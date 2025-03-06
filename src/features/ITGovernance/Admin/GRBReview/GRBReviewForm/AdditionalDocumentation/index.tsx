@@ -1,15 +1,18 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
+import { Button } from '@trussworks/react-uswds';
 import DocumentsTable from 'features/ITGovernance/Requester/SystemIntake/Documents/DocumentsTable';
 
 import CollapsableLink from 'components/CollapsableLink';
-import UswdsReactLink from 'components/LinkWrapper';
 import { GRBReviewFormStepProps } from 'types/grbReview';
 
 import GRBReviewFormStepWrapper from '../GRBReviewFormStepWrapper';
 
 const AdditionalDocumentation = ({ grbReview }: GRBReviewFormStepProps) => {
   const { t } = useTranslation('grbReview');
+  const history = useHistory();
+
   return (
     <GRBReviewFormStepWrapper grbReview={grbReview} requiredFields={false}>
       <CollapsableLink
@@ -36,12 +39,16 @@ const AdditionalDocumentation = ({ grbReview }: GRBReviewFormStepProps) => {
         {t('setUpGrbReviewForm.documents.heading')}
       </h4>
 
-      <UswdsReactLink
-        to={`/it-governance/${grbReview.id}/documents/upload`}
-        className="usa-button"
+      <Button
+        type="button"
+        onClick={() =>
+          history.push(`/it-governance/${grbReview.id}/documents/upload`, {
+            uploadSource: 'grbReviewForm'
+          })
+        }
       >
         {t('setUpGrbReviewForm.documents.addDocument')}
-      </UswdsReactLink>
+      </Button>
 
       <DocumentsTable
         systemIntakeId={grbReview.id}

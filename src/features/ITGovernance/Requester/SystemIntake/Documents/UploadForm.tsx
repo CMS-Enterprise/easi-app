@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Controller } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
@@ -53,6 +53,9 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
   const flags = useFlags();
 
   const history = useHistory();
+  const { state = { uploadSource: 'request' } } = useLocation<{
+    uploadSource: 'request' | 'grbReviewForm';
+  }>();
 
   const { systemId } = useParams<{
     systemId: string;
@@ -82,10 +85,17 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
     context: { type }
   });
 
-  const requestDetailsLink =
-    type === 'requester'
-      ? `/system/${systemId}/documents`
-      : `/it-governance/${systemId}/grb-review`;
+  const returnLink = useMemo(() => {
+    if (state.uploadSource === 'grbReviewForm') {
+      return `/it-governance/${systemId}/grb-review/documents`;
+    }
+
+    if (type === 'requester') {
+      return `/system/${systemId}/documents`;
+    }
+
+    return `/it-governance/${systemId}/grb-review`;
+  }, [state.uploadSource, type, systemId]);
 
   const submit = handleSubmit(async ({ otherTypeDescription, ...formData }) => {
     const newFile = await fileToBase64File(formData.fileData);
@@ -111,7 +121,7 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
             type: 'success'
           }
         );
-        history.push(requestDetailsLink);
+        history.push(returnLink);
       })
       .catch(() => {
         showMessage(t('technicalAssistance:documents.upload.error'), {
@@ -141,8 +151,11 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
           />
         </p>
 
-        <IconLink to={requestDetailsLink} icon={<Icon.ArrowBack />}>
-          {t('intake:documents.dontUpload', { context: type })}
+        <IconLink to={returnLink} icon={<Icon.ArrowBack />}>
+          {t('intake:documents.dontUpload', {
+            context:
+              state.uploadSource === 'grbReviewForm' ? 'grbReviewForm' : type
+          })}
         </IconLink>
 
         <Form className="maxw-full" onSubmit={submit}>
@@ -344,8 +357,11 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
               text: t('technicalAssistance:documents.upload.uploadDocument'),
               disabled: !isValid || isSubmitting
             }}
-            taskListUrl={requestDetailsLink}
-            saveExitText={t('intake:documents.dontUpload', { context: type })}
+            taskListUrl={returnLink}
+            saveExitText={t('intake:documents.dontUpload', {
+              context:
+                state.uploadSource === 'grbReviewForm' ? 'grbReviewForm' : type
+            })}
             border={false}
             className="margin-top-4"
           />

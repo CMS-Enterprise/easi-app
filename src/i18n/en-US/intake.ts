@@ -93,6 +93,7 @@ const intake = {
       'Choose a document to upload such as a draft IGCE, contracting document, RAF or other document related to this project and Intake Request.',
     dontUpload_requester: "Don't upload and return to Intake Request",
     dontUpload_admin: "Don't upload and return to request details",
+    dontUpload_grbReviewForm: "Don't upload and return to GRB review setup",
     selectDocument: 'Select your document',
     supportingDocuments: 'Supporting documents',
     adminDescription:
