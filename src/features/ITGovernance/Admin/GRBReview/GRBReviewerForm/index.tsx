@@ -1,7 +1,7 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
-import { Button, Grid, Icon } from '@trussworks/react-uswds';
+import { Grid, Icon } from '@trussworks/react-uswds';
 import {
   GetSystemIntakeGRBReviewDocument,
   SystemIntakeGRBReviewerFragment,
@@ -18,6 +18,7 @@ import AddReviewerFromEua from './AddReviewerFromEua';
 import AddReviewersFromRequest from './AddReviewersFromRequest';
 
 type GRBReviewerFormProps = {
+  isFromGRBSetup: boolean;
   initialGRBReviewers: SystemIntakeGRBReviewerFragment[];
   setReviewerToRemove: (reviewer: SystemIntakeGRBReviewerFragment) => void;
   grbReviewStartedAt?: string | null;
@@ -27,6 +28,7 @@ type GRBReviewerFormProps = {
  * Form to add or edit a GRB reviewer
  */
 const GRBReviewerForm = ({
+  isFromGRBSetup,
   initialGRBReviewers,
   setReviewerToRemove,
   grbReviewStartedAt
@@ -44,6 +46,7 @@ const GRBReviewerForm = ({
     refetchQueries: [GetSystemIntakeGRBReviewDocument]
   });
 
+  const grbReviewPath = `/it-governance/${systemId}/grb-review`;
   const createGRBReviewers = (reviewers: GRBReviewerFields[]) =>
     mutate({
       variables: {
@@ -65,7 +68,11 @@ const GRBReviewerForm = ({
           { type: 'success' }
         );
 
-        history.push(grbReviewPath);
+        if (isFromGRBSetup) {
+          history.push(`${grbReviewPath}/participants`);
+        } else {
+          history.push(grbReviewPath);
+        }
       })
       .catch(() => {
         showMessage(t(`messages.error.add`), { type: 'error' });
@@ -74,8 +81,6 @@ const GRBReviewerForm = ({
         const err = document.querySelector('.usa-alert');
         err?.scrollIntoView();
       });
-
-  const grbReviewPath = `/it-governance/${systemId}/grb-review`;
 
   return (
     <>

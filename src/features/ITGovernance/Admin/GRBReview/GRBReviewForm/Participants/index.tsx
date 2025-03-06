@@ -59,11 +59,6 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
 
       // Reset `reviewerToRemove` to close modal
       setReviewerToRemove(null);
-
-      // // If removing reviewer from form, go to GRB Review page
-      // if (isForm) {
-      //   history.push(`/it-governance/${id}/grb-review`);
-      // }
     },
     [mutate, showMessage, t]
   );
@@ -121,7 +116,10 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
             <Button
               type="button"
               onClick={() =>
-                history.push(`${pathname.replace('participants', 'add')}`)
+                history.push({
+                  pathname: `${pathname.replace('participants', 'add')}`,
+                  search: 'from-grb-setup'
+                })
               }
               outline={grbReview.grbReviewers.length > 0}
             >
