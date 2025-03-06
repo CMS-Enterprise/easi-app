@@ -138,9 +138,10 @@ function SendPresentationReminder({
 
             <span>
               {presentationDeckFileName}{' '}
-              {presentationDeckFileURL && presentationDeckFileName && (
-                <span>
-                  {canDownload && (
+              <span>
+                {canDownload &&
+                  presentationDeckFileURL &&
+                  presentationDeckFileName && (
                     <Button
                       type="button"
                       unstyled
@@ -156,6 +157,7 @@ function SendPresentationReminder({
                     </Button>
                   )}
 
+                {presentationDeckFileName && (
                   <Button
                     type="button"
                     // Clear fileName to show file upload field
@@ -167,8 +169,8 @@ function SendPresentationReminder({
                   >
                     {t('presentationLinks.sendReminderCard.clearFile')}
                   </Button>
-                </span>
-              )}
+                )}
+              </span>
             </span>
           </div>
         )}
