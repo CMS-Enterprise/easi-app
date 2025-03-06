@@ -60,7 +60,7 @@ const AdditionalDocumentation = ({ grbReview }: GRBReviewFormStepProps) => {
 
       <DocumentsTable
         systemIntakeId={grbReview.id}
-        documents={[grbReview.documents[0], grbReview.documents[1]]}
+        documents={grbReview.documents}
         className="margin-top-4"
       />
     </GRBReviewFormStepWrapper>

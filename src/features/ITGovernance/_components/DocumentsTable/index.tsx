@@ -306,7 +306,9 @@ const DocumentsTable = ({
           />
         </div>
       )}
-      {!documents.length && <p>{t('intake:documents.noDocuments')}</p>}
+      {!documents.length && (
+        <p className="text-italic">{t('intake:documents.noDocuments')}</p>
+      )}
     </div>
   );
 };
