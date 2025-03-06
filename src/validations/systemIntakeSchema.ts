@@ -7,6 +7,7 @@ import { DateTime } from 'luxon';
 import * as Yup from 'yup';
 
 import { FormattedFundingSource } from 'components/FundingSources';
+import { ITGovernanceViewType } from 'types/itGov';
 
 const govTeam = (name: string) =>
   Yup.object().shape({
@@ -366,7 +367,7 @@ export const documentSchema = Yup.object({
   version: Yup.mixed<SystemIntakeDocumentVersion>().required(),
   sendNotification: Yup.boolean().when(
     '$type',
-    (type: 'admin' | 'requester', schema: Yup.BooleanSchema) => {
+    (type: ITGovernanceViewType, schema: Yup.BooleanSchema) => {
       if (type === 'admin') {
         return schema.required(
           i18next.t('technicalAssistance:errors.makeSelection')

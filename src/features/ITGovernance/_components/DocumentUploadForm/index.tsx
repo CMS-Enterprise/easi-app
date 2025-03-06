@@ -31,6 +31,7 @@ import IconLink from 'components/IconLink';
 import Label from 'components/Label';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import useMessage from 'hooks/useMessage';
+import { ITGovernanceViewType } from 'types/itGov';
 import { fileToBase64File } from 'utils/downloadFile';
 import user from 'utils/user';
 import { documentSchema } from 'validations/systemIntakeSchema';
@@ -38,7 +39,7 @@ import { documentSchema } from 'validations/systemIntakeSchema';
 type DocumentUploadFields = Omit<CreateSystemIntakeDocumentInput, 'requestID'>;
 
 type DocumentUploadFormProps = {
-  type: 'admin' | 'requester';
+  type: ITGovernanceViewType;
 };
 
 /**
