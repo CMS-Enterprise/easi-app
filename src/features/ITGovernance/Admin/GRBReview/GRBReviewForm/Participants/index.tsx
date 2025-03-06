@@ -11,7 +11,7 @@ import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import { GRBReviewFormStepProps } from 'types/grbReview';
 
-import ParticipantsTable from '../../ParticipantsSection/ParticipantsSection';
+import ParticipantsTable from '../../ParticipantsSection/ParticipantsTable';
 import GRBReviewFormStepWrapper from '../GRBReviewFormStepWrapper';
 
 // TODO: Update fields type
@@ -65,12 +65,14 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
               )}
             </Button>
           </div>
+        </Grid>
+        <Grid col={10}>
           <ParticipantsTable
-            {...data.systemIntake}
             grbReviewers={grbReview.grbReviewers}
             setReviewerToRemove={setReviewerToRemove}
           />
-
+        </Grid>
+        <Grid col={6}>
           <div className="margin-top-5 border-top-1px border-base-light padding-top-1">
             <p className="text-bold margin-y-0">
               {t('setUpGrbReviewForm.step4.timeframe.heading')}
