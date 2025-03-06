@@ -1326,15 +1326,28 @@ input updateSystemIntakeGRBReviewTypeInput {
 }
 
 """
-Input data used to set or update a System Intake's GRB Review form data
+TODO
 """
-input updateSystemIntakeGRBReviewFormInput {
+input updateSystemIntakeGRBReviewFormInputPresentationStandard {
   systemIntakeID: UUID!
-  grbReviewType: SystemIntakeGRBReviewType @goField(omittable: true)
+  grbDate: Time @goField(omittable: true)
+}
+
+"""
+TODO
+"""
+input updateSystemIntakeGRBReviewFormInputPresentationAsync {
+  systemIntakeID: UUID!
   grbReviewAsyncRecordingTime: Time @goField(omittable: true)
   grbReviewAsyncEndDate: Time @goField(omittable: true)
-  grbReviewStandardGRBMeetingTime: Time @goField(omittable: true)
-  grbReviewAsyncGRBMeetingTime: Time @goField(omittable: true)
+}
+
+"""
+TODO
+"""
+input updateSystemIntakeGRBReviewFormInputTimeframeAsync {
+  systemIntakeID: UUID!
+  grbReviewAsyncEndDate: Time @goField(omittable: true)
 }
 
 """
@@ -2647,7 +2660,7 @@ type Mutation {
   updateSystemIntakeGRBReviewType(input: updateSystemIntakeGRBReviewTypeInput!): UpdateSystemIntakePayload
   @hasRole(role: EASI_GOVTEAM)
 
-  updateSystemIntakeGRBReviewForm(input: updateSystemIntakeGRBReviewFormInput!): UpdateSystemIntakePayload
+  updateSystemIntakeGRBReviewForm(input: updateSystemIntakeGRBReviewFormInputStandard!): UpdateSystemIntakePayload
   @hasRole(role: EASI_GOVTEAM)
 
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
