@@ -34,8 +34,12 @@ const GovTaskGrbMeeting = ({
   const { t } = useTranslation('itGov');
   const [removalModalOpen, setRemovalModalOpen] = useState(false);
   const [reviewTypesModalOpen, setReviewTypesModalOpen] = useState(false);
-  const { showMessage, showErrorMessageInModal, errorMessageInModal } =
-    useMessage();
+  const {
+    showMessage,
+    showErrorMessageInModal,
+    errorMessageInModal,
+    clearMessage
+  } = useMessage();
 
   const dateMapping: Record<
     SystemIntakeGRBReviewType,
@@ -72,14 +76,12 @@ const GovTaskGrbMeeting = ({
         showMessage(t('grbReview:asyncPresentation.modalRemoveLinks.success'), {
           type: 'success'
         });
+        setRemovalModalOpen(false);
       })
       .catch(() => {
         showErrorMessageInModal(
           t('grbReview:asyncPresentation.modalRemoveLinks.error')
         );
-      })
-      .finally(() => {
-        setRemovalModalOpen(false);
       });
   };
 
@@ -88,7 +90,10 @@ const GovTaskGrbMeeting = ({
       {/* Remove Presentation Modal */}
       <Modal
         isOpen={removalModalOpen}
-        closeModal={() => setRemovalModalOpen(false)}
+        closeModal={() => {
+          setRemovalModalOpen(false);
+          clearMessage();
+        }}
         shouldCloseOnOverlayClick
         className="maxw-mobile-lg height-auto"
       >
@@ -130,7 +135,10 @@ const GovTaskGrbMeeting = ({
       {/* GRB Review Type Modal */}
       <Modal
         isOpen={reviewTypesModalOpen}
-        closeModal={() => setReviewTypesModalOpen(false)}
+        closeModal={() => {
+          setReviewTypesModalOpen(false);
+          clearMessage();
+        }}
         shouldCloseOnOverlayClick
         className="height-auto"
       >
