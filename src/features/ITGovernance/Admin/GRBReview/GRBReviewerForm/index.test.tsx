@@ -153,7 +153,8 @@ const getSystemIntakeGRBReviewQuery = (
         id: systemIntake.id,
         grbReviewers: reviewer ? [reviewer] : [],
         grbReviewStartedAt: null,
-        grbReviewType: SystemIntakeGRBReviewType.STANDARD
+        grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+        documents: []
       }
     }
   }

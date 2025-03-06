@@ -238,6 +238,8 @@ export default {
       standard: 'Standard review'
     },
     documents: {
+      heading: 'Documents',
+      addDocument: 'Add a document',
       collapsableText: {
         label: 'What documents should I upload?',
         description:

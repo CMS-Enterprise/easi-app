@@ -1,7 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import DocumentsTable from 'features/ITGovernance/Requester/SystemIntake/Documents/DocumentsTable';
 
 import CollapsableLink from 'components/CollapsableLink';
+import UswdsReactLink from 'components/LinkWrapper';
 import { GRBReviewFormStepProps } from 'types/grbReview';
 
 import GRBReviewFormStepWrapper from '../GRBReviewFormStepWrapper';
@@ -29,6 +31,23 @@ const AdditionalDocumentation = ({ grbReview }: GRBReviewFormStepProps) => {
           ))}
         </ul>
       </CollapsableLink>
+
+      <h4 className="margin-top-6 margin-bottom-1">
+        {t('setUpGrbReviewForm.documents.heading')}
+      </h4>
+
+      <UswdsReactLink
+        to={`/it-governance/${grbReview.id}/documents/upload`}
+        className="usa-button"
+      >
+        {t('setUpGrbReviewForm.documents.addDocument')}
+      </UswdsReactLink>
+
+      <DocumentsTable
+        systemIntakeId={grbReview.id}
+        documents={grbReview.documents}
+        className="margin-top-4"
+      />
     </GRBReviewFormStepWrapper>
   );
 };

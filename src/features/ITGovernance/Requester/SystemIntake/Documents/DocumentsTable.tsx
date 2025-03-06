@@ -27,12 +27,17 @@ import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 type DocumentsTableProps = {
   systemIntakeId: string;
   documents: SystemIntakeDocumentFragmentFragment[];
+  className?: string;
 };
 
 /**
  * System intake document upload form step
  */
-const DocumentsTable = ({ systemIntakeId, documents }: DocumentsTableProps) => {
+const DocumentsTable = ({
+  systemIntakeId,
+  documents,
+  className
+}: DocumentsTableProps) => {
   const { t } = useTranslation();
 
   const { showMessage } = useMessage();
@@ -241,7 +246,7 @@ const DocumentsTable = ({ systemIntakeId, documents }: DocumentsTableProps) => {
   };
 
   return (
-    <div id="systemIntakeDocuments">
+    <div id="systemIntakeDocuments" className={className}>
       <ConfirmDeleteModal />
 
       <Table bordered={false} fullWidth scrollable {...getTableProps()}>

@@ -11,6 +11,7 @@ import Breadcrumbs from 'components/Breadcrumbs';
 import { useEasiFormContext } from 'components/EasiForm';
 import { UseEasiFormReturn } from 'components/EasiForm/types';
 import IconButton from 'components/IconButton';
+import MainContent from 'components/MainContent';
 import RequiredFieldsText from 'components/RequiredFieldsText';
 import StepHeader, { StepHeaderStepProps } from 'components/StepHeader';
 import useMessage from 'hooks/useMessage';
@@ -227,7 +228,7 @@ function GRBReviewFormStepWrapper<
   }, [grbReview, formatSteps, currentStepIndex, history, grbReviewPath]);
 
   return (
-    <>
+    <MainContent>
       <StepHeader
         step={currentStepIndex + 1}
         heading={t('setUpGrbReviewForm.heading')}
@@ -311,7 +312,7 @@ function GRBReviewFormStepWrapper<
           </StepContentWrapper>
         </Grid>
       </GridContainer>
-    </>
+    </MainContent>
   );
 }
 
