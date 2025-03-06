@@ -261,6 +261,57 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
             </FormGroup>
           </div>
         </Grid>
+        <Grid col={10}>
+          <ParticipantsTable
+            grbReviewers={grbReview.grbReviewers}
+            setReviewerToRemove={setReviewerToRemove}
+          />
+        </Grid>
+        <Grid col={6}>
+          <div className="margin-top-5 border-top-1px border-base-light padding-top-1">
+            <p className="text-bold margin-y-0">
+              {t('setUpGrbReviewForm.step4.timeframe.heading')}
+            </p>
+            <p className="margin-top-0 margin-bottom-3 text-base-dark">
+              {t('setUpGrbReviewForm.step4.timeframe.description')}
+            </p>
+            <FormGroup
+              error={!!errors.grbReviewAsyncEndDate}
+              className="margin-top-0"
+            >
+              <Fieldset>
+                <p className="margin-top-0 margin-bottom-1">
+                  {t('setUpGrbReviewForm.step4.selectReviewEndDate.heading')}
+                  <RequiredAsterisk />
+                </p>
+                <p className="margin-y-0 text-base-dark">
+                  {t(
+                    'setUpGrbReviewForm.step4.selectReviewEndDate.description'
+                  )}
+                </p>
+
+                <Controller
+                  control={control}
+                  name="grbReviewAsyncEndDate"
+                  render={({ field: { ref, ...field } }) => (
+                    <>
+                      <DatePickerFormatted
+                        id="grbReviewAsyncEndDate"
+                        {...field}
+                        value={field.value ?? ''}
+                        onChange={date => {
+                          if (date !== field.value) {
+                            field.onChange(date || ''); // Only update when there's a change
+                          }
+                        }}
+                      />
+                    </>
+                  )}
+                />
+              </Fieldset>
+            </FormGroup>
+          </div>
+        </Grid>
       </GRBReviewFormStepWrapper>
     </EasiFormProvider>
   );
