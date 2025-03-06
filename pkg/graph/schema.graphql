@@ -847,7 +847,6 @@ type SystemIntake {
   grbReviewType: SystemIntakeGRBReviewType!
   grbReviewAsyncRecordingTime: Time
   grbReviewAsyncEndDate: Time
-  grbReviewStandardGRBMeetingTime: Time
   grbReviewAsyncGRBMeetingTime: Time
 }
 
@@ -1326,15 +1325,27 @@ input updateSystemIntakeGRBReviewTypeInput {
 }
 
 """
-Input data used to set or update a System Intake's GRB Review form data
+Input data used to set or update a System Intake's GRB Review Presentation (Standard) data
 """
-input updateSystemIntakeGRBReviewFormInput {
+input updateSystemIntakeGRBReviewFormInputPresentationStandard {
   systemIntakeID: UUID!
-  grbReviewType: SystemIntakeGRBReviewType @goField(omittable: true)
+  grbDate: Time!
+}
+
+"""
+Input data used to set or update a System Intake's GRB Review Presentation (Async) data
+"""
+input updateSystemIntakeGRBReviewFormInputPresentationAsync {
+  systemIntakeID: UUID!
   grbReviewAsyncRecordingTime: Time @goField(omittable: true)
-  grbReviewAsyncEndDate: Time @goField(omittable: true)
-  grbReviewStandardGRBMeetingTime: Time @goField(omittable: true)
-  grbReviewAsyncGRBMeetingTime: Time @goField(omittable: true)
+}
+
+"""
+Input data used to set or update a System Intake's GRB Review Timeframe (Async) data
+"""
+input updateSystemIntakeGRBReviewFormInputTimeframeAsync {
+  systemIntakeID: UUID!
+  grbReviewAsyncEndDate: Time!
 }
 
 """
@@ -2646,8 +2657,11 @@ type Mutation {
 
   updateSystemIntakeGRBReviewType(input: updateSystemIntakeGRBReviewTypeInput!): UpdateSystemIntakePayload
   @hasRole(role: EASI_GOVTEAM)
-
-  updateSystemIntakeGRBReviewForm(input: updateSystemIntakeGRBReviewFormInput!): UpdateSystemIntakePayload
+  updateSystemIntakeGRBReviewFormPresentationStandard(input: updateSystemIntakeGRBReviewFormInputPresentationStandard!): UpdateSystemIntakePayload
+  @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeGRBReviewFormPresentationAsync(input: updateSystemIntakeGRBReviewFormInputPresentationAsync!): UpdateSystemIntakePayload
+  @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeGRBReviewFormTimeframeAsync(input: updateSystemIntakeGRBReviewFormInputTimeframeAsync!): UpdateSystemIntakePayload
   @hasRole(role: EASI_GOVTEAM)
 
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
