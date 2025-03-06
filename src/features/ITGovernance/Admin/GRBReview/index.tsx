@@ -444,7 +444,6 @@ const GRBReview = ({
               className="margin-top-4 margin-bottom-6"
             />
 
-            <p>asdf</p>
             <ParticipantsTable
               id={id}
               state={state}
