@@ -84,6 +84,7 @@ const GRBReview = ({
   }>();
 
   const isForm = !!action;
+  const isFromGRBSetup = history.location.search === '?from-grb-setup';
 
   const [reviewerToRemove, setReviewerToRemove] =
     useState<SystemIntakeGRBReviewerFragment | null>(null);
@@ -179,6 +180,7 @@ const GRBReview = ({
 
       {isForm ? (
         <GRBReviewerForm
+          isFromGRBSetup={isFromGRBSetup}
           setReviewerToRemove={setReviewerToRemove}
           initialGRBReviewers={grbReviewers}
           grbReviewStartedAt={grbReviewStartedAt}
