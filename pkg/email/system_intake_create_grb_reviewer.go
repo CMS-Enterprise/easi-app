@@ -14,6 +14,7 @@ import (
 type systemIntakeCreateGRBReviewerParameters struct {
 	ProjectTitle             string
 	RequesterName            string
+	RequesterComponent       string
 	SystemIntakeAdminLink    string
 	ITGovernanceInboxAddress string
 }
@@ -22,6 +23,7 @@ func (sie systemIntakeEmails) createGRBReviewerBody(
 	systemIntakeID uuid.UUID,
 	projectTitle string,
 	requesterName string,
+	requesterComponent string,
 ) (string, error) {
 	if sie.client.templates.systemIntakeCreateGRBReviewer == nil {
 		return "", errors.New("create grb reviewer email template is nil")
@@ -32,6 +34,7 @@ func (sie systemIntakeEmails) createGRBReviewerBody(
 	data := systemIntakeCreateGRBReviewerParameters{
 		ProjectTitle:             projectTitle,
 		RequesterName:            requesterName,
+		RequesterComponent:       requesterComponent,
 		SystemIntakeAdminLink:    sie.client.urlFromPath(adminPath),
 		ITGovernanceInboxAddress: sie.client.config.GRTEmail.String(),
 	}
@@ -51,12 +54,13 @@ func (sie systemIntakeEmails) SendCreateGRBReviewerNotification(
 	systemIntakeID uuid.UUID,
 	projectTitle string,
 	requesterName string,
+	requesterComponent string,
 ) error {
 	if projectTitle == "" {
 		projectTitle = "Draft System Intake"
 	}
 	subject := "GRB Review: You are invited to review documentation in EASi"
-	body, err := sie.createGRBReviewerBody(systemIntakeID, projectTitle, requesterName)
+	body, err := sie.createGRBReviewerBody(systemIntakeID, projectTitle, requesterName, requesterComponent)
 	if err != nil {
 		return err
 	}
