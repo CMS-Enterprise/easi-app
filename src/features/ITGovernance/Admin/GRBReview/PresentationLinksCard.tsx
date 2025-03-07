@@ -7,7 +7,6 @@ import {
   CardFooter,
   CardHeader,
   Icon,
-  Link,
   ModalHeading
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
@@ -23,6 +22,7 @@ import IconLink from 'components/IconLink';
 import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
 import useMessage from 'hooks/useMessage';
+import { downloadFileFromURL } from 'utils/downloadFile';
 
 import ITGovAdminContext from '../ITGovAdminContext';
 
@@ -45,8 +45,10 @@ function PresentationLinksCard({
     recordingLink,
     recordingPasscode,
     transcriptLink,
+    transcriptFileName,
     transcriptFileStatus,
     transcriptFileURL,
+    presentationDeckFileName,
     presentationDeckFileStatus,
     presentationDeckFileURL
   } = grbPresentationLinks || {};
@@ -151,27 +153,30 @@ function PresentationLinksCard({
               </em>
             ) : (
               <>
-                <div className="display-flex flex-wrap flex-gap-1">
-                  {recordingLink && (
-                    <ExternalLinkAndModal href={recordingLink}>
-                      {t('asyncPresentation.viewRecording')}
-                    </ExternalLinkAndModal>
-                  )}
+                {(recordingLink || recordingPasscode || transcriptLink) && (
+                  <div className="display-flex flex-wrap flex-gap-1">
+                    {recordingLink && (
+                      <ExternalLinkAndModal href={recordingLink}>
+                        {t('asyncPresentation.viewRecording')}
+                      </ExternalLinkAndModal>
+                    )}
 
-                  {!recordingLink && (recordingPasscode || transcriptLink) && (
-                    <span>
-                      {t('asyncPresentation.noRecordingLinkAvailable')}
-                    </span>
-                  )}
+                    {!recordingLink &&
+                      (recordingPasscode || transcriptLink) && (
+                        <span>
+                          {t('asyncPresentation.noRecordingLinkAvailable')}
+                        </span>
+                      )}
 
-                  {recordingPasscode && (
-                    <span className="text-base">
-                      {t('asyncPresentation.passcode', {
-                        passcode: recordingPasscode
-                      })}
-                    </span>
-                  )}
-                </div>
+                    {recordingPasscode && (
+                      <span className="text-base">
+                        {t('asyncPresentation.passcode', {
+                          passcode: recordingPasscode
+                        })}
+                      </span>
+                    )}
+                  </div>
+                )}
 
                 {transcriptLink && (
                   <ExternalLinkAndModal href={transcriptLink}>
@@ -181,26 +186,38 @@ function PresentationLinksCard({
 
                 {transcriptFileStatus ===
                   SystemIntakeDocumentStatus.AVAILABLE &&
-                  transcriptFileURL && (
-                    <Link
-                      href={transcriptFileURL}
-                      target="_blank"
-                      data-testid="transcript-url"
+                  transcriptFileURL &&
+                  transcriptFileName && (
+                    <Button
+                      type="button"
+                      onClick={() =>
+                        downloadFileFromURL(
+                          transcriptFileURL,
+                          transcriptFileName
+                        )
+                      }
+                      unstyled
                     >
                       {t('asyncPresentation.viewTranscript')}
-                    </Link>
+                    </Button>
                   )}
 
                 {presentationDeckFileStatus ===
                   SystemIntakeDocumentStatus.AVAILABLE &&
-                  presentationDeckFileURL && (
-                    <Link
-                      href={presentationDeckFileURL}
-                      target="_blank"
-                      data-testid="presentation-url"
+                  presentationDeckFileURL &&
+                  presentationDeckFileName && (
+                    <Button
+                      type="button"
+                      onClick={() =>
+                        downloadFileFromURL(
+                          presentationDeckFileURL,
+                          presentationDeckFileName
+                        )
+                      }
+                      unstyled
                     >
                       {t('asyncPresentation.viewSlideDeck')}
-                    </Link>
+                    </Button>
                   )}
               </>
             )}
