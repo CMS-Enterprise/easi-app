@@ -242,6 +242,22 @@ export default {
       standardSummary:
         '<span>Standard meeting:</span> The project team will present their project at one of the regularly-scheduled GRB meetings. Setting up a standard meeting will not require all steps of this form.'
     },
+    documents: {
+      heading: 'Documents',
+      addDocument: 'Add a document',
+      standardMeetingAlert:
+        'Because this review is a standard GRB meeting, GRB members may not review these documents unless they are presented during the meeting. However, adding additional documents here gives GRB members the option to access documentation within EASi prior to the meeting.',
+      collapsableText: {
+        label: 'What documents should I upload?',
+        description:
+          'GRB reviewers value documents that give them additional context about the project, its budget and funding background, and/or feedback from previous reviewers such as the GRT or small group. These could include documents such as:',
+        list: [
+          'GRT meeting minutes',
+          'Request for Additional Funding (RAF)',
+          'Draft Independent Government Cost Estimate (IGCE)'
+        ]
+      }
+    },
     completeAndBeginReview: 'Complete and begin review'
   },
   adminTask: {

@@ -20,3 +20,5 @@ export interface ItGovTaskSystemIntakeWithMockData
 export interface GetGovernanceTaskListWithMockData {
   systemIntake: ItGovTaskSystemIntakeWithMockData;
 }
+
+export type ITGovernanceViewType = 'admin' | 'requester';

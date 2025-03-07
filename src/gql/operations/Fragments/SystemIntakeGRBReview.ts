@@ -19,5 +19,9 @@ export default gql(/* GraphQL */ `
     grbPresentationLinks {
       ...SystemIntakeGRBPresentationLinks
     }
+
+    documents {
+      ...SystemIntakeDocumentFragment
+    }
   }
 `);

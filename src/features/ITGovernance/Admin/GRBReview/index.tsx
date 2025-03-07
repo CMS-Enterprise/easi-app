@@ -11,7 +11,7 @@ import {
   ModalFooter,
   ModalHeading
 } from '@trussworks/react-uswds';
-import DocumentsTable from 'features/ITGovernance/Requester/SystemIntake/Documents/DocumentsTable';
+import DocumentsTable from 'features/ITGovernance/_components/DocumentsTable';
 import {
   GetSystemIntakeGRBReviewDocument,
   SystemIntakeDocumentFragmentFragment,
