@@ -171,7 +171,85 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
             grbReview={grbReview}
             onSubmit={async () => null}
           >
-            <p>Fields here</p>
+            <Fieldset>
+              <Grid desktop={{ col: 6 }}>
+                <FormGroup
+                  error={!!errors.reviewType?.grbReviewType}
+                  className="margin-top-5"
+                >
+                  <legend className="text-bold">
+                    {t('setUpGrbReviewForm.reviewType.label')}{' '}
+                    <RequiredAsterisk />
+                  </legend>
+
+                  <Controller
+                    control={control}
+                    name="reviewType.grbReviewType"
+                    render={({
+                      field: { ref, ...field },
+                      fieldState: { error }
+                    }) => (
+                      <>
+                        <RadioField
+                          {...field}
+                          id="grbReviewTypeAsync"
+                          value={SystemIntakeGRBReviewType.ASYNC}
+                          label={t('setUpGrbReviewForm.reviewType.async')}
+                          checked={
+                            field.value === SystemIntakeGRBReviewType.ASYNC
+                          }
+                        />
+
+                        <RadioField
+                          {...field}
+                          id="grbReviewTypeStandard"
+                          value={SystemIntakeGRBReviewType.STANDARD}
+                          label={t('setUpGrbReviewForm.reviewType.standard')}
+                          checked={
+                            field.value === SystemIntakeGRBReviewType.STANDARD
+                          }
+                        />
+                      </>
+                    )}
+                  />
+                </FormGroup>
+                <FormGroup
+                  // error={hasRequiredFieldErrors}
+                  className="margin-top-6"
+                >
+                  <Controller
+                    control={control}
+                    name="links.presentationDeckFileData"
+                    render={({ field: { ref, ...field } }) => {
+                      return (
+                        <SendPresentationReminder
+                          systemIntakeID={grbReview.id}
+                          presentationDeckFileURL={
+                            grbReview.grbPresentationLinks
+                              ?.presentationDeckFileURL
+                          }
+                          presentationDeckFileName={
+                            watch('links.presentationDeckFileData')?.name
+                          }
+                          canDownload={
+                            !watch('links.presentationDeckFileData')?.size
+                          }
+                          name={field.name}
+                          id={field.name}
+                          accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
+                          aria-describedby="presentationDeckHelpText"
+                          className="maxw-none"
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            field.onChange(e.currentTarget?.files?.[0])
+                          }
+                          clearFile={() => field.onChange(null)}
+                        />
+                      );
+                    }}
+                  />
+                </FormGroup>
+              </Grid>
+            </Fieldset>
           </GRBReviewFormStepWrapper>
         </EasiFormProvider>
       )}

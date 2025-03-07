@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export default gql(/* GraphQL */ `
-  mutation UpdateSystemIntakeGRBReviewPresentation(
+  mutation UpdateSystemIntakeGRBReviewStandardPresentation(
     $links: SystemIntakeGRBPresentationLinksInput!
     $reviewType: updateSystemIntakeGRBReviewTypeInput!
   ) {
