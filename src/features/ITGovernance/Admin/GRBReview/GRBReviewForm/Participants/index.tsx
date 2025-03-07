@@ -41,7 +41,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
   const form = useEasiForm<ParticipantsFields>({
     resolver: yupResolver(SetGRBParticipantsAsyncSchema),
     defaultValues: {
-      grbReviewAsyncEndDate: grbReview.grbReviewAsyncEndDate
+      grbReviewAsyncEndDate: grbReview.grbReviewAsyncEndDate || ''
     }
   });
   const {
@@ -187,8 +187,12 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
                       <DatePickerFormatted
                         id="grbReviewAsyncEndDate"
                         {...field}
-                        defaultValue={field.value}
-                        ref={null}
+                        value={field.value ?? ''}
+                        onChange={date => {
+                          if (date !== field.value) {
+                            field.onChange(date || ''); // Only update when there's a change
+                          }
+                        }}
                       />
                     </>
                   )}
