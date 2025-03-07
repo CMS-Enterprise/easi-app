@@ -238,7 +238,7 @@ function GRBReviewFormStepWrapper<
   }, [grbReview, formatSteps, currentStepIndex, history, grbReviewPath]);
 
   return (
-    <>
+    <div>
       <StepHeader
         step={currentStepIndex + 1}
         heading={t('setUpGrbReviewForm.heading')}
@@ -327,7 +327,7 @@ function GRBReviewFormStepWrapper<
           )}
         </StepContentWrapper>
       </GridContainer>
-    </>
+    </div>
   );
 }
 

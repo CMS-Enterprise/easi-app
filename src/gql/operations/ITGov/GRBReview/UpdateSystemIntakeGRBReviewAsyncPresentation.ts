@@ -3,12 +3,14 @@ import { gql } from '@apollo/client';
 export default gql(/* GraphQL */ `
   mutation UpdateSystemIntakeGRBReviewAsyncPresentation(
     $links: SystemIntakeGRBPresentationLinksInput!
-    $reviewType: updateSystemIntakeGRBReviewTypeInput!
+    $asyncRecordingDate: updateSystemIntakeGRBReviewFormInputPresentationAsync!
   ) {
     setSystemIntakeGRBPresentationLinks(input: $links) {
       createdAt
     }
-    updateSystemIntakeGRBReviewType(input: $reviewType) {
+    updateSystemIntakeGRBReviewFormPresentationAsync(
+      input: $asyncRecordingDate
+    ) {
       systemIntake {
         ...SystemIntakeGRBReview
       }
