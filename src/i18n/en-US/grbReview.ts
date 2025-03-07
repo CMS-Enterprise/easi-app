@@ -239,6 +239,16 @@ export default {
     },
     completeAndBeginReview: 'Complete and begin review'
   },
+  presentationGRBReviewForm: {
+    heading: 'GRB Meeting',
+    description:
+      'Organize a GRB meeting for the project team’s presentation to the GRB.',
+    alert:
+      'You will need to work with the project team outside of EASi to set up a calendar invite, but you may include the date below for reference purposes within EASi.',
+    meetingDate: 'GRB meeting date',
+    meetingDateDescription:
+      'This date will be visible to the requester. Format: mm/dd/yyyy'
+  },
   adminTask: {
     title: 'Admin Task',
     setUpGRBReview: {
