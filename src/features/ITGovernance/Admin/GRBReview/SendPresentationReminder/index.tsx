@@ -8,6 +8,7 @@ import {
   CardHeader,
   FileInput as UswdsFileInput
 } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 import { useSendPresentationDeckReminderMutation } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
@@ -21,6 +22,7 @@ function SendPresentationReminder({
   onChange,
   clearFile,
   canDownload,
+  className,
   ...props
 }: ComponentProps<typeof UswdsFileInput> & {
   systemIntakeID: string;
@@ -29,6 +31,7 @@ function SendPresentationReminder({
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   clearFile: () => void;
   canDownload?: boolean;
+  className?: string;
 }) {
   const { t } = useTranslation('grbReview');
 
@@ -105,6 +108,7 @@ function SendPresentationReminder({
       containerProps={{
         className: 'margin-0 shadow-2 radius-md'
       }}
+      className={classNames(className)}
     >
       <CardHeader>
         <h4 className="margin-bottom-1">

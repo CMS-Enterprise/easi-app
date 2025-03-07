@@ -252,7 +252,8 @@ export default {
       'You will need to work with the project team outside of EASi to set up a calendar invite, but you may include the date below for reference purposes within EASi.',
     meetingDate: 'GRB meeting date',
     meetingDateDescription:
-      'This date will be visible to the requester. Format: mm/dd/yyyy'
+      'This date will be visible to the requester. Format: mm/dd/yyyy',
+    required: 'This is a required field.'
   },
   adminTask: {
     title: 'Admin Task',

@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FieldValues } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { Form, GridContainer, Icon } from '@trussworks/react-uswds';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
 import { SystemIntakeGRBReviewFragment } from 'gql/generated/graphql';
+import { s } from 'vite/dist/node/types.d-aGj9QkWt';
 
 import AutoSave from 'components/AutoSave';
 import Breadcrumbs from 'components/Breadcrumbs';
@@ -35,6 +36,7 @@ type GRBReviewFormStepWrapperProps<TFieldValues extends FieldValues> = {
   onSubmit?: GRBReviewFormStepSubmit<TFieldValues>;
   /** Defaults to true - shows required fields text above `children` */
   requiredFields?: boolean;
+  disabled?: boolean;
 };
 
 /**
@@ -48,7 +50,8 @@ function GRBReviewFormStepWrapper<
   children,
   grbReview,
   onSubmit,
-  requiredFields = true
+  requiredFields = true,
+  disabled = false
 }: GRBReviewFormStepWrapperProps<TFieldValues>) {
   const { t } = useTranslation('grbReview');
   const history = useHistory();
@@ -112,19 +115,14 @@ function GRBReviewFormStepWrapper<
    * Formats form steps for stepped header
    */
   const formatSteps = useCallback(async () => {
-    const { grbReviewType, grbReviewers, grbPresentationLinks } = grbReview;
+    const { grbReviewType, grbReviewers, grbDate } = grbReview;
 
     // Validate form steps with Yup
-
     const reviewTypeIsValid =
       await GrbReviewFormSchema.grbReviewType.isValid(grbReviewType);
 
-    const presentationIsValid = await GrbReviewFormSchema.presentation.isValid({
-      recordingLink: grbPresentationLinks?.recordingLink,
-      presentationDeckFileData: grbPresentationLinks?.presentationDeckFileName
-        ? {}
-        : undefined
-    });
+    const presentationIsValid =
+      await GrbReviewFormSchema.presentation.isValid(grbDate);
 
     const participantsIsValid = await GrbReviewFormSchema.participants.isValid({
       grbReviewers
@@ -141,7 +139,10 @@ function GRBReviewFormStepWrapper<
             break;
 
           case 'presentation':
-            completed = presentationIsValid;
+            completed =
+              disabled !== undefined
+                ? !disabled
+                : !!(reviewTypeIsValid && presentationIsValid);
             break;
 
           case 'documents':
@@ -160,7 +161,7 @@ function GRBReviewFormStepWrapper<
         acc[index] = {
           ...acc[index],
           completed,
-          // disabled: index > 0 ? !acc[index - 1].completed : false,
+          disabled: index > 0 ? !acc[index - 1].completed : false,
           onClick: () => submitStep(value.key)
         };
 
@@ -168,55 +169,60 @@ function GRBReviewFormStepWrapper<
       },
       [...grbReviewFormSteps]
     );
-  }, [grbReview, submitStep]);
+  }, [grbReview, submitStep, disabled]);
 
   /**
    * Wrapper for step content
    *
    * Returns `<Form>` if `onSubmit` prop is defined
    * */
-  const StepContentWrapper = ({
-    // eslint-disable-next-line @typescript-eslint/no-shadow
-    children,
-    ...props
-  }: {
-    children: React.ReactNode;
-  }) => {
-    if (!onSubmit || !handleSubmit)
+  const StepContentWrapper = useCallback(
+    ({
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      children,
+      ...props
+    }: {
+      children: React.ReactNode;
+    }) => {
+      if (!onSubmit || !handleSubmit)
+        return (
+          <div className="step-content-wrapper" {...props}>
+            {children}
+          </div>
+        );
+
       return (
-        <div className="step-content-wrapper" {...props}>
+        <Form
+          className="step-content-wrapper maxw-none"
+          {...props}
+          role="form"
+          onSubmit={handleSubmit(values => {
+            if (!isDirty) {
+              return history.push(`${grbReviewPath}/${nextStep?.key || ''}`);
+            }
+
+            return onSubmit({ systemIntakeID: systemId, ...values })
+              .then(() =>
+                // Go to next step, or back to review if end of form
+                history.push(`${grbReviewPath}/${nextStep?.key || ''}`)
+              )
+              .catch(() =>
+                showMessage(t('setUpGrbReviewForm.error'), { type: 'error' })
+              );
+          })}
+        >
           {children}
-        </div>
+        </Form>
       );
-
-    return (
-      <Form
-        className="step-content-wrapper maxw-none"
-        {...props}
-        role="form"
-        onSubmit={handleSubmit(values => {
-          if (!isDirty) {
-            return history.push(`${grbReviewPath}/${nextStep?.key || ''}`);
-          }
-
-          return onSubmit({ systemIntakeID: systemId, ...values })
-            .then(() =>
-              // Go to next step, or back to review if end of form
-              history.push(`${grbReviewPath}/${nextStep?.key || ''}`)
-            )
-            .catch(() =>
-              showMessage(t('setUpGrbReviewForm.error'), { type: 'error' })
-            );
-        })}
-      >
-        {children}
-      </Form>
-    );
-  };
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [grbReviewPath, isDirty, history, handleSubmit, showMessage, systemId, t]
+  );
 
   // Format steps and redirect user if current step is disabled
   useEffect(() => {
     formatSteps().then(values => {
+      console.log(values);
       // If current step is disabled, redirect to last valid step or start of form
       if (values[currentStepIndex].disabled) {
         /** Returns the latest valid step or step one */
@@ -286,7 +292,7 @@ function GRBReviewFormStepWrapper<
                 !onSubmit &&
                 history.push(`${grbReviewPath}/${nextStep?.key || ''}`),
               // Disable `next` button if next step is disabled
-              disabled: !!nextStep?.disabled,
+              disabled: !!nextStep?.disabled || disabled,
               text: nextStep
                 ? t('Next')
                 : t('setUpGrbReviewForm.completeAndBeginReview')

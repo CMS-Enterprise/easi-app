@@ -2,7 +2,6 @@ import React from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Fieldset, FormGroup, Grid, Label } from '@trussworks/react-uswds';
-import { actionDateInPast } from 'features/ITGovernance/Admin/Actions/ManageLcid/RetireLcid';
 import {
   SystemIntakeGRBReviewType,
   UpdateSystemIntakeGRBReviewStandardPresentationMutationVariables,
@@ -59,10 +58,10 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
     formState: { errors }
   } = standardForm;
 
-  const onSubmit: GRBReviewFormStepSubmit<
+  const onSubmitStandard: GRBReviewFormStepSubmit<
     UpdateSystemIntakeGRBReviewStandardPresentationMutationVariables
   > = async input => {
-    const newFile = input.presentationDeck.presentationDeckFileData
+    const newFile = input.presentationDeck.presentationDeckFileData?.size
       ? await fileToBase64File(input.presentationDeck.presentationDeckFileData)
       : null;
 
@@ -80,104 +79,110 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
     });
   };
 
-  // const hasRequiredFieldErrors =
-  //   !!errors?.links?.presentationDeckFileData ||
-  //   !grbReview.presentationDeckFileData?.name;
-
-  console.log(watch('grbMeetingDate.grbDate'));
-
   return (
     <>
       {grbReview.grbReviewType === SystemIntakeGRBReviewType.STANDARD ? (
         <EasiFormProvider<StandardPresentationFields> {...standardForm}>
-          <GRBReviewFormStepWrapper grbReview={grbReview} onSubmit={onSubmit}>
+          <GRBReviewFormStepWrapper
+            grbReview={grbReview}
+            onSubmit={onSubmitStandard}
+            disabled={!watch('grbMeetingDate.grbDate')}
+          >
             <Fieldset>
               <Grid desktop={{ col: 6 }}>
-                <FormGroup
-                  error={!!errors.grbMeetingDate?.grbDate}
-                  className="margin-top-5"
-                >
-                  <Controller
-                    name="grbMeetingDate.grbDate"
-                    control={control}
-                    render={({
-                      field: { ref, ...field },
-                      fieldState: { error }
-                    }) => (
-                      <FormGroup error={!!error}>
-                        <Label
-                          htmlFor={field.name}
-                          className="text-normal"
-                          requiredMarker
-                        >
-                          {t('presentationGRBReviewForm.meetingDate')}
-                        </Label>
+                <div className="border-top-1px border-base-lighter margin-top-3">
+                  <h4 className="margin-top-2 margin-bottom-1">
+                    {t('presentationGRBReviewForm.heading')}
+                  </h4>
 
-                        <HelpText className="margin-top-1">
-                          {t(
-                            'presentationGRBReviewForm.meetingDateDescription'
+                  <p className="margin-y-0 text-base">
+                    {t('presentationGRBReviewForm.description')}
+                  </p>
+
+                  <Alert type="info" slim className="margin-top-2">
+                    {t('presentationGRBReviewForm.alert')}
+                  </Alert>
+
+                  <FormGroup
+                    error={!!errors.grbMeetingDate?.grbDate}
+                    className="margin-top-5"
+                  >
+                    <Controller
+                      name="grbMeetingDate.grbDate"
+                      control={control}
+                      rules={{
+                        required: 'presentationGRBReviewForm.required'
+                      }}
+                      render={({
+                        field: { ref, ...field },
+                        fieldState: { error }
+                      }) => (
+                        <FormGroup error={!!error}>
+                          <Label
+                            htmlFor={field.name}
+                            className="text-normal"
+                            requiredMarker
+                          >
+                            {t('presentationGRBReviewForm.meetingDate')}
+                          </Label>
+
+                          <HelpText className="margin-top-1">
+                            {t(
+                              'presentationGRBReviewForm.meetingDateDescription'
+                            )}
+                          </HelpText>
+
+                          {!!error?.message && (
+                            <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
                           )}
-                        </HelpText>
 
-                        {!!error?.message && (
-                          <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
-                        )}
-
-                        <DatePickerFormatted
-                          {...field}
-                          id={field.name}
-                          defaultValue={field.value}
-                          onChange={e => field.onChange(e || undefined)}
-                        />
-                        {
-                          // If past date is selected, show alert
-                          actionDateInPast(field.value || null) && (
-                            <Alert type="warning" slim>
-                              {t('pastDateAlert')}
-                            </Alert>
-                          )
-                        }
-                      </FormGroup>
-                    )}
-                  />
-                </FormGroup>
-                <FormGroup
-                  // error={hasRequiredFieldErrors}
-                  className="margin-top-6"
-                >
-                  <Controller
-                    control={control}
-                    name="presentationDeck.presentationDeckFileData"
-                    render={({ field: { ref, ...field } }) => {
-                      return (
-                        <SendPresentationReminder
-                          systemIntakeID={grbReview.id}
-                          presentationDeckFileURL={
-                            grbReview.grbPresentationLinks
-                              ?.presentationDeckFileURL
-                          }
-                          presentationDeckFileName={
-                            watch('presentationDeck.presentationDeckFileData')
-                              ?.name
-                          }
-                          canDownload={
-                            !watch('presentationDeck.presentationDeckFileData')
-                              ?.size
-                          }
-                          name={field.name}
-                          id={field.name}
-                          accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
-                          aria-describedby="presentationDeckHelpText"
-                          className="maxw-none"
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            field.onChange(e.currentTarget?.files?.[0])
-                          }
-                          clearFile={() => field.onChange(null)}
-                        />
-                      );
-                    }}
-                  />
-                </FormGroup>
+                          <DatePickerFormatted
+                            {...field}
+                            id={field.name}
+                            defaultValue={field.value}
+                            onChange={e => field.onChange(e || undefined)}
+                            dateInPastWarning
+                          />
+                        </FormGroup>
+                      )}
+                    />
+                  </FormGroup>
+                  <FormGroup className="margin-top-6">
+                    <Controller
+                      control={control}
+                      name="presentationDeck.presentationDeckFileData"
+                      render={({ field: { ref, ...field } }) => {
+                        return (
+                          <SendPresentationReminder
+                            systemIntakeID={grbReview.id}
+                            presentationDeckFileURL={
+                              grbReview.grbPresentationLinks
+                                ?.presentationDeckFileURL
+                            }
+                            presentationDeckFileName={
+                              watch('presentationDeck.presentationDeckFileData')
+                                ?.name
+                            }
+                            canDownload={
+                              !watch(
+                                'presentationDeck.presentationDeckFileData'
+                              )?.size
+                            }
+                            name={field.name}
+                            id={field.name}
+                            accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
+                            aria-describedby="presentationDeckHelpText"
+                            className="maxw-none margin-bottom-0"
+                            onChange={(
+                              e: React.ChangeEvent<HTMLInputElement>
+                            ) => field.onChange(e.currentTarget?.files?.[0])}
+                            clearFile={() => field.onChange(null)}
+                          />
+                        );
+                      }}
+                    />
+                  </FormGroup>
+                </div>
               </Grid>
             </Fieldset>
           </GRBReviewFormStepWrapper>
