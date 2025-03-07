@@ -32,6 +32,10 @@ describe('GRB review form - review type', () => {
       })
     ).toBeInTheDocument();
 
+    expect(
+      screen.getByRole('radio', { name: 'Standard meeting' })
+    ).toBeChecked();
+
     expect(asFragment()).toMatchSnapshot();
   });
 });
