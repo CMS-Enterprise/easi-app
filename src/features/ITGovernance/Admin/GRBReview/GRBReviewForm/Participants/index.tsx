@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { Controller } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
   ButtonGroup,
@@ -24,6 +25,7 @@ import Modal from 'components/Modal';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import useMessage from 'hooks/useMessage';
 import { GRBReviewFormStepProps } from 'types/grbReview';
+import { SetGRBParticipantsAsyncSchema } from 'validations/grbReviewSchema';
 
 import ParticipantsTable from '../../ParticipantsSection/_components/ParticipantsTable';
 import GRBReviewFormStepWrapper from '../GRBReviewFormStepWrapper';
@@ -37,6 +39,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
   const { t } = useTranslation('grbReview');
 
   const form = useEasiForm<ParticipantsFields>({
+    resolver: yupResolver(SetGRBParticipantsAsyncSchema),
     defaultValues: {
       grbReviewAsyncEndDate: grbReview.grbReviewAsyncEndDate
     }
@@ -179,10 +182,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
                 <Controller
                   control={control}
                   name="grbReviewAsyncEndDate"
-                  render={({
-                    field: { ref, ...field },
-                    fieldState: { error }
-                  }) => (
+                  render={({ field: { ref, ...field } }) => (
                     <>
                       <DatePickerFormatted
                         id="grbReviewAsyncEndDate"
