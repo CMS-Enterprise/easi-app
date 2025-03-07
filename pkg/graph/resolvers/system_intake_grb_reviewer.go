@@ -89,6 +89,7 @@ func CreateSystemIntakeGRBReviewers(
 				intake.ID,
 				intake.ProjectName.String,
 				intake.Requester,
+				intake.Component.String,
 			)
 			if err != nil {
 				appcontext.ZLogger(ctx).Error("unable to send create GRB member notification", zap.Error(err))
@@ -197,28 +198,35 @@ func StartGRBReview(
 		if err != nil {
 			return nil, err
 		}
+
 		if intake.GRBReviewStartedAt != nil {
 			return nil, errors.New("review already started")
 		}
+
 		intake.GRBReviewStartedAt = helpers.PointerTo(time.Now())
 		_, err = store.UpdateSystemIntakeNP(ctx, tx, intake)
 		if err != nil {
 			return nil, err
 		}
+
 		reviewers, err := dataloaders.GetSystemIntakeGRBReviewersBySystemIntakeID(ctx, intakeID)
 		if err != nil {
 			return nil, err
 		}
+
 		userIDs := lo.Map(reviewers, func(reviewer *models.SystemIntakeGRBReviewer, _ int) uuid.UUID {
 			return reviewer.UserID
 		})
-		accts, err := store.UserAccountsByIDs(ctx, userIDs)
+
+		userAccounts, err := store.UserAccountsByIDs(ctx, userIDs)
 		if err != nil {
 			return nil, err
 		}
-		emails := lo.Map(accts, func(useraccount *authentication.UserAccount, _ int) models.EmailAddress {
-			return models.EmailAddress(useraccount.Email)
+
+		emails := lo.Map(userAccounts, func(userAccount *authentication.UserAccount, _ int) models.EmailAddress {
+			return models.EmailAddress(userAccount.Email)
 		})
+
 		if emailClient != nil {
 			err = emailClient.SystemIntake.SendCreateGRBReviewerNotification(
 				ctx,
@@ -226,6 +234,7 @@ func StartGRBReview(
 				intake.ID,
 				intake.ProjectName.String,
 				intake.Requester,
+				intake.Component.String,
 			)
 			if err != nil {
 				appcontext.ZLogger(ctx).Error("unable to send create GRB member notification", zap.Error(err))
