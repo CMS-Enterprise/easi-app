@@ -16,7 +16,8 @@ import {
   GetSystemIntakeGRBReviewDocument,
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewFragment,
-  useDeleteSystemIntakeGRBReviewerMutation
+  useDeleteSystemIntakeGRBReviewerMutation,
+  useUpdateSystemIntakeGRBReviewTypeMutation
 } from 'gql/generated/graphql';
 
 import DatePickerFormatted from 'components/DatePickerFormatted';
@@ -38,6 +39,8 @@ type ParticipantsFields = {
 const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
   const { t } = useTranslation('grbReview');
 
+  // const [mutate] = useUpdateSystemIntakeGRBReviewTypeMutation();
+
   const form = useEasiForm<ParticipantsFields>({
     resolver: yupResolver(SetGRBParticipantsAsyncSchema),
     defaultValues: {
@@ -56,13 +59,13 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
   const [reviewerToRemove, setReviewerToRemove] =
     useState<SystemIntakeGRBReviewerFragment | null>(null);
 
-  const [mutate] = useDeleteSystemIntakeGRBReviewerMutation({
+  const [deleteReviewer] = useDeleteSystemIntakeGRBReviewerMutation({
     refetchQueries: [GetSystemIntakeGRBReviewDocument]
   });
 
   const removeGRBReviewer = useCallback(
     (reviewer: SystemIntakeGRBReviewerFragment) => {
-      mutate({ variables: { input: { reviewerID: reviewer.id } } })
+      deleteReviewer({ variables: { input: { reviewerID: reviewer.id } } })
         .then(() =>
           showMessage(
             <Trans
@@ -79,7 +82,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
       // Reset `reviewerToRemove` to close modal
       setReviewerToRemove(null);
     },
-    [mutate, showMessage, t]
+    [deleteReviewer, showMessage, t]
   );
 
   return (
