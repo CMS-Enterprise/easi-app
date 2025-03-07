@@ -234,8 +234,13 @@ export default {
       'There was a problem saving your GRB review form. Please try again. If the error persists, please try again at a later date.',
     reviewType: {
       label: 'Choose review type',
+      summaryHeading: 'GRB review types',
       async: 'Asynchronous review',
-      standard: 'Standard review'
+      asyncSummary:
+        '<span>Asynchronous review:</span> The Governance Admin Team will work with the project team to record their presentation and then upload the recording for asynchronous review by the GRB. Use this review type for projects that cannot fit into the standard schedule of meetings or have other requirements that make an asynchronous review preferable.',
+      standard: 'Standard meeting',
+      standardSummary:
+        '<span>Standard meeting:</span> The project team will present their project at one of the regularly-scheduled GRB meetings. Setting up a standard meeting will not require all steps of this form.'
     },
     documents: {
       heading: 'Documents',

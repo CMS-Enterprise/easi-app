@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { FieldValues } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
-import { Form, Grid, GridContainer, Icon } from '@trussworks/react-uswds';
+import { Form, GridContainer, Icon } from '@trussworks/react-uswds';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
 import { SystemIntakeGRBReviewFragment } from 'gql/generated/graphql';
 
@@ -183,11 +183,16 @@ function GRBReviewFormStepWrapper<
   }: {
     children: React.ReactNode;
   }) => {
-    if (!onSubmit || !handleSubmit) return <div {...props}>{children}</div>;
+    if (!onSubmit || !handleSubmit)
+      return (
+        <div className="step-content-wrapper" {...props}>
+          {children}
+        </div>
+      );
 
     return (
       <Form
-        className="maxw-none"
+        className="step-content-wrapper maxw-none"
         {...props}
         role="form"
         onSubmit={handleSubmit(values => {
@@ -235,7 +240,8 @@ function GRBReviewFormStepWrapper<
         text={t('setUpGrbReviewForm.text')}
         subText={t('setUpGrbReviewForm.subText')}
         hideSteps={currentStepIndex < 0}
-        steps={steps}
+        // Remove description from steps to display within form wrapper instead
+        steps={steps.map(({ description, ...val }) => val)}
         errorAlert={<Message className="margin-top-2" />}
         breadcrumbBar={
           <Breadcrumbs
@@ -262,55 +268,59 @@ function GRBReviewFormStepWrapper<
         )}
       </StepHeader>
 
-      <GridContainer className="padding-bottom-10">
-        <Grid>
-          {requiredFields && <RequiredFieldsText />}
+      <GridContainer className={`grb-review-form-${step} padding-bottom-10`}>
+        <StepContentWrapper data-testid="grbReviewForm-stepContentWrapper">
+          <p className="line-height-body-5 text-light font-body-sm margin-top-0 margin-bottom-1">
+            {grbReviewFormSteps[currentStepIndex].description}
+          </p>
 
-          <StepContentWrapper data-testid="grbReviewForm-stepContentWrapper">
-            {children}
+          {requiredFields && (
+            <RequiredFieldsText className="margin-top-0 font-body-sm" />
+          )}
 
-            <Pager
-              next={{
-                type: onSubmit ? 'submit' : 'button',
+          {children}
+
+          <Pager
+            next={{
+              type: onSubmit ? 'submit' : 'button',
+              onClick: () =>
+                !onSubmit &&
+                history.push(`${grbReviewPath}/${nextStep?.key || ''}`),
+              // Disable `next` button if next step is disabled
+              disabled: !!nextStep?.disabled,
+              text: nextStep
+                ? t('Next')
+                : t('setUpGrbReviewForm.completeAndBeginReview')
+            }}
+            back={
+              // Only show `back` button if there is a previous step
+              previousStep && {
+                type: 'button',
                 onClick: () =>
-                  !onSubmit &&
-                  history.push(`${grbReviewPath}/${nextStep?.key || ''}`),
-                // Disable `next` button if next step is disabled
-                disabled: !!nextStep?.disabled,
-                text: nextStep
-                  ? t('Next')
-                  : t('setUpGrbReviewForm.completeAndBeginReview')
-              }}
-              back={
-                // Only show `back` button if there is a previous step
-                previousStep && {
-                  type: 'button',
-                  onClick: () =>
-                    history.push(`${grbReviewPath}/${previousStep.key}`)
-                }
+                  history.push(`${grbReviewPath}/${previousStep.key}`)
               }
-              saveExitText={t('setUpGrbReviewForm.saveAndReturn')}
-              taskListUrl={grbReviewPath}
-              submitDisabled={!isValid || !isDirty}
-              submit={() => submitStep()}
-              border={false}
-              className="margin-top-8 margin-bottom-3"
-            />
+            }
+            saveExitText={t('setUpGrbReviewForm.saveAndReturn')}
+            taskListUrl={grbReviewPath}
+            submitDisabled={!isValid || !isDirty}
+            submit={() => submitStep()}
+            border={false}
+            className="margin-top-8 margin-bottom-3"
+          />
 
-            {isValid && isDirty && (
-              <AutoSave
-                values={watch?.()}
-                onSave={() =>
-                  onSubmit?.({
-                    systemIntakeID: systemId,
-                    ...(watch?.() as TFieldValues)
-                  })
-                }
-                debounceDelay={3000}
-              />
-            )}
-          </StepContentWrapper>
-        </Grid>
+          {isValid && isDirty && (
+            <AutoSave
+              values={watch?.()}
+              onSave={() =>
+                onSubmit?.({
+                  systemIntakeID: systemId,
+                  ...(watch?.() as TFieldValues)
+                })
+              }
+              debounceDelay={3000}
+            />
+          )}
+        </StepContentWrapper>
       </GridContainer>
     </MainContent>
   );
