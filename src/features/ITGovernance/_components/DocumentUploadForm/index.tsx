@@ -84,7 +84,7 @@ const DocumentUploadForm = ({
     formState: { isSubmitting, errors, isValid }
   } = useEasiForm<DocumentUploadFields>({
     resolver: yupResolver(documentSchema),
-    context: { type }
+    context: { type, uploadSource: state.uploadSource }
   });
 
   /** Used to show/hide send notification field */

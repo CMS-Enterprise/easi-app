@@ -365,16 +365,14 @@ export const documentSchema = Yup.object({
     then: schema => schema.required()
   }),
   version: Yup.mixed<SystemIntakeDocumentVersion>().required(),
-  sendNotification: Yup.boolean().when(
-    '$type',
-    (type: ITGovernanceViewType, schema: Yup.BooleanSchema) => {
-      if (type === 'admin') {
-        return schema.required(
-          i18next.t('technicalAssistance:errors.makeSelection')
-        );
-      }
-
-      return schema;
-    }
-  )
+  sendNotification: Yup.boolean().when(['$type', '$uploadSource'], {
+    is: (
+      type: ITGovernanceViewType,
+      uploadSource: 'request' | 'grbReviewForm'
+    ) => type === 'admin' && uploadSource === 'request',
+    then: Yup.boolean().required(
+      i18next.t('technicalAssistance:errors.makeSelection')
+    ),
+    otherwise: Yup.boolean()
+  })
 });
