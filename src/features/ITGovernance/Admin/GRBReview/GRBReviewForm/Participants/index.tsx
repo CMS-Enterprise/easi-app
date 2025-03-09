@@ -29,7 +29,9 @@ import { GRBReviewFormStepProps } from 'types/grbReview';
 import { SetGRBParticipantsAsyncSchema } from 'validations/grbReviewSchema';
 
 import ParticipantsTable from '../../ParticipantsSection/_components/ParticipantsTable';
-import GRBReviewFormStepWrapper from '../GRBReviewFormStepWrapper';
+import GRBReviewFormStepWrapper, {
+  GRBReviewFormStepSubmit
+} from '../GRBReviewFormStepWrapper';
 
 // TODO: Update fields type
 type ParticipantsFields = {
@@ -39,7 +41,7 @@ type ParticipantsFields = {
 const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
   const { t } = useTranslation('grbReview');
 
-  // const [mutate] = useUpdateSystemIntakeGRBReviewTypeMutation();
+  const [mutate] = useUpdateSystemIntakeGRBReviewTypeMutation();
 
   const form = useEasiForm<ParticipantsFields>({
     resolver: yupResolver(SetGRBParticipantsAsyncSchema),
@@ -51,6 +53,10 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
     control,
     formState: { errors }
   } = form;
+
+  const onSubmit: GRBReviewFormStepSubmit<ParticipantsFields> = async input => {
+    mutate({ variables: { input } });
+  };
 
   const history = useHistory();
   const { pathname } = useLocation();
@@ -87,9 +93,9 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
 
   return (
     <EasiFormProvider<ParticipantsFields> {...form}>
-      <GRBReviewFormStepWrapper
+      <GRBReviewFormStepWrapper<ParticipantsFields>
         grbReview={grbReview}
-        onSubmit={async () => null}
+        onSubmit={onSubmit}
       >
         {
           // Remove GRB reviewer modal
