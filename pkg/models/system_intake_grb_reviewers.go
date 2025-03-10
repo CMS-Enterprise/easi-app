@@ -51,6 +51,8 @@ type SystemIntakeGRBReviewer struct {
 	SystemIntakeID  uuid.UUID                         `json:"systemIntakeId" db:"system_intake_id"`
 	GRBVotingRole   SystemIntakeGRBReviewerVotingRole `json:"votingRole" db:"voting_role"`
 	GRBReviewerRole SystemIntakeGRBReviewerRole       `json:"grbRole" db:"grb_role"`
+	Vote            SystemIntakeAsyncGRBVotingOption  `json:"vote" db:"vote"`
+	VoteComment     *string                           `json:"voteComment" db:"vote_comment"`
 }
 
 func NewSystemIntakeGRBReviewer(userID uuid.UUID, createdBy uuid.UUID) *SystemIntakeGRBReviewer {

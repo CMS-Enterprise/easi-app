@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -2030,16 +2029,6 @@ func (r *systemIntakeGRBPresentationLinksResolver) PresentationDeckFileStatus(ct
 // VotingRole is the resolver for the votingRole field.
 func (r *systemIntakeGRBReviewerResolver) VotingRole(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (models.SystemIntakeGRBReviewerVotingRole, error) {
 	return models.SystemIntakeGRBReviewerVotingRole(obj.GRBVotingRole), nil
-}
-
-// Vote is the resolver for the vote field.
-func (r *systemIntakeGRBReviewerResolver) Vote(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (*models.SystemIntakeAsyncGRBVotingOption, error) {
-	panic(fmt.Errorf("not implemented: Vote - vote"))
-}
-
-// VoteComment is the resolver for the voteComment field.
-func (r *systemIntakeGRBReviewerResolver) VoteComment(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (*string, error) {
-	panic(fmt.Errorf("not implemented: VoteComment - voteComment"))
 }
 
 // GrbRole is the resolver for the grbRole field.

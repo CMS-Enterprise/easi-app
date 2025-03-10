@@ -1429,8 +1429,7 @@ type SystemIntakeGRBPresentationLinksResolver interface {
 }
 type SystemIntakeGRBReviewerResolver interface {
 	VotingRole(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (models.SystemIntakeGRBReviewerVotingRole, error)
-	Vote(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (*models.SystemIntakeAsyncGRBVotingOption, error)
-	VoteComment(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (*string, error)
+
 	GrbRole(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (models.SystemIntakeGRBReviewerRole, error)
 }
 type SystemIntakeNoteResolver interface {
@@ -50159,7 +50158,7 @@ func (ec *executionContext) _SystemIntakeGRBReviewer_vote(ctx context.Context, f
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntakeGRBReviewer().Vote(rctx, obj)
+		return obj.Vote, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -50168,17 +50167,17 @@ func (ec *executionContext) _SystemIntakeGRBReviewer_vote(ctx context.Context, f
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*models.SystemIntakeAsyncGRBVotingOption)
+	res := resTmp.(models.SystemIntakeAsyncGRBVotingOption)
 	fc.Result = res
-	return ec.marshalOSystemIntakeAsyncGRBVotingOption2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx, field.Selections, res)
+	return ec.marshalOSystemIntakeAsyncGRBVotingOption2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeGRBReviewer_vote(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeGRBReviewer",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type SystemIntakeAsyncGRBVotingOption does not have child fields")
 		},
@@ -50200,7 +50199,7 @@ func (ec *executionContext) _SystemIntakeGRBReviewer_voteComment(ctx context.Con
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntakeGRBReviewer().VoteComment(rctx, obj)
+		return obj.VoteComment, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -50218,8 +50217,8 @@ func (ec *executionContext) fieldContext_SystemIntakeGRBReviewer_voteComment(_ c
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeGRBReviewer",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
 		},
@@ -73270,71 +73269,9 @@ func (ec *executionContext) _SystemIntakeGRBReviewer(ctx context.Context, sel as
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "vote":
-			field := field
-
-			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntakeGRBReviewer_vote(ctx, field, obj)
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			out.Values[i] = ec._SystemIntakeGRBReviewer_vote(ctx, field, obj)
 		case "voteComment":
-			field := field
-
-			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntakeGRBReviewer_voteComment(ctx, field, obj)
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			out.Values[i] = ec._SystemIntakeGRBReviewer_voteComment(ctx, field, obj)
 		case "grbRole":
 			field := field
 
@@ -81435,19 +81372,13 @@ func (ec *executionContext) unmarshalOSystemIntakeAnnualSpendingInput2ᚖgithub�
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalOSystemIntakeAsyncGRBVotingOption2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx context.Context, v any) (*models.SystemIntakeAsyncGRBVotingOption, error) {
-	if v == nil {
-		return nil, nil
-	}
-	var res = new(models.SystemIntakeAsyncGRBVotingOption)
+func (ec *executionContext) unmarshalOSystemIntakeAsyncGRBVotingOption2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx context.Context, v any) (models.SystemIntakeAsyncGRBVotingOption, error) {
+	var res models.SystemIntakeAsyncGRBVotingOption
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOSystemIntakeAsyncGRBVotingOption2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeAsyncGRBVotingOption) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
+func (ec *executionContext) marshalOSystemIntakeAsyncGRBVotingOption2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeAsyncGRBVotingOption) graphql.Marshaler {
 	return v
 }
 
