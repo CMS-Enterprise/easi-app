@@ -7,6 +7,7 @@ import {
   GetSystemIntakeGRBDiscussionsQueryVariables,
   SystemIntakeGRBReviewDiscussionFragment
 } from 'gql/generated/graphql';
+import i18next from 'i18next';
 import { mockDiscussions } from 'tests/mock/discussions';
 import { systemIntake } from 'tests/mock/systemIntake';
 
@@ -53,7 +54,11 @@ describe('Discussions', () => {
         <VerboseMockedProvider
           mocks={[getSystemIntakeGRBDiscussions(mockDiscussions())]}
         >
-          <Discussions grbReviewers={[]} systemIntakeID={systemIntake.id} />
+          <Discussions
+            grbReviewStartedAt="2025-03-11T01:50:35.146458Z"
+            grbReviewers={[]}
+            systemIntakeID={systemIntake.id}
+          />
         </VerboseMockedProvider>
       </MemoryRouter>
     );
@@ -77,7 +82,11 @@ describe('Discussions', () => {
         <VerboseMockedProvider
           mocks={[getSystemIntakeGRBDiscussions([discussionWithoutReplies])]}
         >
-          <Discussions grbReviewers={[]} systemIntakeID={systemIntake.id} />
+          <Discussions
+            grbReviewStartedAt="2025-03-11T01:50:35.146458Z"
+            grbReviewers={[]}
+            systemIntakeID={systemIntake.id}
+          />
         </VerboseMockedProvider>
       </MemoryRouter>
     );
@@ -97,7 +106,11 @@ describe('Discussions', () => {
     render(
       <MemoryRouter>
         <VerboseMockedProvider mocks={[getSystemIntakeGRBDiscussions([])]}>
-          <Discussions grbReviewers={[]} systemIntakeID={systemIntake.id} />
+          <Discussions
+            grbReviewStartedAt="2025-03-11T01:50:35.146458Z"
+            grbReviewers={[]}
+            systemIntakeID={systemIntake.id}
+          />
         </VerboseMockedProvider>
       </MemoryRouter>
     );
@@ -113,5 +126,27 @@ describe('Discussions', () => {
     expect(
       screen.queryByRole('heading', { name: 'Most recent activity' })
     ).toBeNull();
+  });
+
+  it('locks discussion board if review not started', async () => {
+    render(
+      <MemoryRouter>
+        <VerboseMockedProvider
+          mocks={[getSystemIntakeGRBDiscussions(mockDiscussions())]}
+        >
+          <Discussions grbReviewers={[]} systemIntakeID={systemIntake.id} />
+        </VerboseMockedProvider>
+      </MemoryRouter>
+    );
+
+    expect(
+      await screen.findByText(
+        i18next.t<string>('discussions:general.alerts.reviewNotStarted')
+      )
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByRole('button', { name: 'View discussion board' })
+    ).toBeDisabled();
   });
 });
