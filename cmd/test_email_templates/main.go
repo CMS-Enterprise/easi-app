@@ -626,6 +626,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		intakeID,
 		"Raisinets",
 		"Courage the Cowardly Dog",
+		"Office of Information Technology",
 	)
 	noErr(err)
 

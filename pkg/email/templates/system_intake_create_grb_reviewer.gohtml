@@ -5,7 +5,7 @@
 <br>
 <div class="no-margin">
   <p>Project name: {{.ProjectTitle}}</p>
-  <p>Requester: {{.RequesterName}}</p>
+  <p>Requester: {{.RequesterName}}{{if .RequesterComponent}}, {{.RequesterComponent}}{{else}}{{end}}</p>
 </div>
 
 <br>

@@ -15,6 +15,9 @@ func GetTRBResponseType(responseType string) string {
 	return humanizedName
 }
 
+// *******
+// NOTE - when updating this map, please update the corresponding list in `src/constants/enums/cmsDivisionsAndOffices.ts`
+// *******
 // String map for TRB component acronym
 var componentAcronym = map[string]string{
 	"Center for Clinical Standards and Quality":                "CCSQ",
