@@ -107,7 +107,7 @@ func UpdateSystemIntakeGRBReviewer(
 	input *models.UpdateSystemIntakeGRBReviewerInput,
 ) (*models.SystemIntakeGRBReviewer, error) {
 	return sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.SystemIntakeGRBReviewer, error) {
-		return store.UpdateSystemIntakeGRBReviewer(ctx, tx, input.ReviewerID, input.VotingRole, input.GrbRole)
+		return store.UpdateSystemIntakeGRBReviewer(ctx, tx, input)
 	})
 }
 

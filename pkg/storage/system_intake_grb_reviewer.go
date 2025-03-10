@@ -43,17 +43,19 @@ func (s *Store) CreateSystemIntakeGRBReviewers(ctx context.Context, np sqlutils.
 	return reviewers, nil
 }
 
-func (s *Store) UpdateSystemIntakeGRBReviewer(ctx context.Context, tx *sqlx.Tx, reviewerID uuid.UUID, votingRole models.SystemIntakeGRBReviewerVotingRole, grbRole models.SystemIntakeGRBReviewerRole) (*models.SystemIntakeGRBReviewer, error) {
+func (s *Store) UpdateSystemIntakeGRBReviewer(ctx context.Context, tx *sqlx.Tx, input *models.UpdateSystemIntakeGRBReviewerInput) (*models.SystemIntakeGRBReviewer, error) {
 	updatedReviewer := &models.SystemIntakeGRBReviewer{}
 	if err := namedGet(ctx, tx, updatedReviewer, sqlqueries.SystemIntakeGRBReviewer.Update, args{
-		"reviewer_id": reviewerID,
-		"grb_role":    grbRole,
-		"voting_role": votingRole,
-		"modified_by": appcontext.Principal(ctx).Account().ID,
+		"reviewer_id":  input.ReviewerID,
+		"grb_role":     input.GrbRole,
+		"voting_role":  input.VotingRole,
+		"modified_by":  appcontext.Principal(ctx).Account().ID,
+		"vote":         input.Vote,
+		"vote_comment": input.VoteComment,
 	}); err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"error updating system intake GRB reviewer",
-			zap.String("reviewer_id", reviewerID.String()),
+			zap.String("reviewer_id", input.ReviewerID.String()),
 		)
 	}
 

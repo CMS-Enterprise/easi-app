@@ -9488,6 +9488,8 @@ input UpdateSystemIntakeGRBReviewerInput {
   reviewerID: UUID!
   votingRole: SystemIntakeGRBReviewerVotingRole!
   grbRole: SystemIntakeGRBReviewerRole!
+  vote: SystemIntakeAsyncGRBVotingOption
+  voteComment: String
 }
 
 input DeleteSystemIntakeGRBReviewerInput {
@@ -10889,7 +10891,6 @@ type Mutation {
 
   createSystemIntakeGRBDiscussionPost(input: createSystemIntakeGRBDiscussionPostInput!): SystemIntakeGRBReviewDiscussionPost
   createSystemIntakeGRBDiscussionReply(input: createSystemIntakeGRBDiscussionReplyInput!): SystemIntakeGRBReviewDiscussionPost
-
 
   updateSystemIntakeGRBReviewType(input: updateSystemIntakeGRBReviewTypeInput!): UpdateSystemIntakePayload
   @hasRole(role: EASI_GOVTEAM)
@@ -65226,7 +65227,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeGRBReviewerInput(ctx
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"reviewerID", "votingRole", "grbRole"}
+	fieldsInOrder := [...]string{"reviewerID", "votingRole", "grbRole", "vote", "voteComment"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -65254,6 +65255,20 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeGRBReviewerInput(ctx
 				return it, err
 			}
 			it.GrbRole = data
+		case "vote":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("vote"))
+			data, err := ec.unmarshalOSystemIntakeAsyncGRBVotingOption2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Vote = data
+		case "voteComment":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("voteComment"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.VoteComment = data
 		}
 	}
 
@@ -81379,6 +81394,22 @@ func (ec *executionContext) unmarshalOSystemIntakeAsyncGRBVotingOption2githubᚗ
 }
 
 func (ec *executionContext) marshalOSystemIntakeAsyncGRBVotingOption2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeAsyncGRBVotingOption) graphql.Marshaler {
+	return v
+}
+
+func (ec *executionContext) unmarshalOSystemIntakeAsyncGRBVotingOption2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx context.Context, v any) (*models.SystemIntakeAsyncGRBVotingOption, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(models.SystemIntakeAsyncGRBVotingOption)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOSystemIntakeAsyncGRBVotingOption2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeAsyncGRBVotingOption) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
 	return v
 }
 

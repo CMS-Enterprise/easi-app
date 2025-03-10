@@ -3175,6 +3175,8 @@ export type UpdateSystemIntakeContractDetailsInput = {
 export type UpdateSystemIntakeGRBReviewerInput = {
   grbRole: SystemIntakeGRBReviewerRole;
   reviewerID: Scalars['UUID']['input'];
+  vote?: InputMaybe<SystemIntakeAsyncGRBVotingOption>;
+  voteComment?: InputMaybe<Scalars['String']['input']>;
   votingRole: SystemIntakeGRBReviewerVotingRole;
 };
 
