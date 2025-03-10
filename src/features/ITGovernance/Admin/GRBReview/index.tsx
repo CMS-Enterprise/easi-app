@@ -379,6 +379,7 @@ const GRBReview = ({
             <Discussions
               systemIntakeID={id}
               grbReviewers={grbReviewers}
+              grbReviewStartedAt={grbReviewStartedAt}
               className="margin-top-4 margin-bottom-6"
             />
             <ParticipantsTable

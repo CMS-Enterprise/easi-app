@@ -8,6 +8,10 @@ describe('Discussion Board', () => {
 
     cy.visit('/it-governance/61efa6eb-1976-4431-a158-d89cc00ce31d/grb-review');
 
+    // Start the GRB review
+    cy.contains('button', 'Start GRB review').click();
+    cy.contains('button', 'Start review and send notifications').click();
+
     // Keep the participants list to check against later
     let participants;
     cy.get('[data-testid="grb-participants-table"] td:first-child').then(

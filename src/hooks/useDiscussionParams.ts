@@ -4,20 +4,42 @@ const discussionModeKeys = ['view', 'start', 'reply'] as const;
 
 export type DiscussionMode = (typeof discussionModeKeys)[number];
 
+export type UseDiscussionParamsReturn = {
+  /**
+   * Get discussion board query parameters
+   *
+   * Undefined `discussionMode` implies closed modal
+   */
+  getDiscussionParams: () => {
+    discussionMode: DiscussionMode | undefined;
+    discussionId: string | undefined;
+  };
+  /**
+   * Push a new url query to update the Discussion subviews state.
+   *
+   * `false` implies closing the modal
+   */
+  pushDiscussionQuery: (
+    query:
+      | { discussionMode: Extract<DiscussionMode, 'view' | 'start'> }
+      | {
+          discussionMode: Extract<DiscussionMode, 'reply'>;
+          discussionId: string;
+        }
+      | false
+  ) => void;
+};
+
 /**
  * Handle Discussion (side panel modal) state with the url query params
  * `discussionMode` and `discussionId`.
  */
-export default function useDiscussionParams() {
+export default function useDiscussionParams(): UseDiscussionParamsReturn {
   const history = useHistory();
   const location = useLocation();
 
-  return {
-    getDiscussionParams(): {
-      /** Undefined implies a closed modal */
-      discussionMode: DiscussionMode | undefined;
-      discussionId: string | undefined;
-    } {
+  const getDiscussionParams: UseDiscussionParamsReturn['getDiscussionParams'] =
+    () => {
       const q = new URLSearchParams(location.search);
 
       const discussionMode = q.get('discussionMode') as DiscussionMode | null;
@@ -48,18 +70,10 @@ export default function useDiscussionParams() {
       }
 
       return { discussionMode, discussionId: undefined };
-    },
+    };
 
-    /** Push a new url query to update the Discussion subviews state. `false` implies closing the modal */
-    pushDiscussionQuery(
-      query:
-        | { discussionMode: Extract<DiscussionMode, 'view' | 'start'> }
-        | {
-            discussionMode: Extract<DiscussionMode, 'reply'>;
-            discussionId: string;
-          }
-        | false
-    ) {
+  const pushDiscussionQuery: UseDiscussionParamsReturn['pushDiscussionQuery'] =
+    query => {
       if (query === false) {
         history.push(`${location.pathname}`);
         return;
@@ -67,6 +81,10 @@ export default function useDiscussionParams() {
 
       const querystring = new URLSearchParams(query);
       history.push(`${location.pathname}?${querystring}`);
-    }
+    };
+
+  return {
+    getDiscussionParams,
+    pushDiscussionQuery
   };
 }
