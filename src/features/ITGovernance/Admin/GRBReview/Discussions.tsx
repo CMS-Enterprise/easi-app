@@ -3,23 +3,22 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Button, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import DiscussionBoard from 'features/DiscussionBoard';
-import DiscussionPost from 'features/DiscussionBoard/DiscussionPost';
 import {
   SystemIntakeGRBReviewDiscussionFragment,
   SystemIntakeGRBReviewerFragment,
   useGetSystemIntakeGRBDiscussionsQuery
 } from 'gql/generated/graphql';
 
-import Alert from 'components/Alert';
 import CollapsableLink from 'components/CollapsableLink';
 import IconButton from 'components/IconButton';
-import { getMostRecentDiscussion } from 'components/MentionTextArea/util';
-import Spinner from 'components/Spinner';
 import useDiscussionParams from 'hooks/useDiscussionParams';
+
+import RecentDiscussion from './_components/RecentDiscussion';
 
 type DiscussionsProps = {
   systemIntakeID: string;
   grbReviewers: SystemIntakeGRBReviewerFragment[];
+  grbReviewStartedAt?: string | null;
   className?: string;
 };
 
@@ -27,6 +26,7 @@ type DiscussionsProps = {
 const Discussions = ({
   systemIntakeID,
   grbReviewers,
+  grbReviewStartedAt,
   className
 }: DiscussionsProps) => {
   const { t } = useTranslation('discussions');
@@ -45,9 +45,6 @@ const Discussions = ({
   const discussionsWithoutRepliesCount = grbDiscussions.filter(
     discussion => discussion.replies.length === 0
   ).length;
-
-  /** Discussion with latest activity - either when discussion was created or latest reply */
-  const recentDiscussion = getMostRecentDiscussion(grbDiscussions);
 
   return (
     <>
@@ -105,6 +102,7 @@ const Discussions = ({
                 pushDiscussionQuery({ discussionMode: 'view' });
               }}
               className="margin-right-0 margin-y-2 desktop:margin-y-0 text-no-wrap"
+              disabled={!grbReviewStartedAt}
               outline
             >
               {t('general.viewDiscussionBoard')}
@@ -141,44 +139,12 @@ const Discussions = ({
             )}
           </div>
 
-          {/* Recent discussions */}
-          {recentDiscussion ? (
-            <>
-              <h4 className="margin-bottom-2">
-                {t('general.mostRecentActivity')}
-              </h4>
-
-              {loading ? (
-                <Spinner />
-              ) : (
-                <DiscussionPost
-                  {...recentDiscussion.initialPost}
-                  replies={recentDiscussion.replies}
-                  truncateText
-                />
-              )}
-            </>
-          ) : (
-            // If no discussions, show alert
-            <Alert type="info" slim>
-              <Trans
-                i18nKey="discussions:general.alerts.noDiscussionsStartButton"
-                components={{
-                  button: (
-                    <Button
-                      type="button"
-                      onClick={() => {
-                        pushDiscussionQuery({ discussionMode: 'start' });
-                      }}
-                      unstyled
-                    >
-                      text
-                    </Button>
-                  )
-                }}
-              />
-            </Alert>
-          )}
+          <RecentDiscussion
+            loading={loading}
+            grbReviewStartedAt={grbReviewStartedAt}
+            grbDiscussions={grbDiscussions}
+            pushDiscussionQuery={pushDiscussionQuery}
+          />
         </div>
       </div>
     </>
