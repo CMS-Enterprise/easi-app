@@ -14,7 +14,7 @@ import { systemIntake } from 'tests/mock/systemIntake';
 import { MockedQuery } from 'types/util';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
-import Discussions from './Discussions';
+import Discussions from '.';
 
 const [discussion] = mockDiscussions();
 
