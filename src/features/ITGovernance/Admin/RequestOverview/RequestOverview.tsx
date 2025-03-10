@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch, useParams } from 'react-router-dom';
 import classnames from 'classnames';
+import DocumentUploadForm from 'features/ITGovernance/_components/DocumentUploadForm';
 import PresentationLinksForm from 'features/ITGovernance/Admin/GRBReview/PresentationLinksForm';
-import UploadForm from 'features/ITGovernance/Requester/SystemIntake/Documents/UploadForm';
 import PresentationDeckUpload from 'features/ITGovernance/Requester/TaskList/PresentationDeckUpload';
 import AdditionalInformation from 'features/Miscellaneous/AdditionalInformation';
 import NotFound from 'features/Miscellaneous/NotFound';
@@ -145,7 +145,7 @@ const RequestOverview = ({
                 {flags?.grbReviewTab && (
                   <Route
                     path="/it-governance/:systemId/documents/upload"
-                    render={() => <UploadForm type="admin" />}
+                    render={() => <DocumentUploadForm type="admin" />}
                   />
                 )}
 

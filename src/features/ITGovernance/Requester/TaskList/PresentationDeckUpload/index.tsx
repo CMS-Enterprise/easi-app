@@ -14,6 +14,7 @@ import { useEasiForm } from 'components/EasiForm';
 import IconLink from 'components/IconLink';
 import Label from 'components/Label';
 import useMessage from 'hooks/useMessage';
+import { ITGovernanceViewType } from 'types/itGov';
 import { fileToBase64File } from 'utils/downloadFile';
 
 type PresentationLinkFields = Omit<
@@ -26,7 +27,7 @@ type PresentationLinkFields = Omit<
 >;
 
 type UploadFormProps = {
-  type: 'admin' | 'requester';
+  type: ITGovernanceViewType;
 };
 
 /**
