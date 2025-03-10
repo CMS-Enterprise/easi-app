@@ -3,7 +3,6 @@ import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
   Fieldset,
-  FileInput,
   FormGroup,
   Grid,
   Label,
@@ -21,6 +20,7 @@ import Alert from 'components/Alert';
 import DatePickerFormatted from 'components/DatePickerFormatted';
 import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
 import FieldErrorMsg from 'components/FieldErrorMsg';
+import FileInput from 'components/FileInput';
 import HelpText from 'components/HelpText';
 import { TabPanel, Tabs } from 'components/Tabs';
 import { GRBReviewFormStepProps } from 'types/grbReview';
@@ -126,7 +126,6 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
   const onSubmitAsync: GRBReviewFormStepSubmit<
     UpdateSystemIntakeGRBReviewAsyncPresentationMutationVariables
   > = async input => {
-    console.log(input);
     const { links, asyncRecordingDate } = input;
 
     // Only include newly updated file data, not default values
@@ -462,7 +461,7 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
                             shouldUnregister
                             render={({ field: { ref, ...field } }) => (
                               <FileInput
-                                defaultValue={
+                                defaultFileName={
                                   defaultValues?.links?.transcriptFileData?.name
                                 }
                                 name={field.name}

@@ -1,11 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FieldValues } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { Form, GridContainer, Icon } from '@trussworks/react-uswds';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
 import { SystemIntakeGRBReviewFragment } from 'gql/generated/graphql';
-import { s } from 'vite/dist/node/types.d-aGj9QkWt';
 
 import AutoSave from 'components/AutoSave';
 import Breadcrumbs from 'components/Breadcrumbs';
@@ -222,7 +221,6 @@ function GRBReviewFormStepWrapper<
   // Format steps and redirect user if current step is disabled
   useEffect(() => {
     formatSteps().then(values => {
-      console.log(values);
       // If current step is disabled, redirect to last valid step or start of form
       if (values[currentStepIndex].disabled) {
         /** Returns the latest valid step or step one */
