@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Controller } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
@@ -25,27 +25,29 @@ import { AppState } from 'stores/reducers/rootReducer';
 
 import { Alert } from 'components/Alert';
 import { useEasiForm } from 'components/EasiForm';
+import FieldErrorMsg from 'components/FieldErrorMsg';
 import HelpText from 'components/HelpText';
 import IconLink from 'components/IconLink';
 import Label from 'components/Label';
+import RequiredAsterisk from 'components/RequiredAsterisk';
 import useMessage from 'hooks/useMessage';
+import { ITGovernanceViewType } from 'types/itGov';
 import { fileToBase64File } from 'utils/downloadFile';
 import user from 'utils/user';
 import { documentSchema } from 'validations/systemIntakeSchema';
 
-import FieldErrorMsg from '../../../../../components/FieldErrorMsg';
-import RequiredAsterisk from '../../../../../components/RequiredAsterisk';
-
 type DocumentUploadFields = Omit<CreateSystemIntakeDocumentInput, 'requestID'>;
 
-type UploadFormProps = {
-  type: 'admin' | 'requester';
+type DocumentUploadFormProps = {
+  type: ITGovernanceViewType;
 };
 
 /**
  * System intake document upload form
  */
-const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
+const DocumentUploadForm = ({
+  type = 'requester'
+}: DocumentUploadFormProps) => {
   const { t } = useTranslation();
 
   const { groups } = useSelector((state: AppState) => state.auth);
@@ -53,6 +55,9 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
   const flags = useFlags();
 
   const history = useHistory();
+  const { state = { uploadSource: 'request' } } = useLocation<{
+    uploadSource: 'request' | 'grbReviewForm';
+  }>();
 
   const { systemId } = useParams<{
     systemId: string;
@@ -79,13 +84,26 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
     formState: { isSubmitting, errors, isValid }
   } = useEasiForm<DocumentUploadFields>({
     resolver: yupResolver(documentSchema),
-    context: { type }
+    context: { type, uploadSource: state.uploadSource }
   });
 
-  const requestDetailsLink =
-    type === 'requester'
-      ? `/system/${systemId}/documents`
-      : `/it-governance/${systemId}/grb-review`;
+  /** Used to show/hide send notification field */
+  const canSendNotification: boolean =
+    type === 'admin' &&
+    user.isITGovAdmin(groups, flags) &&
+    state.uploadSource !== 'grbReviewForm';
+
+  const returnLink = useMemo(() => {
+    if (state.uploadSource === 'grbReviewForm') {
+      return `/it-governance/${systemId}/grb-review/documents`;
+    }
+
+    if (type === 'requester') {
+      return `/system/${systemId}/documents`;
+    }
+
+    return `/it-governance/${systemId}/grb-review`;
+  }, [state.uploadSource, type, systemId]);
 
   const submit = handleSubmit(async ({ otherTypeDescription, ...formData }) => {
     const newFile = await fileToBase64File(formData.fileData);
@@ -111,7 +129,7 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
             type: 'success'
           }
         );
-        history.push(requestDetailsLink);
+        history.push(returnLink);
       })
       .catch(() => {
         showMessage(t('technicalAssistance:documents.upload.error'), {
@@ -141,8 +159,11 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
           />
         </p>
 
-        <IconLink to={requestDetailsLink} icon={<Icon.ArrowBack />}>
-          {t('intake:documents.dontUpload', { context: type })}
+        <IconLink to={returnLink} icon={<Icon.ArrowBack />}>
+          {t('intake:documents.dontUpload', {
+            context:
+              state.uploadSource === 'grbReviewForm' ? 'grbReviewForm' : type
+          })}
         </IconLink>
 
         <Form className="maxw-full" onSubmit={submit}>
@@ -275,8 +296,7 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
             </Fieldset>
           </FormGroup>
 
-          {/* display for admins only when accessed from admin view */}
-          {type === 'admin' && user.isITGovAdmin(groups, flags) && (
+          {canSendNotification && (
             <Controller
               name="sendNotification"
               control={control}
@@ -344,8 +364,12 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
               text: t('technicalAssistance:documents.upload.uploadDocument'),
               disabled: !isValid || isSubmitting
             }}
-            taskListUrl={requestDetailsLink}
-            saveExitText={t('intake:documents.dontUpload', { context: type })}
+            taskListUrl={returnLink}
+            submitDisabled
+            saveExitText={t('intake:documents.dontUpload', {
+              context:
+                state.uploadSource === 'grbReviewForm' ? 'grbReviewForm' : type
+            })}
             border={false}
             className="margin-top-4"
           />
@@ -355,4 +379,4 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
   );
 };
 
-export default UploadForm;
+export default DocumentUploadForm;

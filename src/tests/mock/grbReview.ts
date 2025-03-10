@@ -13,7 +13,8 @@ export const grbReview: SystemIntakeGRBReviewFragment = {
   __typename: 'SystemIntake',
   id: systemIntake.id,
   grbReviewType: SystemIntakeGRBReviewType.STANDARD,
-  grbReviewers: []
+  grbReviewers: [],
+  documents: []
 };
 
 export const getSystemIntakeGRBReviewQuery = (
