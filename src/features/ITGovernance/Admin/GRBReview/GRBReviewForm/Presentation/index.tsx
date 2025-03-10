@@ -278,6 +278,7 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
           <GRBReviewFormStepWrapper
             grbReview={grbReview}
             onSubmit={onSubmitAsync}
+            requiredFields={false}
           >
             <Fieldset className="body-normal">
               <Grid desktop={{ col: 6 }}>
