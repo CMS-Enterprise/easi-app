@@ -52,6 +52,7 @@ const Discussions = ({
         systemIntakeID={systemIntakeID}
         grbReviewers={grbReviewers}
         grbDiscussions={grbDiscussions}
+        grbReviewStartedAt={grbReviewStartedAt}
       />
 
       <div
