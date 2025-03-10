@@ -76,7 +76,7 @@ function GRBReviewFormStepWrapper<
     | undefined;
 
   const { handleSubmit, watch } = form || {};
-  const { isValid, isDirty } = form?.formState || {};
+  const { isValid, isDirty, touchedFields } = form?.formState || {};
 
   const grbReviewPath = `/it-governance/${systemId}/grb-review`;
 
@@ -111,7 +111,7 @@ function GRBReviewFormStepWrapper<
     [grbReviewPath, isValid, isDirty, handleSubmit, onSubmit, history, systemId]
   );
 
-  const formValues = form?.getValues();
+  const formValues = form?.getValues?.();
 
   /**
    * Formats form steps for stepped header
@@ -125,7 +125,7 @@ function GRBReviewFormStepWrapper<
 
     const presentationIsValid =
       await GrbReviewFormSchema.presentation.grbDate.isValid(
-        formValues?.grbDate
+        formValues?.grbMeetingDate.grbDate
       );
 
     const participantsIsValid = await GrbReviewFormSchema.participants.isValid({
@@ -241,6 +241,8 @@ function GRBReviewFormStepWrapper<
     });
   }, [grbReview, formatSteps, currentStepIndex, history, grbReviewPath]);
 
+  console.log(touchedFields);
+
   return (
     <MainContent>
       <StepHeader
@@ -317,18 +319,21 @@ function GRBReviewFormStepWrapper<
             className="margin-top-8 margin-bottom-3"
           />
 
-          {isValid && isDirty && (
-            <AutoSave
-              values={watch?.()}
-              onSave={() =>
-                onSubmit?.({
-                  systemIntakeID: systemId,
-                  ...(watch?.() as TFieldValues)
-                })
-              }
-              debounceDelay={3000}
-            />
-          )}
+          {isValid &&
+            isDirty &&
+            touchedFields &&
+            Object.keys(touchedFields).length && (
+              <AutoSave
+                values={watch?.()}
+                onSave={() =>
+                  onSubmit?.({
+                    systemIntakeID: systemId,
+                    ...(watch?.() as TFieldValues)
+                  })
+                }
+                debounceDelay={3000}
+              />
+            )}
         </StepContentWrapper>
       </GridContainer>
     </MainContent>
