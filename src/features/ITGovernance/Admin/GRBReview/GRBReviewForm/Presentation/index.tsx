@@ -95,7 +95,6 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
 
   const {
     control: controlAsync,
-    watch: watchAsync,
     register,
     formState: { errors: errorAsync, defaultValues }
   } = asyncForm;
@@ -143,7 +142,7 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
         asyncRecordingDate: {
           systemIntakeID: asyncRecordingDate.systemIntakeID,
           grbReviewAsyncRecordingTime:
-            asyncRecordingDate.grbReviewAsyncRecordingTime
+            asyncRecordingDate.grbReviewAsyncRecordingTime || null
         },
         links: {
           systemIntakeID: asyncRecordingDate.systemIntakeID,
@@ -273,9 +272,6 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
           <GRBReviewFormStepWrapper
             grbReview={grbReview}
             onSubmit={onSubmitAsync}
-            disabled={
-              !watchAsync('asyncRecordingDate.grbReviewAsyncRecordingTime')
-            }
           >
             <Fieldset className="body-normal">
               <Grid desktop={{ col: 6 }}>
@@ -302,19 +298,12 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
                     <Controller
                       name="asyncRecordingDate.grbReviewAsyncRecordingTime"
                       control={controlAsync}
-                      rules={{
-                        required: 'presentationGRBReviewForm.required'
-                      }}
                       render={({
                         field: { ref, ...field },
                         fieldState: { error }
                       }) => (
                         <FormGroup error={!!error}>
-                          <Label
-                            htmlFor={field.name}
-                            className="text-normal"
-                            requiredMarker
-                          >
+                          <Label htmlFor={field.name} className="text-normal">
                             {t(
                               'presentationGRBReviewForm.asyncRecordingDateLabel'
                             )}
