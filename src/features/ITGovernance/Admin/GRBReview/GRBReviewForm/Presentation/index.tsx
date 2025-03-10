@@ -108,6 +108,12 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
       ? await fileToBase64File(input.presentationDeck.presentationDeckFileData)
       : null;
 
+    // if (!newFile && !grbReview.grbPresentationLinks?.presentationDeckFileName) {
+    //   newFile = undefined;
+    // }ß
+
+    // console.log(input.presentationDeck.presentationDeckFileData);
+
     mutateStandard({
       variables: {
         grbMeetingDate: {

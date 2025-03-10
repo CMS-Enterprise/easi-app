@@ -92,8 +92,6 @@ export const GrbReviewFormSchema = {
   grbReviewType: Yup.mixed()
     .oneOf(extractObjectKeys(SystemIntakeGRBReviewType))
     .required(),
-  presentation: Yup.string().required(
-    i18next.t('grbReview:presentationLinks.requiredField')
-  ),
+  presentation: GrbPresentationStandardFormSchema,
   participants: CreateGRBReviewersSchema
 };

@@ -110,18 +110,22 @@ function GRBReviewFormStepWrapper<
     [grbReviewPath, isValid, isDirty, handleSubmit, onSubmit, history, systemId]
   );
 
+  const formValues = form?.getValues();
+
   /**
    * Formats form steps for stepped header
    */
   const formatSteps = useCallback(async () => {
-    const { grbReviewType, grbReviewers, grbDate } = grbReview;
+    const { grbReviewType, grbReviewers } = grbReview;
 
     // Validate form steps with Yup
     const reviewTypeIsValid =
       await GrbReviewFormSchema.grbReviewType.isValid(grbReviewType);
 
     const presentationIsValid =
-      await GrbReviewFormSchema.presentation.isValid(grbDate);
+      await GrbReviewFormSchema.presentation.grbDate.isValid(
+        formValues?.grbDate
+      );
 
     const participantsIsValid = await GrbReviewFormSchema.participants.isValid({
       grbReviewers
@@ -168,6 +172,7 @@ function GRBReviewFormStepWrapper<
       },
       [...grbReviewFormSteps]
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [grbReview, submitStep, disabled]);
 
   /**
