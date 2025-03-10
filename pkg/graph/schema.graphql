@@ -1199,6 +1199,8 @@ type SystemIntakeGRBReviewer {
   userAccount: UserAccount!
   systemIntakeID: UUID!
   votingRole: SystemIntakeGRBReviewerVotingRole!
+  vote: SystemIntakeAsyncGRBVotingOption
+  voteComment: String
   grbRole: SystemIntakeGRBReviewerRole!
   createdBy: UUID!
   createdAt: Time!
@@ -1283,6 +1285,11 @@ enum SystemIntakeGRBReviewerVotingRole {
   NON_VOTING
 }
 
+enum SystemIntakeAsyncGRBVotingOption {
+  NO_OBJECTION
+  OBJECTION
+}
+
 type SystemIntakeGRBReviewDiscussionPost {
   id: UUID!
   content: HTML!
@@ -1304,7 +1311,6 @@ enum SystemIntakeGRBReviewType {
   STANDARD
   ASYNC
 }
-
 
 input createSystemIntakeGRBDiscussionPostInput {
   systemIntakeID: UUID!

@@ -2056,6 +2056,11 @@ export type SystemIntakeAnnualSpendingInput = {
   plannedYearOneSpendingITPortion?: InputMaybe<Scalars['String']['input']>;
 };
 
+export enum SystemIntakeAsyncGRBVotingOption {
+  NO_OBJECTION = 'NO_OBJECTION',
+  OBJECTION = 'OBJECTION'
+}
+
 /** Represents the OIT Business Owner of a system */
 export type SystemIntakeBusinessOwner = {
   __typename: 'SystemIntakeBusinessOwner';
@@ -2362,6 +2367,8 @@ export type SystemIntakeGRBReviewer = {
   modifiedBy?: Maybe<Scalars['UUID']['output']>;
   systemIntakeID: Scalars['UUID']['output'];
   userAccount: UserAccount;
+  vote?: Maybe<SystemIntakeAsyncGRBVotingOption>;
+  voteComment?: Maybe<Scalars['String']['output']>;
   votingRole: SystemIntakeGRBReviewerVotingRole;
 };
 
