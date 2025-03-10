@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/guregu/null/zero"
 
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
 )
@@ -52,7 +53,7 @@ type SystemIntakeGRBReviewer struct {
 	GRBVotingRole   SystemIntakeGRBReviewerVotingRole `json:"votingRole" db:"voting_role"`
 	GRBReviewerRole SystemIntakeGRBReviewerRole       `json:"grbRole" db:"grb_role"`
 	Vote            SystemIntakeAsyncGRBVotingOption  `json:"vote" db:"vote"`
-	VoteComment     *string                           `json:"voteComment" db:"vote_comment"`
+	VoteComment     zero.String                       `json:"voteComment" db:"vote_comment"`
 }
 
 func NewSystemIntakeGRBReviewer(userID uuid.UUID, createdBy uuid.UUID) *SystemIntakeGRBReviewer {

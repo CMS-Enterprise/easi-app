@@ -50208,9 +50208,9 @@ func (ec *executionContext) _SystemIntakeGRBReviewer_voteComment(ctx context.Con
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(zero.String)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeGRBReviewer_voteComment(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
