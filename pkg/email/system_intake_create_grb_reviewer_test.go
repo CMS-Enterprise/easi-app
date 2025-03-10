@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/cms-enterprise/easi-app/pkg/email/translation"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -14,7 +15,7 @@ func (s *EmailTestSuite) TestCreateSystemIntakeGRBReviewerNotification() {
 	intakeID := uuid.MustParse("24dd7736-e4c2-4f67-8844-51187de49069")
 	requestName := "Hotdog/Not Hotdog Program"
 	requester := "Dr Fishopolis"
-	requesterComponent := "OIT"
+	requesterComponent := "Office of Information Technology"
 	adminLink := fmt.Sprintf(
 		"%s://%s/it-governance/%s/grb-review",
 		s.config.URLScheme,
@@ -52,7 +53,7 @@ func (s *EmailTestSuite) TestCreateSystemIntakeGRBReviewerNotification() {
 			`,
 		requestName,
 		requester,
-		requesterComponent,
+		translation.GetComponentAcronym(requesterComponent),
 		adminLink,
 		ITGovInboxAddress,
 		ITGovInboxAddress,

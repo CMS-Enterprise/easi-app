@@ -1,3 +1,6 @@
+// *******
+// NOTE - when updating this list, please update the corresponding map in `pkg/email/translation/constants.go`
+// *******
 const cmsDivisionsAndOffices = [
   {
     acronym: 'CCSQ',

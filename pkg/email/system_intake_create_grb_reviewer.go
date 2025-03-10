@@ -8,6 +8,7 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/cms-enterprise/easi-app/pkg/email/translation"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -34,7 +35,7 @@ func (sie systemIntakeEmails) createGRBReviewerBody(
 	data := systemIntakeCreateGRBReviewerParameters{
 		ProjectTitle:             projectTitle,
 		RequesterName:            requesterName,
-		RequesterComponent:       requesterComponent,
+		RequesterComponent:       translation.GetComponentAcronym(requesterComponent),
 		SystemIntakeAdminLink:    sie.client.urlFromPath(adminPath),
 		ITGovernanceInboxAddress: sie.client.config.GRTEmail.String(),
 	}
