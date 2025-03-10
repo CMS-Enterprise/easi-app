@@ -155,6 +155,12 @@ type CreateGRBReviewerInput struct {
 	GrbRole    SystemIntakeGRBReviewerRole       `json:"grbRole"`
 }
 
+// Input for creating a presentation deck
+type CreatePresentationDeckInput struct {
+	RequestID uuid.UUID      `json:"requestID"`
+	FileData  graphql.Upload `json:"fileData"`
+}
+
 // The data needed to associate a contact with a system intake
 type CreateSystemIntakeContactInput struct {
 	EuaUserID      string    `json:"euaUserId"`
