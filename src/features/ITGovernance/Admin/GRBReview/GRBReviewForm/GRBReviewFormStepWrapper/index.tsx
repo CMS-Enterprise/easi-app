@@ -35,6 +35,7 @@ type GRBReviewFormStepWrapperProps<TFieldValues extends FieldValues> = {
   onSubmit?: GRBReviewFormStepSubmit<TFieldValues>;
   /** Defaults to true - shows required fields text above `children` */
   requiredFields?: boolean;
+  disabled?: boolean;
 };
 
 /**
@@ -48,7 +49,8 @@ function GRBReviewFormStepWrapper<
   children,
   grbReview,
   onSubmit,
-  requiredFields = true
+  requiredFields = true,
+  disabled = false
 }: GRBReviewFormStepWrapperProps<TFieldValues>) {
   const { t } = useTranslation('grbReview');
   const history = useHistory();
@@ -108,23 +110,22 @@ function GRBReviewFormStepWrapper<
     [grbReviewPath, isValid, isDirty, handleSubmit, onSubmit, history, systemId]
   );
 
+  const formValues = form?.getValues();
+
   /**
    * Formats form steps for stepped header
    */
   const formatSteps = useCallback(async () => {
-    const { grbReviewType, grbReviewers, grbPresentationLinks } = grbReview;
+    const { grbReviewType, grbReviewers } = grbReview;
 
     // Validate form steps with Yup
-
     const reviewTypeIsValid =
       await GrbReviewFormSchema.grbReviewType.isValid(grbReviewType);
 
-    const presentationIsValid = await GrbReviewFormSchema.presentation.isValid({
-      recordingLink: grbPresentationLinks?.recordingLink,
-      presentationDeckFileData: grbPresentationLinks?.presentationDeckFileName
-        ? {}
-        : undefined
-    });
+    const presentationIsValid =
+      await GrbReviewFormSchema.presentation.grbDate.isValid(
+        formValues?.grbDate
+      );
 
     const participantsIsValid = await GrbReviewFormSchema.participants.isValid({
       grbReviewers
@@ -141,7 +142,10 @@ function GRBReviewFormStepWrapper<
             break;
 
           case 'presentation':
-            completed = presentationIsValid;
+            completed =
+              disabled !== undefined
+                ? !disabled
+                : !!(reviewTypeIsValid && presentationIsValid);
             break;
 
           case 'documents':
@@ -168,51 +172,56 @@ function GRBReviewFormStepWrapper<
       },
       [...grbReviewFormSteps]
     );
-  }, [grbReview, submitStep]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [grbReview, submitStep, disabled]);
 
   /**
    * Wrapper for step content
    *
    * Returns `<Form>` if `onSubmit` prop is defined
    * */
-  const StepContentWrapper = ({
-    // eslint-disable-next-line @typescript-eslint/no-shadow
-    children,
-    ...props
-  }: {
-    children: React.ReactNode;
-  }) => {
-    if (!onSubmit || !handleSubmit)
+  const StepContentWrapper = useCallback(
+    ({
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      children,
+      ...props
+    }: {
+      children: React.ReactNode;
+    }) => {
+      if (!onSubmit || !handleSubmit)
+        return (
+          <div className="step-content-wrapper" {...props}>
+            {children}
+          </div>
+        );
+
       return (
-        <div className="step-content-wrapper" {...props}>
+        <Form
+          className="step-content-wrapper maxw-none"
+          {...props}
+          role="form"
+          onSubmit={handleSubmit(values => {
+            if (!isDirty) {
+              return history.push(`${grbReviewPath}/${nextStep?.key || ''}`);
+            }
+
+            return onSubmit({ systemIntakeID: systemId, ...values })
+              .then(() =>
+                // Go to next step, or back to review if end of form
+                history.push(`${grbReviewPath}/${nextStep?.key || ''}`)
+              )
+              .catch(() =>
+                showMessage(t('setUpGrbReviewForm.error'), { type: 'error' })
+              );
+          })}
+        >
           {children}
-        </div>
+        </Form>
       );
-
-    return (
-      <Form
-        className="step-content-wrapper maxw-none"
-        {...props}
-        role="form"
-        onSubmit={handleSubmit(values => {
-          if (!isDirty) {
-            return history.push(`${grbReviewPath}/${nextStep?.key || ''}`);
-          }
-
-          return onSubmit({ systemIntakeID: systemId, ...values })
-            .then(() =>
-              // Go to next step, or back to review if end of form
-              history.push(`${grbReviewPath}/${nextStep?.key || ''}`)
-            )
-            .catch(() =>
-              showMessage(t('setUpGrbReviewForm.error'), { type: 'error' })
-            );
-        })}
-      >
-        {children}
-      </Form>
-    );
-  };
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [grbReviewPath, isDirty, history, handleSubmit, showMessage, systemId, t]
+  );
 
   // Format steps and redirect user if current step is disabled
   useEffect(() => {
@@ -232,7 +241,7 @@ function GRBReviewFormStepWrapper<
   }, [grbReview, formatSteps, currentStepIndex, history, grbReviewPath]);
 
   return (
-    <>
+    <div>
       <StepHeader
         step={currentStepIndex + 1}
         heading={t('setUpGrbReviewForm.heading')}
@@ -286,7 +295,7 @@ function GRBReviewFormStepWrapper<
                 !onSubmit &&
                 history.push(`${grbReviewPath}/${nextStep?.key || ''}`),
               // Disable `next` button if next step is disabled
-              disabled: !!nextStep?.disabled,
+              disabled: !!nextStep?.disabled || disabled,
               text: nextStep
                 ? t('Next')
                 : t('setUpGrbReviewForm.completeAndBeginReview')
@@ -321,7 +330,7 @@ function GRBReviewFormStepWrapper<
           )}
         </StepContentWrapper>
       </GridContainer>
-    </>
+    </div>
   );
 }
 

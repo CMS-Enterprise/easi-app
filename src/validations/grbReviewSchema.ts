@@ -82,10 +82,16 @@ export const SetGRBPresentationLinksSchema = Yup.object().shape(
   [['recordingLink', 'presentationDeckFileData']]
 );
 
+export const GrbPresentationStandardFormSchema = {
+  grbDate: Yup.string().required(
+    i18next.t('grbReview:presentationLinks.requiredField')
+  )
+};
+
 export const GrbReviewFormSchema = {
   grbReviewType: Yup.mixed()
     .oneOf(extractObjectKeys(SystemIntakeGRBReviewType))
     .required(),
-  presentation: SetGRBPresentationLinksSchema,
+  presentation: GrbPresentationStandardFormSchema,
   participants: CreateGRBReviewersSchema
 };

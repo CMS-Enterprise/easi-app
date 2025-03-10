@@ -1,8 +1,12 @@
 import React, { useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DatePicker } from '@trussworks/react-uswds';
 // eslint-disable-next-line import/no-unresolved
 import { DatePickerProps } from '@trussworks/react-uswds/lib/components/forms/DatePicker/DatePicker';
+import { actionDateInPast } from 'features/ITGovernance/Admin/Actions/ManageLcid/RetireLcid';
 import { DateTime } from 'luxon';
+
+import Alert from 'components/Alert';
 
 function defaultFormat(dt: DateTime): string | null {
   return dt.toUTC().toISO();
@@ -16,8 +20,14 @@ function defaultFormat(dt: DateTime): string | null {
 const DatePickerFormatted = ({
   onChange,
   format,
+  dateInPastWarning,
   ...props
-}: DatePickerProps & { format?: (dt: DateTime) => string | null }) => {
+}: DatePickerProps & {
+  format?: (dt: DateTime) => string | null;
+  dateInPastWarning?: boolean;
+}) => {
+  const { t } = useTranslation('action');
+
   const dtFormat = format || defaultFormat;
 
   /** Memoized current field value */
@@ -36,9 +46,21 @@ const DatePickerFormatted = ({
    */
   const FieldCallback = useCallback(
     (fieldProps: DatePickerProps) => {
-      return <DatePicker {...fieldProps} defaultValue={value} />;
+      return (
+        <>
+          <DatePicker {...fieldProps} defaultValue={value} />
+          {
+            // If past date is selected, show alert
+            dateInPastWarning && actionDateInPast(value || null) && (
+              <Alert type="warning" slim>
+                {t('pastDateAlert')}
+              </Alert>
+            )
+          }
+        </>
+      );
     },
-    [value]
+    [value, dateInPastWarning, t]
   );
 
   return (
