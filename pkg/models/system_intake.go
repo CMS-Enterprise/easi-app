@@ -132,7 +132,7 @@ type SystemIntake struct {
 	GRBReviewStartedAt                                *time.Time                   `json:"grbReviewStartedAt" db:"grb_review_started_at"`
 	AlfabetID                                         null.String                  `json:"alfabetID" db:"alfabet_id"`
 	GrtReviewEmailBody                                null.String                  `json:"grtReviewEmailBody" db:"grt_review_email_body"`
-	RequesterEmailAddress                             null.String                  `json:"requesterEmailAddress" db:"requester_email_address"`
+	RequesterEmailAddress                             null.String                  `json:"requesterEmailAddress" db:"requester_email_address"` // Deprecated
 	BusinessCaseID                                    *uuid.UUID                   `json:"businessCase" db:"business_case_id"`
 	LifecycleID                                       null.String                  `json:"lcid" db:"lcid"`
 	LifecycleExpiresAt                                *time.Time                   `json:"lcidExpiresAt" db:"lcid_expires_at" gqlgen:"lcidExpiresAt"`
@@ -165,7 +165,6 @@ type SystemIntake struct {
 	GrbReviewAsyncReportingDate                       *time.Time                   `json:"grbReviewAsyncReportingDate" db:"grb_review_async_reporting_date"`
 	GrbReviewAsyncRecordingTime                       *time.Time                   `json:"grbReviewAsyncRecordingTime" db:"grb_review_async_recording_time"`
 	GrbReviewAsyncEndDate                             *time.Time                   `json:"grbReviewAsyncEndDate" db:"grb_review_async_end_date"`
-	GrbReviewStandardGRBMeetingTime                   *time.Time                   `json:"grbReviewStandardGRBMeetingTime" db:"grb_review_standard_grb_meeting_time"`
 	GrbReviewAsyncGRBMeetingTime                      *time.Time                   `json:"grbReviewAsyncGRBMeetingTime" db:"grb_review_async_grb_meeting_time"`
 }
 
