@@ -117,16 +117,17 @@ function GRBReviewFormStepWrapper<
    * Formats form steps for stepped header
    */
   const formatSteps = useCallback(async () => {
-    const { grbReviewType, grbReviewers } = grbReview;
+    const { grbReviewType, grbReviewers, grbDate } = grbReview;
 
     // Validate form steps with Yup
     const reviewTypeIsValid =
       await GrbReviewFormSchema.grbReviewType.isValid(grbReviewType);
 
-    const presentationIsValid =
-      await GrbReviewFormSchema.presentation?.grbDate.isValid(
-        formValues?.grbMeetingDate?.grbDate
-      );
+    const presentationIsValid = formValues?.grbMeetingDate
+      ? await GrbReviewFormSchema.presentation?.grbDate.isValid(
+          formValues?.grbMeetingDate?.grbDate
+        )
+      : await GrbReviewFormSchema.presentation?.grbDate.isValid(grbDate);
 
     const participantsIsValid = await GrbReviewFormSchema.participants.isValid({
       grbReviewers
@@ -224,6 +225,9 @@ function GRBReviewFormStepWrapper<
   // Format steps and redirect user if current step is disabled
   useEffect(() => {
     formatSteps().then(values => {
+      if (!values) {
+        return;
+      }
       // If current step is disabled, redirect to last valid step or start of form
       if (values[currentStepIndex].disabled) {
         /** Returns the latest valid step or step one */
