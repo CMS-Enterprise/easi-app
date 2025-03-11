@@ -232,6 +232,7 @@ export default {
     steps: grbReviewFormSteps,
     error:
       'There was a problem saving your GRB review form. Please try again. If the error persists, please try again at a later date.',
+    invalidDate: 'Please enter a valid date',
     reviewType: {
       label: 'Choose review type',
       summaryHeading: 'GRB review types',

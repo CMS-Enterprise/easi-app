@@ -22,6 +22,7 @@ import {
 
 import DatePickerFormatted from 'components/DatePickerFormatted';
 import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
+import FieldErrorMsg from 'components/FieldErrorMsg';
 import Modal from 'components/Modal';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import useMessage from 'hooks/useMessage';
@@ -55,8 +56,28 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
   } = form;
 
   const onSubmit: GRBReviewFormStepSubmit<ParticipantsFields> = async input => {
-    mutate({ variables: { input } });
+    mutate({
+      variables: {
+        input: {
+          ...input,
+          grbReviewType: grbReview.grbReviewType,
+          systemIntakeID: grbReview.id
+        }
+      }
+    });
   };
+
+  // const onSubmit: GRBReviewFormStepSubmit<ParticipantsFields> = async (
+  //   formData: ProgressToNewStepFields
+  // ) =>
+  //   mutate({
+  //     variables: {
+  //       input: {
+  //         systemIntakeID: systemIntakeId,
+  //         ...formData
+  //       }
+  //     }
+  //   });
 
   const history = useHistory();
   const { pathname } = useLocation();
@@ -173,26 +194,34 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
             <p className="margin-top-0 margin-bottom-3 text-base-dark">
               {t('setUpGrbReviewForm.step4.timeframe.description')}
             </p>
-            <FormGroup
-              error={!!errors.grbReviewAsyncEndDate}
-              className="margin-top-0"
-            >
-              <Fieldset>
-                <p className="margin-top-0 margin-bottom-1">
-                  {t('setUpGrbReviewForm.step4.selectReviewEndDate.heading')}
-                  <RequiredAsterisk />
-                </p>
-                <p className="margin-y-0 text-base-dark">
-                  {t(
-                    'setUpGrbReviewForm.step4.selectReviewEndDate.description'
-                  )}
-                </p>
 
-                <Controller
-                  control={control}
-                  name="grbReviewAsyncEndDate"
-                  render={({ field: { ref, ...field } }) => (
-                    <>
+            <Controller
+              control={control}
+              name="grbReviewAsyncEndDate"
+              render={({ field: { ref, ...field }, fieldState: { error } }) => (
+                <>
+                  <FormGroup
+                    error={!!errors.grbReviewAsyncEndDate}
+                    className="margin-top-0"
+                  >
+                    <Fieldset>
+                      <p className="margin-top-0 margin-bottom-1">
+                        {t(
+                          'setUpGrbReviewForm.step4.selectReviewEndDate.heading'
+                        )}
+                        <RequiredAsterisk />
+                      </p>
+                      {!!error && (
+                        <FieldErrorMsg>
+                          {t('setUpGrbReviewForm.invalidDate')}
+                        </FieldErrorMsg>
+                      )}
+                      <p className="margin-y-0 text-base-dark">
+                        {t(
+                          'setUpGrbReviewForm.step4.selectReviewEndDate.description'
+                        )}
+                      </p>
+
                       <DatePickerFormatted
                         id="grbReviewAsyncEndDate"
                         {...field}
@@ -203,11 +232,11 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
                           }
                         }}
                       />
-                    </>
-                  )}
-                />
-              </Fieldset>
-            </FormGroup>
+                    </Fieldset>
+                  </FormGroup>
+                </>
+              )}
+            />
           </div>
         </Grid>
         <Grid col={10}>
