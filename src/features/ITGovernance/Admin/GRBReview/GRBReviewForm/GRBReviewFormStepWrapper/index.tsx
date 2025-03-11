@@ -9,7 +9,6 @@ import { SystemIntakeGRBReviewFragment } from 'gql/generated/graphql';
 import AutoSave from 'components/AutoSave';
 import Breadcrumbs from 'components/Breadcrumbs';
 import { useEasiFormContext } from 'components/EasiForm';
-import { UseEasiFormReturn } from 'components/EasiForm/types';
 import IconButton from 'components/IconButton';
 import MainContent from 'components/MainContent';
 import RequiredFieldsText from 'components/RequiredFieldsText';
@@ -26,14 +25,8 @@ export type GRBReviewFormStepSubmit<TFieldValues extends FieldValues> = (
 type GRBReviewFormStepWrapperProps<TFieldValues extends FieldValues> = {
   children: React.ReactNode;
   grbReview: SystemIntakeGRBReviewFragment;
-  /**
-   * onSubmit function for form step
-   *
-   * If undefined, `children` will be wrapped in `div` instead of `form`
-   *
-   * Component must be wrapped in `<EasiFormContextProvider>` for `onSubmit` to work
-   */
-  onSubmit?: GRBReviewFormStepSubmit<TFieldValues>;
+  /** onSubmit function for form step */
+  onSubmit: GRBReviewFormStepSubmit<TFieldValues>;
   /** Defaults to true - shows required fields text above `children` */
   requiredFields?: boolean;
 };
@@ -65,16 +58,11 @@ function GRBReviewFormStepWrapper<
     step: GrbReviewFormStepKey;
   }>();
 
-  /**
-   * Form context object -
-   * will return `undefined` if component is not wrapped in `<EasiFormContextProvider>`
-   */
-  const form = useEasiFormContext<TFieldValues>() as
-    | UseEasiFormReturn<TFieldValues>
-    | undefined;
-
-  const { handleSubmit, watch } = form || {};
-  const { isValid, isDirty } = form?.formState || {};
+  const {
+    handleSubmit,
+    watch,
+    formState: { isValid, isDirty }
+  } = useEasiFormContext<TFieldValues>();
 
   const grbReviewPath = `/it-governance/${systemId}/grb-review`;
 
@@ -100,8 +88,8 @@ function GRBReviewFormStepWrapper<
         return history.push(`${grbReviewPath}/${path || ''}`);
       }
 
-      return handleSubmit?.(values =>
-        onSubmit?.({ systemIntakeID: systemId, ...values }).then(() =>
+      return handleSubmit(values =>
+        onSubmit({ systemIntakeID: systemId, ...values }).then(() =>
           history.push(`${grbReviewPath}/${path || ''}`)
         )
       )();
@@ -171,50 +159,6 @@ function GRBReviewFormStepWrapper<
     );
   }, [grbReview, submitStep]);
 
-  /**
-   * Wrapper for step content
-   *
-   * Returns `<Form>` if `onSubmit` prop is defined
-   * */
-  const StepContentWrapper = ({
-    // eslint-disable-next-line @typescript-eslint/no-shadow
-    children,
-    ...props
-  }: {
-    children: React.ReactNode;
-  }) => {
-    if (!onSubmit || !handleSubmit)
-      return (
-        <div className="step-content-wrapper" {...props}>
-          {children}
-        </div>
-      );
-
-    return (
-      <Form
-        className="step-content-wrapper maxw-none"
-        {...props}
-        role="form"
-        onSubmit={handleSubmit(values => {
-          if (!isDirty) {
-            return history.push(`${grbReviewPath}/${nextStep?.key || ''}`);
-          }
-
-          return onSubmit({ systemIntakeID: systemId, ...values })
-            .then(() =>
-              // Go to next step, or back to review if end of form
-              history.push(`${grbReviewPath}/${nextStep?.key || ''}`)
-            )
-            .catch(() =>
-              showMessage(t('setUpGrbReviewForm.error'), { type: 'error' })
-            );
-        })}
-      >
-        {children}
-      </Form>
-    );
-  };
-
   // Format steps and redirect user if current step is disabled
   useEffect(() => {
     formatSteps().then(values => {
@@ -269,7 +213,25 @@ function GRBReviewFormStepWrapper<
       </StepHeader>
 
       <GridContainer className={`grb-review-form-${step} padding-bottom-10`}>
-        <StepContentWrapper data-testid="grbReviewForm-stepContentWrapper">
+        <Form
+          role="form"
+          className="step-content-wrapper maxw-none"
+          data-testid="grbReviewForm-stepContentWrapper"
+          onSubmit={handleSubmit(values => {
+            if (!isDirty) {
+              return history.push(`${grbReviewPath}/${nextStep?.key || ''}`);
+            }
+
+            return onSubmit({ systemIntakeID: systemId, ...values })
+              .then(() =>
+                // Go to next step, or back to review if end of form
+                history.push(`${grbReviewPath}/${nextStep?.key || ''}`)
+              )
+              .catch(() =>
+                showMessage(t('setUpGrbReviewForm.error'), { type: 'error' })
+              );
+          })}
+        >
           <p className="line-height-body-5 text-light font-body-sm margin-top-0 margin-bottom-1">
             {grbReviewFormSteps[currentStepIndex].description}
           </p>
@@ -282,10 +244,6 @@ function GRBReviewFormStepWrapper<
 
           <Pager
             next={{
-              type: onSubmit ? 'submit' : 'button',
-              onClick: () =>
-                !onSubmit &&
-                history.push(`${grbReviewPath}/${nextStep?.key || ''}`),
               // Disable `next` button if next step is disabled
               disabled: !!nextStep?.disabled,
               text: nextStep
@@ -310,17 +268,17 @@ function GRBReviewFormStepWrapper<
 
           {isValid && isDirty && (
             <AutoSave
-              values={watch?.()}
+              values={watch()}
               onSave={() =>
-                onSubmit?.({
+                onSubmit({
                   systemIntakeID: systemId,
-                  ...(watch?.() as TFieldValues)
+                  ...watch()
                 })
               }
               debounceDelay={3000}
             />
           )}
-        </StepContentWrapper>
+        </Form>
       </GridContainer>
     </MainContent>
   );
