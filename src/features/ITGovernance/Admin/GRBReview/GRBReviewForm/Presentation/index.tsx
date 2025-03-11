@@ -2,14 +2,12 @@ import React from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
-  DatePicker,
   Fieldset,
   FormGroup,
   Grid,
   Label,
   TextInput
 } from '@trussworks/react-uswds';
-import { actionDateInPast } from 'features/ITGovernance/Admin/Actions/ManageLcid/RetireLcid';
 import {
   SystemIntakeGRBReviewType,
   UpdateSystemIntakeGRBReviewAsyncPresentationMutationVariables,
@@ -26,7 +24,6 @@ import FileInput from 'components/FileInput';
 import HelpText from 'components/HelpText';
 import { TabPanel, Tabs } from 'components/Tabs';
 import { GRBReviewFormStepProps } from 'types/grbReview';
-import { formatToUTCISO } from 'utils/date';
 import { fileToBase64File } from 'utils/downloadFile';
 
 import SendPresentationReminder from '../../SendPresentationReminder';
@@ -42,7 +39,6 @@ type AsyncPresentationFields =
 
 const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
   const { t } = useTranslation('grbReview');
-  const { t: actionT } = useTranslation('action');
 
   const standardForm = useEasiForm<StandardPresentationFields>({
     defaultValues: {
@@ -112,7 +108,7 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
       variables: {
         grbMeetingDate: {
           systemIntakeID: input.systemIntakeID,
-          grbDate: formatToUTCISO(input.grbMeetingDate.grbDate, 'MM/dd/yyyy')
+          grbDate: input.grbMeetingDate.grbDate
         },
         presentationDeck: {
           systemIntakeID: input.systemIntakeID,
@@ -212,22 +208,15 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
                           <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
                         )}
 
-                        <DatePicker
+                        <DatePickerFormatted
                           {...field}
                           id={field.name}
                           defaultValue={grbReview.grbDate || ''}
+                          onChange={e => {
+                            field.onChange(e || undefined);
+                          }}
+                          dateInPastWarning
                         />
-
-                        {
-                          // If past date is selected, show alert
-                          actionDateInPast(
-                            formatToUTCISO(field.value || null, 'MM/dd/yyyy')
-                          ) && (
-                            <Alert type="warning" slim>
-                              {actionT('pastDateAlert')}
-                            </Alert>
-                          )
-                        }
                       </FormGroup>
                     )}
                   />
