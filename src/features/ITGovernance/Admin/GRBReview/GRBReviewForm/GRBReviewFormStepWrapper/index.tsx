@@ -143,10 +143,7 @@ function GRBReviewFormStepWrapper<
             break;
 
           case 'presentation':
-            completed =
-              disabled !== undefined
-                ? !disabled
-                : !!(reviewTypeIsValid && presentationIsValid);
+            completed = !!(reviewTypeIsValid && presentationIsValid);
             break;
 
           case 'documents':
@@ -236,7 +233,6 @@ function GRBReviewFormStepWrapper<
 
         history.push(`${grbReviewPath}/${latestValidStep.key}`);
       }
-
       setSteps(values);
     });
   }, [grbReview, formatSteps, currentStepIndex, history, grbReviewPath]);
