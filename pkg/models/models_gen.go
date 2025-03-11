@@ -977,6 +977,12 @@ type UpdateTRBRequestTRBLeadInput struct {
 	TrbLead      string    `json:"trbLead"`
 }
 
+// Data needed to upload a presentation deck
+type UploadSystemIntakeGRBPresentationDeckInput struct {
+	SystemIntakeID           uuid.UUID       `json:"systemIntakeID"`
+	PresentationDeckFileData *graphql.Upload `json:"presentationDeckFileData,omitempty"`
+}
+
 // UserError represents application-level errors that are the result of
 // either user or application developer error.
 type UserError struct {

@@ -99,6 +99,51 @@ func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Sto
 	return store.SetSystemIntakeGRBPresentationLinks(ctx, links)
 }
 
+// UploadSystemIntakeGRBPresentationDeck uploads a presentation deck for a system intake
+func UploadSystemIntakeGRBPresentationDeck(
+	ctx context.Context,
+	store *storage.Store,
+	s3Client *upload.S3Client,
+	input models.UploadSystemIntakeGRBPresentationDeckInput,
+) (*models.SystemIntakeGRBPresentationLinks, error) {
+
+	systemIntake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	if systemIntake == nil {
+		return nil, errors.New("system intake not found")
+	}
+
+	if systemIntake.EUAUserID.ValueOrZero() != appcontext.Principal(ctx).ID() {
+		return nil, errors.New("unauthorized: only the system intake requester can upload a presentation deck")
+	}
+
+	links, err := dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	// if no file is attached
+	if input.PresentationDeckFileData == nil {
+		// remove references to file
+		links.PresentationDeckFileName = nil
+		links.PresentationDeckS3Key = nil
+	} else {
+		links.PresentationDeckFileName = &input.PresentationDeckFileData.Filename
+
+		s3Key, err := handleS3Upload(s3Client, input.PresentationDeckFileData)
+		if err != nil {
+			return nil, err
+		}
+
+		links.PresentationDeckS3Key = &s3Key
+	}
+
+	return store.SetSystemIntakeGRBPresentationLinks(ctx, links)
+}
+
 func SystemIntakeGRBPresentationLinksTranscriptFileURL(ctx context.Context, s3Client *upload.S3Client, systemIntakeID uuid.UUID) (*string, error) {
 	links, err := dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, systemIntakeID)
 	if err != nil {

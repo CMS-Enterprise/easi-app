@@ -1044,6 +1044,7 @@ export type Mutation = {
   updateTRBRequestForm: TRBRequestForm;
   updateTRBRequestFundingSources: Array<TRBFundingSource>;
   updateTRBRequestTRBLead: TRBRequest;
+  uploadSystemIntakeGRBPresentationDeck?: Maybe<SystemIntakeGRBPresentationLinks>;
 };
 
 
@@ -1575,6 +1576,12 @@ export type MutationUpdateTRBRequestFundingSourcesArgs = {
 /** Defines the mutations for the schema */
 export type MutationUpdateTRBRequestTRBLeadArgs = {
   input: UpdateTRBRequestTRBLeadInput;
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationUploadSystemIntakeGRBPresentationDeckArgs = {
+  input: UploadSystemIntakeGRBPresentationDeckInput;
 };
 
 /** PersonRole is an enumeration of values for a person's role */
@@ -3291,6 +3298,12 @@ export type UpdateTRBRequestFundingSourcesInput = {
 export type UpdateTRBRequestTRBLeadInput = {
   trbLead: Scalars['String']['input'];
   trbRequestId: Scalars['UUID']['input'];
+};
+
+/** Data needed to upload a presentation deck */
+export type UploadSystemIntakeGRBPresentationDeckInput = {
+  presentationDeckFileData?: InputMaybe<Scalars['Upload']['input']>;
+  systemIntakeID: Scalars['UUID']['input'];
 };
 
 /** The representation of a User account in the EASI application */
