@@ -51,6 +51,10 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
     defaultValues: {
       grbReviewers: grbReview.grbReviewers,
       grbReviewAsyncEndDate: grbReview.grbReviewAsyncEndDate || ''
+    },
+    values: {
+      grbReviewers: grbReview.grbReviewers,
+      grbReviewAsyncEndDate: grbReview.grbReviewAsyncEndDate || ''
     }
   });
   const {
@@ -102,8 +106,6 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
     [deleteReviewer, showMessage, t]
   );
 
-  console.log(grbReview.grbReviewers);
-  console.log(errors);
   return (
     <EasiFormProvider<ParticipantsFields> {...form}>
       <GRBReviewFormStepWrapper<ParticipantsFields>
@@ -145,16 +147,15 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
           )
         }
 
-        <Grid col={6}>
-          <div className="margin-top-5 border-top-1px border-base-light padding-top-1">
-            <FormGroup error={!!errors.grbReviewers} className="margin-top-0">
+        <FormGroup error={!!errors.grbReviewers} className="margin-top-0">
+          <Grid col={6}>
+            <div className="margin-top-5 border-top-1px border-base-light padding-top-1">
               <p className="text-bold margin-y-0">
                 {t('setUpGrbReviewForm.step4.grbReviewers.heading')}
                 <RequiredAsterisk />
               </p>
-              {/* //TODO: insert error message here */}
               {!!errors.grbReviewers && (
-                <FieldErrorMsg>{t('setUpGrbReviewForm.minFive')}</FieldErrorMsg>
+                <FieldErrorMsg>{errors.grbReviewers.message}</FieldErrorMsg>
               )}
               <p className="margin-y-0 text-base-dark">
                 {t('setUpGrbReviewForm.step4.grbReviewers.description')}
@@ -175,15 +176,15 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
                     : 'addGrbReviewer'
                 )}
               </Button>
-            </FormGroup>
-          </div>
-        </Grid>
-        <Grid col={grbReview.grbReviewers.length > 0 ? 10 : 6}>
-          <ParticipantsTable
-            grbReviewers={grbReview.grbReviewers}
-            setReviewerToRemove={setReviewerToRemove}
-          />
-        </Grid>
+            </div>
+          </Grid>
+          <Grid col={grbReview.grbReviewers.length > 0 ? 10 : 6}>
+            <ParticipantsTable
+              grbReviewers={grbReview.grbReviewers}
+              setReviewerToRemove={setReviewerToRemove}
+            />
+          </Grid>
+        </FormGroup>
         <Grid col={6}>
           <div className="margin-top-5 border-top-1px border-base-light padding-top-1">
             <p className="text-bold margin-y-0">
