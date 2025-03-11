@@ -236,7 +236,10 @@ function GRBReviewFormStepWrapper<
           role="form"
           className="step-content-wrapper maxw-none"
           data-testid="grbReviewForm-stepContentWrapper"
-          onSubmit={() => submitStep({ path: nextStep?.key })}
+          onSubmit={e => {
+            e.preventDefault();
+            submitStep({ path: nextStep?.key });
+          }}
         >
           <p className="line-height-body-5 text-light font-body-sm margin-top-0 margin-bottom-1">
             {grbReviewFormSteps[currentStepIndex].description}
