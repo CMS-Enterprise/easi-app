@@ -1,0 +1,1 @@
+ALTER TABLE system_intake_grb_presentation_links DROP CONSTRAINT one_value_present_null_check;

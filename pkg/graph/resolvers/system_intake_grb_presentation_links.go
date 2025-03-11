@@ -107,26 +107,41 @@ func UploadSystemIntakeGRBPresentationDeck(
 	input models.UploadSystemIntakeGRBPresentationDeckInput,
 ) (*models.SystemIntakeGRBPresentationLinks, error) {
 
+	principal := appcontext.Principal(ctx)
+	userID := principal.Account().ID
+
 	systemIntake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
 	if err != nil {
-		return nil, err
+		if !errors.Is(err, sql.ErrNoRows) {
+			return nil, err
+		}
 	}
 
 	if systemIntake == nil {
 		return nil, errors.New("system intake not found")
 	}
 
-	if systemIntake.EUAUserID.ValueOrZero() != appcontext.Principal(ctx).ID() {
+	if systemIntake.EUAUserID.ValueOrZero() != principal.ID() {
 		return nil, errors.New("unauthorized: only the system intake requester can upload a presentation deck")
 	}
 
 	links, err := dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, input.SystemIntakeID)
 	if err != nil {
-		return nil, err
+		if !errors.Is(err, sql.ErrNoRows) {
+			return nil, err
+		}
 	}
 
+	if links == nil {
+		// initialize new links struct if one does not already exist
+		links = models.NewSystemIntakeGRBPresentationLinks(userID)
+		links.SystemIntakeID = input.SystemIntakeID
+	}
+
+	links.ModifiedBy = &userID
+
 	// if no file is attached
-	if input.PresentationDeckFileData == nil {
+	if input.PresentationDeckFileData == nil || input.PresentationDeckFileData.File == nil {
 		// remove references to file
 		links.PresentationDeckFileName = nil
 		links.PresentationDeckS3Key = nil

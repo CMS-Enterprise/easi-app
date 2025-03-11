@@ -21,11 +21,82 @@ func (s *ResolverSuite) TestSetSystemIntakeGRBPresentationLinks() {
 	s.NoError(err)
 	s.NotNil(systemIntake)
 
-	createdLinks := createSystemIntakeGRBPresentationLinkUpload(s, systemIntake.ID)
+	createdLinks := createSystemIntakeGRBPresentationLinkUploadSet(s, systemIntake.ID)
 	s.NotNil(createdLinks)
 }
 
-func createSystemIntakeGRBPresentationLinkUpload(suite *ResolverSuite, systemIntakeID uuid.UUID) *models.SystemIntakeGRBPresentationLinks {
+func (s *ResolverSuite) TestUploadSystemIntakeGRBPresentationDeck() {
+	input := s.createUploadSystemIntakeGRBPresentationDeckInput(s.createUploadSystemIntakeGRBPresentationDeckFileData())
+
+	// Assert insert portion of upsert
+	createdLinks, err := UploadSystemIntakeGRBPresentationDeck(
+		s.testConfigs.Context,
+		s.testConfigs.Store,
+		s.testConfigs.S3Client,
+		input,
+	)
+	s.NoError(err)
+	s.NotNil(createdLinks)
+	s.Nil(createdLinks.ModifiedBy)
+
+	// Assert update portion of upsert
+	updatedLinks, err := UploadSystemIntakeGRBPresentationDeck(
+		s.testConfigs.Context,
+		s.testConfigs.Store,
+		s.testConfigs.S3Client,
+		input,
+	)
+	s.NoError(err)
+	s.NotNil(updatedLinks)
+	s.NotNil(updatedLinks.ModifiedBy)
+}
+
+func (s *ResolverSuite) TestUploadSystemIntakeGRBPresentationDeck_NilFile() {
+	input := s.createUploadSystemIntakeGRBPresentationDeckInput(nil)
+
+	createdLinks, err := UploadSystemIntakeGRBPresentationDeck(
+		s.testConfigs.Context,
+		s.testConfigs.Store,
+		s.testConfigs.S3Client,
+		input,
+	)
+	s.NoError(err)
+	s.NotNil(createdLinks)
+	s.Nil(createdLinks.ModifiedBy)
+}
+
+func (s *ResolverSuite) createUploadSystemIntakeGRBPresentationDeckFileData() *graphql.Upload {
+	testContents := "Test Presentation Link"
+	encodedFileContent := easiencoding.EncodeBase64String(testContents)
+	fileToUpload := bytes.NewReader([]byte(encodedFileContent))
+	return &graphql.Upload{
+		File:        fileToUpload,
+		Filename:    "test presentation link upload.txt",
+		Size:        fileToUpload.Size(),
+		ContentType: "text/plain",
+	}
+}
+
+func (s *ResolverSuite) createUploadSystemIntakeGRBPresentationDeckInput(fileData *graphql.Upload) models.UploadSystemIntakeGRBPresentationDeckInput {
+	systemIntake, err := CreateSystemIntake(s.testConfigs.Context, s.testConfigs.Store, models.CreateSystemIntakeInput{
+		RequestType: models.SystemIntakeRequestTypeNEW,
+		Requester: &models.SystemIntakeRequesterInput{
+			Name: "Requester Name",
+		},
+	})
+	s.NoError(err)
+	s.NotNil(systemIntake)
+
+	input := models.UploadSystemIntakeGRBPresentationDeckInput{
+		SystemIntakeID:           systemIntake.ID,
+		PresentationDeckFileData: fileData,
+	}
+	s.NoError(err)
+
+	return input
+}
+
+func createSystemIntakeGRBPresentationLinkUploadSet(suite *ResolverSuite, systemIntakeID uuid.UUID) *models.SystemIntakeGRBPresentationLinks {
 	testContents := "Test Presentation Link"
 	encodedFileContent := easiencoding.EncodeBase64String(testContents)
 	fileToUpload := bytes.NewReader([]byte(encodedFileContent))
