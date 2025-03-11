@@ -76,43 +76,62 @@ function GRBReviewFormStepWrapper<
   const nextStep: StepHeaderStepProps | undefined =
     currentStepIndex > -1 ? steps[currentStepIndex + 1] : undefined;
 
-  /**
-   * Submits step if fields are valid
-   *
-   * If invalid, redirects to GRB Review tab or `path` prop with no error messages
-   */
+  /** Submits form step and redirects user */
   const submitStep = useCallback(
-    async (path?: string) => {
-      // Don't submit if invalid or no changes
-      if (!isValid || !isDirty) {
-        return history.push(`${grbReviewPath}/${path || ''}`);
+    async ({
+      shouldValidate = true,
+      path = ''
+    }: {
+      /** If false, does not submit if fields are invalid. Defaults to true. */
+      shouldValidate?: boolean;
+      /** Appends to `grbReviewPath` - leave undefined to return to GRB review tab after submit */
+      path?: string;
+    }) => {
+      // Redirect user without submit if no changes or skipping validation
+      if (!isDirty || (!shouldValidate && !isValid)) {
+        return history.push(`${grbReviewPath}/${path}`);
       }
 
       return handleSubmit(values =>
-        onSubmit({ systemIntakeID: systemId, ...values }).then(() =>
-          history.push(`${grbReviewPath}/${path || ''}`)
-        )
+        onSubmit({ systemIntakeID: systemId, ...values })
+          .then(() => history.push(`${grbReviewPath}/${path}`))
+          // Show error message if validating fields, otherwise redirect
+          .catch(() => {
+            if (shouldValidate) {
+              showMessage(t('setUpGrbReviewForm.error'), { type: 'error' });
+            } else {
+              history.push(`${grbReviewPath}/${path}`);
+            }
+          })
       )();
     },
-    [grbReviewPath, isValid, isDirty, handleSubmit, onSubmit, history, systemId]
+    [
+      grbReviewPath,
+      isValid,
+      isDirty,
+      handleSubmit,
+      onSubmit,
+      history,
+      systemId,
+      showMessage,
+      t
+    ]
   );
 
   /**
    * Formats form steps for stepped header
    */
   const formatSteps = useCallback(async () => {
-    const { grbReviewType, grbReviewers, grbPresentationLinks } = grbReview;
+    const { grbReviewType, grbReviewers, grbDate } = grbReview;
 
     // Validate form steps with Yup
 
-    const reviewTypeIsValid =
-      await GrbReviewFormSchema.grbReviewType.isValid(grbReviewType);
+    const reviewTypeIsValid = await GrbReviewFormSchema.reviewType.isValid({
+      grbReviewType
+    });
 
     const presentationIsValid = await GrbReviewFormSchema.presentation.isValid({
-      recordingLink: grbPresentationLinks?.recordingLink,
-      presentationDeckFileData: grbPresentationLinks?.presentationDeckFileName
-        ? {}
-        : undefined
+      grbDate
     });
 
     const participantsIsValid = await GrbReviewFormSchema.participants.isValid({
@@ -150,7 +169,7 @@ function GRBReviewFormStepWrapper<
           ...acc[index],
           completed,
           disabled: index > 0 ? !acc[index - 1].completed : false,
-          onClick: () => submitStep(value.key)
+          onClick: () => submitStep({ path: value.key })
         };
 
         return acc;
@@ -204,7 +223,7 @@ function GRBReviewFormStepWrapper<
           <IconButton
             icon={<Icon.ArrowBack />}
             type="button"
-            onClick={() => submitStep()}
+            onClick={() => submitStep({ shouldValidate: false })}
             unstyled
           >
             {t('setUpGrbReviewForm.saveAndReturn')}
@@ -217,20 +236,7 @@ function GRBReviewFormStepWrapper<
           role="form"
           className="step-content-wrapper maxw-none"
           data-testid="grbReviewForm-stepContentWrapper"
-          onSubmit={handleSubmit(values => {
-            if (!isDirty) {
-              return history.push(`${grbReviewPath}/${nextStep?.key || ''}`);
-            }
-
-            return onSubmit({ systemIntakeID: systemId, ...values })
-              .then(() =>
-                // Go to next step, or back to review if end of form
-                history.push(`${grbReviewPath}/${nextStep?.key || ''}`)
-              )
-              .catch(() =>
-                showMessage(t('setUpGrbReviewForm.error'), { type: 'error' })
-              );
-          })}
+          onSubmit={() => submitStep({ path: nextStep?.key })}
         >
           <p className="line-height-body-5 text-light font-body-sm margin-top-0 margin-bottom-1">
             {grbReviewFormSteps[currentStepIndex].description}
@@ -244,8 +250,7 @@ function GRBReviewFormStepWrapper<
 
           <Pager
             next={{
-              // Disable `next` button if next step is disabled
-              disabled: !!nextStep?.disabled,
+              disabled: !isValid || !!nextStep?.disabled,
               text: nextStep
                 ? t('Next')
                 : t('setUpGrbReviewForm.completeAndBeginReview')
@@ -254,14 +259,15 @@ function GRBReviewFormStepWrapper<
               // Only show `back` button if there is a previous step
               previousStep && {
                 type: 'button',
+                // Save fields on back click if valid
                 onClick: () =>
-                  history.push(`${grbReviewPath}/${previousStep.key}`)
+                  submitStep({ shouldValidate: false, path: previousStep.key })
               }
             }
             saveExitText={t('setUpGrbReviewForm.saveAndReturn')}
             taskListUrl={grbReviewPath}
             submitDisabled={!isValid || !isDirty}
-            submit={() => submitStep()}
+            submit={() => submitStep({ shouldValidate: false })}
             border={false}
             className="margin-top-8 margin-bottom-3"
           />
