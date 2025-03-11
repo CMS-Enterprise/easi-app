@@ -159,7 +159,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
             </Button>
           </div>
         </Grid>
-        <Grid col={10}>
+        <Grid col={grbReview.grbReviewers.length > 0 ? 10 : 6}>
           <ParticipantsTable
             grbReviewers={grbReview.grbReviewers}
             setReviewerToRemove={setReviewerToRemove}
