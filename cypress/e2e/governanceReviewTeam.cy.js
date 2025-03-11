@@ -578,7 +578,7 @@ describe('Governance Review Team', () => {
 
     cy.contains('button', 'View transcript').should('be.visible');
 
-    cy.contains('a', 'View slide deck').should('be.visible');
+    cy.contains('button', 'View slide deck').should('be.visible');
 
     // Edit presentation links
     cy.contains('a', 'Edit presentation links').click();
