@@ -212,9 +212,7 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
                           {...field}
                           id={field.name}
                           defaultValue={grbReview.grbDate || ''}
-                          onChange={e => {
-                            field.onChange(e || undefined);
-                          }}
+                          onChange={e => field.onChange(e || undefined)}
                           dateInPastWarning
                         />
                       </FormGroup>
