@@ -17,8 +17,7 @@ import {
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewFragment,
   useDeleteSystemIntakeGRBReviewerMutation,
-  useUpdateSystemIntakeGRBReviewFormInputTimeframeAsyncMutation,
-  useUpdateSystemIntakeGRBReviewTypeMutation
+  useUpdateSystemIntakeGRBReviewFormInputTimeframeAsyncMutation
 } from 'gql/generated/graphql';
 
 import DatePickerFormatted from 'components/DatePickerFormatted';
@@ -37,6 +36,7 @@ import GRBReviewFormStepWrapper, {
 
 // TODO: Update fields type
 type ParticipantsFields = {
+  grbReviewers: SystemIntakeGRBReviewerFragment[];
   grbReviewAsyncEndDate: SystemIntakeGRBReviewFragment['grbReviewAsyncEndDate'];
 };
 
@@ -49,6 +49,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
   const form = useEasiForm<ParticipantsFields>({
     resolver: yupResolver(SetGRBParticipantsAsyncSchema),
     defaultValues: {
+      grbReviewers: grbReview.grbReviewers,
       grbReviewAsyncEndDate: grbReview.grbReviewAsyncEndDate || ''
     }
   });
@@ -67,18 +68,6 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
       }
     });
   };
-
-  // const onSubmit: GRBReviewFormStepSubmit<ParticipantsFields> = async (
-  //   formData: ProgressToNewStepFields
-  // ) =>
-  //   mutate({
-  //     variables: {
-  //       input: {
-  //         systemIntakeID: systemIntakeId,
-  //         ...formData
-  //       }
-  //     }
-  //   });
 
   const history = useHistory();
   const { pathname } = useLocation();
@@ -113,6 +102,8 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
     [deleteReviewer, showMessage, t]
   );
 
+  console.log(grbReview.grbReviewers);
+  console.log(errors);
   return (
     <EasiFormProvider<ParticipantsFields> {...form}>
       <GRBReviewFormStepWrapper<ParticipantsFields>
@@ -156,29 +147,35 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
 
         <Grid col={6}>
           <div className="margin-top-5 border-top-1px border-base-light padding-top-1">
-            <p className="text-bold margin-y-0">
-              {t('setUpGrbReviewForm.step4.grbReviewers.heading')}
-              <RequiredAsterisk />
-            </p>
-            <p className="margin-y-0 text-base-dark">
-              {t('setUpGrbReviewForm.step4.grbReviewers.description')}
-            </p>
-            <Button
-              type="button"
-              onClick={() =>
-                history.push({
-                  pathname: `${pathname.replace('participants', 'add')}`,
-                  search: 'from-grb-setup'
-                })
-              }
-              outline={grbReview.grbReviewers.length > 0}
-            >
-              {t(
-                grbReview.grbReviewers.length > 0
-                  ? 'addAnotherGrbReviewer'
-                  : 'addGrbReviewer'
+            <FormGroup error={!!errors.grbReviewers} className="margin-top-0">
+              <p className="text-bold margin-y-0">
+                {t('setUpGrbReviewForm.step4.grbReviewers.heading')}
+                <RequiredAsterisk />
+              </p>
+              {/* //TODO: insert error message here */}
+              {!!errors.grbReviewers && (
+                <FieldErrorMsg>{t('setUpGrbReviewForm.minFive')}</FieldErrorMsg>
               )}
-            </Button>
+              <p className="margin-y-0 text-base-dark">
+                {t('setUpGrbReviewForm.step4.grbReviewers.description')}
+              </p>
+              <Button
+                type="button"
+                onClick={() =>
+                  history.push({
+                    pathname: `${pathname.replace('participants', 'add')}`,
+                    search: 'from-grb-setup'
+                  })
+                }
+                outline={grbReview.grbReviewers.length > 0}
+              >
+                {t(
+                  grbReview.grbReviewers.length > 0
+                    ? 'addAnotherGrbReviewer'
+                    : 'addGrbReviewer'
+                )}
+              </Button>
+            </FormGroup>
           </div>
         </Grid>
         <Grid col={grbReview.grbReviewers.length > 0 ? 10 : 6}>

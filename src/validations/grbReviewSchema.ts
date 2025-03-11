@@ -57,10 +57,10 @@ export const CreateGRBReviewersSchema = Yup.object({
 export const SetGRBParticipantsAsyncSchema = Yup.object({
   grbReviewers: Yup.array(GRBReviewerSchema).min(
     5,
-    i18next.t('Please select at least five GRB reviewers')
+    i18next.t('grbReview:setUpGrbReviewForm.minFive')
   ),
   grbReviewAsyncEndDate: Yup.date().required(
-    i18next.t('grbReview:presentationLinks.requiredField')
+    i18next.t('grbReview:setUpGrbReviewForm.invalidDate')
   )
 });
 
