@@ -17,6 +17,7 @@ import {
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewFragment,
   useDeleteSystemIntakeGRBReviewerMutation,
+  useUpdateSystemIntakeGRBReviewFormInputTimeframeAsyncMutation,
   useUpdateSystemIntakeGRBReviewTypeMutation
 } from 'gql/generated/graphql';
 
@@ -42,7 +43,8 @@ type ParticipantsFields = {
 const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
   const { t } = useTranslation('grbReview');
 
-  const [mutate] = useUpdateSystemIntakeGRBReviewTypeMutation();
+  const [mutate] =
+    useUpdateSystemIntakeGRBReviewFormInputTimeframeAsyncMutation();
 
   const form = useEasiForm<ParticipantsFields>({
     resolver: yupResolver(SetGRBParticipantsAsyncSchema),
@@ -59,9 +61,8 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
     mutate({
       variables: {
         input: {
-          ...input,
-          grbReviewType: grbReview.grbReviewType,
-          systemIntakeID: grbReview.id
+          systemIntakeID: grbReview.id,
+          grbReviewAsyncEndDate: input.grbReviewAsyncEndDate ?? ''
         }
       }
     });
