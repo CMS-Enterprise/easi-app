@@ -45,7 +45,6 @@ const PresentationDeckUpload = ({ type = 'requester' }: UploadFormProps) => {
 
   const { showMessageOnNextPage, showMessage } = useMessage();
 
-  // TODO: May need to incorporate new mutation for requester, once BE work is complete
   // Form would need to toggle between two mutations based on user type
   const [setPresentationLinks] = useSetSystemIntakeGRBPresentationLinksMutation(
     { refetchQueries: ['GetSystemIntake'] }
