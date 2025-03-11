@@ -2,7 +2,6 @@ import React, { ComponentProps } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { SystemIntakeGRBReviewType } from 'gql/generated/graphql';
 import { grbReview } from 'tests/mock/grbReview';
 
 import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
@@ -89,13 +88,7 @@ describe('GRB review form step wrapper', () => {
     renderComponent({
       grbReview: {
         ...grbReview,
-        grbDate: '2021-10-13T00:00:00.000Z',
-        grbReviewType: SystemIntakeGRBReviewType.STANDARD,
-        grbPresentationLinks: {
-          __typename: 'SystemIntakeGRBPresentationLinks',
-          recordingLink: 'https://test.com',
-          presentationDeckFileName: 'test.pdf'
-        }
+        grbDate: '2025-05-11T16:56:50.198746Z'
       }
     });
 
@@ -154,36 +147,5 @@ describe('GRB review form step wrapper', () => {
       'aria-current',
       'true'
     );
-  });
-
-  it('wraps content in `div` if `onSubmit` is undefined', async () => {
-    renderComponent({ onSubmit: undefined });
-
-    expect(
-      screen.getByTestId('grbReviewForm-stepContentWrapper')
-    ).not.toHaveAttribute('role', 'form');
-  });
-
-  it('renders without form context', async () => {
-    // Render without mocked `EasiFormContextProvider`
-    render(
-      <MemoryRouter
-        initialEntries={[
-          `/it-governance/${grbReview.id}/grb-review/review-type`
-        ]}
-      >
-        <MessageProvider>
-          <Route path="/it-governance/:systemId/grb-review/:step">
-            <GRBReviewFormStepWrapper onSubmit={vi.fn()} grbReview={grbReview}>
-              <div />
-            </GRBReviewFormStepWrapper>
-          </Route>
-        </MessageProvider>
-      </MemoryRouter>
-    );
-
-    expect(
-      screen.getByTestId('grbReviewForm-stepContentWrapper')
-    ).not.toHaveAttribute('role', 'form');
   });
 });

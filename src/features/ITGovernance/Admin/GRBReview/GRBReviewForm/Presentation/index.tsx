@@ -162,7 +162,6 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
           <GRBReviewFormStepWrapper
             grbReview={grbReview}
             onSubmit={onSubmitStandard}
-            disabled={!watch('grbMeetingDate.grbDate')}
           >
             <Fieldset>
               <Grid desktop={{ col: 6 }}>

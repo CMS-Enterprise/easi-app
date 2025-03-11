@@ -231,9 +231,10 @@ exports[`GRB review form - additional documents > renders the step 1`] = `
       class="grid-container grb-review-form-documents padding-bottom-10"
       data-testid="gridContainer"
     >
-      <div
-        class="step-content-wrapper"
+      <form
+        class="usa-form step-content-wrapper maxw-none"
         data-testid="grbReviewForm-stepContentWrapper"
+        role="form"
       >
         <p
           class="line-height-body-5 text-light font-body-sm margin-top-0 margin-bottom-1"
@@ -607,7 +608,7 @@ exports[`GRB review form - additional documents > renders the step 1`] = `
                   class="usa-button margin-top-0"
                   data-testid="button"
                   disabled=""
-                  type="button"
+                  type="submit"
                 >
                   Next
                 </button>
@@ -635,7 +636,7 @@ exports[`GRB review form - additional documents > renders the step 1`] = `
             Save and return to request
           </button>
         </div>
-      </div>
+      </form>
     </div>
   </main>
 </DocumentFragment>
