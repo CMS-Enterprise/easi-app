@@ -34,7 +34,6 @@ import GRBReviewFormStepWrapper, {
   GRBReviewFormStepSubmit
 } from '../GRBReviewFormStepWrapper';
 
-// TODO: Update fields type
 type ParticipantsFields = {
   grbReviewers: SystemIntakeGRBReviewerFragment[];
   grbReviewAsyncEndDate: SystemIntakeGRBReviewFragment['grbReviewAsyncEndDate'];
