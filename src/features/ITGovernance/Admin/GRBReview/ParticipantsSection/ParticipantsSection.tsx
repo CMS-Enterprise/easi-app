@@ -24,7 +24,7 @@ type ParticipantsSectionProps = {
 };
 
 /**
- * Participants table used in GRB Review tab
+ * Participants section used in GRB Review tab
  */
 const ParticipantsSection = ({
   id,
