@@ -19,12 +19,14 @@ import './index.scss';
 
 type DiscussionBoardProps = {
   systemIntakeID: string;
+  grbReviewStartedAt: string | null | undefined;
   grbReviewers: SystemIntakeGRBReviewerFragment[];
   grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[];
 };
 
 function DiscussionBoard({
   systemIntakeID,
+  grbReviewStartedAt,
   grbReviewers,
   grbDiscussions
 }: DiscussionBoardProps) {
@@ -72,6 +74,11 @@ function DiscussionBoard({
   const closeModal = () => {
     pushDiscussionQuery(false);
   };
+
+  // Hide discusion board if GRB review has not yet started
+  if (!grbReviewStartedAt) {
+    return null;
+  }
 
   return (
     <DiscussionModalWrapper
