@@ -133,6 +133,8 @@ jobs:
         with:
           name: test-frontend-assets
           path: build/
+      - name: LS Debug
+        run: ls -alh
       - name: Buildx Bake testing images
         uses: docker/bake-action@v6
         with:

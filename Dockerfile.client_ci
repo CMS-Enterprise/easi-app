@@ -2,4 +2,4 @@ FROM node:20.12.2
 
 WORKDIR /app
 RUN yarn global add serve
-COPY build/ /app/build
+COPY build /app
