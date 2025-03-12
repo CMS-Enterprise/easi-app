@@ -36,6 +36,8 @@ const discussions = {
     viewLess: 'View less {{type}}',
 
     alerts: {
+      reviewNotStarted:
+        'This review is not yet started. Start the review to enable discussions.',
       noDiscussionsStarted:
         'There are no discussions yet. When a discussion topic is started, it will appear here.',
       noDiscussionsRepliedTo:
