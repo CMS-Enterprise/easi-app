@@ -133,7 +133,7 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
       ? await fileToBase64File(links.presentationDeckFileData)
       : undefined;
 
-    mutateAsync({
+    return mutateAsync({
       variables: {
         asyncRecordingDate: {
           systemIntakeID: asyncRecordingDate.systemIntakeID,
