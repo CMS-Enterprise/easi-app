@@ -256,7 +256,7 @@ function GRBReviewFormStepWrapper<
 
           <Pager
             next={{
-              disabled: !isValid || !!nextStep?.disabled,
+              disabled: !isValid,
               text: nextStep
                 ? t('Next')
                 : t('setUpGrbReviewForm.completeAndBeginReview')
