@@ -61,22 +61,25 @@ func (s *Store) UpdateSystemIntakeGRBReviewer(ctx context.Context, tx *sqlx.Tx, 
 	return updatedReviewer, nil
 }
 
-func (s *Store) CastSystemIntakeGRBReviewerVote(ctx context.Context, reviewerID uuid.UUID, input *models.CastSystemIntakeGRBReviewerVoteInput) (*models.SystemIntakeGRBReviewer, error) {
-	var updatedReviewer *models.SystemIntakeGRBReviewer
-	if err := namedGet(ctx, s.db, updatedReviewer, sqlqueries.SystemIntakeGRBReviewer.CastVote, args{
-		"reviewer_id":  reviewerID,
+// CastSystemIntakeGRBReviewerVote inserts or updates the vote selection for a GRB Reviewer
+// requires the requesting user to be the GRB reviewer casting the vote (i.e., an admin cannot set another user's vote)
+func (s *Store) CastSystemIntakeGRBReviewerVote(ctx context.Context, input models.CastSystemIntakeGRBReviewerVoteInput) (*models.SystemIntakeGRBReviewer, error) {
+	var updatedReviewer models.SystemIntakeGRBReviewer
+	if err := namedGet(ctx, s.db, &updatedReviewer, sqlqueries.SystemIntakeGRBReviewer.CastVote, args{
+		"reviewer_id":  input.ReviewerID,
+		"user_id":      appcontext.Principal(ctx).Account().ID,
 		"vote":         input.Vote,
 		"vote_comment": input.VoteComment,
 	}); err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"error casting system intake GRB reviewer vote",
 			zap.Error(err),
-			zap.String("reviewer_id", reviewerID.String()),
+			zap.String("reviewer_id", input.ReviewerID.String()),
 		)
 		return nil, err
 	}
 
-	return updatedReviewer, nil
+	return &updatedReviewer, nil
 }
 
 func (s *Store) DeleteSystemIntakeGRBReviewer(ctx context.Context, tx *sqlx.Tx, reviewerID uuid.UUID) error {

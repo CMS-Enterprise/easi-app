@@ -3,7 +3,9 @@ UPDATE
 SET
     vote         = :vote,
     vote_comment = :vote_comment
-WHERE id = :reviewer_id
+WHERE
+    id = :reviewer_id
+    AND user_id = :user_id
 RETURNING
     id,
     system_intake_id,

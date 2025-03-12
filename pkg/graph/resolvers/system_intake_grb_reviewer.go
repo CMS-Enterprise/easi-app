@@ -121,17 +121,16 @@ func DeleteSystemIntakeGRBReviewer(
 	})
 }
 
-func CastSystemIntakeGRBReviewerVote(ctx context.Context, store *storage.Store, input *models.CastSystemIntakeGRBReviewerVoteInput) (*models.SystemIntakeGRBReviewer, error) {
+func CastSystemIntakeGRBReviewerVote(ctx context.Context, store *storage.Store, input models.CastSystemIntakeGRBReviewerVoteInput) (*models.SystemIntakeGRBReviewer, error) {
 	// first, if "OBJECT" is the vote selection, confirm there is a comment (required for objections)
 	if input.Vote == models.SystemIntakeAsyncGRBVotingOptionObjection && (input.VoteComment == nil || len(*input.VoteComment) < 1) {
 		return nil, errors.New("vote comment is required with an `Objection` vote")
 	}
 
-	reviewerID := appcontext.Principal(ctx).Account().ID
 	// then, check if the GRB review is in a state where votes are allowed - do this second to avoid a db round trip
 	// if the above condition isn't met
 	// get system intake
-	systemIntake, err := store.SystemIntakeByGRBReviewerID(ctx, reviewerID)
+	systemIntake, err := store.SystemIntakeByGRBReviewerID(ctx, input.ReviewerID)
 	if err != nil {
 		return nil, err
 	}
@@ -154,7 +153,7 @@ func CastSystemIntakeGRBReviewerVote(ctx context.Context, store *storage.Store, 
 	}
 
 	// set vote
-	return store.CastSystemIntakeGRBReviewerVote(ctx, reviewerID, input)
+	return store.CastSystemIntakeGRBReviewerVote(ctx, input)
 }
 
 func SystemIntakeGRBReviewers(

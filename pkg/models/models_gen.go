@@ -34,6 +34,7 @@ type BusinessCaseSolution struct {
 }
 
 type CastSystemIntakeGRBReviewerVoteInput struct {
+	ReviewerID  uuid.UUID                        `json:"reviewerID"`
 	Vote        SystemIntakeAsyncGRBVotingOption `json:"vote"`
 	VoteComment *string                          `json:"voteComment,omitempty"`
 }

@@ -96,6 +96,7 @@ export enum BusinessCaseStatus {
 }
 
 export type CastSystemIntakeGRBReviewerVoteInput = {
+  reviewerID: Scalars['UUID']['input'];
   vote: SystemIntakeAsyncGRBVotingOption;
   voteComment?: InputMaybe<Scalars['String']['input']>;
 };

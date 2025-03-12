@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -671,7 +670,7 @@ func (r *mutationResolver) DeleteSystemIntakeGRBReviewer(ctx context.Context, in
 
 // CastSystemIntakeGRBReviewerVote is the resolver for the castSystemIntakeGRBReviewerVote field.
 func (r *mutationResolver) CastSystemIntakeGRBReviewerVote(ctx context.Context, input models.CastSystemIntakeGRBReviewerVoteInput) (*models.SystemIntakeGRBReviewer, error) {
-	panic(fmt.Errorf("not implemented: CastSystemIntakeGRBReviewerVote - castSystemIntakeGRBReviewerVote"))
+	return resolvers.CastSystemIntakeGRBReviewerVote(ctx, r.store, input)
 }
 
 // CreateSystemIntakeGRBDiscussionPost is the resolver for the createSystemIntakeGRBDiscussionPost field.

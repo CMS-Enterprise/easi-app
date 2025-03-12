@@ -9506,6 +9506,7 @@ input UpdateSystemIntakeGRBReviewerInput {
 }
 
 input CastSystemIntakeGRBReviewerVoteInput {
+  reviewerID: UUID!
   vote: SystemIntakeAsyncGRBVotingOption!
   voteComment: String
 }
@@ -62229,13 +62230,20 @@ func (ec *executionContext) unmarshalInputCastSystemIntakeGRBReviewerVoteInput(c
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"vote", "voteComment"}
+	fieldsInOrder := [...]string{"reviewerID", "vote", "voteComment"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
+		case "reviewerID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reviewerID"))
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ReviewerID = data
 		case "vote":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("vote"))
 			data, err := ec.unmarshalNSystemIntakeAsyncGRBVotingOption2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx, v)
