@@ -133,13 +133,15 @@ jobs:
         with:
           name: test-frontend-assets
           path: build/
-      - name: LS Debug
-        run: ls -alh
       - name: Buildx Bake testing images
         uses: docker/bake-action@v6
         with:
           files: docker-compose.cypress_ci.yml
           load: true
+          # `source: .` is required because, since v6, bake-action uses the default "Git" context instead of using the "path"
+          # Practically, what this means is that the only files that this bake-action will see, by default, are ones that are checked out from git
+          # Since we purposefully download the frontend build assets to build/, those were not showing up and causing a build error until
+          # `source: .` was added
           source: .
           targets: db_seed,easi_client,cypress
           set: |
