@@ -40,10 +40,10 @@ import { formatDateLocal } from 'utils/date';
 
 import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
-import Discussions from './Discussions/Discussions';
 import GRBFeedbackCard from './GRBFeedbackCard/GRBFeedbackCard';
 import ParticipantsTable from './ParticipantsTable/ParticipantsTable';
 import PresentationLinksCard from './PresentationLinksCard/PresentationLinksCard';
+import Discussions from './Discussions';
 import GRBReviewerForm from './GRBReviewerForm';
 
 import './index.scss';
@@ -439,6 +439,7 @@ const GRBReview = ({
             <Discussions
               systemIntakeID={id}
               grbReviewers={grbReviewers}
+              grbReviewStartedAt={grbReviewStartedAt}
               className="margin-top-4 margin-bottom-6"
             />
 

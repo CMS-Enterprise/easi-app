@@ -57,13 +57,14 @@ describe('Async Presentation Links Card', () => {
 
     screen.getByRole('button', { name: 'View recording' });
     screen.getByText(formattedRecordingPasscode);
-    screen.getByRole('link', { name: 'View transcript' });
-    screen.getByRole('link', { name: 'View slide deck' });
+    screen.getByRole('button', { name: 'View transcript' });
+    screen.getByRole('button', { name: 'View slide deck' });
   });
 
   it('renders the transcript link', () => {
     renderCard({
       ...grbPresentationLinksMock,
+      transcriptFileStatus: SystemIntakeDocumentStatus.UNAVAILABLE,
       transcriptLink: 'http://transcriptlink.com'
     });
 
@@ -107,7 +108,7 @@ describe('Async Presentation Links Card', () => {
     ).not.toBeInTheDocument();
 
     expect(
-      screen.queryByRole('link', { name: 'View slide deck' })
+      screen.queryByRole('button', { name: 'View slide deck' })
     ).not.toBeInTheDocument();
   });
 
