@@ -127,7 +127,6 @@ func UpdateSystemIntakeGRBReviewType(
 	}); err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"error updating system intake GRB reviewer",
-			zap.Error(err),
 			zap.String("system_intake_id", systemIntakeID.String()),
 			zap.String("grb_review_type", string(reviewType)),
 		)
