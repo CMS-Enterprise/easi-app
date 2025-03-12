@@ -7,63 +7,74 @@ import { SystemIntakeGRBReviewType } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import CollapsableLink from 'components/CollapsableLink';
+import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
 import { GRBReviewFormStepProps } from 'types/grbReview';
 
-import GRBReviewFormStepWrapper from '../GRBReviewFormStepWrapper';
+import GRBReviewFormStepWrapper, {
+  GRBReviewFormStepSubmit
+} from '../GRBReviewFormStepWrapper';
 
 const AdditionalDocumentation = ({ grbReview }: GRBReviewFormStepProps) => {
   const { t } = useTranslation('grbReview');
   const history = useHistory();
 
+  const form = useEasiForm();
+
   return (
-    <GRBReviewFormStepWrapper grbReview={grbReview} requiredFields={false}>
-      <CollapsableLink
-        id="documentsList"
-        className="margin-top-3 padding-y-0"
-        label={t('setUpGrbReviewForm.documents.collapsableText.label')}
+    <EasiFormProvider {...form}>
+      <GRBReviewFormStepWrapper
+        grbReview={grbReview}
+        requiredFields={false}
+        onSubmit={(async () => null) as unknown as GRBReviewFormStepSubmit}
       >
-        <p className="line-height-body-5 margin-y-0 tablet:grid-col-9">
-          {t('setUpGrbReviewForm.documents.collapsableText.description')}
-        </p>
+        <CollapsableLink
+          id="documentsList"
+          className="margin-top-3 padding-y-0"
+          label={t('setUpGrbReviewForm.documents.collapsableText.label')}
+        >
+          <p className="line-height-body-5 margin-y-0 tablet:grid-col-9">
+            {t('setUpGrbReviewForm.documents.collapsableText.description')}
+          </p>
 
-        <ul className="line-height-body-5 margin-y-0">
-          {t<string[]>('setUpGrbReviewForm.documents.collapsableText.list', {
-            returnObjects: true
-          }).map(item => (
-            <li key={item} className="margin-top-05">
-              {item}
-            </li>
-          ))}
-        </ul>
-      </CollapsableLink>
+          <ul className="line-height-body-5 margin-y-0">
+            {t<string[]>('setUpGrbReviewForm.documents.collapsableText.list', {
+              returnObjects: true
+            }).map(item => (
+              <li key={item} className="margin-top-05">
+                {item}
+              </li>
+            ))}
+          </ul>
+        </CollapsableLink>
 
-      {grbReview.grbReviewType === SystemIntakeGRBReviewType.STANDARD && (
-        <Alert slim type="info" className="margin-top-3">
-          {t('setUpGrbReviewForm.documents.standardMeetingAlert')}
-        </Alert>
-      )}
+        {grbReview.grbReviewType === SystemIntakeGRBReviewType.STANDARD && (
+          <Alert slim type="info" className="margin-top-3">
+            {t('setUpGrbReviewForm.documents.standardMeetingAlert')}
+          </Alert>
+        )}
 
-      <h4 className="margin-top-6 margin-bottom-1">
-        {t('setUpGrbReviewForm.documents.heading')}
-      </h4>
+        <h4 className="margin-top-6 margin-bottom-1">
+          {t('setUpGrbReviewForm.documents.heading')}
+        </h4>
 
-      <Button
-        type="button"
-        onClick={() =>
-          history.push(`/it-governance/${grbReview.id}/documents/upload`, {
-            uploadSource: 'grbReviewForm'
-          })
-        }
-      >
-        {t('setUpGrbReviewForm.documents.addDocument')}
-      </Button>
+        <Button
+          type="button"
+          onClick={() =>
+            history.push(`/it-governance/${grbReview.id}/documents/upload`, {
+              uploadSource: 'grbReviewForm'
+            })
+          }
+        >
+          {t('setUpGrbReviewForm.documents.addDocument')}
+        </Button>
 
-      <DocumentsTable
-        systemIntakeId={grbReview.id}
-        documents={grbReview.documents}
-        className="margin-top-4"
-      />
-    </GRBReviewFormStepWrapper>
+        <DocumentsTable
+          systemIntakeId={grbReview.id}
+          documents={grbReview.documents}
+          className="margin-top-4"
+        />
+      </GRBReviewFormStepWrapper>
+    </EasiFormProvider>
   );
 };
 

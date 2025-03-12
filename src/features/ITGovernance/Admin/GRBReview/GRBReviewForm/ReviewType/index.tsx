@@ -1,6 +1,7 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Fieldset,
   FormGroup,
@@ -17,6 +18,7 @@ import {
 
 import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
 import RequiredAsterisk from 'components/RequiredAsterisk';
+import { GrbReviewTypeSchema } from 'validations/grbReviewSchema';
 
 import GRBReviewFormStepWrapper, {
   GRBReviewFormStepSubmit
@@ -38,6 +40,7 @@ const ReviewType = ({ grbReview }: ReviewTypeProps) => {
   const [mutate] = useUpdateSystemIntakeGRBReviewTypeMutation();
 
   const form = useEasiForm<ReviewTypeFields>({
+    resolver: yupResolver(GrbReviewTypeSchema),
     defaultValues: {
       grbReviewType: grbReview.grbReviewType
     }
