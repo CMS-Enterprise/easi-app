@@ -5,7 +5,7 @@ SET
     grb_role=:grb_role,
     modified_at=CURRENT_TIMESTAMP,
     modified_by=:modified_by
-WHERE id = :reviewer_id
+WHERE id=:reviewer_id
 RETURNING
     id,
     system_intake_id,
