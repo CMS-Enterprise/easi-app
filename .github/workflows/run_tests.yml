@@ -140,6 +140,7 @@ jobs:
         with:
           files: docker-compose.cypress_ci.yml
           load: true
+          source: .
           targets: db_seed,easi_client,cypress
           set: |
             db_seed.cache-from=type=gha,scope=${{ env.GIT_REF_NAME }}-db_seed
