@@ -121,6 +121,42 @@ func DeleteSystemIntakeGRBReviewer(
 	})
 }
 
+func CastSystemIntakeGRBReviewerVote(ctx context.Context, store *storage.Store, input *models.CastSystemIntakeGRBReviewerVoteInput) (*models.SystemIntakeGRBReviewer, error) {
+	// first, if "OBJECT" is the vote selection, confirm there is a comment (required for objections)
+	if input.Vote == models.SystemIntakeAsyncGRBVotingOptionObjection && (input.VoteComment == nil || len(*input.VoteComment) < 1) {
+		return nil, errors.New("vote comment is required with an `Objection` vote")
+	}
+
+	reviewerID := appcontext.Principal(ctx).Account().ID
+	// then, check if the GRB review is in a state where votes are allowed - do this second to avoid a db round trip
+	// if the above condition isn't met
+	// get system intake
+	systemIntake, err := store.SystemIntakeByGRBReviewerID(ctx, reviewerID)
+	if err != nil {
+		return nil, err
+	}
+
+	// this can happen if the user making the request is not a reviewer
+	if systemIntake == nil {
+		return nil, errors.New("no system intake found for this GRB reviewer")
+	}
+
+	// confirm we are between GRB start date and GRB Async end date
+	// if either are nil, disallow votes
+	if systemIntake.GRBReviewStartedAt == nil || systemIntake.GrbReviewAsyncEndDate == nil {
+		return nil, errors.New("GRB review times not yet available")
+	}
+
+	now := time.Now()
+	// if we `now` is before the review starts or if `now` is after the review ends, we are not in the voting window
+	if now.Before(*systemIntake.GRBReviewStartedAt) || now.After(*systemIntake.GrbReviewAsyncEndDate) {
+		return nil, errors.New("GRB review is not currently accepting votes")
+	}
+
+	// set vote
+	return store.CastSystemIntakeGRBReviewerVote(ctx, reviewerID, input)
+}
+
 func SystemIntakeGRBReviewers(
 	ctx context.Context,
 	intakeID uuid.UUID,

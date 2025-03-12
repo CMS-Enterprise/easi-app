@@ -46,17 +46,34 @@ func (s *Store) CreateSystemIntakeGRBReviewers(ctx context.Context, np sqlutils.
 func (s *Store) UpdateSystemIntakeGRBReviewer(ctx context.Context, tx *sqlx.Tx, input *models.UpdateSystemIntakeGRBReviewerInput) (*models.SystemIntakeGRBReviewer, error) {
 	updatedReviewer := &models.SystemIntakeGRBReviewer{}
 	if err := namedGet(ctx, tx, updatedReviewer, sqlqueries.SystemIntakeGRBReviewer.Update, args{
-		"reviewer_id":  input.ReviewerID,
-		"grb_role":     input.GrbRole,
-		"voting_role":  input.VotingRole,
-		"modified_by":  appcontext.Principal(ctx).Account().ID,
+		"reviewer_id": input.ReviewerID,
+		"grb_role":    input.GrbRole,
+		"voting_role": input.VotingRole,
+		"modified_by": appcontext.Principal(ctx).Account().ID,
+	}); err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"error updating system intake GRB reviewer",
+			zap.Error(err),
+			zap.String("reviewer_id", input.ReviewerID.String()),
+		)
+	}
+
+	return updatedReviewer, nil
+}
+
+func (s *Store) CastSystemIntakeGRBReviewerVote(ctx context.Context, reviewerID uuid.UUID, input *models.CastSystemIntakeGRBReviewerVoteInput) (*models.SystemIntakeGRBReviewer, error) {
+	var updatedReviewer *models.SystemIntakeGRBReviewer
+	if err := namedGet(ctx, s.db, updatedReviewer, sqlqueries.SystemIntakeGRBReviewer.CastVote, args{
+		"reviewer_id":  reviewerID,
 		"vote":         input.Vote,
 		"vote_comment": input.VoteComment,
 	}); err != nil {
 		appcontext.ZLogger(ctx).Error(
-			"error updating system intake GRB reviewer",
-			zap.String("reviewer_id", input.ReviewerID.String()),
+			"error casting system intake GRB reviewer vote",
+			zap.Error(err),
+			zap.String("reviewer_id", reviewerID.String()),
 		)
+		return nil, err
 	}
 
 	return updatedReviewer, nil
@@ -107,6 +124,7 @@ func UpdateSystemIntakeGRBReviewType(
 	}); err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"error updating system intake GRB reviewer",
+			zap.Error(err),
 			zap.String("system_intake_id", systemIntakeID.String()),
 			zap.String("grb_review_type", string(reviewType)),
 		)

@@ -1258,7 +1258,10 @@ input UpdateSystemIntakeGRBReviewerInput {
   reviewerID: UUID!
   votingRole: SystemIntakeGRBReviewerVotingRole!
   grbRole: SystemIntakeGRBReviewerRole!
-  vote: SystemIntakeAsyncGRBVotingOption
+}
+
+input CastSystemIntakeGRBReviewerVoteInput {
+  vote: SystemIntakeAsyncGRBVotingOption!
   voteComment: String
 }
 
@@ -2658,6 +2661,8 @@ type Mutation {
   createSystemIntakeGRBReviewers(input: CreateSystemIntakeGRBReviewersInput!): CreateSystemIntakeGRBReviewersPayload
   updateSystemIntakeGRBReviewer(input: UpdateSystemIntakeGRBReviewerInput!): SystemIntakeGRBReviewer!
   deleteSystemIntakeGRBReviewer(input: DeleteSystemIntakeGRBReviewerInput!): UUID!
+
+  castSystemIntakeGRBReviewerVote(input: CastSystemIntakeGRBReviewerVoteInput!):SystemIntakeGRBReviewer!
 
   createSystemIntakeGRBDiscussionPost(input: createSystemIntakeGRBDiscussionPostInput!): SystemIntakeGRBReviewDiscussionPost
   createSystemIntakeGRBDiscussionReply(input: createSystemIntakeGRBDiscussionReplyInput!): SystemIntakeGRBReviewDiscussionPost

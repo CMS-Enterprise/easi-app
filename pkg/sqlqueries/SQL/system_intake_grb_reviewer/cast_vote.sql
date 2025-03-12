@@ -1,10 +1,8 @@
 UPDATE
     system_intake_grb_reviewers
 SET
-    voting_role=:voting_role,
-    grb_role=:grb_role,
-    modified_at=CURRENT_TIMESTAMP,
-    modified_by=:modified_by
+    vote         = :vote,
+    vote_comment = :vote_comment
 WHERE id = :reviewer_id
 RETURNING
     id,

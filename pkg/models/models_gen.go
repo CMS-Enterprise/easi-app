@@ -33,6 +33,11 @@ type BusinessCaseSolution struct {
 	Title                   *string `json:"title,omitempty"`
 }
 
+type CastSystemIntakeGRBReviewerVoteInput struct {
+	Vote        SystemIntakeAsyncGRBVotingOption `json:"vote"`
+	VoteComment *string                          `json:"voteComment,omitempty"`
+}
+
 // CedarBudgetActualCost represents an individual budget actual cost item; this information is returned from the CEDAR Core API
 // as a part of the CedarBudgetSystemCost object
 type CedarBudgetActualCost struct {
@@ -896,11 +901,9 @@ type UpdateSystemIntakeContractDetailsInput struct {
 }
 
 type UpdateSystemIntakeGRBReviewerInput struct {
-	ReviewerID  uuid.UUID                         `json:"reviewerID"`
-	VotingRole  SystemIntakeGRBReviewerVotingRole `json:"votingRole"`
-	GrbRole     SystemIntakeGRBReviewerRole       `json:"grbRole"`
-	Vote        *SystemIntakeAsyncGRBVotingOption `json:"vote,omitempty"`
-	VoteComment *string                           `json:"voteComment,omitempty"`
+	ReviewerID uuid.UUID                         `json:"reviewerID"`
+	VotingRole SystemIntakeGRBReviewerVotingRole `json:"votingRole"`
+	GrbRole    SystemIntakeGRBReviewerRole       `json:"grbRole"`
 }
 
 // Input data for updating a system intake's relationship to a CEDAR system

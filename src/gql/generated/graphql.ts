@@ -95,6 +95,11 @@ export enum BusinessCaseStatus {
   OPEN = 'OPEN'
 }
 
+export type CastSystemIntakeGRBReviewerVoteInput = {
+  vote: SystemIntakeAsyncGRBVotingOption;
+  voteComment?: InputMaybe<Scalars['String']['input']>;
+};
+
 /** The possible types of assignees for CedarRoles */
 export enum CedarAssigneeType {
   ORGANIZATION = 'ORGANIZATION',
@@ -957,6 +962,7 @@ export enum LifecycleCostYear {
 export type Mutation = {
   __typename: 'Mutation';
   archiveSystemIntake: SystemIntake;
+  castSystemIntakeGRBReviewerVote: SystemIntakeGRBReviewer;
   closeTRBRequest: TRBRequest;
   createCedarSystemBookmark?: Maybe<CreateCedarSystemBookmarkPayload>;
   createSystemIntake?: Maybe<SystemIntake>;
@@ -1050,6 +1056,12 @@ export type Mutation = {
 /** Defines the mutations for the schema */
 export type MutationArchiveSystemIntakeArgs = {
   id: Scalars['UUID']['input'];
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationCastSystemIntakeGRBReviewerVoteArgs = {
+  input: CastSystemIntakeGRBReviewerVoteInput;
 };
 
 
@@ -3175,8 +3187,6 @@ export type UpdateSystemIntakeContractDetailsInput = {
 export type UpdateSystemIntakeGRBReviewerInput = {
   grbRole: SystemIntakeGRBReviewerRole;
   reviewerID: Scalars['UUID']['input'];
-  vote?: InputMaybe<SystemIntakeAsyncGRBVotingOption>;
-  voteComment?: InputMaybe<Scalars['String']['input']>;
   votingRole: SystemIntakeGRBReviewerVotingRole;
 };
 

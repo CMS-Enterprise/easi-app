@@ -615,3 +615,20 @@ func (s *Store) GetMySystemIntakes(ctx context.Context) ([]*models.SystemIntake,
 
 	return intakes, err
 }
+
+func (s *Store) SystemIntakeByGRBReviewerID(ctx context.Context, reviewerID uuid.UUID) (*models.SystemIntake, error) {
+	var systemIntake *models.SystemIntake
+
+	if err := namedGet(ctx, s.db, &systemIntake, sqlqueries.SystemIntake.GetByGRBReviewerID, args{
+		"reviewer_id": reviewerID,
+	}); err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"error getting system intake by GRB reviewer ID",
+			zap.Error(err),
+			zap.String("reviewer_id", reviewerID.String()))
+
+		return nil, err
+	}
+
+	return systemIntake, nil
+}

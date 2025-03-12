@@ -546,6 +546,7 @@ type ComplexityRoot struct {
 
 	Mutation struct {
 		ArchiveSystemIntake                                 func(childComplexity int, id uuid.UUID) int
+		CastSystemIntakeGRBReviewerVote                     func(childComplexity int, input models.CastSystemIntakeGRBReviewerVoteInput) int
 		CloseTRBRequest                                     func(childComplexity int, input models.CloseTRBRequestInput) int
 		CreateCedarSystemBookmark                           func(childComplexity int, input models.CreateCedarSystemBookmarkInput) int
 		CreateSystemIntake                                  func(childComplexity int, input models.CreateSystemIntakeInput) int
@@ -1266,6 +1267,7 @@ type MutationResolver interface {
 	CreateSystemIntakeGRBReviewers(ctx context.Context, input models.CreateSystemIntakeGRBReviewersInput) (*models.CreateSystemIntakeGRBReviewersPayload, error)
 	UpdateSystemIntakeGRBReviewer(ctx context.Context, input models.UpdateSystemIntakeGRBReviewerInput) (*models.SystemIntakeGRBReviewer, error)
 	DeleteSystemIntakeGRBReviewer(ctx context.Context, input models.DeleteSystemIntakeGRBReviewerInput) (uuid.UUID, error)
+	CastSystemIntakeGRBReviewerVote(ctx context.Context, input models.CastSystemIntakeGRBReviewerVoteInput) (*models.SystemIntakeGRBReviewer, error)
 	CreateSystemIntakeGRBDiscussionPost(ctx context.Context, input models.CreateSystemIntakeGRBDiscussionPostInput) (*models.SystemIntakeGRBReviewDiscussionPost, error)
 	CreateSystemIntakeGRBDiscussionReply(ctx context.Context, input models.CreateSystemIntakeGRBDiscussionReplyInput) (*models.SystemIntakeGRBReviewDiscussionPost, error)
 	UpdateSystemIntakeGRBReviewType(ctx context.Context, input models.UpdateSystemIntakeGRBReviewTypeInput) (*models.UpdateSystemIntakePayload, error)
@@ -3979,6 +3981,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.ArchiveSystemIntake(childComplexity, args["id"].(uuid.UUID)), true
+
+	case "Mutation.castSystemIntakeGRBReviewerVote":
+		if e.complexity.Mutation.CastSystemIntakeGRBReviewerVote == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_castSystemIntakeGRBReviewerVote_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CastSystemIntakeGRBReviewerVote(childComplexity, args["input"].(models.CastSystemIntakeGRBReviewerVoteInput)), true
 
 	case "Mutation.closeTRBRequest":
 		if e.complexity.Mutation.CloseTRBRequest == nil {
@@ -8045,6 +8059,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	opCtx := graphql.GetOperationContext(ctx)
 	ec := executionContext{opCtx, e, 0, 0, make(chan graphql.DeferredResult)}
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
+		ec.unmarshalInputCastSystemIntakeGRBReviewerVoteInput,
 		ec.unmarshalInputCloseTRBRequestInput,
 		ec.unmarshalInputCreateCedarSystemBookmarkInput,
 		ec.unmarshalInputCreateGRBReviewerInput,
@@ -9488,7 +9503,10 @@ input UpdateSystemIntakeGRBReviewerInput {
   reviewerID: UUID!
   votingRole: SystemIntakeGRBReviewerVotingRole!
   grbRole: SystemIntakeGRBReviewerRole!
-  vote: SystemIntakeAsyncGRBVotingOption
+}
+
+input CastSystemIntakeGRBReviewerVoteInput {
+  vote: SystemIntakeAsyncGRBVotingOption!
   voteComment: String
 }
 
@@ -10889,6 +10907,8 @@ type Mutation {
   updateSystemIntakeGRBReviewer(input: UpdateSystemIntakeGRBReviewerInput!): SystemIntakeGRBReviewer!
   deleteSystemIntakeGRBReviewer(input: DeleteSystemIntakeGRBReviewerInput!): UUID!
 
+  castSystemIntakeGRBReviewerVote(input: CastSystemIntakeGRBReviewerVoteInput!):SystemIntakeGRBReviewer!
+
   createSystemIntakeGRBDiscussionPost(input: createSystemIntakeGRBDiscussionPostInput!): SystemIntakeGRBReviewDiscussionPost
   createSystemIntakeGRBDiscussionReply(input: createSystemIntakeGRBDiscussionReplyInput!): SystemIntakeGRBReviewDiscussionPost
 
@@ -11557,6 +11577,34 @@ func (ec *executionContext) field_Mutation_archiveSystemIntake_argsID(
 	}
 
 	var zeroVal uuid.UUID
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_castSystemIntakeGRBReviewerVote_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_castSystemIntakeGRBReviewerVote_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_castSystemIntakeGRBReviewerVote_argsInput(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (models.CastSystemIntakeGRBReviewerVoteInput, error) {
+	if _, ok := rawArgs["input"]; !ok {
+		var zeroVal models.CastSystemIntakeGRBReviewerVoteInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNCastSystemIntakeGRBReviewerVoteInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCastSystemIntakeGRBReviewerVoteInput(ctx, tmp)
+	}
+
+	var zeroVal models.CastSystemIntakeGRBReviewerVoteInput
 	return zeroVal, nil
 }
 
@@ -33505,6 +33553,85 @@ func (ec *executionContext) fieldContext_Mutation_deleteSystemIntakeGRBReviewer(
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_deleteSystemIntakeGRBReviewer_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_castSystemIntakeGRBReviewerVote(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_castSystemIntakeGRBReviewerVote(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CastSystemIntakeGRBReviewerVote(rctx, fc.Args["input"].(models.CastSystemIntakeGRBReviewerVoteInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.SystemIntakeGRBReviewer)
+	fc.Result = res
+	return ec.marshalNSystemIntakeGRBReviewer2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewer(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_castSystemIntakeGRBReviewerVote(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_SystemIntakeGRBReviewer_id(ctx, field)
+			case "userAccount":
+				return ec.fieldContext_SystemIntakeGRBReviewer_userAccount(ctx, field)
+			case "systemIntakeID":
+				return ec.fieldContext_SystemIntakeGRBReviewer_systemIntakeID(ctx, field)
+			case "votingRole":
+				return ec.fieldContext_SystemIntakeGRBReviewer_votingRole(ctx, field)
+			case "vote":
+				return ec.fieldContext_SystemIntakeGRBReviewer_vote(ctx, field)
+			case "voteComment":
+				return ec.fieldContext_SystemIntakeGRBReviewer_voteComment(ctx, field)
+			case "grbRole":
+				return ec.fieldContext_SystemIntakeGRBReviewer_grbRole(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_SystemIntakeGRBReviewer_createdBy(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_SystemIntakeGRBReviewer_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_SystemIntakeGRBReviewer_modifiedBy(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_SystemIntakeGRBReviewer_modifiedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeGRBReviewer", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_castSystemIntakeGRBReviewerVote_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -62095,6 +62222,40 @@ func (ec *executionContext) fieldContext___Type_isOneOf(_ context.Context, field
 
 // region    **************************** input.gotpl *****************************
 
+func (ec *executionContext) unmarshalInputCastSystemIntakeGRBReviewerVoteInput(ctx context.Context, obj any) (models.CastSystemIntakeGRBReviewerVoteInput, error) {
+	var it models.CastSystemIntakeGRBReviewerVoteInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"vote", "voteComment"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "vote":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("vote"))
+			data, err := ec.unmarshalNSystemIntakeAsyncGRBVotingOption2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Vote = data
+		case "voteComment":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("voteComment"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.VoteComment = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputCloseTRBRequestInput(ctx context.Context, obj any) (models.CloseTRBRequestInput, error) {
 	var it models.CloseTRBRequestInput
 	asMap := map[string]any{}
@@ -65227,7 +65388,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeGRBReviewerInput(ctx
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"reviewerID", "votingRole", "grbRole", "vote", "voteComment"}
+	fieldsInOrder := [...]string{"reviewerID", "votingRole", "grbRole"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -65255,20 +65416,6 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeGRBReviewerInput(ctx
 				return it, err
 			}
 			it.GrbRole = data
-		case "vote":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("vote"))
-			data, err := ec.unmarshalOSystemIntakeAsyncGRBVotingOption2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Vote = data
-		case "voteComment":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("voteComment"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.VoteComment = data
 		}
 	}
 
@@ -69426,6 +69573,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "deleteSystemIntakeGRBReviewer":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_deleteSystemIntakeGRBReviewer(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "castSystemIntakeGRBReviewerVote":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_castSystemIntakeGRBReviewerVote(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
@@ -76736,6 +76890,11 @@ func (ec *executionContext) marshalNBusinessCaseStatus2githubᚗcomᚋcmsᚑente
 	return res
 }
 
+func (ec *executionContext) unmarshalNCastSystemIntakeGRBReviewerVoteInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCastSystemIntakeGRBReviewerVoteInput(ctx context.Context, v any) (models.CastSystemIntakeGRBReviewerVoteInput, error) {
+	res, err := ec.unmarshalInputCastSystemIntakeGRBReviewerVoteInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNCedarAuthorityToOperate2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarAuthorityToOperateᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarAuthorityToOperate) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -78458,6 +78617,16 @@ func (ec *executionContext) unmarshalNSystemIntakeActionType2githubᚗcomᚋcms�
 }
 
 func (ec *executionContext) marshalNSystemIntakeActionType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeActionType(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeActionType) graphql.Marshaler {
+	return v
+}
+
+func (ec *executionContext) unmarshalNSystemIntakeAsyncGRBVotingOption2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx context.Context, v any) (models.SystemIntakeAsyncGRBVotingOption, error) {
+	var res models.SystemIntakeAsyncGRBVotingOption
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSystemIntakeAsyncGRBVotingOption2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeAsyncGRBVotingOption) graphql.Marshaler {
 	return v
 }
 
@@ -81394,22 +81563,6 @@ func (ec *executionContext) unmarshalOSystemIntakeAsyncGRBVotingOption2githubᚗ
 }
 
 func (ec *executionContext) marshalOSystemIntakeAsyncGRBVotingOption2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeAsyncGRBVotingOption) graphql.Marshaler {
-	return v
-}
-
-func (ec *executionContext) unmarshalOSystemIntakeAsyncGRBVotingOption2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx context.Context, v any) (*models.SystemIntakeAsyncGRBVotingOption, error) {
-	if v == nil {
-		return nil, nil
-	}
-	var res = new(models.SystemIntakeAsyncGRBVotingOption)
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOSystemIntakeAsyncGRBVotingOption2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeAsyncGRBVotingOption) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
 	return v
 }
 
