@@ -96,6 +96,11 @@ func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Sto
 		}
 	}
 
+	// If the links are being set to empty (all fields nil/null) we should just delete the row
+	if links.IsEmpty() {
+		return nil, store.DeleteSystemIntakeGRBPresentationLinks(ctx, input.SystemIntakeID)
+	}
+
 	return store.SetSystemIntakeGRBPresentationLinks(ctx, links)
 }
 
