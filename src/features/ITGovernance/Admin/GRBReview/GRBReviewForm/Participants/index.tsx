@@ -62,7 +62,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
   } = form;
 
   const onSubmit: GRBReviewFormStepSubmit<ParticipantsFields> = async input => {
-    mutate({
+    return mutate({
       variables: {
         input: {
           systemIntakeID: grbReview.id,
