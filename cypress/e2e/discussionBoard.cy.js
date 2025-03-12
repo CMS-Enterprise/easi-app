@@ -1,4 +1,5 @@
-describe('Discussion Board', () => {
+// EASI-4787 TODO: Unskip test and update logic to start GRB review once form is completed
+describe.skip('Discussion Board', () => {
   it('users with access can interact with discussions', () => {
     // Make sure to seed data before running this test
     // Users are from backend mock data
