@@ -3,7 +3,9 @@ import React from 'react';
 import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
 import { GRBReviewFormStepProps } from 'types/grbReview';
 
-import GRBReviewFormStepWrapper from '../GRBReviewFormStepWrapper';
+import GRBReviewFormStepWrapper, {
+  GRBReviewFormStepSubmit
+} from '../GRBReviewFormStepWrapper';
 
 // TODO: Update fields type
 type ParticipantsFields = {};
@@ -15,7 +17,8 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
     <EasiFormProvider<ParticipantsFields> {...form}>
       <GRBReviewFormStepWrapper
         grbReview={grbReview}
-        onSubmit={async () => null}
+        // TODO: Update onSubmit to return mutation
+        onSubmit={(async () => null) as unknown as GRBReviewFormStepSubmit}
       >
         <p>Fields here</p>
       </GRBReviewFormStepWrapper>

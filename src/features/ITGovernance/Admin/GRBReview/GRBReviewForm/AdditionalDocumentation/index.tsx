@@ -10,7 +10,9 @@ import CollapsableLink from 'components/CollapsableLink';
 import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
 import { GRBReviewFormStepProps } from 'types/grbReview';
 
-import GRBReviewFormStepWrapper from '../GRBReviewFormStepWrapper';
+import GRBReviewFormStepWrapper, {
+  GRBReviewFormStepSubmit
+} from '../GRBReviewFormStepWrapper';
 
 const AdditionalDocumentation = ({ grbReview }: GRBReviewFormStepProps) => {
   const { t } = useTranslation('grbReview');
@@ -23,7 +25,7 @@ const AdditionalDocumentation = ({ grbReview }: GRBReviewFormStepProps) => {
       <GRBReviewFormStepWrapper
         grbReview={grbReview}
         requiredFields={false}
-        onSubmit={async () => null}
+        onSubmit={(async () => null) as unknown as GRBReviewFormStepSubmit}
       >
         <CollapsableLink
           id="documentsList"
