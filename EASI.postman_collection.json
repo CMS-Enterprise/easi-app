@@ -1036,7 +1036,7 @@
 									"mode": "graphql",
 									"graphql": {
 										"query": "mutation createSystemIntakeGRBReviewer($input: CreateSystemIntakeGRBReviewersInput!) {\n  createSystemIntakeGRBReviewers(input: $input) {\n    reviewers {\n        id\n        userAccount {\n        id\n        }\n        grbRole\n        votingRole\n        systemIntakeID\n        createdBy\n        createdAt\n        modifiedBy\n        modifiedAt\n    }\n    \n  }\n}",
-										"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"8edb237e-ad48-49b2-91cf-8534362bc6cf\",\r\n    \"reviewers\": {\r\n        \"euaUserId\": \"ABCD\",\r\n        \"votingRole\": \"NON_VOTING\",\r\n        \"grbRole\": \"CMCS_REP\"\r\n    }\r\n  }\r\n}"
+										"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"8edb237e-ad48-49b2-91cf-8534362bc6cf\",\r\n    \"reviewers\": {\r\n        \"euaUserId\": \"USR1\",\r\n        \"votingRole\": \"NON_VOTING\",\r\n        \"grbRole\": \"CMCS_REP\"\r\n    }\r\n  }\r\n}"
 									}
 								},
 								"url": {
@@ -1069,7 +1069,28 @@
 									"mode": "graphql",
 									"graphql": {
 										"query": "mutation updateGRBReviewer($input: UpdateSystemIntakeGRBReviewerInput!) {\n  updateSystemIntakeGRBReviewer(input: $input) {\n    id\n    systemIntakeID\n    grbRole\n    votingRole\n    userAccount {\n        username\n        id\n        givenName\n        commonName\n        email\n    }\n    vote\n    voteComment\n    createdAt\n    createdBy\n    modifiedAt\n    modifiedBy\n  }\n}",
-										"variables": "{\r\n    \"input\": {\r\n        \"reviewerID\": \"{{SystemIntakeGRBReviewerID}}\",\r\n        \"votingRole\": \"VOTING\",\r\n        \"grbRole\": \"ACA_3021_REP\",\r\n        \"vote\":\"NO_OBJECTION\",\r\n        \"voteComment\":\"I just think it's a great idea\"\r\n    }\r\n}"
+										"variables": "{\r\n    \"input\": {\r\n        \"reviewerID\": \"{{SystemIntakeGRBReviewerID}}\",\r\n        \"votingRole\": \"VOTING\",\r\n        \"grbRole\": \"ACA_3021_REP\"\r\n    }\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cast GRB Reviewer Vote",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation castSystemIntakeGRBReviewerVote($input: CastSystemIntakeGRBReviewerVoteInput!) {\n  castSystemIntakeGRBReviewerVote(input: $input) {\n    id\n    systemIntakeID\n    grbRole\n    votingRole\n    userAccount {\n      username\n      id\n      givenName\n      commonName\n      email\n    }\n    vote\n    voteComment\n    createdAt\n    createdBy\n    modifiedAt\n    modifiedBy\n  }\n}\n",
+										"variables": "{\n  \"input\": {\n    \"reviewerID\": \"eb7653ff-94e6-42f9-98fc-63f3a2dd3cca\",\n    \"vote\": \"NO_OBJECTION\",\n    \"voteComment\": \"I think it's a great idea!\"\n  }\n}"
 									}
 								},
 								"url": {
