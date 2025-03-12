@@ -166,7 +166,7 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
           >
             <Fieldset>
               <Grid desktop={{ col: 6 }}>
-                <div className="border-top-1px border-base-lighter margin-top-3">
+                <div className="border-top-1px border-base-lighter margin-top-3 easi-text-normal">
                   <h4 className="margin-top-1 margin-bottom-05">
                     {t('presentationGRBReviewForm.heading')}
                   </h4>
@@ -268,7 +268,7 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
           >
             <Fieldset className="body-normal">
               <Grid desktop={{ col: 6 }}>
-                <div className="border-top-1px border-base-lighter margin-top-3">
+                <div className="border-top-1px border-base-lighter margin-top-3 easi-text-normal">
                   <h4 className="margin-top-1 margin-bottom-05">
                     {t('presentationGRBReviewForm.asyncHeading')}
                   </h4>
