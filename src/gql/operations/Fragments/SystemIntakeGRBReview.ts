@@ -14,6 +14,9 @@ export default gql(/* GraphQL */ `
     grbDate
     grbReviewAsyncRecordingTime
 
+    grbDate
+    grbReviewAsyncRecordingTime
+
     grbReviewers {
       ...SystemIntakeGRBReviewer
     }

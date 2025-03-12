@@ -104,7 +104,7 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
       ? await fileToBase64File(input.presentationDeck.presentationDeckFileData)
       : null;
 
-    mutateStandard({
+    return mutateStandard({
       variables: {
         grbMeetingDate: {
           systemIntakeID: input.systemIntakeID,
