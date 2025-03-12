@@ -40,10 +40,10 @@ import { formatDateLocal } from 'utils/date';
 
 import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
-import Discussions from './Discussions/Discussions';
 import GRBFeedbackCard from './GRBFeedbackCard/GRBFeedbackCard';
 import ParticipantsSection from './ParticipantsSection/ParticipantsSection';
 import PresentationLinksCard from './PresentationLinksCard/PresentationLinksCard';
+import Discussions from './Discussions';
 import GRBReviewerForm from './GRBReviewerForm';
 
 import './index.scss';
