@@ -7,7 +7,9 @@ import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
 import { GRBReviewFormStepProps } from 'types/grbReview';
 import { GrbPresentationSchema } from 'validations/grbReviewSchema';
 
-import GRBReviewFormStepWrapper from '../GRBReviewFormStepWrapper';
+import GRBReviewFormStepWrapper, {
+  GRBReviewFormStepSubmit
+} from '../GRBReviewFormStepWrapper';
 
 type PresentationFields = {
   grbDate: string;
@@ -27,7 +29,8 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
     <EasiFormProvider<PresentationFields> {...form}>
       <GRBReviewFormStepWrapper<PresentationFields>
         grbReview={grbReview}
-        onSubmit={async values => null}
+        // TODO: Update onSubmit to return mutation
+        onSubmit={(async () => null) as unknown as GRBReviewFormStepSubmit}
       >
         <Controller
           name="grbDate"

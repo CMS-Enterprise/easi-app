@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { FieldValues } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
+import { FetchResult } from '@apollo/client';
 import { Form, GridContainer, Icon } from '@trussworks/react-uswds';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
 import { SystemIntakeGRBReviewFragment } from 'gql/generated/graphql';
@@ -18,11 +19,13 @@ import { grbReviewFormSteps } from 'i18n/en-US/grbReview';
 import { GrbReviewFormStepKey } from 'types/grbReview';
 import { GrbReviewFormSchema } from 'validations/grbReviewSchema';
 
-export type GRBReviewFormStepSubmit<TFieldValues extends FieldValues> = (
-  values: TFieldValues & { systemIntakeID: string }
-) => Promise<any>;
+export type GRBReviewFormStepSubmit<
+  TFieldValues extends FieldValues = FieldValues
+> = (values: TFieldValues & { systemIntakeID: string }) => Promise<FetchResult>;
 
-type GRBReviewFormStepWrapperProps<TFieldValues extends FieldValues> = {
+type GRBReviewFormStepWrapperProps<
+  TFieldValues extends FieldValues = FieldValues
+> = {
   children: React.ReactNode;
   grbReview: SystemIntakeGRBReviewFragment;
   /** onSubmit function for form step */
