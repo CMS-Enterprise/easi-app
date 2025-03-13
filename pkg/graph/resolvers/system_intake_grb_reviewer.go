@@ -148,6 +148,7 @@ func CastSystemIntakeGRBReviewerVote(ctx context.Context, store *storage.Store, 
 
 	now := time.Now()
 	// if `now` is before the review starts or if `now` is after the review ends, we are not in the voting window
+	// TODO: it may be possible to submit votes even after the end date - address if needed
 	if now.Before(*systemIntake.GRBReviewStartedAt) || now.After(*systemIntake.GrbReviewAsyncEndDate) {
 		return nil, errors.New("GRB review is not currently accepting votes")
 	}
