@@ -61,7 +61,10 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
     useUpdateSystemIntakeGRBReviewFormInputTimeframeAsyncMutation();
 
   const form = useEasiForm<ParticipantsFields>({
-    resolver: yupResolver(SetGRBParticipantsAsyncSchema),
+    resolver:
+      reviewType === SystemIntakeGRBReviewType.ASYNC
+        ? yupResolver(SetGRBParticipantsAsyncSchema)
+        : undefined,
     defaultValues: {
       grbReviewers: grbReview.grbReviewers,
       grbReviewAsyncEndDate: grbReview.grbReviewAsyncEndDate || ''
