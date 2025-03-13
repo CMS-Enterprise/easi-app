@@ -114,8 +114,8 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 			store,
 			&models.UpdateSystemIntakeGRBReviewerInput{
 				ReviewerID: reviewer.ID,
-				VotingRole: models.SystemIntakeGRBReviewerVotingRole(newVotingRole),
-				GrbRole:    models.SystemIntakeGRBReviewerRole(newGRBRole),
+				VotingRole: newVotingRole,
+				GrbRole:    newGRBRole,
 			},
 		)
 		s.NoError(err)
