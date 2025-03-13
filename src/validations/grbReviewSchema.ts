@@ -54,16 +54,6 @@ export const CreateGRBReviewersSchema = Yup.object({
   )
 });
 
-export const SetGRBParticipantsAsyncSchema = Yup.object({
-  grbReviewers: Yup.array(GRBReviewerSchema).min(
-    5,
-    i18next.t('grbReview:setUpGrbReviewForm.minFive')
-  ),
-  grbReviewAsyncEndDate: Yup.date().required(
-    i18next.t('grbReview:setUpGrbReviewForm.invalidDate')
-  )
-});
-
 /** Presentation links schema */
 export const SetGRBPresentationLinksSchema = Yup.object().shape(
   {
@@ -95,7 +85,15 @@ export const SetGRBPresentationLinksSchema = Yup.object().shape(
 export const GrbReviewTypeSchema = Yup.object().shape({
   grbReviewType: Yup.mixed()
     .oneOf(extractObjectKeys(SystemIntakeGRBReviewType))
-    .required(),
-  presentation: SetGRBPresentationLinksSchema,
-  participants: SetGRBParticipantsAsyncSchema
+    .required()
 });
+
+export const GrbPresentationSchema = Yup.object().shape({
+  grbDate: Yup.string().required()
+});
+
+export const GrbReviewFormSchema = {
+  reviewType: GrbReviewTypeSchema,
+  presentation: GrbPresentationSchema,
+  participants: CreateGRBReviewersSchema
+};
