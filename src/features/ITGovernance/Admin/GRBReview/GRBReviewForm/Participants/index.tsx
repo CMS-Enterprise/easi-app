@@ -1,23 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Controller } from 'react-hook-form';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Button, Fieldset, FormGroup, Grid } from '@trussworks/react-uswds';
 import {
-  Button,
-  ButtonGroup,
-  Fieldset,
-  FormGroup,
-  Grid,
-  ModalFooter,
-  ModalHeading
-} from '@trussworks/react-uswds';
-import {
-  GetSystemIntakeGRBReviewDocument,
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewFragment,
   SystemIntakeGRBReviewType,
-  useDeleteSystemIntakeGRBReviewerMutation,
   useUpdateSystemIntakeGRBReviewFormInputTimeframeAsyncMutation
 } from 'gql/generated/graphql';
 
@@ -25,9 +15,7 @@ import Alert from 'components/Alert';
 import DatePickerFormatted from 'components/DatePickerFormatted';
 import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
 import FieldErrorMsg from 'components/FieldErrorMsg';
-import Modal from 'components/Modal';
 import RequiredAsterisk from 'components/RequiredAsterisk';
-import useMessage from 'hooks/useMessage';
 import { GRBReviewFormStepProps } from 'types/grbReview';
 import { SetGRBParticipantsAsyncSchema } from 'validations/grbReviewSchema';
 
@@ -46,16 +34,8 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
 
   const history = useHistory();
   const { pathname } = useLocation();
-  const { showMessage } = useMessage();
 
   const reviewType: SystemIntakeGRBReviewType = grbReview.grbReviewType;
-
-  const [reviewerToRemove, setReviewerToRemove] =
-    useState<SystemIntakeGRBReviewerFragment | null>(null);
-
-  const [deleteReviewer] = useDeleteSystemIntakeGRBReviewerMutation({
-    refetchQueries: [GetSystemIntakeGRBReviewDocument]
-  });
 
   const [mutate] =
     useUpdateSystemIntakeGRBReviewFormInputTimeframeAsyncMutation();
@@ -90,25 +70,6 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
     });
   };
 
-  const removeGRBReviewer = (reviewer: SystemIntakeGRBReviewerFragment) => {
-    deleteReviewer({ variables: { input: { reviewerID: reviewer.id } } })
-      .then(() =>
-        showMessage(
-          <Trans
-            i18nKey="grbReview:messages.success.remove"
-            values={{ commonName: reviewer.userAccount.commonName }}
-          />,
-          { type: 'success' }
-        )
-      )
-      .catch(() =>
-        showMessage(t('form.messages.error.remove'), { type: 'error' })
-      );
-
-    // Reset `reviewerToRemove` to close modal
-    setReviewerToRemove(null);
-  };
-
   return (
     <EasiFormProvider<ParticipantsFields> {...form}>
       <GRBReviewFormStepWrapper<ParticipantsFields>
@@ -116,41 +77,6 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
         onSubmit={onSubmit}
         requiredFields={reviewType === SystemIntakeGRBReviewType.ASYNC}
       >
-        {
-          // Remove GRB reviewer modal
-          !!reviewerToRemove && (
-            <Modal
-              isOpen={!!reviewerToRemove}
-              closeModal={() => setReviewerToRemove(null)}
-            >
-              <ModalHeading>
-                {t('removeModal.title', {
-                  commonName: reviewerToRemove.userAccount.commonName
-                })}
-              </ModalHeading>
-              <p>{t('removeModal.text')}</p>
-              <ModalFooter>
-                <ButtonGroup>
-                  <Button
-                    type="button"
-                    onClick={() => removeGRBReviewer(reviewerToRemove)}
-                    className="bg-error margin-right-1"
-                  >
-                    {t('removeModal.remove')}
-                  </Button>
-                  <Button
-                    type="button"
-                    onClick={() => setReviewerToRemove(null)}
-                    unstyled
-                  >
-                    {t('Cancel')}
-                  </Button>
-                </ButtonGroup>
-              </ModalFooter>
-            </Modal>
-          )
-        }
-
         <Alert type="info" slim>
           {t('setUpGrbReviewForm.participants.standardAlert')}
         </Alert>
@@ -191,10 +117,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
             col={12}
             tablet={{ col: grbReview.grbReviewers.length > 0 ? 10 : 6 }}
           >
-            <ParticipantsTable
-              grbReviewers={grbReview.grbReviewers}
-              setReviewerToRemove={setReviewerToRemove}
-            />
+            <ParticipantsTable grbReviewers={grbReview.grbReviewers} />
           </Grid>
         </FormGroup>
         {reviewType === SystemIntakeGRBReviewType.ASYNC && (

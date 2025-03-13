@@ -124,10 +124,7 @@ const ParticipantsSection = ({
           </ButtonGroup>
         </div>
       )}
-      <ParticipantsTable
-        grbReviewers={grbReviewers}
-        setReviewerToRemove={setReviewerToRemove}
-      />
+      <ParticipantsTable grbReviewers={grbReviewers} />
     </>
   );
 };

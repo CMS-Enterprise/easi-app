@@ -1,11 +1,23 @@
-import React, { useContext, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import React, { useContext, useMemo, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
 import { Column, useSortBy, useTable } from 'react-table';
-import { Button, ButtonGroup, Table } from '@trussworks/react-uswds';
-import { SystemIntakeGRBReviewerFragment } from 'gql/generated/graphql';
+import {
+  Button,
+  ButtonGroup,
+  ModalFooter,
+  ModalHeading,
+  Table
+} from '@trussworks/react-uswds';
+import {
+  GetSystemIntakeGRBReviewDocument,
+  SystemIntakeGRBReviewerFragment,
+  useDeleteSystemIntakeGRBReviewerMutation
+} from 'gql/generated/graphql';
 import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
+import Modal from 'components/Modal';
+import useMessage from 'hooks/useMessage';
 import {
   currentTableSortDescription,
   getColumnSortStatus,
@@ -14,18 +26,21 @@ import {
 
 type ParticipantsTableProps = {
   grbReviewers: SystemIntakeGRBReviewerFragment[];
-  setReviewerToRemove: (reviewer: SystemIntakeGRBReviewerFragment) => void;
 };
 
-const ParticipantsTable = ({
-  grbReviewers,
-  setReviewerToRemove
-}: ParticipantsTableProps) => {
+const ParticipantsTable = ({ grbReviewers }: ParticipantsTableProps) => {
   const { t } = useTranslation('grbReview');
   const history = useHistory();
   const { pathname } = useLocation();
+  const { showMessage } = useMessage();
+
+  const [reviewerToRemove, setReviewerToRemove] =
+    useState<SystemIntakeGRBReviewerFragment | null>(null);
 
   const isITGovAdmin = useContext(ITGovAdminContext);
+  const [deleteReviewer] = useDeleteSystemIntakeGRBReviewerMutation({
+    refetchQueries: [GetSystemIntakeGRBReviewDocument]
+  });
 
   /** Columns for table */
   const columns = useMemo<Column<SystemIntakeGRBReviewerFragment>[]>(() => {
@@ -103,8 +118,61 @@ const ParticipantsTable = ({
   const { getTableBodyProps, getTableProps, headerGroups, prepareRow, rows } =
     table;
 
+  const removeGRBReviewer = (reviewer: SystemIntakeGRBReviewerFragment) => {
+    deleteReviewer({ variables: { input: { reviewerID: reviewer.id } } })
+      .then(() =>
+        showMessage(
+          <Trans
+            i18nKey="grbReview:messages.success.remove"
+            values={{ commonName: reviewer.userAccount.commonName }}
+          />,
+          { type: 'success' }
+        )
+      )
+      .catch(() =>
+        showMessage(t('form.messages.error.remove'), { type: 'error' })
+      );
+
+    // Reset `reviewerToRemove` to close modal
+    setReviewerToRemove(null);
+  };
+
   return (
     <div className="margin-top-3" data-testid="grb-participants-table">
+      {
+        // Remove GRB reviewer modal
+        !!reviewerToRemove && (
+          <Modal
+            isOpen={!!reviewerToRemove}
+            closeModal={() => setReviewerToRemove(null)}
+          >
+            <ModalHeading>
+              {t('removeModal.title', {
+                commonName: reviewerToRemove.userAccount.commonName
+              })}
+            </ModalHeading>
+            <p>{t('removeModal.text')}</p>
+            <ModalFooter>
+              <ButtonGroup>
+                <Button
+                  type="button"
+                  onClick={() => removeGRBReviewer(reviewerToRemove)}
+                  className="bg-error margin-right-1"
+                >
+                  {t('removeModal.remove')}
+                </Button>
+                <Button
+                  type="button"
+                  onClick={() => setReviewerToRemove(null)}
+                  unstyled
+                >
+                  {t('Cancel')}
+                </Button>
+              </ButtonGroup>
+            </ModalFooter>
+          </Modal>
+        )
+      }
       <Table bordered={false} fullWidth scrollable {...getTableProps()}>
         <thead>
           {headerGroups.map(headerGroup => (
