@@ -144,7 +144,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
         }
 
         <FormGroup error={!!errors.grbReviewers} className="margin-top-0">
-          <Grid col={6}>
+          <Grid col={12} tablet={{ col: 6 }}>
             <div className="margin-top-5 border-top-1px border-base-light padding-top-1">
               <p className="text-bold margin-y-0">
                 {t('setUpGrbReviewForm.participants.grbReviewers.heading')}
@@ -174,14 +174,17 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
               </Button>
             </div>
           </Grid>
-          <Grid col={grbReview.grbReviewers.length > 0 ? 10 : 6}>
+          <Grid
+            col={12}
+            tablet={{ col: grbReview.grbReviewers.length > 0 ? 10 : 6 }}
+          >
             <ParticipantsTable
               grbReviewers={grbReview.grbReviewers}
               setReviewerToRemove={setReviewerToRemove}
             />
           </Grid>
         </FormGroup>
-        <Grid col={6}>
+        <Grid col={12} tablet={{ col: 6 }}>
           <div className="margin-top-5 border-top-1px border-base-light padding-top-1">
             <p className="text-bold margin-y-0">
               {t('setUpGrbReviewForm.participants.timeframe.heading')}
