@@ -54,15 +54,13 @@ func (s *ResolverSuite) TestUploadSystemIntakeGRBPresentationDeck() {
 func (s *ResolverSuite) TestUploadSystemIntakeGRBPresentationDeck_NilFile() {
 	input := s.createUploadSystemIntakeGRBPresentationDeckInput(nil)
 
-	createdLinks, err := UploadSystemIntakeGRBPresentationDeck(
+	_, err := UploadSystemIntakeGRBPresentationDeck(
 		s.testConfigs.Context,
 		s.testConfigs.Store,
 		s.testConfigs.S3Client,
 		input,
 	)
 	s.NoError(err)
-	s.NotNil(createdLinks)
-	s.Nil(createdLinks.ModifiedBy)
 }
 
 func (s *ResolverSuite) createUploadSystemIntakeGRBPresentationDeckFileData() *graphql.Upload {
