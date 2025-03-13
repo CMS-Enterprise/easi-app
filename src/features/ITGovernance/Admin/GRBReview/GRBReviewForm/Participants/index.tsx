@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { Controller } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -42,6 +42,17 @@ type ParticipantsFields = {
 const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
   const { t } = useTranslation('grbReview');
 
+  const history = useHistory();
+  const { pathname } = useLocation();
+  const { showMessage } = useMessage();
+
+  const [reviewerToRemove, setReviewerToRemove] =
+    useState<SystemIntakeGRBReviewerFragment | null>(null);
+
+  const [deleteReviewer] = useDeleteSystemIntakeGRBReviewerMutation({
+    refetchQueries: [GetSystemIntakeGRBReviewDocument]
+  });
+
   const [mutate] =
     useUpdateSystemIntakeGRBReviewFormInputTimeframeAsyncMutation();
 
@@ -72,38 +83,24 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
     });
   };
 
-  const history = useHistory();
-  const { pathname } = useLocation();
-  const { showMessage } = useMessage();
-
-  const [reviewerToRemove, setReviewerToRemove] =
-    useState<SystemIntakeGRBReviewerFragment | null>(null);
-
-  const [deleteReviewer] = useDeleteSystemIntakeGRBReviewerMutation({
-    refetchQueries: [GetSystemIntakeGRBReviewDocument]
-  });
-
-  const removeGRBReviewer = useCallback(
-    (reviewer: SystemIntakeGRBReviewerFragment) => {
-      deleteReviewer({ variables: { input: { reviewerID: reviewer.id } } })
-        .then(() =>
-          showMessage(
-            <Trans
-              i18nKey="grbReview:messages.success.remove"
-              values={{ commonName: reviewer.userAccount.commonName }}
-            />,
-            { type: 'success' }
-          )
+  const removeGRBReviewer = (reviewer: SystemIntakeGRBReviewerFragment) => {
+    deleteReviewer({ variables: { input: { reviewerID: reviewer.id } } })
+      .then(() =>
+        showMessage(
+          <Trans
+            i18nKey="grbReview:messages.success.remove"
+            values={{ commonName: reviewer.userAccount.commonName }}
+          />,
+          { type: 'success' }
         )
-        .catch(() =>
-          showMessage(t('form.messages.error.remove'), { type: 'error' })
-        );
+      )
+      .catch(() =>
+        showMessage(t('form.messages.error.remove'), { type: 'error' })
+      );
 
-      // Reset `reviewerToRemove` to close modal
-      setReviewerToRemove(null);
-    },
-    [deleteReviewer, showMessage, t]
-  );
+    // Reset `reviewerToRemove` to close modal
+    setReviewerToRemove(null);
+  };
 
   return (
     <EasiFormProvider<ParticipantsFields> {...form}>
@@ -150,14 +147,14 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
           <Grid col={6}>
             <div className="margin-top-5 border-top-1px border-base-light padding-top-1">
               <p className="text-bold margin-y-0">
-                {t('setUpGrbReviewForm.step4.grbReviewers.heading')}
+                {t('setUpGrbReviewForm.participants.grbReviewers.heading')}
                 <RequiredAsterisk />
               </p>
               {!!errors.grbReviewers && (
                 <FieldErrorMsg>{errors.grbReviewers.message}</FieldErrorMsg>
               )}
               <p className="margin-y-0 text-base-dark">
-                {t('setUpGrbReviewForm.step4.grbReviewers.description')}
+                {t('setUpGrbReviewForm.participants.grbReviewers.description')}
               </p>
               <Button
                 type="button"
@@ -187,10 +184,10 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
         <Grid col={6}>
           <div className="margin-top-5 border-top-1px border-base-light padding-top-1">
             <p className="text-bold margin-y-0">
-              {t('setUpGrbReviewForm.step4.timeframe.heading')}
+              {t('setUpGrbReviewForm.participants.timeframe.heading')}
             </p>
             <p className="margin-top-0 margin-bottom-3 text-base-dark">
-              {t('setUpGrbReviewForm.step4.timeframe.description')}
+              {t('setUpGrbReviewForm.participants.timeframe.description')}
             </p>
 
             <Controller
@@ -205,7 +202,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
                     <Fieldset>
                       <p className="margin-top-0 margin-bottom-1">
                         {t(
-                          'setUpGrbReviewForm.step4.selectReviewEndDate.heading'
+                          'setUpGrbReviewForm.participants.selectReviewEndDate.heading'
                         )}
                         <RequiredAsterisk />
                       </p>
@@ -216,7 +213,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
                       )}
                       <p className="margin-y-0 text-base-dark">
                         {t(
-                          'setUpGrbReviewForm.step4.selectReviewEndDate.description'
+                          'setUpGrbReviewForm.participants.selectReviewEndDate.description'
                         )}
                       </p>
 
@@ -246,10 +243,10 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
         <Grid col={6}>
           <div className="margin-top-5 border-top-1px border-base-light padding-top-1">
             <p className="text-bold margin-y-0">
-              {t('setUpGrbReviewForm.step4.timeframe.heading')}
+              {t('setUpGrbReviewForm.participants.timeframe.heading')}
             </p>
             <p className="margin-top-0 margin-bottom-3 text-base-dark">
-              {t('setUpGrbReviewForm.step4.timeframe.description')}
+              {t('setUpGrbReviewForm.participants.timeframe.description')}
             </p>
             <FormGroup
               error={!!errors.grbReviewAsyncEndDate}
@@ -257,12 +254,14 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
             >
               <Fieldset>
                 <p className="margin-top-0 margin-bottom-1">
-                  {t('setUpGrbReviewForm.step4.selectReviewEndDate.heading')}
+                  {t(
+                    'setUpGrbReviewForm.participants.selectReviewEndDate.heading'
+                  )}
                   <RequiredAsterisk />
                 </p>
                 <p className="margin-y-0 text-base-dark">
                   {t(
-                    'setUpGrbReviewForm.step4.selectReviewEndDate.description'
+                    'setUpGrbReviewForm.participants.selectReviewEndDate.description'
                   )}
                 </p>
 
@@ -297,10 +296,10 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
         <Grid col={6}>
           <div className="margin-top-5 border-top-1px border-base-light padding-top-1">
             <p className="text-bold margin-y-0">
-              {t('setUpGrbReviewForm.step4.timeframe.heading')}
+              {t('setUpGrbReviewForm.participants.timeframe.heading')}
             </p>
             <p className="margin-top-0 margin-bottom-3 text-base-dark">
-              {t('setUpGrbReviewForm.step4.timeframe.description')}
+              {t('setUpGrbReviewForm.participants.timeframe.description')}
             </p>
             <FormGroup
               error={!!errors.grbReviewAsyncEndDate}
@@ -308,12 +307,14 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
             >
               <Fieldset>
                 <p className="margin-top-0 margin-bottom-1">
-                  {t('setUpGrbReviewForm.step4.selectReviewEndDate.heading')}
+                  {t(
+                    'setUpGrbReviewForm.participants.selectReviewEndDate.heading'
+                  )}
                   <RequiredAsterisk />
                 </p>
                 <p className="margin-y-0 text-base-dark">
                   {t(
-                    'setUpGrbReviewForm.step4.selectReviewEndDate.description'
+                    'setUpGrbReviewForm.participants.selectReviewEndDate.description'
                   )}
                 </p>
 

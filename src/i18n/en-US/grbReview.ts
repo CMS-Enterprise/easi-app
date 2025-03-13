@@ -261,7 +261,7 @@ export default {
       }
     },
     completeAndBeginReview: 'Complete and begin review',
-    step4: {
+    participants: {
       grbReviewers: {
         heading: 'GRB reviewers',
         description:
