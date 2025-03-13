@@ -19,7 +19,6 @@ type ParticipantsSectionProps = {
   id: string;
   state: SystemIntakeState;
   grbReviewers: SystemIntakeGRBReviewerFragment[];
-  setReviewerToRemove: (reviewer: SystemIntakeGRBReviewerFragment) => void;
   grbReviewStartedAt?: string | null;
 };
 
@@ -30,7 +29,6 @@ const ParticipantsSection = ({
   id,
   state,
   grbReviewers,
-  setReviewerToRemove,
   grbReviewStartedAt
 }: ParticipantsSectionProps) => {
   const { t } = useTranslation('grbReview');

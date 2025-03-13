@@ -449,7 +449,6 @@ const GRBReview = ({
               id={id}
               state={state}
               grbReviewers={grbReviewers}
-              setReviewerToRemove={setReviewerToRemove}
               grbReviewStartedAt={grbReviewStartedAt}
             />
           </div>
