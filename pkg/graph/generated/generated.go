@@ -634,6 +634,7 @@ type ComplexityRoot struct {
 		UpdateTRBRequestForm                                func(childComplexity int, input map[string]interface{}) int
 		UpdateTRBRequestFundingSources                      func(childComplexity int, input models.UpdateTRBRequestFundingSourcesInput) int
 		UpdateTRBRequestTRBLead                             func(childComplexity int, input models.UpdateTRBRequestTRBLeadInput) int
+		UploadSystemIntakeGRBPresentationDeck               func(childComplexity int, input models.UploadSystemIntakeGRBPresentationDeckInput) int
 	}
 
 	Query struct {
@@ -1276,6 +1277,7 @@ type MutationResolver interface {
 	UpdateSystemIntakeGRBReviewFormTimeframeAsync(ctx context.Context, input models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync) (*models.UpdateSystemIntakePayload, error)
 	UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, input models.UpdateSystemIntakeLinkedCedarSystemInput) (*models.UpdateSystemIntakePayload, error)
 	SetSystemIntakeGRBPresentationLinks(ctx context.Context, input models.SystemIntakeGRBPresentationLinksInput) (*models.SystemIntakeGRBPresentationLinks, error)
+	UploadSystemIntakeGRBPresentationDeck(ctx context.Context, input models.UploadSystemIntakeGRBPresentationDeckInput) (*models.SystemIntakeGRBPresentationLinks, error)
 	DeleteSystemIntakeGRBPresentationLinks(ctx context.Context, input models.DeleteSystemIntakeGRBPresentationLinksInput) (uuid.UUID, error)
 	ArchiveSystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error)
 	SendFeedbackEmail(ctx context.Context, input models.SendFeedbackEmailInput) (*string, error)
@@ -5038,6 +5040,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpdateTRBRequestTRBLead(childComplexity, args["input"].(models.UpdateTRBRequestTRBLeadInput)), true
 
+	case "Mutation.uploadSystemIntakeGRBPresentationDeck":
+		if e.complexity.Mutation.UploadSystemIntakeGRBPresentationDeck == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_uploadSystemIntakeGRBPresentationDeck_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UploadSystemIntakeGRBPresentationDeck(childComplexity, args["input"].(models.UploadSystemIntakeGRBPresentationDeckInput)), true
+
 	case "Query.cedarAuthorityToOperate":
 		if e.complexity.Query.CedarAuthorityToOperate == nil {
 			break
@@ -8140,6 +8154,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputUpdateTRBRequestFormInput,
 		ec.unmarshalInputUpdateTRBRequestFundingSourcesInput,
 		ec.unmarshalInputUpdateTRBRequestTRBLeadInput,
+		ec.unmarshalInputUploadSystemIntakeGRBPresentationDeckInput,
 		ec.unmarshalInputcreateSystemIntakeGRBDiscussionPostInput,
 		ec.unmarshalInputcreateSystemIntakeGRBDiscussionReplyInput,
 		ec.unmarshalInputupdateSystemIntakeGRBReviewFormInputPresentationAsync,
@@ -8960,6 +8975,14 @@ input SystemIntakeGRBPresentationLinksInput {
   transcriptLink: String @goField(omittable: true)
   transcriptFileData: Upload @goField(omittable: true)
   presentationDeckFileData: Upload @goField(omittable: true)
+}
+
+"""
+Data needed to upload a presentation deck
+"""
+input UploadSystemIntakeGRBPresentationDeckInput {
+  systemIntakeID: UUID!
+  presentationDeckFileData: Upload
 }
 
 input DeleteSystemIntakeGRBPresentationLinksInput {
@@ -10925,6 +10948,7 @@ type Mutation {
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
 
   setSystemIntakeGRBPresentationLinks(input: SystemIntakeGRBPresentationLinksInput!): SystemIntakeGRBPresentationLinks
+  uploadSystemIntakeGRBPresentationDeck(input: UploadSystemIntakeGRBPresentationDeckInput!): SystemIntakeGRBPresentationLinks
   deleteSystemIntakeGRBPresentationLinks(input: DeleteSystemIntakeGRBPresentationLinksInput!): UUID!
 
   archiveSystemIntake(id: UUID!): SystemIntake!
@@ -14111,6 +14135,34 @@ func (ec *executionContext) field_Mutation_updateTRBRequest_argsChanges(
 	}
 
 	var zeroVal map[string]interface{}
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_uploadSystemIntakeGRBPresentationDeck_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_uploadSystemIntakeGRBPresentationDeck_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_uploadSystemIntakeGRBPresentationDeck_argsInput(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (models.UploadSystemIntakeGRBPresentationDeckInput, error) {
+	if _, ok := rawArgs["input"]; !ok {
+		var zeroVal models.UploadSystemIntakeGRBPresentationDeckInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNUploadSystemIntakeGRBPresentationDeckInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUploadSystemIntakeGRBPresentationDeckInput(ctx, tmp)
+	}
+
+	var zeroVal models.UploadSystemIntakeGRBPresentationDeckInput
 	return zeroVal, nil
 }
 
@@ -34257,6 +34309,88 @@ func (ec *executionContext) fieldContext_Mutation_setSystemIntakeGRBPresentation
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_setSystemIntakeGRBPresentationLinks_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_uploadSystemIntakeGRBPresentationDeck(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_uploadSystemIntakeGRBPresentationDeck(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UploadSystemIntakeGRBPresentationDeck(rctx, fc.Args["input"].(models.UploadSystemIntakeGRBPresentationDeckInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.SystemIntakeGRBPresentationLinks)
+	fc.Result = res
+	return ec.marshalOSystemIntakeGRBPresentationLinks2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBPresentationLinks(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_uploadSystemIntakeGRBPresentationDeck(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "systemIntakeID":
+				return ec.fieldContext_SystemIntakeGRBPresentationLinks_systemIntakeID(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_SystemIntakeGRBPresentationLinks_createdBy(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_SystemIntakeGRBPresentationLinks_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_SystemIntakeGRBPresentationLinks_modifiedBy(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_SystemIntakeGRBPresentationLinks_modifiedAt(ctx, field)
+			case "recordingLink":
+				return ec.fieldContext_SystemIntakeGRBPresentationLinks_recordingLink(ctx, field)
+			case "recordingPasscode":
+				return ec.fieldContext_SystemIntakeGRBPresentationLinks_recordingPasscode(ctx, field)
+			case "transcriptLink":
+				return ec.fieldContext_SystemIntakeGRBPresentationLinks_transcriptLink(ctx, field)
+			case "transcriptFileName":
+				return ec.fieldContext_SystemIntakeGRBPresentationLinks_transcriptFileName(ctx, field)
+			case "transcriptFileURL":
+				return ec.fieldContext_SystemIntakeGRBPresentationLinks_transcriptFileURL(ctx, field)
+			case "transcriptFileStatus":
+				return ec.fieldContext_SystemIntakeGRBPresentationLinks_transcriptFileStatus(ctx, field)
+			case "presentationDeckFileName":
+				return ec.fieldContext_SystemIntakeGRBPresentationLinks_presentationDeckFileName(ctx, field)
+			case "presentationDeckFileURL":
+				return ec.fieldContext_SystemIntakeGRBPresentationLinks_presentationDeckFileURL(ctx, field)
+			case "presentationDeckFileStatus":
+				return ec.fieldContext_SystemIntakeGRBPresentationLinks_presentationDeckFileStatus(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeGRBPresentationLinks", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_uploadSystemIntakeGRBPresentationDeck_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -66146,6 +66280,40 @@ func (ec *executionContext) unmarshalInputUpdateTRBRequestTRBLeadInput(ctx conte
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputUploadSystemIntakeGRBPresentationDeckInput(ctx context.Context, obj any) (models.UploadSystemIntakeGRBPresentationDeckInput, error) {
+	var it models.UploadSystemIntakeGRBPresentationDeckInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"systemIntakeID", "presentationDeckFileData"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "systemIntakeID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SystemIntakeID = data
+		case "presentationDeckFileData":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("presentationDeckFileData"))
+			data, err := ec.unmarshalOUpload2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUpload(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.PresentationDeckFileData = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputcreateSystemIntakeGRBDiscussionPostInput(ctx context.Context, obj any) (models.CreateSystemIntakeGRBDiscussionPostInput, error) {
 	var it models.CreateSystemIntakeGRBDiscussionPostInput
 	asMap := map[string]any{}
@@ -69623,6 +69791,10 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "setSystemIntakeGRBPresentationLinks":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_setSystemIntakeGRBPresentationLinks(ctx, field)
+			})
+		case "uploadSystemIntakeGRBPresentationDeck":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_uploadSystemIntakeGRBPresentationDeck(ctx, field)
 			})
 		case "deleteSystemIntakeGRBPresentationLinks":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
@@ -80627,6 +80799,11 @@ func (ec *executionContext) marshalNUpload2githubᚗcomᚋ99designsᚋgqlgenᚋg
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) unmarshalNUploadSystemIntakeGRBPresentationDeckInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUploadSystemIntakeGRBPresentationDeckInput(ctx context.Context, v any) (models.UploadSystemIntakeGRBPresentationDeckInput, error) {
+	res, err := ec.unmarshalInputUploadSystemIntakeGRBPresentationDeckInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNUserAccount2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋauthenticationᚐUserAccount(ctx context.Context, sel ast.SelectionSet, v *authentication.UserAccount) graphql.Marshaler {

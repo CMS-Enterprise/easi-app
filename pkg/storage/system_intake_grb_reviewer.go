@@ -123,7 +123,6 @@ func UpdateSystemIntakeGRBReviewType(
 	if err := namedGet(ctx, np, updatedIntake, sqlqueries.SystemIntakeGRBReviewType.Update, args{
 		"system_intake_id": systemIntakeID,
 		"grb_review_type":  reviewType,
-		"eua_user_id":      appcontext.Principal(ctx).ID(),
 	}); err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"error updating system intake GRB reviewer",
