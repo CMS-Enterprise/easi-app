@@ -135,9 +135,12 @@ function GRBReviewFormStepWrapper<
       grbReviewType
     });
 
+    // console.log(grbDate, grbReviewType);
     const presentationIsValid = await GrbReviewFormSchema.presentation.isValid({
-      grbDate
+      grbDate,
+      grbReviewType
     });
+    console.log(presentationIsValid);
 
     const participantsIsValid = await GrbReviewFormSchema.participants.isValid({
       grbReviewers
