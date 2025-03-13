@@ -201,7 +201,9 @@ function SendPresentationReminder({
             unstyled
             className="margin-top-1"
           >
-            {t('presentationLinks.sendReminderCard.uploadDeck')}
+            {presentationDeckFileName
+              ? t('presentationLinks.sendReminderCard.replacementDeck')
+              : t('presentationLinks.sendReminderCard.uploadDeck')}
           </Button>
         </label>
 

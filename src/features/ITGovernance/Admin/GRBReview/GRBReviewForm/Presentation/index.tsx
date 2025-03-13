@@ -103,7 +103,7 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
     // File data from default values does not have `size` field
     const newFile = input.presentationDeck.presentationDeckFileData?.size
       ? await fileToBase64File(input.presentationDeck.presentationDeckFileData)
-      : null;
+      : undefined;
 
     return mutateStandard({
       variables: {
@@ -113,7 +113,10 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
         },
         presentationDeck: {
           systemIntakeID: input.systemIntakeID,
-          presentationDeckFileData: newFile
+          presentationDeckFileData:
+            input.presentationDeck.presentationDeckFileData === null
+              ? null
+              : newFile
         }
       }
     });
