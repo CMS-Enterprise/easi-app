@@ -4,6 +4,7 @@ import { Button, FileInput as UswdsFileInput } from '@trussworks/react-uswds';
 
 type FileInputProps = ComponentProps<typeof UswdsFileInput> & {
   defaultFileName?: string;
+  clearFile?: () => void;
 };
 
 /**
@@ -12,7 +13,11 @@ type FileInputProps = ComponentProps<typeof UswdsFileInput> & {
  * Default file name is for display only and does NOT set field value.
  * When `defaultFileName` is set, file name is displayed with `Clear file` button.
  */
-const FileInput = ({ defaultFileName, ...props }: FileInputProps) => {
+const FileInput = ({
+  defaultFileName,
+  clearFile,
+  ...props
+}: FileInputProps) => {
   const { t } = useTranslation('form');
 
   const [fileName, setFileName] = useState(defaultFileName || '');
@@ -47,7 +52,10 @@ const FileInput = ({ defaultFileName, ...props }: FileInputProps) => {
         <Button
           type="button"
           // Clear fileName to show file upload field
-          onClick={() => setFileName('')}
+          onClick={() => {
+            clearFile?.();
+            setFileName('');
+          }}
           unstyled
           className="margin-top-0 font-body-2xs"
         >

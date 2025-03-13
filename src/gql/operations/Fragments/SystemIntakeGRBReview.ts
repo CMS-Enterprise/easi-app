@@ -11,6 +11,8 @@ export default gql(/* GraphQL */ `
     id
     grbReviewStartedAt
     grbReviewType
+    grbDate
+    grbReviewAsyncRecordingTime
 
     grbDate
     grbReviewAsyncRecordingTime

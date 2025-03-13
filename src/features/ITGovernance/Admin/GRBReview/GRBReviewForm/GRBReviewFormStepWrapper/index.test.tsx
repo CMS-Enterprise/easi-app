@@ -2,6 +2,7 @@ import React, { ComponentProps } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { SystemIntakeGRBReviewType } from 'gql/generated/graphql';
 import { grbReview } from 'tests/mock/grbReview';
 
 import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
@@ -88,7 +89,13 @@ describe('GRB review form step wrapper', () => {
     renderComponent({
       grbReview: {
         ...grbReview,
-        grbDate: '2025-05-11T16:56:50.198746Z'
+        grbDate: '2021-10-13T00:00:00.000Z',
+        grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+        grbPresentationLinks: {
+          __typename: 'SystemIntakeGRBPresentationLinks',
+          recordingLink: 'https://test.com',
+          presentationDeckFileName: 'test.pdf'
+        }
       }
     });
 

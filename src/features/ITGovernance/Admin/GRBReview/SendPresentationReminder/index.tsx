@@ -8,6 +8,7 @@ import {
   CardHeader,
   FileInput as UswdsFileInput
 } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 import { useSendPresentationDeckReminderMutation } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
@@ -18,19 +19,24 @@ function SendPresentationReminder({
   systemIntakeID,
   presentationDeckFileURL,
   presentationDeckFileName,
+  onChange,
   clearFile,
+  canDownload,
+  className,
   ...props
 }: ComponentProps<typeof UswdsFileInput> & {
   systemIntakeID: string;
   presentationDeckFileURL: string | null | undefined;
   presentationDeckFileName: string | null | undefined;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   clearFile: () => void;
+  canDownload?: boolean;
+  className?: string;
 }) {
   const { t } = useTranslation('grbReview');
 
-  const { id, name, onChange } = props;
+  const { id, name } = props;
 
-  const [file, setFile] = useState<File>();
   const [error, setError] = useState(false);
 
   // State to track if reminder has been sent
@@ -75,11 +81,9 @@ function SendPresentationReminder({
     if (e?.target?.files && e.target.files.length > 0) {
       if (isFileTypeValid(e.target.files[0])) {
         setError(false);
-        setFile(e.target.files[0]);
-        if (onChange) onChange(e);
+        onChange(e);
       } else {
         setError(true);
-        setFile(undefined);
       }
     }
   };
@@ -104,6 +108,7 @@ function SendPresentationReminder({
       containerProps={{
         className: 'margin-0 shadow-2 radius-md'
       }}
+      className={classNames(className)}
     >
       <CardHeader>
         <h4 className="margin-bottom-1">
@@ -125,7 +130,7 @@ function SendPresentationReminder({
           </div>
         )}
 
-        {!file && !presentationDeckFileName ? (
+        {!presentationDeckFileName ? (
           <Alert type="info" slim>
             {t('presentationLinks.sendReminderCard.notUploadedInfo')}
           </Alert>
@@ -136,10 +141,11 @@ function SendPresentationReminder({
             </p>
 
             <span>
-              {file?.name || presentationDeckFileName}{' '}
-              {presentationDeckFileURL && presentationDeckFileName && (
-                <span>
-                  {!file?.name && (
+              {presentationDeckFileName}{' '}
+              <span>
+                {canDownload &&
+                  presentationDeckFileURL &&
+                  presentationDeckFileName && (
                     <Button
                       type="button"
                       unstyled
@@ -155,20 +161,20 @@ function SendPresentationReminder({
                     </Button>
                   )}
 
+                {presentationDeckFileName && (
                   <Button
                     type="button"
                     // Clear fileName to show file upload field
                     onClick={() => {
                       clearFile();
-                      setFile(undefined);
                     }}
                     unstyled
                     className="margin-top-0 margin-left-1 text-red"
                   >
                     {t('presentationLinks.sendReminderCard.clearFile')}
                   </Button>
-                </span>
-              )}
+                )}
+              </span>
             </span>
           </div>
         )}
@@ -180,7 +186,7 @@ function SendPresentationReminder({
             type="button"
             onClick={sendReminderClick}
             disabled={loading || reminderSend}
-            className="margin-top-0"
+            className="margin-top-0 margin-right-1"
           >
             {reminderSend
               ? t('presentationLinks.sendReminderCard.reminderSent')
@@ -188,14 +194,16 @@ function SendPresentationReminder({
           </Button>
         )}
 
-        <label htmlFor={id} className="margin-left-1">
+        <label htmlFor={id}>
           <Button
             type="button"
             onClick={handleButtonClick}
             unstyled
             className="margin-top-1"
           >
-            {t('presentationLinks.sendReminderCard.uploadDeck')}
+            {presentationDeckFileName
+              ? t('presentationLinks.sendReminderCard.replacementDeck')
+              : t('presentationLinks.sendReminderCard.uploadDeck')}
           </Button>
         </label>
 
