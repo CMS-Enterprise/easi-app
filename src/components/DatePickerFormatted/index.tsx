@@ -9,7 +9,7 @@ import { DateTime } from 'luxon';
 import Alert from 'components/Alert';
 
 function defaultFormat(dt: DateTime): string | null {
-  return dt.toUTC().toISO();
+  return dt.toUTC().toISO({ suppressMilliseconds: true });
 }
 
 /**
