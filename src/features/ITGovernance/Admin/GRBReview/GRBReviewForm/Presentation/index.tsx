@@ -92,6 +92,7 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
   const {
     control: controlAsync,
     register,
+    watch: watchAsync,
     formState: { errors: errorAsync, defaultValues }
   } = asyncForm;
 
@@ -142,7 +143,8 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
         },
         links: {
           systemIntakeID: asyncRecordingDate.systemIntakeID,
-          transcriptFileData,
+          transcriptFileData:
+            links.transcriptFileData === null ? null : transcriptFileData,
           presentationDeckFileData:
             links.presentationDeckFileData === null
               ? null
@@ -451,8 +453,11 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
                                 accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
                                 aria-describedby="transcriptHelpText transcriptFileDataHelpText"
                                 className="maxw-none"
+                                clearFile={() => field.onChange(null)}
                                 onChange={e =>
-                                  field.onChange(e.currentTarget?.files?.[0])
+                                  field.onChange(
+                                    e.currentTarget?.files?.[0] || null
+                                  )
                                 }
                               />
                             )}
@@ -464,8 +469,8 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
 
                   <FormGroup className="margin-top-6">
                     <Controller
-                      control={control}
-                      name="presentationDeck.presentationDeckFileData"
+                      control={controlAsync}
+                      name="links.presentationDeckFileData"
                       render={({ field: { ref, ...field } }) => {
                         return (
                           <SendPresentationReminder
@@ -475,13 +480,11 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
                                 ?.presentationDeckFileURL
                             }
                             presentationDeckFileName={
-                              watch('presentationDeck.presentationDeckFileData')
-                                ?.name
+                              watchAsync('links.presentationDeckFileData')?.name
                             }
                             canDownload={
-                              !watch(
-                                'presentationDeck.presentationDeckFileData'
-                              )?.size
+                              !watchAsync('links.presentationDeckFileData')
+                                ?.size
                             }
                             name={field.name}
                             id={field.name}
