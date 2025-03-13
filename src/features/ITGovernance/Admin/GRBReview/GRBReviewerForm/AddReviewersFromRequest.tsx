@@ -34,13 +34,15 @@ type AddReviewersFromRequestProps = {
   systemId: string;
   createGRBReviewers: (reviewers: GRBReviewerFields[]) => Promise<void>;
   grbReviewStartedAt?: string | null;
+  grbReviewPath: string;
 };
 
 /** Form to add multiple GRB Reviewers from existing IT Governance request */
 const AddReviewersFromRequest = ({
   systemId,
   createGRBReviewers,
-  grbReviewStartedAt
+  grbReviewStartedAt,
+  grbReviewPath
 }: AddReviewersFromRequestProps) => {
   const { t } = useTranslation('grbReview');
 
@@ -67,8 +69,6 @@ const AddReviewersFromRequest = ({
   });
 
   const grbReviewers = watch('grbReviewers');
-
-  const grbReviewPath = `/it-governance/${systemId}/grb-review`;
 
   /** Array of GRB reviewers from selected IT Gov request */
   const grbReviewersArray: GRBReviewerComparison[] | undefined = useMemo(() => {

@@ -29,6 +29,7 @@ type AddReviewerFromEuaProps = {
   createGRBReviewers: (reviewers: GRBReviewerFields[]) => Promise<void>;
   setReviewerToRemove: (reviewer: SystemIntakeGRBReviewerFragment) => void;
   grbReviewStartedAt?: string | null;
+  grbReviewPath: string;
 };
 
 /** Form to add or update GRB Reviewer */
@@ -37,7 +38,8 @@ const AddReviewerFromEua = ({
   initialGRBReviewers,
   createGRBReviewers,
   setReviewerToRemove,
-  grbReviewStartedAt
+  grbReviewStartedAt,
+  grbReviewPath
 }: AddReviewerFromEuaProps) => {
   const { t } = useTranslation('grbReview');
   const history = useHistory();
@@ -78,8 +80,6 @@ const AddReviewerFromEua = ({
       }
     }
   });
-
-  const grbReviewPath = `/it-governance/${systemId}/grb-review`;
 
   const action: GRBReviewFormAction = activeReviewer ? 'edit' : 'add';
 

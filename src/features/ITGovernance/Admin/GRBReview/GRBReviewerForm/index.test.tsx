@@ -359,6 +359,7 @@ describe('GRB reviewer form', () => {
               initialGRBReviewers={[grbReviewer]}
               createGRBReviewers={vi.fn()}
               setReviewerToRemove={vi.fn()}
+              grbReviewPath="/it-governance/123/grb-review"
             />
           </MessageProvider>
         </VerboseMockedProvider>
