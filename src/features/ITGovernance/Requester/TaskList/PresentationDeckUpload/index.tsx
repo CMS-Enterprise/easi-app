@@ -6,7 +6,8 @@ import { FileInput, Form, FormGroup, Icon } from '@trussworks/react-uswds';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
 import {
   SystemIntakeGRBPresentationLinksInput,
-  useSetSystemIntakeGRBPresentationLinksMutation
+  useSetSystemIntakeGRBPresentationLinksMutation,
+  useUploadSystemIntakeGRBPresentationDeckMutation
 } from 'gql/generated/graphql';
 
 import { Alert } from 'components/Alert';
@@ -44,11 +45,13 @@ const PresentationDeckUpload = ({ type = 'requester' }: UploadFormProps) => {
 
   const { showMessageOnNextPage, showMessage } = useMessage();
 
-  // TODO: May need to incorporate new mutation for requester, once BE work is complete
   // Form would need to toggle between two mutations based on user type
   const [setPresentationLinks] = useSetSystemIntakeGRBPresentationLinksMutation(
     { refetchQueries: ['GetSystemIntake'] }
   );
+  const [upload] = useUploadSystemIntakeGRBPresentationDeckMutation({
+    refetchQueries: ['GetSystemIntake']
+  });
 
   const {
     handleSubmit,
@@ -73,29 +76,55 @@ const PresentationDeckUpload = ({ type = 'requester' }: UploadFormProps) => {
       ? await fileToBase64File(values.presentationDeckFileData)
       : undefined;
 
-    setPresentationLinks({
-      variables: {
-        input: {
-          systemIntakeID: systemId,
-          presentationDeckFileData
-        }
-      }
-    })
-      .then(() => {
-        showMessageOnNextPage(
-          t('presentationLinks.presentationUpload.success'),
-          {
-            type: 'success'
+    if (type === 'requester') {
+      upload({
+        variables: {
+          input: {
+            systemIntakeID: systemId,
+            presentationDeckFileData
           }
-        );
-        history.push(requestDetailsLink);
+        }
       })
-      .catch(() => {
-        showMessage(t('presentationLinks.presentationUpload.error'), {
-          type: 'error',
-          className: 'margin-top-4'
+        .then(() => {
+          showMessageOnNextPage(
+            t('presentationLinks.presentationUpload.success'),
+            {
+              type: 'success'
+            }
+          );
+          history.push(requestDetailsLink);
+        })
+        .catch(() => {
+          showMessage(t('presentationLinks.presentationUpload.error'), {
+            type: 'error',
+            className: 'margin-top-4'
+          });
         });
-      });
+    } else {
+      setPresentationLinks({
+        variables: {
+          input: {
+            systemIntakeID: systemId,
+            presentationDeckFileData
+          }
+        }
+      })
+        .then(() => {
+          showMessageOnNextPage(
+            t('presentationLinks.presentationUpload.success'),
+            {
+              type: 'success'
+            }
+          );
+          history.push(requestDetailsLink);
+        })
+        .catch(() => {
+          showMessage(t('presentationLinks.presentationUpload.error'), {
+            type: 'error',
+            className: 'margin-top-4'
+          });
+        });
+    }
   });
 
   return (
