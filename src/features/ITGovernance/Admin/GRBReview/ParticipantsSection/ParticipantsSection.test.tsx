@@ -7,11 +7,13 @@ import {
   SystemIntakeGRBReviewerVotingRole,
   SystemIntakeState
 } from 'gql/generated/graphql';
+import { deleteSystemIntakeGRBReviewerMutation } from 'tests/mock/grbReview';
 import { systemIntake } from 'tests/mock/systemIntake';
 import users from 'tests/mock/users';
 import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import { MessageProvider } from 'hooks/useMessage';
+import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import ParticipantsSection from './ParticipantsSection';
 
@@ -35,16 +37,20 @@ describe('GRB review participants table', () => {
   it('renders admin view', () => {
     render(
       <MemoryRouter>
-        <MessageProvider>
-          <ITGovAdminContext.Provider value>
-            <ParticipantsSection
-              id={systemIntake.id}
-              state={SystemIntakeState.OPEN}
-              grbReviewers={[grbReviewer]}
-              grbReviewStartedAt={null}
-            />
-          </ITGovAdminContext.Provider>
-        </MessageProvider>
+        <VerboseMockedProvider
+          mocks={[deleteSystemIntakeGRBReviewerMutation(grbReviewer)]}
+        >
+          <MessageProvider>
+            <ITGovAdminContext.Provider value>
+              <ParticipantsSection
+                id={systemIntake.id}
+                state={SystemIntakeState.OPEN}
+                grbReviewers={[grbReviewer]}
+                grbReviewStartedAt={null}
+              />
+            </ITGovAdminContext.Provider>
+          </MessageProvider>
+        </VerboseMockedProvider>
       </MemoryRouter>
     );
 
@@ -67,16 +73,20 @@ describe('GRB review participants table', () => {
   it('hides alert after review is started', () => {
     render(
       <MemoryRouter>
-        <MessageProvider>
-          <ITGovAdminContext.Provider value>
-            <ParticipantsSection
-              id={systemIntake.id}
-              state={SystemIntakeState.OPEN}
-              grbReviewers={[grbReviewer]}
-              grbReviewStartedAt="2024-09-10T14:42:47.422022Z"
-            />
-          </ITGovAdminContext.Provider>
-        </MessageProvider>
+        <VerboseMockedProvider
+          mocks={[deleteSystemIntakeGRBReviewerMutation(grbReviewer)]}
+        >
+          <MessageProvider>
+            <ITGovAdminContext.Provider value>
+              <ParticipantsSection
+                id={systemIntake.id}
+                state={SystemIntakeState.OPEN}
+                grbReviewers={[grbReviewer]}
+                grbReviewStartedAt="2024-09-10T14:42:47.422022Z"
+              />
+            </ITGovAdminContext.Provider>
+          </MessageProvider>
+        </VerboseMockedProvider>
       </MemoryRouter>
     );
 
@@ -86,16 +96,20 @@ describe('GRB review participants table', () => {
   it('renders closed request state for admins', () => {
     render(
       <MemoryRouter>
-        <MessageProvider>
-          <ITGovAdminContext.Provider value>
-            <ParticipantsSection
-              id={systemIntake.id}
-              state={SystemIntakeState.CLOSED}
-              grbReviewers={[]}
-              grbReviewStartedAt={null}
-            />
-          </ITGovAdminContext.Provider>
-        </MessageProvider>
+        <VerboseMockedProvider
+          mocks={[deleteSystemIntakeGRBReviewerMutation(grbReviewer)]}
+        >
+          <MessageProvider>
+            <ITGovAdminContext.Provider value>
+              <ParticipantsSection
+                id={systemIntake.id}
+                state={SystemIntakeState.CLOSED}
+                grbReviewers={[]}
+                grbReviewStartedAt={null}
+              />
+            </ITGovAdminContext.Provider>
+          </MessageProvider>
+        </VerboseMockedProvider>
       </MemoryRouter>
     );
 
@@ -111,16 +125,20 @@ describe('GRB review participants table', () => {
   it('renders GRB reviewer view', () => {
     render(
       <MemoryRouter>
-        <MessageProvider>
-          <ITGovAdminContext.Provider value={false}>
-            <ParticipantsSection
-              id={systemIntake.id}
-              state={SystemIntakeState.OPEN}
-              grbReviewers={[grbReviewer]}
-              grbReviewStartedAt={null}
-            />
-          </ITGovAdminContext.Provider>
-        </MessageProvider>
+        <VerboseMockedProvider
+          mocks={[deleteSystemIntakeGRBReviewerMutation(grbReviewer)]}
+        >
+          <MessageProvider>
+            <ITGovAdminContext.Provider value={false}>
+              <ParticipantsSection
+                id={systemIntake.id}
+                state={SystemIntakeState.OPEN}
+                grbReviewers={[grbReviewer]}
+                grbReviewStartedAt={null}
+              />
+            </ITGovAdminContext.Provider>
+          </MessageProvider>
+        </VerboseMockedProvider>
       </MemoryRouter>
     );
 
