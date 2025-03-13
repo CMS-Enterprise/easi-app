@@ -8,8 +8,11 @@ import { DateTime } from 'luxon';
 
 import Alert from 'components/Alert';
 
-function defaultFormat(dt: DateTime): string | null {
-  return dt.toUTC().toISO({ suppressMilliseconds: true });
+function defaultFormat(
+  dt: DateTime,
+  suppressMilliseconds?: boolean
+): string | null {
+  return dt.toUTC().toISO({ suppressMilliseconds });
 }
 
 /**
@@ -21,10 +24,12 @@ const DatePickerFormatted = ({
   onChange,
   format,
   dateInPastWarning,
+  suppressMilliseconds,
   ...props
 }: DatePickerProps & {
   format?: (dt: DateTime) => string | null;
   dateInPastWarning?: boolean;
+  suppressMilliseconds?: boolean;
 }) => {
   const { t } = useTranslation('action');
 
@@ -72,7 +77,10 @@ const DatePickerFormatted = ({
             onChange('');
           } else if (typeof val === 'string') {
             onChange(
-              dtFormat(DateTime.fromFormat(val, 'MM/dd/yyyy')) || undefined
+              dtFormat(
+                DateTime.fromFormat(val, 'MM/dd/yyyy'),
+                suppressMilliseconds
+              ) || undefined
             );
           }
         }

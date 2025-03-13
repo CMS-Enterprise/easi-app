@@ -219,6 +219,7 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
                           defaultValue={grbReview.grbDate || ''}
                           onChange={e => field.onChange(e || undefined)}
                           dateInPastWarning
+                          suppressMilliseconds
                         />
                       </FormGroup>
                     )}
@@ -324,6 +325,7 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
                             value={field.value || ''}
                             onChange={e => field.onChange(e || undefined)}
                             dateInPastWarning
+                            suppressMilliseconds
                           />
                         </FormGroup>
                       )}
