@@ -109,3 +109,7 @@ func (s *ResolverSuite) TestSystemIntakeUpdateSystemIntakeGRBReviewFormInputTime
 	s.NotNil(updatedPayload.SystemIntake.GrbReviewAsyncEndDate)
 	s.WithinDuration(timeNow, *updatedPayload.SystemIntake.GrbReviewAsyncEndDate, time.Second)
 }
+
+func (s *ResolverSuite) TestCalcSystemIntakeGRBReviewAsyncStatus() {
+
+}

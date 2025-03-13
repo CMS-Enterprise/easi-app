@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	"github.com/go-openapi/errors"
 
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -99,4 +100,44 @@ func UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(
 	return &models.UpdateSystemIntakePayload{
 		SystemIntake: updatedIntake,
 	}, nil
+}
+
+// resolvers.CalcSystemIntakeGRBReviewAsyncStatus(ctx, obj.ID)
+
+// CalcSystemIntakeGRBReviewAsyncStatus calculates the status of the GRB Review Async page
+func CalcSystemIntakeGRBReviewAsyncStatus(
+	intake *models.SystemIntake,
+) (*models.SystemIntakeGRBReviewAsyncStatus, error) {
+
+	if intake.GrbReviewType == nil || *intake.GrbReviewType != models.SystemIntakeGRBReviewTypeAsync {
+		return nil, errors.New("System intake is not of type GRB Review Async")
+	}
+
+	if intake.GrbReviewAsyncEndDate == nil {
+		return nil, errors.New("System intake GRB Review Async end date is not set")
+	}
+
+	// Evaluate if the current time is before the Grb Review Async end date
+	if intake.GrbReviewAsyncEndDate.After(intake.GrbReviewAsyncRecordingTime) {
+		// Calculate the amount of time remaining until the end date
+		currentTime := time.Now()
+		timeRemaining := intake.GrbReviewAsyncEndDate.Sub(currentTime)
+		return &models.SystemIntakeGRBReviewAsyncStatus{
+			Status:        models.SystemIntakeGRBReviewAsyncStatusTypeInProgress,
+			TimeRemaining: &timeRemaining,
+			TimePastDue:   nil,
+		}
+	}
+
+	// Fallthrough case:
+	//		The current time is after the Grb Review Async end date
+
+	// Calculate the amount of time past due
+	currentTime := time.Now()
+	timePastDue := currentTime.Sub(intake.GrbReviewAsyncEndDate)
+	return &models.SystemIntakeGRBReviewAsyncStatus{
+		Status:        models.SystemIntakeGRBReviewAsyncStatusTypePastDue,
+		TimeRemaining: nil,
+		TimePastDue:   &timePastDue,
+	}
 }

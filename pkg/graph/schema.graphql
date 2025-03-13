@@ -848,6 +848,25 @@ type SystemIntake {
   grbReviewAsyncRecordingTime: Time
   grbReviewAsyncEndDate: Time
   grbReviewAsyncGRBMeetingTime: Time
+  grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatus!
+}
+
+"""
+The status type of the System Intake GRB Review
+"""
+enum SystemIntakeGRBReviewAsyncStatusType {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+"""
+The status of the System Intake GRB Review
+"""
+type SystemIntakeGRBReviewAsyncStatus {
+  status: SystemIntakeGRBReviewAsyncStatusType!
+  timeRemaining: Time
+  timePastDue: Time
 }
 
 type SystemIntakeContractNumber {

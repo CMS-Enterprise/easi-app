@@ -631,6 +631,13 @@ type SystemIntakeGRBPresentationLinksInput struct {
 	PresentationDeckFileData graphql.Omittable[*graphql.Upload] `json:"presentationDeckFileData,omitempty"`
 }
 
+// The status of the System Intake GRB Review
+type SystemIntakeGRBReviewAsyncStatus struct {
+	Status        SystemIntakeGRBReviewAsyncStatusType `json:"status"`
+	TimeRemaining *time.Time                           `json:"timeRemaining,omitempty"`
+	TimePastDue   *time.Time                           `json:"timePastDue,omitempty"`
+}
+
 type SystemIntakeGRBReviewDiscussion struct {
 	InitialPost *SystemIntakeGRBReviewDiscussionPost   `json:"initialPost"`
 	Replies     []*SystemIntakeGRBReviewDiscussionPost `json:"replies"`
@@ -1204,6 +1211,50 @@ func (e *SystemIntakeFormStep) UnmarshalGQL(v any) error {
 }
 
 func (e SystemIntakeFormStep) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// The status type of the System Intake GRB Review
+type SystemIntakeGRBReviewAsyncStatusType string
+
+const (
+	SystemIntakeGRBReviewAsyncStatusTypeNotStarted SystemIntakeGRBReviewAsyncStatusType = "NOT_STARTED"
+	SystemIntakeGRBReviewAsyncStatusTypeInProgress SystemIntakeGRBReviewAsyncStatusType = "IN_PROGRESS"
+	SystemIntakeGRBReviewAsyncStatusTypeCompleted  SystemIntakeGRBReviewAsyncStatusType = "COMPLETED"
+)
+
+var AllSystemIntakeGRBReviewAsyncStatusType = []SystemIntakeGRBReviewAsyncStatusType{
+	SystemIntakeGRBReviewAsyncStatusTypeNotStarted,
+	SystemIntakeGRBReviewAsyncStatusTypeInProgress,
+	SystemIntakeGRBReviewAsyncStatusTypeCompleted,
+}
+
+func (e SystemIntakeGRBReviewAsyncStatusType) IsValid() bool {
+	switch e {
+	case SystemIntakeGRBReviewAsyncStatusTypeNotStarted, SystemIntakeGRBReviewAsyncStatusTypeInProgress, SystemIntakeGRBReviewAsyncStatusTypeCompleted:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeGRBReviewAsyncStatusType) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeGRBReviewAsyncStatusType) UnmarshalGQL(v any) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeGRBReviewAsyncStatusType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeGRBReviewAsyncStatusType", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeGRBReviewAsyncStatusType) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
