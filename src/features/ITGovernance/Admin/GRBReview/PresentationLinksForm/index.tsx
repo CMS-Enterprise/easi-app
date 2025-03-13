@@ -110,7 +110,8 @@ const PresentationLinksForm = ({
         input: {
           systemIntakeID: id,
           ...values,
-          transcriptFileData,
+          transcriptFileData:
+            values.transcriptFileData === null ? null : transcriptFileData,
           presentationDeckFileData:
             values.presentationDeckFileData === null
               ? null
@@ -254,6 +255,7 @@ const PresentationLinksForm = ({
                         accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
                         aria-describedby="transcriptHelpText transcriptFileDataHelpText"
                         className="maxw-none"
+                        clearFile={() => field.onChange(null)}
                         onChange={e =>
                           field.onChange(e.currentTarget?.files?.[0])
                         }
