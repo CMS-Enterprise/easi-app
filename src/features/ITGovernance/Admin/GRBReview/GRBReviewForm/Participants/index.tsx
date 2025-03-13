@@ -16,10 +16,12 @@ import {
   GetSystemIntakeGRBReviewDocument,
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewFragment,
+  SystemIntakeGRBReviewType,
   useDeleteSystemIntakeGRBReviewerMutation,
   useUpdateSystemIntakeGRBReviewFormInputTimeframeAsyncMutation
 } from 'gql/generated/graphql';
 
+import Alert from 'components/Alert';
 import DatePickerFormatted from 'components/DatePickerFormatted';
 import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
 import FieldErrorMsg from 'components/FieldErrorMsg';
@@ -45,6 +47,8 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
   const history = useHistory();
   const { pathname } = useLocation();
   const { showMessage } = useMessage();
+
+  const reviewType: SystemIntakeGRBReviewType = grbReview.grbReviewType;
 
   const [reviewerToRemove, setReviewerToRemove] =
     useState<SystemIntakeGRBReviewerFragment | null>(null);
@@ -107,6 +111,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
       <GRBReviewFormStepWrapper<ParticipantsFields>
         grbReview={grbReview}
         onSubmit={onSubmit}
+        requiredFields={reviewType === SystemIntakeGRBReviewType.ASYNC}
       >
         {
           // Remove GRB reviewer modal
@@ -143,12 +148,17 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
           )
         }
 
+        <Alert type="info" slim>
+          {t('setUpGrbReviewForm.participants.standardAlert')}
+        </Alert>
         <FormGroup error={!!errors.grbReviewers} className="margin-top-0">
           <Grid col={12} tablet={{ col: 6 }}>
             <div className="margin-top-5 border-top-1px border-base-light padding-top-1">
               <p className="text-bold margin-y-0">
                 {t('setUpGrbReviewForm.participants.grbReviewers.heading')}
-                <RequiredAsterisk />
+                {reviewType === SystemIntakeGRBReviewType.ASYNC && (
+                  <RequiredAsterisk />
+                )}
               </p>
               {!!errors.grbReviewers && (
                 <FieldErrorMsg>{errors.grbReviewers.message}</FieldErrorMsg>
@@ -184,59 +194,64 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
             />
           </Grid>
         </FormGroup>
-        <Grid col={12} tablet={{ col: 6 }}>
-          <div className="margin-top-5 border-top-1px border-base-light padding-top-1">
-            <p className="text-bold margin-y-0">
-              {t('setUpGrbReviewForm.participants.timeframe.heading')}
-            </p>
-            <p className="margin-top-0 margin-bottom-3 text-base-dark">
-              {t('setUpGrbReviewForm.participants.timeframe.description')}
-            </p>
+        {reviewType === SystemIntakeGRBReviewType.ASYNC && (
+          <Grid col={12} tablet={{ col: 6 }}>
+            <div className="margin-top-5 border-top-1px border-base-light padding-top-1">
+              <p className="text-bold margin-y-0">
+                {t('setUpGrbReviewForm.participants.timeframe.heading')}
+              </p>
+              <p className="margin-top-0 margin-bottom-3 text-base-dark">
+                {t('setUpGrbReviewForm.participants.timeframe.description')}
+              </p>
 
-            <Controller
-              control={control}
-              name="grbReviewAsyncEndDate"
-              render={({ field: { ref, ...field }, fieldState: { error } }) => (
-                <>
-                  <FormGroup
-                    error={!!errors.grbReviewAsyncEndDate}
-                    className="margin-top-0"
-                  >
-                    <Fieldset>
-                      <p className="margin-top-0 margin-bottom-1">
-                        {t(
-                          'setUpGrbReviewForm.participants.selectReviewEndDate.heading'
+              <Controller
+                control={control}
+                name="grbReviewAsyncEndDate"
+                render={({
+                  field: { ref, ...field },
+                  fieldState: { error }
+                }) => (
+                  <>
+                    <FormGroup
+                      error={!!errors.grbReviewAsyncEndDate}
+                      className="margin-top-0"
+                    >
+                      <Fieldset>
+                        <p className="margin-top-0 margin-bottom-1">
+                          {t(
+                            'setUpGrbReviewForm.participants.selectReviewEndDate.heading'
+                          )}
+                          <RequiredAsterisk />
+                        </p>
+                        {!!error && (
+                          <FieldErrorMsg>
+                            {t('setUpGrbReviewForm.invalidDate')}
+                          </FieldErrorMsg>
                         )}
-                        <RequiredAsterisk />
-                      </p>
-                      {!!error && (
-                        <FieldErrorMsg>
-                          {t('setUpGrbReviewForm.invalidDate')}
-                        </FieldErrorMsg>
-                      )}
-                      <p className="margin-y-0 text-base-dark">
-                        {t(
-                          'setUpGrbReviewForm.participants.selectReviewEndDate.description'
-                        )}
-                      </p>
+                        <p className="margin-y-0 text-base-dark">
+                          {t(
+                            'setUpGrbReviewForm.participants.selectReviewEndDate.description'
+                          )}
+                        </p>
 
-                      <DatePickerFormatted
-                        id="grbReviewAsyncEndDate"
-                        {...field}
-                        value={field.value ?? ''}
-                        onChange={date => {
-                          if (date !== field.value) {
-                            field.onChange(date || ''); // Only update when there's a change
-                          }
-                        }}
-                      />
-                    </Fieldset>
-                  </FormGroup>
-                </>
-              )}
-            />
-          </div>
-        </Grid>
+                        <DatePickerFormatted
+                          id="grbReviewAsyncEndDate"
+                          {...field}
+                          value={field.value ?? ''}
+                          onChange={date => {
+                            if (date !== field.value) {
+                              field.onChange(date || ''); // Only update when there's a change
+                            }
+                          }}
+                        />
+                      </Fieldset>
+                    </FormGroup>
+                  </>
+                )}
+              />
+            </div>
+          </Grid>
+        )}
       </GRBReviewFormStepWrapper>
     </EasiFormProvider>
   );

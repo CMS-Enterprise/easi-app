@@ -262,6 +262,8 @@ export default {
     },
     completeAndBeginReview: 'Complete and begin review',
     participants: {
+      standardAlert:
+        'Because this review is a standard GRB meeting, you do not need to add GRB reviewers to EASi. However, if you do add reviewers, they will have the option to access documentation about this request within EASi prior to the meeting.',
       grbReviewers: {
         heading: 'GRB reviewers',
         description:
