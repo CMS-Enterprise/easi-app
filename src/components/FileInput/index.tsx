@@ -2,12 +2,8 @@ import React, { ComponentProps, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, FileInput as UswdsFileInput } from '@trussworks/react-uswds';
 
-type FileInputProps = Omit<
-  ComponentProps<typeof UswdsFileInput>,
-  'onChange'
-> & {
-  onChange?: (value: File | null) => void;
-  defaultFileName?: string | null;
+type FileInputProps = ComponentProps<typeof UswdsFileInput> & {
+  defaultFileName?: string;
 };
 
 /**
@@ -40,12 +36,7 @@ const FileInput = ({ defaultFileName, ...props }: FileInputProps) => {
 
   // If `defaultFileName` is not set or file is cleared, display Truss `FileInput`
   if (!fileName) {
-    return (
-      <UswdsFileInput
-        {...props}
-        onChange={e => props.onChange?.(e.currentTarget?.files?.[0] || null)}
-      />
-    );
+    return <UswdsFileInput {...props} />;
   }
 
   // Display default filename with button to clear file
@@ -56,13 +47,7 @@ const FileInput = ({ defaultFileName, ...props }: FileInputProps) => {
         <Button
           type="button"
           // Clear fileName to show file upload field
-          onClick={() => {
-            // Set field value to null
-            props.onChange?.(null);
-
-            // Reset fileName state
-            setFileName('');
-          }}
+          onClick={() => setFileName('')}
           unstyled
           className="margin-top-0 font-body-2xs"
         >

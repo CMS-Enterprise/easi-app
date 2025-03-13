@@ -1,6 +1,8 @@
 const form = {
   dropdownInitialSelect: '- Select -',
   allFieldsMandatory: 'All fields are mandatory',
+  fieldsMarkedRequired:
+    'Fields marked with an asterisk (<asterisk />) are required.',
   // Copied from technicalAssistance
   // todo cleanup technicalAssistance and use this text namepace
   inputError: {

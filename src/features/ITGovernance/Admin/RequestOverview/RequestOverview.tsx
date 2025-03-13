@@ -3,9 +3,10 @@ import React, { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch, useParams } from 'react-router-dom';
-import { Grid } from '@trussworks/react-uswds';
 import classnames from 'classnames';
-import UploadForm from 'features/ITGovernance/Requester/SystemIntake/Documents/UploadForm';
+import DocumentUploadForm from 'features/ITGovernance/_components/DocumentUploadForm';
+import PresentationLinksForm from 'features/ITGovernance/Admin/GRBReview/PresentationLinksForm';
+import PresentationDeckUpload from 'features/ITGovernance/Requester/TaskList/PresentationDeckUpload';
 import AdditionalInformation from 'features/Miscellaneous/AdditionalInformation';
 import NotFound from 'features/Miscellaneous/NotFound';
 import {
@@ -22,24 +23,22 @@ import SideNavigation from 'components/SideNavigation';
 import useMessage from 'hooks/useMessage';
 import { clearBusinessCase, fetchBusinessCase } from 'types/routines';
 
-import AccordionNavigation from '../../../components/AccordionNavigation';
+import AccordionNavigation from '../../../../components/AccordionNavigation';
+import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
+import Actions from '../Actions';
+import BusinessCaseReview from '../BusinessCaseReview';
+import Dates from '../Dates';
+import Decision from '../Decision';
+import Documents from '../Documents';
+import Feedback from '../Feedback';
+import GRBReview from '../GRBReview';
+import IntakeReview from '../IntakeReview';
+import LifecycleID from '../LifecycleID';
+import Notes from '../Notes';
+import subNavItems from '../subNavItems';
+import Summary from '../Summary';
 
-import PresentationLinksForm from './GRBReview/PresentationLinksForm';
-import Actions from './Actions';
-import BusinessCaseReview from './BusinessCaseReview';
-import Dates from './Dates';
-import Decision from './Decision';
-import Documents from './Documents';
-import Feedback from './Feedback';
-import GRBReview from './GRBReview';
-import IntakeReview from './IntakeReview';
-import ITGovAdminContext from './ITGovAdminContext';
-import LifecycleID from './LifecycleID';
-import Notes from './Notes';
-import subNavItems from './subNavItems';
-import Summary from './Summary';
-
-import './index.scss';
+import '../index.scss';
 
 type RequestOverviewProps = {
   grbReviewers: SystemIntakeGRBReviewerFragment[];
@@ -77,9 +76,9 @@ const RequestOverview = ({
     (state: AppState) => state.businessCase.form
   );
 
-  /** Hides summary and side navigation for all action subpages */
+  /** Full page layout hides summary and side navigation */
   const fullPageLayout: boolean =
-    activePage === 'resolutions' || activePage === 'manage-lcid' || !!subPage;
+    ['resolutions', 'manage-lcid'].includes(activePage) || !!subPage;
 
   const navItems = subNavItems(systemId, isITGovAdmin, flags);
 
@@ -102,21 +101,19 @@ const RequestOverview = ({
           {...systemIntake}
           requestName={systemIntake.requestName || ''}
           contractNumbers={
-            systemIntake?.contractNumbers?.map(c => c.contractNumber) || []
+            systemIntake.contractNumbers?.map(c => c.contractNumber) || []
           }
         />
       )}
 
       {!fullPageLayout && <AccordionNavigation items={navItems} />}
 
-      <section className="grid-container">
+      <div className="grid-container">
         <Message className="margin-top-2" />
 
-        <Grid
-          row
-          gap
+        <div
           className={classnames({
-            'margin-bottom-5 margin-top-7': !fullPageLayout
+            'grid-row grid-gap margin-bottom-5 margin-top-7': !fullPageLayout
           })}
         >
           {!fullPageLayout && (
@@ -148,7 +145,7 @@ const RequestOverview = ({
                 {flags?.grbReviewTab && (
                   <Route
                     path="/it-governance/:systemId/documents/upload"
-                    render={() => <UploadForm type="admin" />}
+                    render={() => <DocumentUploadForm type="admin" />}
                   />
                 )}
 
@@ -227,6 +224,13 @@ const RequestOverview = ({
                   />
                 )}
 
+                {flags?.grbReviewTab && (
+                  <Route
+                    path="/it-governance/:systemId/grb-review/presentation-deck-upload"
+                    render={() => <PresentationDeckUpload type="admin" />}
+                  />
+                )}
+
                 {/* GRT only routes */}
 
                 <Route
@@ -243,8 +247,8 @@ const RequestOverview = ({
               </Switch>
             </section>
           )}
-        </Grid>
-      </section>
+        </div>
+      </div>
     </MainContent>
   );
 };
