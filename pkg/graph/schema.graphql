@@ -1269,7 +1269,7 @@ input UpdateSystemIntakeGRBReviewerInput {
 }
 
 input CastSystemIntakeGRBReviewerVoteInput {
-  reviewerID: UUID!
+  systemIntakeID: UUID!
   vote: SystemIntakeAsyncGRBVotingOption!
   voteComment: String
 }

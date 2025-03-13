@@ -131,7 +131,7 @@ func CastSystemIntakeGRBReviewerVote(ctx context.Context, store *storage.Store, 
 	// then, check if the GRB review is in a state where votes are allowed - do this second to avoid a db round trip
 	// if the above condition isn't met
 	// get system intake
-	systemIntake, err := store.SystemIntakeByGRBReviewerID(ctx, input.ReviewerID)
+	systemIntake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
 	if err != nil {
 		return nil, err
 	}

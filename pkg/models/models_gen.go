@@ -34,9 +34,9 @@ type BusinessCaseSolution struct {
 }
 
 type CastSystemIntakeGRBReviewerVoteInput struct {
-	ReviewerID  uuid.UUID                        `json:"reviewerID"`
-	Vote        SystemIntakeAsyncGRBVotingOption `json:"vote"`
-	VoteComment *string                          `json:"voteComment,omitempty"`
+	SystemIntakeID uuid.UUID                        `json:"systemIntakeID"`
+	Vote           SystemIntakeAsyncGRBVotingOption `json:"vote"`
+	VoteComment    *string                          `json:"voteComment,omitempty"`
 }
 
 // CedarBudgetActualCost represents an individual budget actual cost item; this information is returned from the CEDAR Core API
