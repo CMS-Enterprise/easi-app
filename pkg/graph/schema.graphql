@@ -717,6 +717,14 @@ input SystemIntakeGRBPresentationLinksInput {
   presentationDeckFileData: Upload @goField(omittable: true)
 }
 
+"""
+Data needed to upload a presentation deck
+"""
+input UploadSystemIntakeGRBPresentationDeckInput {
+  systemIntakeID: UUID!
+  presentationDeckFileData: Upload
+}
+
 input DeleteSystemIntakeGRBPresentationLinksInput {
   systemIntakeID: UUID!
 }
@@ -2667,6 +2675,7 @@ type Mutation {
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
 
   setSystemIntakeGRBPresentationLinks(input: SystemIntakeGRBPresentationLinksInput!): SystemIntakeGRBPresentationLinks
+  uploadSystemIntakeGRBPresentationDeck(input: UploadSystemIntakeGRBPresentationDeckInput!): SystemIntakeGRBPresentationLinks
   deleteSystemIntakeGRBPresentationLinks(input: DeleteSystemIntakeGRBPresentationLinksInput!): UUID!
 
   archiveSystemIntake(id: UUID!): SystemIntake!
