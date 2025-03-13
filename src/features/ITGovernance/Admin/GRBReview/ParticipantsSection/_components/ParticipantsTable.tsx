@@ -145,6 +145,7 @@ const ParticipantsTable = ({ grbReviewers }: ParticipantsTableProps) => {
           <Modal
             isOpen={!!reviewerToRemove}
             closeModal={() => setReviewerToRemove(null)}
+            className="easi-modal__content--narrow"
           >
             <ModalHeading>
               {t('removeModal.title', {
