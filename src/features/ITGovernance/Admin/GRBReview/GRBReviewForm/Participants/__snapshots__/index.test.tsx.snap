@@ -241,17 +241,20 @@ exports[`GRB review form - participants and timeframe > renders the step 1`] = `
         >
           Add the voting and non-voting GRB members who should participate in this review. For asynchronous reviews, add an end date for the review.
         </p>
-        <p
-          class="text-base margin-top-0 font-body-sm"
+        <div
+          class="usa-alert usa-alert--info usa-alert--slim"
+          data-testid="alert"
         >
-          Fields marked with an asterisk (
-          <span
-            class="text-red margin-x-05"
+          <div
+            class="usa-alert__body"
           >
-            *
-          </span>
-          ) are required.
-        </p>
+            <p
+              class="usa-alert__text"
+            >
+              Because this review is a standard GRB meeting, you do not need to add GRB reviewers to EASi. However, if you do add reviewers, they will have the option to access documentation about this request within EASi prior to the meeting.
+            </p>
+          </div>
+        </div>
         <div
           class="usa-form-group margin-top-0"
           data-testid="formGroup"
@@ -267,11 +270,6 @@ exports[`GRB review form - participants and timeframe > renders the step 1`] = `
                 class="text-bold margin-y-0"
               >
                 GRB reviewers
-                <span
-                  class="text-red margin-x-05"
-                >
-                  *
-                </span>
               </p>
               <p
                 class="margin-y-0 text-base-dark"
@@ -419,97 +417,6 @@ exports[`GRB review form - participants and timeframe > renders the step 1`] = `
               >
                 You have not yet added GRB reviewers. Add reviewers using the button above.
               </p>
-            </div>
-          </div>
-        </div>
-        <div
-          class="grid-col-12 tablet:grid-col-6"
-          data-testid="grid"
-        >
-          <div
-            class="margin-top-5 border-top-1px border-base-light padding-top-1"
-          >
-            <p
-              class="text-bold margin-y-0"
-            >
-              Timeframe
-            </p>
-            <p
-              class="margin-top-0 margin-bottom-3 text-base-dark"
-            >
-              Set a timeframe for this review. The GRB members above will be notified of the end date and will receive some automatic reminders.
-            </p>
-            <div
-              class="usa-form-group margin-top-0"
-              data-testid="formGroup"
-            >
-              <fieldset
-                class="usa-fieldset"
-                data-testid="fieldset"
-              >
-                <p
-                  class="margin-top-0 margin-bottom-1"
-                >
-                  Select review end date
-                  <span
-                    class="text-red margin-x-05"
-                  >
-                    *
-                  </span>
-                </p>
-                <p
-                  class="margin-y-0 text-base-dark"
-                >
-                  Set a timeframe for this review. The GRB members above will be notified of the end date and will receive some automatic reminders.
-                </p>
-                <div
-                  class="usa-date-picker usa-date-picker--initialized"
-                  data-testid="date-picker"
-                >
-                  <input
-                    aria-hidden="true"
-                    class="usa-input usa-sr-only usa-date-picker__internal-input"
-                    data-testid="date-picker-internal-input"
-                    name="grbReviewAsyncEndDate"
-                    readonly=""
-                    tabindex="-1"
-                    type="text"
-                    value=""
-                  />
-                  <div
-                    class="usa-date-picker__wrapper"
-                    tabindex="-1"
-                  >
-                    <input
-                      class="usa-input usa-date-picker__external-input"
-                      data-testid="date-picker-external-input"
-                      id="grbReviewAsyncEndDate"
-                      type="text"
-                      value=""
-                    />
-                    <button
-                      aria-haspopup="true"
-                      aria-label="Toggle calendar"
-                      class="usa-date-picker__button"
-                      data-testid="date-picker-button"
-                      type="button"
-                    />
-                    <div
-                      class="usa-date-picker__calendar"
-                      data-testid="date-picker-calendar"
-                      hidden=""
-                      role="application"
-                      style="top: 0px;"
-                    />
-                    <div
-                      aria-live="polite"
-                      class="usa-sr-only usa-date-picker__status"
-                      data-testid="date-picker-status"
-                      role="status"
-                    />
-                  </div>
-                </div>
-              </fieldset>
             </div>
           </div>
         </div>
