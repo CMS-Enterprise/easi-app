@@ -11,6 +11,8 @@ import { systemIntake } from 'tests/mock/systemIntake';
 import users from 'tests/mock/users';
 import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
+import { MessageProvider } from 'hooks/useMessage';
+
 import ParticipantsSection from './ParticipantsSection';
 
 const user = users[0];
@@ -33,15 +35,16 @@ describe('GRB review participants table', () => {
   it('renders admin view', () => {
     render(
       <MemoryRouter>
-        <ITGovAdminContext.Provider value>
-          <ParticipantsSection
-            id={systemIntake.id}
-            state={SystemIntakeState.OPEN}
-            grbReviewers={[grbReviewer]}
-            setReviewerToRemove={() => null}
-            grbReviewStartedAt={null}
-          />
-        </ITGovAdminContext.Provider>
+        <MessageProvider>
+          <ITGovAdminContext.Provider value>
+            <ParticipantsSection
+              id={systemIntake.id}
+              state={SystemIntakeState.OPEN}
+              grbReviewers={[grbReviewer]}
+              grbReviewStartedAt={null}
+            />
+          </ITGovAdminContext.Provider>
+        </MessageProvider>
       </MemoryRouter>
     );
 
@@ -64,15 +67,16 @@ describe('GRB review participants table', () => {
   it('hides alert after review is started', () => {
     render(
       <MemoryRouter>
-        <ITGovAdminContext.Provider value>
-          <ParticipantsSection
-            id={systemIntake.id}
-            state={SystemIntakeState.OPEN}
-            grbReviewers={[grbReviewer]}
-            setReviewerToRemove={() => null}
-            grbReviewStartedAt="2024-09-10T14:42:47.422022Z"
-          />
-        </ITGovAdminContext.Provider>
+        <MessageProvider>
+          <ITGovAdminContext.Provider value>
+            <ParticipantsSection
+              id={systemIntake.id}
+              state={SystemIntakeState.OPEN}
+              grbReviewers={[grbReviewer]}
+              grbReviewStartedAt="2024-09-10T14:42:47.422022Z"
+            />
+          </ITGovAdminContext.Provider>
+        </MessageProvider>
       </MemoryRouter>
     );
 
@@ -82,15 +86,16 @@ describe('GRB review participants table', () => {
   it('renders closed request state for admins', () => {
     render(
       <MemoryRouter>
-        <ITGovAdminContext.Provider value>
-          <ParticipantsSection
-            id={systemIntake.id}
-            state={SystemIntakeState.CLOSED}
-            grbReviewers={[]}
-            setReviewerToRemove={() => null}
-            grbReviewStartedAt={null}
-          />
-        </ITGovAdminContext.Provider>
+        <MessageProvider>
+          <ITGovAdminContext.Provider value>
+            <ParticipantsSection
+              id={systemIntake.id}
+              state={SystemIntakeState.CLOSED}
+              grbReviewers={[]}
+              grbReviewStartedAt={null}
+            />
+          </ITGovAdminContext.Provider>
+        </MessageProvider>
       </MemoryRouter>
     );
 
@@ -106,15 +111,16 @@ describe('GRB review participants table', () => {
   it('renders GRB reviewer view', () => {
     render(
       <MemoryRouter>
-        <ITGovAdminContext.Provider value={false}>
-          <ParticipantsSection
-            id={systemIntake.id}
-            state={SystemIntakeState.OPEN}
-            grbReviewers={[grbReviewer]}
-            setReviewerToRemove={() => null}
-            grbReviewStartedAt={null}
-          />
-        </ITGovAdminContext.Provider>
+        <MessageProvider>
+          <ITGovAdminContext.Provider value={false}>
+            <ParticipantsSection
+              id={systemIntake.id}
+              state={SystemIntakeState.OPEN}
+              grbReviewers={[grbReviewer]}
+              grbReviewStartedAt={null}
+            />
+          </ITGovAdminContext.Provider>
+        </MessageProvider>
       </MemoryRouter>
     );
 
