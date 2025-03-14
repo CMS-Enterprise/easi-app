@@ -103,8 +103,6 @@ func UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(
 	}, nil
 }
 
-// resolvers.CalcSystemIntakeGRBReviewAsyncStatus(ctx, obj.ID)
-
 // CalcSystemIntakeGRBReviewAsyncStatus calculates the status of the GRB Review Async page
 func CalcSystemIntakeGRBReviewAsyncStatus(
 	intake *models.SystemIntake,
