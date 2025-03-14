@@ -2,8 +2,7 @@ UPDATE
     system_intakes
 SET
     grb_review_type=:grb_review_type,
-    updated_at=CURRENT_TIMESTAMP,
-    eua_user_id=:eua_user_id
+    updated_at=CURRENT_TIMESTAMP
 WHERE id=:system_intake_id
 RETURNING
     id,
