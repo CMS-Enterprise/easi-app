@@ -2,7 +2,8 @@ package resolvers
 
 import (
 	"context"
-	"github.com/go-openapi/errors"
+	"errors"
+	"time"
 
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -108,36 +109,37 @@ func UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(
 func CalcSystemIntakeGRBReviewAsyncStatus(
 	intake *models.SystemIntake,
 ) (*models.SystemIntakeGRBReviewAsyncStatus, error) {
+	currentTime := time.Now()
 
-	if intake.GrbReviewType == nil || *intake.GrbReviewType != models.SystemIntakeGRBReviewTypeAsync {
-		return nil, errors.New("System intake is not of type GRB Review Async")
+	if intake.GrbReviewType != models.SystemIntakeGRBReviewTypeAsync {
+		return nil, errors.New("system intake is not of type GRB Review Async")
 	}
 
 	if intake.GrbReviewAsyncEndDate == nil {
-		return nil, errors.New("System intake GRB Review Async end date is not set")
+		return nil, errors.New("system intake GRB Review Async end date is not set")
 	}
 
 	// Evaluate if the current time is before the Grb Review Async end date
-	if intake.GrbReviewAsyncEndDate.After(intake.GrbReviewAsyncRecordingTime) {
+	if intake.GrbReviewAsyncEndDate.After(currentTime) {
 		// Calculate the amount of time remaining until the end date
-		currentTime := time.Now()
 		timeRemaining := intake.GrbReviewAsyncEndDate.Sub(currentTime)
+		timeRemainingTime := time.Unix(0, 0).Add(timeRemaining)
 		return &models.SystemIntakeGRBReviewAsyncStatus{
 			Status:        models.SystemIntakeGRBReviewAsyncStatusTypeInProgress,
-			TimeRemaining: &timeRemaining,
+			TimeRemaining: &timeRemainingTime,
 			TimePastDue:   nil,
-		}
+		}, nil
 	}
 
 	// Fallthrough case:
 	//		The current time is after the Grb Review Async end date
 
 	// Calculate the amount of time past due
-	currentTime := time.Now()
-	timePastDue := currentTime.Sub(intake.GrbReviewAsyncEndDate)
+	timePastDue := currentTime.Sub(*intake.GrbReviewAsyncEndDate)
+	timePastDueTime := time.Unix(0, 0).Add(timePastDue)
 	return &models.SystemIntakeGRBReviewAsyncStatus{
-		Status:        models.SystemIntakeGRBReviewAsyncStatusTypePastDue,
+		Status:        models.SystemIntakeGRBReviewAsyncStatusTypeCompleted,
 		TimeRemaining: nil,
-		TimePastDue:   &timePastDue,
-	}
+		TimePastDue:   &timePastDueTime,
+	}, nil
 }
