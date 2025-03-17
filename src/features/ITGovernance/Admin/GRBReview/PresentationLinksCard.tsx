@@ -98,7 +98,7 @@ function PresentationLinksCard({
   return (
     <>
       {/* Asynchronous presentation links card */}
-      <div className="usa-card__container margin-left-0 border-width-1px shadow-2 margin-top-3 margin-bottom-4">
+      <div className="usa-card__container margin-x-0 border-width-1px shadow-2 margin-top-3 margin-bottom-4">
         <CardHeader>
           <h3>{t('asyncPresentation.title')}</h3>
         </CardHeader>
