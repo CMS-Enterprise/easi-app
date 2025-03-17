@@ -252,195 +252,190 @@ exports[`GRB review form - presentation > renders the step and takes a snapshot 
           </span>
           ) are required.
         </p>
-        <fieldset
-          class="usa-fieldset"
-          data-testid="fieldset"
+        <div
+          class="desktop:grid-col-6"
+          data-testid="grid"
         >
           <div
-            class="desktop:grid-col-6"
-            data-testid="grid"
+            class="border-top-1px border-base-lighter margin-top-3 easi-text-normal"
           >
-            <div
-              class="border-top-1px border-base-lighter margin-top-3 easi-text-normal"
+            <h4
+              class="margin-top-1 margin-bottom-05"
             >
-              <h4
-                class="margin-top-1 margin-bottom-05"
-              >
-                GRB Meeting
-              </h4>
-              <p
-                class="margin-y-0 text-base"
-              >
-                Organize a GRB meeting for the project team’s presentation to the GRB.
-              </p>
+              GRB Meeting
+            </h4>
+            <p
+              class="margin-y-0 text-base"
+            >
+              Organize a GRB meeting for the project team’s presentation to the GRB.
+            </p>
+            <div
+              class="usa-alert usa-alert--info usa-alert--slim margin-top-105"
+              data-testid="alert"
+            >
               <div
-                class="usa-alert usa-alert--info usa-alert--slim margin-top-105"
-                data-testid="alert"
+                class="usa-alert__body"
               >
-                <div
-                  class="usa-alert__body"
+                <p
+                  class="usa-alert__text"
                 >
-                  <p
-                    class="usa-alert__text"
-                  >
-                    You will need to work with the project team outside of EASi to set up a calendar invite, but you may include the date below for reference purposes within EASi.
-                  </p>
-                </div>
+                  You will need to work with the project team outside of EASi to set up a calendar invite, but you may include the date below for reference purposes within EASi.
+                </p>
+              </div>
+            </div>
+            <div
+              class="usa-form-group"
+              data-testid="formGroup"
+            >
+              <label
+                class="usa-label text-normal"
+                data-testid="label"
+                for="grbMeetingDate.grbDate"
+              >
+                GRB meeting date 
+                <abbr
+                  class="usa-hint usa-hint--required"
+                  title="required"
+                >
+                  *
+                </abbr>
+              </label>
+              <div
+                class="easi-help-text margin-top-1"
+              >
+                This date will be visible to the requester. Format: mm/dd/yyyy
               </div>
               <div
-                class="usa-form-group"
-                data-testid="formGroup"
+                class="usa-date-picker usa-date-picker--initialized"
+                data-testid="date-picker"
               >
-                <label
-                  class="usa-label text-normal"
-                  data-testid="label"
-                  for="grbMeetingDate.grbDate"
-                >
-                  GRB meeting date 
-                  <abbr
-                    class="usa-hint usa-hint--required"
-                    title="required"
-                  >
-                    *
-                  </abbr>
-                </label>
+                <input
+                  aria-hidden="true"
+                  class="usa-input usa-sr-only usa-date-picker__internal-input"
+                  data-testid="date-picker-internal-input"
+                  name="grbMeetingDate.grbDate"
+                  readonly=""
+                  tabindex="-1"
+                  type="text"
+                  value=""
+                />
                 <div
-                  class="easi-help-text margin-top-1"
-                >
-                  This date will be visible to the requester. Format: mm/dd/yyyy
-                </div>
-                <div
-                  class="usa-date-picker usa-date-picker--initialized"
-                  data-testid="date-picker"
+                  class="usa-date-picker__wrapper"
+                  tabindex="-1"
                 >
                   <input
-                    aria-hidden="true"
-                    class="usa-input usa-sr-only usa-date-picker__internal-input"
-                    data-testid="date-picker-internal-input"
-                    name="grbMeetingDate.grbDate"
-                    readonly=""
-                    tabindex="-1"
+                    class="usa-input usa-date-picker__external-input"
+                    data-testid="date-picker-external-input"
+                    id="grbMeetingDate.grbDate"
                     type="text"
                     value=""
                   />
+                  <button
+                    aria-haspopup="true"
+                    aria-label="Toggle calendar"
+                    class="usa-date-picker__button"
+                    data-testid="date-picker-button"
+                    type="button"
+                  />
                   <div
-                    class="usa-date-picker__wrapper"
-                    tabindex="-1"
-                  >
-                    <input
-                      class="usa-input usa-date-picker__external-input"
-                      data-testid="date-picker-external-input"
-                      id="grbMeetingDate.grbDate"
-                      type="text"
-                      value=""
-                    />
-                    <button
-                      aria-haspopup="true"
-                      aria-label="Toggle calendar"
-                      class="usa-date-picker__button"
-                      data-testid="date-picker-button"
-                      type="button"
-                    />
-                    <div
-                      class="usa-date-picker__calendar"
-                      data-testid="date-picker-calendar"
-                      hidden=""
-                      role="application"
-                      style="top: 0px;"
-                    />
-                    <div
-                      aria-live="polite"
-                      class="usa-sr-only usa-date-picker__status"
-                      data-testid="date-picker-status"
-                      role="status"
-                    />
-                  </div>
+                    class="usa-date-picker__calendar"
+                    data-testid="date-picker-calendar"
+                    hidden=""
+                    role="application"
+                    style="top: 0px;"
+                  />
+                  <div
+                    aria-live="polite"
+                    class="usa-sr-only usa-date-picker__status"
+                    data-testid="date-picker-status"
+                    role="status"
+                  />
                 </div>
               </div>
-              <div
-                class="usa-form-group margin-top-6"
-                data-testid="formGroup"
+            </div>
+            <div
+              class="usa-form-group margin-top-6"
+              data-testid="formGroup"
+            >
+              <li
+                class="usa-card maxw-none margin-bottom-0"
+                data-testid="Card"
               >
-                <li
-                  class="usa-card maxw-none margin-bottom-0"
-                  data-testid="Card"
+                <div
+                  class="usa-card__container margin-0 shadow-2 radius-md"
                 >
-                  <div
-                    class="usa-card__container margin-0 shadow-2 radius-md"
+                  <header
+                    class="usa-card__header"
+                    data-testid="CardHeader"
                   >
-                    <header
-                      class="usa-card__header"
-                      data-testid="CardHeader"
+                    <h4
+                      class="margin-bottom-1"
                     >
-                      <h4
-                        class="margin-bottom-1"
-                      >
-                        Presentation deck
-                      </h4>
-                      <p
-                        class="margin-top-0 text-base"
-                      >
-                        The requester and their project team are responsible for uploading their completed presentation deck to EASi, though admin team members may upload a deck for them.
-                      </p>
-                    </header>
+                      Presentation deck
+                    </h4>
+                    <p
+                      class="margin-top-0 text-base"
+                    >
+                      The requester and their project team are responsible for uploading their completed presentation deck to EASi, though admin team members may upload a deck for them.
+                    </p>
+                  </header>
+                  <div
+                    class="usa-card__body"
+                    data-testid="CardBody"
+                  >
                     <div
-                      class="usa-card__body"
-                      data-testid="CardBody"
+                      class="usa-alert usa-alert--info usa-alert--slim"
+                      data-testid="alert"
                     >
                       <div
-                        class="usa-alert usa-alert--info usa-alert--slim"
-                        data-testid="alert"
+                        class="usa-alert__body"
                       >
-                        <div
-                          class="usa-alert__body"
+                        <p
+                          class="usa-alert__text"
                         >
-                          <p
-                            class="usa-alert__text"
-                          >
-                            The requester has not yet uploaded their GRB presentation deck. Use the buttons below to send a reminder or upload the deck yourself.
-                          </p>
-                        </div>
+                          The requester has not yet uploaded their GRB presentation deck. Use the buttons below to send a reminder or upload the deck yourself.
+                        </p>
                       </div>
                     </div>
-                    <div
-                      class="usa-card__footer"
-                      data-testid="CardFooter"
+                  </div>
+                  <div
+                    class="usa-card__footer"
+                    data-testid="CardFooter"
+                  >
+                    <button
+                      class="usa-button margin-top-0 margin-right-1"
+                      data-testid="button"
+                      type="button"
+                    >
+                      Send reminder
+                    </button>
+                    <label
+                      for="presentationDeck.presentationDeckFileData"
                     >
                       <button
-                        class="usa-button margin-top-0 margin-right-1"
+                        class="usa-button usa-button--unstyled margin-top-1"
                         data-testid="button"
                         type="button"
                       >
-                        Send reminder
+                        or, upload a deck for the project team
                       </button>
-                      <label
-                        for="presentationDeck.presentationDeckFileData"
-                      >
-                        <button
-                          class="usa-button usa-button--unstyled margin-top-1"
-                          data-testid="button"
-                          type="button"
-                        >
-                          or, upload a deck for the project team
-                        </button>
-                      </label>
-                      <input
-                        accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
-                        aria-describedby="Select your file"
-                        data-testid="file-upload-input"
-                        id="presentationDeck.presentationDeckFileData"
-                        name="presentationDeck.presentationDeckFileData"
-                        style="display: none;"
-                        type="file"
-                      />
-                    </div>
+                    </label>
+                    <input
+                      accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
+                      aria-describedby="Select your file"
+                      data-testid="file-upload-input"
+                      id="presentationDeck.presentationDeckFileData"
+                      name="presentationDeck.presentationDeckFileData"
+                      style="display: none;"
+                      type="file"
+                    />
                   </div>
-                </li>
-                 
-              </div>
+                </div>
+              </li>
+               
             </div>
           </div>
-        </fieldset>
+        </div>
         <div
           class="margin-top-8 margin-bottom-3"
         >
