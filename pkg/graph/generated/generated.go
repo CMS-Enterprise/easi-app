@@ -895,6 +895,7 @@ type ComplexityRoot struct {
 	SystemIntakeGRBReviewer struct {
 		CreatedAt      func(childComplexity int) int
 		CreatedBy      func(childComplexity int) int
+		DateVoted      func(childComplexity int) int
 		GrbRole        func(childComplexity int) int
 		ID             func(childComplexity int) int
 		ModifiedAt     func(childComplexity int) int
@@ -6588,6 +6589,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntakeGRBReviewer.CreatedBy(childComplexity), true
 
+	case "SystemIntakeGRBReviewer.dateVoted":
+		if e.complexity.SystemIntakeGRBReviewer.DateVoted == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeGRBReviewer.DateVoted(childComplexity), true
+
 	case "SystemIntakeGRBReviewer.grbRole":
 		if e.complexity.SystemIntakeGRBReviewer.GrbRole == nil {
 			break
@@ -9469,6 +9477,7 @@ type SystemIntakeGRBReviewer {
   votingRole: SystemIntakeGRBReviewerVotingRole!
   vote: SystemIntakeAsyncGRBVotingOption
   voteComment: String
+  dateVoted: Time
   grbRole: SystemIntakeGRBReviewerRole!
   createdBy: UUID!
   createdAt: Time!
@@ -28702,6 +28711,8 @@ func (ec *executionContext) fieldContext_CreateSystemIntakeGRBReviewersPayload_r
 				return ec.fieldContext_SystemIntakeGRBReviewer_vote(ctx, field)
 			case "voteComment":
 				return ec.fieldContext_SystemIntakeGRBReviewer_voteComment(ctx, field)
+			case "dateVoted":
+				return ec.fieldContext_SystemIntakeGRBReviewer_dateVoted(ctx, field)
 			case "grbRole":
 				return ec.fieldContext_SystemIntakeGRBReviewer_grbRole(ctx, field)
 			case "createdBy":
@@ -33529,6 +33540,8 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeGRBReviewer(
 				return ec.fieldContext_SystemIntakeGRBReviewer_vote(ctx, field)
 			case "voteComment":
 				return ec.fieldContext_SystemIntakeGRBReviewer_voteComment(ctx, field)
+			case "dateVoted":
+				return ec.fieldContext_SystemIntakeGRBReviewer_dateVoted(ctx, field)
 			case "grbRole":
 				return ec.fieldContext_SystemIntakeGRBReviewer_grbRole(ctx, field)
 			case "createdBy":
@@ -33663,6 +33676,8 @@ func (ec *executionContext) fieldContext_Mutation_castSystemIntakeGRBReviewerVot
 				return ec.fieldContext_SystemIntakeGRBReviewer_vote(ctx, field)
 			case "voteComment":
 				return ec.fieldContext_SystemIntakeGRBReviewer_voteComment(ctx, field)
+			case "dateVoted":
+				return ec.fieldContext_SystemIntakeGRBReviewer_dateVoted(ctx, field)
 			case "grbRole":
 				return ec.fieldContext_SystemIntakeGRBReviewer_grbRole(ctx, field)
 			case "createdBy":
@@ -43401,6 +43416,8 @@ func (ec *executionContext) fieldContext_SystemIntake_grbReviewers(_ context.Con
 				return ec.fieldContext_SystemIntakeGRBReviewer_vote(ctx, field)
 			case "voteComment":
 				return ec.fieldContext_SystemIntakeGRBReviewer_voteComment(ctx, field)
+			case "dateVoted":
+				return ec.fieldContext_SystemIntakeGRBReviewer_dateVoted(ctx, field)
 			case "grbRole":
 				return ec.fieldContext_SystemIntakeGRBReviewer_grbRole(ctx, field)
 			case "createdBy":
@@ -50484,6 +50501,47 @@ func (ec *executionContext) fieldContext_SystemIntakeGRBReviewer_voteComment(_ c
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeGRBReviewer_dateVoted(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeGRBReviewer) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeGRBReviewer_dateVoted(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DateVoted, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(zero.Time)
+	fc.Result = res
+	return ec.marshalOTime2githubᚗcomᚋgureguᚋnullᚋzeroᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeGRBReviewer_dateVoted(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeGRBReviewer",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
 		},
 	}
 	return fc, nil
@@ -73621,6 +73679,8 @@ func (ec *executionContext) _SystemIntakeGRBReviewer(ctx context.Context, sel as
 			out.Values[i] = ec._SystemIntakeGRBReviewer_vote(ctx, field, obj)
 		case "voteComment":
 			out.Values[i] = ec._SystemIntakeGRBReviewer_voteComment(ctx, field, obj)
+		case "dateVoted":
+			out.Values[i] = ec._SystemIntakeGRBReviewer_dateVoted(ctx, field, obj)
 		case "grbRole":
 			field := field
 

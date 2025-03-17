@@ -2381,6 +2381,7 @@ export type SystemIntakeGRBReviewer = {
   __typename: 'SystemIntakeGRBReviewer';
   createdAt: Scalars['Time']['output'];
   createdBy: Scalars['UUID']['output'];
+  dateVoted?: Maybe<Scalars['Time']['output']>;
   grbRole: SystemIntakeGRBReviewerRole;
   id: Scalars['UUID']['output'];
   modifiedAt?: Maybe<Scalars['Time']['output']>;

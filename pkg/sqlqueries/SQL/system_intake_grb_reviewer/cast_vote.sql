@@ -2,7 +2,10 @@ UPDATE
     system_intake_grb_reviewers
 SET
     vote         = :vote,
-    vote_comment = :vote_comment
+    vote_comment = :vote_comment,
+    date_voted   = NOW(),
+    modified_at  = NOW(),
+    modified_by  = :user_id
 WHERE
     id = :reviewer_id
     AND user_id = :user_id
@@ -14,6 +17,7 @@ RETURNING
     grb_role,
     vote,
     vote_comment,
+    date_voted,
     modified_at,
     modified_by,
     created_at,
