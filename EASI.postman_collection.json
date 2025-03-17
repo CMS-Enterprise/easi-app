@@ -1976,8 +1976,8 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "mutation UpdateSystemIntakeGRBReviewFormTimeframeAsync($input: updateSystemIntakeGRBReviewFormInputTimeframeAsync!) {\n  updateSystemIntakeGRBReviewFormTimeframeAsync(input: $input) {\n    systemIntake {\n      id\n      grbReviewAsyncEndDate\n    }\n  }\n}",
-								"variables": "{\n  \"input\": {\n    \"systemIntakeID\": \"{{systemIntakeID}}\",\n    \"grbReviewAsyncEndDate\": \"2025-03-10T14:00:00Z\"\n  }\n}"
+								"query": "mutation UpdateSystemIntakeGRBReviewFormTimeframeAsync{\n  updateSystemIntakeGRBReviewFormTimeframeAsync(input: {\n    systemIntakeID: \"{{systemIntakeID}}\",\n    grbReviewAsyncEndDate: \"2025-03-10T14:00:00Z\",\n    # startGRBReview: true\n     }){\n    systemIntake {\n      id\n      grbReviewAsyncEndDate\n    }\n  }\n}",
+								"variables": ""
 							}
 						},
 						"url": {

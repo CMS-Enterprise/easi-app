@@ -1354,6 +1354,10 @@ Input data used to set or update a System Intake's GRB Review Timeframe (Async) 
 input updateSystemIntakeGRBReviewFormInputTimeframeAsync {
   systemIntakeID: UUID!
   grbReviewAsyncEndDate: Time!
+  """
+  Whether or not to start the GRB review meeting now or not. It defaults to false
+  """
+  startGRBReview: Boolean! = false
 }
 
 """

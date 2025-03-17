@@ -3373,6 +3373,8 @@ export type UpdateSystemIntakeGRBReviewFormInputPresentationStandard = {
 /** Input data used to set or update a System Intake's GRB Review Timeframe (Async) data */
 export type UpdateSystemIntakeGRBReviewFormInputTimeframeAsync = {
   grbReviewAsyncEndDate: Scalars['Time']['input'];
+  /** Whether or not to start the GRB review meeting now or not. It defaults to false */
+  startGRBReview?: Scalars['Boolean']['input'];
   systemIntakeID: Scalars['UUID']['input'];
 };
 
