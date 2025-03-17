@@ -1089,8 +1089,8 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation castSystemIntakeGRBReviewerVote($input: CastSystemIntakeGRBReviewerVoteInput!) {\n  castSystemIntakeGRBReviewerVote(input: $input) {\n    id\n    systemIntakeID\n    grbRole\n    votingRole\n    userAccount {\n      username\n      id\n      givenName\n      commonName\n      email\n    }\n    vote\n    voteComment\n    createdAt\n    createdBy\n    modifiedAt\n    modifiedBy\n  }\n}\n",
-										"variables": "{\n  \"input\": {\n    \"reviewerID\": \"eb7653ff-94e6-42f9-98fc-63f3a2dd3cca\",\n    \"vote\": \"NO_OBJECTION\",\n    \"voteComment\": \"I think it's a great idea!\"\n  }\n}"
+										"query": "mutation castSystemIntakeGRBReviewerVote($input: CastSystemIntakeGRBReviewerVoteInput!) {\n  castSystemIntakeGRBReviewerVote(input: $input) {\n    id\n    systemIntakeID\n    grbRole\n    votingRole\n    userAccount {\n      username\n      id\n      givenName\n      commonName\n      email\n    }\n    vote\n    voteComment\n    dateVoted\n    createdAt\n    createdBy\n    modifiedAt\n    modifiedBy\n  }\n}\n",
+										"variables": "{\n  \"input\": {\n    \"systemIntakeID\": \"8edb237e-ad48-49b2-91cf-8534362bc6cf\",\n    \"vote\": \"OBJECTION\",\n    \"voteComment\": \"Could be better\"\n  }\n}"
 									}
 								},
 								"url": {
