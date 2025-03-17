@@ -875,12 +875,6 @@ type ComplexityRoot struct {
 		TranscriptLink             func(childComplexity int) int
 	}
 
-	SystemIntakeGRBReviewAsyncStatus struct {
-		Status        func(childComplexity int) int
-		TimePastDue   func(childComplexity int) int
-		TimeRemaining func(childComplexity int) int
-	}
-
 	SystemIntakeGRBReviewDiscussion struct {
 		InitialPost func(childComplexity int) int
 		Replies     func(childComplexity int) int
@@ -1417,7 +1411,7 @@ type SystemIntakeResolver interface {
 	GrbDiscussions(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewDiscussion, error)
 	GrbPresentationLinks(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBPresentationLinks, error)
 
-	GrbReviewAsyncStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBReviewAsyncStatus, error)
+	GrbReviewAsyncStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBReviewAsyncStatusType, error)
 }
 type SystemIntakeDocumentResolver interface {
 	DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*models.SystemIntakeDocumentType, error)
@@ -6496,27 +6490,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntakeGRBPresentationLinks.TranscriptLink(childComplexity), true
 
-	case "SystemIntakeGRBReviewAsyncStatus.status":
-		if e.complexity.SystemIntakeGRBReviewAsyncStatus.Status == nil {
-			break
-		}
-
-		return e.complexity.SystemIntakeGRBReviewAsyncStatus.Status(childComplexity), true
-
-	case "SystemIntakeGRBReviewAsyncStatus.timePastDue":
-		if e.complexity.SystemIntakeGRBReviewAsyncStatus.TimePastDue == nil {
-			break
-		}
-
-		return e.complexity.SystemIntakeGRBReviewAsyncStatus.TimePastDue(childComplexity), true
-
-	case "SystemIntakeGRBReviewAsyncStatus.timeRemaining":
-		if e.complexity.SystemIntakeGRBReviewAsyncStatus.TimeRemaining == nil {
-			break
-		}
-
-		return e.complexity.SystemIntakeGRBReviewAsyncStatus.TimeRemaining(childComplexity), true
-
 	case "SystemIntakeGRBReviewDiscussion.initialPost":
 		if e.complexity.SystemIntakeGRBReviewDiscussion.InitialPost == nil {
 			break
@@ -9121,25 +9094,16 @@ type SystemIntake {
   grbReviewAsyncRecordingTime: Time
   grbReviewAsyncEndDate: Time
   grbReviewAsyncGRBMeetingTime: Time
-  grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatus!
+  grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType
 }
 
 """
 The status type of the System Intake GRB Review
 """
 enum SystemIntakeGRBReviewAsyncStatusType {
-  NOT_STARTED
   IN_PROGRESS
   COMPLETED
-}
-
-"""
-The status of the System Intake GRB Review
-"""
-type SystemIntakeGRBReviewAsyncStatus {
-  status: SystemIntakeGRBReviewAsyncStatusType!
-  timeRemaining: Time
-  timePastDue: Time
+  PAST_DUE
 }
 
 type SystemIntakeContractNumber {
@@ -46247,14 +46211,11 @@ func (ec *executionContext) _SystemIntake_grbReviewAsyncStatus(ctx context.Conte
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(*models.SystemIntakeGRBReviewAsyncStatus)
+	res := resTmp.(*models.SystemIntakeGRBReviewAsyncStatusType)
 	fc.Result = res
-	return ec.marshalNSystemIntakeGRBReviewAsyncStatus2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewAsyncStatus(ctx, field.Selections, res)
+	return ec.marshalOSystemIntakeGRBReviewAsyncStatusType2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewAsyncStatusType(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntake_grbReviewAsyncStatus(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -46264,15 +46225,7 @@ func (ec *executionContext) fieldContext_SystemIntake_grbReviewAsyncStatus(_ con
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "status":
-				return ec.fieldContext_SystemIntakeGRBReviewAsyncStatus_status(ctx, field)
-			case "timeRemaining":
-				return ec.fieldContext_SystemIntakeGRBReviewAsyncStatus_timeRemaining(ctx, field)
-			case "timePastDue":
-				return ec.fieldContext_SystemIntakeGRBReviewAsyncStatus_timePastDue(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeGRBReviewAsyncStatus", field.Name)
+			return nil, errors.New("field of type SystemIntakeGRBReviewAsyncStatusType does not have child fields")
 		},
 	}
 	return fc, nil
@@ -49622,132 +49575,6 @@ func (ec *executionContext) fieldContext_SystemIntakeGRBPresentationLinks_presen
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type SystemIntakeDocumentStatus does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _SystemIntakeGRBReviewAsyncStatus_status(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeGRBReviewAsyncStatus) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntakeGRBReviewAsyncStatus_status(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Status, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(models.SystemIntakeGRBReviewAsyncStatusType)
-	fc.Result = res
-	return ec.marshalNSystemIntakeGRBReviewAsyncStatusType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewAsyncStatusType(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_SystemIntakeGRBReviewAsyncStatus_status(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "SystemIntakeGRBReviewAsyncStatus",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type SystemIntakeGRBReviewAsyncStatusType does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _SystemIntakeGRBReviewAsyncStatus_timeRemaining(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeGRBReviewAsyncStatus) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntakeGRBReviewAsyncStatus_timeRemaining(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.TimeRemaining, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*time.Time)
-	fc.Result = res
-	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_SystemIntakeGRBReviewAsyncStatus_timeRemaining(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "SystemIntakeGRBReviewAsyncStatus",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Time does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _SystemIntakeGRBReviewAsyncStatus_timePastDue(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeGRBReviewAsyncStatus) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntakeGRBReviewAsyncStatus_timePastDue(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.TimePastDue, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*time.Time)
-	fc.Result = res
-	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_SystemIntakeGRBReviewAsyncStatus_timePastDue(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "SystemIntakeGRBReviewAsyncStatus",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Time does not have child fields")
 		},
 	}
 	return fc, nil
@@ -72249,16 +72076,13 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 		case "grbReviewAsyncStatus":
 			field := field
 
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
 				res = ec._SystemIntake_grbReviewAsyncStatus(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
 				return res
 			}
 
@@ -73334,49 +73158,6 @@ func (ec *executionContext) _SystemIntakeGRBPresentationLinks(ctx context.Contex
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
-var systemIntakeGRBReviewAsyncStatusImplementors = []string{"SystemIntakeGRBReviewAsyncStatus"}
-
-func (ec *executionContext) _SystemIntakeGRBReviewAsyncStatus(ctx context.Context, sel ast.SelectionSet, obj *models.SystemIntakeGRBReviewAsyncStatus) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeGRBReviewAsyncStatusImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("SystemIntakeGRBReviewAsyncStatus")
-		case "status":
-			out.Values[i] = ec._SystemIntakeGRBReviewAsyncStatus_status(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "timeRemaining":
-			out.Values[i] = ec._SystemIntakeGRBReviewAsyncStatus_timeRemaining(ctx, field, obj)
-		case "timePastDue":
-			out.Values[i] = ec._SystemIntakeGRBReviewAsyncStatus_timePastDue(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -79210,30 +78991,6 @@ func (ec *executionContext) unmarshalNSystemIntakeGRBPresentationLinksInput2gith
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNSystemIntakeGRBReviewAsyncStatus2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewAsyncStatus(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeGRBReviewAsyncStatus) graphql.Marshaler {
-	return ec._SystemIntakeGRBReviewAsyncStatus(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNSystemIntakeGRBReviewAsyncStatus2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewAsyncStatus(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeGRBReviewAsyncStatus) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._SystemIntakeGRBReviewAsyncStatus(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalNSystemIntakeGRBReviewAsyncStatusType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewAsyncStatusType(ctx context.Context, v any) (models.SystemIntakeGRBReviewAsyncStatusType, error) {
-	var res models.SystemIntakeGRBReviewAsyncStatusType
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNSystemIntakeGRBReviewAsyncStatusType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewAsyncStatusType(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeGRBReviewAsyncStatusType) graphql.Marshaler {
-	return v
-}
-
 func (ec *executionContext) marshalNSystemIntakeGRBReviewDiscussion2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewDiscussionᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.SystemIntakeGRBReviewDiscussion) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -81937,6 +81694,22 @@ func (ec *executionContext) marshalOSystemIntakeGRBPresentationLinks2ᚖgithub�
 		return graphql.Null
 	}
 	return ec._SystemIntakeGRBPresentationLinks(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOSystemIntakeGRBReviewAsyncStatusType2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewAsyncStatusType(ctx context.Context, v any) (*models.SystemIntakeGRBReviewAsyncStatusType, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(models.SystemIntakeGRBReviewAsyncStatusType)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOSystemIntakeGRBReviewAsyncStatusType2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewAsyncStatusType(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeGRBReviewAsyncStatusType) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) marshalOSystemIntakeGRBReviewDiscussionPost2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewDiscussionPost(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeGRBReviewDiscussionPost) graphql.Marshaler {

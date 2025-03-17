@@ -631,13 +631,6 @@ type SystemIntakeGRBPresentationLinksInput struct {
 	PresentationDeckFileData graphql.Omittable[*graphql.Upload] `json:"presentationDeckFileData,omitempty"`
 }
 
-// The status of the System Intake GRB Review
-type SystemIntakeGRBReviewAsyncStatus struct {
-	Status        SystemIntakeGRBReviewAsyncStatusType `json:"status"`
-	TimeRemaining *time.Time                           `json:"timeRemaining,omitempty"`
-	TimePastDue   *time.Time                           `json:"timePastDue,omitempty"`
-}
-
 type SystemIntakeGRBReviewDiscussion struct {
 	InitialPost *SystemIntakeGRBReviewDiscussionPost   `json:"initialPost"`
 	Replies     []*SystemIntakeGRBReviewDiscussionPost `json:"replies"`
@@ -1224,20 +1217,20 @@ func (e SystemIntakeFormStep) MarshalGQL(w io.Writer) {
 type SystemIntakeGRBReviewAsyncStatusType string
 
 const (
-	SystemIntakeGRBReviewAsyncStatusTypeNotStarted SystemIntakeGRBReviewAsyncStatusType = "NOT_STARTED"
 	SystemIntakeGRBReviewAsyncStatusTypeInProgress SystemIntakeGRBReviewAsyncStatusType = "IN_PROGRESS"
 	SystemIntakeGRBReviewAsyncStatusTypeCompleted  SystemIntakeGRBReviewAsyncStatusType = "COMPLETED"
+	SystemIntakeGRBReviewAsyncStatusTypePastDue    SystemIntakeGRBReviewAsyncStatusType = "PAST_DUE"
 )
 
 var AllSystemIntakeGRBReviewAsyncStatusType = []SystemIntakeGRBReviewAsyncStatusType{
-	SystemIntakeGRBReviewAsyncStatusTypeNotStarted,
 	SystemIntakeGRBReviewAsyncStatusTypeInProgress,
 	SystemIntakeGRBReviewAsyncStatusTypeCompleted,
+	SystemIntakeGRBReviewAsyncStatusTypePastDue,
 }
 
 func (e SystemIntakeGRBReviewAsyncStatusType) IsValid() bool {
 	switch e {
-	case SystemIntakeGRBReviewAsyncStatusTypeNotStarted, SystemIntakeGRBReviewAsyncStatusTypeInProgress, SystemIntakeGRBReviewAsyncStatusTypeCompleted:
+	case SystemIntakeGRBReviewAsyncStatusTypeInProgress, SystemIntakeGRBReviewAsyncStatusTypeCompleted, SystemIntakeGRBReviewAsyncStatusTypePastDue:
 		return true
 	}
 	return false

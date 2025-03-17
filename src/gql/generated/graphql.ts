@@ -1935,7 +1935,7 @@ export type SystemIntake = {
   grbReviewAsyncEndDate?: Maybe<Scalars['Time']['output']>;
   grbReviewAsyncGRBMeetingTime?: Maybe<Scalars['Time']['output']>;
   grbReviewAsyncRecordingTime?: Maybe<Scalars['Time']['output']>;
-  grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatus;
+  grbReviewAsyncStatus?: Maybe<SystemIntakeGRBReviewAsyncStatusType>;
   grbReviewStartedAt?: Maybe<Scalars['Time']['output']>;
   /** GRB Review Form */
   grbReviewType: SystemIntakeGRBReviewType;
@@ -2335,19 +2335,11 @@ export type SystemIntakeGRBPresentationLinksInput = {
   transcriptLink?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** The status of the System Intake GRB Review */
-export type SystemIntakeGRBReviewAsyncStatus = {
-  __typename: 'SystemIntakeGRBReviewAsyncStatus';
-  status: SystemIntakeGRBReviewAsyncStatusType;
-  timePastDue?: Maybe<Scalars['Time']['output']>;
-  timeRemaining?: Maybe<Scalars['Time']['output']>;
-};
-
 /** The status type of the System Intake GRB Review */
 export enum SystemIntakeGRBReviewAsyncStatusType {
   COMPLETED = 'COMPLETED',
   IN_PROGRESS = 'IN_PROGRESS',
-  NOT_STARTED = 'NOT_STARTED'
+  PAST_DUE = 'PAST_DUE'
 }
 
 export type SystemIntakeGRBReviewDiscussion = {

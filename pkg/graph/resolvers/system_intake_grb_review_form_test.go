@@ -116,16 +116,14 @@ func (s *ResolverSuite) TestSystemIntakeUpdateSystemIntakeGRBReviewFormInputTime
 func (s *ResolverSuite) TestCalcSystemIntakeGRBReviewAsyncStatus() {
 	now := time.Now()
 	futureTime := now.Add(24 * time.Hour) // 24 hours in the future
-	expectedFutureTime := time.Unix(0, 0).Add(futureTime.Sub(now))
-	pastTime := now.Add(-24 * time.Hour) // 24 hours in the past
-	expectedPastTime := time.Unix(0, 0).Add(now.Sub(pastTime))
+	pastTime := now.Add(-24 * time.Hour)  // 24 hours in the past
 	systemIntakeID := uuid.New()
 
 	tests := []struct {
 		name        string
 		intake      models.SystemIntake
 		expectedErr error
-		expected    *models.SystemIntakeGRBReviewAsyncStatus
+		expected    *models.SystemIntakeGRBReviewAsyncStatusType
 	}{
 		{
 			name: "Error - GRB Review Async end date is not set",
@@ -133,7 +131,7 @@ func (s *ResolverSuite) TestCalcSystemIntakeGRBReviewAsyncStatus() {
 				ID:            systemIntakeID,
 				GrbReviewType: models.SystemIntakeGRBReviewTypeAsync,
 			},
-			expectedErr: errors.New("System intake GRB Review Async end date is not set"),
+			expectedErr: errors.New("system intake GRB Review Async end date is not set"),
 			expected:    nil,
 		},
 		{
@@ -144,11 +142,7 @@ func (s *ResolverSuite) TestCalcSystemIntakeGRBReviewAsyncStatus() {
 				GrbReviewAsyncEndDate: &futureTime,
 			},
 			expectedErr: nil,
-			expected: &models.SystemIntakeGRBReviewAsyncStatus{
-				Status:        models.SystemIntakeGRBReviewAsyncStatusTypeInProgress,
-				TimeRemaining: &expectedFutureTime,
-				TimePastDue:   nil,
-			},
+			expected:    PointerToSystemIntakeGRBReviewAsyncStatusType(models.SystemIntakeGRBReviewAsyncStatusTypeInProgress),
 		},
 		{
 			name: "Status - Completed (End date is in the past)",
@@ -158,11 +152,7 @@ func (s *ResolverSuite) TestCalcSystemIntakeGRBReviewAsyncStatus() {
 				GrbReviewAsyncEndDate: &pastTime,
 			},
 			expectedErr: nil,
-			expected: &models.SystemIntakeGRBReviewAsyncStatus{
-				Status:        models.SystemIntakeGRBReviewAsyncStatusTypeCompleted,
-				TimeRemaining: nil,
-				TimePastDue:   &expectedPastTime,
-			},
+			expected:    PointerToSystemIntakeGRBReviewAsyncStatusType(models.SystemIntakeGRBReviewAsyncStatusTypeCompleted),
 		},
 	}
 
@@ -179,20 +169,7 @@ func (s *ResolverSuite) TestCalcSystemIntakeGRBReviewAsyncStatus() {
 				// No errors expected
 				s.NoError(err)
 				s.NotNil(status)
-				s.Equal(tc.expected.Status, status.Status)
-
-				// Validate time calculations
-				if tc.expected.TimeRemaining != nil {
-					s.WithinDuration(*tc.expected.TimeRemaining, *status.TimeRemaining, time.Second)
-				} else {
-					s.Nil(status.TimeRemaining)
-				}
-
-				if tc.expected.TimePastDue != nil {
-					s.WithinDuration(*tc.expected.TimePastDue, *status.TimePastDue, time.Second)
-				} else {
-					s.Nil(status.TimePastDue)
-				}
+				s.Equal(*tc.expected, *status)
 			}
 		})
 	}

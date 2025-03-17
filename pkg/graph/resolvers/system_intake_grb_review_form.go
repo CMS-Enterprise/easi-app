@@ -103,10 +103,17 @@ func UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(
 	}, nil
 }
 
+// PointerToSystemIntakeGRBReviewAsyncStatusType Create a reference to an Async GRB Review status
+func PointerToSystemIntakeGRBReviewAsyncStatusType(
+	status models.SystemIntakeGRBReviewAsyncStatusType,
+) *models.SystemIntakeGRBReviewAsyncStatusType {
+	return &status
+}
+
 // CalcSystemIntakeGRBReviewAsyncStatus calculates the status of the GRB Review Async page
 func CalcSystemIntakeGRBReviewAsyncStatus(
 	intake *models.SystemIntake,
-) (*models.SystemIntakeGRBReviewAsyncStatus, error) {
+) (*models.SystemIntakeGRBReviewAsyncStatusType, error) {
 	currentTime := time.Now()
 
 	if intake.GrbReviewType != models.SystemIntakeGRBReviewTypeAsync {
@@ -119,25 +126,10 @@ func CalcSystemIntakeGRBReviewAsyncStatus(
 
 	// Evaluate if the current time is before the Grb Review Async end date
 	if intake.GrbReviewAsyncEndDate.After(currentTime) {
-		// Calculate the amount of time remaining until the end date
-		timeRemaining := intake.GrbReviewAsyncEndDate.Sub(currentTime)
-		timeRemainingTime := time.Unix(0, 0).Add(timeRemaining)
-		return &models.SystemIntakeGRBReviewAsyncStatus{
-			Status:        models.SystemIntakeGRBReviewAsyncStatusTypeInProgress,
-			TimeRemaining: &timeRemainingTime,
-			TimePastDue:   nil,
-		}, nil
+		return PointerToSystemIntakeGRBReviewAsyncStatusType(models.SystemIntakeGRBReviewAsyncStatusTypeInProgress), nil
 	}
 
 	// Fallthrough case:
 	//		The current time is after the Grb Review Async end date
-
-	// Calculate the amount of time past due
-	timePastDue := currentTime.Sub(*intake.GrbReviewAsyncEndDate)
-	timePastDueTime := time.Unix(0, 0).Add(timePastDue)
-	return &models.SystemIntakeGRBReviewAsyncStatus{
-		Status:        models.SystemIntakeGRBReviewAsyncStatusTypeCompleted,
-		TimeRemaining: nil,
-		TimePastDue:   &timePastDueTime,
-	}, nil
+	return PointerToSystemIntakeGRBReviewAsyncStatusType(models.SystemIntakeGRBReviewAsyncStatusTypeCompleted), nil
 }
