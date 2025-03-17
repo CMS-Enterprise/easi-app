@@ -106,6 +106,9 @@ func (s *ResolverSuite) TestSystemIntakeUpdateSystemIntakeGRBReviewFormInputTime
 	s.NotNil(updatedPayload)
 	s.NotNil(updatedPayload.SystemIntake)
 
-	s.NotNil(updatedPayload.SystemIntake.GrbReviewAsyncEndDate)
-	s.WithinDuration(timeNow, *updatedPayload.SystemIntake.GrbReviewAsyncEndDate, time.Second)
+	if s.Suite.NotNil(updatedPayload.SystemIntake.GrbReviewAsyncEndDate) {
+		s.WithinDuration(timeNow, *updatedPayload.SystemIntake.GrbReviewAsyncEndDate, time.Second)
+	}
+
+	s.Nil(updatedPayload.SystemIntake.GRBReviewStartedAt)
 }
