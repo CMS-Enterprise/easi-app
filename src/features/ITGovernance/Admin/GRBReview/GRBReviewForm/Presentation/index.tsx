@@ -1,6 +1,7 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { ErrorMessage } from '@hookform/error-message';
 import {
   Fieldset,
   FormGroup,
@@ -31,8 +32,16 @@ import GRBReviewFormStepWrapper, {
   GRBReviewFormStepSubmit
 } from '../GRBReviewFormStepWrapper';
 
-type StandardPresentationFields =
-  UpdateSystemIntakeGRBReviewStandardPresentationMutationVariables;
+type StandardPresentationFields = {
+  grbMeetingDate: {
+    systemIntakeID: string;
+    grbDate: string;
+  };
+  presentationDeck: {
+    systemIntakeID: string;
+    presentationDeckFileData: File | null;
+  };
+};
 
 type AsyncPresentationFields =
   UpdateSystemIntakeGRBReviewAsyncPresentationMutationVariables;
@@ -87,13 +96,17 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
     }
   );
 
-  const { control, watch } = standardForm;
+  const {
+    control,
+    watch,
+    formState: { errors, isSubmitted }
+  } = standardForm;
 
   const {
     control: controlAsync,
     register,
     watch: watchAsync,
-    formState: { errors: errorAsync, defaultValues }
+    formState: { defaultValues }
   } = asyncForm;
 
   const onSubmitStandard: GRBReviewFormStepSubmit<
@@ -169,100 +182,98 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
             onSubmit={onSubmitStandard}
             disabled={!watch('grbMeetingDate.grbDate')}
           >
-            <Fieldset>
-              <Grid desktop={{ col: 6 }}>
-                <div className="border-top-1px border-base-lighter margin-top-3 easi-text-normal">
-                  <h4 className="margin-top-1 margin-bottom-05">
-                    {t('presentationGRBReviewForm.heading')}
-                  </h4>
+            <Grid desktop={{ col: 6 }}>
+              <div className="border-top-1px border-base-lighter margin-top-3 easi-text-normal">
+                <h4 className="margin-top-1 margin-bottom-05">
+                  {t('presentationGRBReviewForm.heading')}
+                </h4>
 
-                  <p className="margin-y-0 text-base">
-                    {t('presentationGRBReviewForm.description')}
-                  </p>
+                <p className="margin-y-0 text-base">
+                  {t('presentationGRBReviewForm.description')}
+                </p>
 
-                  <Alert type="info" slim className="margin-top-105">
-                    {t('presentationGRBReviewForm.alert')}
-                  </Alert>
+                <Alert type="info" slim className="margin-top-105">
+                  {t('presentationGRBReviewForm.alert')}
+                </Alert>
 
-                  <Controller
-                    name="grbMeetingDate.grbDate"
-                    control={control}
-                    rules={{
-                      required: 'presentationGRBReviewForm.required'
-                    }}
-                    render={({
-                      field: { ref, ...field },
-                      fieldState: { error }
-                    }) => (
-                      <FormGroup error={!!error}>
-                        <Label
-                          htmlFor={field.name}
-                          className="text-normal"
-                          requiredMarker
-                        >
-                          {t('presentationGRBReviewForm.meetingDateLabel')}
-                        </Label>
+                <Controller
+                  name="grbMeetingDate.grbDate"
+                  control={control}
+                  rules={{
+                    required: 'presentationGRBReviewForm.required'
+                  }}
+                  render={({ field: { ref, ...field } }) => (
+                    <FormGroup>
+                      <Label
+                        htmlFor={field.name}
+                        className="text-normal"
+                        requiredMarker
+                      >
+                        {t('presentationGRBReviewForm.meetingDateLabel')}
+                      </Label>
 
-                        <HelpText className="margin-top-1">
-                          {t(
-                            'presentationGRBReviewForm.meetingDateDescription'
-                          )}
-                        </HelpText>
+                      <HelpText className="margin-top-1">
+                        {t('presentationGRBReviewForm.meetingDateDescription')}
+                      </HelpText>
 
-                        {!!error?.message && (
-                          <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
-                        )}
+                      <ErrorMessage
+                        errors={errors}
+                        name="grbMeetingDate.grbDate"
+                        render={({ message }) =>
+                          isSubmitted && (
+                            <FieldErrorMsg>{message}</FieldErrorMsg>
+                          )
+                        }
+                      />
 
-                        <DatePickerFormatted
-                          {...field}
+                      <DatePickerFormatted
+                        {...field}
+                        id={field.name}
+                        defaultValue={grbReview.grbDate || ''}
+                        onChange={e => field.onChange(e || undefined)}
+                        dateInPastWarning
+                        suppressMilliseconds
+                      />
+                    </FormGroup>
+                  )}
+                />
+
+                <Controller
+                  control={control}
+                  name="presentationDeck.presentationDeckFileData"
+                  render={({ field: { ref, ...field } }) => {
+                    return (
+                      <FormGroup className="margin-top-6">
+                        <SendPresentationReminder
+                          systemIntakeID={grbReview.id}
+                          presentationDeckFileURL={
+                            grbReview.grbPresentationLinks
+                              ?.presentationDeckFileURL
+                          }
+                          presentationDeckFileName={
+                            watch('presentationDeck.presentationDeckFileData')
+                              ?.name
+                          }
+                          canDownload={
+                            !watch('presentationDeck.presentationDeckFileData')
+                              ?.size
+                          }
+                          name={field.name}
                           id={field.name}
-                          defaultValue={grbReview.grbDate || ''}
-                          onChange={e => field.onChange(e || undefined)}
-                          dateInPastWarning
-                          suppressMilliseconds
-                        />
+                          accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
+                          aria-describedby="presentationDeckHelpText"
+                          className="maxw-none margin-bottom-0"
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            field.onChange(e.currentTarget?.files?.[0])
+                          }
+                          clearFile={() => field.onChange(null)}
+                        />{' '}
                       </FormGroup>
-                    )}
-                  />
-
-                  <Controller
-                    control={control}
-                    name="presentationDeck.presentationDeckFileData"
-                    render={({ field: { ref, ...field } }) => {
-                      return (
-                        <FormGroup className="margin-top-6">
-                          <SendPresentationReminder
-                            systemIntakeID={grbReview.id}
-                            presentationDeckFileURL={
-                              grbReview.grbPresentationLinks
-                                ?.presentationDeckFileURL
-                            }
-                            presentationDeckFileName={
-                              watch('presentationDeck.presentationDeckFileData')
-                                ?.name
-                            }
-                            canDownload={
-                              !watch(
-                                'presentationDeck.presentationDeckFileData'
-                              )?.size
-                            }
-                            name={field.name}
-                            id={field.name}
-                            accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
-                            aria-describedby="presentationDeckHelpText"
-                            className="maxw-none margin-bottom-0"
-                            onChange={(
-                              e: React.ChangeEvent<HTMLInputElement>
-                            ) => field.onChange(e.currentTarget?.files?.[0])}
-                            clearFile={() => field.onChange(null)}
-                          />{' '}
-                        </FormGroup>
-                      );
-                    }}
-                  />
-                </div>
-              </Grid>
-            </Fieldset>
+                    );
+                  }}
+                />
+              </div>
+            </Grid>
           </GRBReviewFormStepWrapper>
         </EasiFormProvider>
       ) : (
@@ -272,242 +283,224 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
             onSubmit={onSubmitAsync}
             requiredFields={false}
           >
-            <Fieldset className="body-normal">
-              <Grid desktop={{ col: 6 }}>
-                <div className="border-top-1px border-base-lighter margin-top-3 easi-text-normal">
-                  <h4 className="margin-top-1 margin-bottom-05">
-                    {t('presentationGRBReviewForm.asyncHeading')}
-                  </h4>
+            <Grid desktop={{ col: 6 }}>
+              <div className="border-top-1px border-base-lighter margin-top-3 easi-text-normal">
+                <h4 className="margin-top-1 margin-bottom-05">
+                  {t('presentationGRBReviewForm.asyncHeading')}
+                </h4>
 
-                  <p className="margin-y-0 text-base">
-                    {t('presentationGRBReviewForm.asyncDescription')}
-                  </p>
+                <p className="margin-y-0 text-base">
+                  {t('presentationGRBReviewForm.asyncDescription')}
+                </p>
 
-                  <Alert type="info" slim className="margin-top-105">
-                    {t('presentationGRBReviewForm.alert')}
-                  </Alert>
+                <Alert type="info" slim className="margin-top-105">
+                  {t('presentationGRBReviewForm.alert')}
+                </Alert>
 
-                  <FormGroup
-                    error={
-                      !!errorAsync.asyncRecordingDate
-                        ?.grbReviewAsyncRecordingTime
-                    }
-                    className="margin-top-3"
-                  >
-                    <Controller
-                      name="asyncRecordingDate.grbReviewAsyncRecordingTime"
-                      control={controlAsync}
-                      render={({
-                        field: { ref, ...field },
-                        fieldState: { error }
-                      }) => (
-                        <FormGroup error={!!error}>
-                          <Label htmlFor={field.name} className="text-normal">
-                            {t(
-                              'presentationGRBReviewForm.asyncRecordingDateLabel'
-                            )}
-                          </Label>
-
-                          <HelpText className="margin-top-1">
-                            {t(
-                              'presentationGRBReviewForm.meetingDateDescription'
-                            )}
-                          </HelpText>
-
-                          {!!error?.message && (
-                            <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
-                          )}
-
-                          <DatePickerFormatted
-                            {...field}
-                            id={field.name}
-                            defaultValue={field.value || ''}
-                            value={field.value || ''}
-                            onChange={e => field.onChange(e || undefined)}
-                            dateInPastWarning
-                            suppressMilliseconds
-                          />
-                        </FormGroup>
-                      )}
-                    />
-                  </FormGroup>
-                </div>
-
-                <div className="border-top-1px border-base-lighter margin-top-4">
-                  <h4 className="margin-top-1 margin-bottom-05">
-                    {t('presentationGRBReviewForm.forTheReviewers')}
-                  </h4>
-
-                  <p className="margin-y-0 text-base">
-                    {t('presentationGRBReviewForm.reviewersDescription')}
-                  </p>
-
-                  <FormGroup>
-                    <Label
-                      htmlFor="links.recordingLink"
-                      className="text-normal"
-                    >
-                      {t('presentationLinks.recordingLinkLabel')}
-                    </Label>
-
-                    <HelpText
-                      id="recordingLinkHelpText"
-                      className="margin-top-0"
-                    >
-                      {t('presentationLinks.recordingLinkHelpText')}
-                    </HelpText>
-
-                    <TextInput
-                      {...register('links.recordingLink')}
-                      ref={null}
-                      id="recordingLink"
-                      aria-describedby="recordingLinkHelpText"
-                      type="text"
-                    />
-                  </FormGroup>
-
-                  <FormGroup>
-                    <Label
-                      htmlFor="links.recordingPasscode"
-                      className="text-normal"
-                    >
-                      {t('presentationLinks.recordingPasscodeLabel')}
-                    </Label>
-
-                    <HelpText
-                      id="recordingPasscodeHelpText"
-                      className="margin-top-05"
-                    >
-                      {t('presentationLinks.recordingPasscodeHelpText')}
-                    </HelpText>
-
-                    <TextInput
-                      {...register('links.recordingPasscode')}
-                      ref={null}
-                      id="recordingPasscode"
-                      aria-describedby="recordingPasscodeHelpText"
-                      type="text"
-                    />
-                  </FormGroup>
-
-                  <FormGroup>
-                    <Fieldset id="transcriptFields">
-                      <Label
-                        htmlFor="recotranscriptLinkrdingPasscode"
-                        className="text-normal"
-                      >
-                        {t('presentationLinks.transcript')}
+                <Controller
+                  name="asyncRecordingDate.grbReviewAsyncRecordingTime"
+                  control={controlAsync}
+                  render={({ field: { ref, ...field } }) => (
+                    <FormGroup>
+                      <Label htmlFor={field.name} className="text-normal">
+                        {t('presentationGRBReviewForm.asyncRecordingDateLabel')}
                       </Label>
 
-                      <HelpText
-                        id="transcriptHelpText"
-                        className="margin-top-05"
-                      >
-                        {t('presentationLinks.transcriptHelpText')}
+                      <HelpText className="margin-top-1">
+                        {t('presentationGRBReviewForm.meetingDateDescription')}
                       </HelpText>
 
-                      <Tabs
-                        className="margin-top-105"
-                        // Default to upload document tab when document has been uploaded
-                        defaultActiveTab={
-                          defaultValues?.links?.transcriptFileData?.name
-                            ? t('presentationLinks.uploadDocument')
-                            : t('presentationLinks.addLink')
+                      <ErrorMessage
+                        errors={errors}
+                        name="asyncRecordingDate.grbReviewAsyncRecordingTime"
+                        render={({ message }) =>
+                          isSubmitted && (
+                            <FieldErrorMsg>{message}</FieldErrorMsg>
+                          )
                         }
+                      />
+
+                      <DatePickerFormatted
+                        {...field}
+                        id={field.name}
+                        defaultValue={field.value || ''}
+                        value={field.value || ''}
+                        onChange={e => field.onChange(e || undefined)}
+                        dateInPastWarning
+                        suppressMilliseconds
+                      />
+                    </FormGroup>
+                  )}
+                />
+              </div>
+
+              <div className="border-top-1px border-base-lighter margin-top-4">
+                <h4 className="margin-top-1 margin-bottom-05">
+                  {t('presentationGRBReviewForm.forTheReviewers')}
+                </h4>
+
+                <p className="margin-y-0 text-base">
+                  {t('presentationGRBReviewForm.reviewersDescription')}
+                </p>
+
+                <FormGroup>
+                  <Label htmlFor="links.recordingLink" className="text-normal">
+                    {t('presentationLinks.recordingLinkLabel')}
+                  </Label>
+
+                  <HelpText
+                    id="recordingLinkHelpText"
+                    className="margin-top-05"
+                  >
+                    {t('presentationLinks.recordingLinkHelpText')}
+                  </HelpText>
+
+                  <TextInput
+                    {...register('links.recordingLink')}
+                    ref={null}
+                    id="recordingLink"
+                    aria-describedby="recordingLinkHelpText"
+                    type="text"
+                  />
+                </FormGroup>
+
+                <FormGroup>
+                  <Label
+                    htmlFor="links.recordingPasscode"
+                    className="text-normal"
+                  >
+                    {t('presentationLinks.recordingPasscodeLabel')}
+                  </Label>
+
+                  <HelpText
+                    id="recordingPasscodeHelpText"
+                    className="margin-top-05"
+                  >
+                    {t('presentationLinks.recordingPasscodeHelpText')}
+                  </HelpText>
+
+                  <TextInput
+                    {...register('links.recordingPasscode')}
+                    ref={null}
+                    id="recordingPasscode"
+                    aria-describedby="recordingPasscodeHelpText"
+                    type="text"
+                  />
+                </FormGroup>
+
+                <FormGroup>
+                  <Fieldset id="transcriptFields">
+                    <Label
+                      htmlFor="recotranscriptLinkrdingPasscode"
+                      className="text-normal"
+                    >
+                      {t('presentationLinks.transcript')}
+                    </Label>
+
+                    <HelpText id="transcriptHelpText" className="margin-top-05">
+                      {t('presentationLinks.transcriptHelpText')}
+                    </HelpText>
+
+                    <Tabs
+                      className="margin-top-105"
+                      // Default to upload document tab when document has been uploaded
+                      defaultActiveTab={
+                        defaultValues?.links?.transcriptFileData?.name
+                          ? t('presentationLinks.uploadDocument')
+                          : t('presentationLinks.addLink')
+                      }
+                    >
+                      <TabPanel
+                        id="addLink"
+                        tabName={t('presentationLinks.addLink')}
+                        className="outline-0"
                       >
-                        <TabPanel
-                          id="addLink"
-                          tabName={t('presentationLinks.addLink')}
-                          className="outline-0"
+                        <TextInput
+                          {...register('links.transcriptLink', {
+                            shouldUnregister: true
+                          })}
+                          ref={null}
+                          id="transcriptLink"
+                          aria-describedby="transcriptHelpText"
+                          type="url"
+                          className="margin-top-2"
+                        />
+                      </TabPanel>
+
+                      <TabPanel
+                        id="addDocument"
+                        tabName={t('presentationLinks.uploadDocument')}
+                        className="outline-0"
+                      >
+                        <HelpText
+                          id="transcriptFileDataHelpText"
+                          className="margin-top-2"
                         >
-                          <TextInput
-                            {...register('links.transcriptLink', {
-                              shouldUnregister: true
-                            })}
-                            ref={null}
-                            id="transcriptLink"
-                            aria-describedby="transcriptHelpText"
-                            type="url"
-                            className="margin-top-2"
-                          />
-                        </TabPanel>
+                          {t('presentationLinks.documentUploadHelpText')}
+                        </HelpText>
 
-                        <TabPanel
-                          id="addDocument"
-                          tabName={t('presentationLinks.uploadDocument')}
-                          className="outline-0"
-                        >
-                          <HelpText
-                            id="transcriptFileDataHelpText"
-                            className="margin-top-2"
-                          >
-                            {t('presentationLinks.documentUploadHelpText')}
-                          </HelpText>
+                        <Controller
+                          control={controlAsync}
+                          name="links.transcriptFileData"
+                          shouldUnregister
+                          render={({ field: { ref, ...field } }) => (
+                            <FileInput
+                              defaultFileName={
+                                defaultValues?.links?.transcriptFileData?.name
+                              }
+                              name={field.name}
+                              id={field.name}
+                              accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
+                              aria-describedby="transcriptHelpText transcriptFileDataHelpText"
+                              className="maxw-none"
+                              clearFile={() => field.onChange(null)}
+                              onChange={e =>
+                                field.onChange(
+                                  e.currentTarget?.files?.[0] || null
+                                )
+                              }
+                            />
+                          )}
+                        />
+                      </TabPanel>
+                    </Tabs>
+                  </Fieldset>
+                </FormGroup>
 
-                          <Controller
-                            control={controlAsync}
-                            name="links.transcriptFileData"
-                            shouldUnregister
-                            render={({ field: { ref, ...field } }) => (
-                              <FileInput
-                                defaultFileName={
-                                  defaultValues?.links?.transcriptFileData?.name
-                                }
-                                name={field.name}
-                                id={field.name}
-                                accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
-                                aria-describedby="transcriptHelpText transcriptFileDataHelpText"
-                                className="maxw-none"
-                                clearFile={() => field.onChange(null)}
-                                onChange={e =>
-                                  field.onChange(
-                                    e.currentTarget?.files?.[0] || null
-                                  )
-                                }
-                              />
-                            )}
-                          />
-                        </TabPanel>
-                      </Tabs>
-                    </Fieldset>
-                  </FormGroup>
-
-                  <FormGroup className="margin-top-6">
-                    <Controller
-                      control={controlAsync}
-                      name="links.presentationDeckFileData"
-                      render={({ field: { ref, ...field } }) => {
-                        return (
-                          <SendPresentationReminder
-                            systemIntakeID={grbReview.id}
-                            presentationDeckFileURL={
-                              grbReview.grbPresentationLinks
-                                ?.presentationDeckFileURL
-                            }
-                            presentationDeckFileName={
-                              watchAsync('links.presentationDeckFileData')?.name
-                            }
-                            canDownload={
-                              !watchAsync('links.presentationDeckFileData')
-                                ?.size
-                            }
-                            name={field.name}
-                            id={field.name}
-                            accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
-                            aria-describedby="presentationDeckHelpText"
-                            className="maxw-none margin-bottom-0"
-                            onChange={(
-                              e: React.ChangeEvent<HTMLInputElement>
-                            ) => field.onChange(e.currentTarget?.files?.[0])}
-                            clearFile={() => field.onChange(null)}
-                          />
-                        );
-                      }}
-                    />
-                  </FormGroup>
-                </div>
-              </Grid>
-            </Fieldset>
+                <FormGroup className="margin-top-6">
+                  <Controller
+                    control={controlAsync}
+                    name="links.presentationDeckFileData"
+                    render={({ field: { ref, ...field } }) => {
+                      return (
+                        <SendPresentationReminder
+                          systemIntakeID={grbReview.id}
+                          presentationDeckFileURL={
+                            grbReview.grbPresentationLinks
+                              ?.presentationDeckFileURL
+                          }
+                          presentationDeckFileName={
+                            watchAsync('links.presentationDeckFileData')?.name
+                          }
+                          canDownload={
+                            !watchAsync('links.presentationDeckFileData')?.size
+                          }
+                          name={field.name}
+                          id={field.name}
+                          accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
+                          aria-describedby="presentationDeckHelpText"
+                          className="maxw-none margin-bottom-0"
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            field.onChange(e.currentTarget?.files?.[0])
+                          }
+                          clearFile={() => field.onChange(null)}
+                        />
+                      );
+                    }}
+                  />
+                </FormGroup>
+              </div>
+            </Grid>
           </GRBReviewFormStepWrapper>
         </EasiFormProvider>
       )}
