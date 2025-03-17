@@ -32,7 +32,6 @@ type GRBReviewFormStepWrapperProps<
   onSubmit: GRBReviewFormStepSubmit<TFieldValues>;
   /** Defaults to true - shows required fields text above `children` */
   requiredFields?: boolean;
-  disabled?: boolean;
 };
 
 /**
@@ -46,8 +45,7 @@ function GRBReviewFormStepWrapper<
   children,
   grbReview,
   onSubmit,
-  requiredFields = true,
-  disabled = false
+  requiredFields = true
 }: GRBReviewFormStepWrapperProps<TFieldValues>) {
   const { t } = useTranslation('grbReview');
   const history = useHistory();
@@ -183,7 +181,7 @@ function GRBReviewFormStepWrapper<
       [...grbReviewFormSteps]
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [grbReview, submitStep, disabled]);
+  }, [grbReview, submitStep]);
 
   // Format steps and redirect user if current step is disabled
   useEffect(() => {

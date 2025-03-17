@@ -180,7 +180,6 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
           <GRBReviewFormStepWrapper
             grbReview={grbReview}
             onSubmit={onSubmitStandard}
-            disabled={!watch('grbMeetingDate.grbDate')}
           >
             <Grid desktop={{ col: 6 }}>
               <div className="border-top-1px border-base-lighter margin-top-3 easi-text-normal">
