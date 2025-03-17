@@ -50447,9 +50447,9 @@ func (ec *executionContext) _SystemIntakeGRBReviewer_vote(ctx context.Context, f
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(models.SystemIntakeAsyncGRBVotingOption)
+	res := resTmp.(*models.SystemIntakeAsyncGRBVotingOption)
 	fc.Result = res
-	return ec.marshalOSystemIntakeAsyncGRBVotingOption2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx, field.Selections, res)
+	return ec.marshalOSystemIntakeAsyncGRBVotingOption2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeGRBReviewer_vote(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -81801,13 +81801,19 @@ func (ec *executionContext) unmarshalOSystemIntakeAnnualSpendingInput2ᚖgithub�
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalOSystemIntakeAsyncGRBVotingOption2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx context.Context, v any) (models.SystemIntakeAsyncGRBVotingOption, error) {
-	var res models.SystemIntakeAsyncGRBVotingOption
+func (ec *executionContext) unmarshalOSystemIntakeAsyncGRBVotingOption2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx context.Context, v any) (*models.SystemIntakeAsyncGRBVotingOption, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(models.SystemIntakeAsyncGRBVotingOption)
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOSystemIntakeAsyncGRBVotingOption2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeAsyncGRBVotingOption) graphql.Marshaler {
+func (ec *executionContext) marshalOSystemIntakeAsyncGRBVotingOption2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeAsyncGRBVotingOption) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
 	return v
 }
 
