@@ -56,6 +56,8 @@ func (s *Store) UpdateSystemIntakeGRBReviewer(ctx context.Context, tx *sqlx.Tx, 
 			zap.Error(err),
 			zap.String("reviewer_id", input.ReviewerID.String()),
 		)
+
+		return nil, err
 	}
 
 	return updatedReviewer, nil
@@ -79,6 +81,7 @@ func (s *Store) CastSystemIntakeGRBReviewerVote(ctx context.Context, input model
 			zap.String("user_id", userID.String()),
 			zap.String("system_intake_id", input.SystemIntakeID.String()),
 		)
+
 		return nil, err
 	}
 

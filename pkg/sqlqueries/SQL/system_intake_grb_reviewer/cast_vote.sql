@@ -7,7 +7,7 @@ SET
     modified_at  = NOW(),
     modified_by  = :user_id
 WHERE
-    id = :reviewer_id
+    system_intake_id = :system_intake_id
     AND user_id = :user_id
 RETURNING
     id,
