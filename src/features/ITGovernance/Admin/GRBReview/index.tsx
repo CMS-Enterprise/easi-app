@@ -1,7 +1,6 @@
 import React, { useCallback, useContext, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
-import { S } from '@storybook/react/dist/types-0a347bb9';
 import {
   Button,
   ButtonGroup,
@@ -58,8 +57,8 @@ type GRBReviewProps = {
   grbReviewStartedAt?: string | null;
   grbPresentationLinks?: SystemIntakeFragmentFragment['grbPresentationLinks'];
   governanceRequestFeedbacks: SystemIntakeFragmentFragment['governanceRequestFeedbacks'];
-  currentStage: SystemIntakeFragmentFragment['currentStage'];
-  annualSpending: SystemIntakeFragmentFragment['annualSpending'];
+  currentStage?: SystemIntakeFragmentFragment['currentStage'];
+  annualSpending?: SystemIntakeFragmentFragment['annualSpending'];
 };
 
 const GRBReview = ({
@@ -358,36 +357,25 @@ const GRBReview = ({
 
             {/* Intake Request Link */}
             <IntakeRequestCard
-              systemIntakeID={id}
               currentStage={currentStage}
               annualSpending={annualSpending}
               submittedAt={submittedAt}
             />
-            {/* <p className="usa-card__container margin-x-0 padding-x-2 padding-y-1 display-inline-flex flex-row flex-wrap border-width-1px">
-              <span className="margin-right-1">
-                {t('documentsIntakeLinkTitle')}
-              </span>
-              <span className="margin-right-1 text-base">
-                ({t('documentsIntakeSubmitted')}{' '}
-                {formatDateLocal(submittedAt, 'MM/dd/yyyy')})
-              </span>
-              <UswdsReactLink to="./intake-request">
-                {t('documentsIntakeLinkText')}
-              </UswdsReactLink>
-            </p> */}
 
             {/* Additional Documents Title and Link */}
-            <h3 className="margin-bottom-1">{t('additionalDocuments')}</h3>
+            <div className="margin-y-4">
+              <h3 className="margin-bottom-1">{t('additionalDocuments')}</h3>
 
-            {isITGovAdmin && (
-              <UswdsReactLink
-                to="./documents/upload"
-                className="display-flex flex-align-center"
-              >
-                <Icon.Add className="margin-right-1" />
-                <span>{t('additionalDocsLink')}</span>
-              </UswdsReactLink>
-            )}
+              {isITGovAdmin && (
+                <UswdsReactLink
+                  to="./documents/upload"
+                  className="display-flex flex-align-center"
+                >
+                  <Icon.Add className="margin-right-1" />
+                  <span>{t('additionalDocsLink')}</span>
+                </UswdsReactLink>
+              )}
+            </div>
 
             <DocumentsTable systemIntakeId={id} documents={documents} />
             <Discussions
