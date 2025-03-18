@@ -963,7 +963,7 @@ func (s *seederConfig) addGuidanceLetter(ctx context.Context, trb *models.TRBReq
 		}
 
 		if shouldSend {
-			_, err = resolvers.SendTRBGuidanceLetter(ctx, s.store, letter.ID, nil, mock.FetchUserInfoMock, mock.FetchUserInfosMock, false, nil)
+			_, err = resolvers.SendTRBGuidanceLetter(ctx, s.store, letter.ID, nil, mock.FetchUserInfoMock, mock.FetchUserInfosMock, false, false, nil)
 			if err != nil {
 				return nil, err
 			}
