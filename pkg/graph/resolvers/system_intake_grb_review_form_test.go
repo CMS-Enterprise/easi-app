@@ -1,8 +1,9 @@
 package resolvers
 
 import (
-	"errors"
 	"time"
+
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 
 	"github.com/99designs/gqlgen/graphql"
 
@@ -120,20 +121,10 @@ func (s *ResolverSuite) TestCalcSystemIntakeGRBReviewAsyncStatus() {
 	systemIntakeID := uuid.New()
 
 	tests := []struct {
-		name        string
-		intake      models.SystemIntake
-		expectedErr error
-		expected    *models.SystemIntakeGRBReviewAsyncStatusType
+		name     string
+		intake   models.SystemIntake
+		expected *models.SystemIntakeGRBReviewAsyncStatusType
 	}{
-		{
-			name: "Error - GRB Review Async end date is not set",
-			intake: models.SystemIntake{
-				ID:            systemIntakeID,
-				GrbReviewType: models.SystemIntakeGRBReviewTypeAsync,
-			},
-			expectedErr: errors.New("system intake GRB Review Async end date is not set"),
-			expected:    nil,
-		},
 		{
 			name: "Status - In Progress (End date is in the future)",
 			intake: models.SystemIntake{
@@ -141,8 +132,7 @@ func (s *ResolverSuite) TestCalcSystemIntakeGRBReviewAsyncStatus() {
 				GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
 				GrbReviewAsyncEndDate: &futureTime,
 			},
-			expectedErr: nil,
-			expected:    PointerToSystemIntakeGRBReviewAsyncStatusType(models.SystemIntakeGRBReviewAsyncStatusTypeInProgress),
+			expected: helpers.PointerTo(models.SystemIntakeGRBReviewAsyncStatusTypeInProgress),
 		},
 		{
 			name: "Status - Completed (End date is in the past)",
@@ -151,26 +141,17 @@ func (s *ResolverSuite) TestCalcSystemIntakeGRBReviewAsyncStatus() {
 				GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
 				GrbReviewAsyncEndDate: &pastTime,
 			},
-			expectedErr: nil,
-			expected:    PointerToSystemIntakeGRBReviewAsyncStatusType(models.SystemIntakeGRBReviewAsyncStatusTypeCompleted),
+			expected: helpers.PointerTo(models.SystemIntakeGRBReviewAsyncStatusTypeCompleted),
 		},
 	}
 
 	for _, tc := range tests {
 		s.Run(tc.name, func() {
-			status, err := CalcSystemIntakeGRBReviewAsyncStatus(&tc.intake)
+			status := CalcSystemIntakeGRBReviewAsyncStatus(&tc.intake)
 
-			// Check for expected error
-			if tc.expectedErr != nil {
-				s.Error(err)
-				s.Equal(tc.expectedErr.Error(), err.Error())
-				s.Nil(status)
-			} else {
-				// No errors expected
-				s.NoError(err)
-				s.NotNil(status)
-				s.Equal(*tc.expected, *status)
-			}
+			// No errors expected
+			s.NotNil(status)
+			s.Equal(*tc.expected, *status)
 		})
 	}
 }

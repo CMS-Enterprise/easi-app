@@ -2,8 +2,9 @@ package resolvers
 
 import (
 	"context"
-	"errors"
 	"time"
+
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -103,33 +104,26 @@ func UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(
 	}, nil
 }
 
-// PointerToSystemIntakeGRBReviewAsyncStatusType Create a reference to an Async GRB Review status
-func PointerToSystemIntakeGRBReviewAsyncStatusType(
-	status models.SystemIntakeGRBReviewAsyncStatusType,
-) *models.SystemIntakeGRBReviewAsyncStatusType {
-	return &status
-}
-
 // CalcSystemIntakeGRBReviewAsyncStatus calculates the status of the GRB Review Async page
 func CalcSystemIntakeGRBReviewAsyncStatus(
 	intake *models.SystemIntake,
-) (*models.SystemIntakeGRBReviewAsyncStatusType, error) {
+) *models.SystemIntakeGRBReviewAsyncStatusType {
 	currentTime := time.Now()
 
 	if intake.GrbReviewType != models.SystemIntakeGRBReviewTypeAsync {
-		return nil, errors.New("system intake is not of type GRB Review Async")
+		return nil
 	}
 
 	if intake.GrbReviewAsyncEndDate == nil {
-		return nil, errors.New("system intake GRB Review Async end date is not set")
+		return nil
 	}
 
 	// Evaluate if the current time is before the Grb Review Async end date
 	if intake.GrbReviewAsyncEndDate.After(currentTime) {
-		return PointerToSystemIntakeGRBReviewAsyncStatusType(models.SystemIntakeGRBReviewAsyncStatusTypeInProgress), nil
+		return helpers.PointerTo(models.SystemIntakeGRBReviewAsyncStatusTypeInProgress)
 	}
 
 	// Fallthrough case:
 	//		The current time is after the Grb Review Async end date
-	return PointerToSystemIntakeGRBReviewAsyncStatusType(models.SystemIntakeGRBReviewAsyncStatusTypeCompleted), nil
+	return helpers.PointerTo(models.SystemIntakeGRBReviewAsyncStatusTypeCompleted)
 }

@@ -1974,7 +1974,7 @@ func (r *systemIntakeResolver) GrbPresentationLinks(ctx context.Context, obj *mo
 
 // GrbReviewAsyncStatus is the resolver for the grbReviewAsyncStatus field.
 func (r *systemIntakeResolver) GrbReviewAsyncStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBReviewAsyncStatusType, error) {
-	return resolvers.CalcSystemIntakeGRBReviewAsyncStatus(obj)
+	return resolvers.CalcSystemIntakeGRBReviewAsyncStatus(obj), nil
 }
 
 // DocumentType is the resolver for the documentType field.
