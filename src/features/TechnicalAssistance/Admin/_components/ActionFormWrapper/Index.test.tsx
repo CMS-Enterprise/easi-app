@@ -92,7 +92,7 @@ describe('Email recipient fields component', () => {
       })
     );
 
-    expect(getAllByRole('checkbox').length).toBe(2 + attendees.length);
+    expect(getAllByRole('checkbox').length).toBe(3 + attendees.length);
 
     // Snapshot
     expect(asFragment()).toMatchSnapshot();
