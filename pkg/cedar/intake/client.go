@@ -241,19 +241,20 @@ func (c *Client) publishIntakeAndBusinessCase(ctx context.Context, logger *zap.L
 
 // getDurationUntilNextWeekdayAndTime returns the duration from the start time to the next weekday (Mon-Fri) at the given hour
 func getDurationUntilNextWeekdayAndTime(startTime time.Time, hour int) time.Duration {
-	nextTime := getTimeAtHour(startTime, hour)
+	todayTime := getTimeAtHour(startTime, hour)
+	nextTime := todayTime
 
 	// If the scheduled time today has passed, move to the next day
 	if startTime.After(nextTime) {
-		startTime = startTime.AddDate(0, 0, 1)
+		nextTime = nextTime.AddDate(0, 0, 1)
 	}
 
 	// Loop until we find the next weekday (Mon-Fri)
-	for startTime.Weekday() == time.Saturday || startTime.Weekday() == time.Sunday {
-		startTime = startTime.AddDate(0, 0, 1)
+	for nextTime.Weekday() == time.Saturday || nextTime.Weekday() == time.Sunday {
+		nextTime = nextTime.AddDate(0, 0, 1)
 	}
 
-	return getTimeAtHour(startTime, hour).Sub(time.Now().UTC())
+	return nextTime.Sub(startTime)
 }
 
 // This function first sets the time to midnight through Truncate
