@@ -102,8 +102,8 @@ const GRBReviewStatusCard = ({
   );
 
   // TODO: Implement AsyncAdmin and AsyncReviewer components
-  const AsyncAdmin = <></>;
-  const AsyncReviewer = <></>;
+  const AsyncAdmin = <>{t('statusCard.asyncHeading')}</>;
+  const AsyncReviewer = <>{t('statusCard.asyncHeading')}</>;
 
   const renderCard = () => {
     // If the GRB review type is standard, show the standard card for both IT Gov Admin and Reviewer

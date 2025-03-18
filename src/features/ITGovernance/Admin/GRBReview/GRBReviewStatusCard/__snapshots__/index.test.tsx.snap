@@ -1,0 +1,63 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`GRBReviewStatusCard > renders the standard card with correct status and meeting details 1`] = `
+<DocumentFragment>
+  <li
+    class="usa-card test-class"
+    data-testid="Card"
+  >
+    <div
+      class="usa-card__container margin-0 border-none radius-md bg-primary-lighter"
+    >
+      <header
+        class="usa-card__header"
+        data-testid="CardHeader"
+      >
+        <h3
+          class="display-inline-block margin-right-2 margin-bottom-0"
+        >
+          Standard meeting review
+        </h3>
+      </header>
+      <div
+        class="usa-card__body"
+        data-testid="CardBody"
+      >
+        <span
+          class="display-flex border-bottom-1px border-primary-light margin-bottom-2 padding-bottom-2"
+        >
+          <h4
+            class="margin-0 margin-right-1 margin-top-2px"
+          >
+            Review status
+          </h4>
+          <span
+            class="easi-tag bg-white"
+            data-testid="tag"
+          >
+            Scheduled
+          </span>
+        </span>
+        <span>
+          <h4
+            class="margin-0 margin-right-1 margin-top-2px margin-bottom-05"
+          >
+            GRB meeting
+          </h4>
+          <div
+            class="easi-body-large"
+          >
+            01/01/2023
+          </div>
+          <a
+            class="usa-link usa-button usa-button--outline margin-top-2"
+            href="/dates"
+          >
+            Change meeting date
+          </a>
+        </span>
+      </div>
+    </div>
+  </li>
+</DocumentFragment>
+`;

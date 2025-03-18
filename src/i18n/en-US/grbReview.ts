@@ -346,6 +346,7 @@ export default {
   },
   statusCard: {
     standardHeading: 'Standard meeting review',
+    asyncHeading: 'Asynchronous review',
     reviewStatus: 'Review status',
     grbMeeting: 'GRB meeting',
     changeMeetingDate: 'Change meeting date',
