@@ -2433,6 +2433,7 @@ The data needed to send a TRB guidance letter, including who to notify
 """
 input SendTRBGuidanceLetterInput {
   id: UUID!
+  copyITGovMailbox: Boolean!
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
 }

@@ -1788,6 +1788,7 @@ export type SendReportAProblemEmailInput = {
 
 /** The data needed to send a TRB guidance letter, including who to notify */
 export type SendTRBGuidanceLetterInput = {
+  copyITGovMailbox: Scalars['Boolean']['input'];
   copyTrbMailbox: Scalars['Boolean']['input'];
   id: Scalars['UUID']['input'];
   notifyEuaIds: Array<Scalars['String']['input']>;

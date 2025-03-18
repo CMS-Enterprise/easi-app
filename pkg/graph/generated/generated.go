@@ -10532,6 +10532,7 @@ The data needed to send a TRB guidance letter, including who to notify
 """
 input SendTRBGuidanceLetterInput {
   id: UUID!
+  copyITGovMailbox: Boolean!
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
 }
@@ -62021,7 +62022,7 @@ func (ec *executionContext) unmarshalInputSendTRBGuidanceLetterInput(ctx context
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "copyTrbMailbox", "notifyEuaIds"}
+	fieldsInOrder := [...]string{"id", "copyITGovMailbox", "copyTrbMailbox", "notifyEuaIds"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -62035,6 +62036,13 @@ func (ec *executionContext) unmarshalInputSendTRBGuidanceLetterInput(ctx context
 				return it, err
 			}
 			it.ID = data
+		case "copyITGovMailbox":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("copyITGovMailbox"))
+			data, err := ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CopyITGovMailbox = data
 		case "copyTrbMailbox":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("copyTrbMailbox"))
 			data, err := ec.unmarshalNBoolean2bool(ctx, v)
