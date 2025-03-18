@@ -64,7 +64,8 @@ const Review = ({
     trbRequestId,
     resolver: yupResolver(trbActionSchema()),
     defaultValues: {
-      copyTrbMailbox: true
+      copyTrbMailbox: true,
+      copyITGovMailbox: true
     }
   });
 

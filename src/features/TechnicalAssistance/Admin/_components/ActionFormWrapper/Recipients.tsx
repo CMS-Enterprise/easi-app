@@ -20,7 +20,7 @@ import HelpText from 'components/HelpText';
 import Label from 'components/Label';
 import Spinner from 'components/Spinner';
 import TruncatedContent from 'components/TruncatedContent';
-import { CMS_TRB_EMAIL } from 'constants/externalUrls';
+import { CMS_TRB_EMAIL, IT_GOV_EMAIL } from 'constants/externalUrls';
 import { TRBAttendee } from 'types/technicalAssistance';
 import isExternalEmail from 'utils/externalEmail';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
@@ -41,6 +41,7 @@ type TrbRecipient = {
 
 type RecipientFields = {
   copyTrbMailbox: boolean;
+  copyITGovMailbox: boolean;
   notifyEuaIds: string[];
   recipients: TrbRecipient[];
 };
@@ -140,7 +141,11 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
       id && userInfo?.euaUserId !== requester?.userInfo?.euaUserId
   ).length;
 
-  const selectedCount = watch(['notifyEuaIds', 'copyTrbMailbox'])
+  const selectedCount = watch([
+    'notifyEuaIds',
+    'copyTrbMailbox',
+    'copyITGovMailbox'
+  ])
     .flat()
     .filter(item => item).length;
 
@@ -284,6 +289,29 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
                       <RecipientLabel
                         name={t('emailRecipientFields.copyTrbMailbox')}
                         email={CMS_TRB_EMAIL}
+                      />
+                    }
+                    {...{ ...field, ref: null }}
+                    value="true"
+                    checked={!!field.value}
+                  />
+                );
+              }}
+            />
+          </li>
+
+          <li>
+            <Controller
+              name="copyITGovMailbox"
+              control={control}
+              render={({ field }) => {
+                return (
+                  <CheckboxField
+                    id={field.name}
+                    label={
+                      <RecipientLabel
+                        name={t('emailRecipientFields.copyITGovMailbox')}
+                        email={IT_GOV_EMAIL}
                       />
                     }
                     {...{ ...field, ref: null }}
