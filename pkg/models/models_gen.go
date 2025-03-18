@@ -402,9 +402,10 @@ type SendReportAProblemEmailInput struct {
 
 // The data needed to send a TRB guidance letter, including who to notify
 type SendTRBGuidanceLetterInput struct {
-	ID             uuid.UUID `json:"id"`
-	CopyTrbMailbox bool      `json:"copyTrbMailbox"`
-	NotifyEuaIds   []string  `json:"notifyEuaIds"`
+	ID               uuid.UUID `json:"id"`
+	CopyITGovMailbox bool      `json:"copyITGovMailbox"`
+	CopyTrbMailbox   bool      `json:"copyTrbMailbox"`
+	NotifyEuaIds     []string  `json:"notifyEuaIds"`
 }
 
 type SetRolesForUserOnSystemInput struct {

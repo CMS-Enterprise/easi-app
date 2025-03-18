@@ -119,17 +119,84 @@ func (s *EmailTestSuite) TestTRBGuidanceLetterSubmittedEmail() {
 
 		requestType := models.TRBTNeedHelp
 		input := SendTRBGuidanceLetterSubmittedEmailInput{
-			TRBRequestID:   trbID,
-			RequestName:    "Test TRB Request",
-			RequestType:    string(requestType),
-			RequesterName:  "Mc Lovin",
-			Component:      "Center for Clinical Standards and Quality",
-			SubmissionDate: &submissionDate,
-			ConsultDate:    &consultDate,
-			CopyTRBMailbox: true,
-			Recipients:     recipients,
+			TRBRequestID:     trbID,
+			RequestName:      "Test TRB Request",
+			RequestType:      string(requestType),
+			RequesterName:    "Mc Lovin",
+			Component:        "Center for Clinical Standards and Quality",
+			SubmissionDate:   &submissionDate,
+			ConsultDate:      &consultDate,
+			CopyTRBMailbox:   true,
+			CopyITGovMailbox: false,
+			Recipients:       recipients,
 		}
 		allRecipients := append(recipients, s.config.TRBEmail)
+
+		expectedBody := getExpectedEmail(
+			input.RequestName,
+			input.RequesterName,
+			input.Component,
+			input.SubmissionDate,
+			input.ConsultDate,
+			requestType,
+		)
+		err = client.SendTRBGuidanceLetterSubmittedEmail(ctx, input)
+		s.NoError(err)
+		s.ElementsMatch(sender.toAddresses, allRecipients)
+		s.EqualHTML(expectedBody, sender.body)
+	})
+
+	s.Run("successful call has the right content (copying IT gov mailbox)", func() {
+		client, err := NewClient(s.config, &sender)
+		s.NoError(err)
+
+		requestType := models.TRBTNeedHelp
+		input := SendTRBGuidanceLetterSubmittedEmailInput{
+			TRBRequestID:     trbID,
+			RequestName:      "Test TRB Request",
+			RequestType:      string(requestType),
+			RequesterName:    "Mc Lovin",
+			Component:        "Center for Clinical Standards and Quality",
+			SubmissionDate:   &submissionDate,
+			ConsultDate:      &consultDate,
+			CopyTRBMailbox:   false,
+			CopyITGovMailbox: true,
+			Recipients:       recipients,
+		}
+		allRecipients := append(recipients, s.config.GRTEmail)
+
+		expectedBody := getExpectedEmail(
+			input.RequestName,
+			input.RequesterName,
+			input.Component,
+			input.SubmissionDate,
+			input.ConsultDate,
+			requestType,
+		)
+		err = client.SendTRBGuidanceLetterSubmittedEmail(ctx, input)
+		s.NoError(err)
+		s.ElementsMatch(sender.toAddresses, allRecipients)
+		s.EqualHTML(expectedBody, sender.body)
+	})
+
+	s.Run("successful call has the right content (copying both mailboxes)", func() {
+		client, err := NewClient(s.config, &sender)
+		s.NoError(err)
+
+		requestType := models.TRBTNeedHelp
+		input := SendTRBGuidanceLetterSubmittedEmailInput{
+			TRBRequestID:     trbID,
+			RequestName:      "Test TRB Request",
+			RequestType:      string(requestType),
+			RequesterName:    "Mc Lovin",
+			Component:        "Center for Clinical Standards and Quality",
+			SubmissionDate:   &submissionDate,
+			ConsultDate:      &consultDate,
+			CopyTRBMailbox:   true,
+			CopyITGovMailbox: true,
+			Recipients:       recipients,
+		}
+		allRecipients := append(recipients, s.config.TRBEmail, s.config.GRTEmail)
 
 		expectedBody := getExpectedEmail(
 			input.RequestName,
