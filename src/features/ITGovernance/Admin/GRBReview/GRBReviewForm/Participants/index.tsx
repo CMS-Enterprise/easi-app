@@ -162,6 +162,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
                         <DatePickerFormatted
                           id="grbReviewAsyncEndDate"
                           {...field}
+                          dateInPastWarning
                           value={field.value ?? ''}
                           onChange={date => {
                             if (date !== field.value) {
