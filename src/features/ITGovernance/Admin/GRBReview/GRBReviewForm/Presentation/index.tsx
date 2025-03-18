@@ -218,11 +218,7 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
                       <ErrorMessage
                         errors={errors}
                         name="grbMeetingDate.grbDate"
-                        render={({ message }) =>
-                          isSubmitted && (
-                            <FieldErrorMsg>{message}</FieldErrorMsg>
-                          )
-                        }
+                        as={<FieldErrorMsg />}
                       />
 
                       <DatePickerFormatted
@@ -389,10 +385,7 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
 
                 <FormGroup>
                   <Fieldset id="transcriptFields">
-                    <Label
-                      htmlFor="recotranscriptLinkrdingPasscode"
-                      className="text-normal"
-                    >
+                    <Label htmlFor="transcriptLink" className="text-normal">
                       {t('presentationLinks.transcript')}
                     </Label>
 
