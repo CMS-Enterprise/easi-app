@@ -66584,20 +66584,6 @@ func (ec *executionContext) _TRBAdminNoteCategorySpecificData(ctx context.Contex
 	switch obj := (obj).(type) {
 	case nil:
 		return graphql.Null
-	case models.TRBAdminNoteGeneralRequestCategoryData:
-		return ec._TRBAdminNoteGeneralRequestCategoryData(ctx, sel, &obj)
-	case *models.TRBAdminNoteGeneralRequestCategoryData:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._TRBAdminNoteGeneralRequestCategoryData(ctx, sel, obj)
-	case models.TRBAdminNoteInitialRequestFormCategoryData:
-		return ec._TRBAdminNoteInitialRequestFormCategoryData(ctx, sel, &obj)
-	case *models.TRBAdminNoteInitialRequestFormCategoryData:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._TRBAdminNoteInitialRequestFormCategoryData(ctx, sel, obj)
 	case models.TRBAdminNoteSupportingDocumentsCategoryData:
 		return ec._TRBAdminNoteSupportingDocumentsCategoryData(ctx, sel, &obj)
 	case *models.TRBAdminNoteSupportingDocumentsCategoryData:
@@ -66605,13 +66591,13 @@ func (ec *executionContext) _TRBAdminNoteCategorySpecificData(ctx context.Contex
 			return graphql.Null
 		}
 		return ec._TRBAdminNoteSupportingDocumentsCategoryData(ctx, sel, obj)
-	case models.TRBAdminNoteConsultSessionCategoryData:
-		return ec._TRBAdminNoteConsultSessionCategoryData(ctx, sel, &obj)
-	case *models.TRBAdminNoteConsultSessionCategoryData:
+	case models.TRBAdminNoteInitialRequestFormCategoryData:
+		return ec._TRBAdminNoteInitialRequestFormCategoryData(ctx, sel, &obj)
+	case *models.TRBAdminNoteInitialRequestFormCategoryData:
 		if obj == nil {
 			return graphql.Null
 		}
-		return ec._TRBAdminNoteConsultSessionCategoryData(ctx, sel, obj)
+		return ec._TRBAdminNoteInitialRequestFormCategoryData(ctx, sel, obj)
 	case models.TRBAdminNoteGuidanceLetterCategoryData:
 		return ec._TRBAdminNoteGuidanceLetterCategoryData(ctx, sel, &obj)
 	case *models.TRBAdminNoteGuidanceLetterCategoryData:
@@ -66619,6 +66605,20 @@ func (ec *executionContext) _TRBAdminNoteCategorySpecificData(ctx context.Contex
 			return graphql.Null
 		}
 		return ec._TRBAdminNoteGuidanceLetterCategoryData(ctx, sel, obj)
+	case models.TRBAdminNoteGeneralRequestCategoryData:
+		return ec._TRBAdminNoteGeneralRequestCategoryData(ctx, sel, &obj)
+	case *models.TRBAdminNoteGeneralRequestCategoryData:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._TRBAdminNoteGeneralRequestCategoryData(ctx, sel, obj)
+	case models.TRBAdminNoteConsultSessionCategoryData:
+		return ec._TRBAdminNoteConsultSessionCategoryData(ctx, sel, &obj)
+	case *models.TRBAdminNoteConsultSessionCategoryData:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._TRBAdminNoteConsultSessionCategoryData(ctx, sel, obj)
 	default:
 		panic(fmt.Errorf("unexpected type %T", obj))
 	}
@@ -77951,9 +77951,7 @@ func (ec *executionContext) unmarshalNCreateCedarSystemBookmarkInput2githubᚗco
 
 func (ec *executionContext) unmarshalNCreateGRBReviewerInput2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateGRBReviewerInputᚄ(ctx context.Context, v any) ([]*models.CreateGRBReviewerInput, error) {
 	var vSlice []any
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
+	vSlice = graphql.CoerceList(v)
 	var err error
 	res := make([]*models.CreateGRBReviewerInput, len(vSlice))
 	for i := range vSlice {
@@ -78079,9 +78077,7 @@ func (ec *executionContext) marshalNEmailAddress2githubᚗcomᚋcmsᚑenterprise
 
 func (ec *executionContext) unmarshalNEmailAddress2ᚕgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐEmailAddressᚄ(ctx context.Context, v any) ([]models.EmailAddress, error) {
 	var vSlice []any
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
+	vSlice = graphql.CoerceList(v)
 	var err error
 	res := make([]models.EmailAddress, len(vSlice))
 	for i := range vSlice {
@@ -78614,9 +78610,7 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 
 func (ec *executionContext) unmarshalNString2ᚕgithubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx context.Context, v any) ([]zero.String, error) {
 	var vSlice []any
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
+	vSlice = graphql.CoerceList(v)
 	var err error
 	res := make([]zero.String, len(vSlice))
 	for i := range vSlice {
@@ -78640,9 +78634,7 @@ func (ec *executionContext) marshalNString2ᚕgithubᚗcomᚋgureguᚋnullᚋzer
 
 func (ec *executionContext) unmarshalNString2ᚕgithubᚗcomᚋgureguᚋnullᚋzeroᚐStringᚄ(ctx context.Context, v any) ([]zero.String, error) {
 	var vSlice []any
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
+	vSlice = graphql.CoerceList(v)
 	var err error
 	res := make([]zero.String, len(vSlice))
 	for i := range vSlice {
@@ -78672,9 +78664,7 @@ func (ec *executionContext) marshalNString2ᚕgithubᚗcomᚋgureguᚋnullᚋzer
 
 func (ec *executionContext) unmarshalNString2ᚕstringᚄ(ctx context.Context, v any) ([]string, error) {
 	var vSlice []any
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
+	vSlice = graphql.CoerceList(v)
 	var err error
 	res := make([]string, len(vSlice))
 	for i := range vSlice {
@@ -79215,9 +79205,7 @@ func (ec *executionContext) marshalNSystemIntakeFundingSource2ᚖgithubᚗcomᚋ
 
 func (ec *executionContext) unmarshalNSystemIntakeFundingSourceInput2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeFundingSourceInputᚄ(ctx context.Context, v any) ([]*models.SystemIntakeFundingSourceInput, error) {
 	var vSlice []any
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
+	vSlice = graphql.CoerceList(v)
 	var err error
 	res := make([]*models.SystemIntakeFundingSourceInput, len(vSlice))
 	for i := range vSlice {
@@ -79674,9 +79662,7 @@ func (ec *executionContext) marshalNSystemIntakeSoftwareAcquisitionMethods2githu
 
 func (ec *executionContext) unmarshalNSystemIntakeSoftwareAcquisitionMethods2ᚕgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSoftwareAcquisitionMethodsᚄ(ctx context.Context, v any) ([]models.SystemIntakeSoftwareAcquisitionMethods, error) {
 	var vSlice []any
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
+	vSlice = graphql.CoerceList(v)
 	var err error
 	res := make([]models.SystemIntakeSoftwareAcquisitionMethods, len(vSlice))
 	for i := range vSlice {
@@ -79951,9 +79937,7 @@ func (ec *executionContext) marshalNTRBCollabGroupOption2githubᚗcomᚋcmsᚑen
 
 func (ec *executionContext) unmarshalNTRBCollabGroupOption2ᚕgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBCollabGroupOptionᚄ(ctx context.Context, v any) ([]models.TRBCollabGroupOption, error) {
 	var vSlice []any
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
+	vSlice = graphql.CoerceList(v)
 	var err error
 	res := make([]models.TRBCollabGroupOption, len(vSlice))
 	for i := range vSlice {
@@ -80731,9 +80715,7 @@ func (ec *executionContext) marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx
 
 func (ec *executionContext) unmarshalNUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx context.Context, v any) ([]uuid.UUID, error) {
 	var vSlice []any
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
+	vSlice = graphql.CoerceList(v)
 	var err error
 	res := make([]uuid.UUID, len(vSlice))
 	for i := range vSlice {
@@ -81009,9 +80991,7 @@ func (ec *executionContext) marshalN__DirectiveLocation2string(ctx context.Conte
 
 func (ec *executionContext) unmarshalN__DirectiveLocation2ᚕstringᚄ(ctx context.Context, v any) ([]string, error) {
 	var vSlice []any
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
+	vSlice = graphql.CoerceList(v)
 	var err error
 	res := make([]string, len(vSlice))
 	for i := range vSlice {
@@ -81730,9 +81710,7 @@ func (ec *executionContext) unmarshalOString2ᚕstringᚄ(ctx context.Context, v
 		return nil, nil
 	}
 	var vSlice []any
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
+	vSlice = graphql.CoerceList(v)
 	var err error
 	res := make([]string, len(vSlice))
 	for i := range vSlice {
@@ -81869,9 +81847,7 @@ func (ec *executionContext) unmarshalOSystemIntakeCollaboratorInput2ᚕᚖgithub
 		return nil, nil
 	}
 	var vSlice []any
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
+	vSlice = graphql.CoerceList(v)
 	var err error
 	res := make([]*models.SystemIntakeCollaboratorInput, len(vSlice))
 	for i := range vSlice {
@@ -82087,9 +82063,7 @@ func (ec *executionContext) unmarshalOTRBCollabGroupOption2ᚕgithubᚗcomᚋcms
 		return nil, nil
 	}
 	var vSlice []any
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
+	vSlice = graphql.CoerceList(v)
 	var err error
 	res := make([]models.TRBCollabGroupOption, len(vSlice))
 	for i := range vSlice {
@@ -82275,9 +82249,7 @@ func (ec *executionContext) unmarshalOTRBSubjectAreaOption2ᚕgithubᚗcomᚋcms
 		return nil, nil
 	}
 	var vSlice []any
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
+	vSlice = graphql.CoerceList(v)
 	var err error
 	res := make([]models.TRBSubjectAreaOption, len(vSlice))
 	for i := range vSlice {
@@ -82385,9 +82357,7 @@ func (ec *executionContext) unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUI
 		return nil, nil
 	}
 	var vSlice []any
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
+	vSlice = graphql.CoerceList(v)
 	var err error
 	res := make([]uuid.UUID, len(vSlice))
 	for i := range vSlice {
