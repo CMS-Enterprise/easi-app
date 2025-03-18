@@ -178,6 +178,32 @@ exports[`Email recipient fields component > renders recipients 1`] = `
             </svg>
              Show 3 fewer recipients
           </button>
+          <li>
+            <div
+              class="easi-checkbox usa-checkbox"
+            >
+              <input
+                class="usa-checkbox__input"
+                id="copyITGovMailbox"
+                name="copyITGovMailbox"
+                type="checkbox"
+                value="true"
+              />
+              <label
+                class="usa-checkbox__label"
+                for="copyITGovMailbox"
+              >
+                <span>
+                  Copy ITGO Mailbox
+                </span>
+                <span
+                  class="display-block text-base-dark"
+                >
+                  IT_Governance@cms.hhs.gov
+                </span>
+              </label>
+            </div>
+          </li>
           <div
             class="easi-checkbox usa-checkbox"
           >
