@@ -28,6 +28,7 @@ import toggleArrayValue from 'utils/toggleArrayValue';
 
 type RecipientsProps = {
   setRecipientFormOpen?: (value: boolean) => void;
+  itGovMailbox?: boolean;
 };
 
 export type TRBRecipient = TRBAttendee['userInfo'];
@@ -95,7 +96,10 @@ export const ExternalRecipientAlert = ({
 /**
  * TRB email recipients field
  */
-const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
+const RecipientsForm = ({
+  setRecipientFormOpen,
+  itGovMailbox
+}: RecipientsProps) => {
   const { t } = useTranslation('technicalAssistance');
 
   const {
@@ -300,28 +304,30 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
             />
           </li>
 
-          <li>
-            <Controller
-              name="copyITGovMailbox"
-              control={control}
-              render={({ field }) => {
-                return (
-                  <CheckboxField
-                    id={field.name}
-                    label={
-                      <RecipientLabel
-                        name={t('emailRecipientFields.copyITGovMailbox')}
-                        email={IT_GOV_EMAIL}
-                      />
-                    }
-                    {...{ ...field, ref: null }}
-                    value="true"
-                    checked={!!field.value}
-                  />
-                );
-              }}
-            />
-          </li>
+          {itGovMailbox && (
+            <li>
+              <Controller
+                name="copyITGovMailbox"
+                control={control}
+                render={({ field }) => {
+                  return (
+                    <CheckboxField
+                      id={field.name}
+                      label={
+                        <RecipientLabel
+                          name={t('emailRecipientFields.copyITGovMailbox')}
+                          email={IT_GOV_EMAIL}
+                        />
+                      }
+                      {...{ ...field, ref: null }}
+                      value="true"
+                      checked={!!field.value}
+                    />
+                  );
+                }}
+              />
+            </li>
+          )}
 
           {fields
             .filter(
@@ -565,14 +571,19 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
   );
 };
 
-const Recipients = ({ setRecipientFormOpen }: RecipientsProps) => {
+const Recipients = ({
+  setRecipientFormOpen,
+  itGovMailbox
+}: RecipientsProps) => {
   const {
     formState: { isLoading }
   } = useFormContext();
 
   if (isLoading) return <Spinner />;
 
-  return <RecipientsForm setRecipientFormOpen={setRecipientFormOpen} />;
+  return (
+    <RecipientsForm setRecipientFormOpen={setRecipientFormOpen} itGovMailbox />
+  );
 };
 
 export default Recipients;
