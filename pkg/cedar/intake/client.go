@@ -184,6 +184,7 @@ func (c *Client) PublishOnSchedule(ctx context.Context, store *storage.Store, da
 
 	for {
 		decoratedLogger := logger.With(logfields.TraceField(uuid.New().String()), logfields.CedarPublisherAppSection)
+		// TODO update this so that it gets a day monday through friday, and not jsut on that day weekly.
 		nextPublish := getDurationUntilNextDayAndTime(time.Now().UTC(), dayOfWeek, hourInUTC)
 		decoratedLogger.Info(fmt.Sprintf(
 			"next intake publish to CEDAR in %s at %s",
