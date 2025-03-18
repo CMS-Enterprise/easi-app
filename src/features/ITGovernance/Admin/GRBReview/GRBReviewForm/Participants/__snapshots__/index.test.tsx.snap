@@ -272,7 +272,7 @@ exports[`GRB review form - participants and timeframe > renders the step 1`] = `
                 GRB reviewers
               </p>
               <p
-                class="margin-y-0 text-base-dark"
+                class="margin-y-0 text-base-dark line-height-sans-4"
               >
                 Add the GRB members who should review this IT Governance request and indicate their voting role. For asynchronous reviews, you must add at least 5 voting members.
               </p>
@@ -286,7 +286,7 @@ exports[`GRB review form - participants and timeframe > renders the step 1`] = `
             </div>
           </div>
           <div
-            class="grid-col-12 tablet:grid-col-6"
+            class="grid-col-12 tablet:grid-col-10"
             data-testid="grid"
           >
             <div
