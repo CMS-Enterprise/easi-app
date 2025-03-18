@@ -44,7 +44,9 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
     resolver:
       reviewType === SystemIntakeGRBReviewType.ASYNC
         ? yupResolver(SetGRBParticipantsAsyncSchema)
-        : undefined,
+        : yupResolver(
+            SetGRBParticipantsAsyncSchema.omit(['grbReviewAsyncEndDate'])
+          ),
     defaultValues: {
       grbReviewers: grbReview.grbReviewers,
       grbReviewAsyncEndDate: grbReview.grbReviewAsyncEndDate || ''
