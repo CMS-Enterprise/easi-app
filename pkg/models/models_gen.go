@@ -1022,6 +1022,8 @@ type UpdateSystemIntakeGRBReviewFormInputPresentationStandard struct {
 type UpdateSystemIntakeGRBReviewFormInputTimeframeAsync struct {
 	SystemIntakeID        uuid.UUID `json:"systemIntakeID"`
 	GrbReviewAsyncEndDate time.Time `json:"grbReviewAsyncEndDate"`
+	// Whether or not to start the GRB review meeting now or not. It defaults to false
+	StartGRBReview bool `json:"startGRBReview"`
 }
 
 // Input data used to set or update a System Intake's GRB Review Type

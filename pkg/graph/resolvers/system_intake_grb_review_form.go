@@ -2,7 +2,10 @@ package resolvers
 
 import (
 	"context"
+	"errors"
+	"time"
 
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
@@ -89,6 +92,15 @@ func UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(
 	}
 
 	intake.GrbReviewAsyncEndDate = &input.GrbReviewAsyncEndDate
+
+	// Check if the review should be set to started. If already started error
+	if input.StartGRBReview {
+		if intake.GRBReviewStartedAt != nil {
+			return nil, errors.New("review already started")
+		}
+
+		intake.GRBReviewStartedAt = helpers.PointerTo(time.Now())
+	}
 
 	// Update system intake
 	updatedIntake, err := store.UpdateSystemIntake(ctx, intake)

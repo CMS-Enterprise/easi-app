@@ -9635,6 +9635,10 @@ Input data used to set or update a System Intake's GRB Review Timeframe (Async) 
 input updateSystemIntakeGRBReviewFormInputTimeframeAsync {
   systemIntakeID: UUID!
   grbReviewAsyncEndDate: Time!
+  """
+  Whether or not to start the GRB review meeting now or not. It defaults to false
+  """
+  startGRBReview: Boolean! = false
 }
 
 """
@@ -66515,7 +66519,11 @@ func (ec *executionContext) unmarshalInputupdateSystemIntakeGRBReviewFormInputTi
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemIntakeID", "grbReviewAsyncEndDate"}
+	if _, present := asMap["startGRBReview"]; !present {
+		asMap["startGRBReview"] = false
+	}
+
+	fieldsInOrder := [...]string{"systemIntakeID", "grbReviewAsyncEndDate", "startGRBReview"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -66536,6 +66544,13 @@ func (ec *executionContext) unmarshalInputupdateSystemIntakeGRBReviewFormInputTi
 				return it, err
 			}
 			it.GrbReviewAsyncEndDate = data
+		case "startGRBReview":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("startGRBReview"))
+			data, err := ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.StartGRBReview = data
 		}
 	}
 
