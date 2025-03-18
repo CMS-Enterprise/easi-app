@@ -126,6 +126,14 @@ func (s *ResolverSuite) TestCalcSystemIntakeGRBReviewAsyncStatus() {
 		expected *models.SystemIntakeGRBReviewAsyncStatusType
 	}{
 		{
+			name: "Error - GRB Review Async end date is not set",
+			intake: models.SystemIntake{
+				ID:            systemIntakeID,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeAsync,
+			},
+			expected: nil,
+		},
+		{
 			name: "Status - In Progress (End date is in the future)",
 			intake: models.SystemIntake{
 				ID:                    systemIntakeID,
@@ -149,9 +157,13 @@ func (s *ResolverSuite) TestCalcSystemIntakeGRBReviewAsyncStatus() {
 		s.Run(tc.name, func() {
 			status := CalcSystemIntakeGRBReviewAsyncStatus(&tc.intake)
 
-			// No errors expected
-			s.NotNil(status)
-			s.Equal(*tc.expected, *status)
+			if tc.expected == nil {
+				s.Nil(status)
+			} else {
+				// No errors expected
+				s.NotNil(status)
+				s.Equal(*tc.expected, *status)
+			}
 		})
 	}
 }
