@@ -95,6 +95,12 @@ export enum BusinessCaseStatus {
   OPEN = 'OPEN'
 }
 
+export type CastSystemIntakeGRBReviewerVoteInput = {
+  systemIntakeID: Scalars['UUID']['input'];
+  vote: SystemIntakeAsyncGRBVotingOption;
+  voteComment?: InputMaybe<Scalars['String']['input']>;
+};
+
 /** The possible types of assignees for CedarRoles */
 export enum CedarAssigneeType {
   ORGANIZATION = 'ORGANIZATION',
@@ -957,6 +963,7 @@ export enum LifecycleCostYear {
 export type Mutation = {
   __typename: 'Mutation';
   archiveSystemIntake: SystemIntake;
+  castSystemIntakeGRBReviewerVote: SystemIntakeGRBReviewer;
   closeTRBRequest: TRBRequest;
   createCedarSystemBookmark?: Maybe<CreateCedarSystemBookmarkPayload>;
   createSystemIntake?: Maybe<SystemIntake>;
@@ -1051,6 +1058,12 @@ export type Mutation = {
 /** Defines the mutations for the schema */
 export type MutationArchiveSystemIntakeArgs = {
   id: Scalars['UUID']['input'];
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationCastSystemIntakeGRBReviewerVoteArgs = {
+  input: CastSystemIntakeGRBReviewerVoteInput;
 };
 
 
@@ -2063,6 +2076,11 @@ export type SystemIntakeAnnualSpendingInput = {
   plannedYearOneSpendingITPortion?: InputMaybe<Scalars['String']['input']>;
 };
 
+export enum SystemIntakeAsyncGRBVotingOption {
+  NO_OBJECTION = 'NO_OBJECTION',
+  OBJECTION = 'OBJECTION'
+}
+
 /** Represents the OIT Business Owner of a system */
 export type SystemIntakeBusinessOwner = {
   __typename: 'SystemIntakeBusinessOwner';
@@ -2363,12 +2381,15 @@ export type SystemIntakeGRBReviewer = {
   __typename: 'SystemIntakeGRBReviewer';
   createdAt: Scalars['Time']['output'];
   createdBy: Scalars['UUID']['output'];
+  dateVoted?: Maybe<Scalars['Time']['output']>;
   grbRole: SystemIntakeGRBReviewerRole;
   id: Scalars['UUID']['output'];
   modifiedAt?: Maybe<Scalars['Time']['output']>;
   modifiedBy?: Maybe<Scalars['UUID']['output']>;
   systemIntakeID: Scalars['UUID']['output'];
   userAccount: UserAccount;
+  vote?: Maybe<SystemIntakeAsyncGRBVotingOption>;
+  voteComment?: Maybe<Scalars['String']['output']>;
   votingRole: SystemIntakeGRBReviewerVotingRole;
 };
 

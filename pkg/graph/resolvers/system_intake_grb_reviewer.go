@@ -89,6 +89,7 @@ func CreateSystemIntakeGRBReviewers(
 				intake.ID,
 				intake.ProjectName.String,
 				intake.Requester,
+				intake.Component.String,
 			)
 			if err != nil {
 				appcontext.ZLogger(ctx).Error("unable to send create GRB member notification", zap.Error(err))
@@ -107,7 +108,7 @@ func UpdateSystemIntakeGRBReviewer(
 	input *models.UpdateSystemIntakeGRBReviewerInput,
 ) (*models.SystemIntakeGRBReviewer, error) {
 	return sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.SystemIntakeGRBReviewer, error) {
-		return store.UpdateSystemIntakeGRBReviewer(ctx, tx, input.ReviewerID, input.VotingRole, input.GrbRole)
+		return store.UpdateSystemIntakeGRBReviewer(ctx, tx, input)
 	})
 }
 
@@ -119,6 +120,42 @@ func DeleteSystemIntakeGRBReviewer(
 	return sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
 		return store.DeleteSystemIntakeGRBReviewer(ctx, tx, reviewerID)
 	})
+}
+
+func CastSystemIntakeGRBReviewerVote(ctx context.Context, store *storage.Store, input models.CastSystemIntakeGRBReviewerVoteInput) (*models.SystemIntakeGRBReviewer, error) {
+	// first, if "OBJECT" is the vote selection, confirm there is a comment (required for objections)
+	if input.Vote == models.SystemIntakeAsyncGRBVotingOptionObjection && (input.VoteComment == nil || len(*input.VoteComment) < 1) {
+		return nil, errors.New("vote comment is required with an `Objection` vote")
+	}
+
+	// then, check if the GRB review is in a state where votes are allowed - do this second to avoid a db round trip
+	// if the above condition isn't met
+	// get system intake
+	systemIntake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	// this can happen if the user making the request is not a reviewer
+	if systemIntake == nil {
+		return nil, errors.New("no system intake found for this GRB reviewer")
+	}
+
+	// confirm we are between GRB start date and GRB Async end date
+	// if either are nil, disallow votes
+	if systemIntake.GRBReviewStartedAt == nil || systemIntake.GrbReviewAsyncEndDate == nil {
+		return nil, errors.New("GRB review times not yet available")
+	}
+
+	now := time.Now()
+	// if `now` is before the review starts or if `now` is after the review ends, we are not in the voting window
+	// TODO: it may be possible to submit votes even after the end date - address if needed
+	if now.Before(*systemIntake.GRBReviewStartedAt) || now.After(*systemIntake.GrbReviewAsyncEndDate) {
+		return nil, errors.New("GRB review is not currently accepting votes")
+	}
+
+	// set vote
+	return store.CastSystemIntakeGRBReviewerVote(ctx, input)
 }
 
 func SystemIntakeGRBReviewers(
@@ -197,28 +234,35 @@ func StartGRBReview(
 		if err != nil {
 			return nil, err
 		}
+
 		if intake.GRBReviewStartedAt != nil {
 			return nil, errors.New("review already started")
 		}
+
 		intake.GRBReviewStartedAt = helpers.PointerTo(time.Now())
 		_, err = store.UpdateSystemIntakeNP(ctx, tx, intake)
 		if err != nil {
 			return nil, err
 		}
+
 		reviewers, err := dataloaders.GetSystemIntakeGRBReviewersBySystemIntakeID(ctx, intakeID)
 		if err != nil {
 			return nil, err
 		}
+
 		userIDs := lo.Map(reviewers, func(reviewer *models.SystemIntakeGRBReviewer, _ int) uuid.UUID {
 			return reviewer.UserID
 		})
-		accts, err := store.UserAccountsByIDs(ctx, userIDs)
+
+		userAccounts, err := store.UserAccountsByIDs(ctx, userIDs)
 		if err != nil {
 			return nil, err
 		}
-		emails := lo.Map(accts, func(useraccount *authentication.UserAccount, _ int) models.EmailAddress {
-			return models.EmailAddress(useraccount.Email)
+
+		emails := lo.Map(userAccounts, func(userAccount *authentication.UserAccount, _ int) models.EmailAddress {
+			return models.EmailAddress(userAccount.Email)
 		})
+
 		if emailClient != nil {
 			err = emailClient.SystemIntake.SendCreateGRBReviewerNotification(
 				ctx,
@@ -226,6 +270,7 @@ func StartGRBReview(
 				intake.ID,
 				intake.ProjectName.String,
 				intake.Requester,
+				intake.Component.String,
 			)
 			if err != nil {
 				appcontext.ZLogger(ctx).Error("unable to send create GRB member notification", zap.Error(err))
