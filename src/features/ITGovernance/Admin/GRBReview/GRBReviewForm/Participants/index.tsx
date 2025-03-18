@@ -113,10 +113,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
               </Button>
             </div>
           </Grid>
-          <Grid
-            col={12}
-            tablet={{ col: grbReview.grbReviewers.length > 0 ? 10 : 6 }}
-          >
+          <Grid col={12} tablet={{ col: 10 }}>
             <ParticipantsTable grbReviewers={grbReview.grbReviewers} />
           </Grid>
         </FormGroup>
