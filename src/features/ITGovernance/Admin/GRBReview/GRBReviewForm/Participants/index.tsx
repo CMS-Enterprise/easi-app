@@ -92,7 +92,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
               {!!errors.grbReviewers && (
                 <FieldErrorMsg>{errors.grbReviewers.message}</FieldErrorMsg>
               )}
-              <p className="margin-y-0 text-base-dark">
+              <p className="margin-y-0 text-base-dark line-height-sans-4">
                 {t('setUpGrbReviewForm.participants.grbReviewers.description')}
               </p>
               <Button
@@ -154,7 +154,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
                             {t('setUpGrbReviewForm.invalidDate')}
                           </FieldErrorMsg>
                         )}
-                        <p className="margin-y-0 text-base-dark">
+                        <p className="margin-y-0 text-base-dark line-height-sans-4">
                           {t(
                             'setUpGrbReviewForm.participants.selectReviewEndDate.description'
                           )}
