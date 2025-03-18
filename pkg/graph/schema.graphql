@@ -1217,6 +1217,9 @@ type SystemIntakeGRBReviewer {
   userAccount: UserAccount!
   systemIntakeID: UUID!
   votingRole: SystemIntakeGRBReviewerVotingRole!
+  vote: SystemIntakeAsyncGRBVotingOption
+  voteComment: String
+  dateVoted: Time
   grbRole: SystemIntakeGRBReviewerRole!
   createdBy: UUID!
   createdAt: Time!
@@ -1276,6 +1279,12 @@ input UpdateSystemIntakeGRBReviewerInput {
   grbRole: SystemIntakeGRBReviewerRole!
 }
 
+input CastSystemIntakeGRBReviewerVoteInput {
+  systemIntakeID: UUID!
+  vote: SystemIntakeAsyncGRBVotingOption!
+  voteComment: String
+}
+
 input DeleteSystemIntakeGRBReviewerInput {
   reviewerID: UUID!
 }
@@ -1301,6 +1310,11 @@ enum SystemIntakeGRBReviewerVotingRole {
   NON_VOTING
 }
 
+enum SystemIntakeAsyncGRBVotingOption {
+  NO_OBJECTION
+  OBJECTION
+}
+
 type SystemIntakeGRBReviewDiscussionPost {
   id: UUID!
   content: HTML!
@@ -1322,7 +1336,6 @@ enum SystemIntakeGRBReviewType {
   STANDARD
   ASYNC
 }
-
 
 input createSystemIntakeGRBDiscussionPostInput {
   systemIntakeID: UUID!
@@ -1364,6 +1377,10 @@ Input data used to set or update a System Intake's GRB Review Timeframe (Async) 
 input updateSystemIntakeGRBReviewFormInputTimeframeAsync {
   systemIntakeID: UUID!
   grbReviewAsyncEndDate: Time!
+  """
+  Whether or not to start the GRB review meeting now or not. It defaults to false
+  """
+  startGRBReview: Boolean! = false
 }
 
 """
@@ -2669,9 +2686,10 @@ type Mutation {
   updateSystemIntakeGRBReviewer(input: UpdateSystemIntakeGRBReviewerInput!): SystemIntakeGRBReviewer!
   deleteSystemIntakeGRBReviewer(input: DeleteSystemIntakeGRBReviewerInput!): UUID!
 
+  castSystemIntakeGRBReviewerVote(input: CastSystemIntakeGRBReviewerVoteInput!):SystemIntakeGRBReviewer!
+
   createSystemIntakeGRBDiscussionPost(input: createSystemIntakeGRBDiscussionPostInput!): SystemIntakeGRBReviewDiscussionPost
   createSystemIntakeGRBDiscussionReply(input: createSystemIntakeGRBDiscussionReplyInput!): SystemIntakeGRBReviewDiscussionPost
-
 
   updateSystemIntakeGRBReviewType(input: updateSystemIntakeGRBReviewTypeInput!): UpdateSystemIntakePayload
   @hasRole(role: EASI_GOVTEAM)

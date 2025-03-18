@@ -33,6 +33,12 @@ type BusinessCaseSolution struct {
 	Title                   *string `json:"title,omitempty"`
 }
 
+type CastSystemIntakeGRBReviewerVoteInput struct {
+	SystemIntakeID uuid.UUID                        `json:"systemIntakeID"`
+	Vote           SystemIntakeAsyncGRBVotingOption `json:"vote"`
+	VoteComment    *string                          `json:"voteComment,omitempty"`
+}
+
 // CedarBudgetActualCost represents an individual budget actual cost item; this information is returned from the CEDAR Core API
 // as a part of the CedarBudgetSystemCost object
 type CedarBudgetActualCost struct {
@@ -1016,6 +1022,8 @@ type UpdateSystemIntakeGRBReviewFormInputPresentationStandard struct {
 type UpdateSystemIntakeGRBReviewFormInputTimeframeAsync struct {
 	SystemIntakeID        uuid.UUID `json:"systemIntakeID"`
 	GrbReviewAsyncEndDate time.Time `json:"grbReviewAsyncEndDate"`
+	// Whether or not to start the GRB review meeting now or not. It defaults to false
+	StartGRBReview bool `json:"startGRBReview"`
 }
 
 // Input data used to set or update a System Intake's GRB Review Type
@@ -1166,6 +1174,47 @@ func (e *SystemIntakeActionType) UnmarshalGQL(v any) error {
 }
 
 func (e SystemIntakeActionType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type SystemIntakeAsyncGRBVotingOption string
+
+const (
+	SystemIntakeAsyncGRBVotingOptionNoObjection SystemIntakeAsyncGRBVotingOption = "NO_OBJECTION"
+	SystemIntakeAsyncGRBVotingOptionObjection   SystemIntakeAsyncGRBVotingOption = "OBJECTION"
+)
+
+var AllSystemIntakeAsyncGRBVotingOption = []SystemIntakeAsyncGRBVotingOption{
+	SystemIntakeAsyncGRBVotingOptionNoObjection,
+	SystemIntakeAsyncGRBVotingOptionObjection,
+}
+
+func (e SystemIntakeAsyncGRBVotingOption) IsValid() bool {
+	switch e {
+	case SystemIntakeAsyncGRBVotingOptionNoObjection, SystemIntakeAsyncGRBVotingOptionObjection:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeAsyncGRBVotingOption) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeAsyncGRBVotingOption) UnmarshalGQL(v any) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeAsyncGRBVotingOption(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeAsyncGRBVotingOption", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeAsyncGRBVotingOption) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

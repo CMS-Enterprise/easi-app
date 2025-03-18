@@ -110,8 +110,51 @@ func (s *ResolverSuite) TestSystemIntakeUpdateSystemIntakeGRBReviewFormInputTime
 	s.NotNil(updatedPayload)
 	s.NotNil(updatedPayload.SystemIntake)
 
-	s.NotNil(updatedPayload.SystemIntake.GrbReviewAsyncEndDate)
-	s.WithinDuration(timeNow, *updatedPayload.SystemIntake.GrbReviewAsyncEndDate, time.Second)
+	if s.Suite.NotNil(updatedPayload.SystemIntake.GrbReviewAsyncEndDate) {
+		s.WithinDuration(timeNow, *updatedPayload.SystemIntake.GrbReviewAsyncEndDate, time.Second)
+	}
+
+	s.Nil(updatedPayload.SystemIntake.GRBReviewStartedAt)
+
+	tomorrowTime := timeNow.AddDate(0, 0, 1)
+
+	startedTime := time.Now()
+	updatedPayloadStarted, err := UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(
+		s.testConfigs.Context,
+		s.testConfigs.Store,
+		models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync{
+			SystemIntakeID:        systemIntake.ID,
+			GrbReviewAsyncEndDate: tomorrowTime,
+			StartGRBReview:        true,
+		},
+	)
+	// Update the time and set the start date
+	s.NoError(err)
+	if s.Suite.NotNil(updatedPayloadStarted) {
+		if s.Suite.NotNil(updatedPayloadStarted.SystemIntake) {
+			if s.Suite.NotNil(updatedPayloadStarted.SystemIntake.GrbReviewAsyncEndDate) {
+				s.WithinDuration(tomorrowTime, *updatedPayloadStarted.SystemIntake.GrbReviewAsyncEndDate, time.Second)
+			}
+
+			if s.Suite.NotNil(updatedPayloadStarted.SystemIntake.GRBReviewStartedAt) {
+				s.WithinDuration(startedTime, *updatedPayloadStarted.SystemIntake.GRBReviewStartedAt, time.Second)
+			}
+		}
+	}
+
+	// Try to start again and assert an error
+	erroredPayload, err := UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(
+		s.testConfigs.Context,
+		s.testConfigs.Store,
+		models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync{
+			SystemIntakeID:        systemIntake.ID,
+			GrbReviewAsyncEndDate: tomorrowTime,
+			StartGRBReview:        true,
+		},
+	)
+	s.Nil(erroredPayload)
+	s.Error(err)
+
 }
 
 func (s *ResolverSuite) TestCalcSystemIntakeGRBReviewAsyncStatus() {
