@@ -15,7 +15,7 @@ import {
   requester
 } from 'tests/mock/trbRequest';
 
-import { CMS_TRB_EMAIL } from 'constants/externalUrls';
+import { CMS_TRB_EMAIL, IT_GOV_EMAIL } from 'constants/externalUrls';
 import { MessageProvider } from 'hooks/useMessage';
 import { TrbRecipientFields } from 'types/technicalAssistance';
 import { MockedQuery } from 'types/util';
@@ -45,7 +45,8 @@ const store = easiMockStore({ groups: ['EASI_TRB_ADMIN_D'] });
 
 const Form = () => {
   const { ActionForm } = useActionForm<TrbRecipientFields>({
-    trbRequestId: requester?.trbRequestId
+    trbRequestId: requester?.trbRequestId,
+    copyITGovMailbox: true
   });
   return (
     <ActionForm
@@ -74,7 +75,7 @@ describe('Email recipient fields component', () => {
     await waitForElementToBeRemoved(() => getByRole('progressbar'));
 
     // Requester and Copy TRB Mailbox checkboxes rendered by default
-    expect(getAllByRole('checkbox').length).toBe(2);
+    expect(getAllByRole('checkbox').length).toBe(3);
 
     const requesterCheckbox = getByRole('checkbox', {
       name: `${requester.userInfo?.commonName}, CMS (Requester) ${requester.userInfo?.email}`
@@ -83,6 +84,10 @@ describe('Email recipient fields component', () => {
 
     expect(
       getByRole('checkbox', { name: `Copy TRB Mailbox ${CMS_TRB_EMAIL}` })
+    ).toBeChecked();
+
+    expect(
+      getByRole('checkbox', { name: `Copy ITGO Mailbox ${IT_GOV_EMAIL}` })
     ).toBeChecked();
 
     // Expand recipients list

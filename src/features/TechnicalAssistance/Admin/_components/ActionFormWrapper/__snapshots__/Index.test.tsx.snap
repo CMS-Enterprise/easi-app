@@ -97,7 +97,7 @@ exports[`Email recipient fields component > renders recipients 1`] = `
           <span
             class="text-bold"
           >
-            2
+            3
           </span>
            recipients selected
         </p>
@@ -158,31 +158,12 @@ exports[`Email recipient fields component > renders recipients 1`] = `
               </label>
             </div>
           </li>
-          <button
-            class="usa-button usa-button--unstyled truncated-content-button display-flex flex-align-center margin-top-2"
-            data-testid="truncatedContentButton"
-            type="button"
-          >
-            <svg
-              class="usa-icon margin-x-05"
-              focusable="false"
-              height="1em"
-              role="img"
-              viewBox="0 0 24 24"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="m7 14 5-5 5 5z"
-              />
-            </svg>
-             Show 3 fewer recipients
-          </button>
           <li>
             <div
               class="easi-checkbox usa-checkbox"
             >
               <input
+                checked=""
                 class="usa-checkbox__input"
                 id="copyITGovMailbox"
                 name="copyITGovMailbox"
@@ -204,6 +185,26 @@ exports[`Email recipient fields component > renders recipients 1`] = `
               </label>
             </div>
           </li>
+          <button
+            class="usa-button usa-button--unstyled truncated-content-button display-flex flex-align-center margin-top-2"
+            data-testid="truncatedContentButton"
+            type="button"
+          >
+            <svg
+              class="usa-icon margin-x-05"
+              focusable="false"
+              height="1em"
+              role="img"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m7 14 5-5 5 5z"
+              />
+            </svg>
+             Show 3 fewer recipients
+          </button>
           <div
             class="easi-checkbox usa-checkbox"
           >

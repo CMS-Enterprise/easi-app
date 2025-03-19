@@ -62,16 +62,13 @@ const Review = ({
 
   const actionForm = useActionForm<TrbRecipientFields>({
     trbRequestId,
-    resolver: yupResolver(trbActionSchema()),
-    defaultValues: {
-      copyTrbMailbox: true,
-      copyITGovMailbox: true
-    }
+    copyITGovMailbox: true,
+    resolver: yupResolver(trbActionSchema())
   });
 
   const {
     handleSubmit,
-    formState: { isSubmitting }
+    formState: { isSubmitting, defaultValues }
   } = actionForm;
 
   const formSubmitting: boolean = isSubmitting || guidanceLetterResult.loading;
@@ -178,7 +175,7 @@ const Review = ({
           className="maxw-full margin-bottom-205 tablet:grid-col-12 desktop:grid-col-6"
         >
           <FormProvider<TrbRecipientFields> {...actionForm}>
-            <Recipients itGovMailbox />
+            <Recipients copyITGovMailbox={defaultValues?.copyITGovMailbox} />
           </FormProvider>
           {/** Form pager buttons */}
           <Pager

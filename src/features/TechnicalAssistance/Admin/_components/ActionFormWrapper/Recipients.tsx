@@ -28,7 +28,7 @@ import toggleArrayValue from 'utils/toggleArrayValue';
 
 type RecipientsProps = {
   setRecipientFormOpen?: (value: boolean) => void;
-  itGovMailbox?: boolean;
+  copyITGovMailbox?: boolean;
 };
 
 export type TRBRecipient = TRBAttendee['userInfo'];
@@ -98,7 +98,7 @@ export const ExternalRecipientAlert = ({
  */
 const RecipientsForm = ({
   setRecipientFormOpen,
-  itGovMailbox
+  copyITGovMailbox
 }: RecipientsProps) => {
   const { t } = useTranslation('technicalAssistance');
 
@@ -231,7 +231,7 @@ const RecipientsForm = ({
 
       <ul className="usa-list usa-list--unstyled">
         <TruncatedContent
-          initialCount={2}
+          initialCount={copyITGovMailbox ? 3 : 2}
           expanded={recipientsCount === 0}
           hideToggle={recipientsCount === 0}
           labelMore={t(`emailRecipientFields.showMore`, {
@@ -304,7 +304,7 @@ const RecipientsForm = ({
             />
           </li>
 
-          {itGovMailbox && (
+          {copyITGovMailbox && (
             <li>
               <Controller
                 name="copyITGovMailbox"
@@ -573,7 +573,7 @@ const RecipientsForm = ({
 
 const Recipients = ({
   setRecipientFormOpen,
-  itGovMailbox
+  copyITGovMailbox
 }: RecipientsProps) => {
   const {
     formState: { isLoading }
@@ -582,7 +582,10 @@ const Recipients = ({
   if (isLoading) return <Spinner />;
 
   return (
-    <RecipientsForm setRecipientFormOpen={setRecipientFormOpen} itGovMailbox />
+    <RecipientsForm
+      setRecipientFormOpen={setRecipientFormOpen}
+      copyITGovMailbox={copyITGovMailbox}
+    />
   );
 };
 
