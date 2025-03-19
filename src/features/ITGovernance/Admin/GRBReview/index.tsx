@@ -332,11 +332,13 @@ const GRBReview = ({
               {t('reviewDetails.text')}
             </p>
 
-            <GRBReviewStatusCard
-              grbReviewType={grbReviewType}
-              grbDate={grbDate}
-              grbReviewStatus={GRBReviewStatus.SCHEDULED}
-            />
+            {grbReviewStartedAt && (
+              <GRBReviewStatusCard
+                grbReviewType={grbReviewType}
+                grbDate={grbDate}
+                grbReviewStatus={GRBReviewStatus.SCHEDULED}
+              />
+            )}
 
             {/* GRT recommendations to the GRB */}
             <GRBFeedbackCard

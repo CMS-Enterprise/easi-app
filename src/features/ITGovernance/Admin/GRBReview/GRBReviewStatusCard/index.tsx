@@ -71,7 +71,7 @@ const GRBReviewStatusCard = ({
             {t('statusCard.reviewStatus')}
           </h4>
 
-          <Tag className="bg-white">
+          <Tag className="bg-white text-base-darker font-body-sm">
             {t(`statusCard.grbReviewStatus.${grbReviewStatus}`)}
           </Tag>
         </span>
@@ -90,7 +90,7 @@ const GRBReviewStatusCard = ({
             {isITGovAdmin && (
               <UswdsReactLink
                 to="./dates"
-                className="usa-button usa-button--outline margin-top-2"
+                className="usa-button usa-button--outline margin-top-1"
               >
                 {t('statusCard.changeMeetingDate')}
               </UswdsReactLink>

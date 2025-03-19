@@ -32,7 +32,7 @@ exports[`GRBReviewStatusCard > renders the standard card with correct status and
             Review status
           </h4>
           <span
-            class="easi-tag bg-white"
+            class="easi-tag bg-white text-base-darker font-body-sm"
             data-testid="tag"
           >
             Scheduled
@@ -50,7 +50,7 @@ exports[`GRBReviewStatusCard > renders the standard card with correct status and
             01/01/2023
           </div>
           <a
-            class="usa-link usa-button usa-button--outline margin-top-2"
+            class="usa-link usa-button usa-button--outline margin-top-1"
             href="/dates"
           >
             Change meeting date

@@ -353,7 +353,7 @@ export default {
     grbReviewStatus: {
       [GRBReviewStatus.SCHEDULED]: 'Scheduled',
       [GRBReviewStatus.IN_PROGRESS]: 'In progress',
-      [GRBReviewStatus.COMPLETED]: 'Completed'
+      [GRBReviewStatus.COMPLETED]: 'Complete'
     }
   }
 };
