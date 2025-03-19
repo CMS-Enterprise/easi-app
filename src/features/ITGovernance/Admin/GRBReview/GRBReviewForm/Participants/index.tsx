@@ -67,7 +67,8 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
       variables: {
         input: {
           systemIntakeID: grbReview.id,
-          grbReviewAsyncEndDate: input.grbReviewAsyncEndDate ?? ''
+          grbReviewAsyncEndDate: input.grbReviewAsyncEndDate ?? '',
+          startGRBReview: true
         }
       }
     });
