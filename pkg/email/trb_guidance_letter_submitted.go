@@ -50,10 +50,10 @@ func (c Client) SendTRBGuidanceLetterSubmittedEmail(ctx context.Context, input S
 
 	allRecipients := input.Recipients
 	if input.CopyTRBMailbox {
-		allRecipients = append(input.Recipients, c.config.TRBEmail)
+		allRecipients = append(allRecipients, c.config.TRBEmail)
 	}
 	if input.CopyITGovMailbox {
-		allRecipients = append(input.Recipients, c.config.GRTEmail)
+		allRecipients = append(allRecipients, c.config.GRTEmail)
 	}
 
 	submissionDate := ""
