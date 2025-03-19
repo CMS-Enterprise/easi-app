@@ -18,6 +18,7 @@ import {
   SystemIntakeDocumentFragmentFragment,
   SystemIntakeFragmentFragment,
   SystemIntakeGRBReviewerFragment,
+  SystemIntakeGRBReviewerVotingRole,
   SystemIntakeState,
   useDeleteSystemIntakeGRBReviewerMutation,
   useStartGRBReviewMutation
@@ -104,7 +105,9 @@ const GRBReview = ({
   const { euaId } = useSelector((appState: AppState) => appState.auth);
 
   const currentGRBReviewer = grbReviewers.find(
-    reviewer => reviewer.userAccount.username === euaId
+    reviewer =>
+      reviewer.userAccount.username === euaId &&
+      reviewer.votingRole === SystemIntakeGRBReviewerVotingRole.VOTING
   );
 
   const [mutate] = useDeleteSystemIntakeGRBReviewerMutation({

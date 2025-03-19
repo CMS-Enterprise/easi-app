@@ -2,12 +2,12 @@ import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { NavHashLink } from 'react-router-hash-link';
+import { Button, ButtonGroup } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import { SystemIntakeGRBReviewerFragment } from 'gql/generated/graphql';
 
 import CollapsableLink from 'components/CollapsableLink';
 import UswdsReactLink from 'components/LinkWrapper';
-import useDiscussionParams from 'hooks/useDiscussionParams';
 
 export type GRBVotingPanelProps = {
   grbReviewer: SystemIntakeGRBReviewerFragment;
@@ -21,13 +21,11 @@ const GRBVotingPanel = ({ grbReviewer, className }: GRBVotingPanelProps) => {
     systemId: string;
   }>();
 
-  const { pushDiscussionQuery } = useDiscussionParams();
-
   console.log('grbReviewer', grbReviewer);
 
   return (
     <div className={classNames('usa-summary-box easi-body-normal', className)}>
-      <h5 className="text-base-dark text-uppercase margin-top-0 margin-bottom-1 line-height-body-1 text-normal text-body-xs">
+      <h5 className="text-base-dark text-uppercase margin-top-0 margin-bottom-105 line-height-body-1 text-normal text-body-xs">
         {t('reviewTask.title')}
       </h5>
 
@@ -49,12 +47,14 @@ const GRBVotingPanel = ({ grbReviewer, className }: GRBVotingPanelProps) => {
           id="voting-step-1"
           label={t('reviewTask.voting.whatIsImportant')}
           className="margin-top-2"
+          innerClassName="padding-bottom-2px"
+          bold
         >
           <p className="margin-y-0">
             {t('reviewTask.voting.documentsOrResources')}
           </p>
 
-          <ul className="padding-left-2 margin-top-1 smaller-bullet-list">
+          <ul className="padding-left-2 margin-top-1 margin-bottom-0 smaller-bullet-list">
             {t<string[]>('reviewTask.voting.documentItems', {
               returnObjects: true
             })?.map((item, index) => (
@@ -104,12 +104,14 @@ const GRBVotingPanel = ({ grbReviewer, className }: GRBVotingPanelProps) => {
           id="voting-step-1"
           label={t('reviewTask.voting.whatIsImportant')}
           className="margin-top-2"
+          innerClassName="padding-bottom-2px"
+          bold
         >
           <p className="margin-y-0">
             {t('reviewTask.voting.howShouldIParticipate')}
           </p>
 
-          <ul className="padding-left-2 margin-top-1 smaller-bullet-list">
+          <ul className="padding-left-2 margin-top-1 margin-bottom-0 smaller-bullet-list">
             {t<string[]>('reviewTask.voting.discussionItems', {
               returnObjects: true
             })?.map((item, index) => (
@@ -121,6 +123,8 @@ const GRBVotingPanel = ({ grbReviewer, className }: GRBVotingPanelProps) => {
                     discussionLink: (
                       <NavHashLink
                         to={`/it-governance/${systemId}/grb-review#discussions`}
+                        className="display-block"
+                        style={{ marginLeft: '20px' }}
                       >
                         {' '}
                       </NavHashLink>
@@ -147,6 +151,16 @@ const GRBVotingPanel = ({ grbReviewer, className }: GRBVotingPanelProps) => {
       <p className="margin-y-0">{t('reviewTask.voting.step3Description')}</p>
 
       <div className="border-bottom-1px border-info-light margin-y-3" />
+
+      <ButtonGroup>
+        <Button type="button" onClick={() => null}>
+          {t('reviewTask.voting.noObjection')}
+        </Button>
+
+        <Button type="button" onClick={() => null} secondary>
+          {t('reviewTask.voting.object')}
+        </Button>
+      </ButtonGroup>
     </div>
   );
 };
