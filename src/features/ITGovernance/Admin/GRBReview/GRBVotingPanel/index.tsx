@@ -7,6 +7,7 @@ import { SystemIntakeGRBReviewerFragment } from 'gql/generated/graphql';
 
 import CollapsableLink from 'components/CollapsableLink';
 import UswdsReactLink from 'components/LinkWrapper';
+import useDiscussionParams from 'hooks/useDiscussionParams';
 
 export type GRBVotingPanelProps = {
   grbReviewer: SystemIntakeGRBReviewerFragment;
@@ -20,10 +21,12 @@ const GRBVotingPanel = ({ grbReviewer, className }: GRBVotingPanelProps) => {
     systemId: string;
   }>();
 
+  const { pushDiscussionQuery } = useDiscussionParams();
+
   console.log('grbReviewer', grbReviewer);
 
   return (
-    <div className={classNames('usa-summary-box', className)}>
+    <div className={classNames('usa-summary-box easi-body-normal', className)}>
       <h5 className="text-base-dark text-uppercase margin-top-0 margin-bottom-1 line-height-body-1 text-normal text-body-xs">
         {t('reviewTask.title')}
       </h5>
@@ -32,6 +35,7 @@ const GRBVotingPanel = ({ grbReviewer, className }: GRBVotingPanelProps) => {
         {t('reviewTask.voting.title')}
       </h3>
 
+      {/* Step 1 */}
       <Trans
         t={t}
         i18nKey="reviewTask.voting.step1"
@@ -83,6 +87,66 @@ const GRBVotingPanel = ({ grbReviewer, className }: GRBVotingPanelProps) => {
           </ul>
         </CollapsableLink>
       </div>
+
+      <div className="border-bottom-1px border-info-light margin-y-3" />
+
+      {/* Step 2 */}
+      <Trans
+        t={t}
+        i18nKey="reviewTask.voting.step2"
+        components={{
+          bold: <strong />
+        }}
+      />
+
+      <div className="margin-left-105">
+        <CollapsableLink
+          id="voting-step-1"
+          label={t('reviewTask.voting.whatIsImportant')}
+          className="margin-top-2"
+        >
+          <p className="margin-y-0">
+            {t('reviewTask.voting.howShouldIParticipate')}
+          </p>
+
+          <ul className="padding-left-2 margin-top-1 smaller-bullet-list">
+            {t<string[]>('reviewTask.voting.discussionItems', {
+              returnObjects: true
+            })?.map((item, index) => (
+              <li key={item}>
+                <Trans
+                  t={t}
+                  i18nKey={`reviewTask.voting.discussionItems.${index}`}
+                  components={{
+                    discussionLink: (
+                      <NavHashLink
+                        to={`/it-governance/${systemId}/grb-review#discussions`}
+                      >
+                        {' '}
+                      </NavHashLink>
+                    )
+                  }}
+                />
+              </li>
+            ))}
+          </ul>
+        </CollapsableLink>
+      </div>
+
+      <div className="border-bottom-1px border-info-light margin-y-3" />
+
+      {/* Step 3 */}
+      <Trans
+        t={t}
+        i18nKey="reviewTask.voting.step3"
+        components={{
+          bold: <strong />
+        }}
+      />
+
+      <p className="margin-y-0">{t('reviewTask.voting.step3Description')}</p>
+
+      <div className="border-bottom-1px border-info-light margin-y-3" />
     </div>
   );
 };
