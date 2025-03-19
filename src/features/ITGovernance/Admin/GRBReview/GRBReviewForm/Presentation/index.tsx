@@ -199,7 +199,7 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
                   name="grbMeetingDate.grbDate"
                   control={control}
                   rules={{
-                    required: 'presentationGRBReviewForm.required'
+                    required: t<string>('presentationGRBReviewForm.required')
                   }}
                   render={({ field: { ref, ...field } }) => (
                     <FormGroup>
