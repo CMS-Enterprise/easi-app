@@ -1,7 +1,6 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { FetchResult } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Fieldset,
@@ -52,23 +51,8 @@ const ReviewType = ({ grbReview }: ReviewTypeProps) => {
     formState: { errors }
   } = form;
 
-  // const onSubmit: GRBReviewFormStepSubmit<ReviewTypeFields> = async input =>
-  //   mutate({ variables: { input } });
-
-  const onSubmit: GRBReviewFormStepSubmit<ReviewTypeFields> = async input => {
-    // ✅ Ensure we always return a Promise, even when skipping the mutation
-    if (input.grbReviewType === grbReview.grbReviewType) {
-      console.log('Skipping mutation: No changes detected');
-      return Promise.resolve({} as FetchResult); // Return an empty FetchResult
-    }
-
-    console.log('Running mutation: Updating grbReviewType');
-    return mutate({
-      variables: {
-        input
-      }
-    });
-  };
+  const onSubmit: GRBReviewFormStepSubmit<ReviewTypeFields> = async input =>
+    mutate({ variables: { input } });
 
   return (
     <EasiFormProvider<ReviewTypeFields> {...form}>
