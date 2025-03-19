@@ -1948,6 +1948,7 @@ export type SystemIntake = {
   grbReviewAsyncEndDate?: Maybe<Scalars['Time']['output']>;
   grbReviewAsyncGRBMeetingTime?: Maybe<Scalars['Time']['output']>;
   grbReviewAsyncRecordingTime?: Maybe<Scalars['Time']['output']>;
+  grbReviewAsyncStatus?: Maybe<SystemIntakeGRBReviewAsyncStatusType>;
   grbReviewStartedAt?: Maybe<Scalars['Time']['output']>;
   /** GRB Review Form */
   grbReviewType: SystemIntakeGRBReviewType;
@@ -2351,6 +2352,13 @@ export type SystemIntakeGRBPresentationLinksInput = {
   transcriptFileData?: InputMaybe<Scalars['Upload']['input']>;
   transcriptLink?: InputMaybe<Scalars['String']['input']>;
 };
+
+/** The status type of the System Intake GRB Review */
+export enum SystemIntakeGRBReviewAsyncStatusType {
+  COMPLETED = 'COMPLETED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  PAST_DUE = 'PAST_DUE'
+}
 
 export type SystemIntakeGRBReviewDiscussion = {
   __typename: 'SystemIntakeGRBReviewDiscussion';
@@ -3394,6 +3402,8 @@ export type UpdateSystemIntakeGRBReviewFormInputPresentationStandard = {
 /** Input data used to set or update a System Intake's GRB Review Timeframe (Async) data */
 export type UpdateSystemIntakeGRBReviewFormInputTimeframeAsync = {
   grbReviewAsyncEndDate: Scalars['Time']['input'];
+  /** Whether or not to start the GRB review meeting now or not. It defaults to false */
+  startGRBReview?: Scalars['Boolean']['input'];
   systemIntakeID: Scalars['UUID']['input'];
 };
 

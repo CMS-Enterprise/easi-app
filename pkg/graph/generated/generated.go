@@ -714,6 +714,7 @@ type ComplexityRoot struct {
 		GrbReviewAsyncEndDate                             func(childComplexity int) int
 		GrbReviewAsyncGRBMeetingTime                      func(childComplexity int) int
 		GrbReviewAsyncRecordingTime                       func(childComplexity int) int
+		GrbReviewAsyncStatus                              func(childComplexity int) int
 		GrbReviewType                                     func(childComplexity int) int
 		GrbReviewers                                      func(childComplexity int) int
 		GrtReviewEmailBody                                func(childComplexity int) int
@@ -1414,6 +1415,8 @@ type SystemIntakeResolver interface {
 	RelatedTRBRequests(ctx context.Context, obj *models.SystemIntake) ([]*models.TRBRequest, error)
 	GrbDiscussions(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewDiscussion, error)
 	GrbPresentationLinks(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBPresentationLinks, error)
+
+	GrbReviewAsyncStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBReviewAsyncStatusType, error)
 }
 type SystemIntakeDocumentResolver interface {
 	DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*models.SystemIntakeDocumentType, error)
@@ -5679,6 +5682,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.GrbReviewAsyncRecordingTime(childComplexity), true
 
+	case "SystemIntake.grbReviewAsyncStatus":
+		if e.complexity.SystemIntake.GrbReviewAsyncStatus == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.GrbReviewAsyncStatus(childComplexity), true
+
 	case "SystemIntake.grbReviewType":
 		if e.complexity.SystemIntake.GrbReviewType == nil {
 			break
@@ -9124,6 +9134,16 @@ type SystemIntake {
   grbReviewAsyncRecordingTime: Time
   grbReviewAsyncEndDate: Time
   grbReviewAsyncGRBMeetingTime: Time
+  grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType
+}
+
+"""
+The status type of the System Intake GRB Review
+"""
+enum SystemIntakeGRBReviewAsyncStatusType {
+  IN_PROGRESS
+  COMPLETED
+  PAST_DUE
 }
 
 type SystemIntakeContractNumber {
@@ -9635,6 +9655,10 @@ Input data used to set or update a System Intake's GRB Review Timeframe (Async) 
 input updateSystemIntakeGRBReviewFormInputTimeframeAsync {
   systemIntakeID: UUID!
   grbReviewAsyncEndDate: Time!
+  """
+  Whether or not to start the GRB review meeting now or not. It defaults to false
+  """
+  startGRBReview: Boolean! = false
 }
 
 """
@@ -16371,6 +16395,8 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(_ context.Con
 				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
 			case "grbReviewAsyncGRBMeetingTime":
 				return ec.fieldContext_SystemIntake_grbReviewAsyncGRBMeetingTime(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -25275,6 +25301,8 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(ctx con
 				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
 			case "grbReviewAsyncGRBMeetingTime":
 				return ec.fieldContext_SystemIntake_grbReviewAsyncGRBMeetingTime(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -32195,6 +32223,8 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
 			case "grbReviewAsyncGRBMeetingTime":
 				return ec.fieldContext_SystemIntake_grbReviewAsyncGRBMeetingTime(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -32449,6 +32479,8 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeRequestType(
 				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
 			case "grbReviewAsyncGRBMeetingTime":
 				return ec.fieldContext_SystemIntake_grbReviewAsyncGRBMeetingTime(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -34676,6 +34708,8 @@ func (ec *executionContext) fieldContext_Mutation_archiveSystemIntake(ctx contex
 				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
 			case "grbReviewAsyncGRBMeetingTime":
 				return ec.fieldContext_SystemIntake_grbReviewAsyncGRBMeetingTime(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -38984,6 +39018,8 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
 			case "grbReviewAsyncGRBMeetingTime":
 				return ec.fieldContext_SystemIntake_grbReviewAsyncGRBMeetingTime(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -39211,6 +39247,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
 			case "grbReviewAsyncGRBMeetingTime":
 				return ec.fieldContext_SystemIntake_grbReviewAsyncGRBMeetingTime(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -39438,6 +39476,8 @@ func (ec *executionContext) fieldContext_Query_mySystemIntakes(_ context.Context
 				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
 			case "grbReviewAsyncGRBMeetingTime":
 				return ec.fieldContext_SystemIntake_grbReviewAsyncGRBMeetingTime(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -39654,6 +39694,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithReviewRequested(
 				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
 			case "grbReviewAsyncGRBMeetingTime":
 				return ec.fieldContext_SystemIntake_grbReviewAsyncGRBMeetingTime(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -39870,6 +39912,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(_ context.
 				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
 			case "grbReviewAsyncGRBMeetingTime":
 				return ec.fieldContext_SystemIntake_grbReviewAsyncGRBMeetingTime(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -45885,6 +45929,8 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedIntakes(_ context.C
 				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
 			case "grbReviewAsyncGRBMeetingTime":
 				return ec.fieldContext_SystemIntake_grbReviewAsyncGRBMeetingTime(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -46329,6 +46375,47 @@ func (ec *executionContext) fieldContext_SystemIntake_grbReviewAsyncGRBMeetingTi
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntake_grbReviewAsyncStatus(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().GrbReviewAsyncStatus(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.SystemIntakeGRBReviewAsyncStatusType)
+	fc.Result = res
+	return ec.marshalOSystemIntakeGRBReviewAsyncStatusType2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewAsyncStatusType(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_grbReviewAsyncStatus(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SystemIntakeGRBReviewAsyncStatusType does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntakeAction_id(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeAction) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntakeAction_id(ctx, field)
 	if err != nil {
@@ -46582,6 +46669,8 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(_ conte
 				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
 			case "grbReviewAsyncGRBMeetingTime":
 				return ec.fieldContext_SystemIntake_grbReviewAsyncGRBMeetingTime(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -56058,6 +56147,8 @@ func (ec *executionContext) fieldContext_TRBRequest_relatedIntakes(_ context.Con
 				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
 			case "grbReviewAsyncGRBMeetingTime":
 				return ec.fieldContext_SystemIntake_grbReviewAsyncGRBMeetingTime(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -58939,6 +59030,8 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(_ context.
 				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
 			case "grbReviewAsyncGRBMeetingTime":
 				return ec.fieldContext_SystemIntake_grbReviewAsyncGRBMeetingTime(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -59709,6 +59802,8 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
 			case "grbReviewAsyncGRBMeetingTime":
 				return ec.fieldContext_SystemIntake_grbReviewAsyncGRBMeetingTime(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -66515,7 +66610,11 @@ func (ec *executionContext) unmarshalInputupdateSystemIntakeGRBReviewFormInputTi
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemIntakeID", "grbReviewAsyncEndDate"}
+	if _, present := asMap["startGRBReview"]; !present {
+		asMap["startGRBReview"] = false
+	}
+
+	fieldsInOrder := [...]string{"systemIntakeID", "grbReviewAsyncEndDate", "startGRBReview"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -66536,6 +66635,13 @@ func (ec *executionContext) unmarshalInputupdateSystemIntakeGRBReviewFormInputTi
 				return it, err
 			}
 			it.GrbReviewAsyncEndDate = data
+		case "startGRBReview":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("startGRBReview"))
+			data, err := ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.StartGRBReview = data
 		}
 	}
 
@@ -72334,6 +72440,39 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			out.Values[i] = ec._SystemIntake_grbReviewAsyncEndDate(ctx, field, obj)
 		case "grbReviewAsyncGRBMeetingTime":
 			out.Values[i] = ec._SystemIntake_grbReviewAsyncGRBMeetingTime(ctx, field, obj)
+		case "grbReviewAsyncStatus":
+			field := field
+
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_grbReviewAsyncStatus(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -81935,6 +82074,22 @@ func (ec *executionContext) marshalOSystemIntakeGRBPresentationLinks2ᚖgithub�
 		return graphql.Null
 	}
 	return ec._SystemIntakeGRBPresentationLinks(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOSystemIntakeGRBReviewAsyncStatusType2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewAsyncStatusType(ctx context.Context, v any) (*models.SystemIntakeGRBReviewAsyncStatusType, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(models.SystemIntakeGRBReviewAsyncStatusType)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOSystemIntakeGRBReviewAsyncStatusType2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewAsyncStatusType(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeGRBReviewAsyncStatusType) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) marshalOSystemIntakeGRBReviewDiscussionPost2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewDiscussionPost(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeGRBReviewDiscussionPost) graphql.Marshaler {
