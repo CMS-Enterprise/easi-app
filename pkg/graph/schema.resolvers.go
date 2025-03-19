@@ -1809,7 +1809,13 @@ func (r *systemIntakeResolver) NextMeetingDate(ctx context.Context, obj *models.
 
 // GrbReviewers is the resolver for the grbReviewers field.
 func (r *systemIntakeResolver) GrbReviewers(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewer, error) {
+	//TODO: this method is being deprecated. Remove it once the new method is implemented on the FE
 	return resolvers.SystemIntakeGRBReviewers(ctx, obj.ID)
+}
+
+// GrbVotingInformation is the resolver for the grbVotingInformation field.
+func (r *systemIntakeResolver) GrbVotingInformation(ctx context.Context, obj *models.SystemIntake) (*models.GRBVotingInformation, error) {
+	return resolvers.GRBVotingInformationGetBySystemIntake(ctx, obj)
 }
 
 // Isso is the resolver for the isso field.

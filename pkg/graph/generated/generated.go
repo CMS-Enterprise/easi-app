@@ -515,6 +515,14 @@ type ComplexityRoot struct {
 		Reviewers       func(childComplexity int) int
 	}
 
+	GRBVotingInformation struct {
+		GRBReviewers        func(childComplexity int) int
+		NumberOfNoObjection func(childComplexity int) int
+		NumberOfNotVoted    func(childComplexity int) int
+		NumberOfObjection   func(childComplexity int) int
+		VotingStatus        func(childComplexity int) int
+	}
+
 	GovernanceRequestFeedback struct {
 		Author       func(childComplexity int) int
 		CreatedAt    func(childComplexity int) int
@@ -717,6 +725,7 @@ type ComplexityRoot struct {
 		GrbReviewAsyncStatus                              func(childComplexity int) int
 		GrbReviewType                                     func(childComplexity int) int
 		GrbReviewers                                      func(childComplexity int) int
+		GrbVotingInformation                              func(childComplexity int) int
 		GrtReviewEmailBody                                func(childComplexity int) int
 		HasUIChanges                                      func(childComplexity int) int
 		ID                                                func(childComplexity int) int
@@ -1380,6 +1389,7 @@ type SystemIntakeResolver interface {
 	NextMeetingDate(ctx context.Context, obj *models.SystemIntake) (*time.Time, error)
 
 	GrbReviewers(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewer, error)
+	GrbVotingInformation(ctx context.Context, obj *models.SystemIntake) (*models.GRBVotingInformation, error)
 
 	Isso(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeIsso, error)
 	Lcid(ctx context.Context, obj *models.SystemIntake) (*string, error)
@@ -3836,6 +3846,41 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.GRBReviewerComparisonIntake.Reviewers(childComplexity), true
 
+	case "GRBVotingInformation.grbReviewers":
+		if e.complexity.GRBVotingInformation.GRBReviewers == nil {
+			break
+		}
+
+		return e.complexity.GRBVotingInformation.GRBReviewers(childComplexity), true
+
+	case "GRBVotingInformation.numberOfNoObjection":
+		if e.complexity.GRBVotingInformation.NumberOfNoObjection == nil {
+			break
+		}
+
+		return e.complexity.GRBVotingInformation.NumberOfNoObjection(childComplexity), true
+
+	case "GRBVotingInformation.numberOfNotVoted":
+		if e.complexity.GRBVotingInformation.NumberOfNotVoted == nil {
+			break
+		}
+
+		return e.complexity.GRBVotingInformation.NumberOfNotVoted(childComplexity), true
+
+	case "GRBVotingInformation.numberOfObjection":
+		if e.complexity.GRBVotingInformation.NumberOfObjection == nil {
+			break
+		}
+
+		return e.complexity.GRBVotingInformation.NumberOfObjection(childComplexity), true
+
+	case "GRBVotingInformation.votingStatus":
+		if e.complexity.GRBVotingInformation.VotingStatus == nil {
+			break
+		}
+
+		return e.complexity.GRBVotingInformation.VotingStatus(childComplexity), true
+
 	case "GovernanceRequestFeedback.author":
 		if e.complexity.GovernanceRequestFeedback.Author == nil {
 			break
@@ -5702,6 +5747,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemIntake.GrbReviewers(childComplexity), true
+
+	case "SystemIntake.grbVotingInformation":
+		if e.complexity.SystemIntake.GrbVotingInformation == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.GrbVotingInformation(childComplexity), true
 
 	case "SystemIntake.grtReviewEmailBody":
 		if e.complexity.SystemIntake.GrtReviewEmailBody == nil {
@@ -9036,7 +9088,14 @@ type SystemIntake {
   lastMeetingDate: Time
   nextMeetingDate: Time
   grbReviewStartedAt: Time
-  grbReviewers: [SystemIntakeGRBReviewer!]!
+  """
+  All users are are involved in a GRB review. This will be deprecated in favor of grbVotingInformation
+  """
+  grbReviewers: [SystemIntakeGRBReviewer!]! @deprecated(reason: "Use grbVotingInformation.grbReviewers instead")
+  """
+  All information about voting activity in a GRB review
+  """
+  grbVotingInformation: GRBVotingInformation!
   id: UUID!
   isso: SystemIntakeISSO!
   lcid: String
@@ -9135,6 +9194,57 @@ type SystemIntake {
   grbReviewAsyncEndDate: Time
   grbReviewAsyncGRBMeetingTime: Time
   grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType
+}
+
+"""
+GRBVotingInformation holds all the information about the voting session for a GRB Review. 
+"""
+type GRBVotingInformation {
+  """
+  Who is doing the review for these GRB sessions
+  """
+  grbReviewers: [SystemIntakeGRBReviewer!]!
+  """
+  The status of the voting session, this can include if it is not started or in progress, as well as the suggested decision of the voting session
+  """
+  votingStatus: GRBVotingInformationStatus!
+  """
+  How many people have voted no objection
+  """
+  numberOfNoObjection: Int!
+  """
+  How many people have voted with an objection
+  """
+  numberOfObjection: Int!
+  """
+  How many people have not voted
+  """
+  numberOfNotVoted: Int!
+}
+"""
+All possible permutations of the status of a GRB ASYNC voting session
+"""
+enum GRBVotingInformationStatus {
+  """
+  This status is not rendered to the front end, but it is to show a state where the GRB async voting button has not yet been pressed
+  """
+  NOT_STARTED
+  """
+  Setup button has been pressed. This shows for the In progress and Past due statuses
+  """
+  IN_PROGRESS
+  """
+  End date has passed, quorum of votes has been met (5 votes), vote count for approval met (0 votes with objections).
+  """
+  APPROVED
+  """
+  End date has passed, quorum of votes has been met (5 votes), vote count has two or more objections.
+  """
+  NOT_APPROVED
+  """
+  End date has passed, quorum of votes has been met (5 votes), vote count is mostly no objections but has one objection vote OR voting has been ended early and a quorum has not been met.
+  """
+  INCONCLUSIVE
 }
 
 """
@@ -16277,6 +16387,8 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(_ context.Con
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "isso":
@@ -25183,6 +25295,8 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(ctx con
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "isso":
@@ -29805,6 +29919,252 @@ func (ec *executionContext) fieldContext_GRBReviewerComparisonIntake_intakeCreat
 	return fc, nil
 }
 
+func (ec *executionContext) _GRBVotingInformation_grbReviewers(ctx context.Context, field graphql.CollectedField, obj *models.GRBVotingInformation) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBVotingInformation_grbReviewers(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.GRBReviewers, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.SystemIntakeGRBReviewer)
+	fc.Result = res
+	return ec.marshalNSystemIntakeGRBReviewer2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewerᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBVotingInformation_grbReviewers(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBVotingInformation",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_SystemIntakeGRBReviewer_id(ctx, field)
+			case "userAccount":
+				return ec.fieldContext_SystemIntakeGRBReviewer_userAccount(ctx, field)
+			case "systemIntakeID":
+				return ec.fieldContext_SystemIntakeGRBReviewer_systemIntakeID(ctx, field)
+			case "votingRole":
+				return ec.fieldContext_SystemIntakeGRBReviewer_votingRole(ctx, field)
+			case "vote":
+				return ec.fieldContext_SystemIntakeGRBReviewer_vote(ctx, field)
+			case "voteComment":
+				return ec.fieldContext_SystemIntakeGRBReviewer_voteComment(ctx, field)
+			case "dateVoted":
+				return ec.fieldContext_SystemIntakeGRBReviewer_dateVoted(ctx, field)
+			case "grbRole":
+				return ec.fieldContext_SystemIntakeGRBReviewer_grbRole(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_SystemIntakeGRBReviewer_createdBy(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_SystemIntakeGRBReviewer_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_SystemIntakeGRBReviewer_modifiedBy(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_SystemIntakeGRBReviewer_modifiedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeGRBReviewer", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GRBVotingInformation_votingStatus(ctx context.Context, field graphql.CollectedField, obj *models.GRBVotingInformation) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBVotingInformation_votingStatus(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.VotingStatus(ctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(models.GRBVotingInformationStatus)
+	fc.Result = res
+	return ec.marshalNGRBVotingInformationStatus2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBVotingInformationStatus(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBVotingInformation_votingStatus(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBVotingInformation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type GRBVotingInformationStatus does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GRBVotingInformation_numberOfNoObjection(ctx context.Context, field graphql.CollectedField, obj *models.GRBVotingInformation) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBVotingInformation_numberOfNoObjection(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.NumberOfNoObjection(ctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBVotingInformation_numberOfNoObjection(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBVotingInformation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GRBVotingInformation_numberOfObjection(ctx context.Context, field graphql.CollectedField, obj *models.GRBVotingInformation) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBVotingInformation_numberOfObjection(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.NumberOfObjection(ctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBVotingInformation_numberOfObjection(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBVotingInformation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GRBVotingInformation_numberOfNotVoted(ctx context.Context, field graphql.CollectedField, obj *models.GRBVotingInformation) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBVotingInformation_numberOfNotVoted(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.NumberOfNotVoted(ctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBVotingInformation_numberOfNotVoted(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBVotingInformation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _GovernanceRequestFeedback_id(ctx context.Context, field graphql.CollectedField, obj *models.GovernanceRequestFeedback) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_GovernanceRequestFeedback_id(ctx, field)
 	if err != nil {
@@ -32105,6 +32465,8 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "isso":
@@ -32361,6 +32723,8 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeRequestType(
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "isso":
@@ -34590,6 +34954,8 @@ func (ec *executionContext) fieldContext_Mutation_archiveSystemIntake(ctx contex
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "isso":
@@ -38900,6 +39266,8 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "isso":
@@ -39129,6 +39497,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "isso":
@@ -39358,6 +39728,8 @@ func (ec *executionContext) fieldContext_Query_mySystemIntakes(_ context.Context
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "isso":
@@ -39576,6 +39948,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithReviewRequested(
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "isso":
@@ -39794,6 +40168,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(_ context.
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "isso":
@@ -43479,6 +43855,62 @@ func (ec *executionContext) fieldContext_SystemIntake_grbReviewers(_ context.Con
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntake_grbVotingInformation(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().GrbVotingInformation(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.GRBVotingInformation)
+	fc.Result = res
+	return ec.marshalNGRBVotingInformation2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBVotingInformation(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_grbVotingInformation(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "grbReviewers":
+				return ec.fieldContext_GRBVotingInformation_grbReviewers(ctx, field)
+			case "votingStatus":
+				return ec.fieldContext_GRBVotingInformation_votingStatus(ctx, field)
+			case "numberOfNoObjection":
+				return ec.fieldContext_GRBVotingInformation_numberOfNoObjection(ctx, field)
+			case "numberOfObjection":
+				return ec.fieldContext_GRBVotingInformation_numberOfObjection(ctx, field)
+			case "numberOfNotVoted":
+				return ec.fieldContext_GRBVotingInformation_numberOfNotVoted(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type GRBVotingInformation", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntake_id(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntake_id(ctx, field)
 	if err != nil {
@@ -45811,6 +46243,8 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedIntakes(_ context.C
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "isso":
@@ -46551,6 +46985,8 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(_ conte
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "isso":
@@ -56029,6 +56465,8 @@ func (ec *executionContext) fieldContext_TRBRequest_relatedIntakes(_ context.Con
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "isso":
@@ -58912,6 +59350,8 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(_ context.
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "isso":
@@ -59684,6 +60124,8 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
 			case "isso":
@@ -69301,6 +69743,189 @@ func (ec *executionContext) _GRBReviewerComparisonIntake(ctx context.Context, se
 	return out
 }
 
+var gRBVotingInformationImplementors = []string{"GRBVotingInformation"}
+
+func (ec *executionContext) _GRBVotingInformation(ctx context.Context, sel ast.SelectionSet, obj *models.GRBVotingInformation) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, gRBVotingInformationImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("GRBVotingInformation")
+		case "grbReviewers":
+			out.Values[i] = ec._GRBVotingInformation_grbReviewers(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
+		case "votingStatus":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._GRBVotingInformation_votingStatus(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "numberOfNoObjection":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._GRBVotingInformation_numberOfNoObjection(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "numberOfObjection":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._GRBVotingInformation_numberOfObjection(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "numberOfNotVoted":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._GRBVotingInformation_numberOfNotVoted(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var governanceRequestFeedbackImplementors = []string{"GovernanceRequestFeedback"}
 
 func (ec *executionContext) _GovernanceRequestFeedback(ctx context.Context, sel ast.SelectionSet, obj *models.GovernanceRequestFeedback) graphql.Marshaler {
@@ -71477,6 +72102,42 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 					}
 				}()
 				res = ec._SystemIntake_grbReviewers(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "grbVotingInformation":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_grbVotingInformation(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
@@ -78360,6 +79021,36 @@ func (ec *executionContext) marshalNGRBReviewerComparisonIntake2ᚖgithubᚗcom�
 		return graphql.Null
 	}
 	return ec._GRBReviewerComparisonIntake(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNGRBVotingInformation2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBVotingInformation(ctx context.Context, sel ast.SelectionSet, v models.GRBVotingInformation) graphql.Marshaler {
+	return ec._GRBVotingInformation(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNGRBVotingInformation2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBVotingInformation(ctx context.Context, sel ast.SelectionSet, v *models.GRBVotingInformation) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._GRBVotingInformation(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNGRBVotingInformationStatus2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBVotingInformationStatus(ctx context.Context, v any) (models.GRBVotingInformationStatus, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.GRBVotingInformationStatus(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNGRBVotingInformationStatus2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBVotingInformationStatus(ctx context.Context, sel ast.SelectionSet, v models.GRBVotingInformationStatus) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) marshalNGovernanceRequestFeedback2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGovernanceRequestFeedbackᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.GovernanceRequestFeedback) graphql.Marshaler {
