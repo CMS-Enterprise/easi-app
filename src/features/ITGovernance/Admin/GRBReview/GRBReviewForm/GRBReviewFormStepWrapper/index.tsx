@@ -91,8 +91,15 @@ function GRBReviewFormStepWrapper<
       path?: string;
     }) => {
       // Redirect user without submit if no changes or skipping validation
-      if (!isDirty || (!shouldValidate && !isValid)) {
+      if (!isDirty && !shouldValidate) {
         return history.push(`${grbReviewPath}/${path}`);
+      }
+
+      if (!shouldValidate) {
+        // Bypass validation, directly submit the form
+        return onSubmit({ systemIntakeID: systemId, ...watch() })
+          .then(() => history.push(`${grbReviewPath}/${path}`))
+          .catch(() => history.push(`${grbReviewPath}/${path}`));
       }
 
       return handleSubmit(values =>
@@ -109,13 +116,13 @@ function GRBReviewFormStepWrapper<
       )();
     },
     [
-      grbReviewPath,
-      isValid,
       isDirty,
       handleSubmit,
-      onSubmit,
       history,
+      grbReviewPath,
+      onSubmit,
       systemId,
+      watch,
       showMessage,
       t
     ]
@@ -272,7 +279,7 @@ function GRBReviewFormStepWrapper<
             }
             saveExitText={t('setUpGrbReviewForm.saveAndReturn')}
             taskListUrl={grbReviewPath}
-            submitDisabled={!isValid || !isDirty}
+            submitDisabled={!isDirty}
             submit={() => submitStep({ shouldValidate: false })}
             border={false}
             className="margin-top-8 margin-bottom-3"
