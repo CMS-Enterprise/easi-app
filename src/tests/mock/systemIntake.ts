@@ -28,6 +28,7 @@ import {
   SystemIntakeFormState,
   SystemIntakeFragmentFragment,
   SystemIntakeGRBPresentationLinksFragmentFragment,
+  SystemIntakeGRBReviewType,
   SystemIntakeRequestType,
   SystemIntakeState,
   SystemIntakeStatusAdmin,
@@ -352,7 +353,8 @@ export const emptySystemIntake: SystemIntakeFragmentFragment = {
   ],
   relatedIntakes: [],
   relatedTRBRequests: [],
-  grbPresentationLinks
+  grbPresentationLinks,
+  grbReviewType: SystemIntakeGRBReviewType.STANDARD
 };
 
 export const systemIntake: SystemIntakeFragmentFragment = {
@@ -513,7 +515,8 @@ export const systemIntake: SystemIntakeFragmentFragment = {
       createdAt: new Date().toString()
     }
   ],
-  grbPresentationLinks
+  grbPresentationLinks,
+  grbReviewType: SystemIntakeGRBReviewType.STANDARD
 };
 
 export const systemIntakeForTable: GetSystemIntakesTableQuery['systemIntakes'][number] =
@@ -678,7 +681,11 @@ export const taskListSystemIntake: NonNullable<
   relationType: null,
   contractName: null,
   contractNumbers: [],
-  systems: []
+  systems: [],
+  grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+  grbReviewStartedAt: null,
+  grbReviewAsyncEndDate: null,
+  grbReviewAsyncGRBMeetingTime: null
 };
 
 export const getGovernanceTaskListQuery = (

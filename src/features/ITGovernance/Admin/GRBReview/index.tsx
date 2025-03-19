@@ -11,9 +11,9 @@ import {
   ModalFooter,
   ModalHeading
 } from '@trussworks/react-uswds';
-import DocumentsTable from 'features/ITGovernance/Requester/SystemIntake/Documents/DocumentsTable';
+import DocumentsTable from 'features/ITGovernance/_components/DocumentsTable';
 import {
-  GetSystemIntakeGRBReviewersDocument,
+  GetSystemIntakeGRBReviewDocument,
   SystemIntakeDocumentFragmentFragment,
   SystemIntakeFragmentFragment,
   SystemIntakeGRBReviewerFragment,
@@ -22,7 +22,9 @@ import {
   useStartGRBReviewMutation
 } from 'gql/generated/graphql';
 
+import AdminAction from 'components/AdminAction';
 import Alert from 'components/Alert';
+import CollapsableLink from 'components/CollapsableLink';
 import {
   DescriptionDefinition,
   DescriptionList,
@@ -36,13 +38,14 @@ import { BusinessCaseModel } from 'types/businessCase';
 import { GRBReviewFormAction } from 'types/grbReview';
 import { formatDateLocal } from 'utils/date';
 
-import ITGovAdminContext from '../ITGovAdminContext';
+import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
+import GRBFeedbackCard from './GRBFeedbackCard/GRBFeedbackCard';
+import ParticipantsTable from './ParticipantsTable/ParticipantsTable';
+import PresentationLinksCard from './PresentationLinksCard/PresentationLinksCard';
 import Discussions from './Discussions';
-import GRBFeedbackCard from './GRBFeedbackCard';
 import GRBReviewerForm from './GRBReviewerForm';
-import ParticipantsTable from './ParticipantsTable';
-import PresentationLinksCard from './PresentationLinksCard';
+import GRBReviewStatusCard, { GRBReviewStatus } from './GRBReviewStatusCard';
 
 import './index.scss';
 
@@ -56,6 +59,8 @@ type GRBReviewProps = {
   grbReviewStartedAt?: string | null;
   grbPresentationLinks?: SystemIntakeFragmentFragment['grbPresentationLinks'];
   governanceRequestFeedbacks: SystemIntakeFragmentFragment['governanceRequestFeedbacks'];
+  grbReviewType: SystemIntakeFragmentFragment['grbReviewType'];
+  grbDate?: SystemIntakeFragmentFragment['grbDate'];
 };
 
 const GRBReview = ({
@@ -67,9 +72,16 @@ const GRBReview = ({
   documents,
   grbReviewStartedAt,
   grbPresentationLinks,
-  governanceRequestFeedbacks
+  governanceRequestFeedbacks,
+  grbReviewType,
+  grbDate
 }: GRBReviewProps) => {
   const { t } = useTranslation('grbReview');
+
+  const whatDoINeedItems: string[] = t('adminTask.setUpGRBReview.whatDoINeed', {
+    returnObjects: true
+  });
+
   const history = useHistory();
 
   const { action } = useParams<{
@@ -87,7 +99,7 @@ const GRBReview = ({
   const { showMessage } = useMessage();
 
   const [mutate] = useDeleteSystemIntakeGRBReviewerMutation({
-    refetchQueries: [GetSystemIntakeGRBReviewersDocument]
+    refetchQueries: [GetSystemIntakeGRBReviewDocument]
   });
 
   const [startGRBReview] = useStartGRBReviewMutation({
@@ -98,7 +110,7 @@ const GRBReview = ({
     },
     refetchQueries: [
       {
-        query: GetSystemIntakeGRBReviewersDocument,
+        query: GetSystemIntakeGRBReviewDocument,
         variables: { id }
       }
     ]
@@ -222,23 +234,13 @@ const GRBReview = ({
 
           <div className="padding-bottom-4" id="grbReview">
             <PageHeading className="margin-y-0">{t('title')}</PageHeading>
+
             <p className="font-body-md line-height-body-4 text-light margin-top-05 margin-bottom-3">
               {t('description')}
             </p>
-            {/* Feature in progress alert */}
-            <Alert type="info" heading={t('featureInProgress')}>
-              <Trans
-                i18nKey="grbReview:featureInProgressText"
-                components={{
-                  a: (
-                    <UswdsReactLink to="/help/send-feedback" target="_blank">
-                      feedback form
-                    </UswdsReactLink>
-                  )
-                }}
-              />
-            </Alert>
-            {grbReviewStartedAt && (
+
+            {/* TODO: Remove/reuse once BE work done */}
+            {/* {grbReviewStartedAt && (
               <p className="bg-primary-lighter line-height-body-5 padding-y-1 padding-x-2">
                 <Trans
                   i18nKey="grbReview:reviewStartedOn"
@@ -247,20 +249,80 @@ const GRBReview = ({
                   }}
                 />
               </p>
+            )} */}
+
+            {isITGovAdmin && (
+              <>
+                {/* TODO: May change once BE work is done to send reminder */}
+                {grbReviewStartedAt ? (
+                  <AdminAction
+                    type="ITGov"
+                    title={t('adminTask.sendReviewReminder.title')}
+                    buttons={[
+                      {
+                        label: t('adminTask.sendReviewReminder.sendReminder'),
+                        onClick: () =>
+                          history.push(`/it-governance/${id}/grb-review/form`)
+                      },
+                      {
+                        label: t('adminTask.takeADifferentAction'),
+                        unstyled: true,
+                        onClick: () =>
+                          history.push(
+                            `/it-governance/${id}/grb-review/reviewers`
+                          )
+                      }
+                    ]}
+                  >
+                    <p className="margin-top-0">
+                      {t('adminTask.sendReviewReminder.description')}
+                    </p>
+                  </AdminAction>
+                ) : (
+                  <AdminAction
+                    type="ITGov"
+                    title={t('adminTask.setUpGRBReview.title')}
+                    buttons={[
+                      {
+                        label: t('adminTask.setUpGRBReview.title'),
+                        // onClick: () => setStartReviewModalIsOpen(true)
+                        onClick: () =>
+                          history.push(
+                            `/it-governance/${id}/grb-review/review-type`
+                          )
+                      },
+                      {
+                        label: t('adminTask.takeADifferentAction'),
+                        unstyled: true,
+                        onClick: () =>
+                          history.push(`/it-governance/${id}/actions`)
+                      }
+                    ]}
+                  >
+                    <p className="margin-top-0">
+                      {t('adminTask.setUpGRBReview.description')}
+                    </p>
+
+                    <CollapsableLink
+                      id="setUpGRBReview"
+                      className="margin-top-2"
+                      label={t('adminTask.setUpGRBReview.whatDoINeedLabel')}
+                    >
+                      <ul className="padding-left-3 margin-0">
+                        {whatDoINeedItems.map((item, index) => (
+                          <li key={item}>
+                            <Trans
+                              i18nKey={`grbReview:adminTask.setUpGRBReview.whatDoINeed.${index}`}
+                              components={{ bold: <strong /> }}
+                            />
+                          </li>
+                        ))}
+                      </ul>
+                    </CollapsableLink>
+                  </AdminAction>
+                )}
+              </>
             )}
-            {
-              // Only show button if user is admin and review has not been started
-              !grbReviewStartedAt && isITGovAdmin && (
-                <Button
-                  type="button"
-                  onClick={() => setStartReviewModalIsOpen(true)}
-                  className="margin-top-3"
-                  id="startGrbReview"
-                >
-                  {t('startGrbReview')}
-                </Button>
-              )
-            }
 
             {/* Review details */}
             <h2 className="margin-bottom-0 margin-top-6" id="details">
@@ -269,6 +331,14 @@ const GRBReview = ({
             <p className="margin-top-05 line-height-body-5">
               {t('reviewDetails.text')}
             </p>
+
+            {grbReviewStartedAt && (
+              <GRBReviewStatusCard
+                grbReviewType={grbReviewType}
+                grbDate={grbDate}
+                grbReviewStatus={GRBReviewStatus.SCHEDULED}
+              />
+            )}
 
             {/* GRT recommendations to the GRB */}
             <GRBFeedbackCard
@@ -362,6 +432,7 @@ const GRBReview = ({
                 <span>{t('additionalDocsLink')}</span>
               </UswdsReactLink>
             )}
+
             {/* Intake Request Link */}
             <p className="usa-card__container margin-x-0 padding-x-2 padding-y-1 display-inline-flex flex-row flex-wrap border-width-1px">
               <span className="margin-right-1">
@@ -375,13 +446,16 @@ const GRBReview = ({
                 {t('documentsIntakeLinkText')}
               </UswdsReactLink>
             </p>
+
             <DocumentsTable systemIntakeId={id} documents={documents} />
+
             <Discussions
               systemIntakeID={id}
               grbReviewers={grbReviewers}
               grbReviewStartedAt={grbReviewStartedAt}
               className="margin-top-4 margin-bottom-6"
             />
+
             <ParticipantsTable
               id={id}
               state={state}

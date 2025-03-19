@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Form, FormGroup, Select } from '@trussworks/react-uswds';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
 import {
-  GetSystemIntakeGRBReviewersDocument,
+  GetSystemIntakeGRBReviewDocument,
   SystemIntakeGRBReviewerFragment,
   useUpdateSystemIntakeGRBReviewerMutation
 } from 'gql/generated/graphql';
@@ -21,7 +21,7 @@ import Label from 'components/Label';
 import { grbReviewerRoles, grbReviewerVotingRoles } from 'constants/grbRoles';
 import useMessage from 'hooks/useMessage';
 import { GRBReviewerFields, GRBReviewFormAction } from 'types/grbReview';
-import { GRBReviewerSchema } from 'validations/grbReviewerSchema';
+import { GRBReviewerSchema } from 'validations/grbReviewSchema';
 
 type AddReviewerFromEuaProps = {
   systemId: string;
@@ -51,7 +51,7 @@ const AddReviewerFromEua = ({
   const [updateGRBReviewer] = useUpdateSystemIntakeGRBReviewerMutation({
     refetchQueries: [
       {
-        query: GetSystemIntakeGRBReviewersDocument,
+        query: GetSystemIntakeGRBReviewDocument,
         variables: { id: systemId }
       }
     ]
