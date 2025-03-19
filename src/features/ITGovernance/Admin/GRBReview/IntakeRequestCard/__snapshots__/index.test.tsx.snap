@@ -109,8 +109,9 @@ exports[`IntakeRequestCard > renders default version without crashing 1`] = `
           class="usa-link display-flex flex-align-center margin-top-1"
           href="/intake-request"
         >
+          View full Intake Request form
           <svg
-            class="usa-icon margin-right-1"
+            class="usa-icon margin-left-1"
             focusable="false"
             height="1em"
             role="img"
@@ -122,7 +123,6 @@ exports[`IntakeRequestCard > renders default version without crashing 1`] = `
               d="m12 4-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
             />
           </svg>
-          View full Intake Request form
         </a>
       </div>
     </div>
