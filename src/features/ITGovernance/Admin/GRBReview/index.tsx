@@ -36,7 +36,6 @@ import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import useMessage from 'hooks/useMessage';
-import itGov from 'i18n/en-US/itGov';
 import { BusinessCaseModel } from 'types/businessCase';
 import { GRBReviewFormAction } from 'types/grbReview';
 import { formatDateLocal } from 'utils/date';
@@ -48,6 +47,7 @@ import ParticipantsTable from './ParticipantsTable/ParticipantsTable';
 import PresentationLinksCard from './PresentationLinksCard/PresentationLinksCard';
 import Discussions from './Discussions';
 import GRBReviewerForm from './GRBReviewerForm';
+import GRBReviewStatusCard, { GRBReviewStatus } from './GRBReviewStatusCard';
 import GRBVotingPanel from './GRBVotingPanel';
 
 import './index.scss';
@@ -62,6 +62,8 @@ type GRBReviewProps = {
   grbReviewStartedAt?: string | null;
   grbPresentationLinks?: SystemIntakeFragmentFragment['grbPresentationLinks'];
   governanceRequestFeedbacks: SystemIntakeFragmentFragment['governanceRequestFeedbacks'];
+  grbReviewType: SystemIntakeFragmentFragment['grbReviewType'];
+  grbDate?: SystemIntakeFragmentFragment['grbDate'];
 };
 
 const GRBReview = ({
@@ -73,7 +75,9 @@ const GRBReview = ({
   documents,
   grbReviewStartedAt,
   grbPresentationLinks,
-  governanceRequestFeedbacks
+  governanceRequestFeedbacks,
+  grbReviewType,
+  grbDate
 }: GRBReviewProps) => {
   const { t } = useTranslation('grbReview');
 
@@ -343,6 +347,14 @@ const GRBReview = ({
             <p className="margin-top-05 line-height-body-5">
               {t('reviewDetails.text')}
             </p>
+
+            {grbReviewStartedAt && (
+              <GRBReviewStatusCard
+                grbReviewType={grbReviewType}
+                grbDate={grbDate}
+                grbReviewStatus={GRBReviewStatus.SCHEDULED}
+              />
+            )}
 
             {/* GRT recommendations to the GRB */}
             <GRBFeedbackCard

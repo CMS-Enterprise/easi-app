@@ -353,7 +353,9 @@ export const emptySystemIntake: SystemIntakeFragmentFragment = {
   ],
   relatedIntakes: [],
   relatedTRBRequests: [],
-  grbPresentationLinks
+  grbPresentationLinks,
+  grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+  grbReviewers: []
 };
 
 export const systemIntake: SystemIntakeFragmentFragment = {
@@ -514,7 +516,9 @@ export const systemIntake: SystemIntakeFragmentFragment = {
       createdAt: new Date().toString()
     }
   ],
-  grbPresentationLinks
+  grbPresentationLinks,
+  grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+  grbReviewers: []
 };
 
 export const systemIntakeForTable: GetSystemIntakesTableQuery['systemIntakes'][number] =

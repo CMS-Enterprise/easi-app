@@ -144,6 +144,8 @@ export default gql(/* GraphQL */ `
     grbReviewers {
       ...SystemIntakeGRBReviewer
     }
+    grbDate
+    grbReviewType
     grbPresentationLinks {
       ...SystemIntakeGRBPresentationLinksFragment
     }

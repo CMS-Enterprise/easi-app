@@ -1,3 +1,4 @@
+import { GRBReviewStatus } from 'features/ITGovernance/Admin/GRBReview/GRBReviewStatusCard';
 import {
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole
@@ -260,6 +261,24 @@ export default {
     },
     completeAndBeginReview: 'Complete and begin review'
   },
+  presentationGRBReviewForm: {
+    heading: 'GRB Meeting',
+    description:
+      'Organize a GRB meeting for the project team’s presentation to the GRB.',
+    alert:
+      'You will need to work with the project team outside of EASi to set up a calendar invite, but you may include the date below for reference purposes within EASi.',
+    meetingDateLabel: 'GRB meeting date',
+    meetingDateDescription:
+      'This date will be visible to the requester. Format: mm/dd/yyyy',
+    required: 'This is a required field.',
+    asyncHeading: 'For the requester and project team',
+    asyncDescription:
+      'Organize a meeting to record the project team’s presentation for the GRB.',
+    asyncRecordingDateLabel: 'Asychronous presentation recording date',
+    forTheReviewers: 'For the GRB reviewers',
+    reviewersDescription:
+      'The GRB will use the resources below as a part of their review of this IT Governance request.'
+  },
   adminTask: {
     title: 'Admin Task',
     setUpGRBReview: {
@@ -374,6 +393,18 @@ export default {
       clearFile: 'Clear file',
       replacementDeck: 'or, upload a replacement presentation deck',
       view: 'View'
+    }
+  },
+  statusCard: {
+    standardHeading: 'Standard meeting review',
+    asyncHeading: 'Asynchronous review',
+    reviewStatus: 'Review status',
+    grbMeeting: 'GRB meeting',
+    changeMeetingDate: 'Change meeting date',
+    grbReviewStatus: {
+      [GRBReviewStatus.SCHEDULED]: 'Scheduled',
+      [GRBReviewStatus.IN_PROGRESS]: 'In progress',
+      [GRBReviewStatus.COMPLETED]: 'Complete'
     }
   }
 };
