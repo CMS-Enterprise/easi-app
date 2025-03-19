@@ -959,6 +959,11 @@ export enum LifecycleCostYear {
   LIFECYCLE_COST_YEAR_5 = 'LIFECYCLE_COST_YEAR_5'
 }
 
+/** Data needed to manually end a system intake's GRB review voting */
+export type ManuallyEndSystemIntakeGRBReviewAsyncVotingInput = {
+  systemIntakeID: Scalars['UUID']['input'];
+};
+
 /** Defines the mutations for the schema */
 export type Mutation = {
   __typename: 'Mutation';
@@ -1008,6 +1013,7 @@ export type Mutation = {
   deleteTRBRequestDocument?: Maybe<DeleteTRBRequestDocumentPayload>;
   deleteTRBRequestFundingSources: Array<TRBFundingSource>;
   deleteTrbLeadOption: Scalars['Boolean']['output'];
+  manuallyEndSystemIntakeGRBReviewAsyncVoting?: Maybe<UpdateSystemIntakePayload>;
   reopenTrbRequest: TRBRequest;
   requestReviewForTRBGuidanceLetter: TRBGuidanceLetter;
   sendCantFindSomethingEmail?: Maybe<Scalars['String']['output']>;
@@ -1328,6 +1334,12 @@ export type MutationDeleteTRBRequestFundingSourcesArgs = {
 /** Defines the mutations for the schema */
 export type MutationDeleteTrbLeadOptionArgs = {
   eua: Scalars['String']['input'];
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationManuallyEndSystemIntakeGRBReviewAsyncVotingArgs = {
+  input: ManuallyEndSystemIntakeGRBReviewAsyncVotingInput;
 };
 
 
@@ -1947,6 +1959,7 @@ export type SystemIntake = {
   grbPresentationLinks?: Maybe<SystemIntakeGRBPresentationLinks>;
   grbReviewAsyncEndDate?: Maybe<Scalars['Time']['output']>;
   grbReviewAsyncGRBMeetingTime?: Maybe<Scalars['Time']['output']>;
+  grbReviewAsyncManualEndDate?: Maybe<Scalars['Time']['output']>;
   grbReviewAsyncRecordingTime?: Maybe<Scalars['Time']['output']>;
   grbReviewAsyncStatus?: Maybe<SystemIntakeGRBReviewAsyncStatusType>;
   grbReviewStartedAt?: Maybe<Scalars['Time']['output']>;

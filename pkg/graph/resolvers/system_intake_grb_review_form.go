@@ -123,6 +123,10 @@ func CalcSystemIntakeGRBReviewAsyncStatus(
 		return nil
 	}
 
+	if intake.GrbReviewAsyncManualEndDate != nil && currentTime.After(*intake.GrbReviewAsyncManualEndDate) {
+		return helpers.PointerTo(models.SystemIntakeGRBReviewAsyncStatusTypeCompleted)
+	}
+
 	if intake.GrbReviewAsyncEndDate == nil {
 		return nil
 	}
@@ -135,4 +139,31 @@ func CalcSystemIntakeGRBReviewAsyncStatus(
 	// Fallthrough case:
 	//		The current time is after the Grb Review Async end date
 	return helpers.PointerTo(models.SystemIntakeGRBReviewAsyncStatusTypeCompleted)
+}
+
+// ManuallyEndSystemIntakeGRBReviewAsyncVoting ends voting for the GRB Review (Async)
+func ManuallyEndSystemIntakeGRBReviewAsyncVoting(
+	ctx context.Context,
+	store *storage.Store,
+	input models.ManuallyEndSystemIntakeGRBReviewAsyncVotingInput,
+) (*models.UpdateSystemIntakePayload, error) {
+	currentTime := time.Now()
+
+	// Fetch intake by ID
+	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	intake.GrbReviewAsyncManualEndDate = &currentTime
+
+	// Update system intake
+	updatedIntake, err := store.UpdateSystemIntake(ctx, intake)
+	if err != nil {
+		return nil, err
+	}
+
+	return &models.UpdateSystemIntakePayload{
+		SystemIntake: updatedIntake,
+	}, nil
 }

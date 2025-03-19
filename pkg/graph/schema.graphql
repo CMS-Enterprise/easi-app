@@ -730,6 +730,13 @@ input DeleteSystemIntakeGRBPresentationLinksInput {
 }
 
 """
+Data needed to manually end a system intake's GRB review voting
+"""
+input ManuallyEndSystemIntakeGRBReviewAsyncVotingInput {
+  systemIntakeID: UUID!
+}
+
+"""
 Represents an IT governance request for a system
 """
 type SystemIntake {
@@ -857,6 +864,7 @@ type SystemIntake {
   grbReviewAsyncEndDate: Time
   grbReviewAsyncGRBMeetingTime: Time
   grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType
+  grbReviewAsyncManualEndDate: Time
 }
 
 """
@@ -2705,6 +2713,8 @@ type Mutation {
   setSystemIntakeGRBPresentationLinks(input: SystemIntakeGRBPresentationLinksInput!): SystemIntakeGRBPresentationLinks
   uploadSystemIntakeGRBPresentationDeck(input: UploadSystemIntakeGRBPresentationDeckInput!): SystemIntakeGRBPresentationLinks
   deleteSystemIntakeGRBPresentationLinks(input: DeleteSystemIntakeGRBPresentationLinksInput!): UUID!
+  manuallyEndSystemIntakeGRBReviewAsyncVoting(input: ManuallyEndSystemIntakeGRBReviewAsyncVotingInput!): UpdateSystemIntakePayload
+  @hasRole(role: EASI_GOVTEAM)
 
   archiveSystemIntake(id: UUID!): SystemIntake!
 
