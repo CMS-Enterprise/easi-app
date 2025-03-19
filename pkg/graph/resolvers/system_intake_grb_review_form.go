@@ -92,6 +92,7 @@ func UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(
 	}
 
 	intake.GrbReviewAsyncEndDate = &input.GrbReviewAsyncEndDate
+	intake.GrbReviewAsyncManualEndDate = nil
 
 	// Check if the review should be set to started. If already started error
 	if input.StartGRBReview {
