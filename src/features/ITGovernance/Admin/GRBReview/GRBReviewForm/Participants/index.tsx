@@ -59,7 +59,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
   });
   const {
     control,
-    formState: { errors, isValid }
+    formState: { errors }
   } = form;
 
   const onSubmit: GRBReviewFormStepSubmit<ParticipantsFields> = async input => {
@@ -68,7 +68,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
         input: {
           systemIntakeID: grbReview.id,
           grbReviewAsyncEndDate: input.grbReviewAsyncEndDate ?? '',
-          startGRBReview: !!isValid
+          startGRBReview: true
         }
       }
     });

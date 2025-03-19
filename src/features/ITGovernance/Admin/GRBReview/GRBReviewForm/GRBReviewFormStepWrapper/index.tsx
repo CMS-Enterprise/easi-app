@@ -99,10 +99,7 @@ function GRBReviewFormStepWrapper<
         // Bypass validation, directly submit the form
         return onSubmit({ systemIntakeID: systemId, ...watch() })
           .then(() => history.push(`${grbReviewPath}/${path}`))
-          .catch(() => {
-            // show error if graphql fails
-            showMessage(t('setUpGrbReviewForm.error'), { type: 'error' });
-          });
+          .catch(() => history.push(`${grbReviewPath}/${path}`));
       }
 
       return handleSubmit(values =>
