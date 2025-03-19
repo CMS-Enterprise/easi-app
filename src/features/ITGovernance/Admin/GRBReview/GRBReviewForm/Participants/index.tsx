@@ -5,6 +5,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Fieldset, FormGroup, Grid } from '@trussworks/react-uswds';
 import {
+  GetSystemIntakeGRBReviewDocument,
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewFragment,
   SystemIntakeGRBReviewType,
@@ -38,7 +39,9 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
   const reviewType: SystemIntakeGRBReviewType = grbReview.grbReviewType;
 
   const [mutate] =
-    useUpdateSystemIntakeGRBReviewFormInputTimeframeAsyncMutation();
+    useUpdateSystemIntakeGRBReviewFormInputTimeframeAsyncMutation({
+      refetchQueries: [GetSystemIntakeGRBReviewDocument]
+    });
 
   const form = useEasiForm<ParticipantsFields>({
     resolver:
