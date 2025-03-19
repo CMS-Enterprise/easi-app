@@ -296,7 +296,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		}, *taskStatuses)
 
 		// Test the "GUIDANCE_LETTER_SENT" status by sending the guidance letter
-		_, err = SendTRBGuidanceLetter(ctx, store, guidanceLetter.ID, &emailClient, stubFetchUserInfo, stubFetchUserInfos, false, nil)
+		_, err = SendTRBGuidanceLetter(ctx, store, guidanceLetter.ID, &emailClient, stubFetchUserInfo, stubFetchUserInfos, false, false, nil)
 		s.NoError(err)
 		// Fetch the updated request
 		trb, err = GetTRBRequestByID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trb.ID)

@@ -20,7 +20,10 @@ import ActionForm, { ActionFormProps } from '.';
 type UseActionFormProps<
   TFieldValues extends TrbRecipientFields,
   TContext = any
-> = UseFormProps<TFieldValues, TContext> & { trbRequestId: string };
+> = UseFormProps<TFieldValues, TContext> & {
+  trbRequestId: string;
+  copyITGovMailbox?: boolean;
+};
 
 type UseActionFormReturn<
   TFieldValues extends TrbRecipientFields,
@@ -51,6 +54,7 @@ function useActionForm<
   TContext = any
 >({
   trbRequestId,
+  copyITGovMailbox,
   ...formProps
 }: UseActionFormProps<TFieldValues, TContext>): UseActionFormReturn<
   TFieldValues,
@@ -78,6 +82,7 @@ function useActionForm<
 
       return {
         copyTrbMailbox: true,
+        copyITGovMailbox,
         ...formProps?.defaultValues,
         notifyEuaIds: [...(requesterEuaId ? [requesterEuaId] : [])],
         recipients: attendees
@@ -116,10 +121,10 @@ function useActionForm<
     ActionForm: useCallback(
       (props: ActionFormProps) => (
         <FormProvider<TFieldValues, TContext> {...form}>
-          <FormWrapper {...props} />
+          <FormWrapper {...props} copyITGovMailbox={copyITGovMailbox} />
         </FormProvider>
       ),
-      [form, FormWrapper]
+      [form, FormWrapper, copyITGovMailbox]
     )
   };
 }

@@ -113,6 +113,7 @@ func SendTRBGuidanceLetter(ctx context.Context,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	fetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error),
 	copyTRBMailbox bool,
+	copyITGovMailbox bool,
 	notifyEUAIDs []string,
 ) (*models.TRBGuidanceLetter, error) {
 	// Fetch user info for each EUA ID we want to notify
@@ -167,15 +168,16 @@ func SendTRBGuidanceLetter(ctx context.Context,
 	}
 
 	emailInput := email.SendTRBGuidanceLetterSubmittedEmailInput{
-		TRBRequestID:   trb.ID,
-		RequestName:    trb.GetName(),
-		RequestType:    string(trb.Type),
-		RequesterName:  requester.DisplayName,
-		Component:      component,
-		SubmissionDate: letter.ModifiedAt,
-		ConsultDate:    trb.ConsultMeetingTime,
-		CopyTRBMailbox: copyTRBMailbox,
-		Recipients:     recipientEmails,
+		TRBRequestID:     trb.ID,
+		RequestName:      trb.GetName(),
+		RequestType:      string(trb.Type),
+		RequesterName:    requester.DisplayName,
+		Component:        component,
+		SubmissionDate:   letter.ModifiedAt,
+		ConsultDate:      trb.ConsultMeetingTime,
+		CopyTRBMailbox:   copyTRBMailbox,
+		CopyITGovMailbox: copyITGovMailbox,
+		Recipients:       recipientEmails,
 	}
 
 	// Email client can be nil when this is called from tests - the email client itself tests this
