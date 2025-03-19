@@ -95,6 +95,12 @@ export enum BusinessCaseStatus {
   OPEN = 'OPEN'
 }
 
+export type CastSystemIntakeGRBReviewerVoteInput = {
+  systemIntakeID: Scalars['UUID']['input'];
+  vote: SystemIntakeAsyncGRBVotingOption;
+  voteComment?: InputMaybe<Scalars['String']['input']>;
+};
+
 /** The possible types of assignees for CedarRoles */
 export enum CedarAssigneeType {
   ORGANIZATION = 'ORGANIZATION',
@@ -957,6 +963,7 @@ export enum LifecycleCostYear {
 export type Mutation = {
   __typename: 'Mutation';
   archiveSystemIntake: SystemIntake;
+  castSystemIntakeGRBReviewerVote: SystemIntakeGRBReviewer;
   closeTRBRequest: TRBRequest;
   createCedarSystemBookmark?: Maybe<CreateCedarSystemBookmarkPayload>;
   createSystemIntake?: Maybe<SystemIntake>;
@@ -1051,6 +1058,12 @@ export type Mutation = {
 /** Defines the mutations for the schema */
 export type MutationArchiveSystemIntakeArgs = {
   id: Scalars['UUID']['input'];
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationCastSystemIntakeGRBReviewerVoteArgs = {
+  input: CastSystemIntakeGRBReviewerVoteInput;
 };
 
 
@@ -1935,6 +1948,7 @@ export type SystemIntake = {
   grbReviewAsyncEndDate?: Maybe<Scalars['Time']['output']>;
   grbReviewAsyncGRBMeetingTime?: Maybe<Scalars['Time']['output']>;
   grbReviewAsyncRecordingTime?: Maybe<Scalars['Time']['output']>;
+  grbReviewAsyncStatus?: Maybe<SystemIntakeGRBReviewAsyncStatusType>;
   grbReviewStartedAt?: Maybe<Scalars['Time']['output']>;
   /** GRB Review Form */
   grbReviewType: SystemIntakeGRBReviewType;
@@ -2062,6 +2076,11 @@ export type SystemIntakeAnnualSpendingInput = {
   plannedYearOneSpending?: InputMaybe<Scalars['String']['input']>;
   plannedYearOneSpendingITPortion?: InputMaybe<Scalars['String']['input']>;
 };
+
+export enum SystemIntakeAsyncGRBVotingOption {
+  NO_OBJECTION = 'NO_OBJECTION',
+  OBJECTION = 'OBJECTION'
+}
 
 /** Represents the OIT Business Owner of a system */
 export type SystemIntakeBusinessOwner = {
@@ -2334,6 +2353,13 @@ export type SystemIntakeGRBPresentationLinksInput = {
   transcriptLink?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** The status type of the System Intake GRB Review */
+export enum SystemIntakeGRBReviewAsyncStatusType {
+  COMPLETED = 'COMPLETED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  PAST_DUE = 'PAST_DUE'
+}
+
 export type SystemIntakeGRBReviewDiscussion = {
   __typename: 'SystemIntakeGRBReviewDiscussion';
   initialPost: SystemIntakeGRBReviewDiscussionPost;
@@ -2363,12 +2389,15 @@ export type SystemIntakeGRBReviewer = {
   __typename: 'SystemIntakeGRBReviewer';
   createdAt: Scalars['Time']['output'];
   createdBy: Scalars['UUID']['output'];
+  dateVoted?: Maybe<Scalars['Time']['output']>;
   grbRole: SystemIntakeGRBReviewerRole;
   id: Scalars['UUID']['output'];
   modifiedAt?: Maybe<Scalars['Time']['output']>;
   modifiedBy?: Maybe<Scalars['UUID']['output']>;
   systemIntakeID: Scalars['UUID']['output'];
   userAccount: UserAccount;
+  vote?: Maybe<SystemIntakeAsyncGRBVotingOption>;
+  voteComment?: Maybe<Scalars['String']['output']>;
   votingRole: SystemIntakeGRBReviewerVotingRole;
 };
 
@@ -3373,6 +3402,8 @@ export type UpdateSystemIntakeGRBReviewFormInputPresentationStandard = {
 /** Input data used to set or update a System Intake's GRB Review Timeframe (Async) data */
 export type UpdateSystemIntakeGRBReviewFormInputTimeframeAsync = {
   grbReviewAsyncEndDate: Scalars['Time']['input'];
+  /** Whether or not to start the GRB review meeting now or not. It defaults to false */
+  startGRBReview?: Scalars['Boolean']['input'];
   systemIntakeID: Scalars['UUID']['input'];
 };
 
