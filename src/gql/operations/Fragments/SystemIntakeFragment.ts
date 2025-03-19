@@ -142,6 +142,8 @@ export default gql(/* GraphQL */ `
       decisionState
       submittedAt
     }
+    grbDate
+    grbReviewType
     grbPresentationLinks {
       ...SystemIntakeGRBPresentationLinksFragment
     }

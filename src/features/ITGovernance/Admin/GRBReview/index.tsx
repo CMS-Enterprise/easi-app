@@ -45,6 +45,7 @@ import ParticipantsSection from './ParticipantsSection/ParticipantsSection';
 import PresentationLinksCard from './PresentationLinksCard/PresentationLinksCard';
 import Discussions from './Discussions';
 import GRBReviewerForm from './GRBReviewerForm';
+import GRBReviewStatusCard, { GRBReviewStatus } from './GRBReviewStatusCard';
 
 import './index.scss';
 
@@ -58,6 +59,8 @@ type GRBReviewProps = {
   grbReviewStartedAt?: string | null;
   grbPresentationLinks?: SystemIntakeFragmentFragment['grbPresentationLinks'];
   governanceRequestFeedbacks: SystemIntakeFragmentFragment['governanceRequestFeedbacks'];
+  grbReviewType: SystemIntakeFragmentFragment['grbReviewType'];
+  grbDate?: SystemIntakeFragmentFragment['grbDate'];
 };
 
 const GRBReview = ({
@@ -69,7 +72,9 @@ const GRBReview = ({
   documents,
   grbReviewStartedAt,
   grbPresentationLinks,
-  governanceRequestFeedbacks
+  governanceRequestFeedbacks,
+  grbReviewType,
+  grbDate
 }: GRBReviewProps) => {
   const { t } = useTranslation('grbReview');
 
@@ -328,6 +333,14 @@ const GRBReview = ({
             <p className="margin-top-05 line-height-body-5">
               {t('reviewDetails.text')}
             </p>
+
+            {grbReviewStartedAt && (
+              <GRBReviewStatusCard
+                grbReviewType={grbReviewType}
+                grbDate={grbDate}
+                grbReviewStatus={GRBReviewStatus.SCHEDULED}
+              />
+            )}
 
             {/* GRT recommendations to the GRB */}
             <GRBFeedbackCard

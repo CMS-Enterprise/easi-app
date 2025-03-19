@@ -142,7 +142,8 @@ function GRBReviewFormStepWrapper<
     });
 
     const presentationIsValid = await GrbReviewFormSchema.presentation.isValid({
-      grbDate
+      grbDate,
+      grbReviewType
     });
 
     const participantsIsValid = await GrbReviewFormSchema.participants.isValid({
@@ -160,7 +161,7 @@ function GRBReviewFormStepWrapper<
             break;
 
           case 'presentation':
-            completed = presentationIsValid;
+            completed = !!(reviewTypeIsValid && presentationIsValid);
             break;
 
           case 'documents':
@@ -187,11 +188,15 @@ function GRBReviewFormStepWrapper<
       },
       [...grbReviewFormSteps]
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [grbReview, submitStep]);
 
   // Format steps and redirect user if current step is disabled
   useEffect(() => {
     formatSteps().then(values => {
+      if (!values) {
+        return;
+      }
       // If current step is disabled, redirect to last valid step or start of form
       if (values[currentStepIndex].disabled) {
         /** Returns the latest valid step or step one */
@@ -201,7 +206,6 @@ function GRBReviewFormStepWrapper<
 
         history.push(`${grbReviewPath}/${latestValidStep.key}`);
       }
-
       setSteps(values);
     });
   }, [grbReview, formatSteps, currentStepIndex, history, grbReviewPath]);

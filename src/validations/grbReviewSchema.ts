@@ -99,7 +99,16 @@ export const GrbReviewTypeSchema = Yup.object().shape({
 });
 
 export const GrbPresentationSchema = Yup.object().shape({
-  grbDate: Yup.string().required()
+  grbDate: Yup.string()
+    .nullable()
+    .when('grbReviewType', {
+      is: (value?: SystemIntakeGRBReviewType) =>
+        value === SystemIntakeGRBReviewType.STANDARD,
+      then: Yup.string().required(
+        i18next.t('grbReview:presentationLinks.requiredField')
+      ),
+      otherwise: Yup.string().nullable()
+    })
 });
 
 export const GrbReviewFormSchema = {
