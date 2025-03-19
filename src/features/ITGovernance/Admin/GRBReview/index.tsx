@@ -1,5 +1,6 @@
 import React, { useCallback, useContext, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import {
   Button,
@@ -21,6 +22,7 @@ import {
   useDeleteSystemIntakeGRBReviewerMutation,
   useStartGRBReviewMutation
 } from 'gql/generated/graphql';
+import { AppState } from 'stores/reducers/rootReducer';
 
 import AdminAction from 'components/AdminAction';
 import Alert from 'components/Alert';
@@ -34,6 +36,7 @@ import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import useMessage from 'hooks/useMessage';
+import itGov from 'i18n/en-US/itGov';
 import { BusinessCaseModel } from 'types/businessCase';
 import { GRBReviewFormAction } from 'types/grbReview';
 import { formatDateLocal } from 'utils/date';
@@ -45,6 +48,7 @@ import ParticipantsTable from './ParticipantsTable/ParticipantsTable';
 import PresentationLinksCard from './PresentationLinksCard/PresentationLinksCard';
 import Discussions from './Discussions';
 import GRBReviewerForm from './GRBReviewerForm';
+import GRBVotingPanel from './GRBVotingPanel';
 
 import './index.scss';
 
@@ -92,6 +96,12 @@ const GRBReview = ({
     useState<boolean>(false);
 
   const { showMessage } = useMessage();
+
+  const { euaId } = useSelector((appState: AppState) => appState.auth);
+
+  const currentGRBReviewer = grbReviewers.find(
+    reviewer => reviewer.userAccount.username === euaId
+  );
 
   const [mutate] = useDeleteSystemIntakeGRBReviewerMutation({
     refetchQueries: [GetSystemIntakeGRBReviewDocument]
@@ -317,6 +327,13 @@ const GRBReview = ({
                   </AdminAction>
                 )}
               </>
+            )}
+
+            {/* GRB Reviewer Voting Panel */}
+            {/* TODO: Add grbReviewStartedAt once work is done to start review */}
+            {/* {!isITGovAdmin && grbReviewStartedAt && currentGRBReviewer && ( */}
+            {!isITGovAdmin && currentGRBReviewer && (
+              <GRBVotingPanel grbReviewer={currentGRBReviewer} />
             )}
 
             {/* Review details */}

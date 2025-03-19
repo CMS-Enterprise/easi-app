@@ -282,6 +282,39 @@ export default {
     },
     takeADifferentAction: 'or, take a different action'
   },
+  reviewTask: {
+    title: 'GRB Task',
+    voting: {
+      title:
+        'Review this IT Governance request and share your opinion on its merit',
+      step1:
+        '<bold>Step 1</bold>: Review information about this project and request.',
+      whatIsImportant:
+        'What is the most important information and where should I start?',
+      documentsOrResources:
+        'Most request will have the following documents or resources:',
+      documentItems: [
+        'Presentation recording and slide deck <presentationLink>Go to presentation links</presentationLink>',
+        'Business Case <businessCaseLink>Go to Business Case</businessCaseLink>',
+        'Recommendations to the GRB from the Governance Review Team (GRT) <grtLink>Go to GRT recommendations</grtLink>'
+      ],
+      step2:
+        '<bold>Step 2</bold>: Ask questions and participate in discussions.',
+      howShouldIParticipate: 'How should I participate in discussions?',
+      discussionItems: [
+        'Start a new discussion thread for each new topic where possible.',
+        'Tag individuals or groups in discussions in order to notify those individuals and promote awareness and open communication.',
+        'Use the main discussion board for any open conversations, including those with the project team. <discussionLink>View discussion board</discussionLink>',
+        'Use the closed discussion board for any conversations that should be kept internal to the GRB and the Governance Admin Team. <discussionLink>View discussion board</discussionLink>'
+      ],
+      step3:
+        '<bold>Step 3</bold>: Submit your opinion about this IT Governance request.',
+      step3Description:
+        'After reviewing, select either No objection or Object to add your vote on the merit of this project. You will also have the option to add a comment for additional context about your vote.',
+      object: 'Object',
+      noObjection: 'No objection'
+    }
+  },
   presentationLinks: {
     heading_add: 'Add presentation links',
     heading_edit: 'Edit presentation link',
