@@ -91,11 +91,11 @@ function GRBReviewFormStepWrapper<
       path?: string;
     }) => {
       // Redirect user without submit if no changes or skipping validation
-      if (!isDirty && !shouldValidate) {
+      if (!isDirty && isValid && shouldValidate) {
         return history.push(`${grbReviewPath}/${path}`);
       }
 
-      if (!shouldValidate) {
+      if (isDirty && !shouldValidate) {
         // Bypass validation, directly submit the form
         return onSubmit({ systemIntakeID: systemId, ...watch() })
           .then(() => history.push(`${grbReviewPath}/${path}`))
@@ -117,6 +117,7 @@ function GRBReviewFormStepWrapper<
     },
     [
       isDirty,
+      isValid,
       handleSubmit,
       history,
       grbReviewPath,
