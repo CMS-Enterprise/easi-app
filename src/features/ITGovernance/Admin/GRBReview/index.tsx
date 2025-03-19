@@ -41,6 +41,7 @@ import ITGovAdminContext from '../ITGovAdminContext';
 import Discussions from './Discussions';
 import GRBFeedbackCard from './GRBFeedbackCard';
 import GRBReviewerForm from './GRBReviewerForm';
+import IntakeRequestCard from './IntakeRequestCard';
 import ParticipantsTable from './ParticipantsTable';
 import PresentationLinksCard from './PresentationLinksCard';
 
@@ -56,6 +57,8 @@ type GRBReviewProps = {
   grbReviewStartedAt?: string | null;
   grbPresentationLinks?: SystemIntakeFragmentFragment['grbPresentationLinks'];
   governanceRequestFeedbacks: SystemIntakeFragmentFragment['governanceRequestFeedbacks'];
+  currentStage?: SystemIntakeFragmentFragment['currentStage'];
+  annualSpending?: SystemIntakeFragmentFragment['annualSpending'];
 };
 
 const GRBReview = ({
@@ -67,7 +70,9 @@ const GRBReview = ({
   documents,
   grbReviewStartedAt,
   grbPresentationLinks,
-  governanceRequestFeedbacks
+  governanceRequestFeedbacks,
+  currentStage,
+  annualSpending
 }: GRBReviewProps) => {
   const { t } = useTranslation('grbReview');
   const history = useHistory();
@@ -290,7 +295,7 @@ const GRBReview = ({
             />
 
             {/* Business Case Card */}
-            <div className="usa-card__container margin-left-0 border-width-1px shadow-2 margin-top-3 margin-bottom-4">
+            <div className="usa-card__container margin-x-0 border-width-1px shadow-2 margin-top-3 margin-bottom-4">
               <CardHeader>
                 <h3 className="display-inline-block margin-right-2 margin-bottom-0">
                   {t('businessCaseOverview.title')}
@@ -350,31 +355,28 @@ const GRBReview = ({
               )}
             </div>
 
-            {/* Additional Documents Title and Link */}
-            <h3 className="margin-bottom-1">{t('additionalDocuments')}</h3>
-
-            {isITGovAdmin && (
-              <UswdsReactLink
-                to="./documents/upload"
-                className="display-flex flex-align-center"
-              >
-                <Icon.Add className="margin-right-1" />
-                <span>{t('additionalDocsLink')}</span>
-              </UswdsReactLink>
-            )}
             {/* Intake Request Link */}
-            <p className="usa-card__container margin-x-0 padding-x-2 padding-y-1 display-inline-flex flex-row flex-wrap border-width-1px">
-              <span className="margin-right-1">
-                {t('documentsIntakeLinkTitle')}
-              </span>
-              <span className="margin-right-1 text-base">
-                ({t('documentsIntakeSubmitted')}{' '}
-                {formatDateLocal(submittedAt, 'MM/dd/yyyy')})
-              </span>
-              <UswdsReactLink to="./intake-request">
-                {t('documentsIntakeLinkText')}
-              </UswdsReactLink>
-            </p>
+            <IntakeRequestCard
+              currentStage={currentStage}
+              annualSpending={annualSpending}
+              submittedAt={submittedAt}
+            />
+
+            {/* Additional Documents Title and Link */}
+            <div className="margin-y-4">
+              <h3 className="margin-bottom-1">{t('additionalDocuments')}</h3>
+
+              {isITGovAdmin && (
+                <UswdsReactLink
+                  to="./documents/upload"
+                  className="display-flex flex-align-center"
+                >
+                  <Icon.Add className="margin-right-1" />
+                  <span>{t('additionalDocsLink')}</span>
+                </UswdsReactLink>
+              )}
+            </div>
+
             <DocumentsTable systemIntakeId={id} documents={documents} />
             <Discussions
               systemIntakeID={id}
