@@ -1946,6 +1946,39 @@
 					"response": []
 				},
 				{
+					"name": "Manually End SystemIntake GRB Review Async Voting",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation ManuallyEndSystemIntakeGRBReviewAsyncVoting($input: ManuallyEndSystemIntakeGRBReviewAsyncVotingInput!) {\n  manuallyEndSystemIntakeGRBReviewAsyncVoting(input: $input) {\n    systemIntake {\n      id\n      grbReviewAsyncStatus\n    }\n  }\n}",
+								"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\"\r\n  }\r\n}"
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Update System Intake GRB Review Form Presentation (Standard)",
 					"event": [
 						{
@@ -2031,7 +2064,7 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "mutation UpdateSystemIntakeGRBReviewFormTimeframeAsync{\n  updateSystemIntakeGRBReviewFormTimeframeAsync(input: {\n    systemIntakeID: \"{{systemIntakeID}}\",\n    grbReviewAsyncEndDate: \"2025-03-10T14:00:00Z\",\n    # startGRBReview: true\n     }){\n    systemIntake {\n      id\n      grbReviewAsyncEndDate\n    }\n  }\n}",
+								"query": "mutation UpdateSystemIntakeGRBReviewFormTimeframeAsync{\n  updateSystemIntakeGRBReviewFormTimeframeAsync(input: {\n    systemIntakeID: \"{{systemIntakeID}}\",\n    grbReviewAsyncEndDate: \"2026-03-10T14:00:00Z\",\n    # startGRBReview: true\n     }){\n    systemIntake {\n      id\n      grbReviewAsyncEndDate\n    }\n  }\n}",
 								"variables": ""
 							}
 						},
