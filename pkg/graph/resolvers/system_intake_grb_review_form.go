@@ -112,3 +112,27 @@ func UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(
 		SystemIntake: updatedIntake,
 	}, nil
 }
+
+// CalcSystemIntakeGRBReviewAsyncStatus calculates the status of the GRB Review Async page
+func CalcSystemIntakeGRBReviewAsyncStatus(
+	intake *models.SystemIntake,
+) *models.SystemIntakeGRBReviewAsyncStatusType {
+	currentTime := time.Now()
+
+	if intake.GrbReviewType != models.SystemIntakeGRBReviewTypeAsync {
+		return nil
+	}
+
+	if intake.GrbReviewAsyncEndDate == nil {
+		return nil
+	}
+
+	// Evaluate if the current time is before the Grb Review Async end date
+	if intake.GrbReviewAsyncEndDate.After(currentTime) {
+		return helpers.PointerTo(models.SystemIntakeGRBReviewAsyncStatusTypeInProgress)
+	}
+
+	// Fallthrough case:
+	//		The current time is after the Grb Review Async end date
+	return helpers.PointerTo(models.SystemIntakeGRBReviewAsyncStatusTypeCompleted)
+}
