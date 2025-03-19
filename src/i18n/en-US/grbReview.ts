@@ -1,3 +1,4 @@
+import { GRBReviewStatus } from 'features/ITGovernance/Admin/GRBReview/GRBReviewStatusCard';
 import {
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole
@@ -359,6 +360,18 @@ export default {
       clearFile: 'Clear file',
       replacementDeck: 'or, upload a replacement presentation deck',
       view: 'View'
+    }
+  },
+  statusCard: {
+    standardHeading: 'Standard meeting review',
+    asyncHeading: 'Asynchronous review',
+    reviewStatus: 'Review status',
+    grbMeeting: 'GRB meeting',
+    changeMeetingDate: 'Change meeting date',
+    grbReviewStatus: {
+      [GRBReviewStatus.SCHEDULED]: 'Scheduled',
+      [GRBReviewStatus.IN_PROGRESS]: 'In progress',
+      [GRBReviewStatus.COMPLETED]: 'Complete'
     }
   }
 };
