@@ -356,3 +356,19 @@ body * {
   font-size: 1rem;
   line-height: 1.6;
 }
+
+.smaller-bullet-list {
+  li {
+    list-style: none;
+    margin: 0 0 4px 9px;
+    text-indent: -20px;
+  }
+
+  li:before {
+      content:"·";
+      font-size:30px;
+      vertical-align:middle;
+      line-height:20px;
+      margin-right: .75rem;
+  }
+}
