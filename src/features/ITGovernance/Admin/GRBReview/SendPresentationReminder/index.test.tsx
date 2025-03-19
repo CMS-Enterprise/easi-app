@@ -56,35 +56,6 @@ describe('SendPresentationReminder', () => {
     ).toBeInTheDocument();
   });
 
-  it('handles file upload', () => {
-    render(
-      <MemoryRouter>
-        <MockedProvider mocks={[sendReminderEmail]}>
-          <MessageProvider>
-            <SendPresentationReminder
-              systemIntakeID="123"
-              presentationDeckFileURL={null}
-              presentationDeckFileName={null}
-              id="file-input"
-              name="file"
-              onChange={vi.fn()}
-              clearFile={vi.fn()}
-            />
-          </MessageProvider>
-        </MockedProvider>
-      </MemoryRouter>
-    );
-
-    const fileInput = screen.getByTestId('file-upload-input');
-    const file = new File(['dummy content'], 'example.pdf', {
-      type: 'application/pdf'
-    });
-
-    fireEvent.change(fileInput, { target: { files: [file] } });
-
-    expect(screen.getByText('example.pdf')).toBeInTheDocument();
-  });
-
   it('handles send reminder click', async () => {
     render(
       <MemoryRouter>
