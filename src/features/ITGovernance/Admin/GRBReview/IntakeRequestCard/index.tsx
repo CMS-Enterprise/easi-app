@@ -14,7 +14,7 @@ import {
   DescriptionDefinition,
   DescriptionTerm
 } from 'components/DescriptionGroup';
-import UswdsReactLink from 'components/LinkWrapper';
+import IconLink from 'components/IconLink';
 import ReviewRow from 'components/ReviewRow';
 import { formatDateLocal } from 'utils/date';
 
@@ -54,38 +54,56 @@ const IntakeRequestCard = ({
       <CardBody className="padding-top-2">
         <ReviewRow>
           <div>
-            <DescriptionTerm term={t('requestDetails.currentStage')} />
-            <DescriptionDefinition definition={currentStage} />
+            <DescriptionTerm
+              className="font-body-sm margin-bottom-0"
+              term={t('requestDetails.currentStage')}
+            />
+            <DescriptionDefinition
+              className="font-body-md text-light"
+              definition={currentStage}
+            />
           </div>
         </ReviewRow>
         <ReviewRow>
           <div>
-            <DescriptionTerm term={t('review.currentAnnualSpending')} />
+            <DescriptionTerm
+              className="font-body-sm margin-bottom-0"
+              term={t('review.currentAnnualSpending')}
+            />
             <DescriptionDefinition
+              className="font-body-md text-light"
               definition={annualSpending?.currentAnnualSpending}
             />
           </div>
           <div>
             <DescriptionTerm
+              className="font-body-sm margin-bottom-0"
               term={t('review.currentAnnualSpendingITPortion')}
             />
             <DescriptionDefinition
+              className="font-body-md text-light"
               definition={annualSpending?.currentAnnualSpendingITPortion}
             />
           </div>
         </ReviewRow>
         <ReviewRow>
           <div>
-            <DescriptionTerm term={t('review.plannedYearOneSpending')} />
+            <DescriptionTerm
+              className="font-body-sm margin-bottom-0"
+              term={t('review.plannedYearOneSpending')}
+            />
             <DescriptionDefinition
+              className="font-body-md text-light"
               definition={annualSpending?.plannedYearOneSpending}
             />
           </div>
           <div>
             <DescriptionTerm
+              className="font-body-sm margin-bottom-0"
               term={t('review.plannedYearOneSpendingITPortion')}
             />
             <DescriptionDefinition
+              className="font-body-md text-light"
               definition={annualSpending?.plannedYearOneSpendingITPortion}
             />
           </div>
@@ -93,10 +111,13 @@ const IntakeRequestCard = ({
       </CardBody>
 
       <CardFooter>
-        <UswdsReactLink to="./intake-request">
+        <IconLink
+          icon={<Icon.ArrowBack />}
+          to="./intake-request"
+          className="margin-top-1"
+        >
           {t('requestDetails.viewFullIntake')}
-          <Icon.ArrowForward className="text-middle margin-left-1" />
-        </UswdsReactLink>
+        </IconLink>
       </CardFooter>
     </Card>
   );

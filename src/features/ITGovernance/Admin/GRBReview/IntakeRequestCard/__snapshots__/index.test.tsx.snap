@@ -33,12 +33,12 @@ exports[`IntakeRequestCard > renders default version without crashing 1`] = `
         >
           <div>
             <dt
-              class="text-bold margin-bottom-05"
+              class="text-bold margin-bottom-05 font-body-sm margin-bottom-0"
             >
               Where are you in the process?
             </dt>
             <dd
-              class="description-definition margin-0"
+              class="description-definition margin-0 font-body-md text-light"
             >
               I have an idea and want to brainstorm
             </dd>
@@ -49,24 +49,24 @@ exports[`IntakeRequestCard > renders default version without crashing 1`] = `
         >
           <div>
             <dt
-              class="text-bold margin-bottom-05"
+              class="text-bold margin-bottom-05 font-body-sm margin-bottom-0"
             >
               What is the current annual spending?
             </dt>
             <dd
-              class="description-definition margin-0"
+              class="description-definition margin-0 font-body-md text-light"
             >
               $1,500,000
             </dd>
           </div>
           <div>
             <dt
-              class="text-bold margin-bottom-05"
+              class="text-bold margin-bottom-05 font-body-sm margin-bottom-0"
             >
               What portion (% or amount) of the current annual spending is IT?
             </dt>
             <dd
-              class="description-definition margin-0"
+              class="description-definition margin-0 font-body-md text-light"
             >
               50%
             </dd>
@@ -77,24 +77,24 @@ exports[`IntakeRequestCard > renders default version without crashing 1`] = `
         >
           <div>
             <dt
-              class="text-bold margin-bottom-05"
+              class="text-bold margin-bottom-05 font-body-sm margin-bottom-0"
             >
               What is the planned annual spending of the first year of the new contract?
             </dt>
             <dd
-              class="description-definition margin-0"
+              class="description-definition margin-0 font-body-md text-light"
             >
               $1,750,000
             </dd>
           </div>
           <div>
             <dt
-              class="text-bold margin-bottom-05"
+              class="text-bold margin-bottom-05 font-body-sm margin-bottom-0"
             >
               What portion (% or amount) of the planned annual spending of the first year of the new contract is IT?
             </dt>
             <dd
-              class="description-definition margin-0"
+              class="description-definition margin-0 font-body-md text-light"
             >
               75%
             </dd>
@@ -106,12 +106,11 @@ exports[`IntakeRequestCard > renders default version without crashing 1`] = `
         data-testid="CardFooter"
       >
         <a
-          class="usa-link"
+          class="usa-link display-flex flex-align-center margin-top-1"
           href="/intake-request"
         >
-          View full Intake Request form
           <svg
-            class="usa-icon text-middle margin-left-1"
+            class="usa-icon margin-right-1"
             focusable="false"
             height="1em"
             role="img"
@@ -120,9 +119,10 @@ exports[`IntakeRequestCard > renders default version without crashing 1`] = `
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              d="m12 4-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
+              d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
             />
           </svg>
+          View full Intake Request form
         </a>
       </div>
     </div>
