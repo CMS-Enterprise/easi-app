@@ -2,7 +2,6 @@ import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { NavHashLink } from 'react-router-hash-link';
-import { Button, ButtonGroup } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import { SystemIntakeGRBReviewerFragment } from 'gql/generated/graphql';
 
@@ -153,7 +152,7 @@ const GRBVotingPanel = ({ grbReviewer, className }: GRBVotingPanelProps) => {
       <div className="border-bottom-1px border-info-light margin-y-3" />
 
       {/* TODO: add existing vote */}
-      {!!grbReviewer?.vote && <></>}
+      {!!grbReviewer?.vote && <>{grbReviewer.vote}</>}
 
       <GRBVotingModal grbReviewer={grbReviewer} />
     </div>
