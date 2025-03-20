@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -36,7 +36,6 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
 
   const history = useHistory();
   const { pathname } = useLocation();
-  const [startGRB, setStartGRB] = useState(false);
 
   const reviewType: SystemIntakeGRBReviewType = grbReview.grbReviewType;
 
