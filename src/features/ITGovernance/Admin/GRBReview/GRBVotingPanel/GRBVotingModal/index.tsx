@@ -149,7 +149,7 @@ const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
 
         <Button
           type="button"
-          disabled={commentRequired && !watch('voteComment')}
+          disabled={commentRequired && !watch('voteComment')?.trim()}
           onClick={() => {
             castVote();
           }}
@@ -173,7 +173,11 @@ const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
           type="button"
           className="margin-left-2"
           unstyled
-          onClick={() => setIsOpen(false)}
+          onClick={() => {
+            // Reset to default value when closing modal
+            setValue('voteComment', grbReviewer.voteComment);
+            setIsOpen(false);
+          }}
         >
           {hasVoted
             ? t('reviewTask.voting.modal.keepExistingVote')
