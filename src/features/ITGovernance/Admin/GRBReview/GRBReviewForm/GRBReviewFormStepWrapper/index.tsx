@@ -94,7 +94,6 @@ function GRBReviewFormStepWrapper<
       path?: string;
     }) => {
       // Redirect user without submit if no changes or skipping validation
-
       if (!isDirty && !shouldValidate) {
         return history.push(`${grbReviewPath}/${path}`);
       }
@@ -188,7 +187,7 @@ function GRBReviewFormStepWrapper<
           completed,
           disabled: index > 0 ? !acc[index - 1].completed : false,
           onClick: () => {
-            submitStep({ path: value.key });
+            submitStep({ shouldValidate: false, path: value.key });
           }
         };
 
