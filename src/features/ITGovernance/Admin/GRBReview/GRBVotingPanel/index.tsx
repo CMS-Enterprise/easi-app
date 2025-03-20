@@ -9,6 +9,8 @@ import { SystemIntakeGRBReviewerFragment } from 'gql/generated/graphql';
 import CollapsableLink from 'components/CollapsableLink';
 import UswdsReactLink from 'components/LinkWrapper';
 
+import GRBVotingModal from './GRBVotingModal';
+
 export type GRBVotingPanelProps = {
   grbReviewer: SystemIntakeGRBReviewerFragment;
   className?: string;
@@ -20,8 +22,6 @@ const GRBVotingPanel = ({ grbReviewer, className }: GRBVotingPanelProps) => {
   const { systemId } = useParams<{
     systemId: string;
   }>();
-
-  console.log('grbReviewer', grbReviewer);
 
   return (
     <div className={classNames('usa-summary-box easi-body-normal', className)}>
@@ -152,15 +152,7 @@ const GRBVotingPanel = ({ grbReviewer, className }: GRBVotingPanelProps) => {
 
       <div className="border-bottom-1px border-info-light margin-y-3" />
 
-      <ButtonGroup>
-        <Button type="button" onClick={() => null}>
-          {t('reviewTask.voting.noObjection')}
-        </Button>
-
-        <Button type="button" onClick={() => null} secondary>
-          {t('reviewTask.voting.object')}
-        </Button>
-      </ButtonGroup>
+      <GRBVotingModal commentRequired={false} />
     </div>
   );
 };

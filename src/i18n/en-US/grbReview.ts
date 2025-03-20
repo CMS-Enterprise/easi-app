@@ -331,7 +331,21 @@ export default {
       step3Description:
         'After reviewing, select either No objection or Object to add your vote on the merit of this project. You will also have the option to add a comment for additional context about your vote.',
       object: 'Object',
-      noObjection: 'No objection'
+      noObjection: 'No objection',
+      modal: {
+        titleNoObjection: 'Submit your vote with no objection',
+        titleObject: 'Submit your vote with objection',
+        description:
+          'Your vote will be saved for this GRB review. You may change it until the end of the review period.',
+        commentsOptional: 'Comments (optional)',
+        comments: 'Comments',
+        hint: 'Add any additional context about your vote.',
+        confirmNoObjection: 'Submit “no objection” vote',
+        confirmObject: 'Submit “objection” vote',
+        cancel: 'Cancel and go back',
+        error:
+          'There was an issue submitting your vote. Please try again, and if the problem persists, try again later.'
+      }
     }
   },
   presentationLinks: {
