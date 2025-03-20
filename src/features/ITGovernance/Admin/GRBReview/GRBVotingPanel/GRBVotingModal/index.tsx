@@ -48,11 +48,12 @@ const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
     }
   });
 
+  const hasVoted = !!grbReviewer.vote;
+
   const voteType: SystemIntakeAsyncGRBVotingOption = watch('vote');
 
   const commentRequired =
-    voteType === SystemIntakeAsyncGRBVotingOption.OBJECTION ||
-    !!grbReviewer.vote;
+    voteType === SystemIntakeAsyncGRBVotingOption.OBJECTION || hasVoted;
 
   const [mutation] = useCastGRBReviewerVoteMutation();
 
@@ -153,28 +154,42 @@ const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
         </Button>
       </Modal>
 
-      <ButtonGroup>
+      {hasVoted ? (
         <Button
           type="button"
+          outline
           onClick={() => {
-            setValue('vote', SystemIntakeAsyncGRBVotingOption.NO_OBJECTION);
+            // ts doesn't seem to recognize the previous conditional check with hasVoted
+            setValue('vote', grbReviewer.vote!);
             setIsOpen(true);
           }}
         >
-          {t('reviewTask.voting.noObjection')}
+          {t('reviewTask.voting.changeVote')}
         </Button>
+      ) : (
+        <ButtonGroup>
+          <Button
+            type="button"
+            onClick={() => {
+              setValue('vote', SystemIntakeAsyncGRBVotingOption.NO_OBJECTION);
+              setIsOpen(true);
+            }}
+          >
+            {t('reviewTask.voting.noObjection')}
+          </Button>
 
-        <Button
-          type="button"
-          onClick={() => {
-            setValue('vote', SystemIntakeAsyncGRBVotingOption.OBJECTION);
-            setIsOpen(true);
-          }}
-          secondary
-        >
-          {t('reviewTask.voting.object')}
-        </Button>
-      </ButtonGroup>
+          <Button
+            type="button"
+            onClick={() => {
+              setValue('vote', SystemIntakeAsyncGRBVotingOption.OBJECTION);
+              setIsOpen(true);
+            }}
+            secondary
+          >
+            {t('reviewTask.voting.object')}
+          </Button>
+        </ButtonGroup>
+      )}
     </>
   );
 };

@@ -342,6 +342,7 @@ export default {
         hint: 'Add any additional context about your vote.',
         confirmNoObjection: 'Submit “no objection” vote',
         confirmObject: 'Submit “objection” vote',
+        changeVote: 'Change vote',
         cancel: 'Cancel and go back',
         error:
           'There was an issue submitting your vote. Please try again, and if the problem persists, try again later.'

@@ -152,6 +152,9 @@ const GRBVotingPanel = ({ grbReviewer, className }: GRBVotingPanelProps) => {
 
       <div className="border-bottom-1px border-info-light margin-y-3" />
 
+      {/* TODO: add existing vote */}
+      {!!grbReviewer?.vote && <></>}
+
       <GRBVotingModal grbReviewer={grbReviewer} />
     </div>
   );
