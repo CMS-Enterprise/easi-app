@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { FieldValues } from 'react-hook-form';
+import { FieldValues, Path, PathValue } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { FetchResult } from '@apollo/client';
@@ -32,7 +32,7 @@ type GRBReviewFormStepWrapperProps<
   onSubmit: GRBReviewFormStepSubmit<TFieldValues>;
   /** Defaults to true - shows required fields text above `children` */
   requiredFields?: boolean;
-  setStartGRB?: React.Dispatch<React.SetStateAction<boolean>>;
+  startGRBReview?: boolean;
 };
 
 /**
@@ -47,7 +47,7 @@ function GRBReviewFormStepWrapper<
   grbReview,
   onSubmit,
   requiredFields = true,
-  setStartGRB
+  startGRBReview
 }: GRBReviewFormStepWrapperProps<TFieldValues>) {
   const { t } = useTranslation('grbReview');
   const history = useHistory();
@@ -66,7 +66,8 @@ function GRBReviewFormStepWrapper<
   const {
     handleSubmit,
     watch,
-    formState: { isValid, isDirty }
+    formState: { isValid, isDirty },
+    setValue
   } = useEasiFormContext<TFieldValues>();
 
   const grbReviewPath = `/it-governance/${systemId}/grb-review`;
@@ -279,7 +280,14 @@ function GRBReviewFormStepWrapper<
               text: nextStep
                 ? t('Next')
                 : t('setUpGrbReviewForm.completeAndBeginReview'),
-              onClick: () => setStartGRB?.(true)
+              onClick: () => {
+                if (startGRBReview) {
+                  setValue(
+                    'startGRBReview' as Path<TFieldValues>,
+                    true as PathValue<TFieldValues, Path<TFieldValues>>
+                  );
+                }
+              }
             }}
             back={
               // Only show `back` button if there is a previous step

@@ -28,6 +28,7 @@ import GRBReviewFormStepWrapper, {
 type ParticipantsFields = {
   grbReviewers: SystemIntakeGRBReviewerFragment[];
   grbReviewAsyncEndDate: SystemIntakeGRBReviewFragment['grbReviewAsyncEndDate'];
+  startGRBReview: boolean;
 };
 
 const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
@@ -51,11 +52,13 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
         : undefined,
     defaultValues: {
       grbReviewers: grbReview.grbReviewers,
-      grbReviewAsyncEndDate: grbReview.grbReviewAsyncEndDate || ''
+      grbReviewAsyncEndDate: grbReview.grbReviewAsyncEndDate || '',
+      startGRBReview: false
     },
     values: {
       grbReviewers: grbReview.grbReviewers,
-      grbReviewAsyncEndDate: grbReview.grbReviewAsyncEndDate || ''
+      grbReviewAsyncEndDate: grbReview.grbReviewAsyncEndDate || '',
+      startGRBReview: false
     }
   });
   const {
@@ -69,7 +72,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
         input: {
           systemIntakeID: grbReview.id,
           grbReviewAsyncEndDate: input.grbReviewAsyncEndDate ?? '',
-          startGRBReview: startGRB
+          startGRBReview: input.startGRBReview
         }
       }
     });
@@ -81,7 +84,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
         grbReview={grbReview}
         onSubmit={onSubmit}
         requiredFields={reviewType === SystemIntakeGRBReviewType.ASYNC}
-        setStartGRB={setStartGRB}
+        startGRBReview
       >
         <Alert type="info" slim>
           {t('setUpGrbReviewForm.participants.standardAlert')}
