@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -35,6 +35,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
 
   const history = useHistory();
   const { pathname } = useLocation();
+  const [startGRB, setStartGRB] = useState(false);
 
   const reviewType: SystemIntakeGRBReviewType = grbReview.grbReviewType;
 
@@ -68,7 +69,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
         input: {
           systemIntakeID: grbReview.id,
           grbReviewAsyncEndDate: input.grbReviewAsyncEndDate ?? '',
-          startGRBReview: true
+          startGRBReview: startGRB
         }
       }
     });
@@ -80,6 +81,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
         grbReview={grbReview}
         onSubmit={onSubmit}
         requiredFields={reviewType === SystemIntakeGRBReviewType.ASYNC}
+        setStartGRB={setStartGRB}
       >
         <Alert type="info" slim>
           {t('setUpGrbReviewForm.participants.standardAlert')}

@@ -32,6 +32,7 @@ type GRBReviewFormStepWrapperProps<
   onSubmit: GRBReviewFormStepSubmit<TFieldValues>;
   /** Defaults to true - shows required fields text above `children` */
   requiredFields?: boolean;
+  setStartGRB?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 /**
@@ -45,7 +46,8 @@ function GRBReviewFormStepWrapper<
   children,
   grbReview,
   onSubmit,
-  requiredFields = true
+  requiredFields = true,
+  setStartGRB
 }: GRBReviewFormStepWrapperProps<TFieldValues>) {
   const { t } = useTranslation('grbReview');
   const history = useHistory();
@@ -91,6 +93,7 @@ function GRBReviewFormStepWrapper<
       path?: string;
     }) => {
       // Redirect user without submit if no changes or skipping validation
+      debugger;
       if (!isDirty && isValid && shouldValidate) {
         return history.push(`${grbReviewPath}/${path}`);
       }
@@ -184,7 +187,10 @@ function GRBReviewFormStepWrapper<
           ...acc[index],
           completed,
           disabled: index > 0 ? !acc[index - 1].completed : false,
-          onClick: () => submitStep({ path: value.key })
+          onClick: () => {
+            setStartGRB?.(true);
+            submitStep({ path: value.key });
+          }
         };
 
         return acc;
