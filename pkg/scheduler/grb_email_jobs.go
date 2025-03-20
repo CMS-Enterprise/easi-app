@@ -12,7 +12,7 @@ type grbEmailJobs struct {
 }
 
 var GRBEmailJobs = &grbEmailJobs{
-	SendAsyncVotingHalfwayThroughEmailJob: NewScheduledJobWrapper(gocron.CronJob("0 2 * * *", false), sendAsyncVotingHalfwayThroughEmailJobFunction),
+	SendAsyncVotingHalfwayThroughEmailJob: NewScheduledJobWrapper(sharedScheduler, gocron.CronJob("0 2 * * *", false), sendAsyncVotingHalfwayThroughEmailJobFunction),
 }
 
 // TODO, does this even need input? It will be daily anyways.
