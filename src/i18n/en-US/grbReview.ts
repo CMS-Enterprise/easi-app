@@ -352,7 +352,8 @@ export default {
         '<bold>Step 3</bold>: Submit your opinion about this IT Governance request.',
       step3Description:
         'After reviewing, select either No objection or Object to add your vote on the merit of this project. You will also have the option to add a comment for additional context about your vote.',
-      [SystemIntakeAsyncGRBVotingOption.OBJECTION]: 'Object',
+      object: 'Object',
+      [SystemIntakeAsyncGRBVotingOption.OBJECTION]: 'Objection',
       [SystemIntakeAsyncGRBVotingOption.NO_OBJECTION]: 'No objection',
       changeVote: 'Change vote',
       youVoted: 'You voted',

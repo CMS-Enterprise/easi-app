@@ -200,7 +200,9 @@ const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
               setIsOpen(true);
             }}
           >
-            {t('reviewTask.voting.NO_OBJECTION')}
+            {t(
+              `reviewTask.voting.${SystemIntakeAsyncGRBVotingOption.NO_OBJECTION}`
+            )}
           </Button>
 
           <Button
@@ -211,7 +213,7 @@ const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
             }}
             secondary
           >
-            {t('reviewTask.voting.OBJECTION')}
+            {t('reviewTask.voting.object')}
           </Button>
         </ButtonGroup>
       )}

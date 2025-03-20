@@ -32,7 +32,7 @@ const GRBVoteStatus = ({ vote, dateVoted, className }: GRBVoteStatusProps) => {
         {t(`reviewTask.voting.${vote}`)}
       </Tag>
 
-      <span className="margin-left-1 text-no-wrap">
+      <span className="margin-left-1 text-no-wrap text-base-dark">
         {t('reviewTask.voting.votedOn', {
           date: formatDateUtc(dateVoted, 'MMMM d, yyyy')
         })}
