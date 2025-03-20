@@ -777,6 +777,35 @@ export type GRBReviewerComparisonIntake = {
   reviewers: Array<GRBReviewerComparison>;
 };
 
+/** GRBVotingInformation holds all the information about the voting session for a GRB Review.  */
+export type GRBVotingInformation = {
+  __typename: 'GRBVotingInformation';
+  /** Who is doing the review for these GRB sessions */
+  grbReviewers: Array<SystemIntakeGRBReviewer>;
+  /** How many people have voted no objection */
+  numberOfNoObjection: Scalars['Int']['output'];
+  /** How many people have not voted */
+  numberOfNotVoted: Scalars['Int']['output'];
+  /** How many people have voted with an objection */
+  numberOfObjection: Scalars['Int']['output'];
+  /** The status of the voting session, this can include if it is not started or in progress, as well as the suggested decision of the voting session */
+  votingStatus: GRBVotingInformationStatus;
+};
+
+/** All possible permutations of the status of a GRB ASYNC voting session */
+export enum GRBVotingInformationStatus {
+  /** End date has passed, quorum of votes has been met (5 votes), vote count for approval met (0 votes with objections). */
+  APPROVED = 'APPROVED',
+  /** End date has passed, quorum of votes has been met (5 votes), vote count is mostly no objections but has one objection vote OR voting has been ended early and a quorum has not been met. */
+  INCONCLUSIVE = 'INCONCLUSIVE',
+  /** Setup button has been pressed. This shows for the In progress and Past due statuses */
+  IN_PROGRESS = 'IN_PROGRESS',
+  /** End date has passed, quorum of votes has been met (5 votes), vote count has two or more objections. */
+  NOT_APPROVED = 'NOT_APPROVED',
+  /** This status is not rendered to the front end, but it is to show a state where the GRB async voting button has not yet been pressed */
+  NOT_STARTED = 'NOT_STARTED'
+}
+
 /** Feedback given to the requester on a governance request */
 export type GovernanceRequestFeedback = {
   __typename: 'GovernanceRequestFeedback';
@@ -1952,7 +1981,13 @@ export type SystemIntake = {
   grbReviewStartedAt?: Maybe<Scalars['Time']['output']>;
   /** GRB Review Form */
   grbReviewType: SystemIntakeGRBReviewType;
+  /**
+   * All users are are involved in a GRB review. This will be deprecated in favor of grbVotingInformation
+   * @deprecated Use grbVotingInformation.grbReviewers instead
+   */
   grbReviewers: Array<SystemIntakeGRBReviewer>;
+  /** All information about voting activity in a GRB review */
+  grbVotingInformation: GRBVotingInformation;
   grtDate?: Maybe<Scalars['Time']['output']>;
   /** This is a calculated state based on if a date exists for the GRT Meeting date */
   grtMeetingState: SystemIntakeMeetingState;
