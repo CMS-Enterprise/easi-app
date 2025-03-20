@@ -44,7 +44,7 @@ import { formatDateLocal } from 'utils/date';
 import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import GRBFeedbackCard from './GRBFeedbackCard/GRBFeedbackCard';
-import ParticipantsTable from './ParticipantsTable/ParticipantsTable';
+import ParticipantsSection from './ParticipantsSection/ParticipantsSection';
 import PresentationLinksCard from './PresentationLinksCard/PresentationLinksCard';
 import Discussions from './Discussions';
 import GRBReviewerForm from './GRBReviewerForm';
@@ -93,6 +93,7 @@ const GRBReview = ({
   }>();
 
   const isForm = !!action;
+  const isFromGRBSetup = history.location.search === '?from-grb-setup';
 
   const [reviewerToRemove, setReviewerToRemove] =
     useState<SystemIntakeGRBReviewerFragment | null>(null);
@@ -196,6 +197,7 @@ const GRBReview = ({
 
       {isForm ? (
         <GRBReviewerForm
+          isFromGRBSetup={isFromGRBSetup}
           setReviewerToRemove={setReviewerToRemove}
           initialGRBReviewers={grbReviewers}
           grbReviewStartedAt={grbReviewStartedAt}
@@ -475,11 +477,10 @@ const GRBReview = ({
               className="margin-top-4 margin-bottom-6"
             />
 
-            <ParticipantsTable
+            <ParticipantsSection
               id={id}
               state={state}
               grbReviewers={grbReviewers}
-              setReviewerToRemove={setReviewerToRemove}
               grbReviewStartedAt={grbReviewStartedAt}
             />
           </div>

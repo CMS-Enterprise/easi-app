@@ -1016,6 +1016,39 @@
 							"response": []
 						},
 						{
+							"name": "GetGRBVotingInformation(AndReviewers)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query getSystemIntakeGRBReviewers{\n  systemIntake(id: \"{{systemIntakeID}}\") {\n    id\n    grbVotingInformation{\n        votingStatus\n        numberOfNoObjection\n        numberOfObjection\n        numberOfNotVoted\n        grbReviewers {\n            id\n            systemIntakeID\n            grbRole\n            votingRole\n            userAccount {\n                username\n                id\n                givenName\n                commonName\n                email\n            }\n            vote\n            voteComment\n            createdAt\n            createdBy\n            modifiedAt\n            modifiedBy\n        }\n    }\n  }\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Add GRB Reviewer",
 							"event": [
 								{
