@@ -93,7 +93,7 @@ function GRBReviewFormStepWrapper<
       path?: string;
     }) => {
       // Redirect user without submit if no changes or skipping validation
-      debugger;
+
       if (!isDirty && isValid && shouldValidate) {
         return history.push(`${grbReviewPath}/${path}`);
       }
