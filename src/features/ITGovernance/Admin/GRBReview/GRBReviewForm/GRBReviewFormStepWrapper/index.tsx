@@ -94,7 +94,7 @@ function GRBReviewFormStepWrapper<
     }) => {
       // Redirect user without submit if no changes or skipping validation
 
-      if (!isDirty && isValid && shouldValidate) {
+      if (!isDirty && !shouldValidate) {
         return history.push(`${grbReviewPath}/${path}`);
       }
 
@@ -123,7 +123,6 @@ function GRBReviewFormStepWrapper<
     },
     [
       isDirty,
-      isValid,
       handleSubmit,
       history,
       grbReviewPath,
@@ -188,7 +187,6 @@ function GRBReviewFormStepWrapper<
           completed,
           disabled: index > 0 ? !acc[index - 1].completed : false,
           onClick: () => {
-            setStartGRB?.(true);
             submitStep({ path: value.key });
           }
         };
@@ -280,7 +278,8 @@ function GRBReviewFormStepWrapper<
               disabled: !isValid,
               text: nextStep
                 ? t('Next')
-                : t('setUpGrbReviewForm.completeAndBeginReview')
+                : t('setUpGrbReviewForm.completeAndBeginReview'),
+              onClick: () => setStartGRB?.(true)
             }}
             back={
               // Only show `back` button if there is a previous step
