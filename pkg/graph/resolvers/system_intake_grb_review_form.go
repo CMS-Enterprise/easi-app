@@ -37,7 +37,22 @@ func UpdateSystemIntakeGRBReviewFormInputPresentationStandard(
 		return nil, err
 	}
 
-	intake.GRBDate = &input.GrbDate
+	// Don't continue with the update if the value is not set, just return the initial value
+	if !input.GrbDate.IsSet() {
+		return &models.UpdateSystemIntakePayload{
+			SystemIntake: intake,
+		}, nil
+	}
+	inputDate := input.GrbDate.Value()
+	if inputDate == nil {
+		if input.GrbDate.IsSet() {
+			return &models.UpdateSystemIntakePayload{
+				SystemIntake: intake,
+			}, nil
+		}
+	}
+
+	intake.GRBDate = inputDate
 
 	// Update system intake
 	updatedIntake, err := store.UpdateSystemIntake(ctx, intake)
