@@ -6,20 +6,21 @@ import { Button, ButtonGroup, FormGroup, Label } from '@trussworks/react-uswds';
 import {
   CastGRBReviewerVoteMutationVariables,
   SystemIntakeAsyncGRBVotingOption,
+  SystemIntakeGRBReviewerFragment,
   useCastGRBReviewerVoteMutation
 } from 'gql/generated/graphql';
 
+import Alert from 'components/Alert';
 import { useEasiForm } from 'components/EasiForm';
 import Modal from 'components/Modal';
 import RequiredFieldsText from 'components/RequiredFieldsText';
 import TextAreaField from 'components/TextAreaField';
-import useMessage from 'hooks/useMessage';
 
 type GRBVotingModalProps = {
-  commentRequired: boolean;
+  grbReviewer: SystemIntakeGRBReviewerFragment;
 };
 
-const GRBVotingModal = ({ commentRequired }: GRBVotingModalProps) => {
+const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
   const { t } = useTranslation('grbReview');
 
   const { systemId } = useParams<{
@@ -28,7 +29,7 @@ const GRBVotingModal = ({ commentRequired }: GRBVotingModalProps) => {
 
   const history = useHistory();
 
-  const { showMessage } = useMessage();
+  const [error, setError] = useState<boolean>(false);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -47,6 +48,12 @@ const GRBVotingModal = ({ commentRequired }: GRBVotingModalProps) => {
     }
   });
 
+  const voteType: SystemIntakeAsyncGRBVotingOption = watch('vote');
+
+  const commentRequired =
+    voteType === SystemIntakeAsyncGRBVotingOption.OBJECTION ||
+    !!grbReviewer.vote;
+
   const [mutation] = useCastGRBReviewerVoteMutation();
 
   const castVote = handleSubmit(async input => {
@@ -63,23 +70,29 @@ const GRBVotingModal = ({ commentRequired }: GRBVotingModalProps) => {
         history.push('/');
       })
       .catch(() => {
-        showMessage(t('technicalAssistance:documents.upload.error'), {
-          type: 'error',
-          className: 'margin-top-4'
-        });
+        setError(true);
       });
   });
 
-  const voteType: SystemIntakeAsyncGRBVotingOption = watch('vote');
-
   return (
     <>
-      <Modal isOpen={isOpen} closeModal={() => setIsOpen(false)}>
+      <Modal
+        isOpen={isOpen}
+        closeModal={() => setIsOpen(false)}
+        className="easi-body-normal padding-top-6 padding-bottom-1"
+        hideCloseButton
+      >
         <h3 className="margin-top-0 margin-bottom-0">
           {voteType === SystemIntakeAsyncGRBVotingOption.NO_OBJECTION
             ? t('reviewTask.voting.modal.titleNoObjection')
             : t('reviewTask.voting.modal.titleObject')}
         </h3>
+
+        {error && (
+          <Alert type="error" slim>
+            {t('technicalAssistance:documents.upload.error')}
+          </Alert>
+        )}
 
         <p>{t('reviewTask.voting.modal.description')}</p>
 
@@ -93,9 +106,8 @@ const GRBVotingModal = ({ commentRequired }: GRBVotingModalProps) => {
           render={({ field }) => (
             <FormGroup>
               <Label
-                htmlFor="text"
-                hint={t('reviewTask.voting.modal.hint')}
-                className="text-normal margin-top-6"
+                id="voteCommentLabel"
+                htmlFor="voteComment"
                 requiredMarker={commentRequired}
               >
                 {commentRequired
@@ -103,12 +115,18 @@ const GRBVotingModal = ({ commentRequired }: GRBVotingModalProps) => {
                   : t('reviewTask.voting.modal.commentsOptional')}
               </Label>
 
+              <p className="text-base margin-top-1">
+                {t('reviewTask.voting.modal.hint')}
+              </p>
+
               <TextAreaField
                 {...field}
                 ref={null}
-                id="text"
+                id="voteComment"
                 value={field.value || ''}
-                aria-describedby="text-info text-hint"
+                aria-describedby="voteCommentLabel"
+                size="sm"
+                className="margin-bottom-3"
               />
             </FormGroup>
           )}
