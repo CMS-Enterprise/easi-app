@@ -1,6 +1,11 @@
 package models
 
-import "context"
+import (
+	"context"
+	"errors"
+
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+)
 
 type GRBVotingInformationStatus string
 
@@ -24,43 +29,126 @@ type GRBVotingInformation struct {
 	GRBReviewers []*SystemIntakeGRBReviewer
 }
 
-// VotingStatus returns the status of the GRB voting process. GQL will resolver to this field to return
-func (info *GRBVotingInformation) VotingStatus(ctx context.Context) (GRBVotingInformationStatus, error) {
-	//TODO implement
-	return GRBVSNotStarted, nil
-}
-
 // NumberOfNoObjection returns the number of reviewers who have voted no objection
 func (info *GRBVotingInformation) NumberOfNoObjection(ctx context.Context) (int, error) {
-	//TODO implement
-	return 0, nil
+	if info.GRBReviewers == nil {
+		msg := "unexpected empty GRB Reviewers list when counting NumberOfNoObjection"
+		appcontext.ZLogger(ctx).Warn(msg)
+		return 0, errors.New(msg)
+	}
+
+	var count int
+	for _, reviewer := range info.GRBReviewers {
+		if reviewer.Vote == nil {
+			continue
+		}
+
+		if *reviewer.Vote == SystemIntakeAsyncGRBVotingOptionNoObjection {
+			count++
+		}
+	}
+
+	return count, nil
 }
 
 // NumberOfObjection returns the number of reviewers who have voted objection
 func (info *GRBVotingInformation) NumberOfObjection(ctx context.Context) (int, error) {
-	//TODO implement
-	return 0, nil
+	if info.GRBReviewers == nil {
+		msg := "unexpected empty GRB Reviewers list when counting NumberOfObjection"
+		appcontext.ZLogger(ctx).Warn(msg)
+		return 0, errors.New(msg)
+	}
+
+	var count int
+	for _, reviewer := range info.GRBReviewers {
+		if reviewer.Vote == nil {
+			continue
+		}
+
+		if *reviewer.Vote == SystemIntakeAsyncGRBVotingOptionObjection {
+			count++
+		}
+	}
+
+	return count, nil
 }
 
 // NumberOfNotVoted returns the number of reviewers who have not voted
 func (info *GRBVotingInformation) NumberOfNotVoted(ctx context.Context) (int, error) {
-	//TODO implement
-	return 0, nil
+	if info.GRBReviewers == nil {
+		msg := "unexpected empty GRB Reviewers list when counting NumberOfNotVoted"
+		appcontext.ZLogger(ctx).Warn(msg)
+		return 0, errors.New(msg)
+	}
+
+	var count int
+	for _, reviewer := range info.GRBReviewers {
+		if reviewer.Vote == nil {
+			count++
+		}
+	}
+
+	return count, nil
 }
 
 // NumberOfVoted returns the number of reviewers who have voted
 func (info *GRBVotingInformation) NumberOfVoted(ctx context.Context) (int, error) {
-	//TODO implement
-	return 0, nil
+	if info.GRBReviewers == nil {
+		msg := "unexpected empty GRB Reviewers list when counting NumberOfVoted"
+		appcontext.ZLogger(ctx).Warn(msg)
+		return 0, errors.New(msg)
+	}
+
+	var count int
+	for _, reviewer := range info.GRBReviewers {
+		if reviewer.Vote != nil {
+			count++
+		}
+	}
+
+	return count, nil
 }
 
-// QuorumReached checks if the minimum amount of reviewers have voted
+// QuorumReached checks if the minimum number of votes have been cast
 func (info *GRBVotingInformation) QuorumReached(ctx context.Context) (bool, error) {
-	//TODO implement
 	voteCount, err := info.NumberOfVoted(ctx)
 	if err != nil {
 		return false, err
 	}
-	quorum := voteCount >= numberOfVotesForQuorum
-	return quorum, nil
+
+	quorumReached := voteCount >= numberOfVotesForQuorum
+	return quorumReached, nil
+}
+
+// VotingStatus returns the status of the GRB voting process. GQL will resolver to this field to return
+//
+// rules:
+// - IN_PROGRESS:
+//   - if voting is open/past due and is NOT in complete state
+//
+// - APPROVED:
+//   - if voting is in complete state, quorum has been met, and zero objection votes
+//
+// - NOT_APPROVED:
+//   - if voting is in complete state, quorum has been met, and two or more objection votes
+//
+// - INCONCLUSIVE:
+//   - if voting is in complete state, end date has passed, quorum has been met, vote count is mostly no objections but
+//     has one objection vote, OR;
+//   - voting has been ended early and quorum not met
+func (info *GRBVotingInformation) VotingStatus(ctx context.Context) (GRBVotingInformationStatus, error) {
+	if info.SystemIntake == nil {
+		msg := "unexpected nil system intake in VotingStatus"
+		appcontext.ZLogger(ctx).Warn(msg)
+		return "", errors.New(msg)
+	}
+
+	if info.GRBReviewers == nil {
+		msg := "unexpected nil GRB reviewers in VotingStatus"
+		appcontext.ZLogger(ctx).Warn(msg)
+		return "", errors.New(msg)
+	}
+
+	//TODO implement
+	return GRBVSNotStarted, nil
 }
