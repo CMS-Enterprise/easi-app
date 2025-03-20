@@ -3,6 +3,7 @@ package models
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 )
@@ -149,6 +150,62 @@ func (info *GRBVotingInformation) VotingStatus(ctx context.Context) (GRBVotingIn
 		return "", errors.New(msg)
 	}
 
-	//TODO implement
+	if info.SystemIntake.GRBReviewStartedAt == nil {
+		msg := "GRB review not started in VotingStatus"
+		appcontext.ZLogger(ctx).Warn(msg)
+		return "", errors.New(msg)
+	}
+
+	// TODO: it may be possible to submit votes even after the end date - address if needed
+	if info.SystemIntake.GrbReviewAsyncEndDate == nil {
+		msg := "no GRB end date in VotingStatus"
+		appcontext.ZLogger(ctx).Warn(msg)
+		return "", errors.New(msg)
+	}
+
+	now := time.Now()
+	// first, check for not started
+	if now.Before(*info.SystemIntake.GRBReviewStartedAt) {
+		return GRBVSNotStarted, nil
+	}
+
+	// then check in progress
+	if now.After(*info.SystemIntake.GRBReviewStartedAt) && now.Before(*info.SystemIntake.GrbReviewAsyncEndDate) {
+		return GRBVSInProgress, nil
+	}
+
+	// unknown state, not sure if this would be possible after the above checks
+	if !now.After(*info.SystemIntake.GrbReviewAsyncEndDate) {
+		return GRBVSNotStarted, nil
+	}
+
+	// we know here that the end date has passed
+	quorumReached, err := info.QuorumReached(ctx)
+	if err != nil {
+		return "", err
+	}
+
+	objections, err := info.NumberOfObjection(ctx)
+	if err != nil {
+		return "", err
+	}
+
+	// check for approved
+	if quorumReached && objections == 0 {
+		return GRBVSApproved, nil
+	}
+
+	// check for not approved
+	if quorumReached && objections >= 2 {
+		return GRBVSNotApproved, nil
+	}
+
+	// check for inconclusive
+	if !quorumReached || objections == 1 {
+		return GRBVSInconclusive, nil
+	}
+
+	// TODO: implement check for early voting end (new date property?)
+
 	return GRBVSNotStarted, nil
 }
