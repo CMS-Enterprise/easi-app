@@ -1,5 +1,6 @@
 import { GRBReviewStatus } from 'features/ITGovernance/Admin/GRBReview/GRBReviewStatusCard';
 import {
+  SystemIntakeAsyncGRBVotingOption,
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole
 } from 'gql/generated/graphql';
@@ -351,9 +352,11 @@ export default {
         '<bold>Step 3</bold>: Submit your opinion about this IT Governance request.',
       step3Description:
         'After reviewing, select either No objection or Object to add your vote on the merit of this project. You will also have the option to add a comment for additional context about your vote.',
-      object: 'Object',
-      noObjection: 'No objection',
+      [SystemIntakeAsyncGRBVotingOption.OBJECTION]: 'Object',
+      [SystemIntakeAsyncGRBVotingOption.NO_OBJECTION]: 'No objection',
       changeVote: 'Change vote',
+      youVoted: 'You voted',
+      votedOn: 'on {{date}}',
       modal: {
         titleNoObjection: 'Submit your vote with no objection',
         titleObject: 'Submit your vote with objection',

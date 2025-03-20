@@ -70,7 +70,7 @@ const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
         input: {
           systemIntakeID: systemId,
           vote: input.vote,
-          voteComment: input.voteComment
+          voteComment: input.voteComment ? input.voteComment : undefined
         }
       },
       refetchQueries: ['GetSystemIntake']
@@ -200,7 +200,7 @@ const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
               setIsOpen(true);
             }}
           >
-            {t('reviewTask.voting.noObjection')}
+            {t('reviewTask.voting.NO_OBJECTION')}
           </Button>
 
           <Button
@@ -211,7 +211,7 @@ const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
             }}
             secondary
           >
-            {t('reviewTask.voting.object')}
+            {t('reviewTask.voting.OBJECTION')}
           </Button>
         </ButtonGroup>
       )}

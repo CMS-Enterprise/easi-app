@@ -8,6 +8,7 @@ import { SystemIntakeGRBReviewerFragment } from 'gql/generated/graphql';
 import CollapsableLink from 'components/CollapsableLink';
 import UswdsReactLink from 'components/LinkWrapper';
 
+import GRBVoteStatus from './GRBVoteStatus';
 import GRBVotingModal from './GRBVotingModal';
 
 export type GRBVotingPanelProps = {
@@ -147,12 +148,17 @@ const GRBVotingPanel = ({ grbReviewer, className }: GRBVotingPanelProps) => {
         }}
       />
 
-      <p className="margin-y-0">{t('reviewTask.voting.step3Description')}</p>
+      <div className="margin-bottom-1">
+        <p className="margin-y-0">{t('reviewTask.voting.step3Description')}</p>
+      </div>
 
-      <div className="border-bottom-1px border-info-light margin-y-3" />
-
-      {/* TODO: add existing vote */}
-      {!!grbReviewer?.vote && <>{grbReviewer.vote}</>}
+      {!!grbReviewer?.vote && grbReviewer.dateVoted && (
+        <GRBVoteStatus
+          vote={grbReviewer.vote}
+          dateVoted={grbReviewer.dateVoted}
+          className="margin-bottom-105 "
+        />
+      )}
 
       <GRBVotingModal grbReviewer={grbReviewer} />
     </div>
