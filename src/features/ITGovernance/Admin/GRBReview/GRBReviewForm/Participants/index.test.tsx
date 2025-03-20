@@ -4,6 +4,7 @@ import { render, screen } from '@testing-library/react';
 import { grbReview } from 'tests/mock/grbReview';
 
 import { MessageProvider } from 'hooks/useMessage';
+import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import Participants from '.';
 
@@ -15,11 +16,13 @@ describe('GRB review form - participants and timeframe', () => {
           `/it-governance/${grbReview.id}/grb-review/participants`
         ]}
       >
-        <MessageProvider>
-          <Route path="/it-governance/:systemId/grb-review/:step">
-            <Participants grbReview={grbReview} />
-          </Route>
-        </MessageProvider>
+        <VerboseMockedProvider>
+          <MessageProvider>
+            <Route path="/it-governance/:systemId/grb-review/:step">
+              <Participants grbReview={grbReview} />
+            </Route>
+          </MessageProvider>
+        </VerboseMockedProvider>
       </MemoryRouter>
     );
 

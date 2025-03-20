@@ -18,6 +18,7 @@ import AddReviewerFromEua from './AddReviewerFromEua';
 import AddReviewersFromRequest from './AddReviewersFromRequest';
 
 type GRBReviewerFormProps = {
+  isFromGRBSetup: boolean;
   initialGRBReviewers: SystemIntakeGRBReviewerFragment[];
   setReviewerToRemove: (reviewer: SystemIntakeGRBReviewerFragment) => void;
   grbReviewStartedAt?: string | null;
@@ -27,6 +28,7 @@ type GRBReviewerFormProps = {
  * Form to add or edit a GRB reviewer
  */
 const GRBReviewerForm = ({
+  isFromGRBSetup,
   initialGRBReviewers,
   setReviewerToRemove,
   grbReviewStartedAt
@@ -43,6 +45,10 @@ const GRBReviewerForm = ({
   const [mutate] = useCreateSystemIntakeGRBReviewersMutation({
     refetchQueries: [GetSystemIntakeGRBReviewDocument]
   });
+
+  const grbReviewPath = isFromGRBSetup
+    ? `/it-governance/${systemId}/grb-review/participants`
+    : `/it-governance/${systemId}/grb-review`;
 
   const createGRBReviewers = (reviewers: GRBReviewerFields[]) =>
     mutate({
@@ -74,8 +80,6 @@ const GRBReviewerForm = ({
         const err = document.querySelector('.usa-alert');
         err?.scrollIntoView();
       });
-
-  const grbReviewPath = `/it-governance/${systemId}/grb-review`;
 
   return (
     <>
@@ -114,6 +118,7 @@ const GRBReviewerForm = ({
                 className="outline-0"
               >
                 <AddReviewerFromEua
+                  grbReviewPath={grbReviewPath}
                   systemId={systemId}
                   initialGRBReviewers={initialGRBReviewers}
                   createGRBReviewers={createGRBReviewers}
@@ -127,6 +132,7 @@ const GRBReviewerForm = ({
                 className="outline-0"
               >
                 <AddReviewersFromRequest
+                  grbReviewPath={grbReviewPath}
                   systemId={systemId}
                   createGRBReviewers={createGRBReviewers}
                 />
@@ -134,6 +140,7 @@ const GRBReviewerForm = ({
             </Tabs>
           ) : (
             <AddReviewerFromEua
+              grbReviewPath={grbReviewPath}
               systemId={systemId}
               initialGRBReviewers={initialGRBReviewers}
               createGRBReviewers={createGRBReviewers}

@@ -233,6 +233,8 @@ export default {
     steps: grbReviewFormSteps,
     error:
       'There was a problem saving your GRB review form. Please try again. If the error persists, please try again at a later date.',
+    minFive: 'Please select at least five GRB reviewers',
+    invalidDate: 'Please enter a valid date',
     reviewType: {
       label: 'Choose review type',
       summaryHeading: 'GRB review types',
@@ -259,7 +261,26 @@ export default {
         ]
       }
     },
-    completeAndBeginReview: 'Complete and begin review'
+    completeAndBeginReview: 'Complete and begin review',
+    participants: {
+      standardAlert:
+        'Because this review is a standard GRB meeting, you do not need to add GRB reviewers to EASi. However, if you do add reviewers, they will have the option to access documentation about this request within EASi prior to the meeting.',
+      grbReviewers: {
+        heading: 'GRB reviewers',
+        description:
+          'Add the GRB members who should review this IT Governance request and indicate their voting role. For asynchronous reviews, you must add at least 5 voting members.'
+      },
+      timeframe: {
+        heading: 'Timeframe',
+        description:
+          'Set a timeframe for this review. The GRB members above will be notified of the end date and will receive some automatic reminders.'
+      },
+      selectReviewEndDate: {
+        heading: 'Select review end date',
+        description:
+          'Set a timeframe for this review. The GRB members above will be notified of the end date and will receive some automatic reminders.'
+      }
+    }
   },
   presentationGRBReviewForm: {
     heading: 'GRB Meeting',

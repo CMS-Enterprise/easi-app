@@ -1,6 +1,9 @@
 import {
+  DeleteSystemIntakeGRBReviewerDocument,
+  DeleteSystemIntakeGRBReviewerMutation,
   GetSystemIntakeGRBReviewDocument,
   GetSystemIntakeGRBReviewQuery,
+  SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewFragment,
   SystemIntakeGRBReviewType
 } from 'gql/generated/graphql';
@@ -34,5 +37,17 @@ export const getSystemIntakeGRBReviewQuery = (
         ...data
       }
     }
+  }
+});
+
+export const deleteSystemIntakeGRBReviewerMutation = (
+  data: SystemIntakeGRBReviewerFragment
+): MockedQuery<DeleteSystemIntakeGRBReviewerMutation> => ({
+  request: {
+    query: DeleteSystemIntakeGRBReviewerDocument,
+    variables: { input: { reviewerID: data.id } }
+  },
+  result: {
+    data: { __typename: 'Mutation', deleteSystemIntakeGRBReviewer: data.id }
   }
 });

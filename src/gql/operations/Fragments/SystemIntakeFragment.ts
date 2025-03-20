@@ -42,6 +42,7 @@ export default gql(/* GraphQL */ `
     currentStage
     decisionNextSteps
     grbDate
+    grbReviewAsyncEndDate
     grtDate
     governanceRequestFeedbacks {
       ...GovernanceRequestFeedbackFragment
