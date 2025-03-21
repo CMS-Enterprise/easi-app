@@ -201,11 +201,13 @@ func (info *GRBVotingInformation) VotingStatus(ctx context.Context) (GRBVotingIn
 	}
 
 	// check for inconclusive
-	if !quorumReached || objections == 1 {
+	if objections == 1 {
 		return GRBVSInconclusive, nil
 	}
 
-	// TODO: implement check for early voting end (new date property?)
+	if info.SystemIntake.GrbReviewAsyncManualEndDate != nil && now.After(*info.SystemIntake.GrbReviewAsyncManualEndDate) && !quorumReached {
+		return GRBVSInconclusive, nil
+	}
 
 	return GRBVSNotStarted, nil
 }
