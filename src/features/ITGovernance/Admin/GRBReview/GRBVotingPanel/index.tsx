@@ -102,16 +102,12 @@ const GRBVotingPanel = ({ grbReviewer, className }: GRBVotingPanelProps) => {
       <div className="margin-left-105">
         <CollapsableLink
           id="voting-step-1"
-          label={t('reviewTask.voting.whatIsImportant')}
+          label={t('reviewTask.voting.howShouldIParticipate')}
           className="margin-top-2"
           innerClassName="padding-bottom-2px"
           bold
         >
-          <p className="margin-y-0">
-            {t('reviewTask.voting.howShouldIParticipate')}
-          </p>
-
-          <ul className="padding-left-2 margin-top-1 margin-bottom-0 smaller-bullet-list">
+          <ul className="padding-left-2 margin-top-0 margin-bottom-0 smaller-bullet-list">
             {t<string[]>('reviewTask.voting.discussionItems', {
               returnObjects: true
             })?.map((item, index) => (

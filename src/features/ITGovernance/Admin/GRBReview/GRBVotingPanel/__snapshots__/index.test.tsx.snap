@@ -1,0 +1,208 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`GRBVotingPanel > matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="usa-summary-box easi-body-normal"
+  >
+    <h5
+      class="text-base-dark text-uppercase margin-top-0 margin-bottom-105 line-height-body-1 text-normal text-body-xs"
+    >
+      GRB Task
+    </h5>
+    <h3
+      class="margin-top-0 margin-bottom-2"
+    >
+      Review this IT Governance request and share your opinion on its merit
+    </h3>
+    <strong>
+      Step 1
+    </strong>
+    : Review information about this project and request.
+    <div
+      class="margin-left-105"
+    >
+      <div
+        class="easi-collapsable-link"
+      >
+        <button
+          aria-controls="voting-step-1"
+          aria-expanded="true"
+          class="usa-button usa-button--unstyled display-flex flex-align-center text-bold margin-top-2"
+          data-testid="collapsable-link"
+          type="button"
+        >
+          <svg
+            class="usa-icon margin-right-05"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+            />
+          </svg>
+          What is the most important information and where should I start?
+        </button>
+        <div
+          class="padding-bottom-2px easi-collapsable-link__content"
+          id="voting-step-1"
+        >
+          <p
+            class="margin-y-0"
+          >
+            Most request will have the following documents or resources:
+          </p>
+          <ul
+            class="padding-left-2 margin-top-1 margin-bottom-0 smaller-bullet-list"
+          >
+            <li>
+              Presentation recording and slide deck 
+              <a
+                href="/it-governance/undefined/grb-review#documents"
+              >
+                Go to presentation links
+              </a>
+            </li>
+            <li>
+              Business Case 
+              <a
+                class="usa-link"
+                href="/business-case"
+              >
+                Go to Business Case
+              </a>
+            </li>
+            <li>
+              Recommendations to the GRB from the Governance Review Team (GRT) 
+              <a
+                href="/it-governance/undefined/grb-review#details"
+              >
+                Go to GRT recommendations
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div
+      class="border-bottom-1px border-info-light margin-y-3"
+    />
+    <strong>
+      Step 2
+    </strong>
+    : Ask questions and participate in discussions.
+    <div
+      class="margin-left-105"
+    >
+      <div
+        class="easi-collapsable-link"
+      >
+        <button
+          aria-controls="voting-step-1"
+          aria-expanded="true"
+          class="usa-button usa-button--unstyled display-flex flex-align-center text-bold margin-top-2"
+          data-testid="collapsable-link"
+          type="button"
+        >
+          <svg
+            class="usa-icon margin-right-05"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+            />
+          </svg>
+          How should I participate in discussions?
+        </button>
+        <div
+          class="padding-bottom-2px easi-collapsable-link__content"
+          id="voting-step-1"
+        >
+          <ul
+            class="padding-left-2 margin-top-0 margin-bottom-0 smaller-bullet-list"
+          >
+            <li>
+              Start a new discussion thread for each new topic where possible.
+            </li>
+            <li>
+              Tag individuals or groups in discussions in order to notify those individuals and promote awareness and open communication.
+            </li>
+            <li>
+              Use the main discussion board for any open conversations, including those with the project team. 
+              <a
+                class="display-block"
+                href="/it-governance/undefined/grb-review#discussions"
+                style="margin-left: 20px;"
+              >
+                View discussion board
+              </a>
+            </li>
+            <li>
+              Use the closed discussion board for any conversations that should be kept internal to the GRB and the Governance Admin Team. 
+              <a
+                class="display-block"
+                href="/it-governance/undefined/grb-review#discussions"
+                style="margin-left: 20px;"
+              >
+                View discussion board
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div
+      class="border-bottom-1px border-info-light margin-y-3"
+    />
+    <strong>
+      Step 3
+    </strong>
+    : Submit your opinion about this IT Governance request.
+    <div
+      class="margin-bottom-1"
+    >
+      <p
+        class="margin-y-0"
+      >
+        After reviewing, select either No objection or Object to add your vote on the merit of this project. You will also have the option to add a comment for additional context about your vote.
+      </p>
+    </div>
+    <div
+      class="display-block margin-bottom-105 "
+    >
+      <span
+        class="text-bold margin-right-1"
+      >
+        You voted
+      </span>
+      <span
+        class="easi-tag easi-state-tag text-white margin-bottom-105  bg-success-dark"
+        data-testid="vote-tag"
+      >
+        No objection
+      </span>
+      <span
+        class="margin-left-1 text-no-wrap text-base-dark"
+      >
+        on March 21, 2025
+      </span>
+    </div>
+    <button
+      class="usa-button usa-button--outline"
+      data-testid="button"
+      type="button"
+    >
+      Change vote
+    </button>
+  </div>
+</DocumentFragment>
+`;
