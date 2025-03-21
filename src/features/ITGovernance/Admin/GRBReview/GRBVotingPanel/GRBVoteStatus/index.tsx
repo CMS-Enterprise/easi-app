@@ -7,13 +7,17 @@ import Tag from 'components/Tag';
 import { formatDateUtc } from 'utils/date';
 
 type GRBVoteStatusProps = {
-  vote: SystemIntakeAsyncGRBVotingOption;
-  dateVoted: string;
+  vote: SystemIntakeAsyncGRBVotingOption | null | undefined;
+  dateVoted: string | null | undefined;
   className?: string;
 };
 
 const GRBVoteStatus = ({ vote, dateVoted, className }: GRBVoteStatusProps) => {
   const { t } = useTranslation('grbReview');
+
+  if (!vote || !dateVoted) {
+    return null;
+  }
 
   return (
     <div className={classNames('display-block', className)}>

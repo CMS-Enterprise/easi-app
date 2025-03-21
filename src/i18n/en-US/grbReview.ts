@@ -378,7 +378,9 @@ export default {
         cancel: 'Cancel and go back',
         keepExistingVote: 'Keep existing vote',
         error:
-          'There was an issue submitting your vote. Please try again, and if the problem persists, try again later.'
+          'There was an issue submitting your vote. Please try again, and if the problem persists, try again later.',
+        validation: 'Vote comment is required',
+        validationMustChange: 'Vote comment must be changed'
       }
     }
   },

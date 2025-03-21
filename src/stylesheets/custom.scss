@@ -406,6 +406,11 @@ body * {
 .border-info-light {
   border-color: color('info-light');
 }
+
 .border-none {
   border: none !important
+}
+
+abbr[title] {
+  text-decoration: none;
 }

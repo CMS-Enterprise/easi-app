@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
+import { ErrorMessage } from '@hookform/error-message';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, ButtonGroup, FormGroup, Label } from '@trussworks/react-uswds';
 import {
   CastGRBReviewerVoteMutationVariables,
@@ -9,16 +11,38 @@ import {
   SystemIntakeGRBReviewerFragment,
   useCastGRBReviewerVoteMutation
 } from 'gql/generated/graphql';
+import i18next from 'i18next';
+import * as Yup from 'yup';
 
 import Alert from 'components/Alert';
 import { useEasiForm } from 'components/EasiForm';
+import FieldErrorMsg from 'components/FieldErrorMsg';
 import Modal from 'components/Modal';
 import RequiredFieldsText from 'components/RequiredFieldsText';
 import TextAreaField from 'components/TextAreaField';
 
+import GRBVoteStatus from '../GRBVoteStatus';
+
 type GRBVotingModalProps = {
   grbReviewer: SystemIntakeGRBReviewerFragment;
 };
+
+const GRBVoteSchema = (originalComment?: string | null) =>
+  Yup.object({
+    voteComment: Yup.string()
+      .required(
+        i18next.t<string>('grbReview:reviewTask.voting.modal.validation')
+      )
+      .test(
+        'is-not-original-value',
+        i18next.t<string>(
+          'grbReview:reviewTask.voting.modal.validationMustChange'
+        ),
+        value => {
+          return value !== originalComment;
+        }
+      )
+  });
 
 const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
   const { t } = useTranslation('grbReview');
@@ -31,14 +55,21 @@ const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
+  const hasVoted = !!grbReviewer.vote;
+
   const defaultVote =
     grbReviewer.vote === SystemIntakeAsyncGRBVotingOption.NO_OBJECTION
       ? SystemIntakeAsyncGRBVotingOption.OBJECTION
       : SystemIntakeAsyncGRBVotingOption.NO_OBJECTION;
 
-  const { control, watch, setValue, handleSubmit } = useEasiForm<
-    CastGRBReviewerVoteMutationVariables['input']
-  >({
+  const {
+    control,
+    watch,
+    setValue,
+    handleSubmit,
+    reset,
+    formState: { errors }
+  } = useEasiForm<CastGRBReviewerVoteMutationVariables['input']>({
     defaultValues: {
       systemIntakeID: systemId,
       vote: grbReviewer.vote
@@ -52,10 +83,11 @@ const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
         ? defaultVote
         : SystemIntakeAsyncGRBVotingOption.NO_OBJECTION,
       voteComment: grbReviewer.voteComment || ''
-    }
+    },
+    resolver: hasVoted
+      ? yupResolver(GRBVoteSchema(grbReviewer.voteComment))
+      : undefined
   });
-
-  const hasVoted = !!grbReviewer.vote;
 
   const voteType: SystemIntakeAsyncGRBVotingOption = watch('vote');
 
@@ -92,7 +124,7 @@ const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
         hideCloseButton
       >
         <h3 className="margin-top-0 margin-bottom-0">
-          {grbReviewer.vote ? (
+          {hasVoted ? (
             t('reviewTask.voting.modal.titleChangeVote')
           ) : (
             <>
@@ -103,13 +135,23 @@ const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
           )}
         </h3>
 
+        <GRBVoteStatus
+          vote={grbReviewer.vote}
+          dateVoted={grbReviewer.dateVoted}
+          className="margin-bottom-0 margin-top-1"
+        />
+
         {err && (
           <Alert type="error" slim>
             {t('technicalAssistance:documents.upload.error')}
           </Alert>
         )}
 
-        <p>{t('reviewTask.voting.modal.description')}</p>
+        <p>
+          {hasVoted
+            ? t('reviewTask.voting.modal.descriptionChangeVote')
+            : t('reviewTask.voting.modal.description')}
+        </p>
 
         {commentRequired && (
           <RequiredFieldsText className="margin-top-0 font-body-sm" />
@@ -118,8 +160,8 @@ const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
         <Controller
           name="voteComment"
           control={control}
-          render={({ field, fieldState: { error } }) => (
-            <FormGroup>
+          render={({ field }) => (
+            <FormGroup className="margin-top-0">
               <Label
                 id="voteCommentLabel"
                 htmlFor="voteComment"
@@ -130,9 +172,17 @@ const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
                   : t('reviewTask.voting.modal.commentsOptional')}
               </Label>
 
-              <p className="text-base margin-top-1">
-                {t('reviewTask.voting.modal.hint')}
+              <p className="text-base margin-y-1">
+                {hasVoted
+                  ? t('reviewTask.voting.modal.hintChangeVote')
+                  : t('reviewTask.voting.modal.hint')}
               </p>
+
+              <ErrorMessage
+                errors={errors}
+                name="voteComment"
+                as={<FieldErrorMsg />}
+              />
 
               <TextAreaField
                 {...field}
@@ -174,8 +224,8 @@ const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
           className="margin-left-2"
           unstyled
           onClick={() => {
-            // Reset to default value when closing modal
-            setValue('voteComment', grbReviewer.voteComment);
+            // Reset form when closing modal
+            reset();
             setIsOpen(false);
           }}
         >
