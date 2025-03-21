@@ -1,5 +1,6 @@
 import React, { useCallback, useContext, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import {
   Button,
@@ -17,10 +18,12 @@ import {
   SystemIntakeDocumentFragmentFragment,
   SystemIntakeFragmentFragment,
   SystemIntakeGRBReviewerFragment,
+  SystemIntakeGRBReviewerVotingRole,
   SystemIntakeState,
   useDeleteSystemIntakeGRBReviewerMutation,
   useStartGRBReviewMutation
 } from 'gql/generated/graphql';
+import { AppState } from 'stores/reducers/rootReducer';
 
 import AdminAction from 'components/AdminAction';
 import Alert from 'components/Alert';
@@ -46,6 +49,7 @@ import PresentationLinksCard from './PresentationLinksCard/PresentationLinksCard
 import Discussions from './Discussions';
 import GRBReviewerForm from './GRBReviewerForm';
 import GRBReviewStatusCard, { GRBReviewStatus } from './GRBReviewStatusCard';
+import GRBVotingPanel from './GRBVotingPanel';
 
 import './index.scss';
 
@@ -98,6 +102,14 @@ const GRBReview = ({
     useState<boolean>(false);
 
   const { showMessage } = useMessage();
+
+  const { euaId } = useSelector((appState: AppState) => appState.auth);
+
+  const currentGRBReviewer = grbReviewers.find(
+    reviewer =>
+      reviewer.userAccount.username === euaId &&
+      reviewer.votingRole === SystemIntakeGRBReviewerVotingRole.VOTING
+  );
 
   const [mutate] = useDeleteSystemIntakeGRBReviewerMutation({
     refetchQueries: [GetSystemIntakeGRBReviewDocument]
@@ -324,6 +336,13 @@ const GRBReview = ({
                   </AdminAction>
                 )}
               </>
+            )}
+
+            {/* GRB Reviewer Voting Panel */}
+            {/* TODO: Add grbReviewStartedAt once work is done to start review */}
+            {/* {!isITGovAdmin && grbReviewStartedAt && currentGRBReviewer && ( */}
+            {!isITGovAdmin && currentGRBReviewer && (
+              <GRBVotingPanel grbReviewer={currentGRBReviewer} />
             )}
 
             {/* Review details */}

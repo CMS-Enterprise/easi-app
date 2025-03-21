@@ -142,6 +142,9 @@ export default gql(/* GraphQL */ `
       decisionState
       submittedAt
     }
+    grbReviewers {
+      ...SystemIntakeGRBReviewer
+    }
     grbDate
     grbReviewType
     grbPresentationLinks {
