@@ -11,8 +11,17 @@ type grbEmailJobs struct {
 	SendAsyncVotingHalfwayThroughEmailJob ScheduleJobWrapper[AsyncGRBVotingInput]
 }
 
-var GRBEmailJobs = &grbEmailJobs{
-	SendAsyncVotingHalfwayThroughEmailJob: NewScheduledJobWrapper(sharedScheduler, gocron.CronJob("0 2 * * *", false), sendAsyncVotingHalfwayThroughEmailJobFunction),
+var GRBEmailJobs = GetGRBEmailJobs(sharedScheduler)
+
+// (cha) &grbEmailJobs{
+// 	SendAsyncVotingHalfwayThroughEmailJob: NewScheduledJobWrapper(sharedScheduler, gocron.CronJob("0 2 * * *", false), sendAsyncVotingHalfwayThroughEmailJobFunction),
+// }
+
+// GetGRBEmailJobs initializes all GRB email jobs
+func GetGRBEmailJobs(scheduler gocron.Scheduler) *grbEmailJobs {
+	return &grbEmailJobs{
+		SendAsyncVotingHalfwayThroughEmailJob: NewScheduledJobWrapper(sharedScheduler, gocron.CronJob("0 2 * * *", false), sendAsyncVotingHalfwayThroughEmailJobFunction),
+	}
 }
 
 // TODO, does this even need input? It will be daily anyways.
