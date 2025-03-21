@@ -97,11 +97,17 @@ const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
       });
   });
 
+  const resetModal = () => {
+    setError(false);
+    reset();
+    setIsOpen(false);
+  };
+
   return (
     <>
       <Modal
         isOpen={isOpen}
-        closeModal={() => setIsOpen(false)}
+        closeModal={() => resetModal()}
         className="easi-body-normal padding-bottom-1"
       >
         <h3 className="margin-top-0 margin-bottom-0">
@@ -205,9 +211,7 @@ const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
           className="margin-left-2"
           unstyled
           onClick={() => {
-            // Reset form when closing modal
-            reset();
-            setIsOpen(false);
+            resetModal();
           }}
         >
           {hasVoted
