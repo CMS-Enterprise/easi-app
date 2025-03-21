@@ -17,7 +17,6 @@ export type ModalProps = {
   closeModal: () => void;
   shouldCloseOnOverlayClick?: boolean;
   noScrollOnClose?: boolean;
-  hideCloseButton?: boolean;
 };
 
 const Modal = ({
@@ -30,8 +29,7 @@ const Modal = ({
   openModal,
   closeModal,
   shouldCloseOnOverlayClick = false,
-  noScrollOnClose,
-  hideCloseButton
+  noScrollOnClose
 }: ModalProps) => {
   const handleOpenModal = () => {
     if (!noScrollOnClose) noScroll.on();
@@ -65,19 +63,15 @@ const Modal = ({
       // Fix for "App element is not defined" unit test error
       ariaHideApp={root ? undefined : false}
     >
-      {!hideCloseButton && (
-        <button
-          type="button"
-          className="usa-button usa-modal__close margin-top-0"
-          aria-label="Close Modal"
-          onClick={closeModal}
-        >
-          <Icon.Close size={4} />
-          {title && (
-            <h4 className="text-base margin-0 margin-left-1">{title}</h4>
-          )}
-        </button>
-      )}
+      <button
+        type="button"
+        className="usa-button usa-modal__close margin-top-05 margin-right-1"
+        aria-label="Close Modal"
+        onClick={closeModal}
+      >
+        <Icon.Close size={4} />
+        {title && <h4 className="text-base margin-0 margin-left-1">{title}</h4>}
+      </button>
 
       <div className="easi-modal__body">{children}</div>
     </ReactModal>

@@ -11,8 +11,6 @@ import {
   SystemIntakeGRBReviewerFragment,
   useCastGRBReviewerVoteMutation
 } from 'gql/generated/graphql';
-import i18next from 'i18next';
-import * as Yup from 'yup';
 
 import Alert from 'components/Alert';
 import { useEasiForm } from 'components/EasiForm';
@@ -20,29 +18,13 @@ import FieldErrorMsg from 'components/FieldErrorMsg';
 import Modal from 'components/Modal';
 import RequiredFieldsText from 'components/RequiredFieldsText';
 import TextAreaField from 'components/TextAreaField';
+import { GRBVoteSchema } from 'validations/grbReviewSchema';
 
 import GRBVoteStatus from '../GRBVoteStatus';
 
 type GRBVotingModalProps = {
   grbReviewer: SystemIntakeGRBReviewerFragment;
 };
-
-const GRBVoteSchema = (originalComment?: string | null) =>
-  Yup.object({
-    voteComment: Yup.string()
-      .required(
-        i18next.t<string>('grbReview:reviewTask.voting.modal.validation')
-      )
-      .test(
-        'is-not-original-value',
-        i18next.t<string>(
-          'grbReview:reviewTask.voting.modal.validationMustChange'
-        ),
-        value => {
-          return value !== originalComment;
-        }
-      )
-  });
 
 const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
   const { t } = useTranslation('grbReview');
@@ -120,8 +102,7 @@ const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
       <Modal
         isOpen={isOpen}
         closeModal={() => setIsOpen(false)}
-        className="easi-body-normal padding-top-6 padding-bottom-1"
-        hideCloseButton
+        className="easi-body-normal padding-bottom-1"
       >
         <h3 className="margin-top-0 margin-bottom-0">
           {hasVoted ? (
