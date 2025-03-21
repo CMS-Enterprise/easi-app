@@ -1965,7 +1965,7 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "mutation ManuallyEndSystemIntakeGRBReviewAsyncVoting($input: ManuallyEndSystemIntakeGRBReviewAsyncVotingInput!) {\n  manuallyEndSystemIntakeGRBReviewAsyncVoting(input: $input) {\n    systemIntake {\n      id\n      grbReviewAsyncStatus\n    }\n  }\n}",
+								"query": "mutation ManuallyEndSystemIntakeGRBReviewAsyncVoting {\n  manuallyEndSystemIntakeGRBReviewAsyncVoting(systemIntakeID: \"{{systemIntakeID}}\") {\n    systemIntake {\n      id\n      grbReviewAsyncStatus\n    }\n  }\n}",
 								"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\"\r\n  }\r\n}"
 							}
 						},

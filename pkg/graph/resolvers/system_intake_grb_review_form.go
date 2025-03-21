@@ -5,6 +5,8 @@ import (
 	"errors"
 	"time"
 
+	"github.com/google/uuid"
+
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -146,12 +148,12 @@ func CalcSystemIntakeGRBReviewAsyncStatus(
 func ManuallyEndSystemIntakeGRBReviewAsyncVoting(
 	ctx context.Context,
 	store *storage.Store,
-	input models.ManuallyEndSystemIntakeGRBReviewAsyncVotingInput,
+	systemIntakeID uuid.UUID,
 ) (*models.UpdateSystemIntakePayload, error) {
 	currentTime := time.Now()
 
 	// Fetch intake by ID
-	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	intake, err := store.FetchSystemIntakeByID(ctx, systemIntakeID)
 	if err != nil {
 		return nil, err
 	}

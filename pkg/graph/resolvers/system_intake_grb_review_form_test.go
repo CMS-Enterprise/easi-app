@@ -235,9 +235,7 @@ func (s *ResolverSuite) TestManuallyEndSystemIntakeGRBReviewAsyncVoting() {
 	updatedPayload, err := ManuallyEndSystemIntakeGRBReviewAsyncVoting(
 		s.testConfigs.Context,
 		s.testConfigs.Store,
-		models.ManuallyEndSystemIntakeGRBReviewAsyncVotingInput{
-			SystemIntakeID: systemIntake.ID,
-		},
+		systemIntake.ID,
 	)
 
 	// Check for errors

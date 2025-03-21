@@ -959,11 +959,6 @@ export enum LifecycleCostYear {
   LIFECYCLE_COST_YEAR_5 = 'LIFECYCLE_COST_YEAR_5'
 }
 
-/** Data needed to manually end a system intake's GRB review voting */
-export type ManuallyEndSystemIntakeGRBReviewAsyncVotingInput = {
-  systemIntakeID: Scalars['UUID']['input'];
-};
-
 /** Defines the mutations for the schema */
 export type Mutation = {
   __typename: 'Mutation';
@@ -1339,7 +1334,7 @@ export type MutationDeleteTrbLeadOptionArgs = {
 
 /** Defines the mutations for the schema */
 export type MutationManuallyEndSystemIntakeGRBReviewAsyncVotingArgs = {
-  input: ManuallyEndSystemIntakeGRBReviewAsyncVotingInput;
+  systemIntakeID: Scalars['UUID']['input'];
 };
 
 

@@ -591,7 +591,7 @@ type ComplexityRoot struct {
 		DeleteTRBRequestDocument                            func(childComplexity int, id uuid.UUID) int
 		DeleteTRBRequestFundingSources                      func(childComplexity int, input models.DeleteTRBRequestFundingSourcesInput) int
 		DeleteTrbLeadOption                                 func(childComplexity int, eua string) int
-		ManuallyEndSystemIntakeGRBReviewAsyncVoting         func(childComplexity int, input models.ManuallyEndSystemIntakeGRBReviewAsyncVotingInput) int
+		ManuallyEndSystemIntakeGRBReviewAsyncVoting         func(childComplexity int, systemIntakeID uuid.UUID) int
 		ReopenTrbRequest                                    func(childComplexity int, input models.ReopenTRBRequestInput) int
 		RequestReviewForTRBGuidanceLetter                   func(childComplexity int, id uuid.UUID) int
 		SendCantFindSomethingEmail                          func(childComplexity int, input models.SendCantFindSomethingEmailInput) int
@@ -1283,7 +1283,7 @@ type MutationResolver interface {
 	SetSystemIntakeGRBPresentationLinks(ctx context.Context, input models.SystemIntakeGRBPresentationLinksInput) (*models.SystemIntakeGRBPresentationLinks, error)
 	UploadSystemIntakeGRBPresentationDeck(ctx context.Context, input models.UploadSystemIntakeGRBPresentationDeckInput) (*models.SystemIntakeGRBPresentationLinks, error)
 	DeleteSystemIntakeGRBPresentationLinks(ctx context.Context, input models.DeleteSystemIntakeGRBPresentationLinksInput) (uuid.UUID, error)
-	ManuallyEndSystemIntakeGRBReviewAsyncVoting(ctx context.Context, input models.ManuallyEndSystemIntakeGRBReviewAsyncVotingInput) (*models.UpdateSystemIntakePayload, error)
+	ManuallyEndSystemIntakeGRBReviewAsyncVoting(ctx context.Context, systemIntakeID uuid.UUID) (*models.UpdateSystemIntakePayload, error)
 	ArchiveSystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error)
 	SendFeedbackEmail(ctx context.Context, input models.SendFeedbackEmailInput) (*string, error)
 	SendCantFindSomethingEmail(ctx context.Context, input models.SendCantFindSomethingEmailInput) (*string, error)
@@ -4541,7 +4541,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.ManuallyEndSystemIntakeGRBReviewAsyncVoting(childComplexity, args["input"].(models.ManuallyEndSystemIntakeGRBReviewAsyncVotingInput)), true
+		return e.complexity.Mutation.ManuallyEndSystemIntakeGRBReviewAsyncVoting(childComplexity, args["systemIntakeID"].(uuid.UUID)), true
 
 	case "Mutation.reopenTrbRequest":
 		if e.complexity.Mutation.ReopenTrbRequest == nil {
@@ -8136,7 +8136,6 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputDeleteSystemIntakeGRBReviewerInput,
 		ec.unmarshalInputDeleteTRBRequestFundingSourcesInput,
 		ec.unmarshalInputEmailNotificationRecipients,
-		ec.unmarshalInputManuallyEndSystemIntakeGRBReviewAsyncVotingInput,
 		ec.unmarshalInputReopenTRBRequestInput,
 		ec.unmarshalInputSendCantFindSomethingEmailInput,
 		ec.unmarshalInputSendFeedbackEmailInput,
@@ -9027,13 +9026,6 @@ input UploadSystemIntakeGRBPresentationDeckInput {
 }
 
 input DeleteSystemIntakeGRBPresentationLinksInput {
-  systemIntakeID: UUID!
-}
-
-"""
-Data needed to manually end a system intake's GRB review voting
-"""
-input ManuallyEndSystemIntakeGRBReviewAsyncVotingInput {
   systemIntakeID: UUID!
 }
 
@@ -11014,7 +11006,7 @@ type Mutation {
   setSystemIntakeGRBPresentationLinks(input: SystemIntakeGRBPresentationLinksInput!): SystemIntakeGRBPresentationLinks
   uploadSystemIntakeGRBPresentationDeck(input: UploadSystemIntakeGRBPresentationDeckInput!): SystemIntakeGRBPresentationLinks
   deleteSystemIntakeGRBPresentationLinks(input: DeleteSystemIntakeGRBPresentationLinksInput!): UUID!
-  manuallyEndSystemIntakeGRBReviewAsyncVoting(input: ManuallyEndSystemIntakeGRBReviewAsyncVotingInput!): UpdateSystemIntakePayload
+  manuallyEndSystemIntakeGRBReviewAsyncVoting(systemIntakeID: UUID!): UpdateSystemIntakePayload
   @hasRole(role: EASI_GOVTEAM)
 
   archiveSystemIntake(id: UUID!): SystemIntake!
@@ -12934,28 +12926,28 @@ func (ec *executionContext) field_Mutation_deleteTrbLeadOption_argsEua(
 func (ec *executionContext) field_Mutation_manuallyEndSystemIntakeGRBReviewAsyncVoting_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := ec.field_Mutation_manuallyEndSystemIntakeGRBReviewAsyncVoting_argsInput(ctx, rawArgs)
+	arg0, err := ec.field_Mutation_manuallyEndSystemIntakeGRBReviewAsyncVoting_argsSystemIntakeID(ctx, rawArgs)
 	if err != nil {
 		return nil, err
 	}
-	args["input"] = arg0
+	args["systemIntakeID"] = arg0
 	return args, nil
 }
-func (ec *executionContext) field_Mutation_manuallyEndSystemIntakeGRBReviewAsyncVoting_argsInput(
+func (ec *executionContext) field_Mutation_manuallyEndSystemIntakeGRBReviewAsyncVoting_argsSystemIntakeID(
 	ctx context.Context,
 	rawArgs map[string]any,
-) (models.ManuallyEndSystemIntakeGRBReviewAsyncVotingInput, error) {
-	if _, ok := rawArgs["input"]; !ok {
-		var zeroVal models.ManuallyEndSystemIntakeGRBReviewAsyncVotingInput
+) (uuid.UUID, error) {
+	if _, ok := rawArgs["systemIntakeID"]; !ok {
+		var zeroVal uuid.UUID
 		return zeroVal, nil
 	}
 
-	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-	if tmp, ok := rawArgs["input"]; ok {
-		return ec.unmarshalNManuallyEndSystemIntakeGRBReviewAsyncVotingInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐManuallyEndSystemIntakeGRBReviewAsyncVotingInput(ctx, tmp)
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
+	if tmp, ok := rawArgs["systemIntakeID"]; ok {
+		return ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
 	}
 
-	var zeroVal models.ManuallyEndSystemIntakeGRBReviewAsyncVotingInput
+	var zeroVal uuid.UUID
 	return zeroVal, nil
 }
 
@@ -34583,7 +34575,7 @@ func (ec *executionContext) _Mutation_manuallyEndSystemIntakeGRBReviewAsyncVotin
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		directive0 := func(rctx context.Context) (any, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().ManuallyEndSystemIntakeGRBReviewAsyncVoting(rctx, fc.Args["input"].(models.ManuallyEndSystemIntakeGRBReviewAsyncVotingInput))
+			return ec.resolvers.Mutation().ManuallyEndSystemIntakeGRBReviewAsyncVoting(rctx, fc.Args["systemIntakeID"].(uuid.UUID))
 		}
 
 		directive1 := func(ctx context.Context) (any, error) {
@@ -63684,33 +63676,6 @@ func (ec *executionContext) unmarshalInputEmailNotificationRecipients(ctx contex
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputManuallyEndSystemIntakeGRBReviewAsyncVotingInput(ctx context.Context, obj any) (models.ManuallyEndSystemIntakeGRBReviewAsyncVotingInput, error) {
-	var it models.ManuallyEndSystemIntakeGRBReviewAsyncVotingInput
-	asMap := map[string]any{}
-	for k, v := range obj.(map[string]any) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"systemIntakeID"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "systemIntakeID":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
-			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.SystemIntakeID = data
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputReopenTRBRequestInput(ctx context.Context, obj any) (models.ReopenTRBRequestInput, error) {
 	var it models.ReopenTRBRequestInput
 	asMap := map[string]any{}
@@ -78889,11 +78854,6 @@ func (ec *executionContext) marshalNLaunchDarklySettings2ᚖgithubᚗcomᚋcms�
 		return graphql.Null
 	}
 	return ec._LaunchDarklySettings(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalNManuallyEndSystemIntakeGRBReviewAsyncVotingInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐManuallyEndSystemIntakeGRBReviewAsyncVotingInput(ctx context.Context, v any) (models.ManuallyEndSystemIntakeGRBReviewAsyncVotingInput, error) {
-	res, err := ec.unmarshalInputManuallyEndSystemIntakeGRBReviewAsyncVotingInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNPersonRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐPersonRole(ctx context.Context, v any) (models.PersonRole, error) {

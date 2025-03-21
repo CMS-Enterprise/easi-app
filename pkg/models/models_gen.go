@@ -363,11 +363,6 @@ type LaunchDarklySettings struct {
 	SignedHash string `json:"signedHash"`
 }
 
-// Data needed to manually end a system intake's GRB review voting
-type ManuallyEndSystemIntakeGRBReviewAsyncVotingInput struct {
-	SystemIntakeID uuid.UUID `json:"systemIntakeID"`
-}
-
 // Defines the mutations for the schema
 type Mutation struct {
 }
