@@ -28,6 +28,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/authorization"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/oktaapi"
+	"github.com/cms-enterprise/easi-app/pkg/scheduler"
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 	"github.com/cms-enterprise/easi-app/pkg/usersearch"
 
@@ -368,6 +369,8 @@ func (s *Server) routes() {
 		store.UpdateSystemIntake,
 		emailClient.SendLCIDExpirationAlertEmail,
 		time.Hour*24)
+	// start the scheduler
+	scheduler.StartScheduler(store)
 }
 
 func newGQLServer(es graphql.ExecutableSchema) *handler.Server {

@@ -27,6 +27,8 @@ func NewScheduledJobWrapper[input comparable](scheduler gocron.Scheduler, jobDef
 		gocron.NewTask(
 			jobFunction,
 		),
+		// TODO figure out job registration options
+		gocron.WithContext(context.Background()),
 	)
 	if err != nil {
 		fmt.Errorf("error creating scheduler: %v", err)

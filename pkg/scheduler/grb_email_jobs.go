@@ -2,18 +2,22 @@ package scheduler
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/go-co-op/gocron/v2"
+
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 type grbEmailJobs struct {
+	// SendAsyncVotingHalfwayThroughEmailJob is a job that sends an email when the voting session is halfway through
 	SendAsyncVotingHalfwayThroughEmailJob ScheduleJobWrapper[AsyncGRBVotingInput]
 }
 
-var GRBEmailJobs = GetGRBEmailJobs(sharedScheduler)
+// var GRBEmailJobs = GetGRBEmailJobs(GetScheduler())
 
-// (cha) &grbEmailJobs{
+// &grbEmailJobs{
 // 	SendAsyncVotingHalfwayThroughEmailJob: NewScheduledJobWrapper(sharedScheduler, gocron.CronJob("0 2 * * *", false), sendAsyncVotingHalfwayThroughEmailJobFunction),
 // }
 
@@ -41,4 +45,18 @@ func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, input As
 		   a. consider spinning up a separate job for each email
 
 	*/
+}
+
+func init() {
+	RegisterJob("SendAsyncVotingHalfwayThroughEmailJob", func(store *storage.Store, scheduler gocron.Scheduler) {
+		_, err := scheduler.NewJob(
+			gocron.CronJob("0 2 * * *", false),
+			gocron.NewTask(sendAsyncVotingHalfwayThroughEmailJobFunction,
+				AsyncGRBVotingInput{endDate: time.Now()},
+			),
+		)
+		if err != nil {
+			fmt.Errorf("error scheduling job: %v", err)
+		}
+	})
 }
