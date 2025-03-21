@@ -379,7 +379,7 @@ export default {
         error:
           'There was an issue submitting your vote. Please try again, and if the problem persists, try again later.',
         validation: 'Vote comment is required',
-        validationMustChange: 'Vote comment must be changed'
+        validationMustChange: 'Vote comment must be updated'
       }
     }
   },
