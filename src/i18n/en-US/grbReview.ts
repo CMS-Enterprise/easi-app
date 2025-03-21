@@ -345,8 +345,7 @@ export default {
       discussionItems: [
         'Start a new discussion thread for each new topic where possible.',
         'Tag individuals or groups in discussions in order to notify those individuals and promote awareness and open communication.',
-        'Use the main discussion board for any open conversations, including those with the project team. <discussionLink>View discussion board</discussionLink>',
-        'Use the closed discussion board for any conversations that should be kept internal to the GRB and the Governance Admin Team. <discussionLink>View discussion board</discussionLink>'
+        'Use the discussion boards to communicate and ask questions about this project. <discussionLink>View discussion board</discussionLink>'
       ],
       step3:
         '<bold>Step 3</bold>: Submit your opinion about this IT Governance request.',

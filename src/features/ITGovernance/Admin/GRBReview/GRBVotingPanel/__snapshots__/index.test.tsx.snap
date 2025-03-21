@@ -137,21 +137,11 @@ exports[`GRBVotingPanel > matches snapshot 1`] = `
               Tag individuals or groups in discussions in order to notify those individuals and promote awareness and open communication.
             </li>
             <li>
-              Use the main discussion board for any open conversations, including those with the project team. 
+              Use the discussion boards to communicate and ask questions about this project. 
               <a
                 class="display-block"
                 href="/it-governance/undefined/grb-review#discussions"
-                style="margin-left: 20px;"
-              >
-                View discussion board
-              </a>
-            </li>
-            <li>
-              Use the closed discussion board for any conversations that should be kept internal to the GRB and the Governance Admin Team. 
-              <a
-                class="display-block"
-                href="/it-governance/undefined/grb-review#discussions"
-                style="margin-left: 20px;"
+                style="padding-left: 20px;"
               >
                 View discussion board
               </a>
