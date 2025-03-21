@@ -120,7 +120,7 @@ const GRBVotingPanel = ({ grbReviewer, className }: GRBVotingPanelProps) => {
                       <NavHashLink
                         to={`/it-governance/${systemId}/grb-review#discussions`}
                         className="display-block"
-                        style={{ marginLeft: '20px' }}
+                        style={{ paddingLeft: '20px' }}
                       >
                         {' '}
                       </NavHashLink>
