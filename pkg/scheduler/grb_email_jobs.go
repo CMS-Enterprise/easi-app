@@ -2,12 +2,9 @@ package scheduler
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/go-co-op/gocron/v2"
-
-	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 type grbEmailJobs struct {
@@ -15,7 +12,8 @@ type grbEmailJobs struct {
 	SendAsyncVotingHalfwayThroughEmailJob ScheduleJobWrapper[AsyncGRBVotingInput]
 }
 
-// var GRBEmailJobs = GetGRBEmailJobs(GetScheduler())
+// TODO: create a register call here as var instead of an init func? Something that is clear to others?
+var GRBEmailJobs = GetGRBEmailJobs(GetScheduler())
 
 // &grbEmailJobs{
 // 	SendAsyncVotingHalfwayThroughEmailJob: NewScheduledJobWrapper(sharedScheduler, gocron.CronJob("0 2 * * *", false), sendAsyncVotingHalfwayThroughEmailJobFunction),
@@ -24,7 +22,7 @@ type grbEmailJobs struct {
 // GetGRBEmailJobs initializes all GRB email jobs
 func GetGRBEmailJobs(scheduler gocron.Scheduler) *grbEmailJobs {
 	return &grbEmailJobs{
-		SendAsyncVotingHalfwayThroughEmailJob: NewScheduledJobWrapper(sharedScheduler, gocron.CronJob("0 2 * * *", false), sendAsyncVotingHalfwayThroughEmailJobFunction),
+		SendAsyncVotingHalfwayThroughEmailJob: NewScheduledJobWrapper("SendAsyncVotingHalfwayThroughEmailJob", scheduler, gocron.CronJob("0 2 * * *", false), sendAsyncVotingHalfwayThroughEmailJobFunction, AsyncGRBVotingInput{endDate: time.Now()}),
 	}
 }
 
@@ -47,16 +45,16 @@ func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, input As
 	*/
 }
 
-func init() {
-	RegisterJob("SendAsyncVotingHalfwayThroughEmailJob", func(store *storage.Store, scheduler gocron.Scheduler) {
-		_, err := scheduler.NewJob(
-			gocron.CronJob("0 2 * * *", false),
-			gocron.NewTask(sendAsyncVotingHalfwayThroughEmailJobFunction,
-				AsyncGRBVotingInput{endDate: time.Now()},
-			),
-		)
-		if err != nil {
-			fmt.Errorf("error scheduling job: %v", err)
-		}
-	})
-}
+// func init() {
+// 	RegisterJob("SendAsyncVotingHalfwayThroughEmailJob", func(store *storage.Store, scheduler gocron.Scheduler) {
+// 		_, err := scheduler.NewJob(
+// 			gocron.CronJob("0 2 * * *", false),
+// 			gocron.NewTask(sendAsyncVotingHalfwayThroughEmailJobFunction,
+// 				AsyncGRBVotingInput{endDate: time.Now()},
+// 			),
+// 		)
+// 		if err != nil {
+// 			fmt.Errorf("error scheduling job: %v", err)
+// 		}
+// 	})
+// }

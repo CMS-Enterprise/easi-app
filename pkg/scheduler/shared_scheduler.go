@@ -18,12 +18,19 @@ var (
 
 // var jobList map[string]ScheduleJobWrapper
 
-var jobRegistry = make(map[string]func(*storage.Store, gocron.Scheduler)) // Holds job registration functions
+// TODO, perhaps change this to a get function with a once to ensure it is only initialized once
+
+var jobRegistry map[string]RegisterJobFunction // Holds job registration functions
 
 // RegisterJob stores a job registration function to be initialized later.
-func RegisterJob(name string, jobFunc func(*storage.Store, gocron.Scheduler)) {
+func RegisterJob(name string, jobFunc RegisterJobFunction) {
 	mutex.Lock()
 	defer mutex.Unlock()
+
+	if jobRegistry == nil {
+		fmt.Println("jobRegistry is unexpectedly nil! Re-initializing...")
+		jobRegistry = make(map[string]RegisterJobFunction)
+	}
 	jobRegistry[name] = jobFunc
 }
 
