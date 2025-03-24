@@ -12,18 +12,18 @@ import (
 // exampleJobs is a struct that holds all the example jobs. It is not meant to be run in production
 // , but rather to show how to create a job.
 type exampleJobs struct {
-	RunEverySecondJob ScheduleJobWrapper[bool]
+	RunEvery5SecondJob ScheduleJobWrapper[bool]
 }
 
 var ExampleJobs = GetExampleJobs(GetScheduler())
 
 func GetExampleJobs(scheduler gocron.Scheduler) *exampleJobs {
 	return &exampleJobs{
-		RunEverySecondJob: NewScheduledJobWrapper("RunEverySecondJob", scheduler, gocron.CronJob("20 * * * * *", true), runEverySecondJobFunction, true),
+		RunEvery5SecondJob: NewScheduledJobWrapper("RunEverySecondJob", scheduler, gocron.CronJob("*/5 * * * * *", true), runEvery5SecondJobFunction, true),
 	}
 }
 
-func runEverySecondJobFunction(ctx context.Context, input bool) {
+func runEvery5SecondJobFunction(ctx context.Context, input bool) {
 	_ = input
 	logger := appcontext.ZLogger(ctx)
 
