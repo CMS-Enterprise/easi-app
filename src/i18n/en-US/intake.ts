@@ -88,11 +88,12 @@ const intake = {
     tableDescription:
       'Upload any documents relevant to your Intake Request. This could include documents such as draft IGCEs, contracting documents such as a SOO or SOW, presentation slide decks, or other informational documents.',
     continueWithoutDocuments: 'Continue without documents',
-    noDocuments: 'No documents uploaded',
+    noDocuments: 'There are no documents uploaded for this request.',
     formDescription:
       'Choose a document to upload such as a draft IGCE, contracting document, RAF or other document related to this project and Intake Request.',
     dontUpload_requester: "Don't upload and return to Intake Request",
     dontUpload_admin: "Don't upload and return to request details",
+    dontUpload_grbReviewForm: "Don't upload and return to GRB review setup",
     selectDocument: 'Select your document',
     supportingDocuments: 'Supporting documents',
     adminDescription:
@@ -308,6 +309,9 @@ const intake = {
   },
   requestDetails: {
     heading: 'Request details',
+    intakeFormOverview: 'Intake Request form overview',
+    completed: 'Completed {{completedDate}}',
+    viewFullIntake: 'View full Intake Request form',
     subsectionHeadings: {
       projectConcept: 'Project Concept',
       collaboration: 'Collaboration',

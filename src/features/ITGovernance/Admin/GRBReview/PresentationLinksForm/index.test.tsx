@@ -17,7 +17,9 @@ describe('GRB presentation links form', () => {
           <MessageProvider>
             <PresentationLinksForm
               {...systemIntake}
-              grbPresentationLinks={null}
+              grbPresentationLinks={
+                undefined as unknown as SystemIntakeGRBPresentationLinks
+              }
             />
           </MessageProvider>
         </VerboseMockedProvider>
@@ -47,9 +49,6 @@ describe('GRB presentation links form', () => {
   });
 
   it('renders the edit links form', () => {
-    const { recordingLink, transcriptFileName, presentationDeckFileName } =
-      systemIntake?.grbPresentationLinks!;
-
     render(
       <MemoryRouter>
         <VerboseMockedProvider>
@@ -57,7 +56,10 @@ describe('GRB presentation links form', () => {
             <PresentationLinksForm
               {...systemIntake}
               grbPresentationLinks={
-                systemIntake.grbPresentationLinks as SystemIntakeGRBPresentationLinks
+                {
+                  recordingLink: 'http://google.com',
+                  presentationDeckFileName: 'test.pdf'
+                } as SystemIntakeGRBPresentationLinks
               }
             />
           </MessageProvider>
@@ -82,12 +84,10 @@ describe('GRB presentation links form', () => {
     ).toHaveLength(2);
 
     expect(screen.getByRole('textbox', { name: 'Recording link' })).toHaveValue(
-      recordingLink
+      'http://google.com'
     );
 
-    expect(screen.getByText(presentationDeckFileName!)).toBeInTheDocument();
-
-    expect(screen.getByText(transcriptFileName!)).toBeInTheDocument();
+    expect(screen.getByText('test.pdf')).toBeInTheDocument();
 
     // Button should be disabled before any changes are made
     expect(

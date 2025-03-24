@@ -1,8 +1,13 @@
-import { SystemIntakeGRBReviewerFragment } from 'gql/generated/graphql';
+import {
+  SystemIntakeGRBReviewerFragment,
+  SystemIntakeGRBReviewType
+} from 'gql/generated/graphql';
 import i18next from 'i18next';
 import * as Yup from 'yup';
+import { MixedSchema } from 'yup/lib/mixed';
 
 import { grbReviewerRoles, grbReviewerVotingRoles } from 'constants/grbRoles';
+import extractObjectKeys from 'utils/extractObjectKeys';
 
 /** GRB Reviewer for IT Governance request */
 export const GRBReviewerSchema = Yup.object().shape({
@@ -49,55 +54,65 @@ export const CreateGRBReviewersSchema = Yup.object({
   )
 });
 
+export const SetGRBParticipantsAsyncSchema = Yup.object({
+  grbReviewers: Yup.array(GRBReviewerSchema).min(
+    5,
+    i18next.t('grbReview:setUpGrbReviewForm.minFive')
+  ),
+  grbReviewAsyncEndDate: Yup.date().required(
+    i18next.t('grbReview:setUpGrbReviewForm.invalidDate')
+  )
+});
+
 /** Presentation links schema */
 export const SetGRBPresentationLinksSchema = Yup.object().shape(
   {
     // Form requires either recordingLink or presentationDeckFileData fields
-    recordingLink: Yup.string().when(
-      ['$formType', 'presentationDeckFileData'],
-      {
-        is: (
-          formType: 'add' | 'edit',
-          presentationDeckFileData?: File | null
-        ) => {
-          if (formType === 'add' && !presentationDeckFileData) {
-            return true;
-          }
-
-          // Field is required if editing and presentation deck is cleared
-          if (formType === 'edit' && presentationDeckFileData === null) {
-            return true;
-          }
-
-          return false;
-        },
-        then: Yup.string().required(
-          i18next.t('grbReview:presentationLinks.emptyFormError')
-        ),
-        otherwise: Yup.string().nullable()
-      }
-    ),
-    presentationDeckFileData: Yup.mixed().test(
-      'required',
-      i18next.t('grbReview:presentationLinks.emptyFormError'),
-      (value, context) => {
-        const { recordingLink } = context.parent;
-
-        // If `recordingLink` is empty, `presentationDeckFileData` cannot be null
-        // undefined passes because it means there is an existing file
-        if (!recordingLink) {
-          return value !== null;
-        }
-
-        return true;
-      }
-    ),
+    recordingLink: Yup.string().when('presentationDeckFileData', {
+      is: (value?: MixedSchema) => !value,
+      then: Yup.string().required(
+        i18next.t('grbReview:presentationLinks.requiredField')
+      ),
+      otherwise: Yup.string()
+    }),
+    presentationDeckFileData: Yup.mixed().when('recordingLink', {
+      is: (value?: string) => !value,
+      then: Yup.mixed().required(
+        i18next.t('grbReview:presentationLinks.requiredField')
+      ),
+      otherwise: Yup.mixed()
+    }),
 
     // Optional fields
-    recordingPasscode: Yup.string().nullable(),
+    recordingPasscode: Yup.string(),
     transcriptFileData: Yup.mixed(),
-    transcriptLink: Yup.string().nullable()
+    transcriptLink: Yup.string()
   },
   // Prevents cyclic dependency error
   [['recordingLink', 'presentationDeckFileData']]
 );
+
+export const GrbReviewTypeSchema = Yup.object().shape({
+  grbReviewType: Yup.mixed()
+    .oneOf(extractObjectKeys(SystemIntakeGRBReviewType))
+    .required()
+});
+
+export const GrbPresentationSchema = Yup.object().shape({
+  grbDate: Yup.string()
+    .nullable()
+    .when('grbReviewType', {
+      is: (value?: SystemIntakeGRBReviewType) =>
+        value === SystemIntakeGRBReviewType.STANDARD,
+      then: Yup.string().required(
+        i18next.t('grbReview:presentationLinks.requiredField')
+      ),
+      otherwise: Yup.string().nullable()
+    })
+});
+
+export const GrbReviewFormSchema = {
+  reviewType: GrbReviewTypeSchema,
+  presentation: GrbPresentationSchema,
+  participants: SetGRBParticipantsAsyncSchema
+};

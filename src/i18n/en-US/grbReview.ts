@@ -1,3 +1,4 @@
+import { GRBReviewStatus } from 'features/ITGovernance/Admin/GRBReview/GRBReviewStatusCard';
 import {
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole
@@ -48,10 +49,36 @@ const messages: {
   }
 };
 
+export const grbReviewFormSteps = [
+  {
+    label: 'Review type',
+    key: 'review-type',
+    description: 'Select the type of GRB review required for this project'
+  },
+  {
+    label: 'Presentation',
+    key: 'presentation',
+    description:
+      'Organize a date and time for the project team to record or present their project. For asynchronous reviews, also add links to the presentation materials.'
+  },
+  {
+    label: 'Additional documentation',
+    key: 'documents',
+    description:
+      'EASi will automatically link the Business Case (if applicable) and Intake Request form, but you may upload any additional documents necessary to provide GRB reviewers with project information or context. Documents already listed below were uploaded by the requester or project team as a part of their intake request. You may remove any documents uploaded by other Governance Admin Team members, but will not be able to remove documents uploaded by the requester or project team.'
+  },
+  {
+    label: 'Participants and timeframe',
+    key: 'participants',
+    description:
+      'Add the voting and non-voting GRB members who should participate in this review. For asynchronous reviews, add an end date for the review.'
+  }
+] as const;
+
 export default {
   title: 'GRB review',
   description:
-    'Many projects coming through the IT Governance process require review by the Governance Review Board (GRB). These reviews may happen at regularly scheduled GRB meetings or during an alternate asynchronous review process. GRB members will review project details, discuss any concerns, and vote on the merits of the project under consideration. ',
+    'Many projects coming through the IT Governance process require review by the Governance Review Board (GRB). These reviews may happen at regularly scheduled GRB reviews or during an alternate asynchronous review process. GRB members will review project details, discuss any concerns, and vote on the merits of the project under consideration. ',
   featureInProgress: 'Feature in progress',
   featureInProgressText:
     'The capabilities currently available allow Governance Admin Team members to invite GRB reviewers to access documentation related to requests. Future capabilities will include voting, discussions with project teams, timelines, and more. Currently, however, all communication with the project team must be completed via email or during meetings. If you have any questions, please complete the <a>feedback form</a> in the footer of this page.',
@@ -197,6 +224,104 @@ export default {
     grbDate: 'GRB date',
     noDateSet: 'No date set'
   },
+  setUpGrbReviewForm: {
+    heading: 'Set up GRB review',
+    text: 'Use this form to set up a Governance Review Board (GRB) review in EASi.',
+    subText:
+      'You will be able to select the type of review, add recordings and documents, invite GRB members to review this project, and set a timeframe for an asynchronous review.',
+    saveAndReturn: 'Save and return to request',
+    steps: grbReviewFormSteps,
+    error:
+      'There was a problem saving your GRB review form. Please try again. If the error persists, please try again at a later date.',
+    minFive: 'Please select at least five GRB reviewers',
+    invalidDate: 'Please enter a valid date',
+    reviewType: {
+      label: 'Choose review type',
+      summaryHeading: 'GRB review types',
+      async: 'Asynchronous review',
+      asyncSummary:
+        '<span>Asynchronous review:</span> The Governance Admin Team will work with the project team to record their presentation and then upload the recording for asynchronous review by the GRB. Use this review type for projects that cannot fit into the standard schedule of meetings or have other requirements that make an asynchronous review preferable.',
+      standard: 'Standard meeting',
+      standardSummary:
+        '<span>Standard meeting:</span> The project team will present their project at one of the regularly-scheduled GRB meetings. Setting up a standard meeting will not require all steps of this form.'
+    },
+    documents: {
+      heading: 'Documents',
+      addDocument: 'Add a document',
+      standardMeetingAlert:
+        'Because this review is a standard GRB meeting, GRB members may not review these documents unless they are presented during the meeting. However, adding additional documents here gives GRB members the option to access documentation within EASi prior to the meeting.',
+      collapsableText: {
+        label: 'What documents should I upload?',
+        description:
+          'GRB reviewers value documents that give them additional context about the project, its budget and funding background, and/or feedback from previous reviewers such as the GRT or small group. These could include documents such as:',
+        list: [
+          'GRT meeting minutes',
+          'Request for Additional Funding (RAF)',
+          'Draft Independent Government Cost Estimate (IGCE)'
+        ]
+      }
+    },
+    completeAndBeginReview: 'Complete and begin review',
+    participants: {
+      standardAlert:
+        'Because this review is a standard GRB meeting, you do not need to add GRB reviewers to EASi. However, if you do add reviewers, they will have the option to access documentation about this request within EASi prior to the meeting.',
+      grbReviewers: {
+        heading: 'GRB reviewers',
+        description:
+          'Add the GRB members who should review this IT Governance request and indicate their voting role. For asynchronous reviews, you must add at least 5 voting members.'
+      },
+      timeframe: {
+        heading: 'Timeframe',
+        description:
+          'Set a timeframe for this review. The GRB members above will be notified of the end date and will receive some automatic reminders.'
+      },
+      selectReviewEndDate: {
+        heading: 'Select review end date',
+        description:
+          'Set a timeframe for this review. The GRB members above will be notified of the end date and will receive some automatic reminders.'
+      }
+    }
+  },
+  presentationGRBReviewForm: {
+    heading: 'GRB Meeting',
+    description:
+      'Organize a GRB meeting for the project team’s presentation to the GRB.',
+    alert:
+      'You will need to work with the project team outside of EASi to set up a calendar invite, but you may include the date below for reference purposes within EASi.',
+    meetingDateLabel: 'GRB meeting date',
+    meetingDateDescription:
+      'This date will be visible to the requester. Format: mm/dd/yyyy',
+    required: 'This is a required field.',
+    asyncHeading: 'For the requester and project team',
+    asyncDescription:
+      'Organize a meeting to record the project team’s presentation for the GRB.',
+    asyncRecordingDateLabel: 'Asychronous presentation recording date',
+    forTheReviewers: 'For the GRB reviewers',
+    reviewersDescription:
+      'The GRB will use the resources below as a part of their review of this IT Governance request.'
+  },
+  adminTask: {
+    title: 'Admin Task',
+    setUpGRBReview: {
+      title: 'Set up GRB review',
+      description:
+        'EASi will guide you through setting up a GRB review, including the decision between an asynchronous review in EASi and a standard review meeting.',
+      whatDoINeedLabel: 'What do I need in order to set up a GRB review?',
+      whatDoINeed: [
+        '<bold>Presentation recording and transcript</bold>: Organize a time to asynchronously record this project team’s presentation. You will need to add a link to the recording during the setup process.',
+        '<bold>Additional supporting documents</bold>: EASi will automatically add a reference to the Business Case, Intake Request form, and any supporting documents already uploaded by the requester. Please have on hand any additional documents for the GRB to consider as a part of this request.',
+        '<bold>GRB reviewers</bold>: EASi will guide you through the process of adding voting and non-voting GRB reviewers. Please have on hand the names, email addresses, or EUA IDs of these individuals.',
+        '<bold>Timeframe</bold>: Decide on the number of days allotted for this GRB review. You will be able to add more time during the review process if needed.'
+      ]
+    },
+    sendReviewReminder: {
+      title: 'Send review reminder',
+      description:
+        'GRB voting members will get an automatic reminder when there is one day left in the review process. You may use the button below to send an additional reminder at any time.',
+      sendReminder: 'Send reminder'
+    },
+    takeADifferentAction: 'or, take a different action'
+  },
   presentationLinks: {
     heading_add: 'Add presentation links',
     heading_edit: 'Edit presentation link',
@@ -225,6 +350,49 @@ export default {
     error:
       'There was an issue saving your presentation details. Please try again, and if the problem persists, try again later.',
     emptyFormError:
-      'Please complete either the recording link or presentation deck field before submitting.'
+      'Please complete either the recording link or presentation deck field before submitting.',
+    requiredField: 'This is a required field.',
+    presentationUpload: {
+      header: 'Upload GRB presentation',
+      description:
+        'Upload the presentation deck that this project will share with the Governance Review Board (GRB). You may change the uploaded file at any time before the GRB review period starts. ',
+      dontUploadAdmin: 'Don’t upload and return to GRB setup',
+      dontUploadRequester:
+        'Don’t upload and return to the governance task list',
+      selectFile: 'Select your file',
+      recommendedFileTypes: 'Select a PDF, PPT, PPTX, DOC, DOCX, XLS, or XLSX',
+      upload: 'Upload presentation',
+      success: 'You have successfully uploaded your GRB presentation.',
+      error:
+        'There was an issue uploading your presentation. Please try again, and if the issue persists please try again later.'
+    },
+    sendReminderCard: {
+      header: 'Presentation deck',
+      description:
+        'The requester and their project team are responsible for uploading their completed presentation deck to EASi, though admin team members may upload a deck for them.',
+      uplodededFile: 'Uploaded file',
+      notUploadedInfo:
+        'The requester has not yet uploaded their GRB presentation deck. Use the buttons below to send a reminder or upload the deck yourself.',
+      sendReminder: 'Send reminder',
+      reminderSent: 'Reminder sent',
+      reminderError:
+        'There was an issue sending the reminder. Please try again.',
+      uploadDeck: 'or, upload a deck for the project team',
+      clearFile: 'Clear file',
+      replacementDeck: 'or, upload a replacement presentation deck',
+      view: 'View'
+    }
+  },
+  statusCard: {
+    standardHeading: 'Standard meeting review',
+    asyncHeading: 'Asynchronous review',
+    reviewStatus: 'Review status',
+    grbMeeting: 'GRB meeting',
+    changeMeetingDate: 'Change meeting date',
+    grbReviewStatus: {
+      [GRBReviewStatus.SCHEDULED]: 'Scheduled',
+      [GRBReviewStatus.IN_PROGRESS]: 'In progress',
+      [GRBReviewStatus.COMPLETED]: 'Complete'
+    }
   }
 };

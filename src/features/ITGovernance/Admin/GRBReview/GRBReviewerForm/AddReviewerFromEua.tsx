@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Form, FormGroup, Select } from '@trussworks/react-uswds';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
 import {
-  GetSystemIntakeGRBReviewersDocument,
+  GetSystemIntakeGRBReviewDocument,
   SystemIntakeGRBReviewerFragment,
   useUpdateSystemIntakeGRBReviewerMutation
 } from 'gql/generated/graphql';
@@ -21,7 +21,7 @@ import Label from 'components/Label';
 import { grbReviewerRoles, grbReviewerVotingRoles } from 'constants/grbRoles';
 import useMessage from 'hooks/useMessage';
 import { GRBReviewerFields, GRBReviewFormAction } from 'types/grbReview';
-import { GRBReviewerSchema } from 'validations/grbReviewerSchema';
+import { GRBReviewerSchema } from 'validations/grbReviewSchema';
 
 type AddReviewerFromEuaProps = {
   systemId: string;
@@ -29,6 +29,7 @@ type AddReviewerFromEuaProps = {
   createGRBReviewers: (reviewers: GRBReviewerFields[]) => Promise<void>;
   setReviewerToRemove: (reviewer: SystemIntakeGRBReviewerFragment) => void;
   grbReviewStartedAt?: string | null;
+  grbReviewPath: string;
 };
 
 /** Form to add or update GRB Reviewer */
@@ -37,7 +38,8 @@ const AddReviewerFromEua = ({
   initialGRBReviewers,
   createGRBReviewers,
   setReviewerToRemove,
-  grbReviewStartedAt
+  grbReviewStartedAt,
+  grbReviewPath
 }: AddReviewerFromEuaProps) => {
   const { t } = useTranslation('grbReview');
   const history = useHistory();
@@ -51,7 +53,7 @@ const AddReviewerFromEua = ({
   const [updateGRBReviewer] = useUpdateSystemIntakeGRBReviewerMutation({
     refetchQueries: [
       {
-        query: GetSystemIntakeGRBReviewersDocument,
+        query: GetSystemIntakeGRBReviewDocument,
         variables: { id: systemId }
       }
     ]
@@ -78,8 +80,6 @@ const AddReviewerFromEua = ({
       }
     }
   });
-
-  const grbReviewPath = `/it-governance/${systemId}/grb-review`;
 
   const action: GRBReviewFormAction = activeReviewer ? 'edit' : 'add';
 

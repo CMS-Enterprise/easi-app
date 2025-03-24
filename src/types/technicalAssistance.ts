@@ -139,6 +139,7 @@ export type StepComponentProps = {
 export interface TrbRecipientFields {
   notifyEuaIds: string[];
   copyTrbMailbox: boolean;
+  copyITGovMailbox: boolean;
 }
 
 // Funding sources types

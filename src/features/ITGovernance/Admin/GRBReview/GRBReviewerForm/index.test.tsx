@@ -2,7 +2,6 @@ import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import ITGovAdminContext from 'features/ITGovernance/Admin/ITGovAdminContext';
 import {
   CreateSystemIntakeGRBReviewersDocument,
   CreateSystemIntakeGRBReviewersMutation,
@@ -13,12 +12,14 @@ import {
   GetGRBReviewersComparisonsDocument,
   GetGRBReviewersComparisonsQuery,
   GetGRBReviewersComparisonsQueryVariables,
-  GetSystemIntakeGRBReviewersDocument,
-  GetSystemIntakeGRBReviewersQuery,
-  GetSystemIntakeGRBReviewersQueryVariables,
+  GetSystemIntakeGRBReviewDocument,
+  GetSystemIntakeGRBReviewQuery,
+  GetSystemIntakeGRBReviewQueryVariables,
+  GRBVotingInformationStatus,
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole,
+  SystemIntakeGRBReviewType,
   UpdateSystemIntakeGRBReviewerDocument,
   UpdateSystemIntakeGRBReviewerMutation,
   UpdateSystemIntakeGRBReviewerMutationVariables
@@ -26,6 +27,7 @@ import {
 import i18next from 'i18next';
 import { businessCase } from 'tests/mock/businessCase';
 import { systemIntake } from 'tests/mock/systemIntake';
+import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import { MessageProvider } from 'hooks/useMessage';
 import { MockedQuery } from 'types/util';
@@ -132,29 +134,56 @@ const updateSystemIntakeGRBReviewerQuery: MockedQuery<
   }
 };
 
-const getSystemIntakeGRBReviewersQuery = (
+const grbVotingInformation: {
+  __typename: 'GRBVotingInformation';
+  grbReviewers: SystemIntakeGRBReviewerFragment[];
+  votingStatus: GRBVotingInformationStatus;
+  numberOfNoObjection: number;
+  numberOfObjection: number;
+  numberOfNotVoted: number;
+} = {
+  __typename: 'GRBVotingInformation',
+  grbReviewers: [],
+  votingStatus: GRBVotingInformationStatus.NOT_STARTED,
+  numberOfNoObjection: 0,
+  numberOfObjection: 0,
+  numberOfNotVoted: 0
+};
+
+const getSystemIntakeGRBReviewQuery = (
   reviewer?: SystemIntakeGRBReviewerFragment
 ): MockedQuery<
-  GetSystemIntakeGRBReviewersQuery,
-  GetSystemIntakeGRBReviewersQueryVariables
+  GetSystemIntakeGRBReviewQuery,
+  GetSystemIntakeGRBReviewQueryVariables
 > => ({
   request: {
-    query: GetSystemIntakeGRBReviewersDocument,
+    query: GetSystemIntakeGRBReviewDocument,
     variables: {
       id: systemIntake.id
     }
   },
-  result: {
-    data: {
-      __typename: 'Query',
-      systemIntake: {
-        __typename: 'SystemIntake',
-        id: systemIntake.id,
-        grbReviewers: reviewer ? [reviewer] : [],
-        grbReviewStartedAt: null
+  result: reviewer
+    ? {
+        data: {
+          __typename: 'Query',
+          systemIntake: {
+            __typename: 'SystemIntake',
+            id: systemIntake.id,
+            grbVotingInformation: {
+              __typename: 'GRBVotingInformation',
+              grbReviewers: [reviewer],
+              votingStatus: GRBVotingInformationStatus.NOT_STARTED,
+              numberOfNoObjection: 0,
+              numberOfObjection: 0,
+              numberOfNotVoted: 0
+            },
+            grbReviewStartedAt: null,
+            grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+            documents: []
+          }
+        }
       }
-    }
-  }
+    : undefined
 });
 
 const getGRBReviewersComparisonsQuery: MockedQuery<
@@ -175,6 +204,12 @@ const getGRBReviewersComparisonsQuery: MockedQuery<
   }
 };
 
+const populatedGRBVotingInformation = { ...grbVotingInformation };
+populatedGRBVotingInformation.grbReviewers = [grbReviewer];
+
+const updatedGRBVotingInformation = { ...grbVotingInformation };
+updatedGRBVotingInformation.grbReviewers = [updatedGRBReviewer];
+
 describe('GRB reviewer form', () => {
   it('adds a GRB reviewer', async () => {
     render(
@@ -190,8 +225,8 @@ describe('GRB reviewer form', () => {
             cedarContactsQuery('Je'),
             cedarContactsQuery('Jerry Seinfeld'),
             createSystemIntakeGRBReviewersQuery,
-            getSystemIntakeGRBReviewersQuery(),
-            getSystemIntakeGRBReviewersQuery(grbReviewer)
+            getSystemIntakeGRBReviewQuery(),
+            getSystemIntakeGRBReviewQuery(grbReviewer)
           ]}
         >
           <MessageProvider>
@@ -200,7 +235,7 @@ describe('GRB reviewer form', () => {
                 <GRBReview
                   {...systemIntake}
                   businessCase={businessCase}
-                  grbReviewers={[]}
+                  grbVotingInformation={grbVotingInformation}
                 />
               </ITGovAdminContext.Provider>
             </Route>
@@ -209,7 +244,7 @@ describe('GRB reviewer form', () => {
                 <GRBReview
                   {...systemIntake}
                   businessCase={businessCase}
-                  grbReviewers={[grbReviewer]}
+                  grbVotingInformation={populatedGRBVotingInformation}
                 />
               </ITGovAdminContext.Provider>
             </Route>
@@ -278,8 +313,8 @@ describe('GRB reviewer form', () => {
             getGRBReviewersComparisonsQuery,
             cedarContactsQuery(contactLabel),
             updateSystemIntakeGRBReviewerQuery,
-            getSystemIntakeGRBReviewersQuery(grbReviewer),
-            getSystemIntakeGRBReviewersQuery(updatedGRBReviewer)
+            getSystemIntakeGRBReviewQuery(grbReviewer),
+            getSystemIntakeGRBReviewQuery(updatedGRBReviewer)
           ]}
         >
           <MessageProvider>
@@ -288,7 +323,7 @@ describe('GRB reviewer form', () => {
                 <GRBReview
                   {...systemIntake}
                   businessCase={businessCase}
-                  grbReviewers={[grbReviewer]}
+                  grbVotingInformation={populatedGRBVotingInformation}
                 />
               </ITGovAdminContext.Provider>
             </Route>
@@ -297,7 +332,7 @@ describe('GRB reviewer form', () => {
                 <GRBReview
                   {...systemIntake}
                   businessCase={businessCase}
-                  grbReviewers={[updatedGRBReviewer]}
+                  grbVotingInformation={updatedGRBVotingInformation}
                 />
               </ITGovAdminContext.Provider>
             </Route>
@@ -356,6 +391,7 @@ describe('GRB reviewer form', () => {
               initialGRBReviewers={[grbReviewer]}
               createGRBReviewers={vi.fn()}
               setReviewerToRemove={vi.fn()}
+              grbReviewPath="/it-governance/123/grb-review"
             />
           </MessageProvider>
         </VerboseMockedProvider>

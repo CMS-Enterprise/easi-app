@@ -351,10 +351,9 @@ func (s *Server) routes() {
 	}
 
 	// This code publishes all system intakes to CEDAR's intake API
-	go publisher.PublishOnSchedule(
+	go publisher.PublishEveryWeekdayOnSchedule(
 		appcontext.WithLogger(context.Background(), s.logger), // this requires the context to have a data loader each time published. This is built later in the call stack
 		store,
-		time.Friday,
 		publishTimeUTC,
 		buildDataloaders,
 	)
