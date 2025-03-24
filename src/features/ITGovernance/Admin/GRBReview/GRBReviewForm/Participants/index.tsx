@@ -50,12 +50,12 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
         ? yupResolver(SetGRBParticipantsAsyncSchema)
         : undefined,
     defaultValues: {
-      grbReviewers: grbReview.grbReviewers,
+      grbReviewers: grbReview.grbVotingInformation?.grbReviewers,
       grbReviewAsyncEndDate: grbReview.grbReviewAsyncEndDate || '',
       startGRBReview: false
     },
     values: {
-      grbReviewers: grbReview.grbReviewers,
+      grbReviewers: grbReview.grbVotingInformation?.grbReviewers,
       grbReviewAsyncEndDate: grbReview.grbReviewAsyncEndDate || '',
       startGRBReview: false
     }
@@ -111,10 +111,12 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
                     search: 'from-grb-setup'
                   })
                 }
-                outline={grbReview.grbReviewers.length > 0}
+                outline={
+                  grbReview.grbVotingInformation?.grbReviewers.length > 0
+                }
               >
                 {t(
-                  grbReview.grbReviewers.length > 0
+                  grbReview.grbVotingInformation?.grbReviewers.length > 0
                     ? 'addAnotherGrbReviewer'
                     : 'addGrbReviewer'
                 )}
@@ -122,7 +124,9 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
             </div>
           </Grid>
           <Grid col={12} tablet={{ col: 10 }}>
-            <ParticipantsTable grbReviewers={grbReview.grbReviewers} />
+            <ParticipantsTable
+              grbReviewers={grbReview.grbVotingInformation?.grbReviewers}
+            />
           </Grid>
         </FormGroup>
         {reviewType === SystemIntakeGRBReviewType.ASYNC && (
