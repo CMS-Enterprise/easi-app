@@ -211,7 +211,7 @@ const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
 
         <Button
           type="button"
-          className="margin-left-2"
+          className="margin-left-2 margin-top-2"
           unstyled
           onClick={() => {
             resetModal();

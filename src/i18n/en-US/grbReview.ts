@@ -345,7 +345,7 @@ export default {
       discussionItems: [
         'Start a new discussion thread for each new topic where possible.',
         'Tag individuals or groups in discussions in order to notify those individuals and promote awareness and open communication.',
-        'Use the discussion boards to communicate and ask questions about this project. <discussionLink>View discussion board</discussionLink>'
+        'Use the discussion boards to communicate and ask questions about this project. <discussionLink>Go to discussion boards</discussionLink>'
       ],
       step3:
         '<bold>Step 3</bold>: Submit your opinion about this IT Governance request.',
