@@ -50,12 +50,12 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
         ? yupResolver(SetGRBParticipantsAsyncSchema)
         : undefined,
     defaultValues: {
-      grbReviewers: grbReview.grbVotingInformation?.grbReviewers || [],
+      grbReviewers: grbReview.grbVotingInformation?.grbReviewers,
       grbReviewAsyncEndDate: grbReview.grbReviewAsyncEndDate || '',
       startGRBReview: false
     },
     values: {
-      grbReviewers: grbReview.grbVotingInformation?.grbReviewers || [],
+      grbReviewers: grbReview.grbVotingInformation?.grbReviewers,
       grbReviewAsyncEndDate: grbReview.grbReviewAsyncEndDate || '',
       startGRBReview: false
     }

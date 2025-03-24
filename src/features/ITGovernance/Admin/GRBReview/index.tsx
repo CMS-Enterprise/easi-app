@@ -59,7 +59,7 @@ type GRBReviewProps = {
   submittedAt?: string | null;
   state: SystemIntakeState;
   businessCase: BusinessCaseModel;
-  grbReviewers: SystemIntakeGRBReviewerFragment[];
+  grbVotingInformation: SystemIntakeFragmentFragment['grbVotingInformation'];
   documents: SystemIntakeDocumentFragmentFragment[];
   grbReviewStartedAt?: string | null;
   grbPresentationLinks?: SystemIntakeFragmentFragment['grbPresentationLinks'];
@@ -75,7 +75,7 @@ const GRBReview = ({
   businessCase,
   submittedAt,
   state,
-  grbReviewers,
+  grbVotingInformation,
   documents,
   grbReviewStartedAt,
   grbPresentationLinks,
@@ -110,7 +110,7 @@ const GRBReview = ({
 
   const { euaId } = useSelector((appState: AppState) => appState.auth);
 
-  const currentGRBReviewer = grbReviewers.find(
+  const currentGRBReviewer = grbVotingInformation?.grbReviewers.find(
     reviewer =>
       reviewer.userAccount.username === euaId &&
       reviewer.votingRole === SystemIntakeGRBReviewerVotingRole.VOTING
@@ -204,7 +204,7 @@ const GRBReview = ({
         <GRBReviewerForm
           isFromGRBSetup={isFromGRBSetup}
           setReviewerToRemove={setReviewerToRemove}
-          initialGRBReviewers={grbReviewers}
+          initialGRBReviewers={grbVotingInformation?.grbReviewers}
           grbReviewStartedAt={grbReviewStartedAt}
         />
       ) : (
@@ -218,7 +218,9 @@ const GRBReview = ({
               >
                 <ModalHeading>{t('startReviewModal.heading')}</ModalHeading>
                 <p>
-                  {t('startReviewModal.text', { count: grbReviewers.length })}
+                  {t('startReviewModal.text', {
+                    count: grbVotingInformation?.grbReviewers.length
+                  })}
                 </p>
                 <ModalFooter>
                   <ButtonGroup>
@@ -472,7 +474,7 @@ const GRBReview = ({
 
             <Discussions
               systemIntakeID={id}
-              grbReviewers={grbReviewers}
+              grbReviewers={grbVotingInformation?.grbReviewers}
               grbReviewStartedAt={grbReviewStartedAt}
               className="margin-top-4 margin-bottom-6"
             />
@@ -480,7 +482,7 @@ const GRBReview = ({
             <ParticipantsSection
               id={id}
               state={state}
-              grbReviewers={grbReviewers}
+              grbReviewers={grbVotingInformation?.grbReviewers}
               grbReviewStartedAt={grbReviewStartedAt}
             />
           </div>

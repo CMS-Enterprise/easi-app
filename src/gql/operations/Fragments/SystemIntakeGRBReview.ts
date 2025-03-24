@@ -19,6 +19,10 @@ export default gql(/* GraphQL */ `
       grbReviewers {
         ...SystemIntakeGRBReviewer
       }
+      votingStatus
+      numberOfNoObjection
+      numberOfObjection
+      numberOfNotVoted
     }
 
     grbPresentationLinks {

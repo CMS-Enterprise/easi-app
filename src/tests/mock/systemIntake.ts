@@ -12,6 +12,7 @@ import {
   GetSystemIntakesWithLCIDSQuery,
   GovernanceRequestFeedbackTargetForm,
   GovernanceRequestFeedbackType,
+  GRBVotingInformationStatus,
   ITGovDecisionStatus,
   ITGovDraftBusinessCaseStatus,
   ITGovFeedbackStatus,
@@ -357,7 +358,11 @@ export const emptySystemIntake: SystemIntakeFragmentFragment = {
   grbReviewType: SystemIntakeGRBReviewType.STANDARD,
   grbVotingInformation: {
     __typename: 'GRBVotingInformation',
-    grbReviewers: []
+    grbReviewers: [],
+    numberOfNoObjection: 0,
+    numberOfNotVoted: 0,
+    numberOfObjection: 0,
+    votingStatus: GRBVotingInformationStatus.NOT_STARTED
   }
 };
 
@@ -523,7 +528,11 @@ export const systemIntake: SystemIntakeFragmentFragment = {
   grbReviewType: SystemIntakeGRBReviewType.STANDARD,
   grbVotingInformation: {
     __typename: 'GRBVotingInformation',
-    grbReviewers: []
+    grbReviewers: [],
+    votingStatus: GRBVotingInformationStatus.IN_PROGRESS,
+    numberOfNoObjection: 1,
+    numberOfObjection: 2,
+    numberOfNotVoted: 3
   }
 };
 
