@@ -39,6 +39,7 @@ const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
 
   const hasVoted = !!grbReviewer.vote;
 
+  // Default to the opposite of the current vote
   const defaultVote =
     grbReviewer.vote === SystemIntakeAsyncGRBVotingOption.NO_OBJECTION
       ? SystemIntakeAsyncGRBVotingOption.OBJECTION
@@ -71,8 +72,10 @@ const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
       : undefined
   });
 
+  // Current vote type - objection or no objection
   const voteType: SystemIntakeAsyncGRBVotingOption = watch('vote');
 
+  // Comment is required if voting for objection or if the user has already voted
   const commentRequired =
     voteType === SystemIntakeAsyncGRBVotingOption.OBJECTION || hasVoted;
 
