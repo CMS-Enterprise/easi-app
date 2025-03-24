@@ -240,6 +240,7 @@ func StartGRBReview(
 		}
 
 		intake.GRBReviewStartedAt = helpers.PointerTo(time.Now())
+		intake.GrbReviewAsyncManualEndDate = nil
 		_, err = store.UpdateSystemIntakeNP(ctx, tx, intake)
 		if err != nil {
 			return nil, err

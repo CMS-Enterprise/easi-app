@@ -210,3 +210,45 @@ func (s *ResolverSuite) TestCalcSystemIntakeGRBReviewAsyncStatus() {
 		})
 	}
 }
+
+func (s *ResolverSuite) TestManuallyEndSystemIntakeGRBReviewAsyncVoting() {
+	systemIntake := s.createNewIntake()
+	s.NotNil(systemIntake)
+
+	// Set the intake to async
+	systemIntake.GrbReviewType = models.SystemIntakeGRBReviewTypeAsync
+
+	// Set the end date to one hour in the future
+	oneHourLater := time.Now().Add(time.Hour)
+	systemIntake.GrbReviewAsyncEndDate = &oneHourLater
+
+	// Update the intake
+	_, err := s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, systemIntake)
+	s.NoError(err)
+
+	// Calculate the status
+	status := CalcSystemIntakeGRBReviewAsyncStatus(systemIntake)
+	s.NotNil(status)
+	s.Equal(models.SystemIntakeGRBReviewAsyncStatusTypeInProgress, *status)
+
+	// End the voting
+	updatedPayload, err := ManuallyEndSystemIntakeGRBReviewAsyncVoting(
+		s.testConfigs.Context,
+		s.testConfigs.Store,
+		systemIntake.ID,
+	)
+
+	// Check for errors
+	s.NoError(err)
+	s.NotNil(updatedPayload)
+	s.NotNil(updatedPayload.SystemIntake)
+
+	// Check the manual end date
+	s.NotNil(updatedPayload.SystemIntake.GrbReviewAsyncManualEndDate)
+	s.WithinDuration(time.Now(), *updatedPayload.SystemIntake.GrbReviewAsyncManualEndDate, time.Second)
+
+	// Calculate the status again
+	status = CalcSystemIntakeGRBReviewAsyncStatus(updatedPayload.SystemIntake)
+	s.NotNil(status)
+	s.Equal(models.SystemIntakeGRBReviewAsyncStatusTypeCompleted, *status)
+}

@@ -5,6 +5,8 @@ import (
 	"errors"
 	"time"
 
+	"github.com/google/uuid"
+
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -92,6 +94,7 @@ func UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(
 	}
 
 	intake.GrbReviewAsyncEndDate = &input.GrbReviewAsyncEndDate
+	intake.GrbReviewAsyncManualEndDate = nil
 
 	// Check if the review should be set to started. If already started error
 	if input.StartGRBReview {
@@ -123,6 +126,10 @@ func CalcSystemIntakeGRBReviewAsyncStatus(
 		return nil
 	}
 
+	if intake.GrbReviewAsyncManualEndDate != nil && currentTime.After(*intake.GrbReviewAsyncManualEndDate) {
+		return helpers.PointerTo(models.SystemIntakeGRBReviewAsyncStatusTypeCompleted)
+	}
+
 	if intake.GrbReviewAsyncEndDate == nil {
 		return nil
 	}
@@ -135,4 +142,31 @@ func CalcSystemIntakeGRBReviewAsyncStatus(
 	// Fallthrough case:
 	//		The current time is after the Grb Review Async end date
 	return helpers.PointerTo(models.SystemIntakeGRBReviewAsyncStatusTypeCompleted)
+}
+
+// ManuallyEndSystemIntakeGRBReviewAsyncVoting ends voting for the GRB Review (Async)
+func ManuallyEndSystemIntakeGRBReviewAsyncVoting(
+	ctx context.Context,
+	store *storage.Store,
+	systemIntakeID uuid.UUID,
+) (*models.UpdateSystemIntakePayload, error) {
+	currentTime := time.Now()
+
+	// Fetch intake by ID
+	intake, err := store.FetchSystemIntakeByID(ctx, systemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	intake.GrbReviewAsyncManualEndDate = &currentTime
+
+	// Update system intake
+	updatedIntake, err := store.UpdateSystemIntake(ctx, intake)
+	if err != nil {
+		return nil, err
+	}
+
+	return &models.UpdateSystemIntakePayload{
+		SystemIntake: updatedIntake,
+	}, nil
 }

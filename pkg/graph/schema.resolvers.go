@@ -740,6 +740,11 @@ func (r *mutationResolver) DeleteSystemIntakeGRBPresentationLinks(ctx context.Co
 	return input.SystemIntakeID, r.store.DeleteSystemIntakeGRBPresentationLinks(ctx, input.SystemIntakeID)
 }
 
+// ManuallyEndSystemIntakeGRBReviewAsyncVoting is the resolver for the manuallyEndSystemIntakeGRBReviewAsyncVoting field.
+func (r *mutationResolver) ManuallyEndSystemIntakeGRBReviewAsyncVoting(ctx context.Context, systemIntakeID uuid.UUID) (*models.UpdateSystemIntakePayload, error) {
+	return resolvers.ManuallyEndSystemIntakeGRBReviewAsyncVoting(ctx, r.store, systemIntakeID)
+}
+
 // ArchiveSystemIntake is the resolver for the archiveSystemIntake field.
 func (r *mutationResolver) ArchiveSystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 	intake, err := r.store.FetchSystemIntakeByID(ctx, id)
