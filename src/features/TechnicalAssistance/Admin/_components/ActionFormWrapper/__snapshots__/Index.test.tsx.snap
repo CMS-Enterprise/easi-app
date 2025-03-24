@@ -97,7 +97,7 @@ exports[`Email recipient fields component > renders recipients 1`] = `
           <span
             class="text-bold"
           >
-            2
+            3
           </span>
            recipients selected
         </p>
@@ -154,6 +154,33 @@ exports[`Email recipient fields component > renders recipients 1`] = `
                   class="display-block text-base-dark"
                 >
                   cms-trb@cms.hhs.gov
+                </span>
+              </label>
+            </div>
+          </li>
+          <li>
+            <div
+              class="easi-checkbox usa-checkbox"
+            >
+              <input
+                checked=""
+                class="usa-checkbox__input"
+                id="copyITGovMailbox"
+                name="copyITGovMailbox"
+                type="checkbox"
+                value="true"
+              />
+              <label
+                class="usa-checkbox__label"
+                for="copyITGovMailbox"
+              >
+                <span>
+                  Copy ITGO Mailbox
+                </span>
+                <span
+                  class="display-block text-base-dark"
+                >
+                  IT_Governance@cms.hhs.gov
                 </span>
               </label>
             </div>

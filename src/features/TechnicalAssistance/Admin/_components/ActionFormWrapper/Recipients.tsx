@@ -20,7 +20,7 @@ import HelpText from 'components/HelpText';
 import Label from 'components/Label';
 import Spinner from 'components/Spinner';
 import TruncatedContent from 'components/TruncatedContent';
-import { CMS_TRB_EMAIL } from 'constants/externalUrls';
+import { CMS_TRB_EMAIL, IT_GOV_EMAIL } from 'constants/externalUrls';
 import { TRBAttendee } from 'types/technicalAssistance';
 import isExternalEmail from 'utils/externalEmail';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
@@ -28,6 +28,7 @@ import toggleArrayValue from 'utils/toggleArrayValue';
 
 type RecipientsProps = {
   setRecipientFormOpen?: (value: boolean) => void;
+  copyITGovMailbox?: boolean;
 };
 
 export type TRBRecipient = TRBAttendee['userInfo'];
@@ -41,6 +42,7 @@ type TrbRecipient = {
 
 type RecipientFields = {
   copyTrbMailbox: boolean;
+  copyITGovMailbox: boolean;
   notifyEuaIds: string[];
   recipients: TrbRecipient[];
 };
@@ -94,7 +96,10 @@ export const ExternalRecipientAlert = ({
 /**
  * TRB email recipients field
  */
-const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
+const RecipientsForm = ({
+  setRecipientFormOpen,
+  copyITGovMailbox
+}: RecipientsProps) => {
   const { t } = useTranslation('technicalAssistance');
 
   const {
@@ -140,7 +145,11 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
       id && userInfo?.euaUserId !== requester?.userInfo?.euaUserId
   ).length;
 
-  const selectedCount = watch(['notifyEuaIds', 'copyTrbMailbox'])
+  const selectedCount = watch([
+    'notifyEuaIds',
+    'copyTrbMailbox',
+    'copyITGovMailbox'
+  ])
     .flat()
     .filter(item => item).length;
 
@@ -222,7 +231,7 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
 
       <ul className="usa-list usa-list--unstyled">
         <TruncatedContent
-          initialCount={2}
+          initialCount={copyITGovMailbox ? 3 : 2}
           expanded={recipientsCount === 0}
           hideToggle={recipientsCount === 0}
           labelMore={t(`emailRecipientFields.showMore`, {
@@ -294,6 +303,31 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
               }}
             />
           </li>
+
+          {copyITGovMailbox && (
+            <li>
+              <Controller
+                name="copyITGovMailbox"
+                control={control}
+                render={({ field }) => {
+                  return (
+                    <CheckboxField
+                      id={field.name}
+                      label={
+                        <RecipientLabel
+                          name={t('emailRecipientFields.copyITGovMailbox')}
+                          email={IT_GOV_EMAIL}
+                        />
+                      }
+                      {...{ ...field, ref: null }}
+                      value="true"
+                      checked={!!field.value}
+                    />
+                  );
+                }}
+              />
+            </li>
+          )}
 
           {fields
             .filter(
@@ -537,14 +571,22 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
   );
 };
 
-const Recipients = ({ setRecipientFormOpen }: RecipientsProps) => {
+const Recipients = ({
+  setRecipientFormOpen,
+  copyITGovMailbox
+}: RecipientsProps) => {
   const {
     formState: { isLoading }
   } = useFormContext();
 
   if (isLoading) return <Spinner />;
 
-  return <RecipientsForm setRecipientFormOpen={setRecipientFormOpen} />;
+  return (
+    <RecipientsForm
+      setRecipientFormOpen={setRecipientFormOpen}
+      copyITGovMailbox={copyITGovMailbox}
+    />
+  );
 };
 
 export default Recipients;

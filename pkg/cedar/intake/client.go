@@ -170,7 +170,7 @@ func (c *Client) publishIntakeObject(ctx context.Context, model translation.Inta
 	return nil
 }
 
-func (c *Client) PublishOnSchedule(ctx context.Context, store *storage.Store, dayOfWeek time.Weekday, hourInUTC int, buildDataLoaders dataloaders.BuildDataloaders) {
+func (c *Client) PublishEveryWeekdayOnSchedule(ctx context.Context, store *storage.Store, hourInUTC int, buildDataLoaders dataloaders.BuildDataloaders) {
 	logger := appcontext.ZLogger(ctx)
 	if hourInUTC > 24 || hourInUTC < 0 {
 		logger.Error("incorrect hour given for publish schedule, use int between 0 and 24")
@@ -184,7 +184,7 @@ func (c *Client) PublishOnSchedule(ctx context.Context, store *storage.Store, da
 
 	for {
 		decoratedLogger := logger.With(logfields.TraceField(uuid.New().String()), logfields.CedarPublisherAppSection)
-		nextPublish := getDurationUntilNextDayAndTime(time.Now().UTC(), dayOfWeek, hourInUTC)
+		nextPublish := getDurationUntilNextWeekdayAndTime(time.Now().UTC(), hourInUTC)
 		decoratedLogger.Info(fmt.Sprintf(
 			"next intake publish to CEDAR in %s at %s",
 			nextPublish,
@@ -238,30 +238,22 @@ func (c *Client) publishIntakeAndBusinessCase(ctx context.Context, logger *zap.L
 	}
 }
 
-// This function returns the duration from the start time to a given day of week and hour
-func getDurationUntilNextDayAndTime(startTime time.Time, d time.Weekday, hour int) time.Duration {
-	daysUntilTarget := getDaysTil(startTime.Weekday(), d)
+// getDurationUntilNextWeekdayAndTime returns the duration from the start time to the next weekday (Mon-Fri) at the given hour
+func getDurationUntilNextWeekdayAndTime(startTime time.Time, hour int) time.Duration {
+	todayTime := getTimeAtHour(startTime, hour)
+	nextTime := todayTime
 
-	// given weekday matches start date, check if the time has passed given hour
-	// if it has, add 7 days of duration
-	if daysUntilTarget == 0 && startTime.After(getTimeAtHour(startTime, hour)) {
-		daysUntilTarget = 7
+	// If the scheduled time today has passed, move to the next day
+	if startTime.After(nextTime) {
+		nextTime = nextTime.AddDate(0, 0, 1)
 	}
 
-	// adds days to start time
-	targetDay := startTime.AddDate(0, 0, daysUntilTarget)
-	// sets hour of day on target day to given hour
-	targetDayAndTime := getTimeAtHour(targetDay, hour)
-	// return the duration (difference) between the start date and the given day and time
-	return targetDayAndTime.Sub(startTime)
-}
+	// Loop until we find the next weekday (Mon-Fri)
+	for nextTime.Weekday() == time.Saturday || nextTime.Weekday() == time.Sunday {
+		nextTime = nextTime.AddDate(0, 0, 1)
+	}
 
-// This function gets the number of days until the given weekday from the start date
-// getDaysTil(dateThatsAThursday.Weekday(), time.Friday) -> returns 1
-// getDaysTil(time.Friday, time.Friday) -> returns 0
-// getDaysTil(time.Saturday, time.Friday) -> returns 6
-func getDaysTil(startDay time.Weekday, targetDay time.Weekday) int {
-	return (int(targetDay) - int(startDay) + 7) % 7
+	return nextTime.Sub(startTime)
 }
 
 // This function first sets the time to midnight through Truncate
