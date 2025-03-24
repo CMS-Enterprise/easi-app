@@ -11,7 +11,7 @@ import AdditionalInformation from 'features/Miscellaneous/AdditionalInformation'
 import NotFound from 'features/Miscellaneous/NotFound';
 import {
   SystemIntakeGRBPresentationLinks,
-  SystemIntakeGRBReviewerFragment,
+  SystemIntakeGRBReviewFragment,
   useGetSystemIntakeQuery
 } from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
@@ -41,12 +41,12 @@ import Summary from '../Summary';
 import '../index.scss';
 
 type RequestOverviewProps = {
-  grbReviewers: SystemIntakeGRBReviewerFragment[];
+  grbVotingInformation: SystemIntakeGRBReviewFragment['grbVotingInformation'];
   grbReviewStartedAt?: string | null;
 };
 
 const RequestOverview = ({
-  grbReviewers,
+  grbVotingInformation,
   grbReviewStartedAt
 }: RequestOverviewProps) => {
   const { t } = useTranslation('governanceReviewTeam');
@@ -217,7 +217,7 @@ const RequestOverview = ({
                       <GRBReview
                         {...systemIntake}
                         businessCase={businessCase}
-                        grbReviewers={grbReviewers}
+                        grbVotingInformation={grbVotingInformation}
                         grbReviewStartedAt={grbReviewStartedAt}
                       />
                     )}

@@ -25,11 +25,7 @@ describe('GRB review tab', () => {
         <VerboseMockedProvider>
           <MessageProvider>
             <ITGovAdminContext.Provider value={false}>
-              <GRBReview
-                {...systemIntake}
-                businessCase={businessCase}
-                grbReviewers={[]}
-              />
+              <GRBReview {...systemIntake} businessCase={businessCase} />
             </ITGovAdminContext.Provider>
           </MessageProvider>
         </VerboseMockedProvider>
@@ -50,11 +46,7 @@ describe('GRB review tab', () => {
         <VerboseMockedProvider>
           <MessageProvider>
             <ITGovAdminContext.Provider value>
-              <GRBReview
-                {...systemIntake}
-                businessCase={businessCase}
-                grbReviewers={[]}
-              />
+              <GRBReview {...systemIntake} businessCase={businessCase} />
             </ITGovAdminContext.Provider>
           </MessageProvider>
         </VerboseMockedProvider>
@@ -80,7 +72,6 @@ describe('GRB review tab', () => {
               <GRBReview
                 {...systemIntake}
                 businessCase={businessCase}
-                grbReviewers={[]}
                 grbReviewStartedAt={date}
               />
             </ITGovAdminContext.Provider>
@@ -133,7 +124,6 @@ describe('GRB review tab', () => {
               <GRBReview
                 {...systemIntake}
                 businessCase={businessCase}
-                grbReviewers={grbReviewers}
                 grbReviewStartedAt={null}
               />
             </ITGovAdminContext.Provider>

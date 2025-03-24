@@ -147,5 +147,14 @@ export default gql(/* GraphQL */ `
     grbPresentationLinks {
       ...SystemIntakeGRBPresentationLinksFragment
     }
+    grbVotingInformation {
+      grbReviewers {
+        ...SystemIntakeGRBReviewer
+      }
+      votingStatus
+      numberOfNoObjection
+      numberOfObjection
+      numberOfNotVoted
+    }
   }
 `);
