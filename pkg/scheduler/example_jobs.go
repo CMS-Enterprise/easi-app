@@ -15,8 +15,9 @@ type exampleJobs struct {
 	RunEvery5SecondJob ScheduleJobWrapper[bool]
 }
 
-var ExampleJobs = GetExampleJobs(GetScheduler())
+// var ExampleJobs = GetExampleJobs(GetScheduler())
 
+// GetExampleJobs returns a new exampleJobs struct with all the example jobs
 func GetExampleJobs(scheduler gocron.Scheduler) *exampleJobs {
 	return &exampleJobs{
 		RunEvery5SecondJob: NewScheduledJobWrapper("RunEverySecondJob", scheduler, gocron.CronJob("*/5 * * * * *", true), runEvery5SecondJobFunction, true),

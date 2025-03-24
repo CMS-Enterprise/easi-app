@@ -21,7 +21,11 @@ var GRBEmailJobs = GetGRBEmailJobs(GetScheduler())
 // GetGRBEmailJobs initializes all GRB email jobs
 func GetGRBEmailJobs(scheduler gocron.Scheduler) *grbEmailJobs {
 	return &grbEmailJobs{
-		SendAsyncVotingHalfwayThroughEmailJob: NewScheduledJobWrapper("SendAsyncVotingHalfwayThroughEmailJob", scheduler, gocron.CronJob("0 2 * * *", false), sendAsyncVotingHalfwayThroughEmailJobFunction, AsyncGRBVotingInput{endDate: time.Now()}),
+		SendAsyncVotingHalfwayThroughEmailJob: NewScheduledJobWrapper("SendAsyncVotingHalfwayThroughEmailJob", scheduler,
+			//  gocron.CronJob("0 2 * * *", false),
+			//this is for testing so that it runs every 5 seconds
+			gocron.CronJob("*/5 * * * * *", true),
+			sendAsyncVotingHalfwayThroughEmailJobFunction, AsyncGRBVotingInput{endDate: time.Now()}),
 	}
 }
 
@@ -34,6 +38,21 @@ type AsyncGRBVotingInput struct {
 
 func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, input AsyncGRBVotingInput) {
 	_ = input.endDate
+	// contextWithLoader := dataloaders.CTXWithLoaders(ctx, BuildDataloaders(ctx))
+
+	// logger := appcontext.ZLogger(ctx)
+	// store := Store(ctx)
+
+	// // TODO, refactor this, consider using a dataloader instead
+	// intakes, err := store.FetchSystemIntakes(ctx)
+	// if err != nil {
+	// 	logger.Error("error fetching system intakes", zap.Error(err))
+	// 	return
+	// }
+	// intakesToEmail := lo.Filter[*models.SystemIntake](intakes, func(intake *models.SystemIntake) bool {
+	// 	return intake.Status == models.SystemIntakeStatusINTAKESUBMITTED
+	// })
+
 	/*
 		TODO
 		1. Get all the GRB voting sessions that are active and have not been completed
