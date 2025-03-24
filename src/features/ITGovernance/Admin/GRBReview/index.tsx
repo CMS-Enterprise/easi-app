@@ -39,10 +39,12 @@ import { GRBReviewFormAction } from 'types/grbReview';
 import { formatDateLocal } from 'utils/date';
 
 import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
+import Decision from '../Decision';
 
 import GRBFeedbackCard from './GRBFeedbackCard/GRBFeedbackCard';
 import ParticipantsSection from './ParticipantsSection/ParticipantsSection';
 import PresentationLinksCard from './PresentationLinksCard/PresentationLinksCard';
+import DecisionRecordCard from './DecisionRecordCard';
 import Discussions from './Discussions';
 import GRBReviewerForm from './GRBReviewerForm';
 import GRBReviewStatusCard, { GRBReviewStatus } from './GRBReviewStatusCard';
@@ -348,6 +350,8 @@ const GRBReview = ({
                 grbReviewStatus={GRBReviewStatus.SCHEDULED}
               />
             )}
+
+            <DecisionRecordCard grbVotingInformation={grbVotingInformation} />
 
             {/* GRT recommendations to the GRB */}
             <GRBFeedbackCard
