@@ -13,6 +13,7 @@ import (
 // , but rather to show how to create a job.
 type exampleJobs struct {
 	RunEvery5SecondJob ScheduleJobWrapper[bool]
+	SimplifiedJob      ScheduledJob
 }
 
 // var ExampleJobs = GetExampleJobs(GetScheduler())
@@ -20,8 +21,15 @@ type exampleJobs struct {
 // GetExampleJobs returns a new exampleJobs struct with all the example jobs
 func GetExampleJobs(scheduler gocron.Scheduler) *exampleJobs {
 	return &exampleJobs{
+		SimplifiedJob:      NewScheduledJob("SimplifiedJob", scheduler, gocron.CronJob("*/5 * * * * *", true), simplifiedJobFunction),
 		RunEvery5SecondJob: NewScheduledJobWrapper("RunEverySecondJob", scheduler, gocron.CronJob("*/5 * * * * *", true), runEvery5SecondJobFunction, true),
 	}
+}
+func simplifiedJobFunction(ctx context.Context, scheduledJob *ScheduledJob) {
+
+	logger := scheduledJob.decoratedLogger(appcontext.ZLogger(ctx))
+
+	logger.Info("Running simplified job")
 }
 
 func runEvery5SecondJobFunction(ctx context.Context, input bool) {

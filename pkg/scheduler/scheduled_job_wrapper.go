@@ -24,6 +24,17 @@ type ScheduleJobWrapper[input comparable] struct {
 	params        input
 	job           gocron.Job
 }
+type ScheduledJob struct {
+	ScheduleJobWrapper[*ScheduledJob] // Embed the wrapper with a pointer to ScheduledJob
+}
+
+// type ScheduledJob struct {
+// 	name          string
+// 	jobDefinition gocron.JobDefinition
+// 	jobFunction   ScheduledJobFunction[*ScheduledJob]
+// 	params		*ScheduledJob
+// 	job           gocron.Job
+// }
 
 func (sjw *ScheduleJobWrapper[input]) Register() {
 	RegisterJob(sjw.name, func(ctx context.Context, store *storage.Store, scheduler gocron.Scheduler) (gocron.Job, error) {
@@ -78,4 +89,20 @@ func NewScheduledJobWrapper[input comparable](jobName string, scheduler gocron.S
 	// Note, we do not instantiate the job here, it is the responsibility of the RegisterJobFunction to do so. This happens when the defined scheduler is started.
 
 	return sjw
+}
+func NewScheduledJob(jobName string, scheduler gocron.Scheduler, jobDefinition gocron.JobDefinition, jobFunction ScheduledJobFunction[*ScheduledJob]) ScheduledJob {
+	// Create an empty ScheduledJob instance
+	sj := ScheduledJob{
+		ScheduleJobWrapper: ScheduleJobWrapper[*ScheduledJob]{
+			name:          jobName,
+			jobDefinition: jobDefinition,
+			jobFunction:   jobFunction,
+			params:        nil, // params is *ScheduledJob, so nil initially
+		},
+	}
+	sj.params = &sj
+
+	sj.Register()
+
+	return sj
 }
