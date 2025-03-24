@@ -1,6 +1,7 @@
 package scheduler
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"sync"
@@ -8,6 +9,7 @@ import (
 	"github.com/go-co-op/gocron/v2"
 	"go.uber.org/zap"
 
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
@@ -24,7 +26,7 @@ var (
 var jobRegistry map[string]RegisterJobFunction // Holds job registration functions
 
 // RegisterJob stores a job registration function to be initialized later.
-func RegisterJob(name string, jobFunc RegisterJobFunction) {
+func RegisterJob(name string, registerJob RegisterJobFunction) {
 	mutex.Lock()
 	defer mutex.Unlock()
 
@@ -32,7 +34,7 @@ func RegisterJob(name string, jobFunc RegisterJobFunction) {
 		fmt.Println("jobRegistry is unexpectedly nil! Re-initializing...")
 		jobRegistry = make(map[string]RegisterJobFunction)
 	}
-	jobRegistry[name] = jobFunc
+	jobRegistry[name] = registerJob
 }
 
 // TODO, verify this again
@@ -56,13 +58,16 @@ func StartPredefinedJobs(store *storage.Store) {
 }
 
 // StartScheduler runs the scheduler on a separate goroutine and registers jobs.
-func StartScheduler(logger *zap.Logger, store *storage.Store) {
+func StartScheduler(logger *zap.Logger, store *storage.Store, buildDataLoaders dataloaders.BuildDataloaders) {
 	scheduler := GetScheduler()
+
+	// TODO, perhaps just wrap the store in the context as well?
+	ctx := CreateSchedulerContext(context.Background(), logger, store, buildDataLoaders)
 
 	// Register all jobs dynamically
 	mutex.Lock()
-	for _, jobFunc := range jobRegistry {
-		_, err := jobFunc(store, scheduler) // Execute the job function to add it to the scheduler
+	for _, registerJob := range jobRegistry {
+		_, err := registerJob(ctx, store, scheduler) // Execute the job function to add it to the scheduler
 		if err != nil {
 			//TODO: should we stop the app if the job fails to register?
 			logger.Error("error registering job:", zap.Error(err))

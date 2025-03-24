@@ -11,6 +11,6 @@ import (
 // TestShardScheduler tests the shard scheduler
 func TestShardScheduler(t *testing.T) {
 	testhelpers.NewConfig()
-	StartScheduler(nil, nil)
+	StartScheduler(nil, nil, nil)
 
 }

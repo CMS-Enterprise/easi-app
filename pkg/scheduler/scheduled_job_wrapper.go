@@ -13,7 +13,7 @@ import (
 type ScheduledJobFunction[input comparable] func(context.Context, input)
 
 // RegisterJobFunction is a function that registers a job with the scheduler and returns the job
-type RegisterJobFunction func(*storage.Store, gocron.Scheduler) (gocron.Job, error)
+type RegisterJobFunction func(context.Context, *storage.Store, gocron.Scheduler) (gocron.Job, error)
 
 type ScheduleJobWrapper[input comparable] struct {
 	name          string
@@ -24,11 +24,13 @@ type ScheduleJobWrapper[input comparable] struct {
 }
 
 func (sjw *ScheduleJobWrapper[input]) Register() {
-	RegisterJob(sjw.name, func(store *storage.Store, scheduler gocron.Scheduler) (gocron.Job, error) {
+	RegisterJob(sjw.name, func(ctx context.Context, store *storage.Store, scheduler gocron.Scheduler) (gocron.Job, error) {
 		retJob, err := scheduler.NewJob(
 			sjw.jobDefinition,
 			gocron.NewTask(sjw.jobFunction, sjw.params),
+			gocron.WithContext(ctx),
 		)
+
 		//TODO, do we care about sjw params for this statically defined jobs? I think it might make more sense to define them in the job function since they are static
 		if err != nil {
 			return nil, fmt.Errorf("error scheduling job: %v", err)
