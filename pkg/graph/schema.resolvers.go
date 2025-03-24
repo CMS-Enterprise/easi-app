@@ -1130,6 +1130,7 @@ func (r *mutationResolver) SendTRBGuidanceLetter(ctx context.Context, input mode
 		r.service.FetchUserInfo,
 		r.service.FetchUserInfos,
 		input.CopyTrbMailbox,
+		input.CopyITGovMailbox,
 		input.NotifyEuaIds)
 }
 

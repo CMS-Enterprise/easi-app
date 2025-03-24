@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
@@ -152,4 +153,36 @@ func (s *ClientTestSuite) TestTranslation() {
 	// 	s.NoError(err)
 	// 	s.NotNil(ii)
 	// })
+}
+
+func (s *ClientTestSuite) TestGetDurationUntilNextWeekdayAndTime() {
+	tests := []struct {
+		name        string
+		startTime   time.Time
+		expectedDay time.Weekday
+	}{
+		{"Monday before 2 UTC", time.Date(2025, 3, 17, 1, 0, 0, 0, time.UTC), time.Monday}, // Same day at 2 UTC
+		{"Monday after 2 UTC", time.Date(2025, 3, 17, 3, 0, 0, 0, time.UTC), time.Tuesday},
+		{"Tuesday before 2 UTC", time.Date(2025, 3, 18, 1, 0, 0, 0, time.UTC), time.Tuesday},
+		{"Tuesday after 2 UTC", time.Date(2025, 3, 18, 3, 0, 0, 0, time.UTC), time.Wednesday},
+		{"Friday before 2 UTC", time.Date(2025, 3, 21, 1, 0, 0, 0, time.UTC), time.Friday},
+		{"Friday after 2 UTC", time.Date(2025, 3, 21, 3, 0, 0, 0, time.UTC), time.Monday},
+		{"Saturday", time.Date(2025, 3, 22, 10, 0, 0, 0, time.UTC), time.Monday},
+		{"Sunday", time.Date(2025, 3, 23, 10, 0, 0, 0, time.UTC), time.Monday},
+	}
+
+	publishHour := 2 // 2 UTC
+
+	for _, tt := range tests {
+		s.Run(tt.name, func() {
+			duration := getDurationUntilNextWeekdayAndTime(tt.startTime, publishHour)
+			nextRun := tt.startTime.Add(duration)
+
+			// Assert next run day is correct
+			s.Equal(tt.expectedDay, nextRun.Weekday(), "Expected next run to be on %s, but got %s", tt.expectedDay, nextRun.Weekday())
+
+			// Assert next run is at the correct hour (2 UTC)
+			s.Equal(publishHour, nextRun.Hour(), "Expected next run hour to be %d, but got %d", publishHour, nextRun.Hour())
+		})
+	}
 }
