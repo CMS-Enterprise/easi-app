@@ -6,6 +6,7 @@ import (
 	"sync"
 
 	"github.com/go-co-op/gocron/v2"
+	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
@@ -55,16 +56,28 @@ func StartPredefinedJobs(store *storage.Store) {
 }
 
 // StartScheduler runs the scheduler on a separate goroutine and registers jobs.
-func StartScheduler(store *storage.Store) {
+func StartScheduler(logger *zap.Logger, store *storage.Store) {
 	scheduler := GetScheduler()
 
 	// Register all jobs dynamically
 	mutex.Lock()
 	for _, jobFunc := range jobRegistry {
-		jobFunc(store, scheduler) // Execute the job function to add it to the scheduler
+		_, err := jobFunc(store, scheduler) // Execute the job function to add it to the scheduler
+		if err != nil {
+			//TODO: should we stop the app if the job fails to register?
+			logger.Error("error registering job:", zap.Error(err))
+		}
 	}
 	mutex.Unlock()
 
 	// Start the scheduler in a separate goroutine
 	go scheduler.Start()
+}
+
+// StopScheduler is a wrapper for shutting down the shared scheduler, so it's shutdown can be deferred elsewhere
+func StopScheduler(logger *zap.Logger) {
+	scheduler := GetScheduler()
+	err := scheduler.Shutdown()
+
+	logger.Error("failed to shutdown scheduler", zap.Error(err))
 }

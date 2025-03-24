@@ -370,7 +370,9 @@ func (s *Server) routes() {
 		emailClient.SendLCIDExpirationAlertEmail,
 		time.Hour*24)
 	// start the scheduler
-	scheduler.StartScheduler(store)
+	scheduler.StartScheduler(s.logger, store)
+	// note, we defer shutdown the scheduler in server.Serve
+
 }
 
 func newGQLServer(es graphql.ExecutableSchema) *handler.Server {

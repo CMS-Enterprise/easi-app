@@ -12,7 +12,6 @@ type grbEmailJobs struct {
 	SendAsyncVotingHalfwayThroughEmailJob ScheduleJobWrapper[AsyncGRBVotingInput]
 }
 
-// TODO: create a register call here as var instead of an init func? Something that is clear to others?
 var GRBEmailJobs = GetGRBEmailJobs(GetScheduler())
 
 // &grbEmailJobs{
