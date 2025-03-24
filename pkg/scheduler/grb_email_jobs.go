@@ -5,6 +5,10 @@ import (
 	"time"
 
 	"github.com/go-co-op/gocron/v2"
+	"go.uber.org/zap"
+
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 type grbEmailJobs struct {
@@ -40,18 +44,24 @@ func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, input As
 	_ = input.endDate
 	// contextWithLoader := dataloaders.CTXWithLoaders(ctx, BuildDataloaders(ctx))
 
-	// logger := appcontext.ZLogger(ctx)
-	// store := Store(ctx)
+	logger := appcontext.ZLogger(ctx)
+	// decoratedLogger := sjw.decoratedLogger(logger)
+	store := Store(ctx)
+	logger.Info("Running GRB voting halfway through email job")
 
 	// // TODO, refactor this, consider using a dataloader instead
-	// intakes, err := store.FetchSystemIntakes(ctx)
-	// if err != nil {
-	// 	logger.Error("error fetching system intakes", zap.Error(err))
-	// 	return
-	// }
-	// intakesToEmail := lo.Filter[*models.SystemIntake](intakes, func(intake *models.SystemIntake) bool {
+	intakes, err := storage.GetSystemIntakesWithGRBReviewHalfwayThrough(ctx, store, logger)
+	if err != nil {
+		logger.Error("error fetching system intakes", zap.Error(err))
+		return
+	}
+	// intakesToEmail := lo.Filter(intakes, func(intake *models.SystemIntake, index int) bool {
 	// 	return intake.Status == models.SystemIntakeStatusINTAKESUBMITTED
 	// })
+
+	for _, intake := range intakes {
+		logger.Info("sending email to intake owner", zap.String("intakeID", intake.ID.String()))
+	}
 
 	/*
 		TODO

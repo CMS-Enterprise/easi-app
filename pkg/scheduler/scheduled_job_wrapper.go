@@ -5,7 +5,9 @@ import (
 	"fmt"
 
 	"github.com/go-co-op/gocron/v2"
+	"go.uber.org/zap"
 
+	"github.com/cms-enterprise/easi-app/pkg/logfields"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
@@ -38,6 +40,27 @@ func (sjw *ScheduleJobWrapper[input]) Register() {
 		sjw.job = retJob
 		return retJob, nil
 	})
+}
+
+// decoratedLogger returns a logger with the job's metadata
+func (sjw *ScheduleJobWrapper[input]) decoratedLogger(logger *zap.Logger) *zap.Logger {
+	lastRun, errLastRun := sjw.job.LastRun()
+	nextRun, errNextRun := sjw.job.NextRun()
+
+	decoratedLogger := logger.With(logfields.SchedulerAppSection,
+		logfields.JobID(sjw.job.ID()),
+		logfields.JobName(sjw.name),
+		logfields.NextRunTime(nextRun),
+		logfields.LastRunTime(lastRun),
+	)
+	if errLastRun != nil {
+		logger.Warn("error getting last run time", zap.Error(errLastRun))
+	}
+	if errNextRun != nil {
+		logger.Warn("error getting next run time", zap.Error(errNextRun))
+	}
+	return decoratedLogger
+
 }
 
 // NewScheduledJobWrapper holds the logic to initialize a new scheduled job

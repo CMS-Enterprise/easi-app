@@ -7,6 +7,7 @@ import (
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
+	"github.com/cms-enterprise/easi-app/pkg/logfields"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
@@ -19,7 +20,8 @@ const (
 
 // CreateSchedulerContext creates a context with the given logger, store, and buildDataLoaders
 func CreateSchedulerContext(ctx context.Context, logger *zap.Logger, store *storage.Store, buildDataLoaders dataloaders.BuildDataloaders) context.Context {
-	ctx = appcontext.WithLogger(ctx, logger)
+	decoratedLogger := logger.With(logfields.SchedulerAppSection)
+	ctx = appcontext.WithLogger(ctx, decoratedLogger)
 	ctx = ContextWithStore(ctx, store)
 	ctx = ContextWithBuildDataLoaders(ctx, buildDataLoaders)
 

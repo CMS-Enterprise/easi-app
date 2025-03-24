@@ -618,3 +618,13 @@ func (s *Store) GetMySystemIntakes(ctx context.Context) ([]*models.SystemIntake,
 
 	return intakes, err
 }
+
+// GetSystemIntakesWithGRBReviewHalfwayThrough retrieves all system intakes where the GRB review is halfway through
+func GetSystemIntakesWithGRBReviewHalfwayThrough(ctx context.Context, np sqlutils.NamedPreparer, _ *zap.Logger) ([]*models.SystemIntake, error) {
+	var intakes []*models.SystemIntake
+
+	err := namedSelect(ctx, np, &intakes, sqlqueries.SystemIntake.GetWhereGRBReviewIsHalfwayThrough, nil)
+
+	return intakes, err
+
+}
