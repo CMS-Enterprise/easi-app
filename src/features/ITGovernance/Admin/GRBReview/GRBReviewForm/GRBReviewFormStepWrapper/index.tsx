@@ -139,7 +139,9 @@ function GRBReviewFormStepWrapper<
    * Formats form steps for stepped header
    */
   const formatSteps = useCallback(async () => {
-    const { grbReviewType, grbReviewers, grbDate } = grbReview;
+    const { grbReviewType, grbVotingInformation, grbDate } = grbReview;
+
+    const { grbReviewers } = grbVotingInformation || {};
 
     // Validate form steps with Yup
 

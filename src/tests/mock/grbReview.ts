@@ -3,6 +3,7 @@ import {
   DeleteSystemIntakeGRBReviewerMutation,
   GetSystemIntakeGRBReviewDocument,
   GetSystemIntakeGRBReviewQuery,
+  GRBVotingInformationStatus,
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewFragment,
   SystemIntakeGRBReviewType
@@ -16,7 +17,14 @@ export const grbReview: SystemIntakeGRBReviewFragment = {
   __typename: 'SystemIntake',
   id: systemIntake.id,
   grbReviewType: SystemIntakeGRBReviewType.STANDARD,
-  grbReviewers: [],
+  grbVotingInformation: {
+    __typename: 'GRBVotingInformation',
+    grbReviewers: [],
+    numberOfNoObjection: 0,
+    numberOfNotVoted: 0,
+    numberOfObjection: 0,
+    votingStatus: GRBVotingInformationStatus.NOT_STARTED
+  },
   documents: []
 };
 
