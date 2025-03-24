@@ -147,19 +147,24 @@ const getSystemIntakeGRBReviewQuery = (
       id: systemIntake.id
     }
   },
-  result: {
-    data: {
-      __typename: 'Query',
-      systemIntake: {
-        __typename: 'SystemIntake',
-        id: systemIntake.id,
-        grbReviewers: reviewer ? [reviewer] : [],
-        grbReviewStartedAt: null,
-        grbReviewType: SystemIntakeGRBReviewType.STANDARD,
-        documents: []
+  result: reviewer
+    ? {
+        data: {
+          __typename: 'Query',
+          systemIntake: {
+            __typename: 'SystemIntake',
+            id: systemIntake.id,
+            grbVotingInformation: {
+              __typename: 'GRBVotingInformation',
+              grbReviewers: [reviewer]
+            },
+            grbReviewStartedAt: null,
+            grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+            documents: []
+          }
+        }
       }
-    }
-  }
+    : undefined
 });
 
 const getGRBReviewersComparisonsQuery: MockedQuery<

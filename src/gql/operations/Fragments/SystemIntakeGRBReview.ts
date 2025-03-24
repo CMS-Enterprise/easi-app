@@ -15,8 +15,10 @@ export default gql(/* GraphQL */ `
     grbReviewStartedAt
     grbReviewType
 
-    grbReviewers {
-      ...SystemIntakeGRBReviewer
+    grbVotingInformation {
+      grbReviewers {
+        ...SystemIntakeGRBReviewer
+      }
     }
 
     grbPresentationLinks {

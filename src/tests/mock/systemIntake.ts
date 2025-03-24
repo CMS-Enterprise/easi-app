@@ -355,7 +355,10 @@ export const emptySystemIntake: SystemIntakeFragmentFragment = {
   relatedTRBRequests: [],
   grbPresentationLinks,
   grbReviewType: SystemIntakeGRBReviewType.STANDARD,
-  grbReviewers: []
+  grbVotingInformation: {
+    __typename: 'GRBVotingInformation',
+    grbReviewers: []
+  }
 };
 
 export const systemIntake: SystemIntakeFragmentFragment = {
@@ -518,7 +521,10 @@ export const systemIntake: SystemIntakeFragmentFragment = {
   ],
   grbPresentationLinks,
   grbReviewType: SystemIntakeGRBReviewType.STANDARD,
-  grbReviewers: []
+  grbVotingInformation: {
+    __typename: 'GRBVotingInformation',
+    grbReviewers: []
+  }
 };
 
 export const systemIntakeForTable: GetSystemIntakesTableQuery['systemIntakes'][number] =
