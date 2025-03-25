@@ -14,13 +14,14 @@ describe('GRB review', () => {
       if (req.body.operationName === 'UpdateSystemIntakeGRBReviewAsyncPresentation') {
         req.alias = 'updatePresentation';
       }
+      if (req.body.operationName === 'UpdateSystemIntakeGRBReviewFormInputTimeframeAsync') {
+        req.alias = 'updateAsyncTimeframe';
+      }
     });
 
     cy.visit('/it-governance/5af245bc-fc54-4677-bab1-1b3e798bb43c/grb-review');
 
     cy.contains('button', 'Set up GRB review').click();
-
-    // cy.get('input#grbReviewTypeStandard').should('be.checked');
 
     // Click Asynchronous review
     cy.get('input#grbReviewTypeAsync').check({ force: true });
@@ -116,12 +117,11 @@ describe('GRB review', () => {
       if (req.body.operationName === 'UpdateSystemIntakeGRBReviewStandardPresentation') {
         req.alias = 'updatePresentation';
       }
-      if (req.body.operationName === 'UpdateSystemIntakeGRBReviewFormInputTimeframeAsync') {
-        req.alias = 'updateAsyncTimeframe';
+      if (req.body.operationName === 'StartGRBReview') {
+        req.alias = 'startGRBReview';
       }
     });
 
-    // cy.visit('/');
     // Go to a different GRB Review than above
     cy.visit('/it-governance/69357721-1e0c-4a37-a90f-64bb29814e7a/grb-review');
 
@@ -135,11 +135,6 @@ describe('GRB review', () => {
 
     cy.wait('@updateReviewType').its('response.statusCode').should('eq', 200);
 
-    // cy.get('[data-testid="date-picker-external-input"]').type('01/01/2022');
-
-    // cy.get('[data-testid="alert"]').should('be.visible').and('contain.text', "You've entered a date that is in the past. Please double-check to make sure this date is accurate.");
-
-    // cy.get('[data-testid="date-picker-external-input"]').clear()
     cy.get('[data-testid="date-picker-external-input"]').type('01/01/2226');
 
     // Hit Send reminder button
@@ -159,10 +154,11 @@ describe('GRB review', () => {
     cy.url().should('include', '/participants');
     cy.contains('button', 'Complete and begin review').click();
 
+    cy.wait('@startGRBReview').its('response.statusCode').should('eq', 200);
+
     // Returns to the GRB review page
     cy.url().should('include', '/grb-review');
-
-
+    cy.get('[data-testid="CardHeader"]').should('contain.text', 'Standard meeting review');
   });
 });
 
