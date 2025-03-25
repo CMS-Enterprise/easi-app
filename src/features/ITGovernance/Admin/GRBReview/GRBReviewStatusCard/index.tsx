@@ -43,48 +43,52 @@ const GRBReviewStatusCard = ({
   const isITGovAdmin = useContext(ITGovAdminContext);
 
   const StandardCard = (
-    <div className={classNames(className, renderBGColor(grbReviewStatus))}>
-      <div className="padding-205">
-        <h3 className="margin-top-0">{t('statusCard.standardHeading')}</h3>
+    <div
+      className={classNames(
+        className,
+        'padding-205 radius-md',
+        renderBGColor(grbReviewStatus)
+      )}
+    >
+      <h3 className="margin-top-0">{t('statusCard.standardHeading')}</h3>
 
-        {/* Status Section */}
-        <span
-          className={classNames('display-flex', {
-            'border-bottom-1px border-primary-light margin-bottom-2 padding-bottom-2':
-              grbReviewStatus !== GRBReviewStatus.COMPLETED
-          })}
-        >
-          <h4 className="margin-0 margin-right-1 flex-align-self-center">
-            {t('statusCard.reviewStatus')}
+      {/* Status Section */}
+      <span
+        className={classNames('display-flex', {
+          'border-bottom-1px border-primary-light margin-bottom-2 padding-bottom-2':
+            grbReviewStatus !== GRBReviewStatus.COMPLETED
+        })}
+      >
+        <h4 className="margin-0 margin-right-1 flex-align-self-center">
+          {t('statusCard.reviewStatus')}
+        </h4>
+
+        <Tag className="bg-white text-base-darker font-body-sm flex-align-self-center">
+          {t(`statusCard.grbReviewStatus.${grbReviewStatus}`)}
+        </Tag>
+      </span>
+
+      {/* Meeting Details */}
+      {grbReviewStatus !== GRBReviewStatus.COMPLETED && (
+        <span>
+          <h4 className="margin-0 margin-right-1 margin-top-2px margin-bottom-05">
+            {t('statusCard.grbMeeting')}
           </h4>
 
-          <Tag className="bg-white text-base-darker font-body-sm flex-align-self-center">
-            {t(`statusCard.grbReviewStatus.${grbReviewStatus}`)}
-          </Tag>
+          <div className="easi-body-large">
+            {formatDateUtc(grbDate, 'MM/dd/yyyy')}
+          </div>
+
+          {isITGovAdmin && (
+            <UswdsReactLink
+              to="./dates"
+              className="usa-button usa-button--outline margin-top-1"
+            >
+              {t('statusCard.changeMeetingDate')}
+            </UswdsReactLink>
+          )}
         </span>
-
-        {/* Meeting Details */}
-        {grbReviewStatus !== GRBReviewStatus.COMPLETED && (
-          <span>
-            <h4 className="margin-0 margin-right-1 margin-top-2px margin-bottom-05">
-              {t('statusCard.grbMeeting')}
-            </h4>
-
-            <div className="easi-body-large">
-              {formatDateUtc(grbDate, 'MM/dd/yyyy')}
-            </div>
-
-            {isITGovAdmin && (
-              <UswdsReactLink
-                to="./dates"
-                className="usa-button usa-button--outline margin-top-1"
-              >
-                {t('statusCard.changeMeetingDate')}
-              </UswdsReactLink>
-            )}
-          </span>
-        )}
-      </div>
+      )}
     </div>
   );
 
