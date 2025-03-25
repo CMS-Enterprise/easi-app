@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import {
   SystemIntakeFragmentFragment,
+  SystemIntakeGRBReviewFragment,
   SystemIntakeGRBReviewType
 } from 'gql/generated/graphql';
 import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
@@ -22,6 +23,7 @@ export type GRBReviewStatusCardProps = {
   grbReviewType: SystemIntakeFragmentFragment['grbReviewType'];
   grbDate?: SystemIntakeFragmentFragment['grbDate'];
   grbReviewStatus: GRBReviewStatus;
+  grbReviewStartedAt?: SystemIntakeGRBReviewFragment['grbReviewStartedAt'];
   className?: string;
 };
 
@@ -36,11 +38,16 @@ const GRBReviewStatusCard = ({
   grbReviewType,
   grbDate,
   grbReviewStatus,
+  grbReviewStartedAt,
   className
 }: GRBReviewStatusCardProps) => {
   const { t } = useTranslation('grbReview');
 
   const isITGovAdmin = useContext(ITGovAdminContext);
+
+  if (!grbReviewStartedAt) {
+    return null;
+  }
 
   const StandardCard = (
     <div

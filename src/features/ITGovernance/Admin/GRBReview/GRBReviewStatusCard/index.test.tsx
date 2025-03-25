@@ -25,6 +25,7 @@ describe('GRBReviewStatusCard', () => {
       grbReviewType: SystemIntakeGRBReviewType.STANDARD,
       grbDate: '2023-01-01',
       grbReviewStatus: GRBReviewStatus.SCHEDULED,
+      grbReviewStartedAt: '2023-01-01T00:00:00Z',
       className: 'test-class'
     });
 
@@ -66,6 +67,7 @@ describe('GRBReviewStatusCard', () => {
   it('renders the completed status without meeting details', () => {
     renderWithContext(false, {
       grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+      grbReviewStartedAt: '2023-01-01T00:00:00Z',
       grbReviewStatus: GRBReviewStatus.COMPLETED
     });
 
@@ -87,6 +89,7 @@ describe('GRBReviewStatusCard', () => {
   it('renders AsyncAdmin card for async review type when user is ITGovAdmin', () => {
     renderWithContext(true, {
       grbReviewType: SystemIntakeGRBReviewType.ASYNC,
+      grbReviewStartedAt: '2023-01-01T00:00:00Z',
       grbReviewStatus: GRBReviewStatus.IN_PROGRESS
     });
 
@@ -99,6 +102,7 @@ describe('GRBReviewStatusCard', () => {
   it('renders AsyncReviewer card for async review type when user is not ITGovAdmin', () => {
     renderWithContext(false, {
       grbReviewType: SystemIntakeGRBReviewType.ASYNC,
+      grbReviewStartedAt: '2023-01-01T00:00:00Z',
       grbReviewStatus: GRBReviewStatus.IN_PROGRESS
     });
 
@@ -106,5 +110,15 @@ describe('GRBReviewStatusCard', () => {
     expect(
       screen.getByText(i18next.t<string>('grbReview:statusCard.asyncHeading'))
     ).toBeInTheDocument();
+  });
+
+  it('renders null in the abscence ofgrbReviewStartedAt ', () => {
+    const { container } = renderWithContext(false, {
+      grbReviewType: SystemIntakeGRBReviewType.ASYNC,
+      grbReviewStatus: GRBReviewStatus.IN_PROGRESS
+    });
+
+    // Ensure the component renders nothing
+    expect(container.firstChild).toBeNull();
   });
 });
