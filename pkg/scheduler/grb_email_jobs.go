@@ -45,29 +45,12 @@ func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, schedule
 		return
 	}
 	for _, intake := range intakes {
+		//TODO
+		/*1. For each of the intakes, send an email to the relevant people on the intake
+		a. consider spinning up a separate job for each email
+		*/
+
 		logger.Info("sending email to intake owner", zap.String("intakeID", intake.ID.String()))
+
 	}
-
-	/*
-		TODO
-		1. Get all the GRB voting sessions that are active and have not been completed
-		2. For each of the voting sessions, check if the current day is halfway through the voting period
-		3. If it is, send an email to the user who created the voting session
-		   a. consider spinning up a separate job for each email
-
-	*/
 }
-
-// func init() {
-// 	RegisterJob("SendAsyncVotingHalfwayThroughEmailJob", func(store *storage.Store, scheduler gocron.Scheduler) {
-// 		_, err := scheduler.NewJob(
-// 			gocron.CronJob("0 2 * * *", false),
-// 			gocron.NewTask(sendAsyncVotingHalfwayThroughEmailJobFunction,
-// 				AsyncGRBVotingInput{endDate: time.Now()},
-// 			),
-// 		)
-// 		if err != nil {
-// 			fmt.Errorf("error scheduling job: %v", err)
-// 		}
-// 	})
-// }
