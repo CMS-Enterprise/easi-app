@@ -17,6 +17,7 @@ export type DecisionRecordCardProps = {
   className?: string;
 };
 
+// Renders the background color of the decision card based on the voting status
 const renderBGColor = (votingStatus: GRBVotingInformationStatus) => {
   switch (votingStatus) {
     case GRBVotingInformationStatus.IN_PROGRESS:
@@ -32,6 +33,7 @@ const renderBGColor = (votingStatus: GRBVotingInformationStatus) => {
   }
 };
 
+// Renders the border color of the decision card based on the voting status
 const renderBorderColor = (votingStatus: GRBVotingInformationStatus) => {
   switch (votingStatus) {
     case GRBVotingInformationStatus.APPROVED:
@@ -45,6 +47,7 @@ const renderBorderColor = (votingStatus: GRBVotingInformationStatus) => {
   }
 };
 
+// Renders the 'issue decision' mini banner for all statuses except NOT_STARTED and IN_PROGRESS
 const renderDecisionBanner = (
   votingStatus: GRBVotingInformationStatus,
   systemIntakeID: string
