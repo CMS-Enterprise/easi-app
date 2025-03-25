@@ -3,7 +3,6 @@ import {
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole
 } from 'gql/generated/graphql';
-import { add } from 'lodash';
 
 import { GRBReviewFormAction } from 'types/grbReview';
 import { Translation } from 'types/util';

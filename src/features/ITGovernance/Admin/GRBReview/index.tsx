@@ -39,7 +39,6 @@ import { GRBReviewFormAction } from 'types/grbReview';
 import { formatDateLocal } from 'utils/date';
 
 import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
-import Decision from '../Decision';
 
 import GRBFeedbackCard from './GRBFeedbackCard/GRBFeedbackCard';
 import ParticipantsSection from './ParticipantsSection/ParticipantsSection';
