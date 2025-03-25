@@ -3,13 +3,19 @@ describe('GRB review', () => {
     cy.localLogin({ name: 'E2E2', role: 'EASI_D_GOVTEAM' });
   });
 
-  it('completes required fields', () => {
+  it('completes required fields for Asynchronous Review Type', () => {
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'UpdateSystemIntakeGRBReviewType') {
         req.alias = 'updateReviewType';
       }
       if (req.body.operationName === 'SendPresentationDeckReminder') {
         req.alias = 'sendReminder';
+      }
+      if (req.body.operationName === 'UpdateSystemIntakeGRBReviewAsyncPresentation') {
+        req.alias = 'updatePresentation';
+      }
+      if (req.body.operationName === 'UpdateSystemIntakeGRBReviewFormInputTimeframeAsync') {
+        req.alias = 'updateAsyncTimeframe';
       }
     });
 
@@ -45,6 +51,7 @@ describe('GRB review', () => {
     cy.contains('button', 'Reminder sent').should('be.disabled');
 
     cy.contains('button', 'Next').click();
+    cy.wait('@updatePresentation').its('response.statusCode').should('eq', 200);
 
     // Additional documents page
     cy.url().should('include', '/documents');
@@ -93,6 +100,7 @@ describe('GRB review', () => {
     cy.get('#grbReviewAsyncEndDate').type('01/01/2226');
 
     cy.contains('button', 'Complete and begin review').click();
+    cy.wait('@updateAsyncTimeframe').its('response.statusCode').should('eq', 200);
 
     // Returns to the GRB review page
     // Check if discussion button is now clickable
