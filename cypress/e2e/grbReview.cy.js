@@ -3,7 +3,7 @@ describe('GRB review', () => {
     cy.localLogin({ name: 'E2E2', role: 'EASI_D_GOVTEAM' });
   });
 
-  it.skip('completes required fields for Asynchronous Review Type', () => {
+  it('completes required fields for Asynchronous Review Type', () => {
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'UpdateSystemIntakeGRBReviewType') {
         req.alias = 'updateReviewType';
@@ -160,6 +160,35 @@ describe('GRB review', () => {
     cy.url().should('include', '/grb-review');
     cy.get('[data-testid="CardHeader"]').should('contain.text', 'Standard meeting review');
   });
+
+
+  it('Navigates through the form with the headers', () => {
+    cy.visit('/it-governance/38e46d77-e474-4d15-a7c0-f6411221e2a4/grb-review');
+    cy.contains('button', 'Set up GRB review').click();
+
+    cy.url().should('include', '/review-type');
+
+    cy.get('input#grbReviewTypeStandard').check({ force: true });
+
+    // Click on Presentation Header link
+    cy.get('[data-testid="stepIndicator-1"]').click();
+    cy.url().should('include', '/presentation');
+
+    cy.get('[data-testid="stepIndicator-2"]').should('have.class', 'usa-step-indicator__segment--disabled');
+    cy.get('[data-testid="stepIndicator-3"]').should('have.class', 'usa-step-indicator__segment--disabled');
+
+    cy.get('[data-testid="date-picker-external-input"]').type('01/01/2226');
+    cy.contains('button', 'Next').click();
+
+    cy.get('[data-testid="stepIndicator-2"]').should('not.have.class', 'usa-step-indicator__segment--disabled');
+    cy.get('[data-testid="stepIndicator-3"]').should('not.have.class', 'usa-step-indicator__segment--disabled');
+
+    cy.get('[data-testid="stepIndicator-3"]').click();
+    cy.url().should('include', '/participants');
+
+    cy.contains('button', 'Save and return to request').click();
+  });
+
 });
 
 
