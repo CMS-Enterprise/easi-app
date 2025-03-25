@@ -57,7 +57,7 @@ exports[`BusinessCaseCard > renders correctly with a submitted business case 1`]
       >
         <a
           class="usa-link display-flex flex-row flex-align-center"
-          href="/business-case"
+          href="/it-governance/undefined/business-case"
         >
           <span
             class="margin-right-1"

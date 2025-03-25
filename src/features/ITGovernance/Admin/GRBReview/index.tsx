@@ -285,7 +285,7 @@ const GRBReview = ({
             />
 
             {/* Business Case Card */}
-            <BusinessCaseCard businessCase={businessCase} />
+            <BusinessCaseCard businessCase={businessCase} systemIntakeID={id} />
 
             {/* Intake Request Link */}
             <IntakeRequestCard

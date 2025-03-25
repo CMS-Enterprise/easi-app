@@ -21,11 +21,13 @@ import { formatDateLocal } from 'utils/date';
 
 export type IntakeRequestCardProps = {
   businessCase: BusinessCaseModel;
+  systemIntakeID: string;
   className?: string;
 };
 
 const BusinessCaseCard = ({
   businessCase,
+  systemIntakeID,
   className
 }: IntakeRequestCardProps) => {
   const { t } = useTranslation('grbReview');
@@ -79,7 +81,7 @@ const BusinessCaseCard = ({
 
           <CardFooter>
             <UswdsReactLink
-              to="./business-case"
+              to={`/it-governance/${systemIntakeID}/business-case`}
               className="display-flex flex-row flex-align-center"
             >
               <span className="margin-right-1">

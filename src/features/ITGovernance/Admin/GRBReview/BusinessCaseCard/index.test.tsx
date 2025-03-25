@@ -18,7 +18,7 @@ describe('BusinessCaseCard', () => {
   const renderComponent = (businessCase: any) => {
     return render(
       <MemoryRouter>
-        <BusinessCaseCard businessCase={businessCase} />
+        <BusinessCaseCard businessCase={businessCase} systemIntakeID="123" />
       </MemoryRouter>
     );
   };
