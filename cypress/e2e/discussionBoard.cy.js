@@ -1,5 +1,4 @@
-// EASI-4787 TODO: Unskip test and update logic to start GRB review once form is completed
-describe.skip('Discussion Board', () => {
+describe('Discussion Board', () => {
   it('users with access can interact with discussions', () => {
     // Make sure to seed data before running this test
     // Users are from backend mock data
@@ -9,9 +8,14 @@ describe.skip('Discussion Board', () => {
 
     cy.visit('/it-governance/61efa6eb-1976-4431-a158-d89cc00ce31d/grb-review');
 
-    // Start the GRB review
-    cy.contains('button', 'Start GRB review').click();
-    cy.contains('button', 'Start review and send notifications').click();
+    // Fill out the GRB Standard Review Form to kick start discussion board
+    cy.contains('button', 'Set up GRB review').click();
+    cy.get('input#grbReviewTypeStandard').check({ force: true });
+    cy.contains('button', 'Next').click();
+    cy.get('[data-testid="date-picker-external-input"]').type('01/01/2226');
+    cy.contains('button', 'Next').click();
+    cy.get('[data-testid="stepIndicator-3"]').click();
+    cy.url().should('include', '/participants');
 
     // Keep the participants list to check against later
     let participants;
@@ -20,6 +24,12 @@ describe.skip('Discussion Board', () => {
         participants = Array.from(els, el => el.innerText.trim());
       }
     );
+
+    cy.contains('button', 'Complete and begin review').click();
+
+    // Navigate back to GRB Review page
+    cy.url().should('include', '/grb-review');
+
 
     // Opens modal to view mode
     cy.contains('button', 'View discussion board').click();
