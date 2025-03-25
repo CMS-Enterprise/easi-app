@@ -28,7 +28,7 @@ const BusinessCaseCard = ({
   businessCase,
   className
 }: IntakeRequestCardProps) => {
-  const { t } = useTranslation('intake');
+  const { t } = useTranslation('grbReview');
 
   return (
     <Card
