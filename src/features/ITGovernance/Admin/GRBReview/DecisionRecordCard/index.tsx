@@ -17,62 +17,52 @@ export type DecisionRecordCardProps = {
   className?: string;
 };
 
-// Renders the background color of the decision card based on the voting status
-const renderBGColor = (votingStatus: GRBVotingInformationStatus) => {
-  switch (votingStatus) {
-    case GRBVotingInformationStatus.IN_PROGRESS:
-      return 'bg-primary-darker';
-    case GRBVotingInformationStatus.APPROVED:
-      return 'bg-success-darker';
-    case GRBVotingInformationStatus.NOT_APPROVED:
-      return 'bg-secondary-darker';
-    case GRBVotingInformationStatus.INCONCLUSIVE:
-      return 'bg-base-dark';
-    default:
-      return '';
-  }
+type DecisionRenderConfigType = {
+  bgColor: string;
+  borderColor: string;
+  decisionBanner: JSX.Element;
 };
 
-// Renders the border color of the decision card based on the voting status
-const renderBorderColor = (votingStatus: GRBVotingInformationStatus) => {
-  switch (votingStatus) {
-    case GRBVotingInformationStatus.APPROVED:
-      return 'border-success-dark';
-    case GRBVotingInformationStatus.NOT_APPROVED:
-      return 'border-error-dark';
-    case GRBVotingInformationStatus.INCONCLUSIVE:
-      return 'border-base';
-    default:
-      return '';
-  }
-};
-
-// Renders the 'issue decision' mini banner for all statuses except NOT_STARTED and IN_PROGRESS
-const renderDecisionBanner = (
+// Configures render elements (background color, border color, and decision banner) based on the voting status
+const configureDecisionRender = (
   votingStatus: GRBVotingInformationStatus,
   systemIntakeID: string
-) => {
+): DecisionRenderConfigType => {
+  const decisionConfig: DecisionRenderConfigType = {
+    bgColor: '',
+    borderColor: '',
+    decisionBanner: <></>
+  };
   let decisionText = '';
   let decisionIcon = <Icon.Help className="margin-right-1" />;
 
   switch (votingStatus) {
+    case GRBVotingInformationStatus.IN_PROGRESS:
+      decisionConfig.bgColor = 'bg-primary-darker';
+      break;
     case GRBVotingInformationStatus.APPROVED:
+      decisionConfig.bgColor = 'bg-success-darker';
+      decisionConfig.borderColor = 'border-success-dark';
       decisionText = i18next.t<string>('grbReview:decisionCard.approve');
       decisionIcon = <Icon.CheckCircle className="margin-right-1" />;
       break;
     case GRBVotingInformationStatus.NOT_APPROVED:
+      decisionConfig.bgColor = 'bg-secondary-darker';
+      decisionConfig.borderColor = 'border-error-dark';
       decisionText = i18next.t<string>('grbReview:decisionCard.notApprove');
       decisionIcon = <Icon.Cancel className="margin-right-1" />;
       break;
     case GRBVotingInformationStatus.INCONCLUSIVE:
+      decisionConfig.bgColor = 'bg-base-dark';
+      decisionConfig.borderColor = 'border-base';
       decisionText = i18next.t<string>('grbReview:decisionCard.inconclusive');
       decisionIcon = <Icon.Help className="margin-right-1" />;
       break;
     default:
-      return '';
+      decisionText = '';
   }
 
-  return (
+  decisionConfig.decisionBanner = (
     <div className="display-flex margin-y-1">
       {decisionIcon}
       <div className="flex-align-self-center margin-right-2">
@@ -86,6 +76,8 @@ const renderDecisionBanner = (
       </UswdsReactLink>
     </div>
   );
+
+  return decisionConfig;
 };
 
 const DecisionRecordCard = ({
@@ -111,12 +103,17 @@ const DecisionRecordCard = ({
     return null;
   }
 
+  const decisionConfig = configureDecisionRender(
+    grbVotingInformation.votingStatus,
+    systemId
+  );
+
   return (
     <div
       className={classNames(
         className,
         'radius-md padding-2 text-white',
-        renderBGColor(grbVotingInformation.votingStatus)
+        decisionConfig.bgColor
       )}
     >
       <h4 className="margin-y-1">{t('decisionCard.heading')}</h4>
@@ -159,11 +156,11 @@ const DecisionRecordCard = ({
           <div
             className={classNames(
               'border-bottom-1px margin-y-2',
-              renderBorderColor(grbVotingInformation.votingStatus)
+              decisionConfig.borderColor
             )}
           />
 
-          {renderDecisionBanner(grbVotingInformation.votingStatus, systemId)}
+          {decisionConfig.decisionBanner}
         </>
       )}
     </div>
