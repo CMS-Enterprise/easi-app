@@ -3,6 +3,7 @@ import {
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole
 } from 'gql/generated/graphql';
+import { add } from 'lodash';
 
 import { GRBReviewFormAction } from 'types/grbReview';
 import { Translation } from 'types/util';
@@ -394,5 +395,17 @@ export default {
       [GRBReviewStatus.IN_PROGRESS]: 'In progress',
       [GRBReviewStatus.COMPLETED]: 'Complete'
     }
+  },
+  decisionCard: {
+    heading: 'Decision record',
+    voteInfo:
+      '{{noObjection}} no objection, {{objection}} objection, {{notVoted}} not voted',
+    viewVotes: 'View votes',
+    additionalComments: '{{count}} additional comment',
+    additionalComments_plural: '{{count}} additional comments',
+    issueDecision: 'Issue decision',
+    approve: 'This review suggests a decision to approve this project.',
+    notApprove: 'This review suggests a decision to not approve this project.',
+    inconclusive: 'This review is inconclusive.'
   }
 };
