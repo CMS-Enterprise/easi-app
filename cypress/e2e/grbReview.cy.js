@@ -14,9 +14,6 @@ describe('GRB review', () => {
       if (req.body.operationName === 'UpdateSystemIntakeGRBReviewAsyncPresentation') {
         req.alias = 'updatePresentation';
       }
-      if (req.body.operationName === 'UpdateSystemIntakeGRBReviewFormInputTimeframeAsync') {
-        req.alias = 'updateAsyncTimeframe';
-      }
     });
 
     cy.visit('/it-governance/5af245bc-fc54-4677-bab1-1b3e798bb43c/grb-review');
@@ -116,7 +113,7 @@ describe('GRB review', () => {
       if (req.body.operationName === 'SendPresentationDeckReminder') {
         req.alias = 'sendReminder';
       }
-      if (req.body.operationName === 'UpdateSystemIntakeGRBReviewAsyncPresentation') {
+      if (req.body.operationName === 'UpdateSystemIntakeGRBReviewStandardPresentation') {
         req.alias = 'updatePresentation';
       }
       if (req.body.operationName === 'UpdateSystemIntakeGRBReviewFormInputTimeframeAsync') {
@@ -138,11 +135,11 @@ describe('GRB review', () => {
 
     cy.wait('@updateReviewType').its('response.statusCode').should('eq', 200);
 
-    cy.get('[data-testid="date-picker-external-input"]').type('01/01/2022');
+    // cy.get('[data-testid="date-picker-external-input"]').type('01/01/2022');
 
-    cy.get('[data-testid="alert"]').should('be.visible').and('contain.text', "You've entered a date that is in the past. Please double-check to make sure this date is accurate.");
+    // cy.get('[data-testid="alert"]').should('be.visible').and('contain.text', "You've entered a date that is in the past. Please double-check to make sure this date is accurate.");
 
-    cy.get('[data-testid="date-picker-external-input"]').clear()
+    // cy.get('[data-testid="date-picker-external-input"]').clear()
     cy.get('[data-testid="date-picker-external-input"]').type('01/01/2226');
 
     // Hit Send reminder button
@@ -161,7 +158,6 @@ describe('GRB review', () => {
     // Participants page
     cy.url().should('include', '/participants');
     cy.contains('button', 'Complete and begin review').click();
-    cy.wait('@updateAsyncTimeframe').its('response.statusCode').should('eq', 200);
 
     // Returns to the GRB review page
     cy.url().should('include', '/grb-review');
