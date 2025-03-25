@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Card, CardBody, CardHeader } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
   SystemIntakeFragmentFragment,
@@ -44,22 +43,10 @@ const GRBReviewStatusCard = ({
   const isITGovAdmin = useContext(ITGovAdminContext);
 
   const StandardCard = (
-    <Card
-      className={classNames(className)}
-      containerProps={{
-        className: classNames(
-          'margin-0 border-none radius-md',
-          renderBGColor(grbReviewStatus)
-        )
-      }}
-    >
-      <CardHeader>
-        <h3 className="display-inline-block margin-right-2 margin-bottom-0">
-          {t('statusCard.standardHeading')}
-        </h3>
-      </CardHeader>
+    <div className={classNames(className, renderBGColor(grbReviewStatus))}>
+      <div className="padding-205">
+        <h3 className="margin-top-0">{t('statusCard.standardHeading')}</h3>
 
-      <CardBody>
         {/* Status Section */}
         <span
           className={classNames('display-flex', {
@@ -67,11 +54,11 @@ const GRBReviewStatusCard = ({
               grbReviewStatus !== GRBReviewStatus.COMPLETED
           })}
         >
-          <h4 className="margin-0 margin-right-1 margin-top-2px">
+          <h4 className="margin-0 margin-right-1 flex-align-self-center">
             {t('statusCard.reviewStatus')}
           </h4>
 
-          <Tag className="bg-white text-base-darker font-body-sm">
+          <Tag className="bg-white text-base-darker font-body-sm flex-align-self-center">
             {t(`statusCard.grbReviewStatus.${grbReviewStatus}`)}
           </Tag>
         </span>
@@ -97,8 +84,8 @@ const GRBReviewStatusCard = ({
             )}
           </span>
         )}
-      </CardBody>
-    </Card>
+      </div>
+    </div>
   );
 
   // TODO: Implement AsyncAdmin and AsyncReviewer components
