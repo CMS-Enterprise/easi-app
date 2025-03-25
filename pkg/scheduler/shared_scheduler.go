@@ -22,12 +22,6 @@ var (
 	mutex         sync.Mutex
 )
 
-// var jobList map[string]ScheduleJobWrapper
-
-// TODO, perhaps change this to a get function with a once to ensure it is only initialized once
-
-// var jobRegistry map[string]RegisterJobFunction // Holds job registration functions
-
 // JobRegistry returns the shared job registry.
 func JobRegistry() map[string]RegisterJobFunction {
 	onceRegistry.Do(func() {
@@ -98,4 +92,20 @@ func StopScheduler(logger *zap.Logger) {
 	err := scheduler.Shutdown()
 
 	logger.Error("failed to shutdown scheduler", zap.Error(err))
+}
+
+// TODO: how can we provide one time jobs with needed dependencies in context? Should we just have them implemented in the task? Should we perhaps use generics here to define the param for any? Or just not take params?
+
+// OneTimeJob schedules a job to run once immediately
+func OneTimeJob[input comparable](ctx context.Context, params input, name string, jobFunction ScheduledJobFunction[input]) (gocron.Job, error) {
+	scheduler := GetScheduler()
+	retJob, err := scheduler.NewJob(gocron.OneTimeJob(gocron.OneTimeJobStartImmediately()),
+		gocron.NewTask(jobFunction, params),
+		gocron.WithContext(ctx),
+	)
+
+	if err != nil {
+		return nil, fmt.Errorf("error scheduling job: %v", err)
+	}
+	return retJob, nil
 }

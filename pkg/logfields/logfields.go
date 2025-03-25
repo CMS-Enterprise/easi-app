@@ -44,3 +44,7 @@ func LastRunTime(lastRunTime time.Time) zapcore.Field {
 func NextRunTime(nextRunTime time.Time) zapcore.Field {
 	return zap.Time(nextRunTimeKey, nextRunTime)
 }
+
+func IntakeID(intakeID uuid.UUID) zapcore.Field {
+	return zap.Any("intakeID", intakeID)
+}

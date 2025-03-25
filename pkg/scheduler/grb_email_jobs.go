@@ -7,6 +7,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/logfields"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
@@ -49,8 +50,14 @@ func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, schedule
 		/*1. For each of the intakes, send an email to the relevant people on the intake
 		a. consider spinning up a separate job for each email
 		*/
-
-		logger.Info("sending email to intake owner", zap.String("intakeID", intake.ID.String()))
+		_, err := OneTimeJob(ctx, true, "SendAsyncVotingHalfwayThroughEmailJob", func(ctx context.Context, emailClient bool) {
+			//TODO: this should be fully implemented so that it sends an email
+			logger.Info("sending email to intake owner", logfields.IntakeID(intake.ID))
+		})
+		if err != nil {
+			logger.Error("error scheduling email job", logfields.IntakeID(intake.ID), zap.Error(err))
+			return
+		}
 
 	}
 }
