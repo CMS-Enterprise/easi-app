@@ -10,6 +10,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
+	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
@@ -36,10 +37,6 @@ func RegisterJob(name string, registerJob RegisterJobFunction) {
 	mutex.Lock()
 	defer mutex.Unlock()
 
-	// if registry == nil {
-	// 	fmt.Println("registry is unexpectedly nil! Re-initializing...")
-	// 	registry = make(map[string]RegisterJobFunction)
-	// }
 	registry := JobRegistry()
 	registry[name] = registerJob
 }
@@ -51,9 +48,8 @@ func GetScheduler() gocron.Scheduler {
 	onceScheduler.Do(func() {
 		s, err := gocron.NewScheduler()
 		if err != nil {
-			log.Fatal(fmt.Errorf("error creating scheduler: %v", err))
+			log.Panic(fmt.Errorf("error creating scheduler: %v", err))
 
-			//TODO: log error
 		}
 		sharedScheduler = s
 	})
@@ -65,11 +61,10 @@ func StartPredefinedJobs(store *storage.Store) {
 }
 
 // StartScheduler runs the scheduler on a separate goroutine and registers jobs.
-func StartScheduler(logger *zap.Logger, store *storage.Store, buildDataLoaders dataloaders.BuildDataloaders) {
+func StartScheduler(logger *zap.Logger, store *storage.Store, buildDataLoaders dataloaders.BuildDataloaders, emailClient *email.Client) {
 	scheduler := GetScheduler()
 
-	// TODO, perhaps just wrap the store in the context as well?
-	ctx := CreateSchedulerContext(context.Background(), logger, store, buildDataLoaders)
+	ctx := CreateSchedulerContext(context.Background(), logger, store, buildDataLoaders, emailClient)
 
 	// Register all jobs dynamically
 	mutex.Lock()
