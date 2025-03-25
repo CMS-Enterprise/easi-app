@@ -7,6 +7,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/logfields"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
@@ -39,6 +40,7 @@ func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, schedule
 	logger := scheduledJob.decoratedLogger(appcontext.ZLogger(ctx))
 	store := Store(ctx)
 	logger.Info("Running GRB voting halfway through email job")
+	emailClient := EmailClient(ctx)
 
 	intakes, err := storage.GetSystemIntakesWithGRBReviewHalfwayThrough(ctx, store, logger)
 	if err != nil {
@@ -50,8 +52,10 @@ func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, schedule
 		/*1. For each of the intakes, send an email to the relevant people on the intake
 		a. consider spinning up a separate job for each email
 		*/
-		_, err := OneTimeJob(ctx, true, "SendAsyncVotingHalfwayThroughEmailJob", func(ctx context.Context, emailClient bool) {
-			//TODO: this should be fully implemented so that it sends an email
+
+		_, err := OneTimeJob(ctx, emailClient, "SendAsyncVotingHalfwayThroughEmailJob", func(ctx context.Context, emailClient *email.Client) {
+
+			//TODO: this should be fully implemented so that it sends an email. You could also return the emailClient from context, this is merely an example
 			logger.Info("sending email to intake owner", logfields.IntakeID(intake.ID))
 		})
 		if err != nil {
