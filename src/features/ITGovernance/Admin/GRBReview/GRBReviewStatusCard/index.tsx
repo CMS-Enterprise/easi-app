@@ -46,7 +46,7 @@ const GRBReviewStatusCard = ({
     <div
       className={classNames(
         className,
-        'padding-205 radius-md',
+        'padding-3 radius-md',
         renderBGColor(grbReviewStatus)
       )}
     >
