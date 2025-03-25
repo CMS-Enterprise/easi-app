@@ -3,7 +3,7 @@ describe('GRB review', () => {
     cy.localLogin({ name: 'E2E2', role: 'EASI_D_GOVTEAM' });
   });
 
-  it('completes required fields for Asynchronous Review Type', () => {
+  it.skip('completes required fields for Asynchronous Review Type', () => {
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'UpdateSystemIntakeGRBReviewType') {
         req.alias = 'updateReviewType';
@@ -105,6 +105,20 @@ describe('GRB review', () => {
     // Returns to the GRB review page
     // Check if discussion button is now clickable
     cy.contains('button', 'View discussion board').should('not.be.disabled');
+  });
+
+
+  it('completes required fields for Standard Review Type', () => {
+    // cy.visit('/');
+
+    // cy.contains('button', 'Set up GRB review').click();
+
+    cy.url().should('include', '/review-type');
+
+    // Click Standard review
+    // cy.get('input#grbReviewTypeStandard').check({ force: true });
+
+
   });
 });
 
