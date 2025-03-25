@@ -15,33 +15,46 @@ import (
 
 var (
 	sharedScheduler gocron.Scheduler
-	once            sync.Once
-	mutex           sync.Mutex
+
+	jobRegistry   map[string]RegisterJobFunction
+	onceScheduler sync.Once
+	onceRegistry  sync.Once
+	mutex         sync.Mutex
 )
 
 // var jobList map[string]ScheduleJobWrapper
 
 // TODO, perhaps change this to a get function with a once to ensure it is only initialized once
 
-var jobRegistry map[string]RegisterJobFunction // Holds job registration functions
+// var jobRegistry map[string]RegisterJobFunction // Holds job registration functions
+
+// JobRegistry returns the shared job registry.
+func JobRegistry() map[string]RegisterJobFunction {
+	onceRegistry.Do(func() {
+		jobRegistry = make(map[string]RegisterJobFunction)
+
+	})
+	return jobRegistry
+}
 
 // RegisterJob stores a job registration function to be initialized later.
 func RegisterJob(name string, registerJob RegisterJobFunction) {
 	mutex.Lock()
 	defer mutex.Unlock()
 
-	if jobRegistry == nil {
-		fmt.Println("jobRegistry is unexpectedly nil! Re-initializing...")
-		jobRegistry = make(map[string]RegisterJobFunction)
-	}
-	jobRegistry[name] = registerJob
+	// if registry == nil {
+	// 	fmt.Println("registry is unexpectedly nil! Re-initializing...")
+	// 	registry = make(map[string]RegisterJobFunction)
+	// }
+	registry := JobRegistry()
+	registry[name] = registerJob
 }
 
 // TODO, verify this again
 
 // GetScheduler initializes (if needed) and returns the shared scheduler.
 func GetScheduler() gocron.Scheduler {
-	once.Do(func() {
+	onceScheduler.Do(func() {
 		s, err := gocron.NewScheduler()
 		if err != nil {
 			log.Fatal(fmt.Errorf("error creating scheduler: %v", err))

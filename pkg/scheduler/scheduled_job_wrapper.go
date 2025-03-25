@@ -28,14 +28,6 @@ type ScheduledJob struct {
 	ScheduleJobWrapper[*ScheduledJob] // Embed the wrapper with a pointer to ScheduledJob
 }
 
-// type ScheduledJob struct {
-// 	name          string
-// 	jobDefinition gocron.JobDefinition
-// 	jobFunction   ScheduledJobFunction[*ScheduledJob]
-// 	params		*ScheduledJob
-// 	job           gocron.Job
-// }
-
 func (sjw *ScheduleJobWrapper[input]) Register() {
 	RegisterJob(sjw.name, func(ctx context.Context, store *storage.Store, scheduler gocron.Scheduler) (gocron.Job, error) {
 		retJob, err := scheduler.NewJob(
@@ -43,8 +35,6 @@ func (sjw *ScheduleJobWrapper[input]) Register() {
 			gocron.NewTask(sjw.jobFunction, sjw.params),
 			gocron.WithContext(ctx),
 		)
-
-		//TODO, do we care about sjw params for this statically defined jobs? I think it might make more sense to define them in the job function since they are static
 		if err != nil {
 			return nil, fmt.Errorf("error scheduling job: %v", err)
 		}
@@ -77,13 +67,11 @@ func (sjw *ScheduleJobWrapper[input]) decoratedLogger(logger *zap.Logger) *zap.L
 // NewScheduledJobWrapper holds the logic to initialize a new scheduled job
 func NewScheduledJobWrapper[input comparable](jobName string, scheduler gocron.Scheduler, jobDefinition gocron.JobDefinition, jobFunction ScheduledJobFunction[input], params input) ScheduleJobWrapper[input] {
 
-	//TODO,
 	sjw := ScheduleJobWrapper[input]{
 		name:          jobName,
 		jobDefinition: jobDefinition,
 		jobFunction:   jobFunction,
-		//TODO, is there any point to this? It is not dynamic if passed at this point in time....
-		params: params,
+		params:        params,
 	}
 	sjw.Register()
 	// Note, we do not instantiate the job here, it is the responsibility of the RegisterJobFunction to do so. This happens when the defined scheduler is started.
