@@ -1,30 +1,18 @@
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import { Card, CardBody, CardHeader, Icon } from '@trussworks/react-uswds';
+import { Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
   GRBVotingInformationStatus,
-  SystemIntakeAsyncGRBVotingOption,
-  SystemIntakeFragmentFragment,
-  SystemIntakeGRBReviewerRole,
-  SystemIntakeGRBReviewerVotingRole,
-  SystemIntakeGRBReviewType
+  SystemIntakeFragmentFragment
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
-import { b } from 'vitest/dist/chunks/suite.B2jumIFP';
 import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import UswdsReactLink from 'components/LinkWrapper';
 
-// TODO: Temp status type;
-export enum GRBReviewStatus {
-  SCHEDULED,
-  IN_PROGRESS,
-  COMPLETED
-}
-
-export type GRBReviewStatusCardProps = {
+export type DecisionRecordCardProps = {
   grbVotingInformation: SystemIntakeFragmentFragment['grbVotingInformation'];
   className?: string;
 };
@@ -97,58 +85,13 @@ const renderDecisionBanner = (
   );
 };
 
-// TODO: Tempinfo
-const tempGRBVotingInformation: SystemIntakeFragmentFragment['grbVotingInformation'] =
-  {
-    grbReviewers: [
-      {
-        __typename: 'SystemIntakeGRBReviewer',
-        id: '1',
-        grbRole: SystemIntakeGRBReviewerRole.ACA_3021_REP,
-        votingRole: SystemIntakeGRBReviewerVotingRole.VOTING,
-        userAccount: {
-          __typename: 'UserAccount',
-          id: 'user-1',
-          username: 'johndoe',
-          commonName: 'John Doe',
-          email: 'johndoe@example.com'
-        },
-        voteComment: 'This is a comment',
-        vote: SystemIntakeAsyncGRBVotingOption.NO_OBJECTION
-      },
-      {
-        __typename: 'SystemIntakeGRBReviewer',
-        id: '2',
-        grbRole: SystemIntakeGRBReviewerRole.ACA_3021_REP,
-        votingRole: SystemIntakeGRBReviewerVotingRole.VOTING,
-        userAccount: {
-          __typename: 'UserAccount',
-          id: 'user-1',
-          username: 'johndoe',
-          commonName: 'John Doe',
-          email: 'johndoe@example.com'
-        },
-        voteComment: 'This is a comment',
-        vote: SystemIntakeAsyncGRBVotingOption.NO_OBJECTION
-      }
-    ],
-    votingStatus: GRBVotingInformationStatus.NOT_APPROVED,
-    numberOfNoObjection: 1,
-    numberOfObjection: 2,
-    numberOfNotVoted: 3
-  };
-
 const DecisionRecordCard = ({
   grbVotingInformation,
   className
-}: GRBReviewStatusCardProps) => {
+}: DecisionRecordCardProps) => {
   const { t } = useTranslation('grbReview');
 
   const { systemId } = useParams<{ systemId: string }>();
-
-  grbVotingInformation = tempGRBVotingInformation;
-
-  console.log('grbVotingInformation', grbVotingInformation);
 
   const voteCommentCount: number =
     grbVotingInformation?.grbReviewers?.filter(
@@ -168,6 +111,7 @@ const DecisionRecordCard = ({
   return (
     <div
       className={classNames(
+        className,
         'radius-md padding-2 text-white',
         renderBGColor(grbVotingInformation.votingStatus)
       )}
