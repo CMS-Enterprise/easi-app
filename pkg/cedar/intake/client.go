@@ -122,7 +122,7 @@ func (c *Client) publishIntakeObject(ctx context.Context, model translation.Inta
 	const objectVersion = 1
 
 	// from the Swagger (cedar_intake.json, paths/"/intake"/post/parameters/validatePayload):
-	// "Determines if schema validation of the payload is performed syncronously before persisting the record or asyncronously after the record has been persisted"
+	// "Determines if schema validation of the payload is performed synchronously before persisting the record or asyncronously after the record has been persisted"
 	const isValidatedSynchronously = false // false for V1 schemas; this may change when we implement V2 schemas for EASI-1614
 
 	id := model.ObjectID()
