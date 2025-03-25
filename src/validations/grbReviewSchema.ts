@@ -116,3 +116,20 @@ export const GrbReviewFormSchema = {
   presentation: GrbPresentationSchema,
   participants: SetGRBParticipantsAsyncSchema
 };
+
+export const GRBVoteSchema = (originalComment?: string | null) =>
+  Yup.object({
+    voteComment: Yup.string()
+      .required(
+        i18next.t<string>('grbReview:reviewTask.voting.modal.validation')
+      )
+      .test(
+        'is-not-original-value',
+        i18next.t<string>(
+          'grbReview:reviewTask.voting.modal.validationMustChange'
+        ),
+        value => {
+          return value !== originalComment;
+        }
+      )
+  });
