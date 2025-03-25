@@ -2,7 +2,6 @@ package scheduler
 
 import (
 	"context"
-	"time"
 
 	"github.com/go-co-op/gocron/v2"
 	"go.uber.org/zap"
@@ -13,7 +12,7 @@ import (
 
 type grbEmailJobs struct {
 	// SendAsyncVotingHalfwayThroughEmailJob is a job that sends an email when the voting session is halfway through
-	SendAsyncVotingHalfwayThroughEmailJob ScheduleJobWrapper[AsyncGRBVotingInput]
+	SendAsyncVotingHalfwayThroughEmailJob ScheduledJob
 }
 
 var GRBEmailJobs = GetGRBEmailJobs(GetScheduler())
@@ -25,40 +24,26 @@ var GRBEmailJobs = GetGRBEmailJobs(GetScheduler())
 // GetGRBEmailJobs initializes all GRB email jobs
 func GetGRBEmailJobs(scheduler gocron.Scheduler) *grbEmailJobs {
 	return &grbEmailJobs{
-		SendAsyncVotingHalfwayThroughEmailJob: NewScheduledJobWrapper("SendAsyncVotingHalfwayThroughEmailJob", scheduler,
+		SendAsyncVotingHalfwayThroughEmailJob: NewScheduledJob("SendAsyncVotingHalfwayThroughEmailJob", scheduler,
 			//  gocron.CronJob("0 2 * * *", false),
 			//this is for testing so that it runs every 5 seconds
 			gocron.CronJob("*/5 * * * * *", true),
-			sendAsyncVotingHalfwayThroughEmailJobFunction, AsyncGRBVotingInput{endDate: time.Now()}),
+			sendAsyncVotingHalfwayThroughEmailJobFunction),
 	}
 }
 
-// TODO, does this even need input? It will be daily anyways.
-
-// AsyncGRBVotingInput is the input for the GRB voting email job
-type AsyncGRBVotingInput struct {
-	endDate time.Time
-}
-
-func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, input AsyncGRBVotingInput) {
-	_ = input.endDate
+func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, scheduledJob *ScheduledJob) {
 	// contextWithLoader := dataloaders.CTXWithLoaders(ctx, BuildDataloaders(ctx))
 
-	logger := appcontext.ZLogger(ctx)
-	// decoratedLogger := sjw.decoratedLogger(logger)
+	logger := scheduledJob.decoratedLogger(appcontext.ZLogger(ctx))
 	store := Store(ctx)
 	logger.Info("Running GRB voting halfway through email job")
 
-	// // TODO, refactor this, consider using a dataloader instead
 	intakes, err := storage.GetSystemIntakesWithGRBReviewHalfwayThrough(ctx, store, logger)
 	if err != nil {
 		logger.Error("error fetching system intakes", zap.Error(err))
 		return
 	}
-	// intakesToEmail := lo.Filter(intakes, func(intake *models.SystemIntake, index int) bool {
-	// 	return intake.Status == models.SystemIntakeStatusINTAKESUBMITTED
-	// })
-
 	for _, intake := range intakes {
 		logger.Info("sending email to intake owner", zap.String("intakeID", intake.ID.String()))
 	}
