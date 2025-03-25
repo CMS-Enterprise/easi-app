@@ -2481,7 +2481,7 @@ export type SystemIntakeGovernanceTeamInput = {
 
 /**
  * The Information System Security Officer (ISSO) that is
- * assicuated with a system request, if any
+ * associated with a system request, if any
  */
 export type SystemIntakeISSO = {
   __typename: 'SystemIntakeISSO';

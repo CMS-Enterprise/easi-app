@@ -8989,7 +8989,7 @@ type SystemIntakeGovernanceTeam {
 
 """
 The Information System Security Officer (ISSO) that is
-assicuated with a system request, if any
+associated with a system request, if any
 """
 type SystemIntakeISSO {
   isPresent: Boolean
