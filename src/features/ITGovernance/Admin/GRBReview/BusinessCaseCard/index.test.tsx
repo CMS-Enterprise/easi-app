@@ -24,17 +24,19 @@ describe('BusinessCaseCard', () => {
   };
 
   it('renders correctly with a submitted business case', () => {
-    renderComponent(mockBusinessCase);
+    const { asFragment } = renderComponent(mockBusinessCase);
 
     // Check that the title is rendered
     expect(
-      screen.getByText(i18next.t<string>('intake:businessCaseOverview.title'))
+      screen.getByText(
+        i18next.t<string>('grbReview:businessCaseOverview.title')
+      )
     ).toBeInTheDocument();
 
     // Check that the submitted date is rendered
     expect(
       screen.getByText(
-        `${i18next.t<string>('intake:businessCaseOverview.submitted')} 03/21/2025`
+        `${i18next.t<string>('grbReview:businessCaseOverview.submitted')} 03/21/2025`
       )
     ).toBeInTheDocument();
 
@@ -49,9 +51,11 @@ describe('BusinessCaseCard', () => {
     // Check that the "View Business Case" link is rendered
     expect(
       screen.getByText(
-        i18next.t<string>('intake:businessCaseOverview.linkToBusinessCase')
+        i18next.t<string>('grbReview:businessCaseOverview.linkToBusinessCase')
       )
     ).toBeInTheDocument();
+
+    expect(asFragment()).toMatchSnapshot();
   });
 
   it('renders an alert when the business case is unsubmitted', () => {
@@ -67,7 +71,7 @@ describe('BusinessCaseCard', () => {
     // Check that the alert is rendered
     expect(
       screen.getByText(
-        i18next.t<string>('intake:businessCaseOverview.unsubmittedAlertText')
+        i18next.t<string>('grbReview:businessCaseOverview.unsubmittedAlertText')
       )
     ).toBeInTheDocument();
   });
@@ -83,7 +87,7 @@ describe('BusinessCaseCard', () => {
     // Check that "No Solution" is rendered
     expect(
       screen.getByText(
-        i18next.t<string>('intake:businessCaseOverview.noSolution')
+        i18next.t<string>('grbReview:businessCaseOverview.noSolution')
       )
     ).toBeInTheDocument();
   });
