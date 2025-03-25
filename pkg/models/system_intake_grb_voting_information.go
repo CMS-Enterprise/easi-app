@@ -8,6 +8,8 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 )
 
+// TODO: move to autogen
+
 type GRBVotingInformationStatus string
 
 // These are the options for GRBVotingInformationStatus
@@ -40,6 +42,10 @@ func (info *GRBVotingInformation) NumberOfNoObjection(ctx context.Context) (int,
 
 	var count int
 	for _, reviewer := range info.GRBReviewers {
+		if reviewer.GRBVotingRole != SystemIntakeGRBReviewerVotingRoleVoting {
+			continue
+		}
+
 		if reviewer.Vote == nil {
 			continue
 		}
@@ -62,6 +68,10 @@ func (info *GRBVotingInformation) NumberOfObjection(ctx context.Context) (int, e
 
 	var count int
 	for _, reviewer := range info.GRBReviewers {
+		if reviewer.GRBVotingRole != SystemIntakeGRBReviewerVotingRoleVoting {
+			continue
+		}
+
 		if reviewer.Vote == nil {
 			continue
 		}
@@ -84,6 +94,10 @@ func (info *GRBVotingInformation) NumberOfNotVoted(ctx context.Context) (int, er
 
 	var count int
 	for _, reviewer := range info.GRBReviewers {
+		if reviewer.GRBVotingRole != SystemIntakeGRBReviewerVotingRoleVoting {
+			continue
+		}
+
 		if reviewer.Vote == nil {
 			count++
 		}
@@ -102,6 +116,11 @@ func (info *GRBVotingInformation) NumberOfVoted(ctx context.Context) (int, error
 
 	var count int
 	for _, reviewer := range info.GRBReviewers {
+		// only count reviewers who have voting roles
+		if reviewer.GRBVotingRole != SystemIntakeGRBReviewerVotingRoleVoting {
+			continue
+		}
+
 		if reviewer.Vote != nil {
 			count++
 		}
@@ -125,7 +144,7 @@ func (info *GRBVotingInformation) QuorumReached(ctx context.Context) (bool, erro
 //
 // rules:
 // - IN_PROGRESS:
-//   - if voting is open/past due and is NOT in complete state
+//   - if voting is open/past due (quorum not met) and is NOT in complete state
 //
 // - APPROVED:
 //   - if voting is in complete state, quorum has been met, and zero objection votes
@@ -174,16 +193,21 @@ func (info *GRBVotingInformation) VotingStatus(ctx context.Context) (GRBVotingIn
 		return GRBVSInProgress, nil
 	}
 
+	quorumReached, err := info.QuorumReached(ctx)
+	if err != nil {
+		return "", err
+	}
+
+	if now.After(*info.SystemIntake.GrbReviewAsyncEndDate) && !quorumReached {
+		return GRBVSInProgress, nil
+	}
+
 	// unknown state, not sure if this would be possible after the above checks
 	if !now.After(*info.SystemIntake.GrbReviewAsyncEndDate) {
 		return GRBVSNotStarted, nil
 	}
 
 	// we know here that the end date has passed
-	quorumReached, err := info.QuorumReached(ctx)
-	if err != nil {
-		return "", err
-	}
 
 	objections, err := info.NumberOfObjection(ctx)
 	if err != nil {
@@ -196,15 +220,16 @@ func (info *GRBVotingInformation) VotingStatus(ctx context.Context) (GRBVotingIn
 	}
 
 	// check for not approved
-	if quorumReached && objections >= 2 {
+	if quorumReached && objections > 1 {
 		return GRBVSNotApproved, nil
 	}
 
 	// check for inconclusive
-	if objections == 1 {
+	if quorumReached && objections == 1 {
 		return GRBVSInconclusive, nil
 	}
 
+	// if manually ended and quorum not reached
 	if info.SystemIntake.GrbReviewAsyncManualEndDate != nil && now.After(*info.SystemIntake.GrbReviewAsyncManualEndDate) && !quorumReached {
 		return GRBVSInconclusive, nil
 	}
