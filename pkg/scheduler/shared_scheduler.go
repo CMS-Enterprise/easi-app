@@ -41,8 +41,6 @@ func RegisterJob(name string, registerJob RegisterJobFunction) {
 	registry[name] = registerJob
 }
 
-// TODO, verify this again
-
 // GetScheduler initializes (if needed) and returns the shared scheduler.
 func GetScheduler() gocron.Scheduler {
 	onceScheduler.Do(func() {
@@ -56,10 +54,6 @@ func GetScheduler() gocron.Scheduler {
 	return sharedScheduler
 }
 
-func StartPredefinedJobs(store *storage.Store) {
-
-}
-
 // StartScheduler runs the scheduler on a separate goroutine and registers jobs.
 func StartScheduler(logger *zap.Logger, store *storage.Store, buildDataLoaders dataloaders.BuildDataloaders, emailClient *email.Client) {
 	scheduler := GetScheduler()
@@ -71,7 +65,6 @@ func StartScheduler(logger *zap.Logger, store *storage.Store, buildDataLoaders d
 	for _, registerJob := range jobRegistry {
 		_, err := registerJob(ctx, store, scheduler) // Execute the job function to add it to the scheduler
 		if err != nil {
-			//TODO: should we stop the app if the job fails to register?
 			logger.Error("error registering job:", zap.Error(err))
 		}
 	}
@@ -89,9 +82,9 @@ func StopScheduler(logger *zap.Logger) {
 	logger.Error("failed to shutdown scheduler", zap.Error(err))
 }
 
-// TODO: how can we provide one time jobs with needed dependencies in context? Should we just have them implemented in the task? Should we perhaps use generics here to define the param for any? Or just not take params?
-
 // OneTimeJob schedules a job to run once immediately
+// make sure to instantiate it with the expected dependencies in context.
+// it is intended to be used when another job should be created from a scheduled job
 func OneTimeJob[input comparable](ctx context.Context, params input, name string, jobFunction ScheduledJobFunction[input]) (gocron.Job, error) {
 	scheduler := GetScheduler()
 	retJob, err := scheduler.NewJob(gocron.OneTimeJob(gocron.OneTimeJobStartImmediately()),
