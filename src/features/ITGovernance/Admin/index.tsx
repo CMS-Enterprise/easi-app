@@ -3,10 +3,7 @@ import { useSelector } from 'react-redux';
 import { Route, Switch, useParams } from 'react-router-dom';
 import NotFound from 'features/Miscellaneous/NotFound';
 import RequestLinkForm from 'features/RequestLinking/RequestLinkForm';
-import {
-  SystemIntakeGRBReviewFragment,
-  useGetSystemIntakeGRBReviewQuery
-} from 'gql/generated/graphql';
+import { useGetSystemIntakeGRBReviewQuery } from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { AppState } from 'stores/reducers/rootReducer';
 import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
@@ -34,9 +31,11 @@ const GovernanceReviewTeam = () => {
     }
   });
 
-  const grbReview = data?.systemIntake;
+  const grbReview = useMemo(() => {
+    return data?.systemIntake;
+  }, [data?.systemIntake]);
 
-  const { grbVotingInformation, grbReviewStartedAt } = grbReview || {};
+  const { grbVotingInformation } = grbReview || {};
 
   const { grbReviewers } = grbVotingInformation || {};
 
@@ -71,18 +70,12 @@ const GovernanceReviewTeam = () => {
                 path="/it-governance/:systemId/grb-review/:step(review-type|presentation|documents|participants)"
                 exact
               >
-                <GRBReviewForm grbReview={grbReview} />
+                <GRBReviewForm grbReview={grbReview} loading={loading} />
               </Route>
             )}
 
             <Route path="/it-governance/:systemId/:activePage/:subPage?" exact>
-              <RequestOverview
-                grbVotingInformation={
-                  grbVotingInformation ||
-                  ({} as SystemIntakeGRBReviewFragment['grbVotingInformation'])
-                }
-                grbReviewStartedAt={grbReviewStartedAt}
-              />
+              <RequestOverview />
             </Route>
 
             <Route path="*" component={NotFound} />
