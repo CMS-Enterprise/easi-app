@@ -53,6 +53,7 @@ export type ActionFormProps = {
   showErrorSummary?: boolean;
   /** Warning message above submit button */
   submitWarning?: string;
+  copyITGovMailbox?: boolean;
 } & FormProps;
 
 /**
@@ -67,6 +68,7 @@ const ActionForm = ({
   disableFormText,
   submitWarning,
   showErrorSummary = true,
+  copyITGovMailbox,
   ...formProps
 }: ActionFormProps) => {
   const { t } = useTranslation('technicalAssistance');
@@ -180,7 +182,10 @@ const ActionForm = ({
               {t('actionRequestEdits.notificationDescription')}
             </p>
 
-            <Recipients setRecipientFormOpen={setRecipientFormOpen} />
+            <Recipients
+              setRecipientFormOpen={setRecipientFormOpen}
+              copyITGovMailbox={copyITGovMailbox}
+            />
 
             {submitWarning && (
               <Alert type="warning" className="margin-top-4">

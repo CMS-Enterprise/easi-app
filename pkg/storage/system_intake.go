@@ -116,6 +116,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			grb_review_async_end_date,
 			grb_review_async_grb_meeting_time,
 			grb_presentation_deck_requester_reminder_email_sent_time,
+		    grb_review_async_manual_end_date,
 			created_at,
 			updated_at
 		)
@@ -181,6 +182,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			:grb_review_async_end_date,
 			:grb_review_async_grb_meeting_time,
 		    :grb_presentation_deck_requester_reminder_email_sent_time,
+		    :grb_review_async_manual_end_date,
 			:created_at,
 			:updated_at
 		)`
@@ -294,7 +296,8 @@ func (s *Store) UpdateSystemIntakeNP(ctx context.Context, np sqlutils.NamedPrepa
 			grb_review_async_recording_time = :grb_review_async_recording_time,
 			grb_review_async_end_date = :grb_review_async_end_date,
 			grb_review_async_grb_meeting_time = :grb_review_async_grb_meeting_time,
-			grb_presentation_deck_requester_reminder_email_sent_time = :grb_presentation_deck_requester_reminder_email_sent_time
+			grb_presentation_deck_requester_reminder_email_sent_time = :grb_presentation_deck_requester_reminder_email_sent_time,
+			grb_review_async_manual_end_date = :grb_review_async_manual_end_date
 		WHERE system_intakes.id = :id
 	`
 	updateStmt, err := np.PrepareNamed(updateSystemIntakeSQL)

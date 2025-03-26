@@ -1,5 +1,6 @@
 import { GRBReviewStatus } from 'features/ITGovernance/Admin/GRBReview/GRBReviewStatusCard';
 import {
+  SystemIntakeAsyncGRBVotingOption,
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole
 } from 'gql/generated/graphql';
@@ -233,6 +234,8 @@ export default {
     steps: grbReviewFormSteps,
     error:
       'There was a problem saving your GRB review form. Please try again. If the error persists, please try again at a later date.',
+    minFive: 'Please select at least five GRB reviewers',
+    invalidDate: 'Please enter a valid date',
     reviewType: {
       label: 'Choose review type',
       summaryHeading: 'GRB review types',
@@ -259,7 +262,26 @@ export default {
         ]
       }
     },
-    completeAndBeginReview: 'Complete and begin review'
+    completeAndBeginReview: 'Complete and begin review',
+    participants: {
+      standardAlert:
+        'Because this review is a standard GRB meeting, you do not need to add GRB reviewers to EASi. However, if you do add reviewers, they will have the option to access documentation about this request within EASi prior to the meeting.',
+      grbReviewers: {
+        heading: 'GRB reviewers',
+        description:
+          'Add the GRB members who should review this IT Governance request and indicate their voting role. For asynchronous reviews, you must add at least 5 voting members.'
+      },
+      timeframe: {
+        heading: 'Timeframe',
+        description:
+          'Set a timeframe for this review. The GRB members above will be notified of the end date and will receive some automatic reminders.'
+      },
+      selectReviewEndDate: {
+        heading: 'Select review end date',
+        description:
+          'Set a timeframe for this review. The GRB members above will be notified of the end date and will receive some automatic reminders.'
+      }
+    }
   },
   presentationGRBReviewForm: {
     heading: 'GRB Meeting',
@@ -300,6 +322,66 @@ export default {
       sendReminder: 'Send reminder'
     },
     takeADifferentAction: 'or, take a different action'
+  },
+  reviewTask: {
+    title: 'GRB Task',
+    voting: {
+      title:
+        'Review this IT Governance request and share your opinion on its merit',
+      step1:
+        '<bold>Step 1</bold>: Review information about this project and request.',
+      whatIsImportant:
+        'What is the most important information and where should I start?',
+      documentsOrResources:
+        'Most request will have the following documents or resources:',
+      documentItems: [
+        'Presentation recording and slide deck <presentationLink>Go to presentation links</presentationLink>',
+        'Business Case <businessCaseLink>Go to Business Case</businessCaseLink>',
+        'Recommendations to the GRB from the Governance Review Team (GRT) <grtLink>Go to GRT recommendations</grtLink>'
+      ],
+      step2:
+        '<bold>Step 2</bold>: Ask questions and participate in discussions.',
+      howShouldIParticipate: 'How should I participate in discussions?',
+      discussionItems: [
+        'Start a new discussion thread for each new topic where possible.',
+        'Tag individuals or groups in discussions in order to notify those individuals and promote awareness and open communication.',
+        'Use the discussion boards to communicate and ask questions about this project. <discussionLink>Go to discussion boards</discussionLink>'
+      ],
+      step3:
+        '<bold>Step 3</bold>: Submit your opinion about this IT Governance request.',
+      step3Description:
+        'After reviewing, select either No objection or Object to add your vote on the merit of this project. You will also have the option to add a comment for additional context about your vote.',
+      object: 'Object',
+      [SystemIntakeAsyncGRBVotingOption.OBJECTION]: 'Objection',
+      [SystemIntakeAsyncGRBVotingOption.NO_OBJECTION]: 'No objection',
+      changeVote: 'Change vote',
+      youVoted: 'You voted',
+      votedOn: 'on {{date}}',
+      modal: {
+        titleNoObjection: 'Submit your vote with no objection',
+        titleObject: 'Submit your vote with objection',
+        titleChangeVote: 'Change your vote',
+        description:
+          'Your vote will be saved for this GRB review. You may change it until the end of the review period.',
+        descriptionChangeVote:
+          'Your new vote will be saved for this IT Governance request, and can be changed until the end of the review period.',
+        commentsOptional: 'Comments (optional)',
+        comments: 'Comments',
+        hint: 'Add any additional context about your vote.',
+        hintChangeVote:
+          'Any comments that you already added are pre-populated below. Removing them will alter your original response.',
+        confirmNoObjection: 'Submit “no objection” vote',
+        confirmObject: 'Submit “objection” vote',
+        confirmChangeVoteObjection: 'Change to an “objection” vote',
+        confirmChangeVoteNoObjection: 'Change to an “no objection” vote',
+        cancel: 'Cancel and go back',
+        keepExistingVote: 'Keep existing vote',
+        error:
+          'There was an issue submitting your vote. Please try again, and if the problem persists, try again later.',
+        validation: 'Vote comment is required',
+        validationMustChange: 'Vote comment must be updated'
+      }
+    }
   },
   presentationLinks: {
     heading_add: 'Add presentation links',
@@ -373,5 +455,17 @@ export default {
       [GRBReviewStatus.IN_PROGRESS]: 'In progress',
       [GRBReviewStatus.COMPLETED]: 'Complete'
     }
+  },
+  decisionCard: {
+    heading: 'Decision record',
+    voteInfo:
+      '{{noObjection}} no objection, {{objection}} objection, {{notVoted}} not voted',
+    viewVotes: 'View votes',
+    additionalComments: '{{count}} additional comment',
+    additionalComments_plural: '{{count}} additional comments',
+    issueDecision: 'Issue decision',
+    approve: 'This review suggests a decision to approve this project.',
+    notApprove: 'This review suggests a decision to not approve this project.',
+    inconclusive: 'This review is inconclusive.'
   }
 };

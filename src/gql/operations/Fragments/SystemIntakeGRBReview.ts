@@ -9,16 +9,20 @@ export default gql(/* GraphQL */ `
   ${SystemIntakeGRBReviewer}
   fragment SystemIntakeGRBReview on SystemIntake {
     id
+    grbDate
+    grbReviewAsyncEndDate
+    grbReviewAsyncRecordingTime
     grbReviewStartedAt
     grbReviewType
-    grbDate
-    grbReviewAsyncRecordingTime
 
-    grbDate
-    grbReviewAsyncRecordingTime
-
-    grbReviewers {
-      ...SystemIntakeGRBReviewer
+    grbVotingInformation {
+      grbReviewers {
+        ...SystemIntakeGRBReviewer
+      }
+      votingStatus
+      numberOfNoObjection
+      numberOfObjection
+      numberOfNotVoted
     }
 
     grbPresentationLinks {

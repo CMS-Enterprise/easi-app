@@ -1,0 +1,131 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`IntakeRequestCard > renders default version without crashing 1`] = `
+<DocumentFragment>
+  <li
+    class="usa-card"
+    data-testid="Card"
+  >
+    <div
+      class="usa-card__container margin-0 border-width-1px shadow-2"
+    >
+      <header
+        class="usa-card__header"
+        data-testid="CardHeader"
+      >
+        <h3
+          class="display-inline-block margin-right-2 margin-bottom-0"
+        >
+          Intake Request form overview
+        </h3>
+        <span
+          class="margin-right-1 text-base"
+        >
+          Completed 07/01/2021
+        </span>
+      </header>
+      <div
+        class="usa-card__body padding-top-2"
+        data-testid="CardBody"
+      >
+        <div
+          class="easi-review-row"
+        >
+          <div>
+            <dt
+              class="text-bold margin-bottom-05 font-body-sm margin-bottom-0"
+            >
+              Where are you in the process?
+            </dt>
+            <dd
+              class="description-definition margin-0 font-body-md text-light"
+            >
+              I have an idea and want to brainstorm
+            </dd>
+          </div>
+        </div>
+        <div
+          class="easi-review-row"
+        >
+          <div>
+            <dt
+              class="text-bold margin-bottom-05 font-body-sm margin-bottom-0"
+            >
+              What is the current annual spending?
+            </dt>
+            <dd
+              class="description-definition margin-0 font-body-md text-light"
+            >
+              $1,500,000
+            </dd>
+          </div>
+          <div>
+            <dt
+              class="text-bold margin-bottom-05 font-body-sm margin-bottom-0"
+            >
+              What portion (% or amount) of the current annual spending is IT?
+            </dt>
+            <dd
+              class="description-definition margin-0 font-body-md text-light"
+            >
+              50%
+            </dd>
+          </div>
+        </div>
+        <div
+          class="easi-review-row"
+        >
+          <div>
+            <dt
+              class="text-bold margin-bottom-05 font-body-sm margin-bottom-0"
+            >
+              What is the planned annual spending of the first year of the new contract?
+            </dt>
+            <dd
+              class="description-definition margin-0 font-body-md text-light"
+            >
+              $1,750,000
+            </dd>
+          </div>
+          <div>
+            <dt
+              class="text-bold margin-bottom-05 font-body-sm margin-bottom-0"
+            >
+              What portion (% or amount) of the planned annual spending of the first year of the new contract is IT?
+            </dt>
+            <dd
+              class="description-definition margin-0 font-body-md text-light"
+            >
+              75%
+            </dd>
+          </div>
+        </div>
+      </div>
+      <div
+        class="usa-card__footer"
+        data-testid="CardFooter"
+      >
+        <a
+          class="usa-link display-flex flex-align-center margin-top-1"
+          href="/intake-request"
+        >
+          View full Intake Request form
+          <svg
+            class="usa-icon margin-left-1"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="m12 4-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
+            />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </li>
+</DocumentFragment>
+`;

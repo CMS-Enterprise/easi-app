@@ -241,20 +241,185 @@ exports[`GRB review form - participants and timeframe > renders the step 1`] = `
         >
           Add the voting and non-voting GRB members who should participate in this review. For asynchronous reviews, add an end date for the review.
         </p>
-        <p
-          class="text-base margin-top-0 font-body-sm"
+        <div
+          class="usa-alert usa-alert--info usa-alert--slim"
+          data-testid="alert"
         >
-          Fields marked with an asterisk (
-          <span
-            class="text-red margin-x-05"
+          <div
+            class="usa-alert__body"
           >
-            *
-          </span>
-          ) are required.
-        </p>
-        <p>
-          Fields here
-        </p>
+            <p
+              class="usa-alert__text"
+            >
+              Because this review is a standard GRB meeting, you do not need to add GRB reviewers to EASi. However, if you do add reviewers, they will have the option to access documentation about this request within EASi prior to the meeting.
+            </p>
+          </div>
+        </div>
+        <div
+          class="usa-form-group margin-top-0"
+          data-testid="formGroup"
+        >
+          <div
+            class="grid-col-12 tablet:grid-col-6"
+            data-testid="grid"
+          >
+            <div
+              class="margin-top-5 border-top-1px border-base-light padding-top-1"
+            >
+              <p
+                class="text-bold margin-y-0"
+              >
+                GRB reviewers
+              </p>
+              <p
+                class="margin-y-0 text-base-dark line-height-sans-4"
+              >
+                Add the GRB members who should review this IT Governance request and indicate their voting role. For asynchronous reviews, you must add at least 5 voting members.
+              </p>
+              <button
+                class="usa-button"
+                data-testid="button"
+                type="button"
+              >
+                Add a GRB reviewer
+              </button>
+            </div>
+          </div>
+          <div
+            class="grid-col-12 tablet:grid-col-10"
+            data-testid="grid"
+          >
+            <div
+              class="margin-top-3"
+              data-testid="grb-participants-table"
+            >
+              <div
+                class="usa-table-container--scrollable"
+                data-testid="scrollable-table-container"
+                tabindex="0"
+              >
+                <table
+                  class="usa-table usa-table--borderless width-full"
+                  data-testid="table"
+                >
+                  <thead>
+                    <tr
+                      role="row"
+                    >
+                      <th
+                        aria-sort="ascending"
+                        class="border-bottom-2px"
+                        colspan="1"
+                        role="columnheader"
+                        scope="col"
+                        style="cursor: pointer;"
+                        title="Toggle SortBy"
+                      >
+                        <button
+                          class="usa-button usa-button--unstyled"
+                          data-testid="button"
+                          style="cursor: pointer;"
+                          title="Toggle SortBy"
+                          type="button"
+                        >
+                          Name
+                          <svg
+                            class="usa-icon margin-left-05"
+                            data-testid="caret--up"
+                            focusable="false"
+                            height="1em"
+                            role="img"
+                            viewBox="0 0 24 24"
+                            width="1em"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="m12 8-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"
+                            />
+                          </svg>
+                        </button>
+                      </th>
+                      <th
+                        aria-sort="none"
+                        class="border-bottom-2px"
+                        colspan="1"
+                        role="columnheader"
+                        scope="col"
+                        style="cursor: pointer;"
+                        title="Toggle SortBy"
+                      >
+                        <button
+                          class="usa-button usa-button--unstyled"
+                          data-testid="button"
+                          style="cursor: pointer;"
+                          title="Toggle SortBy"
+                          type="button"
+                        >
+                          Voting role
+                          <svg
+                            class="usa-icon margin-left-05"
+                            data-testid="caret--sort"
+                            focusable="false"
+                            height="1em"
+                            role="img"
+                            viewBox="0 0 24 24"
+                            width="1em"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                            />
+                          </svg>
+                        </button>
+                      </th>
+                      <th
+                        aria-sort="none"
+                        class="border-bottom-2px"
+                        colspan="1"
+                        role="columnheader"
+                        scope="col"
+                        style="cursor: pointer;"
+                        title="Toggle SortBy"
+                      >
+                        <button
+                          class="usa-button usa-button--unstyled"
+                          data-testid="button"
+                          style="cursor: pointer;"
+                          title="Toggle SortBy"
+                          type="button"
+                        >
+                          GRB role
+                          <svg
+                            class="usa-icon margin-left-05"
+                            data-testid="caret--sort"
+                            focusable="false"
+                            height="1em"
+                            role="img"
+                            viewBox="0 0 24 24"
+                            width="1em"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                            />
+                          </svg>
+                        </button>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody
+                    role="rowgroup"
+                  />
+                </table>
+              </div>
+              <p
+                class="text-italic margin-top-neg-1"
+              >
+                You have not yet added GRB reviewers. Add reviewers using the button above.
+              </p>
+            </div>
+          </div>
+        </div>
         <div
           class="margin-top-8 margin-bottom-3"
         >

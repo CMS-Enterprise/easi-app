@@ -54,6 +54,16 @@ export const CreateGRBReviewersSchema = Yup.object({
   )
 });
 
+export const SetGRBParticipantsAsyncSchema = Yup.object({
+  grbReviewers: Yup.array(GRBReviewerSchema).min(
+    5,
+    i18next.t('grbReview:setUpGrbReviewForm.minFive')
+  ),
+  grbReviewAsyncEndDate: Yup.date().required(
+    i18next.t('grbReview:setUpGrbReviewForm.invalidDate')
+  )
+});
+
 /** Presentation links schema */
 export const SetGRBPresentationLinksSchema = Yup.object().shape(
   {
@@ -104,5 +114,22 @@ export const GrbPresentationSchema = Yup.object().shape({
 export const GrbReviewFormSchema = {
   reviewType: GrbReviewTypeSchema,
   presentation: GrbPresentationSchema,
-  participants: CreateGRBReviewersSchema
+  participants: SetGRBParticipantsAsyncSchema
 };
+
+export const GRBVoteSchema = (originalComment?: string | null) =>
+  Yup.object({
+    voteComment: Yup.string()
+      .required(
+        i18next.t<string>('grbReview:reviewTask.voting.modal.validation')
+      )
+      .test(
+        'is-not-original-value',
+        i18next.t<string>(
+          'grbReview:reviewTask.voting.modal.validationMustChange'
+        ),
+        value => {
+          return value !== originalComment;
+        }
+      )
+  });

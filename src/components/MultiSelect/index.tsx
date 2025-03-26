@@ -21,7 +21,17 @@ type MultiSelectOptionProps = {
 };
 
 const Option = (props: OptionProps<MultiSelectOptionProps, true>) => {
-  const { data, isSelected, innerProps, innerRef, isFocused } = props;
+  const { data, isSelected, innerProps, innerRef, isFocused, selectOption } =
+    props;
+
+  const onClickMultiOption = (
+    e: React.MouseEvent | React.KeyboardEvent
+  ): void => {
+    selectOption({ ...data });
+    e.stopPropagation();
+    e.preventDefault();
+  };
+
   return (
     <div
       {...innerProps}
@@ -30,6 +40,14 @@ const Option = (props: OptionProps<MultiSelectOptionProps, true>) => {
       className={classNames('usa-combo-box__list-option', {
         'usa-combo-box__list-option--focused': isFocused
       })}
+      onClick={onClickMultiOption}
+      onKeyDown={e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          onClickMultiOption(e);
+        }
+      }}
+      role="button"
+      tabIndex={0}
     >
       <CheckboxField
         label={data.label}
@@ -238,6 +256,7 @@ const MultiSelect = ({
         isMulti
         hideSelectedOptions={false}
         closeMenuOnSelect={false}
+        tabSelectsValue={false}
         onChange={(selectedOptions: MultiSelectOptionProps[]) => {
           setSelected(selectedOptions);
           onChange(selectedOptions.map(option => option.value));

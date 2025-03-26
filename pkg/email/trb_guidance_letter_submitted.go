@@ -15,15 +15,16 @@ import (
 // SendTRBGuidanceLetterSubmittedEmailInput contains the data needed to to send the TRB guidance
 // letter submitted email
 type SendTRBGuidanceLetterSubmittedEmailInput struct {
-	TRBRequestID   uuid.UUID
-	RequestName    string
-	RequestType    string
-	RequesterName  string
-	Component      string
-	SubmissionDate *time.Time
-	ConsultDate    *time.Time
-	CopyTRBMailbox bool
-	Recipients     []models.EmailAddress
+	TRBRequestID     uuid.UUID
+	RequestName      string
+	RequestType      string
+	RequesterName    string
+	Component        string
+	SubmissionDate   *time.Time
+	ConsultDate      *time.Time
+	CopyTRBMailbox   bool
+	CopyITGovMailbox bool
+	Recipients       []models.EmailAddress
 }
 
 // trbGuidanceLetterSubmittedEmailTemplateParams contains the data needed for interpolation in
@@ -49,7 +50,10 @@ func (c Client) SendTRBGuidanceLetterSubmittedEmail(ctx context.Context, input S
 
 	allRecipients := input.Recipients
 	if input.CopyTRBMailbox {
-		allRecipients = append(input.Recipients, c.config.TRBEmail)
+		allRecipients = append(allRecipients, c.config.TRBEmail)
+	}
+	if input.CopyITGovMailbox {
+		allRecipients = append(allRecipients, c.config.GRTEmail)
 	}
 
 	submissionDate := ""

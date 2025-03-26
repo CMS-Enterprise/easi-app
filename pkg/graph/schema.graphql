@@ -864,6 +864,7 @@ type SystemIntake {
   grbReviewAsyncEndDate: Time
   grbReviewAsyncGRBMeetingTime: Time
   grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType
+  grbReviewAsyncManualEndDate: Time
 }
 
 """
@@ -2579,6 +2580,7 @@ The data needed to send a TRB guidance letter, including who to notify
 """
 input SendTRBGuidanceLetterInput {
   id: UUID!
+  copyITGovMailbox: Boolean!
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
 }
@@ -2766,6 +2768,8 @@ type Mutation {
   setSystemIntakeGRBPresentationLinks(input: SystemIntakeGRBPresentationLinksInput!): SystemIntakeGRBPresentationLinks
   uploadSystemIntakeGRBPresentationDeck(input: UploadSystemIntakeGRBPresentationDeckInput!): SystemIntakeGRBPresentationLinks
   deleteSystemIntakeGRBPresentationLinks(input: DeleteSystemIntakeGRBPresentationLinksInput!): UUID!
+  manuallyEndSystemIntakeGRBReviewAsyncVoting(systemIntakeID: UUID!): UpdateSystemIntakePayload
+  @hasRole(role: EASI_GOVTEAM)
 
   archiveSystemIntake(id: UUID!): SystemIntake!
 

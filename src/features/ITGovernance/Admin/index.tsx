@@ -3,7 +3,10 @@ import { useSelector } from 'react-redux';
 import { Route, Switch, useParams } from 'react-router-dom';
 import NotFound from 'features/Miscellaneous/NotFound';
 import RequestLinkForm from 'features/RequestLinking/RequestLinkForm';
-import { useGetSystemIntakeGRBReviewQuery } from 'gql/generated/graphql';
+import {
+  SystemIntakeGRBReviewFragment,
+  useGetSystemIntakeGRBReviewQuery
+} from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { AppState } from 'stores/reducers/rootReducer';
 import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
@@ -33,7 +36,9 @@ const GovernanceReviewTeam = () => {
 
   const grbReview = data?.systemIntake;
 
-  const { grbReviewers, grbReviewStartedAt } = grbReview || {};
+  const { grbVotingInformation, grbReviewStartedAt } = grbReview || {};
+
+  const { grbReviewers } = grbVotingInformation || {};
 
   /** Check if current user is set as GRB reviewer */
   const isGrbReviewer: boolean = useMemo(() => {
@@ -72,7 +77,10 @@ const GovernanceReviewTeam = () => {
 
             <Route path="/it-governance/:systemId/:activePage/:subPage?" exact>
               <RequestOverview
-                grbReviewers={grbReviewers || []}
+                grbVotingInformation={
+                  grbVotingInformation ||
+                  ({} as SystemIntakeGRBReviewFragment['grbVotingInformation'])
+                }
                 grbReviewStartedAt={grbReviewStartedAt}
               />
             </Route>

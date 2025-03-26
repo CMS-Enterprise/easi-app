@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { FieldValues } from 'react-hook-form';
+import { FieldValues, Path, PathValue } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { FetchResult } from '@apollo/client';
@@ -32,6 +32,7 @@ type GRBReviewFormStepWrapperProps<
   onSubmit: GRBReviewFormStepSubmit<TFieldValues>;
   /** Defaults to true - shows required fields text above `children` */
   requiredFields?: boolean;
+  startGRBReview?: boolean;
 };
 
 /**
@@ -45,7 +46,8 @@ function GRBReviewFormStepWrapper<
   children,
   grbReview,
   onSubmit,
-  requiredFields = true
+  requiredFields = true,
+  startGRBReview
 }: GRBReviewFormStepWrapperProps<TFieldValues>) {
   const { t } = useTranslation('grbReview');
   const history = useHistory();
@@ -64,7 +66,8 @@ function GRBReviewFormStepWrapper<
   const {
     handleSubmit,
     watch,
-    formState: { isValid, isDirty }
+    formState: { isValid, isDirty },
+    setValue
   } = useEasiFormContext<TFieldValues>();
 
   const grbReviewPath = `/it-governance/${systemId}/grb-review`;
@@ -91,8 +94,19 @@ function GRBReviewFormStepWrapper<
       path?: string;
     }) => {
       // Redirect user without submit if no changes or skipping validation
-      if (!isDirty || (!shouldValidate && !isValid)) {
+
+      if (!isDirty && !shouldValidate) {
         return history.push(`${grbReviewPath}/${path}`);
+      }
+
+      if (isDirty && !shouldValidate) {
+        // Bypass validation, directly submit the form
+        return onSubmit({ systemIntakeID: systemId, ...watch() })
+          .then(() => history.push(`${grbReviewPath}/${path}`))
+          .catch(() => {
+            // show error if graphql fails
+            showMessage(t('setUpGrbReviewForm.error'), { type: 'error' });
+          });
       }
 
       return handleSubmit(values =>
@@ -109,13 +123,13 @@ function GRBReviewFormStepWrapper<
       )();
     },
     [
-      grbReviewPath,
-      isValid,
       isDirty,
       handleSubmit,
-      onSubmit,
       history,
+      grbReviewPath,
+      onSubmit,
       systemId,
+      watch,
       showMessage,
       t
     ]
@@ -125,7 +139,9 @@ function GRBReviewFormStepWrapper<
    * Formats form steps for stepped header
    */
   const formatSteps = useCallback(async () => {
-    const { grbReviewType, grbReviewers, grbDate } = grbReview;
+    const { grbReviewType, grbVotingInformation, grbDate } = grbReview;
+
+    const { grbReviewers } = grbVotingInformation || {};
 
     // Validate form steps with Yup
 
@@ -173,7 +189,9 @@ function GRBReviewFormStepWrapper<
           ...acc[index],
           completed,
           disabled: index > 0 ? !acc[index - 1].completed : false,
-          onClick: () => submitStep({ path: value.key })
+          onClick: () => {
+            submitStep({ path: value.key });
+          }
         };
 
         return acc;
@@ -263,7 +281,15 @@ function GRBReviewFormStepWrapper<
               disabled: !isValid,
               text: nextStep
                 ? t('Next')
-                : t('setUpGrbReviewForm.completeAndBeginReview')
+                : t('setUpGrbReviewForm.completeAndBeginReview'),
+              onClick: () => {
+                if (startGRBReview) {
+                  setValue(
+                    'startGRBReview' as Path<TFieldValues>,
+                    true as PathValue<TFieldValues, Path<TFieldValues>>
+                  );
+                }
+              }
             }}
             back={
               // Only show `back` button if there is a previous step
@@ -276,7 +302,7 @@ function GRBReviewFormStepWrapper<
             }
             saveExitText={t('setUpGrbReviewForm.saveAndReturn')}
             taskListUrl={grbReviewPath}
-            submitDisabled={!isValid || !isDirty}
+            submitDisabled={!isDirty}
             submit={() => submitStep({ shouldValidate: false })}
             border={false}
             className="margin-top-8 margin-bottom-3"
