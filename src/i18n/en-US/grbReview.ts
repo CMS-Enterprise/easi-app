@@ -279,7 +279,7 @@ export default {
       selectReviewEndDate: {
         heading: 'Select review end date',
         description:
-          'Set a timeframe for this review. The GRB members above will be notified of the end date and will receive some automatic reminders.'
+          'Select the date when the GRB review should end. The review will close at 5pm EST on that day. You will have the opportunity to add additional time to this review if necessary. Format: mm/dd/yyyy'
       }
     }
   },
