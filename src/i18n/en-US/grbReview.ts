@@ -454,7 +454,11 @@ export default {
       [GRBReviewStatus.SCHEDULED]: 'Scheduled',
       [GRBReviewStatus.IN_PROGRESS]: 'In progress',
       [GRBReviewStatus.COMPLETED]: 'Complete'
-    }
+    },
+    timeRemaining: 'Time remaining for review',
+    reviewEnds: 'Review ends {{date}}, 5:00pm EST',
+    addTime: 'Add time',
+    endVoting: 'End voting'
   },
   decisionCard: {
     heading: 'Decision record',

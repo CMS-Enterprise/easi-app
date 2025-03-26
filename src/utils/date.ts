@@ -122,3 +122,22 @@ export const getRelativeDate = (
   // Return relative date
   return dateTime.toRelativeCalendar({ unit: 'days' });
 };
+
+// Formats whole days, hours, and minutes between now and a given ISO string
+export const formatDaysHoursMinutes = (isoString: string) => {
+  // Parse the ISO string into a Luxon DateTime object in UTC
+  const dateTime = DateTime.fromISO(isoString, { zone: 'utc' });
+
+  // Get the current time in UTC
+  const now = DateTime.utc();
+
+  // Calculate the difference between the two DateTime objects
+  const diff = now.diff(dateTime, ['days', 'hours', 'minutes']);
+
+  // Extract whole number of days, hours, and minutes
+  const days = Math.floor(diff.as('days'));
+  const { hours } = diff;
+  const { minutes } = diff;
+
+  return { days, hours, minutes };
+};

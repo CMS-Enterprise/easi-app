@@ -16,6 +16,7 @@ import {
   SystemIntakeFragmentFragment,
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewerVotingRole,
+  SystemIntakeGRBReviewFragment,
   SystemIntakeState,
   useDeleteSystemIntakeGRBReviewerMutation,
   useStartGRBReviewMutation
@@ -39,7 +40,7 @@ import DecisionRecordCard from './DecisionRecordCard';
 import Discussions from './Discussions';
 import GRBReviewAdminTask from './GRBReviewAdminTask';
 import GRBReviewerForm from './GRBReviewerForm';
-import GRBReviewStatusCard, { GRBReviewStatus } from './GRBReviewStatusCard';
+import GRBReviewStatusCard from './GRBReviewStatusCard';
 import GRBVotingPanel from './GRBVotingPanel';
 import IntakeRequestCard from './IntakeRequestCard';
 
@@ -52,7 +53,8 @@ type GRBReviewProps = {
   businessCase: BusinessCaseModel;
   grbVotingInformation: SystemIntakeFragmentFragment['grbVotingInformation'];
   documents: SystemIntakeDocumentFragmentFragment[];
-  grbReviewStartedAt?: string | null;
+  grbReviewStartedAt?: SystemIntakeGRBReviewFragment['grbReviewStartedAt'];
+  grbReviewAsyncEndDate?: SystemIntakeGRBReviewFragment['grbReviewAsyncEndDate'];
   grbPresentationLinks?: SystemIntakeFragmentFragment['grbPresentationLinks'];
   governanceRequestFeedbacks: SystemIntakeFragmentFragment['governanceRequestFeedbacks'];
   grbReviewType: SystemIntakeFragmentFragment['grbReviewType'];
@@ -69,6 +71,7 @@ const GRBReview = ({
   grbVotingInformation,
   documents,
   grbReviewStartedAt,
+  grbReviewAsyncEndDate,
   grbPresentationLinks,
   governanceRequestFeedbacks,
   grbReviewType,
@@ -280,12 +283,14 @@ const GRBReview = ({
               {t('reviewDetails.text')}
             </p>
 
-            <GRBReviewStatusCard
+            {/* <GRBReviewStatusCard
               grbReviewType={grbReviewType}
               grbDate={grbDate}
               grbReviewStatus={GRBReviewStatus.SCHEDULED}
               grbReviewStartedAt={grbReviewStartedAt}
-            />
+            /> */}
+
+            <GRBReviewStatusCard />
 
             <DecisionRecordCard grbVotingInformation={grbVotingInformation} />
 
