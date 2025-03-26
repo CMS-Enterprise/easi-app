@@ -35,6 +35,7 @@ import GRBFeedbackCard from './GRBFeedbackCard/GRBFeedbackCard';
 import ParticipantsSection from './ParticipantsSection/ParticipantsSection';
 import PresentationLinksCard from './PresentationLinksCard/PresentationLinksCard';
 import BusinessCaseCard from './BusinessCaseCard';
+import DecisionRecordCard from './DecisionRecordCard';
 import Discussions from './Discussions';
 import GRBReviewAdminTask from './GRBReviewAdminTask';
 import GRBReviewerForm from './GRBReviewerForm';
@@ -285,6 +286,8 @@ const GRBReview = ({
               grbReviewStatus={GRBReviewStatus.SCHEDULED}
               grbReviewStartedAt={grbReviewStartedAt}
             />
+
+            <DecisionRecordCard grbVotingInformation={grbVotingInformation} />
 
             {/* GRT recommendations to the GRB */}
             <GRBFeedbackCard
