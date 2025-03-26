@@ -6,6 +6,7 @@ import { ErrorMessage } from '@hookform/error-message';
 import { Button, ButtonGroup, FormGroup, Label } from '@trussworks/react-uswds';
 import {
   GetSystemIntakeGRBReviewDocument,
+  SystemIntakeGRBReviewFragment,
   useUpdateSystemIntakeGRBReviewFormInputTimeframeAsyncMutation
 } from 'gql/generated/graphql';
 
@@ -16,9 +17,17 @@ import FieldErrorMsg from 'components/FieldErrorMsg';
 import Modal from 'components/Modal';
 import RequiredFieldsText from 'components/RequiredFieldsText';
 import useMessage from 'hooks/useMessage';
-import { formatDateUtc } from 'utils/date';
+import { formatDateUtc, formatDaysHoursMinutes } from 'utils/date';
 
-const GRBAddTimeModal = () => {
+type AddTimeOrEndVotingProps = {
+  grbReviewAsyncEndDate: SystemIntakeGRBReviewFragment['grbReviewAsyncEndDate'];
+  grbVotingInformation: SystemIntakeGRBReviewFragment['grbVotingInformation'];
+};
+
+const AddTimeOrEndVoting = ({
+  grbReviewAsyncEndDate,
+  grbVotingInformation
+}: AddTimeOrEndVotingProps) => {
   const { t } = useTranslation('grbReview');
 
   const { systemId } = useParams<{
@@ -29,12 +38,16 @@ const GRBAddTimeModal = () => {
 
   const [err, setError] = useState<boolean>(false);
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<'addTime' | 'endVoting' | null>(null);
 
   const [mutation] =
     useUpdateSystemIntakeGRBReviewFormInputTimeframeAsyncMutation({
       refetchQueries: [GetSystemIntakeGRBReviewDocument]
     });
+
+  const { days, hours, minutes } = formatDaysHoursMinutes(
+    grbReviewAsyncEndDate
+  );
 
   const form = useEasiForm<any>({
     defaultValues: {
@@ -55,19 +68,28 @@ const GRBAddTimeModal = () => {
   const resetModal = () => {
     setError(false);
     reset();
-    setIsOpen(false);
+    setIsOpen(null);
   };
 
-  const addTime = handleSubmit(async input => {
+  const addTimeOrEndEarly = handleSubmit(async input => {
     mutation({
       variables: {
         input: {
           systemIntakeID: systemId,
-          grbReviewAsyncEndDate: input.grbReviewAsyncEndDate
+          grbReviewAsyncEndDate:
+            isOpen === 'endVoting'
+              ? new Date().toISOString()
+              : input.grbReviewAsyncEndDate
         }
       }
     })
       .then(() => {
+        if (isOpen === 'endVoting') {
+          showMessage(t('statusCard.endVotingModal.success'), {
+            type: 'success'
+          });
+          return;
+        }
         showMessage(
           t('statusCard.addTimeModal.success', {
             date: formatDateUtc(input.grbReviewAsyncEndDate, 'MM/dd/yyyy')
@@ -76,6 +98,7 @@ const GRBAddTimeModal = () => {
             type: 'success'
           }
         );
+
         resetModal();
       })
       .catch(() => {
@@ -85,8 +108,9 @@ const GRBAddTimeModal = () => {
 
   return (
     <>
+      {/* ADD TIME MODAL */}
       <Modal
-        isOpen={isOpen}
+        isOpen={isOpen === 'addTime'}
         closeModal={() => resetModal()}
         className="easi-body-normal padding-bottom-1 overflow-visible"
       >
@@ -156,7 +180,7 @@ const GRBAddTimeModal = () => {
             type="button"
             disabled={!watch('grbReviewAsyncEndDate')?.trim()}
             onClick={() => {
-              addTime();
+              addTimeOrEndEarly();
             }}
           >
             {t('statusCard.addTimeModal.addTime')}
@@ -175,12 +199,78 @@ const GRBAddTimeModal = () => {
         </ButtonGroup>
       </Modal>
 
+      {/* END VOTING MODAL */}
+      <Modal
+        isOpen={isOpen === 'endVoting'}
+        closeModal={() => resetModal()}
+        className="easi-body-normal padding-bottom-1 overflow-visible"
+      >
+        <h3 className="margin-top-0 margin-bottom-0">
+          {t('statusCard.endVotingModal.heading')}
+        </h3>
+
+        {err && (
+          <Alert type="error" slim>
+            {t('technicalAssistance:documents.upload.error')}
+          </Alert>
+        )}
+
+        <p>{t('statusCard.endVotingModal.description')}</p>
+
+        <p className="text-bold margin-top-1 margin-bottom-0">
+          {t('statusCard.endVotingModal.timeRemaining')}
+        </p>
+
+        <p className="easi-body-large margin-top-0 margin-bottom-2 margin-right-2">
+          {t('statusCard.countdown', {
+            days,
+            hours,
+            minutes
+          })}
+        </p>
+
+        <p className="text-bold margin-top-1 margin-bottom-0">
+          {t('statusCard.endVotingModal.votingStatus')}
+        </p>
+
+        <p className="easi-body-large margin-top-0 margin-bottom-05 margin-right-2">
+          {t('decisionCard.voteInfo', {
+            noObjection: grbVotingInformation.numberOfNoObjection,
+            objection: grbVotingInformation.numberOfObjection,
+            notVoted: grbVotingInformation.numberOfNotVoted
+          })}
+        </p>
+
+        <ButtonGroup className="margin-top-4">
+          <Button
+            type="button"
+            secondary
+            onClick={() => {
+              addTimeOrEndEarly();
+            }}
+          >
+            {t('statusCard.endVotingModal.endEarly')}
+          </Button>
+
+          <Button
+            type="button"
+            className="margin-left-2 margin-top-2"
+            unstyled
+            onClick={() => {
+              resetModal();
+            }}
+          >
+            {t('statusCard.endVotingModal.goBack')}
+          </Button>
+        </ButtonGroup>
+      </Modal>
+
       <ButtonGroup>
         <Button
           type="button"
           outline
           onClick={() => {
-            setIsOpen(true);
+            setIsOpen('addTime');
           }}
         >
           {' '}
@@ -191,7 +281,7 @@ const GRBAddTimeModal = () => {
           type="button"
           outline
           onClick={() => {
-            setIsOpen(true);
+            setIsOpen('endVoting');
           }}
         >
           {t('statusCard.endVoting')}
@@ -201,4 +291,4 @@ const GRBAddTimeModal = () => {
   );
 };
 
-export default GRBAddTimeModal;
+export default AddTimeOrEndVoting;

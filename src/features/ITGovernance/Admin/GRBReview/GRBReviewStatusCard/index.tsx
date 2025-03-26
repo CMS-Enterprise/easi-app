@@ -12,7 +12,7 @@ import UswdsReactLink from 'components/LinkWrapper';
 import Tag from 'components/Tag';
 import { formatDateUtc, formatDaysHoursMinutes } from 'utils/date';
 
-import GRBAddTimeModal from './GRBAddTimeModal';
+import AddTimeOrEndVoting from './AddTimeOrEndVoting';
 
 // TODO: Temp status type;
 export enum GRBReviewStatus {
@@ -79,7 +79,8 @@ const GRBReviewStatusCard = ({
     grbReviewAsyncStatus,
     grbDate,
     grbReviewStartedAt,
-    grbReviewAsyncEndDate
+    grbReviewAsyncEndDate,
+    grbVotingInformation
   } = grbReview;
 
   const isITGovAdmin = useContext(ITGovAdminContext);
@@ -173,7 +174,12 @@ const GRBReviewStatusCard = ({
             </p>
           </span>
 
-          {isITGovAdmin && <GRBAddTimeModal />}
+          {isITGovAdmin && (
+            <AddTimeOrEndVoting
+              grbReviewAsyncEndDate={grbReviewAsyncEndDate}
+              grbVotingInformation={grbVotingInformation}
+            />
+          )}
         </span>
       )}
     </div>

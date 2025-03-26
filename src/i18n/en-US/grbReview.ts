@@ -473,6 +473,20 @@ export default {
       goBack: 'Go back and don’t add time',
       success:
         'You added time to this GRB review. The new end date is {{date}} at 5:00pm EST.'
+    },
+    endVotingModal: {
+      heading: 'End voting early?',
+      description:
+        'Completing this action will end this GRB review early. GRB members will no longer be able to add votes or change their vote for this request.',
+      timeRemaining: 'Time remaining',
+      countdown: '{{days}} days, {{hours}} hours, {{minutes}} minutes',
+      votingStatus: 'Voting status',
+      results:
+        '{{noObjection}} no objection, {{objection}} objection, {{notVoted}} not voted',
+      endEarly: 'End early',
+      goBack: 'Go back and don’t end early',
+      success:
+        'You have ended this GRB review early. GRB members will no longer be able to add or change votes.'
     }
   },
   decisionCard: {
