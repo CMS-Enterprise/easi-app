@@ -164,29 +164,29 @@ const getSystemIntakeGRBReviewQuery = (
       id: systemIntake.id
     }
   },
-  result: reviewer
-    ? {
-        data: {
-          __typename: 'Query',
-          systemIntake: {
-            __typename: 'SystemIntake',
-            id: systemIntake.id,
-            grbVotingInformation: {
-              __typename: 'GRBVotingInformation',
-              grbReviewers: [reviewer],
-              votingStatus: GRBVotingInformationStatus.NOT_STARTED,
-              numberOfNoObjection: 0,
-              numberOfObjection: 0,
-              numberOfNotVoted: 0
-            },
-            grbReviewStartedAt: null,
-            grbReviewType: SystemIntakeGRBReviewType.STANDARD,
-            documents: []
-          }
-        }
+  result: {
+    data: {
+      __typename: 'Query',
+      systemIntake: {
+        __typename: 'SystemIntake',
+        id: systemIntake.id,
+        grbVotingInformation: {
+          __typename: 'GRBVotingInformation',
+          grbReviewers: reviewer ? [reviewer] : [],
+          votingStatus: GRBVotingInformationStatus.NOT_STARTED,
+          numberOfNoObjection: 0,
+          numberOfObjection: 0,
+          numberOfNotVoted: 0
+        },
+        grbReviewStartedAt: null,
+        grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+        documents: []
       }
-    : undefined
+    }
+  }
 });
+
+export default getSystemIntakeGRBReviewQuery;
 
 const getGRBReviewersComparisonsQuery: MockedQuery<
   GetGRBReviewersComparisonsQuery,
@@ -237,18 +237,16 @@ describe('GRB reviewer form', () => {
               <Route path="/it-governance/:systemId/grb-review/:action">
                 <ITGovAdminContext.Provider value>
                   <GRBReview
-                    {...systemIntake}
+                    systemIntake={systemIntake}
                     businessCase={businessCase}
-                    grbVotingInformation={grbVotingInformation}
                   />
                 </ITGovAdminContext.Provider>
               </Route>
               <Route path="/it-governance/:systemId/grb-review">
                 <ITGovAdminContext.Provider value>
                   <GRBReview
-                    {...systemIntake}
+                    systemIntake={systemIntake}
                     businessCase={businessCase}
-                    grbVotingInformation={populatedGRBVotingInformation}
                   />
                 </ITGovAdminContext.Provider>
               </Route>
@@ -318,6 +316,7 @@ describe('GRB reviewer form', () => {
             getGRBReviewersComparisonsQuery,
             cedarContactsQuery(contactLabel),
             updateSystemIntakeGRBReviewerQuery,
+            getSystemIntakeGRBReviewQuery(),
             getSystemIntakeGRBReviewQuery(grbReviewer),
             getSystemIntakeGRBReviewQuery(updatedGRBReviewer)
           ]}
@@ -327,18 +326,16 @@ describe('GRB reviewer form', () => {
               <Route path="/it-governance/:systemId/grb-review/:action">
                 <ITGovAdminContext.Provider value>
                   <GRBReview
-                    {...systemIntake}
+                    systemIntake={systemIntake}
                     businessCase={businessCase}
-                    grbVotingInformation={populatedGRBVotingInformation}
                   />
                 </ITGovAdminContext.Provider>
               </Route>
               <Route path="/it-governance/:systemId/grb-review">
                 <ITGovAdminContext.Provider value>
                   <GRBReview
-                    {...systemIntake}
+                    systemIntake={systemIntake}
                     businessCase={businessCase}
-                    grbVotingInformation={updatedGRBVotingInformation}
                   />
                 </ITGovAdminContext.Provider>
               </Route>

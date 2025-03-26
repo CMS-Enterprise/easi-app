@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
@@ -12,12 +12,11 @@ import {
 import DocumentsTable from 'features/ITGovernance/_components/DocumentsTable';
 import {
   GetSystemIntakeGRBReviewDocument,
-  SystemIntakeDocumentFragmentFragment,
   SystemIntakeFragmentFragment,
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewerVotingRole,
-  SystemIntakeState,
   useDeleteSystemIntakeGRBReviewerMutation,
+  useGetSystemIntakeGRBReviewQuery,
   useStartGRBReviewMutation
 } from 'gql/generated/graphql';
 import { AppState } from 'stores/reducers/rootReducer';
@@ -46,36 +45,11 @@ import IntakeRequestCard from './IntakeRequestCard';
 import './index.scss';
 
 type GRBReviewProps = {
-  id: string;
-  submittedAt?: string | null;
-  state: SystemIntakeState;
+  systemIntake: SystemIntakeFragmentFragment;
   businessCase: BusinessCaseModel;
-  grbVotingInformation: SystemIntakeFragmentFragment['grbVotingInformation'];
-  documents: SystemIntakeDocumentFragmentFragment[];
-  grbReviewStartedAt?: string | null;
-  grbPresentationLinks?: SystemIntakeFragmentFragment['grbPresentationLinks'];
-  governanceRequestFeedbacks: SystemIntakeFragmentFragment['governanceRequestFeedbacks'];
-  grbReviewType: SystemIntakeFragmentFragment['grbReviewType'];
-  grbDate?: SystemIntakeFragmentFragment['grbDate'];
-  currentStage?: SystemIntakeFragmentFragment['currentStage'];
-  annualSpending?: SystemIntakeFragmentFragment['annualSpending'];
 };
 
-const GRBReview = ({
-  id,
-  businessCase,
-  submittedAt,
-  state,
-  grbVotingInformation,
-  documents,
-  grbReviewStartedAt,
-  grbPresentationLinks,
-  governanceRequestFeedbacks,
-  grbReviewType,
-  grbDate,
-  currentStage,
-  annualSpending
-}: GRBReviewProps) => {
+const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
   const { t } = useTranslation('grbReview');
 
   const history = useHistory();
@@ -83,6 +57,25 @@ const GRBReview = ({
   const { action } = useParams<{
     action?: GRBReviewFormAction;
   }>();
+
+  const {
+    id,
+    currentStage,
+    state,
+    submittedAt,
+    annualSpending,
+    governanceRequestFeedbacks
+  } = systemIntake;
+
+  const { data } = useGetSystemIntakeGRBReviewQuery({
+    variables: {
+      id
+    }
+  });
+
+  const grbReview = useMemo(() => {
+    return data?.systemIntake;
+  }, [data?.systemIntake]);
 
   const isForm = !!action;
   const isFromGRBSetup = history.location.search === '?from-grb-setup';
@@ -97,7 +90,7 @@ const GRBReview = ({
 
   const { euaId } = useSelector((appState: AppState) => appState.auth);
 
-  const currentGRBReviewer = grbVotingInformation?.grbReviewers.find(
+  const currentGRBReviewer = grbReview?.grbVotingInformation?.grbReviewers.find(
     reviewer =>
       reviewer.userAccount.username === euaId &&
       reviewer.votingRole === SystemIntakeGRBReviewerVotingRole.VOTING
@@ -150,6 +143,10 @@ const GRBReview = ({
     [history, isForm, id, mutate, showMessage, t]
   );
 
+  if (!grbReview) {
+    return null;
+  }
+
   return (
     <>
       {
@@ -191,8 +188,8 @@ const GRBReview = ({
         <GRBReviewerForm
           isFromGRBSetup={isFromGRBSetup}
           setReviewerToRemove={setReviewerToRemove}
-          initialGRBReviewers={grbVotingInformation?.grbReviewers}
-          grbReviewStartedAt={grbReviewStartedAt}
+          initialGRBReviewers={grbReview.grbVotingInformation?.grbReviewers}
+          grbReviewStartedAt={grbReview.grbReviewStartedAt}
         />
       ) : (
         <>
@@ -206,7 +203,7 @@ const GRBReview = ({
                 <ModalHeading>{t('startReviewModal.heading')}</ModalHeading>
                 <p>
                   {t('startReviewModal.text', {
-                    count: grbVotingInformation?.grbReviewers.length
+                    count: grbReview.grbVotingInformation?.grbReviewers.length
                   })}
                 </p>
                 <ModalFooter>
@@ -262,7 +259,7 @@ const GRBReview = ({
             <GRBReviewAdminTask
               isITGovAdmin={isITGovAdmin}
               systemIntakeId={id}
-              grbReviewStartedAt={grbReviewStartedAt}
+              grbReviewStartedAt={grbReview.grbReviewStartedAt}
             />
 
             {/* GRB Reviewer Voting Panel */}
@@ -281,13 +278,15 @@ const GRBReview = ({
             </p>
 
             <GRBReviewStatusCard
-              grbReviewType={grbReviewType}
-              grbDate={grbDate}
+              grbReviewType={grbReview.grbReviewType}
+              grbDate={grbReview.grbDate}
               grbReviewStatus={GRBReviewStatus.SCHEDULED}
-              grbReviewStartedAt={grbReviewStartedAt}
+              grbReviewStartedAt={grbReview.grbReviewStartedAt}
             />
 
-            <DecisionRecordCard grbVotingInformation={grbVotingInformation} />
+            <DecisionRecordCard
+              grbVotingInformation={grbReview.grbVotingInformation}
+            />
 
             {/* GRT recommendations to the GRB */}
             <GRBFeedbackCard
@@ -305,7 +304,7 @@ const GRBReview = ({
 
             <PresentationLinksCard
               systemIntakeID={id}
-              grbPresentationLinks={grbPresentationLinks}
+              grbPresentationLinks={grbReview.grbPresentationLinks}
             />
 
             {/* Business Case Card */}
@@ -333,20 +332,23 @@ const GRBReview = ({
               )}
             </div>
 
-            <DocumentsTable systemIntakeId={id} documents={documents} />
+            <DocumentsTable
+              systemIntakeId={id}
+              documents={grbReview.documents}
+            />
 
             <Discussions
               systemIntakeID={id}
-              grbReviewers={grbVotingInformation?.grbReviewers}
-              grbReviewStartedAt={grbReviewStartedAt}
+              grbReviewers={grbReview.grbVotingInformation?.grbReviewers}
+              grbReviewStartedAt={grbReview.grbReviewStartedAt}
               className="margin-top-4 margin-bottom-6"
             />
 
             <ParticipantsSection
               id={id}
               state={state}
-              grbReviewers={grbVotingInformation?.grbReviewers}
-              grbReviewStartedAt={grbReviewStartedAt}
+              grbReviewers={grbReview.grbVotingInformation?.grbReviewers}
+              grbReviewStartedAt={grbReview.grbReviewStartedAt}
             />
           </div>
         </>

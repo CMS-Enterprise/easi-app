@@ -154,9 +154,7 @@ describe('Governance Review Team', () => {
           <Provider store={defaultStore}>
             <MessageProvider>
               <Route path="/it-governance/:systemId/intake-request">
-                <RequestOverview
-                  grbVotingInformation={systemIntake.grbVotingInformation}
-                />
+                <RequestOverview />
               </Route>
             </MessageProvider>
           </Provider>
@@ -178,9 +176,7 @@ describe('Governance Review Team', () => {
           <Provider store={defaultStore}>
             <MessageProvider>
               <Route path="/it-governance/:systemId/business-case">
-                <RequestOverview
-                  grbVotingInformation={systemIntake.grbVotingInformation}
-                />
+                <RequestOverview />
               </Route>
             </MessageProvider>
           </Provider>
@@ -207,9 +203,7 @@ describe('Governance Review Team', () => {
           <Provider store={defaultStore}>
             <MessageProvider>
               <Route path="/it-governance/:systemId/notes">
-                <RequestOverview
-                  grbVotingInformation={systemIntake.grbVotingInformation}
-                />
+                <RequestOverview />
               </Route>
             </MessageProvider>
           </Provider>
@@ -228,9 +222,7 @@ describe('Governance Review Team', () => {
           <Provider store={defaultStore}>
             <MessageProvider>
               <Route path="/it-governance/:systemId/dates">
-                <RequestOverview
-                  grbVotingInformation={systemIntake.grbVotingInformation}
-                />
+                <RequestOverview />
               </Route>
             </MessageProvider>
           </Provider>
@@ -250,9 +242,7 @@ describe('Governance Review Team', () => {
           <Provider store={defaultStore}>
             <MessageProvider>
               <Route path="/it-governance/:systemId/decision">
-                <RequestOverview
-                  grbVotingInformation={systemIntake.grbVotingInformation}
-                />
+                <RequestOverview />
               </Route>
             </MessageProvider>
           </Provider>
@@ -299,9 +289,7 @@ describe('Governance Review Board', () => {
           <Provider store={defaultStore}>
             <MessageProvider>
               <Route path="/it-governance/:systemId/intake-request">
-                <RequestOverview
-                  grbVotingInformation={systemIntake.grbVotingInformation}
-                />
+                <RequestOverview />
               </Route>
             </MessageProvider>
           </Provider>
