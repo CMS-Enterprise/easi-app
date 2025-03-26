@@ -45,3 +45,20 @@ func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, schedule
 ```
 
 ### Dependencies
+
+Currently, dependencies are provided mostly through the context. The context is provided to every job when the shared scheduler is started.
+
+The method `CreateSchedulerContext` in [`context.go`](context.go) demonstrates what currently exists on the job. It is important if creating a job through another location in the code to provide the needed parameters to the context.
+
+### One Time Jobs
+
+The scheduler also supports the ability to create jobs that are only run once. This allows a job to create multiple child jobs. Please make sure to pay attention to context and dependencies here.
+
+There is a helper method for this currently in  to facilitate creating one time jobs. It's best practice to use these only when running the job immediately (see below on persistence)
+
+### Logging
+The `decoratedLogger` receiver method on [`ScheduledJobWrapper`](scheduled_job_wrapper.go) will return standard information about a scheduled job on the logger. This allows us to key off of this information if we need to explore any jobs running through splunk.
+
+## Lifecycle and Persistence
+
+It is important to note that this current implementation does not have persistence like an external service would have. This means that a new instance of the job will be created when the app restarts. It is vitally important to remember this when structuring scheduled tasks, and implement a form of persistence in the database if needed for your task. Otherwise there could be scenarios where jobs fire multiple times creating a duplicative experience for the users.

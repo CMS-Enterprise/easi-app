@@ -17,7 +17,7 @@ type ScheduledJobFunction[input comparable] func(context.Context, input)
 // RegisterJobFunction is a function that registers a job with the scheduler and returns the job
 type RegisterJobFunction func(context.Context, *storage.Store, gocron.Scheduler) (gocron.Job, error)
 
-type ScheduleJobWrapper[input comparable] struct {
+type ScheduledJobWrapper[input comparable] struct {
 	name          string
 	jobDefinition gocron.JobDefinition
 	jobFunction   ScheduledJobFunction[input]
@@ -25,10 +25,10 @@ type ScheduleJobWrapper[input comparable] struct {
 	job           gocron.Job
 }
 type ScheduledJob struct {
-	ScheduleJobWrapper[*ScheduledJob] // Embed the wrapper with a pointer to ScheduledJob
+	ScheduledJobWrapper[*ScheduledJob] // Embed the wrapper with a pointer to ScheduledJob
 }
 
-func (sjw *ScheduleJobWrapper[input]) Register() {
+func (sjw *ScheduledJobWrapper[input]) Register() {
 	RegisterJob(sjw.name, func(ctx context.Context, store *storage.Store, scheduler gocron.Scheduler) (gocron.Job, error) {
 		retJob, err := scheduler.NewJob(
 			sjw.jobDefinition,
@@ -44,7 +44,7 @@ func (sjw *ScheduleJobWrapper[input]) Register() {
 }
 
 // decoratedLogger returns a logger with the job's metadata
-func (sjw *ScheduleJobWrapper[input]) decoratedLogger(logger *zap.Logger) *zap.Logger {
+func (sjw *ScheduledJobWrapper[input]) decoratedLogger(logger *zap.Logger) *zap.Logger {
 	lastRun, errLastRun := sjw.job.LastRun()
 	nextRun, errNextRun := sjw.job.NextRun()
 
@@ -65,9 +65,9 @@ func (sjw *ScheduleJobWrapper[input]) decoratedLogger(logger *zap.Logger) *zap.L
 }
 
 // NewScheduledJobWrapper holds the logic to initialize a new scheduled job
-func NewScheduledJobWrapper[input comparable](jobName string, scheduler gocron.Scheduler, jobDefinition gocron.JobDefinition, jobFunction ScheduledJobFunction[input], params input) ScheduleJobWrapper[input] {
+func NewScheduledJobWrapper[input comparable](jobName string, scheduler gocron.Scheduler, jobDefinition gocron.JobDefinition, jobFunction ScheduledJobFunction[input], params input) ScheduledJobWrapper[input] {
 
-	sjw := ScheduleJobWrapper[input]{
+	sjw := ScheduledJobWrapper[input]{
 		name:          jobName,
 		jobDefinition: jobDefinition,
 		jobFunction:   jobFunction,
@@ -81,7 +81,7 @@ func NewScheduledJobWrapper[input comparable](jobName string, scheduler gocron.S
 func NewScheduledJob(jobName string, scheduler gocron.Scheduler, jobDefinition gocron.JobDefinition, jobFunction ScheduledJobFunction[*ScheduledJob]) ScheduledJob {
 	// Create an empty ScheduledJob instance
 	sj := ScheduledJob{
-		ScheduleJobWrapper: ScheduleJobWrapper[*ScheduledJob]{
+		ScheduledJobWrapper: ScheduledJobWrapper[*ScheduledJob]{
 			name:          jobName,
 			jobDefinition: jobDefinition,
 			jobFunction:   jobFunction,

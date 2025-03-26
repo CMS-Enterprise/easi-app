@@ -12,7 +12,7 @@ import (
 // exampleJobs is a struct that holds all the example jobs. It is not meant to be run in production
 // , but rather to show how to create a job.
 type exampleJobs struct {
-	RunEvery5SecondJob ScheduleJobWrapper[bool]
+	RunEvery5SecondJob ScheduledJobWrapper[bool]
 	SimplifiedJob      ScheduledJob
 }
 
