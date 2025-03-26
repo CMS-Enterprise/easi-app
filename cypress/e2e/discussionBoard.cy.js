@@ -12,6 +12,7 @@ describe('Discussion Board', () => {
     cy.contains('button', 'Set up GRB review').click();
     cy.get('input#grbReviewTypeStandard').check({ force: true });
     cy.contains('button', 'Next').click();
+    cy.get('[data-testid="date-picker-external-input"]').clear();
     cy.get('[data-testid="date-picker-external-input"]').type('01/01/2226');
     cy.contains('button', 'Next').click();
     cy.get('[data-testid="stepIndicator-3"]').click();

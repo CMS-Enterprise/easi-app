@@ -50,8 +50,8 @@ describe('GRB review', () => {
     cy.get('[data-testid="date-picker-external-input"]').clear();
     cy.get('[data-testid="date-picker-external-input"]').type('01/01/2226');
 
-    cy.get('input#recordingLink').type('https://www.google.com');
-    cy.get('input#recordingPasscode').type('123');
+    cy.get('input#recordingLink').clear().type('https://www.google.com');
+    cy.get('input#recordingPasscode').clear().type('123');
 
     // Hit Send reminder button
     cy.contains('button', 'Send reminder').click();
@@ -112,7 +112,7 @@ describe('GRB review', () => {
       cy.get('tbody tr').should('have.length', 5);
     });
 
-    cy.get('#grbReviewAsyncEndDate').type('01/01/2226');
+    cy.get('#grbReviewAsyncEndDate').clear().type('01/01/2226');
 
     cy.contains('button', 'Complete and begin review').click();
     cy.wait('@updateAsyncTimeframe')
@@ -156,7 +156,9 @@ describe('GRB review', () => {
 
     cy.wait('@updateReviewType').its('response.statusCode').should('eq', 200);
 
-    cy.get('[data-testid="date-picker-external-input"]').type('01/01/2226');
+    cy.get('[data-testid="date-picker-external-input"]')
+      .clear()
+      .type('01/01/2226');
 
     // Hit Send reminder button
     cy.contains('button', 'Send reminder').click();
@@ -206,7 +208,9 @@ describe('GRB review', () => {
       'usa-step-indicator__segment--disabled'
     );
 
-    cy.get('[data-testid="date-picker-external-input"]').type('01/01/2226');
+    cy.get('[data-testid="date-picker-external-input"]')
+      .clear()
+      .type('01/01/2226');
     cy.contains('button', 'Next').click();
 
     cy.get('[data-testid="stepIndicator-2"]').should(
