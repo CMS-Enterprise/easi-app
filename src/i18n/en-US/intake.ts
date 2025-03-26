@@ -309,6 +309,9 @@ const intake = {
   },
   requestDetails: {
     heading: 'Request details',
+    intakeFormOverview: 'Intake Request form overview',
+    completed: 'Completed {{completedDate}}',
+    viewFullIntake: 'View full Intake Request form',
     subsectionHeadings: {
       projectConcept: 'Project Concept',
       collaboration: 'Collaboration',

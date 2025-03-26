@@ -1,0 +1,85 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`BusinessCaseCard > renders correctly with a submitted business case 1`] = `
+<DocumentFragment>
+  <li
+    class="usa-card"
+    data-testid="Card"
+  >
+    <div
+      class="usa-card__container margin-0 border-width-1px shadow-2"
+    >
+      <header
+        class="usa-card__header"
+        data-testid="CardHeader"
+      >
+        <h3
+          class="display-inline-block margin-right-2 margin-bottom-0"
+        >
+          Business Case overview
+        </h3>
+        <span
+          class="text-base display-inline-block"
+        >
+          Last Updated 03/21/2025
+        </span>
+      </header>
+      <div
+        class="usa-card__body"
+        data-testid="CardBody"
+      >
+        <dl>
+          <dt
+            class="text-bold margin-bottom-05 margin-bottom-0"
+          >
+            Business or user need
+          </dt>
+          <dd
+            class="description-definition margin-0 text-light font-body-md line-height-body-4"
+          >
+            This is the business need.
+          </dd>
+          <dt
+            class="text-bold margin-bottom-05 margin-bottom-0 margin-top-2"
+          >
+            Preferred solution: Summary
+          </dt>
+          <dd
+            class="description-definition margin-0 text-light font-body-md line-height-body-4"
+          >
+            This is the preferred solution.
+          </dd>
+        </dl>
+      </div>
+      <div
+        class="usa-card__footer"
+        data-testid="CardFooter"
+      >
+        <a
+          class="usa-link display-flex flex-row flex-align-center"
+          href="/it-governance/123/business-case"
+        >
+          <span
+            class="margin-right-1"
+          >
+            View full Business Case
+          </span>
+          <svg
+            class="usa-icon"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="m12 4-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
+            />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </li>
+</DocumentFragment>
+`;

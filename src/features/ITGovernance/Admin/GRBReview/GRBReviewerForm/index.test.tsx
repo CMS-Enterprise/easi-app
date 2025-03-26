@@ -1,4 +1,5 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -15,6 +16,7 @@ import {
   GetSystemIntakeGRBReviewDocument,
   GetSystemIntakeGRBReviewQuery,
   GetSystemIntakeGRBReviewQueryVariables,
+  GRBVotingInformationStatus,
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole,
@@ -30,6 +32,7 @@ import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import { MessageProvider } from 'hooks/useMessage';
 import { MockedQuery } from 'types/util';
+import easiMockStore from 'utils/testing/easiMockStore';
 import MockUsers from 'utils/testing/MockUsers';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
@@ -133,6 +136,22 @@ const updateSystemIntakeGRBReviewerQuery: MockedQuery<
   }
 };
 
+const grbVotingInformation: {
+  __typename: 'GRBVotingInformation';
+  grbReviewers: SystemIntakeGRBReviewerFragment[];
+  votingStatus: GRBVotingInformationStatus;
+  numberOfNoObjection: number;
+  numberOfObjection: number;
+  numberOfNotVoted: number;
+} = {
+  __typename: 'GRBVotingInformation',
+  grbReviewers: [],
+  votingStatus: GRBVotingInformationStatus.NOT_STARTED,
+  numberOfNoObjection: 0,
+  numberOfObjection: 0,
+  numberOfNotVoted: 0
+};
+
 const getSystemIntakeGRBReviewQuery = (
   reviewer?: SystemIntakeGRBReviewerFragment
 ): MockedQuery<
@@ -145,19 +164,28 @@ const getSystemIntakeGRBReviewQuery = (
       id: systemIntake.id
     }
   },
-  result: {
-    data: {
-      __typename: 'Query',
-      systemIntake: {
-        __typename: 'SystemIntake',
-        id: systemIntake.id,
-        grbReviewers: reviewer ? [reviewer] : [],
-        grbReviewStartedAt: null,
-        grbReviewType: SystemIntakeGRBReviewType.STANDARD,
-        documents: []
+  result: reviewer
+    ? {
+        data: {
+          __typename: 'Query',
+          systemIntake: {
+            __typename: 'SystemIntake',
+            id: systemIntake.id,
+            grbVotingInformation: {
+              __typename: 'GRBVotingInformation',
+              grbReviewers: [reviewer],
+              votingStatus: GRBVotingInformationStatus.NOT_STARTED,
+              numberOfNoObjection: 0,
+              numberOfObjection: 0,
+              numberOfNotVoted: 0
+            },
+            grbReviewStartedAt: null,
+            grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+            documents: []
+          }
+        }
       }
-    }
-  }
+    : undefined
 });
 
 const getGRBReviewersComparisonsQuery: MockedQuery<
@@ -178,7 +206,14 @@ const getGRBReviewersComparisonsQuery: MockedQuery<
   }
 };
 
+const populatedGRBVotingInformation = { ...grbVotingInformation };
+populatedGRBVotingInformation.grbReviewers = [grbReviewer];
+
+const updatedGRBVotingInformation = { ...grbVotingInformation };
+updatedGRBVotingInformation.grbReviewers = [updatedGRBReviewer];
+
 describe('GRB reviewer form', () => {
+  const store = easiMockStore();
   it('adds a GRB reviewer', async () => {
     render(
       <MemoryRouter
@@ -197,26 +232,28 @@ describe('GRB reviewer form', () => {
             getSystemIntakeGRBReviewQuery(grbReviewer)
           ]}
         >
-          <MessageProvider>
-            <Route path="/it-governance/:systemId/grb-review/:action">
-              <ITGovAdminContext.Provider value>
-                <GRBReview
-                  {...systemIntake}
-                  businessCase={businessCase}
-                  grbReviewers={[]}
-                />
-              </ITGovAdminContext.Provider>
-            </Route>
-            <Route path="/it-governance/:systemId/grb-review">
-              <ITGovAdminContext.Provider value>
-                <GRBReview
-                  {...systemIntake}
-                  businessCase={businessCase}
-                  grbReviewers={[grbReviewer]}
-                />
-              </ITGovAdminContext.Provider>
-            </Route>
-          </MessageProvider>
+          <Provider store={store}>
+            <MessageProvider>
+              <Route path="/it-governance/:systemId/grb-review/:action">
+                <ITGovAdminContext.Provider value>
+                  <GRBReview
+                    {...systemIntake}
+                    businessCase={businessCase}
+                    grbVotingInformation={grbVotingInformation}
+                  />
+                </ITGovAdminContext.Provider>
+              </Route>
+              <Route path="/it-governance/:systemId/grb-review">
+                <ITGovAdminContext.Provider value>
+                  <GRBReview
+                    {...systemIntake}
+                    businessCase={businessCase}
+                    grbVotingInformation={populatedGRBVotingInformation}
+                  />
+                </ITGovAdminContext.Provider>
+              </Route>
+            </MessageProvider>
+          </Provider>
         </VerboseMockedProvider>
       </MemoryRouter>
     );
@@ -285,26 +322,28 @@ describe('GRB reviewer form', () => {
             getSystemIntakeGRBReviewQuery(updatedGRBReviewer)
           ]}
         >
-          <MessageProvider>
-            <Route path="/it-governance/:systemId/grb-review/:action">
-              <ITGovAdminContext.Provider value>
-                <GRBReview
-                  {...systemIntake}
-                  businessCase={businessCase}
-                  grbReviewers={[grbReviewer]}
-                />
-              </ITGovAdminContext.Provider>
-            </Route>
-            <Route path="/it-governance/:systemId/grb-review">
-              <ITGovAdminContext.Provider value>
-                <GRBReview
-                  {...systemIntake}
-                  businessCase={businessCase}
-                  grbReviewers={[updatedGRBReviewer]}
-                />
-              </ITGovAdminContext.Provider>
-            </Route>
-          </MessageProvider>
+          <Provider store={store}>
+            <MessageProvider>
+              <Route path="/it-governance/:systemId/grb-review/:action">
+                <ITGovAdminContext.Provider value>
+                  <GRBReview
+                    {...systemIntake}
+                    businessCase={businessCase}
+                    grbVotingInformation={populatedGRBVotingInformation}
+                  />
+                </ITGovAdminContext.Provider>
+              </Route>
+              <Route path="/it-governance/:systemId/grb-review">
+                <ITGovAdminContext.Provider value>
+                  <GRBReview
+                    {...systemIntake}
+                    businessCase={businessCase}
+                    grbVotingInformation={updatedGRBVotingInformation}
+                  />
+                </ITGovAdminContext.Provider>
+              </Route>
+            </MessageProvider>
+          </Provider>
         </VerboseMockedProvider>
       </MemoryRouter>
     );

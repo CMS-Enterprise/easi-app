@@ -1,4 +1,5 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -12,6 +13,7 @@ import { systemIntake } from 'tests/mock/systemIntake';
 import users from 'tests/mock/users';
 
 import { MessageProvider } from 'hooks/useMessage';
+import easiMockStore from 'utils/testing/easiMockStore';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
@@ -19,19 +21,18 @@ import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdmin
 import GRBReview from '.';
 
 describe('GRB review tab', () => {
+  const store = easiMockStore();
   it('renders GRB reviewer view', async () => {
     render(
       <MemoryRouter>
         <VerboseMockedProvider>
-          <MessageProvider>
-            <ITGovAdminContext.Provider value={false}>
-              <GRBReview
-                {...systemIntake}
-                businessCase={businessCase}
-                grbReviewers={[]}
-              />
-            </ITGovAdminContext.Provider>
-          </MessageProvider>
+          <Provider store={store}>
+            <MessageProvider>
+              <ITGovAdminContext.Provider value={false}>
+                <GRBReview {...systemIntake} businessCase={businessCase} />
+              </ITGovAdminContext.Provider>
+            </MessageProvider>
+          </Provider>
         </VerboseMockedProvider>
       </MemoryRouter>
     );
@@ -48,15 +49,13 @@ describe('GRB review tab', () => {
     render(
       <MemoryRouter>
         <VerboseMockedProvider>
-          <MessageProvider>
-            <ITGovAdminContext.Provider value>
-              <GRBReview
-                {...systemIntake}
-                businessCase={businessCase}
-                grbReviewers={[]}
-              />
-            </ITGovAdminContext.Provider>
-          </MessageProvider>
+          <Provider store={store}>
+            <MessageProvider>
+              <ITGovAdminContext.Provider value>
+                <GRBReview {...systemIntake} businessCase={businessCase} />
+              </ITGovAdminContext.Provider>
+            </MessageProvider>
+          </Provider>
         </VerboseMockedProvider>
       </MemoryRouter>
     );
@@ -75,16 +74,17 @@ describe('GRB review tab', () => {
     render(
       <MemoryRouter>
         <VerboseMockedProvider>
-          <MessageProvider>
-            <ITGovAdminContext.Provider value>
-              <GRBReview
-                {...systemIntake}
-                businessCase={businessCase}
-                grbReviewers={[]}
-                grbReviewStartedAt={date}
-              />
-            </ITGovAdminContext.Provider>
-          </MessageProvider>
+          <Provider store={store}>
+            <MessageProvider>
+              <ITGovAdminContext.Provider value>
+                <GRBReview
+                  {...systemIntake}
+                  businessCase={businessCase}
+                  grbReviewStartedAt={date}
+                />
+              </ITGovAdminContext.Provider>
+            </MessageProvider>
+          </Provider>
         </VerboseMockedProvider>
       </MemoryRouter>
     );
@@ -128,16 +128,17 @@ describe('GRB review tab', () => {
     render(
       <MemoryRouter>
         <VerboseMockedProvider>
-          <MessageProvider>
-            <ITGovAdminContext.Provider value>
-              <GRBReview
-                {...systemIntake}
-                businessCase={businessCase}
-                grbReviewers={grbReviewers}
-                grbReviewStartedAt={null}
-              />
-            </ITGovAdminContext.Provider>
-          </MessageProvider>
+          <Provider store={store}>
+            <MessageProvider>
+              <ITGovAdminContext.Provider value>
+                <GRBReview
+                  {...systemIntake}
+                  businessCase={businessCase}
+                  grbReviewStartedAt={null}
+                />
+              </ITGovAdminContext.Provider>
+            </MessageProvider>
+          </Provider>
         </VerboseMockedProvider>
       </MemoryRouter>
     );

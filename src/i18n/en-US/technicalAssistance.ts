@@ -288,6 +288,7 @@ const technicalAssistance = {
     label: 'Choose recipients',
     selectedCount: '<bold>{{count}}</bold> recipient{{plural}} selected',
     copyTrbMailbox: 'Copy TRB Mailbox',
+    copyITGovMailbox: 'Copy ITGO Mailbox',
     projectTeamMember: 'Project team member',
     showMore: 'Show {{number}} more recipient{{plural}}',
     showFewer: 'Show {{number}} fewer recipient{{plural}}',
