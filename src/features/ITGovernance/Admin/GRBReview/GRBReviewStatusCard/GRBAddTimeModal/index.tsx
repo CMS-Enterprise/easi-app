@@ -15,6 +15,7 @@ import { useEasiForm } from 'components/EasiForm';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import Modal from 'components/Modal';
 import RequiredFieldsText from 'components/RequiredFieldsText';
+import useMessage from 'hooks/useMessage';
 import { formatDateUtc } from 'utils/date';
 
 const GRBAddTimeModal = () => {
@@ -23,6 +24,8 @@ const GRBAddTimeModal = () => {
   const { systemId } = useParams<{
     systemId: string;
   }>();
+
+  const { showMessage } = useMessage();
 
   const [err, setError] = useState<boolean>(false);
 
@@ -65,6 +68,14 @@ const GRBAddTimeModal = () => {
       }
     })
       .then(() => {
+        showMessage(
+          t('statusCard.addTimeModal.success', {
+            date: formatDateUtc(input.grbReviewAsyncEndDate, 'MM/dd/yyyy')
+          }),
+          {
+            type: 'success'
+          }
+        );
         resetModal();
       })
       .catch(() => {

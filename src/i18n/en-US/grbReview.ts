@@ -472,7 +472,7 @@ export default {
       addTime: 'Add time',
       goBack: 'Go back and don’t add time',
       success:
-        'You added time to this GRB review. The new end date is mm/dd/yyyy at 5:00pm EST.'
+        'You added time to this GRB review. The new end date is {{date}} at 5:00pm EST.'
     }
   },
   decisionCard: {

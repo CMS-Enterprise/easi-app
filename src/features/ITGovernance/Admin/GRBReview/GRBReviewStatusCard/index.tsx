@@ -173,18 +173,7 @@ const GRBReviewStatusCard = ({
             </p>
           </span>
 
-          {isITGovAdmin && (
-            <GRBAddTimeModal />
-            // <ButtonGroup>
-            //   <Button type="button" outline onClick={() => {}}>
-            //     {t('statusCard.addTime')}
-            //   </Button>
-
-            //   <Button type="button" outline onClick={() => {}}>
-            //     {t('statusCard.endVoting')}
-            //   </Button>
-            // </ButtonGroup>
-          )}
+          {isITGovAdmin && <GRBAddTimeModal />}
         </span>
       )}
     </div>
