@@ -9,6 +9,7 @@ import {
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewFragment,
   SystemIntakeGRBReviewType,
+  useStartGRBReviewMutation,
   useUpdateSystemIntakeGRBReviewFormInputTimeframeAsyncMutation
 } from 'gql/generated/graphql';
 
@@ -39,7 +40,11 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
 
   const reviewType: SystemIntakeGRBReviewType = grbReview.grbReviewType;
 
-  const [mutate] =
+  const [startStandardReview] = useStartGRBReviewMutation({
+    refetchQueries: [GetSystemIntakeGRBReviewDocument]
+  });
+
+  const [startAsyncReview] =
     useUpdateSystemIntakeGRBReviewFormInputTimeframeAsyncMutation({
       refetchQueries: [GetSystemIntakeGRBReviewDocument]
     });
@@ -66,7 +71,16 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
   } = form;
 
   const onSubmit: GRBReviewFormStepSubmit<ParticipantsFields> = async input => {
-    return mutate({
+    if (reviewType === SystemIntakeGRBReviewType.STANDARD) {
+      return startStandardReview({
+        variables: {
+          input: {
+            systemIntakeID: grbReview.id
+          }
+        }
+      });
+    }
+    return startAsyncReview({
       variables: {
         input: {
           systemIntakeID: grbReview.id,

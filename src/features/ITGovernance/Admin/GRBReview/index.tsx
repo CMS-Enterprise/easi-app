@@ -1,12 +1,10 @@
 import React, { useCallback, useContext, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import {
   Button,
   ButtonGroup,
-  CardBody,
-  CardFooter,
-  CardHeader,
   Icon,
   ModalFooter,
   ModalHeading
@@ -17,36 +15,32 @@ import {
   SystemIntakeDocumentFragmentFragment,
   SystemIntakeFragmentFragment,
   SystemIntakeGRBReviewerFragment,
+  SystemIntakeGRBReviewerVotingRole,
   SystemIntakeState,
   useDeleteSystemIntakeGRBReviewerMutation,
   useStartGRBReviewMutation
 } from 'gql/generated/graphql';
+import { AppState } from 'stores/reducers/rootReducer';
 
-import AdminAction from 'components/AdminAction';
-import Alert from 'components/Alert';
-import CollapsableLink from 'components/CollapsableLink';
-import {
-  DescriptionDefinition,
-  DescriptionList,
-  DescriptionTerm
-} from 'components/DescriptionGroup';
 import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import useMessage from 'hooks/useMessage';
 import { BusinessCaseModel } from 'types/businessCase';
 import { GRBReviewFormAction } from 'types/grbReview';
-import { formatDateLocal } from 'utils/date';
 
 import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import GRBFeedbackCard from './GRBFeedbackCard/GRBFeedbackCard';
 import ParticipantsSection from './ParticipantsSection/ParticipantsSection';
 import PresentationLinksCard from './PresentationLinksCard/PresentationLinksCard';
+import BusinessCaseCard from './BusinessCaseCard';
 import DecisionRecordCard from './DecisionRecordCard';
 import Discussions from './Discussions';
+import GRBReviewAdminTask from './GRBReviewAdminTask';
 import GRBReviewerForm from './GRBReviewerForm';
 import GRBReviewStatusCard, { GRBReviewStatus } from './GRBReviewStatusCard';
+import GRBVotingPanel from './GRBVotingPanel';
 import IntakeRequestCard from './IntakeRequestCard';
 
 import './index.scss';
@@ -84,10 +78,6 @@ const GRBReview = ({
 }: GRBReviewProps) => {
   const { t } = useTranslation('grbReview');
 
-  const whatDoINeedItems: string[] = t('adminTask.setUpGRBReview.whatDoINeed', {
-    returnObjects: true
-  });
-
   const history = useHistory();
 
   const { action } = useParams<{
@@ -104,6 +94,14 @@ const GRBReview = ({
     useState<boolean>(false);
 
   const { showMessage } = useMessage();
+
+  const { euaId } = useSelector((appState: AppState) => appState.auth);
+
+  const currentGRBReviewer = grbVotingInformation?.grbReviewers.find(
+    reviewer =>
+      reviewer.userAccount.username === euaId &&
+      reviewer.votingRole === SystemIntakeGRBReviewerVotingRole.VOTING
+  );
 
   const [mutate] = useDeleteSystemIntakeGRBReviewerMutation({
     refetchQueries: [GetSystemIntakeGRBReviewDocument]
@@ -261,77 +259,17 @@ const GRBReview = ({
               </p>
             )} */}
 
-            {isITGovAdmin && (
-              <>
-                {/* TODO: May change once BE work is done to send reminder */}
-                {grbReviewStartedAt ? (
-                  <AdminAction
-                    type="ITGov"
-                    title={t('adminTask.sendReviewReminder.title')}
-                    buttons={[
-                      {
-                        label: t('adminTask.sendReviewReminder.sendReminder'),
-                        onClick: () =>
-                          history.push(`/it-governance/${id}/grb-review/form`)
-                      },
-                      {
-                        label: t('adminTask.takeADifferentAction'),
-                        unstyled: true,
-                        onClick: () =>
-                          history.push(
-                            `/it-governance/${id}/grb-review/reviewers`
-                          )
-                      }
-                    ]}
-                  >
-                    <p className="margin-top-0">
-                      {t('adminTask.sendReviewReminder.description')}
-                    </p>
-                  </AdminAction>
-                ) : (
-                  <AdminAction
-                    type="ITGov"
-                    title={t('adminTask.setUpGRBReview.title')}
-                    buttons={[
-                      {
-                        label: t('adminTask.setUpGRBReview.title'),
-                        // onClick: () => setStartReviewModalIsOpen(true)
-                        onClick: () =>
-                          history.push(
-                            `/it-governance/${id}/grb-review/review-type`
-                          )
-                      },
-                      {
-                        label: t('adminTask.takeADifferentAction'),
-                        unstyled: true,
-                        onClick: () =>
-                          history.push(`/it-governance/${id}/actions`)
-                      }
-                    ]}
-                  >
-                    <p className="margin-top-0">
-                      {t('adminTask.setUpGRBReview.description')}
-                    </p>
+            <GRBReviewAdminTask
+              isITGovAdmin={isITGovAdmin}
+              systemIntakeId={id}
+              grbReviewStartedAt={grbReviewStartedAt}
+            />
 
-                    <CollapsableLink
-                      id="setUpGRBReview"
-                      className="margin-top-2"
-                      label={t('adminTask.setUpGRBReview.whatDoINeedLabel')}
-                    >
-                      <ul className="padding-left-3 margin-0">
-                        {whatDoINeedItems.map((item, index) => (
-                          <li key={item}>
-                            <Trans
-                              i18nKey={`grbReview:adminTask.setUpGRBReview.whatDoINeed.${index}`}
-                              components={{ bold: <strong /> }}
-                            />
-                          </li>
-                        ))}
-                      </ul>
-                    </CollapsableLink>
-                  </AdminAction>
-                )}
-              </>
+            {/* GRB Reviewer Voting Panel */}
+            {/* TODO: Add grbReviewStartedAt once work is done to start review */}
+            {/* {!isITGovAdmin && grbReviewStartedAt && currentGRBReviewer && ( */}
+            {!isITGovAdmin && currentGRBReviewer && (
+              <GRBVotingPanel grbReviewer={currentGRBReviewer} />
             )}
 
             {/* Review details */}
@@ -342,13 +280,12 @@ const GRBReview = ({
               {t('reviewDetails.text')}
             </p>
 
-            {grbReviewStartedAt && (
-              <GRBReviewStatusCard
-                grbReviewType={grbReviewType}
-                grbDate={grbDate}
-                grbReviewStatus={GRBReviewStatus.SCHEDULED}
-              />
-            )}
+            <GRBReviewStatusCard
+              grbReviewType={grbReviewType}
+              grbDate={grbDate}
+              grbReviewStatus={GRBReviewStatus.SCHEDULED}
+              grbReviewStartedAt={grbReviewStartedAt}
+            />
 
             <DecisionRecordCard grbVotingInformation={grbVotingInformation} />
 
@@ -372,65 +309,7 @@ const GRBReview = ({
             />
 
             {/* Business Case Card */}
-            <div className="usa-card__container margin-x-0 border-width-1px shadow-2 margin-top-3 margin-bottom-4">
-              <CardHeader>
-                <h3 className="display-inline-block margin-right-2 margin-bottom-0">
-                  {t('businessCaseOverview.title')}
-                </h3>
-                {/* TODO: update these checks to use submittedAt when implemented */}
-                {businessCase.id && businessCase.updatedAt && (
-                  <span className="text-base display-inline-block">
-                    {t('businessCaseOverview.submitted')}{' '}
-                    {formatDateLocal(businessCase.updatedAt, 'MM/dd/yyyy')}
-                  </span>
-                )}
-              </CardHeader>
-              {businessCase.id && businessCase.businessNeed ? (
-                <>
-                  <CardBody>
-                    <DescriptionList>
-                      <DescriptionTerm
-                        term={t('businessCaseOverview.need')}
-                        className="margin-bottom-0"
-                      />
-                      <DescriptionDefinition
-                        definition={businessCase.businessNeed}
-                        className="text-light font-body-md line-height-body-4"
-                      />
-
-                      <DescriptionTerm
-                        term={t('businessCaseOverview.preferredSolution')}
-                        className="margin-bottom-0 margin-top-2"
-                      />
-                      <DescriptionDefinition
-                        definition={
-                          businessCase?.preferredSolution?.summary ||
-                          t('businessCaseOverview.noSolution')
-                        }
-                        className="text-light font-body-md line-height-body-4"
-                      />
-                    </DescriptionList>
-                  </CardBody>
-                  <CardFooter>
-                    <UswdsReactLink
-                      to="./business-case"
-                      className="display-flex flex-row flex-align-center"
-                    >
-                      <span className="margin-right-1">
-                        {t('businessCaseOverview.linkToBusinessCase')}
-                      </span>
-                      <Icon.ArrowForward />
-                    </UswdsReactLink>
-                  </CardFooter>
-                </>
-              ) : (
-                <CardBody>
-                  <Alert type="info" slim>
-                    {t('businessCaseOverview.unsubmittedAlertText')}
-                  </Alert>
-                </CardBody>
-              )}
-            </div>
+            <BusinessCaseCard businessCase={businessCase} systemIntakeID={id} />
 
             {/* Intake Request Link */}
             <IntakeRequestCard
