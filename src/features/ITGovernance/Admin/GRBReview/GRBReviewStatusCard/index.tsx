@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, ButtonGroup } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
   SystemIntakeGRBReviewAsyncStatusType,
@@ -12,6 +11,8 @@ import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 import UswdsReactLink from 'components/LinkWrapper';
 import Tag from 'components/Tag';
 import { formatDateUtc, formatDaysHoursMinutes } from 'utils/date';
+
+import GRBAddTimeModal from './GRBAddTimeModal';
 
 // TODO: Temp status type;
 export enum GRBReviewStatus {
@@ -133,7 +134,7 @@ const GRBReviewStatusCard = ({
     </div>
   );
 
-  const AsyncAdminCard = (
+  const AsyncCard = (
     <div
       className={classNames(
         className,
@@ -173,36 +174,29 @@ const GRBReviewStatusCard = ({
           </span>
 
           {isITGovAdmin && (
-            <ButtonGroup>
-              <Button type="button" outline onClick={() => {}}>
-                {t('statusCard.addTime')}
-              </Button>
+            <GRBAddTimeModal />
+            // <ButtonGroup>
+            //   <Button type="button" outline onClick={() => {}}>
+            //     {t('statusCard.addTime')}
+            //   </Button>
 
-              <Button type="button" outline onClick={() => {}}>
-                {t('statusCard.endVoting')}
-              </Button>
-            </ButtonGroup>
+            //   <Button type="button" outline onClick={() => {}}>
+            //     {t('statusCard.endVoting')}
+            //   </Button>
+            // </ButtonGroup>
           )}
         </span>
       )}
     </div>
   );
-  const AsyncReviewerCard = <>{t('statusCard.asyncHeading')}</>;
 
-  const renderCard = () => {
-    // If the GRB review type is standard, show the standard card for both IT Gov Admin and Reviewer
-    if (grbReviewType === SystemIntakeGRBReviewType.STANDARD) {
-      return StandardCard;
-    }
-    // If the GRB review type is async and user id IT Gov Admin
-    if (isITGovAdmin) {
-      return AsyncAdminCard;
-    }
-    // If the GRB review type is async and user is a reviewer
-    return AsyncReviewerCard;
-  };
-
-  return renderCard();
+  return (
+    <>
+      {grbReviewType === SystemIntakeGRBReviewType.STANDARD
+        ? StandardCard
+        : AsyncCard}
+    </>
+  );
 };
 
 export default GRBReviewStatusCard;

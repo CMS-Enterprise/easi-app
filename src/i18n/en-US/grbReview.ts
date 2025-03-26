@@ -461,7 +461,19 @@ export default {
     countdown: '{{days}} days, {{hours}} hours, {{minutes}} minutes',
     reviewEnds: 'Review ends {{date}}, 5:00pm EST',
     addTime: 'Add time',
-    endVoting: 'End voting'
+    endVoting: 'End voting',
+    addTimeModal: {
+      heading: 'Add additional time to this GRB review?',
+      description:
+        'Use the field below to add additional time to this review. The GRB review page will be updated with the new timeframe.',
+      label: 'Set new end date ',
+      hint: 'Select the new date when the GRB review should end. The review will close at 5pm EST on that day. Format: mm/dd/yyyy',
+      newEnd: 'This review will now end on {{date}}.',
+      addTime: 'Add time',
+      goBack: 'Go back and don’t add time',
+      success:
+        'You added time to this GRB review. The new end date is mm/dd/yyyy at 5:00pm EST.'
+    }
   },
   decisionCard: {
     heading: 'Decision record',
