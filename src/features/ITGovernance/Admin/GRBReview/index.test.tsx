@@ -18,6 +18,7 @@ import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
+import getSystemIntakeGRBReviewQuery from './GRBReviewerForm/index.test';
 import GRBReview from '.';
 
 describe('GRB review tab', () => {
@@ -25,7 +26,7 @@ describe('GRB review tab', () => {
   it('renders GRB reviewer view', async () => {
     render(
       <MemoryRouter>
-        <VerboseMockedProvider>
+        <VerboseMockedProvider mocks={[getSystemIntakeGRBReviewQuery()]}>
           <Provider store={store}>
             <MessageProvider>
               <ITGovAdminContext.Provider value={false}>
@@ -48,7 +49,7 @@ describe('GRB review tab', () => {
   it('renders GRT admin view', async () => {
     render(
       <MemoryRouter>
-        <VerboseMockedProvider>
+        <VerboseMockedProvider mocks={[getSystemIntakeGRBReviewQuery()]}>
           <Provider store={store}>
             <MessageProvider>
               <ITGovAdminContext.Provider value>
@@ -70,18 +71,20 @@ describe('GRB review tab', () => {
 
   // TODO: Update unit test once feature is further developed
   test.skip('renders GRB review start date', () => {
-    const date = '2024-09-10T14:42:47.422022Z';
+    // const date = '2024-09-10T14:42:47.422022Z';
+
+    // const grbReviewWithDate = {
+    //   ...grbReview,
+    //   grbReviewStartedAt: date
+    // };
+
     render(
       <MemoryRouter>
-        <VerboseMockedProvider>
+        <VerboseMockedProvider mocks={[getSystemIntakeGRBReviewQuery()]}>
           <Provider store={store}>
             <MessageProvider>
               <ITGovAdminContext.Provider value>
-                <GRBReview
-                  {...systemIntake}
-                  businessCase={businessCase}
-                  grbReviewStartedAt={date}
-                />
+                <GRBReview {...systemIntake} businessCase={businessCase} />
               </ITGovAdminContext.Provider>
             </MessageProvider>
           </Provider>
@@ -127,15 +130,11 @@ describe('GRB review tab', () => {
 
     render(
       <MemoryRouter>
-        <VerboseMockedProvider>
+        <VerboseMockedProvider mocks={[getSystemIntakeGRBReviewQuery()]}>
           <Provider store={store}>
             <MessageProvider>
               <ITGovAdminContext.Provider value>
-                <GRBReview
-                  {...systemIntake}
-                  businessCase={businessCase}
-                  grbReviewStartedAt={null}
-                />
+                <GRBReview {...systemIntake} businessCase={businessCase} />
               </ITGovAdminContext.Provider>
             </MessageProvider>
           </Provider>
