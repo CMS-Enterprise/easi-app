@@ -34,10 +34,12 @@ type Scheduler struct {
 	initialized bool
 }
 
+// NewScheduler creates a new scheduler.
+// panicOnError is a flag that determines if the program should panic if the scheduler fails to initialize.
+// This is useful for package level instantiation
 func NewScheduler(panicOnError bool) (*Scheduler, error) {
 	scheduler, err := gocron.NewScheduler()
 	if err != nil {
-		//TODO, Can we make this not swallow the error?
 		if panicOnError {
 			log.Panic(fmt.Errorf("error creating scheduler: %v", err))
 		}
