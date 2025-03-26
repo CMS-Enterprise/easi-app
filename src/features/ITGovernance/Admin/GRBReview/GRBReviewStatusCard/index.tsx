@@ -15,9 +15,9 @@ import { formatDateUtc, formatDaysHoursMinutes } from 'utils/date';
 
 // TODO: Temp status type;
 export enum GRBReviewStatus {
-  SCHEDULED,
-  IN_PROGRESS,
-  COMPLETED
+  SCHEDULED = 'SCHEDULED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED'
 }
 
 export type GRBReviewStatusCardProps = {
@@ -35,9 +35,9 @@ const renderBGColor = (
 };
 
 const GRBReviewStatusTag = ({
-  grbReviewAsyncStatus
+  grbReviewStatus
 }: {
-  grbReviewAsyncStatus:
+  grbReviewStatus:
     | SystemIntakeGRBReviewAsyncStatusType
     | GRBReviewStatus
     | null
@@ -45,7 +45,7 @@ const GRBReviewStatusTag = ({
 }) => {
   const { t } = useTranslation('grbReview');
 
-  if (!grbReviewAsyncStatus) {
+  if (!grbReviewStatus) {
     return null;
   }
 
@@ -53,8 +53,7 @@ const GRBReviewStatusTag = ({
     <span
       className={classNames('display-flex', {
         'border-bottom-1px border-primary-light margin-bottom-2 padding-bottom-2':
-          grbReviewAsyncStatus !==
-          SystemIntakeGRBReviewAsyncStatusType.COMPLETED
+          grbReviewStatus !== SystemIntakeGRBReviewAsyncStatusType.COMPLETED
       })}
     >
       <h4 className="margin-0 margin-right-1 flex-align-self-center">
@@ -62,7 +61,7 @@ const GRBReviewStatusTag = ({
       </h4>
 
       <Tag className="bg-white text-base-darker font-body-sm flex-align-self-center">
-        {t(`statusCard.grbReviewStatus.${grbReviewAsyncStatus}`)}
+        {t(`statusCard.grbReviewStatus.${grbReviewStatus}`)}
       </Tag>
     </span>
   );
@@ -78,6 +77,7 @@ const GRBReviewStatusCard = ({
     grbReviewType,
     grbReviewAsyncStatus,
     grbDate,
+    grbReviewStartedAt,
     grbReviewAsyncEndDate
   } = grbReview;
 
@@ -86,6 +86,10 @@ const GRBReviewStatusCard = ({
   const { days, hours, minutes } = formatDaysHoursMinutes(
     grbReviewAsyncEndDate
   );
+
+  if (!grbReviewStartedAt) {
+    return null;
+  }
 
   const StandardCard = (
     <div
@@ -100,7 +104,8 @@ const GRBReviewStatusCard = ({
       </h3>
 
       {/* Status Section */}
-      <GRBReviewStatusTag grbReviewAsyncStatus={grbReviewAsyncStatus} />
+      {/* TODO: replace with query data */}
+      <GRBReviewStatusTag grbReviewStatus={GRBReviewStatus.SCHEDULED} />
 
       {/* Meeting Details */}
       {/* TODO: !!!! Replace the Standard GRB Review Status field and enum */}
@@ -141,7 +146,7 @@ const GRBReviewStatusCard = ({
       </h3>
 
       {/* Status Section */}
-      <GRBReviewStatusTag grbReviewAsyncStatus={grbReviewAsyncStatus} />
+      <GRBReviewStatusTag grbReviewStatus={grbReviewAsyncStatus} />
 
       {/* Meeting Details */}
       {grbReviewAsyncStatus !==
