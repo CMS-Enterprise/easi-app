@@ -1,11 +1,7 @@
 package models
 
 import (
-	"context"
-	"errors"
 	"time"
-
-	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 )
 
 // TODO: move to autogen
@@ -33,11 +29,9 @@ type GRBVotingInformation struct {
 }
 
 // NumberOfNoObjection returns the number of reviewers who have voted no objection
-func (info *GRBVotingInformation) NumberOfNoObjection(ctx context.Context) (int, error) {
+func (info *GRBVotingInformation) NumberOfNoObjection() int {
 	if info.GRBReviewers == nil {
-		msg := "unexpected empty GRB Reviewers list when counting NumberOfNoObjection"
-		appcontext.ZLogger(ctx).Warn(msg)
-		return 0, errors.New(msg)
+		return 0
 	}
 
 	var count int
@@ -55,15 +49,13 @@ func (info *GRBVotingInformation) NumberOfNoObjection(ctx context.Context) (int,
 		}
 	}
 
-	return count, nil
+	return count
 }
 
 // NumberOfObjection returns the number of reviewers who have voted objection
-func (info *GRBVotingInformation) NumberOfObjection(ctx context.Context) (int, error) {
+func (info *GRBVotingInformation) NumberOfObjection() int {
 	if info.GRBReviewers == nil {
-		msg := "unexpected empty GRB Reviewers list when counting NumberOfObjection"
-		appcontext.ZLogger(ctx).Warn(msg)
-		return 0, errors.New(msg)
+		return 0
 	}
 
 	var count int
@@ -81,15 +73,13 @@ func (info *GRBVotingInformation) NumberOfObjection(ctx context.Context) (int, e
 		}
 	}
 
-	return count, nil
+	return count
 }
 
 // NumberOfNotVoted returns the number of reviewers who have not voted
-func (info *GRBVotingInformation) NumberOfNotVoted(ctx context.Context) (int, error) {
+func (info *GRBVotingInformation) NumberOfNotVoted() int {
 	if info.GRBReviewers == nil {
-		msg := "unexpected empty GRB Reviewers list when counting NumberOfNotVoted"
-		appcontext.ZLogger(ctx).Warn(msg)
-		return 0, errors.New(msg)
+		return 0
 	}
 
 	var count int
@@ -103,15 +93,13 @@ func (info *GRBVotingInformation) NumberOfNotVoted(ctx context.Context) (int, er
 		}
 	}
 
-	return count, nil
+	return count
 }
 
 // NumberOfVoted returns the number of reviewers who have voted
-func (info *GRBVotingInformation) NumberOfVoted(ctx context.Context) (int, error) {
+func (info *GRBVotingInformation) NumberOfVoted() int {
 	if info.GRBReviewers == nil {
-		msg := "unexpected empty GRB Reviewers list when counting NumberOfVoted"
-		appcontext.ZLogger(ctx).Warn(msg)
-		return 0, errors.New(msg)
+		return 0
 	}
 
 	var count int
@@ -126,18 +114,12 @@ func (info *GRBVotingInformation) NumberOfVoted(ctx context.Context) (int, error
 		}
 	}
 
-	return count, nil
+	return count
 }
 
 // QuorumReached checks if the minimum number of votes have been cast
-func (info *GRBVotingInformation) QuorumReached(ctx context.Context) (bool, error) {
-	voteCount, err := info.NumberOfVoted(ctx)
-	if err != nil {
-		return false, err
-	}
-
-	quorumReached := voteCount >= numberOfVotesForQuorum
-	return quorumReached, nil
+func (info *GRBVotingInformation) QuorumReached() bool {
+	return info.NumberOfVoted() >= numberOfVotesForQuorum
 }
 
 // VotingStatus returns the status of the GRB voting process. GQL will resolver to this field to return
@@ -156,83 +138,69 @@ func (info *GRBVotingInformation) QuorumReached(ctx context.Context) (bool, erro
 //   - if voting is in complete state, end date has passed, quorum has been met, vote count is mostly no objections but
 //     has one objection vote, OR;
 //   - voting has been ended early and quorum not met
-func (info *GRBVotingInformation) VotingStatus(ctx context.Context) (GRBVotingInformationStatus, error) {
+func (info *GRBVotingInformation) VotingStatus() GRBVotingInformationStatus {
 	if info.SystemIntake == nil {
-		msg := "unexpected nil system intake in VotingStatus"
-		appcontext.ZLogger(ctx).Warn(msg)
-		return "", errors.New(msg)
+		return GRBVSNotStarted
 	}
 
 	if info.GRBReviewers == nil {
-		msg := "unexpected nil GRB reviewers in VotingStatus"
-		appcontext.ZLogger(ctx).Warn(msg)
-		return "", errors.New(msg)
+		return GRBVSNotStarted
 	}
 
 	if info.SystemIntake.GRBReviewStartedAt == nil {
-		msg := "GRB review not started in VotingStatus"
-		appcontext.ZLogger(ctx).Warn(msg)
-		return "", errors.New(msg)
+		return GRBVSNotStarted
 	}
 
 	// TODO: it may be possible to submit votes even after the end date - address if needed
 	if info.SystemIntake.GrbReviewAsyncEndDate == nil {
-		msg := "no GRB end date in VotingStatus"
-		appcontext.ZLogger(ctx).Warn(msg)
-		return "", errors.New(msg)
+		return GRBVSNotStarted
 	}
 
 	now := time.Now()
 	// first, check for not started
 	if now.Before(*info.SystemIntake.GRBReviewStartedAt) {
-		return GRBVSNotStarted, nil
+		return GRBVSNotStarted
 	}
 
 	// then check in progress
 	if now.After(*info.SystemIntake.GRBReviewStartedAt) && now.Before(*info.SystemIntake.GrbReviewAsyncEndDate) {
-		return GRBVSInProgress, nil
+		return GRBVSInProgress
 	}
 
-	quorumReached, err := info.QuorumReached(ctx)
-	if err != nil {
-		return "", err
-	}
+	quorumReached := info.QuorumReached()
 
 	if now.After(*info.SystemIntake.GrbReviewAsyncEndDate) && !quorumReached {
-		return GRBVSInProgress, nil
+		return GRBVSInProgress
 	}
 
 	// unknown state, not sure if this would be possible after the above checks
 	if !now.After(*info.SystemIntake.GrbReviewAsyncEndDate) {
-		return GRBVSNotStarted, nil
+		return GRBVSNotStarted
 	}
 
 	// we know here that the end date has passed
 
-	objections, err := info.NumberOfObjection(ctx)
-	if err != nil {
-		return "", err
-	}
+	objections := info.NumberOfObjection()
 
 	// check for approved
 	if quorumReached && objections == 0 {
-		return GRBVSApproved, nil
+		return GRBVSApproved
 	}
 
 	// check for not approved
 	if quorumReached && objections > 1 {
-		return GRBVSNotApproved, nil
+		return GRBVSNotApproved
 	}
 
 	// check for inconclusive
 	if quorumReached && objections == 1 {
-		return GRBVSInconclusive, nil
+		return GRBVSInconclusive
 	}
 
 	// if manually ended and quorum not reached
 	if info.SystemIntake.GrbReviewAsyncManualEndDate != nil && now.After(*info.SystemIntake.GrbReviewAsyncManualEndDate) && !quorumReached {
-		return GRBVSInconclusive, nil
+		return GRBVSInconclusive
 	}
 
-	return GRBVSNotStarted, nil
+	return GRBVSNotStarted
 }
