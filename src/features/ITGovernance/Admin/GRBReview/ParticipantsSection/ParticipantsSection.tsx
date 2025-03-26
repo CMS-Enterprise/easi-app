@@ -55,10 +55,10 @@ const ParticipantsSection = ({
               type="button"
               onClick={() => history.push(`${pathname}/add`)}
               disabled={state === SystemIntakeState.CLOSED}
-              outline={grbReviewers.length > 0}
+              outline={grbReviewers?.length > 0}
             >
               {t(
-                grbReviewers.length > 0
+                grbReviewers?.length > 0
                   ? 'addAnotherGrbReviewer'
                   : 'addGrbReviewer'
               )}

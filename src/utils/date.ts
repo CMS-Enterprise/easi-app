@@ -124,7 +124,13 @@ export const getRelativeDate = (
 };
 
 // Formats whole days, hours, and minutes between now and a given ISO string
-export const formatDaysHoursMinutes = (isoString: string) => {
+export const formatDaysHoursMinutes = (
+  isoString: string | null | undefined
+) => {
+  if (!isoString) {
+    return { days: 0, hours: 0, minutes: 0 };
+  }
+
   // Parse the ISO string into a Luxon DateTime object in UTC
   const dateTime = DateTime.fromISO(isoString, { zone: 'utc' });
 
