@@ -33,6 +33,7 @@ func (sjw *ScheduledJobWrapper[input]) Register() {
 		retJob, err := scheduler.NewJob(
 			sjw.jobDefinition,
 			gocron.NewTask(sjw.jobFunction, sjw.params),
+			// gocron.NewTask(sjw.jobFunction, sjw.params, scheduler),
 			gocron.WithContext(ctx),
 		)
 		if err != nil {

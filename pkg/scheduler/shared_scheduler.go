@@ -23,6 +23,72 @@ var (
 	mutex         sync.Mutex
 )
 
+type Scheduler struct {
+	gocron.Scheduler
+	context     context.Context
+	store       *storage.Store
+	registry    map[string]RegisterJobFunction
+	mutex       sync.Mutex
+	logger      *zap.Logger
+	emailClient *email.Client
+	initialized bool
+}
+
+func NewScheduler(panicOnError bool) (*Scheduler, error) {
+	scheduler, err := gocron.NewScheduler()
+	if err != nil {
+		//TODO, Can we make this not swallow the error?
+		if panicOnError {
+			log.Panic(fmt.Errorf("error creating scheduler: %v", err))
+		}
+		return nil, err
+
+	}
+	return &Scheduler{
+		Scheduler:   scheduler,
+		registry:    make(map[string]RegisterJobFunction),
+		initialized: false,
+	}, nil
+}
+
+var SharedScheduler2, _ = NewScheduler(true)
+
+// Initialize sets the logger, store, and email client for the shared scheduler.
+func (s *Scheduler) Initialize(ctx context.Context, logger *zap.Logger, store *storage.Store, buildDataLoaders dataloaders.BuildDataloaders, emailClient *email.Client) {
+	s.context = ctx
+	s.logger = logger
+	s.store = store
+	s.emailClient = emailClient
+	s.initialized = true
+}
+
+// RegisterJob stores a job registration function to be initialized later.
+func (s *Scheduler) RegisterJob(name string, registerJob RegisterJobFunction) {
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
+
+	s.registry[name] = registerJob
+}
+func (s *Scheduler) Start() {
+	// Register all jobs dynamically
+	s.mutex.Lock()
+	for _, registerJob := range s.registry {
+		_, err := registerJob(s.context, s.store, s) // Execute the job function to add it to the scheduler
+		if err != nil {
+			s.logger.Error("error registering job:", zap.Error(err))
+		}
+	}
+	s.mutex.Unlock()
+
+	// Start the scheduler in a separate goroutine
+	go s.Start()
+}
+func (s *Scheduler) Stop() {
+	err := s.Shutdown()
+
+	s.logger.Error("failed to shutdown scheduler", zap.Error(err))
+}
+
 // JobRegistry returns the shared job registry.
 func JobRegistry() map[string]RegisterJobFunction {
 	onceRegistry.Do(func() {
