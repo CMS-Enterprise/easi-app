@@ -236,12 +236,18 @@ describe('GRB reviewer form', () => {
             <MessageProvider>
               <Route path="/it-governance/:systemId/grb-review/:action">
                 <ITGovAdminContext.Provider value>
-                  <GRBReview {...systemIntake} businessCase={businessCase} />
+                  <GRBReview
+                    systemIntake={systemIntake}
+                    businessCase={businessCase}
+                  />
                 </ITGovAdminContext.Provider>
               </Route>
               <Route path="/it-governance/:systemId/grb-review">
                 <ITGovAdminContext.Provider value>
-                  <GRBReview {...systemIntake} businessCase={businessCase} />
+                  <GRBReview
+                    systemIntake={systemIntake}
+                    businessCase={businessCase}
+                  />
                 </ITGovAdminContext.Provider>
               </Route>
             </MessageProvider>
@@ -319,12 +325,18 @@ describe('GRB reviewer form', () => {
             <MessageProvider>
               <Route path="/it-governance/:systemId/grb-review/:action">
                 <ITGovAdminContext.Provider value>
-                  <GRBReview {...systemIntake} businessCase={businessCase} />
+                  <GRBReview
+                    systemIntake={systemIntake}
+                    businessCase={businessCase}
+                  />
                 </ITGovAdminContext.Provider>
               </Route>
               <Route path="/it-governance/:systemId/grb-review">
                 <ITGovAdminContext.Provider value>
-                  <GRBReview {...systemIntake} businessCase={businessCase} />
+                  <GRBReview
+                    systemIntake={systemIntake}
+                    businessCase={businessCase}
+                  />
                 </ITGovAdminContext.Provider>
               </Route>
             </MessageProvider>

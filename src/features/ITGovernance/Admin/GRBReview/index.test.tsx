@@ -30,7 +30,10 @@ describe('GRB review tab', () => {
           <Provider store={store}>
             <MessageProvider>
               <ITGovAdminContext.Provider value={false}>
-                <GRBReview {...systemIntake} businessCase={businessCase} />
+                <GRBReview
+                  systemIntake={systemIntake}
+                  businessCase={businessCase}
+                />
               </ITGovAdminContext.Provider>
             </MessageProvider>
           </Provider>
@@ -53,7 +56,10 @@ describe('GRB review tab', () => {
           <Provider store={store}>
             <MessageProvider>
               <ITGovAdminContext.Provider value>
-                <GRBReview {...systemIntake} businessCase={businessCase} />
+                <GRBReview
+                  systemIntake={systemIntake}
+                  businessCase={businessCase}
+                />
               </ITGovAdminContext.Provider>
             </MessageProvider>
           </Provider>
@@ -84,7 +90,10 @@ describe('GRB review tab', () => {
           <Provider store={store}>
             <MessageProvider>
               <ITGovAdminContext.Provider value>
-                <GRBReview {...systemIntake} businessCase={businessCase} />
+                <GRBReview
+                  systemIntake={systemIntake}
+                  businessCase={businessCase}
+                />
               </ITGovAdminContext.Provider>
             </MessageProvider>
           </Provider>
@@ -134,7 +143,10 @@ describe('GRB review tab', () => {
           <Provider store={store}>
             <MessageProvider>
               <ITGovAdminContext.Provider value>
-                <GRBReview {...systemIntake} businessCase={businessCase} />
+                <GRBReview
+                  systemIntake={systemIntake}
+                  businessCase={businessCase}
+                />
               </ITGovAdminContext.Provider>
             </MessageProvider>
           </Provider>

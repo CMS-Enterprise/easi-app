@@ -15,7 +15,6 @@ import {
   SystemIntakeFragmentFragment,
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewerVotingRole,
-  SystemIntakeState,
   useDeleteSystemIntakeGRBReviewerMutation,
   useGetSystemIntakeGRBReviewQuery,
   useStartGRBReviewMutation
@@ -46,24 +45,11 @@ import IntakeRequestCard from './IntakeRequestCard';
 import './index.scss';
 
 type GRBReviewProps = {
-  id: string;
-  submittedAt?: string | null;
-  state: SystemIntakeState;
+  systemIntake: SystemIntakeFragmentFragment;
   businessCase: BusinessCaseModel;
-  governanceRequestFeedbacks: SystemIntakeFragmentFragment['governanceRequestFeedbacks'];
-  currentStage?: SystemIntakeFragmentFragment['currentStage'];
-  annualSpending?: SystemIntakeFragmentFragment['annualSpending'];
 };
 
-const GRBReview = ({
-  id,
-  businessCase,
-  submittedAt,
-  state,
-  governanceRequestFeedbacks,
-  currentStage,
-  annualSpending
-}: GRBReviewProps) => {
+const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
   const { t } = useTranslation('grbReview');
 
   const history = useHistory();
@@ -71,6 +57,15 @@ const GRBReview = ({
   const { action } = useParams<{
     action?: GRBReviewFormAction;
   }>();
+
+  const {
+    id,
+    currentStage,
+    state,
+    submittedAt,
+    annualSpending,
+    governanceRequestFeedbacks
+  } = systemIntake;
 
   const { data } = useGetSystemIntakeGRBReviewQuery({
     variables: {

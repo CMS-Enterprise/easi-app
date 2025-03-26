@@ -81,6 +81,10 @@ const RequestOverview = () => {
     }
   }, [dispatch, systemIntake?.businessCaseId]);
 
+  if (loading && !systemIntake) {
+    return <PageLoading />;
+  }
+
   if (!loading && !systemIntake) {
     return <NotFound />;
   }
@@ -206,7 +210,7 @@ const RequestOverview = () => {
                     exact
                     render={() => (
                       <GRBReview
-                        {...systemIntake}
+                        systemIntake={systemIntake}
                         businessCase={businessCase}
                       />
                     )}
