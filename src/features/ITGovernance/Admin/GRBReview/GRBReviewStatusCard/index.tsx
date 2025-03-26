@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Button, ButtonGroup } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
   SystemIntakeGRBReviewAsyncStatusType,
@@ -36,7 +37,11 @@ const renderBGColor = (
 const GRBReviewStatusTag = ({
   grbReviewAsyncStatus
 }: {
-  grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType | null | undefined;
+  grbReviewAsyncStatus:
+    | SystemIntakeGRBReviewAsyncStatusType
+    | GRBReviewStatus
+    | null
+    | undefined;
 }) => {
   const { t } = useTranslation('grbReview');
 
@@ -69,12 +74,18 @@ const GRBReviewStatusCard = ({
 }: GRBReviewStatusCardProps) => {
   const { t } = useTranslation('grbReview');
 
-  const { grbReviewType, grbReviewAsyncStatus, grbDate, grbReviewStartedAt } =
-    grbReview;
+  const {
+    grbReviewType,
+    grbReviewAsyncStatus,
+    grbDate,
+    grbReviewAsyncEndDate
+  } = grbReview;
 
   const isITGovAdmin = useContext(ITGovAdminContext);
 
-  const { days, hours, minutes } = formatDaysHoursMinutes(grbReviewStartedAt);
+  const { days, hours, minutes } = formatDaysHoursMinutes(
+    grbReviewAsyncEndDate
+  );
 
   const StandardCard = (
     <div
@@ -92,6 +103,7 @@ const GRBReviewStatusCard = ({
       <GRBReviewStatusTag grbReviewAsyncStatus={grbReviewAsyncStatus} />
 
       {/* Meeting Details */}
+      {/* TODO: !!!! Replace the Standard GRB Review Status field and enum */}
       {grbReviewAsyncStatus !==
         SystemIntakeGRBReviewAsyncStatusType.COMPLETED && (
         <span>
@@ -136,20 +148,35 @@ const GRBReviewStatusCard = ({
         SystemIntakeGRBReviewAsyncStatusType.COMPLETED && (
         <span>
           <h4 className="margin-0 margin-right-1 margin-top-2px margin-bottom-05">
-            {t('statusCard.grbMeeting')}
+            {t('statusCard.timeRemaining')}
           </h4>
 
-          <div className="easi-body-large">
-            {formatDateUtc(grbDate, 'MM/dd/yyyy')}
-          </div>
+          <span className="display-flex margin-bottom-05">
+            <p className="easi-body-large margin-top-0 margin-bottom-05 margin-right-2">
+              {t('statusCard.countdown', {
+                days,
+                hours,
+                minutes
+              })}
+            </p>
+
+            <p className="easi-body-normal text-primary-dark margin-0 flex-align-self-center">
+              {t('statusCard.reviewEnds', {
+                date: formatDateUtc(grbReviewAsyncEndDate, 'MM/dd/yyyy')
+              })}
+            </p>
+          </span>
 
           {isITGovAdmin && (
-            <UswdsReactLink
-              to="./dates"
-              className="usa-button usa-button--outline margin-top-1"
-            >
-              {t('statusCard.changeMeetingDate')}
-            </UswdsReactLink>
+            <ButtonGroup>
+              <Button type="button" outline onClick={() => {}}>
+                {t('statusCard.addTime')}
+              </Button>
+
+              <Button type="button" outline onClick={() => {}}>
+                {t('statusCard.endVoting')}
+              </Button>
+            </ButtonGroup>
           )}
         </span>
       )}

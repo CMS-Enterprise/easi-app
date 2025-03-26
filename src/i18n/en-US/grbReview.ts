@@ -1,6 +1,7 @@
 import { GRBReviewStatus } from 'features/ITGovernance/Admin/GRBReview/GRBReviewStatusCard';
 import {
   SystemIntakeAsyncGRBVotingOption,
+  SystemIntakeGRBReviewAsyncStatusType,
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole
 } from 'gql/generated/graphql';
@@ -452,10 +453,12 @@ export default {
     changeMeetingDate: 'Change meeting date',
     grbReviewStatus: {
       [GRBReviewStatus.SCHEDULED]: 'Scheduled',
-      [GRBReviewStatus.IN_PROGRESS]: 'In progress',
-      [GRBReviewStatus.COMPLETED]: 'Complete'
+      [SystemIntakeGRBReviewAsyncStatusType.IN_PROGRESS]: 'In progress',
+      [SystemIntakeGRBReviewAsyncStatusType.COMPLETED]: 'Complete',
+      [SystemIntakeGRBReviewAsyncStatusType.PAST_DUE]: 'Past due'
     },
     timeRemaining: 'Time remaining for review',
+    countdown: '{{days}} days, {{hours}} hours, {{minutes}} minutes',
     reviewEnds: 'Review ends {{date}}, 5:00pm EST',
     addTime: 'Add time',
     endVoting: 'End voting'
