@@ -157,12 +157,7 @@ func (info *GRBVotingInformation) VotingStatus() GRBVotingInformationStatus {
 	}
 
 	now := time.Now()
-	// first, check for not started
-	if now.Before(*info.SystemIntake.GRBReviewStartedAt) {
-		return GRBVSNotStarted
-	}
-
-	// then check in progress
+	// check if currently in progress
 	if now.After(*info.SystemIntake.GRBReviewStartedAt) && now.Before(*info.SystemIntake.GrbReviewAsyncEndDate) {
 		return GRBVSInProgress
 	}
