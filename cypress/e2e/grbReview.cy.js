@@ -11,10 +11,16 @@ describe('GRB review', () => {
       if (req.body.operationName === 'SendPresentationDeckReminder') {
         req.alias = 'sendReminder';
       }
-      if (req.body.operationName === 'UpdateSystemIntakeGRBReviewAsyncPresentation') {
+      if (
+        req.body.operationName ===
+        'UpdateSystemIntakeGRBReviewAsyncPresentation'
+      ) {
         req.alias = 'updatePresentation';
       }
-      if (req.body.operationName === 'UpdateSystemIntakeGRBReviewFormInputTimeframeAsync') {
+      if (
+        req.body.operationName ===
+        'UpdateSystemIntakeGRBReviewFormInputTimeframeAsync'
+      ) {
         req.alias = 'updateAsyncTimeframe';
       }
     });
@@ -34,9 +40,14 @@ describe('GRB review', () => {
 
     cy.get('[data-testid="date-picker-external-input"]').type('01/01/2022');
 
-    cy.get('[data-testid="alert"]').should('be.visible').and('contain.text', "You've entered a date that is in the past. Please double-check to make sure this date is accurate.");
+    cy.get('[data-testid="alert"]')
+      .should('be.visible')
+      .and(
+        'contain.text',
+        "You've entered a date that is in the past. Please double-check to make sure this date is accurate."
+      );
 
-    cy.get('[data-testid="date-picker-external-input"]').clear()
+    cy.get('[data-testid="date-picker-external-input"]').clear();
     cy.get('[data-testid="date-picker-external-input"]').type('01/01/2226');
 
     cy.get('input#recordingLink').type('https://www.google.com');
@@ -60,7 +71,7 @@ describe('GRB review', () => {
 
     cy.get('[data-testid="table"]').within(() => {
       cy.get('tbody tr').should('have.length', 4);
-    })
+    });
 
     cy.contains('button', 'Add another GRB reviewer').click();
 
@@ -75,21 +86,27 @@ describe('GRB review', () => {
       .should('have.value', 'Aaron Adams, ADMN (aaron.adams@local.fake)');
 
     cy.get('#votingRole').select('Voting').should('have.value', 'VOTING');
-    cy.get('#grbRole').select('Co-Chair - CIO').should('have.value', 'CO_CHAIR_CIO');
+    cy.get('#grbRole')
+      .select('Co-Chair - CIO')
+      .should('have.value', 'CO_CHAIR_CIO');
 
     cy.contains('button', 'Add reviewer').should('not.be.disabled').click();
 
     cy.url().should('include', '/participants');
 
-    cy.get('[data-testid="alert"]').should('be.visible').and('contain.text', "You added 1 reviewer to this GRB review.");
+    cy.get('[data-testid="alert"]')
+      .should('be.visible')
+      .and('contain.text', 'You added 1 reviewer to this GRB review.');
 
     cy.get('[data-testid="table"]').within(() => {
       // Check to see that Aaron Adams was added as a reviewer.
-      cy.get('tbody tr').eq(0).within(() => {
-        cy.contains('td', 'Aaron Adams').should('exist');
-        cy.contains('td', 'Voting').should('exist');
-        cy.contains('td', 'Co-Chair - CIO').should('exist');
-      });
+      cy.get('tbody tr')
+        .eq(0)
+        .within(() => {
+          cy.contains('td', 'Aaron Adams').should('exist');
+          cy.contains('td', 'Voting').should('exist');
+          cy.contains('td', 'Co-Chair - CIO').should('exist');
+        });
 
       // Check that the expected number of rows exist.
       cy.get('tbody tr').should('have.length', 5);
@@ -98,13 +115,14 @@ describe('GRB review', () => {
     cy.get('#grbReviewAsyncEndDate').type('01/01/2226');
 
     cy.contains('button', 'Complete and begin review').click();
-    cy.wait('@updateAsyncTimeframe').its('response.statusCode').should('eq', 200);
+    cy.wait('@updateAsyncTimeframe')
+      .its('response.statusCode')
+      .should('eq', 200);
 
     // Returns to the GRB review page
     // Check if discussion button is now clickable
     cy.contains('button', 'View discussion board').should('not.be.disabled');
   });
-
 
   it('completes required fields for Standard Review Type', () => {
     cy.intercept('POST', '/api/graph/query', req => {
@@ -114,7 +132,10 @@ describe('GRB review', () => {
       if (req.body.operationName === 'SendPresentationDeckReminder') {
         req.alias = 'sendReminder';
       }
-      if (req.body.operationName === 'UpdateSystemIntakeGRBReviewStandardPresentation') {
+      if (
+        req.body.operationName ===
+        'UpdateSystemIntakeGRBReviewStandardPresentation'
+      ) {
         req.alias = 'updatePresentation';
       }
       if (req.body.operationName === 'StartGRBReview') {
@@ -158,9 +179,11 @@ describe('GRB review', () => {
 
     // Returns to the GRB review page
     cy.url().should('include', '/grb-review');
-    cy.get('[data-testid="CardHeader"]').should('contain.text', 'Standard meeting review');
+    cy.get('[data-testid="CardHeader"]').should(
+      'contain.text',
+      'Standard meeting review'
+    );
   });
-
 
   it('Navigates through the form with the headers', () => {
     cy.visit('/it-governance/38e46d77-e474-4d15-a7c0-f6411221e2a4/grb-review');
@@ -174,22 +197,30 @@ describe('GRB review', () => {
     cy.get('[data-testid="stepIndicator-1"]').click();
     cy.url().should('include', '/presentation');
 
-    cy.get('[data-testid="stepIndicator-2"]').should('have.class', 'usa-step-indicator__segment--disabled');
-    cy.get('[data-testid="stepIndicator-3"]').should('have.class', 'usa-step-indicator__segment--disabled');
+    cy.get('[data-testid="stepIndicator-2"]').should(
+      'have.class',
+      'usa-step-indicator__segment--disabled'
+    );
+    cy.get('[data-testid="stepIndicator-3"]').should(
+      'have.class',
+      'usa-step-indicator__segment--disabled'
+    );
 
     cy.get('[data-testid="date-picker-external-input"]').type('01/01/2226');
     cy.contains('button', 'Next').click();
 
-    cy.get('[data-testid="stepIndicator-2"]').should('not.have.class', 'usa-step-indicator__segment--disabled');
-    cy.get('[data-testid="stepIndicator-3"]').should('not.have.class', 'usa-step-indicator__segment--disabled');
+    cy.get('[data-testid="stepIndicator-2"]').should(
+      'not.have.class',
+      'usa-step-indicator__segment--disabled'
+    );
+    cy.get('[data-testid="stepIndicator-3"]').should(
+      'not.have.class',
+      'usa-step-indicator__segment--disabled'
+    );
 
     cy.get('[data-testid="stepIndicator-3"]').click();
     cy.url().should('include', '/participants');
 
     cy.contains('button', 'Save and return to request').click();
   });
-
 });
-
-
-

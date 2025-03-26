@@ -30,7 +30,6 @@ describe('Discussion Board', () => {
     // Navigate back to GRB Review page
     cy.url().should('include', '/grb-review');
 
-
     // Opens modal to view mode
     cy.contains('button', 'View discussion board').click();
 
