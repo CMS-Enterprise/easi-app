@@ -3,7 +3,6 @@ package scheduler
 import (
 	"context"
 
-	"github.com/go-co-op/gocron/v2"
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
@@ -17,10 +16,10 @@ type exampleJobs struct {
 	SimplifiedJob      ScheduledJob
 }
 
-var ExampleJobs = GetExampleJobs(SharedScheduler2)
+var ExampleJobs = GetExampleJobs(SharedScheduler)
 
 // GetExampleJobs returns a new exampleJobs struct with all the example jobs
-func GetExampleJobs(scheduler gocron.Scheduler) *exampleJobs {
+func GetExampleJobs(scheduler *Scheduler) *exampleJobs {
 	return &exampleJobs{
 		SimplifiedJob:      NewScheduledJob("SimplifiedJob", scheduler, timing.Every5Seconds, simplifiedJobFunction),
 		RunEvery5SecondJob: NewScheduledJobWrapper("RunEverySecondJob", scheduler, timing.Every5Seconds, runEvery5SecondJobFunction, true),

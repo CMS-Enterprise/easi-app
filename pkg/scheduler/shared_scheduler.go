@@ -14,15 +14,6 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
-var (
-	sharedScheduler gocron.Scheduler
-
-	jobRegistry   map[string]RegisterJobFunction
-	onceScheduler sync.Once
-	onceRegistry  sync.Once
-	mutex         sync.Mutex
-)
-
 type Scheduler struct {
 	gocron.Scheduler
 	context     context.Context
@@ -53,7 +44,7 @@ func NewScheduler(panicOnError bool) (*Scheduler, error) {
 	}, nil
 }
 
-var SharedScheduler2, _ = NewScheduler(true)
+var SharedScheduler, _ = NewScheduler(true)
 
 // Initialize sets the logger, store, and email client for the shared scheduler.
 func (s *Scheduler) Initialize(ctx context.Context, logger *zap.Logger, store *storage.Store, buildDataLoaders dataloaders.BuildDataloaders, emailClient *email.Client) {
@@ -92,69 +83,6 @@ func (s *Scheduler) Stop() error {
 	}
 
 	s.logger.Info("Scheduler stopped successfully")
-	return nil
-}
-
-// JobRegistry returns the shared job registry.
-func JobRegistry() map[string]RegisterJobFunction {
-	onceRegistry.Do(func() {
-		jobRegistry = make(map[string]RegisterJobFunction)
-
-	})
-	return jobRegistry
-}
-
-// RegisterJob stores a job registration function to be initialized later.
-func RegisterJob(name string, registerJob RegisterJobFunction) {
-	mutex.Lock()
-	defer mutex.Unlock()
-
-	registry := JobRegistry()
-	registry[name] = registerJob
-}
-
-// GetScheduler initializes (if needed) and returns the shared scheduler.
-func GetScheduler() gocron.Scheduler {
-	onceScheduler.Do(func() {
-		s, err := gocron.NewScheduler()
-		if err != nil {
-			log.Panic(fmt.Errorf("error creating scheduler: %v", err))
-
-		}
-		sharedScheduler = s
-	})
-	return sharedScheduler
-}
-
-// StartScheduler runs the scheduler on a separate goroutine and registers jobs.
-func StartScheduler(logger *zap.Logger, store *storage.Store, buildDataLoaders dataloaders.BuildDataloaders, emailClient *email.Client) {
-	scheduler := GetScheduler()
-
-	ctx := CreateSchedulerContext(context.Background(), logger, store, buildDataLoaders, emailClient)
-
-	// Register all jobs dynamically
-	mutex.Lock()
-	for _, registerJob := range jobRegistry {
-		_, err := registerJob(ctx, store, scheduler) // Execute the job function to add it to the scheduler
-		if err != nil {
-			logger.Error("error registering job:", zap.Error(err))
-		}
-	}
-	mutex.Unlock()
-
-	// Start the scheduler in a separate goroutine
-	go scheduler.Start()
-}
-
-// StopScheduler is a wrapper for shutting down the shared scheduler, so it's shutdown can be deferred elsewhere
-func StopScheduler(logger *zap.Logger) error {
-	scheduler := GetScheduler()
-	err := scheduler.Shutdown()
-	if err != nil {
-		logger.Error("failed to shutdown scheduler", zap.Error(err))
-		return err
-	}
-	logger.Info("Scheduler stopped successfully")
 	return nil
 }
 

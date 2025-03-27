@@ -3,7 +3,6 @@ package scheduler
 import (
 	"context"
 
-	"github.com/go-co-op/gocron/v2"
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
@@ -18,10 +17,11 @@ type grbEmailJobs struct {
 	SendAsyncVotingHalfwayThroughEmailJob ScheduledJob
 }
 
-var GRBEmailJobs = GetGRBEmailJobs(GetScheduler())
+// GRBEmailJobs is the exported representation of all GRB email scheduled jobs
+var GRBEmailJobs = getGRBEmailJobs(SharedScheduler)
 
-// GetGRBEmailJobs initializes all GRB email jobs
-func GetGRBEmailJobs(scheduler gocron.Scheduler) *grbEmailJobs {
+// getGRBEmailJobs initializes all GRB email jobs
+func getGRBEmailJobs(scheduler *Scheduler) *grbEmailJobs {
 	return &grbEmailJobs{
 		SendAsyncVotingHalfwayThroughEmailJob: NewScheduledJob("SendAsyncVotingHalfwayThroughEmailJob", scheduler,
 			timing.Every5Seconds,
@@ -34,7 +34,8 @@ func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, schedule
 	// contextWithLoader := dataloaders.CTXWithLoaders(ctx, BuildDataloaders(ctx))
 
 	logger := scheduledJob.decoratedLogger(appcontext.ZLogger(ctx))
-	store := Store(ctx)
+	// store := Store(ctx)
+	store := scheduledJob.scheduler.store
 	logger.Info("Running GRB voting halfway through email job")
 	emailClient := EmailClient(ctx)
 
@@ -49,7 +50,7 @@ func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, schedule
 		a. consider spinning up a separate job for each email
 		*/
 
-		_, err := OneTimeJob(ctx, SharedScheduler2, emailClient, "SendAsyncVotingHalfwayThroughEmailJob", func(ctx context.Context, emailClient *email.Client) {
+		_, err := OneTimeJob(ctx, SharedScheduler, emailClient, "SendAsyncVotingHalfwayThroughEmailJob", func(ctx context.Context, emailClient *email.Client) {
 
 			//TODO: this should be fully implemented so that it sends an email. You could also return the emailClient from context, this is merely an example
 			logger.Info("sending email to intake owner", logfields.IntakeID(intake.ID))
