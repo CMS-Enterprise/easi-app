@@ -1989,6 +1989,11 @@ func (r *systemIntakeResolver) GrbPresentationLinks(ctx context.Context, obj *mo
 	return dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, obj.ID)
 }
 
+// GrbReviewStandardStatus is the resolver for the grbReviewStandardStatus field.
+func (r *systemIntakeResolver) GrbReviewStandardStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBReviewStandardStatusType, error) {
+	return resolvers.CalcSystemIntakeGRBReviewStandardStatus(obj), nil
+}
+
 // GrbReviewAsyncStatus is the resolver for the grbReviewAsyncStatus field.
 func (r *systemIntakeResolver) GrbReviewAsyncStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBReviewAsyncStatusType, error) {
 	return resolvers.CalcSystemIntakeGRBReviewAsyncStatus(obj), nil
