@@ -144,6 +144,27 @@ func CalcSystemIntakeGRBReviewAsyncStatus(
 	return helpers.PointerTo(models.SystemIntakeGRBReviewAsyncStatusTypeCompleted)
 }
 
+// CalcSystemIntakeGRBReviewStandardStatus calculates the status of a standard (not async) GRB Review
+// the logic here is _very_ similar to that in calcSystemIntakeStandardGRBReviewStatusAdmin
+// TODO Consider refactoring to share the logic?
+func CalcSystemIntakeGRBReviewStandardStatus(
+	intake *models.SystemIntake,
+) *models.SystemIntakeGRBReviewStandardStatusType {
+	if intake.GrbReviewType != models.SystemIntakeGRBReviewTypeStandard {
+		return nil
+	}
+
+	if intake.GRBDate == nil {
+		return nil
+	}
+
+	if intake.GRBDate.After(time.Now()) {
+		return helpers.PointerTo(models.SystemIntakeGRBReviewStandardStatusTypeScheduled)
+	}
+
+	return helpers.PointerTo(models.SystemIntakeGRBReviewStandardStatusTypeCompleted)
+}
+
 // ManuallyEndSystemIntakeGRBReviewAsyncVoting ends voting for the GRB Review (Async)
 func ManuallyEndSystemIntakeGRBReviewAsyncVoting(
 	ctx context.Context,
