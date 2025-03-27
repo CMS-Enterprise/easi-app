@@ -20,10 +20,6 @@ type grbEmailJobs struct {
 
 var GRBEmailJobs = GetGRBEmailJobs(GetScheduler())
 
-// &grbEmailJobs{
-// 	SendAsyncVotingHalfwayThroughEmailJob: NewScheduledJobWrapper(sharedScheduler, gocron.CronJob("0 2 * * *", false), sendAsyncVotingHalfwayThroughEmailJobFunction),
-// }
-
 // GetGRBEmailJobs initializes all GRB email jobs
 func GetGRBEmailJobs(scheduler gocron.Scheduler) *grbEmailJobs {
 	return &grbEmailJobs{
