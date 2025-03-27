@@ -7,6 +7,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/scheduler/timing"
 )
 
 // exampleJobs is a struct that holds all the example jobs. It is not meant to be run in
@@ -20,10 +21,9 @@ var ExampleJobs = GetExampleJobs(SharedScheduler2)
 
 // GetExampleJobs returns a new exampleJobs struct with all the example jobs
 func GetExampleJobs(scheduler gocron.Scheduler) *exampleJobs {
-	cronExpressionEvery5Seconds := "*/5 * * * * *"
 	return &exampleJobs{
-		SimplifiedJob:      NewScheduledJob("SimplifiedJob", scheduler, gocron.CronJob(cronExpressionEvery5Seconds, true), simplifiedJobFunction),
-		RunEvery5SecondJob: NewScheduledJobWrapper("RunEverySecondJob", scheduler, gocron.CronJob(cronExpressionEvery5Seconds, true), runEvery5SecondJobFunction, true),
+		SimplifiedJob:      NewScheduledJob("SimplifiedJob", scheduler, timing.Every5Seconds, simplifiedJobFunction),
+		RunEvery5SecondJob: NewScheduledJobWrapper("RunEverySecondJob", scheduler, timing.Every5Seconds, runEvery5SecondJobFunction, true),
 	}
 }
 func simplifiedJobFunction(ctx context.Context, scheduledJob *ScheduledJob) {

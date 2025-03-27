@@ -9,6 +9,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/logfields"
+	"github.com/cms-enterprise/easi-app/pkg/scheduler/timing"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
@@ -27,9 +28,8 @@ var GRBEmailJobs = GetGRBEmailJobs(GetScheduler())
 func GetGRBEmailJobs(scheduler gocron.Scheduler) *grbEmailJobs {
 	return &grbEmailJobs{
 		SendAsyncVotingHalfwayThroughEmailJob: NewScheduledJob("SendAsyncVotingHalfwayThroughEmailJob", scheduler,
-			//  gocron.CronJob("0 2 * * *", false),
-			//this is for testing so that it runs every 5 seconds
-			gocron.CronJob("*/5 * * * * *", true),
+			timing.Every5Seconds,
+			// timing.DailyAt2AM,
 			sendAsyncVotingHalfwayThroughEmailJobFunction),
 	}
 }
