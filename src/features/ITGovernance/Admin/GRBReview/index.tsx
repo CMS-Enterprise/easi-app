@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { Icon } from '@trussworks/react-uswds';
 import DocumentsTable from 'features/ITGovernance/_components/DocumentsTable';
 import {
+  GRBVotingInformationStatus,
   SystemIntakeFragmentFragment,
   SystemIntakeGRBReviewerVotingRole,
   useGetSystemIntakeGRBReviewQuery
@@ -112,9 +113,57 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
         {/* GRB Review Status */}
         <GRBReviewStatusCard grbReview={grbReview} />
 
+        {/* <DecisionRecordCard
+              grbVotingInformation={grbReview.grbVotingInformation}
+            /> */}
+
+        {/* TODO: Temp dummy data */}
         <DecisionRecordCard
-          grbVotingInformation={grbReview.grbVotingInformation}
+          grbVotingInformation={{
+            __typename: 'GRBVotingInformation',
+            grbReviewers: [],
+            numberOfNoObjection: 4,
+            numberOfObjection: 1,
+            numberOfNotVoted: 3,
+            votingStatus: GRBVotingInformationStatus.IN_PROGRESS
+          }}
         />
+
+        {/* TODO: Temp dummy data */}
+        {/* <DecisionRecordCard
+              grbVotingInformation={{
+                __typename: 'GRBVotingInformation',
+                grbReviewers: [],
+                numberOfNoObjection: 5,
+                numberOfObjection: 0,
+                numberOfNotVoted: 2,
+                votingStatus: GRBVotingInformationStatus.APPROVED
+              }}
+            /> */}
+
+        {/* TODO: Temp dummy data */}
+        {/* <DecisionRecordCard
+              grbVotingInformation={{
+                __typename: 'GRBVotingInformation',
+                grbReviewers: [],
+                numberOfNoObjection: 3,
+                numberOfObjection: 2,
+                numberOfNotVoted: 2,
+                votingStatus: GRBVotingInformationStatus.NOT_APPROVED
+              }}
+            /> */}
+
+        {/* TODO: Temp dummy data */}
+        {/* <DecisionRecordCard
+              grbVotingInformation={{
+                __typename: 'GRBVotingInformation',
+                grbReviewers: [],
+                numberOfNoObjection: 3,
+                numberOfObjection: 0,
+                numberOfNotVoted: 3,
+                votingStatus: GRBVotingInformationStatus.INCONCLUSIVE
+              }}
+            /> */}
 
         {/* GRT recommendations to the GRB */}
         <GRBFeedbackCard
