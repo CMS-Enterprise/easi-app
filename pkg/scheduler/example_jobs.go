@@ -9,8 +9,8 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 )
 
-// exampleJobs is a struct that holds all the example jobs. It is not meant to be run in production
-// , but rather to show how to create a job.
+// exampleJobs is a struct that holds all the example jobs. It is not meant to be run in
+// production, but rather to show how to create a job.
 type exampleJobs struct {
 	RunEvery5SecondJob ScheduledJobWrapper[bool]
 	SimplifiedJob      ScheduledJob
@@ -20,9 +20,10 @@ var ExampleJobs = GetExampleJobs(SharedScheduler2)
 
 // GetExampleJobs returns a new exampleJobs struct with all the example jobs
 func GetExampleJobs(scheduler gocron.Scheduler) *exampleJobs {
+	cronExpressionEvery5Seconds := "*/5 * * * * *"
 	return &exampleJobs{
-		SimplifiedJob:      NewScheduledJob("SimplifiedJob", scheduler, gocron.CronJob("*/5 * * * * *", true), simplifiedJobFunction),
-		RunEvery5SecondJob: NewScheduledJobWrapper("RunEverySecondJob", scheduler, gocron.CronJob("*/5 * * * * *", true), runEvery5SecondJobFunction, true),
+		SimplifiedJob:      NewScheduledJob("SimplifiedJob", scheduler, gocron.CronJob(cronExpressionEvery5Seconds, true), simplifiedJobFunction),
+		RunEvery5SecondJob: NewScheduledJobWrapper("RunEverySecondJob", scheduler, gocron.CronJob(cronExpressionEvery5Seconds, true), runEvery5SecondJobFunction, true),
 	}
 }
 func simplifiedJobFunction(ctx context.Context, scheduledJob *ScheduledJob) {

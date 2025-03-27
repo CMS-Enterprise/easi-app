@@ -81,9 +81,7 @@ func (s *Scheduler) Start() {
 		}
 	}
 	s.mutex.Unlock()
-
-	// Start the scheduler in a separate goroutine
-	go s.Start()
+	s.Scheduler.Start()
 }
 func (s *Scheduler) Stop() error {
 	err := s.Shutdown()
@@ -163,8 +161,7 @@ func StopScheduler(logger *zap.Logger) error {
 // OneTimeJob schedules a job to run once immediately
 // make sure to instantiate it with the expected dependencies in context.
 // it is intended to be used when another job should be created from a scheduled job
-func OneTimeJob[input comparable](ctx context.Context, params input, name string, jobFunction ScheduledJobFunction[input]) (gocron.Job, error) {
-	scheduler := GetScheduler()
+func OneTimeJob[input comparable](ctx context.Context, scheduler gocron.Scheduler, params input, name string, jobFunction ScheduledJobFunction[input]) (gocron.Job, error) {
 	retJob, err := scheduler.NewJob(gocron.OneTimeJob(gocron.OneTimeJobStartImmediately()),
 		gocron.NewTask(jobFunction, params),
 		gocron.WithContext(ctx),

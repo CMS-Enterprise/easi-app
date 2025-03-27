@@ -53,7 +53,7 @@ func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, schedule
 		a. consider spinning up a separate job for each email
 		*/
 
-		_, err := OneTimeJob(ctx, emailClient, "SendAsyncVotingHalfwayThroughEmailJob", func(ctx context.Context, emailClient *email.Client) {
+		_, err := OneTimeJob(ctx, SharedScheduler2, emailClient, "SendAsyncVotingHalfwayThroughEmailJob", func(ctx context.Context, emailClient *email.Client) {
 
 			//TODO: this should be fully implemented so that it sends an email. You could also return the emailClient from context, this is merely an example
 			logger.Info("sending email to intake owner", logfields.IntakeID(intake.ID))
