@@ -256,13 +256,13 @@ func (s *ResolverSuite) TestCalcSystemIntakeGRBReviewStandardStatus() {
 				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 				GRBDate:       &pastTime,
 			},
-			expected: helpers.PointerTo(models.SystemIntakeGRBReviewStandardStatusTypeScheduled),
+			expected: helpers.PointerTo(models.SystemIntakeGRBReviewStandardStatusTypeCompleted),
 		},
 	}
 
 	for _, tc := range tests {
 		s.Run(tc.name, func() {
-			status := CalcSystemIntakeGRBReviewAsyncStatus(&tc.intake)
+			status := CalcSystemIntakeGRBReviewStandardStatus(&tc.intake)
 
 			if tc.expected == nil {
 				s.Nil(status)
