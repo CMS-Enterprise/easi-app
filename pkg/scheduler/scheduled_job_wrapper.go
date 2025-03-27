@@ -1,3 +1,4 @@
+// scheduler contains the logic for scheduled tasks that run in the main thread of the EASI application
 package scheduler
 
 import (
@@ -79,6 +80,7 @@ func (sjw *ScheduledJobWrapper[input]) Register(scheduler *Scheduler) {
 		retJob, err := scheduler.NewJob(
 			sjw.jobDefinition,
 			gocron.NewTask(sjw.RunJob, sjw.params),
+			// Note, if desired, you could pass scheduler directly like this. Currently, it is referenced in the scheduled job
 			// gocron.NewTask(sjw.jobFunction, sjw.params, scheduler),
 			gocron.WithContext(ctx),
 		)
