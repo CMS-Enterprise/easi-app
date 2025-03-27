@@ -18,7 +18,7 @@ import (
 type ScheduledJobFunction[input comparable] func(context.Context, input)
 
 // RegisterJobFunction is a function that registers a job with the scheduler and returns the job
-type RegisterJobFunction func(context.Context, *storage.Store, gocron.Scheduler) (gocron.Job, error)
+type RegisterJobFunction func(context.Context) (gocron.Job, error)
 
 type ScheduledJobWrapper[input comparable] struct {
 	name          string
@@ -75,7 +75,7 @@ func (sjw *ScheduledJobWrapper[input]) RunJob(ctx context.Context, params input)
 }
 
 func (sjw *ScheduledJobWrapper[input]) Register(scheduler *Scheduler) {
-	scheduler.RegisterJob(sjw.name, func(ctx context.Context, store *storage.Store, scheduler gocron.Scheduler) (gocron.Job, error) {
+	scheduler.RegisterJob(sjw.name, func(ctx context.Context) (gocron.Job, error) {
 		retJob, err := scheduler.NewJob(
 			sjw.jobDefinition,
 			gocron.NewTask(sjw.RunJob, sjw.params),

@@ -70,7 +70,7 @@ func (s *Scheduler) Start() {
 	// Register all jobs dynamically
 	s.mutex.Lock()
 	for _, registerJob := range s.registry {
-		_, err := registerJob(s.context, s.store, s) // Execute the job function to add it to the scheduler
+		_, err := registerJob(s.context) // Execute the job function to add it to the scheduler
 		if err != nil {
 			s.logger.Error("error registering job:", zap.Error(err))
 		}
