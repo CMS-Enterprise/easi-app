@@ -85,10 +85,16 @@ func (s *Scheduler) Start() {
 	// Start the scheduler in a separate goroutine
 	go s.Start()
 }
-func (s *Scheduler) Stop() {
+func (s *Scheduler) Stop() error {
 	err := s.Shutdown()
 
-	s.logger.Error("failed to shutdown scheduler", zap.Error(err))
+	if err != nil {
+		s.logger.Error("failed to shutdown scheduler", zap.Error(err))
+		return err
+	}
+
+	s.logger.Info("Scheduler stopped successfully")
+	return nil
 }
 
 // JobRegistry returns the shared job registry.
@@ -143,11 +149,15 @@ func StartScheduler(logger *zap.Logger, store *storage.Store, buildDataLoaders d
 }
 
 // StopScheduler is a wrapper for shutting down the shared scheduler, so it's shutdown can be deferred elsewhere
-func StopScheduler(logger *zap.Logger) {
+func StopScheduler(logger *zap.Logger) error {
 	scheduler := GetScheduler()
 	err := scheduler.Shutdown()
-
-	logger.Error("failed to shutdown scheduler", zap.Error(err))
+	if err != nil {
+		logger.Error("failed to shutdown scheduler", zap.Error(err))
+		return err
+	}
+	logger.Info("Scheduler stopped successfully")
+	return nil
 }
 
 // OneTimeJob schedules a job to run once immediately

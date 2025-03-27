@@ -56,10 +56,10 @@ func (sjw *ScheduledJobWrapper[input]) decoratedLogger(logger *zap.Logger) *zap.
 		logfields.LastRunTime(lastRun),
 	)
 	if errLastRun != nil {
-		logger.Warn("error getting last run time", zap.Error(errLastRun))
+		decoratedLogger.Warn("error getting last run time", zap.Error(errLastRun))
 	}
 	if errNextRun != nil {
-		logger.Warn("error getting next run time", zap.Error(errNextRun))
+		decoratedLogger.Warn("error getting next run time", zap.Error(errNextRun))
 	}
 	return decoratedLogger
 
