@@ -80,11 +80,11 @@ func getTestDependencies() (storage.DBConfig, *ld.LDClient, *zap.Logger, *models
 }
 
 // GetTestPrincipalFunction either inserts a new user account record into the database, or returns the record already in the database
-type GetTestPrincipalFunction func(store *storage.Store, userName string) (*authentication.EUAPrincipal, error)
+type GetTestPrincipalFunction func(store *storage.Store, userName string, isAdmin bool) (*authentication.EUAPrincipal, error)
 
 // GetTestPrincipal is a wrapper function which allows us to conditional call store or user account helper methods to retrieve a test principal
-func (config *Base) GetTestPrincipal(store *storage.Store, userName string) (*authentication.EUAPrincipal, error) {
-	return config.getTestPrincipalFunction(store, userName)
+func (config *Base) GetTestPrincipal(store *storage.Store, userName string, isAdmin bool) (*authentication.EUAPrincipal, error) {
+	return config.getTestPrincipalFunction(store, userName, isAdmin)
 }
 
 // GenericSetupTests is a generic wrapper to setup tests for test suits
@@ -96,7 +96,7 @@ func (config *Base) GenericSetupTests() error {
 	}
 
 	//GET USER ACCOUNT EACH TIME!
-	princ, err := config.GetTestPrincipal(config.Store, config.UserInfo.Username)
+	princ, err := config.GetTestPrincipal(config.Store, config.UserInfo.Username, true)
 	if err != nil {
 		return err
 	}
@@ -114,4 +114,18 @@ func (config *Base) StubFetchUserInfo(_ context.Context, username string) (*mode
 		DisplayName: username + " Doe",
 		Email:       models.EmailAddress(username + ".doe@local.fake"),
 	}, nil
+}
+
+// StubFetchUserInfos is a utility to mock the user info fetcher
+func (config *Base) StubFetchUserInfos(ctx context.Context, username []string) ([]*models.UserInfo, error) {
+	var userInfos []*models.UserInfo
+	for _, name := range username {
+		info, err := config.StubFetchUserInfo(ctx, name)
+		if err != nil {
+			return nil, err
+		}
+		userInfos = append(userInfos, info)
+	}
+	return userInfos, nil
+
 }
