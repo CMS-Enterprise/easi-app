@@ -5,7 +5,6 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/logfields"
 	"github.com/cms-enterprise/easi-app/pkg/scheduler/timing"
@@ -33,11 +32,20 @@ func getGRBEmailJobs(scheduler *Scheduler) *grbEmailJobs {
 func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, scheduledJob *ScheduledJob) {
 	// contextWithLoader := dataloaders.CTXWithLoaders(ctx, BuildDataloaders(ctx))
 
-	logger := scheduledJob.decoratedLogger(appcontext.ZLogger(ctx))
+	logger := scheduledJob.logger()
+
 	// store := Store(ctx)
-	store := scheduledJob.scheduler.store
+	store, err := scheduledJob.store()
+	if err != nil {
+		logger.Error("error getting store from scheduler", zap.Error(err))
+		return
+	}
 	logger.Info("Running GRB voting halfway through email job")
-	emailClient := EmailClient(ctx)
+	emailClient, err := scheduledJob.emailClient()
+	if err != nil {
+		logger.Error("error getting email client from scheduler", zap.Error(err))
+		return
+	}
 
 	intakes, err := storage.GetSystemIntakesWithGRBReviewHalfwayThrough(ctx, store, logger)
 	if err != nil {

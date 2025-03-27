@@ -27,7 +27,12 @@ func GetExampleJobs(scheduler *Scheduler) *exampleJobs {
 }
 func simplifiedJobFunction(ctx context.Context, scheduledJob *ScheduledJob) {
 
-	logger := scheduledJob.decoratedLogger(appcontext.ZLogger(ctx))
+	logger := scheduledJob.logger()
+	_, err := scheduledJob.buildDataLoaders()
+	if err != nil {
+		logger.Error("error getting buildDataLoaders from scheduler", zap.Error(err))
+		return
+	}
 
 	logger.Info("Running simplified job")
 }

@@ -16,13 +16,14 @@ import (
 
 type Scheduler struct {
 	gocron.Scheduler
-	context     context.Context
-	store       *storage.Store
-	registry    map[string]RegisterJobFunction
-	mutex       sync.Mutex
-	logger      *zap.Logger
-	emailClient *email.Client
-	initialized bool
+	context          context.Context
+	store            *storage.Store
+	registry         map[string]RegisterJobFunction
+	mutex            sync.Mutex
+	logger           *zap.Logger
+	emailClient      *email.Client
+	buildDataLoaders dataloaders.BuildDataloaders
+	initialized      bool
 }
 
 // NewScheduler creates a new scheduler.
@@ -48,10 +49,12 @@ var SharedScheduler, _ = NewScheduler(true)
 
 // Initialize sets the logger, store, and email client for the shared scheduler.
 func (s *Scheduler) Initialize(ctx context.Context, logger *zap.Logger, store *storage.Store, buildDataLoaders dataloaders.BuildDataloaders, emailClient *email.Client) {
-	s.context = ctx
+	// TODO consider removing this context, but it is also useful as the jobs have it and can listen for cancellation through it
+	s.context = CreateSchedulerContext(ctx, logger, store, buildDataLoaders, emailClient)
 	s.logger = logger
 	s.store = store
 	s.emailClient = emailClient
+	s.buildDataLoaders = buildDataLoaders
 	s.initialized = true
 }
 

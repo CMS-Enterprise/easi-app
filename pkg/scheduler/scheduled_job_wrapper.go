@@ -7,6 +7,9 @@ import (
 	"github.com/go-co-op/gocron/v2"
 	"go.uber.org/zap"
 
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
+	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/logfields"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
@@ -27,6 +30,40 @@ type ScheduledJobWrapper[input comparable] struct {
 	// such as the logger, store, and email client
 	scheduler *Scheduler
 }
+
+// store returns the store from the scheduler
+func (sjw *ScheduledJobWrapper[input]) store() (*storage.Store, error) {
+	if sjw.scheduler == nil || sjw.scheduler.store == nil {
+		return nil, fmt.Errorf("scheduler is not initialized")
+	}
+	return sjw.scheduler.store, nil
+}
+
+// logger returns the logger from the scheduler
+func (sjw *ScheduledJobWrapper[input]) logger() *zap.Logger {
+	if sjw.scheduler == nil || sjw.scheduler.logger == nil {
+		appcontext.ZLogger(context.Background())
+	}
+	return sjw.decoratedLogger(sjw.scheduler.logger)
+}
+
+// emailClient returns the email client from the scheduler
+func (sjw *ScheduledJobWrapper[input]) emailClient() (*email.Client, error) {
+	if sjw.scheduler == nil || sjw.scheduler.emailClient == nil {
+		return nil, fmt.Errorf("scheduler is not initialized")
+	}
+	return sjw.scheduler.emailClient, nil
+}
+
+// buildDataLoaders returns the buildDataLoaders function from the scheduler
+func (sjw *ScheduledJobWrapper[input]) buildDataLoaders() (dataloaders.BuildDataloaders, error) {
+	if sjw.scheduler == nil || sjw.scheduler.buildDataLoaders == nil {
+		return nil, fmt.Errorf("scheduler is not initialized")
+	}
+	return sjw.scheduler.buildDataLoaders, nil
+}
+
+// ScheduledJob is a concrete implementation of the ScheduledJobWrapper, that passes itself as a parameter to the job function
 type ScheduledJob struct {
 	ScheduledJobWrapper[*ScheduledJob] // Embed the wrapper with a pointer to ScheduledJob
 }
@@ -54,6 +91,7 @@ func (sjw *ScheduledJobWrapper[input]) Register(scheduler *Scheduler) {
 }
 
 // decoratedLogger returns a logger with the job's metadata
+// ideally, you should just call the logger method on the ScheduledJobWrapper, which in turn calls this.
 func (sjw *ScheduledJobWrapper[input]) decoratedLogger(logger *zap.Logger) *zap.Logger {
 	lastRun, errLastRun := sjw.job.LastRun()
 	nextRun, errNextRun := sjw.job.NextRun()
