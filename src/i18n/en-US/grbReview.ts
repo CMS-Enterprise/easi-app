@@ -467,7 +467,8 @@ export default {
       description:
         'Use the field below to add additional time to this review. The GRB review page will be updated with the new timeframe.',
       label: 'Set new end date ',
-      hint: 'Select the new date when the GRB review should end. The review will close at 5pm EST on that day. Format: mm/dd/yyyy',
+      hint: `Select the new date when the GRB review should end. The review will close at 5pm EST on that day. 
+Format: mm/dd/yyyy`,
       newEnd: 'This review will now end on {{date}}.',
       addTime: 'Add time',
       goBack: 'Go back and don’t add time',
