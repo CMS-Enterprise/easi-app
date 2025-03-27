@@ -211,6 +211,70 @@ func (s *ResolverSuite) TestCalcSystemIntakeGRBReviewAsyncStatus() {
 	}
 }
 
+func (s *ResolverSuite) TestCalcSystemIntakeGRBReviewStandardStatus() {
+	now := time.Now()
+	futureTime := now.Add(24 * time.Hour) // 24 hours in the future
+	pastTime := now.Add(-24 * time.Hour)  // 24 hours in the past
+	systemIntakeID := uuid.New()
+
+	tests := []struct {
+		name     string
+		intake   models.SystemIntake
+		expected *models.SystemIntakeGRBReviewStandardStatusType
+	}{
+		{
+			name: "Error - GRB Review type is not standard",
+			intake: models.SystemIntake{
+				ID:            systemIntakeID,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeAsync,
+				GRBDate:       &now,
+			},
+			expected: nil,
+		},
+		{
+			name: "Error - GRB Review date is not set",
+			intake: models.SystemIntake{
+				ID:            systemIntakeID,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       nil,
+			},
+			expected: nil,
+		},
+		{
+			name: "Status - Scheduled (GRB date is in the future)",
+			intake: models.SystemIntake{
+				ID:            systemIntakeID,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       &futureTime,
+			},
+			expected: helpers.PointerTo(models.SystemIntakeGRBReviewStandardStatusTypeScheduled),
+		},
+		{
+			name: "Status - Completed (GRB date is in the past)",
+			intake: models.SystemIntake{
+				ID:            systemIntakeID,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       &pastTime,
+			},
+			expected: helpers.PointerTo(models.SystemIntakeGRBReviewStandardStatusTypeScheduled),
+		},
+	}
+
+	for _, tc := range tests {
+		s.Run(tc.name, func() {
+			status := CalcSystemIntakeGRBReviewAsyncStatus(&tc.intake)
+
+			if tc.expected == nil {
+				s.Nil(status)
+			} else {
+				// No errors expected
+				s.NotNil(status)
+				s.Equal(*tc.expected, *status)
+			}
+		})
+	}
+}
+
 func (s *ResolverSuite) TestManuallyEndSystemIntakeGRBReviewAsyncVoting() {
 	systemIntake := s.createNewIntake()
 	s.NotNil(systemIntake)

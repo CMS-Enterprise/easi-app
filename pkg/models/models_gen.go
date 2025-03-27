@@ -1263,7 +1263,7 @@ func (e SystemIntakeFormStep) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
-// The status type of the System Intake GRB Review
+// The status type of the System Intake GRB Review (For Async Reviews only)
 type SystemIntakeGRBReviewAsyncStatusType string
 
 const (
@@ -1304,6 +1304,48 @@ func (e *SystemIntakeGRBReviewAsyncStatusType) UnmarshalGQL(v any) error {
 }
 
 func (e SystemIntakeGRBReviewAsyncStatusType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// The status type of the System Intake GRB Review (For Standard reviews only)
+type SystemIntakeGRBReviewStandardStatusType string
+
+const (
+	SystemIntakeGRBReviewStandardStatusTypeScheduled SystemIntakeGRBReviewStandardStatusType = "SCHEDULED"
+	SystemIntakeGRBReviewStandardStatusTypeCompleted SystemIntakeGRBReviewStandardStatusType = "COMPLETED"
+)
+
+var AllSystemIntakeGRBReviewStandardStatusType = []SystemIntakeGRBReviewStandardStatusType{
+	SystemIntakeGRBReviewStandardStatusTypeScheduled,
+	SystemIntakeGRBReviewStandardStatusTypeCompleted,
+}
+
+func (e SystemIntakeGRBReviewStandardStatusType) IsValid() bool {
+	switch e {
+	case SystemIntakeGRBReviewStandardStatusTypeScheduled, SystemIntakeGRBReviewStandardStatusTypeCompleted:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeGRBReviewStandardStatusType) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeGRBReviewStandardStatusType) UnmarshalGQL(v any) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeGRBReviewStandardStatusType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeGRBReviewStandardStatusType", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeGRBReviewStandardStatusType) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
