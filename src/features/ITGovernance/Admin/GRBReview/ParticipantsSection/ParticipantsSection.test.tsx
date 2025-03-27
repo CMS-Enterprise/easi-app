@@ -44,6 +44,7 @@ describe('GRB review participants table', () => {
             <ITGovAdminContext.Provider value>
               <ParticipantsSection
                 id={systemIntake.id}
+                isForm
                 state={SystemIntakeState.OPEN}
                 grbReviewers={[grbReviewer]}
                 grbReviewStartedAt={null}
@@ -79,6 +80,7 @@ describe('GRB review participants table', () => {
           <MessageProvider>
             <ITGovAdminContext.Provider value>
               <ParticipantsSection
+                isForm
                 id={systemIntake.id}
                 state={SystemIntakeState.OPEN}
                 grbReviewers={[grbReviewer]}
@@ -102,6 +104,7 @@ describe('GRB review participants table', () => {
           <MessageProvider>
             <ITGovAdminContext.Provider value>
               <ParticipantsSection
+                isForm
                 id={systemIntake.id}
                 state={SystemIntakeState.CLOSED}
                 grbReviewers={[]}
@@ -131,6 +134,7 @@ describe('GRB review participants table', () => {
           <MessageProvider>
             <ITGovAdminContext.Provider value={false}>
               <ParticipantsSection
+                isForm
                 id={systemIntake.id}
                 state={SystemIntakeState.OPEN}
                 grbReviewers={[grbReviewer]}
