@@ -117,7 +117,6 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
               grbVotingInformation={grbReview.grbVotingInformation}
             /> */}
 
-        {/* TODO: Temp dummy data */}
         <DecisionRecordCard
           grbVotingInformation={{
             __typename: 'GRBVotingInformation',
@@ -129,41 +128,38 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
           }}
         />
 
-        {/* TODO: Temp dummy data */}
-        {/* <DecisionRecordCard
-              grbVotingInformation={{
-                __typename: 'GRBVotingInformation',
-                grbReviewers: [],
-                numberOfNoObjection: 5,
-                numberOfObjection: 0,
-                numberOfNotVoted: 2,
-                votingStatus: GRBVotingInformationStatus.APPROVED
-              }}
-            /> */}
+        <DecisionRecordCard
+          grbVotingInformation={{
+            __typename: 'GRBVotingInformation',
+            grbReviewers: [],
+            numberOfNoObjection: 5,
+            numberOfObjection: 0,
+            numberOfNotVoted: 2,
+            votingStatus: GRBVotingInformationStatus.APPROVED
+          }}
+        />
 
-        {/* TODO: Temp dummy data */}
-        {/* <DecisionRecordCard
-              grbVotingInformation={{
-                __typename: 'GRBVotingInformation',
-                grbReviewers: [],
-                numberOfNoObjection: 3,
-                numberOfObjection: 2,
-                numberOfNotVoted: 2,
-                votingStatus: GRBVotingInformationStatus.NOT_APPROVED
-              }}
-            /> */}
+        <DecisionRecordCard
+          grbVotingInformation={{
+            __typename: 'GRBVotingInformation',
+            grbReviewers: [],
+            numberOfNoObjection: 3,
+            numberOfObjection: 2,
+            numberOfNotVoted: 2,
+            votingStatus: GRBVotingInformationStatus.NOT_APPROVED
+          }}
+        />
 
-        {/* TODO: Temp dummy data */}
-        {/* <DecisionRecordCard
-              grbVotingInformation={{
-                __typename: 'GRBVotingInformation',
-                grbReviewers: [],
-                numberOfNoObjection: 3,
-                numberOfObjection: 0,
-                numberOfNotVoted: 3,
-                votingStatus: GRBVotingInformationStatus.INCONCLUSIVE
-              }}
-            /> */}
+        <DecisionRecordCard
+          grbVotingInformation={{
+            __typename: 'GRBVotingInformation',
+            grbReviewers: [],
+            numberOfNoObjection: 3,
+            numberOfObjection: 0,
+            numberOfNotVoted: 3,
+            votingStatus: GRBVotingInformationStatus.INCONCLUSIVE
+          }}
+        />
 
         {/* GRT recommendations to the GRB */}
         <GRBFeedbackCard

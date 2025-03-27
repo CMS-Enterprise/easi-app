@@ -131,6 +131,7 @@ export default {
     virusScanning: 'Virus scanning in progress...',
     adminEmptyAlert:
       'If this GRB review has an asynchronous presentation and recording, you may add that content to EASi to provide additional information for GRB reviews.',
+    emptyAlert: 'The GRB have not yet added presentation links.',
     modalRemoveLinks: {
       title: 'Remove presentation links?',
       text: 'This action will remove any links and files previously added about this asynchronous presesntation and cannot be undone. Are you sure you want to continue?',
