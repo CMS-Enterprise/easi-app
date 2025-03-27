@@ -63,7 +63,6 @@ const GRBReviewAdminTask = ({
           buttons={[
             {
               label: t('adminTask.setUpGRBReview.title'),
-              // onClick: () => setStartReviewModalIsOpen(true)
               onClick: () =>
                 history.push(
                   `/it-governance/${systemIntakeId}/grb-review/review-type`
