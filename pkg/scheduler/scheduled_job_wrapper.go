@@ -71,11 +71,10 @@ type ScheduledJob struct {
 // RunJob is a wrapper for running the job.
 func (sjw *ScheduledJobWrapper[input]) RunJob(ctx context.Context, params input) {
 	sjw.jobFunction(ctx, params)
-
 }
 
 func (sjw *ScheduledJobWrapper[input]) Register(scheduler *Scheduler) {
-	scheduler.RegisterJob(sjw.name, func(ctx context.Context) (gocron.Job, error) {
+	scheduler.registerJob(sjw.name, func(ctx context.Context) (gocron.Job, error) {
 		retJob, err := scheduler.NewJob(
 			sjw.jobDefinition,
 			gocron.NewTask(sjw.RunJob, sjw.params),

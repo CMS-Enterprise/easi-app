@@ -57,17 +57,7 @@ func (s *Scheduler) Initialize(ctx context.Context, logger *zap.Logger, store *s
 	s.emailClient = emailClient
 	s.buildDataLoaders = buildDataLoaders
 	s.initialized = true
-}
 
-// RegisterJob stores a job registration function to be initialized later.
-func (s *Scheduler) RegisterJob(name string, registerJob RegisterJobFunction) {
-	s.mutex.Lock()
-	defer s.mutex.Unlock()
-
-	s.registry[name] = registerJob
-}
-func (s *Scheduler) Start() {
-	// Register all jobs dynamically
 	s.mutex.Lock()
 	for _, registerJob := range s.registry {
 		_, err := registerJob(s.context) // Execute the job function to add it to the scheduler
@@ -76,6 +66,19 @@ func (s *Scheduler) Start() {
 		}
 	}
 	s.mutex.Unlock()
+}
+
+// registerJob stores a job registration function to be initialized later.
+func (s *Scheduler) registerJob(name string, registerJob RegisterJobFunction) {
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
+
+	s.registry[name] = registerJob
+}
+
+// Start is a wrapper that calls the underlying gocron scheduler start method.
+// It is intended to be used when the scheduler is not started in the main thread.
+func (s *Scheduler) Start() {
 	s.Scheduler.Start()
 }
 func (s *Scheduler) Stop() error {
@@ -88,19 +91,4 @@ func (s *Scheduler) Stop() error {
 
 	s.logger.Info("Scheduler stopped successfully")
 	return nil
-}
-
-// OneTimeJob schedules a job to run once immediately
-// make sure to instantiate it with the expected dependencies in context.
-// it is intended to be used when another job should be created from a scheduled job
-func OneTimeJob[input comparable](ctx context.Context, scheduler gocron.Scheduler, params input, name string, jobFunction ScheduledJobFunction[input]) (gocron.Job, error) {
-	retJob, err := scheduler.NewJob(gocron.OneTimeJob(gocron.OneTimeJobStartImmediately()),
-		gocron.NewTask(jobFunction, params),
-		gocron.WithContext(ctx),
-	)
-
-	if err != nil {
-		return nil, fmt.Errorf("error scheduling job: %v", err)
-	}
-	return retJob, nil
 }
