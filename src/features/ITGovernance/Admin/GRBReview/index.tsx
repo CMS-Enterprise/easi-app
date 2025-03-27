@@ -148,8 +148,219 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
     return null;
   }
 
+  if (isForm) {
+    return (
+      <GRBReviewerForm
+        isFromGRBSetup={isFromGRBSetup}
+        setReviewerToRemove={setReviewerToRemove}
+        initialGRBReviewers={grbReview.grbVotingInformation?.grbReviewers}
+        grbReviewStartedAt={grbReview.grbReviewStartedAt}
+      />
+    );
+  }
+
   return (
     <>
+      {
+        // Start GRB Review modal
+        startReviewModalIsOpen && (
+          <Modal
+            isOpen={startReviewModalIsOpen}
+            closeModal={() => setStartReviewModalIsOpen(false)}
+          >
+            <ModalHeading>{t('startReviewModal.heading')}</ModalHeading>
+            <p>
+              {t('startReviewModal.text', {
+                count: grbReview.grbVotingInformation?.grbReviewers.length
+              })}
+            </p>
+            <ModalFooter>
+              <ButtonGroup>
+                <Button
+                  type="button"
+                  onClick={() =>
+                    startGRBReview()
+                      .then(() => setStartReviewModalIsOpen(false))
+                      .catch(() => {
+                        showMessage(t('startGrbReviewError'), {
+                          type: 'error'
+                        });
+                        setStartReviewModalIsOpen(false);
+                      })
+                  }
+                  className="margin-right-1"
+                >
+                  {t('startReviewModal.startReview')}
+                </Button>
+                <Button
+                  type="button"
+                  onClick={() => setStartReviewModalIsOpen(false)}
+                  unstyled
+                >
+                  {t('Go back')}
+                </Button>
+              </ButtonGroup>
+            </ModalFooter>
+          </Modal>
+        )
+      }
+
+      <div className="padding-bottom-4" id="grbReview">
+        <PageHeading className="margin-y-0">{t('title')}</PageHeading>
+
+        <p className="font-body-md line-height-body-4 text-light margin-top-05 margin-bottom-3">
+          {t('description')}
+        </p>
+
+        {/* TODO: Remove/reuse once BE work done */}
+        {/* {grbReviewStartedAt && (
+              <p className="bg-primary-lighter line-height-body-5 padding-y-1 padding-x-2">
+                <Trans
+                  i18nKey="grbReview:reviewStartedOn"
+                  components={{
+                    date: formatDateLocal(grbReviewStartedAt, 'MM/dd/yyyy')
+                  }}
+                />
+              </p>
+            )} */}
+
+        <GRBReviewAdminTask
+          isITGovAdmin={isITGovAdmin}
+          systemIntakeId={id}
+          grbReviewStartedAt={grbReview.grbReviewStartedAt}
+        />
+
+        {/* GRB Reviewer Voting Panel */}
+        {/* TODO: Add grbReviewStartedAt once work is done to start review */}
+        {/* {!isITGovAdmin && grbReviewStartedAt && currentGRBReviewer && ( */}
+        {!isITGovAdmin && currentGRBReviewer && (
+          <GRBVotingPanel grbReviewer={currentGRBReviewer} />
+        )}
+
+        {/* Review details */}
+        <h2 className="margin-bottom-0 margin-top-6" id="details">
+          {t('reviewDetails.title')}
+        </h2>
+        <p className="margin-top-05 line-height-body-5">
+          {t('reviewDetails.text')}
+        </p>
+
+        <GRBReviewStatusCard grbReview={grbReview} />
+
+        {/* <DecisionRecordCard
+              grbVotingInformation={grbReview.grbVotingInformation}
+            /> */}
+
+        {/* TODO: Temp dummy data */}
+        <DecisionRecordCard
+          grbVotingInformation={{
+            __typename: 'GRBVotingInformation',
+            grbReviewers: [],
+            numberOfNoObjection: 4,
+            numberOfObjection: 1,
+            numberOfNotVoted: 3,
+            votingStatus: GRBVotingInformationStatus.IN_PROGRESS
+          }}
+        />
+
+        {/* TODO: Temp dummy data */}
+        {/* <DecisionRecordCard
+              grbVotingInformation={{
+                __typename: 'GRBVotingInformation',
+                grbReviewers: [],
+                numberOfNoObjection: 5,
+                numberOfObjection: 0,
+                numberOfNotVoted: 2,
+                votingStatus: GRBVotingInformationStatus.APPROVED
+              }}
+            /> */}
+
+        {/* TODO: Temp dummy data */}
+        {/* <DecisionRecordCard
+              grbVotingInformation={{
+                __typename: 'GRBVotingInformation',
+                grbReviewers: [],
+                numberOfNoObjection: 3,
+                numberOfObjection: 2,
+                numberOfNotVoted: 2,
+                votingStatus: GRBVotingInformationStatus.NOT_APPROVED
+              }}
+            /> */}
+
+        {/* TODO: Temp dummy data */}
+        {/* <DecisionRecordCard
+              grbVotingInformation={{
+                __typename: 'GRBVotingInformation',
+                grbReviewers: [],
+                numberOfNoObjection: 3,
+                numberOfObjection: 0,
+                numberOfNotVoted: 3,
+                votingStatus: GRBVotingInformationStatus.INCONCLUSIVE
+              }}
+            /> */}
+
+        {/* GRT recommendations to the GRB */}
+        <GRBFeedbackCard
+          systemIntakeID={id}
+          governanceRequestFeedbacks={governanceRequestFeedbacks}
+        />
+
+        {/* Supporting Docs text */}
+        <h2 className="margin-bottom-0 margin-top-6" id="documents">
+          {t('supportingDocuments')}
+        </h2>
+        <p className="margin-top-05 line-height-body-5">
+          {t('supportingDocumentsText')}
+        </p>
+
+        <PresentationLinksCard
+          systemIntakeID={id}
+          grbPresentationLinks={grbReview.grbPresentationLinks}
+        />
+
+        {/* Business Case Card */}
+        <BusinessCaseCard businessCase={businessCase} systemIntakeID={id} />
+
+        {/* Intake Request Link */}
+        <IntakeRequestCard
+          systemIntakeID={id}
+          currentStage={currentStage}
+          annualSpending={annualSpending}
+          submittedAt={submittedAt}
+        />
+
+        {/* Additional Documents Title and Link */}
+        <div className="margin-y-4">
+          <h3 className="margin-bottom-1">{t('additionalDocuments')}</h3>
+
+          {isITGovAdmin && (
+            <UswdsReactLink
+              to="./documents/upload"
+              className="display-flex flex-align-center"
+            >
+              <Icon.Add className="margin-right-1" />
+              <span>{t('additionalDocsLink')}</span>
+            </UswdsReactLink>
+          )}
+        </div>
+
+        <DocumentsTable systemIntakeId={id} documents={grbReview.documents} />
+
+        <Discussions
+          systemIntakeID={id}
+          grbReviewers={grbReview.grbVotingInformation?.grbReviewers}
+          grbReviewStartedAt={grbReview.grbReviewStartedAt}
+          className="margin-top-4 margin-bottom-6"
+        />
+
+        <ParticipantsSection
+          id={id}
+          state={state}
+          grbReviewers={grbReview.grbVotingInformation?.grbReviewers}
+          grbReviewStartedAt={grbReview.grbReviewStartedAt}
+        />
+      </div>
+
       {
         // Remove GRB reviewer modal
         !!reviewerToRemove && (
@@ -184,220 +395,6 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
           </Modal>
         )
       }
-
-      {isForm ? (
-        <GRBReviewerForm
-          isFromGRBSetup={isFromGRBSetup}
-          setReviewerToRemove={setReviewerToRemove}
-          initialGRBReviewers={grbReview.grbVotingInformation?.grbReviewers}
-          grbReviewStartedAt={grbReview.grbReviewStartedAt}
-        />
-      ) : (
-        <>
-          {
-            // Start GRB Review modal
-            startReviewModalIsOpen && (
-              <Modal
-                isOpen={startReviewModalIsOpen}
-                closeModal={() => setStartReviewModalIsOpen(false)}
-              >
-                <ModalHeading>{t('startReviewModal.heading')}</ModalHeading>
-                <p>
-                  {t('startReviewModal.text', {
-                    count: grbReview.grbVotingInformation?.grbReviewers.length
-                  })}
-                </p>
-                <ModalFooter>
-                  <ButtonGroup>
-                    <Button
-                      type="button"
-                      onClick={() =>
-                        startGRBReview()
-                          .then(() => setStartReviewModalIsOpen(false))
-                          .catch(() => {
-                            showMessage(t('startGrbReviewError'), {
-                              type: 'error'
-                            });
-                            setStartReviewModalIsOpen(false);
-                          })
-                      }
-                      className="margin-right-1"
-                    >
-                      {t('startReviewModal.startReview')}
-                    </Button>
-                    <Button
-                      type="button"
-                      onClick={() => setStartReviewModalIsOpen(false)}
-                      unstyled
-                    >
-                      {t('Go back')}
-                    </Button>
-                  </ButtonGroup>
-                </ModalFooter>
-              </Modal>
-            )
-          }
-
-          <div className="padding-bottom-4" id="grbReview">
-            <PageHeading className="margin-y-0">{t('title')}</PageHeading>
-
-            <p className="font-body-md line-height-body-4 text-light margin-top-05 margin-bottom-3">
-              {t('description')}
-            </p>
-
-            {/* TODO: Remove/reuse once BE work done */}
-            {/* {grbReviewStartedAt && (
-              <p className="bg-primary-lighter line-height-body-5 padding-y-1 padding-x-2">
-                <Trans
-                  i18nKey="grbReview:reviewStartedOn"
-                  components={{
-                    date: formatDateLocal(grbReviewStartedAt, 'MM/dd/yyyy')
-                  }}
-                />
-              </p>
-            )} */}
-
-            <GRBReviewAdminTask
-              isITGovAdmin={isITGovAdmin}
-              systemIntakeId={id}
-              grbReviewStartedAt={grbReview.grbReviewStartedAt}
-            />
-
-            {/* GRB Reviewer Voting Panel */}
-            {/* TODO: Add grbReviewStartedAt once work is done to start review */}
-            {/* {!isITGovAdmin && grbReviewStartedAt && currentGRBReviewer && ( */}
-            {!isITGovAdmin && currentGRBReviewer && (
-              <GRBVotingPanel grbReviewer={currentGRBReviewer} />
-            )}
-
-            {/* Review details */}
-            <h2 className="margin-bottom-0 margin-top-6" id="details">
-              {t('reviewDetails.title')}
-            </h2>
-            <p className="margin-top-05 line-height-body-5">
-              {t('reviewDetails.text')}
-            </p>
-
-            <GRBReviewStatusCard grbReview={grbReview} />
-
-            {/* <DecisionRecordCard
-              grbVotingInformation={grbReview.grbVotingInformation}
-            /> */}
-
-            {/* TODO: Temp dummy data */}
-            <DecisionRecordCard
-              grbVotingInformation={{
-                __typename: 'GRBVotingInformation',
-                grbReviewers: [],
-                numberOfNoObjection: 4,
-                numberOfObjection: 1,
-                numberOfNotVoted: 3,
-                votingStatus: GRBVotingInformationStatus.IN_PROGRESS
-              }}
-            />
-
-            {/* TODO: Temp dummy data */}
-            {/* <DecisionRecordCard
-              grbVotingInformation={{
-                __typename: 'GRBVotingInformation',
-                grbReviewers: [],
-                numberOfNoObjection: 5,
-                numberOfObjection: 0,
-                numberOfNotVoted: 2,
-                votingStatus: GRBVotingInformationStatus.APPROVED
-              }}
-            /> */}
-
-            {/* TODO: Temp dummy data */}
-            {/* <DecisionRecordCard
-              grbVotingInformation={{
-                __typename: 'GRBVotingInformation',
-                grbReviewers: [],
-                numberOfNoObjection: 3,
-                numberOfObjection: 2,
-                numberOfNotVoted: 2,
-                votingStatus: GRBVotingInformationStatus.NOT_APPROVED
-              }}
-            /> */}
-
-            {/* TODO: Temp dummy data */}
-            {/* <DecisionRecordCard
-              grbVotingInformation={{
-                __typename: 'GRBVotingInformation',
-                grbReviewers: [],
-                numberOfNoObjection: 3,
-                numberOfObjection: 0,
-                numberOfNotVoted: 3,
-                votingStatus: GRBVotingInformationStatus.INCONCLUSIVE
-              }}
-            /> */}
-
-            {/* GRT recommendations to the GRB */}
-            <GRBFeedbackCard
-              systemIntakeID={id}
-              governanceRequestFeedbacks={governanceRequestFeedbacks}
-            />
-
-            {/* Supporting Docs text */}
-            <h2 className="margin-bottom-0 margin-top-6" id="documents">
-              {t('supportingDocuments')}
-            </h2>
-            <p className="margin-top-05 line-height-body-5">
-              {t('supportingDocumentsText')}
-            </p>
-
-            <PresentationLinksCard
-              systemIntakeID={id}
-              grbPresentationLinks={grbReview.grbPresentationLinks}
-            />
-
-            {/* Business Case Card */}
-            <BusinessCaseCard businessCase={businessCase} systemIntakeID={id} />
-
-            {/* Intake Request Link */}
-            <IntakeRequestCard
-              systemIntakeID={id}
-              currentStage={currentStage}
-              annualSpending={annualSpending}
-              submittedAt={submittedAt}
-            />
-
-            {/* Additional Documents Title and Link */}
-            <div className="margin-y-4">
-              <h3 className="margin-bottom-1">{t('additionalDocuments')}</h3>
-
-              {isITGovAdmin && (
-                <UswdsReactLink
-                  to="./documents/upload"
-                  className="display-flex flex-align-center"
-                >
-                  <Icon.Add className="margin-right-1" />
-                  <span>{t('additionalDocsLink')}</span>
-                </UswdsReactLink>
-              )}
-            </div>
-
-            <DocumentsTable
-              systemIntakeId={id}
-              documents={grbReview.documents}
-            />
-
-            <Discussions
-              systemIntakeID={id}
-              grbReviewers={grbReview.grbVotingInformation?.grbReviewers}
-              grbReviewStartedAt={grbReview.grbReviewStartedAt}
-              className="margin-top-4 margin-bottom-6"
-            />
-
-            <ParticipantsSection
-              id={id}
-              state={state}
-              grbReviewers={grbReview.grbVotingInformation?.grbReviewers}
-              grbReviewStartedAt={grbReview.grbReviewStartedAt}
-            />
-          </div>
-        </>
-      )}
     </>
   );
 };
