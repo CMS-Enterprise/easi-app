@@ -12,6 +12,7 @@ import {
 import DocumentsTable from 'features/ITGovernance/_components/DocumentsTable';
 import {
   GetSystemIntakeGRBReviewDocument,
+  GRBVotingInformationStatus,
   SystemIntakeFragmentFragment,
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewerVotingRole,
@@ -279,8 +280,17 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
 
             <GRBReviewStatusCard grbReview={grbReview} />
 
+            {/* TODO: Temp dummy data */}
             <DecisionRecordCard
-              grbVotingInformation={grbReview.grbVotingInformation}
+              // grbVotingInformation={grbReview.grbVotingInformation}
+              grbVotingInformation={{
+                __typename: 'GRBVotingInformation',
+                grbReviewers: [],
+                numberOfNoObjection: 4,
+                numberOfObjection: 1,
+                numberOfNotVoted: 3,
+                votingStatus: GRBVotingInformationStatus.IN_PROGRESS
+              }}
             />
 
             {/* GRT recommendations to the GRB */}

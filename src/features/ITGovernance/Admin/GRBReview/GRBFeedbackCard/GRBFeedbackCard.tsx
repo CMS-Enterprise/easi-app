@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { CardBody, CardHeader } from '@trussworks/react-uswds';
+import { Card, CardBody, CardHeader } from '@trussworks/react-uswds';
 import FeedbackList from 'features/ITGovernance/Requester/TaskList/Feedback/FeedbackList';
 import {
   GovernanceRequestFeedbackFragmentFragment,
@@ -27,7 +27,10 @@ function GRBFeedbackCard({
     ).length > 0;
 
   return (
-    <div className="usa-card__container margin-x-0 border-width-1px shadow-2 margin-top-3 margin-bottom-4">
+    <Card
+      containerProps={{ className: 'margin-0 radius-md shadow-2' }}
+      className="margin-top-2"
+    >
       <CardHeader>
         <h3 className="display-inline-block margin-right-2 margin-bottom-0">
           {t('reviewDetails.grbFeedback.title')}
@@ -60,7 +63,7 @@ function GRBFeedbackCard({
           </Alert>
         )}
       </CardBody>
-    </div>
+    </Card>
   );
 }
 

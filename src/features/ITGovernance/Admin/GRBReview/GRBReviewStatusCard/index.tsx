@@ -124,7 +124,7 @@ const GRBReviewStatusCard = ({
 
           {isITGovAdmin && (
             <UswdsReactLink
-              to="./dates"
+              to={`/it-governance/${grbReview.id}/dates`}
               className="usa-button usa-button--outline margin-top-1"
             >
               {t('statusCard.changeMeetingDate')}
