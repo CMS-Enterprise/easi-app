@@ -285,9 +285,12 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
               grbReviewStartedAt={grbReview.grbReviewStartedAt}
             />
 
+            {/* <DecisionRecordCard
+              grbVotingInformation={grbReview.grbVotingInformation}
+            /> */}
+
             {/* TODO: Temp dummy data */}
             <DecisionRecordCard
-              // grbVotingInformation={grbReview.grbVotingInformation}
               grbVotingInformation={{
                 __typename: 'GRBVotingInformation',
                 grbReviewers: [],
@@ -297,6 +300,42 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
                 votingStatus: GRBVotingInformationStatus.IN_PROGRESS
               }}
             />
+
+            {/* TODO: Temp dummy data */}
+            {/* <DecisionRecordCard
+              grbVotingInformation={{
+                __typename: 'GRBVotingInformation',
+                grbReviewers: [],
+                numberOfNoObjection: 5,
+                numberOfObjection: 0,
+                numberOfNotVoted: 2,
+                votingStatus: GRBVotingInformationStatus.APPROVED
+              }}
+            /> */}
+
+            {/* TODO: Temp dummy data */}
+            {/* <DecisionRecordCard
+              grbVotingInformation={{
+                __typename: 'GRBVotingInformation',
+                grbReviewers: [],
+                numberOfNoObjection: 3,
+                numberOfObjection: 2,
+                numberOfNotVoted: 2,
+                votingStatus: GRBVotingInformationStatus.NOT_APPROVED
+              }}
+            /> */}
+
+            {/* TODO: Temp dummy data */}
+            {/* <DecisionRecordCard
+              grbVotingInformation={{
+                __typename: 'GRBVotingInformation',
+                grbReviewers: [],
+                numberOfNoObjection: 3,
+                numberOfObjection: 0,
+                numberOfNotVoted: 3,
+                votingStatus: GRBVotingInformationStatus.INCONCLUSIVE
+              }}
+            /> */}
 
             {/* GRT recommendations to the GRB */}
             <GRBFeedbackCard
@@ -322,6 +361,7 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
 
             {/* Intake Request Link */}
             <IntakeRequestCard
+              systemIntakeID={id}
               currentStage={currentStage}
               annualSpending={annualSpending}
               submittedAt={submittedAt}

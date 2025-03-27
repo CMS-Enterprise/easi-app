@@ -19,6 +19,7 @@ import ReviewRow from 'components/ReviewRow';
 import { formatDateLocal } from 'utils/date';
 
 export type IntakeRequestCardProps = {
+  systemIntakeID: string;
   currentStage: SystemIntakeFragmentFragment['currentStage'];
   annualSpending: SystemIntakeFragmentFragment['annualSpending'];
   submittedAt: SystemIntakeFragmentFragment['submittedAt'];
@@ -26,6 +27,7 @@ export type IntakeRequestCardProps = {
 };
 
 const IntakeRequestCard = ({
+  systemIntakeID,
   currentStage,
   annualSpending,
   submittedAt,
@@ -114,7 +116,7 @@ const IntakeRequestCard = ({
         <IconLink
           icon={<Icon.ArrowForward />}
           iconPosition="after"
-          to="./intake-request"
+          to={`/it-governance/${systemIntakeID}/intake-request`}
           className="margin-top-1"
         >
           {t('requestDetails.viewFullIntake')}
