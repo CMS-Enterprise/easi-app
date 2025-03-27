@@ -1,24 +1,15 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
+import { Button, ButtonGroup } from '@trussworks/react-uswds';
 import {
-  Button,
-  ButtonGroup,
-  ModalFooter,
-  ModalHeading
-} from '@trussworks/react-uswds';
-import {
-  GetSystemIntakeGRBReviewDocument,
   SystemIntakeGRBReviewerFragment,
-  SystemIntakeState,
-  useDeleteSystemIntakeGRBReviewerMutation
+  SystemIntakeState
 } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import UswdsReactLink from 'components/LinkWrapper';
-import Modal from 'components/Modal';
-import useMessage from 'hooks/useMessage';
 
 import ITGovAdminContext from '../../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
@@ -47,74 +38,8 @@ const ParticipantsSection = ({
 
   const isITGovAdmin = useContext(ITGovAdminContext);
 
-  const { showMessage } = useMessage();
-
-  const [reviewerToRemove, setReviewerToRemove] =
-    useState<SystemIntakeGRBReviewerFragment | null>(null);
-
-  const [mutate] = useDeleteSystemIntakeGRBReviewerMutation({
-    refetchQueries: [GetSystemIntakeGRBReviewDocument]
-  });
-
-  const removeGRBReviewer = useCallback(
-    (reviewer: SystemIntakeGRBReviewerFragment) => {
-      mutate({ variables: { input: { reviewerID: reviewer.id } } })
-        .then(() =>
-          showMessage(
-            <Trans
-              i18nKey="grbReview:messages.success.remove"
-              values={{ commonName: reviewer.userAccount.commonName }}
-            />,
-            { type: 'success' }
-          )
-        )
-        .catch(() =>
-          showMessage(t('form.messages.error.remove'), { type: 'error' })
-        );
-
-      // Reset `reviewerToRemove` to close modal
-      setReviewerToRemove(null);
-    },
-    [mutate, showMessage, t, setReviewerToRemove]
-  );
-
   return (
     <>
-      {
-        // Remove GRB reviewer modal
-        !!reviewerToRemove && (
-          <Modal
-            isOpen={!!reviewerToRemove}
-            closeModal={() => setReviewerToRemove(null)}
-          >
-            <ModalHeading>
-              {t('removeModal.title', {
-                commonName: reviewerToRemove.userAccount.commonName
-              })}
-            </ModalHeading>
-            <p>{t('removeModal.text')}</p>
-            <ModalFooter>
-              <ButtonGroup>
-                <Button
-                  type="button"
-                  onClick={() => removeGRBReviewer(reviewerToRemove)}
-                  className="bg-error margin-right-1"
-                >
-                  {t('removeModal.remove')}
-                </Button>
-                <Button
-                  type="button"
-                  onClick={() => setReviewerToRemove(null)}
-                  unstyled
-                >
-                  {t('Cancel')}
-                </Button>
-              </ButtonGroup>
-            </ModalFooter>
-          </Modal>
-        )
-      }
-
       <h2 className="margin-bottom-0" id="participants">
         {t('participants')}
       </h2>
