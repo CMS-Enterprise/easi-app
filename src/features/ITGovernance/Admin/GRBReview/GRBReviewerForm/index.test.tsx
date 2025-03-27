@@ -254,7 +254,6 @@ describe('GRB reviewer form', () => {
                 <ITGovAdminContext.Provider value>
                   <ParticipantsSection
                     id={systemIntake.id}
-                    isForm={false}
                     state={systemIntake.state}
                     grbReviewers={[
                       {
@@ -352,7 +351,6 @@ describe('GRB reviewer form', () => {
                 <ITGovAdminContext.Provider value>
                   <ParticipantsSection
                     id={systemIntake.id}
-                    isForm={false}
                     state={systemIntake.state}
                     grbReviewers={[
                       {
@@ -418,7 +416,6 @@ describe('GRB reviewer form', () => {
               systemId={systemIntake.id}
               initialGRBReviewers={[grbReviewer]}
               createGRBReviewers={vi.fn()}
-              setReviewerToRemove={vi.fn()}
               grbReviewPath="/it-governance/123/grb-review"
             />
           </MessageProvider>

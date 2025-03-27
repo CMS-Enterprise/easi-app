@@ -1,7 +1,6 @@
 import React, { useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import { Icon } from '@trussworks/react-uswds';
 import DocumentsTable from 'features/ITGovernance/_components/DocumentsTable';
 import {
@@ -14,7 +13,6 @@ import { AppState } from 'stores/reducers/rootReducer';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import { BusinessCaseModel } from 'types/businessCase';
-import { GRBReviewFormAction } from 'types/grbReview';
 
 import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
@@ -39,10 +37,6 @@ type GRBReviewProps = {
 const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
   const { t } = useTranslation('grbReview');
 
-  const { action } = useParams<{
-    action?: GRBReviewFormAction;
-  }>();
-
   const {
     id,
     currentStage,
@@ -61,8 +55,6 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
   const grbReview = useMemo(() => {
     return data?.systemIntake;
   }, [data?.systemIntake]);
-
-  const isForm = !!action;
 
   const { euaId } = useSelector((appState: AppState) => appState.auth);
 
@@ -181,7 +173,6 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
         {/* Participants Table */}
         <ParticipantsSection
           id={id}
-          isForm={isForm}
           state={state}
           grbReviewers={grbReview.grbVotingInformation?.grbReviewers}
           grbReviewStartedAt={grbReview.grbReviewStartedAt}

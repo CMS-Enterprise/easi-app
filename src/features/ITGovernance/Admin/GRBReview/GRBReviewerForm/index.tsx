@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { Grid, GridContainer, Icon } from '@trussworks/react-uswds';
@@ -32,11 +32,10 @@ const GRBReviewerForm = ({
   grbReviewStartedAt
 }: GRBReviewerFormProps) => {
   const { t } = useTranslation('grbReview');
-  const { showMessage, showMessageOnNextPage } = useMessage();
-  const history = useHistory();
 
-  const [, setReviewerToRemove] =
-    useState<SystemIntakeGRBReviewerFragment | null>(null);
+  const { showMessage, showMessageOnNextPage } = useMessage();
+
+  const history = useHistory();
 
   const { systemId, action } = useParams<{
     systemId: string;
@@ -123,8 +122,8 @@ const GRBReviewerForm = ({
                   systemId={systemId}
                   initialGRBReviewers={initialGRBReviewers}
                   createGRBReviewers={createGRBReviewers}
-                  setReviewerToRemove={setReviewerToRemove}
                   grbReviewStartedAt={grbReviewStartedAt}
+                  isFromGRBSetup={isFromGRBSetup}
                 />
               </TabPanel>
               <TabPanel
@@ -145,8 +144,8 @@ const GRBReviewerForm = ({
               systemId={systemId}
               initialGRBReviewers={initialGRBReviewers}
               createGRBReviewers={createGRBReviewers}
-              setReviewerToRemove={setReviewerToRemove}
               grbReviewStartedAt={grbReviewStartedAt}
+              isFromGRBSetup={isFromGRBSetup}
             />
           )
         }

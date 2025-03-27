@@ -29,7 +29,6 @@ type ParticipantsSectionProps = {
   state: SystemIntakeState;
   grbReviewers: SystemIntakeGRBReviewerFragment[];
   grbReviewStartedAt?: string | null;
-  isForm: boolean;
 };
 
 /**
@@ -39,8 +38,7 @@ const ParticipantsSection = ({
   id,
   state,
   grbReviewers,
-  grbReviewStartedAt,
-  isForm
+  grbReviewStartedAt
 }: ParticipantsSectionProps) => {
   const { t } = useTranslation('grbReview');
 
@@ -76,13 +74,8 @@ const ParticipantsSection = ({
 
       // Reset `reviewerToRemove` to close modal
       setReviewerToRemove(null);
-
-      // If removing reviewer from form, go to GRB Review page
-      if (isForm) {
-        history.push(`/it-governance/${id}/grb-review`);
-      }
     },
-    [history, isForm, id, mutate, showMessage, t, setReviewerToRemove]
+    [mutate, showMessage, t, setReviewerToRemove]
   );
 
   return (
