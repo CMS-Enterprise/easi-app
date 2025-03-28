@@ -24,14 +24,14 @@ func getTestEmailConfig() email.Config {
 	}
 }
 
-func NewEmailClient() (*email.Client, *mockSender) {
-	sender := &mockSender{}
+func NewEmailClient() (*email.Client, *MockSender) {
+	sender := &MockSender{}
 	emailConfig := getTestEmailConfig()
 	emailClient, _ := email.NewClient(emailConfig, sender)
 	return &emailClient, sender
 }
 
-type mockSender struct {
+type MockSender struct {
 	toAddresses  []models.EmailAddress
 	ccAddresses  []models.EmailAddress
 	bccAddresses []models.EmailAddress
@@ -41,7 +41,7 @@ type mockSender struct {
 	sentEmails   []email.Email
 }
 
-func (s *mockSender) Send(ctx context.Context, emailData email.Email) error {
+func (s *MockSender) Send(ctx context.Context, emailData email.Email) error {
 	s.toAddresses = emailData.ToAddresses
 	s.ccAddresses = emailData.CcAddresses
 	s.bccAddresses = emailData.BccAddresses
@@ -52,7 +52,7 @@ func (s *mockSender) Send(ctx context.Context, emailData email.Email) error {
 	return nil
 }
 
-func (s *mockSender) Clear() {
+func (s *MockSender) Clear() {
 	s.toAddresses = []models.EmailAddress{}
 	s.ccAddresses = []models.EmailAddress{}
 	s.bccAddresses = []models.EmailAddress{}

@@ -3,8 +3,10 @@ package scheduler
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/go-co-op/gocron/v2"
+	"github.com/google/uuid"
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
@@ -15,6 +17,8 @@ import (
 )
 
 // ScheduledJobFunction is an abstraction around scheduled jobs and tasks it defines
+// TODO: consider adding additional output parameters to the function signature. This can also be a generic
+// while not useful for the scheduler itself, it might be useful for testing purposes to validate the results.
 type ScheduledJobFunction[input comparable] func(context.Context, input) error
 
 // RegisterJobFunction is a function that registers a job with the scheduler and returns the job
@@ -102,11 +106,20 @@ func (sjw *ScheduledJobWrapper[input]) Register(scheduler *Scheduler) {
 // decoratedLogger returns a logger with the job's metadata
 // ideally, you should just call the logger method on the ScheduledJobWrapper, which in turn calls this.
 func (sjw *ScheduledJobWrapper[input]) decoratedLogger(logger *zap.Logger) *zap.Logger {
-	lastRun, errLastRun := sjw.job.LastRun()
-	nextRun, errNextRun := sjw.job.NextRun()
+	var lastRun time.Time
+	var nextRun time.Time
+	var errLastRun error
+	var errNextRun error
+	var jobID uuid.UUID
+
+	if sjw.job != nil {
+		lastRun, errLastRun = sjw.job.LastRun()
+		nextRun, errNextRun = sjw.job.NextRun()
+		jobID = sjw.job.ID()
+	}
 
 	decoratedLogger := logger.With(logfields.SchedulerAppSection,
-		logfields.JobID(sjw.job.ID()),
+		logfields.JobID(jobID),
 		logfields.JobName(sjw.name),
 		logfields.NextRunTime(nextRun),
 		logfields.LastRunTime(lastRun),
