@@ -122,6 +122,18 @@ func (info *GRBVotingInformation) QuorumReached() bool {
 	return info.NumberOfVoted() >= numberOfVotesForQuorum
 }
 
+func (info *GRBVotingInformation) votingEndedManually() bool {
+	if info.SystemIntake == nil {
+		return false
+	}
+
+	if info.SystemIntake.GrbReviewAsyncManualEndDate == nil {
+		return false
+	}
+
+	return time.Now().After(*info.SystemIntake.GrbReviewAsyncManualEndDate)
+}
+
 // VotingStatus returns the status of the GRB voting process. GQL will resolver to this field to return
 //
 // rules:
@@ -158,22 +170,24 @@ func (info *GRBVotingInformation) VotingStatus() GRBVotingInformationStatus {
 
 	now := time.Now()
 	quorumReached := info.QuorumReached()
+	votingEndedManually := info.votingEndedManually()
 
 	// if manually ended and quorum not reached, inconclusive result
-	if info.SystemIntake.GrbReviewAsyncManualEndDate != nil && now.After(*info.SystemIntake.GrbReviewAsyncManualEndDate) && !quorumReached {
+	if votingEndedManually && !quorumReached {
 		return GRBVSInconclusive
 	}
 
-	// check if currently in progress
-	if now.After(*info.SystemIntake.GRBReviewStartedAt) && now.Before(*info.SystemIntake.GrbReviewAsyncEndDate) {
-		return GRBVSInProgress
-	}
+	if !votingEndedManually {
+		// check if currently in progress
+		if now.After(*info.SystemIntake.GRBReviewStartedAt) && now.Before(*info.SystemIntake.GrbReviewAsyncEndDate) {
+			return GRBVSInProgress
+		}
 
-	// past due, but still in progress
-	if now.After(*info.SystemIntake.GrbReviewAsyncEndDate) && !quorumReached {
-		return GRBVSInProgress
+		// past due, but still in progress
+		if now.After(*info.SystemIntake.GrbReviewAsyncEndDate) && !quorumReached {
+			return GRBVSInProgress
+		}
 	}
-
 	// we know here that the end date has passed
 
 	objections := info.NumberOfObjection()
