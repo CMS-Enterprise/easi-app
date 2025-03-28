@@ -46,9 +46,7 @@ const GRBReviewAdminTask = ({
               label: t('adminTask.takeADifferentAction'),
               unstyled: true,
               onClick: () =>
-                history.push(
-                  `/it-governance/${systemIntakeId}/grb-review/reviewers`
-                )
+                history.push(`/it-governance/${systemIntakeId}/actions`)
             }
           ]}
         >
