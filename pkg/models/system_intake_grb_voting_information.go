@@ -169,7 +169,7 @@ func (info *GRBVotingInformation) VotingStatus() GRBVotingInformationStatus {
 		return GRBVSInProgress
 	}
 
-	// in progress
+	// past due, but still in progress
 	if now.After(*info.SystemIntake.GrbReviewAsyncEndDate) && !quorumReached {
 		return GRBVSInProgress
 	}
