@@ -93,6 +93,8 @@ func calcSystemIntakeGRBMeetingStatusAdmin(intake *models.SystemIntake) models.S
 	return models.SISAGrbReviewComplete
 }
 
+// this function is pretty similar to the logic in CalcSystemIntakeGRBReviewStandardStatus
+// TODO Consider refactoring to share the logic?
 func calcSystemIntakeStandardGRBReviewStatusAdmin(grbDate *time.Time) models.SystemIntakeStatusAdmin {
 	if grbDate == nil || grbDate.After(time.Now()) {
 		return models.SISAGrbMeetingReady

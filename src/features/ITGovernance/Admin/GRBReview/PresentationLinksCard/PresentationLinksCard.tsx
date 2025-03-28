@@ -96,6 +96,9 @@ function PresentationLinksCard({
       });
   };
 
+  // Render empty if not an admin and no links
+  if (!isITGovAdmin && !hasAnyLinks) return null;
+
   return (
     <>
       {/* Asynchronous presentation links card */}
