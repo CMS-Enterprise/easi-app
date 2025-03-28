@@ -55,7 +55,7 @@ const ParticipantsSection = ({
           <div className="desktop:display-flex flex-align-center">
             <Button
               type="button"
-              onClick={() => history.push(`${pathname}/add`)}
+              onClick={() => history.push(`${pathname}add`)}
               disabled={state === SystemIntakeState.CLOSED}
               outline={grbReviewers?.length > 0}
             >
