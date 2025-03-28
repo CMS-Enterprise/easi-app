@@ -13,14 +13,16 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
+const dateFormat = "01/02/2006"
+
 type SendGRBReviewerInvitedToVoteInput struct {
 	Recipient          models.EmailAddress
+	StartDate          time.Time
 	EndDate            time.Time
 	SystemIntakeID     uuid.UUID
 	ProjectName        string
 	RequesterName      string
 	RequesterComponent string
-	DateInfo           string
 }
 
 type grbReviewerInvitedToVoteBody struct {
@@ -40,13 +42,16 @@ func (sie systemIntakeEmails) grbReviewerInvitedToVoteBody(input SendGRBReviewer
 
 	grbReviewPath := path.Join("it-governance", input.SystemIntakeID.String(), "grb-review")
 
+	formattedStart := input.StartDate.Format(dateFormat)
+	formattedEnd := input.EndDate.Format(dateFormat)
+
 	data := grbReviewerInvitedToVoteBody{
 		EndDate:                  input.EndDate,
 		SystemIntakeLink:         grbReviewPath,
 		ProjectName:              input.ProjectName,
 		RequesterName:            input.RequesterName,
 		RequesterComponent:       input.RequesterComponent,
-		DateInfo:                 input.DateInfo,
+		DateInfo:                 fmt.Sprintf("%[1]s-%[2]s", formattedStart, formattedEnd),
 		ITGovernanceInboxAddress: sie.client.config.GRTEmail,
 	}
 
