@@ -114,7 +114,7 @@ const taskList = {
     link: 'Review and Submit'
   },
   attendGRB: {
-    heading: 'Attend the GRB meeting',
+    heading: 'Attend the GRB review',
     description:
       'The Governance Review Board will discuss and make decisions based on the Business Case and recommendations from the Review Team.'
   },
@@ -130,12 +130,13 @@ const taskList = {
     viewSubmittedBusinessCase: 'View submitted request form',
     updateDraftBusinessCase: 'Update draft Business Case',
     updateSubmittedBusinessCase: 'Update submitted draft Business Case',
-    prepareGRB: 'Prepare for the GRB meeting (opens in new tab)',
+    prepareGRB: 'Prepare for the GRB review (opens in new tab)',
     prepareGRT: 'Prepare for the GRT meeting (opens in new tab)',
     readDecision: 'Read decision from board'
   },
   taskStatus: {
     AWAITING_DECISION: 'Awaiting decision',
+    AWAITING_GRB_REVIEW: 'Awaiting GRB review',
     CANT_START: 'Cannot start yet',
     CANNOT_START_YET: 'Cannot start yet',
     COMPLETED: 'Completed',
@@ -149,6 +150,7 @@ const taskList = {
     READY_FOR_REVIEW: 'Ready for review',
     READY_TO_SCHEDULE: 'Ready to schedule',
     READY_TO_START: 'Ready to start',
+    REVIEW_IN_PROGRESS: 'Review in progress',
     SCHEDULED: 'Scheduled'
   },
   taskStatusInfo: {

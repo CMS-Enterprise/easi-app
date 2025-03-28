@@ -1,399 +1,183 @@
-import React, { useCallback, useContext, useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router-dom';
+import React, { useContext, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { Icon } from '@trussworks/react-uswds';
+import DocumentsTable from 'features/ITGovernance/_components/DocumentsTable';
 import {
-  Button,
-  ButtonGroup,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Icon,
-  ModalFooter,
-  ModalHeading
-} from '@trussworks/react-uswds';
-import DocumentsTable from 'features/ITGovernance/Requester/SystemIntake/Documents/DocumentsTable';
-import {
-  GetSystemIntakeGRBReviewersDocument,
-  SystemIntakeDocumentFragmentFragment,
   SystemIntakeFragmentFragment,
-  SystemIntakeGRBReviewerFragment,
-  SystemIntakeState,
-  useDeleteSystemIntakeGRBReviewerMutation,
-  useStartGRBReviewMutation
+  SystemIntakeGRBReviewerVotingRole,
+  useGetSystemIntakeGRBReviewQuery
 } from 'gql/generated/graphql';
+import { AppState } from 'stores/reducers/rootReducer';
 
-import Alert from 'components/Alert';
-import {
-  DescriptionDefinition,
-  DescriptionList,
-  DescriptionTerm
-} from 'components/DescriptionGroup';
 import UswdsReactLink from 'components/LinkWrapper';
-import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
-import useMessage from 'hooks/useMessage';
 import { BusinessCaseModel } from 'types/businessCase';
-import { GRBReviewFormAction } from 'types/grbReview';
-import { formatDateLocal } from 'utils/date';
 
-import ITGovAdminContext from '../ITGovAdminContext';
+import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
+import GRBFeedbackCard from './GRBFeedbackCard/GRBFeedbackCard';
+import ParticipantsSection from './ParticipantsSection/ParticipantsSection';
+import PresentationLinksCard from './PresentationLinksCard/PresentationLinksCard';
+import BusinessCaseCard from './BusinessCaseCard';
+import DecisionRecordCard from './DecisionRecordCard';
 import Discussions from './Discussions';
-import GRBFeedbackCard from './GRBFeedbackCard';
-import GRBReviewerForm from './GRBReviewerForm';
+import GRBReviewAdminTask from './GRBReviewAdminTask';
+import GRBReviewStatusCard, { GRBReviewStatus } from './GRBReviewStatusCard';
+import GRBVotingPanel from './GRBVotingPanel';
 import IntakeRequestCard from './IntakeRequestCard';
-import ParticipantsTable from './ParticipantsTable';
-import PresentationLinksCard from './PresentationLinksCard';
 
 import './index.scss';
 
 type GRBReviewProps = {
-  id: string;
-  submittedAt?: string | null;
-  state: SystemIntakeState;
+  systemIntake: SystemIntakeFragmentFragment;
   businessCase: BusinessCaseModel;
-  grbReviewers: SystemIntakeGRBReviewerFragment[];
-  documents: SystemIntakeDocumentFragmentFragment[];
-  grbReviewStartedAt?: string | null;
-  grbPresentationLinks?: SystemIntakeFragmentFragment['grbPresentationLinks'];
-  governanceRequestFeedbacks: SystemIntakeFragmentFragment['governanceRequestFeedbacks'];
-  currentStage?: SystemIntakeFragmentFragment['currentStage'];
-  annualSpending?: SystemIntakeFragmentFragment['annualSpending'];
 };
 
-const GRBReview = ({
-  id,
-  businessCase,
-  submittedAt,
-  state,
-  grbReviewers,
-  documents,
-  grbReviewStartedAt,
-  grbPresentationLinks,
-  governanceRequestFeedbacks,
-  currentStage,
-  annualSpending
-}: GRBReviewProps) => {
+const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
   const { t } = useTranslation('grbReview');
-  const history = useHistory();
 
-  const { action } = useParams<{
-    action?: GRBReviewFormAction;
-  }>();
+  const {
+    id,
+    currentStage,
+    state,
+    submittedAt,
+    annualSpending,
+    governanceRequestFeedbacks
+  } = systemIntake;
 
-  const isForm = !!action;
-
-  const [reviewerToRemove, setReviewerToRemove] =
-    useState<SystemIntakeGRBReviewerFragment | null>(null);
-
-  const [startReviewModalIsOpen, setStartReviewModalIsOpen] =
-    useState<boolean>(false);
-
-  const { showMessage } = useMessage();
-
-  const [mutate] = useDeleteSystemIntakeGRBReviewerMutation({
-    refetchQueries: [GetSystemIntakeGRBReviewersDocument]
-  });
-
-  const [startGRBReview] = useStartGRBReviewMutation({
+  const { data } = useGetSystemIntakeGRBReviewQuery({
     variables: {
-      input: {
-        systemIntakeID: id
-      }
-    },
-    refetchQueries: [
-      {
-        query: GetSystemIntakeGRBReviewersDocument,
-        variables: { id }
-      }
-    ]
+      id
+    }
   });
+
+  const grbReview = useMemo(() => {
+    return data?.systemIntake;
+  }, [data?.systemIntake]);
+
+  const { euaId } = useSelector((appState: AppState) => appState.auth);
+
+  const currentGRBReviewer = grbReview?.grbVotingInformation?.grbReviewers.find(
+    reviewer =>
+      reviewer.userAccount.username === euaId &&
+      reviewer.votingRole === SystemIntakeGRBReviewerVotingRole.VOTING
+  );
 
   const isITGovAdmin = useContext(ITGovAdminContext);
 
-  const removeGRBReviewer = useCallback(
-    (reviewer: SystemIntakeGRBReviewerFragment) => {
-      mutate({ variables: { input: { reviewerID: reviewer.id } } })
-        .then(() =>
-          showMessage(
-            <Trans
-              i18nKey="grbReview:messages.success.remove"
-              values={{ commonName: reviewer.userAccount.commonName }}
-            />,
-            { type: 'success' }
-          )
-        )
-        .catch(() =>
-          showMessage(t('form.messages.error.remove'), { type: 'error' })
-        );
-
-      // Reset `reviewerToRemove` to close modal
-      setReviewerToRemove(null);
-
-      // If removing reviewer from form, go to GRB Review page
-      if (isForm) {
-        history.push(`/it-governance/${id}/grb-review`);
-      }
-    },
-    [history, isForm, id, mutate, showMessage, t]
-  );
+  if (!grbReview) {
+    return null;
+  }
 
   return (
     <>
-      {
-        // Remove GRB reviewer modal
-        !!reviewerToRemove && (
-          <Modal
-            isOpen={!!reviewerToRemove}
-            closeModal={() => setReviewerToRemove(null)}
-          >
-            <ModalHeading>
-              {t('removeModal.title', {
-                commonName: reviewerToRemove.userAccount.commonName
-              })}
-            </ModalHeading>
-            <p>{t('removeModal.text')}</p>
-            <ModalFooter>
-              <ButtonGroup>
-                <Button
-                  type="button"
-                  onClick={() => removeGRBReviewer(reviewerToRemove)}
-                  className="bg-error margin-right-1"
-                >
-                  {t('removeModal.remove')}
-                </Button>
-                <Button
-                  type="button"
-                  onClick={() => setReviewerToRemove(null)}
-                  unstyled
-                >
-                  {t('Cancel')}
-                </Button>
-              </ButtonGroup>
-            </ModalFooter>
-          </Modal>
-        )
-      }
+      <div className="padding-bottom-4" id="grbReview">
+        <PageHeading className="margin-y-0">{t('title')}</PageHeading>
 
-      {isForm ? (
-        <GRBReviewerForm
-          setReviewerToRemove={setReviewerToRemove}
-          initialGRBReviewers={grbReviewers}
-          grbReviewStartedAt={grbReviewStartedAt}
+        <p className="font-body-md line-height-body-4 text-light margin-top-05 margin-bottom-3">
+          {t('description')}
+        </p>
+
+        {/* GRB Admin Task */}
+        <GRBReviewAdminTask
+          isITGovAdmin={isITGovAdmin}
+          systemIntakeId={id}
+          grbReviewStartedAt={grbReview.grbReviewStartedAt}
         />
-      ) : (
-        <>
-          {
-            // Start GRB Review modal
-            startReviewModalIsOpen && (
-              <Modal
-                isOpen={startReviewModalIsOpen}
-                closeModal={() => setStartReviewModalIsOpen(false)}
-              >
-                <ModalHeading>{t('startReviewModal.heading')}</ModalHeading>
-                <p>
-                  {t('startReviewModal.text', { count: grbReviewers.length })}
-                </p>
-                <ModalFooter>
-                  <ButtonGroup>
-                    <Button
-                      type="button"
-                      onClick={() =>
-                        startGRBReview()
-                          .then(() => setStartReviewModalIsOpen(false))
-                          .catch(() => {
-                            showMessage(t('startGrbReviewError'), {
-                              type: 'error'
-                            });
-                            setStartReviewModalIsOpen(false);
-                          })
-                      }
-                      className="margin-right-1"
-                    >
-                      {t('startReviewModal.startReview')}
-                    </Button>
-                    <Button
-                      type="button"
-                      onClick={() => setStartReviewModalIsOpen(false)}
-                      unstyled
-                    >
-                      {t('Go back')}
-                    </Button>
-                  </ButtonGroup>
-                </ModalFooter>
-              </Modal>
-            )
-          }
 
-          <div className="padding-bottom-4" id="grbReview">
-            <PageHeading className="margin-y-0">{t('title')}</PageHeading>
-            <p className="font-body-md line-height-body-4 text-light margin-top-05 margin-bottom-3">
-              {t('description')}
-            </p>
-            {/* Feature in progress alert */}
-            <Alert type="info" heading={t('featureInProgress')}>
-              <Trans
-                i18nKey="grbReview:featureInProgressText"
-                components={{
-                  a: (
-                    <UswdsReactLink to="/help/send-feedback" target="_blank">
-                      feedback form
-                    </UswdsReactLink>
-                  )
-                }}
-              />
-            </Alert>
-            {grbReviewStartedAt && (
-              <p className="bg-primary-lighter line-height-body-5 padding-y-1 padding-x-2">
-                <Trans
-                  i18nKey="grbReview:reviewStartedOn"
-                  components={{
-                    date: formatDateLocal(grbReviewStartedAt, 'MM/dd/yyyy')
-                  }}
-                />
-              </p>
-            )}
-            {
-              // Only show button if user is admin and review has not been started
-              !grbReviewStartedAt && isITGovAdmin && (
-                <Button
-                  type="button"
-                  onClick={() => setStartReviewModalIsOpen(true)}
-                  className="margin-top-3"
-                  id="startGrbReview"
-                >
-                  {t('startGrbReview')}
-                </Button>
-              )
-            }
+        {/* GRB Reviewer Voting Panel */}
+        {/* TODO: Add grbReviewStartedAt once work is done to start review */}
+        {/* {!isITGovAdmin && grbReviewStartedAt && currentGRBReviewer && ( */}
+        {!isITGovAdmin && currentGRBReviewer && (
+          <GRBVotingPanel grbReviewer={currentGRBReviewer} />
+        )}
 
-            {/* Review details */}
-            <h2 className="margin-bottom-0 margin-top-6" id="details">
-              {t('reviewDetails.title')}
-            </h2>
-            <p className="margin-top-05 line-height-body-5">
-              {t('reviewDetails.text')}
-            </p>
+        {/* Review details */}
+        <h2 className="margin-bottom-0 margin-top-6" id="details">
+          {t('reviewDetails.title')}
+        </h2>
+        <p className="margin-top-05 line-height-body-5">
+          {t('reviewDetails.text')}
+        </p>
 
-            {/* GRT recommendations to the GRB */}
-            <GRBFeedbackCard
-              systemIntakeID={id}
-              governanceRequestFeedbacks={governanceRequestFeedbacks}
-            />
+        {/* GRB Review Status */}
+        <GRBReviewStatusCard
+          grbReviewType={grbReview.grbReviewType}
+          grbDate={grbReview.grbDate}
+          grbReviewStatus={GRBReviewStatus.SCHEDULED}
+          grbReviewStartedAt={grbReview.grbReviewStartedAt}
+        />
 
-            {/* Supporting Docs text */}
-            <h2 className="margin-bottom-0 margin-top-6" id="documents">
-              {t('supportingDocuments')}
-            </h2>
-            <p className="margin-top-05 line-height-body-5">
-              {t('supportingDocumentsText')}
-            </p>
+        <DecisionRecordCard
+          grbVotingInformation={grbReview.grbVotingInformation}
+        />
 
-            <PresentationLinksCard
-              systemIntakeID={id}
-              grbPresentationLinks={grbPresentationLinks}
-            />
+        {/* GRT recommendations to the GRB */}
+        <GRBFeedbackCard
+          systemIntakeID={id}
+          governanceRequestFeedbacks={governanceRequestFeedbacks}
+        />
 
-            {/* Business Case Card */}
-            <div className="usa-card__container margin-x-0 border-width-1px shadow-2 margin-top-3 margin-bottom-4">
-              <CardHeader>
-                <h3 className="display-inline-block margin-right-2 margin-bottom-0">
-                  {t('businessCaseOverview.title')}
-                </h3>
-                {/* TODO: update these checks to use submittedAt when implemented */}
-                {businessCase.id && businessCase.updatedAt && (
-                  <span className="text-base display-inline-block">
-                    {t('businessCaseOverview.submitted')}{' '}
-                    {formatDateLocal(businessCase.updatedAt, 'MM/dd/yyyy')}
-                  </span>
-                )}
-              </CardHeader>
-              {businessCase.id && businessCase.businessNeed ? (
-                <>
-                  <CardBody>
-                    <DescriptionList>
-                      <DescriptionTerm
-                        term={t('businessCaseOverview.need')}
-                        className="margin-bottom-0"
-                      />
-                      <DescriptionDefinition
-                        definition={businessCase.businessNeed}
-                        className="text-light font-body-md line-height-body-4"
-                      />
+        {/* Supporting Docs text */}
+        <h2 className="margin-bottom-0 margin-top-6" id="documents">
+          {t('supportingDocuments')}
+        </h2>
+        <p className="margin-top-05 line-height-body-5">
+          {t('supportingDocumentsText')}
+        </p>
 
-                      <DescriptionTerm
-                        term={t('businessCaseOverview.preferredSolution')}
-                        className="margin-bottom-0 margin-top-2"
-                      />
-                      <DescriptionDefinition
-                        definition={
-                          businessCase?.preferredSolution?.summary ||
-                          t('businessCaseOverview.noSolution')
-                        }
-                        className="text-light font-body-md line-height-body-4"
-                      />
-                    </DescriptionList>
-                  </CardBody>
-                  <CardFooter>
-                    <UswdsReactLink
-                      to="./business-case"
-                      className="display-flex flex-row flex-align-center"
-                    >
-                      <span className="margin-right-1">
-                        {t('businessCaseOverview.linkToBusinessCase')}
-                      </span>
-                      <Icon.ArrowForward />
-                    </UswdsReactLink>
-                  </CardFooter>
-                </>
-              ) : (
-                <CardBody>
-                  <Alert type="info" slim>
-                    {t('businessCaseOverview.unsubmittedAlertText')}
-                  </Alert>
-                </CardBody>
-              )}
-            </div>
+        {/* Presentation Links */}
+        <PresentationLinksCard
+          systemIntakeID={id}
+          grbPresentationLinks={grbReview.grbPresentationLinks}
+        />
 
-            {/* Intake Request Link */}
-            <IntakeRequestCard
-              currentStage={currentStage}
-              annualSpending={annualSpending}
-              submittedAt={submittedAt}
-            />
+        {/* Business Case Card */}
+        <BusinessCaseCard businessCase={businessCase} systemIntakeID={id} />
 
-            {/* Additional Documents Title and Link */}
-            <div className="margin-y-4">
-              <h3 className="margin-bottom-1">{t('additionalDocuments')}</h3>
+        {/* Intake Request Link */}
+        <IntakeRequestCard
+          systemIntakeID={id}
+          currentStage={currentStage}
+          annualSpending={annualSpending}
+          submittedAt={submittedAt}
+        />
 
-              {isITGovAdmin && (
-                <UswdsReactLink
-                  to="./documents/upload"
-                  className="display-flex flex-align-center"
-                >
-                  <Icon.Add className="margin-right-1" />
-                  <span>{t('additionalDocsLink')}</span>
-                </UswdsReactLink>
-              )}
-            </div>
+        {/* Additional Documents Title and Link */}
+        <div className="margin-y-4">
+          <h3 className="margin-bottom-1">{t('additionalDocuments')}</h3>
 
-            <DocumentsTable systemIntakeId={id} documents={documents} />
-            <Discussions
-              systemIntakeID={id}
-              grbReviewers={grbReviewers}
-              grbReviewStartedAt={grbReviewStartedAt}
-              className="margin-top-4 margin-bottom-6"
-            />
-            <ParticipantsTable
-              id={id}
-              state={state}
-              grbReviewers={grbReviewers}
-              setReviewerToRemove={setReviewerToRemove}
-              grbReviewStartedAt={grbReviewStartedAt}
-            />
-          </div>
-        </>
-      )}
+          {isITGovAdmin && (
+            <UswdsReactLink
+              to="./documents/upload"
+              className="display-flex flex-align-center"
+            >
+              <Icon.Add className="margin-right-1" />
+              <span>{t('additionalDocsLink')}</span>
+            </UswdsReactLink>
+          )}
+        </div>
+
+        {/* GRB Documents */}
+        <DocumentsTable systemIntakeId={id} documents={grbReview.documents} />
+
+        {/* Discussion Board */}
+        <Discussions
+          systemIntakeID={id}
+          grbReviewers={grbReview.grbVotingInformation?.grbReviewers}
+          grbReviewStartedAt={grbReview.grbReviewStartedAt}
+          className="margin-top-4 margin-bottom-6"
+        />
+
+        {/* Participants Table */}
+        <ParticipantsSection
+          id={id}
+          state={state}
+          grbReviewers={grbReview.grbVotingInformation?.grbReviewers}
+          grbReviewStartedAt={grbReview.grbReviewStartedAt}
+        />
+      </div>
     </>
   );
 };

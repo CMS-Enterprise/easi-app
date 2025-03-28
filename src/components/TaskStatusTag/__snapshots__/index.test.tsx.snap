@@ -11,6 +11,17 @@ exports[`TaskStatusTag > renders task status tag {"status":"AWAITING_DECISION","
 </DocumentFragment>
 `;
 
+exports[`TaskStatusTag > renders task status tag {"status":"AWAITING_GRB_REVIEW","className":"bg-info-light"} 1`] = `
+<DocumentFragment>
+  <span
+    class="easi-tag easi-task-status-tag bg-info-light"
+    data-testid="task-list-task-tag"
+  >
+    Awaiting GRB review
+  </span>
+</DocumentFragment>
+`;
+
 exports[`TaskStatusTag > renders task status tag {"status":"CANNOT_START_YET","className":"border-2px text-base"} 1`] = `
 <DocumentFragment>
   <span
@@ -139,6 +150,17 @@ exports[`TaskStatusTag > renders task status tag {"status":"READY_TO_START","cla
     data-testid="task-list-task-tag"
   >
     Ready to start
+  </span>
+</DocumentFragment>
+`;
+
+exports[`TaskStatusTag > renders task status tag {"status":"REVIEW_IN_PROGRESS","className":"bg-warning"} 1`] = `
+<DocumentFragment>
+  <span
+    class="easi-tag easi-task-status-tag bg-warning"
+    data-testid="task-list-task-tag"
+  >
+    Review in progress
   </span>
 </DocumentFragment>
 `;

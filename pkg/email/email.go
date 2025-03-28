@@ -65,6 +65,7 @@ type templates struct {
 	systemIntakeRequestEdits                        templateCaller
 	systemIntakeCloseRequest                        templateCaller
 	systemIntakeReopenRequest                       templateCaller
+	systemIntakePresentationDeckUploadReminder      templateCaller
 	systemIntakeProgressToNewStep                   templateCaller
 	systemIntakeNotITGovRequest                     templateCaller
 	systemIntakeNotApproved                         templateCaller
@@ -332,6 +333,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(systemIntakeReopenRequestTemplateName)
 	}
 	appTemplates.systemIntakeReopenRequest = systemIntakeReopenRequest
+
+	systemIntakePresentationDeckUploadReminderTemplateName := "system_intake_presentation_deck_upload_reminder.gohtml"
+	systemIntakePresentationDeckUploadReminder := rawTemplates.Lookup(systemIntakePresentationDeckUploadReminderTemplateName)
+	if systemIntakePresentationDeckUploadReminder == nil {
+		return Client{}, templateError(systemIntakePresentationDeckUploadReminderTemplateName)
+	}
+	appTemplates.systemIntakePresentationDeckUploadReminder = systemIntakePresentationDeckUploadReminder
 
 	systemIntakeProgressToNewStepTemplateName := "system_intake_progress_to_new_step.gohtml"
 	systemIntakeProgressToNewStep := rawTemplates.Lookup(systemIntakeProgressToNewStepTemplateName)

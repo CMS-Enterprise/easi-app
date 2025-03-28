@@ -47,7 +47,7 @@ exports[`The prepare for GRB info page > matches the snapshot 1`] = `
           aria-current="page"
           className="usa-breadcrumb__list-item usa-current"
         >
-          Prepare for GRB meeting
+          Prepare for GRB review
         </li>
       </ol>
     </nav>
@@ -126,7 +126,7 @@ exports[`The prepare for GRB info page > matches the snapshot 1`] = `
         <p
           className="margin-y-0"
         >
-          The following are important items to have with you at the GRB meeting:
+          The following are important items to have with you at the GRB review:
         </p>
         <ul
           className="usa-list usa-list--unstyled line-height-body-5 margin-top-1 padding-y-0"
