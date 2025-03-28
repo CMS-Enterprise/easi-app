@@ -1,6 +1,6 @@
 import React, { useContext, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { Column, useSortBy, useTable } from 'react-table';
 import {
   Button,
@@ -26,12 +26,21 @@ import {
 
 type ParticipantsTableProps = {
   grbReviewers: SystemIntakeGRBReviewerFragment[];
+  fromGRBSetup?: boolean;
 };
 
-const ParticipantsTable = ({ grbReviewers }: ParticipantsTableProps) => {
+const ParticipantsTable = ({
+  grbReviewers,
+  fromGRBSetup
+}: ParticipantsTableProps) => {
   const { t } = useTranslation('grbReview');
+
+  const { systemId } = useParams<{ systemId: string }>();
+
   const history = useHistory();
+
   const { pathname } = useLocation();
+
   const { showMessage } = useMessage();
 
   const [reviewerToRemove, setReviewerToRemove] =
@@ -56,7 +65,16 @@ const ParticipantsTable = ({ grbReviewers }: ParticipantsTableProps) => {
           <ButtonGroup data-testid="grbReviewerActions">
             <Button
               type="button"
-              onClick={() => history.push(`${pathname}/edit`, reviewer)}
+              onClick={() => {
+                if (fromGRBSetup) {
+                  history.push(
+                    `/it-governance/${systemId}/grb-review/edit?from-grb-setup`,
+                    reviewer
+                  );
+                } else {
+                  history.push(`${pathname}/edit`, reviewer);
+                }
+              }}
               className="margin-y-0"
               unstyled
             >
@@ -100,7 +118,15 @@ const ParticipantsTable = ({ grbReviewers }: ParticipantsTableProps) => {
       // Only display action column if user is GRT admin
       ...(isITGovAdmin ? [actionColumn] : [])
     ];
-  }, [t, isITGovAdmin, setReviewerToRemove, history, pathname]);
+  }, [
+    t,
+    isITGovAdmin,
+    setReviewerToRemove,
+    history,
+    pathname,
+    fromGRBSetup,
+    systemId
+  ]);
 
   const table = useTable(
     {

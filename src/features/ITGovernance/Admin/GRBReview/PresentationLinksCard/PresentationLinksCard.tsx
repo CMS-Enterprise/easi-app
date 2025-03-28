@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import {
   Button,
   ButtonGroup,
+  Card,
   CardBody,
   CardFooter,
   CardHeader,
@@ -58,6 +59,9 @@ function PresentationLinksCard({
     transcriptFileStatus === SystemIntakeDocumentStatus.PENDING ||
     presentationDeckFileStatus === SystemIntakeDocumentStatus.PENDING;
 
+  const hasAnyLinks: boolean =
+    !!recordingLink || !!transcriptLink || !!presentationDeckFileURL;
+
   // Remove links handling
 
   const [deleteSystemIntakeGRBPresentationLinks] =
@@ -93,12 +97,15 @@ function PresentationLinksCard({
   };
 
   // Render empty if not an admin and no links
-  if (!isITGovAdmin && !grbPresentationLinks) return null;
+  if (!isITGovAdmin && !hasAnyLinks) return null;
 
   return (
     <>
       {/* Asynchronous presentation links card */}
-      <div className="usa-card__container margin-x-0 border-width-1px shadow-2 margin-top-3 margin-bottom-4">
+      <Card
+        containerProps={{ className: 'margin-0 radius-md shadow-2' }}
+        className="margin-top-2"
+      >
         <CardHeader>
           <h3>{t('asyncPresentation.title')}</h3>
         </CardHeader>
@@ -108,10 +115,10 @@ function PresentationLinksCard({
             <CardBody
               className={classNames('padding-top-0', {
                 'display-flex flex-gap-105 padding-bottom-105 margin-top-neg-1':
-                  grbPresentationLinks
+                  hasAnyLinks
               })}
             >
-              {!grbPresentationLinks ? (
+              {!hasAnyLinks ? (
                 <>
                   <Alert type="info" slim className="margin-bottom-2">
                     {t('asyncPresentation.adminEmptyAlert')}
@@ -143,7 +150,7 @@ function PresentationLinksCard({
             </CardBody>
           )
         }
-        {grbPresentationLinks && (
+        {hasAnyLinks && (
           <CardFooter className="presentation-card-links display-flex flex-wrap flex-column-gap-3 flex-row-gap-1 padding-x-0 padding-bottom-205 padding-top-2 margin-x-3 border-top-1px border-gray-10">
             {isVirusScanning ? (
               <em
@@ -223,7 +230,7 @@ function PresentationLinksCard({
             )}
           </CardFooter>
         )}
-      </div>
+      </Card>
 
       {/* Modal to remove presentation links */}
       <Modal

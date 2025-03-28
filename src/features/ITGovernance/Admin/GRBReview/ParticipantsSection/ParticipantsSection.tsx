@@ -32,6 +32,7 @@ const ParticipantsSection = ({
   grbReviewStartedAt
 }: ParticipantsSectionProps) => {
   const { t } = useTranslation('grbReview');
+
   const history = useHistory();
   const { pathname } = useLocation();
 
@@ -122,6 +123,7 @@ const ParticipantsSection = ({
           </ButtonGroup>
         </div>
       )}
+
       <ParticipantsTable grbReviewers={grbReviewers} />
     </>
   );

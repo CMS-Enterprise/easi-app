@@ -36,7 +36,7 @@ const BusinessCaseCard = ({
     <Card
       className={classNames(className)}
       containerProps={{
-        className: 'margin-0 border-width-1px shadow-2'
+        className: 'margin-0 border-width-1px shadow-2 radius-md'
       }}
     >
       <CardHeader>
