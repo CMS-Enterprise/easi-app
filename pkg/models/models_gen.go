@@ -656,7 +656,7 @@ type SystemIntakeGovernanceTeamInput struct {
 }
 
 // The Information System Security Officer (ISSO) that is
-// assicuated with a system request, if any
+// associated with a system request, if any
 type SystemIntakeIsso struct {
 	IsPresent *bool   `json:"isPresent,omitempty"`
 	Name      *string `json:"name,omitempty"`
