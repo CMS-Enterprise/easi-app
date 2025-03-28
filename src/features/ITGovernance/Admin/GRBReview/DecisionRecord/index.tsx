@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { GridContainer, Icon } from '@trussworks/react-uswds';
 import { SystemIntakeGRBReviewFragment } from 'gql/generated/graphql';
+import { grbReviewers } from 'tests/mock/grbReview';
 
 import Breadcrumbs from 'components/Breadcrumbs';
 import IconLink from 'components/IconLink';
@@ -49,7 +50,9 @@ const DecisionRecord = ({ grbReview }: DecisionRecordProps) => {
       </IconLink>
 
       <DecisionRecordTable
-        grbReviewers={grbReview.grbVotingInformation.grbReviewers}
+        // TODO: Remove mock data
+        grbReviewers={grbReviewers}
+        // grbReviewers={grbReview.grbVotingInformation.grbReviewers}
       />
     </GridContainer>
   );
