@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { Route, Switch, useParams } from 'react-router-dom';
+import { Route, Switch, useHistory, useParams } from 'react-router-dom';
 import NotFound from 'features/Miscellaneous/NotFound';
 import RequestLinkForm from 'features/RequestLinking/RequestLinkForm';
 import { useGetSystemIntakeGRBReviewQuery } from 'gql/generated/graphql';
@@ -11,6 +11,7 @@ import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 import PageLoading from 'components/PageLoading';
 import user from 'utils/user';
 
+import GRBReviewerForm from './GRBReview/GRBReviewerForm';
 import GRBReviewForm from './GRBReview/GRBReviewForm';
 import RequestOverview from './RequestOverview/RequestOverview';
 
@@ -18,6 +19,8 @@ const GovernanceReviewTeam = () => {
   const { groups, euaId, isUserSet } = useSelector(
     (state: AppState) => state.auth
   );
+
+  const history = useHistory();
 
   const flags = useFlags();
 
@@ -48,6 +51,8 @@ const GovernanceReviewTeam = () => {
 
   const isITGovAdmin = user.isITGovAdmin(groups, flags);
 
+  const isFromGRBSetup = history.location.search === '?from-grb-setup';
+
   if (isUserSet && !loading) {
     if (!grbReview) {
       return <NotFound />;
@@ -73,6 +78,19 @@ const GovernanceReviewTeam = () => {
                 <GRBReviewForm grbReview={grbReview} loading={loading} />
               </Route>
             )}
+
+            <Route
+              path="/it-governance/:systemId/grb-review/:action(add|edit)"
+              exact
+            >
+              <GRBReviewerForm
+                isFromGRBSetup={isFromGRBSetup}
+                initialGRBReviewers={
+                  grbReview.grbVotingInformation?.grbReviewers
+                }
+                grbReviewStartedAt={grbReview.grbReviewStartedAt}
+              />
+            </Route>
 
             <Route path="/it-governance/:systemId/:activePage/:subPage?" exact>
               <RequestOverview />
