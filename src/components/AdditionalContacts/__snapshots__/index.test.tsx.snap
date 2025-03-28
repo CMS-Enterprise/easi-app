@@ -1,5 +1,455 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`Additional contacts component > displays form when editing contact 1`] = `
+<DocumentFragment>
+  <div
+    class="system-intake-contacts"
+  >
+    <h4>
+      Additional contacts
+    </h4>
+    <div
+      class="system-intake-contacts__contacts-list"
+      data-testid="systemIntakeContacts__contactsList"
+    >
+      <div
+        data-testid="systemIntakeContact-4828a0b0-9474-4ddc-8fc2-662323ef0087"
+        id="systemIntakeContact-4828a0b0-9474-4ddc-8fc2-662323ef0087"
+      >
+        <div
+          class="systemIntakeContactForm"
+          data-testid="systemIntakeContactForm"
+        >
+          <h4
+            class="margin-bottom-2 margin-top-0"
+          >
+            Edit contact
+          </h4>
+          <div
+            class="usa-form-group margin-top-2"
+          >
+            <label
+              class="usa-label text-normal"
+              data-testid="label"
+              for="systemIntakeContact.commonName"
+            >
+              New contact name
+            </label>
+            <div
+              class="easi-help-text margin-top-1"
+            >
+              This field searches the EUA system. Please confirm that you have added the correct individual.
+            </div>
+            <div
+              class="margin-top-1 cedar-contact-select usa-combo-box maxw-none css-b62m3t-container"
+              id="IntakeForm-ContactCommonName"
+            >
+              <span
+                class="css-1f43avz-a11yText-A11yText"
+                id="react-select-IntakeForm-ContactCommonName-live-region"
+              />
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                aria-relevant="additions text"
+                class="css-1f43avz-a11yText-A11yText"
+                role="log"
+              />
+              <div
+                class="cedar-contact-select__control css-79rxjr-control"
+              >
+                <div
+                  class="cedar-contact-select__value-container cedar-contact-select__value-container--has-value css-1fdsijx-ValueContainer"
+                >
+                  <div
+                    class="cedar-contact-select__input-container css-166bipr-Input"
+                    data-value="Jerry Seinfeld, SF13 (jerry.seinfeld@local.fake)"
+                  >
+                    <input
+                      aria-activedescendant=""
+                      aria-autocomplete="list"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      autocapitalize="none"
+                      autocomplete="off"
+                      autocorrect="off"
+                      class="cedar-contact-select__input"
+                      data-testid="cedar-contact-select"
+                      id="react-select-IntakeForm-ContactCommonName-input"
+                      role="combobox"
+                      spellcheck="false"
+                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                      tabindex="0"
+                      type="text"
+                      value="Jerry Seinfeld, SF13 (jerry.seinfeld@local.fake)"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="cedar-contact-select__indicators css-1hb7zxy-IndicatorsContainer"
+                >
+                  <div
+                    aria-hidden="true"
+                    class="cedar-contact-select__indicator cedar-contact-select__clear-indicator css-1h8bgg-indicatorContainer"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="css-tj5bde-Svg"
+                      focusable="false"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      width="20"
+                    >
+                      <path
+                        d="M14.348 14.849c-0.469 0.469-1.229 0.469-1.697 0l-2.651-3.030-2.651 3.029c-0.469 0.469-1.229 0.469-1.697 0-0.469-0.469-0.469-1.229 0-1.697l2.758-3.15-2.759-3.152c-0.469-0.469-0.469-1.228 0-1.697s1.228-0.469 1.697 0l2.652 3.031 2.651-3.031c0.469-0.469 1.228-0.469 1.697 0s0.469 1.229 0 1.697l-2.758 3.152 2.758 3.15c0.469 0.469 0.469 1.229 0 1.698z"
+                      />
+                    </svg>
+                  </div>
+                  <span
+                    class="cedar-contact-select__indicator-separator css-1u9des2-indicatorSeparator"
+                  />
+                  <div
+                    aria-hidden="true"
+                    class="cedar-contact-select__indicator cedar-contact-select__dropdown-indicator css-1h8bgg-indicatorContainer"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="css-tj5bde-Svg"
+                      focusable="false"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      width="20"
+                    >
+                      <path
+                        d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <input
+                name="systemIntakeContact.commonName"
+                type="hidden"
+                value="[object Object]"
+              />
+            </div>
+          </div>
+          <div
+            class="usa-form-group margin-top-2"
+          >
+            <label
+              class="usa-label text-normal"
+              data-testid="label"
+              for="systemIntakeContact.component"
+            >
+              New contact component
+            </label>
+            <select
+              class="usa-select"
+              data-testid="IntakeForm-ContactComponent"
+              id="IntakeForm-ContactComponent"
+              name="systemIntakeContact.component"
+            >
+              <option
+                disabled=""
+                value=""
+              >
+                Select an option
+              </option>
+              <option
+                value="Center for Clinical Standards and Quality"
+              >
+                Center for Clinical Standards and Quality (CCSQ)
+              </option>
+              <option
+                value="Center for Consumer Information and Insurance Oversight"
+              >
+                Center for Consumer Information and Insurance Oversight (CCIIO)
+              </option>
+              <option
+                value="Center for Medicare"
+              >
+                Center for Medicare (CM)
+              </option>
+              <option
+                value="Center for Medicaid and CHIP Services"
+              >
+                Center for Medicaid and CHIP Services (CMCS)
+              </option>
+              <option
+                value="Center for Medicare and Medicaid Innovation"
+              >
+                Center for Medicare and Medicaid Innovation (CMMI)
+              </option>
+              <option
+                value="Center for Program Integrity"
+              >
+                Center for Program Integrity (CPI)
+              </option>
+              <option
+                value="CMS Wide"
+              >
+                CMS Wide (CMS)
+              </option>
+              <option
+                value="Emergency Preparedness and Response Operations"
+              >
+                Emergency Preparedness and Response Operations (EPRO)
+              </option>
+              <option
+                value="Federal Coordinated Health Care Office"
+              >
+                Federal Coordinated Health Care Office (FCHCO)
+              </option>
+              <option
+                value="Office of Acquisition and Grants Management"
+              >
+                Office of Acquisition and Grants Management (OAGM)
+              </option>
+              <option
+                value="Office of Healthcare Experience and Interoperability"
+              >
+                Office of Healthcare Experience and Interoperability (OHEI)
+              </option>
+              <option
+                value="Office of Communications"
+              >
+                Office of Communications (OC)
+              </option>
+              <option
+                value="Office of Enterprise Data and Analytics"
+              >
+                Office of Enterprise Data and Analytics (OEDA)
+              </option>
+              <option
+                value="Office of Equal Opportunity and Civil Rights"
+              >
+                Office of Equal Opportunity and Civil Rights (OEOCR)
+              </option>
+              <option
+                value="Office of Financial Management"
+              >
+                Office of Financial Management (OFM)
+              </option>
+              <option
+                value="Office of Human Capital"
+              >
+                Office of Human Capital (OHC)
+              </option>
+              <option
+                value="Office of Information Technology"
+              >
+                Office of Information Technology (OIT)
+              </option>
+              <option
+                value="Office of Legislation"
+              >
+                Office of Legislation (OL)
+              </option>
+              <option
+                value="Office of Minority Health"
+              >
+                Office of Minority Health (OMH)
+              </option>
+              <option
+                value="Office of Program Operations and Local Engagement"
+              >
+                Office of Program Operations and Local Engagement (OPOLE)
+              </option>
+              <option
+                value="Office of Security, Facilities, and Logistics Operations"
+              >
+                Office of Security, Facilities, and Logistics Operations (OSFLO)
+              </option>
+              <option
+                value="Office of Strategic Operations and Regulatory Affairs"
+              >
+                Office of Strategic Operations and Regulatory Affairs (OSORA)
+              </option>
+              <option
+                value="Office of Strategy, Performance, and Results"
+              >
+                Office of Strategy, Performance, and Results (OSPR)
+              </option>
+              <option
+                value="Office of the Actuary"
+              >
+                Office of the Actuary (OA)
+              </option>
+              <option
+                value="Offices of Hearings and Inquiries"
+              >
+                Offices of Hearings and Inquiries (OHI)
+              </option>
+              <option
+                value="Other"
+              >
+                Other
+              </option>
+            </select>
+          </div>
+          <div
+            class="usa-form-group margin-top-2"
+          >
+            <label
+              class="usa-label text-normal"
+              data-testid="label"
+              for="systemIntakeContact.role"
+            >
+              New contact role
+            </label>
+            <select
+              class="usa-select"
+              data-testid="IntakeForm-ContactRole"
+              id="IntakeForm-ContactRole"
+              name="systemIntakeContact.role"
+            >
+              <option
+                disabled=""
+                value=""
+              >
+                Select an option
+              </option>
+              <option
+                value="Business Owner"
+              >
+                Business Owner
+              </option>
+              <option
+                value="Product Owner"
+              >
+                Product Owner
+              </option>
+              <option
+                value="System Owner"
+              >
+                System Owner
+              </option>
+              <option
+                value="System Maintainer"
+              >
+                System Maintainer
+              </option>
+              <option
+                value="Contracting Officer’s Representative (COR)"
+              >
+                Contracting Officer’s Representative (COR)
+              </option>
+              <option
+                value="Cloud Navigator"
+              >
+                Cloud Navigator
+              </option>
+              <option
+                value="Information System Security Advisor (ISSO)"
+              >
+                Information System Security Advisor (ISSO)
+              </option>
+              <option
+                value="Privacy Advisor"
+              >
+                Privacy Advisor
+              </option>
+              <option
+                value="Cyber Risk Advisor (CRA)"
+              >
+                Cyber Risk Advisor (CRA)
+              </option>
+              <option
+                value="Other"
+              >
+                Other
+              </option>
+            </select>
+          </div>
+          <div
+            class="usa-alert usa-alert--warning usa-alert--slim"
+            data-testid="alert"
+          >
+            <div
+              class="usa-alert__body"
+            >
+              <p
+                class="usa-alert__text"
+              >
+                The selected individual is external to the CMS organization. Please be sure they should see the information in this notification email before proceeding.
+              </p>
+            </div>
+          </div>
+          <div
+            class="margin-top-2"
+          >
+            <button
+              class="usa-button usa-button--outline margin-top-0"
+              data-testid="button"
+              type="button"
+            >
+              Cancel
+            </button>
+            <button
+              class="usa-button margin-top-0"
+              data-testid="button"
+              type="button"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+        <button
+          class="usa-button usa-button--unstyled text-error margin-top-2"
+          data-testid="button"
+          type="button"
+        >
+          Delete contact
+        </button>
+      </div>
+      <div
+        data-testid="systemIntakeContact-fa706702-45ab-43fe-ad90-68ff681313af"
+        id="systemIntakeContact-fa706702-45ab-43fe-ad90-68ff681313af"
+      >
+        <p
+          class="text-bold"
+        >
+          Cosmo Kramer, Other
+        </p>
+        <p>
+          System Maintainer
+        </p>
+        <p>
+          cosmo.kramer@local.fake
+        </p>
+        <div
+          class="system-intake-contacts__contact-actions"
+        >
+          <button
+            class="usa-button usa-button--unstyled margin-top-0"
+            data-testid="button"
+            type="button"
+          >
+            Edit
+          </button>
+          <button
+            class="usa-button usa-button--unstyled text-error margin-left-2 margin-top-0"
+            data-testid="button"
+            type="button"
+          >
+            Delete contact
+          </button>
+        </div>
+      </div>
+    </div>
+    <button
+      class="usa-button usa-button--outline margin-top-0"
+      data-testid="button"
+      disabled=""
+      type="button"
+    >
+      Add another contact
+    </button>
+  </div>
+</DocumentFragment>
+`;
+
 exports[`Additional contacts component > renders without crashing 1`] = `
 <DocumentFragment>
   <div
