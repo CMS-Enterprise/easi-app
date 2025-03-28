@@ -80,6 +80,7 @@ type templates struct {
 	grbReviewDiscussionIndividualTagged             templateCaller
 	grbReviewDiscussionGroupTagged                  templateCaller
 	grbReviewPresentationLinksUpdated               templateCaller
+	grbReviewerInvitedToVote                        templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -436,6 +437,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(grbReviewPresentationLinksUpdatedTemplateName)
 	}
 	appTemplates.grbReviewPresentationLinksUpdated = grbReviewPresentationLinksUpdated
+
+	grbReviewerInvitedToVoteTemplateName := "grb_reviewer_invited_to_vote.gohtml"
+	grbReviewerInvitedToVote := rawTemplates.Lookup(grbReviewerInvitedToVoteTemplateName)
+	if grbReviewerInvitedToVote == nil {
+		return Client{}, templateError(grbReviewerInvitedToVoteTemplateName)
+	}
+	appTemplates.grbReviewerInvitedToVote = grbReviewerInvitedToVote
 
 	client := Client{
 		config:    config,
