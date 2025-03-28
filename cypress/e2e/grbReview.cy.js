@@ -227,4 +227,39 @@ describe('GRB review', () => {
 
     cy.contains('button', 'Save and return to request').click();
   });
+
+  it('Adds time to voting and Ends time to voting', () => {
+    cy.visit('/it-governance/5af245bc-fc54-4677-bab1-1b3e798bb43c/grb-review');
+
+    cy.get('[data-testid="async-status"]').contains('In progress');
+
+    cy.get('p').contains('Review ends 01/01/2226, 5:00pm EST');
+
+    // Open Add Time modal
+    cy.get('button').contains('Add time').click();
+
+    cy.get('[data-testid="addTimeModalButton"]').should('be.disabled');
+
+    cy.get('[data-testid="date-picker-external-input"]').type('01/01/2227');
+
+    // Click button to add time and close modal
+    cy.get('[data-testid="addTimeModalButton"]')
+      .should('be.not.disabled')
+      .click();
+
+    // Success alert text
+    cy.get('p').contains(
+      'You added time to this GRB review. The new end date is 01/01/2227 at 5:00pm EST.'
+    );
+
+    // Open End Voting modal
+    cy.get('button').contains('End voting').click();
+
+    cy.get('button').contains('End early').should('be.not.disabled').click();
+
+    // Success alert text
+    cy.get('p').contains(
+      'You have ended this GRB review early. GRB members will no longer be able to add or change votes.'
+    );
+  });
 });

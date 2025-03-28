@@ -61,7 +61,10 @@ const GRBReviewStatusTag = ({
         {t('statusCard.reviewStatus')}
       </h4>
 
-      <Tag className="bg-white text-base-darker font-body-sm flex-align-self-center">
+      <Tag
+        data-testid="async-status"
+        className="bg-white text-base-darker font-body-sm flex-align-self-center"
+      >
         {t(`statusCard.grbReviewStatus.${grbReviewStatus}`)}
       </Tag>
     </span>

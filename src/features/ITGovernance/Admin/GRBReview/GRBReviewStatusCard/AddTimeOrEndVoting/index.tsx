@@ -183,6 +183,7 @@ const AddTimeOrEndVoting = ({
         <ButtonGroup className="margin-top-4">
           <Button
             type="button"
+            data-testid="addTimeModalButton"
             disabled={!watch('grbReviewAsyncEndDate')?.trim()}
             onClick={() => {
               addTimeOrEndEarly();
