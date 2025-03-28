@@ -29,3 +29,16 @@ func NewSystemIntakeGRBPresentationLinks(createdByUserAcctID uuid.UUID) *SystemI
 		BaseStructUser: NewBaseStructUser(createdByUserAcctID),
 	}
 }
+
+// IsEmpty returns true if the *SystemIntakeGRBPresentationLinks is nil, or if the required (nullable) fields are ALL nil
+func (s *SystemIntakeGRBPresentationLinks) IsEmpty() bool {
+	if s == nil {
+		return true
+	}
+
+	if s.RecordingLink == nil && s.TranscriptLink == nil && s.TranscriptS3Key == nil && s.PresentationDeckS3Key == nil {
+		return true
+	}
+
+	return false
+}

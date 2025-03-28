@@ -21,6 +21,7 @@ export type AdminActionButton = {
 };
 
 type AdminActionProps = {
+  type?: 'TRB' | 'ITGov';
   title: string;
   buttons: AdminActionButton[];
   description?: string;
@@ -32,6 +33,7 @@ type AdminActionProps = {
  * Admin action component for TRB admin home subpages
  */
 const AdminAction = ({
+  type = 'TRB',
   title,
   description,
   children,
@@ -39,11 +41,14 @@ const AdminAction = ({
   className
 }: AdminActionProps) => {
   const { t } = useTranslation('technicalAssistance');
+  const { t: grbReviewT } = useTranslation('grbReview');
 
   return (
     <div className={classNames('usa-summary-box', className)}>
       <h5 className="text-base-dark text-uppercase margin-top-0 margin-bottom-05 line-height-body-1 text-normal text-body-xs">
-        {t('adminAction.title')}
+        {type === 'TRB'
+          ? t('adminAction.title')
+          : grbReviewT('adminTask.title')}
       </h5>
       <h3 className="margin-y-0">{t(title)}</h3>
       {description && (

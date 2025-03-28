@@ -6,6 +6,20 @@ export const parseAsUTC = (date: string) => DateTime.fromISO(date).toUTC();
 type DateFormat = 'MM/dd/yyyy' | 'MMMM d, yyyy' | 'MM/yyyy';
 
 /**
+ * Output from format to UTC ISO string
+ */
+export const formatToUTCISO = (
+  date: string | null | undefined,
+  format: DateFormat
+): string => {
+  if (date) {
+    const parsedDate = DateTime.fromFormat(date, format).toUTC().toISO();
+    if (parsedDate !== 'Invalid DateTime') return parsedDate || '';
+  }
+  return '';
+};
+
+/**
  * Output local timezoned dates from iso string.
  * Typically used for dates generated with time, or server generated dates
  * Dates may differ depending on local time zone

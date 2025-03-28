@@ -14,6 +14,9 @@ var getSystemIntakesWhereReviewIsRequestedSQL string
 //go:embed SQL/system_intake_grb_reviewer/update.sql
 var updateSystemIntakeGRBReviewerByIDSQL string
 
+//go:embed SQL/system_intake_grb_reviewer/cast_vote.sql
+var castSystemIntakeGRBReviewerVoteSQL string
+
 //go:embed SQL/system_intake_grb_reviewer/delete.sql
 var deleteSystemIntakeGRBReviewerByIDSQL string
 
@@ -27,6 +30,7 @@ var SystemIntakeGRBReviewer = systemIntakeGRBReviewerScripts{
 	GetIntakesWhereReviewRequested: getSystemIntakesWhereReviewIsRequestedSQL,
 	CompareGRBReviewers:            compareSystemIntakeGRBReviewersByIntakeIDSQL,
 	Update:                         updateSystemIntakeGRBReviewerByIDSQL,
+	CastVote:                       castSystemIntakeGRBReviewerVoteSQL,
 	Delete:                         deleteSystemIntakeGRBReviewerByIDSQL,
 }
 
@@ -36,5 +40,6 @@ type systemIntakeGRBReviewerScripts struct {
 	GetIntakesWhereReviewRequested string
 	CompareGRBReviewers            string
 	Update                         string
+	CastVote                       string
 	Delete                         string
 }
