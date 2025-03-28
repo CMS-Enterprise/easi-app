@@ -23,8 +23,7 @@ var GRBEmailJobs = getGRBEmailJobs(SharedScheduler)
 func getGRBEmailJobs(scheduler *Scheduler) *grbEmailJobs {
 	return &grbEmailJobs{
 		SendAsyncVotingHalfwayThroughEmailJob: NewScheduledJob("SendAsyncVotingHalfwayThroughEmailJob", scheduler,
-			timing.Every5Seconds,
-			// timing.DailyAt2AM,
+			timing.DailyAt2AM,
 			sendAsyncVotingHalfwayThroughEmailJobFunction),
 	}
 }

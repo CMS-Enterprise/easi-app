@@ -16,7 +16,7 @@ type exampleJobs struct {
 	SimplifiedJob      ScheduledJob
 }
 
-var ExampleJobs = GetExampleJobs(SharedScheduler)
+// var ExampleJobs = GetExampleJobs(SharedScheduler)
 
 // GetExampleJobs returns a new exampleJobs struct with all the example jobs
 func GetExampleJobs(scheduler *Scheduler) *exampleJobs {
