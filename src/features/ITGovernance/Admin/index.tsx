@@ -80,7 +80,7 @@ const GovernanceReviewTeam = () => {
                 path="/it-governance/:systemId/grb-review/decision-record"
                 exact
               >
-                <DecisionRecord />
+                <DecisionRecord grbReview={grbReview} />
               </Route>
             )}
 
