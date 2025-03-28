@@ -266,3 +266,226 @@ func (s *ModelTestSuite) TestVotingStatus() {
 	votingStatus = info.VotingStatus()
 	s.Equal(votingStatus, GRBVSInconclusive)
 }
+
+type votingStatusTestCase struct {
+	name     string
+	expected GRBVotingInformationStatus
+	info     *GRBVotingInformation
+}
+
+func (s *ModelTestSuite) TestVotingStatus2() {
+	now := time.Now()
+	testCases := []votingStatusTestCase{
+		{
+			name:     "Empty intake",
+			expected: GRBVSNotStarted,
+			info:     &GRBVotingInformation{},
+		},
+		{
+			name:     "Empty reviewers",
+			expected: GRBVSNotStarted,
+			info: &GRBVotingInformation{
+				SystemIntake: &SystemIntake{},
+			},
+		},
+		{
+			name:     "Empty starting date",
+			expected: GRBVSNotStarted,
+			info: &GRBVotingInformation{
+				SystemIntake: &SystemIntake{},
+				GRBReviewers: []*SystemIntakeGRBReviewer{},
+			},
+		},
+		{
+			name:     "Empty end date",
+			expected: GRBVSNotStarted,
+			info: &GRBVotingInformation{
+				SystemIntake: &SystemIntake{
+					GRBReviewStartedAt: helpers.PointerTo(now.AddDate(0, 0, -1)),
+				},
+				GRBReviewers: []*SystemIntakeGRBReviewer{},
+			},
+		},
+		{
+			name:     "Inconclusive - ended manually with no quorum",
+			expected: GRBVSInconclusive,
+			info: &GRBVotingInformation{
+				SystemIntake: &SystemIntake{
+					GRBReviewStartedAt:          helpers.PointerTo(now.AddDate(0, 0, -2)),
+					GrbReviewAsyncEndDate:       helpers.PointerTo(now.AddDate(0, 0, 1)),
+					GrbReviewAsyncManualEndDate: helpers.PointerTo(now.AddDate(0, 0, -1)),
+				},
+				GRBReviewers: []*SystemIntakeGRBReviewer{},
+			},
+		},
+		{
+			name:     "Inconclusive - ended naturally (one objection vote)",
+			expected: GRBVSInconclusive,
+			info: &GRBVotingInformation{
+				SystemIntake: &SystemIntake{
+					GRBReviewStartedAt:    helpers.PointerTo(now.AddDate(0, 0, -2)),
+					GrbReviewAsyncEndDate: helpers.PointerTo(now.AddDate(0, 0, -1)),
+				},
+				GRBReviewers: []*SystemIntakeGRBReviewer{
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionObjection),
+					},
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+					},
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+					},
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+					},
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+					},
+				},
+			},
+		},
+		{
+			name:     "Approved - ended naturally (zero objection votes)",
+			expected: GRBVSApproved,
+			info: &GRBVotingInformation{
+				SystemIntake: &SystemIntake{
+					GRBReviewStartedAt:    helpers.PointerTo(now.AddDate(0, 0, -2)),
+					GrbReviewAsyncEndDate: helpers.PointerTo(now.AddDate(0, 0, -1)),
+				},
+				GRBReviewers: []*SystemIntakeGRBReviewer{
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+					},
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+					},
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+					},
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+					},
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+					},
+				},
+			},
+		},
+		{
+			name:     "Approved - ended manually (zero objection votes)",
+			expected: GRBVSApproved,
+			info: &GRBVotingInformation{
+				SystemIntake: &SystemIntake{
+					GRBReviewStartedAt:          helpers.PointerTo(now.AddDate(0, 0, -1)),
+					GrbReviewAsyncEndDate:       helpers.PointerTo(now.AddDate(0, 0, 1)),
+					GrbReviewAsyncManualEndDate: helpers.PointerTo(now.AddDate(0, 0, -1)),
+				},
+				GRBReviewers: []*SystemIntakeGRBReviewer{
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+					},
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+					},
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+					},
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+					},
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+					},
+				},
+			},
+		},
+		{
+			name:     "Not Approved - ended manually (two or more objection votes)",
+			expected: GRBVSNotApproved,
+			info: &GRBVotingInformation{
+				SystemIntake: &SystemIntake{
+					GRBReviewStartedAt:          helpers.PointerTo(now.AddDate(0, 0, -1)),
+					GrbReviewAsyncEndDate:       helpers.PointerTo(now.AddDate(0, 0, 1)),
+					GrbReviewAsyncManualEndDate: helpers.PointerTo(now.AddDate(0, 0, -1)),
+				},
+				GRBReviewers: []*SystemIntakeGRBReviewer{
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionObjection),
+					},
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionObjection),
+					},
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+					},
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+					},
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+					},
+				},
+			},
+		},
+		{
+			name:     "Not Approved - ended naturally (two or more objection votes)",
+			expected: GRBVSNotApproved,
+			info: &GRBVotingInformation{
+				SystemIntake: &SystemIntake{
+					GRBReviewStartedAt:    helpers.PointerTo(now.AddDate(0, 0, -2)),
+					GrbReviewAsyncEndDate: helpers.PointerTo(now.AddDate(0, 0, -1)),
+				},
+				GRBReviewers: []*SystemIntakeGRBReviewer{
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionObjection),
+					},
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionObjection),
+					},
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+					},
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+					},
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+					},
+				},
+			},
+		},
+	}
+
+	for _, testCase := range testCases {
+		s.Run(testCase.name, func() {
+			actual := testCase.info.VotingStatus()
+			s.Equal(testCase.expected, actual)
+		})
+	}
+}
