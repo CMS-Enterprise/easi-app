@@ -29,7 +29,7 @@ func getGRBEmailJobs(scheduler *Scheduler) *grbEmailJobs {
 	}
 }
 
-func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, scheduledJob *ScheduledJob) {
+func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, scheduledJob *ScheduledJob) error {
 	// contextWithLoader := dataloaders.CTXWithLoaders(ctx, BuildDataloaders(ctx))
 
 	logger := scheduledJob.logger()
@@ -38,19 +38,19 @@ func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, schedule
 	store, err := scheduledJob.store()
 	if err != nil {
 		logger.Error("error getting store from scheduler", zap.Error(err))
-		return
+		return err
 	}
 	logger.Info("Running GRB voting halfway through email job")
 	emailClient, err := scheduledJob.emailClient()
 	if err != nil {
 		logger.Error("error getting email client from scheduler", zap.Error(err))
-		return
+		return err
 	}
 
 	intakes, err := storage.GetSystemIntakesWithGRBReviewHalfwayThrough(ctx, store, logger)
 	if err != nil {
 		logger.Error("error fetching system intakes", zap.Error(err))
-		return
+		return err
 	}
 	for _, intake := range intakes {
 		//TODO
@@ -58,15 +58,19 @@ func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, schedule
 		a. consider spinning up a separate job for each email
 		*/
 
-		_, err := OneTimeJob(ctx, SharedScheduler, emailClient, "SendAsyncVotingHalfwayThroughEmailJob", func(ctx context.Context, emailClient *email.Client) {
+		_, err := OneTimeJob(ctx, SharedScheduler, emailClient, "SendAsyncVotingHalfwayThroughEmailJob", func(ctx context.Context, emailClient *email.Client) error {
 
 			//TODO: this should be fully implemented so that it sends an email. You could also return the emailClient from context, this is merely an example
 			logger.Info("sending email to intake owner", logfields.IntakeID(intake.ID))
+			return nil
 		})
 		if err != nil {
 			logger.Error("error scheduling email job", logfields.IntakeID(intake.ID), zap.Error(err))
-			return
+			// we chose to continue here instead of returning an error, because we want to send emails to all intakes
+			// even if one of them fails
+			continue
 		}
 
 	}
+	return nil
 }

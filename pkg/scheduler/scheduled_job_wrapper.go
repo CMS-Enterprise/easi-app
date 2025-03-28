@@ -15,7 +15,7 @@ import (
 )
 
 // ScheduledJobFunction is an abstraction around scheduled jobs and tasks it defines
-type ScheduledJobFunction[input comparable] func(context.Context, input)
+type ScheduledJobFunction[input comparable] func(context.Context, input) error
 
 // RegisterJobFunction is a function that registers a job with the scheduler and returns the job
 type RegisterJobFunction func(context.Context) (gocron.Job, error)
@@ -68,9 +68,18 @@ type ScheduledJob struct {
 	ScheduledJobWrapper[*ScheduledJob] // Embed the wrapper with a pointer to ScheduledJob
 }
 
-// RunJob is a wrapper for running the job.
-func (sjw *ScheduledJobWrapper[input]) RunJob(ctx context.Context, params input) {
-	sjw.jobFunction(ctx, params)
+// RunJob is a wrapper for running the job. The scheduler itself doesn't do anything with errors,
+// so we wrap logging information here
+func (sjw *ScheduledJobWrapper[input]) RunJob(ctx context.Context, params input) error {
+	logger := sjw.logger()
+	logger.Info("running scheduled job job")
+	err := sjw.jobFunction(ctx, params)
+	if err != nil {
+		logger.Error("error running job", zap.Error(err))
+		return err
+	}
+	logger.Info("job completed successfully")
+	return nil
 }
 
 func (sjw *ScheduledJobWrapper[input]) Register(scheduler *Scheduler) {

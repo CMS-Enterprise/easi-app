@@ -25,22 +25,24 @@ func GetExampleJobs(scheduler *Scheduler) *exampleJobs {
 		RunEvery5SecondJob: NewScheduledJobWrapper("RunEverySecondJob", scheduler, timing.Every5Seconds, runEvery5SecondJobFunction, true),
 	}
 }
-func simplifiedJobFunction(ctx context.Context, scheduledJob *ScheduledJob) {
+func simplifiedJobFunction(ctx context.Context, scheduledJob *ScheduledJob) error {
 
 	logger := scheduledJob.logger()
 	_, err := scheduledJob.buildDataLoaders()
 	if err != nil {
 		logger.Error("error getting buildDataLoaders from scheduler", zap.Error(err))
-		return
+		return err
 	}
 
 	logger.Info("Running simplified job")
+	return nil
 }
 
-func runEvery5SecondJobFunction(ctx context.Context, input bool) {
+func runEvery5SecondJobFunction(ctx context.Context, input bool) error {
 	_ = input
 	logger := appcontext.ZLogger(ctx)
 
 	logger.Info("Running every second job")
 	logger.Info("input: %", zap.Bool("input:", input))
+	return nil
 }
