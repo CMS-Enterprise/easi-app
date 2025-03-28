@@ -181,10 +181,7 @@ describe('GRB review', () => {
 
     // Returns to the GRB review page
     cy.url().should('include', '/grb-review');
-    cy.get('[data-testid="CardHeader"]').should(
-      'contain.text',
-      'Standard meeting review'
-    );
+    cy.get('h3').should('contain.text', 'Standard meeting review');
   });
 
   it('Navigates through the form with the headers', () => {
