@@ -157,20 +157,21 @@ func (info *GRBVotingInformation) VotingStatus() GRBVotingInformationStatus {
 	}
 
 	now := time.Now()
+	quorumReached := info.QuorumReached()
+
+	// if manually ended and quorum not reached, inconclusive result
+	if info.SystemIntake.GrbReviewAsyncManualEndDate != nil && now.After(*info.SystemIntake.GrbReviewAsyncManualEndDate) && !quorumReached {
+		return GRBVSInconclusive
+	}
+
 	// check if currently in progress
 	if now.After(*info.SystemIntake.GRBReviewStartedAt) && now.Before(*info.SystemIntake.GrbReviewAsyncEndDate) {
 		return GRBVSInProgress
 	}
 
-	quorumReached := info.QuorumReached()
-
+	// in progress
 	if now.After(*info.SystemIntake.GrbReviewAsyncEndDate) && !quorumReached {
 		return GRBVSInProgress
-	}
-
-	// unknown state, not sure if this would be possible after the above checks
-	if !now.After(*info.SystemIntake.GrbReviewAsyncEndDate) {
-		return GRBVSNotStarted
 	}
 
 	// we know here that the end date has passed
@@ -189,11 +190,6 @@ func (info *GRBVotingInformation) VotingStatus() GRBVotingInformationStatus {
 
 	// check for inconclusive
 	if quorumReached && objections == 1 {
-		return GRBVSInconclusive
-	}
-
-	// if manually ended and quorum not reached
-	if info.SystemIntake.GrbReviewAsyncManualEndDate != nil && now.After(*info.SystemIntake.GrbReviewAsyncManualEndDate) && !quorumReached {
 		return GRBVSInconclusive
 	}
 
