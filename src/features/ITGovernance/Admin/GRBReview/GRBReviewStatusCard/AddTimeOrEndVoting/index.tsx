@@ -194,7 +194,7 @@ const AddTimeOrEndVoting = ({
 
           <Button
             type="button"
-            className="margin-left-2 margin-top-2"
+            className="margin-left-2"
             unstyled
             onClick={() => {
               resetModal();
