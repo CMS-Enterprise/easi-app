@@ -1,8 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { GridContainer, Icon } from '@trussworks/react-uswds';
-import { SystemIntakeGRBReviewFragment } from 'gql/generated/graphql';
-import { grbReviewers } from 'tests/mock/grbReview';
+import { SystemIntakeGRBReviewerFragment } from 'gql/generated/graphql';
 
 import Breadcrumbs from 'components/Breadcrumbs';
 import IconLink from 'components/IconLink';
@@ -10,13 +9,17 @@ import IconLink from 'components/IconLink';
 import DecisionRecordTable from './_components/DecisionRecordTable';
 
 type DecisionRecordProps = {
-  grbReview: SystemIntakeGRBReviewFragment;
+  systemIntakeId: string;
+  grbReviewers: SystemIntakeGRBReviewerFragment[];
 };
 
 /**
  * System intake GRB review decision record page
  * */
-const DecisionRecord = ({ grbReview }: DecisionRecordProps) => {
+const DecisionRecord = ({
+  systemIntakeId,
+  grbReviewers
+}: DecisionRecordProps) => {
   const { t } = useTranslation('grbReview');
 
   return (
@@ -26,7 +29,7 @@ const DecisionRecord = ({ grbReview }: DecisionRecordProps) => {
           { text: t('Home'), url: '/' },
           {
             text: t('governanceReviewTeam:itGovernanceRequestDetails'),
-            url: `/it-governance/${grbReview.id}/intake-request`
+            url: `/it-governance/${systemIntakeId}/intake-request`
           },
           {
             text: t('decisionRecord.breadcrumb')
@@ -44,16 +47,12 @@ const DecisionRecord = ({ grbReview }: DecisionRecordProps) => {
 
       <IconLink
         icon={<Icon.ArrowBack />}
-        to={`/it-governance/${grbReview.id}/intake-request`}
+        to={`/it-governance/${systemIntakeId}/intake-request`}
       >
         {t('decisionRecord.returnToRequestDetails')}
       </IconLink>
 
-      <DecisionRecordTable
-        // TODO: Remove mock data
-        grbReviewers={grbReviewers}
-        // grbReviewers={grbReview.grbVotingInformation.grbReviewers}
-      />
+      <DecisionRecordTable grbReviewers={grbReviewers} />
     </GridContainer>
   );
 };
