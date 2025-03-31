@@ -146,3 +146,9 @@ write them within.
 Otherwise, add them to `testhelpers`.
 An example is a helper for logging into Okta,
 which is required for testing in `okta` and `integration`
+
+## Scheduling [`scheduler`](/pkg/scheduler/scheduling.md)
+
+`scheduler` provides functionality for recurring and scheduled tasks.
+It happens in the main thread, and is meant to be a package that could
+easily be split off to an external service if the need arrives.
