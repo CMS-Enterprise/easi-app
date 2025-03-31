@@ -140,6 +140,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
           <Grid col={12} tablet={{ col: 10 }}>
             <ParticipantsTable
               grbReviewers={grbReview.grbVotingInformation?.grbReviewers}
+              fromGRBSetup
             />
           </Grid>
         </FormGroup>

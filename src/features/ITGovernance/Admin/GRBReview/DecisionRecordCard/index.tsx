@@ -112,7 +112,7 @@ const DecisionRecordCard = ({
     <div
       className={classNames(
         className,
-        'radius-md padding-2 text-white',
+        'radius-md padding-2 text-white margin-top-2',
         decisionConfig.bgColor
       )}
     >

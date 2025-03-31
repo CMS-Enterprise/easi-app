@@ -1,7 +1,7 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
-import { Grid, Icon } from '@trussworks/react-uswds';
+import { Grid, GridContainer, Icon } from '@trussworks/react-uswds';
 import {
   GetSystemIntakeGRBReviewDocument,
   SystemIntakeGRBReviewerFragment,
@@ -20,7 +20,6 @@ import AddReviewersFromRequest from './AddReviewersFromRequest';
 type GRBReviewerFormProps = {
   isFromGRBSetup: boolean;
   initialGRBReviewers: SystemIntakeGRBReviewerFragment[];
-  setReviewerToRemove: (reviewer: SystemIntakeGRBReviewerFragment) => void;
   grbReviewStartedAt?: string | null;
 };
 
@@ -30,11 +29,12 @@ type GRBReviewerFormProps = {
 const GRBReviewerForm = ({
   isFromGRBSetup,
   initialGRBReviewers,
-  setReviewerToRemove,
   grbReviewStartedAt
 }: GRBReviewerFormProps) => {
   const { t } = useTranslation('grbReview');
+
   const { showMessage, showMessageOnNextPage } = useMessage();
+
   const history = useHistory();
 
   const { systemId, action } = useParams<{
@@ -82,7 +82,7 @@ const GRBReviewerForm = ({
       });
 
   return (
-    <>
+    <GridContainer>
       <Grid className="padding-y-4 margin-bottom-205">
         <h1 className="margin-bottom-1">{t('form.title')}</h1>
         <p className="font-body-md line-height-body-4 text-light margin-top-05 margin-bottom-105 tablet:grid-col-8">
@@ -122,8 +122,8 @@ const GRBReviewerForm = ({
                   systemId={systemId}
                   initialGRBReviewers={initialGRBReviewers}
                   createGRBReviewers={createGRBReviewers}
-                  setReviewerToRemove={setReviewerToRemove}
                   grbReviewStartedAt={grbReviewStartedAt}
+                  isFromGRBSetup={isFromGRBSetup}
                 />
               </TabPanel>
               <TabPanel
@@ -144,13 +144,13 @@ const GRBReviewerForm = ({
               systemId={systemId}
               initialGRBReviewers={initialGRBReviewers}
               createGRBReviewers={createGRBReviewers}
-              setReviewerToRemove={setReviewerToRemove}
               grbReviewStartedAt={grbReviewStartedAt}
+              isFromGRBSetup={isFromGRBSetup}
             />
           )
         }
       </Grid>
-    </>
+    </GridContainer>
   );
 };
 
