@@ -20,13 +20,18 @@ const VoteIcon = ({ vote, className }: VoteIconProps) => {
   switch (vote) {
     case SystemIntakeAsyncGRBVotingOption.OBJECTION:
       return (
-        <Icon.Cancel className={classNames('text-error', className)} size={3} />
+        <Icon.Cancel
+          className={classNames('text-error', className)}
+          data-testid="icon-Cancel"
+          size={3}
+        />
       );
 
     case SystemIntakeAsyncGRBVotingOption.NO_OBJECTION:
       return (
         <Icon.CheckCircle
           className={classNames('text-success', className)}
+          data-testid="icon-CheckCircle"
           size={3}
         />
       );
@@ -35,6 +40,7 @@ const VoteIcon = ({ vote, className }: VoteIconProps) => {
       return (
         <Icon.Help
           className={classNames('text-base-light', className)}
+          data-testid="icon-Help"
           size={3}
         />
       );
@@ -72,7 +78,10 @@ const GRBReviewerVote = ({
   }
 
   return (
-    <div className="display-flex flex-align-center">
+    <div
+      className="display-flex flex-align-center"
+      data-testid="grbReviewerVote"
+    >
       <p
         className={classNames(
           'margin-0 display-flex flex-align-center font-body-sm',
