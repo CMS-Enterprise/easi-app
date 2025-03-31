@@ -1,9 +1,9 @@
 module github.com/cms-enterprise/easi-app
 
-go 1.23.4
+go 1.24.1
 
 require (
-	github.com/99designs/gqlgen v0.17.68
+	github.com/99designs/gqlgen v0.17.70
 	github.com/alecthomas/jsonschema v0.0.0-20211228220459-151e3c21f49d
 	github.com/aws/aws-sdk-go v1.55.6
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a
@@ -23,7 +23,7 @@ require (
 	github.com/pquerna/otp v1.4.0
 	github.com/samber/lo v1.49.1
 	github.com/spf13/cobra v1.9.1
-	github.com/spf13/viper v1.20.0
+	github.com/spf13/viper v1.20.1
 	github.com/stretchr/testify v1.10.0
 	github.com/vektah/gqlparser/v2 v2.5.23
 	github.com/vikstrous/dataloadgen v0.0.6
