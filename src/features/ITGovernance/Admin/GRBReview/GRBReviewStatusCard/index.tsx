@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Grid } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
   SystemIntakeGRBReviewAsyncStatusType,
@@ -161,7 +162,7 @@ const GRBReviewStatusCard = ({
             {t('statusCard.timeRemaining')}
           </h4>
 
-          <span className="display-flex margin-bottom-05">
+          <Grid row className="margin-bottom-05">
             <p className="easi-body-large margin-top-0 margin-bottom-05 margin-right-2">
               {t('statusCard.countdown', {
                 days,
@@ -175,7 +176,7 @@ const GRBReviewStatusCard = ({
                 date: formatDateUtc(grbReviewAsyncEndDate, 'MM/dd/yyyy')
               })}
             </p>
-          </span>
+          </Grid>
 
           {isITGovAdmin && (
             <AddTimeOrEndVoting

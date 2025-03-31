@@ -474,7 +474,9 @@ Format: mm/dd/yyyy`,
       addTime: 'Add time',
       goBack: 'Go back and don’t add time',
       success:
-        'You added time to this GRB review. The new end date is {{date}} at 5:00pm EST.'
+        'You added time to this GRB review. The new end date is {{date}} at 5:00pm EST.',
+      error:
+        'There was an issue adding time to this review. Please try again, and if the problem persists, try again later.'
     },
     endVotingModal: {
       heading: 'End voting early?',
@@ -488,7 +490,9 @@ Format: mm/dd/yyyy`,
       endEarly: 'End early',
       goBack: 'Go back and don’t end early',
       success:
-        'You have ended this GRB review early. GRB members will no longer be able to add or change votes.'
+        'You have ended this GRB review early. GRB members will no longer be able to add or change votes.',
+      error:
+        'There was an issue ending the voting early. Please try again, and if the problem persists, try again later.'
     }
   },
   decisionCard: {

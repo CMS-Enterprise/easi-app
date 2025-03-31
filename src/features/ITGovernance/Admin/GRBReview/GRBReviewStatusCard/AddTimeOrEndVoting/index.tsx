@@ -112,7 +112,7 @@ const AddTimeOrEndVoting = ({
       <Modal
         isOpen={isOpen === 'addTime'}
         closeModal={() => resetModal()}
-        className="easi-body-normal padding-bottom-1 overflow-visible width-mobile-lg"
+        className="easi-body-normal padding-bottom-1 overflow-scroll maxw-mobile-lg"
       >
         <h3 className="margin-top-0 margin-bottom-0">
           {t('statusCard.addTimeModal.heading')}
@@ -120,7 +120,7 @@ const AddTimeOrEndVoting = ({
 
         {err && (
           <Alert type="error" slim>
-            {t('technicalAssistance:documents.upload.error')}
+            {t('statusCard.addTimeModal.error')}
           </Alert>
         )}
 
@@ -209,7 +209,7 @@ const AddTimeOrEndVoting = ({
       <Modal
         isOpen={isOpen === 'endVoting'}
         closeModal={() => resetModal()}
-        className="easi-body-normal padding-bottom-1 overflow-visible width-mobile-lg"
+        className="easi-body-normal padding-bottom-1 overflow-visible maxw-mobile-lg"
       >
         <h3 className="margin-top-0 margin-bottom-0">
           {t('statusCard.endVotingModal.heading')}
@@ -217,7 +217,7 @@ const AddTimeOrEndVoting = ({
 
         {err && (
           <Alert type="error" slim>
-            {t('technicalAssistance:documents.upload.error')}
+            {t('statusCard.endVotingModal.error')}
           </Alert>
         )}
 
@@ -227,7 +227,7 @@ const AddTimeOrEndVoting = ({
           {t('statusCard.endVotingModal.timeRemaining')}
         </p>
 
-        <p className="easi-body-large margin-top-0 margin-bottom-2 margin-right-2">
+        <p className="easi-body-medium margin-top-0 margin-bottom-2 margin-right-2">
           {t('statusCard.countdown', {
             days,
             hours,
@@ -239,7 +239,7 @@ const AddTimeOrEndVoting = ({
           {t('statusCard.endVotingModal.votingStatus')}
         </p>
 
-        <p className="easi-body-large margin-top-0 margin-bottom-05 margin-right-2">
+        <p className="easi-body-medium margin-top-0 margin-bottom-05 margin-right-2">
           {t('decisionCard.voteInfo', {
             noObjection: grbVotingInformation.numberOfNoObjection,
             objection: grbVotingInformation.numberOfObjection,
@@ -260,7 +260,7 @@ const AddTimeOrEndVoting = ({
 
           <Button
             type="button"
-            className="margin-left-2 margin-top-2"
+            className="margin-left-2"
             unstyled
             onClick={() => {
               resetModal();
