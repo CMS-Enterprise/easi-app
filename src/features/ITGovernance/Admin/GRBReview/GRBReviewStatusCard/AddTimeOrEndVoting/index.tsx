@@ -112,7 +112,7 @@ const AddTimeOrEndVoting = ({
       <Modal
         isOpen={isOpen === 'addTime'}
         closeModal={() => resetModal()}
-        className="easi-body-normal padding-bottom-1 overflow-scroll maxw-mobile-lg"
+        className="easi-body-normal padding-bottom-1 maxw-mobile-lg height-fit-content"
       >
         <h3 className="margin-top-0 margin-bottom-0">
           {t('statusCard.addTimeModal.heading')}
@@ -209,7 +209,7 @@ const AddTimeOrEndVoting = ({
       <Modal
         isOpen={isOpen === 'endVoting'}
         closeModal={() => resetModal()}
-        className="easi-body-normal padding-bottom-1 overflow-visible maxw-mobile-lg"
+        className="easi-body-normal padding-bottom-1 maxw-mobile-lg height-fit-content"
       >
         <h3 className="margin-top-0 margin-bottom-0">
           {t('statusCard.endVotingModal.heading')}
