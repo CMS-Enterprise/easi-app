@@ -89,7 +89,7 @@ const DecisionRecordTable = ({ grbReviewers }: DecisionRecordTableProps) => {
         // View comment modal
         grbReviewerViewComment?.voteComment && (
           <Modal
-            isOpen
+            isOpen={!!grbReviewerViewComment}
             closeModal={() => setGRBReviewerViewComment(null)}
             className="easi-modal__content--narrow"
           >

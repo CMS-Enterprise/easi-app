@@ -1,6 +1,7 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
 import { grbReviewers } from 'tests/mock/grbReview';
 import { systemIntake } from 'tests/mock/systemIntake';
@@ -58,5 +59,38 @@ describe('GRB review decision record table', () => {
         i18next.t<string>(`grbReview:votingRoles.${mockReviewer.votingRole}`)
       )
     ).toBeInTheDocument();
+  });
+
+  it('Opens the vote comment modal', () => {
+    render(
+      <MemoryRouter>
+        <DecisionRecord
+          systemIntakeId={systemIntake.id}
+          grbReviewers={grbReviewers}
+        />
+      </MemoryRouter>
+    );
+
+    const mockReviewer = grbReviewers[1];
+
+    const renderedReviewerRow = screen.getByTestId(
+      `grbReviewer-${mockReviewer.userAccount.username}`
+    );
+
+    const viewCommentButton = within(renderedReviewerRow).getByRole('button', {
+      name: 'View comment'
+    });
+
+    userEvent.click(viewCommentButton);
+
+    const modal = screen.getByRole('dialog');
+
+    expect(
+      within(modal).getByRole('heading', { level: 2, name: 'GRB comment' })
+    ).toBeInTheDocument();
+
+    expect(within(modal).getByText('No objection'));
+
+    expect(within(modal).getByText(mockReviewer.voteComment!));
   });
 });
