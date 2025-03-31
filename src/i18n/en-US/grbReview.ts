@@ -476,6 +476,7 @@ export default {
     vote: 'No vote cast',
     vote_OBJECTION: 'Objection',
     vote_NO_OBJECTION: 'No objection',
-    viewComment: 'View comment'
+    viewComment: 'View comment',
+    grbComment: 'GRB comment'
   }
 };

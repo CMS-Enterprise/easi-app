@@ -43,6 +43,14 @@ const VoteIcon = ({ vote, className }: VoteIconProps) => {
 
 type GRBReviewerVoteProps = {
   grbReviewer: SystemIntakeGRBReviewerFragment;
+  /**
+   * Set GRB reviewer and open modal on "View comment" button click
+   *
+   * Omit to hide "View comment" button
+   */
+  setGRBReviewerViewComment?: (
+    grbReviewer: SystemIntakeGRBReviewerFragment | null
+  ) => void;
 };
 
 /**
@@ -51,9 +59,12 @@ type GRBReviewerVoteProps = {
  * Includes a link to view vote comments
  */
 const GRBReviewerVote = ({
-  grbReviewer: { votingRole, vote, voteComment }
+  grbReviewer,
+  setGRBReviewerViewComment
 }: GRBReviewerVoteProps) => {
   const { t } = useTranslation('grbReview');
+
+  const { votingRole, vote, voteComment } = grbReviewer;
 
   // Return early if not voting member
   if (votingRole !== SystemIntakeGRBReviewerVotingRole.VOTING) {
@@ -62,13 +73,27 @@ const GRBReviewerVote = ({
 
   return (
     <div className="display-flex flex-align-center">
-      <p className="margin-0 display-flex flex-align-center width-card padding-right-2">
-        <VoteIcon vote={vote} className="margin-right-05" />
+      <p
+        className={classNames(
+          'margin-0 display-flex flex-align-center font-body-sm',
+          {
+            'width-card padding-right-2':
+              voteComment && setGRBReviewerViewComment
+          }
+        )}
+      >
+        <VoteIcon vote={vote} className="margin-right-1" />
         {t('decisionRecord.vote', { context: vote })}
       </p>
-      <Button type="button" unstyled onClick={() => null}>
-        {t('decisionRecord.viewComment')}
-      </Button>
+      {voteComment && setGRBReviewerViewComment && (
+        <Button
+          type="button"
+          unstyled
+          onClick={() => setGRBReviewerViewComment(grbReviewer)}
+        >
+          {t('decisionRecord.viewComment')}
+        </Button>
+      )}
     </div>
   );
 };

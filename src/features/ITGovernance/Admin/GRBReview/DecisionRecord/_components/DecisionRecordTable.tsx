@@ -1,9 +1,10 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Column, useSortBy, useTable } from 'react-table';
-import { Button, Table } from '@trussworks/react-uswds';
+import { Button, ModalHeading, Table } from '@trussworks/react-uswds';
 import { SystemIntakeGRBReviewerFragment } from 'gql/generated/graphql';
 
+import Modal from 'components/Modal';
 import {
   currentTableSortDescription,
   getColumnSortStatus,
@@ -21,6 +22,10 @@ type DecisionRecordTableProps = {
  */
 const DecisionRecordTable = ({ grbReviewers }: DecisionRecordTableProps) => {
   const { t } = useTranslation('grbReview');
+
+  // Set GRB reviewer to view comment in modal
+  const [grbReviewerViewComment, setGRBReviewerViewComment] =
+    useState<SystemIntakeGRBReviewerFragment | null>(null);
 
   /** Columns for table */
   const columns = useMemo<Column<SystemIntakeGRBReviewerFragment>[]>(() => {
@@ -51,7 +56,12 @@ const DecisionRecordTable = ({ grbReviewers }: DecisionRecordTableProps) => {
       },
       {
         Header: t<string>('Vote'),
-        accessor: grbReviewer => <GRBReviewerVote grbReviewer={grbReviewer} />,
+        accessor: grbReviewer => (
+          <GRBReviewerVote
+            grbReviewer={grbReviewer}
+            setGRBReviewerViewComment={setGRBReviewerViewComment}
+          />
+        ),
         width: 350
       }
     ];
@@ -74,76 +84,94 @@ const DecisionRecordTable = ({ grbReviewers }: DecisionRecordTableProps) => {
     table;
 
   return (
-    <div className="margin-top-6" data-testid="grb-participants-table">
-      <Table bordered={false} fullWidth scrollable {...getTableProps()}>
-        <thead>
-          {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
-                <th
-                  {...column.getHeaderProps(column.getSortByToggleProps())}
-                  aria-sort={getColumnSortStatus(column)}
-                  scope="col"
-                  className="border-bottom-2px"
-                  style={{
-                    width: column.width
-                  }}
-                >
-                  <Button
-                    type="button"
-                    className="width-full flex-justify"
-                    unstyled
-                    {...column.getSortByToggleProps()}
+    <>
+      {
+        // View comment modal
+        grbReviewerViewComment?.voteComment && (
+          <Modal
+            isOpen
+            closeModal={() => setGRBReviewerViewComment(null)}
+            className="easi-modal__content--narrow"
+          >
+            <ModalHeading className="margin-bottom-05">
+              {t('decisionRecord.grbComment')}
+            </ModalHeading>
+            <GRBReviewerVote grbReviewer={grbReviewerViewComment} />
+            <p>{grbReviewerViewComment.voteComment}</p>
+          </Modal>
+        )
+      }
+      <div className="margin-top-6" data-testid="grb-participants-table">
+        <Table bordered={false} fullWidth scrollable {...getTableProps()}>
+          <thead>
+            {headerGroups.map(headerGroup => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map(column => (
+                  <th
+                    {...column.getHeaderProps(column.getSortByToggleProps())}
+                    aria-sort={getColumnSortStatus(column)}
+                    scope="col"
+                    className="border-bottom-2px"
+                    style={{
+                      width: column.width
+                    }}
                   >
-                    {column.render('Header')}
-                    {getHeaderSortIcon(column)}
-                  </Button>
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map(row => {
-            prepareRow(row);
-            return (
-              <tr
-                {...row.getRowProps()}
-                data-testid={`grbReviewer-${row.original.userAccount.username}`}
-              >
-                {row.cells.map(cell => {
-                  return (
-                    <td
-                      {...cell.getCellProps()}
-                      style={{
-                        width: cell.column.width
-                      }}
+                    <Button
+                      type="button"
+                      className="width-full flex-justify"
+                      unstyled
+                      {...column.getSortByToggleProps()}
                     >
-                      {cell.render('Cell')}
-                    </td>
-                  );
-                })}
+                      {column.render('Header')}
+                      {getHeaderSortIcon(column)}
+                    </Button>
+                  </th>
+                ))}
               </tr>
-            );
-          })}
-        </tbody>
-      </Table>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map(row => {
+              prepareRow(row);
+              return (
+                <tr
+                  {...row.getRowProps()}
+                  data-testid={`grbReviewer-${row.original.userAccount.username}`}
+                >
+                  {row.cells.map(cell => {
+                    return (
+                      <td
+                        {...cell.getCellProps()}
+                        style={{
+                          width: cell.column.width
+                        }}
+                      >
+                        {cell.render('Cell')}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </Table>
 
-      {rows.length === 0 && (
-        <p className="text-italic margin-top-neg-1">
-          {t('participantsTable.noReviewers')}
-        </p>
-      )}
+        {rows.length === 0 && (
+          <p className="text-italic margin-top-neg-1">
+            {t('participantsTable.noReviewers')}
+          </p>
+        )}
 
-      {rows.length > 0 && (
-        <p
-          className="usa-sr-only usa-table__announcement-region"
-          aria-live="polite"
-        >
-          {currentTableSortDescription(headerGroups[0])}
-        </p>
-      )}
-    </div>
+        {rows.length > 0 && (
+          <p
+            className="usa-sr-only usa-table__announcement-region"
+            aria-live="polite"
+          >
+            {currentTableSortDescription(headerGroups[0])}
+          </p>
+        )}
+      </div>
+    </>
   );
 };
 

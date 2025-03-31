@@ -86,7 +86,8 @@ export const grbReviewers: SystemIntakeGRBReviewerFragment[] = [
     grbRole: SystemIntakeGRBReviewerRole.CMCS_REP,
     votingRole: SystemIntakeGRBReviewerVotingRole.VOTING,
     vote: SystemIntakeAsyncGRBVotingOption.NO_OBJECTION,
-    voteComment: null,
+    voteComment:
+      'Lorem ipsum dolor sit amet consectetur. Bibendum metus sollicitudin sed morbi convallis tincidunt cursus ullamcorper. Id iaculis aenean laoreet ultrices diam diam odio ante. Neque sit condimentum semper bibendum adipiscing lectus pellentesque. Porttitor ipsum pharetra scelerisque vitae iaculis pellentesque fermentum.',
     dateVoted: null,
     userAccount: {
       id: '08008125-2d0c-434f-b9e4-d26ce6e26fc2',
