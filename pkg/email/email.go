@@ -58,6 +58,7 @@ type templates struct {
 	cedarYouHaveBeenAdded                           templateCaller
 	cedarNewTeamMember                              templateCaller
 	systemIntakeAdminUploadDocTemplate              templateCaller
+	systemIntakeGRBReviewDeadlineExtendedTemplate   templateCaller
 	systemIntakeSubmitInitialFormRequesterTemplate  templateCaller
 	systemIntakeSubmitInitialFormReviewerTemplate   templateCaller
 	systemIntakeSubmitBusinessCaseRequesterTemplate templateCaller
@@ -283,6 +284,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(sisAdminUploadDocTemplateName)
 	}
 	appTemplates.systemIntakeAdminUploadDocTemplate = sisAdminUploadDocTemplate
+
+	sisGRBReviewDeadlineExtendedTemplateName := "system_intake_grb_review_deadline_extended.gohtml"
+	sisGRBReviewDeadlineExtendedTemplate := rawTemplates.Lookup(sisGRBReviewDeadlineExtendedTemplateName)
+	if sisGRBReviewDeadlineExtendedTemplate == nil {
+		return Client{}, templateError(sisGRBReviewDeadlineExtendedTemplateName)
+	}
+	appTemplates.systemIntakeGRBReviewDeadlineExtendedTemplate = sisGRBReviewDeadlineExtendedTemplate
 
 	sisInitialFormRequesterTemplateName := "system_intake_submit_initial_form_requester.gohtml"
 	sisInitialFormRequesterTemplate := rawTemplates.Lookup(sisInitialFormRequesterTemplateName)
