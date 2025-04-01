@@ -32,7 +32,9 @@ const ParticipantsSection = ({
   grbReviewStartedAt
 }: ParticipantsSectionProps) => {
   const { t } = useTranslation('grbReview');
+
   const history = useHistory();
+
   const { pathname } = useLocation();
 
   const isITGovAdmin = useContext(ITGovAdminContext);
@@ -55,10 +57,10 @@ const ParticipantsSection = ({
               type="button"
               onClick={() => history.push(`${pathname}/add`)}
               disabled={state === SystemIntakeState.CLOSED}
-              outline={grbReviewers.length > 0}
+              outline={grbReviewers?.length > 0}
             >
               {t(
-                grbReviewers.length > 0
+                grbReviewers?.length > 0
                   ? 'addAnotherGrbReviewer'
                   : 'addGrbReviewer'
               )}
@@ -122,6 +124,7 @@ const ParticipantsSection = ({
           </ButtonGroup>
         </div>
       )}
+
       <ParticipantsTable grbReviewers={grbReviewers} />
     </>
   );

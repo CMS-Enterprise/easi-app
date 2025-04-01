@@ -637,7 +637,7 @@ type SystemIntakeGovernanceTeam {
 
 """
 The Information System Security Officer (ISSO) that is
-assicuated with a system request, if any
+associated with a system request, if any
 """
 type SystemIntakeISSO {
   isPresent: Boolean
@@ -863,6 +863,7 @@ type SystemIntake {
   grbReviewAsyncRecordingTime: Time
   grbReviewAsyncEndDate: Time
   grbReviewAsyncGRBMeetingTime: Time
+  grbReviewStandardStatus: SystemIntakeGRBReviewStandardStatusType
   grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType
   grbReviewAsyncManualEndDate: Time
 }
@@ -919,12 +920,20 @@ enum GRBVotingInformationStatus {
 }
 
 """
-The status type of the System Intake GRB Review
+The status type of the System Intake GRB Review (For Async Reviews only)
 """
 enum SystemIntakeGRBReviewAsyncStatusType {
   IN_PROGRESS
   COMPLETED
   PAST_DUE
+}
+
+"""
+The status type of the System Intake GRB Review (For Standard reviews only)
+"""
+enum SystemIntakeGRBReviewStandardStatusType {
+  SCHEDULED
+  COMPLETED
 }
 
 type SystemIntakeContractNumber {

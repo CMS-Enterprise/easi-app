@@ -1,12 +1,9 @@
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { Route, Switch, useParams } from 'react-router-dom';
+import { Route, Switch, useHistory, useParams } from 'react-router-dom';
 import NotFound from 'features/Miscellaneous/NotFound';
 import RequestLinkForm from 'features/RequestLinking/RequestLinkForm';
-import {
-  SystemIntakeGRBReviewFragment,
-  useGetSystemIntakeGRBReviewQuery
-} from 'gql/generated/graphql';
+import { useGetSystemIntakeGRBReviewQuery } from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { AppState } from 'stores/reducers/rootReducer';
 import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
@@ -14,6 +11,7 @@ import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 import PageLoading from 'components/PageLoading';
 import user from 'utils/user';
 
+import GRBReviewerForm from './GRBReview/GRBReviewerForm';
 import GRBReviewForm from './GRBReview/GRBReviewForm';
 import RequestOverview from './RequestOverview/RequestOverview';
 
@@ -21,6 +19,8 @@ const GovernanceReviewTeam = () => {
   const { groups, euaId, isUserSet } = useSelector(
     (state: AppState) => state.auth
   );
+
+  const history = useHistory();
 
   const flags = useFlags();
 
@@ -34,9 +34,11 @@ const GovernanceReviewTeam = () => {
     }
   });
 
-  const grbReview = data?.systemIntake;
+  const grbReview = useMemo(() => {
+    return data?.systemIntake;
+  }, [data?.systemIntake]);
 
-  const { grbVotingInformation, grbReviewStartedAt } = grbReview || {};
+  const { grbVotingInformation } = grbReview || {};
 
   const { grbReviewers } = grbVotingInformation || {};
 
@@ -48,6 +50,8 @@ const GovernanceReviewTeam = () => {
   }, [grbReviewers, euaId]);
 
   const isITGovAdmin = user.isITGovAdmin(groups, flags);
+
+  const isFromGRBSetup = history.location.search === '?from-grb-setup';
 
   if (isUserSet && !loading) {
     if (!grbReview) {
@@ -71,18 +75,25 @@ const GovernanceReviewTeam = () => {
                 path="/it-governance/:systemId/grb-review/:step(review-type|presentation|documents|participants)"
                 exact
               >
-                <GRBReviewForm grbReview={grbReview} />
+                <GRBReviewForm grbReview={grbReview} loading={loading} />
               </Route>
             )}
 
-            <Route path="/it-governance/:systemId/:activePage/:subPage?" exact>
-              <RequestOverview
-                grbVotingInformation={
-                  grbVotingInformation ||
-                  ({} as SystemIntakeGRBReviewFragment['grbVotingInformation'])
+            <Route
+              path="/it-governance/:systemId/grb-review/:action(add|edit)"
+              exact
+            >
+              <GRBReviewerForm
+                isFromGRBSetup={isFromGRBSetup}
+                initialGRBReviewers={
+                  grbReview.grbVotingInformation?.grbReviewers
                 }
-                grbReviewStartedAt={grbReviewStartedAt}
+                grbReviewStartedAt={grbReview.grbReviewStartedAt}
               />
+            </Route>
+
+            <Route path="/it-governance/:systemId/:activePage/:subPage?" exact>
+              <RequestOverview />
             </Route>
 
             <Route path="*" component={NotFound} />

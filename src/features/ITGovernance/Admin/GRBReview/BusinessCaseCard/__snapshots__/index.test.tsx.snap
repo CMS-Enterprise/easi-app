@@ -7,7 +7,7 @@ exports[`BusinessCaseCard > renders correctly with a submitted business case 1`]
     data-testid="Card"
   >
     <div
-      class="usa-card__container margin-0 border-width-1px shadow-2"
+      class="usa-card__container margin-0 border-width-1px shadow-2 radius-md"
     >
       <header
         class="usa-card__header"

@@ -1,63 +1,48 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`GRBReviewStatusCard > renders the standard card with correct status and meeting details 1`] = `
+exports[`GRBReviewStatusCard > renders the Standard Card when grbReviewType is STANDARD 1`] = `
 <DocumentFragment>
-  <li
-    class="usa-card test-class"
-    data-testid="Card"
+  <div
+    class="padding-3 radius-md bg-primary-lighter"
   >
-    <div
-      class="usa-card__container margin-0 border-none radius-md bg-primary-lighter"
+    <h3
+      class="margin-top-0 margin-bottom-2"
     >
-      <header
-        class="usa-card__header"
-        data-testid="CardHeader"
+      Standard meeting review
+    </h3>
+    <span
+      class="display-flex border-bottom-1px border-primary-light margin-bottom-2 padding-bottom-2"
+    >
+      <h4
+        class="margin-0 margin-right-1 flex-align-self-center"
       >
-        <h3
-          class="display-inline-block margin-right-2 margin-bottom-0"
-        >
-          Standard meeting review
-        </h3>
-      </header>
+        Review status
+      </h4>
+      <span
+        class="easi-tag bg-white text-base-darker font-body-sm flex-align-self-center"
+        data-testid="async-status"
+      >
+        Scheduled
+      </span>
+    </span>
+    <span>
+      <h4
+        class="margin-0 margin-right-1 margin-top-2px margin-bottom-05"
+      >
+        GRB meeting
+      </h4>
       <div
-        class="usa-card__body"
-        data-testid="CardBody"
+        class="easi-body-large"
       >
-        <span
-          class="display-flex border-bottom-1px border-primary-light margin-bottom-2 padding-bottom-2"
-        >
-          <h4
-            class="margin-0 margin-right-1 margin-top-2px"
-          >
-            Review status
-          </h4>
-          <span
-            class="easi-tag bg-white text-base-darker font-body-sm"
-            data-testid="tag"
-          >
-            Scheduled
-          </span>
-        </span>
-        <span>
-          <h4
-            class="margin-0 margin-right-1 margin-top-2px margin-bottom-05"
-          >
-            GRB meeting
-          </h4>
-          <div
-            class="easi-body-large"
-          >
-            01/01/2023
-          </div>
-          <a
-            class="usa-link usa-button usa-button--outline margin-top-1"
-            href="/dates"
-          >
-            Change meeting date
-          </a>
-        </span>
+        03/28/2025
       </div>
-    </div>
-  </li>
+      <a
+        class="usa-link usa-button usa-button--outline margin-top-1"
+        href="/it-governance/123/dates"
+      >
+        Change meeting date
+      </a>
+    </span>
+  </div>
 </DocumentFragment>
 `;

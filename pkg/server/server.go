@@ -11,6 +11,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/scheduler"
 )
 
 // Server holds dependencies for running the EASi server
@@ -77,6 +78,8 @@ func NewServer(config *viper.Viper) *Server {
 // Serve runs the server
 func Serve(config *viper.Viper) {
 	s := NewServer(config)
+	// TODO: (scheduler) is there another way to structure this so we can defer in the same location as starting the server?
+	defer scheduler.SharedScheduler.Stop()
 
 	useTLS := config.GetBool("USE_TLS")
 	if useTLS {
