@@ -266,11 +266,11 @@ exports[`GRB review form - participants and timeframe > renders the step 1`] = `
             <div
               class="margin-top-5 border-top-1px border-base-light padding-top-1"
             >
-              <p
-                class="text-bold margin-y-0"
+              <h4
+                class="margin-y-0"
               >
                 GRB reviewers
-              </p>
+              </h4>
               <p
                 class="margin-y-0 text-base-dark line-height-sans-4"
               >
