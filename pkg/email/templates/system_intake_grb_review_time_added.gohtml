@@ -1,0 +1,20 @@
+{{template "easi_header.gohtml"}}
+
+<p>{{.AdminName}} added {{.TimeAdded}} to the review for {{.ProjectTitle}}. It will now end on {{.GRBReviewEndDate}} at 5:00pm EST.</p>
+<p><a href="{{.SystemIntakeRequestLink}}">View this request in EASi</a></p>
+<br>
+<p><b>Request Summary:</b>
+  Project title: {{.ProjectTitle}}
+  Requester: {{.RequesterName}}, {{.ComponentAcronym}}
+  GRB review dates: {{.GRBReviewStart}}-{{.GRBReviewDeadline}}
+  Current Votes: {{.VoteTally}}
+</p>
+<div class="no-margin">
+  <p>Next steps:</p>
+  <ul>
+    <li>Wait for the end of the review timeframe, end the voting early, or add additional time to the voting period.</li>
+    <li>Once the voting is over and a quorum of votes has been cast, issue a decision in EASi.</li>
+  </ul>
+</div>
+<hr>
+<p>You will continue to receive email notifications about this request until it is closed.</p>
