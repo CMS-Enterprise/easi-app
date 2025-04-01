@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
@@ -142,4 +143,8 @@ func UpdateSystemIntakeGRBReviewType(
 	return &models.UpdateSystemIntakePayload{
 		SystemIntake: updatedIntake,
 	}, nil
+}
+
+func SetSystemIntakeGRBReviewerReminderSent(ctx context.Context, systemIntakeID uuid.UUID, sendTime time.Time) error {
+	return nil
 }

@@ -777,7 +777,7 @@ export type GRBReviewerComparisonIntake = {
   reviewers: Array<GRBReviewerComparison>;
 };
 
-/** GRBVotingInformation holds all the information about the voting session for a GRB Review.  */
+/** GRBVotingInformation holds all the information about the voting session for a GRB Review. */
 export type GRBVotingInformation = {
   __typename: 'GRBVotingInformation';
   /** Who is doing the review for these GRB sessions */
@@ -1044,6 +1044,7 @@ export type Mutation = {
   sendFeedbackEmail?: Maybe<Scalars['String']['output']>;
   sendGRBReviewPresentationDeckReminderEmail: Scalars['Boolean']['output'];
   sendReportAProblemEmail?: Maybe<Scalars['String']['output']>;
+  sendSystemIntakeGRBReviewerReminder: Scalars['Time']['output'];
   sendTRBGuidanceLetter: TRBGuidanceLetter;
   setRolesForUserOnSystem?: Maybe<Scalars['String']['output']>;
   setSystemIntakeGRBPresentationLinks?: Maybe<SystemIntakeGRBPresentationLinks>;
@@ -1400,6 +1401,12 @@ export type MutationSendGRBReviewPresentationDeckReminderEmailArgs = {
 /** Defines the mutations for the schema */
 export type MutationSendReportAProblemEmailArgs = {
   input: SendReportAProblemEmailInput;
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationSendSystemIntakeGRBReviewerReminderArgs = {
+  systemIntakeID: Scalars['UUID']['input'];
 };
 
 
@@ -1987,6 +1994,7 @@ export type SystemIntake = {
   grbReviewAsyncManualEndDate?: Maybe<Scalars['Time']['output']>;
   grbReviewAsyncRecordingTime?: Maybe<Scalars['Time']['output']>;
   grbReviewAsyncStatus?: Maybe<SystemIntakeGRBReviewAsyncStatusType>;
+  grbReviewReminderLastSent?: Maybe<Scalars['Time']['output']>;
   grbReviewStandardStatus?: Maybe<SystemIntakeGRBReviewStandardStatusType>;
   grbReviewStartedAt?: Maybe<Scalars['Time']['output']>;
   /** GRB Review Form */

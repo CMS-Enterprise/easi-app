@@ -167,6 +167,7 @@ type SystemIntake struct {
 	GrbReviewAsyncEndDate                             *time.Time                   `json:"grbReviewAsyncEndDate" db:"grb_review_async_end_date"`
 	GrbReviewAsyncGRBMeetingTime                      *time.Time                   `json:"grbReviewAsyncGRBMeetingTime" db:"grb_review_async_grb_meeting_time"`
 	GrbReviewAsyncManualEndDate                       *time.Time                   `json:"grbReviewAsyncManualEndDate" db:"grb_review_async_manual_end_date"`
+	GrbReviewReminderLastSent                         *time.Time                   `json:"grbReviewReminderLastSent" db:"grb_review_reminder_last_sent"`
 }
 
 // SystemIntakes is a list of System Intakes

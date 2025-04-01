@@ -866,10 +866,11 @@ type SystemIntake {
   grbReviewStandardStatus: SystemIntakeGRBReviewStandardStatusType
   grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType
   grbReviewAsyncManualEndDate: Time
+  grbReviewReminderLastSent: Time
 }
 
 """
-GRBVotingInformation holds all the information about the voting session for a GRB Review. 
+GRBVotingInformation holds all the information about the voting session for a GRB Review.
 """
 type GRBVotingInformation {
   """
@@ -2755,7 +2756,9 @@ type Mutation {
   updateSystemIntakeGRBReviewer(input: UpdateSystemIntakeGRBReviewerInput!): SystemIntakeGRBReviewer!
   deleteSystemIntakeGRBReviewer(input: DeleteSystemIntakeGRBReviewerInput!): UUID!
 
-  castSystemIntakeGRBReviewerVote(input: CastSystemIntakeGRBReviewerVoteInput!):SystemIntakeGRBReviewer!
+  castSystemIntakeGRBReviewerVote(input: CastSystemIntakeGRBReviewerVoteInput!): SystemIntakeGRBReviewer!
+
+  sendSystemIntakeGRBReviewerReminder(systemIntakeID: UUID!): Time!
 
   createSystemIntakeGRBDiscussionPost(input: createSystemIntakeGRBDiscussionPostInput!): SystemIntakeGRBReviewDiscussionPost
   createSystemIntakeGRBDiscussionReply(input: createSystemIntakeGRBDiscussionReplyInput!): SystemIntakeGRBReviewDiscussionPost

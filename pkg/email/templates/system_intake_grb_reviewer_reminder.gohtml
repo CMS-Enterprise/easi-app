@@ -1,0 +1,21 @@
+{{template "easi_header.gohtml"}}
+
+<p>Reminder: Your input and feedback as a GRB member is due soon for {{.RequestName}}. Please vote by {{.EndDate}} at
+  5pm Eastern Time. Use the link below to review the request materials and vote on the merit of the
+  project.</p>
+
+<p><strong><a href="{{.Link}}">View this request in EASi</a></strong></p>
+
+
+<div class="no-margin">
+  <p><strong>Request summary:</strong></p>
+  <p>Project title: {{.RequestName}}</p>
+  <p>Requester: {{.RequesterName}}, {{.RequesterComponent}}</p>
+  <p>GRB review dates: {{.DateInfo}}</p>
+</div>
+
+<p>If you have questions, please contact the Governance Team at <a
+    href="mailto:{{.ITGovernanceInboxAddress}}">{{.ITGovernanceInboxAddress}}</a>.</p>
+<hr>
+
+<p>You may continue to receive email notifications about this request until a decision is issued and it is closed.</p>
