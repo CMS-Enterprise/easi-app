@@ -23,7 +23,7 @@ import BusinessCaseCard from './BusinessCaseCard';
 import DecisionRecordCard from './DecisionRecordCard';
 import Discussions from './Discussions';
 import GRBReviewAdminTask from './GRBReviewAdminTask';
-import GRBReviewStatusCard, { GRBReviewStatus } from './GRBReviewStatusCard';
+import GRBReviewStatusCard from './GRBReviewStatusCard';
 import GRBVotingPanel from './GRBVotingPanel';
 import IntakeRequestCard from './IntakeRequestCard';
 
@@ -102,13 +102,9 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
         </p>
 
         {/* GRB Review Status */}
-        <GRBReviewStatusCard
-          grbReviewType={grbReview.grbReviewType}
-          grbDate={grbReview.grbDate}
-          grbReviewStatus={GRBReviewStatus.SCHEDULED}
-          grbReviewStartedAt={grbReview.grbReviewStartedAt}
-        />
+        <GRBReviewStatusCard grbReview={grbReview} />
 
+        {/* Decision Record */}
         <DecisionRecordCard
           grbVotingInformation={grbReview.grbVotingInformation}
         />

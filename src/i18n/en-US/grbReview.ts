@@ -1,6 +1,7 @@
 import { GRBReviewStatus } from 'features/ITGovernance/Admin/GRBReview/GRBReviewStatusCard';
 import {
   SystemIntakeAsyncGRBVotingOption,
+  SystemIntakeGRBReviewAsyncStatusType,
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole
 } from 'gql/generated/graphql';
@@ -130,6 +131,7 @@ export default {
     virusScanning: 'Virus scanning in progress...',
     adminEmptyAlert:
       'If this GRB review has an asynchronous presentation and recording, you may add that content to EASi to provide additional information for GRB reviews.',
+    emptyAlert: 'The GRB have not yet added presentation links.',
     modalRemoveLinks: {
       title: 'Remove presentation links?',
       text: 'This action will remove any links and files previously added about this asynchronous presesntation and cannot be undone. Are you sure you want to continue?',
@@ -452,8 +454,45 @@ export default {
     changeMeetingDate: 'Change meeting date',
     grbReviewStatus: {
       [GRBReviewStatus.SCHEDULED]: 'Scheduled',
-      [GRBReviewStatus.IN_PROGRESS]: 'In progress',
-      [GRBReviewStatus.COMPLETED]: 'Complete'
+      [SystemIntakeGRBReviewAsyncStatusType.IN_PROGRESS]: 'In progress',
+      [SystemIntakeGRBReviewAsyncStatusType.COMPLETED]: 'Complete',
+      [SystemIntakeGRBReviewAsyncStatusType.PAST_DUE]: 'Past due'
+    },
+    timeRemaining: 'Time remaining for review',
+    countdown: '{{days}} days, {{hours}} hours, {{minutes}} minutes',
+    reviewEnds: 'Review ends {{date}}, 5:00pm EST',
+    addTime: 'Add time',
+    endVoting: 'End voting',
+    addTimeModal: {
+      heading: 'Add additional time to this GRB review?',
+      description:
+        'Use the field below to add additional time to this review. The GRB review page will be updated with the new timeframe.',
+      label: 'Set new end date ',
+      hint: `Select the new date when the GRB review should end. The review will close at 5pm EST on that day. 
+Format: mm/dd/yyyy`,
+      newEnd: 'This review will now end on {{date}}.',
+      addTime: 'Add time',
+      goBack: 'Go back and don’t add time',
+      success:
+        'You added time to this GRB review. The new end date is {{date}} at 5:00pm EST.',
+      error:
+        'There was an issue adding time to this review. Please try again, and if the problem persists, try again later.'
+    },
+    endVotingModal: {
+      heading: 'End voting early?',
+      description:
+        'Completing this action will end this GRB review early. GRB members will no longer be able to add votes or change their vote for this request.',
+      timeRemaining: 'Time remaining',
+      countdown: '{{days}} days, {{hours}} hours, {{minutes}} minutes',
+      votingStatus: 'Voting status',
+      results:
+        '{{noObjection}} no objection, {{objection}} objection, {{notVoted}} not voted',
+      endEarly: 'End early',
+      goBack: 'Go back and don’t end early',
+      success:
+        'You have ended this GRB review early. GRB members will no longer be able to add or change votes.',
+      error:
+        'There was an issue ending the voting early. Please try again, and if the problem persists, try again later.'
     }
   },
   decisionCard: {

@@ -111,7 +111,7 @@ const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
       <Modal
         isOpen={isOpen}
         closeModal={() => resetModal()}
-        className="easi-body-normal padding-bottom-1"
+        className="easi-body-normal padding-bottom-1 width-tablet"
       >
         <h3 className="margin-top-0 margin-bottom-0">
           {hasVoted ? (

@@ -14,6 +14,7 @@ export default gql(/* GraphQL */ `
     grbReviewAsyncRecordingTime
     grbReviewStartedAt
     grbReviewType
+    grbReviewAsyncStatus
 
     grbVotingInformation {
       grbReviewers {
