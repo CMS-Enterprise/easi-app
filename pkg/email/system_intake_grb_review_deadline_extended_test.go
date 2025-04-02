@@ -16,6 +16,7 @@ func (s *EmailTestSuite) TestSystemIntakeGRBReviewDeadlineExtended() {
 	projectTitle := "My Great Project"
 	requesterName := "Jane Doe"
 	componentAcronym := "ABC"
+	grbReviewStart := time.Date(2025, 1, 10, 0, 0, 0, 0, time.UTC)
 	deadline := time.Date(2026, 5, 10, 0, 0, 0, 0, time.UTC)
 
 	recipient := models.NewEmailAddress("fake@fake.com")
@@ -36,6 +37,7 @@ func (s *EmailTestSuite) TestSystemIntakeGRBReviewDeadlineExtended() {
 		projectTitle,
 		requesterName,
 		componentAcronym,
+		grbReviewStart,
 		deadline,
 	)
 	s.NoError(err)
@@ -57,7 +59,7 @@ func (s *EmailTestSuite) TestSystemIntakeGRBReviewDeadlineExtended() {
 <p><b>Request Summary:</b>
   Project title: %s
   Requester: %s, %s
-  GRB review dates: %s
+  GRB review dates: %s-%s
 </p>
 <p>If you have questions, please contact the Governance Team at  <a href="mailto:%s">%s</a>.</p>
 <hr>
@@ -68,7 +70,8 @@ func (s *EmailTestSuite) TestSystemIntakeGRBReviewDeadlineExtended() {
 		projectTitle,
 		requesterName,
 		componentAcronym,
-		deadline.Format("01/02/2006"), // because no start date is provided
+		grbReviewStart.Format("01/02/2006"),
+		deadline.Format("01/02/2006"),
 		s.config.GRTEmail.String(),
 		s.config.GRTEmail.String(),
 	)
