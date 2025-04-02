@@ -188,24 +188,32 @@ func (info *GRBVotingInformation) VotingStatus() GRBVotingInformationStatus {
 			return GRBVSInProgress
 		}
 	}
-	// we know here that the end date has passed
+
+	// we know here that the natural end date has passed and voting was not ended manually
+
+	// even with the end date in the past, voting is still in progress if no quorum
+	if !quorumReached {
+		return GRBVSInProgress
+	}
+
+	// we know here that quorum has been reached
 
 	objections := info.NumberOfObjection()
 
 	// check for approved
-	if quorumReached && objections == 0 {
+	if objections == 0 {
 		return GRBVSApproved
 	}
 
 	// check for not approved
-	if quorumReached && objections > 1 {
+	if objections > 1 {
 		return GRBVSNotApproved
 	}
 
 	// check for inconclusive
-	if quorumReached && objections == 1 {
+	if objections == 1 {
 		return GRBVSInconclusive
 	}
 
-	return GRBVSNotStarted
+	return GRBVSInProgress
 }
