@@ -304,6 +304,28 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewerComparison() {
 	})
 }
 
+func (s *ResolverSuite) TestValidateCanSendReminder() {
+	type testCase struct {
+		name      string
+		intake    *models.SystemIntake
+		expectErr bool
+	}
+
+	testCases := []testCase{
+		{
+			name:      "nil intake",
+			intake:    nil,
+			expectErr: true,
+		},
+	}
+	for _, tc := range testCases {
+		s.Run(tc.name, func() {
+			err := validateCanSendReminder(tc.intake)
+			s.Equal(tc.expectErr, err != nil)
+		})
+	}
+}
+
 func (s *ResolverSuite) createIntakeAndAddReviewer(reviewer *models.CreateGRBReviewerInput) (*models.SystemIntake, *models.SystemIntakeGRBReviewer) {
 	intake, reviewers := s.createIntakeAndAddReviewers(reviewer)
 	return intake, reviewers[0]

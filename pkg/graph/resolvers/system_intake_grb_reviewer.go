@@ -304,25 +304,8 @@ func SendSystemIntakeGRBReviewerReminder(ctx context.Context, store *storage.Sto
 		return nil, fmt.Errorf("problem getting system intake when attempting to send reminder")
 	}
 
-	if systemIntake == nil {
-		return nil, errors.New("unexpected nil system intake when attempting to send reminder")
-	}
-
-	// prevent sending within 24 hours of last reminder
-	if systemIntake.GrbReviewReminderLastSent != nil && systemIntake.GrbReviewReminderLastSent.After(time.Now().Add(-24*time.Hour)) {
-		return nil, errors.New("previous reminder sent less than 24 hours ago")
-	}
-
-	if systemIntake.GRBReviewStartedAt == nil {
-		return nil, errors.New("grb review not yet started when attempting to send reminder")
-	}
-
-	if systemIntake.GrbReviewAsyncEndDate == nil {
-		return nil, errors.New("grb end date missing when attempting to send reminder")
-	}
-
-	if systemIntake.GrbReviewAsyncManualEndDate != nil {
-		return nil, errors.New("grb review found to be manually ended when attempting to send reminder")
+	if err := validateCanSendReminder(systemIntake); err != nil {
+		return nil, fmt.Errorf("invalid reminder request: %w", err)
 	}
 
 	// find GRB reviewers who haven't voted yet
@@ -381,4 +364,29 @@ func SendSystemIntakeGRBReviewerReminder(ctx context.Context, store *storage.Sto
 	}
 
 	return &sentTime, nil
+}
+
+func validateCanSendReminder(systemIntake *models.SystemIntake) error {
+	if systemIntake == nil {
+		return errors.New("unexpected nil system intake when attempting to send reminder")
+	}
+
+	// prevent sending within 24 hours of last reminder
+	if systemIntake.GrbReviewReminderLastSent != nil && systemIntake.GrbReviewReminderLastSent.After(time.Now().Add(-24*time.Hour)) {
+		return errors.New("previous reminder sent less than 24 hours ago")
+	}
+
+	if systemIntake.GRBReviewStartedAt == nil {
+		return errors.New("grb review not yet started when attempting to send reminder")
+	}
+
+	if systemIntake.GrbReviewAsyncEndDate == nil {
+		return errors.New("grb end date missing when attempting to send reminder")
+	}
+
+	if systemIntake.GrbReviewAsyncManualEndDate != nil {
+		return errors.New("grb review found to be manually ended when attempting to send reminder")
+	}
+
+	return nil
 }
