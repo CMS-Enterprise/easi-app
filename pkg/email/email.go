@@ -59,6 +59,9 @@ type templates struct {
 	cedarNewTeamMember                              templateCaller
 	systemIntakeAdminUploadDocTemplate              templateCaller
 	systemIntakeGRBReviewDeadlineExtendedTemplate   templateCaller
+	systemIntakeGRBReviewRestartedTemplate          templateCaller
+	systemIntakeGRBReviewRestartedAdminTemplate     templateCaller
+	systemIntakeGRBReviewTimeAddedTemplate          templateCaller
 	systemIntakeSubmitInitialFormRequesterTemplate  templateCaller
 	systemIntakeSubmitInitialFormReviewerTemplate   templateCaller
 	systemIntakeSubmitBusinessCaseRequesterTemplate templateCaller
@@ -291,6 +294,27 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(sisGRBReviewDeadlineExtendedTemplateName)
 	}
 	appTemplates.systemIntakeGRBReviewDeadlineExtendedTemplate = sisGRBReviewDeadlineExtendedTemplate
+
+	sisGRBReviewRestartedTemplateName := "system_intake_grb_review_restarted.gohtml"
+	sisGRBReviewRestartedTemplate := rawTemplates.Lookup(sisGRBReviewRestartedTemplateName)
+	if sisGRBReviewRestartedTemplate == nil {
+		return Client{}, templateError(sisGRBReviewRestartedTemplateName)
+	}
+	appTemplates.systemIntakeGRBReviewRestartedTemplate = sisGRBReviewRestartedTemplate
+
+	sisGRBReviewRestartedAdminTemplateName := "system_intake_grb_review_restarted_admin.gohtml"
+	sisGRBReviewRestartedAdminTemplate := rawTemplates.Lookup(sisGRBReviewRestartedAdminTemplateName)
+	if sisGRBReviewRestartedAdminTemplate == nil {
+		return Client{}, templateError(sisGRBReviewRestartedAdminTemplateName)
+	}
+	appTemplates.systemIntakeGRBReviewRestartedAdminTemplate = sisGRBReviewRestartedAdminTemplate
+
+	sisGRBReviewTimeAddedTemplateName := "system_intake_grb_review_time_added.gohtml"
+	sisGRBReviewTimeAddedTemplate := rawTemplates.Lookup(sisGRBReviewTimeAddedTemplateName)
+	if sisGRBReviewTimeAddedTemplate == nil {
+		return Client{}, templateError(sisGRBReviewTimeAddedTemplateName)
+	}
+	appTemplates.systemIntakeGRBReviewTimeAddedTemplate = sisGRBReviewTimeAddedTemplate
 
 	sisInitialFormRequesterTemplateName := "system_intake_submit_initial_form_requester.gohtml"
 	sisInitialFormRequesterTemplate := rawTemplates.Lookup(sisInitialFormRequesterTemplateName)

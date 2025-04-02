@@ -37,27 +37,29 @@ func (sie systemIntakeEmails) systemIntakeGRBReviewDeadlineExtendedBody(
 	}
 
 	var b bytes.Buffer
-	if sie.client.templates.systemIntakePresentationDeckUploadReminder == nil {
-		return "", errors.New("presentation deck upload reminder email template is nil")
+	if sie.client.templates.systemIntakeGRBReviewDeadlineExtendedTemplate == nil {
+		return "", errors.New("systemIntakeGRBReviewDeadlineExtended template is not defined")
 	}
 
 	// TODO: Update the template reference to the correct template for the GRB review deadline extended email
-	err := sie.client.templates.systemIntakePresentationDeckUploadReminder.Execute(&b, data)
+	err := sie.client.templates.systemIntakeGRBReviewDeadlineExtendedTemplate.Execute(&b, data)
 	if err != nil {
 		return "", err
 	}
 	return b.String(), nil
 }
 
-// SendPresentationDeckUploadReminder sends an email to the requesters of a system intake to remind them to upload the presentation deck
-func (sie systemIntakeEmails) SendPresentationDeckUploadReminder(
+// SendSystemIntakeGRBReviewDeadlineExtended sends an email to the requester when the GRB review deadline is extended
+func (sie systemIntakeEmails) SendSystemIntakeGRBReviewDeadlineExtended(
 	ctx context.Context,
 	recipients models.EmailNotificationRecipients,
 	systemIntakeID uuid.UUID,
 	projectTitle string,
+	grbReviewDeadline time.Time,
 ) error {
-	subject := fmt.Sprintf("GRB reminder: upload presentation for %s", projectTitle)
-	body, err := sie.presentationDeckUploadReminderBody(systemIntakeID, projectTitle)
+	subject := fmt.Sprintf("The Governance Admin Team has extended the deadline for this GRB review (%s)", projectTitle)
+
+	body, err := sie.systemIntakeGRBReviewDeadlineExtendedBody(systemIntakeID, projectTitle, grbReviewDeadline)
 	if err != nil {
 		return err
 	}
