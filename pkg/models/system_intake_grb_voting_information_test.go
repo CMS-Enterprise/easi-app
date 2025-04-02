@@ -207,6 +207,39 @@ func (s *ModelTestSuite) TestVotingStatus() {
 			},
 		},
 		{
+			name:     "Inconclusive - ended manually (one objection vote)",
+			expected: GRBVSInconclusive,
+			info: &GRBVotingInformation{
+				SystemIntake: &SystemIntake{
+					GRBReviewStartedAt:          helpers.PointerTo(now.AddDate(0, 0, -1)),
+					GrbReviewAsyncEndDate:       helpers.PointerTo(now.AddDate(0, 0, 1)),
+					GrbReviewAsyncManualEndDate: helpers.PointerTo(now.AddDate(0, 0, -1)),
+				},
+				GRBReviewers: []*SystemIntakeGRBReviewer{
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionObjection),
+					},
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+					},
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+					},
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+					},
+					{
+						GRBVotingRole: SystemIntakeGRBReviewerVotingRoleVoting,
+						Vote:          helpers.PointerTo(SystemIntakeAsyncGRBVotingOptionNoObjection),
+					},
+				},
+			},
+		},
+		{
 			name:     "Inconclusive - ended naturally (one objection vote)",
 			expected: GRBVSInconclusive,
 			info: &GRBVotingInformation{
