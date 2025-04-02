@@ -15,6 +15,8 @@ import (
 
 type systemIntakeGRBReviewDeadlineExtendedParameters struct {
 	ProjectTitle             string
+	RequesterName            string
+	ComponentAcronym         string
 	SystemIntakeRequestLink  string
 	ITGovernanceInboxAddress string
 	GRBHelpLink              string
@@ -24,12 +26,16 @@ type systemIntakeGRBReviewDeadlineExtendedParameters struct {
 func (sie systemIntakeEmails) systemIntakeGRBReviewDeadlineExtendedBody(
 	systemIntakeID uuid.UUID,
 	projectTitle string,
+	requesterName string,
+	componentAcronym string,
 	grbReviewDeadline time.Time,
 ) (string, error) {
 	requesterURL := sie.client.urlFromPath(path.Join("governance-task-list", systemIntakeID.String()))
 
 	data := systemIntakeGRBReviewDeadlineExtendedParameters{
 		ProjectTitle:             projectTitle,
+		RequesterName:            requesterName,
+		ComponentAcronym:         componentAcronym,
 		SystemIntakeRequestLink:  requesterURL,
 		ITGovernanceInboxAddress: sie.client.config.GRTEmail.String(),
 		GRBHelpLink:              sie.client.urlFromPath(path.Join("help", "it-governance", "prepare-for-grb")),
@@ -55,11 +61,19 @@ func (sie systemIntakeEmails) SendSystemIntakeGRBReviewDeadlineExtended(
 	recipients models.EmailNotificationRecipients,
 	systemIntakeID uuid.UUID,
 	projectTitle string,
+	requesterName string,
+	componentAcronym string,
 	grbReviewDeadline time.Time,
 ) error {
 	subject := fmt.Sprintf("The Governance Admin Team has extended the deadline for this GRB review (%s)", projectTitle)
 
-	body, err := sie.systemIntakeGRBReviewDeadlineExtendedBody(systemIntakeID, projectTitle, grbReviewDeadline)
+	body, err := sie.systemIntakeGRBReviewDeadlineExtendedBody(
+		systemIntakeID,
+		projectTitle,
+		requesterName,
+		componentAcronym,
+		grbReviewDeadline,
+	)
 	if err != nil {
 		return err
 	}
