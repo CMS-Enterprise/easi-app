@@ -1,6 +1,10 @@
 package models
 
-import "context"
+import (
+	"time"
+)
+
+// TODO: move to autogen
 
 type GRBVotingInformationStatus string
 
@@ -24,43 +28,192 @@ type GRBVotingInformation struct {
 	GRBReviewers []*SystemIntakeGRBReviewer
 }
 
-// VotingStatus returns the status of the GRB voting process. GQL will resolver to this field to return
-func (info *GRBVotingInformation) VotingStatus(ctx context.Context) (GRBVotingInformationStatus, error) {
-	//TODO implement
-	return GRBVSNotStarted, nil
-}
-
 // NumberOfNoObjection returns the number of reviewers who have voted no objection
-func (info *GRBVotingInformation) NumberOfNoObjection(ctx context.Context) (int, error) {
-	//TODO implement
-	return 0, nil
+func (info *GRBVotingInformation) NumberOfNoObjection() int {
+	if info.GRBReviewers == nil {
+		return 0
+	}
+
+	var count int
+	for _, reviewer := range info.GRBReviewers {
+		if reviewer.GRBVotingRole != SystemIntakeGRBReviewerVotingRoleVoting {
+			continue
+		}
+
+		if reviewer.Vote == nil {
+			continue
+		}
+
+		if *reviewer.Vote == SystemIntakeAsyncGRBVotingOptionNoObjection {
+			count++
+		}
+	}
+
+	return count
 }
 
 // NumberOfObjection returns the number of reviewers who have voted objection
-func (info *GRBVotingInformation) NumberOfObjection(ctx context.Context) (int, error) {
-	//TODO implement
-	return 0, nil
+func (info *GRBVotingInformation) NumberOfObjection() int {
+	if info.GRBReviewers == nil {
+		return 0
+	}
+
+	var count int
+	for _, reviewer := range info.GRBReviewers {
+		if reviewer.GRBVotingRole != SystemIntakeGRBReviewerVotingRoleVoting {
+			continue
+		}
+
+		if reviewer.Vote == nil {
+			continue
+		}
+
+		if *reviewer.Vote == SystemIntakeAsyncGRBVotingOptionObjection {
+			count++
+		}
+	}
+
+	return count
 }
 
 // NumberOfNotVoted returns the number of reviewers who have not voted
-func (info *GRBVotingInformation) NumberOfNotVoted(ctx context.Context) (int, error) {
-	//TODO implement
-	return 0, nil
+func (info *GRBVotingInformation) NumberOfNotVoted() int {
+	if info.GRBReviewers == nil {
+		return 0
+	}
+
+	var count int
+	for _, reviewer := range info.GRBReviewers {
+		if reviewer.GRBVotingRole != SystemIntakeGRBReviewerVotingRoleVoting {
+			continue
+		}
+
+		if reviewer.Vote == nil {
+			count++
+		}
+	}
+
+	return count
 }
 
 // NumberOfVoted returns the number of reviewers who have voted
-func (info *GRBVotingInformation) NumberOfVoted(ctx context.Context) (int, error) {
-	//TODO implement
-	return 0, nil
+func (info *GRBVotingInformation) NumberOfVoted() int {
+	if info.GRBReviewers == nil {
+		return 0
+	}
+
+	var count int
+	for _, reviewer := range info.GRBReviewers {
+		// only count reviewers who have voting roles
+		if reviewer.GRBVotingRole != SystemIntakeGRBReviewerVotingRoleVoting {
+			continue
+		}
+
+		if reviewer.Vote != nil {
+			count++
+		}
+	}
+
+	return count
 }
 
-// QuorumReached checks if the minimum amount of reviewers have voted
-func (info *GRBVotingInformation) QuorumReached(ctx context.Context) (bool, error) {
-	//TODO implement
-	voteCount, err := info.NumberOfVoted(ctx)
-	if err != nil {
-		return false, err
+// QuorumReached checks if the minimum number of votes have been cast
+func (info *GRBVotingInformation) QuorumReached() bool {
+	return info.NumberOfVoted() >= numberOfVotesForQuorum
+}
+
+func (info *GRBVotingInformation) votingEndedManually() bool {
+	if info.SystemIntake == nil {
+		return false
 	}
-	quorum := voteCount >= numberOfVotesForQuorum
-	return quorum, nil
+
+	if info.SystemIntake.GrbReviewAsyncManualEndDate == nil {
+		return false
+	}
+
+	return time.Now().After(*info.SystemIntake.GrbReviewAsyncManualEndDate)
+}
+
+// VotingStatus returns the status of the GRB voting process. GQL will resolver to this field to return
+//
+// rules:
+// - IN_PROGRESS:
+//   - if voting is open/past due (quorum not met) and is NOT in complete state
+//
+// - APPROVED:
+//   - if voting is in complete state, quorum has been met, and zero objection votes
+//
+// - NOT_APPROVED:
+//   - if voting is in complete state, quorum has been met, and two or more objection votes
+//
+// - INCONCLUSIVE:
+//   - if voting is in complete state, end date has passed, quorum has been met, vote count is mostly no objections but
+//     has one objection vote, OR;
+//   - voting has been ended early and quorum not met
+func (info *GRBVotingInformation) VotingStatus() GRBVotingInformationStatus {
+	if info.SystemIntake == nil {
+		return GRBVSNotStarted
+	}
+
+	if info.GRBReviewers == nil {
+		return GRBVSNotStarted
+	}
+
+	if info.SystemIntake.GRBReviewStartedAt == nil {
+		return GRBVSNotStarted
+	}
+
+	// TODO: it may be possible to submit votes even after the end date - address if needed
+	if info.SystemIntake.GrbReviewAsyncEndDate == nil {
+		return GRBVSNotStarted
+	}
+
+	now := time.Now()
+	quorumReached := info.QuorumReached()
+	votingEndedManually := info.votingEndedManually()
+
+	// if manually ended and quorum not reached, inconclusive result
+	if votingEndedManually && !quorumReached {
+		return GRBVSInconclusive
+	}
+
+	if !votingEndedManually {
+		// check if currently in progress
+		if now.After(*info.SystemIntake.GRBReviewStartedAt) && now.Before(*info.SystemIntake.GrbReviewAsyncEndDate) {
+			return GRBVSInProgress
+		}
+
+		// past due, but still in progress
+		if now.After(*info.SystemIntake.GrbReviewAsyncEndDate) && !quorumReached {
+			return GRBVSInProgress
+		}
+	}
+
+	// we know here that the natural end date has passed and voting was not ended manually
+
+	// even with the end date in the past, voting is still in progress if no quorum
+	if !quorumReached {
+		return GRBVSInProgress
+	}
+
+	// we know here that quorum has been reached
+
+	objections := info.NumberOfObjection()
+
+	// check for approved
+	if objections == 0 {
+		return GRBVSApproved
+	}
+
+	// check for not approved
+	if objections > 1 {
+		return GRBVSNotApproved
+	}
+
+	// check for inconclusive
+	if objections == 1 {
+		return GRBVSInconclusive
+	}
+
+	return GRBVSInProgress
 }
