@@ -13,8 +13,6 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-const dateFormat = "01/02/2006"
-
 type SendSystemIntakeGRBReviewerReminderInput struct {
 	Recipient          models.EmailAddress
 	SystemIntakeID     uuid.UUID
@@ -36,6 +34,8 @@ type systemIntakeGRBReviewerReminderBody struct {
 }
 
 func (sie systemIntakeEmails) systemIntakeGRBReviewerReminderBody(input SendSystemIntakeGRBReviewerReminderInput) (string, error) {
+	const dateFormat = "01/02/2006"
+
 	if sie.client.templates.grbReviewReminder == nil {
 		return "", errors.New("grb review reminder template is nil")
 	}
