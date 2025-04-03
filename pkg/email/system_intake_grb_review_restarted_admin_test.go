@@ -54,7 +54,6 @@ func (s *EmailTestSuite) TestSystemIntakeGRBReviewRestartedAdmin() {
 
 <p>%s restarted the review for %s. It will now end on %s at 5:00pm EST.</p>
 <p><a href="%s">View this request in EASi</a></p>
-<br>
 <p><b>Request Summary:</b>
   Project title: %s
   Requester: %s, %s

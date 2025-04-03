@@ -59,7 +59,6 @@ func (s *EmailTestSuite) TestSystemIntakeGRBReviewRestarted() {
     <li>Change your vote.</li>
   </ul>
 </div>
-<br>
 <p><a href="%s">View this request in EASi</a></p>
 <p><b>Request Summary:</b>
   Project title: %s

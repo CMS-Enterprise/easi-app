@@ -58,7 +58,6 @@ func (s *EmailTestSuite) TestSystemIntakeGRBReviewTimeAdded() {
 
 <p>%s added %s to the review for %s. It will now end on %s at 5:00pm EST.</p>
 <p><a href="%s">View this request in EASi</a></p>
-<br>
 <p><b>Request Summary:</b>
   Project title: %s
   Requester: %s, %s
