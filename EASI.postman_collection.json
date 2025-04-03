@@ -1431,6 +1431,27 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Send GRB Review Voting Reminder",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation sendSystemIntakeGRBReviewerReminder($systemIntakeID: UUID!) {\n  sendSystemIntakeGRBReviewerReminder(systemIntakeID: $systemIntakeID) {\n    timeSent\n  }\n}\n",
+										"variables": "{\n    \"systemIntakeID\":\"a5689bec-e4cf-4f2b-a7de-72020e8d65be\"\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
