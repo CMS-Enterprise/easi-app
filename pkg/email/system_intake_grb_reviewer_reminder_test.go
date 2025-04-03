@@ -52,8 +52,7 @@ func (s *EmailTestSuite) TestSendSystemIntakeGRBReviewerReminder() {
 	<p>If you have questions, please contact the Governance Team at <a href="mailto:%[7]s">%[7]s</a>.</p>
 	<hr>
 
-	<p>You may continue to receive email notifications about this request until a decision is issued and it is closed.</p>
-	`,
+	<p>You may continue to receive email notifications about this request until a decision is issued and it is closed.</p>`,
 		projectTitle,
 		formattedEnd,
 		requestLink,

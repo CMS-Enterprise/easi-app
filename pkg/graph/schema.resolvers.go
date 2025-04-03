@@ -674,7 +674,7 @@ func (r *mutationResolver) CastSystemIntakeGRBReviewerVote(ctx context.Context, 
 }
 
 // SendSystemIntakeGRBReviewerReminder is the resolver for the sendSystemIntakeGRBReviewerReminder field.
-func (r *mutationResolver) SendSystemIntakeGRBReviewerReminder(ctx context.Context, systemIntakeID uuid.UUID) (*time.Time, error) {
+func (r *mutationResolver) SendSystemIntakeGRBReviewerReminder(ctx context.Context, systemIntakeID uuid.UUID) (*models.SendSystemIntakeGRBReviewReminderPayload, error) {
 	return resolvers.SendSystemIntakeGRBReviewerReminder(ctx, r.store, r.emailClient, systemIntakeID)
 }
 

@@ -297,7 +297,7 @@ func GetPrincipalAsGRBReviewerBySystemIntakeID(ctx context.Context, systemIntake
 }
 
 // SendSystemIntakeGRBReviewerReminder sends out individual emails to GRB reviewers who have not yet voted (only send to those with voting role)
-func SendSystemIntakeGRBReviewerReminder(ctx context.Context, store *storage.Store, emailClient *email.Client, systemIntakeID uuid.UUID) (*time.Time, error) {
+func SendSystemIntakeGRBReviewerReminder(ctx context.Context, store *storage.Store, emailClient *email.Client, systemIntakeID uuid.UUID) (*models.SendSystemIntakeGRBReviewReminderPayload, error) {
 	// first, confirm a reminder wasn't sent in last 24 hours
 	systemIntake, err := store.FetchSystemIntakeByID(ctx, systemIntakeID)
 	if err != nil {
@@ -321,8 +321,14 @@ func SendSystemIntakeGRBReviewerReminder(ctx context.Context, store *storage.Sto
 			continue
 		}
 
+		// skip if user has already voted
+		if reviewer.Vote != nil {
+			continue
+		}
+
+		// only send to those with voting roles
 		if reviewer.GRBVotingRole == models.SystemIntakeGRBReviewerVotingRoleVoting {
-			votingReviewerIDs = append(votingReviewerIDs, reviewer.ID)
+			votingReviewerIDs = append(votingReviewerIDs, reviewer.UserID)
 		}
 	}
 
@@ -334,6 +340,10 @@ func SendSystemIntakeGRBReviewerReminder(ctx context.Context, store *storage.Sto
 	userAccounts, err := store.UserAccountsByIDs(ctx, votingReviewerIDs)
 	if err != nil {
 		return nil, fmt.Errorf("problem getting user accounts when attempting to send reminder: %w", err)
+	}
+
+	if len(userAccounts) < 1 {
+		return nil, errors.New("no user accounts found when attempting to when attempting to send reminder")
 	}
 
 	// send out emails
@@ -363,7 +373,9 @@ func SendSystemIntakeGRBReviewerReminder(ctx context.Context, store *storage.Sto
 		return nil, fmt.Errorf("problem setting last reminder sent timestamp when sending reminder: %w", err)
 	}
 
-	return &sentTime, nil
+	return &models.SendSystemIntakeGRBReviewReminderPayload{
+		TimeSent: sentTime,
+	}, nil
 }
 
 func validateCanSendReminder(systemIntake *models.SystemIntake) error {

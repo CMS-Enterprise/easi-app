@@ -682,6 +682,10 @@ type ComplexityRoot struct {
 		UserAccount                      func(childComplexity int, username string) int
 	}
 
+	SendSystemIntakeGRBReviewReminderPayload struct {
+		TimeSent func(childComplexity int) int
+	}
+
 	SystemIntake struct {
 		AcquisitionMethods                                func(childComplexity int) int
 		Actions                                           func(childComplexity int) int
@@ -1285,7 +1289,7 @@ type MutationResolver interface {
 	UpdateSystemIntakeGRBReviewer(ctx context.Context, input models.UpdateSystemIntakeGRBReviewerInput) (*models.SystemIntakeGRBReviewer, error)
 	DeleteSystemIntakeGRBReviewer(ctx context.Context, input models.DeleteSystemIntakeGRBReviewerInput) (uuid.UUID, error)
 	CastSystemIntakeGRBReviewerVote(ctx context.Context, input models.CastSystemIntakeGRBReviewerVoteInput) (*models.SystemIntakeGRBReviewer, error)
-	SendSystemIntakeGRBReviewerReminder(ctx context.Context, systemIntakeID uuid.UUID) (*time.Time, error)
+	SendSystemIntakeGRBReviewerReminder(ctx context.Context, systemIntakeID uuid.UUID) (*models.SendSystemIntakeGRBReviewReminderPayload, error)
 	CreateSystemIntakeGRBDiscussionPost(ctx context.Context, input models.CreateSystemIntakeGRBDiscussionPostInput) (*models.SystemIntakeGRBReviewDiscussionPost, error)
 	CreateSystemIntakeGRBDiscussionReply(ctx context.Context, input models.CreateSystemIntakeGRBDiscussionReplyInput) (*models.SystemIntakeGRBReviewDiscussionPost, error)
 	UpdateSystemIntakeGRBReviewType(ctx context.Context, input models.UpdateSystemIntakeGRBReviewTypeInput) (*models.UpdateSystemIntakePayload, error)
@@ -5471,6 +5475,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.UserAccount(childComplexity, args["username"].(string)), true
+
+	case "SendSystemIntakeGRBReviewReminderPayload.timeSent":
+		if e.complexity.SendSystemIntakeGRBReviewReminderPayload.TimeSent == nil {
+			break
+		}
+
+		return e.complexity.SendSystemIntakeGRBReviewReminderPayload.TimeSent(childComplexity), true
 
 	case "SystemIntake.acquisitionMethods":
 		if e.complexity.SystemIntake.AcquisitionMethods == nil {
@@ -9799,6 +9810,10 @@ input createSystemIntakeGRBDiscussionReplyInput {
   content: TaggedHTML!
 }
 
+type SendSystemIntakeGRBReviewReminderPayload {
+  timeSent: Time!
+}
+
 """
 Input data used to set or update a System Intake's GRB Review Type
 """
@@ -11141,7 +11156,7 @@ type Mutation {
 
   castSystemIntakeGRBReviewerVote(input: CastSystemIntakeGRBReviewerVoteInput!): SystemIntakeGRBReviewer!
 
-  sendSystemIntakeGRBReviewerReminder(systemIntakeID: UUID!): Time!
+  sendSystemIntakeGRBReviewerReminder(systemIntakeID: UUID!): SendSystemIntakeGRBReviewReminderPayload!
 
   createSystemIntakeGRBDiscussionPost(input: createSystemIntakeGRBDiscussionPostInput!): SystemIntakeGRBReviewDiscussionPost
   createSystemIntakeGRBDiscussionReply(input: createSystemIntakeGRBDiscussionReplyInput!): SystemIntakeGRBReviewDiscussionPost
@@ -34277,9 +34292,9 @@ func (ec *executionContext) _Mutation_sendSystemIntakeGRBReviewerReminder(ctx co
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*time.Time)
+	res := resTmp.(*models.SendSystemIntakeGRBReviewReminderPayload)
 	fc.Result = res
-	return ec.marshalNTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+	return ec.marshalNSendSystemIntakeGRBReviewReminderPayload2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSendSystemIntakeGRBReviewReminderPayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_sendSystemIntakeGRBReviewerReminder(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -34289,7 +34304,11 @@ func (ec *executionContext) fieldContext_Mutation_sendSystemIntakeGRBReviewerRem
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Time does not have child fields")
+			switch field.Name {
+			case "timeSent":
+				return ec.fieldContext_SendSystemIntakeGRBReviewReminderPayload_timeSent(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SendSystemIntakeGRBReviewReminderPayload", field.Name)
 		},
 	}
 	defer func() {
@@ -42928,6 +42947,50 @@ func (ec *executionContext) fieldContext_Query___schema(_ context.Context, field
 				return ec.fieldContext___Schema_directives(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type __Schema", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SendSystemIntakeGRBReviewReminderPayload_timeSent(ctx context.Context, field graphql.CollectedField, obj *models.SendSystemIntakeGRBReviewReminderPayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SendSystemIntakeGRBReviewReminderPayload_timeSent(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TimeSent, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SendSystemIntakeGRBReviewReminderPayload_timeSent(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SendSystemIntakeGRBReviewReminderPayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
 		},
 	}
 	return fc, nil
@@ -71982,6 +72045,45 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 	return out
 }
 
+var sendSystemIntakeGRBReviewReminderPayloadImplementors = []string{"SendSystemIntakeGRBReviewReminderPayload"}
+
+func (ec *executionContext) _SendSystemIntakeGRBReviewReminderPayload(ctx context.Context, sel ast.SelectionSet, obj *models.SendSystemIntakeGRBReviewReminderPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, sendSystemIntakeGRBReviewReminderPayloadImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SendSystemIntakeGRBReviewReminderPayload")
+		case "timeSent":
+			out.Values[i] = ec._SendSystemIntakeGRBReviewReminderPayload_timeSent(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var systemIntakeImplementors = []string{"SystemIntake"}
 
 func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.SelectionSet, obj *models.SystemIntake) graphql.Marshaler {
@@ -79785,6 +79887,20 @@ func (ec *executionContext) unmarshalNSendFeedbackEmailInput2githubᚗcomᚋcms�
 func (ec *executionContext) unmarshalNSendReportAProblemEmailInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSendReportAProblemEmailInput(ctx context.Context, v any) (models.SendReportAProblemEmailInput, error) {
 	res, err := ec.unmarshalInputSendReportAProblemEmailInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSendSystemIntakeGRBReviewReminderPayload2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSendSystemIntakeGRBReviewReminderPayload(ctx context.Context, sel ast.SelectionSet, v models.SendSystemIntakeGRBReviewReminderPayload) graphql.Marshaler {
+	return ec._SendSystemIntakeGRBReviewReminderPayload(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNSendSystemIntakeGRBReviewReminderPayload2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSendSystemIntakeGRBReviewReminderPayload(ctx context.Context, sel ast.SelectionSet, v *models.SendSystemIntakeGRBReviewReminderPayload) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._SendSystemIntakeGRBReviewReminderPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNSendTRBGuidanceLetterInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSendTRBGuidanceLetterInput(ctx context.Context, v any) (models.SendTRBGuidanceLetterInput, error) {

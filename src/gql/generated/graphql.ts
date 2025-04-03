@@ -1044,7 +1044,7 @@ export type Mutation = {
   sendFeedbackEmail?: Maybe<Scalars['String']['output']>;
   sendGRBReviewPresentationDeckReminderEmail: Scalars['Boolean']['output'];
   sendReportAProblemEmail?: Maybe<Scalars['String']['output']>;
-  sendSystemIntakeGRBReviewerReminder: Scalars['Time']['output'];
+  sendSystemIntakeGRBReviewerReminder: SendSystemIntakeGRBReviewReminderPayload;
   sendTRBGuidanceLetter: TRBGuidanceLetter;
   setRolesForUserOnSystem?: Maybe<Scalars['String']['output']>;
   setSystemIntakeGRBPresentationLinks?: Maybe<SystemIntakeGRBPresentationLinks>;
@@ -1886,6 +1886,11 @@ export type SendReportAProblemEmailInput = {
   isAnonymous: Scalars['Boolean']['input'];
   whatWentWrong: Scalars['String']['input'];
   whatWereYouDoing: Scalars['String']['input'];
+};
+
+export type SendSystemIntakeGRBReviewReminderPayload = {
+  __typename: 'SendSystemIntakeGRBReviewReminderPayload';
+  timeSent: Scalars['Time']['output'];
 };
 
 /** The data needed to send a TRB guidance letter, including who to notify */
