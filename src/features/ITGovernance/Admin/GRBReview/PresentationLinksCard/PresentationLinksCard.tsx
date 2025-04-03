@@ -111,7 +111,7 @@ function PresentationLinksCard({
         </CardHeader>
         {
           // Hide action buttons for GRB reviewers
-          isITGovAdmin && (
+          isITGovAdmin ? (
             <CardBody
               className={classNames('padding-top-0', {
                 'display-flex flex-gap-105 padding-bottom-105 margin-top-neg-1':
@@ -148,6 +148,16 @@ function PresentationLinksCard({
                 </>
               )}
             </CardBody>
+          ) : (
+            <>
+              {!hasAnyLinks && (
+                <div className="padding-x-3 padding-y-2">
+                  <Alert type="info" slim className="margin-bottom-2">
+                    {t('asyncPresentation.emptyAlert')}
+                  </Alert>
+                </div>
+              )}
+            </>
           )
         }
         {hasAnyLinks && (
