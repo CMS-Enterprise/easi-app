@@ -359,7 +359,7 @@ func SendSystemIntakeGRBReviewerReminder(ctx context.Context, store *storage.Sto
 
 	// update system intake for last reminder time
 	sentTime := time.Now()
-	if err := storage.SetSystemIntakeGRBReviewerReminderSent(ctx, systemIntakeID, sentTime); err != nil {
+	if err := storage.SetSystemIntakeGRBReviewerReminderSent(ctx, store, systemIntakeID, sentTime); err != nil {
 		return nil, fmt.Errorf("problem setting last reminder sent timestamp when sending reminder: %w", err)
 	}
 
