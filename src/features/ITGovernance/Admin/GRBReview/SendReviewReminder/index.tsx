@@ -1,17 +1,52 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, ModalFooter, ModalHeading } from '@trussworks/react-uswds';
+import {
+  Alert,
+  Button,
+  ModalFooter,
+  ModalHeading
+} from '@trussworks/react-uswds';
+import { useSendSystemIntakeGRBReviewerReminderMutation } from 'gql/generated/graphql';
 
 import Modal from 'components/Modal';
+import useMessage from 'hooks/useMessage';
 
 const SendReviewReminder = ({
   isOpen,
-  setIsModalOpen
+  setIsModalOpen,
+  systemIntakeId,
+  setReminderSent
 }: {
   isOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
+  systemIntakeId: string;
+  setReminderSent: (reminderSent: boolean) => void;
 }) => {
   const { t } = useTranslation('grbReview');
+  const { errorMessageInModal, showErrorMessageInModal } = useMessage();
+
+  const [sendReminder] = useSendSystemIntakeGRBReviewerReminderMutation({
+    variables: {
+      systemIntakeID: systemIntakeId
+    }
+  });
+
+  // NOTES FOR FUTURE GARY:
+  // 1. Figure out how to get timeSent from mutation
+  // 2. Display timeSent in AdminAction component
+
+  const handleSendReminder = () => {
+    if (!systemIntakeId) return;
+
+    sendReminder()
+      .then(() => {
+        setReminderSent(true);
+        setIsModalOpen(false);
+      })
+      .catch(() => {
+        showErrorMessageInModal(t('adminTask.sendReviewReminder.modal.error'));
+      });
+  };
 
   return (
     <Modal
@@ -23,13 +58,19 @@ const SendReviewReminder = ({
       <ModalHeading>
         {t('adminTask.sendReviewReminder.modal.title')}
       </ModalHeading>
+      {errorMessageInModal && (
+        <Alert type="error" className="margin-top-2" headingLevel="h4">
+          {errorMessageInModal}
+        </Alert>
+      )}
       <p className="margin-top-1">
         {t('adminTask.sendReviewReminder.modal.description')}
       </p>
       <ModalFooter>
         <Button
           type="button"
-          className="margin-top-0 margin-bottom-2 margin-right-3 tablet:margin-bottom-0 "
+          className="margin-top-0 margin-bottom-2 margin-right-3 tablet:margin-bottom-0"
+          onClick={handleSendReminder}
         >
           {t('adminTask.sendReviewReminder.modal.sendReminder')}
         </Button>
