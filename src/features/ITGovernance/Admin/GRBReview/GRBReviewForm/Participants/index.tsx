@@ -2,8 +2,9 @@ import React from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
+import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Fieldset, FormGroup, Grid } from '@trussworks/react-uswds';
+import { Button, FormGroup, Grid, Label } from '@trussworks/react-uswds';
 import {
   GetSystemIntakeGRBReviewDocument,
   SystemIntakeGRBReviewerFragment,
@@ -17,6 +18,7 @@ import Alert from 'components/Alert';
 import DatePickerFormatted from 'components/DatePickerFormatted';
 import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
 import FieldErrorMsg from 'components/FieldErrorMsg';
+import HelpText from 'components/HelpText';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import { GRBReviewFormStepProps } from 'types/grbReview';
 import { SetGRBParticipantsAsyncSchema } from 'validations/grbReviewSchema';
@@ -99,21 +101,31 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
         requiredFields={reviewType === SystemIntakeGRBReviewType.ASYNC}
         startGRBReview
       >
-        <Alert type="info" slim>
-          {t('setUpGrbReviewForm.participants.standardAlert')}
-        </Alert>
+        {
+          // Only show alert for standard review type
+          reviewType === SystemIntakeGRBReviewType.STANDARD && (
+            <Alert type="info" slim>
+              {t('setUpGrbReviewForm.participants.standardAlert')}
+            </Alert>
+          )
+        }
+
         <FormGroup error={!!errors.grbReviewers} className="margin-top-0">
           <Grid col={12} tablet={{ col: 6 }}>
             <div className="margin-top-5 border-top-1px border-base-light padding-top-1">
-              <p className="text-bold margin-y-0">
+              <h4 className="margin-y-0">
                 {t('setUpGrbReviewForm.participants.grbReviewers.heading')}
                 {reviewType === SystemIntakeGRBReviewType.ASYNC && (
                   <RequiredAsterisk />
                 )}
-              </p>
-              {!!errors.grbReviewers && (
-                <FieldErrorMsg>{errors.grbReviewers.message}</FieldErrorMsg>
-              )}
+              </h4>
+
+              <ErrorMessage
+                errors={errors}
+                name="grbReviewers"
+                as={FieldErrorMsg}
+              />
+
               <p className="margin-y-0 text-base-dark line-height-sans-4">
                 {t('setUpGrbReviewForm.participants.grbReviewers.description')}
               </p>
@@ -147,10 +159,10 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
         {reviewType === SystemIntakeGRBReviewType.ASYNC && (
           <Grid col={12} tablet={{ col: 6 }}>
             <div className="margin-top-5 border-top-1px border-base-light padding-top-1">
-              <p className="text-bold margin-y-0">
+              <h4 className="margin-y-0">
                 {t('setUpGrbReviewForm.participants.timeframe.heading')}
-              </p>
-              <p className="margin-top-0 margin-bottom-3 text-base-dark">
+              </h4>
+              <p className="margin-top-0 margin-bottom-3 text-base-dark line-height-body-4">
                 {t('setUpGrbReviewForm.participants.timeframe.description')}
               </p>
 
@@ -166,36 +178,42 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
                       error={!!errors.grbReviewAsyncEndDate}
                       className="margin-top-0"
                     >
-                      <Fieldset>
-                        <p className="margin-top-0 margin-bottom-1">
-                          {t(
-                            'setUpGrbReviewForm.participants.selectReviewEndDate.heading'
-                          )}
-                          <RequiredAsterisk />
-                        </p>
-                        {!!error && (
-                          <FieldErrorMsg>
-                            {t('setUpGrbReviewForm.invalidDate')}
-                          </FieldErrorMsg>
+                      <Label
+                        htmlFor={field.name}
+                        className="text-normal"
+                        requiredMarker
+                      >
+                        {t(
+                          'setUpGrbReviewForm.participants.selectReviewEndDate.heading'
                         )}
-                        <p className="margin-y-0 text-base-dark line-height-sans-4">
-                          {t(
-                            'setUpGrbReviewForm.participants.selectReviewEndDate.description'
-                          )}
-                        </p>
+                      </Label>
 
-                        <DatePickerFormatted
-                          id="grbReviewAsyncEndDate"
-                          {...field}
-                          dateInPastWarning
-                          value={field.value ?? ''}
-                          onChange={date => {
-                            if (date !== field.value) {
-                              field.onChange(date || ''); // Only update when there's a change
-                            }
-                          }}
-                        />
-                      </Fieldset>
+                      {!!error && (
+                        <FieldErrorMsg>
+                          {t('setUpGrbReviewForm.invalidDate')}
+                        </FieldErrorMsg>
+                      )}
+                      <HelpText
+                        id="selectReviewEndDateHelpText"
+                        className="line-height-sans-4 margin-top-1"
+                      >
+                        {t(
+                          'setUpGrbReviewForm.participants.selectReviewEndDate.description'
+                        )}
+                      </HelpText>
+
+                      <DatePickerFormatted
+                        id="grbReviewAsyncEndDate"
+                        {...field}
+                        dateInPastWarning
+                        value={field.value ?? ''}
+                        aria-describedby="selectReviewEndDateHelpText"
+                        onChange={date => {
+                          if (date !== field.value) {
+                            field.onChange(date || ''); // Only update when there's a change
+                          }
+                        }}
+                      />
                     </FormGroup>
                   </>
                 )}
