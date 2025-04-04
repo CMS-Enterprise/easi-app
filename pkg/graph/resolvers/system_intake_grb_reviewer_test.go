@@ -3,11 +3,13 @@ package resolvers
 import (
 	"fmt"
 	"slices"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/local"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
@@ -302,6 +304,66 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewerComparison() {
 		}
 
 	})
+}
+
+func (s *ResolverSuite) TestValidateCanSendReminder() {
+	type testCase struct {
+		name      string
+		intake    *models.SystemIntake
+		expectErr bool
+	}
+
+	testCases := []testCase{
+		{
+			name:      "nil intake",
+			intake:    nil,
+			expectErr: true,
+		},
+		{
+			name: "previous reminder sent within last 24 hours",
+			intake: &models.SystemIntake{
+				GrbReviewReminderLastSent: helpers.PointerTo(time.Now().Add(-time.Hour)),
+			},
+			expectErr: true,
+		},
+		{
+			name:      "missing start date",
+			intake:    &models.SystemIntake{},
+			expectErr: true,
+		},
+		{
+			name: "missing end date",
+			intake: &models.SystemIntake{
+				GRBReviewStartedAt: helpers.PointerTo(time.Now().AddDate(0, 0, -1)),
+			},
+			expectErr: true,
+		},
+		{
+			name: "manually ended review",
+			intake: &models.SystemIntake{
+				GRBReviewStartedAt:          helpers.PointerTo(time.Now().AddDate(0, 0, -1)),
+				GrbReviewAsyncEndDate:       helpers.PointerTo(time.Now().AddDate(0, 0, 1)),
+				GrbReviewAsyncManualEndDate: helpers.PointerTo(time.Now()),
+			},
+			expectErr: true,
+		},
+		{
+			name: "happy path",
+			intake: &models.SystemIntake{
+				GRBReviewStartedAt:        helpers.PointerTo(time.Now().AddDate(0, 0, -1)),
+				GrbReviewAsyncEndDate:     helpers.PointerTo(time.Now().AddDate(0, 0, 1)),
+				GrbReviewReminderLastSent: helpers.PointerTo(time.Now().AddDate(0, 0, -2)),
+			},
+			expectErr: false,
+		},
+	}
+
+	for _, tc := range testCases {
+		s.Run(tc.name, func() {
+			err := validateCanSendReminder(tc.intake)
+			s.Equal(tc.expectErr, err != nil)
+		})
+	}
 }
 
 func (s *ResolverSuite) createIntakeAndAddReviewer(reviewer *models.CreateGRBReviewerInput) (*models.SystemIntake, *models.SystemIntakeGRBReviewer) {

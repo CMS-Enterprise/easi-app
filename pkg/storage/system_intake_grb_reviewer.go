@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
@@ -142,4 +143,19 @@ func UpdateSystemIntakeGRBReviewType(
 	return &models.UpdateSystemIntakePayload{
 		SystemIntake: updatedIntake,
 	}, nil
+}
+
+func SetSystemIntakeGRBReviewerReminderSent(ctx context.Context, np sqlutils.NamedPreparer, systemIntakeID uuid.UUID, sendTime time.Time) error {
+	if _, err := namedExec(ctx, np, sqlqueries.SystemIntakeGRBReviewer.SetLastReminderSentTime, args{
+		"time_sent": sendTime,
+		"id":        systemIntakeID,
+	}); err != nil {
+		appcontext.ZLogger(ctx).
+			Error("error setting last GRB Reviewer reminder sent time",
+				zap.String("system_intake_id", systemIntakeID.String()))
+
+		return err
+	}
+
+	return nil
 }
