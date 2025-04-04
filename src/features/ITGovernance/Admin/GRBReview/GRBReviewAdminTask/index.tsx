@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { SystemIntakeGRBReviewFragment } from 'gql/generated/graphql';
 
 import AdminAction from 'components/AdminAction';
 import CollapsableLink from 'components/CollapsableLink';
+
+import SendReviewReminder from '../SendReviewReminder';
 
 export type IntakeRequestCardProps = {
   isITGovAdmin: boolean;
@@ -18,6 +20,7 @@ const GRBReviewAdminTask = ({
   systemIntakeId
 }: IntakeRequestCardProps) => {
   const { t } = useTranslation('grbReview');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const whatDoINeedItems: string[] = t('adminTask.setUpGRBReview.whatDoINeed', {
     returnObjects: true
@@ -31,6 +34,10 @@ const GRBReviewAdminTask = ({
 
   return (
     <>
+      <SendReviewReminder
+        isOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+      />
       {/* TODO: May change once BE work is done to send reminder */}
       {grbReviewStartedAt ? (
         <AdminAction
@@ -39,8 +46,7 @@ const GRBReviewAdminTask = ({
           buttons={[
             {
               label: t('adminTask.sendReviewReminder.sendReminder'),
-              onClick: () =>
-                history.push(`/it-governance/${systemIntakeId}/grb-review/form`)
+              onClick: () => setIsModalOpen(true)
             },
             {
               label: t('adminTask.takeADifferentAction'),
