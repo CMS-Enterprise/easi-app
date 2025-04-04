@@ -16,6 +16,7 @@ const SendReviewReminder = ({
   return (
     <Modal
       isOpen={isOpen}
+      shouldCloseOnOverlayClick
       closeModal={() => setIsModalOpen(false)}
       className="easi-modal__content--narrow"
     >
