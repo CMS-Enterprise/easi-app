@@ -128,7 +128,7 @@ const DecisionRecordCard = ({
         </div>
 
         <UswdsReactLink
-          to="/vote-record"
+          to={`/it-governance/${systemId}/grb-review/decision-record`}
           className="text-white flex-align-self-center"
         >
           {t('decisionCard.viewVotes')}
