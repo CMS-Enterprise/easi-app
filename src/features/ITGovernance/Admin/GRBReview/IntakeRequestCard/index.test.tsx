@@ -9,6 +9,7 @@ describe('IntakeRequestCard', () => {
     const { asFragment } = render(
       <MemoryRouter>
         <IntakeRequestCard
+          systemIntakeID="ABC123"
           currentStage="I have an idea and want to brainstorm"
           annualSpending={{
             __typename: 'SystemIntakeAnnualSpending',

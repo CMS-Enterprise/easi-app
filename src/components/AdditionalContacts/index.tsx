@@ -3,7 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { Button, Label, Select } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import { ExternalRecipientAlert } from 'features/TechnicalAssistance/Admin/_components/ActionFormWrapper/Recipients';
-import { AugmentedSystemIntakeContact } from 'gql/generated/graphql';
+import {
+  AugmentedSystemIntakeContact,
+  PersonRole
+} from 'gql/generated/graphql';
+import i18next from 'i18next';
 
 import Alert from 'components/Alert';
 import CedarContactSelect from 'components/CedarContactSelect';
@@ -11,7 +15,6 @@ import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
 import HelpText from 'components/HelpText';
 import Spinner from 'components/Spinner';
-import contactRoles from 'constants/enums/contactRoles';
 import { initialContactDetails } from 'constants/systemIntake';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import {
@@ -122,6 +125,13 @@ const ContactForm = ({
     component: '',
     role: ''
   });
+
+  const contactRoles: Record<PersonRole, string> = i18next.t(
+    'technicalAssistance:attendees.contactRoles',
+    {
+      returnObjects: true
+    }
+  );
 
   /** Error handling and save contact */
   const handleSubmit = () => {
