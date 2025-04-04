@@ -7,6 +7,7 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/cms-enterprise/easi-app/pkg/email/translation"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -17,7 +18,7 @@ func (s *EmailTestSuite) TestSendSystemIntakeGRBReviewerReminder() {
 	intakeID := uuid.MustParse("27883155-46ad-4c30-b3b0-30e8d093756e")
 	projectTitle := "Reminder Test Project"
 	requesterName := "Reminder Requester"
-	requesterComponent := "Reminder Component"
+	requesterComponent := "Office of Enterprise Data and Analytics"
 	startDate := time.Now().AddDate(0, 0, -2)
 	endDate := time.Now().AddDate(0, 0, 2)
 	formattedStart := startDate.Format(dateFormat)
@@ -57,7 +58,7 @@ func (s *EmailTestSuite) TestSendSystemIntakeGRBReviewerReminder() {
 		formattedEnd,
 		requestLink,
 		requesterName,
-		requesterComponent,
+		translation.GetComponentAcronym(requesterComponent),
 		fmt.Sprintf("%[1]s-%[2]s", formattedStart, formattedEnd),
 		itGovInboxAddress,
 	)

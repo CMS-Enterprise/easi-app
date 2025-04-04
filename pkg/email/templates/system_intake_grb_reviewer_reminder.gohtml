@@ -10,7 +10,7 @@
 <div class="no-margin">
   <p><strong>Request summary:</strong></p>
   <p>Project title: {{.RequestName}}</p>
-  <p>Requester: {{.RequesterName}}, {{.RequesterComponent}}</p>
+  <p>Requester: {{.RequesterName}}{{if .RequesterComponent}}, {{.RequesterComponent}}{{else}}{{end}}</p>
   <p>GRB review dates: {{.DateInfo}}</p>
 </div>
 

@@ -10,6 +10,7 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/cms-enterprise/easi-app/pkg/email/translation"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -34,22 +35,20 @@ type systemIntakeGRBReviewerReminderBody struct {
 }
 
 func (sie systemIntakeEmails) systemIntakeGRBReviewerReminderBody(input SendSystemIntakeGRBReviewerReminderInput) (string, error) {
-	const dateFormat = "01/02/2006"
-
 	if sie.client.templates.grbReviewReminder == nil {
 		return "", errors.New("grb review reminder template is nil")
 	}
 
 	grbReviewPath := path.Join("it-governance", input.SystemIntakeID.String(), "grb-review")
 
-	formattedStart := input.StartDate.Format(dateFormat)
-	formattedEnd := input.EndDate.Format(dateFormat)
+	formattedStart := input.StartDate.Format("01/02/2006")
+	formattedEnd := input.EndDate.Format("01/02/2006")
 
 	data := systemIntakeGRBReviewerReminderBody{
 		Link:                     sie.client.urlFromPath(grbReviewPath),
 		RequestName:              input.RequestName,
 		RequesterName:            input.RequesterName,
-		RequesterComponent:       input.RequesterComponent,
+		RequesterComponent:       translation.GetComponentAcronym(input.RequesterComponent),
 		DateInfo:                 fmt.Sprintf("%[1]s-%[2]s", formattedStart, formattedEnd),
 		EndDate:                  formattedEnd,
 		ITGovernanceInboxAddress: sie.client.config.GRTEmail,
