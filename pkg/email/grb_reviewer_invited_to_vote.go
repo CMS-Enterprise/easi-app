@@ -13,8 +13,6 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-const dateFormat = "01/02/2006"
-
 type SendGRBReviewerInvitedToVoteInput struct {
 	Recipient          models.EmailAddress
 	StartDate          time.Time
@@ -42,6 +40,7 @@ func (sie systemIntakeEmails) grbReviewerInvitedToVoteBody(input SendGRBReviewer
 
 	grbReviewPath := path.Join("it-governance", input.SystemIntakeID.String(), "grb-review")
 
+	const dateFormat = "01/02/2006"
 	formattedStart := input.StartDate.Format(dateFormat)
 	formattedEnd := input.EndDate.Format(dateFormat)
 
