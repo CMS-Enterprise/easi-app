@@ -744,4 +744,16 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		"Project with Presentation",
 	)
 	noErr(err)
+
+	err = client.SystemIntake.SendGRBReviewerInvitedToVoteEmail(ctx,
+		email.SendGRBReviewerInvitedToVoteInput{
+			Recipient:          requesterEmail,
+			StartDate:          time.Now().AddDate(0, 0, -1),
+			EndDate:            time.Now().AddDate(0, 0, 3),
+			SystemIntakeID:     intakeID,
+			ProjectName:        "Invited to Vote Project",
+			RequesterName:      "Requester Inviting",
+			RequesterComponent: "Center for Medicare",
+		})
+	noErr(err)
 }
