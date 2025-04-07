@@ -24,7 +24,6 @@ const GRBReviewAdminTask = ({
 }: IntakeRequestCardProps) => {
   const { t } = useTranslation('grbReview');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // State to track if reminder has been sent
   const [reminderSent, setReminderSent] = useState(
     grbReviewReminderLastSent || ''
   );
@@ -47,7 +46,6 @@ const GRBReviewAdminTask = ({
         systemIntakeId={systemIntakeId}
         setReminderSent={setReminderSent}
       />
-      {/* TODO: May change once BE work is done to send reminder */}
       {grbReviewStartedAt ? (
         <AdminAction
           type="ITGov"
