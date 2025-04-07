@@ -128,6 +128,25 @@ func CastSystemIntakeGRBReviewerVote(ctx context.Context, store *storage.Store, 
 		return nil, errors.New("vote comment is required with an `Objection` vote")
 	}
 
+	// only allow GRB reviewers with the voting role to vote
+	userID := appcontext.Principal(ctx).Account().ID
+	grbReviewers, err := dataloaders.GetSystemIntakeGRBReviewersBySystemIntakeID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	canVote := false
+	for _, grbReviewer := range grbReviewers {
+		if grbReviewer.UserID == userID && grbReviewer.GRBVotingRole == models.SystemIntakeGRBReviewerVotingRoleVoting {
+			canVote = true
+			break
+		}
+	}
+
+	if !canVote {
+		return nil, errors.New("user is not allowed to vote on this GRB review")
+	}
+
 	// then, check if the GRB review is in a state where votes are allowed - do this second to avoid a db round trip
 	// if the above condition isn't met
 	// get system intake
