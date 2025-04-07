@@ -10,6 +10,7 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/cms-enterprise/easi-app/pkg/email/translation"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -24,7 +25,7 @@ type SendGRBReviewerInvitedToVoteInput struct {
 }
 
 type grbReviewerInvitedToVoteBody struct {
-	EndDate                  time.Time
+	EndDate                  string
 	SystemIntakeLink         string
 	ProjectName              string
 	RequesterName            string
@@ -40,16 +41,15 @@ func (sie systemIntakeEmails) grbReviewerInvitedToVoteBody(input SendGRBReviewer
 
 	grbReviewPath := path.Join("it-governance", input.SystemIntakeID.String(), "grb-review")
 
-	const dateFormat = "01/02/2006"
-	formattedStart := input.StartDate.Format(dateFormat)
-	formattedEnd := input.EndDate.Format(dateFormat)
+	formattedStart := input.StartDate.Format("01/02/2006")
+	formattedEnd := input.EndDate.Format("01/02/2006")
 
 	data := grbReviewerInvitedToVoteBody{
-		EndDate:                  input.EndDate,
-		SystemIntakeLink:         grbReviewPath,
+		EndDate:                  formattedEnd,
+		SystemIntakeLink:         sie.client.urlFromPath(grbReviewPath),
 		ProjectName:              input.ProjectName,
 		RequesterName:            input.RequesterName,
-		RequesterComponent:       input.RequesterComponent,
+		RequesterComponent:       translation.GetComponentAcronym(input.RequesterComponent),
 		DateInfo:                 fmt.Sprintf("%[1]s-%[2]s", formattedStart, formattedEnd),
 		ITGovernanceInboxAddress: sie.client.config.GRTEmail,
 	}
