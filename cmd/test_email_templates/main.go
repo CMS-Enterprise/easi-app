@@ -752,7 +752,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 			SystemIntakeID:     intakeID,
 			RequestName:        "Reminder Email Test",
 			RequesterName:      "Reminder Email - Name",
-			RequesterComponent: "Reminder Email - Component",
+			RequesterComponent: "Offices of Hearings and Inquiries",
 			StartDate:          time.Now().AddDate(0, 0, -1),
 			EndDate:            time.Now().AddDate(0, 0, 3),
 		},
