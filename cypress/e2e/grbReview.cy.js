@@ -124,7 +124,7 @@ describe('GRB review', () => {
     cy.contains('button', 'View discussion board').should('not.be.disabled');
   });
 
-  it.skip('completes required fields for Standard Review Type', () => {
+  it('completes required fields for Standard Review Type', () => {
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'UpdateSystemIntakeGRBReviewType') {
         req.alias = 'updateReviewType';
@@ -184,7 +184,7 @@ describe('GRB review', () => {
     cy.get('h3').should('contain.text', 'Standard meeting review');
   });
 
-  it.skip('Navigates through the form with the headers', () => {
+  it('Navigates through the form with the headers', () => {
     cy.visit('/it-governance/38e46d77-e474-4d15-a7c0-f6411221e2a4/grb-review');
     cy.contains('button', 'Set up GRB review').click();
 
@@ -225,7 +225,7 @@ describe('GRB review', () => {
     cy.contains('button', 'Save and return to request').click();
   });
 
-  it.skip('Adds time to voting and Ends time to voting', () => {
+  it('Adds time to voting and Ends time to voting', () => {
     cy.visit('/it-governance/5af245bc-fc54-4677-bab1-1b3e798bb43c/grb-review');
 
     cy.get('[data-testid="async-status"]').contains('In progress');
