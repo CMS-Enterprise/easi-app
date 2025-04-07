@@ -31,9 +31,6 @@ const SendReviewReminder = ({
     }
   });
 
-  // NOTES FOR FUTURE GARY:
-  // 2. Display timeSent in AdminAction component
-
   const handleSendReminder = () => {
     if (!systemIntakeId) return;
 
