@@ -5,6 +5,7 @@ import { SystemIntakeGRBReviewFragment } from 'gql/generated/graphql';
 
 import AdminAction from 'components/AdminAction';
 import CollapsableLink from 'components/CollapsableLink';
+import { formatDateLocal, formatTimeLocal } from 'utils/date';
 
 import SendReviewReminder from '../SendReviewReminder';
 
@@ -12,17 +13,21 @@ export type IntakeRequestCardProps = {
   isITGovAdmin: boolean;
   grbReviewStartedAt: SystemIntakeGRBReviewFragment['grbReviewStartedAt'];
   systemIntakeId: string;
+  grbReviewReminderLastSent: SystemIntakeGRBReviewFragment['grbReviewReminderLastSent'];
 };
 
 const GRBReviewAdminTask = ({
   isITGovAdmin,
   grbReviewStartedAt,
-  systemIntakeId
+  systemIntakeId,
+  grbReviewReminderLastSent
 }: IntakeRequestCardProps) => {
   const { t } = useTranslation('grbReview');
   const [isModalOpen, setIsModalOpen] = useState(false);
   // State to track if reminder has been sent
-  const [reminderSent, setReminderSent] = useState(false);
+  const [reminderSent, setReminderSent] = useState(
+    grbReviewReminderLastSent || ''
+  );
 
   const whatDoINeedItems: string[] = t('adminTask.setUpGRBReview.whatDoINeed', {
     returnObjects: true
@@ -51,7 +56,7 @@ const GRBReviewAdminTask = ({
             {
               label: t('adminTask.sendReviewReminder.sendReminder'),
               onClick: () => setIsModalOpen(true),
-              disabled: reminderSent
+              disabled: !!reminderSent
             },
             {
               label: t('adminTask.takeADifferentAction'),
@@ -61,8 +66,19 @@ const GRBReviewAdminTask = ({
             }
           ]}
         >
-          <p className="margin-top-0">
+          <p className="margin-top-0 margin-bottom-1">
             {t('adminTask.sendReviewReminder.description')}
+          </p>
+          <p
+            className="margin-top-0 margin-bottom-3 text-italic text-base-dark"
+            data-testid="review-reminder"
+          >
+            {reminderSent
+              ? t('adminTask.sendReviewReminder.mostRecentReminder', {
+                  date: formatDateLocal(reminderSent, 'MM/dd/yyyy'),
+                  time: formatTimeLocal(reminderSent)
+                })
+              : ''}
           </p>
         </AdminAction>
       ) : (

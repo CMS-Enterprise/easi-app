@@ -51,6 +51,21 @@ export const formatDateUtc = (
   return '';
 };
 
+/**
+ * Output local time (e.g., 2:37 PM) from an ISO string.
+ * Useful for displaying only the time portion based on the user's local time zone.
+ */
+export const formatTimeLocal = (
+  date: string | null | undefined,
+  format = 'h:mm a'
+): string => {
+  if (date) {
+    const parsedTime = DateTime.fromISO(date).toFormat(format);
+    if (parsedTime !== 'Invalid DateTime') return parsedTime;
+  }
+  return '';
+};
+
 type ContractDate = {
   day?: string | null | undefined;
   month?: string | null | undefined;

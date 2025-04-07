@@ -84,6 +84,7 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
           isITGovAdmin={isITGovAdmin}
           systemIntakeId={id}
           grbReviewStartedAt={grbReview.grbReviewStartedAt}
+          grbReviewReminderLastSent={grbReview.grbReviewReminderLastSent}
         />
 
         {/* GRB Reviewer Voting Panel */}

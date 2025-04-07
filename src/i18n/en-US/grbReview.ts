@@ -322,7 +322,7 @@ export default {
       description:
         'GRB voting members will get an automatic reminder when there is one day left in the review process. You may use the button below to send an additional reminder at any time.',
       sendReminder: 'Send reminder',
-      mostRecentReminder: 'Most recent reminder sent on {{date}}',
+      mostRecentReminder: 'Most recent reminder sent on {{date}} at {{time}}',
       modal: {
         title: 'Send a reminder',
         description:

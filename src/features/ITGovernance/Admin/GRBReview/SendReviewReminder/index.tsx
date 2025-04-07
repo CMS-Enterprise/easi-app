@@ -20,7 +20,7 @@ const SendReviewReminder = ({
   isOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
   systemIntakeId: string;
-  setReminderSent: (reminderSent: boolean) => void;
+  setReminderSent: (reminderSent: string) => void;
 }) => {
   const { t } = useTranslation('grbReview');
   const { errorMessageInModal, showErrorMessageInModal } = useMessage();
@@ -32,15 +32,16 @@ const SendReviewReminder = ({
   });
 
   // NOTES FOR FUTURE GARY:
-  // 1. Figure out how to get timeSent from mutation
   // 2. Display timeSent in AdminAction component
 
   const handleSendReminder = () => {
     if (!systemIntakeId) return;
 
     sendReminder()
-      .then(() => {
-        setReminderSent(true);
+      .then(response => {
+        setReminderSent(
+          response.data?.sendSystemIntakeGRBReviewerReminder?.timeSent || ''
+        );
         setIsModalOpen(false);
       })
       .catch(() => {
