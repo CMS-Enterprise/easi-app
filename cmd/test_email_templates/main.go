@@ -745,6 +745,61 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 	)
 	noErr(err)
 
+	err = client.SystemIntake.SendSystemIntakeGRBReviewDeadlineExtended(
+		ctx,
+		emailNotificationRecipients,
+		intakeID,
+		"Supreme Taco Project",
+		"Taco King",
+		"STP",
+		time.Date(2025, 1, 10, 0, 0, 0, 0, time.UTC),
+		time.Date(2026, 5, 10, 0, 0, 0, 0, time.UTC),
+	)
+	noErr(err)
+
+	err = client.SystemIntake.SendSystemIntakeGRBReviewTimeAdded(
+		ctx,
+		emailNotificationRecipients,
+		intakeID,
+		"Supreme Taco Admin",
+		"2 days",
+		"Supreme Taco Project",
+		"Taco King",
+		"STP",
+		time.Date(2026, 7, 1, 0, 0, 0, 0, time.UTC),
+		time.Date(2026, 7, 3, 0, 0, 0, 0, time.UTC),
+		time.Date(2026, 7, 5, 0, 0, 0, 0, time.UTC),
+		5,
+	)
+	noErr(err)
+
+	err = client.SystemIntake.SendSystemIntakeGRBReviewRestartedAdmin(
+		ctx,
+		emailNotificationRecipients,
+		intakeID,
+		"Taco Administrator",
+		"Supreme Taco Project",
+		"Taco King",
+		"STP",
+		time.Date(2025, 6, 1, 0, 0, 0, 0, time.UTC),
+		time.Date(2026, 6, 7, 0, 0, 0, 0, time.UTC),
+		time.Date(2026, 6, 7, 0, 0, 0, 0, time.UTC),
+	)
+	noErr(err)
+
+	err = client.SystemIntake.SendSystemIntakeGRBReviewRestarted(
+		ctx,
+		emailNotificationRecipients,
+		intakeID,
+		"Supreme Taco Project",
+		"Taco King",
+		"STP",
+		time.Date(2025, 6, 1, 0, 0, 0, 0, time.UTC),
+		time.Date(2026, 6, 7, 0, 0, 0, 0, time.UTC),
+		time.Date(2026, 6, 7, 0, 0, 0, 0, time.UTC),
+	)
+	noErr(err)
+
 	err = client.SystemIntake.SendGRBReviewerInvitedToVoteEmail(ctx,
 		email.SendGRBReviewerInvitedToVoteInput{
 			Recipient:          requesterEmail,
