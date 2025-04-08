@@ -12,8 +12,6 @@ import (
 )
 
 func (s *EmailTestSuite) TestSendSystemIntakeGRBReviewerReminder() {
-	const dateFormat = "01/02/2006"
-
 	ctx := context.Background()
 	intakeID := uuid.MustParse("27883155-46ad-4c30-b3b0-30e8d093756e")
 	projectTitle := "Reminder Test Project"
@@ -21,8 +19,8 @@ func (s *EmailTestSuite) TestSendSystemIntakeGRBReviewerReminder() {
 	requesterComponent := "Office of Enterprise Data and Analytics"
 	startDate := time.Now().AddDate(0, 0, -2)
 	endDate := time.Now().AddDate(0, 0, 2)
-	formattedStart := startDate.Format(dateFormat)
-	formattedEnd := endDate.Format(dateFormat)
+	formattedStart := startDate.Format("01/02/2006")
+	formattedEnd := endDate.Format("01/02/2006")
 	itGovInboxAddress := s.config.GRTEmail.String()
 
 	requestLink := fmt.Sprintf(
