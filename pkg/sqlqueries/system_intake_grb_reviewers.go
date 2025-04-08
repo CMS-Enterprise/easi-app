@@ -23,6 +23,9 @@ var deleteSystemIntakeGRBReviewerByIDSQL string
 //go:embed SQL/system_intake_grb_reviewer/compare.sql
 var compareSystemIntakeGRBReviewersByIntakeIDSQL string
 
+//go:embed SQL/system_intake_grb_reviewer/set_last_reminder_sent_time.sql
+var setSystemIntakeGrbReviewLastReminderSentTimeSQL string
+
 // SystemIntakeGRBReviewer holds all SQL scripts for GRB Reviewers
 var SystemIntakeGRBReviewer = systemIntakeGRBReviewerScripts{
 	Create:                         insertSystemIntakeGRBReviewerSQL,
@@ -32,6 +35,7 @@ var SystemIntakeGRBReviewer = systemIntakeGRBReviewerScripts{
 	Update:                         updateSystemIntakeGRBReviewerByIDSQL,
 	CastVote:                       castSystemIntakeGRBReviewerVoteSQL,
 	Delete:                         deleteSystemIntakeGRBReviewerByIDSQL,
+	SetLastReminderSentTime:        setSystemIntakeGrbReviewLastReminderSentTimeSQL,
 }
 
 type systemIntakeGRBReviewerScripts struct {
@@ -42,4 +46,5 @@ type systemIntakeGRBReviewerScripts struct {
 	Update                         string
 	CastVote                       string
 	Delete                         string
+	SetLastReminderSentTime        string
 }

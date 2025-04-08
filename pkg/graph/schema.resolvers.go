@@ -673,6 +673,11 @@ func (r *mutationResolver) CastSystemIntakeGRBReviewerVote(ctx context.Context, 
 	return resolvers.CastSystemIntakeGRBReviewerVote(ctx, r.store, input)
 }
 
+// SendSystemIntakeGRBReviewerReminder is the resolver for the sendSystemIntakeGRBReviewerReminder field.
+func (r *mutationResolver) SendSystemIntakeGRBReviewerReminder(ctx context.Context, systemIntakeID uuid.UUID) (*models.SendSystemIntakeGRBReviewReminderPayload, error) {
+	return resolvers.SendSystemIntakeGRBReviewerReminder(ctx, r.store, r.emailClient, systemIntakeID)
+}
+
 // CreateSystemIntakeGRBDiscussionPost is the resolver for the createSystemIntakeGRBDiscussionPost field.
 func (r *mutationResolver) CreateSystemIntakeGRBDiscussionPost(ctx context.Context, input models.CreateSystemIntakeGRBDiscussionPostInput) (*models.SystemIntakeGRBReviewDiscussionPost, error) {
 	return resolvers.CreateSystemIntakeGRBDiscussionPost(ctx, r.store, r.emailClient, input)

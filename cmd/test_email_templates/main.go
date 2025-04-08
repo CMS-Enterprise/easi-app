@@ -799,4 +799,18 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		time.Date(2026, 6, 7, 0, 0, 0, 0, time.UTC),
 	)
 	noErr(err)
+
+	err = client.SystemIntake.SendSystemIntakeGRBReviewerReminder(
+		ctx,
+		email.SendSystemIntakeGRBReviewerReminderInput{
+			Recipient:          requesterEmail,
+			SystemIntakeID:     intakeID,
+			RequestName:        "Reminder Email Test",
+			RequesterName:      "Reminder Email - Name",
+			RequesterComponent: "Offices of Hearings and Inquiries",
+			StartDate:          time.Now().AddDate(0, 0, -1),
+			EndDate:            time.Now().AddDate(0, 0, 3),
+		},
+	)
+	noErr(err)
 }
