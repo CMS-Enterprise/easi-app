@@ -800,6 +800,20 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 	)
 	noErr(err)
 
+	err = client.SystemIntake.SendSystemIntakeGRBReviewerReminder(
+		ctx,
+		email.SendSystemIntakeGRBReviewerReminderInput{
+			Recipient:          requesterEmail,
+			SystemIntakeID:     intakeID,
+			RequestName:        "Reminder Email Test",
+			RequesterName:      "Reminder Email - Name",
+			RequesterComponent: "Offices of Hearings and Inquiries",
+			StartDate:          time.Now().AddDate(0, 0, -1),
+			EndDate:            time.Now().AddDate(0, 0, 3),
+		},
+	)
+	noErr(err)
+
 	err = client.SystemIntake.SendGRBReviewerInvitedToVoteEmail(ctx,
 		email.SendGRBReviewerInvitedToVoteInput{
 			Recipient:          requesterEmail,

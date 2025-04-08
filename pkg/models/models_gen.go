@@ -406,6 +406,10 @@ type SendReportAProblemEmailInput struct {
 	HowSevereWasTheProblem string `json:"howSevereWasTheProblem"`
 }
 
+type SendSystemIntakeGRBReviewReminderPayload struct {
+	TimeSent time.Time `json:"timeSent"`
+}
+
 // The data needed to send a TRB guidance letter, including who to notify
 type SendTRBGuidanceLetterInput struct {
 	ID               uuid.UUID `json:"id"`
