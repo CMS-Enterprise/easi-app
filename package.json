@@ -185,13 +185,11 @@
     "lodash": "4.17.21",
     "marked": "0.7.0",
     "node-fetch": "2.6.1",
-    "graphql": "15.8.0",
     "@graphql-typed-document-node/core": "3.2.0",
     "prosemirror-model": "1.23.0"
   },
   "comments": {
     "on_resolutions": {
-      "graphql": "Having graphql fixed at 15.8.0 allows apollo codegen and graphql-codegen to work together. Once the former is deprecated, you can remove this",
       "typed_document_node": "https://github.com/dotansimha/graphql-code-generator/issues/9293"
     }
   },
