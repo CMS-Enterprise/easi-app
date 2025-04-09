@@ -95,10 +95,10 @@
     "build": "vite build",
     "build:ts": "tsc",
     "serve": "vite preview",
-    "test": "vitest",
-    "test:run": "vitest --run",
-    "test:coverage": "vitest --coverage --run",
-    "test:ci": "vitest --coverage --run --reporter=default --reporter=github-actions",
+    "test": "vitest --config vitest.config.ts",
+    "test:run": "vitest --config vitest.config.ts --run",
+    "test:coverage": "vitest --config vitest.config.ts --coverage --run",
+    "test:ci": "vitest --config vitest.config.ts --coverage --run --reporter=default --reporter=github-actions",
     "lint": "eslint '**/*.{ts,tsx}'",
     "lint:fix": "eslint --fix '**/*.{ts,tsx}'",
     "cypress:open": "cypress open",
@@ -175,7 +175,7 @@
     "vite": "^6.2.5",
     "vite-plugin-svgr": "^4.3.0",
     "vite-tsconfig-paths": "^4.2.0",
-    "vitest": "^2.1.9",
+    "vitest": "^3.1.1",
     "webpack": "^5.98.0"
   },
   "resolutions": {
