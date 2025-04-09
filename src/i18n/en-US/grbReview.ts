@@ -329,6 +329,8 @@ export default {
           'Sending this reminder will send a notification email to the {{count}} out of {{total}} Governance Review Board (GRB) voting members who have not yet added a vote for this request.',
         sendReminder: 'Send reminder',
         cancel: 'Go back without sending',
+        success:
+          'You sent a voting reminder for this GRB review. GRB members added to this review will receive a voting reminder email.',
         error:
           'There was an issue sending your reminder. Please try again, and if the problem persists, try again later.'
       }

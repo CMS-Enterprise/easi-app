@@ -29,7 +29,8 @@ const SendReviewReminder = ({
   grbReviewers: SystemIntakeGRBReviewFragment['grbVotingInformation']['grbReviewers'];
 }) => {
   const { t } = useTranslation('grbReview');
-  const { errorMessageInModal, showErrorMessageInModal } = useMessage();
+  const { showMessage, errorMessageInModal, showErrorMessageInModal } =
+    useMessage();
 
   const grbReviewersWhoHaventVoted = grbReviewers.filter(
     reviewer =>
@@ -56,6 +57,9 @@ const SendReviewReminder = ({
           response.data?.sendSystemIntakeGRBReviewerReminder?.timeSent || ''
         );
         setIsModalOpen(false);
+        showMessage(t('adminTask.sendReviewReminder.modal.success'), {
+          type: 'success'
+        });
       })
       .catch(() => {
         showErrorMessageInModal(t('adminTask.sendReviewReminder.modal.error'));
