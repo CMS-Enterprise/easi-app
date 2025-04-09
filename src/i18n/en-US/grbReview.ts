@@ -321,7 +321,19 @@ export default {
       title: 'Send review reminder',
       description:
         'GRB voting members will get an automatic reminder when there is one day left in the review process. You may use the button below to send an additional reminder at any time.',
-      sendReminder: 'Send reminder'
+      sendReminder: 'Send reminder',
+      mostRecentReminder: 'Most recent reminder sent on {{date}} at {{time}}',
+      modal: {
+        title: 'Send a reminder',
+        description:
+          'Sending this reminder will send a notification email to the {{count}} out of {{total}} Governance Review Board (GRB) voting members who have not yet added a vote for this request.',
+        sendReminder: 'Send reminder',
+        cancel: 'Go back without sending',
+        success:
+          'You sent a voting reminder for this GRB review. GRB members added to this review will receive a voting reminder email.',
+        error:
+          'There was an issue sending your reminder. Please try again, and if the problem persists, try again later.'
+      }
     },
     takeADifferentAction: 'or, take a different action'
   },
@@ -468,7 +480,7 @@ export default {
       description:
         'Use the field below to add additional time to this review. The GRB review page will be updated with the new timeframe.',
       label: 'Set new end date ',
-      hint: `Select the new date when the GRB review should end. The review will close at 5pm EST on that day. 
+      hint: `Select the new date when the GRB review should end. The review will close at 5pm EST on that day.
 Format: mm/dd/yyyy`,
       newEnd: 'This review will now end on {{date}}.',
       addTime: 'Add time',

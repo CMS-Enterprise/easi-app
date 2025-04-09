@@ -18,6 +18,7 @@ export type AdminActionButton = {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   outline?: boolean;
   unstyled?: boolean;
+  disabled?: boolean;
 };
 
 type AdminActionProps = {
@@ -64,6 +65,7 @@ const AdminAction = ({
               onClick={button.onClick}
               outline={button.outline}
               unstyled={button.unstyled}
+              disabled={button.disabled}
             >
               {button.label}
             </Button>

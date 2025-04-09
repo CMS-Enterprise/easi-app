@@ -259,4 +259,48 @@ describe('GRB review', () => {
       'You have ended this GRB review early. GRB members will no longer be able to add or change votes.'
     );
   });
+
+  it('Sends a reminder email', () => {
+    cy.intercept('POST', '/api/graph/query', req => {
+      if (req.body.operationName === 'SendSystemIntakeGRBReviewerReminder') {
+        req.alias = 'sendReminder';
+      }
+    });
+
+    cy.visit('/it-governance/5af245bc-fc54-4677-bab1-1b3e798bb43c/grb-review');
+    cy.get('h3').should('contain.text', 'Send review reminder');
+
+    // Click Send reminder button to open modal
+    cy.contains('button', 'Send reminder').should('be.not.disabled').click();
+
+    // Check modal is visible
+    cy.get('[data-testid="send-review-reminder-modal"]').should('be.visible');
+
+    // Check modal content
+    cy.get('[data-testid="send-review-reminder-modal"]').within(() => {
+      cy.contains('button', 'Send reminder').should('be.visible');
+      cy.contains('button', 'Go back without sending')
+        .should('be.visible')
+        .click();
+    });
+
+    // Check modal is closed
+    cy.get('[data-testid="send-review-reminder-modal"]').should('not.exist');
+
+    // Click Send reminder button to open modal again
+    cy.contains('button', 'Send reminder').should('be.not.disabled').click();
+
+    // Check modal is visible
+    cy.get('[data-testid="send-review-reminder-modal"]').should('be.visible');
+
+    // Check modal content
+    cy.get('[data-testid="send-review-reminder-modal"]').within(() => {
+      cy.contains('button', 'Send reminder').should('be.visible').click();
+    });
+
+    cy.wait('@sendReminder').its('response.statusCode').should('eq', 200);
+
+    // Check review reminder email text is visible
+    cy.get('[data-testid="review-reminder"]').should('be.visible');
+  });
 });

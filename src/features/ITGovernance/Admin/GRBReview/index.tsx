@@ -63,6 +63,7 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
       reviewer.userAccount.username === euaId &&
       reviewer.votingRole === SystemIntakeGRBReviewerVotingRole.VOTING
   );
+  const grbReviewers = grbReview?.grbVotingInformation?.grbReviewers || [];
 
   const isITGovAdmin = useContext(ITGovAdminContext);
 
@@ -84,6 +85,8 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
           isITGovAdmin={isITGovAdmin}
           systemIntakeId={id}
           grbReviewStartedAt={grbReview.grbReviewStartedAt}
+          grbReviewReminderLastSent={grbReview.grbReviewReminderLastSent}
+          grbReviewers={grbReviewers}
         />
 
         {/* GRB Reviewer Voting Panel */}
