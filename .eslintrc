@@ -11,7 +11,7 @@
     "plugin:jsx-a11y/recommended",
     "plugin:prettier/recommended"
   ],
-  "plugins": ["cypress", "simple-import-sort"],
+  "plugins": ["cypress", "simple-import-sort", "vitest"],
   "rules": {
     "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
     "jsx-a11y/label-has-associated-control": [
@@ -32,7 +32,7 @@
     ],
 
     "import/no-unresolved": [
-      2, 
+      2,
       { "caseSensitive": false }
    ],
 
@@ -91,11 +91,16 @@
     "import/resolver": {
       "node": {
         "paths": ["src"],
-        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+        "extensions": [".js", ".jsx", ".ts", ".tsx"],
+        "moduleDirectory": ["node_modules", "src/"]
+      },
+      "typescript": {
+        "alwaysTryTypes": true
       }
     }
   },
   "env": {
-    "cypress/globals": true
+    "cypress/globals": true,
+    "vitest/env": true
   }
 }
