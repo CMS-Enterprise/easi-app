@@ -6,7 +6,11 @@ import {
   ModalFooter,
   ModalHeading
 } from '@trussworks/react-uswds';
-import { useSendSystemIntakeGRBReviewerReminderMutation } from 'gql/generated/graphql';
+import {
+  SystemIntakeGRBReviewerVotingRole,
+  SystemIntakeGRBReviewFragment,
+  useSendSystemIntakeGRBReviewerReminderMutation
+} from 'gql/generated/graphql';
 
 import Modal from 'components/Modal';
 import useMessage from 'hooks/useMessage';
@@ -15,15 +19,27 @@ const SendReviewReminder = ({
   isOpen,
   setIsModalOpen,
   systemIntakeId,
-  setReminderSent
+  setReminderSent,
+  grbReviewers
 }: {
   isOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
   systemIntakeId: string;
   setReminderSent: (reminderSent: string) => void;
+  grbReviewers: SystemIntakeGRBReviewFragment['grbVotingInformation']['grbReviewers'];
 }) => {
   const { t } = useTranslation('grbReview');
   const { errorMessageInModal, showErrorMessageInModal } = useMessage();
+
+  const grbReviewersWhoHaventVoted = grbReviewers.filter(
+    reviewer =>
+      reviewer.votingRole === SystemIntakeGRBReviewerVotingRole.VOTING &&
+      reviewer.vote === null
+  ).length;
+
+  const totalReviewers = grbReviewers.filter(
+    reviewer => reviewer.votingRole === SystemIntakeGRBReviewerVotingRole.VOTING
+  ).length;
 
   const [sendReminder] = useSendSystemIntakeGRBReviewerReminderMutation({
     variables: {
@@ -63,7 +79,10 @@ const SendReviewReminder = ({
           </Alert>
         )}
         <p className="margin-top-1">
-          {t('adminTask.sendReviewReminder.modal.description')}
+          {t('adminTask.sendReviewReminder.modal.description', {
+            count: grbReviewersWhoHaventVoted,
+            total: totalReviewers
+          })}
         </p>
         <ModalFooter>
           <Button

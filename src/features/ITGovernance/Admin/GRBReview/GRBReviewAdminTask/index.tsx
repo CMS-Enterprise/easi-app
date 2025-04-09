@@ -14,13 +14,15 @@ export type IntakeRequestCardProps = {
   grbReviewStartedAt: SystemIntakeGRBReviewFragment['grbReviewStartedAt'];
   systemIntakeId: string;
   grbReviewReminderLastSent: SystemIntakeGRBReviewFragment['grbReviewReminderLastSent'];
+  grbReviewers: SystemIntakeGRBReviewFragment['grbVotingInformation']['grbReviewers'];
 };
 
 const GRBReviewAdminTask = ({
   isITGovAdmin,
   grbReviewStartedAt,
   systemIntakeId,
-  grbReviewReminderLastSent
+  grbReviewReminderLastSent,
+  grbReviewers
 }: IntakeRequestCardProps) => {
   const { t } = useTranslation('grbReview');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,6 +47,7 @@ const GRBReviewAdminTask = ({
         setIsModalOpen={setIsModalOpen}
         systemIntakeId={systemIntakeId}
         setReminderSent={setReminderSent}
+        grbReviewers={grbReviewers}
       />
       {grbReviewStartedAt ? (
         <AdminAction
