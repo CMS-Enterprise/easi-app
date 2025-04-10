@@ -10,7 +10,14 @@ import {
   ModalHeading
 } from '@trussworks/react-uswds';
 import NotFound from 'features/Miscellaneous/NotFound';
-import { SystemIntakeState } from 'gql/generated/graphql';
+import {
+  ITGovIntakeFormStatus,
+  SystemIntakeDecisionState,
+  SystemIntakeState,
+  SystemIntakeStep,
+  useArchiveSystemIntakeMutation,
+  useGetGovernanceTaskListQuery
+} from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import Breadcrumbs from 'components/Breadcrumbs';
@@ -22,14 +29,6 @@ import PageLoading from 'components/PageLoading';
 import { TaskListContainer } from 'components/TaskList';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import useMessage from 'hooks/useMessage';
-
-import {
-  ITGovIntakeFormStatus,
-  SystemIntakeDecisionState,
-  SystemIntakeStep,
-  useArchiveSystemIntakeMutation,
-  useGetGovernanceTaskListQuery
-} from '../../../../gql/generated/graphql';
 
 import AdditionalRequestInfo from './AdditionalRequestInfo';
 import GovTaskBizCaseDraft from './GovTaskBizCaseDraft';

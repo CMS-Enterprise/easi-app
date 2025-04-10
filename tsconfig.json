@@ -2,6 +2,12 @@
   "compilerOptions": {
     "target": "ESNext",
     "baseUrl": "src",
+    "paths": {
+      "utils/*": ["utils/*"],
+      "i18n/*": ["i18n/*"],
+      "components/*": ["components/*"],
+      "*": ["*"]
+    },
     "lib": [
       "dom",
       "dom.iterable",
@@ -27,3 +33,4 @@
     "src"
   ]
 }
+
