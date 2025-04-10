@@ -29,10 +29,10 @@ jobs:
     secrets: inherit
 
   # Commented out while we figure out some issues with teardown / cost.
-  #
-  # Deploy_to_EKS:
-  #   uses: ./.github/workflows/deploy_to_eks.yml
-  #   needs: [Build_Application_Images,Build_easi-frontend_image]
-  #   secrets: inherit
-  #   with:
-  #     namespace: easi-${{ github.event.number }}
+  # TODO: DON'T COMMIT THIS TO MAIN, ONLY ENABLING ON ASYNC GRB SO WE GET A FEATURE BRANCH IN EKS
+  Deploy_to_EKS:
+    uses: ./.github/workflows/deploy_to_eks.yml
+    needs: [Build_Application_Images,Build_easi-frontend_image]
+    secrets: inherit
+    with:
+      namespace: easi-${{ github.event.number }}
