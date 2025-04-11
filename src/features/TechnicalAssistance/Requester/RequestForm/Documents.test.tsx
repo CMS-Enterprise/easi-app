@@ -531,7 +531,7 @@ describe('Trb Request form: Supporting documents', () => {
     userEvent.click(await findByRole('button', { name: 'Remove document' }));
 
     await waitFor(() => {
-      findByText('No documents uploaded');
+      findByText('There are no documents uploaded for this request.');
       expect(fileText).toBeInTheDocument();
     });
   });

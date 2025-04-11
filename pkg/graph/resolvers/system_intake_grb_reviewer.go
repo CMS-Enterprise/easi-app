@@ -3,6 +3,7 @@ package resolvers
 import (
 	"context"
 	"errors"
+	"fmt"
 	"slices"
 	"time"
 
@@ -108,7 +109,7 @@ func UpdateSystemIntakeGRBReviewer(
 	input *models.UpdateSystemIntakeGRBReviewerInput,
 ) (*models.SystemIntakeGRBReviewer, error) {
 	return sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.SystemIntakeGRBReviewer, error) {
-		return store.UpdateSystemIntakeGRBReviewer(ctx, tx, input.ReviewerID, input.VotingRole, input.GrbRole)
+		return store.UpdateSystemIntakeGRBReviewer(ctx, tx, input)
 	})
 }
 
@@ -120,6 +121,42 @@ func DeleteSystemIntakeGRBReviewer(
 	return sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
 		return store.DeleteSystemIntakeGRBReviewer(ctx, tx, reviewerID)
 	})
+}
+
+func CastSystemIntakeGRBReviewerVote(ctx context.Context, store *storage.Store, input models.CastSystemIntakeGRBReviewerVoteInput) (*models.SystemIntakeGRBReviewer, error) {
+	// first, if "OBJECT" is the vote selection, confirm there is a comment (required for objections)
+	if input.Vote == models.SystemIntakeAsyncGRBVotingOptionObjection && (input.VoteComment == nil || len(*input.VoteComment) < 1) {
+		return nil, errors.New("vote comment is required with an `Objection` vote")
+	}
+
+	// then, check if the GRB review is in a state where votes are allowed - do this second to avoid a db round trip
+	// if the above condition isn't met
+	// get system intake
+	systemIntake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	// this can happen if the user making the request is not a reviewer
+	if systemIntake == nil {
+		return nil, errors.New("no system intake found for this GRB reviewer")
+	}
+
+	// confirm we are between GRB start date and GRB Async end date
+	// if either are nil, disallow votes
+	if systemIntake.GRBReviewStartedAt == nil || systemIntake.GrbReviewAsyncEndDate == nil {
+		return nil, errors.New("GRB review times not yet available")
+	}
+
+	now := time.Now()
+	// if `now` is before the review starts or if `now` is after the review ends, we are not in the voting window
+	// TODO: it may be possible to submit votes even after the end date - address if needed
+	if now.Before(*systemIntake.GRBReviewStartedAt) || now.After(*systemIntake.GrbReviewAsyncEndDate) {
+		return nil, errors.New("GRB review is not currently accepting votes")
+	}
+
+	// set vote
+	return store.CastSystemIntakeGRBReviewerVote(ctx, input)
 }
 
 func SystemIntakeGRBReviewers(
@@ -204,6 +241,7 @@ func StartGRBReview(
 		}
 
 		intake.GRBReviewStartedAt = helpers.PointerTo(time.Now())
+		intake.GrbReviewAsyncManualEndDate = nil
 		_, err = store.UpdateSystemIntakeNP(ctx, tx, intake)
 		if err != nil {
 			return nil, err
@@ -256,4 +294,111 @@ func GetPrincipalAsGRBReviewerBySystemIntakeID(ctx context.Context, systemIntake
 		}
 	}
 	return nil, nil
+}
+
+// SendSystemIntakeGRBReviewerReminder sends out individual emails to GRB reviewers who have not yet voted (only send to those with voting role)
+func SendSystemIntakeGRBReviewerReminder(ctx context.Context, store *storage.Store, emailClient *email.Client, systemIntakeID uuid.UUID) (*models.SendSystemIntakeGRBReviewReminderPayload, error) {
+	// first, confirm a reminder wasn't sent in last 24 hours
+	systemIntake, err := store.FetchSystemIntakeByID(ctx, systemIntakeID)
+	if err != nil {
+		return nil, fmt.Errorf("problem getting system intake when attempting to send reminder")
+	}
+
+	if err := validateCanSendReminder(systemIntake); err != nil {
+		return nil, fmt.Errorf("invalid reminder request: %w", err)
+	}
+
+	// find GRB reviewers who haven't voted yet
+	grbReviewers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{systemIntakeID})
+	if err != nil {
+		return nil, fmt.Errorf("problem getting GRB reviewers when attempting to send reminder: %w", err)
+	}
+
+	// find reviewers who have a voting role
+	var votingReviewerIDs []uuid.UUID
+	for _, reviewer := range grbReviewers {
+		if reviewer == nil {
+			continue
+		}
+
+		// skip if user has already voted
+		if reviewer.Vote != nil {
+			continue
+		}
+
+		// only send to those with voting roles
+		if reviewer.GRBVotingRole == models.SystemIntakeGRBReviewerVotingRoleVoting {
+			votingReviewerIDs = append(votingReviewerIDs, reviewer.UserID)
+		}
+	}
+
+	if len(votingReviewerIDs) < 1 {
+		return nil, errors.New("no reviewers to remind")
+	}
+
+	// find the emails associated with these users
+	userAccounts, err := store.UserAccountsByIDs(ctx, votingReviewerIDs)
+	if err != nil {
+		return nil, fmt.Errorf("problem getting user accounts when attempting to send reminder: %w", err)
+	}
+
+	if len(userAccounts) < 1 {
+		return nil, errors.New("no user accounts found when attempting to when attempting to send reminder")
+	}
+
+	// send out emails
+	for _, userAccount := range userAccounts {
+		if userAccount == nil {
+			continue
+		}
+
+		// send each email individually
+		if err := emailClient.SystemIntake.SendSystemIntakeGRBReviewerReminder(ctx, email.SendSystemIntakeGRBReviewerReminderInput{
+			Recipient:          models.EmailAddress(userAccount.Email),
+			SystemIntakeID:     systemIntakeID,
+			RequestName:        systemIntake.ProjectName.String,
+			RequesterName:      systemIntake.Requester,
+			RequesterComponent: systemIntake.Component.String,
+			StartDate:          *systemIntake.GRBReviewStartedAt,
+			EndDate:            *systemIntake.GrbReviewAsyncEndDate,
+		}); err != nil {
+			appcontext.ZLogger(ctx).Error("failed to send reminder email to user", zap.String("user.email", userAccount.Email))
+			// don't exit here, we can send out the rest
+		}
+	}
+
+	// update system intake for last reminder time
+	sentTime := time.Now()
+	if err := storage.SetSystemIntakeGRBReviewerReminderSent(ctx, store, systemIntakeID, sentTime); err != nil {
+		return nil, fmt.Errorf("problem setting last reminder sent timestamp when sending reminder: %w", err)
+	}
+
+	return &models.SendSystemIntakeGRBReviewReminderPayload{
+		TimeSent: sentTime,
+	}, nil
+}
+
+func validateCanSendReminder(systemIntake *models.SystemIntake) error {
+	if systemIntake == nil {
+		return errors.New("unexpected nil system intake when attempting to send reminder")
+	}
+
+	// prevent sending within 24 hours of last reminder
+	if systemIntake.GrbReviewReminderLastSent != nil && systemIntake.GrbReviewReminderLastSent.After(time.Now().Add(-24*time.Hour)) {
+		return errors.New("previous reminder sent less than 24 hours ago")
+	}
+
+	if systemIntake.GRBReviewStartedAt == nil {
+		return errors.New("grb review not yet started when attempting to send reminder")
+	}
+
+	if systemIntake.GrbReviewAsyncEndDate == nil {
+		return errors.New("grb end date missing when attempting to send reminder")
+	}
+
+	if systemIntake.GrbReviewAsyncManualEndDate != nil {
+		return errors.New("grb review found to be manually ended when attempting to send reminder")
+	}
+
+	return nil
 }
