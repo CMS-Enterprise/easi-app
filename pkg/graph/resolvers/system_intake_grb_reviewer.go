@@ -42,10 +42,6 @@ func CreateSystemIntakeGRBReviewers(
 	fetchUsers userhelpers.GetAccountInfosFunc,
 	input *models.CreateSystemIntakeGRBReviewersInput,
 ) (*models.CreateSystemIntakeGRBReviewersPayload, error) {
-	fmt.Println("==== CreateSystemIntakeGRBReviewers ====")
-	//fmt.Println(CreateSystemIntakeGRBReviewers)
-	fmt.Println("==== CreateSystemIntakeGRBReviewers ====")
-
 	return sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.CreateSystemIntakeGRBReviewersPayload, error) {
 		// Fetch intake by ID
 		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, input.SystemIntakeID)
