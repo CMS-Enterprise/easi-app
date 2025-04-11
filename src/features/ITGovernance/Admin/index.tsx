@@ -11,6 +11,7 @@ import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 import PageLoading from 'components/PageLoading';
 import user from 'utils/user';
 
+import DecisionRecord from './GRBReview/DecisionRecord';
 import GRBReviewerForm from './GRBReview/GRBReviewerForm';
 import GRBReviewForm from './GRBReview/GRBReviewForm';
 import RequestOverview from './RequestOverview/RequestOverview';
@@ -76,6 +77,18 @@ const GovernanceReviewTeam = () => {
                 exact
               >
                 <GRBReviewForm grbReview={grbReview} loading={loading} />
+              </Route>
+            )}
+
+            {flags?.grbReviewTab && (
+              <Route
+                path="/it-governance/:systemId/grb-review/decision-record"
+                exact
+              >
+                <DecisionRecord
+                  systemIntakeId={grbReview.id}
+                  grbReviewers={grbReview.grbVotingInformation.grbReviewers}
+                />
               </Route>
             )}
 
