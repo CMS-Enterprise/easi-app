@@ -77,23 +77,50 @@ func CreateSystemIntakeGRBReviewers(
 			return nil, err
 		}
 
+		if emailClient == nil || intake.GRBReviewStartedAt == nil || !intake.GRBReviewStartedAt.Before(time.Now()) {
+			return &models.CreateSystemIntakeGRBReviewersPayload{
+				Reviewers: createdReviewers,
+			}, nil
+		}
+
 		// send notification email to reviewer
 		// Note: GRB review cannot be set to future date currently
-		if emailClient != nil && intake.GRBReviewStartedAt != nil && intake.GRBReviewStartedAt.Before(time.Now()) {
-			emails := []models.EmailAddress{}
+		if intake.GrbReviewType == models.SystemIntakeGRBReviewTypeStandard {
+			var emails []models.EmailAddress
 			for _, reviewer := range accts {
 				emails = append(emails, models.EmailAddress(reviewer.Email))
 			}
-			err = emailClient.SystemIntake.SendCreateGRBReviewerNotification(
+
+			if err := emailClient.SystemIntake.SendCreateGRBReviewerNotification(
 				ctx,
 				emails,
 				intake.ID,
 				intake.ProjectName.String,
 				intake.Requester,
 				intake.Component.String,
-			)
-			if err != nil {
+			); err != nil {
 				appcontext.ZLogger(ctx).Error("unable to send create GRB member notification", zap.Error(err))
+			}
+		} else {
+			if intake.GrbReviewAsyncEndDate != nil {
+				for _, reviewer := range accts {
+					if err := emailClient.SystemIntake.SendGRBReviewerInvitedToVoteEmail(
+						ctx,
+						email.SendGRBReviewerInvitedToVoteInput{
+							Recipient:          models.EmailAddress(reviewer.Email),
+							StartDate:          *intake.GRBReviewStartedAt,
+							EndDate:            *intake.GrbReviewAsyncEndDate,
+							SystemIntakeID:     intake.ID,
+							ProjectName:        intake.ProjectName.String,
+							RequesterName:      intake.Requester,
+							RequesterComponent: intake.Component.String,
+						},
+					); err != nil {
+						appcontext.ZLogger(ctx).Error("problem sending invite to vote email to GRB reviewer", zap.Error(err), zap.String("user.email", reviewer.Email))
+						// don't exit, we can send out the rest
+						continue
+					}
+				}
 			}
 		}
 
@@ -127,6 +154,25 @@ func CastSystemIntakeGRBReviewerVote(ctx context.Context, store *storage.Store, 
 	// first, if "OBJECT" is the vote selection, confirm there is a comment (required for objections)
 	if input.Vote == models.SystemIntakeAsyncGRBVotingOptionObjection && (input.VoteComment == nil || len(*input.VoteComment) < 1) {
 		return nil, errors.New("vote comment is required with an `Objection` vote")
+	}
+
+	// only allow GRB reviewers with the voting role to vote
+	userID := appcontext.Principal(ctx).Account().ID
+	grbReviewers, err := dataloaders.GetSystemIntakeGRBReviewersBySystemIntakeID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	canVote := false
+	for _, grbReviewer := range grbReviewers {
+		if grbReviewer.UserID == userID && grbReviewer.GRBVotingRole == models.SystemIntakeGRBReviewerVotingRoleVoting {
+			canVote = true
+			break
+		}
+	}
+
+	if !canVote {
+		return nil, errors.New("user is not allowed to vote on this GRB review")
 	}
 
 	// then, check if the GRB review is in a state where votes are allowed - do this second to avoid a db round trip
@@ -364,6 +410,7 @@ func SendSystemIntakeGRBReviewerReminder(ctx context.Context, store *storage.Sto
 		}); err != nil {
 			appcontext.ZLogger(ctx).Error("failed to send reminder email to user", zap.String("user.email", userAccount.Email))
 			// don't exit here, we can send out the rest
+			continue
 		}
 	}
 
