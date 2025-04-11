@@ -1002,7 +1002,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query getSystemIntakeGRBReviewers($systemIntakeID: UUID!) {\n  systemIntake(id: $systemIntakeID) {\n    id\n    grbReviewers {\n        id\n        systemIntakeID\n        grbRole\n        votingRole\n        userAccount {\n            username\n            id\n            givenName\n            commonName\n            email\n        }\n        vote\n        voteComment\n        createdAt\n        createdBy\n        modifiedAt\n        modifiedBy\n    }\n  }\n}",
+										"query": "query getSystemIntakeGRBReviewers($systemIntakeID: UUID!) {\n  systemIntake(id: $systemIntakeID) {\n    id\n    grbVotingInformation {\n      grbReviewers {\n        id\n        systemIntakeID\n        grbRole\n        votingRole\n        userAccount {\n          username\n          id\n          givenName\n          commonName\n          email\n        }\n        vote\n        voteComment\n        createdAt\n        createdBy\n        modifiedAt\n        modifiedBy\n      }\n    }\n  }\n}\n",
 										"variables": "{\r\n    \"systemIntakeID\": \"5af245bc-fc54-4677-bab1-1b3e798bb43c\"\r\n}"
 									}
 								},
@@ -1035,7 +1035,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query getSystemIntakeGRBReviewers{\n  systemIntake(id: \"{{systemIntakeID}}\") {\n    id\n    grbVotingInformation{\n        votingStatus\n        numberOfNoObjection\n        numberOfObjection\n        numberOfNotVoted\n        grbReviewers {\n            id\n            systemIntakeID\n            grbRole\n            votingRole\n            userAccount {\n                username\n                id\n                givenName\n                commonName\n                email\n            }\n            vote\n            voteComment\n            createdAt\n            createdBy\n            modifiedAt\n            modifiedBy\n        }\n    }\n  }\n}",
+										"query": "query getSystemIntakeGRBReviewers {\n  systemIntake(id: \"{{systemIntakeID}}\") {\n    id\n    grbVotingInformation {\n      votingStatus\n      numberOfNoObjection\n      numberOfObjection\n      numberOfNotVoted\n      grbReviewers {\n        id\n        systemIntakeID\n        grbRole\n        votingRole\n        userAccount {\n          username\n          id\n          givenName\n          commonName\n          email\n        }\n        vote\n        voteComment\n        createdAt\n        createdBy\n        modifiedAt\n        modifiedBy\n      }\n    }\n  }\n}\n",
 										"variables": ""
 									}
 								},
@@ -1068,7 +1068,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation createSystemIntakeGRBReviewer($input: CreateSystemIntakeGRBReviewersInput!) {\n  createSystemIntakeGRBReviewers(input: $input) {\n    reviewers {\n        id\n        userAccount {\n        id\n        }\n        grbRole\n        votingRole\n        systemIntakeID\n        createdBy\n        createdAt\n        modifiedBy\n        modifiedAt\n    }\n    \n  }\n}",
+										"query": "mutation createSystemIntakeGRBReviewer(\n  $input: CreateSystemIntakeGRBReviewersInput!\n) {\n  createSystemIntakeGRBReviewers(input: $input) {\n    reviewers {\n      id\n      userAccount {\n        id\n      }\n      grbRole\n      votingRole\n      systemIntakeID\n      createdBy\n      createdAt\n      modifiedBy\n      modifiedAt\n    }\n  }\n}\n",
 										"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"8edb237e-ad48-49b2-91cf-8534362bc6cf\",\r\n    \"reviewers\": {\r\n        \"euaUserId\": \"USR1\",\r\n        \"votingRole\": \"NON_VOTING\",\r\n        \"grbRole\": \"CMCS_REP\"\r\n    }\r\n  }\r\n}"
 									}
 								},
@@ -1101,7 +1101,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation updateGRBReviewer($input: UpdateSystemIntakeGRBReviewerInput!) {\n  updateSystemIntakeGRBReviewer(input: $input) {\n    id\n    systemIntakeID\n    grbRole\n    votingRole\n    userAccount {\n        username\n        id\n        givenName\n        commonName\n        email\n    }\n    vote\n    voteComment\n    createdAt\n    createdBy\n    modifiedAt\n    modifiedBy\n  }\n}",
+										"query": "mutation updateGRBReviewer($input: UpdateSystemIntakeGRBReviewerInput!) {\n  updateSystemIntakeGRBReviewer(input: $input) {\n    id\n    systemIntakeID\n    grbRole\n    votingRole\n    userAccount {\n      username\n      id\n      givenName\n      commonName\n      email\n    }\n    vote\n    voteComment\n    createdAt\n    createdBy\n    modifiedAt\n    modifiedBy\n  }\n}\n",
 										"variables": "{\r\n    \"input\": {\r\n        \"reviewerID\": \"{{SystemIntakeGRBReviewerID}}\",\r\n        \"votingRole\": \"VOTING\",\r\n        \"grbRole\": \"ACA_3021_REP\"\r\n    }\r\n}"
 									}
 								},
@@ -1122,7 +1122,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation castSystemIntakeGRBReviewerVote($input: CastSystemIntakeGRBReviewerVoteInput!) {\n  castSystemIntakeGRBReviewerVote(input: $input) {\n    id\n    systemIntakeID\n    grbRole\n    votingRole\n    userAccount {\n      username\n      id\n      givenName\n      commonName\n      email\n    }\n    vote\n    voteComment\n    dateVoted\n    createdAt\n    createdBy\n    modifiedAt\n    modifiedBy\n  }\n}\n",
+										"query": "mutation castSystemIntakeGRBReviewerVote(\n  $input: CastSystemIntakeGRBReviewerVoteInput!\n) {\n  castSystemIntakeGRBReviewerVote(input: $input) {\n    id\n    systemIntakeID\n    grbRole\n    votingRole\n    userAccount {\n      username\n      id\n      givenName\n      commonName\n      email\n    }\n    vote\n    voteComment\n    dateVoted\n    createdAt\n    createdBy\n    modifiedAt\n    modifiedBy\n  }\n}\n",
 										"variables": "{\n  \"input\": {\n    \"systemIntakeID\": \"8edb237e-ad48-49b2-91cf-8534362bc6cf\",\n    \"vote\": \"OBJECTION\",\n    \"voteComment\": \"Could be better\"\n  }\n}"
 									}
 								},
@@ -1188,7 +1188,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query getReviewersComparisons($systemIntakeID: UUID!) {\n  compareGRBReviewersByIntakeID(id: $systemIntakeID) {\n    id\n    requestName\n    reviewers {\n      euaUserId\n      userAccount {\n        commonName\n      }\n      isCurrentReviewer\n      grbRole\n    }\n  }\n}",
+										"query": "query getReviewersComparisons($systemIntakeID: UUID!) {\n  compareGRBReviewersByIntakeID(id: $systemIntakeID) {\n    id\n    requestName\n    reviewers {\n      euaUserId\n      userAccount {\n        commonName\n      }\n      isCurrentReviewer\n      grbRole\n    }\n  }\n}\n",
 										"variables": "{\r\n    \"systemIntakeID\": \"5af245bc-fc54-4677-bab1-1b3e798bb43c\"\r\n}"
 									}
 								},
@@ -1221,7 +1221,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query getSystemIntakeGRBReviewers($systemIntakeID: UUID!) {\n  systemIntake(id: $systemIntakeID) {\n    id\n    grbDiscussions {\n        initialPost {\n            id\n            content\n            votingRole\n            grbRole\n            systemIntakeID\n            createdAt\n            createdByUserAccount {\n                givenName\n                familyName\n            }\n            modifiedAt\n            modifiedByUserAccount {\n                givenName\n                familyName\n            }\n        }\n        replies {\n            id\n            content\n            votingRole\n            grbRole\n            systemIntakeID\n            createdAt\n            createdByUserAccount {\n                givenName\n                familyName\n            }\n            modifiedAt\n            modifiedByUserAccount {\n                givenName\n                familyName\n            }\n        }\n    }\n  }\n}",
+										"query": "query getSystemIntakeGRBReviewers($systemIntakeID: UUID!) {\n  systemIntake(id: $systemIntakeID) {\n    id\n    grbDiscussions {\n      initialPost {\n        id\n        content\n        votingRole\n        grbRole\n        systemIntakeID\n        createdAt\n        createdByUserAccount {\n          givenName\n          familyName\n        }\n        modifiedAt\n        modifiedByUserAccount {\n          givenName\n          familyName\n        }\n      }\n      replies {\n        id\n        content\n        votingRole\n        grbRole\n        systemIntakeID\n        createdAt\n        createdByUserAccount {\n          givenName\n          familyName\n        }\n        modifiedAt\n        modifiedByUserAccount {\n          givenName\n          familyName\n        }\n      }\n    }\n  }\n}\n",
 										"variables": "{\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\"\r\n}"
 									}
 								},
@@ -1320,7 +1320,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation createSystemIntakeGRBDiscussionReply($input: createSystemIntakeGRBDiscussionReplyInput!) {\n  createSystemIntakeGRBDiscussionReply(input: $input) {\n    id\n    content\n    grbRole\n    votingRole\n    systemIntakeID\n    createdByUserAccount {\n        id\n        username\n    }\n  }\n}",
+										"query": "mutation createSystemIntakeGRBDiscussionReply(\n  $input: createSystemIntakeGRBDiscussionReplyInput!\n) {\n  createSystemIntakeGRBDiscussionReply(input: $input) {\n    id\n    content\n    grbRole\n    votingRole\n    systemIntakeID\n    createdByUserAccount {\n      id\n      username\n    }\n  }\n}\n",
 										"variables": "{\r\n  \"input\": {\r\n    \"initialPostID\": \"{{SystemIntakeGRBDiscussionID}}\",\r\n    \"content\": \"<p>monkey kiwi maduros senor <span data-type=\\\"mention\\\" tag-type=\\\"USER_ACCOUNT\\\" class=\\\"mention\\\" data-id-db=\\\"{{UserAccountID}}\\\">@Mckayla Fritsch</span>!</p>\"\r\n  }\r\n}"
 									}
 								},
@@ -1353,7 +1353,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation createSystemIntakeGRBDiscussionReply($input: createSystemIntakeGRBDiscussionReplyInput!) {\n  createSystemIntakeGRBDiscussionReply(input: $input) {\n    id\n    content\n    grbRole\n    votingRole\n    systemIntakeID\n    createdByUserAccount {\n        id\n        username\n    }\n  }\n}",
+										"query": "mutation createSystemIntakeGRBDiscussionReply(\n  $input: createSystemIntakeGRBDiscussionReplyInput!\n) {\n  createSystemIntakeGRBDiscussionReply(input: $input) {\n    id\n    content\n    grbRole\n    votingRole\n    systemIntakeID\n    createdByUserAccount {\n      id\n      username\n    }\n  }\n}\n",
 										"variables": "{\r\n  \"input\": {\r\n    \"initialPostID\": \"{{SystemIntakeGRBDiscussionID}}\",\r\n    \"content\": \"<p>Let me look into it, ok? <span data-type=\\\"mention\\\" tag-type=\\\"GROUP_IT_GOV\\\" class=\\\"mention\\\">@Group</span><span data-type=\\\"mention\\\" tag-type=\\\"GROUP_GRB_REVIEWERS\\\" class=\\\"mention\\\">@Group2</span>!</p>\"\r\n  }\r\n}"
 									}
 								},
@@ -1386,7 +1386,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query getSystemIntakeGRBReviewers($systemIntakeID: UUID!) {\n  systemIntake(id: $systemIntakeID) {\n    id\n    grbPresentationLinks {\n        systemIntakeID\n        createdAt\n        createdBy\n        modifiedAt\n        modifiedBy\n        recordingLink\n        recordingPasscode\n        transcriptFileName\n        transcriptFileStatus\n        transcriptFileURL\n        presentationDeckFileName\n        presentationDeckFileStatus\n        presentationDeckFileURL\n    }\n  }\n}",
+										"query": "query getSystemIntakeGRBReviewers($systemIntakeID: UUID!) {\n  systemIntake(id: $systemIntakeID) {\n    id\n    grbPresentationLinks {\n      systemIntakeID\n      createdAt\n      createdBy\n      modifiedAt\n      modifiedBy\n      recordingLink\n      recordingPasscode\n      transcriptFileName\n      transcriptFileStatus\n      transcriptFileURL\n      presentationDeckFileName\n      presentationDeckFileStatus\n      presentationDeckFileURL\n    }\n  }\n}\n",
 										"variables": "{\r\n    \"systemIntakeID\": \"5af245bc-fc54-4677-bab1-1b3e798bb43c\"\r\n}"
 									}
 								},
@@ -1419,8 +1419,29 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation setSystemIntakeGRBPresentationLinks(\n    $input: SystemIntakeGRBPresentationLinksInput!\n) {\n  setSystemIntakeGRBPresentationLinks(input: $input) {\n    systemIntakeID\n    createdAt\n    createdBy\n    modifiedAt\n    modifiedBy\n    recordingLink\n    recordingPasscode\n    transcriptFileName\n    transcriptFileStatus\n    transcriptFileURL\n    presentationDeckFileName\n    presentationDeckFileStatus\n    presentationDeckFileURL\n  }\n}",
+										"query": "mutation setSystemIntakeGRBPresentationLinks(\n  $input: SystemIntakeGRBPresentationLinksInput!\n) {\n  setSystemIntakeGRBPresentationLinks(input: $input) {\n    systemIntakeID\n    createdAt\n    createdBy\n    modifiedAt\n    modifiedBy\n    recordingLink\n    recordingPasscode\n    transcriptFileName\n    transcriptFileStatus\n    transcriptFileURL\n    presentationDeckFileName\n    presentationDeckFileStatus\n    presentationDeckFileURL\n  }\n}\n",
 										"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"8edb237e-ad48-49b2-91cf-8534362bc6cf\",\r\n    \"recordingLink\": \"https://google.com\",\r\n    \"recordingPasscode\": \"123456\"\r\n  }\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Send GRB Review Voting Reminder",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation sendSystemIntakeGRBReviewerReminder($systemIntakeID: UUID!) {\n  sendSystemIntakeGRBReviewerReminder(systemIntakeID: $systemIntakeID) {\n    timeSent\n  }\n}\n",
+										"variables": "{\n    \"systemIntakeID\":\"a5689bec-e4cf-4f2b-a7de-72020e8d65be\"\n}"
 									}
 								},
 								"url": {
@@ -1576,7 +1597,7 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "query systemIntakeGRBReviewRequested {\n  systemIntakesWithReviewRequested {\n    step\n    state\n    id\n    grbReviewers {\n        id\n        userAccount {\n            commonName\n        }\n    }\n  }\n}",
+								"query": "query systemIntakeGRBReviewRequested {\n  systemIntakesWithReviewRequested {\n    step\n    state\n    id\n    grbVotingInformation {\n        grbReviewers {\n            id\n            userAccount {\n                commonName\n            }\n    }\n    }\n  }\n}",
 								"variables": ""
 							}
 						},

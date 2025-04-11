@@ -34,6 +34,7 @@ const ParticipantsSection = ({
   const { t } = useTranslation('grbReview');
 
   const history = useHistory();
+
   const { pathname } = useLocation();
 
   const isITGovAdmin = useContext(ITGovAdminContext);

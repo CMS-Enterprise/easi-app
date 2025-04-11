@@ -51,6 +51,21 @@ export const formatDateUtc = (
   return '';
 };
 
+/**
+ * Output local time (e.g., 2:37 PM) from an ISO string.
+ * Useful for displaying only the time portion based on the user's local time zone.
+ */
+export const formatTimeLocal = (
+  date: string | null | undefined,
+  format = 'h:mm a'
+): string => {
+  if (date) {
+    const parsedTime = DateTime.fromISO(date).toFormat(format);
+    if (parsedTime !== 'Invalid DateTime') return parsedTime;
+  }
+  return '';
+};
+
 type ContractDate = {
   day?: string | null | undefined;
   month?: string | null | undefined;
@@ -121,4 +136,27 @@ export const getRelativeDate = (
 
   // Return relative date
   return dateTime.toRelativeCalendar({ unit: 'days' });
+};
+
+// Formats whole days, hours, and minutes between now and a given ISO string
+export const formatDaysHoursMinutes = (
+  isoString: string | null | undefined
+) => {
+  if (!isoString) return { days: 0, hours: 0, minutes: 0 };
+
+  // Parse the ISO string into a Luxon DateTime object in UTC
+  const dateTime = DateTime.fromISO(isoString, { zone: 'utc' });
+
+  // Get the current time in UTC
+  const now = DateTime.utc();
+
+  // Calculate the difference between the two DateTime objects
+  const diff = now.diff(dateTime, ['days', 'hours', 'minutes']);
+
+  // Extract whole number of days, hours, and minutes and make them absolute
+  const days = Math.abs(Math.floor(diff.as('days')));
+  const hours = Math.abs(Math.floor(diff.hours));
+  const minutes = Math.abs(Math.floor(diff.minutes));
+
+  return { days, hours, minutes };
 };

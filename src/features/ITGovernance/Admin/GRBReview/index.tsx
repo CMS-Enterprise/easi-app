@@ -23,7 +23,7 @@ import BusinessCaseCard from './BusinessCaseCard';
 import DecisionRecordCard from './DecisionRecordCard';
 import Discussions from './Discussions';
 import GRBReviewAdminTask from './GRBReviewAdminTask';
-import GRBReviewStatusCard, { GRBReviewStatus } from './GRBReviewStatusCard';
+import GRBReviewStatusCard from './GRBReviewStatusCard';
 import GRBVotingPanel from './GRBVotingPanel';
 import IntakeRequestCard from './IntakeRequestCard';
 
@@ -63,6 +63,7 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
       reviewer.userAccount.username === euaId &&
       reviewer.votingRole === SystemIntakeGRBReviewerVotingRole.VOTING
   );
+  const grbReviewers = grbReview?.grbVotingInformation?.grbReviewers || [];
 
   const isITGovAdmin = useContext(ITGovAdminContext);
 
@@ -84,6 +85,8 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
           isITGovAdmin={isITGovAdmin}
           systemIntakeId={id}
           grbReviewStartedAt={grbReview.grbReviewStartedAt}
+          grbReviewReminderLastSent={grbReview.grbReviewReminderLastSent}
+          grbReviewers={grbReviewers}
         />
 
         {/* GRB Reviewer Voting Panel */}
@@ -102,13 +105,9 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
         </p>
 
         {/* GRB Review Status */}
-        <GRBReviewStatusCard
-          grbReviewType={grbReview.grbReviewType}
-          grbDate={grbReview.grbDate}
-          grbReviewStatus={GRBReviewStatus.SCHEDULED}
-          grbReviewStartedAt={grbReview.grbReviewStartedAt}
-        />
+        <GRBReviewStatusCard grbReview={grbReview} />
 
+        {/* Decision Record */}
         <DecisionRecordCard
           grbVotingInformation={grbReview.grbVotingInformation}
         />

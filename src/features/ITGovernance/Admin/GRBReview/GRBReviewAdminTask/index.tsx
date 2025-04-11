@@ -1,23 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { SystemIntakeGRBReviewFragment } from 'gql/generated/graphql';
 
 import AdminAction from 'components/AdminAction';
 import CollapsableLink from 'components/CollapsableLink';
+import { formatDateLocal, formatTimeLocal } from 'utils/date';
+
+import SendReviewReminder from '../SendReviewReminder';
 
 export type IntakeRequestCardProps = {
   isITGovAdmin: boolean;
   grbReviewStartedAt: SystemIntakeGRBReviewFragment['grbReviewStartedAt'];
   systemIntakeId: string;
+  grbReviewReminderLastSent: SystemIntakeGRBReviewFragment['grbReviewReminderLastSent'];
+  grbReviewers: SystemIntakeGRBReviewFragment['grbVotingInformation']['grbReviewers'];
 };
 
 const GRBReviewAdminTask = ({
   isITGovAdmin,
   grbReviewStartedAt,
-  systemIntakeId
+  systemIntakeId,
+  grbReviewReminderLastSent,
+  grbReviewers
 }: IntakeRequestCardProps) => {
   const { t } = useTranslation('grbReview');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [reminderSent, setReminderSent] = useState(
+    grbReviewReminderLastSent || ''
+  );
 
   const whatDoINeedItems: string[] = t('adminTask.setUpGRBReview.whatDoINeed', {
     returnObjects: true
@@ -31,7 +42,13 @@ const GRBReviewAdminTask = ({
 
   return (
     <>
-      {/* TODO: May change once BE work is done to send reminder */}
+      <SendReviewReminder
+        isOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        systemIntakeId={systemIntakeId}
+        setReminderSent={setReminderSent}
+        grbReviewers={grbReviewers}
+      />
       {grbReviewStartedAt ? (
         <AdminAction
           type="ITGov"
@@ -39,21 +56,30 @@ const GRBReviewAdminTask = ({
           buttons={[
             {
               label: t('adminTask.sendReviewReminder.sendReminder'),
-              onClick: () =>
-                history.push(`/it-governance/${systemIntakeId}/grb-review/form`)
+              onClick: () => setIsModalOpen(true),
+              disabled: !!reminderSent
             },
             {
               label: t('adminTask.takeADifferentAction'),
               unstyled: true,
               onClick: () =>
-                history.push(
-                  `/it-governance/${systemIntakeId}/grb-review/reviewers`
-                )
+                history.push(`/it-governance/${systemIntakeId}/actions`)
             }
           ]}
         >
-          <p className="margin-top-0">
+          <p className="margin-top-0 margin-bottom-1">
             {t('adminTask.sendReviewReminder.description')}
+          </p>
+          <p
+            className="margin-top-0 margin-bottom-3 text-italic text-base-dark"
+            data-testid="review-reminder"
+          >
+            {reminderSent
+              ? t('adminTask.sendReviewReminder.mostRecentReminder', {
+                  date: formatDateLocal(reminderSent, 'MM/dd/yyyy'),
+                  time: formatTimeLocal(reminderSent)
+                })
+              : ''}
           </p>
         </AdminAction>
       ) : (
