@@ -3,6 +3,7 @@ package resolvers
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -87,6 +88,10 @@ func UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(
 	store *storage.Store,
 	input models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync,
 ) (*models.UpdateSystemIntakePayload, error) {
+	fmt.Println("==== timeframe ====")
+	//fmt.Println(timeframe)
+	fmt.Println("==== timeframe ====")
+
 	// Fetch intake by ID
 	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
 	if err != nil {
