@@ -91,13 +91,20 @@ const DecisionRecordTable = ({ grbReviewers }: DecisionRecordTableProps) => {
           <Modal
             isOpen={!!grbReviewerViewComment}
             closeModal={() => setGRBReviewerViewComment(null)}
-            className="easi-modal__content--narrow"
+            className="easi-modal__content--narrow height-auto"
           >
             <ModalHeading className="margin-bottom-05">
               {t('decisionRecord.grbComment')}
             </ModalHeading>
             <GRBReviewerVote grbReviewer={grbReviewerViewComment} />
             <p>{grbReviewerViewComment.voteComment}</p>
+            <Button
+              onClick={() => setGRBReviewerViewComment(null)}
+              type="button"
+              unstyled
+            >
+              {t('Go back')}
+            </Button>
           </Modal>
         )
       }

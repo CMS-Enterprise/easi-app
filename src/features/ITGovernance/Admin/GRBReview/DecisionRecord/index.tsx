@@ -29,7 +29,7 @@ const DecisionRecord = ({
           { text: t('Home'), url: '/' },
           {
             text: t('governanceReviewTeam:itGovernanceRequestDetails'),
-            url: `/it-governance/${systemIntakeId}/intake-request`
+            url: `/it-governance/${systemIntakeId}/grb-review`
           },
           {
             text: t('decisionRecord.breadcrumb')
@@ -47,7 +47,7 @@ const DecisionRecord = ({
 
       <IconLink
         icon={<Icon.ArrowBack />}
-        to={`/it-governance/${systemIntakeId}/intake-request`}
+        to={`/it-governance/${systemIntakeId}/grb-review`}
       >
         {t('decisionRecord.returnToRequestDetails')}
       </IconLink>
