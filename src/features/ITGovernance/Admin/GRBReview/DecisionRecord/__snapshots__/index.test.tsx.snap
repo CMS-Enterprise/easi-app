@@ -31,7 +31,7 @@ exports[`GRB review decision record table > matches the snapshot 1`] = `
         >
           <a
             class="text-primary usa-breadcrumb__link"
-            href="/it-governance/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/intake-request"
+            href="/it-governance/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/grb-review"
           >
             <span>
               IT Governance request details
@@ -60,7 +60,7 @@ exports[`GRB review decision record table > matches the snapshot 1`] = `
     </p>
     <a
       class="usa-link display-flex flex-align-center"
-      href="/it-governance/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/intake-request"
+      href="/it-governance/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/grb-review"
     >
       <svg
         class="usa-icon margin-right-1"
