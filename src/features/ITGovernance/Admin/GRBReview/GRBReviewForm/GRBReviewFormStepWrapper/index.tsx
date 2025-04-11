@@ -21,7 +21,7 @@ import { GrbReviewFormSchema } from 'validations/grbReviewSchema';
 
 export type GRBReviewFormStepSubmit<
   TFieldValues extends FieldValues = FieldValues
-> = (values: TFieldValues & { systemIntakeID: string }) => Promise<FetchResult>;
+> = (values: Partial<TFieldValues>) => Promise<FetchResult>;
 
 type GRBReviewFormStepWrapperProps<
   TFieldValues extends FieldValues = FieldValues
@@ -67,7 +67,8 @@ function GRBReviewFormStepWrapper<
     handleSubmit,
     watch,
     formState: { isValid, isDirty },
-    setValue
+    setValue,
+    partialSubmit
   } = useEasiFormContext<TFieldValues>();
 
   const grbReviewPath = `/it-governance/${systemId}/grb-review`;
@@ -82,7 +83,6 @@ function GRBReviewFormStepWrapper<
   const nextStep: StepHeaderStepProps | undefined =
     currentStepIndex > -1 ? steps[currentStepIndex + 1] : undefined;
 
-  /** Submits form step and redirects user */
   const submitStep = useCallback(
     async ({
       shouldValidate = true,
@@ -92,44 +92,34 @@ function GRBReviewFormStepWrapper<
       shouldValidate?: boolean;
       /** Appends to `grbReviewPath` - leave undefined to return to GRB review tab after submit */
       path?: string;
-    }) => {
-      // Redirect user without submit if no changes or skipping validation
+    }) =>
+      handleSubmit(
+        async formData => {
+          if (!isDirty) return history.push(`${grbReviewPath}/${path}`);
 
-      if (!isDirty && !shouldValidate) {
-        return history.push(`${grbReviewPath}/${path}`);
-      }
-
-      if (isDirty && !shouldValidate) {
-        // Bypass validation, directly submit the form
-        return onSubmit({ systemIntakeID: systemId, ...watch() })
-          .then(() => history.push(`${grbReviewPath}/${path}`))
-          .catch(() => {
-            // show error if graphql fails
-            showMessage(t('setUpGrbReviewForm.error'), { type: 'error' });
-          });
-      }
-
-      return handleSubmit(values =>
-        onSubmit({ systemIntakeID: systemId, ...values })
-          .then(() => history.push(`${grbReviewPath}/${path}`))
-          // Show error message if validating fields, otherwise redirect
-          .catch(() => {
-            if (shouldValidate) {
+          return onSubmit(formData)
+            .then(() => history.push(`${grbReviewPath}/${path}`))
+            .catch(() => {
               showMessage(t('setUpGrbReviewForm.error'), { type: 'error' });
-            } else {
-              history.push(`${grbReviewPath}/${path}`);
-            }
-          })
-      )();
-    },
+            });
+        },
+        async () => {
+          if (shouldValidate) return null;
+
+          // If skipping validation, run partial submit to ignore errors
+          return partialSubmit({
+            update: formData => onSubmit(formData),
+            callback: () => history.push(`${grbReviewPath}/${path}`)
+          });
+        }
+      )(),
     [
-      isDirty,
+      grbReviewPath,
       handleSubmit,
       history,
-      grbReviewPath,
+      isDirty,
       onSubmit,
-      systemId,
-      watch,
+      partialSubmit,
       showMessage,
       t
     ]
@@ -286,7 +276,8 @@ function GRBReviewFormStepWrapper<
                 if (startGRBReview) {
                   setValue(
                     'startGRBReview' as Path<TFieldValues>,
-                    true as PathValue<TFieldValues, Path<TFieldValues>>
+                    true as PathValue<TFieldValues, Path<TFieldValues>>,
+                    { shouldDirty: true }
                   );
                 }
               }

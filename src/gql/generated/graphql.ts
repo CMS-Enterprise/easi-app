@@ -3459,7 +3459,8 @@ export type UpdateSystemIntakeGRBReviewFormInputPresentationAsync = {
 
 /** Input data used to set or update a System Intake's GRB Review Presentation (Standard) data */
 export type UpdateSystemIntakeGRBReviewFormInputPresentationStandard = {
-  grbDate: Scalars['Time']['input'];
+  /** the date of the GRB review meeting. It is omittable for simplicity on the front end, but if it is omitted or null the date will not be updated */
+  grbDate?: InputMaybe<Scalars['Time']['input']>;
   systemIntakeID: Scalars['UUID']['input'];
 };
 

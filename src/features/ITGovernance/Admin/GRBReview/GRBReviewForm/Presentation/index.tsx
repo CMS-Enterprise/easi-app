@@ -11,8 +11,7 @@ import {
 } from '@trussworks/react-uswds';
 import {
   SystemIntakeGRBReviewType,
-  UpdateSystemIntakeGRBReviewAsyncPresentationMutationVariables,
-  UpdateSystemIntakeGRBReviewStandardPresentationMutationVariables,
+  UpdateSystemIntakeGRBReviewAsyncPresentationMutationVariables as AsyncPresentationFields,
   useUpdateSystemIntakeGRBReviewAsyncPresentationMutation,
   useUpdateSystemIntakeGRBReviewStandardPresentationMutation
 } from 'gql/generated/graphql';
@@ -34,17 +33,12 @@ import GRBReviewFormStepWrapper, {
 
 type StandardPresentationFields = {
   grbMeetingDate: {
-    systemIntakeID: string;
     grbDate: string;
   };
   presentationDeck: {
-    systemIntakeID: string;
     presentationDeckFileData: File | null;
   };
 };
-
-type AsyncPresentationFields =
-  UpdateSystemIntakeGRBReviewAsyncPresentationMutationVariables;
 
 const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
   const { t } = useTranslation('grbReview');
@@ -52,11 +46,9 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
   const standardForm = useEasiForm<StandardPresentationFields>({
     defaultValues: {
       grbMeetingDate: {
-        systemIntakeID: grbReview.id,
         grbDate: grbReview.grbDate || ''
       },
       presentationDeck: {
-        systemIntakeID: grbReview.id,
         presentationDeckFileData: {
           name: grbReview.grbPresentationLinks?.presentationDeckFileName || ''
         } as File
@@ -96,6 +88,8 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
     }
   );
 
+  const systemIntakeID = grbReview.id;
+
   const {
     control,
     watch,
@@ -110,64 +104,66 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
   } = asyncForm;
 
   const onSubmitStandard: GRBReviewFormStepSubmit<
-    UpdateSystemIntakeGRBReviewStandardPresentationMutationVariables
+    StandardPresentationFields
   > = async input => {
+    const presentationDeckFileData =
+      input?.presentationDeck?.presentationDeckFileData;
+    const grbDate = input?.grbMeetingDate?.grbDate;
+
     // Only include newly updated file data, not default values
     // File data from default values does not have `size` field
-    const newFile = input.presentationDeck.presentationDeckFileData?.size
-      ? await fileToBase64File(input.presentationDeck.presentationDeckFileData)
+    const newFile = presentationDeckFileData?.size
+      ? await fileToBase64File(presentationDeckFileData)
       : undefined;
 
     return mutateStandard({
       variables: {
         grbMeetingDate: {
-          systemIntakeID: input.systemIntakeID,
-          grbDate: input.grbMeetingDate.grbDate
+          systemIntakeID,
+          grbDate
         },
         presentationDeck: {
-          systemIntakeID: input.systemIntakeID,
+          systemIntakeID,
           presentationDeckFileData:
-            input.presentationDeck.presentationDeckFileData === null
-              ? null
-              : newFile
+            presentationDeckFileData === null ? null : newFile
         }
       }
     });
   };
 
   const onSubmitAsync: GRBReviewFormStepSubmit<
-    UpdateSystemIntakeGRBReviewAsyncPresentationMutationVariables
+    AsyncPresentationFields
   > = async input => {
     const { links, asyncRecordingDate } = input;
 
     // Only include newly updated file data, not default values
     // File data from default values does not have `size` field
-    const transcriptFileData = links.transcriptFileData?.size
+    const transcriptFileData = links?.transcriptFileData?.size
       ? await fileToBase64File(links.transcriptFileData)
       : undefined;
 
-    const presentationDeckFileData = links.presentationDeckFileData?.size
+    const presentationDeckFileData = links?.presentationDeckFileData?.size
       ? await fileToBase64File(links.presentationDeckFileData)
       : undefined;
 
     return mutateAsync({
       variables: {
         asyncRecordingDate: {
-          systemIntakeID: asyncRecordingDate.systemIntakeID,
+          systemIntakeID,
           grbReviewAsyncRecordingTime:
-            asyncRecordingDate.grbReviewAsyncRecordingTime || null
+            asyncRecordingDate?.grbReviewAsyncRecordingTime || null
         },
         links: {
-          systemIntakeID: asyncRecordingDate.systemIntakeID,
+          systemIntakeID,
           transcriptFileData:
-            links.transcriptFileData === null ? null : transcriptFileData,
+            links?.transcriptFileData === null ? null : transcriptFileData,
           presentationDeckFileData:
-            links.presentationDeckFileData === null
+            links?.presentationDeckFileData === null
               ? null
               : presentationDeckFileData,
-          recordingLink: links.recordingLink,
-          recordingPasscode: links.recordingPasscode,
-          transcriptLink: links.transcriptLink
+          recordingLink: links?.recordingLink,
+          recordingPasscode: links?.recordingPasscode,
+          transcriptLink: links?.transcriptLink
         }
       }
     });

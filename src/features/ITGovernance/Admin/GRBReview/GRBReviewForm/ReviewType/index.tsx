@@ -52,7 +52,14 @@ const ReviewType = ({ grbReview }: ReviewTypeProps) => {
   } = form;
 
   const onSubmit: GRBReviewFormStepSubmit<ReviewTypeFields> = async input =>
-    mutate({ variables: { input } });
+    mutate({
+      variables: {
+        input: {
+          systemIntakeID: grbReview.id,
+          grbReviewType: input?.grbReviewType || grbReview.grbReviewType
+        }
+      }
+    });
 
   return (
     <EasiFormProvider<ReviewTypeFields> {...form}>

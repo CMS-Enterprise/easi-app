@@ -126,9 +126,6 @@ describe('GRB review', () => {
 
   it('completes required fields for Standard Review Type', () => {
     cy.intercept('POST', '/api/graph/query', req => {
-      if (req.body.operationName === 'UpdateSystemIntakeGRBReviewType') {
-        req.alias = 'updateReviewType';
-      }
       if (req.body.operationName === 'SendPresentationDeckReminder') {
         req.alias = 'sendReminder';
       }
@@ -153,8 +150,6 @@ describe('GRB review', () => {
     cy.get('input#grbReviewTypeStandard').check({ force: true });
 
     cy.contains('button', 'Next').click();
-
-    cy.wait('@updateReviewType').its('response.statusCode').should('eq', 200);
 
     cy.get('[data-testid="date-picker-external-input"]')
       .clear()
