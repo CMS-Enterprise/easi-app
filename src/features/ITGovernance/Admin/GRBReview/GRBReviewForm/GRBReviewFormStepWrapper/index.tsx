@@ -276,7 +276,8 @@ function GRBReviewFormStepWrapper<
                 if (startGRBReview) {
                   setValue(
                     'startGRBReview' as Path<TFieldValues>,
-                    true as PathValue<TFieldValues, Path<TFieldValues>>
+                    true as PathValue<TFieldValues, Path<TFieldValues>>,
+                    { shouldDirty: true }
                   );
                 }
               }
