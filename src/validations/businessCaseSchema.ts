@@ -90,6 +90,12 @@ export const BusinessCaseFinalValidationSchema = {
         'Tell us how you will determine whethere or not this effort is successful'
       )
   }),
+  // TODO: NJD - fill this out. should we validate alernatives ever?
+  alternativeAnalysis: Yup.object().shape({
+    preferredSolution: Yup.object().shape({}),
+    alternativeA: Yup.object().shape({}),
+    alternativeB: Yup.object().shape({})
+  }),
   preferredSolution: Yup.object().shape({
     preferredSolution: Yup.object().shape({
       title: Yup.string()
@@ -319,7 +325,8 @@ export const BusinessCaseDraftValidationSchema = {
     })
   }),
   requestDescription: Yup.object().shape({}),
-  preferredSolution: Yup.object().shape({}),
+  alternativeAnalysis: Yup.object().shape({}), // TODO: NJD - this ok?
+  preferredSolution: Yup.object().shape({}), // TODO: NJD - remove / consolidate these?
   alternativeA: Yup.object().shape({}),
   alternativeB: Yup.object().shape({})
 };

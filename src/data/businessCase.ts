@@ -109,6 +109,8 @@ export const businessCaseInitialData: BusinessCaseModel = {
   cmsBenefit: '',
   priorityAlignment: '',
   successIndicators: '',
+  // proposedSolutions: [cloneDeep(defaultProposedSolution)],
+  // TODO: NJD - remove
   preferredSolution: cloneDeep(defaultProposedSolution),
   alternativeA: cloneDeep(defaultProposedSolution),
   alternativeB: cloneDeep(defaultProposedSolution),
@@ -232,6 +234,8 @@ export const prepareBusinessCaseForApp = (
     cmsBenefit: businessCase.cmsBenefit || '',
     priorityAlignment: businessCase.priorityAlignment || '',
     successIndicators: businessCase.successIndicators || '',
+    // proposedSolutions: [],
+    // TODO: NJD - remove
     preferredSolution: {
       title: businessCase.preferredTitle || '',
       summary: businessCase.preferredSummary || '',

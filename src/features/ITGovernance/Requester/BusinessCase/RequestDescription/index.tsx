@@ -5,6 +5,7 @@ import { Button, ButtonGroup, Icon, Label } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
 import AutoSave from 'components/AutoSave';
+import CollapsableLink from 'components/CollapsableLink';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
 import HelpText from 'components/HelpText';
@@ -69,7 +70,10 @@ const RequestDescription = ({
                 scrollElement="businessNeed"
                 error={!!flatErrors.businessNeed}
               >
-                <Label htmlFor="BusinessCase-BusinessNeed">
+                <Label
+                  htmlFor="BusinessCase-BusinessNeed"
+                  className="width-100"
+                >
                   {t('businessNeed.label')}
                 </Label>
                 <HelpText
@@ -78,7 +82,6 @@ const RequestDescription = ({
                 >
                   {t('businessNeed.include')}
                   <ul className="margin-top-1 padding-left-205">
-                    <li>{t('businessNeed.explanation')}</li>
                     <li>{t('businessNeed.mandates')}</li>
                     <li>{t('businessNeed.investmentBenefits')}</li>
                     <li>{t('businessNeed.deadlines')}</li>
@@ -95,7 +98,7 @@ const RequestDescription = ({
                   aria-describedby="BusinessCase-BusinessNeedCounter BusinessCase-BusinessNeedHelp"
                 />
               </FieldGroup>
-
+              {/* TODO: NJD - add internal collaboration question */}
               <FieldGroup
                 scrollElement="currentSolutionSummary"
                 error={!!flatErrors.currentSolutionSummary}
@@ -183,6 +186,13 @@ const RequestDescription = ({
                 >
                   {t('successIndicatorsHelpText')}
                 </HelpText>
+                <CollapsableLink
+                  id="BusinessCase-exampleSuccessIndicators"
+                  label={t('successIndicatorsExamples.label')}
+                  className="margin-top-1 margin-bottom-2"
+                >
+                  {t('successIndicatorsExamples.description')}
+                </CollapsableLink>
                 <FieldErrorMsg>{flatErrors.successIndicators}</FieldErrorMsg>
                 <Field
                   as={TextAreaField}
@@ -193,6 +203,7 @@ const RequestDescription = ({
                   aria-describedby="BusinessCase-SuccessIndicatorsCounter BusinessCase-SuccessIndicatorsHelp"
                 />
               </FieldGroup>
+              {/* TODO: NJD add response to GRT recs question */}
             </Form>
 
             <ButtonGroup>
@@ -214,7 +225,7 @@ const RequestDescription = ({
                   validateForm().then(err => {
                     if (Object.keys(err).length === 0) {
                       dispatchSave();
-                      const newUrl = 'preferred-solution';
+                      const newUrl = 'alternative-analysis';
                       history.push(newUrl);
                     } else {
                       window.scrollTo(0, 0);

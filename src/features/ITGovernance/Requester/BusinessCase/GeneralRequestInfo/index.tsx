@@ -70,8 +70,11 @@ const GeneralRequestInfo = ({
                 error={!!flatErrors.requestName}
               >
                 <Label htmlFor="BusinessCase-RequestName">
-                  {t('projectName')}
+                  {t('requestName')}
                 </Label>
+                <HelpText id="BusinessCase-PhoneNumber">
+                  {t('requestNameHelpText')}
+                </HelpText>
                 <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
                 <Field
                   as={TextInput}

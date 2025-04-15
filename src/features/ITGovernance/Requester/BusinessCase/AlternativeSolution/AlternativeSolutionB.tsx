@@ -103,6 +103,7 @@ const AlternativeSolutionB = ({
                       // eslint-disable-next-line no-alert
                       window.confirm(t('confirmRemoveAlternativeB'))
                     ) {
+                      // TODO: NJD - define this somewhere?
                       dispatch(
                         putBusinessCase({
                           ...businessCase,

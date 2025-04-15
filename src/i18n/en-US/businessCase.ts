@@ -10,39 +10,46 @@ const businessCase = {
   generalRequest: 'General request information',
   generalRequestDescription:
     "Make a first draft of the various solutions you've thought of and the costs involved to build or buy them. Once you have a draft Business Case ready for review, send it to the Governance Review Admin Team who will ensure it is ready to be presented at the Governance Review Team (GRT) Meeting.",
-  projectName: 'Project name',
-  requester: 'Requester',
-  businessOwner: 'Business Owner',
+  requestName: 'Contract / Request title',
+  requestNameHelpText:
+    'Your request title should match the title of you Acquisition Plan or Interagency Agreement',
+  requester: 'Requester name',
+  businessOwner: 'CMS Business Owner name',
   requesterPhoneNumber: 'Requester phone number',
   requesterPhoneNumberHelpText: 'For example 1234567890 or 123-456-7890',
   requestDescription: 'Request description',
   businessNeed: {
-    label: 'What is your business or user need?',
-    include: 'Include:',
-    explanation:
-      'a detailed explanation of the business need/issue/problem that the request will address',
+    label:
+      'What is your business or user need? Inclue a definition of the problem or object and how it connects to CMS mission, programs, or operations.',
+    include: 'Also include:',
     mandates: 'any legislative mandates or regulations that needs to be met',
     investmentBenefits:
       'any expected benefits from the investment of organizational resources into the request',
     deadlines:
       'relevant deadlines (e.g., statutory deadlines that CMS must meet)',
-    solutionBenefits:
-      'and the benefits of developing an IT solution for this need'
+    solutionBenefits: 'the benefits of developing an IT solution for this need'
   },
-  currentSolutionSummary: 'Summary of Current Solution',
+  currentSolutionSummary:
+    'What is the current process that you are using for this work, or how is this need currently being met?',
   currentSolutionSummaryHelpText:
-    'Provide a brief summary of the solution currently in place including any associated software products and costs (e.g. services, software, Operation and Maintenance)',
-  cmsBenefit: 'How will CMS benefit from this effort?',
+    'Provide a brief summary of the solution currently in place including any associated software products and costs (e.g. services, software, operation and maintenance)',
+  cmsBenefit:
+    'How will CMS benefit from this effort? Support your response with relevant data and facts and outline your project timeline and any key milestones.',
   cmsBenefitHelpText:
     "Provide a summary of how this effort benefits CMS. Include any information on how it supports CMS' mission and strategic goals, creates efficiencies and/or cost savings, or reduces risk",
   priorityAlignment:
-    'How does this effort align with organizational priorities?',
+    'How does this effort align with HHS/CMS policies, strategies, or organizational priorities? Elaborate on the value the proposed solution will bring to the government.',
   priorityAlignmentHelpText:
     'Does this effort support any Administrator priorities or new legislative or regulatory mandates? Include any relevant deadlines.',
   successIndicators:
     'How will you determine whether or not this effort is successful?',
   successIndicatorsHelpText:
-    'Include any performance indicators that you think would demonstrate improved business outcomes - i.e. because of this effort, WHO is going to do exactly WHAT, by exactly HOW MUCH, by exactly WHEN?',
+    'Include any performance indicators that you think would demonstrate improved business outcomes (i.e. because of this effort, WHO is going to do exactly WHAT, by exactly HOW MUCH, by exactly WHEN). Performance measures should capture results relevant to your overall project goals. You may consider what variable(s) will change based on this work, and how that will impact your stakeholders.',
+  successIndicatorsExamples: {
+    label: 'View an example performance indicator',
+    description:
+      'We (Project team component) will increase the number of Program-level Release Demos (from a 1/24/2022 baseline of 0 Release Demos) by 1 a year, every year, until finally achieving (and thereafter maintaining) ≥ 2 / year by 2 years after launch (2/15/2024).'
+  },
   alternatives: 'Alternatives analysis',
   alternativesOptional:
     "This section is optional. You can skip it if you don't have any alternative solutions.",
@@ -50,7 +57,7 @@ const businessCase = {
     text: [
       'Below you should identify options and alternatives to meet your business need. Include a summary of the approaches, how you will acquire the solution, and describe the pros, cons, total life cycle costs, and potential cost savings/avoidance for each alternative considered. Include at least three viable alternatives, starting with your preferred solution.',
       'You should not describe the proposed solutions in technical detail, but instead should describe the "alternative concepts", such as:',
-      "In your alternatives, include details such as differences between system capabilities, user friendliness, technical and security considerations, ease and timing of integration with CMS' IT infrastructure, etc."
+      "In your alternatives, include details such as differences between system capabilities, user friendliness, technical and security considerations, ease and timing of integration with CMS' IT infrastructure, etc. Your alernatives should also address the impact to your project and/or users if your preferred solution is not selected."
     ],
     list: [
       'Buying a Commercial off the shelf (COTS) product/tool vs.',
