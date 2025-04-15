@@ -7,6 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, FormGroup, Grid, Label } from '@trussworks/react-uswds';
 import {
   GetSystemIntakeGRBReviewDocument,
+  SystemIntakeGRBReviewAsyncStatusType,
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewFragment,
   SystemIntakeGRBReviewType,
@@ -139,6 +140,10 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
                 }
                 outline={
                   grbReview.grbVotingInformation?.grbReviewers.length > 0
+                }
+                disabled={
+                  grbReview.grbReviewAsyncStatus ===
+                  SystemIntakeGRBReviewAsyncStatusType.COMPLETED
                 }
               >
                 {t(

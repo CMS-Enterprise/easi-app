@@ -161,7 +161,7 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
             </UswdsReactLink>
           ) : (
             <Trans
-              i18nKey="grbReview:asyncCompletedDocsLink"
+              i18nKey="grbReview:asyncCompleted.documents"
               components={{
                 // TODO: Add link to restart review
                 link1: <UswdsReactLink to="/">restart</UswdsReactLink>

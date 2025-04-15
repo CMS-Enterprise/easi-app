@@ -118,6 +118,12 @@ export default {
   supportingDocuments: 'Supporting documents',
   supportingDocumentsText:
     'The documents below will help the GRB review this IT Governance request, and were completed during the course of this IT Governance request or were added by the requester and/or the Governance Admin Team. You may add additional documents and may remove any that have been added by Governance Admin Team members.',
+  asyncCompleted: {
+    presentationLinks:
+      'This review is over. Please <link1>restart</link1> it if you would like to update presentation links.',
+    documents:
+      'This review is over. Please <link1>restart</link1> it if you would like to add additional documents.'
+  },
   asyncPresentation: {
     title: 'Asynchronous presentation',
     editPresentationLinks: 'Edit presentation links',
@@ -132,8 +138,7 @@ export default {
     adminEmptyAlert:
       'If this GRB review has an asynchronous presentation and recording, you may add that content to EASi to provide additional information for GRB reviews.',
     emptyAlert: 'The GRB have not yet added presentation links.',
-    asyncCompletedAlert:
-      'This review is over. Please <link1>restart</link1> it if you would like to update presentation links.',
+
     modalRemoveLinks: {
       title: 'Remove presentation links?',
       text: 'This action will remove any links and files previously added about this asynchronous presesntation and cannot be undone. Are you sure you want to continue?',
@@ -155,8 +160,6 @@ export default {
   },
   additionalDocuments: 'Additional documents',
   additionalDocsLink: 'Add another supporting document',
-  asyncCompletedDocsLink:
-    'This review is over. Please <link1>restart</link1> it if you would like to add additional documents.',
   documentsIntakeLinkTitle: 'EASi Intake Request form',
   documentsIntakeLinkText: 'View in EASi',
   documentsIntakeSubmitted: 'submitted',

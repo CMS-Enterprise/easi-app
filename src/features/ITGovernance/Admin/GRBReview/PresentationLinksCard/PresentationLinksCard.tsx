@@ -125,7 +125,7 @@ function PresentationLinksCard({
                 SystemIntakeGRBReviewAsyncStatusType.COMPLETED && (
                 <span className="text-base-dark">
                   <Trans
-                    i18nKey="grbReview:asyncPresentation.asyncCompletedAlert"
+                    i18nKey="grbReview:asyncCompleted.presentationLinks"
                     components={{
                       // TODO: Add link to restart review
                       link1: <UswdsReactLink to="/">restart</UswdsReactLink>
