@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import {
   Button,
   ButtonGroup,
@@ -14,6 +14,7 @@ import classNames from 'classnames';
 import {
   SystemIntakeDocumentStatus,
   SystemIntakeGRBPresentationLinksFragmentFragment,
+  SystemIntakeGRBReviewAsyncStatusType,
   useDeleteSystemIntakeGRBPresentationLinksMutation
 } from 'gql/generated/graphql';
 
@@ -30,11 +31,13 @@ import ITGovAdminContext from '../../../../../wrappers/ITGovAdminContext/ITGovAd
 export type PresentationLinksCardProps = {
   systemIntakeID: string;
   grbPresentationLinks?: SystemIntakeGRBPresentationLinksFragmentFragment | null;
+  asyncStatus?: SystemIntakeGRBReviewAsyncStatusType | null;
 };
 
 function PresentationLinksCard({
   systemIntakeID,
-  grbPresentationLinks
+  grbPresentationLinks,
+  asyncStatus
 }: PresentationLinksCardProps) {
   const { t } = useTranslation('grbReview');
 
@@ -118,35 +121,48 @@ function PresentationLinksCard({
                   hasAnyLinks
               })}
             >
-              {!hasAnyLinks ? (
-                <>
-                  <Alert type="info" slim className="margin-bottom-2">
-                    {t('asyncPresentation.adminEmptyAlert')}
-                  </Alert>
-                  <IconLink
-                    icon={<Icon.Add />}
-                    to={`/it-governance/${systemIntakeID}/grb-review/presentation-links`}
-                  >
-                    {t('asyncPresentation.addAsynchronousPresentationLinks')}
-                  </IconLink>
-                </>
-              ) : (
-                <>
-                  <UswdsReactLink
-                    to={`/it-governance/${systemIntakeID}/grb-review/presentation-links`}
-                  >
-                    {t('asyncPresentation.editPresentationLinks')}
-                  </UswdsReactLink>
-                  <Button
-                    type="button"
-                    unstyled
-                    className="text-error"
-                    onClick={() => setRemovePresentationLinksModalOpen(true)}
-                  >
-                    {t('asyncPresentation.removeAllPresentationLinks')}
-                  </Button>
-                </>
+              {asyncStatus ===
+                SystemIntakeGRBReviewAsyncStatusType.COMPLETED && (
+                <span className="text-base-dark">
+                  <Trans
+                    i18nKey="grbReview:asyncPresentation.asyncCompletedAlert"
+                    components={{
+                      // TODO: Add link to restart review
+                      link1: <UswdsReactLink to="/">restart</UswdsReactLink>
+                    }}
+                  />
+                </span>
               )}
+              {asyncStatus !== SystemIntakeGRBReviewAsyncStatusType.COMPLETED &&
+                (!hasAnyLinks ? (
+                  <>
+                    <Alert type="info" slim className="margin-bottom-2">
+                      {t('asyncPresentation.adminEmptyAlert')}
+                    </Alert>
+                    <IconLink
+                      icon={<Icon.Add />}
+                      to={`/it-governance/${systemIntakeID}/grb-review/presentation-links`}
+                    >
+                      {t('asyncPresentation.addAsynchronousPresentationLinks')}
+                    </IconLink>
+                  </>
+                ) : (
+                  <>
+                    <UswdsReactLink
+                      to={`/it-governance/${systemIntakeID}/grb-review/presentation-links`}
+                    >
+                      {t('asyncPresentation.editPresentationLinks')}
+                    </UswdsReactLink>
+                    <Button
+                      type="button"
+                      unstyled
+                      className="text-error"
+                      onClick={() => setRemovePresentationLinksModalOpen(true)}
+                    >
+                      {t('asyncPresentation.removeAllPresentationLinks')}
+                    </Button>
+                  </>
+                ))}
             </CardBody>
           ) : (
             <>

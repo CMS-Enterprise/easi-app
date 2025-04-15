@@ -130,6 +130,7 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
         <PresentationLinksCard
           systemIntakeID={id}
           grbPresentationLinks={grbReview.grbPresentationLinks}
+          asyncStatus={grbReview.grbReviewAsyncStatus}
         />
 
         {/* Business Case Card */}
