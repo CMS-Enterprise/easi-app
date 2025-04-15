@@ -13,6 +13,7 @@ import {
   SystemIntakeDocumentCommonType,
   SystemIntakeDocumentFragmentFragment,
   SystemIntakeDocumentStatus,
+  SystemIntakeGRBReviewAsyncStatusType,
   useDeleteSystemIntakeDocumentMutation
 } from 'gql/generated/graphql';
 
@@ -28,6 +29,7 @@ type DocumentsTableProps = {
   systemIntakeId: string;
   documents: SystemIntakeDocumentFragmentFragment[];
   className?: string;
+  asyncStatus?: SystemIntakeGRBReviewAsyncStatusType | null;
 };
 
 /**
@@ -36,7 +38,8 @@ type DocumentsTableProps = {
 const DocumentsTable = ({
   systemIntakeId,
   documents,
-  className
+  className,
+  asyncStatus
 }: DocumentsTableProps) => {
   const { t } = useTranslation();
 
@@ -144,16 +147,18 @@ const DocumentsTable = ({
 
                 {
                   /* Delete document */
-                  canDelete && (
-                    <Button
-                      unstyled
-                      type="button"
-                      className="margin-left-2 text-error"
-                      onClick={() => setFileToDelete(row.original)}
-                    >
-                      {t('intake:documents.table.removeBtn')}
-                    </Button>
-                  )
+                  canDelete &&
+                    asyncStatus !==
+                      SystemIntakeGRBReviewAsyncStatusType.COMPLETED && (
+                      <Button
+                        unstyled
+                        type="button"
+                        className="margin-left-2 text-error"
+                        onClick={() => setFileToDelete(row.original)}
+                      >
+                        {t('intake:documents.table.removeBtn')}
+                      </Button>
+                    )
                 }
               </div>
             );
@@ -166,7 +171,7 @@ const DocumentsTable = ({
         }
       }
     ];
-  }, [t]);
+  }, [t, asyncStatus]);
 
   const table = useTable(
     {

@@ -155,6 +155,8 @@ export default {
   },
   additionalDocuments: 'Additional documents',
   additionalDocsLink: 'Add another supporting document',
+  asyncCompletedDocsLink:
+    'This review is over. Please <link1>restart</link1> it if you would like to add additional documents.',
   documentsIntakeLinkTitle: 'EASi Intake Request form',
   documentsIntakeLinkText: 'View in EASi',
   documentsIntakeSubmitted: 'submitted',

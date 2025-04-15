@@ -1,10 +1,11 @@
 import React, { useContext, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Icon } from '@trussworks/react-uswds';
 import DocumentsTable from 'features/ITGovernance/_components/DocumentsTable';
 import {
   SystemIntakeFragmentFragment,
+  SystemIntakeGRBReviewAsyncStatusType,
   SystemIntakeGRBReviewerVotingRole,
   useGetSystemIntakeGRBReviewQuery
 } from 'gql/generated/graphql';
@@ -148,7 +149,9 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
         <div className="margin-y-4">
           <h3 className="margin-bottom-1">{t('additionalDocuments')}</h3>
 
-          {isITGovAdmin && (
+          {isITGovAdmin &&
+          grbReview.grbReviewAsyncStatus !==
+            SystemIntakeGRBReviewAsyncStatusType.COMPLETED ? (
             <UswdsReactLink
               to="./documents/upload"
               className="display-flex flex-align-center"
@@ -156,11 +159,23 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
               <Icon.Add className="margin-right-1" />
               <span>{t('additionalDocsLink')}</span>
             </UswdsReactLink>
+          ) : (
+            <Trans
+              i18nKey="grbReview:asyncCompletedDocsLink"
+              components={{
+                // TODO: Add link to restart review
+                link1: <UswdsReactLink to="/">restart</UswdsReactLink>
+              }}
+            />
           )}
         </div>
 
         {/* GRB Documents */}
-        <DocumentsTable systemIntakeId={id} documents={grbReview.documents} />
+        <DocumentsTable
+          systemIntakeId={id}
+          documents={grbReview.documents}
+          asyncStatus={grbReview.grbReviewAsyncStatus}
+        />
 
         {/* Discussion Board */}
         <Discussions
