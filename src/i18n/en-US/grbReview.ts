@@ -122,7 +122,9 @@ export default {
     presentationLinks:
       'This review is over. Please <link1>restart</link1> it if you would like to update presentation links.',
     documents:
-      'This review is over. Please <link1>restart</link1> it if you would like to add additional documents.'
+      'This review is over. Please <link1>restart</link1> it if you would like to add additional documents.',
+    reviewers:
+      'This review is over. Please <link1>restart</link1> it if you would like to add additional reviewers.'
   },
   asyncPresentation: {
     title: 'Asynchronous presentation',
