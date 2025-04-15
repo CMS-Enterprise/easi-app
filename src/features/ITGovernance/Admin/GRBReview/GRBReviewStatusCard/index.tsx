@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Grid } from '@trussworks/react-uswds';
+import { Grid, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
   SystemIntakeGRBReviewAsyncStatusType,
@@ -9,6 +9,7 @@ import {
 } from 'gql/generated/graphql';
 import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
+import IconLink from 'components/IconLink';
 import UswdsReactLink from 'components/LinkWrapper';
 import Tag from 'components/Tag';
 import { formatDateUtc, formatDaysHoursMinutes } from 'utils/date';
@@ -53,7 +54,7 @@ const GRBReviewStatusTag = ({
 
   return (
     <span
-      className={classNames('display-flex', {
+      className={classNames('display-flex flex-align-center', {
         'border-bottom-1px border-primary-light margin-bottom-2 padding-bottom-2':
           grbReviewStatus !== SystemIntakeGRBReviewAsyncStatusType.COMPLETED
       })}
@@ -68,6 +69,18 @@ const GRBReviewStatusTag = ({
       >
         {t(`statusCard.grbReviewStatus.${grbReviewStatus}`)}
       </Tag>
+
+      {grbReviewStatus === SystemIntakeGRBReviewAsyncStatusType.COMPLETED && (
+        <IconLink
+          // TODO: Add link to restart review
+          to="/"
+          iconPosition="after"
+          icon={<Icon.ArrowForward />}
+          className="margin-left-3"
+        >
+          {t('statusCard.restartReview')}
+        </IconLink>
+      )}
     </span>
   );
 };

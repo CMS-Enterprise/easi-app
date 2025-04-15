@@ -464,6 +464,7 @@ export default {
     reviewStatus: 'Review status',
     grbMeeting: 'GRB meeting',
     changeMeetingDate: 'Change meeting date',
+    restartReview: 'Restart review',
     grbReviewStatus: {
       [GRBReviewStatus.SCHEDULED]: 'Scheduled',
       [SystemIntakeGRBReviewAsyncStatusType.IN_PROGRESS]: 'In progress',
