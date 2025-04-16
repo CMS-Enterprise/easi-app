@@ -4,6 +4,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
 import { Button, ButtonGroup } from '@trussworks/react-uswds';
 import {
+  SystemIntakeGRBReviewAsyncStatusType,
   SystemIntakeGRBReviewerFragment,
   SystemIntakeState
 } from 'gql/generated/graphql';
@@ -20,6 +21,7 @@ type ParticipantsSectionProps = {
   state: SystemIntakeState;
   grbReviewers: SystemIntakeGRBReviewerFragment[];
   grbReviewStartedAt?: string | null;
+  asyncStatus?: SystemIntakeGRBReviewAsyncStatusType | null;
 };
 
 /**
@@ -29,7 +31,8 @@ const ParticipantsSection = ({
   id,
   state,
   grbReviewers,
-  grbReviewStartedAt
+  grbReviewStartedAt,
+  asyncStatus
 }: ParticipantsSectionProps) => {
   const { t } = useTranslation('grbReview');
 
@@ -56,7 +59,10 @@ const ParticipantsSection = ({
             <Button
               type="button"
               onClick={() => history.push(`${pathname}/add`)}
-              disabled={state === SystemIntakeState.CLOSED}
+              disabled={
+                state === SystemIntakeState.CLOSED ||
+                asyncStatus === SystemIntakeGRBReviewAsyncStatusType.COMPLETED
+              }
               outline={grbReviewers?.length > 0}
             >
               {t(
@@ -78,6 +84,16 @@ const ParticipantsSection = ({
                         re-open
                       </UswdsReactLink>
                     )
+                  }}
+                />
+              </p>
+            )}
+            {asyncStatus === SystemIntakeGRBReviewAsyncStatusType.COMPLETED && (
+              <p className="desktop:margin-y-0 desktop:margin-left-1">
+                <Trans
+                  i18nKey="grbReview:asyncCompleted.reviewers"
+                  components={{
+                    link1: <UswdsReactLink to="/">restart</UswdsReactLink>
                   }}
                 />
               </p>
