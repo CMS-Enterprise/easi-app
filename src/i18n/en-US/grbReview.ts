@@ -344,7 +344,21 @@ export default {
           'There was an issue sending your reminder. Please try again, and if the problem persists, try again later.'
       }
     },
-    takeADifferentAction: 'or, take a different action'
+    takeADifferentAction: 'or, take a different action',
+    restartReview: {
+      title: 'Restart review?',
+      description:
+        'Restarting this review will retain any existing votes and discussions, but will allow Governance Review Board (GRB) members to cast a new vote or change their existing vote.',
+      setNewEndDateLabel: 'Set new end date',
+      setNewEndDateHelpText:
+        'Select the new date when the GRB review should end. The review will close at 5pm EST on that day. Format: mm/dd/yyyy',
+      restart: 'Restart',
+      cancel: "Go back and don't restart",
+      success:
+        'You restarted this GRB review. The new end date is {{date}} at 5:00pm EST.',
+      error:
+        'There was an issue restarting this review. Please try again, and if the problem persists, try again later.'
+    }
   },
   reviewTask: {
     title: 'GRB Task',

@@ -1,7 +1,7 @@
 import React, { useContext, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { Icon } from '@trussworks/react-uswds';
+import { Button, Icon } from '@trussworks/react-uswds';
 import DocumentsTable from 'features/ITGovernance/_components/DocumentsTable';
 import {
   SystemIntakeFragmentFragment,
@@ -20,6 +20,7 @@ import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdmin
 import GRBFeedbackCard from './GRBFeedbackCard/GRBFeedbackCard';
 import ParticipantsSection from './ParticipantsSection/ParticipantsSection';
 import PresentationLinksCard from './PresentationLinksCard/PresentationLinksCard';
+import { useRestartReviewModal } from './RestartReviewModal/RestartReviewModalContext';
 import BusinessCaseCard from './BusinessCaseCard';
 import DecisionRecordCard from './DecisionRecordCard';
 import Discussions from './Discussions';
@@ -27,6 +28,7 @@ import GRBReviewAdminTask from './GRBReviewAdminTask';
 import GRBReviewStatusCard from './GRBReviewStatusCard';
 import GRBVotingPanel from './GRBVotingPanel';
 import IntakeRequestCard from './IntakeRequestCard';
+import RestartReviewModal from './RestartReviewModal';
 
 import './index.scss';
 
@@ -37,6 +39,7 @@ type GRBReviewProps = {
 
 const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
   const { t } = useTranslation('grbReview');
+  const { openModal } = useRestartReviewModal();
 
   const {
     id,
@@ -74,6 +77,8 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
 
   return (
     <>
+      <RestartReviewModal />
+
       <div className="padding-bottom-4" id="grbReview">
         <PageHeading className="margin-y-0">{t('title')}</PageHeading>
 
@@ -163,8 +168,11 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
             <Trans
               i18nKey="grbReview:asyncCompleted.documents"
               components={{
-                // TODO: Add link to restart review
-                link1: <UswdsReactLink to="/">restart</UswdsReactLink>
+                link1: (
+                  <Button type="button" onClick={openModal}>
+                    {t('restartReview')}
+                  </Button>
+                )
               }}
             />
           )}
