@@ -30,14 +30,14 @@ const RestartReviewModal = () => {
       className="easi-modal__content--narrow"
     >
       <div data-testid="restart-review-modal">
-        <ModalHeading>{t('adminTask.restartReview.modal.title')}</ModalHeading>
+        <ModalHeading>{t('adminTask.restartReview.title')}</ModalHeading>
         {errorMessageInModal && (
           <Alert type="error" className="margin-top-2" headingLevel="h4">
             {errorMessageInModal}
           </Alert>
         )}
         <p className="margin-top-1">
-          {t('adminTask.restartReview.modal.description')}
+          {t('adminTask.restartReview.description')}
         </p>
         <ModalFooter>
           <Button
@@ -45,10 +45,10 @@ const RestartReviewModal = () => {
             className="margin-top-0 margin-bottom-2 margin-right-3 tablet:margin-bottom-0"
             onClick={handleRestartReview}
           >
-            {t('adminTask.restartReview.modal.restart')}
+            {t('adminTask.restartReview.restart')}
           </Button>
           <Button type="button" onClick={closeModal} unstyled>
-            {t('adminTask.restartReview.modal.cancel')}
+            {t('adminTask.restartReview.cancel')}
           </Button>
         </ModalFooter>
       </div>
