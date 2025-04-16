@@ -27,6 +27,7 @@ import useMessage from 'hooks/useMessage';
 import { downloadFileFromURL } from 'utils/downloadFile';
 
 import ITGovAdminContext from '../../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
+import { useRestartReviewModal } from '../RestartReviewModal/RestartReviewModalContext';
 
 export type PresentationLinksCardProps = {
   systemIntakeID: string;
@@ -40,6 +41,7 @@ function PresentationLinksCard({
   asyncStatus
 }: PresentationLinksCardProps) {
   const { t } = useTranslation('grbReview');
+  const { openModal } = useRestartReviewModal();
 
   const isITGovAdmin = useContext(ITGovAdminContext);
 
@@ -128,7 +130,11 @@ function PresentationLinksCard({
                     i18nKey="grbReview:asyncCompleted.presentationLinks"
                     components={{
                       // TODO: Add link to restart review
-                      link1: <UswdsReactLink to="/">restart</UswdsReactLink>
+                      link1: (
+                        <Button type="button" unstyled onClick={openModal}>
+                          {t('restartReview')}
+                        </Button>
+                      )
                     }}
                   />
                 </span>

@@ -13,6 +13,7 @@ import Alert from 'components/Alert';
 import UswdsReactLink from 'components/LinkWrapper';
 
 import ITGovAdminContext from '../../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
+import { useRestartReviewModal } from '../RestartReviewModal/RestartReviewModalContext';
 
 import ParticipantsTable from './_components/ParticipantsTable';
 
@@ -41,6 +42,8 @@ const ParticipantsSection = ({
   const { pathname } = useLocation();
 
   const isITGovAdmin = useContext(ITGovAdminContext);
+
+  const { openModal } = useRestartReviewModal();
 
   return (
     <>
@@ -93,7 +96,11 @@ const ParticipantsSection = ({
                 <Trans
                   i18nKey="grbReview:asyncCompleted.reviewers"
                   components={{
-                    link1: <UswdsReactLink to="/">restart</UswdsReactLink>
+                    link1: (
+                      <Button type="button" unstyled onClick={openModal}>
+                        {t('restartReview')}
+                      </Button>
+                    )
                   }}
                 />
               </p>

@@ -169,7 +169,7 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
               i18nKey="grbReview:asyncCompleted.documents"
               components={{
                 link1: (
-                  <Button type="button" onClick={openModal}>
+                  <Button type="button" unstyled onClick={openModal}>
                     {t('restartReview')}
                   </Button>
                 )
