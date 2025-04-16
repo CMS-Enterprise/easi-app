@@ -141,7 +141,10 @@ const ParticipantsSection = ({
         </div>
       )}
 
-      <ParticipantsTable grbReviewers={grbReviewers} />
+      <ParticipantsTable
+        grbReviewers={grbReviewers}
+        asyncStatus={asyncStatus}
+      />
     </>
   );
 };
