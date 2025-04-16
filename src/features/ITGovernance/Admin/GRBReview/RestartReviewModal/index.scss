@@ -1,0 +1,9 @@
+.date-picker-override {
+  .usa-date-picker__calendar {
+    top: -262px !important;
+
+    @media screen and (max-width: 640px) {
+      top: -261px !important;
+    }
+  }
+}

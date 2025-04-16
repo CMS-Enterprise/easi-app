@@ -355,7 +355,7 @@ export default {
       restart: 'Restart',
       cancel: "Go back and don't restart",
       success:
-        'You restarted this GRB review. The new end date is {{date}} at 5:00pm EST.',
+        'You restarted this GRB review. The new end date is <bold>{{date}}</bold> at 5:00pm EST.',
       error:
         'There was an issue restarting this review. Please try again, and if the problem persists, try again later.'
     }

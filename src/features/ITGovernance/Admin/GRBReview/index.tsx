@@ -77,7 +77,7 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
 
   return (
     <>
-      <RestartReviewModal />
+      <RestartReviewModal systemIntakeId={id} />
 
       <div className="padding-bottom-4" id="grbReview">
         <PageHeading className="margin-y-0">{t('title')}</PageHeading>
