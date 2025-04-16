@@ -1556,19 +1556,21 @@ type TagType string
 
 const (
 	TagTypeUserAccount       TagType = "USER_ACCOUNT"
+	TagTypeRequester         TagType = "REQUESTER"
 	TagTypeGroupItGov        TagType = "GROUP_IT_GOV"
 	TagTypeGroupGrbReviewers TagType = "GROUP_GRB_REVIEWERS"
 )
 
 var AllTagType = []TagType{
 	TagTypeUserAccount,
+	TagTypeRequester,
 	TagTypeGroupItGov,
 	TagTypeGroupGrbReviewers,
 }
 
 func (e TagType) IsValid() bool {
 	switch e {
-	case TagTypeUserAccount, TagTypeGroupItGov, TagTypeGroupGrbReviewers:
+	case TagTypeUserAccount, TagTypeRequester, TagTypeGroupItGov, TagTypeGroupGrbReviewers:
 		return true
 	}
 	return false

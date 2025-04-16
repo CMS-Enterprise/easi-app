@@ -3222,6 +3222,7 @@ export enum TRBWhereInProcessOption {
 export enum TagType {
   GROUP_GRB_REVIEWERS = 'GROUP_GRB_REVIEWERS',
   GROUP_IT_GOV = 'GROUP_IT_GOV',
+  REQUESTER = 'REQUESTER',
   USER_ACCOUNT = 'USER_ACCOUNT'
 }
 

@@ -10326,6 +10326,7 @@ type TRBRequestAttendee {
 # lint-disable defined-types-are-used
 enum TagType {
   USER_ACCOUNT
+  REQUESTER
   GROUP_IT_GOV
   GROUP_GRB_REVIEWERS
 }
