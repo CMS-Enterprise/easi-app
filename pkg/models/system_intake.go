@@ -287,3 +287,9 @@ func (s SystemIntakesByCedarSystemIDsResponse) GetMappingKey() string {
 func (s SystemIntakesByCedarSystemIDsResponse) GetMappingVal() *SystemIntake {
 	return &s.SystemIntake
 }
+
+// ExtendGRBReviewDeadlineInput represents input for extending a GRB review deadline
+type ExtendGRBReviewDeadlineInput struct {
+	SystemIntakeID        uuid.UUID `json:"systemIntakeID"`
+	GrbReviewAsyncEndDate time.Time `json:"grbReviewAsyncEndDate"`
+}

@@ -191,3 +191,56 @@ func ManuallyEndSystemIntakeGRBReviewAsyncVoting(
 		SystemIntake: updatedIntake,
 	}, nil
 }
+
+// ExtendGRBReviewDeadlineAsync extends the deadline for an async GRB review
+func ExtendGRBReviewDeadlineAsync(
+	ctx context.Context,
+	store *storage.Store,
+	input models.ExtendGRBReviewDeadlineInput,
+) (*models.UpdateSystemIntakePayload, error) {
+	// Fetch intake by ID
+	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	// Set the new end date
+	intake.GrbReviewAsyncEndDate = &input.GrbReviewAsyncEndDate
+	intake.GrbReviewAsyncManualEndDate = nil
+
+	// Update system intake
+	updatedIntake, err := store.UpdateSystemIntake(ctx, intake)
+	if err != nil {
+		return nil, err
+	}
+
+	return &models.UpdateSystemIntakePayload{
+		SystemIntake: updatedIntake,
+	}, nil
+}
+
+// RestartGRBReviewAsync restarts an async GRB review
+func RestartGRBReviewAsync(
+	ctx context.Context,
+	store *storage.Store,
+	systemIntakeID uuid.UUID,
+) (*models.UpdateSystemIntakePayload, error) {
+	// Fetch intake by ID
+	intake, err := store.FetchSystemIntakeByID(ctx, systemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	// Set new review start time
+	intake.GRBReviewStartedAt = helpers.PointerTo(time.Now())
+
+	// Update system intake
+	updatedIntake, err := store.UpdateSystemIntake(ctx, intake)
+	if err != nil {
+		return nil, err
+	}
+
+	return &models.UpdateSystemIntakePayload{
+		SystemIntake: updatedIntake,
+	}, nil
+}
