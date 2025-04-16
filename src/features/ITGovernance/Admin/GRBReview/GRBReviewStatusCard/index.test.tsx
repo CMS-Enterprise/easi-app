@@ -13,6 +13,8 @@ import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import { MessageProvider } from 'hooks/useMessage';
 
+import { ModalProvider } from '../RestartReviewModal/RestartReviewModalContext';
+
 import GRBReviewStatusCard from './index';
 
 describe('GRBReviewStatusCard', () => {
@@ -63,7 +65,9 @@ describe('GRBReviewStatusCard', () => {
         <MockedProvider addTypename={false}>
           <MessageProvider>
             <ITGovAdminContext.Provider value={isITGovAdmin}>
-              <GRBReviewStatusCard grbReview={grbReview} />
+              <ModalProvider>
+                <GRBReviewStatusCard grbReview={grbReview} />
+              </ModalProvider>
             </ITGovAdminContext.Provider>
           </MessageProvider>
         </MockedProvider>
