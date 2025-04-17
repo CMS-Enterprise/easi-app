@@ -86,6 +86,7 @@ type templates struct {
 	grbReviewDiscussionGroupTagged                  templateCaller
 	grbReviewPresentationLinksUpdated               templateCaller
 	grbReviewReminder                               templateCaller
+	grbReviewerInvitedToVote                        templateCaller
 	grbReviewHalfwayThrough                         templateCaller
 }
 
@@ -485,6 +486,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(grbReviewReminderTemplateName)
 	}
 	appTemplates.grbReviewReminder = grbReviewReminder
+
+	grbReviewerInvitedToVoteTemplateName := "grb_reviewer_invited_to_vote.gohtml"
+	grbReviewerInvitedToVote := rawTemplates.Lookup(grbReviewerInvitedToVoteTemplateName)
+	if grbReviewerInvitedToVote == nil {
+		return Client{}, templateError(grbReviewerInvitedToVoteTemplateName)
+	}
+	appTemplates.grbReviewerInvitedToVote = grbReviewerInvitedToVote
 
 	grbReviewHalfwayThroughTemplateName := "grb_review_halfway_done.gohtml"
 	grbReviewHalfwayThrough := rawTemplates.Lookup(grbReviewHalfwayThroughTemplateName)
