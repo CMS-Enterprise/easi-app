@@ -383,11 +383,16 @@ func (s *ResolverSuite) TestRestartGRBReviewAsync() {
 	s.NotNil(status)
 	s.Equal(models.SystemIntakeGRBReviewAsyncStatusTypeInProgress, *status)
 
+	input := models.RestartGRBReviewInput{
+		SystemIntakeID: systemIntake.ID,
+		NewGRBEndDate:  time.Now().Add(2 * time.Hour),
+	}
+
 	// Restart the review
 	updatedPayload, err := RestartGRBReviewAsync(
 		s.testConfigs.Context,
 		s.testConfigs.Store,
-		systemIntake.ID,
+		input,
 	)
 
 	// Check for errors
@@ -395,6 +400,11 @@ func (s *ResolverSuite) TestRestartGRBReviewAsync() {
 	s.NotNil(updatedPayload)
 	s.NotNil(updatedPayload.SystemIntake)
 
+	// Check the new start date
+	s.NotNil(updatedPayload.SystemIntake.GRBReviewStartedAt)
+	s.WithinDuration(time.Now(), *updatedPayload.SystemIntake.GRBReviewStartedAt, time.Second)
+
 	// Check the new end date
 	s.NotNil(updatedPayload.SystemIntake.GrbReviewAsyncEndDate)
+	s.WithinDuration(input.NewGRBEndDate, *updatedPayload.SystemIntake.GrbReviewAsyncEndDate, time.Second)
 }

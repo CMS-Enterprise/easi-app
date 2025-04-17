@@ -2131,6 +2131,14 @@ input ExtendGRBReviewDeadlineInput {
 }
 
 """
+Input structure to restart the GRB review process
+"""
+input RestartGRBReviewInput {
+  systemIntakeID: UUID!
+  newGRBEndDate: Time!
+}
+
+"""
 Feedback given to the requester on a governance request
 """
 type GovernanceRequestFeedback {
@@ -2785,7 +2793,7 @@ type Mutation {
   @hasRole(role: EASI_GOVTEAM)
   extendGRBReviewDeadlineAsync(input: ExtendGRBReviewDeadlineInput!): UpdateSystemIntakePayload
   @hasRole(role: EASI_GOVTEAM)
-  restartGRBReviewAsync(systemIntakeID: UUID!): UpdateSystemIntakePayload
+  restartGRBReviewAsync(input: RestartGRBReviewInput!): UpdateSystemIntakePayload
   @hasRole(role: EASI_GOVTEAM)
 
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload

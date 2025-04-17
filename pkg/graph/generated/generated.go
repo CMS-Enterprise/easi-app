@@ -603,7 +603,7 @@ type ComplexityRoot struct {
 		ManuallyEndSystemIntakeGRBReviewAsyncVoting         func(childComplexity int, systemIntakeID uuid.UUID) int
 		ReopenTrbRequest                                    func(childComplexity int, input models.ReopenTRBRequestInput) int
 		RequestReviewForTRBGuidanceLetter                   func(childComplexity int, id uuid.UUID) int
-		RestartGRBReviewAsync                               func(childComplexity int, systemIntakeID uuid.UUID) int
+		RestartGRBReviewAsync                               func(childComplexity int, input models.RestartGRBReviewInput) int
 		SendCantFindSomethingEmail                          func(childComplexity int, input models.SendCantFindSomethingEmailInput) int
 		SendFeedbackEmail                                   func(childComplexity int, input models.SendFeedbackEmailInput) int
 		SendGRBReviewPresentationDeckReminderEmail          func(childComplexity int, systemIntakeID uuid.UUID) int
@@ -1299,7 +1299,7 @@ type MutationResolver interface {
 	UpdateSystemIntakeGRBReviewFormPresentationAsync(ctx context.Context, input models.UpdateSystemIntakeGRBReviewFormInputPresentationAsync) (*models.UpdateSystemIntakePayload, error)
 	UpdateSystemIntakeGRBReviewFormTimeframeAsync(ctx context.Context, input models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync) (*models.UpdateSystemIntakePayload, error)
 	ExtendGRBReviewDeadlineAsync(ctx context.Context, input models.ExtendGRBReviewDeadlineInput) (*models.UpdateSystemIntakePayload, error)
-	RestartGRBReviewAsync(ctx context.Context, systemIntakeID uuid.UUID) (*models.UpdateSystemIntakePayload, error)
+	RestartGRBReviewAsync(ctx context.Context, input models.RestartGRBReviewInput) (*models.UpdateSystemIntakePayload, error)
 	UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, input models.UpdateSystemIntakeLinkedCedarSystemInput) (*models.UpdateSystemIntakePayload, error)
 	SetSystemIntakeGRBPresentationLinks(ctx context.Context, input models.SystemIntakeGRBPresentationLinksInput) (*models.SystemIntakeGRBPresentationLinks, error)
 	UploadSystemIntakeGRBPresentationDeck(ctx context.Context, input models.UploadSystemIntakeGRBPresentationDeckInput) (*models.SystemIntakeGRBPresentationLinks, error)
@@ -4647,7 +4647,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.RestartGRBReviewAsync(childComplexity, args["systemIntakeID"].(uuid.UUID)), true
+		return e.complexity.Mutation.RestartGRBReviewAsync(childComplexity, args["input"].(models.RestartGRBReviewInput)), true
 
 	case "Mutation.sendCantFindSomethingEmail":
 		if e.complexity.Mutation.SendCantFindSomethingEmail == nil {
@@ -8260,6 +8260,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputEmailNotificationRecipients,
 		ec.unmarshalInputExtendGRBReviewDeadlineInput,
 		ec.unmarshalInputReopenTRBRequestInput,
+		ec.unmarshalInputRestartGRBReviewInput,
 		ec.unmarshalInputSendCantFindSomethingEmailInput,
 		ec.unmarshalInputSendFeedbackEmailInput,
 		ec.unmarshalInputSendReportAProblemEmailInput,
@@ -10554,6 +10555,14 @@ input ExtendGRBReviewDeadlineInput {
 }
 
 """
+Input structure to restart the GRB review process
+"""
+input RestartGRBReviewInput {
+  systemIntakeID: UUID!
+  newGRBEndDate: Time!
+}
+
+"""
 Feedback given to the requester on a governance request
 """
 type GovernanceRequestFeedback {
@@ -11208,7 +11217,7 @@ type Mutation {
   @hasRole(role: EASI_GOVTEAM)
   extendGRBReviewDeadlineAsync(input: ExtendGRBReviewDeadlineInput!): UpdateSystemIntakePayload
   @hasRole(role: EASI_GOVTEAM)
-  restartGRBReviewAsync(systemIntakeID: UUID!): UpdateSystemIntakePayload
+  restartGRBReviewAsync(input: RestartGRBReviewInput!): UpdateSystemIntakePayload
   @hasRole(role: EASI_GOVTEAM)
 
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
@@ -13248,28 +13257,28 @@ func (ec *executionContext) field_Mutation_requestReviewForTRBGuidanceLetter_arg
 func (ec *executionContext) field_Mutation_restartGRBReviewAsync_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := ec.field_Mutation_restartGRBReviewAsync_argsSystemIntakeID(ctx, rawArgs)
+	arg0, err := ec.field_Mutation_restartGRBReviewAsync_argsInput(ctx, rawArgs)
 	if err != nil {
 		return nil, err
 	}
-	args["systemIntakeID"] = arg0
+	args["input"] = arg0
 	return args, nil
 }
-func (ec *executionContext) field_Mutation_restartGRBReviewAsync_argsSystemIntakeID(
+func (ec *executionContext) field_Mutation_restartGRBReviewAsync_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
-) (uuid.UUID, error) {
-	if _, ok := rawArgs["systemIntakeID"]; !ok {
-		var zeroVal uuid.UUID
+) (models.RestartGRBReviewInput, error) {
+	if _, ok := rawArgs["input"]; !ok {
+		var zeroVal models.RestartGRBReviewInput
 		return zeroVal, nil
 	}
 
-	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
-	if tmp, ok := rawArgs["systemIntakeID"]; ok {
-		return ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNRestartGRBReviewInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRestartGRBReviewInput(ctx, tmp)
 	}
 
-	var zeroVal uuid.UUID
+	var zeroVal models.RestartGRBReviewInput
 	return zeroVal, nil
 }
 
@@ -35006,7 +35015,7 @@ func (ec *executionContext) _Mutation_restartGRBReviewAsync(ctx context.Context,
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		directive0 := func(rctx context.Context) (any, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().RestartGRBReviewAsync(rctx, fc.Args["systemIntakeID"].(uuid.UUID))
+			return ec.resolvers.Mutation().RestartGRBReviewAsync(rctx, fc.Args["input"].(models.RestartGRBReviewInput))
 		}
 
 		directive1 := func(ctx context.Context) (any, error) {
@@ -64799,6 +64808,40 @@ func (ec *executionContext) unmarshalInputReopenTRBRequestInput(ctx context.Cont
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputRestartGRBReviewInput(ctx context.Context, obj any) (models.RestartGRBReviewInput, error) {
+	var it models.RestartGRBReviewInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"systemIntakeID", "newGRBEndDate"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "systemIntakeID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SystemIntakeID = data
+		case "newGRBEndDate":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("newGRBEndDate"))
+			data, err := ec.unmarshalNTime2timeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.NewGRBEndDate = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputSendCantFindSomethingEmailInput(ctx context.Context, obj any) (models.SendCantFindSomethingEmailInput, error) {
 	var it models.SendCantFindSomethingEmailInput
 	asMap := map[string]any{}
@@ -80175,6 +80218,11 @@ func (ec *executionContext) marshalNPersonRole2githubᚗcomᚋcmsᚑenterprise�
 
 func (ec *executionContext) unmarshalNReopenTRBRequestInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐReopenTRBRequestInput(ctx context.Context, v any) (models.ReopenTRBRequestInput, error) {
 	res, err := ec.unmarshalInputReopenTRBRequestInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNRestartGRBReviewInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRestartGRBReviewInput(ctx context.Context, v any) (models.RestartGRBReviewInput, error) {
+	res, err := ec.unmarshalInputRestartGRBReviewInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 

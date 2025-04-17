@@ -223,16 +223,19 @@ func ExtendGRBReviewDeadlineAsync(
 func RestartGRBReviewAsync(
 	ctx context.Context,
 	store *storage.Store,
-	systemIntakeID uuid.UUID,
+	input models.RestartGRBReviewInput,
 ) (*models.UpdateSystemIntakePayload, error) {
 	// Fetch intake by ID
-	intake, err := store.FetchSystemIntakeByID(ctx, systemIntakeID)
+	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
 	if err != nil {
 		return nil, err
 	}
 
 	// Set new review start time
 	intake.GRBReviewStartedAt = helpers.PointerTo(time.Now())
+
+	// Set the new end date
+	intake.GrbReviewAsyncEndDate = &input.NewGRBEndDate
 
 	// Update system intake
 	updatedIntake, err := store.UpdateSystemIntake(ctx, intake)

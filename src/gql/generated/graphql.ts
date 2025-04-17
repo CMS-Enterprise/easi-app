@@ -1396,7 +1396,7 @@ export type MutationRequestReviewForTRBGuidanceLetterArgs = {
 
 /** Defines the mutations for the schema */
 export type MutationRestartGRBReviewAsyncArgs = {
-  systemIntakeID: Scalars['UUID']['input'];
+  input: RestartGRBReviewInput;
 };
 
 
@@ -1870,6 +1870,12 @@ export enum RequestRelationType {
   EXISTING_SYSTEM = 'EXISTING_SYSTEM',
   NEW_SYSTEM = 'NEW_SYSTEM'
 }
+
+/** Input structure to restart the GRB review process */
+export type RestartGRBReviewInput = {
+  newGRBEndDate: Scalars['Time']['input'];
+  systemIntakeID: Scalars['UUID']['input'];
+};
 
 /** A user role associated with a job code */
 export enum Role {
