@@ -365,7 +365,10 @@ export const Table = ({
 
         <thead>
           {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
+            <tr
+              {...headerGroup.getHeaderGroupProps()}
+              key={{ ...headerGroup.getHeaderGroupProps() }.key}
+            >
               {headerGroup.headers.map((column, index) => (
                 <th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
@@ -377,6 +380,7 @@ export const Table = ({
                     paddingLeft: index === 0 ? '.5em' : 'auto',
                     position: 'relative'
                   }}
+                  key={column.id}
                 >
                   <button
                     className="usa-button usa-button--unstyled"
@@ -395,13 +399,14 @@ export const Table = ({
         <tbody {...getTableBodyProps()}>
           {page.map(row => {
             return (
-              <tr {...row.getRowProps()}>
+              <tr {...row.getRowProps()} key={{ ...row.getRowProps() }.key}>
                 {row.cells.map((cell, index) => (
                   <th
                     style={{
                       paddingLeft: index === 0 ? '.5em' : 'auto'
                     }}
                     {...cell.getCellProps()}
+                    key={{ ...cell.getCellProps() }.key}
                   >
                     {cell.render('Cell')}
                   </th>

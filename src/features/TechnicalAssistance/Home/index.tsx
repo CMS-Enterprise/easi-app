@@ -233,13 +233,17 @@ function Homepage() {
           <Table bordered={false} fullWidth scrollable {...getTableProps()}>
             <thead>
               {headerGroups.map(headerGroup => (
-                <tr {...headerGroup.getHeaderGroupProps()}>
+                <tr
+                  {...headerGroup.getHeaderGroupProps()}
+                  key={{ ...headerGroup.getHeaderGroupProps() }.key}
+                >
                   {headerGroup.headers.map((column, index) => (
                     <th
                       {...column.getHeaderProps(column.getSortByToggleProps())}
                       aria-sort={getColumnSortStatus(column)}
                       scope="col"
                       className="border-bottom-2px padding-left-0"
+                      key={column.id}
                     >
                       <Button
                         type="button"
@@ -258,10 +262,14 @@ function Homepage() {
               {page.map(row => {
                 // prepareRow(row); // Temp prepare all rows before render out, until fixed
                 return (
-                  <tr {...row.getRowProps()}>
+                  <tr {...row.getRowProps()} key={{ ...row.getRowProps() }.key}>
                     {row.cells.map((cell, index) => {
                       return (
-                        <td {...cell.getCellProps()} className="padding-left-0">
+                        <td
+                          {...cell.getCellProps()}
+                          className="padding-left-0"
+                          key={{ ...cell.getCellProps() }.key}
+                        >
                           {cell.render('Cell')}
                         </td>
                       );
