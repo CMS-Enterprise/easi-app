@@ -43,7 +43,7 @@ func ProgressIntake(
 		return nil, err
 	}
 
-	err = newstep.UpdateIntake(intake, input.NewStep, input.MeetingDate, time.Now())
+	err = newstep.UpdateIntake(intake, input.NewStep, input.MeetingDate, time.Now(), input.GrbReviewType)
 	if err != nil {
 		return nil, err
 	}

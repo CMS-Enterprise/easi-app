@@ -24,7 +24,11 @@ const RemoveInsightModal = ({
   const { closeModal } = modalProps;
 
   return (
-    <Modal {...modalProps} noScrollOnClose>
+    <Modal
+      {...modalProps}
+      noScrollOnClose
+      className="easi-modal__remove-insight"
+    >
       <h3 className="margin-y-0 line-height-heading-2">
         {t('guidanceLetterForm.modal.title')}
       </h3>
