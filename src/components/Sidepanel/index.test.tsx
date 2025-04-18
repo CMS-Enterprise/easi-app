@@ -42,7 +42,7 @@ describe('Sidepanel', () => {
   });
 
   it('matches snapshot', async () => {
-    const { asFragment, findByText, findByTestId } = render(
+    const { baseElement, findByText, findByTestId } = render(
       <Sidepanel
         ariaLabel="ariaLabel"
         closeModal={() => {}}
@@ -61,6 +61,6 @@ describe('Sidepanel', () => {
     await findByTestId('testid');
     await findByText('modalHeading');
 
-    expect(asFragment()).toMatchSnapshot();
+    expect(baseElement).toMatchSnapshot();
   });
 });
