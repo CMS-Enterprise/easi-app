@@ -30,14 +30,14 @@ describe('GRB review tab', () => {
         <VerboseMockedProvider mocks={[getSystemIntakeGRBReviewQuery()]}>
           <Provider store={store}>
             <MessageProvider>
-              <ITGovAdminContext.Provider value={false}>
-                <ModalProvider>
+              <ModalProvider>
+                <ITGovAdminContext.Provider value={false}>
                   <GRBReview
                     systemIntake={systemIntake}
                     businessCase={businessCase}
                   />
-                </ModalProvider>
-              </ITGovAdminContext.Provider>
+                </ITGovAdminContext.Provider>
+              </ModalProvider>
             </MessageProvider>
           </Provider>
         </VerboseMockedProvider>
@@ -59,10 +59,12 @@ describe('GRB review tab', () => {
           <Provider store={store}>
             <MessageProvider>
               <ITGovAdminContext.Provider value>
-                <GRBReview
-                  systemIntake={systemIntake}
-                  businessCase={businessCase}
-                />
+                <ModalProvider>
+                  <GRBReview
+                    systemIntake={systemIntake}
+                    businessCase={businessCase}
+                  />
+                </ModalProvider>
               </ITGovAdminContext.Provider>
             </MessageProvider>
           </Provider>
