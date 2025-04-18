@@ -15,6 +15,8 @@ import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 import { MessageProvider } from 'hooks/useMessage';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
+import { ModalProvider } from '../RestartReviewModal/RestartReviewModalContext';
+
 import ParticipantsSection from './ParticipantsSection';
 
 const user = users[0];
@@ -42,12 +44,14 @@ describe('GRB review participants table', () => {
         >
           <MessageProvider>
             <ITGovAdminContext.Provider value>
-              <ParticipantsSection
-                id={systemIntake.id}
-                state={SystemIntakeState.OPEN}
-                grbReviewers={[grbReviewer]}
-                grbReviewStartedAt={null}
-              />
+              <ModalProvider>
+                <ParticipantsSection
+                  id={systemIntake.id}
+                  state={SystemIntakeState.OPEN}
+                  grbReviewers={[grbReviewer]}
+                  grbReviewStartedAt={null}
+                />
+              </ModalProvider>
             </ITGovAdminContext.Provider>
           </MessageProvider>
         </VerboseMockedProvider>
@@ -77,14 +81,16 @@ describe('GRB review participants table', () => {
           mocks={[deleteSystemIntakeGRBReviewerMutation(grbReviewer)]}
         >
           <MessageProvider>
-            <ITGovAdminContext.Provider value>
-              <ParticipantsSection
-                id={systemIntake.id}
-                state={SystemIntakeState.OPEN}
-                grbReviewers={[grbReviewer]}
-                grbReviewStartedAt="2024-09-10T14:42:47.422022Z"
-              />
-            </ITGovAdminContext.Provider>
+            <ModalProvider>
+              <ITGovAdminContext.Provider value>
+                <ParticipantsSection
+                  id={systemIntake.id}
+                  state={SystemIntakeState.OPEN}
+                  grbReviewers={[grbReviewer]}
+                  grbReviewStartedAt="2024-09-10T14:42:47.422022Z"
+                />
+              </ITGovAdminContext.Provider>
+            </ModalProvider>
           </MessageProvider>
         </VerboseMockedProvider>
       </MemoryRouter>
@@ -100,14 +106,16 @@ describe('GRB review participants table', () => {
           mocks={[deleteSystemIntakeGRBReviewerMutation(grbReviewer)]}
         >
           <MessageProvider>
-            <ITGovAdminContext.Provider value>
-              <ParticipantsSection
-                id={systemIntake.id}
-                state={SystemIntakeState.CLOSED}
-                grbReviewers={[]}
-                grbReviewStartedAt={null}
-              />
-            </ITGovAdminContext.Provider>
+            <ModalProvider>
+              <ITGovAdminContext.Provider value>
+                <ParticipantsSection
+                  id={systemIntake.id}
+                  state={SystemIntakeState.CLOSED}
+                  grbReviewers={[]}
+                  grbReviewStartedAt={null}
+                />
+              </ITGovAdminContext.Provider>
+            </ModalProvider>
           </MessageProvider>
         </VerboseMockedProvider>
       </MemoryRouter>
@@ -129,14 +137,16 @@ describe('GRB review participants table', () => {
           mocks={[deleteSystemIntakeGRBReviewerMutation(grbReviewer)]}
         >
           <MessageProvider>
-            <ITGovAdminContext.Provider value={false}>
-              <ParticipantsSection
-                id={systemIntake.id}
-                state={SystemIntakeState.OPEN}
-                grbReviewers={[grbReviewer]}
-                grbReviewStartedAt={null}
-              />
-            </ITGovAdminContext.Provider>
+            <ModalProvider>
+              <ITGovAdminContext.Provider value={false}>
+                <ParticipantsSection
+                  id={systemIntake.id}
+                  state={SystemIntakeState.OPEN}
+                  grbReviewers={[grbReviewer]}
+                  grbReviewStartedAt={null}
+                />
+              </ITGovAdminContext.Provider>
+            </ModalProvider>
           </MessageProvider>
         </VerboseMockedProvider>
       </MemoryRouter>

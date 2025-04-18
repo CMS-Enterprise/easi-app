@@ -78,25 +78,31 @@ describe('Business case alternative a solution', () => {
   it('navigates back a page', async () => {
     await renderPage(defaultStore);
 
-    screen.getByRole('button', { name: /back/i }).click();
+    await userEvent.click(screen.getByRole('button', { name: /back/i }));
 
-    expect(screen.getByTestId('preferred-solution')).toBeInTheDocument();
+    expect(await screen.findByTestId('preferred-solution')).toBeInTheDocument();
   });
 
   it('adds alternative b and navigates to it', async () => {
     await renderPage(defaultStore);
 
-    screen.getByRole('button', { name: /alternative b/i }).click();
+    await userEvent.click(
+      screen.getByRole('button', { name: /alternative b/i })
+    );
 
-    expect(screen.getByTestId('alternative-solution-b')).toBeInTheDocument();
+    expect(
+      await screen.findByTestId('alternative-solution-b')
+    ).toBeInTheDocument();
   });
 
   it('navigates forward to review', async () => {
     await renderPage(defaultStore);
 
-    screen.getByRole('button', { name: /next/i }).click();
+    await userEvent.click(screen.getByRole('button', { name: /next/i }));
 
-    expect(screen.getByTestId('business-case-review')).toBeInTheDocument();
+    expect(
+      await screen.findByTestId('business-case-review')
+    ).toBeInTheDocument();
   });
 
   describe('with alternative b', () => {
@@ -136,9 +142,11 @@ describe('Business case alternative a solution', () => {
     it('navigates forward to alternative b', async () => {
       await renderPage(withAlternativeBStore);
 
-      screen.getByRole('button', { name: /next/i }).click();
+      await userEvent.click(screen.getByRole('button', { name: /next/i }));
 
-      expect(screen.getByTestId('alternative-solution-b')).toBeInTheDocument();
+      expect(
+        await screen.findByTestId('alternative-solution-b')
+      ).toBeInTheDocument();
     });
   });
 
@@ -178,7 +186,7 @@ describe('Business case alternative a solution', () => {
       userEvent.type(titleField, 'Alternative A solution title');
       expect(titleField).toHaveValue('Alternative A solution title');
 
-      screen.getByRole('button', { name: /next/i }).click();
+      await userEvent.click(screen.getByRole('button', { name: /next/i }));
       expect(
         await screen.findByTestId('formik-validation-errors')
       ).toBeInTheDocument();

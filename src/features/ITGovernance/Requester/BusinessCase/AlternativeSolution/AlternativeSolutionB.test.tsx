@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider, MockedResponse } from '@apollo/client/testing';
 import {
+  act,
   render,
   screen,
   waitForElementToBeRemoved
@@ -25,7 +26,13 @@ window.matchMedia = (): any => ({
 
 window.scrollTo = vi.fn;
 
-const renderPage = async (store: any, mocks?: MockedResponse[]) => {
+const defaultMocks = [
+  getGovernanceTaskListQuery({
+    id: '34ded286-02fa-4457-b1a5-0fc6ec00ecf5'
+  })
+];
+
+const renderPage = async (store: any, mocks: MockedResponse[]) => {
   render(
     <MemoryRouter
       initialEntries={[
@@ -33,7 +40,7 @@ const renderPage = async (store: any, mocks?: MockedResponse[]) => {
       ]}
     >
       <Provider store={store}>
-        <MockedProvider mocks={mocks}>
+        <MockedProvider mocks={mocks} addTypename={false}>
           <Route
             path="/business/:businessCaseId/:formPage"
             component={BusinessCase}
@@ -74,32 +81,36 @@ describe('Business case alternative b solution', () => {
   });
 
   it('renders without errors', async () => {
-    await renderPage(defaultStore);
-
+    await renderPage(defaultStore, defaultMocks);
     expect(screen.getByTestId('alternative-solution-b')).toBeInTheDocument();
   });
 
   it('navigates back a page', async () => {
-    await renderPage(defaultStore);
+    await renderPage(defaultStore, defaultMocks);
 
-    screen.getByRole('button', { name: /back/i }).click();
+    userEvent.click(screen.getByRole('button', { name: /back/i }));
 
+    await screen.findByTestId('alternative-solution-a');
     expect(screen.getByTestId('alternative-solution-a')).toBeInTheDocument();
   });
 
   it('navigates forward to review', async () => {
-    await renderPage(defaultStore);
+    await renderPage(defaultStore, defaultMocks);
 
-    screen.getByRole('button', { name: /next/i }).click();
+    userEvent.click(screen.getByRole('button', { name: /next/i }));
 
+    await screen.findByTestId('business-case-review');
     expect(screen.getByTestId('business-case-review')).toBeInTheDocument();
   });
 
   it('removes alternative b', async () => {
     window.confirm = vi.fn(() => true);
-    await renderPage(defaultStore);
+    await renderPage(defaultStore, defaultMocks);
 
-    screen.getByRole('button', { name: /remove alternative b/i }).click();
+    userEvent.click(
+      screen.getByRole('button', { name: /remove alternative b/i })
+    );
+
     expect(window.confirm).toBeCalled();
     expect(screen.getByTestId('alternative-solution-a')).toBeInTheDocument();
   });
@@ -128,20 +139,20 @@ describe('Business case alternative b solution', () => {
     });
 
     it('renders validation errors', async () => {
-      await renderPage(bizCaseFinalStore, [
-        getGovernanceTaskListQuery({
-          step: SystemIntakeStep.FINAL_BUSINESS_CASE
-        })
-      ]);
-
-      // Fill one field so we can trigger validation errors
-      const titleField = screen.getByRole('textbox', {
-        name: /title/i
+      const repeatedMock = getGovernanceTaskListQuery({
+        id: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+        step: SystemIntakeStep.FINAL_BUSINESS_CASE
       });
-      userEvent.type(titleField, 'Alternative B solution title');
-      expect(titleField).toHaveValue('Alternative B solution title');
 
-      screen.getByRole('button', { name: /next/i }).click();
+      await renderPage(bizCaseFinalStore, [repeatedMock, repeatedMock]);
+
+      const titleField = screen.getByRole('textbox', { name: /title/i });
+      await userEvent.type(titleField, 'Something filled');
+
+      await act(async () => {
+        userEvent.click(screen.getByRole('button', { name: /next/i }));
+      });
+
       expect(
         await screen.findByTestId('formik-validation-errors')
       ).toBeInTheDocument();

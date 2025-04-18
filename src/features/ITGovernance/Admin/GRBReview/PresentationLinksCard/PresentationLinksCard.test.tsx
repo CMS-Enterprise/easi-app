@@ -12,6 +12,7 @@ import { MessageProvider } from 'hooks/useMessage';
 import { getExpectedAlertType } from 'utils/testing/helpers';
 
 import ITGovAdminContext from '../../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
+import { ModalProvider } from '../RestartReviewModal/RestartReviewModalContext';
 
 import PresentationLinksCard from './PresentationLinksCard';
 
@@ -30,10 +31,12 @@ describe('Async Presentation Links Card', () => {
         <MessageProvider>
           <MockedProvider>
             <ITGovAdminContext.Provider value={isAdmin}>
-              <PresentationLinksCard
-                systemIntakeID={systemIntake.id}
-                grbPresentationLinks={grbPresentationLinks}
-              />
+              <ModalProvider>
+                <PresentationLinksCard
+                  systemIntakeID={systemIntake.id}
+                  grbPresentationLinks={grbPresentationLinks}
+                />
+              </ModalProvider>
             </ITGovAdminContext.Provider>
           </MockedProvider>
         </MessageProvider>

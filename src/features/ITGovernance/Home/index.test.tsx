@@ -1,14 +1,26 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
-import renderer from 'react-test-renderer';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, waitFor } from '@testing-library/react';
+import { GetRequestsDocument } from 'gql/generated/graphql';
 import configureMockStore from 'redux-mock-store';
 
 import { MessageProvider } from 'hooks/useMessage';
 
 import MakingARequest from './index';
+
+const getRequestsMock = {
+  request: {
+    query: GetRequestsDocument
+  },
+  result: {
+    data: {
+      mySystemIntakes: [],
+      myTrbRequests: []
+    }
+  }
+};
 
 vi.mock('@okta/okta-react', () => ({
   useOktaAuth: () => {
@@ -39,7 +51,7 @@ describe('The making a request page', () => {
   it('renders without errors', async () => {
     render(
       <MemoryRouter initialEntries={['/system/making-a-request']}>
-        <MockedProvider>
+        <MockedProvider mocks={[getRequestsMock]}>
           <Provider store={defaultStore}>
             <MessageProvider>
               <Route path="/system/making-a-request">
@@ -57,17 +69,18 @@ describe('The making a request page', () => {
   });
 
   it('matches the snapshot', () => {
-    const tree = renderer
-      .create(
-        <MemoryRouter>
-          <MockedProvider>
-            <Provider store={defaultStore}>
+    const { asFragment } = render(
+      <MemoryRouter>
+        <MockedProvider mocks={[getRequestsMock]}>
+          <Provider store={defaultStore}>
+            <MessageProvider>
               <MakingARequest />
-            </Provider>
-          </MockedProvider>
-        </MemoryRouter>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+            </MessageProvider>
+          </Provider>
+        </MockedProvider>
+      </MemoryRouter>
+    );
+
+    expect(asFragment()).toMatchSnapshot();
   });
 });

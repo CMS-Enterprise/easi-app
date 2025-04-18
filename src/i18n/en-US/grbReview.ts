@@ -118,6 +118,14 @@ export default {
   supportingDocuments: 'Supporting documents',
   supportingDocumentsText:
     'The documents below will help the GRB review this IT Governance request, and were completed during the course of this IT Governance request or were added by the requester and/or the Governance Admin Team. You may add additional documents and may remove any that have been added by Governance Admin Team members.',
+  asyncCompleted: {
+    presentationLinks:
+      'This review is over. Please <link1>restart</link1> it if you would like to update presentation links.',
+    documents:
+      'This review is over. Please <link1>restart</link1> it if you would like to add additional documents.',
+    reviewers:
+      'This review is over. Please <link1>restart</link1> it to add additional reviewers.'
+  },
   asyncPresentation: {
     title: 'Asynchronous presentation',
     editPresentationLinks: 'Edit presentation links',
@@ -132,6 +140,7 @@ export default {
     adminEmptyAlert:
       'If this GRB review has an asynchronous presentation and recording, you may add that content to EASi to provide additional information for GRB reviews.',
     emptyAlert: 'The GRB have not yet added presentation links.',
+
     modalRemoveLinks: {
       title: 'Remove presentation links?',
       text: 'This action will remove any links and files previously added about this asynchronous presesntation and cannot be undone. Are you sure you want to continue?',
@@ -335,7 +344,21 @@ export default {
           'There was an issue sending your reminder. Please try again, and if the problem persists, try again later.'
       }
     },
-    takeADifferentAction: 'or, take a different action'
+    takeADifferentAction: 'or, take a different action',
+    restartReview: {
+      title: 'Restart review?',
+      description:
+        'Restarting this review will retain any existing votes and discussions, but will allow Governance Review Board (GRB) members to cast a new vote or change their existing vote.',
+      setNewEndDateLabel: 'Set new end date',
+      setNewEndDateHelpText:
+        'Select the new date when the GRB review should end. The review will close at 5pm EST on that day. Format: mm/dd/yyyy',
+      restart: 'Restart',
+      cancel: "Go back and don't restart",
+      success:
+        'You restarted this GRB review. The new end date is <bold>{{date}}</bold> at 5:00pm EST.',
+      error:
+        'There was an issue restarting this review. Please try again, and if the problem persists, try again later.'
+    }
   },
   reviewTask: {
     title: 'GRB Task',
@@ -464,6 +487,7 @@ export default {
     reviewStatus: 'Review status',
     grbMeeting: 'GRB meeting',
     changeMeetingDate: 'Change meeting date',
+    restartReview: 'Restart review',
     grbReviewStatus: {
       [GRBReviewStatus.SCHEDULED]: 'Scheduled',
       [SystemIntakeGRBReviewAsyncStatusType.IN_PROGRESS]: 'In progress',

@@ -152,9 +152,7 @@ exports[`Trb Help Prepare Consult Meeting > renders 1`] = `
             <a
               class="usa-link"
               href="mailto:cms-trb@cms.hhs.gov"
-            >
-              cms-trb@cms.hhs.gov
-            </a>
+            />
             .
           </p>
           <div>

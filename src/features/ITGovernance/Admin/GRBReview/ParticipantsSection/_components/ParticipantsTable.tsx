@@ -11,6 +11,7 @@ import {
 } from '@trussworks/react-uswds';
 import {
   GetSystemIntakeGRBReviewDocument,
+  SystemIntakeGRBReviewAsyncStatusType,
   SystemIntakeGRBReviewerFragment,
   useDeleteSystemIntakeGRBReviewerMutation
 } from 'gql/generated/graphql';
@@ -27,11 +28,13 @@ import {
 type ParticipantsTableProps = {
   grbReviewers: SystemIntakeGRBReviewerFragment[];
   fromGRBSetup?: boolean;
+  asyncStatus?: SystemIntakeGRBReviewAsyncStatusType | null;
 };
 
 const ParticipantsTable = ({
   grbReviewers,
-  fromGRBSetup
+  fromGRBSetup,
+  asyncStatus
 }: ParticipantsTableProps) => {
   const { t } = useTranslation('grbReview');
 
@@ -115,8 +118,11 @@ const ParticipantsTable = ({
           return <>{t<string>(`reviewerRoles.${value}`)}</>;
         }
       },
-      // Only display action column if user is GRT admin
-      ...(isITGovAdmin ? [actionColumn] : [])
+      // Only display action column if user is GRT admin and asyncStatus is not COMPLETED
+      ...(isITGovAdmin &&
+      asyncStatus !== SystemIntakeGRBReviewAsyncStatusType.COMPLETED
+        ? [actionColumn]
+        : [])
     ];
   }, [
     t,
@@ -125,7 +131,8 @@ const ParticipantsTable = ({
     history,
     pathname,
     fromGRBSetup,
-    systemId
+    systemId,
+    asyncStatus
   ]);
 
   const table = useTable(

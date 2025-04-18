@@ -1,0 +1,10 @@
+// classname used to target specifically the date picker calendar and have it render above the input field
+.date-picker-override {
+  .usa-date-picker__calendar {
+    top: -262px !important;
+
+    @media screen and (max-width: 640px) {
+      top: -261px !important;
+    }
+  }
+}
