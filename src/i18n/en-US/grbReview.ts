@@ -281,7 +281,7 @@ export default {
       selectReviewEndDate: {
         heading: 'Select review end date',
         description:
-          'Set a timeframe for this review. The GRB members above will be notified of the end date and will receive some automatic reminders.'
+          'Select the date when the GRB review should end. The review will close at 5pm EST on that day. You will have the opportunity to add additional time to this review if necessary. Format: mm/dd/yyyy'
       }
     }
   },
@@ -518,5 +518,16 @@ Format: mm/dd/yyyy`,
     approve: 'This review suggests a decision to approve this project.',
     notApprove: 'This review suggests a decision to not approve this project.',
     inconclusive: 'This review is inconclusive.'
+  },
+  decisionRecord: {
+    breadcrumb: 'GRB review decision record',
+    description:
+      'The list below is a record of all the votes submitted by GRB reviewers for this request.',
+    returnToRequestDetails: 'Return to request details',
+    vote: 'No vote cast',
+    vote_OBJECTION: 'Objection',
+    vote_NO_OBJECTION: 'No objection',
+    viewComment: 'View comment',
+    grbComment: 'GRB comment'
   }
 };

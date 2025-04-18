@@ -54,7 +54,7 @@ func (s *ResolverSuite) TestSystemIntakeUpdateGrbReviewFormInputPresentationStan
 		s.testConfigs.Store,
 		models.UpdateSystemIntakeGRBReviewFormInputPresentationStandard{
 			SystemIntakeID: systemIntake.ID,
-			GrbDate:        grbDate,
+			GrbDate:        graphql.OmittableOf(&grbDate),
 		},
 	)
 
@@ -62,7 +62,23 @@ func (s *ResolverSuite) TestSystemIntakeUpdateGrbReviewFormInputPresentationStan
 	s.NoError(err)
 	s.NotNil(updatedPayload)
 	s.NotNil(updatedPayload.SystemIntake)
+	s.NotNil(updatedPayload.SystemIntake.GRBDate)
 
+	s.WithinDuration(grbDate, *updatedPayload.SystemIntake.GRBDate, time.Second)
+
+	updatedPayload, err = UpdateSystemIntakeGRBReviewFormInputPresentationStandard(
+		s.testConfigs.Context,
+		s.testConfigs.Store,
+		models.UpdateSystemIntakeGRBReviewFormInputPresentationStandard{
+			SystemIntakeID: systemIntake.ID,
+			GrbDate:        graphql.OmittableOf[*time.Time](nil),
+		},
+	)
+	// Check for errors
+	s.NoError(err)
+	s.NotNil(updatedPayload)
+	s.NotNil(updatedPayload.SystemIntake)
+	// confirm that you can't clear out the time if you pass in nil for the omittable
 	s.WithinDuration(grbDate, *updatedPayload.SystemIntake.GRBDate, time.Second)
 }
 

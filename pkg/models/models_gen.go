@@ -1026,7 +1026,8 @@ type UpdateSystemIntakeGRBReviewFormInputPresentationAsync struct {
 // Input data used to set or update a System Intake's GRB Review Presentation (Standard) data
 type UpdateSystemIntakeGRBReviewFormInputPresentationStandard struct {
 	SystemIntakeID uuid.UUID `json:"systemIntakeID"`
-	GrbDate        time.Time `json:"grbDate"`
+	// the date of the GRB review meeting. It is omittable for simplicity on the front end, but if it is omitted or null the date will not be updated
+	GrbDate graphql.Omittable[*time.Time] `json:"grbDate,omitempty"`
 }
 
 // Input data used to set or update a System Intake's GRB Review Timeframe (Async) data

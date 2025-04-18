@@ -9857,7 +9857,10 @@ Input data used to set or update a System Intake's GRB Review Presentation (Stan
 """
 input updateSystemIntakeGRBReviewFormInputPresentationStandard {
   systemIntakeID: UUID!
-  grbDate: Time!
+  """
+  the date of the GRB review meeting. It is omittable for simplicity on the front end, but if it is omitted or null the date will not be updated
+  """
+  grbDate: Time @goField(omittable: true)
 }
 
 """
@@ -67926,11 +67929,11 @@ func (ec *executionContext) unmarshalInputupdateSystemIntakeGRBReviewFormInputPr
 			it.SystemIntakeID = data
 		case "grbDate":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("grbDate"))
-			data, err := ec.unmarshalNTime2timeᚐTime(ctx, v)
+			data, err := ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.GrbDate = data
+			it.GrbDate = graphql.OmittableOf(data)
 		}
 	}
 
