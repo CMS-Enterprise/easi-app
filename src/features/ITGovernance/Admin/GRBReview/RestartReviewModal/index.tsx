@@ -8,6 +8,10 @@ import {
   ModalFooter,
   ModalHeading
 } from '@trussworks/react-uswds';
+import {
+  GetSystemIntakeGRBReviewDocument,
+  useRestartGRBReviewAsyncMutation
+} from 'gql/generated/graphql';
 
 import DatePickerFormatted from 'components/DatePickerFormatted';
 import HelpText from 'components/HelpText';
@@ -27,23 +31,20 @@ const RestartReviewModal = ({ systemIntakeId }: { systemIntakeId: string }) => {
     useMessage();
   const [selectedDate, setSelectedDate] = useState<string>('');
 
-  // TODO: Uncomment this once the mutation is ready
-  // const [restartReview] =
-  //   useUpdateSystemIntakeGRBReviewFormInputTimeframeAsyncMutation({
-  //     refetchQueries: [GetSystemIntakeGRBReviewDocument]
-  //   });
+  const [restartReview] = useRestartGRBReviewAsyncMutation({
+    refetchQueries: [GetSystemIntakeGRBReviewDocument]
+  });
 
   const handleRestartReview = async () => {
     try {
-      // await restartReview({
-      //   variables: {
-      //     input: {
-      //       systemIntakeID: systemIntakeId,
-      //       grbReviewAsyncEndDate: selectedDate,
-      //       startGRBReview: true
-      //     }
-      //   }
-      // });
+      await restartReview({
+        variables: {
+          input: {
+            systemIntakeID: systemIntakeId,
+            newGRBEndDate: selectedDate
+          }
+        }
+      });
 
       showMessage(
         <Trans
