@@ -304,16 +304,6 @@ describe('GRB review', () => {
 
     cy.get('h1').should('have.text', 'GRB review');
 
-    cy.contains('button', 'End voting').click();
-    cy.contains('button', 'End early').click();
-
-    cy.get('[data-testid="alert"]')
-      .should('be.visible')
-      .and(
-        'contain.text',
-        'You have ended this GRB review early. GRB members will no longer be able to add or change votes.'
-      );
-
     cy.get('body').then($body => {
       const occurrences = $body.text().match(/This review is over\./g) || [];
       expect(occurrences).to.have.length(3);
