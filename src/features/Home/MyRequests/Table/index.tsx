@@ -382,7 +382,10 @@ const Table = ({
         </caption>
         <thead>
           {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
+            <tr
+              {...headerGroup.getHeaderGroupProps()}
+              key={{ ...headerGroup.getHeaderGroupProps() }.key}
+            >
               {headerGroup.headers
                 // @ts-ignore
                 .filter(column => !hiddenColumns?.includes(column.Header))
@@ -398,6 +401,7 @@ const Table = ({
                       paddingLeft: '0',
                       position: 'relative'
                     }}
+                    key={column.id}
                   >
                     <button
                       className="usa-button usa-button--unstyled"
@@ -415,7 +419,7 @@ const Table = ({
         <tbody {...getTableBodyProps()}>
           {page.map(row => {
             return (
-              <tr {...row.getRowProps()}>
+              <tr {...row.getRowProps()} key={row.id}>
                 {row.cells
                   .filter(cell => {
                     // @ts-ignore
@@ -428,6 +432,7 @@ const Table = ({
                           {...cell.getCellProps()}
                           scope="row"
                           style={{ paddingLeft: '0' }}
+                          key={{ ...cell.getCellProps() }.key}
                         >
                           {cell.render('Cell')}
                         </th>
@@ -437,6 +442,7 @@ const Table = ({
                       <td
                         {...cell.getCellProps()}
                         style={{ width: cell.column.width, paddingLeft: '0' }}
+                        key={{ ...cell.getCellProps() }.key}
                       >
                         {cell.render('Cell')}
                       </td>

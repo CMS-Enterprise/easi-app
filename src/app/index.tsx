@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import ReactGA from 'react-ga4';
 import { Provider } from 'react-redux';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
@@ -17,7 +17,7 @@ import * as serviceWorker from '../config/serviceWorker';
 import store from '../config/store';
 import UnsupportedBrowser from '../features/Miscellaneous/UnsupportedBrowser';
 
-import App from './Routes';
+import AppComponent from './Routes';
 
 import './index.scss';
 
@@ -117,15 +117,15 @@ const client = new ApolloClient({
   }
 });
 
-let app;
+let App;
 const browser: any = detect();
 if (browser.name === 'ie') {
-  app = <UnsupportedBrowser />;
+  App = <UnsupportedBrowser />;
 } else {
-  app = (
+  App = (
     <Provider store={store}>
       <ApolloProvider client={client}>
-        <App />
+        <AppComponent />
       </ApolloProvider>
     </Provider>
   );
@@ -169,7 +169,10 @@ if (typeof (window as any).TextEncoder === 'undefined') {
   (window as any).TextEncoder = TextEncoder;
 }
 
-ReactDOM.render(app, document.getElementById('root'));
+const container = document.getElementById('root');
+const root = createRoot(container!);
+
+root.render(App);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
