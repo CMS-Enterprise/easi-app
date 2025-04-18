@@ -708,6 +708,16 @@ func (r *mutationResolver) UpdateSystemIntakeGRBReviewFormTimeframeAsync(ctx con
 	return resolvers.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(ctx, r.store, input)
 }
 
+// ExtendGRBReviewDeadlineAsync is the resolver for the extendGRBReviewDeadlineAsync field.
+func (r *mutationResolver) ExtendGRBReviewDeadlineAsync(ctx context.Context, input models.ExtendGRBReviewDeadlineInput) (*models.UpdateSystemIntakePayload, error) {
+	return resolvers.ExtendGRBReviewDeadlineAsync(ctx, r.store, input)
+}
+
+// RestartGRBReviewAsync is the resolver for the restartGRBReviewAsync field.
+func (r *mutationResolver) RestartGRBReviewAsync(ctx context.Context, input models.RestartGRBReviewInput) (*models.UpdateSystemIntakePayload, error) {
+	return resolvers.RestartGRBReviewAsync(ctx, r.store, input)
+}
+
 // UpdateSystemIntakeLinkedCedarSystem is the resolver for the updateSystemIntakeLinkedCedarSystem field.
 func (r *mutationResolver) UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, input models.UpdateSystemIntakeLinkedCedarSystemInput) (*models.UpdateSystemIntakePayload, error) {
 	// If the linked system is not nil, make sure it's a valid CEDAR system, otherwise return an error

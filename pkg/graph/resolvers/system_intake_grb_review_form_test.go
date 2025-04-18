@@ -332,3 +332,95 @@ func (s *ResolverSuite) TestManuallyEndSystemIntakeGRBReviewAsyncVoting() {
 	s.NotNil(status)
 	s.Equal(models.SystemIntakeGRBReviewAsyncStatusTypeCompleted, *status)
 }
+
+func (s *ResolverSuite) TestExtendGRBReviewDeadlineAsync() {
+	systemIntake := s.createNewIntake()
+	s.NotNil(systemIntake)
+
+	// Set the intake to async
+	systemIntake.GrbReviewType = models.SystemIntakeGRBReviewTypeAsync
+
+	// Set the end date to one hour in the future
+	oneHourLater := time.Now().Add(time.Hour)
+	systemIntake.GrbReviewAsyncEndDate = &oneHourLater
+
+	// Update the intake
+	_, err := s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, systemIntake)
+	s.NoError(err)
+
+	// Calculate the status
+	status := CalcSystemIntakeGRBReviewAsyncStatus(systemIntake)
+	s.NotNil(status)
+	s.Equal(models.SystemIntakeGRBReviewAsyncStatusTypeInProgress, *status)
+
+	// Extend the deadline by 2 hours
+	twoHoursLater := time.Now().Add(2 * time.Hour)
+	updatedPayload, err := ExtendGRBReviewDeadlineAsync(
+		s.testConfigs.Context,
+		s.testConfigs.Store,
+		models.ExtendGRBReviewDeadlineInput{
+			SystemIntakeID:        systemIntake.ID,
+			GrbReviewAsyncEndDate: twoHoursLater,
+		},
+	)
+
+	// Check for errors
+	s.NoError(err)
+	s.NotNil(updatedPayload)
+	s.NotNil(updatedPayload.SystemIntake)
+
+	// Check the new end date
+	s.NotNil(updatedPayload.SystemIntake.GrbReviewAsyncEndDate)
+	s.WithinDuration(twoHoursLater, *updatedPayload.SystemIntake.GrbReviewAsyncEndDate, time.Second)
+
+	// Calculate the status again
+	status = CalcSystemIntakeGRBReviewAsyncStatus(updatedPayload.SystemIntake)
+	s.NotNil(status)
+	s.Equal(models.SystemIntakeGRBReviewAsyncStatusTypeInProgress, *status)
+}
+
+func (s *ResolverSuite) TestRestartGRBReviewAsync() {
+	systemIntake := s.createNewIntake()
+	s.NotNil(systemIntake)
+
+	// Set the intake to async
+	systemIntake.GrbReviewType = models.SystemIntakeGRBReviewTypeAsync
+
+	// Set the end date to one hour in the future
+	oneHourLater := time.Now().Add(time.Hour)
+	systemIntake.GrbReviewAsyncEndDate = &oneHourLater
+
+	// Update the intake
+	_, err := s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, systemIntake)
+	s.NoError(err)
+
+	// Calculate the status
+	status := CalcSystemIntakeGRBReviewAsyncStatus(systemIntake)
+	s.NotNil(status)
+	s.Equal(models.SystemIntakeGRBReviewAsyncStatusTypeInProgress, *status)
+
+	input := models.RestartGRBReviewInput{
+		SystemIntakeID: systemIntake.ID,
+		NewGRBEndDate:  time.Now().Add(2 * time.Hour),
+	}
+
+	// Restart the review
+	updatedPayload, err := RestartGRBReviewAsync(
+		s.testConfigs.Context,
+		s.testConfigs.Store,
+		input,
+	)
+
+	// Check for errors
+	s.NoError(err)
+	s.NotNil(updatedPayload)
+	s.NotNil(updatedPayload.SystemIntake)
+
+	// Check the new start date
+	s.NotNil(updatedPayload.SystemIntake.GRBReviewStartedAt)
+	s.WithinDuration(time.Now(), *updatedPayload.SystemIntake.GRBReviewStartedAt, time.Second)
+
+	// Check the new end date
+	s.NotNil(updatedPayload.SystemIntake.GrbReviewAsyncEndDate)
+	s.WithinDuration(input.NewGRBEndDate, *updatedPayload.SystemIntake.GrbReviewAsyncEndDate, time.Second)
+}

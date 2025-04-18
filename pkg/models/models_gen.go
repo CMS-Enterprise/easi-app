@@ -379,6 +379,12 @@ type ReopenTRBRequestInput struct {
 	NotifyEuaIds   []string  `json:"notifyEuaIds"`
 }
 
+// Input structure to restart the GRB review process
+type RestartGRBReviewInput struct {
+	SystemIntakeID uuid.UUID `json:"systemIntakeID"`
+	NewGRBEndDate  time.Time `json:"newGRBEndDate"`
+}
+
 type SendCantFindSomethingEmailInput struct {
 	Body string `json:"body"`
 }
