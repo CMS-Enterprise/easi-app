@@ -2,6 +2,7 @@ package scheduler
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -9,7 +10,6 @@ import (
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
-	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/logfields"
@@ -38,23 +38,24 @@ type ScheduledJobWrapper[input comparable] struct {
 // store returns the store from the scheduler
 func (sjw *ScheduledJobWrapper[input]) store() (*storage.Store, error) {
 	if sjw.scheduler == nil || sjw.scheduler.store == nil {
-		return nil, fmt.Errorf("scheduler is not initialized")
+		return nil, errors.New("scheduler is not initialized")
 	}
 	return sjw.scheduler.store, nil
 }
 
 // logger returns the logger from the scheduler
-func (sjw *ScheduledJobWrapper[input]) logger() *zap.Logger {
+func (sjw *ScheduledJobWrapper[input]) logger() (*zap.Logger, error) {
 	if sjw.scheduler == nil || sjw.scheduler.logger == nil {
-		appcontext.ZLogger(context.Background())
+		return nil, errors.New("scheduler is not initialized")
 	}
-	return sjw.decoratedLogger(sjw.scheduler.logger)
+
+	return sjw.decoratedLogger(sjw.scheduler.logger), nil
 }
 
 // emailClient returns the email client from the scheduler
 func (sjw *ScheduledJobWrapper[input]) emailClient() (*email.Client, error) {
 	if sjw.scheduler == nil || sjw.scheduler.emailClient == nil {
-		return nil, fmt.Errorf("scheduler is not initialized")
+		return nil, errors.New("scheduler is not initialized")
 	}
 	return sjw.scheduler.emailClient, nil
 }
@@ -62,7 +63,7 @@ func (sjw *ScheduledJobWrapper[input]) emailClient() (*email.Client, error) {
 // buildDataLoaders returns the buildDataLoaders function from the scheduler
 func (sjw *ScheduledJobWrapper[input]) buildDataLoaders() (dataloaders.BuildDataloaders, error) {
 	if sjw.scheduler == nil || sjw.scheduler.buildDataLoaders == nil {
-		return nil, fmt.Errorf("scheduler is not initialized")
+		return nil, errors.New("scheduler is not initialized")
 	}
 	return sjw.scheduler.buildDataLoaders, nil
 }
@@ -75,10 +76,13 @@ type ScheduledJob struct {
 // RunJob is a wrapper for running the job. The scheduler itself doesn't do anything with errors,
 // so we wrap logging information here
 func (sjw *ScheduledJobWrapper[input]) RunJob(ctx context.Context, params input) error {
-	logger := sjw.logger()
-	logger.Info("running scheduled job job")
-	err := sjw.jobFunction(ctx, params)
+	logger, err := sjw.logger()
 	if err != nil {
+		return err
+	}
+
+	logger.Info("running scheduled job job")
+	if err := sjw.jobFunction(ctx, params); err != nil {
 		logger.Error("error running job", zap.Error(err))
 		return err
 	}

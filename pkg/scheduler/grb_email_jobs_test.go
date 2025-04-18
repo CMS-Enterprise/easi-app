@@ -7,6 +7,9 @@ func (suite *SchedulerTestSuite) TestSendAsyncVotingHalfwayThroughEmailJobFuncti
 
 	stubJob := suite.NewScheduledJobStub(testScheduler)
 
+	// we can create one intake that is less than halfway through
+	// and another that is more than halfway through
+
 	err := sendAsyncVotingHalfwayThroughEmailJobFunction(suite.testConfigs.Context, stubJob)
 	suite.NoError(err)
 }

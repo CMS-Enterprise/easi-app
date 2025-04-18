@@ -26,10 +26,12 @@ func GetExampleJobs(scheduler *Scheduler) *exampleJobs {
 	}
 }
 func simplifiedJobFunction(ctx context.Context, scheduledJob *ScheduledJob) error {
-
-	logger := scheduledJob.logger()
-	_, err := scheduledJob.buildDataLoaders()
+	logger, err := scheduledJob.logger()
 	if err != nil {
+		return err
+	}
+
+	if _, err := scheduledJob.buildDataLoaders(); err != nil {
 		logger.Error("error getting buildDataLoaders from scheduler", zap.Error(err))
 		return err
 	}

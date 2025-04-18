@@ -34,7 +34,10 @@ func getGRBEmailJobs(scheduler *Scheduler) *grbEmailJobs {
 func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, scheduledJob *ScheduledJob) error {
 	ctx = dataloaders.CTXWithLoaders(ctx, BuildDataloaders(ctx))
 
-	logger := scheduledJob.logger()
+	logger, err := scheduledJob.logger()
+	if err != nil {
+		return err
+	}
 
 	store, err := scheduledJob.store()
 	if err != nil {
