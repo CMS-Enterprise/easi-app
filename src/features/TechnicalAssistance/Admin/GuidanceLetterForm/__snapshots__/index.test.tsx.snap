@@ -142,8 +142,8 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
             </span>
           </li>
           <li
-            aria-disabled="false"
-            class="usa-step-indicator__segment maxw-none usa-step-indicator__segment--clickable"
+            aria-disabled="true"
+            class="usa-step-indicator__segment maxw-none usa-step-indicator__segment--disabled"
             data-testid="stepIndicator-1"
           >
             <span
@@ -168,8 +168,8 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
             </span>
           </li>
           <li
-            aria-disabled="false"
-            class="usa-step-indicator__segment maxw-none usa-step-indicator__segment--clickable"
+            aria-disabled="true"
+            class="usa-step-indicator__segment maxw-none usa-step-indicator__segment--disabled"
             data-testid="stepIndicator-2"
           >
             <span
@@ -194,8 +194,8 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
             </span>
           </li>
           <li
-            aria-disabled="false"
-            class="usa-step-indicator__segment maxw-none usa-step-indicator__segment--clickable"
+            aria-disabled="true"
+            class="usa-step-indicator__segment maxw-none usa-step-indicator__segment--disabled"
             data-testid="stepIndicator-3"
           >
             <span
