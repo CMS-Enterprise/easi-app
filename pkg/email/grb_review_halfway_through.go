@@ -10,6 +10,7 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/cms-enterprise/easi-app/pkg/email/translation"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -49,7 +50,7 @@ func (sie systemIntakeEmails) grbReviewHalfwayThroughBody(input SendGRBReviewHal
 		Link:               sie.client.urlFromPath(grbReviewPath),
 		TimeRemaining:      buildRemainingTime(input.EndDate),
 		RequesterName:      input.RequesterName,
-		RequesterComponent: input.RequesterComponent,
+		RequesterComponent: translation.GetComponentAcronym(input.RequesterComponent),
 		DateInfo:           fmt.Sprintf("%[1]s-%[2]s", formattedStart, formattedEnd),
 		VoteInfo:           fmt.Sprintf("%[1]d objection, %[2]d no objection, %[3]d no vote", input.ObjectionVotes, input.NoObjectionVotes, input.NotYetVoted),
 	}
