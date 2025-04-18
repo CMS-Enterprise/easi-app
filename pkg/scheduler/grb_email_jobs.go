@@ -32,8 +32,6 @@ func getGRBEmailJobs(scheduler *Scheduler) *grbEmailJobs {
 }
 
 func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, scheduledJob *ScheduledJob) error {
-	ctx = dataloaders.CTXWithLoaders(ctx, BuildDataloaders(ctx))
-
 	logger, err := scheduledJob.logger()
 	if err != nil {
 		return err
@@ -58,7 +56,7 @@ func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, schedule
 	}
 
 	for _, intake := range intakes {
-		if _, err := OneTimeJob(ctx, SharedScheduler, emailClient, "SendAsyncVotingHalfwayThroughEmailJob", func(ctx context.Context, emailClient *email.Client) error {
+		if _, err := OneTimeJob(ctx, SharedScheduler, intake, "SendAsyncVotingHalfwayThroughEmailJob", func(ctx context.Context, intake *models.SystemIntake) error {
 			if intake.GRBReviewStartedAt == nil || intake.GrbReviewAsyncEndDate == nil {
 				return errors.New("missing start and/or end date for sending halfway through email")
 			}
