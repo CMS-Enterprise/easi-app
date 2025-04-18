@@ -599,9 +599,11 @@ type ComplexityRoot struct {
 		DeleteTRBRequestDocument                            func(childComplexity int, id uuid.UUID) int
 		DeleteTRBRequestFundingSources                      func(childComplexity int, input models.DeleteTRBRequestFundingSourcesInput) int
 		DeleteTrbLeadOption                                 func(childComplexity int, eua string) int
+		ExtendGRBReviewDeadlineAsync                        func(childComplexity int, input models.ExtendGRBReviewDeadlineInput) int
 		ManuallyEndSystemIntakeGRBReviewAsyncVoting         func(childComplexity int, systemIntakeID uuid.UUID) int
 		ReopenTrbRequest                                    func(childComplexity int, input models.ReopenTRBRequestInput) int
 		RequestReviewForTRBGuidanceLetter                   func(childComplexity int, id uuid.UUID) int
+		RestartGRBReviewAsync                               func(childComplexity int, input models.RestartGRBReviewInput) int
 		SendCantFindSomethingEmail                          func(childComplexity int, input models.SendCantFindSomethingEmailInput) int
 		SendFeedbackEmail                                   func(childComplexity int, input models.SendFeedbackEmailInput) int
 		SendGRBReviewPresentationDeckReminderEmail          func(childComplexity int, systemIntakeID uuid.UUID) int
@@ -1296,6 +1298,8 @@ type MutationResolver interface {
 	UpdateSystemIntakeGRBReviewFormPresentationStandard(ctx context.Context, input models.UpdateSystemIntakeGRBReviewFormInputPresentationStandard) (*models.UpdateSystemIntakePayload, error)
 	UpdateSystemIntakeGRBReviewFormPresentationAsync(ctx context.Context, input models.UpdateSystemIntakeGRBReviewFormInputPresentationAsync) (*models.UpdateSystemIntakePayload, error)
 	UpdateSystemIntakeGRBReviewFormTimeframeAsync(ctx context.Context, input models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync) (*models.UpdateSystemIntakePayload, error)
+	ExtendGRBReviewDeadlineAsync(ctx context.Context, input models.ExtendGRBReviewDeadlineInput) (*models.UpdateSystemIntakePayload, error)
+	RestartGRBReviewAsync(ctx context.Context, input models.RestartGRBReviewInput) (*models.UpdateSystemIntakePayload, error)
 	UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, input models.UpdateSystemIntakeLinkedCedarSystemInput) (*models.UpdateSystemIntakePayload, error)
 	SetSystemIntakeGRBPresentationLinks(ctx context.Context, input models.SystemIntakeGRBPresentationLinksInput) (*models.SystemIntakeGRBPresentationLinks, error)
 	UploadSystemIntakeGRBPresentationDeck(ctx context.Context, input models.UploadSystemIntakeGRBPresentationDeckInput) (*models.SystemIntakeGRBPresentationLinks, error)
@@ -4585,6 +4589,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.DeleteTrbLeadOption(childComplexity, args["eua"].(string)), true
 
+	case "Mutation.extendGRBReviewDeadlineAsync":
+		if e.complexity.Mutation.ExtendGRBReviewDeadlineAsync == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_extendGRBReviewDeadlineAsync_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.ExtendGRBReviewDeadlineAsync(childComplexity, args["input"].(models.ExtendGRBReviewDeadlineInput)), true
+
 	case "Mutation.manuallyEndSystemIntakeGRBReviewAsyncVoting":
 		if e.complexity.Mutation.ManuallyEndSystemIntakeGRBReviewAsyncVoting == nil {
 			break
@@ -4620,6 +4636,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.RequestReviewForTRBGuidanceLetter(childComplexity, args["id"].(uuid.UUID)), true
+
+	case "Mutation.restartGRBReviewAsync":
+		if e.complexity.Mutation.RestartGRBReviewAsync == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_restartGRBReviewAsync_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.RestartGRBReviewAsync(childComplexity, args["input"].(models.RestartGRBReviewInput)), true
 
 	case "Mutation.sendCantFindSomethingEmail":
 		if e.complexity.Mutation.SendCantFindSomethingEmail == nil {
@@ -8230,7 +8258,9 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputDeleteSystemIntakeGRBReviewerInput,
 		ec.unmarshalInputDeleteTRBRequestFundingSourcesInput,
 		ec.unmarshalInputEmailNotificationRecipients,
+		ec.unmarshalInputExtendGRBReviewDeadlineInput,
 		ec.unmarshalInputReopenTRBRequestInput,
+		ec.unmarshalInputRestartGRBReviewInput,
 		ec.unmarshalInputSendCantFindSomethingEmailInput,
 		ec.unmarshalInputSendFeedbackEmailInput,
 		ec.unmarshalInputSendReportAProblemEmailInput,
@@ -10520,6 +10550,22 @@ enum GovernanceRequestFeedbackType {
 }
 
 """
+Input structure to extend the GRB review deadline
+"""
+input ExtendGRBReviewDeadlineInput {
+  systemIntakeID: UUID!
+  grbReviewAsyncEndDate: Time!
+}
+
+"""
+Input structure to restart the GRB review process
+"""
+input RestartGRBReviewInput {
+  systemIntakeID: UUID!
+  newGRBEndDate: Time!
+}
+
+"""
 Feedback given to the requester on a governance request
 """
 type GovernanceRequestFeedback {
@@ -11171,6 +11217,10 @@ type Mutation {
   updateSystemIntakeGRBReviewFormPresentationAsync(input: updateSystemIntakeGRBReviewFormInputPresentationAsync!): UpdateSystemIntakePayload
   @hasRole(role: EASI_GOVTEAM)
   updateSystemIntakeGRBReviewFormTimeframeAsync(input: updateSystemIntakeGRBReviewFormInputTimeframeAsync!): UpdateSystemIntakePayload
+  @hasRole(role: EASI_GOVTEAM)
+  extendGRBReviewDeadlineAsync(input: ExtendGRBReviewDeadlineInput!): UpdateSystemIntakePayload
+  @hasRole(role: EASI_GOVTEAM)
+  restartGRBReviewAsync(input: RestartGRBReviewInput!): UpdateSystemIntakePayload
   @hasRole(role: EASI_GOVTEAM)
 
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
@@ -13095,6 +13145,34 @@ func (ec *executionContext) field_Mutation_deleteTrbLeadOption_argsEua(
 	return zeroVal, nil
 }
 
+func (ec *executionContext) field_Mutation_extendGRBReviewDeadlineAsync_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_extendGRBReviewDeadlineAsync_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_extendGRBReviewDeadlineAsync_argsInput(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (models.ExtendGRBReviewDeadlineInput, error) {
+	if _, ok := rawArgs["input"]; !ok {
+		var zeroVal models.ExtendGRBReviewDeadlineInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNExtendGRBReviewDeadlineInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐExtendGRBReviewDeadlineInput(ctx, tmp)
+	}
+
+	var zeroVal models.ExtendGRBReviewDeadlineInput
+	return zeroVal, nil
+}
+
 func (ec *executionContext) field_Mutation_manuallyEndSystemIntakeGRBReviewAsyncVoting_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -13176,6 +13254,34 @@ func (ec *executionContext) field_Mutation_requestReviewForTRBGuidanceLetter_arg
 	}
 
 	var zeroVal uuid.UUID
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_restartGRBReviewAsync_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_restartGRBReviewAsync_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_restartGRBReviewAsync_argsInput(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (models.RestartGRBReviewInput, error) {
+	if _, ok := rawArgs["input"]; !ok {
+		var zeroVal models.RestartGRBReviewInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNRestartGRBReviewInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRestartGRBReviewInput(ctx, tmp)
+	}
+
+	var zeroVal models.RestartGRBReviewInput
 	return zeroVal, nil
 }
 
@@ -34806,6 +34912,176 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeGRBReviewFor
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_updateSystemIntakeGRBReviewFormTimeframeAsync_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_extendGRBReviewDeadlineAsync(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_extendGRBReviewDeadlineAsync(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().ExtendGRBReviewDeadlineAsync(rctx, fc.Args["input"].(models.ExtendGRBReviewDeadlineInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				var zeroVal *models.UpdateSystemIntakePayload
+				return zeroVal, err
+			}
+			if ec.directives.HasRole == nil {
+				var zeroVal *models.UpdateSystemIntakePayload
+				return zeroVal, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*models.UpdateSystemIntakePayload); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cms-enterprise/easi-app/pkg/models.UpdateSystemIntakePayload`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.UpdateSystemIntakePayload)
+	fc.Result = res
+	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_extendGRBReviewDeadlineAsync(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "systemIntake":
+				return ec.fieldContext_UpdateSystemIntakePayload_systemIntake(ctx, field)
+			case "userErrors":
+				return ec.fieldContext_UpdateSystemIntakePayload_userErrors(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdateSystemIntakePayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_extendGRBReviewDeadlineAsync_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_restartGRBReviewAsync(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_restartGRBReviewAsync(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().RestartGRBReviewAsync(rctx, fc.Args["input"].(models.RestartGRBReviewInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				var zeroVal *models.UpdateSystemIntakePayload
+				return zeroVal, err
+			}
+			if ec.directives.HasRole == nil {
+				var zeroVal *models.UpdateSystemIntakePayload
+				return zeroVal, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*models.UpdateSystemIntakePayload); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cms-enterprise/easi-app/pkg/models.UpdateSystemIntakePayload`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.UpdateSystemIntakePayload)
+	fc.Result = res
+	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_restartGRBReviewAsync(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "systemIntake":
+				return ec.fieldContext_UpdateSystemIntakePayload_systemIntake(ctx, field)
+			case "userErrors":
+				return ec.fieldContext_UpdateSystemIntakePayload_userErrors(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdateSystemIntakePayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_restartGRBReviewAsync_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -64453,6 +64729,40 @@ func (ec *executionContext) unmarshalInputEmailNotificationRecipients(ctx contex
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputExtendGRBReviewDeadlineInput(ctx context.Context, obj any) (models.ExtendGRBReviewDeadlineInput, error) {
+	var it models.ExtendGRBReviewDeadlineInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"systemIntakeID", "grbReviewAsyncEndDate"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "systemIntakeID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SystemIntakeID = data
+		case "grbReviewAsyncEndDate":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("grbReviewAsyncEndDate"))
+			data, err := ec.unmarshalNTime2timeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.GrbReviewAsyncEndDate = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputReopenTRBRequestInput(ctx context.Context, obj any) (models.ReopenTRBRequestInput, error) {
 	var it models.ReopenTRBRequestInput
 	asMap := map[string]any{}
@@ -64495,6 +64805,40 @@ func (ec *executionContext) unmarshalInputReopenTRBRequestInput(ctx context.Cont
 				return it, err
 			}
 			it.NotifyEuaIds = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputRestartGRBReviewInput(ctx context.Context, obj any) (models.RestartGRBReviewInput, error) {
+	var it models.RestartGRBReviewInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"systemIntakeID", "newGRBEndDate"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "systemIntakeID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SystemIntakeID = data
+		case "newGRBEndDate":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("newGRBEndDate"))
+			data, err := ec.unmarshalNTime2timeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.NewGRBEndDate = data
 		}
 	}
 
@@ -71006,6 +71350,14 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "updateSystemIntakeGRBReviewFormTimeframeAsync":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateSystemIntakeGRBReviewFormTimeframeAsync(ctx, field)
+			})
+		case "extendGRBReviewDeadlineAsync":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_extendGRBReviewDeadlineAsync(ctx, field)
+			})
+		case "restartGRBReviewAsync":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_restartGRBReviewAsync(ctx, field)
 			})
 		case "updateSystemIntakeLinkedCedarSystem":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
@@ -79429,6 +79781,11 @@ func (ec *executionContext) marshalNEstimatedLifecycleCost2ᚖgithubᚗcomᚋcms
 	return ec._EstimatedLifecycleCost(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNExtendGRBReviewDeadlineInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐExtendGRBReviewDeadlineInput(ctx context.Context, v any) (models.ExtendGRBReviewDeadlineInput, error) {
+	res, err := ec.unmarshalInputExtendGRBReviewDeadlineInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNGRBReviewerComparison2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBReviewerComparisonᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.GRBReviewerComparison) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -79864,6 +80221,11 @@ func (ec *executionContext) marshalNPersonRole2githubᚗcomᚋcmsᚑenterprise�
 
 func (ec *executionContext) unmarshalNReopenTRBRequestInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐReopenTRBRequestInput(ctx context.Context, v any) (models.ReopenTRBRequestInput, error) {
 	res, err := ec.unmarshalInputReopenTRBRequestInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNRestartGRBReviewInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRestartGRBReviewInput(ctx context.Context, v any) (models.RestartGRBReviewInput, error) {
+	res, err := ec.unmarshalInputRestartGRBReviewInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
