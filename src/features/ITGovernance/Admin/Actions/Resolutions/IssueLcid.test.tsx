@@ -1,7 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import {
-  act,
   render,
   screen,
   waitForElementToBeRemoved
@@ -89,49 +88,47 @@ describe('Issue LCID form', async () => {
   });
 
   it('Displays confirmation modal when edits are requested', async () => {
-    await act(async () => {
-      render(
-        <VerboseMockedProvider
-          mocks={[
-            getSystemIntakeContactsQuery,
-            getSystemIntakeQuery(),
-            getSystemIntakesWithLcidsQuery
-          ]}
-          addTypename
-        >
-          <MemoryRouter>
-            <MessageProvider>
-              <EditsRequestedContext.Provider value="intakeRequest">
-                <IssueLcid {...systemIntake} systemIntakeId={systemIntake.id} />
-              </EditsRequestedContext.Provider>
-            </MessageProvider>
-          </MemoryRouter>
-        </VerboseMockedProvider>
-      );
+    render(
+      <VerboseMockedProvider
+        mocks={[
+          getSystemIntakeContactsQuery,
+          getSystemIntakeQuery(),
+          getSystemIntakesWithLcidsQuery
+        ]}
+        addTypename
+      >
+        <MemoryRouter>
+          <MessageProvider>
+            <EditsRequestedContext.Provider value="intakeRequest">
+              <IssueLcid {...systemIntake} systemIntakeId={systemIntake.id} />
+            </EditsRequestedContext.Provider>
+          </MessageProvider>
+        </MemoryRouter>
+      </VerboseMockedProvider>
+    );
 
-      await screen.findByText('Issue a Life Cycle ID');
+    await screen.findByText('Issue a Life Cycle ID');
 
-      userEvent.click(
-        screen.getByRole('radio', {
-          name: 'Generate a new Life Cycle ID'
-        })
-      );
+    userEvent.click(
+      screen.getByRole('radio', {
+        name: 'Generate a new Life Cycle ID'
+      })
+    );
 
-      userEvent.type(
-        screen.getByRole('textbox', { name: 'Expiration date *' }),
-        '01/01/2024'
-      );
+    userEvent.type(
+      screen.getByRole('textbox', { name: 'Expiration date *' }),
+      '01/01/2024'
+    );
 
-      await typeRichText(screen.getByTestId('scope'), 'Test scope');
+    await typeRichText(screen.getByTestId('scope'), 'Test scope');
 
-      await typeRichText(screen.getByTestId('nextSteps'), 'Test next steps');
+    await typeRichText(screen.getByTestId('nextSteps'), 'Test next steps');
 
-      userEvent.click(
-        screen.getByRole('radio', {
-          name: 'No, they may if they wish but it’s not necessary'
-        })
-      );
-    });
+    userEvent.click(
+      screen.getByRole('radio', {
+        name: 'No, they may if they wish but it’s not necessary'
+      })
+    );
 
     const submitButton = screen.getByRole('button', {
       name: 'Complete action'
