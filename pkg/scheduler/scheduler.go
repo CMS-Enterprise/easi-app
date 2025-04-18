@@ -10,8 +10,10 @@ import (
 	"github.com/go-co-op/gocron/v2"
 	"go.uber.org/zap"
 
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
+	"github.com/cms-enterprise/easi-app/pkg/logfields"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
@@ -50,9 +52,9 @@ var SharedScheduler, _ = NewScheduler(true)
 
 // Initialize sets the logger, store, and email client for the shared scheduler.
 func (s *Scheduler) Initialize(ctx context.Context, logger *zap.Logger, store *storage.Store, buildDataLoaders dataloaders.BuildDataloaders, emailClient *email.Client) {
-	// TODO consider removing this context, but it is also useful as the jobs have it and can listen for cancellation through it
-	s.context = CreateSchedulerContext(ctx, logger, store, buildDataLoaders, emailClient)
-	s.logger = logger
+	l := logger.With(logfields.SchedulerAppSection)
+	s.logger = l
+	s.context = appcontext.WithLogger(ctx, l)
 	s.store = store
 	s.emailClient = emailClient
 	s.buildDataLoaders = buildDataLoaders

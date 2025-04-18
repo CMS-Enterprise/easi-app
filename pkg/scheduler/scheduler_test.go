@@ -25,7 +25,7 @@ func (suite *SchedulerTestSuite) NewTestScheduler() *Scheduler {
 // NewScheduledJobStub mocks out a scheduled job so we can run the function manually for testing.
 // It is never registered so the function is not run on schedule
 func (suite *SchedulerTestSuite) NewScheduledJobStub(scheduler *Scheduler) *ScheduledJob {
-	// this test defintion is a one time job that starts immediately. However, the scheduler
+	// this test definition is a one time job that starts immediately. However, the scheduler
 	nonExistentCron := "5 4 31 2 1"
 	//“At 04:05 on day-of-month 31 and on Monday in February.”
 	testDefinition := gocron.CronJob(nonExistentCron, false)
@@ -40,7 +40,7 @@ func (suite *SchedulerTestSuite) NewScheduledJobStub(scheduler *Scheduler) *Sche
 			scheduler:   scheduler,
 		},
 	}
-	// Not the job is never registered so it is never run
+	// Note, the job is never registered so it is never run
 	return scheduledJob
 
 }
