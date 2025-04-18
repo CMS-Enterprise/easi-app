@@ -60,9 +60,9 @@ const GovTaskFeedbackFromInitialReview = ({
                 showReviewInfo ? 'reviewInfo' : 'noFeedbackInfo'
               }`}
               components={{
-                a: <Link href={`mailto:${IT_GOV_EMAIL}`}> </Link>,
-                email: IT_GOV_EMAIL
+                a: <Link href={`mailto:${IT_GOV_EMAIL}`}> </Link>
               }}
+              values={{ email: IT_GOV_EMAIL }}
             />
           </Alert>
         )}
