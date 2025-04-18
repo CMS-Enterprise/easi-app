@@ -298,4 +298,51 @@ describe('GRB review', () => {
     // Check review reminder email text is visible
     cy.get('[data-testid="review-reminder"]').should('be.visible');
   });
+
+  it('Restart GRB review', () => {
+    cy.visit('/it-governance/5af245bc-fc54-4677-bab1-1b3e798bb43c/grb-review');
+
+    cy.get('h1').should('have.text', 'GRB review');
+
+    cy.contains('button', 'End voting').click();
+    cy.contains('button', 'End early').click();
+
+    cy.get('[data-testid="alert"]')
+      .should('be.visible')
+      .and(
+        'contain.text',
+        'You have ended this GRB review early. GRB members will no longer be able to add or change votes.'
+      );
+
+    cy.get('body').then($body => {
+      const occurrences = $body.text().match(/This review is over\./g) || [];
+      expect(occurrences).to.have.length(3);
+    });
+
+    cy.contains('button', 'Restart review').click();
+
+    cy.get('[role="dialog"]')
+      .should('be.visible')
+      .within(() => {
+        cy.contains('h2', 'Restart review?').should('exist');
+
+        cy.contains(
+          'Restarting this review will retain any existing votes and discussions, but will allow Governance Review Board (GRB) members to cast a new vote or change their existing vote.'
+        ).should('exist');
+
+        cy.contains('button', 'Restart').should('be.disabled');
+
+        cy.get('[data-testid="date-picker-external-input"]').clear();
+        cy.get('[data-testid="date-picker-external-input"]').type('01/01/2226');
+
+        cy.contains('button', 'Restart').should('be.not.disabled').click();
+      });
+
+    cy.get('[data-testid="alert"]')
+      .should('be.visible')
+      .and(
+        'contain.text',
+        'You restarted this GRB review. The new end date is 01/01/2226 at 5:00pm EST.'
+      );
+  });
 });
