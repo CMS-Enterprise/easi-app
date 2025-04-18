@@ -447,19 +447,25 @@ const RequestRepository = () => {
           {...getTableProps()}
         >
           <caption className="usa-sr-only">
-            {activeTable === 'open' &&
-              t('requestRepository.aria.openTableCaption')}
-            {activeTable === 'closed' &&
-              t('requestRepository.aria.closedTableCaption')}
+            <>
+              {activeTable === 'open' &&
+                t('requestRepository.aria.openTableCaption')}
+              {activeTable === 'closed' &&
+                t('requestRepository.aria.closedTableCaption')}
+            </>
           </caption>
           <thead>
             {headerGroups.map(headerGroup => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
+              <tr
+                {...headerGroup.getHeaderGroupProps()}
+                key={{ ...headerGroup.getHeaderGroupProps() }.key}
+              >
                 {headerGroup.headers.map((column, index) => (
                   <th
                     {...column.getHeaderProps(column.getSortByToggleProps())}
                     aria-sort={getColumnSortStatus(column)}
                     style={{ position: 'relative' }}
+                    key={column.id}
                   >
                     <button
                       className="usa-button usa-button--unstyled"
@@ -482,6 +488,7 @@ const RequestRepository = () => {
               return (
                 <tr
                   {...row.getRowProps()}
+                  key={{ ...row.getRowProps() }.key}
                   // @ts-ignore
                   data-testid={`${row.original.id}-row`}
                 >
@@ -492,6 +499,7 @@ const RequestRepository = () => {
                           {...cell.getCellProps()}
                           style={{ verticalAlign: 'top' }}
                           scope="row"
+                          key={{ ...cell.getCellProps() }.key}
                         >
                           {cell.render('Cell')}
                         </th>
@@ -501,6 +509,7 @@ const RequestRepository = () => {
                       <td
                         {...cell.getCellProps()}
                         style={{ verticalAlign: 'top' }}
+                        key={{ ...cell.getCellProps() }.key}
                       >
                         {cell.render('Cell')}
                       </td>

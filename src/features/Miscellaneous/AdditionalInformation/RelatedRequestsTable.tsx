@@ -303,7 +303,10 @@ const RelatedRequestsTable = ({
       <UswdsTable bordered={false} fullWidth scrollable {...getTableProps()}>
         <thead>
           {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
+            <tr
+              {...headerGroup.getHeaderGroupProps()}
+              key={{ ...headerGroup.getHeaderGroupProps() }.key}
+            >
               {headerGroup.headers.map(column => (
                 <th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
@@ -311,6 +314,7 @@ const RelatedRequestsTable = ({
                   scope="col"
                   className="border-bottom-2px"
                   style={{ paddingLeft: '0', position: 'relative' }}
+                  key={column.id}
                 >
                   <Button
                     type="button"
@@ -333,11 +337,12 @@ const RelatedRequestsTable = ({
             // TODO: why do other tables not trigger eslint issue but this one does?
             const { getRowProps, cells } = { ...row };
             return (
-              <tr {...getRowProps()}>
+              <tr {...getRowProps()} key={{ ...getRowProps() }.key}>
                 {cells.map((cell: Cell<LinkedRequestForTable, any>) => {
                   return (
                     <td
                       {...cell.getCellProps()}
+                      key={{ ...cell.getCellProps() }.key}
                       style={{ width: cell.column.width, paddingLeft: '0' }}
                     >
                       {cell.render('Cell')}

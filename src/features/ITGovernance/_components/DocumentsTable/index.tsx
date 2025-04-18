@@ -257,13 +257,17 @@ const DocumentsTable = ({
       <Table bordered={false} fullWidth scrollable {...getTableProps()}>
         <thead>
           {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
+            <tr
+              {...headerGroup.getHeaderGroupProps()}
+              key={{ ...headerGroup.getHeaderGroupProps() }.key}
+            >
               {headerGroup.headers.map(column => (
                 <th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   aria-sort={getColumnSortStatus(column)}
                   scope="col"
                   className="border-bottom-2px"
+                  key={column.id}
                 >
                   <Button
                     type="button"
@@ -282,10 +286,14 @@ const DocumentsTable = ({
           {page.map(row => {
             prepareRow(row);
             return (
-              <tr {...row.getRowProps()}>
+              <tr {...row.getRowProps()} key={{ ...row.getRowProps() }.key}>
                 {row.cells.map(cell => {
                   return (
-                    <td className="text-ttop" {...cell.getCellProps()}>
+                    <td
+                      className="text-ttop"
+                      {...cell.getCellProps()}
+                      key={{ ...cell.getCellProps() }.key}
+                    >
                       {cell.render('Cell')}
                     </td>
                   );
