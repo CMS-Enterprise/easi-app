@@ -3,6 +3,7 @@
 package models
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"strconv"
@@ -1041,6 +1042,20 @@ func (e Role) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+func (e *Role) UnmarshalJSON(b []byte) error {
+	s, err := strconv.Unquote(string(b))
+	if err != nil {
+		return err
+	}
+	return e.UnmarshalGQL(s)
+}
+
+func (e Role) MarshalJSON() ([]byte, error) {
+	var buf bytes.Buffer
+	e.MarshalGQL(&buf)
+	return buf.Bytes(), nil
+}
+
 // Represents the type of an action that is being done to a system request
 type SystemIntakeActionType string
 
@@ -1139,6 +1154,20 @@ func (e SystemIntakeActionType) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+func (e *SystemIntakeActionType) UnmarshalJSON(b []byte) error {
+	s, err := strconv.Unquote(string(b))
+	if err != nil {
+		return err
+	}
+	return e.UnmarshalGQL(s)
+}
+
+func (e SystemIntakeActionType) MarshalJSON() ([]byte, error) {
+	var buf bytes.Buffer
+	e.MarshalGQL(&buf)
+	return buf.Bytes(), nil
+}
+
 // SystemIntakeRequestEditsOptions represents the current step in the intake process
 type SystemIntakeFormStep string
 
@@ -1181,6 +1210,20 @@ func (e *SystemIntakeFormStep) UnmarshalGQL(v any) error {
 
 func (e SystemIntakeFormStep) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+func (e *SystemIntakeFormStep) UnmarshalJSON(b []byte) error {
+	s, err := strconv.Unquote(string(b))
+	if err != nil {
+		return err
+	}
+	return e.UnmarshalGQL(s)
+}
+
+func (e SystemIntakeFormStep) MarshalJSON() ([]byte, error) {
+	var buf bytes.Buffer
+	e.MarshalGQL(&buf)
+	return buf.Bytes(), nil
 }
 
 type SystemIntakeGRBReviewerRole string
@@ -1244,6 +1287,20 @@ func (e SystemIntakeGRBReviewerRole) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+func (e *SystemIntakeGRBReviewerRole) UnmarshalJSON(b []byte) error {
+	s, err := strconv.Unquote(string(b))
+	if err != nil {
+		return err
+	}
+	return e.UnmarshalGQL(s)
+}
+
+func (e SystemIntakeGRBReviewerRole) MarshalJSON() ([]byte, error) {
+	var buf bytes.Buffer
+	e.MarshalGQL(&buf)
+	return buf.Bytes(), nil
+}
+
 type SystemIntakeGRBReviewerVotingRole string
 
 const (
@@ -1285,6 +1342,20 @@ func (e *SystemIntakeGRBReviewerVotingRole) UnmarshalGQL(v any) error {
 
 func (e SystemIntakeGRBReviewerVotingRole) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+func (e *SystemIntakeGRBReviewerVotingRole) UnmarshalJSON(b []byte) error {
+	s, err := strconv.Unquote(string(b))
+	if err != nil {
+		return err
+	}
+	return e.UnmarshalGQL(s)
+}
+
+func (e SystemIntakeGRBReviewerVotingRole) MarshalJSON() ([]byte, error) {
+	var buf bytes.Buffer
+	e.MarshalGQL(&buf)
+	return buf.Bytes(), nil
 }
 
 // SystemIntakeSoftwareAcquisitionMethods represents the different methods requesters can select in a system intake
@@ -1335,6 +1406,20 @@ func (e SystemIntakeSoftwareAcquisitionMethods) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+func (e *SystemIntakeSoftwareAcquisitionMethods) UnmarshalJSON(b []byte) error {
+	s, err := strconv.Unquote(string(b))
+	if err != nil {
+		return err
+	}
+	return e.UnmarshalGQL(s)
+}
+
+func (e SystemIntakeSoftwareAcquisitionMethods) MarshalJSON() ([]byte, error) {
+	var buf bytes.Buffer
+	e.MarshalGQL(&buf)
+	return buf.Bytes(), nil
+}
+
 // Steps in the system intake process that a Progress to New Step action can progress to
 type SystemIntakeStepToProgressTo string
 
@@ -1381,6 +1466,20 @@ func (e SystemIntakeStepToProgressTo) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+func (e *SystemIntakeStepToProgressTo) UnmarshalJSON(b []byte) error {
+	s, err := strconv.Unquote(string(b))
+	if err != nil {
+		return err
+	}
+	return e.UnmarshalGQL(s)
+}
+
+func (e SystemIntakeStepToProgressTo) MarshalJSON() ([]byte, error) {
+	var buf bytes.Buffer
+	e.MarshalGQL(&buf)
+	return buf.Bytes(), nil
+}
+
 type TagType string
 
 const (
@@ -1422,4 +1521,18 @@ func (e *TagType) UnmarshalGQL(v any) error {
 
 func (e TagType) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+func (e *TagType) UnmarshalJSON(b []byte) error {
+	s, err := strconv.Unquote(string(b))
+	if err != nil {
+		return err
+	}
+	return e.UnmarshalGQL(s)
+}
+
+func (e TagType) MarshalJSON() ([]byte, error) {
+	var buf bytes.Buffer
+	e.MarshalGQL(&buf)
+	return buf.Bytes(), nil
 }
