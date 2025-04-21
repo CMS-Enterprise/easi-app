@@ -631,3 +631,7 @@ func GetSystemIntakesWithGRBReviewHalfwayThrough(ctx context.Context, np sqlutil
 	return intakes, err
 
 }
+
+func GetSystemIntakesWithGRBReviewPastDueNoQuorum(ctx context.Context, np sqlutils.NamedPreparer, logger *zap.Logger) ([]*models.SystemIntake, error) {
+	return nil, nil
+}

@@ -17,6 +17,9 @@ import (
 type grbEmailJobs struct {
 	// SendAsyncVotingHalfwayThroughEmailJob is a job that sends an email when the voting session is halfway through
 	SendAsyncVotingHalfwayThroughEmailJob ScheduledJob
+
+	// SendAsyncPastDueNoQuorumEmailJob is a job that sends and email when a GRB review is past due but quorum is not met
+	SendAsyncPastDueNoQuorumEmailJob ScheduledJob
 }
 
 // GRBEmailJobs is the exported representation of all GRB email scheduled jobs
@@ -25,9 +28,19 @@ var GRBEmailJobs = getGRBEmailJobs(SharedScheduler)
 // getGRBEmailJobs initializes all GRB email jobs
 func getGRBEmailJobs(scheduler *Scheduler) *grbEmailJobs {
 	return &grbEmailJobs{
-		SendAsyncVotingHalfwayThroughEmailJob: NewScheduledJob("SendAsyncVotingHalfwayThroughEmailJob", scheduler,
+		SendAsyncVotingHalfwayThroughEmailJob: NewScheduledJob(
+			"SendAsyncVotingHalfwayThroughEmailJob",
+			scheduler,
 			timing.DailyAt2AM,
-			sendAsyncVotingHalfwayThroughEmailJobFunction),
+			sendAsyncVotingHalfwayThroughEmailJobFunction,
+		),
+
+		SendAsyncPastDueNoQuorumEmailJob: NewScheduledJob(
+			"SendAsyncPastDueNoQuorumEmailJob",
+			scheduler,
+			timing.DailyAt2AM,
+			sendAsyncPastDueNoQuorumEmailJobFunction,
+		),
 	}
 }
 
@@ -95,5 +108,46 @@ func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, schedule
 		}
 
 	}
+	return nil
+}
+
+func sendAsyncPastDueNoQuorumEmailJobFunction(ctx context.Context, scheduledJob *ScheduledJob) error {
+	logger, err := scheduledJob.logger()
+	if err != nil {
+		return err
+	}
+
+	store, err := scheduledJob.store()
+	if err != nil {
+		logger.Error("error getting store from scheduler", zap.Error(err))
+		return err
+	}
+
+	logger.Info("Running GRB review past due no quorum email job")
+
+	emailClient, err := scheduledJob.emailClient()
+	if err != nil {
+		logger.Error("error getting email client from scheduler", zap.Error(err))
+		return err
+	}
+
+	intakes, err := storage.GetSystemIntakesWithGRBReviewPastDueNoQuorum(ctx, store, logger)
+	if err != nil {
+		logger.Error("error getting past due no quorum intakes", zap.Error(err))
+		return err
+	}
+
+	for _, intake := range intakes {
+		if _, err := OneTimeJob(ctx, SharedScheduler, intake, "SendAsyncPastDueNoQuorumEmailJob", func(ctx context.Context, intake *models.SystemIntake) error {
+			_ = emailClient
+			return nil
+		}); err != nil {
+			logger.Error("error scheduling past due no quorum email job", logfields.IntakeID(intake.ID), zap.Error(err))
+			// we chose to continue here instead of returning an error, because we want to send emails to all intakes
+			// even if one of them fails
+			continue
+		}
+	}
+
 	return nil
 }
