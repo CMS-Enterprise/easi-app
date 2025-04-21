@@ -28,21 +28,12 @@ export default defineConfig({
     devSourcemap: true,
     preprocessorOptions: {
       scss: {
-        sourceMap: true,
-        includePaths: [
-          './src/stylesheets',
-          './node_modules/@uswds/uswds/packages'
-        ]
+        api: 'modern-compiler',
+        loadPaths: ['./src/stylesheets', './node_modules/@uswds/uswds/packages']
       }
     },
     postcss: {
       plugins: [autoprefixer]
     }
-  },
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: './src/tests/config.ts',
-    globalSetup: './src/config/global-setup.js'
   }
 });
