@@ -131,6 +131,10 @@ func namedSelect(ctx context.Context, np sqlutils.NamedPreparer, dest any, sqlSt
 		appcontext.ZLogger(ctx).Debug("nil ctx passed to namedSelect")
 	}
 
+	if arguments == nil {
+		arguments = args{}
+	}
+
 	stmt, err := np.PrepareNamed(sqlStatement)
 	if err != nil {
 		return err
@@ -147,6 +151,10 @@ func namedGet(ctx context.Context, np sqlutils.NamedPreparer, dest any, sqlState
 		appcontext.ZLogger(ctx).Debug("nil ctx passed to namedGet")
 	}
 
+	if arguments == nil {
+		arguments = args{}
+	}
+
 	stmt, err := np.PrepareNamed(sqlStatement)
 	if err != nil {
 		return err
@@ -161,6 +169,10 @@ func namedExec(ctx context.Context, np sqlutils.NamedPreparer, sqlStatement stri
 	if ctx == nil {
 		ctx = context.TODO()
 		appcontext.ZLogger(ctx).Debug("nil ctx passed to namedExec")
+	}
+
+	if arguments == nil {
+		arguments = args{}
 	}
 
 	return np.NamedExecContext(ctx, sqlStatement, arguments)

@@ -633,5 +633,12 @@ func GetSystemIntakesWithGRBReviewHalfwayThrough(ctx context.Context, np sqlutil
 }
 
 func GetSystemIntakesWithGRBReviewPastDueNoQuorum(ctx context.Context, np sqlutils.NamedPreparer, logger *zap.Logger) ([]*models.SystemIntake, error) {
-	return nil, nil
+	var intakes []*models.SystemIntake
+
+	if err := namedSelect(ctx, np, &intakes, sqlqueries.SystemIntake.GetWhereGRBPastDueNoQuorum, nil); err != nil {
+		logger.Error("Failed to fetch system intakes with GRB review past due with no quorum met", zap.Error(err))
+		return nil, err
+	}
+
+	return intakes, nil
 }
