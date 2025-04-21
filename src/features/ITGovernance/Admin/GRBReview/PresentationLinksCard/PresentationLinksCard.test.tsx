@@ -12,6 +12,7 @@ import { MessageProvider } from 'hooks/useMessage';
 import { getExpectedAlertType } from 'utils/testing/helpers';
 
 import ITGovAdminContext from '../../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
+import { ModalProvider } from '../RestartReviewModal/RestartReviewModalContext';
 
 import PresentationLinksCard from './PresentationLinksCard';
 
