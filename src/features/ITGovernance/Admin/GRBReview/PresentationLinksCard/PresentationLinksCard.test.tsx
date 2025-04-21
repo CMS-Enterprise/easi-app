@@ -29,12 +29,14 @@ describe('Async Presentation Links Card', () => {
       >
         <MessageProvider>
           <MockedProvider>
-            <ITGovAdminContext.Provider value={isAdmin}>
-              <PresentationLinksCard
-                systemIntakeID={systemIntake.id}
-                grbPresentationLinks={grbPresentationLinks}
-              />
-            </ITGovAdminContext.Provider>
+            <ModalProvider>
+              <ITGovAdminContext.Provider value={isAdmin}>
+                <PresentationLinksCard
+                  systemIntakeID={systemIntake.id}
+                  grbPresentationLinks={grbPresentationLinks}
+                />
+              </ITGovAdminContext.Provider>
+            </ModalProvider>
           </MockedProvider>
         </MessageProvider>
       </MemoryRouter>
