@@ -2138,6 +2138,22 @@ enum GovernanceRequestFeedbackType {
 }
 
 """
+Input structure to extend the GRB review deadline
+"""
+input ExtendGRBReviewDeadlineInput {
+  systemIntakeID: UUID!
+  grbReviewAsyncEndDate: Time!
+}
+
+"""
+Input structure to restart the GRB review process
+"""
+input RestartGRBReviewInput {
+  systemIntakeID: UUID!
+  newGRBEndDate: Time!
+}
+
+"""
 Feedback given to the requester on a governance request
 """
 type GovernanceRequestFeedback {
@@ -2789,6 +2805,10 @@ type Mutation {
   updateSystemIntakeGRBReviewFormPresentationAsync(input: updateSystemIntakeGRBReviewFormInputPresentationAsync!): UpdateSystemIntakePayload
   @hasRole(role: EASI_GOVTEAM)
   updateSystemIntakeGRBReviewFormTimeframeAsync(input: updateSystemIntakeGRBReviewFormInputTimeframeAsync!): UpdateSystemIntakePayload
+  @hasRole(role: EASI_GOVTEAM)
+  extendGRBReviewDeadlineAsync(input: ExtendGRBReviewDeadlineInput!): UpdateSystemIntakePayload
+  @hasRole(role: EASI_GOVTEAM)
+  restartGRBReviewAsync(input: RestartGRBReviewInput!): UpdateSystemIntakePayload
   @hasRole(role: EASI_GOVTEAM)
 
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload

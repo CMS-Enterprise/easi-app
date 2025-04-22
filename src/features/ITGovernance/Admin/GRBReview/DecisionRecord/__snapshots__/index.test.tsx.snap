@@ -1,0 +1,443 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`GRB review decision record table > matches the snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="grid-container padding-bottom-10"
+    data-testid="gridContainer"
+  >
+    <nav
+      aria-label="Breadcrumbs"
+      class="usa-breadcrumb usa-breadcrumb--wrap padding-bottom-0"
+      style="background-color: transparent;"
+    >
+      <ol
+        class="usa-breadcrumb__list"
+      >
+        <li
+          class="usa-breadcrumb__list-item"
+        >
+          <a
+            class="text-primary usa-breadcrumb__link"
+            href="/"
+          >
+            <span>
+              Home
+            </span>
+          </a>
+        </li>
+        <li
+          class="usa-breadcrumb__list-item"
+        >
+          <a
+            class="text-primary usa-breadcrumb__link"
+            href="/it-governance/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/grb-review"
+          >
+            <span>
+              IT Governance request details
+            </span>
+          </a>
+        </li>
+        <li
+          aria-current="page"
+          class="usa-breadcrumb__list-item usa-current"
+        >
+          <span>
+            GRB review decision record
+          </span>
+        </li>
+      </ol>
+    </nav>
+    <h1
+      class="margin-top-5 margin-bottom-105"
+    >
+      Decision record
+    </h1>
+    <p
+      class="font-body-lg text-light margin-top-0"
+    >
+      The list below is a record of all the votes submitted by GRB reviewers for this request.
+    </p>
+    <a
+      class="usa-link display-flex flex-align-center"
+      href="/it-governance/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/grb-review"
+    >
+      <svg
+        class="usa-icon margin-right-1"
+        focusable="false"
+        height="1em"
+        role="img"
+        viewBox="0 0 24 24"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+        />
+      </svg>
+      Return to request details
+    </a>
+    <div
+      class="margin-top-6"
+      data-testid="grb-participants-table"
+    >
+      <div
+        class="usa-table-container--scrollable"
+        data-testid="scrollable-table-container"
+        tabindex="0"
+      >
+        <table
+          class="usa-table usa-table--borderless width-full"
+          data-testid="table"
+        >
+          <thead>
+            <tr
+              role="row"
+            >
+              <th
+                aria-sort="ascending"
+                class="border-bottom-2px"
+                colspan="1"
+                role="columnheader"
+                scope="col"
+                style="width: auto;"
+                title="Toggle SortBy"
+              >
+                <button
+                  class="usa-button usa-button--unstyled width-full flex-justify"
+                  data-testid="button"
+                  style="cursor: pointer;"
+                  title="Toggle SortBy"
+                  type="button"
+                >
+                  Name
+                  <svg
+                    class="usa-icon margin-left-05"
+                    data-testid="caret--up"
+                    focusable="false"
+                    height="1em"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="m12 8-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"
+                    />
+                  </svg>
+                </button>
+              </th>
+              <th
+                aria-sort="none"
+                class="border-bottom-2px"
+                colspan="1"
+                role="columnheader"
+                scope="col"
+                style="width: 160px;"
+                title="Toggle SortBy"
+              >
+                <button
+                  class="usa-button usa-button--unstyled width-full flex-justify"
+                  data-testid="button"
+                  style="cursor: pointer;"
+                  title="Toggle SortBy"
+                  type="button"
+                >
+                  Voting role
+                  <svg
+                    class="usa-icon margin-left-05"
+                    data-testid="caret--sort"
+                    focusable="false"
+                    height="1em"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                    />
+                  </svg>
+                </button>
+              </th>
+              <th
+                aria-sort="none"
+                class="border-bottom-2px"
+                colspan="1"
+                role="columnheader"
+                scope="col"
+                style="width: 350px;"
+                title="Toggle SortBy"
+              >
+                <button
+                  class="usa-button usa-button--unstyled width-full flex-justify"
+                  data-testid="button"
+                  style="cursor: pointer;"
+                  title="Toggle SortBy"
+                  type="button"
+                >
+                  GRB role
+                  <svg
+                    class="usa-icon margin-left-05"
+                    data-testid="caret--sort"
+                    focusable="false"
+                    height="1em"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                    />
+                  </svg>
+                </button>
+              </th>
+              <th
+                aria-sort="none"
+                class="border-bottom-2px"
+                colspan="1"
+                role="columnheader"
+                scope="col"
+                style="width: 350px;"
+                title="Toggle SortBy"
+              >
+                <button
+                  class="usa-button usa-button--unstyled width-full flex-justify"
+                  data-testid="button"
+                  style="cursor: pointer;"
+                  title="Toggle SortBy"
+                  type="button"
+                >
+                  Vote
+                  <svg
+                    class="usa-icon margin-left-05"
+                    data-testid="caret--sort"
+                    focusable="false"
+                    height="1em"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                    />
+                  </svg>
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            role="rowgroup"
+          >
+            <tr
+              data-testid="grbReviewer-ABCD"
+              role="row"
+            >
+              <td
+                role="cell"
+                style="width: auto;"
+              >
+                Adeline Aarons
+              </td>
+              <td
+                role="cell"
+                style="width: 160px;"
+              >
+                Voting
+              </td>
+              <td
+                role="cell"
+                style="width: 350px;"
+              >
+                CMCS Rep
+              </td>
+              <td
+                role="cell"
+                style="width: 350px;"
+              >
+                <div
+                  class="display-flex flex-align-center"
+                  data-testid="grbReviewerVote"
+                >
+                  <p
+                    class="margin-0 display-flex flex-align-center font-body-sm width-card padding-right-2"
+                  >
+                    <svg
+                      class="usa-icon usa-icon--size-3 text-success margin-right-1"
+                      data-testid="icon-CheckCircle"
+                      focusable="false"
+                      height="1em"
+                      role="img"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+                      />
+                    </svg>
+                    No objection
+                  </p>
+                  <button
+                    class="usa-button usa-button--unstyled"
+                    data-testid="button"
+                    type="button"
+                  >
+                    View comment
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr
+              data-testid="grbReviewer-BTMN"
+              role="row"
+            >
+              <td
+                role="cell"
+                style="width: auto;"
+              >
+                Bruce Wayne
+              </td>
+              <td
+                role="cell"
+                style="width: 160px;"
+              >
+                Voting
+              </td>
+              <td
+                role="cell"
+                style="width: 350px;"
+              >
+                Subject Matter Expert (SME)
+              </td>
+              <td
+                role="cell"
+                style="width: 350px;"
+              >
+                <div
+                  class="display-flex flex-align-center"
+                  data-testid="grbReviewerVote"
+                >
+                  <p
+                    class="margin-0 display-flex flex-align-center font-body-sm width-card padding-right-2"
+                  >
+                    <svg
+                      class="usa-icon usa-icon--size-3 text-error margin-right-1"
+                      data-testid="icon-Cancel"
+                      focusable="false"
+                      height="1em"
+                      role="img"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"
+                      />
+                    </svg>
+                    Objection
+                  </p>
+                  <button
+                    class="usa-button usa-button--unstyled"
+                    data-testid="button"
+                    type="button"
+                  >
+                    View comment
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr
+              data-testid="grbReviewer-K8SY"
+              role="row"
+            >
+              <td
+                role="cell"
+                style="width: auto;"
+              >
+                Karen Stanley
+              </td>
+              <td
+                role="cell"
+                style="width: 160px;"
+              >
+                Non-voting
+              </td>
+              <td
+                role="cell"
+                style="width: 350px;"
+              >
+                ACA 3021 Rep
+              </td>
+              <td
+                role="cell"
+                style="width: 350px;"
+              />
+            </tr>
+            <tr
+              data-testid="grbReviewer-USR1"
+              role="row"
+            >
+              <td
+                role="cell"
+                style="width: auto;"
+              >
+                User One
+              </td>
+              <td
+                role="cell"
+                style="width: 160px;"
+              >
+                Voting
+              </td>
+              <td
+                role="cell"
+                style="width: 350px;"
+              >
+                Other
+              </td>
+              <td
+                role="cell"
+                style="width: 350px;"
+              >
+                <div
+                  class="display-flex flex-align-center"
+                  data-testid="grbReviewerVote"
+                >
+                  <p
+                    class="margin-0 display-flex flex-align-center font-body-sm"
+                  >
+                    <svg
+                      class="usa-icon usa-icon--size-3 text-base-light margin-right-1"
+                      data-testid="icon-Help"
+                      focusable="false"
+                      height="1em"
+                      role="img"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
+                      />
+                    </svg>
+                    No vote cast
+                  </p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p
+        aria-live="polite"
+        class="usa-sr-only usa-table__announcement-region"
+      >
+        Requests table sorted by Name ascending
+      </p>
+    </div>
+  </div>
+</DocumentFragment>
+`;

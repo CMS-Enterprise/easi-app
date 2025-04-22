@@ -32,7 +32,7 @@
     ],
 
     "import/no-unresolved": [
-      2, 
+      2,
       { "caseSensitive": false }
    ],
 
@@ -92,7 +92,8 @@
       "node": {
         "paths": ["src"],
         "extensions": [".js", ".jsx", ".ts", ".tsx"]
-      }
+      },
+      "typescript": {}
     }
   },
   "env": {

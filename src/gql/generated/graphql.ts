@@ -744,6 +744,12 @@ export enum ExchangeDirection {
   SENDER = 'SENDER'
 }
 
+/** Input structure to extend the GRB review deadline */
+export type ExtendGRBReviewDeadlineInput = {
+  grbReviewAsyncEndDate: Scalars['Time']['input'];
+  systemIntakeID: Scalars['UUID']['input'];
+};
+
 /**
  * GRBReviewerComparison represents an individual GRB Reviewer within the context of a
  * comparison operation between two system intakes.
@@ -1037,9 +1043,11 @@ export type Mutation = {
   deleteTRBRequestDocument?: Maybe<DeleteTRBRequestDocumentPayload>;
   deleteTRBRequestFundingSources: Array<TRBFundingSource>;
   deleteTrbLeadOption: Scalars['Boolean']['output'];
+  extendGRBReviewDeadlineAsync?: Maybe<UpdateSystemIntakePayload>;
   manuallyEndSystemIntakeGRBReviewAsyncVoting?: Maybe<UpdateSystemIntakePayload>;
   reopenTrbRequest: TRBRequest;
   requestReviewForTRBGuidanceLetter: TRBGuidanceLetter;
+  restartGRBReviewAsync?: Maybe<UpdateSystemIntakePayload>;
   sendCantFindSomethingEmail?: Maybe<Scalars['String']['output']>;
   sendFeedbackEmail?: Maybe<Scalars['String']['output']>;
   sendGRBReviewPresentationDeckReminderEmail: Scalars['Boolean']['output'];
@@ -1363,6 +1371,12 @@ export type MutationDeleteTrbLeadOptionArgs = {
 
 
 /** Defines the mutations for the schema */
+export type MutationExtendGRBReviewDeadlineAsyncArgs = {
+  input: ExtendGRBReviewDeadlineInput;
+};
+
+
+/** Defines the mutations for the schema */
 export type MutationManuallyEndSystemIntakeGRBReviewAsyncVotingArgs = {
   systemIntakeID: Scalars['UUID']['input'];
 };
@@ -1377,6 +1391,12 @@ export type MutationReopenTrbRequestArgs = {
 /** Defines the mutations for the schema */
 export type MutationRequestReviewForTRBGuidanceLetterArgs = {
   id: Scalars['UUID']['input'];
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationRestartGRBReviewAsyncArgs = {
+  input: RestartGRBReviewInput;
 };
 
 
@@ -1850,6 +1870,12 @@ export enum RequestRelationType {
   EXISTING_SYSTEM = 'EXISTING_SYSTEM',
   NEW_SYSTEM = 'NEW_SYSTEM'
 }
+
+/** Input structure to restart the GRB review process */
+export type RestartGRBReviewInput = {
+  newGRBEndDate: Scalars['Time']['input'];
+  systemIntakeID: Scalars['UUID']['input'];
+};
 
 /** A user role associated with a job code */
 export enum Role {

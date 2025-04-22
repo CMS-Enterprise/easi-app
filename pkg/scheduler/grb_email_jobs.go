@@ -2,11 +2,14 @@ package scheduler
 
 import (
 	"context"
+	"errors"
 
 	"go.uber.org/zap"
 
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/logfields"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/scheduler/timing"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
@@ -29,11 +32,11 @@ func getGRBEmailJobs(scheduler *Scheduler) *grbEmailJobs {
 }
 
 func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, scheduledJob *ScheduledJob) error {
-	// contextWithLoader := dataloaders.CTXWithLoaders(ctx, BuildDataloaders(ctx))
+	logger, err := scheduledJob.logger()
+	if err != nil {
+		return err
+	}
 
-	logger := scheduledJob.logger()
-
-	// store := Store(ctx)
 	store, err := scheduledJob.store()
 	if err != nil {
 		logger.Error("error getting store from scheduler", zap.Error(err))
@@ -51,19 +54,40 @@ func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, schedule
 		logger.Error("error fetching system intakes", zap.Error(err))
 		return err
 	}
+
 	for _, intake := range intakes {
-		//TODO
-		/*1. For each of the intakes, send an email to the relevant people on the intake
-		a. consider spinning up a separate job for each email
-		*/
+		if _, err := OneTimeJob(ctx, SharedScheduler, intake, "SendAsyncVotingHalfwayThroughEmailJob", func(ctx context.Context, intake *models.SystemIntake) error {
+			if intake.GRBReviewStartedAt == nil || intake.GrbReviewAsyncEndDate == nil {
+				return errors.New("missing start and/or end date for sending halfway through email")
+			}
 
-		_, err := OneTimeJob(ctx, SharedScheduler, emailClient, "SendAsyncVotingHalfwayThroughEmailJob", func(ctx context.Context, emailClient *email.Client) error {
+			reviewers, err := dataloaders.GetSystemIntakeGRBReviewersBySystemIntakeID(ctx, intake.ID)
+			if err != nil {
+				return err
+			}
 
-			//TODO: this should be fully implemented so that it sends an email. You could also return the emailClient from context, this is merely an example
+			votingInformation := models.GRBVotingInformation{
+				SystemIntake: intake,
+				GRBReviewers: reviewers,
+			}
+
+			if err := emailClient.SystemIntake.SendGRBReviewHalfwayThrough(ctx, email.SendGRBReviewHalfwayThroughInput{
+				SystemIntakeID:     intake.ID,
+				ProjectTitle:       intake.ProjectName.String,
+				RequesterName:      intake.Requester,
+				RequesterComponent: intake.Component.String,
+				StartDate:          *intake.GRBReviewStartedAt,
+				EndDate:            *intake.GrbReviewAsyncEndDate,
+				NoObjectionVotes:   votingInformation.NumberOfNoObjection(),
+				ObjectionVotes:     votingInformation.NumberOfObjection(),
+				NotYetVoted:        votingInformation.NumberOfNotVoted(),
+			}); err != nil {
+				return err
+			}
+
 			logger.Info("sending email to intake owner", logfields.IntakeID(intake.ID))
 			return nil
-		})
-		if err != nil {
+		}); err != nil {
 			logger.Error("error scheduling email job", logfields.IntakeID(intake.ID), zap.Error(err))
 			// we chose to continue here instead of returning an error, because we want to send emails to all intakes
 			// even if one of them fails

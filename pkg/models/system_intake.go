@@ -173,7 +173,7 @@ type SystemIntake struct {
 // SystemIntakes is a list of System Intakes
 type SystemIntakes []SystemIntake
 
-// SystemIntakeFormState represents the possible states of of any System Intake form types.
+// SystemIntakeFormState represents the possible states of any System Intake form types.
 type SystemIntakeFormState string
 
 // These are the options for SystemIntakeRequestFormState
@@ -286,4 +286,10 @@ func (s SystemIntakesByCedarSystemIDsResponse) GetMappingKey() string {
 
 func (s SystemIntakesByCedarSystemIDsResponse) GetMappingVal() *SystemIntake {
 	return &s.SystemIntake
+}
+
+// ExtendGRBReviewDeadlineInput represents input for extending a GRB review deadline
+type ExtendGRBReviewDeadlineInput struct {
+	SystemIntakeID        uuid.UUID `json:"systemIntakeID"`
+	GrbReviewAsyncEndDate time.Time `json:"grbReviewAsyncEndDate"`
 }
