@@ -7,7 +7,7 @@ WHERE (
         sigr.id = si.id
         AND sigr.voting_role = 'VOTING'
         AND sigr.vote IS NOT NULL
-) > 5
+) >= 5
 AND si.grb_review_type = 'ASYNC'
 AND si.grb_review_started_at IS NOT NULL
 AND si.grb_review_async_end_date IS NOT NULL
