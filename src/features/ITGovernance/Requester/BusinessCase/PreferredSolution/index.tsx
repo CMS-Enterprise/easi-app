@@ -515,7 +515,7 @@ const PreferredSolution = ({
                     <ul className="padding-left-205 margin-top-1 margin-bottom-0">
                       <li>{t('pros.immediateImpact')}</li>
                       <li>{t('pros.downstreamImpact')}</li>
-                    </ul>{' '}
+                    </ul>
                   </HelpText>
                   <FieldErrorMsg>
                     {flatErrors['preferredSolution.pros']}
@@ -545,7 +545,7 @@ const PreferredSolution = ({
                     <ul className="padding-left-205 margin-top-1 margin-bottom-0">
                       <li>{t('cons.immediateImpact')}</li>
                       <li>{t('cons.downstreamImpact')}</li>
-                    </ul>{' '}
+                    </ul>
                   </HelpText>
                   <FieldErrorMsg>
                     {flatErrors['preferredSolution.cons']}

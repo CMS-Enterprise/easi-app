@@ -25,8 +25,6 @@ const AlternativeSolutionFields = ({
 
   const { values, errors = {}, setFieldValue } = formikProps;
 
-  const altLabel = t('alternativeLabel', { altLetter });
-
   const altId = `alternative${altLetter}`;
 
   const flatErrors = flattenErrors(errors);
@@ -42,7 +40,7 @@ const AlternativeSolutionFields = ({
           error={!!flatErrors[`${altId}.title`]}
         >
           <Label htmlFor={`BusinessCase-${altId}Title`}>
-            {t('alternativeLabels.title', { altLabel })}
+            {t('solutionTitle')}
           </Label>
           <FieldErrorMsg>{flatErrors[`${altId}.title`]}</FieldErrorMsg>
           <Field
@@ -59,18 +57,18 @@ const AlternativeSolutionFields = ({
           error={!!flatErrors[`${altId}.summary`]}
         >
           <Label htmlFor={`BusinessCase-${altId}Summary`}>
-            {t('alternativeLabels.summary', { altLabel })}
+            {t('solutionSummary.label')}
           </Label>
           <HelpText
             id={`BusinessCase-${altId}SummaryHelp`}
             className="margin-top-1"
           >
-            {t('preferredSolutionSummary.include')}
+            {t('solutionSummary.include')}
             <ul className="padding-left-205 margin-top-1 margin-bottom-0">
-              <li>{t('preferredSolutionSummary.summary')}</li>
-              <li>{t('preferredSolutionSummary.implementation')}</li>
-              <li>{t('preferredSolutionSummary.costs')}</li>
-              <li>{t('preferredSolutionSummary.approaches')}</li>
+              <li>{t('solutionSummary.summary')}</li>
+              <li>{t('solutionSummary.implementation')}</li>
+              <li>{t('solutionSummary.costs')}</li>
+              <li>{t('solutionSummary.approaches')}</li>
             </ul>
           </HelpText>
           <FieldErrorMsg>{flatErrors[`${altId}.summary`]}</FieldErrorMsg>
@@ -89,13 +87,13 @@ const AlternativeSolutionFields = ({
           error={!!flatErrors[`${altId}.acquisitionApproach`]}
         >
           <Label htmlFor={`BusinessCase-${altId}AcquisitionApproach`}>
-            {t('alternativeLabels.acquisitionApproach', { altLabel })}
+            {t('solutionAcquisitionApproach')}
           </Label>
           <HelpText
             id={`BusinessCase-${altId}AcquisitionApproachHelp`}
             className="margin-top-1"
           >
-            {t('preferredSolutionApproachHelpText')}
+            {t('solutionAcquisitionApproachHelpText')}
           </HelpText>
           <FieldErrorMsg>
             {flatErrors[`${altId}.acquisitionApproach`]}
@@ -350,14 +348,16 @@ const AlternativeSolutionFields = ({
           scrollElement={`${altId}.pros`}
           error={!!flatErrors[`${altId}.pros`]}
         >
-          <Label htmlFor={`BusinessCase-${altId}Pros`}>
-            {t('alternativeLabels.pros', { altLabel })}
-          </Label>
+          <Label htmlFor={`BusinessCase-${altId}Pros`}>{t('pros.label')}</Label>
           <HelpText
             id={`BusinessCase-${altId}ProsHelp`}
             className="margin-top-1"
           >
-            {t('preferredSolutionProsHelpText')}
+            {t('pros.include')}
+            <ul className="padding-left-205 margin-top-1 margin-bottom-0">
+              <li>{t('pros.immediateImpact')}</li>
+              <li>{t('pros.downstreamImpact')}</li>
+            </ul>
           </HelpText>
           <FieldErrorMsg>{flatErrors[`${altId}.pros`]}</FieldErrorMsg>
           <Field
@@ -374,14 +374,16 @@ const AlternativeSolutionFields = ({
           scrollElement={`${altId}.cons`}
           error={!!flatErrors[`${altId}.cons`]}
         >
-          <Label htmlFor={`BusinessCase-${altId}Cons`}>
-            {t('alternativeLabels.cons', { altLabel })}
-          </Label>
+          <Label htmlFor={`BusinessCase-${altId}Cons`}>{t('cons.label')}</Label>
           <HelpText
             id={`BusinessCase-${altId}ConsHelp`}
             className="margin-top-1"
           >
-            {t('preferredSolutionConsHelpText')}
+            {t('cons.include')}
+            <ul className="padding-left-205 margin-top-1 margin-bottom-0">
+              <li>{t('cons.immediateImpact')}</li>
+              <li>{t('cons.downstreamImpact')}</li>
+            </ul>{' '}
           </HelpText>
           <FieldErrorMsg>{flatErrors[`${altId}.cons`]}</FieldErrorMsg>
           <Field
