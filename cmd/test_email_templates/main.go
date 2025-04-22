@@ -825,4 +825,18 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 			RequesterComponent: "Center for Medicare",
 		})
 	noErr(err)
+
+	err = client.SystemIntake.SendGRBReviewHalfwayThrough(ctx,
+		email.SendGRBReviewHalfwayThroughInput{
+			SystemIntakeID:     intakeID,
+			ProjectTitle:       "Halfway through title",
+			RequesterName:      "Requester Halfway",
+			RequesterComponent: "Center for Medicare",
+			StartDate:          time.Now().AddDate(0, 0, -1),
+			EndDate:            time.Now().AddDate(0, 0, 5),
+			NoObjectionVotes:   2,
+			ObjectionVotes:     3,
+			NotYetVoted:        1,
+		})
+	noErr(err)
 }

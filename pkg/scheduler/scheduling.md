@@ -10,7 +10,7 @@ The library allows us to use cron syntax to schedule recurring and one time jobs
 
 ### Shared Scheduler [`pkg/scheduler/shared_scheduler.go`](shared_scheduler.go)
 
-The Shared Scheduler is a singleton instance provides a mechanism to declare a `gocron` job in it's own file and register to a singleton scheduler at run time. The scheduler iterates through a map of jobs to create the instance of the job with dependencies in the routes file. 
+The Shared Scheduler is a singleton instance provides a mechanism to declare a `gocron` job in it's own file and register to a singleton scheduler at run time. The scheduler iterates through a map of jobs to create the instance of the job with dependencies in the routes file.
 
 The Scheduler is stopped by calling defer `StopScheduler` in the serve command
 
@@ -48,11 +48,7 @@ func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, schedule
 
 Dependencies are handled through the Scheduler struct. They are passed in upon initialization, which happens in the main thread.
 
-Jobs themselves currently have a reference to their scheduler, so dependencies can be retrieved. There are convenience methods to retrieve the needed dependencies. 
-
-Dependencies also exist in the context. The context is provided to every job when the shared scheduler is started.
-
-The method `CreateSchedulerContext` in [`context.go`](context.go) demonstrates what currently exists on the job. It is important if creating a job through another location in the code to provide the needed parameters to the context.
+Jobs themselves currently have a reference to their scheduler, so dependencies can be retrieved. There are convenience methods to retrieve the needed dependencies.
 
 ### One Time Jobs
 
