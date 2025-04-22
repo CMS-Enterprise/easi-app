@@ -845,9 +845,13 @@ type SystemIntake {
   """
   relatedTRBRequests: [TRBRequest!]!
   """
-  GRB Review Discussion Posts/Threads
+  GRB Review Primary Discussion Board Posts/Threads
   """
-  grbDiscussions: [SystemIntakeGRBReviewDiscussion!]!
+  grbDiscussionsPrimary: [SystemIntakeGRBReviewDiscussion!]!
+  """
+  GRB Review Internal Discussion Board Posts/Threads
+  """
+  grbDiscussionsInternal: [SystemIntakeGRBReviewDiscussion!]!
   """
   GRB Presentation Link Data
   """

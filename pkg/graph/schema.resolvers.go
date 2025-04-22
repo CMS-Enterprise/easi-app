@@ -1984,8 +1984,13 @@ func (r *systemIntakeResolver) RelatedTRBRequests(ctx context.Context, obj *mode
 	return resolvers.SystemIntakeRelatedTRBRequests(ctx, obj.ID)
 }
 
-// GrbDiscussions is the resolver for the grbDiscussions field.
-func (r *systemIntakeResolver) GrbDiscussions(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewDiscussion, error) {
+// GrbDiscussionsPrimary is the resolver for the grbDiscussionsPrimary field.
+func (r *systemIntakeResolver) GrbDiscussionsPrimary(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewDiscussion, error) {
+	return resolvers.SystemIntakeGRBDiscussions(ctx, obj.ID)
+}
+
+// GrbDiscussionsInternal is the resolver for the grbDiscussionsInternal field.
+func (r *systemIntakeResolver) GrbDiscussionsInternal(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewDiscussion, error) {
 	return resolvers.SystemIntakeGRBDiscussions(ctx, obj.ID)
 }
 
