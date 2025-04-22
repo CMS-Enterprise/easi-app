@@ -9813,13 +9813,20 @@ enum SystemIntakeGRBReviewType {
   ASYNC
 }
 
+enum SystemIntakeGRBDiscussionBoardType {
+  PRIMARY
+  INTERNAL
+}
+
 input createSystemIntakeGRBDiscussionPostInput {
   systemIntakeID: UUID!
+  discussionBoardType: SystemIntakeGRBDiscussionBoardType!
   content: TaggedHTML!
 }
 
 input createSystemIntakeGRBDiscussionReplyInput {
   initialPostID: UUID!
+  discussionBoardType: SystemIntakeGRBDiscussionBoardType!
   content: TaggedHTML!
 }
 
@@ -67561,7 +67568,7 @@ func (ec *executionContext) unmarshalInputcreateSystemIntakeGRBDiscussionPostInp
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemIntakeID", "content"}
+	fieldsInOrder := [...]string{"systemIntakeID", "discussionBoardType", "content"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -67575,6 +67582,13 @@ func (ec *executionContext) unmarshalInputcreateSystemIntakeGRBDiscussionPostInp
 				return it, err
 			}
 			it.SystemIntakeID = data
+		case "discussionBoardType":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("discussionBoardType"))
+			data, err := ec.unmarshalNSystemIntakeGRBDiscussionBoardType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBDiscussionBoardType(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.DiscussionBoardType = data
 		case "content":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("content"))
 			data, err := ec.unmarshalNTaggedHTML2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTaggedHTML(ctx, v)
@@ -67595,7 +67609,7 @@ func (ec *executionContext) unmarshalInputcreateSystemIntakeGRBDiscussionReplyIn
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"initialPostID", "content"}
+	fieldsInOrder := [...]string{"initialPostID", "discussionBoardType", "content"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -67609,6 +67623,13 @@ func (ec *executionContext) unmarshalInputcreateSystemIntakeGRBDiscussionReplyIn
 				return it, err
 			}
 			it.InitialPostID = data
+		case "discussionBoardType":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("discussionBoardType"))
+			data, err := ec.unmarshalNSystemIntakeGRBDiscussionBoardType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBDiscussionBoardType(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.DiscussionBoardType = data
 		case "content":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("content"))
 			data, err := ec.unmarshalNTaggedHTML2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTaggedHTML(ctx, v)
@@ -80709,6 +80730,16 @@ func (ec *executionContext) unmarshalNSystemIntakeFundingSourceInput2ᚕᚖgithu
 func (ec *executionContext) unmarshalNSystemIntakeFundingSourceInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeFundingSourceInput(ctx context.Context, v any) (*models.SystemIntakeFundingSourceInput, error) {
 	res, err := ec.unmarshalInputSystemIntakeFundingSourceInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNSystemIntakeGRBDiscussionBoardType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBDiscussionBoardType(ctx context.Context, v any) (models.SystemIntakeGRBDiscussionBoardType, error) {
+	var res models.SystemIntakeGRBDiscussionBoardType
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSystemIntakeGRBDiscussionBoardType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBDiscussionBoardType(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeGRBDiscussionBoardType) graphql.Marshaler {
+	return v
 }
 
 func (ec *executionContext) unmarshalNSystemIntakeGRBPresentationLinksInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBPresentationLinksInput(ctx context.Context, v any) (models.SystemIntakeGRBPresentationLinksInput, error) {

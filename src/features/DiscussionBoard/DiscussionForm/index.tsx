@@ -6,6 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, ButtonGroup, Form, FormGroup } from '@trussworks/react-uswds';
 import {
   GetSystemIntakeGRBDiscussionsDocument,
+  SystemIntakeGRBDiscussionBoardType,
   useCreateSystemIntakeGRBDiscussionPostMutation,
   useCreateSystemIntakeGRBDiscussionReplyMutation
 } from 'gql/generated/graphql';
@@ -81,6 +82,7 @@ const DiscussionForm = ({
         variables: {
           input: {
             systemIntakeID: mutationProps.systemIntakeID,
+            discussionBoardType: SystemIntakeGRBDiscussionBoardType.INTERNAL,
             content
           }
         }
@@ -109,6 +111,7 @@ const DiscussionForm = ({
         variables: {
           input: {
             initialPostID: mutationProps.initialPostID,
+            discussionBoardType: SystemIntakeGRBDiscussionBoardType.INTERNAL,
             content
           }
         }

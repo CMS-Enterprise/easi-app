@@ -2378,6 +2378,11 @@ export type SystemIntakeFundingSourcesInput = {
   fundingSources: Array<SystemIntakeFundingSourceInput>;
 };
 
+export enum SystemIntakeGRBDiscussionBoardType {
+  INTERNAL = 'INTERNAL',
+  PRIMARY = 'PRIMARY'
+}
+
 /**
  * Represents a single row of presentation link and document data for a system intake's Async GRB review
  * All data values are optional but there is a constraint to require one data value on insertion
@@ -3446,11 +3451,13 @@ export type UserInfo = {
 
 export type CreateSystemIntakeGRBDiscussionPostInput = {
   content: Scalars['TaggedHTML']['input'];
+  discussionBoardType: SystemIntakeGRBDiscussionBoardType;
   systemIntakeID: Scalars['UUID']['input'];
 };
 
 export type CreateSystemIntakeGRBDiscussionReplyInput = {
   content: Scalars['TaggedHTML']['input'];
+  discussionBoardType: SystemIntakeGRBDiscussionBoardType;
   initialPostID: Scalars['UUID']['input'];
 };
 

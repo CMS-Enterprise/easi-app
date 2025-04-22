@@ -1410,13 +1410,20 @@ enum SystemIntakeGRBReviewType {
   ASYNC
 }
 
+enum SystemIntakeGRBDiscussionBoardType {
+  PRIMARY
+  INTERNAL
+}
+
 input createSystemIntakeGRBDiscussionPostInput {
   systemIntakeID: UUID!
+  discussionBoardType: SystemIntakeGRBDiscussionBoardType!
   content: TaggedHTML!
 }
 
 input createSystemIntakeGRBDiscussionReplyInput {
   initialPostID: UUID!
+  discussionBoardType: SystemIntakeGRBDiscussionBoardType!
   content: TaggedHTML!
 }
 

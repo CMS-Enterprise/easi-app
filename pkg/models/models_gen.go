@@ -1002,13 +1002,15 @@ type UserError struct {
 }
 
 type CreateSystemIntakeGRBDiscussionPostInput struct {
-	SystemIntakeID uuid.UUID  `json:"systemIntakeID"`
-	Content        TaggedHTML `json:"content"`
+	SystemIntakeID      uuid.UUID                          `json:"systemIntakeID"`
+	DiscussionBoardType SystemIntakeGRBDiscussionBoardType `json:"discussionBoardType"`
+	Content             TaggedHTML                         `json:"content"`
 }
 
 type CreateSystemIntakeGRBDiscussionReplyInput struct {
-	InitialPostID uuid.UUID  `json:"initialPostID"`
-	Content       TaggedHTML `json:"content"`
+	InitialPostID       uuid.UUID                          `json:"initialPostID"`
+	DiscussionBoardType SystemIntakeGRBDiscussionBoardType `json:"discussionBoardType"`
+	Content             TaggedHTML                         `json:"content"`
 }
 
 // Input data used to set or update a System Intake's GRB Review Presentation (Async) data
@@ -1265,6 +1267,47 @@ func (e *SystemIntakeFormStep) UnmarshalGQL(v any) error {
 }
 
 func (e SystemIntakeFormStep) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type SystemIntakeGRBDiscussionBoardType string
+
+const (
+	SystemIntakeGRBDiscussionBoardTypePrimary  SystemIntakeGRBDiscussionBoardType = "PRIMARY"
+	SystemIntakeGRBDiscussionBoardTypeInternal SystemIntakeGRBDiscussionBoardType = "INTERNAL"
+)
+
+var AllSystemIntakeGRBDiscussionBoardType = []SystemIntakeGRBDiscussionBoardType{
+	SystemIntakeGRBDiscussionBoardTypePrimary,
+	SystemIntakeGRBDiscussionBoardTypeInternal,
+}
+
+func (e SystemIntakeGRBDiscussionBoardType) IsValid() bool {
+	switch e {
+	case SystemIntakeGRBDiscussionBoardTypePrimary, SystemIntakeGRBDiscussionBoardTypeInternal:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeGRBDiscussionBoardType) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeGRBDiscussionBoardType) UnmarshalGQL(v any) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeGRBDiscussionBoardType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeGRBDiscussionBoardType", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeGRBDiscussionBoardType) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
