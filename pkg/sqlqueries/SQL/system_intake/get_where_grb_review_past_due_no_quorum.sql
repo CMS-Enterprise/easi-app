@@ -4,7 +4,7 @@ WHERE (
     SELECT COUNT(id)
     FROM system_intake_grb_reviewers sigr
     WHERE
-        sigr.id = si.id
+        sigr.system_intake_id = si.id
         AND sigr.voting_role = 'VOTING'
         AND sigr.vote IS NOT NULL
 ) < 5 -- 5 is the required number of votes for quorum
