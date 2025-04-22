@@ -19,7 +19,7 @@ import HelpText from 'components/HelpText';
 import IconButton from 'components/IconButton';
 import PageNumber from 'components/PageNumber';
 import TextAreaField from 'components/TextAreaField';
-import { alternativeSolutionHasFilledFields } from 'data/businessCase';
+// import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { yesNoMap } from 'data/common';
 import { BusinessCaseModel, PreferredSolutionForm } from 'types/businessCase';
 import { LifecycleCosts } from 'types/estimatedLifecycle';
@@ -65,23 +65,7 @@ const PreferredSolution = ({
 
         return (
           <BusinessCaseStepWrapper
-            title={t('alternatives')}
-            description={
-              <>
-                <p>{t('alternativesDescription.text.0')}</p>
-                <p className="margin-bottom-0">
-                  {t('alternativesDescription.text.1')}
-                </p>
-                <ul className="padding-left-205 margin-top-0">
-                  <li>{t('alternativesDescription.list.0')}</li>
-                  <li>{t('alternativesDescription.list.1')}</li>
-                  <li>{t('alternativesDescription.list.2')}</li>
-                  <li>{t('alternativesDescription.list.3')}</li>
-                  <li>{t('alternativesDescription.list.4')}</li>
-                </ul>
-                <p>{t('alternativesDescription.text.2')}</p>
-              </>
-            }
+            title={t('preferredSolution')}
             systemIntakeId={businessCase.systemIntakeId}
             data-testid="preferred-solution"
             errors={flatErrors}
@@ -89,7 +73,20 @@ const PreferredSolution = ({
           >
             <Form>
               <div className="tablet:grid-col-9">
-                <h2>{t('preferredSolution')}</h2>
+                <IconButton
+                  type="button"
+                  icon={<Icon.ArrowBack />}
+                  className="margin-bottom-3 margin-top-2"
+                  onClick={() => {
+                    dispatchSave();
+                    history.push(
+                      `/business/${businessCase.systemIntakeId}/alternative-analysis`
+                    );
+                  }}
+                  unstyled
+                >
+                  {t('Save & return to Business Case')}
+                </IconButton>
 
                 <FieldGroup
                   scrollElement="preferredSolution.title"
@@ -616,22 +613,15 @@ const PreferredSolution = ({
               onClick={() => {
                 dispatchSave();
                 history.push(
-                  `/governance-task-list/${businessCase.systemIntakeId}`
+                  `/business/${businessCase.systemIntakeId}/alternative-analysis`
                 );
               }}
               unstyled
             >
-              {t('Save & Exit')}
+              {t('Save & return to Business Case')}
             </IconButton>
 
-            <PageNumber
-              currentPage={4}
-              totalPages={
-                alternativeSolutionHasFilledFields(businessCase.alternativeB)
-                  ? 6
-                  : 5
-              }
-            />
+            <PageNumber currentPage={4} totalPages={5} />
             <AutoSave
               values={values}
               onSave={dispatchSave}

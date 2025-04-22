@@ -12,7 +12,7 @@ import HelpText from 'components/HelpText';
 import IconButton from 'components/IconButton';
 import PageNumber from 'components/PageNumber';
 import TextAreaField from 'components/TextAreaField';
-import { alternativeSolutionHasFilledFields } from 'data/businessCase';
+// import { alternativeSolutionHasFilledFields } from 'data/businessCase'; // TODO: NJD - remove?
 import { BusinessCaseModel, RequestDescriptionForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
 import { BusinessCaseSchema } from 'validations/businessCaseSchema';
@@ -252,14 +252,7 @@ const RequestDescription = ({
               {t('Save & Exit')}
             </IconButton>
 
-            <PageNumber
-              currentPage={2}
-              totalPages={
-                alternativeSolutionHasFilledFields(businessCase.alternativeB)
-                  ? 6
-                  : 5
-              }
-            />
+            <PageNumber currentPage={2} totalPages={5} />
 
             <AutoSave
               values={values}

@@ -4,7 +4,6 @@ import { useHistory } from 'react-router-dom';
 import { Button, ButtonGroup, Icon } from '@trussworks/react-uswds';
 import { Form, Formik, FormikProps } from 'formik';
 
-import Alert from 'components/Alert';
 import AutoSave from 'components/AutoSave';
 import HelpText from 'components/HelpText';
 import IconButton from 'components/IconButton';
@@ -57,38 +56,25 @@ const AlternativeSolutionA = ({
         return (
           <BusinessCaseStepWrapper
             systemIntakeId={businessCase.systemIntakeId}
-            title={t('alternatives')}
-            description={
-              <>
-                <p>{t('alternativesDescription.text.0')}</p>
-                <p className="margin-bottom-0">
-                  {t('alternativesDescription.text.1')}
-                </p>
-                <ul className="padding-left-205 margin-top-0">
-                  <li>{t('alternativesDescription.list.0')}</li>
-                  <li>{t('alternativesDescription.list.1')}</li>
-                  <li>{t('alternativesDescription.list.2')}</li>
-                  <li>{t('alternativesDescription.list.3')}</li>
-                  <li>{t('alternativesDescription.list.4')}</li>
-                </ul>
-                <p>{t('alternativesDescription.text.2')}</p>
-              </>
-            }
+            title={t('alternativeA')}
             errors={flatErrors}
             data-testid="alternative-solution-a"
           >
-            <Alert
-              type="info"
-              slim
-              role="alert"
-              aria-live="polite"
-              className="tablet:grid-col-8 margin-top-2"
-            >
-              {t('alternativesOptional')}
-            </Alert>
-
             <Form>
-              <h2 className="margin-y-4">{t('alternativeA')}</h2>
+              <IconButton
+                type="button"
+                icon={<Icon.ArrowBack />}
+                className="margin-bottom-3 margin-top-2"
+                onClick={() => {
+                  dispatchSave();
+                  history.push(
+                    `/business/${businessCase.systemIntakeId}/alternative-analysis`
+                  );
+                }}
+                unstyled
+              >
+                {t('Save & return to Business Case')}
+              </IconButton>
 
               <AlternativeSolutionFields
                 altLetter="A"
@@ -179,12 +165,12 @@ const AlternativeSolutionA = ({
               onClick={() => {
                 dispatchSave();
                 history.push(
-                  `/governance-task-list/${businessCase.systemIntakeId}`
+                  `/business/${businessCase.systemIntakeId}/alternative-analysis`
                 );
               }}
               unstyled
             >
-              {t('Save & Exit')}
+              {t('Save & return to Business Case')}
             </IconButton>
 
             <PageNumber

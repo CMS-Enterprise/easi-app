@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Button, ButtonGroup, Icon } from '@trussworks/react-uswds';
 import { Form, Formik, FormikProps } from 'formik';
@@ -9,12 +8,8 @@ import Alert from 'components/Alert';
 import AutoSave from 'components/AutoSave';
 import IconButton from 'components/IconButton';
 import PageNumber from 'components/PageNumber';
-import {
-  alternativeSolutionHasFilledFields,
-  defaultProposedSolution
-} from 'data/businessCase';
+import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
-import { putBusinessCase } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
 import { BusinessCaseFinalValidationSchema } from 'validations/businessCaseSchema';
 
@@ -35,7 +30,6 @@ const AlternativeSolutionB = ({
   dispatchSave,
   isFinal
 }: AlternativeSolutionBProps) => {
-  const dispatch = useDispatch();
   const history = useHistory();
   const { t } = useTranslation('businessCase');
 
@@ -61,23 +55,7 @@ const AlternativeSolutionB = ({
         return (
           <BusinessCaseStepWrapper
             systemIntakeId={businessCase.systemIntakeId}
-            title={t('alternatives')}
-            description={
-              <>
-                <p>{t('alternativesDescription.text.0')}</p>
-                <p className="margin-bottom-0">
-                  {t('alternativesDescription.text.1')}
-                </p>
-                <ul className="padding-left-205 margin-top-0">
-                  <li>{t('alternativesDescription.list.0')}</li>
-                  <li>{t('alternativesDescription.list.1')}</li>
-                  <li>{t('alternativesDescription.list.2')}</li>
-                  <li>{t('alternativesDescription.list.3')}</li>
-                  <li>{t('alternativesDescription.list.4')}</li>
-                </ul>
-                <p>{t('alternativesDescription.text.2')}</p>
-              </>
-            }
+            title={t('alternativeB')}
             errors={flatErrors}
             data-testid="alternative-solution-b"
           >
@@ -92,34 +70,20 @@ const AlternativeSolutionB = ({
             </Alert>
 
             <Form>
-              <div className="easi-business-case__name-wrapper tablet:grid-col-9">
-                <h2 className="margin-0">{t('alternativeB')}</h2>
-                <Button
-                  type="button"
-                  className="margin-left-2"
-                  unstyled
-                  onClick={() => {
-                    if (
-                      // eslint-disable-next-line no-alert
-                      window.confirm(t('confirmRemoveAlternativeB'))
-                    ) {
-                      // TODO: NJD - define this somewhere?
-                      dispatch(
-                        putBusinessCase({
-                          ...businessCase,
-                          alternativeB: defaultProposedSolution
-                        })
-                      );
-                      history.replace(
-                        `/business/${businessCase.id}/alternative-solution-a`
-                      );
-                    }
-                  }}
-                >
-                  {t('removeAlternativeB')}
-                </Button>
-              </div>
-
+              <IconButton
+                type="button"
+                icon={<Icon.ArrowBack />}
+                className="margin-bottom-3 margin-top-2"
+                onClick={() => {
+                  dispatchSave();
+                  history.push(
+                    `/business/${businessCase.systemIntakeId}/alternative-analysis`
+                  );
+                }}
+                unstyled
+              >
+                {t('Save & return to Business Case')}
+              </IconButton>
               <AlternativeSolutionFields
                 altLetter="B"
                 businessCaseCreatedAt={businessCase.createdAt}
@@ -170,16 +134,16 @@ const AlternativeSolutionB = ({
             <IconButton
               type="button"
               icon={<Icon.ArrowBack />}
-              className="margin-top-2 margin-bottom-3"
+              className="margin-bottom-3 margin-top-2"
               onClick={() => {
                 dispatchSave();
                 history.push(
-                  `/governance-task-list/${businessCase.systemIntakeId}`
+                  `/business/${businessCase.systemIntakeId}/alternative-analysis`
                 );
               }}
               unstyled
             >
-              {t('Save & Exit')}
+              {t('Save & return to Business Case')}
             </IconButton>
 
             <PageNumber currentPage={6} totalPages={6} />

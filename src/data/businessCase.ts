@@ -110,7 +110,6 @@ export const businessCaseInitialData: BusinessCaseModel = {
   priorityAlignment: '',
   successIndicators: '',
   // proposedSolutions: [cloneDeep(defaultProposedSolution)],
-  // TODO: NJD - remove
   preferredSolution: cloneDeep(defaultProposedSolution),
   alternativeA: cloneDeep(defaultProposedSolution),
   alternativeB: cloneDeep(defaultProposedSolution),
@@ -119,6 +118,8 @@ export const businessCaseInitialData: BusinessCaseModel = {
 };
 
 type lifecycleCostLinesType = Record<LifecycleSolution, LifecycleCosts>;
+
+// TODO: NJD - rename this to be more generic (businessCaseHadFilledFields?)
 
 /**
  * This function tells us whether the parameter alternativeSolution has been started
@@ -235,7 +236,6 @@ export const prepareBusinessCaseForApp = (
     priorityAlignment: businessCase.priorityAlignment || '',
     successIndicators: businessCase.successIndicators || '',
     // proposedSolutions: [],
-    // TODO: NJD - remove
     preferredSolution: {
       title: businessCase.preferredTitle || '',
       summary: businessCase.preferredSummary || '',
@@ -337,10 +337,12 @@ export const prepareBusinessCaseForApi = (
   businessCase: BusinessCaseModel
 ): any => {
   const alternativeBExists = alternativeSolutionHasFilledFields(
+    // businessCase.alternativeB
     businessCase.alternativeB
   );
 
   const alternativeAExists = alternativeSolutionHasFilledFields(
+    // businessCase.alternativeA
     businessCase.alternativeA
   );
 

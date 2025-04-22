@@ -67,6 +67,35 @@ const businessCase = {
       'Using an Enterprise Shared Service'
     ]
   },
+  alternativesTable: {
+    type: 'Alternative type',
+    title: 'Solution title',
+    status: 'Status',
+    actions: 'Actions',
+    notSpecified: 'Not yet specified',
+    solutions: [
+      {
+        heading: 'Preferred Solution',
+        required: true,
+        helpText:
+          'This should reflect the intended direction of your project as you have outlined in other pages of your Business Case.',
+        add: 'Add preferred solution'
+      },
+      {
+        heading: 'Alternative A',
+        required: true,
+        helpText:
+          'This alternative should outline a different solution that you considered or evaluated to address your core business need.',
+        add: 'Add alternative A'
+      },
+      {
+        heading: 'Alternative B',
+        required: false,
+        helpText: '', // TODO: find better way of not displaying text here - check against required?
+        add: 'Add alternative B'
+      }
+    ]
+  },
   preferredSolution: 'Preferred solution',
   preferredSolutionTitle: 'Preferred solution: Title',
   preferredSolutionSummary: {

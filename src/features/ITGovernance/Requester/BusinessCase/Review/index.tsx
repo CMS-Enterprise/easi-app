@@ -6,7 +6,7 @@ import { Button, ButtonGroup } from '@trussworks/react-uswds';
 import { AppState } from 'stores/reducers/rootReducer';
 
 import BusinessCaseReview from 'components/BusinessCaseReview';
-import { alternativeSolutionHasFilledFields } from 'data/businessCase';
+// import { alternativeSolutionHasFilledFields } from 'data/businessCase'; // TODO: NJD - remove?
 import { BusinessCaseModel } from 'types/businessCase';
 import { postAction } from 'types/routines';
 
@@ -42,11 +42,7 @@ const Review = ({ businessCase, isFinal }: ReviewProps) => {
             type="button"
             outline
             onClick={() => {
-              const newUrl = alternativeSolutionHasFilledFields(
-                businessCase.alternativeB
-              )
-                ? 'alternative-solution-b'
-                : 'alternative-solution-a';
+              const newUrl = 'alternative-analysis';
               history.push(newUrl);
             }}
           >
