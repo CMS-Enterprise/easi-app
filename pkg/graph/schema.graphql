@@ -845,9 +845,13 @@ type SystemIntake {
   """
   relatedTRBRequests: [TRBRequest!]!
   """
-  GRB Review Discussion Posts/Threads
+  GRB Review Primary Discussion Board Posts/Threads
   """
-  grbDiscussions: [SystemIntakeGRBReviewDiscussion!]!
+  grbDiscussionsPrimary: [SystemIntakeGRBReviewDiscussion!]!
+  """
+  GRB Review Internal Discussion Board Posts/Threads
+  """
+  grbDiscussionsInternal: [SystemIntakeGRBReviewDiscussion!]!
   """
   GRB Presentation Link Data
   """
@@ -1406,13 +1410,20 @@ enum SystemIntakeGRBReviewType {
   ASYNC
 }
 
+enum SystemIntakeGRBDiscussionBoardType {
+  PRIMARY
+  INTERNAL
+}
+
 input createSystemIntakeGRBDiscussionPostInput {
   systemIntakeID: UUID!
+  discussionBoardType: SystemIntakeGRBDiscussionBoardType!
   content: TaggedHTML!
 }
 
 input createSystemIntakeGRBDiscussionReplyInput {
   initialPostID: UUID!
+  discussionBoardType: SystemIntakeGRBDiscussionBoardType!
   content: TaggedHTML!
 }
 
@@ -1932,6 +1943,7 @@ type TRBRequestAttendee {
 # lint-disable defined-types-are-used
 enum TagType {
   USER_ACCOUNT
+  REQUESTER
   GROUP_IT_GOV
   GROUP_GRB_REVIEWERS
 }
