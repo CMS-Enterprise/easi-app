@@ -97,9 +97,9 @@ const businessCase = {
     ]
   },
   preferredSolution: 'Preferred solution',
-  preferredSolutionTitle: 'Preferred solution: Title',
-  preferredSolutionSummary: {
-    label: 'Preferred solution: Summary',
+  solutionTitle: 'Solution title',
+  solutionSummary: {
+    label: 'Summary',
     include: 'Please include:',
     summary:
       'a brief summary of the proposed IT solution including any associated software products,',
@@ -108,9 +108,9 @@ const businessCase = {
     costs: 'costs (e.g. services, software, Operation and Maintenance),',
     approaches: 'and potential acquisition approaches'
   },
-  preferredSolutionApproach: 'Preferred solution: Acquisition approach',
-  preferredSolutionApproachHelpText:
-    'Describe the approach to acquiring the products and services required to deliver the system, including potential contract vehicles.',
+  solutionAcquisitionApproach: 'Acquisition approach',
+  solutionAcquisitionApproachHelpText:
+    "Describe the approach to acquiring the products and services required to deliver the system. Responses should address the project team's contracting approach such as the contract vehicle, if it is an IDIQ, sole source vs competition, whether it is a small business set aside, and/or any other relvant information.",
   isApproved:
     'Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?',
   isBeingReviewed: 'Is it in the process of CMS approval?',
@@ -124,8 +124,30 @@ const businessCase = {
   cloudServiceType:
     'What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?',
   dataCenterLocation: 'Which data center do you plan to host it at?',
-  hasUserInterface: 'Will your solution have a User Interface?',
+  hasUserInterface:
+    'Will your solution have a User Interface, be public facing, or involve outside customers?',
+  prosAndCons: 'Pros and cons',
+  prosAndConsHelpText:
+    'Summarize the capabilities of the recommended technology or tools and how they will or will not meet user and stakeholder requirements.',
   notSure: "I'm not sure",
+  pros: {
+    label: 'Pros',
+    include: 'Please include both:',
+    immediateImpact:
+      'the immeidate impact to your team and/or your project if this solution is selected',
+    downstreamImpact:
+      'the downstream impact to CMS, other systems, or other users if this solution is selected'
+  },
+  // TODO: NJD - I don't like this "NOT" wording, hash out with Zoe / Gov Team
+  // TODO: NJD - can also probably combine pros and cons into one group?
+  cons: {
+    label: 'Cons',
+    include: 'Please include both:',
+    immediateImpact:
+      'the immeidate impact to your team and/or your project if this solution is NOT selected',
+    downstreamImpact:
+      'the downstream impact to CMS, other systems, or other users if this solution is NOT selected'
+  },
   preferredSolutionPros: 'Preferred solution: Pros',
   preferredSolutionProsHelpText:
     'Identify any aspects of this solution that positively differentiates this approach from other solutions',
@@ -133,7 +155,7 @@ const businessCase = {
   preferredSolutionConsHelpText:
     'Identify any aspects of this solution that negatively impact this approach',
   costSavings:
-    'What is the cost savings or avoidance associated with this solution?',
+    'What is the cost savings or avoidance associated with this solution? What is the cost impact if this solution is not implemented?',
   costSavingsHelpText:
     'This could include old systems going away, contract hours/ new Full Time Employees not needed, or other savings, even if indirect.',
   additionalAlternatives: 'Additional alternatives',

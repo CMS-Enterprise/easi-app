@@ -93,7 +93,7 @@ const PreferredSolution = ({
                   error={!!flatErrors['preferredSolution.title']}
                 >
                   <Label htmlFor="BusinessCase-PreferredSolutionTitle">
-                    {t('preferredSolutionTitle')}
+                    {t('solutionTitle')}
                   </Label>
                   <FieldErrorMsg>
                     {flatErrors['preferredSolution.title']}
@@ -112,18 +112,18 @@ const PreferredSolution = ({
                   error={!!flatErrors['preferredSolution.summary']}
                 >
                   <Label htmlFor="BusinessCase-PreferredSolutionSummary">
-                    {t('preferredSolutionSummary.label')}
+                    {t('solutionSummary.label')}
                   </Label>
                   <HelpText
                     id="BusinessCase-PreferredSolutionSummaryHelp"
                     className="margin-top-1"
                   >
-                    {t('preferredSolutionSummary.include')}
+                    {t('solutionSummary.include')}
                     <ul className="padding-left-205 margin-top-1 margin-bottom-0">
-                      <li>{t('preferredSolutionSummary.summary')}</li>
-                      <li>{t('preferredSolutionSummary.implementation')}</li>
-                      <li>{t('preferredSolutionSummary.costs')}</li>
-                      <li>{t('preferredSolutionSummary.approaches')}</li>
+                      <li>{t('solutionSummary.summary')}</li>
+                      <li>{t('solutionSummary.implementation')}</li>
+                      <li>{t('solutionSummary.costs')}</li>
+                      <li>{t('solutionSummary.approaches')}</li>
                     </ul>
                   </HelpText>
                   <FieldErrorMsg>
@@ -144,13 +144,13 @@ const PreferredSolution = ({
                   error={!!flatErrors['preferredSolution.acquisitionApproach']}
                 >
                   <Label htmlFor="BusinessCase-PreferredSolutionAcquisitionApproach">
-                    {t('preferredSolutionApproach')}
+                    {t('solutionAcquisitionApproach')}
                   </Label>
                   <HelpText
                     id="BusinessCase-PreferredSolutionAcquisitionApproachHelp"
                     className="margin-top-1"
                   >
-                    {t('preferredSolutionApproachHelpText')}
+                    {t('solutionAcquisitionApproachHelpText')}
                   </HelpText>
                   <FieldErrorMsg>
                     {flatErrors['preferredSolution.acquisitionApproach']}
@@ -166,6 +166,8 @@ const PreferredSolution = ({
                     aria-describedby="BusinessCase-PreferredSolutionAcquisitionApproachCounter BusinessCase-PreferredSolutionAcquisitionApproachHelp"
                   />
                 </FieldGroup>
+
+                {/* TODO: NJD add target contract award and target completion of dev work questions */}
 
                 <FieldGroup
                   scrollElement="preferredSolution.security.isApproved"
@@ -275,6 +277,8 @@ const PreferredSolution = ({
                   </FieldGroup>
                 )}
 
+                {/* TODO: NJD add zero trust principles question */}
+
                 <FieldGroup
                   scrollElement="preferredSolution.hosting.type"
                   error={!!flatErrors['preferredSolution.hosting.type']}
@@ -331,6 +335,8 @@ const PreferredSolution = ({
                             name="preferredSolution.hosting.location"
                           />
                         </FieldGroup>
+
+                        {/* TODO: NJD add cloud  / cloud migration strategy question */}
 
                         <FieldGroup
                           className="margin-bottom-1 margin-left-4"
@@ -480,18 +486,36 @@ const PreferredSolution = ({
                   </fieldset>
                 </FieldGroup>
 
+                {/* TODO: NJD add workforce training requirements question */}
+
+                <hr
+                  className="margin-bottom-1 margin-top-4 opacity-30"
+                  aria-hidden
+                />
+                <>
+                  <span className="font-body-sm text-bold">
+                    {t('prosAndCons')}
+                  </span>
+                  <br />
+                  <p>{t('prosAndConsHelpText')}</p>
+                </>
+
                 <FieldGroup
                   scrollElement="preferredSolution.pros"
                   error={!!flatErrors['preferredSolution.pros']}
                 >
                   <Label htmlFor="BusinessCase-PreferredSolutionPros">
-                    {t('preferredSolutionPros')}
+                    {t('pros.label')}
                   </Label>
                   <HelpText
                     id="BusinessCase-PreferredSolutionProsHelp"
                     className="margin-top-1"
                   >
-                    {t('preferredSolutionProsHelpText')}
+                    {t('pros.include')}
+                    <ul className="padding-left-205 margin-top-1 margin-bottom-0">
+                      <li>{t('pros.immediateImpact')}</li>
+                      <li>{t('pros.downstreamImpact')}</li>
+                    </ul>{' '}
                   </HelpText>
                   <FieldErrorMsg>
                     {flatErrors['preferredSolution.pros']}
@@ -511,13 +535,17 @@ const PreferredSolution = ({
                   error={!!flatErrors['preferredSolution.cons']}
                 >
                   <Label htmlFor="BusinessCase-PreferredSolutionCons">
-                    {t('preferredSolutionCons')}
+                    {t('cons.label')}
                   </Label>
                   <HelpText
                     id="BusinessCase-PreferredSolutionConsHelp"
                     className="margin-top-1"
                   >
-                    {t('preferredSolutionConsHelpText')}
+                    {t('cons.include')}
+                    <ul className="padding-left-205 margin-top-1 margin-bottom-0">
+                      <li>{t('cons.immediateImpact')}</li>
+                      <li>{t('cons.downstreamImpact')}</li>
+                    </ul>{' '}
                   </HelpText>
                   <FieldErrorMsg>
                     {flatErrors['preferredSolution.cons']}
