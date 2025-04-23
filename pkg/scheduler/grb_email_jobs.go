@@ -38,7 +38,7 @@ func getGRBEmailJobs(scheduler *Scheduler) *grbEmailJobs {
 		SendAsyncPastDueNoQuorumEmailJob: NewScheduledJob(
 			"SendAsyncPastDueNoQuorumEmailJob",
 			scheduler,
-			timing.DailyAt2AM,
+			timing.DailyAt1001PM,
 			sendAsyncPastDueNoQuorumEmailJobFunction,
 		),
 	}
