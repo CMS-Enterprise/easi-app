@@ -98,6 +98,7 @@ const RestartReviewModal = ({ systemIntakeId }: { systemIntakeId: string }) => {
             className="date-picker-override"
             onChange={val => setSelectedDate(val || '')}
             value={selectedDate}
+            dateInPastWarning
           />
         </FormGroup>
         <ModalFooter>
