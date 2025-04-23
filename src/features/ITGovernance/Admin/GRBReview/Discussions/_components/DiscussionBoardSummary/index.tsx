@@ -19,6 +19,9 @@ type DiscussionBoardSummaryProps = {
   loading: boolean;
 };
 
+/**
+ * Displays discussion board summary and most recent activity
+ */
 const DiscussionBoardSummary = ({
   discussionBoardType,
   grbDiscussions,
