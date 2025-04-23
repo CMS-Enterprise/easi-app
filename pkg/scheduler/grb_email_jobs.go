@@ -150,7 +150,7 @@ func sendAsyncPastDueNoQuorumEmailJobFunction(ctx context.Context, scheduledJob 
 	for _, intake := range intakes {
 		if _, err := OneTimeJob(ctx, SharedScheduler, intake, "SendAsyncPastDueNoQuorumEmailJob", func(ctx context.Context, intake *models.SystemIntake) error {
 			if intake.GRBReviewStartedAt == nil || intake.GrbReviewAsyncEndDate == nil {
-				return errors.New("missing start and/or end date for sending halfway through email")
+				return errors.New("missing start and/or end date for sending past due no quorum email")
 			}
 
 			reviewers, err := dataloaders.GetSystemIntakeGRBReviewersBySystemIntakeID(ctx, intake.ID)
@@ -218,7 +218,35 @@ func sendAsyncReviewCompleteQuorumMetJobFunction(ctx context.Context, scheduledJ
 
 	for _, intake := range intakes {
 		if _, err := OneTimeJob(ctx, SharedScheduler, intake, "SendAsyncReviewCompleteWithQuorumEmailJob", func(ctx context.Context, intake *models.SystemIntake) error {
+			if intake.GRBReviewStartedAt == nil || intake.GrbReviewAsyncEndDate == nil {
+				return errors.New("missing start and/or end date for sending review complete quorum met email")
+			}
 
+			reviewers, err := dataloaders.GetSystemIntakeGRBReviewersBySystemIntakeID(ctx, intake.ID)
+			if err != nil {
+				return err
+			}
+
+			votingInformation := models.GRBVotingInformation{
+				SystemIntake: intake,
+				GRBReviewers: reviewers,
+			}
+
+			if err := emailClient.SystemIntake.SendGRBReviewCompleteQuorumMet(ctx, email.SendGRBReviewCompleteQuorumMetInput{
+				SystemIntakeID:     intake.ID,
+				ProjectTitle:       intake.ProjectName.String,
+				RequesterName:      intake.Requester,
+				RequesterComponent: intake.Component.String,
+				StartDate:          *intake.GRBReviewStartedAt,
+				EndDate:            *intake.GrbReviewAsyncEndDate,
+				NoObjectionVotes:   votingInformation.NumberOfNoObjection(),
+				ObjectionVotes:     votingInformation.NumberOfObjection(),
+				NotYetVoted:        votingInformation.NumberOfNotVoted(),
+			}); err != nil {
+				return err
+			}
+
+			logger.Info("sending review complete quorum met email", logfields.IntakeID(intake.ID))
 			return nil
 		}); err != nil {
 			logger.Error("error scheduling review complete quorum met email job", logfields.IntakeID(intake.ID), zap.Error(err))
@@ -226,6 +254,7 @@ func sendAsyncReviewCompleteQuorumMetJobFunction(ctx context.Context, scheduledJ
 			// even if one of them fails
 			continue
 		}
+
 	}
 
 	return nil
