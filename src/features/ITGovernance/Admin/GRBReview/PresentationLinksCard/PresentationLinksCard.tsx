@@ -129,7 +129,6 @@ function PresentationLinksCard({
                   <Trans
                     i18nKey="grbReview:asyncCompleted.presentationLinks"
                     components={{
-                      // TODO: Add link to restart review
                       link1: (
                         <Button type="button" unstyled onClick={openModal}>
                           {t('restartReview')}
