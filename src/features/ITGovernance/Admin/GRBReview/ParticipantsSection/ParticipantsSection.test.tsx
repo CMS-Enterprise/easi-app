@@ -8,7 +8,6 @@ import {
   SystemIntakeGRBReviewerVotingRole,
   SystemIntakeState
 } from 'gql/generated/graphql';
-import i18next from 'i18next';
 import { deleteSystemIntakeGRBReviewerMutation } from 'tests/mock/grbReview';
 import { systemIntake } from 'tests/mock/systemIntake';
 import users from 'tests/mock/users';
