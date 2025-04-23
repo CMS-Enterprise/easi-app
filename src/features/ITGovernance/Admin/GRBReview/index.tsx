@@ -165,16 +165,18 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
               <span>{t('additionalDocsLink')}</span>
             </UswdsReactLink>
           ) : (
-            <Trans
-              i18nKey="grbReview:asyncCompleted.documents"
-              components={{
-                link1: (
-                  <Button type="button" unstyled onClick={openModal}>
-                    {t('restartReview')}
-                  </Button>
-                )
-              }}
-            />
+            <span className="text-base-dark">
+              <Trans
+                i18nKey="grbReview:asyncCompleted.documents"
+                components={{
+                  link1: (
+                    <Button type="button" unstyled onClick={openModal}>
+                      {t('restartReview')}
+                    </Button>
+                  )
+                }}
+              />
+            </span>
           )}
         </div>
 
