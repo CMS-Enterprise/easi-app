@@ -38,7 +38,7 @@ const Discussions = ({
   });
 
   const grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[] | undefined =
-    data?.systemIntake?.grbDiscussions;
+    data?.systemIntake?.grbDiscussionsInternal;
 
   if (!grbDiscussions) return null;
 

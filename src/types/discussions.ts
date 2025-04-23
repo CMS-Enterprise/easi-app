@@ -10,7 +10,10 @@ export type DiscussionAlert =
 
 export type MentionSuggestion =
   | {
-      tagType: TagType.GROUP_IT_GOV | TagType.GROUP_GRB_REVIEWERS;
+      tagType:
+        | TagType.GROUP_IT_GOV
+        | TagType.GROUP_GRB_REVIEWERS
+        | TagType.REQUESTER;
       displayName: string;
     }
   | {
