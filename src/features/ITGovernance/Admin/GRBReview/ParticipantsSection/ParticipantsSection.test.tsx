@@ -2,11 +2,13 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 import {
+  SystemIntakeGRBReviewAsyncStatusType,
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole,
   SystemIntakeState
 } from 'gql/generated/graphql';
+import i18next from 'i18next';
 import { deleteSystemIntakeGRBReviewerMutation } from 'tests/mock/grbReview';
 import { systemIntake } from 'tests/mock/systemIntake';
 import users from 'tests/mock/users';
@@ -161,5 +163,35 @@ describe('GRB review participants table', () => {
     expect(screen.queryByRole('link', { name: 'Start GRB Review' })).toBeNull();
 
     expect(screen.queryByTestId('grbReviewerActions')).toBeNull();
+  });
+
+  it('renders Complete Async Status in admin view', async () => {
+    render(
+      <MemoryRouter>
+        <VerboseMockedProvider
+          mocks={[deleteSystemIntakeGRBReviewerMutation(grbReviewer)]}
+        >
+          <MessageProvider>
+            <ModalProvider>
+              <ITGovAdminContext.Provider value>
+                <ParticipantsSection
+                  id={systemIntake.id}
+                  state={SystemIntakeState.OPEN}
+                  grbReviewers={[grbReviewer]}
+                  grbReviewStartedAt={null}
+                  asyncStatus={SystemIntakeGRBReviewAsyncStatusType.COMPLETED}
+                />
+              </ITGovAdminContext.Provider>
+            </ModalProvider>
+          </MessageProvider>
+        </VerboseMockedProvider>
+      </MemoryRouter>
+    );
+
+    expect(
+      screen.getByRole('button', { name: 'Add another GRB reviewer' })
+    ).toBeDisabled();
+
+    expect(await screen.findByText(/this review is over/i)).toBeInTheDocument();
   });
 });

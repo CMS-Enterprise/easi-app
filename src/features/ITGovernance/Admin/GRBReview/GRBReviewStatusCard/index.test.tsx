@@ -145,4 +145,19 @@ describe('GRBReviewStatusCard', () => {
       screen.queryByText(i18next.t<string>('grbReview:statusCard.addTime'))
     ).not.toBeInTheDocument();
   });
+
+  it('renders Completed state in Async reviews', () => {
+    const asyncReviewCompletedState = {
+      ...mockAsyncReview,
+      grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType.COMPLETED
+    };
+
+    renderComponent(asyncReviewCompletedState);
+
+    expect(
+      screen.queryByText(
+        i18next.t<string>('grbReview:statusCard.restartReview')
+      )
+    ).toBeInTheDocument();
+  });
 });

@@ -4,7 +4,8 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 import {
   SystemIntakeDocumentStatus,
-  SystemIntakeGRBPresentationLinksFragmentFragment
+  SystemIntakeGRBPresentationLinksFragmentFragment,
+  SystemIntakeGRBReviewAsyncStatusType
 } from 'gql/generated/graphql';
 import { systemIntake } from 'tests/mock/systemIntake';
 
@@ -143,5 +144,29 @@ describe('Async Presentation Links Card', () => {
     expect(
       screen.queryByRole('button', { name: 'Remove all presentation links' })
     ).not.toBeInTheDocument();
+  });
+
+  it('renders the Complete Async Status variant', async () => {
+    render(
+      <MemoryRouter
+        initialEntries={[`/it-governance/${systemIntake.id}/grb-review`]}
+      >
+        <MessageProvider>
+          <MockedProvider>
+            <ModalProvider>
+              <ITGovAdminContext.Provider value>
+                <PresentationLinksCard
+                  systemIntakeID={systemIntake.id}
+                  grbPresentationLinks={grbPresentationLinksMock}
+                  asyncStatus={SystemIntakeGRBReviewAsyncStatusType.COMPLETED}
+                />
+              </ITGovAdminContext.Provider>
+            </ModalProvider>
+          </MockedProvider>
+        </MessageProvider>
+      </MemoryRouter>
+    );
+
+    expect(await screen.findByText(/this review is over/i)).toBeInTheDocument();
   });
 });
