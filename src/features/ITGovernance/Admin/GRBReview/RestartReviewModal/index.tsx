@@ -78,12 +78,14 @@ const RestartReviewModal = ({ systemIntakeId }: { systemIntakeId: string }) => {
             {errorMessageInModal}
           </Alert>
         )}
-        <p className="margin-top-1">
-          {t('adminTask.restartReview.description')}
-        </p>
-        <FormGroup>
-          <RequiredFieldsText className="margin-top-0 font-body-sm" />
-          <Label htmlFor="grbReviewAsyncEndDate" requiredMarker>
+        <p className="margin-y-0">{t('adminTask.restartReview.description')}</p>
+        <FormGroup className="margin-y-0">
+          <RequiredFieldsText className="margin-top-2 margin-bottom-3 font-body-sm" />
+          <Label
+            htmlFor="grbReviewAsyncEndDate"
+            requiredMarker
+            className="margin-top-0"
+          >
             {t('adminTask.restartReview.setNewEndDateLabel')}
           </Label>
           <HelpText className="margin-top-1">
