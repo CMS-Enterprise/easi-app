@@ -50,6 +50,90 @@ const lifecycleCostsSchema = Yup.object().shape({
   other: relatedCostPhase
 });
 
+const draftSolutionSchema = Yup.object().shape({
+  title: Yup.string(),
+  summary: Yup.string(),
+  acquisitionApproach: Yup.string(),
+  security: Yup.object().shape({}),
+  hosting: Yup.object().shape({}),
+  hasUserInterface: Yup.string(),
+  pros: Yup.string(),
+  cons: Yup.string(),
+  estimatedLifecycleCost: lifecycleCostsSchema,
+  costSavings: Yup.string()
+});
+
+const finalSolutionSchema = (solutionType: string) =>
+  Yup.object().shape({
+    title: Yup.string()
+      .trim()
+      .required(`Enter a title for the ${solutionType} solution`),
+    summary: Yup.string()
+      .trim()
+      .required(`Tell us about the ${solutionType} solution`),
+    acquisitionApproach: Yup.string()
+      .trim()
+      .required(
+        `Tell us about the acquisition approach for the ${solutionType} solution`
+      ),
+    security: Yup.object().shape({
+      isApproved: Yup.boolean()
+        .nullable()
+        .required(
+          `Tell us whether the ${solutionType} solution was approved by IT Security for use at CMS`
+        ),
+      isBeingReviewed: Yup.string()
+        .nullable()
+        .when('isApproved', {
+          is: false,
+          then: Yup.string().required(
+            `Tell us whether the ${solutionType} solution is in the process of receiving approval`
+          )
+        })
+    }),
+    hosting: Yup.object().shape({
+      type: Yup.string().required(
+        `Tell us how ${solutionType} solution will be hosted`
+      ),
+      location: Yup.string()
+        .when('type', {
+          is: 'cloud',
+          then: Yup.string()
+            .trim()
+            .required(`Tell us where ${solutionType} solution will be hosted`)
+        })
+        .when('type', {
+          is: 'dataCenter',
+          then: Yup.string()
+            .trim()
+            .required(`Tell us where ${solutionType} solution will be hosted`)
+        }),
+      cloudServiceType: Yup.string().when('type', {
+        is: 'cloud',
+        then: Yup.string()
+          .trim()
+          .required(
+            `Tell us about the cloud service that will be used for the ${solutionType} solution`
+          )
+      })
+    }),
+    hasUserInterface: Yup.string().required(
+      `Tell us whether the ${solutionType} solution will have user interface`
+    ),
+    pros: Yup.string()
+      .trim()
+      .required(`Tell us about the pros of the ${solutionType} solution`),
+    cons: Yup.string()
+      .trim()
+      .required(`Tell us about the cons of the ${solutionType} solution`),
+    estimatedLifecycleCost: lifecycleCostsSchema,
+    costSavings: Yup.string()
+      .trim()
+      .required(
+        `Tell us about the cost savings or avoidance associated with the ${solutionType} solution`
+      )
+  });
+
 export const BusinessCaseFinalValidationSchema = {
   generalRequestInfo: Yup.object().shape({
     requestName: Yup.string().trim().required('Enter the Project name'),
@@ -90,227 +174,9 @@ export const BusinessCaseFinalValidationSchema = {
         'Tell us how you will determine whethere or not this effort is successful'
       )
   }),
-  // TODO: NJD - fill this out. should we validate alernatives ever?
-  alternativeAnalysis: Yup.object().shape({
-    preferredSolution: Yup.object().shape({}),
-    alternativeA: Yup.object().shape({}),
-    alternativeB: Yup.object().shape({})
-  }),
-  preferredSolution: Yup.object().shape({
-    preferredSolution: Yup.object().shape({
-      title: Yup.string()
-        .trim()
-        .required('Enter a title for the Preferred solution'),
-      summary: Yup.string()
-        .trim()
-        .required('Tell us about the Preferred solution'),
-      acquisitionApproach: Yup.string()
-        .trim()
-        .required(
-          'Tell us about the acquisition approach for the Preferred solution'
-        ),
-      security: Yup.object().shape({
-        isApproved: Yup.boolean()
-          .nullable()
-          .required(
-            'Tell us whether for solution was approved by IT Security for use at CMS'
-          ),
-        isBeingReviewed: Yup.string()
-          .nullable()
-          .when('isApproved', {
-            is: false,
-            then: Yup.string().required(
-              'Tell us whether your solution is in the process of receiving approval'
-            )
-          })
-      }),
-      hosting: Yup.object().shape({
-        type: Yup.string().required(
-          'Tell us how Preferred solution will be hosted'
-        ),
-        location: Yup.string()
-          .when('type', {
-            is: 'cloud',
-            then: Yup.string()
-              .trim()
-              .required('Tell us where Preferred solution will be hosted')
-          })
-          .when('type', {
-            is: 'dataCenter',
-            then: Yup.string()
-              .trim()
-              .required('Tell us where Preferred solution will be hosted')
-          }),
-        cloudServiceType: Yup.string().when('type', {
-          is: 'cloud',
-          then: Yup.string()
-            .trim()
-            .required(
-              'Tell us about the cloud service that will be used for the Preferred solution'
-            )
-        })
-      }),
-      hasUserInterface: Yup.string().required(
-        'Tell us whether the Preferred solution will have user interface'
-      ),
-      pros: Yup.string()
-        .trim()
-        .required('Tell us about the pros of Preferred solution'),
-      cons: Yup.string()
-        .trim()
-        .required('Tell us about the cons of Preferred solution'),
-      estimatedLifecycleCost: lifecycleCostsSchema,
-      costSavings: Yup.string()
-        .trim()
-        .required(
-          'Tell us about the cost savings or avoidance associated with this solution'
-        )
-    })
-  }),
-  alternativeA: Yup.object().shape({
-    alternativeA: Yup.object().shape({
-      title: Yup.string()
-        .trim()
-        .required('Enter a title for the Alternative A solution'),
-      summary: Yup.string()
-        .trim()
-        .required('Tell us about the Alternative A solution'),
-      acquisitionApproach: Yup.string()
-        .trim()
-        .required(
-          'Tell us about the acquisition approach for the Alternative A solution'
-        ),
-      security: Yup.object().shape({
-        isApproved: Yup.boolean()
-          .nullable()
-          .required(
-            'Tell us whether for solution was approved by IT Security for use at CMS'
-          ),
-        isBeingReviewed: Yup.string()
-          .nullable()
-          .when('isApproved', {
-            is: false,
-            then: Yup.string().required(
-              'Tell us whether your solution is in the process of receiving approval'
-            )
-          })
-      }),
-      hosting: Yup.object().shape({
-        type: Yup.string()
-          .trim()
-          .required('Tell us how Alternative A solution will be hosted'),
-        location: Yup.string()
-          .when('type', {
-            is: 'cloud',
-            then: Yup.string()
-              .trim()
-              .required('Tell us where Alternative A solution will be hosted')
-          })
-          .when('type', {
-            is: 'dataCenter',
-            then: Yup.string()
-              .trim()
-              .required('Tell us where Alternative A solution will be hosted')
-          }),
-        cloudServiceType: Yup.string().when('type', {
-          is: 'cloud',
-          then: Yup.string()
-            .trim()
-            .required(
-              'Tell us about the cloud service that will be used for the Alternative A solution'
-            )
-        })
-      }),
-      hasUserInterface: Yup.string()
-        .nullable()
-        .required(
-          'Tell us whether the Alternative A solution will have user interface'
-        ),
-      pros: Yup.string()
-        .trim()
-        .required('Tell us about the pros of Alternative A solution'),
-      cons: Yup.string()
-        .trim()
-        .required('Tell us about the cons of Alternative A solution'),
-      estimatedLifecycleCost: lifecycleCostsSchema,
-      costSavings: Yup.string()
-        .trim()
-        .required(
-          'Tell us about the cost savings or avoidance associated with this solution'
-        )
-    })
-  }),
-  alternativeB: Yup.object().shape({
-    alternativeB: Yup.object().shape({
-      title: Yup.string()
-        .trim()
-        .required('Enter a title for the Alternative B solution'),
-      summary: Yup.string()
-        .trim()
-        .required('Tell us about the Alternative B solution'),
-      acquisitionApproach: Yup.string()
-        .trim()
-        .required(
-          'Tell us about the acquisition approach for the Alternative B solution'
-        ),
-      security: Yup.object().shape({
-        isApproved: Yup.boolean()
-          .nullable()
-          .required(
-            'Tell us whether for solution was approved by IT Security for use at CMS'
-          ),
-        isBeingReviewed: Yup.string()
-          .nullable()
-          .when('isApproved', {
-            is: false,
-            then: Yup.string().required(
-              'Tell us whether your solution is in the process of receiving approval'
-            )
-          })
-      }),
-      hosting: Yup.object().shape({
-        type: Yup.string().required(
-          'Tell us how Alternative B solution will be hosted'
-        ),
-        location: Yup.string()
-          .when('type', {
-            is: 'cloud',
-            then: Yup.string()
-              .trim()
-              .required('Tell us where Alternative B solution will be hosted')
-          })
-          .when('type', {
-            is: 'dataCenter',
-            then: Yup.string()
-              .trim()
-              .required('Tell us where Alternative B solution will be hosted')
-          }),
-        cloudServiceType: Yup.string().when('type', {
-          is: 'cloud',
-          then: Yup.string()
-            .trim()
-            .required(
-              'Tell us about the cloud service that will be used for the Alternative B solution'
-            )
-        })
-      }),
-      hasUserInterface: Yup.string().required(
-        'Tell us whether the Alternative B solution will have user interface'
-      ),
-      pros: Yup.string()
-        .trim()
-        .required('Tell us about the pros of Alternative B solution'),
-      cons: Yup.string()
-        .trim()
-        .required('Tell us about the cons of Alternative B solution'),
-      estimatedLifecycleCost: lifecycleCostsSchema,
-      costSavings: Yup.string()
-        .trim()
-        .required(
-          'Tell us about the cost savings or avoidance associated with this solution'
-        )
-    })
-  })
+  preferredSolution: finalSolutionSchema('Preferred Solution'),
+  alternativeA: finalSolutionSchema('Alternative A'),
+  alternativeB: finalSolutionSchema('Alternative B')
 };
 
 // We don't validate much when a Business Case is in draft
@@ -325,11 +191,29 @@ export const BusinessCaseDraftValidationSchema = {
     })
   }),
   requestDescription: Yup.object().shape({}),
-  alternativeAnalysis: Yup.object().shape({}), // TODO: NJD - this ok?
-  preferredSolution: Yup.object().shape({}), // TODO: NJD - remove / consolidate these?
+  alternativeAnalysis: Yup.object().shape({}),
+  preferredSolution: Yup.object().shape({}),
   alternativeA: Yup.object().shape({}),
   alternativeB: Yup.object().shape({})
 };
+
+export const getAlternativeAnalysisSchema = (
+  isFinal: boolean,
+  alternativeBProvided: boolean
+) =>
+  Yup.object().shape({
+    preferredSolution: SolutionSchema(isFinal, 'Preferred Solution'),
+
+    alternativeA: SolutionSchema(isFinal, 'Alternative A'),
+
+    alternativeB: alternativeBProvided
+      ? SolutionSchema(isFinal, 'Alternative B')
+      : Yup.object()
+  });
+
+/** Returns Solution schema based on whether final or draft */
+export const SolutionSchema = (isFinal: boolean, solutionType: string) =>
+  isFinal ? finalSolutionSchema(solutionType) : draftSolutionSchema;
 
 /** Returns Business Case schema based on whether final or draft */
 export const BusinessCaseSchema = (isFinal: boolean) =>

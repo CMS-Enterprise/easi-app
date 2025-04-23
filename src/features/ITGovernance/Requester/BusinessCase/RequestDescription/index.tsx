@@ -12,7 +12,6 @@ import HelpText from 'components/HelpText';
 import IconButton from 'components/IconButton';
 import PageNumber from 'components/PageNumber';
 import TextAreaField from 'components/TextAreaField';
-// import { alternativeSolutionHasFilledFields } from 'data/businessCase'; // TODO: NJD - remove?
 import { BusinessCaseModel, RequestDescriptionForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
 import { BusinessCaseSchema } from 'validations/businessCaseSchema';
@@ -98,7 +97,9 @@ const RequestDescription = ({
                   aria-describedby="BusinessCase-BusinessNeedCounter BusinessCase-BusinessNeedHelp"
                 />
               </FieldGroup>
+
               {/* TODO: NJD - add internal collaboration question */}
+
               <FieldGroup
                 scrollElement="currentSolutionSummary"
                 error={!!flatErrors.currentSolutionSummary}
@@ -203,6 +204,7 @@ const RequestDescription = ({
                   aria-describedby="BusinessCase-SuccessIndicatorsCounter BusinessCase-SuccessIndicatorsHelp"
                 />
               </FieldGroup>
+
               {/* TODO: NJD add response to GRT recs question */}
             </Form>
 

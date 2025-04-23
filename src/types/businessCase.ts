@@ -68,10 +68,6 @@ export type AlternativeBSolutionForm = {
 // Business Case Form Model
 export type BusinessCaseModel = GeneralRequestInfoForm &
   RequestDescriptionForm &
-  // TODO: NJD - remove
-  // PreferredSolutionForm &
-  // AlternativeASolutionForm &
-  // AlternativeBSolutionForm
   AlternativeAnalysisForm & {
     id?: string;
     euaUserId?: string;

@@ -108,6 +108,8 @@ const AlternativeSolutionFields = ({
           />
         </FieldGroup>
 
+        {/* TODO: NJD add target contract award and target completion of dev work questions */}
+
         <FieldGroup
           scrollElement={`${altId}.security.isApproved`}
           error={!!flatErrors[`${altId}.security.isApproved`]}
@@ -192,6 +194,8 @@ const AlternativeSolutionFields = ({
           </FieldGroup>
         )}
 
+        {/* TODO: NJD add zero trust principles question */}
+
         <FieldGroup
           scrollElement={`${altId}.hosting.type`}
           error={!!flatErrors[`${altId}.hosting.type`]}
@@ -234,6 +238,9 @@ const AlternativeSolutionFields = ({
                     name={`${altId}.hosting.location`}
                   />
                 </FieldGroup>
+
+                {/* TODO: NJD add cloud  / cloud migration strategy question */}
+
                 <FieldGroup
                   className="margin-bottom-1 margin-left-4"
                   scrollElement={`${altId}.hosting.cloudServiceType`}
@@ -343,6 +350,15 @@ const AlternativeSolutionFields = ({
             />
           </fieldset>
         </FieldGroup>
+
+        {/* TODO: NJD add workforce training requirements question */}
+
+        <hr className="margin-bottom-1 margin-top-4 opacity-30" aria-hidden />
+        <>
+          <span className="font-body-sm text-bold">{t('prosAndCons')}</span>
+          <br />
+          <p>{t('prosAndConsHelpText')}</p>
+        </>
 
         <FieldGroup
           scrollElement={`${altId}.pros`}

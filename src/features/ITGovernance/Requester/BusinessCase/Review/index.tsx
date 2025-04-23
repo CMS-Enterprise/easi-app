@@ -6,7 +6,6 @@ import { Button, ButtonGroup } from '@trussworks/react-uswds';
 import { AppState } from 'stores/reducers/rootReducer';
 
 import BusinessCaseReview from 'components/BusinessCaseReview';
-// import { alternativeSolutionHasFilledFields } from 'data/businessCase'; // TODO: NJD - remove?
 import { BusinessCaseModel } from 'types/businessCase';
 import { postAction } from 'types/routines';
 

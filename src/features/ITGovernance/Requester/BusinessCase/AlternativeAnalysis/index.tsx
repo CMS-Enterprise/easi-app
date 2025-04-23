@@ -21,14 +21,15 @@ import {
 } from 'types/businessCase';
 import { putBusinessCase } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
-import { BusinessCaseSchema } from 'validations/businessCaseSchema';
+import {
+  getAlternativeAnalysisSchema,
+  SolutionSchema
+} from 'validations/businessCaseSchema';
 
 import BusinessCaseStepWrapper from '../BusinessCaseStepWrapper';
 
 type AltnerativeAnalysisProps = {
   businessCase: BusinessCaseModel;
-  // proposedSolutions: BusinessCaseSolution[]; // TODO: NJD - don't think we need this
-  // proposedSolutions: ProposedBusinessCaseSolution[]; // TODO: NJD - pretty sure this is the wrong type
   formikRef: any;
   dispatchSave: () => void;
   isFinal: boolean;
@@ -111,11 +112,23 @@ const AlternativeAnalysis = ({
         Header: t<string>('alternativesTable.status'),
         Cell: ({ row }: CellProps<ProposedBusinessCaseSolution, string>) => {
           const isInProgress = alternativeSolutionHasFilledFields(row.original);
-          return (
-            <span className={isInProgress ? 'text-success' : 'text-error'}>
-              {isInProgress ? 'Complete' : 'Incomplete'}
-            </span>
+          const solutionType = t(
+            `alternativesTable.solutions.${row.index}.heading`
           );
+
+          if (!isInProgress) {
+            return <></>;
+          }
+
+          try {
+            // Validate the specific solution using business case schema
+            SolutionSchema(isFinal, solutionType).validateSync(row.original, {
+              abortEarly: false
+            });
+            return <span className="text-success">Completed</span>;
+          } catch (err) {
+            return <span className="text-info">In Progress</span>;
+          }
         }
       },
       {
@@ -152,7 +165,7 @@ const AlternativeAnalysis = ({
                   className="margin-left-1"
                   type="button"
                   unstyled
-                  // TODO: NJD, need to make this more generic once we support more than two alternatives (C, D, etc.)
+                  // TODO: NJD, need to make this more generic if we start to support more than two alternatives (C, D, etc.)
                   onClick={() => {
                     if (
                       // eslint-disable-next-line no-alert
@@ -164,6 +177,8 @@ const AlternativeAnalysis = ({
                           alternativeB: defaultProposedSolution
                         })
                       );
+                      // TODO: NJD - this doesn't force a full state refresh. Can call window.location.reload() to fix but bad UX
+                      history.replace(history.location);
                     }
                   }}
                 >
@@ -175,7 +190,7 @@ const AlternativeAnalysis = ({
         }
       }
     ],
-    [businessCase, dispatch, dispatchSave, history, t]
+    [businessCase, dispatch, dispatchSave, history, isFinal, t]
   );
 
   const tableData = [
@@ -203,7 +218,10 @@ const AlternativeAnalysis = ({
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={BusinessCaseSchema(isFinal).alternativeAnalysis}
+      validationSchema={getAlternativeAnalysisSchema(
+        isFinal,
+        alternativeSolutionHasFilledFields(businessCase.alternativeB)
+      )}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
