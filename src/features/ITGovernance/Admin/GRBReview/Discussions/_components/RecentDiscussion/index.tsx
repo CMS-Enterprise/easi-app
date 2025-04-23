@@ -5,9 +5,10 @@ import DiscussionPost from 'features/DiscussionBoard/DiscussionPost';
 import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
-import { getMostRecentDiscussion } from 'components/MentionTextArea/util';
 import Spinner from 'components/Spinner';
 import { UseDiscussionParamsReturn } from 'hooks/useDiscussionParams';
+
+import { getMostRecentDiscussion } from '../../util';
 
 type RecentDiscussionProps = {
   loading: boolean;
