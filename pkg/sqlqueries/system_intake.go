@@ -17,14 +17,20 @@ var getWhereGRBReviewIsHalfwayThrough string
 //go:embed SQL/system_intake/get_where_grb_review_past_due_no_quorum.sql
 var getWhereGRBReviewPastDueNoQuorum string
 
+//
+//go:embed SQL/system_intake/get_where_grb_review_complete_quorum_met.sql
+var getWhereGRBReviewCompleteQuorumMet string
+
 var SystemIntake = systemIntakeScripts{
 	GetByUser:                         getByUser,
 	GetWhereGRBReviewIsHalfwayThrough: getWhereGRBReviewIsHalfwayThrough,
 	GetWhereGRBPastDueNoQuorum:        getWhereGRBReviewPastDueNoQuorum,
+	GetWhereReviewCompleteQuorumMet:   getWhereGRBReviewCompleteQuorumMet,
 }
 
 type systemIntakeScripts struct {
 	GetByUser                         string
 	GetWhereGRBReviewIsHalfwayThrough string
 	GetWhereGRBPastDueNoQuorum        string
+	GetWhereReviewCompleteQuorumMet   string
 }
