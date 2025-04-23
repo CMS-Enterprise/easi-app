@@ -757,6 +757,20 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 	)
 	noErr(err)
 
+	err = client.SystemIntake.SendSystemIntakeGRBReviewEnded(
+		ctx,
+		email.SendSystemIntakeGRBReviewEndedInput{
+			Recipient:          requesterEmail,
+			SystemIntakeID:     intakeID,
+			ProjectName:        "Project Ended Email Test",
+			RequesterName:      "Ended Email - Name",
+			RequesterComponent: "Office of Muffins and Waffles",
+			GRBReviewStart:     time.Now().AddDate(0, 0, -5),
+			GRBReviewDeadline:  time.Now(),
+		},
+	)
+	noErr(err)
+
 	err = client.SystemIntake.SendSystemIntakeGRBReviewTimeAdded(
 		ctx,
 		emailNotificationRecipients,
