@@ -9,6 +9,7 @@ import {
   useGetSystemIntakeGRBDiscussionsQuery
 } from 'gql/generated/graphql';
 
+import Alert from 'components/Alert';
 import CollapsableLink from 'components/CollapsableLink';
 import IconButton from 'components/IconButton';
 import useDiscussionParams from 'hooks/useDiscussionParams';
@@ -140,12 +141,17 @@ const Discussions = ({
             )}
           </div>
 
-          <RecentDiscussion
-            loading={loading}
-            grbReviewStartedAt={grbReviewStartedAt}
-            grbDiscussions={grbDiscussions}
-            pushDiscussionQuery={pushDiscussionQuery}
-          />
+          {grbReviewStartedAt ? (
+            <RecentDiscussion
+              loading={loading}
+              grbDiscussions={grbDiscussions}
+              pushDiscussionQuery={pushDiscussionQuery}
+            />
+          ) : (
+            <Alert type="info" slim>
+              {t('general.alerts.reviewNotStarted')}
+            </Alert>
+          )}
         </div>
       </div>
     </>
