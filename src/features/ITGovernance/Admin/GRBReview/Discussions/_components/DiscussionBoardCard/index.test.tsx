@@ -7,13 +7,13 @@ import {
   mockDiscussionsWithoutReplies
 } from 'tests/mock/discussions';
 
-import DiscussionBoardSummary from '.';
+import DiscussionBoardCard from '.';
 
-describe('Discussion board summary', () => {
+describe('Discussion board card', () => {
   it('renders the primary discussion board', () => {
     render(
       <MemoryRouter>
-        <DiscussionBoardSummary
+        <DiscussionBoardCard
           discussionBoardType={SystemIntakeGRBDiscussionBoardType.PRIMARY}
           grbDiscussions={mockDiscussions()}
           grbReviewStartedAt="2025-03-11T01:50:35.146458Z"
@@ -30,7 +30,7 @@ describe('Discussion board summary', () => {
   it('renders the internal discussion board', () => {
     render(
       <MemoryRouter>
-        <DiscussionBoardSummary
+        <DiscussionBoardCard
           discussionBoardType={SystemIntakeGRBDiscussionBoardType.INTERNAL}
           grbDiscussions={mockDiscussions()}
           grbReviewStartedAt="2025-03-11T01:50:35.146458Z"
@@ -49,7 +49,7 @@ describe('Discussion board summary', () => {
   it('renders 0 discussions without replies', async () => {
     render(
       <MemoryRouter>
-        <DiscussionBoardSummary
+        <DiscussionBoardCard
           discussionBoardType={SystemIntakeGRBDiscussionBoardType.PRIMARY}
           grbDiscussions={mockDiscussions()}
           grbReviewStartedAt="2025-03-11T01:50:35.146458Z"
@@ -69,7 +69,7 @@ describe('Discussion board summary', () => {
   it('renders discussions without replies', async () => {
     render(
       <MemoryRouter>
-        <DiscussionBoardSummary
+        <DiscussionBoardCard
           discussionBoardType={SystemIntakeGRBDiscussionBoardType.PRIMARY}
           grbDiscussions={mockDiscussionsWithoutReplies()}
           grbReviewStartedAt="2025-03-11T01:50:35.146458Z"
@@ -92,7 +92,7 @@ describe('Discussion board summary', () => {
   it('locks discussion board if review not started', async () => {
     render(
       <MemoryRouter>
-        <DiscussionBoardSummary
+        <DiscussionBoardCard
           discussionBoardType={SystemIntakeGRBDiscussionBoardType.PRIMARY}
           grbDiscussions={[]}
           grbReviewStartedAt={undefined}

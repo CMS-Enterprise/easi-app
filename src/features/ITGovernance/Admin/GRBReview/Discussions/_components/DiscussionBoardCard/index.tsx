@@ -12,7 +12,7 @@ import useDiscussionParams from 'hooks/useDiscussionParams';
 
 import RecentDiscussion from '../RecentDiscussion';
 
-type DiscussionBoardSummaryProps = {
+type DiscussionBoardCardProps = {
   discussionBoardType: SystemIntakeGRBDiscussionBoardType;
   grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[];
   grbReviewStartedAt: string | null | undefined;
@@ -20,14 +20,14 @@ type DiscussionBoardSummaryProps = {
 };
 
 /**
- * Displays discussion board summary and most recent activity
+ * Displays discussion board information and most recent activity
  */
-const DiscussionBoardSummary = ({
+const DiscussionBoardCard = ({
   discussionBoardType,
   grbDiscussions,
   grbReviewStartedAt,
   loading
-}: DiscussionBoardSummaryProps) => {
+}: DiscussionBoardCardProps) => {
   const { t } = useTranslation('discussions');
 
   const { pushDiscussionQuery } = useDiscussionParams();
@@ -120,4 +120,4 @@ const DiscussionBoardSummary = ({
   );
 };
 
-export default DiscussionBoardSummary;
+export default DiscussionBoardCard;

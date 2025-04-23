@@ -10,7 +10,7 @@ import {
 
 import CollapsableLink from 'components/CollapsableLink';
 
-import DiscussionBoardSummary from './_components/DiscussionBoardSummary';
+import DiscussionBoardCard from './_components/DiscussionBoardCard';
 
 type DiscussionsProps = {
   systemIntakeID: string;
@@ -19,7 +19,7 @@ type DiscussionsProps = {
   className?: string;
 };
 
-/** Displays recent discussions on GRB Review tab */
+/** Displays discussion boards on GRB review tab */
 const Discussions = ({
   systemIntakeID,
   grbReviewers,
@@ -77,14 +77,14 @@ const Discussions = ({
           </ul>
         </CollapsableLink>
 
-        <DiscussionBoardSummary
+        <DiscussionBoardCard
           discussionBoardType={SystemIntakeGRBDiscussionBoardType.PRIMARY}
           grbDiscussions={grbDiscussionsPrimary}
           grbReviewStartedAt={grbReviewStartedAt}
           loading={loading}
         />
 
-        <DiscussionBoardSummary
+        <DiscussionBoardCard
           discussionBoardType={SystemIntakeGRBDiscussionBoardType.INTERNAL}
           grbDiscussions={grbDiscussionsInternal}
           grbReviewStartedAt={grbReviewStartedAt}
