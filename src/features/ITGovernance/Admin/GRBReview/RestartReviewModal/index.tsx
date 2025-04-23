@@ -8,6 +8,7 @@ import {
   ModalFooter,
   ModalHeading
 } from '@trussworks/react-uswds';
+import { actionDateInPast } from 'features/ITGovernance/Admin/Actions/ManageLcid/RetireLcid';
 import {
   GetSystemIntakeGRBReviewDocument,
   useRestartGRBReviewAsyncMutation
@@ -79,41 +80,43 @@ const RestartReviewModal = ({ systemIntakeId }: { systemIntakeId: string }) => {
           </Alert>
         )}
         <p className="margin-y-0">{t('adminTask.restartReview.description')}</p>
-        <FormGroup className="margin-y-0">
-          <RequiredFieldsText className="margin-top-2 margin-bottom-3 font-body-sm" />
-          <Label
-            htmlFor="grbReviewAsyncEndDate"
-            requiredMarker
-            className="margin-top-0"
-          >
-            {t('adminTask.restartReview.setNewEndDateLabel')}
-          </Label>
-          <HelpText className="margin-top-1">
-            {t('adminTask.restartReview.setNewEndDateHelpText')}
-          </HelpText>
-          <DatePickerFormatted
-            id="grbReviewAsyncEndDate"
-            name="grbReviewAsyncEndDate"
-            // classname used to target specifically the date picker calendar and have it render above the input field
-            className="date-picker-override"
-            onChange={val => setSelectedDate(val || '')}
-            value={selectedDate}
-            dateInPastWarning
-          />
-        </FormGroup>
-        <ModalFooter>
-          <Button
-            type="button"
-            className="margin-top-0 margin-bottom-2 margin-right-3 tablet:margin-bottom-0"
-            onClick={handleRestartReview}
-            disabled={!selectedDate}
-          >
-            {t('adminTask.restartReview.restart')}
-          </Button>
-          <Button type="button" onClick={closeModal} unstyled>
-            {t('adminTask.restartReview.cancel')}
-          </Button>
-        </ModalFooter>
+        <form>
+          <FormGroup className="margin-y-0">
+            <RequiredFieldsText className="margin-top-2 margin-bottom-3 font-body-sm" />
+            <Label
+              htmlFor="grbReviewAsyncEndDate"
+              requiredMarker
+              className="margin-top-0"
+            >
+              {t('adminTask.restartReview.setNewEndDateLabel')}
+            </Label>
+            <HelpText className="margin-top-1">
+              {t('adminTask.restartReview.setNewEndDateHelpText')}
+            </HelpText>
+            <DatePickerFormatted
+              id="grbReviewAsyncEndDate"
+              name="grbReviewAsyncEndDate"
+              // classname used to target specifically the date picker calendar and have it render above the input field
+              className="date-picker-override"
+              onChange={val => setSelectedDate(val || '')}
+              value={selectedDate}
+              dateInPastWarning
+            />
+          </FormGroup>
+          <ModalFooter>
+            <Button
+              type="submit"
+              className="margin-top-0 margin-bottom-2 margin-right-3 tablet:margin-bottom-0"
+              onClick={handleRestartReview}
+              disabled={actionDateInPast(selectedDate)}
+            >
+              {t('adminTask.restartReview.restart')}
+            </Button>
+            <Button type="button" onClick={closeModal} unstyled>
+              {t('adminTask.restartReview.cancel')}
+            </Button>
+          </ModalFooter>
+        </form>
       </div>
     </Modal>
   );
