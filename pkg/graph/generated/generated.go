@@ -724,7 +724,8 @@ type ComplexityRoot struct {
 		GRTMeetingState                                   func(childComplexity int) int
 		GovernanceRequestFeedbacks                        func(childComplexity int) int
 		GovernanceTeams                                   func(childComplexity int) int
-		GrbDiscussions                                    func(childComplexity int) int
+		GrbDiscussionsInternal                            func(childComplexity int) int
+		GrbDiscussionsPrimary                             func(childComplexity int) int
 		GrbPresentationDeckRequesterReminderEmailSentTime func(childComplexity int) int
 		GrbPresentationLinks                              func(childComplexity int) int
 		GrbReviewAsyncEndDate                             func(childComplexity int) int
@@ -1438,7 +1439,8 @@ type SystemIntakeResolver interface {
 	ContractNumbers(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeContractNumber, error)
 	RelatedIntakes(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntake, error)
 	RelatedTRBRequests(ctx context.Context, obj *models.SystemIntake) ([]*models.TRBRequest, error)
-	GrbDiscussions(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewDiscussion, error)
+	GrbDiscussionsPrimary(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewDiscussion, error)
+	GrbDiscussionsInternal(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewDiscussion, error)
 	GrbPresentationLinks(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBPresentationLinks, error)
 
 	GrbReviewStandardStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBReviewStandardStatusType, error)
@@ -5756,12 +5758,19 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.SystemIntake.GovernanceTeams(childComplexity), true
 
-	case "SystemIntake.grbDiscussions":
-		if e.complexity.SystemIntake.GrbDiscussions == nil {
+	case "SystemIntake.grbDiscussionsInternal":
+		if e.complexity.SystemIntake.GrbDiscussionsInternal == nil {
 			break
 		}
 
-		return e.complexity.SystemIntake.GrbDiscussions(childComplexity), true
+		return e.complexity.SystemIntake.GrbDiscussionsInternal(childComplexity), true
+
+	case "SystemIntake.grbDiscussionsPrimary":
+		if e.complexity.SystemIntake.GrbDiscussionsPrimary == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.GrbDiscussionsPrimary(childComplexity), true
 
 	case "SystemIntake.grbPresentationDeckRequesterReminderEmailSentTime":
 		if e.complexity.SystemIntake.GrbPresentationDeckRequesterReminderEmailSentTime == nil {
@@ -9269,9 +9278,13 @@ type SystemIntake {
   """
   relatedTRBRequests: [TRBRequest!]!
   """
-  GRB Review Discussion Posts/Threads
+  GRB Review Primary Discussion Board Posts/Threads
   """
-  grbDiscussions: [SystemIntakeGRBReviewDiscussion!]!
+  grbDiscussionsPrimary: [SystemIntakeGRBReviewDiscussion!]!
+  """
+  GRB Review Internal Discussion Board Posts/Threads
+  """
+  grbDiscussionsInternal: [SystemIntakeGRBReviewDiscussion!]!
   """
   GRB Presentation Link Data
   """
@@ -9830,13 +9843,20 @@ enum SystemIntakeGRBReviewType {
   ASYNC
 }
 
+enum SystemIntakeGRBDiscussionBoardType {
+  PRIMARY
+  INTERNAL
+}
+
 input createSystemIntakeGRBDiscussionPostInput {
   systemIntakeID: UUID!
+  discussionBoardType: SystemIntakeGRBDiscussionBoardType!
   content: TaggedHTML!
 }
 
 input createSystemIntakeGRBDiscussionReplyInput {
   initialPostID: UUID!
+  discussionBoardType: SystemIntakeGRBDiscussionBoardType!
   content: TaggedHTML!
 }
 
@@ -10356,6 +10376,7 @@ type TRBRequestAttendee {
 # lint-disable defined-types-are-used
 enum TagType {
   USER_ACCOUNT
+  REQUESTER
   GROUP_IT_GOV
   GROUP_GRB_REVIEWERS
 }
@@ -16742,8 +16763,10 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(_ context.Con
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
 			case "grbPresentationDeckRequesterReminderEmailSentTime":
@@ -25656,8 +25679,10 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(ctx con
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
 			case "grbPresentationDeckRequesterReminderEmailSentTime":
@@ -32832,8 +32857,10 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
 			case "grbPresentationDeckRequesterReminderEmailSentTime":
@@ -33096,8 +33123,10 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeRequestType(
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
 			case "grbPresentationDeckRequesterReminderEmailSentTime":
@@ -35647,8 +35676,10 @@ func (ec *executionContext) fieldContext_Mutation_archiveSystemIntake(ctx contex
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
 			case "grbPresentationDeckRequesterReminderEmailSentTime":
@@ -39965,8 +39996,10 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
 			case "grbPresentationDeckRequesterReminderEmailSentTime":
@@ -40202,8 +40235,10 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
 			case "grbPresentationDeckRequesterReminderEmailSentTime":
@@ -40439,8 +40474,10 @@ func (ec *executionContext) fieldContext_Query_mySystemIntakes(_ context.Context
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
 			case "grbPresentationDeckRequesterReminderEmailSentTime":
@@ -40665,8 +40702,10 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithReviewRequested(
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
 			case "grbPresentationDeckRequesterReminderEmailSentTime":
@@ -40891,8 +40930,10 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(_ context.
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
 			case "grbPresentationDeckRequesterReminderEmailSentTime":
@@ -47016,8 +47057,10 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedIntakes(_ context.C
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
 			case "grbPresentationDeckRequesterReminderEmailSentTime":
@@ -47153,8 +47196,8 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedTRBRequests(_ conte
 	return fc, nil
 }
 
-func (ec *executionContext) _SystemIntake_grbDiscussions(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+func (ec *executionContext) _SystemIntake_grbDiscussionsPrimary(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -47167,7 +47210,7 @@ func (ec *executionContext) _SystemIntake_grbDiscussions(ctx context.Context, fi
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().GrbDiscussions(rctx, obj)
+		return ec.resolvers.SystemIntake().GrbDiscussionsPrimary(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -47184,7 +47227,57 @@ func (ec *executionContext) _SystemIntake_grbDiscussions(ctx context.Context, fi
 	return ec.marshalNSystemIntakeGRBReviewDiscussion2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewDiscussionᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_SystemIntake_grbDiscussions(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_SystemIntake_grbDiscussionsPrimary(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "initialPost":
+				return ec.fieldContext_SystemIntakeGRBReviewDiscussion_initialPost(ctx, field)
+			case "replies":
+				return ec.fieldContext_SystemIntakeGRBReviewDiscussion_replies(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeGRBReviewDiscussion", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntake_grbDiscussionsInternal(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().GrbDiscussionsInternal(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.SystemIntakeGRBReviewDiscussion)
+	fc.Result = res
+	return ec.marshalNSystemIntakeGRBReviewDiscussion2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewDiscussionᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_grbDiscussionsInternal(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntake",
 		Field:      field,
@@ -47887,8 +47980,10 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(_ conte
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
 			case "grbPresentationDeckRequesterReminderEmailSentTime":
@@ -57373,8 +57468,10 @@ func (ec *executionContext) fieldContext_TRBRequest_relatedIntakes(_ context.Con
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
 			case "grbPresentationDeckRequesterReminderEmailSentTime":
@@ -60264,8 +60361,10 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(_ context.
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
 			case "grbPresentationDeckRequesterReminderEmailSentTime":
@@ -61044,8 +61143,10 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
 			case "grbPresentationDeckRequesterReminderEmailSentTime":
@@ -67811,7 +67912,7 @@ func (ec *executionContext) unmarshalInputcreateSystemIntakeGRBDiscussionPostInp
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemIntakeID", "content"}
+	fieldsInOrder := [...]string{"systemIntakeID", "discussionBoardType", "content"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -67825,6 +67926,13 @@ func (ec *executionContext) unmarshalInputcreateSystemIntakeGRBDiscussionPostInp
 				return it, err
 			}
 			it.SystemIntakeID = data
+		case "discussionBoardType":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("discussionBoardType"))
+			data, err := ec.unmarshalNSystemIntakeGRBDiscussionBoardType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBDiscussionBoardType(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.DiscussionBoardType = data
 		case "content":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("content"))
 			data, err := ec.unmarshalNTaggedHTML2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTaggedHTML(ctx, v)
@@ -67845,7 +67953,7 @@ func (ec *executionContext) unmarshalInputcreateSystemIntakeGRBDiscussionReplyIn
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"initialPostID", "content"}
+	fieldsInOrder := [...]string{"initialPostID", "discussionBoardType", "content"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -67859,6 +67967,13 @@ func (ec *executionContext) unmarshalInputcreateSystemIntakeGRBDiscussionReplyIn
 				return it, err
 			}
 			it.InitialPostID = data
+		case "discussionBoardType":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("discussionBoardType"))
+			data, err := ec.unmarshalNSystemIntakeGRBDiscussionBoardType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBDiscussionBoardType(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.DiscussionBoardType = data
 		case "content":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("content"))
 			data, err := ec.unmarshalNTaggedHTML2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTaggedHTML(ctx, v)
@@ -73848,7 +73963,7 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-		case "grbDiscussions":
+		case "grbDiscussionsPrimary":
 			field := field
 
 			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
@@ -73857,7 +73972,43 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._SystemIntake_grbDiscussions(ctx, field, obj)
+				res = ec._SystemIntake_grbDiscussionsPrimary(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "grbDiscussionsInternal":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_grbDiscussionsInternal(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
@@ -80941,6 +81092,16 @@ func (ec *executionContext) unmarshalNSystemIntakeFundingSourceInput2ᚕᚖgithu
 func (ec *executionContext) unmarshalNSystemIntakeFundingSourceInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeFundingSourceInput(ctx context.Context, v any) (*models.SystemIntakeFundingSourceInput, error) {
 	res, err := ec.unmarshalInputSystemIntakeFundingSourceInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNSystemIntakeGRBDiscussionBoardType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBDiscussionBoardType(ctx context.Context, v any) (models.SystemIntakeGRBDiscussionBoardType, error) {
+	var res models.SystemIntakeGRBDiscussionBoardType
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSystemIntakeGRBDiscussionBoardType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBDiscussionBoardType(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeGRBDiscussionBoardType) graphql.Marshaler {
+	return v
 }
 
 func (ec *executionContext) unmarshalNSystemIntakeGRBPresentationLinksInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBPresentationLinksInput(ctx context.Context, v any) (models.SystemIntakeGRBPresentationLinksInput, error) {

@@ -7,7 +7,10 @@ export default gql(/* GraphQL */ `
   query GetSystemIntakeGRBDiscussions($id: UUID!) {
     systemIntake(id: $id) {
       id
-      grbDiscussions {
+      grbDiscussionsInternal {
+        ...SystemIntakeGRBReviewDiscussion
+      }
+      grbDiscussionsPrimary {
         ...SystemIntakeGRBReviewDiscussion
       }
     }

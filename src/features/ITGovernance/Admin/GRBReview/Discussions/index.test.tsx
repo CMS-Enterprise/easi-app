@@ -41,7 +41,8 @@ const getSystemIntakeGRBDiscussions = (
       systemIntake: {
         __typename: 'SystemIntake',
         id: systemIntake.id,
-        grbDiscussions
+        grbDiscussionsInternal: grbDiscussions,
+        grbDiscussionsPrimary: grbDiscussions
       }
     }
   }

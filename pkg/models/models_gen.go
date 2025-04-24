@@ -1009,13 +1009,15 @@ type UserError struct {
 }
 
 type CreateSystemIntakeGRBDiscussionPostInput struct {
-	SystemIntakeID uuid.UUID  `json:"systemIntakeID"`
-	Content        TaggedHTML `json:"content"`
+	SystemIntakeID      uuid.UUID                          `json:"systemIntakeID"`
+	DiscussionBoardType SystemIntakeGRBDiscussionBoardType `json:"discussionBoardType"`
+	Content             TaggedHTML                         `json:"content"`
 }
 
 type CreateSystemIntakeGRBDiscussionReplyInput struct {
-	InitialPostID uuid.UUID  `json:"initialPostID"`
-	Content       TaggedHTML `json:"content"`
+	InitialPostID       uuid.UUID                          `json:"initialPostID"`
+	DiscussionBoardType SystemIntakeGRBDiscussionBoardType `json:"discussionBoardType"`
+	Content             TaggedHTML                         `json:"content"`
 }
 
 // Input data used to set or update a System Intake's GRB Review Presentation (Async) data
@@ -1326,6 +1328,61 @@ func (e *SystemIntakeFormStep) UnmarshalJSON(b []byte) error {
 }
 
 func (e SystemIntakeFormStep) MarshalJSON() ([]byte, error) {
+	var buf bytes.Buffer
+	e.MarshalGQL(&buf)
+	return buf.Bytes(), nil
+}
+
+type SystemIntakeGRBDiscussionBoardType string
+
+const (
+	SystemIntakeGRBDiscussionBoardTypePrimary  SystemIntakeGRBDiscussionBoardType = "PRIMARY"
+	SystemIntakeGRBDiscussionBoardTypeInternal SystemIntakeGRBDiscussionBoardType = "INTERNAL"
+)
+
+var AllSystemIntakeGRBDiscussionBoardType = []SystemIntakeGRBDiscussionBoardType{
+	SystemIntakeGRBDiscussionBoardTypePrimary,
+	SystemIntakeGRBDiscussionBoardTypeInternal,
+}
+
+func (e SystemIntakeGRBDiscussionBoardType) IsValid() bool {
+	switch e {
+	case SystemIntakeGRBDiscussionBoardTypePrimary, SystemIntakeGRBDiscussionBoardTypeInternal:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeGRBDiscussionBoardType) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeGRBDiscussionBoardType) UnmarshalGQL(v any) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeGRBDiscussionBoardType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeGRBDiscussionBoardType", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeGRBDiscussionBoardType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+func (e *SystemIntakeGRBDiscussionBoardType) UnmarshalJSON(b []byte) error {
+	s, err := strconv.Unquote(string(b))
+	if err != nil {
+		return err
+	}
+	return e.UnmarshalGQL(s)
+}
+
+func (e SystemIntakeGRBDiscussionBoardType) MarshalJSON() ([]byte, error) {
 	var buf bytes.Buffer
 	e.MarshalGQL(&buf)
 	return buf.Bytes(), nil
@@ -1703,19 +1760,21 @@ type TagType string
 
 const (
 	TagTypeUserAccount       TagType = "USER_ACCOUNT"
+	TagTypeRequester         TagType = "REQUESTER"
 	TagTypeGroupItGov        TagType = "GROUP_IT_GOV"
 	TagTypeGroupGrbReviewers TagType = "GROUP_GRB_REVIEWERS"
 )
 
 var AllTagType = []TagType{
 	TagTypeUserAccount,
+	TagTypeRequester,
 	TagTypeGroupItGov,
 	TagTypeGroupGrbReviewers,
 }
 
 func (e TagType) IsValid() bool {
 	switch e {
-	case TagTypeUserAccount, TagTypeGroupItGov, TagTypeGroupGrbReviewers:
+	case TagTypeUserAccount, TagTypeRequester, TagTypeGroupItGov, TagTypeGroupGrbReviewers:
 		return true
 	}
 	return false
