@@ -89,6 +89,7 @@ type templates struct {
 	grbReviewReminder                               templateCaller
 	grbReviewerInvitedToVote                        templateCaller
 	grbReviewHalfwayThrough                         templateCaller
+	grbReviewPastDueNoQuorum                        templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -508,6 +509,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(grbReviewHalfwayThroughTemplateName)
 	}
 	appTemplates.grbReviewHalfwayThrough = grbReviewHalfwayThrough
+
+	grbReviewPastDueNoQuorumTemplateName := "grb_review_past_due_no_quorum.gohtml"
+	grbReviewPastDueNoQuorum := rawTemplates.Lookup(grbReviewPastDueNoQuorumTemplateName)
+	if grbReviewPastDueNoQuorum == nil {
+		return Client{}, templateError(grbReviewPastDueNoQuorumTemplateName)
+	}
+	appTemplates.grbReviewPastDueNoQuorum = grbReviewPastDueNoQuorum
 
 	client := Client{
 		config:    config,
