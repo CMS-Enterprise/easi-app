@@ -3,6 +3,8 @@ package scheduler
 import (
 	"time"
 
+	"github.com/guregu/null"
+
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
@@ -29,5 +31,32 @@ func (suite *SchedulerTestSuite) TestSendAsyncVotingHalfwayThroughEmailJobFuncti
 	// TODO: return successCount/failureCount from these functions and update `OneTimeJob` to take a more generic style `func (ctx) error` or something similar
 	// once that is done, we can test if this worked vs just not-errored
 	err = sendAsyncVotingHalfwayThroughEmailJobFunction(suite.testConfigs.Context, stubJob)
+	suite.NoError(err)
+}
+
+func (suite *SchedulerTestSuite) TestSendGRBReviewEndedEmailJobFunction() {
+	testScheduler := suite.NewTestScheduler()
+	stubJob := suite.NewScheduledJobStub(testScheduler)
+
+	now := time.Now()
+
+	// Step 1: Create a test intake that has completed async voting (ended yesterday)
+	testIntake := &models.SystemIntake{
+		Requester:             "Ended Voting User",
+		RequesterEmailAddress: null.StringFrom("endedvoting@example.com"),
+		Component:             null.StringFrom("Test Component"),
+		ProjectName:           null.StringFrom("Voting Ended Project"),
+		GRBReviewStartedAt:    helpers.PointerTo(now.AddDate(0, 0, -5)),
+		GrbReviewAsyncEndDate: helpers.PointerTo(now.AddDate(0, 0, -1)), // Ended yesterday
+		GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
+		Step:                  models.SystemIntakeStepGRBREVIEW,
+		RequestType:           models.SystemIntakeRequestTypeNEW,
+	}
+	createdIntake, err := suite.testConfigs.Store.CreateSystemIntake(suite.testConfigs.Context, testIntake)
+	suite.NoError(err)
+	suite.NotNil(createdIntake)
+
+	// Step 3: Run the new job function
+	err = sendGRBReviewEndedEmailJobFunction(suite.testConfigs.Context, stubJob)
 	suite.NoError(err)
 }
