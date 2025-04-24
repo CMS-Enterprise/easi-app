@@ -49,7 +49,7 @@ func (suite *SchedulerTestSuite) TestSendGRBReviewEndedEmailJobFunction() {
 		GRBReviewStartedAt:    helpers.PointerTo(now.AddDate(0, 0, -5)),
 		GrbReviewAsyncEndDate: helpers.PointerTo(now.AddDate(0, 0, -1)), // Ended yesterday
 		GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
-		Step:                  models.SystemIntakeStepDECISION,
+		Step:                  models.SystemIntakeStepINITIALFORM,
 		RequestType:           models.SystemIntakeRequestTypeNEW,
 	}
 	createdIntake, err := suite.testConfigs.Store.CreateSystemIntake(suite.testConfigs.Context, testIntake)
