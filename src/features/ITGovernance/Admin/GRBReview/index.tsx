@@ -1,6 +1,7 @@
 import React, { useContext, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { NavHashLink } from 'react-router-hash-link';
 import { Icon } from '@trussworks/react-uswds';
 import DocumentsTable from 'features/ITGovernance/_components/DocumentsTable';
 import {
@@ -56,6 +57,8 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
     return data?.systemIntake;
   }, [data?.systemIntake]);
 
+  const { grbReviewStartedAt } = grbReview || {};
+
   const { euaId } = useSelector((appState: AppState) => appState.auth);
 
   const currentGRBReviewer = grbReview?.grbVotingInformation?.grbReviewers.find(
@@ -75,11 +78,9 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
     <>
       <div className="padding-bottom-4" id="grbReview">
         <PageHeading className="margin-y-0">{t('title')}</PageHeading>
-
         <p className="font-body-md line-height-body-4 text-light margin-top-05 margin-bottom-3">
           {t('description')}
         </p>
-
         {/* GRB Admin Task */}
         <GRBReviewAdminTask
           isITGovAdmin={isITGovAdmin}
@@ -88,14 +89,12 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
           grbReviewReminderLastSent={grbReview.grbReviewReminderLastSent}
           grbReviewers={grbReviewers}
         />
-
         {/* GRB Reviewer Voting Panel */}
         {/* TODO: Add grbReviewStartedAt once work is done to start review */}
         {/* {!isITGovAdmin && grbReviewStartedAt && currentGRBReviewer && ( */}
         {!isITGovAdmin && currentGRBReviewer && (
           <GRBVotingPanel grbReviewer={currentGRBReviewer} />
         )}
-
         {/* Review details */}
         <h2 className="margin-bottom-0 margin-top-6" id="details">
           {t('reviewDetails.title')}
@@ -103,21 +102,40 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
         <p className="margin-top-05 line-height-body-5">
           {t('reviewDetails.text')}
         </p>
-
         {/* GRB Review Status */}
         <GRBReviewStatusCard grbReview={grbReview} />
-
         {/* Decision Record */}
         <DecisionRecordCard
           grbVotingInformation={grbReview.grbVotingInformation}
         />
+
+        {/* Discussions summary card */}
+        {grbReviewStartedAt && (
+          <div className="bg-base-lightest padding-x-3 padding-y-3 margin-top-2">
+            <p className="margin-top-05">
+              <Trans
+                i18nKey="discussions:summaryCard.title"
+                components={{ span: <span className="text-bold" /> }}
+                // TODO: Update to use actual values from grbDiscussions
+                values={{ withoutReplies: 4 }}
+                count={2}
+              />
+            </p>
+
+            <NavHashLink
+              to="#discussions"
+              className="display-inline-block margin-bottom-05"
+            >
+              {t('discussions:summaryCard.jumpToDiscussions')}
+            </NavHashLink>
+          </div>
+        )}
 
         {/* GRT recommendations to the GRB */}
         <GRBFeedbackCard
           systemIntakeID={id}
           governanceRequestFeedbacks={governanceRequestFeedbacks}
         />
-
         {/* Supporting Docs text */}
         <h2 className="margin-bottom-0 margin-top-6" id="documents">
           {t('supportingDocuments')}
@@ -125,16 +143,13 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
         <p className="margin-top-05 line-height-body-5">
           {t('supportingDocumentsText')}
         </p>
-
         {/* Presentation Links */}
         <PresentationLinksCard
           systemIntakeID={id}
           grbPresentationLinks={grbReview.grbPresentationLinks}
         />
-
         {/* Business Case Card */}
         <BusinessCaseCard businessCase={businessCase} systemIntakeID={id} />
-
         {/* Intake Request Link */}
         <IntakeRequestCard
           systemIntakeID={id}
@@ -142,7 +157,6 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
           annualSpending={annualSpending}
           submittedAt={submittedAt}
         />
-
         {/* Additional Documents Title and Link */}
         <div className="margin-y-4">
           <h3 className="margin-bottom-1">{t('additionalDocuments')}</h3>
@@ -157,10 +171,8 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
             </UswdsReactLink>
           )}
         </div>
-
         {/* GRB Documents */}
         <DocumentsTable systemIntakeId={id} documents={grbReview.documents} />
-
         {/* Discussion Board */}
         <Discussions
           systemIntakeID={id}
@@ -168,7 +180,6 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
           grbReviewStartedAt={grbReview.grbReviewStartedAt}
           className="margin-top-4 margin-bottom-6"
         />
-
         {/* Participants Table */}
         <ParticipantsSection
           id={id}

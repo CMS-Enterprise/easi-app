@@ -81,6 +81,12 @@ const discussions = {
     }
   },
 
+  summaryCard: {
+    title:
+      '<span>Discussions summary:</span> {{count}} total discussions ({{withoutReplies}} without replies)',
+    jumpToDiscussions: 'Jump to discussions'
+  },
+
   // Board Specific Translations
   governanceReviewBoard: {
     discussionsDescription:
