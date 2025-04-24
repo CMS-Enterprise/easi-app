@@ -764,7 +764,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 			SystemIntakeID:     intakeID,
 			ProjectName:        "Project Ended Email Test",
 			RequesterName:      "Ended Email - Name",
-			RequesterComponent: "Office of Muffins and Waffles",
+			RequesterComponent: "Center for Medicare",
 			GRBReviewStart:     time.Now().AddDate(0, 0, -5),
 			GRBReviewDeadline:  time.Now(),
 		},
