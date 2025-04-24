@@ -3,6 +3,7 @@ package scheduler
 import (
 	"context"
 	"errors"
+	"time"
 
 	"go.uber.org/zap"
 
@@ -18,8 +19,11 @@ type grbEmailJobs struct {
 	// SendAsyncVotingHalfwayThroughEmailJob is a job that sends an email when the voting session is halfway through
 	SendAsyncVotingHalfwayThroughEmailJob ScheduledJob
 
-	// SendAsyncPastDueNoQuorumEmailJob is a job that sends an email when a GRB review is past due but quorum is not met
-	SendAsyncPastDueNoQuorumEmailJob ScheduledJob
+	// SendAsyncPastDueNoQuorumEmailJob is a job that sends and email when a GRB review is past due but quorum is not met
+	SendAsyncPastDueNoQuorumEmailJob ScheduledJob // TODO: Consider using OneTimeJob type
+
+	// SendGRBReviewEndedEmailJob is a job that sends an email when the GRB review has ended
+	SendGRBReviewEndedEmailJob ScheduledJob // TODO: Consider using OneTimeJob type
 
 	// SendAsyncReviewCompleteWithQuorumEmailJob is a job that sends when a GRB review is finished and quorum has been met
 	SendAsyncReviewCompleteWithQuorumEmailJob ScheduledJob
@@ -41,14 +45,18 @@ func getGRBEmailJobs(scheduler *Scheduler) *grbEmailJobs {
 		SendAsyncPastDueNoQuorumEmailJob: NewScheduledJob(
 			"SendAsyncPastDueNoQuorumEmailJob",
 			scheduler,
-			timing.DailyAt1001PM,
+			timing.DailyAt10_01PMUTC,
 			sendAsyncPastDueNoQuorumEmailJobFunction,
 		),
+
+		SendGRBReviewEndedEmailJob: NewScheduledJob("SendGRBReviewEndedEmailJob", scheduler,
+			timing.DailyAt10_01PMUTC,
+			sendGRBReviewEndedEmailJobFunction),
 
 		SendAsyncReviewCompleteWithQuorumEmailJob: NewScheduledJob(
 			"SendAsyncReviewCompleteWithQuorumEmailJob",
 			scheduler,
-			timing.DailyAt1001PM,
+			timing.DailyAt10_01PMUTC,
 			sendAsyncReviewCompleteQuorumMetJobFunction,
 		),
 	}
@@ -184,6 +192,74 @@ func sendAsyncPastDueNoQuorumEmailJobFunction(ctx context.Context, scheduledJob 
 			// we chose to continue here instead of returning an error, because we want to send emails to all intakes
 			// even if one of them fails
 			continue
+		}
+	}
+
+	return nil
+}
+
+func sendGRBReviewEndedEmailJobFunction(ctx context.Context, scheduledJob *ScheduledJob) error {
+	logger, err := scheduledJob.logger()
+	if err != nil {
+		return err
+	}
+
+	store, err := scheduledJob.store()
+	if err != nil {
+		logger.Error("error getting store from scheduler", zap.Error(err))
+		return err
+	}
+
+	emailClient, err := scheduledJob.emailClient()
+	if err != nil {
+		logger.Error("error getting email client from scheduler", zap.Error(err))
+		return err
+	}
+
+	logger.Info("Running GRB review ended email job")
+
+	intakes, err := store.FetchSystemIntakes(ctx)
+	if err != nil {
+		logger.Error("error fetching system intakes", zap.Error(err))
+		return err
+	}
+
+	now := time.Now().UTC().Truncate(24 * time.Hour)
+
+	for _, intake := range intakes {
+		if intake.GrbReviewType != models.SystemIntakeGRBReviewTypeAsync {
+			continue
+		}
+		if intake.GRBReviewStartedAt == nil || intake.GrbReviewAsyncEndDate == nil {
+			continue
+		}
+		// Don't resend if voting has been manually ended
+		if intake.GrbReviewAsyncManualEndDate != nil {
+			continue
+		}
+		// Only send if the review end was reached
+		if intake.GrbReviewAsyncEndDate.After(now) {
+			continue
+		}
+
+		if intake.RequesterEmailAddress.Valid && intake.ProjectName.Valid {
+			if err := emailClient.SystemIntake.SendSystemIntakeGRBReviewEnded(
+				ctx,
+				email.SendSystemIntakeGRBReviewEndedInput{
+					Recipient:          models.NewEmailAddress(intake.RequesterEmailAddress.String),
+					SystemIntakeID:     intake.ID,
+					ProjectName:        intake.ProjectName.String,
+					RequesterName:      intake.Requester,
+					RequesterComponent: intake.Component.String,
+					GRBReviewStart:     *intake.GRBReviewStartedAt,
+					GRBReviewDeadline:  *intake.GrbReviewAsyncEndDate,
+				},
+			); err != nil {
+				logger.Error("failed to send GRB Review Ended email", logfields.IntakeID(intake.ID), zap.Error(err))
+				continue
+			}
+
+			logger.Info("sent GRB Review Ended email", logfields.IntakeID(intake.ID))
 		}
 	}
 

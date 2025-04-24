@@ -3,6 +3,8 @@ package scheduler
 import (
 	"time"
 
+	"github.com/guregu/null"
+
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
@@ -52,5 +54,32 @@ func (suite *SchedulerTestSuite) TestSendAsyncPastDueNoQuorumEmailJobFunction() 
 	suite.NotNil(createdIntake)
 
 	err = sendAsyncPastDueNoQuorumEmailJobFunction(suite.testConfigs.Context, stubJob)
+	suite.NoError(err)
+}
+
+func (suite *SchedulerTestSuite) TestSendGRBReviewEndedEmailJobFunction() {
+	testScheduler := suite.NewTestScheduler()
+	stubJob := suite.NewScheduledJobStub(testScheduler)
+
+	now := time.Now()
+
+	// Step 1: Create a test intake that has completed async voting (ended yesterday)
+	testIntake := &models.SystemIntake{
+		Requester:             "Ended Voting User",
+		RequesterEmailAddress: null.StringFrom("endedvoting@example.com"),
+		Component:             null.StringFrom("Test Component"),
+		ProjectName:           null.StringFrom("Voting Ended Project"),
+		GRBReviewStartedAt:    helpers.PointerTo(now.AddDate(0, 0, -5)),
+		GrbReviewAsyncEndDate: helpers.PointerTo(now.AddDate(0, 0, -1)), // Ended yesterday
+		GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
+		Step:                  models.SystemIntakeStepINITIALFORM,
+		RequestType:           models.SystemIntakeRequestTypeNEW,
+	}
+	createdIntake, err := suite.testConfigs.Store.CreateSystemIntake(suite.testConfigs.Context, testIntake)
+	suite.NoError(err)
+	suite.NotNil(createdIntake)
+
+	// Step 3: Run the new job function
+	err = sendGRBReviewEndedEmailJobFunction(suite.testConfigs.Context, stubJob)
 	suite.NoError(err)
 }
