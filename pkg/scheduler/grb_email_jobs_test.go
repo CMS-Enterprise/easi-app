@@ -21,6 +21,7 @@ func (suite *SchedulerTestSuite) TestSendAsyncVotingHalfwayThroughEmailJobFuncti
 		GrbReviewAsyncEndDate: helpers.PointerTo(now.AddDate(0, 0, 4)),
 		Step:                  models.SystemIntakeStepINITIALFORM,
 		RequestType:           models.SystemIntakeRequestTypeNEW,
+		GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
 	}
 	createdIntake, err := suite.testConfigs.Store.CreateSystemIntake(suite.testConfigs.Context, testIntake)
 	suite.NoError(err)
@@ -29,5 +30,27 @@ func (suite *SchedulerTestSuite) TestSendAsyncVotingHalfwayThroughEmailJobFuncti
 	// TODO: return successCount/failureCount from these functions and update `OneTimeJob` to take a more generic style `func (ctx) error` or something similar
 	// once that is done, we can test if this worked vs just not-errored
 	err = sendAsyncVotingHalfwayThroughEmailJobFunction(suite.testConfigs.Context, stubJob)
+	suite.NoError(err)
+}
+
+func (suite *SchedulerTestSuite) TestSendAsyncPastDueNoQuorumEmailJobFunction() {
+	testScheduler := suite.NewTestScheduler()
+
+	stubJob := suite.NewScheduledJobStub(testScheduler)
+
+	now := time.Now()
+	testIntake := &models.SystemIntake{
+		GRBReviewStartedAt:    helpers.PointerTo(now.AddDate(0, 0, -7)),
+		GrbReviewAsyncEndDate: helpers.PointerTo(now.AddDate(0, 0, -1)),
+		Step:                  models.SystemIntakeStepINITIALFORM,
+		RequestType:           models.SystemIntakeRequestTypeNEW,
+		GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
+	}
+
+	createdIntake, err := suite.testConfigs.Store.CreateSystemIntake(suite.testConfigs.Context, testIntake)
+	suite.NoError(err)
+	suite.NotNil(createdIntake)
+
+	err = sendAsyncPastDueNoQuorumEmailJobFunction(suite.testConfigs.Context, stubJob)
 	suite.NoError(err)
 }

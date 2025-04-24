@@ -839,4 +839,18 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 			NotYetVoted:        1,
 		})
 	noErr(err)
+
+	err = client.SystemIntake.SendGRBReviewPastDueNoQuorum(ctx,
+		email.SendGRBReviewPastDueNoQuorumInput{
+			SystemIntakeID:     intakeID,
+			ProjectTitle:       "Past Due No Quorum title",
+			RequesterName:      "Requester Past Due No Quorum",
+			RequesterComponent: "Office of Legislation",
+			StartDate:          time.Now().AddDate(0, 0, -1),
+			EndDate:            time.Now().AddDate(0, 0, 5),
+			NoObjectionVotes:   1,
+			ObjectionVotes:     1,
+			NotYetVoted:        1,
+		})
+	noErr(err)
 }
