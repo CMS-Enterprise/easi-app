@@ -7,6 +7,7 @@ import DocumentsTable from 'features/ITGovernance/_components/DocumentsTable';
 import {
   SystemIntakeFragmentFragment,
   SystemIntakeGRBReviewerVotingRole,
+  useGetSystemIntakeGRBDiscussionsQuery,
   useGetSystemIntakeGRBReviewQuery
 } from 'gql/generated/graphql';
 import { AppState } from 'stores/reducers/rootReducer';
@@ -47,15 +48,21 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
     governanceRequestFeedbacks
   } = systemIntake;
 
-  const { data } = useGetSystemIntakeGRBReviewQuery({
+  const isITGovAdmin = useContext(ITGovAdminContext);
+
+  const { data: discussionsData } = useGetSystemIntakeGRBDiscussionsQuery({
+    variables: { id }
+  });
+
+  const { data: grbReviewData } = useGetSystemIntakeGRBReviewQuery({
     variables: {
       id
     }
   });
 
   const grbReview = useMemo(() => {
-    return data?.systemIntake;
-  }, [data?.systemIntake]);
+    return grbReviewData?.systemIntake;
+  }, [grbReviewData?.systemIntake]);
 
   const { grbReviewStartedAt } = grbReview || {};
 
@@ -66,9 +73,24 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
       reviewer.userAccount.username === euaId &&
       reviewer.votingRole === SystemIntakeGRBReviewerVotingRole.VOTING
   );
+
   const grbReviewers = grbReview?.grbVotingInformation?.grbReviewers || [];
 
-  const isITGovAdmin = useContext(ITGovAdminContext);
+  /** Merge discussions from both board types into one array */
+  const grbDiscussions = useMemo(() => {
+    if (!discussionsData?.systemIntake) return undefined;
+
+    return [
+      ...discussionsData.systemIntake.grbDiscussionsInternal,
+      ...discussionsData.systemIntake.grbDiscussionsPrimary
+    ];
+  }, [discussionsData]);
+
+  const grbDiscussionsWithoutRepliesCount: number = useMemo(() => {
+    if (!grbDiscussions) return 0;
+
+    return grbDiscussions.filter(({ replies }) => replies.length === 0).length;
+  }, [grbDiscussions]);
 
   if (!grbReview) {
     return null;
@@ -110,15 +132,16 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
         />
 
         {/* Discussions summary card */}
-        {grbReviewStartedAt && (
+        {grbReviewStartedAt && grbDiscussions && (
           <div className="bg-base-lightest padding-x-3 padding-y-3 margin-top-2">
             <p className="margin-top-05">
               <Trans
                 i18nKey="discussions:summaryCard.title"
                 components={{ span: <span className="text-bold" /> }}
-                // TODO: Update to use actual values from grbDiscussions
-                values={{ withoutReplies: 4 }}
-                count={2}
+                values={{
+                  withoutReplies: grbDiscussionsWithoutRepliesCount
+                }}
+                count={grbDiscussions.length}
               />
             </p>
 
