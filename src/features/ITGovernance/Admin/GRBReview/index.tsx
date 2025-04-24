@@ -147,7 +147,7 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
 
             <NavHashLink
               to="#discussions"
-              className="display-inline-block margin-bottom-05"
+              className="usa-link display-inline-block margin-bottom-05"
             >
               {t('discussions:summaryCard.jumpToDiscussions')}
             </NavHashLink>
