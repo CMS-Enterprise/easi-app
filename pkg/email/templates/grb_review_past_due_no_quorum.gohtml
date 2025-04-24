@@ -1,0 +1,28 @@
+{{template "easi_header.gohtml"}}
+
+<p>The review timeframe for {{.ProjectTitle}} has passed, but not enough GRB members have entered a vote to reach a
+  quorum. The GRB review is now in a past due state. GRB members may continue to vote until a quorum is reached. You may
+  want to send a reminder to GRB members in order to reach a quorum of votes.</p>
+
+<p><strong><a href="{{.Link}}">View this request in EASi</a></strong></p>
+
+<div class="no-margin">
+  <p><strong>Request summary:</strong></p>
+  <p>Project title: {{.ProjectTitle}}</p>
+  <p>Requester: {{.RequesterName}}{{if .RequesterComponent}}, {{.RequesterComponent}}{{else}}{{end}}</p>
+  <p>GRB review dates: {{.DateInfo}}</p>
+  <p>Votes: {{.VoteInfo}}</p>
+</div>
+<br>
+<div class="no-margin">
+  <p>Next steps:</p>
+  <ul>
+    <li>Send a reminder to GRB review members.</li>
+    <li>End the review without a quorum.</li>
+    <li>Issue a decision in EASi.</li>
+  </ul>
+</div>
+<br>
+<hr>
+
+<p>You will continue to receive email notifications about this request until it is closed.</p>
