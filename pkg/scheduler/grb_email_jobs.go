@@ -256,6 +256,5 @@ func sendAsyncReviewCompleteQuorumMetJobFunction(ctx context.Context, scheduledJ
 		}
 
 	}
-
 	return nil
 }
