@@ -98,7 +98,7 @@ const RequestDescription = ({
                 />
               </FieldGroup>
 
-              {/* TODO: NJD - add internal collaboration question */}
+              {/* TODO: add internal collaboration question */}
 
               <FieldGroup
                 scrollElement="currentSolutionSummary"
@@ -163,6 +163,13 @@ const RequestDescription = ({
                 >
                   {t('priorityAlignmentHelpText')}
                 </HelpText>
+                <CollapsableLink
+                  id="BusinessCase-examplePriorityAlignment"
+                  label={t('priorityAlignmentExample.label')}
+                  className="margin-top-1 margin-bottom-2"
+                >
+                  {t('priorityAlignmentExample.description')}
+                </CollapsableLink>
                 <FieldErrorMsg>{flatErrors.priorityAlignment}</FieldErrorMsg>
                 <Field
                   as={TextAreaField}
@@ -205,7 +212,7 @@ const RequestDescription = ({
                 />
               </FieldGroup>
 
-              {/* TODO: NJD add response to GRT recs question */}
+              {/* TODO: add response to GRT recs question */}
             </Form>
 
             <ButtonGroup>

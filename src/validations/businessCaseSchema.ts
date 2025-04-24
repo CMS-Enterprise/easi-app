@@ -50,19 +50,6 @@ const lifecycleCostsSchema = Yup.object().shape({
   other: relatedCostPhase
 });
 
-const draftSolutionSchema = Yup.object().shape({
-  title: Yup.string(),
-  summary: Yup.string(),
-  acquisitionApproach: Yup.string(),
-  security: Yup.object().shape({}),
-  hosting: Yup.object().shape({}),
-  hasUserInterface: Yup.string(),
-  pros: Yup.string(),
-  cons: Yup.string(),
-  estimatedLifecycleCost: lifecycleCostsSchema,
-  costSavings: Yup.string()
-});
-
 const finalSolutionSchema = (solutionType: string) =>
   Yup.object().shape({
     title: Yup.string()
@@ -213,7 +200,7 @@ export const getAlternativeAnalysisSchema = (
 
 /** Returns Solution schema based on whether final or draft */
 export const SolutionSchema = (isFinal: boolean, solutionType: string) =>
-  isFinal ? finalSolutionSchema(solutionType) : draftSolutionSchema;
+  isFinal ? finalSolutionSchema(solutionType) : Yup.object();
 
 /** Returns Business Case schema based on whether final or draft */
 export const BusinessCaseSchema = (isFinal: boolean) =>

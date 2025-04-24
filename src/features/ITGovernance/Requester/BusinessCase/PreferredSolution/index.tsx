@@ -1,14 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import {
-  Button,
-  ButtonGroup,
-  Icon,
-  Label,
-  Radio,
-  TextInput
-} from '@trussworks/react-uswds';
+import { Button, Icon, Label, Radio, TextInput } from '@trussworks/react-uswds';
+import classnames from 'classnames';
 import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 
 import AutoSave from 'components/AutoSave';
@@ -24,7 +18,7 @@ import { yesNoMap } from 'data/common';
 import { BusinessCaseModel, PreferredSolutionForm } from 'types/businessCase';
 import { LifecycleCosts } from 'types/estimatedLifecycle';
 import flattenErrors from 'utils/flattenErrors';
-import { BusinessCaseSchema } from 'validations/businessCaseSchema';
+import { SolutionSchema } from 'validations/businessCaseSchema';
 
 import BusinessCaseStepWrapper from '../BusinessCaseStepWrapper';
 
@@ -44,24 +38,43 @@ const PreferredSolution = ({
   const history = useHistory();
 
   const initialValues = {
-    preferredSolution: businessCase.preferredSolution
+    preferredSolution: {
+      ...businessCase.preferredSolution
+    }
   };
 
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={BusinessCaseSchema(isFinal).preferredSolution}
+      // validationSchema={BusinessCaseSchema(isFinal).preferredSolution}
+      validationSchema={SolutionSchema(isFinal, 'Preferred Solution')}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
       innerRef={formikRef}
     >
       {(formikProps: FormikProps<PreferredSolutionForm>) => {
-        const { values, errors, setErrors, setFieldValue, validateForm } =
-          formikProps;
+        const { values, errors, setFieldValue, validateForm } = formikProps;
 
         const flatErrors = flattenErrors(errors);
+
+        const validateSolution = () => {
+          try {
+            SolutionSchema(isFinal, 'Preferred Solution').validateSync(
+              values.preferredSolution,
+              { abortEarly: false }
+            );
+
+            return true;
+          } catch (err) {
+            return false;
+          }
+        };
+
+        const isFormValid = validateSolution();
+
+        // const isFormValid = Object.keys(flatErrors).length === 0;
 
         return (
           <BusinessCaseStepWrapper
@@ -167,7 +180,7 @@ const PreferredSolution = ({
                   />
                 </FieldGroup>
 
-                {/* TODO: NJD add target contract award and target completion of dev work questions */}
+                {/* TODO: add target contract award and target completion of dev work questions */}
 
                 <FieldGroup
                   scrollElement="preferredSolution.security.isApproved"
@@ -277,7 +290,7 @@ const PreferredSolution = ({
                   </FieldGroup>
                 )}
 
-                {/* TODO: NJD add zero trust principles question */}
+                {/* TODO: add zero trust principles question */}
 
                 <FieldGroup
                   scrollElement="preferredSolution.hosting.type"
@@ -336,7 +349,7 @@ const PreferredSolution = ({
                           />
                         </FieldGroup>
 
-                        {/* TODO: NJD add cloud  / cloud migration strategy question */}
+                        {/* TODO: add cloud  / cloud migration strategy question */}
 
                         <FieldGroup
                           className="margin-bottom-1 margin-left-4"
@@ -486,7 +499,7 @@ const PreferredSolution = ({
                   </fieldset>
                 </FieldGroup>
 
-                {/* TODO: NJD add workforce training requirements question */}
+                {/* TODO: add workforce training requirements question */}
 
                 <hr
                   className="margin-bottom-1 margin-top-4 opacity-30"
@@ -603,36 +616,26 @@ const PreferredSolution = ({
               </FieldGroup>
             </Form>
 
-            <ButtonGroup>
-              <Button
-                type="button"
-                outline
-                onClick={() => {
-                  dispatchSave();
-                  setErrors({});
-                  const newUrl = 'request-description';
-                  history.push(newUrl);
-                }}
-              >
-                {t('Back')}
-              </Button>
-              <Button
-                type="button"
-                onClick={() => {
-                  validateForm().then(err => {
-                    if (Object.keys(err).length === 0) {
-                      dispatchSave();
-                      const newUrl = 'alternative-solution-a';
-                      history.push(newUrl);
-                    } else {
-                      window.scrollTo(0, 0);
-                    }
-                  });
-                }}
-              >
-                {t('Next')}
-              </Button>
-            </ButtonGroup>
+            <Button
+              type="button"
+              className={classnames('usa-button', {
+                'usa-button--disabled': !isFormValid,
+                'no-pointer': !isFormValid
+              })}
+              onClick={() => {
+                validateForm().then(err => {
+                  if (Object.keys(err).length === 0) {
+                    dispatchSave();
+                    const newUrl = 'alternative-analysis';
+                    history.push(newUrl);
+                  } else {
+                    window.scrollTo(0, 0);
+                  }
+                });
+              }}
+            >
+              {t('Finish Preferred Solution')}
+            </Button>
 
             <IconButton
               type="button"

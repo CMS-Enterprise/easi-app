@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { Button, ButtonGroup, Icon } from '@trussworks/react-uswds';
+import { Button, Icon } from '@trussworks/react-uswds';
 import { Form, Formik, FormikProps } from 'formik';
 
 import Alert from 'components/Alert';
@@ -48,7 +48,7 @@ const AlternativeSolutionB = ({
       innerRef={formikRef}
     >
       {(formikProps: FormikProps<any>) => {
-        const { errors, setErrors, validateForm } = formikProps;
+        const { errors, validateForm } = formikProps;
         const values = formikProps.values.alternativeB;
         const flatErrors = flattenErrors(errors);
 
@@ -91,45 +91,33 @@ const AlternativeSolutionB = ({
               />
             </Form>
 
-            <ButtonGroup>
-              <Button
-                type="button"
-                outline
-                onClick={() => {
-                  dispatchSave();
-                  setErrors({});
-                  const newUrl = 'alternative-solution-a';
+            <Button
+              type="button"
+              onClick={() => {
+                dispatchSave();
+                const newUrl = 'alternative-analysis';
+
+                // If final Business Case OR any field is filled
+                if (
+                  isFinal &&
+                  alternativeSolutionHasFilledFields(
+                    formikRef?.current?.values?.alternativeB
+                  )
+                ) {
+                  validateForm().then(err => {
+                    if (Object.keys(err).length === 0) {
+                      history.push(newUrl);
+                    } else {
+                      window.scrollTo(0, 0);
+                    }
+                  });
+                } else {
                   history.push(newUrl);
-                }}
-              >
-                {t('Back')}
-              </Button>
-              <Button
-                type="button"
-                onClick={() => {
-                  dispatchSave();
-                  // If final Business Case OR any field is filled
-                  if (
-                    isFinal &&
-                    alternativeSolutionHasFilledFields(
-                      formikRef?.current?.values?.alternativeB
-                    )
-                  ) {
-                    validateForm().then(err => {
-                      if (Object.keys(err).length === 0) {
-                        history.push('review');
-                      } else {
-                        window.scrollTo(0, 0);
-                      }
-                    });
-                  } else {
-                    history.push('review');
-                  }
-                }}
-              >
-                {t('Next')}
-              </Button>
-            </ButtonGroup>
+                }
+              }}
+            >
+              {t('Finish Alternative B')}
+            </Button>
 
             <IconButton
               type="button"

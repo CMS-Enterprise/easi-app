@@ -41,6 +41,11 @@ const businessCase = {
     'How does this effort align with HHS/CMS policies, strategies, or organizational priorities? Elaborate on the value the proposed solution will bring to the government.',
   priorityAlignmentHelpText:
     'Does this effort support any Administrator priorities or new legislative or regulatory mandates? Include any relevant deadlines.',
+  priorityAlignmentExample: {
+    label: 'View an example answer',
+    description:
+      'To comply with the Making Electronic Government Accountable by Yielding Tangible Efficiencies MEGABYTE Act, the Office of Information Technology (OIT) is seeking to continue the XYZ Enterprise License Agreement (ELA). XYZ licenses provide a variety of services for CMS including customer service management, service desk support, service desk ticket tracking, catalog orders and asset management.'
+  },
   successIndicators:
     'How will you determine whether or not this effort is successful?',
   successIndicatorsHelpText:
@@ -139,7 +144,7 @@ const businessCase = {
       'the downstream impact to CMS, other systems, or other users if this solution is selected'
   },
   // TODO: NJD - I don't like this "NOT" wording, hash out with Zoe / Gov Team
-  // TODO: NJD - can also probably combine pros and cons into one group?
+  // TODO: NJD - can also probably combine pros and cons into one group
   cons: {
     label: 'Cons',
     include: 'Please include both:',

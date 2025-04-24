@@ -108,7 +108,7 @@ const AlternativeSolutionFields = ({
           />
         </FieldGroup>
 
-        {/* TODO: NJD add target contract award and target completion of dev work questions */}
+        {/* TODO: add target contract award and target completion of dev work questions */}
 
         <FieldGroup
           scrollElement={`${altId}.security.isApproved`}
@@ -194,7 +194,7 @@ const AlternativeSolutionFields = ({
           </FieldGroup>
         )}
 
-        {/* TODO: NJD add zero trust principles question */}
+        {/* TODO: add zero trust principles question */}
 
         <FieldGroup
           scrollElement={`${altId}.hosting.type`}
@@ -239,7 +239,7 @@ const AlternativeSolutionFields = ({
                   />
                 </FieldGroup>
 
-                {/* TODO: NJD add cloud  / cloud migration strategy question */}
+                {/* TODO: add cloud  / cloud migration strategy question */}
 
                 <FieldGroup
                   className="margin-bottom-1 margin-left-4"
@@ -351,7 +351,7 @@ const AlternativeSolutionFields = ({
           </fieldset>
         </FieldGroup>
 
-        {/* TODO: NJD add workforce training requirements question */}
+        {/* TODO: add workforce training requirements question */}
 
         <hr className="margin-bottom-1 margin-top-4 opacity-30" aria-hidden />
         <>

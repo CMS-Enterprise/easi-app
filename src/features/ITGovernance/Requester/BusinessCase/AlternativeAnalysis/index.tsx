@@ -165,7 +165,7 @@ const AlternativeAnalysis = ({
                   className="margin-left-1"
                   type="button"
                   unstyled
-                  // TODO: NJD, need to make this more generic if we start to support more than two alternatives (C, D, etc.)
+                  // TODO: NJD - need to make this more generic if we start to support more than two alternatives (C, D, etc.)
                   onClick={() => {
                     if (
                       // eslint-disable-next-line no-alert
@@ -177,7 +177,7 @@ const AlternativeAnalysis = ({
                           alternativeB: defaultProposedSolution
                         })
                       );
-                      // TODO: NJD - this doesn't force a full state refresh. Can call window.location.reload() to fix but bad UX
+                      // TODO: NJD - this doesn't force a full state refresh. Can call window.location.reload() to fix but feels like bad UX
                       history.replace(history.location);
                     }
                   }}
@@ -289,7 +289,7 @@ const AlternativeAnalysis = ({
                                 return (
                                   <td
                                     className="text-ttop"
-                                    style={{ width: '60%' }} // TODO: NJD - find better way to do this
+                                    style={{ width: '60%' }} // TODO: NJD - better way to do this?
                                     {...cell.getCellProps()}
                                   >
                                     {cell.render('Cell')}
