@@ -4,29 +4,63 @@ import { MemoryRouter } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
+  GetSystemIntakeGRBDiscussionsDocument,
+  GetSystemIntakeGRBDiscussionsQuery,
+  GetSystemIntakeGRBDiscussionsQueryVariables,
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole
 } from 'gql/generated/graphql';
 import { businessCase } from 'tests/mock/businessCase';
+import {
+  mockDiscussions,
+  mockDiscussionsWithoutReplies
+} from 'tests/mock/discussions';
+import { getSystemIntakeGRBReviewQuery } from 'tests/mock/grbReview';
 import { systemIntake } from 'tests/mock/systemIntake';
 import users from 'tests/mock/users';
 
 import { MessageProvider } from 'hooks/useMessage';
+import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
-import getSystemIntakeGRBReviewQuery from './GRBReviewerForm/index.test';
 import GRBReview from '.';
+
+const getSystemIntakeGRBReviewDiscussionsQuery: MockedQuery<
+  GetSystemIntakeGRBDiscussionsQuery,
+  GetSystemIntakeGRBDiscussionsQueryVariables
+> = {
+  request: {
+    query: GetSystemIntakeGRBDiscussionsDocument,
+    variables: { id: systemIntake.id }
+  },
+  result: {
+    data: {
+      __typename: 'Query',
+      systemIntake: {
+        __typename: 'SystemIntake',
+        id: systemIntake.id,
+        grbDiscussionsInternal: mockDiscussions(),
+        grbDiscussionsPrimary: mockDiscussionsWithoutReplies()
+      }
+    }
+  }
+};
 
 describe('GRB review tab', () => {
   const store = easiMockStore();
   it('renders GRB reviewer view', async () => {
     render(
       <MemoryRouter>
-        <VerboseMockedProvider mocks={[getSystemIntakeGRBReviewQuery()]}>
+        <VerboseMockedProvider
+          mocks={[
+            getSystemIntakeGRBReviewDiscussionsQuery,
+            getSystemIntakeGRBReviewQuery()
+          ]}
+        >
           <Provider store={store}>
             <MessageProvider>
               <ITGovAdminContext.Provider value={false}>
@@ -52,7 +86,12 @@ describe('GRB review tab', () => {
   it('renders GRT admin view', async () => {
     render(
       <MemoryRouter>
-        <VerboseMockedProvider mocks={[getSystemIntakeGRBReviewQuery()]}>
+        <VerboseMockedProvider
+          mocks={[
+            getSystemIntakeGRBReviewDiscussionsQuery,
+            getSystemIntakeGRBReviewQuery()
+          ]}
+        >
           <Provider store={store}>
             <MessageProvider>
               <ITGovAdminContext.Provider value>
@@ -167,5 +206,44 @@ describe('GRB review tab', () => {
     );
 
     expect(modalText).toBeInTheDocument();
+  });
+
+  it('renders the discussion summary', async () => {
+    render(
+      <MemoryRouter>
+        <VerboseMockedProvider
+          mocks={[
+            getSystemIntakeGRBReviewDiscussionsQuery,
+            getSystemIntakeGRBReviewDiscussionsQuery,
+            getSystemIntakeGRBReviewQuery({
+              grbReviewStartedAt: '2024-10-21T14:55:47.88283Z'
+            })
+          ]}
+        >
+          <Provider store={store}>
+            <MessageProvider>
+              <ITGovAdminContext.Provider value>
+                <GRBReview
+                  systemIntake={systemIntake}
+                  businessCase={businessCase}
+                />
+              </ITGovAdminContext.Provider>
+            </MessageProvider>
+          </Provider>
+        </VerboseMockedProvider>
+      </MemoryRouter>
+    );
+
+    expect(
+      await screen.findByText('Discussions summary', { exact: false })
+    ).toBeInTheDocument();
+
+    expect(
+      await screen.findByText('5 total discussions (4 without replies)', {
+        exact: false
+      })
+    ).toBeInTheDocument();
+
+    expect(screen.getByRole('link', { name: 'Jump to discussions' }));
   });
 });

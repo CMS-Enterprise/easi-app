@@ -194,8 +194,6 @@ const getSystemIntakeGRBReviewQuery = (
   }
 });
 
-export default getSystemIntakeGRBReviewQuery;
-
 const getGRBReviewersComparisonsQuery: MockedQuery<
   GetGRBReviewersComparisonsQuery,
   GetGRBReviewersComparisonsQueryVariables
