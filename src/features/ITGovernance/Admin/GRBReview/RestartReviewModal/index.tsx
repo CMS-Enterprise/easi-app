@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ReactEventHandler, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import {
   Alert,
@@ -36,33 +36,34 @@ const RestartReviewModal = ({ systemIntakeId }: { systemIntakeId: string }) => {
     refetchQueries: [GetSystemIntakeGRBReviewDocument]
   });
 
-  const handleRestartReview = async () => {
-    try {
-      await restartReview({
-        variables: {
-          input: {
-            systemIntakeID: systemIntakeId,
-            newGRBEndDate: selectedDate
+  const handleSubmit: ReactEventHandler = event => {
+    event.preventDefault();
+    restartReview({
+      variables: {
+        input: {
+          systemIntakeID: systemIntakeId,
+          newGRBEndDate: selectedDate
+        }
+      }
+    })
+      .then(() => {
+        showMessage(
+          <Trans
+            i18nKey="grbReview:adminTask.restartReview.success"
+            components={{ bold: <strong /> }}
+            values={{ date: formatDateLocal(selectedDate, 'MM/dd/yyyy') }}
+          />,
+          {
+            type: 'success'
           }
-        }
+        );
+
+        // Close modal on success
+        closeModal();
+      })
+      .catch(() => {
+        showErrorMessageInModal(t('adminTask.restartReview.error'));
       });
-
-      showMessage(
-        <Trans
-          i18nKey="grbReview:adminTask.restartReview.success"
-          components={{ bold: <strong /> }}
-          values={{ date: formatDateLocal(selectedDate, 'MM/dd/yyyy') }}
-        />,
-        {
-          type: 'success'
-        }
-      );
-
-      // Close modal on success
-      closeModal();
-    } catch (error) {
-      showErrorMessageInModal(t('adminTask.restartReview.error'));
-    }
   };
 
   return (
@@ -80,7 +81,7 @@ const RestartReviewModal = ({ systemIntakeId }: { systemIntakeId: string }) => {
           </Alert>
         )}
         <p className="margin-y-0">{t('adminTask.restartReview.description')}</p>
-        <form>
+        <form onSubmit={handleSubmit}>
           <FormGroup className="margin-y-0">
             <RequiredFieldsText className="margin-top-2 margin-bottom-3 font-body-sm" />
             <Label
@@ -107,8 +108,7 @@ const RestartReviewModal = ({ systemIntakeId }: { systemIntakeId: string }) => {
             <Button
               type="submit"
               className="margin-top-0 margin-bottom-2 margin-right-3 tablet:margin-bottom-0"
-              onClick={handleRestartReview}
-              disabled={actionDateInPast(selectedDate)}
+              disabled={!selectedDate || actionDateInPast(selectedDate)}
             >
               {t('adminTask.restartReview.restart')}
             </Button>
