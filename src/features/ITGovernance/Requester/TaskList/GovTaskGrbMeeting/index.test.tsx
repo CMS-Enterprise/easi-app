@@ -65,10 +65,8 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
       // Button to prep grb meeting
       getByRoleWithNameTextKey('link', 'itGov:taskList.step.grbMeeting.button');
 
-      // Renders discussions card
-      expect(
-        screen.getByTestId('requester-discussions-card')
-      ).toBeInTheDocument();
+      // Hides discussions card
+      expect(screen.queryByTestId('requester-discussions-card')).toBeNull();
     });
 
     it('In progress - scheduled', () => {
@@ -96,10 +94,8 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
       // Button to prep grb meeting
       getByRoleWithNameTextKey('link', 'itGov:taskList.step.grbMeeting.button');
 
-      // Renders discussions card
-      expect(
-        screen.getByTestId('requester-discussions-card')
-      ).toBeInTheDocument();
+      // Hides discussions card
+      expect(screen.queryByTestId('requester-discussions-card')).toBeNull();
     });
 
     it('Done', () => {
@@ -182,6 +178,19 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
       );
       // Button to prep grb meeting
       getByRoleWithNameTextKey('link', 'itGov:taskList.step.grbMeeting.button');
+    });
+
+    it('In progress - awaiting decision', () => {
+      const modifiedMock = {
+        ...taskListState.grbMeetingAwaitingDecision.systemIntake!,
+        grbReviewType: SystemIntakeGRBReviewType.ASYNC
+      };
+      renderGovTaskGrbMeeting(modifiedMock);
+
+      // renders the discussion card
+      expect(
+        screen.getByTestId('requester-discussions-card')
+      ).toBeInTheDocument();
     });
 
     it('Done', () => {

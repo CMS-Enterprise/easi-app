@@ -87,15 +87,6 @@ const GovTaskGrbMeeting = ({
       });
   };
 
-  /** Discussions card should only render if review is in progress */
-  const renderDiscussionsCard = [
-    ITGovGRBStatus.AWAITING_DECISION,
-    ITGovGRBStatus.AWAITING_GRB_REVIEW,
-    ITGovGRBStatus.READY_TO_SCHEDULE,
-    ITGovGRBStatus.REVIEW_IN_PROGRESS,
-    ITGovGRBStatus.SCHEDULED
-  ].includes(grbMeetingStatus);
-
   return (
     <>
       {/* Remove Presentation Modal */}
@@ -294,12 +285,17 @@ const GovTaskGrbMeeting = ({
               </>
             )}
 
-          {renderDiscussionsCard && (
-            <RequesterDiscussionsCard
-              systemIntakeId={id}
-              grbMeetingStatus={grbMeetingStatus}
-            />
-          )}
+          {
+            /** Discussions card */
+            // Only render if review is active
+            (grbMeetingStatus === ITGovGRBStatus.AWAITING_DECISION ||
+              grbMeetingStatus === ITGovGRBStatus.REVIEW_IN_PROGRESS) && (
+              <RequesterDiscussionsCard
+                systemIntakeId={id}
+                grbMeetingStatus={grbMeetingStatus}
+              />
+            )
+          }
 
           <div className="margin-top-2 display-flex flex-align-center">
             <UswdsReactLink
