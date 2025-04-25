@@ -227,12 +227,14 @@ describe('GRB review tab', () => {
         >
           <Provider store={store}>
             <MessageProvider>
-              <ITGovAdminContext.Provider value>
-                <GRBReview
-                  systemIntake={systemIntake}
-                  businessCase={businessCase}
-                />
-              </ITGovAdminContext.Provider>
+              <ModalProvider>
+                <ITGovAdminContext.Provider value>
+                  <GRBReview
+                    systemIntake={systemIntake}
+                    businessCase={businessCase}
+                  />
+                </ITGovAdminContext.Provider>
+              </ModalProvider>
             </MessageProvider>
           </Provider>
         </VerboseMockedProvider>
