@@ -50,6 +50,11 @@ describe('Requester discussions card', () => {
     expect(
       await screen.findByText('There were no discussions during this review.')
     ).toBeInTheDocument();
+
+    // Start a discussion button should be hidden when awaiting decision
+    expect(
+      screen.queryByRole('button', { name: 'Start a discussion' })
+    ).toBeNull();
   });
 
   it('renders in progress with no discussions', async () => {

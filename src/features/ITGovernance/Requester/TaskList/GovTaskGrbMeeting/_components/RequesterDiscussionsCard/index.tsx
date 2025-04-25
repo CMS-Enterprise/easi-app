@@ -1,16 +1,22 @@
 import React, { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Icon } from '@trussworks/react-uswds';
+import { Button, ButtonGroup, Icon } from '@trussworks/react-uswds';
 import {
   ITGovGRBStatus,
   useGetSystemIntakeGRBDiscussionsQuery
 } from 'gql/generated/graphql';
+
+import Divider from 'components/Divider';
 
 type RequesterDiscussionsCardProps = {
   systemIntakeId: string;
   grbMeetingStatus: ITGovGRBStatus;
 };
 
+/**
+ * Displays Primary Discussion Board information for requesters
+ * with buttons to view and start discussions
+ */
 const RequesterDiscussionsCard = ({
   systemIntakeId,
   grbMeetingStatus
@@ -64,6 +70,20 @@ const RequesterDiscussionsCard = ({
           </span>
         )}
       </p>
+
+      <Divider className="margin-y-2" />
+
+      <ButtonGroup>
+        <Button type="button" onClick={() => null} className="margin-right-1">
+          {t('general.viewDiscussionBoard')}
+        </Button>
+
+        {grbMeetingStatus !== ITGovGRBStatus.AWAITING_DECISION && (
+          <Button type="button" onClick={() => null} unstyled>
+            {t('general.startDiscussion.heading')}
+          </Button>
+        )}
+      </ButtonGroup>
     </div>
   );
 };

@@ -39,6 +39,35 @@ exports[`Requester discussions card > matches the snapshot 1`] = `
          discussions total
       </span>
     </p>
+    <div
+      class="easi-divider margin-y-2"
+    />
+    <ul
+      class="usa-button-group"
+    >
+      <li
+        class="usa-button-group__item"
+      >
+        <button
+          class="usa-button margin-right-1"
+          data-testid="button"
+          type="button"
+        >
+          View discussion board
+        </button>
+      </li>
+      <li
+        class="usa-button-group__item"
+      >
+        <button
+          class="usa-button usa-button--unstyled"
+          data-testid="button"
+          type="button"
+        >
+          Start a discussion
+        </button>
+      </li>
+    </ul>
   </div>
 </DocumentFragment>
 `;
