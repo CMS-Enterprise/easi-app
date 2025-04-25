@@ -26,9 +26,7 @@ describe('Requester discussions card', () => {
       </VerboseMockedProvider>
     );
 
-    expect(
-      await screen.findByTestId('requester-discussions-card')
-    ).toBeInTheDocument();
+    expect(await screen.findByTestId('discussions-total')).toBeInTheDocument();
 
     expect(asFragment()).toMatchSnapshot();
   });

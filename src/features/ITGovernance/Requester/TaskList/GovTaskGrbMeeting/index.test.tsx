@@ -6,6 +6,7 @@ import {
   SystemIntakeGRBReviewType
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
+import { getSystemIntakeGRBDiscussionsQuery } from 'tests/mock/discussions';
 import { taskListState } from 'tests/mock/govTaskList';
 
 import { MessageProvider } from 'hooks/useMessage';
@@ -23,7 +24,7 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
   function renderGovTaskGrbMeeting(mockdata: ITGovTaskSystemIntake) {
     return render(
       <MemoryRouter>
-        <VerboseMockedProvider>
+        <VerboseMockedProvider mocks={[getSystemIntakeGRBDiscussionsQuery()]}>
           <MessageProvider>
             <GovTaskGrbMeeting {...mockdata} />
           </MessageProvider>
@@ -39,6 +40,9 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
       expectTaskStatusTagToHaveTextKey('CANT_START');
       // Link to prep grb meeting
       getByRoleWithNameTextKey('link', 'itGov:taskList.step.grbMeeting.button');
+
+      // Hides discussions card
+      expect(screen.queryByTestId('requester-discussions-card')).toBeNull();
     });
 
     it('Skipped', () => {
@@ -47,6 +51,9 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
       expectTaskStatusTagToHaveTextKey('NOT_NEEDED');
       // Link to prep grb meeting
       getByRoleWithNameTextKey('link', 'itGov:taskList.step.grbMeeting.button');
+
+      // Hides discussions card
+      expect(screen.queryByTestId('requester-discussions-card')).toBeNull();
     });
 
     it('In progress - not scheduled', () => {
@@ -57,6 +64,11 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
       expectTaskStatusTagToHaveTextKey('READY_TO_SCHEDULE');
       // Button to prep grb meeting
       getByRoleWithNameTextKey('link', 'itGov:taskList.step.grbMeeting.button');
+
+      // Renders discussions card
+      expect(
+        screen.getByTestId('requester-discussions-card')
+      ).toBeInTheDocument();
     });
 
     it('In progress - scheduled', () => {
@@ -83,6 +95,11 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
       ).toBeInTheDocument();
       // Button to prep grb meeting
       getByRoleWithNameTextKey('link', 'itGov:taskList.step.grbMeeting.button');
+
+      // Renders discussions card
+      expect(
+        screen.getByTestId('requester-discussions-card')
+      ).toBeInTheDocument();
     });
 
     it('Done', () => {
@@ -100,6 +117,9 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
       );
       // Link to prep grb meeting
       getByRoleWithNameTextKey('link', 'itGov:taskList.step.grbMeeting.button');
+
+      // Hides discussions card
+      expect(screen.queryByTestId('requester-discussions-card')).toBeNull();
     });
   });
   describe('Async GRB Meeting', () => {
