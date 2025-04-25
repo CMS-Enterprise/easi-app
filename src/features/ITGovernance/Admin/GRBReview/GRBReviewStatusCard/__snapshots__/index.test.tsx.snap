@@ -11,7 +11,7 @@ exports[`GRBReviewStatusCard > renders the Standard Card when grbReviewType is S
       Standard meeting review
     </h3>
     <span
-      class="display-flex border-bottom-1px border-primary-light margin-bottom-2 padding-bottom-2"
+      class="display-flex flex-align-center border-bottom-1px border-primary-light margin-bottom-2 padding-bottom-2"
     >
       <h4
         class="margin-0 margin-right-1 flex-align-self-center"

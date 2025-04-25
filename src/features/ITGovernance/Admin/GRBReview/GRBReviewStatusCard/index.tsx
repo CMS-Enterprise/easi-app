@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Grid } from '@trussworks/react-uswds';
+import { Button, Grid, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
   SystemIntakeGRBReviewAsyncStatusType,
@@ -12,6 +12,8 @@ import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 import UswdsReactLink from 'components/LinkWrapper';
 import Tag from 'components/Tag';
 import { formatDateUtc, formatDaysHoursMinutes } from 'utils/date';
+
+import { useRestartReviewModal } from '../RestartReviewModal/RestartReviewModalContext';
 
 import AddTimeOrEndVoting from './AddTimeOrEndVoting';
 
@@ -46,6 +48,7 @@ const GRBReviewStatusTag = ({
     | undefined;
 }) => {
   const { t } = useTranslation('grbReview');
+  const { openModal } = useRestartReviewModal();
 
   if (!grbReviewStatus) {
     return null;
@@ -53,7 +56,7 @@ const GRBReviewStatusTag = ({
 
   return (
     <span
-      className={classNames('display-flex', {
+      className={classNames('display-flex flex-align-center', {
         'border-bottom-1px border-primary-light margin-bottom-2 padding-bottom-2':
           grbReviewStatus !== SystemIntakeGRBReviewAsyncStatusType.COMPLETED
       })}
@@ -68,6 +71,18 @@ const GRBReviewStatusTag = ({
       >
         {t(`statusCard.grbReviewStatus.${grbReviewStatus}`)}
       </Tag>
+
+      {grbReviewStatus === SystemIntakeGRBReviewAsyncStatusType.COMPLETED && (
+        <Button
+          type="button"
+          unstyled
+          onClick={openModal}
+          className="margin-left-3"
+        >
+          {t('statusCard.restartReview')}
+          <Icon.ArrowForward />
+        </Button>
+      )}
     </span>
   );
 };
