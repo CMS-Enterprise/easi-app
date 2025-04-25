@@ -84,10 +84,12 @@ type templates struct {
 	grbReviewDiscussionReply                        templateCaller
 	grbReviewDiscussionIndividualTagged             templateCaller
 	grbReviewDiscussionGroupTagged                  templateCaller
+	grbReviewEnded                                  templateCaller
 	grbReviewPresentationLinksUpdated               templateCaller
 	grbReviewReminder                               templateCaller
 	grbReviewerInvitedToVote                        templateCaller
 	grbReviewHalfwayThrough                         templateCaller
+	grbReviewPastDueNoQuorum                        templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -473,6 +475,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 	}
 	appTemplates.grbReviewDiscussionGroupTagged = grbReviewDiscussionGroupTagged
 
+	grbReviewEndedTemplateName := "system_intake_grb_review_voting_ended.gohtml"
+	grbReviewEndedTemplate := rawTemplates.Lookup(grbReviewEndedTemplateName)
+	if grbReviewEndedTemplate == nil {
+		return Client{}, templateError(grbReviewEndedTemplateName)
+	}
+	appTemplates.grbReviewEnded = grbReviewEndedTemplate
+
 	grbReviewPresentationLinksUpdatedTemplateName := "grb_review_presentation_links_updated.gohtml"
 	grbReviewPresentationLinksUpdated := rawTemplates.Lookup(grbReviewPresentationLinksUpdatedTemplateName)
 	if grbReviewPresentationLinksUpdated == nil {
@@ -500,6 +509,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(grbReviewHalfwayThroughTemplateName)
 	}
 	appTemplates.grbReviewHalfwayThrough = grbReviewHalfwayThrough
+
+	grbReviewPastDueNoQuorumTemplateName := "grb_review_past_due_no_quorum.gohtml"
+	grbReviewPastDueNoQuorum := rawTemplates.Lookup(grbReviewPastDueNoQuorumTemplateName)
+	if grbReviewPastDueNoQuorum == nil {
+		return Client{}, templateError(grbReviewPastDueNoQuorumTemplateName)
+	}
+	appTemplates.grbReviewPastDueNoQuorum = grbReviewPastDueNoQuorum
 
 	client := Client{
 		config:    config,

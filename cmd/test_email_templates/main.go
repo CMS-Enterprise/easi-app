@@ -757,6 +757,20 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 	)
 	noErr(err)
 
+	err = client.SystemIntake.SendSystemIntakeGRBReviewEnded(
+		ctx,
+		email.SendSystemIntakeGRBReviewEndedInput{
+			Recipient:          requesterEmail,
+			SystemIntakeID:     intakeID,
+			ProjectName:        "Project Ended Email Test",
+			RequesterName:      "Ended Email - Name",
+			RequesterComponent: "Center for Medicare",
+			GRBReviewStart:     time.Now().AddDate(0, 0, -5),
+			GRBReviewDeadline:  time.Now(),
+		},
+	)
+	noErr(err)
+
 	err = client.SystemIntake.SendSystemIntakeGRBReviewTimeAdded(
 		ctx,
 		emailNotificationRecipients,
@@ -836,6 +850,20 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 			EndDate:            time.Now().AddDate(0, 0, 5),
 			NoObjectionVotes:   2,
 			ObjectionVotes:     3,
+			NotYetVoted:        1,
+		})
+	noErr(err)
+
+	err = client.SystemIntake.SendGRBReviewPastDueNoQuorum(ctx,
+		email.SendGRBReviewPastDueNoQuorumInput{
+			SystemIntakeID:     intakeID,
+			ProjectTitle:       "Past Due No Quorum title",
+			RequesterName:      "Requester Past Due No Quorum",
+			RequesterComponent: "Office of Legislation",
+			StartDate:          time.Now().AddDate(0, 0, -1),
+			EndDate:            time.Now().AddDate(0, 0, 5),
+			NoObjectionVotes:   1,
+			ObjectionVotes:     1,
 			NotYetVoted:        1,
 		})
 	noErr(err)

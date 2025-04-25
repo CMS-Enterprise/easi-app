@@ -1,10 +1,11 @@
 import React, { useContext, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { Icon } from '@trussworks/react-uswds';
+import { Button, Icon } from '@trussworks/react-uswds';
 import DocumentsTable from 'features/ITGovernance/_components/DocumentsTable';
 import {
   SystemIntakeFragmentFragment,
+  SystemIntakeGRBReviewAsyncStatusType,
   SystemIntakeGRBReviewerVotingRole,
   useGetSystemIntakeGRBReviewQuery
 } from 'gql/generated/graphql';
@@ -19,6 +20,7 @@ import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdmin
 import GRBFeedbackCard from './GRBFeedbackCard/GRBFeedbackCard';
 import ParticipantsSection from './ParticipantsSection/ParticipantsSection';
 import PresentationLinksCard from './PresentationLinksCard/PresentationLinksCard';
+import { useRestartReviewModal } from './RestartReviewModal/RestartReviewModalContext';
 import BusinessCaseCard from './BusinessCaseCard';
 import DecisionRecordCard from './DecisionRecordCard';
 import Discussions from './Discussions';
@@ -26,6 +28,7 @@ import GRBReviewAdminTask from './GRBReviewAdminTask';
 import GRBReviewStatusCard from './GRBReviewStatusCard';
 import GRBVotingPanel from './GRBVotingPanel';
 import IntakeRequestCard from './IntakeRequestCard';
+import RestartReviewModal from './RestartReviewModal';
 
 import './index.scss';
 
@@ -36,6 +39,7 @@ type GRBReviewProps = {
 
 const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
   const { t } = useTranslation('grbReview');
+  const { openModal } = useRestartReviewModal();
 
   const {
     id,
@@ -73,6 +77,8 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
 
   return (
     <>
+      <RestartReviewModal systemIntakeId={id} />
+
       <div className="padding-bottom-4" id="grbReview">
         <PageHeading className="margin-y-0">{t('title')}</PageHeading>
 
@@ -130,6 +136,7 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
         <PresentationLinksCard
           systemIntakeID={id}
           grbPresentationLinks={grbReview.grbPresentationLinks}
+          asyncStatus={grbReview.grbReviewAsyncStatus}
         />
 
         {/* Business Case Card */}
@@ -147,7 +154,9 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
         <div className="margin-y-4">
           <h3 className="margin-bottom-1">{t('additionalDocuments')}</h3>
 
-          {isITGovAdmin && (
+          {isITGovAdmin &&
+          grbReview.grbReviewAsyncStatus !==
+            SystemIntakeGRBReviewAsyncStatusType.COMPLETED ? (
             <UswdsReactLink
               to="./documents/upload"
               className="display-flex flex-align-center"
@@ -155,11 +164,28 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
               <Icon.Add className="margin-right-1" />
               <span>{t('additionalDocsLink')}</span>
             </UswdsReactLink>
+          ) : (
+            <span className="text-base-dark">
+              <Trans
+                i18nKey="grbReview:asyncCompleted.documents"
+                components={{
+                  link1: (
+                    <Button type="button" unstyled onClick={openModal}>
+                      {t('restartReview')}
+                    </Button>
+                  )
+                }}
+              />
+            </span>
           )}
         </div>
 
         {/* GRB Documents */}
-        <DocumentsTable systemIntakeId={id} documents={grbReview.documents} />
+        <DocumentsTable
+          systemIntakeId={id}
+          documents={grbReview.documents}
+          asyncStatus={grbReview.grbReviewAsyncStatus}
+        />
 
         {/* Discussion Board */}
         <Discussions
@@ -175,6 +201,7 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
           state={state}
           grbReviewers={grbReview.grbVotingInformation?.grbReviewers}
           grbReviewStartedAt={grbReview.grbReviewStartedAt}
+          asyncStatus={grbReview.grbReviewAsyncStatus}
         />
       </div>
     </>

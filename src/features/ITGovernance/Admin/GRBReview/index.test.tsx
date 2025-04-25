@@ -19,6 +19,7 @@ import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import getSystemIntakeGRBReviewQuery from './GRBReviewerForm/index.test';
+import { ModalProvider } from './RestartReviewModal/RestartReviewModalContext';
 import GRBReview from '.';
 
 describe('GRB review tab', () => {
@@ -29,12 +30,14 @@ describe('GRB review tab', () => {
         <VerboseMockedProvider mocks={[getSystemIntakeGRBReviewQuery()]}>
           <Provider store={store}>
             <MessageProvider>
-              <ITGovAdminContext.Provider value={false}>
-                <GRBReview
-                  systemIntake={systemIntake}
-                  businessCase={businessCase}
-                />
-              </ITGovAdminContext.Provider>
+              <ModalProvider>
+                <ITGovAdminContext.Provider value={false}>
+                  <GRBReview
+                    systemIntake={systemIntake}
+                    businessCase={businessCase}
+                  />
+                </ITGovAdminContext.Provider>
+              </ModalProvider>
             </MessageProvider>
           </Provider>
         </VerboseMockedProvider>
@@ -55,12 +58,14 @@ describe('GRB review tab', () => {
         <VerboseMockedProvider mocks={[getSystemIntakeGRBReviewQuery()]}>
           <Provider store={store}>
             <MessageProvider>
-              <ITGovAdminContext.Provider value>
-                <GRBReview
-                  systemIntake={systemIntake}
-                  businessCase={businessCase}
-                />
-              </ITGovAdminContext.Provider>
+              <ModalProvider>
+                <ITGovAdminContext.Provider value>
+                  <GRBReview
+                    systemIntake={systemIntake}
+                    businessCase={businessCase}
+                  />
+                </ITGovAdminContext.Provider>
+              </ModalProvider>
             </MessageProvider>
           </Provider>
         </VerboseMockedProvider>
