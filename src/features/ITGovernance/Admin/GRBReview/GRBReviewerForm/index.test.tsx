@@ -37,6 +37,7 @@ import MockUsers from 'utils/testing/MockUsers';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import ParticipantsSection from '../ParticipantsSection/ParticipantsSection';
+import { ModalProvider } from '../RestartReviewModal/RestartReviewModalContext';
 
 import AddReviewerFromEua from './AddReviewerFromEua';
 import GRBReviewerForm from '.';
@@ -237,31 +238,33 @@ describe('GRB reviewer form', () => {
         >
           <Provider store={store}>
             <MessageProvider>
-              <Route path="/it-governance/:systemId/grb-review/:action">
-                <ITGovAdminContext.Provider value>
-                  <GRBReviewerForm
-                    isFromGRBSetup={false}
-                    initialGRBReviewers={
-                      systemIntake.grbVotingInformation?.grbReviewers || []
-                    }
-                    grbReviewStartedAt={grbReview.grbReviewStartedAt}
-                  />
-                </ITGovAdminContext.Provider>
-              </Route>
-              <Route path="/it-governance/:systemId/grb-review">
-                <ITGovAdminContext.Provider value>
-                  <ParticipantsSection
-                    id={systemIntake.id}
-                    state={systemIntake.state}
-                    grbReviewers={[
-                      {
-                        ...grbReviewer
+              <ModalProvider>
+                <Route path="/it-governance/:systemId/grb-review/:action">
+                  <ITGovAdminContext.Provider value>
+                    <GRBReviewerForm
+                      isFromGRBSetup={false}
+                      initialGRBReviewers={
+                        systemIntake.grbVotingInformation?.grbReviewers || []
                       }
-                    ]}
-                    grbReviewStartedAt={grbReview.grbReviewStartedAt}
-                  />
-                </ITGovAdminContext.Provider>
-              </Route>
+                      grbReviewStartedAt={grbReview.grbReviewStartedAt}
+                    />
+                  </ITGovAdminContext.Provider>
+                </Route>
+                <Route path="/it-governance/:systemId/grb-review">
+                  <ITGovAdminContext.Provider value>
+                    <ParticipantsSection
+                      id={systemIntake.id}
+                      state={systemIntake.state}
+                      grbReviewers={[
+                        {
+                          ...grbReviewer
+                        }
+                      ]}
+                      grbReviewStartedAt={grbReview.grbReviewStartedAt}
+                    />
+                  </ITGovAdminContext.Provider>
+                </Route>
+              </ModalProvider>
             </MessageProvider>
           </Provider>
         </VerboseMockedProvider>
@@ -334,31 +337,33 @@ describe('GRB reviewer form', () => {
         >
           <Provider store={store}>
             <MessageProvider>
-              <Route path="/it-governance/:systemId/grb-review/:action">
-                <ITGovAdminContext.Provider value>
-                  <GRBReviewerForm
-                    isFromGRBSetup={false}
-                    initialGRBReviewers={
-                      systemIntake.grbVotingInformation?.grbReviewers || []
-                    }
-                    grbReviewStartedAt={grbReview.grbReviewStartedAt}
-                  />
-                </ITGovAdminContext.Provider>
-              </Route>
-              <Route path="/it-governance/:systemId/grb-review">
-                <ITGovAdminContext.Provider value>
-                  <ParticipantsSection
-                    id={systemIntake.id}
-                    state={systemIntake.state}
-                    grbReviewers={[
-                      {
-                        ...updatedGRBReviewer
+              <ModalProvider>
+                <Route path="/it-governance/:systemId/grb-review/:action">
+                  <ITGovAdminContext.Provider value>
+                    <GRBReviewerForm
+                      isFromGRBSetup={false}
+                      initialGRBReviewers={
+                        systemIntake.grbVotingInformation?.grbReviewers || []
                       }
-                    ]}
-                    grbReviewStartedAt={grbReview.grbReviewStartedAt}
-                  />
-                </ITGovAdminContext.Provider>
-              </Route>
+                      grbReviewStartedAt={grbReview.grbReviewStartedAt}
+                    />
+                  </ITGovAdminContext.Provider>
+                </Route>
+                <Route path="/it-governance/:systemId/grb-review">
+                  <ITGovAdminContext.Provider value>
+                    <ParticipantsSection
+                      id={systemIntake.id}
+                      state={systemIntake.state}
+                      grbReviewers={[
+                        {
+                          ...updatedGRBReviewer
+                        }
+                      ]}
+                      grbReviewStartedAt={grbReview.grbReviewStartedAt}
+                    />
+                  </ITGovAdminContext.Provider>
+                </Route>
+              </ModalProvider>
             </MessageProvider>
           </Provider>
         </VerboseMockedProvider>

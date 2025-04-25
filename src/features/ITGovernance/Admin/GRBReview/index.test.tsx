@@ -27,6 +27,7 @@ import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
+import { ModalProvider } from './RestartReviewModal/RestartReviewModalContext';
 import GRBReview from '.';
 
 const getSystemIntakeGRBReviewDiscussionsQuery: MockedQuery<
@@ -63,12 +64,14 @@ describe('GRB review tab', () => {
         >
           <Provider store={store}>
             <MessageProvider>
-              <ITGovAdminContext.Provider value={false}>
-                <GRBReview
-                  systemIntake={systemIntake}
-                  businessCase={businessCase}
-                />
-              </ITGovAdminContext.Provider>
+              <ModalProvider>
+                <ITGovAdminContext.Provider value={false}>
+                  <GRBReview
+                    systemIntake={systemIntake}
+                    businessCase={businessCase}
+                  />
+                </ITGovAdminContext.Provider>
+              </ModalProvider>
             </MessageProvider>
           </Provider>
         </VerboseMockedProvider>
@@ -94,12 +97,14 @@ describe('GRB review tab', () => {
         >
           <Provider store={store}>
             <MessageProvider>
-              <ITGovAdminContext.Provider value>
-                <GRBReview
-                  systemIntake={systemIntake}
-                  businessCase={businessCase}
-                />
-              </ITGovAdminContext.Provider>
+              <ModalProvider>
+                <ITGovAdminContext.Provider value>
+                  <GRBReview
+                    systemIntake={systemIntake}
+                    businessCase={businessCase}
+                  />
+                </ITGovAdminContext.Provider>
+              </ModalProvider>
             </MessageProvider>
           </Provider>
         </VerboseMockedProvider>
