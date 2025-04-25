@@ -77,12 +77,22 @@ const RequesterDiscussionsCard = ({
       <Divider className="margin-y-2" />
 
       <ButtonGroup>
-        <Button type="button" onClick={() => null} className="margin-right-1">
+        <Button
+          type="button"
+          // TODO EASI-4857: update to open primary discussion board
+          onClick={() => null}
+          className="margin-right-1"
+        >
           {t('general.viewDiscussionBoard')}
         </Button>
 
         {grbMeetingStatus !== ITGovGRBStatus.AWAITING_DECISION && (
-          <Button type="button" onClick={() => null} unstyled>
+          <Button
+            type="button"
+            // TODO EASI-4857: update to open primary discussion board
+            onClick={() => null}
+            unstyled
+          >
             {t('general.startDiscussion.heading')}
           </Button>
         )}
