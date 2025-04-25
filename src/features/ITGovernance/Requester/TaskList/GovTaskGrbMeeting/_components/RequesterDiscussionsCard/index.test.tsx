@@ -1,0 +1,95 @@
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import { ITGovGRBStatus } from 'gql/generated/graphql';
+import {
+  getSystemIntakeGRBDiscussionsQuery,
+  mockDiscussions,
+  mockDiscussionsWithoutReplies
+} from 'tests/mock/discussions';
+import { systemIntake } from 'tests/mock/systemIntake';
+
+import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
+
+import RequesterDiscussionsCard from '.';
+
+const discussions = mockDiscussions();
+const discussionsWithoutReplies = mockDiscussionsWithoutReplies();
+
+describe('Requester discussions card', () => {
+  it('matches the snapshot', async () => {
+    const { asFragment } = render(
+      <VerboseMockedProvider mocks={[getSystemIntakeGRBDiscussionsQuery()]}>
+        <RequesterDiscussionsCard
+          systemIntakeId={systemIntake.id}
+          grbMeetingStatus={ITGovGRBStatus.REVIEW_IN_PROGRESS}
+        />
+      </VerboseMockedProvider>
+    );
+
+    expect(
+      await screen.findByTestId('requester-discussions-card')
+    ).toBeInTheDocument();
+
+    expect(asFragment()).toMatchSnapshot();
+  });
+
+  it('renders completed with no discussions', async () => {
+    render(
+      <VerboseMockedProvider
+        mocks={[
+          getSystemIntakeGRBDiscussionsQuery({ grbDiscussionsPrimary: [] })
+        ]}
+      >
+        <RequesterDiscussionsCard
+          systemIntakeId={systemIntake.id}
+          grbMeetingStatus={ITGovGRBStatus.COMPLETED}
+        />
+      </VerboseMockedProvider>
+    );
+
+    expect(
+      await screen.findByText('There were no discussions during this review.')
+    ).toBeInTheDocument();
+  });
+
+  it('renders in progress with no discussions', async () => {
+    render(
+      <VerboseMockedProvider
+        mocks={[
+          getSystemIntakeGRBDiscussionsQuery({ grbDiscussionsPrimary: [] })
+        ]}
+      >
+        <RequesterDiscussionsCard
+          systemIntakeId={systemIntake.id}
+          grbMeetingStatus={ITGovGRBStatus.REVIEW_IN_PROGRESS}
+        />
+      </VerboseMockedProvider>
+    );
+
+    expect(
+      await screen.findByText(
+        'There are not yet any discussions for this review.'
+      )
+    ).toBeInTheDocument();
+  });
+
+  it('renders the correct number of discussions', async () => {
+    render(
+      <VerboseMockedProvider mocks={[getSystemIntakeGRBDiscussionsQuery()]}>
+        <RequesterDiscussionsCard
+          systemIntakeId={systemIntake.id}
+          grbMeetingStatus={ITGovGRBStatus.REVIEW_IN_PROGRESS}
+        />
+      </VerboseMockedProvider>
+    );
+
+    // Check discussion counts
+    expect(
+      await screen.findByTestId('discussions-without-replies')
+    ).toHaveTextContent(`${discussionsWithoutReplies.length}`);
+
+    expect(await screen.findByTestId('discussions-total')).toHaveTextContent(
+      `${discussions.length + discussionsWithoutReplies.length}`
+    );
+  });
+});

@@ -100,7 +100,7 @@ const discussions = {
     noDiscussions: 'There are not yet any discussions for this review.',
     noDiscussions_COMPLETED: 'There were no discussions during this review.',
     discussionsCount:
-      '<strong>{{discussionsWithoutRepliesCount}}</strong> discussions without replies, <strong>{{count}}</strong> discussions total'
+      '<0>{{discussionsWithoutRepliesCount}}</0> discussions without replies, <1>{{count}}</1> discussions total'
   }
 };
 
