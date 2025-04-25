@@ -31,6 +31,7 @@ import Decision from '../Decision';
 import Documents from '../Documents';
 import Feedback from '../Feedback';
 import GRBReview from '../GRBReview';
+import { ModalProvider } from '../GRBReview/RestartReviewModal/RestartReviewModalContext';
 import IntakeReview from '../IntakeReview';
 import LifecycleID from '../LifecycleID';
 import Notes from '../Notes';
@@ -209,10 +210,12 @@ const RequestOverview = () => {
                     path="/it-governance/:systemId/grb-review/:action(add|edit)?"
                     exact
                     render={() => (
-                      <GRBReview
-                        systemIntake={systemIntake}
-                        businessCase={businessCase}
-                      />
+                      <ModalProvider>
+                        <GRBReview
+                          systemIntake={systemIntake}
+                          businessCase={businessCase}
+                        />
+                      </ModalProvider>
                     )}
                   />
                 )}
