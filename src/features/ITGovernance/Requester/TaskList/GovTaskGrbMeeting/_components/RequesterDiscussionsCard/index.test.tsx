@@ -33,7 +33,7 @@ describe('Requester discussions card', () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
-  it('renders completed with no discussions', async () => {
+  it('renders awaiting decision status with no discussions', async () => {
     render(
       <VerboseMockedProvider
         mocks={[
@@ -42,7 +42,7 @@ describe('Requester discussions card', () => {
       >
         <RequesterDiscussionsCard
           systemIntakeId={systemIntake.id}
-          grbMeetingStatus={ITGovGRBStatus.COMPLETED}
+          grbMeetingStatus={ITGovGRBStatus.AWAITING_DECISION}
         />
       </VerboseMockedProvider>
     );

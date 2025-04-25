@@ -98,7 +98,8 @@ const discussions = {
 
   taskList: {
     noDiscussions: 'There are not yet any discussions for this review.',
-    noDiscussions_COMPLETED: 'There were no discussions during this review.',
+    noDiscussions_AWAITING_DECISION:
+      'There were no discussions during this review.',
     discussionsCount:
       '<0>{{discussionsWithoutRepliesCount}}</0> discussions without replies, <1>{{count}}</1> discussions total'
   }
