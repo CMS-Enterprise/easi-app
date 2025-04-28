@@ -10,7 +10,7 @@ import FieldGroup from 'components/FieldGroup';
 import HelpText from 'components/HelpText';
 import IconButton from 'components/IconButton';
 import PageNumber from 'components/PageNumber';
-import { alternativeSolutionHasFilledFields } from 'data/businessCase';
+import { solutionHasFilledFields } from 'data/businessCase';
 import { BusinessCaseModel, GeneralRequestInfoForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
 import { BusinessCaseSchema } from 'validations/businessCaseSchema';
@@ -182,9 +182,7 @@ const GeneralRequestInfo = ({
             <PageNumber
               currentPage={1}
               totalPages={
-                alternativeSolutionHasFilledFields(businessCase.alternativeB)
-                  ? 6
-                  : 5
+                solutionHasFilledFields(businessCase.alternativeB) ? 6 : 5
               }
             />
 

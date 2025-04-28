@@ -144,7 +144,7 @@ const businessCase = {
       'the downstream impact to CMS, other systems, or other users if this solution is selected'
   },
   // TODO: NJD - I don't like this "NOT" wording, hash out with Zoe / Gov Team
-  // TODO: NJD - can also probably combine pros and cons into one group
+  // TODO: combine pros and cons into one group?
   cons: {
     label: 'Cons',
     include: 'Please include both:',

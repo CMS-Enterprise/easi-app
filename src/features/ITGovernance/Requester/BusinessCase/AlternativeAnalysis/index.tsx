@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -11,15 +11,15 @@ import HelpText from 'components/HelpText';
 import IconButton from 'components/IconButton';
 import PageNumber from 'components/PageNumber';
 import {
-  alternativeSolutionHasFilledFields,
-  defaultProposedSolution
+  defaultProposedSolution,
+  solutionHasFilledFields
 } from 'data/businessCase';
 import {
   AlternativeAnalysisForm,
   BusinessCaseModel,
   ProposedBusinessCaseSolution
 } from 'types/businessCase';
-import { putBusinessCase } from 'types/routines';
+import { fetchBusinessCase, putBusinessCase } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
 import {
   getAlternativeAnalysisSchema,
@@ -44,6 +44,14 @@ const AlternativeAnalysis = ({
   const dispatch = useDispatch();
   const history = useHistory();
   const { t } = useTranslation('businessCase');
+
+  // Add state for table data
+
+  const [tableData, setTableData] = useState([
+    businessCase.preferredSolution,
+    businessCase.alternativeA,
+    businessCase.alternativeB
+  ]);
 
   const columns = useMemo<Column<ProposedBusinessCaseSolution>[]>(
     () => [
@@ -77,7 +85,7 @@ const AlternativeAnalysis = ({
           const { index } = row;
 
           // Check to see if form has been started and display title
-          if (alternativeSolutionHasFilledFields(row.original)) {
+          if (solutionHasFilledFields(row.original)) {
             return (
               <>{row.original.title || t(`alternativesTable.notSpecified`)}</>
             );
@@ -111,7 +119,7 @@ const AlternativeAnalysis = ({
         // Status column - shows Complete, In progress, or blank
         Header: t<string>('alternativesTable.status'),
         Cell: ({ row }: CellProps<ProposedBusinessCaseSolution, string>) => {
-          const isInProgress = alternativeSolutionHasFilledFields(row.original);
+          const isInProgress = solutionHasFilledFields(row.original);
           const solutionType = t(
             `alternativesTable.solutions.${row.index}.heading`
           );
@@ -138,7 +146,7 @@ const AlternativeAnalysis = ({
           const { index } = row;
 
           // Display blank if form hasn't been started yet
-          if (!alternativeSolutionHasFilledFields(row.original)) {
+          if (!solutionHasFilledFields(row.original)) {
             return <></>;
           }
 
@@ -166,17 +174,31 @@ const AlternativeAnalysis = ({
                   type="button"
                   unstyled
                   // TODO: NJD - need to make this more generic if we start to support more than two alternatives (C, D, etc.)
-                  onClick={() => {
+                  onClick={async () => {
                     if (
                       // eslint-disable-next-line no-alert
                       window.confirm(t('confirmRemoveAlternativeB'))
                     ) {
-                      dispatch(
+                      await dispatch(
                         putBusinessCase({
                           ...businessCase,
                           alternativeB: defaultProposedSolution
                         })
                       );
+
+                      // Update table data state
+                      setTableData([
+                        businessCase.preferredSolution,
+                        businessCase.alternativeA,
+                        defaultProposedSolution
+                      ]);
+
+                      // Force a re-fetch of the business case data
+
+                      await dispatch(
+                        fetchBusinessCase(businessCase.systemIntakeId)
+                      );
+
                       // TODO: NJD - this doesn't force a full state refresh. Can call window.location.reload() to fix but feels like bad UX
                       history.replace(history.location);
                     }
@@ -192,12 +214,6 @@ const AlternativeAnalysis = ({
     ],
     [businessCase, dispatch, dispatchSave, history, isFinal, t]
   );
-
-  const tableData = [
-    businessCase.preferredSolution,
-    businessCase.alternativeA,
-    businessCase.alternativeB
-  ];
 
   const table = useTable({
     columns,
@@ -220,7 +236,7 @@ const AlternativeAnalysis = ({
       onSubmit={dispatchSave}
       validationSchema={getAlternativeAnalysisSchema(
         isFinal,
-        alternativeSolutionHasFilledFields(businessCase.alternativeB)
+        solutionHasFilledFields(businessCase.alternativeB)
       )}
       validateOnBlur={false}
       validateOnChange={false}

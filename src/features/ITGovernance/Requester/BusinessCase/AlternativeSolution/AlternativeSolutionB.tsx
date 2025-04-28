@@ -2,16 +2,16 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button, Icon } from '@trussworks/react-uswds';
+import classnames from 'classnames';
 import { Form, Formik, FormikProps } from 'formik';
 
 import Alert from 'components/Alert';
 import AutoSave from 'components/AutoSave';
 import IconButton from 'components/IconButton';
 import PageNumber from 'components/PageNumber';
-import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
-import { BusinessCaseFinalValidationSchema } from 'validations/businessCaseSchema';
+import { BusinessCaseSchema } from 'validations/businessCaseSchema';
 
 import BusinessCaseStepWrapper from '../BusinessCaseStepWrapper';
 
@@ -30,8 +30,8 @@ const AlternativeSolutionB = ({
   dispatchSave,
   isFinal
 }: AlternativeSolutionBProps) => {
-  const history = useHistory();
   const { t } = useTranslation('businessCase');
+  const history = useHistory();
 
   const initialValues = {
     alternativeB: businessCase.alternativeB
@@ -41,16 +41,30 @@ const AlternativeSolutionB = ({
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={BusinessCaseFinalValidationSchema.alternativeB}
+      validationSchema={BusinessCaseSchema(isFinal).alternativeB}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
       innerRef={formikRef}
     >
       {(formikProps: FormikProps<any>) => {
-        const { errors, validateForm } = formikProps;
-        const values = formikProps.values.alternativeB;
+        const { values, errors } = formikProps;
         const flatErrors = flattenErrors(errors);
+
+        const validateSolution = () => {
+          try {
+            BusinessCaseSchema(isFinal).alternativeB.validateSync(
+              values.alternativeB,
+              { abortEarly: false }
+            );
+
+            return true;
+          } catch (err) {
+            return false;
+          }
+        };
+
+        const isFormValid = validateSolution();
 
         return (
           <BusinessCaseStepWrapper
@@ -93,27 +107,29 @@ const AlternativeSolutionB = ({
 
             <Button
               type="button"
+              disabled={!isFormValid}
+              className={classnames('usa-button', {
+                'no-pointer': !isFormValid
+              })}
+              // onClick={() => {
+              //   validateForm().then(err => {
+              //     if (Object.keys(err).length === 0) {
+              //       dispatchSave();
+              //       const newUrl = 'alternative-analysis';
+              //       history.push(newUrl);
+              //     } else {
+              //       window.scrollTo(0, 0);
+              //     }
+              //   });
+              // }}
+
+              // TODO: NJD - I couldn't get valdiation to work properly here - I don't think we need it since we validate on the actual button
+              //    but I would like to get it working to be safe. Any suggestions on how to get the above validation working onClick? It
+              //    has something to do with Promises. I could probably call the BusinessCaseSchema directly like i do in isFormValid?
               onClick={() => {
                 dispatchSave();
                 const newUrl = 'alternative-analysis';
-
-                // If final Business Case OR any field is filled
-                if (
-                  isFinal &&
-                  alternativeSolutionHasFilledFields(
-                    formikRef?.current?.values?.alternativeB
-                  )
-                ) {
-                  validateForm().then(err => {
-                    if (Object.keys(err).length === 0) {
-                      history.push(newUrl);
-                    } else {
-                      window.scrollTo(0, 0);
-                    }
-                  });
-                } else {
-                  history.push(newUrl);
-                }
+                history.push(newUrl);
               }}
             >
               {t('Finish Alternative B')}

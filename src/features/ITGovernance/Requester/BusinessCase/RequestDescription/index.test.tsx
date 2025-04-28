@@ -134,7 +134,7 @@ describe('Business case request description form', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByRole('heading', { name: /Preferred solution/i, level: 2 })
+        screen.getByRole('heading', { name: /Alternative analysis/i, level: 2 })
       ).toBeInTheDocument();
     });
   });
@@ -163,7 +163,7 @@ describe('Business case request description form', () => {
     screen.getByRole('button', { name: /next/i }).click();
 
     await waitFor(() => {
-      expect(screen.getByTestId('preferred-solution')).toBeInTheDocument();
+      expect(screen.getByTestId('alternative-analysis')).toBeInTheDocument();
     });
   });
 

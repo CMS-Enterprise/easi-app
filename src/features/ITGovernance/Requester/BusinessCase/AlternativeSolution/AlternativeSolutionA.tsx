@@ -2,15 +2,16 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button, Icon } from '@trussworks/react-uswds';
+import classnames from 'classnames';
 import { Form, Formik, FormikProps } from 'formik';
 
 import AutoSave from 'components/AutoSave';
 import IconButton from 'components/IconButton';
 import PageNumber from 'components/PageNumber';
-import { alternativeSolutionHasFilledFields } from 'data/businessCase';
+import { solutionHasFilledFields } from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
-import { BusinessCaseFinalValidationSchema } from 'validations/businessCaseSchema';
+import { BusinessCaseSchema } from 'validations/businessCaseSchema';
 
 import BusinessCaseStepWrapper from '../BusinessCaseStepWrapper';
 
@@ -29,8 +30,8 @@ const AlternativeSolutionA = ({
   dispatchSave,
   isFinal
 }: AlternativeSolutionProps) => {
-  const history = useHistory();
   const { t } = useTranslation('businessCase');
+  const history = useHistory();
 
   const initialValues = {
     alternativeA: businessCase.alternativeA
@@ -40,17 +41,31 @@ const AlternativeSolutionA = ({
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={BusinessCaseFinalValidationSchema.alternativeA}
+      validationSchema={BusinessCaseSchema(isFinal).alternativeA}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
       innerRef={formikRef}
     >
       {(formikProps: FormikProps<any>) => {
-        const { errors, validateForm } = formikProps;
-        const values = formikProps.values.alternativeA;
+        const { values, errors } = formikProps;
 
         const flatErrors = flattenErrors(errors);
+
+        const validateSolution = () => {
+          try {
+            BusinessCaseSchema(isFinal).alternativeA.validateSync(
+              values.alternativeA,
+              { abortEarly: false }
+            );
+
+            return true;
+          } catch (err) {
+            return false;
+          }
+        };
+
+        const isFormValid = validateSolution();
 
         return (
           <BusinessCaseStepWrapper
@@ -84,21 +99,29 @@ const AlternativeSolutionA = ({
 
             <Button
               type="button"
+              disabled={!isFormValid}
+              className={classnames('usa-button', {
+                'no-pointer': !isFormValid
+              })}
+              // onClick={() => {
+              //   validateForm().then(err => {
+              //     if (Object.keys(err).length === 0) {
+              //       dispatchSave();
+              //       const newUrl = 'alternative-analysis';
+              //       history.push(newUrl);
+              //     } else {
+              //       window.scrollTo(0, 0);
+              //     }
+              //   });
+              // }}
+
+              // TODO: NJD - I couldn't get valdiation to work properly here - I don't think we need it since we validate on the actual button
+              //    but I would like to get it working to be safe. Any suggestions on how to get the above validation working onClick? It
+              //    has something to do with Promises. I could probably call the BusinessCaseSchema directly like i do in isFormValid?
               onClick={() => {
                 dispatchSave();
                 const newUrl = 'alternative-analysis';
-
-                if (isFinal && alternativeSolutionHasFilledFields(values)) {
-                  validateForm().then(err => {
-                    if (Object.keys(err).length === 0) {
-                      history.push(newUrl);
-                    } else {
-                      window.scrollTo(0, 0);
-                    }
-                  });
-                } else {
-                  history.push(newUrl);
-                }
+                history.push(newUrl);
               }}
             >
               {t('Finish Alternative A')}
@@ -122,9 +145,7 @@ const AlternativeSolutionA = ({
             <PageNumber
               currentPage={5}
               totalPages={
-                alternativeSolutionHasFilledFields(businessCase.alternativeB)
-                  ? 6
-                  : 5
+                solutionHasFilledFields(businessCase.alternativeB) ? 6 : 5
               }
             />
             <AutoSave
