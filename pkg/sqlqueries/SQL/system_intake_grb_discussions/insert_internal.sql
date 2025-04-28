@@ -8,8 +8,10 @@ INSERT INTO system_intake_internal_grb_review_discussion_posts (
     created_by,
     created_at,
     modified_by,
-    modified_at
-) VALUES (
+    modified_at,
+    discussion_board_type
+)
+VALUES (
     :id,
     :content,
     :voting_role,
@@ -19,7 +21,8 @@ INSERT INTO system_intake_internal_grb_review_discussion_posts (
     :created_by,
     :created_at,
     :modified_by,
-    :modified_at
+    :modified_at,
+    :discussion_board_type
 )
 RETURNING
     id,
@@ -31,4 +34,5 @@ RETURNING
     created_by,
     created_at,
     modified_by,
-    modified_at;
+    modified_at,
+    discussion_board_type;

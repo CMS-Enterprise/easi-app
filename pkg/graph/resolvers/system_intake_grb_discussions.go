@@ -54,6 +54,7 @@ func CreateSystemIntakeGRBDiscussionPost(
 			post.VotingRole = &principalAsGRBReviewer.GRBVotingRole
 			post.GRBRole = &principalAsGRBReviewer.GRBReviewerRole
 		}
+		post.DiscussionBoardType = &input.DiscussionBoardType
 
 		// save in DB
 		result, err := store.CreateSystemIntakeGRBDiscussionPost(ctx, tx, post)
@@ -128,6 +129,7 @@ func CreateSystemIntakeGRBDiscussionReply(
 			post.VotingRole = &principalGRBReviewer.GRBVotingRole
 			post.GRBRole = &principalGRBReviewer.GRBReviewerRole
 		}
+		post.DiscussionBoardType = &input.DiscussionBoardType
 
 		result, err := store.CreateSystemIntakeGRBDiscussionPost(ctx, tx, post)
 		if err != nil {
