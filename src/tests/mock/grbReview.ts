@@ -20,6 +20,13 @@ export const grbReview: SystemIntakeGRBReviewFragment = {
   __typename: 'SystemIntake',
   id: systemIntake.id,
   grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+  grbReviewStartedAt: null,
+  grbDate: null,
+  grbReviewAsyncEndDate: null,
+  grbReviewAsyncRecordingTime: null,
+  grbReviewAsyncStatus: null,
+  grbReviewReminderLastSent: null,
+  grbPresentationLinks: null,
   grbVotingInformation: {
     __typename: 'GRBVotingInformation',
     grbReviewers: [],
@@ -32,7 +39,7 @@ export const grbReview: SystemIntakeGRBReviewFragment = {
 };
 
 export const getSystemIntakeGRBReviewQuery = (
-  data: Partial<SystemIntakeGRBReviewFragment>
+  data?: Partial<SystemIntakeGRBReviewFragment>
 ): MockedQuery<GetSystemIntakeGRBReviewQuery> => ({
   request: {
     query: GetSystemIntakeGRBReviewDocument,
