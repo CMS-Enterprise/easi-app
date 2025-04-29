@@ -307,7 +307,7 @@ export default {
     asyncHeading: 'For the requester and project team',
     asyncDescription:
       'Organize a meeting to record the project team’s presentation for the GRB.',
-    asyncRecordingDateLabel: 'Asychronous presentation recording date',
+    asyncRecordingDateLabel: 'Asynchronous presentation recording date',
     forTheReviewers: 'For the GRB reviewers',
     reviewersDescription:
       'The GRB will use the resources below as a part of their review of this IT Governance request.'
