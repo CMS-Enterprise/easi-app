@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"html/template"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
@@ -35,6 +36,16 @@ func CreateSystemIntakeGRBDiscussionPost(
 		systemIntake, err := store.FetchSystemIntakeByIDNP(ctx, tx, intakeID)
 		if err != nil {
 			return nil, err
+		}
+
+		// cannot post after GRB review is over
+		if systemIntake.GrbReviewAsyncManualEndDate != nil || (systemIntake.GrbReviewAsyncEndDate != nil && systemIntake.GrbReviewAsyncEndDate.Before(time.Now())) {
+			return nil, errors.New("GRB review is over, no more posts allowed")
+		}
+
+		// requester cannot post/reply on the internal post
+		if systemIntake.EUAUserID.String == appcontext.Principal(ctx).Account().Username && input.DiscussionBoardType == models.SystemIntakeGRBDiscussionBoardTypeInternal {
+			return nil, errors.New("requester cannot post on the Internal board")
 		}
 
 		principalAsGRBReviewer, err := GetPrincipalAsGRBReviewerBySystemIntakeID(ctx, intakeID)
@@ -139,11 +150,6 @@ func CreateSystemIntakeGRBDiscussionReply(
 		}
 		post.DiscussionBoardType = &input.DiscussionBoardType
 
-		result, err := store.CreateSystemIntakeGRBDiscussionPost(ctx, tx, post)
-		if err != nil {
-			return nil, err
-		}
-
 		systemIntake, err := store.FetchSystemIntakeByIDNP(ctx, tx, intakeID)
 		if err != nil {
 			return nil, err
@@ -151,6 +157,16 @@ func CreateSystemIntakeGRBDiscussionReply(
 
 		if systemIntake == nil {
 			return nil, errors.New("problem finding system intake when handling GRB reply")
+		}
+
+		// requester cannot post/reply on the internal post
+		if systemIntake.EUAUserID.String == appcontext.Principal(ctx).Account().Username && input.DiscussionBoardType == models.SystemIntakeGRBDiscussionBoardTypeInternal {
+			return nil, errors.New("requester cannot reply on the Internal board")
+		}
+
+		// cannot post after GRB review is over
+		if systemIntake.GrbReviewAsyncManualEndDate != nil || (systemIntake.GrbReviewAsyncEndDate != nil && systemIntake.GrbReviewAsyncEndDate.Before(time.Now())) {
+			return nil, errors.New("GRB review is over, no more replies allowed")
 		}
 
 		// the initial poster will receive a notification
@@ -163,6 +179,11 @@ func CreateSystemIntakeGRBDiscussionReply(
 
 		if initialPoster == nil {
 			return nil, errors.New("problem finding initial poster when handling GRB reply")
+		}
+
+		result, err := store.CreateSystemIntakeGRBDiscussionPost(ctx, tx, post)
+		if err != nil {
+			return nil, err
 		}
 
 		// if no email client, do not proceed
