@@ -7,12 +7,12 @@ import {
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
 import { taskListState } from 'tests/mock/govTaskList';
+import { grbPresentationLinks } from 'tests/mock/systemIntake';
 
 import { MessageProvider } from 'hooks/useMessage';
 import { ITGovTaskSystemIntake } from 'types/itGov';
 import {
   expectTaskStatusTagToHaveTextKey,
-  getByRoleWithNameTextKey,
   getExpectedAlertType
 } from 'utils/testing/helpers';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
@@ -37,16 +37,22 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
       renderGovTaskGrbMeeting(taskListState.grbMeetingCantStart.systemIntake!);
       // Cannot start yet
       expectTaskStatusTagToHaveTextKey('CANT_START');
+
       // Link to prep grb meeting
-      getByRoleWithNameTextKey('link', 'itGov:taskList.step.grbMeeting.button');
+      expect(
+        screen.getByRole('link', { name: 'Prepare for the GRB review' })
+      ).not.toHaveClass('usa-button');
     });
 
     it('Skipped', () => {
       renderGovTaskGrbMeeting(taskListState.grbMeetingSkipped.systemIntake!);
       // Not needed
       expectTaskStatusTagToHaveTextKey('NOT_NEEDED');
+
       // Link to prep grb meeting
-      getByRoleWithNameTextKey('link', 'itGov:taskList.step.grbMeeting.button');
+      expect(
+        screen.getByRole('link', { name: 'Prepare for the GRB review' })
+      ).not.toHaveClass('usa-button');
     });
 
     it('In progress - not scheduled', () => {
@@ -55,8 +61,11 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
       );
       // Ready to schedule
       expectTaskStatusTagToHaveTextKey('READY_TO_SCHEDULE');
+
       // Button to prep grb meeting
-      getByRoleWithNameTextKey('link', 'itGov:taskList.step.grbMeeting.button');
+      expect(
+        screen.getByRole('link', { name: 'Prepare for the GRB review' })
+      ).toHaveClass('usa-button');
     });
 
     it('In progress - scheduled', () => {
@@ -81,8 +90,11 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
           )
         )
       ).toBeInTheDocument();
+
       // Button to prep grb meeting
-      getByRoleWithNameTextKey('link', 'itGov:taskList.step.grbMeeting.button');
+      expect(
+        screen.getByRole('link', { name: 'Prepare for the GRB review' })
+      ).toHaveClass('usa-button');
     });
 
     it('Done', () => {
@@ -98,10 +110,14 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
           }
         )
       );
+
       // Link to prep grb meeting
-      getByRoleWithNameTextKey('link', 'itGov:taskList.step.grbMeeting.button');
+      expect(
+        screen.getByRole('link', { name: 'Prepare for the GRB review' })
+      ).not.toHaveClass('usa-button');
     });
   });
+
   describe('Async GRB Meeting', () => {
     it('Can’t start', () => {
       const modifiedMock = {
@@ -112,8 +128,11 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
 
       // Cannot start yet
       expectTaskStatusTagToHaveTextKey('CANT_START');
+
       // Link to prep grb meeting
-      getByRoleWithNameTextKey('link', 'itGov:taskList.step.grbMeeting.button');
+      expect(
+        screen.getByRole('link', { name: 'Prepare for the GRB review' })
+      ).not.toHaveClass('usa-button');
     });
 
     it('Skipped', () => {
@@ -125,32 +144,41 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
 
       // Not needed
       expectTaskStatusTagToHaveTextKey('NOT_NEEDED');
+
       // Link to prep grb meeting
-      getByRoleWithNameTextKey('link', 'itGov:taskList.step.grbMeeting.button');
+      expect(
+        screen.getByRole('link', { name: 'Prepare for the GRB review' })
+      ).not.toHaveClass('usa-button');
     });
 
     it('In progress - not scheduled', () => {
       const modifiedMock = {
         ...taskListState.grbMeetingInProgressNotScheduled.systemIntake!,
-        grbReviewType: SystemIntakeGRBReviewType.ASYNC
+        grbReviewType: SystemIntakeGRBReviewType.ASYNC,
+        grbPresentationLinks
       };
       renderGovTaskGrbMeeting(modifiedMock);
 
       // Ready to schedule
       expectTaskStatusTagToHaveTextKey('READY_TO_SCHEDULE');
+
       // Button to prep grb meeting
-      getByRoleWithNameTextKey('link', 'itGov:taskList.step.grbMeeting.button');
+      expect(
+        screen.getByRole('link', { name: 'Prepare for the GRB review' })
+      ).toHaveClass('usa-button');
     });
 
     it('In progress - scheduled', () => {
       const modifiedMock = {
         ...taskListState.grbMeetingInProgressScheduled.systemIntake!,
-        grbReviewType: SystemIntakeGRBReviewType.ASYNC
+        grbReviewType: SystemIntakeGRBReviewType.ASYNC,
+        grbPresentationLinks
       };
       renderGovTaskGrbMeeting(modifiedMock);
 
       // Scheduled
       expectTaskStatusTagToHaveTextKey('SCHEDULED');
+
       // Meeting scheduled info
       expect(getExpectedAlertType('info')).toHaveTextContent(
         i18next.t<string>(
@@ -160,8 +188,11 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
           }
         )
       );
+
       // Button to prep grb meeting
-      getByRoleWithNameTextKey('link', 'itGov:taskList.step.grbMeeting.button');
+      expect(
+        screen.getByRole('link', { name: 'Prepare for the GRB review' })
+      ).toHaveClass('usa-button');
     });
 
     it('Done', () => {
@@ -182,16 +213,91 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
           }
         )
       );
-      // Link to prep grb meeting
-      getByRoleWithNameTextKey('link', 'itGov:taskList.step.grbMeeting.button');
-    });
 
-    it('Opens and closes the remove presentation modal', () => {
+      // Link to prep grb meeting
+      expect(
+        screen.getByRole('link', { name: 'Prepare for the GRB review' })
+      ).not.toHaveClass('usa-button');
+    });
+  });
+
+  describe('Presentation deck', () => {
+    it('displays document scanning', () => {
       const modifiedMock = {
         ...taskListState.grbMeetingInProgressNotScheduled.systemIntake!,
-        grbReviewType: SystemIntakeGRBReviewType.ASYNC
+        grbReviewType: SystemIntakeGRBReviewType.ASYNC,
+        grbPresentationLinks: {
+          __typename: 'SystemIntakeGRBPresentationLinks' as const,
+          presentationDeckFileStatus: SystemIntakeDocumentStatus.PENDING
+        }
       };
       renderGovTaskGrbMeeting(modifiedMock);
+
+      expect(
+        screen.getByText(
+          i18next.t<string>('itGov:taskList.step.grbMeeting.scanning')
+        )
+      ).toBeInTheDocument();
+    });
+
+    it('displays the correct presentation file name and buttons work', () => {
+      const modifiedMock = {
+        ...taskListState.grbMeetingInProgressNotScheduled.systemIntake!,
+        grbReviewType: SystemIntakeGRBReviewType.ASYNC,
+        grbPresentationLinks
+      };
+      renderGovTaskGrbMeeting(modifiedMock);
+
+      expect(
+        screen.queryByText(
+          i18next.t<string>('itGov:taskList.step.grbMeeting.scanning')
+        )
+      ).not.toBeInTheDocument();
+
+      expect(
+        screen.getByText(/Uploaded presentation deck:/i)
+      ).toBeInTheDocument();
+
+      // Ensure the filename appears
+      expect(
+        screen.getByText(grbPresentationLinks.presentationDeckFileName!)
+      ).toBeInTheDocument();
+
+      // Check the "View" link is present with correct URL
+      const links = screen.getAllByRole('link', { name: /View/i });
+      const correctLink = links.find(
+        link =>
+          link.getAttribute('href') ===
+          grbPresentationLinks.presentationDeckFileURL
+      );
+
+      expect(correctLink).toBeInTheDocument();
+
+      // Ensure the "Remove" button exists
+      expect(
+        screen.getByRole('button', { name: /Remove/i })
+      ).toBeInTheDocument();
+
+      fireEvent.click(screen.getByRole('button', { name: /Remove/i }));
+
+      // Expect Modal to pop up
+      expect(
+        screen.getByText(
+          i18next.t<string>('itGov:taskList.step.grbMeeting.removeModal.title')
+        )
+      ).toBeInTheDocument();
+
+      expect(
+        screen.getByRole('button', { name: /Remove presentation/i })
+      ).toBeInTheDocument();
+    });
+  });
+
+  describe('Review types modal', () => {
+    it('opens and closes the modal', async () => {
+      renderGovTaskGrbMeeting(
+        taskListState.grbMeetingInProgressNotScheduled.systemIntake!
+      );
 
       // Click the Learn more button
       fireEvent.click(
@@ -199,14 +305,13 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
           i18next.t<string>('itGov:taskList.step.grbMeeting.learnMore')
         )
       );
+
       // Expect Modal to pop up
-      expect(
-        screen.getByText(
-          i18next.t<string>(
-            'itGov:taskList.step.grbMeeting.reviewTypeModal.title'
-          )
-        )
-      ).toBeInTheDocument();
+      const modalTitle = screen.queryByRole('heading', {
+        name: 'GRB review types'
+      });
+
+      expect(modalTitle).toBeInTheDocument();
 
       // Click the Go back button
       fireEvent.click(
@@ -216,96 +321,9 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
           )
         )
       );
+
       // Expect Modal to close
-      expect(
-        screen.queryByText(
-          i18next.t<string>(
-            'itGov:taskList.step.grbMeeting.reviewTypeModal.title'
-          )
-        )
-      ).not.toBeInTheDocument();
-    });
-
-    describe('Testing Presentation Deck', () => {
-      it('Display document scanning', () => {
-        const modifiedMock = {
-          ...taskListState.grbMeetingInProgressNotScheduled.systemIntake!,
-          grbReviewType: SystemIntakeGRBReviewType.ASYNC,
-          grbPresentationLinks: {
-            __typename: 'SystemIntakeGRBPresentationLinks' as const,
-            presentationDeckFileStatus: SystemIntakeDocumentStatus.PENDING
-          }
-        };
-        renderGovTaskGrbMeeting(modifiedMock);
-
-        expect(
-          screen.getByText(
-            i18next.t<string>('itGov:taskList.step.grbMeeting.scanning')
-          )
-        ).toBeInTheDocument();
-      });
-
-      it('displays the correct presentation file name and buttons work', () => {
-        const modifiedMock = {
-          ...taskListState.grbMeetingInProgressNotScheduled.systemIntake!,
-          grbReviewType: SystemIntakeGRBReviewType.ASYNC,
-          grbPresentationLinks: {
-            __typename: 'SystemIntakeGRBPresentationLinks' as const,
-            presentationDeckFileName: 'presentationDeckFileName.pdf',
-            presentationDeckFileStatus: SystemIntakeDocumentStatus.AVAILABLE,
-            presentationDeckFileURL:
-              'http://example.com/presentationDeckFileName.pdf'
-          }
-        };
-        renderGovTaskGrbMeeting(modifiedMock);
-
-        expect(
-          screen.queryByText(
-            i18next.t<string>('itGov:taskList.step.grbMeeting.scanning')
-          )
-        ).not.toBeInTheDocument();
-
-        expect(
-          screen.getByText(/Uploaded presentation deck:/i)
-        ).toBeInTheDocument();
-
-        // Ensure the filename appears
-        expect(
-          screen.getByText(
-            modifiedMock.grbPresentationLinks?.presentationDeckFileName
-          )
-        ).toBeInTheDocument();
-
-        // Check the "View" link is present with correct URL
-        const links = screen.getAllByRole('link', { name: /View/i });
-        const correctLink = links.find(
-          link =>
-            link.getAttribute('href') ===
-            'http://example.com/presentationDeckFileName.pdf'
-        );
-
-        expect(correctLink).toBeInTheDocument();
-
-        // Ensure the "Remove" button exists
-        expect(
-          screen.getByRole('button', { name: /Remove/i })
-        ).toBeInTheDocument();
-
-        fireEvent.click(screen.getByRole('button', { name: /Remove/i }));
-
-        // Expect Modal to pop up
-        expect(
-          screen.getByText(
-            i18next.t<string>(
-              'itGov:taskList.step.grbMeeting.removeModal.title'
-            )
-          )
-        ).toBeInTheDocument();
-
-        expect(
-          screen.getByRole('button', { name: /Remove presentation/i })
-        ).toBeInTheDocument();
-      });
+      expect(modalTitle).not.toBeInTheDocument();
     });
   });
 });
