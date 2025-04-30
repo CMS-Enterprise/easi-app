@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Button, ButtonGroup, Link } from '@trussworks/react-uswds';
 import classNames from 'classnames';
@@ -84,6 +84,31 @@ const GovTaskGrbMeeting = ({
         );
       });
   };
+
+  /**
+   * Whether to render `Prepare for the GRB review` link as button
+   * based on review type and meeting status
+   */
+  const renderPrepareGRBReviewButton = useMemo(() => {
+    switch (grbMeetingStatus) {
+      case ITGovGRBStatus.READY_TO_SCHEDULE:
+        return !(
+          grbReviewType === SystemIntakeGRBReviewType.ASYNC &&
+          !grbPresentationLinks
+        );
+
+      case ITGovGRBStatus.SCHEDULED:
+        return !(
+          grbReviewType === SystemIntakeGRBReviewType.ASYNC &&
+          !grbPresentationLinks
+        );
+
+      case ITGovGRBStatus.AWAITING_GRB_REVIEW:
+        return !grbPresentationLinks;
+      default:
+        return false;
+    }
+  }, [grbMeetingStatus, grbReviewType, grbPresentationLinks]);
 
   return (
     <>
@@ -283,30 +308,30 @@ const GovTaskGrbMeeting = ({
               </>
             )}
 
-          <div className="margin-top-2 display-flex flex-align-center">
+          {/** GRB review meeting help buttons */}
+          <ButtonGroup
+            className={classNames('margin-top-2', {
+              'usa-button-group__divided': !renderPrepareGRBReviewButton
+            })}
+          >
             <UswdsReactLink
               to="/help/it-governance/prepare-for-grb"
               target="_blank"
-              className={classNames(
-                'margin-right-2 padding-right-2 border-right-1px border-base-lighter',
-                (grbReviewType === SystemIntakeGRBReviewType.STANDARD &&
-                  (grbMeetingStatus === ITGovGRBStatus.READY_TO_SCHEDULE ||
-                    grbMeetingStatus === ITGovGRBStatus.SCHEDULED)) ||
-                  grbPresentationLinks
-                  ? 'usa-button border-right-0'
-                  : ''
-              )}
+              className={classNames({
+                'usa-button': renderPrepareGRBReviewButton
+              })}
             >
-              {t(`taskList.step.${stepKey}.button`)}
+              {t('taskList.step.grbMeeting.button')}
             </UswdsReactLink>
+
             <Button
               type="button"
               unstyled
               onClick={() => setReviewTypesModalOpen(true)}
             >
-              {t(`taskList.step.${stepKey}.learnMore`)}
+              {t('taskList.step.grbMeeting.learnMore')}
             </Button>
-          </div>
+          </ButtonGroup>
         </TaskListDescription>
       </TaskListItem>
     </>
