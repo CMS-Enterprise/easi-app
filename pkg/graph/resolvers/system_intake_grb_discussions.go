@@ -104,6 +104,14 @@ func CreateSystemIntakeGRBDiscussionReply(
 			return nil, err
 		}
 
+		if initialPost.DiscussionBoardType == nil {
+			return nil, errors.New("unexpected nil discussion board type on initial post")
+		}
+
+		if *initialPost.DiscussionBoardType != input.DiscussionBoardType {
+			return nil, errors.New("discussion board type mismatch in discussion reply, aborting")
+		}
+
 		intakeID := initialPost.SystemIntakeID
 		if initialPost.ReplyToID != nil {
 			return nil, errors.New("only top level posts can be replied to")
