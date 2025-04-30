@@ -23,7 +23,7 @@ func createSystemIntakeGRBDiscussionPost(
 		models.CreateSystemIntakeGRBDiscussionPostInput{
 			SystemIntakeID:      intake.ID,
 			Content:             content,
-			DiscussionBoardType: models.SystemIntakeGRBDiscussionBoardTypeInternal,
+			DiscussionBoardType: models.SystemIntakeGRBDiscussionBoardTypePrimary,
 		},
 	)
 	if err != nil {
@@ -45,7 +45,7 @@ func createSystemIntakeGRBDiscussionReply(
 		models.CreateSystemIntakeGRBDiscussionReplyInput{
 			InitialPostID:       initialPostID,
 			Content:             content,
-			DiscussionBoardType: models.SystemIntakeGRBDiscussionBoardTypeInternal,
+			DiscussionBoardType: models.SystemIntakeGRBDiscussionBoardTypePrimary,
 		},
 	)
 	if err != nil {
