@@ -167,39 +167,43 @@ const GovTaskGrbMeeting = ({
         shouldCloseOnOverlayClick
         className="height-auto"
       >
-        <PageHeading headingLevel="h3" className="margin-top-0 margin-bottom-3">
+        <h3 className="margin-y-0">
           {t(`taskList.step.${stepKey}.reviewTypeModal.title`)}
-        </PageHeading>
+        </h3>
 
-        {Object.values(SystemIntakeGRBReviewType).map(type => (
-          <React.Fragment key={type}>
-            <p className="font-body-md line-height-sans-4 margin-top-0 margin-bottom-1 text-bold">
-              {t(`taskList.step.${stepKey}.reviewTypeModal.${type}.heading`)}
-            </p>
-            {(
-              t(
+        <dl className="margin-top-0 font-body-sm line-height-body-5">
+          {Object.values(SystemIntakeGRBReviewType).map(type => (
+            <React.Fragment key={type}>
+              <dt>
+                <h4 className="margin-bottom-0">
+                  {t(
+                    `taskList.step.${stepKey}.reviewTypeModal.${type}.heading`
+                  )}
+                </h4>
+              </dt>
+              {t<string[]>(
                 `taskList.step.${stepKey}.reviewTypeModal.${type}.description`,
                 {
                   returnObjects: true
                 }
-              ) as string[]
-            ).map((description, index, arr) => (
-              <p
-                // eslint-disable-next-line react/no-array-index-key
-                key={index}
-                className={`margin-top-0 ${
-                  index === arr.length - 1
-                    ? 'margin-bottom-3'
-                    : 'margin-bottom-1'
-                }`}
-              >
-                {description}
-              </p>
-            ))}
-          </React.Fragment>
-        ))}
+              ).map((description, index) => (
+                <dd
+                  // eslint-disable-next-line react/no-array-index-key
+                  key={index}
+                  className="margin-left-0 margin-y-1"
+                >
+                  {description}
+                </dd>
+              ))}
+            </React.Fragment>
+          ))}
+        </dl>
 
-        <Button type="button" onClick={() => setReviewTypesModalOpen(false)}>
+        <Button
+          type="button"
+          onClick={() => setReviewTypesModalOpen(false)}
+          className="margin-top-2"
+        >
           {t(`taskList.step.${stepKey}.reviewTypeModal.goBack`)}
         </Button>
       </Modal>
