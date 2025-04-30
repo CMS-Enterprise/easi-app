@@ -100,6 +100,14 @@ const discussions = {
       // description:
       // 'Use this discussion board to ask questions or have dicussions with the {{groupNames}} members. The conversations here are not visible to the Project team.'
     }
+  },
+
+  taskList: {
+    noDiscussions: 'There are not yet any discussions for this review.',
+    noDiscussions_AWAITING_DECISION:
+      'There were no discussions during this review.',
+    discussionsCount:
+      '<0>{{discussionsWithoutRepliesCount}}</0> discussions without replies, <1>{{count}}</1> discussions total'
   }
 };
 
