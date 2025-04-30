@@ -6,6 +6,7 @@ import {
   SystemIntakeGRBReviewType
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
+import { getSystemIntakeGRBDiscussionsQuery } from 'tests/mock/discussions';
 import { taskListState } from 'tests/mock/govTaskList';
 import { grbPresentationLinks } from 'tests/mock/systemIntake';
 
@@ -23,7 +24,7 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
   function renderGovTaskGrbMeeting(mockdata: ITGovTaskSystemIntake) {
     return render(
       <MemoryRouter>
-        <VerboseMockedProvider>
+        <VerboseMockedProvider mocks={[getSystemIntakeGRBDiscussionsQuery()]}>
           <MessageProvider>
             <GovTaskGrbMeeting {...mockdata} />
           </MessageProvider>
@@ -42,6 +43,9 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
       expect(
         screen.getByRole('link', { name: 'Prepare for the GRB review' })
       ).not.toHaveClass('usa-button');
+
+      // Hides discussions card
+      expect(screen.queryByTestId('requester-discussions-card')).toBeNull();
     });
 
     it('Skipped', () => {
@@ -53,6 +57,9 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
       expect(
         screen.getByRole('link', { name: 'Prepare for the GRB review' })
       ).not.toHaveClass('usa-button');
+
+      // Hides discussions card
+      expect(screen.queryByTestId('requester-discussions-card')).toBeNull();
     });
 
     it('In progress - not scheduled', () => {
@@ -66,6 +73,9 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
       expect(
         screen.getByRole('link', { name: 'Prepare for the GRB review' })
       ).toHaveClass('usa-button');
+
+      // Hides discussions card
+      expect(screen.queryByTestId('requester-discussions-card')).toBeNull();
     });
 
     it('In progress - scheduled', () => {
@@ -95,6 +105,9 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
       expect(
         screen.getByRole('link', { name: 'Prepare for the GRB review' })
       ).toHaveClass('usa-button');
+
+      // Hides discussions card
+      expect(screen.queryByTestId('requester-discussions-card')).toBeNull();
     });
 
     it('Done', () => {
@@ -115,6 +128,9 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
       expect(
         screen.getByRole('link', { name: 'Prepare for the GRB review' })
       ).not.toHaveClass('usa-button');
+
+      // Hides discussions card
+      expect(screen.queryByTestId('requester-discussions-card')).toBeNull();
     });
   });
 
@@ -193,6 +209,19 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
       expect(
         screen.getByRole('link', { name: 'Prepare for the GRB review' })
       ).toHaveClass('usa-button');
+    });
+
+    it('In progress - awaiting decision', () => {
+      const modifiedMock = {
+        ...taskListState.grbMeetingAwaitingDecision.systemIntake!,
+        grbReviewType: SystemIntakeGRBReviewType.ASYNC
+      };
+      renderGovTaskGrbMeeting(modifiedMock);
+
+      // renders the discussion card
+      expect(
+        screen.getByTestId('requester-discussions-card')
+      ).toBeInTheDocument();
     });
 
     it('Done', () => {

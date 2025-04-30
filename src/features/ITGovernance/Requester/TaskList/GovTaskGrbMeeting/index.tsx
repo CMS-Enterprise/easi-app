@@ -19,6 +19,8 @@ import TaskListItem, { TaskListDescription } from 'components/TaskList';
 import useMessage from 'hooks/useMessage';
 import { formatDateUtc } from 'utils/date';
 
+import RequesterDiscussionsCard from './_components/RequesterDiscussionsCard';
+
 const GovTaskGrbMeeting = ({
   id,
   itGovTaskStatuses: { grbMeetingStatus },
@@ -311,6 +313,18 @@ const GovTaskGrbMeeting = ({
                 )}
               </>
             )}
+
+          {
+            /** Discussions card */
+            // Only render if review is active
+            (grbMeetingStatus === ITGovGRBStatus.AWAITING_DECISION ||
+              grbMeetingStatus === ITGovGRBStatus.REVIEW_IN_PROGRESS) && (
+              <RequesterDiscussionsCard
+                systemIntakeId={id}
+                grbMeetingStatus={grbMeetingStatus}
+              />
+            )
+          }
 
           {/** GRB review meeting help buttons */}
           <ButtonGroup
