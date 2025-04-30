@@ -24,6 +24,9 @@ type grbEmailJobs struct {
 
 	// SendGRBReviewEndedEmailJob is a job that sends an email when the GRB review has ended
 	SendGRBReviewEndedEmailJob ScheduledJob // TODO: Consider using OneTimeJob type
+
+	// SendGRBReviewLastDayReminderJob is a job that sends an email when the GRB review is on the last day
+	SendGRBReviewLastDayReminderJob ScheduledJob // TODO: Consider using OneTimeJob type
 }
 
 // GRBEmailJobs is the exported representation of all GRB email scheduled jobs
@@ -46,9 +49,19 @@ func getGRBEmailJobs(scheduler *Scheduler) *grbEmailJobs {
 			sendAsyncPastDueNoQuorumEmailJobFunction,
 		),
 
-		SendGRBReviewEndedEmailJob: NewScheduledJob("SendGRBReviewEndedEmailJob", scheduler,
+		SendGRBReviewEndedEmailJob: NewScheduledJob(
+			"SendGRBReviewEndedEmailJob",
+			scheduler,
 			timing.DailyAt10_01PMUTC,
-			sendGRBReviewEndedEmailJobFunction),
+			sendGRBReviewEndedEmailJobFunction,
+		),
+
+		SendGRBReviewLastDayReminderJob: NewScheduledJob(
+			"SendGRBReviewLastDayReminderJob",
+			scheduler,
+			timing.DailyAt1PMUTC,
+			sendGRBReviewLastDayReminderJobFunction,
+		),
 	}
 }
 
@@ -251,6 +264,98 @@ func sendGRBReviewEndedEmailJobFunction(ctx context.Context, scheduledJob *Sched
 
 			logger.Info("sent GRB Review Ended email", logfields.IntakeID(intake.ID))
 		}
+	}
+
+	return nil
+}
+
+func sendGRBReviewLastDayReminderJobFunction(
+	ctx context.Context,
+	scheduledJob *ScheduledJob,
+) error {
+	// ---- helpers ----
+	logger, err := scheduledJob.logger()
+	if err != nil {
+		return err
+	}
+	store, err := scheduledJob.store()
+	if err != nil {
+		logger.Error("error getting store from scheduler", zap.Error(err))
+		return err
+	}
+	emailClient, err := scheduledJob.emailClient()
+	if err != nil {
+		logger.Error("error getting email client from scheduler", zap.Error(err))
+		return err
+	}
+
+	logger.Info("Running GRB review LAST-DAY reminder job")
+
+	// Fetch *all* intakes, we’ll filter in memory
+	intakes, err := store.FetchSystemIntakes(ctx)
+	if err != nil {
+		logger.Error("error fetching system intakes", zap.Error(err))
+		return err
+	}
+
+	// Today truncated to 00:00 UTC
+	todayUTC := time.Now().UTC().Truncate(24 * time.Hour)
+
+	for _, intake := range intakes {
+
+		var deadline time.Time
+
+		// Select the deadline based on the review type
+		if intake.GrbReviewType == models.SystemIntakeGRBReviewTypeAsync {
+			if intake.GrbReviewAsyncManualEndDate != nil {
+				continue
+			} else if intake.GrbReviewAsyncEndDate == nil {
+				continue
+			} else {
+				deadline = *intake.GrbReviewAsyncEndDate
+			}
+		} else {
+			if intake.GRBDate == nil {
+				continue
+			} else {
+				deadline = *intake.GRBDate
+			}
+		}
+
+		if intake.GRBReviewStartedAt == nil {
+			continue // incomplete data
+		}
+
+		// Is the async end-date **today**?
+		endDateUTC := deadline.UTC().Truncate(24 * time.Hour)
+		if !endDateUTC.Equal(todayUTC) {
+			continue // not the last-day yet (or already passed)
+		}
+
+		// ---- Build + send email ----
+		if !intake.RequesterEmailAddress.Valid || !intake.ProjectName.Valid {
+			continue // can’t send without these
+		}
+
+		sendErr := emailClient.SystemIntake.SendSystemIntakeGRBReviewLastDay(
+			ctx,
+			email.SendSystemIntakeGRBReviewLastDayInput{
+				Recipient:          models.NewEmailAddress(intake.RequesterEmailAddress.String),
+				SystemIntakeID:     intake.ID,
+				ProjectName:        intake.ProjectName.String,
+				RequesterName:      intake.Requester,
+				RequesterComponent: intake.Component.String,
+				GRBReviewStart:     *intake.GRBReviewStartedAt,
+				GRBReviewDeadline:  deadline,
+			},
+		)
+		if sendErr != nil {
+			logger.Error("failed to send GRB last-day reminder",
+				logfields.IntakeID(intake.ID), zap.Error(sendErr))
+			continue // keep processing other intakes
+		}
+
+		logger.Info("sent GRB last-day reminder", logfields.IntakeID(intake.ID))
 	}
 
 	return nil
