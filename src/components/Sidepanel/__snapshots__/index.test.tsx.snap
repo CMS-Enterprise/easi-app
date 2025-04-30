@@ -1,12 +1,16 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Sidepanel > matches snapshot 1`] = `
-<DocumentFragment>
+<body
+  aria-hidden="true"
+  class="ReactModal__Body--open"
+>
   <div
     data-react-modal-body-trap=""
     style="position: absolute; opacity: 0;"
     tabindex="0"
   />
+  <div />
   <div
     data-react-modal-body-trap=""
     style="position: absolute; opacity: 0;"
@@ -64,5 +68,5 @@ exports[`Sidepanel > matches snapshot 1`] = `
       </div>
     </div>
   </div>
-</DocumentFragment>
+</body>
 `;

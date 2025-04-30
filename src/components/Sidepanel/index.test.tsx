@@ -1,16 +1,27 @@
 import React from 'react';
 import Modal from 'react-modal';
-import { render, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
 import Sidepanel from '.';
 
 describe('Sidepanel', () => {
+  let container: HTMLDivElement;
+
   beforeAll(() => {
     Modal.setAppElement(document.body);
   });
 
+  beforeEach(() => {
+    container = document.createElement('div');
+    document.body.appendChild(container);
+  });
+
+  afterEach(() => {
+    document.body.removeChild(container);
+  });
+
   it('renders without errors', async () => {
-    const { getByText, getByTestId } = render(
+    const { findByText, findByTestId } = render(
       <Sidepanel
         ariaLabel="ariaLabel"
         closeModal={() => {}}
@@ -20,15 +31,18 @@ describe('Sidepanel', () => {
       >
         <div>children</div>
       </Sidepanel>,
-      { container: document.body }
+      {
+        container,
+        baseElement: document.body // allows us to query into the portal
+      }
     );
 
-    expect(getByTestId('testid')).toBeInTheDocument();
-    expect(getByText('modalHeading')).toBeInTheDocument();
+    expect(await findByTestId('testid')).toBeInTheDocument();
+    expect(await findByText('modalHeading')).toBeInTheDocument();
   });
 
   it('matches snapshot', async () => {
-    const { asFragment, getByText, getByTestId } = render(
+    const { baseElement, findByText, findByTestId } = render(
       <Sidepanel
         ariaLabel="ariaLabel"
         closeModal={() => {}}
@@ -38,14 +52,15 @@ describe('Sidepanel', () => {
       >
         <div>children</div>
       </Sidepanel>,
-      { container: document.body }
+      {
+        container,
+        baseElement: document.body
+      }
     );
 
-    await waitFor(() => {
-      expect(getByTestId('testid')).toBeInTheDocument();
-      expect(getByText('modalHeading')).toBeInTheDocument();
-    });
+    await findByTestId('testid');
+    await findByText('modalHeading');
 
-    expect(asFragment()).toMatchSnapshot();
+    expect(baseElement).toMatchSnapshot();
   });
 });
