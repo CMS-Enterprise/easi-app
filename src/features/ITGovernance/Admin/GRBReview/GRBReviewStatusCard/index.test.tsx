@@ -13,6 +13,8 @@ import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import { MessageProvider } from 'hooks/useMessage';
 
+import { ModalProvider } from '../RestartReviewModal/RestartReviewModalContext';
+
 import GRBReviewStatusCard from './index';
 
 describe('GRBReviewStatusCard', () => {
@@ -62,9 +64,11 @@ describe('GRBReviewStatusCard', () => {
       <MemoryRouter>
         <MockedProvider addTypename={false}>
           <MessageProvider>
-            <ITGovAdminContext.Provider value={isITGovAdmin}>
-              <GRBReviewStatusCard grbReview={grbReview} />
-            </ITGovAdminContext.Provider>
+            <ModalProvider>
+              <ITGovAdminContext.Provider value={isITGovAdmin}>
+                <GRBReviewStatusCard grbReview={grbReview} />
+              </ITGovAdminContext.Provider>
+            </ModalProvider>
           </MessageProvider>
         </MockedProvider>
       </MemoryRouter>
@@ -140,5 +144,20 @@ describe('GRBReviewStatusCard', () => {
     expect(
       screen.queryByText(i18next.t<string>('grbReview:statusCard.addTime'))
     ).not.toBeInTheDocument();
+  });
+
+  it('renders Completed state in Async reviews', () => {
+    const asyncReviewCompletedState = {
+      ...mockAsyncReview,
+      grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType.COMPLETED
+    };
+
+    renderComponent(asyncReviewCompletedState);
+
+    expect(
+      screen.queryByText(
+        i18next.t<string>('grbReview:statusCard.restartReview')
+      )
+    ).toBeInTheDocument();
   });
 });
