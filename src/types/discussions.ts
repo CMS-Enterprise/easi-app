@@ -44,3 +44,11 @@ export type MentionListOnKeyDown = {
   /** onKeyDown handler for rendering the suggestions popup and loading spinner */
   onKeyDown: ({ event }: { event: KeyboardEvent }) => boolean;
 };
+
+/** Generic discussion type with only `createdAt` props */
+export interface DiscussionTimestamps {
+  initialPost: {
+    createdAt: string;
+  };
+  replies: { createdAt: string }[];
+}
