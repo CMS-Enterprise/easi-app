@@ -93,6 +93,7 @@ const ViewDiscussions = ({
                           {...discussion.initialPost}
                           replies={discussion.replies}
                           discussionBoardType={discussionBoardType}
+                          readOnly={readOnly}
                         />
                       </li>
                     ))}
@@ -124,6 +125,7 @@ const ViewDiscussions = ({
                           {...discussion.initialPost}
                           replies={discussion.replies}
                           discussionBoardType={discussionBoardType}
+                          readOnly={readOnly}
                         />
                       </li>
                     ))}

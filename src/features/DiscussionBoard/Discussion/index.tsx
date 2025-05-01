@@ -49,6 +49,7 @@ const Discussion = ({
       <DiscussionPost
         {...initialPost}
         discussionBoardType={discussionBoardType}
+        readOnly={readOnly}
       />
       {replies.length > 0 && (
         <>
@@ -80,6 +81,7 @@ const Discussion = ({
                   <DiscussionPost
                     {...reply}
                     discussionBoardType={discussionBoardType}
+                    readOnly={readOnly}
                   />
                 </li>
               ))}
