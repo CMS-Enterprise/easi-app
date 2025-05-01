@@ -13,20 +13,16 @@ import {
   GetGRBReviewersComparisonsDocument,
   GetGRBReviewersComparisonsQuery,
   GetGRBReviewersComparisonsQueryVariables,
-  GetSystemIntakeGRBReviewDocument,
-  GetSystemIntakeGRBReviewQuery,
-  GetSystemIntakeGRBReviewQueryVariables,
   GRBVotingInformationStatus,
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole,
-  SystemIntakeGRBReviewType,
   UpdateSystemIntakeGRBReviewerDocument,
   UpdateSystemIntakeGRBReviewerMutation,
   UpdateSystemIntakeGRBReviewerMutationVariables
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
-import { grbReview } from 'tests/mock/grbReview';
+import { getSystemIntakeGRBReviewQuery, grbReview } from 'tests/mock/grbReview';
 import { systemIntake } from 'tests/mock/systemIntake';
 import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
@@ -157,43 +153,43 @@ const grbVotingInformation: {
   numberOfNotVoted: 0
 };
 
-const getSystemIntakeGRBReviewQuery = (
-  reviewer?: SystemIntakeGRBReviewerFragment
-): MockedQuery<
-  GetSystemIntakeGRBReviewQuery,
-  GetSystemIntakeGRBReviewQueryVariables
-> => ({
-  request: {
-    query: GetSystemIntakeGRBReviewDocument,
-    variables: {
-      id: systemIntake.id
-    }
-  },
-  result: {
-    data: {
-      __typename: 'Query',
-      systemIntake: {
-        __typename: 'SystemIntake',
-        id: systemIntake.id,
-        grbDate: '2022-10-21T14:55:47.88283Z',
-        grbReviewAsyncEndDate: '2022-10-21T14:55:47.88283Z',
-        grbReviewAsyncRecordingTime: '2022-10-21T14:55:47.88283Z',
-        grbPresentationLinks: null,
-        grbVotingInformation: {
-          __typename: 'GRBVotingInformation',
-          grbReviewers: reviewer ? [reviewer] : [],
-          votingStatus: GRBVotingInformationStatus.NOT_STARTED,
-          numberOfNoObjection: 0,
-          numberOfObjection: 0,
-          numberOfNotVoted: 0
-        },
-        grbReviewStartedAt: null,
-        grbReviewType: SystemIntakeGRBReviewType.STANDARD,
-        documents: []
-      }
-    }
-  }
-});
+// const getSystemIntakeGRBReviewQuery = (
+//   reviewer?: SystemIntakeGRBReviewerFragment
+// ): MockedQuery<
+//   GetSystemIntakeGRBReviewQuery,
+//   GetSystemIntakeGRBReviewQueryVariables
+// > => ({
+//   request: {
+//     query: GetSystemIntakeGRBReviewDocument,
+//     variables: {
+//       id: systemIntake.id
+//     }
+//   },
+//   result: {
+//     data: {
+//       __typename: 'Query',
+//       systemIntake: {
+//         __typename: 'SystemIntake',
+//         id: systemIntake.id,
+//         grbDate: '2022-10-21T14:55:47.88283Z',
+//         grbReviewAsyncEndDate: '2022-10-21T14:55:47.88283Z',
+//         grbReviewAsyncRecordingTime: '2022-10-21T14:55:47.88283Z',
+//         grbPresentationLinks: null,
+//         grbVotingInformation: {
+//           __typename: 'GRBVotingInformation',
+//           grbReviewers: reviewer ? [reviewer] : [],
+//           votingStatus: GRBVotingInformationStatus.NOT_STARTED,
+//           numberOfNoObjection: 0,
+//           numberOfObjection: 0,
+//           numberOfNotVoted: 0
+//         },
+//         grbReviewStartedAt: null,
+//         grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+//         documents: []
+//       }
+//     }
+//   }
+// });
 
 const getGRBReviewersComparisonsQuery: MockedQuery<
   GetGRBReviewersComparisonsQuery,
@@ -233,7 +229,12 @@ describe('GRB reviewer form', () => {
             cedarContactsQuery('Jerry Seinfeld'),
             createSystemIntakeGRBReviewersQuery,
             getSystemIntakeGRBReviewQuery(),
-            getSystemIntakeGRBReviewQuery(grbReviewer)
+            getSystemIntakeGRBReviewQuery({
+              grbVotingInformation: {
+                ...grbReview.grbVotingInformation,
+                grbReviewers: [grbReviewer]
+              }
+            })
           ]}
         >
           <Provider store={store}>
@@ -331,8 +332,18 @@ describe('GRB reviewer form', () => {
             cedarContactsQuery(contactLabel),
             updateSystemIntakeGRBReviewerQuery,
             getSystemIntakeGRBReviewQuery(),
-            getSystemIntakeGRBReviewQuery(grbReviewer),
-            getSystemIntakeGRBReviewQuery(updatedGRBReviewer)
+            getSystemIntakeGRBReviewQuery({
+              grbVotingInformation: {
+                ...grbReview.grbVotingInformation,
+                grbReviewers: [grbReviewer]
+              }
+            }),
+            getSystemIntakeGRBReviewQuery({
+              grbVotingInformation: {
+                ...grbReview.grbVotingInformation,
+                grbReviewers: [updatedGRBReviewer]
+              }
+            })
           ]}
         >
           <Provider store={store}>
