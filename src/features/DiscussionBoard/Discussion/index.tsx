@@ -20,6 +20,7 @@ type DiscussionProps = {
   closeModal: () => void;
   setDiscussionAlert: (discussionAlert: DiscussionAlert) => void;
   mentionSuggestions: MentionSuggestion[];
+  readOnly?: boolean;
 };
 
 /**
@@ -32,7 +33,8 @@ const Discussion = ({
   discussion,
   closeModal,
   setDiscussionAlert,
-  mentionSuggestions
+  mentionSuggestions,
+  readOnly
 }: DiscussionProps) => {
   const { t } = useTranslation('discussions');
   const [showReplies, setShowReplies] = useState(true);
@@ -85,15 +87,20 @@ const Discussion = ({
           )}
         </>
       )}
-      <h2 className="margin-bottom-2 margin-top-8">{t('general.reply')}</h2>
-      <DiscussionForm
-        type="reply"
-        discussionBoardType={discussionBoardType}
-        closeModal={closeModal}
-        initialPostID={initialPost.id}
-        setDiscussionAlert={setDiscussionAlert}
-        mentionSuggestions={mentionSuggestions}
-      />
+
+      {!readOnly && (
+        <>
+          <h2 className="margin-bottom-2 margin-top-8">{t('general.reply')}</h2>
+          <DiscussionForm
+            type="reply"
+            discussionBoardType={discussionBoardType}
+            closeModal={closeModal}
+            initialPostID={initialPost.id}
+            setDiscussionAlert={setDiscussionAlert}
+            mentionSuggestions={mentionSuggestions}
+          />
+        </>
+      )}
     </div>
   );
 };

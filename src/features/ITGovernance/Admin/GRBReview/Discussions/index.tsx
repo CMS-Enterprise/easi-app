@@ -39,8 +39,6 @@ const Discussions = ({
 
   if (!grbDiscussionsInternal || !grbDiscussionsPrimary) return null;
 
-  console.log(readOnly);
-
   return (
     <>
       <DiscussionBoard
@@ -48,6 +46,7 @@ const Discussions = ({
         grbReviewers={grbReviewers}
         grbDiscussions={grbDiscussionsInternal}
         grbReviewStartedAt={grbReviewStartedAt}
+        readOnly={readOnly}
       />
 
       <div

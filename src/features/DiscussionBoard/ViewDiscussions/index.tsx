@@ -16,6 +16,7 @@ import DiscussionPost from '../DiscussionPost';
 type ViewDiscussionsProps = {
   discussionBoardType: SystemIntakeGRBDiscussionBoardType;
   grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[];
+  readOnly?: boolean;
 };
 
 /**
@@ -26,7 +27,8 @@ type ViewDiscussionsProps = {
  */
 const ViewDiscussions = ({
   discussionBoardType,
-  grbDiscussions
+  grbDiscussions,
+  readOnly
 }: ViewDiscussionsProps) => {
   const { t } = useTranslation('discussions');
 
@@ -51,16 +53,22 @@ const ViewDiscussions = ({
 
       <h2 className="margin-top-5 margin-bottom-2">{t('general.label')}</h2>
 
-      <IconButton
-        type="button"
-        onClick={() => {
-          pushDiscussionQuery({ discussionBoardType, discussionMode: 'start' });
-        }}
-        icon={<Icon.Announcement />}
-        unstyled
-      >
-        {t('general.startNewDiscussion')}
-      </IconButton>
+      {!readOnly && (
+        <IconButton
+          type="button"
+          onClick={() => {
+            pushDiscussionQuery({
+              discussionBoardType,
+              discussionMode: 'start'
+            });
+          }}
+          icon={<Icon.Announcement />}
+          unstyled
+        >
+          {t('general.startNewDiscussion')}
+        </IconButton>
+      )}
+
       <Accordion
         className="discussions-list margin-top-5"
         multiselectable

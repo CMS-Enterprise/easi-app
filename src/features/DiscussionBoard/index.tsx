@@ -109,6 +109,7 @@ function DiscussionBoard({
         <ViewDiscussions
           grbDiscussions={grbDiscussions}
           discussionBoardType={discussionBoardType}
+          readOnly={readOnly}
         />
       )}
 
@@ -119,6 +120,7 @@ function DiscussionBoard({
           systemIntakeID={systemIntakeID}
           closeModal={closeModal}
           setDiscussionAlert={setDiscussionAlert}
+          readOnly={readOnly}
         />
       )}
 
@@ -129,6 +131,7 @@ function DiscussionBoard({
           discussion={activeDiscussion}
           closeModal={closeModal}
           setDiscussionAlert={setDiscussionAlert}
+          readOnly={readOnly}
         />
       )}
     </DiscussionModalWrapper>

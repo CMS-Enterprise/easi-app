@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { NotFoundPartial } from 'features/Miscellaneous/NotFound';
 import { SystemIntakeGRBDiscussionBoardType } from 'gql/generated/graphql';
 
 import { DiscussionAlert, MentionSuggestion } from 'types/discussions';
@@ -12,6 +13,7 @@ type StartDiscussionProps = {
   closeModal: () => void;
   setDiscussionAlert: (discussionAlert: DiscussionAlert) => void;
   mentionSuggestions: MentionSuggestion[];
+  readOnly?: boolean;
 };
 
 /**
@@ -22,9 +24,14 @@ const StartDiscussion = ({
   discussionBoardType,
   closeModal,
   setDiscussionAlert,
-  mentionSuggestions
+  mentionSuggestions,
+  readOnly
 }: StartDiscussionProps) => {
   const { t } = useTranslation('discussions');
+
+  if (readOnly) {
+    return <NotFoundPartial />;
+  }
 
   return (
     <div>
