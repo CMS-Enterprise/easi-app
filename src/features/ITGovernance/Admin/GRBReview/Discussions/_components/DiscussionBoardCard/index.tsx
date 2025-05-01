@@ -17,6 +17,7 @@ type DiscussionBoardCardProps = {
   grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[];
   grbReviewStartedAt: string | null | undefined;
   loading: boolean;
+  readOnly?: boolean;
 };
 
 /**
@@ -26,7 +27,8 @@ const DiscussionBoardCard = ({
   discussionBoardType,
   grbDiscussions,
   grbReviewStartedAt,
-  loading
+  loading,
+  readOnly
 }: DiscussionBoardCardProps) => {
   const { t } = useTranslation('discussions');
 
@@ -117,6 +119,7 @@ const DiscussionBoardCard = ({
           discussionBoardType={discussionBoardType}
           grbDiscussions={grbDiscussions}
           pushDiscussionQuery={pushDiscussionQuery}
+          readOnly={readOnly}
         />
       ) : (
         <Alert type="info" slim>

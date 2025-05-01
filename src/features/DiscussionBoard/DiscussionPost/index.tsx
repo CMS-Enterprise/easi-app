@@ -26,6 +26,7 @@ type DiscussionPostProps = SystemIntakeGRBReviewDiscussionPostFragment & {
   replies?: SystemIntakeGRBReviewDiscussionPostFragment[];
   /** Truncates discussion content text with read more/less button */
   truncateText?: boolean;
+  readOnly?: boolean;
 };
 
 /**
@@ -35,6 +36,7 @@ const DiscussionPost = ({
   discussionBoardType,
   replies,
   truncateText,
+  readOnly,
   ...initialPost
 }: DiscussionPostProps) => {
   const { t } = useTranslation('discussions');
@@ -110,7 +112,8 @@ const DiscussionPost = ({
 
         {
           // Only render reply data if `replies` is not undefined
-          replies && (
+          // Hide if `readOnly` is true and no replies
+          replies && (!readOnly || replies.length > 0) && (
             <div
               className="easi-discussion-post__replies display-flex margin-top-2"
               data-testid="discussionReplies"

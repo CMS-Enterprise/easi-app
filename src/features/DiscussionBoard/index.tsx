@@ -23,18 +23,21 @@ type DiscussionBoardProps = {
   grbReviewStartedAt: string | null | undefined;
   grbReviewers: SystemIntakeGRBReviewerFragment[];
   grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[];
+  readOnly?: boolean;
 };
 
 function DiscussionBoard({
   systemIntakeID,
   grbReviewStartedAt,
   grbReviewers,
-  grbDiscussions
+  grbDiscussions,
+  readOnly
 }: DiscussionBoardProps) {
   /** Discussion alert state for form success and error messages */
   const [discussionAlert, setDiscussionAlert] = useState<DiscussionAlert>(null);
 
   const { getDiscussionParams, pushDiscussionQuery } = useDiscussionParams();
+
   const {
     discussionMode,
     discussionId,

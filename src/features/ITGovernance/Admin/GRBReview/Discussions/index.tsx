@@ -16,6 +16,7 @@ type DiscussionsProps = {
   systemIntakeID: string;
   grbReviewers: SystemIntakeGRBReviewerFragment[];
   grbReviewStartedAt?: string | null;
+  readOnly?: boolean;
   className?: string;
 };
 
@@ -24,6 +25,7 @@ const Discussions = ({
   systemIntakeID,
   grbReviewers,
   grbReviewStartedAt,
+  readOnly,
   className
 }: DiscussionsProps) => {
   const { t } = useTranslation('discussions');
@@ -36,6 +38,8 @@ const Discussions = ({
     data?.systemIntake || {};
 
   if (!grbDiscussionsInternal || !grbDiscussionsPrimary) return null;
+
+  console.log(readOnly);
 
   return (
     <>
@@ -82,6 +86,7 @@ const Discussions = ({
           grbDiscussions={grbDiscussionsPrimary}
           grbReviewStartedAt={grbReviewStartedAt}
           loading={loading}
+          readOnly={readOnly}
         />
 
         <DiscussionBoardCard
@@ -89,6 +94,7 @@ const Discussions = ({
           grbDiscussions={grbDiscussionsInternal}
           grbReviewStartedAt={grbReviewStartedAt}
           loading={loading}
+          readOnly={readOnly}
         />
       </div>
     </>

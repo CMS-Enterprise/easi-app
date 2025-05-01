@@ -18,6 +18,7 @@ type RecentDiscussionProps = {
   discussionBoardType: SystemIntakeGRBDiscussionBoardType;
   grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[];
   pushDiscussionQuery: UseDiscussionParamsReturn['pushDiscussionQuery'];
+  readOnly?: boolean;
 };
 
 /**
@@ -27,7 +28,8 @@ const RecentDiscussion = ({
   loading,
   discussionBoardType,
   grbDiscussions,
-  pushDiscussionQuery
+  pushDiscussionQuery,
+  readOnly
 }: RecentDiscussionProps) => {
   const { t } = useTranslation('discussions');
 
@@ -69,6 +71,7 @@ const RecentDiscussion = ({
       ) : (
         <DiscussionPost
           {...recentDiscussion.initialPost}
+          readOnly={readOnly}
           replies={recentDiscussion.replies}
           discussionBoardType={discussionBoardType}
           truncateText

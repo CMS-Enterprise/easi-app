@@ -229,6 +229,7 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
           grbReviewers={grbReview.grbVotingInformation?.grbReviewers}
           grbReviewStartedAt={grbReview.grbReviewStartedAt}
           className="margin-top-4 margin-bottom-6"
+          // readOnly
         />
         {/* Participants Table */}
         <ParticipantsSection
