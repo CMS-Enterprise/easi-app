@@ -1,4 +1,5 @@
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 import { ITGovGRBStatus } from 'gql/generated/graphql';
 import {
@@ -18,12 +19,14 @@ const discussionsWithoutReplies = mockDiscussionsWithoutReplies();
 describe('Requester discussions card', () => {
   it('matches the snapshot', async () => {
     const { asFragment } = render(
-      <VerboseMockedProvider mocks={[getSystemIntakeGRBDiscussionsQuery()]}>
-        <RequesterDiscussionsCard
-          systemIntakeId={systemIntake.id}
-          grbMeetingStatus={ITGovGRBStatus.REVIEW_IN_PROGRESS}
-        />
-      </VerboseMockedProvider>
+      <MemoryRouter>
+        <VerboseMockedProvider mocks={[getSystemIntakeGRBDiscussionsQuery()]}>
+          <RequesterDiscussionsCard
+            systemIntakeId={systemIntake.id}
+            grbMeetingStatus={ITGovGRBStatus.REVIEW_IN_PROGRESS}
+          />
+        </VerboseMockedProvider>
+      </MemoryRouter>
     );
 
     expect(await screen.findByTestId('discussions-total')).toBeInTheDocument();
@@ -33,16 +36,18 @@ describe('Requester discussions card', () => {
 
   it('renders awaiting decision status with no discussions', async () => {
     render(
-      <VerboseMockedProvider
-        mocks={[
-          getSystemIntakeGRBDiscussionsQuery({ grbDiscussionsPrimary: [] })
-        ]}
-      >
-        <RequesterDiscussionsCard
-          systemIntakeId={systemIntake.id}
-          grbMeetingStatus={ITGovGRBStatus.AWAITING_DECISION}
-        />
-      </VerboseMockedProvider>
+      <MemoryRouter>
+        <VerboseMockedProvider
+          mocks={[
+            getSystemIntakeGRBDiscussionsQuery({ grbDiscussionsPrimary: [] })
+          ]}
+        >
+          <RequesterDiscussionsCard
+            systemIntakeId={systemIntake.id}
+            grbMeetingStatus={ITGovGRBStatus.AWAITING_DECISION}
+          />
+        </VerboseMockedProvider>
+      </MemoryRouter>
     );
 
     expect(
@@ -57,16 +62,18 @@ describe('Requester discussions card', () => {
 
   it('renders in progress with no discussions', async () => {
     render(
-      <VerboseMockedProvider
-        mocks={[
-          getSystemIntakeGRBDiscussionsQuery({ grbDiscussionsPrimary: [] })
-        ]}
-      >
-        <RequesterDiscussionsCard
-          systemIntakeId={systemIntake.id}
-          grbMeetingStatus={ITGovGRBStatus.REVIEW_IN_PROGRESS}
-        />
-      </VerboseMockedProvider>
+      <MemoryRouter>
+        <VerboseMockedProvider
+          mocks={[
+            getSystemIntakeGRBDiscussionsQuery({ grbDiscussionsPrimary: [] })
+          ]}
+        >
+          <RequesterDiscussionsCard
+            systemIntakeId={systemIntake.id}
+            grbMeetingStatus={ITGovGRBStatus.REVIEW_IN_PROGRESS}
+          />
+        </VerboseMockedProvider>
+      </MemoryRouter>
     );
 
     expect(
@@ -78,12 +85,14 @@ describe('Requester discussions card', () => {
 
   it('renders the correct number of discussions', async () => {
     render(
-      <VerboseMockedProvider mocks={[getSystemIntakeGRBDiscussionsQuery()]}>
-        <RequesterDiscussionsCard
-          systemIntakeId={systemIntake.id}
-          grbMeetingStatus={ITGovGRBStatus.REVIEW_IN_PROGRESS}
-        />
-      </VerboseMockedProvider>
+      <MemoryRouter>
+        <VerboseMockedProvider mocks={[getSystemIntakeGRBDiscussionsQuery()]}>
+          <RequesterDiscussionsCard
+            systemIntakeId={systemIntake.id}
+            grbMeetingStatus={ITGovGRBStatus.REVIEW_IN_PROGRESS}
+          />
+        </VerboseMockedProvider>
+      </MemoryRouter>
     );
 
     // Check discussion counts

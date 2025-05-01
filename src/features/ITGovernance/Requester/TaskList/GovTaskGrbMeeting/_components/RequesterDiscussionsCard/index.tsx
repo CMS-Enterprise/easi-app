@@ -3,11 +3,13 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Button, ButtonGroup, Icon } from '@trussworks/react-uswds';
 import {
   ITGovGRBStatus,
+  SystemIntakeGRBDiscussionBoardType,
   useGetSystemIntakeGRBDiscussionsQuery
 } from 'gql/generated/graphql';
 
 import Divider from 'components/Divider';
 import Spinner from 'components/Spinner';
+import useDiscussionParams from 'hooks/useDiscussionParams';
 
 type RequesterDiscussionsCardProps = {
   systemIntakeId: string;
@@ -23,6 +25,8 @@ const RequesterDiscussionsCard = ({
   grbMeetingStatus
 }: RequesterDiscussionsCardProps) => {
   const { t } = useTranslation('discussions');
+
+  const { pushDiscussionQuery } = useDiscussionParams();
 
   const { data, loading } = useGetSystemIntakeGRBDiscussionsQuery({
     variables: { id: systemIntakeId }
@@ -79,8 +83,12 @@ const RequesterDiscussionsCard = ({
       <ButtonGroup>
         <Button
           type="button"
-          // TODO EASI-4857: update to open primary discussion board
-          onClick={() => null}
+          onClick={() =>
+            pushDiscussionQuery({
+              discussionBoardType: SystemIntakeGRBDiscussionBoardType.PRIMARY,
+              discussionMode: 'view'
+            })
+          }
           className="margin-right-1"
         >
           {t('general.viewDiscussionBoard')}
@@ -89,8 +97,12 @@ const RequesterDiscussionsCard = ({
         {grbMeetingStatus !== ITGovGRBStatus.AWAITING_DECISION && (
           <Button
             type="button"
-            // TODO EASI-4857: update to open primary discussion board
-            onClick={() => null}
+            onClick={() =>
+              pushDiscussionQuery({
+                discussionBoardType: SystemIntakeGRBDiscussionBoardType.PRIMARY,
+                discussionMode: 'start'
+              })
+            }
             unstyled
           >
             {t('general.startDiscussion.heading')}
