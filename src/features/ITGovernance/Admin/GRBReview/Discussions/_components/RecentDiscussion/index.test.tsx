@@ -1,6 +1,7 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
+import { SystemIntakeGRBDiscussionBoardType } from 'gql/generated/graphql';
 import i18next from 'i18next';
 import { mockDiscussions } from 'tests/mock/discussions';
 
@@ -12,6 +13,7 @@ describe('RecentDiscussion', () => {
       <MemoryRouter>
         <RecentDiscussion
           loading={false}
+          discussionBoardType={SystemIntakeGRBDiscussionBoardType.INTERNAL}
           grbDiscussions={mockDiscussions()}
           pushDiscussionQuery={vi.fn()}
         />
@@ -34,6 +36,7 @@ describe('RecentDiscussion', () => {
       <MemoryRouter>
         <RecentDiscussion
           loading={false}
+          discussionBoardType={SystemIntakeGRBDiscussionBoardType.INTERNAL}
           grbDiscussions={[]}
           pushDiscussionQuery={vi.fn()}
         />

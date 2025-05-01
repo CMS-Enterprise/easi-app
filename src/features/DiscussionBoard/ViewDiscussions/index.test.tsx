@@ -2,6 +2,7 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { SystemIntakeGRBDiscussionBoardType } from 'gql/generated/graphql';
 import i18next from 'i18next';
 import {
   mockDiscussions,
@@ -22,7 +23,10 @@ describe('ViewDiscussions component', () => {
   it('renders the component', () => {
     render(
       <MemoryRouter>
-        <ViewDiscussions grbDiscussions={mockDiscussions()} />
+        <ViewDiscussions
+          grbDiscussions={mockDiscussions()}
+          discussionBoardType={SystemIntakeGRBDiscussionBoardType.INTERNAL}
+        />
       </MemoryRouter>
     );
 
@@ -47,7 +51,10 @@ describe('ViewDiscussions component', () => {
   it('renders alerts for no discussion posts', () => {
     render(
       <MemoryRouter>
-        <ViewDiscussions grbDiscussions={[]} />
+        <ViewDiscussions
+          grbDiscussions={[]}
+          discussionBoardType={SystemIntakeGRBDiscussionBoardType.INTERNAL}
+        />
       </MemoryRouter>
     );
 
@@ -71,7 +78,10 @@ describe('ViewDiscussions component', () => {
 
     render(
       <MemoryRouter>
-        <ViewDiscussions grbDiscussions={grbDiscussions} />
+        <ViewDiscussions
+          grbDiscussions={grbDiscussions}
+          discussionBoardType={SystemIntakeGRBDiscussionBoardType.INTERNAL}
+        />
       </MemoryRouter>
     );
 

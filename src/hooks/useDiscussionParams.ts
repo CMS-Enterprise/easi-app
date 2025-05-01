@@ -1,4 +1,5 @@
 import { useHistory, useLocation } from 'react-router-dom';
+import { SystemIntakeGRBDiscussionBoardType } from 'gql/generated/graphql';
 
 const discussionModeKeys = ['view', 'start', 'reply'] as const;
 
@@ -11,6 +12,7 @@ export type UseDiscussionParamsReturn = {
    * Undefined `discussionMode` implies closed modal
    */
   getDiscussionParams: () => {
+    discussionBoardType: SystemIntakeGRBDiscussionBoardType | undefined;
     discussionMode: DiscussionMode | undefined;
     discussionId: string | undefined;
   };
@@ -21,14 +23,36 @@ export type UseDiscussionParamsReturn = {
    */
   pushDiscussionQuery: (
     query:
-      | { discussionMode: Extract<DiscussionMode, 'view' | 'start'> }
+      | {
+          discussionMode: Extract<DiscussionMode, 'view' | 'start'>;
+          discussionBoardType: SystemIntakeGRBDiscussionBoardType;
+        }
       | {
           discussionMode: Extract<DiscussionMode, 'reply'>;
+          discussionBoardType: SystemIntakeGRBDiscussionBoardType;
           discussionId: string;
         }
       | false
   ) => void;
 };
+
+function discussionModeIsValid(
+  discussionMode: DiscussionMode | string | null
+): discussionMode is DiscussionMode {
+  return (
+    discussionMode !== null &&
+    discussionModeKeys.includes(discussionMode as DiscussionMode)
+  );
+}
+
+function discussionBoardTypeIsValid(
+  discussionBoardType: SystemIntakeGRBDiscussionBoardType | string | null
+): discussionBoardType is SystemIntakeGRBDiscussionBoardType {
+  return (
+    discussionBoardType !== null &&
+    discussionBoardType in SystemIntakeGRBDiscussionBoardType
+  );
+}
 
 /**
  * Handle Discussion (side panel modal) state with the url query params
@@ -42,14 +66,17 @@ export default function useDiscussionParams(): UseDiscussionParamsReturn {
     () => {
       const q = new URLSearchParams(location.search);
 
-      const discussionMode = q.get('discussionMode') as DiscussionMode | null;
+      const discussionMode = q.get('discussionMode');
+      const discussionBoardType = q.get('discussionBoardType');
+      const discussionId = q.get('discussionId');
 
-      // Silent ignore on invalid `discussionModeKeys`
+      // Silent fail on invalid query params
       if (
-        discussionMode === null ||
-        !discussionModeKeys.includes(discussionMode)
+        !discussionModeIsValid(discussionMode) ||
+        !discussionBoardTypeIsValid(discussionBoardType)
       ) {
         return {
+          discussionBoardType: undefined,
           discussionMode: undefined,
           discussionId: undefined
         };
@@ -58,18 +85,21 @@ export default function useDiscussionParams(): UseDiscussionParamsReturn {
       // Check reply mode for valid `discussionId`
       // Silent fail if `discussionId` is invalid
       if (discussionMode === 'reply') {
-        const discussionId = q.get('discussionId');
-
         if (discussionId === null)
           return {
+            discussionBoardType: undefined,
             discussionMode: undefined,
             discussionId: undefined
           };
 
-        return { discussionMode, discussionId };
+        return {
+          discussionMode,
+          discussionBoardType,
+          discussionId
+        };
       }
 
-      return { discussionMode, discussionId: undefined };
+      return { discussionMode, discussionBoardType, discussionId: undefined };
     };
 
   const pushDiscussionQuery: UseDiscussionParamsReturn['pushDiscussionQuery'] =

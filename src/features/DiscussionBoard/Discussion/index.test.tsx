@@ -3,6 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
+  SystemIntakeGRBDiscussionBoardType,
   SystemIntakeGRBReviewDiscussionFragment,
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole
@@ -26,6 +27,7 @@ describe('Discussion component', () => {
       <MemoryRouter>
         <VerboseMockedProvider>
           <Discussion
+            discussionBoardType={SystemIntakeGRBDiscussionBoardType.PRIMARY}
             mentionSuggestions={[]}
             discussion={discussion}
             closeModal={vi.fn()}
@@ -112,6 +114,7 @@ describe('Discussion component', () => {
       <MemoryRouter>
         <VerboseMockedProvider>
           <Discussion
+            discussionBoardType={SystemIntakeGRBDiscussionBoardType.INTERNAL}
             mentionSuggestions={[]}
             discussion={discussion}
             closeModal={vi.fn()}

@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '@trussworks/react-uswds';
 import { NotFoundPartial } from 'features/Miscellaneous/NotFound';
-import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/generated/graphql';
+import {
+  SystemIntakeGRBDiscussionBoardType,
+  SystemIntakeGRBReviewDiscussionFragment
+} from 'gql/generated/graphql';
 
 import IconButton from 'components/IconButton';
 import { DiscussionAlert, MentionSuggestion } from 'types/discussions';
@@ -12,6 +15,7 @@ import DiscussionsList from '../DiscussionList';
 import DiscussionPost from '../DiscussionPost';
 
 type DiscussionProps = {
+  discussionBoardType: SystemIntakeGRBDiscussionBoardType;
   discussion: SystemIntakeGRBReviewDiscussionFragment | null;
   closeModal: () => void;
   setDiscussionAlert: (discussionAlert: DiscussionAlert) => void;
@@ -24,6 +28,7 @@ type DiscussionProps = {
  * Displays discussion, replies, and form to reply to discussion post
  */
 const Discussion = ({
+  discussionBoardType,
   discussion,
   closeModal,
   setDiscussionAlert,
@@ -39,7 +44,10 @@ const Discussion = ({
   return (
     <div>
       <h1 className="margin-bottom-5">{t('general.discussion')}</h1>
-      <DiscussionPost {...initialPost} />
+      <DiscussionPost
+        {...initialPost}
+        discussionBoardType={discussionBoardType}
+      />
       {replies.length > 0 && (
         <>
           <div className="display-flex flex-justify">
@@ -67,7 +75,10 @@ const Discussion = ({
             >
               {replies.map(reply => (
                 <li key={reply.id}>
-                  <DiscussionPost {...reply} />
+                  <DiscussionPost
+                    {...reply}
+                    discussionBoardType={discussionBoardType}
+                  />
                 </li>
               ))}
             </DiscussionsList>
@@ -77,6 +88,7 @@ const Discussion = ({
       <h2 className="margin-bottom-2 margin-top-8">{t('general.reply')}</h2>
       <DiscussionForm
         type="reply"
+        discussionBoardType={discussionBoardType}
         closeModal={closeModal}
         initialPostID={initialPost.id}
         setDiscussionAlert={setDiscussionAlert}

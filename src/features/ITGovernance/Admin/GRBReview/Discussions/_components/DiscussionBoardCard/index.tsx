@@ -65,7 +65,10 @@ const DiscussionBoardCard = ({
         <Button
           type="button"
           onClick={() => {
-            pushDiscussionQuery({ discussionMode: 'view' });
+            pushDiscussionQuery({
+              discussionBoardType,
+              discussionMode: 'view'
+            });
           }}
           className="margin-right-0 margin-y-2 desktop:margin-y-0 text-no-wrap"
           disabled={!grbReviewStartedAt}
@@ -94,7 +97,10 @@ const DiscussionBoardCard = ({
           <IconButton
             type="button"
             onClick={() => {
-              pushDiscussionQuery({ discussionMode: 'view' });
+              pushDiscussionQuery({
+                discussionBoardType,
+                discussionMode: 'view'
+              });
             }}
             icon={<Icon.ArrowForward />}
             iconPosition="after"
@@ -108,6 +114,7 @@ const DiscussionBoardCard = ({
       {grbReviewStartedAt ? (
         <RecentDiscussion
           loading={loading}
+          discussionBoardType={discussionBoardType}
           grbDiscussions={grbDiscussions}
           pushDiscussionQuery={pushDiscussionQuery}
         />

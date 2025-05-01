@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { SystemIntakeGRBDiscussionBoardType } from 'gql/generated/graphql';
 
 import { DiscussionAlert, MentionSuggestion } from 'types/discussions';
 
@@ -7,6 +8,7 @@ import DiscussionForm from '../DiscussionForm';
 
 type StartDiscussionProps = {
   systemIntakeID: string;
+  discussionBoardType: SystemIntakeGRBDiscussionBoardType;
   closeModal: () => void;
   setDiscussionAlert: (discussionAlert: DiscussionAlert) => void;
   mentionSuggestions: MentionSuggestion[];
@@ -17,6 +19,7 @@ type StartDiscussionProps = {
  */
 const StartDiscussion = ({
   systemIntakeID,
+  discussionBoardType,
   closeModal,
   setDiscussionAlert,
   mentionSuggestions
@@ -33,6 +36,7 @@ const StartDiscussion = ({
       </p>
 
       <DiscussionForm
+        discussionBoardType={discussionBoardType}
         closeModal={closeModal}
         type="discussion"
         systemIntakeID={systemIntakeID}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import {
+  SystemIntakeGRBDiscussionBoardType,
   SystemIntakeGRBReviewDiscussionFragment,
   SystemIntakeGRBReviewerFragment,
   TagType
@@ -34,7 +35,11 @@ function DiscussionBoard({
   const [discussionAlert, setDiscussionAlert] = useState<DiscussionAlert>(null);
 
   const { getDiscussionParams, pushDiscussionQuery } = useDiscussionParams();
-  const { discussionMode, discussionId } = getDiscussionParams();
+  const {
+    discussionMode,
+    discussionId,
+    discussionBoardType = SystemIntakeGRBDiscussionBoardType.PRIMARY
+  } = getDiscussionParams();
 
   // Reset discussionAlert when the side panel changes from certain modes
   const [lastMode, setLastMode] = useState<DiscussionMode | undefined>(
@@ -97,11 +102,15 @@ function DiscussionBoard({
       )}
 
       {discussionMode === 'view' && (
-        <ViewDiscussions grbDiscussions={grbDiscussions} />
+        <ViewDiscussions
+          grbDiscussions={grbDiscussions}
+          discussionBoardType={discussionBoardType}
+        />
       )}
 
       {discussionMode === 'start' && (
         <StartDiscussion
+          discussionBoardType={discussionBoardType}
           mentionSuggestions={mentionSuggestions}
           systemIntakeID={systemIntakeID}
           closeModal={closeModal}
@@ -111,6 +120,7 @@ function DiscussionBoard({
 
       {discussionMode === 'reply' && (
         <Discussion
+          discussionBoardType={discussionBoardType}
           mentionSuggestions={mentionSuggestions}
           discussion={activeDiscussion}
           closeModal={closeModal}

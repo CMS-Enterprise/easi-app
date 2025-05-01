@@ -1,7 +1,10 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '@trussworks/react-uswds';
-import { SystemIntakeGRBReviewDiscussionPostFragment } from 'gql/generated/graphql';
+import {
+  SystemIntakeGRBDiscussionBoardType,
+  SystemIntakeGRBReviewDiscussionPostFragment
+} from 'gql/generated/graphql';
 import { upperFirst } from 'lodash';
 import { DateTime } from 'luxon';
 
@@ -14,6 +17,7 @@ import { getRelativeDate } from 'utils/date';
 import './index.scss';
 
 type DiscussionPostProps = SystemIntakeGRBReviewDiscussionPostFragment & {
+  discussionBoardType: SystemIntakeGRBDiscussionBoardType;
   /**
    * Array of discussion replies
    *
@@ -28,6 +32,7 @@ type DiscussionPostProps = SystemIntakeGRBReviewDiscussionPostFragment & {
  * Displays single discussion or reply
  */
 const DiscussionPost = ({
+  discussionBoardType,
   replies,
   truncateText,
   ...initialPost
@@ -114,6 +119,7 @@ const DiscussionPost = ({
                 type="button"
                 onClick={() => {
                   pushDiscussionQuery({
+                    discussionBoardType,
                     discussionMode: 'reply',
                     discussionId: initialPost.id
                   });
