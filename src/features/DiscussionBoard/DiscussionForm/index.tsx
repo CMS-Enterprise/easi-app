@@ -157,7 +157,9 @@ const DiscussionForm = ({
           {t('general.discussionForm.contentLabel', { context: type })}
         </Label>
         <HelpText id="contentHelpText">
-          {t('general.discussionForm.helpText')}
+          {t('general.discussionForm.helpText', {
+            context: discussionBoardType
+          })}
         </HelpText>
 
         <ErrorMessage errors={errors} name="content" as={FieldErrorMsg} />

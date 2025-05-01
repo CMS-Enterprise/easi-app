@@ -57,16 +57,18 @@ const discussions = {
 
     startDiscussion: {
       heading: 'Start a discussion',
-      description:
+      description_PRIMARY:
+        'Have a question or comment that you want to discuss with the requester, project team, or other individuals involved in this request?  Start a discussion and you’ll be notified when they reply. ',
+      description_INTERNAL:
         'Have a question or comment that you want to discuss internally with the Governance Admin Team or other Governance Review Board (GRB) members involved in this request? Start a discussion and you’ll be notified when they reply.'
-      // description:
-      // 'Have a question or comment that you want to discuss internally with the {{groupNames}} members involved in this request? Start a discussion and you’ll be notified when they reply.',
     },
 
     discussionForm: {
       contentLabel_discussion: 'Type your question or discussion topic',
       contentLabel_reply: 'Type your reply',
-      helpText:
+      helpText_PRIMARY:
+        'To tag an individual or team, type "@" and select the individual or group you wish to notify. You may begin typing the group name or individual’s name if you do not see it in the list.',
+      helpText_INTERNAL:
         'To tag an individual or team, type "@" and select the individual or group you wish to notify. You may begin typing the group name or individual’s name if you do not see it in the list. In this discussion board, you are only able to tag GRB reviewers or Governance Admin Team members.',
       save: 'Save {{type}}'
     },

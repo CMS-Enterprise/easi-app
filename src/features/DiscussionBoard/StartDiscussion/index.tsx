@@ -31,8 +31,10 @@ const StartDiscussion = ({
       <h1 className="margin-bottom-205">
         {t('general.startDiscussion.heading')}
       </h1>
-      <p className="line-height-body-5 margin-bottom-5">
-        {t('general.startDiscussion.description')}
+      <p className="line-height-body-5">
+        {t('general.startDiscussion.description', {
+          context: discussionBoardType
+        })}
       </p>
 
       <DiscussionForm
