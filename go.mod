@@ -5,7 +5,7 @@ go 1.24.1
 require (
 	github.com/99designs/gqlgen v0.17.72
 	github.com/alecthomas/jsonschema v0.0.0-20211228220459-151e3c21f49d
-	github.com/aws/aws-sdk-go v1.55.6
+	github.com/aws/aws-sdk-go v1.55.7
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a
 	github.com/go-co-op/gocron/v2 v2.16.1
 	github.com/go-openapi/errors v0.22.1
@@ -22,11 +22,11 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/okta/okta-jwt-verifier-golang v1.3.1
 	github.com/pquerna/otp v1.4.0
-	github.com/samber/lo v1.49.1
+	github.com/samber/lo v1.50.0
 	github.com/spf13/cobra v1.9.1
 	github.com/spf13/viper v1.20.1
 	github.com/stretchr/testify v1.10.0
-	github.com/vektah/gqlparser/v2 v2.5.25
+	github.com/vektah/gqlparser/v2 v2.5.26
 	github.com/vikstrous/dataloadgen v0.0.6
 	go.uber.org/zap v1.27.0
 	golang.org/x/sync v0.13.0
