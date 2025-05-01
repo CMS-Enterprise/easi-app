@@ -167,4 +167,26 @@ describe('ViewDiscussions component', () => {
       )
     );
   });
+
+  it('renders the read only view', () => {
+    render(
+      <MemoryRouter>
+        <ViewDiscussions
+          grbDiscussions={mockDiscussionsWithoutReplies()}
+          discussionBoardType={SystemIntakeGRBDiscussionBoardType.INTERNAL}
+          readOnly
+        />
+      </MemoryRouter>
+    );
+
+    expect(
+      screen.queryByRole('button', { name: 'Start a new discussion' })
+    ).not.toBeInTheDocument();
+
+    const discussion = screen.queryAllByRole('listitem')[0];
+
+    expect(
+      within(discussion).queryByRole('button', { name: 'Reply' })
+    ).not.toBeInTheDocument();
+  });
 });

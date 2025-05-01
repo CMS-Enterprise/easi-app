@@ -72,6 +72,23 @@ describe('DiscussionPost', () => {
     expect(screen.queryByTestId('lastReplyAtText')).toBeNull();
   });
 
+  it('renders a discussion post without replies - read only view', () => {
+    render(
+      <MemoryRouter>
+        <DiscussionPost
+          {...discussion.initialPost}
+          replies={[]}
+          discussionBoardType={SystemIntakeGRBDiscussionBoardType.INTERNAL}
+          readOnly
+        />
+      </MemoryRouter>
+    );
+
+    expect(
+      screen.queryByRole('button', { name: 'Reply' })
+    ).not.toBeInTheDocument();
+  });
+
   it('hides discussion reply data', () => {
     render(
       <MemoryRouter>

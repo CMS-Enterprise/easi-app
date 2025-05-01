@@ -51,4 +51,22 @@ describe('RecentDiscussion', () => {
       screen.getByRole('button', { name: 'Start a discussion' })
     ).toBeInTheDocument();
   });
+
+  it('renders read only view - no discussions', () => {
+    render(
+      <MemoryRouter>
+        <RecentDiscussion
+          loading={false}
+          discussionBoardType={SystemIntakeGRBDiscussionBoardType.INTERNAL}
+          grbDiscussions={[]}
+          pushDiscussionQuery={vi.fn()}
+          readOnly
+        />
+      </MemoryRouter>
+    );
+
+    expect(
+      screen.queryByRole('button', { name: 'Start a discussion' })
+    ).not.toBeInTheDocument();
+  });
 });

@@ -158,4 +158,27 @@ describe('Discussion component', () => {
       screen.getByRole('button', { name: 'Show replies' })
     ).toBeInTheDocument();
   });
+
+  it('renders the read only view', () => {
+    const [discussion] = discussions;
+
+    render(
+      <MemoryRouter>
+        <VerboseMockedProvider>
+          <Discussion
+            discussionBoardType={SystemIntakeGRBDiscussionBoardType.PRIMARY}
+            mentionSuggestions={[]}
+            discussion={discussion}
+            closeModal={vi.fn()}
+            setDiscussionAlert={vi.fn()}
+            readOnly
+          />
+        </VerboseMockedProvider>
+      </MemoryRouter>
+    );
+
+    expect(
+      screen.queryByRole('heading', { name: 'Reply' })
+    ).not.toBeInTheDocument();
+  });
 });
