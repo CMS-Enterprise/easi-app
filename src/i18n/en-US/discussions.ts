@@ -97,13 +97,11 @@ const discussions = {
     boardType_PRIMARY: 'Primary discussion board',
     visibility_INTERNAL: '<icon /> Visibility restricted',
     visibility_PRIMARY: '<icon /> Not restricted',
-    internal: {
-      label: 'Internal GRB discussion board', // TODO: enum translation?
-      description:
-        'Use this discussion board to ask questions or have dicussions with the Governance Admin Team and other Governance Review Board (GRB) members. The conversations here are not visible to the Project team.'
-      // description:
-      // 'Use this discussion board to ask questions or have dicussions with the {{groupNames}} members. The conversations here are not visible to the Project team.'
-    }
+
+    description_PRIMARY:
+      'Use this discussion board to ask questions or have discussions with the requester and project team, Governance Admin Team, and other Governance Review Board (GRB) members.',
+    description_INTERNAL:
+      'Use this discussion board to ask questions or have discussions with the Governance Admin Team and other Governance Review Board (GRB) members. The conversations here are not visible to the Project team.'
   },
 
   taskList: {

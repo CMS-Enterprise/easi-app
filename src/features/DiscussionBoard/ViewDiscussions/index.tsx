@@ -44,9 +44,13 @@ const ViewDiscussions = ({
         {t('governanceReviewBoard.boardType', { context: discussionBoardType })}
       </h1>
       <p className="font-body-lg text-light line-height-body-5 margin-top-105">
-        {t('governanceReviewBoard.internal.description')}
+        {t('governanceReviewBoard.description', {
+          context: discussionBoardType
+        })}
       </p>
+
       <h2 className="margin-top-5 margin-bottom-2">{t('general.label')}</h2>
+
       <IconButton
         type="button"
         onClick={() => {

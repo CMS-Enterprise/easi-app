@@ -87,6 +87,7 @@ function DiscussionBoard({
 
   return (
     <DiscussionModalWrapper
+      discussionBoardType={discussionBoardType}
       isOpen={discussionMode !== undefined}
       closeModal={closeModal}
     >
