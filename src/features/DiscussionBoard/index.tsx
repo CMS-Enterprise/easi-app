@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import {
   SystemIntakeGRBDiscussionBoardType,
@@ -33,6 +34,8 @@ function DiscussionBoard({
   grbDiscussions,
   readOnly
 }: DiscussionBoardProps) {
+  const { t } = useTranslation();
+
   /** Discussion alert state for form success and error messages */
   const [discussionAlert, setDiscussionAlert] = useState<DiscussionAlert>(null);
 
@@ -50,22 +53,34 @@ function DiscussionBoard({
   );
 
   /** Mention suggestions for discussion form tags */
-  const mentionSuggestions: MentionSuggestion[] = [
-    {
-      displayName: 'Governance Admin Team',
-      tagType: TagType.GROUP_IT_GOV
-    },
-    {
-      displayName: 'Governance Review Board (GRB)',
-      tagType: TagType.GROUP_GRB_REVIEWERS
-    },
-    ...grbReviewers.map(({ userAccount }) => ({
-      key: userAccount.username,
-      tagType: TagType.USER_ACCOUNT,
-      displayName: userAccount.commonName,
-      id: userAccount.id
-    }))
-  ];
+  const mentionSuggestions: MentionSuggestion[] = useMemo(() => {
+    const suggestions: MentionSuggestion[] = [
+      {
+        displayName: t('Governance Admin Team'),
+        tagType: TagType.GROUP_IT_GOV
+      },
+      {
+        displayName: t('Governance Review Board (GRB)'),
+        tagType: TagType.GROUP_GRB_REVIEWERS
+      },
+      ...grbReviewers.map(({ userAccount }) => ({
+        key: userAccount.username,
+        tagType: TagType.USER_ACCOUNT,
+        displayName: userAccount.commonName,
+        id: userAccount.id
+      }))
+    ];
+
+    // Add requester as mention suggestion for primary discussion board
+    if (discussionBoardType === SystemIntakeGRBDiscussionBoardType.PRIMARY) {
+      suggestions[2] = {
+        displayName: t('Requester'),
+        tagType: TagType.REQUESTER
+      };
+    }
+
+    return suggestions;
+  }, [grbReviewers, discussionBoardType, t]);
 
   const activeDiscussion =
     grbDiscussions.find(d => d.initialPost.id === discussionId) || null;
