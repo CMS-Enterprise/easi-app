@@ -38,6 +38,14 @@ describe('ViewDiscussions component', () => {
     ).toBeInTheDocument();
 
     expect(
+      screen.getByText(
+        i18next.t<string>('discussions:governanceReviewBoard.description', {
+          context: 'INTERNAL'
+        })
+      )
+    );
+
+    expect(
       screen.getByRole('heading', { level: 2, name: 'Discussions' })
     ).toBeInTheDocument();
 
@@ -131,6 +139,32 @@ describe('ViewDiscussions component', () => {
     // Expanded list should display all items
     expect(expandedNewDiscussionListItems).toHaveLength(
       discussionsWithoutReplies.length
+    );
+  });
+
+  it('renders the primary discussion board', () => {
+    render(
+      <MemoryRouter>
+        <ViewDiscussions
+          grbDiscussions={mockDiscussions()}
+          discussionBoardType={SystemIntakeGRBDiscussionBoardType.PRIMARY}
+        />
+      </MemoryRouter>
+    );
+
+    expect(
+      screen.getByRole('heading', {
+        level: 1,
+        name: 'Primary discussion board'
+      })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(
+        i18next.t<string>('discussions:governanceReviewBoard.description', {
+          context: 'PRIMARY'
+        })
+      )
     );
   });
 });
