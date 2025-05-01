@@ -2,9 +2,11 @@ package email
 
 import (
 	"context"
-	"github.com/cms-enterprise/easi-app/pkg/models"
-	"github.com/google/uuid"
 	"time"
+
+	"github.com/google/uuid"
+
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *EmailTestSuite) TestSystemIntakeGRBReviewLastDay() {

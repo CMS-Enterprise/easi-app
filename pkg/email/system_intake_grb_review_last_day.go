@@ -7,9 +7,10 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/google/uuid"
+
 	"github.com/cms-enterprise/easi-app/pkg/email/translation"
 	"github.com/cms-enterprise/easi-app/pkg/models"
-	"github.com/google/uuid"
 )
 
 type SendSystemIntakeGRBReviewLastDayInput struct {
