@@ -8,6 +8,7 @@ import {
   SystemIntakeFragmentFragment,
   SystemIntakeGRBReviewAsyncStatusType,
   SystemIntakeGRBReviewerVotingRole,
+  SystemIntakeGRBReviewStandardStatusType,
   useGetSystemIntakeGRBDiscussionsQuery,
   useGetSystemIntakeGRBReviewQuery
 } from 'gql/generated/graphql';
@@ -68,7 +69,8 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
     return grbReviewData?.systemIntake;
   }, [grbReviewData?.systemIntake]);
 
-  const { grbReviewStartedAt } = grbReview || {};
+  const { grbReviewStartedAt, grbReviewAsyncStatus, grbReviewStandardStatus } =
+    grbReview || {};
 
   const { euaId } = useSelector((appState: AppState) => appState.auth);
 
@@ -229,7 +231,13 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
           grbReviewers={grbReview.grbVotingInformation?.grbReviewers}
           grbReviewStartedAt={grbReview.grbReviewStartedAt}
           className="margin-top-4 margin-bottom-6"
-          // readOnly
+          // Make discussions read only when review is completed
+          readOnly={
+            grbReviewAsyncStatus ===
+              SystemIntakeGRBReviewAsyncStatusType.COMPLETED ||
+            grbReviewStandardStatus ===
+              SystemIntakeGRBReviewStandardStatusType.COMPLETED
+          }
         />
         {/* Participants Table */}
         <ParticipantsSection
