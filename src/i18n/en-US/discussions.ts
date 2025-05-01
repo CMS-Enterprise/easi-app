@@ -42,6 +42,7 @@ const discussions = {
         'There are no discussions yet. When a discussion topic is started, it will appear here.',
       noDiscussionsRepliedTo:
         'There are no discussions yet. When a discussion topic is replied to, it will appear here.',
+      noDiscussions: 'There are not yet any discussions.',
       noDiscussionsStartButton:
         'There are not yet any discussions. <button>Start a discussion</button>.',
       replyError:

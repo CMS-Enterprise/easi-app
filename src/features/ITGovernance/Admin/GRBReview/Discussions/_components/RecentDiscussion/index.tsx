@@ -39,25 +39,29 @@ const RecentDiscussion = ({
   if (!recentDiscussion) {
     return (
       <Alert type="info" slim>
-        <Trans
-          i18nKey="discussions:general.alerts.noDiscussionsStartButton"
-          components={{
-            button: (
-              <Button
-                type="button"
-                onClick={() => {
-                  pushDiscussionQuery({
-                    discussionBoardType,
-                    discussionMode: 'start'
-                  });
-                }}
-                unstyled
-              >
-                text
-              </Button>
-            )
-          }}
-        />
+        {readOnly ? (
+          t('general.alerts.noDiscussions')
+        ) : (
+          <Trans
+            i18nKey="discussions:general.alerts.noDiscussionsStartButton"
+            components={{
+              button: (
+                <Button
+                  type="button"
+                  onClick={() => {
+                    pushDiscussionQuery({
+                      discussionBoardType,
+                      discussionMode: 'start'
+                    });
+                  }}
+                  unstyled
+                >
+                  text
+                </Button>
+              )
+            }}
+          />
+        )}
       </Alert>
     );
   }
