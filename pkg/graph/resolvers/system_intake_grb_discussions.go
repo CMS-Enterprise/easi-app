@@ -294,6 +294,25 @@ func sendDiscussionEmailsForTags(
 		if tag == nil {
 			continue
 		}
+
+		// check if the requester was tagged
+		if tag.TagType == models.TagTypeRequester {
+			// get requester
+			intake, err := store.FetchSystemIntakeByID(ctx, intakeID)
+			if err != nil {
+				logger.Error("problem getting intake when requester tagged", zap.Error(err))
+				return err
+			}
+
+			requesterAcct, err := store.UserAccountGetByUsername(ctx, store, intake.EUAUserID.String)
+			if err != nil {
+				logger.Error("problem getting requester account when requester tagged", zap.Error(err))
+				return err
+			}
+
+			individualTagAcctIDs = append(individualTagAcctIDs, requesterAcct.ID)
+		}
+
 		if tag.TagType == models.TagTypeUserAccount {
 			if _, ok := grbReviewerCache[tag.TaggedContentID]; !ok {
 				// this means someone was tagged who should not have been
