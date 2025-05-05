@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Button, ButtonGroup, Link } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import DiscussionBoard from 'features/DiscussionBoard';
 import {
   GetGovernanceTaskListQuery,
   ITGovGRBStatus,
@@ -89,6 +90,11 @@ const GovTaskGrbMeeting = ({
 
   return (
     <>
+      <DiscussionBoard
+        systemIntakeID={id}
+        readOnly={grbMeetingStatus === ITGovGRBStatus.COMPLETED}
+      />
+
       {/* Remove Presentation Modal */}
       <Modal
         isOpen={removalModalOpen}

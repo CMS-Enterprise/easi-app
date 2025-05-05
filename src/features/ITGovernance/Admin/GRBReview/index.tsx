@@ -228,7 +228,6 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
         {/* Discussion Board */}
         <Discussions
           systemIntakeID={id}
-          grbReviewers={grbReview.grbVotingInformation?.grbReviewers}
           grbReviewStartedAt={grbReview.grbReviewStartedAt}
           className="margin-top-4 margin-bottom-6"
           // Make discussions read only when review is completed

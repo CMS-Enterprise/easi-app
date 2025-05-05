@@ -4,8 +4,9 @@ import classNames from 'classnames';
 import {
   SystemIntakeGRBDiscussionBoardType,
   SystemIntakeGRBReviewDiscussionFragment,
-  SystemIntakeGRBReviewerFragment,
-  TagType
+  TagType,
+  useGetSystemIntakeGRBDiscussionsQuery,
+  useGetSystemIntakeGRBReviewQuery
 } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
@@ -21,19 +22,10 @@ import './index.scss';
 
 type DiscussionBoardProps = {
   systemIntakeID: string;
-  grbReviewStartedAt: string | null | undefined;
-  grbReviewers: SystemIntakeGRBReviewerFragment[];
-  grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[];
   readOnly?: boolean;
 };
 
-function DiscussionBoard({
-  systemIntakeID,
-  grbReviewStartedAt,
-  grbReviewers,
-  grbDiscussions,
-  readOnly
-}: DiscussionBoardProps) {
+function DiscussionBoard({ systemIntakeID, readOnly }: DiscussionBoardProps) {
   const { t } = useTranslation();
 
   /** Discussion alert state for form success and error messages */
@@ -52,6 +44,38 @@ function DiscussionBoard({
     discussionMode
   );
 
+  const { data: grbReviewData } = useGetSystemIntakeGRBReviewQuery({
+    variables: { id: systemIntakeID },
+    fetchPolicy: 'cache-first'
+  });
+
+  const { data: grbDiscussionsData, loading: grbDiscussionsLoading } =
+    useGetSystemIntakeGRBDiscussionsQuery({
+      variables: { id: systemIntakeID },
+      fetchPolicy: 'cache-first'
+    });
+
+  /** Return GRB discussions based on board type */
+  const grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[] | undefined =
+    useMemo(() => {
+      if (grbDiscussionsLoading || !grbDiscussionsData?.systemIntake) {
+        return undefined;
+      }
+
+      const { grbDiscussionsInternal, grbDiscussionsPrimary } =
+        grbDiscussionsData.systemIntake;
+
+      if (discussionBoardType === SystemIntakeGRBDiscussionBoardType.INTERNAL) {
+        return grbDiscussionsInternal;
+      }
+
+      return grbDiscussionsPrimary;
+    }, [grbDiscussionsLoading, grbDiscussionsData, discussionBoardType]);
+
+  const { grbReviewStartedAt } = grbReviewData?.systemIntake || {};
+  const grbReviewers =
+    grbReviewData?.systemIntake?.grbVotingInformation?.grbReviewers;
+
   /** Mention suggestions for discussion form tags */
   const mentionSuggestions: MentionSuggestion[] = useMemo(() => {
     const suggestions: MentionSuggestion[] = [
@@ -63,7 +87,7 @@ function DiscussionBoard({
         displayName: t('Governance Review Board (GRB)'),
         tagType: TagType.GROUP_GRB_REVIEWERS
       },
-      ...grbReviewers.map(({ userAccount }) => ({
+      ...(grbReviewers || []).map(({ userAccount }) => ({
         key: userAccount.username,
         tagType: TagType.USER_ACCOUNT,
         displayName: userAccount.commonName,
@@ -82,9 +106,6 @@ function DiscussionBoard({
     return suggestions;
   }, [grbReviewers, discussionBoardType, t]);
 
-  const activeDiscussion =
-    grbDiscussions.find(d => d.initialPost.id === discussionId) || null;
-
   useEffect(() => {
     if (lastMode !== discussionMode) {
       if (lastMode === 'view' || lastMode === 'reply') {
@@ -99,9 +120,12 @@ function DiscussionBoard({
   };
 
   // Hide discusion board if GRB review has not yet started
-  if (!grbReviewStartedAt) {
+  if (!grbReviewStartedAt || !grbDiscussions) {
     return null;
   }
+
+  const activeDiscussion =
+    grbDiscussions.find(d => d.initialPost.id === discussionId) || null;
 
   return (
     <DiscussionModalWrapper

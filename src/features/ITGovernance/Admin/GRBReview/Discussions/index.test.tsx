@@ -43,7 +43,6 @@ describe('Discussions', () => {
       <MemoryRouter>
         <VerboseMockedProvider mocks={[getSystemIntakeGRBDiscussions]}>
           <Discussions
-            grbReviewers={[]}
             systemIntakeID={systemIntake.id}
             grbReviewStartedAt="2025-03-11T01:50:35.146458Z"
           />
