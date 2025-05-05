@@ -78,6 +78,11 @@ const businessCase = {
     status: 'Status',
     actions: 'Actions',
     notSpecified: 'Not yet specified',
+    removeModal: {
+      title: 'Are you sure you want to remove this alternative?',
+      content:
+        'This action cannot be undone, though you may add this alternative again if needed.'
+    },
     solutions: [
       {
         heading: 'Preferred Solution',

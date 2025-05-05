@@ -3,12 +3,20 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { CellProps, Column, useTable } from 'react-table';
-import { Button, ButtonGroup, Icon, Table } from '@trussworks/react-uswds';
+import {
+  Button,
+  ButtonGroup,
+  Icon,
+  ModalFooter,
+  ModalHeading,
+  Table
+} from '@trussworks/react-uswds';
 import { FieldArray, Form, Formik, FormikProps } from 'formik';
 
 import AutoSave from 'components/AutoSave';
 import HelpText from 'components/HelpText';
 import IconButton from 'components/IconButton';
+import Modal from 'components/Modal';
 import PageNumber from 'components/PageNumber';
 import {
   defaultProposedSolution,
@@ -19,7 +27,7 @@ import {
   BusinessCaseModel,
   ProposedBusinessCaseSolution
 } from 'types/businessCase';
-import { fetchBusinessCase, putBusinessCase } from 'types/routines';
+import { putBusinessCase } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
 import {
   getAlternativeAnalysisSchema,
@@ -45,13 +53,7 @@ const AlternativeAnalysis = ({
   const history = useHistory();
   const { t } = useTranslation('businessCase');
 
-  // Add state for table data
-
-  const [tableData, setTableData] = useState([
-    businessCase.preferredSolution,
-    businessCase.alternativeA,
-    businessCase.alternativeB
-  ]);
+  const [isRemoveModalOpen, setRemoveModalOpen] = useState<boolean>(false);
 
   const columns = useMemo<Column<ProposedBusinessCaseSolution>[]>(
     () => [
@@ -173,35 +175,8 @@ const AlternativeAnalysis = ({
                   className="margin-left-1"
                   type="button"
                   unstyled
-                  // TODO: NJD - need to make this more generic if we start to support more than two alternatives (C, D, etc.)
-                  onClick={async () => {
-                    if (
-                      // eslint-disable-next-line no-alert
-                      window.confirm(t('confirmRemoveAlternativeB'))
-                    ) {
-                      await dispatch(
-                        putBusinessCase({
-                          ...businessCase,
-                          alternativeB: defaultProposedSolution
-                        })
-                      );
-
-                      // Update table data state
-                      setTableData([
-                        businessCase.preferredSolution,
-                        businessCase.alternativeA,
-                        defaultProposedSolution
-                      ]);
-
-                      // Force a re-fetch of the business case data
-
-                      await dispatch(
-                        fetchBusinessCase(businessCase.systemIntakeId)
-                      );
-
-                      // TODO: NJD - this doesn't force a full state refresh. Can call window.location.reload() to fix but feels like bad UX
-                      history.replace(history.location);
-                    }
+                  onClick={() => {
+                    setRemoveModalOpen(true);
                   }}
                 >
                   {t('general:remove')}
@@ -212,12 +187,16 @@ const AlternativeAnalysis = ({
         }
       }
     ],
-    [businessCase, dispatch, dispatchSave, history, isFinal, t]
+    [dispatchSave, history, isFinal, t]
   );
 
   const table = useTable({
     columns,
-    data: tableData,
+    data: [
+      businessCase.preferredSolution,
+      businessCase.alternativeA,
+      businessCase.alternativeB
+    ],
     autoResetPage: true
   });
 
@@ -244,7 +223,8 @@ const AlternativeAnalysis = ({
       innerRef={formikRef}
     >
       {(formikProps: FormikProps<AlternativeAnalysisForm>) => {
-        const { errors, setErrors, values, validateForm } = formikProps;
+        const { errors, setErrors, setFieldValue, values, validateForm } =
+          formikProps;
         const flatErrors = flattenErrors(errors);
 
         return (
@@ -305,7 +285,7 @@ const AlternativeAnalysis = ({
                                 return (
                                   <td
                                     className="text-ttop"
-                                    style={{ width: '60%' }} // TODO: NJD - better way to do this?
+                                    style={{ width: '60%' }} // TODO: better way to do this?
                                     {...cell.getCellProps()}
                                   >
                                     {cell.render('Cell')}
@@ -375,6 +355,54 @@ const AlternativeAnalysis = ({
               onSave={dispatchSave}
               debounceDelay={1000 * 3}
             />
+
+            {/* Remove alternative modal */}
+            <Modal
+              isOpen={isRemoveModalOpen}
+              closeModal={() => {
+                setRemoveModalOpen(false);
+              }}
+            >
+              <ModalHeading>
+                {t('alternativesTable.removeModal.title')}
+              </ModalHeading>
+              <p>{t('alternativesTable.removeModal.content')}</p>
+              <ModalFooter>
+                {' '}
+                <ButtonGroup>
+                  <Button
+                    type="button"
+                    className="margin-right-1"
+                    onClick={() => {
+                      // Reset alternative B in form
+                      setFieldValue('alternativeB', defaultProposedSolution);
+
+                      // Set alternative B back to default state
+                      const updatedBusinessCase = {
+                        ...businessCase,
+                        alternativeB: defaultProposedSolution
+                      };
+
+                      dispatch(putBusinessCase(updatedBusinessCase));
+
+                      setRemoveModalOpen(false);
+                      history.replace(history.location);
+                    }}
+                  >
+                    {t('general:remove')}
+                  </Button>
+                  <Button
+                    type="button"
+                    unstyled
+                    onClick={() => {
+                      setRemoveModalOpen(false);
+                    }}
+                  >
+                    {t('general:cancel')}
+                  </Button>
+                </ButtonGroup>
+              </ModalFooter>
+            </Modal>
           </BusinessCaseStepWrapper>
         );
       }}
