@@ -8,6 +8,7 @@ import {
 import i18next from 'i18next';
 import { getSystemIntakeGRBDiscussionsQuery } from 'tests/mock/discussions';
 import { taskListState } from 'tests/mock/govTaskList';
+import { getSystemIntakeGRBReviewQuery } from 'tests/mock/grbReview';
 import { grbPresentationLinks } from 'tests/mock/systemIntake';
 
 import { MessageProvider } from 'hooks/useMessage';
@@ -24,7 +25,12 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
   function renderGovTaskGrbMeeting(mockdata: ITGovTaskSystemIntake) {
     return render(
       <MemoryRouter>
-        <VerboseMockedProvider mocks={[getSystemIntakeGRBDiscussionsQuery()]}>
+        <VerboseMockedProvider
+          mocks={[
+            getSystemIntakeGRBDiscussionsQuery(),
+            getSystemIntakeGRBReviewQuery()
+          ]}
+        >
           <MessageProvider>
             <GovTaskGrbMeeting {...mockdata} />
           </MessageProvider>
