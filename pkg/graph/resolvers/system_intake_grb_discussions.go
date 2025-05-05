@@ -284,10 +284,12 @@ func sendDiscussionEmailsForTags(
 	}
 
 	// check if the grb group is being emailed, in which case we should make sure we do not send any individual emails out
-	var grbGroupFound bool
+	var (
+		grbGroupFound bool
 
-	groupTagTypes := []models.TagType{}
-	individualTagAcctIDs := []uuid.UUID{}
+		groupTagTypes        []models.TagType
+		individualTagAcctIDs []uuid.UUID
+	)
 
 	// split individual and group tags
 	for _, tag := range uniqueTags {
