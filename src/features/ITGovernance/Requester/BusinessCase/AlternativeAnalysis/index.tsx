@@ -93,7 +93,7 @@ const AlternativeAnalysis = ({
             );
           }
 
-          // TODO: NJD - super hacky string replace thing, find better way of doing this
+          // TODO: super hacky string replace thing, find better way of doing this
           const newUrl = t(`alternativesTable.solutions.${index}.heading`)
             .toLowerCase()
             .replace(/\s+/g, '-')
@@ -152,7 +152,7 @@ const AlternativeAnalysis = ({
             return <></>;
           }
 
-          // TODO: NJD - super hacky string replace thing, find better way of doing this
+          // TODO: super hacky string replace thing, find better way of doing this
           const newUrl = t(`alternativesTable.solutions.${index}.heading`)
             .toLowerCase()
             .replace(/\s+/g, '-')

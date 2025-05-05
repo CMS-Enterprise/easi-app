@@ -17,7 +17,7 @@ import { yesNoMap } from 'data/common';
 import { BusinessCaseModel, PreferredSolutionForm } from 'types/businessCase';
 import { LifecycleCosts } from 'types/estimatedLifecycle';
 import flattenErrors from 'utils/flattenErrors';
-import { BusinessCaseSchema } from 'validations/businessCaseSchema';
+import { getSingleSolutionSchema } from 'validations/businessCaseSchema';
 
 import BusinessCaseStepWrapper from '../BusinessCaseStepWrapper';
 
@@ -44,21 +44,21 @@ const PreferredSolution = ({
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={BusinessCaseSchema(isFinal).preferredSolution}
+      validationSchema={getSingleSolutionSchema(isFinal, 'Preferred Solution')}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
       innerRef={formikRef}
     >
       {(formikProps: FormikProps<PreferredSolutionForm>) => {
-        const { values, errors, setFieldValue } = formikProps;
+        const { values, errors, setFieldValue, validateForm } = formikProps;
 
         const flatErrors = flattenErrors(errors);
 
         const validateSolution = () => {
           try {
-            BusinessCaseSchema(isFinal).preferredSolution.validateSync(
-              values.preferredSolution,
+            getSingleSolutionSchema(isFinal, 'Preferred Solution').validateSync(
+              { preferredSolution: values.preferredSolution },
               { abortEarly: false }
             );
 
@@ -616,25 +616,16 @@ const PreferredSolution = ({
               className={classnames('usa-button', {
                 'no-pointer': !isFormValid
               })}
-              // onClick={() => {
-              //   validateForm().then(err => {
-              //     if (Object.keys(err).length === 0) {
-              //       dispatchSave();
-              //       const newUrl = 'alternative-analysis';
-              //       history.push(newUrl);
-              //     } else {
-              //       window.scrollTo(0, 0);
-              //     }
-              //   });
-              // }}
-
-              // TODO: NJD - I couldn't get valdiation to work properly here - I don't think we need it since we validate on the actual button
-              //    but I would like to get it working to be safe. Any suggestions on how to get the above validation working onClick? It
-              //    has something to do with Promises. I could probably call the BusinessCaseSchema directly like i do in isFormValid?
               onClick={() => {
-                dispatchSave();
-                const newUrl = 'alternative-analysis';
-                history.push(newUrl);
+                validateForm().then(err => {
+                  if (Object.keys(err).length === 0) {
+                    dispatchSave();
+                    const newUrl = 'alternative-analysis';
+                    history.push(newUrl);
+                  } else {
+                    window.scrollTo(0, 0);
+                  }
+                });
               }}
             >
               {t('Finish Preferred Solution')}

@@ -184,19 +184,54 @@ export const BusinessCaseDraftValidationSchema = {
   alternativeB: Yup.object().shape({})
 };
 
+/**
+ * Returns the validation schema for a specific solution type
+ */
+export const getSolutionValidationSchema = (
+  isFinal: boolean,
+  solutionType: 'Preferred Solution' | 'Alternative A' | 'Alternative B'
+) => {
+  return isFinal ? finalSolutionSchema(solutionType) : Yup.object();
+};
+
 export const getAlternativeAnalysisSchema = (
   isFinal: boolean,
   alternativeBProvided: boolean
 ) =>
   Yup.object().shape({
-    preferredSolution: SolutionSchema(isFinal, 'Preferred Solution'),
+    preferredSolution: getSolutionValidationSchema(
+      isFinal,
+      'Preferred Solution'
+    ),
 
-    alternativeA: SolutionSchema(isFinal, 'Alternative A'),
+    alternativeA: getSolutionValidationSchema(isFinal, 'Alternative A'),
 
     alternativeB: alternativeBProvided
-      ? SolutionSchema(isFinal, 'Alternative B')
+      ? getSolutionValidationSchema(isFinal, 'Alternative B')
       : Yup.object()
   });
+
+/**
+ * Returns the validation schema for a single solution
+ */
+export const getSingleSolutionSchema = (
+  isFinal: boolean,
+  solutionType: 'Preferred Solution' | 'Alternative A' | 'Alternative B'
+) => {
+  if (solutionType === 'Preferred Solution') {
+    return Yup.object({
+      preferredSolution: getSolutionValidationSchema(isFinal, solutionType)
+    });
+  }
+  if (solutionType === 'Alternative A') {
+    return Yup.object({
+      alternativeA: getSolutionValidationSchema(isFinal, solutionType)
+    });
+  }
+  return Yup.object({
+    alternativeB: getSolutionValidationSchema(isFinal, solutionType)
+  });
+};
 
 /** Returns Solution schema based on whether final or draft */
 export const SolutionSchema = (isFinal: boolean, solutionType: string) =>
