@@ -121,6 +121,16 @@ const finalSolutionSchema = (solutionType: string) =>
       )
   });
 
+/**
+ * Returns the validation schema for a specific solution type
+ */
+const getSolutionValidationSchema = (
+  isFinal: boolean,
+  solutionType: 'Preferred Solution' | 'Alternative A' | 'Alternative B'
+) => {
+  return isFinal ? finalSolutionSchema(solutionType) : Yup.object();
+};
+
 export const BusinessCaseFinalValidationSchema = {
   generalRequestInfo: Yup.object().shape({
     requestName: Yup.string().trim().required('Enter the Project name'),
@@ -184,30 +194,57 @@ export const BusinessCaseDraftValidationSchema = {
   alternativeB: Yup.object().shape({})
 };
 
-/**
- * Returns the validation schema for a specific solution type
- */
-export const getSolutionValidationSchema = (
-  isFinal: boolean,
-  solutionType: 'Preferred Solution' | 'Alternative A' | 'Alternative B'
-) => {
-  return isFinal ? finalSolutionSchema(solutionType) : Yup.object();
-};
-
 export const getAlternativeAnalysisSchema = (
   isFinal: boolean,
   alternativeBProvided: boolean
 ) =>
   Yup.object().shape({
-    preferredSolution: getSolutionValidationSchema(
-      isFinal,
-      'Preferred Solution'
+    preferredSolution: Yup.object().test(
+      'is-complete',
+      'Please finish filling out the Preferred Solution',
+      value => {
+        if (!isFinal) return true; // Skip validation if not final
+        try {
+          finalSolutionSchema('Preferred Solution').validateSync(value, {
+            abortEarly: false
+          });
+          return true;
+        } catch {
+          return false;
+        }
+      }
     ),
-
-    alternativeA: getSolutionValidationSchema(isFinal, 'Alternative A'),
-
+    alternativeA: Yup.object().test(
+      'is-complete',
+      'Please finish filling out Alternative A',
+      value => {
+        if (!isFinal) return true; // Skip validation if not final
+        try {
+          finalSolutionSchema('Alternative A').validateSync(value, {
+            abortEarly: false
+          });
+          return true;
+        } catch {
+          return false;
+        }
+      }
+    ),
     alternativeB: alternativeBProvided
-      ? getSolutionValidationSchema(isFinal, 'Alternative B')
+      ? Yup.object().test(
+          'is-complete',
+          'Please finish filling out Alternative B',
+          value => {
+            if (!isFinal) return true; // Skip validation if not final
+            try {
+              finalSolutionSchema('Alternative B').validateSync(value, {
+                abortEarly: false
+              });
+              return true;
+            } catch {
+              return false;
+            }
+          }
+        )
       : Yup.object()
   });
 
