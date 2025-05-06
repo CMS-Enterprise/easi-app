@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { CellProps, Column, useTable } from 'react-table';
@@ -13,11 +13,13 @@ import {
 } from '@trussworks/react-uswds';
 import { FieldArray, Form, Formik, FormikProps } from 'formik';
 
+import Alert from 'components/Alert';
 import AutoSave from 'components/AutoSave';
 import HelpText from 'components/HelpText';
 import IconButton from 'components/IconButton';
 import Modal from 'components/Modal';
 import PageNumber from 'components/PageNumber';
+import RequiredAsterisk from 'components/RequiredAsterisk';
 import {
   defaultProposedSolution,
   solutionHasFilledFields
@@ -66,10 +68,16 @@ const AlternativeAnalysis = ({
 
           return (
             <>
-              <span>{t(`alternativesTable.solutions.${index}.heading`)}</span>
+              <span>
+                {t(`alternativesTable.solutions.${index}.heading`)}
+
+                {t(`alternativesTable.solutions.${index}.required`) && (
+                  <RequiredAsterisk />
+                )}
+              </span>
               <br />
               <HelpText>
-                {t(`alternativesTable.solutions.${index}.required`) // Boolean / True
+                {t(`alternativesTable.solutions.${index}.required`) // Boolean
                   ? 'Required'
                   : 'Recommended'}
               </HelpText>
@@ -245,16 +253,27 @@ const AlternativeAnalysis = ({
                   <li>{t('alternativesDescription.list.4')}</li>
                 </ul>
                 <p>{t('alternativesDescription.text.2')}</p>
+                {/* Required fields help text */}
+                <HelpText className="margin-top-1 text-base">
+                  <Trans
+                    i18nKey="businessCase:requiredFields"
+                    components={{ red: <span className="text-red" /> }}
+                  />
+                </HelpText>
               </>
             }
             errors={flatErrors}
             data-testid="alternative-analysis"
-            fieldsMandatory={isFinal}
           >
             <Form className="tablet:grid-col-9 margin-bottom-6">
               <FieldArray name="AlternativeAnalysis">
                 {() => (
                   <div>
+                    {!isFinal && (
+                      <Alert type="info" className="margin-top-2" slim>
+                        {t('alternativesDescription.draftAlert')}
+                      </Alert>
+                    )}
                     <Table
                       bordered={false}
                       fullWidth

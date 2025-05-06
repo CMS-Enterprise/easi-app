@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button, ButtonGroup, Icon, Label } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
@@ -11,6 +11,7 @@ import FieldGroup from 'components/FieldGroup';
 import HelpText from 'components/HelpText';
 import IconButton from 'components/IconButton';
 import PageNumber from 'components/PageNumber';
+import RequiredAsterisk from 'components/RequiredAsterisk';
 import TextAreaField from 'components/TextAreaField';
 import { BusinessCaseModel, RequestDescriptionForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
@@ -62,9 +63,15 @@ const RequestDescription = ({
             title={t('requestDescription')}
             data-testid="request-description"
             errors={flatErrors}
-            fieldsMandatory={isFinal}
           >
             <Form className="tablet:grid-col-9 margin-bottom-6">
+              {/* Required fields help text */}
+              <HelpText className="margin-top-1 text-base">
+                <Trans
+                  i18nKey="businessCase:requiredFields"
+                  components={{ red: <span className="text-red" /> }}
+                />
+              </HelpText>
               <FieldGroup
                 scrollElement="businessNeed"
                 error={!!flatErrors.businessNeed}
@@ -74,6 +81,7 @@ const RequestDescription = ({
                   className="width-100"
                 >
                   {t('businessNeed.label')}
+                  <RequiredAsterisk />
                 </Label>
                 <HelpText
                   id="BusinessCase-BusinessNeedHelp"
@@ -106,6 +114,7 @@ const RequestDescription = ({
               >
                 <Label htmlFor="BusinessCase-CurrentSolutionSummary">
                   {t('currentSolutionSummary')}
+                  <RequiredAsterisk />
                 </Label>
                 <HelpText
                   id="BusinessCase-CurrentSolutionSummaryHelp"
@@ -132,6 +141,7 @@ const RequestDescription = ({
               >
                 <Label htmlFor="BusinessCase-CmsBenefit">
                   {t('cmsBenefit')}
+                  <RequiredAsterisk />
                 </Label>
                 <HelpText
                   id="BusinessCase-CmsBenefitHelp"
@@ -156,6 +166,7 @@ const RequestDescription = ({
               >
                 <Label htmlFor="BusinessCase-PriorityAlignment">
                   {t('priorityAlignment')}
+                  <RequiredAsterisk />
                 </Label>
                 <HelpText
                   id="BusinessCase-PriorityAlignmentHelp"
@@ -187,6 +198,7 @@ const RequestDescription = ({
               >
                 <Label htmlFor="BusinessCase-SuccessIndicators">
                   {t('successIndicators')}
+                  <RequiredAsterisk />
                 </Label>
                 <HelpText
                   id="BusinessCase-SuccessIndicatorsHelp"

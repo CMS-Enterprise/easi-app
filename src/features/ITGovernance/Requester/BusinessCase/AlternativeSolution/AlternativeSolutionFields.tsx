@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { Label, Radio, TextInput } from '@trussworks/react-uswds';
 import { Field, FormikProps } from 'formik';
 
@@ -7,6 +7,7 @@ import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
 import HelpText from 'components/HelpText';
+import RequiredAsterisk from 'components/RequiredAsterisk';
 import TextAreaField from 'components/TextAreaField';
 import flattenErrors from 'utils/flattenErrors';
 
@@ -31,6 +32,13 @@ const AlternativeSolutionFields = ({
 
   return (
     <>
+      {/* Required fields help text */}
+      <HelpText className="margin-top-1 text-base">
+        <Trans
+          i18nKey="businessCase:requiredFields"
+          components={{ red: <span className="text-red" /> }}
+        />
+      </HelpText>
       <div
         data-testid="alternative-solution-fields"
         className="tablet:grid-col-9"
@@ -41,6 +49,7 @@ const AlternativeSolutionFields = ({
         >
           <Label htmlFor={`BusinessCase-${altId}Title`}>
             {t('solutionTitle')}
+            <RequiredAsterisk />
           </Label>
           <FieldErrorMsg>{flatErrors[`${altId}.title`]}</FieldErrorMsg>
           <Field
@@ -58,6 +67,7 @@ const AlternativeSolutionFields = ({
         >
           <Label htmlFor={`BusinessCase-${altId}Summary`}>
             {t('solutionSummary.label')}
+            <RequiredAsterisk />
           </Label>
           <HelpText
             id={`BusinessCase-${altId}SummaryHelp`}
@@ -88,6 +98,7 @@ const AlternativeSolutionFields = ({
         >
           <Label htmlFor={`BusinessCase-${altId}AcquisitionApproach`}>
             {t('solutionAcquisitionApproach')}
+            <RequiredAsterisk />
           </Label>
           <HelpText
             id={`BusinessCase-${altId}AcquisitionApproachHelp`}
@@ -116,7 +127,10 @@ const AlternativeSolutionFields = ({
           data-testid="security-approval"
         >
           <fieldset className="usa-fieldset margin-top-4">
-            <legend className="usa-label">{t('isApproved')}</legend>
+            <legend className="usa-label">
+              {t('isApproved')}
+              <RequiredAsterisk />
+            </legend>
             <FieldErrorMsg>
               {flatErrors[`${altId}.security.isApproved`]}
             </FieldErrorMsg>
@@ -156,6 +170,7 @@ const AlternativeSolutionFields = ({
             <fieldset className="usa-fieldset margin-top-4">
               <legend className="usa-label margin-bottom-1">
                 {t('isBeingReviewed')}
+                <RequiredAsterisk />
               </legend>
               <HelpText id={`BusinessCase-${altId}SecurityReviewHelp`}>
                 {t('isBeingReviewedHelpText')}
@@ -201,7 +216,10 @@ const AlternativeSolutionFields = ({
           error={!!flatErrors[`${altId}.hosting.type`]}
         >
           <fieldset className="usa-fieldset margin-top-4">
-            <legend className="usa-label">{t('hostingType')}</legend>
+            <legend className="usa-label">
+              {t('hostingType')}
+              <RequiredAsterisk />
+            </legend>
             <FieldErrorMsg>{flatErrors[`${altId}.hosting.type`]}</FieldErrorMsg>
 
             <Field
@@ -226,6 +244,7 @@ const AlternativeSolutionFields = ({
                 >
                   <Label htmlFor={`BusinessCase-${altId}CloudLocation`}>
                     {t('hostingLocation')}
+                    <RequiredAsterisk />
                   </Label>
                   <FieldErrorMsg>
                     {flatErrors[`${altId}.hosting.location`]}
@@ -248,6 +267,7 @@ const AlternativeSolutionFields = ({
                 >
                   <Label htmlFor={`BusinessCase-${altId}CloudServiceType`}>
                     {t('cloudServiceType')}
+                    <RequiredAsterisk />
                   </Label>
                   <FieldErrorMsg>
                     {flatErrors[`${altId}.hosting.cloudServiceType`]}
@@ -283,6 +303,7 @@ const AlternativeSolutionFields = ({
               >
                 <Label htmlFor={`BusinessCase-${altId}DataCenterLocation`}>
                   {t('dataCenterLocation')}
+                  <RequiredAsterisk />
                 </Label>
                 <FieldErrorMsg>
                   {flatErrors[`${altId}.hosting.location`]}
@@ -318,7 +339,10 @@ const AlternativeSolutionFields = ({
           data-testid="user-interface-group"
         >
           <fieldset className="usa-fieldset margin-top-4">
-            <legend className="usa-label">{t('hasUserInterface')}</legend>
+            <legend className="usa-label">
+              {t('hasUserInterface')}
+              <RequiredAsterisk />
+            </legend>
             <FieldErrorMsg>
               {flatErrors[`${altId}.hasUserInterface`]}
             </FieldErrorMsg>
@@ -364,7 +388,10 @@ const AlternativeSolutionFields = ({
           scrollElement={`${altId}.pros`}
           error={!!flatErrors[`${altId}.pros`]}
         >
-          <Label htmlFor={`BusinessCase-${altId}Pros`}>{t('pros.label')}</Label>
+          <Label htmlFor={`BusinessCase-${altId}Pros`}>
+            {t('pros.label')}
+            <RequiredAsterisk />
+          </Label>
           <HelpText
             id={`BusinessCase-${altId}ProsHelp`}
             className="margin-top-1"
@@ -390,7 +417,10 @@ const AlternativeSolutionFields = ({
           scrollElement={`${altId}.cons`}
           error={!!flatErrors[`${altId}.cons`]}
         >
-          <Label htmlFor={`BusinessCase-${altId}Cons`}>{t('cons.label')}</Label>
+          <Label htmlFor={`BusinessCase-${altId}Cons`}>
+            {t('cons.label')}
+            <RequiredAsterisk />
+          </Label>
           <HelpText
             id={`BusinessCase-${altId}ConsHelp`}
             className="margin-top-1"
@@ -434,6 +464,7 @@ const AlternativeSolutionFields = ({
       >
         <Label htmlFor={`BusinessCase-${altId}CostSavings`}>
           {t('costSavings')}
+          <RequiredAsterisk />
         </Label>
         <HelpText
           id={`BusinessCase-${altId}CostSavingsHelp`}

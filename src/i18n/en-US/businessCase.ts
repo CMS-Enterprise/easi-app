@@ -70,7 +70,9 @@ const businessCase = {
       'Developing a Custom-built solution vs.',
       'Using/repurposing an existing CMS system vs.',
       'Using an Enterprise Shared Service'
-    ]
+    ],
+    draftAlert:
+      'During the draft Business Case phase, you may leave some questions unanswered and may leave your alternatives in an "In progress" status. However, the more you can complete in each alternative, the better feedback and help you will receive from the Governance Admin team and Governance Review Team (GRT) during this draft Business Case phase. When you reach the final Business Case phase, you will be required to fill out all questions in each alternative you add to your Business Case.'
   },
   alternativesTable: {
     type: 'Alternative type',
@@ -220,6 +222,8 @@ const businessCase = {
     newRelatedCost: 'What is your related cost?',
     removeCategory: 'Remove category'
   },
+  requiredFields:
+    'Fields marked with an asterisk ( <red>*</red> ) are required only for the final Business Case.',
   checkAnswers: 'Check your answers before sending',
   sendBusinessCase: 'Send my Business Case'
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button, Icon, Label, Radio, TextInput } from '@trussworks/react-uswds';
 import classnames from 'classnames';
@@ -76,7 +76,6 @@ const PreferredSolution = ({
             systemIntakeId={businessCase.systemIntakeId}
             data-testid="preferred-solution"
             errors={flatErrors}
-            fieldsMandatory={isFinal}
           >
             <Form>
               <div className="tablet:grid-col-9">
@@ -94,6 +93,14 @@ const PreferredSolution = ({
                 >
                   {t('Save & return to Business Case')}
                 </IconButton>
+
+                {/* Required fields help text */}
+                <HelpText className="margin-top-1 text-base">
+                  <Trans
+                    i18nKey="businessCase:requiredFields"
+                    components={{ red: <span className="text-red" /> }}
+                  />
+                </HelpText>
 
                 <FieldGroup
                   scrollElement="preferredSolution.title"

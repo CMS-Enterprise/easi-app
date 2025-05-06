@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button, Icon, Label, TextInput } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
@@ -10,6 +10,7 @@ import FieldGroup from 'components/FieldGroup';
 import HelpText from 'components/HelpText';
 import IconButton from 'components/IconButton';
 import PageNumber from 'components/PageNumber';
+import RequiredAsterisk from 'components/RequiredAsterisk';
 import { solutionHasFilledFields } from 'data/businessCase';
 import { BusinessCaseModel, GeneralRequestInfoForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
@@ -62,15 +63,22 @@ const GeneralRequestInfo = ({
             description={t('generalRequestDescription')}
             errors={flatErrors}
             data-testid="general-request-info"
-            fieldsMandatory={isFinal}
           >
             <Form className="tablet:grid-col-9 margin-bottom-6">
+              {/* Required fields help text */}
+              <HelpText className="margin-top-1 text-base">
+                <Trans
+                  i18nKey="businessCase:requiredFields"
+                  components={{ red: <span className="text-red" /> }}
+                />
+              </HelpText>
               <FieldGroup
                 scrollElement="requestName"
                 error={!!flatErrors.requestName}
               >
                 <Label htmlFor="BusinessCase-RequestName">
                   {t('requestName')}
+                  <RequiredAsterisk />
                 </Label>
                 <HelpText id="BusinessCase-PhoneNumber">
                   {t('requestNameHelpText')}
@@ -91,6 +99,7 @@ const GeneralRequestInfo = ({
               >
                 <Label htmlFor="BusinessCase-RequesterName">
                   {t('requester')}
+                  <RequiredAsterisk />
                 </Label>
                 <FieldErrorMsg>{flatErrors['requester.name']}</FieldErrorMsg>
                 <Field
@@ -108,6 +117,7 @@ const GeneralRequestInfo = ({
               >
                 <Label htmlFor="BusinessCase-BusinessOwnerName">
                   {t('businessOwner')}
+                  <RequiredAsterisk />
                 </Label>
                 <FieldErrorMsg>
                   {flatErrors['businessOwner.name']}
@@ -127,6 +137,7 @@ const GeneralRequestInfo = ({
               >
                 <Label htmlFor="BusinessCase-RequesterPhoneNumber">
                   {t('requesterPhoneNumber')}
+                  <RequiredAsterisk />
                 </Label>
                 <HelpText id="BusinessCase-PhoneNumber">
                   {t('requesterPhoneNumberHelpText')}
