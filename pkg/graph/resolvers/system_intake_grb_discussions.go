@@ -181,6 +181,29 @@ func CreateSystemIntakeGRBDiscussionReply(
 			}
 		}
 
+		// Send a notification to the initial poster
+		if initialPoster.ID != replyPoster.ID {
+			grbRole := "UNSET_VALUE" // TODO: What should the default GRB role be?
+			if post.GRBRole != nil {
+				grbRole = post.GRBRole.String()
+			}
+
+			if err := emailClient.SystemIntake.SendGRBReviewDiscussionReplyRequesterEmail(
+				ctx,
+				email.SendGRBReviewDiscussionReplyRequesterEmailInput{
+					SystemIntakeID:    intakeID,
+					RequestName:       systemIntake.ProjectName.String,
+					ReplierName:       replyPoster.CommonName,
+					VotingRole:        authorRole,
+					GRBRole:           grbRole,
+					DiscussionContent: input.Content.ToTemplate(),
+					Recipient:         models.EmailAddress(initialPoster.Email),
+				},
+			); err != nil {
+				return nil, err
+			}
+		}
+
 		uniqueTags := input.Content.UniqueTags()
 		// strip initial post author from tags in case author was tagged
 		uniqueTagsWithoutInitialPoster := lo.Filter(uniqueTags, func(t *models.Tag, _ int) bool {
