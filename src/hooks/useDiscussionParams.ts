@@ -67,8 +67,11 @@ export default function useDiscussionParams(): UseDiscussionParamsReturn {
       const q = new URLSearchParams(location.search);
 
       const discussionMode = q.get('discussionMode');
-      const discussionBoardType = q.get('discussionBoardType');
       const discussionId = q.get('discussionId');
+
+      const discussionBoardType =
+        q.get('discussionBoardType') ||
+        SystemIntakeGRBDiscussionBoardType.PRIMARY;
 
       // Silent fail on invalid query params
       if (

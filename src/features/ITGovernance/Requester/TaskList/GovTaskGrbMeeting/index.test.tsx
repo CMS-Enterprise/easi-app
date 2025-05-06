@@ -1,4 +1,5 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
 import {
@@ -13,6 +14,7 @@ import { grbPresentationLinks } from 'tests/mock/systemIntake';
 
 import { MessageProvider } from 'hooks/useMessage';
 import { ITGovTaskSystemIntake } from 'types/itGov';
+import easiMockStore from 'utils/testing/easiMockStore';
 import {
   expectTaskStatusTagToHaveTextKey,
   getExpectedAlertType
@@ -21,21 +23,25 @@ import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import GovTaskGrbMeeting from '.';
 
+const store = easiMockStore({ groups: ['EASI_P_USER'] });
+
 describe('Gov Task: Attend the GRB meeting statuses', () => {
   function renderGovTaskGrbMeeting(mockdata: ITGovTaskSystemIntake) {
     return render(
-      <MemoryRouter>
-        <VerboseMockedProvider
-          mocks={[
-            getSystemIntakeGRBDiscussionsQuery(),
-            getSystemIntakeGRBReviewQuery()
-          ]}
-        >
-          <MessageProvider>
-            <GovTaskGrbMeeting {...mockdata} />
-          </MessageProvider>
-        </VerboseMockedProvider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <VerboseMockedProvider
+            mocks={[
+              getSystemIntakeGRBDiscussionsQuery(),
+              getSystemIntakeGRBReviewQuery()
+            ]}
+          >
+            <MessageProvider>
+              <GovTaskGrbMeeting {...mockdata} />
+            </MessageProvider>
+          </VerboseMockedProvider>
+        </MemoryRouter>
+      </Provider>
     );
   }
 
