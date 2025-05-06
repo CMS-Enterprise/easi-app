@@ -84,6 +84,7 @@ type templates struct {
 	grbReviewDiscussionReply                        templateCaller
 	grbReviewDiscussionIndividualTagged             templateCaller
 	grbReviewDiscussionGroupTagged                  templateCaller
+	grbReviewDiscussionProjectTeamIndividualTagged  templateCaller
 	grbReviewEnded                                  templateCaller
 	grbReviewPresentationLinksUpdated               templateCaller
 	grbReviewReminder                               templateCaller
@@ -475,6 +476,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(grbReviewDiscussionGroupTaggedTemplateName)
 	}
 	appTemplates.grbReviewDiscussionGroupTagged = grbReviewDiscussionGroupTagged
+
+	grbReviewDiscussionProjectTeamIndividualTaggedTemplateName := "grb_review_discussion_project_team_individual_tagged.gohtml"
+	grbReviewDiscussionProjectTeamIndividualTagged := rawTemplates.Lookup(grbReviewDiscussionProjectTeamIndividualTaggedTemplateName)
+	if grbReviewDiscussionProjectTeamIndividualTagged == nil {
+		return Client{}, templateError(grbReviewDiscussionProjectTeamIndividualTaggedTemplateName)
+	}
+	appTemplates.grbReviewDiscussionProjectTeamIndividualTagged = grbReviewDiscussionProjectTeamIndividualTagged
 
 	grbReviewEndedTemplateName := "system_intake_grb_review_voting_ended.gohtml"
 	grbReviewEndedTemplate := rawTemplates.Lookup(grbReviewEndedTemplateName)
