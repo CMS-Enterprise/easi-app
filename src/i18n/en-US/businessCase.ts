@@ -40,7 +40,7 @@ const businessCase = {
   priorityAlignment:
     'How does this effort align with HHS/CMS policies, strategies, or organizational priorities? Elaborate on the value the proposed solution will bring to the government.',
   priorityAlignmentHelpText:
-    'Does this effort support any Administrator priorities or new legislative or regulatory mandates? Include any relevant deadlines.',
+    'Does this effort support any Administrator priorities or new legislative or regulatory mandates? Include any relevant deadlines. See below for an example answer.',
   priorityAlignmentExample: {
     label: 'View an example answer',
     description:
@@ -56,11 +56,9 @@ const businessCase = {
       'We (Project team component) will increase the number of Program-level Release Demos (from a 1/24/2022 baseline of 0 Release Demos) by 1 a year, every year, until finally achieving (and thereafter maintaining) ≥ 2 / year by 2 years after launch (2/15/2024).'
   },
   alternatives: 'Alternatives analysis',
-  alternativesOptional:
-    "This section is optional. You can skip it if you don't have any alternative solutions.",
   alternativesDescription: {
     text: [
-      'Below you should identify options and alternatives to meet your business need. Include a summary of the approaches, how you will acquire the solution, and describe the pros, cons, total life cycle costs, and potential cost savings/avoidance for each alternative considered. Include at least three viable alternatives, starting with your preferred solution.',
+      'Below you should identify options and alternatives to meet your business need. Include a summary of the approaches, how you will acquire the solution, and describe the pros, cons, total life cycle costs, and potential cost savings/avoidance for each alternative considered. Include up to three viable alternatives, starting with your preferred solution.',
       'You should not describe the proposed solutions in technical detail, but instead should describe the "alternative concepts", such as:',
       "In your alternatives, include details such as differences between system capabilities, user friendliness, technical and security considerations, ease and timing of integration with CMS' IT infrastructure, etc. Your alernatives should also address the impact to your project and/or users if your preferred solution is not selected."
     ],
@@ -71,7 +69,7 @@ const businessCase = {
       'Using/repurposing an existing CMS system vs.',
       'Using an Enterprise Shared Service'
     ],
-    draftAlert:
+    draftAlternativesAlert:
       'During the draft Business Case phase, you may leave some questions unanswered and may leave your alternatives in an "In progress" status. However, the more you can complete in each alternative, the better feedback and help you will receive from the Governance Admin team and Governance Review Team (GRT) during this draft Business Case phase. When you reach the final Business Case phase, you will be required to fill out all questions in each alternative you add to your Business Case.'
   },
   alternativesTable: {
@@ -150,15 +148,15 @@ const businessCase = {
     downstreamImpact:
       'the downstream impact to CMS, other systems, or other users if this solution is selected'
   },
-  // TODO: NJD - I don't like this "NOT" wording, hash out with Zoe / Gov Team
-  // TODO: combine pros and cons into one group?
   cons: {
     label: 'Cons',
-    include: 'Please include both:',
+    include: 'Please include:',
+    downsides:
+      'Any downsides to this alternative if it <bold>is</bold> selected',
     immediateImpact:
-      'the immeidate impact to your team and/or your project if this solution is NOT selected',
+      'the immeidate impact to your team and/or your project if this solution <bold>is not</bold> selected',
     downstreamImpact:
-      'the downstream impact to CMS, other systems, or other users if this solution is NOT selected'
+      'the downstream impact to CMS, other systems, or other users if this solution <bold>is not</bold> selected'
   },
   preferredSolutionPros: 'Preferred solution: Pros',
   preferredSolutionProsHelpText:
@@ -224,6 +222,8 @@ const businessCase = {
   },
   requiredFields:
     'Fields marked with an asterisk ( <red>*</red> ) are required only for the final Business Case.',
+  draftAlert:
+    'During the draft Business Case phase, you may leave some questions unanswered. However, you will receive better feedback and help from the Governance Admin Team and Governance Review Team (GRT) during this draft Business Case phase if you complete as much as you can. When you reach the final Business Case phase, you will need to fill out all required questions in your Business Case.',
   checkAnswers: 'Check your answers before sending',
   sendBusinessCase: 'Send my Business Case'
 };

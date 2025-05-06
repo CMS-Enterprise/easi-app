@@ -3,6 +3,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Label, Radio, TextInput } from '@trussworks/react-uswds';
 import { Field, FormikProps } from 'formik';
 
+import Alert from 'components/Alert';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
@@ -15,12 +16,14 @@ type AlternativeSolutionFieldsProps = {
   altLetter: string;
   businessCaseCreatedAt: string;
   formikProps: FormikProps<any>;
+  isFinal: boolean;
 };
 
 const AlternativeSolutionFields = ({
   altLetter,
   businessCaseCreatedAt,
-  formikProps
+  formikProps,
+  isFinal
 }: AlternativeSolutionFieldsProps) => {
   const { t } = useTranslation('businessCase');
 
@@ -32,13 +35,18 @@ const AlternativeSolutionFields = ({
 
   return (
     <>
-      {/* Required fields help text */}
+      {/* Required fields help text and alert */}{' '}
       <HelpText className="margin-top-1 text-base">
         <Trans
           i18nKey="businessCase:requiredFields"
           components={{ red: <span className="text-red" /> }}
         />
       </HelpText>
+      {!isFinal && (
+        <Alert type="info" className="margin-top-2" slim>
+          {t('businessCase:draftAlert')}
+        </Alert>
+      )}
       <div
         data-testid="alternative-solution-fields"
         className="tablet:grid-col-9"
@@ -427,9 +435,31 @@ const AlternativeSolutionFields = ({
           >
             {t('cons.include')}
             <ul className="padding-left-205 margin-top-1 margin-bottom-0">
-              <li>{t('cons.immediateImpact')}</li>
-              <li>{t('cons.downstreamImpact')}</li>
-            </ul>{' '}
+              <li>
+                <Trans
+                  i18nKey="businessCase:cons.downsides"
+                  components={{
+                    bold: <span className="text-bold" />
+                  }}
+                />
+              </li>
+              <li>
+                <Trans
+                  i18nKey="businessCase:cons.immediateImpact"
+                  components={{
+                    bold: <span className="text-bold" />
+                  }}
+                />
+              </li>
+              <li>
+                <Trans
+                  i18nKey="businessCase:cons.downstreamImpact"
+                  components={{
+                    bold: <span className="text-bold" />
+                  }}
+                />
+              </li>
+            </ul>
           </HelpText>
           <FieldErrorMsg>{flatErrors[`${altId}.cons`]}</FieldErrorMsg>
           <Field
@@ -442,7 +472,7 @@ const AlternativeSolutionFields = ({
           />
         </FieldGroup>
       </div>
-
+      <hr className="margin-bottom-4 margin-top-4 opacity-30" aria-hidden />
       <EstimatedLifecycleCost
         className="margin-top-2"
         formikKey={`${altId}.estimatedLifecycleCost`}
@@ -456,7 +486,6 @@ const AlternativeSolutionFields = ({
         }
         setFieldValue={setFieldValue}
       />
-
       <FieldGroup
         scrollElement={`${altId}.costSavings`}
         error={!!flatErrors[`${altId}.costSavings`]}

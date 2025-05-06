@@ -11,6 +11,7 @@ import {
   ModalHeading,
   Table
 } from '@trussworks/react-uswds';
+import classnames from 'classnames';
 import { FieldArray, Form, Formik, FormikProps } from 'formik';
 
 import Alert from 'components/Alert';
@@ -20,6 +21,7 @@ import IconButton from 'components/IconButton';
 import Modal from 'components/Modal';
 import PageNumber from 'components/PageNumber';
 import RequiredAsterisk from 'components/RequiredAsterisk';
+import TaskStatusTag from 'components/TaskStatusTag';
 import {
   defaultProposedSolution,
   solutionHasFilledFields
@@ -139,13 +141,18 @@ const AlternativeAnalysis = ({
           }
 
           try {
-            // Validate the specific solution using business case schema
-            SolutionSchema(isFinal, solutionType).validateSync(row.original, {
+            // Validate the specific solution using business case schema. We pass in true for isFinal
+            // to show correct in progress or complete even when business case is in draft
+            SolutionSchema(true, solutionType).validateSync(row.original, {
               abortEarly: false
             });
-            return <span className="text-success">Completed</span>;
+            return <TaskStatusTag status="COMPLETED" />;
           } catch (err) {
-            return <span className="text-info">In Progress</span>;
+            return (
+              <span>
+                <TaskStatusTag status="IN_PROGRESS" />
+              </span>
+            );
           }
         }
       },
@@ -235,6 +242,29 @@ const AlternativeAnalysis = ({
           formikProps;
         const flatErrors = flattenErrors(errors);
 
+        // Validation function to check if the form is valid, used to diable/enable the Next button
+        const validateSolution = () => {
+          try {
+            getAlternativeAnalysisSchema(
+              isFinal,
+              solutionHasFilledFields(businessCase.alternativeB)
+            ).validateSync(
+              {
+                preferredSolution: values.preferredSolution,
+                alternativeA: values.alternativeA,
+                alternativeB: values.alternativeB
+              },
+              { abortEarly: false }
+            );
+
+            return true;
+          } catch (err) {
+            return false;
+          }
+        };
+
+        const isFormValid = validateSolution();
+
         return (
           <BusinessCaseStepWrapper
             systemIntakeId={businessCase.systemIntakeId}
@@ -269,9 +299,10 @@ const AlternativeAnalysis = ({
               <FieldArray name="AlternativeAnalysis">
                 {() => (
                   <div>
+                    {/* Required fields help alert */}
                     {!isFinal && (
                       <Alert type="info" className="margin-top-2" slim>
-                        {t('alternativesDescription.draftAlert')}
+                        {t('alternativesDescription.draftAlternativesAlert')}
                       </Alert>
                     )}
                     <Table
@@ -336,6 +367,10 @@ const AlternativeAnalysis = ({
               </Button>
               <Button
                 type="button"
+                disabled={!isFormValid}
+                className={classnames('usa-button', {
+                  'no-pointer': !isFormValid
+                })}
                 onClick={() => {
                   validateForm().then(err => {
                     if (Object.keys(err).length === 0) {

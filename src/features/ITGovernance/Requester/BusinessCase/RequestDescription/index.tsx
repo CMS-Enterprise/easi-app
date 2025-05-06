@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { Button, ButtonGroup, Icon, Label } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
+import Alert from 'components/Alert';
 import AutoSave from 'components/AutoSave';
 import CollapsableLink from 'components/CollapsableLink';
 import FieldErrorMsg from 'components/FieldErrorMsg';
@@ -65,13 +66,20 @@ const RequestDescription = ({
             errors={flatErrors}
           >
             <Form className="tablet:grid-col-9 margin-bottom-6">
-              {/* Required fields help text */}
+              {/* Required fields help text and alert */}
               <HelpText className="margin-top-1 text-base">
                 <Trans
                   i18nKey="businessCase:requiredFields"
                   components={{ red: <span className="text-red" /> }}
                 />
               </HelpText>
+
+              {!isFinal && (
+                <Alert type="info" className="margin-top-2" slim>
+                  {t('businessCase:draftAlert')}
+                </Alert>
+              )}
+
               <FieldGroup
                 scrollElement="businessNeed"
                 error={!!flatErrors.businessNeed}
@@ -105,9 +113,7 @@ const RequestDescription = ({
                   aria-describedby="BusinessCase-BusinessNeedCounter BusinessCase-BusinessNeedHelp"
                 />
               </FieldGroup>
-
               {/* TODO: add internal collaboration question */}
-
               <FieldGroup
                 scrollElement="currentSolutionSummary"
                 error={!!flatErrors.currentSolutionSummary}
@@ -134,7 +140,6 @@ const RequestDescription = ({
                   aria-describedby="BusinessCase-CurrentSolutionSummaryCounter BusinessCase-CurrentSolutionSummaryHelp"
                 />
               </FieldGroup>
-
               <FieldGroup
                 scrollElement="cmsBenefit"
                 error={!!flatErrors.cmsBenefit}
@@ -159,7 +164,6 @@ const RequestDescription = ({
                   aria-describedby="BusinessCase-CmsBenefitCounter BusinessCase-CmsBenefitHelp"
                 />
               </FieldGroup>
-
               <FieldGroup
                 scrollElement="priorityAlignment"
                 error={!!flatErrors.priorityAlignment}
@@ -191,7 +195,6 @@ const RequestDescription = ({
                   aria-describedby="BusinessCase-PriorityAlignmentCounter BusinessCase-PriorityAlignmentHelp"
                 />
               </FieldGroup>
-
               <FieldGroup
                 scrollElement="successIndicators"
                 error={!!flatErrors.successIndicators}
@@ -223,7 +226,6 @@ const RequestDescription = ({
                   aria-describedby="BusinessCase-SuccessIndicatorsCounter BusinessCase-SuccessIndicatorsHelp"
                 />
               </FieldGroup>
-
               {/* TODO: add response to GRT recs question */}
             </Form>
 

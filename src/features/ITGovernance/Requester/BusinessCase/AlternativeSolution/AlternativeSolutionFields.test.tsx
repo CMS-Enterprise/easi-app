@@ -24,6 +24,7 @@ describe('Alternative Solution Fields', () => {
               altLetter="A"
               businessCaseCreatedAt={new Date().toISOString()}
               formikProps={formikProps}
+              isFinal={false}
             />
           </Form>
         )}

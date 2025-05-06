@@ -2,10 +2,8 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button, Icon } from '@trussworks/react-uswds';
-import classnames from 'classnames';
 import { Form, Formik, FormikProps } from 'formik';
 
-import Alert from 'components/Alert';
 import AutoSave from 'components/AutoSave';
 import IconButton from 'components/IconButton';
 import PageNumber from 'components/PageNumber';
@@ -51,21 +49,6 @@ const AlternativeSolutionB = ({
         const { values, errors, validateForm } = formikProps;
         const flatErrors = flattenErrors(errors);
 
-        const validateSolution = () => {
-          try {
-            getSingleSolutionSchema(isFinal, 'Alternative B').validateSync(
-              { alternativeB: values.alternativeB },
-              { abortEarly: false }
-            );
-
-            return true;
-          } catch (err) {
-            return false;
-          }
-        };
-
-        const isFormValid = validateSolution();
-
         return (
           <BusinessCaseStepWrapper
             systemIntakeId={businessCase.systemIntakeId}
@@ -73,16 +56,6 @@ const AlternativeSolutionB = ({
             errors={flatErrors}
             data-testid="alternative-solution-b"
           >
-            <Alert
-              type="info"
-              slim
-              role="alert"
-              aria-live="polite"
-              className="tablet:grid-col-8 margin-top-2"
-            >
-              {t('alternativesOptional')}
-            </Alert>
-
             <Form>
               <IconButton
                 type="button"
@@ -102,15 +75,12 @@ const AlternativeSolutionB = ({
                 altLetter="B"
                 businessCaseCreatedAt={businessCase.createdAt}
                 formikProps={formikProps}
+                isFinal={isFinal}
               />
             </Form>
 
             <Button
               type="button"
-              disabled={!isFormValid}
-              className={classnames('usa-button', {
-                'no-pointer': !isFormValid
-              })}
               onClick={() => {
                 validateForm().then(err => {
                   if (Object.keys(err).length === 0) {

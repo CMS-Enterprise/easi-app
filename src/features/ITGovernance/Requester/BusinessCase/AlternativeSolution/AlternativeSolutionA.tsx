@@ -2,7 +2,6 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button, Icon } from '@trussworks/react-uswds';
-import classnames from 'classnames';
 import { Form, Formik, FormikProps } from 'formik';
 
 import AutoSave from 'components/AutoSave';
@@ -52,21 +51,6 @@ const AlternativeSolutionA = ({
 
         const flatErrors = flattenErrors(errors);
 
-        const validateSolution = () => {
-          try {
-            getSingleSolutionSchema(isFinal, 'Alternative A').validateSync(
-              { alternativeA: values.alternativeA },
-              { abortEarly: false }
-            );
-
-            return true;
-          } catch (err) {
-            return false;
-          }
-        };
-
-        const isFormValid = validateSolution();
-
         return (
           <BusinessCaseStepWrapper
             systemIntakeId={businessCase.systemIntakeId}
@@ -94,15 +78,12 @@ const AlternativeSolutionA = ({
                 altLetter="A"
                 businessCaseCreatedAt={businessCase.createdAt}
                 formikProps={formikProps}
+                isFinal={isFinal}
               />
             </Form>
 
             <Button
               type="button"
-              disabled={!isFormValid}
-              className={classnames('usa-button', {
-                'no-pointer': !isFormValid
-              })}
               onClick={() => {
                 validateForm().then(err => {
                   if (Object.keys(err).length === 0) {

@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { Button, Icon, Label, TextInput } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
+import Alert from 'components/Alert';
 import AutoSave from 'components/AutoSave';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
@@ -65,13 +66,20 @@ const GeneralRequestInfo = ({
             data-testid="general-request-info"
           >
             <Form className="tablet:grid-col-9 margin-bottom-6">
-              {/* Required fields help text */}
+              {/* Required fields help text and alert */}
               <HelpText className="margin-top-1 text-base">
                 <Trans
                   i18nKey="businessCase:requiredFields"
                   components={{ red: <span className="text-red" /> }}
                 />
               </HelpText>
+
+              {!isFinal && (
+                <Alert type="info" className="margin-top-2" slim>
+                  {t('businessCase:draftAlert')}
+                </Alert>
+              )}
+
               <FieldGroup
                 scrollElement="requestName"
                 error={!!flatErrors.requestName}
@@ -92,7 +100,6 @@ const GeneralRequestInfo = ({
                   name="requestName"
                 />
               </FieldGroup>
-
               <FieldGroup
                 scrollElement="requester.name"
                 error={!!flatErrors['requester.name']}
@@ -110,7 +117,6 @@ const GeneralRequestInfo = ({
                   name="requester.name"
                 />
               </FieldGroup>
-
               <FieldGroup
                 scrollElement="businessOwner.name"
                 error={!!flatErrors['businessOwner.name']}
@@ -130,7 +136,6 @@ const GeneralRequestInfo = ({
                   name="businessOwner.name"
                 />
               </FieldGroup>
-
               <FieldGroup
                 scrollElement="requester.phoneNumber"
                 error={!!flatErrors['requester.phoneNumber']}

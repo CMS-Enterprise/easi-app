@@ -2,9 +2,9 @@ import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button, Icon, Label, Radio, TextInput } from '@trussworks/react-uswds';
-import classnames from 'classnames';
 import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 
+import Alert from 'components/Alert';
 import AutoSave from 'components/AutoSave';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
 import FieldErrorMsg from 'components/FieldErrorMsg';
@@ -55,21 +55,6 @@ const PreferredSolution = ({
 
         const flatErrors = flattenErrors(errors);
 
-        const validateSolution = () => {
-          try {
-            getSingleSolutionSchema(isFinal, 'Preferred Solution').validateSync(
-              { preferredSolution: values.preferredSolution },
-              { abortEarly: false }
-            );
-
-            return true;
-          } catch (err) {
-            return false;
-          }
-        };
-
-        const isFormValid = validateSolution();
-
         return (
           <BusinessCaseStepWrapper
             title={t('preferredSolution')}
@@ -94,13 +79,19 @@ const PreferredSolution = ({
                   {t('Save & return to Business Case')}
                 </IconButton>
 
-                {/* Required fields help text */}
+                {/* Required fields help text and alert */}
                 <HelpText className="margin-top-1 text-base">
                   <Trans
                     i18nKey="businessCase:requiredFields"
                     components={{ red: <span className="text-red" /> }}
                   />
                 </HelpText>
+
+                {!isFinal && (
+                  <Alert type="info" className="margin-top-2" slim>
+                    {t('alternativesDescription.draftAlternativesAlert')}
+                  </Alert>
+                )}
 
                 <FieldGroup
                   scrollElement="preferredSolution.title"
@@ -557,8 +548,30 @@ const PreferredSolution = ({
                   >
                     {t('cons.include')}
                     <ul className="padding-left-205 margin-top-1 margin-bottom-0">
-                      <li>{t('cons.immediateImpact')}</li>
-                      <li>{t('cons.downstreamImpact')}</li>
+                      <li>
+                        <Trans
+                          i18nKey="businessCase:cons.downsides"
+                          components={{
+                            bold: <span className="text-bold" />
+                          }}
+                        />
+                      </li>
+                      <li>
+                        <Trans
+                          i18nKey="businessCase:cons.immediateImpact"
+                          components={{
+                            bold: <span className="text-bold" />
+                          }}
+                        />
+                      </li>
+                      <li>
+                        <Trans
+                          i18nKey="businessCase:cons.downstreamImpact"
+                          components={{
+                            bold: <span className="text-bold" />
+                          }}
+                        />
+                      </li>
                     </ul>
                   </HelpText>
                   <FieldErrorMsg>
@@ -574,6 +587,11 @@ const PreferredSolution = ({
                   />
                 </FieldGroup>
               </div>
+
+              <hr
+                className="margin-bottom-4 margin-top-4 opacity-30"
+                aria-hidden
+              />
 
               <EstimatedLifecycleCost
                 className="margin-top-2"
@@ -619,10 +637,6 @@ const PreferredSolution = ({
 
             <Button
               type="button"
-              disabled={!isFormValid}
-              className={classnames('usa-button', {
-                'no-pointer': !isFormValid
-              })}
               onClick={() => {
                 validateForm().then(err => {
                   if (Object.keys(err).length === 0) {
