@@ -37,8 +37,7 @@ describe('Governance Task List', () => {
           <VerboseMockedProvider
             mocks={[
               getGovernanceTaskListQuery({
-                ...taskListState.intakeFormNotStarted.systemIntake,
-                __typename: 'SystemIntake'
+                ...taskListState.intakeFormNotStarted.systemIntake
               })
             ]}
           >
@@ -128,8 +127,7 @@ describe('Governance Task List', () => {
               getGovernanceTaskListQuery({
                 ...taskListState.intakeFormNotStarted.systemIntake,
                 state: SystemIntakeState.CLOSED,
-                decisionState: SystemIntakeDecisionState.NOT_APPROVED,
-                __typename: 'SystemIntake'
+                decisionState: SystemIntakeDecisionState.NOT_APPROVED
               })
             ]}
           >
@@ -161,8 +159,7 @@ describe('Governance Task List', () => {
           <VerboseMockedProvider
             mocks={[
               getGovernanceTaskListQuery({
-                ...taskListState.intakeFormNotStarted.systemIntake,
-                __typename: 'SystemIntake'
+                ...taskListState.intakeFormNotStarted.systemIntake
               })
             ]}
           >
@@ -190,8 +187,7 @@ describe('Governance Task List', () => {
           <VerboseMockedProvider
             mocks={[
               getGovernanceTaskListQuery({
-                ...taskListState.intakeFormSubmitted.systemIntake,
-                __typename: 'SystemIntake'
+                ...taskListState.intakeFormSubmitted.systemIntake
               })
             ]}
           >

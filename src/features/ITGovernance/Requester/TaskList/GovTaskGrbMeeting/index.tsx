@@ -113,12 +113,13 @@ const GovTaskGrbMeeting = ({
     }
   }, [grbMeetingStatus, grbReviewType, grbPresentationLinks]);
 
+  const renderDiscussionBoard =
+    grbMeetingStatus === ITGovGRBStatus.AWAITING_DECISION ||
+    grbMeetingStatus === ITGovGRBStatus.REVIEW_IN_PROGRESS;
+
   return (
     <>
-      <DiscussionBoard
-        systemIntakeID={id}
-        readOnly={grbMeetingStatus === ITGovGRBStatus.COMPLETED}
-      />
+      {renderDiscussionBoard && <DiscussionBoard systemIntakeID={id} />}
 
       {/* Remove Presentation Modal */}
       <Modal
@@ -323,8 +324,7 @@ const GovTaskGrbMeeting = ({
           {
             /** Discussions card */
             // Only render if review is active
-            (grbMeetingStatus === ITGovGRBStatus.AWAITING_DECISION ||
-              grbMeetingStatus === ITGovGRBStatus.REVIEW_IN_PROGRESS) && (
+            renderDiscussionBoard && (
               <RequesterDiscussionsCard
                 systemIntakeId={id}
                 grbMeetingStatus={grbMeetingStatus}
