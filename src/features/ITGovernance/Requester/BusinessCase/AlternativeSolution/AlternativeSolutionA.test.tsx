@@ -1,31 +1,24 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { MockedProvider, MockedResponse } from '@apollo/client/testing';
 import {
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved
 } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import BusinessCase from 'features/ITGovernance/Requester/BusinessCase';
 import { SystemIntakeStep } from 'gql/generated/graphql';
 import configureMockStore from 'redux-mock-store';
-import { getGovernanceTaskListQuery } from 'tests/mock/systemIntake';
-
 import {
-  businessCaseInitialData,
-  defaultProposedSolution
-} from 'data/businessCase';
+  getGovernanceTaskListQuery,
+  systemIntake
+} from 'tests/mock/systemIntake';
 
-window.matchMedia = (): any => ({
-  addListener: () => {},
-  removeListener: () => {}
-});
+import { businessCaseInitialData } from 'data/businessCase';
+import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
-window.scrollTo = vi.fn;
-
-const renderPage = async (store: any, mocks?: MockedResponse[]) => {
+const renderPage = async (store: any, isFinal?: boolean) => {
   render(
     <MemoryRouter
       initialEntries={[
@@ -33,12 +26,20 @@ const renderPage = async (store: any, mocks?: MockedResponse[]) => {
       ]}
     >
       <Provider store={store}>
-        <MockedProvider mocks={mocks}>
+        <VerboseMockedProvider
+          mocks={[
+            getGovernanceTaskListQuery({
+              step: isFinal
+                ? SystemIntakeStep.FINAL_BUSINESS_CASE
+                : SystemIntakeStep.DRAFT_BUSINESS_CASE
+            })
+          ]}
+        >
           <Route
             path="/business/:businessCaseId/:formPage"
             component={BusinessCase}
           />
-        </MockedProvider>
+        </VerboseMockedProvider>
       </Provider>
     </MemoryRouter>
   );
@@ -55,8 +56,8 @@ describe('Business case alternative a solution', () => {
     businessCase: {
       form: {
         ...businessCaseInitialData,
-        id: '75746af8-9a9b-4558-a375-cf9848eb2b0d',
-        systemIntakeId: '943916ee-7a30-4213-990e-02c4fb97382a'
+        systemIntakeId: systemIntake.id,
+        id: '75746af8-9a9b-4558-a375-cf9848eb2b0d'
       },
       isLoading: false,
       isSaving: false,
@@ -75,113 +76,124 @@ describe('Business case alternative a solution', () => {
     expect(screen.getByTestId('alternative-solution-a')).toBeInTheDocument();
   });
 
-  it('navigates back a page', async () => {
+  it('does not run validations', async () => {
     await renderPage(defaultStore);
 
-    screen.getByRole('button', { name: /back/i }).click();
+    screen.getByRole('button', { name: /Finish Alternative A/i }).click();
 
-    expect(screen.getByTestId('preferred-solution')).toBeInTheDocument();
-  });
-
-  it('adds alternative b and navigates to it', async () => {
-    await renderPage(defaultStore);
-
-    screen.getByRole('button', { name: /alternative b/i }).click();
-
-    expect(screen.getByTestId('alternative-solution-b')).toBeInTheDocument();
-  });
-
-  it('navigates forward to review', async () => {
-    await renderPage(defaultStore);
-
-    screen.getByRole('button', { name: /next/i }).click();
-
-    expect(screen.getByTestId('business-case-review')).toBeInTheDocument();
-  });
-
-  describe('with alternative b', () => {
-    const withAlternativeBStore = mockStore({
-      auth: {
-        euaId: 'AAAA'
-      },
-      businessCase: {
-        form: {
-          ...businessCaseInitialData,
-          id: '75746af8-9a9b-4558-a375-cf9848eb2b0d',
-          systemIntakeId: '943916ee-7a30-4213-990e-02c4fb97382a',
-          alternativeB: {
-            ...defaultProposedSolution,
-            title: 'Alt B'
-          }
-        },
-        isLoading: false,
-        isSaving: false,
-        error: null
-      },
-      action: {
-        isPosting: false,
-        error: null,
-        actions: []
-      }
+    await waitFor(() => {
+      expect(
+        screen.queryByTestId('formik-validation-errors')
+      ).not.toBeInTheDocument();
     });
+    await waitFor(() => {
+      expect(screen.getByTestId('alternative-analysis')).toBeInTheDocument();
+    });
+  });
 
-    it('hides adding alternative b when it exists already', async () => {
-      await renderPage(withAlternativeBStore);
+  it('renders draft business case fields message', async () => {
+    await renderPage(defaultStore);
+
+    expect(
+      screen.getByTestId('draft-business-case-fields-alert')
+    ).toBeInTheDocument();
+  });
+
+  it('navigates back to alternative analysis', async () => {
+    await renderPage(defaultStore);
+
+    screen.getByTestId('save-and-return-button').click();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('alternative-analysis')).toBeInTheDocument();
+    });
+  });
+
+  it('navigates to alternative analysis page after finishing', async () => {
+    await renderPage(defaultStore);
+
+    screen.getByRole('button', { name: /Finish Alternative A/i }).click();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('alternative-analysis')).toBeInTheDocument();
+    });
+  });
+
+  // it('adds alternative b and navigates to it', async () => {
+  //   await renderPage(defaultStore);
+
+  //   screen.getByRole('button', { name: /alternative b/i }).click();
+
+  //   expect(screen.getByTestId('alternative-solution-b')).toBeInTheDocument();
+  // });
+
+  // it('navigates forward to review', async () => {
+  //   await renderPage(defaultStore);
+
+  //   screen.getByRole('button', { name: /next/i }).click();
+
+  //   expect(screen.getByTestId('business-case-review')).toBeInTheDocument();
+  // });
+
+  // describe('with alternative b', () => {
+  //   const withAlternativeBStore = mockStore({
+  //     auth: {
+  //       euaId: 'AAAA'
+  //     },
+  //     businessCase: {
+  //       form: {
+  //         ...businessCaseInitialData,
+  //         id: '75746af8-9a9b-4558-a375-cf9848eb2b0d',
+  //         systemIntakeId: '943916ee-7a30-4213-990e-02c4fb97382a',
+  //         alternativeB: {
+  //           ...defaultProposedSolution,
+  //           title: 'Alt B'
+  //         }
+  //       },
+  //       isLoading: false,
+  //       isSaving: false,
+  //       error: null
+  //     },
+  //     action: {
+  //       isPosting: false,
+  //       error: null,
+  //       actions: []
+  //     }
+  //   });
+  //   it('hides adding alternative b when it exists already', async () => {
+  //     await renderPage(withAlternativeBStore);
+  //     expect(
+  //       screen.queryByRole('button', { name: /alternative b/i })
+  //     ).not.toBeInTheDocument();
+  //   });
+  //   it('navigates forward to alternative b', async () => {
+  //     await renderPage(withAlternativeBStore);
+  //     screen.getByRole('button', { name: /next/i }).click();
+  //     expect(screen.getByTestId('alternative-solution-b')).toBeInTheDocument();
+  //   });
+  // });
+
+  describe('Final Business Case', () => {
+    it('does not render draft business case fields message', async () => {
+      await renderPage(defaultStore, true);
 
       expect(
-        screen.queryByRole('button', { name: /alternative b/i })
+        screen.queryByTestId('draft-business-case-fields-alert')
       ).not.toBeInTheDocument();
     });
 
-    it('navigates forward to alternative b', async () => {
-      await renderPage(withAlternativeBStore);
+    it('runs validations and redners form errors', async () => {
+      window.scrollTo = vi.fn;
 
-      screen.getByRole('button', { name: /next/i }).click();
+      await renderPage(defaultStore, true);
 
-      expect(screen.getByTestId('alternative-solution-b')).toBeInTheDocument();
-    });
-  });
+      screen.getByRole('button', { name: /Finish Alternative A/i }).click();
 
-  describe('BIZ_CASE_FINAL_NEEDED', () => {
-    const bizCaseFinalStore = mockStore({
-      auth: {
-        euaId: 'AAAA'
-      },
-      businessCase: {
-        form: {
-          ...businessCaseInitialData,
-          id: '75746af8-9a9b-4558-a375-cf9848eb2b0d',
-          systemIntakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2'
-        },
-        isLoading: false,
-        isSaving: false,
-        error: null
-      },
-      action: {
-        isPosting: false,
-        error: null,
-        actions: []
-      }
-    });
-
-    it('renders validation errors', async () => {
-      await renderPage(bizCaseFinalStore, [
-        getGovernanceTaskListQuery({
-          step: SystemIntakeStep.FINAL_BUSINESS_CASE
-        })
-      ]);
-
-      // Fill one field so we can trigger validation errors
-      const titleField = screen.getByRole('textbox', {
-        name: /title/i
+      await waitFor(() => {
+        expect(
+          screen.getByTestId('formik-validation-errors')
+        ).toBeInTheDocument();
       });
-      userEvent.type(titleField, 'Alternative A solution title');
-      expect(titleField).toHaveValue('Alternative A solution title');
-
-      screen.getByRole('button', { name: /next/i }).click();
-      expect(
-        await screen.findByTestId('formik-validation-errors')
-      ).toBeInTheDocument();
     });
   });
 });

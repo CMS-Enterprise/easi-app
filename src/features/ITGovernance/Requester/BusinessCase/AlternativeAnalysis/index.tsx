@@ -202,7 +202,7 @@ const AlternativeAnalysis = ({
         }
       }
     ],
-    [dispatchSave, history, isFinal, t]
+    [dispatchSave, history, t]
   );
 
   const table = useTable({
@@ -301,7 +301,12 @@ const AlternativeAnalysis = ({
                   <div>
                     {/* Required fields help alert */}
                     {!isFinal && (
-                      <Alert type="info" className="margin-top-2" slim>
+                      <Alert
+                        type="info"
+                        className="margin-top-2"
+                        data-testid="draft-business-case-fields-alert"
+                        slim
+                      >
                         {t('alternativesDescription.draftAlternativesAlert')}
                       </Alert>
                     )}

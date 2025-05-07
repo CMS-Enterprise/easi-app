@@ -55,7 +55,7 @@ const businessCase = {
     description:
       'We (Project team component) will increase the number of Program-level Release Demos (from a 1/24/2022 baseline of 0 Release Demos) by 1 a year, every year, until finally achieving (and thereafter maintaining) ≥ 2 / year by 2 years after launch (2/15/2024).'
   },
-  alternatives: 'Alternatives analysis',
+  alternatives: 'Options and alternatives',
   alternativesDescription: {
     text: [
       'Below you should identify options and alternatives to meet your business need. Include a summary of the approaches, how you will acquire the solution, and describe the pros, cons, total life cycle costs, and potential cost savings/avoidance for each alternative considered. Include up to three viable alternatives, starting with your preferred solution.',

@@ -88,7 +88,12 @@ const PreferredSolution = ({
                 </HelpText>
 
                 {!isFinal && (
-                  <Alert type="info" className="margin-top-2" slim>
+                  <Alert
+                    type="info"
+                    className="margin-top-2"
+                    data-testid="draft-business-case-fields-alert"
+                    slim
+                  >
                     {t('alternativesDescription.draftAlternativesAlert')}
                   </Alert>
                 )}
@@ -656,6 +661,7 @@ const PreferredSolution = ({
               type="button"
               icon={<Icon.ArrowBack />}
               className="margin-bottom-3 margin-top-2"
+              data-testid="save-and-return-button"
               onClick={() => {
                 dispatchSave();
                 history.push(

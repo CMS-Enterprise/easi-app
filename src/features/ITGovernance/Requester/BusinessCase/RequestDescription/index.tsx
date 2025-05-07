@@ -75,7 +75,12 @@ const RequestDescription = ({
               </HelpText>
 
               {!isFinal && (
-                <Alert type="info" className="margin-top-2" slim>
+                <Alert
+                  type="info"
+                  className="margin-top-2"
+                  data-testid="draft-business-case-fields-alert"
+                  slim
+                >
                   {t('businessCase:draftAlert')}
                 </Alert>
               )}

@@ -103,6 +103,7 @@ const AlternativeSolutionA = ({
               type="button"
               icon={<Icon.ArrowBack />}
               className="margin-bottom-3 margin-top-2"
+              data-testid="save-and-return-button"
               onClick={() => {
                 dispatchSave();
                 history.push(
