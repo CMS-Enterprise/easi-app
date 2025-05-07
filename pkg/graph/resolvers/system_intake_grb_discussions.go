@@ -183,7 +183,8 @@ func CreateSystemIntakeGRBDiscussionReply(
 
 		// Send a notification to the initial poster
 		if initialPoster.ID != replyPoster.ID {
-			grbRole := "UNSET_VALUE" // TODO: What should the default GRB role be?
+			// Note: Confirmed with UX, we should never hit this but in the case we do this is an acceptable default
+			grbRole := "Other"
 			if post.GRBRole != nil {
 				grbRole = post.GRBRole.String()
 			}
