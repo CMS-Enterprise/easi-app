@@ -41,7 +41,11 @@ describe('Discussion Board', () => {
     cy.get('#mention-discussion').type('@');
 
     // Check that all participants in the dropdown match the table, + some more groups
-    const groups = ['Governance Admin Team', 'Governance Review Board (GRB)'];
+    const groups = [
+      'Governance Admin Team',
+      'Governance Review Board (GRB)',
+      'Requester'
+    ];
     cy.get('#mention-discussion-editorContent button.item').then(els => {
       const dropdownItems = Array.from(els, el => el.innerText.trim());
       // The dropdown will have the participants + some groups

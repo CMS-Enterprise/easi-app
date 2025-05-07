@@ -96,7 +96,19 @@ function DiscussionBoard({ systemIntakeID, readOnly }: DiscussionBoardProps) {
       {
         displayName: t('Governance Review Board (GRB)'),
         tagType: TagType.GROUP_GRB_REVIEWERS
-      },
+      }
+    ];
+
+    // Add requester as mention suggestion for primary discussion board
+    if (discussionBoardType === SystemIntakeGRBDiscussionBoardType.PRIMARY) {
+      suggestions.push({
+        displayName: t('Requester'),
+        tagType: TagType.REQUESTER
+      });
+    }
+
+    return [
+      ...suggestions,
       ...(grbReviewers || []).map(({ userAccount }) => ({
         key: userAccount.username,
         tagType: TagType.USER_ACCOUNT,
@@ -104,16 +116,6 @@ function DiscussionBoard({ systemIntakeID, readOnly }: DiscussionBoardProps) {
         id: userAccount.id
       }))
     ];
-
-    // Add requester as mention suggestion for primary discussion board
-    if (discussionBoardType === SystemIntakeGRBDiscussionBoardType.PRIMARY) {
-      suggestions[2] = {
-        displayName: t('Requester'),
-        tagType: TagType.REQUESTER
-      };
-    }
-
-    return suggestions;
   }, [grbReviewers, discussionBoardType, t]);
 
   /**
