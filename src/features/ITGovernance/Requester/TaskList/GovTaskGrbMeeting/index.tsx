@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Button, ButtonGroup, Link } from '@trussworks/react-uswds';
 import classNames from 'classnames';
@@ -87,6 +87,31 @@ const GovTaskGrbMeeting = ({
       });
   };
 
+  /**
+   * Whether to render `Prepare for the GRB review` link as button
+   * based on review type and meeting status
+   */
+  const renderPrepareGRBReviewButton = useMemo(() => {
+    switch (grbMeetingStatus) {
+      case ITGovGRBStatus.READY_TO_SCHEDULE:
+        return !(
+          grbReviewType === SystemIntakeGRBReviewType.ASYNC &&
+          !grbPresentationLinks
+        );
+
+      case ITGovGRBStatus.SCHEDULED:
+        return !(
+          grbReviewType === SystemIntakeGRBReviewType.ASYNC &&
+          !grbPresentationLinks
+        );
+
+      case ITGovGRBStatus.AWAITING_GRB_REVIEW:
+        return !grbPresentationLinks;
+      default:
+        return false;
+    }
+  }, [grbMeetingStatus, grbReviewType, grbPresentationLinks]);
+
   return (
     <>
       {/* Remove Presentation Modal */}
@@ -144,39 +169,43 @@ const GovTaskGrbMeeting = ({
         shouldCloseOnOverlayClick
         className="height-auto"
       >
-        <PageHeading headingLevel="h3" className="margin-top-0 margin-bottom-3">
+        <h3 className="margin-y-0">
           {t(`taskList.step.${stepKey}.reviewTypeModal.title`)}
-        </PageHeading>
+        </h3>
 
-        {Object.values(SystemIntakeGRBReviewType).map(type => (
-          <React.Fragment key={type}>
-            <p className="font-body-md line-height-sans-4 margin-top-0 margin-bottom-1 text-bold">
-              {t(`taskList.step.${stepKey}.reviewTypeModal.${type}.heading`)}
-            </p>
-            {(
-              t(
+        <dl className="margin-top-0 font-body-sm line-height-body-5">
+          {Object.values(SystemIntakeGRBReviewType).map(type => (
+            <React.Fragment key={type}>
+              <dt>
+                <h4 className="margin-bottom-0">
+                  {t(
+                    `taskList.step.${stepKey}.reviewTypeModal.${type}.heading`
+                  )}
+                </h4>
+              </dt>
+              {t<string[]>(
                 `taskList.step.${stepKey}.reviewTypeModal.${type}.description`,
                 {
                   returnObjects: true
                 }
-              ) as string[]
-            ).map((description, index, arr) => (
-              <p
-                // eslint-disable-next-line react/no-array-index-key
-                key={index}
-                className={`margin-top-0 ${
-                  index === arr.length - 1
-                    ? 'margin-bottom-3'
-                    : 'margin-bottom-1'
-                }`}
-              >
-                {description}
-              </p>
-            ))}
-          </React.Fragment>
-        ))}
+              ).map((description, index) => (
+                <dd
+                  // eslint-disable-next-line react/no-array-index-key
+                  key={index}
+                  className="margin-left-0 margin-y-1"
+                >
+                  {description}
+                </dd>
+              ))}
+            </React.Fragment>
+          ))}
+        </dl>
 
-        <Button type="button" onClick={() => setReviewTypesModalOpen(false)}>
+        <Button
+          type="button"
+          onClick={() => setReviewTypesModalOpen(false)}
+          className="margin-top-2"
+        >
           {t(`taskList.step.${stepKey}.reviewTypeModal.goBack`)}
         </Button>
       </Modal>
@@ -297,30 +326,30 @@ const GovTaskGrbMeeting = ({
             )
           }
 
-          <div className="margin-top-2 display-flex flex-align-center">
+          {/** GRB review meeting help buttons */}
+          <ButtonGroup
+            className={classNames('margin-top-2', {
+              'usa-button-group__divided': !renderPrepareGRBReviewButton
+            })}
+          >
             <UswdsReactLink
               to="/help/it-governance/prepare-for-grb"
               target="_blank"
-              className={classNames(
-                'margin-right-2 padding-right-2 border-right-1px border-base-lighter',
-                (grbReviewType === SystemIntakeGRBReviewType.STANDARD &&
-                  (grbMeetingStatus === ITGovGRBStatus.READY_TO_SCHEDULE ||
-                    grbMeetingStatus === ITGovGRBStatus.SCHEDULED)) ||
-                  grbPresentationLinks
-                  ? 'usa-button border-right-0'
-                  : ''
-              )}
+              className={classNames({
+                'usa-button': renderPrepareGRBReviewButton
+              })}
             >
-              {t(`taskList.step.${stepKey}.button`)}
+              {t('taskList.step.grbMeeting.button')}
             </UswdsReactLink>
+
             <Button
               type="button"
               unstyled
               onClick={() => setReviewTypesModalOpen(true)}
             >
-              {t(`taskList.step.${stepKey}.learnMore`)}
+              {t('taskList.step.grbMeeting.learnMore')}
             </Button>
-          </div>
+          </ButtonGroup>
         </TaskListDescription>
       </TaskListItem>
     </>

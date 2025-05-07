@@ -27,6 +27,9 @@ type grbEmailJobs struct {
 
 	// SendGRBReviewLastDayReminderJob is a job that sends an email when the GRB review is on the last day
 	SendGRBReviewLastDayReminderJob ScheduledJob // TODO: Consider using OneTimeJob type
+
+	// SendAsyncReviewCompleteWithQuorumEmailJob is a job that sends when a GRB review is finished and quorum has been met
+	SendAsyncReviewCompleteWithQuorumEmailJob ScheduledJob
 }
 
 // GRBEmailJobs is the exported representation of all GRB email scheduled jobs
@@ -61,6 +64,13 @@ func getGRBEmailJobs(scheduler *Scheduler) *grbEmailJobs {
 			scheduler,
 			timing.DailyAt1PMUTC,
 			sendGRBReviewLastDayReminderJobFunction,
+		),
+
+		SendAsyncReviewCompleteWithQuorumEmailJob: NewScheduledJob(
+			"SendAsyncReviewCompleteWithQuorumEmailJob",
+			scheduler,
+			timing.DailyAt10_01PMUTC,
+			sendAsyncReviewCompleteQuorumMetJobFunction,
 		),
 	}
 }
@@ -161,7 +171,7 @@ func sendAsyncPastDueNoQuorumEmailJobFunction(ctx context.Context, scheduledJob 
 	for _, intake := range intakes {
 		if _, err := OneTimeJob(ctx, SharedScheduler, intake, "SendAsyncPastDueNoQuorumEmailJob", func(ctx context.Context, intake *models.SystemIntake) error {
 			if intake.GRBReviewStartedAt == nil || intake.GrbReviewAsyncEndDate == nil {
-				return errors.New("missing start and/or end date for sending halfway through email")
+				return errors.New("missing start and/or end date for sending past due no quorum email")
 			}
 
 			reviewers, err := dataloaders.GetSystemIntakeGRBReviewersBySystemIntakeID(ctx, intake.ID)
@@ -358,5 +368,74 @@ func sendGRBReviewLastDayReminderJobFunction(
 		logger.Info("sent GRB last-day reminder", logfields.IntakeID(intake.ID))
 	}
 
+	return nil
+}
+
+func sendAsyncReviewCompleteQuorumMetJobFunction(ctx context.Context, scheduledJob *ScheduledJob) error {
+	logger, err := scheduledJob.logger()
+	if err != nil {
+		return err
+	}
+
+	store, err := scheduledJob.store()
+	if err != nil {
+		logger.Error("error getting store from scheduler", zap.Error(err))
+		return err
+	}
+
+	logger.Info("Running GRB review complete with quorum met email job")
+
+	emailClient, err := scheduledJob.emailClient()
+	if err != nil {
+		logger.Error("error getting email client from scheduler", zap.Error(err))
+		return err
+	}
+
+	intakes, err := storage.GetSystemaIntakesWithGRBReviewCompleteQuorumMet(ctx, store, logger)
+	if err != nil {
+		logger.Error("error getting review complete quorum met intakes", zap.Error(err))
+		return err
+	}
+
+	for _, intake := range intakes {
+		if _, err := OneTimeJob(ctx, SharedScheduler, intake, "SendAsyncReviewCompleteWithQuorumEmailJob", func(ctx context.Context, intake *models.SystemIntake) error {
+			if intake.GRBReviewStartedAt == nil || intake.GrbReviewAsyncEndDate == nil {
+				return errors.New("missing start and/or end date for sending review complete quorum met email")
+			}
+
+			reviewers, err := dataloaders.GetSystemIntakeGRBReviewersBySystemIntakeID(ctx, intake.ID)
+			if err != nil {
+				return err
+			}
+
+			votingInformation := models.GRBVotingInformation{
+				SystemIntake: intake,
+				GRBReviewers: reviewers,
+			}
+
+			if err := emailClient.SystemIntake.SendGRBReviewCompleteQuorumMet(ctx, email.SendGRBReviewCompleteQuorumMetInput{
+				SystemIntakeID:     intake.ID,
+				ProjectTitle:       intake.ProjectName.String,
+				RequesterName:      intake.Requester,
+				RequesterComponent: intake.Component.String,
+				StartDate:          *intake.GRBReviewStartedAt,
+				EndDate:            *intake.GrbReviewAsyncEndDate,
+				NoObjectionVotes:   votingInformation.NumberOfNoObjection(),
+				ObjectionVotes:     votingInformation.NumberOfObjection(),
+				NotYetVoted:        votingInformation.NumberOfNotVoted(),
+			}); err != nil {
+				return err
+			}
+
+			logger.Info("sending review complete quorum met email", logfields.IntakeID(intake.ID))
+			return nil
+		}); err != nil {
+			logger.Error("error scheduling review complete quorum met email job", logfields.IntakeID(intake.ID), zap.Error(err))
+			// we chose to continue here instead of returning an error, because we want to send emails to all intakes
+			// even if one of them fails
+			continue
+		}
+
+	}
 	return nil
 }
