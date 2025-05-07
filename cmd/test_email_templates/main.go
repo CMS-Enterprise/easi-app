@@ -881,4 +881,15 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 			NotYetVoted:        3,
 		})
 	noErr(err)
+
+	err = client.SystemIntake.SendGRBReviewDiscussionProjectTeamIndividualTaggedEmail(ctx,
+		email.SendGRBReviewDiscussionProjectTeamIndividualTaggedInput{
+			SystemIntakeID:    intakeID,
+			UserName:          "Send Project Team Individual Email title",
+			RequestName:       "Project Team title",
+			Role:              "Center for Medicaid and CHIP Services",
+			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`,
+			Recipient:         requesterEmail,
+		})
+	noErr(err)
 }
