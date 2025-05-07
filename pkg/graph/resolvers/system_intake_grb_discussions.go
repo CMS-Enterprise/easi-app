@@ -13,6 +13,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/services"
@@ -43,9 +44,8 @@ func CreateSystemIntakeGRBDiscussionPost(
 			return nil, errors.New("GRB review is over, no more posts allowed")
 		}
 
-		// requester cannot post/reply on the internal post
-		if systemIntake.EUAUserID.String == appcontext.Principal(ctx).Account().Username && input.DiscussionBoardType == models.SystemIntakeGRBDiscussionBoardTypeInternal {
-			return nil, errors.New("requester cannot post on the Internal board")
+		if input.DiscussionBoardType == models.SystemIntakeGRBDiscussionBoardTypeInternal && !isAuthorizedForInternalBoard(ctx, intakeID) {
+			return nil, errors.New("user not authorized to post on Internal board")
 		}
 
 		principalAsGRBReviewer, err := GetPrincipalAsGRBReviewerBySystemIntakeID(ctx, intakeID)
@@ -159,9 +159,8 @@ func CreateSystemIntakeGRBDiscussionReply(
 			return nil, errors.New("problem finding system intake when handling GRB reply")
 		}
 
-		// requester cannot post/reply on the internal post
-		if systemIntake.EUAUserID.String == appcontext.Principal(ctx).Account().Username && input.DiscussionBoardType == models.SystemIntakeGRBDiscussionBoardTypeInternal {
-			return nil, errors.New("requester cannot reply on the Internal board")
+		if input.DiscussionBoardType == models.SystemIntakeGRBDiscussionBoardTypeInternal && !isAuthorizedForInternalBoard(ctx, intakeID) {
+			return nil, errors.New("user is not authorized to reply on the Internal board")
 		}
 
 		// cannot post after GRB review is over
@@ -425,4 +424,29 @@ func getAuthorRoleFromPost(post *models.SystemIntakeGRBReviewDiscussionPost) (st
 	}
 
 	return fmt.Sprintf("%[1]s member, %[2]s", votingRoleStr, grbRoleStr), nil
+}
+
+func isAuthorizedForInternalBoard(ctx context.Context, systemIntakeID uuid.UUID) bool {
+	// get grb reviewers
+	grbReviewers, err := dataloaders.GetSystemIntakeGRBReviewersBySystemIntakeID(ctx, systemIntakeID)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error("problem getting grb reviewers when checking to see if user is authorized for Internal board", zap.Error(err))
+		return false
+	}
+
+	actingUserID := appcontext.Principal(ctx).Account().ID
+
+	// acting user is an admin
+	if services.AuthorizeRequireGRTJobCode(ctx) {
+		return true
+	}
+
+	for _, grbReviewer := range grbReviewers {
+		// acting user is a reviewer
+		if grbReviewer.UserID == actingUserID {
+			return true
+		}
+	}
+
+	return false
 }
