@@ -1,7 +1,8 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { getSystemIntakeGRBDiscussionsQuery } from 'tests/mock/discussions';
 import { getSystemIntakeGRBReviewQuery } from 'tests/mock/grbReview';
 import { systemIntake } from 'tests/mock/systemIntake';
@@ -13,115 +14,209 @@ import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 import DiscussionBoard from '.';
 
 describe('Discussion board', () => {
-  it('renders the primary discussion board', async () => {
-    const store = easiMockStore({ groups: [BASIC_USER_PROD] });
+  describe('Primary  discussion board', () => {
+    it('renders the discussion board', async () => {
+      const store = easiMockStore({ groups: [BASIC_USER_PROD] });
 
-    render(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={['?discussionMode=view']}>
-          <VerboseMockedProvider
-            mocks={[
-              getSystemIntakeGRBDiscussionsQuery(),
-              getSystemIntakeGRBReviewQuery({
-                grbReviewStartedAt: '2025-04-06T15:02:20.066496346Z'
-              })
-            ]}
-          >
-            <Route>
-              <div id="root">
-                <DiscussionBoard systemIntakeID={systemIntake.id} />
-              </div>
-            </Route>
-          </VerboseMockedProvider>
-        </MemoryRouter>
-      </Provider>
-    );
+      render(
+        <Provider store={store}>
+          <MemoryRouter initialEntries={['?discussionMode=view']}>
+            <VerboseMockedProvider
+              mocks={[
+                getSystemIntakeGRBDiscussionsQuery(),
+                getSystemIntakeGRBReviewQuery({
+                  grbReviewStartedAt: '2025-04-06T15:02:20.066496346Z'
+                })
+              ]}
+            >
+              <Route>
+                <div id="root">
+                  <DiscussionBoard systemIntakeID={systemIntake.id} />
+                </div>
+              </Route>
+            </VerboseMockedProvider>
+          </MemoryRouter>
+        </Provider>
+      );
 
-    expect(
-      await screen.findByRole('heading', {
-        level: 4,
-        name: 'Primary discussion board'
-      })
-    ).toBeInTheDocument();
+      expect(
+        await screen.findByRole('heading', {
+          level: 4,
+          name: 'Primary discussion board'
+        })
+      ).toBeInTheDocument();
 
-    expect(
-      screen.queryByRole('heading', { name: 'This page cannot be found.' })
-    ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('heading', { name: 'This page cannot be found.' })
+      ).not.toBeInTheDocument();
+    });
+
+    it('lists the requester as a tag option', async () => {
+      const store = easiMockStore({ groups: [BASIC_USER_PROD] });
+
+      render(
+        <Provider store={store}>
+          <MemoryRouter initialEntries={['?discussionMode=start']}>
+            <VerboseMockedProvider
+              mocks={[
+                getSystemIntakeGRBDiscussionsQuery(),
+                getSystemIntakeGRBReviewQuery({
+                  grbReviewStartedAt: '2025-04-06T15:02:20.066496346Z'
+                })
+              ]}
+            >
+              <Route>
+                <div id="root">
+                  <DiscussionBoard systemIntakeID={systemIntake.id} />
+                </div>
+              </Route>
+            </VerboseMockedProvider>
+          </MemoryRouter>
+        </Provider>
+      );
+
+      expect(
+        await screen.findByRole('heading', {
+          level: 4,
+          name: 'Primary discussion board'
+        })
+      ).toBeInTheDocument();
+
+      userEvent.type(screen.getByRole('textbox'), '@');
+
+      const mentions = await screen.findByRole('tooltip');
+      waitFor(() => expect(mentions).toHaveAttribute('data-state', 'visible'));
+
+      expect(
+        screen.getByRole('button', { name: 'Requester' })
+      ).toBeInTheDocument();
+    });
   });
 
-  it('renders the internal discussion board', async () => {
-    const store = easiMockStore({ groups: [GOVTEAM_PROD] });
+  describe('Internal GRB discussion board', () => {
+    it('renders the discussion board', async () => {
+      const store = easiMockStore({ groups: [GOVTEAM_PROD] });
 
-    render(
-      <Provider store={store}>
-        <MemoryRouter
-          initialEntries={['?discussionMode=view&discussionBoardType=INTERNAL']}
-        >
-          <VerboseMockedProvider
-            mocks={[
-              getSystemIntakeGRBDiscussionsQuery(),
-              getSystemIntakeGRBReviewQuery({
-                grbReviewStartedAt: '2025-04-06T15:02:20.066496346Z'
-              })
+      render(
+        <Provider store={store}>
+          <MemoryRouter
+            initialEntries={[
+              '?discussionMode=view&discussionBoardType=INTERNAL'
             ]}
           >
-            <Route>
-              <div id="root">
-                <DiscussionBoard systemIntakeID={systemIntake.id} />
-              </div>
-            </Route>
-          </VerboseMockedProvider>
-        </MemoryRouter>
-      </Provider>
-    );
+            <VerboseMockedProvider
+              mocks={[
+                getSystemIntakeGRBDiscussionsQuery(),
+                getSystemIntakeGRBReviewQuery({
+                  grbReviewStartedAt: '2025-04-06T15:02:20.066496346Z'
+                })
+              ]}
+            >
+              <Route>
+                <div id="root">
+                  <DiscussionBoard systemIntakeID={systemIntake.id} />
+                </div>
+              </Route>
+            </VerboseMockedProvider>
+          </MemoryRouter>
+        </Provider>
+      );
 
-    expect(
-      await screen.findByRole('heading', {
-        level: 4,
-        name: 'Internal GRB discussion board'
-      })
-    ).toBeInTheDocument();
+      expect(
+        await screen.findByRole('heading', {
+          level: 4,
+          name: 'Internal GRB discussion board'
+        })
+      ).toBeInTheDocument();
 
-    expect(
-      screen.queryByRole('heading', { name: 'This page cannot be found.' })
-    ).not.toBeInTheDocument();
-  });
+      expect(
+        screen.queryByRole('heading', { name: 'This page cannot be found.' })
+      ).not.toBeInTheDocument();
+    });
 
-  it('restricts the internal discussion board', async () => {
-    const store = easiMockStore({ groups: [BASIC_USER_PROD] });
+    it('restricts the discussion board from basic users', async () => {
+      const store = easiMockStore({ groups: [BASIC_USER_PROD] });
 
-    render(
-      <Provider store={store}>
-        <MemoryRouter
-          initialEntries={['?discussionMode=view&discussionBoardType=INTERNAL']}
-        >
-          <VerboseMockedProvider
-            mocks={[
-              getSystemIntakeGRBDiscussionsQuery(),
-              getSystemIntakeGRBReviewQuery({
-                grbReviewStartedAt: '2025-04-06T15:02:20.066496346Z'
-              })
+      render(
+        <Provider store={store}>
+          <MemoryRouter
+            initialEntries={[
+              '?discussionMode=view&discussionBoardType=INTERNAL'
             ]}
           >
-            <Route>
-              <div id="root">
-                <DiscussionBoard systemIntakeID={systemIntake.id} />
-              </div>
-            </Route>
-          </VerboseMockedProvider>
-        </MemoryRouter>
-      </Provider>
-    );
+            <VerboseMockedProvider
+              mocks={[
+                getSystemIntakeGRBDiscussionsQuery(),
+                getSystemIntakeGRBReviewQuery({
+                  grbReviewStartedAt: '2025-04-06T15:02:20.066496346Z'
+                })
+              ]}
+            >
+              <Route>
+                <div id="root">
+                  <DiscussionBoard systemIntakeID={systemIntake.id} />
+                </div>
+              </Route>
+            </VerboseMockedProvider>
+          </MemoryRouter>
+        </Provider>
+      );
 
-    expect(
-      await screen.findByRole('heading', {
-        level: 4,
-        name: 'Internal GRB discussion board'
-      })
-    ).toBeInTheDocument();
+      expect(
+        await screen.findByRole('heading', {
+          level: 4,
+          name: 'Internal GRB discussion board'
+        })
+      ).toBeInTheDocument();
 
-    expect(
-      screen.getByRole('heading', { name: 'This page cannot be found.' })
-    ).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', { name: 'This page cannot be found.' })
+      ).toBeInTheDocument();
+    });
+
+    it('does not list the requester as a tag option', async () => {
+      const store = easiMockStore({ groups: [GOVTEAM_PROD] });
+
+      render(
+        <Provider store={store}>
+          <MemoryRouter
+            initialEntries={[
+              '?discussionMode=start&discussionBoardType=INTERNAL'
+            ]}
+          >
+            <VerboseMockedProvider
+              mocks={[
+                getSystemIntakeGRBDiscussionsQuery(),
+                getSystemIntakeGRBReviewQuery({
+                  grbReviewStartedAt: '2025-04-06T15:02:20.066496346Z'
+                })
+              ]}
+            >
+              <Route>
+                <div id="root">
+                  <DiscussionBoard systemIntakeID={systemIntake.id} />
+                </div>
+              </Route>
+            </VerboseMockedProvider>
+          </MemoryRouter>
+        </Provider>
+      );
+
+      expect(
+        await screen.findByRole('heading', {
+          level: 4,
+          name: 'Internal GRB discussion board'
+        })
+      ).toBeInTheDocument();
+
+      userEvent.type(screen.getByRole('textbox'), '@');
+
+      const mentions = await screen.findByRole('tooltip');
+      waitFor(() => expect(mentions).toHaveAttribute('data-state', 'visible'));
+
+      expect(
+        screen.queryByRole('button', { name: 'Requester' })
+      ).not.toBeInTheDocument();
+    });
   });
 });
