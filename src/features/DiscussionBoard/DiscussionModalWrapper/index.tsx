@@ -6,12 +6,14 @@ import { SystemIntakeGRBDiscussionBoardType } from 'gql/generated/graphql';
 import Sidepanel from 'components/Sidepanel';
 
 type DiscussionModalWrapperProps = {
+  discussionBoardType: SystemIntakeGRBDiscussionBoardType;
   isOpen: boolean;
   closeModal: () => void;
   children: React.ReactNode;
 };
 
 const DiscussionModalWrapper = ({
+  discussionBoardType,
   isOpen,
   closeModal,
   children
@@ -24,7 +26,7 @@ const DiscussionModalWrapper = ({
       closeModal={closeModal}
       isOpen={isOpen}
       modalHeading={t('governanceReviewBoard.boardType', {
-        context: SystemIntakeGRBDiscussionBoardType.INTERNAL
+        context: discussionBoardType
       })}
       testid="discussion-modal"
     >

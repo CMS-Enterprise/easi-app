@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Button, ButtonGroup, Link } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import DiscussionBoard from 'features/DiscussionBoard';
 import {
   GetGovernanceTaskListQuery,
   ITGovGRBStatus,
@@ -112,8 +113,14 @@ const GovTaskGrbMeeting = ({
     }
   }, [grbMeetingStatus, grbReviewType, grbPresentationLinks]);
 
+  const renderDiscussionBoard =
+    grbMeetingStatus === ITGovGRBStatus.AWAITING_DECISION ||
+    grbMeetingStatus === ITGovGRBStatus.REVIEW_IN_PROGRESS;
+
   return (
     <>
+      {renderDiscussionBoard && <DiscussionBoard systemIntakeID={id} />}
+
       {/* Remove Presentation Modal */}
       <Modal
         isOpen={removalModalOpen}
@@ -317,8 +324,7 @@ const GovTaskGrbMeeting = ({
           {
             /** Discussions card */
             // Only render if review is active
-            (grbMeetingStatus === ITGovGRBStatus.AWAITING_DECISION ||
-              grbMeetingStatus === ITGovGRBStatus.REVIEW_IN_PROGRESS) && (
+            renderDiscussionBoard && (
               <RequesterDiscussionsCard
                 systemIntakeId={id}
                 grbMeetingStatus={grbMeetingStatus}

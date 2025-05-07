@@ -1,7 +1,10 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
-import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/generated/graphql';
+import {
+  SystemIntakeGRBDiscussionBoardType,
+  SystemIntakeGRBReviewDiscussionFragment
+} from 'gql/generated/graphql';
 import i18next from 'i18next';
 import { mockDiscussions } from 'tests/mock/discussions';
 
@@ -19,6 +22,7 @@ describe('DiscussionPost', () => {
         <DiscussionPost
           {...discussion.initialPost}
           replies={discussion.replies}
+          discussionBoardType={SystemIntakeGRBDiscussionBoardType.INTERNAL}
         />
       </MemoryRouter>
     );
@@ -55,7 +59,11 @@ describe('DiscussionPost', () => {
   it('renders a discussion post without replies', () => {
     render(
       <MemoryRouter>
-        <DiscussionPost {...discussion.initialPost} replies={[]} />
+        <DiscussionPost
+          {...discussion.initialPost}
+          replies={[]}
+          discussionBoardType={SystemIntakeGRBDiscussionBoardType.INTERNAL}
+        />
       </MemoryRouter>
     );
 
@@ -64,10 +72,30 @@ describe('DiscussionPost', () => {
     expect(screen.queryByTestId('lastReplyAtText')).toBeNull();
   });
 
+  it('renders a discussion post without replies - read only view', () => {
+    render(
+      <MemoryRouter>
+        <DiscussionPost
+          {...discussion.initialPost}
+          replies={[]}
+          discussionBoardType={SystemIntakeGRBDiscussionBoardType.INTERNAL}
+          readOnly
+        />
+      </MemoryRouter>
+    );
+
+    expect(
+      screen.queryByRole('button', { name: 'Reply' })
+    ).not.toBeInTheDocument();
+  });
+
   it('hides discussion reply data', () => {
     render(
       <MemoryRouter>
-        <DiscussionPost {...discussion.initialPost} />
+        <DiscussionPost
+          {...discussion.initialPost}
+          discussionBoardType={SystemIntakeGRBDiscussionBoardType.INTERNAL}
+        />
       </MemoryRouter>
     );
 
@@ -89,6 +117,7 @@ describe('DiscussionPost', () => {
         <DiscussionPost
           {...discussionNoRole.initialPost}
           replies={discussionNoRole.replies}
+          discussionBoardType={SystemIntakeGRBDiscussionBoardType.INTERNAL}
         />
       </MemoryRouter>
     );

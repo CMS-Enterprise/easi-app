@@ -85,8 +85,42 @@ exports[`Discussions > matches the snapshot 1`] = `
         <p
           class="margin-0 margin-right-105 display-flex"
         >
-          0 discussions without replies
+          <svg
+            aria-label="warning icon"
+            class="usa-icon text-warning-dark margin-right-05"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
+            />
+          </svg>
+          4 discussions without replies
         </p>
+        <button
+          class="usa-button usa-button--unstyled display-flex flex-align-center"
+          data-testid="button"
+          type="button"
+        >
+          View
+          <svg
+            class="usa-icon margin-left-1"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="m12 4-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
+            />
+          </svg>
+        </button>
       </div>
       <h4
         class="margin-bottom-2"
@@ -95,16 +129,16 @@ exports[`Discussions > matches the snapshot 1`] = `
       </h4>
       <div
         class="easi-discussion-post display-flex line-height-body-1"
-        data-testid="discussion-post-882357e4-c0b0-44ef-b749-f71879ad7878"
+        data-testid="discussion-post-d6cd88e2-d330-4b7c-9006-d6cf95b775e9"
       >
         <div
           class="margin-right-105"
         >
           <div
-            class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-red-cool-10 easi-discussion-avatar"
+            class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-green-5 easi-discussion-avatar"
             data-testid="avatar--basic"
           >
-            OA
+            AA
           </div>
         </div>
         <div
@@ -117,18 +151,18 @@ exports[`Discussions > matches the snapshot 1`] = `
               <p
                 class="margin-y-0"
               >
-                Otilia Abbott
+                Audrey Abrams
               </p>
               <h5
                 class="margin-top-05 margin-bottom-0 font-body-xs text-base text-normal"
               >
-                Voting, Subject Matter Expert (SME)
+                Non-voting, CCIIO Rep
               </h5>
             </div>
             <p
               class="margin-top-105 tablet:margin-top-0 margin-bottom-0 text-base"
             >
-              11/12/2024
+              11/18/2024
             </p>
           </div>
           <div
@@ -144,30 +178,10 @@ exports[`Discussions > matches the snapshot 1`] = `
               translate="no"
             >
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit i ...
+                This is a discussion without replies.
               </p>
             </div>
           </div>
-          <button
-            class="usa-button usa-button--unstyled display-flex flex-align-center margin-bottom-205"
-            data-testid="button"
-            type="button"
-          >
-            Read more
-            <svg
-              class="usa-icon margin-left-1"
-              focusable="false"
-              height="1em"
-              role="img"
-              viewBox="0 0 24 24"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
-              />
-            </svg>
-          </button>
           <div
             class="easi-discussion-post__replies display-flex margin-top-2"
             data-testid="discussionReplies"
@@ -190,14 +204,8 @@ exports[`Discussions > matches the snapshot 1`] = `
                   d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 9h-2V5h2v6zm0 4h-2v-2h2v2z"
                 />
               </svg>
-              2 replies
+              Reply
             </button>
-            <p
-              class="text-base margin-0"
-              data-testid="lastReplyAtText"
-            >
-              Last reply 11/13/2024 at 10:00 AM
-            </p>
           </div>
         </div>
       </div>
@@ -249,8 +257,42 @@ exports[`Discussions > matches the snapshot 1`] = `
         <p
           class="margin-0 margin-right-105 display-flex"
         >
-          0 discussions without replies
+          <svg
+            aria-label="warning icon"
+            class="usa-icon text-warning-dark margin-right-05"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
+            />
+          </svg>
+          4 discussions without replies
         </p>
+        <button
+          class="usa-button usa-button--unstyled display-flex flex-align-center"
+          data-testid="button"
+          type="button"
+        >
+          View
+          <svg
+            class="usa-icon margin-left-1"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="m12 4-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
+            />
+          </svg>
+        </button>
       </div>
       <h4
         class="margin-bottom-2"
@@ -259,16 +301,16 @@ exports[`Discussions > matches the snapshot 1`] = `
       </h4>
       <div
         class="easi-discussion-post display-flex line-height-body-1"
-        data-testid="discussion-post-882357e4-c0b0-44ef-b749-f71879ad7878"
+        data-testid="discussion-post-d6cd88e2-d330-4b7c-9006-d6cf95b775e9"
       >
         <div
           class="margin-right-105"
         >
           <div
-            class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-red-cool-10 easi-discussion-avatar"
+            class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-green-5 easi-discussion-avatar"
             data-testid="avatar--basic"
           >
-            OA
+            AA
           </div>
         </div>
         <div
@@ -281,18 +323,18 @@ exports[`Discussions > matches the snapshot 1`] = `
               <p
                 class="margin-y-0"
               >
-                Otilia Abbott
+                Audrey Abrams
               </p>
               <h5
                 class="margin-top-05 margin-bottom-0 font-body-xs text-base text-normal"
               >
-                Voting, Subject Matter Expert (SME)
+                Non-voting, CCIIO Rep
               </h5>
             </div>
             <p
               class="margin-top-105 tablet:margin-top-0 margin-bottom-0 text-base"
             >
-              11/12/2024
+              11/18/2024
             </p>
           </div>
           <div
@@ -308,30 +350,10 @@ exports[`Discussions > matches the snapshot 1`] = `
               translate="no"
             >
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit i ...
+                This is a discussion without replies.
               </p>
             </div>
           </div>
-          <button
-            class="usa-button usa-button--unstyled display-flex flex-align-center margin-bottom-205"
-            data-testid="button"
-            type="button"
-          >
-            Read more
-            <svg
-              class="usa-icon margin-left-1"
-              focusable="false"
-              height="1em"
-              role="img"
-              viewBox="0 0 24 24"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
-              />
-            </svg>
-          </button>
           <div
             class="easi-discussion-post__replies display-flex margin-top-2"
             data-testid="discussionReplies"
@@ -354,14 +376,8 @@ exports[`Discussions > matches the snapshot 1`] = `
                   d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 9h-2V5h2v6zm0 4h-2v-2h2v2z"
                 />
               </svg>
-              2 replies
+              Reply
             </button>
-            <p
-              class="text-base margin-0"
-              data-testid="lastReplyAtText"
-            >
-              Last reply 11/13/2024 at 10:00 AM
-            </p>
           </div>
         </div>
       </div>

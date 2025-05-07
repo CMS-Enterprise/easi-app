@@ -2,7 +2,10 @@ import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Button } from '@trussworks/react-uswds';
 import DiscussionPost from 'features/DiscussionBoard/DiscussionPost';
-import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/generated/graphql';
+import {
+  SystemIntakeGRBDiscussionBoardType,
+  SystemIntakeGRBReviewDiscussionFragment
+} from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import Spinner from 'components/Spinner';
@@ -12,8 +15,10 @@ import { getMostRecentDiscussion } from '../../util';
 
 type RecentDiscussionProps = {
   loading: boolean;
+  discussionBoardType: SystemIntakeGRBDiscussionBoardType;
   grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[];
   pushDiscussionQuery: UseDiscussionParamsReturn['pushDiscussionQuery'];
+  readOnly?: boolean;
 };
 
 /**
@@ -21,8 +26,10 @@ type RecentDiscussionProps = {
  */
 const RecentDiscussion = ({
   loading,
+  discussionBoardType,
   grbDiscussions,
-  pushDiscussionQuery
+  pushDiscussionQuery,
+  readOnly
 }: RecentDiscussionProps) => {
   const { t } = useTranslation('discussions');
 
@@ -32,22 +39,29 @@ const RecentDiscussion = ({
   if (!recentDiscussion) {
     return (
       <Alert type="info" slim>
-        <Trans
-          i18nKey="discussions:general.alerts.noDiscussionsStartButton"
-          components={{
-            button: (
-              <Button
-                type="button"
-                onClick={() => {
-                  pushDiscussionQuery({ discussionMode: 'start' });
-                }}
-                unstyled
-              >
-                text
-              </Button>
-            )
-          }}
-        />
+        {readOnly ? (
+          t('general.alerts.noDiscussions')
+        ) : (
+          <Trans
+            i18nKey="discussions:general.alerts.noDiscussionsStartButton"
+            components={{
+              button: (
+                <Button
+                  type="button"
+                  onClick={() => {
+                    pushDiscussionQuery({
+                      discussionBoardType,
+                      discussionMode: 'start'
+                    });
+                  }}
+                  unstyled
+                >
+                  text
+                </Button>
+              )
+            }}
+          />
+        )}
       </Alert>
     );
   }
@@ -61,7 +75,9 @@ const RecentDiscussion = ({
       ) : (
         <DiscussionPost
           {...recentDiscussion.initialPost}
+          readOnly={readOnly}
           replies={recentDiscussion.replies}
+          discussionBoardType={discussionBoardType}
           truncateText
         />
       )}

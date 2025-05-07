@@ -1,7 +1,10 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '@trussworks/react-uswds';
-import { SystemIntakeGRBReviewDiscussionPostFragment } from 'gql/generated/graphql';
+import {
+  SystemIntakeGRBDiscussionBoardType,
+  SystemIntakeGRBReviewDiscussionPostFragment
+} from 'gql/generated/graphql';
 import { upperFirst } from 'lodash';
 import { DateTime } from 'luxon';
 
@@ -14,6 +17,7 @@ import { getRelativeDate } from 'utils/date';
 import './index.scss';
 
 type DiscussionPostProps = SystemIntakeGRBReviewDiscussionPostFragment & {
+  discussionBoardType: SystemIntakeGRBDiscussionBoardType;
   /**
    * Array of discussion replies
    *
@@ -22,14 +26,17 @@ type DiscussionPostProps = SystemIntakeGRBReviewDiscussionPostFragment & {
   replies?: SystemIntakeGRBReviewDiscussionPostFragment[];
   /** Truncates discussion content text with read more/less button */
   truncateText?: boolean;
+  readOnly?: boolean;
 };
 
 /**
  * Displays single discussion or reply
  */
 const DiscussionPost = ({
+  discussionBoardType,
   replies,
   truncateText,
+  readOnly,
   ...initialPost
 }: DiscussionPostProps) => {
   const { t } = useTranslation('discussions');
@@ -105,7 +112,8 @@ const DiscussionPost = ({
 
         {
           // Only render reply data if `replies` is not undefined
-          replies && (
+          // Hide if `readOnly` is true and no replies
+          replies && (!readOnly || replies.length > 0) && (
             <div
               className="easi-discussion-post__replies display-flex margin-top-2"
               data-testid="discussionReplies"
@@ -114,6 +122,7 @@ const DiscussionPost = ({
                 type="button"
                 onClick={() => {
                   pushDiscussionQuery({
+                    discussionBoardType,
                     discussionMode: 'reply',
                     discussionId: initialPost.id
                   });
