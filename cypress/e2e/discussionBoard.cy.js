@@ -56,7 +56,7 @@ describe('Discussion Board', () => {
 
     // Type narrow down to Ally Anderson
     const mentionName = 'Ally Anderson';
-    cy.get('#mention-discussion').type('Al');
+    cy.get('#mention-discussion').type('Al', { force: true });
     cy.contains('#mention-discussion-editorContent button.item', mentionName)
       .as('ally')
       .should('have.length', 1);
