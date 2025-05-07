@@ -868,6 +868,19 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		})
 	noErr(err)
 
+	err = client.SystemIntake.SendSystemIntakeGRBReviewLastDay(
+		ctx,
+		email.SendSystemIntakeGRBReviewLastDayInput{
+			Recipient:          requesterEmail,
+			SystemIntakeID:     intakeID,
+			ProjectName:        "Last Day Project",
+			RequesterName:      "Last Day - Name",
+			RequesterComponent: "Last Day - Component",
+			GRBReviewStart:     time.Now().AddDate(0, 0, -1),
+			GRBReviewDeadline:  time.Now(),
+		})
+	noErr(err)
+
 	err = client.SystemIntake.SendGRBReviewCompleteQuorumMet(ctx,
 		email.SendGRBReviewCompleteQuorumMetInput{
 			SystemIntakeID:     intakeID,

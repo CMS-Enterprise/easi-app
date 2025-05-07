@@ -86,6 +86,7 @@ type templates struct {
 	grbReviewDiscussionGroupTagged                  templateCaller
 	grbReviewDiscussionProjectTeamIndividualTagged  templateCaller
 	grbReviewEnded                                  templateCaller
+	grbReviewLastDay                                templateCaller
 	grbReviewPresentationLinksUpdated               templateCaller
 	grbReviewReminder                               templateCaller
 	grbReviewerInvitedToVote                        templateCaller
@@ -490,6 +491,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(grbReviewEndedTemplateName)
 	}
 	appTemplates.grbReviewEnded = grbReviewEndedTemplate
+
+	grbReviewLastDayTemplateName := "system_intake_grb_review_last_day_reminder.gohtml"
+	grbReviewLastDayTemplate := rawTemplates.Lookup(grbReviewLastDayTemplateName)
+	if grbReviewLastDayTemplate == nil {
+		return Client{}, templateError(grbReviewLastDayTemplateName)
+	}
+	appTemplates.grbReviewLastDay = grbReviewLastDayTemplate
 
 	grbReviewPresentationLinksUpdatedTemplateName := "grb_review_presentation_links_updated.gohtml"
 	grbReviewPresentationLinksUpdated := rawTemplates.Lookup(grbReviewPresentationLinksUpdatedTemplateName)

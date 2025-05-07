@@ -703,7 +703,8 @@ export const taskListSystemIntake: NonNullable<
   grbReviewType: SystemIntakeGRBReviewType.STANDARD,
   grbReviewStartedAt: null,
   grbReviewAsyncEndDate: null,
-  grbReviewAsyncGRBMeetingTime: null
+  grbReviewAsyncGRBMeetingTime: null,
+  grbPresentationLinks: null
 };
 
 export const getGovernanceTaskListQuery = (

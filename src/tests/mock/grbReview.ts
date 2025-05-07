@@ -25,6 +25,7 @@ export const grbReview: SystemIntakeGRBReviewFragment = {
   grbReviewAsyncEndDate: null,
   grbReviewAsyncRecordingTime: null,
   grbReviewAsyncStatus: null,
+  grbReviewStandardStatus: null,
   grbReviewReminderLastSent: null,
   grbPresentationLinks: null,
   grbVotingInformation: {
