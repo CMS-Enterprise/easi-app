@@ -18,7 +18,7 @@ func (s *EmailTestSuite) TestSendGRBReviewDiscussionProjectTeamIndividualTaggedE
 	userName := "GRB Member"
 	requestName := "Project Team request"
 	role := "Professional"
-	discussionContent := template.HTML(`<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`)
+	discussionContent := template.HTML(`<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!</p>`)
 	recipient := models.NewEmailAddress("fake@fake.com")
 
 	input := SendGRBReviewDiscussionProjectTeamIndividualTaggedInput{
