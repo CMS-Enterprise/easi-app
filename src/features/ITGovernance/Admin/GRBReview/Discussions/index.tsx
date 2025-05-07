@@ -4,7 +4,6 @@ import classNames from 'classnames';
 import DiscussionBoard from 'features/DiscussionBoard';
 import {
   SystemIntakeGRBDiscussionBoardType,
-  SystemIntakeGRBReviewerFragment,
   useGetSystemIntakeGRBDiscussionsQuery
 } from 'gql/generated/graphql';
 
@@ -14,16 +13,16 @@ import DiscussionBoardCard from './_components/DiscussionBoardCard';
 
 type DiscussionsProps = {
   systemIntakeID: string;
-  grbReviewers: SystemIntakeGRBReviewerFragment[];
   grbReviewStartedAt?: string | null;
+  readOnly?: boolean;
   className?: string;
 };
 
 /** Displays discussion boards on GRB review tab */
 const Discussions = ({
   systemIntakeID,
-  grbReviewers,
   grbReviewStartedAt,
+  readOnly,
   className
 }: DiscussionsProps) => {
   const { t } = useTranslation('discussions');
@@ -39,12 +38,7 @@ const Discussions = ({
 
   return (
     <>
-      <DiscussionBoard
-        systemIntakeID={systemIntakeID}
-        grbReviewers={grbReviewers}
-        grbDiscussions={grbDiscussionsInternal}
-        grbReviewStartedAt={grbReviewStartedAt}
-      />
+      <DiscussionBoard systemIntakeID={systemIntakeID} readOnly={readOnly} />
 
       <div
         id="discussions"
@@ -82,6 +76,7 @@ const Discussions = ({
           grbDiscussions={grbDiscussionsPrimary}
           grbReviewStartedAt={grbReviewStartedAt}
           loading={loading}
+          readOnly={readOnly}
         />
 
         <DiscussionBoardCard
@@ -89,6 +84,7 @@ const Discussions = ({
           grbDiscussions={grbDiscussionsInternal}
           grbReviewStartedAt={grbReviewStartedAt}
           loading={loading}
+          readOnly={readOnly}
         />
       </div>
     </>

@@ -26,6 +26,7 @@ type DiscussionContent = {
 };
 
 interface DiscussionFormProps {
+  discussionBoardType: SystemIntakeGRBDiscussionBoardType;
   setDiscussionAlert: (discussionAlert: DiscussionAlert) => void;
   closeModal: () => void;
   mentionSuggestions: MentionSuggestion[];
@@ -47,6 +48,7 @@ interface ReplyProps extends DiscussionFormProps {
  */
 const DiscussionForm = ({
   type,
+  discussionBoardType,
   closeModal,
   setDiscussionAlert,
   mentionSuggestions,
@@ -100,7 +102,7 @@ const DiscussionForm = ({
           });
         })
         .finally(() => {
-          pushDiscussionQuery({ discussionMode: 'view' });
+          pushDiscussionQuery({ discussionBoardType, discussionMode: 'view' });
         });
     }
   });
@@ -155,7 +157,9 @@ const DiscussionForm = ({
           {t('general.discussionForm.contentLabel', { context: type })}
         </Label>
         <HelpText id="contentHelpText">
-          {t('general.discussionForm.helpText')}
+          {t('general.discussionForm.helpText', {
+            context: discussionBoardType
+          })}
         </HelpText>
 
         <ErrorMessage errors={errors} name="content" as={FieldErrorMsg} />
@@ -181,7 +185,9 @@ const DiscussionForm = ({
         <Button
           type="button"
           outline
-          onClick={() => pushDiscussionQuery({ discussionMode: 'view' })}
+          onClick={() =>
+            pushDiscussionQuery({ discussionBoardType, discussionMode: 'view' })
+          }
         >
           {t('general.cancel')}
         </Button>

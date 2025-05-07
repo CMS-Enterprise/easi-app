@@ -1,7 +1,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Accordion, Icon } from '@trussworks/react-uswds';
-import { SystemIntakeGRBReviewDiscussionFragment } from 'gql/generated/graphql';
+import {
+  SystemIntakeGRBDiscussionBoardType,
+  SystemIntakeGRBReviewDiscussionFragment
+} from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import IconButton from 'components/IconButton';
@@ -11,7 +14,9 @@ import DiscussionsList from '../DiscussionList';
 import DiscussionPost from '../DiscussionPost';
 
 type ViewDiscussionsProps = {
+  discussionBoardType: SystemIntakeGRBDiscussionBoardType;
   grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[];
+  readOnly?: boolean;
 };
 
 /**
@@ -20,7 +25,11 @@ type ViewDiscussionsProps = {
  * Displays list of all discussions
  * with links to start a new discussion or reply to existing discussions
  */
-const ViewDiscussions = ({ grbDiscussions }: ViewDiscussionsProps) => {
+const ViewDiscussions = ({
+  discussionBoardType,
+  grbDiscussions,
+  readOnly
+}: ViewDiscussionsProps) => {
   const { t } = useTranslation('discussions');
 
   const { pushDiscussionQuery } = useDiscussionParams();
@@ -34,22 +43,32 @@ const ViewDiscussions = ({ grbDiscussions }: ViewDiscussionsProps) => {
   return (
     <div>
       <h1 className="margin-bottom-105">
-        {t('governanceReviewBoard.internal.label')}
+        {t('governanceReviewBoard.boardType', { context: discussionBoardType })}
       </h1>
       <p className="font-body-lg text-light line-height-body-5 margin-top-105">
-        {t('governanceReviewBoard.internal.description')}
+        {t('governanceReviewBoard.description', {
+          context: discussionBoardType
+        })}
       </p>
+
       <h2 className="margin-top-5 margin-bottom-2">{t('general.label')}</h2>
-      <IconButton
-        type="button"
-        onClick={() => {
-          pushDiscussionQuery({ discussionMode: 'start' });
-        }}
-        icon={<Icon.Announcement />}
-        unstyled
-      >
-        {t('general.startNewDiscussion')}
-      </IconButton>
+
+      {!readOnly && (
+        <IconButton
+          type="button"
+          onClick={() => {
+            pushDiscussionQuery({
+              discussionBoardType,
+              discussionMode: 'start'
+            });
+          }}
+          icon={<Icon.Announcement />}
+          unstyled
+        >
+          {t('general.startNewDiscussion')}
+        </IconButton>
+      )}
+
       <Accordion
         className="discussions-list margin-top-5"
         multiselectable
@@ -73,6 +92,8 @@ const ViewDiscussions = ({ grbDiscussions }: ViewDiscussionsProps) => {
                         <DiscussionPost
                           {...discussion.initialPost}
                           replies={discussion.replies}
+                          discussionBoardType={discussionBoardType}
+                          readOnly={readOnly}
                         />
                       </li>
                     ))}
@@ -103,6 +124,8 @@ const ViewDiscussions = ({ grbDiscussions }: ViewDiscussionsProps) => {
                         <DiscussionPost
                           {...discussion.initialPost}
                           replies={discussion.replies}
+                          discussionBoardType={discussionBoardType}
+                          readOnly={readOnly}
                         />
                       </li>
                     ))}
