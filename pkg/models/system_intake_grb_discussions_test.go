@@ -2,6 +2,8 @@ package models
 
 import (
 	"github.com/google/uuid"
+
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 )
 
 func (s *ModelTestSuite) TestSystemIntakeGRBDiscussionsHelpers() {
@@ -11,6 +13,7 @@ func (s *ModelTestSuite) TestSystemIntakeGRBDiscussionsHelpers() {
 	post1 := NewSystemIntakeGRBReviewDiscussionPost(createdByID)
 	post1ID := uuid.New()
 	post1.ID = post1ID
+	post1.DiscussionBoardType = helpers.PointerTo(SystemIntakeGRBDiscussionBoardTypePrimary)
 
 	// replies
 	post1reply1 := NewSystemIntakeGRBReviewDiscussionPost(createdByID)
@@ -26,6 +29,7 @@ func (s *ModelTestSuite) TestSystemIntakeGRBDiscussionsHelpers() {
 	post2 := NewSystemIntakeGRBReviewDiscussionPost(createdByID)
 	post2ID := uuid.New()
 	post2.ID = post2ID
+	post2.DiscussionBoardType = helpers.PointerTo(SystemIntakeGRBDiscussionBoardTypePrimary)
 
 	// replies
 	post2reply1 := NewSystemIntakeGRBReviewDiscussionPost(createdByID)
@@ -48,7 +52,7 @@ func (s *ModelTestSuite) TestSystemIntakeGRBDiscussionsHelpers() {
 			post2reply1,
 		}
 
-		discussions, err := CreateGRBDiscussionsFromPosts(posts)
+		discussions, err := CreateGRBDiscussionsFromPosts(posts, SystemIntakeGRBDiscussionBoardTypePrimary)
 		s.NoError(err)
 
 		s.NotNil(discussions)
@@ -212,7 +216,7 @@ func (s *ModelTestSuite) TestSystemIntakeGRBDiscussionsHelpers() {
 			post2reply1,
 		}
 
-		discussions, err := CreateGRBDiscussionsFromPosts(posts)
+		discussions, err := CreateGRBDiscussionsFromPosts(posts, SystemIntakeGRBDiscussionBoardTypePrimary)
 		s.Error(err)
 		s.Nil(discussions)
 	})

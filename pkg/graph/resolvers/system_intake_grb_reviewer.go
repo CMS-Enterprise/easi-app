@@ -26,12 +26,13 @@ import (
 func SystemIntakeGRBDiscussions(
 	ctx context.Context,
 	intakeID uuid.UUID,
+	boardType models.SystemIntakeGRBDiscussionBoardType,
 ) ([]*models.SystemIntakeGRBReviewDiscussion, error) {
 	posts, err := dataloaders.GetSystemIntakeGRBDiscussionPostsBySystemIntakeID(ctx, intakeID)
 	if err != nil {
 		return nil, err
 	}
-	return models.CreateGRBDiscussionsFromPosts(posts)
+	return models.CreateGRBDiscussionsFromPosts(posts, boardType)
 }
 
 // CreateSystemIntakeGRBReviewers creates GRB Reviewers for a System Intake
