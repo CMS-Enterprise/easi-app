@@ -161,7 +161,10 @@ const DiscussionForm = ({
         <p className="text-bold margin-bottom-0 margin-top-105">
           {t('general.discussionForm.modal.discussionBoard')}
         </p>
-        <p className="margin-top-0 text-light font-body-md">
+        <p
+          className="margin-top-0 text-light font-body-md"
+          data-testid="discussion-board-type"
+        >
           {t(`discussionBoardType.${discussionBoardType}`)}
         </p>
 
