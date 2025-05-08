@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"html/template"
 	"path"
+	"strings"
 
 	"github.com/google/uuid"
 
@@ -19,6 +20,7 @@ func (s *EmailTestSuite) TestSendGRBReviewDiscussionProjectTeamIndividualTaggedE
 	requestName := "Project Team request"
 	role := "Professional"
 	discussionContent := template.HTML(`<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!</p>`)
+	discussionBoard := models.SystemIntakeGRBDiscussionBoardTypePrimary
 	recipient := models.NewEmailAddress("fake@fake.com")
 
 	input := SendGRBReviewDiscussionProjectTeamIndividualTaggedInput{
@@ -28,6 +30,7 @@ func (s *EmailTestSuite) TestSendGRBReviewDiscussionProjectTeamIndividualTaggedE
 		Role:              role,
 		DiscussionID:      postID,
 		DiscussionContent: discussionContent,
+		DiscussionBoard:   discussionBoard,
 		Recipient:         recipient,
 	}
 
@@ -42,7 +45,7 @@ func (s *EmailTestSuite) TestSendGRBReviewDiscussionProjectTeamIndividualTaggedE
 
 	grbReviewLink := client.urlFromPath(intakePath)
 
-	discussionLink := client.urlFromPathAndQuery(intakePath, fmt.Sprintf("discussionMode=reply&amp;discussionId=%s", postID.String()))
+	discussionLink := client.urlFromPathAndQuery(intakePath, fmt.Sprintf("discussionBoardType=%[1]s&amp;discussionMode=reply&amp;discussionId=%[2]s", strings.ToLower(discussionBoard.String()), postID.String()))
 
 	expectedEmail := fmt.Sprintf(`
 		<h1 class="header-title">EASi</h1>
