@@ -1,3 +1,11 @@
+import { TagType } from 'gql/generated/graphql';
+
+const tags: Record<Exclude<TagType, TagType.USER_ACCOUNT>, string> = {
+  [TagType.GROUP_GRB_REVIEWERS]: 'Governance Review Board (GRB)',
+  [TagType.GROUP_IT_GOV]: 'Governance Admin Team',
+  [TagType.REQUESTER]: 'Requester'
+};
+
 const discussions = {
   // TODO: We need to make a decision on how to structure these translations:
   //         - Do we want a generic i18n file at all?
@@ -91,11 +99,13 @@ const discussions = {
     jumpToDiscussions: 'Jump to discussions'
   },
 
+  // discussion text area tags
+  tags,
+
   // Board Specific Translations
   governanceReviewBoard: {
     discussionsDescription:
       'Use the discussion boards below to discuss this project. The internal GRB discussion board is a space for the Governance Admin Team and GRB members to discuss privately; the project team will not be able to view discussions there. The primary discussion board is open to all participating in this GRB review.',
-    governanceAdminTeam: 'Governance Admin Team',
     boardType_INTERNAL: 'Internal GRB discussion board',
     boardType_PRIMARY: 'Primary discussion board',
     visibility_INTERNAL: 'Visibility restricted',
@@ -104,7 +114,10 @@ const discussions = {
     description_PRIMARY:
       'Use this discussion board to ask questions or have discussions with the requester and project team, Governance Admin Team, and other Governance Review Board (GRB) members.',
     description_INTERNAL:
-      'Use this discussion board to ask questions or have discussions with the Governance Admin Team and other Governance Review Board (GRB) members. The conversations here are not visible to the Project team.'
+      'Use this discussion board to ask questions or have discussions with the Governance Admin Team and other Governance Review Board (GRB) members. The conversations here are not visible to the Project team.',
+
+    discussionsSharedWith:
+      'All discussions and replies in this discussion board will be shared with:'
   },
 
   taskList: {

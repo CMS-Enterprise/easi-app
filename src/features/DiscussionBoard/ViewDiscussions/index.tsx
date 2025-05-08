@@ -10,6 +10,7 @@ import Alert from 'components/Alert';
 import IconButton from 'components/IconButton';
 import useDiscussionParams from 'hooks/useDiscussionParams';
 
+import VisibilitySummary from '../_components/VisibilitySummary';
 import DiscussionsList from '../DiscussionList';
 import DiscussionPost from '../DiscussionPost';
 
@@ -60,6 +61,8 @@ const ViewDiscussions = ({
           context: discussionBoardType
         })}
       </p>
+
+      <VisibilitySummary discussionBoardType={discussionBoardType} />
 
       <p className="font-body-lg text-light line-height-body-5 margin-top-105">
         {t('governanceReviewBoard.description', {

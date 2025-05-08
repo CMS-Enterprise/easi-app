@@ -31,7 +31,7 @@ type DiscussionBoardProps = {
 };
 
 function DiscussionBoard({ systemIntakeID, readOnly }: DiscussionBoardProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation('discussions');
 
   const flags = useFlags();
   const { groups, euaId, isUserSet } = useSelector(
@@ -90,11 +90,11 @@ function DiscussionBoard({ systemIntakeID, readOnly }: DiscussionBoardProps) {
   const mentionSuggestions: MentionSuggestion[] = useMemo(() => {
     const suggestions: MentionSuggestion[] = [
       {
-        displayName: t('Governance Admin Team'),
+        displayName: t(`tags.${TagType.GROUP_IT_GOV}`),
         tagType: TagType.GROUP_IT_GOV
       },
       {
-        displayName: t('Governance Review Board (GRB)'),
+        displayName: t(`tags.${TagType.GROUP_GRB_REVIEWERS}`),
         tagType: TagType.GROUP_GRB_REVIEWERS
       }
     ];
@@ -102,7 +102,7 @@ function DiscussionBoard({ systemIntakeID, readOnly }: DiscussionBoardProps) {
     // Add requester as mention suggestion for primary discussion board
     if (discussionBoardType === SystemIntakeGRBDiscussionBoardType.PRIMARY) {
       suggestions.push({
-        displayName: t('Requester'),
+        displayName: t(`tags.${TagType.REQUESTER}`),
         tagType: TagType.REQUESTER
       });
     }
