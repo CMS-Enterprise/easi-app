@@ -10,9 +10,9 @@ import {
 import IconButton from 'components/IconButton';
 import { DiscussionAlert, MentionSuggestion } from 'types/discussions';
 
-import DiscussionForm from '../DiscussionForm';
-import DiscussionsList from '../DiscussionList';
-import DiscussionPost from '../DiscussionPost';
+import DiscussionForm from '../_components/DiscussionForm';
+import DiscussionsList from '../_components/DiscussionList';
+import DiscussionPost from '../_components/DiscussionPost';
 
 type DiscussionProps = {
   discussionBoardType: SystemIntakeGRBDiscussionBoardType;

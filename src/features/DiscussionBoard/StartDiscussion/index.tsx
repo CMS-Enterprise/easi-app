@@ -5,7 +5,7 @@ import { SystemIntakeGRBDiscussionBoardType } from 'gql/generated/graphql';
 
 import { DiscussionAlert, MentionSuggestion } from 'types/discussions';
 
-import DiscussionForm from '../DiscussionForm';
+import DiscussionForm from '../_components/DiscussionForm';
 
 type StartDiscussionProps = {
   systemIntakeID: string;

@@ -18,8 +18,8 @@ import useDiscussionParams, { DiscussionMode } from 'hooks/useDiscussionParams';
 import { DiscussionAlert, MentionSuggestion } from 'types/discussions';
 import user from 'utils/user';
 
+import DiscussionModalWrapper from './_components/DiscussionModalWrapper';
 import Discussion from './Discussion';
-import DiscussionModalWrapper from './DiscussionModalWrapper';
 import StartDiscussion from './StartDiscussion';
 import ViewDiscussions from './ViewDiscussions';
 

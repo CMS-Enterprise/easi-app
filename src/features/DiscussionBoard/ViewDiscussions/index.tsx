@@ -10,9 +10,9 @@ import Alert from 'components/Alert';
 import IconButton from 'components/IconButton';
 import useDiscussionParams from 'hooks/useDiscussionParams';
 
+import DiscussionsList from '../_components/DiscussionList';
+import DiscussionPost from '../_components/DiscussionPost';
 import VisibilitySummary from '../_components/VisibilitySummary';
-import DiscussionsList from '../DiscussionList';
-import DiscussionPost from '../DiscussionPost';
 
 type ViewDiscussionsProps = {
   discussionBoardType: SystemIntakeGRBDiscussionBoardType;
