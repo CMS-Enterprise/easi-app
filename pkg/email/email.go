@@ -82,6 +82,7 @@ type templates struct {
 	systemIntakeChangeLCIDRetirementDate            templateCaller
 	systemIntakeCreateGRBReviewer                   templateCaller
 	grbReviewDiscussionReply                        templateCaller
+	grbReviewDiscussionReplyRequester               templateCaller
 	grbReviewDiscussionIndividualTagged             templateCaller
 	grbReviewDiscussionGroupTagged                  templateCaller
 	grbReviewDiscussionProjectTeamIndividualTagged  templateCaller
@@ -463,6 +464,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(grbReviewDiscussionReplyTemplateName)
 	}
 	appTemplates.grbReviewDiscussionReply = grbReviewDiscussionReply
+
+	grbReviewDiscussionReplyRequesterName := "grb_review_discussion_reply_requester.gohtml"
+	tpl := rawTemplates.Lookup(grbReviewDiscussionReplyRequesterName)
+	if tpl == nil {
+		return Client{}, templateError(grbReviewDiscussionReplyRequesterName)
+	}
+	appTemplates.grbReviewDiscussionReplyRequester = tpl
 
 	grbReviewDiscussionIndividualTaggedTemplateName := "grb_review_discussion_individual_tagged.gohtml"
 	grbReviewDiscussionIndividualTagged := rawTemplates.Lookup(grbReviewDiscussionIndividualTaggedTemplateName)
