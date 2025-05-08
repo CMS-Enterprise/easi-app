@@ -40,11 +40,27 @@ const ViewDiscussions = ({
   const discussionsWithReplies: SystemIntakeGRBReviewDiscussionFragment[] =
     grbDiscussions.filter(discussion => discussion.replies.length > 0);
 
+  const VisibilityIcon =
+    discussionBoardType === SystemIntakeGRBDiscussionBoardType.INTERNAL
+      ? Icon.LockOutline
+      : Icon.LockOpen;
+
   return (
     <div>
       <h1 className="margin-bottom-105">
         {t('governanceReviewBoard.boardType', { context: discussionBoardType })}
       </h1>
+
+      <p
+        className="margin-0 margin-top-05 text-base display-flex flex-align-center"
+        data-testid="visibility"
+      >
+        <VisibilityIcon className="margin-right-05" />
+        {t('governanceReviewBoard.visibility', {
+          context: discussionBoardType
+        })}
+      </p>
+
       <p className="font-body-lg text-light line-height-body-5 margin-top-105">
         {t('governanceReviewBoard.description', {
           context: discussionBoardType

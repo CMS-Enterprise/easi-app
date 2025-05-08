@@ -98,8 +98,8 @@ const discussions = {
     governanceAdminTeam: 'Governance Admin Team',
     boardType_INTERNAL: 'Internal GRB discussion board',
     boardType_PRIMARY: 'Primary discussion board',
-    visibility_INTERNAL: '<icon /> Visibility restricted',
-    visibility_PRIMARY: '<icon /> Not restricted',
+    visibility_INTERNAL: 'Visibility restricted',
+    visibility_PRIMARY: 'Not restricted',
 
     description_PRIMARY:
       'Use this discussion board to ask questions or have discussions with the requester and project team, Governance Admin Team, and other Governance Review Board (GRB) members.',
