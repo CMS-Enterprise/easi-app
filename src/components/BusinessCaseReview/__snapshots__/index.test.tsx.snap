@@ -118,12 +118,12 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
               <dt
                 class="text-bold margin-bottom-05"
               >
-                How will CMS benefit from this effort?
+                What is the current process that you are using for this work, or how is this need currently being met?
               </dt>
               <dd
                 class="description-definition margin-0 text-pre-wrap"
               >
-                Test CMS benefit
+                Test current solution summary
               </dd>
             </div>
           </div>
@@ -136,12 +136,12 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
               <dt
                 class="text-bold margin-bottom-05"
               >
-                Summary of Current Solution
+                How will CMS benefit from this effort?
               </dt>
               <dd
                 class="description-definition margin-0 text-pre-wrap"
               >
-                Test current solution summary
+                Test CMS benefit
               </dd>
             </div>
           </div>
@@ -429,7 +429,7 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                   <dt
                     class="text-bold margin-bottom-05"
                   >
-                    Will your solution have a User Interface?
+                    Will your solution have a User Interface, be public facing, or involve outside customers?
                   </dt>
                   <dd
                     class="description-definition margin-0 text-pre-wrap"
@@ -686,7 +686,7 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                     <dt
                       class="text-bold margin-bottom-05"
                     >
-                      Will your solution have a User Interface?
+                      Will your solution have a User Interface, be public facing, or involve outside customers?
                     </dt>
                     <dd
                       class="description-definition margin-0 text-pre-wrap"
@@ -949,7 +949,7 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                     <dt
                       class="text-bold margin-bottom-05"
                     >
-                      Will your solution have a User Interface?
+                      Will your solution have a User Interface, be public facing, or involve outside customers?
                     </dt>
                     <dd
                       class="description-definition margin-0 text-pre-wrap"
