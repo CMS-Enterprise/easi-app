@@ -9,11 +9,12 @@ import (
 
 type SystemIntakeGRBReviewDiscussionPost struct {
 	BaseStructUser
-	Content        HTML                               `json:"content" db:"content"`
-	SystemIntakeID uuid.UUID                          `json:"systemIntakeId" db:"system_intake_id"`
-	ReplyToID      *uuid.UUID                         `db:"reply_to_id"`
-	VotingRole     *SystemIntakeGRBReviewerVotingRole `json:"votingRole" db:"voting_role"`
-	GRBRole        *SystemIntakeGRBReviewerRole       `json:"grbRole" db:"grb_role"`
+	Content             HTML                                `json:"content" db:"content"`
+	SystemIntakeID      uuid.UUID                           `json:"systemIntakeId" db:"system_intake_id"`
+	ReplyToID           *uuid.UUID                          `db:"reply_to_id"`
+	VotingRole          *SystemIntakeGRBReviewerVotingRole  `json:"votingRole" db:"voting_role"`
+	GRBRole             *SystemIntakeGRBReviewerRole        `json:"grbRole" db:"grb_role"`
+	DiscussionBoardType *SystemIntakeGRBDiscussionBoardType `json:"discussionBoardType" db:"discussion_board_type"`
 }
 
 func NewSystemIntakeGRBReviewDiscussionPost(createdBy uuid.UUID) *SystemIntakeGRBReviewDiscussionPost {
