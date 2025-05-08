@@ -97,7 +97,7 @@ describe('Business case request description form', () => {
     });
 
     const currentSolutionSummaryField = screen.getByRole('textbox', {
-      name: /current solution/i
+      name: /current process/i
     });
     userEvent.type(currentSolutionSummaryField, 'Current Solution');
     await waitFor(() => {
@@ -134,17 +134,20 @@ describe('Business case request description form', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByRole('heading', { name: /Preferred solution/i, level: 2 })
+        screen.getByRole('heading', {
+          name: /Options and alternatives/i,
+          level: 1
+        })
       ).toBeInTheDocument();
     });
   });
 
-  it('does not render mandatory fields message', async () => {
+  it('renders draft business case fields message', async () => {
     await renderPage(defaultStore);
 
     expect(
-      screen.queryByTestId('mandatory-fields-alert')
-    ).not.toBeInTheDocument();
+      screen.getByTestId('draft-business-case-fields-alert')
+    ).toBeInTheDocument();
   });
 
   it('navigates back one page', async () => {
@@ -163,15 +166,17 @@ describe('Business case request description form', () => {
     screen.getByRole('button', { name: /next/i }).click();
 
     await waitFor(() => {
-      expect(screen.getByTestId('preferred-solution')).toBeInTheDocument();
+      expect(screen.getByTestId('alternative-analysis')).toBeInTheDocument();
     });
   });
 
   describe('Final Business Case', () => {
-    it('renders mandatory fields message', async () => {
+    it('does not render draft business case fields message', async () => {
       await renderPage(defaultStore, true);
 
-      expect(screen.getByTestId('mandatory-fields-alert')).toBeInTheDocument();
+      expect(
+        screen.queryByTestId('draft-business-case-fields-alert')
+      ).not.toBeInTheDocument();
     });
 
     it('runs validations and renders form errors', async () => {

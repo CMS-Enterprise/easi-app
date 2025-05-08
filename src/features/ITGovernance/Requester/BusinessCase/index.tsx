@@ -33,6 +33,7 @@ import {
   putBusinessCase
 } from 'types/routines';
 
+import AlternativeAnalysis from './AlternativeAnalysis';
 import {
   AlternativeSolutionA,
   AlternativeSolutionB
@@ -165,6 +166,17 @@ export const BusinessCase = () => {
             path="/business/:businessCaseId/request-description"
             render={() => (
               <RequestDescription
+                formikRef={formikRef}
+                dispatchSave={dispatchSave}
+                businessCase={businessCase}
+                isFinal={isFinal}
+              />
+            )}
+          />
+          <Route
+            path="/business/:businessCaseId/alternative-analysis"
+            render={() => (
+              <AlternativeAnalysis
                 formikRef={formikRef}
                 dispatchSave={dispatchSave}
                 businessCase={businessCase}
