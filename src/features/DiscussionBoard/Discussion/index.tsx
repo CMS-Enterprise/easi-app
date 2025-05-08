@@ -17,7 +17,6 @@ import DiscussionPost from '../_components/DiscussionPost';
 type DiscussionProps = {
   discussionBoardType: SystemIntakeGRBDiscussionBoardType;
   discussion: SystemIntakeGRBReviewDiscussionFragment | null;
-  closeModal: () => void;
   setDiscussionAlert: (discussionAlert: DiscussionAlert) => void;
   mentionSuggestions: MentionSuggestion[];
   readOnly?: boolean;
@@ -31,7 +30,6 @@ type DiscussionProps = {
 const Discussion = ({
   discussionBoardType,
   discussion,
-  closeModal,
   setDiscussionAlert,
   mentionSuggestions,
   readOnly
@@ -96,7 +94,6 @@ const Discussion = ({
           <DiscussionForm
             type="reply"
             discussionBoardType={discussionBoardType}
-            closeModal={closeModal}
             initialPostID={initialPost.id}
             setDiscussionAlert={setDiscussionAlert}
             mentionSuggestions={mentionSuggestions}

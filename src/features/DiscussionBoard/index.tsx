@@ -146,8 +146,6 @@ function DiscussionBoard({ systemIntakeID, readOnly }: DiscussionBoardProps) {
     }
   }, [discussionMode, lastMode, setDiscussionAlert]);
 
-  const closeModal = () => pushDiscussionQuery(false);
-
   // Hide discusion board if GRB review has not yet started
   if (!grbReviewStartedAt || !grbDiscussions) {
     return null;
@@ -160,7 +158,7 @@ function DiscussionBoard({ systemIntakeID, readOnly }: DiscussionBoardProps) {
     <DiscussionModalWrapper
       discussionBoardType={discussionBoardType}
       isOpen={discussionMode !== undefined}
-      closeModal={closeModal}
+      closeModal={() => pushDiscussionQuery(false)}
     >
       {canViewDiscussionBoard ? (
         <>
@@ -191,7 +189,6 @@ function DiscussionBoard({ systemIntakeID, readOnly }: DiscussionBoardProps) {
               discussionBoardType={discussionBoardType}
               mentionSuggestions={mentionSuggestions}
               systemIntakeID={systemIntakeID}
-              closeModal={closeModal}
               setDiscussionAlert={setDiscussionAlert}
               readOnly={readOnly}
             />
@@ -202,7 +199,6 @@ function DiscussionBoard({ systemIntakeID, readOnly }: DiscussionBoardProps) {
               discussionBoardType={discussionBoardType}
               mentionSuggestions={mentionSuggestions}
               discussion={activeDiscussion}
-              closeModal={closeModal}
               setDiscussionAlert={setDiscussionAlert}
               readOnly={readOnly}
             />

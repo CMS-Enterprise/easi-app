@@ -47,9 +47,7 @@ const DiscussionBoardCard = ({
     <div className="internal-discussion-board bg-white padding-3 padding-bottom-4 margin-top-4 border-base-lighter shadow-2">
       <div className="internal-discussions-board__header desktop:display-flex flex-align-start">
         <h3 className="margin-top-0 margin-bottom-1">
-          {t('governanceReviewBoard.boardType', {
-            context: discussionBoardType
-          })}
+          {t(`discussionBoardType.${discussionBoardType}`)}
         </h3>
 
         <p className="margin-0 margin-top-05 text-base display-flex text-no-wrap">

@@ -49,7 +49,7 @@ const ViewDiscussions = ({
   return (
     <div>
       <h1 className="margin-bottom-105">
-        {t('governanceReviewBoard.boardType', { context: discussionBoardType })}
+        {t(`discussionBoardType.${discussionBoardType}`)}
       </h1>
 
       <p

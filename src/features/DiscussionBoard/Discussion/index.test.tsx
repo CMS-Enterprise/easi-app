@@ -30,7 +30,6 @@ describe('Discussion component', () => {
             discussionBoardType={SystemIntakeGRBDiscussionBoardType.PRIMARY}
             mentionSuggestions={[]}
             discussion={discussion}
-            closeModal={vi.fn()}
             setDiscussionAlert={vi.fn()}
           />
         </VerboseMockedProvider>
@@ -117,7 +116,6 @@ describe('Discussion component', () => {
             discussionBoardType={SystemIntakeGRBDiscussionBoardType.INTERNAL}
             mentionSuggestions={[]}
             discussion={discussion}
-            closeModal={vi.fn()}
             setDiscussionAlert={vi.fn()}
           />
         </VerboseMockedProvider>
@@ -169,7 +167,6 @@ describe('Discussion component', () => {
             discussionBoardType={SystemIntakeGRBDiscussionBoardType.PRIMARY}
             mentionSuggestions={[]}
             discussion={discussion}
-            closeModal={vi.fn()}
             setDiscussionAlert={vi.fn()}
             readOnly
           />
