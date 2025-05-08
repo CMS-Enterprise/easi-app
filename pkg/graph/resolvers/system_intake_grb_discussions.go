@@ -211,6 +211,30 @@ func CreateSystemIntakeGRBDiscussionReply(
 			}
 		}
 
+		// Send a notification to the initial poster
+		if initialPoster.ID != replyPoster.ID {
+			// Note: Confirmed with UX, we should never hit this but in the case we do this is an acceptable default
+			grbRole := "Other"
+			if post.GRBRole != nil {
+				grbRole = post.GRBRole.String()
+			}
+
+			if err := emailClient.SystemIntake.SendGRBReviewDiscussionReplyRequesterEmail(
+				ctx,
+				email.SendGRBReviewDiscussionReplyRequesterEmailInput{
+					SystemIntakeID:    intakeID,
+					RequestName:       systemIntake.ProjectName.String,
+					ReplierName:       replyPoster.CommonName,
+					VotingRole:        authorRole,
+					GRBRole:           grbRole,
+					DiscussionContent: input.Content.ToTemplate(),
+					Recipient:         models.EmailAddress(initialPoster.Email),
+				},
+			); err != nil {
+				return nil, err
+			}
+		}
+
 		uniqueTags := input.Content.UniqueTags()
 		// strip initial post author from tags in case author was tagged
 		uniqueTagsWithoutInitialPoster := lo.Filter(uniqueTags, func(t *models.Tag, _ int) bool {
