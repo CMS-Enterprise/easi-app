@@ -81,6 +81,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussions() {
 				Content: models.TaggedHTML{
 					RawContent: "<p>banana</p>",
 				},
+				DiscussionBoardType: models.SystemIntakeGRBDiscussionBoardTypePrimary,
 			},
 		)
 		s.Nil(post)
@@ -277,6 +278,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 				Content: models.TaggedHTML{
 					RawContent: "<p>banana</p>",
 				},
+				DiscussionBoardType: models.SystemIntakeGRBDiscussionBoardTypePrimary,
 			},
 		)
 		s.Nil(replyPost)
@@ -550,10 +552,15 @@ func (s *ResolverSuite) createGRBDiscussion(
 		s.testConfigs.Store,
 		emailClient,
 		models.CreateSystemIntakeGRBDiscussionPostInput{
-			SystemIntakeID: intakeID,
-			Content:        taggedHTMLContent,
+			SystemIntakeID:      intakeID,
+			Content:             taggedHTMLContent,
+			DiscussionBoardType: models.SystemIntakeGRBDiscussionBoardTypePrimary,
 		},
 	)
+	fmt.Println("==== err ====")
+	fmt.Println(err)
+	fmt.Println("==== err ====")
+
 	s.NotNil(discussion)
 	s.NoError(err)
 	s.Equal(discussion.Content, models.HTML(content))
@@ -576,8 +583,9 @@ func (s *ResolverSuite) createGRBDiscussionReply(
 		s.testConfigs.Store,
 		emailClient,
 		models.CreateSystemIntakeGRBDiscussionReplyInput{
-			InitialPostID: discussionPost.ID,
-			Content:       taggedHTMLContent,
+			InitialPostID:       discussionPost.ID,
+			Content:             taggedHTMLContent,
+			DiscussionBoardType: models.SystemIntakeGRBDiscussionBoardTypePrimary,
 		},
 	)
 	// test returned reply post
