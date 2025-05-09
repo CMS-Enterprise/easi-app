@@ -1,3 +1,21 @@
+import {
+  SystemIntakeGRBDiscussionBoardType,
+  TagType
+} from 'gql/generated/graphql';
+
+const tags: Record<Exclude<TagType, TagType.USER_ACCOUNT>, string> = {
+  [TagType.GROUP_GRB_REVIEWERS]: 'Governance Review Board (GRB)',
+  [TagType.GROUP_IT_GOV]: 'Governance Admin Team',
+  [TagType.REQUESTER]: 'Requester'
+};
+
+const discussionBoardType: Record<SystemIntakeGRBDiscussionBoardType, string> =
+  {
+    [SystemIntakeGRBDiscussionBoardType.INTERNAL]:
+      'Internal GRB discussion board',
+    [SystemIntakeGRBDiscussionBoardType.PRIMARY]: 'Primary discussion board'
+  };
+
 const discussions = {
   // TODO: We need to make a decision on how to structure these translations:
   //         - Do we want a generic i18n file at all?
@@ -71,7 +89,12 @@ const discussions = {
         'To tag an individual or team, type "@" and select the individual or group you wish to notify. You may begin typing the group name or individual’s name if you do not see it in the list.',
       helpText_INTERNAL:
         'To tag an individual or team, type "@" and select the individual or group you wish to notify. You may begin typing the group name or individual’s name if you do not see it in the list. In this discussion board, you are only able to tag GRB reviewers or Governance Admin Team members.',
-      save: 'Save {{type}}'
+      save: 'Save {{type}}',
+      modal: {
+        heading_discussion: 'Are you sure you want to start this discussion?',
+        heading_reply: 'Are you sure you want to reply to this discussion?',
+        discussionBoard: 'Discussion board'
+      }
     },
 
     usageTips: {
@@ -91,20 +114,26 @@ const discussions = {
     jumpToDiscussions: 'Jump to discussions'
   },
 
+  // discussion text area tags
+  tags,
+
+  // Discussion board type labels
+  discussionBoardType,
+
   // Board Specific Translations
   governanceReviewBoard: {
     discussionsDescription:
       'Use the discussion boards below to discuss this project. The internal GRB discussion board is a space for the Governance Admin Team and GRB members to discuss privately; the project team will not be able to view discussions there. The primary discussion board is open to all participating in this GRB review.',
-    governanceAdminTeam: 'Governance Admin Team',
-    boardType_INTERNAL: 'Internal GRB discussion board',
-    boardType_PRIMARY: 'Primary discussion board',
-    visibility_INTERNAL: '<icon /> Visibility restricted',
-    visibility_PRIMARY: '<icon /> Not restricted',
+    visibility_INTERNAL: 'Visibility restricted',
+    visibility_PRIMARY: 'Not restricted',
 
     description_PRIMARY:
       'Use this discussion board to ask questions or have discussions with the requester and project team, Governance Admin Team, and other Governance Review Board (GRB) members.',
     description_INTERNAL:
-      'Use this discussion board to ask questions or have discussions with the Governance Admin Team and other Governance Review Board (GRB) members. The conversations here are not visible to the Project team.'
+      'Use this discussion board to ask questions or have discussions with the Governance Admin Team and other Governance Review Board (GRB) members. The conversations here are not visible to the Project team.',
+
+    discussionsSharedWith:
+      'All discussions and replies in this discussion board will be shared with:'
   },
 
   taskList: {

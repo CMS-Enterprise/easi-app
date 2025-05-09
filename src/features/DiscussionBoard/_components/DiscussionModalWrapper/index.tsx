@@ -25,9 +25,7 @@ const DiscussionModalWrapper = ({
       ariaLabel={t('ariaLabel')}
       closeModal={closeModal}
       isOpen={isOpen}
-      modalHeading={t('governanceReviewBoard.boardType', {
-        context: discussionBoardType
-      })}
+      modalHeading={t(`discussionBoardType.${discussionBoardType}`)}
       testid="discussion-modal"
     >
       <GridContainer className="easi-discussions padding-top-4 padding-bottom-8">

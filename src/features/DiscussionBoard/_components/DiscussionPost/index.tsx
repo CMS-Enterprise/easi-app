@@ -53,7 +53,7 @@ const DiscussionPost = ({
   const role =
     votingRole && grbRole
       ? `${t(`grbReview:votingRoles.${votingRole}`)}, ${t(`grbReview:reviewerRoles.${grbRole}`)}`
-      : t('governanceReviewBoard.governanceAdminTeam');
+      : t('tags.GROUP_IT_GOV');
 
   /**
    * Formatted text for date and time of last reply
