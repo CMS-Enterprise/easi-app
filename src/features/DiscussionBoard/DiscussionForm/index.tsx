@@ -84,7 +84,7 @@ const DiscussionForm = ({
         variables: {
           input: {
             systemIntakeID: mutationProps.systemIntakeID,
-            discussionBoardType: SystemIntakeGRBDiscussionBoardType.INTERNAL,
+            discussionBoardType,
             content
           }
         }
@@ -113,7 +113,7 @@ const DiscussionForm = ({
         variables: {
           input: {
             initialPostID: mutationProps.initialPostID,
-            discussionBoardType: SystemIntakeGRBDiscussionBoardType.INTERNAL,
+            discussionBoardType,
             content
           }
         }
