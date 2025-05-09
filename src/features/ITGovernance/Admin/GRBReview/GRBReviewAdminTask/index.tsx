@@ -56,8 +56,7 @@ const GRBReviewAdminTask = ({
           buttons={[
             {
               label: t('adminTask.sendReviewReminder.sendReminder'),
-              onClick: () => setIsModalOpen(true),
-              disabled: !!reminderSent
+              onClick: () => setIsModalOpen(true)
             },
             {
               label: t('adminTask.takeADifferentAction'),
