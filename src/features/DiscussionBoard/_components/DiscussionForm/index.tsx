@@ -154,6 +154,7 @@ const DiscussionForm = ({
         isOpen={modalIsOpen}
         closeModal={() => setModalIsOpen(false)}
         className="font-body-sm height-auto"
+        id="confirmDiscussionModal"
       >
         <ModalHeading className="margin-top-0 margin-bottom-105">
           {t('general.discussionForm.modal.heading', { context: type })}
