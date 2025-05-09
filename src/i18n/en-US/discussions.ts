@@ -42,6 +42,7 @@ const discussions = {
         'There are no discussions yet. When a discussion topic is started, it will appear here.',
       noDiscussionsRepliedTo:
         'There are no discussions yet. When a discussion topic is replied to, it will appear here.',
+      noDiscussions: 'There are not yet any discussions.',
       noDiscussionsStartButton:
         'There are not yet any discussions. <button>Start a discussion</button>.',
       replyError:
@@ -57,16 +58,18 @@ const discussions = {
 
     startDiscussion: {
       heading: 'Start a discussion',
-      description:
+      description_PRIMARY:
+        'Have a question or comment that you want to discuss with the requester, project team, or other individuals involved in this request?  Start a discussion and you’ll be notified when they reply. ',
+      description_INTERNAL:
         'Have a question or comment that you want to discuss internally with the Governance Admin Team or other Governance Review Board (GRB) members involved in this request? Start a discussion and you’ll be notified when they reply.'
-      // description:
-      // 'Have a question or comment that you want to discuss internally with the {{groupNames}} members involved in this request? Start a discussion and you’ll be notified when they reply.',
     },
 
     discussionForm: {
       contentLabel_discussion: 'Type your question or discussion topic',
       contentLabel_reply: 'Type your reply',
-      helpText:
+      helpText_PRIMARY:
+        'To tag an individual or team, type "@" and select the individual or group you wish to notify. You may begin typing the group name or individual’s name if you do not see it in the list.',
+      helpText_INTERNAL:
         'To tag an individual or team, type "@" and select the individual or group you wish to notify. You may begin typing the group name or individual’s name if you do not see it in the list. In this discussion board, you are only able to tag GRB reviewers or Governance Admin Team members.',
       save: 'Save {{type}}'
     },
@@ -75,25 +78,41 @@ const discussions = {
       label: 'Tips for using the discussion boards',
       content: [
         'Start a new discussion thread for each new topic',
-        'Use tags (@) any time you need input from a specific individual or group. Group tags will notify all members of that group. Available group tags: <span>@Governance Review Board</span> and <span>@Governance Admin Team</span>.',
+        'Ask questions in the primary discussion board as often as possible when appropriate, especially if there may be input needed from the project team',
+        'Use tags (@) any time you need input from a specific individual or group. Group tags will notify all members of that group. Available group tags: <span>@Governance Review Board</span>, <span>@Governance Admin Team</span>, and <span>@Requester</span>.',
         'Participating individuals will get an email notification when a new discussion is started, or when they are tagged in a discussion or reply'
       ]
     }
   },
 
+  summaryCard: {
+    title:
+      '<span>Discussions summary:</span> {{count}} total discussions ({{withoutReplies}} without replies)',
+    jumpToDiscussions: 'Jump to discussions'
+  },
+
   // Board Specific Translations
   governanceReviewBoard: {
     discussionsDescription:
-      'Use the discussion boards below to discuss this project. The internal GRB discussion board is a space for the Governance Admin Team and GRB members to discuss privately; the project team will not be able to view discussions there.',
+      'Use the discussion boards below to discuss this project. The internal GRB discussion board is a space for the Governance Admin Team and GRB members to discuss privately; the project team will not be able to view discussions there. The primary discussion board is open to all participating in this GRB review.',
     governanceAdminTeam: 'Governance Admin Team',
-    internal: {
-      label: 'Internal GRB discussion board', // TODO: enum translation?
-      visibilityRestricted: 'Visibility restricted',
-      description:
-        'Use this discussion board to ask questions or have dicussions with the Governance Admin Team and other Governance Review Board (GRB) members. The conversations here are not visible to the Project team.'
-      // description:
-      // 'Use this discussion board to ask questions or have dicussions with the {{groupNames}} members. The conversations here are not visible to the Project team.'
-    }
+    boardType_INTERNAL: 'Internal GRB discussion board',
+    boardType_PRIMARY: 'Primary discussion board',
+    visibility_INTERNAL: '<icon /> Visibility restricted',
+    visibility_PRIMARY: '<icon /> Not restricted',
+
+    description_PRIMARY:
+      'Use this discussion board to ask questions or have discussions with the requester and project team, Governance Admin Team, and other Governance Review Board (GRB) members.',
+    description_INTERNAL:
+      'Use this discussion board to ask questions or have discussions with the Governance Admin Team and other Governance Review Board (GRB) members. The conversations here are not visible to the Project team.'
+  },
+
+  taskList: {
+    noDiscussions: 'There are not yet any discussions for this review.',
+    noDiscussions_AWAITING_DECISION:
+      'There were no discussions during this review.',
+    discussionsCount:
+      '<0>{{discussionsWithoutRepliesCount}}</0> discussions without replies, <1>{{count}}</1> discussions total'
   }
 };
 

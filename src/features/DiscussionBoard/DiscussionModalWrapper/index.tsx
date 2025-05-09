@@ -1,16 +1,19 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Grid, GridContainer } from '@trussworks/react-uswds';
+import { SystemIntakeGRBDiscussionBoardType } from 'gql/generated/graphql';
 
 import Sidepanel from 'components/Sidepanel';
 
 type DiscussionModalWrapperProps = {
+  discussionBoardType: SystemIntakeGRBDiscussionBoardType;
   isOpen: boolean;
   closeModal: () => void;
   children: React.ReactNode;
 };
 
 const DiscussionModalWrapper = ({
+  discussionBoardType,
   isOpen,
   closeModal,
   children
@@ -22,7 +25,9 @@ const DiscussionModalWrapper = ({
       ariaLabel={t('ariaLabel')}
       closeModal={closeModal}
       isOpen={isOpen}
-      modalHeading={t('governanceReviewBoard.internal.label')}
+      modalHeading={t('governanceReviewBoard.boardType', {
+        context: discussionBoardType
+      })}
       testid="discussion-modal"
     >
       <GridContainer className="easi-discussions padding-top-4 padding-bottom-8">
