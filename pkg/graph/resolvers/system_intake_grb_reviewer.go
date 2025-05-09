@@ -431,11 +431,6 @@ func validateCanSendReminder(systemIntake *models.SystemIntake) error {
 		return errors.New("unexpected nil system intake when attempting to send reminder")
 	}
 
-	// prevent sending within 24 hours of last reminder
-	if systemIntake.GrbReviewReminderLastSent != nil && systemIntake.GrbReviewReminderLastSent.After(time.Now().Add(-24*time.Hour)) {
-		return errors.New("previous reminder sent less than 24 hours ago")
-	}
-
 	if systemIntake.GRBReviewStartedAt == nil {
 		return errors.New("grb review not yet started when attempting to send reminder")
 	}

@@ -19,13 +19,11 @@ const SendReviewReminder = ({
   isOpen,
   setIsModalOpen,
   systemIntakeId,
-  setReminderSent,
   grbReviewers
 }: {
   isOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
   systemIntakeId: string;
-  setReminderSent: (reminderSent: string) => void;
   grbReviewers: SystemIntakeGRBReviewFragment['grbVotingInformation']['grbReviewers'];
 }) => {
   const { t } = useTranslation('grbReview');
@@ -45,7 +43,8 @@ const SendReviewReminder = ({
   const [sendReminder] = useSendSystemIntakeGRBReviewerReminderMutation({
     variables: {
       systemIntakeID: systemIntakeId
-    }
+    },
+    refetchQueries: ['GetSystemIntakeGRBReview']
   });
 
   const handleSendReminder = () => {
@@ -53,9 +52,6 @@ const SendReviewReminder = ({
 
     sendReminder()
       .then(response => {
-        setReminderSent(
-          response.data?.sendSystemIntakeGRBReviewerReminder?.timeSent || ''
-        );
         setIsModalOpen(false);
         showMessage(t('adminTask.sendReviewReminder.modal.success'), {
           type: 'success'
