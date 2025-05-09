@@ -17,10 +17,12 @@ func (s *ModelTestSuite) TestSystemIntakeGRBDiscussionsHelpers() {
 
 	// replies
 	post1reply1 := NewSystemIntakeGRBReviewDiscussionPost(createdByID)
+	post1reply1.DiscussionBoardType = helpers.PointerTo(SystemIntakeGRBDiscussionBoardTypePrimary)
 	post1reply1ID := uuid.New()
 	post1reply1.ID = post1reply1ID
 	post1reply1.ReplyToID = &post1ID
 	post1reply2 := NewSystemIntakeGRBReviewDiscussionPost(createdByID)
+	post1reply2.DiscussionBoardType = helpers.PointerTo(SystemIntakeGRBDiscussionBoardTypePrimary)
 	post1reply2ID := uuid.New()
 	post1reply2.ID = post1reply2ID
 	post1reply2.ReplyToID = &post1ID
@@ -33,10 +35,13 @@ func (s *ModelTestSuite) TestSystemIntakeGRBDiscussionsHelpers() {
 
 	// replies
 	post2reply1 := NewSystemIntakeGRBReviewDiscussionPost(createdByID)
+	post2reply1.DiscussionBoardType = helpers.PointerTo(SystemIntakeGRBDiscussionBoardTypePrimary)
+
 	post2reply1ID := uuid.New()
 	post2reply1.ID = post2reply1ID
 	post2reply1.ReplyToID = &post2ID
 	post2reply2 := NewSystemIntakeGRBReviewDiscussionPost(createdByID)
+	post2reply2.DiscussionBoardType = helpers.PointerTo(SystemIntakeGRBDiscussionBoardTypePrimary)
 	post2reply2ID := uuid.New()
 	post2reply2.ID = post2reply2ID
 	post2reply2.ReplyToID = &post2ID
