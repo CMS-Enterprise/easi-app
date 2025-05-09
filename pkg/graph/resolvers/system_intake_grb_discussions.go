@@ -335,7 +335,19 @@ func sendDiscussionEmailsForTags(
 				return err
 			}
 
-			individualTagAcctIDs = append(individualTagAcctIDs, requesterAcct.ID)
+			// send email to requester
+			if err := emailClient.SystemIntake.SendGRBReviewDiscussionProjectTeamIndividualTaggedEmail(ctx, email.SendGRBReviewDiscussionProjectTeamIndividualTaggedInput{
+				SystemIntakeID:    intakeID,
+				UserName:          principal.Account().CommonName,
+				RequestName:       intakeRequestName,
+				Role:              postAuthorRole,
+				DiscussionID:      discussionID,
+				DiscussionContent: content,
+				DiscussionBoard:   models.SystemIntakeGRBDiscussionBoardTypePrimary, // requester can only be tagged on the Primary board
+				Recipient:         models.EmailAddress(requesterAcct.Email),
+			}); err != nil {
+				return err
+			}
 		}
 
 		if tag.TagType == models.TagTypeUserAccount {
