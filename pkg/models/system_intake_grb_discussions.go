@@ -24,13 +24,22 @@ func NewSystemIntakeGRBReviewDiscussionPost(createdBy uuid.UUID) *SystemIntakeGR
 }
 
 // CreateGRBDiscussionsFromPosts sorts a slice of discussion posts (replies and initial) and sorts them into multiple discussions
-func CreateGRBDiscussionsFromPosts(posts []*SystemIntakeGRBReviewDiscussionPost) ([]*SystemIntakeGRBReviewDiscussion, error) {
+func CreateGRBDiscussionsFromPosts(posts []*SystemIntakeGRBReviewDiscussionPost, boardType SystemIntakeGRBDiscussionBoardType) ([]*SystemIntakeGRBReviewDiscussion, error) {
 	postMap := map[uuid.UUID][]*SystemIntakeGRBReviewDiscussionPost{}
 	for _, post := range posts {
 		// shouldn't happen but we dereference below
 		if post == nil {
 			return nil, errors.New("post is nil")
 		}
+
+		if post.DiscussionBoardType == nil {
+			return nil, errors.New("discussion board is nil")
+		}
+
+		if *post.DiscussionBoardType != boardType {
+			continue
+		}
+
 		// group posts into slices by the initial post id
 		var groupingID uuid.UUID
 		if post.ReplyToID != nil {
