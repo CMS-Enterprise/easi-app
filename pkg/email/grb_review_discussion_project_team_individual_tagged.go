@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"html/template"
 	"path"
-	"strings"
 
 	"github.com/google/uuid"
 
@@ -47,7 +46,7 @@ func (sie systemIntakeEmails) grbReviewDiscussionProjectTeamIndividualTaggedBody
 		UserName:                 input.UserName,
 		Role:                     input.Role,
 		DiscussionContent:        input.DiscussionContent,
-		DiscussionLink:           sie.client.urlFromPathAndQuery(grbReviewPath, fmt.Sprintf("discussionBoardType=%[1]s&discussionMode=reply&discussionId=%[2]s", strings.ToLower(input.DiscussionBoard.String()), input.DiscussionID.String())),
+		DiscussionLink:           sie.client.urlFromPathAndQuery(grbReviewPath, fmt.Sprintf("discussionBoardType=%[1]s&discussionMode=reply&discussionId=%[2]s", input.DiscussionBoard.String(), input.DiscussionID.String())),
 		ITGovernanceInboxAddress: sie.client.config.GRTEmail,
 	}
 

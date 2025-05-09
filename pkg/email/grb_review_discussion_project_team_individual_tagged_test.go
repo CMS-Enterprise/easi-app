@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"html/template"
 	"path"
-	"strings"
 
 	"github.com/google/uuid"
 
@@ -45,7 +44,7 @@ func (s *EmailTestSuite) TestSendGRBReviewDiscussionProjectTeamIndividualTaggedE
 
 	grbReviewLink := client.urlFromPath(intakePath)
 
-	discussionLink := client.urlFromPathAndQuery(intakePath, fmt.Sprintf("discussionBoardType=%[1]s&amp;discussionMode=reply&amp;discussionId=%[2]s", strings.ToLower(discussionBoard.String()), postID.String()))
+	discussionLink := client.urlFromPathAndQuery(intakePath, fmt.Sprintf("discussionBoardType=%[1]s&amp;discussionMode=reply&amp;discussionId=%[2]s", discussionBoard.String(), postID.String()))
 
 	expectedEmail := fmt.Sprintf(`
 		<h1 class="header-title">EASi</h1>
