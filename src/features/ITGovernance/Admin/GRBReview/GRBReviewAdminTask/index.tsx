@@ -26,9 +26,6 @@ const GRBReviewAdminTask = ({
 }: IntakeRequestCardProps) => {
   const { t } = useTranslation('grbReview');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [reminderSent, setReminderSent] = useState(
-    grbReviewReminderLastSent || ''
-  );
 
   const whatDoINeedItems: string[] = t('adminTask.setUpGRBReview.whatDoINeed', {
     returnObjects: true
@@ -46,7 +43,6 @@ const GRBReviewAdminTask = ({
         isOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         systemIntakeId={systemIntakeId}
-        setReminderSent={setReminderSent}
         grbReviewers={grbReviewers}
       />
       {grbReviewStartedAt ? (
@@ -73,10 +69,13 @@ const GRBReviewAdminTask = ({
             className="margin-top-0 margin-bottom-3 text-italic text-base-dark"
             data-testid="review-reminder"
           >
-            {reminderSent
+            {grbReviewReminderLastSent
               ? t('adminTask.sendReviewReminder.mostRecentReminder', {
-                  date: formatDateLocal(reminderSent, 'MM/dd/yyyy'),
-                  time: formatTimeLocal(reminderSent)
+                  date: formatDateLocal(
+                    grbReviewReminderLastSent,
+                    'MM/dd/yyyy'
+                  ),
+                  time: formatTimeLocal(grbReviewReminderLastSent)
                 })
               : ''}
           </p>
