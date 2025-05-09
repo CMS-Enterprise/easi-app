@@ -65,20 +65,18 @@ const GRBReviewAdminTask = ({
           <p className="margin-top-0 margin-bottom-1">
             {t('adminTask.sendReviewReminder.description')}
           </p>
-          <p
-            className="margin-top-0 margin-bottom-3 text-italic text-base-dark"
-            data-testid="review-reminder"
-          >
-            {grbReviewReminderLastSent
-              ? t('adminTask.sendReviewReminder.mostRecentReminder', {
-                  date: formatDateLocal(
-                    grbReviewReminderLastSent,
-                    'MM/dd/yyyy'
-                  ),
-                  time: formatTimeLocal(grbReviewReminderLastSent)
-                })
-              : ''}
-          </p>
+
+          {grbReviewReminderLastSent && (
+            <p
+              className="margin-top-0 margin-bottom-3 text-italic text-base-dark"
+              data-testid="review-reminder"
+            >
+              {t('adminTask.sendReviewReminder.mostRecentReminder', {
+                date: formatDateLocal(grbReviewReminderLastSent, 'MM/dd/yyyy'),
+                time: formatTimeLocal(grbReviewReminderLastSent)
+              })}
+            </p>
+          )}
         </AdminAction>
       ) : (
         <AdminAction
