@@ -80069,6 +80069,7 @@ func (ec *executionContext) unmarshalNGRBVotingInformationStatus2githubᚗcomᚋ
 }
 
 func (ec *executionContext) marshalNGRBVotingInformationStatus2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBVotingInformationStatus(ctx context.Context, sel ast.SelectionSet, v models.GRBVotingInformationStatus) graphql.Marshaler {
+	_ = sel
 	res := graphql.MarshalString(string(v))
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -81247,6 +81248,7 @@ func (ec *executionContext) unmarshalNSystemIntakeGRBReviewType2githubᚗcomᚋc
 }
 
 func (ec *executionContext) marshalNSystemIntakeGRBReviewType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewType(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeGRBReviewType) graphql.Marshaler {
+	_ = sel
 	res := graphql.MarshalString(string(v))
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -83962,6 +83964,8 @@ func (ec *executionContext) marshalOSystemIntakeGRBReviewType2ᚖgithubᚗcomᚋ
 	if v == nil {
 		return graphql.Null
 	}
+	_ = sel
+	_ = ctx
 	res := graphql.MarshalString(string(*v))
 	return res
 }
