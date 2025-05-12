@@ -1996,12 +1996,12 @@ func (r *systemIntakeResolver) RelatedTRBRequests(ctx context.Context, obj *mode
 
 // GrbDiscussionsPrimary is the resolver for the grbDiscussionsPrimary field.
 func (r *systemIntakeResolver) GrbDiscussionsPrimary(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewDiscussion, error) {
-	return resolvers.SystemIntakeGRBDiscussions(ctx, obj.ID)
+	return resolvers.SystemIntakeGRBDiscussions(ctx, obj.ID, models.SystemIntakeGRBDiscussionBoardTypePrimary)
 }
 
 // GrbDiscussionsInternal is the resolver for the grbDiscussionsInternal field.
 func (r *systemIntakeResolver) GrbDiscussionsInternal(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewDiscussion, error) {
-	return resolvers.SystemIntakeGRBDiscussions(ctx, obj.ID)
+	return resolvers.SystemIntakeGRBDiscussions(ctx, obj.ID, models.SystemIntakeGRBDiscussionBoardTypeInternal)
 }
 
 // GrbPresentationLinks is the resolver for the grbPresentationLinks field.

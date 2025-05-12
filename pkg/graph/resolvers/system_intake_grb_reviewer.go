@@ -26,12 +26,13 @@ import (
 func SystemIntakeGRBDiscussions(
 	ctx context.Context,
 	intakeID uuid.UUID,
+	boardType models.SystemIntakeGRBDiscussionBoardType,
 ) ([]*models.SystemIntakeGRBReviewDiscussion, error) {
 	posts, err := dataloaders.GetSystemIntakeGRBDiscussionPostsBySystemIntakeID(ctx, intakeID)
 	if err != nil {
 		return nil, err
 	}
-	return models.CreateGRBDiscussionsFromPosts(posts)
+	return models.CreateGRBDiscussionsFromPosts(posts, boardType)
 }
 
 // CreateSystemIntakeGRBReviewers creates GRB Reviewers for a System Intake
@@ -428,11 +429,6 @@ func SendSystemIntakeGRBReviewerReminder(ctx context.Context, store *storage.Sto
 func validateCanSendReminder(systemIntake *models.SystemIntake) error {
 	if systemIntake == nil {
 		return errors.New("unexpected nil system intake when attempting to send reminder")
-	}
-
-	// prevent sending within 24 hours of last reminder
-	if systemIntake.GrbReviewReminderLastSent != nil && systemIntake.GrbReviewReminderLastSent.After(time.Now().Add(-24*time.Hour)) {
-		return errors.New("previous reminder sent less than 24 hours ago")
 	}
 
 	if systemIntake.GRBReviewStartedAt == nil {

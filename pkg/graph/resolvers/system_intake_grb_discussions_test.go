@@ -29,7 +29,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussions() {
 		)
 
 		// test the resolver for retrieving discussions
-		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID)
+		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID, models.SystemIntakeGRBDiscussionBoardTypePrimary)
 		s.NotNil(discussions)
 		s.NoError(err)
 		s.Len(discussions, 1)
@@ -201,7 +201,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 		discussionPost2 := s.createGRBDiscussion(ctx, emailClient, intake.ID, "<p>this is a newer newerDiscussion</p>")
 
 		// fetch newerDiscussion using resolver
-		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID)
+		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID, models.SystemIntakeGRBDiscussionBoardTypePrimary)
 		s.NoError(err)
 		s.NotNil(discussions)
 		s.Len(discussions, 2)
@@ -242,7 +242,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 		)
 
 		// fetch discussion using resolver
-		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID)
+		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID, models.SystemIntakeGRBDiscussionBoardTypePrimary)
 		s.NoError(err)
 		s.NotNil(discussions)
 		s.Len(discussions, 1)
@@ -285,7 +285,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 		s.Error(err)
 
 		// fetch discussion using resolver
-		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID)
+		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID, models.SystemIntakeGRBDiscussionBoardTypePrimary)
 		s.NoError(err)
 		s.NotNil(discussions)
 		s.Len(discussions, 1)
@@ -322,7 +322,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 		)
 
 		// fetch discussion using resolver
-		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID)
+		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID, models.SystemIntakeGRBDiscussionBoardTypePrimary)
 		s.NoError(err)
 		s.NotNil(discussions)
 		s.Len(discussions, 1)
@@ -379,7 +379,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 		)
 
 		// fetch discussions using resolver
-		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID)
+		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID, models.SystemIntakeGRBDiscussionBoardTypePrimary)
 		s.NoError(err)
 		s.NotNil(discussions)
 		s.Len(discussions, 2)
@@ -557,9 +557,6 @@ func (s *ResolverSuite) createGRBDiscussion(
 			DiscussionBoardType: models.SystemIntakeGRBDiscussionBoardTypePrimary,
 		},
 	)
-	fmt.Println("==== err ====")
-	fmt.Println(err)
-	fmt.Println("==== err ====")
 
 	s.NotNil(discussion)
 	s.NoError(err)
