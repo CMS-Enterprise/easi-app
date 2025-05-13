@@ -380,16 +380,18 @@ function TaskList() {
                   {t('button.saveAndExit')}
                 </UswdsReactLink>
               </div>
-              <div className="margin-top-1">
-                <Button
-                  type="button"
-                  unstyled
-                  className="text-error"
-                  onClick={() => setRemoveRequestModalOpen(true)}
-                >
-                  {t('button.removeYourRequest')}
-                </Button>
-              </div>
+              {formStatus !== TRBFormStatus.COMPLETED && (
+                <div className="margin-top-1">
+                  <Button
+                    type="button"
+                    unstyled
+                    className="text-error"
+                    onClick={() => setRemoveRequestModalOpen(true)}
+                  >
+                    {t('button.removeYourRequest')}
+                  </Button>
+                </div>
+              )}
 
               <AdditionalRequestInfo
                 {...data.trbRequest}
