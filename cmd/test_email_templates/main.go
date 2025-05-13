@@ -637,7 +637,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 			UserName:          "Discussion Tester #1",
 			RequestName:       "GRB Review Discussion Test",
 			Role:              "Voting Member",
-			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`,
+			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!</p>`,
 			Recipient:         requesterEmail,
 		},
 	)
@@ -664,7 +664,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 			UserName:          "Discussion Tester #1",
 			RequestName:       "GRB Review Discussion Test",
 			Role:              "Voting Member",
-			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`,
+			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!</p>`,
 			Recipients:        []models.EmailAddress{requesterEmail},
 		},
 	)
@@ -678,7 +678,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 			UserName:          "Discussion Tester #1",
 			RequestName:       "GRB Review Discussion Test",
 			Role:              "Governance Admin Team",
-			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`,
+			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!</p>`,
 			Recipients:        []models.EmailAddress{requesterEmail},
 		},
 	)
@@ -692,7 +692,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 			UserName:          "Discussion Tester #1",
 			RequestName:       "GRB Review Discussion Test",
 			Role:              "Governance Admin Team",
-			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`,
+			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!</p>`,
 			Recipients:        []models.EmailAddress{requesterEmail},
 		},
 	)
@@ -706,7 +706,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 			RequestName:       "GRB Review Discussion Test",
 			Role:              "Voting Member, CIO",
 			GroupName:         "Governance Admin Team",
-			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`,
+			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!</p>`,
 			Recipients:        emailNotificationRecipients,
 		},
 	)
@@ -721,7 +721,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 			RequestName:       "GRB Review Discussion Test",
 			Role:              "Governance Admin Team",
 			GroupName:         "GRB",
-			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`,
+			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!</p>`,
 			Recipients:        emailNotificationRecipients,
 		},
 	)
@@ -906,6 +906,17 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 			NoObjectionVotes:   6,
 			ObjectionVotes:     1,
 			NotYetVoted:        3,
+		})
+	noErr(err)
+
+	err = client.SystemIntake.SendGRBReviewDiscussionProjectTeamIndividualTaggedEmail(ctx,
+		email.SendGRBReviewDiscussionProjectTeamIndividualTaggedInput{
+			SystemIntakeID:    intakeID,
+			UserName:          "Sally Ride",
+			RequestName:       "Project Team title",
+			Role:              "Center for Medicaid and CHIP Services",
+			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!</p>`,
+			Recipient:         requesterEmail,
 		})
 	noErr(err)
 }
