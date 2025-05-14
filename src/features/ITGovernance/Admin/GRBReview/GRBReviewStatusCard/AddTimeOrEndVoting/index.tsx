@@ -7,7 +7,7 @@ import { Button, ButtonGroup, FormGroup, Label } from '@trussworks/react-uswds';
 import {
   GetSystemIntakeGRBReviewDocument,
   SystemIntakeGRBReviewFragment,
-  useUpdateSystemIntakeGRBReviewFormInputTimeframeAsyncMutation
+  useExtendGRBReviewDeadlineAsyncMutation
 } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
@@ -40,10 +40,9 @@ const AddTimeOrEndVoting = ({
 
   const [isOpen, setIsOpen] = useState<'addTime' | 'endVoting' | null>(null);
 
-  const [mutation] =
-    useUpdateSystemIntakeGRBReviewFormInputTimeframeAsyncMutation({
-      refetchQueries: [GetSystemIntakeGRBReviewDocument]
-    });
+  const [mutation] = useExtendGRBReviewDeadlineAsyncMutation({
+    refetchQueries: [GetSystemIntakeGRBReviewDocument]
+  });
 
   const { days, hours, minutes } = formatDaysHoursMinutes(
     grbReviewAsyncEndDate
