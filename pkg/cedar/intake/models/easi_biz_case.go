@@ -15,10 +15,13 @@ type EASIBizCase struct {
 	BusinessOwner          string                  `json:"businessOwner" jsonschema:"description=Business Owner of this request,example=John Doe"`
 	BusinessSolutions      []*EASIBusinessSolution `json:"businessSolutions,omitempty" jsonschema:"description=Array Business Solutions (preferred and alternatives),example=N/A"`
 	CmsBenefit             *string                 `json:"cmsBenefit,omitempty" jsonschema:"description=How CMS will benefit from this effort,example=Reduce FTE hours and generate better end products"`
+	CollaborationNeeded    *string                 `json:"collaborationNeeded,omitempty" jsonschema:"description=Collaboration or vendor engagement needed to support this work,example=Need to work with the IUSG and some of their vendors"`
 	CurrentSolutionSummary *string                 `json:"currentSolutionSummary,omitempty" jsonschema:"description=Summary of the current solution,example=Managed through spreadsheets and email"`
 	IntakeID               *string                 `json:"intakeId,omitempty" jsonschema:"description=Unique ID of the intake associated with this Business Case,example=36b85781-169a-4539-aa66-916663d8118c"`
 	PriorityAlignment      *string                 `json:"priorityAlignment,omitempty" jsonschema:"description=The ways this effort align with organizational priorities,example=Aligns with CMS' automation push"`
+	ProjectAcronym         *string                 `json:"projectAcronym,omitempty" jsonschema:"description=Acronym for project,example=EASi"`
 	ProjectName            string                  `json:"projectName" jsonschema:"description=Name of the project,example=Easy Access to System"`
+	ResponseToGRTFeedback  *string                 `json:"responseToGRTFeedback,omitempty" jsonschema:"description=Implementation plan or response to GRT feedback,example=We will implement the feedback by doing X, Y, and Z"`
 	Requester              string                  `json:"requester" jsonschema:"description=Name of the requester,example=John Doe"`
 	RequesterPhoneNumber   *string                 `json:"requesterPhoneNumber,omitempty" jsonschema:"description=Phone number of requester,example=410-123-4567,example=4431234567"`
 	Status                 string                  `json:"status" jsonschema:"Current status of the Business Case within EASi,example=OPEN"`
@@ -33,6 +36,7 @@ type EASIBusinessSolution struct {
 	CostSavings             *string             `json:"costSavings,omitempty" jsonschema:"description=Cost savings of this solution,example=over ten million dollars"`
 	HasUI                   *string             `json:"hasUI,omitempty" jsonschema:"description=Does this solution have/need a UI,example=Yes"`
 	HostingCloudServiceType *string             `json:"hostingCloudServiceType,omitempty" jsonschema:"description=What type of cloud service will be used,example=PaaS"`
+	HostingCloudStrategy    *string             `json:"hostingCloudStrategy,omitempty" jsonschema:"description=What is your cloud migration strategy, include implementation details,example=Hybrid, we will begin with data center migration and then target Azure to AWS"`
 	HostingLocation         *string             `json:"hostingLocation,omitempty" jsonschema:"description=Where will this solution be hosted,example=AWS"`
 	HostingType             *string             `json:"hostingType,omitempty" jsonschema:"description=What type of hosting will this solution use,example=cloud"`
 	LifecycleCostLines      []EASILifecycleCost `json:"lifecycleCostLines,omitempty" jsonschema:"description=Array of LifecycleCostLines (costs associated with upcoming Fiscal Years) for this business solution,example=N/A"`
@@ -41,7 +45,11 @@ type EASIBusinessSolution struct {
 	SecurityIsBeingReviewed *string             `json:"securityIsBeingReviewed,omitempty" jsonschema:"description=Is this solution in the process of getting FedRAMP/FISMA approval,example=Yes"`
 	SolutionType            string              `json:"solutionType" jsonschema:"enum=preferred,enum=alternativeA,enum=alternativeB,description=Which solution is this (preferred or alternatives),example=preferred"`
 	Summary                 *string             `json:"summary,omitempty" jsonschema:"description=Summary of this solution,example=Building a new application in ServiceNow"`
+	TargetContractAward     *string             `json:"targetContractAward,omitempty" jsonschema:"description=Target date for contract award,example=2023-02-27T14:34:43Z"`
+	TargetCompletionDate    *string             `json:"targetCompletionDate,omitempty" jsonschema:"description=Target date for completion of development work,example=2023-02-27T14:34:43Z"`
 	Title                   *string             `json:"title,omitempty" jsonschema:"description=Name of this solution,example=ServiceNow"`
+	WorkforceTrainingReqs   *string             `json:"workforceTrainingReqs,omitempty" jsonschema:"description=Will any workforce training requirements arise as a result of this solution,example=Training will be required for all users"`
+	ZeroTrustAlignment      *string             `json:"zeroTrustAlignment,omitempty" jsonschema:"description=Identify how this solution aligns with Zero Trust principles,example=This solution is aligned with Zero Trust principles"`
 }
 
 // EASILifecycleCost represents a lifecycle cost item submitted through EASi as part of a Business Case

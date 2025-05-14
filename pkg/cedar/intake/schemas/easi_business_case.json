@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "$ref": "#/definitions/EASIBizCase",
-  "title": "EASIBizCaseV04",
+  "title": "EASIBizCaseV05",
   "definitions": {
     "EASIBizCase": {
       "required": [
@@ -56,6 +56,13 @@
             "Reduce FTE hours and generate better end products"
           ]
         },
+        "collaborationNeeded": {
+          "type": "string",
+          "description": "Collaboration or vendor engagement needed to support this work",
+          "examples": [
+            "Need to work with the IUSG and some of their vendors"
+          ]
+        },
         "currentSolutionSummary": {
           "type": "string",
           "description": "Summary of the current solution",
@@ -77,11 +84,25 @@
             "Aligns with CMS' automation push"
           ]
         },
+        "projectAcronym": {
+          "type": "string",
+          "description": "Acronym for project",
+          "examples": [
+            "EASi"
+          ]
+        },
         "projectName": {
           "type": "string",
           "description": "Name of the project",
           "examples": [
             "Easy Access to System"
+          ]
+        },
+        "responseToGRTFeedback": {
+          "type": "string",
+          "description": "Implementation plan or response to GRT feedback",
+          "examples": [
+            "We will implement the feedback by doing X"
           ]
         },
         "requester": {
@@ -163,6 +184,13 @@
             "PaaS"
           ]
         },
+        "hostingCloudStrategy": {
+          "type": "string",
+          "description": "What is your cloud migration strategy",
+          "examples": [
+            "Hybrid"
+          ]
+        },
         "hostingLocation": {
           "type": "string",
           "description": "Where will this solution be hosted",
@@ -222,11 +250,39 @@
             "Building a new application in ServiceNow"
           ]
         },
+        "targetContractAward": {
+          "type": "string",
+          "description": "Target date for contract award",
+          "examples": [
+            "2023-02-27T14:34:43Z"
+          ]
+        },
+        "targetCompletionDate": {
+          "type": "string",
+          "description": "Target date for completion of development work",
+          "examples": [
+            "2023-02-27T14:34:43Z"
+          ]
+        },
         "title": {
           "type": "string",
           "description": "Name of this solution",
           "examples": [
             "ServiceNow"
+          ]
+        },
+        "workforceTrainingReqs": {
+          "type": "string",
+          "description": "Will any workforce training requirements arise as a result of this solution",
+          "examples": [
+            "Training will be required for all users"
+          ]
+        },
+        "zeroTrustAlignment": {
+          "type": "string",
+          "description": "Identify how this solution aligns with Zero Trust principles",
+          "examples": [
+            "This solution is aligned with Zero Trust principles"
           ]
         }
       },
