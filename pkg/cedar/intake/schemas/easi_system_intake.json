@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "$ref": "#/definitions/EASIIntake",
-  "title": "EASIIntakeV07",
+  "title": "EASIIntakeV08",
   "definitions": {
     "EASIFundingSource": {
       "required": [
@@ -368,6 +368,59 @@
         "hasUiChanges": {
           "type": "boolean",
           "description": "Does the request have UI changes"
+        },
+        "usesAiTech": {
+          "type": "boolean",
+          "description": "Does the request use AI technology"
+        },
+        "usingSoftware": {
+          "type": "string",
+          "description": "Is the request using software",
+          "examples": [
+            "Not Sure"
+          ]
+        },
+        "acquisitionMethods": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "description": "Acquisition methods for the software related to this request"
+        },
+        "currentAnnualSpending": {
+          "type": "string",
+          "description": "Current annual spending for the request",
+          "examples": [
+            "Less than $1 million"
+          ]
+        },
+        "currentAnnualSpendingITPortion": {
+          "type": "string",
+          "description": "Current annual spending IT portion for the request",
+          "examples": [
+            "25%"
+          ]
+        },
+        "plannedYearOneSpending": {
+          "type": "string",
+          "description": "Planned year one spending for the request",
+          "examples": [
+            "Less than $1 million"
+          ]
+        },
+        "plannedYearOneSpendingITPortion": {
+          "type": "string",
+          "description": "Planned year one spending IT portion for the request",
+          "examples": [
+            "30%"
+          ]
+        },
+        "scheduledProductionDate": {
+          "type": "string",
+          "description": "Scheduled production date for the request",
+          "examples": [
+            "2025-10-20"
+          ]
         }
       },
       "additionalProperties": false,

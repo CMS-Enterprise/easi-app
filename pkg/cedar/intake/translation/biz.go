@@ -40,6 +40,9 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wir
 		PriorityAlignment:      bc.PriorityAlignment.Ptr(),
 		SuccessIndicators:      bc.SuccessIndicators.Ptr(),
 		Status:                 string(bc.Status),
+		// CollaborationNeeded:    pStr(""), // TODO: fill this out after field is added to business case
+		// ProjectAcronym:         pStr(""), // TODO: fill this out after field is added to business case
+		// ResponseToGRTFeedback:  pStr(""), // TODO: fill this out after field is added to business case
 
 		ArchivedAt: pStr(strDateTime(bc.ArchivedAt)),
 
@@ -60,11 +63,16 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wir
 		HostingType:             bc.PreferredHostingType.Ptr(),
 		HostingLocation:         bc.PreferredHostingLocation.Ptr(),
 		HostingCloudServiceType: bc.PreferredHostingCloudServiceType.Ptr(),
+		HostingCloudStrategy:    pStr(""), // TODO: fill this out after field is added to business case
 		HasUI:                   bc.PreferredHasUI.Ptr(),
 		Pros:                    bc.PreferredPros.Ptr(),
 		Cons:                    bc.PreferredCons.Ptr(),
 		CostSavings:             bc.PreferredCostSavings.Ptr(),
 		LifecycleCostLines:      []intakemodels.EASILifecycleCost{},
+		// TargetContractAward:     pStr(""), // TODO: fill this out after field is added to business case
+		// TargetCompletionDate:    pStr(""), // TODO: fill this out after field is added to business case
+		// WorkforceTrainingReqs:   pStr(""), // TODO: fill this out after field is added to business case
+		// ZeroTrustAlignment:      pStr(""), // TODO: fill this out after field is added to business case
 	}
 
 	// TODO: do we need to check if alternative a and b are filled out?
@@ -86,6 +94,10 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wir
 		Cons:                    bc.AlternativeACons.Ptr(),
 		CostSavings:             bc.AlternativeACostSavings.Ptr(),
 		LifecycleCostLines:      []intakemodels.EASILifecycleCost{},
+		// TargetContractAward:     pStr(""), // TODO: fill this out after field is added to business case
+		// TargetCompletionDate:    pStr(""), // TODO: fill this out after field is added to business case
+		// WorkforceTrainingReqs:   pStr(""), // TODO: fill this out after field is added to business case
+		// ZeroTrustAlignment:      pStr(""), // TODO: fill this out after field is added to business case
 	}
 
 	// Alternative b (optional)
@@ -104,6 +116,10 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wir
 		Cons:                    bc.AlternativeBCons.Ptr(),
 		CostSavings:             bc.AlternativeBCostSavings.Ptr(),
 		LifecycleCostLines:      []intakemodels.EASILifecycleCost{},
+		// TargetContractAward:     pStr(""), // TODO: fill this out after field is added to business case
+		// TargetCompletionDate:    pStr(""), // TODO: fill this out after field is added to business case
+		// WorkforceTrainingReqs:   pStr(""), // TODO: fill this out after field is added to business case
+		// ZeroTrustAlignment:      pStr(""), // TODO: fill this out after field is added to business case
 	}
 
 	// Add lifecycle cost lines to business solutions
