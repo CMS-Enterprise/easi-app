@@ -38,10 +38,10 @@ exports[`CedarContactSelect > selects contact from dropdown 1`] = `
       class="cedar-contact-select__control cedar-contact-select__control--is-focused cedar-contact-select__control--menu-is-open css-13u0srz-control"
     >
       <div
-        class="cedar-contact-select__value-container css-1fdsijx-ValueContainer"
+        class="cedar-contact-select__value-container css-hlgwow"
       >
         <div
-          class="cedar-contact-select__input-container css-166bipr-Input"
+          class="cedar-contact-select__input-container css-1cfo1cf"
           data-value="Adeline Aarons"
         >
           <input
@@ -67,7 +67,7 @@ exports[`CedarContactSelect > selects contact from dropdown 1`] = `
         </div>
       </div>
       <div
-        class="cedar-contact-select__indicators css-1hb7zxy-IndicatorsContainer"
+        class="cedar-contact-select__indicators css-1wy0on6"
       >
         <span
           class="cedar-contact-select__indicator-separator css-1u9des2-indicatorSeparator"
@@ -96,7 +96,7 @@ exports[`CedarContactSelect > selects contact from dropdown 1`] = `
     >
       <div
         aria-multiselectable="false"
-        class="cedar-contact-select__menu-list css-bgzggo-MenuList"
+        class="cedar-contact-select__menu-list css-1t1p7p"
         id="react-select-cedarContactSelect-listbox"
         role="listbox"
       >

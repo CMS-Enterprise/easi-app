@@ -51,7 +51,7 @@ exports[`Trb Public Guidance Letter > renders from email link 1`] = `
         class="usa-link"
         href="mailto:cms-trb@cms.hhs.gov"
       >
-        cms-trb@cms.hhs.gov
+        [object Object]
       </a>
       .
     </p>
@@ -571,7 +571,7 @@ exports[`Trb Public Guidance Letter > renders from email link 1`] = `
                 class="usa-link"
                 href="mailto:cms-trb@cms.hhs.gov"
               >
-                cms-trb@cms.hhs.gov
+                [object Object]
               </a>
             </div>
           </div>
@@ -1068,7 +1068,7 @@ exports[`Trb Public Guidance Letter > renders from task list link 1`] = `
                 class="usa-link"
                 href="mailto:cms-trb@cms.hhs.gov"
               >
-                cms-trb@cms.hhs.gov
+                [object Object]
               </a>
             </div>
           </div>

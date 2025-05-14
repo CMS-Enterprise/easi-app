@@ -79,7 +79,7 @@ exports[`TeamCard > renders 1`] = `
                 >
                   Business Owner
                   <br />
-                  +4 more roles
+                  +4 more role
                 </p>
               </div>
             </div>
@@ -129,7 +129,7 @@ exports[`TeamCard > renders 1`] = `
                 >
                   System Maintainer
                   <br />
-                  +4 more roles
+                  +4 more role
                 </p>
               </div>
             </div>
@@ -229,7 +229,7 @@ exports[`TeamCard > renders 1`] = `
                 >
                   Contracting Officer's Representative (COR)
                   <br />
-                  +2 more roles
+                  +2 more role
                 </p>
               </div>
             </div>

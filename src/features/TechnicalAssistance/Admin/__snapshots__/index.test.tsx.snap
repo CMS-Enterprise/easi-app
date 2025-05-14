@@ -568,7 +568,7 @@ exports[`TRB admin home > matches the snapshot 1`] = `
               <span
                 class="text-bold"
               >
-                0
+                [object Object]
               </span>
                additional documents uploaded as a part of this request.
             </div>
