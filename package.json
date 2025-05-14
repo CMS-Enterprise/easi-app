@@ -54,7 +54,7 @@
     "eslint-config-react-app": "^7.0.1",
     "font-awesome": "^4.7.0",
     "formik": "^2.4.6",
-    "i18next": "20.6.1",
+    "i18next": "^25.1.2",
     "i18next-browser-languagedetector": "^5.0.0",
     "istanbul-lib-coverage": "^3.2.2",
     "launchdarkly-react-client-sdk": "^3.6.1",
