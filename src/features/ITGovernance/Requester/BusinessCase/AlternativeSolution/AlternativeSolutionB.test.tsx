@@ -25,7 +25,15 @@ window.matchMedia = (): any => ({
 
 window.scrollTo = vi.fn;
 
-const renderPage = async (store: any, mocks?: MockedResponse[]) => {
+const renderPage = async (
+  store: any,
+  mocks: MockedResponse[] = [
+    getGovernanceTaskListQuery({
+      id: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+      step: SystemIntakeStep.DRAFT_BUSINESS_CASE
+    })
+  ]
+) => {
   render(
     <MemoryRouter
       initialEntries={[
@@ -33,7 +41,7 @@ const renderPage = async (store: any, mocks?: MockedResponse[]) => {
       ]}
     >
       <Provider store={store}>
-        <MockedProvider mocks={mocks}>
+        <MockedProvider mocks={mocks} addTypename={false}>
           <Route
             path="/business/:businessCaseId/:formPage"
             component={BusinessCase}
@@ -56,7 +64,7 @@ describe('Business case alternative b solution', () => {
       form: {
         ...businessCaseInitialData,
         id: '75746af8-9a9b-4558-a375-cf9848eb2b0d',
-        systemIntakeId: '34ded286-02fa-4457-b1a5-0fc6ec00ecf5',
+        systemIntakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
         alternativeB: {
           ...defaultProposedSolution,
           title: 'Alt B'
