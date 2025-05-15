@@ -82,7 +82,7 @@ describe('Business case alternative b solution', () => {
   it('navigates back a page', async () => {
     await renderPage(defaultStore);
 
-    screen.getByRole('button', { name: /back/i }).click();
+    await userEvent.click(screen.getByRole('button', { name: /back/i }));
 
     expect(screen.getByTestId('alternative-solution-a')).toBeInTheDocument();
   });
@@ -90,7 +90,7 @@ describe('Business case alternative b solution', () => {
   it('navigates forward to review', async () => {
     await renderPage(defaultStore);
 
-    screen.getByRole('button', { name: /next/i }).click();
+    await userEvent.click(screen.getByRole('button', { name: /next/i }));
 
     expect(screen.getByTestId('business-case-review')).toBeInTheDocument();
   });
@@ -99,7 +99,9 @@ describe('Business case alternative b solution', () => {
     window.confirm = vi.fn(() => true);
     await renderPage(defaultStore);
 
-    screen.getByRole('button', { name: /remove alternative b/i }).click();
+    await userEvent.click(
+      screen.getByRole('button', { name: /remove alternative b/i })
+    );
     expect(window.confirm).toBeCalled();
     expect(screen.getByTestId('alternative-solution-a')).toBeInTheDocument();
   });
@@ -141,7 +143,7 @@ describe('Business case alternative b solution', () => {
       userEvent.type(titleField, 'Alternative B solution title');
       expect(titleField).toHaveValue('Alternative B solution title');
 
-      screen.getByRole('button', { name: /next/i }).click();
+      await userEvent.click(screen.getByRole('button', { name: /next/i }));
       expect(
         await screen.findByTestId('formik-validation-errors')
       ).toBeInTheDocument();
