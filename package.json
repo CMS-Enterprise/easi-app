@@ -179,6 +179,8 @@
     "webpack": "^5.99.7"
   },
   "resolutions": {
+    "@types/react": "18.3.1",
+    "@types/react-dom": "18.3.1",
     "prismjs": "1.24.0",
     "glob-parent": "5.1.2",
     "css-what": "5.0.1",
