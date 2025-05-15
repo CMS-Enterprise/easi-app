@@ -291,6 +291,17 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			expectedStatus: models.SISAClosed,
 			expectError:    false,
 		},
+		{
+			testCase: "LCID Retiring Soon",
+			intake: models.SystemIntake{
+				LifecycleID:        null.StringFrom("fake"),
+				LifecycleRetiresAt: &tomorrow,
+				DecisionState:      models.SIDSLcidIssued,
+				State:              models.SystemIntakeStateOpen,
+			},
+			expectedStatus: models.SISALcidRetiringSoon,
+			expectError:    false,
+		},
 	}
 
 	finalBizCaseTests := []testSystemIntakeAdminStatusType{

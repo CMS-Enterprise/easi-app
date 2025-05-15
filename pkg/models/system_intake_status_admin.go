@@ -19,6 +19,7 @@ const (
 	SISALcidIssued                   SystemIntakeStatusAdmin = "LCID_ISSUED"
 	SISALcidExpired                  SystemIntakeStatusAdmin = "LCID_EXPIRED"
 	SISALcidRetired                  SystemIntakeStatusAdmin = "LCID_RETIRED"
+	SISALcidRetiringSoon             SystemIntakeStatusAdmin = "LCID_RETIRING_SOON"
 	SISANotGovernance                SystemIntakeStatusAdmin = "NOT_GOVERNANCE"
 	SISANotApproved                  SystemIntakeStatusAdmin = "NOT_APPROVED"
 	SISAClosed                       SystemIntakeStatusAdmin = "CLOSED"

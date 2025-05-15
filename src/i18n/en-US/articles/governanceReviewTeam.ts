@@ -57,6 +57,7 @@ const systemIntakeStatusAdmin: Record<SystemIntakeStatusAdmin, string> = {
   LCID_ISSUED: 'LCID issued: {{lcid}}',
   LCID_EXPIRED: 'Expired LCID: {{lcid}}',
   LCID_RETIRED: 'Retired LCID: {{lcid}}',
+  LCID_RETIRING_SOON: 'LCID retiring soon: {{lcid}}',
   NOT_APPROVED: 'Project not approved by the GRB',
   NOT_GOVERNANCE: 'Not an IT Governance request'
 };

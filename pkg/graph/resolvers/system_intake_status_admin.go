@@ -13,6 +13,11 @@ func CalculateSystemIntakeAdminStatus(intake *models.SystemIntake) (models.Syste
 		return "", fmt.Errorf("invalid state") // This status should not be returned in normal use of the application
 	}
 
+	if intake.LifecycleRetiresAt != nil &&
+		intake.LifecycleRetiresAt.After(time.Now()) {
+		return models.SISALcidRetiringSoon, nil
+	}
+
 	if intake.State == models.SystemIntakeStateClosed && intake.DecisionState == models.SIDSNoDecision {
 		// If the decision is closed and a decision wasn't issued, show closed
 		// An intake that is closed without a decision doesn't progress to the SystemIntakeStepDECISION step, but remains on its current step. This allows it to stay on that step if re-opened.
