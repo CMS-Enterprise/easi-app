@@ -78,9 +78,10 @@ export const SystemIntakeStatusAdminIndex: Record<
   LCID_ISSUED: 10,
   LCID_EXPIRED: 11,
   LCID_RETIRED: 12,
-  NOT_GOVERNANCE: 13,
-  NOT_APPROVED: 14,
-  CLOSED: 15
+  LCID_RETIRING_SOON: 13,
+  NOT_GOVERNANCE: 14,
+  NOT_APPROVED: 15,
+  CLOSED: 16
 } as const;
 
 // Adding 'OPEN' status for typescript, but will never be needed in trbRequestStatusSortType
