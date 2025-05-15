@@ -588,7 +588,7 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
         <tbody {...getTableBodyProps()}>
           {page.map((row, rowIdx) => {
             return (
-              <tr {...row.getRowProps()}>
+              <tr {...row.getRowProps()} key={{ ...row.getRowProps() }.key}>
                 {row.cells.map((cell, index) => {
                   return (
                     <td
