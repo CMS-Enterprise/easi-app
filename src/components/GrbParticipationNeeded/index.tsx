@@ -164,8 +164,11 @@ const GrbParticipationNeeded = () => {
             <Table bordered={false} fullWidth {...getTableProps()}>
               <thead>
                 {headerGroups.map(headerGroup => (
-                  <tr {...headerGroup.getHeaderGroupProps()}>
-                    {headerGroup.headers.map((column, index) => (
+                  <tr
+                    {...headerGroup.getHeaderGroupProps()}
+                    key={{ ...headerGroup.getHeaderGroupProps() }.key}
+                  >
+                    {headerGroup.headers.map(column => (
                       <th
                         {...column.getHeaderProps(
                           column.getSortByToggleProps()
@@ -173,6 +176,7 @@ const GrbParticipationNeeded = () => {
                         aria-sort={getColumnSortStatus(column)}
                         scope="col"
                         className="border-bottom-2px bg-primary-lighter"
+                        key={column.id}
                       >
                         <Button
                           type="button"
@@ -191,11 +195,12 @@ const GrbParticipationNeeded = () => {
                 {page.map(row => {
                   prepareRow(row);
                   return (
-                    <tr {...row.getRowProps()}>
+                    <tr {...row.getRowProps()} key={row.id}>
                       {row.cells.map((cell, index) => {
                         return (
                           <td
                             {...cell.getCellProps()}
+                            key={{ ...cell.getCellProps() }.key}
                             className="bg-primary-lighter"
                           >
                             {cell.render('Cell')}
