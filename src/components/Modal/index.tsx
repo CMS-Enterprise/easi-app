@@ -17,6 +17,7 @@ export type ModalProps = {
   closeModal: () => void;
   shouldCloseOnOverlayClick?: boolean;
   noScrollOnClose?: boolean;
+  id?: string;
 };
 
 const Modal = ({
@@ -29,7 +30,8 @@ const Modal = ({
   openModal,
   closeModal,
   shouldCloseOnOverlayClick = false,
-  noScrollOnClose
+  noScrollOnClose,
+  id
 }: ModalProps) => {
   const handleOpenModal = () => {
     if (!noScrollOnClose) noScroll.on();
@@ -62,6 +64,7 @@ const Modal = ({
       appElement={root!}
       // Fix for "App element is not defined" unit test error
       ariaHideApp={root ? undefined : false}
+      id={id}
     >
       <button
         type="button"

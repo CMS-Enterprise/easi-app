@@ -5,12 +5,11 @@ import { SystemIntakeGRBDiscussionBoardType } from 'gql/generated/graphql';
 
 import { DiscussionAlert, MentionSuggestion } from 'types/discussions';
 
-import DiscussionForm from '../DiscussionForm';
+import DiscussionForm from '../_components/DiscussionForm';
 
 type StartDiscussionProps = {
   systemIntakeID: string;
   discussionBoardType: SystemIntakeGRBDiscussionBoardType;
-  closeModal: () => void;
   setDiscussionAlert: (discussionAlert: DiscussionAlert) => void;
   mentionSuggestions: MentionSuggestion[];
   readOnly?: boolean;
@@ -22,7 +21,6 @@ type StartDiscussionProps = {
 const StartDiscussion = ({
   systemIntakeID,
   discussionBoardType,
-  closeModal,
   setDiscussionAlert,
   mentionSuggestions,
   readOnly
@@ -46,7 +44,6 @@ const StartDiscussion = ({
 
       <DiscussionForm
         discussionBoardType={discussionBoardType}
-        closeModal={closeModal}
         type="discussion"
         systemIntakeID={systemIntakeID}
         setDiscussionAlert={setDiscussionAlert}

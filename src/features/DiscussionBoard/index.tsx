@@ -18,8 +18,8 @@ import useDiscussionParams, { DiscussionMode } from 'hooks/useDiscussionParams';
 import { DiscussionAlert, MentionSuggestion } from 'types/discussions';
 import user from 'utils/user';
 
+import DiscussionModalWrapper from './_components/DiscussionModalWrapper';
 import Discussion from './Discussion';
-import DiscussionModalWrapper from './DiscussionModalWrapper';
 import StartDiscussion from './StartDiscussion';
 import ViewDiscussions from './ViewDiscussions';
 
@@ -31,7 +31,7 @@ type DiscussionBoardProps = {
 };
 
 function DiscussionBoard({ systemIntakeID, readOnly }: DiscussionBoardProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation('discussions');
 
   const flags = useFlags();
   const { groups, euaId, isUserSet } = useSelector(
@@ -90,11 +90,11 @@ function DiscussionBoard({ systemIntakeID, readOnly }: DiscussionBoardProps) {
   const mentionSuggestions: MentionSuggestion[] = useMemo(() => {
     const suggestions: MentionSuggestion[] = [
       {
-        displayName: t('Governance Admin Team'),
+        displayName: t(`tags.${TagType.GROUP_IT_GOV}`),
         tagType: TagType.GROUP_IT_GOV
       },
       {
-        displayName: t('Governance Review Board (GRB)'),
+        displayName: t(`tags.${TagType.GROUP_GRB_REVIEWERS}`),
         tagType: TagType.GROUP_GRB_REVIEWERS
       }
     ];
@@ -102,7 +102,7 @@ function DiscussionBoard({ systemIntakeID, readOnly }: DiscussionBoardProps) {
     // Add requester as mention suggestion for primary discussion board
     if (discussionBoardType === SystemIntakeGRBDiscussionBoardType.PRIMARY) {
       suggestions.push({
-        displayName: t('Requester'),
+        displayName: t(`tags.${TagType.REQUESTER}`),
         tagType: TagType.REQUESTER
       });
     }
@@ -146,8 +146,6 @@ function DiscussionBoard({ systemIntakeID, readOnly }: DiscussionBoardProps) {
     }
   }, [discussionMode, lastMode, setDiscussionAlert]);
 
-  const closeModal = () => pushDiscussionQuery(false);
-
   // Hide discusion board if GRB review has not yet started
   if (!grbReviewStartedAt || !grbDiscussions) {
     return null;
@@ -160,7 +158,7 @@ function DiscussionBoard({ systemIntakeID, readOnly }: DiscussionBoardProps) {
     <DiscussionModalWrapper
       discussionBoardType={discussionBoardType}
       isOpen={discussionMode !== undefined}
-      closeModal={closeModal}
+      closeModal={() => pushDiscussionQuery(false)}
     >
       {canViewDiscussionBoard ? (
         <>
@@ -191,7 +189,6 @@ function DiscussionBoard({ systemIntakeID, readOnly }: DiscussionBoardProps) {
               discussionBoardType={discussionBoardType}
               mentionSuggestions={mentionSuggestions}
               systemIntakeID={systemIntakeID}
-              closeModal={closeModal}
               setDiscussionAlert={setDiscussionAlert}
               readOnly={readOnly}
             />
@@ -202,7 +199,6 @@ function DiscussionBoard({ systemIntakeID, readOnly }: DiscussionBoardProps) {
               discussionBoardType={discussionBoardType}
               mentionSuggestions={mentionSuggestions}
               discussion={activeDiscussion}
-              closeModal={closeModal}
               setDiscussionAlert={setDiscussionAlert}
               readOnly={readOnly}
             />

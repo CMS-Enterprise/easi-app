@@ -69,6 +69,10 @@ describe('Discussion Board', () => {
     cy.get('#mention-discussion').type(discussionText);
     cy.contains('button', 'Save discussion').click();
 
+    // Confirmation modal
+    cy.contains('h2', 'Are you sure you want to start this discussion?');
+    cy.contains('button[type="submit"]', 'Save discussion').click();
+
     // See posted successfully
     cy.contains(
       '.usa-alert--success',
@@ -103,6 +107,10 @@ describe('Discussion Board', () => {
 
     cy.get('#mention-reply').type(replyText);
     cy.contains('button', 'Save reply').click();
+
+    // Confirmation modal
+    cy.contains('h2', 'Are you sure you want to reply to this discussion?');
+    cy.contains('button[type="submit"]', 'Save reply').click();
 
     // Reply success
     cy.contains('.usa-alert--success', 'Success! Your reply has been added.');

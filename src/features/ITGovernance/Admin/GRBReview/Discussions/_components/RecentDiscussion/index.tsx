@@ -1,7 +1,7 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Button } from '@trussworks/react-uswds';
-import DiscussionPost from 'features/DiscussionBoard/DiscussionPost';
+import DiscussionPost from 'features/DiscussionBoard/_components/DiscussionPost';
 import {
   SystemIntakeGRBDiscussionBoardType,
   SystemIntakeGRBReviewDiscussionFragment

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { Button, Icon } from '@trussworks/react-uswds';
 import {
   SystemIntakeGRBDiscussionBoardType,
@@ -38,32 +38,25 @@ const DiscussionBoardCard = ({
     discussion => discussion.replies.length === 0
   ).length;
 
+  const VisibilityIcon =
+    discussionBoardType === SystemIntakeGRBDiscussionBoardType.INTERNAL
+      ? Icon.LockOutline
+      : Icon.LockOpen;
+
   return (
     <div className="internal-discussion-board bg-white padding-3 padding-bottom-4 margin-top-4 border-base-lighter shadow-2">
       <div className="internal-discussions-board__header desktop:display-flex flex-align-start">
         <h3 className="margin-top-0 margin-bottom-1">
-          {t('governanceReviewBoard.boardType', {
-            context: discussionBoardType
-          })}
+          {t(`discussionBoardType.${discussionBoardType}`)}
         </h3>
 
         <p className="margin-0 margin-top-05 text-base display-flex text-no-wrap">
-          <Trans
-            i18nKey="discussions:governanceReviewBoard.visibility"
-            tOptions={{
-              context: discussionBoardType
-            }}
-            components={{
-              icon:
-                discussionBoardType ===
-                SystemIntakeGRBDiscussionBoardType.INTERNAL ? (
-                  <Icon.LockOutline className="margin-right-05" />
-                ) : (
-                  <Icon.LockOpen className="margin-right-05" />
-                )
-            }}
-          />
+          <VisibilityIcon className="margin-right-05" />
+          {t('governanceReviewBoard.visibility', {
+            context: discussionBoardType
+          })}
         </p>
+
         <Button
           type="button"
           onClick={() => {

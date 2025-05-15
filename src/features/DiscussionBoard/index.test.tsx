@@ -46,6 +46,10 @@ describe('Discussion board', () => {
         })
       ).toBeInTheDocument();
 
+      expect(screen.getByTestId('visibility')).toHaveTextContent(
+        'Not restricted'
+      );
+
       expect(
         screen.queryByRole('heading', { name: 'This page cannot be found.' })
       ).not.toBeInTheDocument();
@@ -128,6 +132,10 @@ describe('Discussion board', () => {
           name: 'Internal GRB discussion board'
         })
       ).toBeInTheDocument();
+
+      expect(screen.getByTestId('visibility')).toHaveTextContent(
+        'Visibility restricted'
+      );
 
       expect(
         screen.queryByRole('heading', { name: 'This page cannot be found.' })
