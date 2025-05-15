@@ -196,7 +196,7 @@ const GrbParticipationNeeded = () => {
                   prepareRow(row);
                   return (
                     <tr {...row.getRowProps()} key={row.id}>
-                      {row.cells.map((cell, index) => {
+                      {row.cells.map(cell => {
                         return (
                           <td
                             {...cell.getCellProps()}

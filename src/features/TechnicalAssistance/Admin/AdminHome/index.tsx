@@ -253,10 +253,14 @@ function TrbNewRequestsTable({ requests, className }: TrbRequestsTableProps) {
       <Table bordered={false} fullWidth scrollable {...getTableProps()}>
         <thead>
           {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
+            <tr
+              {...headerGroup.getHeaderGroupProps()}
+              key={{ ...headerGroup.getHeaderGroupProps() }.key}
+            >
               {headerGroup.headers.map((column, index) => (
                 <th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
+                  key={column.id}
                   aria-sort={getColumnSortStatus(column)}
                   scope="col"
                   className="border-bottom-2px bg-transparent"
@@ -283,11 +287,12 @@ function TrbNewRequestsTable({ requests, className }: TrbRequestsTableProps) {
         <tbody {...getTableBodyProps()}>
           {page.map((row, rowIdx) => {
             return (
-              <tr {...row.getRowProps()}>
+              <tr {...row.getRowProps()} key={{ ...row.getRowProps() }.key}>
                 {row.cells.map((cell, index) => {
                   return (
                     <td
                       {...cell.getCellProps()}
+                      key={{ ...cell.getCellProps() }.key}
                       className="bg-transparent"
                       data-testid={`trb-new-cell-${rowIdx}-${index}`}
                     >
@@ -555,10 +560,14 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
       <Table bordered={false} fullWidth scrollable {...getTableProps()}>
         <thead>
           {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column, index) => (
+            <tr
+              {...headerGroup.getHeaderGroupProps()}
+              key={{ ...headerGroup.getHeaderGroupProps() }.key}
+            >
+              {headerGroup.headers.map(column => (
                 <th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
+                  key={column.id}
                   aria-sort={getColumnSortStatus(column)}
                   scope="col"
                   className="border-bottom-2px"
@@ -583,8 +592,9 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
                 {row.cells.map((cell, index) => {
                   return (
                     <td
-                      data-testid={`trb-existing-cell-${rowIdx}-${index}`}
                       {...cell.getCellProps()}
+                      key={{ ...cell.getCellProps() }.key}
+                      data-testid={`trb-existing-cell-${rowIdx}-${index}`}
                     >
                       {cell.render('Cell')}
                     </td>

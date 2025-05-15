@@ -62,9 +62,7 @@ function Homepage() {
 
   const { loading, error, data } = useGetTRBRequestsQuery();
 
-  const infoBoxText = t<Record<string, string[]>>('infoBox', {
-    returnObjects: true
-  });
+  const infoBoxText = t('infoBox', { returnObjects: true });
 
   // @ts-ignore
   // Ignoring due to accessor props with dot property string values which break react-table typescripting
@@ -233,10 +231,14 @@ function Homepage() {
           <Table bordered={false} fullWidth scrollable {...getTableProps()}>
             <thead>
               {headerGroups.map(headerGroup => (
-                <tr {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map((column, index) => (
+                <tr
+                  {...headerGroup.getHeaderGroupProps()}
+                  key={{ ...headerGroup.getHeaderGroupProps() }.key}
+                >
+                  {headerGroup.headers.map(column => (
                     <th
                       {...column.getHeaderProps(column.getSortByToggleProps())}
+                      key={column.id}
                       aria-sort={getColumnSortStatus(column)}
                       scope="col"
                       className="border-bottom-2px padding-left-0"
@@ -258,10 +260,14 @@ function Homepage() {
               {page.map(row => {
                 // prepareRow(row); // Temp prepare all rows before render out, until fixed
                 return (
-                  <tr {...row.getRowProps()}>
-                    {row.cells.map((cell, index) => {
+                  <tr {...row.getRowProps()} key={{ ...row.getRowProps() }.key}>
+                    {row.cells.map(cell => {
                       return (
-                        <td {...cell.getCellProps()} className="padding-left-0">
+                        <td
+                          {...cell.getCellProps()}
+                          key={{ ...cell.getCellProps() }.key}
+                          className="padding-left-0"
+                        >
                           {cell.render('Cell')}
                         </td>
                       );
