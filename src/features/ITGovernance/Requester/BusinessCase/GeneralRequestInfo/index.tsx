@@ -1,16 +1,18 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button, Icon, Label, TextInput } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
+import Alert from 'components/Alert';
 import AutoSave from 'components/AutoSave';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
 import HelpText from 'components/HelpText';
 import IconButton from 'components/IconButton';
 import PageNumber from 'components/PageNumber';
-import { alternativeSolutionHasFilledFields } from 'data/businessCase';
+import RequiredAsterisk from 'components/RequiredAsterisk';
+import { solutionHasFilledFields } from 'data/businessCase';
 import { BusinessCaseModel, GeneralRequestInfoForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
 import { BusinessCaseSchema } from 'validations/businessCaseSchema';
@@ -62,16 +64,38 @@ const GeneralRequestInfo = ({
             description={t('generalRequestDescription')}
             errors={flatErrors}
             data-testid="general-request-info"
-            fieldsMandatory={isFinal}
           >
             <Form className="tablet:grid-col-9 margin-bottom-6">
+              {/* Required fields help text and alert */}
+              <HelpText className="margin-top-1 text-base">
+                <Trans
+                  i18nKey="businessCase:requiredFields"
+                  components={{ red: <span className="text-red" /> }}
+                />
+              </HelpText>
+
+              {!isFinal && (
+                <Alert
+                  type="info"
+                  className="margin-top-2"
+                  data-testid="draft-business-case-fields-alert"
+                  slim
+                >
+                  {t('businessCase:draftAlert')}
+                </Alert>
+              )}
+
               <FieldGroup
                 scrollElement="requestName"
                 error={!!flatErrors.requestName}
               >
                 <Label htmlFor="BusinessCase-RequestName">
-                  {t('projectName')}
+                  {t('requestName')}
+                  <RequiredAsterisk />
                 </Label>
+                <HelpText id="BusinessCase-PhoneNumber">
+                  {t('requestNameHelpText')}
+                </HelpText>
                 <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
                 <Field
                   as={TextInput}
@@ -81,13 +105,13 @@ const GeneralRequestInfo = ({
                   name="requestName"
                 />
               </FieldGroup>
-
               <FieldGroup
                 scrollElement="requester.name"
                 error={!!flatErrors['requester.name']}
               >
                 <Label htmlFor="BusinessCase-RequesterName">
                   {t('requester')}
+                  <RequiredAsterisk />
                 </Label>
                 <FieldErrorMsg>{flatErrors['requester.name']}</FieldErrorMsg>
                 <Field
@@ -98,13 +122,13 @@ const GeneralRequestInfo = ({
                   name="requester.name"
                 />
               </FieldGroup>
-
               <FieldGroup
                 scrollElement="businessOwner.name"
                 error={!!flatErrors['businessOwner.name']}
               >
                 <Label htmlFor="BusinessCase-BusinessOwnerName">
                   {t('businessOwner')}
+                  <RequiredAsterisk />
                 </Label>
                 <FieldErrorMsg>
                   {flatErrors['businessOwner.name']}
@@ -117,13 +141,13 @@ const GeneralRequestInfo = ({
                   name="businessOwner.name"
                 />
               </FieldGroup>
-
               <FieldGroup
                 scrollElement="requester.phoneNumber"
                 error={!!flatErrors['requester.phoneNumber']}
               >
                 <Label htmlFor="BusinessCase-RequesterPhoneNumber">
                   {t('requesterPhoneNumber')}
+                  <RequiredAsterisk />
                 </Label>
                 <HelpText id="BusinessCase-PhoneNumber">
                   {t('requesterPhoneNumberHelpText')}
@@ -179,9 +203,7 @@ const GeneralRequestInfo = ({
             <PageNumber
               currentPage={1}
               totalPages={
-                alternativeSolutionHasFilledFields(businessCase.alternativeB)
-                  ? 6
-                  : 5
+                solutionHasFilledFields(businessCase.alternativeB) ? 6 : 5
               }
             />
 

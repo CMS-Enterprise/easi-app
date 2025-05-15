@@ -109,6 +109,7 @@ export const businessCaseInitialData: BusinessCaseModel = {
   cmsBenefit: '',
   priorityAlignment: '',
   successIndicators: '',
+  // proposedSolutions: [cloneDeep(defaultProposedSolution)],
   preferredSolution: cloneDeep(defaultProposedSolution),
   alternativeA: cloneDeep(defaultProposedSolution),
   alternativeB: cloneDeep(defaultProposedSolution),
@@ -119,13 +120,13 @@ export const businessCaseInitialData: BusinessCaseModel = {
 type lifecycleCostLinesType = Record<LifecycleSolution, LifecycleCosts>;
 
 /**
- * This function tells us whether the parameter alternativeSolution has been started
- * @param alternativeSolution - an alternative solution case (e.g. A, B)
+ * This function tells us whether the parameter bizCaseSolution has been started
+ * @param bizCaseSolution - an alternative solution case (e.g. A, B)
  */
-export const alternativeSolutionHasFilledFields = (
-  alternativeSolution: ProposedBusinessCaseSolution
+export const solutionHasFilledFields = (
+  bizCaseSolution: ProposedBusinessCaseSolution
 ) => {
-  if (!alternativeSolution) {
+  if (!bizCaseSolution) {
     return false;
   }
 
@@ -140,7 +141,7 @@ export const alternativeSolutionHasFilledFields = (
     cons,
     costSavings,
     estimatedLifecycleCost
-  } = alternativeSolution;
+  } = bizCaseSolution;
 
   /** Whether requester has entered costs for required lifecycle cost categories */
   const hasRequiredPhaseCosts: boolean = !![
@@ -232,6 +233,7 @@ export const prepareBusinessCaseForApp = (
     cmsBenefit: businessCase.cmsBenefit || '',
     priorityAlignment: businessCase.priorityAlignment || '',
     successIndicators: businessCase.successIndicators || '',
+    // proposedSolutions: [],
     preferredSolution: {
       title: businessCase.preferredTitle || '',
       summary: businessCase.preferredSummary || '',
@@ -332,11 +334,13 @@ const formatLifecycleCostsForApi = (
 export const prepareBusinessCaseForApi = (
   businessCase: BusinessCaseModel
 ): any => {
-  const alternativeBExists = alternativeSolutionHasFilledFields(
+  const alternativeBExists = solutionHasFilledFields(
+    // businessCase.alternativeB
     businessCase.alternativeB
   );
 
-  const alternativeAExists = alternativeSolutionHasFilledFields(
+  const alternativeAExists = solutionHasFilledFields(
+    // businessCase.alternativeA
     businessCase.alternativeA
   );
 

@@ -84,6 +84,7 @@ const TaskStatusTag = ({ status, state = 'OPEN' }: TaskStatusTagProps) => {
 
   return (
     <Tag
+      style={{ whiteSpace: 'nowrap' }}
       className={`easi-task-status-tag ${className}`}
       data-testid="task-list-task-tag"
     >

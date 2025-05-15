@@ -1,16 +1,10 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import {
-  Button,
-  ButtonGroup,
-  Icon,
-  Label,
-  Radio,
-  TextInput
-} from '@trussworks/react-uswds';
+import { Button, Icon, Label, Radio, TextInput } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 
+import Alert from 'components/Alert';
 import AutoSave from 'components/AutoSave';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
 import FieldErrorMsg from 'components/FieldErrorMsg';
@@ -19,12 +13,11 @@ import HelpText from 'components/HelpText';
 import IconButton from 'components/IconButton';
 import PageNumber from 'components/PageNumber';
 import TextAreaField from 'components/TextAreaField';
-import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { yesNoMap } from 'data/common';
 import { BusinessCaseModel, PreferredSolutionForm } from 'types/businessCase';
 import { LifecycleCosts } from 'types/estimatedLifecycle';
 import flattenErrors from 'utils/flattenErrors';
-import { BusinessCaseSchema } from 'validations/businessCaseSchema';
+import { getSingleSolutionSchema } from 'validations/businessCaseSchema';
 
 import BusinessCaseStepWrapper from '../BusinessCaseStepWrapper';
 
@@ -51,52 +44,66 @@ const PreferredSolution = ({
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={BusinessCaseSchema(isFinal).preferredSolution}
+      validationSchema={getSingleSolutionSchema(isFinal, 'Preferred Solution')}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
       innerRef={formikRef}
     >
       {(formikProps: FormikProps<PreferredSolutionForm>) => {
-        const { values, errors, setErrors, setFieldValue, validateForm } =
-          formikProps;
+        const { values, errors, setFieldValue, validateForm } = formikProps;
 
         const flatErrors = flattenErrors(errors);
 
         return (
           <BusinessCaseStepWrapper
-            title={t('alternatives')}
-            description={
-              <>
-                <p>{t('alternativesDescription.text.0')}</p>
-                <p className="margin-bottom-0">
-                  {t('alternativesDescription.text.1')}
-                </p>
-                <ul className="padding-left-205 margin-top-0">
-                  <li>{t('alternativesDescription.list.0')}</li>
-                  <li>{t('alternativesDescription.list.1')}</li>
-                  <li>{t('alternativesDescription.list.2')}</li>
-                  <li>{t('alternativesDescription.list.3')}</li>
-                  <li>{t('alternativesDescription.list.4')}</li>
-                </ul>
-                <p>{t('alternativesDescription.text.2')}</p>
-              </>
-            }
+            title={t('preferredSolution')}
             systemIntakeId={businessCase.systemIntakeId}
             data-testid="preferred-solution"
             errors={flatErrors}
-            fieldsMandatory={isFinal}
           >
             <Form>
               <div className="tablet:grid-col-9">
-                <h2>{t('preferredSolution')}</h2>
+                <IconButton
+                  type="button"
+                  icon={<Icon.ArrowBack />}
+                  className="margin-bottom-3 margin-top-2"
+                  onClick={() => {
+                    dispatchSave();
+                    history.push(
+                      `/business/${businessCase.systemIntakeId}/alternative-analysis`
+                    );
+                  }}
+                  unstyled
+                >
+                  {t('Save & return to Business Case')}
+                </IconButton>
+
+                {/* Required fields help text and alert */}
+                <HelpText className="margin-top-1 text-base">
+                  <Trans
+                    i18nKey="businessCase:requiredFields"
+                    components={{ red: <span className="text-red" /> }}
+                  />
+                </HelpText>
+
+                {!isFinal && (
+                  <Alert
+                    type="info"
+                    className="margin-top-2"
+                    data-testid="draft-business-case-fields-alert"
+                    slim
+                  >
+                    {t('alternativesDescription.draftAlternativesAlert')}
+                  </Alert>
+                )}
 
                 <FieldGroup
                   scrollElement="preferredSolution.title"
                   error={!!flatErrors['preferredSolution.title']}
                 >
                   <Label htmlFor="BusinessCase-PreferredSolutionTitle">
-                    {t('preferredSolutionTitle')}
+                    {t('solutionTitle')}
                   </Label>
                   <FieldErrorMsg>
                     {flatErrors['preferredSolution.title']}
@@ -115,18 +122,18 @@ const PreferredSolution = ({
                   error={!!flatErrors['preferredSolution.summary']}
                 >
                   <Label htmlFor="BusinessCase-PreferredSolutionSummary">
-                    {t('preferredSolutionSummary.label')}
+                    {t('solutionSummary.label')}
                   </Label>
                   <HelpText
                     id="BusinessCase-PreferredSolutionSummaryHelp"
                     className="margin-top-1"
                   >
-                    {t('preferredSolutionSummary.include')}
+                    {t('solutionSummary.include')}
                     <ul className="padding-left-205 margin-top-1 margin-bottom-0">
-                      <li>{t('preferredSolutionSummary.summary')}</li>
-                      <li>{t('preferredSolutionSummary.implementation')}</li>
-                      <li>{t('preferredSolutionSummary.costs')}</li>
-                      <li>{t('preferredSolutionSummary.approaches')}</li>
+                      <li>{t('solutionSummary.summary')}</li>
+                      <li>{t('solutionSummary.implementation')}</li>
+                      <li>{t('solutionSummary.costs')}</li>
+                      <li>{t('solutionSummary.approaches')}</li>
                     </ul>
                   </HelpText>
                   <FieldErrorMsg>
@@ -147,13 +154,13 @@ const PreferredSolution = ({
                   error={!!flatErrors['preferredSolution.acquisitionApproach']}
                 >
                   <Label htmlFor="BusinessCase-PreferredSolutionAcquisitionApproach">
-                    {t('preferredSolutionApproach')}
+                    {t('solutionAcquisitionApproach')}
                   </Label>
                   <HelpText
                     id="BusinessCase-PreferredSolutionAcquisitionApproachHelp"
                     className="margin-top-1"
                   >
-                    {t('preferredSolutionApproachHelpText')}
+                    {t('solutionAcquisitionApproachHelpText')}
                   </HelpText>
                   <FieldErrorMsg>
                     {flatErrors['preferredSolution.acquisitionApproach']}
@@ -169,6 +176,8 @@ const PreferredSolution = ({
                     aria-describedby="BusinessCase-PreferredSolutionAcquisitionApproachCounter BusinessCase-PreferredSolutionAcquisitionApproachHelp"
                   />
                 </FieldGroup>
+
+                {/* TODO: add target contract award and target completion of dev work questions */}
 
                 <FieldGroup
                   scrollElement="preferredSolution.security.isApproved"
@@ -278,6 +287,8 @@ const PreferredSolution = ({
                   </FieldGroup>
                 )}
 
+                {/* TODO: add zero trust principles question */}
+
                 <FieldGroup
                   scrollElement="preferredSolution.hosting.type"
                   error={!!flatErrors['preferredSolution.hosting.type']}
@@ -334,6 +345,8 @@ const PreferredSolution = ({
                             name="preferredSolution.hosting.location"
                           />
                         </FieldGroup>
+
+                        {/* TODO: add cloud  / cloud migration strategy question */}
 
                         <FieldGroup
                           className="margin-bottom-1 margin-left-4"
@@ -483,18 +496,36 @@ const PreferredSolution = ({
                   </fieldset>
                 </FieldGroup>
 
+                {/* TODO: add workforce training requirements question */}
+
+                <hr
+                  className="margin-bottom-1 margin-top-4 opacity-30"
+                  aria-hidden
+                />
+                <>
+                  <span className="font-body-sm text-bold">
+                    {t('prosAndCons')}
+                  </span>
+                  <br />
+                  <p>{t('prosAndConsHelpText')}</p>
+                </>
+
                 <FieldGroup
                   scrollElement="preferredSolution.pros"
                   error={!!flatErrors['preferredSolution.pros']}
                 >
                   <Label htmlFor="BusinessCase-PreferredSolutionPros">
-                    {t('preferredSolutionPros')}
+                    {t('pros.label')}
                   </Label>
                   <HelpText
                     id="BusinessCase-PreferredSolutionProsHelp"
                     className="margin-top-1"
                   >
-                    {t('preferredSolutionProsHelpText')}
+                    {t('pros.include')}
+                    <ul className="padding-left-205 margin-top-1 margin-bottom-0">
+                      <li>{t('pros.immediateImpact')}</li>
+                      <li>{t('pros.downstreamImpact')}</li>
+                    </ul>
                   </HelpText>
                   <FieldErrorMsg>
                     {flatErrors['preferredSolution.pros']}
@@ -514,13 +545,39 @@ const PreferredSolution = ({
                   error={!!flatErrors['preferredSolution.cons']}
                 >
                   <Label htmlFor="BusinessCase-PreferredSolutionCons">
-                    {t('preferredSolutionCons')}
+                    {t('cons.label')}
                   </Label>
                   <HelpText
                     id="BusinessCase-PreferredSolutionConsHelp"
                     className="margin-top-1"
                   >
-                    {t('preferredSolutionConsHelpText')}
+                    {t('cons.include')}
+                    <ul className="padding-left-205 margin-top-1 margin-bottom-0">
+                      <li>
+                        <Trans
+                          i18nKey="businessCase:cons.downsides"
+                          components={{
+                            bold: <span className="text-bold" />
+                          }}
+                        />
+                      </li>
+                      <li>
+                        <Trans
+                          i18nKey="businessCase:cons.immediateImpact"
+                          components={{
+                            bold: <span className="text-bold" />
+                          }}
+                        />
+                      </li>
+                      <li>
+                        <Trans
+                          i18nKey="businessCase:cons.downstreamImpact"
+                          components={{
+                            bold: <span className="text-bold" />
+                          }}
+                        />
+                      </li>
+                    </ul>
                   </HelpText>
                   <FieldErrorMsg>
                     {flatErrors['preferredSolution.cons']}
@@ -535,6 +592,11 @@ const PreferredSolution = ({
                   />
                 </FieldGroup>
               </div>
+
+              <hr
+                className="margin-bottom-4 margin-top-4 opacity-30"
+                aria-hidden
+              />
 
               <EstimatedLifecycleCost
                 className="margin-top-2"
@@ -578,60 +640,40 @@ const PreferredSolution = ({
               </FieldGroup>
             </Form>
 
-            <ButtonGroup>
-              <Button
-                type="button"
-                outline
-                onClick={() => {
-                  dispatchSave();
-                  setErrors({});
-                  const newUrl = 'request-description';
-                  history.push(newUrl);
-                }}
-              >
-                {t('Back')}
-              </Button>
-              <Button
-                type="button"
-                onClick={() => {
-                  validateForm().then(err => {
-                    if (Object.keys(err).length === 0) {
-                      dispatchSave();
-                      const newUrl = 'alternative-solution-a';
-                      history.push(newUrl);
-                    } else {
-                      window.scrollTo(0, 0);
-                    }
-                  });
-                }}
-              >
-                {t('Next')}
-              </Button>
-            </ButtonGroup>
+            <Button
+              type="button"
+              onClick={() => {
+                validateForm().then(err => {
+                  if (Object.keys(err).length === 0) {
+                    dispatchSave();
+                    const newUrl = 'alternative-analysis';
+                    history.push(newUrl);
+                  } else {
+                    window.scrollTo(0, 0);
+                  }
+                });
+              }}
+            >
+              {t('Finish Preferred Solution')}
+            </Button>
 
             <IconButton
               type="button"
               icon={<Icon.ArrowBack />}
               className="margin-bottom-3 margin-top-2"
+              data-testid="save-and-return-button"
               onClick={() => {
                 dispatchSave();
                 history.push(
-                  `/governance-task-list/${businessCase.systemIntakeId}`
+                  `/business/${businessCase.systemIntakeId}/alternative-analysis`
                 );
               }}
               unstyled
             >
-              {t('Save & Exit')}
+              {t('Save & return to Business Case')}
             </IconButton>
 
-            <PageNumber
-              currentPage={4}
-              totalPages={
-                alternativeSolutionHasFilledFields(businessCase.alternativeB)
-                  ? 6
-                  : 5
-              }
-            />
+            <PageNumber currentPage={4} totalPages={5} />
             <AutoSave
               values={values}
               onSave={dispatchSave}

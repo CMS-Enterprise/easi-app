@@ -73,11 +73,23 @@ describe('The Business Case Form', () => {
 
     cy.contains('button', 'Next').click();
 
+    cy.contains('h1', 'Options and alternatives');
+
+    cy.contains('button', 'Add preferred solution').click();
+
     cy.businessCase.preferredSolution.fillAllFields();
 
-    cy.contains('button', 'Next').click();
+    cy.contains('button', 'Finish Preferred Solution').click();
+
+    cy.contains('h1', 'Options and alternatives');
+
+    cy.contains('button', 'Add alternative A').click();
 
     cy.businessCase.alternativeASolution.fillAllFields();
+
+    cy.contains('button', 'Finish Alternative A').click();
+
+    cy.contains('h1', 'Options and alternatives');
 
     cy.contains('button', 'Next').click();
 
