@@ -5,7 +5,7 @@ import { render, screen } from '@testing-library/react';
 import { businessCaseInitialData } from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
 
-import ITGovAdminContext from '../ITGovAdminContext';
+import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import BusinessCaseReview from './index';
 

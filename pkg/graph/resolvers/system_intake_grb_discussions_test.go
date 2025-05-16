@@ -29,7 +29,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussions() {
 		)
 
 		// test the resolver for retrieving discussions
-		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID)
+		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID, models.SystemIntakeGRBDiscussionBoardTypePrimary)
 		s.NotNil(discussions)
 		s.NoError(err)
 		s.Len(discussions, 1)
@@ -81,6 +81,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussions() {
 				Content: models.TaggedHTML{
 					RawContent: "<p>banana</p>",
 				},
+				DiscussionBoardType: models.SystemIntakeGRBDiscussionBoardTypePrimary,
 			},
 		)
 		s.Nil(post)
@@ -200,7 +201,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 		discussionPost2 := s.createGRBDiscussion(ctx, emailClient, intake.ID, "<p>this is a newer newerDiscussion</p>")
 
 		// fetch newerDiscussion using resolver
-		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID)
+		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID, models.SystemIntakeGRBDiscussionBoardTypePrimary)
 		s.NoError(err)
 		s.NotNil(discussions)
 		s.Len(discussions, 2)
@@ -241,7 +242,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 		)
 
 		// fetch discussion using resolver
-		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID)
+		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID, models.SystemIntakeGRBDiscussionBoardTypePrimary)
 		s.NoError(err)
 		s.NotNil(discussions)
 		s.Len(discussions, 1)
@@ -277,13 +278,14 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 				Content: models.TaggedHTML{
 					RawContent: "<p>banana</p>",
 				},
+				DiscussionBoardType: models.SystemIntakeGRBDiscussionBoardTypePrimary,
 			},
 		)
 		s.Nil(replyPost)
 		s.Error(err)
 
 		// fetch discussion using resolver
-		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID)
+		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID, models.SystemIntakeGRBDiscussionBoardTypePrimary)
 		s.NoError(err)
 		s.NotNil(discussions)
 		s.Len(discussions, 1)
@@ -320,7 +322,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 		)
 
 		// fetch discussion using resolver
-		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID)
+		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID, models.SystemIntakeGRBDiscussionBoardTypePrimary)
 		s.NoError(err)
 		s.NotNil(discussions)
 		s.Len(discussions, 1)
@@ -377,7 +379,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 		)
 
 		// fetch discussions using resolver
-		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID)
+		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID, models.SystemIntakeGRBDiscussionBoardTypePrimary)
 		s.NoError(err)
 		s.NotNil(discussions)
 		s.Len(discussions, 2)
@@ -550,10 +552,12 @@ func (s *ResolverSuite) createGRBDiscussion(
 		s.testConfigs.Store,
 		emailClient,
 		models.CreateSystemIntakeGRBDiscussionPostInput{
-			SystemIntakeID: intakeID,
-			Content:        taggedHTMLContent,
+			SystemIntakeID:      intakeID,
+			Content:             taggedHTMLContent,
+			DiscussionBoardType: models.SystemIntakeGRBDiscussionBoardTypePrimary,
 		},
 	)
+
 	s.NotNil(discussion)
 	s.NoError(err)
 	s.Equal(discussion.Content, models.HTML(content))
@@ -576,8 +580,9 @@ func (s *ResolverSuite) createGRBDiscussionReply(
 		s.testConfigs.Store,
 		emailClient,
 		models.CreateSystemIntakeGRBDiscussionReplyInput{
-			InitialPostID: discussionPost.ID,
-			Content:       taggedHTMLContent,
+			InitialPostID:       discussionPost.ID,
+			Content:             taggedHTMLContent,
+			DiscussionBoardType: models.SystemIntakeGRBDiscussionBoardTypePrimary,
 		},
 	)
 	// test returned reply post

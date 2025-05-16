@@ -2,6 +2,7 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { SystemIntakeGRBDiscussionBoardType } from 'gql/generated/graphql';
 import i18next from 'i18next';
 import {
   mockDiscussions,
@@ -22,7 +23,10 @@ describe('ViewDiscussions component', () => {
   it('renders the component', () => {
     render(
       <MemoryRouter>
-        <ViewDiscussions grbDiscussions={mockDiscussions()} />
+        <ViewDiscussions
+          grbDiscussions={mockDiscussions()}
+          discussionBoardType={SystemIntakeGRBDiscussionBoardType.INTERNAL}
+        />
       </MemoryRouter>
     );
 
@@ -32,6 +36,14 @@ describe('ViewDiscussions component', () => {
         name: 'Internal GRB discussion board'
       })
     ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(
+        i18next.t<string>('discussions:governanceReviewBoard.description', {
+          context: 'INTERNAL'
+        })
+      )
+    );
 
     expect(
       screen.getByRole('heading', { level: 2, name: 'Discussions' })
@@ -47,7 +59,10 @@ describe('ViewDiscussions component', () => {
   it('renders alerts for no discussion posts', () => {
     render(
       <MemoryRouter>
-        <ViewDiscussions grbDiscussions={[]} />
+        <ViewDiscussions
+          grbDiscussions={[]}
+          discussionBoardType={SystemIntakeGRBDiscussionBoardType.INTERNAL}
+        />
       </MemoryRouter>
     );
 
@@ -71,7 +86,10 @@ describe('ViewDiscussions component', () => {
 
     render(
       <MemoryRouter>
-        <ViewDiscussions grbDiscussions={grbDiscussions} />
+        <ViewDiscussions
+          grbDiscussions={grbDiscussions}
+          discussionBoardType={SystemIntakeGRBDiscussionBoardType.INTERNAL}
+        />
       </MemoryRouter>
     );
 
@@ -122,5 +140,53 @@ describe('ViewDiscussions component', () => {
     expect(expandedNewDiscussionListItems).toHaveLength(
       discussionsWithoutReplies.length
     );
+  });
+
+  it('renders the primary discussion board', () => {
+    render(
+      <MemoryRouter>
+        <ViewDiscussions
+          grbDiscussions={mockDiscussions()}
+          discussionBoardType={SystemIntakeGRBDiscussionBoardType.PRIMARY}
+        />
+      </MemoryRouter>
+    );
+
+    expect(
+      screen.getByRole('heading', {
+        level: 1,
+        name: 'Primary discussion board'
+      })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(
+        i18next.t<string>('discussions:governanceReviewBoard.description', {
+          context: 'PRIMARY'
+        })
+      )
+    );
+  });
+
+  it('renders the read only view', () => {
+    render(
+      <MemoryRouter>
+        <ViewDiscussions
+          grbDiscussions={mockDiscussionsWithoutReplies()}
+          discussionBoardType={SystemIntakeGRBDiscussionBoardType.INTERNAL}
+          readOnly
+        />
+      </MemoryRouter>
+    );
+
+    expect(
+      screen.queryByRole('button', { name: 'Start a new discussion' })
+    ).not.toBeInTheDocument();
+
+    const discussion = screen.queryAllByRole('listitem')[0];
+
+    expect(
+      within(discussion).queryByRole('button', { name: 'Reply' })
+    ).not.toBeInTheDocument();
   });
 });
