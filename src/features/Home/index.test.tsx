@@ -6,6 +6,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   GetCedarSystemsDocument,
+  GetMyCedarSystemsDocument,
   GetSystemIntakesTableDocument,
   GetSystemIntakesTableQuery,
   GetSystemIntakesTableQueryVariables,
@@ -74,10 +75,22 @@ const getClosedSystemIntakesTable: MockedQuery<
   }
 };
 
+const getMyCedarSystemsMock = {
+  request: {
+    query: GetMyCedarSystemsDocument
+  },
+  result: {
+    data: {
+      myCedarSystems: []
+    }
+  }
+};
+
 const mocks = [
   getRequestsQuery([]),
   getOpenSystemIntakesTable,
   getClosedSystemIntakesTable,
+  getMyCedarSystemsMock,
   {
     request: {
       query: GetCedarSystemsDocument
