@@ -188,10 +188,6 @@ func getAsyncGRBReviewStatus(intake *models.SystemIntake) (models.ITGovGRBStatus
 		return models.ITGRRBSReviewInProgress, nil
 	}
 
-	if intake.GRBDate.After(now) {
-		return models.ITGGRBSScheduled, nil
-	}
-
 	if intake.Step == models.SystemIntakeStepGRBMEETING {
 		return models.ITGGRBSAwaitingDecision, nil
 	}
