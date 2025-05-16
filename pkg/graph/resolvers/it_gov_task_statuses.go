@@ -167,24 +167,20 @@ func GrbMeetingStatus(intake *models.SystemIntake) (models.ITGovGRBStatus, error
 }
 
 func getAsyncGRBReviewStatus(intake *models.SystemIntake) (models.ITGovGRBStatus, error) {
-	// ✅ Short-circuit: no dates means fallback to nil logic
 	if intake.GRBDate == nil {
 		return getGRBReviewStatusWithNilGRBDate(intake)
 	}
 
 	now := time.Now()
 
-	// ✅ 1. Awaiting GRB review
 	if intake.GrbReviewAsyncRecordingTime != nil && now.After(*intake.GrbReviewAsyncRecordingTime) {
 		return models.ITGRRBSAwaitingGRBReview, nil
 	}
 
-	// ✅ 2. Scheduled (recording time in future)
 	if intake.GrbReviewAsyncRecordingTime != nil && now.Before(*intake.GrbReviewAsyncRecordingTime) {
 		return models.ITGGRBSScheduled, nil
 	}
 
-	// ✅ 3. Review in progress
 	if intake.GRBReviewStartedAt != nil &&
 		intake.GrbReviewAsyncEndDate != nil &&
 		now.After(*intake.GRBReviewStartedAt) &&
@@ -192,17 +188,14 @@ func getAsyncGRBReviewStatus(intake *models.SystemIntake) (models.ITGovGRBStatus
 		return models.ITGRRBSReviewInProgress, nil
 	}
 
-	// ✅ 4. GRB Date in future
 	if intake.GRBDate.After(now) {
 		return models.ITGGRBSScheduled, nil
 	}
 
-	// ✅ 5. Awaiting decision (step = GRB meeting)
 	if intake.Step == models.SystemIntakeStepGRBMEETING {
 		return models.ITGGRBSAwaitingDecision, nil
 	}
 
-	// ✅ 6. Everything else = completed
 	return models.ITGGRBSCompleted, nil
 }
 
