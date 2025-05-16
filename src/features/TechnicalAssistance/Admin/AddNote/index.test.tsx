@@ -4,7 +4,6 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import selectEvent from 'react-select-event';
 import { MockedProvider } from '@apollo/client/testing';
 import {
-  act,
   render,
   screen,
   waitForElementToBeRemoved
@@ -226,62 +225,60 @@ describe('Trb Admin Notes: Add Note', () => {
   });
 
   it('submits successfully ', async () => {
-    await act(async () => {
-      const { getByText, getByLabelText, getByRole } = render(
-        <Provider store={store}>
-          <MockedProvider
-            defaultOptions={{
-              watchQuery: { fetchPolicy: 'no-cache' },
-              query: { fetchPolicy: 'no-cache' }
-            }}
-            mocks={[
-              createTrbAdminNoteQuery,
-              getTrbRequestSummaryQuery,
-              getTRBRequestAttendeesQuery
-            ]}
+    const { getByText, getByLabelText, getByRole } = render(
+      <Provider store={store}>
+        <MockedProvider
+          defaultOptions={{
+            watchQuery: { fetchPolicy: 'no-cache' },
+            query: { fetchPolicy: 'no-cache' }
+          }}
+          mocks={[
+            createTrbAdminNoteQuery,
+            getTrbRequestSummaryQuery,
+            getTRBRequestAttendeesQuery
+          ]}
+        >
+          <MemoryRouter
+            initialEntries={[`/trb/${mockTrbRequestId}/notes/add-note`]}
           >
-            <MemoryRouter
-              initialEntries={[`/trb/${mockTrbRequestId}/notes/add-note`]}
-            >
-              <TRBRequestInfoWrapper>
-                <MessageProvider>
-                  <Route exact path="/trb/:id/:activePage">
-                    <AdminHome />
-                  </Route>
+            <TRBRequestInfoWrapper>
+              <MessageProvider>
+                <Route exact path="/trb/:id/:activePage">
+                  <AdminHome />
+                </Route>
 
-                  <Route exact path="/trb/:id/notes/add-note">
-                    <AddNote />
-                  </Route>
-                </MessageProvider>
-              </TRBRequestInfoWrapper>
-            </MemoryRouter>
-          </MockedProvider>
-        </Provider>
-      );
+                <Route exact path="/trb/:id/notes/add-note">
+                  <AddNote />
+                </Route>
+              </MessageProvider>
+            </TRBRequestInfoWrapper>
+          </MemoryRouter>
+        </MockedProvider>
+      </Provider>
+    );
 
-      getByText(
-        i18next.t<string>('technicalAssistance:notes.addNoteDescription')
-      );
+    getByText(
+      i18next.t<string>('technicalAssistance:notes.addNoteDescription')
+    );
 
-      const submitButton = getByRole('button', {
-        name: i18next.t<string>('technicalAssistance:notes.saveNote')
-      });
-
-      expect(submitButton).toBeDisabled();
-
-      // Select note category
-      userEvent.selectOptions(
-        getByLabelText(
-          RegExp(i18next.t<string>('technicalAssistance:notes.labels.category'))
-        ),
-        ['Supporting documents']
-      );
-
-      // Enter note text
-      await typeRichText(await screen.findByTestId('noteText'), 'My cute note');
-
-      userEvent.click(submitButton);
+    const submitButton = getByRole('button', {
+      name: i18next.t<string>('technicalAssistance:notes.saveNote')
     });
+
+    expect(submitButton).toBeDisabled();
+
+    // Select note category
+    userEvent.selectOptions(
+      getByLabelText(
+        RegExp(i18next.t<string>('technicalAssistance:notes.labels.category'))
+      ),
+      ['Supporting documents']
+    );
+
+    // Enter note text
+    await typeRichText(await screen.findByTestId('noteText'), 'My cute note');
+
+    userEvent.click(submitButton);
   });
 
   it('shows an error notice when submission fails', async () => {

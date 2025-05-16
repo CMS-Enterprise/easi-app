@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { MockedProvider, MockedResponse } from '@apollo/client/testing';
+import { MockedProvider } from '@apollo/client/testing';
 import {
   render,
   screen,
@@ -25,7 +25,13 @@ window.matchMedia = (): any => ({
 
 window.scrollTo = vi.fn;
 
-const renderPage = async (store: any, mocks?: MockedResponse[]) => {
+const SYSTEM_INTAKE_ID = '943916ee-7a30-4213-990e-02c4fb97382a';
+
+const renderPage = async (
+  store: any,
+  systemIntakeId: string = SYSTEM_INTAKE_ID,
+  step: SystemIntakeStep = SystemIntakeStep.DRAFT_BUSINESS_CASE
+) => {
   render(
     <MemoryRouter
       initialEntries={[
@@ -33,7 +39,15 @@ const renderPage = async (store: any, mocks?: MockedResponse[]) => {
       ]}
     >
       <Provider store={store}>
-        <MockedProvider mocks={mocks}>
+        <MockedProvider
+          mocks={[
+            getGovernanceTaskListQuery({
+              id: systemIntakeId,
+              step
+            })
+          ]}
+          addTypename={false}
+        >
           <Route
             path="/business/:businessCaseId/:formPage"
             component={BusinessCase}
@@ -56,7 +70,7 @@ describe('Business case alternative a solution', () => {
       form: {
         ...businessCaseInitialData,
         id: '75746af8-9a9b-4558-a375-cf9848eb2b0d',
-        systemIntakeId: '943916ee-7a30-4213-990e-02c4fb97382a'
+        systemIntakeId: SYSTEM_INTAKE_ID
       },
       isLoading: false,
       isSaving: false,
@@ -78,7 +92,7 @@ describe('Business case alternative a solution', () => {
   it('navigates back a page', async () => {
     await renderPage(defaultStore);
 
-    screen.getByRole('button', { name: /back/i }).click();
+    await userEvent.click(screen.getByRole('button', { name: /back/i }));
 
     expect(screen.getByTestId('preferred-solution')).toBeInTheDocument();
   });
@@ -86,7 +100,9 @@ describe('Business case alternative a solution', () => {
   it('adds alternative b and navigates to it', async () => {
     await renderPage(defaultStore);
 
-    screen.getByRole('button', { name: /alternative b/i }).click();
+    await userEvent.click(
+      screen.getByRole('button', { name: /alternative b/i })
+    );
 
     expect(screen.getByTestId('alternative-solution-b')).toBeInTheDocument();
   });
@@ -94,7 +110,7 @@ describe('Business case alternative a solution', () => {
   it('navigates forward to review', async () => {
     await renderPage(defaultStore);
 
-    screen.getByRole('button', { name: /next/i }).click();
+    await userEvent.click(screen.getByRole('button', { name: /next/i }));
 
     expect(screen.getByTestId('business-case-review')).toBeInTheDocument();
   });
@@ -108,7 +124,7 @@ describe('Business case alternative a solution', () => {
         form: {
           ...businessCaseInitialData,
           id: '75746af8-9a9b-4558-a375-cf9848eb2b0d',
-          systemIntakeId: '943916ee-7a30-4213-990e-02c4fb97382a',
+          systemIntakeId: SYSTEM_INTAKE_ID,
           alternativeB: {
             ...defaultProposedSolution,
             title: 'Alt B'
@@ -136,7 +152,7 @@ describe('Business case alternative a solution', () => {
     it('navigates forward to alternative b', async () => {
       await renderPage(withAlternativeBStore);
 
-      screen.getByRole('button', { name: /next/i }).click();
+      await userEvent.click(screen.getByRole('button', { name: /next/i }));
 
       expect(screen.getByTestId('alternative-solution-b')).toBeInTheDocument();
     });
@@ -165,11 +181,11 @@ describe('Business case alternative a solution', () => {
     });
 
     it('renders validation errors', async () => {
-      await renderPage(bizCaseFinalStore, [
-        getGovernanceTaskListQuery({
-          step: SystemIntakeStep.FINAL_BUSINESS_CASE
-        })
-      ]);
+      await renderPage(
+        bizCaseFinalStore,
+        'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+        SystemIntakeStep.FINAL_BUSINESS_CASE
+      );
 
       // Fill one field so we can trigger validation errors
       const titleField = screen.getByRole('textbox', {
@@ -178,7 +194,7 @@ describe('Business case alternative a solution', () => {
       userEvent.type(titleField, 'Alternative A solution title');
       expect(titleField).toHaveValue('Alternative A solution title');
 
-      screen.getByRole('button', { name: /next/i }).click();
+      await userEvent.click(screen.getByRole('button', { name: /next/i }));
       expect(
         await screen.findByTestId('formik-validation-errors')
       ).toBeInTheDocument();
