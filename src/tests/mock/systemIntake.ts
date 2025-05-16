@@ -681,30 +681,24 @@ export const taskListSystemIntake: NonNullable<
   systems: []
 };
 
-export const getGovernanceTaskListQuery = ({
-  id = systemIntakeId,
-  step = SystemIntakeStep.DRAFT_BUSINESS_CASE,
-  overrides = {}
-}: {
-  id?: string;
-  step?: SystemIntakeStep;
-  overrides?: Partial<GetGovernanceTaskListQuery['systemIntake']>;
-}): MockedQuery<
+export const getGovernanceTaskListQuery = (
+  taskListData?: Partial<GetGovernanceTaskListQuery['systemIntake']>
+): MockedQuery<
   GetGovernanceTaskListQuery,
   GetGovernanceTaskListQueryVariables
 > => ({
   request: {
     query: GetGovernanceTaskListDocument,
-    variables: { id }
+    variables: {
+      id: systemIntakeId
+    }
   },
   result: {
     data: {
       __typename: 'Query',
       systemIntake: {
         ...taskListSystemIntake,
-        id,
-        step,
-        ...overrides
+        ...taskListData
       }
     }
   }
