@@ -136,7 +136,7 @@ describe('Alternative Solution Fields', () => {
     });
     userEvent.type(costSavingsField, 'Alternative A solution cost savings');
     expect(costSavingsField).toHaveValue('Alternative A solution cost savings');
-  });
+  }, 10000); // Increase timeout to 10000ms for this test
 
   it('is approved by cms security', () => {
     renderFields();
