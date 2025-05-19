@@ -11,16 +11,19 @@ import NotFound from 'features/Miscellaneous/NotFound';
 import {
   SystemIntakeGRBPresentationLinks,
   SystemIntakeGRBReviewerFragment,
+  SystemIntakeStatusAdmin,
   useGetSystemIntakeQuery
 } from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { AppState } from 'stores/reducers/rootReducer';
 
+import Alert from 'components/Alert';
 import MainContent from 'components/MainContent';
 import PageLoading from 'components/PageLoading';
 import SideNavigation from 'components/SideNavigation';
 import useMessage from 'hooks/useMessage';
 import { clearBusinessCase, fetchBusinessCase } from 'types/routines';
+import { formatDateUtc } from 'utils/date';
 
 import AccordionNavigation from '../../../components/AccordionNavigation';
 
@@ -110,6 +113,18 @@ const RequestOverview = ({
       {!fullPageLayout && <AccordionNavigation items={navItems} />}
 
       <section className="grid-container">
+        {systemIntake?.statusAdmin ===
+          SystemIntakeStatusAdmin.LCID_RETIRING_SOON && (
+          <Alert type="info" slim className="margin-top-2 margin-bottom-neg-1">
+            {/* <p>{statusAdmin}</p> */}
+            <p className="margin-y-0">
+              {t('lcidAlertMessage', {
+                lcid: systemIntake?.lcid,
+                date: formatDateUtc(systemIntake?.lcidRetiresAt, 'MM/dd/yyyy')
+              })}
+            </p>
+          </Alert>
+        )}
         <Message className="margin-top-2" />
 
         <Grid
