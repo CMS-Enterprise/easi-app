@@ -140,7 +140,7 @@ const AlternativeSolutionFields = ({
           data-testid="security-approval"
         >
           <fieldset className="usa-fieldset margin-top-4">
-            <legend className="usa-label">
+            <legend className="usa-label maxw-none">
               {t('isApproved')}
               <RequiredAsterisk />
             </legend>
@@ -352,7 +352,7 @@ const AlternativeSolutionFields = ({
           data-testid="user-interface-group"
         >
           <fieldset className="usa-fieldset margin-top-4">
-            <legend className="usa-label">
+            <legend className="usa-label maxw-none">
               {t('hasUserInterface')}
               <RequiredAsterisk />
             </legend>
@@ -392,8 +392,7 @@ const AlternativeSolutionFields = ({
 
         <hr className="margin-bottom-1 margin-top-4 opacity-30" aria-hidden />
         <>
-          <span className="font-body-sm text-bold">{t('prosAndCons')}</span>
-          <br />
+          <h4>{t('prosAndCons')}</h4>
           <p>{t('prosAndConsHelpText')}</p>
         </>
 
@@ -411,8 +410,22 @@ const AlternativeSolutionFields = ({
           >
             {t('pros.include')}
             <ul className="padding-left-205 margin-top-1 margin-bottom-0">
-              <li>{t('pros.immediateImpact')}</li>
-              <li>{t('pros.downstreamImpact')}</li>
+              <li>
+                <Trans
+                  i18nKey="businessCase:pros.immediateImpact"
+                  components={{
+                    bold: <span className="text-bold" />
+                  }}
+                />
+              </li>
+              <li>
+                <Trans
+                  i18nKey="businessCase:pros.downstreamImpact"
+                  components={{
+                    bold: <span className="text-bold" />
+                  }}
+                />
+              </li>
             </ul>
           </HelpText>
           <FieldErrorMsg>{flatErrors[`${altId}.pros`]}</FieldErrorMsg>
@@ -496,7 +509,10 @@ const AlternativeSolutionFields = ({
         error={!!flatErrors[`${altId}.costSavings`]}
         className="margin-top-2 margin-bottom-6 tablet:grid-col-9"
       >
-        <Label htmlFor={`BusinessCase-${altId}CostSavings`}>
+        <Label
+          htmlFor={`BusinessCase-${altId}CostSavings`}
+          className="maxw-none"
+        >
           {t('costSavings')}
           <RequiredAsterisk />
         </Label>

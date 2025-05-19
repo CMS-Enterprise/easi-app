@@ -79,9 +79,11 @@ const businessCase = {
     actions: 'Actions',
     notSpecified: 'Not yet specified',
     removeModal: {
-      title: 'Are you sure you want to remove this alternative?',
+      title: 'Are you sure you want to remove Alternative B?',
       content:
-        'This action cannot be undone, though you may add this alternative again if needed.'
+        'Removing Alternative B will clear any content you have added. This action cannot be undone. If you change your mind and choose to add Alternative B again after removing it, you will have to input all content again.',
+      confirm: 'Remove alternative',
+      cancel: "Don't remove and go back"
     },
     solutions: [
       {
@@ -144,9 +146,9 @@ const businessCase = {
     label: 'Pros',
     include: 'Please include both:',
     immediateImpact:
-      'the immeidate impact to your team and/or your project if this solution is selected',
+      'the immediate impact to your team and/or your project if this alternative <bold>is</bold> selected',
     downstreamImpact:
-      'the downstream impact to CMS, other systems, or other users if this solution is selected'
+      'the downstream impact to CMS, other systems, or other users if this alternative <bold>is</bold> selected'
   },
   cons: {
     label: 'Cons',
@@ -154,9 +156,9 @@ const businessCase = {
     downsides:
       'Any downsides to this alternative if it <bold>is</bold> selected',
     immediateImpact:
-      'the immeidate impact to your team and/or your project if this solution <bold>is not</bold> selected',
+      'the immediate impact to your team and/or your project if this alternative <bold>is not</bold> selected',
     downstreamImpact:
-      'the downstream impact to CMS, other systems, or other users if this solution <bold>is not</bold> selected'
+      'the downstream impact to CMS, other systems, or other users if this alternative <bold>is not</bold> selected'
   },
   preferredSolutionPros: 'Preferred solution: Pros',
   preferredSolutionProsHelpText:
@@ -225,6 +227,7 @@ const businessCase = {
   draftAlert:
     'During the draft Business Case phase, you may leave some questions unanswered. However, you will receive better feedback and help from the Governance Admin Team and Governance Review Team (GRT) during this draft Business Case phase if you complete as much as you can. When you reach the final Business Case phase, you will need to fill out all required questions in your Business Case.',
   checkAnswers: 'Check your answers before sending',
+  saveAndReturn: 'Save and return to Business Case',
   sendBusinessCase: 'Send my Business Case'
 };
 

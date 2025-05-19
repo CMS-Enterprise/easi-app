@@ -6,8 +6,6 @@ import { Form, Formik, FormikProps } from 'formik';
 
 import AutoSave from 'components/AutoSave';
 import IconButton from 'components/IconButton';
-import PageNumber from 'components/PageNumber';
-import { solutionHasFilledFields } from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
 import { getSingleSolutionSchema } from 'validations/businessCaseSchema';
@@ -71,7 +69,7 @@ const AlternativeSolutionA = ({
                 }}
                 unstyled
               >
-                {t('Save & return to Business Case')}
+                {t('saveAndReturn')}
               </IconButton>
 
               <AlternativeSolutionFields
@@ -112,15 +110,9 @@ const AlternativeSolutionA = ({
               }}
               unstyled
             >
-              {t('Save & return to Business Case')}
+              {t('saveAndReturn')}
             </IconButton>
 
-            <PageNumber
-              currentPage={5}
-              totalPages={
-                solutionHasFilledFields(businessCase.alternativeB) ? 6 : 5
-              }
-            />
             <AutoSave
               values={values}
               onSave={dispatchSave}

@@ -6,6 +6,7 @@ import { Button, ButtonGroup } from '@trussworks/react-uswds';
 import { AppState } from 'stores/reducers/rootReducer';
 
 import BusinessCaseReview from 'components/BusinessCaseReview';
+import PageNumber from 'components/PageNumber';
 import { BusinessCaseModel } from 'types/businessCase';
 import { postAction } from 'types/routines';
 
@@ -65,6 +66,8 @@ const Review = ({ businessCase, isFinal }: ReviewProps) => {
           </Button>
         </ButtonGroup>
       </>
+
+      <PageNumber currentPage={4} totalPages={4} />
     </BusinessCaseStepWrapper>
   );
 };

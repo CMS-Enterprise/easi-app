@@ -91,7 +91,7 @@ const RequestDescription = ({
               >
                 <Label
                   htmlFor="BusinessCase-BusinessNeed"
-                  className="width-100"
+                  className="maxw-none"
                 >
                   {t('businessNeed.label')}
                   <RequiredAsterisk />
@@ -123,7 +123,10 @@ const RequestDescription = ({
                 scrollElement="currentSolutionSummary"
                 error={!!flatErrors.currentSolutionSummary}
               >
-                <Label htmlFor="BusinessCase-CurrentSolutionSummary">
+                <Label
+                  htmlFor="BusinessCase-CurrentSolutionSummary"
+                  className="maxw-none"
+                >
                   {t('currentSolutionSummary')}
                   <RequiredAsterisk />
                 </Label>
@@ -149,7 +152,7 @@ const RequestDescription = ({
                 scrollElement="cmsBenefit"
                 error={!!flatErrors.cmsBenefit}
               >
-                <Label htmlFor="BusinessCase-CmsBenefit">
+                <Label htmlFor="BusinessCase-CmsBenefit" className="maxw-none">
                   {t('cmsBenefit')}
                   <RequiredAsterisk />
                 </Label>
@@ -173,7 +176,10 @@ const RequestDescription = ({
                 scrollElement="priorityAlignment"
                 error={!!flatErrors.priorityAlignment}
               >
-                <Label htmlFor="BusinessCase-PriorityAlignment">
+                <Label
+                  htmlFor="BusinessCase-PriorityAlignment"
+                  className="maxw-none"
+                >
                   {t('priorityAlignment')}
                   <RequiredAsterisk />
                 </Label>
@@ -204,7 +210,10 @@ const RequestDescription = ({
                 scrollElement="successIndicators"
                 error={!!flatErrors.successIndicators}
               >
-                <Label htmlFor="BusinessCase-SuccessIndicators">
+                <Label
+                  htmlFor="BusinessCase-SuccessIndicators"
+                  className="maxw-none"
+                >
                   {t('successIndicators')}
                   <RequiredAsterisk />
                 </Label>
@@ -280,7 +289,7 @@ const RequestDescription = ({
               {t('Save & Exit')}
             </IconButton>
 
-            <PageNumber currentPage={2} totalPages={5} />
+            <PageNumber currentPage={2} totalPages={4} />
 
             <AutoSave
               values={values}

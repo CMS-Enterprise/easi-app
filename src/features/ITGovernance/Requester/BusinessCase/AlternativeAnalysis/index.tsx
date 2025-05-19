@@ -71,7 +71,7 @@ const AlternativeAnalysis = ({
           return (
             <>
               <span>
-                {t(`alternativesTable.solutions.${index}.heading`)}
+                <b>{t(`alternativesTable.solutions.${index}.heading`)}</b>
 
                 {t(`alternativesTable.solutions.${index}.required`) && (
                   <RequiredAsterisk />
@@ -99,7 +99,11 @@ const AlternativeAnalysis = ({
           // Check to see if form has been started and display title
           if (solutionHasFilledFields(row.original)) {
             return (
-              <>{row.original.title || t(`alternativesTable.notSpecified`)}</>
+              <>
+                {row.original.title || (
+                  <i>{t(`alternativesTable.notSpecified`)}</i>
+                )}
+              </>
             );
           }
 
@@ -120,7 +124,7 @@ const AlternativeAnalysis = ({
                   history.push(newUrl);
                 }}
               >
-                {t(`alternativesTable.solutions.${index}.add`)}
+                <b>{t(`alternativesTable.solutions.${index}.add`)}</b>
                 <Icon.ArrowForward className="margin-left-1" />
               </Button>
             </>
@@ -187,7 +191,7 @@ const AlternativeAnalysis = ({
               </Button>
               {index > 1 && (
                 <Button
-                  className="margin-left-1"
+                  className="margin-left-1 text-error"
                   type="button"
                   unstyled
                   onClick={() => {
@@ -339,7 +343,7 @@ const AlternativeAnalysis = ({
                               {row.cells.map(cell => {
                                 return (
                                   <td
-                                    className="text-ttop"
+                                    className="text-middle"
                                     style={{ width: '60%' }} // TODO: better way to do this?
                                     {...cell.getCellProps()}
                                   >
@@ -407,7 +411,7 @@ const AlternativeAnalysis = ({
               {t('Save & Exit')}
             </IconButton>
 
-            <PageNumber currentPage={3} totalPages={5} />
+            <PageNumber currentPage={3} totalPages={4} />
 
             <AutoSave
               values={values}
@@ -431,7 +435,8 @@ const AlternativeAnalysis = ({
                 <ButtonGroup>
                   <Button
                     type="button"
-                    className="margin-right-1"
+                    secondary
+                    className="margin-right-2"
                     onClick={() => {
                       // Reset alternative B in form
                       setFieldValue('alternativeB', defaultProposedSolution);
@@ -448,7 +453,7 @@ const AlternativeAnalysis = ({
                       history.replace(history.location);
                     }}
                   >
-                    {t('general:remove')}
+                    {t('alternativesTable.removeModal.confirm')}
                   </Button>
                   <Button
                     type="button"
@@ -457,7 +462,7 @@ const AlternativeAnalysis = ({
                       setRemoveModalOpen(false);
                     }}
                   >
-                    {t('general:cancel')}
+                    {t('alternativesTable.removeModal.cancel')}
                   </Button>
                 </ButtonGroup>
               </ModalFooter>

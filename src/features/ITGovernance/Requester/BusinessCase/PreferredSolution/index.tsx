@@ -11,7 +11,6 @@ import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
 import HelpText from 'components/HelpText';
 import IconButton from 'components/IconButton';
-import PageNumber from 'components/PageNumber';
 import TextAreaField from 'components/TextAreaField';
 import { yesNoMap } from 'data/common';
 import { BusinessCaseModel, PreferredSolutionForm } from 'types/businessCase';
@@ -76,7 +75,7 @@ const PreferredSolution = ({
                   }}
                   unstyled
                 >
-                  {t('Save & return to Business Case')}
+                  {t('saveAndReturn')}
                 </IconButton>
 
                 {/* Required fields help text and alert */}
@@ -185,7 +184,9 @@ const PreferredSolution = ({
                   data-testid="security-approval"
                 >
                   <fieldset className="usa-fieldset margin-top-4">
-                    <legend className="usa-label">{t('isApproved')}</legend>
+                    <legend className="usa-label maxw-none">
+                      {t('isApproved')}
+                    </legend>
                     <FieldErrorMsg>
                       {flatErrors['preferredSolution.security.isApproved']}
                     </FieldErrorMsg>
@@ -454,7 +455,7 @@ const PreferredSolution = ({
                   data-testid="user-interface-group"
                 >
                   <fieldset className="usa-fieldset margin-top-4">
-                    <legend className="usa-label">
+                    <legend className="usa-label maxw-none">
                       {t('hasUserInterface')}
                     </legend>
                     <FieldErrorMsg>
@@ -503,10 +504,7 @@ const PreferredSolution = ({
                   aria-hidden
                 />
                 <>
-                  <span className="font-body-sm text-bold">
-                    {t('prosAndCons')}
-                  </span>
-                  <br />
+                  <h4>{t('prosAndCons')}</h4>
                   <p>{t('prosAndConsHelpText')}</p>
                 </>
 
@@ -523,8 +521,22 @@ const PreferredSolution = ({
                   >
                     {t('pros.include')}
                     <ul className="padding-left-205 margin-top-1 margin-bottom-0">
-                      <li>{t('pros.immediateImpact')}</li>
-                      <li>{t('pros.downstreamImpact')}</li>
+                      <li>
+                        <Trans
+                          i18nKey="businessCase:pros.immediateImpact"
+                          components={{
+                            bold: <span className="text-bold" />
+                          }}
+                        />
+                      </li>
+                      <li>
+                        <Trans
+                          i18nKey="businessCase:pros.downstreamImpact"
+                          components={{
+                            bold: <span className="text-bold" />
+                          }}
+                        />
+                      </li>
                     </ul>
                   </HelpText>
                   <FieldErrorMsg>
@@ -617,7 +629,10 @@ const PreferredSolution = ({
                 error={!!flatErrors['preferredSolution.costSavings']}
                 className="tablet:grid-col-9 margin-bottom-6"
               >
-                <Label htmlFor="BusinessCase-PreferredSolutionCostSavings">
+                <Label
+                  htmlFor="BusinessCase-PreferredSolutionCostSavings"
+                  className="maxw-none"
+                >
                   {t('costSavings')}
                 </Label>
                 <HelpText
@@ -660,7 +675,7 @@ const PreferredSolution = ({
             <IconButton
               type="button"
               icon={<Icon.ArrowBack />}
-              className="margin-bottom-3 margin-top-2"
+              className="margin-bottom-3 margin-top-3"
               data-testid="save-and-return-button"
               onClick={() => {
                 dispatchSave();
@@ -670,10 +685,9 @@ const PreferredSolution = ({
               }}
               unstyled
             >
-              {t('Save & return to Business Case')}
+              {t('saveAndReturn')}
             </IconButton>
 
-            <PageNumber currentPage={4} totalPages={5} />
             <AutoSave
               values={values}
               onSave={dispatchSave}

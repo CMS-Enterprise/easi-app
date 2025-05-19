@@ -12,7 +12,6 @@ import HelpText from 'components/HelpText';
 import IconButton from 'components/IconButton';
 import PageNumber from 'components/PageNumber';
 import RequiredAsterisk from 'components/RequiredAsterisk';
-import { solutionHasFilledFields } from 'data/businessCase';
 import { BusinessCaseModel, GeneralRequestInfoForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
 import { BusinessCaseSchema } from 'validations/businessCaseSchema';
@@ -200,12 +199,7 @@ const GeneralRequestInfo = ({
               {t('Save & Exit')}
             </IconButton>
 
-            <PageNumber
-              currentPage={1}
-              totalPages={
-                solutionHasFilledFields(businessCase.alternativeB) ? 6 : 5
-              }
-            />
+            <PageNumber currentPage={1} totalPages={4} />
 
             <AutoSave
               values={values}
