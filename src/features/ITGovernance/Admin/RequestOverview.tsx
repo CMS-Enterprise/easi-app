@@ -116,7 +116,6 @@ const RequestOverview = ({
         {systemIntake?.statusAdmin ===
           SystemIntakeStatusAdmin.LCID_RETIRING_SOON && (
           <Alert type="info" slim className="margin-top-2 margin-bottom-neg-1">
-            {/* <p>{statusAdmin}</p> */}
             <p className="margin-y-0">
               {t('lcidAlertMessage', {
                 lcid: systemIntake?.lcid,
