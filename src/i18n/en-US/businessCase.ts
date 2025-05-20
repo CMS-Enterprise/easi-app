@@ -12,7 +12,7 @@ const businessCase = {
     "Make a first draft of the various solutions you've thought of and the costs involved to build or buy them. Once you have a draft Business Case ready for review, send it to the Governance Review Admin Team who will ensure it is ready to be presented at the Governance Review Team (GRT) Meeting.",
   requestName: 'Contract / Request title',
   requestNameHelpText:
-    'Your request title should match the title of you Acquisition Plan or Interagency Agreement',
+    'Your request title should match the title of your Acquisition Plan or Interagency Agreement',
   requester: 'Requester name',
   businessOwner: 'CMS Business Owner name',
   requesterPhoneNumber: 'Requester phone number',
@@ -20,7 +20,7 @@ const businessCase = {
   requestDescription: 'Request description',
   businessNeed: {
     label:
-      'What is your business or user need? Inclue a definition of the problem or object and how it connects to CMS mission, programs, or operations.',
+      'What is your business or user need? Include a definition of the problem or object and how it connects to CMS mission, programs, or operations.',
     include: 'Also include:',
     mandates: 'any legislative mandates or regulations that needs to be met',
     investmentBenefits:
@@ -58,19 +58,19 @@ const businessCase = {
   alternatives: 'Options and alternatives',
   alternativesDescription: {
     text: [
-      'Below you should identify options and alternatives to meet your business need. Include a summary of the approaches, how you will acquire the solution, and describe the pros, cons, total life cycle costs, and potential cost savings/avoidance for each alternative considered. Include up to three viable alternatives, starting with your preferred solution.',
+      'Below, you should identify options and alternatives to meet your business need. Include a summary of the approaches, how you will acquire the solution, and describe the pros, cons, total life cycle costs, and potential cost savings/avoidance for each alternative considered. Include up to three viable alternatives, starting with your preferred solution.',
       'You should not describe the proposed solutions in technical detail, but instead should describe the "alternative concepts", such as:',
-      "In your alternatives, include details such as differences between system capabilities, user friendliness, technical and security considerations, ease and timing of integration with CMS' IT infrastructure, etc. Your alernatives should also address the impact to your project and/or users if your preferred solution is not selected."
+      "In your alternatives, include details such as differences between system capabilities, user friendliness, technical and security considerations, ease and timing of integration with CMS' IT infrastructure, etc. Your alternatives should also address the impact to your project and/or users if your preferred solution is not selected."
     ],
     list: [
-      'Buying a Commercial off the shelf (COTS) product/tool vs.',
-      'Buying a Government off the shelf (GOTS) product/tool vs.',
-      'Developing a Custom-built solution vs.',
-      'Using/repurposing an existing CMS system vs.',
-      'Using an Enterprise Shared Service'
+      'buying a commercial off the shelf (COTS) product/tool vs.',
+      'buying a Government off the shelf (GOTS) product/tool vs.',
+      'developing a custom-built solution vs.',
+      'using/repurposing an existing CMS system vs.',
+      'using an Enterprise Shared Service'
     ],
     draftAlternativesAlert:
-      'During the draft Business Case phase, you may leave some questions unanswered and may leave your alternatives in an "In progress" status. However, the more you can complete in each alternative, the better feedback and help you will receive from the Governance Admin team and Governance Review Team (GRT) during this draft Business Case phase. When you reach the final Business Case phase, you will be required to fill out all questions in each alternative you add to your Business Case.'
+      'During the draft Business Case phase, you may leave some questions unanswered and may leave your alternatives in an "In progress" status. However, you will receive better feedback and help from the Governance Admin Team and Governance Review Team (GRT) during this draft Business Case phase if you complete as much as you can for each alternative. When you reach the final Business Case phase, you will need to fill out all required questions in each alternative you add to your Business Case.'
   },
   alternativesTable: {
     type: 'Alternative type',
@@ -122,10 +122,10 @@ const businessCase = {
   },
   solutionAcquisitionApproach: 'Acquisition approach',
   solutionAcquisitionApproachHelpText:
-    "Describe the approach to acquiring the products and services required to deliver the system. Responses should address the project team's contracting approach such as the contract vehicle, if it is an IDIQ, sole source vs competition, whether it is a small business set aside, and/or any other relvant information.",
+    "Describe the approach to acquiring the products and services required to deliver the system. Responses should address the project team's contracting approach such as the contract vehicle, if it is an IDIQ, sole source vs competition, whether it is a small business set aside, and/or any other relevant information.",
   isApproved:
     'Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?',
-  isBeingReviewed: 'Is it in the process of CMS approval?',
+  isBeingReviewed: 'Is it in the process of getting approved?',
   isBeingReviewedHelpText:
     'Obtaining CMS Approval can be lengthy and solutions that do not have it or are just starting may lead to longer project timelines.',
   hostingType: 'Do you need to host your solution?',
@@ -137,7 +137,7 @@ const businessCase = {
     'What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?',
   dataCenterLocation: 'Which data center do you plan to host it at?',
   hasUserInterface:
-    'Will your solution have a User Interface, be public facing, or involve outside customers?',
+    'Will your solution have a user interface, be public facing, or involve outside customers?',
   prosAndCons: 'Pros and cons',
   prosAndConsHelpText:
     'Summarize the capabilities of the recommended technology or tools and how they will or will not meet user and stakeholder requirements.',
@@ -172,7 +172,7 @@ const businessCase = {
     'This could include old systems going away, contract hours/ new Full Time Employees not needed, or other savings, even if indirect.',
   additionalAlternatives: 'Additional alternatives',
   additionalAlternativesHelpText:
-    'If you are buillding a multi-year project that will require significant upkeep, you may want to include more alternatives. Keep in mind that Government off-the-shelf and Commercial off-the-shelf products are acceptable alternatives to include.',
+    'If you are building a multi-year project that will require significant upkeep, you may want to include more alternatives. Keep in mind that Government off-the-shelf and Commercial off-the-shelf products are acceptable alternatives to include.',
   alternativeA: 'Alternative A',
   alternativeB: 'Alternative B',
   removeAlternativeB: 'Remove Alternative B',
@@ -227,7 +227,8 @@ const businessCase = {
   draftAlert:
     'During the draft Business Case phase, you may leave some questions unanswered. However, you will receive better feedback and help from the Governance Admin Team and Governance Review Team (GRT) during this draft Business Case phase if you complete as much as you can. When you reach the final Business Case phase, you will need to fill out all required questions in your Business Case.',
   checkAnswers: 'Check your answers before sending',
-  saveAndReturn: 'Save and return to Business Case',
+  saveAndReturnToBusinessCase: 'Save and return to Business Case',
+  saveAndExit: 'Save and exit',
   sendBusinessCase: 'Send my Business Case'
 };
 

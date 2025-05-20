@@ -12,13 +12,15 @@ import {
   Table
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
-import { FieldArray, Form, Formik, FormikProps } from 'formik';
+import { Form, Formik, FormikProps } from 'formik';
 
 import Alert from 'components/Alert';
 import AutoSave from 'components/AutoSave';
 import HelpText from 'components/HelpText';
 import IconButton from 'components/IconButton';
+import MainContent from 'components/MainContent';
 import Modal from 'components/Modal';
+import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import TaskStatusTag from 'components/TaskStatusTag';
@@ -32,13 +34,10 @@ import {
   ProposedBusinessCaseSolution
 } from 'types/businessCase';
 import { putBusinessCase } from 'types/routines';
-import flattenErrors from 'utils/flattenErrors';
 import {
   getAlternativeAnalysisSchema,
   SolutionSchema
 } from 'validations/businessCaseSchema';
-
-import BusinessCaseStepWrapper from '../BusinessCaseStepWrapper';
 
 type AltnerativeAnalysisProps = {
   businessCase: BusinessCaseModel;
@@ -242,9 +241,7 @@ const AlternativeAnalysis = ({
       innerRef={formikRef}
     >
       {(formikProps: FormikProps<AlternativeAnalysisForm>) => {
-        const { errors, setErrors, setFieldValue, values, validateForm } =
-          formikProps;
-        const flatErrors = flattenErrors(errors);
+        const { setErrors, setFieldValue, values, validateForm } = formikProps;
 
         // Validation function to check if the form is valid, used to diable/enable the Next button
         const validateSolution = () => {
@@ -270,95 +267,88 @@ const AlternativeAnalysis = ({
         const isFormValid = validateSolution();
 
         return (
-          <BusinessCaseStepWrapper
-            systemIntakeId={businessCase.systemIntakeId}
-            title={t('alternatives')}
-            description={
-              <>
-                <p>{t('alternativesDescription.text.0')}</p>
-                <p className="margin-bottom-0">
-                  {t('alternativesDescription.text.1')}
-                </p>
-                <ul className="padding-left-205 margin-top-0">
-                  <li>{t('alternativesDescription.list.0')}</li>
-                  <li>{t('alternativesDescription.list.1')}</li>
-                  <li>{t('alternativesDescription.list.2')}</li>
-                  <li>{t('alternativesDescription.list.3')}</li>
-                  <li>{t('alternativesDescription.list.4')}</li>
-                </ul>
-                <p>{t('alternativesDescription.text.2')}</p>
-                {/* Required fields help text */}
-                <HelpText className="margin-top-1 text-base">
-                  <Trans
-                    i18nKey="businessCase:requiredFields"
-                    components={{ red: <span className="text-red" /> }}
-                  />
-                </HelpText>
-              </>
-            }
-            errors={flatErrors}
-            data-testid="alternative-analysis"
-          >
-            <Form className="tablet:grid-col-9 margin-bottom-6">
-              <FieldArray name="AlternativeAnalysis">
-                {() => (
-                  <div>
-                    {/* Required fields help alert */}
-                    {!isFinal && (
-                      <Alert
-                        type="info"
-                        className="margin-top-2"
-                        data-testid="draft-business-case-fields-alert"
-                        slim
-                      >
-                        {t('alternativesDescription.draftAlternativesAlert')}
-                      </Alert>
-                    )}
-                    <Table
-                      bordered={false}
-                      fullWidth
-                      style={{ tableLayout: 'auto' }}
-                      {...getTableProps()}
-                    >
-                      <thead>
-                        {headerGroups.map(headerGroup => (
-                          <tr {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map(column => (
-                              <th
-                                {...column.getHeaderProps()}
-                                scope="col"
-                                className="border-bottom-2px"
-                              >
-                                {column.render('Header')}
-                              </th>
-                            ))}
-                          </tr>
-                        ))}
-                      </thead>
-                      <tbody {...getTableBodyProps()}>
-                        {rows.map(row => {
-                          prepareRow(row);
-                          return (
-                            <tr {...row.getRowProps()}>
-                              {row.cells.map(cell => {
-                                return (
-                                  <td
-                                    className="text-middle"
-                                    style={{ width: '60%' }} // TODO: better way to do this?
-                                    {...cell.getCellProps()}
-                                  >
-                                    {cell.render('Cell')}
-                                  </td>
-                                );
-                              })}
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </Table>
-                  </div>
+          <MainContent className="grid-container">
+            <PageHeading className="margin-top-4">
+              {t('alternatives')}
+            </PageHeading>
+            <div className="font-body-lg text-light">
+              <p>{t('alternativesDescription.text.0')}</p>
+              <p className="margin-bottom-0">
+                {t('alternativesDescription.text.1')}
+              </p>
+              <ul className="margin-top-1">
+                <li>{t('alternativesDescription.list.0')}</li>
+                <li>{t('alternativesDescription.list.1')}</li>
+                <li>{t('alternativesDescription.list.2')}</li>
+                <li>{t('alternativesDescription.list.3')}</li>
+                <li>{t('alternativesDescription.list.4')}</li>
+              </ul>
+              <p>{t('alternativesDescription.text.2')}</p>
+              {/* Required fields help text */}
+              <HelpText className="margin-top-1 text-base">
+                <Trans
+                  i18nKey="businessCase:requiredFields"
+                  components={{ red: <span className="text-red" /> }}
+                />
+              </HelpText>
+            </div>
+
+            <Form className="margin-bottom-6">
+              <div>
+                {/* Required fields help alert */}
+                {!isFinal && (
+                  <Alert
+                    type="info"
+                    className="margin-top-2"
+                    data-testid="draft-business-case-fields-alert"
+                    slim
+                  >
+                    {t('alternativesDescription.draftAlternativesAlert')}
+                  </Alert>
                 )}
-              </FieldArray>
+                <Table
+                  bordered={false}
+                  fullWidth
+                  style={{ tableLayout: 'auto' }}
+                  {...getTableProps()}
+                >
+                  <thead>
+                    {headerGroups.map(headerGroup => (
+                      <tr {...headerGroup.getHeaderGroupProps()}>
+                        {headerGroup.headers.map(column => (
+                          <th
+                            {...column.getHeaderProps()}
+                            scope="col"
+                            className="border-bottom-2px"
+                          >
+                            {column.render('Header')}
+                          </th>
+                        ))}
+                      </tr>
+                    ))}
+                  </thead>
+                  <tbody {...getTableBodyProps()}>
+                    {rows.map(row => {
+                      prepareRow(row);
+                      return (
+                        <tr {...row.getRowProps()}>
+                          {row.cells.map(cell => {
+                            return (
+                              <td
+                                className="text-middle"
+                                style={{ width: '30%' }} // TODO: better way to do this?
+                                {...cell.getCellProps()}
+                              >
+                                {cell.render('Cell')}
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </Table>
+              </div>
             </Form>
 
             <ButtonGroup>
@@ -408,7 +398,7 @@ const AlternativeAnalysis = ({
               }}
               className="margin-bottom-3 margin-top-205"
             >
-              {t('Save & Exit')}
+              {t('saveAndExit')}
             </IconButton>
 
             <PageNumber currentPage={3} totalPages={4} />
@@ -467,7 +457,7 @@ const AlternativeAnalysis = ({
                 </ButtonGroup>
               </ModalFooter>
             </Modal>
-          </BusinessCaseStepWrapper>
+          </MainContent>
         );
       }}
     </Formik>

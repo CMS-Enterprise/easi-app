@@ -286,7 +286,7 @@ const RequestDescription = ({
               }}
               unstyled
             >
-              {t('Save & Exit')}
+              {t('saveAndExit')}
             </IconButton>
 
             <PageNumber currentPage={2} totalPages={4} />

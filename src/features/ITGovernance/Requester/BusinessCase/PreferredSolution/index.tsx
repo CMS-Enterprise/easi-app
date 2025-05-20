@@ -11,6 +11,7 @@ import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
 import HelpText from 'components/HelpText';
 import IconButton from 'components/IconButton';
+import RequiredAsterisk from 'components/RequiredAsterisk';
 import TextAreaField from 'components/TextAreaField';
 import { yesNoMap } from 'data/common';
 import { BusinessCaseModel, PreferredSolutionForm } from 'types/businessCase';
@@ -75,7 +76,7 @@ const PreferredSolution = ({
                   }}
                   unstyled
                 >
-                  {t('saveAndReturn')}
+                  {t('saveAndReturnToBusinessCase')}
                 </IconButton>
 
                 {/* Required fields help text and alert */}
@@ -103,6 +104,7 @@ const PreferredSolution = ({
                 >
                   <Label htmlFor="BusinessCase-PreferredSolutionTitle">
                     {t('solutionTitle')}
+                    <RequiredAsterisk />
                   </Label>
                   <FieldErrorMsg>
                     {flatErrors['preferredSolution.title']}
@@ -122,6 +124,7 @@ const PreferredSolution = ({
                 >
                   <Label htmlFor="BusinessCase-PreferredSolutionSummary">
                     {t('solutionSummary.label')}
+                    <RequiredAsterisk />
                   </Label>
                   <HelpText
                     id="BusinessCase-PreferredSolutionSummaryHelp"
@@ -154,6 +157,7 @@ const PreferredSolution = ({
                 >
                   <Label htmlFor="BusinessCase-PreferredSolutionAcquisitionApproach">
                     {t('solutionAcquisitionApproach')}
+                    <RequiredAsterisk />
                   </Label>
                   <HelpText
                     id="BusinessCase-PreferredSolutionAcquisitionApproachHelp"
@@ -186,6 +190,7 @@ const PreferredSolution = ({
                   <fieldset className="usa-fieldset margin-top-4">
                     <legend className="usa-label maxw-none">
                       {t('isApproved')}
+                      <RequiredAsterisk />
                     </legend>
                     <FieldErrorMsg>
                       {flatErrors['preferredSolution.security.isApproved']}
@@ -230,15 +235,17 @@ const PreferredSolution = ({
 
                 {values.preferredSolution.security.isApproved === false && (
                   <FieldGroup
+                    className="margin-y-1 margin-left-4"
                     scrollElement="preferredSolution.security.isBeingReviewed"
                     error={
                       !!flatErrors['preferredSolution.security.isBeingReviewed']
                     }
                     data-testid="security-approval-in-progress"
                   >
-                    <fieldset className="usa-fieldset margin-top-4">
+                    <fieldset className="usa-fieldset margin-top-2">
                       <legend className="usa-label margin-bottom-1">
                         {t('isBeingReviewed')}
+                        <RequiredAsterisk />
                       </legend>
                       <HelpText id="BusinessCase-PreferredSolutionApprovalHelp">
                         {t('isBeingReviewedHelpText')}
@@ -295,7 +302,9 @@ const PreferredSolution = ({
                   error={!!flatErrors['preferredSolution.hosting.type']}
                 >
                   <fieldset className="usa-fieldset margin-top-4">
-                    <legend className="usa-label">{t('hostingType')}</legend>
+                    <legend className="usa-label">
+                      {t('hostingType')} <RequiredAsterisk />
+                    </legend>
                     <FieldErrorMsg>
                       {flatErrors['preferredSolution.hosting.type']}
                     </FieldErrorMsg>
@@ -332,6 +341,7 @@ const PreferredSolution = ({
                         >
                           <Label htmlFor="BusinessCase-PreferredSolutionCloudLocation">
                             {t('hostingLocation')}
+                            <RequiredAsterisk />
                           </Label>
                           <FieldErrorMsg>
                             {flatErrors['preferredSolution.hosting.location']}
@@ -360,6 +370,7 @@ const PreferredSolution = ({
                         >
                           <Label htmlFor="BusinessCase-PreferredSolutionCloudServiceType">
                             {t('cloudServiceType')}
+                            <RequiredAsterisk />
                           </Label>
                           <FieldErrorMsg>
                             {
@@ -414,6 +425,7 @@ const PreferredSolution = ({
                       >
                         <Label htmlFor="BusinessCase-PreferredSolutionDataCenterLocation">
                           {t('dataCenterLocation')}
+                          <RequiredAsterisk />
                         </Label>
                         <FieldErrorMsg>
                           {flatErrors['preferredSolution.hosting.location']}
@@ -457,6 +469,7 @@ const PreferredSolution = ({
                   <fieldset className="usa-fieldset margin-top-4">
                     <legend className="usa-label maxw-none">
                       {t('hasUserInterface')}
+                      <RequiredAsterisk />
                     </legend>
                     <FieldErrorMsg>
                       {flatErrors['preferredSolution.hasUserInterface']}
@@ -514,6 +527,7 @@ const PreferredSolution = ({
                 >
                   <Label htmlFor="BusinessCase-PreferredSolutionPros">
                     {t('pros.label')}
+                    <RequiredAsterisk />
                   </Label>
                   <HelpText
                     id="BusinessCase-PreferredSolutionProsHelp"
@@ -558,6 +572,7 @@ const PreferredSolution = ({
                 >
                   <Label htmlFor="BusinessCase-PreferredSolutionCons">
                     {t('cons.label')}
+                    <RequiredAsterisk />
                   </Label>
                   <HelpText
                     id="BusinessCase-PreferredSolutionConsHelp"
@@ -565,14 +580,6 @@ const PreferredSolution = ({
                   >
                     {t('cons.include')}
                     <ul className="padding-left-205 margin-top-1 margin-bottom-0">
-                      <li>
-                        <Trans
-                          i18nKey="businessCase:cons.downsides"
-                          components={{
-                            bold: <span className="text-bold" />
-                          }}
-                        />
-                      </li>
                       <li>
                         <Trans
                           i18nKey="businessCase:cons.immediateImpact"
@@ -584,6 +591,14 @@ const PreferredSolution = ({
                       <li>
                         <Trans
                           i18nKey="businessCase:cons.downstreamImpact"
+                          components={{
+                            bold: <span className="text-bold" />
+                          }}
+                        />
+                      </li>
+                      <li>
+                        <Trans
+                          i18nKey="businessCase:cons.downsides"
                           components={{
                             bold: <span className="text-bold" />
                           }}
@@ -634,6 +649,7 @@ const PreferredSolution = ({
                   className="maxw-none"
                 >
                   {t('costSavings')}
+                  <RequiredAsterisk />
                 </Label>
                 <HelpText
                   id="BusinessCase-PreferredSolutionCostSavingsHelp"
@@ -655,6 +671,11 @@ const PreferredSolution = ({
               </FieldGroup>
             </Form>
 
+            <hr
+              className="margin-bottom-2 margin-top-4 opacity-30"
+              aria-hidden
+            />
+
             <Button
               type="button"
               onClick={() => {
@@ -669,7 +690,7 @@ const PreferredSolution = ({
                 });
               }}
             >
-              {t('Finish Preferred Solution')}
+              {t('Finish preferred solution')}
             </Button>
 
             <IconButton
@@ -685,7 +706,7 @@ const PreferredSolution = ({
               }}
               unstyled
             >
-              {t('saveAndReturn')}
+              {t('saveAndReturnToBusinessCase')}
             </IconButton>
 
             <AutoSave

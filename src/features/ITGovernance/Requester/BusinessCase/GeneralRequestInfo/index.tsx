@@ -196,7 +196,7 @@ const GeneralRequestInfo = ({
               }}
               className="margin-bottom-3 margin-top-205"
             >
-              {t('Save & Exit')}
+              {t('saveAndExit')}
             </IconButton>
 
             <PageNumber currentPage={1} totalPages={4} />

@@ -68,7 +68,7 @@ const AlternativeSolutionB = ({
                 }}
                 unstyled
               >
-                {t('saveAndReturn')}
+                {t('saveAndReturnToBusinessCase')}
               </IconButton>
               <AlternativeSolutionFields
                 altLetter="B"
@@ -77,6 +77,11 @@ const AlternativeSolutionB = ({
                 isFinal={isFinal}
               />
             </Form>
+
+            <hr
+              className="margin-bottom-2 margin-top-4 opacity-30"
+              aria-hidden
+            />
 
             <Button
               type="button"
@@ -92,7 +97,7 @@ const AlternativeSolutionB = ({
                 });
               }}
             >
-              {t('Finish Alternative B')}
+              {t('Finish alternative B')}
             </Button>
 
             <IconButton
@@ -108,7 +113,7 @@ const AlternativeSolutionB = ({
               }}
               unstyled
             >
-              {t('saveAndReturn')}
+              {t('saveAndReturnToBusinessCase')}
             </IconButton>
 
             <AutoSave

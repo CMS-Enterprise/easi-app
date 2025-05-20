@@ -176,11 +176,12 @@ const AlternativeSolutionFields = ({
 
         {values[`${altId}`].security.isApproved === false && (
           <FieldGroup
+            className="margin-y-1 margin-left-4"
             scrollElement={`${altId}.security.isBeingReviewed`}
             error={!!flatErrors[`${altId}.security.isBeingReviewed`]}
             data-testid="security-approval-in-progress"
           >
-            <fieldset className="usa-fieldset margin-top-4">
+            <fieldset className="usa-fieldset margin-top-2">
               <legend className="usa-label margin-bottom-1">
                 {t('isBeingReviewed')}
                 <RequiredAsterisk />
@@ -455,14 +456,6 @@ const AlternativeSolutionFields = ({
             <ul className="padding-left-205 margin-top-1 margin-bottom-0">
               <li>
                 <Trans
-                  i18nKey="businessCase:cons.downsides"
-                  components={{
-                    bold: <span className="text-bold" />
-                  }}
-                />
-              </li>
-              <li>
-                <Trans
                   i18nKey="businessCase:cons.immediateImpact"
                   components={{
                     bold: <span className="text-bold" />
@@ -472,6 +465,14 @@ const AlternativeSolutionFields = ({
               <li>
                 <Trans
                   i18nKey="businessCase:cons.downstreamImpact"
+                  components={{
+                    bold: <span className="text-bold" />
+                  }}
+                />
+              </li>
+              <li>
+                <Trans
+                  i18nKey="businessCase:cons.downsides"
                   components={{
                     bold: <span className="text-bold" />
                   }}

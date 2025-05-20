@@ -168,7 +168,7 @@ export const BusinessCaseFinalValidationSchema = {
     successIndicators: Yup.string()
       .trim()
       .required(
-        'Tell us how you will determine whethere or not this effort is successful'
+        'Tell us how you will determine whether or not this effort is successful'
       )
   }),
   preferredSolution: finalSolutionSchema('Preferred Solution'),
