@@ -25,6 +25,7 @@ import PageLoading from 'components/PageLoading';
 import { TaskListContainer } from 'components/TaskList';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import useMessage from 'hooks/useMessage';
+import { formatDateUtc } from 'utils/date';
 
 import {
   ITGovIntakeFormStatus,
@@ -136,7 +137,6 @@ function GovernanceTaskList() {
                     {t('taskList.description', { requestName })}
                   </p>
                 )}
-
                 {isClosed && !hasDecision && (
                   <Alert
                     type="warning"
@@ -179,10 +179,33 @@ function GovernanceTaskList() {
                       />
                     </Alert>
                   ) : (
-                    <>gary</>
+                    systemIntake?.lcidRetiresAt && (
+                      <Alert
+                        type="info"
+                        heading={t('taskList.lcidRetiringSoon.heading')}
+                        className="margin-bottom-6"
+                        data-testid="decision-alert"
+                      >
+                        <Trans
+                          i18nKey="itGov:taskList.lcidRetiringSoon.text"
+                          values={{
+                            email: IT_GOV_EMAIL,
+                            date: formatDateUtc(
+                              systemIntake?.lcidRetiresAt,
+                              'MM/dd/yyyy'
+                            )
+                          }}
+                          components={{
+                            decisionLink: <Link href="#decision"> </Link>,
+                            emailLink: (
+                              <Link href={`mailto:${IT_GOV_EMAIL}`}> </Link>
+                            )
+                          }}
+                        />
+                      </Alert>
+                    )
                   )
                 }
-
                 {
                   // General feedback banner with link
                   systemIntake.governanceRequestFeedbacks.length > 0 && (
@@ -202,7 +225,6 @@ function GovernanceTaskList() {
                     </div>
                   )
                 }
-
                 <TaskListContainer className="margin-top-4">
                   {/* 1. Fill out the Intake Request form */}
                   <GovTaskIntakeForm {...systemIntake} />
