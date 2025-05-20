@@ -76,6 +76,10 @@ const RequestOverview = ({
 
   const systemIntake = data?.systemIntake;
 
+  const lcidRetiringSoon =
+    systemIntake?.statusAdmin === SystemIntakeStatusAdmin.LCID_RETIRING_SOON &&
+    systemIntake?.lcidRetiresAt;
+
   const businessCase = useSelector(
     (state: AppState) => state.businessCase.form
   );
@@ -113,8 +117,7 @@ const RequestOverview = ({
       {!fullPageLayout && <AccordionNavigation items={navItems} />}
 
       <section className="grid-container">
-        {systemIntake?.statusAdmin ===
-          SystemIntakeStatusAdmin.LCID_RETIRING_SOON && (
+        {lcidRetiringSoon && (
           <Alert type="info" slim className="margin-top-2 margin-bottom-neg-1">
             <p className="margin-y-0">
               {t('lcidAlertMessage', {
