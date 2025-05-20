@@ -232,14 +232,27 @@ func DecisionAndNextStepsStatus(intake *models.SystemIntake) (models.ITGovDecisi
 	switch intake.Step {
 	case models.SystemIntakeStepINITIALFORM, models.SystemIntakeStepDRAFTBIZCASE, models.SystemIntakeStepGRTMEETING, models.SystemIntakeStepFINALBIZCASE:
 		return models.ITGDSCantStart, nil
+
 	case models.SystemIntakeStepGRBMEETING:
-		if intake.GRBDate == nil {
-			return models.ITGDSCantStart, nil
+		if intake.GrbReviewType == models.SystemIntakeGRBReviewTypeStandard {
+			if intake.GRBDate == nil {
+				return models.ITGDSCantStart, nil
+			}
+			if intake.GRBDate.After(time.Now()) { // Meeting has not happened
+				return models.ITGDSCantStart, nil
+			}
 		}
-		if intake.GRBDate.After(time.Now()) { // Meeting has not happened
-			return models.ITGDSCantStart, nil
+
+		if intake.GrbReviewType == models.SystemIntakeGRBReviewTypeAsync {
+			if intake.GrbReviewAsyncEndDate == nil {
+				return models.ITGDSCantStart, nil
+			}
+			if intake.GrbReviewAsyncEndDate.After(time.Now()) { // Meeting has not happened
+				return models.ITGDSCantStart, nil
+			}
 		}
-		// Meeting has  happened, intake is waiting on a decision
+
+		// Meeting has happened, intake is waiting on a decision
 		return models.ITGDSInReview, nil
 
 	case models.SystemIntakeStepDECISION:
