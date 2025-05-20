@@ -25,7 +25,8 @@ export default gql(/* GraphQL */ `
       updatedAt
       grtDate
       grbDate
-
+      lcid
+      lcidRetiresAt
       step
       state
       decisionState
