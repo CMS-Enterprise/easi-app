@@ -10,7 +10,10 @@ import {
   ModalHeading
 } from '@trussworks/react-uswds';
 import NotFound from 'features/Miscellaneous/NotFound';
-import { SystemIntakeState } from 'gql/generated/graphql';
+import {
+  SystemIntakeState,
+  SystemIntakeStatusAdmin
+} from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import Breadcrumbs from 'components/Breadcrumbs';
@@ -155,7 +158,9 @@ function GovernanceTaskList() {
 
                 {
                   // Decision issued alert
-                  showDecisionAlert && (
+                  showDecisionAlert &&
+                  systemIntake?.statusAdmin !==
+                    SystemIntakeStatusAdmin.LCID_RETIRING_SOON ? (
                     <Alert
                       type="info"
                       heading={t('taskList.decisionAlert.heading')}
@@ -173,6 +178,8 @@ function GovernanceTaskList() {
                         }}
                       />
                     </Alert>
+                  ) : (
+                    <>gary</>
                   )
                 }
 

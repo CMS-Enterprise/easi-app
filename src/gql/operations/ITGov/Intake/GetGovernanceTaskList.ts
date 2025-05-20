@@ -21,6 +21,7 @@ export default gql(/* GraphQL */ `
         targetForm
       }
 
+      statusAdmin
       submittedAt
       updatedAt
       grtDate
