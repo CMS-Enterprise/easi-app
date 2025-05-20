@@ -4,7 +4,32 @@ export default gql(/* GraphQL */ `
   query GetGovernanceTaskList($id: UUID!) {
     systemIntake(id: $id) {
       id
+      contractName
+      decisionState
+      grbDate
+      grtDate
+      lcid
+      lcidRetiresAt
+      relationType
       requestName
+      state
+      statusAdmin
+      step
+      submittedAt
+      updatedAt
+
+      businessCase {
+        id
+      }
+
+      contractNumbers {
+        contractNumber
+      }
+
+      governanceRequestFeedbacks {
+        id
+        targetForm
+      }
 
       itGovTaskStatuses {
         intakeFormStatus
@@ -16,31 +41,6 @@ export default gql(/* GraphQL */ `
         decisionAndNextStepsStatus
       }
 
-      governanceRequestFeedbacks {
-        id
-        targetForm
-      }
-
-      statusAdmin
-      submittedAt
-      updatedAt
-      grtDate
-      grbDate
-      lcid
-      lcidRetiresAt
-      step
-      state
-      decisionState
-
-      businessCase {
-        id
-      }
-
-      relationType
-      contractName
-      contractNumbers {
-        contractNumber
-      }
       systems {
         id
         name
