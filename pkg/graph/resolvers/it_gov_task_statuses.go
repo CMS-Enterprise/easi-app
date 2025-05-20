@@ -167,22 +167,23 @@ func GrbMeetingStatus(intake *models.SystemIntake) (models.ITGovGRBStatus, error
 }
 
 func getAsyncGRBReviewStatus(intake *models.SystemIntake) (models.ITGovGRBStatus, error) {
-	if intake.GRBDate == nil {
+	// Async recording date has not been set
+	if intake.GrbReviewAsyncRecordingTime == nil {
 		return getGRBReviewStatusWithNilGRBDate(intake)
 	}
 
 	now := time.Now()
 
-	if intake.GrbReviewAsyncRecordingTime != nil && now.After(*intake.GrbReviewAsyncRecordingTime) {
-		return models.ITGRRBSAwaitingGRBReview, nil
-	}
+	// If review has not been started, check if recording date has passed
+	if intake.GRBReviewStartedAt == nil {
+		if now.After(*intake.GrbReviewAsyncRecordingTime) {
+			return models.ITGRRBSAwaitingGRBReview, nil
+		}
 
-	if intake.GrbReviewAsyncRecordingTime != nil && now.Before(*intake.GrbReviewAsyncRecordingTime) {
 		return models.ITGGRBSScheduled, nil
 	}
 
-	if intake.GRBReviewStartedAt != nil &&
-		intake.GrbReviewAsyncEndDate != nil &&
+	if intake.GrbReviewAsyncEndDate != nil &&
 		now.After(*intake.GRBReviewStartedAt) &&
 		now.Before(*intake.GrbReviewAsyncEndDate) {
 		return models.ITGRRBSReviewInProgress, nil
