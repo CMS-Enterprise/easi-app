@@ -143,11 +143,11 @@ function GovernanceTaskList() {
                   >
                     <Trans
                       i18nKey="itGov:taskList.closedAlert.text"
+                      values={{ email: IT_GOV_EMAIL }}
                       components={{
                         emailLink: (
                           <Link href={`mailto:${IT_GOV_EMAIL}`}> </Link>
-                        ),
-                        email: IT_GOV_EMAIL
+                        )
                       }}
                     />
                   </Alert>
@@ -164,12 +164,12 @@ function GovernanceTaskList() {
                     >
                       <Trans
                         i18nKey="itGov:taskList.decisionAlert.text"
+                        values={{ email: IT_GOV_EMAIL }}
                         components={{
                           decisionLink: <Link href="#decision"> </Link>,
                           emailLink: (
                             <Link href={`mailto:${IT_GOV_EMAIL}`}> </Link>
-                          ),
-                          email: IT_GOV_EMAIL
+                          )
                         }}
                       />
                     </Alert>
