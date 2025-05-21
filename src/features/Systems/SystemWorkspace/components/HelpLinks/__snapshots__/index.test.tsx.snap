@@ -20,12 +20,12 @@ exports[`Help Links component > matches snapshot 1`] = `
           <div
             class="usa-card__container"
           >
-            <header
+            <div
               class="usa-card__header text-bold padding-y-0 flex-2 line-height-serif-2 margin-bottom-2"
               data-testid="CardHeader"
             >
               Get a new Life Cycle ID (LCID)
-            </header>
+            </div>
             <div
               class="usa-card__body padding-y-0 flex-1 system-help-links__fill-card-space"
               data-testid="CardBody"
@@ -64,12 +64,12 @@ exports[`Help Links component > matches snapshot 1`] = `
           <div
             class="usa-card__container"
           >
-            <header
+            <div
               class="usa-card__header text-bold padding-y-0 flex-2 line-height-serif-2 margin-bottom-2"
               data-testid="CardHeader"
             >
               Get technical assistance with your system
-            </header>
+            </div>
             <div
               class="usa-card__body padding-y-0 flex-1 system-help-links__fill-card-space"
               data-testid="CardBody"
@@ -108,12 +108,12 @@ exports[`Help Links component > matches snapshot 1`] = `
           <div
             class="usa-card__container"
           >
-            <header
+            <div
               class="usa-card__header text-bold padding-y-0 flex-2 line-height-serif-2 margin-bottom-2"
               data-testid="CardHeader"
             >
               Learn more about the Target Life Cycle (TLC)
-            </header>
+            </div>
             <div
               class="usa-card__body padding-y-0 flex-1 system-help-links__fill-card-space"
               data-testid="CardBody"
@@ -153,12 +153,12 @@ exports[`Help Links component > matches snapshot 1`] = `
           <div
             class="usa-card__container"
           >
-            <header
+            <div
               class="usa-card__header text-bold padding-y-0 flex-2 line-height-serif-2 margin-bottom-2"
               data-testid="CardHeader"
             >
               Learn more about security and privacy at CMS
-            </header>
+            </div>
             <div
               class="usa-card__body padding-y-0 flex-1 system-help-links__fill-card-space"
               data-testid="CardBody"
@@ -198,12 +198,12 @@ exports[`Help Links component > matches snapshot 1`] = `
           <div
             class="usa-card__container"
           >
-            <header
+            <div
               class="usa-card__header text-bold padding-y-0 flex-2 line-height-serif-2 margin-bottom-2"
               data-testid="CardHeader"
             >
               Consider Threat Modeling for your system
-            </header>
+            </div>
             <div
               class="usa-card__body padding-y-0 flex-1 system-help-links__fill-card-space"
               data-testid="CardBody"
@@ -243,12 +243,12 @@ exports[`Help Links component > matches snapshot 1`] = `
           <div
             class="usa-card__container"
           >
-            <header
+            <div
               class="usa-card__header text-bold padding-y-0 flex-2 line-height-serif-2 margin-bottom-2"
               data-testid="CardHeader"
             >
               Learn more about Cloud offerings at CMS
-            </header>
+            </div>
             <div
               class="usa-card__body padding-y-0 flex-1 system-help-links__fill-card-space"
               data-testid="CardBody"

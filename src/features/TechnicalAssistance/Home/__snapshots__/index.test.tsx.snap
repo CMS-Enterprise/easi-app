@@ -306,7 +306,7 @@ exports[`TRB Subview snapshots > matches Request Type 1`] = `
         <div
           class="usa-card__container shadow-2"
         >
-          <header
+          <div
             class="usa-card__header"
             data-testid="CardHeader"
           >
@@ -315,7 +315,7 @@ exports[`TRB Subview snapshots > matches Request Type 1`] = `
             >
               I’m having a problem with my system
             </h3>
-          </header>
+          </div>
           <div
             class="usa-card__body padding-bottom-0"
             data-testid="CardBody"
@@ -371,7 +371,7 @@ exports[`TRB Subview snapshots > matches Request Type 1`] = `
         <div
           class="usa-card__container shadow-2"
         >
-          <header
+          <div
             class="usa-card__header"
             data-testid="CardHeader"
           >
@@ -380,7 +380,7 @@ exports[`TRB Subview snapshots > matches Request Type 1`] = `
             >
               I have an idea and would like feedback
             </h3>
-          </header>
+          </div>
           <div
             class="usa-card__body padding-bottom-0"
             data-testid="CardBody"

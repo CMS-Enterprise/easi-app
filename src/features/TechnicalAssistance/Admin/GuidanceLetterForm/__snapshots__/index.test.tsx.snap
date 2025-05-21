@@ -138,6 +138,7 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
                
               <span
                 class="usa-sr-only"
+                data-testid="srStatusText"
               >
                 completed
               </span>
@@ -182,6 +183,7 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
                
               <span
                 class="usa-sr-only"
+                data-testid="srStatusText"
               >
                 not completed
               </span>
@@ -206,6 +208,7 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
                
               <span
                 class="usa-sr-only"
+                data-testid="srStatusText"
               >
                 not completed
               </span>
@@ -230,6 +233,7 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
                
               <span
                 class="usa-sr-only"
+                data-testid="srStatusText"
               >
                 not completed
               </span>
@@ -247,6 +251,7 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
             >
               <span
                 class="usa-sr-only"
+                data-testid="step-text"
               >
                 Step
               </span>

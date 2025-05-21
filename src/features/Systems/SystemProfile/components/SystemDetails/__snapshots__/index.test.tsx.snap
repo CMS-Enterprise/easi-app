@@ -84,12 +84,12 @@ exports[`SystemDetails subpage for System Profile > matches snapshot 1`] = `
         <div
           class="usa-card__container"
         >
-          <header
+          <div
             class="usa-card__header easi-header__basic padding-2 padding-bottom-0 text-top"
             data-testid="CardHeader"
           >
             Production environment
-          </header>
+          </div>
           <div
             class="usa-card__body padding-left-2 padding-right-2 padding-top-0 padding-bottom-0"
             data-testid="CardBody"

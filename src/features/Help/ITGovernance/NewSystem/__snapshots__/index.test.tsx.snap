@@ -302,7 +302,7 @@ exports[`New System > matches the snapshot 1`] = `
           <div
             class="usa-card__container radius-md shadow-2 minh-mobile"
           >
-            <header
+            <div
               class="usa-card__header padding-x-3 padding-top-3"
               data-testid="CardHeader"
             >
@@ -322,7 +322,7 @@ exports[`New System > matches the snapshot 1`] = `
                   IT Governance
                 </span>
               </a>
-            </header>
+            </div>
             <div
               class="usa-card__body padding-top-0 article__body"
               data-testid="CardBody"
@@ -351,7 +351,7 @@ exports[`New System > matches the snapshot 1`] = `
           <div
             class="usa-card__container radius-md shadow-2 minh-mobile"
           >
-            <header
+            <div
               class="usa-card__header padding-x-3 padding-top-3"
               data-testid="CardHeader"
             >
@@ -371,7 +371,7 @@ exports[`New System > matches the snapshot 1`] = `
                   IT Governance
                 </span>
               </a>
-            </header>
+            </div>
             <div
               class="usa-card__body padding-top-0 article__body"
               data-testid="CardBody"
@@ -400,7 +400,7 @@ exports[`New System > matches the snapshot 1`] = `
           <div
             class="usa-card__container radius-md shadow-2 minh-mobile"
           >
-            <header
+            <div
               class="usa-card__header padding-x-3 padding-top-3"
               data-testid="CardHeader"
             >
@@ -420,7 +420,7 @@ exports[`New System > matches the snapshot 1`] = `
                   IT Governance
                 </span>
               </a>
-            </header>
+            </div>
             <div
               class="usa-card__body padding-top-0 article__body"
               data-testid="CardBody"
