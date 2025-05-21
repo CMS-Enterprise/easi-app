@@ -3,6 +3,9 @@ package resolvers
 import (
 	"context"
 	"fmt"
+	"time"
+
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 
 	"github.com/google/uuid"
 	"github.com/samber/lo"
@@ -170,6 +173,23 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussions() {
 		for _, user := range reviewerAccts {
 			s.Contains(grbEmail.BccAddresses, models.EmailAddress(user.Email))
 		}
+	})
+
+	s.Run("create GRB discussion on completed intake", func() {
+		emailClient, _ := NewEmailClient()
+
+		intake := s.createNewIntake()
+		intake.GrbReviewAsyncManualEndDate = helpers.PointerTo(time.Now().Add(time.Hour * -24))
+		intake, err := s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intake)
+		s.NoError(err)
+
+		ctx, _ := s.getTestContextWithPrincipal("ABCD", true)
+		s.createGRBDiscussionWithExpectedError(
+			ctx,
+			emailClient,
+			intake.ID,
+			"<p>banana</p>",
+		)
 	})
 }
 
@@ -536,6 +556,27 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 			s.Contains(grbEmail.BccAddresses, models.EmailAddress(user.Email))
 		}
 	})
+
+	// Test replying on a complete system intake
+	s.Run("reply to GRB discussion on complete intake", func() {
+		emailClient, _ := NewEmailClient()
+
+		intake := s.createNewIntake()
+
+		ctx, _ := s.getTestContextWithPrincipal("USR1", true)
+		discussionPost := s.createGRBDiscussion(ctx, emailClient, intake.ID, "<p>this is a discussion</p>")
+
+		intake.GrbReviewAsyncManualEndDate = helpers.PointerTo(time.Now().Add(time.Hour * -24))
+		intake, err := s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intake)
+		s.NoError(err)
+
+		s.createGRBDiscussionReplyWithExpectedError(
+			ctx,
+			emailClient,
+			discussionPost,
+			"<p>banana</p>",
+		)
+	})
 }
 
 // helper to create a discussion
@@ -558,12 +599,39 @@ func (s *ResolverSuite) createGRBDiscussion(
 		},
 	)
 
-	s.NotNil(discussion)
 	s.NoError(err)
-	s.Equal(discussion.Content, models.HTML(content))
-	s.Equal(discussion.SystemIntakeID, intakeID)
+	s.NotNil(discussion)
 	s.NotNil(discussion.ID)
 	s.Nil(discussion.ReplyToID)
+	s.Equal(discussion.Content, models.HTML(content))
+	s.Equal(discussion.SystemIntakeID, intakeID)
+
+	return discussion
+}
+
+// helper to create a discussion
+func (s *ResolverSuite) createGRBDiscussionWithExpectedError(
+	ctx context.Context,
+	emailClient *email.Client,
+	intakeID uuid.UUID,
+	content string,
+) *models.SystemIntakeGRBReviewDiscussionPost {
+	taggedHTMLContent, err := models.NewTaggedHTMLFromString(content)
+	s.NoError(err)
+	discussion, err := CreateSystemIntakeGRBDiscussionPost(
+		ctx,
+		s.testConfigs.Store,
+		emailClient,
+		models.CreateSystemIntakeGRBDiscussionPostInput{
+			SystemIntakeID:      intakeID,
+			Content:             taggedHTMLContent,
+			DiscussionBoardType: models.SystemIntakeGRBDiscussionBoardTypePrimary,
+		},
+	)
+
+	s.Error(err)
+	s.Nil(discussion)
+
 	return discussion
 }
 
@@ -593,6 +661,30 @@ func (s *ResolverSuite) createGRBDiscussionReply(
 	s.Equal(appcontext.Principal(ctx).Account().ID, replyPost.CreatedBy)
 	s.NotNil(replyPost.ReplyToID)
 	s.Equal(*replyPost.ReplyToID, discussionPost.ID)
+	return replyPost
+}
+
+func (s *ResolverSuite) createGRBDiscussionReplyWithExpectedError(
+	ctx context.Context,
+	emailClient *email.Client,
+	discussionPost *models.SystemIntakeGRBReviewDiscussionPost,
+	content string,
+) *models.SystemIntakeGRBReviewDiscussionPost {
+	taggedHTMLContent, err := models.NewTaggedHTMLFromString(content)
+	s.NoError(err)
+	replyPost, err := CreateSystemIntakeGRBDiscussionReply(
+		ctx,
+		s.testConfigs.Store,
+		emailClient,
+		models.CreateSystemIntakeGRBDiscussionReplyInput{
+			InitialPostID:       discussionPost.ID,
+			Content:             taggedHTMLContent,
+			DiscussionBoardType: models.SystemIntakeGRBDiscussionBoardTypePrimary,
+		},
+	)
+
+	s.Error(err)
+	s.Nil(replyPost)
 	return replyPost
 }
 
