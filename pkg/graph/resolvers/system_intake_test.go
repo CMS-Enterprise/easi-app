@@ -217,3 +217,11 @@ func (s *ResolverSuite) TestUpdateSystemIntakeRequestType() {
 	s.NotNil(intakeWithNewType)
 	s.Equal(models.SystemIntakeRequestTypeMAJORCHANGES, intakeWithNewType.RequestType)
 }
+
+func (s *ResolverSuite) TestGetRequesterUpdateEmailData() {
+	ctx := s.testConfigs.Context
+	store := s.testConfigs.Store
+
+	_, err := GetRequesterUpdateEmailData(ctx, store)
+	s.NoError(err)
+}

@@ -650,6 +650,7 @@ type ComplexityRoot struct {
 		MyCedarSystems                   func(childComplexity int) int
 		MySystemIntakes                  func(childComplexity int) int
 		MyTrbRequests                    func(childComplexity int, archived bool) int
+		RequesterUpdateEmailData         func(childComplexity int) int
 		RoleTypes                        func(childComplexity int) int
 		Roles                            func(childComplexity int, cedarSystemID string, roleTypeID *string) int
 		SystemIntake                     func(childComplexity int, id uuid.UUID) int
@@ -663,6 +664,14 @@ type ComplexityRoot struct {
 		TrbRequests                      func(childComplexity int, archived bool) int
 		Urls                             func(childComplexity int, cedarSystemID string) int
 		UserAccount                      func(childComplexity int, username string) int
+	}
+
+	RequesterUpdateEmailData struct {
+		LcidExpiresAt  func(childComplexity int) int
+		LcidIssuedAt   func(childComplexity int) int
+		LcidRetiresAt  func(childComplexity int) int
+		LcidStatus     func(childComplexity int) int
+		RequesterEmail func(childComplexity int) int
 	}
 
 	SystemIntake struct {
@@ -1334,6 +1343,7 @@ type QueryResolver interface {
 	MyTrbRequests(ctx context.Context, archived bool) ([]*models.TRBRequest, error)
 	TrbLeadOptions(ctx context.Context) ([]*models.UserInfo, error)
 	TrbAdminNote(ctx context.Context, id uuid.UUID) (*models.TRBAdminNote, error)
+	RequesterUpdateEmailData(ctx context.Context) ([]*models.RequesterUpdateEmailData, error)
 	UserAccount(ctx context.Context, username string) (*authentication.UserAccount, error)
 }
 type SystemIntakeResolver interface {
@@ -5149,6 +5159,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Query.MyTrbRequests(childComplexity, args["archived"].(bool)), true
 
+	case "Query.requesterUpdateEmailData":
+		if e.complexity.Query.RequesterUpdateEmailData == nil {
+			break
+		}
+
+		return e.complexity.Query.RequesterUpdateEmailData(childComplexity), true
+
 	case "Query.roleTypes":
 		if e.complexity.Query.RoleTypes == nil {
 			break
@@ -5284,6 +5301,41 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Query.UserAccount(childComplexity, args["username"].(string)), true
+
+	case "RequesterUpdateEmailData.lcidExpiresAt":
+		if e.complexity.RequesterUpdateEmailData.LcidExpiresAt == nil {
+			break
+		}
+
+		return e.complexity.RequesterUpdateEmailData.LcidExpiresAt(childComplexity), true
+
+	case "RequesterUpdateEmailData.lcidIssuedAt":
+		if e.complexity.RequesterUpdateEmailData.LcidIssuedAt == nil {
+			break
+		}
+
+		return e.complexity.RequesterUpdateEmailData.LcidIssuedAt(childComplexity), true
+
+	case "RequesterUpdateEmailData.lcidRetiresAt":
+		if e.complexity.RequesterUpdateEmailData.LcidRetiresAt == nil {
+			break
+		}
+
+		return e.complexity.RequesterUpdateEmailData.LcidRetiresAt(childComplexity), true
+
+	case "RequesterUpdateEmailData.lcidStatus":
+		if e.complexity.RequesterUpdateEmailData.LcidStatus == nil {
+			break
+		}
+
+		return e.complexity.RequesterUpdateEmailData.LcidStatus(childComplexity), true
+
+	case "RequesterUpdateEmailData.requesterEmail":
+		if e.complexity.RequesterUpdateEmailData.RequesterEmail == nil {
+			break
+		}
+
+		return e.complexity.RequesterUpdateEmailData.RequesterEmail(childComplexity), true
 
 	case "SystemIntake.acquisitionMethods":
 		if e.complexity.SystemIntake.AcquisitionMethods == nil {
@@ -9264,6 +9316,14 @@ type SystemIntakeLCIDExpirationChange {
   newCostBaseline: String
 }
 
+type RequesterUpdateEmailData {
+  lcidStatus: SystemIntakeLCIDStatus
+  lcidIssuedAt: Time
+  lcidExpiresAt: Time
+  lcidRetiresAt: Time
+  requesterEmail: EmailAddress!
+}
+
 """
 The contact who is associated with an action being done to a system request
 """
@@ -10817,6 +10877,8 @@ type Query {
   myTrbRequests(archived: Boolean! = false): [TRBRequest!]!
   trbLeadOptions: [UserInfo!]!
   trbAdminNote(id: UUID!): TRBAdminNote!
+  requesterUpdateEmailData: [RequesterUpdateEmailData!]!
+
   @hasRole(role: EASI_TRB_ADMIN)
   userAccount(username: String!): UserAccount
 }
@@ -40737,35 +40799,8 @@ func (ec *executionContext) _Query_trbAdminNote(ctx context.Context, field graph
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		directive0 := func(rctx context.Context) (any, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Query().TrbAdminNote(rctx, fc.Args["id"].(uuid.UUID))
-		}
-
-		directive1 := func(ctx context.Context) (any, error) {
-			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_TRB_ADMIN")
-			if err != nil {
-				var zeroVal *models.TRBAdminNote
-				return zeroVal, err
-			}
-			if ec.directives.HasRole == nil {
-				var zeroVal *models.TRBAdminNote
-				return zeroVal, errors.New("directive hasRole is not implemented")
-			}
-			return ec.directives.HasRole(ctx, nil, directive0, role)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*models.TRBAdminNote); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cms-enterprise/easi-app/pkg/models.TRBAdminNote`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().TrbAdminNote(rctx, fc.Args["id"].(uuid.UUID))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -40826,6 +40861,89 @@ func (ec *executionContext) fieldContext_Query_trbAdminNote(ctx context.Context,
 	if fc.Args, err = ec.field_Query_trbAdminNote_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_requesterUpdateEmailData(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_requesterUpdateEmailData(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Query().RequesterUpdateEmailData(rctx)
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_TRB_ADMIN")
+			if err != nil {
+				var zeroVal []*models.RequesterUpdateEmailData
+				return zeroVal, err
+			}
+			if ec.directives.HasRole == nil {
+				var zeroVal []*models.RequesterUpdateEmailData
+				return zeroVal, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.([]*models.RequesterUpdateEmailData); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be []*github.com/cms-enterprise/easi-app/pkg/models.RequesterUpdateEmailData`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.RequesterUpdateEmailData)
+	fc.Result = res
+	return ec.marshalNRequesterUpdateEmailData2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRequesterUpdateEmailDataᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_requesterUpdateEmailData(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "lcidStatus":
+				return ec.fieldContext_RequesterUpdateEmailData_lcidStatus(ctx, field)
+			case "lcidIssuedAt":
+				return ec.fieldContext_RequesterUpdateEmailData_lcidIssuedAt(ctx, field)
+			case "lcidExpiresAt":
+				return ec.fieldContext_RequesterUpdateEmailData_lcidExpiresAt(ctx, field)
+			case "lcidRetiresAt":
+				return ec.fieldContext_RequesterUpdateEmailData_lcidRetiresAt(ctx, field)
+			case "requesterEmail":
+				return ec.fieldContext_RequesterUpdateEmailData_requesterEmail(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type RequesterUpdateEmailData", field.Name)
+		},
 	}
 	return fc, nil
 }
@@ -41028,6 +41146,214 @@ func (ec *executionContext) fieldContext_Query___schema(_ context.Context, field
 				return ec.fieldContext___Schema_directives(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type __Schema", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RequesterUpdateEmailData_lcidStatus(ctx context.Context, field graphql.CollectedField, obj *models.RequesterUpdateEmailData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RequesterUpdateEmailData_lcidStatus(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.LcidStatus, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.SystemIntakeLCIDStatus)
+	fc.Result = res
+	return ec.marshalOSystemIntakeLCIDStatus2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeLCIDStatus(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RequesterUpdateEmailData_lcidStatus(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RequesterUpdateEmailData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SystemIntakeLCIDStatus does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RequesterUpdateEmailData_lcidIssuedAt(ctx context.Context, field graphql.CollectedField, obj *models.RequesterUpdateEmailData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RequesterUpdateEmailData_lcidIssuedAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.LcidIssuedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RequesterUpdateEmailData_lcidIssuedAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RequesterUpdateEmailData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RequesterUpdateEmailData_lcidExpiresAt(ctx context.Context, field graphql.CollectedField, obj *models.RequesterUpdateEmailData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RequesterUpdateEmailData_lcidExpiresAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.LcidExpiresAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RequesterUpdateEmailData_lcidExpiresAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RequesterUpdateEmailData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RequesterUpdateEmailData_lcidRetiresAt(ctx context.Context, field graphql.CollectedField, obj *models.RequesterUpdateEmailData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RequesterUpdateEmailData_lcidRetiresAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.LcidRetiresAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RequesterUpdateEmailData_lcidRetiresAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RequesterUpdateEmailData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RequesterUpdateEmailData_requesterEmail(ctx context.Context, field graphql.CollectedField, obj *models.RequesterUpdateEmailData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RequesterUpdateEmailData_requesterEmail(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.RequesterEmail, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(models.EmailAddress)
+	fc.Result = res
+	return ec.marshalNEmailAddress2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐEmailAddress(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RequesterUpdateEmailData_requesterEmail(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RequesterUpdateEmailData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type EmailAddress does not have child fields")
 		},
 	}
 	return fc, nil
@@ -69042,6 +69368,28 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "requesterUpdateEmailData":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_requesterUpdateEmailData(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
 		case "userAccount":
 			field := field
 
@@ -69069,6 +69417,53 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Query___schema(ctx, field)
 			})
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var requesterUpdateEmailDataImplementors = []string{"RequesterUpdateEmailData"}
+
+func (ec *executionContext) _RequesterUpdateEmailData(ctx context.Context, sel ast.SelectionSet, obj *models.RequesterUpdateEmailData) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, requesterUpdateEmailDataImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("RequesterUpdateEmailData")
+		case "lcidStatus":
+			out.Values[i] = ec._RequesterUpdateEmailData_lcidStatus(ctx, field, obj)
+		case "lcidIssuedAt":
+			out.Values[i] = ec._RequesterUpdateEmailData_lcidIssuedAt(ctx, field, obj)
+		case "lcidExpiresAt":
+			out.Values[i] = ec._RequesterUpdateEmailData_lcidExpiresAt(ctx, field, obj)
+		case "lcidRetiresAt":
+			out.Values[i] = ec._RequesterUpdateEmailData_lcidRetiresAt(ctx, field, obj)
+		case "requesterEmail":
+			out.Values[i] = ec._RequesterUpdateEmailData_requesterEmail(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -76725,6 +77120,60 @@ func (ec *executionContext) marshalNPersonRole2githubᚗcomᚋcmsᚑenterprise�
 func (ec *executionContext) unmarshalNReopenTRBRequestInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐReopenTRBRequestInput(ctx context.Context, v any) (models.ReopenTRBRequestInput, error) {
 	res, err := ec.unmarshalInputReopenTRBRequestInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNRequesterUpdateEmailData2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRequesterUpdateEmailDataᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.RequesterUpdateEmailData) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNRequesterUpdateEmailData2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRequesterUpdateEmailData(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNRequesterUpdateEmailData2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRequesterUpdateEmailData(ctx context.Context, sel ast.SelectionSet, v *models.RequesterUpdateEmailData) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._RequesterUpdateEmailData(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx context.Context, v any) (models.Role, error) {

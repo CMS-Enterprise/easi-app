@@ -1555,6 +1555,11 @@ func (r *queryResolver) TrbAdminNote(ctx context.Context, id uuid.UUID) (*models
 	return resolvers.GetTRBAdminNoteByID(ctx, r.store, id)
 }
 
+// RequesterUpdateEmailData is the resolver for the requesterUpdateEmailData field.
+func (r *queryResolver) RequesterUpdateEmailData(ctx context.Context) ([]*models.RequesterUpdateEmailData, error) {
+	return resolvers.GetRequesterUpdateEmailData(ctx, r.store)
+}
+
 // UserAccount is the resolver for the userAccount field.
 func (r *queryResolver) UserAccount(ctx context.Context, username string) (*authentication.UserAccount, error) {
 	return resolvers.UserAccountGetByUsername(ctx, r.store, r.store, username)
