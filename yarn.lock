@@ -3768,10 +3768,10 @@
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-2.0.0.tgz#f544a148d3ab35801c1f633a7441fd87c2e484bf"
   integrity sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==
 
-"@trussworks/react-uswds@^6.0.0":
-  version "6.2.0"
-  resolved "https://registry.yarnpkg.com/@trussworks/react-uswds/-/react-uswds-6.2.0.tgz#b7f5a307c3c0cd6af7fef8ed2d0fa73b337087ec"
-  integrity sha512-B7Yi9hy+dF4A3XiXUB3BofvcNekhcb/NTldaAIM4Lt+jEd7wIFbTJc03v1inIJHUMLcke0nYFx4gOmixpivPZg==
+"@trussworks/react-uswds@9.1.0":
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/@trussworks/react-uswds/-/react-uswds-9.1.0.tgz#6a60156fd7b7ee90484ccbe2d898784d34f7cb36"
+  integrity sha512-vQsr73oMtDIzLHVtkgD81tL7YxzygTyH9e1P3Lv/C1tGlqoNEUmUgVEmUVzo/IwOvMN0XxxSkNkOpnM9rDzRMg==
 
 "@tybys/wasm-util@^0.9.0":
   version "0.9.0"
