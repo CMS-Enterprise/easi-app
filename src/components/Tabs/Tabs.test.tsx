@@ -293,7 +293,6 @@ it('unselected tab has correct attributes', async () => {
       </TabPanel>
     </Tabs>
   );
-  screen.debug();
   const selectedTab = screen.getByTestId('Tab2-tab-btn');
   expect(selectedTab).toHaveAttribute('aria-selected', 'false');
   expect(selectedTab).toHaveAttribute('tabindex', '-1');
