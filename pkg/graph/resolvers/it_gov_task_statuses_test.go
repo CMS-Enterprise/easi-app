@@ -1,6 +1,7 @@
 package resolvers
 
 import (
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"testing"
 	"time"
 
@@ -387,6 +388,46 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 			},
 			expectedStatus: "",
 			expectError:    true,
+		},
+		{
+			testCase: "Decision issued step: GRB Meeting, standard, GRB Date nil",
+			intake: models.SystemIntake{
+				Step:          models.SystemIntakeStepGRBMEETING,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       nil,
+			},
+		},
+		{
+			testCase: "Decision issued step: GRB Meeting, standard, GRB Date nil",
+			intake: models.SystemIntake{
+				Step:          models.SystemIntakeStepGRBMEETING,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       nil,
+			},
+		},
+		{
+			testCase: "Decision issued step: GRB Meeting, standard, GRB Date future",
+			intake: models.SystemIntake{
+				Step:          models.SystemIntakeStepGRBMEETING,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       helpers.PointerTo(time.Now().Add(time.Hour * 24)),
+			},
+		},
+		{
+			testCase: "Decision issued step: GRB Meeting, async, GRB Date nil",
+			intake: models.SystemIntake{
+				Step:          models.SystemIntakeStepGRBMEETING,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeAsync,
+				GRBDate:       nil,
+			},
+		},
+		{
+			testCase: "Decision issued step: GRB Meeting, async, GRB Date future",
+			intake: models.SystemIntake{
+				Step:          models.SystemIntakeStepGRBMEETING,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeAsync,
+				GRBDate:       helpers.PointerTo(time.Now().Add(time.Hour * 24)),
+			},
 		},
 	}
 
