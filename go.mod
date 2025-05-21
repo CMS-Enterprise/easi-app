@@ -21,13 +21,13 @@ require (
 	github.com/lib/pq v1.10.9
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/okta/okta-jwt-verifier-golang v1.3.1
-	github.com/pquerna/otp v1.4.0
+	github.com/pquerna/otp v1.5.0
 	github.com/samber/lo v1.50.0
 	github.com/spf13/cobra v1.9.1
 	github.com/spf13/viper v1.20.1
 	github.com/stretchr/testify v1.10.0
 	github.com/vektah/gqlparser/v2 v2.5.27
-	github.com/vikstrous/dataloadgen v0.0.6
+	github.com/vikstrous/dataloadgen v0.0.8
 	go.uber.org/zap v1.27.0
 	golang.org/x/sync v0.14.0
 	gopkg.in/launchdarkly/go-sdk-common.v2 v2.5.1

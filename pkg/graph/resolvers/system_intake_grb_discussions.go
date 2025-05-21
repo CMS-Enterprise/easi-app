@@ -39,6 +39,19 @@ func CreateSystemIntakeGRBDiscussionPost(
 			return nil, err
 		}
 
+		if systemIntake == nil {
+			return nil, errors.New("problem finding system intake when handling GRB post")
+		}
+
+		isGRBReviewCompleted, err := IsGRBReviewCompleted(systemIntake)
+		if err != nil {
+			return nil, err
+		}
+
+		if isGRBReviewCompleted {
+			return nil, errors.New("cannot post to a completed system intake")
+		}
+
 		// cannot post after GRB review is over
 		if systemIntake.GrbReviewAsyncManualEndDate != nil || (systemIntake.GrbReviewAsyncEndDate != nil && systemIntake.GrbReviewAsyncEndDate.Before(time.Now())) {
 			return nil, errors.New("GRB review is over, no more posts allowed")
@@ -157,6 +170,15 @@ func CreateSystemIntakeGRBDiscussionReply(
 
 		if systemIntake == nil {
 			return nil, errors.New("problem finding system intake when handling GRB reply")
+		}
+
+		isGRBReviewCompleted, err := IsGRBReviewCompleted(systemIntake)
+		if err != nil {
+			return nil, err
+		}
+
+		if isGRBReviewCompleted {
+			return nil, errors.New("cannot post to a completed system intake")
 		}
 
 		if input.DiscussionBoardType == models.SystemIntakeGRBDiscussionBoardTypeInternal && !isAuthorizedForInternalBoard(ctx, intakeID) {

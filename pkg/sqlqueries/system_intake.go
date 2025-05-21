@@ -21,11 +21,17 @@ var getWhereGRBReviewPastDueNoQuorum string
 //go:embed SQL/system_intake/get_where_grb_review_complete_quorum_met.sql
 var getWhereGRBReviewCompleteQuorumMet string
 
+// getRequesterUpdateEmailData holds the SQL query to get requester update email data
+//
+//go:embed SQL/system_intake/get_requester_update_email_data.sql
+var getRequesterUpdateEmailData string
+
 var SystemIntake = systemIntakeScripts{
 	GetByUser:                         getByUser,
 	GetWhereGRBReviewIsHalfwayThrough: getWhereGRBReviewIsHalfwayThrough,
 	GetWhereGRBPastDueNoQuorum:        getWhereGRBReviewPastDueNoQuorum,
 	GetWhereReviewCompleteQuorumMet:   getWhereGRBReviewCompleteQuorumMet,
+	GetRequesterUpdateEmailData:       getRequesterUpdateEmailData,
 }
 
 type systemIntakeScripts struct {
@@ -33,4 +39,5 @@ type systemIntakeScripts struct {
 	GetWhereGRBReviewIsHalfwayThrough string
 	GetWhereGRBPastDueNoQuorum        string
 	GetWhereReviewCompleteQuorumMet   string
+	GetRequesterUpdateEmailData       string
 }
