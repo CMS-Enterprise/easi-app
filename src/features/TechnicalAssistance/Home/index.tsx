@@ -62,7 +62,10 @@ function Homepage() {
 
   const { loading, error, data } = useGetTRBRequestsQuery();
 
-  const infoBoxText = t('infoBox', { returnObjects: true });
+  const infoBoxText = t('infoBox', { returnObjects: true }) as {
+    text: string[];
+    list: string[];
+  };
 
   // @ts-ignore
   // Ignoring due to accessor props with dot property string values which break react-table typescripting

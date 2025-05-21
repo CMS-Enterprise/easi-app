@@ -247,7 +247,7 @@ const GRBReview = ({
               <p className="bg-primary-lighter line-height-body-5 padding-y-1 padding-x-2">
                 <Trans
                   i18nKey="grbReview:reviewStartedOn"
-                  components={{
+                  values={{
                     date: formatDateLocal(grbReviewStartedAt, 'MM/dd/yyyy')
                   }}
                 />

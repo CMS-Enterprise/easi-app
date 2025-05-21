@@ -163,9 +163,9 @@ const RequestHome = ({
                   ? 'technicalAssistance:adminHome.docInfo'
                   : 'technicalAssistance:adminHome.docInfoPlural'
               }
+              values={{ docCount: documents?.length || 0 }}
               components={{
-                bold: <span className="text-bold" />,
-                docCount: documents?.length || 0
+                bold: <span className="text-bold" />
               }}
             />
           </div>

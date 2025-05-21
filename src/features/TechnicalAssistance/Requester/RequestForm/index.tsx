@@ -148,9 +148,9 @@ function Header({
   const history = useHistory();
 
   const { t } = useTranslation('technicalAssistance');
-  const text = t<RequestFormText>('requestForm', {
+  const text = t('requestForm', {
     returnObjects: true
-  });
+  }) as RequestFormText;
 
   return (
     <StepHeader

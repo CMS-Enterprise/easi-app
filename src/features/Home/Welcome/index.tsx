@@ -57,9 +57,11 @@ const WelcomeText = () => {
               </CardHeader>
               <CardBody className="padding-bottom-4">
                 <IconList className="font-body-lg">
-                  {t<string[]>('welcome.toolsToHelp.list', {
-                    returnObjects: true
-                  }).map(item => {
+                  {(
+                    t('welcome.toolsToHelp.list', {
+                      returnObjects: true
+                    }) as string[]
+                  ).map(item => {
                     return (
                       <IconListItem
                         key={item}
@@ -78,9 +80,11 @@ const WelcomeText = () => {
               </CardHeader>
               <CardBody className="padding-bottom-4">
                 <IconList className="font-body-lg text-light">
-                  {t<string[]>('welcome.noMore.list', {
-                    returnObjects: true
-                  }).map(item => {
+                  {(
+                    t('welcome.noMore.list', {
+                      returnObjects: true
+                    }) as string[]
+                  ).map(item => {
                     return (
                       <IconListItem
                         key={item}
