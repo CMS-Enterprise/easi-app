@@ -78,6 +78,8 @@ const businessCase = {
     status: 'Status',
     actions: 'Actions',
     notSpecified: 'Not yet specified',
+    completeSolutionsHelpText:
+      'Complete all required solutions to proceed with your Business Case',
     removeModal: {
       title: 'Are you sure you want to remove Alternative B?',
       content:

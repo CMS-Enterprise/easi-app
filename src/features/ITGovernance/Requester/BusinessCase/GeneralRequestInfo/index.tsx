@@ -92,7 +92,7 @@ const GeneralRequestInfo = ({
                   {t('requestName')}
                   <RequiredAsterisk />
                 </Label>
-                <HelpText id="BusinessCase-PhoneNumber">
+                <HelpText id="BusinessCase-RequestNameHelp">
                   {t('requestNameHelpText')}
                 </HelpText>
                 <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
@@ -101,6 +101,7 @@ const GeneralRequestInfo = ({
                   error={!!flatErrors.requestName}
                   id="BusinessCase-RequestName"
                   maxLength={50}
+                  aria-describedby="BusinessCase-RequestNameHelp"
                   name="requestName"
                 />
               </FieldGroup>

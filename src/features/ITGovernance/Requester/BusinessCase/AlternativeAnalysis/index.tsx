@@ -13,6 +13,7 @@ import {
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { Form, Formik, FormikProps } from 'formik';
+import { camelCase } from 'lodash';
 
 import Alert from 'components/Alert';
 import AutoSave from 'components/AutoSave';
@@ -31,12 +32,13 @@ import {
 import {
   AlternativeAnalysisForm,
   BusinessCaseModel,
-  ProposedBusinessCaseSolution
+  ProposedBusinessCaseSolution,
+  SolutionLabelType
 } from 'types/businessCase';
 import { putBusinessCase } from 'types/routines';
 import {
-  getAlternativeAnalysisSchema,
-  SolutionSchema
+  BusinessCaseSchema,
+  getAlternativeAnalysisSchema
 } from 'validations/businessCaseSchema';
 
 type AltnerativeAnalysisProps = {
@@ -135,9 +137,10 @@ const AlternativeAnalysis = ({
         Header: t<string>('alternativesTable.status'),
         Cell: ({ row }: CellProps<ProposedBusinessCaseSolution, string>) => {
           const isInProgress = solutionHasFilledFields(row.original);
-          const solutionType = t(
-            `alternativesTable.solutions.${row.index}.heading`
-          );
+
+          const solutionType = camelCase(
+            t(`alternativesTable.solutions.${row.index}.heading`)
+          ) as SolutionLabelType;
 
           if (!isInProgress) {
             return <></>;
@@ -146,9 +149,11 @@ const AlternativeAnalysis = ({
           try {
             // Validate the specific solution using business case schema. We pass in true for isFinal
             // to show correct in progress or complete even when business case is in draft
-            SolutionSchema(true, solutionType).validateSync(row.original, {
-              abortEarly: false
-            });
+            BusinessCaseSchema(isFinal)[solutionType].validateSync(
+              row.original,
+              { abortEarly: false }
+            );
+
             return <TaskStatusTag status="COMPLETED" />;
           } catch (err) {
             return (
@@ -235,13 +240,16 @@ const AlternativeAnalysis = ({
         isFinal,
         solutionHasFilledFields(businessCase.alternativeB)
       )}
-      validateOnBlur={false}
-      validateOnChange={false}
-      validateOnMount={false}
+      validateOnBlur
+      validateOnChange
+      validateOnMount
       innerRef={formikRef}
     >
       {(formikProps: FormikProps<AlternativeAnalysisForm>) => {
         const { setErrors, setFieldValue, values, validateForm } = formikProps;
+
+        // TODO: this custom validation hook was done because formik isValid was failing to detect removal of
+        //   alternative B w/o hard refresh. May be worth looking at to get rid of this function
 
         // Validation function to check if the form is valid, used to diable/enable the Next button
         const validateSolution = () => {
@@ -267,12 +275,17 @@ const AlternativeAnalysis = ({
         const isFormValid = validateSolution();
 
         return (
-          <MainContent className="grid-container">
-            <PageHeading className="margin-top-4">
+          <MainContent
+            className="grid-container"
+            data-testid="alternative-analysis"
+          >
+            <PageHeading className="margin-top-4 margin-bottom-2">
               {t('alternatives')}
             </PageHeading>
             <div className="font-body-lg text-light">
-              <p>{t('alternativesDescription.text.0')}</p>
+              <p className="margin-top-0">
+                {t('alternativesDescription.text.0')}
+              </p>
               <p className="margin-bottom-0">
                 {t('alternativesDescription.text.1')}
               </p>
@@ -367,9 +380,7 @@ const AlternativeAnalysis = ({
               <Button
                 type="button"
                 disabled={!isFormValid}
-                className={classnames('usa-button', {
-                  'no-pointer': !isFormValid
-                })}
+                className={classnames('usa-button')}
                 onClick={() => {
                   validateForm().then(err => {
                     if (Object.keys(err).length === 0) {
@@ -384,6 +395,13 @@ const AlternativeAnalysis = ({
               >
                 {t('Next')}
               </Button>
+
+              {/* Display solution help text when form is invalid (button is greyed out) */}
+              {!isFormValid && (
+                <HelpText className="margin-left-1">
+                  {t('alternativesTable.completeSolutionsHelpText')}
+                </HelpText>
+              )}
             </ButtonGroup>
 
             <IconButton

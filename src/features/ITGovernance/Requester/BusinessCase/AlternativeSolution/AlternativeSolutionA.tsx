@@ -38,7 +38,7 @@ const AlternativeSolutionA = ({
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={getSingleSolutionSchema(isFinal, 'Alternative A')}
+      validationSchema={getSingleSolutionSchema(isFinal, 'alternativeA')}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}

@@ -44,7 +44,7 @@ const PreferredSolution = ({
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={getSingleSolutionSchema(isFinal, 'Preferred Solution')}
+      validationSchema={getSingleSolutionSchema(isFinal, 'preferredSolution')}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}

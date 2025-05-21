@@ -46,6 +46,11 @@ export type RequestDescriptionForm = {
   successIndicators: string;
 };
 
+export type SolutionLabelType =
+  | 'preferredSolution'
+  | 'alternativeA'
+  | 'alternativeB';
+
 export type AlternativeAnalysisForm = {
   // proposedSolutions: ProposedBusinessCaseSolution[];
   preferredSolution: ProposedBusinessCaseSolution;
