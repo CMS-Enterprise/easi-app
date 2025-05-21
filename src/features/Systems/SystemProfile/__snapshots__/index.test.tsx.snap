@@ -437,7 +437,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                             <div
                               class="usa-card__container"
                             >
-                              <header
+                              <div
                                 class="usa-card__header easi-header__basic padding-2 padding-bottom-0 text-top"
                                 data-testid="CardHeader"
                               >
@@ -454,7 +454,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                     </dt>
                                   </div>
                                 </div>
-                              </header>
+                              </div>
                               <div
                                 class="usa-card__body padding-x-2 padding-y-0"
                                 data-testid="CardBody"
@@ -538,7 +538,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                             <div
                               class="usa-card__container"
                             >
-                              <header
+                              <div
                                 class="usa-card__header easi-header__basic padding-2 padding-bottom-0 text-top"
                                 data-testid="CardHeader"
                               >
@@ -555,7 +555,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                     Expired
                                   </span>
                                 </div>
-                              </header>
+                              </div>
                               <div
                                 class="usa-card__body padding-x-2 padding-y-0"
                                 data-testid="CardBody"
@@ -633,7 +633,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                             <div
                               class="usa-card__container"
                             >
-                              <header
+                              <div
                                 class="usa-card__header easi-header__basic padding-2 padding-bottom-0 text-top"
                                 data-testid="CardHeader"
                               >
@@ -650,7 +650,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                     </dt>
                                   </div>
                                 </div>
-                              </header>
+                              </div>
                               <div
                                 class="usa-card__body padding-x-2 padding-y-0"
                                 data-testid="CardBody"
@@ -746,7 +746,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                             <div
                               class="usa-card__container"
                             >
-                              <header
+                              <div
                                 class="usa-card__header easi-header__basic padding-2 padding-bottom-0 text-top"
                                 data-testid="CardHeader"
                               >
@@ -760,7 +760,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                 >
                                   Fiscal Year: 2021
                                 </p>
-                              </header>
+                              </div>
                               <div
                                 class="usa-card__body padding-2 padding-top-0"
                                 data-testid="CardBody"
@@ -806,7 +806,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                             <div
                               class="usa-card__container"
                             >
-                              <header
+                              <div
                                 class="usa-card__header easi-header__basic padding-2 padding-bottom-0 text-top margin-bottom-2"
                                 data-testid="CardHeader"
                               >
@@ -823,7 +823,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                     </dt>
                                   </div>
                                 </div>
-                              </header>
+                              </div>
                               <div
                                 class="usa-card__body padding-x-2 padding-y-0"
                                 data-testid="CardBody"
@@ -971,7 +971,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                             <div
                               class="usa-card__container"
                             >
-                              <header
+                              <div
                                 class="usa-card__header easi-header__basic padding-2 padding-bottom-0 text-top margin-bottom-2"
                                 data-testid="CardHeader"
                               >
@@ -988,7 +988,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                     </dt>
                                   </div>
                                 </div>
-                              </header>
+                              </div>
                               <div
                                 class="usa-card__body padding-x-2 padding-y-0"
                                 data-testid="CardBody"
@@ -1064,7 +1064,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                             <div
                               class="usa-card__container"
                             >
-                              <header
+                              <div
                                 class="usa-card__header easi-header__basic padding-2 padding-bottom-0 text-top"
                                 data-testid="CardHeader"
                               >
@@ -1081,7 +1081,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                     </dt>
                                   </div>
                                 </div>
-                              </header>
+                              </div>
                               <div
                                 class="usa-card__body padding-x-2 padding-y-0"
                                 data-testid="CardBody"

@@ -498,19 +498,19 @@ exports[`Trb Request form: Basic > submits the form successfully after a failed 
                 role="log"
               />
               <div
-                class=" css-1vl89cy-control"
+                class="css-1vl89cy-control"
               >
                 <div
-                  class=" css-1fdsijx-ValueContainer"
+                  class="css-hlgwow"
                 >
                   <div
-                    class=" css-1jqq78o-placeholder"
+                    class="css-1jqq78o-placeholder"
                     id="react-select-2-placeholder"
                   >
                     0 selected
                   </div>
                   <div
-                    class=" css-qbdosj-Input"
+                    class="css-19bb58m"
                     data-value=""
                   >
                     <input
@@ -534,14 +534,14 @@ exports[`Trb Request form: Basic > submits the form successfully after a failed 
                   </div>
                 </div>
                 <div
-                  class=" css-1hb7zxy-IndicatorsContainer"
+                  class="css-1wy0on6"
                 >
                   <span
-                    class=" css-1umco55-indicatorSeparator"
+                    class="css-1umco55-indicatorSeparator"
                   />
                   <div
                     aria-hidden="true"
-                    class=" css-1ndq4cj-indicatorContainer"
+                    class="css-1ndq4cj-indicatorContainer"
                   >
                     <svg
                       aria-hidden="true"

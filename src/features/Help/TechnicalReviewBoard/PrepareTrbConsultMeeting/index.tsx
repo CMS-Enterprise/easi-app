@@ -76,9 +76,9 @@ function PrepareTrbConsultMeeting() {
             <p>
               <Trans
                 i18nKey="prepareTrbConsultMeeting:downloadTemplates.description"
+                values={{ email: CMS_TRB_EMAIL }}
                 components={{
-                  a: <Link href={`mailto:${CMS_TRB_EMAIL}`}> </Link>,
-                  email: CMS_TRB_EMAIL
+                  a: <Link href={`mailto:${CMS_TRB_EMAIL}`}> </Link>
                 }}
               />
             </p>
@@ -95,9 +95,11 @@ function PrepareTrbConsultMeeting() {
           {t('outcomes.description')}
         </div>
         <ul className="easi-list line-height-body-5">
-          {t<string[]>('outcomes.list', {
-            returnObjects: true
-          }).map(item => (
+          {(
+            t('outcomes.list', {
+              returnObjects: true
+            }) as string[]
+          ).map(item => (
             <li key={item}>{item}</li>
           ))}
         </ul>

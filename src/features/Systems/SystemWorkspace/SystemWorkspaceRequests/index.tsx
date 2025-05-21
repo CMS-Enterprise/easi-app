@@ -262,7 +262,10 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
       <Table bordered={false} fullWidth scrollable {...getTableProps()}>
         <thead>
           {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
+            <tr
+              {...headerGroup.getHeaderGroupProps()}
+              key={{ ...headerGroup.getHeaderGroupProps() }.key}
+            >
               {headerGroup.headers.map((column, index) => (
                 <th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
@@ -286,10 +289,15 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
         <tbody {...getTableBodyProps()}>
           {page.map((row, rowIdx) => {
             return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map((cell, index) => {
+              <tr {...row.getRowProps()} key={{ ...row.getRowProps() }.key}>
+                {row.cells.map(cell => {
                   return (
-                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                    <td
+                      {...cell.getCellProps()}
+                      key={{ ...cell.getCellProps() }.key}
+                    >
+                      {cell.render('Cell')}
+                    </td>
                   );
                 })}
               </tr>

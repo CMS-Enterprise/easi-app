@@ -343,10 +343,16 @@ const EstimatedLifecycleCost = ({
           {
             // Phase error messages
             !!errors &&
-              Object.values(errors).map((error, index) => (
-                // eslint-disable-next-line react/no-array-index-key
-                <FieldErrorMsg key={index}>{error.years}</FieldErrorMsg>
-              ))
+              Object.values(errors).map((error, index) => {
+                const errorMessage =
+                  typeof error.years === 'string'
+                    ? error.years
+                    : Object.values(error.years || {}).join(', ');
+                return (
+                  // eslint-disable-next-line react/no-array-index-key
+                  <FieldErrorMsg key={index}>{errorMessage}</FieldErrorMsg>
+                );
+              })
           }
 
           <div className="cost-table-row cost-table-row__headings minh-0">

@@ -100,9 +100,9 @@ const GuidanceLetterForm = () => {
   const [formAlert, setFormAlert] = useState<FormAlertObject | null>(null);
 
   /** Form steps translated text object */
-  const steps = t<StepsText>('guidanceLetterForm.steps', {
+  const steps = t('guidanceLetterForm.steps', {
     returnObjects: true
-  });
+  }) as StepsText;
 
   /** Index of current form step - will return -1 if invalid URL */
   const currentStepIndex: number = guidanceFormSteps.findIndex(

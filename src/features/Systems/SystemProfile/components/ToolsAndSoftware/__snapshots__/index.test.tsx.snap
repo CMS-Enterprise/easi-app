@@ -21,7 +21,7 @@ exports[`System Profile Tools and Software subpage > matches snapshot 1`] = `
         <div
           class="usa-card__container"
         >
-          <header
+          <div
             class="usa-card__header padding-2 padding-bottom-1"
             data-testid="CardHeader"
           >
@@ -46,7 +46,7 @@ exports[`System Profile Tools and Software subpage > matches snapshot 1`] = `
                 Tecnhopedia Category 1
               </dd>
             </div>
-          </header>
+          </div>
         </div>
       </li>
       <li
@@ -56,7 +56,7 @@ exports[`System Profile Tools and Software subpage > matches snapshot 1`] = `
         <div
           class="usa-card__container"
         >
-          <header
+          <div
             class="usa-card__header padding-2 padding-bottom-1"
             data-testid="CardHeader"
           >
@@ -87,7 +87,7 @@ exports[`System Profile Tools and Software subpage > matches snapshot 1`] = `
                 API Gateway
               </span>
             </div>
-          </header>
+          </div>
         </div>
       </li>
       <li
@@ -97,7 +97,7 @@ exports[`System Profile Tools and Software subpage > matches snapshot 1`] = `
         <div
           class="usa-card__container"
         >
-          <header
+          <div
             class="usa-card__header padding-2 padding-bottom-1"
             data-testid="CardHeader"
           >
@@ -134,7 +134,7 @@ exports[`System Profile Tools and Software subpage > matches snapshot 1`] = `
                 API Gateway
               </span>
             </div>
-          </header>
+          </div>
         </div>
       </li>
     </ul>
