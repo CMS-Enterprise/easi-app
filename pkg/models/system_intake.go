@@ -7,6 +7,8 @@ import (
 	"github.com/guregu/null"
 	"github.com/guregu/null/zero"
 	"github.com/lib/pq"
+
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 )
 
 // SystemIntakeRequestType represents the type of a system intake
@@ -216,27 +218,21 @@ const (
 
 // LCIDStatus returns the status of this intake's LCID, if present
 func (si *SystemIntake) LCIDStatus(currentTime time.Time) *SystemIntakeLCIDStatus {
-	// copies of the constants, declared as local variables instead of constants so we can get pointers to them,
-	// which we need so we can return a *SystemIntakeLCIDStatus that can be nil
-	issuedStatus := SystemIntakeLCIDStatusIssued
-	expiredStatus := SystemIntakeLCIDStatusExpired
-	retiredStatus := SystemIntakeLCIDStatusRetired
-
 	if si == nil || si.LifecycleID.ValueOrZero() == "" {
 		return nil
 	}
 
 	// check retirement date first - if both retirement date and expiration date have passed, retirement takes precedence
 	if si.LifecycleRetiresAt != nil && si.LifecycleRetiresAt.Before(currentTime) {
-		return &retiredStatus
+		return helpers.PointerTo(SystemIntakeLCIDStatusRetired)
 	}
 
 	// LifecycleExpiresAt should always be non-nil if an LCID has been issued; check just to avoid a panic if there's inconsistent data
 	if si.LifecycleExpiresAt != nil && si.LifecycleExpiresAt.Before(currentTime) {
-		return &expiredStatus
+		return helpers.PointerTo(SystemIntakeLCIDStatusExpired)
 	}
 
-	return &issuedStatus
+	return helpers.PointerTo(SystemIntakeLCIDStatusIssued)
 }
 
 // RelatedSystemIntake is used when intakes are selected from the DB using linking tables and the related request ID is added as an aliased column.

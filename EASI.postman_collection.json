@@ -1867,6 +1867,27 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "System Intake Get Requester Update Email Data",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query getRequesterUpdateEmailData {\n    requesterUpdateEmailData{\n        lcidStatus\n        lcidIssuedAt\n        lcidExpiresAt\n        lcidRetiresAt\n        requesterEmail\n    }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
