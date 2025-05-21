@@ -567,7 +567,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 		discussionPost := s.createGRBDiscussion(ctx, emailClient, intake.ID, "<p>this is a discussion</p>")
 
 		intake.GrbReviewAsyncManualEndDate = helpers.PointerTo(time.Now().Add(time.Hour * -24))
-		intake, err := s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intake)
+		_, err := s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intake)
 		s.NoError(err)
 
 		s.createGRBDiscussionReplyWithExpectedError(
