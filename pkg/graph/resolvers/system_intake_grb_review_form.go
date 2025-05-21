@@ -262,3 +262,27 @@ func RestartGRBReviewAsync(
 		SystemIntake: updatedIntake,
 	}, nil
 }
+
+// IsGRBReviewCompleted checks if the GRB review is completed for either standard or async
+func IsGRBReviewCompleted(intake *models.SystemIntake) (bool, error) {
+	switch intake.GrbReviewType {
+	case models.SystemIntakeGRBReviewTypeStandard:
+		grbReviewState := CalcSystemIntakeGRBReviewStandardStatus(intake)
+		if grbReviewState == nil {
+			return false, nil
+		}
+
+		return *grbReviewState == models.SystemIntakeGRBReviewStandardStatusTypeCompleted, nil
+
+	case models.SystemIntakeGRBReviewTypeAsync:
+		grbReviewState := CalcSystemIntakeGRBReviewAsyncStatus(intake)
+		if grbReviewState == nil {
+			return false, nil
+		}
+
+		return *grbReviewState == models.SystemIntakeGRBReviewAsyncStatusTypeCompleted, nil
+
+	default:
+		return false, errors.New("invalid GRB review type")
+	}
+}
