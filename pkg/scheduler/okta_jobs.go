@@ -9,14 +9,14 @@ import (
 )
 
 type oktaJobs struct {
-	// SendAsyncVotingHalfwayThroughEmailJob is a job that sends an email when the voting session is halfway through
+	// SendAsyncVotingHalfwayThroughEmailJob is a job that sends a request after fifteen days, to prevent the token from expiring
 	ReauthenticateWithOktaJob ScheduledJob
 }
 
-// OktaJobs is the exported representation of all GRB email scheduled jobs
+// OktaJobs is the exported representation of all Okta scheduled jobs
 var OktaJobs = getOktaJobs(SharedScheduler)
 
-// getOktaJobs initializes all GRB email jobs
+// getOktaJobs initializes all Okta jobs
 func getOktaJobs(scheduler *Scheduler) *oktaJobs {
 	return &oktaJobs{
 		ReauthenticateWithOktaJob: NewScheduledJob(
