@@ -5,13 +5,7 @@ import (
 
 	"go.uber.org/zap"
 
-	// "github.com/cms-enterprise/easi-app/pkg/dataloaders"
-	// "github.com/cms-enterprise/easi-app/pkg/email"
-	// "github.com/cms-enterprise/easi-app/pkg/logfields"
-	// "github.com/cms-enterprise/easi-app/pkg/models"
-
 	"github.com/cms-enterprise/easi-app/pkg/scheduler/timing"
-	// "github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 type oktaJobs struct {
