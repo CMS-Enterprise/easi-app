@@ -15,6 +15,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/logfields"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/usersearch"
 )
 
 type Scheduler struct {
@@ -25,6 +26,7 @@ type Scheduler struct {
 	mutex            sync.Mutex
 	logger           *zap.Logger
 	emailClient      *email.Client
+	userSearchClient usersearch.Client
 	buildDataLoaders dataloaders.BuildDataloaders
 	initialized      bool
 }
@@ -51,12 +53,13 @@ func NewScheduler(panicOnError bool) (*Scheduler, error) {
 var SharedScheduler, _ = NewScheduler(true)
 
 // Initialize sets the logger, store, and email client for the shared scheduler.
-func (s *Scheduler) Initialize(ctx context.Context, logger *zap.Logger, store *storage.Store, buildDataLoaders dataloaders.BuildDataloaders, emailClient *email.Client) {
+func (s *Scheduler) Initialize(ctx context.Context, logger *zap.Logger, store *storage.Store, buildDataLoaders dataloaders.BuildDataloaders, emailClient *email.Client, userSearchClient usersearch.Client) {
 	l := logger.With(logfields.SchedulerAppSection)
 	s.logger = l
 	s.context = appcontext.WithLogger(ctx, l)
 	s.store = store
 	s.emailClient = emailClient
+	s.userSearchClient = userSearchClient
 	s.buildDataLoaders = buildDataLoaders
 	s.initialized = true
 

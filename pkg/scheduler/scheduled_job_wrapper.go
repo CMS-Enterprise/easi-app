@@ -14,6 +14,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/logfields"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/usersearch"
 )
 
 // ScheduledJobFunction is an abstraction around scheduled jobs and tasks it defines
@@ -58,6 +59,14 @@ func (sjw *ScheduledJobWrapper[input]) emailClient() (*email.Client, error) {
 		return nil, errors.New("scheduler is not initialized")
 	}
 	return sjw.scheduler.emailClient, nil
+}
+
+// userSearchClient returns the userSearchClient from the scheduler
+func (sjw *ScheduledJobWrapper[input]) userSearchClient() (usersearch.Client, error) {
+	if sjw.scheduler == nil || sjw.scheduler.userSearchClient == nil {
+		return nil, errors.New("scheduler is not initialized")
+	}
+	return sjw.scheduler.userSearchClient, nil
 }
 
 // buildDataLoaders returns the buildDataLoaders function from the scheduler

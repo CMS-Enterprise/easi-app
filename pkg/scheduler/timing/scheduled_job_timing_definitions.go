@@ -1,6 +1,8 @@
 package timing
 
-import "github.com/go-co-op/gocron/v2"
+import (
+	"github.com/go-co-op/gocron/v2"
+)
 
 var (
 	// Every5Seconds is a cron expression that will run every 5 seconds, useful for testing
@@ -15,4 +17,7 @@ var (
 
 	// DailyAt1PMUTC is a cron expression that runs every day at 1 PM UTC (13:00) which is 9 AM EST
 	DailyAt1PMUTC = gocron.CronJob("0 13 * * *", false)
+
+	// FifteenDays is a cron expression that runs once every fifteen days day at 12 AM UTC (00:00) which is 8 PM M **EDT** or 7 PM **EST** depending on daylight saving time.
+	FifteenDays = gocron.CronJob("0 0 */15 * *", false)
 )
