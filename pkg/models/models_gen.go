@@ -374,6 +374,14 @@ type ReopenTRBRequestInput struct {
 	NotifyEuaIds   []string  `json:"notifyEuaIds"`
 }
 
+type RequesterUpdateEmailData struct {
+	LcidStatus     *SystemIntakeLCIDStatus `json:"lcidStatus,omitempty"`
+	LcidIssuedAt   *time.Time              `json:"lcidIssuedAt,omitempty"`
+	LcidExpiresAt  *time.Time              `json:"lcidExpiresAt,omitempty"`
+	LcidRetiresAt  *time.Time              `json:"lcidRetiresAt,omitempty"`
+	RequesterEmail EmailAddress            `json:"requesterEmail"`
+}
+
 type SendCantFindSomethingEmailInput struct {
 	Body string `json:"body"`
 }

@@ -368,3 +368,7 @@ func SystemIntakesWithReviewRequested(ctx context.Context, store *storage.Store)
 func GetMySystemIntakes(ctx context.Context, store *storage.Store) ([]*models.SystemIntake, error) {
 	return store.GetMySystemIntakes(ctx)
 }
+
+func GetRequesterUpdateEmailData(ctx context.Context, store *storage.Store) ([]*models.RequesterUpdateEmailData, error) {
+	return store.GetRequesterUpdateEmailData(ctx)
+}
