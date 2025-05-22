@@ -20,6 +20,8 @@ import {
   CardFooter,
   CardGroup,
   CardHeader,
+  Checkbox,
+  Fieldset,
   Form,
   FormGroup,
   GridContainer,
@@ -420,9 +422,20 @@ const RequestRepository = () => {
             {t('home:adminHome.GRT.requesterUpdateEmail.modal.heading')}
           </ModalHeading>
           <p>{t('home:adminHome.GRT.requesterUpdateEmail.modal.content')}</p>
+          <Fieldset>
+            {(
+              t('home:adminHome.GRT.requesterUpdateEmail.modal.list', {
+                returnObjects: true
+              }) as string[]
+            ).map(item => {
+              return (
+                <Checkbox id={item} name={item} value={item} label={item} />
+              );
+            })}
+          </Fieldset>
 
           <ModalFooter>
-            <ButtonGroup>
+            <div className="display-flex flex-gap-3">
               <Button
                 type="button"
                 // TODO: update to mailto link
@@ -442,7 +455,7 @@ const RequestRepository = () => {
                   'home:adminHome.GRT.requesterUpdateEmail.modal.copyEmailButton'
                 )}
               </Button>
-            </ButtonGroup>
+            </div>
           </ModalFooter>
         </Modal>
 
