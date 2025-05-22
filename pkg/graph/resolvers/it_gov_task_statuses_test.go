@@ -1359,9 +1359,8 @@ func TestGrbMeetingStatus(t *testing.T) {
 		{
 			testCase: "Async: Review in progress",
 			intake: models.SystemIntake{
-				Step:                        models.SystemIntakeStepGRBREVIEW,
+				Step:                        models.SystemIntakeStepGRBMEETING,
 				GrbReviewType:               models.SystemIntakeGRBReviewTypeAsync,
-				GRBDate:                     &yesterday,
 				GRBReviewStartedAt:          &yesterday,
 				GrbReviewAsyncEndDate:       &tomorrow,
 				GrbReviewAsyncRecordingTime: &yesterday,
@@ -1371,9 +1370,8 @@ func TestGrbMeetingStatus(t *testing.T) {
 		{
 			testCase: "Async: Awaiting GRB review (recording passed)",
 			intake: models.SystemIntake{
-				Step:                        models.SystemIntakeStepGRBREVIEW,
+				Step:                        models.SystemIntakeStepGRBMEETING,
 				GrbReviewType:               models.SystemIntakeGRBReviewTypeAsync,
-				GRBDate:                     &yesterday,
 				GrbReviewAsyncRecordingTime: &yesterday,
 			},
 			expectedStatus: models.ITGRRBSAwaitingGRBReview,
@@ -1440,9 +1438,8 @@ func TestGrbMeetingStatus(t *testing.T) {
 		{
 			testCase: "Async: Review in progress (between start and end, no recording time)",
 			intake: models.SystemIntake{
-				Step:                  models.SystemIntakeStepGRBREVIEW,
+				Step:                  models.SystemIntakeStepGRBMEETING,
 				GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
-				GRBDate:               &yesterday,
 				GRBReviewStartedAt:    &yesterday,
 				GrbReviewAsyncEndDate: &tomorrow,
 			},
@@ -1451,9 +1448,8 @@ func TestGrbMeetingStatus(t *testing.T) {
 		{
 			testCase: "Async: Awaiting GRB review (recording passed)",
 			intake: models.SystemIntake{
-				Step:                        models.SystemIntakeStepGRBREVIEW,
+				Step:                        models.SystemIntakeStepGRBMEETING,
 				GrbReviewType:               models.SystemIntakeGRBReviewTypeAsync,
-				GRBDate:                     &yesterday,
 				GRBReviewStartedAt:          &yesterday,
 				GrbReviewAsyncEndDate:       &tomorrow,
 				GrbReviewAsyncRecordingTime: &yesterday,
@@ -1463,9 +1459,8 @@ func TestGrbMeetingStatus(t *testing.T) {
 		{
 			testCase: "Async: Scheduled (recording time in future)",
 			intake: models.SystemIntake{
-				Step:                        models.SystemIntakeStepGRBREVIEW,
+				Step:                        models.SystemIntakeStepGRBMEETING,
 				GrbReviewType:               models.SystemIntakeGRBReviewTypeAsync,
-				GRBDate:                     &yesterday,
 				GrbReviewAsyncEndDate:       &tomorrow,
 				GrbReviewAsyncRecordingTime: &tomorrow,
 			},

@@ -226,9 +226,6 @@ func getGRBReviewStatusWithNilGRBDate(intake *models.SystemIntake) (models.ITGov
 	case models.SystemIntakeStepGRBMEETING: // If at the GRB step, show ready to schedule
 		return models.ITGGRBSReadyToSchedule, nil
 
-	case models.SystemIntakeStepGRBREVIEW:
-		return models.ITGRRBSReviewInProgress, nil
-
 	case models.SystemIntakeStepDECISION: // If after GRB step, show that it was not needed (skipped)
 		return models.ITGGRBSNotNeeded, nil
 	default: //This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string. It will also provide an error if a new state is added and not handled.
