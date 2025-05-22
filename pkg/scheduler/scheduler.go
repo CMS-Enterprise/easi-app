@@ -52,7 +52,7 @@ func NewScheduler(panicOnError bool) (*Scheduler, error) {
 
 var SharedScheduler, _ = NewScheduler(true)
 
-// Initialize sets the logger, store, and email client for the shared scheduler.
+// Initialize sets the logger, store, an email client, and a userSearchClient(Okta) for the shared scheduler
 func (s *Scheduler) Initialize(ctx context.Context, logger *zap.Logger, store *storage.Store, buildDataLoaders dataloaders.BuildDataloaders, emailClient *email.Client, userSearchClient usersearch.Client) {
 	l := logger.With(logfields.SchedulerAppSection)
 	s.logger = l
