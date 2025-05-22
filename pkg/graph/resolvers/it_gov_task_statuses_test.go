@@ -329,8 +329,9 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 		{
 			testCase: "GRB Meeting: no meeting scheduled",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRBMEETING,
-				GRBDate: nil,
+				Step:          models.SystemIntakeStepGRBMEETING,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       nil,
 			},
 			expectedStatus: models.ITGDSCantStart,
 			expectError:    false,
@@ -338,8 +339,9 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 		{
 			testCase: "GRB Meeting: meeting scheduled, but hasn't happened",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRBMEETING,
-				GRBDate: &tomorrow,
+				Step:          models.SystemIntakeStepGRBMEETING,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       &tomorrow,
 			},
 			expectedStatus: models.ITGDSCantStart,
 			expectError:    false,
@@ -347,8 +349,9 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 		{
 			testCase: "GRB Meeting: meeting scheduled, it already happened",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRBMEETING,
-				GRBDate: &yesterday,
+				Step:          models.SystemIntakeStepGRBMEETING,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       &yesterday,
 			},
 			expectedStatus: models.ITGDSInReview,
 			expectError:    false,
@@ -396,6 +399,8 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 				GRBDate:       nil,
 			},
+			expectedStatus: models.ITGDSCantStart,
+			expectError:    false,
 		},
 		{
 			testCase: "Decision issued step: GRB Meeting, standard, GRB Date nil",
@@ -404,6 +409,9 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 				GRBDate:       nil,
 			},
+
+			expectedStatus: models.ITGDSCantStart,
+			expectError:    false,
 		},
 		{
 			testCase: "Decision issued step: GRB Meeting, standard, GRB Date future",
@@ -412,22 +420,28 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 				GRBDate:       helpers.PointerTo(time.Now().Add(time.Hour * 24)),
 			},
+			expectedStatus: models.ITGDSCantStart,
+			expectError:    false,
 		},
 		{
 			testCase: "Decision issued step: GRB Meeting, async, GRB Date nil",
 			intake: models.SystemIntake{
-				Step:          models.SystemIntakeStepGRBMEETING,
-				GrbReviewType: models.SystemIntakeGRBReviewTypeAsync,
-				GRBDate:       nil,
+				Step:                  models.SystemIntakeStepGRBMEETING,
+				GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
+				GrbReviewAsyncEndDate: nil,
 			},
+			expectedStatus: models.ITGDSCantStart,
+			expectError:    false,
 		},
 		{
 			testCase: "Decision issued step: GRB Meeting, async, GRB Date future",
 			intake: models.SystemIntake{
-				Step:          models.SystemIntakeStepGRBMEETING,
-				GrbReviewType: models.SystemIntakeGRBReviewTypeAsync,
-				GRBDate:       helpers.PointerTo(time.Now().Add(time.Hour * 24)),
+				Step:                  models.SystemIntakeStepGRBMEETING,
+				GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
+				GrbReviewAsyncEndDate: helpers.PointerTo(time.Now().Add(time.Hour * 24)),
 			},
+			expectedStatus: models.ITGDSCantStart,
+			expectError:    false,
 		},
 	}
 
@@ -1344,11 +1358,12 @@ func TestGrbMeetingStatus(t *testing.T) {
 		{
 			testCase: "Async: Review in progress",
 			intake: models.SystemIntake{
-				Step:                  models.SystemIntakeStepGRBREVIEW,
-				GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
-				GRBDate:               &yesterday,
-				GRBReviewStartedAt:    &yesterday,
-				GrbReviewAsyncEndDate: &tomorrow,
+				Step:                        models.SystemIntakeStepGRBREVIEW,
+				GrbReviewType:               models.SystemIntakeGRBReviewTypeAsync,
+				GRBDate:                     &yesterday,
+				GRBReviewStartedAt:          &yesterday,
+				GrbReviewAsyncEndDate:       &tomorrow,
+				GrbReviewAsyncRecordingTime: &yesterday,
 			},
 			expectedStatus: models.ITGRRBSReviewInProgress,
 		},
@@ -1442,7 +1457,7 @@ func TestGrbMeetingStatus(t *testing.T) {
 				GrbReviewAsyncEndDate:       &tomorrow,
 				GrbReviewAsyncRecordingTime: &yesterday,
 			},
-			expectedStatus: models.ITGRRBSAwaitingGRBReview,
+			expectedStatus: models.ITGRRBSReviewInProgress,
 		},
 		{
 			testCase: "Async: Scheduled (recording time in future)",
@@ -1450,7 +1465,6 @@ func TestGrbMeetingStatus(t *testing.T) {
 				Step:                        models.SystemIntakeStepGRBREVIEW,
 				GrbReviewType:               models.SystemIntakeGRBReviewTypeAsync,
 				GRBDate:                     &yesterday,
-				GRBReviewStartedAt:          &yesterday,
 				GrbReviewAsyncEndDate:       &tomorrow,
 				GrbReviewAsyncRecordingTime: &tomorrow,
 			},
