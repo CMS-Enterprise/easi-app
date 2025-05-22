@@ -1267,6 +1267,14 @@ type SystemIntakeLCIDExpirationChange {
   newCostBaseline: String
 }
 
+type RequesterUpdateEmailData {
+  lcidStatus: SystemIntakeLCIDStatus
+  lcidIssuedAt: Time
+  lcidExpiresAt: Time
+  lcidRetiresAt: Time
+  requesterEmail: EmailAddress!
+}
+
 """
 The contact who is associated with an action being done to a system request
 """
@@ -2929,6 +2937,8 @@ type Query {
   myTrbRequests(archived: Boolean! = false): [TRBRequest!]!
   trbLeadOptions: [UserInfo!]!
   trbAdminNote(id: UUID!): TRBAdminNote!
+  requesterUpdateEmailData: [RequesterUpdateEmailData!]!
+
   @hasRole(role: EASI_TRB_ADMIN)
   userAccount(username: String!): UserAccount
 }

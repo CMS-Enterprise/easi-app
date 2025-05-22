@@ -1696,6 +1696,7 @@ export type Query = {
   myCedarSystems: Array<CedarSystem>;
   mySystemIntakes: Array<SystemIntake>;
   myTrbRequests: Array<TRBRequest>;
+  requesterUpdateEmailData: Array<RequesterUpdateEmailData>;
   roleTypes: Array<CedarRoleType>;
   roles: Array<CedarRole>;
   /**
@@ -1870,6 +1871,15 @@ export enum RequestRelationType {
   EXISTING_SYSTEM = 'EXISTING_SYSTEM',
   NEW_SYSTEM = 'NEW_SYSTEM'
 }
+
+export type RequesterUpdateEmailData = {
+  __typename: 'RequesterUpdateEmailData';
+  lcidExpiresAt?: Maybe<Scalars['Time']['output']>;
+  lcidIssuedAt?: Maybe<Scalars['Time']['output']>;
+  lcidRetiresAt?: Maybe<Scalars['Time']['output']>;
+  lcidStatus?: Maybe<SystemIntakeLCIDStatus>;
+  requesterEmail: Scalars['EmailAddress']['output'];
+};
 
 /** Input structure to restart the GRB review process */
 export type RestartGRBReviewInput = {

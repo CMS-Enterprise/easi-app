@@ -380,6 +380,14 @@ type ReopenTRBRequestInput struct {
 	NotifyEuaIds   []string  `json:"notifyEuaIds"`
 }
 
+type RequesterUpdateEmailData struct {
+	LcidStatus     *SystemIntakeLCIDStatus `json:"lcidStatus,omitempty"`
+	LcidIssuedAt   *time.Time              `json:"lcidIssuedAt,omitempty"`
+	LcidExpiresAt  *time.Time              `json:"lcidExpiresAt,omitempty"`
+	LcidRetiresAt  *time.Time              `json:"lcidRetiresAt,omitempty"`
+	RequesterEmail EmailAddress            `json:"requesterEmail"`
+}
+
 // Input structure to restart the GRB review process
 type RestartGRBReviewInput struct {
 	SystemIntakeID uuid.UUID `json:"systemIntakeID"`
