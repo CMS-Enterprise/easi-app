@@ -1,9 +1,10 @@
 package resolvers
 
 import (
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"testing"
 	"time"
+
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 
 	"github.com/stretchr/testify/assert"
 
