@@ -15,6 +15,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
   ButtonGroup,
+  Card,
+  CardBody,
+  CardFooter,
+  CardGroup,
+  CardHeader,
   Form,
   FormGroup,
   GridContainer,
@@ -75,6 +80,9 @@ const RequestRepository = () => {
   /* Controls Configure Portfolio Update Report modal */
   const [configReportModalOpen, setConfigReportModalOpen] =
     useState<boolean>(false);
+
+  const [requestUpdateEmailModalOpen, setRequestUpdateEmailModalOpen] =
+    useState(false);
 
   /* Date range for Portfolio Update Report */
   const { control, handleSubmit, watch } = useForm<{
@@ -232,20 +240,69 @@ const RequestRepository = () => {
   return (
     <>
       <GridContainer className="margin-top-1 margin-bottom-2">
-        <ButtonGroup className="trb-admin-team-home-actions">
-          {/* Configure Portfolio Update Report button */}
-          <Button
-            type="button"
-            onClick={() => setConfigReportModalOpen(true)}
-            className="margin-right-1"
+        <CardGroup className="margin-y-2">
+          <Card
+            containerProps={{
+              className: 'radius-0 border-gray-10 shadow-3'
+            }}
+            gridLayout={{
+              tablet: {
+                col: 6
+              }
+            }}
           >
-            {t('home:adminHome.GRT.configureReport.button')}
-          </Button>
-          {/* Portfolio Update Report info modal trigger button */}
-          <Button type="button" onClick={() => setInfoModalOpen(true)} unstyled>
-            {t('home:adminHome.GRT.infoModal.link')}
-          </Button>
-        </ButtonGroup>
+            <CardHeader>
+              <h4>{t('home:adminHome.GRT.configureReport.card.heading')}</h4>
+            </CardHeader>
+            <CardBody>
+              <p>{t('home:adminHome.GRT.configureReport.card.content')}</p>
+              <Button
+                type="button"
+                onClick={() => setInfoModalOpen(true)}
+                unstyled
+              >
+                {t('home:adminHome.GRT.infoModal.link')}
+              </Button>
+            </CardBody>
+            <CardFooter>
+              <Button
+                type="button"
+                onClick={() => setConfigReportModalOpen(true)}
+                className="margin-right-1"
+              >
+                {t('home:adminHome.GRT.configureReport.button')}
+              </Button>
+            </CardFooter>
+          </Card>
+          <Card
+            containerProps={{
+              className: 'radius-0 border-gray-10 shadow-3'
+            }}
+            gridLayout={{
+              tablet: {
+                col: 6
+              }
+            }}
+          >
+            <CardHeader>
+              <h4>
+                {t('home:adminHome.GRT.requesterUpdateEmail.card.heading')}
+              </h4>
+            </CardHeader>
+            <CardBody>
+              <p>{t('home:adminHome.GRT.requesterUpdateEmail.card.content')}</p>
+            </CardBody>
+            <CardFooter>
+              <Button
+                type="button"
+                onClick={() => setRequestUpdateEmailModalOpen(true)}
+                className="margin-right-1"
+              >
+                {t('home:adminHome.GRT.requesterUpdateEmail.card.button')}
+              </Button>
+            </CardFooter>
+          </Card>
+        </CardGroup>
       </GridContainer>
       <GridContainer className="margin-bottom-5 maxw-none">
         {/* Configure Portfolio Update Report modal */}
@@ -351,6 +408,41 @@ const RequestRepository = () => {
             >
               {t('Close')}
             </Button>
+          </ModalFooter>
+        </Modal>
+
+        {/* Request Update Email Modal */}
+        <Modal
+          isOpen={requestUpdateEmailModalOpen}
+          closeModal={() => setRequestUpdateEmailModalOpen(false)}
+        >
+          <ModalHeading>
+            {t('home:adminHome.GRT.requesterUpdateEmail.modal.heading')}
+          </ModalHeading>
+          <p>{t('home:adminHome.GRT.requesterUpdateEmail.modal.content')}</p>
+
+          <ModalFooter>
+            <ButtonGroup>
+              <Button
+                type="button"
+                // TODO: update to mailto link
+                onClick={() => setRequestUpdateEmailModalOpen(false)}
+              >
+                {t(
+                  'home:adminHome.GRT.requesterUpdateEmail.modal.openEmailButton'
+                )}
+              </Button>
+              <Button
+                type="button"
+                // TODO: copy emails to clipboard
+                onClick={() => setRequestUpdateEmailModalOpen(false)}
+                unstyled
+              >
+                {t(
+                  'home:adminHome.GRT.requesterUpdateEmail.modal.copyEmailButton'
+                )}
+              </Button>
+            </ButtonGroup>
           </ModalFooter>
         </Modal>
 
