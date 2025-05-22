@@ -7,10 +7,12 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
 	"github.com/cms-enterprise/easi-app/pkg/email"
+	"github.com/cms-enterprise/easi-app/pkg/local"
 	"github.com/cms-enterprise/easi-app/pkg/testconfig/dbtestconfigs"
 	"github.com/cms-enterprise/easi-app/pkg/testconfig/emailtestconfigs"
 	"github.com/cms-enterprise/easi-app/pkg/testconfig/uploadtestconfigs"
 	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/usersearch"
 
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/upload"
@@ -34,6 +36,7 @@ type Base struct {
 	Context                  context.Context
 	getTestPrincipalFunction GetTestPrincipalFunction
 	EmailClient              *email.Client
+	userSearchClient         usersearch.Client
 	Sender                   *emailtestconfigs.MockSender
 }
 
@@ -51,7 +54,8 @@ func GetDefaultTestConfigs(getTestPrincipalFunction GetTestPrincipalFunction) *B
 func (config *Base) GetDefaults(ctxCallbacks ...func(context.Context) context.Context) {
 	dbConfig, ldClient, logger, userInfo := getTestDependencies()
 	store, _ := storage.NewStore(dbConfig, ldClient)
-	client, sender := emailtestconfigs.NewEmailClient()
+	emailClient, sender := emailtestconfigs.NewEmailClient()
+	userSearchClient := local.NewOktaAPIClient()
 
 	viperConfig := testhelpers.NewConfig()
 	s3Client := uploadtestconfigs.S3TestClient(viperConfig)
@@ -61,7 +65,8 @@ func (config *Base) GetDefaults(ctxCallbacks ...func(context.Context) context.Co
 	config.UserInfo = userInfo
 	config.Store = store
 	config.S3Client = &s3Client
-	config.EmailClient = client
+	config.EmailClient = emailClient
+	config.userSearchClient = userSearchClient
 	config.Sender = sender
 
 	config.Context = appcontext.WithLogger(context.Background(), config.Logger)

@@ -4,6 +4,8 @@ import (
 	"context"
 
 	"github.com/go-co-op/gocron/v2"
+
+	"github.com/cms-enterprise/easi-app/pkg/local"
 )
 
 //TODO implement shared testing utilities
@@ -18,7 +20,7 @@ import (
 func (suite *SchedulerTestSuite) NewTestScheduler() *Scheduler {
 	testScheduler, err := NewScheduler(false)
 	suite.NoError(err)
-	testScheduler.Initialize(suite.testConfigs.Context, suite.testConfigs.Logger, suite.testConfigs.Store, suite.buildDataLoaders(), suite.testConfigs.EmailClient)
+	testScheduler.Initialize(suite.testConfigs.Context, suite.testConfigs.Logger, suite.testConfigs.Store, suite.buildDataLoaders(), suite.testConfigs.EmailClient, local.NewOktaAPIClient())
 	return testScheduler
 }
 

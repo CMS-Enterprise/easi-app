@@ -369,7 +369,7 @@ func (s *Server) routes() {
 		emailClient.SendLCIDExpirationAlertEmail,
 		time.Hour*24)
 	// start the scheduler
-	scheduler.SharedScheduler.Initialize(context.TODO(), s.logger, store, buildDataloaders, &emailClient)
+	scheduler.SharedScheduler.Initialize(context.TODO(), s.logger, store, buildDataloaders, &emailClient, userSearchClient)
 	scheduler.SharedScheduler.Start()
 
 	// note, we defer shutdown the scheduler in server.Serve
