@@ -80,20 +80,20 @@ describe('Business case general request info form', () => {
   it('fills all fields', async () => {
     await renderPage(defaultStore);
 
-    const projectNameField = screen.getByRole('textbox', {
-      name: /Project name/i
+    const requestNameField = screen.getByRole('textbox', {
+      name: /Contract \/ Request title/i
     });
-    userEvent.type(projectNameField, 'Test Project 1');
-    expect(projectNameField).toHaveValue('Test Project 1');
+    userEvent.type(requestNameField, 'Test Project 1');
+    expect(requestNameField).toHaveValue('Test Project 1');
 
     const requesterField = screen.getByRole('textbox', {
-      name: /^Requester$/i
+      name: /Requester name/i
     });
     userEvent.type(requesterField, 'John Doe');
     expect(requesterField).toHaveValue('John Doe');
 
     const businessOwnerField = screen.getByRole('textbox', {
-      name: /Business Owner/i
+      name: /CMS Business Owner name/i
     });
     userEvent.type(businessOwnerField, 'Sally Doe');
     expect(businessOwnerField).toHaveValue('Sally Doe');
@@ -123,12 +123,12 @@ describe('Business case general request info form', () => {
     });
   });
 
-  it('does not render mandatory fields message', async () => {
+  it('renders draft business case fields message', async () => {
     await renderPage(defaultStore);
 
     expect(
-      screen.queryByTestId('mandatory-fields-alert')
-    ).not.toBeInTheDocument();
+      screen.getByTestId('draft-business-case-fields-alert')
+    ).toBeInTheDocument();
   });
 
   it('navigates to next page', async () => {
@@ -142,10 +142,12 @@ describe('Business case general request info form', () => {
   });
 
   describe('Final Business Case', () => {
-    it('renders mandatory fields message', async () => {
+    it('does not render draft business case fields message', async () => {
       await renderPage(defaultStore, true);
 
-      expect(screen.getByTestId('mandatory-fields-alert')).toBeInTheDocument();
+      expect(
+        screen.queryByTestId('draft-business-case-fields-alert')
+      ).not.toBeInTheDocument();
     });
 
     it('runs validations and renders form errors', async () => {

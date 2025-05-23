@@ -155,6 +155,7 @@ exports[`Trb Admin Request Home > renders successfully with empty data 1`] = `
               <span
                 class="easi-tag easi-task-status-tag bg-info-light"
                 data-testid="task-list-task-tag"
+                style="white-space: nowrap;"
               >
                 Ready to start
               </span>
@@ -216,6 +217,7 @@ exports[`Trb Admin Request Home > renders successfully with empty data 1`] = `
               <span
                 class="easi-tag easi-task-status-tag border-2px text-base"
                 data-testid="task-list-task-tag"
+                style="white-space: nowrap;"
               >
                 Cannot start yet
               </span>

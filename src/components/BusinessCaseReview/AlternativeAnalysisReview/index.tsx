@@ -3,7 +3,7 @@ import ProposedBusinessCaseSolutionReview from 'features/ITGovernance/Requester/
 
 import PrintableTabContent from 'components/PrintableTabContent';
 import ResponsiveTabs from 'components/ResponsiveTabs';
-import { alternativeSolutionHasFilledFields } from 'data/businessCase';
+import { solutionHasFilledFields } from 'data/businessCase';
 import { ProposedBusinessCaseSolution } from 'types/businessCase';
 
 type AlternativeAnalysisReviewProps = {
@@ -22,10 +22,10 @@ const AlternativeAnalysisReview = (values: AlternativeAnalysisReviewProps) => {
   const getFilledSolutions = () => {
     const solutions = ['Preferred solution'];
 
-    if (alternativeA && alternativeSolutionHasFilledFields(alternativeA)) {
+    if (alternativeA && solutionHasFilledFields(alternativeA)) {
       solutions.push('Alternative A');
     }
-    if (alternativeB && alternativeSolutionHasFilledFields(alternativeB)) {
+    if (alternativeB && solutionHasFilledFields(alternativeB)) {
       solutions.push('Alternative B');
     }
     return solutions;
@@ -51,7 +51,7 @@ const AlternativeAnalysisReview = (values: AlternativeAnalysisReviewProps) => {
             solution={preferredSolution}
           />
         </PrintableTabContent>
-        {alternativeA && alternativeSolutionHasFilledFields(alternativeA) && (
+        {alternativeA && solutionHasFilledFields(alternativeA) && (
           <PrintableTabContent visible={activeSolutionTab === 'Alternative A'}>
             <ProposedBusinessCaseSolutionReview
               name="Alternative A"
@@ -60,7 +60,7 @@ const AlternativeAnalysisReview = (values: AlternativeAnalysisReviewProps) => {
             />
           </PrintableTabContent>
         )}
-        {alternativeB && alternativeSolutionHasFilledFields(alternativeB) && (
+        {alternativeB && solutionHasFilledFields(alternativeB) && (
           <PrintableTabContent visible={activeSolutionTab === 'Alternative B'}>
             <ProposedBusinessCaseSolutionReview
               name="Alternative B"

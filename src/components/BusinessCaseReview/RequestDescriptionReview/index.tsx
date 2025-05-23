@@ -28,19 +28,19 @@ const RequestDescriptionReview = ({
       </ReviewRow>
       <ReviewRow className="margin-bottom-3">
         <div className="line-height-body-3">
-          <DescriptionTerm term="How will CMS benefit from this effort?" />
+          <DescriptionTerm term="What is the current process that you are using for this work, or how is this need currently being met?" />
           <DescriptionDefinition
             className="text-pre-wrap"
-            definition={values.cmsBenefit}
+            definition={values.currentSolutionSummary}
           />
         </div>
       </ReviewRow>
       <ReviewRow className="margin-bottom-3">
         <div className="line-height-body-3">
-          <DescriptionTerm term="Summary of Current Solution" />
+          <DescriptionTerm term="How will CMS benefit from this effort?" />
           <DescriptionDefinition
             className="text-pre-wrap"
-            definition={values.currentSolutionSummary}
+            definition={values.cmsBenefit}
           />
         </div>
       </ReviewRow>
