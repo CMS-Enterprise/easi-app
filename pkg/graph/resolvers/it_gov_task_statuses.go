@@ -154,16 +154,71 @@ func BizCaseFinalStatus(intake *models.SystemIntake) (models.ITGovFinalBusinessC
 
 // GrbMeetingStatus calculates the ITGovGRBStatus for the GrbMeeting section for the system intake task list for the requester view
 func GrbMeetingStatus(intake *models.SystemIntake) (models.ITGovGRBStatus, error) {
-	if intake.GRBDate != nil { // status depends on if there is a date scheduled or not
-		if intake.GRBDate.After(time.Now()) { // Meeting has not happened
-			return models.ITGGRBSScheduled, nil
-		}
-		if intake.Step == models.SystemIntakeStepGRBMEETING { //if the step is GRB meeting, status is awaiting decision
-			return models.ITGGRBSAwaitingDecision, nil
-		}
-		return models.ITGGRBSCompleted, nil // if the step is not GRB meeting, the status is completed
+	switch intake.GrbReviewType {
+	case models.SystemIntakeGRBReviewTypeAsync:
+		return getAsyncGRBReviewStatus(intake)
+
+	case models.SystemIntakeGRBReviewTypeStandard:
+		return getStandardGRBReviewStatus(intake)
+
+	default:
+		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its grb review type"), intake.GrbReviewType, "SystemIntakeGRBReviewType")
 	}
-	// the grb date is nil.
+}
+
+func getAsyncGRBReviewStatus(intake *models.SystemIntake) (models.ITGovGRBStatus, error) {
+	now := time.Now()
+
+	// Review has not been started
+	if intake.GRBReviewStartedAt == nil {
+
+		// Async recording date has not been set
+		if intake.GrbReviewAsyncRecordingTime == nil {
+			return getGRBReviewStatusWithNilGRBDate(intake)
+		}
+
+		// Async recording date is in past
+		if now.After(*intake.GrbReviewAsyncRecordingTime) {
+			return models.ITGRRBSAwaitingGRBReview, nil
+		}
+
+		// Async recording date is in future
+		return models.ITGGRBSScheduled, nil
+	}
+
+	// Review has started
+	if intake.GrbReviewAsyncEndDate != nil &&
+		// Review end date is in future
+		now.After(*intake.GRBReviewStartedAt) &&
+		now.Before(*intake.GrbReviewAsyncEndDate) {
+		return models.ITGRRBSReviewInProgress, nil
+	}
+
+	// Review end date is in past, request is awaiting decision
+	if intake.Step == models.SystemIntakeStepGRBMEETING {
+		return models.ITGGRBSAwaitingDecision, nil
+	}
+
+	// Review end date is in past, decision has been issued
+	return models.ITGGRBSCompleted, nil
+}
+
+func getStandardGRBReviewStatus(intake *models.SystemIntake) (models.ITGovGRBStatus, error) {
+	if intake.GRBDate == nil {
+		return getGRBReviewStatusWithNilGRBDate(intake)
+	}
+
+	if intake.GRBDate.After(time.Now()) { // Meeting has not happened
+		return models.ITGGRBSScheduled, nil
+	}
+	if intake.Step == models.SystemIntakeStepGRBMEETING { //if the step is GRB meeting, status is awaiting decision
+		return models.ITGGRBSAwaitingDecision, nil
+	}
+
+	return models.ITGGRBSCompleted, nil // if the step is not GRB meeting, the status is completed
+}
+
+func getGRBReviewStatusWithNilGRBDate(intake *models.SystemIntake) (models.ITGovGRBStatus, error) {
 	switch intake.Step {
 	case models.SystemIntakeStepINITIALFORM, models.SystemIntakeStepDRAFTBIZCASE, models.SystemIntakeStepGRTMEETING, models.SystemIntakeStepFINALBIZCASE: // Any step before GRB should show can't start
 		return models.ITGGRBSCantStart, nil
@@ -176,7 +231,6 @@ func GrbMeetingStatus(intake *models.SystemIntake) (models.ITGovGRBStatus, error
 	default: //This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string. It will also provide an error if a new state is added and not handled.
 		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its intake form step"), intake.Step, "SystemIntakeStep")
 	}
-
 }
 
 // DecisionAndNextStepsStatus calculates the ITGovDecisionStatus for the Decisions section for the system intake task list for the requester view
@@ -185,14 +239,27 @@ func DecisionAndNextStepsStatus(intake *models.SystemIntake) (models.ITGovDecisi
 	switch intake.Step {
 	case models.SystemIntakeStepINITIALFORM, models.SystemIntakeStepDRAFTBIZCASE, models.SystemIntakeStepGRTMEETING, models.SystemIntakeStepFINALBIZCASE:
 		return models.ITGDSCantStart, nil
+
 	case models.SystemIntakeStepGRBMEETING:
-		if intake.GRBDate == nil {
-			return models.ITGDSCantStart, nil
+		if intake.GrbReviewType == models.SystemIntakeGRBReviewTypeStandard {
+			if intake.GRBDate == nil {
+				return models.ITGDSCantStart, nil
+			}
+			if intake.GRBDate.After(time.Now()) { // Meeting has not happened
+				return models.ITGDSCantStart, nil
+			}
 		}
-		if intake.GRBDate.After(time.Now()) { // Meeting has not happened
-			return models.ITGDSCantStart, nil
+
+		if intake.GrbReviewType == models.SystemIntakeGRBReviewTypeAsync {
+			if intake.GrbReviewAsyncEndDate == nil {
+				return models.ITGDSCantStart, nil
+			}
+			if intake.GrbReviewAsyncEndDate.After(time.Now()) { // Meeting has not happened
+				return models.ITGDSCantStart, nil
+			}
 		}
-		// Meeting has  happened, intake is waiting on a decision
+
+		// Meeting has happened, intake is waiting on a decision
 		return models.ITGDSInReview, nil
 
 	case models.SystemIntakeStepDECISION:

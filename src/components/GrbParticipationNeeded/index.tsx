@@ -57,7 +57,10 @@ const GrbParticipationNeeded = () => {
 
   const { data, loading } = useGetSystemIntakesWithReviewRequestedQuery();
 
-  const systemIntakes = data?.systemIntakesWithReviewRequested || [];
+  const systemIntakes = useMemo(
+    () => data?.systemIntakesWithReviewRequested || [],
+    [data?.systemIntakesWithReviewRequested]
+  );
 
   const columns = useMemo<
     Column<SystemIntakeWithReviewRequestedFragment>[]
