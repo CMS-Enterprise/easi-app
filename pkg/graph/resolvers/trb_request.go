@@ -65,12 +65,12 @@ func UpdateTRBRequest(ctx context.Context, id uuid.UUID, changes map[string]inte
 	// if we are archiving, we must check if the TRB form status is completed, in which case archiving is not allowed
 	val, ok := changes["archived"]
 	if ok {
-		isArchiving, ok := val.(bool)
+		isArchiving, ok := val.(*bool)
 		if !ok {
-			return nil, errors.New("expected bool for `archived` key")
+			return nil, errors.New("expected *bool for `archived` key")
 		}
 
-		if isArchiving {
+		if isArchiving != nil && *isArchiving {
 			existingForm, err := store.GetTRBRequestFormByTRBRequestID(ctx, id)
 			if err != nil {
 				return nil, err
