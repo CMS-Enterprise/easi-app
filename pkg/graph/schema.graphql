@@ -866,7 +866,6 @@ type SystemIntake {
   grbReviewType: SystemIntakeGRBReviewType!
   grbReviewAsyncRecordingTime: Time
   grbReviewAsyncEndDate: Time
-  grbReviewAsyncGRBMeetingTime: Time
   grbReviewStandardStatus: SystemIntakeGRBReviewStandardStatusType
   grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType
   grbReviewAsyncManualEndDate: Time

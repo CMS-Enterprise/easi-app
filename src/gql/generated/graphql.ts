@@ -2033,7 +2033,6 @@ export type SystemIntake = {
   /** GRB Presentation Link Data */
   grbPresentationLinks?: Maybe<SystemIntakeGRBPresentationLinks>;
   grbReviewAsyncEndDate?: Maybe<Scalars['Time']['output']>;
-  grbReviewAsyncGRBMeetingTime?: Maybe<Scalars['Time']['output']>;
   grbReviewAsyncManualEndDate?: Maybe<Scalars['Time']['output']>;
   grbReviewAsyncRecordingTime?: Maybe<Scalars['Time']['output']>;
   grbReviewAsyncStatus?: Maybe<SystemIntakeGRBReviewAsyncStatusType>;
