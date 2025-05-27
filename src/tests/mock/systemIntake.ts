@@ -703,7 +703,7 @@ export const taskListSystemIntake: NonNullable<
   grbReviewType: SystemIntakeGRBReviewType.STANDARD,
   grbReviewStartedAt: null,
   grbReviewAsyncEndDate: null,
-  grbReviewAsyncGRBMeetingTime: null,
+  grbReviewAsyncRecordingTime: null,
   grbPresentationLinks: null
 };
 
