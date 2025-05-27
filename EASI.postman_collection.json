@@ -548,7 +548,7 @@
 							"response": []
 						},
 						{
-							"name": "SystemIntake Delete (archive)",
+							"name": "Archive System Intake",
 							"event": [
 								{
 									"listen": "test",
@@ -556,21 +556,25 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
 							"request": {
-								"method": "DELETE",
+								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation ArchiveSystemIntake($id: UUID!) {\n    archiveSystemIntake(id: $id) {\n        id\n        archivedAt\n    }\n}",
+										"variables": "{\n    \"id\": \"{{systemIntakeID}}\"\n}"
+									}
+								},
 								"url": {
-									"raw": "{{apiURL}}/system_intake/{{systemIntakeID}}",
+									"raw": "{{url}}",
 									"host": [
-										"{{apiURL}}"
-									],
-									"path": [
-										"system_intake",
-										"{{systemIntakeID}}"
+										"{{url}}"
 									]
 								}
 							},

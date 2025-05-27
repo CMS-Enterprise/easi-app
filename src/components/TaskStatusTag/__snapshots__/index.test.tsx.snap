@@ -5,6 +5,7 @@ exports[`TaskStatusTag > renders task status tag {"status":"AWAITING_DECISION","
   <span
     class="easi-tag easi-task-status-tag bg-info-light"
     data-testid="task-list-task-tag"
+    style="white-space: nowrap;"
   >
     Awaiting decision
   </span>
@@ -27,6 +28,7 @@ exports[`TaskStatusTag > renders task status tag {"status":"CANNOT_START_YET","c
   <span
     class="easi-tag easi-task-status-tag border-2px text-base"
     data-testid="task-list-task-tag"
+    style="white-space: nowrap;"
   >
     Cannot start yet
   </span>
@@ -38,6 +40,7 @@ exports[`TaskStatusTag > renders task status tag {"status":"CANT_START","classNa
   <span
     class="easi-tag easi-task-status-tag border-2px text-base"
     data-testid="task-list-task-tag"
+    style="white-space: nowrap;"
   >
     Cannot start yet
   </span>
@@ -49,6 +52,7 @@ exports[`TaskStatusTag > renders task status tag {"status":"COMPLETED","classNam
   <span
     class="easi-tag easi-task-status-tag bg-success-dark text-white"
     data-testid="task-list-task-tag"
+    style="white-space: nowrap;"
   >
     Completed
   </span>
@@ -60,6 +64,7 @@ exports[`TaskStatusTag > renders task status tag {"status":"DONE","className":"b
   <span
     class="easi-tag easi-task-status-tag bg-success-dark text-white"
     data-testid="task-list-task-tag"
+    style="white-space: nowrap;"
   >
     Completed
   </span>
@@ -71,6 +76,7 @@ exports[`TaskStatusTag > renders task status tag {"status":"EDITS_REQUESTED","cl
   <span
     class="easi-tag easi-task-status-tag bg-warning"
     data-testid="task-list-task-tag"
+    style="white-space: nowrap;"
   >
     Edits requested
   </span>
@@ -82,6 +88,7 @@ exports[`TaskStatusTag > renders task status tag {"status":"IN_PROGRESS","classN
   <span
     class="easi-tag easi-task-status-tag bg-warning"
     data-testid="task-list-task-tag"
+    style="white-space: nowrap;"
   >
     In progress
   </span>
@@ -93,6 +100,7 @@ exports[`TaskStatusTag > renders task status tag {"status":"IN_REVIEW","classNam
   <span
     class="easi-tag easi-task-status-tag bg-info-light"
     data-testid="task-list-task-tag"
+    style="white-space: nowrap;"
   >
     In review
   </span>
@@ -104,6 +112,7 @@ exports[`TaskStatusTag > renders task status tag {"status":"NOT_NEEDED","classNa
   <span
     class="easi-tag easi-task-status-tag border-2px text-base"
     data-testid="task-list-task-tag"
+    style="white-space: nowrap;"
   >
     Not needed
   </span>
@@ -115,6 +124,7 @@ exports[`TaskStatusTag > renders task status tag {"status":"READY","className":"
   <span
     class="easi-tag easi-task-status-tag bg-info-light"
     data-testid="task-list-task-tag"
+    style="white-space: nowrap;"
   >
     Ready to start
   </span>
@@ -126,6 +136,7 @@ exports[`TaskStatusTag > renders task status tag {"status":"READY_FOR_REVIEW","c
   <span
     class="easi-tag easi-task-status-tag bg-info-light"
     data-testid="task-list-task-tag"
+    style="white-space: nowrap;"
   >
     Ready for review
   </span>
@@ -137,6 +148,7 @@ exports[`TaskStatusTag > renders task status tag {"status":"READY_TO_SCHEDULE","
   <span
     class="easi-tag easi-task-status-tag bg-info-light"
     data-testid="task-list-task-tag"
+    style="white-space: nowrap;"
   >
     Ready to schedule
   </span>
@@ -148,6 +160,7 @@ exports[`TaskStatusTag > renders task status tag {"status":"READY_TO_START","cla
   <span
     class="easi-tag easi-task-status-tag bg-info-light"
     data-testid="task-list-task-tag"
+    style="white-space: nowrap;"
   >
     Ready to start
   </span>
@@ -170,6 +183,7 @@ exports[`TaskStatusTag > renders task status tag {"status":"SCHEDULED","classNam
   <span
     class="easi-tag easi-task-status-tag bg-info-light"
     data-testid="task-list-task-tag"
+    style="white-space: nowrap;"
   >
     Scheduled
   </span>
@@ -181,6 +195,7 @@ exports[`TaskStatusTag > renders task status tag {"status":"SUBMITTED","classNam
   <span
     class="easi-tag easi-task-status-tag bg-info-light"
     data-testid="task-list-task-tag"
+    style="white-space: nowrap;"
   >
     In review
   </span>

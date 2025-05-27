@@ -767,6 +767,16 @@ func (r *mutationResolver) ArchiveSystemIntake(ctx context.Context, id uuid.UUID
 		return nil, err
 	}
 
+	// we first must check the current intake form status. if it is not Ready or In Progress, archiving is not allowed
+	currentStatus, err := resolvers.IntakeFormStatus(intake)
+	if err != nil {
+		return nil, err
+	}
+
+	if currentStatus != models.ITGISReady && currentStatus != models.ITGISInProgress {
+		return nil, errors.New("cannot remove system intake unless in Ready or In Progress status")
+	}
+
 	if !services.AuthorizeUserIsIntakeRequester(ctx, intake) {
 		return nil, errors.New("user is unauthorized to archive system intake")
 	}
