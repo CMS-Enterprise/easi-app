@@ -30,7 +30,7 @@ const GovTaskGrbMeeting = ({
   grbReviewType,
   grbReviewStartedAt,
   grbReviewAsyncEndDate,
-  grbReviewAsyncGRBMeetingTime,
+  grbReviewAsyncRecordingTime,
   grbPresentationLinks
 }: NonNullable<GetGovernanceTaskListQuery['systemIntake']>) => {
   const stepKey = 'grbMeeting';
@@ -54,8 +54,8 @@ const GovTaskGrbMeeting = ({
       COMPLETED: grbDate
     },
     ASYNC: {
-      SCHEDULED: grbReviewAsyncGRBMeetingTime,
-      AWAITING_GRB_REVIEW: grbReviewAsyncGRBMeetingTime,
+      SCHEDULED: grbReviewAsyncRecordingTime,
+      AWAITING_GRB_REVIEW: grbReviewAsyncRecordingTime,
       AWAITING_DECISION: grbReviewAsyncEndDate,
       COMPLETED: grbReviewAsyncEndDate
     }
