@@ -5,6 +5,7 @@ import { NavHashLink } from 'react-router-hash-link';
 import { Button, Icon } from '@trussworks/react-uswds';
 import DocumentsTable from 'features/ITGovernance/_components/DocumentsTable';
 import {
+  GRBVotingInformationStatus,
   SystemIntakeFragmentFragment,
   SystemIntakeGRBReviewAsyncStatusType,
   SystemIntakeGRBReviewerVotingRole,
@@ -52,6 +53,8 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
     annualSpending,
     governanceRequestFeedbacks
   } = systemIntake;
+
+  const votingStatus = systemIntake.grbVotingInformation?.votingStatus;
 
   const isITGovAdmin = useContext(ITGovAdminContext);
 
@@ -120,11 +123,10 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
           grbReviewers={grbReviewers}
         />
         {/* GRB Reviewer Voting Panel */}
-        {/* TODO: Add grbReviewStartedAt once work is done to start review */}
-        {/* {!isITGovAdmin && grbReviewStartedAt && currentGRBReviewer && ( */}
-        {!isITGovAdmin && currentGRBReviewer && (
-          <GRBVotingPanel grbReviewer={currentGRBReviewer} />
-        )}
+        {currentGRBReviewer &&
+          votingStatus === GRBVotingInformationStatus.IN_PROGRESS && (
+            <GRBVotingPanel grbReviewer={currentGRBReviewer} />
+          )}
         {/* Review details */}
         <h2 className="margin-bottom-0 margin-top-6" id="details">
           {t('reviewDetails.title')}
