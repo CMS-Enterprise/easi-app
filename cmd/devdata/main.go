@@ -965,6 +965,53 @@ func main() {
 		},
 	)
 	// Don't add new requests here as the Cypress tests are reliant on their intakes showing up on the first page of results
+
+	// expiring soon
+	intakeID = uuid.New()
+	makeSystemIntakeAndIssueLCID(
+		ctx,
+		"With LCID expiring soon",
+		&intakeID,
+		mock.PrincipalUser,
+		store,
+		time.Now().AddDate(0, 0, 7),
+	)
+
+	// expiring soon
+	intakeID = uuid.New()
+	makeSystemIntakeAndIssueLCID(
+		ctx,
+		"With LCID expiring soon 2",
+		&intakeID,
+		mock.AccessibilityUser,
+		store,
+		time.Now().AddDate(0, 0, 5),
+	)
+
+	// expired
+	intakeID = uuid.New()
+	makeSystemIntakeAndIssueLCID(
+		ctx,
+		"With LCID already expired",
+		&intakeID,
+		mock.PrincipalUser,
+		store,
+		time.Now().AddDate(0, 0, -5),
+	)
+
+	// expired
+	intakeID = uuid.New()
+	makeSystemIntakeAndIssueLCID(
+		ctx,
+		"With LCID already expired 2",
+		&intakeID,
+		mock.AccessibilityUser,
+		store,
+		time.Now().AddDate(0, 0, -4),
+	)
+
+	//
+	//retireLCID()
 }
 
 func must(_ interface{}, err error) {
