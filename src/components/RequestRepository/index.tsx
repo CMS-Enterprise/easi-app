@@ -20,8 +20,6 @@ import {
   CardFooter,
   CardGroup,
   CardHeader,
-  Checkbox,
-  Fieldset,
   Form,
   FormGroup,
   GridContainer,
@@ -30,7 +28,10 @@ import {
   Table
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
-import { useGetSystemIntakesTableQuery } from 'gql/generated/graphql';
+import {
+  useGetRequesterUpdateEmailDataQuery,
+  useGetSystemIntakesTableQuery
+} from 'gql/generated/graphql';
 import { startCase } from 'lodash';
 import { ActiveStateType, TableStateContext } from 'wrappers/TableStateWrapper';
 
@@ -56,6 +57,7 @@ import {
 } from 'utils/tableSort';
 import dateRangeSchema from 'validations/dateRangeSchema';
 
+import AnnualEmail from './AnnualEmail';
 import csvHeaderMap from './csvHeaderMap';
 import csvPortfolioReportHeaderMap from './csvPortfolioReportHeaderMap';
 import tableMap, { SystemIntakeForTable } from './tableMap';
@@ -83,9 +85,6 @@ const RequestRepository = () => {
   const [configReportModalOpen, setConfigReportModalOpen] =
     useState<boolean>(false);
 
-  const [requestUpdateEmailModalOpen, setRequestUpdateEmailModalOpen] =
-    useState(false);
-
   /* Date range for Portfolio Update Report */
   const { control, handleSubmit, watch } = useForm<{
     dateStart: string;
@@ -105,6 +104,11 @@ const RequestRepository = () => {
     useGetSystemIntakesTableQuery({
       variables: { openRequests: false }
     });
+
+  const { data: requesterUpdateEmailData } =
+    useGetRequesterUpdateEmailDataQuery();
+
+  console.log(requesterUpdateEmailData);
 
   /** Object containing formatted system intakes split by `open` and `closed` state */
   const systemIntakes: SystemIntakesData = useMemo(
@@ -276,34 +280,9 @@ const RequestRepository = () => {
               </Button>
             </CardFooter>
           </Card>
-          <Card
-            containerProps={{
-              className: 'radius-0 border-gray-10 shadow-3'
-            }}
-            gridLayout={{
-              tablet: {
-                col: 6
-              }
-            }}
-          >
-            <CardHeader>
-              <h4>
-                {t('home:adminHome.GRT.requesterUpdateEmail.card.heading')}
-              </h4>
-            </CardHeader>
-            <CardBody>
-              <p>{t('home:adminHome.GRT.requesterUpdateEmail.card.content')}</p>
-            </CardBody>
-            <CardFooter>
-              <Button
-                type="button"
-                onClick={() => setRequestUpdateEmailModalOpen(true)}
-                className="margin-right-1"
-              >
-                {t('home:adminHome.GRT.requesterUpdateEmail.card.button')}
-              </Button>
-            </CardFooter>
-          </Card>
+
+          {/* Requester update email Card and Modal */}
+          <AnnualEmail />
         </CardGroup>
       </GridContainer>
       <GridContainer className="margin-bottom-5 maxw-none">
@@ -410,52 +389,6 @@ const RequestRepository = () => {
             >
               {t('Close')}
             </Button>
-          </ModalFooter>
-        </Modal>
-
-        {/* Request Update Email Modal */}
-        <Modal
-          isOpen={requestUpdateEmailModalOpen}
-          closeModal={() => setRequestUpdateEmailModalOpen(false)}
-        >
-          <ModalHeading>
-            {t('home:adminHome.GRT.requesterUpdateEmail.modal.heading')}
-          </ModalHeading>
-          <p>{t('home:adminHome.GRT.requesterUpdateEmail.modal.content')}</p>
-          <Fieldset>
-            {(
-              t('home:adminHome.GRT.requesterUpdateEmail.modal.list', {
-                returnObjects: true
-              }) as string[]
-            ).map(item => {
-              return (
-                <Checkbox id={item} name={item} value={item} label={item} />
-              );
-            })}
-          </Fieldset>
-
-          <ModalFooter>
-            <div className="display-flex flex-gap-3">
-              <Button
-                type="button"
-                // TODO: update to mailto link
-                onClick={() => setRequestUpdateEmailModalOpen(false)}
-              >
-                {t(
-                  'home:adminHome.GRT.requesterUpdateEmail.modal.openEmailButton'
-                )}
-              </Button>
-              <Button
-                type="button"
-                // TODO: copy emails to clipboard
-                onClick={() => setRequestUpdateEmailModalOpen(false)}
-                unstyled
-              >
-                {t(
-                  'home:adminHome.GRT.requesterUpdateEmail.modal.copyEmailButton'
-                )}
-              </Button>
-            </div>
           </ModalFooter>
         </Modal>
 
