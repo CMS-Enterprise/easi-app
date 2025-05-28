@@ -1166,7 +1166,6 @@ type SystemIntakeLCIDExpirationChange {
 }
 
 type RequesterUpdateEmailData {
-  projectName: String!
   lcidStatus: SystemIntakeLCIDStatus
   lcidIssuedAt: Time
   lcidExpiresAt: Time

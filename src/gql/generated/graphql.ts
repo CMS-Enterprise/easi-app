@@ -1756,7 +1756,6 @@ export type RequesterUpdateEmailData = {
   lcidIssuedAt?: Maybe<Scalars['Time']['output']>;
   lcidRetiresAt?: Maybe<Scalars['Time']['output']>;
   lcidStatus?: Maybe<SystemIntakeLCIDStatus>;
-  projectName: Scalars['String']['output'];
   requesterEmail: Scalars['EmailAddress']['output'];
 };
 

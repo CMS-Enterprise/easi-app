@@ -1,5 +1,4 @@
 SELECT
-    si.project_name,
     si.lcid,
     si.lcid_expires_at,
     si.lcid_issued_at,
