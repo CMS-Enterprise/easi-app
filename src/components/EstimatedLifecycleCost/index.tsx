@@ -18,6 +18,7 @@ import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
 import HelpText from 'components/HelpText';
 import IconButton from 'components/IconButton';
+import RequiredAsterisk from 'components/RequiredAsterisk';
 import {
   LifecycleCosts,
   LifecyclePhaseKey,
@@ -78,6 +79,7 @@ const Phase = ({
                 <div className="cost-table-col">
                   <legend className="usa-label">
                     {t(lifecycleCosts[category].label)}
+                    <RequiredAsterisk />
                   </legend>
 
                   {
