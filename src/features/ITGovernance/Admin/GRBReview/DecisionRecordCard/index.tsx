@@ -23,7 +23,7 @@ type DecisionRenderConfigType = {
   decisionBanner: JSX.Element;
 };
 
-// Configures render elements (background color, border color, and decision banner) based on the voting status
+/** Configures render elements (background color, border color, and decision banner) based on the voting status */
 const configureDecisionRender = (
   votingStatus: GRBVotingInformationStatus,
   systemIntakeID: string
@@ -96,9 +96,8 @@ const DecisionRecordCard = ({
   const isITGovAdmin = useContext(ITGovAdminContext);
 
   if (
-    !isITGovAdmin ||
     grbVotingInformation?.votingStatus ===
-      GRBVotingInformationStatus.NOT_STARTED
+    GRBVotingInformationStatus.NOT_STARTED
   ) {
     return null;
   }
@@ -150,19 +149,20 @@ const DecisionRecordCard = ({
         </div>
       </div>
 
-      {grbVotingInformation.votingStatus !==
-        GRBVotingInformationStatus.IN_PROGRESS && (
-        <>
-          <div
-            className={classNames(
-              'border-bottom-1px margin-y-2',
-              decisionConfig.borderColor
-            )}
-          />
+      {isITGovAdmin &&
+        grbVotingInformation.votingStatus !==
+          GRBVotingInformationStatus.IN_PROGRESS && (
+          <>
+            <div
+              className={classNames(
+                'border-bottom-1px margin-y-2',
+                decisionConfig.borderColor
+              )}
+            />
 
-          {decisionConfig.decisionBanner}
-        </>
-      )}
+            {decisionConfig.decisionBanner}
+          </>
+        )}
     </div>
   );
 };
