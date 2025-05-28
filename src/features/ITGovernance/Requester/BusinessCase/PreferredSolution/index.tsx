@@ -688,7 +688,6 @@ const PreferredSolution = ({
                     id="BusinessCase-PreferredWorkforceTrainingReqs"
                     maxLength={2000}
                     name="preferredSolution.workforceTrainingReqs"
-                    aria-describedby="BusinessCase-PreferredWorkforceTrainingReqsCounter BusinessCase-PreferredWorkforceTrainingReqsHelp"
                   />
                 </FieldGroup>
 

@@ -12,6 +12,7 @@ import FieldGroup from 'components/FieldGroup';
 import HelpText from 'components/HelpText';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import TextAreaField from 'components/TextAreaField';
+import { ZERO_TRUST_LEARN_MORE } from 'constants/externalUrls';
 import flattenErrors from 'utils/flattenErrors';
 
 type AlternativeSolutionFieldsProps = {
@@ -288,13 +289,17 @@ const AlternativeSolutionFields = ({
         >
           <Label htmlFor={`BusinessCase-${altId}ZeroTrustAlignment`}>
             {t('zeroTrustAlignment')}
-            <RequiredAsterisk />
           </Label>
           <HelpText
-            id={`BusinessCase-${altId}ZeroTrustAlignmentHelp`}
+            id="BusinessCase-PreferredSolutionZeroTrustAlignmentHelp"
             className="margin-top-1"
           >
-            {t('zeroTrustAlignmentHelpText')}
+            <Trans
+              i18nKey="businessCase:zeroTrustAlignmentHelpText"
+              components={{
+                a: <a href={ZERO_TRUST_LEARN_MORE}> Click here </a>
+              }}
+            />
           </HelpText>
           <FieldErrorMsg>
             {flatErrors[`${altId}.zeroTrustAlignment`]}
@@ -496,16 +501,13 @@ const AlternativeSolutionFields = ({
           scrollElement={`${altId}.workforceTrainingReqs`}
           error={!!flatErrors[`${altId}.workforceTrainingReqs`]}
         >
-          <Label htmlFor={`BusinessCase-${altId}WorkforceTrainingReqs`}>
+          <Label
+            htmlFor={`BusinessCase-${altId}WorkforceTrainingReqs`}
+            className="maxw-none margin-bottom-2"
+          >
             {t('workforceTrainingReqs')}
             <RequiredAsterisk />
           </Label>
-          <HelpText
-            id={`BusinessCase-${altId}WorkforceTrainingReqsHelp`}
-            className="margin-top-1"
-          >
-            {t('workforceTrainingReqsHelpText')}
-          </HelpText>
           <FieldErrorMsg>
             {flatErrors[`${altId}.workforceTrainingReqs`]}
           </FieldErrorMsg>
@@ -515,7 +517,6 @@ const AlternativeSolutionFields = ({
             id={`BusinessCase-${altId}workforceTrainingReqs`}
             maxLength={10000}
             name={`${altId}.workforceTrainingReqs`}
-            aria-describedby={`BusinessCase-${altId}WorkforceTrainingReqsCounter BusinessCase-${altId}WorkforceTrainingReqsHelp`}
           />
         </FieldGroup>
 

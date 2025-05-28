@@ -11,6 +11,7 @@ import { hostingTypeMap } from 'data/businessCase';
 import { yesNoMap } from 'data/common';
 import { ProposedBusinessCaseSolution } from 'types/businessCase';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
+import { formatDateLocal } from 'utils/date';
 
 /**
  * Title
@@ -42,13 +43,13 @@ const PropsedBusinessCaseSolutionReview = ({
     <DescriptionList title={name} className="margin-bottom-0">
       <ReviewRow>
         <div className="line-height-body-3">
-          <DescriptionTerm term={`${name}: Title`} />
+          <DescriptionTerm term="Solution Title" />
           <DescriptionDefinition definition={solution.title} />
         </div>
       </ReviewRow>
       <ReviewRow>
         <div className="line-height-body-3">
-          <DescriptionTerm term={`${name}: Summary`} />
+          <DescriptionTerm term="Summary" />
           <DescriptionDefinition
             className="text-pre-wrap"
             definition={solution.summary}
@@ -57,10 +58,37 @@ const PropsedBusinessCaseSolutionReview = ({
       </ReviewRow>
       <ReviewRow>
         <div className="line-height-body-3">
-          <DescriptionTerm term={`${name}: Acquisition approach`} />
+          <DescriptionTerm term="Acquisition approach" />
           <DescriptionDefinition
             className="text-pre-wrap"
             definition={solution.acquisitionApproach}
+          />
+        </div>
+      </ReviewRow>
+      <ReviewRow>
+        <div className="line-height-body-3">
+          <DescriptionTerm term="Target release date of contract solicitation" />
+          <DescriptionDefinition
+            className="text-pre-wrap"
+            definition={
+              solution.targetContractAwardDate
+                ? formatDateLocal(
+                    solution.targetContractAwardDate,
+                    'MM/dd/yyyy'
+                  )
+                : 'N/A'
+            }
+          />
+        </div>
+        <div className="line-height-body-3">
+          <DescriptionTerm term="Target completion date (In production)" />
+          <DescriptionDefinition
+            className="text-pre-wrap"
+            definition={
+              solution.targetCompletionDate
+                ? formatDateLocal(solution.targetCompletionDate, 'MM/dd/yyyy')
+                : 'N/A'
+            }
           />
         </div>
       </ReviewRow>
@@ -84,6 +112,17 @@ const PropsedBusinessCaseSolutionReview = ({
               />
             </div>
           </ReviewRow>
+          {solution.hosting.cloudStrategy && (
+            <ReviewRow>
+              <div className="line-height-body-3">
+                <DescriptionTerm term="What is your cloud strategy or cloud migration strategy and how will you implement it?" />
+                <DescriptionDefinition
+                  className="text-pre-wrap"
+                  definition={solution.hosting.cloudStrategy}
+                />
+              </div>
+            </ReviewRow>
+          )}
           {solution.hosting.cloudServiceType && (
             <ReviewRow>
               <div className="line-height-body-3">
@@ -122,7 +161,11 @@ const PropsedBusinessCaseSolutionReview = ({
           <DescriptionTerm term="Identify your project's alignment with Zero Trust principles?" />
           <DescriptionDefinition
             className="text-pre-wrap"
-            definition={solution.security.zeroTrustAlignment}
+            definition={
+              solution.security.zeroTrustAlignment
+                ? solution.security.zeroTrustAlignment
+                : 'N/A'
+            }
           />
         </div>
       </ReviewRow>
@@ -137,7 +180,16 @@ const PropsedBusinessCaseSolutionReview = ({
       </ReviewRow>
       <ReviewRow>
         <div className="line-height-body-3">
-          <DescriptionTerm term={`${name}: Pros`} />
+          <DescriptionTerm term="Will any workforce training requirements arise as a result of this solution?" />
+          <DescriptionDefinition
+            className="text-pre-wrap"
+            definition={solution.workforceTrainingReqs}
+          />
+        </div>
+      </ReviewRow>
+      <ReviewRow>
+        <div className="line-height-body-3">
+          <DescriptionTerm term="Pros" />
           <DescriptionDefinition
             className="text-pre-wrap"
             definition={solution.pros}
@@ -146,7 +198,7 @@ const PropsedBusinessCaseSolutionReview = ({
       </ReviewRow>
       <ReviewRow>
         <div className="line-height-body-3">
-          <DescriptionTerm term={`${name}: Cons`} />
+          <DescriptionTerm term="Cons" />
           <DescriptionDefinition
             className="text-pre-wrap"
             definition={solution.cons}

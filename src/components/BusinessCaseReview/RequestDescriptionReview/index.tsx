@@ -71,7 +71,19 @@ const RequestDescriptionReview = ({
           />
         </div>
       </ReviewRow>
-      {/* TODO: NJD - add response to GRT? handle conditional rendering? */}
+      <ReviewRow className="margin-bottom-3">
+        <div className="line-height-body-3">
+          <DescriptionTerm term="How will you implement or respond to the recommendations provided by the GRT?" />
+          <DescriptionDefinition
+            className="text-pre-wrap"
+            definition={
+              values.responseToGRTFeedback
+                ? values.responseToGRTFeedback
+                : 'N/A'
+            }
+          />
+        </div>
+      </ReviewRow>
     </DescriptionList>
   );
 };
