@@ -375,6 +375,7 @@ type ReopenTRBRequestInput struct {
 }
 
 type RequesterUpdateEmailData struct {
+	ProjectName    string                  `json:"projectName"`
 	LcidStatus     *SystemIntakeLCIDStatus `json:"lcidStatus,omitempty"`
 	LcidIssuedAt   *time.Time              `json:"lcidIssuedAt,omitempty"`
 	LcidExpiresAt  *time.Time              `json:"lcidExpiresAt,omitempty"`
