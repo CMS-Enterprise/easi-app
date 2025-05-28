@@ -964,7 +964,100 @@ func main() {
 			completeOtherSteps: true,
 		},
 	)
-	// Don't add new requests here as the Cypress tests are reliant on their intakes showing up on the first page of results
+
+	// expiring soon
+	intakeID = uuid.New()
+	makeSystemIntakeAndIssueLCID(
+		ctx,
+		"With LCID expiring soon",
+		&intakeID,
+		mock.PrincipalUser,
+		store,
+		time.Now().AddDate(0, 0, 7),
+	)
+
+	// expiring soon
+	intakeID = uuid.New()
+	makeSystemIntakeAndIssueLCID(
+		ctx,
+		"With LCID expiring soon 2",
+		&intakeID,
+		mock.AccessibilityUser,
+		store,
+		time.Now().AddDate(0, 0, 5),
+	)
+
+	// expired
+	intakeID = uuid.New()
+	makeSystemIntakeAndIssueLCID(
+		ctx,
+		"With LCID already expired",
+		&intakeID,
+		mock.PrincipalUser,
+		store,
+		time.Now().AddDate(0, 0, -5),
+	)
+
+	// expired
+	intakeID = uuid.New()
+	makeSystemIntakeAndIssueLCID(
+		ctx,
+		"With LCID already expired 2",
+		&intakeID,
+		mock.AccessibilityUser,
+		store,
+		time.Now().AddDate(0, 0, -4),
+	)
+
+	// retiring soon
+	intakeID = uuid.New()
+	intake = makeSystemIntakeAndIssueLCID(
+		ctx,
+		"With LCID Retiring soon",
+		&intakeID,
+		mock.PrincipalUser,
+		store,
+		time.Now().AddDate(2, 0, 0),
+	)
+
+	retireLCID(ctx, store, intake, time.Now().AddDate(0, 0, 4))
+
+	intakeID = uuid.New()
+	intake = makeSystemIntakeAndIssueLCID(
+		ctx,
+		"With LCID Retiring soon 2",
+		&intakeID,
+		mock.AccessibilityUser,
+		store,
+		time.Now().AddDate(2, 0, 0),
+	)
+
+	retireLCID(ctx, store, intake, time.Now().AddDate(0, 0, 5))
+
+	// retired
+	intakeID = uuid.New()
+	intake = makeSystemIntakeAndIssueLCID(
+		ctx,
+		"With LCID already retired",
+		&intakeID,
+		mock.PrincipalUser,
+		store,
+		time.Now().AddDate(2, 0, 0),
+	)
+
+	retireLCID(ctx, store, intake, time.Now().AddDate(0, 0, -5))
+
+	intakeID = uuid.New()
+	intake = makeSystemIntakeAndIssueLCID(
+		ctx,
+		"With LCID already retired 2",
+		&intakeID,
+		mock.AccessibilityUser,
+		store,
+		time.Now().AddDate(2, 0, 0),
+	)
+
+	retireLCID(ctx, store, intake, time.Now().AddDate(0, 0, -4))
 }
 
 func must(_ interface{}, err error) {
