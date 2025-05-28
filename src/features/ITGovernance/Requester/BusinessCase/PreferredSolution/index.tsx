@@ -1,11 +1,20 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { Button, Icon, Label, Radio, TextInput } from '@trussworks/react-uswds';
+import {
+  Button,
+  Grid,
+  Icon,
+  Label,
+  Radio,
+  TextInput
+} from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import { DateTime } from 'luxon';
 
 import Alert from 'components/Alert';
 import AutoSave from 'components/AutoSave';
+import DatePickerFormatted from 'components/DatePickerFormatted';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
@@ -13,6 +22,7 @@ import HelpText from 'components/HelpText';
 import IconButton from 'components/IconButton';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import TextAreaField from 'components/TextAreaField';
+import { ZERO_TRUST_LEARN_MORE } from 'constants/externalUrls';
 import { yesNoMap } from 'data/common';
 import { BusinessCaseModel, PreferredSolutionForm } from 'types/businessCase';
 import { LifecycleCosts } from 'types/estimatedLifecycle';
@@ -151,6 +161,79 @@ const PreferredSolution = ({
                   />
                 </FieldGroup>
 
+                {/* Target dataes */}
+                <Grid row gap>
+                  {/* Target contract award date */}
+                  <Grid tablet={{ col: 6 }}>
+                    <div className="height-full display-flex flex-column">
+                      <div className="flex-fill">
+                        <Label
+                          htmlFor="BusinessCase-PreferredSolutionTargetContractAwardDate"
+                          className="margin-bottom-1"
+                        >
+                          {t('targetContractAwardDate')}
+                        </Label>
+                        <HelpText>
+                          {t('targetContractAwardDateHelpText')}
+                        </HelpText>
+                        <HelpText>{t('dateFormat')}</HelpText>
+                      </div>
+                      <Field
+                        as={DatePickerFormatted}
+                        error={
+                          !!flatErrors[
+                            'preferredSolution.targetContractAwardDate'
+                          ]
+                        }
+                        onChange={(date: DateTime) => {
+                          // Convert the DateTime object to a string for consistent storage
+                          const dateString = date ? date.toLocaleString() : '';
+                          setFieldValue(
+                            'preferredSolution.targetContractAwardDate',
+                            dateString
+                          );
+                        }}
+                        id="BusinessCase-PreferredSolutionTargetContractAwardDate"
+                        name="preferredSolution.targetContractAwardDate"
+                        aria-describedby="BusinessCase-PreferredSolutionTargetContractAwardDateHelp"
+                      />
+                    </div>
+                  </Grid>
+
+                  {/* Target completion date */}
+                  <Grid tablet={{ col: 6 }}>
+                    <div className="display-flex flex-column">
+                      <div className="flex-fill">
+                        <Label
+                          htmlFor="BusinessCase-PreferredSolutionTargetCompletionDate"
+                          className="margin-bottom-1"
+                        >
+                          {t('targetCompletionDate')}
+                        </Label>
+                        <HelpText>{t('targetCompletionDateHelpText')}</HelpText>
+                        <HelpText>{t('dateFormat')}</HelpText>
+                      </div>
+                      <Field
+                        as={DatePickerFormatted}
+                        error={
+                          !!flatErrors['preferredSolution.targetCompletionDate']
+                        }
+                        onChange={(date: DateTime) => {
+                          // Convert the DateTime object to a string for consistent storage
+                          const dateString = date ? date.toLocaleString() : '';
+                          setFieldValue(
+                            'preferredSolution.targetCompletionDate',
+                            dateString
+                          );
+                        }}
+                        id="BusinessCase-PreferredSolutionTargetCompletionDate"
+                        name="preferredSolution.targetCompletionDate"
+                        aria-describedby="BusinessCase-PreferredSolutionTargetCompletionDateHelp"
+                      />
+                    </div>
+                  </Grid>
+                </Grid>
+
                 <FieldGroup
                   scrollElement="preferredSolution.acquisitionApproach"
                   error={!!flatErrors['preferredSolution.acquisitionApproach']}
@@ -179,8 +262,6 @@ const PreferredSolution = ({
                     aria-describedby="BusinessCase-PreferredSolutionAcquisitionApproachCounter BusinessCase-PreferredSolutionAcquisitionApproachHelp"
                   />
                 </FieldGroup>
-
-                {/* TODO: add target contract award and target completion of dev work questions */}
 
                 <FieldGroup
                   scrollElement="preferredSolution.security.isApproved"
@@ -295,7 +376,51 @@ const PreferredSolution = ({
                   </FieldGroup>
                 )}
 
-                {/* TODO: add zero trust principles question */}
+                <FieldGroup
+                  scrollElement="preferredSolution.security.zeroTrustAlignment"
+                  error={
+                    !!flatErrors[
+                      'preferredSolution.security.zeroTrustAlignment'
+                    ]
+                  }
+                >
+                  <Label
+                    htmlFor="BusinessCase-PreferredSolutionZeroTrustAlignment"
+                    className="maxw-none"
+                  >
+                    {t('zeroTrustAlignment')}
+                  </Label>
+                  <HelpText
+                    id="BusinessCase-PreferredSolutionZeroTrustAlignmentHelp"
+                    className="margin-top-1"
+                  >
+                    <Trans
+                      i18nKey="businessCase:zeroTrustAlignmentHelpText"
+                      components={{
+                        a: <a href={ZERO_TRUST_LEARN_MORE}> Click here </a>
+                      }}
+                    />
+                  </HelpText>
+                  <FieldErrorMsg>
+                    {
+                      flatErrors[
+                        'preferredSolution.security.zeroTrustAlignment'
+                      ]
+                    }
+                  </FieldErrorMsg>
+                  <Field
+                    as={TextAreaField}
+                    error={
+                      !!flatErrors[
+                        'preferredSolution.security.zeroTrustAlignment'
+                      ]
+                    }
+                    id="BusinessCase-PreferredSolutionZeroTrustAlignment"
+                    maxLength={2000}
+                    name="preferredSolution.security.zeroTrustAlignment"
+                    aria-describedby="BusinessCase-PreferredSolutionZeroTrustAlignmentCounter BusinessCase-PreferredSolutionZeroTrustAlignmentHelp"
+                  />
+                </FieldGroup>
 
                 <FieldGroup
                   scrollElement="preferredSolution.hosting.type"
@@ -357,7 +482,38 @@ const PreferredSolution = ({
                           />
                         </FieldGroup>
 
-                        {/* TODO: add cloud  / cloud migration strategy question */}
+                        <FieldGroup
+                          className="margin-bottom-1 margin-left-4"
+                          scrollElement="preferredSolution.hosting.cloudStrategy"
+                          error={
+                            !!flatErrors[
+                              'preferredSolution.hosting.cloudStrategy'
+                            ]
+                          }
+                        >
+                          <Label htmlFor="BusinessCase-PreferredSolutionCloudStrategy">
+                            {t('cloudStrategy')}
+                            <RequiredAsterisk />
+                          </Label>
+                          <FieldErrorMsg>
+                            {
+                              flatErrors[
+                                'preferredSolution.hosting.cloudStrategy'
+                              ]
+                            }
+                          </FieldErrorMsg>
+                          <Field
+                            as={TextInput}
+                            error={
+                              !!flatErrors[
+                                'preferredSolution.hosting.cloudStrategy'
+                              ]
+                            }
+                            id="BusinessCase-PreferredSolutionCloudStrategy"
+                            maxLength={50}
+                            name="preferredSolution.hosting.cloudStrategy"
+                          />
+                        </FieldGroup>
 
                         <FieldGroup
                           className="margin-bottom-1 margin-left-4"
@@ -510,7 +666,31 @@ const PreferredSolution = ({
                   </fieldset>
                 </FieldGroup>
 
-                {/* TODO: add workforce training requirements question */}
+                <FieldGroup
+                  scrollElement="preferredSolution.workforceTrainingReqs"
+                  error={
+                    !!flatErrors['preferredSolution.workforceTrainingReqs']
+                  }
+                >
+                  <Label
+                    htmlFor="BusinessCase-PreferredWorkforceTrainingReqs"
+                    className="maxw-none margin-bottom-2"
+                  >
+                    {t('workforceTrainingReqs')}
+                    <RequiredAsterisk />
+                  </Label>
+                  <FieldErrorMsg>
+                    {flatErrors['preferredSolution.workforceTrainingReqs']}
+                  </FieldErrorMsg>
+                  <Field
+                    as={TextAreaField}
+                    error={!!flatErrors.workforceTrainingReqs}
+                    id="BusinessCase-PreferredWorkforceTrainingReqs"
+                    maxLength={2000}
+                    name="preferredSolution.workforceTrainingReqs"
+                    aria-describedby="BusinessCase-PreferredWorkforceTrainingReqsCounter BusinessCase-PreferredWorkforceTrainingReqsHelp"
+                  />
+                </FieldGroup>
 
                 <hr
                   className="margin-bottom-1 margin-top-4 opacity-30"

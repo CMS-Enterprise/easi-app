@@ -292,19 +292,24 @@ export const businessCase: BusinessCaseModel = {
     title: 'Preferred title',
     summary: 'Preferred summary',
     acquisitionApproach: 'Preferred acquisition approach',
+    targetContractAwardDate: '2025-03-15T19:22:40Z',
+    targetCompletionDate: '2025-03-15T19:22:40Z',
     security: {
       isApproved: null,
-      isBeingReviewed: ''
+      isBeingReviewed: '',
+      zeroTrustAlignment: ''
     },
     hosting: {
       type: '',
       location: '',
+      cloudStrategy: '',
       cloudServiceType: ''
     },
     hasUserInterface: '',
     pros: 'Preferred pros',
     cons: 'Preferred cons',
     costSavings: 'Preferred cost savings',
+    workforceTrainingReqs: 'Preferred workforce training requirements',
     estimatedLifecycleCost: {
       development: {
         label: 'Development',
@@ -408,19 +413,25 @@ export const businessCase: BusinessCaseModel = {
     title: 'Preferred title',
     summary: 'Preferred summary',
     acquisitionApproach: 'Preferred acquisition approach',
+    targetContractAwardDate: '2025-03-15T19:22:40Z',
+    targetCompletionDate: '2025-03-15T19:22:40Z',
     security: {
       isApproved: null,
-      isBeingReviewed: ''
+      isBeingReviewed: '',
+      zeroTrustAlignment: ''
     },
     hosting: {
       type: '',
       location: '',
+      cloudStrategy: '',
       cloudServiceType: ''
     },
     hasUserInterface: '',
     pros: 'Preferred pros',
     cons: 'Preferred cons',
     costSavings: 'Preferred cost savings',
+    workforceTrainingReqs: 'Preferred workforce training requirements',
+
     estimatedLifecycleCost: {
       development: {
         label: 'Development',
@@ -524,19 +535,24 @@ export const businessCase: BusinessCaseModel = {
     title: 'Preferred title',
     summary: 'Preferred summary',
     acquisitionApproach: 'Preferred acquisition approach',
+    targetContractAwardDate: '2025-03-15T19:22:40Z',
+    targetCompletionDate: '2025-03-15T19:22:40Z',
     security: {
       isApproved: null,
-      isBeingReviewed: ''
+      isBeingReviewed: '',
+      zeroTrustAlignment: ''
     },
     hosting: {
       type: '',
       location: '',
+      cloudStrategy: '',
       cloudServiceType: ''
     },
     hasUserInterface: '',
     pros: 'Preferred pros',
     cons: 'Preferred cons',
     costSavings: 'Preferred cost savings',
+    workforceTrainingReqs: 'Preferred workforce training requirements',
     estimatedLifecycleCost: {
       development: {
         label: 'Development',

@@ -38,10 +38,12 @@ const RequestDescription = ({
 
   const initialValues = {
     businessNeed: businessCase.businessNeed,
+    collaborationNeeded: businessCase.collaborationNeeded,
     currentSolutionSummary: businessCase.currentSolutionSummary,
     cmsBenefit: businessCase.cmsBenefit,
     priorityAlignment: businessCase.priorityAlignment,
-    successIndicators: businessCase.successIndicators
+    successIndicators: businessCase.successIndicators,
+    responseToGRTFeedback: businessCase.responseToGRTFeedback
   };
 
   return (
@@ -118,7 +120,35 @@ const RequestDescription = ({
                   aria-describedby="BusinessCase-BusinessNeedCounter BusinessCase-BusinessNeedHelp"
                 />
               </FieldGroup>
-              {/* TODO: add internal collaboration question */}
+
+              <FieldGroup
+                scrollElement="collaborationNeeded"
+                error={!!flatErrors.collaborationNeeded}
+              >
+                <Label
+                  htmlFor="BusinessCase-CollaborationNeeded"
+                  className="maxw-none"
+                >
+                  {t('collaborationNeeded')}
+                  <RequiredAsterisk />
+                </Label>
+                <HelpText
+                  id="BusinessCase-CollaborationNeededHelp"
+                  className="margin-top-1"
+                >
+                  {t('collaborationNeededHelpText')}
+                </HelpText>
+                <FieldErrorMsg>{flatErrors.collaborationNeeded}</FieldErrorMsg>
+                <Field
+                  as={TextAreaField}
+                  error={!!flatErrors.collaborationNeeded}
+                  id="BusinessCase-CollaborationNeeded"
+                  maxLength={2000}
+                  name="collaborationNeeded"
+                  aria-describedby="BusinessCase-CollaborationNeededCounter BusinessCase-CollaborationNeededHelp"
+                />
+              </FieldGroup>
+
               <FieldGroup
                 scrollElement="currentSolutionSummary"
                 error={!!flatErrors.currentSolutionSummary}
@@ -240,7 +270,36 @@ const RequestDescription = ({
                   aria-describedby="BusinessCase-SuccessIndicatorsCounter BusinessCase-SuccessIndicatorsHelp"
                 />
               </FieldGroup>
-              {/* TODO: add response to GRT recs question */}
+
+              <FieldGroup
+                scrollElement="responseToGRTFeedback"
+                error={!!flatErrors.responseToGRTFeedback}
+              >
+                <Label
+                  htmlFor="BusinessCase-ResponseToGRTFeedback"
+                  className="maxw-none"
+                >
+                  {t('responseToGRTFeedback')}
+                  <RequiredAsterisk />
+                </Label>
+                <HelpText
+                  id="BusinessCase-ResponseToGRTFeedbackHelp"
+                  className="margin-top-1"
+                >
+                  {t('responseToGRTFeedbackHelpText')}
+                </HelpText>
+                <FieldErrorMsg>
+                  {flatErrors.responseToGRTFeedback}
+                </FieldErrorMsg>
+                <Field
+                  as={TextAreaField}
+                  error={!!flatErrors.responseToGRTFeedback}
+                  id="BusinessCase-ResponseToGRTFeedback"
+                  maxLength={2000}
+                  name="responseToGRTFeedback"
+                  aria-describedby="BusinessCase-ResponseToGRTFeedbackCounter BusinessCase-ResponseToGRTFeedbackHelp"
+                />
+              </FieldGroup>
             </Form>
 
             <ButtonGroup>

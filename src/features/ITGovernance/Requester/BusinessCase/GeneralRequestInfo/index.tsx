@@ -36,6 +36,7 @@ const GeneralRequestInfo = ({
 
   const initialValues: GeneralRequestInfoForm = {
     requestName: businessCase.requestName,
+    projectAcronym: businessCase.projectAcronym,
     requester: businessCase.requester,
     businessOwner: businessCase.businessOwner
   };

@@ -119,6 +119,15 @@ const PropsedBusinessCaseSolutionReview = ({
       )}
       <ReviewRow>
         <div className="line-height-body-3">
+          <DescriptionTerm term="Identify your project's alignment with Zero Trust principles?" />
+          <DescriptionDefinition
+            className="text-pre-wrap"
+            definition={solution.security.zeroTrustAlignment}
+          />
+        </div>
+      </ReviewRow>
+      <ReviewRow>
+        <div className="line-height-body-3">
           <DescriptionTerm term="Will your solution have a User Interface, be public facing, or involve outside customers?" />
           <DescriptionDefinition
             className="text-pre-wrap"

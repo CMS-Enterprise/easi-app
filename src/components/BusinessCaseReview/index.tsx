@@ -44,6 +44,7 @@ const BusinessCaseReview = ({
           <GeneralRequestInfoReview
             values={{
               requestName: values.requestName,
+              projectAcronym: values.projectAcronym,
               businessOwner: {
                 name: values.businessOwner.name
               },
@@ -63,10 +64,12 @@ const BusinessCaseReview = ({
           <RequestDescriptionReview
             values={{
               businessNeed: values.businessNeed,
+              collaborationNeeded: values.collaborationNeeded,
               currentSolutionSummary: values.currentSolutionSummary,
               cmsBenefit: values.cmsBenefit,
               priorityAlignment: values.priorityAlignment,
-              successIndicators: values.successIndicators
+              successIndicators: values.successIndicators,
+              responseToGRTFeedback: values.responseToGRTFeedback
             }}
           />
         </SectionWrapper>

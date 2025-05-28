@@ -28,6 +28,15 @@ const RequestDescriptionReview = ({
       </ReviewRow>
       <ReviewRow className="margin-bottom-3">
         <div className="line-height-body-3">
+          <DescriptionTerm term="What internal collaboration or vendor engagement will support the recommended work?" />
+          <DescriptionDefinition
+            className="text-pre-wrap"
+            definition={values.collaborationNeeded}
+          />
+        </div>
+      </ReviewRow>
+      <ReviewRow className="margin-bottom-3">
+        <div className="line-height-body-3">
           <DescriptionTerm term="What is the current process that you are using for this work, or how is this need currently being met?" />
           <DescriptionDefinition
             className="text-pre-wrap"
@@ -62,6 +71,7 @@ const RequestDescriptionReview = ({
           />
         </div>
       </ReviewRow>
+      {/* TODO: NJD - add response to GRT? handle conditional rendering? */}
     </DescriptionList>
   );
 };

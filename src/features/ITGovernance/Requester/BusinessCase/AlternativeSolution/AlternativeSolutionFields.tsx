@@ -1,9 +1,11 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Label, Radio, TextInput } from '@trussworks/react-uswds';
+import { Grid, Label, Radio, TextInput } from '@trussworks/react-uswds';
 import { Field, FormikProps } from 'formik';
+import { DateTime } from 'luxon';
 
 import Alert from 'components/Alert';
+import DatePickerFormatted from 'components/DatePickerFormatted';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
@@ -101,7 +103,7 @@ const AlternativeSolutionFields = ({
             id={`BusinessCase-${altId}Summary`}
             maxLength={10000}
             name={`${altId}.summary`}
-            aria-describedby={`BusinessCase-${altId}SummmaryCounter BusinessCase-${altId}SummaryHelp`}
+            aria-describedby={`BusinessCase-${altId}SummaryCounter BusinessCase-${altId}SummaryHelp`}
           />
         </FieldGroup>
 
@@ -132,7 +134,64 @@ const AlternativeSolutionFields = ({
           />
         </FieldGroup>
 
-        {/* TODO: add target contract award and target completion of dev work questions */}
+        {/* Target dataes */}
+        <Grid row gap>
+          {/* Target contract award */}
+          <Grid tablet={{ col: 6 }}>
+            <div className="height-full display-flex flex-column">
+              <div className="flex-fill">
+                <Label
+                  htmlFor={`BusinessCase-${altId}TargetContractAwardDate`}
+                  className="margin-bottom-1"
+                >
+                  {t('targetContractAwardDate')}
+                </Label>
+                <HelpText>{t('targetContractAwardDateHelpText')}</HelpText>
+                <HelpText>{t('dateFormat')}</HelpText>
+              </div>
+              <Field
+                as={DatePickerFormatted}
+                error={!!flatErrors[`${altId}.targetContractAwardDate`]}
+                onChange={(date: DateTime) => {
+                  // Convert the DateTime object to a string for consistent storage
+                  const dateString = date ? date.toLocaleString() : '';
+                  setFieldValue(`${altId}.targetContractAwardDate`, dateString);
+                }}
+                id={`BusinessCase-${altId}TargetContractAwardDate`}
+                name={`${altId}.targetContractAwardDate`}
+                aria-describedby={`BusinessCase-${altId}TargetContractAwardDateHelp`}
+              />
+            </div>
+          </Grid>
+
+          {/* Target completion date */}
+          <Grid tablet={{ col: 6 }}>
+            <div className="height-full display-flex flex-column">
+              <div className="flex-fill">
+                <Label
+                  htmlFor={`BusinessCase-${altId}TargetCompletionDate`}
+                  className="margin-bottom-1"
+                >
+                  {t('targetCompletionDate')}
+                </Label>
+                <HelpText>{t('targetCompletionDateHelpText')}</HelpText>
+                <HelpText>{t('dateFormat')}</HelpText>
+              </div>
+              <Field
+                as={DatePickerFormatted}
+                error={!!flatErrors[`${altId}.targetCompletionDate`]}
+                onChange={(date: DateTime) => {
+                  // Convert the DateTime object to a string for consistent storage
+                  const dateString = date ? date.toLocaleString() : '';
+                  setFieldValue(`${altId}.targetCompletionDate`, dateString);
+                }}
+                id={`BusinessCase-${altId}TargetCompletionDate`}
+                name={`${altId}.targetCompletionDate`}
+                aria-describedby={`BusinessCase-${altId}TargetCompletionDateHelp`}
+              />
+            </div>
+          </Grid>
+        </Grid>
 
         <FieldGroup
           scrollElement={`${altId}.security.isApproved`}
@@ -223,7 +282,32 @@ const AlternativeSolutionFields = ({
           </FieldGroup>
         )}
 
-        {/* TODO: add zero trust principles question */}
+        <FieldGroup
+          scrollElement={`${altId}.zeroTrustAlignment`}
+          error={!!flatErrors[`${altId}.zeroTrustAlignment`]}
+        >
+          <Label htmlFor={`BusinessCase-${altId}ZeroTrustAlignment`}>
+            {t('zeroTrustAlignment')}
+            <RequiredAsterisk />
+          </Label>
+          <HelpText
+            id={`BusinessCase-${altId}ZeroTrustAlignmentHelp`}
+            className="margin-top-1"
+          >
+            {t('zeroTrustAlignmentHelpText')}
+          </HelpText>
+          <FieldErrorMsg>
+            {flatErrors[`${altId}.zeroTrustAlignment`]}
+          </FieldErrorMsg>
+          <Field
+            as={TextAreaField}
+            error={!!flatErrors[`${altId}.zeroTrustAlignment`]}
+            id={`BusinessCase-${altId}zeroTrustAlignment`}
+            maxLength={10000}
+            name={`${altId}.zeroTrustAlignment`}
+            aria-describedby={`BusinessCase-${altId}ZeroTrustAlignmentCounter BusinessCase-${altId}ZeroTrustAlignmentHelp`}
+          />
+        </FieldGroup>
 
         <FieldGroup
           scrollElement={`${altId}.hosting.type`}
@@ -272,7 +356,26 @@ const AlternativeSolutionFields = ({
                   />
                 </FieldGroup>
 
-                {/* TODO: add cloud  / cloud migration strategy question */}
+                <FieldGroup
+                  className="margin-bottom-1 margin-left-4"
+                  scrollElement={`${altId}.hosting.cloudStrategy`}
+                  error={!!flatErrors[`${altId}.hosting.cloudStrategy`]}
+                >
+                  <Label htmlFor={`BusinessCase-${altId}CloudStrategy`}>
+                    {t('cloudStrategy')}
+                    <RequiredAsterisk />
+                  </Label>
+                  <FieldErrorMsg>
+                    {flatErrors[`${altId}.hosting.cloudStrategy`]}
+                  </FieldErrorMsg>
+                  <Field
+                    as={TextInput}
+                    error={!!flatErrors[`${altId}.hosting.cloudStrategy`]}
+                    id={`BusinessCase-${altId}CloudStrategy`}
+                    maxLength={50}
+                    name={`${altId}.hosting.cloudStrategy`}
+                  />
+                </FieldGroup>
 
                 <FieldGroup
                   className="margin-bottom-1 margin-left-4"
@@ -389,7 +492,32 @@ const AlternativeSolutionFields = ({
           </fieldset>
         </FieldGroup>
 
-        {/* TODO: add workforce training requirements question */}
+        <FieldGroup
+          scrollElement={`${altId}.workforceTrainingReqs`}
+          error={!!flatErrors[`${altId}.workforceTrainingReqs`]}
+        >
+          <Label htmlFor={`BusinessCase-${altId}WorkforceTrainingReqs`}>
+            {t('workforceTrainingReqs')}
+            <RequiredAsterisk />
+          </Label>
+          <HelpText
+            id={`BusinessCase-${altId}WorkforceTrainingReqsHelp`}
+            className="margin-top-1"
+          >
+            {t('workforceTrainingReqsHelpText')}
+          </HelpText>
+          <FieldErrorMsg>
+            {flatErrors[`${altId}.workforceTrainingReqs`]}
+          </FieldErrorMsg>
+          <Field
+            as={TextAreaField}
+            error={!!flatErrors[`${altId}.workforceTrainingReqs`]}
+            id={`BusinessCase-${altId}workforceTrainingReqs`}
+            maxLength={10000}
+            name={`${altId}.workforceTrainingReqs`}
+            aria-describedby={`BusinessCase-${altId}WorkforceTrainingReqsCounter BusinessCase-${altId}WorkforceTrainingReqsHelp`}
+          />
+        </FieldGroup>
 
         <hr className="margin-bottom-1 margin-top-4 opacity-30" aria-hidden />
         <>
