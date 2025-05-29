@@ -151,7 +151,7 @@ const home = {
           content:
             'Select the LCID statuses you would like to include in this email list. EASi will gather all requester emails for LCIDs with that status.',
           list: {
-            ACTIVE: 'Active (does not include LCIDs retiring soon)',
+            ISSUED: 'Active (does not include LCIDs retiring soon)',
             EXPIRING_SOON: 'Expiring soon only',
             EXPIRED: 'Expired',
             RETIRING_SOON: 'Retiring soon',

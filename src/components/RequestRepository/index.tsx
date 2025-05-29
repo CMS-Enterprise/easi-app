@@ -28,10 +28,7 @@ import {
   Table
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
-import {
-  useGetRequesterUpdateEmailDataQuery,
-  useGetSystemIntakesTableQuery
-} from 'gql/generated/graphql';
+import { useGetSystemIntakesTableQuery } from 'gql/generated/graphql';
 import { startCase } from 'lodash';
 import { ActiveStateType, TableStateContext } from 'wrappers/TableStateWrapper';
 
@@ -104,11 +101,6 @@ const RequestRepository = () => {
     useGetSystemIntakesTableQuery({
       variables: { openRequests: false }
     });
-
-  const { data: requesterUpdateEmailData } =
-    useGetRequesterUpdateEmailDataQuery();
-
-  console.log(requesterUpdateEmailData);
 
   /** Object containing formatted system intakes split by `open` and `closed` state */
   const systemIntakes: SystemIntakesData = useMemo(
