@@ -2,6 +2,16 @@ package models
 
 import "github.com/google/uuid"
 
+type SystemRelationshipType string
+
+const (
+	SystemRelationshipTypePrimarySupport     SystemRelationshipType = "PRIMARY_SUPPORT"
+	SystemRelationshipTypePartialSupport     SystemRelationshipType = "PARTIAL_SUPORT"
+	SystemRelationshipTypeUsesInTechSolution SystemRelationshipType = "USES_IN_TECH_SOLUTION"
+	SystemRelationshipTypeUsedInTechSolution SystemRelationshipType = "USED_IN_TECH_SOLUTION"
+	SystemRelationshipTypeOther              SystemRelationshipType = "OTHER"
+)
+
 // SystemIntakeSystem is the insertion type for linking a system intake to
 // system(s)
 type SystemIntakeSystem struct {

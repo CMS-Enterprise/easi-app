@@ -35,6 +35,33 @@ func CreateSystemIntake(
 	return createdIntake, err
 }
 
+// CreateSystemIntakeSystemRelationship creates the system relationship type
+func CreateSystemIntakeSystemRelationship(
+	ctx context.Context,
+	store *storage.Store,
+	input models.SystemIntakeRelationshipInput,
+) (*models.CreateSystemIntakeSystemRelationshipPayload, error) {
+
+	relationship := &models.SystemIntakeRelationship{
+		SystemRelationshipType: input.SystemRelationshipType,
+		OtherTypeDescription: func() string {
+			if input.OtherTypeDescription != nil {
+				return *input.OtherTypeDescription
+			}
+			return ""
+		}(),
+	}
+	// func (s *Store) CreateSystemIntakeRelationship(ctx context.Context, systemIntakeRelationship *models.SystemIntakeRelationship) (*models.SystemIntakeRelationship, error) {
+	createdRelationship, err := store.CreateSystemIntakeRelationship(ctx, relationship)
+	if err != nil {
+		return nil, err
+	}
+	return &models.CreateSystemIntakeSystemRelationshipPayload{
+		SystemRelationshipType: createdRelationship.SystemRelationshipType,
+		OtherTypeDescription:   &createdRelationship.OtherTypeDescription,
+	}, nil
+}
+
 // CreateSystemIntakeContact creates a system intake's contact info.
 func CreateSystemIntakeContact(
 	ctx context.Context,

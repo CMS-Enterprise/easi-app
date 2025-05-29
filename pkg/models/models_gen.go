@@ -206,6 +206,12 @@ type CreateSystemIntakeNoteInput struct {
 	IntakeID   uuid.UUID `json:"intakeId"`
 }
 
+// The data needed to define system relationship in system intake
+type CreateSystemIntakeSystemRelationshipPayload struct {
+	SystemRelationshipType SystemRelationshipType `json:"systemRelationshipType"`
+	OtherTypeDescription   *string                `json:"otherTypeDescription,omitempty"`
+}
+
 // The data needed to create a TRB admin note with the Consult Session category
 type CreateTRBAdminNoteConsultSessionInput struct {
 	TrbRequestID uuid.UUID `json:"trbRequestId"`
@@ -745,6 +751,12 @@ type SystemIntakeRejectIntakeInput struct {
 	AdditionalInfo         *HTML                        `json:"additionalInfo,omitempty"`
 	NotificationRecipients *EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
+}
+
+// The data needed to define system relationship in system intake
+type SystemIntakeRelationshipInput struct {
+	SystemRelationshipType SystemRelationshipType `json:"systemRelationshipType"`
+	OtherTypeDescription   *string                `json:"otherTypeDescription,omitempty"`
 }
 
 // Input for creating a Reopen Request Action in Admin Actions v2
