@@ -128,8 +128,7 @@ const AnnualEmail = () => {
       const subject = encodeURIComponent('An update from IT Governance');
       window.location.href = `mailto:?bcc=${bccList}&subject=${subject}`;
     } else if (action === 'copy') {
-      // navigator.clipboard.writeText(emailString);
-      console.log(emailString);
+      navigator.clipboard.writeText(emailString);
     }
   };
 
