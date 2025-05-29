@@ -47,13 +47,12 @@ const AnnualEmail = () => {
   const formValues = watch();
   const hasSelected = Object.values(formValues).some(Boolean);
 
-  // Shared logic to extract filtered, deduplicated emails
   const getFilteredEmails = (formData: FormValues): string[] => {
     if (!emailData?.requesterUpdateEmailData) return [];
 
     const today = new Date();
-    const in30Days = new Date(today);
-    in30Days.setDate(today.getDate() + 30);
+    const in120Days = new Date(today);
+    in120Days.setDate(today.getDate() + 120);
 
     const past120Days = new Date(today);
     past120Days.setDate(today.getDate() - 120);
@@ -69,35 +68,36 @@ const AnnualEmail = () => {
 
         if (selectedStatuses.includes(lcidStatus)) return true;
 
-        // EXPIRING_SOON (date-based)
+        if (
+          selectedStatuses.includes('ACTIVE') &&
+          lcidStatus === 'ISSUED' &&
+          lcidRetiresAt === null
+        )
+          return true;
+
         if (
           selectedStatuses.includes('EXPIRING_SOON') &&
           lcidExpiresAt &&
           new Date(lcidExpiresAt) >= today &&
-          new Date(lcidExpiresAt) <= in30Days
-        ) {
+          new Date(lcidExpiresAt) <= in120Days
+        )
           return true;
-        }
 
-        // RETIRING_SOON (just check for ISSUED + non-null retire date)
         if (
           selectedStatuses.includes('RETIRING_SOON') &&
           lcidStatus === 'ISSUED' &&
           lcidRetiresAt
-        ) {
+        )
           return true;
-        }
 
-        // RETIRED_RECENTLY (date-based)
         if (
           selectedStatuses.includes('RETIRED_RECENTLY') &&
           lcidStatus === 'RETIRED' &&
           lcidRetiresAt &&
           new Date(lcidRetiresAt) >= past120Days &&
           new Date(lcidRetiresAt) < today
-        ) {
+        )
           return true;
-        }
 
         return false;
       })
@@ -110,11 +110,11 @@ const AnnualEmail = () => {
     const emails = getFilteredEmails(formData);
 
     if (emails.length === 0) {
-      setWarning(true); // show warning message
-      return; // exit early — don't open mail client or copy
+      setWarning(true);
+      return;
     }
 
-    setWarning(false); // clear warning if previously shown
+    setWarning(false);
 
     const emailString = emails.join(', ');
 
@@ -151,7 +151,10 @@ const AnnualEmail = () => {
         <CardFooter>
           <Button
             type="button"
-            onClick={() => setModalOpen(true)}
+            onClick={() => {
+              setModalOpen(true);
+              setWarning(false);
+            }}
             className="margin-right-1"
           >
             {t('home:adminHome.GRT.requesterUpdateEmail.card.button')}
@@ -159,7 +162,6 @@ const AnnualEmail = () => {
         </CardFooter>
       </Card>
 
-      {/* Request Update Email Modal */}
       <Modal
         isOpen={modalOpen}
         closeModal={() => {
