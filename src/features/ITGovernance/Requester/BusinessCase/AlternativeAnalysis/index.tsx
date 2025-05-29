@@ -149,10 +149,9 @@ const AlternativeAnalysis = ({
           try {
             // Validate the specific solution using business case schema. We pass in true for isFinal
             // to show correct in progress or complete even when business case is in draft
-            BusinessCaseSchema(isFinal)[solutionType].validateSync(
-              row.original,
-              { abortEarly: false }
-            );
+            BusinessCaseSchema(true)[solutionType].validateSync(row.original, {
+              abortEarly: false
+            });
 
             return <TaskStatusTag status="COMPLETED" />;
           } catch (err) {
