@@ -1,8 +1,13 @@
 import {
+  GetSystemIntakeGRBDiscussionsDocument,
+  GetSystemIntakeGRBDiscussionsQuery,
+  GetSystemIntakeGRBDiscussionsQueryVariables,
   SystemIntakeGRBReviewDiscussionFragment,
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole
 } from 'gql/generated/graphql';
+
+import { MockedQuery } from 'types/util';
 
 import { systemIntake } from './systemIntake';
 import users from './users';
@@ -139,3 +144,37 @@ export const mockDiscussionsWithoutReplies = (
     replies: []
   }
 ];
+
+/** Array of discussions with and without replies */
+const grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[] = [
+  ...mockDiscussions(),
+  ...mockDiscussionsWithoutReplies()
+];
+
+export const getSystemIntakeGRBDiscussionsQuery = (
+  data: {
+    grbDiscussionsPrimary?: SystemIntakeGRBReviewDiscussionFragment[];
+    grbDiscussionsInternal?: SystemIntakeGRBReviewDiscussionFragment[];
+  } = {}
+): MockedQuery<
+  GetSystemIntakeGRBDiscussionsQuery,
+  GetSystemIntakeGRBDiscussionsQueryVariables
+> => ({
+  request: {
+    query: GetSystemIntakeGRBDiscussionsDocument,
+    variables: {
+      id: systemIntake.id
+    }
+  },
+  result: {
+    data: {
+      __typename: 'Query',
+      systemIntake: {
+        __typename: 'SystemIntake',
+        id: systemIntake.id,
+        grbDiscussionsInternal: data?.grbDiscussionsInternal || grbDiscussions,
+        grbDiscussionsPrimary: data?.grbDiscussionsPrimary || grbDiscussions
+      }
+    }
+  }
+});

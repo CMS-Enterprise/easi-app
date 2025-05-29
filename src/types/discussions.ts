@@ -10,7 +10,10 @@ export type DiscussionAlert =
 
 export type MentionSuggestion =
   | {
-      tagType: TagType.GROUP_IT_GOV | TagType.GROUP_GRB_REVIEWERS;
+      tagType:
+        | TagType.GROUP_IT_GOV
+        | TagType.GROUP_GRB_REVIEWERS
+        | TagType.REQUESTER;
       displayName: string;
     }
   | {
@@ -41,3 +44,11 @@ export type MentionListOnKeyDown = {
   /** onKeyDown handler for rendering the suggestions popup and loading spinner */
   onKeyDown: ({ event }: { event: KeyboardEvent }) => boolean;
 };
+
+/** Generic discussion type with only `createdAt` props */
+export interface DiscussionTimestamps {
+  initialPost: {
+    createdAt: string;
+  };
+  replies: { createdAt: string }[];
+}

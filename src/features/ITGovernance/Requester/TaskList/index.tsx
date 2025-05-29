@@ -10,7 +10,10 @@ import {
   ModalHeading
 } from '@trussworks/react-uswds';
 import NotFound from 'features/Miscellaneous/NotFound';
-import { SystemIntakeState } from 'gql/generated/graphql';
+import {
+  ITGovIntakeFormStatus,
+  SystemIntakeState
+} from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import Breadcrumbs from 'components/Breadcrumbs';
@@ -24,7 +27,6 @@ import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import useMessage from 'hooks/useMessage';
 
 import {
-  ITGovIntakeFormStatus,
   SystemIntakeDecisionState,
   SystemIntakeStep,
   useArchiveSystemIntakeMutation,
@@ -207,7 +209,7 @@ function GovernanceTaskList() {
                   <GovTaskGrtMeeting {...systemIntake} />
                   {/* 5. Submit your Business Case for final approval */}
                   <GovTaskBizCaseFinal {...systemIntake} />
-                  {/* 6. Attend the GRB meeting */}
+                  {/* 6. Attend the GRB review */}
                   <GovTaskGrbMeeting {...systemIntake} />
                   {/* 7. Decision and next steps */}
                   <GovTaskDecisionAndNextSteps {...systemIntake} />

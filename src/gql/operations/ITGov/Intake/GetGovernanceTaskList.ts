@@ -25,6 +25,10 @@ export default gql(/* GraphQL */ `
       updatedAt
       grtDate
       grbDate
+      grbReviewType
+      grbReviewStartedAt
+      grbReviewAsyncEndDate
+      grbReviewAsyncRecordingTime
 
       step
       state
@@ -43,6 +47,11 @@ export default gql(/* GraphQL */ `
         id
         name
         acronym
+      }
+      grbPresentationLinks {
+        presentationDeckFileName
+        presentationDeckFileStatus
+        presentationDeckFileURL
       }
     }
   }
