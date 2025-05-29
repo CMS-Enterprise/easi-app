@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { Button, ButtonGroup } from '@trussworks/react-uswds';
 import {
+  GetSystemIntakeDocument,
+  GetSystemIntakeGRBReviewDocument,
   SystemIntakeGRBReviewFragment,
   useEndGRBReviewAsyncVotingMutation
 } from 'gql/generated/graphql';
@@ -36,6 +38,7 @@ const EndGRBAsyncVoting = ({
   const [err, setError] = useState<boolean>(false);
 
   const [endVoting] = useEndGRBReviewAsyncVotingMutation({
+    refetchQueries: [GetSystemIntakeGRBReviewDocument, GetSystemIntakeDocument],
     variables: {
       systemIntakeID: systemId
     },

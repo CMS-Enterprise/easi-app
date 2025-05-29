@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { ErrorMessage } from '@hookform/error-message';
 import { Button, ButtonGroup, FormGroup, Label } from '@trussworks/react-uswds';
 import {
+  GetSystemIntakeDocument,
   GetSystemIntakeGRBReviewDocument,
   useExtendGRBReviewDeadlineAsyncMutation
 } from 'gql/generated/graphql';
@@ -35,7 +36,7 @@ const ExtendGRBAsyncReview = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const [mutation] = useExtendGRBReviewDeadlineAsyncMutation({
-    refetchQueries: [GetSystemIntakeGRBReviewDocument]
+    refetchQueries: [GetSystemIntakeGRBReviewDocument, GetSystemIntakeDocument]
   });
 
   const form = useEasiForm<any>({
