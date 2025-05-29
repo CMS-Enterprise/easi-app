@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { Button, ButtonGroup } from '@trussworks/react-uswds';
@@ -35,25 +35,27 @@ const EndGRBAsyncVoting = ({
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [err, setError] = useState<boolean>(false);
 
-  const [mutate] = useEndGRBReviewAsyncVotingMutation({
+  const [endVoting] = useEndGRBReviewAsyncVotingMutation({
     variables: {
       systemIntakeID: systemId
-    }
+    },
+    onCompleted: () =>
+      showMessage(t('statusCard.endVotingModal.success'), {
+        type: 'success'
+      }),
+    onError: () => setError(true)
   });
-
-  const endVoting = () => {
-    mutate()
-      .then(() =>
-        showMessage(t('statusCard.endVotingModal.success'), {
-          type: 'success'
-        })
-      )
-      .catch(() => setError(true));
-  };
 
   const { days, hours, minutes } = formatDaysHoursMinutes(
     grbReviewAsyncEndDate
   );
+
+  // Reset error state when modal is opened
+  useEffect(() => {
+    if (isOpen) {
+      setError(false);
+    }
+  }, [isOpen]);
 
   return (
     <>
@@ -115,13 +117,7 @@ const EndGRBAsyncVoting = ({
       </Modal>
 
       {/* Modal trigger button */}
-      <Button
-        type="button"
-        outline
-        onClick={() => {
-          setIsOpen(true);
-        }}
-      >
+      <Button type="button" outline onClick={() => setIsOpen(true)}>
         {t('statusCard.endVoting')}
       </Button>
     </>
