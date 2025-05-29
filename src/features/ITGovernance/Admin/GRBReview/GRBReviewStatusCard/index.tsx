@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Grid, Icon } from '@trussworks/react-uswds';
+import { Button, ButtonGroup, Grid, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
   SystemIntakeGRBReviewAsyncStatusType,
@@ -15,7 +15,8 @@ import { formatDateUtc, formatDaysHoursMinutes } from 'utils/date';
 
 import { useRestartReviewModal } from '../RestartReviewModal/RestartReviewModalContext';
 
-import AddTimeOrEndVoting from './AddTimeOrEndVoting';
+import EndGRBAsyncVoting from './EndGRBAsyncVoting';
+import ExtendGRBAsyncReview from './ExtendGRBAsyncReview';
 
 // TODO: Temp status type;
 export enum GRBReviewStatus {
@@ -194,10 +195,13 @@ const GRBReviewStatusCard = ({
           </Grid>
 
           {isITGovAdmin && (
-            <AddTimeOrEndVoting
-              grbReviewAsyncEndDate={grbReviewAsyncEndDate}
-              grbVotingInformation={grbVotingInformation}
-            />
+            <ButtonGroup>
+              <ExtendGRBAsyncReview />
+              <EndGRBAsyncVoting
+                grbReviewAsyncEndDate={grbReviewAsyncEndDate}
+                grbVotingInformation={grbVotingInformation}
+              />
+            </ButtonGroup>
           )}
         </span>
       )}
