@@ -1482,6 +1482,7 @@ func TestGrbMeetingStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:                        models.SystemIntakeStepGRBMEETING,
 				GrbReviewType:               models.SystemIntakeGRBReviewTypeAsync,
+				GRBReviewStartedAt:          &yesterday,
 				GrbReviewAsyncEndDate:       &tomorrow,
 				GrbReviewAsyncRecordingTime: &tomorrow,
 				GrbReviewAsyncManualEndDate: &now,
