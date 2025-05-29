@@ -358,6 +358,17 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 			expectError:    false,
 		},
 		{
+			testCase: "GRB Meeting: Async review, voting ended manually",
+			intake: models.SystemIntake{
+				Step:                        models.SystemIntakeStepGRBMEETING,
+				GrbReviewType:               models.SystemIntakeGRBReviewTypeAsync,
+				GrbReviewAsyncEndDate:       &tomorrow,
+				GrbReviewAsyncManualEndDate: &yesterday,
+			},
+			expectedStatus: models.ITGDSInReview,
+			expectError:    false,
+		},
+		{
 			testCase: "Decision issued step: LCID Issued",
 			intake: models.SystemIntake{
 				Step:          models.SystemIntakeStepDECISION,
@@ -1465,6 +1476,17 @@ func TestGrbMeetingStatus(t *testing.T) {
 				GrbReviewAsyncRecordingTime: &tomorrow,
 			},
 			expectedStatus: models.ITGGRBSScheduled,
+		},
+		{
+			testCase: "Async: Voting has been ended early",
+			intake: models.SystemIntake{
+				Step:                        models.SystemIntakeStepGRBMEETING,
+				GrbReviewType:               models.SystemIntakeGRBReviewTypeAsync,
+				GrbReviewAsyncEndDate:       &tomorrow,
+				GrbReviewAsyncRecordingTime: &tomorrow,
+				GrbReviewAsyncManualEndDate: &now,
+			},
+			expectedStatus: models.ITGGRBSAwaitingDecision,
 		},
 	}
 
