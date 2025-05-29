@@ -64,40 +64,45 @@ const AnnualEmail = () => {
     const emails = emailData.requesterUpdateEmailData
       .filter(entry => {
         const { lcidStatus, lcidExpiresAt, lcidRetiresAt } = entry;
-        if (!lcidStatus) return false;
 
-        if (selectedStatuses.includes(lcidStatus)) return true;
-
+        // Match explicit status keys: ISSUED, EXPIRED, RETIRED
         if (
-          selectedStatuses.includes('ACTIVE') &&
-          lcidStatus === 'ISSUED' &&
-          lcidRetiresAt === null
-        )
+          lcidStatus &&
+          selectedStatuses.includes(lcidStatus) &&
+          !(lcidStatus === 'ISSUED' && lcidRetiresAt) // exclude retiring from general ISSUED
+        ) {
           return true;
+        }
 
+        // Expiring soon logic
         if (
           selectedStatuses.includes('EXPIRING_SOON') &&
           lcidExpiresAt &&
           new Date(lcidExpiresAt) >= today &&
           new Date(lcidExpiresAt) <= in120Days
-        )
+        ) {
           return true;
+        }
 
+        // Retiring soon logic
         if (
           selectedStatuses.includes('RETIRING_SOON') &&
           lcidStatus === 'ISSUED' &&
           lcidRetiresAt
-        )
+        ) {
           return true;
+        }
 
+        // Retired recently logic
         if (
           selectedStatuses.includes('RETIRED_RECENTLY') &&
           lcidStatus === 'RETIRED' &&
           lcidRetiresAt &&
           new Date(lcidRetiresAt) >= past120Days &&
           new Date(lcidRetiresAt) < today
-        )
+        ) {
           return true;
+        }
 
         return false;
       })
@@ -123,7 +128,8 @@ const AnnualEmail = () => {
       const subject = encodeURIComponent('An update from IT Governance');
       window.location.href = `mailto:?bcc=${bccList}&subject=${subject}`;
     } else if (action === 'copy') {
-      navigator.clipboard.writeText(emailString);
+      // navigator.clipboard.writeText(emailString);
+      console.log(emailString);
     }
   };
 
