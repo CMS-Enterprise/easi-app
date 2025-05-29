@@ -3,7 +3,7 @@ CREATE TYPE system_relationship_type AS ENUM (
     'PARTIAL_SUPORT',
     'USES_IN_TECH_SOLUTION',
     'USED_IN_TECH_SOLUTION',
-    'OTHER_TYPE'
+    'OTHER'
 );
 
 -- UPDATE system_intake_systems SET relationship_type = 'PRIMARY_SUPPORT';
@@ -13,10 +13,11 @@ CREATE TYPE system_relationship_type AS ENUM (
 
 CREATE TABLE system_relationships (
     system_id UUID REFERENCES system_intake_systems(id),
+    system_intake_systems_id UUID REFERENCES system_intake_systems(id),
     system_relationship_type SYSTEM_RELATIONSHIP_TYPE NOT NULL,
-    other_type_description TEXT,
+    other_description TEXT,
     PRIMARY KEY(system_id, system_relationship_type)
 );
 
-ALTER TABLE system_relationships ADD CONSTRAINT system_intake_systems_other_type_is_null_unless_system_relationship_type_is_other 
-CHECK ((system_relationship_type = 'OTHER') = (other_type IS NOT NULL AND other_type != '')); 
+ALTER TABLE system_relationships ADD CONSTRAINT system_intake_systems_other_description_is_null_unless_system_relationship_type_is_other 
+CHECK ((system_relationship_type = 'OTHER') = (other_description IS NOT NULL AND other_description != '')); 

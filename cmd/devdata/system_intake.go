@@ -358,6 +358,16 @@ func setSystemIntakeRelationExistingService(
 	if err != nil {
 		panic(err)
 	}
+
+	systemRelationship := &models.SystemIntakeRelationship{
+		SystemRelationshipType: "",
+		OtherTypeDescription:   "",
+	}
+	_, err = createSystemIntakeRelationship(ctx, store, systemRelationship)
+	if err != nil {
+		panic(err)
+	}
+
 }
 
 func unlinkSystemIntakeRelation(ctx context.Context, store *storage.Store, intakeID uuid.UUID) {
@@ -583,4 +593,19 @@ func modifySystemIntake(
 		panic(err)
 	}
 	return intake
+}
+
+func createSystemIntakeRelationship(
+	ctx context.Context,
+	store *storage.Store,
+	systemRelationship *models.SystemIntakeRelationship,
+) (*models.CreateSystemIntakeSystemRelationshipPayload, error) {
+
+	input := models.SystemIntakeRelationshipInput{
+		SystemRelationshipType: systemRelationship.SystemRelationshipType,
+		OtherTypeDescription:   &systemRelationship.OtherTypeDescription,
+	}
+	systemRelationshipPayload, err := resolvers.CreateSystemIntakeSystemRelationship(ctx, store, input)
+
+	return systemRelationshipPayload, err
 }

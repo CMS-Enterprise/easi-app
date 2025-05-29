@@ -34,6 +34,7 @@ CHECK ((relationship_type = 'OTHER') = (other_type IS NOT NULL AND other_type !=
 -- v177__Add_Intake_Systems_table.sql
 -- get_by_system_intake_ids.sql
 -- select_by_cedar_system_ids.sql (This one is roughly related, but I dont think will need an update)
+-- Update the postman file
         
 -- Maybe? Depending on needs of the front end?)
 -- related_intakes_by_intake_ids.sql 
@@ -46,16 +47,8 @@ CHECK ((relationship_type = 'OTHER') = (other_type IS NOT NULL AND other_type !=
 
 -- Resolver
 
--- Front end is a separate ticket
 
-
--- Step 3: Migrate the existing data
--- "Historic Information should be listed as Primary" - I think this means we should set it to system_relationship_type to 'PRIMARY_SUPPORT'
--- Done in the migration 
--- Do we need any complex logic to support mapping these links to this new ENUM and fill out the Other_Type field?
-
-
--- What about dev table migrations? Do we need to change seed data
--- How do we see this in the front end?
--- Is CodeGen usually run with the front end PR?
 -- What branch should I point this PR at?
+
+-- Complexity based on the multi select - Do we do a join table?
+-- Historic data is more complicated now, we could run some SQL that creates a relationship for all existing systems and creates a primary relationship for them
