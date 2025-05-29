@@ -188,6 +188,8 @@ func getAsyncGRBReviewStatus(intake *models.SystemIntake) (models.ITGovGRBStatus
 
 	// Review has started
 	if intake.GrbReviewAsyncEndDate != nil &&
+		// Review has not been ended manually
+		intake.GrbReviewAsyncManualEndDate == nil &&
 		// Review end date is in future
 		now.After(*intake.GRBReviewStartedAt) &&
 		now.Before(*intake.GrbReviewAsyncEndDate) {
@@ -251,10 +253,19 @@ func DecisionAndNextStepsStatus(intake *models.SystemIntake) (models.ITGovDecisi
 		}
 
 		if intake.GrbReviewType == models.SystemIntakeGRBReviewTypeAsync {
+
+			// Review has been ended manually
+			if intake.GrbReviewAsyncManualEndDate != nil {
+				return models.ITGDSInReview, nil
+			}
+
+			// Review has not been started
 			if intake.GrbReviewAsyncEndDate == nil {
 				return models.ITGDSCantStart, nil
 			}
-			if intake.GrbReviewAsyncEndDate.After(time.Now()) { // Meeting has not happened
+
+			// Review is in progress
+			if intake.GrbReviewAsyncEndDate.After(time.Now()) {
 				return models.ITGDSCantStart, nil
 			}
 		}
