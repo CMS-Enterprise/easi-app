@@ -191,6 +191,7 @@ const AnnualEmail = () => {
                   id={statusKey}
                   value={statusKey}
                   label={statusLabel}
+                  data-testid={`checkbox-${statusKey}`}
                 />
               )}
             />

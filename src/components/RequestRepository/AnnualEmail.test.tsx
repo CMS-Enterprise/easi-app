@@ -2,15 +2,17 @@ import React from 'react';
 import { MockedProvider } from '@apollo/client/testing';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { GetRequesterUpdateEmailDataDocument } from 'gql/generated/graphql';
-import i18next from 'i18next';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import AnnualEmail from './AnnualEmail';
 
-const now = new Date();
-const within120Days = new Date(
-  now.getTime() - 100 * 24 * 60 * 60 * 1000
-).toISOString();
+const today = new Date();
+const retiringSoonDate = new Date(today);
+retiringSoonDate.setDate(today.getDate() + 92);
+const retiredRecentlyDate = new Date(today);
+retiredRecentlyDate.setDate(today.getDate() - 25);
+const expiredDate = new Date(today);
+expiredDate.setFullYear(today.getFullYear() - 1);
 
 const mocks = [
   {
@@ -22,24 +24,31 @@ const mocks = [
         requesterUpdateEmailData: [
           {
             lcidStatus: 'ISSUED',
-            lcidIssuedAt: '2099-06-01T00:00:00Z',
-            lcidExpiresAt: '2099-06-01T00:00:00Z',
+            lcidIssuedAt: '2024-01-01T00:00:00Z',
+            lcidExpiresAt: '2025-12-01T00:00:00Z',
             lcidRetiresAt: null,
             requesterEmail: 'active@example.com'
           },
           {
             lcidStatus: 'EXPIRED',
-            lcidIssuedAt: '2099-06-01T00:00:00Z',
-            lcidExpiresAt: '2023-06-01T00:00:00Z',
+            lcidIssuedAt: '2023-01-01T00:00:00Z',
+            lcidExpiresAt: expiredDate.toISOString(),
             lcidRetiresAt: null,
             requesterEmail: 'expired@example.com'
           },
           {
+            lcidStatus: 'ISSUED',
+            lcidIssuedAt: '2024-01-01T00:00:00Z',
+            lcidExpiresAt: '2025-12-01T00:00:00Z',
+            lcidRetiresAt: retiringSoonDate.toISOString(),
+            requesterEmail: 'retiring-soon@example.com'
+          },
+          {
             lcidStatus: 'RETIRED',
-            lcidIssuedAt: '2022-01-01T00:00:00Z',
-            lcidExpiresAt: '2023-01-01T00:00:00Z',
-            lcidRetiresAt: within120Days,
-            requesterEmail: 'retired@example.com'
+            lcidIssuedAt: '2023-01-01T00:00:00Z',
+            lcidExpiresAt: '2023-12-01T00:00:00Z',
+            lcidRetiresAt: retiredRecentlyDate.toISOString(),
+            requesterEmail: 'retired-recently@example.com'
           }
         ]
       }
@@ -63,20 +72,10 @@ describe('AnnualEmail UI & Clipboard Behavior', () => {
       </MockedProvider>
     );
 
-    fireEvent.click(
-      await screen.findByRole('button', {
-        name: i18next.t('home:adminHome.GRT.requesterUpdateEmail.card.button')
-      })
-    );
+    fireEvent.click(await screen.findByTestId('button'));
 
-    expect(await screen.findByLabelText(/Active/)).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', {
-        name: i18next.t(
-          'home:adminHome.GRT.requesterUpdateEmail.modal.openEmailButton'
-        )
-      })
-    ).toBeDisabled();
+    expect(await screen.findByTestId('checkbox-ISSUED')).toBeInTheDocument();
+    expect(screen.getByText(/Open in email/i)).toBeDisabled();
   });
 
   it('enables buttons and copies correct email on "Active"', async () => {
@@ -86,17 +85,10 @@ describe('AnnualEmail UI & Clipboard Behavior', () => {
       </MockedProvider>
     );
 
-    fireEvent.click(
-      await screen.findByRole('button', {
-        name: i18next.t('home:adminHome.GRT.requesterUpdateEmail.card.button')
-      })
-    );
-    fireEvent.click(screen.getByLabelText(/Active/));
+    fireEvent.click(await screen.findByTestId('button'));
+    fireEvent.click(screen.getByTestId('checkbox-ISSUED'));
 
-    const copyBtn = screen.getByRole('button', {
-      name: /or, copy emails to clipboard/i
-    });
-    fireEvent.click(copyBtn);
+    fireEvent.click(screen.getByText(/copy emails to clipboard/i));
 
     await waitFor(() => {
       expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
@@ -105,66 +97,82 @@ describe('AnnualEmail UI & Clipboard Behavior', () => {
     });
   });
 
-  it('shows warning if no matching emails for "Retiring soon"', async () => {
+  it('copies correct email on "Expired"', async () => {
     render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <AnnualEmail />
       </MockedProvider>
     );
 
-    fireEvent.click(
-      await screen.findByRole('button', {
-        name: i18next.t('home:adminHome.GRT.requesterUpdateEmail.card.button')
-      })
-    );
-    fireEvent.click(screen.getByLabelText(/Retiring soon/));
-
-    const copyBtn = screen.getByRole('button', {
-      name: i18next.t(
-        'home:adminHome.GRT.requesterUpdateEmail.modal.copyEmailButton'
-      )
-    });
-    fireEvent.click(copyBtn);
-
-    expect(
-      await screen.findByText(
-        i18next.t(
-          'home:adminHome.GRT.requesterUpdateEmail.modal.noEmail'
-        ) as string
-      )
-    ).toBeInTheDocument();
-  });
-
-  it('copies correct email on "Retired" status', async () => {
-    render(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <AnnualEmail />
-      </MockedProvider>
-    );
-
-    fireEvent.click(
-      await screen.findByRole('button', {
-        name: i18next.t('home:adminHome.GRT.requesterUpdateEmail.card.button')
-      })
-    );
-
-    // Wait for modal content
-    await screen.findByLabelText(/Retired/);
-    fireEvent.click(screen.getByLabelText(/Retired/));
-
-    // Wait for buttons to become enabled
-    const copyBtn = await screen.findByRole('button', {
-      name: i18next.t(
-        'home:adminHome.GRT.requesterUpdateEmail.modal.copyEmailButton'
-      )
-    });
-
-    fireEvent.click(copyBtn);
+    fireEvent.click(await screen.findByTestId('button'));
+    fireEvent.click(screen.getByTestId('checkbox-EXPIRED'));
+    fireEvent.click(screen.getByText(/copy emails to clipboard/i));
 
     await waitFor(() => {
       expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
-        'retired@example.com'
+        'expired@example.com'
       );
     });
+  });
+
+  it('copies correct email on "Retiring Soon"', async () => {
+    render(
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <AnnualEmail />
+      </MockedProvider>
+    );
+
+    fireEvent.click(await screen.findByTestId('button'));
+    fireEvent.click(screen.getByTestId('checkbox-RETIRING_SOON'));
+    fireEvent.click(screen.getByText(/copy emails to clipboard/i));
+
+    await waitFor(() => {
+      expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
+        'retiring-soon@example.com'
+      );
+    });
+  });
+
+  it('copies correct email on "Retired Recently"', async () => {
+    render(
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <AnnualEmail />
+      </MockedProvider>
+    );
+
+    fireEvent.click(await screen.findByTestId('button'));
+    fireEvent.click(screen.getByTestId('checkbox-RETIRED_RECENTLY'));
+    fireEvent.click(screen.getByText(/copy emails to clipboard/i));
+
+    await waitFor(() => {
+      expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
+        'retired-recently@example.com'
+      );
+    });
+  });
+
+  it('shows warning if no matching emails for an empty state', async () => {
+    const emptyMock = [
+      {
+        request: { query: GetRequesterUpdateEmailDataDocument },
+        result: { data: { requesterUpdateEmailData: [] } }
+      }
+    ];
+
+    render(
+      <MockedProvider mocks={emptyMock} addTypename={false}>
+        <AnnualEmail />
+      </MockedProvider>
+    );
+
+    fireEvent.click(await screen.findByTestId('button'));
+    fireEvent.click(screen.getByTestId('checkbox-EXPIRED'));
+    fireEvent.click(screen.getByText(/copy emails to clipboard/i));
+
+    expect(
+      await screen.findByText(
+        /There are no requester emails that match your selection/i
+      )
+    ).toBeInTheDocument();
   });
 });
