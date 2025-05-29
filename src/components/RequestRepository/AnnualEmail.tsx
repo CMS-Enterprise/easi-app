@@ -69,31 +69,35 @@ const AnnualEmail = () => {
 
         if (selectedStatuses.includes(lcidStatus)) return true;
 
+        // EXPIRING_SOON (date-based)
         if (
           selectedStatuses.includes('EXPIRING_SOON') &&
           lcidExpiresAt &&
           new Date(lcidExpiresAt) >= today &&
           new Date(lcidExpiresAt) <= in30Days
-        )
+        ) {
           return true;
+        }
 
+        // RETIRING_SOON (just check for ISSUED + non-null retire date)
         if (
           selectedStatuses.includes('RETIRING_SOON') &&
-          lcidStatus === 'RETIRED' &&
-          lcidRetiresAt &&
-          new Date(lcidRetiresAt) >= today &&
-          new Date(lcidRetiresAt) <= in30Days
-        )
+          lcidStatus === 'ISSUED' &&
+          lcidRetiresAt
+        ) {
           return true;
+        }
 
+        // RETIRED_RECENTLY (date-based)
         if (
           selectedStatuses.includes('RETIRED_RECENTLY') &&
           lcidStatus === 'RETIRED' &&
           lcidRetiresAt &&
           new Date(lcidRetiresAt) >= past120Days &&
           new Date(lcidRetiresAt) < today
-        )
+        ) {
           return true;
+        }
 
         return false;
       })
