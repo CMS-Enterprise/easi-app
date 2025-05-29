@@ -13,6 +13,7 @@ import {
 } from '@trussworks/react-uswds';
 import { useGetRequesterUpdateEmailDataQuery } from 'gql/generated/graphql';
 
+import Alert from 'components/Alert';
 import CheckboxField from 'components/CheckboxField';
 import Modal from 'components/Modal';
 
@@ -23,6 +24,7 @@ type FormValues = {
 const AnnualEmail = () => {
   const { t } = useTranslation('governanceReviewTeam');
   const [modalOpen, setModalOpen] = useState(false);
+  const [warning, setWarning] = useState(false);
 
   const { data: emailData } = useGetRequesterUpdateEmailDataQuery();
 
@@ -100,22 +102,29 @@ const AnnualEmail = () => {
     return Array.from(new Set(emails));
   };
 
-  // Submit button → opens mail client
-  const onSubmit = (formData: FormValues) => {
+  const handleEmails = (formData: FormValues, action: 'submit' | 'copy') => {
     const emails = getFilteredEmails(formData);
-    const bccList = encodeURIComponent(emails.join(','));
-    const subject = encodeURIComponent('An update from IT Governance');
 
-    window.location.href = `mailto:?bcc=${bccList}&subject=${subject}`;
-  };
+    if (emails.length === 0) {
+      setWarning(true); // show warning message
+      return; // exit early — don't open mail client or copy
+    }
 
-  // Copy button → copies to clipboard
-  const onCopy = () => {
-    const emails = getFilteredEmails(formValues);
+    setWarning(false); // clear warning if previously shown
+
     const emailString = emails.join(', ');
 
-    navigator.clipboard.writeText(emailString);
+    if (action === 'submit') {
+      const bccList = encodeURIComponent(emailString);
+      const subject = encodeURIComponent('An update from IT Governance');
+      window.location.href = `mailto:?bcc=${bccList}&subject=${subject}`;
+    } else if (action === 'copy') {
+      navigator.clipboard.writeText(emailString);
+    }
   };
+
+  const onSubmit = (formData: FormValues) => handleEmails(formData, 'submit');
+  const onCopy = () => handleEmails(formValues, 'copy');
 
   return (
     <>
@@ -147,7 +156,13 @@ const AnnualEmail = () => {
       </Card>
 
       {/* Request Update Email Modal */}
-      <Modal isOpen={modalOpen} closeModal={() => setModalOpen(false)}>
+      <Modal
+        isOpen={modalOpen}
+        closeModal={() => {
+          setModalOpen(false);
+          setWarning(false);
+        }}
+      >
         <ModalHeading>
           {t('home:adminHome.GRT.requesterUpdateEmail.modal.heading')}
         </ModalHeading>
@@ -170,9 +185,19 @@ const AnnualEmail = () => {
             />
           ))}
 
+          {warning && (
+            <Alert slim type="warning">
+              {t('home:adminHome.GRT.requesterUpdateEmail.modal.noEmail')}
+            </Alert>
+          )}
+
           <ModalFooter>
             <div className="display-flex flex-gap-3">
-              <Button type="submit" disabled={!hasSelected}>
+              <Button
+                type="submit"
+                disabled={!hasSelected}
+                className="margin-y-0"
+              >
                 {t(
                   'home:adminHome.GRT.requesterUpdateEmail.modal.openEmailButton'
                 )}
@@ -182,6 +207,7 @@ const AnnualEmail = () => {
                 onClick={onCopy}
                 disabled={!hasSelected}
                 unstyled
+                className="margin-y-0"
               >
                 {t(
                   'home:adminHome.GRT.requesterUpdateEmail.modal.copyEmailButton'

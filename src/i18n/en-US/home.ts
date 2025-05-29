@@ -158,7 +158,9 @@ const home = {
             RETIRED_RECENTLY: 'Retired recently (past 120 days)'
           },
           openEmailButton: 'Open in email',
-          copyEmailButton: 'or, copy emails to clipboard'
+          copyEmailButton: 'or, copy emails to clipboard',
+          noEmail:
+            'There are no requester emails that match your selection. Please update your selection to download an email list from EASi.'
         }
       }
     }
