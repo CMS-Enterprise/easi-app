@@ -150,13 +150,13 @@ const home = {
           heading: 'Configure email list',
           content:
             'Select the LCID statuses you would like to include in this email list. EASi will gather all requester emails for LCIDs with that status.',
-          list: [
-            'Active (does not include LCIDs retiring soon)',
-            'Expiring soon only',
-            'Expired',
-            'Retiring soon',
-            'Retired recently (past 120 days)'
-          ],
+          list: {
+            ACTIVE: 'Active (does not include LCIDs retiring soon)',
+            EXPIRING_SOON: 'Expiring soon only',
+            EXPIRED: 'Expired',
+            RETIRING_SOON: 'Retiring soon',
+            RETIRED_RECENTLY: 'Retired recently (past 120 days)'
+          },
           openEmailButton: 'Open in email',
           copyEmailButton: 'or, copy emails to clipboard'
         }

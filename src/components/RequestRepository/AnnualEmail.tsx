@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
   Button,
@@ -6,17 +7,41 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
-  Checkbox,
-  Fieldset,
+  Form,
   ModalFooter,
   ModalHeading
 } from '@trussworks/react-uswds';
 
+import CheckboxField from 'components/CheckboxField';
 import Modal from 'components/Modal';
+
+type FormValues = {
+  [key: string]: boolean;
+};
 
 const AnnualEmail = () => {
   const { t } = useTranslation('governanceReviewTeam');
   const [modalOpen, setModalOpen] = useState(false);
+
+  const list: Record<string, string> = t(
+    'home:adminHome.GRT.requesterUpdateEmail.modal.list',
+    {
+      returnObjects: true
+    }
+  );
+
+  const defaultValues = Object.keys(list).reduce((acc, key) => {
+    acc[key] = false;
+    return acc;
+  }, {} as FormValues);
+
+  const { control, handleSubmit } = useForm<FormValues>({
+    defaultValues
+  });
+
+  const onSubmit = (data: FormValues) => {
+    console.log('Selected options:', data);
+  };
 
   return (
     <>
@@ -53,39 +78,44 @@ const AnnualEmail = () => {
           {t('home:adminHome.GRT.requesterUpdateEmail.modal.heading')}
         </ModalHeading>
         <p>{t('home:adminHome.GRT.requesterUpdateEmail.modal.content')}</p>
-        <Fieldset>
-          {(
-            t('home:adminHome.GRT.requesterUpdateEmail.modal.list', {
-              returnObjects: true
-            }) as string[]
-          ).map(item => {
-            return <Checkbox id={item} name={item} value={item} label={item} />;
-          })}
-        </Fieldset>
 
-        <ModalFooter>
-          <div className="display-flex flex-gap-3">
-            <Button
-              type="button"
-              // TODO: update to mailto link
-              onClick={() => setModalOpen(false)}
-            >
-              {t(
-                'home:adminHome.GRT.requesterUpdateEmail.modal.openEmailButton'
+        <Form onSubmit={handleSubmit(onSubmit)} className="maxw-none">
+          {Object.entries(list).map(([statusKey, statusLabel]) => (
+            <Controller
+              key={statusKey}
+              name={statusKey}
+              control={control}
+              render={({ field: { ref, ...field } }) => (
+                <CheckboxField
+                  {...field}
+                  id={statusKey}
+                  value={statusKey}
+                  label={statusLabel}
+                />
               )}
-            </Button>
-            <Button
-              type="button"
-              // TODO: copy emails to clipboard
-              onClick={() => setModalOpen(false)}
-              unstyled
-            >
-              {t(
-                'home:adminHome.GRT.requesterUpdateEmail.modal.copyEmailButton'
-              )}
-            </Button>
-          </div>
-        </ModalFooter>
+            />
+          ))}
+
+          <ModalFooter>
+            <div className="display-flex flex-gap-3">
+              <Button type="submit">
+                {t(
+                  'home:adminHome.GRT.requesterUpdateEmail.modal.openEmailButton'
+                )}
+              </Button>
+              <Button
+                type="button"
+                // TODO: copy emails to clipboard
+                onClick={() => setModalOpen(false)}
+                unstyled
+              >
+                {t(
+                  'home:adminHome.GRT.requesterUpdateEmail.modal.copyEmailButton'
+                )}
+              </Button>
+            </div>
+          </ModalFooter>
+        </Form>
       </Modal>
     </>
   );
