@@ -430,9 +430,10 @@ type SetSystemIntakeRelationExistingServiceInput struct {
 }
 
 type SetSystemIntakeRelationExistingSystemInput struct {
-	SystemIntakeID  uuid.UUID `json:"systemIntakeID"`
-	CedarSystemIDs  []string  `json:"cedarSystemIDs"`
-	ContractNumbers []string  `json:"contractNumbers"`
+	SystemIntakeID           uuid.UUID             `json:"systemIntakeID"`
+	CedarSystemIDs           []string              `json:"cedarSystemIDs"`
+	CedarSystemRelationShips []*SystemRelationship `json:"cedarSystemRelationShips,omitempty"`
+	ContractNumbers          []string              `json:"contractNumbers"`
 }
 
 type SetSystemIntakeRelationNewSystemInput struct {
@@ -816,6 +817,11 @@ type SystemIntakeUpdateLCIDInput struct {
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
 }
 
+type SystemRelationship struct {
+	CedarSystemID          *string                 `json:"cedarSystemId,omitempty"`
+	SystemRelationshipType *SystemRelationshipType `json:"systemRelationshipType,omitempty"`
+}
+
 // Data specific to admin notes in the Consult Session category
 // This type doesn't contain any actual data
 type TRBAdminNoteConsultSessionCategoryData struct {
@@ -912,8 +918,9 @@ type UpdateSystemIntakeGRBReviewerInput struct {
 
 // Input data for updating a system intake's relationship to a CEDAR system
 type UpdateSystemIntakeLinkedCedarSystemInput struct {
-	ID            uuid.UUID `json:"id"`
-	CedarSystemID *string   `json:"cedarSystemId,omitempty"`
+	ID                 uuid.UUID               `json:"id"`
+	CedarSystemID      *string                 `json:"cedarSystemId,omitempty"`
+	SystemRelationship *SystemRelationshipType `json:"systemRelationship,omitempty"`
 }
 
 // Input data for updating an IT governance admin note

@@ -1065,11 +1065,27 @@ input UpdateSystemIntakeContractDetailsInput {
 }
 
 """
+Types of System Relationships
+"""
+enum SystemRelationshipType {
+  PRIMARY_SUPPORT
+  PARTIAL_SUPORT
+  USES_IN_TECH_SOLUTION
+  USED_IN_TECH_SOLUTION
+  OTHER
+}
+
+input SystemRelationship {
+  cedarSystemId: String
+  systemRelationshipType: SystemRelationshipType
+}
+"""
 Input data for updating a system intake's relationship to a CEDAR system
 """
 input UpdateSystemIntakeLinkedCedarSystemInput {
   id: UUID!
   cedarSystemId: String
+  systemRelationship: SystemRelationshipType
 }
 
 # RequestRelationType.NEW_SYSTEM
@@ -1082,6 +1098,7 @@ input SetSystemIntakeRelationNewSystemInput {
 input SetSystemIntakeRelationExistingSystemInput {
   systemIntakeID: UUID!
   cedarSystemIDs: [String!]!
+  cedarSystemRelationShips: [SystemRelationship!]
   contractNumbers: [String!]!
 }
 

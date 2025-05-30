@@ -1818,6 +1818,7 @@ export type SetSystemIntakeRelationExistingServiceInput = {
 
 export type SetSystemIntakeRelationExistingSystemInput = {
   cedarSystemIDs: Array<Scalars['String']['input']>;
+  cedarSystemRelationShips?: InputMaybe<Array<SystemRelationship>>;
   contractNumbers: Array<Scalars['String']['input']>;
   systemIntakeID: Scalars['UUID']['input'];
 };
@@ -2645,6 +2646,20 @@ export type SystemIntakeUpdateLCIDInput = {
   systemIntakeID: Scalars['UUID']['input'];
 };
 
+export type SystemRelationship = {
+  cedarSystemId?: InputMaybe<Scalars['String']['input']>;
+  systemRelationshipType?: InputMaybe<SystemRelationshipType>;
+};
+
+/** Types of System Relationships */
+export enum SystemRelationshipType {
+  OTHER = 'OTHER',
+  PARTIAL_SUPORT = 'PARTIAL_SUPORT',
+  PRIMARY_SUPPORT = 'PRIMARY_SUPPORT',
+  USED_IN_TECH_SOLUTION = 'USED_IN_TECH_SOLUTION',
+  USES_IN_TECH_SOLUTION = 'USES_IN_TECH_SOLUTION'
+}
+
 /** Represents an admin note attached to a TRB request */
 export type TRBAdminNote = {
   __typename: 'TRBAdminNote';
@@ -3133,6 +3148,7 @@ export type UpdateSystemIntakeGRBReviewerInput = {
 export type UpdateSystemIntakeLinkedCedarSystemInput = {
   cedarSystemId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['UUID']['input'];
+  systemRelationship?: InputMaybe<SystemRelationshipType>;
 };
 
 /** Input data for updating an IT governance admin note */
