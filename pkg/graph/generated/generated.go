@@ -10885,10 +10885,8 @@ type Query {
   trbRequests(archived: Boolean! = false): [TRBRequest!]! @hasRole(role: EASI_TRB_ADMIN)
   myTrbRequests(archived: Boolean! = false): [TRBRequest!]!
   trbLeadOptions: [UserInfo!]!
-  trbAdminNote(id: UUID!): TRBAdminNote!
+  trbAdminNote(id: UUID!): TRBAdminNote! @hasRole(role: EASI_TRB_ADMIN)
   requesterUpdateEmailData: [RequesterUpdateEmailData!]!
-
-  @hasRole(role: EASI_TRB_ADMIN)
   userAccount(username: String!): UserAccount
 }
 
@@ -40808,8 +40806,35 @@ func (ec *executionContext) _Query_trbAdminNote(ctx context.Context, field graph
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().TrbAdminNote(rctx, fc.Args["id"].(uuid.UUID))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Query().TrbAdminNote(rctx, fc.Args["id"].(uuid.UUID))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_TRB_ADMIN")
+			if err != nil {
+				var zeroVal *models.TRBAdminNote
+				return zeroVal, err
+			}
+			if ec.directives.HasRole == nil {
+				var zeroVal *models.TRBAdminNote
+				return zeroVal, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*models.TRBAdminNote); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cms-enterprise/easi-app/pkg/models.TRBAdminNote`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -40887,35 +40912,8 @@ func (ec *executionContext) _Query_requesterUpdateEmailData(ctx context.Context,
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		directive0 := func(rctx context.Context) (any, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Query().RequesterUpdateEmailData(rctx)
-		}
-
-		directive1 := func(ctx context.Context) (any, error) {
-			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_TRB_ADMIN")
-			if err != nil {
-				var zeroVal []*models.RequesterUpdateEmailData
-				return zeroVal, err
-			}
-			if ec.directives.HasRole == nil {
-				var zeroVal []*models.RequesterUpdateEmailData
-				return zeroVal, errors.New("directive hasRole is not implemented")
-			}
-			return ec.directives.HasRole(ctx, nil, directive0, role)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.([]*models.RequesterUpdateEmailData); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be []*github.com/cms-enterprise/easi-app/pkg/models.RequesterUpdateEmailData`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().RequesterUpdateEmailData(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
