@@ -62,6 +62,36 @@ func CreateTRBRequest(
 
 // UpdateTRBRequest updates a TRB request
 func UpdateTRBRequest(ctx context.Context, id uuid.UUID, changes map[string]interface{}, store *storage.Store) (*models.TRBRequest, error) {
+	// if we are archiving, we must check if the TRB form status is completed, in which case archiving is not allowed
+	val, ok := changes["archived"]
+	if ok {
+		var isArchiving bool
+		switch t := val.(type) {
+		case bool:
+			isArchiving = t
+		case *bool:
+			if t == nil {
+				isArchiving = false
+				break
+			}
+
+			isArchiving = *t
+		default:
+			return nil, errors.New("expected bool or *bool for `archived` key")
+		}
+
+		if isArchiving {
+			existingForm, err := store.GetTRBRequestFormByTRBRequestID(ctx, id)
+			if err != nil {
+				return nil, err
+			}
+
+			if existingForm.Status == models.TRBFormStatusCompleted {
+				return nil, errors.New("cannot archive a completed TRB request")
+			}
+		}
+	}
+
 	existing, err := store.GetTRBRequestByID(ctx, id)
 	if err != nil {
 		return nil, err

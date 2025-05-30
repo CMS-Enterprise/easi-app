@@ -2,6 +2,7 @@ const general = {
   appName: 'Easy Access to System Information (EASi)',
   intake: 'Intake Request',
   businessCase: 'Business Case',
+  cancel: 'Cancel',
   date: {
     day: 'Day',
     month: 'Month',
