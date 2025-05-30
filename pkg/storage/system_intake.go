@@ -679,3 +679,30 @@ func (s *Store) GetRequesterUpdateEmailData(ctx context.Context) ([]*models.Requ
 
 	return data, nil
 }
+
+// GetSystemIntakeByGRBReviewerID retrieves the system intake where the user is a GRB reviewer
+// specified by the reviewer row ID
+func (s *Store) GetSystemIntakeByGRBReviewerID(
+	ctx context.Context,
+	reviewerID uuid.UUID,
+) (*models.SystemIntake, error) {
+	intake := &models.SystemIntake{}
+	err := namedSelect(ctx, s.db, intake, sqlqueries.SystemIntake.GetSystemIntakeByGRBReviewerID, args{
+		"grb_reviewer_id": reviewerID,
+	})
+
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"failed to fetch system intake by GRB reviewer ID",
+			zap.Error(err),
+			zap.String("reviewerID", reviewerID.String()),
+		)
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     intake,
+			Operation: apperrors.QueryFetch,
+		}
+	}
+
+	return intake, nil
+}

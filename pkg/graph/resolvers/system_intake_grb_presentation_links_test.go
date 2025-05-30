@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"bytes"
+	"time"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
@@ -25,7 +26,7 @@ func (s *ResolverSuite) TestSetSystemIntakeGRBPresentationLinks() {
 	s.NotNil(createdLinks)
 }
 
-func (s *ResolverSuite) TestUploadSystemIntakeGRBPresentationDeck() {
+func (s *ResolverSuite) TestUploadSystemIntakeGRBPresentationDeckOnCompletedGRBReview() {
 	input := s.createUploadSystemIntakeGRBPresentationDeckInput(s.createUploadSystemIntakeGRBPresentationDeckFileData())
 
 	// Assert insert portion of upsert
@@ -38,17 +39,37 @@ func (s *ResolverSuite) TestUploadSystemIntakeGRBPresentationDeck() {
 	s.NoError(err)
 	s.NotNil(createdLinks)
 	s.Nil(createdLinks.ModifiedBy)
+}
 
-	// Assert update portion of upsert
-	updatedLinks, err := UploadSystemIntakeGRBPresentationDeck(
+func (s *ResolverSuite) TestUploadSystemIntakeGRBPresentationDeck() {
+	intake, err := CreateSystemIntake(s.testConfigs.Context, s.testConfigs.Store, models.CreateSystemIntakeInput{
+		RequestType: models.SystemIntakeRequestTypeNEW,
+		Requester: &models.SystemIntakeRequesterInput{
+			Name: "Requester Name",
+		},
+	})
+	s.NoError(err)
+	s.NotNil(intake)
+
+	pastTime := time.Now().Add(-24 * time.Hour)
+	intake.GrbReviewType = models.SystemIntakeGRBReviewTypeAsync
+	intake.GrbReviewAsyncEndDate = &pastTime
+	intake, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intake)
+	s.NoError(err)
+
+	input := models.UploadSystemIntakeGRBPresentationDeckInput{
+		SystemIntakeID:           intake.ID,
+		PresentationDeckFileData: s.createUploadSystemIntakeGRBPresentationDeckFileData(),
+	}
+
+	// Assert insert portion of upsert
+	_, err = UploadSystemIntakeGRBPresentationDeck(
 		s.testConfigs.Context,
 		s.testConfigs.Store,
 		s.testConfigs.S3Client,
 		input,
 	)
-	s.NoError(err)
-	s.NotNil(updatedLinks)
-	s.NotNil(updatedLinks.ModifiedBy)
+	s.Error(err)
 }
 
 func (s *ResolverSuite) TestUploadSystemIntakeGRBPresentationDeck_NilFile() {

@@ -22,6 +22,20 @@ import (
 func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, input models.SystemIntakeGRBPresentationLinksInput) (*models.SystemIntakeGRBPresentationLinks, error) {
 	userID := appcontext.Principal(ctx).Account().ID
 
+	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	isComplete, err := IsGRBReviewCompleted(intake)
+	if err != nil {
+		return nil, err
+	}
+
+	if isComplete {
+		return nil, errors.New("cannot set GRB presentation links for completed GRB review")
+	}
+
 	links, err := dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, input.SystemIntakeID)
 	if err != nil {
 		if !errors.Is(err, sql.ErrNoRows) {
@@ -124,6 +138,15 @@ func UploadSystemIntakeGRBPresentationDeck(
 
 	if systemIntake == nil {
 		return nil, errors.New("system intake not found")
+	}
+
+	isReviewCompleted, err := IsGRBReviewCompleted(systemIntake)
+	if err != nil {
+		return nil, err
+	}
+
+	if isReviewCompleted {
+		return nil, errors.New("cannot upload presentation deck for completed GRB review")
 	}
 
 	if systemIntake.EUAUserID.ValueOrZero() != principal.ID() {

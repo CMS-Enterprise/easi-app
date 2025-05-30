@@ -66,6 +66,41 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 		s.False(sender.emailWasSent)
 	})
 
+	s.Run("create GRB Reviewer and add to intake on completed GRB review", func() {
+		emailClient, sender := NewEmailClient()
+		reviewerEUA := "ABCD"
+		votingRole := models.SystemIntakeGRBReviewerVotingRoleVoting
+		grbRole := models.SystemIntakeGRBReviewerRoleAca3021Rep
+
+		pastTime := time.Now().Add(-24 * time.Hour)
+		intake := s.createNewIntake()
+		intake.GrbReviewType = models.SystemIntakeGRBReviewTypeAsync
+		intake.GrbReviewAsyncEndDate = &pastTime
+		intake, err := store.UpdateSystemIntake(ctx, intake)
+		s.NoError(err)
+
+		_ = s.getOrCreateUserAccts(reviewerEUA)
+
+		_, err = CreateSystemIntakeGRBReviewers(
+			ctx,
+			store,
+			emailClient,
+			userhelpers.GetUserInfoAccountInfosWrapperFunc(okta.FetchUserInfos),
+			&models.CreateSystemIntakeGRBReviewersInput{
+				SystemIntakeID: intake.ID,
+				Reviewers: []*models.CreateGRBReviewerInput{
+					{
+						EuaUserID:  reviewerEUA,
+						VotingRole: votingRole,
+						GrbRole:    grbRole,
+					},
+				},
+			},
+		)
+		s.Error(err)
+		s.False(sender.emailWasSent)
+	})
+
 	s.Run("fetch GRB reviewers", func() {
 		intake, reviewers := s.createIntakeAndAddReviewers(
 			&models.CreateGRBReviewerInput{
@@ -129,6 +164,38 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 		s.Equal(newGRBRole, updatedReviewer.GRBReviewerRole)
 	})
 
+	s.Run("update GRB reviewer voting and GRB role on completed intake", func() {
+		reviewerEUA := "ABCD"
+		originalVotingRole := models.SystemIntakeGRBReviewerVotingRoleAlternate
+		originalGRBRole := models.SystemIntakeGRBReviewerRoleAca3021Rep
+		newVotingRole := models.SystemIntakeGRBReviewerVotingRoleVoting
+		newGRBRole := models.SystemIntakeGRBReviewerRoleCmcsRep
+
+		_ = s.getOrCreateUserAcct(reviewerEUA)
+		intake, reviewer := s.createIntakeAndAddReviewer(&models.CreateGRBReviewerInput{
+			EuaUserID:  reviewerEUA,
+			VotingRole: originalVotingRole,
+			GrbRole:    originalGRBRole,
+		})
+
+		pastTime := time.Now().Add(-24 * time.Hour)
+		intake.GrbReviewType = models.SystemIntakeGRBReviewTypeAsync
+		intake.GrbReviewAsyncEndDate = &pastTime
+		_, err := store.UpdateSystemIntake(ctx, intake)
+		s.NoError(err)
+
+		_, err = UpdateSystemIntakeGRBReviewer(
+			ctx,
+			store,
+			&models.UpdateSystemIntakeGRBReviewerInput{
+				ReviewerID: reviewer.ID,
+				VotingRole: newVotingRole,
+				GrbRole:    newGRBRole,
+			},
+		)
+		s.Error(err)
+	})
+
 	s.Run("delete GRB reviewer", func() {
 		reviewerEUA := "ABCD"
 		originalVotingRole := models.SystemIntakeGRBReviewerVotingRoleVoting
@@ -155,6 +222,40 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 		updatedReviewers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{intake.ID})
 		s.NoError(err)
 		s.Len(updatedReviewers, 0)
+	})
+
+	s.Run("delete GRB reviewer on completed intake", func() {
+		reviewerEUA := "ABCD"
+		originalVotingRole := models.SystemIntakeGRBReviewerVotingRoleVoting
+		originalGRBRole := models.SystemIntakeGRBReviewerRoleAca3021Rep
+
+		userAcct := s.getOrCreateUserAcct(reviewerEUA)
+		intake, reviewer := s.createIntakeAndAddReviewer(&models.CreateGRBReviewerInput{
+			EuaUserID:  reviewerEUA,
+			VotingRole: originalVotingRole,
+			GrbRole:    originalGRBRole,
+		})
+
+		reviewers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{intake.ID})
+		s.NoError(err)
+		s.Len(reviewers, 1)
+		s.Equal(userAcct.ID, reviewers[0].UserID)
+
+		pastTime := time.Now().Add(-24 * time.Hour)
+		intake.GrbReviewType = models.SystemIntakeGRBReviewTypeAsync
+		intake.GrbReviewAsyncEndDate = &pastTime
+		intake, err = store.UpdateSystemIntake(ctx, intake)
+		s.NoError(err)
+
+		err = DeleteSystemIntakeGRBReviewer(
+			ctx,
+			store,
+			reviewer.ID,
+		)
+		s.NoError(err)
+
+		_, err = store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{intake.ID})
+		s.Error(err)
 	})
 }
 
