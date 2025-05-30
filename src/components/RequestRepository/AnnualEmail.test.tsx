@@ -86,7 +86,9 @@ describe('AnnualEmail UI & Clipboard Behavior', () => {
     );
 
     fireEvent.click(await screen.findByTestId('button'));
-    fireEvent.click(screen.getByTestId('checkbox-ISSUED'));
+    const checkbox = await screen.findByTestId('checkbox-ISSUED');
+    fireEvent.click(checkbox);
+    await waitFor(() => expect(checkbox).toBeChecked());
 
     fireEvent.click(screen.getByText(/copy emails to clipboard/i));
 
@@ -105,7 +107,9 @@ describe('AnnualEmail UI & Clipboard Behavior', () => {
     );
 
     fireEvent.click(await screen.findByTestId('button'));
-    fireEvent.click(screen.getByTestId('checkbox-EXPIRED'));
+    const checkbox = await screen.findByTestId('checkbox-EXPIRED');
+    fireEvent.click(checkbox);
+    await waitFor(() => expect(checkbox).toBeChecked());
     fireEvent.click(screen.getByText(/copy emails to clipboard/i));
 
     await waitFor(() => {
@@ -123,7 +127,9 @@ describe('AnnualEmail UI & Clipboard Behavior', () => {
     );
 
     fireEvent.click(await screen.findByTestId('button'));
-    fireEvent.click(screen.getByTestId('checkbox-RETIRING_SOON'));
+    const checkbox = await screen.findByTestId('checkbox-RETIRING_SOON');
+    fireEvent.click(checkbox);
+    await waitFor(() => expect(checkbox).toBeChecked());
     fireEvent.click(screen.getByText(/copy emails to clipboard/i));
 
     await waitFor(() => {
@@ -141,7 +147,11 @@ describe('AnnualEmail UI & Clipboard Behavior', () => {
     );
 
     fireEvent.click(await screen.findByTestId('button'));
-    fireEvent.click(screen.getByTestId('checkbox-RETIRED_RECENTLY'));
+
+    const checkbox = await screen.findByTestId('checkbox-RETIRED_RECENTLY');
+    fireEvent.click(checkbox);
+    await waitFor(() => expect(checkbox).toBeChecked());
+
     fireEvent.click(screen.getByText(/copy emails to clipboard/i));
 
     await waitFor(() => {
@@ -166,7 +176,9 @@ describe('AnnualEmail UI & Clipboard Behavior', () => {
     );
 
     fireEvent.click(await screen.findByTestId('button'));
-    fireEvent.click(screen.getByTestId('checkbox-EXPIRED'));
+    const checkbox = await screen.findByTestId('checkbox-EXPIRED');
+    fireEvent.click(checkbox);
+    await waitFor(() => expect(checkbox).toBeChecked());
     fireEvent.click(screen.getByText(/copy emails to clipboard/i));
 
     expect(
