@@ -17,9 +17,24 @@ import Alert from 'components/Alert';
 import CheckboxField from 'components/CheckboxField';
 import Modal from 'components/Modal';
 
-type FormValues = {
-  [key: string]: boolean;
-};
+// Define all possible status keys
+type StatusKey =
+  | 'ISSUED'
+  | 'EXPIRED'
+  | 'RETIRED'
+  | 'EXPIRING_SOON'
+  | 'RETIRING_SOON'
+  | 'RETIRED_RECENTLY';
+
+// Strongly typed form values
+type FormValues = Record<StatusKey, boolean>;
+
+// Typed helper to get entries with strong keys
+function typedEntries<T extends Record<string, any>>(
+  obj: T
+): [keyof T, T[keyof T]][] {
+  return Object.entries(obj) as [keyof T, T[keyof T]][];
+}
 
 const AnnualEmail = () => {
   const { t } = useTranslation('governanceReviewTeam');
@@ -28,14 +43,14 @@ const AnnualEmail = () => {
 
   const { data: emailData } = useGetRequesterUpdateEmailDataQuery();
 
-  const list: Record<string, string> = t(
+  const list: Record<StatusKey, string> = t(
     'home:adminHome.GRT.requesterUpdateEmail.modal.list',
     {
       returnObjects: true
     }
-  );
+  ) as Record<StatusKey, string>;
 
-  const defaultValues = Object.keys(list).reduce((acc, key) => {
+  const defaultValues = typedEntries(list).reduce((acc, [key]) => {
     acc[key] = false;
     return acc;
   }, {} as FormValues);
@@ -47,34 +62,42 @@ const AnnualEmail = () => {
   const formValues = watch();
   const hasSelected = Object.values(formValues).some(Boolean);
 
+  // Returns a deduplicated list of requester emails based on selected statuses and LCID dates
   const getFilteredEmails = (formData: FormValues): string[] => {
+    // Early return if email data is unavailable
     if (!emailData?.requesterUpdateEmailData) return [];
 
+    // Define today's date
     const today = new Date();
+
+    // Define the date 120 days from today
     const in120Days = new Date(today);
     in120Days.setDate(today.getDate() + 120);
 
+    // Define the date 120 days before today
     const past120Days = new Date(today);
     past120Days.setDate(today.getDate() - 120);
 
-    const selectedStatuses = Object.entries(formData)
+    // Extract statuses that the user has checked in the form
+    const selectedStatuses = typedEntries(formData)
       .filter(([, isChecked]) => isChecked)
       .map(([status]) => status);
 
+    // Filter and collect emails that match the selected status criteria
     const emails = emailData.requesterUpdateEmailData
       .filter(entry => {
         const { lcidStatus, lcidExpiresAt, lcidRetiresAt } = entry;
 
-        // Match explicit status keys: ISSUED, EXPIRED, RETIRED
+        // Case 1: Match selected LCID status directly (excluding 'ISSUED' with retirement date)
         if (
           lcidStatus &&
-          selectedStatuses.includes(lcidStatus) &&
-          !(lcidStatus === 'ISSUED' && lcidRetiresAt) // exclude retiring from general ISSUED
+          selectedStatuses.includes(lcidStatus as StatusKey) &&
+          !(lcidStatus === 'ISSUED' && lcidRetiresAt)
         ) {
           return true;
         }
 
-        // Expiring soon logic
+        // Case 2: Expiring soon — LCID expiration is within the next 120 days
         if (
           selectedStatuses.includes('EXPIRING_SOON') &&
           lcidExpiresAt &&
@@ -84,7 +107,7 @@ const AnnualEmail = () => {
           return true;
         }
 
-        // Retiring soon logic
+        // Case 3: Retiring soon — Status is 'ISSUED' and has a retirement date
         if (
           selectedStatuses.includes('RETIRING_SOON') &&
           lcidStatus === 'ISSUED' &&
@@ -93,7 +116,7 @@ const AnnualEmail = () => {
           return true;
         }
 
-        // Retired recently logic
+        // Case 4: Retired recently — Status is 'RETIRED' and retirement date was within the past 120 days
         if (
           selectedStatuses.includes('RETIRED_RECENTLY') &&
           lcidStatus === 'RETIRED' &&
@@ -104,10 +127,13 @@ const AnnualEmail = () => {
           return true;
         }
 
+        // Default: entry doesn't match any selected status
         return false;
       })
+      // Extract requester emails from the filtered entries
       .map(entry => entry.requesterEmail);
 
+    // Return a deduplicated list of emails
     return Array.from(new Set(emails));
   };
 
@@ -180,18 +206,18 @@ const AnnualEmail = () => {
         <p>{t('home:adminHome.GRT.requesterUpdateEmail.modal.content')}</p>
 
         <Form onSubmit={handleSubmit(onSubmit)} className="maxw-none">
-          {Object.entries(list).map(([statusKey, statusLabel]) => (
+          {typedEntries(list).map(([key, statusLabel]) => (
             <Controller
-              key={statusKey}
-              name={statusKey}
+              key={key}
+              name={key}
               control={control}
               render={({ field: { ref, ...field } }) => (
                 <CheckboxField
                   {...field}
-                  id={statusKey}
-                  value={statusKey}
+                  id={key as string}
+                  value={key as string}
                   label={statusLabel}
-                  data-testid={`checkbox-${statusKey}`}
+                  data-testid={`checkbox-${key}`}
                 />
               )}
             />
