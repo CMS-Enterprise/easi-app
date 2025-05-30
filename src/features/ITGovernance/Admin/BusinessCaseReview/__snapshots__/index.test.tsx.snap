@@ -120,6 +120,22 @@ exports[`The GRT Business Case review > matches the snapshot 1`] = `
             <dt
               class="text-bold margin-bottom-05"
             >
+              What internal collaboration or vendor engagement will support the recommended work?
+            </dt>
+            <dd
+              class="description-definition margin-0 text-pre-wrap"
+            />
+          </div>
+        </div>
+        <div
+          class="easi-review-row margin-bottom-3"
+        >
+          <div
+            class="line-height-body-3"
+          >
+            <dt
+              class="text-bold margin-bottom-05"
+            >
               What is the current process that you are using for this work, or how is this need currently being met?
             </dt>
             <dd
@@ -180,6 +196,24 @@ exports[`The GRT Business Case review > matches the snapshot 1`] = `
               class="description-definition margin-0 text-pre-wrap"
             >
               Mock success indicators
+            </dd>
+          </div>
+        </div>
+        <div
+          class="easi-review-row margin-bottom-3"
+        >
+          <div
+            class="line-height-body-3"
+          >
+            <dt
+              class="text-bold margin-bottom-05"
+            >
+              How will you implement or respond to the recommendations provided by the GRT?
+            </dt>
+            <dd
+              class="description-definition margin-0 text-pre-wrap"
+            >
+              N/A
             </dd>
           </div>
         </div>
@@ -245,7 +279,7 @@ exports[`The GRT Business Case review > matches the snapshot 1`] = `
                 <dt
                   class="text-bold margin-bottom-05"
                 >
-                  Preferred solution: Title
+                  Solution Title
                 </dt>
                 <dd
                   class="description-definition margin-0"
@@ -263,7 +297,7 @@ exports[`The GRT Business Case review > matches the snapshot 1`] = `
                 <dt
                   class="text-bold margin-bottom-05"
                 >
-                  Preferred solution: Summary
+                  Summary
                 </dt>
                 <dd
                   class="description-definition margin-0 text-pre-wrap"
@@ -281,12 +315,44 @@ exports[`The GRT Business Case review > matches the snapshot 1`] = `
                 <dt
                   class="text-bold margin-bottom-05"
                 >
-                  Preferred solution: Acquisition approach
+                  Acquisition approach
                 </dt>
                 <dd
                   class="description-definition margin-0 text-pre-wrap"
                 >
                   Mock acquisition approach
+                </dd>
+              </div>
+            </div>
+            <div
+              class="easi-review-row"
+            >
+              <div
+                class="line-height-body-3"
+              >
+                <dt
+                  class="text-bold margin-bottom-05"
+                >
+                  Target release date of contract solicitation
+                </dt>
+                <dd
+                  class="description-definition margin-0 text-pre-wrap"
+                >
+                  03/15/2025
+                </dd>
+              </div>
+              <div
+                class="line-height-body-3"
+              >
+                <dt
+                  class="text-bold margin-bottom-05"
+                >
+                  Target completion date (In production)
+                </dt>
+                <dd
+                  class="description-definition margin-0 text-pre-wrap"
+                >
+                  03/15/2025
                 </dd>
               </div>
             </div>
@@ -351,6 +417,24 @@ exports[`The GRT Business Case review > matches the snapshot 1`] = `
                 <dt
                   class="text-bold margin-bottom-05"
                 >
+                  Identify your project's alignment with Zero Trust principles?
+                </dt>
+                <dd
+                  class="description-definition margin-0 text-pre-wrap"
+                >
+                  Mock Zero Trust
+                </dd>
+              </div>
+            </div>
+            <div
+              class="easi-review-row"
+            >
+              <div
+                class="line-height-body-3"
+              >
+                <dt
+                  class="text-bold margin-bottom-05"
+                >
                   Will your solution have a User Interface, be public facing, or involve outside customers?
                 </dt>
                 <dd
@@ -369,7 +453,25 @@ exports[`The GRT Business Case review > matches the snapshot 1`] = `
                 <dt
                   class="text-bold margin-bottom-05"
                 >
-                  Preferred solution: Pros
+                  Will any workforce training requirements arise as a result of this solution?
+                </dt>
+                <dd
+                  class="description-definition margin-0 text-pre-wrap"
+                >
+                  Mock workforce training requirements
+                </dd>
+              </div>
+            </div>
+            <div
+              class="easi-review-row"
+            >
+              <div
+                class="line-height-body-3"
+              >
+                <dt
+                  class="text-bold margin-bottom-05"
+                >
+                  Pros
                 </dt>
                 <dd
                   class="description-definition margin-0 text-pre-wrap"
@@ -387,7 +489,7 @@ exports[`The GRT Business Case review > matches the snapshot 1`] = `
                 <dt
                   class="text-bold margin-bottom-05"
                 >
-                  Preferred solution: Cons
+                  Cons
                 </dt>
                 <dd
                   class="description-definition margin-0 text-pre-wrap"

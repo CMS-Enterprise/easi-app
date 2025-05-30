@@ -29,6 +29,10 @@ const businessCase = {
       'relevant deadlines (e.g., statutory deadlines that CMS must meet)',
     solutionBenefits: 'the benefits of developing an IT solution for this need'
   },
+  collaborationNeeded:
+    'What internal collaboration or vendor engagement will support the recommended work?',
+  collaborationNeededHelpText:
+    'Provide a brief summary of any internal or external collaborations that you anticipate needing.',
   currentSolutionSummary:
     'What is the current process that you are using for this work, or how is this need currently being met?',
   currentSolutionSummaryHelpText:
@@ -55,6 +59,10 @@ const businessCase = {
     description:
       'We (Project team component) will increase the number of Program-level Release Demos (from a 1/24/2022 baseline of 0 Release Demos) by 1 a year, every year, until finally achieving (and thereafter maintaining) ≥ 2 / year by 2 years after launch (2/15/2024).'
   },
+  responseToGRTFeedback:
+    'How will you implement or respond to the recommendations provided by the GRT?',
+  responseToGRTFeedbackHelpText:
+    'Leave this question blank until after you attend a GRT meeting.',
   alternatives: 'Options and alternatives',
   alternativesDescription: {
     text: [
@@ -125,21 +133,35 @@ const businessCase = {
   solutionAcquisitionApproach: 'Acquisition approach',
   solutionAcquisitionApproachHelpText:
     "Describe the approach to acquiring the products and services required to deliver the system. Responses should address the project team's contracting approach such as the contract vehicle, if it is an IDIQ, sole source vs competition, whether it is a small business set aside, and/or any other relevant information.",
+  targetContractAwardDate: 'Target contract award',
+  targetContractAwardDateHelpText:
+    'If you are unsure, please estimate the date.',
+  targetCompletionDate: 'Target completion of development work (if applicable)',
+  targetCompletionDateHelpText: 'If you are unsure, please estimate the date.',
+  dateFormat: 'Format: mm/dd/yyyy',
   isApproved:
     'Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?',
   isBeingReviewed: 'Is it in the process of getting approved?',
   isBeingReviewedHelpText:
     'Obtaining CMS Approval can be lengthy and solutions that do not have it or are just starting may lead to longer project timelines.',
+  zeroTrustAlignment:
+    "Identify your project's alignment with Zero Trust principles",
+  zeroTrustAlignmentHelpText:
+    "<a>Click here</a> for more information about Zero Trust and CMS's Zero Trust policies.",
   hostingType: 'Do you need to host your solution?',
   hostingTypeCloud: 'Yes, in the cloud (AWS, Azure, etc.)',
   hostingTypeDataCenter: 'Yes, at a data center',
   noHostingNeeded: 'No, hosting is not needed',
   hostingLocation: 'Where are you planning to host?',
+  cloudStrategy:
+    'What is your cloud strategy or cloud migration strategy and how will you implement it?',
   cloudServiceType:
     'What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?',
   dataCenterLocation: 'Which data center do you plan to host it at?',
   hasUserInterface:
     'Will your solution have a user interface, be public facing, or involve outside customers?',
+  workforceTrainingReqs:
+    'Will any workforce training requirements arise as a result of this solution?',
   prosAndCons: 'Pros and cons',
   prosAndConsHelpText:
     'Summarize the capabilities of the recommended technology or tools and how they will or will not meet user and stakeholder requirements.',

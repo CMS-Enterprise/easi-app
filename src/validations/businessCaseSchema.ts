@@ -95,6 +95,14 @@ const finalSolutionSchema = (solutionType: string) =>
             .trim()
             .required(`Tell us where ${solutionType} solution will be hosted`)
         }),
+      cloudStrategy: Yup.string().when('type', {
+        is: 'cloud',
+        then: Yup.string()
+          .trim()
+          .required(
+            `Tell us about the cloud strategy or migration strategy that will be used for the ${solutionType} solution`
+          )
+      }),
       cloudServiceType: Yup.string().when('type', {
         is: 'cloud',
         then: Yup.string()
@@ -106,6 +114,9 @@ const finalSolutionSchema = (solutionType: string) =>
     }),
     hasUserInterface: Yup.string().required(
       `Tell us whether the ${solutionType} solution will have user interface`
+    ),
+    workforceTrainingReqs: Yup.string().required(
+      `Tell us whether any workforce training will be required as a part of ${solutionType}`
     ),
     pros: Yup.string()
       .trim()
@@ -144,6 +155,11 @@ export const BusinessCaseFinalValidationSchema = {
     businessNeed: Yup.string()
       .trim()
       .required('Tell us what the business or user need is'),
+    collaborationNeeded: Yup.string()
+      .trim()
+      .required(
+        'Tell us what internal collaboration or vendor engagement will support this work'
+      ),
     currentSolutionSummary: Yup.string()
       .trim()
       .required('Give us a summary of the current solution'),
