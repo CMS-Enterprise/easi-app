@@ -102,7 +102,7 @@ func calcSystemIntakeGRBMeetingStatusRequester(intake *models.SystemIntake, curr
 	case models.SystemIntakeGRBReviewTypeStandard:
 		return calcSystemIntakeStandardGRBReviewStatusRequester(intake.GRBDate, currentTime)
 	case models.SystemIntakeGRBReviewTypeAsync:
-		return calcSystemIntakeAsyncGRBReviewStatusRequester(intake.GRBReviewStartedAt, intake.GrbReviewAsyncEndDate, currentTime)
+		return calcSystemIntakeAsyncGRBReviewStatusRequester(intake.GRBReviewStartedAt, intake.GrbReviewAsyncEndDate, intake.GrbReviewAsyncManualEndDate, currentTime)
 	}
 
 	return models.SISRGrbMeetingAwaitingDecision
@@ -116,12 +116,12 @@ func calcSystemIntakeStandardGRBReviewStatusRequester(grbDate *time.Time, curren
 	return models.SISRGrbMeetingAwaitingDecision
 }
 
-func calcSystemIntakeAsyncGRBReviewStatusRequester(startDate *time.Time, endDate *time.Time, currentTime time.Time) models.SystemIntakeStatusRequester {
+func calcSystemIntakeAsyncGRBReviewStatusRequester(startDate *time.Time, endDate *time.Time, manualEndDate *time.Time, currentTime time.Time) models.SystemIntakeStatusRequester {
 	if startDate == nil || endDate == nil {
 		return models.SISRGrbMeetingReady
 	}
 
-	if startDate.Before(currentTime) && endDate.After(currentTime) {
+	if manualEndDate == nil && startDate.Before(currentTime) && endDate.After(currentTime) {
 		return models.SISRGrbReviewInProgress
 	}
 

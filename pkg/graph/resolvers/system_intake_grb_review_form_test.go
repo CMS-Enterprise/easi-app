@@ -423,4 +423,7 @@ func (s *ResolverSuite) TestRestartGRBReviewAsync() {
 	// Check the new end date
 	s.NotNil(updatedPayload.SystemIntake.GrbReviewAsyncEndDate)
 	s.WithinDuration(input.NewGRBEndDate, *updatedPayload.SystemIntake.GrbReviewAsyncEndDate, time.Second)
+
+	// Check that manual end date is nil
+	s.Nil(updatedPayload.SystemIntake.GrbReviewAsyncManualEndDate)
 }

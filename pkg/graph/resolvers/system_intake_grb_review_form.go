@@ -252,6 +252,9 @@ func RestartGRBReviewAsync(
 	// Set the new end date
 	intake.GrbReviewAsyncEndDate = &input.NewGRBEndDate
 
+	// Reset manual end date
+	intake.GrbReviewAsyncManualEndDate = nil
+
 	// Update system intake
 	updatedIntake, err := store.UpdateSystemIntake(ctx, intake)
 	if err != nil {
