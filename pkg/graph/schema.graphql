@@ -2540,6 +2540,8 @@ enum SystemRelationshipType {
 The data needed to define system relationship in system intake
 """
 input SystemIntakeRelationshipInput {
+  systemId: UUID
+  systemIntakeSystemId: UUID
   systemRelationshipType: SystemRelationshipType!
   otherTypeDescription: String # Optional -- only used if OTHER_TYPE_DESCRIPTION is selected
 }
@@ -2548,6 +2550,8 @@ input SystemIntakeRelationshipInput {
 The data needed to define system relationship in system intake
 """
 type CreateSystemIntakeSystemRelationshipPayload {
+  systemId: UUID
+  systemIntakeSystemId: UUID
   systemRelationshipType: SystemRelationshipType!
   otherTypeDescription: String # Optional -- only used if OTHER_TYPE_DESCRIPTION is selected
 }

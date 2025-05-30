@@ -360,6 +360,7 @@ func setSystemIntakeRelationExistingService(
 	}
 
 	systemRelationship := &models.SystemIntakeRelationship{
+		SystemID:               intakeID,
 		SystemRelationshipType: "",
 		OtherTypeDescription:   "",
 	}
@@ -602,6 +603,7 @@ func createSystemIntakeRelationship(
 ) (*models.CreateSystemIntakeSystemRelationshipPayload, error) {
 
 	input := models.SystemIntakeRelationshipInput{
+		SystemID:               &systemRelationship.SystemID,
 		SystemRelationshipType: systemRelationship.SystemRelationshipType,
 		OtherTypeDescription:   &systemRelationship.OtherTypeDescription,
 	}

@@ -3,8 +3,6 @@ package storage
 import (
 	"context"
 
-	"github.com/google/uuid"
-
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
@@ -21,18 +19,18 @@ func (s *Store) CreateSystemIntakeRelationship(ctx context.Context, systemIntake
 		systemIntakeRelationship.UpdatedAt = &now
 	}
 
-	systemIntakeRelationship.ID = uuid.New()
+	// systemIntakeRelationship.ID = uuid.New()
 	const createSystemIntakeRelationshipSQL = `
 		INSERT INTO system_relationships (
-			id,
 			system_id,
+			system_intake_systems_id,
 			system_relationship_type,
-			other_type_description
+			other_description
 		) VALUES (
 		 	:id,
 			:system_id,
 			:system_relationship_type,
-			:other_type_description
+			:other_description
 		)`
 	_, err := s.db.NamedExec(
 		createSystemIntakeRelationshipSQL,

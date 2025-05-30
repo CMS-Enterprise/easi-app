@@ -592,6 +592,8 @@ export type CreateSystemIntakeNoteInput = {
 export type CreateSystemIntakeSystemRelationshipPayload = {
   __typename: 'CreateSystemIntakeSystemRelationshipPayload';
   otherTypeDescription?: Maybe<Scalars['String']['output']>;
+  systemId?: Maybe<Scalars['UUID']['output']>;
+  systemIntakeSystemId?: Maybe<Scalars['UUID']['output']>;
   systemRelationshipType: SystemRelationshipType;
 };
 
@@ -2497,6 +2499,8 @@ export type SystemIntakeRejectIntakeInput = {
 /** The data needed to define system relationship in system intake */
 export type SystemIntakeRelationshipInput = {
   otherTypeDescription?: InputMaybe<Scalars['String']['input']>;
+  systemId?: InputMaybe<Scalars['UUID']['input']>;
+  systemIntakeSystemId?: InputMaybe<Scalars['UUID']['input']>;
   systemRelationshipType: SystemRelationshipType;
 };
 

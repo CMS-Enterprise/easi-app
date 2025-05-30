@@ -468,6 +468,8 @@ type ComplexityRoot struct {
 
 	CreateSystemIntakeSystemRelationshipPayload struct {
 		OtherTypeDescription   func(childComplexity int) int
+		SystemID               func(childComplexity int) int
+		SystemIntakeSystemID   func(childComplexity int) int
 		SystemRelationshipType func(childComplexity int) int
 	}
 
@@ -3679,6 +3681,20 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.CreateSystemIntakeSystemRelationshipPayload.OtherTypeDescription(childComplexity), true
+
+	case "CreateSystemIntakeSystemRelationshipPayload.systemId":
+		if e.complexity.CreateSystemIntakeSystemRelationshipPayload.SystemID == nil {
+			break
+		}
+
+		return e.complexity.CreateSystemIntakeSystemRelationshipPayload.SystemID(childComplexity), true
+
+	case "CreateSystemIntakeSystemRelationshipPayload.systemIntakeSystemId":
+		if e.complexity.CreateSystemIntakeSystemRelationshipPayload.SystemIntakeSystemID == nil {
+			break
+		}
+
+		return e.complexity.CreateSystemIntakeSystemRelationshipPayload.SystemIntakeSystemID(childComplexity), true
 
 	case "CreateSystemIntakeSystemRelationshipPayload.systemRelationshipType":
 		if e.complexity.CreateSystemIntakeSystemRelationshipPayload.SystemRelationshipType == nil {
@@ -10725,6 +10741,8 @@ enum SystemRelationshipType {
 The data needed to define system relationship in system intake
 """
 input SystemIntakeRelationshipInput {
+  systemId: UUID
+  systemIntakeSystemId: UUID
   systemRelationshipType: SystemRelationshipType!
   otherTypeDescription: String # Optional -- only used if OTHER_TYPE_DESCRIPTION is selected
 }
@@ -10733,6 +10751,8 @@ input SystemIntakeRelationshipInput {
 The data needed to define system relationship in system intake
 """
 type CreateSystemIntakeSystemRelationshipPayload {
+  systemId: UUID
+  systemIntakeSystemId: UUID
   systemRelationshipType: SystemRelationshipType!
   otherTypeDescription: String # Optional -- only used if OTHER_TYPE_DESCRIPTION is selected
 }
@@ -28409,6 +28429,88 @@ func (ec *executionContext) fieldContext_CreateSystemIntakeGRBReviewersPayload_r
 	return fc, nil
 }
 
+func (ec *executionContext) _CreateSystemIntakeSystemRelationshipPayload_systemId(ctx context.Context, field graphql.CollectedField, obj *models.CreateSystemIntakeSystemRelationshipPayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CreateSystemIntakeSystemRelationshipPayload_systemId(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SystemID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*uuid.UUID)
+	fc.Result = res
+	return ec.marshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CreateSystemIntakeSystemRelationshipPayload_systemId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CreateSystemIntakeSystemRelationshipPayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CreateSystemIntakeSystemRelationshipPayload_systemIntakeSystemId(ctx context.Context, field graphql.CollectedField, obj *models.CreateSystemIntakeSystemRelationshipPayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CreateSystemIntakeSystemRelationshipPayload_systemIntakeSystemId(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SystemIntakeSystemID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*uuid.UUID)
+	fc.Result = res
+	return ec.marshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CreateSystemIntakeSystemRelationshipPayload_systemIntakeSystemId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CreateSystemIntakeSystemRelationshipPayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _CreateSystemIntakeSystemRelationshipPayload_systemRelationshipType(ctx context.Context, field graphql.CollectedField, obj *models.CreateSystemIntakeSystemRelationshipPayload) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_CreateSystemIntakeSystemRelationshipPayload_systemRelationshipType(ctx, field)
 	if err != nil {
@@ -32993,6 +33095,10 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntakeSystemRelati
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "systemId":
+				return ec.fieldContext_CreateSystemIntakeSystemRelationshipPayload_systemId(ctx, field)
+			case "systemIntakeSystemId":
+				return ec.fieldContext_CreateSystemIntakeSystemRelationshipPayload_systemIntakeSystemId(ctx, field)
 			case "systemRelationshipType":
 				return ec.fieldContext_CreateSystemIntakeSystemRelationshipPayload_systemRelationshipType(ctx, field)
 			case "otherTypeDescription":
@@ -63957,13 +64063,27 @@ func (ec *executionContext) unmarshalInputSystemIntakeRelationshipInput(ctx cont
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemRelationshipType", "otherTypeDescription"}
+	fieldsInOrder := [...]string{"systemId", "systemIntakeSystemId", "systemRelationshipType", "otherTypeDescription"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
+		case "systemId":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemId"))
+			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SystemID = data
+		case "systemIntakeSystemId":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeSystemId"))
+			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SystemIntakeSystemID = data
 		case "systemRelationshipType":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemRelationshipType"))
 			data, err := ec.unmarshalNSystemRelationshipType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemRelationshipType(ctx, v)
@@ -67668,6 +67788,10 @@ func (ec *executionContext) _CreateSystemIntakeSystemRelationshipPayload(ctx con
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("CreateSystemIntakeSystemRelationshipPayload")
+		case "systemId":
+			out.Values[i] = ec._CreateSystemIntakeSystemRelationshipPayload_systemId(ctx, field, obj)
+		case "systemIntakeSystemId":
+			out.Values[i] = ec._CreateSystemIntakeSystemRelationshipPayload_systemIntakeSystemId(ctx, field, obj)
 		case "systemRelationshipType":
 			out.Values[i] = ec._CreateSystemIntakeSystemRelationshipPayload_systemRelationshipType(ctx, field, obj)
 			if out.Values[i] == graphql.Null {

@@ -43,6 +43,7 @@ func CreateSystemIntakeSystemRelationship(
 ) (*models.CreateSystemIntakeSystemRelationshipPayload, error) {
 
 	relationship := &models.SystemIntakeRelationship{
+		SystemID:               *input.SystemID,
 		SystemRelationshipType: input.SystemRelationshipType,
 		OtherTypeDescription: func() string {
 			if input.OtherTypeDescription != nil {

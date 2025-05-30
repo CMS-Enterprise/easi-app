@@ -208,6 +208,8 @@ type CreateSystemIntakeNoteInput struct {
 
 // The data needed to define system relationship in system intake
 type CreateSystemIntakeSystemRelationshipPayload struct {
+	SystemID               *uuid.UUID             `json:"systemId,omitempty"`
+	SystemIntakeSystemID   *uuid.UUID             `json:"systemIntakeSystemId,omitempty"`
 	SystemRelationshipType SystemRelationshipType `json:"systemRelationshipType"`
 	OtherTypeDescription   *string                `json:"otherTypeDescription,omitempty"`
 }
@@ -755,6 +757,8 @@ type SystemIntakeRejectIntakeInput struct {
 
 // The data needed to define system relationship in system intake
 type SystemIntakeRelationshipInput struct {
+	SystemID               *uuid.UUID             `json:"systemId,omitempty"`
+	SystemIntakeSystemID   *uuid.UUID             `json:"systemIntakeSystemId,omitempty"`
 	SystemRelationshipType SystemRelationshipType `json:"systemRelationshipType"`
 	OtherTypeDescription   *string                `json:"otherTypeDescription,omitempty"`
 }
