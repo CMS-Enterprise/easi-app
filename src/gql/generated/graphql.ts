@@ -588,15 +588,6 @@ export type CreateSystemIntakeNoteInput = {
   intakeId: Scalars['UUID']['input'];
 };
 
-/** The data needed to define system relationship in system intake */
-export type CreateSystemIntakeSystemRelationshipPayload = {
-  __typename: 'CreateSystemIntakeSystemRelationshipPayload';
-  otherTypeDescription?: Maybe<Scalars['String']['output']>;
-  systemId?: Maybe<Scalars['UUID']['output']>;
-  systemIntakeSystemId?: Maybe<Scalars['UUID']['output']>;
-  systemRelationshipType: SystemRelationshipType;
-};
-
 /** The data needed to create a TRB admin note with the Consult Session category */
 export type CreateTRBAdminNoteConsultSessionInput = {
   noteText: Scalars['HTML']['input'];
@@ -984,7 +975,6 @@ export type Mutation = {
   createSystemIntakeGRBDiscussionReply?: Maybe<SystemIntakeGRBReviewDiscussionPost>;
   createSystemIntakeGRBReviewers?: Maybe<CreateSystemIntakeGRBReviewersPayload>;
   createSystemIntakeNote?: Maybe<SystemIntakeNote>;
-  createSystemIntakeSystemRelationship?: Maybe<CreateSystemIntakeSystemRelationshipPayload>;
   createTRBAdminNoteConsultSession: TRBAdminNote;
   createTRBAdminNoteGeneralRequest: TRBAdminNote;
   createTRBAdminNoteGuidanceLetter: TRBAdminNote;
@@ -1183,12 +1173,6 @@ export type MutationCreateSystemIntakeGRBReviewersArgs = {
 /** Defines the mutations for the schema */
 export type MutationCreateSystemIntakeNoteArgs = {
   input: CreateSystemIntakeNoteInput;
-};
-
-
-/** Defines the mutations for the schema */
-export type MutationCreateSystemIntakeSystemRelationshipArgs = {
-  input: SystemIntakeRelationshipInput;
 };
 
 
@@ -2496,14 +2480,6 @@ export type SystemIntakeRejectIntakeInput = {
   trbFollowUp: SystemIntakeTRBFollowUp;
 };
 
-/** The data needed to define system relationship in system intake */
-export type SystemIntakeRelationshipInput = {
-  otherTypeDescription?: InputMaybe<Scalars['String']['input']>;
-  systemId?: InputMaybe<Scalars['UUID']['input']>;
-  systemIntakeSystemId?: InputMaybe<Scalars['UUID']['input']>;
-  systemRelationshipType: SystemRelationshipType;
-};
-
 /** Input for creating a Reopen Request Action in Admin Actions v2 */
 export type SystemIntakeReopenRequestInput = {
   additionalInfo?: InputMaybe<Scalars['HTML']['input']>;
@@ -2668,15 +2644,6 @@ export type SystemIntakeUpdateLCIDInput = {
   scope?: InputMaybe<Scalars['HTML']['input']>;
   systemIntakeID: Scalars['UUID']['input'];
 };
-
-/** A list of the possible system relationship types */
-export enum SystemRelationshipType {
-  OTHER_TYPE_DESCRIPTION = 'OTHER_TYPE_DESCRIPTION',
-  PARTIAL_SUPORT = 'PARTIAL_SUPORT',
-  PRIMARY_SUPPORT = 'PRIMARY_SUPPORT',
-  USES_REQUEST = 'USES_REQUEST',
-  USES_SYSTEM = 'USES_SYSTEM'
-}
 
 /** Represents an admin note attached to a TRB request */
 export type TRBAdminNote = {

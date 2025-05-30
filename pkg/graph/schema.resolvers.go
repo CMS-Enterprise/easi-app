@@ -624,11 +624,6 @@ func (r *mutationResolver) UnlinkSystemIntakeRelation(ctx context.Context, intak
 	}, nil
 }
 
-// CreateSystemIntakeSystemRelationship is the resolver for the createSystemIntakeSystemRelationship field.
-func (r *mutationResolver) CreateSystemIntakeSystemRelationship(ctx context.Context, input models.SystemIntakeRelationshipInput) (*models.CreateSystemIntakeSystemRelationshipPayload, error) {
-	return resolvers.CreateSystemIntakeSystemRelationship(ctx, r.store, input)
-}
-
 // CreateSystemIntakeContact is the resolver for the createSystemIntakeContact field.
 func (r *mutationResolver) CreateSystemIntakeContact(ctx context.Context, input models.CreateSystemIntakeContactInput) (*models.CreateSystemIntakeContactPayload, error) {
 	return resolvers.CreateSystemIntakeContact(ctx, r.store, input)

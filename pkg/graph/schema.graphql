@@ -2524,46 +2524,6 @@ input ReopenTRBRequestInput {
   notifyEuaIds: [String!]!
 }
 
-
-"""
-A list of the possible system relationship types
-"""
-enum SystemRelationshipType {
-  PRIMARY_SUPPORT
-  PARTIAL_SUPORT
-  USES_SYSTEM
-  USES_REQUEST
-  OTHER_TYPE_DESCRIPTION
-}
-
-"""
-The data needed to define system relationship in system intake
-"""
-input SystemIntakeRelationshipInput {
-  systemId: UUID
-  systemIntakeSystemId: UUID
-  systemRelationshipType: SystemRelationshipType!
-  otherTypeDescription: String # Optional -- only used if OTHER_TYPE_DESCRIPTION is selected
-}
-
-"""
-The data needed to define system relationship in system intake
-"""
-type CreateSystemIntakeSystemRelationshipPayload {
-  systemId: UUID
-  systemIntakeSystemId: UUID
-  systemRelationshipType: SystemRelationshipType!
-  otherTypeDescription: String # Optional -- only used if OTHER_TYPE_DESCRIPTION is selected
-}
-
-# """
-# The payload when retrieving all system relationships data
-# """
-# type SystemIntakeRelationshipsPayload {
-#   systemRelationshipTypes: [SystemRelationshipType!]!
-#   otherTypeDescription: String
-# }
-
 """
 Defines the mutations for the schema
 """
@@ -2639,9 +2599,6 @@ type Mutation {
   setSystemIntakeRelationExistingSystem(input: SetSystemIntakeRelationExistingSystemInput): UpdateSystemIntakePayload
   setSystemIntakeRelationExistingService(input: SetSystemIntakeRelationExistingServiceInput): UpdateSystemIntakePayload
   unlinkSystemIntakeRelation(intakeID: UUID!): UpdateSystemIntakePayload
-  createSystemIntakeSystemRelationship(
-    input: SystemIntakeRelationshipInput!
-  ): CreateSystemIntakeSystemRelationshipPayload
 
   createSystemIntakeContact(input: CreateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   updateSystemIntakeContact(input: UpdateSystemIntakeContactInput!): CreateSystemIntakeContactPayload

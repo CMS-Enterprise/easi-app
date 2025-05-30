@@ -6,18 +6,14 @@ CREATE TYPE system_relationship_type AS ENUM (
     'OTHER'
 );
 
--- UPDATE system_intake_systems SET relationship_type = 'PRIMARY_SUPPORT';
--- If we make a new table, there will be no data for this
--- We could populate it, we could allow the front end to display blank
--- It sort of makes sense to leave it blank since we don't really know that it is PRIMARY SUPPORT
+ALTER TABLE system_intake_systems ADD COLUMN relationship_type SYSTEM_RELATIONSHIP_TYPE[];
 
-CREATE TABLE system_relationships (
-    system_id UUID REFERENCES system_intake_systems(id),
-    system_intake_systems_id UUID REFERENCES system_intake_systems(id),
-    system_relationship_type SYSTEM_RELATIONSHIP_TYPE NOT NULL,
-    other_description TEXT,
-    PRIMARY KEY(system_id, system_relationship_type)
+ALTER TABLE system_intake_systems ADD COLUMN other_type TEXT;
+
+ALTER TABLE system_intake_systems
+ADD CONSTRAINT system_intake_systems_check_other_type_only_if_other
+CHECK (
+    other_type IS NULL
+    OR relationship_type @> ARRAY['OTHER']::SYSTEM_RELATIONSHIP_TYPE[] -- does the array contain OTHER?
 );
-
-ALTER TABLE system_relationships ADD CONSTRAINT system_intake_systems_other_description_is_null_unless_system_relationship_type_is_other 
-CHECK ((system_relationship_type = 'OTHER') = (other_description IS NOT NULL AND other_description != '')); 
+COMMENT ON CONSTRAINT system_intake_systems_check_other_type_only_if_other ON system_intake_systems IS 'Ensures that if other_type can only be provided if the relationship_type array includes the OTHER option.';
