@@ -395,7 +395,7 @@ end
 
 namespace :gql do
   task :lint_schema do
-    sh "yarn run graphql-schema-linter pkg/graph/schema.graphql"
+    sh "yarn run graphql-schema-linter 'pkg/graph/**/*.graphql'"
   end
 
   namespace :generate do
@@ -413,7 +413,7 @@ namespace :gql do
 
          `go install golang.org/x/tools/cmd/goimports@latest` if !$?.success?
 
-         sh "goimports -w -local github.com/cms-enterprise/easi-app pkg/graph/schema.resolvers.go" if $?.success?
+         sh "goimports -w -local github.com/cms-enterprise/easi-app pkg/graph/resolvers" if $?.success?
 
         end
       end
