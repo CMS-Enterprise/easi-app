@@ -2037,6 +2037,39 @@
 					"response": []
 				},
 				{
+					"name": "Restart Async GRB Review",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation restartGRBReviewAsync(\n  $input: RestartGRBReviewInput!\n) {\n  restartGRBReviewAsync(input: $input) {\n    systemIntake {\n      grbReviewStartedAt\n      grbReviewAsyncEndDate\n      grbReviewAsyncManualEndDate\n\n      statusAdmin\n      grbReviewAsyncStatus\n\n      itGovTaskStatuses {\n        grbMeetingStatus\n      }\n\n      grbVotingInformation {\n        votingStatus\n      }\n    }\n  }\n}",
+								"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n    \"newGRBEndDate\": \"2030-03-10T14:00:00Z\"\r\n  }\r\n}"
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Update System Intake GRB Review Form Presentation (Standard)",
 					"event": [
 						{

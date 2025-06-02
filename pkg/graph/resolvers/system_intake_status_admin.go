@@ -92,7 +92,7 @@ func calcSystemIntakeGRBMeetingStatusAdmin(intake *models.SystemIntake) models.S
 	case models.SystemIntakeGRBReviewTypeStandard:
 		return calcSystemIntakeStandardGRBReviewStatusAdmin(intake.GRBDate)
 	case models.SystemIntakeGRBReviewTypeAsync:
-		return calcSystemIntakeAsyncGRBReviewStatusAdmin(intake.GRBReviewStartedAt, intake.GrbReviewAsyncEndDate)
+		return calcSystemIntakeAsyncGRBReviewStatusAdmin(intake.GRBReviewStartedAt, intake.GrbReviewAsyncEndDate, intake.GrbReviewAsyncManualEndDate)
 	}
 
 	return models.SISAGrbReviewComplete
@@ -108,13 +108,13 @@ func calcSystemIntakeStandardGRBReviewStatusAdmin(grbDate *time.Time) models.Sys
 	return models.SISAGrbReviewComplete
 }
 
-func calcSystemIntakeAsyncGRBReviewStatusAdmin(startDate *time.Time, endDate *time.Time) models.SystemIntakeStatusAdmin {
+func calcSystemIntakeAsyncGRBReviewStatusAdmin(startDate *time.Time, endDate *time.Time, manualEndDate *time.Time) models.SystemIntakeStatusAdmin {
 	if startDate == nil || endDate == nil {
 		return models.SISAGrbMeetingReady
 	}
 
 	now := time.Now()
-	if startDate.Before(now) && endDate.After(now) {
+	if manualEndDate == nil && startDate.Before(now) && endDate.After(now) {
 		return models.SISAGrbReviewInProgress
 	}
 

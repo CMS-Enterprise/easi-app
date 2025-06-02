@@ -184,6 +184,21 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			expectedStatus: models.SISAGrbReviewComplete,
 			expectError:    false,
 		},
+		{
+			testCase: "Async GRB - Review Complete. Voting ended manually",
+			intake: models.SystemIntake{
+				Step:                        models.SystemIntakeStepGRBMEETING,
+				RequestFormState:            models.SIRFSSubmitted,
+				DecisionState:               models.SIDSNoDecision,
+				State:                       models.SystemIntakeStateOpen,
+				GrbReviewType:               models.SystemIntakeGRBReviewTypeAsync,
+				GRBReviewStartedAt:          helpers.PointerTo(yesterday.AddDate(0, 0, -2)),
+				GrbReviewAsyncEndDate:       &tomorrow,
+				GrbReviewAsyncManualEndDate: helpers.PointerTo(yesterday.AddDate(0, 0, -1)),
+			},
+			expectedStatus: models.SISAGrbReviewComplete,
+			expectError:    false,
+		},
 	}
 
 	draftBizCaseTests := []testSystemIntakeAdminStatusType{
