@@ -118,7 +118,12 @@ const RequestOverview = ({
 
       <section className="grid-container">
         {lcidRetiringSoon && (
-          <Alert type="info" slim className="margin-top-2 margin-bottom-neg-1">
+          <Alert
+            type="info"
+            slim
+            className="margin-top-2 margin-bottom-neg-1"
+            data-testid="lcid-retiring-soon-alert"
+          >
             {t('lcidAlertMessage', {
               lcid: systemIntake?.lcid,
               date: formatDateUtc(systemIntake?.lcidRetiresAt, 'MM/dd/yyyy')
