@@ -987,6 +987,17 @@ func main() {
 		time.Now().AddDate(0, 0, 5),
 	)
 
+	// expiring soon
+	intakeID = uuid.New()
+	makeSystemIntakeAndIssueLCID(
+		ctx,
+		"With LCID expiring soon 3",
+		&intakeID,
+		mock.Batman,
+		store,
+		time.Now().AddDate(0, 0, 5),
+	)
+
 	// expired
 	intakeID = uuid.New()
 	makeSystemIntakeAndIssueLCID(
