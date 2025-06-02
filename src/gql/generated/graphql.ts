@@ -1574,6 +1574,7 @@ export type Query = {
   myCedarSystems: Array<CedarSystem>;
   mySystemIntakes: Array<SystemIntake>;
   myTrbRequests: Array<TRBRequest>;
+  removeThis?: Maybe<SystemRelationship>;
   requesterUpdateEmailData: Array<RequesterUpdateEmailData>;
   roleTypes: Array<CedarRoleType>;
   roles: Array<CedarRole>;
@@ -2644,6 +2645,14 @@ export type SystemIntakeUpdateLCIDInput = {
   reason?: InputMaybe<Scalars['HTML']['input']>;
   scope?: InputMaybe<Scalars['HTML']['input']>;
   systemIntakeID: Scalars['UUID']['input'];
+};
+
+/** TODO This comment */
+export type SystemRelationship = {
+  __typename: 'SystemRelationship';
+  cedarSystemId?: Maybe<Scalars['String']['output']>;
+  otherTypeDescription?: Maybe<Scalars['String']['output']>;
+  systemRelationshipType: Array<Scalars['String']['output']>;
 };
 
 /** TODO This comment */

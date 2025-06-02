@@ -650,6 +650,7 @@ type ComplexityRoot struct {
 		MyCedarSystems                   func(childComplexity int) int
 		MySystemIntakes                  func(childComplexity int) int
 		MyTrbRequests                    func(childComplexity int, archived bool) int
+		RemoveThis                       func(childComplexity int) int
 		RequesterUpdateEmailData         func(childComplexity int) int
 		RoleTypes                        func(childComplexity int) int
 		Roles                            func(childComplexity int, cedarSystemID string, roleTypeID *string) int
@@ -947,6 +948,12 @@ type ComplexityRoot struct {
 		Component func(childComplexity int) int
 		Email     func(childComplexity int) int
 		Name      func(childComplexity int) int
+	}
+
+	SystemRelationship struct {
+		CedarSystemID          func(childComplexity int) int
+		OtherTypeDescription   func(childComplexity int) int
+		SystemRelationshipType func(childComplexity int) int
 	}
 
 	TRBAdminNote struct {
@@ -1344,6 +1351,7 @@ type QueryResolver interface {
 	TrbLeadOptions(ctx context.Context) ([]*models.UserInfo, error)
 	TrbAdminNote(ctx context.Context, id uuid.UUID) (*models.TRBAdminNote, error)
 	RequesterUpdateEmailData(ctx context.Context) ([]*models.RequesterUpdateEmailData, error)
+	RemoveThis(ctx context.Context) (*models.SystemRelationship, error)
 	UserAccount(ctx context.Context, username string) (*authentication.UserAccount, error)
 }
 type SystemIntakeResolver interface {
@@ -5159,6 +5167,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Query.MyTrbRequests(childComplexity, args["archived"].(bool)), true
 
+	case "Query.removeThis":
+		if e.complexity.Query.RemoveThis == nil {
+			break
+		}
+
+		return e.complexity.Query.RemoveThis(childComplexity), true
+
 	case "Query.requesterUpdateEmailData":
 		if e.complexity.Query.RequesterUpdateEmailData == nil {
 			break
@@ -6736,6 +6751,27 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.SystemIntakeRequester.Name(childComplexity), true
+
+	case "SystemRelationship.cedarSystemId":
+		if e.complexity.SystemRelationship.CedarSystemID == nil {
+			break
+		}
+
+		return e.complexity.SystemRelationship.CedarSystemID(childComplexity), true
+
+	case "SystemRelationship.otherTypeDescription":
+		if e.complexity.SystemRelationship.OtherTypeDescription == nil {
+			break
+		}
+
+		return e.complexity.SystemRelationship.OtherTypeDescription(childComplexity), true
+
+	case "SystemRelationship.systemRelationshipType":
+		if e.complexity.SystemRelationship.SystemRelationshipType == nil {
+			break
+		}
+
+		return e.complexity.SystemRelationship.SystemRelationshipType(childComplexity), true
 
 	case "TRBAdminNote.author":
 		if e.complexity.TRBAdminNote.Author == nil {
@@ -9226,6 +9262,14 @@ enum SystemRelationshipType {
   USED_IN_TECH_SOLUTION
   OTHER
 }
+"""
+TODO This comment
+"""
+type SystemRelationship {
+  cedarSystemId: String
+  systemRelationshipType: [String!]!
+  otherTypeDescription: String
+}
 
 """
 TODO This comment
@@ -10900,6 +10944,8 @@ type Query {
   trbLeadOptions: [UserInfo!]!
   trbAdminNote(id: UUID!): TRBAdminNote!
   requesterUpdateEmailData: [RequesterUpdateEmailData!]!
+
+  removeThis: SystemRelationship
 
   @hasRole(role: EASI_TRB_ADMIN)
   userAccount(username: String!): UserAccount
@@ -40900,35 +40946,8 @@ func (ec *executionContext) _Query_requesterUpdateEmailData(ctx context.Context,
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		directive0 := func(rctx context.Context) (any, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Query().RequesterUpdateEmailData(rctx)
-		}
-
-		directive1 := func(ctx context.Context) (any, error) {
-			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_TRB_ADMIN")
-			if err != nil {
-				var zeroVal []*models.RequesterUpdateEmailData
-				return zeroVal, err
-			}
-			if ec.directives.HasRole == nil {
-				var zeroVal []*models.RequesterUpdateEmailData
-				return zeroVal, errors.New("directive hasRole is not implemented")
-			}
-			return ec.directives.HasRole(ctx, nil, directive0, role)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.([]*models.RequesterUpdateEmailData); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be []*github.com/cms-enterprise/easi-app/pkg/models.RequesterUpdateEmailData`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().RequesterUpdateEmailData(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -40965,6 +40984,82 @@ func (ec *executionContext) fieldContext_Query_requesterUpdateEmailData(_ contex
 				return ec.fieldContext_RequesterUpdateEmailData_requesterEmail(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type RequesterUpdateEmailData", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_removeThis(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_removeThis(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Query().RemoveThis(rctx)
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_TRB_ADMIN")
+			if err != nil {
+				var zeroVal *models.SystemRelationship
+				return zeroVal, err
+			}
+			if ec.directives.HasRole == nil {
+				var zeroVal *models.SystemRelationship
+				return zeroVal, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*models.SystemRelationship); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cms-enterprise/easi-app/pkg/models.SystemRelationship`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.SystemRelationship)
+	fc.Result = res
+	return ec.marshalOSystemRelationship2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemRelationship(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_removeThis(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "cedarSystemId":
+				return ec.fieldContext_SystemRelationship_cedarSystemId(ctx, field)
+			case "systemRelationshipType":
+				return ec.fieldContext_SystemRelationship_systemRelationshipType(ctx, field)
+			case "otherTypeDescription":
+				return ec.fieldContext_SystemRelationship_otherTypeDescription(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemRelationship", field.Name)
 		},
 	}
 	return fc, nil
@@ -50754,6 +50849,132 @@ func (ec *executionContext) _SystemIntakeRequester_name(ctx context.Context, fie
 func (ec *executionContext) fieldContext_SystemIntakeRequester_name(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeRequester",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemRelationship_cedarSystemId(ctx context.Context, field graphql.CollectedField, obj *models.SystemRelationship) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemRelationship_cedarSystemId(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CedarSystemID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemRelationship_cedarSystemId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemRelationship",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemRelationship_systemRelationshipType(ctx context.Context, field graphql.CollectedField, obj *models.SystemRelationship) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemRelationship_systemRelationshipType(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SystemRelationshipType, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]string)
+	fc.Result = res
+	return ec.marshalNString2ᚕstringᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemRelationship_systemRelationshipType(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemRelationship",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemRelationship_otherTypeDescription(ctx context.Context, field graphql.CollectedField, obj *models.SystemRelationship) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemRelationship_otherTypeDescription(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.OtherTypeDescription, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemRelationship_otherTypeDescription(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemRelationship",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -69467,6 +69688,25 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "removeThis":
+			field := field
+
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_removeThis(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
 		case "userAccount":
 			field := field
 
@@ -72781,6 +73021,49 @@ func (ec *executionContext) _SystemIntakeRequester(ctx context.Context, sel ast.
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var systemRelationshipImplementors = []string{"SystemRelationship"}
+
+func (ec *executionContext) _SystemRelationship(ctx context.Context, sel ast.SelectionSet, obj *models.SystemRelationship) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, systemRelationshipImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SystemRelationship")
+		case "cedarSystemId":
+			out.Values[i] = ec._SystemRelationship_cedarSystemId(ctx, field, obj)
+		case "systemRelationshipType":
+			out.Values[i] = ec._SystemRelationship_systemRelationshipType(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "otherTypeDescription":
+			out.Values[i] = ec._SystemRelationship_otherTypeDescription(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -80790,6 +81073,13 @@ func (ec *executionContext) marshalOSystemIntakeTRBFollowUp2ᚖgithubᚗcomᚋcm
 	_ = ctx
 	res := graphql.MarshalString(string(*v))
 	return res
+}
+
+func (ec *executionContext) marshalOSystemRelationship2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemRelationship(ctx context.Context, sel ast.SelectionSet, v *models.SystemRelationship) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SystemRelationship(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOSystemRelationshipInput2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemRelationshipInputᚄ(ctx context.Context, v any) ([]*models.SystemRelationshipInput, error) {

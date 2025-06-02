@@ -29,7 +29,7 @@ func SetSystemIntakeRelationExistingService(
 
 		// Remove CEDAR system relationships
 		// do this first, so we fetch the updated one below in `UpdateSystemIntakeNP`
-		if err := store.SetSystemIntakeSystems(ctx, tx, input.SystemIntakeID, []string{}); err != nil {
+		if err := store.SetSystemIntakeSystems(ctx, tx, input.SystemIntakeID, []string{}, []*models.SystemRelationship{}); err != nil {
 			return nil, err
 		}
 
@@ -63,7 +63,7 @@ func SetSystemIntakeRelationNewSystem(
 		}
 
 		// Remove CEDAR system relationships
-		if err := store.SetSystemIntakeSystems(ctx, tx, input.SystemIntakeID, []string{}); err != nil {
+		if err := store.SetSystemIntakeSystems(ctx, tx, input.SystemIntakeID, []string{}, []*models.SystemRelationship{}); err != nil {
 			return nil, err
 		}
 
@@ -104,8 +104,9 @@ func SetSystemIntakeRelationExistingSystem(
 			}
 		}
 
+		//TODO update this
 		// Add CEDAR system relationships
-		if err := store.SetSystemIntakeSystems(ctx, tx, input.SystemIntakeID, input.CedarSystemIDs); err != nil {
+		if err := store.SetSystemIntakeSystems(ctx, tx, input.SystemIntakeID, input.CedarSystemIDs, []*models.SystemRelationship{}); err != nil {
 			return nil, err
 		}
 
@@ -146,7 +147,7 @@ func UnlinkSystemIntakeRelation(
 		// }
 
 		// Clear CEDAR system relationships
-		if err := store.SetSystemIntakeSystems(ctx, tx, intakeID, []string{}); err != nil {
+		if err := store.SetSystemIntakeSystems(ctx, tx, intakeID, []string{}, []*models.SystemRelationship{}); err != nil {
 			return nil, err
 		}
 

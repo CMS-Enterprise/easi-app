@@ -1074,6 +1074,14 @@ enum SystemRelationshipType {
   USED_IN_TECH_SOLUTION
   OTHER
 }
+"""
+TODO This comment
+"""
+type SystemRelationship {
+  cedarSystemId: String
+  systemRelationshipType: [String!]!
+  otherTypeDescription: String
+}
 
 """
 TODO This comment
@@ -2748,6 +2756,8 @@ type Query {
   trbLeadOptions: [UserInfo!]!
   trbAdminNote(id: UUID!): TRBAdminNote!
   requesterUpdateEmailData: [RequesterUpdateEmailData!]!
+
+  removeThis: SystemRelationship
 
   @hasRole(role: EASI_TRB_ADMIN)
   userAccount(username: String!): UserAccount

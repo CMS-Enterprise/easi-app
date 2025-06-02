@@ -818,6 +818,13 @@ type SystemIntakeUpdateLCIDInput struct {
 }
 
 // TODO This comment
+type SystemRelationship struct {
+	CedarSystemID          *string  `json:"cedarSystemId,omitempty"`
+	SystemRelationshipType []string `json:"systemRelationshipType"`
+	OtherTypeDescription   *string  `json:"otherTypeDescription,omitempty"`
+}
+
+// TODO This comment
 type SystemRelationshipInput struct {
 	CedarSystemID          *string                 `json:"cedarSystemId,omitempty"`
 	SystemRelationshipType *SystemRelationshipType `json:"systemRelationshipType,omitempty"`

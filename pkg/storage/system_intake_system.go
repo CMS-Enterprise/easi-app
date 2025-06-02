@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
+	"github.com/guregu/null/zero"
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 	"go.uber.org/zap"
@@ -16,7 +17,7 @@ import (
 
 // SetSystemIntakeSystems links given System IDs to given System Intake ID
 // This function opts to take a *sqlx.Tx instead of a NamedPreparer because the SQL calls inside this function are heavily intertwined, and we never want to call them outside the scope of a transaction
-func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemIntakeID uuid.UUID, systemIDs []string) error {
+func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemIntakeID uuid.UUID, systemIDs []string, systemRelationships []*models.SystemRelationship) error {
 	if systemIntakeID == uuid.Nil {
 		return errors.New("unexpected nil system intake ID when linking system intake to system id")
 	}
@@ -38,13 +39,22 @@ func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemI
 
 	setSystemIntakeSystemsLinks := make([]models.SystemIntakeSystem, len(systemIDs))
 
-	for i, systemID := range systemIDs {
+	// for i, systemID := range systemIDs {
+	// 	systemIDLink := models.NewSystemIntakeSystem(userID)
+	// 	systemIDLink.ID = uuid.New()
+	// 	systemIDLink.ModifiedBy = &userID
+	// 	systemIDLink.SystemIntakeID = systemIntakeID
+	// 	systemIDLink.SystemID = systemID
+
+	// 	setSystemIntakeSystemsLinks[i] = systemIDLink
+	// }
+
+	for i, relationship := range systemRelationships {
 		systemIDLink := models.NewSystemIntakeSystem(userID)
 		systemIDLink.ID = uuid.New()
 		systemIDLink.ModifiedBy = &userID
-		systemIDLink.SystemIntakeID = systemIntakeID
-		systemIDLink.SystemID = systemID
-		systemIDLink.SystemRelationshipType = pq.StringArray{"PRIMARY_SUPPORT"}
+		systemIDLink.SystemRelationshipType = relationship.SystemRelationshipType
+		systemIDLink.OtherSystemRelationship = zero.StringFromPtr(relationship.OtherTypeDescription)
 
 		setSystemIntakeSystemsLinks[i] = systemIDLink
 	}
