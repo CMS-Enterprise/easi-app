@@ -1088,7 +1088,7 @@ TODO This comment
 """
 input SystemRelationshipInput {
   cedarSystemId: String
-  systemRelationshipType: SystemRelationshipType
+  systemRelationshipType: [String!]!
   otherTypeDescription: String
 }
 """

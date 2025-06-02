@@ -826,9 +826,9 @@ type SystemRelationship struct {
 
 // TODO This comment
 type SystemRelationshipInput struct {
-	CedarSystemID          *string                 `json:"cedarSystemId,omitempty"`
-	SystemRelationshipType *SystemRelationshipType `json:"systemRelationshipType,omitempty"`
-	OtherTypeDescription   *string                 `json:"otherTypeDescription,omitempty"`
+	CedarSystemID          *string  `json:"cedarSystemId,omitempty"`
+	SystemRelationshipType []string `json:"systemRelationshipType"`
+	OtherTypeDescription   *string  `json:"otherTypeDescription,omitempty"`
 }
 
 // Data specific to admin notes in the Consult Session category

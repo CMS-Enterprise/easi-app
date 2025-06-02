@@ -9276,7 +9276,7 @@ TODO This comment
 """
 input SystemRelationshipInput {
   cedarSystemId: String
-  systemRelationshipType: SystemRelationshipType
+  systemRelationshipType: [String!]!
   otherTypeDescription: String
 }
 """
@@ -64350,7 +64350,7 @@ func (ec *executionContext) unmarshalInputSystemRelationshipInput(ctx context.Co
 			it.CedarSystemID = data
 		case "systemRelationshipType":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemRelationshipType"))
-			data, err := ec.unmarshalOSystemRelationshipType2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemRelationshipType(ctx, v)
+			data, err := ec.unmarshalNString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}

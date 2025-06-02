@@ -309,26 +309,26 @@ func setSystemIntakeRelationExistingSystem(
 	idOne := "11AB1A00-1234-5678-ABC1-1A001B00CC0A"
 	idTwo := "11AB1A00-1234-5678-ABC1-1A001B00CC1B"
 
-	relationshipOne := models.SystemRelationshipTypePrimarySupport
-	relationshipTwo := models.SystemRelationshipTypeOther
+	relationshipOne := []string{(string(models.SystemRelationshipTypePrimarySupport))}
+	relationshipTwo := []string{(string(models.SystemRelationshipTypeOther))}
 
 	otherTypeDescriptionOne := "Text used to describe the relationship"
-	otherTypeDescriptionTwo := ""
+	otherTypeDescriptionTwo := "asdf"
 
-	relatioinshipInputOne := models.SystemRelationshipInput{
+	relationshipInputOne := models.SystemRelationshipInput{
 		CedarSystemID:          &idOne,
-		SystemRelationshipType: &relationshipOne,
+		SystemRelationshipType: relationshipOne,
 		OtherTypeDescription:   &otherTypeDescriptionOne,
 	}
-	relatioinshipInputTwo := models.SystemRelationshipInput{
+	relationshipInputTwo := models.SystemRelationshipInput{
 		CedarSystemID:          &idTwo,
-		SystemRelationshipType: &relationshipTwo,
+		SystemRelationshipType: relationshipTwo,
 		OtherTypeDescription:   &otherTypeDescriptionTwo,
 	}
 
 	cedarSystemRelationships := []*models.SystemRelationshipInput{
-		&relatioinshipInputOne,
-		&relatioinshipInputTwo,
+		&relationshipInputOne,
+		&relationshipInputTwo,
 	}
 	input := &models.SetSystemIntakeRelationExistingSystemInput{
 		SystemIntakeID:           intakeID,

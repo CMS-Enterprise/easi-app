@@ -2659,7 +2659,7 @@ export type SystemRelationship = {
 export type SystemRelationshipInput = {
   cedarSystemId?: InputMaybe<Scalars['String']['input']>;
   otherTypeDescription?: InputMaybe<Scalars['String']['input']>;
-  systemRelationshipType?: InputMaybe<SystemRelationshipType>;
+  systemRelationshipType: Array<Scalars['String']['input']>;
 };
 
 /** Types of System Relationships */
