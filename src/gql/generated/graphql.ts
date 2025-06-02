@@ -1874,6 +1874,7 @@ export enum RequestRelationType {
 
 export type RequesterUpdateEmailData = {
   __typename: 'RequesterUpdateEmailData';
+  euaUserId: Scalars['String']['output'];
   lcidExpiresAt?: Maybe<Scalars['Time']['output']>;
   lcidIssuedAt?: Maybe<Scalars['Time']['output']>;
   lcidRetiresAt?: Maybe<Scalars['Time']['output']>;
