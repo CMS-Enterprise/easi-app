@@ -119,12 +119,10 @@ const RequestOverview = ({
       <section className="grid-container">
         {lcidRetiringSoon && (
           <Alert type="info" slim className="margin-top-2 margin-bottom-neg-1">
-            <p className="margin-y-0">
-              {t('lcidAlertMessage', {
-                lcid: systemIntake?.lcid,
-                date: formatDateUtc(systemIntake?.lcidRetiresAt, 'MM/dd/yyyy')
-              })}
-            </p>
+            {t('lcidAlertMessage', {
+              lcid: systemIntake?.lcid,
+              date: formatDateUtc(systemIntake?.lcidRetiresAt, 'MM/dd/yyyy')
+            })}
           </Alert>
         )}
         <Message className="margin-top-2" />
