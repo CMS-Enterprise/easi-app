@@ -13,6 +13,6 @@ VALUES (
     :system_id,
     :created_by,
     :modified_by,
-    relationship_type,
-    other_system_relationship
+    :relationship_type,
+    :other_system_relationship
 ) ON CONFLICT DO NOTHING;
