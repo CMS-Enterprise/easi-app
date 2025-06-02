@@ -223,12 +223,34 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
       ).toHaveClass('usa-button');
     });
 
-    it('In progress - awaiting decision', () => {
+    it('Awaiting decision (past end date)', () => {
       const modifiedMock = {
         ...taskListState.grbMeetingAwaitingDecision.systemIntake!,
         grbReviewType: SystemIntakeGRBReviewType.ASYNC
       };
+
       renderGovTaskGrbMeeting(modifiedMock);
+
+      // Displays correct end date
+      expect(screen.findByText('This GRB review ended on 07/20/2023.'));
+
+      // renders the discussion card
+      expect(
+        screen.getByTestId('requester-discussions-card')
+      ).toBeInTheDocument();
+    });
+
+    it('Awaiting decision (ended manually)', () => {
+      const modifiedMock = {
+        ...taskListState.grbMeetingAwaitingDecision.systemIntake!,
+        grbReviewType: SystemIntakeGRBReviewType.ASYNC,
+        grbReviewAsyncManualEndDate: '2025-06-02T00:00:00.000Z'
+      };
+
+      renderGovTaskGrbMeeting(modifiedMock);
+
+      // Displays correct end date
+      expect(screen.findByText('This GRB review ended on 06/02/2025.'));
 
       // renders the discussion card
       expect(
