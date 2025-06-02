@@ -8475,7 +8475,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	{Name: "../schema.graphql", Input: `"""
+	{Name: "../schema/schema.graphql", Input: `"""
 UserError represents application-level errors that are the result of
 either user or application developer error.
 """
