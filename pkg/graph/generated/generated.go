@@ -667,6 +667,7 @@ type ComplexityRoot struct {
 	}
 
 	RequesterUpdateEmailData struct {
+		EuaUserID      func(childComplexity int) int
 		LcidExpiresAt  func(childComplexity int) int
 		LcidIssuedAt   func(childComplexity int) int
 		LcidRetiresAt  func(childComplexity int) int
@@ -5303,6 +5304,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Query.UserAccount(childComplexity, args["username"].(string)), true
 
+	case "RequesterUpdateEmailData.euaUserId":
+		if e.complexity.RequesterUpdateEmailData.EuaUserID == nil {
+			break
+		}
+
+		return e.complexity.RequesterUpdateEmailData.EuaUserID(childComplexity), true
+
 	case "RequesterUpdateEmailData.lcidExpiresAt":
 		if e.complexity.RequesterUpdateEmailData.LcidExpiresAt == nil {
 			break
@@ -9325,6 +9333,7 @@ type SystemIntakeLCIDExpirationChange {
 }
 
 type RequesterUpdateEmailData {
+  euaUserId: String!
   projectName: String!
   lcidStatus: SystemIntakeLCIDStatus
   lcidIssuedAt: Time
@@ -40938,6 +40947,8 @@ func (ec *executionContext) fieldContext_Query_requesterUpdateEmailData(_ contex
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "euaUserId":
+				return ec.fieldContext_RequesterUpdateEmailData_euaUserId(ctx, field)
 			case "projectName":
 				return ec.fieldContext_RequesterUpdateEmailData_projectName(ctx, field)
 			case "lcidStatus":
@@ -41155,6 +41166,50 @@ func (ec *executionContext) fieldContext_Query___schema(_ context.Context, field
 				return ec.fieldContext___Schema_directives(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type __Schema", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RequesterUpdateEmailData_euaUserId(ctx context.Context, field graphql.CollectedField, obj *models.RequesterUpdateEmailData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RequesterUpdateEmailData_euaUserId(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.EuaUserID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RequesterUpdateEmailData_euaUserId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RequesterUpdateEmailData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -69504,6 +69559,11 @@ func (ec *executionContext) _RequesterUpdateEmailData(ctx context.Context, sel a
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("RequesterUpdateEmailData")
+		case "euaUserId":
+			out.Values[i] = ec._RequesterUpdateEmailData_euaUserId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		case "projectName":
 			out.Values[i] = ec._RequesterUpdateEmailData_projectName(ctx, field, obj)
 			if out.Values[i] == graphql.Null {

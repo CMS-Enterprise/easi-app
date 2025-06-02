@@ -11,6 +11,7 @@ import (
 	"github.com/samber/lo"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers/systemintake/formstate"
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
@@ -370,5 +371,21 @@ func GetMySystemIntakes(ctx context.Context, store *storage.Store) ([]*models.Sy
 }
 
 func GetRequesterUpdateEmailData(ctx context.Context, store *storage.Store) ([]*models.RequesterUpdateEmailData, error) {
-	return store.GetRequesterUpdateEmailData(ctx)
+	// first, get data from store
+	data, err := store.GetRequesterUpdateEmailData(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	// then, match up emails from okta
+	for i, item := range data {
+		userInfo, err := dataloaders.FetchUserInfoByEUAUserID(ctx, item.EuaUserID)
+		if err != nil {
+			return nil, err
+		}
+
+		data[i].RequesterEmail = userInfo.Email
+	}
+
+	return data, nil
 }
