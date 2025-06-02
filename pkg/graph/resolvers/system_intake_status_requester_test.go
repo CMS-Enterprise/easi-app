@@ -428,6 +428,20 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 				errorExpected:  false,
 			},
 			{
+				testName: "Async: Voting ended manually",
+				intake: models.SystemIntake{
+					Step:                        models.SystemIntakeStepGRBMEETING,
+					GRBReviewStartedAt:          &yesterday,
+					GrbReviewAsyncEndDate:       &tomorrow,
+					GrbReviewAsyncManualEndDate: &yesterday,
+					State:                       models.SystemIntakeStateOpen,
+					DecisionState:               models.SIDSNoDecision,
+					GrbReviewType:               models.SystemIntakeGRBReviewTypeAsync,
+				},
+				expectedStatus: models.SISRGrbMeetingAwaitingDecision,
+				errorExpected:  false,
+			},
+			{
 				testName: "Closed while GRB meeting scheduled",
 				intake: models.SystemIntake{
 					Step:          models.SystemIntakeStepGRBMEETING,

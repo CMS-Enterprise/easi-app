@@ -548,7 +548,7 @@
 							"response": []
 						},
 						{
-							"name": "SystemIntake Delete (archive)",
+							"name": "Archive System Intake",
 							"event": [
 								{
 									"listen": "test",
@@ -556,21 +556,25 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
 							"request": {
-								"method": "DELETE",
+								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation ArchiveSystemIntake($id: UUID!) {\n    archiveSystemIntake(id: $id) {\n        id\n        archivedAt\n    }\n}",
+										"variables": "{\n    \"id\": \"{{systemIntakeID}}\"\n}"
+									}
+								},
 								"url": {
-									"raw": "{{apiURL}}/system_intake/{{systemIntakeID}}",
+									"raw": "{{url}}",
 									"host": [
-										"{{apiURL}}"
-									],
-									"path": [
-										"system_intake",
-										"{{systemIntakeID}}"
+										"{{url}}"
 									]
 								}
 							},
@@ -2021,6 +2025,39 @@
 							"graphql": {
 								"query": "mutation ManuallyEndSystemIntakeGRBReviewAsyncVoting {\n  manuallyEndSystemIntakeGRBReviewAsyncVoting(systemIntakeID: \"{{systemIntakeID}}\") {\n    systemIntake {\n      id\n      grbReviewAsyncStatus\n    }\n  }\n}",
 								"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\"\r\n  }\r\n}"
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Restart Async GRB Review",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation restartGRBReviewAsync(\n  $input: RestartGRBReviewInput!\n) {\n  restartGRBReviewAsync(input: $input) {\n    systemIntake {\n      grbReviewStartedAt\n      grbReviewAsyncEndDate\n      grbReviewAsyncManualEndDate\n\n      statusAdmin\n      grbReviewAsyncStatus\n\n      itGovTaskStatuses {\n        grbMeetingStatus\n      }\n\n      grbVotingInformation {\n        votingStatus\n      }\n    }\n  }\n}",
+								"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n    \"newGRBEndDate\": \"2030-03-10T14:00:00Z\"\r\n  }\r\n}"
 							}
 						},
 						"url": {

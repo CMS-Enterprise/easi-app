@@ -1,31 +1,27 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { MockedProvider, MockedResponse } from '@apollo/client/testing';
 import {
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved
 } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import BusinessCase from 'features/ITGovernance/Requester/BusinessCase';
 import { SystemIntakeStep } from 'gql/generated/graphql';
 import configureMockStore from 'redux-mock-store';
-import { getGovernanceTaskListQuery } from 'tests/mock/systemIntake';
+import {
+  getGovernanceTaskListQuery,
+  systemIntake
+} from 'tests/mock/systemIntake';
 
 import {
   businessCaseInitialData,
   defaultProposedSolution
 } from 'data/businessCase';
+import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
-window.matchMedia = (): any => ({
-  addListener: () => {},
-  removeListener: () => {}
-});
-
-window.scrollTo = vi.fn;
-
-const renderPage = async (store: any, mocks?: MockedResponse[]) => {
+const renderPage = async (store: any, isFinal?: boolean) => {
   render(
     <MemoryRouter
       initialEntries={[
@@ -33,12 +29,20 @@ const renderPage = async (store: any, mocks?: MockedResponse[]) => {
       ]}
     >
       <Provider store={store}>
-        <MockedProvider mocks={mocks}>
+        <VerboseMockedProvider
+          mocks={[
+            getGovernanceTaskListQuery({
+              step: isFinal
+                ? SystemIntakeStep.FINAL_BUSINESS_CASE
+                : SystemIntakeStep.DRAFT_BUSINESS_CASE
+            })
+          ]}
+        >
           <Route
             path="/business/:businessCaseId/:formPage"
             component={BusinessCase}
           />
-        </MockedProvider>
+        </VerboseMockedProvider>
       </Provider>
     </MemoryRouter>
   );
@@ -55,8 +59,8 @@ describe('Business case alternative b solution', () => {
     businessCase: {
       form: {
         ...businessCaseInitialData,
+        systemIntakeId: systemIntake.id,
         id: '75746af8-9a9b-4558-a375-cf9848eb2b0d',
-        systemIntakeId: '34ded286-02fa-4457-b1a5-0fc6ec00ecf5',
         alternativeB: {
           ...defaultProposedSolution,
           title: 'Alt B'
@@ -79,72 +83,72 @@ describe('Business case alternative b solution', () => {
     expect(screen.getByTestId('alternative-solution-b')).toBeInTheDocument();
   });
 
-  it('navigates back a page', async () => {
+  it('does not run validations', async () => {
     await renderPage(defaultStore);
 
-    screen.getByRole('button', { name: /back/i }).click();
+    screen.getByRole('button', { name: /Finish Alternative B/i }).click();
 
-    expect(screen.getByTestId('alternative-solution-a')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        screen.queryByTestId('formik-validation-errors')
+      ).not.toBeInTheDocument();
+    });
+    await waitFor(() => {
+      expect(screen.getByTestId('alternative-analysis')).toBeInTheDocument();
+    });
   });
 
-  it('navigates forward to review', async () => {
+  it('renders draft business case fields message', async () => {
     await renderPage(defaultStore);
 
-    screen.getByRole('button', { name: /next/i }).click();
-
-    expect(screen.getByTestId('business-case-review')).toBeInTheDocument();
+    expect(
+      screen.getByTestId('draft-business-case-fields-alert')
+    ).toBeInTheDocument();
   });
 
-  it('removes alternative b', async () => {
-    window.confirm = vi.fn(() => true);
+  it('navigates back to alternative analysis', async () => {
     await renderPage(defaultStore);
 
-    screen.getByRole('button', { name: /remove alternative b/i }).click();
-    expect(window.confirm).toBeCalled();
-    expect(screen.getByTestId('alternative-solution-a')).toBeInTheDocument();
+    screen.getByTestId('save-and-return-button').click();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('alternative-analysis')).toBeInTheDocument();
+    });
+  });
+
+  it('navigates to alternative analysis page after finishing', async () => {
+    await renderPage(defaultStore);
+
+    screen.getByRole('button', { name: /Finish Alternative B/i }).click();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('alternative-analysis')).toBeInTheDocument();
+    });
   });
 
   describe('BIZ_CASE_FINAL_NEEDED', () => {
-    const bizCaseFinalStore = mockStore({
-      auth: {
-        euaId: 'AAAA'
-      },
-      businessCase: {
-        form: {
-          ...businessCaseInitialData,
-          id: '75746af8-9a9b-4558-a375-cf9848eb2b0d',
-          systemIntakeId: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
-          alternativeB: defaultProposedSolution
-        },
-        isLoading: false,
-        isSaving: false,
-        error: null
-      },
-      action: {
-        isPosting: false,
-        error: null,
-        actions: []
-      }
-    });
+    describe('Final Business Case', () => {
+      it('does not render draft business case fields message', async () => {
+        await renderPage(defaultStore, true);
 
-    it('renders validation errors', async () => {
-      await renderPage(bizCaseFinalStore, [
-        getGovernanceTaskListQuery({
-          step: SystemIntakeStep.FINAL_BUSINESS_CASE
-        })
-      ]);
-
-      // Fill one field so we can trigger validation errors
-      const titleField = screen.getByRole('textbox', {
-        name: /title/i
+        expect(
+          screen.queryByTestId('draft-business-case-fields-alert')
+        ).not.toBeInTheDocument();
       });
-      userEvent.type(titleField, 'Alternative B solution title');
-      expect(titleField).toHaveValue('Alternative B solution title');
 
-      screen.getByRole('button', { name: /next/i }).click();
-      expect(
-        await screen.findByTestId('formik-validation-errors')
-      ).toBeInTheDocument();
+      it('runs validations and redners form errors', async () => {
+        window.scrollTo = vi.fn;
+
+        await renderPage(defaultStore, true);
+
+        screen.getByRole('button', { name: /Finish Alternative B/i }).click();
+
+        await waitFor(() => {
+          expect(
+            screen.getByTestId('formik-validation-errors')
+          ).toBeInTheDocument();
+        });
+      });
     });
   });
 });
