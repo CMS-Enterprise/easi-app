@@ -33,12 +33,23 @@ const renderBGColor = (grbReviewStatus: GRBReviewStatus) => {
 };
 
 type GRBReviewStatusTagProps = {
+  isITGovAdmin: boolean;
+  grbReviewType: SystemIntakeGRBReviewType;
   grbReviewStatus: GRBReviewStatus;
 };
 
-const GRBReviewStatusTag = ({ grbReviewStatus }: GRBReviewStatusTagProps) => {
+const GRBReviewStatusTag = ({
+  isITGovAdmin,
+  grbReviewType,
+  grbReviewStatus
+}: GRBReviewStatusTagProps) => {
   const { t } = useTranslation('grbReview');
   const { openModal } = useRestartReviewModal();
+
+  const showRestartButton =
+    isITGovAdmin &&
+    grbReviewType === SystemIntakeGRBReviewType.ASYNC &&
+    grbReviewStatus === SystemIntakeGRBReviewAsyncStatusType.COMPLETED;
 
   return (
     <span
@@ -58,7 +69,7 @@ const GRBReviewStatusTag = ({ grbReviewStatus }: GRBReviewStatusTagProps) => {
         {t(`statusCard.grbReviewStatus.${grbReviewStatus}`)}
       </Tag>
 
-      {grbReviewStatus === SystemIntakeGRBReviewAsyncStatusType.COMPLETED && (
+      {showRestartButton && (
         <Button
           type="button"
           unstyled
@@ -118,7 +129,11 @@ const GRBReviewStatusCard = ({
       </h3>
 
       {/* Status Section */}
-      <GRBReviewStatusTag grbReviewStatus={grbReviewStatus} />
+      <GRBReviewStatusTag
+        grbReviewType={grbReviewType}
+        grbReviewStatus={grbReviewStatus}
+        isITGovAdmin={isITGovAdmin}
+      />
 
       {/* Meeting Details */}
       {grbReviewStatus !==
@@ -158,7 +173,11 @@ const GRBReviewStatusCard = ({
       </h3>
 
       {/* Status Section */}
-      <GRBReviewStatusTag grbReviewStatus={grbReviewStatus} />
+      <GRBReviewStatusTag
+        grbReviewType={grbReviewType}
+        grbReviewStatus={grbReviewStatus}
+        isITGovAdmin={isITGovAdmin}
+      />
 
       {/* Meeting Details */}
       {grbReviewStatus !== SystemIntakeGRBReviewAsyncStatusType.COMPLETED && (
