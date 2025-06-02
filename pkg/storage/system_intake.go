@@ -604,6 +604,7 @@ func (s *Store) GetRequesterUpdateEmailData(ctx context.Context) ([]*models.Requ
 	now := time.Now()
 	for _, item := range res {
 		data = append(data, &models.RequesterUpdateEmailData{
+			EuaUserID:     item.EUAUserID.String,
 			ProjectName:   item.ProjectName.String,
 			LcidStatus:    item.LCIDStatus(now),
 			LcidIssuedAt:  item.LifecycleIssuedAt,
