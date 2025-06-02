@@ -249,6 +249,11 @@ describe('GRB review', () => {
 
     cy.get('button').contains('End early').should('be.not.disabled').click();
 
+    // Header status
+    cy.get('[data-testid="grt-current-status"]').contains(
+      'GRB review complete'
+    );
+
     // Success alert text
     cy.get('p').contains(
       'You have ended this GRB review early. GRB members will no longer be able to add or change votes.'
@@ -327,6 +332,11 @@ describe('GRB review', () => {
 
         cy.contains('button', 'Restart').should('be.not.disabled').click();
       });
+
+    // Header status
+    cy.get('[data-testid="grt-current-status"]').contains(
+      'GRB review in progress'
+    );
 
     cy.get('[data-testid="alert"]')
       .should('be.visible')
