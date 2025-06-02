@@ -1075,9 +1075,13 @@ enum SystemRelationshipType {
   OTHER
 }
 
-input SystemRelationship {
+"""
+TODO This comment
+"""
+input SystemRelationshipInput {
   cedarSystemId: String
   systemRelationshipType: SystemRelationshipType
+  otherTypeDescription: String
 }
 """
 Input data for updating a system intake's relationship to a CEDAR system
@@ -1098,7 +1102,7 @@ input SetSystemIntakeRelationNewSystemInput {
 input SetSystemIntakeRelationExistingSystemInput {
   systemIntakeID: UUID!
   cedarSystemIDs: [String!]!
-  cedarSystemRelationShips: [SystemRelationship!]
+  cedarSystemRelationShips: [SystemRelationshipInput!]
   contractNumbers: [String!]!
 }
 

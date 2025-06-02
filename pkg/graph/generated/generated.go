@@ -8032,7 +8032,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputSystemIntakeRetireLCIDInput,
 		ec.unmarshalInputSystemIntakeUnretireLCIDInput,
 		ec.unmarshalInputSystemIntakeUpdateLCIDInput,
-		ec.unmarshalInputSystemRelationship,
+		ec.unmarshalInputSystemRelationshipInput,
 		ec.unmarshalInputTRBRequestChanges,
 		ec.unmarshalInputUpdateSystemIntakeAdminLeadInput,
 		ec.unmarshalInputUpdateSystemIntakeContactDetailsInput,
@@ -9227,9 +9227,13 @@ enum SystemRelationshipType {
   OTHER
 }
 
-input SystemRelationship {
+"""
+TODO This comment
+"""
+input SystemRelationshipInput {
   cedarSystemId: String
   systemRelationshipType: SystemRelationshipType
+  otherTypeDescription: String
 }
 """
 Input data for updating a system intake's relationship to a CEDAR system
@@ -9250,7 +9254,7 @@ input SetSystemIntakeRelationNewSystemInput {
 input SetSystemIntakeRelationExistingSystemInput {
   systemIntakeID: UUID!
   cedarSystemIDs: [String!]!
-  cedarSystemRelationShips: [SystemRelationship!]
+  cedarSystemRelationShips: [SystemRelationshipInput!]
   contractNumbers: [String!]!
 }
 
@@ -62520,7 +62524,7 @@ func (ec *executionContext) unmarshalInputSetSystemIntakeRelationExistingSystemI
 			it.CedarSystemIDs = data
 		case "cedarSystemRelationShips":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemRelationShips"))
-			data, err := ec.unmarshalOSystemRelationship2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemRelationshipᚄ(ctx, v)
+			data, err := ec.unmarshalOSystemRelationshipInput2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemRelationshipInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -64102,14 +64106,14 @@ func (ec *executionContext) unmarshalInputSystemIntakeUpdateLCIDInput(ctx contex
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputSystemRelationship(ctx context.Context, obj any) (models.SystemRelationship, error) {
-	var it models.SystemRelationship
+func (ec *executionContext) unmarshalInputSystemRelationshipInput(ctx context.Context, obj any) (models.SystemRelationshipInput, error) {
+	var it models.SystemRelationshipInput
 	asMap := map[string]any{}
 	for k, v := range obj.(map[string]any) {
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"cedarSystemId", "systemRelationshipType"}
+	fieldsInOrder := [...]string{"cedarSystemId", "systemRelationshipType", "otherTypeDescription"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -64130,6 +64134,13 @@ func (ec *executionContext) unmarshalInputSystemRelationship(ctx context.Context
 				return it, err
 			}
 			it.SystemRelationshipType = data
+		case "otherTypeDescription":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("otherTypeDescription"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.OtherTypeDescription = data
 		}
 	}
 
@@ -78527,8 +78538,8 @@ func (ec *executionContext) unmarshalNSystemIntakeUpdateLCIDInput2githubᚗcom�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNSystemRelationship2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemRelationship(ctx context.Context, v any) (*models.SystemRelationship, error) {
-	res, err := ec.unmarshalInputSystemRelationship(ctx, v)
+func (ec *executionContext) unmarshalNSystemRelationshipInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemRelationshipInput(ctx context.Context, v any) (*models.SystemRelationshipInput, error) {
+	res, err := ec.unmarshalInputSystemRelationshipInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -80781,17 +80792,17 @@ func (ec *executionContext) marshalOSystemIntakeTRBFollowUp2ᚖgithubᚗcomᚋcm
 	return res
 }
 
-func (ec *executionContext) unmarshalOSystemRelationship2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemRelationshipᚄ(ctx context.Context, v any) ([]*models.SystemRelationship, error) {
+func (ec *executionContext) unmarshalOSystemRelationshipInput2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemRelationshipInputᚄ(ctx context.Context, v any) ([]*models.SystemRelationshipInput, error) {
 	if v == nil {
 		return nil, nil
 	}
 	var vSlice []any
 	vSlice = graphql.CoerceList(v)
 	var err error
-	res := make([]*models.SystemRelationship, len(vSlice))
+	res := make([]*models.SystemRelationshipInput, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNSystemRelationship2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemRelationship(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNSystemRelationshipInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemRelationshipInput(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}

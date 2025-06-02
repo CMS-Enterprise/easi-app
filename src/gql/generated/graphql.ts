@@ -1818,7 +1818,7 @@ export type SetSystemIntakeRelationExistingServiceInput = {
 
 export type SetSystemIntakeRelationExistingSystemInput = {
   cedarSystemIDs: Array<Scalars['String']['input']>;
-  cedarSystemRelationShips?: InputMaybe<Array<SystemRelationship>>;
+  cedarSystemRelationShips?: InputMaybe<Array<SystemRelationshipInput>>;
   contractNumbers: Array<Scalars['String']['input']>;
   systemIntakeID: Scalars['UUID']['input'];
 };
@@ -2646,8 +2646,10 @@ export type SystemIntakeUpdateLCIDInput = {
   systemIntakeID: Scalars['UUID']['input'];
 };
 
-export type SystemRelationship = {
+/** TODO This comment */
+export type SystemRelationshipInput = {
   cedarSystemId?: InputMaybe<Scalars['String']['input']>;
+  otherTypeDescription?: InputMaybe<Scalars['String']['input']>;
   systemRelationshipType?: InputMaybe<SystemRelationshipType>;
 };
 
