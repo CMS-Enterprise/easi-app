@@ -99,7 +99,8 @@ function GovernanceTaskList() {
   const showDecisionAlert =
     hasDecision &&
     (isClosed ||
-      systemIntake?.step === SystemIntakeStep.DECISION_AND_NEXT_STEPS);
+      systemIntake?.step === SystemIntakeStep.DECISION_AND_NEXT_STEPS) &&
+    systemIntake?.statusAdmin !== SystemIntakeStatusAdmin.LCID_RETIRING_SOON;
 
   if (error) {
     return <NotFound />;
@@ -158,9 +159,7 @@ function GovernanceTaskList() {
 
                 {
                   // Decision issued alert
-                  showDecisionAlert &&
-                  systemIntake?.statusAdmin !==
-                    SystemIntakeStatusAdmin.LCID_RETIRING_SOON ? (
+                  showDecisionAlert ? (
                     <Alert
                       type="info"
                       heading={t('taskList.decisionAlert.heading')}
