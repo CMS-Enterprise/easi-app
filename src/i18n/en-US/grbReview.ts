@@ -1,12 +1,12 @@
-import { GRBReviewStatus } from 'features/ITGovernance/Admin/GRBReview/GRBReviewStatusCard';
 import {
   SystemIntakeAsyncGRBVotingOption,
   SystemIntakeGRBReviewAsyncStatusType,
   SystemIntakeGRBReviewerRole,
-  SystemIntakeGRBReviewerVotingRole
+  SystemIntakeGRBReviewerVotingRole,
+  SystemIntakeGRBReviewStandardStatusType
 } from 'gql/generated/graphql';
 
-import { GRBReviewFormAction } from 'types/grbReview';
+import { GRBReviewFormAction, GRBReviewStatus } from 'types/grbReview';
 import { Translation } from 'types/util';
 
 export const grbReviewerVotingRolesTranslation: Translation<SystemIntakeGRBReviewerVotingRole> =
@@ -76,6 +76,13 @@ export const grbReviewFormSteps = [
       'Add the voting and non-voting GRB members who should participate in this review. For asynchronous reviews, add an end date for the review.'
   }
 ] as const;
+
+const grbReviewStatus: Translation<GRBReviewStatus> = {
+  [SystemIntakeGRBReviewStandardStatusType.SCHEDULED]: 'Scheduled',
+  [SystemIntakeGRBReviewAsyncStatusType.IN_PROGRESS]: 'In progress',
+  [SystemIntakeGRBReviewAsyncStatusType.COMPLETED]: 'Complete',
+  [SystemIntakeGRBReviewAsyncStatusType.PAST_DUE]: 'Past due'
+};
 
 export default {
   title: 'GRB review',
@@ -488,12 +495,7 @@ export default {
     grbMeeting: 'GRB meeting',
     changeMeetingDate: 'Change meeting date',
     restartReview: 'Restart review',
-    grbReviewStatus: {
-      [GRBReviewStatus.SCHEDULED]: 'Scheduled',
-      [SystemIntakeGRBReviewAsyncStatusType.IN_PROGRESS]: 'In progress',
-      [SystemIntakeGRBReviewAsyncStatusType.COMPLETED]: 'Complete',
-      [SystemIntakeGRBReviewAsyncStatusType.PAST_DUE]: 'Past due'
-    },
+    grbReviewStatus,
     timeRemaining: 'Time remaining for review',
     countdown: '{{days}} days, {{hours}} hours, {{minutes}} minutes',
     reviewEnds: 'Review ends {{date}}, 5:00pm EST',
