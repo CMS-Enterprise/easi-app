@@ -1,7 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { MockedProvider } from '@apollo/client/testing';
 import {
   render,
   screen,
@@ -17,13 +16,7 @@ import {
   businessCaseInitialData,
   defaultProposedSolution
 } from 'data/businessCase';
-
-window.matchMedia = (): any => ({
-  addListener: () => {},
-  removeListener: () => {}
-});
-
-window.scrollTo = vi.fn;
+import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 const SYSTEM_INTAKE_ID = '943916ee-7a30-4213-990e-02c4fb97382a';
 
@@ -39,7 +32,7 @@ const renderPage = async (
       ]}
     >
       <Provider store={store}>
-        <MockedProvider
+        <VerboseMockedProvider
           mocks={[
             getGovernanceTaskListQuery({
               id: systemIntakeId,
@@ -52,7 +45,7 @@ const renderPage = async (
             path="/business/:businessCaseId/:formPage"
             component={BusinessCase}
           />
-        </MockedProvider>
+        </VerboseMockedProvider>
       </Provider>
     </MemoryRouter>
   );
@@ -89,7 +82,7 @@ describe('Business case alternative a solution', () => {
     expect(screen.getByTestId('alternative-solution-a')).toBeInTheDocument();
   });
 
-  it('navigates back a page', async () => {
+  it('does not run validations', async () => {
     await renderPage(defaultStore);
 
     await userEvent.click(screen.getByRole('button', { name: /back/i }));
@@ -107,7 +100,7 @@ describe('Business case alternative a solution', () => {
     expect(screen.getByTestId('alternative-solution-b')).toBeInTheDocument();
   });
 
-  it('navigates forward to review', async () => {
+  it('navigates back to alternative analysis', async () => {
     await renderPage(defaultStore);
 
     await userEvent.click(screen.getByRole('button', { name: /next/i }));
@@ -145,7 +138,7 @@ describe('Business case alternative a solution', () => {
       await renderPage(withAlternativeBStore);
 
       expect(
-        screen.queryByRole('button', { name: /alternative b/i })
+        screen.queryByTestId('draft-business-case-fields-alert')
       ).not.toBeInTheDocument();
     });
 

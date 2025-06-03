@@ -15,6 +15,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
   ButtonGroup,
+  Card,
+  CardBody,
+  CardFooter,
+  CardGroup,
+  CardHeader,
   Form,
   FormGroup,
   GridContainer,
@@ -49,6 +54,7 @@ import {
 } from 'utils/tableSort';
 import dateRangeSchema from 'validations/dateRangeSchema';
 
+import AnnualEmail from './AnnualEmail';
 import csvHeaderMap from './csvHeaderMap';
 import csvPortfolioReportHeaderMap from './csvPortfolioReportHeaderMap';
 import tableMap, { SystemIntakeForTable } from './tableMap';
@@ -232,20 +238,44 @@ const RequestRepository = () => {
   return (
     <>
       <GridContainer className="margin-top-1 margin-bottom-2">
-        <ButtonGroup className="trb-admin-team-home-actions">
-          {/* Configure Portfolio Update Report button */}
-          <Button
-            type="button"
-            onClick={() => setConfigReportModalOpen(true)}
-            className="margin-right-1"
+        <CardGroup className="margin-y-2">
+          <Card
+            containerProps={{
+              className: 'radius-0 border-gray-10 shadow-3'
+            }}
+            gridLayout={{
+              tablet: {
+                col: 6
+              }
+            }}
           >
-            {t('home:adminHome.GRT.configureReport.button')}
-          </Button>
-          {/* Portfolio Update Report info modal trigger button */}
-          <Button type="button" onClick={() => setInfoModalOpen(true)} unstyled>
-            {t('home:adminHome.GRT.infoModal.link')}
-          </Button>
-        </ButtonGroup>
+            <CardHeader>
+              <h4>{t('home:adminHome.GRT.configureReport.card.heading')}</h4>
+            </CardHeader>
+            <CardBody>
+              <p>{t('home:adminHome.GRT.configureReport.card.content')}</p>
+              <Button
+                type="button"
+                onClick={() => setInfoModalOpen(true)}
+                unstyled
+              >
+                {t('home:adminHome.GRT.infoModal.link')}
+              </Button>
+            </CardBody>
+            <CardFooter>
+              <Button
+                type="button"
+                onClick={() => setConfigReportModalOpen(true)}
+                className="margin-right-1"
+              >
+                {t('home:adminHome.GRT.configureReport.button')}
+              </Button>
+            </CardFooter>
+          </Card>
+
+          {/* Requester update email Card and Modal */}
+          <AnnualEmail />
+        </CardGroup>
       </GridContainer>
       <GridContainer className="margin-bottom-5 maxw-none">
         {/* Configure Portfolio Update Report modal */}

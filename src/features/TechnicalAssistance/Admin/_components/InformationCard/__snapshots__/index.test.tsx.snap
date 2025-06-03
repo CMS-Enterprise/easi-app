@@ -34,6 +34,7 @@ exports[`TRB Admin InformationCard > Renders correct Initial request form info 1
           <span
             class="easi-tag easi-task-status-tag bg-success-dark text-white"
             data-testid="task-list-task-tag"
+            style="white-space: nowrap;"
           >
             Completed
           </span>
@@ -100,6 +101,7 @@ exports[`TRB Admin InformationCard > Renders correct guidance letter info 1`] = 
           <span
             class="easi-tag easi-task-status-tag bg-info-light"
             data-testid="task-list-task-tag"
+            style="white-space: nowrap;"
           >
             Ready to start
           </span>

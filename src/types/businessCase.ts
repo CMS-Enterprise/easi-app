@@ -46,6 +46,18 @@ export type RequestDescriptionForm = {
   successIndicators: string;
 };
 
+export type SolutionLabelType =
+  | 'preferredSolution'
+  | 'alternativeA'
+  | 'alternativeB';
+
+export type AlternativeAnalysisForm = {
+  // proposedSolutions: ProposedBusinessCaseSolution[];
+  preferredSolution: ProposedBusinessCaseSolution;
+  alternativeA: ProposedBusinessCaseSolution;
+  alternativeB: ProposedBusinessCaseSolution;
+};
+
 export type PreferredSolutionForm = {
   preferredSolution: ProposedBusinessCaseSolution;
 };
@@ -61,9 +73,7 @@ export type AlternativeBSolutionForm = {
 // Business Case Form Model
 export type BusinessCaseModel = GeneralRequestInfoForm &
   RequestDescriptionForm &
-  PreferredSolutionForm &
-  AlternativeASolutionForm &
-  AlternativeBSolutionForm & {
+  AlternativeAnalysisForm & {
     id?: string;
     euaUserId?: string;
     status: BusinessCaseStatus;

@@ -7,7 +7,6 @@ import {
   waitFor,
   waitForElementToBeRemoved
 } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import BusinessCase from 'features/ITGovernance/Requester/BusinessCase';
 import { SystemIntakeStep } from 'gql/generated/graphql';
 import configureMockStore from 'redux-mock-store';
@@ -23,7 +22,7 @@ const renderPage = async (store: any, isFinal?: boolean) => {
   render(
     <MemoryRouter
       initialEntries={[
-        '/business/75746af8-9a9b-4558-a375-cf9848eb2b0d/general-request-info'
+        '/business/75746af8-9a9b-4558-a375-cf9848eb2b0d/alternative-analysis'
       ]}
     >
       <Provider store={store}>
@@ -48,7 +47,7 @@ const renderPage = async (store: any, isFinal?: boolean) => {
   await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
 };
 
-describe('Business case general request info form', () => {
+describe('Business case alternative analysis form', () => {
   const mockStore = configureMockStore();
   const defaultStore = mockStore({
     auth: {
@@ -74,52 +73,8 @@ describe('Business case general request info form', () => {
   it('renders without errors', async () => {
     await renderPage(defaultStore);
 
-    expect(screen.getByTestId('general-request-info')).toBeInTheDocument();
-  });
-
-  it('fills all fields', async () => {
-    await renderPage(defaultStore);
-
-    const requestNameField = screen.getByRole('textbox', {
-      name: /Contract \/ Request title/i
-    });
-    userEvent.type(requestNameField, 'Test Project 1');
-    expect(requestNameField).toHaveValue('Test Project 1');
-
-    const requesterField = screen.getByRole('textbox', {
-      name: /Requester name/i
-    });
-    userEvent.type(requesterField, 'John Doe');
-    expect(requesterField).toHaveValue('John Doe');
-
-    const businessOwnerField = screen.getByRole('textbox', {
-      name: /CMS Business Owner name/i
-    });
-    userEvent.type(businessOwnerField, 'Sally Doe');
-    expect(businessOwnerField).toHaveValue('Sally Doe');
-
-    const phoneNumberField = screen.getByRole('textbox', {
-      name: /Phone Number/i
-    });
-    userEvent.type(phoneNumberField, '1234567890');
-    expect(phoneNumberField).toHaveValue('1234567890');
-  });
-
-  it('does not run validations', async () => {
-    await renderPage(defaultStore);
-
-    screen.getByRole('button', { name: /Next/i }).click();
-
     await waitFor(() => {
-      expect(
-        screen.queryByTestId('formik-validation-errors')
-      ).not.toBeInTheDocument();
-    });
-
-    await waitFor(() => {
-      expect(
-        screen.getByRole('heading', { name: /Request description/i })
-      ).toBeInTheDocument();
+      expect(screen.getByTestId('alternative-analysis')).toBeInTheDocument();
     });
   });
 
@@ -131,14 +86,71 @@ describe('Business case general request info form', () => {
     ).toBeInTheDocument();
   });
 
-  it('navigates to next page', async () => {
+  it('all three add solution buttons are present', async () => {
     await renderPage(defaultStore);
 
-    screen.getByRole('button', { name: /next/i }).click();
+    expect(
+      screen.getByRole('button', { name: /Add preferred solution/i })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByRole('button', { name: /Add alternative A/i })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByRole('button', { name: /Add alternative B/i })
+    ).toBeInTheDocument();
+  });
+
+  it('solution buttons navigate to correct solution', async () => {
+    await renderPage(defaultStore);
+
+    // Navigate to Preferred Solution
+    screen.getByRole('button', { name: /Add preferred solution/i }).click();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('preferred-solution')).toBeInTheDocument();
+    });
+
+    // Navigate back to Alternative Analysis
+    screen.getByTestId('save-and-return-button').click();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('alternative-analysis')).toBeInTheDocument();
+    });
+
+    // Navigate to Alternative A
+    screen.getByRole('button', { name: /Add alternative A/i }).click();
+
+    expect(screen.getByTestId('alternative-solution-a')).toBeInTheDocument();
+
+    // Navigate back to Alternative Analysis
+    screen.getByTestId('save-and-return-button').click();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('alternative-analysis')).toBeInTheDocument();
+    });
+
+    // Navigate to Alternative B
+    screen.getByRole('button', { name: /Add alternative B/i }).click();
+
+    expect(screen.getByTestId('alternative-solution-b')).toBeInTheDocument();
+  });
+
+  it('navigates to the previous page when "Back" is clicked', async () => {
+    await renderPage(defaultStore);
+
+    screen.getByRole('button', { name: /back/i }).click();
 
     await waitFor(() => {
       expect(screen.getByTestId('request-description')).toBeInTheDocument();
     });
+  });
+
+  it('next button is not disabled', async () => {
+    await renderPage(defaultStore);
+
+    expect(screen.getByRole('button', { name: /Next/i })).not.toBeDisabled();
   });
 
   describe('Final Business Case', () => {
@@ -150,18 +162,12 @@ describe('Business case general request info form', () => {
       ).not.toBeInTheDocument();
     });
 
-    it('runs validations and renders form errors', async () => {
+    it('Next button is disabled when solutions are not filled out', async () => {
       window.scrollTo = vi.fn;
 
       await renderPage(defaultStore, true);
 
-      screen.getByRole('button', { name: /Next/i }).click();
-
-      await waitFor(() => {
-        expect(
-          screen.getByTestId('formik-validation-errors')
-        ).toBeInTheDocument();
-      });
+      expect(screen.getByRole('button', { name: /Next/i })).toBeDisabled();
     });
   });
 });

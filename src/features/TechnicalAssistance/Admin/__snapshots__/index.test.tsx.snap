@@ -464,6 +464,7 @@ exports[`TRB admin home > matches the snapshot 1`] = `
                       <span
                         class="easi-tag easi-task-status-tag bg-warning"
                         data-testid="task-list-task-tag"
+                        style="white-space: nowrap;"
                       >
                         In progress
                       </span>
@@ -525,6 +526,7 @@ exports[`TRB admin home > matches the snapshot 1`] = `
                       <span
                         class="easi-tag easi-task-status-tag border-2px text-base"
                         data-testid="task-list-task-tag"
+                        style="white-space: nowrap;"
                       >
                         Cannot start yet
                       </span>
