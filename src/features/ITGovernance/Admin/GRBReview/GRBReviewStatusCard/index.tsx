@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, ButtonGroup, Grid, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
@@ -26,10 +26,16 @@ export type GRBReviewStatusCardProps = {
 };
 
 const renderBGColor = (grbReviewStatus: GRBReviewStatus) => {
-  if (grbReviewStatus === SystemIntakeGRBReviewAsyncStatusType.COMPLETED) {
-    return 'bg-success-lighter';
+  switch (grbReviewStatus) {
+    case SystemIntakeGRBReviewAsyncStatusType.COMPLETED:
+      return 'bg-success-lighter';
+
+    case 'NOT_STARTED':
+      return 'bg-warning-lighter';
+
+    default:
+      return 'bg-primary-lighter';
   }
-  return 'bg-primary-lighter';
 };
 
 type GRBReviewStatusTagProps = {
@@ -106,13 +112,24 @@ const GRBReviewStatusCard = ({
     grbReviewAsyncEndDate
   );
 
-  /** Returns the correct status data for the review type */
-  const grbReviewStatus: GRBReviewStatus | null | undefined =
-    grbReviewType === SystemIntakeGRBReviewType.STANDARD
+  /**
+   * Returns the correct status data for the review type,
+   * or NOT_STARTED if status is null
+   */
+  const grbReviewStatus: GRBReviewStatus | null | undefined = useMemo(() => {
+    if (!grbReviewStartedAt) return 'NOT_STARTED';
+
+    return grbReviewType === SystemIntakeGRBReviewType.STANDARD
       ? grbReviewStandardStatus
       : grbReviewAsyncStatus;
+  }, [
+    grbReviewAsyncStatus,
+    grbReviewStandardStatus,
+    grbReviewType,
+    grbReviewStartedAt
+  ]);
 
-  if (!grbReviewStartedAt || !grbReviewStatus) {
+  if (!grbReviewStatus) {
     return null;
   }
 

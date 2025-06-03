@@ -78,6 +78,7 @@ export const grbReviewFormSteps = [
 ] as const;
 
 const grbReviewStatus: Translation<GRBReviewStatus> = {
+  NOT_STARTED: 'Not started',
   [SystemIntakeGRBReviewStandardStatusType.SCHEDULED]: 'Scheduled',
   [SystemIntakeGRBReviewAsyncStatusType.IN_PROGRESS]: 'In progress',
   [SystemIntakeGRBReviewAsyncStatusType.COMPLETED]: 'Complete',
