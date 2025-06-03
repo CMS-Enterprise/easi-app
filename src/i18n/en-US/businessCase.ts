@@ -10,9 +10,12 @@ const businessCase = {
   generalRequest: 'General request information',
   generalRequestDescription:
     "Make a first draft of the various solutions you've thought of and the costs involved to build or buy them. Once you have a draft Business Case ready for review, send it to the Governance Review Admin Team who will ensure it is ready to be presented at the Governance Review Team (GRT) Meeting.",
-  requestName: 'Contract / Request title',
+  requestName: 'Contract / request title',
   requestNameHelpText:
     'Your request title should match the title of your Acquisition Plan or Interagency Agreement',
+  projectAcronym: 'Contract / request acronym',
+  projectAcronymHelpText:
+    'Include any acronym or short name related to this request.',
   requester: 'Requester name',
   businessOwner: 'CMS Business Owner name',
   requesterPhoneNumber: 'Requester phone number',
@@ -62,7 +65,7 @@ const businessCase = {
   responseToGRTFeedback:
     'How will you implement or respond to the recommendations provided by the GRT?',
   responseToGRTFeedbackHelpText:
-    'Leave this question blank until after you attend a GRT meeting.',
+    "Leave this question blank until after you attend a GRT meeting. Fill in 'N/A' if a GRT meeting related to this request is never scheduled.",
   alternatives: 'Options and alternatives',
   alternativesDescription: {
     text: [

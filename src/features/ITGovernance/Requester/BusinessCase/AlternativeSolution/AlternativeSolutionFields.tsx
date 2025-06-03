@@ -291,7 +291,7 @@ const AlternativeSolutionFields = ({
             {t('zeroTrustAlignment')}
           </Label>
           <HelpText
-            id="BusinessCase-PreferredSolutionZeroTrustAlignmentHelp"
+            id={`BusinessCase-${altId}ZeroTrustAlignmentHelp`}
             className="margin-top-1"
           >
             <Trans
@@ -307,7 +307,7 @@ const AlternativeSolutionFields = ({
           <Field
             as={TextAreaField}
             error={!!flatErrors[`${altId}.zeroTrustAlignment`]}
-            id={`BusinessCase-${altId}zeroTrustAlignment`}
+            id={`BusinessCase-${altId}ZeroTrustAlignment`}
             maxLength={10000}
             name={`${altId}.zeroTrustAlignment`}
             aria-describedby={`BusinessCase-${altId}ZeroTrustAlignmentCounter BusinessCase-${altId}ZeroTrustAlignmentHelp`}
@@ -514,7 +514,7 @@ const AlternativeSolutionFields = ({
           <Field
             as={TextAreaField}
             error={!!flatErrors[`${altId}.workforceTrainingReqs`]}
-            id={`BusinessCase-${altId}workforceTrainingReqs`}
+            id={`BusinessCase-${altId}WorkforceTrainingReqs`}
             maxLength={10000}
             name={`${altId}.workforceTrainingReqs`}
           />

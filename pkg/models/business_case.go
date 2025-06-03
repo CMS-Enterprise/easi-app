@@ -168,8 +168,6 @@ type BusinessCase struct {
 	LastSubmittedAt    *time.Time `json:"lastSubmittedAt" db:"last_submitted_at"`
 }
 
-// TODO: NJD - do I needto do something similar with ProposedSolutions?
-
 // BusinessCaseWithCosts is a helper to allow for legacy REST code
 // to function that combines lifecycle costs with the Business Case model
 type BusinessCaseWithCosts struct {
