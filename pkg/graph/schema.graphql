@@ -1077,15 +1077,6 @@ enum SystemRelationshipType {
 """
 TODO This comment
 """
-type SystemRelationship {
-  cedarSystemId: String
-  systemRelationshipType: [String!]!
-  otherTypeDescription: String
-}
-
-"""
-TODO This comment
-"""
 input SystemRelationshipInput {
   cedarSystemId: String
   systemRelationshipType: [String!]!
@@ -2756,8 +2747,6 @@ type Query {
   trbLeadOptions: [UserInfo!]!
   trbAdminNote(id: UUID!): TRBAdminNote!
   requesterUpdateEmailData: [RequesterUpdateEmailData!]!
-
-  removeThis: SystemRelationship
 
   @hasRole(role: EASI_TRB_ADMIN)
   userAccount(username: String!): UserAccount

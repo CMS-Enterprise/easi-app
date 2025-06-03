@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -1569,11 +1568,6 @@ func (r *queryResolver) TrbAdminNote(ctx context.Context, id uuid.UUID) (*models
 // RequesterUpdateEmailData is the resolver for the requesterUpdateEmailData field.
 func (r *queryResolver) RequesterUpdateEmailData(ctx context.Context) ([]*models.RequesterUpdateEmailData, error) {
 	return resolvers.GetRequesterUpdateEmailData(ctx, r.store)
-}
-
-// RemoveThis is the resolver for the removeThis field.
-func (r *queryResolver) RemoveThis(ctx context.Context) (*models.SystemRelationship, error) {
-	panic(fmt.Errorf("not implemented: RemoveThis - removeThis"))
 }
 
 // UserAccount is the resolver for the userAccount field.

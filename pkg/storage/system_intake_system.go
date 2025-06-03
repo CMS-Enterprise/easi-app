@@ -5,7 +5,6 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
-	"github.com/guregu/null/zero"
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 	"go.uber.org/zap"
@@ -54,7 +53,7 @@ func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemI
 		systemIDLink.ID = uuid.New()
 		systemIDLink.ModifiedBy = &userID
 		systemIDLink.SystemRelationshipType = relationship.SystemRelationshipType
-		systemIDLink.OtherSystemRelationship = zero.StringFromPtr(relationship.OtherTypeDescription)
+		systemIDLink.OtherSystemRelationship = relationship.OtherTypeDescription
 
 		setSystemIntakeSystemsLinks[i] = systemIDLink
 	}

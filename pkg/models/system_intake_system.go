@@ -16,6 +16,12 @@ const (
 	SystemRelationshipTypeOther              SystemRelationshipType = "OTHER"
 )
 
+type SystemRelationship struct {
+	CedarSystemID          zero.String `json:"cedarSystemId" db:"cedar_system_id"`
+	SystemRelationshipType []string    `json:"systemRelationshipType" db:"system_relationship_type"`
+	OtherTypeDescription   zero.String `json:"otherTypeDescription" db:"other_type_description"`
+}
+
 // SystemIntakeSystem is the insertion type for linking a system intake to
 // system(s)
 type SystemIntakeSystem struct {
