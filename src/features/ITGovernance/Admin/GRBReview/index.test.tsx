@@ -11,7 +11,9 @@ import {
   SystemIntakeFragmentFragment,
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewerRole,
-  SystemIntakeGRBReviewerVotingRole
+  SystemIntakeGRBReviewerVotingRole,
+  SystemIntakeState,
+  SystemIntakeStatusAdmin
 } from 'gql/generated/graphql';
 import { businessCase } from 'tests/mock/businessCase';
 import {
@@ -272,6 +274,148 @@ describe('GRB review tab', () => {
     ).toBeInTheDocument();
 
     expect(screen.getByRole('link', { name: 'Jump to discussions' }));
+  });
+
+  describe('Admin task card', () => {
+    it('renders the card', async () => {
+      render(
+        <MemoryRouter>
+          <VerboseMockedProvider
+            mocks={[
+              getSystemIntakeGRBReviewDiscussionsQuery,
+              getSystemIntakeGRBReviewQuery(grbReview)
+            ]}
+          >
+            <Provider store={store}>
+              <MessageProvider>
+                <ModalProvider>
+                  <ITGovAdminContext.Provider value>
+                    <GRBReview
+                      systemIntake={systemIntake}
+                      businessCase={businessCase}
+                    />
+                  </ITGovAdminContext.Provider>
+                </ModalProvider>
+              </MessageProvider>
+            </Provider>
+          </VerboseMockedProvider>
+        </MemoryRouter>
+      );
+
+      expect(
+        await screen.findByRole('heading', { level: 1, name: 'GRB review' })
+      ).toBeInTheDocument();
+
+      expect(
+        screen.getByRole('heading', { name: 'Admin Task' })
+      ).toBeInTheDocument();
+    });
+
+    it('hides the card if the request is closed', async () => {
+      render(
+        <MemoryRouter>
+          <VerboseMockedProvider
+            mocks={[
+              getSystemIntakeGRBReviewDiscussionsQuery,
+              getSystemIntakeGRBReviewQuery(grbReview)
+            ]}
+          >
+            <Provider store={store}>
+              <MessageProvider>
+                <ModalProvider>
+                  <ITGovAdminContext.Provider value>
+                    <GRBReview
+                      systemIntake={{
+                        ...systemIntake,
+                        state: SystemIntakeState.CLOSED
+                      }}
+                      businessCase={businessCase}
+                    />
+                  </ITGovAdminContext.Provider>
+                </ModalProvider>
+              </MessageProvider>
+            </Provider>
+          </VerboseMockedProvider>
+        </MemoryRouter>
+      );
+
+      expect(
+        await screen.findByRole('heading', { level: 1, name: 'GRB review' })
+      ).toBeInTheDocument();
+
+      expect(screen.queryByRole('heading', { name: 'Admin Task' })).toBeNull();
+    });
+
+    it('hides the card if the request is awaiting a decision', async () => {
+      render(
+        <MemoryRouter>
+          <VerboseMockedProvider
+            mocks={[
+              getSystemIntakeGRBReviewDiscussionsQuery,
+              getSystemIntakeGRBReviewQuery(grbReview)
+            ]}
+          >
+            <Provider store={store}>
+              <MessageProvider>
+                <ModalProvider>
+                  <ITGovAdminContext.Provider value>
+                    <GRBReview
+                      systemIntake={{
+                        ...systemIntake,
+                        statusAdmin:
+                          SystemIntakeStatusAdmin.GRB_MEETING_COMPLETE
+                      }}
+                      businessCase={businessCase}
+                    />
+                  </ITGovAdminContext.Provider>
+                </ModalProvider>
+              </MessageProvider>
+            </Provider>
+          </VerboseMockedProvider>
+        </MemoryRouter>
+      );
+
+      expect(
+        await screen.findByRole('heading', { level: 1, name: 'GRB review' })
+      ).toBeInTheDocument();
+
+      expect(screen.queryByRole('heading', { name: 'Admin Task' })).toBeNull();
+    });
+
+    it('hides the card if the setup form has been submitted for a standard meeting', async () => {
+      render(
+        <MemoryRouter>
+          <VerboseMockedProvider
+            mocks={[
+              getSystemIntakeGRBReviewDiscussionsQuery,
+              getSystemIntakeGRBReviewQuery({
+                ...grbReview,
+                grbReviewStartedAt: '2024-10-21T14:55:47.88283Z'
+              })
+            ]}
+          >
+            <Provider store={store}>
+              <MessageProvider>
+                <ModalProvider>
+                  <ITGovAdminContext.Provider value>
+                    <GRBReview
+                      systemIntake={systemIntake}
+                      businessCase={businessCase}
+                    />
+                  </ITGovAdminContext.Provider>
+                </ModalProvider>
+              </MessageProvider>
+            </Provider>
+          </VerboseMockedProvider>
+        </MemoryRouter>
+      );
+
+      expect(
+        await screen.findByRole('heading', { level: 1, name: 'GRB review' })
+      ).toBeInTheDocument();
+
+      expect(screen.queryByRole('heading', { name: 'Admin Task' })).toBeNull();
+    });
   });
 
   describe('GRB voting panel', () => {

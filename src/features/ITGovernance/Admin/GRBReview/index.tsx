@@ -10,6 +10,9 @@ import {
   SystemIntakeGRBReviewAsyncStatusType,
   SystemIntakeGRBReviewerVotingRole,
   SystemIntakeGRBReviewStandardStatusType,
+  SystemIntakeGRBReviewType,
+  SystemIntakeState,
+  SystemIntakeStatusAdmin,
   useGetSystemIntakeGRBDiscussionsQuery,
   useGetSystemIntakeGRBReviewQuery
 } from 'gql/generated/graphql';
@@ -51,7 +54,8 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
     state,
     submittedAt,
     annualSpending,
-    governanceRequestFeedbacks
+    governanceRequestFeedbacks,
+    statusAdmin
   } = systemIntake;
 
   const votingStatus = systemIntake.grbVotingInformation?.votingStatus;
@@ -72,8 +76,12 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
     return grbReviewData?.systemIntake;
   }, [grbReviewData?.systemIntake]);
 
-  const { grbReviewStartedAt, grbReviewAsyncStatus, grbReviewStandardStatus } =
-    grbReview || {};
+  const {
+    grbReviewType,
+    grbReviewStartedAt,
+    grbReviewAsyncStatus,
+    grbReviewStandardStatus
+  } = grbReview || {};
 
   const { euaId } = useSelector((appState: AppState) => appState.auth);
 
@@ -101,6 +109,15 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
     return grbDiscussions.filter(({ replies }) => replies.length === 0).length;
   }, [grbDiscussions]);
 
+  const hideAdminTask: boolean =
+    // Form has been submitted for standard meeting
+    (grbReviewStartedAt &&
+      grbReviewType === SystemIntakeGRBReviewType.STANDARD) ||
+    // Request is awaiting a decision, with either voting ended or meeting date passed
+    statusAdmin === SystemIntakeStatusAdmin.GRB_MEETING_COMPLETE ||
+    // Request has been closed or issued a decision
+    state === SystemIntakeState.CLOSED;
+
   if (!grbReview) {
     return null;
   }
@@ -115,13 +132,15 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
           {t('description')}
         </p>
         {/* GRB Admin Task */}
-        <GRBReviewAdminTask
-          isITGovAdmin={isITGovAdmin}
-          systemIntakeId={id}
-          grbReviewStartedAt={grbReview.grbReviewStartedAt}
-          grbReviewReminderLastSent={grbReview.grbReviewReminderLastSent}
-          grbReviewers={grbReviewers}
-        />
+        {!hideAdminTask && (
+          <GRBReviewAdminTask
+            isITGovAdmin={isITGovAdmin}
+            systemIntakeId={id}
+            grbReviewStartedAt={grbReview.grbReviewStartedAt}
+            grbReviewReminderLastSent={grbReview.grbReviewReminderLastSent}
+            grbReviewers={grbReviewers}
+          />
+        )}
         {/* GRB Reviewer Voting Panel */}
         {currentGRBReviewer &&
           votingStatus === GRBVotingInformationStatus.IN_PROGRESS && (
