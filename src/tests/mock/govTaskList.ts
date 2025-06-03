@@ -893,7 +893,8 @@ export const taskListState: {
       grbReviewType: SystemIntakeGRBReviewType.STANDARD,
       grbReviewStartedAt: '2023-07-20T00:30:28Z',
       grbReviewAsyncRecordingTime: '2023-07-20T00:30:28Z',
-      grbReviewAsyncEndDate: '2023-07-20T00:30:28Z'
+      grbReviewAsyncEndDate: '2023-07-20T00:30:28Z',
+      grbReviewAsyncManualEndDate: null
     }
   },
   grbMeetingAwaitingDecision: {
@@ -921,7 +922,8 @@ export const taskListState: {
       grbReviewType: SystemIntakeGRBReviewType.STANDARD,
       grbReviewStartedAt: '2023-07-20T00:30:28Z',
       grbReviewAsyncRecordingTime: '2023-07-20T00:30:28Z',
-      grbReviewAsyncEndDate: '2023-07-20T00:30:28Z'
+      grbReviewAsyncEndDate: '2023-07-20T00:30:28Z',
+      grbReviewAsyncManualEndDate: null
     }
   },
   grbMeetingDone: {
@@ -949,7 +951,8 @@ export const taskListState: {
       grbReviewType: SystemIntakeGRBReviewType.STANDARD,
       grbReviewStartedAt: '2023-07-20T00:30:28Z',
       grbReviewAsyncRecordingTime: '2023-07-20T00:30:28Z',
-      grbReviewAsyncEndDate: '2023-07-20T00:30:28Z'
+      grbReviewAsyncEndDate: '2023-07-20T00:30:28Z',
+      grbReviewAsyncManualEndDate: null
     }
   },
 

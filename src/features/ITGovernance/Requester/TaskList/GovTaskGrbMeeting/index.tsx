@@ -30,6 +30,7 @@ const GovTaskGrbMeeting = ({
   grbReviewType,
   grbReviewStartedAt,
   grbReviewAsyncEndDate,
+  grbReviewAsyncManualEndDate,
   grbReviewAsyncRecordingTime,
   grbPresentationLinks
 }: NonNullable<GetGovernanceTaskListQuery['systemIntake']>) => {
@@ -56,8 +57,9 @@ const GovTaskGrbMeeting = ({
     ASYNC: {
       SCHEDULED: grbReviewAsyncRecordingTime,
       AWAITING_GRB_REVIEW: grbReviewAsyncRecordingTime,
-      AWAITING_DECISION: grbReviewAsyncEndDate,
-      COMPLETED: grbReviewAsyncEndDate
+      // Use manual end date will only exist if voting ended early
+      AWAITING_DECISION: grbReviewAsyncManualEndDate || grbReviewAsyncEndDate,
+      COMPLETED: grbReviewAsyncManualEndDate || grbReviewAsyncEndDate
     }
   };
 

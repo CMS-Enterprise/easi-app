@@ -10,6 +10,7 @@ import {
 } from '@trussworks/react-uswds';
 import { actionDateInPast } from 'features/ITGovernance/Admin/Actions/ManageLcid/RetireLcid';
 import {
+  GetSystemIntakeDocument,
   GetSystemIntakeGRBReviewDocument,
   useRestartGRBReviewAsyncMutation
 } from 'gql/generated/graphql';
@@ -33,7 +34,7 @@ const RestartReviewModal = ({ systemIntakeId }: { systemIntakeId: string }) => {
   const [selectedDate, setSelectedDate] = useState<string>('');
 
   const [restartReview] = useRestartGRBReviewAsyncMutation({
-    refetchQueries: [GetSystemIntakeGRBReviewDocument]
+    refetchQueries: [GetSystemIntakeGRBReviewDocument, GetSystemIntakeDocument]
   });
 
   const handleSubmit: ReactEventHandler = event => {
