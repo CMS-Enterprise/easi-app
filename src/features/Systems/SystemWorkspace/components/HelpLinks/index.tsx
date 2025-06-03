@@ -17,9 +17,9 @@ export const HelpLinks = ({
 }) => {
   const { t } = useTranslation('systemWorkspace');
 
-  const helpCards = t<HelpLinkType[]>('helpLinks.links', {
+  const helpCards = t('helpLinks.links', {
     returnObjects: true
-  });
+  }) as HelpLinkType[];
 
   return (
     <SummaryBox

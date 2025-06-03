@@ -208,10 +208,14 @@ const ParticipantsTable = ({
         <Table bordered={false} fullWidth scrollable {...getTableProps()}>
           <thead>
             {headerGroups.map(headerGroup => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column, index) => (
+              <tr
+                {...headerGroup.getHeaderGroupProps()}
+                key={{ ...headerGroup.getHeaderGroupProps() }.key}
+              >
+                {headerGroup.headers.map(column => (
                   <th
                     {...column.getHeaderProps(column.getSortByToggleProps())}
+                    key={column.id}
                     aria-sort={getColumnSortStatus(column)}
                     scope="col"
                     className="border-bottom-2px"
@@ -235,11 +239,17 @@ const ParticipantsTable = ({
               return (
                 <tr
                   {...row.getRowProps()}
+                  key={{ ...row.getRowProps() }.key}
                   data-testid={`grbReviewer-${row.original.userAccount.username}`}
                 >
                   {row.cells.map((cell, index) => {
                     return (
-                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      <td
+                        {...cell.getCellProps()}
+                        key={{ ...cell.getCellProps() }.key}
+                      >
+                        {cell.render('Cell')}
+                      </td>
                     );
                   })}
                 </tr>

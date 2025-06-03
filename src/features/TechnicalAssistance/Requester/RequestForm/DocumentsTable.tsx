@@ -298,10 +298,14 @@ function DocumentsTable({
         <Table bordered={false} fullWidth scrollable {...getTableProps()}>
           <thead>
             {headerGroups.map(headerGroup => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column, index) => (
+              <tr
+                {...headerGroup.getHeaderGroupProps()}
+                key={{ ...headerGroup.getHeaderGroupProps() }.key}
+              >
+                {headerGroup.headers.map(column => (
                   <th
                     {...column.getHeaderProps(column.getSortByToggleProps())}
+                    key={column.id}
                     aria-sort={getColumnSortStatus(column)}
                     scope="col"
                     className="border-bottom-2px"
@@ -323,10 +327,15 @@ function DocumentsTable({
             {rows.map(row => {
               prepareRow(row);
               return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map((cell, index) => {
+                <tr {...row.getRowProps()} key={{ ...row.getRowProps() }.key}>
+                  {row.cells.map(cell => {
                     return (
-                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      <td
+                        {...cell.getCellProps()}
+                        key={{ ...cell.getCellProps() }.key}
+                      >
+                        {cell.render('Cell')}
+                      </td>
                     );
                   })}
                 </tr>

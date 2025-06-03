@@ -116,9 +116,11 @@ function RequestType() {
               >
                 <div>
                   <ul className="list-style-middot">
-                    {t<string[]>(`requestType.type.${requestType}.list`, {
-                      returnObjects: true
-                    }).map((text: string, idx: number) => (
+                    {(
+                      t(`requestType.type.${requestType}.list`, {
+                        returnObjects: true
+                      }) as string[]
+                    ).map((text: string, idx: number) => (
                       // eslint-disable-next-line react/no-array-index-key
                       <li key={idx}>{text}</li>
                     ))}

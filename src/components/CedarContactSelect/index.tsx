@@ -14,7 +14,8 @@ import Select, {
   IndicatorsContainerProps,
   InputProps,
   MenuProps,
-  OptionProps
+  OptionProps,
+  SingleValue
 } from 'react-select';
 import { Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
@@ -316,8 +317,8 @@ export default function CedarContactSelect({
             }
           : undefined
       }
-      onChange={(item: CedarContactSelectOption) =>
-        updateContact(item?.value || null)
+      onChange={(newValue: SingleValue<CedarContactSelectOption>) =>
+        updateContact(newValue?.value || null)
       }
       onBlur={() => {
         // Automatically select on blur if search returns single result

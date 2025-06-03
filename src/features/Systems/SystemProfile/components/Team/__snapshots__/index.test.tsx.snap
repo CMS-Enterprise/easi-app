@@ -75,7 +75,7 @@ exports[`System Profile Team subpage > matches snapshot 1`] = `
           <div
             class="usa-card__container"
           >
-            <header
+            <div
               class="usa-card__header padding-x-2 padding-top-105 padding-bottom-0"
               data-testid="CardHeader"
             >
@@ -84,7 +84,7 @@ exports[`System Profile Team subpage > matches snapshot 1`] = `
               >
                 null null
               </h3>
-            </header>
+            </div>
             <div
               class="usa-card__body padding-x-2 padding-top-0"
               data-testid="CardBody"
@@ -104,7 +104,7 @@ exports[`System Profile Team subpage > matches snapshot 1`] = `
           <div
             class="usa-card__container"
           >
-            <header
+            <div
               class="usa-card__header padding-x-2 padding-top-105 padding-bottom-0"
               data-testid="CardHeader"
             >
@@ -113,7 +113,7 @@ exports[`System Profile Team subpage > matches snapshot 1`] = `
               >
                 null null
               </h3>
-            </header>
+            </div>
             <div
               class="usa-card__body padding-x-2 padding-top-0"
               data-testid="CardBody"
@@ -161,7 +161,7 @@ exports[`System Profile Team subpage > matches snapshot 1`] = `
           <div
             class="usa-card__container"
           >
-            <header
+            <div
               class="usa-card__header padding-x-2 padding-top-105 padding-bottom-0"
               data-testid="CardHeader"
             >
@@ -170,7 +170,7 @@ exports[`System Profile Team subpage > matches snapshot 1`] = `
               >
                 null null
               </h3>
-            </header>
+            </div>
             <div
               class="usa-card__body padding-x-2 padding-top-0"
               data-testid="CardBody"
@@ -218,7 +218,7 @@ exports[`System Profile Team subpage > matches snapshot 1`] = `
           <div
             class="usa-card__container"
           >
-            <header
+            <div
               class="usa-card__header padding-x-2 padding-top-105 padding-bottom-0"
               data-testid="CardHeader"
             >
@@ -227,7 +227,7 @@ exports[`System Profile Team subpage > matches snapshot 1`] = `
               >
                 null null
               </h3>
-            </header>
+            </div>
             <div
               class="usa-card__body padding-x-2 padding-top-0"
               data-testid="CardBody"
@@ -252,7 +252,7 @@ exports[`System Profile Team subpage > matches snapshot 1`] = `
           <div
             class="usa-card__container"
           >
-            <header
+            <div
               class="usa-card__header padding-x-2 padding-top-105 padding-bottom-0"
               data-testid="CardHeader"
             >
@@ -261,7 +261,7 @@ exports[`System Profile Team subpage > matches snapshot 1`] = `
               >
                 null null
               </h3>
-            </header>
+            </div>
             <div
               class="usa-card__body padding-x-2 padding-top-0"
               data-testid="CardBody"

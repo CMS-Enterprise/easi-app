@@ -219,10 +219,14 @@ function TeamTable({
       <Table bordered={false} fullWidth {...getTableProps()}>
         <thead>
           {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
+            <tr
+              {...headerGroup.getHeaderGroupProps()}
+              key={{ ...headerGroup.getHeaderGroupProps() }.key}
+            >
               {headerGroup.headers.map((column, index) => (
                 <th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
+                  key={column.id}
                   aria-sort={getColumnSortStatus(column)}
                   scope="col"
                   className="border-bottom-2px"
@@ -241,12 +245,17 @@ function TeamTable({
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {page.map((row, rowIdx) => {
+          {page.map(row => {
             return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map((cell, index) => {
+              <tr {...row.getRowProps()} key={{ ...row.getRowProps() }.key}>
+                {row.cells.map(cell => {
                   return (
-                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                    <td
+                      {...cell.getCellProps()}
+                      key={{ ...cell.getCellProps() }.key}
+                    >
+                      {cell.render('Cell')}
+                    </td>
                   );
                 })}
               </tr>
