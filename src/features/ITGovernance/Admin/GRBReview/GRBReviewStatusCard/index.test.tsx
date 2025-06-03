@@ -6,6 +6,7 @@ import {
   GRBVotingInformationStatus,
   SystemIntakeGRBReviewAsyncStatusType,
   SystemIntakeGRBReviewFragment,
+  SystemIntakeGRBReviewStandardStatusType,
   SystemIntakeGRBReviewType
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
@@ -22,6 +23,7 @@ describe('GRBReviewStatusCard', () => {
     __typename: 'SystemIntake',
     grbReviewType: SystemIntakeGRBReviewType.STANDARD,
     grbReviewAsyncStatus: null,
+    grbReviewStandardStatus: SystemIntakeGRBReviewStandardStatusType.SCHEDULED,
     grbDate: '2025-03-28T12:00:00Z',
     grbReviewStartedAt: '2025-03-27T12:00:00Z',
     grbReviewAsyncEndDate: null,
@@ -137,12 +139,26 @@ describe('GRBReviewStatusCard', () => {
     expect(container.firstChild).toBeNull();
   });
 
-  it('does not display admin-specific actions for non-admin users', () => {
+  it('renders GRB reviewer view - in progress', () => {
     renderComponent(mockStandardReview, false);
 
     // Check that the Add Time or End Voting button is not displayed
     expect(
       screen.queryByText(i18next.t<string>('grbReview:statusCard.addTime'))
+    ).not.toBeInTheDocument();
+  });
+
+  it('renders GRB reviewer view - completed', () => {
+    const asyncReviewCompletedState = {
+      ...mockAsyncReview,
+      grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType.COMPLETED
+    };
+
+    renderComponent(asyncReviewCompletedState, false);
+
+    // Hide restart review button
+    expect(
+      screen.queryByRole('button', { name: /restart review/i })
     ).not.toBeInTheDocument();
   });
 

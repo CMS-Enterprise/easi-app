@@ -1,58 +1,55 @@
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Grid, Icon } from '@trussworks/react-uswds';
+import { Button, ButtonGroup, Grid, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
   SystemIntakeGRBReviewAsyncStatusType,
   SystemIntakeGRBReviewFragment,
+  SystemIntakeGRBReviewStandardStatusType,
   SystemIntakeGRBReviewType
 } from 'gql/generated/graphql';
 import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Tag from 'components/Tag';
+import { GRBReviewStatus } from 'types/grbReview';
 import { formatDateUtc, formatDaysHoursMinutes } from 'utils/date';
 
 import { useRestartReviewModal } from '../RestartReviewModal/RestartReviewModalContext';
 
-import AddTimeOrEndVoting from './AddTimeOrEndVoting';
-
-// TODO: Temp status type;
-export enum GRBReviewStatus {
-  SCHEDULED = 'SCHEDULED',
-  IN_PROGRESS = 'IN_PROGRESS',
-  COMPLETED = 'COMPLETED'
-}
+import EndGRBAsyncVoting from './EndGRBAsyncVoting';
+import ExtendGRBAsyncReview from './ExtendGRBAsyncReview';
 
 export type GRBReviewStatusCardProps = {
   grbReview: SystemIntakeGRBReviewFragment;
   className?: string;
 };
 
-const renderBGColor = (
-  grbReviewStatus: SystemIntakeGRBReviewAsyncStatusType | null | undefined
-) => {
+const renderBGColor = (grbReviewStatus: GRBReviewStatus) => {
   if (grbReviewStatus === SystemIntakeGRBReviewAsyncStatusType.COMPLETED) {
     return 'bg-success-lighter';
   }
   return 'bg-primary-lighter';
 };
 
+type GRBReviewStatusTagProps = {
+  isITGovAdmin: boolean;
+  grbReviewType: SystemIntakeGRBReviewType;
+  grbReviewStatus: GRBReviewStatus;
+};
+
 const GRBReviewStatusTag = ({
+  isITGovAdmin,
+  grbReviewType,
   grbReviewStatus
-}: {
-  grbReviewStatus:
-    | SystemIntakeGRBReviewAsyncStatusType
-    | GRBReviewStatus
-    | null
-    | undefined;
-}) => {
+}: GRBReviewStatusTagProps) => {
   const { t } = useTranslation('grbReview');
   const { openModal } = useRestartReviewModal();
 
-  if (!grbReviewStatus) {
-    return null;
-  }
+  const showRestartButton =
+    isITGovAdmin &&
+    grbReviewType === SystemIntakeGRBReviewType.ASYNC &&
+    grbReviewStatus === SystemIntakeGRBReviewAsyncStatusType.COMPLETED;
 
   return (
     <span
@@ -72,7 +69,7 @@ const GRBReviewStatusTag = ({
         {t(`statusCard.grbReviewStatus.${grbReviewStatus}`)}
       </Tag>
 
-      {grbReviewStatus === SystemIntakeGRBReviewAsyncStatusType.COMPLETED && (
+      {showRestartButton && (
         <Button
           type="button"
           unstyled
@@ -95,6 +92,7 @@ const GRBReviewStatusCard = ({
 
   const {
     grbReviewType,
+    grbReviewStandardStatus,
     grbReviewAsyncStatus,
     grbDate,
     grbReviewStartedAt,
@@ -108,7 +106,13 @@ const GRBReviewStatusCard = ({
     grbReviewAsyncEndDate
   );
 
-  if (!grbReviewStartedAt) {
+  /** Returns the correct status data for the review type */
+  const grbReviewStatus: GRBReviewStatus | null | undefined =
+    grbReviewType === SystemIntakeGRBReviewType.STANDARD
+      ? grbReviewStandardStatus
+      : grbReviewAsyncStatus;
+
+  if (!grbReviewStartedAt || !grbReviewStatus) {
     return null;
   }
 
@@ -117,7 +121,7 @@ const GRBReviewStatusCard = ({
       className={classNames(
         className,
         'padding-3 radius-md',
-        renderBGColor(grbReviewAsyncStatus)
+        renderBGColor(grbReviewStatus)
       )}
     >
       <h3 className="margin-top-0 margin-bottom-2">
@@ -125,13 +129,15 @@ const GRBReviewStatusCard = ({
       </h3>
 
       {/* Status Section */}
-      {/* TODO: replace with query data */}
-      <GRBReviewStatusTag grbReviewStatus={GRBReviewStatus.SCHEDULED} />
+      <GRBReviewStatusTag
+        grbReviewType={grbReviewType}
+        grbReviewStatus={grbReviewStatus}
+        isITGovAdmin={isITGovAdmin}
+      />
 
       {/* Meeting Details */}
-      {/* TODO: !!!! Replace the Standard GRB Review Status field and enum */}
-      {grbReviewAsyncStatus !==
-        SystemIntakeGRBReviewAsyncStatusType.COMPLETED && (
+      {grbReviewStatus !==
+        SystemIntakeGRBReviewStandardStatusType.COMPLETED && (
         <span>
           <h4 className="margin-0 margin-right-1 margin-top-2px margin-bottom-05">
             {t('statusCard.grbMeeting')}
@@ -159,7 +165,7 @@ const GRBReviewStatusCard = ({
       className={classNames(
         className,
         'padding-3 radius-md',
-        renderBGColor(grbReviewAsyncStatus)
+        renderBGColor(grbReviewStatus)
       )}
     >
       <h3 className="margin-top-0 margin-bottom-2">
@@ -167,11 +173,14 @@ const GRBReviewStatusCard = ({
       </h3>
 
       {/* Status Section */}
-      <GRBReviewStatusTag grbReviewStatus={grbReviewAsyncStatus} />
+      <GRBReviewStatusTag
+        grbReviewType={grbReviewType}
+        grbReviewStatus={grbReviewStatus}
+        isITGovAdmin={isITGovAdmin}
+      />
 
       {/* Meeting Details */}
-      {grbReviewAsyncStatus !==
-        SystemIntakeGRBReviewAsyncStatusType.COMPLETED && (
+      {grbReviewStatus !== SystemIntakeGRBReviewAsyncStatusType.COMPLETED && (
         <span>
           <h4 className="margin-0 margin-right-1 margin-top-2px margin-bottom-05">
             {t('statusCard.timeRemaining')}
@@ -194,10 +203,13 @@ const GRBReviewStatusCard = ({
           </Grid>
 
           {isITGovAdmin && (
-            <AddTimeOrEndVoting
-              grbReviewAsyncEndDate={grbReviewAsyncEndDate}
-              grbVotingInformation={grbVotingInformation}
-            />
+            <ButtonGroup>
+              <ExtendGRBAsyncReview />
+              <EndGRBAsyncVoting
+                grbReviewAsyncEndDate={grbReviewAsyncEndDate}
+                grbVotingInformation={grbVotingInformation}
+              />
+            </ButtonGroup>
           )}
         </span>
       )}
