@@ -83,7 +83,9 @@ describe('GRBReviewStatusCard', () => {
     // Check that the standard heading is rendered
     expect(
       screen.getByText(
-        i18next.t<string>('grbReview:statusCard.standardHeading')
+        i18next.t<string>('grbReview:statusCard.heading', {
+          context: 'STANDARD'
+        })
       )
     ).toBeInTheDocument();
 
@@ -105,7 +107,9 @@ describe('GRBReviewStatusCard', () => {
 
     // Check that the async heading is rendered
     expect(
-      screen.getByText(i18next.t<string>('grbReview:statusCard.asyncHeading'))
+      screen.getByText(
+        i18next.t<string>('grbReview:statusCard.heading', { context: 'ASYNC' })
+      )
     ).toBeInTheDocument();
 
     // Check that the time remaining is displayed
