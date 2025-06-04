@@ -667,10 +667,12 @@ type ComplexityRoot struct {
 	}
 
 	RequesterUpdateEmailData struct {
+		EuaUserID      func(childComplexity int) int
 		LcidExpiresAt  func(childComplexity int) int
 		LcidIssuedAt   func(childComplexity int) int
 		LcidRetiresAt  func(childComplexity int) int
 		LcidStatus     func(childComplexity int) int
+		ProjectName    func(childComplexity int) int
 		RequesterEmail func(childComplexity int) int
 	}
 
@@ -5302,6 +5304,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Query.UserAccount(childComplexity, args["username"].(string)), true
 
+	case "RequesterUpdateEmailData.euaUserId":
+		if e.complexity.RequesterUpdateEmailData.EuaUserID == nil {
+			break
+		}
+
+		return e.complexity.RequesterUpdateEmailData.EuaUserID(childComplexity), true
+
 	case "RequesterUpdateEmailData.lcidExpiresAt":
 		if e.complexity.RequesterUpdateEmailData.LcidExpiresAt == nil {
 			break
@@ -5329,6 +5338,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.RequesterUpdateEmailData.LcidStatus(childComplexity), true
+
+	case "RequesterUpdateEmailData.projectName":
+		if e.complexity.RequesterUpdateEmailData.ProjectName == nil {
+			break
+		}
+
+		return e.complexity.RequesterUpdateEmailData.ProjectName(childComplexity), true
 
 	case "RequesterUpdateEmailData.requesterEmail":
 		if e.complexity.RequesterUpdateEmailData.RequesterEmail == nil {
@@ -9338,6 +9354,8 @@ type SystemIntakeLCIDExpirationChange {
 }
 
 type RequesterUpdateEmailData {
+  euaUserId: String!
+  projectName: String!
   lcidStatus: SystemIntakeLCIDStatus
   lcidIssuedAt: Time
   lcidExpiresAt: Time
@@ -10897,10 +10915,8 @@ type Query {
   trbRequests(archived: Boolean! = false): [TRBRequest!]! @hasRole(role: EASI_TRB_ADMIN)
   myTrbRequests(archived: Boolean! = false): [TRBRequest!]!
   trbLeadOptions: [UserInfo!]!
-  trbAdminNote(id: UUID!): TRBAdminNote!
+  trbAdminNote(id: UUID!): TRBAdminNote! @hasRole(role: EASI_TRB_ADMIN)
   requesterUpdateEmailData: [RequesterUpdateEmailData!]!
-
-  @hasRole(role: EASI_TRB_ADMIN)
   userAccount(username: String!): UserAccount
 }
 
@@ -40820,8 +40836,35 @@ func (ec *executionContext) _Query_trbAdminNote(ctx context.Context, field graph
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().TrbAdminNote(rctx, fc.Args["id"].(uuid.UUID))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Query().TrbAdminNote(rctx, fc.Args["id"].(uuid.UUID))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_TRB_ADMIN")
+			if err != nil {
+				var zeroVal *models.TRBAdminNote
+				return zeroVal, err
+			}
+			if ec.directives.HasRole == nil {
+				var zeroVal *models.TRBAdminNote
+				return zeroVal, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*models.TRBAdminNote); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cms-enterprise/easi-app/pkg/models.TRBAdminNote`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -40899,35 +40942,8 @@ func (ec *executionContext) _Query_requesterUpdateEmailData(ctx context.Context,
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		directive0 := func(rctx context.Context) (any, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Query().RequesterUpdateEmailData(rctx)
-		}
-
-		directive1 := func(ctx context.Context) (any, error) {
-			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_TRB_ADMIN")
-			if err != nil {
-				var zeroVal []*models.RequesterUpdateEmailData
-				return zeroVal, err
-			}
-			if ec.directives.HasRole == nil {
-				var zeroVal []*models.RequesterUpdateEmailData
-				return zeroVal, errors.New("directive hasRole is not implemented")
-			}
-			return ec.directives.HasRole(ctx, nil, directive0, role)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.([]*models.RequesterUpdateEmailData); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be []*github.com/cms-enterprise/easi-app/pkg/models.RequesterUpdateEmailData`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().RequesterUpdateEmailData(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -40952,6 +40968,10 @@ func (ec *executionContext) fieldContext_Query_requesterUpdateEmailData(_ contex
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "euaUserId":
+				return ec.fieldContext_RequesterUpdateEmailData_euaUserId(ctx, field)
+			case "projectName":
+				return ec.fieldContext_RequesterUpdateEmailData_projectName(ctx, field)
 			case "lcidStatus":
 				return ec.fieldContext_RequesterUpdateEmailData_lcidStatus(ctx, field)
 			case "lcidIssuedAt":
@@ -41167,6 +41187,94 @@ func (ec *executionContext) fieldContext_Query___schema(_ context.Context, field
 				return ec.fieldContext___Schema_directives(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type __Schema", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RequesterUpdateEmailData_euaUserId(ctx context.Context, field graphql.CollectedField, obj *models.RequesterUpdateEmailData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RequesterUpdateEmailData_euaUserId(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.EuaUserID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RequesterUpdateEmailData_euaUserId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RequesterUpdateEmailData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RequesterUpdateEmailData_projectName(ctx context.Context, field graphql.CollectedField, obj *models.RequesterUpdateEmailData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RequesterUpdateEmailData_projectName(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ProjectName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RequesterUpdateEmailData_projectName(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RequesterUpdateEmailData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -69527,6 +69635,16 @@ func (ec *executionContext) _RequesterUpdateEmailData(ctx context.Context, sel a
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("RequesterUpdateEmailData")
+		case "euaUserId":
+			out.Values[i] = ec._RequesterUpdateEmailData_euaUserId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "projectName":
+			out.Values[i] = ec._RequesterUpdateEmailData_projectName(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		case "lcidStatus":
 			out.Values[i] = ec._RequesterUpdateEmailData_lcidStatus(ctx, field, obj)
 		case "lcidIssuedAt":

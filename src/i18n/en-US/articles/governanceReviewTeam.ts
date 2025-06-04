@@ -309,6 +309,8 @@ const governanceReviewTeam = {
     closed: 'Closed'
   },
   systemIntakeStatusAdmin,
+  lcidAlertMessage:
+    'The LCID for this request ({{-lcid}}) is set to retire on {{-date}}. If this is in error, or if you wish to change the retirement date, please take the action to manage this Life Cycle ID.',
   systemIntakeStatusRequester,
   adminLeads: {
     assignModal: {

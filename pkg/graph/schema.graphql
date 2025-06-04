@@ -1186,6 +1186,8 @@ type SystemIntakeLCIDExpirationChange {
 }
 
 type RequesterUpdateEmailData {
+  euaUserId: String!
+  projectName: String!
   lcidStatus: SystemIntakeLCIDStatus
   lcidIssuedAt: Time
   lcidExpiresAt: Time
@@ -2745,10 +2747,8 @@ type Query {
   trbRequests(archived: Boolean! = false): [TRBRequest!]! @hasRole(role: EASI_TRB_ADMIN)
   myTrbRequests(archived: Boolean! = false): [TRBRequest!]!
   trbLeadOptions: [UserInfo!]!
-  trbAdminNote(id: UUID!): TRBAdminNote!
+  trbAdminNote(id: UUID!): TRBAdminNote! @hasRole(role: EASI_TRB_ADMIN)
   requesterUpdateEmailData: [RequesterUpdateEmailData!]!
-
-  @hasRole(role: EASI_TRB_ADMIN)
   userAccount(username: String!): UserAccount
 }
 
