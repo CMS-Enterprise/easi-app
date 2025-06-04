@@ -201,7 +201,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 				errorExpected:  false,
 			},
 			{
-				testName: "Async GRB  - Awaiting decision",
+				testName: "Async GRB  - Past due but no quorum",
 				intake: models.SystemIntake{
 					Step:                  models.SystemIntakeStepGRBMEETING,
 					RequestFormState:      models.SIRFSInProgress,
@@ -211,7 +211,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					GRBReviewStartedAt:    helpers.PointerTo(yesterday.AddDate(0, 0, -1)),
 					GrbReviewAsyncEndDate: &yesterday,
 				},
-				expectedStatus: models.SISRGrbMeetingAwaitingDecision,
+				expectedStatus: models.SISRGrbReviewInProgress,
 				errorExpected:  false,
 			},
 		},

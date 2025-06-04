@@ -174,7 +174,7 @@ func (s *ResolverSuite) TestSystemIntakeUpdateSystemIntakeGRBReviewFormInputTime
 }
 
 func (s *ResolverSuite) TestCalcSystemIntakeGRBReviewAsyncStatus() {
-	ctx := s.testConfigs.Context
+	ctx := s.ctxWithNewDataloaders()
 
 	now := time.Now()
 	futureTime := now.Add(24 * time.Hour) // 24 hours in the future
@@ -204,13 +204,13 @@ func (s *ResolverSuite) TestCalcSystemIntakeGRBReviewAsyncStatus() {
 			expected: helpers.PointerTo(models.SystemIntakeGRBReviewAsyncStatusTypeInProgress),
 		},
 		{
-			name: "Status - Completed (End date is in the past)",
+			name: "Status - Past Due (End date is in the past, no quorum)",
 			intake: models.SystemIntake{
 				ID:                    systemIntakeID,
 				GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
 				GrbReviewAsyncEndDate: &pastTime,
 			},
-			expected: helpers.PointerTo(models.SystemIntakeGRBReviewAsyncStatusTypeCompleted),
+			expected: helpers.PointerTo(models.SystemIntakeGRBReviewAsyncStatusTypePastDue),
 		},
 	}
 

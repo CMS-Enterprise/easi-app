@@ -123,7 +123,7 @@ func calcSystemIntakeAsyncGRBReviewStatusAdmin(ctx context.Context, intake *mode
 	}
 
 	// If end date has passed but quorum has not been met, return models.SISAGrbReviewInProgress
-	if now.After(*intake.GrbReviewAsyncManualEndDate) {
+	if now.After(*intake.GrbReviewAsyncEndDate) {
 		// check quorum status
 		grbVotingInformation, err := GRBVotingInformationGetBySystemIntake(ctx, intake)
 		if err != nil {
