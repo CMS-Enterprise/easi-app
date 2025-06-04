@@ -1,6 +1,7 @@
 package resolvers
 
 import (
+	"context"
 	"testing"
 	"time"
 
@@ -460,7 +461,7 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 	for i := range decisionStateTests {
 		test := decisionStateTests[i]
 		t.Run(test.testCase, func(t *testing.T) {
-			status, err := DecisionAndNextStepsStatus(&test.intake)
+			status, err := DecisionAndNextStepsStatus(context.TODO(), &test.intake)
 			assert.EqualValues(t, test.expectedStatus, status)
 			if test.expectError {
 				assert.Error(t, err)
@@ -1493,7 +1494,7 @@ func TestGrbMeetingStatus(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.testCase, func(t *testing.T) {
-			status, err := GrbMeetingStatus(&tc.intake)
+			status, err := GrbMeetingStatus(context.TODO(), &tc.intake)
 			assert.EqualValues(t, tc.expectedStatus, status)
 			if tc.expectError {
 				assert.Error(t, err)

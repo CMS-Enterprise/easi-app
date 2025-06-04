@@ -1,9 +1,13 @@
 package resolvers
 
 import (
+	"context"
 	"fmt"
 	"time"
 
+	"go.uber.org/zap"
+
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
@@ -153,10 +157,10 @@ func BizCaseFinalStatus(intake *models.SystemIntake) (models.ITGovFinalBusinessC
 }
 
 // GrbMeetingStatus calculates the ITGovGRBStatus for the GrbMeeting section for the system intake task list for the requester view
-func GrbMeetingStatus(intake *models.SystemIntake) (models.ITGovGRBStatus, error) {
+func GrbMeetingStatus(ctx context.Context, intake *models.SystemIntake) (models.ITGovGRBStatus, error) {
 	switch intake.GrbReviewType {
 	case models.SystemIntakeGRBReviewTypeAsync:
-		return getAsyncGRBReviewStatus(intake)
+		return getAsyncGRBReviewStatus(ctx, intake)
 
 	case models.SystemIntakeGRBReviewTypeStandard:
 		return getStandardGRBReviewStatus(intake)
@@ -166,7 +170,7 @@ func GrbMeetingStatus(intake *models.SystemIntake) (models.ITGovGRBStatus, error
 	}
 }
 
-func getAsyncGRBReviewStatus(intake *models.SystemIntake) (models.ITGovGRBStatus, error) {
+func getAsyncGRBReviewStatus(ctx context.Context, intake *models.SystemIntake) (models.ITGovGRBStatus, error) {
 	now := time.Now()
 
 	// Review has not been started
@@ -199,7 +203,16 @@ func getAsyncGRBReviewStatus(intake *models.SystemIntake) (models.ITGovGRBStatus
 	// Review end date is in past, request is awaiting decision
 	if intake.Step == models.SystemIntakeStepGRBMEETING {
 
-		// TODO: If quorum is not met, return models.ITGRRBSReviewInProgress
+		// If quorum is not met, return models.ITGRRBSReviewInProgress
+		grbVotingInformation, err := GRBVotingInformationGetBySystemIntake(ctx, intake)
+		if err != nil {
+			appcontext.ZLogger(ctx).Error("problem getting grb voting information", zap.Error(err), zap.String("intake.id", intake.ID.String()))
+			return models.ITGRRBSReviewInProgress, err
+		}
+
+		if !grbVotingInformation.QuorumReached() {
+			return models.ITGRRBSReviewInProgress, nil
+		}
 
 		return models.ITGGRBSAwaitingDecision, nil
 	}
@@ -239,7 +252,7 @@ func getGRBReviewStatusWithNilGRBDate(intake *models.SystemIntake) (models.ITGov
 }
 
 // DecisionAndNextStepsStatus calculates the ITGovDecisionStatus for the Decisions section for the system intake task list for the requester view
-func DecisionAndNextStepsStatus(intake *models.SystemIntake) (models.ITGovDecisionStatus, error) {
+func DecisionAndNextStepsStatus(ctx context.Context, intake *models.SystemIntake) (models.ITGovDecisionStatus, error) {
 
 	switch intake.Step {
 	case models.SystemIntakeStepINITIALFORM, models.SystemIntakeStepDRAFTBIZCASE, models.SystemIntakeStepGRTMEETING, models.SystemIntakeStepFINALBIZCASE:
@@ -273,6 +286,15 @@ func DecisionAndNextStepsStatus(intake *models.SystemIntake) (models.ITGovDecisi
 			}
 
 			// If quorum is not met, return models.ITGDSCantStart
+			grbVotingInformation, err := GRBVotingInformationGetBySystemIntake(ctx, intake)
+			if err != nil {
+				appcontext.ZLogger(ctx).Error("problem getting grb voting information", zap.Error(err), zap.String("intake.id", intake.ID.String()))
+				return models.ITGDSCantStart, err
+			}
+
+			if !grbVotingInformation.QuorumReached() {
+				return models.ITGDSCantStart, nil
+			}
 		}
 
 		// Meeting has happened, intake is waiting on a decision
