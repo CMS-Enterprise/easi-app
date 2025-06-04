@@ -45,7 +45,7 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 		}
 
 		err := sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
-			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, createdIDs[0], systemIDs, []*models.SystemRelationship{})
+			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, createdIDs[0], systemIDs, []*models.SystemRelationshipInput{})
 		})
 		s.NoError(err)
 
@@ -148,17 +148,17 @@ func (s *ResolverSuite) TestSystemIntakesByCedarSystemID() {
 		}
 
 		err = sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
-			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, open1, systemNumbers, []*models.SystemRelationship{})
+			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, open1, systemNumbers, []*models.SystemRelationshipInput{})
 		})
 		s.NoError(err)
 
 		err = sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
-			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, open2, systemNumbers, []*models.SystemRelationship{})
+			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, open2, systemNumbers, []*models.SystemRelationshipInput{})
 		})
 		s.NoError(err)
 
 		err = sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
-			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, closed, systemNumbers, []*models.SystemRelationship{})
+			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, closed, systemNumbers, []*models.SystemRelationshipInput{})
 		})
 		s.NoError(err)
 

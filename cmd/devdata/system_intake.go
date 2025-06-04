@@ -305,37 +305,17 @@ func setSystemIntakeRelationExistingSystem(
 	intakeID uuid.UUID,
 	contractNumbers []string,
 	cedarSystemIDs []string,
+	cedarSystemRelationships []*models.SystemRelationshipInput,
 ) {
-	idOne := "11AB1A00-1234-5678-ABC1-1A001B00CC0A"
-	// idTwo := "11AB1A00-1234-5678-ABC1-1A001B00CC1B"
 
-	relationshipOne := []string{(string(models.SystemRelationshipTypePrimarySupport))}
-	// relationshipTwo := []string{(string(models.SystemRelationshipTypeOther))}
-
-	// otherTypeDescriptionOne := zero.StringFrom("Text used to describe the relationship")
-	otherTypeDescriptionOne := "Text used to describe the relationship"
-	// otherTypeDescriptionTwo := "asdf"
-
-	relationshipInputOne := models.SystemRelationshipInput{
-		CedarSystemID:          &idOne,
-		SystemRelationshipType: relationshipOne,
-		OtherTypeDescription:   &otherTypeDescriptionOne,
+	if len(cedarSystemRelationships) < 1 {
+		return
 	}
-	// relationshipInputTwo := models.SystemRelationshipInput{
-	// 	CedarSystemID:          &idTwo,
-	// 	SystemRelationshipType: relationshipTwo,
-	// 	OtherTypeDescription:   &otherTypeDescriptionTwo,
-	// }
 
-	cedarSystemRelationships := []*models.SystemRelationshipInput{
-		&relationshipInputOne,
-		// &relationshipInputTwo,
-	}
 	input := &models.SetSystemIntakeRelationExistingSystemInput{
-		SystemIntakeID:           intakeID,
-		ContractNumbers:          contractNumbers,
-		CedarSystemIDs:           cedarSystemIDs,
-		CedarSystemRelationShips: cedarSystemRelationships,
+		SystemIntakeID:  intakeID,
+		ContractNumbers: contractNumbers,
+		CedarSystemIDs:  cedarSystemIDs,
 	}
 
 	// temp, manually set these contract numbers

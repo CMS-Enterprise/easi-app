@@ -2,7 +2,6 @@ package models
 
 import (
 	"github.com/google/uuid"
-	"github.com/guregu/null/zero"
 	"github.com/lib/pq"
 )
 
@@ -16,20 +15,15 @@ const (
 	SystemRelationshipTypeOther              SystemRelationshipType = "OTHER"
 )
 
-type SystemRelationship struct {
-	CedarSystemID          zero.String `json:"cedarSystemId" db:"cedar_system_id"`
-	SystemRelationshipType []string    `json:"systemRelationshipType" db:"system_relationship_type"`
-	OtherTypeDescription   zero.String `json:"otherTypeDescription" db:"other_type_description"`
-}
-
 // SystemIntakeSystem is the insertion type for linking a system intake to
 // system(s)
 type SystemIntakeSystem struct {
 	BaseStructUser
-	SystemIntakeID          uuid.UUID      `json:"systemIntakeId" db:"system_intake_id"`
-	SystemID                string         `json:"systemId" db:"system_id"`
+	SystemIntakeID uuid.UUID `json:"systemIntakeId" db:"system_intake_id"`
+	SystemID       string    `json:"systemId" db:"system_id"`
+	//TODO -- Consider bringing in EnumArray from Mint
 	SystemRelationshipType  pq.StringArray `json:"relationshipType" db:"relationship_type"`
-	OtherSystemRelationship zero.String    `json:"otherSystemRelationship" db:"other_system_relationship"`
+	OtherSystemRelationship *string        `json:"otherSystemRelationship" db:"other_system_relationship"`
 }
 
 // NewSystemIntakeSystem creates a SystemIntakeSystemLink

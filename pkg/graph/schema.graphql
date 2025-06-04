@@ -1079,7 +1079,7 @@ TODO This comment
 """
 input SystemRelationshipInput {
   cedarSystemId: String
-  systemRelationshipType: [String!]!
+  systemRelationshipType: [SystemRelationshipType!]!
   otherTypeDescription: String
 }
 """

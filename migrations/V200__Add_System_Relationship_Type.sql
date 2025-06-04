@@ -8,7 +8,7 @@ CREATE TYPE system_relationship_type AS ENUM (
 
 ALTER TABLE system_intake_systems ADD COLUMN relationship_type SYSTEM_RELATIONSHIP_TYPE[];
 
-ALTER TABLE system_intake_systems ADD COLUMN other_system_relationship TEXT;
+ALTER TABLE system_intake_systems ADD COLUMN other_system_relationship ZERO_STRING;
 
 ALTER TABLE system_intake_systems
 ADD CONSTRAINT system_intake_systems_check_other_system_relationship_only_if_other

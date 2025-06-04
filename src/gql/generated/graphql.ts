@@ -2650,7 +2650,7 @@ export type SystemIntakeUpdateLCIDInput = {
 export type SystemRelationshipInput = {
   cedarSystemId?: InputMaybe<Scalars['String']['input']>;
   otherTypeDescription?: InputMaybe<Scalars['String']['input']>;
-  systemRelationshipType: Array<Scalars['String']['input']>;
+  systemRelationshipType: Array<SystemRelationshipType>;
 };
 
 /** Types of System Relationships */
