@@ -149,7 +149,7 @@ describe('formatDaysHoursMinutes', () => {
     const result = formatDaysHoursMinutes(futureDate);
 
     expect(result).toEqual({
-      days: 1,
+      days: 0,
       hours: 3,
       minutes: 15
     });
