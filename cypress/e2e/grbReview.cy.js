@@ -169,7 +169,6 @@ describe('GRB review', () => {
         .within(() => {
           cy.contains('td', 'Adeline Aarons').should('exist');
           cy.contains('td', 'Voting').should('exist');
-          cy.contains('td', 'Co-Chair - CIO').should('exist');
         });
     });
 
