@@ -118,6 +118,8 @@ func calcSystemIntakeAsyncGRBReviewStatusAdmin(startDate *time.Time, endDate *ti
 		return models.SISAGrbReviewInProgress
 	}
 
+	// TODO: If end date has passed but quorum has not been met, return models.SISAGrbReviewInProgress
+
 	return models.SISAGrbReviewComplete
 }
 

@@ -125,6 +125,8 @@ func calcSystemIntakeAsyncGRBReviewStatusRequester(startDate *time.Time, endDate
 		return models.SISRGrbReviewInProgress
 	}
 
+	// TODO: If end date has passed but quorum has not been met, return models.SISRGrbReviewInProgress
+
 	return models.SISRGrbMeetingAwaitingDecision
 }
 

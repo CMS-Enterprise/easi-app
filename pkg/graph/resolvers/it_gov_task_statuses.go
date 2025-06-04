@@ -198,6 +198,9 @@ func getAsyncGRBReviewStatus(intake *models.SystemIntake) (models.ITGovGRBStatus
 
 	// Review end date is in past, request is awaiting decision
 	if intake.Step == models.SystemIntakeStepGRBMEETING {
+
+		// TODO: If quorum is not met, return models.ITGRRBSReviewInProgress
+
 		return models.ITGGRBSAwaitingDecision, nil
 	}
 
@@ -268,6 +271,8 @@ func DecisionAndNextStepsStatus(intake *models.SystemIntake) (models.ITGovDecisi
 			if intake.GrbReviewAsyncEndDate.After(time.Now()) {
 				return models.ITGDSCantStart, nil
 			}
+
+			// If quorum is not met, return models.ITGDSCantStart
 		}
 
 		// Meeting has happened, intake is waiting on a decision
