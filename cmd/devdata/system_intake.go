@@ -305,11 +305,16 @@ func setSystemIntakeRelationExistingSystem(
 	intakeID uuid.UUID,
 	contractNumbers []string,
 	cedarSystemIDs []string,
+	cedarSystemRelationships []*models.SystemRelationshipInput,
 ) {
+
+	if len(cedarSystemRelationships) < 1 {
+		return
+	}
+
 	input := &models.SetSystemIntakeRelationExistingSystemInput{
 		SystemIntakeID:  intakeID,
 		ContractNumbers: contractNumbers,
-		CedarSystemIDs:  cedarSystemIDs,
 	}
 
 	// temp, manually set these contract numbers

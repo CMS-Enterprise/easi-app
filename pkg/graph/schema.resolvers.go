@@ -577,7 +577,7 @@ func (r *mutationResolver) SetSystemIntakeRelationNewSystem(ctx context.Context,
 }
 
 // SetSystemIntakeRelationExistingSystem is the resolver for the setSystemIntakeRelationExistingSystem field.
-func (r *mutationResolver) SetSystemIntakeRelationExistingSystem(ctx context.Context, input *models.SetSystemIntakeRelationExistingSystemInput) (*models.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) SetSystemIntakeRelationExistingSystem(ctx context.Context, input *models.SetSystemIntakeRelationExistingSystemInput) (*models.SetSystemIntakeRelationExistingSystemPayload, error) {
 	// This resolver's purpose is to relate this System Intake to some number of CEDAR System IDs and Contract Numbers
 	// It is also responsible for clearing any previous relations that might have been set by SetSystemIntakeRelationExistingService(), which,
 	// in practice, should just be the `contractName` field.
@@ -586,7 +586,7 @@ func (r *mutationResolver) SetSystemIntakeRelationExistingSystem(ctx context.Con
 		return nil, err
 	}
 
-	return &models.UpdateSystemIntakePayload{
+	return &models.SetSystemIntakeRelationExistingSystemPayload{
 		SystemIntake: intake,
 	}, nil
 }

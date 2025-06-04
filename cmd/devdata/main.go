@@ -155,6 +155,7 @@ func main() {
 			ID,
 			[]string{"111111", "111112"},
 			[]string{"11AB1A00-1234-5678-ABC1-1A001B00CC6G"},
+			[]*models.SystemRelationshipInput{},
 		)
 	}
 
@@ -776,6 +777,7 @@ func main() {
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
 		},
+		[]*models.SystemRelationshipInput{},
 	)
 
 	intakeID = uuid.MustParse("28f36737-b5cf-464a-a5a2-f1c89acea4cf")
@@ -789,6 +791,7 @@ func main() {
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}",
 		},
+		[]*models.SystemRelationshipInput{},
 	)
 
 	intakeID = uuid.MustParse("dd31c8bd-b677-434c-aa35-56138f0b443b")
@@ -802,6 +805,7 @@ func main() {
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC4E}",
 		},
+		[]*models.SystemRelationshipInput{},
 	)
 
 	intakeID = uuid.MustParse("020fba51-9b95-4e87-8cd4-808ae6e3dac8")
@@ -815,6 +819,7 @@ func main() {
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC5F}",
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC6G}",
 		},
+		[]*models.SystemRelationshipInput{},
 	)
 	// 3. Intakes related to an existing contract/service
 	intakeID = uuid.MustParse("b8e3fbf3-73af-4bac-bac3-fd6167a36166")
@@ -839,6 +844,7 @@ func main() {
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
 		},
+		[]*models.SystemRelationshipInput{},
 	)
 	unlinkSystemIntakeRelation(ctx, store, intakeID)
 
@@ -854,6 +860,7 @@ func main() {
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC5F}",
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC6G}",
 		},
+		[]*models.SystemRelationshipInput{},
 	)
 
 	// initial intake form

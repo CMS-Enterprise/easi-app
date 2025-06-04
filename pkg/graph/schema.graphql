@@ -1065,11 +1065,37 @@ input UpdateSystemIntakeContractDetailsInput {
 }
 
 """
+Types of System Relationships
+"""
+enum SystemRelationshipType {
+  PRIMARY_SUPPORT
+  PARTIAL_SUPORT
+  USES_IN_TECH_SOLUTION
+  USED_IN_TECH_SOLUTION
+  OTHER
+}
+"""
+TODO This comment
+"""
+input SystemRelationshipInput {
+  cedarSystemId: String
+  systemRelationshipType: [SystemRelationshipType!]!
+  otherTypeDescription: String
+}
+
+type SystemRelationship {
+  cedarSystemId: String
+  systemRelationshipType: [SystemRelationshipType!]!
+  otherTypeDescription: String
+}
+"""
 Input data for updating a system intake's relationship to a CEDAR system
 """
 input UpdateSystemIntakeLinkedCedarSystemInput {
   id: UUID!
   cedarSystemId: String
+  # May not be part of the scope of the ticket
+  systemRelationship: SystemRelationshipType
 }
 
 # RequestRelationType.NEW_SYSTEM
@@ -1081,8 +1107,16 @@ input SetSystemIntakeRelationNewSystemInput {
 # RequestRelationType.EXISTING_SYSTEM
 input SetSystemIntakeRelationExistingSystemInput {
   systemIntakeID: UUID!
-  cedarSystemIDs: [String!]!
+  cedarSystemRelationShips: [SystemRelationshipInput!]
   contractNumbers: [String!]!
+}
+
+type SetSystemIntakeRelationExistingSystemPayload {
+  systemIntakeID: UUID!
+  systemIntake: SystemIntake
+  cedarSystemRelationShips: [SystemRelationship!]
+  contractNumbers: [String!]!
+  userErrors: [UserError!]
 }
 
 # RequestRelationType.EXISTING_SERVICE
@@ -2598,7 +2632,7 @@ type Mutation {
   ): DeleteCedarSystemBookmarkPayload
 
   setSystemIntakeRelationNewSystem(input: SetSystemIntakeRelationNewSystemInput): UpdateSystemIntakePayload
-  setSystemIntakeRelationExistingSystem(input: SetSystemIntakeRelationExistingSystemInput): UpdateSystemIntakePayload
+  setSystemIntakeRelationExistingSystem(input: SetSystemIntakeRelationExistingSystemInput): SetSystemIntakeRelationExistingSystemPayload
   setSystemIntakeRelationExistingService(input: SetSystemIntakeRelationExistingServiceInput): UpdateSystemIntakePayload
   unlinkSystemIntakeRelation(intakeID: UUID!): UpdateSystemIntakePayload
 
