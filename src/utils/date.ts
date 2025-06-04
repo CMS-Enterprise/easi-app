@@ -151,12 +151,12 @@ export const formatDaysHoursMinutes = (
   const now = DateTime.utc();
 
   // Calculate the difference between the two DateTime objects
-  const diff = now.diff(dateTime, ['days', 'hours', 'minutes']);
+  const diff = dateTime.diff(now, ['days', 'hours', 'minutes']);
 
   // Extract whole number of days, hours, and minutes and make them absolute
-  const days = Math.abs(Math.floor(diff.as('days')));
-  const hours = Math.abs(Math.floor(diff.hours));
-  const minutes = Math.abs(Math.floor(diff.minutes));
+  const days = Math.abs(diff.days);
+  const hours = Math.abs(diff.hours);
+  const minutes = Math.floor(Math.abs(diff.minutes));
 
   return { days, hours, minutes };
 };
