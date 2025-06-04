@@ -34,6 +34,7 @@ describe('Async Presentation Links Card', () => {
             <ModalProvider>
               <ITGovAdminContext.Provider value={isAdmin}>
                 <PresentationLinksCard
+                  grbReviewStartedAt="2025-04-04T19:56:57.994482Z"
                   systemIntakeID={systemIntake.id}
                   grbPresentationLinks={grbPresentationLinks}
                 />
@@ -159,6 +160,7 @@ describe('Async Presentation Links Card', () => {
                   systemIntakeID={systemIntake.id}
                   grbPresentationLinks={grbPresentationLinksMock}
                   asyncStatus={SystemIntakeGRBReviewAsyncStatusType.COMPLETED}
+                  grbReviewStartedAt="2025-04-04T19:56:57.994482Z"
                 />
               </ITGovAdminContext.Provider>
             </ModalProvider>
