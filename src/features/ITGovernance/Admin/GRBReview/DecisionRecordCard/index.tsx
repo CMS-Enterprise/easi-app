@@ -5,15 +5,17 @@ import { Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
   GRBVotingInformationStatus,
-  SystemIntakeFragmentFragment
+  SystemIntakeGRBReviewFragment
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
 import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import UswdsReactLink from 'components/LinkWrapper';
 
+import './index.scss';
+
 export type DecisionRecordCardProps = {
-  grbVotingInformation: SystemIntakeFragmentFragment['grbVotingInformation'];
+  grbVotingInformation: SystemIntakeGRBReviewFragment['grbVotingInformation'];
   className?: string;
 };
 
@@ -23,7 +25,7 @@ type DecisionRenderConfigType = {
   decisionBanner: JSX.Element;
 };
 
-// Configures render elements (background color, border color, and decision banner) based on the voting status
+/** Configures render elements (background color, border color, and decision banner) based on the voting status */
 const configureDecisionRender = (
   votingStatus: GRBVotingInformationStatus,
   systemIntakeID: string
@@ -63,14 +65,17 @@ const configureDecisionRender = (
   }
 
   decisionConfig.decisionBanner = (
-    <div className="display-flex margin-y-1">
+    <div
+      className={classNames(
+        'decision-banner display-flex padding-top-2 margin-top-2 border-top-1px line-height-body-5',
+        decisionConfig.borderColor
+      )}
+    >
       {decisionIcon}
-      <div className="flex-align-self-center margin-right-2">
-        {decisionText}
-      </div>
+      <p className="margin-y-0 margin-right-3">{decisionText}</p>
       <UswdsReactLink
         to={`/it-governance/${systemIntakeID}/resolutions`}
-        className="text-white flex-align-self-center"
+        className="text-white"
       >
         {i18next.t<string>('grbReview:decisionCard.issueDecision')}
       </UswdsReactLink>
@@ -80,6 +85,7 @@ const configureDecisionRender = (
   return decisionConfig;
 };
 
+/** Displays summary of voting and decision record information */
 const DecisionRecordCard = ({
   grbVotingInformation,
   className
@@ -96,9 +102,8 @@ const DecisionRecordCard = ({
   const isITGovAdmin = useContext(ITGovAdminContext);
 
   if (
-    !isITGovAdmin ||
     grbVotingInformation?.votingStatus ===
-      GRBVotingInformationStatus.NOT_STARTED
+    GRBVotingInformationStatus.NOT_STARTED
   ) {
     return null;
   }
@@ -112,20 +117,20 @@ const DecisionRecordCard = ({
     <div
       className={classNames(
         className,
-        'radius-md padding-2 text-white margin-top-2',
+        'decision-record-card radius-md padding-3 text-white margin-top-2',
         decisionConfig.bgColor
       )}
     >
-      <h4 className="margin-y-1">{t('decisionCard.heading')}</h4>
+      <h4 className="margin-y-0">{t('decisionCard.heading')}</h4>
 
-      <div className="display-flex margin-bottom-1">
-        <div className="easi-body-large margin-right-2">
+      <div className="display-flex margin-y-05">
+        <p className="easi-body-large margin-right-3 margin-y-0">
           {t('decisionCard.voteInfo', {
             noObjection: grbVotingInformation.numberOfNoObjection,
             objection: grbVotingInformation.numberOfObjection,
             notVoted: grbVotingInformation.numberOfNotVoted
           })}
-        </div>
+        </p>
 
         <UswdsReactLink
           to={`/it-governance/${systemId}/grb-review/decision-record`}
@@ -135,34 +140,26 @@ const DecisionRecordCard = ({
         </UswdsReactLink>
       </div>
 
-      <div
-        className={classNames('display-flex', {
+      <p
+        className={classNames('display-flex flex-align-center margin-y-0', {
           'text-primary-light':
             grbVotingInformation.votingStatus ===
             GRBVotingInformationStatus.IN_PROGRESS
         })}
       >
         <Icon.Comment className="margin-right-1" />
-        <div className="flex-align-self-center">
-          {t('decisionCard.additionalComments', {
-            count: voteCommentCount
-          })}
-        </div>
-      </div>
+        {t('decisionCard.additionalComments', {
+          count: voteCommentCount
+        })}
+      </p>
 
-      {grbVotingInformation.votingStatus !==
-        GRBVotingInformationStatus.IN_PROGRESS && (
-        <>
-          <div
-            className={classNames(
-              'border-bottom-1px margin-y-2',
-              decisionConfig.borderColor
-            )}
-          />
-
-          {decisionConfig.decisionBanner}
-        </>
-      )}
+      {
+        // Decision banner for admin view only
+        isITGovAdmin &&
+          grbVotingInformation.votingStatus !==
+            GRBVotingInformationStatus.IN_PROGRESS &&
+          decisionConfig.decisionBanner
+      }
     </div>
   );
 };
