@@ -2,7 +2,6 @@ package models
 
 import (
 	"github.com/google/uuid"
-	"github.com/lib/pq"
 )
 
 type SystemRelationshipType string
@@ -22,8 +21,8 @@ type SystemIntakeSystem struct {
 	SystemIntakeID uuid.UUID `json:"systemIntakeId" db:"system_intake_id"`
 	SystemID       string    `json:"systemId" db:"system_id"`
 	//TODO -- Consider bringing in EnumArray from Mint
-	SystemRelationshipType  pq.StringArray `json:"relationshipType" db:"relationship_type"`
-	OtherSystemRelationship *string        `json:"otherSystemRelationship" db:"other_system_relationship"`
+	SystemRelationshipType  EnumArray[SystemRelationshipType] `json:"relationshipType" db:"relationship_type"`
+	OtherSystemRelationship *string                           `json:"otherSystemRelationship" db:"other_system_relationship"`
 }
 
 // NewSystemIntakeSystem creates a SystemIntakeSystemLink

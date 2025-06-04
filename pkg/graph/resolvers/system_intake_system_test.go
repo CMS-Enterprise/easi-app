@@ -38,14 +38,15 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 
 		// set contract for the created system intake
 		// insert systems for this created system intake
-		systemIDs := []string{
-			systemID1,
-			systemID2,
-			systemID3,
-		}
+		// systemIDs := []string{
+		// 	systemID1,
+		// 	systemID2,
+		// 	systemID3,
+		// }
 
 		err := sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
-			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, createdIDs[0], systemIDs, []*models.SystemRelationshipInput{})
+			// systemIDs,
+			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, createdIDs[0], []*models.SystemRelationshipInput{})
 		})
 		s.NoError(err)
 
@@ -140,25 +141,25 @@ func (s *ResolverSuite) TestSystemIntakesByCedarSystemID() {
 		closed = create3.ID
 
 		// link all systems to all system intakes
-		systemNumbers := []string{
-			system1,
-			system2,
-			system3,
-			system4,
-		}
+		// systemNumbers := []string{
+		// 	system1,
+		// 	system2,
+		// 	system3,
+		// 	system4,
+		// }
 
 		err = sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
-			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, open1, systemNumbers, []*models.SystemRelationshipInput{})
+			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, open1, []*models.SystemRelationshipInput{})
 		})
 		s.NoError(err)
 
 		err = sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
-			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, open2, systemNumbers, []*models.SystemRelationshipInput{})
+			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, open2, []*models.SystemRelationshipInput{})
 		})
 		s.NoError(err)
 
 		err = sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
-			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, closed, systemNumbers, []*models.SystemRelationshipInput{})
+			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, closed, []*models.SystemRelationshipInput{})
 		})
 		s.NoError(err)
 

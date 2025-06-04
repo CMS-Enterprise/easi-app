@@ -16,7 +16,7 @@ import (
 
 // SetSystemIntakeSystems links given System IDs to given System Intake ID
 // This function opts to take a *sqlx.Tx instead of a NamedPreparer because the SQL calls inside this function are heavily intertwined, and we never want to call them outside the scope of a transaction
-func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemIntakeID uuid.UUID, systemIDs []string, systemRelationships []*models.SystemRelationshipInput) error {
+func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemIntakeID uuid.UUID, systemRelationships []*models.SystemRelationshipInput) error {
 	if systemIntakeID == uuid.Nil {
 		return errors.New("unexpected nil system intake ID when linking system intake to system id")
 	}
@@ -47,9 +47,10 @@ func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemI
 		systemIDLink := models.NewSystemIntakeSystem(userID)
 		systemIDLink.SystemID = *relationship.CedarSystemID
 		systemIDLink.ID = uuid.New()
+		systemIDLink.SystemIntakeID = systemIntakeID
 		systemIDLink.ModifiedBy = &userID
 		//TODO -- Consider bringing in EnumArray from Mint
-		systemIDLink.SystemRelationshipType = models.ConvertEnumsToStringArray(relationship.SystemRelationshipType)
+		systemIDLink.SystemRelationshipType = relationship.SystemRelationshipType
 		systemIDLink.OtherSystemRelationship = relationship.OtherTypeDescription
 
 		setSystemIntakeSystemsLinks[i] = systemIDLink

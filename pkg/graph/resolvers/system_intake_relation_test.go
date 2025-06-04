@@ -82,7 +82,8 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 
 			// Set existing system IDs
 			err = sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
-				return store.SetSystemIntakeSystems(ctx, tx, openIntake.ID, caseValues.InitialSystemIDs, []*models.SystemRelationshipInput{})
+				//Ids removed were caseValues.InitialSystemIDs
+				return store.SetSystemIntakeSystems(ctx, tx, openIntake.ID, []*models.SystemRelationshipInput{})
 
 			})
 			s.NoError(err)
@@ -196,7 +197,8 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 
 			// Set existing system IDs
 			err = sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
-				return store.SetSystemIntakeSystems(ctx, tx, openIntake.ID, caseValues.InitialSystemIDs, []*models.SystemRelationshipInput{})
+				// Ids removed were caseValues.InitialSystemIDs
+				return store.SetSystemIntakeSystems(ctx, tx, openIntake.ID, []*models.SystemRelationshipInput{})
 			})
 			s.NoError(err)
 
@@ -206,9 +208,9 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 
 			// Set the "existing system" relationship
 			input := &models.SetSystemIntakeRelationExistingSystemInput{
-				SystemIntakeID:  openIntake.ID,
-				CedarSystemIDs:  caseValues.NewSystemIDs,
-				ContractNumbers: caseValues.NewContractNumbers,
+				SystemIntakeID:           openIntake.ID,
+				CedarSystemRelationShips: []*models.SystemRelationshipInput{},
+				ContractNumbers:          caseValues.NewContractNumbers,
 			}
 			updatedIntake, err := SetSystemIntakeRelationExistingSystem(
 				ctx,
@@ -318,7 +320,8 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 
 			// Set existing system IDs
 			err = sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
-				return store.SetSystemIntakeSystems(ctx, tx, openIntake.ID, caseValues.InitialSystemIDs, []*models.SystemRelationshipInput{})
+				// caseValues.InitialSystemIDs
+				return store.SetSystemIntakeSystems(ctx, tx, openIntake.ID, []*models.SystemRelationshipInput{})
 
 			})
 			s.NoError(err)
@@ -428,9 +431,9 @@ func (s *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 
 		// Set the existing system relationship
 		input := &models.SetSystemIntakeRelationExistingSystemInput{
-			SystemIntakeID:  openIntake.ID,
-			CedarSystemIDs:  []string{"abcde", "fghijk"},
-			ContractNumbers: []string{"12345", "67890"},
+			SystemIntakeID:           openIntake.ID,
+			CedarSystemRelationShips: []*models.SystemRelationshipInput{},
+			ContractNumbers:          []string{"12345", "67890"},
 		}
 		_, err = SetSystemIntakeRelationExistingSystem(
 			ctx,

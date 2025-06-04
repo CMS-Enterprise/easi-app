@@ -433,9 +433,16 @@ type SetSystemIntakeRelationExistingServiceInput struct {
 
 type SetSystemIntakeRelationExistingSystemInput struct {
 	SystemIntakeID           uuid.UUID                  `json:"systemIntakeID"`
-	CedarSystemIDs           []string                   `json:"cedarSystemIDs"`
 	CedarSystemRelationShips []*SystemRelationshipInput `json:"cedarSystemRelationShips,omitempty"`
 	ContractNumbers          []string                   `json:"contractNumbers"`
+}
+
+type SetSystemIntakeRelationExistingSystemPayload struct {
+	SystemIntakeID           uuid.UUID             `json:"systemIntakeID"`
+	SystemIntake             *SystemIntake         `json:"systemIntake,omitempty"`
+	CedarSystemRelationShips []*SystemRelationship `json:"cedarSystemRelationShips,omitempty"`
+	ContractNumbers          []string              `json:"contractNumbers"`
+	UserErrors               []*UserError          `json:"userErrors,omitempty"`
 }
 
 type SetSystemIntakeRelationNewSystemInput struct {
@@ -817,6 +824,12 @@ type SystemIntakeUpdateLCIDInput struct {
 	AdditionalInfo         *HTML                        `json:"additionalInfo,omitempty"`
 	NotificationRecipients *EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
+}
+
+type SystemRelationship struct {
+	CedarSystemID          *string                  `json:"cedarSystemId,omitempty"`
+	SystemRelationshipType []SystemRelationshipType `json:"systemRelationshipType"`
+	OtherTypeDescription   *string                  `json:"otherTypeDescription,omitempty"`
 }
 
 // TODO This comment

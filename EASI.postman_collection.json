@@ -1,7 +1,8 @@
 {
 	"info": {
 		"name": "EASI",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_collection_link": "https://cooperheinrichs.postman.co/workspace/Cooper-Heinrichs's-Workspace~2ef36db6-e40a-4731-85b8-66dae82b3d05/collection/45221282-19425a0f-361a-40a0-b35a-99568767fff1?action=share&source=collection_link&creator=45221282"
 	},
 	"item": [
 		{
@@ -1416,7 +1417,7 @@
 									"mode": "graphql",
 									"graphql": {
 										"query": "mutation SetSystemIntakeRelationExistingSystem ($input: SetSystemIntakeRelationExistingSystemInput!) {\r\n    setSystemIntakeRelationExistingSystem(input:$input) {\r\n        userErrors {\r\n            message\r\n            path\r\n        }\r\n        systemIntake {\r\n            id\r\n            step\r\n            state\r\n            relationType\r\n            contractName\r\n            contractNumbers {\r\n                contractNumber\r\n            }\r\n            systems {\r\n                id\r\n                name\r\n                acronym\r\n            }\r\n        }\r\n    }\r\n}",
-										"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"contractNumbers\": [\r\n            \"abcde\",\r\n            \"fghij\"\r\n        ],\r\n        \"cedarSystemIDs\": [\r\n            \"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}\",\r\n            \"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}\"\r\n        ]\r\n    }\r\n}"
+										"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"contractNumbers\": [\r\n            \"abcde\",\r\n            \"fghij\"\r\n        ],\r\n        \"cedarSystemIDs\": [\r\n            \"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}\",\r\n            \"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}\"\r\n        ],\r\n        \"cedarSystemRelationShips\": [\r\n            {\r\n                \"cedarSystemId\": \"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}\",\r\n                \"systemRelationshipType\": [\"PRIMARY_SUPPORT\", \"OTHER\"],\r\n                \"otherTypeDescription\": \"other description\"\r\n            }\r\n        ]\r\n    }\r\n}"
 									}
 								},
 								"url": {

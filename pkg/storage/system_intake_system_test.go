@@ -42,14 +42,14 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 		}
 
 		// insert systems for this created system intake
-		systemNumbers := []string{
-			system1,
-			system2,
-			system3,
-		}
+		// systemNumbers := []string{
+		// 	system1,
+		// 	system2,
+		// 	system3,
+		// }
 		for _, systemIntakeID := range createdIDs {
 			err := sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
-				return s.store.SetSystemIntakeSystems(ctx, tx, systemIntakeID, systemNumbers, []*models.SystemRelationshipInput{})
+				return s.store.SetSystemIntakeSystems(ctx, tx, systemIntakeID, []*models.SystemRelationshipInput{})
 			})
 			s.NoError(err)
 		}
@@ -92,7 +92,8 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 
 		// now, we can add system 4 to one of the system intakes and verify that the created_at dates for the first three remain unchanged
 		err = sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
-			return s.store.SetSystemIntakeSystems(ctx, tx, createdIDs[0], append(systemNumbers, system4), []*models.SystemRelationshipInput{})
+			// append(systemNumbers, system4)
+			return s.store.SetSystemIntakeSystems(ctx, tx, createdIDs[0], []*models.SystemRelationshipInput{})
 		})
 		s.NoError(err)
 

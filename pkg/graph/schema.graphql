@@ -1082,12 +1082,19 @@ input SystemRelationshipInput {
   systemRelationshipType: [SystemRelationshipType!]!
   otherTypeDescription: String
 }
+
+type SystemRelationship {
+  cedarSystemId: String
+  systemRelationshipType: [SystemRelationshipType!]!
+  otherTypeDescription: String
+}
 """
 Input data for updating a system intake's relationship to a CEDAR system
 """
 input UpdateSystemIntakeLinkedCedarSystemInput {
   id: UUID!
   cedarSystemId: String
+  # May not be part of the scope of the ticket
   systemRelationship: SystemRelationshipType
 }
 
@@ -1100,9 +1107,16 @@ input SetSystemIntakeRelationNewSystemInput {
 # RequestRelationType.EXISTING_SYSTEM
 input SetSystemIntakeRelationExistingSystemInput {
   systemIntakeID: UUID!
-  cedarSystemIDs: [String!]!
   cedarSystemRelationShips: [SystemRelationshipInput!]
   contractNumbers: [String!]!
+}
+
+type SetSystemIntakeRelationExistingSystemPayload {
+  systemIntakeID: UUID!
+  systemIntake: SystemIntake
+  cedarSystemRelationShips: [SystemRelationship!]
+  contractNumbers: [String!]!
+  userErrors: [UserError!]
 }
 
 # RequestRelationType.EXISTING_SERVICE
@@ -2618,7 +2632,7 @@ type Mutation {
   ): DeleteCedarSystemBookmarkPayload
 
   setSystemIntakeRelationNewSystem(input: SetSystemIntakeRelationNewSystemInput): UpdateSystemIntakePayload
-  setSystemIntakeRelationExistingSystem(input: SetSystemIntakeRelationExistingSystemInput): UpdateSystemIntakePayload
+  setSystemIntakeRelationExistingSystem(input: SetSystemIntakeRelationExistingSystemInput): SetSystemIntakeRelationExistingSystemPayload
   setSystemIntakeRelationExistingService(input: SetSystemIntakeRelationExistingServiceInput): UpdateSystemIntakePayload
   unlinkSystemIntakeRelation(intakeID: UUID!): UpdateSystemIntakePayload
 
