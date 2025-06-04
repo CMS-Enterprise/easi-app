@@ -133,6 +133,7 @@ func UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(
 
 // CalcSystemIntakeGRBReviewAsyncStatus calculates the status of the GRB Review Async page
 func CalcSystemIntakeGRBReviewAsyncStatus(
+	ctx context.Context,
 	intake *models.SystemIntake,
 ) *models.SystemIntakeGRBReviewAsyncStatusType {
 	currentTime := time.Now()
@@ -154,9 +155,18 @@ func CalcSystemIntakeGRBReviewAsyncStatus(
 		return helpers.PointerTo(models.SystemIntakeGRBReviewAsyncStatusTypeInProgress)
 	}
 
-	// Fallthrough case:
-	//		The current time is after the Grb Review Async end date
-	return helpers.PointerTo(models.SystemIntakeGRBReviewAsyncStatusTypeCompleted)
+	grbVotingInformation, err := GRBVotingInformationGetBySystemIntake(ctx, intake)
+	if err != nil {
+		return nil
+	}
+
+	// If past end date and quorum is reached, review is completed
+	if grbVotingInformation.QuorumReached() {
+		return helpers.PointerTo(models.SystemIntakeGRBReviewAsyncStatusTypeCompleted)
+	}
+
+	// If past end date and quorum is not reached, review is past due
+	return helpers.PointerTo(models.SystemIntakeGRBReviewAsyncStatusTypePastDue)
 }
 
 // CalcSystemIntakeGRBReviewStandardStatus calculates the status of a standard (not async) GRB Review
@@ -267,7 +277,7 @@ func RestartGRBReviewAsync(
 }
 
 // IsGRBReviewCompleted checks if the GRB review is completed for either standard or async
-func IsGRBReviewCompleted(intake *models.SystemIntake) (bool, error) {
+func IsGRBReviewCompleted(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 	switch intake.GrbReviewType {
 	case models.SystemIntakeGRBReviewTypeStandard:
 		grbReviewState := CalcSystemIntakeGRBReviewStandardStatus(intake)
@@ -278,7 +288,7 @@ func IsGRBReviewCompleted(intake *models.SystemIntake) (bool, error) {
 		return *grbReviewState == models.SystemIntakeGRBReviewStandardStatusTypeCompleted, nil
 
 	case models.SystemIntakeGRBReviewTypeAsync:
-		grbReviewState := CalcSystemIntakeGRBReviewAsyncStatus(intake)
+		grbReviewState := CalcSystemIntakeGRBReviewAsyncStatus(ctx, intake)
 		if grbReviewState == nil {
 			return false, nil
 		}
