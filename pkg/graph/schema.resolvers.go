@@ -1971,7 +1971,7 @@ func (r *systemIntakeResolver) ItGovTaskStatuses(ctx context.Context, obj *model
 
 // StatusRequester is the resolver for the statusRequester field.
 func (r *systemIntakeResolver) StatusRequester(ctx context.Context, obj *models.SystemIntake) (models.SystemIntakeStatusRequester, error) {
-	return resolvers.CalculateSystemIntakeRequesterStatus(obj, time.Now())
+	return resolvers.CalculateSystemIntakeRequesterStatus(ctx, obj, time.Now())
 }
 
 // StatusAdmin is the resolver for the statusAdmin field.

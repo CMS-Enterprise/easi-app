@@ -1,10 +1,14 @@
 package resolvers
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"time"
 
+	"go.uber.org/zap"
+
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -12,7 +16,7 @@ const noDecisionInvalidStateErrMsg = "issue calculating the requester intake sta
 
 // CalculateSystemIntakeRequesterStatus calculates the status to display in the requester view for a System Intake Request,
 // based on the intake's current step, the state of that step, and the overall intake state (open/closed)
-func CalculateSystemIntakeRequesterStatus(intake *models.SystemIntake, currentTime time.Time) (models.SystemIntakeStatusRequester, error) {
+func CalculateSystemIntakeRequesterStatus(ctx context.Context, intake *models.SystemIntake, currentTime time.Time) (models.SystemIntakeStatusRequester, error) {
 	if intake.Step == models.SystemIntakeStepDECISION && intake.DecisionState == models.SIDSNoDecision {
 		return "", errors.New(noDecisionInvalidStateErrMsg)
 	}
@@ -40,7 +44,7 @@ func CalculateSystemIntakeRequesterStatus(intake *models.SystemIntake, currentTi
 		return calcSystemIntakeFinalBusinessCaseStatusRequester(intake.FinalBusinessCaseState)
 	case models.SystemIntakeStepGRBMEETING:
 		// this calc function doesn't use a switch statement and can't possibly return an error
-		return calcSystemIntakeGRBMeetingStatusRequester(intake, currentTime), nil
+		return calcSystemIntakeGRBMeetingStatusRequester(ctx, intake, currentTime), nil
 	case models.SystemIntakeStepDECISION:
 		return calcSystemIntakeDecisionStatusRequester(intake.DecisionState, intake.LCIDStatus(time.Now()))
 	default:
@@ -97,12 +101,12 @@ func calcSystemIntakeFinalBusinessCaseStatusRequester(finalBusinessCaseState mod
 	}
 }
 
-func calcSystemIntakeGRBMeetingStatusRequester(intake *models.SystemIntake, currentTime time.Time) models.SystemIntakeStatusRequester {
+func calcSystemIntakeGRBMeetingStatusRequester(ctx context.Context, intake *models.SystemIntake, currentTime time.Time) models.SystemIntakeStatusRequester {
 	switch intake.GrbReviewType {
 	case models.SystemIntakeGRBReviewTypeStandard:
 		return calcSystemIntakeStandardGRBReviewStatusRequester(intake.GRBDate, currentTime)
 	case models.SystemIntakeGRBReviewTypeAsync:
-		return calcSystemIntakeAsyncGRBReviewStatusRequester(intake.GRBReviewStartedAt, intake.GrbReviewAsyncEndDate, intake.GrbReviewAsyncManualEndDate, currentTime)
+		return calcSystemIntakeAsyncGRBReviewStatusRequester(ctx, intake, currentTime)
 	}
 
 	return models.SISRGrbMeetingAwaitingDecision
@@ -116,16 +120,28 @@ func calcSystemIntakeStandardGRBReviewStatusRequester(grbDate *time.Time, curren
 	return models.SISRGrbMeetingAwaitingDecision
 }
 
-func calcSystemIntakeAsyncGRBReviewStatusRequester(startDate *time.Time, endDate *time.Time, manualEndDate *time.Time, currentTime time.Time) models.SystemIntakeStatusRequester {
-	if startDate == nil || endDate == nil {
+func calcSystemIntakeAsyncGRBReviewStatusRequester(ctx context.Context, intake *models.SystemIntake, currentTime time.Time) models.SystemIntakeStatusRequester {
+	if intake.GRBReviewStartedAt == nil || intake.GrbReviewAsyncEndDate == nil {
 		return models.SISRGrbMeetingReady
 	}
 
-	if manualEndDate == nil && startDate.Before(currentTime) && endDate.After(currentTime) {
+	if intake.GrbReviewAsyncManualEndDate == nil && intake.GRBReviewStartedAt.Before(currentTime) && intake.GrbReviewAsyncEndDate.After(currentTime) {
 		return models.SISRGrbReviewInProgress
 	}
 
-	// TODO: If end date has passed but quorum has not been met, return models.SISRGrbReviewInProgress
+	// If end date has passed but quorum has not been met, return models.SISRGrbReviewInProgress
+	if currentTime.After(*intake.GrbReviewAsyncEndDate) {
+		// check quorum status
+		grbVotingInformation, err := GRBVotingInformationGetBySystemIntake(ctx, intake)
+		if err != nil {
+			appcontext.ZLogger(ctx).Error("problem getting grb voting information", zap.Error(err), zap.String("intake.id", intake.ID.String()))
+			return models.SISRGrbReviewInProgress
+		}
+
+		if !grbVotingInformation.QuorumReached() {
+			return models.SISRGrbReviewInProgress
+		}
+	}
 
 	return models.SISRGrbMeetingAwaitingDecision
 }

@@ -1,6 +1,7 @@
 package resolvers
 
 import (
+	"context"
 	"fmt"
 	"testing"
 	"time"
@@ -34,7 +35,7 @@ func TestCalculateSystemIntakeRequesterStatus(t *testing.T) {
 				testCase := singleStepTestCases.testCases[i]
 
 				t.Run(testCase.testName, func(t *testing.T) {
-					actualStatus, err := CalculateSystemIntakeRequesterStatus(&testCase.intake, mockCurrentTime)
+					actualStatus, err := CalculateSystemIntakeRequesterStatus(context.TODO(), &testCase.intake, mockCurrentTime)
 					assert.EqualValues(t, testCase.expectedStatus, actualStatus)
 					if testCase.errorExpected {
 						assert.Error(t, err)
