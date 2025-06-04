@@ -1,6 +1,7 @@
 package resolvers
 
 import (
+	"context"
 	"testing"
 	"time"
 
@@ -585,7 +586,7 @@ func systemIntakeAdminStatusRunTestCollection(t *testing.T, tests []testSystemIn
 		for i := range tests {
 			test := tests[i]
 			t.Run(test.testCase, func(t *testing.T) {
-				status, err := CalculateSystemIntakeAdminStatus(&test.intake)
+				status, err := CalculateSystemIntakeAdminStatus(context.TODO(), &test.intake)
 				assert.EqualValues(t, test.expectedStatus, status)
 
 				if test.expectError {

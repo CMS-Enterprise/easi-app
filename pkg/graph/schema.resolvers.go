@@ -1976,7 +1976,7 @@ func (r *systemIntakeResolver) StatusRequester(ctx context.Context, obj *models.
 
 // StatusAdmin is the resolver for the statusAdmin field.
 func (r *systemIntakeResolver) StatusAdmin(ctx context.Context, obj *models.SystemIntake) (models.SystemIntakeStatusAdmin, error) {
-	return resolvers.CalculateSystemIntakeAdminStatus(obj)
+	return resolvers.CalculateSystemIntakeAdminStatus(ctx, obj)
 }
 
 // LcidStatus is the resolver for the lcidStatus field.
