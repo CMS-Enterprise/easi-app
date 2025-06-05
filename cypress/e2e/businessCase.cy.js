@@ -148,8 +148,8 @@ describe('The Business Case Form', () => {
           title: 'Preferred Solution Title',
           summary: 'Preferred Solution Summary',
           acquisitionApproach: 'Preferred Solution Acquisition approach',
-          targetContractAwardDate: '2025-03-13T04:00:00.000Z',
-          targetCompletionDate: '2025-03-15T04:00:00.000Z',
+          targetContractAwardDate: new Date('03/13/2025').toISOString(),
+          targetCompletionDate: new Date('03/15/2025').toISOString(),
           security: {
             isApproved: false,
             isBeingReviewed: 'YES'
@@ -269,8 +269,8 @@ describe('The Business Case Form', () => {
           title: 'Alternative A Title',
           summary: 'Alternative A Summary',
           acquisitionApproach: 'Alternative A AcquisitionApproach',
-          targetContractAwardDate: '2025-03-13T04:00:00.000Z',
-          targetCompletionDate: '2025-03-15T04:00:00.000Z',
+          targetContractAwardDate: new Date('03/13/2025').toISOString(),
+          targetCompletionDate: new Date('03/15/2025').toISOString(),
           security: {
             isApproved: false,
             isBeingReviewed: 'YES'
