@@ -174,6 +174,8 @@ func (s *ResolverSuite) TestSystemIntakeUpdateSystemIntakeGRBReviewFormInputTime
 }
 
 func (s *ResolverSuite) TestCalcSystemIntakeGRBReviewAsyncStatus() {
+	ctx := s.ctxWithNewDataloaders()
+
 	now := time.Now()
 	futureTime := now.Add(24 * time.Hour) // 24 hours in the future
 	pastTime := now.Add(-24 * time.Hour)  // 24 hours in the past
@@ -202,19 +204,19 @@ func (s *ResolverSuite) TestCalcSystemIntakeGRBReviewAsyncStatus() {
 			expected: helpers.PointerTo(models.SystemIntakeGRBReviewAsyncStatusTypeInProgress),
 		},
 		{
-			name: "Status - Completed (End date is in the past)",
+			name: "Status - Past Due (End date is in the past, no quorum)",
 			intake: models.SystemIntake{
 				ID:                    systemIntakeID,
 				GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
 				GrbReviewAsyncEndDate: &pastTime,
 			},
-			expected: helpers.PointerTo(models.SystemIntakeGRBReviewAsyncStatusTypeCompleted),
+			expected: helpers.PointerTo(models.SystemIntakeGRBReviewAsyncStatusTypePastDue),
 		},
 	}
 
 	for _, tc := range tests {
 		s.Run(tc.name, func() {
-			status := CalcSystemIntakeGRBReviewAsyncStatus(&tc.intake)
+			status := CalcSystemIntakeGRBReviewAsyncStatus(ctx, &tc.intake)
 
 			if tc.expected == nil {
 				s.Nil(status)
@@ -292,6 +294,8 @@ func (s *ResolverSuite) TestCalcSystemIntakeGRBReviewStandardStatus() {
 }
 
 func (s *ResolverSuite) TestManuallyEndSystemIntakeGRBReviewAsyncVoting() {
+	ctx := s.testConfigs.Context
+
 	systemIntake := s.createNewIntake()
 	s.NotNil(systemIntake)
 
@@ -307,7 +311,7 @@ func (s *ResolverSuite) TestManuallyEndSystemIntakeGRBReviewAsyncVoting() {
 	s.NoError(err)
 
 	// Calculate the status
-	status := CalcSystemIntakeGRBReviewAsyncStatus(systemIntake)
+	status := CalcSystemIntakeGRBReviewAsyncStatus(ctx, systemIntake)
 	s.NotNil(status)
 	s.Equal(models.SystemIntakeGRBReviewAsyncStatusTypeInProgress, *status)
 
@@ -328,12 +332,14 @@ func (s *ResolverSuite) TestManuallyEndSystemIntakeGRBReviewAsyncVoting() {
 	s.WithinDuration(time.Now(), *updatedPayload.SystemIntake.GrbReviewAsyncManualEndDate, time.Second)
 
 	// Calculate the status again
-	status = CalcSystemIntakeGRBReviewAsyncStatus(updatedPayload.SystemIntake)
+	status = CalcSystemIntakeGRBReviewAsyncStatus(ctx, updatedPayload.SystemIntake)
 	s.NotNil(status)
 	s.Equal(models.SystemIntakeGRBReviewAsyncStatusTypeCompleted, *status)
 }
 
 func (s *ResolverSuite) TestExtendGRBReviewDeadlineAsync() {
+	ctx := s.testConfigs.Context
+
 	systemIntake := s.createNewIntake()
 	s.NotNil(systemIntake)
 
@@ -349,7 +355,7 @@ func (s *ResolverSuite) TestExtendGRBReviewDeadlineAsync() {
 	s.NoError(err)
 
 	// Calculate the status
-	status := CalcSystemIntakeGRBReviewAsyncStatus(systemIntake)
+	status := CalcSystemIntakeGRBReviewAsyncStatus(ctx, systemIntake)
 	s.NotNil(status)
 	s.Equal(models.SystemIntakeGRBReviewAsyncStatusTypeInProgress, *status)
 
@@ -374,12 +380,14 @@ func (s *ResolverSuite) TestExtendGRBReviewDeadlineAsync() {
 	s.WithinDuration(twoHoursLater, *updatedPayload.SystemIntake.GrbReviewAsyncEndDate, time.Second)
 
 	// Calculate the status again
-	status = CalcSystemIntakeGRBReviewAsyncStatus(updatedPayload.SystemIntake)
+	status = CalcSystemIntakeGRBReviewAsyncStatus(ctx, updatedPayload.SystemIntake)
 	s.NotNil(status)
 	s.Equal(models.SystemIntakeGRBReviewAsyncStatusTypeInProgress, *status)
 }
 
 func (s *ResolverSuite) TestRestartGRBReviewAsync() {
+	ctx := s.testConfigs.Context
+
 	systemIntake := s.createNewIntake()
 	s.NotNil(systemIntake)
 
@@ -395,7 +403,7 @@ func (s *ResolverSuite) TestRestartGRBReviewAsync() {
 	s.NoError(err)
 
 	// Calculate the status
-	status := CalcSystemIntakeGRBReviewAsyncStatus(systemIntake)
+	status := CalcSystemIntakeGRBReviewAsyncStatus(ctx, systemIntake)
 	s.NotNil(status)
 	s.Equal(models.SystemIntakeGRBReviewAsyncStatusTypeInProgress, *status)
 

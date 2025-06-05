@@ -2,11 +2,9 @@ package resolvers
 
 import (
 	"fmt"
-	"testing"
 	"time"
 
 	"github.com/guregu/null"
-	"github.com/stretchr/testify/assert"
 
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
@@ -24,22 +22,23 @@ type testCasesForStep struct {
 	testCases []calculateSystemIntakeRequesterStatusTestCase
 }
 
-func TestCalculateSystemIntakeRequesterStatus(t *testing.T) {
+func (s *ResolverSuite) TestCalculateSystemIntakeRequesterStatus() {
+	ctx := s.ctxWithNewDataloaders()
 	mockCurrentTime := time.Unix(0, 0)
 	allTestCases := systemIntakeStatusRequesterTestCases(mockCurrentTime)
 
 	for _, singleStepTestCases := range allTestCases {
-		t.Run(fmt.Sprintf("Testing statuses for the %v step", singleStepTestCases.stepName), func(t *testing.T) {
+		s.Run(fmt.Sprintf("Testing statuses for the %v step", singleStepTestCases.stepName), func() {
 			for i := range singleStepTestCases.testCases {
 				testCase := singleStepTestCases.testCases[i]
 
-				t.Run(testCase.testName, func(t *testing.T) {
-					actualStatus, err := CalculateSystemIntakeRequesterStatus(&testCase.intake, mockCurrentTime)
-					assert.EqualValues(t, testCase.expectedStatus, actualStatus)
+				s.Run(testCase.testName, func() {
+					actualStatus, err := CalculateSystemIntakeRequesterStatus(ctx, &testCase.intake, mockCurrentTime)
+					s.EqualValues(testCase.expectedStatus, actualStatus)
 					if testCase.errorExpected {
-						assert.Error(t, err)
+						s.Error(err)
 					} else {
-						assert.NoError(t, err)
+						s.NoError(err)
 					}
 				})
 			}
@@ -200,7 +199,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 				errorExpected:  false,
 			},
 			{
-				testName: "Async GRB  - Awaiting decision",
+				testName: "Async GRB  - Past due but no quorum",
 				intake: models.SystemIntake{
 					Step:                  models.SystemIntakeStepGRBMEETING,
 					RequestFormState:      models.SIRFSInProgress,
@@ -210,7 +209,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					GRBReviewStartedAt:    helpers.PointerTo(yesterday.AddDate(0, 0, -1)),
 					GrbReviewAsyncEndDate: &yesterday,
 				},
-				expectedStatus: models.SISRGrbMeetingAwaitingDecision,
+				expectedStatus: models.SISRGrbReviewInProgress,
 				errorExpected:  false,
 			},
 		},

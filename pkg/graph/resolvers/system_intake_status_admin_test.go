@@ -1,6 +1,7 @@
 package resolvers
 
 import (
+	"context"
 	"testing"
 	"time"
 
@@ -171,7 +172,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			expectError:    false,
 		},
 		{
-			testCase: "Async GRB - Review Complete",
+			testCase: "Async GRB - Voting Past Due but no quorum",
 			intake: models.SystemIntake{
 				Step:                  models.SystemIntakeStepGRBMEETING,
 				RequestFormState:      models.SIRFSSubmitted,
@@ -181,7 +182,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				GRBReviewStartedAt:    helpers.PointerTo(yesterday.AddDate(0, 0, -1)),
 				GrbReviewAsyncEndDate: &yesterday,
 			},
-			expectedStatus: models.SISAGrbReviewComplete,
+			expectedStatus: models.SISAGrbReviewInProgress,
 			expectError:    false,
 		},
 		{
@@ -585,7 +586,7 @@ func systemIntakeAdminStatusRunTestCollection(t *testing.T, tests []testSystemIn
 		for i := range tests {
 			test := tests[i]
 			t.Run(test.testCase, func(t *testing.T) {
-				status, err := CalculateSystemIntakeAdminStatus(&test.intake)
+				status, err := CalculateSystemIntakeAdminStatus(context.TODO(), &test.intake)
 				assert.EqualValues(t, test.expectedStatus, status)
 
 				if test.expectError {

@@ -1,12 +1,9 @@
 package resolvers
 
 import (
-	"testing"
 	"time"
 
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
-
-	"github.com/stretchr/testify/assert"
 
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
@@ -58,8 +55,7 @@ type testSystemIntakeGRBStatusType struct {
 	expectError    bool
 }
 
-func TestIntakeFormStatus(t *testing.T) {
-
+func (s *ResolverSuite) TestIntakeFormStatus() {
 	defaultTestState := models.SystemIntakeFormState("Testing Default State")
 
 	intakeFormTests := []testSystemIntakeFormStatusType{
@@ -160,21 +156,20 @@ func TestIntakeFormStatus(t *testing.T) {
 
 	for i := range intakeFormTests {
 		test := intakeFormTests[i]
-		t.Run(test.testCase, func(t *testing.T) {
+		s.Run(test.testCase, func() {
 			status, err := IntakeFormStatus(&test.intake)
-			assert.EqualValues(t, test.expectedStatus, status)
+			s.EqualValues(test.expectedStatus, status)
 			if test.expectError {
-				assert.Error(t, err)
+				s.Error(err)
 			} else {
-				assert.NoError(t, err)
+				s.NoError(err)
 			}
 
 		})
 	}
-
 }
 
-func TestFeedbackFromInitialReviewStatus(t *testing.T) {
+func (s *ResolverSuite) TestFeedbackFromInitialReviewStatus() {
 	defaultTestState := models.SystemIntakeFormState("Testing Default State")
 
 	intakeFormFeedbackTests := []testSystemIntakeFormFeedbackStatusType{
@@ -276,20 +271,22 @@ func TestFeedbackFromInitialReviewStatus(t *testing.T) {
 
 	for i := range intakeFormFeedbackTests {
 		test := intakeFormFeedbackTests[i]
-		t.Run(test.testCase, func(t *testing.T) {
+		s.Run(test.testCase, func() {
 			status, err := FeedbackFromInitialReviewStatus(&test.intake)
-			assert.EqualValues(t, test.expectedStatus, status)
+			s.EqualValues(test.expectedStatus, status)
 			if test.expectError {
-				assert.Error(t, err)
+				s.Error(err)
 			} else {
-				assert.NoError(t, err)
+				s.NoError(err)
 			}
 
 		})
 	}
-
 }
-func TestDecisionAndNextStepsStatus(t *testing.T) {
+
+func (s *ResolverSuite) TestDecisionAndNextStepsStatus() {
+	ctx := s.ctxWithNewDataloaders()
+
 	yesterday := time.Now().Add(time.Hour * -24)
 	tomorrow := time.Now().Add(time.Hour * 24)
 
@@ -459,20 +456,20 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 
 	for i := range decisionStateTests {
 		test := decisionStateTests[i]
-		t.Run(test.testCase, func(t *testing.T) {
-			status, err := DecisionAndNextStepsStatus(&test.intake)
-			assert.EqualValues(t, test.expectedStatus, status)
+		s.Run(test.testCase, func() {
+			status, err := DecisionAndNextStepsStatus(ctx, &test.intake)
+			s.EqualValues(test.expectedStatus, status)
 			if test.expectError {
-				assert.Error(t, err)
+				s.Error(err)
 			} else {
-				assert.NoError(t, err)
+				s.NoError(err)
 			}
 
 		})
 	}
-
 }
-func TestBizCaseDraftStatus(t *testing.T) {
+
+func (s *ResolverSuite) TestBizCaseDraftStatus() {
 	defaultTestStep := models.SystemIntakeStep("Testing Default State")
 	defaultTestState := models.SystemIntakeFormState("Testing Default State")
 
@@ -724,20 +721,20 @@ func TestBizCaseDraftStatus(t *testing.T) {
 
 	for i := range draftBusinessCaseTests {
 		test := draftBusinessCaseTests[i]
-		t.Run(test.testCase, func(t *testing.T) {
+		s.Run(test.testCase, func() {
 			status, err := BizCaseDraftStatus(&test.intake)
-			assert.EqualValues(t, test.expectedStatus, status)
+			s.EqualValues(test.expectedStatus, status)
 			if test.expectError {
-				assert.Error(t, err)
+				s.Error(err)
 			} else {
-				assert.NoError(t, err)
+				s.NoError(err)
 			}
 
 		})
 	}
-
 }
-func TestGrtMeetingStatus(t *testing.T) {
+
+func (s *ResolverSuite) TestGrtMeetingStatus() {
 	yesterday := time.Now().Add(time.Hour * -24)
 	tomorrow := time.Now().Add(time.Hour * 24)
 	invalidTestStep := models.SystemIntakeStep("Testing Invalid Step")
@@ -936,20 +933,20 @@ func TestGrtMeetingStatus(t *testing.T) {
 
 	for i := range decisionStateTests {
 		test := decisionStateTests[i]
-		t.Run(test.testCase, func(t *testing.T) {
+		s.Run(test.testCase, func() {
 			status, err := GrtMeetingStatus(&test.intake)
-			assert.EqualValues(t, test.expectedStatus, status)
+			s.EqualValues(test.expectedStatus, status)
 			if test.expectError {
-				assert.Error(t, err)
+				s.Error(err)
 			} else {
-				assert.NoError(t, err)
+				s.NoError(err)
 			}
 
 		})
 	}
-
 }
-func TestBizCaseFinalStatus(t *testing.T) {
+
+func (s *ResolverSuite) TestBizCaseFinalStatus() {
 	defaultTestStep := models.SystemIntakeStep("Testing Default State")
 	defaultTestState := models.SystemIntakeFormState("Testing Default State")
 	finalBusinessCaseTests := []testSystemIntakeBusinessCaseFinalStatusType{
@@ -1200,20 +1197,22 @@ func TestBizCaseFinalStatus(t *testing.T) {
 
 	for i := range finalBusinessCaseTests {
 		test := finalBusinessCaseTests[i]
-		t.Run(test.testCase, func(t *testing.T) {
+		s.Run(test.testCase, func() {
 			status, err := BizCaseFinalStatus(&test.intake)
-			assert.EqualValues(t, test.expectedStatus, status)
+			s.EqualValues(test.expectedStatus, status)
 			if test.expectError {
-				assert.Error(t, err)
+				s.Error(err)
 			} else {
-				assert.NoError(t, err)
+				s.NoError(err)
 			}
 
 		})
 	}
 }
 
-func TestGrbMeetingStatus(t *testing.T) {
+func (s *ResolverSuite) TestGrbMeetingStatus() {
+	ctx := s.ctxWithNewDataloaders()
+
 	now := time.Now()
 	yesterday := now.Add(-24 * time.Hour)
 	tomorrow := now.Add(24 * time.Hour)
@@ -1478,7 +1477,7 @@ func TestGrbMeetingStatus(t *testing.T) {
 			expectedStatus: models.ITGGRBSScheduled,
 		},
 		{
-			testCase: "Async: Voting has been ended early",
+			testCase: "Async: Voting has been ended early, but quorum has not been met",
 			intake: models.SystemIntake{
 				Step:                        models.SystemIntakeStepGRBMEETING,
 				GrbReviewType:               models.SystemIntakeGRBReviewTypeAsync,
@@ -1487,18 +1486,18 @@ func TestGrbMeetingStatus(t *testing.T) {
 				GrbReviewAsyncRecordingTime: &tomorrow,
 				GrbReviewAsyncManualEndDate: &now,
 			},
-			expectedStatus: models.ITGGRBSAwaitingDecision,
+			expectedStatus: models.ITGRRBSReviewInProgress,
 		},
 	}
 
 	for _, tc := range tests {
-		t.Run(tc.testCase, func(t *testing.T) {
-			status, err := GrbMeetingStatus(&tc.intake)
-			assert.EqualValues(t, tc.expectedStatus, status)
+		s.Run(tc.testCase, func() {
+			status, err := GrbMeetingStatus(ctx, &tc.intake)
+			s.EqualValues(tc.expectedStatus, status)
 			if tc.expectError {
-				assert.Error(t, err)
+				s.Error(err)
 			} else {
-				assert.NoError(t, err)
+				s.NoError(err)
 			}
 		})
 	}

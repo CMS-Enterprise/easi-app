@@ -43,7 +43,7 @@ func CreateSystemIntakeGRBDiscussionPost(
 			return nil, errors.New("problem finding system intake when handling GRB post")
 		}
 
-		isGRBReviewCompleted, err := IsGRBReviewCompleted(systemIntake)
+		isGRBReviewCompleted, err := IsGRBReviewCompleted(ctx, systemIntake)
 		if err != nil {
 			return nil, err
 		}
@@ -172,7 +172,7 @@ func CreateSystemIntakeGRBDiscussionReply(
 			return nil, errors.New("problem finding system intake when handling GRB reply")
 		}
 
-		isGRBReviewCompleted, err := IsGRBReviewCompleted(systemIntake)
+		isGRBReviewCompleted, err := IsGRBReviewCompleted(ctx, systemIntake)
 		if err != nil {
 			return nil, err
 		}
