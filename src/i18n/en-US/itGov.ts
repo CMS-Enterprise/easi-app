@@ -28,6 +28,10 @@ export default {
       heading: 'The Governance team has offered feedback about your request.',
       text: 'Please review the feedback using the button below. It may have important information about your project and your IT Governance request.'
     },
+    lcidRetiringSoon: {
+      heading: 'LCID retiring soon',
+      text: 'The Governance Admin Team has set this Life Cycle ID (LCID) to retire on {{date}}. You may view the existing decision at the <decisionLink>bottom of this page</decisionLink>. If you have further questions, or if you believe there is an error with the retirement date for this LCID, you may contact the Governance Admin Team at <emailLink>{{email}}</emailLink>.'
+    },
     step: {
       intakeForm: {
         title: 'Fill out the Intake Request form',
