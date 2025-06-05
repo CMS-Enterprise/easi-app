@@ -10,7 +10,6 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import { DateTime } from 'luxon';
 
 import Alert from 'components/Alert';
 import AutoSave from 'components/AutoSave';
@@ -185,12 +184,10 @@ const PreferredSolution = ({
                             'preferredSolution.targetContractAwardDate'
                           ]
                         }
-                        onChange={(date: DateTime) => {
-                          // Convert the DateTime object to a string for consistent storage
-                          const dateString = date ? date.toLocaleString() : '';
+                        onChange={(date: string) => {
                           setFieldValue(
                             'preferredSolution.targetContractAwardDate',
-                            dateString
+                            date
                           );
                         }}
                         id="BusinessCase-PreferredSolutionTargetContractAwardDate"
@@ -218,12 +215,10 @@ const PreferredSolution = ({
                         error={
                           !!flatErrors['preferredSolution.targetCompletionDate']
                         }
-                        onChange={(date: DateTime) => {
-                          // Convert the DateTime object to a string for consistent storage
-                          const dateString = date ? date.toLocaleString() : '';
+                        onChange={(date: string) => {
                           setFieldValue(
                             'preferredSolution.targetCompletionDate',
-                            dateString
+                            date
                           );
                         }}
                         id="BusinessCase-PreferredSolutionTargetCompletionDate"

@@ -2,7 +2,6 @@ import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Grid, Label, Radio, TextInput } from '@trussworks/react-uswds';
 import { Field, FormikProps } from 'formik';
-import { DateTime } from 'luxon';
 
 import Alert from 'components/Alert';
 import DatePickerFormatted from 'components/DatePickerFormatted';
@@ -153,10 +152,8 @@ const AlternativeSolutionFields = ({
               <Field
                 as={DatePickerFormatted}
                 error={!!flatErrors[`${altId}.targetContractAwardDate`]}
-                onChange={(date: DateTime) => {
-                  // Convert the DateTime object to a string for consistent storage
-                  const dateString = date ? date.toLocaleString() : '';
-                  setFieldValue(`${altId}.targetContractAwardDate`, dateString);
+                onChange={(date: string) => {
+                  setFieldValue(`${altId}.targetContractAwardDate`, date);
                 }}
                 id={`BusinessCase-${altId}TargetContractAwardDate`}
                 name={`${altId}.targetContractAwardDate`}
@@ -181,10 +178,8 @@ const AlternativeSolutionFields = ({
               <Field
                 as={DatePickerFormatted}
                 error={!!flatErrors[`${altId}.targetCompletionDate`]}
-                onChange={(date: DateTime) => {
-                  // Convert the DateTime object to a string for consistent storage
-                  const dateString = date ? date.toLocaleString() : '';
-                  setFieldValue(`${altId}.targetCompletionDate`, dateString);
+                onChange={(date: string) => {
+                  setFieldValue(`${altId}.targetCompletionDate`, date);
                 }}
                 id={`BusinessCase-${altId}TargetCompletionDate`}
                 name={`${altId}.targetCompletionDate`}
