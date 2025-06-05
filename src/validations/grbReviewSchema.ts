@@ -55,10 +55,28 @@ export const CreateGRBReviewersSchema = Yup.object({
 });
 
 export const SetGRBParticipantsAsyncSchema = Yup.object({
-  grbReviewers: Yup.array(GRBReviewerSchema).min(
-    5,
-    i18next.t('grbReview:setUpGrbReviewForm.minFive')
-  ),
+  grbReviewers: Yup.array()
+    .of(
+      Yup.object().shape({
+        id: Yup.string().required(),
+        grbRole: Yup.string().required(),
+        votingRole: Yup.string()
+          .oneOf(['VOTING', 'NON_VOTING', 'ALTERNATE'])
+          .required(),
+        userAccount: Yup.object().shape({
+          id: Yup.string().required(),
+          username: Yup.string().required(),
+          commonName: Yup.string().required(),
+          email: Yup.string().email().required()
+        })
+      })
+    )
+    .test(
+      'at-least-five-voting',
+      i18next.t('grbReview:setUpGrbReviewForm.minFive'),
+      (reviewers = []) =>
+        reviewers.filter(r => r.votingRole === 'VOTING').length >= 5
+    ),
   grbReviewAsyncEndDate: Yup.date().required(
     i18next.t('grbReview:setUpGrbReviewForm.invalidDate')
   )
