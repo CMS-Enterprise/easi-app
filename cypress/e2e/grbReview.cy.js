@@ -94,6 +94,44 @@ describe('GRB review', () => {
 
     cy.url().should('include', '/participants');
 
+    cy.contains('button', 'Add another GRB reviewer').click();
+
+    // Add a GRB Reviewer
+    cy.url().should('include', '/add?from-grb-setup');
+    cy.contains('h1', 'Add a GRB reviewer');
+
+    cy.get('#react-select-userAccount-input')
+      .type('User Two')
+      .wait(2000) // See Note [Specific Cypress wait duration on Okta search]
+      .type('{downArrow}{enter}')
+      .should('have.value', 'User Two, USR2 (user.two@local.fake)');
+
+    cy.get('#votingRole').select('Voting').should('have.value', 'VOTING');
+    cy.get('#grbRole')
+      .select('Co-Chair - CIO')
+      .should('have.value', 'CO_CHAIR_CIO');
+
+    cy.contains('button', 'Add reviewer').should('not.be.disabled').click();
+
+    cy.contains('button', 'Add another GRB reviewer').click();
+
+    // Add a GRB Reviewer
+    cy.url().should('include', '/add?from-grb-setup');
+    cy.contains('h1', 'Add a GRB reviewer');
+
+    cy.get('#react-select-userAccount-input')
+      .type('User Three')
+      .wait(2000) // See Note [Specific Cypress wait duration on Okta search]
+      .type('{downArrow}{enter}')
+      .should('have.value', 'User Three, USR3 (user.three@local.fake)');
+
+    cy.get('#votingRole').select('Voting').should('have.value', 'VOTING');
+    cy.get('#grbRole')
+      .select('Co-Chair - CIO')
+      .should('have.value', 'CO_CHAIR_CIO');
+
+    cy.contains('button', 'Add reviewer').should('not.be.disabled').click();
+
     cy.get('[data-testid="alert"]')
       .should('be.visible')
       .and('contain.text', 'You added 1 reviewer to this GRB review.');
@@ -109,7 +147,29 @@ describe('GRB review', () => {
         });
 
       // Check that the expected number of rows exist.
-      cy.get('tbody tr').should('have.length', 5);
+      cy.get('tbody tr').should('have.length', 7);
+
+      cy.get('tbody tr')
+        .eq(1)
+        .within(() => {
+          cy.contains('td', 'Adeline Aarons').should('exist');
+          cy.contains('td', 'Alternate').should('exist');
+          cy.contains('button', 'Edit').click();
+        });
+    });
+
+    cy.get('#votingRole').should('have.value', 'ALTERNATE').select('Voting');
+
+    cy.contains('button', 'Save changes').should('not.be.disabled').click();
+
+    cy.get('[data-testid="table"]').within(() => {
+      // Check to see that Adeline Aarons is now a voting memeber
+      cy.get('tbody tr')
+        .eq(1)
+        .within(() => {
+          cy.contains('td', 'Adeline Aarons').should('exist');
+          cy.contains('td', 'Voting').should('exist');
+        });
     });
 
     cy.get('#grbReviewAsyncEndDate').clear().type('01/01/2226');
