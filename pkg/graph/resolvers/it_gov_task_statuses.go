@@ -210,7 +210,7 @@ func getAsyncGRBReviewStatus(ctx context.Context, intake *models.SystemIntake) (
 			return models.ITGRRBSReviewInProgress, err
 		}
 
-		if !grbVotingInformation.QuorumReached() {
+		if !grbVotingInformation.QuorumReached() && intake.GrbReviewAsyncManualEndDate == nil {
 			return models.ITGRRBSReviewInProgress, nil
 		}
 
@@ -292,7 +292,7 @@ func DecisionAndNextStepsStatus(ctx context.Context, intake *models.SystemIntake
 				return models.ITGDSCantStart, err
 			}
 
-			if !grbVotingInformation.QuorumReached() {
+			if !grbVotingInformation.QuorumReached() && intake.GrbReviewAsyncManualEndDate == nil {
 				return models.ITGDSCantStart, nil
 			}
 		}
