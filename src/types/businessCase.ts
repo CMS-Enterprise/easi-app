@@ -18,8 +18,8 @@ export type ProposedBusinessCaseSolution = BusinessCaseSolution & {
   security: {
     isApproved: boolean | null;
     isBeingReviewed: string;
-    zeroTrustAlignment: string;
   };
+  zeroTrustAlignment: string;
   hosting: {
     type: string;
     location: string;

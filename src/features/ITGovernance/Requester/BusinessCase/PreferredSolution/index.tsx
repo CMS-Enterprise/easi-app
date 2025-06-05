@@ -372,12 +372,8 @@ const PreferredSolution = ({
                 )}
 
                 <FieldGroup
-                  scrollElement="preferredSolution.security.zeroTrustAlignment"
-                  error={
-                    !!flatErrors[
-                      'preferredSolution.security.zeroTrustAlignment'
-                    ]
-                  }
+                  scrollElement="preferredSolution.zeroTrustAlignment"
+                  error={!!flatErrors['preferredSolution.zeroTrustAlignment']}
                 >
                   <Label
                     htmlFor="BusinessCase-PreferredSolutionZeroTrustAlignment"
@@ -397,22 +393,14 @@ const PreferredSolution = ({
                     />
                   </HelpText>
                   <FieldErrorMsg>
-                    {
-                      flatErrors[
-                        'preferredSolution.security.zeroTrustAlignment'
-                      ]
-                    }
+                    {flatErrors['preferredSolution.zeroTrustAlignment']}
                   </FieldErrorMsg>
                   <Field
                     as={TextAreaField}
-                    error={
-                      !!flatErrors[
-                        'preferredSolution.security.zeroTrustAlignment'
-                      ]
-                    }
+                    error={!!flatErrors['preferredSolution.zeroTrustAlignment']}
                     id="BusinessCase-PreferredSolutionZeroTrustAlignment"
                     maxLength={2000}
-                    name="preferredSolution.security.zeroTrustAlignment"
+                    name="preferredSolution.zeroTrustAlignment"
                     aria-describedby="BusinessCase-PreferredSolutionZeroTrustAlignmentCounter BusinessCase-PreferredSolutionZeroTrustAlignmentHelp"
                   />
                 </FieldGroup>

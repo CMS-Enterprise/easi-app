@@ -296,9 +296,9 @@ export const businessCase: BusinessCaseModel = {
     targetCompletionDate: '2025-03-15T19:22:40Z',
     security: {
       isApproved: null,
-      isBeingReviewed: '',
-      zeroTrustAlignment: ''
+      isBeingReviewed: ''
     },
+    zeroTrustAlignment: '',
     hosting: {
       type: '',
       location: '',
@@ -417,9 +417,9 @@ export const businessCase: BusinessCaseModel = {
     targetCompletionDate: '2025-03-15T19:22:40Z',
     security: {
       isApproved: null,
-      isBeingReviewed: '',
-      zeroTrustAlignment: ''
+      isBeingReviewed: ''
     },
+    zeroTrustAlignment: '',
     hosting: {
       type: '',
       location: '',
@@ -539,9 +539,9 @@ export const businessCase: BusinessCaseModel = {
     targetCompletionDate: '2025-03-15T19:22:40Z',
     security: {
       isApproved: null,
-      isBeingReviewed: '',
-      zeroTrustAlignment: ''
+      isBeingReviewed: ''
     },
+    zeroTrustAlignment: '',
     hosting: {
       type: '',
       location: '',

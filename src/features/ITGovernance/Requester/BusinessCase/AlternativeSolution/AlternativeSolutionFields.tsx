@@ -279,8 +279,8 @@ const AlternativeSolutionFields = ({
         )}
 
         <FieldGroup
-          scrollElement={`${altId}.security.zeroTrustAlignment`}
-          error={!!flatErrors[`${altId}.security.zeroTrustAlignment`]}
+          scrollElement={`${altId}.zeroTrustAlignment`}
+          error={!!flatErrors[`${altId}.zeroTrustAlignment`]}
         >
           <Label htmlFor={`BusinessCase-${altId}ZeroTrustAlignment`}>
             {t('zeroTrustAlignment')}
@@ -297,14 +297,14 @@ const AlternativeSolutionFields = ({
             />
           </HelpText>
           <FieldErrorMsg>
-            {flatErrors[`${altId}.security.zeroTrustAlignment`]}
+            {flatErrors[`${altId}.zeroTrustAlignment`]}
           </FieldErrorMsg>
           <Field
             as={TextAreaField}
-            error={!!flatErrors[`${altId}.security.zeroTrustAlignment`]}
+            error={!!flatErrors[`${altId}.zeroTrustAlignment`]}
             id={`BusinessCase-${altId}ZeroTrustAlignment`}
             maxLength={10000}
-            name={`${altId}.security.zeroTrustAlignment`}
+            name={`${altId}.zeroTrustAlignment`}
             aria-describedby={`BusinessCase-${altId}ZeroTrustAlignmentCounter BusinessCase-${altId}ZeroTrustAlignmentHelp`}
           />
         </FieldGroup>

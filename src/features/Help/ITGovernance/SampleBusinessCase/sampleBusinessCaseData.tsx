@@ -140,10 +140,10 @@ const sampleBusinessCaseData: BusinessCaseModel = {
     },
     security: {
       isApproved: true,
-      isBeingReviewed: '',
-      zeroTrustAlignment:
-        'It will be aligned with the Zero Trust Architecture (ZTA) principles and practices.'
+      isBeingReviewed: ''
     },
+    zeroTrustAlignment:
+      'It will be aligned with the Zero Trust Architecture (ZTA) principles and practices.',
     hosting: {
       type: 'cloud',
       location: 'CMS AWS Cloud Instance - SaaS - ServiceNow; IaaS -',
@@ -265,10 +265,10 @@ const sampleBusinessCaseData: BusinessCaseModel = {
     },
     security: {
       isApproved: false,
-      isBeingReviewed: 'NO',
-      zeroTrustAlignment:
-        'It will be aligned with the Zero Trust Architecture (ZTA) principles and practices.'
+      isBeingReviewed: 'NO'
     },
+    zeroTrustAlignment:
+      'It will be aligned with the Zero Trust Architecture (ZTA) principles and practices.',
     hosting: {
       type: 'cloud',
       location: 'Microsoft Azure Government Cloud - SaaS - Atlassia',
@@ -391,10 +391,10 @@ const sampleBusinessCaseData: BusinessCaseModel = {
     },
     security: {
       isApproved: true,
-      isBeingReviewed: '',
-      zeroTrustAlignment:
-        'It will be aligned with the Zero Trust Architecture (ZTA) principles and practices.'
+      isBeingReviewed: ''
     },
+    zeroTrustAlignment:
+      'It will be aligned with the Zero Trust Architecture (ZTA) principles and practices.',
     hosting: {
       type: 'dataCenter',
       location: 'Baltimore Data Center - PaaS - Sharepoint',

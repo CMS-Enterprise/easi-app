@@ -300,9 +300,9 @@ const mockBusinessCase: BusinessCaseModel = {
     targetCompletionDate: '',
     security: {
       isApproved: null,
-      isBeingReviewed: '',
-      zeroTrustAlignment: ''
+      isBeingReviewed: ''
     },
+    zeroTrustAlignment: '',
     hosting: {
       type: '',
       location: '',
@@ -421,9 +421,9 @@ const mockBusinessCase: BusinessCaseModel = {
     targetCompletionDate: '',
     security: {
       isApproved: null,
-      isBeingReviewed: '',
-      zeroTrustAlignment: ''
+      isBeingReviewed: ''
     },
+    zeroTrustAlignment: '',
     hosting: {
       type: '',
       location: '',
@@ -542,9 +542,9 @@ const mockBusinessCase: BusinessCaseModel = {
     targetCompletionDate: '',
     security: {
       isApproved: null,
-      isBeingReviewed: '',
-      zeroTrustAlignment: ''
+      isBeingReviewed: ''
     },
+    zeroTrustAlignment: '',
     hosting: {
       type: '',
       location: '',

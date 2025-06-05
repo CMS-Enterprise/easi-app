@@ -162,9 +162,7 @@ const PropsedBusinessCaseSolutionReview = ({
           <DescriptionDefinition
             className="text-pre-wrap"
             definition={
-              solution.security.zeroTrustAlignment
-                ? solution.security.zeroTrustAlignment
-                : 'N/A'
+              solution.zeroTrustAlignment ? solution.zeroTrustAlignment : 'N/A'
             }
           />
         </div>

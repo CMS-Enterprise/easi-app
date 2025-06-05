@@ -152,9 +152,9 @@ describe('The Business Case Form', () => {
           targetCompletionDate: '2025-03-15T04:00:00.000Z',
           security: {
             isApproved: false,
-            isBeingReviewed: 'YES',
-            zeroTrustAlignment: 'Preferred Solution Zero Trust Alignment'
+            isBeingReviewed: 'YES'
           },
+          zeroTrustAlignment: 'Preferred Solution Zero Trust Alignment',
           hosting: {
             type: 'cloud',
             cloudServiceType: 'Saas',
@@ -273,9 +273,9 @@ describe('The Business Case Form', () => {
           targetCompletionDate: '2025-03-15T04:00:00.000Z',
           security: {
             isApproved: false,
-            isBeingReviewed: 'YES',
-            zeroTrustAlignment: 'Alternative A Zero Trust Alignment'
+            isBeingReviewed: 'YES'
           },
+          zeroTrustAlignment: 'Alternative A Zero Trust Alignment',
           hosting: {
             type: 'cloud',
             cloudServiceType: 'Saas',

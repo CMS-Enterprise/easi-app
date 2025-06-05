@@ -141,9 +141,9 @@ describe('The Business Case Review Component', () => {
       costSavings: 'Test cost savings',
       security: {
         isApproved: false,
-        isBeingReviewed: 'YES',
-        zeroTrustAlignment: 'Test Zero Trust'
+        isBeingReviewed: 'YES'
       },
+      zeroTrustAlignment: 'Test Zero Trust',
       hosting: {
         type: 'cloud',
         location: 'Test location',
@@ -262,9 +262,9 @@ describe('The Business Case Review Component', () => {
       costSavings: 'Test cost savings',
       security: {
         isApproved: false,
-        isBeingReviewed: 'YES',
-        zeroTrustAlignment: 'Test Zero Trust'
+        isBeingReviewed: 'YES'
       },
+      zeroTrustAlignment: 'Test Zero Trust',
       hosting: {
         type: 'cloud',
         location: 'Test location',
@@ -383,9 +383,9 @@ describe('The Business Case Review Component', () => {
       costSavings: 'Test cost savings',
       security: {
         isApproved: false,
-        isBeingReviewed: 'YES',
-        zeroTrustAlignment: 'Test Zero Trust'
+        isBeingReviewed: 'YES'
       },
+      zeroTrustAlignment: 'Test Zero Trust',
       hosting: {
         type: 'cloud',
         location: 'Test location',

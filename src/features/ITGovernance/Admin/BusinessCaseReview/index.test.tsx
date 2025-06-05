@@ -141,9 +141,9 @@ describe('The GRT Business Case review', () => {
       costSavings: 'Mock cost savings',
       security: {
         isApproved: false,
-        isBeingReviewed: 'YES',
-        zeroTrustAlignment: 'Mock Zero Trust'
+        isBeingReviewed: 'YES'
       },
+      zeroTrustAlignment: 'Mock Zero Trust',
       hosting: {
         type: 'Cloud',
         location: 'Mock location',

@@ -85,9 +85,9 @@ export const defaultProposedSolution = {
   costSavings: '',
   security: {
     isApproved: null,
-    isBeingReviewed: '',
-    zeroTrustAlignment: ''
+    isBeingReviewed: ''
   },
+  zeroTrustAlignment: '',
   hosting: {
     type: '',
     location: '',
@@ -145,6 +145,7 @@ export const solutionHasFilledFields = (
     targetContractAwardDate,
     targetCompletionDate,
     security,
+    zeroTrustAlignment,
     hosting,
     hasUserInterface,
     pros,
@@ -172,7 +173,7 @@ export const solutionHasFilledFields = (
     targetCompletionDate ||
     security.isApproved ||
     security.isBeingReviewed ||
-    security.zeroTrustAlignment ||
+    zeroTrustAlignment ||
     hosting.type ||
     hosting.location ||
     hosting.cloudStrategy ||
@@ -266,10 +267,9 @@ export const prepareBusinessCaseForApp = (
       estimatedLifecycleCost: lifecycleCostLines.Preferred,
       security: {
         isApproved: businessCase.preferredSecurityIsApproved,
-        isBeingReviewed: businessCase.preferredSecurityIsBeingReviewed || '',
-        zeroTrustAlignment:
-          businessCase.preferredSecurityZeroTrustAlignment || ''
+        isBeingReviewed: businessCase.preferredSecurityIsBeingReviewed || ''
       },
+      zeroTrustAlignment: businessCase.preferredZeroTrustAlignment || '',
       hosting: {
         type: businessCase.preferredHostingType || '',
         location: businessCase.preferredHostingLocation || '',
@@ -292,10 +292,9 @@ export const prepareBusinessCaseForApp = (
       estimatedLifecycleCost: lifecycleCostLines.A,
       security: {
         isApproved: businessCase.alternativeASecurityIsApproved,
-        isBeingReviewed: businessCase.alternativeASecurityIsBeingReviewed,
-        zeroTrustAlignment:
-          businessCase.alternativeASecurityZeroTrustAlignment || ''
+        isBeingReviewed: businessCase.alternativeASecurityIsBeingReviewed
       },
+      zeroTrustAlignment: businessCase.alternativeAZeroTrustAlignment || '',
       hosting: {
         type: businessCase.alternativeAHostingType || '',
         location: businessCase.alternativeAHostingLocation || '',
@@ -319,10 +318,9 @@ export const prepareBusinessCaseForApp = (
       estimatedLifecycleCost: lifecycleCostLines.B,
       security: {
         isApproved: businessCase.alternativeBSecurityIsApproved,
-        isBeingReviewed: businessCase.alternativeBSecurityIsBeingReviewed || '',
-        zeroTrustAlignment:
-          businessCase.alternativeBSecurityZeroTrustAlignment || ''
+        isBeingReviewed: businessCase.alternativeBSecurityIsBeingReviewed || ''
       },
+      zeroTrustAlignment: businessCase.alternativeBZeroTrustAlignment || '',
       hosting: {
         type: businessCase.alternativeBHostingType || '',
         location: businessCase.alternativeBHostingLocation || '',
@@ -444,8 +442,8 @@ export const prepareBusinessCaseForApi = (
       businessCase.preferredSolution.security.isApproved,
     preferredSecurityisBeingReviewed:
       businessCase.preferredSolution.security.isBeingReviewed || null,
-    preferredSecurityZeroTrustAlignment:
-      businessCase.preferredSolution.security.zeroTrustAlignment || null,
+    preferredZeroTrustAlignment:
+      businessCase.preferredSolution.zeroTrustAlignment || null,
     preferredHostingType: businessCase.preferredSolution.hosting.type || null,
     preferredHostingLocation:
       businessCase.preferredSolution.hosting.location || null,
@@ -473,8 +471,8 @@ export const prepareBusinessCaseForApi = (
       businessCase.alternativeA.security.isApproved,
     alternativeASecurityisBeingReviewed:
       businessCase.alternativeA.security.isBeingReviewed || null,
-    alternativeASecurityZeroTrustAlignment:
-      businessCase.alternativeA.security.zeroTrustAlignment || null,
+    alternativeAZeroTrustAlignment:
+      businessCase.alternativeA.zeroTrustAlignment || null,
     alternativeAHostingType: businessCase.alternativeA.hosting.type || null,
     alternativeAHostingLocation:
       businessCase.alternativeA.hosting.location || null,
@@ -502,8 +500,8 @@ export const prepareBusinessCaseForApi = (
       businessCase.alternativeB.security.isApproved || null,
     alternativeBSecurityisBeingReviewed:
       businessCase.alternativeB.security.isBeingReviewed || null,
-    alternativeBSecurityZeroTrustAlignment:
-      businessCase.alternativeB.security.zeroTrustAlignment || null,
+    alternativeBZeroTrustAlignment:
+      businessCase.alternativeB.zeroTrustAlignment || null,
     alternativeBHostingType: businessCase.alternativeB.hosting.type || null,
     alternativeBHostingLocation:
       businessCase.alternativeB.hosting.location || null,
