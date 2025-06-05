@@ -137,8 +137,8 @@ const FundingSources = ({ disableParentForm }: FundingSourcesProps) => {
                 className="margin-top-2"
                 error={!!errors?.fundingSources?.[index]?.projectNumber}
               >
-                <Label htmlFor="fundingNumber" className="text-normal">
-                  {t('contractDetails.fundingSources.fundingNumber')}
+                <Label htmlFor="projectNumber" className="text-normal">
+                  {t('contractDetails.fundingSources.projectNumber')}
                 </Label>
                 <HelpText id="fundingNumberHelpText">
                   {t('contractDetails.fundingSources.fundingNumberHelpText')}
@@ -152,7 +152,7 @@ const FundingSources = ({ disableParentForm }: FundingSourcesProps) => {
                   {...register(`fundingSources.${index}.projectNumber`)}
                   ref={null}
                   type="text"
-                  id="fundingNumber"
+                  id="projectNumber"
                   aria-describedby="fundingNumberHelptext fundingNumberHelpLink"
                 />
 
@@ -243,12 +243,12 @@ const FundingSources = ({ disableParentForm }: FundingSourcesProps) => {
             </p>
             <p className="margin-y-05">
               {t('contractDetails.fundingSources.fundingNumberLabel', {
-                fundingNumber: projectNumber
+                projectNumber
               })}
             </p>
             <p className="margin-y-05">
               {t('contractDetails.fundingSources.fundingSourcesLabel', {
-                sources: investments.join(', ')
+                investments: investments.join(', ')
               })}
             </p>
 

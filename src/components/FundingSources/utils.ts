@@ -8,11 +8,11 @@ export const formatFundingSourcesForApi = (
 ): FundingSource[] => {
   return fundingSources
     .map(({ id, projectNumber, investments }) => {
-      return investments.map(source => ({
+      return investments.map(investment => ({
         __typename: 'SystemIntakeFundingSource' as const,
         id,
-        fundingNumber: projectNumber,
-        source
+        projectNumber,
+        investment
       }));
     })
     .flat();

@@ -214,7 +214,7 @@ describe('The System Intake Form', () => {
     const fundingNumber = '123456';
 
     cy.systemIntake.contractDetails.addFundingSource({
-      fundingNumber,
+      projectNumber: fundingNumber,
       sources: ['Fed Admin', 'Research'],
       restart: true
     });

@@ -65,7 +65,7 @@ describe('Funding sources', () => {
     userEvent.click(saveButton);
 
     expect(
-      await screen.findByText('Funding number must be exactly 6 digits')
+      await screen.findByText('Project number must be exactly 6 digits')
     ).toBeInTheDocument();
 
     expect(
@@ -73,10 +73,10 @@ describe('Funding sources', () => {
     ).toBeInTheDocument();
 
     const fundingNumberField = screen.getByRole('textbox', {
-      name: 'Funding number'
+      name: 'Project number'
     });
 
-    // Check funding number is numeric
+    // Check project number is numeric
 
     userEvent.type(fundingNumberField, 'aaaaaa');
     expect(fundingNumberField).toHaveValue('aaaaaa');
@@ -84,10 +84,10 @@ describe('Funding sources', () => {
     userEvent.click(screen.getByRole('button', { name: 'Save' }));
 
     expect(
-      await screen.findByText('Funding number can only contain digits')
+      await screen.findByText('Project number can only contain digits')
     ).toBeInTheDocument();
 
-    // Check unique funding number
+    // Check unique project number
 
     userEvent.clear(fundingNumberField);
     userEvent.type(fundingNumberField, '123456');
@@ -96,7 +96,7 @@ describe('Funding sources', () => {
     userEvent.click(screen.getByRole('button', { name: 'Save' }));
 
     expect(
-      await screen.findByText('Funding number must be unique')
+      await screen.findByText('Project number must be unique')
     ).toBeInTheDocument();
   });
 });
