@@ -1486,7 +1486,7 @@ func (s *ResolverSuite) TestGrbMeetingStatus() {
 				GrbReviewAsyncRecordingTime: &tomorrow,
 				GrbReviewAsyncManualEndDate: &now,
 			},
-			expectedStatus: models.ITGRRBSReviewInProgress,
+			expectedStatus: models.ITGGRBSAwaitingDecision,
 		},
 	}
 
