@@ -28,7 +28,7 @@ type EASIIntake struct {
 	ExistingContract                string               `json:"existingContract" jsonschema:"description=Is there an existing contract for this effort,example=HAVE_CONTRACT"`
 	ExistingFunding                 *bool                `json:"existingFunding,omitempty" jsonschema:"description=Will this project be funded out of an existing source,example=True"`
 	FundingNumber                   *string              `json:"fundingNumber,omitempty" jsonschema:"description=six digit funding number,example=123456"`
-	FundingSource                   *string              `json:"fundingSource,omitempty" jsonschema:"description=Investment of funding,example=Prog Ops"`
+	FundingSource                   *string              `json:"fundingSource,omitempty" jsonschema:"description=Source of funding,example=Prog Ops"`
 	FundingSources                  []*EASIFundingSource `json:"fundingSources,omitempty" jsonschema:"description=Array of funding sources, which contain a source of funding and a six-digit funding number,example=N/A"`
 	GrbDate                         *string              `json:"grbDate,omitempty" jsonschema:"description=Scheduled date for the Governance Review Board (GRB) meeting,example=2025-12-12"`
 	GrtDate                         *string              `json:"grtDate,omitempty" jsonschema:"description=Scheduled date for the Governance Review Team (GRT) meeting,example=2025-10-20"` // TODO: doesn't seem like this is ever populated, remove?
@@ -67,5 +67,5 @@ type EASIIntake struct {
 type EASIFundingSource struct {
 	FundingSourceID string  `json:"fundingSourceId" jsonschema:"description=Unique ID of this funding source,example=91e5c1f3-11fb-4124-805c-adbdd02c5395"`
 	FundingNumber   *string `json:"fundingNumber,omitempty" jsonschema:"description=six digit funding number,example=123456"`
-	Source          *string `json:"fundingSource,omitempty" jsonschema:"description=Investment of funding,example=Prog Ops"`
+	Source          *string `json:"fundingSource,omitempty" jsonschema:"description=Source of funding,example=Prog Ops"`
 }

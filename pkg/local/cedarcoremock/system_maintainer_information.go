@@ -12,7 +12,7 @@ var mockSystemMaintainerInformation = map[string]*models.SystemMaintainerInforma
 	"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}": {
 		AdHocAgileDeploymentFrequency:         zero.StringFrom("Every three weeks"),
 		AgileUsed:                             true,
-		AuthoritativeDatasource:               zero.StringFrom("Investment control"),
+		AuthoritativeDatasource:               zero.StringFrom("Source control"),
 		BusinessArtifactsOnDemand:             true,
 		DataAtRestEncryptionKeyManagement:     zero.StringFrom("AWS KMS"),
 		DeploymentFrequency:                   zero.StringFrom("Every two weeks"),
