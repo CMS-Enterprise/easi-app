@@ -58,7 +58,10 @@ describe('Business case general request info form', () => {
       form: {
         ...businessCaseInitialData,
         systemIntakeId: systemIntake.id,
-        id: '75746af8-9a9b-4558-a375-cf9848eb2b0d'
+        id: '75746af8-9a9b-4558-a375-cf9848eb2b0d',
+        requester: {
+          name: 'John Doe'
+        }
       },
       isLoading: false,
       isSaving: false,
@@ -81,22 +84,32 @@ describe('Business case general request info form', () => {
     await renderPage(defaultStore);
 
     const requestNameField = screen.getByRole('textbox', {
-      name: /Contract \/ Request title/i
+      name: /Contract \/ request title/i
     });
     userEvent.type(requestNameField, 'Test Project 1');
     expect(requestNameField).toHaveValue('Test Project 1');
 
+    const projectAcronymField = screen.getByRole('textbox', {
+      name: /Contract \/ request acronym/i
+    });
+    userEvent.type(projectAcronymField, 'TP1');
+    expect(projectAcronymField).toHaveValue('TP1');
+
     const requesterField = screen.getByRole('textbox', {
       name: /Requester name/i
     });
+
+    expect(requesterField).toBeDisabled();
+
     userEvent.type(requesterField, 'John Doe');
     expect(requesterField).toHaveValue('John Doe');
 
-    const businessOwnerField = screen.getByRole('textbox', {
-      name: /CMS Business Owner name/i
-    });
-    userEvent.type(businessOwnerField, 'Sally Doe');
-    expect(businessOwnerField).toHaveValue('Sally Doe');
+    const businessOwnerField = screen.getByTestId('cedar-contact-select');
+
+    userEvent.type(businessOwnerField, 'Jane McModel');
+    userEvent.keyboard('[Enter]');
+
+    expect(businessOwnerField).toHaveValue('Jane McModel');
 
     const phoneNumberField = screen.getByRole('textbox', {
       name: /Phone Number/i

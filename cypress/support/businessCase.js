@@ -5,6 +5,10 @@ cy.businessCase = {
         .type('Easy Access to System Information')
         .should('have.value', 'Easy Access to System Information');
 
+      cy.get('#BusinessCase-ProjectAcronym')
+        .type('EASi')
+        .should('have.value', 'EASi');
+
       cy.get('#BusinessCase-RequesterName')
         .type('Casey Doe')
         .should('have.value', 'Casey Doe');
@@ -24,6 +28,10 @@ cy.businessCase = {
         .type('The quick brown fox jumps over the lazy dog.')
         .should('have.value', 'The quick brown fox jumps over the lazy dog.');
 
+      cy.get('#BusinessCase-CollaborationNeeded')
+        .type('The quick brown fox jumps over the lazy dog.')
+        .should('have.value', 'The quick brown fox jumps over the lazy dog.');
+
       cy.get('#BusinessCase-CurrentSolutionSummary')
         .type('The quick brown fox jumps over the lazy dog.')
         .should('have.value', 'The quick brown fox jumps over the lazy dog.');
@@ -37,6 +45,10 @@ cy.businessCase = {
         .should('have.value', 'The quick brown fox jumps over the lazy dog.');
 
       cy.get('#BusinessCase-SuccessIndicators')
+        .type('The quick brown fox jumps over the lazy dog.')
+        .should('have.value', 'The quick brown fox jumps over the lazy dog.');
+
+      cy.get('#BusinessCase-ResponseToGRTFeedback')
         .type('The quick brown fox jumps over the lazy dog.')
         .should('have.value', 'The quick brown fox jumps over the lazy dog.');
     }
@@ -55,6 +67,24 @@ cy.businessCase = {
         .type('Preferred Solution Acquisition approach')
         .should('have.value', 'Preferred Solution Acquisition approach');
 
+      cy.get('#BusinessCase-PreferredSolutionTargetContractAwardDate').type(
+        '03/13/2025'
+      );
+
+      cy.get('#BusinessCase-PreferredSolutionTargetContractAwardDate').should(
+        'have.value',
+        '03/13/2025'
+      );
+
+      cy.get('#BusinessCase-PreferredSolutionTargetCompletionDate').type(
+        '03/15/2025'
+      );
+
+      cy.get('#BusinessCase-PreferredSolutionTargetCompletionDate').should(
+        'have.value',
+        '03/15/2025'
+      );
+
       cy.get('#BusinessCase-PreferredSolutionSecurityNotApproved')
         .check({ force: true })
         .should('be.checked');
@@ -62,6 +92,10 @@ cy.businessCase = {
       cy.get('#BusinessCase-PreferredSolutionSecurityIsBeingReviewedYes')
         .check({ force: true })
         .should('be.checked');
+
+      cy.get('#BusinessCase-PreferredSolutionZeroTrustAlignment')
+        .type('Preferred Solution Zero Trust Alignment')
+        .should('have.value', 'Preferred Solution Zero Trust Alignment');
 
       cy.get('#BusinessCase-PreferredSolutionHostingCloud')
         .check({ force: true })
@@ -75,9 +109,17 @@ cy.businessCase = {
         .type('Saas')
         .should('have.value', 'Saas');
 
+      cy.get('#BusinessCase-PreferredSolutionCloudStrategy')
+        .type('Just do it')
+        .should('have.value', 'Just do it');
+
       cy.get('#BusinessCase-PreferredHasUserInferfaceYes')
         .check({ force: true })
         .should('be.checked');
+
+      cy.get('#BusinessCase-PreferredWorkforceTrainingReqs')
+        .type('Preferred Workforce Training')
+        .should('have.value', 'Preferred Workforce Training');
 
       cy.get('#BusinessCase-PreferredSolutionPros')
         .type('Preferred Solution Pros')
@@ -134,6 +176,24 @@ cy.businessCase = {
         .type('Alternative A AcquisitionApproach')
         .should('have.value', 'Alternative A AcquisitionApproach');
 
+      cy.get('#BusinessCase-alternativeATargetContractAwardDate').type(
+        '03/13/2025'
+      );
+
+      cy.get('#BusinessCase-alternativeATargetContractAwardDate').should(
+        'have.value',
+        '03/13/2025'
+      );
+
+      cy.get('#BusinessCase-alternativeATargetCompletionDate').type(
+        '03/15/2025'
+      );
+
+      cy.get('#BusinessCase-alternativeATargetCompletionDate').should(
+        'have.value',
+        '03/15/2025'
+      );
+
       cy.get('#BusinessCase-alternativeASecurityNotApproved')
         .check({ force: true })
         .should('be.checked');
@@ -141,6 +201,10 @@ cy.businessCase = {
       cy.get('#BusinessCase-alternativeASecurityIsBeingReviewedYed')
         .check({ force: true })
         .should('be.checked');
+
+      cy.get('#BusinessCase-alternativeAZeroTrustAlignment')
+        .type('Alternative A Zero Trust Alignment')
+        .should('have.value', 'Alternative A Zero Trust Alignment');
 
       cy.get('#BusinessCase-alternativeAHostingCloud')
         .check({ force: true })
@@ -154,9 +218,17 @@ cy.businessCase = {
         .type('Saas')
         .should('have.value', 'Saas');
 
+      cy.get('#BusinessCase-alternativeACloudStrategy')
+        .type('Just do it')
+        .should('have.value', 'Just do it');
+
       cy.get('#BusinessCase-alternativeAHasUserInferfaceYes')
         .check({ force: true })
         .should('be.checked');
+
+      cy.get('#BusinessCase-alternativeAWorkforceTrainingReqs')
+        .type('Alternative A Workforce Training')
+        .should('have.value', 'Alternative A Workforce Training');
 
       cy.get('#BusinessCase-alternativeAPros')
         .type('Alternative A Pros')

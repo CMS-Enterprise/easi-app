@@ -209,7 +209,7 @@ const AlternativeAnalysis = ({
         }
       }
     ],
-    [dispatchSave, history, t]
+    [dispatchSave, history, isFinal, t]
   );
 
   const table = useTable({
