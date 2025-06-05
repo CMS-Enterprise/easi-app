@@ -264,10 +264,10 @@ const DocumentsTable = ({
               {headerGroup.headers.map(column => (
                 <th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
+                  key={column.id}
                   aria-sort={getColumnSortStatus(column)}
                   scope="col"
                   className="border-bottom-2px"
-                  key={column.id}
                 >
                   <Button
                     type="button"
@@ -286,7 +286,7 @@ const DocumentsTable = ({
           {page.map(row => {
             prepareRow(row);
             return (
-              <tr {...row.getRowProps()} key={{ ...row.getRowProps() }.key}>
+              <tr {...row.getRowProps()} key={row.id}>
                 {row.cells.map(cell => {
                   return (
                     <td

@@ -6,7 +6,8 @@ import { render, screen, waitFor } from '@testing-library/react';
 import {
   GetAdminNotesAndActionsDocument,
   GetAdminNotesAndActionsQuery,
-  SystemIntakeActionType
+  SystemIntakeActionType,
+  SystemIntakeStatusAdmin
 } from 'gql/generated/graphql';
 import configureMockStore from 'redux-mock-store';
 import {
@@ -271,8 +272,36 @@ describe('Governance Review Team', () => {
     );
 
     await waitForPageLoad('grt-actions-view');
+  });
+  it('renders LCID Retiring Soon alert', async () => {
+    render(
+      <MemoryRouter
+        initialEntries={[`/it-governance/${systemIntake.id}/intake-request`]}
+      >
+        <MockedProvider
+          mocks={[
+            getSystemIntakeQuery({
+              statusAdmin: SystemIntakeStatusAdmin.LCID_RETIRING_SOON,
+              lcidRetiresAt: '2020-10-08T03:11:24.478056Z'
+            }),
+            getSystemIntakeContactsQuery
+          ]}
+          addTypename={false}
+        >
+          <Provider store={defaultStore}>
+            <MessageProvider>
+              <Route path="/it-governance/:systemId/intake-request">
+                <RequestOverview />
+              </Route>
+            </MessageProvider>
+          </Provider>
+        </MockedProvider>
+      </MemoryRouter>
+    );
+    await waitForPageLoad('intake-review');
 
-    // screen.debug(undefined, Infinity);
+    expect(screen.getByTestId('grt-current-status')).toBeInTheDocument();
+    expect(screen.getByTestId('lcid-retiring-soon-alert')).toBeInTheDocument();
   });
 });
 
