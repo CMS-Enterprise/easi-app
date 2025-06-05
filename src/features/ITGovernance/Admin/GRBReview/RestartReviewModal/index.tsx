@@ -100,9 +100,7 @@ const RestartReviewModal = ({ systemIntakeId }: { systemIntakeId: string }) => {
               name="grbReviewAsyncEndDate"
               // classname used to target specifically the date picker calendar and have it render above the input field
               className="date-picker-override"
-              onChange={val => {
-                setSelectedDate(val || '');
-              }}
+              onChange={val => setSelectedDate(val || '')}
               value={selectedDate}
               dateInPastWarning
               format={dt =>
