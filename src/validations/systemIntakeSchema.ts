@@ -234,7 +234,7 @@ export const FundingSourcesValidationSchema = Yup.object().shape({
     }).test('is-unique', 'Must be unique', (value, context) => {
       const fundingNumbers: string[] = context.parent
         .filter((source: FormattedFundingSource) => source.id !== value.id)
-        .map((source: FormattedFundingSource) => source.fundingNumber);
+        .map((source: FormattedFundingSource) => source.projectNumber);
 
       const isUnique = !fundingNumbers.includes(value?.fundingNumber!);
 

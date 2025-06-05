@@ -32,8 +32,8 @@ func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wir
 	for _, fundingSource := range si.FundingSources {
 		fundingSources = append(fundingSources, &intakemodels.EASIFundingSource{
 			FundingSourceID: fundingSource.ID.String(),
-			Source:          fundingSource.Source.Ptr(),
-			FundingNumber:   fundingSource.FundingNumber.Ptr(),
+			Source:          fundingSource.Investment.Ptr(),
+			FundingNumber:   fundingSource.ProjectNumber.Ptr(),
 		})
 	}
 

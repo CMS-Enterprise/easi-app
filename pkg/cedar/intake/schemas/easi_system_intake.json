@@ -24,7 +24,7 @@
         },
         "fundingSource": {
           "type": "string",
-          "description": "Source of funding",
+          "description": "Investment of funding",
           "examples": [
             "Prog Ops"
           ]
@@ -198,7 +198,7 @@
         },
         "fundingSource": {
           "type": "string",
-          "description": "Source of funding",
+          "description": "Investment of funding",
           "examples": [
             "Prog Ops"
           ]

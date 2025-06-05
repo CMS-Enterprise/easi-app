@@ -1536,8 +1536,8 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveFundingSource() {
 		ExistingFunding: null.BoolFrom(true),
 		FundingSources: []*models.SystemIntakeFundingSource{
 			{
-				Source:        null.StringFrom("Prog Ops"),
-				FundingNumber: null.StringFrom("123456"),
+				Investment:    null.StringFrom("Prog Ops"),
+				ProjectNumber: null.StringFrom("123456"),
 			},
 		},
 	})

@@ -125,7 +125,7 @@ func (s *ClientTestSuite) TestTranslation() {
 		// Check that the ID of the Intake is Correct
 		s.EqualValues(si.ID.String(), intakeBody.IntakeID)
 
-		// Check that the Funding Source ID is being pulled from the FundingSources array of the Intake
+		// Check that the Funding Investment ID is being pulled from the FundingSources array of the Intake
 		s.EqualValues(si.FundingSources[0].ID.String(), intakeBody.FundingSources[0].FundingSourceID)
 
 	})
