@@ -60,7 +60,7 @@ const PresentationCardActions = ({
         </Alert>
         <IconLink
           icon={<Icon.ArrowForward />}
-          to="grb-review/review-type"
+          to={`/it-governance/${systemIntakeID}/grb-review/review-type`}
           iconPosition="after"
         >
           {t('adminTask.setUpGRBReview.title')}
