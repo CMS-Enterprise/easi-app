@@ -79,7 +79,7 @@ describe('DecisionRecordCard', () => {
     );
   };
 
-  it('renders correctly when the user is an ITGov admin and voting status is not NOT_STARTED', () => {
+  it('renders correctly when voting status is not NOT_STARTED', () => {
     renderComponent(true, mockVotingInformation);
 
     // Check that the heading is rendered
@@ -111,13 +111,6 @@ describe('DecisionRecordCard', () => {
         })
       )
     ).toBeInTheDocument();
-  });
-
-  it('does not render when the user is not an ITGov admin', () => {
-    const { container } = renderComponent(false, mockVotingInformation);
-
-    // Ensure the component renders nothing
-    expect(container.firstChild).toBeNull();
   });
 
   it('does not render when the voting status is NOT_STARTED', () => {
@@ -191,5 +184,20 @@ describe('DecisionRecordCard', () => {
     expect(
       screen.getByText(i18next.t<string>('grbReview:decisionCard.inconclusive'))
     ).toBeInTheDocument();
+  });
+
+  it('does not render decision banner when user is not an ITGov admin', () => {
+    const votingInformation = {
+      ...mockVotingInformation,
+      votingStatus: GRBVotingInformationStatus.APPROVED
+    };
+
+    renderComponent(false, votingInformation);
+
+    expect(
+      screen.queryByText(
+        i18next.t<string>('grbReview:decisionCard.issueDecision')
+      )
+    ).not.toBeInTheDocument();
   });
 });

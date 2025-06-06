@@ -255,7 +255,7 @@ export default {
     steps: grbReviewFormSteps,
     error:
       'There was a problem saving your GRB review form. Please try again. If the error persists, please try again at a later date.',
-    minFive: 'Please select at least five GRB reviewers',
+    minFive: 'Please select at least five voting GRB reviewers',
     invalidDate: 'Please enter a valid date',
     reviewType: {
       label: 'Choose review type',

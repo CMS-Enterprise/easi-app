@@ -271,12 +271,12 @@ func (r *iTGovTaskStatusesResolver) BizCaseFinalStatus(ctx context.Context, obj 
 
 // GrbMeetingStatus is the resolver for the grbMeetingStatus field.
 func (r *iTGovTaskStatusesResolver) GrbMeetingStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovGRBStatus, error) {
-	return resolvers.GrbMeetingStatus(obj.ParentSystemIntake)
+	return resolvers.GrbMeetingStatus(ctx, obj.ParentSystemIntake)
 }
 
 // DecisionAndNextStepsStatus is the resolver for the decisionAndNextStepsStatus field.
 func (r *iTGovTaskStatusesResolver) DecisionAndNextStepsStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovDecisionStatus, error) {
-	return resolvers.DecisionAndNextStepsStatus(obj.ParentSystemIntake)
+	return resolvers.DecisionAndNextStepsStatus(ctx, obj.ParentSystemIntake)
 }
 
 // CreateSystemIntakeActionProgressToNewStep is the resolver for the createSystemIntakeActionProgressToNewStep field.
@@ -1971,12 +1971,12 @@ func (r *systemIntakeResolver) ItGovTaskStatuses(ctx context.Context, obj *model
 
 // StatusRequester is the resolver for the statusRequester field.
 func (r *systemIntakeResolver) StatusRequester(ctx context.Context, obj *models.SystemIntake) (models.SystemIntakeStatusRequester, error) {
-	return resolvers.CalculateSystemIntakeRequesterStatus(obj, time.Now())
+	return resolvers.CalculateSystemIntakeRequesterStatus(ctx, obj, time.Now())
 }
 
 // StatusAdmin is the resolver for the statusAdmin field.
 func (r *systemIntakeResolver) StatusAdmin(ctx context.Context, obj *models.SystemIntake) (models.SystemIntakeStatusAdmin, error) {
-	return resolvers.CalculateSystemIntakeAdminStatus(obj)
+	return resolvers.CalculateSystemIntakeAdminStatus(ctx, obj)
 }
 
 // LcidStatus is the resolver for the lcidStatus field.
@@ -2031,7 +2031,7 @@ func (r *systemIntakeResolver) GrbReviewStandardStatus(ctx context.Context, obj 
 
 // GrbReviewAsyncStatus is the resolver for the grbReviewAsyncStatus field.
 func (r *systemIntakeResolver) GrbReviewAsyncStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBReviewAsyncStatusType, error) {
-	return resolvers.CalcSystemIntakeGRBReviewAsyncStatus(obj), nil
+	return resolvers.CalcSystemIntakeGRBReviewAsyncStatus(ctx, obj), nil
 }
 
 // DocumentType is the resolver for the documentType field.

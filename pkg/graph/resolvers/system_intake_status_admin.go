@@ -1,14 +1,18 @@
 package resolvers
 
 import (
+	"context"
 	"fmt"
 	"time"
 
+	"go.uber.org/zap"
+
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // CalculateSystemIntakeAdminStatus calculates the status to display in the admin view for a System Intake Request, based on the current step, and the state of that step and the overall state
-func CalculateSystemIntakeAdminStatus(intake *models.SystemIntake) (models.SystemIntakeStatusAdmin, error) {
+func CalculateSystemIntakeAdminStatus(ctx context.Context, intake *models.SystemIntake) (models.SystemIntakeStatusAdmin, error) {
 	if intake.Step == models.SystemIntakeStepDECISION && intake.DecisionState == models.SIDSNoDecision {
 		return "", fmt.Errorf("invalid state") // This status should not be returned in normal use of the application
 	}
@@ -44,7 +48,7 @@ func CalculateSystemIntakeAdminStatus(intake *models.SystemIntake) (models.Syste
 	case models.SystemIntakeStepFINALBIZCASE:
 		retStatus = calcSystemIntakeFinalBusinessCaseStatusAdmin(intake.FinalBusinessCaseState)
 	case models.SystemIntakeStepGRBMEETING:
-		retStatus = calcSystemIntakeGRBMeetingStatusAdmin(intake)
+		retStatus = calcSystemIntakeGRBMeetingStatusAdmin(ctx, intake)
 	case models.SystemIntakeStepDECISION:
 		retStatus, err = calcSystemIntakeDecisionStatusAdmin(intake.DecisionState, intake.LCIDStatus(time.Now()))
 	default:
@@ -87,12 +91,12 @@ func calcSystemIntakeFinalBusinessCaseStatusAdmin(finalBusinessCaseState models.
 	return models.SISAFinalBusinessCaseInProgress
 }
 
-func calcSystemIntakeGRBMeetingStatusAdmin(intake *models.SystemIntake) models.SystemIntakeStatusAdmin {
+func calcSystemIntakeGRBMeetingStatusAdmin(ctx context.Context, intake *models.SystemIntake) models.SystemIntakeStatusAdmin {
 	switch intake.GrbReviewType {
 	case models.SystemIntakeGRBReviewTypeStandard:
 		return calcSystemIntakeStandardGRBReviewStatusAdmin(intake.GRBDate)
 	case models.SystemIntakeGRBReviewTypeAsync:
-		return calcSystemIntakeAsyncGRBReviewStatusAdmin(intake.GRBReviewStartedAt, intake.GrbReviewAsyncEndDate, intake.GrbReviewAsyncManualEndDate)
+		return calcSystemIntakeAsyncGRBReviewStatusAdmin(ctx, intake)
 	}
 
 	return models.SISAGrbReviewComplete
@@ -108,14 +112,28 @@ func calcSystemIntakeStandardGRBReviewStatusAdmin(grbDate *time.Time) models.Sys
 	return models.SISAGrbReviewComplete
 }
 
-func calcSystemIntakeAsyncGRBReviewStatusAdmin(startDate *time.Time, endDate *time.Time, manualEndDate *time.Time) models.SystemIntakeStatusAdmin {
-	if startDate == nil || endDate == nil {
+func calcSystemIntakeAsyncGRBReviewStatusAdmin(ctx context.Context, intake *models.SystemIntake) models.SystemIntakeStatusAdmin {
+	if intake.GRBReviewStartedAt == nil || intake.GrbReviewAsyncEndDate == nil {
 		return models.SISAGrbMeetingReady
 	}
 
 	now := time.Now()
-	if manualEndDate == nil && startDate.Before(now) && endDate.After(now) {
+	if intake.GrbReviewAsyncManualEndDate == nil && intake.GRBReviewStartedAt.Before(now) && intake.GrbReviewAsyncEndDate.After(now) {
 		return models.SISAGrbReviewInProgress
+	}
+
+	// If end date has passed but quorum has not been met, return models.SISAGrbReviewInProgress
+	if now.After(*intake.GrbReviewAsyncEndDate) && intake.GrbReviewAsyncManualEndDate == nil {
+		// check quorum status
+		grbVotingInformation, err := GRBVotingInformationGetBySystemIntake(ctx, intake)
+		if err != nil {
+			appcontext.ZLogger(ctx).Error("problem getting grb voting information", zap.Error(err), zap.String("intake.id", intake.ID.String()))
+			return models.SISAGrbReviewInProgress
+		}
+
+		if !grbVotingInformation.QuorumReached() && intake.GrbReviewAsyncManualEndDate == nil {
+			return models.SISAGrbReviewInProgress
+		}
 	}
 
 	return models.SISAGrbReviewComplete
