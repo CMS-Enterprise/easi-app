@@ -332,7 +332,7 @@ describe('The System Intake Form', () => {
       .siblings('dd')
       .contains('Center for Medicare');
 
-    cy.contains('.easi-review-row dt', 'CMS Business Owner\'s name')
+    cy.contains('.easi-review-row dt',"CMS Business Owner's name")
       .siblings('dd')
       .contains('Audrey Abrams');
 
