@@ -11,8 +11,8 @@ export const formatFundingSourcesForApi = (
       return sources.map(source => ({
         __typename: 'SystemIntakeFundingSource' as const,
         id,
-        fundingNumber,
-        source
+        projectNumber: fundingNumber,
+        investment: source
       }));
     })
     .flat();
