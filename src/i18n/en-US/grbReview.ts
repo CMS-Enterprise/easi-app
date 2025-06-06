@@ -224,10 +224,15 @@ export default {
     infoAlertReviewNotStarted:
       'Adding GRB reviewers will not send them an invitation until you start the GRB review, though they will still be able to access content if they sign into EASi. This individual will be able to see information about this IT Governance request including the Intake Request form, Business Case, and other supporting documents. Please make sure this individual should be able to access this information before you proceed. They will not be able to take any actions on the request or see Admin notes.',
     infoAlertReviewStarted:
-      'Adding a reviewer will send them an informational notification email with a link to EASi. This individual will be able to see information about this IT Governance request including the Intake Request form, Business Case, and other supporting documents. Please make sure this individual should be able to access this information before you proceed. They will not be able to take any actions on the request or see Admin notes.'
+      'Adding a reviewer will send them an informational notification email with a link to EASi. This individual will be able to see information about this IT Governance request including the Intake Request form, Business Case, and other supporting documents. Please make sure this individual should be able to access this information before you proceed. They will not be able to take any actions on the request or see Admin notes.',
+    cantStartAlert_ASYNC:
+      'You will not be able to complete this form and begin the review until the request is in the “Ready for GRB review” status. Please take the admin action to progress this request to the GRB step. <link1>Go to admin actions</link1>',
+    cantStartAlert_STANDARD:
+      'You will not be able to complete this form until the request is in the “Ready for GRB review” status. Please take the admin action to progress this request to the GRB step. <link1>Go to admin actions</link1>'
   },
   messages,
   votingRoles: grbReviewerVotingRolesTranslation,
+
   reviewerRoles: grbReviewerRolesTranslation,
   removeModal: {
     title: 'Remove {{commonName}} as a GRB reviewer?',

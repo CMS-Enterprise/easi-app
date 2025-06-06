@@ -7,7 +7,8 @@ import {
   SystemIntakeGRBReviewAsyncStatusType,
   SystemIntakeGRBReviewFragment,
   SystemIntakeGRBReviewStandardStatusType,
-  SystemIntakeGRBReviewType
+  SystemIntakeGRBReviewType,
+  SystemIntakeStatusAdmin
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
 import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
@@ -22,6 +23,7 @@ describe('GRBReviewStatusCard', () => {
   const mockStandardReview: SystemIntakeGRBReviewFragment = {
     __typename: 'SystemIntake',
     grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+    statusAdmin: SystemIntakeStatusAdmin.GRB_MEETING_READY,
     grbReviewAsyncStatus: null,
     grbReviewStandardStatus: SystemIntakeGRBReviewStandardStatusType.SCHEDULED,
     grbDate: '2025-03-28T12:00:00Z',
@@ -41,6 +43,7 @@ describe('GRBReviewStatusCard', () => {
 
   const mockAsyncReview: SystemIntakeGRBReviewFragment = {
     __typename: 'SystemIntake',
+    statusAdmin: SystemIntakeStatusAdmin.GRB_REVIEW_IN_PROGRESS,
     grbReviewType: SystemIntakeGRBReviewType.ASYNC,
     grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType.IN_PROGRESS,
     grbDate: null,

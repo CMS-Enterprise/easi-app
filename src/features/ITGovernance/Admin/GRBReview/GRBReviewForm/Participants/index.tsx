@@ -1,7 +1,7 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import { useHistory, useLocation } from 'react-router-dom';
+import { Trans, useTranslation } from 'react-i18next';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, FormGroup, Grid, Label } from '@trussworks/react-uswds';
@@ -10,6 +10,7 @@ import {
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewFragment,
   SystemIntakeGRBReviewType,
+  SystemIntakeStatusAdmin,
   useStartGRBReviewMutation,
   useUpdateSystemIntakeGRBReviewFormInputTimeframeAsyncMutation
 } from 'gql/generated/graphql';
@@ -19,6 +20,7 @@ import DatePickerFormatted from 'components/DatePickerFormatted';
 import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import HelpText from 'components/HelpText';
+import UswdsReactLink from 'components/LinkWrapper';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import { GRBReviewFormStepProps } from 'types/grbReview';
 import { SetGRBParticipantsAsyncSchema } from 'validations/grbReviewSchema';
@@ -39,6 +41,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
 
   const history = useHistory();
   const { pathname } = useLocation();
+  const { systemId } = useParams<{ systemId: string }>();
 
   const reviewType: SystemIntakeGRBReviewType = grbReview.grbReviewType;
 
@@ -221,6 +224,30 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
             </div>
           </Grid>
         )}
+
+        {/* Show alert if review cannot be started yet */}
+        {!grbReview.grbReviewStartedAt &&
+          grbReview.statusAdmin !==
+            SystemIntakeStatusAdmin.GRB_MEETING_READY && (
+            <Alert
+              type="warning"
+              slim
+              className="margin-top-8 margin-bottom-neg-4"
+              data-testid="cant-start-alert"
+            >
+              <Trans
+                i18nKey="grbReview:form.cantStartAlert"
+                tOptions={{ context: reviewType }}
+                components={{
+                  link1: (
+                    <UswdsReactLink to={`/it-governance/${systemId}/actions`}>
+                      actions link
+                    </UswdsReactLink>
+                  )
+                }}
+              />
+            </Alert>
+          )}
       </GRBReviewFormStepWrapper>
     </EasiFormProvider>
   );

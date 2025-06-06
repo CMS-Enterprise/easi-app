@@ -9,6 +9,8 @@ export default gql(/* GraphQL */ `
   ${SystemIntakeGRBReviewer}
   fragment SystemIntakeGRBReview on SystemIntake {
     id
+    statusAdmin
+
     grbDate
     grbReviewAsyncEndDate
     grbReviewAsyncRecordingTime

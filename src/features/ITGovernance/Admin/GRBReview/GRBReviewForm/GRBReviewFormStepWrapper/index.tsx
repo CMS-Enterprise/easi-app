@@ -5,7 +5,10 @@ import { useHistory, useParams } from 'react-router-dom';
 import { FetchResult } from '@apollo/client';
 import { Form, GridContainer, Icon } from '@trussworks/react-uswds';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
-import { SystemIntakeGRBReviewFragment } from 'gql/generated/graphql';
+import {
+  SystemIntakeGRBReviewFragment,
+  SystemIntakeStatusAdmin
+} from 'gql/generated/graphql';
 
 import AutoSave from 'components/AutoSave';
 import Breadcrumbs from 'components/Breadcrumbs';
@@ -82,6 +85,12 @@ function GRBReviewFormStepWrapper<
 
   const nextStep: StepHeaderStepProps | undefined =
     currentStepIndex > -1 ? steps[currentStepIndex + 1] : undefined;
+
+  /** Disable submit button if review cannot be started yet */
+  const disableSubmit: boolean =
+    !nextStep &&
+    !grbReview.grbReviewStartedAt &&
+    grbReview.statusAdmin !== SystemIntakeStatusAdmin.GRB_MEETING_READY;
 
   const submitStep = useCallback(
     async ({
@@ -268,7 +277,7 @@ function GRBReviewFormStepWrapper<
 
           <Pager
             next={{
-              disabled: !isValid,
+              disabled: !isValid || disableSubmit,
               text: nextStep
                 ? t('Next')
                 : t('setUpGrbReviewForm.completeAndBeginReview'),
