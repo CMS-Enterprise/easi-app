@@ -1,0 +1,17 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Required fields text component > matches the snapshot 1`] = `
+<DocumentFragment>
+  <p
+    class="text-base"
+  >
+    Fields marked with an asterisk (
+    <span
+      class="text-red margin-x-05"
+    >
+      *
+    </span>
+    ) are required.
+  </p>
+</DocumentFragment>
+`;

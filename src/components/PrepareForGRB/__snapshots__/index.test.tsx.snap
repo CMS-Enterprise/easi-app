@@ -97,7 +97,7 @@ exports[`Prepare for GRB > renders help mode without crashing 1`] = `
       <p
         class="margin-y-0"
       >
-        The following are important items to have with you at the GRB meeting:
+        The following are important items to have with you at the GRB review:
       </p>
       <ul
         class="usa-list usa-list--unstyled line-height-body-5 margin-top-1 padding-y-0"
@@ -247,7 +247,7 @@ exports[`Prepare for GRB > renders without crashing 1`] = `
       <p
         class="margin-y-0"
       >
-        The following are important items to have with you at the GRB meeting:
+        The following are important items to have with you at the GRB review:
       </p>
       <ul
         class="usa-list usa-list--unstyled line-height-body-5 margin-top-1 padding-y-0"

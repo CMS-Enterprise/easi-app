@@ -21,8 +21,9 @@ func createSystemIntakeGRBDiscussionPost(
 		store,
 		nil, // email client
 		models.CreateSystemIntakeGRBDiscussionPostInput{
-			SystemIntakeID: intake.ID,
-			Content:        content,
+			SystemIntakeID:      intake.ID,
+			Content:             content,
+			DiscussionBoardType: models.SystemIntakeGRBDiscussionBoardTypePrimary,
 		},
 	)
 	if err != nil {
@@ -42,8 +43,9 @@ func createSystemIntakeGRBDiscussionReply(
 		store,
 		nil, // email client
 		models.CreateSystemIntakeGRBDiscussionReplyInput{
-			InitialPostID: initialPostID,
-			Content:       content,
+			InitialPostID:       initialPostID,
+			Content:             content,
+			DiscussionBoardType: models.SystemIntakeGRBDiscussionBoardTypePrimary,
 		},
 	)
 	if err != nil {

@@ -132,7 +132,7 @@ func namedSelect(ctx context.Context, np sqlutils.NamedPreparer, dest any, sqlSt
 	}
 
 	if arguments == nil {
-		arguments = map[string]any{}
+		arguments = args{}
 	}
 
 	stmt, err := np.PrepareNamed(sqlStatement)
@@ -152,7 +152,7 @@ func namedGet(ctx context.Context, np sqlutils.NamedPreparer, dest any, sqlState
 	}
 
 	if arguments == nil {
-		arguments = map[string]any{}
+		arguments = args{}
 	}
 
 	stmt, err := np.PrepareNamed(sqlStatement)
@@ -172,7 +172,7 @@ func namedExec(ctx context.Context, np sqlutils.NamedPreparer, sqlStatement stri
 	}
 
 	if arguments == nil {
-		arguments = map[string]any{}
+		arguments = args{}
 	}
 
 	return np.NamedExecContext(ctx, sqlStatement, arguments)

@@ -469,7 +469,7 @@ describe('Governance Review Team', () => {
     );
   });
 
-  it('can progress to the GRT meeting step', () => {
+  it('can progress to the GRB meeting step', () => {
     cy.contains('a', 'Draft Business Case').should('be.visible').click();
 
     cy.get('li.usa-sidenav__item a[href*="actions"]').click();
@@ -480,29 +480,42 @@ describe('Governance Review Team', () => {
 
     // Complete action form
 
-    cy.get('#GRT_MEETING').check({ force: true });
+    cy.get('#GRB_MEETING').check({ force: true });
 
-    cy.get('#meetingDate').type('01/01/2024');
+    cy.get('#meetingDate').should('not.be.disabled');
+
+    cy.get('#meetingDate').type('01/01/2050');
+
+    cy.get('#grbReviewType').check({ force: true });
+
+    cy.get('#meetingDate').should('have.value', '');
+
+    cy.get('#meetingDate').should('be.disabled');
+
+    // Uncheck async grb and reinput dates
+    cy.get('#grbReviewType').uncheck({ force: true });
+
+    cy.get('#meetingDate').type('01/01/2050');
 
     cy.contains('button', 'Complete action').should('not.be.disabled').click();
 
     // Check form submit was successful
     cy.get('div[data-testid="alert"]').contains(
-      'Action complete. This request is now ready for a GRT meeting.'
+      'Action complete. This request is now ready for a GRB review.'
     );
 
     // Check for correct status
     cy.get('[data-testid="grt-current-status"]').contains(
-      'GRT meeting complete'
+      'Ready for GRB review'
     );
 
-    // Check GRT meeting date was set
+    // Check GRB meeting date was set
 
     cy.get('li.usa-sidenav__item a[href*="dates"]').click();
 
-    cy.get('#Dates-GrtDateMonth').should('have.value', '1');
-    cy.get('#Dates-GrtDateDay').should('have.value', '1');
-    cy.get('#Dates-GrtDateYear').should('have.value', '2024');
+    cy.get('#Dates-GrbDateMonth').should('have.value', '1');
+    cy.get('#Dates-GrbDateDay').should('have.value', '1');
+    cy.get('#Dates-GrbDateYear').should('have.value', '2050');
   });
 
   it('can upload a presentation deck', () => {
@@ -537,7 +550,8 @@ describe('Governance Review Team', () => {
 
     // Upload presentation deck
     cy.get('input[name=presentationDeckFileData]').selectFile(
-      'cypress/fixtures/test.pdf'
+      'cypress/fixtures/test.pdf',
+      { force: true }
     );
 
     // Submit form

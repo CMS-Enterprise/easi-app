@@ -2,12 +2,12 @@ import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import ITGovAdminContext from 'features/ITGovernance/Admin/ITGovAdminContext';
 import {
   GetTRBRequestSummaryQuery,
   RequestRelationType,
   SystemIntakeFragmentFragment
 } from 'gql/generated/graphql';
+import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';

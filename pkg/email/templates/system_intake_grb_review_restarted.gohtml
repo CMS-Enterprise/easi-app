@@ -1,0 +1,19 @@
+{{template "easi_header.gohtml"}}
+
+<p>The Governance Admin Team has restarted the review for {{.ProjectTitle}}. It will now end on {{.GRBReviewEndDate}} at 5:00pm EST.</p>
+<div class="no-margin">
+  <p>Use the link below to:</p>
+  <ul>
+    <li>Re-review project materials and documentation.</li>
+    <li>Ask additional questions or review ongoing discussions with other GRB members, the project team, and the Governance Admin Team.</li>
+    <li>Change your vote.</li>
+  </ul>
+</div>
+<p><a href="{{.SystemIntakeRequestLink}}">View this request in EASi</a></p>
+<p><b>Request Summary:</b>
+  Project title: {{.ProjectTitle}}
+  Requester: {{.RequesterName}}, {{.ComponentAcronym}}
+  GRB review dates: {{.GRBReviewStart}}-{{.GRBReviewDeadline}}
+</p>
+<hr>
+<p>You may continue to receive email notifications about this request until a decision is issued and it is closed.</p>
