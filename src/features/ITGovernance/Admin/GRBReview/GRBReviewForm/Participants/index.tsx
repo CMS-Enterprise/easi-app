@@ -233,6 +233,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
               type="warning"
               slim
               className="margin-top-8 margin-bottom-neg-4"
+              data-testid="cant-start-alert"
             >
               <Trans
                 i18nKey="grbReview:form.cantStartAlert"
