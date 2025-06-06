@@ -30,8 +30,8 @@ import {
 export type FormattedFundingSource = {
   __typename: 'SystemIntakeFundingSource';
   id: string;
-  projectNumber: string | null;
-  investments: string[];
+  fundingNumber: string | null;
+  sources: string[];
 };
 
 type FundingSourcesForm = {
@@ -118,14 +118,14 @@ const FundingSources = ({ disableParentForm }: FundingSourcesProps) => {
   return (
     <div id="intakeFundingSources">
       {fields.map((source, index) => {
-        const { projectNumber, investments, id } = source;
+        const { fundingNumber, sources, id } = source;
 
         // Show form if adding or editing funding source
         if (id === activeFundingSource?.id) {
           return (
             <Fieldset
               key={id}
-              id={`fundingSources.${index}.projectNumber`}
+              id={`fundingSources.${index}.fundingNumber`}
               className="margin-top-3"
             >
               <legend className="usa-legend text-bold">
@@ -135,24 +135,24 @@ const FundingSources = ({ disableParentForm }: FundingSourcesProps) => {
               </legend>
               <FieldGroup
                 className="margin-top-2"
-                error={!!errors?.fundingSources?.[index]?.projectNumber}
+                error={!!errors?.fundingSources?.[index]?.fundingNumber}
               >
-                <Label htmlFor="projectNumber" className="text-normal">
-                  {t('contractDetails.fundingSources.projectNumber')}
+                <Label htmlFor="fundingNumber" className="text-normal">
+                  {t('contractDetails.fundingSources.fundingNumber')}
                 </Label>
                 <HelpText id="fundingNumberHelpText">
                   {t('contractDetails.fundingSources.fundingNumberHelpText')}
                 </HelpText>
                 <ErrorMessage
                   errors={errors}
-                  name={`fundingSources.${index}.projectNumber`}
+                  name={`fundingSources.${index}.fundingNumber`}
                   as={FieldErrorMsg}
                 />
                 <TextInput
-                  {...register(`fundingSources.${index}.projectNumber`)}
+                  {...register(`fundingSources.${index}.fundingNumber`)}
                   ref={null}
                   type="text"
-                  id="projectNumber"
+                  id="fundingNumber"
                   aria-describedby="fundingNumberHelptext fundingNumberHelpLink"
                 />
 
@@ -168,19 +168,17 @@ const FundingSources = ({ disableParentForm }: FundingSourcesProps) => {
                 </HelpText>
               </FieldGroup>
 
-              <FieldGroup
-                error={!!errors?.fundingSources?.[index]?.investments}
-              >
+              <FieldGroup error={!!errors?.fundingSources?.[index]?.sources}>
                 <Label htmlFor="sources" className="text-normal">
                   {t('contractDetails.fundingSources.fundingSource')}
                 </Label>
                 <ErrorMessage
                   errors={errors}
-                  name={`fundingSources.${index}.investments`}
+                  name={`fundingSources.${index}.sources`}
                   as={FieldErrorMsg}
                 />
                 <Controller
-                  name={`fundingSources.${index}.investments`}
+                  name={`fundingSources.${index}.sources`}
                   control={control}
                   render={({ field: { ref, ...field } }) => (
                     <MultiSelect
@@ -192,7 +190,7 @@ const FundingSources = ({ disableParentForm }: FundingSourcesProps) => {
                         label: t(option)
                       }))}
                       onChange={values => field.onChange(values)}
-                      initialValues={activeFundingSource?.investments}
+                      initialValues={activeFundingSource.sources}
                     />
                   )}
                 />
@@ -234,7 +232,7 @@ const FundingSources = ({ disableParentForm }: FundingSourcesProps) => {
         // Display funding source
         return (
           <div
-            id={`fundingSource${projectNumber}`}
+            id={`fundingSource${fundingNumber}`}
             key={id}
             className="margin-top-205"
           >
@@ -243,12 +241,12 @@ const FundingSources = ({ disableParentForm }: FundingSourcesProps) => {
             </p>
             <p className="margin-y-05">
               {t('contractDetails.fundingSources.fundingNumberLabel', {
-                projectNumber
+                fundingNumber
               })}
             </p>
             <p className="margin-y-05">
               {t('contractDetails.fundingSources.fundingSourcesLabel', {
-                investments: investments.join(', ')
+                sources: sources.join(', ')
               })}
             </p>
 
@@ -302,8 +300,8 @@ const FundingSources = ({ disableParentForm }: FundingSourcesProps) => {
             onClick={() => {
               const newSource: Omit<FormattedFundingSource, 'id'> = {
                 __typename: 'SystemIntakeFundingSource',
-                projectNumber: '',
-                investments: []
+                fundingNumber: '',
+                sources: []
               };
 
               append(newSource);

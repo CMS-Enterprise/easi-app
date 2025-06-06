@@ -7,12 +7,12 @@ export const formatFundingSourcesForApi = (
   fundingSources: FormattedFundingSource[]
 ): FundingSource[] => {
   return fundingSources
-    .map(({ id, projectNumber, investments }) => {
-      return investments.map(investment => ({
+    .map(({ id, fundingNumber, sources }) => {
+      return sources.map(source => ({
         __typename: 'SystemIntakeFundingSource' as const,
         id,
-        projectNumber,
-        investment
+        fundingNumber,
+        source
       }));
     })
     .flat();
@@ -24,10 +24,10 @@ export const formatFundingSourcesForApp = (
 ): FormattedFundingSource[] => {
   return fundingSources.reduce<FormattedFundingSource[]>(
     (acc, { id, projectNumber, investment }) => {
-      const existingSource = acc.find(s => s.projectNumber === projectNumber);
+      const existingSource = acc.find(s => s.fundingNumber === projectNumber);
 
       if (investment && existingSource) {
-        existingSource.investments.push(investment);
+        existingSource.sources.push(investment);
         return acc;
       }
 
@@ -36,8 +36,8 @@ export const formatFundingSourcesForApp = (
         {
           __typename: 'SystemIntakeFundingSource',
           id,
-          projectNumber: projectNumber ?? null,
-          investments: investment ? [investment] : []
+          fundingNumber: projectNumber ?? null,
+          sources: investment ? [investment] : []
         }
       ];
     },

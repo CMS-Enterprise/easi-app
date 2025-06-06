@@ -56,27 +56,27 @@ describe('System intake validation', () => {
   });
 });
 
-describe('eFunding sources form validation', () => {
+describe('Funding sources form validation', () => {
   const fundingSources: FormattedFundingSource[] = [
     {
       __typename: 'SystemIntakeFundingSource',
       id: '414c80dc-8f8a-4bed-9aa0-29342d860190',
-      projectNumber: '111111',
-      investments: ['Fed Admin', 'ACA 3021']
+      fundingNumber: '111111',
+      sources: ['Fed Admin', 'ACA 3021']
     },
     {
       __typename: 'SystemIntakeFundingSource',
       id: '00a5db89-d05b-49e1-b6ac-f6f21c5d0992',
-      projectNumber: '222222',
-      investments: ['HITECH Medicaid']
+      fundingNumber: '222222',
+      sources: ['HITECH Medicaid']
     }
   ];
 
   const newFundingSource: FormattedFundingSource = {
     __typename: 'SystemIntakeFundingSource',
     id: '75e52b6f-f120-48b2-b87d-137cfc0388b9',
-    projectNumber: '333333',
-    investments: ['HITECH Medicare', 'Fed Admin', 'ACA 3021']
+    fundingNumber: '333333',
+    sources: ['HITECH Medicare', 'Fed Admin', 'ACA 3021']
   };
 
   it('passes basic validation', async () => {
@@ -87,33 +87,33 @@ describe('eFunding sources form validation', () => {
     ).resolves.toBeTruthy();
   });
 
-  it('validates project number', async () => {
-    // Empty project number
+  it('validates funding number', async () => {
+    // Empty funding number
     await expect(
       FundingSourcesValidationSchema.validate({
-        fundingSources: [{ ...newFundingSource, projectNumber: '' }]
+        fundingSources: [{ ...newFundingSource, fundingNumber: '' }]
       })
-    ).rejects.toThrow('Project number must be exactly 6 digits');
+    ).rejects.toThrow('Funding number must be exactly 6 digits');
 
     // Must be exactly 6 digits
     await expect(
       FundingSourcesValidationSchema.validate({
-        fundingSources: [{ ...newFundingSource, projectNumber: '1' }]
+        fundingSources: [{ ...newFundingSource, fundingNumber: '1' }]
       })
-    ).rejects.toThrow('Project number must be exactly 6 digits');
+    ).rejects.toThrow('Funding number must be exactly 6 digits');
 
     await expect(
       FundingSourcesValidationSchema.validate({
-        fundingSources: [{ ...newFundingSource, projectNumber: '1234567' }]
+        fundingSources: [{ ...newFundingSource, fundingNumber: '1234567' }]
       })
-    ).rejects.toThrow('Project number must be exactly 6 digits');
+    ).rejects.toThrow('Funding number must be exactly 6 digits');
 
     // Only accepts numbers
     await expect(
       FundingSourcesValidationSchema.validate({
-        fundingSources: [{ ...newFundingSource, projectNumber: 'abcdef' }]
+        fundingSources: [{ ...newFundingSource, fundingNumber: 'abcdef' }]
       })
-    ).rejects.toThrow('Project number can only contain digits');
+    ).rejects.toThrow('Funding number can only contain digits');
 
     // Must be unique
     await expect(
@@ -122,11 +122,11 @@ describe('eFunding sources form validation', () => {
           ...fundingSources,
           {
             ...newFundingSource,
-            projectNumber: fundingSources[0].projectNumber
+            fundingNumber: fundingSources[0].fundingNumber
           }
         ]
       })
-    ).rejects.toThrow('Project number must be unique');
+    ).rejects.toThrow('Funding number must be unique');
   });
 
   it('validates funding sources', async () => {

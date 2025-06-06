@@ -87,7 +87,7 @@ export const SystemIntakeReview = ({
                 </p>
                 <p className="margin-y-05">
                   {t('contractDetails.fundingSources.fundingSourcesLabel', {
-                    investments: sources.join(', ')
+                    sources: sources.join(', ')
                   })}
                 </p>
               </li>

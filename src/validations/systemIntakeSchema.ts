@@ -225,24 +225,24 @@ export const FundingSourcesValidationSchema = Yup.object().shape({
   fundingSources: Yup.array().of(
     Yup.object({
       id: Yup.string(),
-      projectNumber: Yup.string()
+      fundingNumber: Yup.string()
         .trim()
-        .required('Project number must be exactly 6 digits')
-        .length(6, 'Project number must be exactly 6 digits')
-        .matches(/^\d+$/, 'Project number can only contain digits'),
+        .required('Funding number must be exactly 6 digits')
+        .length(6, 'Funding number must be exactly 6 digits')
+        .matches(/^\d+$/, 'Funding number can only contain digits'),
       sources: Yup.array().of(Yup.string()).min(1, 'Select a funding source')
     }).test('is-unique', 'Must be unique', (value, context) => {
       const fundingNumbers: string[] = context.parent
         .filter((source: FormattedFundingSource) => source.id !== value.id)
-        .map((source: FormattedFundingSource) => source.projectNumber);
+        .map((source: FormattedFundingSource) => source.fundingNumber);
 
-      const isUnique = !fundingNumbers.includes(value?.projectNumber!);
+      const isUnique = !fundingNumbers.includes(value?.fundingNumber!);
 
       return (
         isUnique ||
         context.createError({
-          path: `${context.path}.projectNumber`,
-          message: 'Project number must be unique'
+          path: `${context.path}.fundingNumber`,
+          message: 'Funding number must be unique'
         })
       );
     })

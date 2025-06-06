@@ -56,7 +56,7 @@ const getLastAdminNote = (
 export const formatFundingSources = (
   fundingSources: TableSystemIntake['fundingSources']
 ): string => {
-  /** Formats sources into {projectNumber: [keys]} object */
+  /** Formats sources into {fundingNumber: [keys]} object */
   const sourcesObject = fundingSources.reduce<{
     [index: string]: Array<string>;
   }>((acc, { projectNumber, investment }) => {
