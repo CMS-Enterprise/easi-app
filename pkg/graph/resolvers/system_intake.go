@@ -215,8 +215,8 @@ func SystemIntakeUpdateContractDetails(ctx context.Context, store *storage.Store
 				for _, fundingSourceInput := range input.FundingSources.FundingSources {
 					fundingSources = append(fundingSources, &models.SystemIntakeFundingSource{
 						SystemIntakeID: intake.ID,
-						Source:         null.StringFromPtr(fundingSourceInput.Source),
-						FundingNumber:  null.StringFromPtr(fundingSourceInput.FundingNumber),
+						Investment:     null.StringFromPtr(fundingSourceInput.Investment),
+						ProjectNumber:  null.StringFromPtr(fundingSourceInput.ProjectNumber),
 					})
 				}
 

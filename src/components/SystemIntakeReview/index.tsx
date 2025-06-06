@@ -47,16 +47,16 @@ export const SystemIntakeReview = ({
 
     // Format funding sources object
     const fundingSourcesObject = fundingSources.reduce<FundingSourcesObject>(
-      (acc, { fundingNumber, source }) => {
-        if (!fundingNumber || !source) return acc;
-        const sourcesArray = acc[fundingNumber]
-          ? [...acc[fundingNumber].sources, source]
-          : [source];
+      (acc, { projectNumber, investment }) => {
+        if (!projectNumber || !investment) return acc;
+        const sourcesArray = acc[projectNumber]
+          ? [...acc[projectNumber].sources, investment]
+          : [investment];
         // Return formatted object of funding sources
         return {
           ...acc,
-          [fundingNumber]: {
-            fundingNumber,
+          [projectNumber]: {
+            fundingNumber: projectNumber,
             sources: sourcesArray
           }
         };
@@ -113,7 +113,7 @@ export const SystemIntakeReview = ({
   };
 
   /* Component used to conditionally render software acquisition information depending on what is present.
-      Translate acquisition strategy enum values using i18n 
+      Translate acquisition strategy enum values using i18n
   */
 
   const SoftwareAcquisition = () => {

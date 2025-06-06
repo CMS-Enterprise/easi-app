@@ -46,8 +46,8 @@ describe('Funding sources', () => {
           {
             __typename: 'SystemIntakeFundingSource',
             id: 'a07b4819-ae01-4995-8aaa-a342a7c20e96',
-            fundingNumber: '123456',
-            source: 'Fed Admin'
+            projectNumber: '123456',
+            investment: 'Fed Admin'
           }
         ]}
       >

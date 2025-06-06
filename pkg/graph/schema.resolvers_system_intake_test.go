@@ -1291,8 +1291,8 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsImmediatelyAfterIntakeCreati
 				ID              string
 				ExistingFunding bool
 				FundingSources  []struct {
-					Source        string
-					FundingNumber string
+					Investment    string
+					ProjectNumber string
 				}
 				Costs struct {
 					ExpectedIncreaseAmount string
@@ -1329,8 +1329,8 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsImmediatelyAfterIntakeCreati
 					existingFunding: true
 					fundingSources: [
 						{
-							source: "Prog Ops"
-							fundingNumber: "123456"
+							investment: "Prog Ops"
+							projectNumber: "123456"
 						}
 					]
 				}
@@ -1350,8 +1350,8 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsImmediatelyAfterIntakeCreati
 					id
 					existingFunding
 					fundingSources {
-						fundingNumber
-						source
+						projectNumber
+						investment
 					}
 					costs {
 						expectedIncreaseAmount
@@ -1385,9 +1385,9 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsImmediatelyAfterIntakeCreati
 	respIntake := resp.UpdateSystemIntakeContractDetails.SystemIntake
 
 	fundingSources := respIntake.FundingSources
-	s.Equal(fundingSources[0].FundingNumber, "123456")
+	s.Equal(fundingSources[0].ProjectNumber, "123456")
 	s.True(respIntake.ExistingFunding)
-	s.Equal(fundingSources[0].Source, "Prog Ops")
+	s.Equal(fundingSources[0].Investment, "Prog Ops")
 
 	costs := respIntake.Costs
 	s.Equal(costs.ExpectedIncreaseAmount, "A little bit")
@@ -1536,8 +1536,8 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveFundingSource() {
 		ExistingFunding: null.BoolFrom(true),
 		FundingSources: []*models.SystemIntakeFundingSource{
 			{
-				Source:        null.StringFrom("Prog Ops"),
-				FundingNumber: null.StringFrom("123456"),
+				Investment:    null.StringFrom("Prog Ops"),
+				ProjectNumber: null.StringFrom("123456"),
 			},
 		},
 	})
@@ -1553,8 +1553,8 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveFundingSource() {
 				ExistingFunding bool
 				FundingSources  []struct {
 					SystemIntakeID string
-					Source         string
-					FundingNumber  string
+					Investment     string
+					ProjectNumber  string
 				}
 			}
 		}
@@ -1573,8 +1573,8 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveFundingSource() {
 					id
 					existingFunding
 					fundingSources {
-						fundingNumber
-						source
+						projectNumber
+						investment
 					}
 				}
 			}
