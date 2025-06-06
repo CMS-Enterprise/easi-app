@@ -83,7 +83,9 @@ describe('GRBReviewStatusCard', () => {
     // Check that the standard heading is rendered
     expect(
       screen.getByText(
-        i18next.t<string>('grbReview:statusCard.standardHeading')
+        i18next.t<string>('grbReview:statusCard.heading', {
+          context: 'STANDARD'
+        })
       )
     ).toBeInTheDocument();
 
@@ -105,7 +107,9 @@ describe('GRBReviewStatusCard', () => {
 
     // Check that the async heading is rendered
     expect(
-      screen.getByText(i18next.t<string>('grbReview:statusCard.asyncHeading'))
+      screen.getByText(
+        i18next.t<string>('grbReview:statusCard.heading', { context: 'ASYNC' })
+      )
     ).toBeInTheDocument();
 
     // Check that the time remaining is displayed
@@ -127,16 +131,19 @@ describe('GRBReviewStatusCard', () => {
     ).toBeInTheDocument();
   });
 
-  it('renders nothing if grbReviewStartedAt is not set', () => {
+  it('renders if review has not started', () => {
     const reviewWithoutStartDate = {
       ...mockStandardReview,
       grbReviewStartedAt: null
     };
 
-    const { container } = renderComponent(reviewWithoutStartDate);
+    renderComponent(reviewWithoutStartDate);
 
-    // Ensure the component renders nothing
-    expect(container.firstChild).toBeNull();
+    expect(screen.getByTestId('async-status')).toHaveTextContent('Not started');
+
+    expect(
+      screen.getByRole('link', { name: 'Set up GRB review' })
+    ).toBeInTheDocument();
   });
 
   it('renders GRB reviewer view - in progress', () => {

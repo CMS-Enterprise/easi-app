@@ -34,6 +34,7 @@ describe('Async Presentation Links Card', () => {
             <ModalProvider>
               <ITGovAdminContext.Provider value={isAdmin}>
                 <PresentationLinksCard
+                  grbReviewStartedAt="2025-04-04T19:56:57.994482Z"
                   systemIntakeID={systemIntake.id}
                   grbPresentationLinks={grbPresentationLinks}
                 />
@@ -159,6 +160,7 @@ describe('Async Presentation Links Card', () => {
                   systemIntakeID={systemIntake.id}
                   grbPresentationLinks={grbPresentationLinksMock}
                   asyncStatus={SystemIntakeGRBReviewAsyncStatusType.COMPLETED}
+                  grbReviewStartedAt="2025-04-04T19:56:57.994482Z"
                 />
               </ITGovAdminContext.Provider>
             </ModalProvider>
@@ -168,5 +170,37 @@ describe('Async Presentation Links Card', () => {
     );
 
     expect(await screen.findByText(/this review is over/i)).toBeInTheDocument();
+  });
+
+  it('renders the review not started variant', () => {
+    render(
+      <MemoryRouter
+        initialEntries={[`/it-governance/${systemIntake.id}/grb-review`]}
+      >
+        <MessageProvider>
+          <MockedProvider>
+            <ModalProvider>
+              <ITGovAdminContext.Provider value>
+                <PresentationLinksCard
+                  grbReviewStartedAt={null}
+                  systemIntakeID={systemIntake.id}
+                  grbPresentationLinks={null}
+                />
+              </ITGovAdminContext.Provider>
+            </ModalProvider>
+          </MockedProvider>
+        </MessageProvider>
+      </MemoryRouter>
+    );
+
+    expect(
+      screen.getByText(
+        'You have not completed setup for this asynchronous review. Continue the GRB review setup process to add information about this asynchronous presentation.'
+      )
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByRole('link', { name: 'Set up GRB review' })
+    ).toBeInTheDocument();
   });
 });

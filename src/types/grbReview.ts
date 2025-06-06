@@ -35,4 +35,5 @@ export type GrbReviewFormStepKey = (typeof grbReviewFormSteps)[number]['key'];
 
 export type GRBReviewStatus =
   | SystemIntakeGRBReviewAsyncStatusType
-  | SystemIntakeGRBReviewStandardStatusType;
+  | SystemIntakeGRBReviewStandardStatusType
+  | 'NOT_STARTED';

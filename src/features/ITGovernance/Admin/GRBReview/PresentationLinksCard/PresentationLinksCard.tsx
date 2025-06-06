@@ -29,19 +29,112 @@ import { downloadFileFromURL } from 'utils/downloadFile';
 import ITGovAdminContext from '../../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 import { useRestartReviewModal } from '../RestartReviewModal/RestartReviewModalContext';
 
+export type PresentationCardActionsProps = {
+  systemIntakeID: string;
+  hasAnyLinks: boolean;
+  setRemovePresentationLinksModalOpen: (open: boolean) => void;
+  grbReviewStartedAt: string | null | undefined;
+  asyncStatus?: SystemIntakeGRBReviewAsyncStatusType | null;
+};
+
+/**
+ * Renders action buttons for the presentation links card
+ * at different stages of the review process
+ */
+const PresentationCardActions = ({
+  systemIntakeID,
+  grbReviewStartedAt,
+  hasAnyLinks,
+  setRemovePresentationLinksModalOpen,
+  asyncStatus
+}: PresentationCardActionsProps) => {
+  const { t } = useTranslation('grbReview');
+
+  const { openModal: openRestartReviewModal } = useRestartReviewModal();
+
+  if (!grbReviewStartedAt) {
+    return (
+      <>
+        <Alert type="warning" slim className="margin-bottom-2">
+          {t('asyncPresentation.reviewSetupNotCompleted')}
+        </Alert>
+        <IconLink
+          icon={<Icon.ArrowForward />}
+          to={`/it-governance/${systemIntakeID}/grb-review/review-type`}
+          iconPosition="after"
+        >
+          {t('adminTask.setUpGRBReview.title')}
+        </IconLink>
+      </>
+    );
+  }
+
+  if (asyncStatus === SystemIntakeGRBReviewAsyncStatusType.COMPLETED) {
+    return (
+      <p className="text-base-dark margin-y-0">
+        <Trans
+          i18nKey="grbReview:asyncCompleted.presentationLinks"
+          components={{
+            link1: (
+              <Button type="button" unstyled onClick={openRestartReviewModal}>
+                {t('restartReview')}
+              </Button>
+            )
+          }}
+        />
+      </p>
+    );
+  }
+
+  if (!hasAnyLinks) {
+    return (
+      <>
+        <Alert type="info" slim className="margin-bottom-2">
+          {t('asyncPresentation.adminEmptyAlert')}
+        </Alert>
+        <IconLink
+          icon={<Icon.Add />}
+          to={`/it-governance/${systemIntakeID}/grb-review/presentation-links`}
+        >
+          {t('asyncPresentation.addAsynchronousPresentationLinks')}
+        </IconLink>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <UswdsReactLink
+        to={`/it-governance/${systemIntakeID}/grb-review/presentation-links`}
+      >
+        {t('asyncPresentation.editPresentationLinks')}
+      </UswdsReactLink>
+      <Button
+        type="button"
+        unstyled
+        className="text-error"
+        onClick={() => setRemovePresentationLinksModalOpen(true)}
+      >
+        {t('asyncPresentation.removeAllPresentationLinks')}
+      </Button>
+    </>
+  );
+};
+
 export type PresentationLinksCardProps = {
   systemIntakeID: string;
+  grbReviewStartedAt?: string | null;
   grbPresentationLinks?: SystemIntakeGRBPresentationLinksFragmentFragment | null;
   asyncStatus?: SystemIntakeGRBReviewAsyncStatusType | null;
 };
 
 function PresentationLinksCard({
   systemIntakeID,
+  grbReviewStartedAt,
   grbPresentationLinks,
   asyncStatus
 }: PresentationLinksCardProps) {
   const { t } = useTranslation('grbReview');
-  const { openModal } = useRestartReviewModal();
 
   const isITGovAdmin = useContext(ITGovAdminContext);
 
@@ -114,74 +207,26 @@ function PresentationLinksCard({
         <CardHeader>
           <h3>{t('asyncPresentation.title')}</h3>
         </CardHeader>
-        {
-          // Hide action buttons for GRB reviewers
-          isITGovAdmin ? (
-            <CardBody
-              className={classNames('padding-top-0', {
-                'display-flex flex-gap-105 padding-bottom-105 margin-top-neg-1':
-                  hasAnyLinks
-              })}
-            >
-              {asyncStatus ===
-                SystemIntakeGRBReviewAsyncStatusType.COMPLETED && (
-                <span className="text-base-dark">
-                  <Trans
-                    i18nKey="grbReview:asyncCompleted.presentationLinks"
-                    components={{
-                      link1: (
-                        <Button type="button" unstyled onClick={openModal}>
-                          {t('restartReview')}
-                        </Button>
-                      )
-                    }}
-                  />
-                </span>
-              )}
-              {asyncStatus !== SystemIntakeGRBReviewAsyncStatusType.COMPLETED &&
-                (!hasAnyLinks ? (
-                  <>
-                    <Alert type="info" slim className="margin-bottom-2">
-                      {t('asyncPresentation.adminEmptyAlert')}
-                    </Alert>
-                    <IconLink
-                      icon={<Icon.Add />}
-                      to={`/it-governance/${systemIntakeID}/grb-review/presentation-links`}
-                    >
-                      {t('asyncPresentation.addAsynchronousPresentationLinks')}
-                    </IconLink>
-                  </>
-                ) : (
-                  <>
-                    <UswdsReactLink
-                      to={`/it-governance/${systemIntakeID}/grb-review/presentation-links`}
-                    >
-                      {t('asyncPresentation.editPresentationLinks')}
-                    </UswdsReactLink>
-                    <Button
-                      type="button"
-                      unstyled
-                      className="text-error"
-                      onClick={() => setRemovePresentationLinksModalOpen(true)}
-                    >
-                      {t('asyncPresentation.removeAllPresentationLinks')}
-                    </Button>
-                  </>
-                ))}
-            </CardBody>
-          ) : (
-            <>
-              {!hasAnyLinks && (
-                <div className="padding-x-3 padding-y-2">
-                  <Alert type="info" slim className="margin-bottom-2">
-                    {t('asyncPresentation.emptyAlert')}
-                  </Alert>
-                </div>
-              )}
-            </>
-          )
-        }
-        {hasAnyLinks && (
+        {/* Render action links for admins only */}
+        {isITGovAdmin && (
+          <CardBody
+            className={classNames('padding-top-0', {
+              'display-flex flex-gap-105 padding-bottom-105 margin-top-neg-1':
+                hasAnyLinks
+            })}
+          >
+            <PresentationCardActions
+              systemIntakeID={systemIntakeID}
+              grbReviewStartedAt={grbReviewStartedAt}
+              hasAnyLinks={hasAnyLinks}
+              setRemovePresentationLinksModalOpen={
+                setRemovePresentationLinksModalOpen
+              }
+              asyncStatus={asyncStatus}
+            />
+          </CardBody>
+        )}
+        {hasAnyLinks && grbReviewStartedAt && (
           <CardFooter className="presentation-card-links display-flex flex-wrap flex-column-gap-3 flex-row-gap-1 padding-x-0 padding-bottom-205 padding-top-2 margin-x-3 border-top-1px border-gray-10">
             {isVirusScanning ? (
               <em
