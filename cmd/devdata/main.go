@@ -744,7 +744,7 @@ func main() {
 	)
 
 	intakeID = uuid.MustParse("29486f85-1aba-4eaf-a7dd-6137b9873adc")
-	makeSystemIntakeAndSubmit(
+	intake = makeSystemIntakeAndSubmit(
 		ctx,
 		"Edits requested on initial request form",
 		&intakeID,
