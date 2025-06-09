@@ -78,6 +78,7 @@ export const grbReviewFormSteps = [
 ] as const;
 
 const grbReviewStatus: Translation<GRBReviewStatus> = {
+  NOT_STARTED: 'Not started',
   [SystemIntakeGRBReviewStandardStatusType.SCHEDULED]: 'Scheduled',
   [SystemIntakeGRBReviewAsyncStatusType.IN_PROGRESS]: 'In progress',
   [SystemIntakeGRBReviewAsyncStatusType.COMPLETED]: 'Complete',
@@ -146,6 +147,8 @@ export default {
     virusScanning: 'Virus scanning in progress...',
     adminEmptyAlert:
       'If this GRB review has an asynchronous presentation and recording, you may add that content to EASi to provide additional information for GRB reviews.',
+    reviewSetupNotCompleted:
+      'You have not completed setup for this asynchronous review. Continue the GRB review setup process to add information about this asynchronous presentation.',
     emptyAlert: 'The GRB have not yet added presentation links.',
 
     modalRemoveLinks: {
@@ -489,8 +492,8 @@ export default {
     }
   },
   statusCard: {
-    standardHeading: 'Standard meeting review',
-    asyncHeading: 'Asynchronous review',
+    heading_STANDARD: 'Standard meeting review',
+    heading_ASYNC: 'Asynchronous review',
     reviewStatus: 'Review status',
     grbMeeting: 'GRB meeting',
     changeMeetingDate: 'Change meeting date',
