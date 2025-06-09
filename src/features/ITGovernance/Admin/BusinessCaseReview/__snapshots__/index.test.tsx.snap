@@ -35,7 +35,7 @@ exports[`The GRT Business Case review > matches the snapshot 1`] = `
             <dt
               class="text-bold margin-bottom-05"
             >
-              Project name
+              Contact / request title
             </dt>
             <dd
               class="description-definition margin-0"
@@ -47,7 +47,21 @@ exports[`The GRT Business Case review > matches the snapshot 1`] = `
             <dt
               class="text-bold margin-bottom-05"
             >
-              Business Owner
+              Contact / request acronym
+            </dt>
+            <dd
+              class="description-definition margin-0"
+            />
+          </div>
+        </div>
+        <div
+          class="easi-review-row"
+        >
+          <div>
+            <dt
+              class="text-bold margin-bottom-05"
+            >
+              CMS Business Owner
             </dt>
             <dd
               class="description-definition margin-0"
@@ -71,6 +85,10 @@ exports[`The GRT Business Case review > matches the snapshot 1`] = `
               Jane Doe
             </dd>
           </div>
+        </div>
+        <div
+          class="easi-review-row"
+        >
           <div>
             <dt
               class="text-bold margin-bottom-05"
@@ -365,22 +383,6 @@ exports[`The GRT Business Case review > matches the snapshot 1`] = `
                 <dt
                   class="text-bold margin-bottom-05"
                 >
-                  Do you need to host your solution?
-                </dt>
-                <dd
-                  class="description-definition margin-0 text-pre-wrap"
-                />
-              </div>
-            </div>
-            <div
-              class="easi-review-row"
-            >
-              <div
-                class="line-height-body-3"
-              >
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
                   Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?
                 </dt>
                 <dd
@@ -399,7 +401,7 @@ exports[`The GRT Business Case review > matches the snapshot 1`] = `
                 <dt
                   class="text-bold margin-bottom-05"
                 >
-                  Is your solution in the process of CMS IT Security approval?
+                  Is it in the process of getting approved?
                 </dt>
                 <dd
                   class="description-definition margin-0 text-pre-wrap"
@@ -424,6 +426,22 @@ exports[`The GRT Business Case review > matches the snapshot 1`] = `
                 >
                   Mock Zero Trust
                 </dd>
+              </div>
+            </div>
+            <div
+              class="easi-review-row"
+            >
+              <div
+                class="line-height-body-3"
+              >
+                <dt
+                  class="text-bold margin-bottom-05"
+                >
+                  Do you need to host your solution?
+                </dt>
+                <dd
+                  class="description-definition margin-0 text-pre-wrap"
+                />
               </div>
             </div>
             <div

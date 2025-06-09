@@ -30,7 +30,7 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
               <dt
                 class="text-bold margin-bottom-05"
               >
-                Project name
+                Contact / request title
               </dt>
               <dd
                 class="description-definition margin-0"
@@ -42,7 +42,23 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
               <dt
                 class="text-bold margin-bottom-05"
               >
-                Business Owner
+                Contact / request acronym
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                EASi
+              </dd>
+            </div>
+          </div>
+          <div
+            class="easi-review-row"
+          >
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                CMS Business Owner
               </dt>
               <dd
                 class="description-definition margin-0"
@@ -66,6 +82,10 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                 Jane Smith
               </dd>
             </div>
+          </div>
+          <div
+            class="easi-review-row"
+          >
             <div>
               <dt
                 class="text-bold margin-bottom-05"
@@ -405,6 +425,60 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                   <dt
                     class="text-bold margin-bottom-05"
                   >
+                    Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?
+                  </dt>
+                  <dd
+                    class="description-definition margin-0 text-pre-wrap"
+                  >
+                    No
+                  </dd>
+                </div>
+              </div>
+              <div
+                class="easi-review-row"
+              >
+                <div
+                  class="line-height-body-3"
+                >
+                  <dt
+                    class="text-bold margin-bottom-05"
+                  >
+                    Is it in the process of getting approved?
+                  </dt>
+                  <dd
+                    class="description-definition margin-0 text-pre-wrap"
+                  >
+                    Yes
+                  </dd>
+                </div>
+              </div>
+              <div
+                class="easi-review-row"
+              >
+                <div
+                  class="line-height-body-3"
+                >
+                  <dt
+                    class="text-bold margin-bottom-05"
+                  >
+                    Identify your project's alignment with Zero Trust principles?
+                  </dt>
+                  <dd
+                    class="description-definition margin-0 text-pre-wrap"
+                  >
+                    Test Zero Trust
+                  </dd>
+                </div>
+              </div>
+              <div
+                class="easi-review-row"
+              >
+                <div
+                  class="line-height-body-3"
+                >
+                  <dt
+                    class="text-bold margin-bottom-05"
+                  >
                     Do you need to host your solution?
                   </dt>
                   <dd
@@ -468,60 +542,6 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                       Test cloud service
                     </dd>
                   </div>
-                </div>
-              </div>
-              <div
-                class="easi-review-row"
-              >
-                <div
-                  class="line-height-body-3"
-                >
-                  <dt
-                    class="text-bold margin-bottom-05"
-                  >
-                    Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?
-                  </dt>
-                  <dd
-                    class="description-definition margin-0 text-pre-wrap"
-                  >
-                    No
-                  </dd>
-                </div>
-              </div>
-              <div
-                class="easi-review-row"
-              >
-                <div
-                  class="line-height-body-3"
-                >
-                  <dt
-                    class="text-bold margin-bottom-05"
-                  >
-                    Is your solution in the process of CMS IT Security approval?
-                  </dt>
-                  <dd
-                    class="description-definition margin-0 text-pre-wrap"
-                  >
-                    Yes
-                  </dd>
-                </div>
-              </div>
-              <div
-                class="easi-review-row"
-              >
-                <div
-                  class="line-height-body-3"
-                >
-                  <dt
-                    class="text-bold margin-bottom-05"
-                  >
-                    Identify your project's alignment with Zero Trust principles?
-                  </dt>
-                  <dd
-                    class="description-definition margin-0 text-pre-wrap"
-                  >
-                    Test Zero Trust
-                  </dd>
                 </div>
               </div>
               <div
@@ -748,6 +768,60 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                     <dt
                       class="text-bold margin-bottom-05"
                     >
+                      Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?
+                    </dt>
+                    <dd
+                      class="description-definition margin-0 text-pre-wrap"
+                    >
+                      No
+                    </dd>
+                  </div>
+                </div>
+                <div
+                  class="easi-review-row"
+                >
+                  <div
+                    class="line-height-body-3"
+                  >
+                    <dt
+                      class="text-bold margin-bottom-05"
+                    >
+                      Is it in the process of getting approved?
+                    </dt>
+                    <dd
+                      class="description-definition margin-0 text-pre-wrap"
+                    >
+                      Yes
+                    </dd>
+                  </div>
+                </div>
+                <div
+                  class="easi-review-row"
+                >
+                  <div
+                    class="line-height-body-3"
+                  >
+                    <dt
+                      class="text-bold margin-bottom-05"
+                    >
+                      Identify your project's alignment with Zero Trust principles?
+                    </dt>
+                    <dd
+                      class="description-definition margin-0 text-pre-wrap"
+                    >
+                      Test Zero Trust
+                    </dd>
+                  </div>
+                </div>
+                <div
+                  class="easi-review-row"
+                >
+                  <div
+                    class="line-height-body-3"
+                  >
+                    <dt
+                      class="text-bold margin-bottom-05"
+                    >
                       Do you need to host your solution?
                     </dt>
                     <dd
@@ -811,60 +885,6 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                         Test cloud service
                       </dd>
                     </div>
-                  </div>
-                </div>
-                <div
-                  class="easi-review-row"
-                >
-                  <div
-                    class="line-height-body-3"
-                  >
-                    <dt
-                      class="text-bold margin-bottom-05"
-                    >
-                      Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?
-                    </dt>
-                    <dd
-                      class="description-definition margin-0 text-pre-wrap"
-                    >
-                      No
-                    </dd>
-                  </div>
-                </div>
-                <div
-                  class="easi-review-row"
-                >
-                  <div
-                    class="line-height-body-3"
-                  >
-                    <dt
-                      class="text-bold margin-bottom-05"
-                    >
-                      Is your solution in the process of CMS IT Security approval?
-                    </dt>
-                    <dd
-                      class="description-definition margin-0 text-pre-wrap"
-                    >
-                      Yes
-                    </dd>
-                  </div>
-                </div>
-                <div
-                  class="easi-review-row"
-                >
-                  <div
-                    class="line-height-body-3"
-                  >
-                    <dt
-                      class="text-bold margin-bottom-05"
-                    >
-                      Identify your project's alignment with Zero Trust principles?
-                    </dt>
-                    <dd
-                      class="description-definition margin-0 text-pre-wrap"
-                    >
-                      Test Zero Trust
-                    </dd>
                   </div>
                 </div>
                 <div
@@ -1097,6 +1117,60 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                     <dt
                       class="text-bold margin-bottom-05"
                     >
+                      Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?
+                    </dt>
+                    <dd
+                      class="description-definition margin-0 text-pre-wrap"
+                    >
+                      No
+                    </dd>
+                  </div>
+                </div>
+                <div
+                  class="easi-review-row"
+                >
+                  <div
+                    class="line-height-body-3"
+                  >
+                    <dt
+                      class="text-bold margin-bottom-05"
+                    >
+                      Is it in the process of getting approved?
+                    </dt>
+                    <dd
+                      class="description-definition margin-0 text-pre-wrap"
+                    >
+                      Yes
+                    </dd>
+                  </div>
+                </div>
+                <div
+                  class="easi-review-row"
+                >
+                  <div
+                    class="line-height-body-3"
+                  >
+                    <dt
+                      class="text-bold margin-bottom-05"
+                    >
+                      Identify your project's alignment with Zero Trust principles?
+                    </dt>
+                    <dd
+                      class="description-definition margin-0 text-pre-wrap"
+                    >
+                      Test Zero Trust
+                    </dd>
+                  </div>
+                </div>
+                <div
+                  class="easi-review-row"
+                >
+                  <div
+                    class="line-height-body-3"
+                  >
+                    <dt
+                      class="text-bold margin-bottom-05"
+                    >
                       Do you need to host your solution?
                     </dt>
                     <dd
@@ -1160,60 +1234,6 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                         Test cloud service
                       </dd>
                     </div>
-                  </div>
-                </div>
-                <div
-                  class="easi-review-row"
-                >
-                  <div
-                    class="line-height-body-3"
-                  >
-                    <dt
-                      class="text-bold margin-bottom-05"
-                    >
-                      Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?
-                    </dt>
-                    <dd
-                      class="description-definition margin-0 text-pre-wrap"
-                    >
-                      No
-                    </dd>
-                  </div>
-                </div>
-                <div
-                  class="easi-review-row"
-                >
-                  <div
-                    class="line-height-body-3"
-                  >
-                    <dt
-                      class="text-bold margin-bottom-05"
-                    >
-                      Is your solution in the process of CMS IT Security approval?
-                    </dt>
-                    <dd
-                      class="description-definition margin-0 text-pre-wrap"
-                    >
-                      Yes
-                    </dd>
-                  </div>
-                </div>
-                <div
-                  class="easi-review-row"
-                >
-                  <div
-                    class="line-height-body-3"
-                  >
-                    <dt
-                      class="text-bold margin-bottom-05"
-                    >
-                      Identify your project's alignment with Zero Trust principles?
-                    </dt>
-                    <dd
-                      class="description-definition margin-0 text-pre-wrap"
-                    >
-                      Test Zero Trust
-                    </dd>
                   </div>
                 </div>
                 <div

@@ -94,6 +94,37 @@ const PropsedBusinessCaseSolutionReview = ({
       </ReviewRow>
       <ReviewRow>
         <div className="line-height-body-3">
+          <DescriptionTerm term="Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?" />
+          <DescriptionDefinition
+            className="text-pre-wrap"
+            definition={convertBoolToYesNo(solution.security.isApproved)}
+          />
+        </div>
+      </ReviewRow>
+      {!solution.security.isApproved && (
+        <ReviewRow>
+          <div className="line-height-body-3">
+            <DescriptionTerm term="Is it in the process of getting approved?" />
+            <DescriptionDefinition
+              className="text-pre-wrap"
+              definition={yesNoMap[solution.security.isBeingReviewed]}
+            />
+          </div>
+        </ReviewRow>
+      )}
+      <ReviewRow>
+        <div className="line-height-body-3">
+          <DescriptionTerm term="Identify your project's alignment with Zero Trust principles?" />
+          <DescriptionDefinition
+            className="text-pre-wrap"
+            definition={
+              solution.zeroTrustAlignment ? solution.zeroTrustAlignment : 'N/A'
+            }
+          />
+        </div>
+      </ReviewRow>
+      <ReviewRow>
+        <div className="line-height-body-3">
           <DescriptionTerm term="Do you need to host your solution?" />
           <DescriptionDefinition
             className="text-pre-wrap"
@@ -136,37 +167,7 @@ const PropsedBusinessCaseSolutionReview = ({
           )}
         </div>
       )}
-      <ReviewRow>
-        <div className="line-height-body-3">
-          <DescriptionTerm term="Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?" />
-          <DescriptionDefinition
-            className="text-pre-wrap"
-            definition={convertBoolToYesNo(solution.security.isApproved)}
-          />
-        </div>
-      </ReviewRow>
-      {!solution.security.isApproved && (
-        <ReviewRow>
-          <div className="line-height-body-3">
-            <DescriptionTerm term="Is your solution in the process of CMS IT Security approval?" />
-            <DescriptionDefinition
-              className="text-pre-wrap"
-              definition={yesNoMap[solution.security.isBeingReviewed]}
-            />
-          </div>
-        </ReviewRow>
-      )}
-      <ReviewRow>
-        <div className="line-height-body-3">
-          <DescriptionTerm term="Identify your project's alignment with Zero Trust principles?" />
-          <DescriptionDefinition
-            className="text-pre-wrap"
-            definition={
-              solution.zeroTrustAlignment ? solution.zeroTrustAlignment : 'N/A'
-            }
-          />
-        </div>
-      </ReviewRow>
+
       <ReviewRow>
         <div className="line-height-body-3">
           <DescriptionTerm term="Will your solution have a User Interface, be public facing, or involve outside customers?" />
