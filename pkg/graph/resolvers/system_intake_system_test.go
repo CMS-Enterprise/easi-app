@@ -24,6 +24,7 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 
 	// create system intake
 	s.Run("create system intakes for test", func() {
+		createdIntakes := make([]*models.SystemIntake, 0)
 		for i := 0; i < 2; i++ {
 			intake := models.SystemIntake{
 				EUAUserID:   testhelpers.RandomEUAIDNull(),
@@ -34,6 +35,7 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 			created, err := s.testConfigs.Store.CreateSystemIntake(ctx, &intake)
 			s.NoError(err)
 			createdIDs = append(createdIDs, created.ID)
+			createdIntakes = append(createdIntakes, created)
 		}
 
 		// set contract for the created system intake
@@ -46,7 +48,7 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 
 		err := sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
 			// systemIDs,
-			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, createdIDs[0], []*models.SystemRelationshipInput{})
+			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, createdIntakes[0], []*models.SystemRelationshipInput{})
 		})
 		s.NoError(err)
 
@@ -89,9 +91,6 @@ func (s *ResolverSuite) TestSystemIntakesByCedarSystemID() {
 	ctx := s.testConfigs.Context
 
 	var (
-		open1 uuid.UUID
-		open2 uuid.UUID
-
 		closed uuid.UUID
 	)
 
@@ -114,8 +113,6 @@ func (s *ResolverSuite) TestSystemIntakesByCedarSystemID() {
 		s.NoError(err)
 		s.NotNil(create1)
 
-		open1 = create1.ID
-
 		intake2 := models.SystemIntake{
 			EUAUserID:   testhelpers.RandomEUAIDNull(),
 			RequestType: models.SystemIntakeRequestTypeNEW,
@@ -125,8 +122,6 @@ func (s *ResolverSuite) TestSystemIntakesByCedarSystemID() {
 		create2, err := s.testConfigs.Store.CreateSystemIntake(ctx, &intake2)
 		s.NoError(err)
 		s.NotNil(create2)
-
-		open2 = create2.ID
 
 		intake3 := models.SystemIntake{
 			EUAUserID:   testhelpers.RandomEUAIDNull(),
@@ -149,17 +144,17 @@ func (s *ResolverSuite) TestSystemIntakesByCedarSystemID() {
 		// }
 
 		err = sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
-			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, open1, []*models.SystemRelationshipInput{})
+			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, create1, []*models.SystemRelationshipInput{})
 		})
 		s.NoError(err)
 
 		err = sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
-			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, open2, []*models.SystemRelationshipInput{})
+			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, create2, []*models.SystemRelationshipInput{})
 		})
 		s.NoError(err)
 
 		err = sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
-			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, closed, []*models.SystemRelationshipInput{})
+			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, create3, []*models.SystemRelationshipInput{})
 		})
 		s.NoError(err)
 

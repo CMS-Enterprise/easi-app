@@ -16,8 +16,8 @@ import (
 
 // SetSystemIntakeSystems links given System IDs to given System Intake ID
 // This function opts to take a *sqlx.Tx instead of a NamedPreparer because the SQL calls inside this function are heavily intertwined, and we never want to call them outside the scope of a transaction
-func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemIntakeID uuid.UUID, systemRelationships []*models.SystemRelationshipInput) error {
-	if systemIntakeID == uuid.Nil {
+func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemIntake *models.SystemIntake, systemRelationships []*models.SystemRelationshipInput) error {
+	if systemIntake.ID == uuid.Nil {
 		return errors.New("unexpected nil system intake ID when linking system intake to system id")
 	}
 
@@ -33,7 +33,7 @@ func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemI
 
 	if _, err := tx.NamedExec(sqlqueries.SystemIntakeSystemForm.Delete, map[string]interface{}{
 		"system_ids":       pq.StringArray(systemIdsToDelete),
-		"system_intake_id": systemIntakeID,
+		"system_intake_id": systemIntake.ID,
 	}); err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to delete system ids linked to system intake", zap.Error(err))
 		return err
@@ -47,7 +47,7 @@ func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemI
 		systemIDLink := models.NewSystemIntakeSystem(userID)
 		systemIDLink.SystemID = *relationship.CedarSystemID
 		systemIDLink.ID = uuid.New()
-		systemIDLink.SystemIntakeID = systemIntakeID
+		systemIDLink.SystemIntakeID = systemIntake.ID
 		systemIDLink.ModifiedBy = &userID
 		//TODO -- Consider bringing in EnumArray from Mint
 		systemIDLink.SystemRelationshipType = relationship.SystemRelationshipType
@@ -60,6 +60,8 @@ func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemI
 		appcontext.ZLogger(ctx).Error("Failed to insert linked system intake to system ids", zap.Error(err))
 		return err
 	}
+
+	systemIntake.CedarSystemRelationShips = setSystemIntakeSystemsLinks
 
 	return nil
 }

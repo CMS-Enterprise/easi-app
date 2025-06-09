@@ -83,7 +83,7 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 			// Set existing system IDs
 			err = sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
 				//Ids removed were caseValues.InitialSystemIDs
-				return store.SetSystemIntakeSystems(ctx, tx, openIntake.ID, []*models.SystemRelationshipInput{})
+				return store.SetSystemIntakeSystems(ctx, tx, openIntake, []*models.SystemRelationshipInput{})
 
 			})
 			s.NoError(err)
@@ -198,7 +198,7 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			// Set existing system IDs
 			err = sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
 				// Ids removed were caseValues.InitialSystemIDs
-				return store.SetSystemIntakeSystems(ctx, tx, openIntake.ID, []*models.SystemRelationshipInput{})
+				return store.SetSystemIntakeSystems(ctx, tx, openIntake, []*models.SystemRelationshipInput{})
 			})
 			s.NoError(err)
 
@@ -321,7 +321,7 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 			// Set existing system IDs
 			err = sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
 				// caseValues.InitialSystemIDs
-				return store.SetSystemIntakeSystems(ctx, tx, openIntake.ID, []*models.SystemRelationshipInput{})
+				return store.SetSystemIntakeSystems(ctx, tx, openIntake, []*models.SystemRelationshipInput{})
 
 			})
 			s.NoError(err)

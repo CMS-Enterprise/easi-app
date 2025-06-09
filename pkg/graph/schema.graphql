@@ -837,6 +837,7 @@ type SystemIntake {
   GRB Presentation Link Data
   """
   grbPresentationLinks: SystemIntakeGRBPresentationLinks
+  cedarSystemRelationShips: [SystemIntakeSystem]
 }
 
 type SystemIntakeContractNumber {
@@ -1083,10 +1084,11 @@ input SystemRelationshipInput {
   otherTypeDescription: String
 }
 
-type SystemRelationship {
-  cedarSystemId: String
-  systemRelationshipType: [SystemRelationshipType!]!
-  otherTypeDescription: String
+type SystemIntakeSystem {
+	systemIntakeID: UUID!
+	systemID: String
+	systemRelationshipType: [SystemRelationshipType!]!
+	otherSystemRelationship: String
 }
 """
 Input data for updating a system intake's relationship to a CEDAR system
@@ -1094,8 +1096,6 @@ Input data for updating a system intake's relationship to a CEDAR system
 input UpdateSystemIntakeLinkedCedarSystemInput {
   id: UUID!
   cedarSystemId: String
-  # May not be part of the scope of the ticket
-  systemRelationship: SystemRelationshipType
 }
 
 # RequestRelationType.NEW_SYSTEM
@@ -1109,14 +1109,6 @@ input SetSystemIntakeRelationExistingSystemInput {
   systemIntakeID: UUID!
   cedarSystemRelationShips: [SystemRelationshipInput!]
   contractNumbers: [String!]!
-}
-
-type SetSystemIntakeRelationExistingSystemPayload {
-  systemIntakeID: UUID!
-  systemIntake: SystemIntake
-  cedarSystemRelationShips: [SystemRelationship!]
-  contractNumbers: [String!]!
-  userErrors: [UserError!]
 }
 
 # RequestRelationType.EXISTING_SERVICE
@@ -2632,7 +2624,7 @@ type Mutation {
   ): DeleteCedarSystemBookmarkPayload
 
   setSystemIntakeRelationNewSystem(input: SetSystemIntakeRelationNewSystemInput): UpdateSystemIntakePayload
-  setSystemIntakeRelationExistingSystem(input: SetSystemIntakeRelationExistingSystemInput): SetSystemIntakeRelationExistingSystemPayload
+  setSystemIntakeRelationExistingSystem(input: SetSystemIntakeRelationExistingSystemInput): UpdateSystemIntakePayload
   setSystemIntakeRelationExistingService(input: SetSystemIntakeRelationExistingServiceInput): UpdateSystemIntakePayload
   unlinkSystemIntakeRelation(intakeID: UUID!): UpdateSystemIntakePayload
 

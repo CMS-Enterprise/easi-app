@@ -18,9 +18,8 @@ const (
 // system(s)
 type SystemIntakeSystem struct {
 	BaseStructUser
-	SystemIntakeID uuid.UUID `json:"systemIntakeId" db:"system_intake_id"`
-	SystemID       string    `json:"systemId" db:"system_id"`
-	//TODO -- Consider bringing in EnumArray from Mint
+	SystemIntakeID          uuid.UUID                         `json:"systemIntakeId" db:"system_intake_id"`
+	SystemID                string                            `json:"systemId" db:"system_id"`
 	SystemRelationshipType  EnumArray[SystemRelationshipType] `json:"relationshipType" db:"relationship_type"`
 	OtherSystemRelationship *string                           `json:"otherSystemRelationship" db:"other_system_relationship"`
 }

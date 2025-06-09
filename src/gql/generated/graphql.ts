@@ -1006,7 +1006,7 @@ export type Mutation = {
   setRolesForUserOnSystem?: Maybe<Scalars['String']['output']>;
   setSystemIntakeGRBPresentationLinks?: Maybe<SystemIntakeGRBPresentationLinks>;
   setSystemIntakeRelationExistingService?: Maybe<UpdateSystemIntakePayload>;
-  setSystemIntakeRelationExistingSystem?: Maybe<SetSystemIntakeRelationExistingSystemPayload>;
+  setSystemIntakeRelationExistingSystem?: Maybe<UpdateSystemIntakePayload>;
   setSystemIntakeRelationNewSystem?: Maybe<UpdateSystemIntakePayload>;
   setTRBAdminNoteArchived: TRBAdminNote;
   setTRBRequestRelationExistingService?: Maybe<TRBRequest>;
@@ -1824,15 +1824,6 @@ export type SetSystemIntakeRelationExistingSystemInput = {
   systemIntakeID: Scalars['UUID']['input'];
 };
 
-export type SetSystemIntakeRelationExistingSystemPayload = {
-  __typename: 'SetSystemIntakeRelationExistingSystemPayload';
-  cedarSystemRelationShips?: Maybe<Array<SystemRelationship>>;
-  contractNumbers: Array<Scalars['String']['output']>;
-  systemIntake?: Maybe<SystemIntake>;
-  systemIntakeID: Scalars['UUID']['output'];
-  userErrors?: Maybe<Array<UserError>>;
-};
-
 export type SetSystemIntakeRelationNewSystemInput = {
   contractNumbers: Array<Scalars['String']['input']>;
   systemIntakeID: Scalars['UUID']['input'];
@@ -1879,6 +1870,7 @@ export type SystemIntake = {
   businessOwner: SystemIntakeBusinessOwner;
   businessSolution?: Maybe<Scalars['String']['output']>;
   cedarSystemId?: Maybe<Scalars['String']['output']>;
+  cedarSystemRelationShips?: Maybe<Array<Maybe<SystemIntakeSystem>>>;
   contract: SystemIntakeContract;
   contractName?: Maybe<Scalars['String']['output']>;
   /** Linked contract numbers */
@@ -2628,6 +2620,14 @@ export enum SystemIntakeStepToProgressTo {
   GRT_MEETING = 'GRT_MEETING'
 }
 
+export type SystemIntakeSystem = {
+  __typename: 'SystemIntakeSystem';
+  otherSystemRelationship?: Maybe<Scalars['String']['output']>;
+  systemID?: Maybe<Scalars['String']['output']>;
+  systemIntakeID: Scalars['UUID']['output'];
+  systemRelationshipType: Array<SystemRelationshipType>;
+};
+
 /** Different options for whether the Governance team believes a requester's team should consult with the TRB */
 export enum SystemIntakeTRBFollowUp {
   NOT_RECOMMENDED = 'NOT_RECOMMENDED',
@@ -2654,13 +2654,6 @@ export type SystemIntakeUpdateLCIDInput = {
   reason?: InputMaybe<Scalars['HTML']['input']>;
   scope?: InputMaybe<Scalars['HTML']['input']>;
   systemIntakeID: Scalars['UUID']['input'];
-};
-
-export type SystemRelationship = {
-  __typename: 'SystemRelationship';
-  cedarSystemId?: Maybe<Scalars['String']['output']>;
-  otherTypeDescription?: Maybe<Scalars['String']['output']>;
-  systemRelationshipType: Array<SystemRelationshipType>;
 };
 
 /** TODO This comment */
@@ -3167,7 +3160,6 @@ export type UpdateSystemIntakeGRBReviewerInput = {
 export type UpdateSystemIntakeLinkedCedarSystemInput = {
   cedarSystemId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['UUID']['input'];
-  systemRelationship?: InputMaybe<SystemRelationshipType>;
 };
 
 /** Input data for updating an IT governance admin note */
@@ -3689,7 +3681,7 @@ export type SetSystemIntakeRelationExistingSystemMutationVariables = Exact<{
 }>;
 
 
-export type SetSystemIntakeRelationExistingSystemMutation = { __typename: 'Mutation', setSystemIntakeRelationExistingSystem?: { __typename: 'SetSystemIntakeRelationExistingSystemPayload', systemIntake?: { __typename: 'SystemIntake', id: UUID } | null } | null };
+export type SetSystemIntakeRelationExistingSystemMutation = { __typename: 'Mutation', setSystemIntakeRelationExistingSystem?: { __typename: 'UpdateSystemIntakePayload', systemIntake?: { __typename: 'SystemIntake', id: UUID } | null } | null };
 
 export type SetSystemIntakeRelationExistingServiceMutationVariables = Exact<{
   input: SetSystemIntakeRelationExistingServiceInput;

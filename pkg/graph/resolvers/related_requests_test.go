@@ -78,7 +78,7 @@ func (s *ResolverSuite) TestRelatedRequests() {
 			relations[caseName] = relation
 
 			err := sqlutils.WithTransaction(s.testConfigs.Context, s.testConfigs.Store, func(tx *sqlx.Tx) error {
-				if err := s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, intake.ID, []*models.SystemRelationshipInput{}); err != nil {
+				if err := s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, intake, []*models.SystemRelationshipInput{}); err != nil {
 					panic(err)
 				}
 				if err := s.testConfigs.Store.SetSystemIntakeContractNumbers(ctx, tx, intake.ID, relation.ContractNumbers); err != nil {

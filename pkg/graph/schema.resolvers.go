@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -577,7 +578,7 @@ func (r *mutationResolver) SetSystemIntakeRelationNewSystem(ctx context.Context,
 }
 
 // SetSystemIntakeRelationExistingSystem is the resolver for the setSystemIntakeRelationExistingSystem field.
-func (r *mutationResolver) SetSystemIntakeRelationExistingSystem(ctx context.Context, input *models.SetSystemIntakeRelationExistingSystemInput) (*models.SetSystemIntakeRelationExistingSystemPayload, error) {
+func (r *mutationResolver) SetSystemIntakeRelationExistingSystem(ctx context.Context, input *models.SetSystemIntakeRelationExistingSystemInput) (*models.UpdateSystemIntakePayload, error) {
 	// This resolver's purpose is to relate this System Intake to some number of CEDAR System IDs and Contract Numbers
 	// It is also responsible for clearing any previous relations that might have been set by SetSystemIntakeRelationExistingService(), which,
 	// in practice, should just be the `contractName` field.
@@ -586,7 +587,7 @@ func (r *mutationResolver) SetSystemIntakeRelationExistingSystem(ctx context.Con
 		return nil, err
 	}
 
-	return &models.SetSystemIntakeRelationExistingSystemPayload{
+	return &models.UpdateSystemIntakePayload{
 		SystemIntake: intake,
 	}, nil
 }
@@ -2037,6 +2038,11 @@ func (r *systemIntakeNoteResolver) Editor(ctx context.Context, obj *models.Syste
 	return resolvers.SystemIntakeNoteEditor(ctx, obj)
 }
 
+// SystemRelationshipType is the resolver for the systemRelationshipType field.
+func (r *systemIntakeSystemResolver) SystemRelationshipType(ctx context.Context, obj *models.SystemIntakeSystem) ([]models.SystemRelationshipType, error) {
+	panic(fmt.Errorf("not implemented: SystemRelationshipType - systemRelationshipType"))
+}
+
 // Author is the resolver for the author field.
 func (r *tRBAdminNoteResolver) Author(ctx context.Context, obj *models.TRBAdminNote) (*models.UserInfo, error) {
 	authorInfo, err := dataloaders.FetchUserInfoByEUAUserID(ctx, obj.CreatedBy)
@@ -2320,6 +2326,11 @@ func (r *Resolver) SystemIntakeNote() generated.SystemIntakeNoteResolver {
 	return &systemIntakeNoteResolver{r}
 }
 
+// SystemIntakeSystem returns generated.SystemIntakeSystemResolver implementation.
+func (r *Resolver) SystemIntakeSystem() generated.SystemIntakeSystemResolver {
+	return &systemIntakeSystemResolver{r}
+}
+
 // TRBAdminNote returns generated.TRBAdminNoteResolver implementation.
 func (r *Resolver) TRBAdminNote() generated.TRBAdminNoteResolver { return &tRBAdminNoteResolver{r} }
 
@@ -2373,6 +2384,7 @@ type systemIntakeDocumentResolver struct{ *Resolver }
 type systemIntakeGRBPresentationLinksResolver struct{ *Resolver }
 type systemIntakeGRBReviewerResolver struct{ *Resolver }
 type systemIntakeNoteResolver struct{ *Resolver }
+type systemIntakeSystemResolver struct{ *Resolver }
 type tRBAdminNoteResolver struct{ *Resolver }
 type tRBGuidanceLetterResolver struct{ *Resolver }
 type tRBGuidanceLetterInsightResolver struct{ *Resolver }

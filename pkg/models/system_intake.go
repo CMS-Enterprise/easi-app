@@ -153,6 +153,7 @@ type SystemIntake struct {
 	TRBFollowUpRecommendation       *SystemIntakeTRBFollowUp     `json:"trbFollowUpRecommendation" db:"trb_follow_up_recommendation"`
 	ContractName                    zero.String                  `json:"contractName" db:"contract_name"`
 	SystemRelationType              *RequestRelationType         `json:"relationType" db:"system_relation_type"`
+	CedarSystemRelationShips        []SystemIntakeSystem         `json:"cedarSystemRelationShips"`
 }
 
 // SystemIntakes is a list of System Intakes
