@@ -151,6 +151,9 @@ const GRBReviewStatusCard = ({
       ? 'border-error-light'
       : 'border-primary-light';
 
+  const dateTextColorClass =
+    grbReviewStatus === 'PAST_DUE' ? 'text-error-dark' : 'text-primary-dark';
+
   return (
     <div
       className={classNames(
@@ -196,9 +199,15 @@ const GRBReviewStatusCard = ({
                   })}
                 </p>
 
-                <p className="easi-body-normal text-primary-dark margin-0 flex-align-self-center">
+                <p
+                  className={classNames(
+                    'easi-body-normal margin-0 flex-align-self-center',
+                    dateTextColorClass
+                  )}
+                >
                   {t('statusCard.reviewEnds', {
-                    date: formatDateUtc(grbReviewAsyncEndDate, 'MM/dd/yyyy')
+                    date: formatDateUtc(grbReviewAsyncEndDate, 'MM/dd/yyyy'),
+                    context: grbReviewStatus
                   })}
                 </p>
               </Grid>
