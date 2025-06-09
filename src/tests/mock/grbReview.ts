@@ -9,7 +9,8 @@ import {
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole,
   SystemIntakeGRBReviewFragment,
-  SystemIntakeGRBReviewType
+  SystemIntakeGRBReviewType,
+  SystemIntakeStatusAdmin
 } from 'gql/generated/graphql';
 
 import { MockedQuery } from 'types/util';
@@ -18,6 +19,7 @@ import { systemIntake } from './systemIntake';
 
 export const grbReview: SystemIntakeGRBReviewFragment = {
   __typename: 'SystemIntake',
+  statusAdmin: SystemIntakeStatusAdmin.GRB_MEETING_READY,
   id: systemIntake.id,
   grbReviewType: SystemIntakeGRBReviewType.STANDARD,
   grbReviewStartedAt: null,
