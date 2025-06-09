@@ -401,17 +401,6 @@ describe('GRB review', () => {
 
     cy.get('li.usa-sidenav__item a[href*="grb-review#details"]').click();
 
-    // Remove all presentation links
-    cy.contains('button', 'Remove all presentation links').click();
-
-    // Modal remove button
-    cy.contains('button', 'Remove presentation links').click();
-
-    // Returns to empty state with no links
-    cy.contains('a', 'Add asynchronous presentation links').should(
-      'be.visible'
-    );
-
     cy.contains('a', 'Add asynchronous presentation links').click();
 
     // Complete upload form form
@@ -499,5 +488,16 @@ describe('GRB review', () => {
 
     // Check that the presentation deck file was deleted
     cy.get('[data-testid="presentation-url"]').should('not.exist');
+
+    // Remove all presentation links
+    cy.contains('button', 'Remove all presentation links').click();
+
+    // Modal remove button
+    cy.contains('button', 'Remove presentation links').click();
+
+    // Returns to empty state with no links
+    cy.contains('a', 'Add asynchronous presentation links').should(
+      'be.visible'
+    );
   });
 });
