@@ -131,6 +131,9 @@ const GRBReviewStatusCard = ({
       case 'NOT_STARTED':
         return 'bg-warning-lighter';
 
+      case 'PAST_DUE':
+        return 'bg-error-lighter';
+
       default:
         return 'bg-primary-lighter';
     }
@@ -142,6 +145,11 @@ const GRBReviewStatusCard = ({
   if (!grbReviewStatus) {
     return null;
   }
+
+  const borderColorClass =
+    grbReviewStatus === 'PAST_DUE'
+      ? 'border-error-light'
+      : 'border-primary-light';
 
   return (
     <div
@@ -166,7 +174,12 @@ const GRBReviewStatusCard = ({
 
       {/* Meeting Details */}
       {reviewIsInProgress && (
-        <div className="border-top-1px border-primary-light margin-top-2 padding-top-2">
+        <div
+          className={classNames(
+            'border-top-1px margin-top-2 padding-top-2',
+            borderColorClass
+          )}
+        >
           {grbReviewType === SystemIntakeGRBReviewType.ASYNC ? (
             // ASYNC review type
             <>
