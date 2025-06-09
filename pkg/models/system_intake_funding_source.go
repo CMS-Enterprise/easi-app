@@ -11,8 +11,8 @@ import (
 type SystemIntakeFundingSource struct {
 	ID             uuid.UUID   `json:"id"`
 	SystemIntakeID uuid.UUID   `json:"systemIntakeId" db:"system_intake_id"`
-	Source         null.String `json:"source" db:"source"`
-	FundingNumber  null.String `json:"fundingNumber" db:"funding_number"`
+	Investment     null.String `json:"investment" db:"investment"`
+	ProjectNumber  null.String `json:"projectNumber" db:"project_number"`
 	CreatedAt      *time.Time  `db:"created_at"`
 }
 

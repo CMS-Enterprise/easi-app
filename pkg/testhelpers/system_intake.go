@@ -35,8 +35,8 @@ func NewSystemIntake() models.SystemIntake {
 		FundingSources: []*models.SystemIntakeFundingSource{
 			{
 				ID:            uuid.New(),
-				Source:        null.StringFrom("CLIA"),
-				FundingNumber: null.StringFrom("123456"),
+				Investment:    null.StringFrom("CLIA"),
+				ProjectNumber: null.StringFrom("123456"),
 			},
 		},
 		BusinessNeed:       null.StringFrom("Test Business Need"),

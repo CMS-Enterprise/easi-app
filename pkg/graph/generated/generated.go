@@ -852,9 +852,9 @@ type ComplexityRoot struct {
 	}
 
 	SystemIntakeFundingSource struct {
-		FundingNumber func(childComplexity int) int
 		ID            func(childComplexity int) int
-		Source        func(childComplexity int) int
+		Investment    func(childComplexity int) int
+		ProjectNumber func(childComplexity int) int
 	}
 
 	SystemIntakeGRBPresentationLinks struct {
@@ -6305,13 +6305,6 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.SystemIntakeDocumentType.OtherTypeDescription(childComplexity), true
 
-	case "SystemIntakeFundingSource.fundingNumber":
-		if e.complexity.SystemIntakeFundingSource.FundingNumber == nil {
-			break
-		}
-
-		return e.complexity.SystemIntakeFundingSource.FundingNumber(childComplexity), true
-
 	case "SystemIntakeFundingSource.id":
 		if e.complexity.SystemIntakeFundingSource.ID == nil {
 			break
@@ -6319,12 +6312,19 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.SystemIntakeFundingSource.ID(childComplexity), true
 
-	case "SystemIntakeFundingSource.source":
-		if e.complexity.SystemIntakeFundingSource.Source == nil {
+	case "SystemIntakeFundingSource.investment":
+		if e.complexity.SystemIntakeFundingSource.Investment == nil {
 			break
 		}
 
-		return e.complexity.SystemIntakeFundingSource.Source(childComplexity), true
+		return e.complexity.SystemIntakeFundingSource.Investment(childComplexity), true
+
+	case "SystemIntakeFundingSource.projectNumber":
+		if e.complexity.SystemIntakeFundingSource.ProjectNumber == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeFundingSource.ProjectNumber(childComplexity), true
 
 	case "SystemIntakeGRBPresentationLinks.createdAt":
 		if e.complexity.SystemIntakeGRBPresentationLinks.CreatedAt == nil {
@@ -9168,16 +9168,16 @@ Represents the source of funding for a system
 """
 type SystemIntakeFundingSource {
   id: UUID!
-  fundingNumber: String
-  source: String
+  projectNumber: String
+  investment: String
 }
 
 """
 Represents the source of funding for a system
 """
 input SystemIntakeFundingSourceInput {
-  fundingNumber: String
-  source: String
+  projectNumber: String
+  investment: String
 }
 
 """
@@ -42310,10 +42310,10 @@ func (ec *executionContext) fieldContext_SystemIntake_fundingSources(_ context.C
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_SystemIntakeFundingSource_id(ctx, field)
-			case "fundingNumber":
-				return ec.fieldContext_SystemIntakeFundingSource_fundingNumber(ctx, field)
-			case "source":
-				return ec.fieldContext_SystemIntakeFundingSource_source(ctx, field)
+			case "projectNumber":
+				return ec.fieldContext_SystemIntakeFundingSource_projectNumber(ctx, field)
+			case "investment":
+				return ec.fieldContext_SystemIntakeFundingSource_investment(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeFundingSource", field.Name)
 		},
@@ -48056,8 +48056,8 @@ func (ec *executionContext) fieldContext_SystemIntakeFundingSource_id(_ context.
 	return fc, nil
 }
 
-func (ec *executionContext) _SystemIntakeFundingSource_fundingNumber(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeFundingSource) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntakeFundingSource_fundingNumber(ctx, field)
+func (ec *executionContext) _SystemIntakeFundingSource_projectNumber(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeFundingSource) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeFundingSource_projectNumber(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -48070,7 +48070,7 @@ func (ec *executionContext) _SystemIntakeFundingSource_fundingNumber(ctx context
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.FundingNumber, nil
+		return obj.ProjectNumber, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -48084,7 +48084,7 @@ func (ec *executionContext) _SystemIntakeFundingSource_fundingNumber(ctx context
 	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚐString(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_SystemIntakeFundingSource_fundingNumber(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_SystemIntakeFundingSource_projectNumber(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeFundingSource",
 		Field:      field,
@@ -48097,8 +48097,8 @@ func (ec *executionContext) fieldContext_SystemIntakeFundingSource_fundingNumber
 	return fc, nil
 }
 
-func (ec *executionContext) _SystemIntakeFundingSource_source(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeFundingSource) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntakeFundingSource_source(ctx, field)
+func (ec *executionContext) _SystemIntakeFundingSource_investment(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeFundingSource) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeFundingSource_investment(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -48111,7 +48111,7 @@ func (ec *executionContext) _SystemIntakeFundingSource_source(ctx context.Contex
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Source, nil
+		return obj.Investment, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -48125,7 +48125,7 @@ func (ec *executionContext) _SystemIntakeFundingSource_source(ctx context.Contex
 	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚐString(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_SystemIntakeFundingSource_source(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_SystemIntakeFundingSource_investment(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeFundingSource",
 		Field:      field,
@@ -63299,27 +63299,27 @@ func (ec *executionContext) unmarshalInputSystemIntakeFundingSourceInput(ctx con
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"fundingNumber", "source"}
+	fieldsInOrder := [...]string{"projectNumber", "investment"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
-		case "fundingNumber":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("fundingNumber"))
+		case "projectNumber":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("projectNumber"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.FundingNumber = data
-		case "source":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("source"))
+			it.ProjectNumber = data
+		case "investment":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("investment"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.Source = data
+			it.Investment = data
 		}
 	}
 
@@ -71900,10 +71900,10 @@ func (ec *executionContext) _SystemIntakeFundingSource(ctx context.Context, sel 
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "fundingNumber":
-			out.Values[i] = ec._SystemIntakeFundingSource_fundingNumber(ctx, field, obj)
-		case "source":
-			out.Values[i] = ec._SystemIntakeFundingSource_source(ctx, field, obj)
+		case "projectNumber":
+			out.Values[i] = ec._SystemIntakeFundingSource_projectNumber(ctx, field, obj)
+		case "investment":
+			out.Values[i] = ec._SystemIntakeFundingSource_investment(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
