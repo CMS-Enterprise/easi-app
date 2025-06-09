@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
@@ -104,11 +105,13 @@ func SetSystemIntakeRelationExistingSystem(
 			}
 		}
 
-		//TODO update this
+		fmt.Println(input.CedarSystemRelationShips)
 		// Add CEDAR system relationships
 		if err := store.SetSystemIntakeSystems(ctx, tx, intake, input.CedarSystemRelationShips); err != nil {
 			return nil, err
 		}
+
+		fmt.Println(input.CedarSystemRelationShips)
 
 		// Delete & recreate contract number relationships
 		// DISABLED: See Note [EASI-4160 Disable Contract Number Linking]

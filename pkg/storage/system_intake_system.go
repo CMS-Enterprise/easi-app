@@ -21,22 +21,17 @@ func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemI
 		return errors.New("unexpected nil system intake ID when linking system intake to system id")
 	}
 
+	_, err := tx.NamedExec(sqlqueries.SystemIntakeSystemForm.Delete, map[string]interface{}{
+		"system_intake_id": systemIntake.ID,
+	})
+	if err != nil {
+		appcontext.ZLogger(ctx).Error("Failed to delete system ids linked to system intake", zap.Error(err))
+		return err
+	}
+
 	// no need to run insert if we are not inserting new system ids
 	if len(systemRelationships) < 1 {
 		return nil
-	}
-
-	var systemIdsToDelete []string
-	for _, value := range systemRelationships {
-		systemIdsToDelete = append(systemIdsToDelete, *value.CedarSystemID)
-	}
-
-	if _, err := tx.NamedExec(sqlqueries.SystemIntakeSystemForm.Delete, map[string]interface{}{
-		"system_ids":       pq.StringArray(systemIdsToDelete),
-		"system_intake_id": systemIntake.ID,
-	}); err != nil {
-		appcontext.ZLogger(ctx).Error("Failed to delete system ids linked to system intake", zap.Error(err))
-		return err
 	}
 
 	userID := appcontext.Principal(ctx).Account().ID
@@ -49,7 +44,6 @@ func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemI
 		systemIDLink.ID = uuid.New()
 		systemIDLink.SystemIntakeID = systemIntake.ID
 		systemIDLink.ModifiedBy = &userID
-		//TODO -- Consider bringing in EnumArray from Mint
 		systemIDLink.SystemRelationshipType = relationship.SystemRelationshipType
 		systemIDLink.OtherSystemRelationship = relationship.OtherTypeDescription
 
@@ -60,8 +54,6 @@ func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemI
 		appcontext.ZLogger(ctx).Error("Failed to insert linked system intake to system ids", zap.Error(err))
 		return err
 	}
-
-	systemIntake.CedarSystemRelationShips = setSystemIntakeSystemsLinks
 
 	return nil
 }

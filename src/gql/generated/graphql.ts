@@ -2656,7 +2656,7 @@ export type SystemIntakeUpdateLCIDInput = {
   systemIntakeID: Scalars['UUID']['input'];
 };
 
-/** TODO This comment */
+/** Input data for creating a system intake's relationship to a CEDAR system */
 export type SystemRelationshipInput = {
   cedarSystemId?: InputMaybe<Scalars['String']['input']>;
   otherTypeDescription?: InputMaybe<Scalars['String']['input']>;

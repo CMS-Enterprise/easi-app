@@ -1076,7 +1076,7 @@ enum SystemRelationshipType {
   OTHER
 }
 """
-TODO This comment
+Input data for creating a system intake's relationship to a CEDAR system
 """
 input SystemRelationshipInput {
   cedarSystemId: String

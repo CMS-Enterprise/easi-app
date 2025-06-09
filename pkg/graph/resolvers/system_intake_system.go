@@ -34,3 +34,14 @@ func SystemIntakeSystems(ctx context.Context, systemIntakeID uuid.UUID) ([]*mode
 func CedarSystemLinkedSystemIntakes(ctx context.Context, cedarSystemID string, state models.SystemIntakeState) ([]*models.SystemIntake, error) {
 	return dataloaders.GetCedarSystemLinkedSystemIntakes(ctx, cedarSystemID, state)
 }
+
+// SystemIntakeSystemsByIntakeID utilizes dataloaders to retrieve systems linked to a given system intake ID
+func SystemIntakeSystemsByIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeSystem, error) {
+	systems, err := dataloaders.GetSystemIntakeSystemsBySystemIntakeID(ctx, systemIntakeID)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error("unable to retrieve cedar system ids from db", zap.Error(err))
+		return nil, err
+	}
+
+	return systems, nil
+}

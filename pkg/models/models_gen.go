@@ -818,7 +818,7 @@ type SystemIntakeUpdateLCIDInput struct {
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
 }
 
-// TODO This comment
+// Input data for creating a system intake's relationship to a CEDAR system
 type SystemRelationshipInput struct {
 	CedarSystemID          *string                  `json:"cedarSystemId,omitempty"`
 	SystemRelationshipType []SystemRelationshipType `json:"systemRelationshipType"`
