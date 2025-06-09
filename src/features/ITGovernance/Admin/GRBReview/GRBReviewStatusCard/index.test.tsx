@@ -24,7 +24,7 @@ describe('GRBReviewStatusCard', () => {
     grbReviewType: SystemIntakeGRBReviewType.STANDARD,
     grbReviewAsyncStatus: null,
     grbReviewStandardStatus: SystemIntakeGRBReviewStandardStatusType.SCHEDULED,
-    grbDate: '2025-03-28T12:00:00Z',
+    grbDate: '2050-03-28T12:00:00Z',
     grbReviewStartedAt: '2025-03-27T12:00:00Z',
     grbReviewAsyncEndDate: null,
     grbVotingInformation: {
@@ -45,14 +45,14 @@ describe('GRBReviewStatusCard', () => {
     grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType.IN_PROGRESS,
     grbDate: null,
     grbReviewStartedAt: '2025-03-27T12:00:00Z',
-    grbReviewAsyncEndDate: '2025-03-30T12:00:00Z',
+    grbReviewAsyncEndDate: '2050-03-30T12:00:00Z',
     grbVotingInformation: {
       __typename: 'GRBVotingInformation',
       grbReviewers: [],
       numberOfNoObjection: 0,
       numberOfNotVoted: 0,
       numberOfObjection: 0,
-      votingStatus: GRBVotingInformationStatus.NOT_STARTED
+      votingStatus: GRBVotingInformationStatus.IN_PROGRESS
     },
     id: '123',
     documents: []
@@ -77,110 +77,133 @@ describe('GRBReviewStatusCard', () => {
     );
   };
 
-  it('renders the Standard Card when grbReviewType is STANDARD', () => {
-    const { asFragment } = renderComponent(mockStandardReview);
+  describe('Standard meeting card', () => {
+    it('renders the card', () => {
+      const { asFragment } = renderComponent(mockStandardReview);
 
-    // Check that the standard heading is rendered
-    expect(
-      screen.getByText(
-        i18next.t<string>('grbReview:statusCard.heading', {
-          context: 'STANDARD'
-        })
-      )
-    ).toBeInTheDocument();
+      // Check that the standard heading is rendered
+      expect(
+        screen.getByText(
+          i18next.t<string>('grbReview:statusCard.heading', {
+            context: 'STANDARD'
+          })
+        )
+      ).toBeInTheDocument();
 
-    // Check that the meeting date is displayed
-    expect(screen.getByText('03/28/2025')).toBeInTheDocument();
+      // Check that the meeting date is displayed
+      expect(screen.getByText('03/28/2050')).toBeInTheDocument();
 
-    // Check that the "Change Meeting Date" button is displayed for ITGov admins
-    expect(
-      screen.getByText(
-        i18next.t<string>('grbReview:statusCard.changeMeetingDate')
-      )
-    ).toBeInTheDocument();
+      // Check that the "Change Meeting Date" button is displayed for ITGov admins
+      expect(
+        screen.getByText(
+          i18next.t<string>('grbReview:statusCard.changeMeetingDate')
+        )
+      ).toBeInTheDocument();
 
-    expect(asFragment()).toMatchSnapshot();
+      expect(asFragment()).toMatchSnapshot();
+    });
+
+    it('renders status: not started', () => {
+      const reviewWithoutStartDate = {
+        ...mockStandardReview,
+        grbReviewStartedAt: null
+      };
+
+      renderComponent(reviewWithoutStartDate);
+
+      expect(screen.getByTestId('async-status')).toHaveTextContent(
+        'Not started'
+      );
+
+      expect(
+        screen.getByRole('link', { name: 'Set up GRB review' })
+      ).toBeInTheDocument();
+    });
   });
 
-  it('renders the Async Card when grbReviewType is ASYNC', () => {
-    renderComponent(mockAsyncReview);
+  describe('Asynchronous review card', () => {
+    it('renders the card', () => {
+      renderComponent(mockAsyncReview);
 
-    // Check that the async heading is rendered
-    expect(
-      screen.getByText(
-        i18next.t<string>('grbReview:statusCard.heading', { context: 'ASYNC' })
-      )
-    ).toBeInTheDocument();
+      // Check that the async heading is rendered
+      expect(
+        screen.getByText(
+          i18next.t<string>('grbReview:statusCard.heading', {
+            context: 'ASYNC'
+          })
+        )
+      ).toBeInTheDocument();
 
-    // Check that the time remaining is displayed
-    expect(
-      screen.getByText(i18next.t<string>('grbReview:statusCard.timeRemaining'))
-    ).toBeInTheDocument();
-  });
+      // Check that the time remaining is displayed
+      expect(
+        screen.getByText(
+          i18next.t<string>('grbReview:statusCard.timeRemaining')
+        )
+      ).toBeInTheDocument();
+    });
 
-  it('displays the Add Time or End Voting section for ITGov admins in async review', () => {
-    renderComponent(mockAsyncReview);
+    it('renders status: past due', () => {
+      renderComponent({
+        ...mockAsyncReview,
+        grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType.PAST_DUE,
+        grbReviewAsyncEndDate: '2025-03-30T21:00:00Z'
+      });
 
-    // Check that the Add Time or End Voting section is rendered
-    expect(
-      screen.getByText(i18next.t<string>('grbReview:statusCard.addTime'))
-    ).toBeInTheDocument();
+      expect(screen.getByTestId('async-status')).toHaveTextContent('Past due');
+      expect(
+        screen.getByText('Original end date: 03/30/2025, 5:00pm EST')
+      ).toBeInTheDocument();
+    });
 
-    expect(
-      screen.getByText(i18next.t<string>('grbReview:statusCard.endVoting'))
-    ).toBeInTheDocument();
-  });
+    it('renders add time and end voting buttons (admin)', () => {
+      renderComponent(mockAsyncReview);
 
-  it('renders if review has not started', () => {
-    const reviewWithoutStartDate = {
-      ...mockStandardReview,
-      grbReviewStartedAt: null
-    };
+      // Check that the Add Time or End Voting section is rendered
+      expect(
+        screen.getByText(i18next.t<string>('grbReview:statusCard.addTime'))
+      ).toBeInTheDocument();
 
-    renderComponent(reviewWithoutStartDate);
+      expect(
+        screen.getByText(i18next.t<string>('grbReview:statusCard.endVoting'))
+      ).toBeInTheDocument();
+    });
 
-    expect(screen.getByTestId('async-status')).toHaveTextContent('Not started');
+    it('renders restart review button if review is completed (admin)', () => {
+      const asyncReviewCompletedState = {
+        ...mockAsyncReview,
+        grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType.COMPLETED
+      };
 
-    expect(
-      screen.getByRole('link', { name: 'Set up GRB review' })
-    ).toBeInTheDocument();
-  });
+      renderComponent(asyncReviewCompletedState);
 
-  it('renders GRB reviewer view - in progress', () => {
-    renderComponent(mockStandardReview, false);
+      expect(
+        screen.queryByText(
+          i18next.t<string>('grbReview:statusCard.restartReview')
+        )
+      ).toBeInTheDocument();
+    });
 
-    // Check that the Add Time or End Voting button is not displayed
-    expect(
-      screen.queryByText(i18next.t<string>('grbReview:statusCard.addTime'))
-    ).not.toBeInTheDocument();
-  });
+    it('hides restart review button if user is not admin', () => {
+      const asyncReviewCompletedState = {
+        ...mockAsyncReview,
+        grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType.COMPLETED
+      };
 
-  it('renders GRB reviewer view - completed', () => {
-    const asyncReviewCompletedState = {
-      ...mockAsyncReview,
-      grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType.COMPLETED
-    };
+      renderComponent(asyncReviewCompletedState, false);
 
-    renderComponent(asyncReviewCompletedState, false);
+      // Hide restart review button
+      expect(
+        screen.queryByRole('button', { name: /restart review/i })
+      ).not.toBeInTheDocument();
+    });
 
-    // Hide restart review button
-    expect(
-      screen.queryByRole('button', { name: /restart review/i })
-    ).not.toBeInTheDocument();
-  });
+    it('hides add time button if user is not admin', () => {
+      renderComponent(mockAsyncReview, false);
 
-  it('renders Completed state in Async reviews', () => {
-    const asyncReviewCompletedState = {
-      ...mockAsyncReview,
-      grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType.COMPLETED
-    };
-
-    renderComponent(asyncReviewCompletedState);
-
-    expect(
-      screen.queryByText(
-        i18next.t<string>('grbReview:statusCard.restartReview')
-      )
-    ).toBeInTheDocument();
+      // Check that the Add Time or End Voting button is not displayed
+      expect(
+        screen.queryByText(i18next.t<string>('grbReview:statusCard.addTime'))
+      ).not.toBeInTheDocument();
+    });
   });
 });
