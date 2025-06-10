@@ -41,6 +41,7 @@ const AnnualEmail = () => {
   const { t } = useTranslation('governanceReviewTeam');
   const [modalOpen, setModalOpen] = useState(false);
   const [warning, setWarning] = useState(false);
+  const [emailsCopied, setEmailsCopied] = useState(false);
 
   const {
     data: emailData,
@@ -164,7 +165,10 @@ const AnnualEmail = () => {
   };
 
   const onSubmit = (formData: FormValues) => handleEmails(formData, 'submit');
-  const onCopy = () => handleEmails(formValues, 'copy');
+  const onCopy = () => {
+    handleEmails(formValues, 'copy');
+    setEmailsCopied(true);
+  };
 
   return (
     <>
@@ -203,6 +207,7 @@ const AnnualEmail = () => {
         closeModal={() => {
           setModalOpen(false);
           setWarning(false);
+          setEmailsCopied(false);
         }}
       >
         <ModalHeading>
@@ -260,17 +265,28 @@ const AnnualEmail = () => {
                       'home:adminHome.GRT.requesterUpdateEmail.modal.openEmailButton'
                     )}
                   </Button>
-                  <Button
-                    type="button"
-                    onClick={onCopy}
-                    disabled={!hasSelected}
-                    unstyled
-                    className="margin-y-0"
-                  >
-                    {t(
-                      'home:adminHome.GRT.requesterUpdateEmail.modal.copyEmailButton'
-                    )}
-                  </Button>
+                  {emailsCopied ? (
+                    <div className="display-flex flex-align-center flex-justify-space-between">
+                      <span className="text-italic text-success-dark">
+                        <Icon.Check className="margin-right-1" />
+                        {t(
+                          'home:adminHome.GRT.requesterUpdateEmail.modal.copied'
+                        )}
+                      </span>
+                    </div>
+                  ) : (
+                    <Button
+                      type="button"
+                      onClick={onCopy}
+                      disabled={!hasSelected}
+                      unstyled
+                      className="margin-y-0"
+                    >
+                      {t(
+                        'home:adminHome.GRT.requesterUpdateEmail.modal.copyEmailButton'
+                      )}
+                    </Button>
+                  )}
                 </div>
               </ModalFooter>
             </Form>
