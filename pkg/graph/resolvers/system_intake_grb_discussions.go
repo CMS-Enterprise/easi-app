@@ -178,7 +178,7 @@ func CreateSystemIntakeGRBDiscussionReply(
 		}
 
 		if isGRBReviewComplete {
-			return nil, errors.New("cannot post to a completed system intake")
+			return nil, errors.New("cannot reply to a discussion on a completed system intake")
 		}
 
 		if input.DiscussionBoardType == models.SystemIntakeGRBDiscussionBoardTypeInternal && !isAuthorizedForInternalBoard(ctx, intakeID) {

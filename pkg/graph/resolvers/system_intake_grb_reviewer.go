@@ -181,7 +181,7 @@ func DeleteSystemIntakeGRBReviewer(
 	}
 
 	if isGRBReviewComplete {
-		return errors.New("cannot update GRB reviewer for completed GRB review")
+		return errors.New("cannot delete GRB reviewer for completed GRB review")
 	}
 
 	return sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
