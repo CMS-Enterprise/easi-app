@@ -11,59 +11,86 @@ import (
 func (s *ResolverSuite) TestRelatedRequests() {
 	ctx := s.testConfigs.Context
 
+	systemID1 := "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"
+	systemID2 := "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
+	systemID3 := "{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"
+	unrelatedSystemID := "{11AB1A00-1234-5678-ABC1-1A001B00CC3D}"
+
+	description := "other description"
+
 	const (
-		systemID1               = "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"
-		systemID2               = "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
-		systemID3               = "{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"
-		unrelatedSystemID       = "{11AB1A00-1234-5678-ABC1-1A001B00CC3D}"
 		contractNumber1         = "00001"
 		contractNumber2         = "00002"
 		contractNumber3         = "00003"
 		unrelatedContractNumber = "00004"
 	)
 
+	system1 := models.SystemRelationshipInput{
+		CedarSystemID:          &systemID1,
+		SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+		OtherTypeDescription:   &description,
+	}
+
+	system2 := models.SystemRelationshipInput{
+		CedarSystemID:          &systemID2,
+		SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+		OtherTypeDescription:   &description,
+	}
+
+	system3 := models.SystemRelationshipInput{
+		CedarSystemID:          &systemID3,
+		SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+		OtherTypeDescription:   &description,
+	}
+
+	unrelatedSystem := models.SystemRelationshipInput{
+		CedarSystemID:          &unrelatedSystemID,
+		SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT"},
+	}
+
 	var relations = map[string]struct {
-		Systems                 []string
+		TrbSystems              []string
+		CedarSystems            []*models.SystemRelationshipInput
 		ContractNumbers         []string
 		ExpectedRelatedRequests int
 		TrbRequestID            uuid.UUID
 		SystemIntakeID          uuid.UUID
 	}{
 		"no relation should have no relations": {
-			[]string{}, []string{}, 0, uuid.Nil, uuid.Nil,
+			[]string{}, []*models.SystemRelationshipInput{}, []string{}, 0, uuid.Nil, uuid.Nil,
 		},
 		"req with sys1 should relate to req with sys1 and sys2": {
-			[]string{systemID1}, []string{}, 1, uuid.Nil, uuid.Nil,
+			[]string{systemID1}, []*models.SystemRelationshipInput{&system1}, []string{}, 1, uuid.Nil, uuid.Nil,
 		},
 		"req with sys2 should relate to req with sys1 and sys2": {
-			[]string{systemID2}, []string{}, 1, uuid.Nil, uuid.Nil,
+			[]string{systemID2}, []*models.SystemRelationshipInput{&system2}, []string{}, 1, uuid.Nil, uuid.Nil,
 		},
 		"req with sys1 and sys2 should relate to req with sys1 and req with sys2": {
-			[]string{systemID1, systemID2}, []string{}, 2, uuid.Nil, uuid.Nil,
+			[]string{systemID1, systemID2}, []*models.SystemRelationshipInput{&system1, &system2}, []string{}, 2, uuid.Nil, uuid.Nil,
 		},
 		"unrelated system ID should relate to no requests": {
-			[]string{unrelatedSystemID}, []string{}, 0, uuid.Nil, uuid.Nil,
+			[]string{unrelatedSystemID}, []*models.SystemRelationshipInput{&unrelatedSystem}, []string{}, 0, uuid.Nil, uuid.Nil,
 		},
 		"req with cn1 should relate to req with cn1 and cn2": {
-			[]string{}, []string{contractNumber1}, 1, uuid.Nil, uuid.Nil,
+			[]string{}, []*models.SystemRelationshipInput{}, []string{contractNumber1}, 1, uuid.Nil, uuid.Nil,
 		},
 		"req with cn2 should relate to req with cn1 and cn2": {
-			[]string{}, []string{contractNumber2}, 1, uuid.Nil, uuid.Nil,
+			[]string{}, []*models.SystemRelationshipInput{}, []string{contractNumber2}, 1, uuid.Nil, uuid.Nil,
 		},
 		"req with cn1 and cn2 should relate to req with cn1 and req with cn2": {
-			[]string{}, []string{contractNumber1, contractNumber2}, 2, uuid.Nil, uuid.Nil,
+			[]string{}, []*models.SystemRelationshipInput{}, []string{contractNumber1, contractNumber2}, 2, uuid.Nil, uuid.Nil,
 		},
 		"unrelated contract number should relate to no requests": {
-			[]string{}, []string{unrelatedContractNumber}, 0, uuid.Nil, uuid.Nil,
+			[]string{}, []*models.SystemRelationshipInput{}, []string{unrelatedContractNumber}, 0, uuid.Nil, uuid.Nil,
 		},
 		"req with sys3 and cn3 should relate to req with sys3 and req with cn3": {
-			[]string{systemID3}, []string{contractNumber3}, 2, uuid.Nil, uuid.Nil,
+			[]string{systemID3}, []*models.SystemRelationshipInput{&system3}, []string{contractNumber3}, 2, uuid.Nil, uuid.Nil,
 		},
 		"req with cn3 should relate to req with sys3 and cn3": {
-			[]string{}, []string{contractNumber3}, 1, uuid.Nil, uuid.Nil,
+			[]string{}, []*models.SystemRelationshipInput{}, []string{contractNumber3}, 1, uuid.Nil, uuid.Nil,
 		},
 		"req with sys3 should relate to req with sys3 and cn3": {
-			[]string{systemID3}, []string{}, 1, uuid.Nil, uuid.Nil,
+			[]string{systemID3}, []*models.SystemRelationshipInput{&system3}, []string{}, 1, uuid.Nil, uuid.Nil,
 		},
 	}
 	// create system intakes and trb requests for testing
@@ -84,7 +111,7 @@ func (s *ResolverSuite) TestRelatedRequests() {
 				if err := s.testConfigs.Store.SetSystemIntakeContractNumbers(ctx, tx, intake.ID, relation.ContractNumbers); err != nil {
 					panic(err)
 				}
-				if err := s.testConfigs.Store.SetTRBRequestSystems(ctx, tx, trbRequest.ID, relation.Systems); err != nil {
+				if err := s.testConfigs.Store.SetTRBRequestSystems(ctx, tx, trbRequest.ID, relation.TrbSystems); err != nil {
 					panic(err)
 				}
 				if err := s.testConfigs.Store.SetTRBRequestContractNumbers(ctx, tx, trbRequest.ID, relation.ContractNumbers); err != nil {
@@ -111,7 +138,7 @@ func (s *ResolverSuite) TestRelatedRequests() {
 			s.NoError(err)
 			// requests of a different type will relate to the same case so will have one additional expected relation
 			// except for the case where there are no related systems or contract numbers
-			if len(relation.ContractNumbers) == 0 && len(relation.Systems) == 0 {
+			if len(relation.ContractNumbers) == 0 && len(relation.TrbSystems) == 0 {
 				s.Len(relatedTRBRequests, 0)
 				return
 			}
@@ -122,7 +149,7 @@ func (s *ResolverSuite) TestRelatedRequests() {
 			s.NoError(err)
 			// requests of a different type will relate to the same case so will have one additional expected relation
 			// except for the case where there are no related systems or contract numbers
-			if len(relation.ContractNumbers) == 0 && len(relation.Systems) == 0 {
+			if len(relation.ContractNumbers) == 0 && len(relation.TrbSystems) == 0 {
 				s.Len(relatedIntakes, 0)
 				return
 			}
