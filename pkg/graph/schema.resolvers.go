@@ -1958,6 +1958,11 @@ func (r *systemIntakeResolver) GrbPresentationLinks(ctx context.Context, obj *mo
 	return dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, obj.ID)
 }
 
+// CedarSystemRelationShips is the resolver for the cedarSystemRelationShips field.
+func (r *systemIntakeResolver) CedarSystemRelationShips(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeSystem, error) {
+	return dataloaders.GetSystemIntakeSystemsBySystemIntakeID(ctx, obj.ID)
+}
+
 // DocumentType is the resolver for the documentType field.
 func (r *systemIntakeDocumentResolver) DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*models.SystemIntakeDocumentType, error) {
 	return &models.SystemIntakeDocumentType{
