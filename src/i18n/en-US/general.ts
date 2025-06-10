@@ -10,6 +10,7 @@ const general = {
   },
   edit: 'Edit',
   remove: 'Remove',
+  loading: 'Loading',
   pageLoading: 'Loading the page',
   loadingResults: 'Loading results',
   noResults: 'No results',
