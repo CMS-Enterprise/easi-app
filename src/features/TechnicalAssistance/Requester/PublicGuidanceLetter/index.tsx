@@ -112,7 +112,10 @@ function PublicGuidanceLetter() {
         {fromTaskList ? (
           <>
             <UswdsReactLink to={`/trb/task-list/${id}`}>
-              <Icon.ArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+              <Icon.ArrowBack
+                className="margin-right-05 margin-bottom-2px text-tbottom"
+                aria-label="back"
+              />
               {t('requestFeedback.returnToTaskList')}
             </UswdsReactLink>
 
@@ -242,7 +245,10 @@ function PublicGuidanceLetter() {
             className="display-inline-block margin-top-5"
             to={`/trb/task-list/${id}`}
           >
-            <Icon.ArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+            <Icon.ArrowBack
+              className="margin-right-05 margin-bottom-2px text-tbottom"
+              aria-label="back"
+            />
             {t('requestFeedback.returnToTaskList')}
           </UswdsReactLink>
         )}

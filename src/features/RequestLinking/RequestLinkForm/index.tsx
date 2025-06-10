@@ -668,7 +668,9 @@ const RequestLinkForm = ({
             </ButtonGroup>
 
             <IconButton
-              icon={<Icon.ArrowBack className="margin-right-05" />}
+              icon={
+                <Icon.ArrowBack className="margin-right-05" aria-label="back" />
+              }
               type="button"
               unstyled
               onClick={() => {

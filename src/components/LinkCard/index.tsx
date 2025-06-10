@@ -36,7 +36,7 @@ const LinkCard = ({ className, type }: LinkCardProps) => {
         className="display-flex flex-align-center margin-top-1 margin-bottom-3"
       >
         {t(`actions.${type}.learnMore`)}
-        <Icon.ArrowForward className="margin-left-1" />
+        <Icon.ArrowForward className="margin-left-1" aria-label="forward" />
       </UswdsReactLink>
 
       <Button

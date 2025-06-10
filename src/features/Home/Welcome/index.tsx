@@ -65,7 +65,12 @@ const WelcomeText = () => {
                     return (
                       <IconListItem
                         key={item}
-                        icon={<Icon.Check className="text-green" />}
+                        icon={
+                          <Icon.Check
+                            className="text-green"
+                            aria-label="check"
+                          />
+                        }
                       >
                         {item}
                       </IconListItem>
@@ -92,6 +97,7 @@ const WelcomeText = () => {
                           <Icon.Close
                             className="text-red margin-right-1"
                             size={3}
+                            aria-label="close"
                           />
                         }
                       >
@@ -134,6 +140,7 @@ const WelcomeText = () => {
                 <Icon.NotificationsActive
                   size={5}
                   className="text-primary-vivid"
+                  aria-label="notifications-active"
                 />
                 <h3 className="line-height-body-2">
                   {t('welcome.automation')}
@@ -145,7 +152,11 @@ const WelcomeText = () => {
             </Card>
             <Card className="desktop:grid-col-4">
               <CardHeader className="padding-bottom-0">
-                <Icon.Groups size={5} className="text-primary-vivid" />
+                <Icon.Groups
+                  size={5}
+                  className="text-primary-vivid"
+                  aria-label="groups"
+                />
                 <h3 className="line-height-body-2">
                   {t('welcome.collaboration')}
                 </h3>
@@ -156,7 +167,11 @@ const WelcomeText = () => {
             </Card>
             <Card className="desktop:grid-col-4">
               <CardHeader className="padding-bottom-0">
-                <Icon.Edit size={5} className="text-primary-vivid" />
+                <Icon.Edit
+                  size={5}
+                  className="text-primary-vivid"
+                  aria-label="edit"
+                />
                 <h3 className="line-height-body-2">{t('welcome.editing')}</h3>
               </CardHeader>
               <CardBody>

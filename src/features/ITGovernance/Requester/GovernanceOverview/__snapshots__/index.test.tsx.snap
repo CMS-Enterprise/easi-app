@@ -280,6 +280,7 @@ exports[`The governance overview page > matches the snapshot (w/ id param) 1`] =
             type="button"
           >
             <svg
+              aria-label="next"
               class="usa-icon margin-right-05"
               focusable="false"
               height="1em"
@@ -587,6 +588,7 @@ exports[`The governance overview page > matches the snapshot (w/o id param) 1`] 
             type="button"
           >
             <svg
+              aria-label="next"
               class="usa-icon margin-right-05"
               focusable="false"
               height="1em"

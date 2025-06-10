@@ -66,7 +66,11 @@ const TruncatedText = ({
         className={classnames({ 'text-bold': isOpen })}
         unstyled
       >
-        {isOpen ? <Icon.ExpandMore /> : <Icon.NavigateNext />}
+        {isOpen ? (
+          <Icon.ExpandMore aria-label="expand" />
+        ) : (
+          <Icon.NavigateNext aria-label="next" />
+        )}
         {isOpen ? closeLabel || label : label}
       </Button>
     </div>

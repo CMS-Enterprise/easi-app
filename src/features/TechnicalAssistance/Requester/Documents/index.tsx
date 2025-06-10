@@ -62,7 +62,10 @@ const DocumentsTaskList = () => {
         </p>
 
         <UswdsReactLink to={`/trb/task-list/${requestID}`}>
-          <Icon.ArrowBack className="margin-right-1 text-middle" />
+          <Icon.ArrowBack
+            className="margin-right-1 text-middle"
+            aria-label="back"
+          />
           <span className="line-height-body-5">
             {t('requestFeedback.returnToTaskList')}
           </span>
@@ -91,7 +94,10 @@ const DocumentsTaskList = () => {
 
         <div className="margin-top-5">
           <UswdsReactLink to={`/trb/task-list/${requestID}`}>
-            <Icon.ArrowBack className="margin-right-1 text-middle" />
+            <Icon.ArrowBack
+              className="margin-right-1 text-middle"
+              aria-label="back"
+            />
             <span className="line-height-body-5">
               {t('requestFeedback.returnToTaskList')}
             </span>

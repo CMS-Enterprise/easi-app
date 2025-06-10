@@ -88,6 +88,7 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
                 type="button"
               >
                 <svg
+                  aria-label="back"
                   class="usa-icon margin-right-05 margin-bottom-2px text-tbottom"
                   focusable="false"
                   height="1em"
@@ -391,6 +392,7 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
                       type="button"
                     >
                       <svg
+                        aria-label="dropup"
                         class="usa-icon usa-icon--size-3 text-primary"
                         focusable="false"
                         height="1em"
@@ -416,6 +418,7 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
                       type="button"
                     >
                       <svg
+                        aria-label="dropdown"
                         class="usa-icon usa-icon--size-3 text-primary"
                         focusable="false"
                         height="1em"
@@ -534,6 +537,7 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
                       type="button"
                     >
                       <svg
+                        aria-label="dropup"
                         class="usa-icon usa-icon--size-3 text-primary"
                         focusable="false"
                         height="1em"
@@ -559,6 +563,7 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
                       type="button"
                     >
                       <svg
+                        aria-label="dropdown"
                         class="usa-icon usa-icon--size-3 text-primary"
                         focusable="false"
                         height="1em"
@@ -677,6 +682,7 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
                       type="button"
                     >
                       <svg
+                        aria-label="dropup"
                         class="usa-icon usa-icon--size-3 text-primary"
                         focusable="false"
                         height="1em"
@@ -702,6 +708,7 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
                       type="button"
                     >
                       <svg
+                        aria-label="dropdown"
                         class="usa-icon usa-icon--size-3 text-primary"
                         focusable="false"
                         height="1em"
@@ -844,6 +851,7 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
             type="button"
           >
             <svg
+              aria-label="back"
               class="usa-icon margin-right-05"
               focusable="false"
               height="1em"

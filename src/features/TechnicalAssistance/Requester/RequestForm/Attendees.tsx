@@ -282,7 +282,10 @@ function Attendees({
                   to={`/trb/task-list/${trbID}`}
                   className="display-block margin-bottom-5"
                 >
-                  <Icon.ArrowBack className="margin-right-1 text-middle" />
+                  <Icon.ArrowBack
+                    className="margin-right-1 text-middle"
+                    aria-label="back"
+                  />
                   <span className="line-height-body-5">
                     {t('requestFeedback.returnToTaskList')}
                   </span>

@@ -93,7 +93,7 @@ const GRBReviewerForm = ({
         </p>
 
         <IconLink
-          icon={<Icon.ArrowBack />}
+          icon={<Icon.ArrowBack aria-label="back" />}
           to={grbReviewPath}
           className="margin-top-3 margin-bottom-5"
         >

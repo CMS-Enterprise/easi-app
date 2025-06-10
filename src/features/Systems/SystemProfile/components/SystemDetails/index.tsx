@@ -249,7 +249,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                     isLocationsExpanded ? 'less' : 'more'
                   }`
                 )}
-                <Icon.ExpandMore
+                <Icon.ExpandMore aria-label="expand"
                   className="margin-left-05 margin-bottom-2px text-tbottom"
                   style={{
                     transform: isLocationsExpanded ? 'rotate(180deg)' : ''
@@ -282,7 +282,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
             key={tag}
             className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter"
           >
-            <Icon.CheckCircle className="system-profile__icon text-primary-dark margin-right-1" />
+            <Icon.CheckCircle className="system-profile__icon text-primary-dark margin-right-1" aria-label="check"/>
             {tag}
           </Tag>
         ))}
@@ -376,7 +376,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
 
         {cedarSystemDetails?.systemMaintainerInformation.ecapParticipation && (
           <Tag className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter">
-            <Icon.CheckCircle className="system-profile__icon text-primary-dark margin-right-1" />
+            <Icon.CheckCircle className="system-profile__icon text-primary-dark margin-right-1" aria-label="check"/>
             {t('singleSystem.systemDetails.eCapInitiative')}
           </Tag>
         )}

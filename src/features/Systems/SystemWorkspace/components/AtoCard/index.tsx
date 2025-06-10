@@ -83,7 +83,7 @@ function AtoCard({
               className="margin-left-1 display-flex flex-align-center text-primary"
             >
               {t('spaces.ato.learn')}
-              <Icon.Launch className="margin-left-1" />
+              <Icon.Launch aria-label="launch" className="margin-left-1" />
             </Link>
           </div>
         }

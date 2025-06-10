@@ -118,7 +118,7 @@ const AccordionNavigation = ({
             <li className="margin-top-2">
               <IconLink
                 to="/"
-                icon={<Icon.ArrowBack />}
+                icon={<Icon.ArrowBack aria-label="back"/>}
                 className="text-underline"
               >
                 {t('back.allRequests')}

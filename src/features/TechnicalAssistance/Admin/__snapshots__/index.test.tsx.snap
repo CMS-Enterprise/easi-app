@@ -161,6 +161,7 @@ exports[`TRB admin home > matches the snapshot 1`] = `
                 class="display-flex flex-align-center"
               >
                 <svg
+                  aria-label="error"
                   class="usa-icon text-error margin-right-05"
                   focusable="false"
                   height="1em"
@@ -212,6 +213,7 @@ exports[`TRB admin home > matches the snapshot 1`] = `
                 >
                   <svg
                     aria-hidden="true"
+                    aria-label="back"
                     class="usa-icon"
                     focusable="false"
                     height="1em"
@@ -580,6 +582,7 @@ exports[`TRB admin home > matches the snapshot 1`] = `
             >
               View documents
               <svg
+                aria-label="forward"
                 class="usa-icon margin-left-1"
                 focusable="false"
                 height="1em"

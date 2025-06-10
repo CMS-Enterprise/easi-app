@@ -49,7 +49,7 @@ const Discussion = ({
             <IconButton
               type="button"
               onClick={() => setShowReplies(!showReplies)}
-              icon={showReplies ? <Icon.ExpandLess /> : <Icon.ExpandMore />}
+              icon={showReplies ? <Icon.ExpandLess aria-label="hide"/> : <Icon.ExpandMore aria-label="expand" />}
               iconPosition="after"
               unstyled
             >

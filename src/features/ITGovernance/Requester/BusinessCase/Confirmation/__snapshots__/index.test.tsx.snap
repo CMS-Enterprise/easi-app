@@ -25,6 +25,7 @@ exports[`The Business Case Confirmation page > matches the snapshot 1`] = `
         >
           <svg
             aria-hidden="true"
+            aria-label="nav-before"
             class="usa-icon margin-x-05"
             focusable="false"
             height="1em"

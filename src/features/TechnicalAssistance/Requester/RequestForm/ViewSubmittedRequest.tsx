@@ -31,7 +31,7 @@ function ViewSubmittedRequest({
 
       {newTab && (
         <IconButton
-          icon={<Icon.Close />}
+          icon={<Icon.Close aria-label="close" />}
           type="button"
           unstyled
           onClick={() => window.close()}

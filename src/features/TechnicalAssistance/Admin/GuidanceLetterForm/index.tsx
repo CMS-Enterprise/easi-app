@@ -339,7 +339,10 @@ const GuidanceLetterForm = () => {
                   }
                 }}
               >
-                <Icon.ArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+                <Icon.ArrowBack
+                  className="margin-right-05 margin-bottom-2px text-tbottom"
+                  aria-label="back"
+                />
                 {t('guidanceLetterForm.returnToRequest')}
               </Button>
             )

@@ -101,7 +101,7 @@ export default function LinkArrayField() {
         disabled={links.length > 0 && !lastLinkInput}
         unstyled
       >
-        <Icon.Add className="margin-right-05" />
+        <Icon.Add className="margin-right-05" aria-label="add"/>
         {t(
           fields.length === 0
             ? 'guidanceLetterForm.addResourceLink'

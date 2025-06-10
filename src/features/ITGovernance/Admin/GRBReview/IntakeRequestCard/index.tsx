@@ -112,7 +112,7 @@ const IntakeRequestCard = ({
 
       <CardFooter>
         <IconLink
-          icon={<Icon.ArrowForward />}
+          icon={<Icon.ArrowForward aria-label="forward" />}
           iconPosition="after"
           to="./intake-request"
           className="margin-top-1"

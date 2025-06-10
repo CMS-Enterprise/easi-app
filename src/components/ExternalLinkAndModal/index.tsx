@@ -96,7 +96,7 @@ const ExternalLinkAndModal = ({
           type="button"
           unstyled
           onClick={() => setIsModalOpen(true)}
-          icon={<Icon.Launch className="margin-left-0" />}
+          icon={<Icon.Launch aria-label="launch" className="margin-left-0" />}
           iconPosition="after"
           className="flex-gap-05"
         >

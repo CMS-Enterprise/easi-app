@@ -33,7 +33,11 @@ export const HelpLinks = ({
           <div className="display-flex flex-align-center flex-justify">
             <h3 className="margin-y-0">{t('helpLinks.header')}</h3>
 
-            <Icon.LightbulbOutline size={4} className="text-primary" />
+            <Icon.LightbulbOutline
+              size={4}
+              className="text-primary"
+              aria-label="lightbulb"
+            />
           </div>
 
           <p className="margin-top-1">{t('helpLinks.description')}</p>

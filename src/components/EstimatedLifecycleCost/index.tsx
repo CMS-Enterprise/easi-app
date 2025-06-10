@@ -174,7 +174,7 @@ const AddRelatedCostField = ({
         // Add related cost button
         activeRelatedCost === null ? (
           <IconButton
-            icon={<Icon.Add />}
+            icon={<Icon.Add aria-label="add" />}
             type="button"
             unstyled
             onClick={() => setActiveRelatedCost('' as LifecyclePhaseKey)}

@@ -66,6 +66,7 @@ export default function BookmarkButton({
       onClick={toggle}
     >
       <Icon.Bookmark
+        aria-label="bookmark"
         className={classnames('margin-right-1', {
           'outline text-base': !isBookmarkedState
         })}

@@ -88,6 +88,7 @@ exports[`ATO subpage for System Profile > matches snapshot 1`] = `
         data-testid="atoExpirationLogicHelpText"
       >
         <svg
+          aria-label="info"
           class="usa-icon margin-right-1"
           focusable="false"
           height="1em"

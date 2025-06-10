@@ -38,6 +38,7 @@ exports[`Sidepanel > matches snapshot 1`] = `
               type="button"
             >
               <svg
+                aria-label="close"
                 class="usa-icon usa-icon--size-4 text-base"
                 focusable="false"
                 height="1em"

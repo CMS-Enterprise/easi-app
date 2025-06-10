@@ -88,7 +88,12 @@ const RequestSummary = ({
           className="display-flex flex-align-center"
           data-testid="admin-lead"
         >
-          {!adminLead && <Icon.Error className="text-error margin-right-05" />}
+          {!adminLead && (
+            <Icon.Error
+              className="text-error margin-right-05"
+              aria-label="error"
+            />
+          )}
           {adminLead || t('governanceReviewTeam:adminLeads.notAssigned')}
         </span>
         {isITGovAdmin && (

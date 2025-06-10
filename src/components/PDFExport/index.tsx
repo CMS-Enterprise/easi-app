@@ -20,7 +20,7 @@ export const PDFExportButton = ({
 }: PDFExportButtonProps) => {
   return (
     <IconButton
-      icon={<Icon.FileDownload />}
+      icon={<Icon.FileDownload aria-label="download" />}
       className={classNames('easi-no-print', className)}
       type="button"
       onClick={handlePrint}

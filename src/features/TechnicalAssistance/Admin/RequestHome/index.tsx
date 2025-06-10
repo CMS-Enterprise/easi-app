@@ -175,7 +175,7 @@ const RequestHome = ({
             className="display-flex flex-align-center margin-top-2"
           >
             {t('adminHome.viewDocs')}
-            <Icon.ArrowForward className="margin-left-1" />
+            <Icon.ArrowForward className="margin-left-1" aria-label="forward"/>
           </UswdsReactLink>
         </>
       )}

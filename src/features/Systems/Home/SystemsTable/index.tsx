@@ -150,7 +150,7 @@ export const Table = ({
 
     if (!isHomePage) {
       cols.push({
-        Header: <Icon.Bookmark />,
+        Header: <Icon.Bookmark aria-label="bookmark" />,
         accessor: 'id',
         id: 'systemId',
         disableGlobalFilter: true,
@@ -164,7 +164,7 @@ export const Table = ({
             type="button"
             unstyled
           >
-            <Icon.Bookmark
+            <Icon.Bookmark aria-label="bookmark"
               className={classNames({
                 'text-base-lighter': !isBookmarked(row.original.id)
               })}
@@ -461,7 +461,7 @@ export const Table = ({
                   ),
                   link2: <UswdsReactLink to="/systems"> </UswdsReactLink>,
                   iconForward: (
-                    <Icon.ArrowForward className="icon-top margin-left-05" />
+                    <Icon.ArrowForward className="icon-top margin-left-05"aria-label="forward" />
                   )
                 }}
               />
@@ -489,7 +489,7 @@ export const Table = ({
             components={{
               link1: <UswdsReactLink to="/systems"> </UswdsReactLink>,
               iconForward: (
-                <Icon.ArrowForward className="icon-top margin-left-05" />
+                <Icon.ArrowForward className="icon-top margin-left-05" aria-label="forward"/>
               )
             }}
           />

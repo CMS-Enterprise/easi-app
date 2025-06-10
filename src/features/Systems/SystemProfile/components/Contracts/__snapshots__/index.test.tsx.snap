@@ -39,6 +39,7 @@ exports[`System Contracts subpage > matches snapshot 1`] = `
             class="display-flex flex-align-center margin-y-1"
           >
             <svg
+              aria-label="verified"
               class="usa-icon margin-right-1 text-info-dark"
               focusable="false"
               height="1em"

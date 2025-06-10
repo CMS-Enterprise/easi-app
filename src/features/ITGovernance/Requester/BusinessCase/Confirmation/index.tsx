@@ -30,7 +30,11 @@ const Confirmation = ({
             to={`/governance-task-list/${businessCase.systemIntakeId}`}
             className="display-flex"
           >
-            <Icon.NavigateBefore className="margin-x-05" aria-hidden />
+            <Icon.NavigateBefore
+              className="margin-x-05"
+              aria-hidden
+              aria-label="nav-before"
+            />
             {t('businessCase:submission.confirmation.taskListCta')}
           </Link>
         </div>

@@ -33,7 +33,7 @@ const FeedbackBanner = ({ type, id, className }: FeedbackBannerProps) => {
         className="padding-x-2"
       >
         <p className="margin-top-0 margin-bottom-2 display-flex line-height-body-5">
-          <Icon.Warning className="text-error-dark margin-right-1" size={3} />
+          <Icon.Warning aria-label="warning" className="text-error-dark margin-right-1" size={3} />
           {t('feedback', { type })}
         </p>
         <Link

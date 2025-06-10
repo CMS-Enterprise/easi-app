@@ -34,7 +34,7 @@ export default function CsvDownloadLink({
       role="link"
       {...props}
     >
-      <Icon.FileDownload className="text-middle margin-right-1" />
+      <Icon.FileDownload aria-label="download" className="text-middle margin-right-1" />
       {children}
     </CSVLink>
   );

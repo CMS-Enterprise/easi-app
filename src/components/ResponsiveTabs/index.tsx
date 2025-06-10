@@ -183,9 +183,9 @@ const ResponsiveTabs = ({
               aria-expanded={isMoreMenuOpen}
             >
               {isMoreMenuOpen ? (
-                <Icon.ExpandMore size={5} />
+                <Icon.ExpandMore aria-label="expand" size={5} />
               ) : (
-                <Icon.NavigateNext size={5} />
+                <Icon.NavigateNext size={5} aria-label="next"/>
               )}
               <span>More</span>
             </button>

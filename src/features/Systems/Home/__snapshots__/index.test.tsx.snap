@@ -95,6 +95,7 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                   Click the bookmark icon ( 
                 </span>
                 <svg
+                  aria-label="bookmark"
                   class="usa-icon"
                   focusable="false"
                   height="1em"
@@ -130,6 +131,7 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
       </h2>
       Click the bookmark icon (
       <svg
+        aria-label="bookmark"
         class="usa-icon text-bookmark-icon"
         focusable="false"
         height="1em"
@@ -222,6 +224,7 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                       type="button"
                     >
                       <svg
+                        aria-label="bookmark"
                         class="usa-icon"
                         focusable="false"
                         height="1em"
@@ -235,6 +238,7 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                         />
                       </svg>
                       <svg
+                        aria-label="unfold more"
                         class="usa-icon margin-left-05"
                         data-testid="caret--sort"
                         focusable="false"
@@ -266,6 +270,7 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                     >
                       Acronym
                       <svg
+                        aria-label="unfold more"
                         class="usa-icon margin-left-05"
                         data-testid="caret--sort"
                         focusable="false"
@@ -297,6 +302,7 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                     >
                       System name
                       <svg
+                        aria-label="hide"
                         class="usa-icon margin-left-05"
                         data-testid="caret--up"
                         focusable="false"
@@ -328,6 +334,7 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                     >
                       CMS component
                       <svg
+                        aria-label="unfold more"
                         class="usa-icon margin-left-05"
                         data-testid="caret--sort"
                         focusable="false"
@@ -361,6 +368,7 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                       type="button"
                     >
                       <svg
+                        aria-label="bookmark"
                         class="usa-icon text-base-lighter"
                         focusable="false"
                         height="1em"
@@ -411,6 +419,7 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                       type="button"
                     >
                       <svg
+                        aria-label="bookmark"
                         class="usa-icon text-base-lighter"
                         focusable="false"
                         height="1em"
@@ -461,6 +470,7 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                       type="button"
                     >
                       <svg
+                        aria-label="bookmark"
                         class="usa-icon text-base-lighter"
                         focusable="false"
                         height="1em"
@@ -511,6 +521,7 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                       type="button"
                     >
                       <svg
+                        aria-label="bookmark"
                         class="usa-icon text-base-lighter"
                         focusable="false"
                         height="1em"

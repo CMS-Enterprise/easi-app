@@ -242,6 +242,7 @@ exports[`TeamCard > renders 1`] = `
                 type="button"
               >
                 <svg
+                  aria-label="expand"
                   class="usa-icon margin-right-05 margin-bottom-2px text-tbottom"
                   focusable="false"
                   height="1em"

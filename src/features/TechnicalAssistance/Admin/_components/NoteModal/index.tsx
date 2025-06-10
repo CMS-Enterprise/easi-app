@@ -75,9 +75,13 @@ const NotesModal = ({
             }}
           >
             {viewType === 'viewNotes' ? (
-              <Icon.Close size={4} className="text-base" />
+              <Icon.Close size={4} className="text-base" aria-label="close" />
             ) : (
-              <Icon.ArrowBack size={4} className="text-base" />
+              <Icon.ArrowBack
+                size={4}
+                className="text-base"
+                aria-label="back"
+              />
             )}
           </Button>
           <h4 className="margin-0">

@@ -13,6 +13,7 @@ exports[`The Collapsable Link componnet > renders without crashing 1`] = `
       type="button"
     >
       <svg
+        aria-label="next"
         class="usa-icon margin-right-05"
         focusable="false"
         height="1em"

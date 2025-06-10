@@ -14,6 +14,7 @@ exports[`Help forms > submits the "Report A Problem" form successfully after a f
       type="button"
     >
       <svg
+        aria-label="close"
         class="usa-icon margin-right-05 margin-top-3px text-tbottom"
         focusable="false"
         height="1em"
@@ -378,6 +379,7 @@ exports[`Help forms > submits the "Report A Problem" form successfully after a f
       type="button"
     >
       <svg
+        aria-label="close"
         class="usa-icon margin-right-05 margin-top-3px text-tbottom"
         focusable="false"
         height="1em"
@@ -462,6 +464,7 @@ exports[`Help forms > submits the "Send Feedback" form successfully after a fail
       type="button"
     >
       <svg
+        aria-label="close"
         class="usa-icon margin-right-05 margin-top-3px text-tbottom"
         focusable="false"
         height="1em"
@@ -1191,6 +1194,7 @@ exports[`Help forms > submits the "Send Feedback" form successfully after a fail
       type="button"
     >
       <svg
+        aria-label="close"
         class="usa-icon margin-right-05 margin-top-3px text-tbottom"
         focusable="false"
         height="1em"

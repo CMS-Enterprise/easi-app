@@ -35,7 +35,10 @@ function Feedback({ request, taskListUrl, prevStep }: FeedbackProps) {
   const returnToFormLink = useMemo(
     () => (
       <UswdsReactLink to={returnUrl}>
-        <Icon.ArrowBack className="margin-right-1 text-middle" />
+        <Icon.ArrowBack
+          className="margin-right-1 text-middle"
+          aria-label="back"
+        />
         <span className="line-height-body-5">
           {fromTaskList
             ? t('requestFeedback.returnToTaskList')

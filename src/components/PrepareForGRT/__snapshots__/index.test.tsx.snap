@@ -80,6 +80,7 @@ exports[`Prepare for GRT > renders help mode without crashing 1`] = `
             type="button"
           >
             <svg
+              aria-label="next"
               class="usa-icon margin-right-05"
               focusable="false"
               height="1em"
@@ -110,6 +111,7 @@ exports[`Prepare for GRT > renders help mode without crashing 1`] = `
             type="button"
           >
             <svg
+              aria-label="next"
               class="usa-icon margin-right-05"
               focusable="false"
               height="1em"
@@ -140,6 +142,7 @@ exports[`Prepare for GRT > renders help mode without crashing 1`] = `
             type="button"
           >
             <svg
+              aria-label="next"
               class="usa-icon margin-right-05"
               focusable="false"
               height="1em"
@@ -170,6 +173,7 @@ exports[`Prepare for GRT > renders help mode without crashing 1`] = `
             type="button"
           >
             <svg
+              aria-label="next"
               class="usa-icon margin-right-05"
               focusable="false"
               height="1em"
@@ -305,6 +309,7 @@ exports[`Prepare for GRT > renders without crashing 1`] = `
             type="button"
           >
             <svg
+              aria-label="next"
               class="usa-icon margin-right-05"
               focusable="false"
               height="1em"
@@ -335,6 +340,7 @@ exports[`Prepare for GRT > renders without crashing 1`] = `
             type="button"
           >
             <svg
+              aria-label="next"
               class="usa-icon margin-right-05"
               focusable="false"
               height="1em"
@@ -365,6 +371,7 @@ exports[`Prepare for GRT > renders without crashing 1`] = `
             type="button"
           >
             <svg
+              aria-label="next"
               class="usa-icon margin-right-05"
               focusable="false"
               height="1em"
@@ -395,6 +402,7 @@ exports[`Prepare for GRT > renders without crashing 1`] = `
             type="button"
           >
             <svg
+              aria-label="next"
               class="usa-icon margin-right-05"
               focusable="false"
               height="1em"

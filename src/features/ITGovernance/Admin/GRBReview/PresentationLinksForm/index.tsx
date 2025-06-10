@@ -156,7 +156,7 @@ const PresentationLinksForm = ({
         </p>
 
         <IconLink
-          icon={<Icon.ArrowBack />}
+          icon={<Icon.ArrowBack aria-label="back" />}
           className="margin-top-3 margin-bottom-5"
           to={grbReviewPath}
         >
@@ -308,7 +308,7 @@ const PresentationLinksForm = ({
         </Form>
 
         <IconLink
-          icon={<Icon.ArrowBack />}
+          icon={<Icon.ArrowBack aria-label="back" />}
           className="margin-top-205"
           to={grbReviewPath}
         >

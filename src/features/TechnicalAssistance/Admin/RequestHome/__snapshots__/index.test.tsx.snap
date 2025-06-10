@@ -271,6 +271,7 @@ exports[`Trb Admin Request Home > renders successfully with empty data 1`] = `
     >
       View documents
       <svg
+        aria-label="forward"
         class="usa-icon margin-left-1"
         focusable="false"
         height="1em"

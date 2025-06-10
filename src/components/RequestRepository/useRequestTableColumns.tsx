@@ -80,7 +80,10 @@ const useRequestTableColumns = (
           <div className="display-flex flex-align-center">
             {/* TODO: should probably make this a button that opens up the assign admin
                 lead automatically. Similar to the Dates functionality */}
-            <Icon.Error className="text-secondary margin-right-05" />
+            <Icon.Error
+              className="text-secondary margin-right-05"
+              aria-label="error"
+            />
             {adminLead}
           </div>
         );

@@ -42,7 +42,10 @@ const ContractCard = ({
       <CardBody className="padding-x-2 padding-y-0">
         {contract.isDeliveryOrg && (
           <div className="display-flex flex-align-center margin-y-1">
-            <Icon.Verified className="margin-right-1 text-info-dark" />
+            <Icon.Verified
+              className="margin-right-1 text-info-dark"
+              aria-label="verified"
+            />
             <span style={{ marginTop: '1px' }}>
               {t('singleSystem.contracts.isDeliveryOrg')}
             </span>

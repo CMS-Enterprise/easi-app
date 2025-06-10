@@ -182,7 +182,7 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
                 className="display-flex"
                 data-testid="atoExpirationLogicHelpText"
               >
-                <Icon.Info className="margin-right-1" />
+                <Icon.Info aria-label="info" className="margin-right-1" />
                 {t('singleSystem.ato.atoExpiringSoonLogicInfo')}
               </HelpText>
             ) : (

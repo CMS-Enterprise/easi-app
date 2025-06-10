@@ -276,7 +276,7 @@ const RequestDescription = ({
 
             <IconButton
               type="button"
-              icon={<Icon.ArrowBack />}
+              icon={<Icon.ArrowBack aria-label="back" />}
               className="margin-bottom-3 margin-top-2"
               onClick={() => {
                 dispatchSave();

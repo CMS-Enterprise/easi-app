@@ -289,7 +289,10 @@ const DocumentUpload = ({
           variant="unstyled"
           to={`/trb/${prevRoute}/${requestID}/documents`}
         >
-          <Icon.ArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+          <Icon.ArrowBack
+            className="margin-right-05 margin-bottom-2px text-tbottom"
+            aria-label="back"
+          />
           {t('documents.upload.dontUploadAndReturn')}
         </UswdsReactLink>
       </div>

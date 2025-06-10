@@ -111,6 +111,7 @@ exports[`IntakeRequestCard > renders default version without crashing 1`] = `
         >
           View full Intake Request form
           <svg
+            aria-label="forward"
             class="usa-icon margin-left-1"
             focusable="false"
             height="1em"

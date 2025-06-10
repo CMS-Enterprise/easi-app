@@ -342,7 +342,7 @@ const GRBReview = ({
                       <span className="margin-right-1">
                         {t('businessCaseOverview.linkToBusinessCase')}
                       </span>
-                      <Icon.ArrowForward />
+                      <Icon.ArrowForward aria-label="forward" />
                     </UswdsReactLink>
                   </CardFooter>
                 </>
@@ -371,7 +371,7 @@ const GRBReview = ({
                   to="./documents/upload"
                   className="display-flex flex-align-center"
                 >
-                  <Icon.Add className="margin-right-1" />
+                  <Icon.Add className="margin-right-1" aria-label="add" />
                   <span>{t('additionalDocsLink')}</span>
                 </UswdsReactLink>
               )}

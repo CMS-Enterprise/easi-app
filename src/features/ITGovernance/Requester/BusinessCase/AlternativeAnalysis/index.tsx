@@ -126,7 +126,10 @@ const AlternativeAnalysis = ({
                 }}
               >
                 <b>{t(`alternativesTable.solutions.${index}.add`)}</b>
-                <Icon.ArrowForward className="margin-left-1" />
+                <Icon.ArrowForward
+                  className="margin-left-1"
+                  aria-label="forward"
+                />
               </Button>
             </>
           );
@@ -404,7 +407,7 @@ const AlternativeAnalysis = ({
             </ButtonGroup>
 
             <IconButton
-              icon={<Icon.ArrowBack />}
+              icon={<Icon.ArrowBack aria-label="back" />}
               type="button"
               unstyled
               onClick={() => {

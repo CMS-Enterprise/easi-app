@@ -39,6 +39,7 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
               >
                 Submission date
                 <svg
+                  aria-label="expand"
                   class="usa-icon margin-left-05"
                   data-testid="caret--down"
                   focusable="false"
@@ -70,6 +71,7 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
               >
                 Request name
                 <svg
+                  aria-label="unfold more"
                   class="usa-icon margin-left-05"
                   data-testid="caret--sort"
                   focusable="false"
@@ -101,6 +103,7 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
               >
                 Governance
                 <svg
+                  aria-label="unfold more"
                   class="usa-icon margin-left-05"
                   data-testid="caret--sort"
                   focusable="false"
@@ -132,6 +135,7 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
               >
                 Status
                 <svg
+                  aria-label="unfold more"
                   class="usa-icon margin-left-05"
                   data-testid="caret--sort"
                   focusable="false"
@@ -163,6 +167,7 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
               >
                 Upcoming meeting date
                 <svg
+                  aria-label="unfold more"
                   class="usa-icon margin-left-05"
                   data-testid="caret--sort"
                   focusable="false"
@@ -194,6 +199,7 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
               >
                 Related systems
                 <svg
+                  aria-label="unfold more"
                   class="usa-icon margin-left-05"
                   data-testid="caret--sort"
                   focusable="false"
