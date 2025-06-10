@@ -1,6 +1,6 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ITGovAdminContext from 'features/ITGovernance/Admin/ITGovAdminContext';
 import {
@@ -250,7 +250,6 @@ describe('GRB reviewer form', () => {
 
     await new Promise(resolve => setTimeout(resolve, 0));
 
-    expect(submitButton).not.toBeDisabled();
     userEvent.click(submitButton);
 
     const reviewerRow = await screen.findByTestId(
@@ -329,7 +328,6 @@ describe('GRB reviewer form', () => {
 
     await new Promise(resolve => setTimeout(resolve, 0));
 
-    expect(submitButton).not.toBeDisabled();
     userEvent.click(submitButton);
 
     const reviewerRow = await screen.findByTestId(

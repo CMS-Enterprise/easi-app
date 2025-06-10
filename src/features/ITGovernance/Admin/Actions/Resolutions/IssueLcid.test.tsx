@@ -3,6 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 import {
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -25,30 +26,40 @@ import { EditsRequestedContext } from '..';
 import IssueLcid from './IssueLcid';
 
 /** Checks field default values when lcid is selected */
-const checkFieldDefaults = () => {
-  expect(
-    screen.getByRole('textbox', { name: 'Expiration date *' })
-  ).toHaveValue(
-    formatDateLocal(systemIntakeWithLcid.lcidExpiresAt || '', 'MM/dd/yyyy')
-  );
+const checkFieldDefaults = async () => {
+  await waitFor(() => {
+    expect(
+      screen.getByRole('textbox', { name: 'Expiration date *' })
+    ).toHaveValue(
+      formatDateLocal(systemIntakeWithLcid.lcidExpiresAt || '', 'MM/dd/yyyy')
+    );
+  });
 
-  expect(screen.getByTestId('scope')).toContainHTML(
-    systemIntakeWithLcid.lcidScope!
-  );
+  await waitFor(() => {
+    expect(screen.getByTestId('scope')).toContainHTML(
+      systemIntakeWithLcid.lcidScope!
+    );
+  });
 
-  expect(screen.getByTestId('nextSteps')).toContainHTML(
-    systemIntakeWithLcid.decisionNextSteps!
-  );
+  await waitFor(() => {
+    expect(screen.getByTestId('nextSteps')).toContainHTML(
+      systemIntakeWithLcid.decisionNextSteps!
+    );
+  });
 
-  expect(
-    screen.getByRole('radio', {
-      name: 'No, they may if they wish but it’s not necessary'
-    })
-  ).toBeChecked();
+  await waitFor(() => {
+    expect(
+      screen.getByRole('radio', {
+        name: 'No, they may if they wish but it’s not necessary'
+      })
+    ).toBeChecked();
+  });
 
-  expect(
-    screen.getByRole('textbox', { name: 'Project cost baseline' })
-  ).toHaveValue(systemIntakeWithLcid.lcidCostBaseline!);
+  await waitFor(() => {
+    expect(
+      screen.getByRole('textbox', { name: 'Project cost baseline' })
+    ).toHaveValue(systemIntakeWithLcid.lcidCostBaseline!);
+  });
 };
 
 describe('Issue LCID form', async () => {
