@@ -14,11 +14,11 @@ import (
 func (s *ResolverSuite) TestIntakeRelatedSystems() {
 	ctx := s.testConfigs.Context
 
-	const (
-		systemID1 = "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"
-		systemID2 = "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
-		systemID3 = "{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"
-	)
+	systemID1 := "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"
+	systemID2 := "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
+	systemID3 := "{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"
+
+	description := "other description"
 
 	var createdIDs []uuid.UUID
 
@@ -39,13 +39,21 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 		}
 
 		// set contract for the created system intake
-		// TODO - Replace with systemrelationship inout
-		// systemIDs := []string{
-		// 	systemID1,
-		// 	systemID2,
-		// 	systemID3,
-		// }
-		systemRelationshipInput := []*models.SystemRelationshipInput{}
+		systemRelationshipInput := []*models.SystemRelationshipInput{
+			{
+				CedarSystemID:          &systemID1,
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+				OtherTypeDescription:   &description,
+			},
+			{
+				CedarSystemID:          &systemID2,
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "USED_IN_TECH_SOLUTION"},
+			},
+			{
+				CedarSystemID:          &systemID3,
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT"},
+			},
+		}
 
 		err := sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
 			// systemIDs,
