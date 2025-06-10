@@ -119,7 +119,6 @@ func SetSystemIntakeRelationExistingSystem(
 		intake.ContractName = zero.StringFromPtr(nil)
 		relationType := models.RelationTypeExistingSystem
 		intake.SystemRelationType = &relationType
-
 		return store.UpdateSystemIntakeNP(ctx, tx, intake)
 	})
 }

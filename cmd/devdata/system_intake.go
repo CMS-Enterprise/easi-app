@@ -304,7 +304,6 @@ func setSystemIntakeRelationExistingSystem(
 	store *storage.Store,
 	intakeID uuid.UUID,
 	contractNumbers []string,
-	cedarSystemIDs []string,
 	cedarSystemRelationships []*models.SystemRelationshipInput,
 ) {
 

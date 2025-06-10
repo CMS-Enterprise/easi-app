@@ -149,13 +149,20 @@ func main() {
 			},
 		})
 
+		idOne := "11AB1A00-1234-5678-ABC1-1A001B00CC6G"
+		descriptionOne := "other description"
 		setSystemIntakeRelationExistingSystem(
 			ctx,
 			store,
 			ID,
 			[]string{"111111", "111112"},
-			[]string{"11AB1A00-1234-5678-ABC1-1A001B00CC6G"},
-			[]*models.SystemRelationshipInput{},
+			[]*models.SystemRelationshipInput{
+				{
+					CedarSystemID:          &idOne,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+					OtherTypeDescription:   &descriptionOne,
+				},
+			},
 		)
 	}
 
@@ -768,58 +775,102 @@ func main() {
 	// 2. Intakes related to CEDAR System(s)
 	intakeID = uuid.MustParse("29d73aa0-3a29-478e-afb4-374a7594be47")
 	makeSystemIntakeAndSubmit(ctx, "System Intake Relation (Existing System 0A)", &intakeID, mock.PrincipalUser, store)
+
+	idOne := "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
+	descriptionOne := "other description"
+	idTwo := "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
+
 	setSystemIntakeRelationExistingSystem(
 		ctx,
 		store,
 		intakeID,
 		[]string{"00001", "00002"},
-		[]string{
-			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
-			"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
+		[]*models.SystemRelationshipInput{
+			{
+				CedarSystemID:          &idOne,
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+				OtherTypeDescription:   &descriptionOne,
+			},
+			{
+				CedarSystemID:          &idTwo,
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "USED_IN_TECH_SOLUTION"},
+			},
 		},
-		[]*models.SystemRelationshipInput{},
 	)
 
 	intakeID = uuid.MustParse("28f36737-b5cf-464a-a5a2-f1c89acea4cf")
 	makeSystemIntakeAndSubmit(ctx, "Related Intake 1 (system 0A)", &intakeID, mock.PrincipalUser, store)
+
+	idThree := "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"
+	descriptionThree := "other description"
+	idFour := "{11AB1A00-1234-5678-ABC1-1A001B00CC3D}"
+
 	setSystemIntakeRelationExistingSystem(
 		ctx,
 		store,
 		intakeID,
 		[]string{"00003", "00004"},
-		[]string{
-			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
-			"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}",
+		[]*models.SystemRelationshipInput{
+			{
+				CedarSystemID:          &idThree,
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+				OtherTypeDescription:   &descriptionThree,
+			},
+			{
+				CedarSystemID:          &idFour,
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "USED_IN_TECH_SOLUTION"},
+			},
 		},
-		[]*models.SystemRelationshipInput{},
 	)
 
 	intakeID = uuid.MustParse("dd31c8bd-b677-434c-aa35-56138f0b443b")
 	makeSystemIntakeAndSubmit(ctx, "Related Intake 2 (system 1B)", &intakeID, mock.PrincipalUser, store)
+
+	idFive := "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
+	descriptionFive := "other description"
+	idSix := "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"
+
 	setSystemIntakeRelationExistingSystem(
 		ctx,
 		store,
 		intakeID,
 		[]string{"00003", "00004"},
-		[]string{
-			"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
-			"{11AB1A00-1234-5678-ABC1-1A001B00CC4E}",
+		[]*models.SystemRelationshipInput{
+			{
+				CedarSystemID:          &idFive,
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+				OtherTypeDescription:   &descriptionFive,
+			},
+			{
+				CedarSystemID:          &idSix,
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "USED_IN_TECH_SOLUTION"},
+			},
 		},
-		[]*models.SystemRelationshipInput{},
 	)
 
 	intakeID = uuid.MustParse("020fba51-9b95-4e87-8cd4-808ae6e3dac8")
 	makeSystemIntakeAndSubmit(ctx, "Related Intake 3 (contract 01)", &intakeID, mock.PrincipalUser, store)
+
+	idSeven := "{11AB1A00-1234-5678-ABC1-1A001B00CC5F}"
+	descriptionSeven := "other description"
+	idEight := "{11AB1A00-1234-5678-ABC1-1A001B00CC6G}"
+
 	setSystemIntakeRelationExistingSystem(
 		ctx,
 		store,
 		intakeID,
 		[]string{"00005", "00001"},
-		[]string{
-			"{11AB1A00-1234-5678-ABC1-1A001B00CC5F}",
-			"{11AB1A00-1234-5678-ABC1-1A001B00CC6G}",
+		[]*models.SystemRelationshipInput{
+			{
+				CedarSystemID:          &idSeven,
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+				OtherTypeDescription:   &descriptionSeven,
+			},
+			{
+				CedarSystemID:          &idEight,
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "USED_IN_TECH_SOLUTION"},
+			},
 		},
-		[]*models.SystemRelationshipInput{},
 	)
 	// 3. Intakes related to an existing contract/service
 	intakeID = uuid.MustParse("b8e3fbf3-73af-4bac-bac3-fd6167a36166")
@@ -835,32 +886,54 @@ func main() {
 	// 4. Unlinked from system/contract intake
 	intakeID = uuid.MustParse("964cc832-827b-4744-b503-eb1f04af1e10")
 	makeSystemIntakeAndSubmit(ctx, "System Intake Relation (Unlinked)", &intakeID, mock.PrincipalUser, store)
+
+	idNine := "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"
+	descriptionNine := "other description"
+	idTen := "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
+
 	setSystemIntakeRelationExistingSystem(
 		ctx,
 		store,
 		intakeID,
 		[]string{"12345", "67890"},
-		[]string{
-			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
-			"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
+		[]*models.SystemRelationshipInput{
+			{
+				CedarSystemID:          &idNine,
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+				OtherTypeDescription:   &descriptionNine,
+			},
+			{
+				CedarSystemID:          &idTen,
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "USED_IN_TECH_SOLUTION"},
+			},
 		},
-		[]*models.SystemRelationshipInput{},
 	)
 	unlinkSystemIntakeRelation(ctx, store, intakeID)
 
 	// 5. Link deactivated Systems
 	intakeID = uuid.MustParse("04cb8a97-3515-4071-9b80-2710834cd94c")
 	makeSystemIntakeAndSubmit(ctx, "System Intake Relation (Deactivated System)", &intakeID, mock.PrincipalUser, store)
+
+	idEleven := "{11AB1A00-1234-5678-ABC1-1A001B00CC5F}"
+	descriptionEleven := "other description"
+	idTwelve := "{11AB1A00-1234-5678-ABC1-1A001B00CC6G}"
+
 	setSystemIntakeRelationExistingSystem(
 		ctx,
 		store,
 		intakeID,
 		[]string{"12345", "67890"},
-		[]string{
-			"{11AB1A00-1234-5678-ABC1-1A001B00CC5F}",
-			"{11AB1A00-1234-5678-ABC1-1A001B00CC6G}",
+		[]*models.SystemRelationshipInput{
+			{
+				CedarSystemID:          &idEleven,
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+				OtherTypeDescription:   &descriptionEleven,
+			},
+			{
+				CedarSystemID:          &idTwelve,
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "USED_IN_TECH_SOLUTION"},
+			},
 		},
-		[]*models.SystemRelationshipInput{},
 	)
 
 	// initial intake form
