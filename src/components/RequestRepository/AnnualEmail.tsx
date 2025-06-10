@@ -161,13 +161,13 @@ const AnnualEmail = () => {
       window.location.href = `mailto:?bcc=${bccList}&subject=${subject}`;
     } else if (action === 'copy') {
       navigator.clipboard.writeText(emailString);
+      setEmailsCopied(true);
     }
   };
 
   const onSubmit = (formData: FormValues) => handleEmails(formData, 'submit');
   const onCopy = () => {
     handleEmails(formValues, 'copy');
-    setEmailsCopied(true);
   };
 
   return (
