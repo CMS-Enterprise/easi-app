@@ -44,7 +44,26 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 		}
 
 		// insert systems for this created system intake
-		linkedSystems := []*models.SystemRelationshipInput{}
+		idOne := "1"
+		idTwo := "2"
+		idThree := "3"
+		idFour := "4"
+		descriptionOne := ""
+		linkedSystems := []*models.SystemRelationshipInput{
+			{
+				CedarSystemID:          &idOne,
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+				OtherTypeDescription:   &descriptionOne,
+			},
+			{
+				CedarSystemID:          &idTwo,
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT"},
+			},
+			{
+				CedarSystemID:          &idThree,
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT"},
+			},
+		}
 
 		for _, systemIntake := range createdIntakes {
 			err := sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
@@ -90,9 +109,15 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 		}
 
 		// now, we can add system 4 to one of the system intakes and verify that the created_at dates for the first three remain unchanged
+		system4 := models.SystemRelationshipInput{
+			CedarSystemID:          &idFour,
+			SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT"},
+		}
+		linkedSystems = append(linkedSystems, &system4)
+
 		err = sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
 			// append(systemNumbers, system4)
-			return s.store.SetSystemIntakeSystems(ctx, tx, createdIntakes[0].ID, []*models.SystemRelationshipInput{})
+			return s.store.SetSystemIntakeSystems(ctx, tx, createdIntakes[0].ID, linkedSystems)
 		})
 		s.NoError(err)
 
@@ -117,7 +142,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 				firstThreeSystemsTime = system.CreatedAt
 			}
 
-			if system.SystemID == system4 {
+			if system.SystemID == *system4.CedarSystemID {
 				fourthSystemTime = system.CreatedAt
 			}
 		}
