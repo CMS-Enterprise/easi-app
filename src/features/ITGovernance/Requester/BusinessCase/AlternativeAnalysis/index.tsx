@@ -209,7 +209,7 @@ const AlternativeAnalysis = ({
         }
       }
     ],
-    [dispatchSave, history, isFinal, t]
+    [dispatchSave, history, t]
   );
 
   const table = useTable({
@@ -295,9 +295,11 @@ const AlternativeAnalysis = ({
                 <li>{t('alternativesDescription.list.3')}</li>
                 <li>{t('alternativesDescription.list.4')}</li>
               </ul>
-              <p>{t('alternativesDescription.text.2')}</p>
+              <p className="margin-bottom-1">
+                {t('alternativesDescription.text.2')}
+              </p>
               {/* Required fields help text */}
-              <HelpText className="margin-top-1 text-base">
+              <HelpText className="font-body-sm">
                 <Trans
                   i18nKey="businessCase:requiredFields"
                   components={{ red: <span className="text-red" /> }}

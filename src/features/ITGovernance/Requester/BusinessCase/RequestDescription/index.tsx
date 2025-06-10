@@ -222,7 +222,7 @@ const RequestDescription = ({
                 <CollapsableLink
                   id="BusinessCase-examplePriorityAlignment"
                   label={t('priorityAlignmentExample.label')}
-                  className="margin-top-1 margin-bottom-2"
+                  className="margin-top-1 margin-bottom-1"
                 >
                   {t('priorityAlignmentExample.description')}
                 </CollapsableLink>
@@ -256,7 +256,7 @@ const RequestDescription = ({
                 <CollapsableLink
                   id="BusinessCase-exampleSuccessIndicators"
                   label={t('successIndicatorsExamples.label')}
-                  className="margin-top-1 margin-bottom-2"
+                  className="margin-top-1 margin-bottom-1"
                 >
                   {t('successIndicatorsExamples.description')}
                 </CollapsableLink>
