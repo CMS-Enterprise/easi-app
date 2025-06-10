@@ -276,7 +276,7 @@ const DocumentsTable = ({ systemIntakeId, documents }: DocumentsTableProps) => {
           {page.map(row => {
             prepareRow(row);
             return (
-              <tr {...row.getRowProps()} key={{ ...row.getRowProps() }.key}>
+              <tr {...row.getRowProps()} key={row.id}>
                 {row.cells.map(cell => {
                   return (
                     <td

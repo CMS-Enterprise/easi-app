@@ -1,6 +1,7 @@
 package resolvers
 
 import (
+	"context"
 	"slices"
 	"time"
 
@@ -222,6 +223,8 @@ func (s *ResolverSuite) TestGetRequesterUpdateEmailData() {
 	ctx := s.testConfigs.Context
 	store := s.testConfigs.Store
 
-	_, err := GetRequesterUpdateEmailData(ctx, store)
+	_, err := GetRequesterUpdateEmailData(ctx, store, func(ctx context.Context, strings []string) ([]*models.UserInfo, error) {
+		return nil, nil
+	})
 	s.NoError(err)
 }

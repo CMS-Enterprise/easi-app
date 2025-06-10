@@ -11,7 +11,6 @@ import (
 	"github.com/samber/lo"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
-	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers/systemintake/formstate"
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
@@ -370,21 +369,52 @@ func GetMySystemIntakes(ctx context.Context, store *storage.Store) ([]*models.Sy
 	return store.GetMySystemIntakes(ctx)
 }
 
-func GetRequesterUpdateEmailData(ctx context.Context, store *storage.Store) ([]*models.RequesterUpdateEmailData, error) {
+func GetRequesterUpdateEmailData(
+	ctx context.Context,
+	store *storage.Store,
+	fetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error),
+) ([]*models.RequesterUpdateEmailData, error) {
+
 	// first, get data from store
 	data, err := store.GetRequesterUpdateEmailData(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	// then, match up emails from okta
-	for i, item := range data {
-		userInfo, err := dataloaders.FetchUserInfoByEUAUserID(ctx, item.EuaUserID)
-		if err != nil {
-			return nil, err
+	var euaIDs []string
+	for _, item := range data {
+		euaIDs = append(euaIDs, item.EuaUserID)
+	}
+
+	// then, get user data from Okta
+	userData, err := fetchUserInfos(ctx, euaIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	// map emails for ease
+	cache := map[string]models.EmailAddress{}
+
+	for _, user := range userData {
+		if user == nil {
+			continue
 		}
 
-		data[i].RequesterEmail = userInfo.Email
+		cache[user.Username] = user.Email
+	}
+
+	// then, match up emails from okta
+	for i, item := range data {
+		if item == nil {
+			continue
+		}
+
+		val, ok := cache[item.EuaUserID]
+		if !ok {
+			continue
+		}
+
+		data[i].RequesterEmail = val
 	}
 
 	return data, nil

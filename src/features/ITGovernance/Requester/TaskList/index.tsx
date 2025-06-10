@@ -10,7 +10,10 @@ import {
   ModalHeading
 } from '@trussworks/react-uswds';
 import NotFound from 'features/Miscellaneous/NotFound';
-import { SystemIntakeState } from 'gql/generated/graphql';
+import {
+  SystemIntakeState,
+  SystemIntakeStatusAdmin
+} from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import Breadcrumbs from 'components/Breadcrumbs';
@@ -22,6 +25,7 @@ import PageLoading from 'components/PageLoading';
 import { TaskListContainer } from 'components/TaskList';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import useMessage from 'hooks/useMessage';
+import { formatDateUtc } from 'utils/date';
 
 import {
   ITGovIntakeFormStatus,
@@ -95,7 +99,8 @@ function GovernanceTaskList() {
   const showDecisionAlert =
     hasDecision &&
     (isClosed ||
-      systemIntake?.step === SystemIntakeStep.DECISION_AND_NEXT_STEPS);
+      systemIntake?.step === SystemIntakeStep.DECISION_AND_NEXT_STEPS) &&
+    systemIntake?.statusAdmin !== SystemIntakeStatusAdmin.LCID_RETIRING_SOON;
 
   if (error) {
     return <NotFound />;
@@ -133,7 +138,6 @@ function GovernanceTaskList() {
                     {t('taskList.description', { requestName })}
                   </p>
                 )}
-
                 {isClosed && !hasDecision && (
                   <Alert
                     type="warning"
@@ -143,9 +147,7 @@ function GovernanceTaskList() {
                   >
                     <Trans
                       i18nKey="itGov:taskList.closedAlert.text"
-                      values={{
-                        email: IT_GOV_EMAIL
-                      }}
+                      values={{ email: IT_GOV_EMAIL }}
                       components={{
                         emailLink: (
                           <Link href={`mailto:${IT_GOV_EMAIL}`}> </Link>
@@ -157,7 +159,7 @@ function GovernanceTaskList() {
 
                 {
                   // Decision issued alert
-                  showDecisionAlert && (
+                  showDecisionAlert ? (
                     <Alert
                       type="info"
                       heading={t('taskList.decisionAlert.heading')}
@@ -166,9 +168,7 @@ function GovernanceTaskList() {
                     >
                       <Trans
                         i18nKey="itGov:taskList.decisionAlert.text"
-                        values={{
-                          email: IT_GOV_EMAIL
-                        }}
+                        values={{ email: IT_GOV_EMAIL }}
                         components={{
                           decisionLink: <Link href="#decision"> </Link>,
                           emailLink: (
@@ -177,9 +177,34 @@ function GovernanceTaskList() {
                         }}
                       />
                     </Alert>
+                  ) : (
+                    systemIntake?.lcidRetiresAt && (
+                      <Alert
+                        type="info"
+                        heading={t('taskList.lcidRetiringSoon.heading')}
+                        className="margin-bottom-6"
+                        data-testid="decision-alert"
+                      >
+                        <Trans
+                          i18nKey="itGov:taskList.lcidRetiringSoon.text"
+                          values={{
+                            email: IT_GOV_EMAIL,
+                            date: formatDateUtc(
+                              systemIntake?.lcidRetiresAt,
+                              'MM/dd/yyyy'
+                            )
+                          }}
+                          components={{
+                            decisionLink: <Link href="#decision"> </Link>,
+                            emailLink: (
+                              <Link href={`mailto:${IT_GOV_EMAIL}`}> </Link>
+                            )
+                          }}
+                        />
+                      </Alert>
+                    )
                   )
                 }
-
                 {
                   // General feedback banner with link
                   systemIntake.governanceRequestFeedbacks.length > 0 && (
@@ -199,7 +224,6 @@ function GovernanceTaskList() {
                     </div>
                   )
                 }
-
                 <TaskListContainer className="margin-top-4">
                   {/* 1. Fill out the Intake Request form */}
                   <GovTaskIntakeForm {...systemIntake} />

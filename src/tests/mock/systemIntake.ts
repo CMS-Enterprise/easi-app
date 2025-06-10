@@ -678,7 +678,10 @@ export const taskListSystemIntake: NonNullable<
   relationType: null,
   contractName: null,
   contractNumbers: [],
-  systems: []
+  systems: [],
+  statusAdmin: SystemIntakeStatusAdmin.GRB_MEETING_READY,
+  lcid: '123',
+  lcidRetiresAt: '2020-10-08T03:11:24.478056Z'
 };
 
 export const getGovernanceTaskListQuery = (
