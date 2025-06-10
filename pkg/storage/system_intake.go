@@ -363,6 +363,27 @@ func (s *Store) FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPr
 		}
 	}
 
+	linkedSystemsSQL := `
+		SELECT *
+		FROM system_intake_systems
+		WHERE system_intake_id= $1;
+	`
+
+	linkedSystems := []models.SystemIntakeSystem{}
+
+	linkedSystemFetchErr := s.db.Select(&linkedSystems, linkedSystemsSQL, id)
+
+	if linkedSystemFetchErr != nil && !errors.Is(linkedSystemFetchErr, sql.ErrNoRows) {
+		appcontext.ZLogger(ctx).Error("Failed to fetch linked intake systems", zap.Error(err), zap.String("id", id.String()))
+		return nil, &apperrors.QueryError{
+			Err:       linkedSystemFetchErr,
+			Model:     models.SystemIntakeSystem{},
+			Operation: apperrors.QueryFetch,
+		}
+	}
+
+	intake.CedarSystemRelationShips = linkedSystems
+
 	// TODO: Rather than two separate queries/round-trips to the database, the funding sources should be
 	// queried via a single query that includes a left join on system_intake_funding_sources. This code
 	// works and can unblock frontend work that relies on this function, but should be revisited. I was

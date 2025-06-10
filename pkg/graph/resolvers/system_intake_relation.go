@@ -105,13 +105,13 @@ func SetSystemIntakeRelationExistingSystem(
 			}
 		}
 
-		fmt.Println(input.CedarSystemRelationShips)
+		fmt.Println("relationships", input.CedarSystemRelationShips)
 		// Add CEDAR system relationships
 		if err := store.SetSystemIntakeSystems(ctx, tx, intake, input.CedarSystemRelationShips); err != nil {
 			return nil, err
 		}
 
-		fmt.Println(input.CedarSystemRelationShips)
+		fmt.Println("relationships", input.CedarSystemRelationShips)
 
 		// Delete & recreate contract number relationships
 		// DISABLED: See Note [EASI-4160 Disable Contract Number Linking]

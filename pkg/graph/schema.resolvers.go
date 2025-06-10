@@ -1959,11 +1959,6 @@ func (r *systemIntakeResolver) GrbPresentationLinks(ctx context.Context, obj *mo
 	return dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, obj.ID)
 }
 
-// CedarSystemRelationShips is the resolver for the cedarSystemRelationShips field.
-func (r *systemIntakeResolver) CedarSystemRelationShips(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeSystem, error) {
-	return dataloaders.GetSystemIntakeSystemsBySystemIntakeID(ctx, obj.ID)
-}
-
 // DocumentType is the resolver for the documentType field.
 func (r *systemIntakeDocumentResolver) DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*models.SystemIntakeDocumentType, error) {
 	return &models.SystemIntakeDocumentType{
@@ -2045,7 +2040,9 @@ func (r *systemIntakeNoteResolver) Editor(ctx context.Context, obj *models.Syste
 
 // SystemRelationshipType is the resolver for the systemRelationshipType field.
 func (r *systemIntakeSystemResolver) SystemRelationshipType(ctx context.Context, obj *models.SystemIntakeSystem) ([]models.SystemRelationshipType, error) {
-	panic(fmt.Errorf("not implemented: SystemRelationshipType - systemRelationshipType"))
+	fmt.Println("TODO - Implement this SystemRelationshipType if needed")
+
+	return []models.SystemRelationshipType{}, errors.New("unexpected value")
 }
 
 // Author is the resolver for the author field.

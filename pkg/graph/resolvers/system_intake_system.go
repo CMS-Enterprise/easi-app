@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
@@ -42,6 +43,6 @@ func SystemIntakeSystemsByIntakeID(ctx context.Context, systemIntakeID uuid.UUID
 		appcontext.ZLogger(ctx).Error("unable to retrieve cedar system ids from db", zap.Error(err))
 		return nil, err
 	}
-
+	fmt.Println("super cool print")
 	return systems, nil
 }

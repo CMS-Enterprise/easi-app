@@ -1413,7 +1413,6 @@ type SystemIntakeResolver interface {
 	RelatedTRBRequests(ctx context.Context, obj *models.SystemIntake) ([]*models.TRBRequest, error)
 	GrbDiscussions(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewDiscussion, error)
 	GrbPresentationLinks(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBPresentationLinks, error)
-	CedarSystemRelationShips(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeSystem, error)
 }
 type SystemIntakeDocumentResolver interface {
 	DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*models.SystemIntakeDocumentType, error)
@@ -45495,7 +45494,7 @@ func (ec *executionContext) _SystemIntake_cedarSystemRelationShips(ctx context.C
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().CedarSystemRelationShips(rctx, obj)
+		return obj.CedarSystemRelationShips, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -45504,17 +45503,17 @@ func (ec *executionContext) _SystemIntake_cedarSystemRelationShips(ctx context.C
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.([]*models.SystemIntakeSystem)
+	res := resTmp.([]models.SystemIntakeSystem)
 	fc.Result = res
-	return ec.marshalOSystemIntakeSystem2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSystem(ctx, field.Selections, res)
+	return ec.marshalOSystemIntakeSystem2ᚕgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSystem(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntake_cedarSystemRelationShips(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntake",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "systemIntakeID":
@@ -71415,38 +71414,7 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "cedarSystemRelationShips":
-			field := field
-
-			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_cedarSystemRelationShips(ctx, field, obj)
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			out.Values[i] = ec._SystemIntake_cedarSystemRelationShips(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -81369,7 +81337,11 @@ func (ec *executionContext) marshalOSystemIntakeStep2ᚖgithubᚗcomᚋcmsᚑent
 	return res
 }
 
-func (ec *executionContext) marshalOSystemIntakeSystem2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSystem(ctx context.Context, sel ast.SelectionSet, v []*models.SystemIntakeSystem) graphql.Marshaler {
+func (ec *executionContext) marshalOSystemIntakeSystem2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSystem(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeSystem) graphql.Marshaler {
+	return ec._SystemIntakeSystem(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalOSystemIntakeSystem2ᚕgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSystem(ctx context.Context, sel ast.SelectionSet, v []models.SystemIntakeSystem) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -81396,7 +81368,7 @@ func (ec *executionContext) marshalOSystemIntakeSystem2ᚕᚖgithubᚗcomᚋcms�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOSystemIntakeSystem2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSystem(ctx, sel, v[i])
+			ret[i] = ec.marshalOSystemIntakeSystem2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSystem(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -81408,13 +81380,6 @@ func (ec *executionContext) marshalOSystemIntakeSystem2ᚕᚖgithubᚗcomᚋcms�
 	wg.Wait()
 
 	return ret
-}
-
-func (ec *executionContext) marshalOSystemIntakeSystem2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSystem(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeSystem) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._SystemIntakeSystem(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOSystemIntakeTRBFollowUp2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeTRBFollowUp(ctx context.Context, v any) (*models.SystemIntakeTRBFollowUp, error) {
