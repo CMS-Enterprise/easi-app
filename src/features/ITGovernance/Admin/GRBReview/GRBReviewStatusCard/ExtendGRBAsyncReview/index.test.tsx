@@ -2,7 +2,6 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { GRBVotingInformationStatus } from 'gql/generated/graphql';
 import i18next from 'i18next';
 
 import { MessageProvider } from 'hooks/useMessage';
@@ -10,24 +9,12 @@ import { MessageProvider } from 'hooks/useMessage';
 import AddTimeOrEndVoting from './index';
 
 describe('AddTimeOrEndVoting', () => {
-  const mockProps = {
-    grbReviewAsyncEndDate: '2025-03-30T12:00:00Z',
-    grbVotingInformation: {
-      __typename: 'GRBVotingInformation' as const,
-      grbReviewers: [],
-      votingStatus: GRBVotingInformationStatus.NOT_STARTED,
-      numberOfNoObjection: 3,
-      numberOfObjection: 1,
-      numberOfNotVoted: 2
-    }
-  };
-
   const renderComponent = () => {
     return render(
       <MemoryRouter>
         <MockedProvider>
           <MessageProvider>
-            <AddTimeOrEndVoting {...mockProps} />
+            <AddTimeOrEndVoting />
           </MessageProvider>
         </MockedProvider>
       </MemoryRouter>
@@ -64,22 +51,6 @@ describe('AddTimeOrEndVoting', () => {
         name: i18next.t<string>('grbReview:statusCard.addTimeModal.addTime')
       })[1]
     ).toBeDisabled();
-  });
-
-  it('opens the "End Voting" modal when the "End Voting" button is clicked', () => {
-    renderComponent();
-
-    // Click the "End Voting" button
-    fireEvent.click(
-      screen.getByText(i18next.t<string>('grbReview:statusCard.endVoting'))
-    );
-
-    // Check that the "End Voting" modal is open
-    expect(
-      screen.getByText(
-        i18next.t<string>('grbReview:statusCard.endVotingModal.heading')
-      )
-    ).toBeInTheDocument();
   });
 
   it('closes the modal when the "Go Back" button is clicked', () => {

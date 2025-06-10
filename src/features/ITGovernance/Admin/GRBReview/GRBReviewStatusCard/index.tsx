@@ -1,66 +1,52 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Grid, Icon } from '@trussworks/react-uswds';
+import { Button, ButtonGroup, Grid, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
-  SystemIntakeGRBReviewAsyncStatusType,
   SystemIntakeGRBReviewFragment,
   SystemIntakeGRBReviewType
 } from 'gql/generated/graphql';
 import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
+import IconLink from 'components/IconLink';
 import UswdsReactLink from 'components/LinkWrapper';
 import Tag from 'components/Tag';
+import { GRBReviewStatus } from 'types/grbReview';
 import { formatDateUtc, formatDaysHoursMinutes } from 'utils/date';
 
 import { useRestartReviewModal } from '../RestartReviewModal/RestartReviewModalContext';
 
-import AddTimeOrEndVoting from './AddTimeOrEndVoting';
-
-// TODO: Temp status type;
-export enum GRBReviewStatus {
-  SCHEDULED = 'SCHEDULED',
-  IN_PROGRESS = 'IN_PROGRESS',
-  COMPLETED = 'COMPLETED'
-}
+import EndGRBAsyncVoting from './EndGRBAsyncVoting';
+import ExtendGRBAsyncReview from './ExtendGRBAsyncReview';
 
 export type GRBReviewStatusCardProps = {
   grbReview: SystemIntakeGRBReviewFragment;
   className?: string;
 };
 
-const renderBGColor = (
-  grbReviewStatus: SystemIntakeGRBReviewAsyncStatusType | null | undefined
-) => {
-  if (grbReviewStatus === SystemIntakeGRBReviewAsyncStatusType.COMPLETED) {
-    return 'bg-success-lighter';
-  }
-  return 'bg-primary-lighter';
+type GRBReviewStatusTagProps = {
+  isITGovAdmin: boolean;
+  grbReviewType: SystemIntakeGRBReviewType;
+  grbReviewStatus: GRBReviewStatus;
 };
 
 const GRBReviewStatusTag = ({
+  isITGovAdmin,
+  grbReviewType,
   grbReviewStatus
-}: {
-  grbReviewStatus:
-    | SystemIntakeGRBReviewAsyncStatusType
-    | GRBReviewStatus
-    | null
-    | undefined;
-}) => {
+}: GRBReviewStatusTagProps) => {
   const { t } = useTranslation('grbReview');
   const { openModal } = useRestartReviewModal();
 
-  if (!grbReviewStatus) {
-    return null;
-  }
+  const showRestartButton =
+    isITGovAdmin &&
+    grbReviewType === SystemIntakeGRBReviewType.ASYNC &&
+    grbReviewStatus === 'COMPLETED';
+
+  const showSetupButton = isITGovAdmin && grbReviewStatus === 'NOT_STARTED';
 
   return (
-    <span
-      className={classNames('display-flex flex-align-center', {
-        'border-bottom-1px border-primary-light margin-bottom-2 padding-bottom-2':
-          grbReviewStatus !== SystemIntakeGRBReviewAsyncStatusType.COMPLETED
-      })}
-    >
+    <div className={classNames('display-flex flex-align-center')}>
       <h4 className="margin-0 margin-right-1 flex-align-self-center">
         {t('statusCard.reviewStatus')}
       </h4>
@@ -72,7 +58,7 @@ const GRBReviewStatusTag = ({
         {t(`statusCard.grbReviewStatus.${grbReviewStatus}`)}
       </Tag>
 
-      {grbReviewStatus === SystemIntakeGRBReviewAsyncStatusType.COMPLETED && (
+      {showRestartButton && (
         <Button
           type="button"
           unstyled
@@ -83,7 +69,18 @@ const GRBReviewStatusTag = ({
           <Icon.ArrowForward />
         </Button>
       )}
-    </span>
+
+      {showSetupButton && (
+        <IconLink
+          to="grb-review/review-type"
+          className="margin-left-3"
+          icon={<Icon.ArrowForward />}
+          iconPosition="after"
+        >
+          {t('adminTask.setUpGRBReview.title')}
+        </IconLink>
+      )}
+    </div>
   );
 };
 
@@ -95,6 +92,7 @@ const GRBReviewStatusCard = ({
 
   const {
     grbReviewType,
+    grbReviewStandardStatus,
     grbReviewAsyncStatus,
     grbDate,
     grbReviewStartedAt,
@@ -108,108 +106,124 @@ const GRBReviewStatusCard = ({
     grbReviewAsyncEndDate
   );
 
-  if (!grbReviewStartedAt) {
+  /**
+   * Returns the correct status data for the review type,
+   * or NOT_STARTED if status is null
+   */
+  const grbReviewStatus: GRBReviewStatus | null | undefined = useMemo(() => {
+    if (!grbReviewStartedAt) return 'NOT_STARTED';
+
+    return grbReviewType === SystemIntakeGRBReviewType.STANDARD
+      ? grbReviewStandardStatus
+      : grbReviewAsyncStatus;
+  }, [
+    grbReviewAsyncStatus,
+    grbReviewStandardStatus,
+    grbReviewType,
+    grbReviewStartedAt
+  ]);
+
+  const backgroundColorClass = useMemo(() => {
+    switch (grbReviewStatus) {
+      case 'COMPLETED':
+        return 'bg-success-lighter';
+
+      case 'NOT_STARTED':
+        return 'bg-warning-lighter';
+
+      default:
+        return 'bg-primary-lighter';
+    }
+  }, [grbReviewStatus]);
+
+  const reviewIsInProgress: boolean =
+    grbReviewStatus !== 'NOT_STARTED' && grbReviewStatus !== 'COMPLETED';
+
+  if (!grbReviewStatus) {
     return null;
   }
 
-  const StandardCard = (
-    <div
-      className={classNames(
-        className,
-        'padding-3 radius-md',
-        renderBGColor(grbReviewAsyncStatus)
-      )}
-    >
-      <h3 className="margin-top-0 margin-bottom-2">
-        {t('statusCard.standardHeading')}
-      </h3>
-
-      {/* Status Section */}
-      {/* TODO: replace with query data */}
-      <GRBReviewStatusTag grbReviewStatus={GRBReviewStatus.SCHEDULED} />
-
-      {/* Meeting Details */}
-      {/* TODO: !!!! Replace the Standard GRB Review Status field and enum */}
-      {grbReviewAsyncStatus !==
-        SystemIntakeGRBReviewAsyncStatusType.COMPLETED && (
-        <span>
-          <h4 className="margin-0 margin-right-1 margin-top-2px margin-bottom-05">
-            {t('statusCard.grbMeeting')}
-          </h4>
-
-          <div className="easi-body-large">
-            {formatDateUtc(grbDate, 'MM/dd/yyyy')}
-          </div>
-
-          {isITGovAdmin && (
-            <UswdsReactLink
-              to={`/it-governance/${grbReview.id}/dates`}
-              className="usa-button usa-button--outline margin-top-1"
-            >
-              {t('statusCard.changeMeetingDate')}
-            </UswdsReactLink>
-          )}
-        </span>
-      )}
-    </div>
-  );
-
-  const AsyncCard = (
-    <div
-      className={classNames(
-        className,
-        'padding-3 radius-md',
-        renderBGColor(grbReviewAsyncStatus)
-      )}
-    >
-      <h3 className="margin-top-0 margin-bottom-2">
-        {t('statusCard.asyncHeading')}
-      </h3>
-
-      {/* Status Section */}
-      <GRBReviewStatusTag grbReviewStatus={grbReviewAsyncStatus} />
-
-      {/* Meeting Details */}
-      {grbReviewAsyncStatus !==
-        SystemIntakeGRBReviewAsyncStatusType.COMPLETED && (
-        <span>
-          <h4 className="margin-0 margin-right-1 margin-top-2px margin-bottom-05">
-            {t('statusCard.timeRemaining')}
-          </h4>
-
-          <Grid row className="margin-bottom-05">
-            <p className="easi-body-large margin-top-0 margin-bottom-05 margin-right-2">
-              {t('statusCard.countdown', {
-                days,
-                hours,
-                minutes
-              })}
-            </p>
-
-            <p className="easi-body-normal text-primary-dark margin-0 flex-align-self-center">
-              {t('statusCard.reviewEnds', {
-                date: formatDateUtc(grbReviewAsyncEndDate, 'MM/dd/yyyy')
-              })}
-            </p>
-          </Grid>
-
-          {isITGovAdmin && (
-            <AddTimeOrEndVoting
-              grbReviewAsyncEndDate={grbReviewAsyncEndDate}
-              grbVotingInformation={grbVotingInformation}
-            />
-          )}
-        </span>
-      )}
-    </div>
-  );
-
   return (
-    <>
-      {grbReviewType === SystemIntakeGRBReviewType.STANDARD
-        ? StandardCard
-        : AsyncCard}
-    </>
+    <div
+      className={classNames(
+        className,
+        'padding-3 radius-md',
+        backgroundColorClass
+      )}
+    >
+      {grbReviewStatus !== 'NOT_STARTED' && (
+        <h3 className="margin-top-0 margin-bottom-2">
+          {t('statusCard.heading', { context: grbReviewType })}
+        </h3>
+      )}
+
+      {/* Status Section */}
+      <GRBReviewStatusTag
+        grbReviewType={grbReviewType}
+        grbReviewStatus={grbReviewStatus}
+        isITGovAdmin={isITGovAdmin}
+      />
+
+      {/* Meeting Details */}
+      {reviewIsInProgress && (
+        <div className="border-top-1px border-primary-light margin-top-2 padding-top-2">
+          {grbReviewType === SystemIntakeGRBReviewType.ASYNC ? (
+            // ASYNC review type
+            <>
+              <h4 className="margin-0 margin-right-1 margin-top-2px margin-bottom-05">
+                {t('statusCard.timeRemaining')}
+              </h4>
+
+              <Grid row className="margin-bottom-05">
+                <p className="easi-body-large margin-top-0 margin-bottom-05 margin-right-2">
+                  {t('statusCard.countdown', {
+                    days,
+                    hours,
+                    minutes
+                  })}
+                </p>
+
+                <p className="easi-body-normal text-primary-dark margin-0 flex-align-self-center">
+                  {t('statusCard.reviewEnds', {
+                    date: formatDateUtc(grbReviewAsyncEndDate, 'MM/dd/yyyy')
+                  })}
+                </p>
+              </Grid>
+
+              {isITGovAdmin && (
+                <ButtonGroup>
+                  <ExtendGRBAsyncReview />
+                  <EndGRBAsyncVoting
+                    grbReviewAsyncEndDate={grbReviewAsyncEndDate}
+                    grbVotingInformation={grbVotingInformation}
+                  />
+                </ButtonGroup>
+              )}
+            </>
+          ) : (
+            // STANDARD meeting type
+            <>
+              <h4 className="margin-0 margin-right-1 margin-top-2px margin-bottom-05">
+                {t('statusCard.grbMeeting')}
+              </h4>
+
+              <div className="easi-body-large">
+                {formatDateUtc(grbDate, 'MM/dd/yyyy')}
+              </div>
+
+              {isITGovAdmin && (
+                <UswdsReactLink
+                  to={`/it-governance/${grbReview.id}/dates`}
+                  className="usa-button usa-button--outline margin-top-1"
+                >
+                  {t('statusCard.changeMeetingDate')}
+                </UswdsReactLink>
+              )}
+            </>
+          )}
+        </div>
+      )}
+    </div>
   );
 };
 

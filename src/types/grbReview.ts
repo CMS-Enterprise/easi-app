@@ -1,8 +1,10 @@
 import {
   GetGRBReviewersComparisonsQuery,
+  SystemIntakeGRBReviewAsyncStatusType,
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole,
-  SystemIntakeGRBReviewFragment
+  SystemIntakeGRBReviewFragment,
+  SystemIntakeGRBReviewStandardStatusType
 } from 'gql/generated/graphql';
 
 import { grbReviewFormSteps } from 'i18n/en-US/grbReview';
@@ -30,3 +32,8 @@ export interface GRBReviewFormStepProps {
 }
 
 export type GrbReviewFormStepKey = (typeof grbReviewFormSteps)[number]['key'];
+
+export type GRBReviewStatus =
+  | SystemIntakeGRBReviewAsyncStatusType
+  | SystemIntakeGRBReviewStandardStatusType
+  | 'NOT_STARTED';

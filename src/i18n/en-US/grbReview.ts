@@ -1,12 +1,12 @@
-import { GRBReviewStatus } from 'features/ITGovernance/Admin/GRBReview/GRBReviewStatusCard';
 import {
   SystemIntakeAsyncGRBVotingOption,
   SystemIntakeGRBReviewAsyncStatusType,
   SystemIntakeGRBReviewerRole,
-  SystemIntakeGRBReviewerVotingRole
+  SystemIntakeGRBReviewerVotingRole,
+  SystemIntakeGRBReviewStandardStatusType
 } from 'gql/generated/graphql';
 
-import { GRBReviewFormAction } from 'types/grbReview';
+import { GRBReviewFormAction, GRBReviewStatus } from 'types/grbReview';
 import { Translation } from 'types/util';
 
 export const grbReviewerVotingRolesTranslation: Translation<SystemIntakeGRBReviewerVotingRole> =
@@ -77,6 +77,14 @@ export const grbReviewFormSteps = [
   }
 ] as const;
 
+const grbReviewStatus: Translation<GRBReviewStatus> = {
+  NOT_STARTED: 'Not started',
+  [SystemIntakeGRBReviewStandardStatusType.SCHEDULED]: 'Scheduled',
+  [SystemIntakeGRBReviewAsyncStatusType.IN_PROGRESS]: 'In progress',
+  [SystemIntakeGRBReviewAsyncStatusType.COMPLETED]: 'Complete',
+  [SystemIntakeGRBReviewAsyncStatusType.PAST_DUE]: 'Past due'
+};
+
 export default {
   title: 'GRB review',
   description:
@@ -139,6 +147,8 @@ export default {
     virusScanning: 'Virus scanning in progress...',
     adminEmptyAlert:
       'If this GRB review has an asynchronous presentation and recording, you may add that content to EASi to provide additional information for GRB reviews.',
+    reviewSetupNotCompleted:
+      'You have not completed setup for this asynchronous review. Continue the GRB review setup process to add information about this asynchronous presentation.',
     emptyAlert: 'The GRB have not yet added presentation links.',
 
     modalRemoveLinks: {
@@ -217,10 +227,15 @@ export default {
     infoAlertReviewNotStarted:
       'Adding GRB reviewers will not send them an invitation until you start the GRB review, though they will still be able to access content if they sign into EASi. This individual will be able to see information about this IT Governance request including the Intake Request form, Business Case, and other supporting documents. Please make sure this individual should be able to access this information before you proceed. They will not be able to take any actions on the request or see Admin notes.',
     infoAlertReviewStarted:
-      'Adding a reviewer will send them an informational notification email with a link to EASi. This individual will be able to see information about this IT Governance request including the Intake Request form, Business Case, and other supporting documents. Please make sure this individual should be able to access this information before you proceed. They will not be able to take any actions on the request or see Admin notes.'
+      'Adding a reviewer will send them an informational notification email with a link to EASi. This individual will be able to see information about this IT Governance request including the Intake Request form, Business Case, and other supporting documents. Please make sure this individual should be able to access this information before you proceed. They will not be able to take any actions on the request or see Admin notes.',
+    cantStartAlert_ASYNC:
+      'You will not be able to complete this form and begin the review until the request is in the “Ready for GRB review” status. Please take the admin action to progress this request to the GRB step. <link1>Go to admin actions</link1>',
+    cantStartAlert_STANDARD:
+      'You will not be able to complete this form until the request is in the “Ready for GRB review” status. Please take the admin action to progress this request to the GRB step. <link1>Go to admin actions</link1>'
   },
   messages,
   votingRoles: grbReviewerVotingRolesTranslation,
+
   reviewerRoles: grbReviewerRolesTranslation,
   removeModal: {
     title: 'Remove {{commonName}} as a GRB reviewer?',
@@ -245,7 +260,7 @@ export default {
     steps: grbReviewFormSteps,
     error:
       'There was a problem saving your GRB review form. Please try again. If the error persists, please try again at a later date.',
-    minFive: 'Please select at least five GRB reviewers',
+    minFive: 'Please select at least five voting GRB reviewers',
     invalidDate: 'Please enter a valid date',
     reviewType: {
       label: 'Choose review type',
@@ -482,18 +497,13 @@ export default {
     }
   },
   statusCard: {
-    standardHeading: 'Standard meeting review',
-    asyncHeading: 'Asynchronous review',
+    heading_STANDARD: 'Standard meeting review',
+    heading_ASYNC: 'Asynchronous review',
     reviewStatus: 'Review status',
     grbMeeting: 'GRB meeting',
     changeMeetingDate: 'Change meeting date',
     restartReview: 'Restart review',
-    grbReviewStatus: {
-      [GRBReviewStatus.SCHEDULED]: 'Scheduled',
-      [SystemIntakeGRBReviewAsyncStatusType.IN_PROGRESS]: 'In progress',
-      [SystemIntakeGRBReviewAsyncStatusType.COMPLETED]: 'Complete',
-      [SystemIntakeGRBReviewAsyncStatusType.PAST_DUE]: 'Past due'
-    },
+    grbReviewStatus,
     timeRemaining: 'Time remaining for review',
     countdown: '{{days}} days, {{hours}} hours, {{minutes}} minutes',
     reviewEnds: 'Review ends {{date}}, 5:00pm EST',

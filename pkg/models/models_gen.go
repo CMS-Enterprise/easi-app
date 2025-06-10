@@ -381,6 +381,8 @@ type ReopenTRBRequestInput struct {
 }
 
 type RequesterUpdateEmailData struct {
+	EuaUserID      string                  `json:"euaUserId"`
+	ProjectName    string                  `json:"projectName"`
 	LcidStatus     *SystemIntakeLCIDStatus `json:"lcidStatus,omitempty"`
 	LcidIssuedAt   *time.Time              `json:"lcidIssuedAt,omitempty"`
 	LcidExpiresAt  *time.Time              `json:"lcidExpiresAt,omitempty"`

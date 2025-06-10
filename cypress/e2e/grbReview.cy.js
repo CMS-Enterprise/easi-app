@@ -94,6 +94,44 @@ describe('GRB review', () => {
 
     cy.url().should('include', '/participants');
 
+    cy.contains('button', 'Add another GRB reviewer').click();
+
+    // Add a GRB Reviewer
+    cy.url().should('include', '/add?from-grb-setup');
+    cy.contains('h1', 'Add a GRB reviewer');
+
+    cy.get('#react-select-userAccount-input')
+      .type('User Two')
+      .wait(2000) // See Note [Specific Cypress wait duration on Okta search]
+      .type('{downArrow}{enter}')
+      .should('have.value', 'User Two, USR2 (user.two@local.fake)');
+
+    cy.get('#votingRole').select('Voting').should('have.value', 'VOTING');
+    cy.get('#grbRole')
+      .select('Co-Chair - CIO')
+      .should('have.value', 'CO_CHAIR_CIO');
+
+    cy.contains('button', 'Add reviewer').should('not.be.disabled').click();
+
+    cy.contains('button', 'Add another GRB reviewer').click();
+
+    // Add a GRB Reviewer
+    cy.url().should('include', '/add?from-grb-setup');
+    cy.contains('h1', 'Add a GRB reviewer');
+
+    cy.get('#react-select-userAccount-input')
+      .type('User Three')
+      .wait(2000) // See Note [Specific Cypress wait duration on Okta search]
+      .type('{downArrow}{enter}')
+      .should('have.value', 'User Three, USR3 (user.three@local.fake)');
+
+    cy.get('#votingRole').select('Voting').should('have.value', 'VOTING');
+    cy.get('#grbRole')
+      .select('Co-Chair - CIO')
+      .should('have.value', 'CO_CHAIR_CIO');
+
+    cy.contains('button', 'Add reviewer').should('not.be.disabled').click();
+
     cy.get('[data-testid="alert"]')
       .should('be.visible')
       .and('contain.text', 'You added 1 reviewer to this GRB review.');
@@ -109,7 +147,29 @@ describe('GRB review', () => {
         });
 
       // Check that the expected number of rows exist.
-      cy.get('tbody tr').should('have.length', 5);
+      cy.get('tbody tr').should('have.length', 7);
+
+      cy.get('tbody tr')
+        .eq(1)
+        .within(() => {
+          cy.contains('td', 'Adeline Aarons').should('exist');
+          cy.contains('td', 'Alternate').should('exist');
+          cy.contains('button', 'Edit').click();
+        });
+    });
+
+    cy.get('#votingRole').should('have.value', 'ALTERNATE').select('Voting');
+
+    cy.contains('button', 'Save changes').should('not.be.disabled').click();
+
+    cy.get('[data-testid="table"]').within(() => {
+      // Check to see that Adeline Aarons is now a voting memeber
+      cy.get('tbody tr')
+        .eq(1)
+        .within(() => {
+          cy.contains('td', 'Adeline Aarons').should('exist');
+          cy.contains('td', 'Voting').should('exist');
+        });
     });
 
     cy.get('#grbReviewAsyncEndDate').clear().type('01/01/2226');
@@ -220,41 +280,6 @@ describe('GRB review', () => {
     cy.contains('button', 'Save and return to request').click();
   });
 
-  it('Adds time to voting and Ends time to voting', () => {
-    cy.visit('/it-governance/5af245bc-fc54-4677-bab1-1b3e798bb43c/grb-review');
-
-    cy.get('[data-testid="async-status"]').contains('In progress');
-
-    cy.get('p').contains('Review ends 01/01/2226, 5:00pm EST');
-
-    // Open Add Time modal
-    cy.get('button').contains('Add time').click();
-
-    cy.get('[data-testid="addTimeModalButton"]').should('be.disabled');
-
-    cy.get('[data-testid="date-picker-external-input"]').type('01/01/2227');
-
-    // Click button to add time and close modal
-    cy.get('[data-testid="addTimeModalButton"]')
-      .should('be.not.disabled')
-      .click();
-
-    // Success alert text
-    cy.get('p').contains(
-      'You added time to this GRB review. The new end date is 01/01/2227 at 5:00pm EST.'
-    );
-
-    // Open End Voting modal
-    cy.get('button').contains('End voting').click();
-
-    cy.get('button').contains('End early').should('be.not.disabled').click();
-
-    // Success alert text
-    cy.get('p').contains(
-      'You have ended this GRB review early. GRB members will no longer be able to add or change votes.'
-    );
-  });
-
   it('Sends a reminder email', () => {
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'SendSystemIntakeGRBReviewerReminder') {
@@ -299,6 +324,41 @@ describe('GRB review', () => {
     cy.get('[data-testid="review-reminder"]').should('be.visible');
   });
 
+  it('Adds time to voting and Ends time to voting', () => {
+    cy.visit('/it-governance/5af245bc-fc54-4677-bab1-1b3e798bb43c/grb-review');
+
+    cy.get('[data-testid="async-status"]').contains('In progress');
+
+    cy.get('p').contains('Review ends 01/01/2226, 5:00pm EST');
+
+    // Open Add Time modal
+    cy.get('button').contains('Add time').click();
+
+    cy.get('[data-testid="addTimeModalButton"]').should('be.disabled');
+
+    cy.get('[data-testid="date-picker-external-input"]').type('01/01/2227');
+
+    // Click button to add time and close modal
+    cy.get('[data-testid="addTimeModalButton"]')
+      .should('be.not.disabled')
+      .click();
+
+    // Success alert text
+    cy.get('p').contains(
+      'You added time to this GRB review. The new end date is 01/01/2227 at 5:00pm EST.'
+    );
+
+    // Open End Voting modal
+    cy.get('button').contains('End voting').click();
+
+    cy.get('button').contains('End early').should('be.not.disabled').click();
+
+    // Success alert text
+    cy.get('p').contains(
+      'You have ended this GRB review early. GRB members will no longer be able to add or change votes.'
+    );
+  });
+
   it('Restart GRB review', () => {
     cy.visit('/it-governance/5af245bc-fc54-4677-bab1-1b3e798bb43c/grb-review');
 
@@ -334,5 +394,110 @@ describe('GRB review', () => {
         'contain.text',
         'You restarted this GRB review. The new end date is 01/01/2226 at 5:00pm EST.'
       );
+  });
+
+  it('can upload a presentation deck', () => {
+    cy.contains('a', 'Draft Business Case').should('be.visible').click();
+
+    cy.get('li.usa-sidenav__item a[href*="grb-review#details"]').click();
+
+    cy.contains('a', 'Add asynchronous presentation links').click();
+
+    // Complete upload form form
+
+    cy.contains('button', 'Save presentation details').should('be.disabled');
+
+    // Recording link
+    cy.get('#recordingLink')
+      .type('https://example.com/recording')
+      .should('have.value', 'https://example.com/recording');
+
+    cy.contains('button', 'Save presentation details').should(
+      'not.be.disabled'
+    );
+
+    // Recording passcode
+    cy.get('#recordingPasscode')
+      .type('3465376')
+      .should('have.value', '3465376');
+
+    // Transcript link
+    cy.get('#transcriptLink')
+      .type('https://example.com/transcript')
+      .should('have.value', 'https://example.com/transcript');
+
+    // Upload presentation deck
+    cy.get('input[name=presentationDeckFileData]').selectFile(
+      'cypress/fixtures/test.pdf',
+      { force: true }
+    );
+
+    // Submit form
+    cy.contains('button', 'Save presentation details').click();
+
+    cy.contains('.usa-card__footer', 'Virus scanning in progress...').should(
+      'be.visible'
+    );
+
+    // Mark file as passing virus scan
+    cy.get('[data-testdeckurl]').within(el => {
+      const url = el.attr('data-testdeckurl');
+      // console.log('url', url);
+      const filepath = url.match(/(\/easi-app-file-uploads\/[^?]*)/)[1];
+      cy.exec(`scripts/tag_minio_file ${filepath} CLEAN`);
+    });
+
+    cy.reload();
+
+    // Verify presentation deck is uploaded as well as other details
+    cy.contains('button', 'View recording').should('be.visible');
+
+    cy.contains('span', '(Passcode: 3465376)').should('be.visible');
+
+    cy.contains('button', 'View transcript').should('be.visible');
+
+    cy.contains('button', 'View slide deck').should('be.visible');
+
+    // Edit presentation links
+    cy.contains('a', 'Edit presentation links').click();
+
+    cy.contains('button', 'Save presentation details').should('be.disabled');
+
+    cy.contains('button', 'Upload document').click();
+
+    // Upload transcript file
+    cy.get('input[name=transcriptFileData]').selectFile(
+      'cypress/fixtures/test.pdf'
+    );
+
+    // Clear presentation deck file
+    cy.get('button').contains('Clear file').click();
+
+    // Submit form
+    cy.contains('button', 'Save presentation details').click();
+
+    // Mark file as passing virus scan
+    cy.get('[data-testdeckurl]').within(el => {
+      const url = el.attr('data-testdeckurl');
+      // console.log('url', url);
+      const filepath = url.match(/(\/easi-app-file-uploads\/[^?]*)/)[1];
+      cy.exec(`scripts/tag_minio_file ${filepath} CLEAN`);
+    });
+
+    cy.reload();
+
+    // Check that the presentation deck file was deleted
+    cy.get('[data-testid="presentation-url"]').should('not.exist');
+
+    // Remove all presentation links
+    cy.contains('button', 'Remove all presentation links').click();
+
+    // Modal remove button
+    cy.contains('button', 'Remove presentation links').click();
+
+    // Returns to empty state with no links
+    cy.contains('a', 'Add asynchronous presentation links').should(
+      'be.visible'
+    );
   });
 });

@@ -652,12 +652,7 @@ func GetSystemaIntakesWithGRBReviewCompleteQuorumMet(ctx context.Context, np sql
 }
 
 func (s *Store) GetRequesterUpdateEmailData(ctx context.Context) ([]*models.RequesterUpdateEmailData, error) {
-	type temp struct {
-		models.SystemIntake
-		RequesterEmailAddress models.EmailAddress `json:"email" db:"email"`
-	}
-
-	var res []temp
+	var res []models.SystemIntake
 	if err := namedSelect(ctx, s.db, &res, sqlqueries.SystemIntake.GetRequesterUpdateEmailData, nil); err != nil {
 		return nil, err
 	}
@@ -666,11 +661,12 @@ func (s *Store) GetRequesterUpdateEmailData(ctx context.Context) ([]*models.Requ
 	now := time.Now()
 	for _, item := range res {
 		data = append(data, &models.RequesterUpdateEmailData{
-			LcidStatus:     item.LCIDStatus(now),
-			LcidIssuedAt:   item.LifecycleIssuedAt,
-			LcidExpiresAt:  item.LifecycleExpiresAt,
-			LcidRetiresAt:  item.LifecycleRetiresAt,
-			RequesterEmail: item.RequesterEmailAddress,
+			EuaUserID:     item.EUAUserID.String,
+			ProjectName:   item.ProjectName.String,
+			LcidStatus:    item.LCIDStatus(now),
+			LcidIssuedAt:  item.LifecycleIssuedAt,
+			LcidExpiresAt: item.LifecycleExpiresAt,
+			LcidRetiresAt: item.LifecycleRetiresAt,
 		})
 	}
 

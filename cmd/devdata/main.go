@@ -744,7 +744,7 @@ func main() {
 	)
 
 	intakeID = uuid.MustParse("29486f85-1aba-4eaf-a7dd-6137b9873adc")
-	makeSystemIntakeAndSubmit(
+	intake = makeSystemIntakeAndSubmit(
 		ctx,
 		"Edits requested on initial request form",
 		&intakeID,
@@ -983,6 +983,17 @@ func main() {
 		"With LCID expiring soon 2",
 		&intakeID,
 		mock.AccessibilityUser,
+		store,
+		time.Now().AddDate(0, 0, 5),
+	)
+
+	// expiring soon
+	intakeID = uuid.New()
+	makeSystemIntakeAndIssueLCID(
+		ctx,
+		"With LCID expiring soon 3",
+		&intakeID,
+		mock.Batman,
 		store,
 		time.Now().AddDate(0, 0, 5),
 	)

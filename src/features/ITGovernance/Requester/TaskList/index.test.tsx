@@ -9,7 +9,8 @@ import {
 } from '@testing-library/react';
 import {
   SystemIntakeDecisionState,
-  SystemIntakeState
+  SystemIntakeState,
+  SystemIntakeStatusAdmin
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
 import { taskListState } from 'tests/mock/govTaskList';
@@ -207,6 +208,38 @@ describe('Governance Task List', () => {
       expect(
         screen.queryByRole('button', { name: 'Remove your request' })
       ).toBeNull();
+    });
+  });
+
+  describe('LCID Retiring Soon', () => {
+    it('renders alert when LCID is retiring soon', async () => {
+      render(
+        <MemoryRouter initialEntries={[`/governance-task-list/${id}`]}>
+          <VerboseMockedProvider
+            mocks={[
+              getGovernanceTaskListQuery({
+                ...taskListState.intakeFormSubmitted.systemIntake,
+                statusAdmin: SystemIntakeStatusAdmin.LCID_RETIRING_SOON,
+                lcidRetiresAt: '2020-10-08T03:11:24.478056Z'
+              })
+            ]}
+            addTypename={false}
+          >
+            <Provider store={store}>
+              <MessageProvider>
+                <Route path="/governance-task-list/:systemId">
+                  <GovernanceTaskList />
+                </Route>
+              </MessageProvider>
+            </Provider>
+          </VerboseMockedProvider>
+        </MemoryRouter>
+      );
+
+      await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
+
+      expect(screen.getByTestId('decision-alert')).toBeInTheDocument();
+      expect(screen.getByText('LCID retiring soon')).toBeInTheDocument();
     });
   });
 });

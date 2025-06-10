@@ -6,7 +6,9 @@ import {
   GRBVotingInformationStatus,
   SystemIntakeGRBReviewAsyncStatusType,
   SystemIntakeGRBReviewFragment,
-  SystemIntakeGRBReviewType
+  SystemIntakeGRBReviewStandardStatusType,
+  SystemIntakeGRBReviewType,
+  SystemIntakeStatusAdmin
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
 import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
@@ -21,7 +23,9 @@ describe('GRBReviewStatusCard', () => {
   const mockStandardReview: SystemIntakeGRBReviewFragment = {
     __typename: 'SystemIntake',
     grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+    statusAdmin: SystemIntakeStatusAdmin.GRB_MEETING_READY,
     grbReviewAsyncStatus: null,
+    grbReviewStandardStatus: SystemIntakeGRBReviewStandardStatusType.SCHEDULED,
     grbDate: '2025-03-28T12:00:00Z',
     grbReviewStartedAt: '2025-03-27T12:00:00Z',
     grbReviewAsyncEndDate: null,
@@ -39,6 +43,7 @@ describe('GRBReviewStatusCard', () => {
 
   const mockAsyncReview: SystemIntakeGRBReviewFragment = {
     __typename: 'SystemIntake',
+    statusAdmin: SystemIntakeStatusAdmin.GRB_REVIEW_IN_PROGRESS,
     grbReviewType: SystemIntakeGRBReviewType.ASYNC,
     grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType.IN_PROGRESS,
     grbDate: null,
@@ -81,7 +86,9 @@ describe('GRBReviewStatusCard', () => {
     // Check that the standard heading is rendered
     expect(
       screen.getByText(
-        i18next.t<string>('grbReview:statusCard.standardHeading')
+        i18next.t<string>('grbReview:statusCard.heading', {
+          context: 'STANDARD'
+        })
       )
     ).toBeInTheDocument();
 
@@ -103,7 +110,9 @@ describe('GRBReviewStatusCard', () => {
 
     // Check that the async heading is rendered
     expect(
-      screen.getByText(i18next.t<string>('grbReview:statusCard.asyncHeading'))
+      screen.getByText(
+        i18next.t<string>('grbReview:statusCard.heading', { context: 'ASYNC' })
+      )
     ).toBeInTheDocument();
 
     // Check that the time remaining is displayed
@@ -125,24 +134,41 @@ describe('GRBReviewStatusCard', () => {
     ).toBeInTheDocument();
   });
 
-  it('renders nothing if grbReviewStartedAt is not set', () => {
+  it('renders if review has not started', () => {
     const reviewWithoutStartDate = {
       ...mockStandardReview,
       grbReviewStartedAt: null
     };
 
-    const { container } = renderComponent(reviewWithoutStartDate);
+    renderComponent(reviewWithoutStartDate);
 
-    // Ensure the component renders nothing
-    expect(container.firstChild).toBeNull();
+    expect(screen.getByTestId('async-status')).toHaveTextContent('Not started');
+
+    expect(
+      screen.getByRole('link', { name: 'Set up GRB review' })
+    ).toBeInTheDocument();
   });
 
-  it('does not display admin-specific actions for non-admin users', () => {
+  it('renders GRB reviewer view - in progress', () => {
     renderComponent(mockStandardReview, false);
 
     // Check that the Add Time or End Voting button is not displayed
     expect(
       screen.queryByText(i18next.t<string>('grbReview:statusCard.addTime'))
+    ).not.toBeInTheDocument();
+  });
+
+  it('renders GRB reviewer view - completed', () => {
+    const asyncReviewCompletedState = {
+      ...mockAsyncReview,
+      grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType.COMPLETED
+    };
+
+    renderComponent(asyncReviewCompletedState, false);
+
+    // Hide restart review button
+    expect(
+      screen.queryByRole('button', { name: /restart review/i })
     ).not.toBeInTheDocument();
   });
 

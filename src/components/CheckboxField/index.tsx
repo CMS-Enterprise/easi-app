@@ -11,6 +11,7 @@ type CheckboxFieldProps = {
   onBlur: () => void;
   value: string;
   inputProps?: JSX.IntrinsicElements['input'];
+  'data-testid'?: string;
 };
 
 const CheckboxField = ({
@@ -22,7 +23,8 @@ const CheckboxField = ({
   onChange,
   onBlur,
   value,
-  inputProps
+  inputProps,
+  'data-testid': datatestid
 }: CheckboxFieldProps) => {
   const checkboxClassNames = classnames('easi-checkbox', 'usa-checkbox', {
     'easy-checkbox--disabled': disabled
@@ -40,6 +42,7 @@ const CheckboxField = ({
         type="checkbox"
         value={value}
         {...inputProps}
+        data-testid={datatestid}
       />
       <label className="usa-checkbox__label" htmlFor={id}>
         {label}
