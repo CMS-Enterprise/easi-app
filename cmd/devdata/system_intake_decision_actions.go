@@ -21,7 +21,6 @@ func makeSystemIntakeAndIssueLCID(
 	store *storage.Store,
 	lcidExpirationDate time.Time,
 ) *models.SystemIntake {
-	pastMeetingDate := time.Now().AddDate(0, -1, 0)
 	var intake *models.SystemIntake
 	// Business Cases require EUA ID to be set in DB constraint
 	if requesterEUA == "" {
@@ -42,10 +41,7 @@ func makeSystemIntakeAndIssueLCID(
 			requesterEUA,
 			store,
 			models.SystemIntakeStepToProgressToGrbMeeting,
-			&progressOptions{
-				completeOtherSteps: true,
-				meetingDate:        &pastMeetingDate,
-			},
+			nil,
 		)
 	}
 	intake = issueLCID(
