@@ -48,7 +48,7 @@ describe('GRB review', () => {
       );
 
     cy.get('[data-testid="date-picker-external-input"]').clear();
-    cy.get('[data-testid="date-picker-external-input"]').type('01/01/2226');
+    cy.get('[data-testid="date-picker-external-input"]').type('01/01/2026');
 
     cy.get('input#recordingLink').clear().type('https://www.google.com');
     cy.get('input#recordingPasscode').clear().type('123');
@@ -213,7 +213,7 @@ describe('GRB review', () => {
 
     cy.get('[data-testid="date-picker-external-input"]')
       .clear()
-      .type('01/01/2226');
+      .type('01/01/2026');
 
     // Hit Send reminder button
     cy.contains('button', 'Send reminder').click();
@@ -262,7 +262,7 @@ describe('GRB review', () => {
 
     cy.get('[data-testid="date-picker-external-input"]')
       .clear()
-      .type('01/01/2226');
+      .type('01/01/2026');
     cy.contains('button', 'Next').click();
 
     cy.get('[data-testid="stepIndicator-2"]').should(
@@ -329,7 +329,7 @@ describe('GRB review', () => {
 
     cy.get('[data-testid="async-status"]').contains('In progress');
 
-    cy.get('p').contains('Review ends 01/01/2226, 5:00pm EST');
+    cy.get('p').contains('Review ends 01/01/2026, 5:00pm EST');
 
     // Open Add Time modal
     cy.get('button').contains('Add time').click();
@@ -383,7 +383,7 @@ describe('GRB review', () => {
         cy.contains('button', 'Restart').should('be.disabled');
 
         cy.get('[data-testid="date-picker-external-input"]').clear();
-        cy.get('[data-testid="date-picker-external-input"]').type('01/01/2226');
+        cy.get('[data-testid="date-picker-external-input"]').type('01/01/2026');
 
         cy.contains('button', 'Restart').should('be.not.disabled').click();
       });
@@ -392,7 +392,7 @@ describe('GRB review', () => {
       .should('be.visible')
       .and(
         'contain.text',
-        'You restarted this GRB review. The new end date is 01/01/2226 at 5:00pm EST.'
+        'You restarted this GRB review. The new end date is 01/01/2026 at 5:00pm EST.'
       );
   });
 
