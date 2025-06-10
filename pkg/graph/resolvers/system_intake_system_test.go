@@ -39,16 +39,17 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 		}
 
 		// set contract for the created system intake
-		// insert systems for this created system intake
+		// TODO - Replace with systemrelationship inout
 		// systemIDs := []string{
 		// 	systemID1,
 		// 	systemID2,
 		// 	systemID3,
 		// }
+		systemRelationshipInput := []*models.SystemRelationshipInput{}
 
 		err := sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
 			// systemIDs,
-			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, createdIntakes[0], []*models.SystemRelationshipInput{})
+			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, createdIntakes[0].ID, systemRelationshipInput)
 		})
 		s.NoError(err)
 
@@ -142,19 +143,20 @@ func (s *ResolverSuite) TestSystemIntakesByCedarSystemID() {
 		// 	system3,
 		// 	system4,
 		// }
+		linkedSystems := []*models.SystemRelationshipInput{}
 
 		err = sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
-			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, create1, []*models.SystemRelationshipInput{})
+			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, create1.ID, linkedSystems)
 		})
 		s.NoError(err)
 
 		err = sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
-			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, create2, []*models.SystemRelationshipInput{})
+			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, create2.ID, linkedSystems)
 		})
 		s.NoError(err)
 
 		err = sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
-			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, create3, []*models.SystemRelationshipInput{})
+			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, create3.ID, linkedSystems)
 		})
 		s.NoError(err)
 

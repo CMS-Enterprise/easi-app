@@ -16,13 +16,13 @@ import (
 
 // SetSystemIntakeSystems links given System IDs to given System Intake ID
 // This function opts to take a *sqlx.Tx instead of a NamedPreparer because the SQL calls inside this function are heavily intertwined, and we never want to call them outside the scope of a transaction
-func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemIntake *models.SystemIntake, systemRelationships []*models.SystemRelationshipInput) error {
-	if systemIntake.ID == uuid.Nil {
+func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemIntakeID uuid.UUID, systemRelationships []*models.SystemRelationshipInput) error {
+	if systemIntakeID == uuid.Nil {
 		return errors.New("unexpected nil system intake ID when linking system intake to system id")
 	}
 
 	_, err := tx.NamedExec(sqlqueries.SystemIntakeSystemForm.Delete, map[string]interface{}{
-		"system_intake_id": systemIntake.ID,
+		"system_intake_id": systemIntakeID,
 	})
 	if err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to delete system ids linked to system intake", zap.Error(err))
@@ -42,7 +42,7 @@ func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemI
 		systemIDLink := models.NewSystemIntakeSystem(userID)
 		systemIDLink.SystemID = *relationship.CedarSystemID
 		systemIDLink.ID = uuid.New()
-		systemIDLink.SystemIntakeID = systemIntake.ID
+		systemIDLink.SystemIntakeID = systemIntakeID
 		systemIDLink.ModifiedBy = &userID
 		systemIDLink.SystemRelationshipType = relationship.SystemRelationshipType
 		systemIDLink.OtherSystemRelationship = relationship.OtherTypeDescription
