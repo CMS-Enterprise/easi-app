@@ -98,6 +98,9 @@ func SetSystemIntakeRelationExistingSystem(
 			return nil, err
 		}
 
+		fmt.Println("==== intake ====")
+		fmt.Println(intake)
+		fmt.Println("==== intake ====")
 		// ensure all given CEDAR system IDs are valid by checking with CEDAR
 		for _, systemRelationship := range input.CedarSystemRelationShips {
 			if _, err = getCedarSystem(ctx, *systemRelationship.CedarSystemID); err != nil {
@@ -123,7 +126,18 @@ func SetSystemIntakeRelationExistingSystem(
 		intake.ContractName = zero.StringFromPtr(nil)
 		relationType := models.RelationTypeExistingSystem
 		intake.SystemRelationType = &relationType
-		return store.UpdateSystemIntakeNP(ctx, tx, intake)
+
+		fmt.Println("==== intake ====")
+		fmt.Println(intake)
+		fmt.Println("==== intake ====")
+
+		finalIntake, err := store.UpdateSystemIntakeNP(ctx, tx, intake)
+
+		fmt.Println("==== finalIntake ====")
+		fmt.Println(finalIntake)
+		fmt.Println("==== finalIntake ====")
+
+		return finalIntake, err
 	})
 }
 

@@ -381,6 +381,9 @@ func (s *Store) FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPr
 			Operation: apperrors.QueryFetch,
 		}
 	}
+	fmt.Println("==== linkedSystems ====")
+	fmt.Println(linkedSystems)
+	fmt.Println("==== linkedSystems ====")
 
 	intake.CedarSystemRelationShips = linkedSystems
 
