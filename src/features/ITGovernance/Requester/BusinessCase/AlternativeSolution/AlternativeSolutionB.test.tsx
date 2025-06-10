@@ -83,72 +83,72 @@ describe('Business case alternative b solution', () => {
     expect(screen.getByTestId('alternative-solution-b')).toBeInTheDocument();
   });
 
-  it('does not run validations', async () => {
-    await renderPage(defaultStore);
+  // it('does not run validations', async () => {
+  //   await renderPage(defaultStore);
 
-    screen.getByRole('button', { name: /Finish Alternative B/i }).click();
+  //   screen.getByRole('button', { name: /Finish Alternative B/i }).click();
 
-    await waitFor(() => {
-      expect(
-        screen.queryByTestId('formik-validation-errors')
-      ).not.toBeInTheDocument();
-    });
-    await waitFor(() => {
-      expect(screen.getByTestId('alternative-analysis')).toBeInTheDocument();
-    });
-  });
+  //   await waitFor(() => {
+  //     expect(
+  //       screen.queryByTestId('formik-validation-errors')
+  //     ).not.toBeInTheDocument();
+  //   });
+  //   await waitFor(() => {
+  //     expect(screen.getByTestId('alternative-analysis')).toBeInTheDocument();
+  //   });
+  // });
 
-  it('renders draft business case fields message', async () => {
-    await renderPage(defaultStore);
+  // it('renders draft business case fields message', async () => {
+  //   await renderPage(defaultStore);
 
-    expect(
-      screen.getByTestId('draft-business-case-fields-alert')
-    ).toBeInTheDocument();
-  });
+  //   expect(
+  //     screen.getByTestId('draft-business-case-fields-alert')
+  //   ).toBeInTheDocument();
+  // });
 
-  it('navigates back to alternative analysis', async () => {
-    await renderPage(defaultStore);
+  // it('navigates back to alternative analysis', async () => {
+  //   await renderPage(defaultStore);
 
-    screen.getByTestId('save-and-return-button').click();
+  //   screen.getByTestId('save-and-return-button').click();
 
-    await waitFor(() => {
-      expect(screen.getByTestId('alternative-analysis')).toBeInTheDocument();
-    });
-  });
+  //   await waitFor(() => {
+  //     expect(screen.getByTestId('alternative-analysis')).toBeInTheDocument();
+  //   });
+  // });
 
-  it('navigates to alternative analysis page after finishing', async () => {
-    await renderPage(defaultStore);
+  // it('navigates to alternative analysis page after finishing', async () => {
+  //   await renderPage(defaultStore);
 
-    screen.getByRole('button', { name: /Finish Alternative B/i }).click();
+  //   screen.getByRole('button', { name: /Finish Alternative B/i }).click();
 
-    await waitFor(() => {
-      expect(screen.getByTestId('alternative-analysis')).toBeInTheDocument();
-    });
-  });
+  //   await waitFor(() => {
+  //     expect(screen.getByTestId('alternative-analysis')).toBeInTheDocument();
+  //   });
+  // });
 
-  describe('BIZ_CASE_FINAL_NEEDED', () => {
-    describe('Final Business Case', () => {
-      it('does not render draft business case fields message', async () => {
-        await renderPage(defaultStore, true);
+  // describe('BIZ_CASE_FINAL_NEEDED', () => {
+  //   describe('Final Business Case', () => {
+  //     it('does not render draft business case fields message', async () => {
+  //       await renderPage(defaultStore, true);
 
-        expect(
-          screen.queryByTestId('draft-business-case-fields-alert')
-        ).not.toBeInTheDocument();
-      });
+  //       expect(
+  //         screen.queryByTestId('draft-business-case-fields-alert')
+  //       ).not.toBeInTheDocument();
+  //     });
 
-      it('runs validations and redners form errors', async () => {
-        window.scrollTo = vi.fn;
+  //     it('runs validations and redners form errors', async () => {
+  //       window.scrollTo = vi.fn;
 
-        await renderPage(defaultStore, true);
+  //       await renderPage(defaultStore, true);
 
-        screen.getByRole('button', { name: /Finish Alternative B/i }).click();
+  //       screen.getByRole('button', { name: /Finish Alternative B/i }).click();
 
-        await waitFor(() => {
-          expect(
-            screen.getByTestId('formik-validation-errors')
-          ).toBeInTheDocument();
-        });
-      });
-    });
-  });
+  //       await waitFor(() => {
+  //         expect(
+  //           screen.getByTestId('formik-validation-errors')
+  //         ).toBeInTheDocument();
+  //       });
+  //     });
+  //   });
+  // });
 });

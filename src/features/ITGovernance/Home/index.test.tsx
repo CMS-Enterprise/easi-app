@@ -1,7 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
-import renderer from 'react-test-renderer';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, waitFor } from '@testing-library/react';
 import { GetRequestsDocument } from 'gql/generated/graphql';
@@ -71,17 +70,15 @@ describe('The making a request page', () => {
   });
 
   it('matches the snapshot', () => {
-    const tree = renderer
-      .create(
-        <MemoryRouter>
-          <MockedProvider mocks={[getRequestsMock]}>
-            <Provider store={defaultStore}>
-              <MakingARequest />
-            </Provider>
-          </MockedProvider>
-        </MemoryRouter>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    const { asFragment } = render(
+      <MemoryRouter>
+        <MockedProvider mocks={[getRequestsMock]}>
+          <Provider store={defaultStore}>
+            <MakingARequest />
+          </Provider>
+        </MockedProvider>
+      </MemoryRouter>
+    );
+    expect(asFragment()).toMatchSnapshot();
   });
 });

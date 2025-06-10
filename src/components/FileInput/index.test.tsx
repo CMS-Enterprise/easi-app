@@ -11,9 +11,8 @@ describe('FileInput component', () => {
         name="fileUpload"
         id="fileUpload"
         onChange={() => {}}
-        onPointerEnterCapture={() => {}}
-        onPointerLeaveCapture={() => {}}
-        crossOrigin={undefined}
+        onPointerOverCapture={() => {}}
+        onPointerMoveCapture={() => {}}
       />
     );
 
@@ -27,9 +26,8 @@ describe('FileInput component', () => {
         id="fileUpload"
         defaultFileName="test.pdf"
         onChange={() => {}}
-        onPointerEnterCapture={() => {}}
-        onPointerLeaveCapture={() => {}}
-        crossOrigin={undefined}
+        onPointerOverCapture={() => {}}
+        onPointerMoveCapture={() => {}}
       />
     );
 
@@ -47,9 +45,8 @@ describe('FileInput component', () => {
         id="fileUpload"
         defaultFileName="test.pdf"
         onChange={() => {}}
-        onPointerEnterCapture={() => {}}
-        onPointerLeaveCapture={() => {}}
-        crossOrigin={undefined}
+        onPointerOverCapture={() => {}}
+        onPointerMoveCapture={() => {}}
       />
     );
 

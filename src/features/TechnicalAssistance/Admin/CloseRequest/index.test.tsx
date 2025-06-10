@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   CloseTRBRequestDocument,
@@ -184,12 +184,6 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
       text
     );
 
-    userEvent.click(
-      getByRole('button', {
-        name: i18next.t<string>('technicalAssistance:actionCloseRequest.submit')
-      })
-    );
-
     // Click through the modal
     userEvent.click(
       await findByRole('button', {
@@ -248,12 +242,6 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
         )
       ),
       text
-    );
-
-    userEvent.click(
-      getByRole('button', {
-        name: i18next.t<string>('technicalAssistance:actionCloseRequest.submit')
-      })
     );
 
     userEvent.click(
