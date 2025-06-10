@@ -27,7 +27,7 @@ func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Sto
 		return nil, err
 	}
 
-	isComplete, err := IsGRBReviewCompleted(intake)
+	isComplete, err := isGRBReviewCompleted(ctx, intake)
 	if err != nil {
 		return nil, err
 	}
@@ -140,7 +140,7 @@ func UploadSystemIntakeGRBPresentationDeck(
 		return nil, errors.New("system intake not found")
 	}
 
-	isReviewCompleted, err := IsGRBReviewCompleted(systemIntake)
+	isReviewCompleted, err := isGRBReviewCompleted(ctx, systemIntake)
 	if err != nil {
 		return nil, err
 	}

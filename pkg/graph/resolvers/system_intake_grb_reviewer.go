@@ -53,12 +53,12 @@ func CreateSystemIntakeGRBReviewers(
 			return nil, errors.New("system intake not found")
 		}
 
-		isGRBReviewCompleted, err := IsGRBReviewCompleted(intake)
+		isGRBReviewComplete, err := isGRBReviewCompleted(ctx, intake)
 		if err != nil {
 			return nil, err
 		}
 
-		if isGRBReviewCompleted {
+		if isGRBReviewComplete {
 			return nil, errors.New("cannot create GRB reviewers for completed GRB review")
 		}
 
@@ -151,12 +151,12 @@ func UpdateSystemIntakeGRBReviewer(
 		return nil, err
 	}
 
-	isGRBReviewCompleted, err := IsGRBReviewCompleted(intake)
+	isGRBReviewComplete, err := isGRBReviewCompleted(ctx, intake)
 	if err != nil {
 		return nil, err
 	}
 
-	if isGRBReviewCompleted {
+	if isGRBReviewComplete {
 		return nil, errors.New("cannot update GRB reviewer for completed GRB review")
 	}
 
@@ -175,12 +175,12 @@ func DeleteSystemIntakeGRBReviewer(
 		return err
 	}
 
-	isGRBReviewCompleted, err := IsGRBReviewCompleted(intake)
+	isGRBReviewComplete, err := isGRBReviewCompleted(ctx, intake)
 	if err != nil {
 		return err
 	}
 
-	if isGRBReviewCompleted {
+	if isGRBReviewComplete {
 		return errors.New("cannot update GRB reviewer for completed GRB review")
 	}
 
@@ -233,12 +233,12 @@ func CastSystemIntakeGRBReviewerVote(ctx context.Context, store *storage.Store, 
 		return nil, errors.New("GRB review times not yet available")
 	}
 
-	isGRBReviewCompleted, err := IsGRBReviewCompleted(systemIntake)
+	isGRBReviewComplete, err := isGRBReviewCompleted(ctx, systemIntake)
 	if err != nil {
 		return nil, err
 	}
 
-	if isGRBReviewCompleted {
+	if isGRBReviewComplete {
 		return nil, errors.New("GRB review is not currently accepting votes")
 	}
 
