@@ -2,7 +2,6 @@ package resolvers
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
@@ -98,9 +97,6 @@ func SetSystemIntakeRelationExistingSystem(
 			return nil, err
 		}
 
-		fmt.Println("==== intake ====")
-		fmt.Println(intake)
-		fmt.Println("==== intake ====")
 		// ensure all given CEDAR system IDs are valid by checking with CEDAR
 		for _, systemRelationship := range input.CedarSystemRelationShips {
 			if _, err = getCedarSystem(ctx, *systemRelationship.CedarSystemID); err != nil {
@@ -108,13 +104,10 @@ func SetSystemIntakeRelationExistingSystem(
 			}
 		}
 
-		fmt.Println("relationships", input.CedarSystemRelationShips)
 		// Add CEDAR system relationships
 		if err := store.SetSystemIntakeSystems(ctx, tx, intake, input.CedarSystemRelationShips); err != nil {
 			return nil, err
 		}
-
-		fmt.Println("relationships", input.CedarSystemRelationShips)
 
 		// Delete & recreate contract number relationships
 		// DISABLED: See Note [EASI-4160 Disable Contract Number Linking]
@@ -127,17 +120,7 @@ func SetSystemIntakeRelationExistingSystem(
 		relationType := models.RelationTypeExistingSystem
 		intake.SystemRelationType = &relationType
 
-		fmt.Println("==== intake ====")
-		fmt.Println(intake)
-		fmt.Println("==== intake ====")
-
-		finalIntake, err := store.UpdateSystemIntakeNP(ctx, tx, intake)
-
-		fmt.Println("==== finalIntake ====")
-		fmt.Println(finalIntake)
-		fmt.Println("==== finalIntake ====")
-
-		return finalIntake, err
+		return store.UpdateSystemIntakeNP(ctx, tx, intake)
 	})
 }
 
