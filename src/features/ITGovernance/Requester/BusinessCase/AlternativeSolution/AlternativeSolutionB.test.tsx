@@ -4,7 +4,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import {
   render,
   screen,
-  waitFor,
+  // waitFor,
   waitForElementToBeRemoved
 } from '@testing-library/react';
 import BusinessCase from 'features/ITGovernance/Requester/BusinessCase';

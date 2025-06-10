@@ -6,15 +6,15 @@ import {
   screen,
   waitForElementToBeRemoved
 } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+// import userEvent from '@testing-library/user-event';
 import BusinessCase from 'features/ITGovernance/Requester/BusinessCase';
 import { SystemIntakeStep } from 'gql/generated/graphql';
 import configureMockStore from 'redux-mock-store';
 import { getGovernanceTaskListQuery } from 'tests/mock/systemIntake';
 
 import {
-  businessCaseInitialData,
-  defaultProposedSolution
+  businessCaseInitialData
+  // defaultProposedSolution
 } from 'data/businessCase';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 

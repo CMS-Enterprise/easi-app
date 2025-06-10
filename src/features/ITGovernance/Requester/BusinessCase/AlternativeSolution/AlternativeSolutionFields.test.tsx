@@ -1,6 +1,6 @@
 import React from 'react';
-import { render, screen, within } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen } from '@testing-library/react';
+// import userEvent from '@testing-library/user-event';
 import { Form, Formik, FormikProps } from 'formik';
 
 import { defaultProposedSolution } from 'data/businessCase';

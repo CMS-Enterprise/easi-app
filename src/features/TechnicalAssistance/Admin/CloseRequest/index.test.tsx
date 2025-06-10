@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import { render, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   CloseTRBRequestDocument,
@@ -67,7 +67,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
   };
 
   it('closes a request with a reason', async () => {
-    const { getByLabelText, getByRole, findByText, findByRole } = render(
+    const { getByLabelText, findByText, findByRole } = render(
       <Provider store={store}>
         <MockedProvider
           defaultOptions={{
@@ -199,7 +199,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
   });
 
   it('shows an error notice when close submission fails', async () => {
-    const { getByLabelText, getByRole, findByText, findByRole } = render(
+    const { getByLabelText, findByText, findByRole } = render(
       <MockedProvider
         mocks={[
           getAttendeesQuery,
