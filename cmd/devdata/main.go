@@ -404,6 +404,21 @@ func main() {
 
 	makeSystemIntakeGRBPresentationLinks(ctx, store, links)
 
+	intakeID = uuid.MustParse("b0c1d2e3-f4a5-6789-abcd-ef0123456789")
+	intake = makeSystemIntakeAndProgressToStep(
+		ctx,
+		"Async GRB review in progress (without votes)",
+		&intakeID,
+		mock.PrincipalUser,
+		store,
+		models.SystemIntakeStepToProgressToGrbMeeting,
+		&progressOptions{
+			completeOtherSteps: true,
+			fillForm:           true,
+		},
+	)
+	setupSystemIntakeGRBReview(ctx, store, intake, models.SystemIntakeGRBReviewTypeAsync, &futureMeetingDate)
+
 	intakeID = uuid.MustParse("d80cf287-35cb-4e76-b8b3-0467eabd75b8")
 	makeSystemIntakeAndProgressToStep(
 		ctx,
