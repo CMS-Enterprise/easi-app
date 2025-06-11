@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
+	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/local"
@@ -72,17 +73,74 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 		votingRole := models.SystemIntakeGRBReviewerVotingRoleVoting
 		grbRole := models.SystemIntakeGRBReviewerRoleAca3021Rep
 
-		pastTime := time.Now().Add(-24 * time.Hour)
 		intake := s.createNewIntake()
 		intake.GrbReviewType = models.SystemIntakeGRBReviewTypeAsync
-		intake.GrbReviewAsyncEndDate = &pastTime
-		intake, err := store.UpdateSystemIntake(ctx, intake)
+		intake.GRBReviewStartedAt = helpers.PointerTo(time.Now().AddDate(0, 0, -4))
+
+		// set (temp) future end date
+		intake.GrbReviewAsyncEndDate = helpers.PointerTo(time.Now().AddDate(0, 0, 1))
+
+		var err error
+		intake, err = store.UpdateSystemIntake(ctx, intake)
 		s.NoError(err)
+
+		// first, set a voting quorum on this intake
+		reviewers := []*models.CreateGRBReviewerInput{
+			{
+				EuaUserID:  mock.PrincipalUser,
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
+			},
+			{
+				EuaUserID:  mock.Batman,
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleOther,
+			},
+			{
+				EuaUserID:  "ABCD",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
+			},
+			{
+				EuaUserID:  mock.AccessibilityUser,
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
+			},
+			{
+				EuaUserID:  mock.TestUser,
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
+			},
+		}
+		_, err = CreateSystemIntakeGRBReviewers(s.testConfigs.Context, s.testConfigs.Store, nil, userhelpers.GetUserInfoAccountInfosWrapperFunc(mock.FetchUserInfosMock), &models.CreateSystemIntakeGRBReviewersInput{
+			SystemIntakeID: intake.ID,
+			Reviewers:      reviewers,
+		})
+		s.NoError(err)
+
+		// set votes for each one
+		for _, reviewer := range reviewers {
+			rctx, _ := s.getTestContextWithPrincipal(reviewer.EuaUserID, false)
+			_, err := CastSystemIntakeGRBReviewerVote(rctx, s.testConfigs.Store, models.CastSystemIntakeGRBReviewerVoteInput{
+				SystemIntakeID: intake.ID,
+				Vote:           models.SystemIntakeAsyncGRBVotingOptionNoObjection,
+				VoteComment:    nil,
+			})
+			s.NoError(err)
+		}
 
 		_ = s.getOrCreateUserAccts(reviewerEUA)
 
+		fmt.Println("==== failing test ====")
+		fmt.Println("==== failing test ====")
+
+		// set end date in the past
+		intake.GrbReviewAsyncEndDate = helpers.PointerTo(time.Now().AddDate(0, 0, -1))
+		intake, err = store.UpdateSystemIntake(ctx, intake)
+		s.NoError(err)
+
 		_, err = CreateSystemIntakeGRBReviewers(
-			ctx,
+			s.ctxWithNewDataloaders(),
 			store,
 			emailClient,
 			userhelpers.GetUserInfoAccountInfosWrapperFunc(okta.FetchUserInfos),

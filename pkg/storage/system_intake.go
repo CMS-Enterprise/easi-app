@@ -680,7 +680,7 @@ func (s *Store) GetSystemIntakeByGRBReviewerID(
 	reviewerID uuid.UUID,
 ) (*models.SystemIntake, error) {
 	intake := &models.SystemIntake{}
-	err := namedSelect(ctx, s.db, intake, sqlqueries.SystemIntake.GetSystemIntakeByGRBReviewerID, args{
+	err := namedGet(ctx, s.db, intake, sqlqueries.SystemIntake.GetSystemIntakeByGRBReviewerID, args{
 		"grb_reviewer_id": reviewerID,
 	})
 

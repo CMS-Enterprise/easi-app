@@ -2,14 +2,12 @@ package resolvers
 
 import (
 	"bytes"
-	"fmt"
 	"time"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
 
 	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
-	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
@@ -110,13 +108,6 @@ func (s *ResolverSuite) TestUploadSystemIntakeGRBPresentationDeck() {
 		s.NoError(err)
 	}
 
-	grbReviewers, err := dataloaders.GetSystemIntakeGRBReviewersBySystemIntakeID(s.ctxWithNewDataloaders(), intake.ID)
-	s.NoError(err)
-
-	fmt.Println("==== grbReviewers ====")
-	fmt.Println(grbReviewers)
-	fmt.Println("==== grbReviewers ====")
-
 	// set back to time in the past
 	intake.GrbReviewAsyncEndDate = helpers.PointerTo(time.Now().AddDate(0, 0, -1))
 	intake, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intake)
@@ -128,10 +119,6 @@ func (s *ResolverSuite) TestUploadSystemIntakeGRBPresentationDeck() {
 	}
 
 	// Assert insert portion of upsert
-	fmt.Println("==== failed test ====")
-	//fmt.Println(failed test)
-	fmt.Println("==== failed test ====")
-
 	_, err = UploadSystemIntakeGRBPresentationDeck(
 		s.testConfigs.Context,
 		s.testConfigs.Store,
