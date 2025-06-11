@@ -131,6 +131,9 @@ const GRBReviewStatusCard = ({
       case 'NOT_STARTED':
         return 'bg-warning-lighter';
 
+      case 'PAST_DUE':
+        return 'bg-error-lighter';
+
       default:
         return 'bg-primary-lighter';
     }
@@ -142,6 +145,14 @@ const GRBReviewStatusCard = ({
   if (!grbReviewStatus) {
     return null;
   }
+
+  const borderColorClass =
+    grbReviewStatus === 'PAST_DUE'
+      ? 'border-error-light'
+      : 'border-primary-light';
+
+  const dateTextColorClass =
+    grbReviewStatus === 'PAST_DUE' ? 'text-error-dark' : 'text-primary-dark';
 
   return (
     <div
@@ -166,7 +177,12 @@ const GRBReviewStatusCard = ({
 
       {/* Meeting Details */}
       {reviewIsInProgress && (
-        <div className="border-top-1px border-primary-light margin-top-2 padding-top-2">
+        <div
+          className={classNames(
+            'border-top-1px margin-top-2 padding-top-2',
+            borderColorClass
+          )}
+        >
           {grbReviewType === SystemIntakeGRBReviewType.ASYNC ? (
             // ASYNC review type
             <>
@@ -183,9 +199,15 @@ const GRBReviewStatusCard = ({
                   })}
                 </p>
 
-                <p className="easi-body-normal text-primary-dark margin-0 flex-align-self-center">
+                <p
+                  className={classNames(
+                    'easi-body-normal margin-0 flex-align-self-center',
+                    dateTextColorClass
+                  )}
+                >
                   {t('statusCard.reviewEnds', {
-                    date: formatDateUtc(grbReviewAsyncEndDate, 'MM/dd/yyyy')
+                    date: formatDateUtc(grbReviewAsyncEndDate, 'MM/dd/yyyy'),
+                    context: grbReviewStatus
                   })}
                 </p>
               </Grid>

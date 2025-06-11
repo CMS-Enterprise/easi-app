@@ -141,6 +141,10 @@ describe('formatDaysHoursMinutes', () => {
   });
 
   it('calculates the difference for a future date', () => {
+    // Set current date to fix flaky unit test
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2025-06-01T12:00:00Z'));
+
     // Mock a future ISO string
     const futureDate = DateTime.utc()
       .plus({ days: 0, hours: 3, minutes: 15 })
@@ -153,6 +157,8 @@ describe('formatDaysHoursMinutes', () => {
       hours: 3,
       minutes: 15
     });
+
+    vi.useRealTimers();
   });
 
   it('returns 0 for all values when the input date is now', () => {
