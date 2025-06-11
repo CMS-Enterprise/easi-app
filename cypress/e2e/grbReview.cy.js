@@ -172,7 +172,13 @@ describe('GRB review', () => {
         });
     });
 
-    cy.get('#grbReviewAsyncEndDate').clear().type('01/01/2226');
+    // cy.get('#grbReviewAsyncEndDate').clear().type('01/01/2226');
+    cy.get('[data-testid="date-picker-external-input"]')
+      .clear()
+      .type('01/01/2226');
+
+    // cy.get('#grbReviewAsyncEndDate').type('01/01/2026');
+    // cy.get('#grbReviewAsyncEndDate').should('have.value', '01/01/2026');
 
     cy.contains('button', 'Complete and begin review').click();
     cy.wait('@updateAsyncTimeframe')
