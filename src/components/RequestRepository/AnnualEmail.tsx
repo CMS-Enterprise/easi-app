@@ -17,6 +17,7 @@ import { useGetRequesterUpdateEmailDataQuery } from 'gql/generated/graphql';
 import Alert from 'components/Alert';
 import CheckboxField from 'components/CheckboxField';
 import Modal from 'components/Modal';
+import Spinner from 'components/Spinner';
 
 // Define all possible status keys
 type StatusKey =
@@ -215,11 +216,9 @@ const AnnualEmail = () => {
         </ModalHeading>
         <p>{t('home:adminHome.GRT.requesterUpdateEmail.modal.content')}</p>
         {loading && (
-          <div className="display-flex flex-align-center flex-justify-space-between">
-            <Icon.Autorenew className="text-base-dark" />
-            <span className="margin-left-1 text-base-dark text-italic">
-              {t('general:loadingData')}
-            </span>
+          <div className="display-flex flex-align-center text-base-dark text-italic">
+            <Spinner size="small" className="margin-right-1" />
+            {t('general:loadingData')}
           </div>
         )}
         {error && (
@@ -236,13 +235,17 @@ const AnnualEmail = () => {
                   key={key}
                   name={key}
                   control={control}
-                  render={({ field: { ref, ...field } }) => (
+                  render={({ field: { ref, onChange, ...field } }) => (
                     <CheckboxField
                       {...field}
                       id={key as string}
                       value={key as string}
                       label={statusLabel}
                       data-testid={`checkbox-${key}`}
+                      onChange={e => {
+                        setEmailsCopied(false);
+                        onChange(e);
+                      }}
                     />
                   )}
                 />
@@ -266,13 +269,11 @@ const AnnualEmail = () => {
                     )}
                   </Button>
                   {emailsCopied ? (
-                    <div className="display-flex flex-align-center flex-justify-space-between">
-                      <span className="text-italic text-success-dark">
-                        <Icon.Check className="margin-right-1" />
-                        {t(
-                          'home:adminHome.GRT.requesterUpdateEmail.modal.copied'
-                        )}
-                      </span>
+                    <div className="display-flex flex-align-center text-italic text-success-dark">
+                      <Icon.Check className="margin-right-1" />
+                      {t(
+                        'home:adminHome.GRT.requesterUpdateEmail.modal.copied'
+                      )}
                     </div>
                   ) : (
                     <Button
