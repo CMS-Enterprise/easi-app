@@ -24,8 +24,9 @@ describe('The Collapsable Link componnet', () => {
     userEvent.click(screen.getByTestId('collapsable-link'));
     await screen.findByTestId('children');
 
-    expect(
-      screen.getByRole('button', { name: new RegExp('Test', 'i') })
-    ).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByRole('button', { name: 'Test' })).toHaveAttribute(
+      'aria-expanded',
+      'true'
+    );
   });
 });

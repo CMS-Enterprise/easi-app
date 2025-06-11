@@ -234,7 +234,7 @@ describe('Trb Request form: Supporting documents', () => {
 
     // Check some render states
     // Submit button is "Next" when there are documents
-    await findByRole('button', { name: /Next/i });
+    await findByRole('button', { name: 'Next' });
 
     // Available file
     getByRole('button', { name: 'View' });
@@ -264,16 +264,16 @@ describe('Trb Request form: Supporting documents', () => {
     );
 
     // Add document button can open the upload document form
-    userEvent.click(await findByRole('link', { name: /Add a document/i }));
+    userEvent.click(await findByRole('link', { name: 'Add a document' }));
 
     getByText('Upload a document', { selector: 'h1' });
 
     // Can close without uploading
     userEvent.click(
-      getByRole('link', { name: /Don’t upload and return to previous page/i })
+      getByRole('link', { name: 'Don’t upload and return to previous page' })
     );
 
-    expect(getByRole('link', { name: /Add a document/i })).toBeInTheDocument();
+    expect(getByRole('link', { name: 'Add a document' })).toBeInTheDocument();
   });
 
   it('successfully uploads a doc, starting from the documents table', async () => {
@@ -372,10 +372,10 @@ describe('Trb Request form: Supporting documents', () => {
     ).toBeInTheDocument();
 
     // Add document button opens upload document form
-    userEvent.click(getByRole('link', { name: /Add a document/i }));
+    userEvent.click(getByRole('link', { name: 'Add a document' }));
 
     // Upload doc disabled on empty form
-    const uploadButton = getByRole('button', { name: /Upload document/i });
+    const uploadButton = getByRole('button', { name: 'Upload document' });
     expect(uploadButton).toBeDisabled();
 
     const documentUploadLabel = getByLabelText('Document upload');
@@ -436,7 +436,7 @@ describe('Trb Request form: Supporting documents', () => {
     userEvent.click(getByTestId('documentType-ARCHITECTURE_DIAGRAM'));
 
     // Attempt submit
-    const uploadButton = getByRole('button', { name: /Upload document/i });
+    const uploadButton = getByRole('button', { name: 'Upload document' });
     userEvent.click(uploadButton);
 
     await findByText(/There was an issue uploading your document/);
@@ -525,10 +525,10 @@ describe('Trb Request form: Supporting documents', () => {
     console.error = vi.fn();
 
     // Opens modal
-    userEvent.click(await findByRole('button', { name: /Remove/i }));
+    userEvent.click(await findByRole('button', { name: 'Remove' }));
 
     // Removes document from modal
-    userEvent.click(await findByRole('button', { name: /Remove document/i }));
+    userEvent.click(await findByRole('button', { name: 'Remove document' }));
 
     await waitFor(() => {
       findByText('No documents uploaded');
@@ -578,7 +578,7 @@ describe('Trb Request form: Supporting documents', () => {
       </MemoryRouter>
     );
 
-    const uploadButton = getByRole('button', { name: /Upload document/i });
+    const uploadButton = getByRole('button', { name: 'Upload document' });
 
     expect(uploadButton).toBeDisabled();
 

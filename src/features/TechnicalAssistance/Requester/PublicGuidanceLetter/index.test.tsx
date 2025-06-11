@@ -113,17 +113,13 @@ describe('Trb Public Guidance Letter', () => {
 
     await screen.findAllByRole('heading', {
       level: 1,
-      name: new RegExp(
-        i18next.t<string>('technicalAssistance:guidanceLetterForm.heading'),
-        'i'
-      )
+      name: i18next.t<string>('technicalAssistance:guidanceLetterForm.heading')
     });
 
     await findByRole('heading', {
       level: 2,
-      name: new RegExp(
-        i18next.t<string>('technicalAssistance:guidanceLetter.requestSummary'),
-        'i'
+      name: i18next.t<string>(
+        'technicalAssistance:guidanceLetter.requestSummary'
       )
     });
 
@@ -159,7 +155,7 @@ describe('Trb Public Guidance Letter', () => {
 
     await findByRole('heading', {
       level: 1,
-      name: new RegExp(i18next.t<string>('error:notFound.heading'), 'i')
+      name: i18next.t<string>('error:notFound.heading')
     });
   });
 
@@ -187,10 +183,7 @@ describe('Trb Public Guidance Letter', () => {
 
     await findByRole('heading', {
       level: 4,
-      name: new RegExp(
-        i18next.t<string>('technicalAssistance:guidanceLetter.incomplete'),
-        'i'
-      )
+      name: i18next.t<string>('technicalAssistance:guidanceLetter.incomplete')
     });
   });
 
@@ -223,19 +216,13 @@ describe('Trb Public Guidance Letter', () => {
 
     await screen.findAllByRole('heading', {
       level: 1,
-      name: new RegExp(
-        i18next.t<string>('technicalAssistance:guidanceLetterForm.heading'),
-        'i'
-      )
+      name: i18next.t<string>('technicalAssistance:guidanceLetterForm.heading')
     });
 
     expect(
       await findAllByRole('link', {
-        name: new RegExp(
-          i18next.t<string>(
-            'technicalAssistance:requestFeedback.returnToTaskList'
-          ),
-          'i'
+        name: i18next.t<string>(
+          'technicalAssistance:requestFeedback.returnToTaskList'
         )
       })
     ).toHaveLength(2);

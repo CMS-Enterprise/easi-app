@@ -410,7 +410,6 @@ const AlternativeAnalysis = ({
               icon={<Icon.ArrowBack aria-label="back" />}
               type="button"
               unstyled
-              data-testid="save-and-return-button"
               onClick={() => {
                 dispatchSave();
                 history.push(

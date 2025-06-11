@@ -131,7 +131,7 @@ describe('TRB Guidance Letter Form', () => {
 
     // Wait for the heading that confirms the page rendered
     await screen.findByRole('button', {
-      name: /Add additional guidance/i
+      name: 'Add additional guidance'
     });
 
     expect(asFragment()).toMatchSnapshot();
@@ -165,13 +165,13 @@ describe('TRB Guidance Letter Form', () => {
     const { findByRole, findByTestId } = renderForm('insights');
 
     const button = await findByRole('button', {
-      name: /Add additional guidance/i
+      name: 'Add additional guidance'
     });
 
     userEvent.click(button);
 
     // Title field
-    const titleInput = await findByRole('textbox', { name: /Title */i });
+    const titleInput = await findByRole('textbox', { name: 'Title *' });
     userEvent.type(titleInput, mockInsight.title);
     expect(titleInput).toHaveValue(mockInsight.title);
 
@@ -182,12 +182,12 @@ describe('TRB Guidance Letter Form', () => {
 
     // Add resource link
     const addLinkButton = await findByRole('button', {
-      name: /Add a resource link/i
+      name: 'Add a resource link'
     });
     userEvent.click(addLinkButton);
 
     const addAnotherLinkButton = await findByRole('button', {
-      name: /Add another resource link/i
+      name: 'Add another resource link'
     });
     // Button should be disabled while link input is blank
     expect(addAnotherLinkButton).toBeDisabled();

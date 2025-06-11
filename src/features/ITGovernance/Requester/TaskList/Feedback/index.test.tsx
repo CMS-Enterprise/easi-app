@@ -100,25 +100,21 @@ describe('Feedback page', () => {
 
     expect(
       screen.getByRole('heading', {
-        name: new RegExp(i18next.t<string>('taskList:feedbackV2.heading'), 'i')
+        name: i18next.t<string>('taskList:feedbackV2.heading')
       })
     ).toBeInTheDocument();
 
     expect(
       await screen.findAllByRole('link', {
-        name: new RegExp(
-          i18next.t<string>('taskList:navigation.returnToGovernanceTaskList'),
-          'i'
+        name: i18next.t<string>(
+          'taskList:navigation.returnToGovernanceTaskList'
         )
       })
     );
 
     expect(
       screen.getAllByRole('button', {
-        name: new RegExp(
-          i18next.t<string>('taskList:feedbackV2.downloadAsPDF'),
-          'i'
-        )
+        name: i18next.t<string>('taskList:feedbackV2.downloadAsPDF')
       })
     );
 
@@ -171,12 +167,9 @@ describe('Feedback page', () => {
 
     expect(
       screen.getAllByRole('link', {
-        name: new RegExp(
-          i18next.t<string>('taskList:navigation.returnToForm', {
-            type: 'Intake Request Form'
-          }),
-          'i'
-        )
+        name: i18next.t<string>('taskList:navigation.returnToForm', {
+          type: 'Intake Request Form'
+        })
       })
     );
 

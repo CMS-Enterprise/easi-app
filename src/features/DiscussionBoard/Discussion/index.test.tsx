@@ -36,7 +36,7 @@ describe('Discussion component', () => {
     );
 
     expect(
-      screen.getByRole('heading', { level: 1, name: /Discussion/i })
+      screen.getByRole('heading', { level: 1, name: 'Discussion' })
     ).toBeInTheDocument();
 
     expect(
@@ -46,18 +46,15 @@ describe('Discussion component', () => {
     expect(
       screen.getByRole('heading', {
         level: 4,
-        name: new RegExp(
-          i18next.t('discussions:general.repliesCount', {
-            count: discussion.replies.length
-          }),
-          'i'
-        )
+        name: i18next.t('discussions:general.repliesCount', {
+          count: discussion.replies.length
+        })
       })
     ).toBeInTheDocument();
 
     // Should not show view more replies button with only two replies
     expect(
-      screen.queryByRole('button', { name: /View more replies/i })
+      screen.queryByRole('button', { name: 'View more replies' })
     ).toBeNull();
   });
 
@@ -131,7 +128,7 @@ describe('Discussion component', () => {
     expect(within(repliesList).getAllByRole('listitem')).toHaveLength(4);
 
     const viewMoreButton = screen.getByRole('button', {
-      name: /View more replies/i
+      name: 'View more replies'
     });
 
     userEvent.click(viewMoreButton);
@@ -141,13 +138,13 @@ describe('Discussion component', () => {
     );
 
     expect(
-      screen.getByRole('button', { name: /View less replies/i })
+      screen.getByRole('button', { name: 'View less replies' })
     ).toBeInTheDocument();
 
     // Toggle hide replies
 
     const hideRepliesButton = screen.getByRole('button', {
-      name: /Hide replies/i
+      name: 'Hide replies'
     });
 
     userEvent.click(hideRepliesButton);
@@ -155,7 +152,7 @@ describe('Discussion component', () => {
     expect(screen.queryByTestId('discussionList')).toBeNull();
 
     expect(
-      screen.getByRole('button', { name: /Show replies/i })
+      screen.getByRole('button', { name: 'Show replies' })
     ).toBeInTheDocument();
   });
 });
