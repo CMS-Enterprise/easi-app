@@ -17,6 +17,10 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
         class="easi-section"
         data-testid="section-wrapper"
       >
+        <hr
+          aria-hidden="true"
+          class="margin-bottom-1 margin-top-4 opacity-30"
+        />
         <h2>
           General request information
         </h2>
@@ -105,6 +109,10 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
         class="easi-section"
         data-testid="section-wrapper"
       >
+        <hr
+          aria-hidden="true"
+          class="margin-bottom-1 margin-top-4 opacity-30"
+        />
         <h2>
           Request description
         </h2>
@@ -239,6 +247,10 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
           </div>
         </dl>
       </div>
+      <hr
+        aria-hidden="true"
+        class="margin-bottom-1 margin-top-4 opacity-30"
+      />
       <h2
         class="easi-no-print"
       >
@@ -393,7 +405,7 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                   <dt
                     class="text-bold margin-bottom-05"
                   >
-                    Target release date of contract solicitation
+                    Target contract award date
                   </dt>
                   <dd
                     class="description-definition margin-0 text-pre-wrap"
@@ -736,7 +748,7 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                     <dt
                       class="text-bold margin-bottom-05"
                     >
-                      Target release date of contract solicitation
+                      Target contract award date
                     </dt>
                     <dd
                       class="description-definition margin-0 text-pre-wrap"
@@ -1085,7 +1097,7 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                     <dt
                       class="text-bold margin-bottom-05"
                     >
-                      Target release date of contract solicitation
+                      Target contract award date
                     </dt>
                     <dd
                       class="description-definition margin-0 text-pre-wrap"

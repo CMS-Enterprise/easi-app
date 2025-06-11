@@ -380,6 +380,7 @@ const PreferredSolution = ({
                     className="maxw-none"
                   >
                     {t('zeroTrustAlignment')}
+                    <RequiredAsterisk />
                   </Label>
                   <HelpText
                     id="BusinessCase-PreferredSolutionZeroTrustAlignmentHelp"

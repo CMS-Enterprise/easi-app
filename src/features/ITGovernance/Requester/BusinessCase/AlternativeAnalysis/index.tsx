@@ -281,7 +281,7 @@ const AlternativeAnalysis = ({
             <PageHeading className="margin-top-4 margin-bottom-2">
               {t('alternatives')}
             </PageHeading>
-            <div className="font-body-lg text-light">
+            <div className="font-body-lg text-light line-height-sans-4">
               <p className="margin-top-0">
                 {t('alternativesDescription.text.0')}
               </p>

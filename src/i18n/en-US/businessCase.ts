@@ -65,7 +65,7 @@ const businessCase = {
   responseToGRTFeedback:
     'How will you implement or respond to the recommendations provided by the GRT?',
   responseToGRTFeedbackHelpText:
-    "Leave this question blank until after you attend a GRT meeting. Fill in 'N/A' if a GRT meeting related to this request is never scheduled.",
+    "Leave this question blank until after you attend a GRT meeting. You may input 'N/A' if a GRT meeting was not scheduled for your project or if the GRT has no recommendations.",
   alternatives: 'Options and alternatives',
   alternativesDescription: {
     text: [

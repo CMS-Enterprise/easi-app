@@ -67,7 +67,7 @@ const PropsedBusinessCaseSolutionReview = ({
       </ReviewRow>
       <ReviewRow>
         <div className="line-height-body-3">
-          <DescriptionTerm term="Target release date of contract solicitation" />
+          <DescriptionTerm term="Target contract award date" />
           <DescriptionDefinition
             className="text-pre-wrap"
             definition={

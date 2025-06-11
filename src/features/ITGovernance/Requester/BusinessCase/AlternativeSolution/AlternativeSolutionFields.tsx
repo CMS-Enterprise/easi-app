@@ -282,8 +282,12 @@ const AlternativeSolutionFields = ({
           scrollElement={`${altId}.zeroTrustAlignment`}
           error={!!flatErrors[`${altId}.zeroTrustAlignment`]}
         >
-          <Label htmlFor={`BusinessCase-${altId}ZeroTrustAlignment`}>
+          <Label
+            htmlFor={`BusinessCase-${altId}ZeroTrustAlignment`}
+            className="maxw-none"
+          >
             {t('zeroTrustAlignment')}
+            <RequiredAsterisk />
           </Label>
           <HelpText
             id={`BusinessCase-${altId}ZeroTrustAlignmentHelp`}

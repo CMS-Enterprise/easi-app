@@ -224,7 +224,9 @@ const RequestDescription = ({
                   label={t('priorityAlignmentExample.label')}
                   className="margin-top-1 margin-bottom-1"
                 >
-                  {t('priorityAlignmentExample.description')}
+                  <div className="line-height-sans-4">
+                    {t('priorityAlignmentExample.description')}
+                  </div>
                 </CollapsableLink>
                 <FieldErrorMsg>{flatErrors.priorityAlignment}</FieldErrorMsg>
                 <Field
@@ -258,7 +260,9 @@ const RequestDescription = ({
                   label={t('successIndicatorsExamples.label')}
                   className="margin-top-1 margin-bottom-1"
                 >
-                  {t('successIndicatorsExamples.description')}
+                  <div className="line-height-sans-4">
+                    {t('successIndicatorsExamples.description')}
+                  </div>
                 </CollapsableLink>
                 <FieldErrorMsg>{flatErrors.successIndicators}</FieldErrorMsg>
                 <Field

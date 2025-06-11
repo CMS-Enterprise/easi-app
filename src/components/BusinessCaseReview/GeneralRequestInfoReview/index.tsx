@@ -24,7 +24,9 @@ const GeneralRequestInfoReview = ({
         </div>
         <div>
           <DescriptionTerm term="Contact / request acronym" />
-          <DescriptionDefinition definition={values.projectAcronym} />
+          <DescriptionDefinition
+            definition={values.projectAcronym ? values.projectAcronym : 'N/A'}
+          />
         </div>
       </ReviewRow>
       <ReviewRow>

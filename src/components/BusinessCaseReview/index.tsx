@@ -40,6 +40,8 @@ const BusinessCaseReview = ({
             helpArticle ? 'request-information-wrapper margin-top-4' : ''
           }
         >
+          <hr className="margin-bottom-1 margin-top-4 opacity-30" aria-hidden />
+
           <h2>{t('generalRequest')}</h2>
           <GeneralRequestInfoReview
             values={{
@@ -60,6 +62,8 @@ const BusinessCaseReview = ({
           borderBottom={!!helpArticle}
           className={helpArticle ? 'padding-bottom-3' : ''}
         >
+          <hr className="margin-bottom-1 margin-top-4 opacity-30" aria-hidden />
+
           <h2>{t('requestDescription')}</h2>
           <RequestDescriptionReview
             values={{
@@ -73,6 +77,8 @@ const BusinessCaseReview = ({
             }}
           />
         </SectionWrapper>
+
+        <hr className="margin-bottom-1 margin-top-4 opacity-30" aria-hidden />
 
         <h2 className="easi-no-print">{t('alternatives')}</h2>
         <div className="alternative-analysis-wrapper">
