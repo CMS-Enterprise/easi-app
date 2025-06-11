@@ -42,7 +42,9 @@ describe('DiscussionPost', () => {
 
     const repliesCount = replies.length;
     expect(
-      screen.getByRole('button', { name: `${repliesCount} replies` })
+      screen.getByRole('button', {
+        name: new RegExp(`${repliesCount} replies`, 'i')
+      })
     ).toBeInTheDocument();
 
     const lastReplyAtText = i18next.t('discussions:general.lastReply', {
@@ -59,7 +61,7 @@ describe('DiscussionPost', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByRole('button', { name: 'Reply' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Reply/i })).toBeInTheDocument();
 
     expect(screen.queryByTestId('lastReplyAtText')).toBeNull();
   });

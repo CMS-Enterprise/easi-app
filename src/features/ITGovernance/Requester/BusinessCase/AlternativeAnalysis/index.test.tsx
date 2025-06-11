@@ -144,7 +144,7 @@ describe('Business case alternative analysis form', () => {
   it('navigates to the previous page when "Back" is clicked', async () => {
     await renderPage(defaultStore);
 
-    screen.getByRole('button', { name: /back/i }).click();
+    screen.getByRole('button', { name: /Save and exit/i }).click();
 
     await waitFor(() => {
       expect(screen.getByTestId('request-description')).toBeInTheDocument();

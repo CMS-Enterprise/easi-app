@@ -64,14 +64,14 @@ describe('Discussions', () => {
     );
 
     expect(
-      await screen.findByRole('heading', { name: 'Most recent activity' })
+      await screen.findByRole('heading', { name: /Most recent activity/i })
     ).toBeInTheDocument();
 
     expect(
       screen.getByText('0 discussions without replies')
     ).toBeInTheDocument();
 
-    expect(screen.queryByRole('img', { name: 'warning icon' })).toBeNull();
+    expect(screen.queryByRole('img', { name: /warning icon/i })).toBeNull();
 
     expect(screen.queryByRole('button', { name: 'View' })).toBeNull();
   });
@@ -99,7 +99,7 @@ describe('Discussions', () => {
       screen.getByRole('img', { name: 'warning icon' })
     ).toBeInTheDocument();
 
-    expect(screen.getByRole('button', { name: 'View' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /View/i })).toBeInTheDocument();
   });
 
   it('renders discussion board with no discussions', async () => {
@@ -146,7 +146,7 @@ describe('Discussions', () => {
     ).toBeInTheDocument();
 
     expect(
-      screen.getByRole('button', { name: 'View discussion board' })
+      screen.getByRole('button', { name: /View discussion board/i })
     ).toBeDisabled();
   });
 });

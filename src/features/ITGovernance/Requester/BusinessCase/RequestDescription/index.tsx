@@ -247,6 +247,7 @@ const RequestDescription = ({
               <Button
                 type="button"
                 outline
+                data-testid="back-button"
                 onClick={() => {
                   dispatchSave();
                   setErrors({});
@@ -258,6 +259,7 @@ const RequestDescription = ({
               </Button>
               <Button
                 type="button"
+                data-testid="next-button"
                 onClick={() => {
                   validateForm().then(err => {
                     if (Object.keys(err).length === 0) {

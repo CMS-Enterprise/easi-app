@@ -124,7 +124,7 @@ describe('Business case request description form', () => {
   it('does not run validations', async () => {
     await renderPage(defaultStore);
 
-    screen.getByRole('button', { name: /Next/i }).click();
+    screen.getByTestId('next-button').click();
 
     await waitFor(() => {
       expect(
@@ -153,7 +153,7 @@ describe('Business case request description form', () => {
   it('navigates back one page', async () => {
     await renderPage(defaultStore);
 
-    screen.getByRole('button', { name: /back/i }).click();
+    screen.getByTestId('back-button').click();
 
     await waitFor(() => {
       expect(screen.getByTestId('general-request-info')).toBeInTheDocument();
@@ -163,7 +163,7 @@ describe('Business case request description form', () => {
   it('navigates to next page', async () => {
     await renderPage(defaultStore);
 
-    screen.getByRole('button', { name: /next/i }).click();
+    screen.getByTestId('next-button').click();
 
     await waitFor(() => {
       expect(screen.getByTestId('alternative-analysis')).toBeInTheDocument();
@@ -184,7 +184,7 @@ describe('Business case request description form', () => {
 
       await renderPage(defaultStore, true);
 
-      screen.getByRole('button', { name: /Next/i }).click();
+      screen.getByTestId('next-button').click();
 
       await waitFor(() => {
         expect(

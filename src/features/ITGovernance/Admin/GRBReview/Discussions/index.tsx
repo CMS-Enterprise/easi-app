@@ -117,7 +117,6 @@ const Discussions = ({
             <p className="margin-0 margin-right-105 display-flex">
               {discussionsWithoutRepliesCount > 0 && (
                 <Icon.Warning
-                  aria-label="warning"
                   className="text-warning-dark margin-right-05"
                   aria-label="warning icon"
                 />

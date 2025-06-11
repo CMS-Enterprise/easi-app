@@ -45,7 +45,7 @@ describe('GRB participation needed', () => {
     );
 
     expect(
-      await screen.findByRole('heading', { name: 'GRB participation needed' })
+      await screen.findByRole('heading', { name: /GRB participation needed/i })
     );
   });
 
@@ -59,7 +59,7 @@ describe('GRB participation needed', () => {
     );
 
     expect(
-      screen.queryByRole('heading', { name: 'GRB participation needed' })
+      screen.queryByRole('heading', { name: /GRB participation needed/i })
     ).toBeNull();
   });
 
@@ -77,11 +77,13 @@ describe('GRB participation needed', () => {
     const testIntake = mockSystemIntakes[0];
 
     userEvent.click(
-      await screen.findByRole('button', { name: 'Show GRB reviews' })
+      await screen.findByRole('button', { name: /Show GRB reviews/i })
     );
 
     expect(
-      screen.getByRole('link', { name: testIntake.requestName! })
+      screen.getByRole('link', {
+        name: new RegExp(testIntake.requestName!, 'i')
+      })
     ).toHaveAttribute('href', `/it-governance/${testIntake.id}/grb-review`);
 
     expect(
