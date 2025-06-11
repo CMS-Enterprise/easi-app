@@ -312,8 +312,9 @@ func setSystemIntakeRelationExistingSystem(
 	}
 
 	input := &models.SetSystemIntakeRelationExistingSystemInput{
-		SystemIntakeID:  intakeID,
-		ContractNumbers: contractNumbers,
+		SystemIntakeID:           intakeID,
+		ContractNumbers:          contractNumbers,
+		CedarSystemRelationShips: cedarSystemRelationships,
 	}
 
 	// temp, manually set these contract numbers
