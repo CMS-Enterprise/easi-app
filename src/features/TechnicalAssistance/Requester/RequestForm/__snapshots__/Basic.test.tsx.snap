@@ -727,7 +727,7 @@ exports[`Trb Request form: Basic > submits the form successfully after a failed 
         type="button"
       >
         <svg
-          aria-label="back"
+          aria-hidden="true"
           class="usa-icon margin-right-05"
           focusable="false"
           height="1em"

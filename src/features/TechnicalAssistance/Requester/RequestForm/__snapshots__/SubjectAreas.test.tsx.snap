@@ -490,7 +490,7 @@ exports[`Trb Request form: Subject areas > checks subject area form elements 1`]
         type="button"
       >
         <svg
-          aria-label="back"
+          aria-hidden="true"
           class="usa-icon margin-right-05"
           focusable="false"
           height="1em"

@@ -66,7 +66,7 @@ const GlobalClientFilter = ({
         type="submit"
         className="grid-row flex-justify-center flex-align-center no-pointer"
       >
-        <Icon.Search size={3} aria-label="search"/>
+        <Icon.Search size={3} aria-hidden />
       </Button>
     </Form>
   );

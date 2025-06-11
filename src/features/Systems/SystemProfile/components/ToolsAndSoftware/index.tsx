@@ -126,7 +126,7 @@ const SystemToolsAndSoftware = ({ system }: SystemProfileSubviewProps) => {
                 }
               )}
               <Icon.ExpandMore
-                aria-label="expand"
+                aria-hidden
                 className="margin-left-05 margin-bottom-2px text-tbottom"
                 style={{
                   transform: isExpanded ? 'rotate(180deg)' : ''

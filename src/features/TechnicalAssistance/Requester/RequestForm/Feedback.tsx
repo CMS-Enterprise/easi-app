@@ -37,7 +37,7 @@ function Feedback({ request, taskListUrl, prevStep }: FeedbackProps) {
       <UswdsReactLink to={returnUrl}>
         <Icon.ArrowBack
           className="margin-right-1 text-middle"
-          aria-label="back"
+          aria-hidden
         />
         <span className="line-height-body-5">
           {fromTaskList

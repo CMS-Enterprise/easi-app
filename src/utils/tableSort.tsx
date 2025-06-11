@@ -29,7 +29,7 @@ export const getHeaderSortIcon = <T extends {}>(column: HeaderGroup<T>) => {
       <Icon.UnfoldMore
         className={sharedClassName}
         data-testid="caret--sort"
-        aria-label="unfold more"
+        aria-hidden
       />
     );
   }
@@ -37,7 +37,7 @@ export const getHeaderSortIcon = <T extends {}>(column: HeaderGroup<T>) => {
   if (column.isSortedDesc) {
     return (
       <Icon.ExpandMore
-        aria-label="expand"
+        aria-hidden
         className={sharedClassName}
         data-testid="caret--down"
       />
@@ -48,7 +48,7 @@ export const getHeaderSortIcon = <T extends {}>(column: HeaderGroup<T>) => {
     <Icon.ExpandLess
       className={sharedClassName}
       data-testid="caret--up"
-      aria-label="hide"
+      aria-hidden
     />
   );
 };

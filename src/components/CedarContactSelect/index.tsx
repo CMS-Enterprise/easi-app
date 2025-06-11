@@ -110,7 +110,7 @@ const IndicatorsContainer = (
   return (
     <components.IndicatorsContainer {...props}>
       {!loading && resultsWarning && (
-        <Icon.Warning aria-label="warning" className="text-warning" size={3} />
+        <Icon.Warning aria-hidden className="text-warning" size={3} />
       )}
       {loading && <Spinner size="small" />}
       {children}

@@ -1058,7 +1058,7 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
         type="button"
       >
         <svg
-          aria-label="download"
+          aria-hidden="true"
           class="usa-icon margin-right-1"
           focusable="false"
           height="1em"

@@ -89,10 +89,7 @@ const RequestSummary = ({
           data-testid="admin-lead"
         >
           {!adminLead && (
-            <Icon.Error
-              className="text-error margin-right-05"
-              aria-label="error"
-            />
+            <Icon.Error className="text-error margin-right-05" aria-hidden />
           )}
           {adminLead || t('governanceReviewTeam:adminLeads.notAssigned')}
         </span>

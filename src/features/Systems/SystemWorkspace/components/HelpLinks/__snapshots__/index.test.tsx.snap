@@ -36,7 +36,7 @@ exports[`Help Links component > matches snapshot 1`] = `
               >
                 Start an IT Governance request
                 <svg
-                  aria-label="forward"
+                  aria-hidden="true"
                   class="usa-icon margin-left-1"
                   focusable="false"
                   height="1em"
@@ -81,7 +81,7 @@ exports[`Help Links component > matches snapshot 1`] = `
               >
                 Start a technical assistance request
                 <svg
-                  aria-label="forward"
+                  aria-hidden="true"
                   class="usa-icon margin-left-1"
                   focusable="false"
                   height="1em"
@@ -127,7 +127,7 @@ exports[`Help Links component > matches snapshot 1`] = `
               >
                 Go to the TLC homepage
                 <svg
-                  aria-label="launch"
+                  aria-hidden="true"
                   class="usa-icon margin-left-0 margin-left-1"
                   focusable="false"
                   height="1em"
@@ -173,7 +173,7 @@ exports[`Help Links component > matches snapshot 1`] = `
               >
                 Go to CyberGeek
                 <svg
-                  aria-label="launch"
+                  aria-hidden="true"
                   class="usa-icon margin-left-0 margin-left-1"
                   focusable="false"
                   height="1em"
@@ -219,7 +219,7 @@ exports[`Help Links component > matches snapshot 1`] = `
               >
                 Learn more on CyberGeek
                 <svg
-                  aria-label="launch"
+                  aria-hidden="true"
                   class="usa-icon margin-left-0 margin-left-1"
                   focusable="false"
                   height="1em"
@@ -265,7 +265,7 @@ exports[`Help Links component > matches snapshot 1`] = `
               >
                 Go to the Cloud homepage
                 <svg
-                  aria-label="launch"
+                  aria-hidden="true"
                   class="usa-icon margin-left-0 margin-left-1"
                   focusable="false"
                   height="1em"

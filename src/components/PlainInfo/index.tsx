@@ -20,7 +20,7 @@ const PlainInfo = ({ className, children, small }: PlainInfoProps) => {
   return (
     <div className={classes}>
       <Icon.Info
-        aria-label="info"
+        aria-hidden
         size={small ? 3 : 5}
         className="easi-plain-info__icon"
       />

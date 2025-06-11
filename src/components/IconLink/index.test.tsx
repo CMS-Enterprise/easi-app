@@ -9,7 +9,7 @@ describe('Icon link', () => {
   it('renders the icon', () => {
     const { getByRole } = render(
       <MemoryRouter>
-        <IconLink icon={<Icon.ArrowBack aria-label="back" />} to="/">
+        <IconLink icon={<Icon.ArrowBack />} to="/">
           Link label
         </IconLink>
       </MemoryRouter>

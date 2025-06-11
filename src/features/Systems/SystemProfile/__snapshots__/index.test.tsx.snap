@@ -65,7 +65,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                       type="button"
                     >
                       <svg
-                        aria-label="bookmark"
+                        aria-hidden="true"
                         class="usa-icon margin-right-1 outline text-base"
                         data-testid="is-not-bookmarked"
                         focusable="false"
@@ -228,7 +228,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                       type="button"
                     >
                       <svg
-                        aria-label="visibility-off"
+                        aria-hidden="true"
                         class="usa-icon easi-collapsable-link__eye-icon"
                         focusable="false"
                         height="1em"
@@ -846,7 +846,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                         data-testid="tag"
                                       >
                                         <svg
-                                          aria-label="upload"
+                                          aria-hidden="true"
                                           class="usa-icon margin-right-1"
                                           focusable="false"
                                           height="1em"
@@ -879,7 +879,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                         data-testid="tag"
                                       >
                                         <svg
-                                          aria-label="download"
+                                          aria-hidden="true"
                                           class="usa-icon margin-right-1"
                                           focusable="false"
                                           height="1em"
@@ -1228,7 +1228,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                           >
                             Send an email
                             <svg
-                              aria-label="mail"
+                              aria-hidden="true"
                               class="usa-icon margin-left-05 margin-bottom-2px text-tbottom"
                               focusable="false"
                               height="1em"

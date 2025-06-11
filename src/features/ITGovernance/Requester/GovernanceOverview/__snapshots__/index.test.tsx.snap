@@ -48,6 +48,7 @@ exports[`The governance overview page > matches the snapshot (w/ id param) 1`] =
       href="/system/request-type/test-intake-guid"
     >
       <svg
+        aria-hidden="true"
         class="usa-icon text-no-underline"
         focusable="false"
         height="1em"
@@ -280,7 +281,7 @@ exports[`The governance overview page > matches the snapshot (w/ id param) 1`] =
             type="button"
           >
             <svg
-              aria-label="next"
+              aria-hidden="true"
               class="usa-icon margin-right-05"
               focusable="false"
               height="1em"
@@ -356,6 +357,7 @@ exports[`The governance overview page > matches the snapshot (w/o id param) 1`] 
       href="/system/request-type/"
     >
       <svg
+        aria-hidden="true"
         class="usa-icon text-no-underline"
         focusable="false"
         height="1em"
@@ -588,7 +590,7 @@ exports[`The governance overview page > matches the snapshot (w/o id param) 1`] 
             type="button"
           >
             <svg
-              aria-label="next"
+              aria-hidden="true"
               class="usa-icon margin-right-05"
               focusable="false"
               height="1em"

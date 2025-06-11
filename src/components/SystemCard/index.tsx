@@ -72,7 +72,7 @@ const SystemCard = ({
           className="display-flex flex-align-center"
         >
           {t('viewSystem')}
-          <Icon.ArrowForward className="margin-left-1" aria-label="forward" />
+          <Icon.ArrowForward className="margin-left-1" aria-hidden />
         </UswdsReactLink>
       </Grid>
     </Card>

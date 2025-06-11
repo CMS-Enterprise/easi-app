@@ -89,7 +89,7 @@ const Recipient = ({
       {!id && !isActive && (
         <div className="margin-left-4 margin-top-1 margin-bottom-2">
           <p className="text-base display-flex flex-align-center margin-y-1">
-            <Icon.Warning aria-label="warning" className="text-warning margin-right-1" />
+            <Icon.Warning aria-hidden className="text-warning margin-right-1" />
             {t('emailRecipients.unverifiedRecipient')}
           </p>
           {/* Button to open form to verify recipient */}

@@ -29,10 +29,7 @@ function SystemCardItem({ item }: { item: SystemCardItemProps }) {
       <Divider className="margin-y-2" />
       <UswdsReactLink to={`/systems/${item.id}`}>
         {t('additionalRequestInfo.viewSystemProfile')}
-        <Icon.ArrowForward
-          className="text-middle margin-left-05"
-          aria-label="forward"
-        />
+        <Icon.ArrowForward className="text-middle margin-left-05" aria-hidden />
       </UswdsReactLink>
     </div>
   );
@@ -64,7 +61,7 @@ function SystemCardList({ items }: { items: SystemCardItemProps[] }) {
               count: numMore
             })}
             <Icon.ExpandMore
-              aria-label="expand"
+              aria-hidden
               className="text-middle margin-left-05"
               style={{ transform: `scaleY(${isShowMore ? -1 : 1})` }}
             />

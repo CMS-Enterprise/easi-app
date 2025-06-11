@@ -117,10 +117,7 @@ const DiscussionPost = ({
                 }}
                 className="margin-right-205"
                 icon={
-                  <Icon.Announcement
-                    aria-label="announcement"
-                    className="text-primary"
-                  />
+                  <Icon.Announcement aria-hidden className="text-primary" />
                 }
                 unstyled
               >

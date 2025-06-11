@@ -28,7 +28,7 @@ exports[`Workspace team page > renders 1`] = `
       href="/systems/000-0000-1/workspace"
     >
       <svg
-        aria-label="back"
+        aria-hidden="true"
         class="usa-icon margin-right-1"
         focusable="false"
         height="1em"
@@ -83,7 +83,7 @@ exports[`Workspace team page > renders 1`] = `
           type="submit"
         >
           <svg
-            aria-label="search"
+            aria-hidden="true"
             class="usa-icon usa-icon--size-3"
             focusable="false"
             height="1em"
@@ -124,7 +124,7 @@ exports[`Workspace team page > renders 1`] = `
               >
                 Name
                 <svg
-                  aria-label="unfold more"
+                  aria-hidden="true"
                   class="usa-icon margin-left-05"
                   data-testid="caret--sort"
                   focusable="false"
@@ -158,7 +158,7 @@ exports[`Workspace team page > renders 1`] = `
               >
                 Role(s)
                 <svg
-                  aria-label="expand"
+                  aria-hidden="true"
                   class="usa-icon margin-left-05"
                   data-testid="caret--down"
                   focusable="false"
@@ -188,7 +188,7 @@ exports[`Workspace team page > renders 1`] = `
               >
                 Actions
                 <svg
-                  aria-label="unfold more"
+                  aria-hidden="true"
                   class="usa-icon margin-left-05"
                   data-testid="caret--sort"
                   focusable="false"

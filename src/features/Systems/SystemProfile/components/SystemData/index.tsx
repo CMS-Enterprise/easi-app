@@ -42,19 +42,19 @@ export function ExchangeDirectionTag({
     <Tag className="text-base-darker bg-base-lighter display-flex flex-align-center width-fit-content">
       {data === ExchangeDirection.RECEIVER && (
         <>
-          <Icon.FileDownload aria-label="download" className="margin-right-1" />
+          <Icon.FileDownload aria-hidden className="margin-right-1" />
           {t('singleSystem.systemData.exchangeDirection.receives')}
         </>
       )}
       {data === ExchangeDirection.SENDER && (
         <>
-          <Icon.FileUpload className="margin-right-1" aria-label="upload" />
+          <Icon.FileUpload className="margin-right-1" aria-hidden />
           {t('singleSystem.systemData.exchangeDirection.sends')}
         </>
       )}
       {data === null && (
         <>
-          <Icon.HelpOutline className="margin-right-1" aria-label="help" />
+          <Icon.HelpOutline className="margin-right-1" aria-hidden />
           <span className="text-normal text-italic">
             {t('singleSystem.systemData.exchangeDirection.unknown')}
           </span>
@@ -90,7 +90,7 @@ function ExchangeCard({ data }: { data: GetSystemProfileExchanges }) {
         <div className="margin-bottom-0 easi-header__basic flex-align-baseline">
           <h3 className="margin-top-0 margin-bottom-1">{data.exchangeName}</h3>
           <Tag className="bg-base-lighter text-darker text-normal text-italic display-flex flex-align-center">
-            <Icon.HelpOutline className="margin-right-1" aria-label="help" />
+            <Icon.HelpOutline className="margin-right-1" aria-hidden />
             {t('singleSystem.systemData.statusUnknown')}
           </Tag>
         </div>
@@ -123,7 +123,7 @@ function ExchangeCard({ data }: { data: GetSystemProfileExchanges }) {
                     : 'singleSystem.description.more'
                 )}
                 <Icon.ExpandMore
-                  aria-label="expand"
+                  aria-hidden
                   className="expand-icon margin-left-05 margin-bottom-2px text-tbottom"
                 />
               </Button>
@@ -416,7 +416,7 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
                   }`
                 )}
                 <Icon.ExpandMore
-                  aria-label="expand"
+                  aria-hidden
                   className="margin-left-05 margin-bottom-2px text-tbottom"
                   style={{
                     transform: isExchangesExpanded ? 'rotate(180deg)' : ''

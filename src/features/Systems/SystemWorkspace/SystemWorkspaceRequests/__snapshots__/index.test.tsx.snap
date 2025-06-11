@@ -75,7 +75,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 1`] 
         href="/systems/{11AB1A00-1234-5678-ABC1-1A001B00CC1B}/workspace"
       >
         <svg
-          aria-label="back"
+          aria-hidden="true"
           class="usa-icon margin-right-1"
           focusable="false"
           height="1em"
@@ -172,7 +172,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 1`] 
           type="submit"
         >
           <svg
-            aria-label="search"
+            aria-hidden="true"
             class="usa-icon usa-icon--size-3"
             focusable="false"
             height="1em"
@@ -218,7 +218,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 1`] 
                 >
                   Submission date
                   <svg
-                    aria-label="expand"
+                    aria-hidden="true"
                     class="usa-icon margin-left-05"
                     data-testid="caret--down"
                     focusable="false"
@@ -252,7 +252,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 1`] 
                 >
                   Request name
                   <svg
-                    aria-label="unfold more"
+                    aria-hidden="true"
                     class="usa-icon margin-left-05"
                     data-testid="caret--sort"
                     focusable="false"
@@ -286,7 +286,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 1`] 
                 >
                   Process
                   <svg
-                    aria-label="unfold more"
+                    aria-hidden="true"
                     class="usa-icon margin-left-05"
                     data-testid="caret--sort"
                     focusable="false"
@@ -320,7 +320,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 1`] 
                 >
                   Status
                   <svg
-                    aria-label="unfold more"
+                    aria-hidden="true"
                     class="usa-icon margin-left-05"
                     data-testid="caret--sort"
                     focusable="false"
@@ -354,7 +354,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 1`] 
                 >
                   Upcoming meeting date
                   <svg
-                    aria-label="unfold more"
+                    aria-hidden="true"
                     class="usa-icon margin-left-05"
                     data-testid="caret--sort"
                     focusable="false"
@@ -388,7 +388,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 1`] 
                 >
                   Requester
                   <svg
-                    aria-label="unfold more"
+                    aria-hidden="true"
                     class="usa-icon margin-left-05"
                     data-testid="caret--sort"
                     focusable="false"
@@ -763,7 +763,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 2`] 
         href="/systems/{11AB1A00-1234-5678-ABC1-1A001B00CC1B}/workspace"
       >
         <svg
-          aria-label="back"
+          aria-hidden="true"
           class="usa-icon margin-right-1"
           focusable="false"
           height="1em"
@@ -860,7 +860,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 2`] 
           type="submit"
         >
           <svg
-            aria-label="search"
+            aria-hidden="true"
             class="usa-icon usa-icon--size-3"
             focusable="false"
             height="1em"
@@ -906,7 +906,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 2`] 
                 >
                   Submission date
                   <svg
-                    aria-label="expand"
+                    aria-hidden="true"
                     class="usa-icon margin-left-05"
                     data-testid="caret--down"
                     focusable="false"
@@ -940,7 +940,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 2`] 
                 >
                   Request name
                   <svg
-                    aria-label="unfold more"
+                    aria-hidden="true"
                     class="usa-icon margin-left-05"
                     data-testid="caret--sort"
                     focusable="false"
@@ -974,7 +974,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 2`] 
                 >
                   Process
                   <svg
-                    aria-label="unfold more"
+                    aria-hidden="true"
                     class="usa-icon margin-left-05"
                     data-testid="caret--sort"
                     focusable="false"
@@ -1008,7 +1008,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 2`] 
                 >
                   Status
                   <svg
-                    aria-label="unfold more"
+                    aria-hidden="true"
                     class="usa-icon margin-left-05"
                     data-testid="caret--sort"
                     focusable="false"
@@ -1042,7 +1042,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 2`] 
                 >
                   Most recent meeting date
                   <svg
-                    aria-label="unfold more"
+                    aria-hidden="true"
                     class="usa-icon margin-left-05"
                     data-testid="caret--sort"
                     focusable="false"
@@ -1076,7 +1076,7 @@ exports[`System Workspace Requests Table > renders open and closed requests 2`] 
                 >
                   Requester
                   <svg
-                    aria-label="unfold more"
+                    aria-hidden="true"
                     class="usa-icon margin-left-05"
                     data-testid="caret--sort"
                     focusable="false"

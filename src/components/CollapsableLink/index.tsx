@@ -38,21 +38,21 @@ const CollapsableLink = ({
     return isOpen ? (
       <Icon.VisibilityOff
         className="easi-collapsable-link__eye-icon"
-        aria-label="visibility-off"
+        aria-hidden
       />
     ) : (
       <Icon.Visibility
         className="easi-collapsable-link__eye-icon"
-        aria-label="visibility-on"
+        aria-hidden
       />
     );
   };
 
   const renderCaret = () => {
     return isOpen ? (
-      <Icon.ExpandMore aria-label="expand" className="margin-right-05" />
+      <Icon.ExpandMore aria-hidden className="margin-right-05" />
     ) : (
-      <Icon.NavigateNext className="margin-right-05" aria-label="next" />
+      <Icon.NavigateNext className="margin-right-05" aria-hidden />
     );
   };
 

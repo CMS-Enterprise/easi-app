@@ -131,7 +131,7 @@ const FundingAndBudget = ({ system }: SystemProfileSubviewProps) => {
                           width="1rem"
                           height="1rem"
                           className="margin-right-1"
-                          aria-label="calendar today"
+                          aria-hidden
                         />
                         {`${t('singleSystem.fundingAndBudget.fiscalYear')} ${
                           budget.fiscalYear
@@ -145,7 +145,7 @@ const FundingAndBudget = ({ system }: SystemProfileSubviewProps) => {
                           width="1rem"
                           height="1rem"
                           className="margin-right-1"
-                          aria-label="help"
+                          aria-hidden
                         />
                         {t('singleSystem.fundingAndBudget.noFiscalYear')}
                       </dd>
@@ -217,7 +217,7 @@ const FundingAndBudget = ({ system }: SystemProfileSubviewProps) => {
                 ? t('singleSystem.fundingAndBudget.viewLessFunding')
                 : t('singleSystem.fundingAndBudget.viewMoreFunding')}
               <Icon.ExpandMore
-                aria-label="expand"
+                aria-hidden
                 className="margin-left-05 margin-bottom-2px text-tbottom"
                 style={{
                   transform: isExpanded ? 'rotate(180deg)' : ''

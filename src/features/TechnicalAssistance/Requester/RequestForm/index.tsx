@@ -219,7 +219,7 @@ function Header({
         >
           <Icon.ArrowBack
             className="margin-right-05 margin-bottom-2px text-tbottom"
-            aria-label="back"
+            aria-hidden
           />
           {t('button.saveAndExit')}
         </Button>
@@ -240,7 +240,7 @@ function EditsRequestedWarning({
     <div className="bg-error-lighter padding-y-2">
       <GridContainer className="width-full">
         <div>
-          <Icon.Warning aria-label="warning"
+          <Icon.Warning aria-hidden
             className="text-error-dark text-middle margin-right-1"
             size={3}
           />

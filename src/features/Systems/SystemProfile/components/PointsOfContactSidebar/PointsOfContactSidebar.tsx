@@ -86,7 +86,10 @@ const PointsOfContactSidebar = ({
                     target="_blank"
                   >
                     {t('singleSystem.sendEmail')}
-                    <Icon.MailOutline className="margin-left-05 margin-bottom-2px text-tbottom" aria-label="mail"/>
+                    <Icon.MailOutline
+                      className="margin-left-05 margin-bottom-2px text-tbottom"
+                      aria-hidden
+                    />
                   </Link>
                 </p>
               )}

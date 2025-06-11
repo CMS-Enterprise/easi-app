@@ -72,7 +72,7 @@ const FeedbackList = ({
         <>
           <IconLink
             to={returnLink.path}
-            icon={<Icon.ArrowBack aria-label="back" />}
+            icon={<Icon.ArrowBack aria-hidden />}
             className="margin-bottom-1 tablet:margin-bottom-0"
           >
             {returnLink.text}

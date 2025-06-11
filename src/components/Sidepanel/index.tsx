@@ -55,7 +55,7 @@ const Sidepanel = ({
             aria-label="Close Modal"
             onClick={closeModal}
           >
-            <Icon.Close size={4} className="text-base" aria-label="close" />
+            <Icon.Close size={4} className="text-base" aria-hidden />
           </button>
           <h4 className="margin-0">{modalHeading}</h4>
         </div>

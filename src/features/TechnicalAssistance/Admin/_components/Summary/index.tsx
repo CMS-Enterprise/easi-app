@@ -121,7 +121,7 @@ export default function Summary({
                 {!trbLead && (
                   <Icon.Error
                     className="text-error margin-right-05"
-                    aria-label="error"
+                    aria-hidden
                   />
                 )}
                 {trbLead || t('adminHome.notAssigned')}

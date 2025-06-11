@@ -298,7 +298,7 @@ exports[`System Data sub page for System Profile > matches snapshot 1`] = `
                 data-testid="tag"
               >
                 <svg
-                  aria-label="help"
+                  aria-hidden="true"
                   class="usa-icon margin-right-1"
                   focusable="false"
                   height="1em"
@@ -336,7 +336,7 @@ exports[`System Data sub page for System Profile > matches snapshot 1`] = `
                 data-testid="tag"
               >
                 <svg
-                  aria-label="upload"
+                  aria-hidden="true"
                   class="usa-icon margin-right-1"
                   focusable="false"
                   height="1em"
@@ -447,7 +447,7 @@ exports[`System Data sub page for System Profile > matches snapshot 1`] = `
                 data-testid="tag"
               >
                 <svg
-                  aria-label="help"
+                  aria-hidden="true"
                   class="usa-icon margin-right-1"
                   focusable="false"
                   height="1em"
@@ -485,7 +485,7 @@ exports[`System Data sub page for System Profile > matches snapshot 1`] = `
                 data-testid="tag"
               >
                 <svg
-                  aria-label="download"
+                  aria-hidden="true"
                   class="usa-icon margin-right-1"
                   focusable="false"
                   height="1em"

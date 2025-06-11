@@ -58,7 +58,7 @@ const AlternativeSolutionB = ({
             <Form>
               <IconButton
                 type="button"
-                icon={<Icon.ArrowBack aria-label="back" />}
+                icon={<Icon.ArrowBack aria-hidden />}
                 className="margin-bottom-3 margin-top-2"
                 onClick={() => {
                   dispatchSave();
@@ -102,7 +102,7 @@ const AlternativeSolutionB = ({
 
             <IconButton
               type="button"
-              icon={<Icon.ArrowBack aria-label="back" />}
+              icon={<Icon.ArrowBack aria-hidden />}
               className="margin-bottom-3 margin-top-2"
               data-testid="save-and-return-button"
               onClick={() => {

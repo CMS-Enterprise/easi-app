@@ -214,7 +214,13 @@ const MentionTextArea = React.forwardRef<HTMLDivElement, MentionTextAreaProps>(
           // Read more/less button for truncated text
           textIsTruncated && (
             <IconButton
-              icon={textExpanded ? <Icon.ExpandLess aria-label="hide"/> : <Icon.ExpandMore aria-label="expand" />}
+              icon={
+                textExpanded ? (
+                  <Icon.ExpandLess aria-hidden />
+                ) : (
+                  <Icon.ExpandMore aria-hidden />
+                )
+              }
               type="button"
               onClick={() => setTextExpanded(!textExpanded)}
               iconPosition="after"

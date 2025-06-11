@@ -11,7 +11,7 @@ exports[`New System > matches the snapshot 1`] = `
       type="button"
     >
       <svg
-        aria-label="close"
+        aria-hidden="true"
         class="usa-icon margin-right-05 margin-top-3px text-tbottom"
         focusable="false"
         height="1em"
@@ -109,7 +109,7 @@ exports[`New System > matches the snapshot 1`] = `
             type="button"
           >
             <svg
-              aria-label="next"
+              aria-hidden="true"
               class="usa-icon margin-right-05"
               focusable="false"
               height="1em"

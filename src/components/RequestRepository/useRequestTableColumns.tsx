@@ -82,7 +82,7 @@ const useRequestTableColumns = (
                 lead automatically. Similar to the Dates functionality */}
             <Icon.Error
               className="text-secondary margin-right-05"
-              aria-label="error"
+              aria-hidden
             />
             {adminLead}
           </div>

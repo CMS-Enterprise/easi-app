@@ -94,7 +94,7 @@ const Discussions = ({
               {t('governanceReviewBoard.internal.label')}
             </h3>
             <p className="margin-0 margin-top-05 text-base display-flex text-no-wrap">
-              <Icon.LockOutline className="margin-right-05" aria-label="lock" />
+              <Icon.LockOutline className="margin-right-05" aria-hidden />
               <span>
                 {t('governanceReviewBoard.internal.visibilityRestricted')}
               </span>
@@ -117,7 +117,6 @@ const Discussions = ({
             <p className="margin-0 margin-right-105 display-flex">
               {discussionsWithoutRepliesCount > 0 && (
                 <Icon.Warning
-                  aria-label="warning"
                   className="text-warning-dark margin-right-05"
                   aria-label="warning icon"
                 />
@@ -134,7 +133,7 @@ const Discussions = ({
                 onClick={() => {
                   pushDiscussionQuery({ discussionMode: 'view' });
                 }}
-                icon={<Icon.ArrowForward aria-label="forward" />}
+                icon={<Icon.ArrowForward aria-hidden />}
                 iconPosition="after"
                 unstyled
               >

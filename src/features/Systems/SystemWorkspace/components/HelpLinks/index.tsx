@@ -36,7 +36,7 @@ export const HelpLinks = ({
             <Icon.LightbulbOutline
               size={4}
               className="text-primary"
-              aria-label="lightbulb"
+              aria-hidden
             />
           </div>
 

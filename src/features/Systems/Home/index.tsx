@@ -111,7 +111,7 @@ export const SystemList = () => {
                     <span className="margin-0">
                       {t('systemProfile:noBookmark.text1')}
                     </span>
-                    <Icon.Bookmark aria-label="bookmark" />
+                    <Icon.Bookmark aria-hidden />
                     <span className="margin-0">
                       {t('systemProfile:noBookmark.text2')}
                     </span>
@@ -140,7 +140,9 @@ export const SystemList = () => {
             <Trans
               i18nKey="systemProfile:systemTable.subtitle"
               components={{
-                icon: <Icon.Bookmark aria-label="bookmark" className="text-bookmark-icon" />
+                icon: (
+                  <Icon.Bookmark aria-hidden className="text-bookmark-icon" />
+                )
               }}
             />
 

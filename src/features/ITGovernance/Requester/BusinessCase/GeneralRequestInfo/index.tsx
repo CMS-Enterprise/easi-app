@@ -186,7 +186,7 @@ const GeneralRequestInfo = ({
             </Button>
 
             <IconButton
-              icon={<Icon.ArrowBack aria-label="back" />}
+              icon={<Icon.ArrowBack aria-hidden />}
               type="button"
               unstyled
               onClick={() => {

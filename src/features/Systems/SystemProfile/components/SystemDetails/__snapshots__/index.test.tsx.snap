@@ -109,7 +109,7 @@ exports[`SystemDetails subpage for System Profile > matches snapshot 1`] = `
               class="margin-top-1"
             >
               <svg
-                aria-label="verified"
+                aria-hidden="true"
                 class="usa-icon margin-right-1"
                 color="#00a91c"
                 focusable="false"
@@ -181,7 +181,7 @@ exports[`SystemDetails subpage for System Profile > matches snapshot 1`] = `
       data-testid="tag"
     >
       <svg
-        aria-label="check"
+        aria-hidden="true"
         class="usa-icon system-profile__icon text-primary-dark margin-right-1"
         focusable="false"
         height="1em"
@@ -282,7 +282,7 @@ exports[`SystemDetails subpage for System Profile > matches snapshot 1`] = `
       data-testid="tag"
     >
       <svg
-        aria-label="check"
+        aria-hidden="true"
         class="usa-icon system-profile__icon text-primary-dark margin-right-1"
         focusable="false"
         height="1em"

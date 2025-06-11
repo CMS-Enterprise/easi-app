@@ -133,7 +133,7 @@ export const TeamContactCard = ({
             target="_blank"
           >
             {person.assigneeEmail}
-            <Icon.MailOutline className="margin-left-1" aria-label="mail" />
+            <Icon.MailOutline className="margin-left-1" aria-hidden />
           </Link>
         )}
       </CardHeader>
@@ -219,7 +219,7 @@ export const TeamSection = ({
             >
               {t(`singleSystem.team.show${isExpanded ? 'Less' : 'More'}`)}
               <Icon.ExpandMore
-                aria-label="expand"
+                aria-hidden
                 className="margin-left-05 margin-bottom-2px text-tbottom"
                 style={{
                   transform: isExpanded ? 'rotate(180deg)' : ''

@@ -31,7 +31,7 @@ exports[`BookmarkCard > matches the snapshot 1`] = `
             type="button"
           >
             <svg
-              aria-label="bookmark"
+              aria-hidden="true"
               class="usa-icon usa-icon--size-5"
               focusable="false"
               height="1em"

@@ -381,7 +381,7 @@ function SystemWorkspaceRequests() {
       <div className="display-flex">
         <IconLink
           className="text-primary"
-          icon={<Icon.ArrowBack aria-label="back" />}
+          icon={<Icon.ArrowBack aria-hidden />}
           to={workspacePath}
         >
           {t('returnToWorkspace')}

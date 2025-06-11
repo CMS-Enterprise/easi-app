@@ -141,10 +141,7 @@ const UploadForm = ({ type = 'requester' }: UploadFormProps) => {
           />
         </p>
 
-        <IconLink
-          to={requestDetailsLink}
-          icon={<Icon.ArrowBack aria-label="back" />}
-        >
+        <IconLink to={requestDetailsLink} icon={<Icon.ArrowBack aria-hidden />}>
           {t('intake:documents.dontUpload', { context: type })}
         </IconLink>
 

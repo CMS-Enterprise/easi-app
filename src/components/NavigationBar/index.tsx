@@ -253,7 +253,7 @@ const NavigationBar = ({ signout, userName }: NavigationProps) => {
             )}
             <NavMenuButton
               onClick={() => setExpanded(prvExpanded => !prvExpanded)}
-              label={<Icon.Menu size={3} aria-label="menu"/>}
+              label={<Icon.Menu size={3} aria-hidden />}
             />
           </div>
           <PrimaryNav

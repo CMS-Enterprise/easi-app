@@ -208,7 +208,7 @@ exports[`Governance Overview Content > renders default version without crashing 
           type="button"
         >
           <svg
-            aria-label="next"
+            aria-hidden="true"
             class="usa-icon margin-right-05"
             focusable="false"
             height="1em"
@@ -287,7 +287,7 @@ exports[`Governance Overview Content > renders help section version without cras
           type="button"
         >
           <svg
-            aria-label="next"
+            aria-hidden="true"
             class="usa-icon margin-right-05"
             focusable="false"
             height="1em"

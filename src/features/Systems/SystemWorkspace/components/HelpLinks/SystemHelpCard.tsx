@@ -49,7 +49,7 @@ const SystemHelpCard = ({
             aria-label={header}
           >
             {linkText}
-            <Icon.ArrowForward className="margin-left-1" aria-label="forward" />
+            <Icon.ArrowForward className="margin-left-1" aria-hidden />
           </UswdsReactLink>
         )}
       </CardBody>

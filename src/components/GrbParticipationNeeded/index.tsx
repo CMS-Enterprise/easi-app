@@ -140,7 +140,7 @@ const GrbParticipationNeeded = () => {
           <h2 className="margin-y-0 margin-right-2">
             {t('homepage.participationNeeded')}
           </h2>
-          <Icon.Groups size={4} className="text-primary" aria-label="groups"/>
+          <Icon.Groups size={4} className="text-primary" aria-hidden />
         </div>
 
         <p className="line-height-body-5 margin-top-1 margin-bottom-3">
@@ -150,7 +150,13 @@ const GrbParticipationNeeded = () => {
         {/* Toggle GRB reviews button */}
         <IconButton
           onClick={() => setShowGrbReviews(!showGrbReviews)}
-          icon={showGrbReviews ? <Icon.VisibilityOff  aria-label="visibility-off"/> : <Icon.Visibility  aria-label="visibility-on"/>}
+          icon={
+            showGrbReviews ? (
+              <Icon.VisibilityOff aria-label="visibility-off" />
+            ) : (
+              <Icon.Visibility aria-label="visibility-on" />
+            )
+          }
           type="button"
           unstyled
         >

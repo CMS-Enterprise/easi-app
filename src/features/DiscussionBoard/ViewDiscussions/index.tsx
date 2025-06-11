@@ -45,7 +45,7 @@ const ViewDiscussions = ({ grbDiscussions }: ViewDiscussionsProps) => {
         onClick={() => {
           pushDiscussionQuery({ discussionMode: 'start' });
         }}
-        icon={<Icon.Announcement aria-label="announcement" />}
+        icon={<Icon.Announcement aria-hidden />}
         unstyled
       >
         {t('general.startNewDiscussion')}

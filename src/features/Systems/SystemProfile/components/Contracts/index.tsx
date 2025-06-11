@@ -44,7 +44,7 @@ const ContractCard = ({
           <div className="display-flex flex-align-center margin-y-1">
             <Icon.Verified
               className="margin-right-1 text-info-dark"
-              aria-label="verified"
+              aria-hidden
             />
             <span style={{ marginTop: '1px' }}>
               {t('singleSystem.contracts.isDeliveryOrg')}

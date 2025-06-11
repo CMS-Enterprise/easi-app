@@ -31,7 +31,7 @@ exports[`Help Footer > renders 1`] = `
           >
             Report a problem
             <svg
-              aria-label="launch"
+              aria-hidden="true"
               class="usa-icon margin-left-1"
               focusable="false"
               height="1em"
@@ -52,7 +52,7 @@ exports[`Help Footer > renders 1`] = `
           >
             Send feedback
             <svg
-              aria-label="launch"
+              aria-hidden="true"
               class="usa-icon margin-left-1"
               focusable="false"
               height="1em"
@@ -73,7 +73,7 @@ exports[`Help Footer > renders 1`] = `
           >
             Chat with us on Slack
             <svg
-              aria-label="launch"
+              aria-hidden="true"
               class="usa-icon margin-left-1"
               focusable="false"
               height="1em"
@@ -90,7 +90,7 @@ exports[`Help Footer > renders 1`] = `
         </div>
       </div>
       <svg
-        aria-label="lightbulb"
+        aria-hidden="true"
         class="usa-icon usa-icon--size-3 text-primary-light"
         focusable="false"
         height="1em"

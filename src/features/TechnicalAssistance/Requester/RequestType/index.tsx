@@ -85,7 +85,7 @@ function RequestType() {
         }}
         className="display-flex flex-align-center margin-top-2"
       >
-        <Icon.ArrowBack className="margin-right-1" aria-label="back" />
+        <Icon.ArrowBack className="margin-right-1" aria-hidden />
         {t(isNew ? 'requestType.goBack' : 'requestType.goBackWithoutChange')}
       </UswdsReactLink>
 
@@ -175,7 +175,7 @@ function RequestType() {
                 {t('requestType.services.other')}
                 <Icon.ArrowForward
                   className="margin-left-05 margin-bottom-2px text-tbottom"
-                  aria-label="forward"
+                  aria-hidden
                 />
               </UswdsReactLink>
             ) : (
@@ -191,7 +191,7 @@ function RequestType() {
                 {t('requestType.services.other')}
                 <Icon.ArrowForward
                   className="margin-left-05 margin-bottom-2px text-tbottom"
-                  aria-label="forward"
+                  aria-hidden
                 />
               </Button>
             )}

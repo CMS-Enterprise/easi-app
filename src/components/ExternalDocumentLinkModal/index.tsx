@@ -56,9 +56,9 @@ const ExternalDocumentLinkModal = ({
             }`}
           >
             {showFullUrl ? (
-              <Icon.ExpandMore aria-label="expand" />
+              <Icon.ExpandMore aria-hidden />
             ) : (
-              <Icon.NavigateNext aria-label="next" />
+              <Icon.NavigateNext aria-hidden />
             )}
             {externalT('viewFullURL')}
           </span>

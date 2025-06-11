@@ -65,12 +65,7 @@ const WelcomeText = () => {
                     return (
                       <IconListItem
                         key={item}
-                        icon={
-                          <Icon.Check
-                            className="text-green"
-                            aria-label="check"
-                          />
-                        }
+                        icon={<Icon.Check className="text-green" aria-hidden />}
                       >
                         {item}
                       </IconListItem>
@@ -97,7 +92,7 @@ const WelcomeText = () => {
                           <Icon.Close
                             className="text-red margin-right-1"
                             size={3}
-                            aria-label="close"
+                            aria-hidden
                           />
                         }
                       >
@@ -140,7 +135,7 @@ const WelcomeText = () => {
                 <Icon.NotificationsActive
                   size={5}
                   className="text-primary-vivid"
-                  aria-label="notifications-active"
+                  aria-hidden
                 />
                 <h3 className="line-height-body-2">
                   {t('welcome.automation')}
@@ -155,7 +150,7 @@ const WelcomeText = () => {
                 <Icon.Groups
                   size={5}
                   className="text-primary-vivid"
-                  aria-label="groups"
+                  aria-hidden
                 />
                 <h3 className="line-height-body-2">
                   {t('welcome.collaboration')}
@@ -170,7 +165,7 @@ const WelcomeText = () => {
                 <Icon.Edit
                   size={5}
                   className="text-primary-vivid"
-                  aria-label="edit"
+                  aria-hidden
                 />
                 <h3 className="line-height-body-2">{t('welcome.editing')}</h3>
               </CardHeader>

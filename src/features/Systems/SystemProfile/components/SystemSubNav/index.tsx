@@ -48,9 +48,9 @@ const SystemSubNav = ({
       >
         <h3 className="padding-left-1">{t(`navigation.${subinfo}`)}</h3>
         {!isAccordionOpen ? (
-          <Icon.ExpandMore aria-label="expand" size={3} />
+          <Icon.ExpandMore aria-hidden size={3} />
         ) : (
-          <Icon.ExpandLess size={3} aria-label="hide"/>
+          <Icon.ExpandLess size={3} aria-hidden/>
         )}
       </button>
       {isAccordionOpen && (

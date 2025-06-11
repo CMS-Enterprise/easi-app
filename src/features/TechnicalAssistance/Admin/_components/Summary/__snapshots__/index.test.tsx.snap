@@ -158,7 +158,7 @@ exports[`TRB Admin Home summary > renders TRB request details 1`] = `
               class="display-flex flex-align-center"
             >
               <svg
-                aria-label="error"
+                aria-hidden="true"
                 class="usa-icon text-error margin-right-05"
                 focusable="false"
                 height="1em"

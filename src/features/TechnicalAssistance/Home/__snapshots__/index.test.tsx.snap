@@ -281,7 +281,7 @@ exports[`TRB Subview snapshots > matches Request Type 1`] = `
       href="/trb/task-list/b1120f6a-87d7-4bcd-b8f2-0835c51b2d52"
     >
       <svg
-        aria-label="back"
+        aria-hidden="true"
         class="usa-icon margin-right-1"
         focusable="false"
         height="1em"
@@ -335,7 +335,7 @@ exports[`TRB Subview snapshots > matches Request Type 1`] = `
                 type="button"
               >
                 <svg
-                  aria-label="next"
+                  aria-hidden="true"
                   class="usa-icon margin-right-05"
                   focusable="false"
                   height="1em"
@@ -401,7 +401,7 @@ exports[`TRB Subview snapshots > matches Request Type 1`] = `
                 type="button"
               >
                 <svg
-                  aria-label="next"
+                  aria-hidden="true"
                   class="usa-icon margin-right-05"
                   focusable="false"
                   height="1em"
@@ -450,7 +450,7 @@ exports[`TRB Subview snapshots > matches Request Type 1`] = `
           >
             Other (I don’t see what I’m looking for)
             <svg
-              aria-label="forward"
+              aria-hidden="true"
               class="usa-icon margin-left-05 margin-bottom-2px text-tbottom"
               focusable="false"
               height="1em"
@@ -602,7 +602,7 @@ exports[`Technical Assistance (TRB) homepage > renders the homepage with a list 
             type="submit"
           >
             <svg
-              aria-label="search"
+              aria-hidden="true"
               class="usa-icon usa-icon--size-3"
               focusable="false"
               height="1em"
@@ -648,7 +648,7 @@ exports[`Technical Assistance (TRB) homepage > renders the homepage with a list 
                   >
                     Project title
                     <svg
-                      aria-label="unfold more"
+                      aria-hidden="true"
                       class="usa-icon margin-left-05"
                       data-testid="caret--sort"
                       focusable="false"
@@ -682,7 +682,7 @@ exports[`Technical Assistance (TRB) homepage > renders the homepage with a list 
                   >
                     Request status
                     <svg
-                      aria-label="unfold more"
+                      aria-hidden="true"
                       class="usa-icon margin-left-05"
                       data-testid="caret--sort"
                       focusable="false"
@@ -716,7 +716,7 @@ exports[`Technical Assistance (TRB) homepage > renders the homepage with a list 
                   >
                     Submission date
                     <svg
-                      aria-label="expand"
+                      aria-hidden="true"
                       class="usa-icon margin-left-05"
                       data-testid="caret--down"
                       focusable="false"

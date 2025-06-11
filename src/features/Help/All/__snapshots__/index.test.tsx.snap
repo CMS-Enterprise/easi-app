@@ -14,7 +14,7 @@ exports[`All help articles > matches the snapshot 1`] = `
       type="button"
     >
       <svg
-        aria-label="back"
+        aria-hidden="true"
         class="usa-icon margin-right-05 margin-top-3px text-tbottom"
         focusable="false"
         height="1em"

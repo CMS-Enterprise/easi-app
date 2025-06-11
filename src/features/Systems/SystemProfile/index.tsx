@@ -501,7 +501,10 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                                     ? 'singleSystem.description.less'
                                     : 'singleSystem.description.more'
                                 )}
-                                <Icon.ExpandMore aria-label="expand" className="expand-icon margin-left-05 margin-bottom-2px text-tbottom" />
+                                <Icon.ExpandMore
+                                  aria-hidden
+                                  className="expand-icon margin-left-05 margin-bottom-2px text-tbottom"
+                                />
                               </Button>
                             </div>
                           )}

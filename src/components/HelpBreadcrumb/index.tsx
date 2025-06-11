@@ -35,12 +35,12 @@ export default function HelpBreadcrumb({
       {type === 'close' ? (
         <Icon.Close
           className="margin-right-05 margin-top-3px text-tbottom"
-          aria-label="close"
+          aria-hidden
         />
       ) : (
         <Icon.ArrowBack
           className="margin-right-05 margin-top-3px text-tbottom"
-          aria-label="back"
+          aria-hidden
         />
       )}
       {text ?? t(type)}

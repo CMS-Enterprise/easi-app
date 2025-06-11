@@ -1,0 +1,386 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Feedback page > Renders the feedback page - Governance task list 1`] = `
+<DocumentFragment>
+  <main
+    class="easi-main-content grid-container padding-bottom-10 margin-bottom-2"
+    id="main-content"
+    role="main"
+    tabindex="-1"
+  >
+    <nav
+      aria-label="Breadcrumbs"
+      class="usa-breadcrumb usa-breadcrumb--wrap"
+    >
+      <ol
+        class="usa-breadcrumb__list"
+      >
+        <li
+          class="usa-breadcrumb__list-item"
+        >
+          <a
+            class="usa-breadcrumb__link"
+            href="/"
+          >
+            <span>
+              IT Governance
+            </span>
+          </a>
+        </li>
+        <li
+          class="usa-breadcrumb__list-item"
+        >
+          <a
+            class="usa-breadcrumb__link"
+            href="/governance-task-list/a4158ad8-1236-4a55-9ad5-7e15a5d49de2"
+          >
+            <span>
+              Governance task list
+            </span>
+          </a>
+        </li>
+        <li
+          aria-current="page"
+          class="usa-breadcrumb__list-item usa-current"
+        >
+          Feedback
+        </li>
+      </ol>
+    </nav>
+    <h1
+      aria-live="polite"
+      class="easi-h1 margin-top-4 margin-bottom-105"
+      tabindex="-1"
+    >
+      Feedback about your request
+    </h1>
+    <div
+      class="tablet:display-flex"
+    >
+      <a
+        class="usa-link display-flex flex-align-center margin-bottom-1 tablet:margin-bottom-0"
+        href="/governance-task-list/a4158ad8-1236-4a55-9ad5-7e15a5d49de2"
+      >
+        <svg
+          aria-hidden="true"
+          class="usa-icon margin-right-1"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+          />
+        </svg>
+        Return to governance task list
+      </a>
+      <span
+        class="margin-x-2 text-base-light display-none tablet:display-block"
+      >
+        |
+      </span>
+      <button
+        class="usa-button usa-button--unstyled display-flex flex-align-center easi-no-print"
+        data-testid="button"
+        type="button"
+      >
+        <svg
+          aria-hidden="true"
+          class="usa-icon margin-right-1"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"
+          />
+        </svg>
+        Download feedback as PDF
+      </button>
+    </div>
+    <div>
+      <h1
+        aria-live="polite"
+        class="easi-h1 easi-only-print"
+        tabindex="-1"
+      >
+        Feedback
+      </h1>
+      <ul
+        class="usa-list--unstyled margin-top-4"
+        data-testid="feedback-list"
+      >
+        <li
+          class="border-top-1px border-base-light margin-bottom-4"
+        >
+          <h3
+            class="margin-top-4"
+          >
+            General feedback for the requester
+          </h3>
+          <dl
+            class="grid-row"
+          >
+            <div
+              class="tablet:grid-col-6"
+              data-testid="grid"
+            >
+              <dt
+                class="text-bold margin-bottom-1"
+              >
+                Date
+              </dt>
+              <dd
+                class="margin-x-0"
+              >
+                November 14, 2023
+              </dd>
+            </div>
+            <div
+              class="tablet:grid-col-6 margin-top-2 tablet:margin-top-0"
+              data-testid="grid"
+            >
+              <dt
+                class="text-bold margin-bottom-1"
+              >
+                From
+              </dt>
+              <dd
+                class="margin-x-0"
+              >
+                Jerry Seinfeld, Governance Team
+              </dd>
+            </div>
+            <div
+              class="bg-base-lightest width-full margin-top-3 padding-3"
+            >
+              <div
+                class="easi-toast easi-toast-viewer"
+              >
+                <div>
+                  <div
+                    class="toastui-editor-contents"
+                    style="overflow-wrap: break-word;"
+                  >
+                    <p
+                      data-nodeid="1"
+                    >
+                      This is feedback for the requester from the Progress to New Step action.
+                    </p>
+                    
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </dl>
+        </li>
+        <li
+          class="border-top-1px border-base-light margin-bottom-4"
+        >
+          <h3
+            class="margin-top-4"
+          >
+            Recommendation for the Governance Review Board (GRB)
+          </h3>
+          <dl
+            class="grid-row"
+          >
+            <div
+              class="tablet:grid-col-6"
+              data-testid="grid"
+            >
+              <dt
+                class="text-bold margin-bottom-1"
+              >
+                Date
+              </dt>
+              <dd
+                class="margin-x-0"
+              >
+                November 14, 2023
+              </dd>
+            </div>
+            <div
+              class="tablet:grid-col-6 margin-top-2 tablet:margin-top-0"
+              data-testid="grid"
+            >
+              <dt
+                class="text-bold margin-bottom-1"
+              >
+                From
+              </dt>
+              <dd
+                class="margin-x-0"
+              >
+                Jerry Seinfeld, Governance Team
+              </dd>
+            </div>
+            <div
+              class="bg-base-lightest width-full margin-top-3 padding-3"
+            >
+              <div
+                class="easi-toast easi-toast-viewer"
+              >
+                <div>
+                  <div
+                    class="toastui-editor-contents"
+                    style="overflow-wrap: break-word;"
+                  >
+                    <p
+                      data-nodeid="3"
+                    >
+                      This is a recommendation for the GRB from the Progress to New Step action.
+                    </p>
+                    
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </dl>
+        </li>
+        <li
+          class="border-top-1px border-base-light margin-bottom-4"
+        >
+          <h3
+            class="margin-top-4"
+          >
+            Edits requested to a form
+          </h3>
+          <dl
+            class="grid-row"
+          >
+            <div
+              class="tablet:grid-col-6"
+              data-testid="grid"
+            >
+              <dt
+                class="text-bold margin-bottom-1"
+              >
+                Date
+              </dt>
+              <dd
+                class="margin-x-0"
+              >
+                November 14, 2023
+              </dd>
+            </div>
+            <div
+              class="tablet:grid-col-6 margin-top-2 tablet:margin-top-0"
+              data-testid="grid"
+            >
+              <dt
+                class="text-bold margin-bottom-1"
+              >
+                From
+              </dt>
+              <dd
+                class="margin-x-0"
+              >
+                Jerry Seinfeld, Governance Team
+              </dd>
+            </div>
+            <div
+              class="bg-base-lightest width-full margin-top-3 padding-3"
+            >
+              <dl
+                class="margin-y-0"
+                data-testid="target-form"
+              >
+                <dt
+                  class="text-bold margin-top-0 margin-bottom-1"
+                >
+                  Edits requested for
+                </dt>
+                <dd
+                  class="margin-top-1 margin-bottom-4 margin-x-0"
+                >
+                  Intake Request form
+                </dd>
+              </dl>
+              <div
+                class="easi-toast easi-toast-viewer"
+              >
+                <div>
+                  <div
+                    class="toastui-editor-contents"
+                    style="overflow-wrap: break-word;"
+                  >
+                    <p
+                      data-nodeid="5"
+                    >
+                      This is feedback from the Request Edits action
+                    </p>
+                    
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </dl>
+        </li>
+      </ul>
+    </div>
+    <div
+      class="easi-divider margin-bottom-4 easi-no-print"
+    />
+    <div
+      class="tablet:display-flex"
+    >
+      <a
+        class="usa-link display-flex flex-align-center margin-bottom-1 tablet:margin-bottom-0"
+        href="/governance-task-list/a4158ad8-1236-4a55-9ad5-7e15a5d49de2"
+      >
+        <svg
+          aria-hidden="true"
+          class="usa-icon margin-right-1"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+          />
+        </svg>
+        Return to governance task list
+      </a>
+      <span
+        class="margin-x-2 text-base-light display-none tablet:display-block"
+      >
+        |
+      </span>
+      <button
+        class="usa-button usa-button--unstyled display-flex flex-align-center easi-no-print"
+        data-testid="button"
+        type="button"
+      >
+        <svg
+          aria-hidden="true"
+          class="usa-icon margin-right-1"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"
+          />
+        </svg>
+        Download feedback as PDF
+      </button>
+    </div>
+  </main>
+</DocumentFragment>
+`;

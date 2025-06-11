@@ -67,9 +67,9 @@ const TruncatedText = ({
         unstyled
       >
         {isOpen ? (
-          <Icon.ExpandMore aria-label="expand" />
+          <Icon.ExpandMore aria-hidden />
         ) : (
-          <Icon.NavigateNext aria-label="next" />
+          <Icon.NavigateNext aria-hidden />
         )}
         {isOpen ? closeLabel || label : label}
       </Button>
