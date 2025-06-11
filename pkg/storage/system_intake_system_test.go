@@ -150,6 +150,14 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 		s.False(firstThreeSystemsTime.IsZero())
 		s.False(fourthSystemTime.IsZero())
 
+		fmt.Println("==== firstThreeSystemsTime ====")
+		fmt.Println(firstThreeSystemsTime)
+		fmt.Println("==== firstThreeSystemsTime ====")
+
+		fmt.Println("==== fourthSystemTime ====")
+		fmt.Println(fourthSystemTime)
+		fmt.Println("==== fourthSystemTime ====")
+
 		s.True(fourthSystemTime.After(firstThreeSystemsTime))
 
 		_, err = s.db.Exec("DELETE FROM system_intakes WHERE id = ANY($1)", pq.Array(createdIDs))

@@ -79,13 +79,13 @@ func (s *ResolverSuite) TestRelatedRequests() {
 			[]string{}, []*models.SystemRelationshipInput{}, []string{contractNumber2}, 1, 1, uuid.Nil, uuid.Nil,
 		},
 		"req with cn1 and cn2 should relate to req with cn1 and req with cn2": {
-			[]string{}, []*models.SystemRelationshipInput{}, []string{contractNumber1, contractNumber2}, 0, 2, uuid.Nil, uuid.Nil,
+			[]string{}, []*models.SystemRelationshipInput{}, []string{contractNumber1, contractNumber2}, 2, 0, uuid.Nil, uuid.Nil,
 		},
 		"unrelated contract number should relate to no requests": {
 			[]string{}, []*models.SystemRelationshipInput{}, []string{unrelatedContractNumber}, 0, 0, uuid.Nil, uuid.Nil,
 		},
 		"req with sys3 and cn3 should relate to req with sys3 and req with cn3": {
-			[]string{systemID3}, []*models.SystemRelationshipInput{&system3}, []string{contractNumber3}, 1, 2, uuid.Nil, uuid.Nil,
+			[]string{systemID3}, []*models.SystemRelationshipInput{&system3}, []string{contractNumber3}, 2, 1, uuid.Nil, uuid.Nil,
 		},
 		"req with cn3 should relate to req with sys3 and cn3": {
 			[]string{}, []*models.SystemRelationshipInput{&system3}, []string{contractNumber3}, 1, 1, uuid.Nil, uuid.Nil,
