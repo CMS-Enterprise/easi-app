@@ -327,7 +327,7 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			// Set the "existing system" relationship
 			input := &models.SetSystemIntakeRelationExistingSystemInput{
 				SystemIntakeID:           openIntake.ID,
-				CedarSystemRelationShips: []*models.SystemRelationshipInput{},
+				CedarSystemRelationShips: caseValues.NewLinkedSystems,
 				ContractNumbers:          caseValues.NewContractNumbers,
 			}
 			updatedIntake, err := SetSystemIntakeRelationExistingSystem(

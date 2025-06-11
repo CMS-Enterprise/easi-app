@@ -49,48 +49,49 @@ func (s *ResolverSuite) TestRelatedRequests() {
 	}
 
 	var relations = map[string]struct {
-		TrbSystems              []string
-		CedarSystems            []*models.SystemRelationshipInput
-		ContractNumbers         []string
-		ExpectedRelatedRequests int
-		TrbRequestID            uuid.UUID
-		SystemIntakeID          uuid.UUID
+		TrbSystems                  []string
+		CedarSystems                []*models.SystemRelationshipInput
+		ContractNumbers             []string
+		ExpectedRelatedTrbRequests  int
+		ExpectedRelatedCedarSystems int
+		TrbRequestID                uuid.UUID
+		SystemIntakeID              uuid.UUID
 	}{
 		"no relation should have no relations": {
-			[]string{}, []*models.SystemRelationshipInput{}, []string{}, 0, uuid.Nil, uuid.Nil,
+			[]string{}, []*models.SystemRelationshipInput{}, []string{}, 0, 0, uuid.Nil, uuid.Nil,
 		},
 		"req with sys1 should relate to req with sys1 and sys2": {
-			[]string{systemID1}, []*models.SystemRelationshipInput{&system1}, []string{}, 1, uuid.Nil, uuid.Nil,
+			[]string{systemID1}, []*models.SystemRelationshipInput{&system1}, []string{}, 1, 1, uuid.Nil, uuid.Nil,
 		},
 		"req with sys2 should relate to req with sys1 and sys2": {
-			[]string{systemID2}, []*models.SystemRelationshipInput{&system2}, []string{}, 1, uuid.Nil, uuid.Nil,
+			[]string{systemID2}, []*models.SystemRelationshipInput{&system2}, []string{}, 1, 1, uuid.Nil, uuid.Nil,
 		},
 		"req with sys1 and sys2 should relate to req with sys1 and req with sys2": {
-			[]string{systemID1, systemID2}, []*models.SystemRelationshipInput{&system1, &system2}, []string{}, 2, uuid.Nil, uuid.Nil,
+			[]string{systemID1, systemID2}, []*models.SystemRelationshipInput{&system1, &system2}, []string{}, 2, 2, uuid.Nil, uuid.Nil,
 		},
 		"unrelated system ID should relate to no requests": {
-			[]string{unrelatedSystemID}, []*models.SystemRelationshipInput{&unrelatedSystem}, []string{}, 0, uuid.Nil, uuid.Nil,
+			[]string{unrelatedSystemID}, []*models.SystemRelationshipInput{&unrelatedSystem}, []string{}, 0, 0, uuid.Nil, uuid.Nil,
 		},
 		"req with cn1 should relate to req with cn1 and cn2": {
-			[]string{}, []*models.SystemRelationshipInput{}, []string{contractNumber1}, 1, uuid.Nil, uuid.Nil,
+			[]string{}, []*models.SystemRelationshipInput{}, []string{contractNumber1}, 1, 1, uuid.Nil, uuid.Nil,
 		},
 		"req with cn2 should relate to req with cn1 and cn2": {
-			[]string{}, []*models.SystemRelationshipInput{}, []string{contractNumber2}, 1, uuid.Nil, uuid.Nil,
+			[]string{}, []*models.SystemRelationshipInput{}, []string{contractNumber2}, 1, 1, uuid.Nil, uuid.Nil,
 		},
 		"req with cn1 and cn2 should relate to req with cn1 and req with cn2": {
-			[]string{}, []*models.SystemRelationshipInput{}, []string{contractNumber1, contractNumber2}, 2, uuid.Nil, uuid.Nil,
+			[]string{}, []*models.SystemRelationshipInput{}, []string{contractNumber1, contractNumber2}, 0, 2, uuid.Nil, uuid.Nil,
 		},
 		"unrelated contract number should relate to no requests": {
-			[]string{}, []*models.SystemRelationshipInput{}, []string{unrelatedContractNumber}, 0, uuid.Nil, uuid.Nil,
+			[]string{}, []*models.SystemRelationshipInput{}, []string{unrelatedContractNumber}, 0, 0, uuid.Nil, uuid.Nil,
 		},
 		"req with sys3 and cn3 should relate to req with sys3 and req with cn3": {
-			[]string{systemID3}, []*models.SystemRelationshipInput{&system3}, []string{contractNumber3}, 2, uuid.Nil, uuid.Nil,
+			[]string{systemID3}, []*models.SystemRelationshipInput{&system3}, []string{contractNumber3}, 1, 2, uuid.Nil, uuid.Nil,
 		},
 		"req with cn3 should relate to req with sys3 and cn3": {
-			[]string{}, []*models.SystemRelationshipInput{}, []string{contractNumber3}, 1, uuid.Nil, uuid.Nil,
+			[]string{}, []*models.SystemRelationshipInput{&system3}, []string{contractNumber3}, 1, 1, uuid.Nil, uuid.Nil,
 		},
 		"req with sys3 should relate to req with sys3 and cn3": {
-			[]string{systemID3}, []*models.SystemRelationshipInput{&system3}, []string{}, 1, uuid.Nil, uuid.Nil,
+			[]string{systemID3}, []*models.SystemRelationshipInput{&system3}, []string{contractNumber3}, 1, 1, uuid.Nil, uuid.Nil,
 		},
 	}
 	// create system intakes and trb requests for testing
@@ -105,7 +106,7 @@ func (s *ResolverSuite) TestRelatedRequests() {
 			relations[caseName] = relation
 
 			err := sqlutils.WithTransaction(s.testConfigs.Context, s.testConfigs.Store, func(tx *sqlx.Tx) error {
-				if err := s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, intake.ID, []*models.SystemRelationshipInput{}); err != nil {
+				if err := s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, intake.ID, relation.CedarSystems); err != nil {
 					panic(err)
 				}
 				if err := s.testConfigs.Store.SetSystemIntakeContractNumbers(ctx, tx, intake.ID, relation.ContractNumbers); err != nil {
@@ -126,12 +127,12 @@ func (s *ResolverSuite) TestRelatedRequests() {
 		s.Run("system intake related intakes "+caseName, func() {
 			relatedIntakes, err := SystemIntakeRelatedSystemIntakes(s.ctxWithNewDataloaders(), relation.SystemIntakeID)
 			s.NoError(err)
-			s.Len(relatedIntakes, relation.ExpectedRelatedRequests)
+			s.Len(relatedIntakes, relation.ExpectedRelatedCedarSystems)
 		})
 		s.Run("trb req related trb reqs "+caseName, func() {
 			relatedTRBRequests, err := TRBRequestRelatedTRBRequests(s.ctxWithNewDataloaders(), relation.TrbRequestID)
 			s.NoError(err)
-			s.Len(relatedTRBRequests, relation.ExpectedRelatedRequests)
+			s.Len(relatedTRBRequests, relation.ExpectedRelatedTrbRequests)
 		})
 		s.Run("system intake related trb reqs "+caseName, func() {
 			relatedTRBRequests, err := SystemIntakeRelatedTRBRequests(s.ctxWithNewDataloaders(), relation.SystemIntakeID)
@@ -142,7 +143,7 @@ func (s *ResolverSuite) TestRelatedRequests() {
 				s.Len(relatedTRBRequests, 0)
 				return
 			}
-			s.Len(relatedTRBRequests, relation.ExpectedRelatedRequests+1)
+			s.Len(relatedTRBRequests, relation.ExpectedRelatedTrbRequests+1)
 		})
 		s.Run("trb req related intakes "+caseName, func() {
 			relatedIntakes, err := TRBRequestRelatedSystemIntakes(s.ctxWithNewDataloaders(), relation.TrbRequestID)
@@ -153,7 +154,7 @@ func (s *ResolverSuite) TestRelatedRequests() {
 				s.Len(relatedIntakes, 0)
 				return
 			}
-			s.Len(relatedIntakes, relation.ExpectedRelatedRequests+1)
+			s.Len(relatedIntakes, relation.ExpectedRelatedTrbRequests+1)
 		})
 	}
 }
