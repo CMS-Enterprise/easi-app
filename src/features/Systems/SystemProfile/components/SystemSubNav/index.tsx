@@ -50,7 +50,7 @@ const SystemSubNav = ({
         {!isAccordionOpen ? (
           <Icon.ExpandMore aria-hidden size={3} />
         ) : (
-          <Icon.ExpandLess size={3} aria-hidden/>
+          <Icon.ExpandLess size={3} aria-hidden />
         )}
       </button>
       {isAccordionOpen && (

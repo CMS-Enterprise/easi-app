@@ -240,7 +240,8 @@ function EditsRequestedWarning({
     <div className="bg-error-lighter padding-y-2">
       <GridContainer className="width-full">
         <div>
-          <Icon.Warning aria-hidden
+          <Icon.Warning
+            aria-hidden
             className="text-error-dark text-middle margin-right-1"
             size={3}
           />
