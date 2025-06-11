@@ -39,7 +39,7 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 		}
 
 		// set contract for the created system intake
-		systemRelationshipInput := []*models.SystemRelationshipInput{
+		linkedSystems := []*models.SystemRelationshipInput{
 			{
 				CedarSystemID:          &systemID1,
 				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
@@ -57,7 +57,7 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 
 		err := sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
 			// systemIDs,
-			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, createdIntakes[0].ID, systemRelationshipInput)
+			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, createdIntakes[0].ID, linkedSystems)
 		})
 		s.NoError(err)
 
@@ -105,12 +105,11 @@ func (s *ResolverSuite) TestSystemIntakesByCedarSystemID() {
 		closed uuid.UUID
 	)
 
-	const (
-		system1 = "1"
-		system2 = "2"
-		system3 = "3"
-		system4 = "4"
-	)
+	systemID1 := "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"
+	systemID2 := "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
+	systemID3 := "{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"
+
+	description := "other description"
 
 	s.Run("test getting system intakes by cedar system id", func() {
 		// create some intakes
@@ -151,7 +150,21 @@ func (s *ResolverSuite) TestSystemIntakesByCedarSystemID() {
 		closed = create3.ID
 
 		// link all systems to all system intakes
-		linkedSystems := []*models.SystemRelationshipInput{}
+		linkedSystems := []*models.SystemRelationshipInput{
+			{
+				CedarSystemID:          &systemID1,
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+				OtherTypeDescription:   &description,
+			},
+			{
+				CedarSystemID:          &systemID2,
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "USED_IN_TECH_SOLUTION"},
+			},
+			{
+				CedarSystemID:          &systemID3,
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT"},
+			},
+		}
 
 		err = sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
 			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, open1, linkedSystems)
@@ -168,7 +181,7 @@ func (s *ResolverSuite) TestSystemIntakesByCedarSystemID() {
 		})
 		s.NoError(err)
 
-		results, err := CedarSystemLinkedSystemIntakes(s.ctxWithNewDataloaders(), system1, models.SystemIntakeStateOpen)
+		results, err := CedarSystemLinkedSystemIntakes(s.ctxWithNewDataloaders(), systemID1, models.SystemIntakeStateOpen)
 		s.NoError(err)
 		s.Len(results, 2)
 
@@ -184,7 +197,7 @@ func (s *ResolverSuite) TestSystemIntakesByCedarSystemID() {
 		s.False(foundClosed)
 
 		// now get the closed one
-		results, err = CedarSystemLinkedSystemIntakes(s.ctxWithNewDataloaders(), system1, models.SystemIntakeStateClosed)
+		results, err = CedarSystemLinkedSystemIntakes(s.ctxWithNewDataloaders(), systemID1, models.SystemIntakeStateClosed)
 		s.NoError(err)
 		s.Len(results, 1)
 		s.Equal(results[0].ID, closed)
