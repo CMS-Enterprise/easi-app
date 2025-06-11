@@ -85,13 +85,13 @@ func (s *ResolverSuite) TestRelatedRequests() {
 			[]string{}, []*models.SystemRelationshipInput{}, []string{unrelatedContractNumber}, 0, 0, uuid.Nil, uuid.Nil,
 		},
 		"req with sys3 and cn3 should relate to req with sys3 and req with cn3": {
-			[]string{systemID3}, []*models.SystemRelationshipInput{&system3}, []string{contractNumber3}, 2, 1, uuid.Nil, uuid.Nil,
+			[]string{systemID3}, []*models.SystemRelationshipInput{&system3}, []string{contractNumber3}, 2, 2, uuid.Nil, uuid.Nil,
 		},
 		"req with cn3 should relate to req with sys3 and cn3": {
-			[]string{}, []*models.SystemRelationshipInput{&system3}, []string{contractNumber3}, 1, 1, uuid.Nil, uuid.Nil,
+			[]string{}, []*models.SystemRelationshipInput{&system3}, []string{contractNumber3}, 2, 2, uuid.Nil, uuid.Nil,
 		},
 		"req with sys3 should relate to req with sys3 and cn3": {
-			[]string{systemID3}, []*models.SystemRelationshipInput{&system3}, []string{contractNumber3}, 1, 1, uuid.Nil, uuid.Nil,
+			[]string{systemID3}, []*models.SystemRelationshipInput{&system3}, []string{contractNumber3}, 2, 2, uuid.Nil, uuid.Nil,
 		},
 	}
 	// create system intakes and trb requests for testing
