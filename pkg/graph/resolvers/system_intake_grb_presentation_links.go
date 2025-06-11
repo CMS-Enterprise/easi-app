@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 	"path/filepath"
 
 	"github.com/99designs/gqlgen/graphql"
@@ -139,6 +140,10 @@ func UploadSystemIntakeGRBPresentationDeck(
 	if systemIntake == nil {
 		return nil, errors.New("system intake not found")
 	}
+
+	fmt.Println("==== *systemIntake ====")
+	fmt.Printf("%+v\n", *systemIntake)
+	fmt.Println("==== *systemIntake ====")
 
 	isReviewCompleted, err := isGRBReviewCompleted(ctx, systemIntake)
 	if err != nil {
