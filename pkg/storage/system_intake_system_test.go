@@ -48,7 +48,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 		idTwo := "2"
 		idThree := "3"
 		idFour := "4"
-		descriptionOne := ""
+		descriptionOne := "other text description"
 		linkedSystems := []*models.SystemRelationshipInput{
 			{
 				CedarSystemID:          &idOne,
