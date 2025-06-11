@@ -103,6 +103,13 @@ const RestartReviewModal = ({ systemIntakeId }: { systemIntakeId: string }) => {
               onChange={val => setSelectedDate(val || '')}
               value={selectedDate}
               dateInPastWarning
+              format={dt =>
+                dt
+                  .setZone('America/New_York')
+                  .set({ hour: 17, minute: 0, second: 0 })
+                  .toUTC()
+                  .toISO({ suppressMilliseconds: true })
+              }
             />
           </FormGroup>
           <ModalFooter>
