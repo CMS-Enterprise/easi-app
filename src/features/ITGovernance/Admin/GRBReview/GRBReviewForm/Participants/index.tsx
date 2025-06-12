@@ -216,6 +216,13 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
                             field.onChange(date || ''); // Only update when there's a change
                           }
                         }}
+                        format={dt =>
+                          dt
+                            .setZone('America/New_York')
+                            .set({ hour: 17, minute: 0, second: 0 })
+                            .toUTC()
+                            .toISO({ suppressMilliseconds: true })
+                        }
                       />
                     </FormGroup>
                   </>
