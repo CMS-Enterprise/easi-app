@@ -83,11 +83,6 @@ func (s *ResolverSuite) TestUploadSystemIntakeGRBPresentationDeck() {
 			GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
 		},
 	}
-	_, err = CreateSystemIntakeGRBReviewers(s.testConfigs.Context, s.testConfigs.Store, nil, userhelpers.GetUserInfoAccountInfosWrapperFunc(mock.FetchUserInfosMock), &models.CreateSystemIntakeGRBReviewersInput{
-		SystemIntakeID: intake.ID,
-		Reviewers:      reviewers,
-	})
-	s.NoError(err)
 
 	// set a start time in the past
 	intake.GRBReviewStartedAt = helpers.PointerTo(time.Now().AddDate(0, 0, -1))
@@ -95,6 +90,12 @@ func (s *ResolverSuite) TestUploadSystemIntakeGRBPresentationDeck() {
 	intake.GrbReviewAsyncEndDate = helpers.PointerTo(time.Now().AddDate(0, 0, 10))
 	intake.GrbReviewType = models.SystemIntakeGRBReviewTypeAsync
 	intake, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intake)
+	s.NoError(err)
+
+	_, err = CreateSystemIntakeGRBReviewers(s.testConfigs.Context, s.testConfigs.Store, nil, userhelpers.GetUserInfoAccountInfosWrapperFunc(mock.FetchUserInfosMock), &models.CreateSystemIntakeGRBReviewersInput{
+		SystemIntakeID: intake.ID,
+		Reviewers:      reviewers,
+	})
 	s.NoError(err)
 
 	// set votes for each one
@@ -120,7 +121,7 @@ func (s *ResolverSuite) TestUploadSystemIntakeGRBPresentationDeck() {
 
 	// Assert insert portion of upsert
 	_, err = UploadSystemIntakeGRBPresentationDeck(
-		s.testConfigs.Context,
+		s.ctxWithNewDataloaders(),
 		s.testConfigs.Store,
 		s.testConfigs.S3Client,
 		input,
