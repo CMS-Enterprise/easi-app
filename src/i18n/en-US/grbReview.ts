@@ -507,6 +507,7 @@ export default {
     timeRemaining: 'Time remaining for review',
     countdown: '{{days}} days, {{hours}} hours, {{minutes}} minutes',
     reviewEnds: 'Review ends {{date}}, 5:00pm EST',
+    reviewEnds_PAST_DUE: 'Original end date: {{date}}, 5:00pm EST',
     addTime: 'Add time',
     endVoting: 'End voting',
     addTimeModal: {
