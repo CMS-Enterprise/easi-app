@@ -160,7 +160,10 @@ const home = {
           openEmailButton: 'Open in email',
           copyEmailButton: 'or, copy emails to clipboard',
           noEmail:
-            'There are no requester emails that match your selection. Please update your selection to download an email list from EASi.'
+            'There are no requester emails that match your selection. Please update your selection to download an email list from EASi.',
+          error:
+            'There was an error loading the data. Please close this and try again. If the error persists, try again later.',
+          copied: 'Copied to clipboard'
         }
       }
     }
