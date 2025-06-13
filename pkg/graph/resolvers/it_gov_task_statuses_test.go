@@ -1,10 +1,9 @@
 package resolvers
 
 import (
-	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
@@ -56,8 +55,7 @@ type testSystemIntakeGRBStatusType struct {
 	expectError    bool
 }
 
-func TestIntakeFormStatus(t *testing.T) {
-
+func (s *ResolverSuite) TestIntakeFormStatus() {
 	defaultTestState := models.SystemIntakeFormState("Testing Default State")
 
 	intakeFormTests := []testSystemIntakeFormStatusType{
@@ -158,21 +156,20 @@ func TestIntakeFormStatus(t *testing.T) {
 
 	for i := range intakeFormTests {
 		test := intakeFormTests[i]
-		t.Run(test.testCase, func(t *testing.T) {
+		s.Run(test.testCase, func() {
 			status, err := IntakeFormStatus(&test.intake)
-			assert.EqualValues(t, test.expectedStatus, status)
+			s.EqualValues(test.expectedStatus, status)
 			if test.expectError {
-				assert.Error(t, err)
+				s.Error(err)
 			} else {
-				assert.NoError(t, err)
+				s.NoError(err)
 			}
 
 		})
 	}
-
 }
 
-func TestFeedbackFromInitialReviewStatus(t *testing.T) {
+func (s *ResolverSuite) TestFeedbackFromInitialReviewStatus() {
 	defaultTestState := models.SystemIntakeFormState("Testing Default State")
 
 	intakeFormFeedbackTests := []testSystemIntakeFormFeedbackStatusType{
@@ -274,20 +271,22 @@ func TestFeedbackFromInitialReviewStatus(t *testing.T) {
 
 	for i := range intakeFormFeedbackTests {
 		test := intakeFormFeedbackTests[i]
-		t.Run(test.testCase, func(t *testing.T) {
+		s.Run(test.testCase, func() {
 			status, err := FeedbackFromInitialReviewStatus(&test.intake)
-			assert.EqualValues(t, test.expectedStatus, status)
+			s.EqualValues(test.expectedStatus, status)
 			if test.expectError {
-				assert.Error(t, err)
+				s.Error(err)
 			} else {
-				assert.NoError(t, err)
+				s.NoError(err)
 			}
 
 		})
 	}
-
 }
-func TestDecisionAndNextStepsStatus(t *testing.T) {
+
+func (s *ResolverSuite) TestDecisionAndNextStepsStatus() {
+	ctx := s.ctxWithNewDataloaders()
+
 	yesterday := time.Now().Add(time.Hour * -24)
 	tomorrow := time.Now().Add(time.Hour * 24)
 
@@ -328,8 +327,9 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 		{
 			testCase: "GRB Meeting: no meeting scheduled",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRBMEETING,
-				GRBDate: nil,
+				Step:          models.SystemIntakeStepGRBMEETING,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       nil,
 			},
 			expectedStatus: models.ITGDSCantStart,
 			expectError:    false,
@@ -337,8 +337,9 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 		{
 			testCase: "GRB Meeting: meeting scheduled, but hasn't happened",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRBMEETING,
-				GRBDate: &tomorrow,
+				Step:          models.SystemIntakeStepGRBMEETING,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       &tomorrow,
 			},
 			expectedStatus: models.ITGDSCantStart,
 			expectError:    false,
@@ -346,8 +347,20 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 		{
 			testCase: "GRB Meeting: meeting scheduled, it already happened",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRBMEETING,
-				GRBDate: &yesterday,
+				Step:          models.SystemIntakeStepGRBMEETING,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       &yesterday,
+			},
+			expectedStatus: models.ITGDSInReview,
+			expectError:    false,
+		},
+		{
+			testCase: "GRB Meeting: Async review, voting ended manually",
+			intake: models.SystemIntake{
+				Step:                        models.SystemIntakeStepGRBMEETING,
+				GrbReviewType:               models.SystemIntakeGRBReviewTypeAsync,
+				GrbReviewAsyncEndDate:       &tomorrow,
+				GrbReviewAsyncManualEndDate: &yesterday,
 			},
 			expectedStatus: models.ITGDSInReview,
 			expectError:    false,
@@ -388,24 +401,75 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 			expectedStatus: "",
 			expectError:    true,
 		},
+		{
+			testCase: "Decision issued step: GRB Meeting, standard, GRB Date nil",
+			intake: models.SystemIntake{
+				Step:          models.SystemIntakeStepGRBMEETING,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       nil,
+			},
+			expectedStatus: models.ITGDSCantStart,
+			expectError:    false,
+		},
+		{
+			testCase: "Decision issued step: GRB Meeting, standard, GRB Date nil",
+			intake: models.SystemIntake{
+				Step:          models.SystemIntakeStepGRBMEETING,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       nil,
+			},
+
+			expectedStatus: models.ITGDSCantStart,
+			expectError:    false,
+		},
+		{
+			testCase: "Decision issued step: GRB Meeting, standard, GRB Date future",
+			intake: models.SystemIntake{
+				Step:          models.SystemIntakeStepGRBMEETING,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       helpers.PointerTo(time.Now().Add(time.Hour * 24)),
+			},
+			expectedStatus: models.ITGDSCantStart,
+			expectError:    false,
+		},
+		{
+			testCase: "Decision issued step: GRB Meeting, async, GRB Date nil",
+			intake: models.SystemIntake{
+				Step:                  models.SystemIntakeStepGRBMEETING,
+				GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
+				GrbReviewAsyncEndDate: nil,
+			},
+			expectedStatus: models.ITGDSCantStart,
+			expectError:    false,
+		},
+		{
+			testCase: "Decision issued step: GRB Meeting, async, GRB Date future",
+			intake: models.SystemIntake{
+				Step:                  models.SystemIntakeStepGRBMEETING,
+				GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
+				GrbReviewAsyncEndDate: helpers.PointerTo(time.Now().Add(time.Hour * 24)),
+			},
+			expectedStatus: models.ITGDSCantStart,
+			expectError:    false,
+		},
 	}
 
 	for i := range decisionStateTests {
 		test := decisionStateTests[i]
-		t.Run(test.testCase, func(t *testing.T) {
-			status, err := DecisionAndNextStepsStatus(&test.intake)
-			assert.EqualValues(t, test.expectedStatus, status)
+		s.Run(test.testCase, func() {
+			status, err := DecisionAndNextStepsStatus(ctx, &test.intake)
+			s.EqualValues(test.expectedStatus, status)
 			if test.expectError {
-				assert.Error(t, err)
+				s.Error(err)
 			} else {
-				assert.NoError(t, err)
+				s.NoError(err)
 			}
 
 		})
 	}
-
 }
-func TestBizCaseDraftStatus(t *testing.T) {
+
+func (s *ResolverSuite) TestBizCaseDraftStatus() {
 	defaultTestStep := models.SystemIntakeStep("Testing Default State")
 	defaultTestState := models.SystemIntakeFormState("Testing Default State")
 
@@ -657,20 +721,20 @@ func TestBizCaseDraftStatus(t *testing.T) {
 
 	for i := range draftBusinessCaseTests {
 		test := draftBusinessCaseTests[i]
-		t.Run(test.testCase, func(t *testing.T) {
+		s.Run(test.testCase, func() {
 			status, err := BizCaseDraftStatus(&test.intake)
-			assert.EqualValues(t, test.expectedStatus, status)
+			s.EqualValues(test.expectedStatus, status)
 			if test.expectError {
-				assert.Error(t, err)
+				s.Error(err)
 			} else {
-				assert.NoError(t, err)
+				s.NoError(err)
 			}
 
 		})
 	}
-
 }
-func TestGrtMeetingStatus(t *testing.T) {
+
+func (s *ResolverSuite) TestGrtMeetingStatus() {
 	yesterday := time.Now().Add(time.Hour * -24)
 	tomorrow := time.Now().Add(time.Hour * 24)
 	invalidTestStep := models.SystemIntakeStep("Testing Invalid Step")
@@ -869,20 +933,20 @@ func TestGrtMeetingStatus(t *testing.T) {
 
 	for i := range decisionStateTests {
 		test := decisionStateTests[i]
-		t.Run(test.testCase, func(t *testing.T) {
+		s.Run(test.testCase, func() {
 			status, err := GrtMeetingStatus(&test.intake)
-			assert.EqualValues(t, test.expectedStatus, status)
+			s.EqualValues(test.expectedStatus, status)
 			if test.expectError {
-				assert.Error(t, err)
+				s.Error(err)
 			} else {
-				assert.NoError(t, err)
+				s.NoError(err)
 			}
 
 		})
 	}
-
 }
-func TestBizCaseFinalStatus(t *testing.T) {
+
+func (s *ResolverSuite) TestBizCaseFinalStatus() {
 	defaultTestStep := models.SystemIntakeStep("Testing Default State")
 	defaultTestState := models.SystemIntakeFormState("Testing Default State")
 	finalBusinessCaseTests := []testSystemIntakeBusinessCaseFinalStatusType{
@@ -1133,228 +1197,308 @@ func TestBizCaseFinalStatus(t *testing.T) {
 
 	for i := range finalBusinessCaseTests {
 		test := finalBusinessCaseTests[i]
-		t.Run(test.testCase, func(t *testing.T) {
+		s.Run(test.testCase, func() {
 			status, err := BizCaseFinalStatus(&test.intake)
-			assert.EqualValues(t, test.expectedStatus, status)
+			s.EqualValues(test.expectedStatus, status)
 			if test.expectError {
-				assert.Error(t, err)
+				s.Error(err)
 			} else {
-				assert.NoError(t, err)
+				s.NoError(err)
 			}
 
 		})
 	}
-
 }
-func TestGrbMeetingStatus(t *testing.T) {
 
-	yesterday := time.Now().Add(time.Hour * -24)
-	tomorrow := time.Now().Add(time.Hour * 24)
-	invalidTestStep := models.SystemIntakeStep("Testing Invalid Step")
+func (s *ResolverSuite) TestGrbMeetingStatus() {
+	ctx := s.ctxWithNewDataloaders()
 
-	grbTests := []testSystemIntakeGRBStatusType{
+	now := time.Now()
+	yesterday := now.Add(-24 * time.Hour)
+	tomorrow := now.Add(24 * time.Hour)
+
+	invalidStep := models.SystemIntakeStep("Testing Invalid Step")
+
+	tests := []testSystemIntakeGRBStatusType{
+		// ---------- Initial Form ----------
 		{
-			testCase: "Request form: No GRB Date Scheduled",
+			testCase: "Request form: No GRB Date",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepINITIALFORM,
-				GRBDate: nil,
+				Step:          models.SystemIntakeStepINITIALFORM,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       nil,
 			},
 			expectedStatus: models.ITGGRBSCantStart,
-			expectError:    false,
 		},
 		{
 			testCase: "Request form: GRB Date Yesterday",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepINITIALFORM,
-				GRBDate: &yesterday,
+				Step:          models.SystemIntakeStepINITIALFORM,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       &yesterday,
 			},
 			expectedStatus: models.ITGGRBSCompleted,
-			expectError:    false,
 		},
 		{
-			testCase: "Request form: GRB Date Tommorrow",
+			testCase: "Request form: GRB Date Tomorrow",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepINITIALFORM,
-				GRBDate: &tomorrow,
+				Step:          models.SystemIntakeStepINITIALFORM,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       &tomorrow,
 			},
 			expectedStatus: models.ITGGRBSScheduled,
-			expectError:    false,
 		},
+
+		// ---------- Draft Business Case ----------
 		{
-			testCase: "Draft Business Case: No GRB Date Scheduled",
+			testCase: "Draft BC: No GRB Date",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepDRAFTBIZCASE,
-				GRBDate: nil,
+				Step:          models.SystemIntakeStepDRAFTBIZCASE,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       nil,
 			},
 			expectedStatus: models.ITGGRBSCantStart,
-			expectError:    false,
 		},
 		{
-			testCase: "Draft Business Case: GRB Date Yesterday",
+			testCase: "Draft BC: GRB Date Yesterday",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepDRAFTBIZCASE,
-				GRBDate: &yesterday,
+				Step:          models.SystemIntakeStepDRAFTBIZCASE,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       &yesterday,
 			},
 			expectedStatus: models.ITGGRBSCompleted,
-			expectError:    false,
 		},
 		{
-			testCase: "Draft Business Case: GRB Date Tommorrow",
+			testCase: "Draft BC: GRB Date Tomorrow",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepDRAFTBIZCASE,
-				GRBDate: &tomorrow,
+				Step:          models.SystemIntakeStepDRAFTBIZCASE,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       &tomorrow,
 			},
 			expectedStatus: models.ITGGRBSScheduled,
-			expectError:    false,
 		},
+
+		// ---------- GRT ----------
 		{
-			testCase: "GRT Step: No GRB Date Scheduled",
+			testCase: "GRT: No GRB Date",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRTMEETING,
-				GRBDate: nil,
+				Step:          models.SystemIntakeStepGRTMEETING,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       nil,
 			},
 			expectedStatus: models.ITGGRBSCantStart,
-			expectError:    false,
 		},
 		{
-			testCase: "GRT Step: GRB Date Yesterday",
+			testCase: "GRT: GRB Date Yesterday",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRTMEETING,
-				GRBDate: &yesterday,
+				Step:          models.SystemIntakeStepGRTMEETING,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       &yesterday,
 			},
 			expectedStatus: models.ITGGRBSCompleted,
-			expectError:    false,
 		},
 		{
-			testCase: "GRT Step: GRB Date Tommorrow",
+			testCase: "GRT: GRB Date Tomorrow",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRTMEETING,
-				GRBDate: &tomorrow,
+				Step:          models.SystemIntakeStepGRTMEETING,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       &tomorrow,
 			},
 			expectedStatus: models.ITGGRBSScheduled,
-			expectError:    false,
 		},
+
+		// ---------- Final BC ----------
 		{
-			testCase: "Final Business Case Step: No GRB Date Scheduled",
+			testCase: "Final BC: No GRB Date",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepFINALBIZCASE,
-				GRBDate: nil,
+				Step:          models.SystemIntakeStepFINALBIZCASE,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       nil,
 			},
 			expectedStatus: models.ITGGRBSCantStart,
-			expectError:    false,
 		},
 		{
-			testCase: "Final Business Case Step: GRB Date Yesterday",
+			testCase: "Final BC: GRB Date Yesterday",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepFINALBIZCASE,
-				GRBDate: &yesterday,
+				Step:          models.SystemIntakeStepFINALBIZCASE,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       &yesterday,
 			},
 			expectedStatus: models.ITGGRBSCompleted,
-			expectError:    false,
 		},
 		{
-			testCase: "Final Business Case Step: GRB Date Tommorrow",
+			testCase: "Final BC: GRB Date Tomorrow",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepFINALBIZCASE,
-				GRBDate: &tomorrow,
+				Step:          models.SystemIntakeStepFINALBIZCASE,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       &tomorrow,
 			},
 			expectedStatus: models.ITGGRBSScheduled,
-			expectError:    false,
 		},
+
+		// ---------- GRB step ----------
 		{
-			testCase: "GRB Step: No GRB Date Scheduled",
+			testCase: "GRB step: No GRB Date",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRBMEETING,
-				GRBDate: nil,
+				Step:          models.SystemIntakeStepGRBMEETING,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       nil,
 			},
 			expectedStatus: models.ITGGRBSReadyToSchedule,
-			expectError:    false,
 		},
 		{
-			testCase: "GRB Step: GRB Date Yesterday",
+			testCase: "GRB step: GRB Date Yesterday (awaiting decision)",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRBMEETING,
-				GRBDate: &yesterday,
+				Step:          models.SystemIntakeStepGRBMEETING,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       &yesterday,
 			},
 			expectedStatus: models.ITGGRBSAwaitingDecision,
-			expectError:    false,
 		},
 		{
-			testCase: "GRB Step: GRB Date Tommorrow",
+			testCase: "GRB step: GRB Date Tomorrow (scheduled)",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRBMEETING,
-				GRBDate: &tomorrow,
+				Step:          models.SystemIntakeStepGRBMEETING,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       &tomorrow,
 			},
 			expectedStatus: models.ITGGRBSScheduled,
-			expectError:    false,
+		},
+
+		// ---------- Async review (already existed) ----------
+		{
+			testCase: "Async: Review in progress",
+			intake: models.SystemIntake{
+				Step:                        models.SystemIntakeStepGRBMEETING,
+				GrbReviewType:               models.SystemIntakeGRBReviewTypeAsync,
+				GRBReviewStartedAt:          &yesterday,
+				GrbReviewAsyncEndDate:       &tomorrow,
+				GrbReviewAsyncRecordingTime: &yesterday,
+			},
+			expectedStatus: models.ITGRRBSReviewInProgress,
 		},
 		{
-			testCase: "Decision Step: No GRB Date Scheduled",
+			testCase: "Async: Awaiting GRB review (recording passed)",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepDECISION,
-				GRBDate: nil,
+				Step:                        models.SystemIntakeStepGRBMEETING,
+				GrbReviewType:               models.SystemIntakeGRBReviewTypeAsync,
+				GrbReviewAsyncRecordingTime: &yesterday,
+			},
+			expectedStatus: models.ITGRRBSAwaitingGRBReview,
+		},
+
+		// ---------- Decision ----------
+		{
+			testCase: "Decision: No GRB Date",
+			intake: models.SystemIntake{
+				Step:          models.SystemIntakeStepDECISION,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       nil,
 			},
 			expectedStatus: models.ITGGRBSNotNeeded,
-			expectError:    false,
 		},
 		{
-			testCase: "Decision Step: GRB Date Yesterday",
+			testCase: "Decision: GRB Date Yesterday",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepDECISION,
-				GRBDate: &yesterday,
+				Step:          models.SystemIntakeStepDECISION,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       &yesterday,
 			},
 			expectedStatus: models.ITGGRBSCompleted,
-			expectError:    false,
 		},
 		{
-			testCase: "Decision Step: GRB Date Tommorrow",
+			testCase: "Decision: GRB Date Tomorrow",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepDECISION,
-				GRBDate: &tomorrow,
+				Step:          models.SystemIntakeStepDECISION,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       &tomorrow,
 			},
 			expectedStatus: models.ITGGRBSScheduled,
-			expectError:    false,
 		},
+
+		// ---------- Invalid step ----------
 		{
-			testCase: "Invalid Step: No GRB Date Scheduled, expect error",
+			testCase: "Invalid step: No GRB Date (error expected)",
 			intake: models.SystemIntake{
-				Step:    invalidTestStep,
-				GRBDate: nil,
+				Step:          invalidStep,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       nil,
 			},
-			expectedStatus: "",
-			expectError:    true,
+			expectError: true,
 		},
 		{
-			testCase: "Invalid Step: GRB Date Yesterday, no error",
+			testCase: "Invalid step: GRB Date Yesterday",
 			intake: models.SystemIntake{
-				Step:    invalidTestStep,
-				GRBDate: &yesterday,
+				Step:          invalidStep,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       &yesterday,
 			},
 			expectedStatus: models.ITGGRBSCompleted,
-			expectError:    false,
 		},
 		{
-			testCase: "Invalid Step: GRB Date Tommorrow, no error",
+			testCase: "Invalid step: GRB Date Tomorrow",
 			intake: models.SystemIntake{
-				Step:    invalidTestStep,
-				GRBDate: &tomorrow,
+				Step:          invalidStep,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:       &tomorrow,
 			},
 			expectedStatus: models.ITGGRBSScheduled,
-			expectError:    false,
+		},
+		// ---------- Async review ----------
+		{
+			testCase: "Async: Review in progress (between start and end, no recording time)",
+			intake: models.SystemIntake{
+				Step:                  models.SystemIntakeStepGRBMEETING,
+				GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
+				GRBReviewStartedAt:    &yesterday,
+				GrbReviewAsyncEndDate: &tomorrow,
+			},
+			expectedStatus: models.ITGRRBSReviewInProgress,
+		},
+		{
+			testCase: "Async: Awaiting GRB review (recording passed)",
+			intake: models.SystemIntake{
+				Step:                        models.SystemIntakeStepGRBMEETING,
+				GrbReviewType:               models.SystemIntakeGRBReviewTypeAsync,
+				GRBReviewStartedAt:          &yesterday,
+				GrbReviewAsyncEndDate:       &tomorrow,
+				GrbReviewAsyncRecordingTime: &yesterday,
+			},
+			expectedStatus: models.ITGRRBSReviewInProgress,
+		},
+		{
+			testCase: "Async: Scheduled (recording time in future)",
+			intake: models.SystemIntake{
+				Step:                        models.SystemIntakeStepGRBMEETING,
+				GrbReviewType:               models.SystemIntakeGRBReviewTypeAsync,
+				GrbReviewAsyncEndDate:       &tomorrow,
+				GrbReviewAsyncRecordingTime: &tomorrow,
+			},
+			expectedStatus: models.ITGGRBSScheduled,
+		},
+		{
+			testCase: "Async: Voting has been ended early, but quorum has not been met",
+			intake: models.SystemIntake{
+				Step:                        models.SystemIntakeStepGRBMEETING,
+				GrbReviewType:               models.SystemIntakeGRBReviewTypeAsync,
+				GRBReviewStartedAt:          &yesterday,
+				GrbReviewAsyncEndDate:       &tomorrow,
+				GrbReviewAsyncRecordingTime: &tomorrow,
+				GrbReviewAsyncManualEndDate: &now,
+			},
+			expectedStatus: models.ITGGRBSAwaitingDecision,
 		},
 	}
 
-	for i := range grbTests {
-		test := grbTests[i]
-		t.Run(test.testCase, func(t *testing.T) {
-			status, err := GrbMeetingStatus(&test.intake)
-			assert.EqualValues(t, test.expectedStatus, status)
-			if test.expectError {
-				assert.Error(t, err)
+	for _, tc := range tests {
+		s.Run(tc.testCase, func() {
+			status, err := GrbMeetingStatus(ctx, &tc.intake)
+			s.EqualValues(tc.expectedStatus, status)
+			if tc.expectError {
+				s.Error(err)
 			} else {
-				assert.NoError(t, err)
+				s.NoError(err)
 			}
 		})
 	}
-
 }

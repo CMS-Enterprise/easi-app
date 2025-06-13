@@ -28,7 +28,6 @@ type SendGRBReviewDiscussionIndividualTaggedEmailInput struct {
 // GRBReviewDiscussionIndividualTaggedBody contains the data needed for interpolation in
 // the GRB Discussion Individual Tagged email template
 type GRBReviewDiscussionIndividualTaggedBody struct {
-	SystemIntakeID           uuid.UUID
 	UserName                 string
 	RequestName              string
 	DiscussionBoardType      string

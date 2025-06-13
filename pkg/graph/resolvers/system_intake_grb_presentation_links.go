@@ -22,6 +22,20 @@ import (
 func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, input models.SystemIntakeGRBPresentationLinksInput) (*models.SystemIntakeGRBPresentationLinks, error) {
 	userID := appcontext.Principal(ctx).Account().ID
 
+	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	isComplete, err := isGRBReviewCompleted(ctx, intake)
+	if err != nil {
+		return nil, err
+	}
+
+	if isComplete {
+		return nil, errors.New("cannot set GRB presentation links for completed GRB review")
+	}
+
 	links, err := dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, input.SystemIntakeID)
 	if err != nil {
 		if !errors.Is(err, sql.ErrNoRows) {
@@ -94,6 +108,85 @@ func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Sto
 
 			links.PresentationDeckS3Key = &s3Key
 		}
+	}
+
+	// If the links are being set to empty (all fields nil/null) we should just delete the row
+	if links.IsEmpty() {
+		return nil, store.DeleteSystemIntakeGRBPresentationLinks(ctx, input.SystemIntakeID)
+	}
+
+	return store.SetSystemIntakeGRBPresentationLinks(ctx, links)
+}
+
+// UploadSystemIntakeGRBPresentationDeck uploads a presentation deck for a system intake
+func UploadSystemIntakeGRBPresentationDeck(
+	ctx context.Context,
+	store *storage.Store,
+	s3Client *upload.S3Client,
+	input models.UploadSystemIntakeGRBPresentationDeckInput,
+) (*models.SystemIntakeGRBPresentationLinks, error) {
+
+	principal := appcontext.Principal(ctx)
+	userID := principal.Account().ID
+
+	systemIntake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		if !errors.Is(err, sql.ErrNoRows) {
+			return nil, err
+		}
+	}
+
+	if systemIntake == nil {
+		return nil, errors.New("system intake not found")
+	}
+
+	isReviewCompleted, err := isGRBReviewCompleted(ctx, systemIntake)
+	if err != nil {
+		return nil, err
+	}
+
+	if isReviewCompleted {
+		return nil, errors.New("cannot upload presentation deck for completed GRB review")
+	}
+
+	if systemIntake.EUAUserID.ValueOrZero() != principal.ID() {
+		return nil, errors.New("unauthorized: only the system intake requester can upload a presentation deck")
+	}
+
+	links, err := dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, input.SystemIntakeID)
+	if err != nil {
+		if !errors.Is(err, sql.ErrNoRows) {
+			return nil, err
+		}
+	}
+
+	if links == nil {
+		// initialize new links struct if one does not already exist
+		links = models.NewSystemIntakeGRBPresentationLinks(userID)
+		links.SystemIntakeID = input.SystemIntakeID
+	}
+
+	links.ModifiedBy = &userID
+
+	// if no file is attached
+	if input.PresentationDeckFileData == nil || input.PresentationDeckFileData.File == nil {
+		// remove references to file
+		links.PresentationDeckFileName = nil
+		links.PresentationDeckS3Key = nil
+	} else {
+		links.PresentationDeckFileName = &input.PresentationDeckFileData.Filename
+
+		s3Key, err := handleS3Upload(s3Client, input.PresentationDeckFileData)
+		if err != nil {
+			return nil, err
+		}
+
+		links.PresentationDeckS3Key = &s3Key
+	}
+
+	// If the links are being set to empty (all fields nil/null) we should just delete the row
+	if links.IsEmpty() {
+		return nil, store.DeleteSystemIntakeGRBPresentationLinks(ctx, input.SystemIntakeID)
 	}
 
 	return store.SetSystemIntakeGRBPresentationLinks(ctx, links)

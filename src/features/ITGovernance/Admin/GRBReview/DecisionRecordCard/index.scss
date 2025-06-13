@@ -1,0 +1,10 @@
+.decision-record-card *[class*="display-flex"] {
+  .usa-icon,
+  .usa-link {
+    flex-shrink: 0;
+  }
+
+  &.decision-banner .usa-icon{
+    height: 1.6rem;
+  }
+}
