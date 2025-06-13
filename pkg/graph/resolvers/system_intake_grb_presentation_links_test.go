@@ -28,7 +28,7 @@ func (s *ResolverSuite) TestSetSystemIntakeGRBPresentationLinks() {
 	s.NotNil(createdLinks)
 }
 
-func (s *ResolverSuite) TestUploadSystemIntakeGRBPresentationDeckOnCompletedGRBReview() {
+func (s *ResolverSuite) TestUploadSystemIntakeGRBPresentationDeck() {
 	input := s.createUploadSystemIntakeGRBPresentationDeckInput(s.createUploadSystemIntakeGRBPresentationDeckFileData())
 
 	// Assert insert portion of upsert
@@ -43,7 +43,7 @@ func (s *ResolverSuite) TestUploadSystemIntakeGRBPresentationDeckOnCompletedGRBR
 	s.Nil(createdLinks.ModifiedBy)
 }
 
-func (s *ResolverSuite) TestUploadSystemIntakeGRBPresentationDeck() {
+func (s *ResolverSuite) TestUploadSystemIntakeGRBPresentationDeckOnCompletedGRBReview() {
 	_ = s.ctxWithNewDataloaders() // set dataloaders
 
 	intake, err := CreateSystemIntake(s.testConfigs.Context, s.testConfigs.Store, models.CreateSystemIntakeInput{
