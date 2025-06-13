@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	"slices"
 	"time"
 
 	"github.com/google/uuid"
@@ -399,10 +400,8 @@ func GetRequesterUpdateEmailData(
 	}
 
 	// chunk the data into the maximum, which is 200
-	chunks := helpers.Chunk(euaIDs, maxEUAsPerRequest)
-
 	var userData []*models.UserInfo
-	for _, chunk := range chunks {
+	for chunk := range slices.Chunk(euaIDs, maxEUAsPerRequest) {
 		// then, get user data from Okta
 		res, err := fetchUserInfos(ctx, chunk)
 		if err != nil {
