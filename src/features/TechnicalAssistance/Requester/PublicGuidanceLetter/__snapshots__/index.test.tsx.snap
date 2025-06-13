@@ -61,6 +61,7 @@ exports[`Trb Public Guidance Letter > renders from email link 1`] = `
       type="button"
     >
       <svg
+        aria-hidden="true"
         class="usa-icon margin-right-1"
         focusable="false"
         height="1em"
@@ -168,6 +169,7 @@ exports[`Trb Public Guidance Letter > renders from email link 1`] = `
           type="button"
         >
           <svg
+            aria-hidden="true"
             class="usa-icon easi-collapsable-link__eye-icon"
             focusable="false"
             height="1em"
@@ -642,6 +644,7 @@ exports[`Trb Public Guidance Letter > renders from task list link 1`] = `
       href="/trb/task-list/d8ebedca-0031-4ccd-9690-37390726c50e"
     >
       <svg
+        aria-hidden="true"
         class="usa-icon margin-right-05 margin-bottom-2px text-tbottom"
         focusable="false"
         height="1em"
@@ -667,6 +670,7 @@ exports[`Trb Public Guidance Letter > renders from task list link 1`] = `
       type="button"
     >
       <svg
+        aria-hidden="true"
         class="usa-icon margin-right-1"
         focusable="false"
         height="1em"
@@ -1080,6 +1084,7 @@ exports[`Trb Public Guidance Letter > renders from task list link 1`] = `
       href="/trb/task-list/d8ebedca-0031-4ccd-9690-37390726c50e"
     >
       <svg
+        aria-hidden="true"
         class="usa-icon margin-right-05 margin-bottom-2px text-tbottom"
         focusable="false"
         height="1em"

@@ -247,7 +247,7 @@ const GRBReview = ({
               <p className="bg-primary-lighter line-height-body-5 padding-y-1 padding-x-2">
                 <Trans
                   i18nKey="grbReview:reviewStartedOn"
-                  components={{
+                  values={{
                     date: formatDateLocal(grbReviewStartedAt, 'MM/dd/yyyy')
                   }}
                 />
@@ -342,7 +342,7 @@ const GRBReview = ({
                       <span className="margin-right-1">
                         {t('businessCaseOverview.linkToBusinessCase')}
                       </span>
-                      <Icon.ArrowForward />
+                      <Icon.ArrowForward aria-hidden />
                     </UswdsReactLink>
                   </CardFooter>
                 </>
@@ -371,7 +371,7 @@ const GRBReview = ({
                   to="./documents/upload"
                   className="display-flex flex-align-center"
                 >
-                  <Icon.Add className="margin-right-1" />
+                  <Icon.Add className="margin-right-1" aria-hidden />
                   <span>{t('additionalDocsLink')}</span>
                 </UswdsReactLink>
               )}

@@ -148,6 +148,7 @@ exports[`TRB Guidance Letter review component > Matches the snapshot 1`] = `
                     type="button"
                   >
                     <svg
+                      aria-label="dropup"
                       class="usa-icon usa-icon--size-3 text-primary"
                       focusable="false"
                       height="1em"
@@ -173,6 +174,7 @@ exports[`TRB Guidance Letter review component > Matches the snapshot 1`] = `
                     type="button"
                   >
                     <svg
+                      aria-label="dropdown"
                       class="usa-icon usa-icon--size-3 text-primary"
                       focusable="false"
                       height="1em"
@@ -265,6 +267,7 @@ exports[`TRB Guidance Letter review component > Matches the snapshot 1`] = `
                     type="button"
                   >
                     <svg
+                      aria-label="dropup"
                       class="usa-icon usa-icon--size-3 text-primary"
                       focusable="false"
                       height="1em"
@@ -290,6 +293,7 @@ exports[`TRB Guidance Letter review component > Matches the snapshot 1`] = `
                     type="button"
                   >
                     <svg
+                      aria-label="dropdown"
                       class="usa-icon usa-icon--size-3 text-primary"
                       focusable="false"
                       height="1em"
@@ -382,6 +386,7 @@ exports[`TRB Guidance Letter review component > Matches the snapshot 1`] = `
                     type="button"
                   >
                     <svg
+                      aria-label="dropup"
                       class="usa-icon usa-icon--size-3 text-primary"
                       focusable="false"
                       height="1em"
@@ -407,6 +412,7 @@ exports[`TRB Guidance Letter review component > Matches the snapshot 1`] = `
                     type="button"
                   >
                     <svg
+                      aria-label="dropdown"
                       class="usa-icon usa-icon--size-3 text-primary"
                       focusable="false"
                       height="1em"

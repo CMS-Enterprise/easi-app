@@ -67,7 +67,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
   };
 
   it('closes a request with a reason', async () => {
-    const { getByLabelText, getByRole, findByText, findByRole } = render(
+    const { getByLabelText, findByText, findByRole } = render(
       <Provider store={store}>
         <MockedProvider
           defaultOptions={{
@@ -184,12 +184,6 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
       text
     );
 
-    userEvent.click(
-      getByRole('button', {
-        name: i18next.t<string>('technicalAssistance:actionCloseRequest.submit')
-      })
-    );
-
     // Click through the modal
     userEvent.click(
       await findByRole('button', {
@@ -205,7 +199,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
   });
 
   it('shows an error notice when close submission fails', async () => {
-    const { getByLabelText, getByRole, findByText, findByRole } = render(
+    const { getByLabelText, findByText, findByRole } = render(
       <MockedProvider
         mocks={[
           getAttendeesQuery,
@@ -248,12 +242,6 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
         )
       ),
       text
-    );
-
-    userEvent.click(
-      getByRole('button', {
-        name: i18next.t<string>('technicalAssistance:actionCloseRequest.submit')
-      })
     );
 
     userEvent.click(

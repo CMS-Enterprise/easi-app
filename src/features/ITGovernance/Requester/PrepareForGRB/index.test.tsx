@@ -1,6 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 
 import PrepareForGRB from './index';
 
@@ -20,13 +20,11 @@ vi.mock('@okta/okta-react', () => ({
 
 describe('The prepare for GRB info page', () => {
   it('matches the snapshot', () => {
-    const tree = renderer
-      .create(
-        <MemoryRouter>
-          <PrepareForGRB />
-        </MemoryRouter>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    const { asFragment } = render(
+      <MemoryRouter>
+        <PrepareForGRB />
+      </MemoryRouter>
+    );
+    expect(asFragment()).toMatchSnapshot();
   });
 });

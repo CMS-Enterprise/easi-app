@@ -20,12 +20,12 @@ exports[`Help Links component > matches snapshot 1`] = `
           <div
             class="usa-card__container"
           >
-            <header
+            <div
               class="usa-card__header text-bold padding-y-0 flex-2 line-height-serif-2 margin-bottom-2"
               data-testid="CardHeader"
             >
               Get a new Life Cycle ID (LCID)
-            </header>
+            </div>
             <div
               class="usa-card__body padding-y-0 flex-1 system-help-links__fill-card-space"
               data-testid="CardBody"
@@ -36,6 +36,7 @@ exports[`Help Links component > matches snapshot 1`] = `
               >
                 Start an IT Governance request
                 <svg
+                  aria-hidden="true"
                   class="usa-icon margin-left-1"
                   focusable="false"
                   height="1em"
@@ -64,12 +65,12 @@ exports[`Help Links component > matches snapshot 1`] = `
           <div
             class="usa-card__container"
           >
-            <header
+            <div
               class="usa-card__header text-bold padding-y-0 flex-2 line-height-serif-2 margin-bottom-2"
               data-testid="CardHeader"
             >
               Get technical assistance with your system
-            </header>
+            </div>
             <div
               class="usa-card__body padding-y-0 flex-1 system-help-links__fill-card-space"
               data-testid="CardBody"
@@ -80,6 +81,7 @@ exports[`Help Links component > matches snapshot 1`] = `
               >
                 Start a technical assistance request
                 <svg
+                  aria-hidden="true"
                   class="usa-icon margin-left-1"
                   focusable="false"
                   height="1em"
@@ -108,12 +110,12 @@ exports[`Help Links component > matches snapshot 1`] = `
           <div
             class="usa-card__container"
           >
-            <header
+            <div
               class="usa-card__header text-bold padding-y-0 flex-2 line-height-serif-2 margin-bottom-2"
               data-testid="CardHeader"
             >
               Learn more about the Target Life Cycle (TLC)
-            </header>
+            </div>
             <div
               class="usa-card__body padding-y-0 flex-1 system-help-links__fill-card-space"
               data-testid="CardBody"
@@ -125,6 +127,7 @@ exports[`Help Links component > matches snapshot 1`] = `
               >
                 Go to the TLC homepage
                 <svg
+                  aria-hidden="true"
                   class="usa-icon margin-left-0 margin-left-1"
                   focusable="false"
                   height="1em"
@@ -153,12 +156,12 @@ exports[`Help Links component > matches snapshot 1`] = `
           <div
             class="usa-card__container"
           >
-            <header
+            <div
               class="usa-card__header text-bold padding-y-0 flex-2 line-height-serif-2 margin-bottom-2"
               data-testid="CardHeader"
             >
               Learn more about security and privacy at CMS
-            </header>
+            </div>
             <div
               class="usa-card__body padding-y-0 flex-1 system-help-links__fill-card-space"
               data-testid="CardBody"
@@ -170,6 +173,7 @@ exports[`Help Links component > matches snapshot 1`] = `
               >
                 Go to CyberGeek
                 <svg
+                  aria-hidden="true"
                   class="usa-icon margin-left-0 margin-left-1"
                   focusable="false"
                   height="1em"
@@ -198,12 +202,12 @@ exports[`Help Links component > matches snapshot 1`] = `
           <div
             class="usa-card__container"
           >
-            <header
+            <div
               class="usa-card__header text-bold padding-y-0 flex-2 line-height-serif-2 margin-bottom-2"
               data-testid="CardHeader"
             >
               Consider Threat Modeling for your system
-            </header>
+            </div>
             <div
               class="usa-card__body padding-y-0 flex-1 system-help-links__fill-card-space"
               data-testid="CardBody"
@@ -215,6 +219,7 @@ exports[`Help Links component > matches snapshot 1`] = `
               >
                 Learn more on CyberGeek
                 <svg
+                  aria-hidden="true"
                   class="usa-icon margin-left-0 margin-left-1"
                   focusable="false"
                   height="1em"
@@ -243,12 +248,12 @@ exports[`Help Links component > matches snapshot 1`] = `
           <div
             class="usa-card__container"
           >
-            <header
+            <div
               class="usa-card__header text-bold padding-y-0 flex-2 line-height-serif-2 margin-bottom-2"
               data-testid="CardHeader"
             >
               Learn more about Cloud offerings at CMS
-            </header>
+            </div>
             <div
               class="usa-card__body padding-y-0 flex-1 system-help-links__fill-card-space"
               data-testid="CardBody"
@@ -260,6 +265,7 @@ exports[`Help Links component > matches snapshot 1`] = `
               >
                 Go to the Cloud homepage
                 <svg
+                  aria-hidden="true"
                   class="usa-icon margin-left-0 margin-left-1"
                   focusable="false"
                   height="1em"

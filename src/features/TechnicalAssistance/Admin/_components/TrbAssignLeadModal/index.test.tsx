@@ -57,7 +57,7 @@ describe('TrbAssignLeadModal', () => {
     const modalRef = React.createRef<ModalRef>();
     const trbRequestIdRef = React.createRef<TrbRequestIdRef>();
 
-    const { findByText, getByRole } = render(
+    const { findByText } = render(
       <>
         <Provider store={store}>
           <MockedProvider mocks={[getTrbLeadOptionsQuery]}>
@@ -84,12 +84,6 @@ describe('TrbAssignLeadModal', () => {
       </>
     );
 
-    const open = getByRole('button', {
-      name: i18next.t<string>('technicalAssistance:adminHome.assignLead')
-    });
-
-    userEvent.click(open);
-
     await findByText(
       i18next.t<string>('technicalAssistance:assignTrbLeadModal.heading')
     );
@@ -99,7 +93,6 @@ describe('TrbAssignLeadModal', () => {
 
   it('assigns a trb lead to myself successfully', async () => {
     const modalRef = React.createRef<ModalRef>();
-    const trbRequestIdRef = React.createRef<TrbRequestIdRef>();
 
     const { findByText, getByRole, getByTestId } = render(
       <Provider store={store}>
@@ -112,25 +105,20 @@ describe('TrbAssignLeadModal', () => {
               <TrbAssignLeadModalOpener
                 trbRequestId={mockTrbRequestId}
                 modalRef={modalRef}
-                trbRequestIdRef={trbRequestIdRef}
+                trbRequestIdRef={{ current: mockTrbRequestId }}
                 className="usa-button--unstyled"
               >
                 {i18next.t<string>('technicalAssistance:adminHome.assignLead')}
               </TrbAssignLeadModalOpener>
               <TrbAssignLeadModal
                 modalRef={modalRef}
-                trbRequestIdRef={trbRequestIdRef}
+                trbRequestIdRef={{ current: mockTrbRequestId }}
               />
             </MessageProvider>
           </MemoryRouter>
         </MockedProvider>
       </Provider>
     );
-
-    const open = getByRole('button', {
-      name: i18next.t<string>('technicalAssistance:adminHome.assignLead')
-    });
-    userEvent.click(open);
 
     // See that "Assign myself" is parsed
     await findByText(
@@ -154,7 +142,6 @@ describe('TrbAssignLeadModal', () => {
 
   it('shows an error when something failed', async () => {
     const modalRef = React.createRef<ModalRef>();
-    const trbRequestIdRef = React.createRef<TrbRequestIdRef>();
 
     const { findByText, getByRole, findByTestId } = render(
       <Provider store={store}>
@@ -173,25 +160,20 @@ describe('TrbAssignLeadModal', () => {
               <TrbAssignLeadModalOpener
                 trbRequestId={mockTrbRequestId}
                 modalRef={modalRef}
-                trbRequestIdRef={trbRequestIdRef}
+                trbRequestIdRef={{ current: mockTrbRequestId }}
                 className="usa-button--unstyled"
               >
                 {i18next.t<string>('technicalAssistance:adminHome.assignLead')}
               </TrbAssignLeadModalOpener>
               <TrbAssignLeadModal
                 modalRef={modalRef}
-                trbRequestIdRef={trbRequestIdRef}
+                trbRequestIdRef={{ current: mockTrbRequestId }}
               />
             </MessageProvider>
           </MemoryRouter>
         </MockedProvider>
       </Provider>
     );
-
-    const open = getByRole('button', {
-      name: i18next.t<string>('technicalAssistance:adminHome.assignLead')
-    });
-    userEvent.click(open);
 
     userEvent.click(await findByTestId(`trbLead-${trbLeadInfo.euaUserId}`));
 

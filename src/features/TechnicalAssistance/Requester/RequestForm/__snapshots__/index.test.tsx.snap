@@ -72,6 +72,7 @@ exports[`TRB Request Form Feedback > goes to and renders the feedback view 1`] =
       href="/trb/requests/d8ebedca-0031-4ccd-9690-37390726c50e/basic"
     >
       <svg
+        aria-hidden="true"
         class="usa-icon margin-right-1 text-middle"
         focusable="false"
         height="1em"
@@ -232,6 +233,7 @@ exports[`TRB Request Form Feedback > goes to and renders the feedback view 1`] =
         href="/trb/requests/d8ebedca-0031-4ccd-9690-37390726c50e/basic"
       >
         <svg
+          aria-hidden="true"
           class="usa-icon margin-right-1 text-middle"
           focusable="false"
           height="1em"

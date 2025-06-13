@@ -13,12 +13,12 @@ exports[`TeamCard > renders 1`] = `
       <div
         class="usa-card__container"
       >
-        <header
+        <div
           class="usa-card__header text-bold padding-0 line-height-serif-2 margin-bottom-1 text-body-lg"
           data-testid="CardHeader"
         >
           Team
-        </header>
+        </div>
         <div
           class="usa-card__body padding-0 flex-1 workspaces__fill-card-space"
           data-testid="CardBody"
@@ -242,6 +242,7 @@ exports[`TeamCard > renders 1`] = `
                 type="button"
               >
                 <svg
+                  aria-hidden="true"
                   class="usa-icon margin-right-05 margin-bottom-2px text-tbottom"
                   focusable="false"
                   height="1em"

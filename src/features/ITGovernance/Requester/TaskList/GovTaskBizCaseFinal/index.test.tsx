@@ -158,9 +158,11 @@ describe('Gov Task: Submit your Business Case for final approval statuses', () =
       await renderToStringWithData(
         <Trans
           i18nKey="itGov:taskList.step.bizCaseFinal.noFeedbackInfo"
-          components={{
-            a: <Link href={mailtoItGov}> </Link>,
+          values={{
             email: IT_GOV_EMAIL
+          }}
+          components={{
+            a: <Link href={mailtoItGov}> </Link>
           }}
         />
       )

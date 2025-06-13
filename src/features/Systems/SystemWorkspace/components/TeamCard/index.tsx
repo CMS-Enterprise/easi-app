@@ -132,6 +132,7 @@ function TeamCard({ roles }: { roles: CedarRole[] }) {
                 }}
               >
                 <Icon.ExpandMore
+                  aria-hidden
                   className="margin-right-05 margin-bottom-2px text-tbottom"
                   style={{
                     transform: isExpanded ? 'rotate(180deg)' : ''

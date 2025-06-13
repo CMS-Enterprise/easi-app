@@ -131,7 +131,11 @@ const InsightsCategory = ({
                           )}
                           unstyled
                         >
-                          <Icon.ArrowDropUp size={3} className="text-primary" />
+                          <Icon.ArrowDropUp
+                            size={3}
+                            className="text-primary"
+                            aria-label="dropup"
+                          />
                         </Button>
                         <span data-testid="order-index">{index + 1}</span>
                         <Button
@@ -146,6 +150,7 @@ const InsightsCategory = ({
                           <Icon.ArrowDropDown
                             size={3}
                             className="text-primary"
+                            aria-label="dropdown"
                           />
                         </Button>
                       </div>

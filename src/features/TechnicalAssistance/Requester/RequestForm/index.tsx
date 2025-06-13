@@ -148,9 +148,9 @@ function Header({
   const history = useHistory();
 
   const { t } = useTranslation('technicalAssistance');
-  const text = t<RequestFormText>('requestForm', {
+  const text = t('requestForm', {
     returnObjects: true
-  });
+  }) as RequestFormText;
 
   return (
     <StepHeader
@@ -217,7 +217,10 @@ function Header({
             }, false);
           }}
         >
-          <Icon.ArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+          <Icon.ArrowBack
+            className="margin-right-05 margin-bottom-2px text-tbottom"
+            aria-hidden
+          />
           {t('button.saveAndExit')}
         </Button>
       )}
@@ -238,6 +241,7 @@ function EditsRequestedWarning({
       <GridContainer className="width-full">
         <div>
           <Icon.Warning
+            aria-hidden
             className="text-error-dark text-middle margin-right-1"
             size={3}
           />

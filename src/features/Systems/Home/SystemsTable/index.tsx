@@ -150,7 +150,7 @@ export const Table = ({
 
     if (!isHomePage) {
       cols.push({
-        Header: <Icon.Bookmark />,
+        Header: <Icon.Bookmark aria-hidden />,
         accessor: 'id',
         id: 'systemId',
         disableGlobalFilter: true,
@@ -165,6 +165,7 @@ export const Table = ({
             unstyled
           >
             <Icon.Bookmark
+              aria-hidden
               className={classNames({
                 'text-base-lighter': !isBookmarked(row.original.id)
               })}
@@ -365,7 +366,10 @@ export const Table = ({
 
         <thead>
           {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
+            <tr
+              {...headerGroup.getHeaderGroupProps()}
+              key={{ ...headerGroup.getHeaderGroupProps() }.key}
+            >
               {headerGroup.headers.map((column, index) => (
                 <th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
@@ -395,13 +399,14 @@ export const Table = ({
         <tbody {...getTableBodyProps()}>
           {page.map(row => {
             return (
-              <tr {...row.getRowProps()}>
+              <tr {...row.getRowProps()} key={{ ...row.getRowProps() }.key}>
                 {row.cells.map((cell, index) => (
                   <th
                     style={{
                       paddingLeft: index === 0 ? '.5em' : 'auto'
                     }}
                     {...cell.getCellProps()}
+                    key={{ ...cell.getCellProps() }.key}
                   >
                     {cell.render('Cell')}
                   </th>
@@ -457,7 +462,10 @@ export const Table = ({
                   ),
                   link2: <UswdsReactLink to="/systems"> </UswdsReactLink>,
                   iconForward: (
-                    <Icon.ArrowForward className="icon-top margin-left-05" />
+                    <Icon.ArrowForward
+                      className="icon-top margin-left-05"
+                      aria-hidden
+                    />
                   )
                 }}
               />
@@ -485,7 +493,10 @@ export const Table = ({
             components={{
               link1: <UswdsReactLink to="/systems"> </UswdsReactLink>,
               iconForward: (
-                <Icon.ArrowForward className="icon-top margin-left-05" />
+                <Icon.ArrowForward
+                  className="icon-top margin-left-05"
+                  aria-hidden
+                />
               )
             }}
           />

@@ -57,13 +57,15 @@ const WelcomeText = () => {
               </CardHeader>
               <CardBody className="padding-bottom-4">
                 <IconList className="font-body-lg">
-                  {t<string[]>('welcome.toolsToHelp.list', {
-                    returnObjects: true
-                  }).map(item => {
+                  {(
+                    t('welcome.toolsToHelp.list', {
+                      returnObjects: true
+                    }) as string[]
+                  ).map(item => {
                     return (
                       <IconListItem
                         key={item}
-                        icon={<Icon.Check className="text-green" />}
+                        icon={<Icon.Check className="text-green" aria-hidden />}
                       >
                         {item}
                       </IconListItem>
@@ -78,9 +80,11 @@ const WelcomeText = () => {
               </CardHeader>
               <CardBody className="padding-bottom-4">
                 <IconList className="font-body-lg text-light">
-                  {t<string[]>('welcome.noMore.list', {
-                    returnObjects: true
-                  }).map(item => {
+                  {(
+                    t('welcome.noMore.list', {
+                      returnObjects: true
+                    }) as string[]
+                  ).map(item => {
                     return (
                       <IconListItem
                         key={item}
@@ -88,6 +92,7 @@ const WelcomeText = () => {
                           <Icon.Close
                             className="text-red margin-right-1"
                             size={3}
+                            aria-hidden
                           />
                         }
                       >
@@ -130,6 +135,7 @@ const WelcomeText = () => {
                 <Icon.NotificationsActive
                   size={5}
                   className="text-primary-vivid"
+                  aria-hidden
                 />
                 <h3 className="line-height-body-2">
                   {t('welcome.automation')}
@@ -141,7 +147,11 @@ const WelcomeText = () => {
             </Card>
             <Card className="desktop:grid-col-4">
               <CardHeader className="padding-bottom-0">
-                <Icon.Groups size={5} className="text-primary-vivid" />
+                <Icon.Groups
+                  size={5}
+                  className="text-primary-vivid"
+                  aria-hidden
+                />
                 <h3 className="line-height-body-2">
                   {t('welcome.collaboration')}
                 </h3>
@@ -152,7 +162,11 @@ const WelcomeText = () => {
             </Card>
             <Card className="desktop:grid-col-4">
               <CardHeader className="padding-bottom-0">
-                <Icon.Edit size={5} className="text-primary-vivid" />
+                <Icon.Edit
+                  size={5}
+                  className="text-primary-vivid"
+                  aria-hidden
+                />
                 <h3 className="line-height-body-2">{t('welcome.editing')}</h3>
               </CardHeader>
               <CardBody>

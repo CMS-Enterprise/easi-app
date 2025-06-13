@@ -19,7 +19,7 @@ export default () => {
           <div className="grid-row grid-gap margin-top-2 desktop:margin-top-0">
             <IconLink
               className="font-body-3xs text-white text-no-underline"
-              icon={<Icon.Launch />}
+              icon={<Icon.Launch aria-hidden />}
               iconPosition="after"
               to="/help/report-a-problem"
               target="_blank"
@@ -29,7 +29,7 @@ export default () => {
 
             <IconLink
               className="font-body-3xs text-white text-no-underline"
-              icon={<Icon.Launch />}
+              icon={<Icon.Launch aria-hidden />}
               iconPosition="after"
               to="/help/send-feedback"
               target="_blank"
@@ -43,11 +43,15 @@ export default () => {
               target="_blank"
             >
               {t('footer.chatOnSlack')}
-              <Icon.Launch className="margin-left-1" />
+              <Icon.Launch aria-hidden className="margin-left-1" />
             </Link>
           </div>
         </div>
-        <Icon.LightbulbOutline className="text-primary-light" size={3} />
+        <Icon.LightbulbOutline
+          className="text-primary-light"
+          size={3}
+          aria-hidden
+        />
       </GridContainer>
     </div>
   );

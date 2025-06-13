@@ -117,7 +117,7 @@ function PresentationLinksCard({
                     {t('asyncPresentation.adminEmptyAlert')}
                   </Alert>
                   <IconLink
-                    icon={<Icon.Add />}
+                    icon={<Icon.Add aria-hidden />}
                     to={`/it-governance/${systemIntakeID}/grb-review/presentation-links`}
                   >
                     {t('asyncPresentation.addAsynchronousPresentationLinks')}

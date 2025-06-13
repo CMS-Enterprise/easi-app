@@ -45,7 +45,7 @@ const SideNavigation = ({
             <li className="margin-bottom-4">
               <IconLink
                 to={returnLink.to}
-                icon={<Icon.ArrowBack />}
+                icon={<Icon.ArrowBack aria-hidden />}
                 className="text-primary hover:text-primary-dark text-underline"
               >
                 {t(returnLink.text)}

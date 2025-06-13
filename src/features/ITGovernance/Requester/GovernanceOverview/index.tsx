@@ -52,7 +52,7 @@ const GovernanceOverview = () => {
         }}
         className="display-flex flex-align-center text-primary"
       >
-        <Icon.NavigateBefore className="text-no-underline" />
+        <Icon.NavigateBefore className="text-no-underline" aria-hidden />
         <span>{t('intake:navigation.changeRequestType')}</span>
       </Link>
       <p className="line-height-body-5 font-body-lg text-light">

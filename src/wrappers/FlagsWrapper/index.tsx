@@ -10,9 +10,9 @@ type WrapperProps = {
 const UserTargetingWrapper = ({ children }: WrapperProps) => {
   // wrapping initial value in function to get around useState and setState thinking
   // the functional component is a function to be evaluated.
-  const [LDProvider, setLDProvider] = useState<React.FunctionComponent>(
-    () => () => <div />
-  );
+  const [LDProvider, setLDProvider] = useState<
+    React.FC<{ children: React.ReactNode }>
+  >(() => () => null);
 
   const { data } = useGetCurrentUserQuery();
 
@@ -41,10 +41,10 @@ const UserTargetingWrapper = ({ children }: WrapperProps) => {
           }
         });
 
-        setLDProvider(() => () => provider({ children }));
+        setLDProvider(() => provider);
       })();
     }
-  }, [data, children]);
+  }, [data]);
 
   return <LDProvider>{children}</LDProvider>;
 };

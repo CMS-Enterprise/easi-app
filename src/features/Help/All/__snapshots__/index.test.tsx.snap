@@ -14,6 +14,7 @@ exports[`All help articles > matches the snapshot 1`] = `
       type="button"
     >
       <svg
+        aria-hidden="true"
         class="usa-icon margin-right-05 margin-top-3px text-tbottom"
         focusable="false"
         height="1em"
@@ -50,7 +51,7 @@ exports[`All help articles > matches the snapshot 1`] = `
         <div
           class="usa-card__container radius-md shadow-2 minh-mobile"
         >
-          <header
+          <div
             class="usa-card__header padding-x-3 padding-top-3"
             data-testid="CardHeader"
           >
@@ -70,7 +71,7 @@ exports[`All help articles > matches the snapshot 1`] = `
                 IT Governance
               </span>
             </a>
-          </header>
+          </div>
           <div
             class="usa-card__body padding-top-0 article__body"
             data-testid="CardBody"
@@ -99,7 +100,7 @@ exports[`All help articles > matches the snapshot 1`] = `
         <div
           class="usa-card__container radius-md shadow-2 minh-mobile"
         >
-          <header
+          <div
             class="usa-card__header padding-x-3 padding-top-3"
             data-testid="CardHeader"
           >
@@ -119,7 +120,7 @@ exports[`All help articles > matches the snapshot 1`] = `
                 IT Governance
               </span>
             </a>
-          </header>
+          </div>
           <div
             class="usa-card__body padding-top-0 article__body"
             data-testid="CardBody"
@@ -148,7 +149,7 @@ exports[`All help articles > matches the snapshot 1`] = `
         <div
           class="usa-card__container radius-md shadow-2 minh-mobile"
         >
-          <header
+          <div
             class="usa-card__header padding-x-3 padding-top-3"
             data-testid="CardHeader"
           >
@@ -168,7 +169,7 @@ exports[`All help articles > matches the snapshot 1`] = `
                 IT Governance
               </span>
             </a>
-          </header>
+          </div>
           <div
             class="usa-card__body padding-top-0 article__body"
             data-testid="CardBody"
@@ -197,7 +198,7 @@ exports[`All help articles > matches the snapshot 1`] = `
         <div
           class="usa-card__container radius-md shadow-2 minh-mobile"
         >
-          <header
+          <div
             class="usa-card__header padding-x-3 padding-top-3"
             data-testid="CardHeader"
           >
@@ -217,7 +218,7 @@ exports[`All help articles > matches the snapshot 1`] = `
                 IT Governance
               </span>
             </a>
-          </header>
+          </div>
           <div
             class="usa-card__body padding-top-0 article__body"
             data-testid="CardBody"
@@ -246,7 +247,7 @@ exports[`All help articles > matches the snapshot 1`] = `
         <div
           class="usa-card__container radius-md shadow-2 minh-mobile"
         >
-          <header
+          <div
             class="usa-card__header padding-x-3 padding-top-3"
             data-testid="CardHeader"
           >
@@ -266,7 +267,7 @@ exports[`All help articles > matches the snapshot 1`] = `
                 Technical Review Board
               </span>
             </a>
-          </header>
+          </div>
           <div
             class="usa-card__body padding-top-0 article__body"
             data-testid="CardBody"
@@ -295,7 +296,7 @@ exports[`All help articles > matches the snapshot 1`] = `
         <div
           class="usa-card__container radius-md shadow-2 minh-mobile"
         >
-          <header
+          <div
             class="usa-card__header padding-x-3 padding-top-3"
             data-testid="CardHeader"
           >
@@ -315,7 +316,7 @@ exports[`All help articles > matches the snapshot 1`] = `
                 Technical Review Board
               </span>
             </a>
-          </header>
+          </div>
           <div
             class="usa-card__body padding-top-0 article__body"
             data-testid="CardBody"

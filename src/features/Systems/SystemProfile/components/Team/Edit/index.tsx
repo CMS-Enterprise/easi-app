@@ -306,7 +306,7 @@ const EditTeam = ({
                 ? `/systems/${cedarSystemId}/workspace`
                 : `/systems/${cedarSystemId}/team`
             }
-            icon={<Icon.ArrowBack />}
+            icon={<Icon.ArrowBack aria-hidden />}
             className="margin-top-2 margin-bottom-6 line-height-body-4 text-primary"
           >
             {t(
@@ -432,7 +432,7 @@ const EditTeam = ({
               </CardGroup>
               <IconLink
                 to={`/systems/${cedarSystemId}/team`}
-                icon={<Icon.ArrowBack />}
+                icon={<Icon.ArrowBack aria-hidden />}
                 className="margin-top-6"
               >
                 {t('returnToSystemProfile')}

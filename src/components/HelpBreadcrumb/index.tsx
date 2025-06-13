@@ -33,9 +33,15 @@ export default function HelpBreadcrumb({
       className={classNames('margin-top-6', className)}
     >
       {type === 'close' ? (
-        <Icon.Close className="margin-right-05 margin-top-3px text-tbottom" />
+        <Icon.Close
+          className="margin-right-05 margin-top-3px text-tbottom"
+          aria-hidden
+        />
       ) : (
-        <Icon.ArrowBack className="margin-right-05 margin-top-3px text-tbottom" />
+        <Icon.ArrowBack
+          className="margin-right-05 margin-top-3px text-tbottom"
+          aria-hidden
+        />
       )}
       {text ?? t(type)}
     </Button>

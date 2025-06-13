@@ -79,6 +79,7 @@ exports[`System Card Componenet > matches snapshot 1`] = `
         >
           View system profile
           <svg
+            aria-hidden="true"
             class="usa-icon margin-left-1"
             focusable="false"
             height="1em"

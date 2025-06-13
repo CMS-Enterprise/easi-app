@@ -1,9 +1,9 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import {
-  act,
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -26,30 +26,40 @@ import { EditsRequestedContext } from '..';
 import IssueLcid from './IssueLcid';
 
 /** Checks field default values when lcid is selected */
-const checkFieldDefaults = () => {
-  expect(
-    screen.getByRole('textbox', { name: 'Expiration date *' })
-  ).toHaveValue(
-    formatDateLocal(systemIntakeWithLcid.lcidExpiresAt || '', 'MM/dd/yyyy')
-  );
+const checkFieldDefaults = async () => {
+  await waitFor(() => {
+    expect(
+      screen.getByRole('textbox', { name: 'Expiration date *' })
+    ).toHaveValue(
+      formatDateLocal(systemIntakeWithLcid.lcidExpiresAt || '', 'MM/dd/yyyy')
+    );
+  });
 
-  expect(screen.getByTestId('scope')).toContainHTML(
-    systemIntakeWithLcid.lcidScope!
-  );
+  await waitFor(() => {
+    expect(screen.getByTestId('scope')).toContainHTML(
+      systemIntakeWithLcid.lcidScope!
+    );
+  });
 
-  expect(screen.getByTestId('nextSteps')).toContainHTML(
-    systemIntakeWithLcid.decisionNextSteps!
-  );
+  await waitFor(() => {
+    expect(screen.getByTestId('nextSteps')).toContainHTML(
+      systemIntakeWithLcid.decisionNextSteps!
+    );
+  });
 
-  expect(
-    screen.getByRole('radio', {
-      name: 'No, they may if they wish but it’s not necessary'
-    })
-  ).toBeChecked();
+  await waitFor(() => {
+    expect(
+      screen.getByRole('radio', {
+        name: 'No, they may if they wish but it’s not necessary'
+      })
+    ).toBeChecked();
+  });
 
-  expect(
-    screen.getByRole('textbox', { name: 'Project cost baseline' })
-  ).toHaveValue(systemIntakeWithLcid.lcidCostBaseline!);
+  await waitFor(() => {
+    expect(
+      screen.getByRole('textbox', { name: 'Project cost baseline' })
+    ).toHaveValue(systemIntakeWithLcid.lcidCostBaseline!);
+  });
 };
 
 describe('Issue LCID form', async () => {
@@ -89,49 +99,47 @@ describe('Issue LCID form', async () => {
   });
 
   it('Displays confirmation modal when edits are requested', async () => {
-    await act(async () => {
-      render(
-        <VerboseMockedProvider
-          mocks={[
-            getSystemIntakeContactsQuery,
-            getSystemIntakeQuery(),
-            getSystemIntakesWithLcidsQuery
-          ]}
-          addTypename
-        >
-          <MemoryRouter>
-            <MessageProvider>
-              <EditsRequestedContext.Provider value="intakeRequest">
-                <IssueLcid {...systemIntake} systemIntakeId={systemIntake.id} />
-              </EditsRequestedContext.Provider>
-            </MessageProvider>
-          </MemoryRouter>
-        </VerboseMockedProvider>
-      );
+    render(
+      <VerboseMockedProvider
+        mocks={[
+          getSystemIntakeContactsQuery,
+          getSystemIntakeQuery(),
+          getSystemIntakesWithLcidsQuery
+        ]}
+        addTypename
+      >
+        <MemoryRouter>
+          <MessageProvider>
+            <EditsRequestedContext.Provider value="intakeRequest">
+              <IssueLcid {...systemIntake} systemIntakeId={systemIntake.id} />
+            </EditsRequestedContext.Provider>
+          </MessageProvider>
+        </MemoryRouter>
+      </VerboseMockedProvider>
+    );
 
-      await screen.findByText('Issue a Life Cycle ID');
+    await screen.findByText('Issue a Life Cycle ID');
 
-      userEvent.click(
-        screen.getByRole('radio', {
-          name: 'Generate a new Life Cycle ID'
-        })
-      );
+    userEvent.click(
+      screen.getByRole('radio', {
+        name: 'Generate a new Life Cycle ID'
+      })
+    );
 
-      userEvent.type(
-        screen.getByRole('textbox', { name: 'Expiration date *' }),
-        '01/01/2024'
-      );
+    userEvent.type(
+      screen.getByRole('textbox', { name: 'Expiration date *' }),
+      '01/01/2024'
+    );
 
-      await typeRichText(screen.getByTestId('scope'), 'Test scope');
+    await typeRichText(screen.getByTestId('scope'), 'Test scope');
 
-      await typeRichText(screen.getByTestId('nextSteps'), 'Test next steps');
+    await typeRichText(screen.getByTestId('nextSteps'), 'Test next steps');
 
-      userEvent.click(
-        screen.getByRole('radio', {
-          name: 'No, they may if they wish but it’s not necessary'
-        })
-      );
-    });
+    userEvent.click(
+      screen.getByRole('radio', {
+        name: 'No, they may if they wish but it’s not necessary'
+      })
+    );
 
     const submitButton = screen.getByRole('button', {
       name: 'Complete action'

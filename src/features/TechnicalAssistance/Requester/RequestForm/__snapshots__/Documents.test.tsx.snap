@@ -46,6 +46,7 @@ exports[`Trb Request form: Supporting documents > renders states with documents 
               >
                 File name
                 <svg
+                  aria-hidden="true"
                   class="usa-icon margin-left-05"
                   data-testid="caret--sort"
                   focusable="false"
@@ -79,6 +80,7 @@ exports[`Trb Request form: Supporting documents > renders states with documents 
               >
                 Document type
                 <svg
+                  aria-hidden="true"
                   class="usa-icon margin-left-05"
                   data-testid="caret--sort"
                   focusable="false"
@@ -112,6 +114,7 @@ exports[`Trb Request form: Supporting documents > renders states with documents 
               >
                 Upload date
                 <svg
+                  aria-hidden="true"
                   class="usa-icon margin-left-05"
                   data-testid="caret--down"
                   focusable="false"
@@ -145,6 +148,7 @@ exports[`Trb Request form: Supporting documents > renders states with documents 
               >
                 Actions
                 <svg
+                  aria-hidden="true"
                   class="usa-icon margin-left-05"
                   data-testid="caret--sort"
                   focusable="false"
@@ -299,6 +303,7 @@ exports[`Trb Request form: Supporting documents > renders states with documents 
       type="button"
     >
       <svg
+        aria-hidden="true"
         class="usa-icon margin-right-05"
         focusable="false"
         height="1em"
@@ -390,6 +395,7 @@ exports[`Trb Request form: Supporting documents > renders states without documen
       type="button"
     >
       <svg
+        aria-hidden="true"
         class="usa-icon margin-right-05"
         focusable="false"
         height="1em"
