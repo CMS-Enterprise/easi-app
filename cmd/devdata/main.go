@@ -149,8 +149,6 @@ func main() {
 			},
 		})
 
-		idOne := "11AB1A00-1234-5678-ABC1-1A001B00CC6G"
-		descriptionOne := "other description"
 		setSystemIntakeRelationExistingSystem(
 			ctx,
 			store,
@@ -158,9 +156,9 @@ func main() {
 			[]string{"111111", "111112"},
 			[]*models.SystemRelationshipInput{
 				{
-					CedarSystemID:          &idOne,
+					CedarSystemID:          helpers.PointerTo("11AB1A00-1234-5678-ABC1-1A001B00CC6G"),
 					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-					OtherTypeDescription:   &descriptionOne,
+					OtherTypeDescription:   helpers.PointerTo("other description"),
 				},
 			},
 		)
@@ -776,10 +774,6 @@ func main() {
 	intakeID = uuid.MustParse("29d73aa0-3a29-478e-afb4-374a7594be47")
 	makeSystemIntakeAndSubmit(ctx, "System Intake Relation (Existing System 0A)", &intakeID, mock.PrincipalUser, store)
 
-	idOne := "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
-	descriptionOne := "other description"
-	idTwo := "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
-
 	setSystemIntakeRelationExistingSystem(
 		ctx,
 		store,
@@ -787,12 +781,12 @@ func main() {
 		[]string{"00001", "00002"},
 		[]*models.SystemRelationshipInput{
 			{
-				CedarSystemID:          &idOne,
+				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"),
 				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-				OtherTypeDescription:   &descriptionOne,
+				OtherTypeDescription:   helpers.PointerTo("other description"),
 			},
 			{
-				CedarSystemID:          &idTwo,
+				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"),
 				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "USED_IN_TECH_SOLUTION"},
 			},
 		},
@@ -801,10 +795,6 @@ func main() {
 	intakeID = uuid.MustParse("28f36737-b5cf-464a-a5a2-f1c89acea4cf")
 	makeSystemIntakeAndSubmit(ctx, "Related Intake 1 (system 0A)", &intakeID, mock.PrincipalUser, store)
 
-	idThree := "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"
-	descriptionThree := "other description"
-	idFour := "{11AB1A00-1234-5678-ABC1-1A001B00CC3D}"
-
 	setSystemIntakeRelationExistingSystem(
 		ctx,
 		store,
@@ -812,12 +802,12 @@ func main() {
 		[]string{"00003", "00004"},
 		[]*models.SystemRelationshipInput{
 			{
-				CedarSystemID:          &idThree,
+				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"),
 				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-				OtherTypeDescription:   &descriptionThree,
+				OtherTypeDescription:   helpers.PointerTo("other description"),
 			},
 			{
-				CedarSystemID:          &idFour,
+				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC3D}"),
 				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "USED_IN_TECH_SOLUTION"},
 			},
 		},
@@ -826,10 +816,6 @@ func main() {
 	intakeID = uuid.MustParse("dd31c8bd-b677-434c-aa35-56138f0b443b")
 	makeSystemIntakeAndSubmit(ctx, "Related Intake 2 (system 1B)", &intakeID, mock.PrincipalUser, store)
 
-	idFive := "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
-	descriptionFive := "other description"
-	idSix := "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"
-
 	setSystemIntakeRelationExistingSystem(
 		ctx,
 		store,
@@ -837,12 +823,12 @@ func main() {
 		[]string{"00003", "00004"},
 		[]*models.SystemRelationshipInput{
 			{
-				CedarSystemID:          &idFive,
+				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"),
 				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-				OtherTypeDescription:   &descriptionFive,
+				OtherTypeDescription:   helpers.PointerTo("other description"),
 			},
 			{
-				CedarSystemID:          &idSix,
+				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"),
 				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "USED_IN_TECH_SOLUTION"},
 			},
 		},
@@ -851,10 +837,6 @@ func main() {
 	intakeID = uuid.MustParse("020fba51-9b95-4e87-8cd4-808ae6e3dac8")
 	makeSystemIntakeAndSubmit(ctx, "Related Intake 3 (contract 01)", &intakeID, mock.PrincipalUser, store)
 
-	idSeven := "{11AB1A00-1234-5678-ABC1-1A001B00CC5F}"
-	descriptionSeven := "other description"
-	idEight := "{11AB1A00-1234-5678-ABC1-1A001B00CC6G}"
-
 	setSystemIntakeRelationExistingSystem(
 		ctx,
 		store,
@@ -862,12 +844,12 @@ func main() {
 		[]string{"00005", "00001"},
 		[]*models.SystemRelationshipInput{
 			{
-				CedarSystemID:          &idSeven,
+				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC5F}"),
 				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-				OtherTypeDescription:   &descriptionSeven,
+				OtherTypeDescription:   helpers.PointerTo("other description"),
 			},
 			{
-				CedarSystemID:          &idEight,
+				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC6G}"),
 				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "USED_IN_TECH_SOLUTION"},
 			},
 		},
@@ -887,10 +869,6 @@ func main() {
 	intakeID = uuid.MustParse("964cc832-827b-4744-b503-eb1f04af1e10")
 	makeSystemIntakeAndSubmit(ctx, "System Intake Relation (Unlinked)", &intakeID, mock.PrincipalUser, store)
 
-	idNine := "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"
-	descriptionNine := "other description"
-	idTen := "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
-
 	setSystemIntakeRelationExistingSystem(
 		ctx,
 		store,
@@ -898,12 +876,12 @@ func main() {
 		[]string{"12345", "67890"},
 		[]*models.SystemRelationshipInput{
 			{
-				CedarSystemID:          &idNine,
+				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"),
 				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-				OtherTypeDescription:   &descriptionNine,
+				OtherTypeDescription:   helpers.PointerTo("other description"),
 			},
 			{
-				CedarSystemID:          &idTen,
+				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"),
 				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "USED_IN_TECH_SOLUTION"},
 			},
 		},
@@ -914,10 +892,6 @@ func main() {
 	intakeID = uuid.MustParse("04cb8a97-3515-4071-9b80-2710834cd94c")
 	makeSystemIntakeAndSubmit(ctx, "System Intake Relation (Deactivated System)", &intakeID, mock.PrincipalUser, store)
 
-	idEleven := "{11AB1A00-1234-5678-ABC1-1A001B00CC5F}"
-	descriptionEleven := "other description"
-	idTwelve := "{11AB1A00-1234-5678-ABC1-1A001B00CC6G}"
-
 	setSystemIntakeRelationExistingSystem(
 		ctx,
 		store,
@@ -925,12 +899,12 @@ func main() {
 		[]string{"12345", "67890"},
 		[]*models.SystemRelationshipInput{
 			{
-				CedarSystemID:          &idEleven,
+				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC5F}"),
 				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-				OtherTypeDescription:   &descriptionEleven,
+				OtherTypeDescription:   helpers.PointerTo("other description"),
 			},
 			{
-				CedarSystemID:          &idTwelve,
+				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC6G}"),
 				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "USED_IN_TECH_SOLUTION"},
 			},
 		},
