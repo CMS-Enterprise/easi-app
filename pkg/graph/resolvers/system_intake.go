@@ -381,8 +381,18 @@ func GetRequesterUpdateEmailData(
 		return nil, err
 	}
 
-	var euaIDs []string
+	var (
+		euaIDs []string
+		euaSet = map[string]struct{}{}
+	)
+
 	for _, item := range data {
+		// de-duplicate
+		if _, seen := euaSet[item.EuaUserID]; seen {
+			continue
+		}
+
+		euaSet[item.EuaUserID] = struct{}{}
 		euaIDs = append(euaIDs, item.EuaUserID)
 	}
 
