@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	"slices"
 	"time"
 
 	"github.com/google/uuid"
@@ -369,6 +370,8 @@ func GetMySystemIntakes(ctx context.Context, store *storage.Store) ([]*models.Sy
 	return store.GetMySystemIntakes(ctx)
 }
 
+const maxEUAsPerRequest = 200
+
 func GetRequesterUpdateEmailData(
 	ctx context.Context,
 	store *storage.Store,
@@ -381,15 +384,31 @@ func GetRequesterUpdateEmailData(
 		return nil, err
 	}
 
-	var euaIDs []string
+	var (
+		euaIDs []string
+		euaSet = map[string]struct{}{}
+	)
+
 	for _, item := range data {
+		// de-duplicate
+		if _, seen := euaSet[item.EuaUserID]; seen {
+			continue
+		}
+
+		euaSet[item.EuaUserID] = helpers.EmptyStruct
 		euaIDs = append(euaIDs, item.EuaUserID)
 	}
 
-	// then, get user data from Okta
-	userData, err := fetchUserInfos(ctx, euaIDs)
-	if err != nil {
-		return nil, err
+	// chunk the data into the maximum, which is 200
+	var userData []*models.UserInfo
+	for chunk := range slices.Chunk(euaIDs, maxEUAsPerRequest) {
+		// then, get user data from Okta
+		res, err := fetchUserInfos(ctx, chunk)
+		if err != nil {
+			return nil, err
+		}
+
+		userData = append(userData, res...)
 	}
 
 	// map emails for ease
