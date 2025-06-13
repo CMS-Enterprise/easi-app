@@ -7,6 +7,6 @@ SELECT
     modified_by,
     modified_at,
     relationship_type,
-    other_system_relationship
+    other_system_relationship_description
 FROM system_intake_systems
 WHERE system_intake_id = ANY(:system_intake_ids);

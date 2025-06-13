@@ -6,7 +6,7 @@ INSERT INTO system_intake_systems (
     modified_by,
     modified_at,
     relationship_type,
-    other_system_relationship
+    other_system_relationship_description
 )
 VALUES (
     :id,
@@ -16,5 +16,5 @@ VALUES (
     :modified_by,
     NOW(),
     :relationship_type,
-    :other_system_relationship
+    :other_system_relationship_description
 ) ON CONFLICT DO NOTHING;

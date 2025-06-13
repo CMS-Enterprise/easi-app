@@ -21,7 +21,7 @@ type SystemIntakeSystem struct {
 	SystemIntakeID          uuid.UUID                         `json:"systemIntakeId" db:"system_intake_id"`
 	SystemID                string                            `json:"systemId" db:"system_id"`
 	SystemRelationshipType  EnumArray[SystemRelationshipType] `json:"relationshipType" db:"relationship_type"`
-	OtherSystemRelationship *string                           `json:"otherSystemRelationship" db:"other_system_relationship"`
+	OtherSystemRelationship *string                           `json:"otherSystemRelationshipDescription" db:"other_system_relationship_description"`
 }
 
 // NewSystemIntakeSystem creates a SystemIntakeSystemLink
