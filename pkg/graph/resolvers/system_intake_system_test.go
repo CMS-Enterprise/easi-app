@@ -56,7 +56,6 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 		}
 
 		err := sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
-			// systemIDs,
 			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, createdIntakes[0].ID, linkedSystems)
 		})
 		s.NoError(err)

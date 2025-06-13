@@ -4,6 +4,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 )
@@ -11,14 +12,13 @@ import (
 func (s *ResolverSuite) TestRelatedRequests() {
 	ctx := s.testConfigs.Context
 
-	systemID1 := "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"
-	systemID2 := "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
-	systemID3 := "{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"
-	unrelatedSystemID := "{11AB1A00-1234-5678-ABC1-1A001B00CC3D}"
-
 	description := "other description"
 
 	const (
+		systemID1               = "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"
+		systemID2               = "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
+		systemID3               = "{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"
+		unrelatedSystemID       = "{11AB1A00-1234-5678-ABC1-1A001B00CC3D}"
 		contractNumber1         = "00001"
 		contractNumber2         = "00002"
 		contractNumber3         = "00003"
@@ -26,25 +26,25 @@ func (s *ResolverSuite) TestRelatedRequests() {
 	)
 
 	system1 := models.SystemRelationshipInput{
-		CedarSystemID:          &systemID1,
+		CedarSystemID:          helpers.PointerTo(string(systemID1)),
 		SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
 		OtherTypeDescription:   &description,
 	}
 
 	system2 := models.SystemRelationshipInput{
-		CedarSystemID:          &systemID2,
+		CedarSystemID:          helpers.PointerTo(string(systemID2)),
 		SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
 		OtherTypeDescription:   &description,
 	}
 
 	system3 := models.SystemRelationshipInput{
-		CedarSystemID:          &systemID3,
+		CedarSystemID:          helpers.PointerTo(string(systemID3)),
 		SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
 		OtherTypeDescription:   &description,
 	}
 
 	unrelatedSystem := models.SystemRelationshipInput{
-		CedarSystemID:          &unrelatedSystemID,
+		CedarSystemID:          helpers.PointerTo(string(unrelatedSystemID)),
 		SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT"},
 	}
 

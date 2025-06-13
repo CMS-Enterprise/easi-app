@@ -433,7 +433,7 @@ type SetSystemIntakeRelationExistingServiceInput struct {
 
 type SetSystemIntakeRelationExistingSystemInput struct {
 	SystemIntakeID           uuid.UUID                  `json:"systemIntakeID"`
-	CedarSystemRelationShips []*SystemRelationshipInput `json:"cedarSystemRelationShips,omitempty"`
+	CedarSystemRelationShips []*SystemRelationshipInput `json:"cedarSystemRelationShips"`
 	ContractNumbers          []string                   `json:"contractNumbers"`
 }
 

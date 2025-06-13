@@ -1819,7 +1819,7 @@ export type SetSystemIntakeRelationExistingServiceInput = {
 };
 
 export type SetSystemIntakeRelationExistingSystemInput = {
-  cedarSystemRelationShips?: InputMaybe<Array<SystemRelationshipInput>>;
+  cedarSystemRelationShips: Array<SystemRelationshipInput>;
   contractNumbers: Array<Scalars['String']['input']>;
   systemIntakeID: Scalars['UUID']['input'];
 };
