@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
 import { Button, ButtonGroup } from '@trussworks/react-uswds';
 import {
@@ -39,8 +39,6 @@ const ParticipantsSection = ({
 
   const history = useHistory();
 
-  const { pathname } = useLocation();
-
   const isITGovAdmin = useContext(ITGovAdminContext);
 
   const { openModal } = useRestartReviewModal();
@@ -61,7 +59,9 @@ const ParticipantsSection = ({
           <div className="desktop:display-flex flex-align-center">
             <Button
               type="button"
-              onClick={() => history.push(`${pathname}/add`)}
+              onClick={() =>
+                history.push(`/it-governance/${id}/grb-review/add`)
+              }
               disabled={
                 state === SystemIntakeState.CLOSED ||
                 asyncStatus === SystemIntakeGRBReviewAsyncStatusType.COMPLETED
