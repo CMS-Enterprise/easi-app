@@ -459,10 +459,7 @@ const intake = {
     nextSteps: {
       heading: 'What happens next?',
       description:
-        'The Governance Review Admin Team will review and get back to you with <strong>one of these</strong> outcomes:',
-      direct: 'direct you to go through the Governance Review process',
-      decide: 'or decide there is no further governance needed',
-      timeline: 'They will get back to you in two business days.'
+        'The Governance Admin Team will review your request and get back to you within two business days. If your project is determined to contain reportable IT, your project may require a full Governance Review. The full IT Governance Review process can take up to 3 weeks assuming no issues are raised.'
     },
     sendIntakeRequest: 'Send my Intake Request'
   }
