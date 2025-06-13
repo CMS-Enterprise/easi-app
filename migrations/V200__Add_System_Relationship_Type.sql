@@ -1,6 +1,6 @@
 CREATE TYPE system_relationship_type AS ENUM (
     'PRIMARY_SUPPORT',
-    'PARTIAL_SUPORT',
+    'PARTIAL_SUPPORT',
     'USES_IN_TECH_SOLUTION',
     'USED_IN_TECH_SOLUTION',
     'OTHER'
