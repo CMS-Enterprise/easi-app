@@ -52,6 +52,16 @@ func CreateSystemIntakeGRBReviewers(
 		if intake == nil {
 			return nil, errors.New("system intake not found")
 		}
+
+		isGRBReviewComplete, err := isGRBReviewCompleted(ctx, intake)
+		if err != nil {
+			return nil, err
+		}
+
+		if isGRBReviewComplete {
+			return nil, errors.New("cannot create GRB reviewers for completed GRB review")
+		}
+
 		euas := lo.Map(input.Reviewers, func(reviewer *models.CreateGRBReviewerInput, _ int) string {
 			return reviewer.EuaUserID
 		})
@@ -136,6 +146,20 @@ func UpdateSystemIntakeGRBReviewer(
 	store *storage.Store,
 	input *models.UpdateSystemIntakeGRBReviewerInput,
 ) (*models.SystemIntakeGRBReviewer, error) {
+	intake, err := store.GetSystemIntakeByGRBReviewerID(ctx, input.ReviewerID)
+	if err != nil {
+		return nil, err
+	}
+
+	isGRBReviewComplete, err := isGRBReviewCompleted(ctx, intake)
+	if err != nil {
+		return nil, err
+	}
+
+	if isGRBReviewComplete {
+		return nil, errors.New("cannot update GRB reviewer for completed GRB review")
+	}
+
 	return sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.SystemIntakeGRBReviewer, error) {
 		return store.UpdateSystemIntakeGRBReviewer(ctx, tx, input)
 	})
@@ -146,6 +170,20 @@ func DeleteSystemIntakeGRBReviewer(
 	store *storage.Store,
 	reviewerID uuid.UUID,
 ) error {
+	intake, err := store.GetSystemIntakeByGRBReviewerID(ctx, reviewerID)
+	if err != nil {
+		return err
+	}
+
+	isGRBReviewComplete, err := isGRBReviewCompleted(ctx, intake)
+	if err != nil {
+		return err
+	}
+
+	if isGRBReviewComplete {
+		return errors.New("cannot delete GRB reviewer for completed GRB review")
+	}
+
 	return sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
 		return store.DeleteSystemIntakeGRBReviewer(ctx, tx, reviewerID)
 	})
@@ -195,10 +233,12 @@ func CastSystemIntakeGRBReviewerVote(ctx context.Context, store *storage.Store, 
 		return nil, errors.New("GRB review times not yet available")
 	}
 
-	now := time.Now()
-	// if `now` is before the review starts or if `now` is after the review ends, we are not in the voting window
-	// TODO: it may be possible to submit votes even after the end date - address if needed
-	if now.Before(*systemIntake.GRBReviewStartedAt) || now.After(*systemIntake.GrbReviewAsyncEndDate) {
+	isGRBReviewComplete, err := isGRBReviewCompleted(ctx, systemIntake)
+	if err != nil {
+		return nil, err
+	}
+
+	if isGRBReviewComplete {
 		return nil, errors.New("GRB review is not currently accepting votes")
 	}
 

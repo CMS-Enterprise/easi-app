@@ -125,6 +125,7 @@ args{
 type args map[string]any
 
 // namedSelect is a shortcut for using `sqlx` Select (SelectContext) with named arguments to prevent writing out the prepare step each time
+// normally useful for returning multiple rows
 func namedSelect(ctx context.Context, np sqlutils.NamedPreparer, dest any, sqlStatement string, arguments any) error {
 	if ctx == nil {
 		ctx = context.TODO()
@@ -145,6 +146,7 @@ func namedSelect(ctx context.Context, np sqlutils.NamedPreparer, dest any, sqlSt
 }
 
 // namedGet is a shortcut for using `sqlx` Get (GetContext) with named arguments to prevent writing out the prepare step each time
+// normally useful for returning a single row
 func namedGet(ctx context.Context, np sqlutils.NamedPreparer, dest any, sqlStatement string, arguments any) error {
 	if ctx == nil {
 		ctx = context.TODO()

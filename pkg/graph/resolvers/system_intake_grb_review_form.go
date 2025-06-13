@@ -276,8 +276,8 @@ func RestartGRBReviewAsync(
 	}, nil
 }
 
-// IsGRBReviewCompleted checks if the GRB review is completed for either standard or async
-func IsGRBReviewCompleted(ctx context.Context, intake *models.SystemIntake) (bool, error) {
+// isGRBReviewCompleted checks if the GRB review is completed for either standard or async
+func isGRBReviewCompleted(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 	switch intake.GrbReviewType {
 	case models.SystemIntakeGRBReviewTypeStandard:
 		grbReviewState := CalcSystemIntakeGRBReviewStandardStatus(intake)

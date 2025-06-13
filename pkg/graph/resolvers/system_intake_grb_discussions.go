@@ -43,12 +43,12 @@ func CreateSystemIntakeGRBDiscussionPost(
 			return nil, errors.New("problem finding system intake when handling GRB post")
 		}
 
-		isGRBReviewCompleted, err := IsGRBReviewCompleted(ctx, systemIntake)
+		isGRBReviewComplete, err := isGRBReviewCompleted(ctx, systemIntake)
 		if err != nil {
 			return nil, err
 		}
 
-		if isGRBReviewCompleted {
+		if isGRBReviewComplete {
 			return nil, errors.New("cannot post to a completed system intake")
 		}
 
@@ -172,13 +172,13 @@ func CreateSystemIntakeGRBDiscussionReply(
 			return nil, errors.New("problem finding system intake when handling GRB reply")
 		}
 
-		isGRBReviewCompleted, err := IsGRBReviewCompleted(ctx, systemIntake)
+		isGRBReviewComplete, err := isGRBReviewCompleted(ctx, systemIntake)
 		if err != nil {
 			return nil, err
 		}
 
-		if isGRBReviewCompleted {
-			return nil, errors.New("cannot post to a completed system intake")
+		if isGRBReviewComplete {
+			return nil, errors.New("cannot reply to a discussion on a completed system intake")
 		}
 
 		if input.DiscussionBoardType == models.SystemIntakeGRBDiscussionBoardTypeInternal && !isAuthorizedForInternalBoard(ctx, intakeID) {

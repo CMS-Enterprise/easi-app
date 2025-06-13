@@ -136,23 +136,11 @@ func main() {
 			store,
 			time.Now().AddDate(2, 0, 0),
 		)
-		createSystemIntakeGRBReviewers(ctx, store, sysIn, []*models.CreateGRBReviewerInput{
-			{
-				EuaUserID:  "BTMN",
-				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
-				GrbRole:    models.SystemIntakeGRBReviewerRoleAca3021Rep,
-			},
-			{
-				EuaUserID:  "A11Y",
-				VotingRole: models.SystemIntakeGRBReviewerVotingRoleAlternate,
-				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
-			},
-		})
 
 		setSystemIntakeRelationExistingSystem(
 			ctx,
 			store,
-			ID,
+			sysIn.ID,
 			[]string{"111111", "111112"},
 			[]string{"11AB1A00-1234-5678-ABC1-1A001B00CC6G"},
 		)

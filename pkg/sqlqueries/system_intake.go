@@ -26,12 +26,18 @@ var getWhereGRBReviewCompleteQuorumMet string
 //go:embed SQL/system_intake/get_requester_update_email_data.sql
 var getRequesterUpdateEmailData string
 
+// getSystemIntakeByGRBReviewerID holds the SQL query to get system intakes by GRB reviewer ID
+//
+//go:embed SQL/system_intake/get_by_grb_reviewer_id.sql
+var getSystemIntakeByGRBReviewerID string
+
 var SystemIntake = systemIntakeScripts{
 	GetByUser:                         getByUser,
 	GetWhereGRBReviewIsHalfwayThrough: getWhereGRBReviewIsHalfwayThrough,
 	GetWhereGRBPastDueNoQuorum:        getWhereGRBReviewPastDueNoQuorum,
 	GetWhereReviewCompleteQuorumMet:   getWhereGRBReviewCompleteQuorumMet,
 	GetRequesterUpdateEmailData:       getRequesterUpdateEmailData,
+	GetSystemIntakeByGRBReviewerID:    getSystemIntakeByGRBReviewerID,
 }
 
 type systemIntakeScripts struct {
@@ -40,4 +46,5 @@ type systemIntakeScripts struct {
 	GetWhereGRBPastDueNoQuorum        string
 	GetWhereReviewCompleteQuorumMet   string
 	GetRequesterUpdateEmailData       string
+	GetSystemIntakeByGRBReviewerID    string
 }
