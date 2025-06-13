@@ -1,8 +1,7 @@
 {
 	"info": {
 		"name": "EASI",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_collection_link": "https://cooperheinrichs.postman.co/workspace/Cooper-Heinrichs's-Workspace~2ef36db6-e40a-4731-85b8-66dae82b3d05/collection/45221282-19425a0f-361a-40a0-b35a-99568767fff1?action=share&source=collection_link&creator=45221282"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
