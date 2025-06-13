@@ -369,6 +369,8 @@ func GetMySystemIntakes(ctx context.Context, store *storage.Store) ([]*models.Sy
 	return store.GetMySystemIntakes(ctx)
 }
 
+const maxEUAsPerRequest = 200
+
 func GetRequesterUpdateEmailData(
 	ctx context.Context,
 	store *storage.Store,
@@ -392,14 +394,22 @@ func GetRequesterUpdateEmailData(
 			continue
 		}
 
-		euaSet[item.EuaUserID] = struct{}{}
+		euaSet[item.EuaUserID] = helpers.EmptyStruct
 		euaIDs = append(euaIDs, item.EuaUserID)
 	}
 
-	// then, get user data from Okta
-	userData, err := fetchUserInfos(ctx, euaIDs)
-	if err != nil {
-		return nil, err
+	// chunk the data into the maximum, which is 200
+	chunks := helpers.Chunk(euaIDs, maxEUAsPerRequest)
+
+	var userData []*models.UserInfo
+	for _, chunk := range chunks {
+		// then, get user data from Okta
+		res, err := fetchUserInfos(ctx, chunk)
+		if err != nil {
+			return nil, err
+		}
+
+		userData = append(userData, res...)
 	}
 
 	// map emails for ease
