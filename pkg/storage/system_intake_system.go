@@ -16,34 +16,36 @@ import (
 
 // SetSystemIntakeSystems links given System IDs to given System Intake ID
 // This function opts to take a *sqlx.Tx instead of a NamedPreparer because the SQL calls inside this function are heavily intertwined, and we never want to call them outside the scope of a transaction
-func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemIntakeID uuid.UUID, systemIDs []string) error {
+func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemIntakeID uuid.UUID, systemRelationships []*models.SystemRelationshipInput) error {
 	if systemIntakeID == uuid.Nil {
 		return errors.New("unexpected nil system intake ID when linking system intake to system id")
 	}
 
-	if _, err := tx.NamedExec(sqlqueries.SystemIntakeSystemForm.Delete, map[string]interface{}{
-		"system_ids":       pq.StringArray(systemIDs),
+	_, err := tx.NamedExec(sqlqueries.SystemIntakeSystemForm.Delete, map[string]interface{}{
 		"system_intake_id": systemIntakeID,
-	}); err != nil {
+	})
+	if err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to delete system ids linked to system intake", zap.Error(err))
 		return err
 	}
 
 	// no need to run insert if we are not inserting new system ids
-	if len(systemIDs) < 1 {
+	if len(systemRelationships) < 1 {
 		return nil
 	}
 
 	userID := appcontext.Principal(ctx).Account().ID
 
-	setSystemIntakeSystemsLinks := make([]models.SystemIntakeSystem, len(systemIDs))
+	setSystemIntakeSystemsLinks := make([]models.SystemIntakeSystem, len(systemRelationships))
 
-	for i, systemID := range systemIDs {
+	for i, relationship := range systemRelationships {
 		systemIDLink := models.NewSystemIntakeSystem(userID)
+		systemIDLink.SystemID = *relationship.CedarSystemID
 		systemIDLink.ID = uuid.New()
-		systemIDLink.ModifiedBy = &userID
 		systemIDLink.SystemIntakeID = systemIntakeID
-		systemIDLink.SystemID = systemID
+		systemIDLink.ModifiedBy = &userID
+		systemIDLink.SystemRelationshipType = relationship.SystemRelationshipType
+		systemIDLink.OtherSystemRelationship = relationship.OtherTypeDescription
 
 		setSystemIntakeSystemsLinks[i] = systemIDLink
 	}

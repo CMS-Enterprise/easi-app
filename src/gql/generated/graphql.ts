@@ -1819,7 +1819,7 @@ export type SetSystemIntakeRelationExistingServiceInput = {
 };
 
 export type SetSystemIntakeRelationExistingSystemInput = {
-  cedarSystemIDs: Array<Scalars['String']['input']>;
+  cedarSystemRelationShips: Array<SystemRelationshipInput>;
   contractNumbers: Array<Scalars['String']['input']>;
   systemIntakeID: Scalars['UUID']['input'];
 };
@@ -1870,6 +1870,7 @@ export type SystemIntake = {
   businessOwner: SystemIntakeBusinessOwner;
   businessSolution?: Maybe<Scalars['String']['output']>;
   cedarSystemId?: Maybe<Scalars['String']['output']>;
+  cedarSystemRelationShips?: Maybe<Array<Maybe<SystemIntakeSystem>>>;
   contract: SystemIntakeContract;
   contractName?: Maybe<Scalars['String']['output']>;
   /** Linked contract numbers */
@@ -2619,6 +2620,14 @@ export enum SystemIntakeStepToProgressTo {
   GRT_MEETING = 'GRT_MEETING'
 }
 
+export type SystemIntakeSystem = {
+  __typename: 'SystemIntakeSystem';
+  otherSystemRelationship?: Maybe<Scalars['String']['output']>;
+  systemID?: Maybe<Scalars['String']['output']>;
+  systemIntakeID: Scalars['UUID']['output'];
+  systemRelationshipType: Array<SystemRelationshipType>;
+};
+
 /** Different options for whether the Governance team believes a requester's team should consult with the TRB */
 export enum SystemIntakeTRBFollowUp {
   NOT_RECOMMENDED = 'NOT_RECOMMENDED',
@@ -2646,6 +2655,22 @@ export type SystemIntakeUpdateLCIDInput = {
   scope?: InputMaybe<Scalars['HTML']['input']>;
   systemIntakeID: Scalars['UUID']['input'];
 };
+
+/** Input data for creating a system intake's relationship to a CEDAR system */
+export type SystemRelationshipInput = {
+  cedarSystemId?: InputMaybe<Scalars['String']['input']>;
+  otherTypeDescription?: InputMaybe<Scalars['String']['input']>;
+  systemRelationshipType: Array<SystemRelationshipType>;
+};
+
+/** Types of System Relationships */
+export enum SystemRelationshipType {
+  OTHER = 'OTHER',
+  PARTIAL_SUPORT = 'PARTIAL_SUPORT',
+  PRIMARY_SUPPORT = 'PRIMARY_SUPPORT',
+  USED_IN_TECH_SOLUTION = 'USED_IN_TECH_SOLUTION',
+  USES_IN_TECH_SOLUTION = 'USES_IN_TECH_SOLUTION'
+}
 
 /** Represents an admin note attached to a TRB request */
 export type TRBAdminNote = {
