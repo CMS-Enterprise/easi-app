@@ -1,11 +1,12 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { Button, Icon, Label, TextInput } from '@trussworks/react-uswds';
+import { Button, Grid, Icon, Label, TextInput } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
 import Alert from 'components/Alert';
 import AutoSave from 'components/AutoSave';
+import CedarContactSelect from 'components/CedarContactSelect';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
 import HelpText from 'components/HelpText';
@@ -36,6 +37,7 @@ const GeneralRequestInfo = ({
 
   const initialValues: GeneralRequestInfoForm = {
     requestName: businessCase.requestName,
+    projectAcronym: businessCase.projectAcronym,
     requester: businessCase.requester,
     businessOwner: businessCase.businessOwner
   };
@@ -53,7 +55,7 @@ const GeneralRequestInfo = ({
       innerRef={formikRef}
     >
       {(formikProps: FormikProps<GeneralRequestInfoForm>) => {
-        const { errors, values, validateForm } = formikProps;
+        const { errors, values, setFieldValue, validateForm } = formikProps;
         const flatErrors = flattenErrors(errors);
 
         return (
@@ -84,27 +86,59 @@ const GeneralRequestInfo = ({
                 </Alert>
               )}
 
-              <FieldGroup
-                scrollElement="requestName"
-                error={!!flatErrors.requestName}
-              >
-                <Label htmlFor="BusinessCase-RequestName">
-                  {t('requestName')}
-                  <RequiredAsterisk />
-                </Label>
-                <HelpText id="BusinessCase-RequestNameHelp">
-                  {t('requestNameHelpText')}
-                </HelpText>
-                <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
-                <Field
-                  as={TextInput}
-                  error={!!flatErrors.requestName}
-                  id="BusinessCase-RequestName"
-                  maxLength={50}
-                  aria-describedby="BusinessCase-RequestNameHelp"
-                  name="requestName"
-                />
-              </FieldGroup>
+              <Grid row gap="sm">
+                <Grid tablet={{ col: 7 }}>
+                  <FieldGroup
+                    scrollElement="requestName"
+                    error={!!flatErrors.requestName}
+                  >
+                    <Label htmlFor="BusinessCase-RequestName">
+                      {t('requestName')}
+                      <RequiredAsterisk />
+                    </Label>
+                    <HelpText
+                      id="BusinessCase-RequestNameHelp"
+                      className="tablet:width-mobile-lg"
+                    >
+                      {t('requestNameHelpText')}
+                    </HelpText>
+                    <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
+                    <Field
+                      as={TextInput}
+                      error={!!flatErrors.requestName}
+                      id="BusinessCase-RequestName"
+                      maxLength={50}
+                      aria-describedby="BusinessCase-RequestNameHelp"
+                      name="requestName"
+                    />
+                  </FieldGroup>
+                </Grid>
+
+                <Grid tablet={{ col: 5 }}>
+                  <FieldGroup
+                    scrollElement="projectAcronym"
+                    className="margin-left-1"
+                    error={!!flatErrors.projectAcronym}
+                  >
+                    <Label htmlFor="BusinessCase-ProjectAcronym">
+                      {t('projectAcronym')}
+                    </Label>
+                    <HelpText id="BusinessCase-ProjectAcronymHelp">
+                      {t('projectAcronymHelpText')}
+                    </HelpText>
+                    <FieldErrorMsg>{flatErrors.projectAcronym}</FieldErrorMsg>
+                    <Field
+                      as={TextInput}
+                      error={!!flatErrors.projectAcronym}
+                      id="BusinessCase-ProjectAcronym"
+                      maxLength={10}
+                      aria-describedby="BusinessCase-ProjectAcronymHelp"
+                      name="projectAcronym"
+                    />
+                  </FieldGroup>
+                </Grid>
+              </Grid>
+
               <FieldGroup
                 scrollElement="requester.name"
                 error={!!flatErrors['requester.name']}
@@ -120,6 +154,8 @@ const GeneralRequestInfo = ({
                   id="BusinessCase-RequesterName"
                   maxLength={50}
                   name="requester.name"
+                  className="maxw-none"
+                  disabled
                 />
               </FieldGroup>
               <FieldGroup
@@ -134,11 +170,21 @@ const GeneralRequestInfo = ({
                   {flatErrors['businessOwner.name']}
                 </FieldErrorMsg>
                 <Field
-                  as={TextInput}
+                  as={CedarContactSelect}
+                  name="businessOwner.name"
                   error={!!flatErrors['businessOwner.name']}
                   id="BusinessCase-BusinessOwnerName"
-                  maxLength={50}
-                  name="businessOwner.name"
+                  value={{
+                    commonName: values.businessOwner.name,
+                    euaUserId: '',
+                    email: ''
+                  }}
+                  onChange={(contact: any) => {
+                    setFieldValue(
+                      'businessOwner.name',
+                      contact?.commonName || ''
+                    );
+                  }}
                 />
               </FieldGroup>
               <FieldGroup
@@ -163,7 +209,7 @@ const GeneralRequestInfo = ({
                   name="requester.phoneNumber"
                   match={allowedPhoneNumberCharacters}
                   aria-describedby="BusinessCase-PhoneNumber"
-                  className="width-card-lg"
+                  className="maxw-none"
                 />
               </FieldGroup>
             </Form>

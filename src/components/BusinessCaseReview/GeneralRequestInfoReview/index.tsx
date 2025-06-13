@@ -19,11 +19,19 @@ const GeneralRequestInfoReview = ({
     <DescriptionList title="General request information">
       <ReviewRow>
         <div>
-          <DescriptionTerm term="Project name" />
+          <DescriptionTerm term="Contact / request title" />
           <DescriptionDefinition definition={values.requestName} />
         </div>
         <div>
-          <DescriptionTerm term="Business Owner" />
+          <DescriptionTerm term="Contact / request acronym" />
+          <DescriptionDefinition
+            definition={values.projectAcronym ? values.projectAcronym : 'N/A'}
+          />
+        </div>
+      </ReviewRow>
+      <ReviewRow>
+        <div>
+          <DescriptionTerm term="CMS Business Owner" />
           <DescriptionDefinition definition={values.businessOwner.name} />
         </div>
       </ReviewRow>
@@ -32,6 +40,8 @@ const GeneralRequestInfoReview = ({
           <DescriptionTerm term="Requester" />
           <DescriptionDefinition definition={values.requester.name} />
         </div>
+      </ReviewRow>
+      <ReviewRow>
         <div>
           <DescriptionTerm term="Requester phone number" />
           <DescriptionDefinition definition={values.requester.phoneNumber} />

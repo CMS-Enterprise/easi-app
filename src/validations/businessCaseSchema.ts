@@ -50,74 +50,80 @@ const lifecycleCostsSchema = Yup.object().shape({
   other: relatedCostPhase
 });
 
-const finalSolutionSchema = (solutionType: string) =>
+const finalSolutionSchema = () =>
   Yup.object().shape({
-    title: Yup.string()
-      .trim()
-      .required(`Enter a title for the ${solutionType} solution`),
-    summary: Yup.string()
-      .trim()
-      .required(`Tell us about the ${solutionType} solution`),
+    title: Yup.string().trim().required(`Enter a title for this solution`),
+    summary: Yup.string().trim().required(`Tell us about this solution`),
     acquisitionApproach: Yup.string()
       .trim()
-      .required(
-        `Tell us about the acquisition approach for the ${solutionType} solution`
-      ),
+      .required(`Tell us about the acquisition approach for this solution`),
     security: Yup.object().shape({
       isApproved: Yup.boolean()
         .nullable()
         .required(
-          `Tell us whether the ${solutionType} solution was approved by IT Security for use at CMS`
+          `Tell us whether this solution was approved by IT Security for use at CMS`
         ),
       isBeingReviewed: Yup.string()
         .nullable()
         .when('isApproved', {
           is: false,
           then: Yup.string().required(
-            `Tell us whether the ${solutionType} solution is in the process of receiving approval`
+            `Tell us whether this solution is in the process of receiving approval`
           )
         })
     }),
+    zeroTrustAlignment: Yup.string().required(
+      `Tell us how this solution aligns with Zero Trust principles`
+    ),
     hosting: Yup.object().shape({
-      type: Yup.string().required(
-        `Tell us how ${solutionType} solution will be hosted`
-      ),
+      type: Yup.string().required(`Tell us how this solution will be hosted`),
       location: Yup.string()
         .when('type', {
           is: 'cloud',
           then: Yup.string()
             .trim()
-            .required(`Tell us where ${solutionType} solution will be hosted`)
+            .required(`Tell us where this solution will be hosted`)
         })
         .when('type', {
           is: 'dataCenter',
           then: Yup.string()
             .trim()
-            .required(`Tell us where ${solutionType} solution will be hosted`)
+            .required(`Tell us where this solution will be hosted`)
         }),
+      cloudStrategy: Yup.string().when('type', {
+        is: 'cloud',
+        then: Yup.string()
+          .trim()
+          .required(
+            `Tell us about the cloud strategy or migration strategy that will be used for this solution`
+          )
+      }),
       cloudServiceType: Yup.string().when('type', {
         is: 'cloud',
         then: Yup.string()
           .trim()
           .required(
-            `Tell us about the cloud service that will be used for the ${solutionType} solution`
+            `Tell us about the cloud service that will be used for this solution`
           )
       })
     }),
     hasUserInterface: Yup.string().required(
-      `Tell us whether the ${solutionType} solution will have user interface`
+      `Tell us whether this solution will have user interface`
+    ),
+    workforceTrainingReqs: Yup.string().required(
+      `Tell us whether any workforce training will be required as a part of this solution`
     ),
     pros: Yup.string()
       .trim()
-      .required(`Tell us about the pros of the ${solutionType} solution`),
+      .required(`Tell us about the pros of this solution`),
     cons: Yup.string()
       .trim()
-      .required(`Tell us about the cons of the ${solutionType} solution`),
+      .required(`Tell us about the cons of this solution`),
     estimatedLifecycleCost: lifecycleCostsSchema,
     costSavings: Yup.string()
       .trim()
       .required(
-        `Tell us about the cost savings or avoidance associated with the ${solutionType} solution`
+        `Tell us about the cost savings or avoidance associated with this solution`
       )
   });
 
@@ -144,6 +150,11 @@ export const BusinessCaseFinalValidationSchema = {
     businessNeed: Yup.string()
       .trim()
       .required('Tell us what the business or user need is'),
+    collaborationNeeded: Yup.string()
+      .trim()
+      .required(
+        'Tell us what internal collaboration or vendor engagement will support this work'
+      ),
     currentSolutionSummary: Yup.string()
       .trim()
       .required('Give us a summary of the current solution'),
@@ -159,11 +170,16 @@ export const BusinessCaseFinalValidationSchema = {
       .trim()
       .required(
         'Tell us how you will determine whether or not this effort is successful'
+      ),
+    responseToGRTFeedback: Yup.string()
+      .trim()
+      .required(
+        "Tell us how you will implement or respond to GRT recommendations (enter 'N/A' if no feedback has been given)"
       )
   }),
-  preferredSolution: finalSolutionSchema('Preferred Solution'),
-  alternativeA: finalSolutionSchema('Alternative A'),
-  alternativeB: finalSolutionSchema('Alternative B')
+  preferredSolution: finalSolutionSchema(),
+  alternativeA: finalSolutionSchema(),
+  alternativeB: finalSolutionSchema()
 };
 
 // We don't validate much when a Business Case is in draft
@@ -195,7 +211,7 @@ export const getAlternativeAnalysisSchema = (
       value => {
         if (!isFinal) return true; // Skip validation if not final
         try {
-          finalSolutionSchema('Preferred Solution').validateSync(value, {
+          finalSolutionSchema().validateSync(value, {
             abortEarly: false
           });
           return true;
@@ -210,7 +226,7 @@ export const getAlternativeAnalysisSchema = (
       value => {
         if (!isFinal) return true; // Skip validation if not final
         try {
-          finalSolutionSchema('Alternative A').validateSync(value, {
+          finalSolutionSchema().validateSync(value, {
             abortEarly: false
           });
           return true;
@@ -226,7 +242,7 @@ export const getAlternativeAnalysisSchema = (
           value => {
             if (!isFinal) return true; // Skip validation if not final
             try {
-              finalSolutionSchema('Alternative B').validateSync(value, {
+              finalSolutionSchema().validateSync(value, {
                 abortEarly: false
               });
               return true;

@@ -95,50 +95,68 @@ type BusinessCase struct {
 	SystemIntakeID                      uuid.UUID          `json:"systemIntakeId" db:"system_intake"`
 	Status                              BusinessCaseStatus `json:"status"`
 	ProjectName                         null.String        `json:"projectName" db:"project_name"`
+	ProjectAcronym                      null.String        `json:"projectAcronym" db:"project_acronym"`
 	Requester                           null.String        `json:"requester"`
 	RequesterPhoneNumber                null.String        `json:"requesterPhoneNumber" db:"requester_phone_number"`
 	BusinessOwner                       null.String        `json:"businessOwner" db:"business_owner"`
 	BusinessNeed                        null.String        `json:"businessNeed" db:"business_need"`
+	CollaborationNeeded                 null.String        `json:"collaborationNeeded" db:"collaboration_needed"`
 	CurrentSolutionSummary              null.String        `json:"currentSolutionSummary" db:"current_solution_summary"`
 	CMSBenefit                          null.String        `json:"cmsBenefit" db:"cms_benefit"`
 	PriorityAlignment                   null.String        `json:"priorityAlignment" db:"priority_alignment"`
 	SuccessIndicators                   null.String        `json:"successIndicators" db:"success_indicators"`
+	ResponseToGRTFeedback               null.String        `json:"responseToGRTFeedback" db:"response_to_grt_feedback"`
 	PreferredTitle                      null.String        `json:"preferredTitle" db:"preferred_title"`
 	PreferredSummary                    null.String        `json:"preferredSummary" db:"preferred_summary"`
 	PreferredAcquisitionApproach        null.String        `json:"preferredAcquisitionApproach" db:"preferred_acquisition_approach"`
+	PreferredTargetContractAwardDate    *time.Time         `json:"preferredTargetContractAwardDate" db:"preferred_target_contract_award_date"`
+	PreferredTargetCompletionDate       *time.Time         `json:"preferredTargetCompletionDate" db:"preferred_target_completion_date"`
 	PreferredSecurityIsApproved         null.Bool          `json:"preferredSecurityIsApproved" db:"preferred_security_is_approved"`
 	PreferredSecurityIsBeingReviewed    null.String        `json:"preferredSecurityIsBeingReviewed" db:"preferred_security_is_being_reviewed"`
+	PreferredZeroTrustAlignment         null.String        `json:"preferredZeroTrustAlignment" db:"preferred_zero_trust_alignment"`
 	PreferredHostingType                null.String        `json:"preferredHostingType" db:"preferred_hosting_type"`
 	PreferredHostingLocation            null.String        `json:"preferredHostingLocation" db:"preferred_hosting_location"`
+	PreferredHostingCloudStrategy       null.String        `json:"preferredHostingCloudStrategy" db:"preferred_hosting_cloud_strategy"`
 	PreferredHostingCloudServiceType    null.String        `json:"preferredHostingCloudServiceType" db:"preferred_hosting_cloud_service_type"`
 	PreferredHasUI                      null.String        `json:"preferredHasUI" db:"preferred_has_ui"`
 	PreferredPros                       null.String        `json:"preferredPros" db:"preferred_pros"`
 	PreferredCons                       null.String        `json:"preferredCons" db:"preferred_cons"`
 	PreferredCostSavings                null.String        `json:"preferredCostSavings" db:"preferred_cost_savings"`
+	PreferredWorkforceTrainingReqs      null.String        `json:"preferredWorkforceTrainingReqs" db:"preferred_workforce_training_reqs"`
 	AlternativeATitle                   null.String        `json:"alternativeATitle" db:"alternative_a_title"`
 	AlternativeASummary                 null.String        `json:"alternativeASummary" db:"alternative_a_summary"`
 	AlternativeAAcquisitionApproach     null.String        `json:"alternativeAAcquisitionApproach" db:"alternative_a_acquisition_approach"`
+	AlternativeATargetContractAwardDate *time.Time         `json:"alternativeATargetContractAwardDate" db:"alternative_a_target_contract_award_date"`
+	AlternativeATargetCompletionDate    *time.Time         `json:"alternativeATargetCompletionDate" db:"alternative_a_target_completion_date"`
 	AlternativeASecurityIsApproved      null.Bool          `json:"alternativeASecurityIsApproved" db:"alternative_a_security_is_approved"`
 	AlternativeASecurityIsBeingReviewed null.String        `json:"alternativeASecurityIsBeingReviewed" db:"alternative_a_security_is_being_reviewed"`
+	AlternativeAZeroTrustAlignment      null.String        `json:"alternativeAZeroTrustAlignment" db:"alternative_a_zero_trust_alignment"`
 	AlternativeAHostingType             null.String        `json:"alternativeAHostingType" db:"alternative_a_hosting_type"`
 	AlternativeAHostingLocation         null.String        `json:"alternativeAHostingLocation" db:"alternative_a_hosting_location"`
+	AlternativeAHostingCloudStrategy    null.String        `json:"alternativeAHostingCloudStrategy" db:"alternative_a_hosting_cloud_strategy"`
 	AlternativeAHostingCloudServiceType null.String        `json:"alternativeAHostingCloudServiceType" db:"alternative_a_hosting_cloud_service_type"`
 	AlternativeAHasUI                   null.String        `json:"alternativeAHasUI" db:"alternative_a_has_ui"`
 	AlternativeAPros                    null.String        `json:"alternativeAPros" db:"alternative_a_pros"`
 	AlternativeACons                    null.String        `json:"alternativeACons" db:"alternative_a_cons"`
 	AlternativeACostSavings             null.String        `json:"alternativeACostSavings" db:"alternative_a_cost_savings"`
+	AlternativeAWorkforceTrainingReqs   null.String        `json:"alternativeAWorkforceTrainingReqs" db:"alternative_a_workforce_training_reqs"`
 	AlternativeBTitle                   null.String        `json:"alternativeBTitle" db:"alternative_b_title"`
 	AlternativeBSummary                 null.String        `json:"alternativeBSummary" db:"alternative_b_summary"`
 	AlternativeBAcquisitionApproach     null.String        `json:"alternativeBAcquisitionApproach" db:"alternative_b_acquisition_approach"`
+	AlternativeBTargetContractAwardDate *time.Time         `json:"alternativeBTargetContractAwardDate" db:"alternative_b_target_contract_award_date"`
+	AlternativeBTargetCompletionDate    *time.Time         `json:"alternativeBTargetCompletionDate" db:"alternative_b_target_completion_date"`
 	AlternativeBSecurityIsApproved      null.Bool          `json:"alternativeBSecurityIsApproved" db:"alternative_b_security_is_approved"`
 	AlternativeBSecurityIsBeingReviewed null.String        `json:"alternativeBSecurityIsBeingReviewed" db:"alternative_b_security_is_being_reviewed"`
+	AlternativeBZeroTrustAlignment      null.String        `json:"alternativeBZeroTrustAlignment" db:"alternative_b_zero_trust_alignment"`
 	AlternativeBHostingType             null.String        `json:"alternativeBHostingType" db:"alternative_b_hosting_type"`
 	AlternativeBHostingLocation         null.String        `json:"alternativeBHostingLocation" db:"alternative_b_hosting_location"`
+	AlternativeBHostingCloudStrategy    null.String        `json:"alternativeBHostingCloudStrategy" db:"alternative_b_hosting_cloud_strategy"`
 	AlternativeBHostingCloudServiceType null.String        `json:"alternativeBHostingCloudServiceType" db:"alternative_b_hosting_cloud_service_type"`
 	AlternativeBHasUI                   null.String        `json:"alternativeBHasUI" db:"alternative_b_has_ui"`
 	AlternativeBPros                    null.String        `json:"alternativeBPros" db:"alternative_b_pros"`
 	AlternativeBCons                    null.String        `json:"alternativeBCons" db:"alternative_b_cons"`
 	AlternativeBCostSavings             null.String        `json:"alternativeBCostSavings" db:"alternative_b_cost_savings"`
+	AlternativeBWorkforceTrainingReqs   null.String        `json:"alternativeBWorkforceTrainingReqs" db:"alternative_b_workforce_training_reqs"`
 	CreatedAt                           *time.Time         `json:"createdAt" db:"created_at"`
 	UpdatedAt                           *time.Time         `json:"updatedAt" db:"updated_at"`
 	ArchivedAt                          *time.Time         `db:"archived_at"`

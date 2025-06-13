@@ -17,6 +17,7 @@ describe('The Business Case Review Component', () => {
     updatedAt: '2021-06-11T19:22:40Z',
     systemIntakeId: '048c26ea-07be-4f40-b29e-761fc17bf414',
     requestName: 'EASi Test',
+    projectAcronym: 'EASi',
     requester: {
       name: 'Jane Smith',
       phoneNumber: '1234567890'
@@ -25,14 +26,18 @@ describe('The Business Case Review Component', () => {
       name: 'Jane Smith'
     },
     businessNeed: 'Test business need',
+    collaborationNeeded: 'Test collaboration needed',
     cmsBenefit: 'Test CMS benefit',
     currentSolutionSummary: 'Test current solution summary',
     priorityAlignment: 'Test priority alignment',
     successIndicators: 'Test success indicators',
+    responseToGRTFeedback: 'Test response to GRT feedback',
     preferredSolution: {
       title: 'Test preferred solution',
       summary: 'Test summary',
       acquisitionApproach: 'Test acquisition approach',
+      targetContractAwardDate: '2025-03-15T19:22:40Z',
+      targetCompletionDate: '2025-03-15T19:22:40Z',
       pros: 'Test pros',
       cons: 'Test cons',
       estimatedLifecycleCost: {
@@ -138,17 +143,22 @@ describe('The Business Case Review Component', () => {
         isApproved: false,
         isBeingReviewed: 'YES'
       },
+      zeroTrustAlignment: 'Test Zero Trust',
       hosting: {
         type: 'cloud',
         location: 'Test location',
+        cloudStrategy: 'test cloud strategy',
         cloudServiceType: 'Test cloud service'
       },
-      hasUserInterface: 'YES'
+      hasUserInterface: 'YES',
+      workforceTrainingReqs: 'Test workforce training requirements'
     },
     alternativeA: {
       title: 'Test alternative a solution',
       summary: 'Test summary',
       acquisitionApproach: 'Test acquisition approach',
+      targetContractAwardDate: '2025-03-15T19:22:40Z',
+      targetCompletionDate: '2025-03-15T19:22:40Z',
       pros: 'Test pros',
       cons: 'Test cons',
       estimatedLifecycleCost: {
@@ -254,17 +264,22 @@ describe('The Business Case Review Component', () => {
         isApproved: false,
         isBeingReviewed: 'YES'
       },
+      zeroTrustAlignment: 'Test Zero Trust',
       hosting: {
         type: 'cloud',
         location: 'Test location',
+        cloudStrategy: 'Test cloud strategy',
         cloudServiceType: 'Test cloud service'
       },
-      hasUserInterface: 'YES'
+      hasUserInterface: 'YES',
+      workforceTrainingReqs: 'Test workforce training requirements'
     },
     alternativeB: {
       title: 'Test alternative b solution',
       summary: 'Test summary',
       acquisitionApproach: 'Test acquisition approach',
+      targetContractAwardDate: '2025-03-15T19:22:40Z',
+      targetCompletionDate: '2025-03-15T19:22:40Z',
       pros: 'Test pros',
       cons: 'Test cons',
       estimatedLifecycleCost: {
@@ -370,12 +385,15 @@ describe('The Business Case Review Component', () => {
         isApproved: false,
         isBeingReviewed: 'YES'
       },
+      zeroTrustAlignment: 'Test Zero Trust',
       hosting: {
         type: 'cloud',
         location: 'Test location',
+        cloudStrategy: 'Test cloud strategy',
         cloudServiceType: 'Test cloud service'
       },
-      hasUserInterface: 'YES'
+      hasUserInterface: 'YES',
+      workforceTrainingReqs: 'Test workforce training requirements'
     }
   };
 

@@ -13,22 +13,28 @@ export type BusinessCaseSolution = {
 // Proposed Solution
 export type ProposedBusinessCaseSolution = BusinessCaseSolution & {
   acquisitionApproach: string;
+  targetContractAwardDate: string;
+  targetCompletionDate: string;
   security: {
     isApproved: boolean | null;
     isBeingReviewed: string;
   };
+  zeroTrustAlignment: string;
   hosting: {
     type: string;
     location: string;
+    cloudStrategy: string;
     cloudServiceType?: string;
   };
   hasUserInterface: string;
+  workforceTrainingReqs: string;
 };
 
 type BusinessCaseStatus = 'OPEN' | 'CLOSED';
 
 export type GeneralRequestInfoForm = {
   requestName: string;
+  projectAcronym: string;
   requester: {
     name: string;
     phoneNumber: string;
@@ -40,10 +46,12 @@ export type GeneralRequestInfoForm = {
 
 export type RequestDescriptionForm = {
   businessNeed: string;
+  collaborationNeeded: string;
   currentSolutionSummary: string;
   cmsBenefit: string;
   priorityAlignment: string;
   successIndicators: string;
+  responseToGRTFeedback: string;
 };
 
 export type SolutionLabelType =
