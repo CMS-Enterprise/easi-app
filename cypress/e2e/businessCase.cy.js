@@ -21,9 +21,13 @@ describe('The Business Case Form', () => {
       'Easy Access to System Information'
     );
 
+    cy.get('#BusinessCase-ProjectAcronym')
+      .type('EASi')
+      .should('have.value', 'EASi');
+
     cy.get('#BusinessCase-RequesterName').should('have.value', 'EndToEnd One');
 
-    cy.get('#BusinessCase-BusinessOwnerName').should(
+    cy.get('#react-select-BusinessCase-BusinessOwnerName-input').should(
       'have.value',
       'John BusinessOwner'
     );
@@ -40,6 +44,15 @@ describe('The Business Case Form', () => {
       'have.value',
       'Business Need: The quick brown fox jumps over the lazy dog.'
     );
+
+    cy.get('#BusinessCase-CollaborationNeeded')
+      .type(
+        'Collaboration Needed: The quick brown fox jumps over the lazy dog.'
+      )
+      .should(
+        'have.value',
+        'Collaboration Needed: The quick brown fox jumps over the lazy dog.'
+      );
 
     cy.get('#BusinessCase-CurrentSolutionSummary')
       .type(
@@ -69,6 +82,15 @@ describe('The Business Case Form', () => {
       .should(
         'have.value',
         'Success Indicators: The quick brown fox jumps over the lazy dog.'
+      );
+
+    cy.get('#BusinessCase-ResponseToGRTFeedback')
+      .type(
+        'Reponse to GRT Feedback: The quick brown fox jumps over the lazy dog.'
+      )
+      .should(
+        'have.value',
+        'Reponse to GRT Feedback: The quick brown fox jumps over the lazy dog.'
       );
 
     cy.contains('button', 'Next').click();
@@ -101,6 +123,7 @@ describe('The Business Case Form', () => {
       .its('form')
       .should('deep.include', {
         requestName: 'Easy Access to System Information',
+        projectAcronym: 'EASi',
         requester: {
           name: 'EndToEnd One',
           phoneNumber: '1234567890'
@@ -110,6 +133,8 @@ describe('The Business Case Form', () => {
         },
         businessNeed:
           'Business Need: The quick brown fox jumps over the lazy dog.',
+        collaborationNeeded:
+          'Collaboration Needed: The quick brown fox jumps over the lazy dog.',
         currentSolutionSummary:
           'Current Solution Summary: The quick brown fox jumps over the lazy dog.',
         cmsBenefit: 'CMS Benefit: The quick brown fox jumps over the lazy dog.',
@@ -117,20 +142,27 @@ describe('The Business Case Form', () => {
           'Priority Alignment: The quick brown fox jumps over the lazy dog.',
         successIndicators:
           'Success Indicators: The quick brown fox jumps over the lazy dog.',
+        responseToGRTFeedback:
+          'Reponse to GRT Feedback: The quick brown fox jumps over the lazy dog.',
         preferredSolution: {
           title: 'Preferred Solution Title',
           summary: 'Preferred Solution Summary',
           acquisitionApproach: 'Preferred Solution Acquisition approach',
+          targetContractAwardDate: new Date('03/13/2025').toISOString(),
+          targetCompletionDate: new Date('03/15/2025').toISOString(),
           security: {
             isApproved: false,
             isBeingReviewed: 'YES'
           },
+          zeroTrustAlignment: 'Preferred Solution Zero Trust Alignment',
           hosting: {
+            type: 'cloud',
             cloudServiceType: 'Saas',
-            location: 'AWS',
-            type: 'cloud'
+            cloudStrategy: 'Just do it',
+            location: 'AWS'
           },
           hasUserInterface: 'YES',
+          workforceTrainingReqs: 'Preferred Workforce Training',
           pros: 'Preferred Solution Pros',
           cons: 'Preferred Solution Cons',
           estimatedLifecycleCost: {
@@ -237,16 +269,21 @@ describe('The Business Case Form', () => {
           title: 'Alternative A Title',
           summary: 'Alternative A Summary',
           acquisitionApproach: 'Alternative A AcquisitionApproach',
+          targetContractAwardDate: new Date('03/13/2025').toISOString(),
+          targetCompletionDate: new Date('03/15/2025').toISOString(),
           security: {
             isApproved: false,
             isBeingReviewed: 'YES'
           },
+          zeroTrustAlignment: 'Alternative A Zero Trust Alignment',
           hosting: {
+            type: 'cloud',
             cloudServiceType: 'Saas',
-            location: 'AWS',
-            type: 'cloud'
+            cloudStrategy: 'Just do it',
+            location: 'AWS'
           },
           hasUserInterface: 'YES',
+          workforceTrainingReqs: 'Alternative A Workforce Training',
           pros: 'Alternative A Pros',
           cons: 'Alternative A Cons',
           estimatedLifecycleCost: {

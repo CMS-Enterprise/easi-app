@@ -20,18 +20,23 @@ type TRBAdminNoteCategorySpecificData interface {
 
 // A solution proposal within a Business Case
 type BusinessCaseSolution struct {
-	AcquisitionApproach     *string `json:"acquisitionApproach,omitempty"`
-	Cons                    *string `json:"cons,omitempty"`
-	CostSavings             *string `json:"costSavings,omitempty"`
-	HasUI                   *string `json:"hasUi,omitempty"`
-	HostingCloudServiceType *string `json:"hostingCloudServiceType,omitempty"`
-	HostingLocation         *string `json:"hostingLocation,omitempty"`
-	HostingType             *string `json:"hostingType,omitempty"`
-	Pros                    *string `json:"pros,omitempty"`
-	SecurityIsApproved      *bool   `json:"securityIsApproved,omitempty"`
-	SecurityIsBeingReviewed *string `json:"securityIsBeingReviewed,omitempty"`
-	Summary                 *string `json:"summary,omitempty"`
-	Title                   *string `json:"title,omitempty"`
+	AcquisitionApproach     *string    `json:"acquisitionApproach,omitempty"`
+	Cons                    *string    `json:"cons,omitempty"`
+	CostSavings             *string    `json:"costSavings,omitempty"`
+	HasUI                   *string    `json:"hasUi,omitempty"`
+	HostingCloudServiceType *string    `json:"hostingCloudServiceType,omitempty"`
+	HostingCloudStrategy    *string    `json:"hostingCloudStrategy,omitempty"`
+	HostingLocation         *string    `json:"hostingLocation,omitempty"`
+	HostingType             *string    `json:"hostingType,omitempty"`
+	Pros                    *string    `json:"pros,omitempty"`
+	SecurityIsApproved      *bool      `json:"securityIsApproved,omitempty"`
+	SecurityIsBeingReviewed *string    `json:"securityIsBeingReviewed,omitempty"`
+	Summary                 *string    `json:"summary,omitempty"`
+	TargetContractAwardDate *time.Time `json:"targetContractAwardDate,omitempty"`
+	TargetCompletionDate    *time.Time `json:"targetCompletionDate,omitempty"`
+	Title                   *string    `json:"title,omitempty"`
+	WorkforceTrainingReqs   *string    `json:"workforceTrainingReqs,omitempty"`
+	ZeroTrustAlignment      *string    `json:"zeroTrustAlignment,omitempty"`
 }
 
 type CastSystemIntakeGRBReviewerVoteInput struct {

@@ -36,6 +36,8 @@ describe('The GRT Business Case review', () => {
       title: 'Mock Preferred solution',
       summary: 'Mock Preferred solution summary',
       acquisitionApproach: 'Mock acquisition approach',
+      targetContractAwardDate: '2025-03-15T19:22:40Z',
+      targetCompletionDate: '2025-03-15T19:22:40Z',
       pros: 'Mock Preferred solution pros',
       cons: 'Mock Preferred solution cons',
       estimatedLifecycleCost: {
@@ -141,12 +143,15 @@ describe('The GRT Business Case review', () => {
         isApproved: false,
         isBeingReviewed: 'YES'
       },
+      zeroTrustAlignment: 'Mock Zero Trust',
       hosting: {
         type: 'Cloud',
         location: 'Mock location',
+        cloudStrategy: 'Mock cloud strategy',
         cloudServiceType: 'Mock cloud service'
       },
-      hasUserInterface: 'YES'
+      hasUserInterface: 'YES',
+      workforceTrainingReqs: 'Mock workforce training requirements'
     }
   };
 

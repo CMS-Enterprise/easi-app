@@ -296,19 +296,24 @@ const mockBusinessCase: BusinessCaseModel = {
     title: 'Preferred title',
     summary: 'Preferred summary',
     acquisitionApproach: 'Preferred acquisition approach',
+    targetContractAwardDate: '',
+    targetCompletionDate: '',
     security: {
       isApproved: null,
       isBeingReviewed: ''
     },
+    zeroTrustAlignment: '',
     hosting: {
       type: '',
       location: '',
+      cloudStrategy: '',
       cloudServiceType: ''
     },
     hasUserInterface: '',
     pros: 'Preferred pros',
     cons: 'Preferred cons',
     costSavings: 'Preferred cost savings',
+    workforceTrainingReqs: '',
     estimatedLifecycleCost: {
       development: {
         label: 'Development',
@@ -412,19 +417,24 @@ const mockBusinessCase: BusinessCaseModel = {
     title: 'Preferred title',
     summary: 'Preferred summary',
     acquisitionApproach: 'Preferred acquisition approach',
+    targetContractAwardDate: '',
+    targetCompletionDate: '',
     security: {
       isApproved: null,
       isBeingReviewed: ''
     },
+    zeroTrustAlignment: '',
     hosting: {
       type: '',
       location: '',
+      cloudStrategy: '',
       cloudServiceType: ''
     },
     hasUserInterface: '',
     pros: 'Preferred pros',
     cons: 'Preferred cons',
     costSavings: 'Preferred cost savings',
+    workforceTrainingReqs: '',
     estimatedLifecycleCost: {
       development: {
         label: 'Development',
@@ -528,19 +538,24 @@ const mockBusinessCase: BusinessCaseModel = {
     title: 'Preferred title',
     summary: 'Preferred summary',
     acquisitionApproach: 'Preferred acquisition approach',
+    targetContractAwardDate: '',
+    targetCompletionDate: '',
     security: {
       isApproved: null,
       isBeingReviewed: ''
     },
+    zeroTrustAlignment: '',
     hosting: {
       type: '',
       location: '',
+      cloudStrategy: '',
       cloudServiceType: ''
     },
     hasUserInterface: '',
     pros: 'Preferred pros',
     cons: 'Preferred cons',
     costSavings: 'Preferred cost savings',
+    workforceTrainingReqs: '',
     estimatedLifecycleCost: {
       development: {
         label: 'Development',

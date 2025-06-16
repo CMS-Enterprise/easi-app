@@ -28,6 +28,15 @@ const RequestDescriptionReview = ({
       </ReviewRow>
       <ReviewRow className="margin-bottom-3">
         <div className="line-height-body-3">
+          <DescriptionTerm term="What internal collaboration or vendor engagement will support the recommended work?" />
+          <DescriptionDefinition
+            className="text-pre-wrap"
+            definition={values.collaborationNeeded}
+          />
+        </div>
+      </ReviewRow>
+      <ReviewRow className="margin-bottom-3">
+        <div className="line-height-body-3">
           <DescriptionTerm term="What is the current process that you are using for this work, or how is this need currently being met?" />
           <DescriptionDefinition
             className="text-pre-wrap"
@@ -59,6 +68,19 @@ const RequestDescriptionReview = ({
           <DescriptionDefinition
             className="text-pre-wrap"
             definition={values.successIndicators}
+          />
+        </div>
+      </ReviewRow>
+      <ReviewRow className="margin-bottom-3">
+        <div className="line-height-body-3">
+          <DescriptionTerm term="How will you implement or respond to the recommendations provided by the GRT?" />
+          <DescriptionDefinition
+            className="text-pre-wrap"
+            definition={
+              values.responseToGRTFeedback
+                ? values.responseToGRTFeedback
+                : 'N/A'
+            }
           />
         </div>
       </ReviewRow>
