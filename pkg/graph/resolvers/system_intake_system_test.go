@@ -47,7 +47,7 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 			},
 			{
 				CedarSystemID:          &systemID2,
-				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "USED_IN_TECH_SOLUTION"},
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "IMPACTS_SELECTED_SYSTEM"},
 			},
 			{
 				CedarSystemID:          &systemID3,
@@ -157,7 +157,7 @@ func (s *ResolverSuite) TestSystemIntakesByCedarSystemID() {
 			},
 			{
 				CedarSystemID:          &systemID2,
-				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "USED_IN_TECH_SOLUTION"},
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "IMPACTS_SELECTED_SYSTEM"},
 			},
 			{
 				CedarSystemID:          &systemID3,

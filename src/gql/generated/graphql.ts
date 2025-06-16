@@ -2665,11 +2665,11 @@ export type SystemRelationshipInput = {
 
 /** Types of System Relationships */
 export enum SystemRelationshipType {
+  IMPACTS_SELECTED_SYSTEM = 'IMPACTS_SELECTED_SYSTEM',
   OTHER = 'OTHER',
   PARTIAL_SUPORT = 'PARTIAL_SUPORT',
   PRIMARY_SUPPORT = 'PRIMARY_SUPPORT',
-  USED_IN_TECH_SOLUTION = 'USED_IN_TECH_SOLUTION',
-  USES_IN_TECH_SOLUTION = 'USES_IN_TECH_SOLUTION'
+  USES_OR_IMPACTED_BY_SELECTED_SYSTEM = 'USES_OR_IMPACTED_BY_SELECTED_SYSTEM'
 }
 
 /** Represents an admin note attached to a TRB request */

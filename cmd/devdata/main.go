@@ -787,7 +787,7 @@ func main() {
 			},
 			{
 				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"),
-				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "USED_IN_TECH_SOLUTION"},
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "IMPACTS_SELECTED_SYSTEM"},
 			},
 		},
 	)
@@ -808,7 +808,7 @@ func main() {
 			},
 			{
 				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC3D}"),
-				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "USED_IN_TECH_SOLUTION"},
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "IMPACTS_SELECTED_SYSTEM"},
 			},
 		},
 	)
@@ -829,7 +829,7 @@ func main() {
 			},
 			{
 				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"),
-				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "USED_IN_TECH_SOLUTION"},
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "IMPACTS_SELECTED_SYSTEM"},
 			},
 		},
 	)
@@ -850,7 +850,7 @@ func main() {
 			},
 			{
 				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC6G}"),
-				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "USED_IN_TECH_SOLUTION"},
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "IMPACTS_SELECTED_SYSTEM"},
 			},
 		},
 	)
@@ -882,7 +882,7 @@ func main() {
 			},
 			{
 				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"),
-				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "USED_IN_TECH_SOLUTION"},
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "IMPACTS_SELECTED_SYSTEM"},
 			},
 		},
 	)
@@ -905,7 +905,7 @@ func main() {
 			},
 			{
 				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC6G}"),
-				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "USED_IN_TECH_SOLUTION"},
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "IMPACTS_SELECTED_SYSTEM"},
 			},
 		},
 	)
