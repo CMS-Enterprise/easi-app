@@ -8,7 +8,6 @@ import {
 import classNames from 'classnames';
 
 import CollapsableLink from 'components/CollapsableLink';
-import Divider from 'components/Divider';
 import UswdsReactLink from 'components/LinkWrapper';
 import { ArticleComponentProps } from 'types/articles';
 
