@@ -69,7 +69,7 @@ const GovernanceOverviewContent = ({
       <div className="tablet:grid-col-8">
         <h2 className="font-heading-xl margin-bottom-2">{t('stepsHeading')}</h2>
 
-        <GovProcessCollapse className="margin-bottom-1 text-bold" />
+        <GovProcessCollapse className="margin-bottom-1" />
 
         <ProcessList className="margin-top-2 border-bottom border-bottom-width-1px border-base-lighter margin-bottom-4">
           {processSteps
