@@ -4,8 +4,7 @@ import { Link, useLocation, useParams } from 'react-router-dom';
 import {
   Breadcrumb,
   BreadcrumbBar,
-  BreadcrumbLink,
-  Icon
+  BreadcrumbLink
 } from '@trussworks/react-uswds';
 
 import GovernanceOverviewContent from 'components/GovernanceOverview';
@@ -43,23 +42,24 @@ const GovernanceOverview = () => {
         </Breadcrumb>
         <Breadcrumb current>{t('intake:navigation.startRequest')}</Breadcrumb>
       </BreadcrumbBar>
-      <PageHeading className="margin-bottom-2">{t('heading')}</PageHeading>
+
+      <PageHeading className="margin-bottom-0">{t('heading')}</PageHeading>
+      <span className="text-base-dark margin-right-2">
+        {t('changeRequestTypeCopy')}
+      </span>
       <Link
         to={{
           pathname: `/system/request-type/${systemId || ''}`,
           search: linkCedarSystemIdQs,
           state: { isNew }
         }}
-        className="display-flex flex-align-center text-primary"
+        className="text-primary"
       >
-        <Icon.NavigateBefore className="text-no-underline" />
-        <span>{t('intake:navigation.changeRequestType')}</span>
+        {t('intake:navigation.changeRequestType')}
       </Link>
+
       <p className="line-height-body-5 font-body-lg text-light">
         {t('subheading')}
-      </p>
-      <p className="easi-governance-overview__indented-body">
-        {t('processUse')}
       </p>
 
       <GovernanceOverviewContent />

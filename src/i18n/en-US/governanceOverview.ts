@@ -1,19 +1,18 @@
 const governanceOverview = {
-  heading: 'Add a new system or service',
+  heading: 'IT Governance request',
+  changeRequestTypeCopy: 'Add a system, service, or project',
   subheading:
-    'To add a new system or service, you need to go through a set of steps to get reviewed by the Governance Review Board (GRB).',
-  processUse:
-    "Use this process only if you'd like to add a new system, service or make major changes and upgrades to an existing one.",
+    'The EASi IT Governance process connects you with the resources, people and services that you need in order to request a CMS Life Cycle ID and get approval for your project or IT expenditure. The Intake Request form is the first step in the overall process and will provide the Governance Admin Team with a brief budgetary, contractual, and conceptual overview of your project. Upon submission of the Intake Request form, you will receive an automatic email from EASi, and a Governance Admin Team member will soon follow up regarding next steps. Listed below is an overview of all the steps involved in the IT Governance process.',
   info: {
     intro: 'Working through this step-by-step process will help you:',
     listItems: [
-      'Work with GRT Subject Matter Experts (SMEs) to refine your Business Case',
-      'Justify your Business Case to the GRB',
-      'Complete or initiate any new requirements from the GRT and/or GRB',
-      'Get a Life Cycle ID (LCID) certifying compliance with HHS standards for IT investments to use on your acquisition documentation'
+      'work with Governance Review Team (GRT) Subject Matter Experts (SMEs) to refine your Business Case',
+      'justify your Business Case to the GRB',
+      'complete or initiate any new requirements from the GRT and/or GRB',
+      'get a Life Cycle ID (LCID) certifying compliance with HHS standards for IT investments to use on your acquisition documentation'
     ],
     timeline:
-      'It can take 4 to 6 weeks to go through all the steps and get a decision.'
+      'It may take up to 4 to 6 weeks to go through all the steps in the IT Governance process and receive a decision from the GRB.'
   },
   stepsHeading: 'Steps in the governance process',
   steps: [

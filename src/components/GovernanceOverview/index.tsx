@@ -52,24 +52,20 @@ const GovernanceOverviewContent = ({
   });
   return (
     <div className={classNames('governance-overview__content', className)}>
-      <div
-        className={`overflow-hidden padding-y-1${
-          helpArticle && ' bg-base-lightest padding-x-2 margin-bottom-6'
-        }`}
-      >
-        <p>{t('info.intro')}</p>
+      <div className="bg-base-lightest padding-2 margin-bottom-6">
+        <p className="margin-0">{t('info.intro')}</p>
         <ul className="padding-left-205">
           {(
             t('info.listItems', {
               returnObjects: true
             }) as string[]
           ).map(item => (
-            <li className="margin-y-1" key={item}>
+            <li className="line-height-sans-4" key={item}>
               {item}
             </li>
           ))}
         </ul>
-        <p>{t('info.timeline')}</p>
+        <p className="margin-0">{t('info.timeline')}</p>
       </div>
       <div className="tablet:grid-col-6">
         <h2 className="font-heading-xl margin-bottom-2">{t('stepsHeading')}</h2>
