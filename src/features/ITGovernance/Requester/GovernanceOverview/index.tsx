@@ -31,7 +31,7 @@ const GovernanceOverview = () => {
 
   return (
     <MainContent
-      className="easi-governance-overview grid-container margin-bottom-2"
+      className="easi-governance-overview grid-container margin-bottom-10"
       data-testid="governance-overview"
     >
       <BreadcrumbBar variant="wrap">
@@ -65,17 +65,31 @@ const GovernanceOverview = () => {
       <GovernanceOverviewContent />
 
       {systemId && (
-        <UswdsReactLink
-          className="usa-button margin-bottom-5"
-          variant="unstyled"
-          to={{
-            pathname: `/system/link/${systemId}`,
-            search: linkCedarSystemIdQs,
-            state: { isNew }
-          }}
-        >
-          {t('getStarted')}
-        </UswdsReactLink>
+        <div className="margin-top-4">
+          <UswdsReactLink
+            className="usa-button
+            usa-button--outline"
+            variant="unstyled"
+            to={{
+              pathname: `/system/request-type/${systemId || ''}`,
+              search: linkCedarSystemIdQs,
+              state: { isNew }
+            }}
+          >
+            {t('technicalAssistance:button.back')}
+          </UswdsReactLink>
+          <UswdsReactLink
+            className="usa-button"
+            variant="unstyled"
+            to={{
+              pathname: `/system/link/${systemId}`,
+              search: linkCedarSystemIdQs,
+              state: { isNew }
+            }}
+          >
+            {t('technicalAssistance:button.continue')}
+          </UswdsReactLink>
+        </div>
       )}
     </MainContent>
   );
