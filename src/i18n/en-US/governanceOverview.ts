@@ -17,61 +17,57 @@ const governanceOverview = {
   stepsHeading: 'Steps in the governance process',
   steps: [
     {
-      heading: 'Fill the Intake Request form',
+      heading: 'Fill out the Intake Request form',
       content:
         'Tell the Governance Admin Team about your project or idea and upload any existing documentation.'
     },
     {
       heading: 'Feedback from initial review',
       content:
-        "The Governance admin team will review your Intake Request form and decide if it it needs further governance. If it does, they'll direct you to go through the remaining steps."
+        'The Governance Admin Team will review your Intake Request form and decide if it needs further governance. If it does, they’ll direct you to go through any additional steps of this governance process that are required, as outlined below.'
     },
     {
-      heading: 'Prepare your Business Case',
-      content: 'Draft different solutions and the corresponding costs involved.'
-    },
-    {
-      heading: 'Attend the Governance Review Team meeting',
+      heading: 'Prepare a Business Case',
       content:
-        'Discuss your draft Business Case with the Governance Review Team (GRT). They will give you feedback and help you refine your Business Case before you present to the Governance Review Board (GRB).',
+        'Draft different solutions to your business need and document any corresponding costs involved for each solution.'
+    },
+    {
+      heading: 'Attend the Governance Review Team (GRT) meeting',
+      content:
+        'Discuss your draft Business Case with the GRT. They may give you feedback and work with you to refine your Business Case before you share it with the GRB. If the GRT has any additional comments or feedback after the meeting, they may ask you to make additional updates to your Business Case.',
       link: {
         text: 'Prepare for the GRT meeting (opens in new tab)',
         path: '/help/it-governance/prepare-for-grt'
       }
     },
     {
-      heading: 'Feedback from the Governance Review Team',
+      heading: 'Submit your Business Case for final approval',
       content:
-        'If the Governance Review Team has any additional comments or feedback, they may ask you to update your Business Case before submitting it to the Governance Review Board.'
+        'Update your Business Case based on any feedback or requirements from the GRT and submit it to the GRB via EASi.'
     },
     {
-      heading: 'Submit your final Business Case',
+      heading: 'Get approval from the Governance Review Board (GRB)',
       content:
-        'Update your Business Case based on feedback and incorporate any requirements from the review meeting or Governance Review Team for submission to the Governance Review Board.'
-    },
-    {
-      heading: 'Attend the Governance Review Board Meeting',
-      content:
-        'Present your Business Case to the Governance Review Board. The GRB will discuss and make a decision based on your Business Case as well as any recommendations from the Governance Review Team.',
+        'Depending on the complexity of your request and the costs involved, the Governance Admin Team may ask that you get approval from the GRB. This may be completed asynchronously within EASi, or they may ask you to present your Business Case at a GRB meeting. The GRB will discuss and make decisions based on any or all of the following: your Intake Request, business need, Business Case, and recommendations from the GRT.',
       link: {
-        text: 'Prepare for the GRB review (opens in new tab)',
+        text: 'Prepare for the GRB meeting (opens in new tab)',
         path: '/help/it-governance/prepare-for-grb'
       }
     },
     {
       heading: 'Decision and next steps',
       content:
-        'If your request is ready to move forward, you will receive a unique Life Cycle ID (LCID). If there are outstanding concerns, you will receive documented next steps to address in order to proceed.'
+        'If your request is approved, you will receive a unique Life Cycle ID. If it is not approved, you will receive a set of next steps or concerns to address.'
     }
   ],
   processExists: {
     heading: 'Why does the governance process exist?',
-    subheading: 'These steps make sure',
+    subheading: 'These steps make sure that:',
     listItems: [
       'your request fits into current CMS IT strategy',
-      'to avoid duplicate solutions that already exists at CMS',
-      'you have considered various solutions',
-      'CMS meets various policies and remains compliant'
+      'you avoid duplicating solutions that already exist at CMS',
+      'you have considered a variety of solutions to meet your business need',
+      'CMS continues to meet all required policies and remains compliant'
     ]
   },
   getStarted: 'Get started'
