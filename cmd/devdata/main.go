@@ -407,7 +407,7 @@ func main() {
 	intakeID = uuid.MustParse("b0c1d2e3-f4a5-6789-abcd-ef0123456789")
 	intake = makeSystemIntakeAndProgressToStep(
 		ctx,
-		"Async GRB review in progress (without votes)",
+		"Async GRB review in progress",
 		&intakeID,
 		mock.PrincipalUser,
 		store,
@@ -417,7 +417,126 @@ func main() {
 			fillForm:           true,
 		},
 	)
+	createSystemIntakeGRBReviewers(
+		ctx,
+		store,
+		intake,
+		[]*models.CreateGRBReviewerInput{
+			{
+				EuaUserID:  mock.PrincipalUser,
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
+			},
+			{
+				EuaUserID:  "USR2",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCciioRep,
+			},
+			{
+				EuaUserID:  "BTMN",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleOther,
+			},
+			{
+				EuaUserID:  "ABCD",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
+			},
+			{
+				EuaUserID:  "A11Y",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
+			},
+		},
+	)
 	setupSystemIntakeGRBReview(ctx, store, intake, models.SystemIntakeGRBReviewTypeAsync, &futureMeetingDate)
+
+	intakeID = uuid.MustParse("c0d1e2f3-4567-89ab-cdef-0123456789ab")
+	intake = makeSystemIntakeAndProgressToStep(
+		ctx,
+		"Async GRB review in progress (with votes)",
+		&intakeID,
+		mock.PrincipalUser,
+		store,
+		models.SystemIntakeStepToProgressToGrbMeeting,
+		&progressOptions{
+			completeOtherSteps: true,
+			fillForm:           true,
+		},
+	)
+	createSystemIntakeGRBReviewers(
+		ctx,
+		store,
+		intake,
+		[]*models.CreateGRBReviewerInput{
+			{
+				EuaUserID:  mock.PrincipalUser,
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
+			},
+			{
+				EuaUserID:  "USR2",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCciioRep,
+			},
+			{
+				EuaUserID:  "USR3",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleNonVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleSubjectMatterExpert,
+			},
+			{
+				EuaUserID:  "USR4",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleAlternate,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleOther,
+			},
+			{
+				EuaUserID:  "BTMN",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleOther,
+			},
+			{
+				EuaUserID:  "ABCD",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
+			},
+			{
+				EuaUserID:  "A11Y",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
+			},
+		},
+	)
+	setupSystemIntakeGRBReview(ctx, store, intake, models.SystemIntakeGRBReviewTypeAsync, &futureMeetingDate)
+
+	castSytemIntakeGRBReviewerVote(ctx, store, models.CastSystemIntakeGRBReviewerVoteInput{
+		SystemIntakeID: intake.ID,
+		Vote:           models.SystemIntakeAsyncGRBVotingOptionNoObjection,
+	})
+
+	grbReviewerCtx := userCtxNonAdmin("USR2")
+	castSytemIntakeGRBReviewerVote(grbReviewerCtx, store, models.CastSystemIntakeGRBReviewerVoteInput{
+		SystemIntakeID: intake.ID,
+		Vote:           models.SystemIntakeAsyncGRBVotingOptionNoObjection,
+	})
+
+	grbReviewerCtx = userCtxNonAdmin("BTMN")
+	castSytemIntakeGRBReviewerVote(grbReviewerCtx, store, models.CastSystemIntakeGRBReviewerVoteInput{
+		SystemIntakeID: intake.ID,
+		Vote:           models.SystemIntakeAsyncGRBVotingOptionNoObjection,
+	})
+
+	grbReviewerCtx = userCtxNonAdmin("ABCD")
+	castSytemIntakeGRBReviewerVote(grbReviewerCtx, store, models.CastSystemIntakeGRBReviewerVoteInput{
+		SystemIntakeID: intake.ID,
+		Vote:           models.SystemIntakeAsyncGRBVotingOptionNoObjection,
+	})
+
+	grbReviewerCtx = userCtxNonAdmin("A11Y")
+	castSytemIntakeGRBReviewerVote(grbReviewerCtx, store, models.CastSystemIntakeGRBReviewerVoteInput{
+		SystemIntakeID: intake.ID,
+		Vote:           models.SystemIntakeAsyncGRBVotingOptionObjection,
+		VoteComment:    helpers.PointerTo("I object to this request because it is terrible."),
+	})
 
 	intakeID = uuid.MustParse("d80cf287-35cb-4e76-b8b3-0467eabd75b8")
 	makeSystemIntakeAndProgressToStep(

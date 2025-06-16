@@ -7,7 +7,6 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
 
-	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -33,65 +32,32 @@ func setupSystemIntakeGRBReview(
 		panic("End date must be set for GRB review")
 	}
 
-	// Standard meeting type - set end date and start review
+	// Async review type - set end date and start review
 
-	if grbReviewType == models.SystemIntakeGRBReviewTypeStandard {
-		intake = updateGRBReviewStandardEndDate(
+	if grbReviewType == models.SystemIntakeGRBReviewTypeAsync {
+		intake = startGRBReviewAsync(
 			ctx,
 			store,
 			intake.ID,
 			endDate,
 		)
 
-		startGRBReviewStandard(
-			ctx,
-			store,
-			intake.ID,
-		)
-
 		return intake
 	}
 
-	// Async review type - add reviewers, set end date, and start review
+	// Standard meeting type - set end date and start review
 
-	createSystemIntakeGRBReviewers(
-		ctx,
-		store,
-		intake,
-		[]*models.CreateGRBReviewerInput{
-			{
-				EuaUserID:  mock.PrincipalUser,
-				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
-				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
-			},
-			{
-				EuaUserID:  "USR2",
-				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
-				GrbRole:    models.SystemIntakeGRBReviewerRoleCciioRep,
-			},
-			{
-				EuaUserID:  "BTMN",
-				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
-				GrbRole:    models.SystemIntakeGRBReviewerRoleOther,
-			},
-			{
-				EuaUserID:  "ABCD",
-				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
-				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
-			},
-			{
-				EuaUserID:  "A11Y",
-				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
-				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
-			},
-		},
-	)
-
-	intake = startGRBReviewAsync(
+	intake = updateGRBReviewStandardEndDate(
 		ctx,
 		store,
 		intake.ID,
 		endDate,
+	)
+
+	startGRBReviewStandard(
+		ctx,
+		store,
+		intake.ID,
 	)
 
 	return intake
