@@ -182,6 +182,7 @@ const RequestTypeForm = () => {
                 <Button
                   type="button"
                   className="margin-right-1"
+                  data-testid={`start-button--${type.toLowerCase()}`}
                   onClick={() => handleCreateIntake(type)}
                 >
                   {t('requestTypeForm.start')}
