@@ -37,6 +37,7 @@ import Label from 'components/Label';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
+import RequiredFieldsText from 'components/RequiredFieldsText';
 import processStages from 'constants/enums/processStages';
 import {
   CMS_AI_EMAIL,
@@ -202,18 +203,19 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
         as={<Alert type="error" />}
       />
 
-      <PageHeading className="margin-bottom-3">
+      <PageHeading className="margin-top-4 margin-bottom-1">
         {t('requestDetails.heading')}
       </PageHeading>
+      <p className="font-body-lg line-height-body-5 margin-top-0 margin-bottom-1">
+        {t('requestDetails.description')}
+      </p>
 
       {systemIntake.requestFormState ===
         SystemIntakeFormState.EDITS_REQUESTED && (
         <FeedbackBanner id={systemIntake.id} type="Intake Request" />
       )}
 
-      <p className="line-height-body-6">{t('requestDetails.description')}</p>
-
-      <MandatoryFieldsAlert className="tablet:grid-col-6" />
+      <RequiredFieldsText className="margin-top-0 margin-bottom-5" />
 
       <hr className="margin-bottom-1 margin-top-3 opacity-30" aria-hidden />
       <span className="font-body-sm text-bold">
@@ -225,7 +227,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
         onSubmit={handleSubmit(() =>
           submit(() => history.push('contract-details'), true)
         )}
-        className="maxw-none tablet:grid-col-6 margin-bottom-7"
+        className="maxw-none tablet:grid-col-9 margin-bottom-7"
       >
         <FieldGroup scrollElement="requestName" error={!!errors.requestName}>
           <Label htmlFor="requestName">
@@ -547,7 +549,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           {/* If 'Yes' is selected, display additional software props (software MultiSelect (to come later) and Acquisition Approach Checkboxes) */}
           {watch('usingSoftware') === 'YES' && (
             <div className="margin-left-4 margin-bottom-3">
-              {/* TODO: We eventually want to display a ComboBox/MultiSelect of software the requester can select, before we 
+              {/* TODO: We eventually want to display a ComboBox/MultiSelect of software the requester can select, before we
                 can do this we need a list of "CMS known" software and/or vendors that is currently being evaluated by ICPG / DVSM */}
 
               <Controller
@@ -642,7 +644,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                 {...field}
                 inputRef={ref}
                 id="usingSoftwareNotSure"
-                label={t('Not Sure')}
+                label={t('requestDetails.softwareAcquisition.notSure')}
                 checked={value === 'NOT_SURE'}
                 onChange={() => {
                   field.onChange('NOT_SURE');
@@ -664,13 +666,13 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           border={false}
           taskListUrl={saveExitLink}
           submit={() => submit(() => history.push(saveExitLink))}
-          className="margin-top-4"
+          className="margin-top-5 border-top border-base-light padding-top-1"
         />
       </Form>
 
       <AutoSave values={watch()} onSave={submit} debounceDelay={3000} />
 
-      <PageNumber currentPage={2} totalPages={5} />
+      <PageNumber currentPage={2} totalPages={5} className="margin-bottom-15" />
     </>
   );
 };

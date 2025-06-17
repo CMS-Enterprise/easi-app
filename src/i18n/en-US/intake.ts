@@ -356,12 +356,12 @@ const intake = {
     completed: 'Completed {{completedDate}}',
     viewFullIntake: 'View full Intake Request form',
     subsectionHeadings: {
-      projectConcept: 'Project Concept',
+      projectConcept: 'Project concept',
       collaboration: 'Collaboration',
       projectDetails: 'Project Details'
     },
     description:
-      'Provide a brief explanation of the business need/issue/problem that the contract/request will address, including your current plans for how to address the need. This page should speak to what your contract/request accomplishes and how.',
+      'Provide a brief explanation of the business need, issue, or problem that the contract/request will address, including your current plans for how to address the need. This page should speak to what your contract/request accomplishes and how.',
     contractTitle: 'Contract/Request Title',
     contractTitleHelpText:
       'Your request title should match the title of your Acquisition Plan or Interagency Agreement.',
@@ -383,6 +383,7 @@ const intake = {
         'Do you plan to use any software products to fulfill your business needs?',
       usingSoftwareHelp:
         'This could include COTS products, infrastructure products, or other engineering and development tools. <dvsmEmail>Email the Division of Vendor and Software Management (DVSM)</dvsmEmail> to learn more about options at CMS related to software and Enterprise License Agreements (ELAs). If you mark "I\'m not sure", someone from DVSM may reach out to speak with you about available software and enterprise licenses.',
+      notSure: "I'm not sure",
       selectedLabel: 'Selected software',
       whichSoftwareLabel: 'Which software?',
       whichSoftwareHelp:

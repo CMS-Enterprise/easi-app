@@ -772,7 +772,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
       <AutoSave values={watch()} onSave={submit} debounceDelay={3000} />
 
-      <PageNumber currentPage={1} totalPages={5} />
+      <PageNumber currentPage={1} totalPages={5} className="margin-bottom-15" />
     </>
   );
 };
