@@ -134,6 +134,11 @@ const intake = {
       subheading: 'Your reference ID is {{referenceId}}',
       homeCta: 'Go back to EASi homepage',
       taskListCta: 'Go back to governance task list'
+    },
+    success: {
+      heading: 'Success!',
+      description:
+        'Your Intake Request form has been submitted. You will receive an automatic email, and a Governance Admin Team member will reach out shortly regarding next steps.'
     }
   },
   lifecycleId: 'Life Cycle ID',
