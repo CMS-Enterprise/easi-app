@@ -283,27 +283,31 @@ const intake = {
   },
   contactDetails: {
     intakeProcessDescription:
-      'The EASi System Intake process can guide you through all stages of your procurement/project, connecting you with the resources, people and services that you need. Please complete and submit this CMS IT Intake form to engage with the CMS IT Governance review process. This is the first step to receive a CMS IT Life Cycle ID. Upon submission, you will receive an email promptly from the IT_Governance mailbox, and an IT Governance Team member will reach out regarding next steps.',
+      'Provide the names of any team members or key collaborators for this project. You must provide a name for at least the project’s Business Owner and Project/Product Manager or Lead, but may also use the additional contacts section to list and team members or subject matter experts (SMEs) critical to this project. This will help the Governance Admin Team contact the correct individuals during this IT Governance process.',
     heading: 'Contact details',
-    requester: 'Requester',
+    requesterInformation: 'Requester information',
+    requester: 'Requester name',
     requesterComponent: 'Requester component',
     businessOwner: {
+      info: 'CMS Business Owner information',
       sameAsRequester: 'CMS Business Owner is same as requester',
       name: 'CMS Business Owner',
       helpText:
-        'This person owns a line of business related to this request and will champion the request moving forward',
+        'This person owns a line of business related to this request and will champion the request moving forward.',
       nameField: 'CMS Business Owner name',
+      searchesEUADatabase: 'This field searches CMS’ EUA database.',
       component: 'CMS Business Owner component',
       email: 'CMS Business Owner email'
     },
     productManager: {
-      sameAsRequester: 'CMS Product Manager is same as requester',
-      name: 'CMS Project/Product Manager, or lead',
+      sameAsRequester:
+        'CMS Project/Product Manager or Lead is same as requester',
+      name: 'CMS Project/Product Manager or Lead information',
       helpText:
-        'This person may be contacted for follow ups and to understand the state of the contract',
-      nameField: 'CMS Project/Product Manager, or lead name',
-      component: 'CMS Product Manager component',
-      email: 'CMS Product Manager email'
+        'This person may be contacted for follow ups and to understand the state of the contract.',
+      nameField: 'CMS Project/Product Manager or Lead name',
+      component: 'CMS Project/Product Manager or Lead component',
+      email: 'CMS Project/Product Manager or Lead email'
     },
     isso: {
       label:
@@ -315,7 +319,7 @@ const intake = {
       email: 'ISSO email'
     },
     additionalContacts: {
-      titleContacts: 'Additional contacts',
+      titleContacts: 'Additional team members and project points of contact',
       titleRecipients: 'Choose recipients',
       recipientsSelected: '{{count}} recipients selected',
       showMore: 'Show {{count}} more recipients',
