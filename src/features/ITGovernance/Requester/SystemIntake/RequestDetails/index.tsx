@@ -216,18 +216,15 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
 
       <RequiredFieldsText className="margin-top-0 margin-bottom-5" />
 
-      <hr className="margin-bottom-1 margin-top-3 opacity-30" aria-hidden />
-      <span className="font-body-sm text-bold">
-        {' '}
-        {t('requestDetails.subsectionHeadings.projectConcept')}
-      </span>
-
       <Form
         onSubmit={handleSubmit(() =>
           submit(() => history.push('contract-details'), true)
         )}
-        className="maxw-none tablet:grid-col-9 margin-bottom-7"
+        className="maxw-none tablet:grid-col-9 margin-bottom-5 border-top border-base-light padding-top-1"
       >
+        <span className="font-body-md text-bold">
+          {t('requestDetails.subsectionHeadings.projectConcept')}
+        </span>
         <FieldGroup scrollElement="requestName" error={!!errors.requestName}>
           <Label htmlFor="requestName">
             {t('requestDetails.contractTitle')}

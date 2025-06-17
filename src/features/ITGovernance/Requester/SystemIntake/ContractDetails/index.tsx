@@ -32,6 +32,7 @@ import HelpText from 'components/HelpText';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
+import RequiredFieldsText from 'components/RequiredFieldsText';
 import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
 import { ContractDetailsForm } from 'types/systemIntake';
 import flattenFormErrors from 'utils/flattenFormErrors';
@@ -261,9 +262,12 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
 
       <ErrorMessage errors={errors} name="root" as={<Alert type="error" />} />
 
-      <PageHeading className="margin-bottom-3">
+      <PageHeading className="margin-top-4 margin-bottom-1">
         {t('contractDetails.heading')}
       </PageHeading>
+      <p className="font-body-lg line-height-body-5 margin-top-0 margin-bottom-1">
+        {t('contractDetails.description')}
+      </p>
 
       {systemIntake.requestFormState ===
         SystemIntakeFormState.EDITS_REQUESTED && (
@@ -274,14 +278,14 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
         />
       )}
 
-      <MandatoryFieldsAlert className="tablet:grid-col-6" />
+      <RequiredFieldsText className="margin-top-0 margin-bottom-5" />
 
       <EasiFormProvider<ContractDetailsForm> {...form}>
         <Form
           onSubmit={handleSubmit(() =>
             submit(() => history.push('documents'), true)
           )}
-          className="maxw-none tablet:grid-col-6 margin-bottom-7"
+          className="maxw-none tablet:grid-col-9 margin-bottom-7"
         >
           <FieldGroup
             scrollElement="fundingSources"

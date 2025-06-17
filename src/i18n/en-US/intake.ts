@@ -413,6 +413,8 @@ const intake = {
   },
   contractDetails: {
     heading: 'Contract details',
+    description:
+      'Document details about your funding, budget, and contract. These details will help assess the spending scope of your project and request.',
     fundingSources: {
       label: 'Which existing funding sources will fund this project?',
       helpText:
