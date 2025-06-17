@@ -29,7 +29,6 @@ import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
 import FundingSources from 'components/FundingSources';
 import HelpText from 'components/HelpText';
-import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import RequiredFieldsText from 'components/RequiredFieldsText';
@@ -285,8 +284,11 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
           onSubmit={handleSubmit(() =>
             submit(() => history.push('documents'), true)
           )}
-          className="maxw-none tablet:grid-col-9 margin-bottom-7"
+          className="maxw-none tablet:grid-col-9 margin-bottom-5 border-top border-base-light padding-top-1"
         >
+          <p className="text-bold margin-y-0">
+            {t('contractDetails.fundingAndBudget')}
+          </p>
           <FieldGroup
             scrollElement="fundingSources"
             error={!!errors.fundingSources}
@@ -307,7 +309,10 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
             scrollElement="annualSpending.currentAnnualSpending"
             error={!!errors.annualSpending?.currentAnnualSpending}
           >
-            <Label htmlFor="annualSpending.currentAnnualSpending">
+            <Label
+              className="maxw-none"
+              htmlFor="annualSpending.currentAnnualSpending"
+            >
               {t('contractDetails.currentAnnualSpending')}
             </Label>
             <ErrorMessage
@@ -328,7 +333,10 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
             scrollElement="annualSpending.currentAnnualSpendingITPortion"
             error={!!errors.annualSpending?.currentAnnualSpendingITPortion}
           >
-            <Label htmlFor="annualSpending.currentAnnualSpendingITPortion">
+            <Label
+              className="maxw-none"
+              htmlFor="annualSpending.currentAnnualSpendingITPortion"
+            >
               {t('contractDetails.currentAnnualSpendingITPortion')}
             </Label>
             <ErrorMessage
@@ -349,7 +357,10 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
             scrollElement="annualSpending.plannedYearOneSpending"
             error={!!errors.annualSpending?.plannedYearOneSpending}
           >
-            <Label htmlFor="annualSpending.plannedYearOneSpending">
+            <Label
+              className="maxw-none"
+              htmlFor="annualSpending.plannedYearOneSpending"
+            >
               {t('contractDetails.plannedYearOneSpending')}
             </Label>
             <ErrorMessage
@@ -370,7 +381,10 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
             scrollElement="annualSpending.plannedYearOneSpendingITPortion"
             error={!!errors.annualSpending?.plannedYearOneSpendingITPortion}
           >
-            <Label htmlFor="annualSpending.plannedYearOneSpendingITPortion">
+            <Label
+              className="maxw-none"
+              htmlFor="annualSpending.plannedYearOneSpendingITPortion"
+            >
               {t('contractDetails.plannedYearOneSpendingITPortion')}
             </Label>
             <ErrorMessage
@@ -392,12 +406,13 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
             error={!!errors.contract?.hasContract}
           >
             <Fieldset>
-              <legend className="usa-label">
+              <Label
+                className="maxw-none"
+                htmlFor="contractHaveContract"
+                requiredMarker
+              >
                 {t('contractDetails.hasContract')}
-              </legend>
-              <HelpText className="margin-top-1" id="haContractHelpText">
-                {t('contractDetails.hasContractHelpText')}
-              </HelpText>
+              </Label>
               <ErrorMessage
                 errors={errors}
                 name="contract.hasContract"
@@ -488,14 +503,14 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
             border={false}
             taskListUrl={saveExitLink}
             submit={() => submit(() => history.push(saveExitLink))}
-            className="margin-top-4"
+            className="margin-top-5 border-top border-base-light padding-top-1"
           />
         </Form>
       </EasiFormProvider>
 
       <AutoSave values={watch()} onSave={submit} debounceDelay={3000} />
 
-      <PageNumber currentPage={3} totalPages={5} />
+      <PageNumber currentPage={3} totalPages={5} className="margin-bottom-15" />
     </>
   );
 };

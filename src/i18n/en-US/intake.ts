@@ -68,7 +68,7 @@ const intake = {
   viewFeedback: 'View feedback',
   fields: {
     projectName: 'Project name',
-    requester: 'Requester',
+    requester: 'Requester name',
     submissionDate: 'Submission date',
     requestFor: 'Request for',
     component: 'Component',
@@ -415,6 +415,7 @@ const intake = {
     heading: 'Contract details',
     description:
       'Document details about your funding, budget, and contract. These details will help assess the spending scope of your project and request.',
+    fundingAndBudget: 'Funding and budget',
     fundingSources: {
       label: 'Which existing funding sources will fund this project?',
       helpText:
@@ -465,7 +466,7 @@ const intake = {
     submissionDate: 'Submission date',
     contactDetails: 'Contact details',
     requesterComponent: 'Requester component',
-    cmsBusinessOwnerName: "CMS Business Owner's name",
+    cmsBusinessOwnerName: 'CMS Business Owner',
     cmsBusinessOwnerComponent: 'CMS Business Owner component',
     cmsProjectManagerName: 'CMS Project/Product Manager or Lead',
     cmsProjectManagerComponent: 'CMS Project/Product Manager or Lead component',

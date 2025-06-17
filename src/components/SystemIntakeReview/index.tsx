@@ -20,6 +20,7 @@ import './index.scss';
 
 type SystemIntakeReviewProps = {
   systemIntake: SystemIntakeFragmentFragment;
+  hideSubmissionDate?: boolean;
 };
 
 type FundingSourcesObject = {
@@ -30,7 +31,8 @@ type FundingSourcesObject = {
 };
 
 export const SystemIntakeReview = ({
-  systemIntake
+  systemIntake,
+  hideSubmissionDate = false
 }: SystemIntakeReviewProps) => {
   const { annualSpending, costs, contract, submittedAt, contractNumbers } =
     systemIntake;
@@ -113,7 +115,7 @@ export const SystemIntakeReview = ({
   };
 
   /* Component used to conditionally render software acquisition information depending on what is present.
-      Translate acquisition strategy enum values using i18n 
+      Translate acquisition strategy enum values using i18n
   */
 
   const SoftwareAcquisition = () => {
@@ -258,16 +260,18 @@ export const SystemIntakeReview = ({
   return (
     <div>
       <DescriptionList title={t('review.systemRequest')}>
-        <ReviewRow>
-          <div>
-            <DescriptionTerm term={t('review.submissionDate')} />
-            <DescriptionDefinition definition={getSubmissionDate()} />
-          </div>
-        </ReviewRow>
+        {!hideSubmissionDate && (
+          <ReviewRow>
+            <div>
+              <DescriptionTerm term={t('review.submissionDate')} />
+              <DescriptionDefinition definition={getSubmissionDate()} />
+            </div>
+          </ReviewRow>
+        )}
       </DescriptionList>
 
       <hr className="system-intake__hr" />
-      <h2 className="font-heading-xl">Contact details</h2>
+      <h2 className="font-heading-xl">{t('review.contactDetails')}</h2>
 
       <DescriptionList title={t('review.contactDetails')}>
         <ReviewRow>
@@ -324,7 +328,9 @@ export const SystemIntakeReview = ({
       </DescriptionList>
 
       <hr className="system-intake__hr" />
-      <h2 className="font-heading-xl">{t('review.requestDetails')}</h2>
+      <h2 className="font-heading-xl margin-top-3 margin-bottom-0">
+        {t('review.requestDetails')}
+      </h2>
 
       <DescriptionList title={t('review.requestDetails')}>
         <ReviewRow>
@@ -386,7 +392,9 @@ export const SystemIntakeReview = ({
       </DescriptionList>
 
       <hr className="system-intake__hr" />
-      <h2 className="font-heading-xl">Contract details</h2>
+      <h2 className="font-heading-xl margin-top-3 margin-bottom-0">
+        {t('contractDetails.heading')}
+      </h2>
 
       <DescriptionList title={t('review.contractDetails')}>
         <ReviewRow>
@@ -460,7 +468,9 @@ export const SystemIntakeReview = ({
       </DescriptionList>
 
       <hr className="system-intake__hr" />
-      <h2 className="font-heading-xl">{t('review.documents')}</h2>
+      <h2 className="font-heading-xl margin-top-3 margin-bottom-0">
+        {t('review.documents')}
+      </h2>
       <DocumentsTable
         systemIntakeId={systemIntake.id}
         documents={systemIntake.documents}

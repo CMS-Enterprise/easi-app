@@ -48,7 +48,7 @@ const Review = ({ systemIntake }: ReviewProps) => {
         />
       )}
 
-      <SystemIntakeReview systemIntake={systemIntake} />
+      <SystemIntakeReview systemIntake={systemIntake} hideSubmissionDate />
 
       <SummaryBox className="grid-col-6 margin-top-8 margin-bottom-5">
         <SummaryBoxHeading headingLevel="h3" className="margin-bottom-2">
