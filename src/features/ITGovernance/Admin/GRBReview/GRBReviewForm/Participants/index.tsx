@@ -14,6 +14,7 @@ import {
   useStartGRBReviewMutation,
   useUpdateSystemIntakeGRBReviewFormInputTimeframeAsyncMutation
 } from 'gql/generated/graphql';
+import { DateTime } from 'luxon';
 
 import Alert from 'components/Alert';
 import DatePickerFormatted from 'components/DatePickerFormatted';
@@ -72,8 +73,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
   });
   const {
     control,
-    formState: { errors },
-    watch
+    formState: { errors }
   } = form;
 
   const onSubmit: GRBReviewFormStepSubmit<ParticipantsFields> = async input => {
@@ -96,8 +96,6 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
       }
     });
   };
-
-  console.log(watch('grbReviewAsyncEndDate'));
 
   return (
     <EasiFormProvider<ParticipantsFields> {...form}>
@@ -207,45 +205,6 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
                           'setUpGrbReviewForm.participants.selectReviewEndDate.description'
                         )}
                       </HelpText>
-                      {/* <DatePicker
-                        id="grbReviewAsyncEndDate"
-                        {...field}
-                        value={field.value ?? ''}
-                        aria-describedby="selectReviewEndDateHelpText"
-                        // onChange={val => {
-                        //   if (!val) return;
-
-                        //   const dt = DateTime.fromFormat(val, 'MM/dd/yyyy');
-
-                        //   if (!dt.isValid) return;
-
-                        //   const formattedDate = dt
-                        //     .set({ hour: 21, minute: 0, second: 0 })
-                        //     .toISO({ suppressMilliseconds: true });
-
-                        //   field.onChange(formattedDate);
-                        // }}
-
-                        onChange={val => {
-                          if (!val) return;
-
-                          if (val === '') {
-                            field.onChange(val);
-                            return;
-                          }
-
-                          const dt = DateTime.fromFormat(val, 'MM/dd/yyyy');
-                          const formattedDate = dt
-                            .setZone('America/New_York')
-                            .set({ hour: 17, minute: 0, second: 0 })
-                            .toUTC()
-                            .toISO({ suppressMilliseconds: true });
-
-                          // if (!dt.isValid) return;
-
-                          field.onChange(formattedDate);
-                        }}
-                      /> */}
 
                       <DatePickerFormatted
                         id="grbReviewAsyncEndDate"
@@ -253,22 +212,10 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
                         dateInPastWarning
                         value={field.value ?? ''}
                         aria-describedby="selectReviewEndDateHelpText"
-                        // onChange={date => {
-                        //   if (date !== field.value) {
-                        //     field.onChange(date || ''); // Only update when there's a change
-                        //   }
-                        // }}
-                        // format={dt =>
-                        //   dt
-                        //     .setZone('America/New_York')
-                        //     .set({ hour: 17, minute: 0, second: 0 })
-                        //     .toUTC()
-                        //     .toISO({ suppressMilliseconds: true })
-                        // }
                         format={dt =>
-                          dt
-                            .set({ hour: 21, minute: 0, second: 0 })
-                            .toISO({ suppressMilliseconds: true })
+                          DateTime.utc(dt.year, dt.month, dt.day, 21).toISO({
+                            suppressMilliseconds: true
+                          })
                         }
                       />
                     </FormGroup>
