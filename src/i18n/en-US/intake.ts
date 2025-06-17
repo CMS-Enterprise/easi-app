@@ -461,6 +461,7 @@ const intake = {
   },
   review: {
     heading: 'Check your answers before sending',
+    edit: 'Edit this section',
     notSubmitted: 'Not yet submitted',
     systemRequest: 'System Request',
     submissionDate: 'Submission date',
