@@ -582,7 +582,7 @@ func main() {
 	)
 
 	intakeID = uuid.MustParse("d9c931c6-0858-494d-b991-e02a94a42f38")
-	makeSystemIntakeAndProgressToStep(
+	intake = makeSystemIntakeAndProgressToStep(
 		ctx,
 		"GRB meeting without date set",
 		&intakeID,
@@ -591,6 +591,43 @@ func main() {
 		models.SystemIntakeStepToProgressToGrbMeeting,
 		&progressOptions{
 			completeOtherSteps: true,
+		},
+	)
+	createSystemIntakeGRBReviewers(
+		ctx,
+		store,
+		intake,
+		[]*models.CreateGRBReviewerInput{
+			{
+				EuaUserID:  mock.PrincipalUser,
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
+			},
+			{
+				EuaUserID:  "BTMN",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleOther,
+			},
+			{
+				EuaUserID:  "ABCD",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleAlternate,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
+			},
+			{
+				EuaUserID:  "A11Y",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleNonVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
+			},
+			{
+				EuaUserID:  "USR2",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleSubjectMatterExpert,
+			},
+			{
+				EuaUserID:  "USR3",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleQioRep,
+			},
 		},
 	)
 
