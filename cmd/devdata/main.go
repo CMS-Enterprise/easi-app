@@ -259,7 +259,6 @@ func main() {
 		store,
 		models.SystemIntakeStepToProgressToGrbMeeting,
 		&progressOptions{
-			meetingDate:        &futureMeetingDate,
 			completeOtherSteps: true,
 			fillForm:           true,
 		},
@@ -281,13 +280,18 @@ func main() {
 			},
 			{
 				EuaUserID:  "ABCD",
-				VotingRole: models.SystemIntakeGRBReviewerVotingRoleAlternate,
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
 				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
 			},
 			{
 				EuaUserID:  "A11Y",
-				VotingRole: models.SystemIntakeGRBReviewerVotingRoleNonVoting,
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
 				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
+			},
+			{
+				EuaUserID:  "USR2",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleSubjectMatterExpert,
 			},
 		},
 	)
