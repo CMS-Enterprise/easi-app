@@ -4,7 +4,13 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, FormGroup, Grid, Label } from '@trussworks/react-uswds';
+import {
+  Button,
+  DatePicker,
+  FormGroup,
+  Grid,
+  Label
+} from '@trussworks/react-uswds';
 import {
   GetSystemIntakeGRBReviewDocument,
   SystemIntakeGRBReviewerFragment,
@@ -14,9 +20,9 @@ import {
   useStartGRBReviewMutation,
   useUpdateSystemIntakeGRBReviewFormInputTimeframeAsyncMutation
 } from 'gql/generated/graphql';
+import { DateTime } from 'luxon';
 
 import Alert from 'components/Alert';
-import DatePickerFormatted from 'components/DatePickerFormatted';
 import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import HelpText from 'components/HelpText';
@@ -204,8 +210,27 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
                           'setUpGrbReviewForm.participants.selectReviewEndDate.description'
                         )}
                       </HelpText>
+                      <DatePicker
+                        id="grbReviewAsyncEndDate"
+                        {...field}
+                        value={field.value ?? ''}
+                        aria-describedby="selectReviewEndDateHelpText"
+                        onChange={val => {
+                          if (!val) return;
 
-                      <DatePickerFormatted
+                          const dt = DateTime.fromFormat(val, 'MM/dd/yyyy');
+
+                          if (!dt.isValid) return;
+
+                          const formattedDate = dt
+                            .set({ hour: 21, minute: 0, second: 0 })
+                            .toISO({ suppressMilliseconds: true });
+
+                          field.onChange(formattedDate);
+                        }}
+                      />
+
+                      {/* <DatePickerFormatted
                         id="grbReviewAsyncEndDate"
                         {...field}
                         dateInPastWarning
@@ -223,7 +248,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
                             .toUTC()
                             .toISO({ suppressMilliseconds: true })
                         }
-                      />
+                      /> */}
                     </FormGroup>
                   </>
                 )}
