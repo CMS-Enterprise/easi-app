@@ -78,7 +78,8 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
   });
   const {
     control,
-    formState: { errors }
+    formState: { errors },
+    watch
   } = form;
 
   const onSubmit: GRBReviewFormStepSubmit<ParticipantsFields> = async input => {
@@ -101,6 +102,8 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
       }
     });
   };
+
+  console.log(watch('grbReviewAsyncEndDate'));
 
   return (
     <EasiFormProvider<ParticipantsFields> {...form}>
@@ -215,16 +218,36 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
                         {...field}
                         value={field.value ?? ''}
                         aria-describedby="selectReviewEndDateHelpText"
+                        // onChange={val => {
+                        //   if (!val) return;
+
+                        //   const dt = DateTime.fromFormat(val, 'MM/dd/yyyy');
+
+                        //   if (!dt.isValid) return;
+
+                        //   const formattedDate = dt
+                        //     .set({ hour: 21, minute: 0, second: 0 })
+                        //     .toISO({ suppressMilliseconds: true });
+
+                        //   field.onChange(formattedDate);
+                        // }}
+
                         onChange={val => {
                           if (!val) return;
 
+                          if (val === '') {
+                            field.onChange(val);
+                            return;
+                          }
+
                           const dt = DateTime.fromFormat(val, 'MM/dd/yyyy');
-
-                          if (!dt.isValid) return;
-
                           const formattedDate = dt
-                            .set({ hour: 21, minute: 0, second: 0 })
+                            .setZone('America/New_York')
+                            .set({ hour: 17, minute: 0, second: 0 })
+                            .toUTC()
                             .toISO({ suppressMilliseconds: true });
+
+                          // if (!dt.isValid) return;
 
                           field.onChange(formattedDate);
                         }}
