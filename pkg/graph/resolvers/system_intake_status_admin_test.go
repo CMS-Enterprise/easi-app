@@ -1,12 +1,14 @@
 package resolvers
 
 import (
+	"context"
 	"testing"
 	"time"
 
 	"github.com/guregu/null"
 	"github.com/stretchr/testify/assert"
 
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -29,6 +31,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				Step:             models.SystemIntakeStepINITIALFORM,
 				RequestFormState: models.SIRFSNotStarted,
 				State:            models.SystemIntakeStateOpen,
+				GrbReviewType:    models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISAInitialRequestFormInProgress,
 			expectError:    false,
@@ -39,6 +42,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				Step:             models.SystemIntakeStepINITIALFORM,
 				RequestFormState: models.SIRFSInProgress,
 				State:            models.SystemIntakeStateOpen,
+				GrbReviewType:    models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISAInitialRequestFormInProgress,
 			expectError:    false,
@@ -49,6 +53,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				Step:             models.SystemIntakeStepINITIALFORM,
 				RequestFormState: models.SIRFSEditsRequested,
 				State:            models.SystemIntakeStateOpen,
+				GrbReviewType:    models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISAInitialRequestFormInProgress,
 			expectError:    false,
@@ -59,6 +64,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				Step:             models.SystemIntakeStepINITIALFORM,
 				RequestFormState: models.SIRFSSubmitted,
 				State:            models.SystemIntakeStateOpen,
+				GrbReviewType:    models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISAInitialRequestFormSubmitted,
 			expectError:    false,
@@ -70,8 +76,128 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				RequestFormState: models.SIRFSSubmitted,
 				DecisionState:    models.SIDSNoDecision,
 				State:            models.SystemIntakeStateClosed,
+				GrbReviewType:    models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISAClosed,
+			expectError:    false,
+		},
+		{
+			testCase: "Sync GRB - Ready for review. GRB date missing",
+			intake: models.SystemIntake{
+				Step:             models.SystemIntakeStepGRBMEETING,
+				RequestFormState: models.SIRFSSubmitted,
+				DecisionState:    models.SIDSNoDecision,
+				State:            models.SystemIntakeStateOpen,
+				GrbReviewType:    models.SystemIntakeGRBReviewTypeStandard,
+			},
+			expectedStatus: models.SISAGrbMeetingReady,
+			expectError:    false,
+		},
+		{
+			testCase: "Sync GRB - Ready for review",
+			intake: models.SystemIntake{
+				Step:             models.SystemIntakeStepGRBMEETING,
+				RequestFormState: models.SIRFSSubmitted,
+				DecisionState:    models.SIDSNoDecision,
+				State:            models.SystemIntakeStateOpen,
+				GrbReviewType:    models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:          &tomorrow,
+			},
+			expectedStatus: models.SISAGrbMeetingReady,
+			expectError:    false,
+		},
+		{
+			testCase: "Sync GRB - Review Complete",
+			intake: models.SystemIntake{
+				Step:             models.SystemIntakeStepGRBMEETING,
+				RequestFormState: models.SIRFSSubmitted,
+				DecisionState:    models.SIDSNoDecision,
+				State:            models.SystemIntakeStateOpen,
+				GrbReviewType:    models.SystemIntakeGRBReviewTypeStandard,
+				GRBDate:          &yesterday,
+			},
+			expectedStatus: models.SISAGrbReviewComplete,
+			expectError:    false,
+		},
+		{
+			testCase: "Async GRB - Ready for review. Both times missing",
+			intake: models.SystemIntake{
+				Step:             models.SystemIntakeStepGRBMEETING,
+				RequestFormState: models.SIRFSSubmitted,
+				DecisionState:    models.SIDSNoDecision,
+				State:            models.SystemIntakeStateOpen,
+				GrbReviewType:    models.SystemIntakeGRBReviewTypeAsync,
+			},
+			expectedStatus: models.SISAGrbMeetingReady,
+			expectError:    false,
+		},
+		{
+			testCase: "Async GRB - Ready for review. Start time missing",
+			intake: models.SystemIntake{
+				Step:                  models.SystemIntakeStepGRBMEETING,
+				RequestFormState:      models.SIRFSSubmitted,
+				DecisionState:         models.SIDSNoDecision,
+				State:                 models.SystemIntakeStateOpen,
+				GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
+				GrbReviewAsyncEndDate: &tomorrow,
+			},
+			expectedStatus: models.SISAGrbMeetingReady,
+			expectError:    false,
+		},
+		{
+			testCase: "Async GRB - Ready for review. End time missing",
+			intake: models.SystemIntake{
+				Step:               models.SystemIntakeStepGRBMEETING,
+				RequestFormState:   models.SIRFSSubmitted,
+				DecisionState:      models.SIDSNoDecision,
+				State:              models.SystemIntakeStateOpen,
+				GrbReviewType:      models.SystemIntakeGRBReviewTypeAsync,
+				GRBReviewStartedAt: &yesterday,
+			},
+			expectedStatus: models.SISAGrbMeetingReady,
+			expectError:    false,
+		},
+		{
+			testCase: "Async GRB - In Review",
+			intake: models.SystemIntake{
+				Step:                  models.SystemIntakeStepGRBMEETING,
+				RequestFormState:      models.SIRFSSubmitted,
+				DecisionState:         models.SIDSNoDecision,
+				State:                 models.SystemIntakeStateOpen,
+				GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
+				GRBReviewStartedAt:    &yesterday,
+				GrbReviewAsyncEndDate: &tomorrow,
+			},
+			expectedStatus: models.SISAGrbReviewInProgress,
+			expectError:    false,
+		},
+		{
+			testCase: "Async GRB - Voting Past Due but no quorum",
+			intake: models.SystemIntake{
+				Step:                  models.SystemIntakeStepGRBMEETING,
+				RequestFormState:      models.SIRFSSubmitted,
+				DecisionState:         models.SIDSNoDecision,
+				State:                 models.SystemIntakeStateOpen,
+				GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
+				GRBReviewStartedAt:    helpers.PointerTo(yesterday.AddDate(0, 0, -1)),
+				GrbReviewAsyncEndDate: &yesterday,
+			},
+			expectedStatus: models.SISAGrbReviewInProgress,
+			expectError:    false,
+		},
+		{
+			testCase: "Async GRB - Review Complete. Voting ended manually",
+			intake: models.SystemIntake{
+				Step:                        models.SystemIntakeStepGRBMEETING,
+				RequestFormState:            models.SIRFSSubmitted,
+				DecisionState:               models.SIDSNoDecision,
+				State:                       models.SystemIntakeStateOpen,
+				GrbReviewType:               models.SystemIntakeGRBReviewTypeAsync,
+				GRBReviewStartedAt:          helpers.PointerTo(yesterday.AddDate(0, 0, -2)),
+				GrbReviewAsyncEndDate:       &tomorrow,
+				GrbReviewAsyncManualEndDate: helpers.PointerTo(yesterday.AddDate(0, 0, -1)),
+			},
+			expectedStatus: models.SISAGrbReviewComplete,
 			expectError:    false,
 		},
 	}
@@ -83,6 +209,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
 				DraftBusinessCaseState: models.SIRFSNotStarted,
 				State:                  models.SystemIntakeStateOpen,
+				GrbReviewType:          models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISADraftBusinessCaseInProgress,
 			expectError:    false,
@@ -93,6 +220,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
 				DraftBusinessCaseState: models.SIRFSInProgress,
 				State:                  models.SystemIntakeStateOpen,
+				GrbReviewType:          models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISADraftBusinessCaseInProgress,
 			expectError:    false,
@@ -103,6 +231,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
 				DraftBusinessCaseState: models.SIRFSEditsRequested,
 				State:                  models.SystemIntakeStateOpen,
+				GrbReviewType:          models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISADraftBusinessCaseInProgress,
 			expectError:    false,
@@ -113,6 +242,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
 				DraftBusinessCaseState: models.SIRFSSubmitted,
 				State:                  models.SystemIntakeStateOpen,
+				GrbReviewType:          models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISADraftBusinessCaseSubmitted,
 			expectError:    false,
@@ -124,6 +254,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				DraftBusinessCaseState: models.SIRFSSubmitted,
 				DecisionState:          models.SIDSNoDecision,
 				State:                  models.SystemIntakeStateClosed,
+				GrbReviewType:          models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISAClosed,
 			expectError:    false,
@@ -134,9 +265,10 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "GRT meeting not scheduled yet",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRTMEETING,
-				GRTDate: nil,
-				State:   models.SystemIntakeStateOpen,
+				Step:          models.SystemIntakeStepGRTMEETING,
+				GRTDate:       nil,
+				State:         models.SystemIntakeStateOpen,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISAGrtMeetingReady,
 			expectError:    false,
@@ -144,9 +276,10 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "GRT meeting happens tomorrow",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRTMEETING,
-				GRTDate: &tomorrow,
-				State:   models.SystemIntakeStateOpen,
+				Step:          models.SystemIntakeStepGRTMEETING,
+				GRTDate:       &tomorrow,
+				State:         models.SystemIntakeStateOpen,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISAGrtMeetingReady,
 			expectError:    false,
@@ -154,9 +287,10 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "GRT meeting happened yesterday",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRTMEETING,
-				GRTDate: &yesterday,
-				State:   models.SystemIntakeStateOpen,
+				Step:          models.SystemIntakeStepGRTMEETING,
+				GRTDate:       &yesterday,
+				State:         models.SystemIntakeStateOpen,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISAGrtMeetingComplete,
 			expectError:    false,
@@ -168,6 +302,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				GRTDate:       &yesterday,
 				State:         models.SystemIntakeStateClosed,
 				DecisionState: models.SIDSNoDecision,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISAClosed,
 			expectError:    false,
@@ -192,6 +327,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepFINALBIZCASE,
 				FinalBusinessCaseState: models.SIRFSNotStarted,
 				State:                  models.SystemIntakeStateOpen,
+				GrbReviewType:          models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISAFinalBusinessCaseInProgress,
 			expectError:    false,
@@ -202,6 +338,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepFINALBIZCASE,
 				FinalBusinessCaseState: models.SIRFSInProgress,
 				State:                  models.SystemIntakeStateOpen,
+				GrbReviewType:          models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISAFinalBusinessCaseInProgress,
 			expectError:    false,
@@ -212,6 +349,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepFINALBIZCASE,
 				FinalBusinessCaseState: models.SIRFSEditsRequested,
 				State:                  models.SystemIntakeStateOpen,
+				GrbReviewType:          models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISAFinalBusinessCaseInProgress,
 			expectError:    false,
@@ -222,6 +360,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepFINALBIZCASE,
 				FinalBusinessCaseState: models.SIRFSSubmitted,
 				State:                  models.SystemIntakeStateOpen,
+				GrbReviewType:          models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISAFinalBusinessCaseSubmitted,
 			expectError:    false,
@@ -233,6 +372,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				FinalBusinessCaseState: models.SIRFSSubmitted,
 				DecisionState:          models.SIDSNoDecision,
 				State:                  models.SystemIntakeStateClosed,
+				GrbReviewType:          models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISAClosed,
 			expectError:    false,
@@ -242,9 +382,10 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "GRB meeting not scheduled yet",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRBMEETING,
-				GRBDate: nil,
-				State:   models.SystemIntakeStateOpen,
+				Step:          models.SystemIntakeStepGRBMEETING,
+				GRBDate:       nil,
+				State:         models.SystemIntakeStateOpen,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISAGrbMeetingReady,
 			expectError:    false,
@@ -252,9 +393,10 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "GRB meeting happens tomorrow",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRBMEETING,
-				GRBDate: &tomorrow,
-				State:   models.SystemIntakeStateOpen,
+				Step:          models.SystemIntakeStepGRBMEETING,
+				GRBDate:       &tomorrow,
+				State:         models.SystemIntakeStateOpen,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISAGrbMeetingReady,
 			expectError:    false,
@@ -262,11 +404,12 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "GRB meeting happened yesterday",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRBMEETING,
-				GRBDate: &yesterday,
-				State:   models.SystemIntakeStateOpen,
+				Step:          models.SystemIntakeStepGRBMEETING,
+				GRBDate:       &yesterday,
+				State:         models.SystemIntakeStateOpen,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 			},
-			expectedStatus: models.SISAGrbMeetingComplete,
+			expectedStatus: models.SISAGrbReviewComplete,
 			expectError:    false,
 		},
 		{
@@ -276,6 +419,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				GRBDate:       &yesterday,
 				State:         models.SystemIntakeStateClosed,
 				DecisionState: models.SIDSNoDecision,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISAClosed,
 			expectError:    false,
@@ -289,6 +433,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				Step:          models.SystemIntakeStepDECISION,
 				DecisionState: models.SIDSLcidIssued,
 				State:         models.SystemIntakeStateOpen,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISALcidIssued,
 			expectError:    false,
@@ -299,6 +444,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				Step:          models.SystemIntakeStepDECISION,
 				DecisionState: models.SIDSLcidIssued,
 				State:         models.SystemIntakeStateClosed,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISALcidIssued,
 			expectError:    false,
@@ -312,6 +458,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				LifecycleExpiresAt: &yesterday,
 				LifecycleRetiresAt: &yesterday,
 				State:              models.SystemIntakeStateClosed,
+				GrbReviewType:      models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISALcidIssued,
 			expectError:    false,
@@ -325,6 +472,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 
 				DecisionState: models.SIDSLcidIssued,
 				State:         models.SystemIntakeStateClosed,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISALcidRetired,
 			expectError:    false,
@@ -338,6 +486,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 
 				DecisionState: models.SIDSLcidIssued,
 				State:         models.SystemIntakeStateClosed,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISALcidExpired,
 			expectError:    false,
@@ -348,6 +497,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				Step:          models.SystemIntakeStepDECISION,
 				DecisionState: models.SIDSNotGovernance,
 				State:         models.SystemIntakeStateOpen,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISANotGovernance,
 			expectError:    false,
@@ -358,6 +508,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				Step:          models.SystemIntakeStepDECISION,
 				DecisionState: models.SIDSNotGovernance,
 				State:         models.SystemIntakeStateClosed,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISANotGovernance,
 			expectError:    false,
@@ -368,6 +519,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				Step:          models.SystemIntakeStepDECISION,
 				DecisionState: models.SIDSNotApproved,
 				State:         models.SystemIntakeStateOpen,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISANotApproved,
 			expectError:    false,
@@ -378,6 +530,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				Step:          models.SystemIntakeStepDECISION,
 				DecisionState: models.SIDSNotApproved,
 				State:         models.SystemIntakeStateClosed,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISANotApproved,
 			expectError:    false,
@@ -388,6 +541,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				Step:          models.SystemIntakeStepFINALBIZCASE,
 				DecisionState: models.SIDSNotApproved,
 				State:         models.SystemIntakeStateClosed,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: models.SISAClosed,
 			expectError:    false,
@@ -399,6 +553,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				Step:          models.SystemIntakeStepDECISION,
 				DecisionState: models.SIDSNoDecision,
 				State:         models.SystemIntakeStateClosed,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: "",
 			expectError:    true,
@@ -410,6 +565,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				Step:          models.SystemIntakeStepDECISION,
 				DecisionState: models.SIDSNoDecision,
 				State:         models.SystemIntakeStateOpen,
+				GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 			},
 			expectedStatus: "",
 			expectError:    true,
@@ -430,7 +586,7 @@ func systemIntakeAdminStatusRunTestCollection(t *testing.T, tests []testSystemIn
 		for i := range tests {
 			test := tests[i]
 			t.Run(test.testCase, func(t *testing.T) {
-				status, err := CalculateSystemIntakeAdminStatus(&test.intake)
+				status, err := CalculateSystemIntakeAdminStatus(context.TODO(), &test.intake)
 				assert.EqualValues(t, test.expectedStatus, status)
 
 				if test.expectError {

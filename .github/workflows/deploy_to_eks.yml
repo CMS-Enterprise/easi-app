@@ -20,7 +20,7 @@ jobs:
   Deploy_to_EKS:
     runs-on: ubuntu-latest
     environment: "dev"
-    if: ${{ !contains( github.event.pull_request.labels.*.name, 'eks_ignore') }}
+    if: ${{ contains( github.event.pull_request.labels.*.name, 'eks_deploy') }}
     steps:
       - name: Check out code
         uses: actions/checkout@v4

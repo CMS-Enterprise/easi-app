@@ -1,0 +1,29 @@
+{{template "easi_header.gohtml"}}
+
+<p>There are {{.TimeRemaining}} left in the GRB review period for {{.ProjectTitle}}. At any time during the review period
+  you
+  may add additional time to the review, end it early, or send a reminder to the GRB reviewers who have not voted. Use
+  the link below to do any of those in EASi. GRB reviewers will also receive some automatic reminders to vote.</p>
+
+<p><strong><a href="{{.Link}}">View this request in EASi</a></strong></p>
+
+<div class="no-margin">
+  <p><strong>Request summary:</strong></p>
+  <p>Project title: {{.ProjectTitle}}</p>
+  <p>Requester: {{.RequesterName}}{{if .RequesterComponent}}, {{.RequesterComponent}}{{else}}{{end}}</p>
+  <p>GRB review dates: {{.DateInfo}}</p>
+  <p>Current votes: {{.VoteInfo}}</p>
+</div>
+<br>
+<div class="no-margin">
+  <p>Next steps:</p>
+  <ul>
+    <li>Wait for the end of the review timeframe, end the voting early, or add additional time to the voting period.
+    </li>
+    <li>Once the voting is over and a quorum of votes has been cast, issue a decision in EASi.</li>
+  </ul>
+</div>
+<br>
+<hr>
+
+<p>You will continue to receive email notifications about this request until it is closed.</p>

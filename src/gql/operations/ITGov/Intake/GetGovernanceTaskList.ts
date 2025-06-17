@@ -41,10 +41,43 @@ export default gql(/* GraphQL */ `
         decisionAndNextStepsStatus
       }
 
+      governanceRequestFeedbacks {
+        id
+        targetForm
+      }
+
+      submittedAt
+      updatedAt
+      grtDate
+      grbDate
+      grbReviewType
+      grbReviewStartedAt
+      grbReviewAsyncEndDate
+      grbReviewAsyncManualEndDate
+      grbReviewAsyncRecordingTime
+
+      step
+      state
+      decisionState
+
+      businessCase {
+        id
+      }
+
+      relationType
+      contractName
+      contractNumbers {
+        contractNumber
+      }
       systems {
         id
         name
         acronym
+      }
+      grbPresentationLinks {
+        presentationDeckFileName
+        presentationDeckFileStatus
+        presentationDeckFileURL
       }
     }
   }

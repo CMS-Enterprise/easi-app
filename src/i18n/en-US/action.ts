@@ -16,7 +16,7 @@ const action = {
       description:
         'Select which steps are required for this request, and move the request to another step in the Governance process.',
       accordion:
-        'Choose this action when this request is ready for a draft Business Case, GRT meeting, final Business Case, or GRB meeting. You will be able to select the step to move the request to. '
+        'Choose this action when this request is ready for a draft Business Case, GRT meeting, final Business Case, or GRB review. You will be able to select the step to move the request to. '
     },
     decisionOPEN: {
       title_NO_DECISION: 'Issue a decision or close this request',
@@ -398,17 +398,18 @@ const action = {
       'Adding a date here will replace any {{type}} date already entered.',
     FINAL_BUSINESS_CASE: 'Final Business Case',
     finalBusinessCaseDescription:
-      'Choose this step if this request is ready for a final Business Case and subsequent GRB meeting, either because the draft Business Case is complete, or because this request is skipping the GRT.',
-    GRB_MEETING: 'GRB meeting',
+      'Choose this step if this request is ready for a final Business Case and subsequent GRB review, either because the draft Business Case is complete, or because this request is skipping the GRT.',
+    GRB_MEETING: 'GRB review',
     grbMeetingDescription:
-      'Choose this step if the final Business case is complete and this team is ready to meet with the GRB.',
+      'Choose this step if the final Business case is complete and this team is ready to review their project with the GRB. The GRB review may happen asynchronously or in a meeting format.',
     feedback: 'Feedback for the requester (optional)',
     feedbackHelpText:
       'If there is any extra feedback you would like to give to the requester as they progress to the next step, input that feedback here. This includes any feedback from the GRT for the requester.',
     grbRecommendations: 'Recommendations for the GRB (optional)',
     grbRecommendationsHelpText:
       'Add any extra context or recommendations that you would like the Governance Review Board (GRB) to consider as a part of their evaluation of this project. The requester will be able to see these recommendations.',
-    summaryBoxHeading: 'Steps of the IT Governance process'
+    summaryBoxHeading: 'Steps of the IT Governance process',
+    asyncGRB: 'Check this box if the GRB review will be asynchronous'
   },
   notItGovRequest: {
     reason: 'Why is this not an IT Governance request? (optional)',
