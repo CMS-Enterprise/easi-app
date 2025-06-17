@@ -64,6 +64,7 @@ export function Pager({
               disabled={back.disabled}
               onClick={back.onClick}
               className="margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
+              data-testid="pager-back-button"
             >
               {back.text ?? t('button.back')}
             </Button>
@@ -80,6 +81,7 @@ export function Pager({
               disabled={next.disabled}
               onClick={next.onClick}
               className="margin-top-0"
+              data-testid="pager-next-button"
             >
               {next.text ?? t('button.next')}
             </Button>
