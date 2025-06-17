@@ -1973,6 +1973,11 @@ func (r *systemIntakeResolver) GrbPresentationLinks(ctx context.Context, obj *mo
 	return dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, obj.ID)
 }
 
+// CedarSystemRelationShips is the resolver for the cedarSystemRelationShips field.
+func (r *systemIntakeResolver) CedarSystemRelationShips(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeSystem, error) {
+	return dataloaders.GetSystemIntakeSystemsBySystemIntakeID(ctx, obj.ID)
+}
+
 // DocumentType is the resolver for the documentType field.
 func (r *systemIntakeDocumentResolver) DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*models.SystemIntakeDocumentType, error) {
 	return &models.SystemIntakeDocumentType{
@@ -2050,6 +2055,11 @@ func (r *systemIntakeNoteResolver) Author(ctx context.Context, obj *models.Syste
 // Editor is the resolver for the editor field.
 func (r *systemIntakeNoteResolver) Editor(ctx context.Context, obj *models.SystemIntakeNote) (*models.UserInfo, error) {
 	return resolvers.SystemIntakeNoteEditor(ctx, obj)
+}
+
+// SystemRelationshipType is the resolver for the systemRelationshipType field.
+func (r *systemIntakeSystemResolver) SystemRelationshipType(ctx context.Context, obj *models.SystemIntakeSystem) ([]models.SystemRelationshipType, error) {
+	return obj.SystemRelationshipType, nil
 }
 
 // Author is the resolver for the author field.
@@ -2335,6 +2345,11 @@ func (r *Resolver) SystemIntakeNote() generated.SystemIntakeNoteResolver {
 	return &systemIntakeNoteResolver{r}
 }
 
+// SystemIntakeSystem returns generated.SystemIntakeSystemResolver implementation.
+func (r *Resolver) SystemIntakeSystem() generated.SystemIntakeSystemResolver {
+	return &systemIntakeSystemResolver{r}
+}
+
 // TRBAdminNote returns generated.TRBAdminNoteResolver implementation.
 func (r *Resolver) TRBAdminNote() generated.TRBAdminNoteResolver { return &tRBAdminNoteResolver{r} }
 
@@ -2388,6 +2403,7 @@ type systemIntakeDocumentResolver struct{ *Resolver }
 type systemIntakeGRBPresentationLinksResolver struct{ *Resolver }
 type systemIntakeGRBReviewerResolver struct{ *Resolver }
 type systemIntakeNoteResolver struct{ *Resolver }
+type systemIntakeSystemResolver struct{ *Resolver }
 type tRBAdminNoteResolver struct{ *Resolver }
 type tRBGuidanceLetterResolver struct{ *Resolver }
 type tRBGuidanceLetterInsightResolver struct{ *Resolver }

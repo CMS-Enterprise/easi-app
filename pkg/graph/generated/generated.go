@@ -57,6 +57,7 @@ type ResolverRoot interface {
 	SystemIntakeGRBPresentationLinks() SystemIntakeGRBPresentationLinksResolver
 	SystemIntakeGRBReviewer() SystemIntakeGRBReviewerResolver
 	SystemIntakeNote() SystemIntakeNoteResolver
+	SystemIntakeSystem() SystemIntakeSystemResolver
 	TRBAdminNote() TRBAdminNoteResolver
 	TRBGuidanceLetter() TRBGuidanceLetterResolver
 	TRBGuidanceLetterInsight() TRBGuidanceLetterInsightResolver
@@ -696,6 +697,7 @@ type ComplexityRoot struct {
 		BusinessOwner               func(childComplexity int) int
 		BusinessSolution            func(childComplexity int) int
 		CedarSystemID               func(childComplexity int) int
+		CedarSystemRelationShips    func(childComplexity int) int
 		Contract                    func(childComplexity int) int
 		ContractName                func(childComplexity int) int
 		ContractNumbers             func(childComplexity int) int
@@ -957,6 +959,13 @@ type ComplexityRoot struct {
 		Component func(childComplexity int) int
 		Email     func(childComplexity int) int
 		Name      func(childComplexity int) int
+	}
+
+	SystemIntakeSystem struct {
+		OtherSystemRelationship func(childComplexity int) int
+		SystemID                func(childComplexity int) int
+		SystemIntakeID          func(childComplexity int) int
+		SystemRelationshipType  func(childComplexity int) int
 	}
 
 	TRBAdminNote struct {
@@ -1412,6 +1421,7 @@ type SystemIntakeResolver interface {
 	RelatedTRBRequests(ctx context.Context, obj *models.SystemIntake) ([]*models.TRBRequest, error)
 	GrbDiscussions(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewDiscussion, error)
 	GrbPresentationLinks(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBPresentationLinks, error)
+	CedarSystemRelationShips(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeSystem, error)
 }
 type SystemIntakeDocumentResolver interface {
 	DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*models.SystemIntakeDocumentType, error)
@@ -1438,6 +1448,9 @@ type SystemIntakeNoteResolver interface {
 	Author(ctx context.Context, obj *models.SystemIntakeNote) (*models.SystemIntakeNoteAuthor, error)
 
 	Editor(ctx context.Context, obj *models.SystemIntakeNote) (*models.UserInfo, error)
+}
+type SystemIntakeSystemResolver interface {
+	SystemRelationshipType(ctx context.Context, obj *models.SystemIntakeSystem) ([]models.SystemRelationshipType, error)
 }
 type TRBAdminNoteResolver interface {
 	Author(ctx context.Context, obj *models.TRBAdminNote) (*models.UserInfo, error)
@@ -5494,6 +5507,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.SystemIntake.CedarSystemID(childComplexity), true
 
+	case "SystemIntake.cedarSystemRelationShips":
+		if e.complexity.SystemIntake.CedarSystemRelationShips == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.CedarSystemRelationShips(childComplexity), true
+
 	case "SystemIntake.contract":
 		if e.complexity.SystemIntake.Contract == nil {
 			break
@@ -6817,6 +6837,34 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.SystemIntakeRequester.Name(childComplexity), true
 
+	case "SystemIntakeSystem.otherSystemRelationship":
+		if e.complexity.SystemIntakeSystem.OtherSystemRelationship == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeSystem.OtherSystemRelationship(childComplexity), true
+
+	case "SystemIntakeSystem.systemID":
+		if e.complexity.SystemIntakeSystem.SystemID == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeSystem.SystemID(childComplexity), true
+
+	case "SystemIntakeSystem.systemIntakeID":
+		if e.complexity.SystemIntakeSystem.SystemIntakeID == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeSystem.SystemIntakeID(childComplexity), true
+
+	case "SystemIntakeSystem.systemRelationshipType":
+		if e.complexity.SystemIntakeSystem.SystemRelationshipType == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeSystem.SystemRelationshipType(childComplexity), true
+
 	case "TRBAdminNote.author":
 		if e.complexity.TRBAdminNote.Author == nil {
 			break
@@ -8112,6 +8160,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputSystemIntakeRetireLCIDInput,
 		ec.unmarshalInputSystemIntakeUnretireLCIDInput,
 		ec.unmarshalInputSystemIntakeUpdateLCIDInput,
+		ec.unmarshalInputSystemRelationshipInput,
 		ec.unmarshalInputTRBRequestChanges,
 		ec.unmarshalInputUpdateSystemIntakeAdminLeadInput,
 		ec.unmarshalInputUpdateSystemIntakeContactDetailsInput,
@@ -8656,7 +8705,6 @@ type CedarExchangeTypeOfDataItem {
   name: String
 }
 
-
 enum ExchangeDirection {
   SENDER
   RECEIVER
@@ -9028,7 +9076,7 @@ type SystemIntake {
   documents: [SystemIntakeDocument!]!
   hasUiChanges: Boolean
   usesAiTech: Boolean
-  itGovTaskStatuses:  ITGovTaskStatuses!
+  itGovTaskStatuses: ITGovTaskStatuses!
   requestFormState: SystemIntakeFormState!
   draftBusinessCaseState: SystemIntakeFormState!
   """
@@ -9076,6 +9124,7 @@ type SystemIntake {
   GRB Presentation Link Data
   """
   grbPresentationLinks: SystemIntakeGRBPresentationLinks
+  cedarSystemRelationShips: [SystemIntakeSystem]
 }
 
 type SystemIntakeContractNumber {
@@ -9211,11 +9260,11 @@ a system request
 """
 input UpdateSystemIntakeContactDetailsInput {
   id: UUID!
-  requester: SystemIntakeRequesterWithComponentInput!,
-  businessOwner: SystemIntakeBusinessOwnerInput!,
-  productManager: SystemIntakeProductManagerInput!,
-  isso: SystemIntakeISSOInput!,
-  governanceTeams: SystemIntakeGovernanceTeamInput!,
+  requester: SystemIntakeRequesterWithComponentInput!
+  businessOwner: SystemIntakeBusinessOwnerInput!
+  productManager: SystemIntakeProductManagerInput!
+  isso: SystemIntakeISSOInput!
+  governanceTeams: SystemIntakeGovernanceTeamInput!
 }
 
 """
@@ -9268,7 +9317,6 @@ NOTE: This field is no longer in intake form but data/query is preserved for exi
 input SystemIntakeCostsInput {
   expectedIncreaseAmount: String
   isExpectingIncrease: String
-
 }
 
 """
@@ -9304,6 +9352,31 @@ input UpdateSystemIntakeContractDetailsInput {
 }
 
 """
+Types of System Relationships
+"""
+enum SystemRelationshipType {
+  PRIMARY_SUPPORT
+  PARTIAL_SUPORT
+  USES_OR_IMPACTED_BY_SELECTED_SYSTEM
+  IMPACTS_SELECTED_SYSTEM
+  OTHER
+}
+"""
+Input data for creating a system intake's relationship to a CEDAR system
+"""
+input SystemRelationshipInput {
+  cedarSystemId: String
+  systemRelationshipType: [SystemRelationshipType!]!
+  otherTypeDescription: String
+}
+
+type SystemIntakeSystem {
+  systemIntakeID: UUID!
+  systemID: String
+  systemRelationshipType: [SystemRelationshipType!]!
+  otherSystemRelationship: String
+}
+"""
 Input data for updating a system intake's relationship to a CEDAR system
 """
 input UpdateSystemIntakeLinkedCedarSystemInput {
@@ -9320,7 +9393,7 @@ input SetSystemIntakeRelationNewSystemInput {
 # RequestRelationType.EXISTING_SYSTEM
 input SetSystemIntakeRelationExistingSystemInput {
   systemIntakeID: UUID!
-  cedarSystemIDs: [String!]!
+  cedarSystemRelationShips: [SystemRelationshipInput!]!
   contractNumbers: [String!]!
 }
 
@@ -9371,7 +9444,6 @@ enum SystemIntakeActionType {
   SEND_EMAIL
   SUBMIT_BIZ_CASE
   SUBMIT_FINAL_BIZ_CASE
-
 }
 
 """
@@ -9538,7 +9610,6 @@ type SystemIntakeGRBReviewDiscussion {
   replies: [SystemIntakeGRBReviewDiscussionPost!]!
 }
 
-
 input createSystemIntakeGRBDiscussionPostInput {
   systemIntakeID: UUID!
   content: TaggedHTML!
@@ -9658,7 +9729,6 @@ input SystemIntakeRequestEditsInput {
   additionalInfo: HTML
   adminNote: HTML
 }
-
 
 """
 Different options for whether the Governance team believes a requester's team should consult with the TRB
@@ -9947,7 +10017,6 @@ type TRBRequest {
   modifiedAt: Time
   contractName: String
   relationType: RequestRelationType # TODO: NOT IMPLEMENTED
-
   """
   Linked contract numbers
   """
@@ -10125,7 +10194,7 @@ input CreateTRBRequestDocumentInput {
   requestID: UUID!
   fileData: Upload!
   documentType: TRBDocumentCommonType!
-  otherTypeDescription: String  # Needed if documentType == OTHER
+  otherTypeDescription: String # Needed if documentType == OTHER
 }
 
 """
@@ -10154,7 +10223,9 @@ type DeleteTRBRequestDocumentPayload {
   document: TRBRequestDocument
 }
 
-"""Represents a document attached to a System Intake"""
+"""
+Represents a document attached to a System Intake
+"""
 type SystemIntakeDocument {
   documentType: SystemIntakeDocumentType!
   id: UUID!
@@ -10177,12 +10248,16 @@ type SystemIntakeDocumentType {
   otherTypeDescription: String
 }
 
-"""Data returned after uploading a document to a System Intake"""
+"""
+Data returned after uploading a document to a System Intake
+"""
 type CreateSystemIntakeDocumentPayload {
   document: SystemIntakeDocument
 }
 
-"""Data returned after deleting a document attached to a System Intake"""
+"""
+Data returned after deleting a document attached to a System Intake
+"""
 type DeleteSystemIntakeDocumentPayload {
   document: SystemIntakeDocument
 }
@@ -10563,7 +10638,12 @@ type TRBAdminNoteGuidanceLetterCategoryData {
   insights: [TRBGuidanceLetterInsight!]!
 }
 
-union TRBAdminNoteCategorySpecificData = TRBAdminNoteGeneralRequestCategoryData | TRBAdminNoteInitialRequestFormCategoryData | TRBAdminNoteSupportingDocumentsCategoryData | TRBAdminNoteConsultSessionCategoryData | TRBAdminNoteGuidanceLetterCategoryData
+union TRBAdminNoteCategorySpecificData =
+  | TRBAdminNoteGeneralRequestCategoryData
+  | TRBAdminNoteInitialRequestFormCategoryData
+  | TRBAdminNoteSupportingDocumentsCategoryData
+  | TRBAdminNoteConsultSessionCategoryData
+  | TRBAdminNoteGuidanceLetterCategoryData
 
 """
 Represents an admin note attached to a TRB request
@@ -10719,7 +10799,8 @@ input CreateTRBGuidanceLetterInsightInput {
 """
 The input required to update an insight to a TRB guidance letter
 """
-input UpdateTRBGuidanceLetterInsightInput @goModel(model: "map[string]interface{}") {
+input UpdateTRBGuidanceLetterInsightInput
+  @goModel(model: "map[string]interface{}") {
   id: UUID!
   title: String
   insight: HTML
@@ -10811,24 +10892,33 @@ type Mutation {
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
 
   createSystemIntakeNote(input: CreateSystemIntakeNoteInput!): SystemIntakeNote
-  @hasRole(role: EASI_GOVTEAM)
-  updateSystemIntakeNote(input: UpdateSystemIntakeNoteInput!): SystemIntakeNote!
-  @hasRole(role: EASI_GOVTEAM)
+    @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeNote(
+    input: UpdateSystemIntakeNoteInput!
+  ): SystemIntakeNote! @hasRole(role: EASI_GOVTEAM)
   createSystemIntake(input: CreateSystemIntakeInput!): SystemIntake
-  @hasRole(role: EASI_USER)
-  updateSystemIntakeRequestType(id: UUID!, newType: SystemIntakeRequestType!): SystemIntake!
-  @hasRole(role: EASI_USER)
+    @hasRole(role: EASI_USER)
+  updateSystemIntakeRequestType(
+    id: UUID!
+    newType: SystemIntakeRequestType!
+  ): SystemIntake! @hasRole(role: EASI_USER)
 
-  submitIntake(
-    input: SubmitIntakeInput!
+  submitIntake(input: SubmitIntakeInput!): UpdateSystemIntakePayload
+  updateSystemIntakeAdminLead(
+    input: UpdateSystemIntakeAdminLeadInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeReviewDates(
+    input: UpdateSystemIntakeReviewDatesInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeContactDetails(
+    input: UpdateSystemIntakeContactDetailsInput!
   ): UpdateSystemIntakePayload
-  updateSystemIntakeAdminLead(input: UpdateSystemIntakeAdminLeadInput!): UpdateSystemIntakePayload
-  @hasRole(role: EASI_GOVTEAM)
-  updateSystemIntakeReviewDates(input: UpdateSystemIntakeReviewDatesInput!): UpdateSystemIntakePayload
-  @hasRole(role: EASI_GOVTEAM)
-  updateSystemIntakeContactDetails(input: UpdateSystemIntakeContactDetailsInput!): UpdateSystemIntakePayload
-  updateSystemIntakeRequestDetails(input: UpdateSystemIntakeRequestDetailsInput!): UpdateSystemIntakePayload
-  updateSystemIntakeContractDetails(input: UpdateSystemIntakeContractDetailsInput!): UpdateSystemIntakePayload
+  updateSystemIntakeRequestDetails(
+    input: UpdateSystemIntakeRequestDetailsInput!
+  ): UpdateSystemIntakePayload
+  updateSystemIntakeContractDetails(
+    input: UpdateSystemIntakeContractDetailsInput!
+  ): UpdateSystemIntakePayload
   createCedarSystemBookmark(
     input: CreateCedarSystemBookmarkInput!
   ): CreateCedarSystemBookmarkPayload
@@ -10836,28 +10926,56 @@ type Mutation {
     input: CreateCedarSystemBookmarkInput!
   ): DeleteCedarSystemBookmarkPayload
 
-  setSystemIntakeRelationNewSystem(input: SetSystemIntakeRelationNewSystemInput): UpdateSystemIntakePayload
-  setSystemIntakeRelationExistingSystem(input: SetSystemIntakeRelationExistingSystemInput): UpdateSystemIntakePayload
-  setSystemIntakeRelationExistingService(input: SetSystemIntakeRelationExistingServiceInput): UpdateSystemIntakePayload
+  setSystemIntakeRelationNewSystem(
+    input: SetSystemIntakeRelationNewSystemInput
+  ): UpdateSystemIntakePayload
+  setSystemIntakeRelationExistingSystem(
+    input: SetSystemIntakeRelationExistingSystemInput
+  ): UpdateSystemIntakePayload
+  setSystemIntakeRelationExistingService(
+    input: SetSystemIntakeRelationExistingServiceInput
+  ): UpdateSystemIntakePayload
   unlinkSystemIntakeRelation(intakeID: UUID!): UpdateSystemIntakePayload
 
-  createSystemIntakeContact(input: CreateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
-  updateSystemIntakeContact(input: UpdateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
-  deleteSystemIntakeContact(input: DeleteSystemIntakeContactInput!): DeleteSystemIntakeContactPayload
+  createSystemIntakeContact(
+    input: CreateSystemIntakeContactInput!
+  ): CreateSystemIntakeContactPayload
+  updateSystemIntakeContact(
+    input: UpdateSystemIntakeContactInput!
+  ): CreateSystemIntakeContactPayload
+  deleteSystemIntakeContact(
+    input: DeleteSystemIntakeContactInput!
+  ): DeleteSystemIntakeContactPayload
 
   startGRBReview(input: StartGRBReviewInput!): String
 
-  createSystemIntakeGRBReviewers(input: CreateSystemIntakeGRBReviewersInput!): CreateSystemIntakeGRBReviewersPayload
-  updateSystemIntakeGRBReviewer(input: UpdateSystemIntakeGRBReviewerInput!): SystemIntakeGRBReviewer!
-  deleteSystemIntakeGRBReviewer(input: DeleteSystemIntakeGRBReviewerInput!): UUID!
+  createSystemIntakeGRBReviewers(
+    input: CreateSystemIntakeGRBReviewersInput!
+  ): CreateSystemIntakeGRBReviewersPayload
+  updateSystemIntakeGRBReviewer(
+    input: UpdateSystemIntakeGRBReviewerInput!
+  ): SystemIntakeGRBReviewer!
+  deleteSystemIntakeGRBReviewer(
+    input: DeleteSystemIntakeGRBReviewerInput!
+  ): UUID!
 
-  createSystemIntakeGRBDiscussionPost(input: createSystemIntakeGRBDiscussionPostInput!): SystemIntakeGRBReviewDiscussionPost
-  createSystemIntakeGRBDiscussionReply(input: createSystemIntakeGRBDiscussionReplyInput!): SystemIntakeGRBReviewDiscussionPost
+  createSystemIntakeGRBDiscussionPost(
+    input: createSystemIntakeGRBDiscussionPostInput!
+  ): SystemIntakeGRBReviewDiscussionPost
+  createSystemIntakeGRBDiscussionReply(
+    input: createSystemIntakeGRBDiscussionReplyInput!
+  ): SystemIntakeGRBReviewDiscussionPost
 
-  updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
+  updateSystemIntakeLinkedCedarSystem(
+    input: UpdateSystemIntakeLinkedCedarSystemInput!
+  ): UpdateSystemIntakePayload
 
-  setSystemIntakeGRBPresentationLinks(input: SystemIntakeGRBPresentationLinksInput!): SystemIntakeGRBPresentationLinks
-  deleteSystemIntakeGRBPresentationLinks(input: DeleteSystemIntakeGRBPresentationLinksInput!): UUID!
+  setSystemIntakeGRBPresentationLinks(
+    input: SystemIntakeGRBPresentationLinksInput!
+  ): SystemIntakeGRBPresentationLinks
+  deleteSystemIntakeGRBPresentationLinks(
+    input: DeleteSystemIntakeGRBPresentationLinksInput!
+  ): UUID!
 
   archiveSystemIntake(id: UUID!): SystemIntake!
 
@@ -10866,66 +10984,93 @@ type Mutation {
   sendReportAProblemEmail(input: SendReportAProblemEmailInput!): String
   createTRBRequest(requestType: TRBRequestType!): TRBRequest!
   updateTRBRequest(id: UUID!, changes: TRBRequestChanges): TRBRequest!
-  createTRBRequestAttendee(input: CreateTRBRequestAttendeeInput!): TRBRequestAttendee!
-  updateTRBRequestAttendee(input: UpdateTRBRequestAttendeeInput!): TRBRequestAttendee!
+  createTRBRequestAttendee(
+    input: CreateTRBRequestAttendeeInput!
+  ): TRBRequestAttendee!
+  updateTRBRequestAttendee(
+    input: UpdateTRBRequestAttendeeInput!
+  ): TRBRequestAttendee!
   deleteTRBRequestAttendee(id: UUID!): TRBRequestAttendee!
-  createTRBRequestDocument(input: CreateTRBRequestDocumentInput!): CreateTRBRequestDocumentPayload
+  createTRBRequestDocument(
+    input: CreateTRBRequestDocumentInput!
+  ): CreateTRBRequestDocumentPayload
   deleteTRBRequestDocument(id: UUID!): DeleteTRBRequestDocumentPayload
-  createSystemIntakeDocument(input: CreateSystemIntakeDocumentInput!): CreateSystemIntakeDocumentPayload
+  createSystemIntakeDocument(
+    input: CreateSystemIntakeDocumentInput!
+  ): CreateSystemIntakeDocumentPayload
   deleteSystemIntakeDocument(id: UUID!): DeleteSystemIntakeDocumentPayload
   updateTRBRequestForm(input: UpdateTRBRequestFormInput!): TRBRequestForm!
-  updateTRBRequestFundingSources(input: UpdateTRBRequestFundingSourcesInput!): [TRBFundingSource!]!
-  deleteTRBRequestFundingSources(input: DeleteTRBRequestFundingSourcesInput!): [TRBFundingSource!]!
+  updateTRBRequestFundingSources(
+    input: UpdateTRBRequestFundingSourcesInput!
+  ): [TRBFundingSource!]!
+  deleteTRBRequestFundingSources(
+    input: DeleteTRBRequestFundingSourcesInput!
+  ): [TRBFundingSource!]!
   setRolesForUserOnSystem(input: SetRolesForUserOnSystemInput!): String
-  createTRBRequestFeedback(input: CreateTRBRequestFeedbackInput!): TRBRequestFeedback!
-  @hasRole(role: EASI_TRB_ADMIN)
-  updateTRBRequestConsultMeetingTime(input: UpdateTRBRequestConsultMeetingTimeInput!): TRBRequest!
-  @hasRole(role: EASI_TRB_ADMIN)
+  createTRBRequestFeedback(
+    input: CreateTRBRequestFeedbackInput!
+  ): TRBRequestFeedback! @hasRole(role: EASI_TRB_ADMIN)
+  updateTRBRequestConsultMeetingTime(
+    input: UpdateTRBRequestConsultMeetingTimeInput!
+  ): TRBRequest! @hasRole(role: EASI_TRB_ADMIN)
   updateTRBRequestTRBLead(input: UpdateTRBRequestTRBLeadInput!): TRBRequest!
-  @hasRole(role: EASI_TRB_ADMIN)
+    @hasRole(role: EASI_TRB_ADMIN)
 
-  setTRBRequestRelationNewSystem(input: SetTRBRequestRelationNewSystemInput!): TRBRequest
-  setTRBRequestRelationExistingSystem(input: SetTRBRequestRelationExistingSystemInput!): TRBRequest
-  setTRBRequestRelationExistingService(input: SetTRBRequestRelationExistingServiceInput!): TRBRequest
+  setTRBRequestRelationNewSystem(
+    input: SetTRBRequestRelationNewSystemInput!
+  ): TRBRequest
+  setTRBRequestRelationExistingSystem(
+    input: SetTRBRequestRelationExistingSystemInput!
+  ): TRBRequest
+  setTRBRequestRelationExistingService(
+    input: SetTRBRequestRelationExistingServiceInput!
+  ): TRBRequest
   unlinkTRBRequestRelation(trbRequestID: UUID!): TRBRequest
 
   # separate mutations for each category of admin note
-  createTRBAdminNoteGeneralRequest(input: CreateTRBAdminNoteGeneralRequestInput!): TRBAdminNote!
-  @hasRole(role: EASI_TRB_ADMIN)
-  createTRBAdminNoteInitialRequestForm(input: CreateTRBAdminNoteInitialRequestFormInput!): TRBAdminNote!
-  @hasRole(role: EASI_TRB_ADMIN)
-  createTRBAdminNoteSupportingDocuments(input: CreateTRBAdminNoteSupportingDocumentsInput!): TRBAdminNote!
-  @hasRole(role: EASI_TRB_ADMIN)
-  createTRBAdminNoteConsultSession(input: CreateTRBAdminNoteConsultSessionInput!): TRBAdminNote!
-  @hasRole(role: EASI_TRB_ADMIN)
-  createTRBAdminNoteGuidanceLetter(input: CreateTRBAdminNoteGuidanceLetterInput!): TRBAdminNote!
-  @hasRole(role: EASI_TRB_ADMIN)
+  createTRBAdminNoteGeneralRequest(
+    input: CreateTRBAdminNoteGeneralRequestInput!
+  ): TRBAdminNote! @hasRole(role: EASI_TRB_ADMIN)
+  createTRBAdminNoteInitialRequestForm(
+    input: CreateTRBAdminNoteInitialRequestFormInput!
+  ): TRBAdminNote! @hasRole(role: EASI_TRB_ADMIN)
+  createTRBAdminNoteSupportingDocuments(
+    input: CreateTRBAdminNoteSupportingDocumentsInput!
+  ): TRBAdminNote! @hasRole(role: EASI_TRB_ADMIN)
+  createTRBAdminNoteConsultSession(
+    input: CreateTRBAdminNoteConsultSessionInput!
+  ): TRBAdminNote! @hasRole(role: EASI_TRB_ADMIN)
+  createTRBAdminNoteGuidanceLetter(
+    input: CreateTRBAdminNoteGuidanceLetterInput!
+  ): TRBAdminNote! @hasRole(role: EASI_TRB_ADMIN)
   setTRBAdminNoteArchived(id: UUID!, isArchived: Boolean!): TRBAdminNote!
-  @hasRole(role: EASI_TRB_ADMIN)
+    @hasRole(role: EASI_TRB_ADMIN)
   createTRBGuidanceLetter(trbRequestId: UUID!): TRBGuidanceLetter!
-  @hasRole(role: EASI_TRB_ADMIN)
-  updateTRBGuidanceLetter(input: UpdateTRBGuidanceLetterInput!): TRBGuidanceLetter!
-  @hasRole(role: EASI_TRB_ADMIN)
+    @hasRole(role: EASI_TRB_ADMIN)
+  updateTRBGuidanceLetter(
+    input: UpdateTRBGuidanceLetterInput!
+  ): TRBGuidanceLetter! @hasRole(role: EASI_TRB_ADMIN)
   requestReviewForTRBGuidanceLetter(id: UUID!): TRBGuidanceLetter!
-  @hasRole(role: EASI_TRB_ADMIN)
+    @hasRole(role: EASI_TRB_ADMIN)
   sendTRBGuidanceLetter(input: SendTRBGuidanceLetterInput!): TRBGuidanceLetter!
-  @hasRole(role: EASI_TRB_ADMIN)
-  createTRBGuidanceLetterInsight(input: CreateTRBGuidanceLetterInsightInput!): TRBGuidanceLetterInsight!
-  @hasRole(role: EASI_TRB_ADMIN)
-  updateTRBGuidanceLetterInsight(input: UpdateTRBGuidanceLetterInsightInput!): TRBGuidanceLetterInsight!
-  @hasRole(role: EASI_TRB_ADMIN)
-  updateTRBGuidanceLetterInsightOrder(input: UpdateTRBGuidanceLetterInsightOrderInput!): [TRBGuidanceLetterInsight!]!
-  @hasRole(role: EASI_TRB_ADMIN)
+    @hasRole(role: EASI_TRB_ADMIN)
+  createTRBGuidanceLetterInsight(
+    input: CreateTRBGuidanceLetterInsightInput!
+  ): TRBGuidanceLetterInsight! @hasRole(role: EASI_TRB_ADMIN)
+  updateTRBGuidanceLetterInsight(
+    input: UpdateTRBGuidanceLetterInsightInput!
+  ): TRBGuidanceLetterInsight! @hasRole(role: EASI_TRB_ADMIN)
+  updateTRBGuidanceLetterInsightOrder(
+    input: UpdateTRBGuidanceLetterInsightOrderInput!
+  ): [TRBGuidanceLetterInsight!]! @hasRole(role: EASI_TRB_ADMIN)
   deleteTRBGuidanceLetterInsight(id: UUID!): TRBGuidanceLetterInsight!
-  @hasRole(role: EASI_TRB_ADMIN)
+    @hasRole(role: EASI_TRB_ADMIN)
   closeTRBRequest(input: CloseTRBRequestInput!): TRBRequest!
-  @hasRole(role: EASI_TRB_ADMIN)
+    @hasRole(role: EASI_TRB_ADMIN)
   reopenTrbRequest(input: ReopenTRBRequestInput!): TRBRequest!
-  @hasRole(role: EASI_TRB_ADMIN)
-  createTrbLeadOption(eua: String!): UserInfo!
-  @hasRole(role: EASI_TRB_ADMIN)
-  deleteTrbLeadOption(eua: String!): Boolean!
-  @hasRole(role: EASI_TRB_ADMIN)
+    @hasRole(role: EASI_TRB_ADMIN)
+  createTrbLeadOption(eua: String!): UserInfo! @hasRole(role: EASI_TRB_ADMIN)
+  deleteTrbLeadOption(eua: String!): Boolean! @hasRole(role: EASI_TRB_ADMIN)
 }
 
 """
@@ -10938,7 +11083,7 @@ type Query {
   """
   systemIntake(id: UUID!): SystemIntake
   systemIntakes(openRequests: Boolean!): [SystemIntake!]!
-  mySystemIntakes:[SystemIntake!]!
+  mySystemIntakes: [SystemIntake!]!
   systemIntakesWithReviewRequested: [SystemIntake!]!
   systemIntakesWithLcids: [SystemIntake!]!
   compareGRBReviewersByIntakeID(id: UUID!): [GRBReviewerComparisonIntake!]!
@@ -10955,7 +11100,12 @@ type Query {
   myCedarSystems: [CedarSystem!]!
   cedarSystemBookmarks: [CedarSystemBookmark!]!
   cedarThreat(cedarSystemId: String!): [CedarThreat!]!
-  deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
+  deployments(
+    cedarSystemId: String!
+    deploymentType: String
+    state: String
+    status: String
+  ): [CedarDeployment!]!
   roleTypes: [CedarRoleType!]!
   roles(cedarSystemId: String!, roleTypeID: String): [CedarRole!]!
   exchanges(cedarSystemId: String!): [CedarExchange!]!
@@ -10963,7 +11113,8 @@ type Query {
   cedarSystemDetails(cedarSystemId: String!): CedarSystemDetails
   systemIntakeContacts(id: UUID!): SystemIntakeContactsPayload!
   trbRequest(id: UUID!): TRBRequest!
-  trbRequests(archived: Boolean! = false): [TRBRequest!]! @hasRole(role: EASI_TRB_ADMIN)
+  trbRequests(archived: Boolean! = false): [TRBRequest!]!
+    @hasRole(role: EASI_TRB_ADMIN)
   myTrbRequests(archived: Boolean! = false): [TRBRequest!]!
   trbLeadOptions: [UserInfo!]!
   trbAdminNote(id: UUID!): TRBAdminNote! @hasRole(role: EASI_TRB_ADMIN)
@@ -11062,7 +11213,6 @@ enum Role {
   EASI_USER
 }
 
-
 """
 The requester view of the IT gov intake step status
 """
@@ -11085,7 +11235,6 @@ enum ITGovIntakeFormStatus {
   COMPLETED
 }
 
-
 """
 The requester view of the IT gov feedback step status
 """
@@ -11104,7 +11253,6 @@ enum ITGovFeedbackStatus {
   COMPLETED
 }
 
-
 """
 The requester view of the IT gov Decision step status
 """
@@ -11122,7 +11270,6 @@ enum ITGovDecisionStatus {
   """
   COMPLETED
 }
-
 
 """
 The requester view of the IT gov draft Business Case step status
@@ -11160,7 +11307,6 @@ enum ITGovDraftBusinessCaseStatus {
   """
   DONE
 }
-
 
 """
 The requester view of the IT Gov GRT step status
@@ -16206,6 +16352,8 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(_ context.Con
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "cedarSystemRelationShips":
+				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -25305,6 +25453,8 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(ctx con
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "cedarSystemRelationShips":
+				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -32209,6 +32359,8 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "cedarSystemRelationShips":
+				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -32453,6 +32605,8 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeRequestType(
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "cedarSystemRelationShips":
+				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -34161,6 +34315,8 @@ func (ec *executionContext) fieldContext_Mutation_archiveSystemIntake(ctx contex
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "cedarSystemRelationShips":
+				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -38377,6 +38533,8 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "cedarSystemRelationShips":
+				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -38594,6 +38752,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "cedarSystemRelationShips":
+				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -38811,6 +38971,8 @@ func (ec *executionContext) fieldContext_Query_mySystemIntakes(_ context.Context
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "cedarSystemRelationShips":
+				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -39017,6 +39179,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithReviewRequested(
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "cedarSystemRelationShips":
+				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -39223,6 +39387,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(_ context.
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "cedarSystemRelationShips":
+				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -45584,6 +45750,8 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedIntakes(_ context.C
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "cedarSystemRelationShips":
+				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -45815,6 +45983,57 @@ func (ec *executionContext) fieldContext_SystemIntake_grbPresentationLinks(_ con
 				return ec.fieldContext_SystemIntakeGRBPresentationLinks_presentationDeckFileStatus(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeGRBPresentationLinks", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntake_cedarSystemRelationShips(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().CedarSystemRelationShips(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*models.SystemIntakeSystem)
+	fc.Result = res
+	return ec.marshalOSystemIntakeSystem2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSystem(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_cedarSystemRelationShips(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "systemIntakeID":
+				return ec.fieldContext_SystemIntakeSystem_systemIntakeID(ctx, field)
+			case "systemID":
+				return ec.fieldContext_SystemIntakeSystem_systemID(ctx, field)
+			case "systemRelationshipType":
+				return ec.fieldContext_SystemIntakeSystem_systemRelationshipType(ctx, field)
+			case "otherSystemRelationship":
+				return ec.fieldContext_SystemIntakeSystem_otherSystemRelationship(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeSystem", field.Name)
 		},
 	}
 	return fc, nil
@@ -46063,6 +46282,8 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(_ conte
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "cedarSystemRelationShips":
+				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -51286,6 +51507,176 @@ func (ec *executionContext) fieldContext_SystemIntakeRequester_name(_ context.Co
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntakeSystem_systemIntakeID(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeSystem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeSystem_systemIntakeID(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SystemIntakeID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeSystem_systemIntakeID(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeSystem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeSystem_systemID(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeSystem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeSystem_systemID(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SystemID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalOString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeSystem_systemID(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeSystem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeSystem_systemRelationshipType(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeSystem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeSystem_systemRelationshipType(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntakeSystem().SystemRelationshipType(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]models.SystemRelationshipType)
+	fc.Result = res
+	return ec.marshalNSystemRelationshipType2ᚕgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemRelationshipTypeᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeSystem_systemRelationshipType(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeSystem",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SystemRelationshipType does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeSystem_otherSystemRelationship(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeSystem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeSystem_otherSystemRelationship(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.OtherSystemRelationship, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeSystem_otherSystemRelationship(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeSystem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _TRBAdminNote_id(ctx context.Context, field graphql.CollectedField, obj *models.TRBAdminNote) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_TRBAdminNote_id(ctx, field)
 	if err != nil {
@@ -55406,6 +55797,8 @@ func (ec *executionContext) fieldContext_TRBRequest_relatedIntakes(_ context.Con
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "cedarSystemRelationShips":
+				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -58277,6 +58670,8 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(_ context.
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "cedarSystemRelationShips":
+				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -59037,6 +59432,8 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "cedarSystemRelationShips":
+				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -63023,7 +63420,7 @@ func (ec *executionContext) unmarshalInputSetSystemIntakeRelationExistingSystemI
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemIntakeID", "cedarSystemIDs", "contractNumbers"}
+	fieldsInOrder := [...]string{"systemIntakeID", "cedarSystemRelationShips", "contractNumbers"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -63037,13 +63434,13 @@ func (ec *executionContext) unmarshalInputSetSystemIntakeRelationExistingSystemI
 				return it, err
 			}
 			it.SystemIntakeID = data
-		case "cedarSystemIDs":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemIDs"))
-			data, err := ec.unmarshalNString2ᚕstringᚄ(ctx, v)
+		case "cedarSystemRelationShips":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemRelationShips"))
+			data, err := ec.unmarshalNSystemRelationshipInput2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemRelationshipInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.CedarSystemIDs = data
+			it.CedarSystemRelationShips = data
 		case "contractNumbers":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contractNumbers"))
 			data, err := ec.unmarshalNString2ᚕstringᚄ(ctx, v)
@@ -64615,6 +65012,47 @@ func (ec *executionContext) unmarshalInputSystemIntakeUpdateLCIDInput(ctx contex
 				return it, err
 			}
 			it.AdminNote = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputSystemRelationshipInput(ctx context.Context, obj any) (models.SystemRelationshipInput, error) {
+	var it models.SystemRelationshipInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"cedarSystemId", "systemRelationshipType", "otherTypeDescription"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "cedarSystemId":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemId"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CedarSystemID = data
+		case "systemRelationshipType":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemRelationshipType"))
+			data, err := ec.unmarshalNSystemRelationshipType2ᚕgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemRelationshipTypeᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SystemRelationshipType = data
+		case "otherTypeDescription":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("otherTypeDescription"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.OtherTypeDescription = data
 		}
 	}
 
@@ -71499,6 +71937,39 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "cedarSystemRelationShips":
+			field := field
+
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_cedarSystemRelationShips(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -73274,6 +73745,85 @@ func (ec *executionContext) _SystemIntakeRequester(ctx context.Context, sel ast.
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var systemIntakeSystemImplementors = []string{"SystemIntakeSystem"}
+
+func (ec *executionContext) _SystemIntakeSystem(ctx context.Context, sel ast.SelectionSet, obj *models.SystemIntakeSystem) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeSystemImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SystemIntakeSystem")
+		case "systemIntakeID":
+			out.Values[i] = ec._SystemIntakeSystem_systemIntakeID(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
+		case "systemID":
+			out.Values[i] = ec._SystemIntakeSystem_systemID(ctx, field, obj)
+		case "systemRelationshipType":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntakeSystem_systemRelationshipType(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "otherSystemRelationship":
+			out.Values[i] = ec._SystemIntakeSystem_otherSystemRelationship(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -79031,6 +79581,102 @@ func (ec *executionContext) unmarshalNSystemIntakeUpdateLCIDInput2githubᚗcom�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNSystemRelationshipInput2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemRelationshipInputᚄ(ctx context.Context, v any) ([]*models.SystemRelationshipInput, error) {
+	var vSlice []any
+	vSlice = graphql.CoerceList(v)
+	var err error
+	res := make([]*models.SystemRelationshipInput, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNSystemRelationshipInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemRelationshipInput(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) unmarshalNSystemRelationshipInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemRelationshipInput(ctx context.Context, v any) (*models.SystemRelationshipInput, error) {
+	res, err := ec.unmarshalInputSystemRelationshipInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNSystemRelationshipType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemRelationshipType(ctx context.Context, v any) (models.SystemRelationshipType, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.SystemRelationshipType(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSystemRelationshipType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemRelationshipType(ctx context.Context, sel ast.SelectionSet, v models.SystemRelationshipType) graphql.Marshaler {
+	_ = sel
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) unmarshalNSystemRelationshipType2ᚕgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemRelationshipTypeᚄ(ctx context.Context, v any) ([]models.SystemRelationshipType, error) {
+	var vSlice []any
+	vSlice = graphql.CoerceList(v)
+	var err error
+	res := make([]models.SystemRelationshipType, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNSystemRelationshipType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemRelationshipType(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalNSystemRelationshipType2ᚕgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemRelationshipTypeᚄ(ctx context.Context, sel ast.SelectionSet, v []models.SystemRelationshipType) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNSystemRelationshipType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemRelationshipType(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
 func (ec *executionContext) marshalNTRBAdminNote2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdminNote(ctx context.Context, sel ast.SelectionSet, v models.TRBAdminNote) graphql.Marshaler {
 	return ec._TRBAdminNote(ctx, sel, &v)
 }
@@ -81259,6 +81905,54 @@ func (ec *executionContext) marshalOSystemIntakeStep2ᚖgithubᚗcomᚋcmsᚑent
 	_ = ctx
 	res := graphql.MarshalString(string(*v))
 	return res
+}
+
+func (ec *executionContext) marshalOSystemIntakeSystem2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSystem(ctx context.Context, sel ast.SelectionSet, v []*models.SystemIntakeSystem) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOSystemIntakeSystem2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSystem(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	return ret
+}
+
+func (ec *executionContext) marshalOSystemIntakeSystem2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSystem(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeSystem) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SystemIntakeSystem(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOSystemIntakeTRBFollowUp2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeTRBFollowUp(ctx context.Context, v any) (*models.SystemIntakeTRBFollowUp, error) {

@@ -16,6 +16,8 @@ type systemIntakeRelationTestCase struct {
 	NewContractNumbers     []string
 	InitialSystemIDs       []string
 	NewSystemIDs           []string
+	InitialLinkedSystems   []*models.SystemRelationshipInput
+	NewLinkedSystems       []*models.SystemRelationshipInput
 }
 
 func (s *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
@@ -23,6 +25,10 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 	store := s.testConfigs.Store
 
 	submittedAt := time.Now()
+
+	idOne := "{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"
+	descriptionOne := "other description"
+	idTwo := "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
 
 	var cases = map[string]systemIntakeRelationTestCase{
 		"adds contract numbers when no initial contract numbers exist": {
@@ -50,12 +56,26 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 			NewContractNumbers:     []string{"1"},
 			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
 			NewSystemIDs:           []string{},
+			InitialLinkedSystems: []*models.SystemRelationshipInput{
+				{
+					CedarSystemID:          &idOne,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+					OtherTypeDescription:   &descriptionOne,
+				},
+				{
+					CedarSystemID:          &idTwo,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT"},
+				},
+			},
+			NewLinkedSystems: []*models.SystemRelationshipInput{},
 		},
 		"should not add system IDs": {
 			InitialContractNumbers: []string{"1", "2"},
 			NewContractNumbers:     []string{"1"},
 			InitialSystemIDs:       []string{},
 			NewSystemIDs:           []string{},
+			InitialLinkedSystems:   []*models.SystemRelationshipInput{},
+			NewLinkedSystems:       []*models.SystemRelationshipInput{},
 		},
 	}
 
@@ -82,7 +102,8 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 
 			// Set existing system IDs
 			err = sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
-				return store.SetSystemIntakeSystems(ctx, tx, openIntake.ID, caseValues.InitialSystemIDs)
+				//Ids removed were caseValues.InitialSystemIDs
+				return store.SetSystemIntakeSystems(ctx, tx, openIntake.ID, caseValues.InitialLinkedSystems)
 
 			})
 			s.NoError(err)
@@ -140,36 +161,134 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 
 	submittedAt := time.Now()
 
+	idOne := "{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"
+	descriptionOne := "other description"
+	idTwo := "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
+	idThree := "{11AB1A00-1234-5678-ABC1-1A001B00CC3D}"
+	idFour := "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"
+	idFive := "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"
+
 	var cases = map[string]systemIntakeRelationTestCase{
 		"adds contract numbers and system IDs when no initial ones exist": {
 			InitialContractNumbers: []string{},
-			InitialSystemIDs:       []string{},
 			NewContractNumbers:     []string{"1", "2"},
+			InitialSystemIDs:       []string{},
 			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
+			InitialLinkedSystems:   []*models.SystemRelationshipInput{},
+			NewLinkedSystems: []*models.SystemRelationshipInput{
+				{
+					CedarSystemID:          &idOne,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+					OtherTypeDescription:   &descriptionOne,
+				},
+				{
+					CedarSystemID:          &idTwo,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT"},
+				},
+			},
 		},
 		"removes existing contract numbers and system IDs when none are given": {
 			InitialContractNumbers: []string{"1", "2"},
-			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
 			NewContractNumbers:     []string{},
+			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
 			NewSystemIDs:           []string{},
+
+			InitialLinkedSystems: []*models.SystemRelationshipInput{
+				{
+					CedarSystemID:          &idOne,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+					OtherTypeDescription:   &descriptionOne,
+				},
+				{
+					CedarSystemID:          &idTwo,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT"},
+				},
+			},
+			NewLinkedSystems: []*models.SystemRelationshipInput{},
 		},
 		"changes existing contract numbers and system IDs to different ones": {
 			InitialContractNumbers: []string{"1", "2"},
-			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
 			NewContractNumbers:     []string{"3", "4"},
+			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
 			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}", "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"},
+			InitialLinkedSystems: []*models.SystemRelationshipInput{
+				{
+					CedarSystemID:          &idOne,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+					OtherTypeDescription:   &descriptionOne,
+				},
+				{
+					CedarSystemID:          &idTwo,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT"},
+				},
+			},
+			NewLinkedSystems: []*models.SystemRelationshipInput{
+				{
+					CedarSystemID:          &idThree,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+					OtherTypeDescription:   &descriptionOne,
+				},
+				{
+					CedarSystemID:          &idFour,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT"},
+				},
+			},
 		},
 		"changes existing contract numbers and system IDs to add new ones": {
 			InitialContractNumbers: []string{"1", "2"},
-			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
 			NewContractNumbers:     []string{"1", "2", "3"},
+			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
 			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}", "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}", "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"},
+			InitialLinkedSystems: []*models.SystemRelationshipInput{
+				{
+					CedarSystemID:          &idOne,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+					OtherTypeDescription:   &descriptionOne,
+				},
+				{
+					CedarSystemID:          &idTwo,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT"},
+				},
+			},
+			NewLinkedSystems: []*models.SystemRelationshipInput{
+				{
+					CedarSystemID:          &idThree,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+					OtherTypeDescription:   &descriptionOne,
+				},
+				{
+					CedarSystemID:          &idFour,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT"},
+				},
+				{
+					CedarSystemID:          &idFive,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT"},
+				},
+			},
 		},
 		"changes existing contract numbers and system IDs to remove old ones": {
 			InitialContractNumbers: []string{"1", "2"},
-			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
 			NewContractNumbers:     []string{"1"},
+			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
 			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"},
+			InitialLinkedSystems: []*models.SystemRelationshipInput{
+				{
+					CedarSystemID:          &idOne,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+					OtherTypeDescription:   &descriptionOne,
+				},
+				{
+					CedarSystemID:          &idTwo,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT"},
+				},
+			},
+			NewLinkedSystems: []*models.SystemRelationshipInput{
+				{
+					CedarSystemID:          &idOne,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+					OtherTypeDescription:   &descriptionOne,
+				},
+			},
 		},
 	}
 
@@ -196,7 +315,8 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 
 			// Set existing system IDs
 			err = sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
-				return store.SetSystemIntakeSystems(ctx, tx, openIntake.ID, caseValues.InitialSystemIDs)
+				// Ids removed were caseValues.InitialSystemIDs
+				return store.SetSystemIntakeSystems(ctx, tx, openIntake.ID, caseValues.InitialLinkedSystems)
 			})
 			s.NoError(err)
 
@@ -206,9 +326,9 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 
 			// Set the "existing system" relationship
 			input := &models.SetSystemIntakeRelationExistingSystemInput{
-				SystemIntakeID:  openIntake.ID,
-				CedarSystemIDs:  caseValues.NewSystemIDs,
-				ContractNumbers: caseValues.NewContractNumbers,
+				SystemIntakeID:           openIntake.ID,
+				CedarSystemRelationShips: caseValues.NewLinkedSystems,
+				ContractNumbers:          caseValues.NewContractNumbers,
 			}
 			updatedIntake, err := SetSystemIntakeRelationExistingSystem(
 				ctx,
@@ -259,6 +379,10 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 
 	submittedAt := time.Now()
 
+	idOne := "{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"
+	descriptionOne := "other description"
+	idTwo := "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
+
 	var cases = map[string]systemIntakeRelationTestCase{
 		"adds contract numbers when no initial ones exist": {
 			InitialContractNumbers: []string{},
@@ -285,12 +409,26 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 			NewContractNumbers:     []string{"1"},
 			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
 			NewSystemIDs:           []string{},
+			InitialLinkedSystems: []*models.SystemRelationshipInput{
+				{
+					CedarSystemID:          &idOne,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+					OtherTypeDescription:   &descriptionOne,
+				},
+				{
+					CedarSystemID:          &idTwo,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT"},
+				},
+			},
+			NewLinkedSystems: []*models.SystemRelationshipInput{},
 		},
 		"should not add system IDs": {
 			InitialContractNumbers: []string{"1", "2"},
 			NewContractNumbers:     []string{"1"},
 			InitialSystemIDs:       []string{},
 			NewSystemIDs:           []string{},
+			InitialLinkedSystems:   []*models.SystemRelationshipInput{},
+			NewLinkedSystems:       []*models.SystemRelationshipInput{},
 		},
 	}
 
@@ -318,7 +456,8 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 
 			// Set existing system IDs
 			err = sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
-				return store.SetSystemIntakeSystems(ctx, tx, openIntake.ID, caseValues.InitialSystemIDs)
+				// caseValues.InitialSystemIDs
+				return store.SetSystemIntakeSystems(ctx, tx, openIntake.ID, caseValues.InitialLinkedSystems)
 
 			})
 			s.NoError(err)
@@ -428,9 +567,9 @@ func (s *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 
 		// Set the existing system relationship
 		input := &models.SetSystemIntakeRelationExistingSystemInput{
-			SystemIntakeID:  openIntake.ID,
-			CedarSystemIDs:  []string{"abcde", "fghijk"},
-			ContractNumbers: []string{"12345", "67890"},
+			SystemIntakeID:           openIntake.ID,
+			CedarSystemRelationShips: []*models.SystemRelationshipInput{},
+			ContractNumbers:          []string{"12345", "67890"},
 		}
 		_, err = SetSystemIntakeRelationExistingSystem(
 			ctx,

@@ -437,9 +437,9 @@ type SetSystemIntakeRelationExistingServiceInput struct {
 }
 
 type SetSystemIntakeRelationExistingSystemInput struct {
-	SystemIntakeID  uuid.UUID `json:"systemIntakeID"`
-	CedarSystemIDs  []string  `json:"cedarSystemIDs"`
-	ContractNumbers []string  `json:"contractNumbers"`
+	SystemIntakeID           uuid.UUID                  `json:"systemIntakeID"`
+	CedarSystemRelationShips []*SystemRelationshipInput `json:"cedarSystemRelationShips"`
+	ContractNumbers          []string                   `json:"contractNumbers"`
 }
 
 type SetSystemIntakeRelationNewSystemInput struct {
@@ -821,6 +821,13 @@ type SystemIntakeUpdateLCIDInput struct {
 	AdditionalInfo         *HTML                        `json:"additionalInfo,omitempty"`
 	NotificationRecipients *EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
+}
+
+// Input data for creating a system intake's relationship to a CEDAR system
+type SystemRelationshipInput struct {
+	CedarSystemID          *string                  `json:"cedarSystemId,omitempty"`
+	SystemRelationshipType []SystemRelationshipType `json:"systemRelationshipType"`
+	OtherTypeDescription   *string                  `json:"otherTypeDescription,omitempty"`
 }
 
 // Data specific to admin notes in the Consult Session category

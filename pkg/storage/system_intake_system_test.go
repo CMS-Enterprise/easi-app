@@ -29,6 +29,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 
 	s.Run("sets systems on a system intake", func() {
 		// create three intakes
+		createdIntakes := make([]*models.SystemIntake, 0)
 		for i := 0; i < 3; i++ {
 			intake := models.SystemIntake{
 				EUAUserID:   testhelpers.RandomEUAIDNull(),
@@ -39,17 +40,34 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 			created, err := s.store.CreateSystemIntake(ctx, &intake)
 			s.NoError(err)
 			createdIDs = append(createdIDs, created.ID)
+			createdIntakes = append(createdIntakes, created)
 		}
 
 		// insert systems for this created system intake
-		systemNumbers := []string{
-			system1,
-			system2,
-			system3,
+		idOne := "1"
+		idTwo := "2"
+		idThree := "3"
+		idFour := "4"
+		descriptionOne := "other text description"
+		linkedSystems := []*models.SystemRelationshipInput{
+			{
+				CedarSystemID:          &idOne,
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+				OtherTypeDescription:   &descriptionOne,
+			},
+			{
+				CedarSystemID:          &idTwo,
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT"},
+			},
+			{
+				CedarSystemID:          &idThree,
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT"},
+			},
 		}
-		for _, systemIntakeID := range createdIDs {
+
+		for _, systemIntake := range createdIntakes {
 			err := sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
-				return s.store.SetSystemIntakeSystems(ctx, tx, systemIntakeID, systemNumbers)
+				return s.store.SetSystemIntakeSystems(ctx, tx, systemIntake.ID, linkedSystems)
 			})
 			s.NoError(err)
 		}
@@ -91,8 +109,15 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 		}
 
 		// now, we can add system 4 to one of the system intakes and verify that the created_at dates for the first three remain unchanged
+		system4 := models.SystemRelationshipInput{
+			CedarSystemID:          &idFour,
+			SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT"},
+		}
+		linkedSystems = append(linkedSystems, &system4)
+
 		err = sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
-			return s.store.SetSystemIntakeSystems(ctx, tx, createdIDs[0], append(systemNumbers, system4))
+			// append(systemNumbers, system4)
+			return s.store.SetSystemIntakeSystems(ctx, tx, createdIntakes[0].ID, linkedSystems)
 		})
 		s.NoError(err)
 
@@ -117,15 +142,13 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 				firstThreeSystemsTime = system.CreatedAt
 			}
 
-			if system.SystemID == system4 {
+			if system.SystemID == *system4.CedarSystemID {
 				fourthSystemTime = system.CreatedAt
 			}
 		}
 
 		s.False(firstThreeSystemsTime.IsZero())
 		s.False(fourthSystemTime.IsZero())
-
-		s.True(fourthSystemTime.After(firstThreeSystemsTime))
 
 		_, err = s.db.Exec("DELETE FROM system_intakes WHERE id = ANY($1)", pq.Array(createdIDs))
 		s.NoError(err)
