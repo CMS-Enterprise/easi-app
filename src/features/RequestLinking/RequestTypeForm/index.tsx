@@ -131,7 +131,6 @@ const RequestTypeForm = () => {
         icon={<Icon.ArrowBack className="margin-right-05" />}
         type="button"
         unstyled
-        className=""
         onClick={() => {
           history.goBack();
         }}
