@@ -14,26 +14,19 @@ import {
   CardHeader,
   Icon
 } from '@trussworks/react-uswds';
-import { Field, Form, Formik, FormikProps } from 'formik';
 import {
   SystemIntakeRequestType,
   useCreateSystemIntakeMutation,
-  useGetSystemIntakeQuery,
   useUpdateSystemIntakeRequestTypeMutation
 } from 'gql/generated/graphql';
 
 import CollapsableLink from 'components/CollapsableLink';
-import { ErrorAlert, ErrorAlertMessage } from 'components/ErrorAlert';
-import FieldGroup from 'components/FieldGroup';
 import IconButton from 'components/IconButton';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
-import { RadioField } from 'components/RadioField';
-import flattenErrors from 'utils/flattenErrors';
 import linkCedarSystemIdQueryString, {
   useLinkCedarSystemIdQueryParam
 } from 'utils/linkCedarSystemIdQueryString';
-import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
 const RequestTypeForm = () => {
   const { systemId } = useParams<{
@@ -55,27 +48,8 @@ const RequestTypeForm = () => {
 
   const linkCedarSystemId = useLinkCedarSystemIdQueryParam();
 
-  // Check for an existing intake to prefill the request type option
-  const intakeQuery = useGetSystemIntakeQuery({
-    variables: {
-      id: systemId || ''
-    },
-    skip: !systemId
-  });
-  const lastRequestType = intakeQuery.data?.systemIntake?.requestType;
-
-  const majorChangesExamples: string[] = t(
-    'requestTypeForm.helpAndGuidance.majorChanges.list',
-    {
-      returnObjects: true
-    }
-  );
-
-  const handleCreateIntake = (formikValues: {
-    requestType: SystemIntakeRequestType;
-  }) => {
+  const handleCreateIntake = (requestType: SystemIntakeRequestType) => {
     oktaAuth.getUser().then((user: any) => {
-      const { requestType } = formikValues;
       const input = {
         requestType,
         requester: {
@@ -135,7 +109,7 @@ const RequestTypeForm = () => {
 
   return (
     <MainContent
-      className="grid-container margin-bottom-5"
+      className="grid-container margin-bottom-15"
       data-testid="request-type-form"
     >
       <BreadcrumbBar variant="wrap">
@@ -205,7 +179,11 @@ const RequestTypeForm = () => {
                 </CollapsableLink>
               </CardBody>
               <CardFooter>
-                <Button type="button" className="margin-right-1">
+                <Button
+                  type="button"
+                  className="margin-right-1"
+                  onClick={() => handleCreateIntake(type)}
+                >
                   {t('requestTypeForm.start')}
                 </Button>
               </CardFooter>
@@ -213,112 +191,6 @@ const RequestTypeForm = () => {
           );
         })}
       </CardGroup>
-
-      <Formik
-        initialValues={{
-          requestType: lastRequestType || ('' as SystemIntakeRequestType)
-        }}
-        enableReinitialize
-        onSubmit={handleCreateIntake}
-        validationSchema={SystemIntakeValidationSchema.requestType}
-        validateOnBlur={false}
-        validateOnChange={false}
-        validateOnMount={false}
-      >
-        {(
-          formikProps: FormikProps<{ requestType: SystemIntakeRequestType }>
-        ) => {
-          const { values, errors, setErrors, handleSubmit } = formikProps;
-          const flatErrors = flattenErrors(errors);
-          return (
-            <>
-              {Object.keys(errors).length > 0 && (
-                <ErrorAlert
-                  testId="formik-validation-errors"
-                  classNames="margin-top-3"
-                  heading="Please check and fix the following"
-                >
-                  {Object.keys(flatErrors).map(key => {
-                    return (
-                      <ErrorAlertMessage
-                        key={`Error.${key}`}
-                        errorKey={key}
-                        message={flatErrors[key]}
-                      />
-                    );
-                  })}
-                </ErrorAlert>
-              )}
-              <Form
-                onSubmit={e => {
-                  handleSubmit(e);
-                  window.scrollTo(0, 0);
-                }}
-              >
-                <FieldGroup
-                  error={!!flatErrors.requestType}
-                  scrollElement="requestType"
-                >
-                  <fieldset
-                    className="usa-fieldset"
-                    aria-describedby="RequestType-HelpText"
-                  >
-                    <Field
-                      as={RadioField}
-                      id="RequestType-NewSystem"
-                      className="margin-bottom-4"
-                      label={t('requestTypeForm.fields.addNewSystem')}
-                      name="requestType"
-                      value="NEW"
-                      checked={values.requestType === 'NEW'}
-                    />
-                    <Field
-                      as={RadioField}
-                      id="RequestType-MajorChangesSystem"
-                      className="margin-bottom-4"
-                      label={t('requestTypeForm.fields.majorChanges')}
-                      name="requestType"
-                      value="MAJOR_CHANGES"
-                      checked={values.requestType === 'MAJOR_CHANGES'}
-                    />
-                    <Field
-                      as={RadioField}
-                      id="RequestType-RecompeteSystem"
-                      className="margin-bottom-4"
-                      label={t('requestTypeForm.fields.recompete')}
-                      name="requestType"
-                      value="RECOMPETE"
-                      checked={values.requestType === 'RECOMPETE'}
-                    />
-                  </fieldset>
-                </FieldGroup>
-                <CollapsableLink
-                  id="MajorChangesAccordion"
-                  label={t(
-                    'requestTypeForm.helpAndGuidance.majorChanges.label'
-                  )}
-                >
-                  <p>
-                    {t('requestTypeForm.helpAndGuidance.majorChanges.para')}
-                  </p>
-                  <ul className="line-height-body-6">
-                    {majorChangesExamples.map(item => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                </CollapsableLink>
-                <Button
-                  className="margin-top-5 display-block"
-                  type="submit"
-                  onClick={() => setErrors({})}
-                >
-                  Continue
-                </Button>
-              </Form>
-            </>
-          );
-        }}
-      </Formik>
     </MainContent>
   );
 };
