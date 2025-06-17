@@ -4,13 +4,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
-import {
-  Button,
-  DatePicker,
-  FormGroup,
-  Grid,
-  Label
-} from '@trussworks/react-uswds';
+import { Button, FormGroup, Grid, Label } from '@trussworks/react-uswds';
 import {
   GetSystemIntakeGRBReviewDocument,
   SystemIntakeGRBReviewerFragment,
@@ -20,9 +14,9 @@ import {
   useStartGRBReviewMutation,
   useUpdateSystemIntakeGRBReviewFormInputTimeframeAsyncMutation
 } from 'gql/generated/graphql';
-import { DateTime } from 'luxon';
 
 import Alert from 'components/Alert';
+import DatePickerFormatted from 'components/DatePickerFormatted';
 import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import HelpText from 'components/HelpText';
@@ -213,7 +207,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
                           'setUpGrbReviewForm.participants.selectReviewEndDate.description'
                         )}
                       </HelpText>
-                      <DatePicker
+                      {/* <DatePicker
                         id="grbReviewAsyncEndDate"
                         {...field}
                         value={field.value ?? ''}
@@ -251,19 +245,19 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
 
                           field.onChange(formattedDate);
                         }}
-                      />
+                      /> */}
 
-                      {/* <DatePickerFormatted
+                      <DatePickerFormatted
                         id="grbReviewAsyncEndDate"
                         {...field}
                         dateInPastWarning
                         value={field.value ?? ''}
                         aria-describedby="selectReviewEndDateHelpText"
-                        onChange={date => {
-                          if (date !== field.value) {
-                            field.onChange(date || ''); // Only update when there's a change
-                          }
-                        }}
+                        // onChange={date => {
+                        //   if (date !== field.value) {
+                        //     field.onChange(date || ''); // Only update when there's a change
+                        //   }
+                        // }}
                         format={dt =>
                           dt
                             .setZone('America/New_York')
@@ -271,7 +265,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
                             .toUTC()
                             .toISO({ suppressMilliseconds: true })
                         }
-                      /> */}
+                      />
                     </FormGroup>
                   </>
                 )}
