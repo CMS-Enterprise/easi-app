@@ -220,10 +220,50 @@ const intake = {
     adminLead: 'Admin Lead'
   },
   requestTypeForm: {
-    heading: 'Make a Request',
+    heading: 'Start an IT Governance request',
     subheading: 'What is this request for?',
+    goBack: 'Go back without starting a request ',
+    start: 'Start',
+    cards: {
+      NEW: {
+        heading: 'Add a system, service, or project',
+        description:
+          'Any new project such as an IT system, service, or other business need is required to submit an IT Governance request and go through the IT Governance process in order to obtain a Life Cycle ID. A Life Cycle ID is the record of approval for your planned IT initiatives from a capital investment and planning perspective, and is a necessary step for all procurement activities at CMS.',
+        collapseLink: 'When should I choose this option?',
+        collapseLinkList: [
+          'I am starting a brand new services contract',
+          'I am planning to build an entirely new IT system',
+          'I am planning to develop an entirely new IT product such as an API or database',
+          'I am starting another type of new project at CMS'
+        ]
+      },
+      MAJOR_CHANGES: {
+        heading: 'Major changes to a system, service, or project',
+        description:
+          'Many IT systems at CMS undergo significant changes throughout their life cycle. Teams should complete a new IT Governance request when considering any significant changes to their IT system, service, or other project.',
+        collapseLink: 'When should I choose this option?',
+        collapseLinkList: [
+          'I am moving from a physical data center to the cloud',
+          'I am making significant changes to my system’s platform or software products',
+          'I am making significant new system integrations or connections',
+          'My system, service, or project is changing its Major Function Alignment or the Data Categories it supports',
+          'My system is undergoing a modernization effort',
+          'I am building an entirely new UI for my system'
+        ]
+      },
+      RECOMPETE: {
+        heading: 'Re-compete with no changes or minor changes',
+        description:
+          'Projects and/or contracts that wish to continue operating must undergo a re-compete at regular intervals (often every 5 years). These projects must submit a new IT Governance request to obtain a new Life Cycle ID even if there are no significant changes to the scope of the contract. Re-compete requests may often take a faster and simpler route through the IT Governance process.',
+        collapseLink: 'When should I choose this option?',
+        collapseLinkList: [
+          'I am completing a standard re-compete with no significant changes to the contract or scope of work',
+          'I am completing a re-compete with minor changes that will not significantly impact the IT spending or technical architecture of my system, service, or other project.'
+        ]
+      }
+    },
     fields: {
-      addNewSystem: 'Add a new system or service',
+      addNewSystem: 'Add a system, service, or project',
       majorChanges:
         'Major changes or upgrades to an existing system or service',
       recompete:

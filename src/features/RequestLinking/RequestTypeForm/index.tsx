@@ -6,7 +6,13 @@ import {
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink,
-  Button
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardGroup,
+  CardHeader,
+  Icon
 } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import {
@@ -19,6 +25,7 @@ import {
 import CollapsableLink from 'components/CollapsableLink';
 import { ErrorAlert, ErrorAlertMessage } from 'components/ErrorAlert';
 import FieldGroup from 'components/FieldGroup';
+import IconButton from 'components/IconButton';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import { RadioField } from 'components/RadioField';
@@ -120,6 +127,12 @@ const RequestTypeForm = () => {
     });
   };
 
+  const requestTypes = [
+    SystemIntakeRequestType.NEW,
+    SystemIntakeRequestType.RECOMPETE,
+    SystemIntakeRequestType.MAJOR_CHANGES
+  ];
+
   return (
     <MainContent
       className="grid-container margin-bottom-5"
@@ -133,7 +146,74 @@ const RequestTypeForm = () => {
         </Breadcrumb>
         <Breadcrumb current>{t('navigation.startRequest')}</Breadcrumb>
       </BreadcrumbBar>
-      <PageHeading>{t('requestTypeForm.heading')}</PageHeading>
+
+      <PageHeading className="margin-bottom-1">
+        {t('requestTypeForm.heading')}
+      </PageHeading>
+      <p className="margin-top-0 margin-bottom-2 font-body-lg">
+        {t('requestTypeForm.subheading')}
+      </p>
+      <IconButton
+        icon={<Icon.ArrowBack className="margin-right-05" />}
+        type="button"
+        unstyled
+        className=""
+        onClick={() => {
+          history.goBack();
+        }}
+      >
+        {t('requestTypeForm.goBack')}
+      </IconButton>
+
+      <CardGroup className="margin-top-4 margin-bottom-8">
+        {requestTypes.map(type => {
+          const card = t(`requestTypeForm.cards.${type}`, {
+            returnObjects: true
+          }) as {
+            heading: string;
+            description: string;
+            collapseLink: string;
+            collapseLinkList: string[];
+          };
+
+          return (
+            <Card
+              key={type}
+              containerProps={{
+                className: 'radius-0 border-gray-10 shadow-3'
+              }}
+              gridLayout={{
+                tablet: {
+                  col: 6
+                }
+              }}
+            >
+              <CardHeader>
+                <h3>{card.heading}</h3>
+              </CardHeader>
+              <CardBody>
+                <p>{card.description}</p>
+                <CollapsableLink
+                  id={`when-should-i-choose-this-option-${type.toLowerCase()}`}
+                  label={card.collapseLink}
+                >
+                  <ul className="margin-bottom-0 margin-top-1 padding-left-205 line-height-body-5">
+                    {card.collapseLinkList.map(item => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </CollapsableLink>
+              </CardBody>
+              <CardFooter>
+                <Button type="button" className="margin-right-1">
+                  {t('requestTypeForm.start')}
+                </Button>
+              </CardFooter>
+            </Card>
+          );
+        })}
+      </CardGroup>
+
       <Formik
         initialValues={{
           requestType: lastRequestType || ('' as SystemIntakeRequestType)
@@ -183,9 +263,6 @@ const RequestTypeForm = () => {
                     className="usa-fieldset"
                     aria-describedby="RequestType-HelpText"
                   >
-                    <legend className="font-heading-xl margin-bottom-4">
-                      {t('requestTypeForm.subheading')}
-                    </legend>
                     <Field
                       as={RadioField}
                       id="RequestType-NewSystem"
