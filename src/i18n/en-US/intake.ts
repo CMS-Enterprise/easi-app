@@ -222,7 +222,6 @@ const intake = {
   requestTypeForm: {
     heading: 'Start an IT Governance request',
     subheading: 'What is this request for?',
-    goBack: 'Go back without starting a request ',
     start: 'Start',
     cards: {
       NEW: {

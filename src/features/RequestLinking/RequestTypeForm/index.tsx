@@ -122,7 +122,9 @@ const RequestTypeForm = () => {
       </BreadcrumbBar>
 
       <PageHeading className="margin-bottom-1">
-        {t('requestTypeForm.heading')}
+        {isNew
+          ? t('requestTypeForm.heading')
+          : t('navigation.changeRequestType')}
       </PageHeading>
       <p className="margin-top-0 margin-bottom-2 font-body-lg">
         {t('requestTypeForm.subheading')}
@@ -135,7 +137,9 @@ const RequestTypeForm = () => {
           history.goBack();
         }}
       >
-        {t('requestTypeForm.goBack')}
+        {isNew
+          ? t('technicalAssistance:requestType.goBack')
+          : t('technicalAssistance:requestType.goBackWithoutChange')}
       </IconButton>
 
       <CardGroup className="margin-top-4 margin-bottom-8">
