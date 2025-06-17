@@ -56,6 +56,7 @@ export type BusinessCase = {
   businessNeed?: Maybe<Scalars['String']['output']>;
   businessOwner?: Maybe<Scalars['String']['output']>;
   cmsBenefit?: Maybe<Scalars['String']['output']>;
+  collaborationNeeded?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['Time']['output'];
   currentSolutionSummary?: Maybe<Scalars['String']['output']>;
   euaUserId: Scalars['String']['output'];
@@ -63,9 +64,11 @@ export type BusinessCase = {
   lifecycleCostLines?: Maybe<Array<EstimatedLifecycleCost>>;
   preferredSolution?: Maybe<BusinessCaseSolution>;
   priorityAlignment?: Maybe<Scalars['String']['output']>;
+  projectAcronym?: Maybe<Scalars['String']['output']>;
   projectName?: Maybe<Scalars['String']['output']>;
   requester?: Maybe<Scalars['String']['output']>;
   requesterPhoneNumber?: Maybe<Scalars['String']['output']>;
+  responseToGRTFeedback?: Maybe<Scalars['String']['output']>;
   status: BusinessCaseStatus;
   successIndicators?: Maybe<Scalars['String']['output']>;
   systemIntake: SystemIntake;
@@ -80,13 +83,18 @@ export type BusinessCaseSolution = {
   costSavings?: Maybe<Scalars['String']['output']>;
   hasUi?: Maybe<Scalars['String']['output']>;
   hostingCloudServiceType?: Maybe<Scalars['String']['output']>;
+  hostingCloudStrategy?: Maybe<Scalars['String']['output']>;
   hostingLocation?: Maybe<Scalars['String']['output']>;
   hostingType?: Maybe<Scalars['String']['output']>;
   pros?: Maybe<Scalars['String']['output']>;
   securityIsApproved?: Maybe<Scalars['Boolean']['output']>;
   securityIsBeingReviewed?: Maybe<Scalars['String']['output']>;
   summary?: Maybe<Scalars['String']['output']>;
+  targetCompletionDate?: Maybe<Scalars['Time']['output']>;
+  targetContractAwardDate?: Maybe<Scalars['Time']['output']>;
   title?: Maybe<Scalars['String']['output']>;
+  workforceTrainingReqs?: Maybe<Scalars['String']['output']>;
+  zeroTrustAlignment?: Maybe<Scalars['String']['output']>;
 };
 
 /** The status of a Business Case associated with an system IT governence request */

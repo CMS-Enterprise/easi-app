@@ -35,7 +35,7 @@ exports[`The GRT Business Case review > matches the snapshot 1`] = `
             <dt
               class="text-bold margin-bottom-05"
             >
-              Project name
+              Contact / request title
             </dt>
             <dd
               class="description-definition margin-0"
@@ -47,7 +47,23 @@ exports[`The GRT Business Case review > matches the snapshot 1`] = `
             <dt
               class="text-bold margin-bottom-05"
             >
-              Business Owner
+              Contact / request acronym
+            </dt>
+            <dd
+              class="description-definition margin-0"
+            >
+              N/A
+            </dd>
+          </div>
+        </div>
+        <div
+          class="easi-review-row"
+        >
+          <div>
+            <dt
+              class="text-bold margin-bottom-05"
+            >
+              CMS Business Owner
             </dt>
             <dd
               class="description-definition margin-0"
@@ -71,6 +87,10 @@ exports[`The GRT Business Case review > matches the snapshot 1`] = `
               Jane Doe
             </dd>
           </div>
+        </div>
+        <div
+          class="easi-review-row"
+        >
           <div>
             <dt
               class="text-bold margin-bottom-05"
@@ -109,6 +129,22 @@ exports[`The GRT Business Case review > matches the snapshot 1`] = `
             >
               Mock business need
             </dd>
+          </div>
+        </div>
+        <div
+          class="easi-review-row margin-bottom-3"
+        >
+          <div
+            class="line-height-body-3"
+          >
+            <dt
+              class="text-bold margin-bottom-05"
+            >
+              What internal collaboration or vendor engagement will support the recommended work?
+            </dt>
+            <dd
+              class="description-definition margin-0 text-pre-wrap"
+            />
           </div>
         </div>
         <div
@@ -183,6 +219,24 @@ exports[`The GRT Business Case review > matches the snapshot 1`] = `
             </dd>
           </div>
         </div>
+        <div
+          class="easi-review-row margin-bottom-3"
+        >
+          <div
+            class="line-height-body-3"
+          >
+            <dt
+              class="text-bold margin-bottom-05"
+            >
+              How will you implement or respond to the recommendations provided by the GRT?
+            </dt>
+            <dd
+              class="description-definition margin-0 text-pre-wrap"
+            >
+              N/A
+            </dd>
+          </div>
+        </div>
       </dl>
       <h2
         class="font-heading-xl margin-top-6 margin-bottom-2"
@@ -245,7 +299,7 @@ exports[`The GRT Business Case review > matches the snapshot 1`] = `
                 <dt
                   class="text-bold margin-bottom-05"
                 >
-                  Preferred solution: Title
+                  Solution Title
                 </dt>
                 <dd
                   class="description-definition margin-0"
@@ -263,7 +317,7 @@ exports[`The GRT Business Case review > matches the snapshot 1`] = `
                 <dt
                   class="text-bold margin-bottom-05"
                 >
-                  Preferred solution: Summary
+                  Summary
                 </dt>
                 <dd
                   class="description-definition margin-0 text-pre-wrap"
@@ -281,7 +335,7 @@ exports[`The GRT Business Case review > matches the snapshot 1`] = `
                 <dt
                   class="text-bold margin-bottom-05"
                 >
-                  Preferred solution: Acquisition approach
+                  Acquisition approach
                 </dt>
                 <dd
                   class="description-definition margin-0 text-pre-wrap"
@@ -299,11 +353,27 @@ exports[`The GRT Business Case review > matches the snapshot 1`] = `
                 <dt
                   class="text-bold margin-bottom-05"
                 >
-                  Do you need to host your solution?
+                  Target contract award date
                 </dt>
                 <dd
                   class="description-definition margin-0 text-pre-wrap"
-                />
+                >
+                  03/15/2025
+                </dd>
+              </div>
+              <div
+                class="line-height-body-3"
+              >
+                <dt
+                  class="text-bold margin-bottom-05"
+                >
+                  Target completion date (In production)
+                </dt>
+                <dd
+                  class="description-definition margin-0 text-pre-wrap"
+                >
+                  03/15/2025
+                </dd>
               </div>
             </div>
             <div
@@ -333,13 +403,47 @@ exports[`The GRT Business Case review > matches the snapshot 1`] = `
                 <dt
                   class="text-bold margin-bottom-05"
                 >
-                  Is your solution in the process of CMS IT Security approval?
+                  Is it in the process of getting approved?
                 </dt>
                 <dd
                   class="description-definition margin-0 text-pre-wrap"
                 >
                   Yes
                 </dd>
+              </div>
+            </div>
+            <div
+              class="easi-review-row"
+            >
+              <div
+                class="line-height-body-3"
+              >
+                <dt
+                  class="text-bold margin-bottom-05"
+                >
+                  Identify your project's alignment with Zero Trust principles?
+                </dt>
+                <dd
+                  class="description-definition margin-0 text-pre-wrap"
+                >
+                  Mock Zero Trust
+                </dd>
+              </div>
+            </div>
+            <div
+              class="easi-review-row"
+            >
+              <div
+                class="line-height-body-3"
+              >
+                <dt
+                  class="text-bold margin-bottom-05"
+                >
+                  Do you need to host your solution?
+                </dt>
+                <dd
+                  class="description-definition margin-0 text-pre-wrap"
+                />
               </div>
             </div>
             <div
@@ -369,7 +473,25 @@ exports[`The GRT Business Case review > matches the snapshot 1`] = `
                 <dt
                   class="text-bold margin-bottom-05"
                 >
-                  Preferred solution: Pros
+                  Will any workforce training requirements arise as a result of this solution?
+                </dt>
+                <dd
+                  class="description-definition margin-0 text-pre-wrap"
+                >
+                  Mock workforce training requirements
+                </dd>
+              </div>
+            </div>
+            <div
+              class="easi-review-row"
+            >
+              <div
+                class="line-height-body-3"
+              >
+                <dt
+                  class="text-bold margin-bottom-05"
+                >
+                  Pros
                 </dt>
                 <dd
                   class="description-definition margin-0 text-pre-wrap"
@@ -387,7 +509,7 @@ exports[`The GRT Business Case review > matches the snapshot 1`] = `
                 <dt
                   class="text-bold margin-bottom-05"
                 >
-                  Preferred solution: Cons
+                  Cons
                 </dt>
                 <dd
                   class="description-definition margin-0 text-pre-wrap"

@@ -37,7 +37,9 @@ const Review = ({ businessCase, isFinal }: ReviewProps) => {
       <>
         <BusinessCaseReview values={businessCase} />
 
-        <ButtonGroup className="margin-top-6">
+        <hr className="margin-top-4 opacity-30" aria-hidden />
+
+        <ButtonGroup className="margin-top-2">
           <Button
             type="button"
             outline

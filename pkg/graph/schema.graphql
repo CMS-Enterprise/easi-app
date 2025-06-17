@@ -473,13 +473,18 @@ type BusinessCaseSolution {
   costSavings: String
   hasUi: String
   hostingCloudServiceType: String
+  hostingCloudStrategy: String
   hostingLocation: String
   hostingType: String
   pros: String
   securityIsApproved: Boolean
   securityIsBeingReviewed: String
   summary: String
+  targetContractAwardDate: Time
+  targetCompletionDate: Time
   title: String
+  workforceTrainingReqs: String
+  zeroTrustAlignment: String
 }
 
 """
@@ -542,6 +547,7 @@ type BusinessCase {
   businessNeed: String
   businessOwner: String
   cmsBenefit: String
+  collaborationNeeded: String
   createdAt: Time!
   currentSolutionSummary: String
   euaUserId: String!
@@ -549,9 +555,11 @@ type BusinessCase {
   lifecycleCostLines: [EstimatedLifecycleCost!]
   preferredSolution: BusinessCaseSolution
   priorityAlignment: String
+  projectAcronym: String
   projectName: String
   requester: String
   requesterPhoneNumber: String
+  responseToGRTFeedback: String
   status: BusinessCaseStatus!
   successIndicators: String
   systemIntake: SystemIntake!
