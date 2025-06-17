@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router-dom';
+import {
+  Link as ReactRouterLink,
+  useHistory,
+  useLocation,
+  useParams
+} from 'react-router-dom';
 import {
   Button,
   ButtonGroup,
@@ -27,6 +32,9 @@ import { TaskListContainer } from 'components/TaskList';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import useMessage from 'hooks/useMessage';
 import { formatDateUtc } from 'utils/date';
+import linkCedarSystemIdQueryString, {
+  useLinkCedarSystemIdQueryParam
+} from 'utils/linkCedarSystemIdQueryString';
 
 import {
   SystemIntakeDecisionState,
@@ -48,6 +56,8 @@ function GovernanceTaskList() {
   const { systemId } = useParams<{ systemId: string }>();
   const { t } = useTranslation('itGov');
   const history = useHistory();
+  const { state } = useLocation<{ isNew?: boolean }>();
+  const isNew = !!state?.isNew;
 
   const { showMessageOnNextPage, showMessage, Message } = useMessage();
 
@@ -67,6 +77,9 @@ function GovernanceTaskList() {
 
   const systemIntake = data?.systemIntake;
   const requestName = systemIntake?.requestName;
+
+  const linkCedarSystemId = useLinkCedarSystemIdQueryParam();
+  const linkCedarSystemIdQs = linkCedarSystemIdQueryString(linkCedarSystemId);
 
   const archiveIntake = async () => {
     archive()
@@ -138,6 +151,19 @@ function GovernanceTaskList() {
                     {t('taskList.description', { requestName })}
                   </p>
                 )}
+                <span className="text-base-dark margin-right-2">
+                  {t('governanceOverview:changeRequestTypeCopy')}
+                </span>
+                <ReactRouterLink
+                  to={{
+                    pathname: `/system/request-type/${systemId || ''}`,
+                    search: linkCedarSystemIdQs,
+                    state: { isNew }
+                  }}
+                  className="text-primary"
+                >
+                  {t('intake:navigation.changeRequestType')}
+                </ReactRouterLink>
                 {isClosed && !hasDecision && (
                   <Alert
                     type="warning"
