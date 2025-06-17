@@ -659,10 +659,10 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
             type: 'button',
             onClick: () => submit(() => history.push('contact-details'))
           }}
-          border={false}
+          border
           taskListUrl={saveExitLink}
           submit={() => submit(() => history.push(saveExitLink))}
-          className="margin-top-5 border-top border-base-light padding-top-1"
+          className="margin-top-5"
         />
       </Form>
 

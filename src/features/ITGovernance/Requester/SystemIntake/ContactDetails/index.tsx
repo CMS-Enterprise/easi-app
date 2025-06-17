@@ -763,10 +763,10 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           next={{
             type: 'submit'
           }}
-          border={false}
+          border
           taskListUrl={saveExitLink}
           submit={() => submit(() => history.push(saveExitLink))}
-          className="margin-top-5 border-top border-base-light padding-top-1"
+          className="margin-top-5"
         />
       </Form>
 
