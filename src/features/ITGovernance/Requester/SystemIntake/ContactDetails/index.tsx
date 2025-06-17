@@ -754,6 +754,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
         {/* Governance Teams */}
 
+        {/* TODO: remove EA option and add 508 clearance officer */}
         <EasiFormProvider<ContactDetailsForm> {...form}>
           <GovernanceTeams />
         </EasiFormProvider>
