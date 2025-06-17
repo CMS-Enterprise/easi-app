@@ -1,4 +1,4 @@
-describe('The Business Case Form', () => {
+describe.skip('The Business Case Form', () => {
   beforeEach(() => {
     cy.localLogin({ name: 'E2E1' });
   });

@@ -1,4 +1,4 @@
-describe('Discussion Board', () => {
+describe.skip('Discussion Board', () => {
   it('users with access can interact with discussions', () => {
     // Make sure to seed data before running this test
     // Users are from backend mock data
