@@ -99,8 +99,7 @@ describe('The request type form page', () => {
 
     renderPage([intakeMutation]);
 
-    screen.getByRole('radio', { name: /new system/i }).click();
-    screen.getByRole('button', { name: /continue/i }).click();
+    screen.getByTestId('start-button--new').click();
 
     expect(
       await screen.findByTestId('governance-overview')
@@ -136,8 +135,7 @@ describe('The request type form page', () => {
 
     renderPage([intakeMutation]);
 
-    screen.getByRole('radio', { name: /major changes/i }).click();
-    screen.getByRole('button', { name: /continue/i }).click();
+    screen.getByTestId('start-button--major_changes').click();
 
     await screen.findByTestId('link-form');
   });
@@ -171,19 +169,8 @@ describe('The request type form page', () => {
 
     renderPage([intakeMutation]);
 
-    screen.getByRole('radio', { name: /re-compete/i }).click();
-    screen.getByRole('button', { name: /continue/i }).click();
+    screen.getByTestId('start-button--recompete').click();
 
     await screen.findByTestId('link-form');
-  });
-
-  it('executes request type validations', async () => {
-    renderPage([]);
-
-    screen.getByRole('button', { name: /continue/i }).click();
-
-    expect(
-      await screen.findByTestId('formik-validation-errors')
-    ).toBeInTheDocument();
   });
 });
