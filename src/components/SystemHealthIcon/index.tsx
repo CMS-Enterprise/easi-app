@@ -48,6 +48,7 @@ const SystemHealthIcon = ({
           className={classes}
           size={sizeChecker(size)}
           data-testid="system-health-icon"
+          aria-hidden
         />
       );
     }
@@ -57,6 +58,7 @@ const SystemHealthIcon = ({
           className={classes}
           size={sizeChecker(size)}
           data-testid="system-health-icon"
+          aria-hidden
         />
       );
     }
@@ -66,6 +68,7 @@ const SystemHealthIcon = ({
           className={classes}
           size={sizeChecker(size)}
           data-testid="system-health-icon"
+          aria-hidden
         />
       );
     }

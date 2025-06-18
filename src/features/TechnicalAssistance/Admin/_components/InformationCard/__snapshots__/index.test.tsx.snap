@@ -9,7 +9,7 @@ exports[`TRB Admin InformationCard > Renders correct Initial request form info 1
     <div
       class="usa-card__container"
     >
-      <header
+      <div
         class="usa-card__header"
         data-testid="CardHeader"
       >
@@ -23,7 +23,7 @@ exports[`TRB Admin InformationCard > Renders correct Initial request form info 1
         >
           Completed by requester
         </p>
-      </header>
+      </div>
       <div
         class="usa-card__body"
         data-testid="CardBody"
@@ -76,7 +76,7 @@ exports[`TRB Admin InformationCard > Renders correct guidance letter info 1`] = 
     <div
       class="usa-card__container"
     >
-      <header
+      <div
         class="usa-card__header"
         data-testid="CardHeader"
       >
@@ -90,7 +90,7 @@ exports[`TRB Admin InformationCard > Renders correct guidance letter info 1`] = 
         >
           To be completed by TRB
         </p>
-      </header>
+      </div>
       <div
         class="usa-card__body"
         data-testid="CardBody"

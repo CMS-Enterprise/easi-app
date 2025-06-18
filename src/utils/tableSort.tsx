@@ -26,18 +26,30 @@ export const getHeaderSortIcon = <T extends {}>(column: HeaderGroup<T>) => {
 
   if (!column.isSorted) {
     return (
-      <Icon.UnfoldMore className={sharedClassName} data-testid="caret--sort" />
+      <Icon.UnfoldMore
+        className={sharedClassName}
+        data-testid="caret--sort"
+        aria-hidden
+      />
     );
   }
 
   if (column.isSortedDesc) {
     return (
-      <Icon.ExpandMore className={sharedClassName} data-testid="caret--down" />
+      <Icon.ExpandMore
+        aria-hidden
+        className={sharedClassName}
+        data-testid="caret--down"
+      />
     );
   }
 
   return (
-    <Icon.ExpandLess className={sharedClassName} data-testid="caret--up" />
+    <Icon.ExpandLess
+      className={sharedClassName}
+      data-testid="caret--up"
+      aria-hidden
+    />
   );
 };
 

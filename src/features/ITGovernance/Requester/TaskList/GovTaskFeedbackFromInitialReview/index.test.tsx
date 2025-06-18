@@ -75,9 +75,11 @@ describe('Gov Task: Feedback from initial review statuses', () => {
       await renderToStringWithData(
         <Trans
           i18nKey="itGov:taskList.step.feedbackFromInitialReview.noFeedbackInfo"
-          components={{
-            a: <Link href={mailtoItGov}> </Link>,
+          values={{
             email: IT_GOV_EMAIL
+          }}
+          components={{
+            a: <Link href={mailtoItGov}> </Link>
           }}
         />
       )

@@ -17,9 +17,9 @@ export const HelpLinks = ({
 }) => {
   const { t } = useTranslation('systemWorkspace');
 
-  const helpCards = t<HelpLinkType[]>('helpLinks.links', {
+  const helpCards = t('helpLinks.links', {
     returnObjects: true
-  });
+  }) as HelpLinkType[];
 
   return (
     <SummaryBox
@@ -33,7 +33,11 @@ export const HelpLinks = ({
           <div className="display-flex flex-align-center flex-justify">
             <h3 className="margin-y-0">{t('helpLinks.header')}</h3>
 
-            <Icon.LightbulbOutline size={4} className="text-primary" />
+            <Icon.LightbulbOutline
+              size={4}
+              className="text-primary"
+              aria-hidden
+            />
           </div>
 
           <p className="margin-top-1">{t('helpLinks.description')}</p>

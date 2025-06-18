@@ -67,7 +67,7 @@ const BookmarkCard = ({
             type="button"
             unstyled
           >
-            <Icon.Bookmark size={5} />
+            <Icon.Bookmark aria-hidden size={5} />
           </Button>
         </div>
         <p className="margin-0">{acronym}</p>
