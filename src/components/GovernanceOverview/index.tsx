@@ -8,7 +8,6 @@ import {
 import classNames from 'classnames';
 
 import CollapsableLink from 'components/CollapsableLink';
-import Divider from 'components/Divider';
 import UswdsReactLink from 'components/LinkWrapper';
 import { ArticleComponentProps } from 'types/articles';
 
@@ -52,31 +51,29 @@ const GovernanceOverviewContent = ({
   });
   return (
     <div className={classNames('governance-overview__content', className)}>
-      <div
-        className={`overflow-hidden padding-y-1${
-          helpArticle && ' bg-base-lightest padding-x-2 margin-bottom-6'
-        }`}
-      >
-        <p>{t('info.intro')}</p>
+      <div className="bg-base-lightest padding-2 margin-bottom-6">
+        <p className="margin-0">{t('info.intro')}</p>
         <ul className="padding-left-205">
           {(
             t('info.listItems', {
               returnObjects: true
             }) as string[]
           ).map(item => (
-            <li className="margin-y-1" key={item}>
+            <li className="line-height-sans-4" key={item}>
               {item}
             </li>
           ))}
         </ul>
-        <p>{t('info.timeline')}</p>
+        <p className="margin-0">{t('info.timeline')}</p>
       </div>
-      <div className="tablet:grid-col-6">
+      <div className="tablet:grid-col-8">
         <h2 className="font-heading-xl margin-bottom-2">{t('stepsHeading')}</h2>
-        {helpArticle && <GovProcessCollapse className="margin-bottom-1" />}
-        <ProcessList className="margin-top-2">
+
+        <GovProcessCollapse className="margin-bottom-1" />
+
+        <ProcessList className="margin-top-2 border-bottom border-bottom-width-1px border-base-lighter margin-bottom-4">
           {processSteps
-            .filter((step, i) => i < 2)
+            .filter((_, i) => i < 2)
             .map(step => {
               return (
                 <ProcessListItem key={step.heading}>
@@ -93,13 +90,34 @@ const GovernanceOverviewContent = ({
               );
             })}
         </ProcessList>
-        <Divider className="margin-bottom-3" />
         <ProcessList
-          className="easi-governance-overview__governance-steps"
+          className="easi-governance-overview__governance-steps margin-top-2 border-bottom border-bottom-width-1px border-base-lighter margin-bottom-4"
           start={3}
         >
           {processSteps
-            .filter((step, i) => i > 1)
+            .filter((_, i) => i > 1 && i < 6)
+            .map(step => {
+              return (
+                <ProcessListItem key={step.heading}>
+                  <ProcessListHeading type="h3">
+                    {step.heading}
+                  </ProcessListHeading>
+                  <p className="margin-bottom-1">{step.content}</p>
+                  {step.link && (
+                    <UswdsReactLink to={step.link.path} target="_blank">
+                      {step.link.text}
+                    </UswdsReactLink>
+                  )}
+                </ProcessListItem>
+              );
+            })}
+        </ProcessList>
+        <ProcessList
+          className="easi-governance-overview__governance-steps"
+          start={7}
+        >
+          {processSteps
+            .filter((_, i) => i > 5)
             .map(step => {
               return (
                 <ProcessListItem key={step.heading}>
@@ -117,11 +135,6 @@ const GovernanceOverviewContent = ({
             })}
         </ProcessList>
       </div>
-      {!helpArticle && (
-        <div className="margin-bottom-7">
-          <GovProcessCollapse />
-        </div>
-      )}
     </div>
   );
 };
