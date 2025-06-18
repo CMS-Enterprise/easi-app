@@ -93,7 +93,7 @@ const Documents = ({ systemIntake }: DocumentsProps) => {
             history.push(`/system/${systemIntake.id}/contract-details`)
         }}
         taskListUrl={`/governance-task-list/${systemIntake.id}`}
-        border={false}
+        border
         submitDisabled
       />
 
