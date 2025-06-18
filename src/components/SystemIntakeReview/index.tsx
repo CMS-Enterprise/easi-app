@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import DocumentsTable from 'features/ITGovernance/_components/DocumentsTable';
+import DocumentsTable from 'features/ITGovernance/Requester/SystemIntake/Documents/DocumentsTable';
 import { SystemIntakeFragmentFragment } from 'gql/generated/graphql';
 import i18next from 'i18next';
 
