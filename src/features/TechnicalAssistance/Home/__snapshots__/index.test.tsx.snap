@@ -281,6 +281,7 @@ exports[`TRB Subview snapshots > matches Request Type 1`] = `
       href="/trb/task-list/b1120f6a-87d7-4bcd-b8f2-0835c51b2d52"
     >
       <svg
+        aria-hidden="true"
         class="usa-icon margin-right-1"
         focusable="false"
         height="1em"
@@ -306,7 +307,7 @@ exports[`TRB Subview snapshots > matches Request Type 1`] = `
         <div
           class="usa-card__container shadow-2"
         >
-          <header
+          <div
             class="usa-card__header"
             data-testid="CardHeader"
           >
@@ -315,7 +316,7 @@ exports[`TRB Subview snapshots > matches Request Type 1`] = `
             >
               I’m having a problem with my system
             </h3>
-          </header>
+          </div>
           <div
             class="usa-card__body padding-bottom-0"
             data-testid="CardBody"
@@ -334,6 +335,7 @@ exports[`TRB Subview snapshots > matches Request Type 1`] = `
                 type="button"
               >
                 <svg
+                  aria-hidden="true"
                   class="usa-icon margin-right-05"
                   focusable="false"
                   height="1em"
@@ -371,7 +373,7 @@ exports[`TRB Subview snapshots > matches Request Type 1`] = `
         <div
           class="usa-card__container shadow-2"
         >
-          <header
+          <div
             class="usa-card__header"
             data-testid="CardHeader"
           >
@@ -380,7 +382,7 @@ exports[`TRB Subview snapshots > matches Request Type 1`] = `
             >
               I have an idea and would like feedback
             </h3>
-          </header>
+          </div>
           <div
             class="usa-card__body padding-bottom-0"
             data-testid="CardBody"
@@ -399,6 +401,7 @@ exports[`TRB Subview snapshots > matches Request Type 1`] = `
                 type="button"
               >
                 <svg
+                  aria-hidden="true"
                   class="usa-icon margin-right-05"
                   focusable="false"
                   height="1em"
@@ -447,6 +450,7 @@ exports[`TRB Subview snapshots > matches Request Type 1`] = `
           >
             Other (I don’t see what I’m looking for)
             <svg
+              aria-hidden="true"
               class="usa-icon margin-left-05 margin-bottom-2px text-tbottom"
               focusable="false"
               height="1em"
@@ -598,6 +602,7 @@ exports[`Technical Assistance (TRB) homepage > renders the homepage with a list 
             type="submit"
           >
             <svg
+              aria-hidden="true"
               class="usa-icon usa-icon--size-3"
               focusable="false"
               height="1em"
@@ -643,6 +648,7 @@ exports[`Technical Assistance (TRB) homepage > renders the homepage with a list 
                   >
                     Project title
                     <svg
+                      aria-hidden="true"
                       class="usa-icon margin-left-05"
                       data-testid="caret--sort"
                       focusable="false"
@@ -676,6 +682,7 @@ exports[`Technical Assistance (TRB) homepage > renders the homepage with a list 
                   >
                     Request status
                     <svg
+                      aria-hidden="true"
                       class="usa-icon margin-left-05"
                       data-testid="caret--sort"
                       focusable="false"
@@ -709,6 +716,7 @@ exports[`Technical Assistance (TRB) homepage > renders the homepage with a list 
                   >
                     Submission date
                     <svg
+                      aria-hidden="true"
                       class="usa-icon margin-left-05"
                       data-testid="caret--down"
                       focusable="false"

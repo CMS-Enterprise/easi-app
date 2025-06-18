@@ -1,98 +1,97 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`The making a request page > matches the snapshot 1`] = `
-<main
-  className="easi-main-content grid-container line-height-body-5 margin-bottom-5"
-  data-testid="making-a-system-request"
-  id="main-content"
-  role="main"
-  tabIndex={-1}
->
-  <h1
-    aria-live="polite"
-    className="easi-h1 margin-bottom-0 margin-top-5"
-    tabIndex={-1}
+<DocumentFragment>
+  <main
+    class="easi-main-content grid-container line-height-body-5 margin-bottom-5"
+    data-testid="making-a-system-request"
+    id="main-content"
+    role="main"
+    tabindex="-1"
   >
-    IT Governance requests
-  </h1>
-  <p
-    className="margin-top-0 font-body-lg"
-  >
-    Request new Life Cycle IDs for your systems, services, or other contracts.
-  </p>
-  <div
-    className="usa-summary-box easi-request__container margin-bottom-3 padding-x-2 padding-y-1"
-    data-testid="summary-box"
-  >
+    <h1
+      aria-live="polite"
+      class="easi-h1 margin-bottom-0 margin-top-5"
+      tabindex="-1"
+    >
+      IT Governance requests
+    </h1>
+    <p
+      class="margin-top-0 font-body-lg"
+    >
+      Request new Life Cycle IDs for your systems, services, or other contracts.
+    </p>
     <div
-      className="usa-summary-box__body"
+      class="usa-summary-box easi-request__container margin-bottom-3 padding-x-2 padding-y-1"
+      data-testid="summary-box"
     >
       <div
-        className="usa-summary-box__text"
+        class="usa-summary-box__body"
       >
-        <p>
-          You can make a request to:
-        </p>
-        <ul>
-          <li>
-            add a new system or service
-          </li>
-          <li>
-            make major changes or updates
-          </li>
-          <li>
-            re-compete a contract
-          </li>
-        </ul>
+        <div
+          class="usa-summary-box__text"
+        >
+          <p>
+            You can make a request to:
+          </p>
+          <ul>
+            <li>
+              add a new system or service
+            </li>
+            <li>
+              make major changes or updates
+            </li>
+            <li>
+              re-compete a contract
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
-  </div>
-  <p>
-    If you are looking for help with Enterprise Architecture or the Navigator program, please get in touch with them directly at:
-     
-    <a
-      className="usa-link"
-      href="mailto:EnterpriseArchitecture@cms.hhs.gov"
+    <p>
+      If you are looking for help with Enterprise Architecture or the Navigator program, please get in touch with them directly at: 
+      <a
+        class="usa-link"
+        href="mailto:EnterpriseArchitecture@cms.hhs.gov"
+      >
+        EnterpriseArchitecture@cms.hhs.gov
+      </a>
+      .
+    </p>
+    <p
+      class="margin-bottom-3"
     >
-      EnterpriseArchitecture@cms.hhs.gov
-    </a>
-    .
-  </p>
-  <p
-    className="margin-bottom-3"
-  >
-    For all other questions, you can reach the CMS IT Governance team at: 
-     
+      For all other questions, you can reach the CMS IT Governance team at:  
+      <a
+        class="usa-link"
+        href="mailto:IT_Governance@cms.hhs.gov"
+      >
+        IT_Governance@cms.hhs.gov
+      </a>
+      .
+    </p>
     <a
-      className="usa-link"
-      href="mailto:IT_Governance@cms.hhs.gov"
+      class="usa-button"
+      href="/system/request-type"
     >
-      IT_Governance@cms.hhs.gov
+      Start a new request
     </a>
-    .
-  </p>
-  <a
-    className="usa-button"
-    href="/system/request-type"
-    onClick={[Function]}
-  >
-    Start a new request
-  </a>
-  <h2
-    className="padding-top-2 margin-top-5 easi-section__border-top"
-  >
-    My IT governance requests
-  </h2>
-  <div
-    className="text-center"
-    data-testid="table-loading"
-  >
-    <span
-      aria-valuetext="Loading"
-      className="easi-spinner easi-spinner--xl"
-      role="progressbar"
-    />
-    ;
-  </div>
-</main>
+    <h2
+      class="padding-top-2 margin-top-5 easi-section__border-top"
+    >
+      My IT governance requests
+    </h2>
+    <div
+      class="text-center"
+      data-testid="table-loading"
+    >
+      <span
+        aria-valuetext="Loading"
+        class="easi-spinner easi-spinner--xl"
+        role="progressbar"
+      />
+      ;
+    </div>
+  </main>
+</DocumentFragment>
 `;

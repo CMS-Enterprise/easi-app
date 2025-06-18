@@ -28,9 +28,11 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
           {t('prepare.whatToExpect.title')}
         </h2>
         <ul className="list-style-none margin-0 padding-0">
-          {t<string[]>('prepare.whatToExpect.items', {
-            returnObjects: true
-          }).map((item, idx) => (
+          {(
+            t('prepare.whatToExpect.items', {
+              returnObjects: true
+            }) as string[]
+          ).map((item, idx) => (
             <li
               className={classNames('line-height-sans-6', {
                 'margin-top-1': idx
@@ -52,30 +54,38 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
         <CollapsableList
           className="margin-top-2"
           label={t('prepare.capitalPlanning.title')}
-          items={t<string[]>('prepare.capitalPlanning.items', {
-            returnObjects: true
-          })}
+          items={
+            t('prepare.capitalPlanning.items', {
+              returnObjects: true
+            }) as string[]
+          }
         />
         <CollapsableList
           className="margin-top-2"
           label={t('prepare.enterpriseArchitecture.title')}
-          items={t<string[]>('prepare.enterpriseArchitecture.items', {
-            returnObjects: true
-          })}
+          items={
+            t('prepare.enterpriseArchitecture.items', {
+              returnObjects: true
+            }) as string[]
+          }
         />
         <CollapsableList
           className="margin-top-2"
           label={t('prepare.sharedServices.title')}
-          items={t<string[]>('prepare.sharedServices.items', {
-            returnObjects: true
-          })}
+          items={
+            t('prepare.sharedServices.items', {
+              returnObjects: true
+            }) as string[]
+          }
         />
         <CollapsableList
           className="margin-top-2"
           label={t('prepare.itSecurityPrivacy.title')}
-          items={t<string[]>('prepare.itSecurityPrivacy.items', {
-            returnObjects: true
-          })}
+          items={
+            t('prepare.itSecurityPrivacy.items', {
+              returnObjects: true
+            }) as string[]
+          }
         />
       </div>
       <div>
@@ -84,9 +94,11 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
         </h3>
         <div>{t('prepare.whatToBring.subtitle')}</div>
         <ul className="list-style-middot-inner line-height-body-5">
-          {t<string[]>('prepare.whatToBring.items', {
-            returnObjects: true
-          }).map(item => (
+          {(
+            t('prepare.whatToBring.items', {
+              returnObjects: true
+            }) as string[]
+          ).map(item => (
             <li key={item}>{item}</li>
           ))}
         </ul>

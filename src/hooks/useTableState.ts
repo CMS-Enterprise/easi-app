@@ -5,9 +5,9 @@ Storage method depends on the need of type of persistence
 Table setters are dependent on react-table exposed methods
 */
 
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { FilterValue, SortingRule } from 'react-table';
-import { assign } from 'lodash';
+import { assign, isEqual } from 'lodash';
 import {
   ActiveStateType,
   ReactTableStateType,
@@ -26,8 +26,9 @@ const useTableState = (
 ) => {
   const tableStates: Record<string, TableStates> =
     useContext(TableStateContext);
-
   const tableState = tableStates[tableName];
+
+  const didInitRef = useRef(false);
 
   // Stores page size in local storage on every selection change
   useEffect(() => {
@@ -40,28 +41,41 @@ const useTableState = (
   // Stores state/sets context on unmount only on page change
   useEffect(() => {
     const tableStateRef = tableState.current;
-
     return () => {
       tableStateRef.state = assign({}, tableStateRef.state, state);
     };
   }, [tableState, state]);
 
-  // The following hooks sets table settings from stored context state
-
-  // Navigates to previously view page || 0
-  // Sorts by previous view sort || desc:true, id: 'submittedAt'
+  // Initialize table state only once
   useEffect(() => {
-    gotoPage(tableState.current.state.pageIndex);
-    setSortBy(tableState.current.state.sortBy);
-  }, [gotoPage, setSortBy, tableState]);
+    if (didInitRef.current) return;
+    didInitRef.current = true;
 
-  // Filters by previous search term || ''
-  useEffect(() => {
-    // Needs to wait for data to be present - react-table resets globalFilter if initialized before data
-    if (data.length) {
-      setGlobalFilter(tableState.current.state.globalFilter);
+    const storedPageIndex = tableState.current.state.pageIndex;
+    const storedSortBy = tableState.current.state.sortBy;
+    const storedFilter = tableState.current.state.globalFilter;
+
+    if (state.pageIndex !== storedPageIndex) {
+      gotoPage(storedPageIndex);
     }
-  }, [data.length, setGlobalFilter, tableState]);
+
+    if (!isEqual(state.sortBy, storedSortBy)) {
+      setSortBy(storedSortBy);
+    }
+
+    if (data.length && !isEqual(state.globalFilter, storedFilter)) {
+      setGlobalFilter(storedFilter);
+    }
+  }, [
+    gotoPage,
+    setSortBy,
+    setGlobalFilter,
+    tableState,
+    state.pageIndex,
+    state.sortBy,
+    state.globalFilter,
+    data.length
+  ]);
 
   // Sets previous active table || 'open'
   useEffect(() => {

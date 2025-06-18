@@ -6,14 +6,29 @@ import FileInput from '.';
 
 describe('FileInput component', () => {
   it('renders file upload field', () => {
-    render(<FileInput name="fileUpload" id="fileUpload" />);
+    render(
+      <FileInput
+        name="fileUpload"
+        id="fileUpload"
+        onChange={() => {}}
+        onPointerOverCapture={() => {}}
+        onPointerMoveCapture={() => {}}
+      />
+    );
 
     expect(screen.getByTestId('file-input-input')).toBeInTheDocument();
   });
 
   it('renders field with default filename', () => {
     render(
-      <FileInput name="fileUpload" id="fileUpload" defaultFileName="test.pdf" />
+      <FileInput
+        name="fileUpload"
+        id="fileUpload"
+        defaultFileName="test.pdf"
+        onChange={() => {}}
+        onPointerOverCapture={() => {}}
+        onPointerMoveCapture={() => {}}
+      />
     );
 
     expect(
@@ -25,7 +40,14 @@ describe('FileInput component', () => {
 
   it('clears default filename', async () => {
     render(
-      <FileInput name="fileUpload" id="fileUpload" defaultFileName="test.pdf" />
+      <FileInput
+        name="fileUpload"
+        id="fileUpload"
+        defaultFileName="test.pdf"
+        onChange={() => {}}
+        onPointerOverCapture={() => {}}
+        onPointerMoveCapture={() => {}}
+      />
     );
 
     const clearButton = screen.getByRole('button', { name: 'Clear file' });

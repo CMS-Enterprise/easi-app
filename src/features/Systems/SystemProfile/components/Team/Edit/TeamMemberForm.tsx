@@ -359,7 +359,7 @@ const TeamMemberForm = ({
       </Form>
 
       <IconLink
-        icon={<Icon.ArrowBack />}
+        icon={<Icon.ArrowBack aria-hidden />}
         to={
           isWorkspace
             ? `/systems/${cedarSystemId}/workspace`

@@ -73,9 +73,11 @@ const Discussions = ({
           className="text-bold"
         >
           <ul className="margin-y-0 padding-left-205">
-            {t<string[]>('general.usageTips.content', {
-              returnObjects: true
-            }).map((item, index) => (
+            {(
+              t('general.usageTips.content', {
+                returnObjects: true
+              }) as string[]
+            ).map((item, index) => (
               <li key={item} className="line-height-body-5 margin-bottom-05">
                 <Trans
                   i18nKey={`discussions:general.usageTips.content.${index}`}
@@ -92,7 +94,7 @@ const Discussions = ({
               {t('governanceReviewBoard.internal.label')}
             </h3>
             <p className="margin-0 margin-top-05 text-base display-flex text-no-wrap">
-              <Icon.LockOutline className="margin-right-05" />
+              <Icon.LockOutline className="margin-right-05" aria-hidden />
               <span>
                 {t('governanceReviewBoard.internal.visibilityRestricted')}
               </span>
@@ -131,7 +133,7 @@ const Discussions = ({
                 onClick={() => {
                   pushDiscussionQuery({ discussionMode: 'view' });
                 }}
-                icon={<Icon.ArrowForward />}
+                icon={<Icon.ArrowForward aria-hidden />}
                 iconPosition="after"
                 unstyled
               >
