@@ -258,7 +258,7 @@ describe('Business case preferred solution form', () => {
   it('does not run validations', async () => {
     await renderPage(defaultStore);
 
-    screen.getByRole('button', { name: /Next/i }).click();
+    screen.getByRole('button', { name: /Finish Preferred Solution/i }).click();
 
     await waitFor(() => {
       expect(
@@ -266,43 +266,45 @@ describe('Business case preferred solution form', () => {
       ).not.toBeInTheDocument();
     });
     await waitFor(() => {
-      expect(screen.getByTestId('alternative-solution-a')).toBeInTheDocument();
+      expect(screen.getByTestId('alternative-analysis')).toBeInTheDocument();
     });
   });
 
-  it('does not render mandatory fields message', async () => {
+  it('renders draft business case fields message', async () => {
     await renderPage(defaultStore);
 
     expect(
-      screen.queryByTestId('mandatory-fields-alert')
-    ).not.toBeInTheDocument();
+      screen.getByTestId('draft-business-case-fields-alert')
+    ).toBeInTheDocument();
   });
 
-  it('navigates back one page', async () => {
+  it('navigates back to alternative analysis', async () => {
     await renderPage(defaultStore);
 
-    screen.getByRole('button', { name: /back/i }).click();
+    screen.getByTestId('save-and-return-button').click();
 
     await waitFor(() => {
-      expect(screen.getByTestId('request-description')).toBeInTheDocument();
+      expect(screen.getByTestId('alternative-analysis')).toBeInTheDocument();
     });
   });
 
-  it('navigates to next page', async () => {
+  it('navigates to alternative analysis page after finishing', async () => {
     await renderPage(defaultStore);
 
-    screen.getByRole('button', { name: /next/i }).click();
+    screen.getByRole('button', { name: /Finish Preferred Solution/i }).click();
 
     await waitFor(() => {
-      expect(screen.getByTestId('alternative-solution-a')).toBeInTheDocument();
+      expect(screen.getByTestId('alternative-analysis')).toBeInTheDocument();
     });
   });
 
   describe('Final Business Case', () => {
-    it('renders mandatory fields message', async () => {
+    it('does not render draft business case fields message', async () => {
       await renderPage(defaultStore, true);
 
-      expect(screen.getByTestId('mandatory-fields-alert')).toBeInTheDocument();
+      expect(
+        screen.queryByTestId('draft-business-case-fields-alert')
+      ).not.toBeInTheDocument();
     });
 
     it('runs validations and renders form errors', async () => {
@@ -310,7 +312,9 @@ describe('Business case preferred solution form', () => {
 
       await renderPage(defaultStore, true);
 
-      screen.getByRole('button', { name: /Next/i }).click();
+      screen
+        .getByRole('button', { name: /Finish Preferred Solution/i })
+        .click();
 
       await waitFor(() => {
         expect(

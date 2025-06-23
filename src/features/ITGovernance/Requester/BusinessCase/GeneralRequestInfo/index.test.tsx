@@ -58,7 +58,10 @@ describe('Business case general request info form', () => {
       form: {
         ...businessCaseInitialData,
         systemIntakeId: systemIntake.id,
-        id: '75746af8-9a9b-4558-a375-cf9848eb2b0d'
+        id: '75746af8-9a9b-4558-a375-cf9848eb2b0d',
+        requester: {
+          name: 'John Doe'
+        }
       },
       isLoading: false,
       isSaving: false,
@@ -80,23 +83,33 @@ describe('Business case general request info form', () => {
   it('fills all fields', async () => {
     await renderPage(defaultStore);
 
-    const projectNameField = screen.getByRole('textbox', {
-      name: /Project name/i
+    const requestNameField = screen.getByRole('textbox', {
+      name: /Contract \/ request title/i
     });
-    userEvent.type(projectNameField, 'Test Project 1');
-    expect(projectNameField).toHaveValue('Test Project 1');
+    userEvent.type(requestNameField, 'Test Project 1');
+    expect(requestNameField).toHaveValue('Test Project 1');
+
+    const projectAcronymField = screen.getByRole('textbox', {
+      name: /Contract \/ request acronym/i
+    });
+    userEvent.type(projectAcronymField, 'TP1');
+    expect(projectAcronymField).toHaveValue('TP1');
 
     const requesterField = screen.getByRole('textbox', {
-      name: /^Requester$/i
+      name: /Requester name/i
     });
+
+    expect(requesterField).toBeDisabled();
+
     userEvent.type(requesterField, 'John Doe');
     expect(requesterField).toHaveValue('John Doe');
 
-    const businessOwnerField = screen.getByRole('textbox', {
-      name: /Business Owner/i
-    });
-    userEvent.type(businessOwnerField, 'Sally Doe');
-    expect(businessOwnerField).toHaveValue('Sally Doe');
+    const businessOwnerField = screen.getByTestId('cedar-contact-select');
+
+    userEvent.type(businessOwnerField, 'Jane McModel');
+    userEvent.keyboard('[Enter]');
+
+    expect(businessOwnerField).toHaveValue('Jane McModel');
 
     const phoneNumberField = screen.getByRole('textbox', {
       name: /Phone Number/i
@@ -123,12 +136,12 @@ describe('Business case general request info form', () => {
     });
   });
 
-  it('does not render mandatory fields message', async () => {
+  it('renders draft business case fields message', async () => {
     await renderPage(defaultStore);
 
     expect(
-      screen.queryByTestId('mandatory-fields-alert')
-    ).not.toBeInTheDocument();
+      screen.getByTestId('draft-business-case-fields-alert')
+    ).toBeInTheDocument();
   });
 
   it('navigates to next page', async () => {
@@ -142,10 +155,12 @@ describe('Business case general request info form', () => {
   });
 
   describe('Final Business Case', () => {
-    it('renders mandatory fields message', async () => {
+    it('does not render draft business case fields message', async () => {
       await renderPage(defaultStore, true);
 
-      expect(screen.getByTestId('mandatory-fields-alert')).toBeInTheDocument();
+      expect(
+        screen.queryByTestId('draft-business-case-fields-alert')
+      ).not.toBeInTheDocument();
     });
 
     it('runs validations and renders form errors', async () => {

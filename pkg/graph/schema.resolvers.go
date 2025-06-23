@@ -38,13 +38,18 @@ func (r *businessCaseResolver) AlternativeASolution(ctx context.Context, obj *mo
 		CostSavings:             obj.AlternativeACostSavings.Ptr(),
 		HasUI:                   obj.AlternativeAHasUI.Ptr(),
 		HostingCloudServiceType: obj.AlternativeAHostingCloudServiceType.Ptr(),
+		HostingCloudStrategy:    obj.AlternativeAHostingCloudStrategy.Ptr(),
 		HostingLocation:         obj.AlternativeAHostingLocation.Ptr(),
 		HostingType:             obj.AlternativeAHostingType.Ptr(),
 		Pros:                    obj.AlternativeAPros.Ptr(),
 		SecurityIsApproved:      obj.AlternativeASecurityIsApproved.Ptr(),
 		SecurityIsBeingReviewed: obj.AlternativeASecurityIsBeingReviewed.Ptr(),
 		Summary:                 obj.AlternativeASummary.Ptr(),
+		TargetContractAwardDate: obj.AlternativeATargetContractAwardDate,
+		TargetCompletionDate:    obj.AlternativeATargetCompletionDate,
 		Title:                   obj.AlternativeATitle.Ptr(),
+		WorkforceTrainingReqs:   obj.AlternativeAWorkforceTrainingReqs.Ptr(),
+		ZeroTrustAlignment:      obj.AlternativeAZeroTrustAlignment.Ptr(),
 	}, nil
 }
 
@@ -56,13 +61,18 @@ func (r *businessCaseResolver) AlternativeBSolution(ctx context.Context, obj *mo
 		CostSavings:             obj.AlternativeBCostSavings.Ptr(),
 		HasUI:                   obj.AlternativeBHasUI.Ptr(),
 		HostingCloudServiceType: obj.AlternativeBHostingCloudServiceType.Ptr(),
+		HostingCloudStrategy:    obj.AlternativeBHostingCloudStrategy.Ptr(),
 		HostingLocation:         obj.AlternativeBHostingLocation.Ptr(),
 		HostingType:             obj.AlternativeBHostingType.Ptr(),
 		Pros:                    obj.AlternativeBPros.Ptr(),
 		SecurityIsApproved:      obj.AlternativeBSecurityIsApproved.Ptr(),
 		SecurityIsBeingReviewed: obj.AlternativeBSecurityIsBeingReviewed.Ptr(),
 		Summary:                 obj.AlternativeBSummary.Ptr(),
+		TargetContractAwardDate: obj.AlternativeBTargetContractAwardDate,
+		TargetCompletionDate:    obj.AlternativeBTargetCompletionDate,
 		Title:                   obj.AlternativeBTitle.Ptr(),
+		WorkforceTrainingReqs:   obj.AlternativeBWorkforceTrainingReqs.Ptr(),
+		ZeroTrustAlignment:      obj.AlternativeBZeroTrustAlignment.Ptr(),
 	}, nil
 }
 
@@ -79,13 +89,18 @@ func (r *businessCaseResolver) PreferredSolution(ctx context.Context, obj *model
 		CostSavings:             obj.PreferredCostSavings.Ptr(),
 		HasUI:                   obj.PreferredHasUI.Ptr(),
 		HostingCloudServiceType: obj.PreferredHostingCloudServiceType.Ptr(),
+		HostingCloudStrategy:    obj.PreferredHostingCloudStrategy.Ptr(),
 		HostingLocation:         obj.PreferredHostingLocation.Ptr(),
 		HostingType:             obj.PreferredHostingType.Ptr(),
 		Pros:                    obj.PreferredPros.Ptr(),
 		SecurityIsApproved:      obj.PreferredSecurityIsApproved.Ptr(),
 		SecurityIsBeingReviewed: obj.PreferredSecurityIsBeingReviewed.Ptr(),
 		Summary:                 obj.PreferredSummary.Ptr(),
+		TargetContractAwardDate: obj.PreferredTargetContractAwardDate,
+		TargetCompletionDate:    obj.PreferredTargetCompletionDate,
 		Title:                   obj.PreferredTitle.Ptr(),
+		WorkforceTrainingReqs:   obj.PreferredWorkforceTrainingReqs.Ptr(),
+		ZeroTrustAlignment:      obj.PreferredZeroTrustAlignment.Ptr(),
 	}, nil
 }
 
@@ -715,6 +730,16 @@ func (r *mutationResolver) ArchiveSystemIntake(ctx context.Context, id uuid.UUID
 	intake, err := r.store.FetchSystemIntakeByID(ctx, id)
 	if err != nil {
 		return nil, err
+	}
+
+	// we first must check the current intake form status. if it is not Ready or In Progress, archiving is not allowed
+	currentStatus, err := resolvers.IntakeFormStatus(intake)
+	if err != nil {
+		return nil, err
+	}
+
+	if currentStatus != models.ITGISReady && currentStatus != models.ITGISInProgress {
+		return nil, errors.New("cannot remove system intake unless in Ready or In Progress status")
 	}
 
 	if !services.AuthorizeUserIsIntakeRequester(ctx, intake) {
@@ -1553,6 +1578,11 @@ func (r *queryResolver) TrbLeadOptions(ctx context.Context) ([]*models.UserInfo,
 // TrbAdminNote is the resolver for the trbAdminNote field.
 func (r *queryResolver) TrbAdminNote(ctx context.Context, id uuid.UUID) (*models.TRBAdminNote, error) {
 	return resolvers.GetTRBAdminNoteByID(ctx, r.store, id)
+}
+
+// RequesterUpdateEmailData is the resolver for the requesterUpdateEmailData field.
+func (r *queryResolver) RequesterUpdateEmailData(ctx context.Context) ([]*models.RequesterUpdateEmailData, error) {
+	return resolvers.GetRequesterUpdateEmailData(ctx, r.store, r.service.FetchUserInfos)
 }
 
 // UserAccount is the resolver for the userAccount field.

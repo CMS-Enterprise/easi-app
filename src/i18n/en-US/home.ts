@@ -124,6 +124,11 @@ const home = {
           '<p>Downloading the Portfolio Update Report will generate and download a comma-separated (CSV) file of all IT Governance requests within the date range you select. The dates selected are based on the last admin team note date.</p><p>The Report contains the following fields: Project name, Requester name, EUA ID, Requester component, Last admin team note, Product Manager name, Business Owner name, Business Owner component, Business need, Business solution, Process status, AI tech involved, Funding number and source, Current annual spend, Current annual spend IT portion, Planned annual spend, Planned annual spend IT portion, Contractor(s), Contract vehicle, Period of performance start, Period of performance end, Status, LCID, LCID scope, LCID expiration date, Admin lead, Updated at, and Submitted at.</p>'
       },
       configureReport: {
+        card: {
+          heading: 'Portfolio update report',
+          content:
+            'The Portfolio Update Report is a downloadable csv file with key information about IT Governance requests within a chosen date range. '
+        },
         button: 'Configure Portfolio Update Report',
         heading: 'Select a date range to download',
         content:
@@ -133,6 +138,33 @@ const home = {
         download: 'Download',
         close: "Don't download and return to EASi",
         error: 'Please enter a valid date'
+      },
+      requesterUpdateEmail: {
+        card: {
+          heading: 'Requester update email',
+          content:
+            'Use EASi to generate a list of all email addresses for requesters who have LCIDs. You may then use this list to compose your yearly update email or other email communication in the email client of your choice.',
+          button: 'Configure email list'
+        },
+        modal: {
+          heading: 'Configure email list',
+          content:
+            'Select the LCID statuses you would like to include in this email list. EASi will gather all requester emails for LCIDs with that status.',
+          list: {
+            ISSUED: 'Active (does not include LCIDs retiring soon)',
+            EXPIRING_SOON: 'Expiring soon only',
+            EXPIRED: 'Expired',
+            RETIRING_SOON: 'Retiring soon',
+            RETIRED_RECENTLY: 'Retired recently (past 120 days)'
+          },
+          openEmailButton: 'Open in email',
+          copyEmailButton: 'or, copy emails to clipboard',
+          noEmail:
+            'There are no requester emails that match your selection. Please update your selection to download an email list from EASi.',
+          error:
+            'There was an error loading the data. Please close this and try again. If the error persists, try again later.',
+          copied: 'Copied to clipboard'
+        }
       }
     }
   }

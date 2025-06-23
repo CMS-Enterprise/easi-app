@@ -1,6 +1,7 @@
 package resolvers
 
 import (
+	"context"
 	"slices"
 	"time"
 
@@ -216,4 +217,14 @@ func (s *ResolverSuite) TestUpdateSystemIntakeRequestType() {
 	s.NoError(err)
 	s.NotNil(intakeWithNewType)
 	s.Equal(models.SystemIntakeRequestTypeMAJORCHANGES, intakeWithNewType.RequestType)
+}
+
+func (s *ResolverSuite) TestGetRequesterUpdateEmailData() {
+	ctx := s.testConfigs.Context
+	store := s.testConfigs.Store
+
+	_, err := GetRequesterUpdateEmailData(ctx, store, func(ctx context.Context, strings []string) ([]*models.UserInfo, error) {
+		return nil, nil
+	})
+	s.NoError(err)
 }

@@ -89,6 +89,7 @@ type ComplexityRoot struct {
 		BusinessNeed           func(childComplexity int) int
 		BusinessOwner          func(childComplexity int) int
 		CMSBenefit             func(childComplexity int) int
+		CollaborationNeeded    func(childComplexity int) int
 		CreatedAt              func(childComplexity int) int
 		CurrentSolutionSummary func(childComplexity int) int
 		EUAUserID              func(childComplexity int) int
@@ -96,9 +97,11 @@ type ComplexityRoot struct {
 		LifecycleCostLines     func(childComplexity int) int
 		PreferredSolution      func(childComplexity int) int
 		PriorityAlignment      func(childComplexity int) int
+		ProjectAcronym         func(childComplexity int) int
 		ProjectName            func(childComplexity int) int
 		Requester              func(childComplexity int) int
 		RequesterPhoneNumber   func(childComplexity int) int
+		ResponseToGRTFeedback  func(childComplexity int) int
 		Status                 func(childComplexity int) int
 		SuccessIndicators      func(childComplexity int) int
 		SystemIntake           func(childComplexity int) int
@@ -111,13 +114,18 @@ type ComplexityRoot struct {
 		CostSavings             func(childComplexity int) int
 		HasUI                   func(childComplexity int) int
 		HostingCloudServiceType func(childComplexity int) int
+		HostingCloudStrategy    func(childComplexity int) int
 		HostingLocation         func(childComplexity int) int
 		HostingType             func(childComplexity int) int
 		Pros                    func(childComplexity int) int
 		SecurityIsApproved      func(childComplexity int) int
 		SecurityIsBeingReviewed func(childComplexity int) int
 		Summary                 func(childComplexity int) int
+		TargetCompletionDate    func(childComplexity int) int
+		TargetContractAwardDate func(childComplexity int) int
 		Title                   func(childComplexity int) int
+		WorkforceTrainingReqs   func(childComplexity int) int
+		ZeroTrustAlignment      func(childComplexity int) int
 	}
 
 	CedarAuthorityToOperate struct {
@@ -650,6 +658,7 @@ type ComplexityRoot struct {
 		MyCedarSystems                   func(childComplexity int) int
 		MySystemIntakes                  func(childComplexity int) int
 		MyTrbRequests                    func(childComplexity int, archived bool) int
+		RequesterUpdateEmailData         func(childComplexity int) int
 		RoleTypes                        func(childComplexity int) int
 		Roles                            func(childComplexity int, cedarSystemID string, roleTypeID *string) int
 		SystemIntake                     func(childComplexity int, id uuid.UUID) int
@@ -663,6 +672,16 @@ type ComplexityRoot struct {
 		TrbRequests                      func(childComplexity int, archived bool) int
 		Urls                             func(childComplexity int, cedarSystemID string) int
 		UserAccount                      func(childComplexity int, username string) int
+	}
+
+	RequesterUpdateEmailData struct {
+		EuaUserID      func(childComplexity int) int
+		LcidExpiresAt  func(childComplexity int) int
+		LcidIssuedAt   func(childComplexity int) int
+		LcidRetiresAt  func(childComplexity int) int
+		LcidStatus     func(childComplexity int) int
+		ProjectName    func(childComplexity int) int
+		RequesterEmail func(childComplexity int) int
 	}
 
 	SystemIntake struct {
@@ -1334,6 +1353,7 @@ type QueryResolver interface {
 	MyTrbRequests(ctx context.Context, archived bool) ([]*models.TRBRequest, error)
 	TrbLeadOptions(ctx context.Context) ([]*models.UserInfo, error)
 	TrbAdminNote(ctx context.Context, id uuid.UUID) (*models.TRBAdminNote, error)
+	RequesterUpdateEmailData(ctx context.Context) ([]*models.RequesterUpdateEmailData, error)
 	UserAccount(ctx context.Context, username string) (*authentication.UserAccount, error)
 }
 type SystemIntakeResolver interface {
@@ -1588,6 +1608,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.BusinessCase.CMSBenefit(childComplexity), true
 
+	case "BusinessCase.collaborationNeeded":
+		if e.complexity.BusinessCase.CollaborationNeeded == nil {
+			break
+		}
+
+		return e.complexity.BusinessCase.CollaborationNeeded(childComplexity), true
+
 	case "BusinessCase.createdAt":
 		if e.complexity.BusinessCase.CreatedAt == nil {
 			break
@@ -1637,6 +1664,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.BusinessCase.PriorityAlignment(childComplexity), true
 
+	case "BusinessCase.projectAcronym":
+		if e.complexity.BusinessCase.ProjectAcronym == nil {
+			break
+		}
+
+		return e.complexity.BusinessCase.ProjectAcronym(childComplexity), true
+
 	case "BusinessCase.projectName":
 		if e.complexity.BusinessCase.ProjectName == nil {
 			break
@@ -1657,6 +1691,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.BusinessCase.RequesterPhoneNumber(childComplexity), true
+
+	case "BusinessCase.responseToGRTFeedback":
+		if e.complexity.BusinessCase.ResponseToGRTFeedback == nil {
+			break
+		}
+
+		return e.complexity.BusinessCase.ResponseToGRTFeedback(childComplexity), true
 
 	case "BusinessCase.status":
 		if e.complexity.BusinessCase.Status == nil {
@@ -1721,6 +1762,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.BusinessCaseSolution.HostingCloudServiceType(childComplexity), true
 
+	case "BusinessCaseSolution.hostingCloudStrategy":
+		if e.complexity.BusinessCaseSolution.HostingCloudStrategy == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseSolution.HostingCloudStrategy(childComplexity), true
+
 	case "BusinessCaseSolution.hostingLocation":
 		if e.complexity.BusinessCaseSolution.HostingLocation == nil {
 			break
@@ -1763,12 +1811,40 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.BusinessCaseSolution.Summary(childComplexity), true
 
+	case "BusinessCaseSolution.targetCompletionDate":
+		if e.complexity.BusinessCaseSolution.TargetCompletionDate == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseSolution.TargetCompletionDate(childComplexity), true
+
+	case "BusinessCaseSolution.targetContractAwardDate":
+		if e.complexity.BusinessCaseSolution.TargetContractAwardDate == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseSolution.TargetContractAwardDate(childComplexity), true
+
 	case "BusinessCaseSolution.title":
 		if e.complexity.BusinessCaseSolution.Title == nil {
 			break
 		}
 
 		return e.complexity.BusinessCaseSolution.Title(childComplexity), true
+
+	case "BusinessCaseSolution.workforceTrainingReqs":
+		if e.complexity.BusinessCaseSolution.WorkforceTrainingReqs == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseSolution.WorkforceTrainingReqs(childComplexity), true
+
+	case "BusinessCaseSolution.zeroTrustAlignment":
+		if e.complexity.BusinessCaseSolution.ZeroTrustAlignment == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseSolution.ZeroTrustAlignment(childComplexity), true
 
 	case "CedarAuthorityToOperate.actualDispositionDate":
 		if e.complexity.CedarAuthorityToOperate.ActualDispositionDate == nil {
@@ -5149,6 +5225,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Query.MyTrbRequests(childComplexity, args["archived"].(bool)), true
 
+	case "Query.requesterUpdateEmailData":
+		if e.complexity.Query.RequesterUpdateEmailData == nil {
+			break
+		}
+
+		return e.complexity.Query.RequesterUpdateEmailData(childComplexity), true
+
 	case "Query.roleTypes":
 		if e.complexity.Query.RoleTypes == nil {
 			break
@@ -5284,6 +5367,55 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Query.UserAccount(childComplexity, args["username"].(string)), true
+
+	case "RequesterUpdateEmailData.euaUserId":
+		if e.complexity.RequesterUpdateEmailData.EuaUserID == nil {
+			break
+		}
+
+		return e.complexity.RequesterUpdateEmailData.EuaUserID(childComplexity), true
+
+	case "RequesterUpdateEmailData.lcidExpiresAt":
+		if e.complexity.RequesterUpdateEmailData.LcidExpiresAt == nil {
+			break
+		}
+
+		return e.complexity.RequesterUpdateEmailData.LcidExpiresAt(childComplexity), true
+
+	case "RequesterUpdateEmailData.lcidIssuedAt":
+		if e.complexity.RequesterUpdateEmailData.LcidIssuedAt == nil {
+			break
+		}
+
+		return e.complexity.RequesterUpdateEmailData.LcidIssuedAt(childComplexity), true
+
+	case "RequesterUpdateEmailData.lcidRetiresAt":
+		if e.complexity.RequesterUpdateEmailData.LcidRetiresAt == nil {
+			break
+		}
+
+		return e.complexity.RequesterUpdateEmailData.LcidRetiresAt(childComplexity), true
+
+	case "RequesterUpdateEmailData.lcidStatus":
+		if e.complexity.RequesterUpdateEmailData.LcidStatus == nil {
+			break
+		}
+
+		return e.complexity.RequesterUpdateEmailData.LcidStatus(childComplexity), true
+
+	case "RequesterUpdateEmailData.projectName":
+		if e.complexity.RequesterUpdateEmailData.ProjectName == nil {
+			break
+		}
+
+		return e.complexity.RequesterUpdateEmailData.ProjectName(childComplexity), true
+
+	case "RequesterUpdateEmailData.requesterEmail":
+		if e.complexity.RequesterUpdateEmailData.RequesterEmail == nil {
+			break
+		}
+
+		return e.complexity.RequesterUpdateEmailData.RequesterEmail(childComplexity), true
 
 	case "SystemIntake.acquisitionMethods":
 		if e.complexity.SystemIntake.AcquisitionMethods == nil {
@@ -8573,13 +8705,18 @@ type BusinessCaseSolution {
   costSavings: String
   hasUi: String
   hostingCloudServiceType: String
+  hostingCloudStrategy: String
   hostingLocation: String
   hostingType: String
   pros: String
   securityIsApproved: Boolean
   securityIsBeingReviewed: String
   summary: String
+  targetContractAwardDate: Time
+  targetCompletionDate: Time
   title: String
+  workforceTrainingReqs: String
+  zeroTrustAlignment: String
 }
 
 """
@@ -8642,6 +8779,7 @@ type BusinessCase {
   businessNeed: String
   businessOwner: String
   cmsBenefit: String
+  collaborationNeeded: String
   createdAt: Time!
   currentSolutionSummary: String
   euaUserId: String!
@@ -8649,9 +8787,11 @@ type BusinessCase {
   lifecycleCostLines: [EstimatedLifecycleCost!]
   preferredSolution: BusinessCaseSolution
   priorityAlignment: String
+  projectAcronym: String
   projectName: String
   requester: String
   requesterPhoneNumber: String
+  responseToGRTFeedback: String
   status: BusinessCaseStatus!
   successIndicators: String
   systemIntake: SystemIntake!
@@ -9262,6 +9402,16 @@ type SystemIntakeLCIDExpirationChange {
   newNextSteps: HTML
   previousCostBaseline: String
   newCostBaseline: String
+}
+
+type RequesterUpdateEmailData {
+  euaUserId: String!
+  projectName: String!
+  lcidStatus: SystemIntakeLCIDStatus
+  lcidIssuedAt: Time
+  lcidExpiresAt: Time
+  lcidRetiresAt: Time
+  requesterEmail: EmailAddress!
 }
 
 """
@@ -10816,8 +10966,8 @@ type Query {
   trbRequests(archived: Boolean! = false): [TRBRequest!]! @hasRole(role: EASI_TRB_ADMIN)
   myTrbRequests(archived: Boolean! = false): [TRBRequest!]!
   trbLeadOptions: [UserInfo!]!
-  trbAdminNote(id: UUID!): TRBAdminNote!
-  @hasRole(role: EASI_TRB_ADMIN)
+  trbAdminNote(id: UUID!): TRBAdminNote! @hasRole(role: EASI_TRB_ADMIN)
+  requesterUpdateEmailData: [RequesterUpdateEmailData!]!
   userAccount(username: String!): UserAccount
 }
 
@@ -14949,6 +15099,8 @@ func (ec *executionContext) fieldContext_BusinessCase_alternativeASolution(_ con
 				return ec.fieldContext_BusinessCaseSolution_hasUi(ctx, field)
 			case "hostingCloudServiceType":
 				return ec.fieldContext_BusinessCaseSolution_hostingCloudServiceType(ctx, field)
+			case "hostingCloudStrategy":
+				return ec.fieldContext_BusinessCaseSolution_hostingCloudStrategy(ctx, field)
 			case "hostingLocation":
 				return ec.fieldContext_BusinessCaseSolution_hostingLocation(ctx, field)
 			case "hostingType":
@@ -14961,8 +15113,16 @@ func (ec *executionContext) fieldContext_BusinessCase_alternativeASolution(_ con
 				return ec.fieldContext_BusinessCaseSolution_securityIsBeingReviewed(ctx, field)
 			case "summary":
 				return ec.fieldContext_BusinessCaseSolution_summary(ctx, field)
+			case "targetContractAwardDate":
+				return ec.fieldContext_BusinessCaseSolution_targetContractAwardDate(ctx, field)
+			case "targetCompletionDate":
+				return ec.fieldContext_BusinessCaseSolution_targetCompletionDate(ctx, field)
 			case "title":
 				return ec.fieldContext_BusinessCaseSolution_title(ctx, field)
+			case "workforceTrainingReqs":
+				return ec.fieldContext_BusinessCaseSolution_workforceTrainingReqs(ctx, field)
+			case "zeroTrustAlignment":
+				return ec.fieldContext_BusinessCaseSolution_zeroTrustAlignment(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type BusinessCaseSolution", field.Name)
 		},
@@ -15016,6 +15176,8 @@ func (ec *executionContext) fieldContext_BusinessCase_alternativeBSolution(_ con
 				return ec.fieldContext_BusinessCaseSolution_hasUi(ctx, field)
 			case "hostingCloudServiceType":
 				return ec.fieldContext_BusinessCaseSolution_hostingCloudServiceType(ctx, field)
+			case "hostingCloudStrategy":
+				return ec.fieldContext_BusinessCaseSolution_hostingCloudStrategy(ctx, field)
 			case "hostingLocation":
 				return ec.fieldContext_BusinessCaseSolution_hostingLocation(ctx, field)
 			case "hostingType":
@@ -15028,8 +15190,16 @@ func (ec *executionContext) fieldContext_BusinessCase_alternativeBSolution(_ con
 				return ec.fieldContext_BusinessCaseSolution_securityIsBeingReviewed(ctx, field)
 			case "summary":
 				return ec.fieldContext_BusinessCaseSolution_summary(ctx, field)
+			case "targetContractAwardDate":
+				return ec.fieldContext_BusinessCaseSolution_targetContractAwardDate(ctx, field)
+			case "targetCompletionDate":
+				return ec.fieldContext_BusinessCaseSolution_targetCompletionDate(ctx, field)
 			case "title":
 				return ec.fieldContext_BusinessCaseSolution_title(ctx, field)
+			case "workforceTrainingReqs":
+				return ec.fieldContext_BusinessCaseSolution_workforceTrainingReqs(ctx, field)
+			case "zeroTrustAlignment":
+				return ec.fieldContext_BusinessCaseSolution_zeroTrustAlignment(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type BusinessCaseSolution", field.Name)
 		},
@@ -15148,6 +15318,47 @@ func (ec *executionContext) _BusinessCase_cmsBenefit(ctx context.Context, field 
 }
 
 func (ec *executionContext) fieldContext_BusinessCase_cmsBenefit(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "BusinessCase",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _BusinessCase_collaborationNeeded(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_BusinessCase_collaborationNeeded(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CollaborationNeeded, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(null.String)
+	fc.Result = res
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_BusinessCase_collaborationNeeded(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "BusinessCase",
 		Field:      field,
@@ -15434,6 +15645,8 @@ func (ec *executionContext) fieldContext_BusinessCase_preferredSolution(_ contex
 				return ec.fieldContext_BusinessCaseSolution_hasUi(ctx, field)
 			case "hostingCloudServiceType":
 				return ec.fieldContext_BusinessCaseSolution_hostingCloudServiceType(ctx, field)
+			case "hostingCloudStrategy":
+				return ec.fieldContext_BusinessCaseSolution_hostingCloudStrategy(ctx, field)
 			case "hostingLocation":
 				return ec.fieldContext_BusinessCaseSolution_hostingLocation(ctx, field)
 			case "hostingType":
@@ -15446,8 +15659,16 @@ func (ec *executionContext) fieldContext_BusinessCase_preferredSolution(_ contex
 				return ec.fieldContext_BusinessCaseSolution_securityIsBeingReviewed(ctx, field)
 			case "summary":
 				return ec.fieldContext_BusinessCaseSolution_summary(ctx, field)
+			case "targetContractAwardDate":
+				return ec.fieldContext_BusinessCaseSolution_targetContractAwardDate(ctx, field)
+			case "targetCompletionDate":
+				return ec.fieldContext_BusinessCaseSolution_targetCompletionDate(ctx, field)
 			case "title":
 				return ec.fieldContext_BusinessCaseSolution_title(ctx, field)
+			case "workforceTrainingReqs":
+				return ec.fieldContext_BusinessCaseSolution_workforceTrainingReqs(ctx, field)
+			case "zeroTrustAlignment":
+				return ec.fieldContext_BusinessCaseSolution_zeroTrustAlignment(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type BusinessCaseSolution", field.Name)
 		},
@@ -15484,6 +15705,47 @@ func (ec *executionContext) _BusinessCase_priorityAlignment(ctx context.Context,
 }
 
 func (ec *executionContext) fieldContext_BusinessCase_priorityAlignment(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "BusinessCase",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _BusinessCase_projectAcronym(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_BusinessCase_projectAcronym(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ProjectAcronym, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(null.String)
+	fc.Result = res
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_BusinessCase_projectAcronym(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "BusinessCase",
 		Field:      field,
@@ -15607,6 +15869,47 @@ func (ec *executionContext) _BusinessCase_requesterPhoneNumber(ctx context.Conte
 }
 
 func (ec *executionContext) fieldContext_BusinessCase_requesterPhoneNumber(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "BusinessCase",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _BusinessCase_responseToGRTFeedback(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_BusinessCase_responseToGRTFeedback(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ResponseToGRTFeedback, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(null.String)
+	fc.Result = res
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_BusinessCase_responseToGRTFeedback(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "BusinessCase",
 		Field:      field,
@@ -16159,6 +16462,47 @@ func (ec *executionContext) fieldContext_BusinessCaseSolution_hostingCloudServic
 	return fc, nil
 }
 
+func (ec *executionContext) _BusinessCaseSolution_hostingCloudStrategy(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCaseSolution) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_BusinessCaseSolution_hostingCloudStrategy(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.HostingCloudStrategy, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_BusinessCaseSolution_hostingCloudStrategy(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "BusinessCaseSolution",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _BusinessCaseSolution_hostingLocation(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCaseSolution) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_BusinessCaseSolution_hostingLocation(ctx, field)
 	if err != nil {
@@ -16405,6 +16749,88 @@ func (ec *executionContext) fieldContext_BusinessCaseSolution_summary(_ context.
 	return fc, nil
 }
 
+func (ec *executionContext) _BusinessCaseSolution_targetContractAwardDate(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCaseSolution) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_BusinessCaseSolution_targetContractAwardDate(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TargetContractAwardDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_BusinessCaseSolution_targetContractAwardDate(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "BusinessCaseSolution",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _BusinessCaseSolution_targetCompletionDate(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCaseSolution) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_BusinessCaseSolution_targetCompletionDate(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TargetCompletionDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_BusinessCaseSolution_targetCompletionDate(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "BusinessCaseSolution",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _BusinessCaseSolution_title(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCaseSolution) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_BusinessCaseSolution_title(ctx, field)
 	if err != nil {
@@ -16434,6 +16860,88 @@ func (ec *executionContext) _BusinessCaseSolution_title(ctx context.Context, fie
 }
 
 func (ec *executionContext) fieldContext_BusinessCaseSolution_title(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "BusinessCaseSolution",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _BusinessCaseSolution_workforceTrainingReqs(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCaseSolution) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_BusinessCaseSolution_workforceTrainingReqs(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.WorkforceTrainingReqs, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_BusinessCaseSolution_workforceTrainingReqs(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "BusinessCaseSolution",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _BusinessCaseSolution_zeroTrustAlignment(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCaseSolution) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_BusinessCaseSolution_zeroTrustAlignment(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ZeroTrustAlignment, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_BusinessCaseSolution_zeroTrustAlignment(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "BusinessCaseSolution",
 		Field:      field,
@@ -40830,6 +41338,66 @@ func (ec *executionContext) fieldContext_Query_trbAdminNote(ctx context.Context,
 	return fc, nil
 }
 
+func (ec *executionContext) _Query_requesterUpdateEmailData(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_requesterUpdateEmailData(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().RequesterUpdateEmailData(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.RequesterUpdateEmailData)
+	fc.Result = res
+	return ec.marshalNRequesterUpdateEmailData2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRequesterUpdateEmailDataᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_requesterUpdateEmailData(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "euaUserId":
+				return ec.fieldContext_RequesterUpdateEmailData_euaUserId(ctx, field)
+			case "projectName":
+				return ec.fieldContext_RequesterUpdateEmailData_projectName(ctx, field)
+			case "lcidStatus":
+				return ec.fieldContext_RequesterUpdateEmailData_lcidStatus(ctx, field)
+			case "lcidIssuedAt":
+				return ec.fieldContext_RequesterUpdateEmailData_lcidIssuedAt(ctx, field)
+			case "lcidExpiresAt":
+				return ec.fieldContext_RequesterUpdateEmailData_lcidExpiresAt(ctx, field)
+			case "lcidRetiresAt":
+				return ec.fieldContext_RequesterUpdateEmailData_lcidRetiresAt(ctx, field)
+			case "requesterEmail":
+				return ec.fieldContext_RequesterUpdateEmailData_requesterEmail(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type RequesterUpdateEmailData", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Query_userAccount(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Query_userAccount(ctx, field)
 	if err != nil {
@@ -41033,6 +41601,302 @@ func (ec *executionContext) fieldContext_Query___schema(_ context.Context, field
 	return fc, nil
 }
 
+func (ec *executionContext) _RequesterUpdateEmailData_euaUserId(ctx context.Context, field graphql.CollectedField, obj *models.RequesterUpdateEmailData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RequesterUpdateEmailData_euaUserId(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.EuaUserID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RequesterUpdateEmailData_euaUserId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RequesterUpdateEmailData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RequesterUpdateEmailData_projectName(ctx context.Context, field graphql.CollectedField, obj *models.RequesterUpdateEmailData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RequesterUpdateEmailData_projectName(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ProjectName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RequesterUpdateEmailData_projectName(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RequesterUpdateEmailData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RequesterUpdateEmailData_lcidStatus(ctx context.Context, field graphql.CollectedField, obj *models.RequesterUpdateEmailData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RequesterUpdateEmailData_lcidStatus(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.LcidStatus, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.SystemIntakeLCIDStatus)
+	fc.Result = res
+	return ec.marshalOSystemIntakeLCIDStatus2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeLCIDStatus(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RequesterUpdateEmailData_lcidStatus(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RequesterUpdateEmailData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SystemIntakeLCIDStatus does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RequesterUpdateEmailData_lcidIssuedAt(ctx context.Context, field graphql.CollectedField, obj *models.RequesterUpdateEmailData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RequesterUpdateEmailData_lcidIssuedAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.LcidIssuedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RequesterUpdateEmailData_lcidIssuedAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RequesterUpdateEmailData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RequesterUpdateEmailData_lcidExpiresAt(ctx context.Context, field graphql.CollectedField, obj *models.RequesterUpdateEmailData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RequesterUpdateEmailData_lcidExpiresAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.LcidExpiresAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RequesterUpdateEmailData_lcidExpiresAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RequesterUpdateEmailData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RequesterUpdateEmailData_lcidRetiresAt(ctx context.Context, field graphql.CollectedField, obj *models.RequesterUpdateEmailData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RequesterUpdateEmailData_lcidRetiresAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.LcidRetiresAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RequesterUpdateEmailData_lcidRetiresAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RequesterUpdateEmailData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RequesterUpdateEmailData_requesterEmail(ctx context.Context, field graphql.CollectedField, obj *models.RequesterUpdateEmailData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RequesterUpdateEmailData_requesterEmail(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.RequesterEmail, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(models.EmailAddress)
+	fc.Result = res
+	return ec.marshalNEmailAddress2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐEmailAddress(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RequesterUpdateEmailData_requesterEmail(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RequesterUpdateEmailData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type EmailAddress does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntake_actions(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntake_actions(ctx, field)
 	if err != nil {
@@ -41227,6 +42091,8 @@ func (ec *executionContext) fieldContext_SystemIntake_businessCase(_ context.Con
 				return ec.fieldContext_BusinessCase_businessOwner(ctx, field)
 			case "cmsBenefit":
 				return ec.fieldContext_BusinessCase_cmsBenefit(ctx, field)
+			case "collaborationNeeded":
+				return ec.fieldContext_BusinessCase_collaborationNeeded(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_BusinessCase_createdAt(ctx, field)
 			case "currentSolutionSummary":
@@ -41241,12 +42107,16 @@ func (ec *executionContext) fieldContext_SystemIntake_businessCase(_ context.Con
 				return ec.fieldContext_BusinessCase_preferredSolution(ctx, field)
 			case "priorityAlignment":
 				return ec.fieldContext_BusinessCase_priorityAlignment(ctx, field)
+			case "projectAcronym":
+				return ec.fieldContext_BusinessCase_projectAcronym(ctx, field)
 			case "projectName":
 				return ec.fieldContext_BusinessCase_projectName(ctx, field)
 			case "requester":
 				return ec.fieldContext_BusinessCase_requester(ctx, field)
 			case "requesterPhoneNumber":
 				return ec.fieldContext_BusinessCase_requesterPhoneNumber(ctx, field)
+			case "responseToGRTFeedback":
+				return ec.fieldContext_BusinessCase_responseToGRTFeedback(ctx, field)
 			case "status":
 				return ec.fieldContext_BusinessCase_status(ctx, field)
 			case "successIndicators":
@@ -65021,6 +65891,8 @@ func (ec *executionContext) _BusinessCase(ctx context.Context, sel ast.Selection
 			out.Values[i] = ec._BusinessCase_businessOwner(ctx, field, obj)
 		case "cmsBenefit":
 			out.Values[i] = ec._BusinessCase_cmsBenefit(ctx, field, obj)
+		case "collaborationNeeded":
+			out.Values[i] = ec._BusinessCase_collaborationNeeded(ctx, field, obj)
 		case "createdAt":
 			out.Values[i] = ec._BusinessCase_createdAt(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -65106,12 +65978,16 @@ func (ec *executionContext) _BusinessCase(ctx context.Context, sel ast.Selection
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "priorityAlignment":
 			out.Values[i] = ec._BusinessCase_priorityAlignment(ctx, field, obj)
+		case "projectAcronym":
+			out.Values[i] = ec._BusinessCase_projectAcronym(ctx, field, obj)
 		case "projectName":
 			out.Values[i] = ec._BusinessCase_projectName(ctx, field, obj)
 		case "requester":
 			out.Values[i] = ec._BusinessCase_requester(ctx, field, obj)
 		case "requesterPhoneNumber":
 			out.Values[i] = ec._BusinessCase_requesterPhoneNumber(ctx, field, obj)
+		case "responseToGRTFeedback":
+			out.Values[i] = ec._BusinessCase_responseToGRTFeedback(ctx, field, obj)
 		case "status":
 			out.Values[i] = ec._BusinessCase_status(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -65204,6 +66080,8 @@ func (ec *executionContext) _BusinessCaseSolution(ctx context.Context, sel ast.S
 			out.Values[i] = ec._BusinessCaseSolution_hasUi(ctx, field, obj)
 		case "hostingCloudServiceType":
 			out.Values[i] = ec._BusinessCaseSolution_hostingCloudServiceType(ctx, field, obj)
+		case "hostingCloudStrategy":
+			out.Values[i] = ec._BusinessCaseSolution_hostingCloudStrategy(ctx, field, obj)
 		case "hostingLocation":
 			out.Values[i] = ec._BusinessCaseSolution_hostingLocation(ctx, field, obj)
 		case "hostingType":
@@ -65216,8 +66094,16 @@ func (ec *executionContext) _BusinessCaseSolution(ctx context.Context, sel ast.S
 			out.Values[i] = ec._BusinessCaseSolution_securityIsBeingReviewed(ctx, field, obj)
 		case "summary":
 			out.Values[i] = ec._BusinessCaseSolution_summary(ctx, field, obj)
+		case "targetContractAwardDate":
+			out.Values[i] = ec._BusinessCaseSolution_targetContractAwardDate(ctx, field, obj)
+		case "targetCompletionDate":
+			out.Values[i] = ec._BusinessCaseSolution_targetCompletionDate(ctx, field, obj)
 		case "title":
 			out.Values[i] = ec._BusinessCaseSolution_title(ctx, field, obj)
+		case "workforceTrainingReqs":
+			out.Values[i] = ec._BusinessCaseSolution_workforceTrainingReqs(ctx, field, obj)
+		case "zeroTrustAlignment":
+			out.Values[i] = ec._BusinessCaseSolution_zeroTrustAlignment(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -69042,6 +69928,28 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "requesterUpdateEmailData":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_requesterUpdateEmailData(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
 		case "userAccount":
 			field := field
 
@@ -69069,6 +69977,63 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Query___schema(ctx, field)
 			})
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var requesterUpdateEmailDataImplementors = []string{"RequesterUpdateEmailData"}
+
+func (ec *executionContext) _RequesterUpdateEmailData(ctx context.Context, sel ast.SelectionSet, obj *models.RequesterUpdateEmailData) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, requesterUpdateEmailDataImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("RequesterUpdateEmailData")
+		case "euaUserId":
+			out.Values[i] = ec._RequesterUpdateEmailData_euaUserId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "projectName":
+			out.Values[i] = ec._RequesterUpdateEmailData_projectName(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "lcidStatus":
+			out.Values[i] = ec._RequesterUpdateEmailData_lcidStatus(ctx, field, obj)
+		case "lcidIssuedAt":
+			out.Values[i] = ec._RequesterUpdateEmailData_lcidIssuedAt(ctx, field, obj)
+		case "lcidExpiresAt":
+			out.Values[i] = ec._RequesterUpdateEmailData_lcidExpiresAt(ctx, field, obj)
+		case "lcidRetiresAt":
+			out.Values[i] = ec._RequesterUpdateEmailData_lcidRetiresAt(ctx, field, obj)
+		case "requesterEmail":
+			out.Values[i] = ec._RequesterUpdateEmailData_requesterEmail(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -76725,6 +77690,60 @@ func (ec *executionContext) marshalNPersonRole2githubᚗcomᚋcmsᚑenterprise�
 func (ec *executionContext) unmarshalNReopenTRBRequestInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐReopenTRBRequestInput(ctx context.Context, v any) (models.ReopenTRBRequestInput, error) {
 	res, err := ec.unmarshalInputReopenTRBRequestInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNRequesterUpdateEmailData2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRequesterUpdateEmailDataᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.RequesterUpdateEmailData) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNRequesterUpdateEmailData2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRequesterUpdateEmailData(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNRequesterUpdateEmailData2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRequesterUpdateEmailData(ctx context.Context, sel ast.SelectionSet, v *models.RequesterUpdateEmailData) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._RequesterUpdateEmailData(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx context.Context, v any) (models.Role, error) {

@@ -125,9 +125,14 @@ const waitForPageLoad = async () =>
 
 describe('TRB Guidance Letter Form', () => {
   it('matches the snapshot', async () => {
-    const { asFragment } = renderForm('summary');
+    const { asFragment } = renderForm('insights');
 
     await waitForPageLoad();
+
+    // Wait for the heading that confirms the page rendered
+    await screen.findByRole('button', {
+      name: 'Add additional guidance'
+    });
 
     expect(asFragment()).toMatchSnapshot();
   });

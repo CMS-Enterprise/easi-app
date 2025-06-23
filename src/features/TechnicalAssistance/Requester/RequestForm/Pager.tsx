@@ -120,7 +120,7 @@ export function Pager({
             }
           }}
         >
-          <Icon.ArrowBack className="margin-right-05" />
+          <Icon.ArrowBack className="margin-right-05" aria-hidden />
           {saveExitText || t('button.saveAndExit')}
         </Button>
       )}

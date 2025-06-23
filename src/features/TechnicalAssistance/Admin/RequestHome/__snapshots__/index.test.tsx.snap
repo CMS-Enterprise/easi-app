@@ -130,7 +130,7 @@ exports[`Trb Admin Request Home > renders successfully with empty data 1`] = `
         <div
           class="usa-card__container"
         >
-          <header
+          <div
             class="usa-card__header"
             data-testid="CardHeader"
           >
@@ -144,7 +144,7 @@ exports[`Trb Admin Request Home > renders successfully with empty data 1`] = `
             >
               Completed by requester
             </p>
-          </header>
+          </div>
           <div
             class="usa-card__body"
             data-testid="CardBody"
@@ -155,6 +155,7 @@ exports[`Trb Admin Request Home > renders successfully with empty data 1`] = `
               <span
                 class="easi-tag easi-task-status-tag bg-info-light"
                 data-testid="task-list-task-tag"
+                style="white-space: nowrap;"
               >
                 Ready to start
               </span>
@@ -191,7 +192,7 @@ exports[`Trb Admin Request Home > renders successfully with empty data 1`] = `
         <div
           class="usa-card__container"
         >
-          <header
+          <div
             class="usa-card__header"
             data-testid="CardHeader"
           >
@@ -205,7 +206,7 @@ exports[`Trb Admin Request Home > renders successfully with empty data 1`] = `
             >
               To be completed by TRB
             </p>
-          </header>
+          </div>
           <div
             class="usa-card__body"
             data-testid="CardBody"
@@ -216,6 +217,7 @@ exports[`Trb Admin Request Home > renders successfully with empty data 1`] = `
               <span
                 class="easi-tag easi-task-status-tag border-2px text-base"
                 data-testid="task-list-task-tag"
+                style="white-space: nowrap;"
               >
                 Cannot start yet
               </span>
@@ -269,6 +271,7 @@ exports[`Trb Admin Request Home > renders successfully with empty data 1`] = `
     >
       View documents
       <svg
+        aria-hidden="true"
         class="usa-icon margin-left-1"
         focusable="false"
         height="1em"

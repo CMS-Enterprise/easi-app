@@ -1,17 +1,19 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button, ButtonGroup, Icon, Label } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
+import Alert from 'components/Alert';
 import AutoSave from 'components/AutoSave';
+import CollapsableLink from 'components/CollapsableLink';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
 import HelpText from 'components/HelpText';
 import IconButton from 'components/IconButton';
 import PageNumber from 'components/PageNumber';
+import RequiredAsterisk from 'components/RequiredAsterisk';
 import TextAreaField from 'components/TextAreaField';
-import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { BusinessCaseModel, RequestDescriptionForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
 import { BusinessCaseSchema } from 'validations/businessCaseSchema';
@@ -36,10 +38,12 @@ const RequestDescription = ({
 
   const initialValues = {
     businessNeed: businessCase.businessNeed,
+    collaborationNeeded: businessCase.collaborationNeeded,
     currentSolutionSummary: businessCase.currentSolutionSummary,
     cmsBenefit: businessCase.cmsBenefit,
     priorityAlignment: businessCase.priorityAlignment,
-    successIndicators: businessCase.successIndicators
+    successIndicators: businessCase.successIndicators,
+    responseToGRTFeedback: businessCase.responseToGRTFeedback
   };
 
   return (
@@ -62,15 +66,37 @@ const RequestDescription = ({
             title={t('requestDescription')}
             data-testid="request-description"
             errors={flatErrors}
-            fieldsMandatory={isFinal}
           >
             <Form className="tablet:grid-col-9 margin-bottom-6">
+              {/* Required fields help text and alert */}
+              <HelpText className="margin-top-1 text-base">
+                <Trans
+                  i18nKey="businessCase:requiredFields"
+                  components={{ red: <span className="text-red" /> }}
+                />
+              </HelpText>
+
+              {!isFinal && (
+                <Alert
+                  type="info"
+                  className="margin-top-2"
+                  data-testid="draft-business-case-fields-alert"
+                  slim
+                >
+                  {t('businessCase:draftAlert')}
+                </Alert>
+              )}
+
               <FieldGroup
                 scrollElement="businessNeed"
                 error={!!flatErrors.businessNeed}
               >
-                <Label htmlFor="BusinessCase-BusinessNeed">
+                <Label
+                  htmlFor="BusinessCase-BusinessNeed"
+                  className="maxw-none"
+                >
                   {t('businessNeed.label')}
+                  <RequiredAsterisk />
                 </Label>
                 <HelpText
                   id="BusinessCase-BusinessNeedHelp"
@@ -78,7 +104,6 @@ const RequestDescription = ({
                 >
                   {t('businessNeed.include')}
                   <ul className="margin-top-1 padding-left-205">
-                    <li>{t('businessNeed.explanation')}</li>
                     <li>{t('businessNeed.mandates')}</li>
                     <li>{t('businessNeed.investmentBenefits')}</li>
                     <li>{t('businessNeed.deadlines')}</li>
@@ -97,11 +122,43 @@ const RequestDescription = ({
               </FieldGroup>
 
               <FieldGroup
+                scrollElement="collaborationNeeded"
+                error={!!flatErrors.collaborationNeeded}
+              >
+                <Label
+                  htmlFor="BusinessCase-CollaborationNeeded"
+                  className="maxw-none"
+                >
+                  {t('collaborationNeeded')}
+                  <RequiredAsterisk />
+                </Label>
+                <HelpText
+                  id="BusinessCase-CollaborationNeededHelp"
+                  className="margin-top-1"
+                >
+                  {t('collaborationNeededHelpText')}
+                </HelpText>
+                <FieldErrorMsg>{flatErrors.collaborationNeeded}</FieldErrorMsg>
+                <Field
+                  as={TextAreaField}
+                  error={!!flatErrors.collaborationNeeded}
+                  id="BusinessCase-CollaborationNeeded"
+                  maxLength={2000}
+                  name="collaborationNeeded"
+                  aria-describedby="BusinessCase-CollaborationNeededCounter BusinessCase-CollaborationNeededHelp"
+                />
+              </FieldGroup>
+
+              <FieldGroup
                 scrollElement="currentSolutionSummary"
                 error={!!flatErrors.currentSolutionSummary}
               >
-                <Label htmlFor="BusinessCase-CurrentSolutionSummary">
+                <Label
+                  htmlFor="BusinessCase-CurrentSolutionSummary"
+                  className="maxw-none"
+                >
                   {t('currentSolutionSummary')}
+                  <RequiredAsterisk />
                 </Label>
                 <HelpText
                   id="BusinessCase-CurrentSolutionSummaryHelp"
@@ -121,13 +178,13 @@ const RequestDescription = ({
                   aria-describedby="BusinessCase-CurrentSolutionSummaryCounter BusinessCase-CurrentSolutionSummaryHelp"
                 />
               </FieldGroup>
-
               <FieldGroup
                 scrollElement="cmsBenefit"
                 error={!!flatErrors.cmsBenefit}
               >
-                <Label htmlFor="BusinessCase-CmsBenefit">
+                <Label htmlFor="BusinessCase-CmsBenefit" className="maxw-none">
                   {t('cmsBenefit')}
+                  <RequiredAsterisk />
                 </Label>
                 <HelpText
                   id="BusinessCase-CmsBenefitHelp"
@@ -145,13 +202,16 @@ const RequestDescription = ({
                   aria-describedby="BusinessCase-CmsBenefitCounter BusinessCase-CmsBenefitHelp"
                 />
               </FieldGroup>
-
               <FieldGroup
                 scrollElement="priorityAlignment"
                 error={!!flatErrors.priorityAlignment}
               >
-                <Label htmlFor="BusinessCase-PriorityAlignment">
+                <Label
+                  htmlFor="BusinessCase-PriorityAlignment"
+                  className="maxw-none"
+                >
                   {t('priorityAlignment')}
+                  <RequiredAsterisk />
                 </Label>
                 <HelpText
                   id="BusinessCase-PriorityAlignmentHelp"
@@ -159,6 +219,15 @@ const RequestDescription = ({
                 >
                   {t('priorityAlignmentHelpText')}
                 </HelpText>
+                <CollapsableLink
+                  id="BusinessCase-examplePriorityAlignment"
+                  label={t('priorityAlignmentExample.label')}
+                  className="margin-top-1 margin-bottom-1"
+                >
+                  <div className="line-height-sans-4">
+                    {t('priorityAlignmentExample.description')}
+                  </div>
+                </CollapsableLink>
                 <FieldErrorMsg>{flatErrors.priorityAlignment}</FieldErrorMsg>
                 <Field
                   as={TextAreaField}
@@ -169,13 +238,16 @@ const RequestDescription = ({
                   aria-describedby="BusinessCase-PriorityAlignmentCounter BusinessCase-PriorityAlignmentHelp"
                 />
               </FieldGroup>
-
               <FieldGroup
                 scrollElement="successIndicators"
                 error={!!flatErrors.successIndicators}
               >
-                <Label htmlFor="BusinessCase-SuccessIndicators">
+                <Label
+                  htmlFor="BusinessCase-SuccessIndicators"
+                  className="maxw-none"
+                >
                   {t('successIndicators')}
+                  <RequiredAsterisk />
                 </Label>
                 <HelpText
                   id="BusinessCase-SuccessIndicatorsHelp"
@@ -183,6 +255,15 @@ const RequestDescription = ({
                 >
                   {t('successIndicatorsHelpText')}
                 </HelpText>
+                <CollapsableLink
+                  id="BusinessCase-exampleSuccessIndicators"
+                  label={t('successIndicatorsExamples.label')}
+                  className="margin-top-1 margin-bottom-1"
+                >
+                  <div className="line-height-sans-4">
+                    {t('successIndicatorsExamples.description')}
+                  </div>
+                </CollapsableLink>
                 <FieldErrorMsg>{flatErrors.successIndicators}</FieldErrorMsg>
                 <Field
                   as={TextAreaField}
@@ -191,6 +272,36 @@ const RequestDescription = ({
                   maxLength={2000}
                   name="successIndicators"
                   aria-describedby="BusinessCase-SuccessIndicatorsCounter BusinessCase-SuccessIndicatorsHelp"
+                />
+              </FieldGroup>
+
+              <FieldGroup
+                scrollElement="responseToGRTFeedback"
+                error={!!flatErrors.responseToGRTFeedback}
+              >
+                <Label
+                  htmlFor="BusinessCase-ResponseToGRTFeedback"
+                  className="maxw-none"
+                >
+                  {t('responseToGRTFeedback')}
+                  <RequiredAsterisk />
+                </Label>
+                <HelpText
+                  id="BusinessCase-ResponseToGRTFeedbackHelp"
+                  className="margin-top-1"
+                >
+                  {t('responseToGRTFeedbackHelpText')}
+                </HelpText>
+                <FieldErrorMsg>
+                  {flatErrors.responseToGRTFeedback}
+                </FieldErrorMsg>
+                <Field
+                  as={TextAreaField}
+                  error={!!flatErrors.responseToGRTFeedback}
+                  id="BusinessCase-ResponseToGRTFeedback"
+                  maxLength={2000}
+                  name="responseToGRTFeedback"
+                  aria-describedby="BusinessCase-ResponseToGRTFeedbackCounter BusinessCase-ResponseToGRTFeedbackHelp"
                 />
               </FieldGroup>
             </Form>
@@ -214,7 +325,7 @@ const RequestDescription = ({
                   validateForm().then(err => {
                     if (Object.keys(err).length === 0) {
                       dispatchSave();
-                      const newUrl = 'preferred-solution';
+                      const newUrl = 'alternative-analysis';
                       history.push(newUrl);
                     } else {
                       window.scrollTo(0, 0);
@@ -228,7 +339,7 @@ const RequestDescription = ({
 
             <IconButton
               type="button"
-              icon={<Icon.ArrowBack />}
+              icon={<Icon.ArrowBack aria-hidden />}
               className="margin-bottom-3 margin-top-2"
               onClick={() => {
                 dispatchSave();
@@ -238,17 +349,10 @@ const RequestDescription = ({
               }}
               unstyled
             >
-              {t('Save & Exit')}
+              {t('saveAndExit')}
             </IconButton>
 
-            <PageNumber
-              currentPage={2}
-              totalPages={
-                alternativeSolutionHasFilledFields(businessCase.alternativeB)
-                  ? 6
-                  : 5
-              }
-            />
+            <PageNumber currentPage={2} totalPages={4} />
 
             <AutoSave
               values={values}

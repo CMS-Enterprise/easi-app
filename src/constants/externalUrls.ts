@@ -15,3 +15,6 @@ export const CFACTS = 'https://cfacts.cms.gov';
 
 export const ATO_LEARN_MORE =
   'https://security.cms.gov/learn/authorization-operate-ato';
+
+export const ZERO_TRUST_LEARN_MORE =
+  'https://security.cms.gov/learn/zero-trust';

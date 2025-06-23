@@ -381,6 +381,7 @@ exports[`Trb Request form: Check and submit > renders request form field values 
       type="button"
     >
       <svg
+        aria-hidden="true"
         class="usa-icon margin-right-05"
         focusable="false"
         height="1em"

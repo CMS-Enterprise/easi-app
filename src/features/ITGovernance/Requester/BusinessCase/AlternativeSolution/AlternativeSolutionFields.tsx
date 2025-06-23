@@ -1,31 +1,35 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { Label, Radio, TextInput } from '@trussworks/react-uswds';
+import { Trans, useTranslation } from 'react-i18next';
+import { Grid, Label, Radio, TextInput } from '@trussworks/react-uswds';
 import { Field, FormikProps } from 'formik';
 
+import Alert from 'components/Alert';
+import DatePickerFormatted from 'components/DatePickerFormatted';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
 import HelpText from 'components/HelpText';
+import RequiredAsterisk from 'components/RequiredAsterisk';
 import TextAreaField from 'components/TextAreaField';
+import { ZERO_TRUST_LEARN_MORE } from 'constants/externalUrls';
 import flattenErrors from 'utils/flattenErrors';
 
 type AlternativeSolutionFieldsProps = {
   altLetter: string;
   businessCaseCreatedAt: string;
   formikProps: FormikProps<any>;
+  isFinal: boolean;
 };
 
 const AlternativeSolutionFields = ({
   altLetter,
   businessCaseCreatedAt,
-  formikProps
+  formikProps,
+  isFinal
 }: AlternativeSolutionFieldsProps) => {
   const { t } = useTranslation('businessCase');
 
   const { values, errors = {}, setFieldValue } = formikProps;
-
-  const altLabel = t('alternativeLabel', { altLetter });
 
   const altId = `alternative${altLetter}`;
 
@@ -33,6 +37,23 @@ const AlternativeSolutionFields = ({
 
   return (
     <>
+      {/* Required fields help text and alert */}{' '}
+      <HelpText className="margin-top-1 text-base">
+        <Trans
+          i18nKey="businessCase:requiredFields"
+          components={{ red: <span className="text-red" /> }}
+        />
+      </HelpText>
+      {!isFinal && (
+        <Alert
+          type="info"
+          className="margin-top-2"
+          data-testid="draft-business-case-fields-alert"
+          slim
+        >
+          {t('businessCase:draftAlert')}
+        </Alert>
+      )}
       <div
         data-testid="alternative-solution-fields"
         className="tablet:grid-col-9"
@@ -42,7 +63,8 @@ const AlternativeSolutionFields = ({
           error={!!flatErrors[`${altId}.title`]}
         >
           <Label htmlFor={`BusinessCase-${altId}Title`}>
-            {t('alternativeLabels.title', { altLabel })}
+            {t('solutionTitle')}
+            <RequiredAsterisk />
           </Label>
           <FieldErrorMsg>{flatErrors[`${altId}.title`]}</FieldErrorMsg>
           <Field
@@ -59,18 +81,19 @@ const AlternativeSolutionFields = ({
           error={!!flatErrors[`${altId}.summary`]}
         >
           <Label htmlFor={`BusinessCase-${altId}Summary`}>
-            {t('alternativeLabels.summary', { altLabel })}
+            {t('solutionSummary.label')}
+            <RequiredAsterisk />
           </Label>
           <HelpText
             id={`BusinessCase-${altId}SummaryHelp`}
             className="margin-top-1"
           >
-            {t('preferredSolutionSummary.include')}
+            {t('solutionSummary.include')}
             <ul className="padding-left-205 margin-top-1 margin-bottom-0">
-              <li>{t('preferredSolutionSummary.summary')}</li>
-              <li>{t('preferredSolutionSummary.implementation')}</li>
-              <li>{t('preferredSolutionSummary.costs')}</li>
-              <li>{t('preferredSolutionSummary.approaches')}</li>
+              <li>{t('solutionSummary.summary')}</li>
+              <li>{t('solutionSummary.implementation')}</li>
+              <li>{t('solutionSummary.costs')}</li>
+              <li>{t('solutionSummary.approaches')}</li>
             </ul>
           </HelpText>
           <FieldErrorMsg>{flatErrors[`${altId}.summary`]}</FieldErrorMsg>
@@ -80,7 +103,7 @@ const AlternativeSolutionFields = ({
             id={`BusinessCase-${altId}Summary`}
             maxLength={10000}
             name={`${altId}.summary`}
-            aria-describedby={`BusinessCase-${altId}SummmaryCounter BusinessCase-${altId}SummaryHelp`}
+            aria-describedby={`BusinessCase-${altId}SummaryCounter BusinessCase-${altId}SummaryHelp`}
           />
         </FieldGroup>
 
@@ -89,13 +112,14 @@ const AlternativeSolutionFields = ({
           error={!!flatErrors[`${altId}.acquisitionApproach`]}
         >
           <Label htmlFor={`BusinessCase-${altId}AcquisitionApproach`}>
-            {t('alternativeLabels.acquisitionApproach', { altLabel })}
+            {t('solutionAcquisitionApproach')}
+            <RequiredAsterisk />
           </Label>
           <HelpText
             id={`BusinessCase-${altId}AcquisitionApproachHelp`}
             className="margin-top-1"
           >
-            {t('preferredSolutionApproachHelpText')}
+            {t('solutionAcquisitionApproachHelpText')}
           </HelpText>
           <FieldErrorMsg>
             {flatErrors[`${altId}.acquisitionApproach`]}
@@ -110,13 +134,71 @@ const AlternativeSolutionFields = ({
           />
         </FieldGroup>
 
+        {/* Target dataes */}
+        <Grid row gap>
+          {/* Target contract award */}
+          <Grid tablet={{ col: 6 }}>
+            <div className="height-full display-flex flex-column">
+              <div className="flex-fill">
+                <Label
+                  htmlFor={`BusinessCase-${altId}TargetContractAwardDate`}
+                  className="margin-bottom-1"
+                >
+                  {t('targetContractAwardDate')}
+                </Label>
+                <HelpText>{t('targetContractAwardDateHelpText')}</HelpText>
+                <HelpText>{t('dateFormat')}</HelpText>
+              </div>
+              <Field
+                as={DatePickerFormatted}
+                error={!!flatErrors[`${altId}.targetContractAwardDate`]}
+                onChange={(date: string) => {
+                  setFieldValue(`${altId}.targetContractAwardDate`, date);
+                }}
+                id={`BusinessCase-${altId}TargetContractAwardDate`}
+                name={`${altId}.targetContractAwardDate`}
+                aria-describedby={`BusinessCase-${altId}TargetContractAwardDateHelp`}
+              />
+            </div>
+          </Grid>
+
+          {/* Target completion date */}
+          <Grid tablet={{ col: 6 }}>
+            <div className="height-full display-flex flex-column">
+              <div className="flex-fill">
+                <Label
+                  htmlFor={`BusinessCase-${altId}TargetCompletionDate`}
+                  className="margin-bottom-1"
+                >
+                  {t('targetCompletionDate')}
+                </Label>
+                <HelpText>{t('targetCompletionDateHelpText')}</HelpText>
+                <HelpText>{t('dateFormat')}</HelpText>
+              </div>
+              <Field
+                as={DatePickerFormatted}
+                error={!!flatErrors[`${altId}.targetCompletionDate`]}
+                onChange={(date: string) => {
+                  setFieldValue(`${altId}.targetCompletionDate`, date);
+                }}
+                id={`BusinessCase-${altId}TargetCompletionDate`}
+                name={`${altId}.targetCompletionDate`}
+                aria-describedby={`BusinessCase-${altId}TargetCompletionDateHelp`}
+              />
+            </div>
+          </Grid>
+        </Grid>
+
         <FieldGroup
           scrollElement={`${altId}.security.isApproved`}
           error={!!flatErrors[`${altId}.security.isApproved`]}
           data-testid="security-approval"
         >
           <fieldset className="usa-fieldset margin-top-4">
-            <legend className="usa-label">{t('isApproved')}</legend>
+            <legend className="usa-label maxw-none">
+              {t('isApproved')}
+              <RequiredAsterisk />
+            </legend>
             <FieldErrorMsg>
               {flatErrors[`${altId}.security.isApproved`]}
             </FieldErrorMsg>
@@ -149,13 +231,15 @@ const AlternativeSolutionFields = ({
 
         {values[`${altId}`].security.isApproved === false && (
           <FieldGroup
+            className="margin-y-1 margin-left-4"
             scrollElement={`${altId}.security.isBeingReviewed`}
             error={!!flatErrors[`${altId}.security.isBeingReviewed`]}
             data-testid="security-approval-in-progress"
           >
-            <fieldset className="usa-fieldset margin-top-4">
+            <fieldset className="usa-fieldset margin-top-2">
               <legend className="usa-label margin-bottom-1">
                 {t('isBeingReviewed')}
+                <RequiredAsterisk />
               </legend>
               <HelpText id={`BusinessCase-${altId}SecurityReviewHelp`}>
                 {t('isBeingReviewedHelpText')}
@@ -195,11 +279,49 @@ const AlternativeSolutionFields = ({
         )}
 
         <FieldGroup
+          scrollElement={`${altId}.zeroTrustAlignment`}
+          error={!!flatErrors[`${altId}.zeroTrustAlignment`]}
+        >
+          <Label
+            htmlFor={`BusinessCase-${altId}ZeroTrustAlignment`}
+            className="maxw-none"
+          >
+            {t('zeroTrustAlignment')}
+            <RequiredAsterisk />
+          </Label>
+          <HelpText
+            id={`BusinessCase-${altId}ZeroTrustAlignmentHelp`}
+            className="margin-top-1"
+          >
+            <Trans
+              i18nKey="businessCase:zeroTrustAlignmentHelpText"
+              components={{
+                a: <a href={ZERO_TRUST_LEARN_MORE}> Click here </a>
+              }}
+            />
+          </HelpText>
+          <FieldErrorMsg>
+            {flatErrors[`${altId}.zeroTrustAlignment`]}
+          </FieldErrorMsg>
+          <Field
+            as={TextAreaField}
+            error={!!flatErrors[`${altId}.zeroTrustAlignment`]}
+            id={`BusinessCase-${altId}ZeroTrustAlignment`}
+            maxLength={10000}
+            name={`${altId}.zeroTrustAlignment`}
+            aria-describedby={`BusinessCase-${altId}ZeroTrustAlignmentCounter BusinessCase-${altId}ZeroTrustAlignmentHelp`}
+          />
+        </FieldGroup>
+
+        <FieldGroup
           scrollElement={`${altId}.hosting.type`}
           error={!!flatErrors[`${altId}.hosting.type`]}
         >
           <fieldset className="usa-fieldset margin-top-4">
-            <legend className="usa-label">{t('hostingType')}</legend>
+            <legend className="usa-label">
+              {t('hostingType')}
+              <RequiredAsterisk />
+            </legend>
             <FieldErrorMsg>{flatErrors[`${altId}.hosting.type`]}</FieldErrorMsg>
 
             <Field
@@ -224,6 +346,7 @@ const AlternativeSolutionFields = ({
                 >
                   <Label htmlFor={`BusinessCase-${altId}CloudLocation`}>
                     {t('hostingLocation')}
+                    <RequiredAsterisk />
                   </Label>
                   <FieldErrorMsg>
                     {flatErrors[`${altId}.hosting.location`]}
@@ -236,6 +359,28 @@ const AlternativeSolutionFields = ({
                     name={`${altId}.hosting.location`}
                   />
                 </FieldGroup>
+
+                <FieldGroup
+                  className="margin-bottom-1 margin-left-4"
+                  scrollElement={`${altId}.hosting.cloudStrategy`}
+                  error={!!flatErrors[`${altId}.hosting.cloudStrategy`]}
+                >
+                  <Label htmlFor={`BusinessCase-${altId}CloudStrategy`}>
+                    {t('cloudStrategy')}
+                    <RequiredAsterisk />
+                  </Label>
+                  <FieldErrorMsg>
+                    {flatErrors[`${altId}.hosting.cloudStrategy`]}
+                  </FieldErrorMsg>
+                  <Field
+                    as={TextInput}
+                    error={!!flatErrors[`${altId}.hosting.cloudStrategy`]}
+                    id={`BusinessCase-${altId}CloudStrategy`}
+                    maxLength={50}
+                    name={`${altId}.hosting.cloudStrategy`}
+                  />
+                </FieldGroup>
+
                 <FieldGroup
                   className="margin-bottom-1 margin-left-4"
                   scrollElement={`${altId}.hosting.cloudServiceType`}
@@ -243,6 +388,7 @@ const AlternativeSolutionFields = ({
                 >
                   <Label htmlFor={`BusinessCase-${altId}CloudServiceType`}>
                     {t('cloudServiceType')}
+                    <RequiredAsterisk />
                   </Label>
                   <FieldErrorMsg>
                     {flatErrors[`${altId}.hosting.cloudServiceType`]}
@@ -278,6 +424,7 @@ const AlternativeSolutionFields = ({
               >
                 <Label htmlFor={`BusinessCase-${altId}DataCenterLocation`}>
                   {t('dataCenterLocation')}
+                  <RequiredAsterisk />
                 </Label>
                 <FieldErrorMsg>
                   {flatErrors[`${altId}.hosting.location`]}
@@ -313,7 +460,10 @@ const AlternativeSolutionFields = ({
           data-testid="user-interface-group"
         >
           <fieldset className="usa-fieldset margin-top-4">
-            <legend className="usa-label">{t('hasUserInterface')}</legend>
+            <legend className="usa-label maxw-none">
+              {t('hasUserInterface')}
+              <RequiredAsterisk />
+            </legend>
             <FieldErrorMsg>
               {flatErrors[`${altId}.hasUserInterface`]}
             </FieldErrorMsg>
@@ -347,17 +497,65 @@ const AlternativeSolutionFields = ({
         </FieldGroup>
 
         <FieldGroup
+          scrollElement={`${altId}.workforceTrainingReqs`}
+          error={!!flatErrors[`${altId}.workforceTrainingReqs`]}
+        >
+          <Label
+            htmlFor={`BusinessCase-${altId}WorkforceTrainingReqs`}
+            className="maxw-none margin-bottom-2"
+          >
+            {t('workforceTrainingReqs')}
+            <RequiredAsterisk />
+          </Label>
+          <FieldErrorMsg>
+            {flatErrors[`${altId}.workforceTrainingReqs`]}
+          </FieldErrorMsg>
+          <Field
+            as={TextAreaField}
+            error={!!flatErrors[`${altId}.workforceTrainingReqs`]}
+            id={`BusinessCase-${altId}WorkforceTrainingReqs`}
+            maxLength={10000}
+            name={`${altId}.workforceTrainingReqs`}
+          />
+        </FieldGroup>
+
+        <hr className="margin-bottom-1 margin-top-4 opacity-30" aria-hidden />
+        <>
+          <h4>{t('prosAndCons')}</h4>
+          <p>{t('prosAndConsHelpText')}</p>
+        </>
+
+        <FieldGroup
           scrollElement={`${altId}.pros`}
           error={!!flatErrors[`${altId}.pros`]}
         >
           <Label htmlFor={`BusinessCase-${altId}Pros`}>
-            {t('alternativeLabels.pros', { altLabel })}
+            {t('pros.label')}
+            <RequiredAsterisk />
           </Label>
           <HelpText
             id={`BusinessCase-${altId}ProsHelp`}
             className="margin-top-1"
           >
-            {t('preferredSolutionProsHelpText')}
+            {t('pros.include')}
+            <ul className="padding-left-205 margin-top-1 margin-bottom-0">
+              <li>
+                <Trans
+                  i18nKey="businessCase:pros.immediateImpact"
+                  components={{
+                    bold: <span className="text-bold" />
+                  }}
+                />
+              </li>
+              <li>
+                <Trans
+                  i18nKey="businessCase:pros.downstreamImpact"
+                  components={{
+                    bold: <span className="text-bold" />
+                  }}
+                />
+              </li>
+            </ul>
           </HelpText>
           <FieldErrorMsg>{flatErrors[`${altId}.pros`]}</FieldErrorMsg>
           <Field
@@ -375,13 +573,40 @@ const AlternativeSolutionFields = ({
           error={!!flatErrors[`${altId}.cons`]}
         >
           <Label htmlFor={`BusinessCase-${altId}Cons`}>
-            {t('alternativeLabels.cons', { altLabel })}
+            {t('cons.label')}
+            <RequiredAsterisk />
           </Label>
           <HelpText
             id={`BusinessCase-${altId}ConsHelp`}
             className="margin-top-1"
           >
-            {t('preferredSolutionConsHelpText')}
+            {t('cons.include')}
+            <ul className="padding-left-205 margin-top-1 margin-bottom-0">
+              <li>
+                <Trans
+                  i18nKey="businessCase:cons.immediateImpact"
+                  components={{
+                    bold: <span className="text-bold" />
+                  }}
+                />
+              </li>
+              <li>
+                <Trans
+                  i18nKey="businessCase:cons.downstreamImpact"
+                  components={{
+                    bold: <span className="text-bold" />
+                  }}
+                />
+              </li>
+              <li>
+                <Trans
+                  i18nKey="businessCase:cons.downsides"
+                  components={{
+                    bold: <span className="text-bold" />
+                  }}
+                />
+              </li>
+            </ul>
           </HelpText>
           <FieldErrorMsg>{flatErrors[`${altId}.cons`]}</FieldErrorMsg>
           <Field
@@ -394,7 +619,7 @@ const AlternativeSolutionFields = ({
           />
         </FieldGroup>
       </div>
-
+      <hr className="margin-bottom-4 margin-top-4 opacity-30" aria-hidden />
       <EstimatedLifecycleCost
         className="margin-top-2"
         formikKey={`${altId}.estimatedLifecycleCost`}
@@ -408,14 +633,17 @@ const AlternativeSolutionFields = ({
         }
         setFieldValue={setFieldValue}
       />
-
       <FieldGroup
         scrollElement={`${altId}.costSavings`}
         error={!!flatErrors[`${altId}.costSavings`]}
         className="margin-top-2 margin-bottom-6 tablet:grid-col-9"
       >
-        <Label htmlFor={`BusinessCase-${altId}CostSavings`}>
+        <Label
+          htmlFor={`BusinessCase-${altId}CostSavings`}
+          className="maxw-none"
+        >
           {t('costSavings')}
+          <RequiredAsterisk />
         </Label>
         <HelpText
           id={`BusinessCase-${altId}CostSavingsHelp`}

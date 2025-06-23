@@ -526,7 +526,7 @@
 							"response": []
 						},
 						{
-							"name": "SystemIntake Delete (archive)",
+							"name": "Archive System Intake",
 							"event": [
 								{
 									"listen": "test",
@@ -534,21 +534,25 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
 							"request": {
-								"method": "DELETE",
+								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation ArchiveSystemIntake($id: UUID!) {\n    archiveSystemIntake(id: $id) {\n        id\n        archivedAt\n    }\n}",
+										"variables": "{\n    \"id\": \"{{systemIntakeID}}\"\n}"
+									}
+								},
 								"url": {
-									"raw": "{{apiURL}}/system_intake/{{systemIntakeID}}",
+									"raw": "{{url}}",
 									"host": [
-										"{{apiURL}}"
-									],
-									"path": [
-										"system_intake",
-										"{{systemIntakeID}}"
+										"{{url}}"
 									]
 								}
 							},
@@ -1857,6 +1861,27 @@
 							"graphql": {
 								"query": "mutation {\n  updateSystemIntakeRequestType(id:\"{{systemIntakeID}}\", newType: MAJOR_CHANGES) {\n    id\n\n    requestType\n\n    state\n    decisionState\n  }\n}",
 								"variables": "{\r\n    \"id\": \"{{systemIntakeID}}\"\r\n}"
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "System Intake Get Requester Update Email Data",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query getRequesterUpdateEmailData {\n    requesterUpdateEmailData{\n        lcidStatus\n        lcidIssuedAt\n        lcidExpiresAt\n        lcidRetiresAt\n        requesterEmail\n    }\n}",
+								"variables": ""
 							}
 						},
 						"url": {

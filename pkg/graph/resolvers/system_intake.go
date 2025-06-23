@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	"slices"
 	"time"
 
 	"github.com/google/uuid"
@@ -367,4 +368,73 @@ func SystemIntakesWithReviewRequested(ctx context.Context, store *storage.Store)
 
 func GetMySystemIntakes(ctx context.Context, store *storage.Store) ([]*models.SystemIntake, error) {
 	return store.GetMySystemIntakes(ctx)
+}
+
+const maxEUAsPerRequest = 200
+
+func GetRequesterUpdateEmailData(
+	ctx context.Context,
+	store *storage.Store,
+	fetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error),
+) ([]*models.RequesterUpdateEmailData, error) {
+
+	// first, get data from store
+	data, err := store.GetRequesterUpdateEmailData(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	var (
+		euaIDs []string
+		euaSet = map[string]struct{}{}
+	)
+
+	for _, item := range data {
+		// de-duplicate
+		if _, seen := euaSet[item.EuaUserID]; seen {
+			continue
+		}
+
+		euaSet[item.EuaUserID] = helpers.EmptyStruct
+		euaIDs = append(euaIDs, item.EuaUserID)
+	}
+
+	// chunk the data into the maximum, which is 200
+	var userData []*models.UserInfo
+	for chunk := range slices.Chunk(euaIDs, maxEUAsPerRequest) {
+		// then, get user data from Okta
+		res, err := fetchUserInfos(ctx, chunk)
+		if err != nil {
+			return nil, err
+		}
+
+		userData = append(userData, res...)
+	}
+
+	// map emails for ease
+	cache := map[string]models.EmailAddress{}
+
+	for _, user := range userData {
+		if user == nil {
+			continue
+		}
+
+		cache[user.Username] = user.Email
+	}
+
+	// then, match up emails from okta
+	for i, item := range data {
+		if item == nil {
+			continue
+		}
+
+		val, ok := cache[item.EuaUserID]
+		if !ok {
+			continue
+		}
+
+		data[i].RequesterEmail = val
+	}
+
+	return data, nil
 }

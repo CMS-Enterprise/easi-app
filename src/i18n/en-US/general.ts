@@ -2,6 +2,7 @@ const general = {
   appName: 'Easy Access to System Information (EASi)',
   intake: 'Intake Request',
   businessCase: 'Business Case',
+  cancel: 'Cancel',
   date: {
     day: 'Day',
     month: 'Month',
@@ -9,6 +10,7 @@ const general = {
   },
   edit: 'Edit',
   remove: 'Remove',
+  loadingData: 'Loading data',
   pageLoading: 'Loading the page',
   loadingResults: 'Loading results',
   noResults: 'No results',

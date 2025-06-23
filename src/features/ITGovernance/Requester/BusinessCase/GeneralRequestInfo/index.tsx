@@ -1,16 +1,18 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { Button, Icon, Label, TextInput } from '@trussworks/react-uswds';
+import { Button, Grid, Icon, Label, TextInput } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
+import Alert from 'components/Alert';
 import AutoSave from 'components/AutoSave';
+import CedarContactSelect from 'components/CedarContactSelect';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
 import HelpText from 'components/HelpText';
 import IconButton from 'components/IconButton';
 import PageNumber from 'components/PageNumber';
-import { alternativeSolutionHasFilledFields } from 'data/businessCase';
+import RequiredAsterisk from 'components/RequiredAsterisk';
 import { BusinessCaseModel, GeneralRequestInfoForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
 import { BusinessCaseSchema } from 'validations/businessCaseSchema';
@@ -35,6 +37,7 @@ const GeneralRequestInfo = ({
 
   const initialValues: GeneralRequestInfoForm = {
     requestName: businessCase.requestName,
+    projectAcronym: businessCase.projectAcronym,
     requester: businessCase.requester,
     businessOwner: businessCase.businessOwner
   };
@@ -52,7 +55,7 @@ const GeneralRequestInfo = ({
       innerRef={formikRef}
     >
       {(formikProps: FormikProps<GeneralRequestInfoForm>) => {
-        const { errors, values, validateForm } = formikProps;
+        const { errors, values, setFieldValue, validateForm } = formikProps;
         const flatErrors = flattenErrors(errors);
 
         return (
@@ -62,25 +65,79 @@ const GeneralRequestInfo = ({
             description={t('generalRequestDescription')}
             errors={flatErrors}
             data-testid="general-request-info"
-            fieldsMandatory={isFinal}
           >
             <Form className="tablet:grid-col-9 margin-bottom-6">
-              <FieldGroup
-                scrollElement="requestName"
-                error={!!flatErrors.requestName}
-              >
-                <Label htmlFor="BusinessCase-RequestName">
-                  {t('projectName')}
-                </Label>
-                <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
-                <Field
-                  as={TextInput}
-                  error={!!flatErrors.requestName}
-                  id="BusinessCase-RequestName"
-                  maxLength={50}
-                  name="requestName"
+              {/* Required fields help text and alert */}
+              <HelpText className="margin-top-1 text-base">
+                <Trans
+                  i18nKey="businessCase:requiredFields"
+                  components={{ red: <span className="text-red" /> }}
                 />
-              </FieldGroup>
+              </HelpText>
+
+              {!isFinal && (
+                <Alert
+                  type="info"
+                  className="margin-top-2"
+                  data-testid="draft-business-case-fields-alert"
+                  slim
+                >
+                  {t('businessCase:draftAlert')}
+                </Alert>
+              )}
+
+              <Grid row gap="sm">
+                <Grid tablet={{ col: 7 }}>
+                  <FieldGroup
+                    scrollElement="requestName"
+                    error={!!flatErrors.requestName}
+                  >
+                    <Label htmlFor="BusinessCase-RequestName">
+                      {t('requestName')}
+                      <RequiredAsterisk />
+                    </Label>
+                    <HelpText
+                      id="BusinessCase-RequestNameHelp"
+                      className="tablet:width-mobile-lg"
+                    >
+                      {t('requestNameHelpText')}
+                    </HelpText>
+                    <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
+                    <Field
+                      as={TextInput}
+                      error={!!flatErrors.requestName}
+                      id="BusinessCase-RequestName"
+                      maxLength={50}
+                      aria-describedby="BusinessCase-RequestNameHelp"
+                      name="requestName"
+                    />
+                  </FieldGroup>
+                </Grid>
+
+                <Grid tablet={{ col: 5 }}>
+                  <FieldGroup
+                    scrollElement="projectAcronym"
+                    className="margin-left-1"
+                    error={!!flatErrors.projectAcronym}
+                  >
+                    <Label htmlFor="BusinessCase-ProjectAcronym">
+                      {t('projectAcronym')}
+                    </Label>
+                    <HelpText id="BusinessCase-ProjectAcronymHelp">
+                      {t('projectAcronymHelpText')}
+                    </HelpText>
+                    <FieldErrorMsg>{flatErrors.projectAcronym}</FieldErrorMsg>
+                    <Field
+                      as={TextInput}
+                      error={!!flatErrors.projectAcronym}
+                      id="BusinessCase-ProjectAcronym"
+                      maxLength={10}
+                      aria-describedby="BusinessCase-ProjectAcronymHelp"
+                      name="projectAcronym"
+                    />
+                  </FieldGroup>
+                </Grid>
+              </Grid>
 
               <FieldGroup
                 scrollElement="requester.name"
@@ -88,6 +145,7 @@ const GeneralRequestInfo = ({
               >
                 <Label htmlFor="BusinessCase-RequesterName">
                   {t('requester')}
+                  <RequiredAsterisk />
                 </Label>
                 <FieldErrorMsg>{flatErrors['requester.name']}</FieldErrorMsg>
                 <Field
@@ -96,34 +154,46 @@ const GeneralRequestInfo = ({
                   id="BusinessCase-RequesterName"
                   maxLength={50}
                   name="requester.name"
+                  className="maxw-none"
+                  disabled
                 />
               </FieldGroup>
-
               <FieldGroup
                 scrollElement="businessOwner.name"
                 error={!!flatErrors['businessOwner.name']}
               >
                 <Label htmlFor="BusinessCase-BusinessOwnerName">
                   {t('businessOwner')}
+                  <RequiredAsterisk />
                 </Label>
                 <FieldErrorMsg>
                   {flatErrors['businessOwner.name']}
                 </FieldErrorMsg>
                 <Field
-                  as={TextInput}
+                  as={CedarContactSelect}
+                  name="businessOwner.name"
                   error={!!flatErrors['businessOwner.name']}
                   id="BusinessCase-BusinessOwnerName"
-                  maxLength={50}
-                  name="businessOwner.name"
+                  value={{
+                    commonName: values.businessOwner.name,
+                    euaUserId: '',
+                    email: ''
+                  }}
+                  onChange={(contact: any) => {
+                    setFieldValue(
+                      'businessOwner.name',
+                      contact?.commonName || ''
+                    );
+                  }}
                 />
               </FieldGroup>
-
               <FieldGroup
                 scrollElement="requester.phoneNumber"
                 error={!!flatErrors['requester.phoneNumber']}
               >
                 <Label htmlFor="BusinessCase-RequesterPhoneNumber">
                   {t('requesterPhoneNumber')}
+                  <RequiredAsterisk />
                 </Label>
                 <HelpText id="BusinessCase-PhoneNumber">
                   {t('requesterPhoneNumberHelpText')}
@@ -139,7 +209,7 @@ const GeneralRequestInfo = ({
                   name="requester.phoneNumber"
                   match={allowedPhoneNumberCharacters}
                   aria-describedby="BusinessCase-PhoneNumber"
-                  className="width-card-lg"
+                  className="maxw-none"
                 />
               </FieldGroup>
             </Form>
@@ -162,7 +232,7 @@ const GeneralRequestInfo = ({
             </Button>
 
             <IconButton
-              icon={<Icon.ArrowBack />}
+              icon={<Icon.ArrowBack aria-hidden />}
               type="button"
               unstyled
               onClick={() => {
@@ -173,17 +243,10 @@ const GeneralRequestInfo = ({
               }}
               className="margin-bottom-3 margin-top-205"
             >
-              {t('Save & Exit')}
+              {t('saveAndExit')}
             </IconButton>
 
-            <PageNumber
-              currentPage={1}
-              totalPages={
-                alternativeSolutionHasFilledFields(businessCase.alternativeB)
-                  ? 6
-                  : 5
-              }
-            />
+            <PageNumber currentPage={1} totalPages={4} />
 
             <AutoSave
               values={values}

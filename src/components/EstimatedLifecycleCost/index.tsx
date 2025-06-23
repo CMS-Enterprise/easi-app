@@ -18,6 +18,7 @@ import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
 import HelpText from 'components/HelpText';
 import IconButton from 'components/IconButton';
+import RequiredAsterisk from 'components/RequiredAsterisk';
 import {
   LifecycleCosts,
   LifecyclePhaseKey,
@@ -78,6 +79,7 @@ const Phase = ({
                 <div className="cost-table-col">
                   <legend className="usa-label">
                     {t(lifecycleCosts[category].label)}
+                    <RequiredAsterisk />
                   </legend>
 
                   {
@@ -172,7 +174,7 @@ const AddRelatedCostField = ({
         // Add related cost button
         activeRelatedCost === null ? (
           <IconButton
-            icon={<Icon.Add />}
+            icon={<Icon.Add aria-hidden />}
             type="button"
             unstyled
             onClick={() => setActiveRelatedCost('' as LifecyclePhaseKey)}
@@ -343,10 +345,16 @@ const EstimatedLifecycleCost = ({
           {
             // Phase error messages
             !!errors &&
-              Object.values(errors).map((error, index) => (
-                // eslint-disable-next-line react/no-array-index-key
-                <FieldErrorMsg key={index}>{error.years}</FieldErrorMsg>
-              ))
+              Object.values(errors).map((error, index) => {
+                const errorMessage =
+                  typeof error.years === 'string'
+                    ? error.years
+                    : Object.values(error.years || {}).join(', ');
+                return (
+                  // eslint-disable-next-line react/no-array-index-key
+                  <FieldErrorMsg key={index}>{errorMessage}</FieldErrorMsg>
+                );
+              })
           }
 
           <div className="cost-table-row cost-table-row__headings minh-0">

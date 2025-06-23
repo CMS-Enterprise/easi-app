@@ -17,6 +17,10 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
         class="easi-section"
         data-testid="section-wrapper"
       >
+        <hr
+          aria-hidden="true"
+          class="margin-bottom-1 margin-top-4 opacity-30"
+        />
         <h2>
           General request information
         </h2>
@@ -30,7 +34,7 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
               <dt
                 class="text-bold margin-bottom-05"
               >
-                Project name
+                Contact / request title
               </dt>
               <dd
                 class="description-definition margin-0"
@@ -42,7 +46,23 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
               <dt
                 class="text-bold margin-bottom-05"
               >
-                Business Owner
+                Contact / request acronym
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                EASi
+              </dd>
+            </div>
+          </div>
+          <div
+            class="easi-review-row"
+          >
+            <div>
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                CMS Business Owner
               </dt>
               <dd
                 class="description-definition margin-0"
@@ -66,6 +86,10 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                 Jane Smith
               </dd>
             </div>
+          </div>
+          <div
+            class="easi-review-row"
+          >
             <div>
               <dt
                 class="text-bold margin-bottom-05"
@@ -85,6 +109,10 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
         class="easi-section"
         data-testid="section-wrapper"
       >
+        <hr
+          aria-hidden="true"
+          class="margin-bottom-1 margin-top-4 opacity-30"
+        />
         <h2>
           Request description
         </h2>
@@ -118,12 +146,12 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
               <dt
                 class="text-bold margin-bottom-05"
               >
-                How will CMS benefit from this effort?
+                What internal collaboration or vendor engagement will support the recommended work?
               </dt>
               <dd
                 class="description-definition margin-0 text-pre-wrap"
               >
-                Test CMS benefit
+                Test collaboration needed
               </dd>
             </div>
           </div>
@@ -136,12 +164,30 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
               <dt
                 class="text-bold margin-bottom-05"
               >
-                Summary of Current Solution
+                What is the current process that you are using for this work, or how is this need currently being met?
               </dt>
               <dd
                 class="description-definition margin-0 text-pre-wrap"
               >
                 Test current solution summary
+              </dd>
+            </div>
+          </div>
+          <div
+            class="easi-review-row margin-bottom-3"
+          >
+            <div
+              class="line-height-body-3"
+            >
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                How will CMS benefit from this effort?
+              </dt>
+              <dd
+                class="description-definition margin-0 text-pre-wrap"
+              >
+                Test CMS benefit
               </dd>
             </div>
           </div>
@@ -181,12 +227,34 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
               </dd>
             </div>
           </div>
+          <div
+            class="easi-review-row margin-bottom-3"
+          >
+            <div
+              class="line-height-body-3"
+            >
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                How will you implement or respond to the recommendations provided by the GRT?
+              </dt>
+              <dd
+                class="description-definition margin-0 text-pre-wrap"
+              >
+                Test response to GRT feedback
+              </dd>
+            </div>
+          </div>
         </dl>
       </div>
+      <hr
+        aria-hidden="true"
+        class="margin-bottom-1 margin-top-4 opacity-30"
+      />
       <h2
         class="easi-no-print"
       >
-        Alternatives analysis
+        Options and alternatives
       </h2>
       <div
         class="alternative-analysis-wrapper"
@@ -283,7 +351,7 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                   <dt
                     class="text-bold margin-bottom-05"
                   >
-                    Preferred solution: Title
+                    Solution Title
                   </dt>
                   <dd
                     class="description-definition margin-0"
@@ -301,7 +369,7 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                   <dt
                     class="text-bold margin-bottom-05"
                   >
-                    Preferred solution: Summary
+                    Summary
                   </dt>
                   <dd
                     class="description-definition margin-0 text-pre-wrap"
@@ -319,12 +387,98 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                   <dt
                     class="text-bold margin-bottom-05"
                   >
-                    Preferred solution: Acquisition approach
+                    Acquisition approach
                   </dt>
                   <dd
                     class="description-definition margin-0 text-pre-wrap"
                   >
                     Test acquisition approach
+                  </dd>
+                </div>
+              </div>
+              <div
+                class="easi-review-row"
+              >
+                <div
+                  class="line-height-body-3"
+                >
+                  <dt
+                    class="text-bold margin-bottom-05"
+                  >
+                    Target contract award date
+                  </dt>
+                  <dd
+                    class="description-definition margin-0 text-pre-wrap"
+                  >
+                    03/15/2025
+                  </dd>
+                </div>
+                <div
+                  class="line-height-body-3"
+                >
+                  <dt
+                    class="text-bold margin-bottom-05"
+                  >
+                    Target completion date (In production)
+                  </dt>
+                  <dd
+                    class="description-definition margin-0 text-pre-wrap"
+                  >
+                    03/15/2025
+                  </dd>
+                </div>
+              </div>
+              <div
+                class="easi-review-row"
+              >
+                <div
+                  class="line-height-body-3"
+                >
+                  <dt
+                    class="text-bold margin-bottom-05"
+                  >
+                    Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?
+                  </dt>
+                  <dd
+                    class="description-definition margin-0 text-pre-wrap"
+                  >
+                    No
+                  </dd>
+                </div>
+              </div>
+              <div
+                class="easi-review-row"
+              >
+                <div
+                  class="line-height-body-3"
+                >
+                  <dt
+                    class="text-bold margin-bottom-05"
+                  >
+                    Is it in the process of getting approved?
+                  </dt>
+                  <dd
+                    class="description-definition margin-0 text-pre-wrap"
+                  >
+                    Yes
+                  </dd>
+                </div>
+              </div>
+              <div
+                class="easi-review-row"
+              >
+                <div
+                  class="line-height-body-3"
+                >
+                  <dt
+                    class="text-bold margin-bottom-05"
+                  >
+                    Identify your project's alignment with Zero Trust principles?
+                  </dt>
+                  <dd
+                    class="description-definition margin-0 text-pre-wrap"
+                  >
+                    Test Zero Trust
                   </dd>
                 </div>
               </div>
@@ -374,6 +528,24 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                     <dt
                       class="text-bold margin-bottom-05"
                     >
+                      What is your cloud strategy or cloud migration strategy and how will you implement it?
+                    </dt>
+                    <dd
+                      class="description-definition margin-0 text-pre-wrap"
+                    >
+                      test cloud strategy
+                    </dd>
+                  </div>
+                </div>
+                <div
+                  class="easi-review-row"
+                >
+                  <div
+                    class="line-height-body-3"
+                  >
+                    <dt
+                      class="text-bold margin-bottom-05"
+                    >
                       What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?
                     </dt>
                     <dd
@@ -393,25 +565,7 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                   <dt
                     class="text-bold margin-bottom-05"
                   >
-                    Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?
-                  </dt>
-                  <dd
-                    class="description-definition margin-0 text-pre-wrap"
-                  >
-                    No
-                  </dd>
-                </div>
-              </div>
-              <div
-                class="easi-review-row"
-              >
-                <div
-                  class="line-height-body-3"
-                >
-                  <dt
-                    class="text-bold margin-bottom-05"
-                  >
-                    Is your solution in the process of CMS IT Security approval?
+                    Will your solution have a User Interface, be public facing, or involve outside customers?
                   </dt>
                   <dd
                     class="description-definition margin-0 text-pre-wrap"
@@ -429,12 +583,12 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                   <dt
                     class="text-bold margin-bottom-05"
                   >
-                    Will your solution have a User Interface?
+                    Will any workforce training requirements arise as a result of this solution?
                   </dt>
                   <dd
                     class="description-definition margin-0 text-pre-wrap"
                   >
-                    Yes
+                    Test workforce training requirements
                   </dd>
                 </div>
               </div>
@@ -447,7 +601,7 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                   <dt
                     class="text-bold margin-bottom-05"
                   >
-                    Preferred solution: Pros
+                    Pros
                   </dt>
                   <dd
                     class="description-definition margin-0 text-pre-wrap"
@@ -465,7 +619,7 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                   <dt
                     class="text-bold margin-bottom-05"
                   >
-                    Preferred solution: Cons
+                    Cons
                   </dt>
                   <dd
                     class="description-definition margin-0 text-pre-wrap"
@@ -540,7 +694,7 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                     <dt
                       class="text-bold margin-bottom-05"
                     >
-                      Alternative A: Title
+                      Solution Title
                     </dt>
                     <dd
                       class="description-definition margin-0"
@@ -558,7 +712,7 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                     <dt
                       class="text-bold margin-bottom-05"
                     >
-                      Alternative A: Summary
+                      Summary
                     </dt>
                     <dd
                       class="description-definition margin-0 text-pre-wrap"
@@ -576,12 +730,98 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                     <dt
                       class="text-bold margin-bottom-05"
                     >
-                      Alternative A: Acquisition approach
+                      Acquisition approach
                     </dt>
                     <dd
                       class="description-definition margin-0 text-pre-wrap"
                     >
                       Test acquisition approach
+                    </dd>
+                  </div>
+                </div>
+                <div
+                  class="easi-review-row"
+                >
+                  <div
+                    class="line-height-body-3"
+                  >
+                    <dt
+                      class="text-bold margin-bottom-05"
+                    >
+                      Target contract award date
+                    </dt>
+                    <dd
+                      class="description-definition margin-0 text-pre-wrap"
+                    >
+                      03/15/2025
+                    </dd>
+                  </div>
+                  <div
+                    class="line-height-body-3"
+                  >
+                    <dt
+                      class="text-bold margin-bottom-05"
+                    >
+                      Target completion date (In production)
+                    </dt>
+                    <dd
+                      class="description-definition margin-0 text-pre-wrap"
+                    >
+                      03/15/2025
+                    </dd>
+                  </div>
+                </div>
+                <div
+                  class="easi-review-row"
+                >
+                  <div
+                    class="line-height-body-3"
+                  >
+                    <dt
+                      class="text-bold margin-bottom-05"
+                    >
+                      Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?
+                    </dt>
+                    <dd
+                      class="description-definition margin-0 text-pre-wrap"
+                    >
+                      No
+                    </dd>
+                  </div>
+                </div>
+                <div
+                  class="easi-review-row"
+                >
+                  <div
+                    class="line-height-body-3"
+                  >
+                    <dt
+                      class="text-bold margin-bottom-05"
+                    >
+                      Is it in the process of getting approved?
+                    </dt>
+                    <dd
+                      class="description-definition margin-0 text-pre-wrap"
+                    >
+                      Yes
+                    </dd>
+                  </div>
+                </div>
+                <div
+                  class="easi-review-row"
+                >
+                  <div
+                    class="line-height-body-3"
+                  >
+                    <dt
+                      class="text-bold margin-bottom-05"
+                    >
+                      Identify your project's alignment with Zero Trust principles?
+                    </dt>
+                    <dd
+                      class="description-definition margin-0 text-pre-wrap"
+                    >
+                      Test Zero Trust
                     </dd>
                   </div>
                 </div>
@@ -631,6 +871,24 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                       <dt
                         class="text-bold margin-bottom-05"
                       >
+                        What is your cloud strategy or cloud migration strategy and how will you implement it?
+                      </dt>
+                      <dd
+                        class="description-definition margin-0 text-pre-wrap"
+                      >
+                        Test cloud strategy
+                      </dd>
+                    </div>
+                  </div>
+                  <div
+                    class="easi-review-row"
+                  >
+                    <div
+                      class="line-height-body-3"
+                    >
+                      <dt
+                        class="text-bold margin-bottom-05"
+                      >
                         What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?
                       </dt>
                       <dd
@@ -650,25 +908,7 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                     <dt
                       class="text-bold margin-bottom-05"
                     >
-                      Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?
-                    </dt>
-                    <dd
-                      class="description-definition margin-0 text-pre-wrap"
-                    >
-                      No
-                    </dd>
-                  </div>
-                </div>
-                <div
-                  class="easi-review-row"
-                >
-                  <div
-                    class="line-height-body-3"
-                  >
-                    <dt
-                      class="text-bold margin-bottom-05"
-                    >
-                      Is your solution in the process of CMS IT Security approval?
+                      Will your solution have a User Interface, be public facing, or involve outside customers?
                     </dt>
                     <dd
                       class="description-definition margin-0 text-pre-wrap"
@@ -686,12 +926,12 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                     <dt
                       class="text-bold margin-bottom-05"
                     >
-                      Will your solution have a User Interface?
+                      Will any workforce training requirements arise as a result of this solution?
                     </dt>
                     <dd
                       class="description-definition margin-0 text-pre-wrap"
                     >
-                      Yes
+                      Test workforce training requirements
                     </dd>
                   </div>
                 </div>
@@ -704,7 +944,7 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                     <dt
                       class="text-bold margin-bottom-05"
                     >
-                      Alternative A: Pros
+                      Pros
                     </dt>
                     <dd
                       class="description-definition margin-0 text-pre-wrap"
@@ -722,7 +962,7 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                     <dt
                       class="text-bold margin-bottom-05"
                     >
-                      Alternative A: Cons
+                      Cons
                     </dt>
                     <dd
                       class="description-definition margin-0 text-pre-wrap"
@@ -803,7 +1043,7 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                     <dt
                       class="text-bold margin-bottom-05"
                     >
-                      Alternative B: Title
+                      Solution Title
                     </dt>
                     <dd
                       class="description-definition margin-0"
@@ -821,7 +1061,7 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                     <dt
                       class="text-bold margin-bottom-05"
                     >
-                      Alternative B: Summary
+                      Summary
                     </dt>
                     <dd
                       class="description-definition margin-0 text-pre-wrap"
@@ -839,12 +1079,98 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                     <dt
                       class="text-bold margin-bottom-05"
                     >
-                      Alternative B: Acquisition approach
+                      Acquisition approach
                     </dt>
                     <dd
                       class="description-definition margin-0 text-pre-wrap"
                     >
                       Test acquisition approach
+                    </dd>
+                  </div>
+                </div>
+                <div
+                  class="easi-review-row"
+                >
+                  <div
+                    class="line-height-body-3"
+                  >
+                    <dt
+                      class="text-bold margin-bottom-05"
+                    >
+                      Target contract award date
+                    </dt>
+                    <dd
+                      class="description-definition margin-0 text-pre-wrap"
+                    >
+                      03/15/2025
+                    </dd>
+                  </div>
+                  <div
+                    class="line-height-body-3"
+                  >
+                    <dt
+                      class="text-bold margin-bottom-05"
+                    >
+                      Target completion date (In production)
+                    </dt>
+                    <dd
+                      class="description-definition margin-0 text-pre-wrap"
+                    >
+                      03/15/2025
+                    </dd>
+                  </div>
+                </div>
+                <div
+                  class="easi-review-row"
+                >
+                  <div
+                    class="line-height-body-3"
+                  >
+                    <dt
+                      class="text-bold margin-bottom-05"
+                    >
+                      Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?
+                    </dt>
+                    <dd
+                      class="description-definition margin-0 text-pre-wrap"
+                    >
+                      No
+                    </dd>
+                  </div>
+                </div>
+                <div
+                  class="easi-review-row"
+                >
+                  <div
+                    class="line-height-body-3"
+                  >
+                    <dt
+                      class="text-bold margin-bottom-05"
+                    >
+                      Is it in the process of getting approved?
+                    </dt>
+                    <dd
+                      class="description-definition margin-0 text-pre-wrap"
+                    >
+                      Yes
+                    </dd>
+                  </div>
+                </div>
+                <div
+                  class="easi-review-row"
+                >
+                  <div
+                    class="line-height-body-3"
+                  >
+                    <dt
+                      class="text-bold margin-bottom-05"
+                    >
+                      Identify your project's alignment with Zero Trust principles?
+                    </dt>
+                    <dd
+                      class="description-definition margin-0 text-pre-wrap"
+                    >
+                      Test Zero Trust
                     </dd>
                   </div>
                 </div>
@@ -894,6 +1220,24 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                       <dt
                         class="text-bold margin-bottom-05"
                       >
+                        What is your cloud strategy or cloud migration strategy and how will you implement it?
+                      </dt>
+                      <dd
+                        class="description-definition margin-0 text-pre-wrap"
+                      >
+                        Test cloud strategy
+                      </dd>
+                    </div>
+                  </div>
+                  <div
+                    class="easi-review-row"
+                  >
+                    <div
+                      class="line-height-body-3"
+                    >
+                      <dt
+                        class="text-bold margin-bottom-05"
+                      >
                         What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?
                       </dt>
                       <dd
@@ -913,25 +1257,7 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                     <dt
                       class="text-bold margin-bottom-05"
                     >
-                      Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?
-                    </dt>
-                    <dd
-                      class="description-definition margin-0 text-pre-wrap"
-                    >
-                      No
-                    </dd>
-                  </div>
-                </div>
-                <div
-                  class="easi-review-row"
-                >
-                  <div
-                    class="line-height-body-3"
-                  >
-                    <dt
-                      class="text-bold margin-bottom-05"
-                    >
-                      Is your solution in the process of CMS IT Security approval?
+                      Will your solution have a User Interface, be public facing, or involve outside customers?
                     </dt>
                     <dd
                       class="description-definition margin-0 text-pre-wrap"
@@ -949,12 +1275,12 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                     <dt
                       class="text-bold margin-bottom-05"
                     >
-                      Will your solution have a User Interface?
+                      Will any workforce training requirements arise as a result of this solution?
                     </dt>
                     <dd
                       class="description-definition margin-0 text-pre-wrap"
                     >
-                      Yes
+                      Test workforce training requirements
                     </dd>
                   </div>
                 </div>
@@ -967,7 +1293,7 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                     <dt
                       class="text-bold margin-bottom-05"
                     >
-                      Alternative B: Pros
+                      Pros
                     </dt>
                     <dd
                       class="description-definition margin-0 text-pre-wrap"
@@ -985,7 +1311,7 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
                     <dt
                       class="text-bold margin-bottom-05"
                     >
-                      Alternative B: Cons
+                      Cons
                     </dt>
                     <dd
                       class="description-definition margin-0 text-pre-wrap"
@@ -1058,6 +1384,7 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
         type="button"
       >
         <svg
+          aria-hidden="true"
           class="usa-icon margin-right-1"
           focusable="false"
           height="1em"

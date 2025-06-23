@@ -593,3 +593,25 @@ func (s *Store) GetMySystemIntakes(ctx context.Context) ([]*models.SystemIntake,
 
 	return intakes, err
 }
+
+func (s *Store) GetRequesterUpdateEmailData(ctx context.Context) ([]*models.RequesterUpdateEmailData, error) {
+	var res []models.SystemIntake
+	if err := namedSelect(ctx, s.db, &res, sqlqueries.SystemIntake.GetRequesterUpdateEmailData, nil); err != nil {
+		return nil, err
+	}
+
+	var data []*models.RequesterUpdateEmailData
+	now := time.Now()
+	for _, item := range res {
+		data = append(data, &models.RequesterUpdateEmailData{
+			EuaUserID:     item.EUAUserID.String,
+			ProjectName:   item.ProjectName.String,
+			LcidStatus:    item.LCIDStatus(now),
+			LcidIssuedAt:  item.LifecycleIssuedAt,
+			LcidExpiresAt: item.LifecycleExpiresAt,
+			LcidRetiresAt: item.LifecycleRetiresAt,
+		})
+	}
+
+	return data, nil
+}

@@ -453,6 +453,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
                     >
                       File name
                       <svg
+                        aria-hidden="true"
                         class="usa-icon margin-left-05"
                         data-testid="caret--sort"
                         focusable="false"
@@ -486,6 +487,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
                     >
                       Document type
                       <svg
+                        aria-hidden="true"
                         class="usa-icon margin-left-05"
                         data-testid="caret--sort"
                         focusable="false"
@@ -519,6 +521,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
                     >
                       Date added
                       <svg
+                        aria-hidden="true"
                         class="usa-icon margin-left-05"
                         data-testid="caret--down"
                         focusable="false"
@@ -552,6 +555,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
                     >
                       Actions
                       <svg
+                        aria-hidden="true"
                         class="usa-icon margin-left-05"
                         data-testid="caret--sort"
                         focusable="false"
@@ -589,6 +593,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
         type="button"
       >
         <svg
+          aria-hidden="true"
           class="usa-icon margin-right-1"
           focusable="false"
           height="1em"

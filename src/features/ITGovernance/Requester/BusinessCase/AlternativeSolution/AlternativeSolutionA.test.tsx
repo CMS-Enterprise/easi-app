@@ -1,10 +1,10 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { MockedProvider, MockedResponse } from '@apollo/client/testing';
 import {
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -17,28 +17,40 @@ import {
   businessCaseInitialData,
   defaultProposedSolution
 } from 'data/businessCase';
+import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
-window.matchMedia = (): any => ({
-  addListener: () => {},
-  removeListener: () => {}
-});
+const SYSTEM_INTAKE_ID = '943916ee-7a30-4213-990e-02c4fb97382a';
 
-window.scrollTo = vi.fn;
-
-const renderPage = async (store: any, mocks?: MockedResponse[]) => {
+const renderPage = async (
+  store: any,
+  systemIntakeId: string = SYSTEM_INTAKE_ID,
+  step: SystemIntakeStep = SystemIntakeStep.DRAFT_BUSINESS_CASE,
+  alternative:
+    | 'alternative-solution-a'
+    | 'alternative-solution-b'
+    | 'alternative-analysis' = 'alternative-solution-a'
+) => {
   render(
     <MemoryRouter
       initialEntries={[
-        '/business/75746af8-9a9b-4558-a375-cf9848eb2b0d/alternative-solution-a'
+        `/business/75746af8-9a9b-4558-a375-cf9848eb2b0d/${alternative}`
       ]}
     >
       <Provider store={store}>
-        <MockedProvider mocks={mocks}>
+        <VerboseMockedProvider
+          mocks={[
+            getGovernanceTaskListQuery({
+              id: systemIntakeId,
+              step
+            })
+          ]}
+          addTypename={false}
+        >
           <Route
             path="/business/:businessCaseId/:formPage"
             component={BusinessCase}
           />
-        </MockedProvider>
+        </VerboseMockedProvider>
       </Provider>
     </MemoryRouter>
   );
@@ -56,7 +68,7 @@ describe('Business case alternative a solution', () => {
       form: {
         ...businessCaseInitialData,
         id: '75746af8-9a9b-4558-a375-cf9848eb2b0d',
-        systemIntakeId: '943916ee-7a30-4213-990e-02c4fb97382a'
+        systemIntakeId: SYSTEM_INTAKE_ID
       },
       isLoading: false,
       isSaving: false,
@@ -75,28 +87,16 @@ describe('Business case alternative a solution', () => {
     expect(screen.getByTestId('alternative-solution-a')).toBeInTheDocument();
   });
 
-  it('navigates back a page', async () => {
+  it('adds alternative a and navigates to it', async () => {
     await renderPage(defaultStore);
 
-    screen.getByRole('button', { name: /back/i }).click();
+    userEvent.click(
+      screen.getByRole('button', { name: /Finish alternative A/i })
+    );
 
-    expect(screen.getByTestId('preferred-solution')).toBeInTheDocument();
-  });
-
-  it('adds alternative b and navigates to it', async () => {
-    await renderPage(defaultStore);
-
-    screen.getByRole('button', { name: /alternative b/i }).click();
-
-    expect(screen.getByTestId('alternative-solution-b')).toBeInTheDocument();
-  });
-
-  it('navigates forward to review', async () => {
-    await renderPage(defaultStore);
-
-    screen.getByRole('button', { name: /next/i }).click();
-
-    expect(screen.getByTestId('business-case-review')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByTestId('alternative-solution-a')).toBeInTheDocument();
+    });
   });
 
   describe('with alternative b', () => {
@@ -108,7 +108,7 @@ describe('Business case alternative a solution', () => {
         form: {
           ...businessCaseInitialData,
           id: '75746af8-9a9b-4558-a375-cf9848eb2b0d',
-          systemIntakeId: '943916ee-7a30-4213-990e-02c4fb97382a',
+          systemIntakeId: SYSTEM_INTAKE_ID,
           alternativeB: {
             ...defaultProposedSolution,
             title: 'Alt B'
@@ -126,19 +126,35 @@ describe('Business case alternative a solution', () => {
     });
 
     it('hides adding alternative b when it exists already', async () => {
-      await renderPage(withAlternativeBStore);
+      await renderPage(
+        withAlternativeBStore,
+        undefined,
+        undefined,
+        'alternative-analysis'
+      );
 
       expect(
-        screen.queryByRole('button', { name: /alternative b/i })
+        screen.queryByRole('button', { name: /Add alternative B/i })
       ).not.toBeInTheDocument();
     });
 
     it('navigates forward to alternative b', async () => {
-      await renderPage(withAlternativeBStore);
+      await renderPage(
+        withAlternativeBStore,
+        undefined,
+        undefined,
+        'alternative-solution-b'
+      );
 
-      screen.getByRole('button', { name: /next/i }).click();
+      userEvent.click(
+        screen.getByRole('button', { name: /Finish alternative B/i })
+      );
 
-      expect(screen.getByTestId('alternative-solution-b')).toBeInTheDocument();
+      await waitFor(() => {
+        expect(
+          screen.getByTestId('alternative-solution-b')
+        ).toBeInTheDocument();
+      });
     });
   });
 
@@ -165,11 +181,11 @@ describe('Business case alternative a solution', () => {
     });
 
     it('renders validation errors', async () => {
-      await renderPage(bizCaseFinalStore, [
-        getGovernanceTaskListQuery({
-          step: SystemIntakeStep.FINAL_BUSINESS_CASE
-        })
-      ]);
+      await renderPage(
+        bizCaseFinalStore,
+        'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
+        SystemIntakeStep.FINAL_BUSINESS_CASE
+      );
 
       // Fill one field so we can trigger validation errors
       const titleField = screen.getByRole('textbox', {
@@ -178,7 +194,10 @@ describe('Business case alternative a solution', () => {
       userEvent.type(titleField, 'Alternative A solution title');
       expect(titleField).toHaveValue('Alternative A solution title');
 
-      screen.getByRole('button', { name: /next/i }).click();
+      userEvent.click(
+        screen.getByRole('button', { name: /Finish alternative A/i })
+      );
+
       expect(
         await screen.findByTestId('formik-validation-errors')
       ).toBeInTheDocument();
