@@ -8,7 +8,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
-func castSytemIntakeGRBReviewerVote(
+func castSystemIntakeGRBReviewerVote(
 	ctx context.Context,
 	store *storage.Store,
 	input models.CastSystemIntakeGRBReviewerVoteInput,

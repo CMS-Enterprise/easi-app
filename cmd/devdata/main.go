@@ -324,31 +324,31 @@ func main() {
 	)
 	setupSystemIntakeGRBReview(ctx, store, intake, models.SystemIntakeGRBReviewTypeAsync, &pastMeetingDate)
 
-	castSytemIntakeGRBReviewerVote(ctx, store, models.CastSystemIntakeGRBReviewerVoteInput{
+	castSystemIntakeGRBReviewerVote(ctx, store, models.CastSystemIntakeGRBReviewerVoteInput{
 		SystemIntakeID: intake.ID,
 		Vote:           models.SystemIntakeAsyncGRBVotingOptionNoObjection,
 	})
 
 	grbReviewerCtx := userCtxNonAdmin("USR2")
-	castSytemIntakeGRBReviewerVote(grbReviewerCtx, store, models.CastSystemIntakeGRBReviewerVoteInput{
+	castSystemIntakeGRBReviewerVote(grbReviewerCtx, store, models.CastSystemIntakeGRBReviewerVoteInput{
 		SystemIntakeID: intake.ID,
 		Vote:           models.SystemIntakeAsyncGRBVotingOptionNoObjection,
 	})
 
 	grbReviewerCtx = userCtxNonAdmin("USR3")
-	castSytemIntakeGRBReviewerVote(grbReviewerCtx, store, models.CastSystemIntakeGRBReviewerVoteInput{
+	castSystemIntakeGRBReviewerVote(grbReviewerCtx, store, models.CastSystemIntakeGRBReviewerVoteInput{
 		SystemIntakeID: intake.ID,
 		Vote:           models.SystemIntakeAsyncGRBVotingOptionNoObjection,
 	})
 
 	grbReviewerCtx = userCtxNonAdmin("USR4")
-	castSytemIntakeGRBReviewerVote(grbReviewerCtx, store, models.CastSystemIntakeGRBReviewerVoteInput{
+	castSystemIntakeGRBReviewerVote(grbReviewerCtx, store, models.CastSystemIntakeGRBReviewerVoteInput{
 		SystemIntakeID: intake.ID,
 		Vote:           models.SystemIntakeAsyncGRBVotingOptionNoObjection,
 	})
 
 	grbReviewerCtx = userCtxNonAdmin("USR5")
-	castSytemIntakeGRBReviewerVote(grbReviewerCtx, store, models.CastSystemIntakeGRBReviewerVoteInput{
+	castSystemIntakeGRBReviewerVote(grbReviewerCtx, store, models.CastSystemIntakeGRBReviewerVoteInput{
 		SystemIntakeID: intake.ID,
 		Vote:           models.SystemIntakeAsyncGRBVotingOptionNoObjection,
 	})
@@ -410,31 +410,31 @@ func main() {
 	)
 	setupSystemIntakeGRBReview(ctx, store, intake, models.SystemIntakeGRBReviewTypeAsync, &futureMeetingDate)
 
-	castSytemIntakeGRBReviewerVote(ctx, store, models.CastSystemIntakeGRBReviewerVoteInput{
+	castSystemIntakeGRBReviewerVote(ctx, store, models.CastSystemIntakeGRBReviewerVoteInput{
 		SystemIntakeID: intake.ID,
 		Vote:           models.SystemIntakeAsyncGRBVotingOptionNoObjection,
 	})
 
 	grbReviewerCtx = userCtxNonAdmin("USR2")
-	castSytemIntakeGRBReviewerVote(grbReviewerCtx, store, models.CastSystemIntakeGRBReviewerVoteInput{
+	castSystemIntakeGRBReviewerVote(grbReviewerCtx, store, models.CastSystemIntakeGRBReviewerVoteInput{
 		SystemIntakeID: intake.ID,
 		Vote:           models.SystemIntakeAsyncGRBVotingOptionNoObjection,
 	})
 
 	grbReviewerCtx = userCtxNonAdmin("BTMN")
-	castSytemIntakeGRBReviewerVote(grbReviewerCtx, store, models.CastSystemIntakeGRBReviewerVoteInput{
+	castSystemIntakeGRBReviewerVote(grbReviewerCtx, store, models.CastSystemIntakeGRBReviewerVoteInput{
 		SystemIntakeID: intake.ID,
 		Vote:           models.SystemIntakeAsyncGRBVotingOptionNoObjection,
 	})
 
 	grbReviewerCtx = userCtxNonAdmin("ABCD")
-	castSytemIntakeGRBReviewerVote(grbReviewerCtx, store, models.CastSystemIntakeGRBReviewerVoteInput{
+	castSystemIntakeGRBReviewerVote(grbReviewerCtx, store, models.CastSystemIntakeGRBReviewerVoteInput{
 		SystemIntakeID: intake.ID,
 		Vote:           models.SystemIntakeAsyncGRBVotingOptionNoObjection,
 	})
 
 	grbReviewerCtx = userCtxNonAdmin("A11Y")
-	castSytemIntakeGRBReviewerVote(grbReviewerCtx, store, models.CastSystemIntakeGRBReviewerVoteInput{
+	castSystemIntakeGRBReviewerVote(grbReviewerCtx, store, models.CastSystemIntakeGRBReviewerVoteInput{
 		SystemIntakeID: intake.ID,
 		Vote:           models.SystemIntakeAsyncGRBVotingOptionObjection,
 		VoteComment:    helpers.PointerTo("I object to this request because it is terrible."),
