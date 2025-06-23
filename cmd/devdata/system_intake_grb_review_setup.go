@@ -114,7 +114,8 @@ func startGRBReviewStandard(
 		ctx,
 		store,
 		nil,
-		systemIntakeID)
+		systemIntakeID,
+	)
 
 	if err != nil {
 		panic(err)
@@ -127,13 +128,15 @@ func startGRBReviewAsync(
 	systemIntakeID uuid.UUID,
 	endDate *time.Time,
 ) *models.SystemIntake {
-	intakePayload, err := resolvers.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(ctx,
+	intakePayload, err := resolvers.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(
+		ctx,
 		store,
 		models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync{
 			SystemIntakeID:        systemIntakeID,
 			GrbReviewAsyncEndDate: *endDate,
 			StartGRBReview:        true,
-		})
+		},
+	)
 
 	if err != nil {
 		panic(err)
