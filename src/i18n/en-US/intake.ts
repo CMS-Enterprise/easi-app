@@ -145,6 +145,12 @@ const intake = {
         copy: 'Go to the IT Governance Sharepoint space',
         href: 'https://share.cms.gov/Office/OIT/CIOCorner/SitePages/ITGovernance.aspx'
       }
+    },
+    error: {
+      heading: 'Something went wrong.',
+      description:
+        'Your Intake Request was not submitted. Please either return to the previous page and try again or try again at a later date.',
+      backToIntakeRequest: 'Back to Intake Request'
     }
   },
   lifecycleId: 'Life Cycle ID',

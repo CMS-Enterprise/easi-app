@@ -5,8 +5,8 @@ import {
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink,
+  ButtonGroup,
   GridContainer,
-  Link,
   SummaryBox,
   SummaryBoxContent,
   SummaryBoxHeading
@@ -15,17 +15,23 @@ import {
 import ExternalLinkAndModal from 'components/ExternalLinkAndModal';
 import PageHeading from 'components/PageHeading';
 
-const Confirmation = () => {
+const Confirmation = ({
+  submissionSuccess
+}: {
+  submissionSuccess: boolean;
+}) => {
   const { systemId } = useParams<{ systemId: string }>();
   const { t } = useTranslation('intake');
 
   return (
     <>
-      <div className="margin-bottom-8 bg-success-lighter padding-bottom-6">
+      <div
+        className={`margin-bottom-8  padding-bottom-6 ${submissionSuccess ? 'bg-success-lighter' : 'bg-error-lighter'}`}
+      >
         <GridContainer>
           <BreadcrumbBar
             variant="wrap"
-            className="bg-success-lighter margin-bottom-6"
+            className={`margin-bottom-6 ${submissionSuccess ? 'bg-success-lighter' : 'bg-error-lighter'}`}
           >
             <Breadcrumb>
               <BreadcrumbLink asCustom={ReactRouterLink} to="/">
@@ -46,56 +52,53 @@ const Confirmation = () => {
           </BreadcrumbBar>
 
           <PageHeading className="margin-top-0 margin-bottom-1">
-            {t('submission.success.heading')}
+            {submissionSuccess
+              ? t('submission.success.heading')
+              : t('submission.error.heading')}
           </PageHeading>
           <p className="font-body-lg line-height-body-5 margin-top-0 margin-bottom-5">
-            {t('submission.success.description')}
+            {submissionSuccess
+              ? t('submission.success.description')
+              : t('submission.error.description')}
           </p>
-          <Link
-            href={`/governance-task-list/${systemId}`}
-            className="usa-button"
-            variant="unstyled"
-          >
-            {t('taskList:navigation.returnToTaskList')}
-          </Link>
+          <ButtonGroup>
+            {!submissionSuccess && (
+              <ReactRouterLink
+                to={`/system/${systemId}/contact-details`}
+                className="usa-button"
+              >
+                {t('submission.error.backToIntakeRequest')}
+              </ReactRouterLink>
+            )}
+            <ReactRouterLink
+              to={`/governance-task-list/${systemId}`}
+              className={`usa-button ${!submissionSuccess ? 'usa-button--outline' : ''}`}
+            >
+              {t('taskList:navigation.returnToTaskList')}
+            </ReactRouterLink>
+          </ButtonGroup>
         </GridContainer>
       </div>
-      <div>
-        <GridContainer>
-          <SummaryBox className="grid-col-8 margin-top-0 margin-bottom-5">
-            <SummaryBoxHeading headingLevel="h3" className="margin-bottom-2">
-              {t('review.nextSteps.heading')}
-            </SummaryBoxHeading>
-            <SummaryBoxContent>
-              {t('review.nextSteps.description')}
-            </SummaryBoxContent>
-          </SummaryBox>
-          <p>{t('submission.success.learnMore')}</p>
-          <ExternalLinkAndModal
-            href={t('submission.success.sharepointLink.href')}
-          >
-            <span>{t('submission.success.sharepointLink.copy')}</span>
-          </ExternalLinkAndModal>
-
-          {/* <div>
-        <PageHeading>{t('submission.confirmation.heading')}</PageHeading>
-        <h2 className="margin-bottom-8 text-normal">
-          {t('submission.confirmation.subheading', {
-            referenceId: systemId
-          })}
-        </h2>
+      {submissionSuccess && (
         <div>
-          <Link
-            to={`/governance-task-list/${systemId}`}
-            className="display-flex"
-          >
-            <Icon.NavigateBefore className="margin-x-05" aria-hidden />
-            {t('submission.confirmation.taskListCta')}
-          </Link>
+          <GridContainer>
+            <SummaryBox className="grid-col-8 margin-top-0 margin-bottom-5">
+              <SummaryBoxHeading headingLevel="h3" className="margin-bottom-2">
+                {t('review.nextSteps.heading')}
+              </SummaryBoxHeading>
+              <SummaryBoxContent>
+                {t('review.nextSteps.description')}
+              </SummaryBoxContent>
+            </SummaryBox>
+            <p>{t('submission.success.learnMore')}</p>
+            <ExternalLinkAndModal
+              href={t('submission.success.sharepointLink.href')}
+            >
+              <span>{t('submission.success.sharepointLink.copy')}</span>
+            </ExternalLinkAndModal>
+          </GridContainer>
         </div>
-      </div> */}
-        </GridContainer>
-      </div>
+      )}
     </>
   );
 };

@@ -40,16 +40,19 @@ export const SystemIntake = () => {
 
   const systemIntake = data?.systemIntake;
 
+  const isConfirmationPage =
+    formPage === 'confirmation' || formPage === 'confirmation-error';
+
   if (!loading && !systemIntake) {
     return <NotFound />;
   }
 
   return (
     <MainContent
-      className={`system-intake  margin-bottom-5 ${formPage !== 'confirmation' ? 'grid-container' : ''}`}
+      className={`system-intake  margin-bottom-5 ${!isConfirmationPage ? 'grid-container' : ''}`}
       data-testid="system-intake"
     >
-      {subPage !== 'upload' && formPage !== 'confirmation' && (
+      {subPage !== 'upload' && !isConfirmationPage && (
         <BreadcrumbBar variant="wrap">
           <Breadcrumb>
             <BreadcrumbLink asCustom={Link} to="/">
@@ -98,7 +101,11 @@ export const SystemIntake = () => {
           />
           <Route
             path="/system/:systemId/confirmation"
-            render={() => <Confirmation />}
+            render={() => <Confirmation submissionSuccess />}
+          />
+          <Route
+            path="/system/:systemId/confirmation-error"
+            render={() => <Confirmation submissionSuccess={false} />}
           />
           <Route
             path="/system/:systemId/view"
