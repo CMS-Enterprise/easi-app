@@ -232,7 +232,7 @@ const GeneralRequestInfo = ({
             </Button>
 
             <IconButton
-              icon={<Icon.ArrowBack />}
+              icon={<Icon.ArrowBack aria-hidden />}
               type="button"
               unstyled
               onClick={() => {

@@ -85,7 +85,7 @@ function RequestType() {
         }}
         className="display-flex flex-align-center margin-top-2"
       >
-        <Icon.ArrowBack className="margin-right-1" />
+        <Icon.ArrowBack className="margin-right-1" aria-hidden />
         {t(isNew ? 'requestType.goBack' : 'requestType.goBackWithoutChange')}
       </UswdsReactLink>
 
@@ -116,9 +116,11 @@ function RequestType() {
               >
                 <div>
                   <ul className="list-style-middot">
-                    {t<string[]>(`requestType.type.${requestType}.list`, {
-                      returnObjects: true
-                    }).map((text: string, idx: number) => (
+                    {(
+                      t(`requestType.type.${requestType}.list`, {
+                        returnObjects: true
+                      }) as string[]
+                    ).map((text: string, idx: number) => (
                       // eslint-disable-next-line react/no-array-index-key
                       <li key={idx}>{text}</li>
                     ))}
@@ -171,7 +173,10 @@ function RequestType() {
                 }}
               >
                 {t('requestType.services.other')}
-                <Icon.ArrowForward className="margin-left-05 margin-bottom-2px text-tbottom" />
+                <Icon.ArrowForward
+                  className="margin-left-05 margin-bottom-2px text-tbottom"
+                  aria-hidden
+                />
               </UswdsReactLink>
             ) : (
               <Button
@@ -184,7 +189,10 @@ function RequestType() {
                 }}
               >
                 {t('requestType.services.other')}
-                <Icon.ArrowForward className="margin-left-05 margin-bottom-2px text-tbottom" />
+                <Icon.ArrowForward
+                  className="margin-left-05 margin-bottom-2px text-tbottom"
+                  aria-hidden
+                />
               </Button>
             )}
           </li>

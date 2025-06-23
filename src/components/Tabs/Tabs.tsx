@@ -38,7 +38,7 @@ const Tabs = ({ defaultActiveTab, children, className }: TabsProps) => {
     name: child.props.tabName
   }));
   const [activeTab, setActiveTab] = useState(
-    defaultActiveTab || tabObjs[0].name
+    defaultActiveTab || tabObjs[0]?.name || ''
   );
 
   const handleKeyup = (e: KeyboardEvent) => {

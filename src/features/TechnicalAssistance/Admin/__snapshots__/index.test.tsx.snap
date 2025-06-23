@@ -161,6 +161,7 @@ exports[`TRB admin home > matches the snapshot 1`] = `
                 class="display-flex flex-align-center"
               >
                 <svg
+                  aria-hidden="true"
                   class="usa-icon text-error margin-right-05"
                   focusable="false"
                   height="1em"
@@ -439,7 +440,7 @@ exports[`TRB admin home > matches the snapshot 1`] = `
                 <div
                   class="usa-card__container"
                 >
-                  <header
+                  <div
                     class="usa-card__header"
                     data-testid="CardHeader"
                   >
@@ -453,7 +454,7 @@ exports[`TRB admin home > matches the snapshot 1`] = `
                     >
                       Completed by requester
                     </p>
-                  </header>
+                  </div>
                   <div
                     class="usa-card__body"
                     data-testid="CardBody"
@@ -501,7 +502,7 @@ exports[`TRB admin home > matches the snapshot 1`] = `
                 <div
                   class="usa-card__container"
                 >
-                  <header
+                  <div
                     class="usa-card__header"
                     data-testid="CardHeader"
                   >
@@ -515,7 +516,7 @@ exports[`TRB admin home > matches the snapshot 1`] = `
                     >
                       To be completed by TRB
                     </p>
-                  </header>
+                  </div>
                   <div
                     class="usa-card__body"
                     data-testid="CardBody"
@@ -580,6 +581,7 @@ exports[`TRB admin home > matches the snapshot 1`] = `
             >
               View documents
               <svg
+                aria-hidden="true"
                 class="usa-icon margin-left-1"
                 focusable="false"
                 height="1em"

@@ -46,12 +46,9 @@ function ProcessFlow() {
   // Redirect to start if `requestType` isn't set
   if (!requestType) return <Redirect to="/trb/start" />;
 
-  const requestTypeText = t<Record<string, { heading: string }>>(
-    'requestType.type',
-    {
-      returnObjects: true
-    }
-  );
+  const requestTypeText = t('requestType.type', {
+    returnObjects: true
+  }) as Record<string, { heading: string }>;
 
   return (
     <GridContainer className="width-full">

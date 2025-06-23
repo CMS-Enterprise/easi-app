@@ -116,7 +116,9 @@ const DiscussionPost = ({
                   });
                 }}
                 className="margin-right-205"
-                icon={<Icon.Announcement className="text-primary" />}
+                icon={
+                  <Icon.Announcement aria-hidden className="text-primary" />
+                }
                 unstyled
               >
                 {replies.length > 0

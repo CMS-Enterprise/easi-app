@@ -119,7 +119,10 @@ export default function Summary({
               </h4>
               <span className="display-flex flex-align-center">
                 {!trbLead && (
-                  <Icon.Error className="text-error margin-right-05" />
+                  <Icon.Error
+                    className="text-error margin-right-05"
+                    aria-hidden
+                  />
                 )}
                 {trbLead || t('adminHome.notAssigned')}
               </span>
