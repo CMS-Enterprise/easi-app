@@ -1,7 +1,12 @@
 import React from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { Button } from '@trussworks/react-uswds';
+import {
+  Button,
+  SummaryBox,
+  SummaryBoxContent,
+  SummaryBoxHeading
+} from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
   SystemIntakeFormState,
@@ -43,17 +48,21 @@ const Review = ({ systemIntake }: ReviewProps) => {
         />
       )}
 
-      <SystemIntakeReview systemIntake={systemIntake} />
-      <hr className="system-intake__hr" />
-      <h2 className="font-heading-xl">{t('review.nextSteps.heading')}</h2>
-      <p>
-        <Trans i18nKey="intake:review.nextSteps.description" />
-      </p>
-      <ul className="usa-list">
-        <li>{t('review.nextSteps.direct')}</li>
-        <li>{t('review.nextSteps.decide')}</li>
-      </ul>
-      <p className="margin-bottom-6">{t('review.nextSteps.timeline')}</p>
+      <SystemIntakeReview
+        systemIntake={systemIntake}
+        showSubmissionDate={false}
+        showEditSectionLink
+      />
+
+      <SummaryBox className="grid-col-6 margin-top-8 margin-bottom-5">
+        <SummaryBoxHeading headingLevel="h3" className="margin-bottom-2">
+          {t('review.nextSteps.heading')}
+        </SummaryBoxHeading>
+        <SummaryBoxContent>
+          {t('review.nextSteps.description')}
+        </SummaryBoxContent>
+      </SummaryBox>
+
       <Button
         type="button"
         outline
