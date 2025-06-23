@@ -25,7 +25,7 @@ import './index.scss';
 
 export const SystemIntake = () => {
   const { t } = useTranslation();
-  const { systemId, subPage } = useParams<{
+  const { systemId, subPage, formPage } = useParams<{
     systemId: string;
     formPage: string;
     subPage: string;
@@ -46,10 +46,10 @@ export const SystemIntake = () => {
 
   return (
     <MainContent
-      className="system-intake grid-container margin-bottom-5"
+      className={`system-intake  margin-bottom-5 ${formPage !== 'confirmation' ? 'grid-container' : ''}`}
       data-testid="system-intake"
     >
-      {subPage !== 'upload' && (
+      {subPage !== 'upload' && formPage !== 'confirmation' && (
         <BreadcrumbBar variant="wrap">
           <Breadcrumb>
             <BreadcrumbLink asCustom={Link} to="/">
@@ -64,7 +64,9 @@ export const SystemIntake = () => {
               <span>{t('taskList:navigation.governanceTaskList')}</span>
             </BreadcrumbLink>
           </Breadcrumb>
-          <Breadcrumb current>Intake Request</Breadcrumb>
+          <Breadcrumb current>
+            {t('taskList:navigation.intakeRequest')}
+          </Breadcrumb>
         </BreadcrumbBar>
       )}
       {loading && <PageLoading />}

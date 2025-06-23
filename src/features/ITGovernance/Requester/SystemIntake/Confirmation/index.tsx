@@ -1,13 +1,18 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { Link as ReactRouterLink, useParams } from 'react-router-dom';
 import {
+  Breadcrumb,
+  BreadcrumbBar,
+  BreadcrumbLink,
+  GridContainer,
   Link,
   SummaryBox,
   SummaryBoxContent,
   SummaryBoxHeading
 } from '@trussworks/react-uswds';
 
+import ExternalLinkAndModal from 'components/ExternalLinkAndModal';
 import PageHeading from 'components/PageHeading';
 
 const Confirmation = () => {
@@ -15,31 +20,64 @@ const Confirmation = () => {
   const { t } = useTranslation('intake');
 
   return (
-    <div className="margin-bottom-15">
-      <PageHeading className="margin-top-4 margin-bottom-1">
-        {t('submission.success.heading')}
-      </PageHeading>
-      <p className="font-body-lg line-height-body-5 margin-top-0 margin-bottom-5">
-        {t('submission.success.description')}
-      </p>
-      <Link
-        href={`/governance-task-list/${systemId}`}
-        className="usa-button"
-        variant="unstyled"
-      >
-        {t('taskList:navigation.returnToTaskList')}
-      </Link>
+    <>
+      <div className="margin-bottom-8 bg-success-lighter padding-bottom-6">
+        <GridContainer>
+          <BreadcrumbBar
+            variant="wrap"
+            className="bg-success-lighter margin-bottom-6"
+          >
+            <Breadcrumb>
+              <BreadcrumbLink asCustom={ReactRouterLink} to="/">
+                <span>{t('taskList:navigation.home')}</span>
+              </BreadcrumbLink>
+            </Breadcrumb>
+            <Breadcrumb>
+              <BreadcrumbLink
+                asCustom={ReactRouterLink}
+                to={`/governance-task-list/${systemId}`}
+              >
+                <span>{t('taskList:navigation.governanceTaskList')}</span>
+              </BreadcrumbLink>
+            </Breadcrumb>
+            <Breadcrumb current>
+              {t('taskList:navigation.intakeRequest')}
+            </Breadcrumb>
+          </BreadcrumbBar>
 
-      <SummaryBox className="grid-col-8 margin-top-8 margin-bottom-5">
-        <SummaryBoxHeading headingLevel="h3" className="margin-bottom-2">
-          {t('review.nextSteps.heading')}
-        </SummaryBoxHeading>
-        <SummaryBoxContent>
-          {t('review.nextSteps.description')}
-        </SummaryBoxContent>
-      </SummaryBox>
+          <PageHeading className="margin-top-0 margin-bottom-1">
+            {t('submission.success.heading')}
+          </PageHeading>
+          <p className="font-body-lg line-height-body-5 margin-top-0 margin-bottom-5">
+            {t('submission.success.description')}
+          </p>
+          <Link
+            href={`/governance-task-list/${systemId}`}
+            className="usa-button"
+            variant="unstyled"
+          >
+            {t('taskList:navigation.returnToTaskList')}
+          </Link>
+        </GridContainer>
+      </div>
+      <div>
+        <GridContainer>
+          <SummaryBox className="grid-col-8 margin-top-0 margin-bottom-5">
+            <SummaryBoxHeading headingLevel="h3" className="margin-bottom-2">
+              {t('review.nextSteps.heading')}
+            </SummaryBoxHeading>
+            <SummaryBoxContent>
+              {t('review.nextSteps.description')}
+            </SummaryBoxContent>
+          </SummaryBox>
+          <p>{t('submission.success.learnMore')}</p>
+          <ExternalLinkAndModal
+            href={t('submission.success.sharepointLink.href')}
+          >
+            <span>{t('submission.success.sharepointLink.copy')}</span>
+          </ExternalLinkAndModal>
 
-      {/* <div>
+          {/* <div>
         <PageHeading>{t('submission.confirmation.heading')}</PageHeading>
         <h2 className="margin-bottom-8 text-normal">
           {t('submission.confirmation.subheading', {
@@ -56,7 +94,9 @@ const Confirmation = () => {
           </Link>
         </div>
       </div> */}
-    </div>
+        </GridContainer>
+      </div>
+    </>
   );
 };
 

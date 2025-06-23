@@ -138,7 +138,13 @@ const intake = {
     success: {
       heading: 'Success!',
       description:
-        'Your Intake Request form has been submitted. You will receive an automatic email, and a Governance Admin Team member will reach out shortly regarding next steps.'
+        'Your Intake Request form has been submitted. You will receive an automatic email, and a Governance Admin Team member will reach out shortly regarding next steps.',
+      learnMore:
+        'Want to learn more about the IT Governance process? Visit the IT Governance Sharepoint space.',
+      sharepointLink: {
+        copy: 'Go to the IT Governance Sharepoint space',
+        href: 'https://share.cms.gov/Office/OIT/CIOCorner/SitePages/ITGovernance.aspx'
+      }
     }
   },
   lifecycleId: 'Life Cycle ID',
