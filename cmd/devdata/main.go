@@ -301,18 +301,23 @@ func main() {
 				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
 			},
 			{
-				EuaUserID:  "BTMN",
+				EuaUserID:  "TEST",
 				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
 				GrbRole:    models.SystemIntakeGRBReviewerRoleOther,
 			},
 			{
-				EuaUserID:  "ABCD",
-				VotingRole: models.SystemIntakeGRBReviewerVotingRoleAlternate,
+				EuaUserID:  "GRTB",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
 				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
 			},
 			{
-				EuaUserID:  "A11Y",
-				VotingRole: models.SystemIntakeGRBReviewerVotingRoleNonVoting,
+				EuaUserID:  "CMSU",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
+			},
+			{
+				EuaUserID:  "ADMI",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
 				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
 			},
 		},
@@ -436,11 +441,21 @@ func main() {
 			},
 			{
 				EuaUserID:  "USR3",
-				VotingRole: models.SystemIntakeGRBReviewerVotingRoleAlternate,
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
 				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
 			},
 			{
 				EuaUserID:  "USR4",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
+			},
+			{
+				EuaUserID:  "USR5",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
+			},
+			{
+				EuaUserID:  "SF13",
 				VotingRole: models.SystemIntakeGRBReviewerVotingRoleNonVoting,
 				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
 			},
