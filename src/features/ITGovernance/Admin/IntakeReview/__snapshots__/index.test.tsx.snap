@@ -23,29 +23,12 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
       <div>
         <dl
           title="System Request"
-        >
-          <div
-            class="easi-review-row"
-          >
-            <div>
-              <dt
-                class="text-bold margin-bottom-05"
-              >
-                Submission date
-              </dt>
-              <dd
-                class="description-definition margin-0"
-              >
-                October 20, 2022
-              </dd>
-            </div>
-          </div>
-        </dl>
+        />
         <hr
           class="system-intake__hr"
         />
         <h2
-          class="font-heading-xl"
+          class="font-heading-xl margin-bottom-0"
         >
           Contact details
         </h2>
@@ -61,7 +44,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
               <dt
                 class="text-bold margin-bottom-05"
               >
-                Requester
+                Requester name
               </dt>
               <dd
                 class="description-definition margin-0"
@@ -89,7 +72,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
               <dt
                 class="text-bold margin-bottom-05"
               >
-                CMS Business Owner's name
+                CMS Business Owner
               </dt>
               <dd
                 class="description-definition margin-0"
@@ -171,7 +154,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
           class="system-intake__hr"
         />
         <h2
-          class="font-heading-xl"
+          class="font-heading-xl margin-top-3 margin-bottom-0"
         >
           Request details
         </h2>
@@ -311,7 +294,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
           class="system-intake__hr"
         />
         <h2
-          class="font-heading-xl"
+          class="font-heading-xl margin-top-3 margin-bottom-0"
         >
           Contract details
         </h2>
@@ -401,7 +384,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
               <dt
                 class="text-bold margin-bottom-05"
               >
-                Period of performance
+                Period of performance dates for planned project
               </dt>
               <dd
                 class="description-definition margin-0"
@@ -415,7 +398,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
           class="system-intake__hr"
         />
         <h2
-          class="font-heading-xl"
+          class="font-heading-xl margin-top-3 margin-bottom-0"
         >
           Documents
         </h2>
@@ -579,7 +562,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
             </table>
           </div>
           <p>
-            No documents uploaded
+            There are no documents uploaded for this request.
           </p>
         </div>
       </div>

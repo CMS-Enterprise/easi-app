@@ -57,41 +57,45 @@ exports[`New System > matches the snapshot 1`] = `
       class="governance-overview__content padding-bottom-3"
     >
       <div
-        class="overflow-hidden padding-y-1 bg-base-lightest padding-x-2 margin-bottom-6"
+        class="bg-base-lightest padding-2 margin-bottom-6"
       >
-        <p>
+        <p
+          class="margin-0"
+        >
           Working through this step-by-step process will help you:
         </p>
         <ul
           class="padding-left-205"
         >
           <li
-            class="margin-y-1"
+            class="line-height-sans-4"
           >
-            Work with GRT Subject Matter Experts (SMEs) to refine your Business Case
+            work with Governance Review Team (GRT) Subject Matter Experts (SMEs) to refine your Business Case
           </li>
           <li
-            class="margin-y-1"
+            class="line-height-sans-4"
           >
-            Justify your Business Case to the GRB
+            justify your Business Case to the GRB
           </li>
           <li
-            class="margin-y-1"
+            class="line-height-sans-4"
           >
-            Complete or initiate any new requirements from the GRT and/or GRB
+            complete or initiate any new requirements from the GRT and/or GRB
           </li>
           <li
-            class="margin-y-1"
+            class="line-height-sans-4"
           >
-            Get a Life Cycle ID (LCID) certifying compliance with HHS standards for IT investments to use on your acquisition documentation
+            get a Life Cycle ID (LCID) certifying compliance with HHS standards for IT investments to use on your acquisition documentation
           </li>
         </ul>
-        <p>
-          It can take 4 to 6 weeks to go through all the steps and get a decision.
+        <p
+          class="margin-0"
+        >
+          It may take up to 4 to 6 weeks to go through all the steps in the IT Governance process and receive a decision from the GRB.
         </p>
       </div>
       <div
-        class="tablet:grid-col-6"
+        class="tablet:grid-col-8"
       >
         <h2
           class="font-heading-xl margin-bottom-2"
@@ -126,7 +130,7 @@ exports[`New System > matches the snapshot 1`] = `
           </button>
         </div>
         <ol
-          class="usa-process-list margin-top-2"
+          class="usa-process-list margin-top-2 border-bottom border-bottom-width-1px border-base-lighter margin-bottom-4"
         >
           <li
             class="usa-process-list__item"
@@ -135,7 +139,7 @@ exports[`New System > matches the snapshot 1`] = `
               class="usa-process-list__heading"
               data-testid="processListHeading"
             >
-              Fill the Intake Request form
+              Fill out the Intake Request form
             </h3>
             <p
               class="margin-bottom-1"
@@ -155,15 +159,12 @@ exports[`New System > matches the snapshot 1`] = `
             <p
               class="margin-bottom-1"
             >
-              The Governance admin team will review your Intake Request form and decide if it it needs further governance. If it does, they'll direct you to go through the remaining steps.
+              The Governance Admin Team will review your Intake Request form and decide if it needs further governance. If it does, they’ll direct you to go through any additional steps of this governance process that are required, as outlined below.
             </p>
           </li>
         </ol>
-        <div
-          class="easi-divider margin-bottom-3"
-        />
         <ol
-          class="usa-process-list easi-governance-overview__governance-steps"
+          class="usa-process-list easi-governance-overview__governance-steps margin-top-2 border-bottom border-bottom-width-1px border-base-lighter margin-bottom-4"
           start="3"
         >
           <li
@@ -173,12 +174,12 @@ exports[`New System > matches the snapshot 1`] = `
               class="usa-process-list__heading"
               data-testid="processListHeading"
             >
-              Prepare your Business Case
+              Prepare a Business Case
             </h3>
             <p
               class="margin-bottom-1"
             >
-              Draft different solutions and the corresponding costs involved.
+              Draft different solutions to your business need and document any corresponding costs involved for each solution.
             </p>
           </li>
           <li
@@ -188,12 +189,12 @@ exports[`New System > matches the snapshot 1`] = `
               class="usa-process-list__heading"
               data-testid="processListHeading"
             >
-              Attend the Governance Review Team meeting
+              Attend the Governance Review Team (GRT) meeting
             </h3>
             <p
               class="margin-bottom-1"
             >
-              Discuss your draft Business Case with the Governance Review Team (GRT). They will give you feedback and help you refine your Business Case before you present to the Governance Review Board (GRB).
+              Discuss your draft Business Case with the GRT. They may give you feedback and work with you to refine your Business Case before you share it with the GRB. If the GRT has any additional comments or feedback after the meeting, they may ask you to make additional updates to your Business Case.
             </p>
             <a
               class="usa-link"
@@ -210,12 +211,12 @@ exports[`New System > matches the snapshot 1`] = `
               class="usa-process-list__heading"
               data-testid="processListHeading"
             >
-              Feedback from the Governance Review Team
+              Submit your Business Case for final approval
             </h3>
             <p
               class="margin-bottom-1"
             >
-              If the Governance Review Team has any additional comments or feedback, they may ask you to update your Business Case before submitting it to the Governance Review Board.
+              Update your Business Case based on any feedback or requirements from the GRT and submit it to the GRB via EASi.
             </p>
           </li>
           <li
@@ -225,27 +226,12 @@ exports[`New System > matches the snapshot 1`] = `
               class="usa-process-list__heading"
               data-testid="processListHeading"
             >
-              Submit your final Business Case
+              Get approval from the Governance Review Board (GRB)
             </h3>
             <p
               class="margin-bottom-1"
             >
-              Update your Business Case based on feedback and incorporate any requirements from the review meeting or Governance Review Team for submission to the Governance Review Board.
-            </p>
-          </li>
-          <li
-            class="usa-process-list__item"
-          >
-            <h3
-              class="usa-process-list__heading"
-              data-testid="processListHeading"
-            >
-              Attend the Governance Review Board Meeting
-            </h3>
-            <p
-              class="margin-bottom-1"
-            >
-              Present your Business Case to the Governance Review Board. The GRB will discuss and make a decision based on your Business Case as well as any recommendations from the Governance Review Team.
+              Depending on the complexity of your request and the costs involved, the Governance Admin Team may ask that you get approval from the GRB. This may be completed asynchronously within EASi, or they may ask you to present your Business Case at a GRB meeting. The GRB will discuss and make decisions based on any or all of the following: your Intake Request, business need, Business Case, and recommendations from the GRT.
             </p>
             <a
               class="usa-link"
@@ -255,6 +241,11 @@ exports[`New System > matches the snapshot 1`] = `
               Prepare for the GRB meeting (opens in new tab)
             </a>
           </li>
+        </ol>
+        <ol
+          class="usa-process-list easi-governance-overview__governance-steps"
+          start="7"
+        >
           <li
             class="usa-process-list__item"
           >
@@ -267,7 +258,7 @@ exports[`New System > matches the snapshot 1`] = `
             <p
               class="margin-bottom-1"
             >
-              If your request is ready to move forward, you will receive a unique Life Cycle ID (LCID). If there are outstanding concerns, you will receive documented next steps to address in order to proceed.
+              If your request is approved, you will receive a unique Life Cycle ID. If it is not approved, you will receive a set of next steps or concerns to address.
             </p>
           </li>
         </ol>

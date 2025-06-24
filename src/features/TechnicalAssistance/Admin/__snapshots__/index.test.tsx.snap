@@ -91,7 +91,7 @@ exports[`TRB admin home > matches the snapshot 1`] = `
               <h5
                 class="text-normal margin-y-0"
               >
-                Requester
+                Requester name
               </h5>
               <h4
                 class="margin-top-05 margin-bottom-2"

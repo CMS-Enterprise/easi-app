@@ -38,7 +38,7 @@ exports[`The prepare for GRB info page > matches the snapshot 1`] = `
               href="/governance-task-list/undefined"
             >
               <span>
-                Governance task list
+                Task list
               </span>
             </a>
           </li>
