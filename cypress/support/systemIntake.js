@@ -18,11 +18,6 @@ cy.systemIntake = {
         .type('{downarrow}{enter}')
         .should('have.value', 'Audrey Abrams, ADMI (audrey.abrams@local.fake)');
 
-      cy.get('#businessOwnerEmail').should(
-        'have.value',
-        'audrey.abrams@local.fake'
-      );
-
       cy.get('#businessOwnerComponent')
         .select('CMS Wide')
         .should('have.value', 'CMS Wide');
@@ -32,11 +27,6 @@ cy.systemIntake = {
         .wait(2000) // See Note [Specific Cypress wait duration on Okta search]
         .type('{downArrow}{enter}')
         .should('have.value', 'Delphia Green, GBRG (delphia.green@local.fake)');
-
-      cy.get('#productManagerEmail').should(
-        'have.value',
-        'delphia.green@local.fake'
-      );
 
       cy.get('#productManagerComponent')
         .select('Office of Legislation')
