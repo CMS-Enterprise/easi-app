@@ -20,7 +20,7 @@ describe('ViewDiscussions component', () => {
     'discussions:general.alerts.noDiscussionsRepliedTo'
   );
 
-  it.only('renders the component', () => {
+  it('renders the component', () => {
     render(
       <MemoryRouter>
         <ViewDiscussions
