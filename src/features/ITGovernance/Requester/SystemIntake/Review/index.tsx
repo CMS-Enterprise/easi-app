@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import {
   Button,
+  Icon,
   SummaryBox,
   SummaryBoxContent,
   SummaryBoxHeading
@@ -90,6 +91,18 @@ const Review = ({ systemIntake }: ReviewProps) => {
       >
         {t('review.sendIntakeRequest')}
       </Button>
+      <Button
+        className="margin-top-2 display-flex flex-align-center"
+        type="button"
+        unstyled
+        onClick={() => {
+          history.push(`/governance-task-list/${systemIntake.id}`);
+        }}
+      >
+        <Icon.ArrowBack className="margin-right-05" aria-hidden />
+        {t('review.saveWithoutSubmitting')}
+      </Button>
+
       <PageNumber className="margin-top-8" currentPage={5} totalPages={5} />
     </div>
   );

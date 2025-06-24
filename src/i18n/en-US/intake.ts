@@ -526,7 +526,8 @@ const intake = {
       description:
         'The Governance Admin Team will review your request and get back to you within two business days. If your project is determined to contain reportable IT, your project may require a full Governance Review. The full IT Governance Review process can take up to 3 weeks assuming no issues are raised.'
     },
-    sendIntakeRequest: 'Send my Intake Request'
+    sendIntakeRequest: 'Send my Intake Request',
+    saveWithoutSubmitting: 'Save and exit without submitting'
   }
 };
 
