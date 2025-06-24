@@ -31,6 +31,7 @@ exports[`DocumentUploadForm page > matches the snapshot 1`] = `
       href="/it-governance/63448b98-f92a-4227-bbf3-d07961ce242d/grb-review"
     >
       <svg
+        aria-hidden="true"
         class="usa-icon margin-right-1"
         focusable="false"
         height="1em"
@@ -442,6 +443,7 @@ exports[`DocumentUploadForm page > matches the snapshot 1`] = `
           type="button"
         >
           <svg
+            aria-hidden="true"
             class="usa-icon margin-right-05"
             focusable="false"
             height="1em"
