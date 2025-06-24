@@ -114,7 +114,7 @@ const IntakeRequestCard = ({
 
       <CardFooter>
         <IconLink
-          icon={<Icon.ArrowForward />}
+          icon={<Icon.ArrowForward aria-hidden />}
           iconPosition="after"
           to={`/it-governance/${systemIntakeID}/intake-request`}
           className="margin-top-1"

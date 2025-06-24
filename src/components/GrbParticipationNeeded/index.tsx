@@ -143,7 +143,7 @@ const GrbParticipationNeeded = () => {
           <h2 className="margin-y-0 margin-right-2">
             {t('homepage.participationNeeded')}
           </h2>
-          <Icon.Groups size={4} className="text-primary" />
+          <Icon.Groups size={4} className="text-primary" aria-hidden />
         </div>
 
         <p className="line-height-body-5 margin-top-1 margin-bottom-3">
@@ -153,7 +153,13 @@ const GrbParticipationNeeded = () => {
         {/* Toggle GRB reviews button */}
         <IconButton
           onClick={() => setShowGrbReviews(!showGrbReviews)}
-          icon={showGrbReviews ? <Icon.VisibilityOff /> : <Icon.Visibility />}
+          icon={
+            showGrbReviews ? (
+              <Icon.VisibilityOff aria-label="visibility-off" />
+            ) : (
+              <Icon.Visibility aria-label="visibility-on" />
+            )
+          }
           type="button"
           unstyled
         >
@@ -167,8 +173,11 @@ const GrbParticipationNeeded = () => {
             <Table bordered={false} fullWidth {...getTableProps()}>
               <thead>
                 {headerGroups.map(headerGroup => (
-                  <tr {...headerGroup.getHeaderGroupProps()}>
-                    {headerGroup.headers.map((column, index) => (
+                  <tr
+                    {...headerGroup.getHeaderGroupProps()}
+                    key={{ ...headerGroup.getHeaderGroupProps() }.key}
+                  >
+                    {headerGroup.headers.map(column => (
                       <th
                         {...column.getHeaderProps(
                           column.getSortByToggleProps()
@@ -176,6 +185,7 @@ const GrbParticipationNeeded = () => {
                         aria-sort={getColumnSortStatus(column)}
                         scope="col"
                         className="border-bottom-2px bg-primary-lighter"
+                        key={column.id}
                       >
                         <Button
                           type="button"
@@ -194,11 +204,12 @@ const GrbParticipationNeeded = () => {
                 {page.map(row => {
                   prepareRow(row);
                   return (
-                    <tr {...row.getRowProps()}>
-                      {row.cells.map((cell, index) => {
+                    <tr {...row.getRowProps()} key={row.id}>
+                      {row.cells.map(cell => {
                         return (
                           <td
                             {...cell.getCellProps()}
+                            key={{ ...cell.getCellProps() }.key}
                             className="bg-primary-lighter"
                           >
                             {cell.render('Cell')}

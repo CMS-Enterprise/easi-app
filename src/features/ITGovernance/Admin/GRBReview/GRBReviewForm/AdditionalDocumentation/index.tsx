@@ -37,9 +37,12 @@ const AdditionalDocumentation = ({ grbReview }: GRBReviewFormStepProps) => {
           </p>
 
           <ul className="line-height-body-5 margin-y-0">
-            {t<string[]>('setUpGrbReviewForm.documents.collapsableText.list', {
-              returnObjects: true
-            }).map(item => (
+            {t<string, string[]>(
+              'setUpGrbReviewForm.documents.collapsableText.list',
+              {
+                returnObjects: true
+              }
+            ).map(item => (
               <li key={item} className="margin-top-05">
                 {item}
               </li>

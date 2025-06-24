@@ -77,7 +77,7 @@ describe('GRB participation needed', () => {
     const testIntake = mockSystemIntakes[0];
 
     userEvent.click(
-      await screen.findByRole('button', { name: 'Show GRB reviews' })
+      await screen.findByRole('button', { name: /Show GRB reviews/i })
     );
 
     expect(

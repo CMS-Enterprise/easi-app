@@ -122,7 +122,9 @@ describe('Business case alternative analysis form', () => {
     // Navigate to Alternative A
     screen.getByRole('button', { name: /Add alternative A/i }).click();
 
-    expect(screen.getByTestId('alternative-solution-a')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByTestId('alternative-solution-a')).toBeInTheDocument();
+    });
 
     // Navigate back to Alternative Analysis
     screen.getByTestId('save-and-return-button').click();
@@ -134,7 +136,9 @@ describe('Business case alternative analysis form', () => {
     // Navigate to Alternative B
     screen.getByRole('button', { name: /Add alternative B/i }).click();
 
-    expect(screen.getByTestId('alternative-solution-b')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByTestId('alternative-solution-b')).toBeInTheDocument();
+    });
   });
 
   it('navigates to the previous page when "Back" is clicked', async () => {

@@ -39,18 +39,12 @@ import Breadcrumbs from '../../../../components/Breadcrumbs';
 
 function TaskList() {
   const { t } = useTranslation('technicalAssistance');
-  const requestTypeText = t<Record<string, { heading: string }>>(
-    'requestType.type',
-    {
-      returnObjects: true
-    }
-  );
-  const taskListText = t<{ heading: string; text: string; list?: string[] }[]>(
-    'taskList.taskList',
-    {
-      returnObjects: true
-    }
-  );
+  const requestTypeText = t('requestType.type', {
+    returnObjects: true
+  }) as Record<string, { heading: string }>;
+  const taskListText = t('taskList.taskList', {
+    returnObjects: true
+  }) as { heading: string; text: string; list?: string[] }[];
 
   const history = useHistory();
   const { id } = useParams<{

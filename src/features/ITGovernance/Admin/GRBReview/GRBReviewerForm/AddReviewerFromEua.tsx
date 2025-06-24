@@ -281,7 +281,7 @@ const AddReviewerFromEua = ({
           className="margin-top-2"
         >
           <dl className="margin-y-neg-1 padding-left-2">
-            {t<string[]>('form.votingRolesInfo.items', {
+            {t<string, string[]>('form.votingRolesInfo.items', {
               returnObjects: true
             }).map(item => (
               <div key={item} className="display-list-item margin-y-1">

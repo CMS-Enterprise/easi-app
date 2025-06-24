@@ -192,7 +192,7 @@ const GovTaskGrbMeeting = ({
                   )}
                 </h4>
               </dt>
-              {t<string[]>(
+              {t<string, string[]>(
                 `taskList.step.${stepKey}.reviewTypeModal.${type}.description`,
                 {
                   returnObjects: true
