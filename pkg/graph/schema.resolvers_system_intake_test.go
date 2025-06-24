@@ -559,10 +559,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetails() {
 					Component string
 					Email     string
 				}
-				Isso struct {
-					IsPresent bool
-					Name      null.String
-				}
 				GovernanceTeams struct {
 					IsPresent bool
 					Teams     null.String
@@ -609,10 +605,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetails() {
 						component
 						email
 					}
-					isso {
-						name
-						isPresent
-					}
 					governanceTeams {
 						teams {
 							name
@@ -635,9 +627,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetails() {
 	s.Equal(respIntake.Requester.Name, "Iama Requester")
 	s.Equal(respIntake.Requester.Component, "CMS Office 3")
 	s.Equal(respIntake.Requester.Email, "terry.thompson@local.fake")
-
-	s.Nil(respIntake.Isso.Name.Ptr())
-	s.False(respIntake.Isso.IsPresent)
 
 	s.Nil(respIntake.GovernanceTeams.Teams.Ptr())
 	s.False(respIntake.GovernanceTeams.IsPresent)
@@ -669,10 +658,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsEmptyEUA() {
 					Component string
 					Email     string
 				}
-				Isso struct {
-					IsPresent bool
-					Name      null.String
-				}
 				GovernanceTeams struct {
 					IsPresent bool
 					Teams     null.String
@@ -719,10 +704,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsEmptyEUA() {
 						component
 						email
 					}
-					isso {
-						name
-						isPresent
-					}
 					governanceTeams {
 						teams {
 							name
@@ -746,14 +727,11 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsEmptyEUA() {
 	s.Equal(respIntake.Requester.Component, "CMS Office 3")
 	s.Equal(respIntake.Requester.Email, "")
 
-	s.Nil(respIntake.Isso.Name.Ptr())
-	s.False(respIntake.Isso.IsPresent)
-
 	s.Nil(respIntake.GovernanceTeams.Teams.Ptr())
 	s.False(respIntake.GovernanceTeams.IsPresent)
 }
 
-func (s *GraphQLTestSuite) TestUpdateContactDetailsWithISSOAndTeams() {
+func (s *GraphQLTestSuite) TestUpdateContactDetailsWithTeams() {
 	ctx := s.context
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -777,10 +755,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWithISSOAndTeams() {
 				Requester struct {
 					Name      string
 					Component string
-				}
-				Isso struct {
-					IsPresent bool
-					Name      string
 				}
 				GovernanceTeams struct {
 					IsPresent bool
@@ -835,10 +809,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWithISSOAndTeams() {
 						name
 						component
 					}
-					isso {
-						name
-						isPresent
-					}
 					governanceTeams {
 						teams {
 							collaborator
@@ -853,8 +823,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWithISSOAndTeams() {
 	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContactDetails.SystemIntake.ID)
 
 	respIntake := resp.UpdateSystemIntakeContactDetails.SystemIntake
-	s.Equal("Iama Issoperson", respIntake.Isso.Name)
-	s.True(respIntake.Isso.IsPresent)
 
 	s.True(respIntake.GovernanceTeams.IsPresent)
 	teams := respIntake.GovernanceTeams.Teams
@@ -868,7 +836,7 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWithISSOAndTeams() {
 	s.Equal("enterpriseArchitecture", teams[2].Key)
 }
 
-func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearISSOAndTeams() {
+func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearTeams() {
 	ctx := s.context
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -877,7 +845,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearISSOAndTeams() {
 	})
 	s.NoError(intakeErr)
 
-	intake.ISSOName = null.StringFrom("Isso Person")
 	intake.TRBCollaboratorName = null.StringFrom("TRB Person")
 	intake.OITSecurityCollaboratorName = null.StringFrom("OIT Person")
 	intake.EACollaboratorName = null.StringFrom("EA Person")
@@ -899,10 +866,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearISSOAndTeams() {
 				Requester struct {
 					Name      string
 					Component string
-				}
-				Isso struct {
-					IsPresent bool
-					Name      null.String
 				}
 				GovernanceTeams struct {
 					IsPresent bool
@@ -949,10 +912,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearISSOAndTeams() {
 						name
 						component
 					}
-					isso {
-						name
-						isPresent
-					}
 					governanceTeams {
 						teams {
 							collaborator
@@ -967,8 +926,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearISSOAndTeams() {
 	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContactDetails.SystemIntake.ID)
 
 	respIntake := resp.UpdateSystemIntakeContactDetails.SystemIntake
-	s.Nil(respIntake.Isso.Name.Ptr())
-	s.False(respIntake.Isso.IsPresent)
 
 	s.Nil(respIntake.GovernanceTeams.Teams.Ptr())
 	s.False(respIntake.GovernanceTeams.IsPresent)
@@ -983,7 +940,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearOneTeam() {
 	})
 	s.NoError(intakeErr)
 
-	intake.ISSOName = null.StringFrom("Isso Person")
 	intake.TRBCollaboratorName = null.StringFrom("TRB Person")
 	intake.OITSecurityCollaboratorName = null.StringFrom("OIT Person")
 	intake.EACollaboratorName = null.StringFrom("EA Person")
@@ -1005,10 +961,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearOneTeam() {
 				Requester struct {
 					Name      string
 					Component string
-				}
-				Isso struct {
-					IsPresent bool
-					Name      null.String
 				}
 				GovernanceTeams struct {
 					IsPresent bool
@@ -1061,10 +1013,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearOneTeam() {
 					requester {
 						name
 						component
-					}
-					isso {
-						name
-						isPresent
 					}
 					governanceTeams {
 						teams {
