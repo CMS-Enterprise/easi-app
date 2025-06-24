@@ -9,6 +9,7 @@ import {
 } from 'react-router-dom';
 import { LoginCallback, SecureRoute } from '@okta/okta-react';
 import { GovBanner } from '@trussworks/react-uswds';
+import EditLinkedSystemsForm from 'features/EditLinkedSystems/EditLinkedSystemsForm';
 import Help from 'features/Help';
 import Home from 'features/Home';
 import MyRequests from 'features/Home/MyRequests';
@@ -93,6 +94,10 @@ const AppRoutes = () => {
       <SecureRoute exact path="/system/link/:id?">
         <RequestLinkForm requestType="itgov" />
       </SecureRoute>
+      <SecureRoute exact path="/edit-linked-systems/:id?">
+        <EditLinkedSystemsForm requestType="itgov" />
+      </SecureRoute>
+
       <SecureRoute
         path="/governance-overview/:systemId?"
         component={GovernanceOverview}
