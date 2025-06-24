@@ -589,10 +589,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetails() {
 					name: "Iama Requester",
 					component: "CMS Office 3"
 				},
-				isso: {
-					isPresent: false
-					name: null
-				},
 				governanceTeams: {
 					isPresent: false
 					teams: []
@@ -702,10 +698,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsEmptyEUA() {
 				requester: {
 					name: "Iama Requester",
 					component: "CMS Office 3"
-				},
-				isso: {
-					isPresent: false
-					name: null
 				},
 				governanceTeams: {
 					isPresent: false
@@ -819,10 +811,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWithISSOAndTeams() {
 				requester: {
 					name: "Iama Requester",
 					component: "CMS Office 3"
-				},
-				isso: {
-					isPresent: true,
-					name: "Iama Issoperson"
 				},
 				governanceTeams: {
 					isPresent: true,
@@ -942,10 +930,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearISSOAndTeams() {
 					name: "Iama Requester",
 					component: "CMS Office 3"
 				},
-				isso: {
-					isPresent: false,
-					name: null
-				},
 				governanceTeams: {
 					isPresent: false,
 					teams: null
@@ -1055,10 +1039,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearOneTeam() {
 				requester: {
 					name: "Iama Requester",
 					component: "CMS Office 3"
-				},
-				isso: {
-					isPresent: false,
-					name: null
 				},
 				governanceTeams: {
 					isPresent: true,

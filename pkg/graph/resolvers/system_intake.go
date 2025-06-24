@@ -155,12 +155,6 @@ func SystemIntakeUpdateContactDetails(ctx context.Context, store *storage.Store,
 	intake.ProductManager = null.StringFrom(input.ProductManager.Name)
 	intake.ProductManagerComponent = null.StringFrom(input.ProductManager.Component)
 
-	if input.Isso.IsPresent != nil && *input.Isso.IsPresent {
-		intake.ISSOName = null.StringFromPtr(input.Isso.Name)
-	} else {
-		intake.ISSOName = null.StringFromPtr(nil)
-	}
-
 	if input.GovernanceTeams.IsPresent != nil {
 		trbCollaboratorName := null.StringFromPtr(nil)
 		for _, team := range input.GovernanceTeams.Teams {
