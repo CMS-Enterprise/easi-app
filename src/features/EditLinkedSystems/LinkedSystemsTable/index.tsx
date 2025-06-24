@@ -110,18 +110,6 @@ const LinkedSystemsTable = ({
       });
     }
 
-    if (isHomePage) {
-      cols.push({
-        Header: t<string>('systemTable.header.openRequests'),
-        accessor: (system: CedarSystem) => {
-          return (
-            system.linkedTrbRequests.length + system.linkedSystemIntakes.length
-          );
-        },
-        id: 'openRequests'
-      });
-    }
-
     return cols;
   }, [t, systems, createMutate, deleteMutate, isHomePage, flags.showAtoColumn]);
 
@@ -278,11 +266,7 @@ const LinkedSystemsTable = ({
 
       {/* Alerts to show if there is no system/data */}
       {systems.length === 0 && (
-        <Alert
-          type="info"
-          heading={t('systemTable.noMySystem.header')}
-          className="margin-top-5"
-        >
+        <Alert type="info" className="margin-top-5">
           {isHomePage ? (
             <Trans
               i18nKey="systemProfile:systemTable.noMySystem.description"
@@ -298,34 +282,8 @@ const LinkedSystemsTable = ({
               }}
             />
           ) : (
-            <Trans
-              i18nKey="systemProfile:systemTable.noMySystem.descriptionAlt"
-              components={{
-                link1: <Link href="EnterpriseArchitecture@cms.hhs.gov"> </Link>
-              }}
-            />
+            <Trans i18nKey="linkedSystems:linkedSystemsTable.noSystemsListed" />
           )}
-        </Alert>
-      )}
-
-      {/* Alert to show to direct to Systems tab when viewing My sytems */}
-      {systems.length > 0 && isHomePage && (
-        <Alert
-          type="info"
-          heading={t('systemProfile:systemTable:dontSeeSystem.header')}
-        >
-          <Trans
-            i18nKey="systemProfile:systemTable:dontSeeSystem.description"
-            components={{
-              link1: <UswdsReactLink to="/systems"> </UswdsReactLink>,
-              iconForward: (
-                <Icon.ArrowForward
-                  className="icon-top margin-left-05"
-                  aria-hidden
-                />
-              )
-            }}
-          />
         </Alert>
       )}
     </div>

@@ -51,6 +51,7 @@ const EditLinkedSystemsForm = ({
   const { id } = useParams<{
     id: string;
   }>();
+  console.log(id);
   const history = useHistory();
 
   const { t } = useTranslation([
@@ -370,16 +371,7 @@ const EditLinkedSystemsForm = ({
               disabled={!submitEnabled}
               onClick={() => submit()}
             >
-              {t(
-                `link.form.${(() => {
-                  if (isNew) {
-                    return relation === RequestRelationType.NEW_SYSTEM
-                      ? 'continueTaskList'
-                      : 'next';
-                  }
-                  return 'saveChanges';
-                })()}`
-              )}
+              {t('itGov:link.form.continueTaskList')}
             </Button>
           </ButtonGroup>
 
