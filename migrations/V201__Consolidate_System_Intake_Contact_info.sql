@@ -1,8 +1,9 @@
 -- Add new common_name column to support "legacy" contacts imported from system_intakes table
 ALTER TABLE system_intake_contacts ADD COLUMN common_name TEXT;
 
--- Add new flag for determining if contact is primary requester
-ALTER TABLE system_intake_contacts ADD COLUMN is_primary_requester BOOLEAN;
+-- Add new foreign key reference to user_account table (will eventually replace eua_user_id)
+-- TODO: make this NOT NULL once user_table functionality fully integrated
+ALTER TABLE system_intake_contacts ADD COLUMN user_account_id UUID REFERENCES user_account(id);
 
 -- Temporarily remove NOT NULL check from eua_user_id to allow for one time migration of historical contact info from system_intakes
 ALTER TABLE system_intake_contacts ALTER COLUMN eua_user_id DROP NOT NULL;
@@ -26,8 +27,7 @@ INSERT INTO system_intake_contacts
     component,
     role,
     created_at,
-    updated_at,
-    is_primary_requester
+    updated_at
 )
 SELECT
     gen_random_uuid() AS id,
@@ -36,8 +36,7 @@ SELECT
     si.component,
     'Requester' AS role,
     si.created_at,
-    si.updated_at,
-    TRUE AS is_primary_requester
+    si.updated_at
 FROM system_intakes si
 WHERE NOT EXISTS (
     SELECT 1 
@@ -46,7 +45,6 @@ WHERE NOT EXISTS (
         sic.system_intake_id = si.id 
         AND (
             (sic.eua_user_id IS NOT NULL AND sic.eua_user_id = si.eua_user_id)
-            OR sic.is_primary_requester = TRUE
         )
 );
 
@@ -59,8 +57,7 @@ INSERT INTO system_intake_contacts
     role,
     created_at,
     updated_at,
-    common_name,
-    is_primary_requester
+    common_name
 )
 SELECT
     gen_random_uuid() AS id,
@@ -69,8 +66,7 @@ SELECT
     'Business Owner' AS role,
     si.created_at,
     si.updated_at,
-    si.business_owner AS common_name,
-    FALSE AS is_primary_requester
+    si.business_owner AS common_name
 FROM system_intakes si
 WHERE
     si.business_owner IS NOT NULL
@@ -78,7 +74,7 @@ WHERE
         SELECT 1 
         FROM system_intake_contacts sic 
         WHERE
-            sic.system_intake_id = si.id 
+            sic.system_intake_id = si.id
             AND sic.role = 'Business Owner'
     );
 
@@ -91,8 +87,7 @@ INSERT INTO system_intake_contacts
     role,
     created_at,
     updated_at,
-    common_name,
-    is_primary_requester
+    common_name
 )
 SELECT
     gen_random_uuid() AS id,
@@ -101,8 +96,7 @@ SELECT
     'Product Manager' AS role,
     si.created_at,
     si.updated_at,
-    si.product_manager AS common_name,
-    FALSE AS is_primary_requester
+    si.product_manager AS common_name
 FROM system_intakes si
 WHERE
     si.product_manager IS NOT NULL
