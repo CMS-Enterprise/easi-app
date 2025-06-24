@@ -51,7 +51,7 @@ const EditLinkedSystemsForm = ({
   const { id } = useParams<{
     id: string;
   }>();
-  console.log(id);
+
   const history = useHistory();
 
   const { t } = useTranslation([
