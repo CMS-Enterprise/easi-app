@@ -85,6 +85,8 @@ const Review = ({ systemIntake }: ReviewProps) => {
           }).then(response => {
             if (!response.errors) {
               history.push(`/system/${systemIntake.id}/confirmation`);
+            } else {
+              history.push(`/system/${systemIntake.id}/confirmation-error`);
             }
           })
         }
