@@ -3,7 +3,7 @@ ALTER TABLE system_intake_contacts ADD COLUMN common_name TEXT;
 
 -- Add new foreign key reference to user_account table (will eventually replace eua_user_id)
 -- TODO: make this NOT NULL once user_table functionality fully integrated
-ALTER TABLE system_intake_contacts ADD COLUMN user_account_id UUID REFERENCES user_account(id);
+ALTER TABLE system_intake_contacts ADD COLUMN user_id UUID REFERENCES user_account(id);
 
 -- Temporarily remove NOT NULL check from eua_user_id to allow for one time migration of historical contact info from system_intakes
 ALTER TABLE system_intake_contacts ALTER COLUMN eua_user_id DROP NOT NULL;
