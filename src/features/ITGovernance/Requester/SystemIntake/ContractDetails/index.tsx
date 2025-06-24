@@ -29,9 +29,9 @@ import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
 import FundingSources from 'components/FundingSources';
 import HelpText from 'components/HelpText';
-import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
+import RequiredFieldsText from 'components/RequiredFieldsText';
 import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
 import { ContractDetailsForm } from 'types/systemIntake';
 import flattenFormErrors from 'utils/flattenFormErrors';
@@ -261,9 +261,12 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
 
       <ErrorMessage errors={errors} name="root" as={<Alert type="error" />} />
 
-      <PageHeading className="margin-bottom-3">
+      <PageHeading className="margin-top-4 margin-bottom-1">
         {t('contractDetails.heading')}
       </PageHeading>
+      <p className="font-body-lg line-height-body-5 margin-top-0 margin-bottom-1">
+        {t('contractDetails.description')}
+      </p>
 
       {systemIntake.requestFormState ===
         SystemIntakeFormState.EDITS_REQUESTED && (
@@ -274,15 +277,18 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
         />
       )}
 
-      <MandatoryFieldsAlert className="tablet:grid-col-6" />
+      <RequiredFieldsText className="margin-top-0 margin-bottom-5" />
 
       <EasiFormProvider<ContractDetailsForm> {...form}>
         <Form
           onSubmit={handleSubmit(() =>
             submit(() => history.push('documents'), true)
           )}
-          className="maxw-none tablet:grid-col-6 margin-bottom-7"
+          className="maxw-none tablet:grid-col-9 margin-bottom-5 border-top border-base-light padding-top-1"
         >
+          <p className="text-bold margin-y-0">
+            {t('contractDetails.fundingAndBudget')}
+          </p>
           <FieldGroup
             scrollElement="fundingSources"
             error={!!errors.fundingSources}
@@ -303,7 +309,10 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
             scrollElement="annualSpending.currentAnnualSpending"
             error={!!errors.annualSpending?.currentAnnualSpending}
           >
-            <Label htmlFor="annualSpending.currentAnnualSpending">
+            <Label
+              className="maxw-none"
+              htmlFor="annualSpending.currentAnnualSpending"
+            >
               {t('contractDetails.currentAnnualSpending')}
             </Label>
             <ErrorMessage
@@ -324,7 +333,10 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
             scrollElement="annualSpending.currentAnnualSpendingITPortion"
             error={!!errors.annualSpending?.currentAnnualSpendingITPortion}
           >
-            <Label htmlFor="annualSpending.currentAnnualSpendingITPortion">
+            <Label
+              className="maxw-none"
+              htmlFor="annualSpending.currentAnnualSpendingITPortion"
+            >
               {t('contractDetails.currentAnnualSpendingITPortion')}
             </Label>
             <ErrorMessage
@@ -345,7 +357,10 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
             scrollElement="annualSpending.plannedYearOneSpending"
             error={!!errors.annualSpending?.plannedYearOneSpending}
           >
-            <Label htmlFor="annualSpending.plannedYearOneSpending">
+            <Label
+              className="maxw-none"
+              htmlFor="annualSpending.plannedYearOneSpending"
+            >
               {t('contractDetails.plannedYearOneSpending')}
             </Label>
             <ErrorMessage
@@ -366,7 +381,10 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
             scrollElement="annualSpending.plannedYearOneSpendingITPortion"
             error={!!errors.annualSpending?.plannedYearOneSpendingITPortion}
           >
-            <Label htmlFor="annualSpending.plannedYearOneSpendingITPortion">
+            <Label
+              className="maxw-none"
+              htmlFor="annualSpending.plannedYearOneSpendingITPortion"
+            >
               {t('contractDetails.plannedYearOneSpendingITPortion')}
             </Label>
             <ErrorMessage
@@ -388,12 +406,13 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
             error={!!errors.contract?.hasContract}
           >
             <Fieldset>
-              <legend className="usa-label">
+              <Label
+                className="maxw-none"
+                htmlFor="contractHaveContract"
+                requiredMarker
+              >
                 {t('contractDetails.hasContract')}
-              </legend>
-              <HelpText className="margin-top-1" id="haContractHelpText">
-                {t('contractDetails.hasContractHelpText')}
-              </HelpText>
+              </Label>
               <ErrorMessage
                 errors={errors}
                 name="contract.hasContract"
@@ -481,17 +500,17 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
               type: 'button',
               onClick: () => submit(() => history.push('request-details'))
             }}
-            border={false}
+            border
             taskListUrl={saveExitLink}
             submit={() => submit(() => history.push(saveExitLink))}
-            className="margin-top-4"
+            className="margin-top-5"
           />
         </Form>
       </EasiFormProvider>
 
       <AutoSave values={watch()} onSave={submit} debounceDelay={3000} />
 
-      <PageNumber currentPage={3} totalPages={5} />
+      <PageNumber currentPage={3} totalPages={5} className="margin-bottom-15" />
     </>
   );
 };
