@@ -140,6 +140,7 @@ exports[`GRB review form - presentation > renders the step and takes a snapshot 
                 Review type 
                 <span
                   class="usa-sr-only"
+                  data-testid="srStatusText"
                 >
                   not completed
                 </span>
@@ -168,6 +169,7 @@ exports[`GRB review form - presentation > renders the step and takes a snapshot 
                 Additional documentation 
                 <span
                   class="usa-sr-only"
+                  data-testid="srStatusText"
                 >
                   not completed
                 </span>
@@ -184,6 +186,7 @@ exports[`GRB review form - presentation > renders the step and takes a snapshot 
                 Participants and timeframe 
                 <span
                   class="usa-sr-only"
+                  data-testid="srStatusText"
                 >
                   not completed
                 </span>
@@ -201,6 +204,7 @@ exports[`GRB review form - presentation > renders the step and takes a snapshot 
               >
                 <span
                   class="usa-sr-only"
+                  data-testid="step-text"
                 >
                   Step
                 </span>
@@ -364,7 +368,7 @@ exports[`GRB review form - presentation > renders the step and takes a snapshot 
                 <div
                   class="usa-card__container margin-0 shadow-2 radius-md"
                 >
-                  <header
+                  <div
                     class="usa-card__header"
                     data-testid="CardHeader"
                   >
@@ -378,7 +382,7 @@ exports[`GRB review form - presentation > renders the step and takes a snapshot 
                     >
                       The requester and their project team are responsible for uploading their completed presentation deck to EASi, though admin team members may upload a deck for them.
                     </p>
-                  </header>
+                  </div>
                   <div
                     class="usa-card__body"
                     data-testid="CardBody"
@@ -480,6 +484,7 @@ exports[`GRB review form - presentation > renders the step and takes a snapshot 
             type="button"
           >
             <svg
+              aria-hidden="true"
               class="usa-icon margin-right-05"
               focusable="false"
               height="1em"

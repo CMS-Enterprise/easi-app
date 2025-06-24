@@ -140,6 +140,7 @@ exports[`GRB review form - additional documents > renders the step 1`] = `
                 Review type 
                 <span
                   class="usa-sr-only"
+                  data-testid="srStatusText"
                 >
                   not completed
                 </span>
@@ -156,6 +157,7 @@ exports[`GRB review form - additional documents > renders the step 1`] = `
                 Presentation 
                 <span
                   class="usa-sr-only"
+                  data-testid="srStatusText"
                 >
                   not completed
                 </span>
@@ -184,6 +186,7 @@ exports[`GRB review form - additional documents > renders the step 1`] = `
                 Participants and timeframe 
                 <span
                   class="usa-sr-only"
+                  data-testid="srStatusText"
                 >
                   not completed
                 </span>
@@ -201,6 +204,7 @@ exports[`GRB review form - additional documents > renders the step 1`] = `
               >
                 <span
                   class="usa-sr-only"
+                  data-testid="step-text"
                 >
                   Step
                 </span>
@@ -252,6 +256,7 @@ exports[`GRB review form - additional documents > renders the step 1`] = `
             type="button"
           >
             <svg
+              aria-hidden="true"
               class="usa-icon margin-right-05"
               focusable="false"
               height="1em"
@@ -328,6 +333,7 @@ exports[`GRB review form - additional documents > renders the step 1`] = `
                     >
                       File name
                       <svg
+                        aria-hidden="true"
                         class="usa-icon margin-left-05"
                         data-testid="caret--sort"
                         focusable="false"
@@ -361,6 +367,7 @@ exports[`GRB review form - additional documents > renders the step 1`] = `
                     >
                       Document type
                       <svg
+                        aria-hidden="true"
                         class="usa-icon margin-left-05"
                         data-testid="caret--sort"
                         focusable="false"
@@ -394,6 +401,7 @@ exports[`GRB review form - additional documents > renders the step 1`] = `
                     >
                       Date added
                       <svg
+                        aria-hidden="true"
                         class="usa-icon margin-left-05"
                         data-testid="caret--down"
                         focusable="false"
@@ -427,6 +435,7 @@ exports[`GRB review form - additional documents > renders the step 1`] = `
                     >
                       Actions
                       <svg
+                        aria-hidden="true"
                         class="usa-icon margin-left-05"
                         data-testid="caret--sort"
                         focusable="false"
@@ -621,6 +630,7 @@ exports[`GRB review form - additional documents > renders the step 1`] = `
             type="button"
           >
             <svg
+              aria-hidden="true"
               class="usa-icon margin-right-05"
               focusable="false"
               height="1em"
