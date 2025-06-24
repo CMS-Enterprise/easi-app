@@ -21,9 +21,8 @@ describe('Creating requests from the workspace that are linked to cedar systems'
     // IT Gov
     cy.get('@workspaceUrl').then(url => cy.visit(url));
     cy.get('[data-testid="new-request-itgov"]a').click();
-    cy.get('#RequestType-NewSystem').check({ force: true });
-    cy.contains('button', 'Continue').click();
-    cy.contains('a', 'Get started').click();
+    cy.get('[data-testid="start-button--new"]').click();
+    cy.contains('a', 'Continue').click();
     cy.get(`[data-testid="multiselect-tag--${systemName} (OFW)"]`).should(
       'be.visible'
     );
