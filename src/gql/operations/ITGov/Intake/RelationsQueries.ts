@@ -19,6 +19,12 @@ export const SetSystemIntakeRelationExistingSystem = gql(/* GraphQL */ `
     setSystemIntakeRelationExistingSystem(input: $input) {
       systemIntake {
         id
+        cedarSystemRelationShips {
+          systemIntakeID
+          systemID
+          systemRelationshipType
+          otherSystemRelationship
+        }
       }
     }
   }
@@ -80,6 +86,20 @@ export const UnlinkTrbRequestRelation = gql(/* GraphQL */ `
   mutation UnlinkTrbRequestRelation($trbRequestID: UUID!) {
     unlinkTRBRequestRelation(trbRequestID: $trbRequestID) {
       id
+    }
+  }
+`);
+
+export const GetTrbRequestRelations = gql(/* GraphQL */ `
+  query systemIntake($id: UUID!) {
+    systemIntake(id: $id) {
+      id
+      cedarSystemRelationShips {
+        systemIntakeID
+        systemID
+        systemRelationshipType
+        otherSystemRelationship
+      }
     }
   }
 `);

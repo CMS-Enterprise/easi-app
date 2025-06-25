@@ -15,8 +15,7 @@ import {
 } from '@trussworks/react-uswds';
 import {
   RequestRelationType,
-  useGetSystemIntakeRelationQuery,
-  useGetTRBRequestRelationQuery
+  useSystemIntakeQuery
 } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
@@ -28,8 +27,6 @@ import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import { RequestType } from 'types/requestType';
-import formatContractNumbers from 'utils/formatContractNumbers';
-import { useLinkCedarSystemIdQueryParam } from 'utils/linkCedarSystemIdQueryString';
 
 import LinkedSystemTable from '../LinkedSystemsTable';
 
@@ -64,7 +61,7 @@ const EditLinkedSystemsForm = ({
 
   const { state } = useLocation<{ isNew?: boolean }>();
 
-  const linkCedarSystemId = useLinkCedarSystemIdQueryParam();
+  //   const linkCedarSystemId = useLinkCedarSystemIdQueryParam();
 
   // Form edit mode is either new or edit
   const isNew = !!state?.isNew;
@@ -94,18 +91,15 @@ const EditLinkedSystemsForm = ({
   const [isSkipModalOpen, setSkipModalOpen] = useState<boolean>(false);
   const [isUnlinkModalOpen, setUnlinkModalOpen] = useState<boolean>(false);
 
-  const query =
-    requestType === 'trb'
-      ? useGetTRBRequestRelationQuery
-      : useGetSystemIntakeRelationQuery;
-
   const {
     data,
     // error: undefined,
     loading: relationLoading
-  } = query({
+  } = useSystemIntakeQuery({
     variables: { id }
   });
+
+  console.log('show data', data);
 
   //   const cedarSystemIdOptions = useMemo(() => {
   //     const cedarSystemsData = data?.cedarSystems;
@@ -119,6 +113,9 @@ const EditLinkedSystemsForm = ({
 
   //   const [setNewTRBSystem, { error: newTRBSystemError }] =
   //     useSetTrbRequestRelationNewSystemMutation();
+
+  //   const [getLinkedSystems, { error: getLinkedSystemsError }] =
+  //     useSetSystemIntakeRelationExistingSystemMutation();
 
   //   const [setNewIntakeSystem, { error: newIntakeSystemError }] =
   //     useSetSystemIntakeRelationNewSystemMutation();
@@ -147,31 +144,31 @@ const EditLinkedSystemsForm = ({
       cedarSystemIDs: [],
       contractNumbers: '',
       contractName: ''
-    },
-    values: (values => {
-      if (!values) return undefined;
+    }
+    // values: (values => {
+    //   if (!values) return undefined;
 
-      // Condition for prefilling existing systems on new requests
-      if (values.relationType === null && linkCedarSystemId) {
-        return {
-          relationType: RequestRelationType.EXISTING_SYSTEM,
-          cedarSystemIDs: [linkCedarSystemId],
-          contractNumbers: '',
-          contractName: ''
-        };
-      }
+    //   // Condition for prefilling existing systems on new requests
+    //   //   if (values.relationType === null && linkCedarSystemId) {
+    //   //     return {
+    //   //       relationType: RequestRelationType.EXISTING_SYSTEM,
+    //   //       cedarSystemIDs: [linkCedarSystemId],
+    //   //       contractNumbers: '',
+    //   //       contractName: ''
+    //   //     };
+    //   //   }
 
-      return {
-        relationType: values.relationType || null,
-        cedarSystemIDs: values.systems.map(v => v.id),
-        contractNumbers: formatContractNumbers(values.contractNumbers),
-        contractName: values.contractName || ''
-      };
-    })(
-      requestType === 'trb'
-        ? data && 'trbRequest' in data && data.trbRequest
-        : data && 'systemIntake' in data && data.systemIntake
-    )
+    //   //   return {
+    //   //     relationType: values.relationType || null,
+    //   //     cedarSystemIDs: values.systems.map(v => v.id),
+    //   //     contractNumbers: formatContractNumbers(values.contractNumbers),
+    //   //     contractName: values.contractName || ''
+    //   //   };
+    // })(
+    //   requestType === 'trb'
+    //     ? data && 'trbRequest' in data && data.trbRequest
+    //     : data && 'systemIntake' in data && data.systemIntake
+    // )
   });
 
   // Ref fields for some form behavior
