@@ -14,7 +14,6 @@ import {
   useStartGRBReviewMutation,
   useUpdateSystemIntakeGRBReviewFormInputTimeframeAsyncMutation
 } from 'gql/generated/graphql';
-import { DateTime } from 'luxon';
 
 import Alert from 'components/Alert';
 import DatePickerFormatted from 'components/DatePickerFormatted';
@@ -213,9 +212,11 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
                         value={field.value ?? ''}
                         aria-describedby="selectReviewEndDateHelpText"
                         format={dt =>
-                          DateTime.utc(dt.year, dt.month, dt.day, 21).toISO({
-                            suppressMilliseconds: true
-                          })
+                          dt
+                            .setZone('America/New_York')
+                            .set({ hour: 17, minute: 0, second: 0 })
+                            .toUTC()
+                            .toISO({ suppressMilliseconds: true })
                         }
                       />
                     </FormGroup>
