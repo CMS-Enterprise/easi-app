@@ -202,7 +202,7 @@ const RequestRepository = () => {
       autoResetSortBy: false,
       autoResetPage: true,
       initialState: {
-        sortBy: useMemo(() => lastSort[activeTable], [lastSort, activeTable]),
+        sortBy: lastSort[activeTable],
         pageIndex: itGovAdmin.current.state.pageIndex,
         pageSize: defaultPageSize
       }
@@ -484,12 +484,16 @@ const RequestRepository = () => {
           </caption>
           <thead>
             {headerGroups.map(headerGroup => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column, index) => (
+              <tr
+                {...headerGroup.getHeaderGroupProps()}
+                key={{ ...headerGroup.getHeaderGroupProps() }.key}
+              >
+                {headerGroup.headers.map(column => (
                   <th
                     {...column.getHeaderProps(column.getSortByToggleProps())}
                     aria-sort={getColumnSortStatus(column)}
                     style={{ position: 'relative' }}
+                    key={column.id}
                   >
                     <button
                       className="usa-button usa-button--unstyled"
@@ -512,6 +516,7 @@ const RequestRepository = () => {
               return (
                 <tr
                   {...row.getRowProps()}
+                  key={{ ...row.getRowProps() }.key}
                   // @ts-ignore
                   data-testid={`${row.original.id}-row`}
                 >
@@ -522,6 +527,7 @@ const RequestRepository = () => {
                           {...cell.getCellProps()}
                           style={{ verticalAlign: 'top' }}
                           scope="row"
+                          key={{ ...cell.getCellProps() }.key}
                         >
                           {cell.render('Cell')}
                         </th>
@@ -531,6 +537,7 @@ const RequestRepository = () => {
                       <td
                         {...cell.getCellProps()}
                         style={{ verticalAlign: 'top' }}
+                        key={{ ...cell.getCellProps() }.key}
                       >
                         {cell.render('Cell')}
                       </td>

@@ -59,7 +59,7 @@ const PresentationCardActions = ({
           {t('asyncPresentation.reviewSetupNotCompleted')}
         </Alert>
         <IconLink
-          icon={<Icon.ArrowForward />}
+          icon={<Icon.ArrowForward aria-hidden />}
           to={`/it-governance/${systemIntakeID}/grb-review/review-type`}
           iconPosition="after"
         >

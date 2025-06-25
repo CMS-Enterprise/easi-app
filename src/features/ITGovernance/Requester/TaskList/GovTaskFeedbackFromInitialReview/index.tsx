@@ -59,9 +59,11 @@ const GovTaskFeedbackFromInitialReview = ({
               i18nKey={`itGov:taskList.step.${stepKey}.${
                 showReviewInfo ? 'reviewInfo' : 'noFeedbackInfo'
               }`}
-              components={{
-                a: <Link href={`mailto:${IT_GOV_EMAIL}`}> </Link>,
+              values={{
                 email: IT_GOV_EMAIL
+              }}
+              components={{
+                a: <Link href={`mailto:${IT_GOV_EMAIL}`}> </Link>
               }}
             />
           </Alert>

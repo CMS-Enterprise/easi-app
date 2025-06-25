@@ -159,7 +159,7 @@ const DocumentUploadForm = ({
           />
         </p>
 
-        <IconLink to={returnLink} icon={<Icon.ArrowBack />}>
+        <IconLink to={returnLink} icon={<Icon.ArrowBack aria-hidden />}>
           {t('intake:documents.dontUpload', {
             context:
               state.uploadSource === 'grbReviewForm' ? 'grbReviewForm' : type

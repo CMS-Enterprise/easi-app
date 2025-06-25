@@ -23,7 +23,7 @@ exports[`ATO subpage for System Profile > matches snapshot 1`] = `
         <div
           class="usa-card__container"
         >
-          <header
+          <div
             class="usa-card__header padding-2 padding-bottom-0 text-top text-white"
             data-testid="CardHeader"
           >
@@ -40,7 +40,7 @@ exports[`ATO subpage for System Profile > matches snapshot 1`] = `
             <div
               class="easi-divider grid-col-12 border-error-darker"
             />
-          </header>
+          </div>
           <div
             class="usa-card__footer padding-2 text-white"
             data-testid="CardFooter"
@@ -88,6 +88,7 @@ exports[`ATO subpage for System Profile > matches snapshot 1`] = `
         data-testid="atoExpirationLogicHelpText"
       >
         <svg
+          aria-hidden="true"
           class="usa-icon margin-right-1"
           focusable="false"
           height="1em"

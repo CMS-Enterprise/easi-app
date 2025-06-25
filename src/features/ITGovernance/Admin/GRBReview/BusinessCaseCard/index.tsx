@@ -87,7 +87,7 @@ const BusinessCaseCard = ({
               <span className="margin-right-1">
                 {t('businessCaseOverview.linkToBusinessCase')}
               </span>
-              <Icon.ArrowForward />
+              <Icon.ArrowForward aria-hidden />
             </UswdsReactLink>
           </CardFooter>
         </>

@@ -62,6 +62,7 @@ exports[`Feedback page > Renders the feedback page - Governance task list 1`] = 
         href="/governance-task-list/a4158ad8-1236-4a55-9ad5-7e15a5d49de2"
       >
         <svg
+          aria-hidden="true"
           class="usa-icon margin-right-1"
           focusable="false"
           height="1em"
@@ -87,6 +88,7 @@ exports[`Feedback page > Renders the feedback page - Governance task list 1`] = 
         type="button"
       >
         <svg
+          aria-hidden="true"
           class="usa-icon margin-right-1"
           focusable="false"
           height="1em"
@@ -337,6 +339,7 @@ exports[`Feedback page > Renders the feedback page - Governance task list 1`] = 
         href="/governance-task-list/a4158ad8-1236-4a55-9ad5-7e15a5d49de2"
       >
         <svg
+          aria-hidden="true"
           class="usa-icon margin-right-1"
           focusable="false"
           height="1em"
@@ -362,6 +365,7 @@ exports[`Feedback page > Renders the feedback page - Governance task list 1`] = 
         type="button"
       >
         <svg
+          aria-hidden="true"
           class="usa-icon margin-right-1"
           focusable="false"
           height="1em"

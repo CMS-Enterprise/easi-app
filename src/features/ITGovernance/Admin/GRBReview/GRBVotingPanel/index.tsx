@@ -55,7 +55,7 @@ const GRBVotingPanel = ({ grbReviewer, className }: GRBVotingPanelProps) => {
           </p>
 
           <ul className="padding-left-2 margin-top-1 margin-bottom-0 smaller-bullet-list">
-            {t<string[]>('reviewTask.voting.documentItems', {
+            {t<string, string[]>('reviewTask.voting.documentItems', {
               returnObjects: true
             })?.map((item, index) => (
               <li key={item}>
@@ -108,7 +108,7 @@ const GRBVotingPanel = ({ grbReviewer, className }: GRBVotingPanelProps) => {
           bold
         >
           <ul className="padding-left-2 margin-top-0 margin-bottom-0 smaller-bullet-list">
-            {t<string[]>('reviewTask.voting.discussionItems', {
+            {t<string, string[]>('reviewTask.voting.discussionItems', {
               returnObjects: true
             })?.map((item, index) => (
               <li key={item}>

@@ -213,6 +213,10 @@
   }
 }
 
+.usa-alert__body {
+  padding-left: 4rem !important;
+}
+
 .bg-transparent {
   background-color: transparent;
 }
@@ -440,4 +444,11 @@ abbr[title] {
 
 .height-fit-content {
   height: fit-content;
+}
+  
+@media (min-width: 30em) {
+  .usa-button-group {
+    align-items: center;
+    flex-direction: row;
+  }
 }

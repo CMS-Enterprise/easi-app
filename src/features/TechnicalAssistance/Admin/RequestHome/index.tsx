@@ -163,9 +163,9 @@ const RequestHome = ({
                   ? 'technicalAssistance:adminHome.docInfo'
                   : 'technicalAssistance:adminHome.docInfoPlural'
               }
+              values={{ docCount: documents?.length || 0 }}
               components={{
-                bold: <span className="text-bold" />,
-                docCount: documents?.length || 0
+                bold: <span className="text-bold" />
               }}
             />
           </div>
@@ -175,7 +175,7 @@ const RequestHome = ({
             className="display-flex flex-align-center margin-top-2"
           >
             {t('adminHome.viewDocs')}
-            <Icon.ArrowForward className="margin-left-1" />
+            <Icon.ArrowForward className="margin-left-1" aria-hidden />
           </UswdsReactLink>
         </>
       )}

@@ -72,7 +72,7 @@ const Modal = ({
         aria-label="Close Modal"
         onClick={closeModal}
       >
-        <Icon.Close size={4} />
+        <Icon.Close size={4} aria-hidden />
         {title && <h4 className="text-base margin-0 margin-left-1">{title}</h4>}
       </button>
 

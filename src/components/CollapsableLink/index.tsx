@@ -38,17 +38,23 @@ const CollapsableLink = ({
 
   const renderEyeIcon = () => {
     return isOpen ? (
-      <Icon.VisibilityOff className="easi-collapsable-link__eye-icon" />
+      <Icon.VisibilityOff
+        className="easi-collapsable-link__eye-icon"
+        aria-hidden
+      />
     ) : (
-      <Icon.Visibility className="easi-collapsable-link__eye-icon" />
+      <Icon.Visibility
+        className="easi-collapsable-link__eye-icon"
+        aria-hidden
+      />
     );
   };
 
   const renderCaret = () => {
     return isOpen ? (
-      <Icon.ExpandMore className="margin-right-05" />
+      <Icon.ExpandMore aria-hidden className="margin-right-05" />
     ) : (
-      <Icon.NavigateNext className="margin-right-05" />
+      <Icon.NavigateNext className="margin-right-05" aria-hidden />
     );
   };
 

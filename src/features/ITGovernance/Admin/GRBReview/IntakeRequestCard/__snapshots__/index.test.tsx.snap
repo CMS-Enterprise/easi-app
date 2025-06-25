@@ -9,7 +9,7 @@ exports[`IntakeRequestCard > renders default version without crashing 1`] = `
     <div
       class="usa-card__container margin-0 border-width-1px shadow-2 radius-md"
     >
-      <header
+      <div
         class="usa-card__header"
         data-testid="CardHeader"
       >
@@ -23,7 +23,7 @@ exports[`IntakeRequestCard > renders default version without crashing 1`] = `
         >
           Completed 07/01/2021
         </span>
-      </header>
+      </div>
       <div
         class="usa-card__body padding-top-2"
         data-testid="CardBody"
@@ -111,6 +111,7 @@ exports[`IntakeRequestCard > renders default version without crashing 1`] = `
         >
           View full Intake Request form
           <svg
+            aria-hidden="true"
             class="usa-icon margin-left-1"
             focusable="false"
             height="1em"

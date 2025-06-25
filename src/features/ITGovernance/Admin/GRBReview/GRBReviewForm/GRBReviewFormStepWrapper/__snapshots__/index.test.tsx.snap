@@ -152,6 +152,7 @@ exports[`GRB review form step wrapper > matches the snapshot 1`] = `
                 Presentation 
                 <span
                   class="usa-sr-only"
+                  data-testid="srStatusText"
                 >
                   not completed
                 </span>
@@ -168,6 +169,7 @@ exports[`GRB review form step wrapper > matches the snapshot 1`] = `
                 Additional documentation 
                 <span
                   class="usa-sr-only"
+                  data-testid="srStatusText"
                 >
                   not completed
                 </span>
@@ -184,6 +186,7 @@ exports[`GRB review form step wrapper > matches the snapshot 1`] = `
                 Participants and timeframe 
                 <span
                   class="usa-sr-only"
+                  data-testid="srStatusText"
                 >
                   not completed
                 </span>
@@ -201,6 +204,7 @@ exports[`GRB review form step wrapper > matches the snapshot 1`] = `
               >
                 <span
                   class="usa-sr-only"
+                  data-testid="step-text"
                 >
                   Step
                 </span>
@@ -284,6 +288,7 @@ exports[`GRB review form step wrapper > matches the snapshot 1`] = `
             type="button"
           >
             <svg
+              aria-hidden="true"
               class="usa-icon margin-right-05"
               focusable="false"
               height="1em"

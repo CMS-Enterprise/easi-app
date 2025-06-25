@@ -56,7 +56,7 @@ const ViewDiscussions = ({
         className="margin-0 margin-top-05 text-base display-flex flex-align-center"
         data-testid="visibility"
       >
-        <VisibilityIcon className="margin-right-05" />
+        <VisibilityIcon className="margin-right-05" aria-hidden />
         {t('governanceReviewBoard.visibility', {
           context: discussionBoardType
         })}

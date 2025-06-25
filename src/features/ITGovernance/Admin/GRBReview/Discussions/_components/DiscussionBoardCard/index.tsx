@@ -51,7 +51,7 @@ const DiscussionBoardCard = ({
         </h3>
 
         <p className="margin-0 margin-top-05 text-base display-flex text-no-wrap">
-          <VisibilityIcon className="margin-right-05" />
+          <VisibilityIcon className="margin-right-05" aria-hidden />
           {t('governanceReviewBoard.visibility', {
             context: discussionBoardType
           })}
@@ -97,7 +97,7 @@ const DiscussionBoardCard = ({
                 discussionMode: 'view'
               });
             }}
-            icon={<Icon.ArrowForward />}
+            icon={<Icon.ArrowForward aria-hidden />}
             iconPosition="after"
             unstyled
           >

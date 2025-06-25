@@ -58,9 +58,11 @@ const Discussions = ({
           className="text-bold"
         >
           <ul className="margin-y-0 padding-left-205">
-            {t<string[]>('general.usageTips.content', {
-              returnObjects: true
-            }).map((item, index) => (
+            {(
+              t('general.usageTips.content', {
+                returnObjects: true
+              }) as string[]
+            ).map((item, index) => (
               <li key={item} className="line-height-body-5 margin-bottom-05">
                 <Trans
                   i18nKey={`discussions:general.usageTips.content.${index}`}

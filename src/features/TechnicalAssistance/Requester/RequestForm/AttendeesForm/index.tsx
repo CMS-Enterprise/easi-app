@@ -108,7 +108,7 @@ function AttendeesForm({
 
   /** Whether or not the submitted attendee EUA ID is unique compared to the requester and additional attendees */
   const euaUserIdIsUnique = useCallback(
-    euaUserId => {
+    (euaUserId: string) => {
       return [
         // If editing, filter out default euaUserId value
         ...attendees.filter(
@@ -150,7 +150,7 @@ function AttendeesForm({
     /** Submit additional attendee fields and return to main attendees form */
     const submitForm = (formData: TRBAttendeeFields) => {
       // If euaUserId is not unique, set field error
-      if (!euaUserIdIsUnique(formData.euaUserId)) {
+      if (!euaUserIdIsUnique(formData.euaUserId || '')) {
         setError('euaUserId', {
           message: 'Attendee has already been added'
         });
@@ -268,7 +268,10 @@ function AttendeesForm({
                 setActiveAttendee({ ...initialAttendee, trbRequestId })
               }
             >
-              <Icon.ArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+              <Icon.ArrowBack
+                className="margin-right-05 margin-bottom-2px text-tbottom"
+                aria-hidden
+              />
               {t(
                 activeAttendee.id
                   ? 'attendees.dontEditAndReturn'

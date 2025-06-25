@@ -33,6 +33,7 @@ exports[`GRBVotingPanel > matches snapshot 1`] = `
           type="button"
         >
           <svg
+            aria-hidden="true"
             class="usa-icon margin-right-05"
             focusable="false"
             height="1em"
@@ -109,6 +110,7 @@ exports[`GRBVotingPanel > matches snapshot 1`] = `
           type="button"
         >
           <svg
+            aria-hidden="true"
             class="usa-icon margin-right-05"
             focusable="false"
             height="1em"
