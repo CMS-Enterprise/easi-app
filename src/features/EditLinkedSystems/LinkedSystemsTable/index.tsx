@@ -22,6 +22,7 @@ import {
   Table as UswdsTable
 } from '@trussworks/react-uswds';
 import {
+  GetCedarSystemsQuery,
   SystemIntakeSystem,
   useCreateCedarSystemBookmarkMutation,
   useDeleteCedarSystemBookmarkMutation,
@@ -61,6 +62,14 @@ type TableProps = {
   isHomePage?: boolean;
 };
 
+const organizeCedarSystems = (data: GetCedarSystemsQuery | undefined) => {
+  if (!data || !data.cedarSystems) return {};
+  return data.cedarSystems.reduce((acc: any, item: any) => {
+    acc[item.id] = item;
+    return acc;
+  }, {});
+};
+
 const LinkedSystemsTable = ({
   systems = [],
   defaultPageSize = 10,
@@ -82,6 +91,10 @@ const LinkedSystemsTable = ({
 
   console.log(loadingSystems, error1, systems, data1?.cedarSystems);
 
+  const organizedCedarSystems = organizeCedarSystems(data1);
+
+  console.log('organizedCedarSystems', organizedCedarSystems);
+
   const columns: Column<SystemIntakeSystem>[] = useMemo(() => {
     const cols: Column<SystemIntakeSystem>[] = [];
 
@@ -92,7 +105,7 @@ const LinkedSystemsTable = ({
       Cell: ({ row }: { row: Row<SystemIntakeSystem> }) => {
         // const url = `/systems/${row.id}/home/top`;
         // return <UswdsReactLink to={url}>{row.id}</UswdsReactLink>;
-        return <p>{t(`${row.cells[0].value}`)}</p>;
+        return <p>{t(`${organizedCedarSystems[row.cells[0].value].name}`)}</p>;
       }
     });
 
