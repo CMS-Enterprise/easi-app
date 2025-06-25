@@ -95,7 +95,7 @@ const AppRoutes = () => {
         <RequestLinkForm requestType="itgov" />
       </SecureRoute>
       <SecureRoute exact path="/edit-linked-systems/:id?">
-        <EditLinkedSystemsForm requestType="itgov" />
+        <EditLinkedSystemsForm />
       </SecureRoute>
 
       <SecureRoute

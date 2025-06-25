@@ -15,6 +15,7 @@ import {
 } from '@trussworks/react-uswds';
 import {
   RequestRelationType,
+  SystemIntakeSystem,
   useSystemIntakeQuery
 } from 'gql/generated/graphql';
 
@@ -26,7 +27,6 @@ import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import RequiredAsterisk from 'components/RequiredAsterisk';
-import { RequestType } from 'types/requestType';
 
 import LinkedSystemTable from '../LinkedSystemsTable';
 
@@ -37,13 +37,7 @@ type EditLinkedSystemsFormType = {
   contractName: string;
 };
 
-const EditLinkedSystemsForm = ({
-  requestType,
-  fromAdmin
-}: {
-  requestType: RequestType;
-  fromAdmin?: boolean;
-}) => {
+const EditLinkedSystemsForm = ({ fromAdmin }: { fromAdmin?: boolean }) => {
   // Id refers to trb request or system intake
   const { id } = useParams<{
     id: string;
@@ -70,20 +64,14 @@ const EditLinkedSystemsForm = ({
   // Also for a breadcrumb navigation link
   const redirectUrl = (() => {
     if (fromAdmin) {
-      return requestType === 'trb'
-        ? `/trb/${id}/additional-information`
-        : `/it-governance/${id}/additional-information`;
+      return `/it-governance/${id}/additional-information`;
     }
-    return requestType === 'trb'
-      ? `/trb/task-list/${id}`
-      : `/governance-task-list/${id}`;
+    return `/governance-task-list/${id}`;
   })();
 
   const breadCrumb = (() => {
     if (fromAdmin) {
-      return requestType === 'trb'
-        ? t('additionalRequestInfo.trbBreadcrumb')
-        : t('additionalRequestInfo.itGovBreadcrumb');
+      return t('additionalRequestInfo.itGovBreadcrumb');
     }
     return t('additionalRequestInfo.taskListBreadCrumb');
   })();
@@ -99,44 +87,10 @@ const EditLinkedSystemsForm = ({
     variables: { id }
   });
 
-  console.log('show data', data);
-
-  //   const cedarSystemIdOptions = useMemo(() => {
-  //     const cedarSystemsData = data?.cedarSystems;
-  //     return !cedarSystemsData
-  //       ? []
-  //       : cedarSystemsData.map(system => ({
-  //           label: `${system.name} (${system.acronym})`,
-  //           value: system.id
-  //         }));
-  //   }, [data?.cedarSystems]);
-
-  //   const [setNewTRBSystem, { error: newTRBSystemError }] =
-  //     useSetTrbRequestRelationNewSystemMutation();
-
-  //   const [getLinkedSystems, { error: getLinkedSystemsError }] =
-  //     useSetSystemIntakeRelationExistingSystemMutation();
-
-  //   const [setNewIntakeSystem, { error: newIntakeSystemError }] =
-  //     useSetSystemIntakeRelationNewSystemMutation();
-
-  //   const [setExistingTRBSystem, { error: existingTRBSystemError }] =
-  //     useSetTrbRequestRelationExistingSystemMutation();
-
-  //   const [setExistingIntakeSystem, { error: existingIntakeSystemError }] =
-  //     useSetSystemIntakeRelationExistingSystemMutation();
-
-  //   const [setExistingTRBService, { error: existingTRBServiceError }] =
-  //     useSetTrbRequestRelationExistingServiceMutation();
-
-  //   const [setExistingIntakeService, { error: existingIntakeServiceError }] =
-  //     useSetSystemIntakeRelationExistingServiceMutation();
-
-  //   const [unlinkTRBRelation, { error: unlinkTRBRelationError }] =
-  //     useUnlinkTrbRequestRelationMutation();
-
-  //   const [unlinkIntakeRelation, { error: unlinkIntakeRelationError }] =
-  //     useUnlinkSystemIntakeRelationMutation();
+  console.log(
+    'Cedar Relationships:',
+    data?.systemIntake?.cedarSystemRelationShips as SystemIntakeSystem[]
+  );
 
   const { watch, handleSubmit } = useForm<EditLinkedSystemsFormType>({
     defaultValues: {
@@ -239,22 +193,12 @@ const EditLinkedSystemsForm = ({
         <BreadcrumbBar variant="wrap">
           <Breadcrumb>
             <BreadcrumbLink asCustom={Link} to="/">
-              <span>
-                {t(
-                  requestType === 'trb'
-                    ? 'technicalAssistance:breadcrumbs.technicalAssistance'
-                    : 'intake:navigation.itGovernance'
-                )}
-              </span>
+              <span>{t('intake:navigation.itGovernance')}</span>
             </BreadcrumbLink>
           </Breadcrumb>
           {isNew ? (
             <Breadcrumb current>
-              {t(
-                requestType === 'trb'
-                  ? 'technicalAssistance:breadcrumbs.startTrbRequest'
-                  : 'intake:navigation.startRequest'
-              )}
+              {t('intake:navigation.startRequest')}
             </Breadcrumb>
           ) : (
             <>
@@ -273,11 +217,7 @@ const EditLinkedSystemsForm = ({
           {t('link.header')}
         </PageHeading>
         <p className="font-body-lg line-height-body-5 text-light margin-y-0">
-          {t(
-            `${
-              requestType === 'trb' ? 'technicalAssistance' : 'itGov'
-            }:link.description`
-          )}
+          {t(`'itGov':link.description`)}
         </p>
         <p className="margin-top-2 margin-bottom-5 text-base">
           <Trans
@@ -295,20 +235,12 @@ const EditLinkedSystemsForm = ({
               <Fieldset
                 legend={
                   <h4 className="margin-top-0 margin-bottom-1 line-height-heading-2">
-                    {t(
-                      `${
-                        requestType === 'trb' ? 'technicalAssistance' : 'itGov'
-                      }:link.form.field.systemOrService.label`
-                    )}
+                    {t(`itGov:link.form.field.systemOrService.label`)}
                   </h4>
                 }
               >
                 <p className="text-base margin-top-1 margin-bottom-3">
-                  {t(
-                    `${
-                      requestType === 'trb' ? 'technicalAssistance' : 'itGov'
-                    }:link.form.field.systemOrService.hint`
-                  )}
+                  {t(`itGov:link.form.field.systemOrService.hint`)}
                 </p>
                 <ul className="text-base">
                   <li>
@@ -354,7 +286,10 @@ const EditLinkedSystemsForm = ({
           </Grid>
 
           <LinkedSystemTable
-            systems={[]}
+            systems={
+              data?.systemIntake
+                ?.cedarSystemRelationShips as SystemIntakeSystem[]
+            }
             defaultPageSize={20}
             isHomePage={false}
           />
@@ -368,7 +303,7 @@ const EditLinkedSystemsForm = ({
               disabled={!submitEnabled}
               onClick={() => submit()}
             >
-              {t('itGov:link.form.continueTaskList')}
+              {t(`'itGov':link.form.continueTaskList`)}
             </Button>
           </ButtonGroup>
 
@@ -392,13 +327,7 @@ const EditLinkedSystemsForm = ({
             </h2>
             <p className="margin-y-0">{t('link.skipConfirm.text')}</p>
             <ul className="easi-list margin-top-0">
-              <li>
-                {t(
-                  `${
-                    requestType === 'trb' ? 'technicalAssistance' : 'itGov'
-                  }:link.skipConfirm.list.0`
-                )}
-              </li>
+              <li>{t(`itGov:link.skipConfirm.list.0`)}</li>
               <li>{t('link.skipConfirm.list.1')}</li>
             </ul>
             <ButtonGroup className="margin-top-3">
@@ -426,13 +355,7 @@ const EditLinkedSystemsForm = ({
             <p className="margin-top-0">{t('link.unlinkConfirm.text.0')}</p>
             <p className="margin-bottom-0">{t('link.unlinkConfirm.text.1')}</p>
             <ul className="easi-list margin-top-0">
-              <li>
-                {t(
-                  `${
-                    requestType === 'trb' ? 'technicalAssistance' : 'itGov'
-                  }:link.skipConfirm.list.0`
-                )}
-              </li>
+              <li>{t(`itGov:link.skipConfirm.list.0`)}</li>
               <li>{t('link.skipConfirm.list.1')}</li>
             </ul>
             <ButtonGroup className="margin-top-3">

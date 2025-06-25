@@ -7,7 +7,6 @@
 import React, { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import {
-  CellProps,
   Column,
   Row,
   useFilters,
@@ -16,23 +15,27 @@ import {
   useSortBy,
   useTable
 } from 'react-table';
-import { Icon, Link, Table as UswdsTable } from '@trussworks/react-uswds';
 import {
-  GetCedarSystemsQuery,
+  Button,
+  Icon,
+  Link,
+  Table as UswdsTable
+} from '@trussworks/react-uswds';
+import {
+  SystemIntakeSystem,
   useCreateCedarSystemBookmarkMutation,
   useDeleteCedarSystemBookmarkMutation,
+  useGetCedarSystemsQuery,
   useGetMyCedarSystemsQuery
 } from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Alert from 'components/Alert';
-import { AtoStatusIconText } from 'components/AtoStatus';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
-import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices'; // May be temporary if we want to hard code all the CMS acronyms.  For now it creates an acronym for all capitalized words
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   getColumnSortStatus,
@@ -42,12 +45,18 @@ import {
 
 import './index.scss';
 
-type CedarSystem = GetCedarSystemsQuery['cedarSystems'][number];
+// type SystemLink {
+// otherSystemRelationship: null;
+// systemID: "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}";
+// systemIntakeID: "feeb8bf9-236b-4061-b506-53641ab14c9c";
+// systemRelationshipType: ["IMPACTS_SELECTED_SYSTEM"];
+// __typename: "SystemIntakeSystem";
+// }
 
 export type LinkedSystemTableType = 'system-links';
 
 type TableProps = {
-  systems?: CedarSystem[];
+  systems?: SystemIntakeSystem[];
   defaultPageSize?: number;
   isHomePage?: boolean;
 };
@@ -65,42 +74,51 @@ const LinkedSystemsTable = ({
   const [createMutate] = useCreateCedarSystemBookmarkMutation();
   const [deleteMutate] = useDeleteCedarSystemBookmarkMutation();
 
-  const columns: Column<CedarSystem>[] = useMemo(() => {
-    const cols: Column<CedarSystem>[] = [];
+  const {
+    loading: loadingSystems,
+    error: error1,
+    data: data1
+  } = useGetCedarSystemsQuery();
+
+  console.log(loadingSystems, error1, systems, data1?.cedarSystems);
+
+  const columns: Column<SystemIntakeSystem>[] = useMemo(() => {
+    const cols: Column<SystemIntakeSystem>[] = [];
 
     cols.push({
       Header: t<string>('linkedSystemsTable.header.systemName'),
-      accessor: 'name',
-      id: 'systemName',
-      Cell: ({ row }: { row: Row<CedarSystem> }) => {
-        const url = `/systems/${row.original.id}/home/top`;
-        return <UswdsReactLink to={url}>{row.original.name}</UswdsReactLink>;
+      accessor: 'systemID',
+      id: 'systemID',
+      Cell: ({ row }: { row: Row<SystemIntakeSystem> }) => {
+        // const url = `/systems/${row.id}/home/top`;
+        // return <UswdsReactLink to={url}>{row.id}</UswdsReactLink>;
+        return <p>{t(`${row.cells[0].value}`)}</p>;
       }
     });
 
-    if (!isHomePage) {
-      cols.push({
-        Header: t<string>('linkedSystemsTable.header.relationships'),
-        accessor: 'businessOwnerOrg',
-        id: 'systemOwner',
-        Cell: ({ row }: { row: Row<CedarSystem> }) => (
-          <p>
-            {cmsDivisionsAndOffices.find(
-              item => item.name === row.original.businessOwnerOrg
-            )?.acronym || row.original.businessOwnerOrg}
-          </p>
-        )
-      });
-    }
+    cols.push({
+      Header: t<string>('linkedSystemsTable.header.relationships'),
+      accessor: 'systemRelationshipType',
+      id: 'systemRelationshipType',
+      Cell: ({ row }: { row: Row<SystemIntakeSystem> }) => {
+        return <p>{t(`${row.cells[1].value}`)}</p>;
+      }
+    });
 
     if (flags.showAtoColumn) {
       cols.push({
         Header: t<string>('linkedSystemsTable.header.actions'),
-        accessor: 'atoExpirationDate',
-        Cell: ({
-          value
-        }: CellProps<CedarSystem, CedarSystem['atoExpirationDate']>) => (
-          <AtoStatusIconText dt={value} />
+        Cell: ({ row }: { row: Row<SystemIntakeSystem> }) => (
+          <div>
+            <Button type="button" unstyled>
+              Edit
+            </Button>
+            <span style={{ margin: '0 0.5rem' }} />
+            <Button type="button" unstyled>
+              Remove
+            </Button>
+            <span style={{ margin: '0 0.5rem' }} />
+          </div>
         ),
         sortType: (a, b) =>
           (a.values.atoExpirationDate ?? '') >
@@ -141,7 +159,7 @@ const LinkedSystemsTable = ({
         }
       },
       columns,
-      data: systems as CedarSystem[],
+      data: systems as SystemIntakeSystem[],
       globalFilter: (filterRows, ids, filterValue) =>
         globalFilterCellText(filterRows, ids, filterValue),
       autoResetSortBy: false,
