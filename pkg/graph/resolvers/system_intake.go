@@ -50,12 +50,12 @@ func CreateSystemIntakeContact(
 		Component:      input.Component,
 		Role:           input.Role,
 	}
-	contractsUserAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, input.EuaUserID, false, getAccountInformation)
+	contactUserAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, input.EuaUserID, false, getAccountInformation)
 	if err != nil {
 		return nil, err
 	}
 	// We comment this out for now, we will use this eventually to link the contact to the user account
-	_ = contractsUserAccount
+	_ = contactUserAccount
 
 	createdContact, err := store.CreateSystemIntakeContact(ctx, contact)
 	if err != nil {
@@ -81,12 +81,12 @@ func UpdateSystemIntakeContact(
 		Role:           input.Role,
 	}
 
-	contractsUserAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, input.EuaUserID, false, getAccountInformation)
+	contactUserAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, input.EuaUserID, false, getAccountInformation)
 	if err != nil {
 		return nil, err
 	}
 	// We comment this out for now, we will use this eventually to link the contact to the user account
-	_ = contractsUserAccount
+	_ = contactUserAccount
 
 	updatedContact, err := store.UpdateSystemIntakeContact(ctx, contact)
 	if err != nil {
