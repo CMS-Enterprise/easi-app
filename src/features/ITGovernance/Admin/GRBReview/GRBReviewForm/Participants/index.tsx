@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Controller } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
@@ -74,6 +74,16 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
     control,
     formState: { errors }
   } = form;
+
+  // Memoize the format function to prevent re-renders
+  const formatAsyncEndDate = useMemo(() => {
+    return (dt: any) =>
+      dt
+        .setZone('America/New_York')
+        .set({ hour: 17, minute: 0, second: 0 })
+        .toUTC()
+        .toISO({ suppressMilliseconds: true });
+  }, []);
 
   const onSubmit: GRBReviewFormStepSubmit<ParticipantsFields> = async input => {
     if (reviewType === SystemIntakeGRBReviewType.STANDARD) {
@@ -211,13 +221,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
                         dateInPastWarning
                         value={field.value ?? ''}
                         aria-describedby="selectReviewEndDateHelpText"
-                        format={dt =>
-                          dt
-                            .setZone('America/New_York')
-                            .set({ hour: 17, minute: 0, second: 0 })
-                            .toUTC()
-                            .toISO({ suppressMilliseconds: true })
-                        }
+                        format={formatAsyncEndDate}
                       />
                     </FormGroup>
                   </>

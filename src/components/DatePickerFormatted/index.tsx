@@ -45,6 +45,9 @@ const DatePickerFormatted = ({
     return props.defaultValue || '';
   }, [props.defaultValue, props.value]);
 
+  // Memoize the format function to prevent re-renders
+  const memoizedFormat = useMemo(() => format, [format]);
+
   /**
    * Fix for bug where <DatePicker> does not rerender to show updated value when set dynamically
    *
@@ -57,27 +60,32 @@ const DatePickerFormatted = ({
     [value]
   );
 
-  const handleChange = (val: string | undefined): void | undefined => {
-    if (onChange) {
-      // Handle empty string
-      // if (val === '') return onChange('');
+  const handleChange = useCallback(
+    (val: string | undefined): void | undefined => {
+      if (onChange) {
+        // Handle empty string
+        // if (val === '') return onChange('');
 
-      // Only format if the date is complete (MM/dd/yyyy = 10 characters)
-      if (typeof val === 'string' && val.length === 10) {
-        const dt = DateTime.fromFormat(val, 'MM/dd/yyyy');
+        // Only format if the date is complete (MM/dd/yyyy = 10 characters)
+        if (typeof val === 'string' && val.length === 10) {
+          const dt = DateTime.fromFormat(val, 'MM/dd/yyyy');
 
-        if (dt.isValid) {
-          return onChange(format(dt, suppressMilliseconds) || undefined);
+          if (dt.isValid) {
+            return onChange(
+              memoizedFormat(dt, suppressMilliseconds) || undefined
+            );
+          }
         }
+
+        // Execute onChange with undefined value if the date is invalid
+        return onChange(undefined);
       }
 
-      // Execute onChange with undefined value if the date is invalid
-      return onChange(undefined);
-    }
-
-    // Return undefined if no onChange handler is provided
-    return undefined;
-  };
+      // Return undefined if no onChange handler is provided
+      return undefined;
+    },
+    [onChange, memoizedFormat, suppressMilliseconds]
+  );
 
   return (
     <>
