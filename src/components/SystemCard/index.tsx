@@ -46,7 +46,7 @@ const SystemCard = ({
           {acronym && <p className="margin-0 margin-left-1">({acronym})</p>}
         </div>
 
-        <div className="bg-primary-lighter padding-y-105 margin-bottom-1">
+        <div className="bg-primary-lighter margin-bottom-1 padding-y-105 padding-right-105">
           <ul className="margin-y-0">
             {(
               t('list', {
