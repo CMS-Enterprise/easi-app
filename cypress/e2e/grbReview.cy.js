@@ -32,8 +32,10 @@ describe('GRB review', () => {
     // Participants page
     cy.url().should('include', '/participants');
 
+    cy.get('#grbReviewAsyncEndDate').should('be.visible');
     cy.get('#grbReviewAsyncEndDate').clear();
-    cy.get('#grbReviewAsyncEndDate').type('01/01/2026');
+    cy.wait(1000);
+    cy.get('#grbReviewAsyncEndDate').type('01/01/2026', { delay: 0 });
     cy.get('#grbReviewAsyncEndDate').should('have.value', '01/01/2026');
 
     //   cy.contains('button', 'Complete and begin review').click();
