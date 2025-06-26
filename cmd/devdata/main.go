@@ -406,11 +406,6 @@ func main() {
 				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
 				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
 			},
-			{
-				EuaUserID:  "USR2",
-				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
-				GrbRole:    models.SystemIntakeGRBReviewerRoleSubjectMatterExpert,
-			},
 		},
 	)
 	setupSystemIntakeGRBReview(ctx, store, intake, models.SystemIntakeGRBReviewTypeAsync, &futureMeetingDate)
