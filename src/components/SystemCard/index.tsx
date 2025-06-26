@@ -39,13 +39,24 @@ const SystemCard = ({
       className={classnames('grid-col-12 system-card', className)}
     >
       <Grid mobile={{ col: 12 }}>
-        <div className="system-card__header easi-header__basic">
+        <div className="system-card__header">
           <h3 className="system-card__title margin-top-0 margin-bottom-1">
             {name}
           </h3>
+          {acronym && <p className="margin-0 margin-left-1">({acronym})</p>}
         </div>
 
-        <p className="margin-0">{acronym}</p>
+        <div className="bg-primary-lighter padding-y-105 margin-bottom-1">
+          <ul className="margin-y-0">
+            {(
+              t('list', {
+                returnObjects: true
+              }) as string[]
+            ).map(item => {
+              return <li key={item}>{item}</li>;
+            })}
+          </ul>
+        </div>
 
         <p className="system-card__body-text line-height-body-4">
           {description}
