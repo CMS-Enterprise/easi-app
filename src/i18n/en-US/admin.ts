@@ -1,9 +1,9 @@
 const admin = {
-  title: 'Additional information',
+  title: 'System information',
   description:
-    'This request is a part of the system, service, or contract indicated below. Any related requests are displayed because they are linked to the same system.',
+    'This request is related to the system(s) indicated below. They could be related for a variety of reasons, including because this request funds the system or because this request uses the system in its proposed technical solution.',
   somethingIncorrect: 'See something incorrect?',
-  editInformation: 'Edit information',
+  editInformation: 'Edit system information',
   component: 'CMS component owner',
   businessOwner: 'Business Owner',
   viewSystem: 'View system profile',

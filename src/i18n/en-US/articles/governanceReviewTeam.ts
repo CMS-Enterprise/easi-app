@@ -284,8 +284,8 @@ const governanceReviewTeam = {
     noRejectionReasons: 'No reasons specified',
     decisionSectionTitle: 'Decision Details'
   },
-  additionalInformation: {
-    title: 'Additional information'
+  systemInformation: {
+    title: 'System information'
   },
   feedback: {
     title: 'Feedback',
