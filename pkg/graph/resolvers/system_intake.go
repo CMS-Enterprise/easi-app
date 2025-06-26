@@ -42,6 +42,7 @@ func CreateSystemIntakeContact(
 	ctx context.Context,
 	store *storage.Store,
 	input models.CreateSystemIntakeContactInput,
+	getAccountInformation userhelpers.GetAccountInfoFunc,
 ) (*models.CreateSystemIntakeContactPayload, error) {
 	contact := &models.SystemIntakeContact{
 		SystemIntakeID: input.SystemIntakeID,
@@ -49,6 +50,13 @@ func CreateSystemIntakeContact(
 		Component:      input.Component,
 		Role:           input.Role,
 	}
+	contractsUserAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, input.EuaUserID, false, getAccountInformation)
+	if err != nil {
+		return nil, err
+	}
+	// We comment this out for now, we will use this eventually to link the contact to the user account
+	_ = contractsUserAccount
+
 	createdContact, err := store.CreateSystemIntakeContact(ctx, contact)
 	if err != nil {
 		return nil, err
