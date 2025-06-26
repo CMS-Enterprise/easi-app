@@ -1,0 +1,494 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`GRB review form - participants and timeframe > renders the step 1`] = `
+<DocumentFragment>
+  <main
+    class="easi-main-content"
+    id="main-content"
+    role="main"
+    tabindex="-1"
+  >
+    <div
+      class="trb-form-header"
+    >
+      <div
+        class="bg-gray-5 padding-bottom-6"
+      >
+        <div
+          class="grid-container"
+          data-testid="gridContainer"
+        >
+          <div
+            class="grid-row"
+            data-testid="grid"
+          >
+            <div
+              class="grid-col"
+              data-testid="grid"
+            >
+              <nav
+                aria-label="Breadcrumbs"
+                class="usa-breadcrumb usa-breadcrumb--wrap padding-bottom-0"
+                style="background-color: transparent;"
+              >
+                <ol
+                  class="usa-breadcrumb__list"
+                >
+                  <li
+                    class="usa-breadcrumb__list-item"
+                  >
+                    <a
+                      class="text-primary usa-breadcrumb__link"
+                      href="/"
+                    >
+                      <span>
+                        Home
+                      </span>
+                    </a>
+                  </li>
+                  <li
+                    class="usa-breadcrumb__list-item"
+                  >
+                    <a
+                      class="text-primary usa-breadcrumb__link"
+                      href="/it-governance/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/grb-review"
+                    >
+                      <span>
+                        IT Governance request details
+                      </span>
+                    </a>
+                  </li>
+                  <li
+                    aria-current="page"
+                    class="usa-breadcrumb__list-item usa-current"
+                  >
+                    <span>
+                      Set up GRB review
+                    </span>
+                  </li>
+                </ol>
+              </nav>
+              <h1
+                aria-live="polite"
+                class="easi-h1 margin-bottom-0"
+                tabindex="-1"
+              >
+                Set up GRB review
+              </h1>
+              <div
+                class="font-body-lg line-height-body-5 text-light"
+              >
+                Use this form to set up a Governance Review Board (GRB) review in EASi.
+              </div>
+              <div
+                class="margin-top-2 line-height-body-5"
+              >
+                You will be able to select the type of review, add recordings and documents, invite GRB members to review this project, and set a timeframe for an asynchronous review.
+              </div>
+              <div
+                class="margin-top-3"
+              >
+                <button
+                  class="usa-button usa-button--unstyled display-flex flex-align-center"
+                  data-testid="button"
+                  type="button"
+                >
+                  <svg
+                    class="usa-icon margin-right-1"
+                    focusable="false"
+                    height="1em"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+                    />
+                  </svg>
+                  Save and return to request
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="grid-container"
+        data-testid="gridContainer"
+      />
+      <div
+        class="grid-container"
+        data-testid="gridContainer"
+      >
+        <div
+          aria-label="progress"
+          class="usa-step-indicator margin-top-4 margin-bottom-2"
+          data-testid="step-indicator"
+        >
+          <ol
+            class="usa-step-indicator__segments"
+          >
+            <li
+              aria-disabled="true"
+              class="usa-step-indicator__segment maxw-none usa-step-indicator__segment--disabled"
+              data-testid="stepIndicator-0"
+            >
+              <span
+                class="usa-step-indicator__segment-label"
+              >
+                Review type 
+                <span
+                  class="usa-sr-only"
+                  data-testid="srStatusText"
+                >
+                  not completed
+                </span>
+              </span>
+            </li>
+            <li
+              aria-disabled="true"
+              class="usa-step-indicator__segment maxw-none usa-step-indicator__segment--disabled"
+              data-testid="stepIndicator-1"
+            >
+              <span
+                class="usa-step-indicator__segment-label"
+              >
+                Presentation 
+                <span
+                  class="usa-sr-only"
+                  data-testid="srStatusText"
+                >
+                  not completed
+                </span>
+              </span>
+            </li>
+            <li
+              aria-disabled="true"
+              class="usa-step-indicator__segment maxw-none usa-step-indicator__segment--disabled"
+              data-testid="stepIndicator-2"
+            >
+              <span
+                class="usa-step-indicator__segment-label"
+              >
+                Additional documentation 
+                <span
+                  class="usa-sr-only"
+                  data-testid="srStatusText"
+                >
+                  not completed
+                </span>
+              </span>
+            </li>
+            <li
+              aria-current="true"
+              aria-disabled="true"
+              class="usa-step-indicator__segment usa-step-indicator__segment--current maxw-none usa-step-indicator__segment--disabled"
+              data-testid="stepIndicator-3"
+            >
+              <span
+                class="usa-step-indicator__segment-label"
+              >
+                Participants and timeframe 
+              </span>
+            </li>
+          </ol>
+          <div
+            class="usa-step-indicator__header"
+          >
+            <h4
+              class="usa-step-indicator__heading"
+            >
+              <span
+                class="usa-step-indicator__heading-counter"
+              >
+                <span
+                  class="usa-sr-only"
+                  data-testid="step-text"
+                >
+                  Step
+                </span>
+                <span
+                  class="usa-step-indicator__current-step"
+                >
+                  4
+                </span>
+                 
+                <span
+                  class="usa-step-indicator__total-steps"
+                >
+                  of 4
+                </span>
+                 
+              </span>
+              <span
+                class="usa-step-indicator__heading-text"
+              >
+                Participants and timeframe
+              </span>
+            </h4>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="grid-container grb-review-form-participants padding-bottom-10"
+      data-testid="gridContainer"
+    >
+      <form
+        class="usa-form step-content-wrapper maxw-none"
+        data-testid="grbReviewForm-stepContentWrapper"
+        role="form"
+      >
+        <p
+          class="line-height-body-5 text-light font-body-sm margin-top-0 margin-bottom-1"
+        >
+          Add the voting and non-voting GRB members who should participate in this review. For asynchronous reviews, add an end date for the review.
+        </p>
+        <div
+          class="usa-alert usa-alert--info usa-alert--slim"
+          data-testid="alert"
+        >
+          <div
+            class="usa-alert__body"
+          >
+            <p
+              class="usa-alert__text"
+            >
+              Because this review is a standard GRB meeting, you do not need to add GRB reviewers to EASi. However, if you do add reviewers, they will have the option to access documentation about this request within EASi prior to the meeting.
+            </p>
+          </div>
+        </div>
+        <div
+          class="usa-form-group margin-top-0"
+          data-testid="formGroup"
+        >
+          <div
+            class="grid-col-12 tablet:grid-col-6"
+            data-testid="grid"
+          >
+            <div
+              class="margin-top-5 border-top-1px border-base-light padding-top-1"
+            >
+              <h4
+                class="margin-y-0"
+              >
+                GRB reviewers
+              </h4>
+              <p
+                class="margin-y-0 text-base-dark line-height-sans-4"
+              >
+                Add the GRB members who should review this IT Governance request and indicate their voting role. For asynchronous reviews, you must add at least 5 voting members.
+              </p>
+              <button
+                class="usa-button"
+                data-testid="button"
+                type="button"
+              >
+                Add a GRB reviewer
+              </button>
+            </div>
+          </div>
+          <div
+            class="grid-col-12 tablet:grid-col-10"
+            data-testid="grid"
+          >
+            <div
+              class="margin-top-3"
+              data-testid="grb-participants-table"
+            >
+              <div
+                class="usa-table-container--scrollable"
+                data-testid="scrollable-table-container"
+                tabindex="0"
+              >
+                <table
+                  class="usa-table usa-table--borderless width-full"
+                  data-testid="table"
+                >
+                  <thead>
+                    <tr
+                      role="row"
+                    >
+                      <th
+                        aria-sort="ascending"
+                        class="border-bottom-2px"
+                        colspan="1"
+                        role="columnheader"
+                        scope="col"
+                        style="cursor: pointer;"
+                        title="Toggle SortBy"
+                      >
+                        <button
+                          class="usa-button usa-button--unstyled"
+                          data-testid="button"
+                          style="cursor: pointer;"
+                          title="Toggle SortBy"
+                          type="button"
+                        >
+                          Name
+                          <svg
+                            aria-hidden="true"
+                            class="usa-icon margin-left-05"
+                            data-testid="caret--up"
+                            focusable="false"
+                            height="1em"
+                            role="img"
+                            viewBox="0 0 24 24"
+                            width="1em"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="m12 8-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"
+                            />
+                          </svg>
+                        </button>
+                      </th>
+                      <th
+                        aria-sort="none"
+                        class="border-bottom-2px"
+                        colspan="1"
+                        role="columnheader"
+                        scope="col"
+                        style="cursor: pointer;"
+                        title="Toggle SortBy"
+                      >
+                        <button
+                          class="usa-button usa-button--unstyled"
+                          data-testid="button"
+                          style="cursor: pointer;"
+                          title="Toggle SortBy"
+                          type="button"
+                        >
+                          Voting role
+                          <svg
+                            aria-hidden="true"
+                            class="usa-icon margin-left-05"
+                            data-testid="caret--sort"
+                            focusable="false"
+                            height="1em"
+                            role="img"
+                            viewBox="0 0 24 24"
+                            width="1em"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                            />
+                          </svg>
+                        </button>
+                      </th>
+                      <th
+                        aria-sort="none"
+                        class="border-bottom-2px"
+                        colspan="1"
+                        role="columnheader"
+                        scope="col"
+                        style="cursor: pointer;"
+                        title="Toggle SortBy"
+                      >
+                        <button
+                          class="usa-button usa-button--unstyled"
+                          data-testid="button"
+                          style="cursor: pointer;"
+                          title="Toggle SortBy"
+                          type="button"
+                        >
+                          GRB role
+                          <svg
+                            aria-hidden="true"
+                            class="usa-icon margin-left-05"
+                            data-testid="caret--sort"
+                            focusable="false"
+                            height="1em"
+                            role="img"
+                            viewBox="0 0 24 24"
+                            width="1em"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                            />
+                          </svg>
+                        </button>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody
+                    role="rowgroup"
+                  />
+                </table>
+              </div>
+              <p
+                class="text-italic margin-top-neg-1"
+              >
+                You have not yet added GRB reviewers. Add reviewers using the button above.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="margin-top-8 margin-bottom-3"
+        >
+          <ul
+            class="usa-button-group"
+          >
+            <li
+              class="usa-button-group__item"
+            >
+              <div
+                class="display-flex flex-align-center"
+              >
+                <button
+                  class="usa-button usa-button--outline margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
+                  data-testid="button"
+                  type="button"
+                >
+                  Back
+                </button>
+              </div>
+            </li>
+            <li
+              class="usa-button-group__item"
+            >
+              <div
+                class="display-flex flex-align-center"
+              >
+                <button
+                  class="usa-button margin-top-0"
+                  data-testid="button"
+                  disabled=""
+                  type="submit"
+                >
+                  Complete and begin review
+                </button>
+              </div>
+            </li>
+          </ul>
+          <button
+            class="usa-button usa-button--unstyled margin-top-2 display-flex flex-align-center"
+            data-testid="button"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon margin-right-05"
+              focusable="false"
+              height="1em"
+              role="img"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+              />
+            </svg>
+            Save and return to request
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
+</DocumentFragment>
+`;

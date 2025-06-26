@@ -1,0 +1,465 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`DocumentUploadForm page > matches the snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="tablet:grid-col-12 desktop:grid-col-8 margin-top-6 margin-bottom-8 padding-bottom-4"
+  >
+    <h1
+      class="margin-bottom-1"
+    >
+      Upload a document
+    </h1>
+    <p
+      class="margin-top-1 margin-bottom-1 font-body-md line-height-body-5 text-light"
+    >
+      Choose a document to upload such as a draft IGCE, contracting document, RAF or other document related to this project and Intake Request.
+    </p>
+    <p
+      class="margin-bottom-3 margin-top-105 text-base"
+    >
+      Fields marked with an asterisk ( 
+      <span
+        class="text-red"
+      >
+        *
+      </span>
+       ) are required.
+    </p>
+    <a
+      class="usa-link display-flex flex-align-center"
+      href="/it-governance/63448b98-f92a-4227-bbf3-d07961ce242d/grb-review"
+    >
+      <svg
+        aria-hidden="true"
+        class="usa-icon margin-right-1"
+        focusable="false"
+        height="1em"
+        role="img"
+        viewBox="0 0 24 24"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+        />
+      </svg>
+      Don't upload and return to request details
+    </a>
+    <form
+      class="usa-form maxw-full"
+      data-testid="form"
+    >
+      <div
+        class="usa-form-group margin-top-5"
+        data-testid="formGroup"
+      >
+        <label
+          class="usa-label"
+          for="fileData"
+        >
+          Select your document
+          <span
+            class="text-red"
+          >
+             *
+          </span>
+        </label>
+        <p
+          class="usa-hint margin-bottom-0 margin-top-05"
+        >
+          Select a PDF, DOC, DOCX, XLS, or XLSX
+        </p>
+        <div
+          class="usa-file-input"
+          data-testid="file-input"
+        >
+          <div
+            class="usa-file-input__target"
+            data-testid="file-input-droptarget"
+          >
+            <div
+              aria-hidden="true"
+              class="usa-file-input__instructions"
+              data-testid="file-input-instructions"
+            >
+              <span
+                class="usa-file-input__drag-text"
+              >
+                Drag file here or 
+              </span>
+              <span
+                class="usa-file-input__choose"
+              >
+                choose from folder
+              </span>
+            </div>
+            <div
+              class="usa-file-input__box"
+              data-testid="file-input-box"
+            />
+            <input
+              accept=".pdf,.doc,.docx,.xls,.xlsx"
+              class="usa-file-input__input"
+              data-testid="file-input-input"
+              id="fileData"
+              name="fileData"
+              type="file"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="usa-form-group"
+        data-testid="formGroup"
+      >
+        <fieldset
+          class="usa-fieldset"
+          data-testid="fieldset"
+        >
+          <legend
+            class="usa-legend"
+          >
+            <span
+              class="text-bold"
+            >
+              What type of document are you uploading? 
+              <span
+                class="text-red"
+              >
+                *
+              </span>
+            </span>
+          </legend>
+          <div
+            class="usa-radio"
+            data-testid="radio"
+          >
+            <input
+              class="usa-radio__input"
+              data-testid="documentType-SOO_SOW"
+              id="documentType-SOO_SOW"
+              name="documentType"
+              type="radio"
+              value="SOO_SOW"
+            />
+            <label
+              class="usa-radio__label"
+              for="documentType-SOO_SOW"
+            >
+              Statement of Objectives (SOO), Statement of Work (SOW), Performance Work Statement (PWS), or other contracting document
+            </label>
+          </div>
+          <div
+            class="usa-radio"
+            data-testid="radio"
+          >
+            <input
+              class="usa-radio__input"
+              data-testid="documentType-DRAFT_IGCE"
+              id="documentType-DRAFT_IGCE"
+              name="documentType"
+              type="radio"
+              value="DRAFT_IGCE"
+            />
+            <label
+              class="usa-radio__label"
+              for="documentType-DRAFT_IGCE"
+            >
+              Draft Independent Government Cost Estimate (IGCE)
+            </label>
+          </div>
+          <div
+            class="usa-radio"
+            data-testid="radio"
+          >
+            <input
+              class="usa-radio__input"
+              data-testid="documentType-ACQUISITION_PLAN_OR_STRATEGY"
+              id="documentType-ACQUISITION_PLAN_OR_STRATEGY"
+              name="documentType"
+              type="radio"
+              value="ACQUISITION_PLAN_OR_STRATEGY"
+            />
+            <label
+              class="usa-radio__label"
+              for="documentType-ACQUISITION_PLAN_OR_STRATEGY"
+            >
+              Acquisition Plan (AP) or Acquisition Strategy (AS)
+            </label>
+          </div>
+          <div
+            class="usa-radio"
+            data-testid="radio"
+          >
+            <input
+              class="usa-radio__input"
+              data-testid="documentType-REQUEST_FOR_ADDITIONAL_FUNDING"
+              id="documentType-REQUEST_FOR_ADDITIONAL_FUNDING"
+              name="documentType"
+              type="radio"
+              value="REQUEST_FOR_ADDITIONAL_FUNDING"
+            />
+            <label
+              class="usa-radio__label"
+              for="documentType-REQUEST_FOR_ADDITIONAL_FUNDING"
+            >
+              Request for Additional Funding (RAF)
+            </label>
+          </div>
+          <div
+            class="usa-radio"
+            data-testid="radio"
+          >
+            <input
+              class="usa-radio__input"
+              data-testid="documentType-SOFTWARE_BILL_OF_MATERIALS"
+              id="documentType-SOFTWARE_BILL_OF_MATERIALS"
+              name="documentType"
+              type="radio"
+              value="SOFTWARE_BILL_OF_MATERIALS"
+            />
+            <label
+              class="usa-radio__label"
+              for="documentType-SOFTWARE_BILL_OF_MATERIALS"
+            >
+              Software Bill of Materials (BOM)
+            </label>
+          </div>
+          <div
+            class="usa-radio"
+            data-testid="radio"
+          >
+            <input
+              class="usa-radio__input"
+              data-testid="documentType-MEETING_MINUTES"
+              id="documentType-MEETING_MINUTES"
+              name="documentType"
+              type="radio"
+              value="MEETING_MINUTES"
+            />
+            <label
+              class="usa-radio__label"
+              for="documentType-MEETING_MINUTES"
+            >
+              Meeting Minutes
+            </label>
+          </div>
+          <div
+            class="usa-radio"
+            data-testid="radio"
+          >
+            <input
+              class="usa-radio__input"
+              data-testid="documentType-OTHER"
+              id="documentType-OTHER"
+              name="documentType"
+              type="radio"
+              value="OTHER"
+            />
+            <label
+              class="usa-radio__label"
+              for="documentType-OTHER"
+            >
+              Other
+            </label>
+          </div>
+        </fieldset>
+      </div>
+      <div
+        class="usa-form-group"
+        data-testid="formGroup"
+      >
+        <fieldset
+          class="usa-fieldset"
+          data-testid="fieldset"
+        >
+          <legend
+            class="usa-legend"
+          >
+            <span
+              class="text-bold"
+            >
+              What is the version of this document? 
+            </span>
+          </legend>
+          <div
+            class="usa-radio"
+            data-testid="radio"
+          >
+            <input
+              aria-describedby="versionHelpTextCURRENT"
+              class="usa-radio__input"
+              data-testid="version-CURRENT"
+              id="version-CURRENT"
+              name="version"
+              type="radio"
+              value="CURRENT"
+            />
+            <label
+              class="usa-radio__label"
+              for="version-CURRENT"
+            >
+              Current
+            </label>
+          </div>
+          <p
+            class="margin-left-4 margin-top-05 margin-bottom-0 font-body-2xs line-height-body-3"
+            id="versionHelpTextCURRENT"
+          >
+            Choose this option if this is the most recent document version that the Governance Team should reference.
+          </p>
+          <div
+            class="usa-radio"
+            data-testid="radio"
+          >
+            <input
+              aria-describedby="versionHelpTextHISTORICAL"
+              class="usa-radio__input"
+              data-testid="version-HISTORICAL"
+              id="version-HISTORICAL"
+              name="version"
+              type="radio"
+              value="HISTORICAL"
+            />
+            <label
+              class="usa-radio__label"
+              for="version-HISTORICAL"
+            >
+              Historical
+            </label>
+          </div>
+          <p
+            class="margin-left-4 margin-top-05 margin-bottom-0 font-body-2xs line-height-body-3"
+            id="versionHelpTextHISTORICAL"
+          >
+            Choose this option if you are uploading a document from the past that should be used for reference purposes only.
+          </p>
+        </fieldset>
+      </div>
+      <div
+        class="usa-form-group margin-top-3"
+        data-testid="formGroup"
+      >
+        <fieldset
+          class="usa-fieldset"
+          data-testid="fieldset"
+        >
+          <legend
+            class="usa-legend"
+          >
+            <span
+              class="text-bold"
+            >
+              Would you like to send a notification email to GRB reviewers?
+              <span
+                class="text-red margin-x-05"
+              >
+                *
+              </span>
+            </span>
+          </legend>
+          <div
+            class="easi-help-text margin-top-05"
+          >
+            If you choose “Yes”, EASi will automatically send a notification email to all GRB reviewers added to this request. Sending a notification while a GRB review is still in progress will help GRB reviewers stay up to date with all relevant project materials.
+          </div>
+          <div
+            class="usa-radio"
+            data-testid="radio"
+          >
+            <input
+              class="usa-radio__input"
+              id="sendNotification-yes"
+              name="sendNotification"
+              type="radio"
+            />
+            <label
+              class="usa-radio__label"
+              for="sendNotification-yes"
+            >
+              Yes
+            </label>
+          </div>
+          <div
+            class="usa-radio"
+            data-testid="radio"
+          >
+            <input
+              class="usa-radio__input"
+              id="sendNotification-no"
+              name="sendNotification"
+              type="radio"
+            />
+            <label
+              class="usa-radio__label"
+              for="sendNotification-no"
+            >
+              No
+            </label>
+          </div>
+        </fieldset>
+      </div>
+      <div
+        class="usa-alert usa-alert--info usa-alert--slim margin-top-5"
+        data-testid="alert"
+      >
+        <div
+          class="usa-alert__body"
+        >
+          <p
+            class="usa-alert__text"
+          >
+            To keep CMS safe, documents are scanned for viruses after uploading. If something goes wrong, we'll let you know.
+          </p>
+        </div>
+      </div>
+      <div
+        class="margin-top-4"
+      >
+        <ul
+          class="usa-button-group"
+        >
+          <li
+            class="usa-button-group__item"
+          >
+            <div
+              class="display-flex flex-align-center"
+            >
+              <button
+                class="usa-button margin-top-0"
+                data-testid="button"
+                disabled=""
+                type="submit"
+              >
+                Upload document
+              </button>
+            </div>
+          </li>
+        </ul>
+        <button
+          class="usa-button usa-button--unstyled margin-top-2 display-flex flex-align-center"
+          data-testid="button"
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="usa-icon margin-right-05"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+            />
+          </svg>
+          Don't upload and return to request details
+        </button>
+      </div>
+    </form>
+  </div>
+</DocumentFragment>
+`;

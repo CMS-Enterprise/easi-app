@@ -121,7 +121,9 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
           class="usa-step-indicator__segments"
         >
           <li
-            class="usa-step-indicator__segment usa-step-indicator__segment--complete usa-step-indicator__segment--clickable"
+            aria-disabled="false"
+            class="usa-step-indicator__segment usa-step-indicator__segment--complete maxw-none usa-step-indicator__segment--clickable"
+            data-testid="stepIndicator-0"
           >
             <span
               class="usa-step-indicator__segment-label"
@@ -147,7 +149,9 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
           </li>
           <li
             aria-current="true"
-            class="usa-step-indicator__segment usa-step-indicator__segment--current usa-step-indicator__segment--disabled"
+            aria-disabled="true"
+            class="usa-step-indicator__segment usa-step-indicator__segment--current maxw-none usa-step-indicator__segment--disabled"
+            data-testid="stepIndicator-1"
           >
             <span
               class="usa-step-indicator__segment-label"
@@ -166,7 +170,9 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
             </span>
           </li>
           <li
-            class="usa-step-indicator__segment usa-step-indicator__segment--clickable"
+            aria-disabled="false"
+            class="usa-step-indicator__segment maxw-none usa-step-indicator__segment--clickable"
+            data-testid="stepIndicator-2"
           >
             <span
               class="usa-step-indicator__segment-label"
@@ -191,7 +197,9 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
             </span>
           </li>
           <li
-            class="usa-step-indicator__segment usa-step-indicator__segment--clickable"
+            aria-disabled="false"
+            class="usa-step-indicator__segment maxw-none usa-step-indicator__segment--clickable"
+            data-testid="stepIndicator-3"
           >
             <span
               class="usa-step-indicator__segment-label"
@@ -216,7 +224,9 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
             </span>
           </li>
           <li
-            class="usa-step-indicator__segment usa-step-indicator__segment--disabled"
+            aria-disabled="true"
+            class="usa-step-indicator__segment maxw-none usa-step-indicator__segment--disabled"
+            data-testid="stepIndicator-4"
           >
             <span
               class="usa-step-indicator__segment-label"

@@ -18,7 +18,7 @@ const governanceReviewBoard = {
     },
     whatToBring: {
       title: 'What to bring',
-      copy: 'The following are important items to have with you at the GRB meeting:',
+      copy: 'The following are important items to have with you at the GRB review:',
       items: [
         'a copy of your Business Case',
         'any contracting materials that you might have in place, for example, a Statement of Work (SOW), a Performance Work Statement (PWS), or other contracting document',
@@ -28,7 +28,7 @@ const governanceReviewBoard = {
   },
   prepare: {
     title: 'Prepare for the Governance Review Board meeting',
-    breadcrumb: 'Prepare for GRB meeting',
+    breadcrumb: 'Prepare for GRB review',
 
     whatIsIt: {
       title: 'What is the Governance Review Board?',
