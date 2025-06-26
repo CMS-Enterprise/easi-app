@@ -34,10 +34,6 @@ export type SystemIntakeForm = {
     name: string;
     component: string;
   };
-  isso: {
-    isPresent: boolean | null;
-    name: string;
-  };
   governanceTeams: {
     isPresent: boolean | null;
     teams: SystemIntakeCollaboratorInput[];
@@ -78,7 +74,6 @@ export type ContactDetailsForm = {
   requester: ContactFields;
   businessOwner: ContactFields & { sameAsRequester: boolean };
   productManager: ContactFields & { sameAsRequester: boolean };
-  isso: ContactFields & { isPresent: boolean };
   governanceTeams: {
     isPresent: boolean;
     teams: CollaboratorFields;
@@ -176,7 +171,6 @@ export type FormattedContacts = {
   requester: SystemIntakeContactProps;
   businessOwner: SystemIntakeContactProps;
   productManager: SystemIntakeContactProps;
-  isso: SystemIntakeContactProps;
   additionalContacts: SystemIntakeContactProps[];
 };
 

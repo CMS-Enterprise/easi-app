@@ -403,10 +403,6 @@ func updateSystemIntakeContactDetails(
 			Name:      productManagerName,
 			Component: productManagerComponent,
 		},
-		Isso: &models.SystemIntakeISSOInput{
-			IsPresent: &issoIsPresent,
-			Name:      &issoName,
-		},
 		GovernanceTeams: &models.SystemIntakeGovernanceTeamInput{
 			IsPresent: &govTeamsPresent,
 			Teams: []*models.SystemIntakeCollaboratorInput{

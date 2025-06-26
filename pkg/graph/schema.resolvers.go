@@ -1808,16 +1808,6 @@ func (r *systemIntakeResolver) GrbReviewers(ctx context.Context, obj *models.Sys
 	return resolvers.SystemIntakeGRBReviewers(ctx, obj.ID)
 }
 
-// Isso is the resolver for the isso field.
-func (r *systemIntakeResolver) Isso(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeIsso, error) {
-	isPresent := len(obj.ISSOName.String) > 0
-
-	return &models.SystemIntakeIsso{
-		IsPresent: &isPresent,
-		Name:      obj.ISSOName.Ptr(),
-	}, nil
-}
-
 // Lcid is the resolver for the lcid field.
 func (r *systemIntakeResolver) Lcid(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.LifecycleID.Ptr(), nil
