@@ -13,7 +13,7 @@ describe('GRB review', () => {
       }
     });
 
-    cy.visit('/it-governance/5af245bc-fc54-4677-bab1-1b3e798bb43c/grb-review');
+    cy.visit('/it-governance/d9c931c6-0858-494d-b991-e02a94a42f38/grb-review');
 
     cy.contains('button', 'Set up GRB review').click();
 
@@ -33,8 +33,8 @@ describe('GRB review', () => {
     cy.url().should('include', '/participants');
 
     cy.get('#grbReviewAsyncEndDate').clear();
-    cy.get('#grbReviewAsyncEndDate').type('01/01/2026');
-    cy.get('#grbReviewAsyncEndDate').should('have.value', '01/01/2026');
+    cy.get('#grbReviewAsyncEndDate').debug().type('01/01/2026');
+    cy.get('#grbReviewAsyncEndDate').debug().should('have.value', '01/01/2026');
 
     //   cy.contains('button', 'Complete and begin review').click();
 
