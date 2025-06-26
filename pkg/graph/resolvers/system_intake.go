@@ -17,6 +17,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 )
 
 // CreateSystemIntake creates a system intake.
@@ -41,6 +42,7 @@ func CreateSystemIntakeContact(
 	ctx context.Context,
 	store *storage.Store,
 	input models.CreateSystemIntakeContactInput,
+	getAccountInformation userhelpers.GetAccountInfoFunc,
 ) (*models.CreateSystemIntakeContactPayload, error) {
 	contact := &models.SystemIntakeContact{
 		SystemIntakeID: input.SystemIntakeID,
@@ -48,6 +50,13 @@ func CreateSystemIntakeContact(
 		Component:      input.Component,
 		Role:           input.Role,
 	}
+	contactUserAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, input.EuaUserID, false, getAccountInformation)
+	if err != nil {
+		return nil, err
+	}
+	// We comment this out for now, we will use this eventually to link the contact to the user account
+	_ = contactUserAccount
+
 	createdContact, err := store.CreateSystemIntakeContact(ctx, contact)
 	if err != nil {
 		return nil, err
@@ -62,6 +71,7 @@ func UpdateSystemIntakeContact(
 	ctx context.Context,
 	store *storage.Store,
 	input models.UpdateSystemIntakeContactInput,
+	getAccountInformation userhelpers.GetAccountInfoFunc,
 ) (*models.CreateSystemIntakeContactPayload, error) {
 	contact := &models.SystemIntakeContact{
 		ID:             input.ID,
@@ -70,6 +80,13 @@ func UpdateSystemIntakeContact(
 		Component:      input.Component,
 		Role:           input.Role,
 	}
+
+	contactUserAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, input.EuaUserID, false, getAccountInformation)
+	if err != nil {
+		return nil, err
+	}
+	// We comment this out for now, we will use this eventually to link the contact to the user account
+	_ = contactUserAccount
 
 	updatedContact, err := store.UpdateSystemIntakeContact(ctx, contact)
 	if err != nil {

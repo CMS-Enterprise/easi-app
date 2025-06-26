@@ -641,12 +641,12 @@ func (r *mutationResolver) UnlinkSystemIntakeRelation(ctx context.Context, intak
 
 // CreateSystemIntakeContact is the resolver for the createSystemIntakeContact field.
 func (r *mutationResolver) CreateSystemIntakeContact(ctx context.Context, input models.CreateSystemIntakeContactInput) (*models.CreateSystemIntakeContactPayload, error) {
-	return resolvers.CreateSystemIntakeContact(ctx, r.store, input)
+	return resolvers.CreateSystemIntakeContact(ctx, r.store, input, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo))
 }
 
 // UpdateSystemIntakeContact is the resolver for the updateSystemIntakeContact field.
 func (r *mutationResolver) UpdateSystemIntakeContact(ctx context.Context, input models.UpdateSystemIntakeContactInput) (*models.CreateSystemIntakeContactPayload, error) {
-	return resolvers.UpdateSystemIntakeContact(ctx, r.store, input)
+	return resolvers.UpdateSystemIntakeContact(ctx, r.store, input, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo))
 }
 
 // DeleteSystemIntakeContact is the resolver for the deleteSystemIntakeContact field.
