@@ -57,10 +57,6 @@ export default gql(/* GraphQL */ `
         name
       }
     }
-    isso {
-      isPresent
-      name
-    }
     existingFunding
     fundingSources {
       ...FundingSourceFragment

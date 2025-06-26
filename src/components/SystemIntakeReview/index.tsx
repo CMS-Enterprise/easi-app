@@ -36,7 +36,7 @@ export const SystemIntakeReview = ({
     systemIntake;
   const {
     contacts: {
-      data: { requester, businessOwner, productManager, isso }
+      data: { requester, businessOwner, productManager }
     }
   } = useSystemIntakeContacts(systemIntake.id);
 
@@ -97,13 +97,6 @@ export const SystemIntakeReview = ({
       </ul>
     );
   };
-  const issoDefinition = () => {
-    const hasIsso = convertBoolToYesNo(!!isso.commonName);
-    if (isso.commonName) {
-      return `${hasIsso}, ${isso.commonName}`;
-    }
-    return hasIsso;
-  };
 
   const getSubmissionDate = () => {
     if (submittedAt) {
@@ -113,7 +106,7 @@ export const SystemIntakeReview = ({
   };
 
   /* Component used to conditionally render software acquisition information depending on what is present.
-      Translate acquisition strategy enum values using i18n 
+      Translate acquisition strategy enum values using i18n
   */
 
   const SoftwareAcquisition = () => {
@@ -303,10 +296,6 @@ export const SystemIntakeReview = ({
           </div>
         </ReviewRow>
         <ReviewRow>
-          <div>
-            <DescriptionTerm term={t('review.isso')} />
-            <DescriptionDefinition definition={issoDefinition()} />
-          </div>
           <div>
             <DescriptionTerm term={t('review.collaborating')} />
             {systemIntake.governanceTeams.isPresent ? (

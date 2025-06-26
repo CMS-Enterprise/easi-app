@@ -1158,7 +1158,6 @@ func main() {
 		i.BusinessOwnerComponent = null.StringFrom("Center for Consumer Information and Insurance Oversight")
 		i.ProductManager = null.StringFrom("John ProductManager")
 		i.ProductManagerComponent = null.StringFrom("Center for Consumer Information and Insurance Oversight")
-		i.ISSO = null.StringFrom("")
 		i.TRBCollaborator = null.StringFrom("")
 		i.OITSecurityCollaborator = null.StringFrom("")
 		i.EACollaborator = null.StringFrom("")

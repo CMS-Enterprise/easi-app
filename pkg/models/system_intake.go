@@ -95,7 +95,7 @@ type SystemIntake struct {
 	BusinessOwnerComponent                            null.String                  `json:"businessOwnerComponent" db:"business_owner_component"`
 	ProductManager                                    null.String                  `json:"productManager" db:"product_manager"`
 	ProductManagerComponent                           null.String                  `json:"productManagerComponent" db:"product_manager_component"`
-	ISSO                                              null.String                  `json:"isso"`
+	ISSO                                              null.String                  `json:"isso"` // deprecated - leaving here so the DB has a field to scan the soon-to-be-deleted `isso` column
 	ISSOName                                          null.String                  `json:"issoName" db:"isso_name"`
 	TRBCollaborator                                   null.String                  `json:"trbCollaborator" db:"trb_collaborator"`
 	TRBCollaboratorName                               null.String                  `json:"trbCollaboratorName" db:"trb_collaborator_name"`

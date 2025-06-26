@@ -644,15 +644,6 @@ type SystemIntakeGovernanceTeam {
 }
 
 """
-The Information System Security Officer (ISSO) that is
-associated with a system request, if any
-"""
-type SystemIntakeISSO {
-  isPresent: Boolean
-  name: String
-}
-
-"""
 The author of a note added to a system request
 """
 type SystemIntakeNoteAuthor {
@@ -775,7 +766,6 @@ type SystemIntake {
   """
   grbVotingInformation: GRBVotingInformation!
   id: UUID!
-  isso: SystemIntakeISSO!
   lcid: String
   lcidIssuedAt: Time
   lcidExpiresAt: Time
@@ -1051,14 +1041,6 @@ input SystemIntakeProductManagerInput {
 }
 
 """
-The input data used to set the ISSO associated with a system request, if any
-"""
-input SystemIntakeISSOInput {
-  isPresent: Boolean
-  name: String
-}
-
-"""
 The input data used to add an OIT collaborator for a system request
 """
 input SystemIntakeCollaboratorInput {
@@ -1081,11 +1063,10 @@ a system request
 """
 input UpdateSystemIntakeContactDetailsInput {
   id: UUID!
-  requester: SystemIntakeRequesterWithComponentInput!,
-  businessOwner: SystemIntakeBusinessOwnerInput!,
-  productManager: SystemIntakeProductManagerInput!,
-  isso: SystemIntakeISSOInput!,
-  governanceTeams: SystemIntakeGovernanceTeamInput!,
+  requester: SystemIntakeRequesterWithComponentInput!
+  businessOwner: SystemIntakeBusinessOwnerInput!
+  productManager: SystemIntakeProductManagerInput!
+  governanceTeams: SystemIntakeGovernanceTeamInput!
 }
 
 """

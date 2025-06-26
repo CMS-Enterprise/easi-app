@@ -266,15 +266,6 @@ const intake = {
       component: 'CMS Product Manager component',
       email: 'CMS Product Manager email'
     },
-    isso: {
-      label:
-        'Does your project have an Information System Security Officer (ISSO)?',
-      helpText:
-        'If yes, please tell us the name of your Information System Security Officer so we can get in touch with them',
-      name: 'ISSO Name',
-      component: 'ISSO Component',
-      email: 'ISSO email'
-    },
     additionalContacts: {
       titleContacts: 'Additional contacts',
       titleRecipients: 'Choose recipients',
@@ -423,7 +414,6 @@ const intake = {
     cmsBusinessOwnerComponent: 'CMS Business Owner component',
     cmsProjectManagerName: 'CMS Project/Product Manager or Lead',
     cmsProjectManagerComponent: 'CMS Project/Product Manager or Lead component',
-    isso: 'Does your project have an Information System Security Officer (ISSO)?',
     collaborating: 'I have started collaborating with',
     requestDetails: 'Request details',
     projectName: 'Project name',

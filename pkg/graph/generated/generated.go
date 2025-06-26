@@ -759,7 +759,6 @@ type ComplexityRoot struct {
 		GrtReviewEmailBody                                func(childComplexity int) int
 		HasUIChanges                                      func(childComplexity int) int
 		ID                                                func(childComplexity int) int
-		Isso                                              func(childComplexity int) int
 		ItGovTaskStatuses                                 func(childComplexity int) int
 		LastMeetingDate                                   func(childComplexity int) int
 		Lcid                                              func(childComplexity int) int
@@ -950,11 +949,6 @@ type ComplexityRoot struct {
 	SystemIntakeGovernanceTeam struct {
 		IsPresent func(childComplexity int) int
 		Teams     func(childComplexity int) int
-	}
-
-	SystemIntakeISSO struct {
-		IsPresent func(childComplexity int) int
-		Name      func(childComplexity int) int
 	}
 
 	SystemIntakeLCIDExpirationChange struct {
@@ -1426,7 +1420,6 @@ type SystemIntakeResolver interface {
 	GrbReviewers(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewer, error)
 	GrbVotingInformation(ctx context.Context, obj *models.SystemIntake) (*models.GRBVotingInformation, error)
 
-	Isso(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeIsso, error)
 	Lcid(ctx context.Context, obj *models.SystemIntake) (*string, error)
 
 	LcidScope(ctx context.Context, obj *models.SystemIntake) (*models.HTML, error)
@@ -6001,13 +5994,6 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.SystemIntake.ID(childComplexity), true
 
-	case "SystemIntake.isso":
-		if e.complexity.SystemIntake.Isso == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.Isso(childComplexity), true
-
 	case "SystemIntake.itGovTaskStatuses":
 		if e.complexity.SystemIntake.ItGovTaskStatuses == nil {
 			break
@@ -6959,20 +6945,6 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.SystemIntakeGovernanceTeam.Teams(childComplexity), true
-
-	case "SystemIntakeISSO.isPresent":
-		if e.complexity.SystemIntakeISSO.IsPresent == nil {
-			break
-		}
-
-		return e.complexity.SystemIntakeISSO.IsPresent(childComplexity), true
-
-	case "SystemIntakeISSO.name":
-		if e.complexity.SystemIntakeISSO.Name == nil {
-			break
-		}
-
-		return e.complexity.SystemIntakeISSO.Name(childComplexity), true
 
 	case "SystemIntakeLCIDExpirationChange.newCostBaseline":
 		if e.complexity.SystemIntakeLCIDExpirationChange.NewCostBaseline == nil {
@@ -8420,7 +8392,6 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputSystemIntakeFundingSourcesInput,
 		ec.unmarshalInputSystemIntakeGRBPresentationLinksInput,
 		ec.unmarshalInputSystemIntakeGovernanceTeamInput,
-		ec.unmarshalInputSystemIntakeISSOInput,
 		ec.unmarshalInputSystemIntakeIssueLCIDInput,
 		ec.unmarshalInputSystemIntakeNotITGovReqInput,
 		ec.unmarshalInputSystemIntakeProductManagerInput,
@@ -9201,15 +9172,6 @@ type SystemIntakeGovernanceTeam {
 }
 
 """
-The Information System Security Officer (ISSO) that is
-associated with a system request, if any
-"""
-type SystemIntakeISSO {
-  isPresent: Boolean
-  name: String
-}
-
-"""
 The author of a note added to a system request
 """
 type SystemIntakeNoteAuthor {
@@ -9332,7 +9294,6 @@ type SystemIntake {
   """
   grbVotingInformation: GRBVotingInformation!
   id: UUID!
-  isso: SystemIntakeISSO!
   lcid: String
   lcidIssuedAt: Time
   lcidExpiresAt: Time
@@ -9608,14 +9569,6 @@ input SystemIntakeProductManagerInput {
 }
 
 """
-The input data used to set the ISSO associated with a system request, if any
-"""
-input SystemIntakeISSOInput {
-  isPresent: Boolean
-  name: String
-}
-
-"""
 The input data used to add an OIT collaborator for a system request
 """
 input SystemIntakeCollaboratorInput {
@@ -9638,11 +9591,10 @@ a system request
 """
 input UpdateSystemIntakeContactDetailsInput {
   id: UUID!
-  requester: SystemIntakeRequesterWithComponentInput!,
-  businessOwner: SystemIntakeBusinessOwnerInput!,
-  productManager: SystemIntakeProductManagerInput!,
-  isso: SystemIntakeISSOInput!,
-  governanceTeams: SystemIntakeGovernanceTeamInput!,
+  requester: SystemIntakeRequesterWithComponentInput!
+  businessOwner: SystemIntakeBusinessOwnerInput!
+  productManager: SystemIntakeProductManagerInput!
+  governanceTeams: SystemIntakeGovernanceTeamInput!
 }
 
 """
@@ -16956,8 +16908,6 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(_ context.Con
 				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -26075,8 +26025,6 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(ctx con
 				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -33251,8 +33199,6 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -33515,8 +33461,6 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeRequestType(
 				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -36066,8 +36010,6 @@ func (ec *executionContext) fieldContext_Mutation_archiveSystemIntake(ctx contex
 				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -40384,8 +40326,6 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -40621,8 +40561,6 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -40858,8 +40796,6 @@ func (ec *executionContext) fieldContext_Query_mySystemIntakes(_ context.Context
 				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -41084,8 +41020,6 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithReviewRequested(
 				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -41310,8 +41244,6 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(_ context.
 				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -45505,56 +45437,6 @@ func (ec *executionContext) fieldContext_SystemIntake_id(_ context.Context, fiel
 	return fc, nil
 }
 
-func (ec *executionContext) _SystemIntake_isso(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntake_isso(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().Isso(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*models.SystemIntakeIsso)
-	fc.Result = res
-	return ec.marshalNSystemIntakeISSO2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeIsso(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_SystemIntake_isso(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "isPresent":
-				return ec.fieldContext_SystemIntakeISSO_isPresent(ctx, field)
-			case "name":
-				return ec.fieldContext_SystemIntakeISSO_name(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeISSO", field.Name)
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _SystemIntake_lcid(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntake_lcid(ctx, field)
 	if err != nil {
@@ -47797,8 +47679,6 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedIntakes(_ context.C
 				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -48677,8 +48557,6 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(_ conte
 				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -53069,88 +52947,6 @@ func (ec *executionContext) fieldContext_SystemIntakeGovernanceTeam_teams(_ cont
 				return ec.fieldContext_SystemIntakeCollaborator_name(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeCollaborator", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _SystemIntakeISSO_isPresent(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeIsso) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntakeISSO_isPresent(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.IsPresent, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*bool)
-	fc.Result = res
-	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_SystemIntakeISSO_isPresent(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "SystemIntakeISSO",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Boolean does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _SystemIntakeISSO_name(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeIsso) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntakeISSO_name(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Name, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_SystemIntakeISSO_name(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "SystemIntakeISSO",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -58163,8 +57959,6 @@ func (ec *executionContext) fieldContext_TRBRequest_relatedIntakes(_ context.Con
 				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -61054,8 +60848,6 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(_ context.
 				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -61834,8 +61626,6 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -66922,40 +66712,6 @@ func (ec *executionContext) unmarshalInputSystemIntakeGovernanceTeamInput(ctx co
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputSystemIntakeISSOInput(ctx context.Context, obj any) (models.SystemIntakeISSOInput, error) {
-	var it models.SystemIntakeISSOInput
-	asMap := map[string]any{}
-	for k, v := range obj.(map[string]any) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"isPresent", "name"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "isPresent":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isPresent"))
-			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.IsPresent = data
-		case "name":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Name = data
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputSystemIntakeIssueLCIDInput(ctx context.Context, obj any) (models.SystemIntakeIssueLCIDInput, error) {
 	var it models.SystemIntakeIssueLCIDInput
 	asMap := map[string]any{}
@@ -67740,7 +67496,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeContactDetailsInput(
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "requester", "businessOwner", "productManager", "isso", "governanceTeams"}
+	fieldsInOrder := [...]string{"id", "requester", "businessOwner", "productManager", "governanceTeams"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -67775,13 +67531,6 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeContactDetailsInput(
 				return it, err
 			}
 			it.ProductManager = data
-		case "isso":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isso"))
-			data, err := ec.unmarshalNSystemIntakeISSOInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeISSOInput(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Isso = data
 		case "governanceTeams":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("governanceTeams"))
 			data, err := ec.unmarshalNSystemIntakeGovernanceTeamInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGovernanceTeamInput(ctx, v)
@@ -73999,42 +73748,6 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
-		case "isso":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_isso(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "lcid":
 			field := field
 
@@ -76470,44 +76183,6 @@ func (ec *executionContext) _SystemIntakeGovernanceTeam(ctx context.Context, sel
 			out.Values[i] = ec._SystemIntakeGovernanceTeam_isPresent(ctx, field, obj)
 		case "teams":
 			out.Values[i] = ec._SystemIntakeGovernanceTeam_teams(ctx, field, obj)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
-var systemIntakeISSOImplementors = []string{"SystemIntakeISSO"}
-
-func (ec *executionContext) _SystemIntakeISSO(ctx context.Context, sel ast.SelectionSet, obj *models.SystemIntakeIsso) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeISSOImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("SystemIntakeISSO")
-		case "isPresent":
-			out.Values[i] = ec._SystemIntakeISSO_isPresent(ctx, field, obj)
-		case "name":
-			out.Values[i] = ec._SystemIntakeISSO_name(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -82290,25 +81965,6 @@ func (ec *executionContext) marshalNSystemIntakeGovernanceTeam2ᚖgithubᚗcom�
 
 func (ec *executionContext) unmarshalNSystemIntakeGovernanceTeamInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGovernanceTeamInput(ctx context.Context, v any) (*models.SystemIntakeGovernanceTeamInput, error) {
 	res, err := ec.unmarshalInputSystemIntakeGovernanceTeamInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNSystemIntakeISSO2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeIsso(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeIsso) graphql.Marshaler {
-	return ec._SystemIntakeISSO(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNSystemIntakeISSO2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeIsso(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeIsso) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._SystemIntakeISSO(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalNSystemIntakeISSOInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeISSOInput(ctx context.Context, v any) (*models.SystemIntakeISSOInput, error) {
-	res, err := ec.unmarshalInputSystemIntakeISSOInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 

@@ -681,19 +681,6 @@ type SystemIntakeGovernanceTeamInput struct {
 	Teams     []*SystemIntakeCollaboratorInput `json:"teams,omitempty"`
 }
 
-// The Information System Security Officer (ISSO) that is
-// associated with a system request, if any
-type SystemIntakeIsso struct {
-	IsPresent *bool   `json:"isPresent,omitempty"`
-	Name      *string `json:"name,omitempty"`
-}
-
-// The input data used to set the ISSO associated with a system request, if any
-type SystemIntakeISSOInput struct {
-	IsPresent *bool   `json:"isPresent,omitempty"`
-	Name      *string `json:"name,omitempty"`
-}
-
 // Input for setting an intake's decision to issuing an LCID in IT Gov v2
 type SystemIntakeIssueLCIDInput struct {
 	SystemIntakeID         uuid.UUID                    `json:"systemIntakeID"`
@@ -906,7 +893,6 @@ type UpdateSystemIntakeContactDetailsInput struct {
 	Requester       *SystemIntakeRequesterWithComponentInput `json:"requester"`
 	BusinessOwner   *SystemIntakeBusinessOwnerInput          `json:"businessOwner"`
 	ProductManager  *SystemIntakeProductManagerInput         `json:"productManager"`
-	Isso            *SystemIntakeISSOInput                   `json:"isso"`
 	GovernanceTeams *SystemIntakeGovernanceTeamInput         `json:"governanceTeams"`
 }
 
