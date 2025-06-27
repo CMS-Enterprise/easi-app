@@ -19,6 +19,13 @@ const cmsGovernanceTeams = [
     acronym: 'EA',
     name: 'Enterprise Architecture',
     collaboratorKey: 'eaCollaboratorName'
+  },
+  {
+    key: '508clearanceOfficer',
+    label: '508 Clearance Officer',
+    acronym: '508',
+    name: '508 Clearance Officer',
+    collaboratorKey: '508collaboratorName'
   }
 ] as const;
 
