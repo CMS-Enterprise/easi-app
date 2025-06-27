@@ -1878,6 +1878,8 @@ export type SystemIntake = {
   businessOwner: SystemIntakeBusinessOwner;
   businessSolution?: Maybe<Scalars['String']['output']>;
   cedarSystemId?: Maybe<Scalars['String']['output']>;
+  collaborator508?: Maybe<Scalars['String']['output']>;
+  collaboratorName508?: Maybe<Scalars['String']['output']>;
   contract: SystemIntakeContract;
   contractName?: Maybe<Scalars['String']['output']>;
   /** Linked contract numbers */

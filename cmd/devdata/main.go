@@ -896,6 +896,7 @@ func main() {
 		i.TRBCollaborator = null.StringFrom("")
 		i.OITSecurityCollaborator = null.StringFrom("")
 		i.EACollaborator = null.StringFrom("")
+		i.Collaborator508 = null.StringFrom("")
 		i.ProjectName = null.StringFrom("Easy Access to System Information")
 		i.ExistingFunding = null.BoolFrom(false)
 		i.FundingNumber = null.StringFrom("")

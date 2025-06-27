@@ -739,6 +739,8 @@ type SystemIntake {
   decisionNextSteps: HTML
   eaCollaborator: String
   eaCollaboratorName: String
+  collaborator508: String
+  collaboratorName508: String
   euaUserId: String
   existingFunding: Boolean
   fundingSources: [SystemIntakeFundingSource!]!
