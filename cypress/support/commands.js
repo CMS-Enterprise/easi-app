@@ -23,4 +23,10 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
 import 'cypress-file-upload';
+
+/** Get an element by data-testid attribute */
+Cypress.Commands.add('getByTestId', (testId, options = {}) =>
+  cy.get(`[data-testid="${testId}"]`, options)
+);
