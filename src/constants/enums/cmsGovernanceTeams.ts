@@ -21,11 +21,11 @@ const cmsGovernanceTeams = [
     collaboratorKey: 'eaCollaboratorName'
   },
   {
-    key: '508clearanceOfficer',
+    key: 'clearanceOfficer508',
     label: '508 Clearance Officer',
     acronym: '508',
     name: '508 Clearance Officer',
-    collaboratorKey: '508collaboratorName'
+    collaboratorKey: 'collaboratorName508'
   }
 ] as const;
 

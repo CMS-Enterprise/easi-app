@@ -94,6 +94,8 @@ type SystemIntake struct {
 	OITSecurityCollaboratorName     null.String                  `json:"oitSecurityCollaboratorName" db:"oit_security_collaborator_name"`
 	EACollaborator                  null.String                  `json:"eaCollaborator" db:"ea_collaborator"`
 	EACollaboratorName              null.String                  `json:"eaCollaboratorName" db:"ea_collaborator_name"`
+	Collaborator508                 null.String                  `json:"collaborator508" db:"collaborator_508"`
+	CollaboratorName508             null.String                  `json:"collaboratorName508" db:"collaborator_name_508"`
 	ProjectName                     null.String                  `json:"projectName" db:"project_name"`
 	ProjectAcronym                  null.String                  `json:"projectAcronym" db:"project_acronym"`
 	BusinessNeed                    null.String                  `json:"businessNeed" db:"business_need"`
