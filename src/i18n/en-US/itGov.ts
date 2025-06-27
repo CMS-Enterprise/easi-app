@@ -181,7 +181,7 @@ export default {
       unlink: 'or, unlink all information',
       addASystem: 'Add a system',
       doesNotSupportOrUseAnySystems:
-        'or, check this box if this project does not suport or use any existing CMS systems'
+        'or, check this box if this project does not support or use any existing CMS systems'
     },
     cancelAndExit: 'Cancel request and exit',
     dontUpdate: 'Don’t update and return to task list',

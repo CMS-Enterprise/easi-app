@@ -24,10 +24,7 @@ import {
 import {
   GetCedarSystemsQuery,
   SystemIntakeSystem,
-  useCreateCedarSystemBookmarkMutation,
-  useDeleteCedarSystemBookmarkMutation,
-  useGetCedarSystemsQuery,
-  useGetMyCedarSystemsQuery
+  useGetCedarSystemsQuery
 } from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
@@ -45,14 +42,6 @@ import {
 } from 'utils/tableSort';
 
 import './index.scss';
-
-// type SystemLink {
-// otherSystemRelationship: null;
-// systemID: "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}";
-// systemIntakeID: "feeb8bf9-236b-4061-b506-53641ab14c9c";
-// systemRelationshipType: ["IMPACTS_SELECTED_SYSTEM"];
-// __typename: "SystemIntakeSystem";
-// }
 
 export type LinkedSystemTableType = 'system-links';
 
@@ -78,22 +67,16 @@ const LinkedSystemsTable = ({
   const flags = useFlags();
   const { t } = useTranslation('linkedSystems');
 
-  const { loading, data: mySystems } = useGetMyCedarSystemsQuery();
-
-  const [createMutate] = useCreateCedarSystemBookmarkMutation();
-  const [deleteMutate] = useDeleteCedarSystemBookmarkMutation();
-
   const {
     loading: loadingSystems,
-    error: error1,
-    data: data1
+    error: cedarSystemsError,
+    data
   } = useGetCedarSystemsQuery();
 
-  console.log(loadingSystems, error1, systems, data1?.cedarSystems);
-
-  const organizedCedarSystems = organizeCedarSystems(data1);
-
-  console.log('organizedCedarSystems', organizedCedarSystems);
+  const organizedCedarSystems = useMemo(
+    () => organizeCedarSystems(data),
+    [data]
+  );
 
   const columns: Column<SystemIntakeSystem>[] = useMemo(() => {
     const cols: Column<SystemIntakeSystem>[] = [];
@@ -103,9 +86,14 @@ const LinkedSystemsTable = ({
       accessor: 'systemID',
       id: 'systemID',
       Cell: ({ row }: { row: Row<SystemIntakeSystem> }) => {
-        // const url = `/systems/${row.id}/home/top`;
-        // return <UswdsReactLink to={url}>{row.id}</UswdsReactLink>;
-        return <p>{t(`${organizedCedarSystems[row.cells[0].value].name}`)}</p>;
+        return (
+          <p>
+            {t(
+              `${organizedCedarSystems[row.cells[0]?.value]?.name}` ||
+                'supercoolsystem'
+            )}
+          </p>
+        );
       }
     });
 
@@ -114,7 +102,7 @@ const LinkedSystemsTable = ({
       accessor: 'systemRelationshipType',
       id: 'systemRelationshipType',
       Cell: ({ row }: { row: Row<SystemIntakeSystem> }) => {
-        return <p>{t(`${row.cells[1].value}`)}</p>;
+        return <p>{t(row.cells[1]?.value ?? '')}</p>;
       }
     });
 
@@ -142,7 +130,7 @@ const LinkedSystemsTable = ({
     }
 
     return cols;
-  }, [t, systems, createMutate, deleteMutate, isHomePage, flags.showAtoColumn]);
+  }, [t, flags.showAtoColumn, organizedCedarSystems]);
 
   const {
     getTableProps,
@@ -192,13 +180,9 @@ const LinkedSystemsTable = ({
 
   rows.map(row => prepareRow(row));
 
-  if (loading && !mySystems?.myCedarSystems) {
-    return <PageLoading />;
-  }
-
   return (
     <div className="margin-bottom-6">
-      {systems.length > state.pageSize && (
+      {systems.length > 0 && (
         <>
           <TableResults
             globalFilter={state.globalFilter}
@@ -208,113 +192,128 @@ const LinkedSystemsTable = ({
             rowLength={systems.length}
             className="margin-bottom-4"
           />
+          <UswdsTable
+            bordered={false}
+            fullWidth
+            scrollable
+            {...getTableProps()}
+          >
+            <caption className="usa-sr-only">
+              {t('systemTable.caption')}
+            </caption>
+
+            <thead>
+              {headerGroups.map(headerGroup => {
+                return (
+                  <tr key={{ ...headerGroup.getHeaderGroupProps() }.key}>
+                    {headerGroup.headers.map((column, index) => (
+                      <th
+                        aria-sort={getColumnSortStatus(column)}
+                        scope="col"
+                        style={{
+                          minWidth: index === 0 ? '50px' : '150px',
+                          padding: index === 0 ? '0' : 'auto',
+                          paddingLeft: index === 0 ? '.5em' : 'auto',
+                          position: 'relative'
+                        }}
+                        key={column.id}
+                      >
+                        <button
+                          className="usa-button usa-button--unstyled"
+                          type="button"
+                          {...column.getSortByToggleProps()}
+                        >
+                          {column.render('Header')}
+                          {getHeaderSortIcon(column)}
+                        </button>
+                      </th>
+                    ))}
+                  </tr>
+                );
+              })}
+            </thead>
+
+            <tbody {...getTableBodyProps()}>
+              {page.map(row => {
+                const { id, cells } = { ...row };
+                return (
+                  <tr key={id}>
+                    {cells.map((cell, index) => (
+                      <td
+                        style={{
+                          paddingLeft: index === 0 ? '.5em' : 'auto'
+                        }}
+                        key={{ ...cell.getCellProps() }.key}
+                      >
+                        {cell.render('Cell')}
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </UswdsTable>
+
+          <div className="grid-row grid-gap grid-gap-lg">
+            {systems.length > state.pageSize && (
+              <TablePagination
+                gotoPage={gotoPage}
+                previousPage={previousPage}
+                nextPage={nextPage}
+                canNextPage={canNextPage}
+                pageIndex={state.pageIndex}
+                pageOptions={pageOptions}
+                canPreviousPage={canPreviousPage}
+                pageCount={pageCount}
+                pageSize={state.pageSize}
+                setPageSize={setPageSize}
+                page={[]}
+                className="desktop:grid-col-fill"
+              />
+            )}
+            {systems.length > 5 && (
+              <TablePageSize
+                className="desktop:grid-col-auto"
+                pageSize={state.pageSize}
+                setPageSize={setPageSize}
+              />
+            )}
+          </div>
         </>
       )}
-
-      <UswdsTable bordered={false} fullWidth scrollable {...getTableProps()}>
-        <caption className="usa-sr-only">{t('systemTable.caption')}</caption>
-
-        <thead>
-          {headerGroups.map(headerGroup => (
-            <tr
-              {...headerGroup.getHeaderGroupProps()}
-              key={{ ...headerGroup.getHeaderGroupProps() }.key}
-            >
-              {headerGroup.headers.map((column, index) => (
-                <th
-                  {...column.getHeaderProps(column.getSortByToggleProps())}
-                  aria-sort={getColumnSortStatus(column)}
-                  scope="col"
-                  style={{
-                    minWidth: index === 0 ? '50px' : '150px',
-                    padding: index === 0 ? '0' : 'auto',
-                    paddingLeft: index === 0 ? '.5em' : 'auto',
-                    position: 'relative'
-                  }}
-                >
-                  <button
-                    className="usa-button usa-button--unstyled"
-                    type="button"
-                    {...column.getSortByToggleProps()}
-                  >
-                    {column.render('Header')}
-                    {getHeaderSortIcon(column)}
-                  </button>
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-
-        <tbody {...getTableBodyProps()}>
-          {page.map(row => {
-            return (
-              <tr {...row.getRowProps()} key={{ ...row.getRowProps() }.key}>
-                {row.cells.map((cell, index) => (
-                  <th
-                    style={{
-                      paddingLeft: index === 0 ? '.5em' : 'auto'
-                    }}
-                    {...cell.getCellProps()}
-                    key={{ ...cell.getCellProps() }.key}
-                  >
-                    {cell.render('Cell')}
-                  </th>
-                ))}
-              </tr>
-            );
-          })}
-        </tbody>
-      </UswdsTable>
-
-      {systems.length > 0 && (
-        <div className="grid-row grid-gap grid-gap-lg">
-          {systems.length > state.pageSize && (
-            <TablePagination
-              gotoPage={gotoPage}
-              previousPage={previousPage}
-              nextPage={nextPage}
-              canNextPage={canNextPage}
-              pageIndex={state.pageIndex}
-              pageOptions={pageOptions}
-              canPreviousPage={canPreviousPage}
-              pageCount={pageCount}
-              pageSize={state.pageSize}
-              setPageSize={setPageSize}
-              page={[]}
-              className="desktop:grid-col-fill"
-            />
-          )}
-          {systems.length > 5 && (
-            <TablePageSize
-              className="desktop:grid-col-auto"
-              pageSize={state.pageSize}
-              setPageSize={setPageSize}
-            />
-          )}
-        </div>
-      )}
-
-      {/* Alerts to show if there is no system/data */}
-      {systems.length === 0 && (
-        <Alert type="info" className="margin-top-5">
-          {isHomePage ? (
-            <Trans
-              i18nKey="systemProfile:systemTable.noMySystem.description"
-              components={{
-                link1: <Link href="EnterpriseArchitecture@cms.hhs.gov"> </Link>,
-                link2: <UswdsReactLink to="/systems"> </UswdsReactLink>,
-                iconForward: (
-                  <Icon.ArrowForward
-                    className="icon-top margin-left-05"
-                    aria-hidden
-                  />
-                )
-              }}
-            />
-          ) : (
-            <Trans i18nKey="linkedSystems:linkedSystemsTable.noSystemsListed" />
-          )}
+      {loadingSystems && <PageLoading />}
+      {!systems ||
+        (systems.length === 0 && (
+          <Alert type="info" className="margin-top-5">
+            {isHomePage ? (
+              <Trans
+                i18nKey="systemProfile:systemTable.noMySystem.description"
+                components={{
+                  link1: (
+                    <Link href="EnterpriseArchitecture@cms.hhs.gov"> </Link>
+                  ),
+                  link2: <UswdsReactLink to="/systems"> </UswdsReactLink>,
+                  iconForward: (
+                    <Icon.ArrowForward
+                      className="icon-top margin-left-05"
+                      aria-hidden
+                    />
+                  )
+                }}
+              />
+            ) : (
+              <Trans i18nKey="linkedSystems:linkedSystemsTable.noSystemsListed" />
+            )}
+          </Alert>
+        ))}
+      {cedarSystemsError && (
+        <Alert type="warning" className="margin-top-5">
+          <Trans
+            i18nKey="linkedSystems:linkedSystemsTable.errorRetrievingCedarSystems"
+            components={{
+              link1: <Link href="EnterpriseArchitecture@cms.hhs.gov"> </Link>
+            }}
+          />
         </Alert>
       )}
     </div>

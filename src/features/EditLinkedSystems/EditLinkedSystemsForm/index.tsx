@@ -55,8 +55,6 @@ const EditLinkedSystemsForm = ({ fromAdmin }: { fromAdmin?: boolean }) => {
 
   const { state } = useLocation<{ isNew?: boolean }>();
 
-  //   const linkCedarSystemId = useLinkCedarSystemIdQueryParam();
-
   // Form edit mode is either new or edit
   const isNew = !!state?.isNew;
 
@@ -79,6 +77,8 @@ const EditLinkedSystemsForm = ({ fromAdmin }: { fromAdmin?: boolean }) => {
   const [isSkipModalOpen, setSkipModalOpen] = useState<boolean>(false);
   const [isUnlinkModalOpen, setUnlinkModalOpen] = useState<boolean>(false);
 
+  const [systemsUsed, setSystemsUsed] = useState<boolean>(false);
+
   const {
     data,
     // error: undefined,
@@ -87,12 +87,7 @@ const EditLinkedSystemsForm = ({ fromAdmin }: { fromAdmin?: boolean }) => {
     variables: { id }
   });
 
-  console.log(
-    'Cedar Relationships:',
-    data?.systemIntake?.cedarSystemRelationShips as SystemIntakeSystem[]
-  );
-
-  const { watch, handleSubmit } = useForm<EditLinkedSystemsFormType>({
+  const { handleSubmit } = useForm<EditLinkedSystemsFormType>({
     defaultValues: {
       relationType: null,
       cedarSystemIDs: [],
@@ -125,30 +120,11 @@ const EditLinkedSystemsForm = ({ fromAdmin }: { fromAdmin?: boolean }) => {
     // )
   });
 
-  // Ref fields for some form behavior
-  const fields = watch();
-  const relation = fields.relationType;
-
   // This form doesn't use field validation feedback
   // Instead the submission button is disabled according to field requirements
   const submitEnabled: boolean = (() => {
-    if (relation === null) return false;
-
-    if (relation === RequestRelationType.NEW_SYSTEM) return true;
-
-    if (
-      relation === RequestRelationType.EXISTING_SYSTEM &&
-      fields.cedarSystemIDs.length
-    )
-      return true;
-
-    if (
-      relation === RequestRelationType.EXISTING_SERVICE &&
-      fields.contractName.trim() !== ''
-    )
-      return true;
-
-    // Default to disabled
+    // if there are relationships added or the checkbox is filled
+    if (systemsUsed) return true;
     return false;
   })();
 
@@ -180,6 +156,7 @@ const EditLinkedSystemsForm = ({ fromAdmin }: { fromAdmin?: boolean }) => {
       err?.scrollIntoView();
     }
   }, [hasErrors]);
+
   return (
     <MainContent className="grid-container margin-bottom-15">
       {hasErrors && (
@@ -277,18 +254,18 @@ const EditLinkedSystemsForm = ({ fromAdmin }: { fromAdmin?: boolean }) => {
                 label={t('link.form.doesNotSupportOrUseAnySystems')}
                 id={'innerProps.id'!}
                 name="datavalue"
-                checked={false}
-                onChange={() => null}
+                value="systemsUsed"
+                checked={systemsUsed}
+                onChange={e => setSystemsUsed(e.target.checked)}
                 onBlur={() => null}
-                value="false"
               />
             </Grid>
           </Grid>
 
           <LinkedSystemTable
             systems={
-              data?.systemIntake
-                ?.cedarSystemRelationShips as SystemIntakeSystem[]
+              (data?.systemIntake
+                ?.cedarSystemRelationShips as SystemIntakeSystem[]) || []
             }
             defaultPageSize={20}
             isHomePage={false}
@@ -303,7 +280,7 @@ const EditLinkedSystemsForm = ({ fromAdmin }: { fromAdmin?: boolean }) => {
               disabled={!submitEnabled}
               onClick={() => submit()}
             >
-              {t(`'itGov':link.form.continueTaskList`)}
+              {t(`itGov:link.form.continueTaskList`)}
             </Button>
           </ButtonGroup>
 
