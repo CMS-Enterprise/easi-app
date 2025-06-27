@@ -85,7 +85,6 @@ func makeTestSystemIntake(times usefulTimes, projectName string) *models.SystemI
 		ISSOName:                    null.StringFrom("Isaac ISSO"),
 		TRBCollaboratorName:         null.StringFrom("Sara TRB"),
 		OITSecurityCollaboratorName: null.StringFrom("Chris OIT"),
-		EACollaboratorName:          null.StringFrom("Sai EA"),
 
 		ExistingFunding: null.BoolFrom(true),
 		FundingSources: []*models.SystemIntakeFundingSource{
