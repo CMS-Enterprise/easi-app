@@ -38,17 +38,17 @@ describe.skip('GRB review', () => {
 
     cy.wait('@updateReviewType').its('response.statusCode').should('eq', 200);
 
-    cy.get('[data-testid="date-picker-external-input"]').type('01/01/2022');
+    cy.getByTestId('date-picker-external-input').type('01/01/2022');
 
-    cy.get('[data-testid="alert"]')
+    cy.getByTestId('alert')
       .should('be.visible')
       .and(
         'contain.text',
         "You've entered a date that is in the past. Please double-check to make sure this date is accurate."
       );
 
-    cy.get('[data-testid="date-picker-external-input"]').clear();
-    cy.get('[data-testid="date-picker-external-input"]').type('01/01/2026');
+    cy.getByTestId('date-picker-external-input').clear();
+    cy.getByTestId('date-picker-external-input').type('01/01/2026');
 
     cy.get('input#recordingLink').clear().type('https://www.google.com');
     cy.get('input#recordingPasscode').clear().type('123');
@@ -69,7 +69,7 @@ describe.skip('GRB review', () => {
     // Participants page
     cy.url().should('include', '/participants');
 
-    cy.get('[data-testid="table"]').within(() => {
+    cy.getByTestId('table').within(() => {
       cy.get('tbody tr').should('have.length', 4);
     });
 
@@ -132,11 +132,11 @@ describe.skip('GRB review', () => {
 
     cy.contains('button', 'Add reviewer').should('not.be.disabled').click();
 
-    cy.get('[data-testid="alert"]')
+    cy.getByTestId('alert')
       .should('be.visible')
       .and('contain.text', 'You added 1 reviewer to this GRB review.');
 
-    cy.get('[data-testid="table"]').within(() => {
+    cy.getByTestId('table').within(() => {
       // Check to see that Aaron Adams was added as a reviewer.
       cy.get('tbody tr')
         .eq(0)
@@ -162,7 +162,7 @@ describe.skip('GRB review', () => {
 
     cy.contains('button', 'Save changes').should('not.be.disabled').click();
 
-    cy.get('[data-testid="table"]').within(() => {
+    cy.getByTestId('table').within(() => {
       // Check to see that Adeline Aarons is now a voting memeber
       cy.get('tbody tr')
         .eq(1)
@@ -172,7 +172,7 @@ describe.skip('GRB review', () => {
         });
     });
 
-    cy.get('#grbReviewAsyncEndDate').clear().type('01/01/2026');
+    cy.getByTestId('date-picker-external-input').clear().type('01/01/2026');
 
     cy.contains('button', 'Complete and begin review').click();
     cy.wait('@updateAsyncTimeframe')
@@ -211,9 +211,7 @@ describe.skip('GRB review', () => {
 
     cy.contains('button', 'Next').click();
 
-    cy.get('[data-testid="date-picker-external-input"]')
-      .clear()
-      .type('01/01/2026');
+    cy.getByTestId('date-picker-external-input').clear().type('01/01/2026');
 
     // Hit Send reminder button
     cy.contains('button', 'Send reminder').click();
@@ -248,33 +246,31 @@ describe.skip('GRB review', () => {
     cy.get('input#grbReviewTypeStandard').check({ force: true });
 
     // Click on Presentation Header link
-    cy.get('[data-testid="stepIndicator-1"]').click();
+    cy.getByTestId('stepIndicator-1').click();
     cy.url().should('include', '/presentation');
 
-    cy.get('[data-testid="stepIndicator-2"]').should(
+    cy.getByTestId('stepIndicator-2').should(
       'have.class',
       'usa-step-indicator__segment--disabled'
     );
-    cy.get('[data-testid="stepIndicator-3"]').should(
+    cy.getByTestId('stepIndicator-3').should(
       'have.class',
       'usa-step-indicator__segment--disabled'
     );
 
-    cy.get('[data-testid="date-picker-external-input"]')
-      .clear()
-      .type('01/01/2026');
+    cy.getByTestId('date-picker-external-input').clear().type('01/01/2026');
     cy.contains('button', 'Next').click();
 
-    cy.get('[data-testid="stepIndicator-2"]').should(
+    cy.getByTestId('stepIndicator-2').should(
       'not.have.class',
       'usa-step-indicator__segment--disabled'
     );
-    cy.get('[data-testid="stepIndicator-3"]').should(
+    cy.getByTestId('stepIndicator-3').should(
       'not.have.class',
       'usa-step-indicator__segment--disabled'
     );
 
-    cy.get('[data-testid="stepIndicator-3"]').click();
+    cy.getByTestId('stepIndicator-3').click();
     cy.url().should('include', '/participants');
 
     cy.contains('button', 'Save and return to request').click();
@@ -294,10 +290,10 @@ describe.skip('GRB review', () => {
     cy.contains('button', 'Send reminder').should('be.not.disabled').click();
 
     // Check modal is visible
-    cy.get('[data-testid="send-review-reminder-modal"]').should('be.visible');
+    cy.getByTestId('send-review-reminder-modal').should('be.visible');
 
     // Check modal content
-    cy.get('[data-testid="send-review-reminder-modal"]').within(() => {
+    cy.getByTestId('send-review-reminder-modal').within(() => {
       cy.contains('button', 'Send reminder').should('be.visible');
       cy.contains('button', 'Go back without sending')
         .should('be.visible')
@@ -305,43 +301,41 @@ describe.skip('GRB review', () => {
     });
 
     // Check modal is closed
-    cy.get('[data-testid="send-review-reminder-modal"]').should('not.exist');
+    cy.getByTestId('send-review-reminder-modal').should('not.exist');
 
     // Click Send reminder button to open modal again
     cy.contains('button', 'Send reminder').should('be.not.disabled').click();
 
     // Check modal is visible
-    cy.get('[data-testid="send-review-reminder-modal"]').should('be.visible');
+    cy.getByTestId('send-review-reminder-modal').should('be.visible');
 
     // Check modal content
-    cy.get('[data-testid="send-review-reminder-modal"]').within(() => {
+    cy.getByTestId('send-review-reminder-modal').within(() => {
       cy.contains('button', 'Send reminder').should('be.visible').click();
     });
 
     cy.wait('@sendReminder').its('response.statusCode').should('eq', 200);
 
     // Check review reminder email text is visible
-    cy.get('[data-testid="review-reminder"]').should('be.visible');
+    cy.getByTestId('review-reminder').should('be.visible');
   });
 
   it('Adds time to voting and Ends time to voting', () => {
     cy.visit('/it-governance/5af245bc-fc54-4677-bab1-1b3e798bb43c/grb-review');
 
-    cy.get('[data-testid="async-status"]').contains('In progress');
+    cy.getByTestId('async-status').contains('In progress');
 
     cy.get('p').contains('Review ends 01/01/2026, 5:00pm EST');
 
     // Open Add Time modal
     cy.get('button').contains('Add time').click();
 
-    cy.get('[data-testid="addTimeModalButton"]').should('be.disabled');
+    cy.getByTestId('addTimeModalButton').should('be.disabled');
 
-    cy.get('[data-testid="date-picker-external-input"]').type('01/01/2227');
+    cy.getByTestId('date-picker-external-input').type('01/01/2227');
 
     // Click button to add time and close modal
-    cy.get('[data-testid="addTimeModalButton"]')
-      .should('be.not.disabled')
-      .click();
+    cy.getByTestId('addTimeModalButton').should('be.not.disabled').click();
 
     // Success alert text
     cy.get('p').contains(
@@ -382,13 +376,13 @@ describe.skip('GRB review', () => {
 
         cy.contains('button', 'Restart').should('be.disabled');
 
-        cy.get('[data-testid="date-picker-external-input"]').clear();
-        cy.get('[data-testid="date-picker-external-input"]').type('01/01/2026');
+        cy.getByTestId('date-picker-external-input').clear();
+        cy.getByTestId('date-picker-external-input').type('01/01/2026');
 
         cy.contains('button', 'Restart').should('be.not.disabled').click();
       });
 
-    cy.get('[data-testid="alert"]')
+    cy.getByTestId('alert')
       .should('be.visible')
       .and(
         'contain.text',
@@ -487,7 +481,7 @@ describe.skip('GRB review', () => {
     cy.reload();
 
     // Check that the presentation deck file was deleted
-    cy.get('[data-testid="presentation-url"]').should('not.exist');
+    cy.getByTestId('presentation-url').should('not.exist');
 
     // Remove all presentation links
     cy.contains('button', 'Remove all presentation links').click();
