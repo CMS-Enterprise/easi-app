@@ -1771,21 +1771,6 @@ func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.
 		})
 	}
 
-	if len(obj.EACollaboratorName.String) > 0 {
-		key := "enterpriseArchitecture"
-		label := "Enterprise Architecture (EA)"
-		acronym := "EA"
-		name := "Enterprise Architecture"
-
-		teams = append(teams, &models.SystemIntakeCollaborator{
-			Key:          key,
-			Label:        label,
-			Acronym:      acronym,
-			Name:         name,
-			Collaborator: obj.EACollaboratorName.String,
-		})
-	}
-
 	if len(obj.CollaboratorName508.String) > 0 {
 		key := "clearanceOfficer508"
 		label := "508 Clearance Officer"

@@ -14,13 +14,6 @@ const cmsGovernanceTeams = [
     collaboratorKey: 'oitSecurityCollaboratorName'
   },
   {
-    key: 'enterpriseArchitecture',
-    label: 'Enterprise Architecture (EA)',
-    acronym: 'EA',
-    name: 'Enterprise Architecture',
-    collaboratorKey: 'eaCollaboratorName'
-  },
-  {
     key: 'clearanceOfficer508',
     label: '508 Clearance Officer',
     acronym: '508',
