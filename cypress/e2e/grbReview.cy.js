@@ -1,8 +1,10 @@
-describe.skip('GRB review', () => {
+describe('GRB review', () => {
   beforeEach(() => {
     cy.localLogin({ name: 'E2E2', role: 'EASI_D_GOVTEAM' });
   });
 
+  // Request name: GRB meeting without date set
+  // System intake ID: d9c931c6-0858-494d-b991-e02a94a42f38
   it('completes required fields for Asynchronous Review Type', () => {
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'UpdateSystemIntakeGRBReviewType') {
@@ -25,7 +27,7 @@ describe.skip('GRB review', () => {
       }
     });
 
-    cy.visit('/it-governance/5af245bc-fc54-4677-bab1-1b3e798bb43c/grb-review');
+    cy.visit('/it-governance/d9c931c6-0858-494d-b991-e02a94a42f38/grb-review');
 
     cy.contains('button', 'Set up GRB review').click();
 
@@ -184,6 +186,8 @@ describe.skip('GRB review', () => {
     cy.contains('button', 'View discussion board').should('not.be.disabled');
   });
 
+  // Request name: GRB meeting with date set in future
+  // System intake ID: 8ef9d0fb-e673-441c-9876-f874b179f89c
   it('completes required fields for Standard Review Type', () => {
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'SendPresentationDeckReminder') {
@@ -200,8 +204,7 @@ describe.skip('GRB review', () => {
       }
     });
 
-    // Go to a different GRB Review than above
-    cy.visit('/it-governance/69357721-1e0c-4a37-a90f-64bb29814e7a/grb-review');
+    cy.visit('/it-governance/8ef9d0fb-e673-441c-9876-f874b179f89c/grb-review');
 
     cy.contains('button', 'Set up GRB review').click();
 
@@ -237,8 +240,10 @@ describe.skip('GRB review', () => {
     cy.get('h3').should('contain.text', 'Standard meeting review');
   });
 
+  // Request name: Skip to GRB meeting without date set
+  // System intake ID: 8f0b8dfc-acb2-4cd3-a79e-241c355f551c
   it('Navigates through the form with the headers', () => {
-    cy.visit('/it-governance/38e46d77-e474-4d15-a7c0-f6411221e2a4/grb-review');
+    cy.visit('/it-governance/8f0b8dfc-acb2-4cd3-a79e-241c355f551c/grb-review');
     cy.contains('button', 'Set up GRB review').click();
 
     cy.url().should('include', '/review-type');
@@ -276,6 +281,8 @@ describe.skip('GRB review', () => {
     cy.contains('button', 'Save and return to request').click();
   });
 
+  // Request name: Async GRB review in progress
+  // System intake ID: 5af245bc-fc54-4677-bab1-1b3e798bb43c
   it('Sends a reminder email', () => {
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'SendSystemIntakeGRBReviewerReminder') {
@@ -320,76 +327,8 @@ describe.skip('GRB review', () => {
     cy.getByTestId('review-reminder').should('be.visible');
   });
 
-  it('Adds time to voting and Ends time to voting', () => {
-    cy.visit('/it-governance/5af245bc-fc54-4677-bab1-1b3e798bb43c/grb-review');
-
-    cy.getByTestId('async-status').contains('In progress');
-
-    cy.get('p').contains('Review ends 01/01/2026, 5:00pm EST');
-
-    // Open Add Time modal
-    cy.get('button').contains('Add time').click();
-
-    cy.getByTestId('addTimeModalButton').should('be.disabled');
-
-    cy.getByTestId('date-picker-external-input').type('01/01/2227');
-
-    // Click button to add time and close modal
-    cy.getByTestId('addTimeModalButton').should('be.not.disabled').click();
-
-    // Success alert text
-    cy.get('p').contains(
-      'You added time to this GRB review. The new end date is 01/01/2227 at 5:00pm EST.'
-    );
-
-    // Open End Voting modal
-    cy.get('button').contains('End voting').click();
-
-    cy.get('button').contains('End early').should('be.not.disabled').click();
-
-    // Success alert text
-    cy.get('p').contains(
-      'You have ended this GRB review early. GRB members will no longer be able to add or change votes.'
-    );
-  });
-
-  it('Restart GRB review', () => {
-    cy.visit('/it-governance/5af245bc-fc54-4677-bab1-1b3e798bb43c/grb-review');
-
-    cy.get('h1').should('have.text', 'GRB review');
-
-    cy.get('body').then($body => {
-      const occurrences = $body.text().match(/This review is over\./g) || [];
-      expect(occurrences).to.have.length(3);
-    });
-
-    cy.contains('button', 'Restart review').click();
-
-    cy.get('[role="dialog"]')
-      .should('be.visible')
-      .within(() => {
-        cy.contains('h2', 'Restart review?').should('exist');
-
-        cy.contains(
-          'Restarting this review will retain any existing votes and discussions, but will allow Governance Review Board (GRB) members to cast a new vote or change their existing vote.'
-        ).should('exist');
-
-        cy.contains('button', 'Restart').should('be.disabled');
-
-        cy.getByTestId('date-picker-external-input').clear();
-        cy.getByTestId('date-picker-external-input').type('01/01/2026');
-
-        cy.contains('button', 'Restart').should('be.not.disabled').click();
-      });
-
-    cy.getByTestId('alert')
-      .should('be.visible')
-      .and(
-        'contain.text',
-        'You restarted this GRB review. The new end date is 01/01/2026 at 5:00pm EST.'
-      );
-  });
-
+  // Request name: Async GRB review in progress
+  // System intake ID: 5af245bc-fc54-4677-bab1-1b3e798bb43c
   it('can upload a presentation deck', () => {
     cy.contains('a', 'Draft Business Case').should('be.visible').click();
 
@@ -493,5 +432,79 @@ describe.skip('GRB review', () => {
     cy.contains('a', 'Add asynchronous presentation links').should(
       'be.visible'
     );
+  });
+
+  // Request name: Async GRB review in progress
+  // System intake ID: 5af245bc-fc54-4677-bab1-1b3e798bb43c
+  it('Adds time to voting and Ends time to voting', () => {
+    cy.visit('/it-governance/5af245bc-fc54-4677-bab1-1b3e798bb43c/grb-review');
+
+    cy.getByTestId('async-status').contains('In progress');
+
+    cy.get('p').contains('Review ends 01/01/2026, 5:00pm EST');
+
+    // Open Add Time modal
+    cy.get('button').contains('Add time').click();
+
+    cy.getByTestId('addTimeModalButton').should('be.disabled');
+
+    cy.getByTestId('date-picker-external-input').type('01/01/2227');
+
+    // Click button to add time and close modal
+    cy.getByTestId('addTimeModalButton').should('be.not.disabled').click();
+
+    // Success alert text
+    cy.get('p').contains(
+      'You added time to this GRB review. The new end date is 01/01/2227 at 5:00pm EST.'
+    );
+
+    // Open End Voting modal
+    cy.get('button').contains('End voting').click();
+
+    cy.get('button').contains('End early').should('be.not.disabled').click();
+
+    // Success alert text
+    cy.get('p').contains(
+      'You have ended this GRB review early. GRB members will no longer be able to add or change votes.'
+    );
+  });
+
+  // Request name: Async GRB review (voting complete)
+  // System intake ID: b569ae1e-bf04-4c1b-96a5-b9604d74d979
+  it('Restart GRB review', () => {
+    cy.visit('/it-governance/b569ae1e-bf04-4c1b-96a5-b9604d74d979/grb-review');
+
+    cy.get('h1').should('have.text', 'GRB review');
+
+    cy.get('body').then($body => {
+      const occurrences = $body.text().match(/This review is over\./g) || [];
+      expect(occurrences).to.have.length(3);
+    });
+
+    cy.contains('button', 'Restart review').click();
+
+    cy.get('[role="dialog"]')
+      .should('be.visible')
+      .within(() => {
+        cy.contains('h2', 'Restart review?').should('exist');
+
+        cy.contains(
+          'Restarting this review will retain any existing votes and discussions, but will allow Governance Review Board (GRB) members to cast a new vote or change their existing vote.'
+        ).should('exist');
+
+        cy.contains('button', 'Restart').should('be.disabled');
+
+        cy.getByTestId('date-picker-external-input').clear();
+        cy.getByTestId('date-picker-external-input').type('01/01/2026');
+
+        cy.contains('button', 'Restart').should('be.not.disabled').click();
+      });
+
+    cy.getByTestId('alert')
+      .should('be.visible')
+      .and(
+        'contain.text',
+        'You restarted this GRB review. The new end date is 01/01/2026 at 5:00pm EST.'
+      );
   });
 });
