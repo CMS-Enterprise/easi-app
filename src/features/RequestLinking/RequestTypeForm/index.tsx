@@ -92,7 +92,7 @@ const RequestTypeForm = () => {
           //   break;
           default:
             // console.warn(`Unknown request type: ${requestType}`);
-            history.push(`/edit-linked-systems/${id}?${linkqs}`);
+            history.push(`/linked-systems/${id}?${linkqs}`);
             break;
         }
       };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { GridContainer } from '@trussworks/react-uswds';
-import EditLinkedSystemsForm from 'features/EditLinkedSystems/EditLinkedSystemsForm';
+import EditLinkedSystemsForm from 'features/LinkedSystems';
 import { NotFoundPartial } from 'features/Miscellaneous/NotFound';
 import RequestLinkForm from 'features/RequestLinking/RequestLinkForm';
 
