@@ -60,7 +60,7 @@ const intake = {
   navigation: {
     itGovernance: 'IT Governance',
     startRequest: 'Start an IT Governance request',
-    editLinkRelation: 'Edit linked system, service, or contract',
+    editLinkRelation: 'Edit linked systems',
     changeRequestType: 'Change request type'
   },
   feedback:
