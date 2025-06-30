@@ -46,6 +46,13 @@ const ParticipantsSection = ({
 
   const { openModal } = useRestartReviewModal();
 
+  const statusIsCompleted =
+    (asyncStatus &&
+      asyncStatus !== SystemIntakeGRBReviewAsyncStatusType.COMPLETED) ||
+    (grbReviewStandardStatus &&
+      grbReviewStandardStatus !==
+        SystemIntakeGRBReviewStandardStatusType.COMPLETED);
+
   return (
     <>
       <h2 className="margin-bottom-0" id="participants">
@@ -60,23 +67,22 @@ const ParticipantsSection = ({
         /* IT Gov Admin view */
         <>
           <div className="desktop:display-flex flex-align-center">
-            <Button
-              type="button"
-              onClick={() =>
-                history.push(`/it-governance/${id}/grb-review/add`)
-              }
-              disabled={
-                state === SystemIntakeState.CLOSED ||
-                asyncStatus === SystemIntakeGRBReviewAsyncStatusType.COMPLETED
-              }
-              outline={grbReviewers?.length > 0}
-            >
-              {t(
-                grbReviewers?.length > 0
-                  ? 'addAnotherGrbReviewer'
-                  : 'addGrbReviewer'
-              )}
-            </Button>
+            {statusIsCompleted && (
+              <Button
+                type="button"
+                onClick={() =>
+                  history.push(`/it-governance/${id}/grb-review/add`)
+                }
+                disabled={state === SystemIntakeState.CLOSED}
+                outline={grbReviewers?.length > 0}
+              >
+                {t(
+                  grbReviewers?.length > 0
+                    ? 'addAnotherGrbReviewer'
+                    : 'addGrbReviewer'
+                )}
+              </Button>
+            )}
 
             {state === SystemIntakeState.CLOSED && (
               <p className="desktop:margin-y-0 desktop:margin-left-1">
