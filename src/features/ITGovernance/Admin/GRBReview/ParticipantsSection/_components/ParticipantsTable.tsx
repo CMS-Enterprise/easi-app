@@ -13,6 +13,7 @@ import {
   GetSystemIntakeGRBReviewDocument,
   SystemIntakeGRBReviewAsyncStatusType,
   SystemIntakeGRBReviewerFragment,
+  SystemIntakeGRBReviewStandardStatusType,
   useDeleteSystemIntakeGRBReviewerMutation
 } from 'gql/generated/graphql';
 import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
@@ -29,12 +30,14 @@ type ParticipantsTableProps = {
   grbReviewers: SystemIntakeGRBReviewerFragment[];
   fromGRBSetup?: boolean;
   asyncStatus?: SystemIntakeGRBReviewAsyncStatusType | null;
+  grbReviewStandardStatus?: SystemIntakeGRBReviewStandardStatusType | null;
 };
 
 const ParticipantsTable = ({
   grbReviewers,
   fromGRBSetup,
-  asyncStatus
+  asyncStatus,
+  grbReviewStandardStatus
 }: ParticipantsTableProps) => {
   const { t } = useTranslation('grbReview');
 
@@ -53,6 +56,17 @@ const ParticipantsTable = ({
   const [deleteReviewer] = useDeleteSystemIntakeGRBReviewerMutation({
     refetchQueries: [GetSystemIntakeGRBReviewDocument]
   });
+
+  // Only show the action column if the user is an IT Gov Admin
+  // and the active review type (either async or standard) is not completed.
+  // Only one status will be relevant at a time; the other will be null.
+  const shouldShowActionColumn =
+    isITGovAdmin &&
+    ((asyncStatus &&
+      asyncStatus !== SystemIntakeGRBReviewAsyncStatusType.COMPLETED) ||
+      (grbReviewStandardStatus &&
+        grbReviewStandardStatus !==
+          SystemIntakeGRBReviewStandardStatusType.COMPLETED));
 
   /** Columns for table */
   const columns = useMemo<Column<SystemIntakeGRBReviewerFragment>[]>(() => {
@@ -118,21 +132,16 @@ const ParticipantsTable = ({
           return <>{t<string>(`reviewerRoles.${value}`)}</>;
         }
       },
-      // Only display action column if user is GRT admin and asyncStatus is not COMPLETED
-      ...(isITGovAdmin &&
-      asyncStatus !== SystemIntakeGRBReviewAsyncStatusType.COMPLETED
-        ? [actionColumn]
-        : [])
+      ...(shouldShowActionColumn ? [actionColumn] : [])
     ];
   }, [
     t,
-    isITGovAdmin,
     setReviewerToRemove,
     history,
     pathname,
     fromGRBSetup,
-    systemId,
-    asyncStatus
+    shouldShowActionColumn,
+    systemId
   ]);
 
   const table = useTable(

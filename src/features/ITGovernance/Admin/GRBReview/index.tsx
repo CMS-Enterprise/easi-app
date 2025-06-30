@@ -136,7 +136,7 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
           <GRBReviewAdminTask
             isITGovAdmin={isITGovAdmin}
             systemIntakeId={id}
-            grbReviewStartedAt={grbReview.grbReviewStartedAt}
+            grbReviewStartedAt={grbReviewStartedAt}
             grbReviewReminderLastSent={grbReview.grbReviewReminderLastSent}
             grbReviewers={grbReviewers}
           />
@@ -198,9 +198,9 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
         {/* Presentation Links */}
         <PresentationLinksCard
           systemIntakeID={id}
-          grbReviewStartedAt={grbReview.grbReviewStartedAt}
+          grbReviewStartedAt={grbReviewStartedAt}
           grbPresentationLinks={grbReview.grbPresentationLinks}
-          asyncStatus={grbReview.grbReviewAsyncStatus}
+          asyncStatus={grbReviewAsyncStatus}
         />
         {/* Business Case Card */}
         <BusinessCaseCard businessCase={businessCase} systemIntakeID={id} />
@@ -216,7 +216,7 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
           <h3 className="margin-bottom-1">{t('additionalDocuments')}</h3>
 
           {isITGovAdmin &&
-          grbReview.grbReviewAsyncStatus !==
+          grbReviewAsyncStatus !==
             SystemIntakeGRBReviewAsyncStatusType.COMPLETED ? (
             <UswdsReactLink
               to="./documents/upload"
@@ -244,13 +244,13 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
         <DocumentsTable
           systemIntakeId={id}
           documents={grbReview.documents}
-          asyncStatus={grbReview.grbReviewAsyncStatus}
+          asyncStatus={grbReviewAsyncStatus}
         />
 
         {/* Discussion Board */}
         <Discussions
           systemIntakeID={id}
-          grbReviewStartedAt={grbReview.grbReviewStartedAt}
+          grbReviewStartedAt={grbReviewStartedAt}
           className="margin-top-4 margin-bottom-6"
           // Make discussions read only when review is completed
           readOnly={
@@ -265,8 +265,9 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
           id={id}
           state={state}
           grbReviewers={grbReview.grbVotingInformation?.grbReviewers}
-          grbReviewStartedAt={grbReview.grbReviewStartedAt}
-          asyncStatus={grbReview.grbReviewAsyncStatus}
+          grbReviewStartedAt={grbReviewStartedAt}
+          asyncStatus={grbReviewAsyncStatus}
+          grbReviewStandardStatus={grbReviewStandardStatus}
         />
       </div>
     </>

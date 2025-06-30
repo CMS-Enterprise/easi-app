@@ -6,6 +6,7 @@ import { Button, ButtonGroup } from '@trussworks/react-uswds';
 import {
   SystemIntakeGRBReviewAsyncStatusType,
   SystemIntakeGRBReviewerFragment,
+  SystemIntakeGRBReviewStandardStatusType,
   SystemIntakeState
 } from 'gql/generated/graphql';
 
@@ -23,6 +24,7 @@ type ParticipantsSectionProps = {
   grbReviewers: SystemIntakeGRBReviewerFragment[];
   grbReviewStartedAt?: string | null;
   asyncStatus?: SystemIntakeGRBReviewAsyncStatusType | null;
+  grbReviewStandardStatus?: SystemIntakeGRBReviewStandardStatusType | null;
 };
 
 /**
@@ -33,7 +35,8 @@ const ParticipantsSection = ({
   state,
   grbReviewers,
   grbReviewStartedAt,
-  asyncStatus
+  asyncStatus,
+  grbReviewStandardStatus
 }: ParticipantsSectionProps) => {
   const { t } = useTranslation('grbReview');
 
@@ -151,6 +154,7 @@ const ParticipantsSection = ({
       <ParticipantsTable
         grbReviewers={grbReviewers}
         asyncStatus={asyncStatus}
+        grbReviewStandardStatus={grbReviewStandardStatus}
       />
     </>
   );
