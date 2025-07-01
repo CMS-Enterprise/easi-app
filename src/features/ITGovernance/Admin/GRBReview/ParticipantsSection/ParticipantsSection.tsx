@@ -46,12 +46,15 @@ const ParticipantsSection = ({
 
   const { openModal } = useRestartReviewModal();
 
-  const statusIsCompleted =
+  const statusIsNotCompleted =
     (asyncStatus &&
       asyncStatus !== SystemIntakeGRBReviewAsyncStatusType.COMPLETED) ||
     (grbReviewStandardStatus &&
       grbReviewStandardStatus !==
         SystemIntakeGRBReviewStandardStatusType.COMPLETED);
+
+  const showButton =
+    statusIsNotCompleted || (!asyncStatus && !grbReviewStandardStatus);
 
   return (
     <>
@@ -67,7 +70,7 @@ const ParticipantsSection = ({
         /* IT Gov Admin view */
         <>
           <div className="desktop:display-flex flex-align-center">
-            {statusIsCompleted && (
+            {showButton && (
               <Button
                 type="button"
                 onClick={() =>
