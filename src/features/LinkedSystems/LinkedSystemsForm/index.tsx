@@ -1,19 +1,20 @@
-import React, { useMemo, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import React, { useCallback, useMemo } from 'react';
+import { Controller, FieldPath } from 'react-hook-form';
 // import { useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
+import { ErrorMessage } from '@hookform/error-message';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
-  Breadcrumb,
-  BreadcrumbBar,
-  BreadcrumbLink,
   Button,
   Fieldset,
   Form,
   FormGroup,
   Grid,
   Icon,
-  Label
+  Label,
+  Link,
+  TextInput
 } from '@trussworks/react-uswds';
 import {
   SystemRelationshipType,
@@ -23,26 +24,33 @@ import {
 
 import Alert from 'components/Alert';
 import CheckboxField from 'components/CheckboxField';
+import { useEasiForm } from 'components/EasiForm';
+import { ErrorAlert, ErrorAlertMessage } from 'components/ErrorAlert';
 import IconButton from 'components/IconButton';
 import MainContent from 'components/MainContent';
 import MultiSelect from 'components/MultiSelect';
 import PageHeading from 'components/PageHeading';
 import RequiredAsterisk from 'components/RequiredAsterisk';
+import Spinner from 'components/Spinner';
+import flattenFormErrors from 'utils/flattenFormErrors';
+import { linkedSystemsSchema } from 'validations/systemIntakeSchema';
 
 type LinkedSystemsFormFields = {
   cedarSystemIDs: string[];
+  primarySupport: boolean;
+  partialSupport: boolean;
+  usesOrImpactedBySelectedSystem: boolean;
+  impactsSelectedSystem: boolean;
+  other: boolean;
+  otherDescription: string;
 };
 
 const hasErrors = false; // todo fix this
-
-const isNew = false; // TODO fix this
 
 const LinkedSystemsForm = () => {
   const { id } = useParams<{
     id: string;
   }>();
-
-  console.log(id);
 
   const history = useHistory();
 
@@ -50,20 +58,11 @@ const LinkedSystemsForm = () => {
 
   //   const { state } = useLocation<{ isNew?: boolean }>();
 
-  const [primarySupport, setPrimarySupport] = useState<boolean>(false);
-  const [partialSupport, setPartialSupport] = useState<boolean>(false);
-  const [usesOrImpactedBySelectedSystem, setUsesOrImpactedBySelectedSystem] =
-    useState<boolean>(false);
-  const [impactsSelectedSystem, setImpactsSelectedSystem] =
-    useState<boolean>(false);
-  const [otherSystemRelationship, setOtherSystemRelationship] =
-    useState<boolean>(false);
-
-  const { control } = useForm<LinkedSystemsFormFields>({
-    defaultValues: {
-      cedarSystemIDs: []
-    }
-  });
+  //   const { control } = useForm<LinkedSystemsFormFields>({
+  //     defaultValues: {
+  //       cedarSystemIDs: []
+  //     }
+  //   });
 
   //   const {
   //     loading: loadingSystems,
@@ -72,59 +71,72 @@ const LinkedSystemsForm = () => {
   //   } = useGetCedarSystemsQuery();
 
   const {
-    data,
+    data: systemIntakeAndCedarSystems,
     error: relationError,
     loading: relationLoading
   } = useGetSystemIntakeRelationQuery({
     variables: { id }
   });
-  console.log(relationError, relationLoading);
+
+  //   console.log('1', systemIntakeAndCedarSystems, relationError, relationLoading);
+
   const cedarSystemIdOptions = useMemo(() => {
-    const cedarSystemsData = data?.cedarSystems;
+    const cedarSystemsData = systemIntakeAndCedarSystems?.cedarSystems;
     return !cedarSystemsData
       ? []
       : cedarSystemsData.map(system => ({
           label: `${system.name} (${system.acronym})`,
           value: system.id
         }));
-  }, [data?.cedarSystems]);
+  }, [systemIntakeAndCedarSystems?.cedarSystems]);
 
-  const breadCrumb = (() => {
-    return t('additionalRequestInfo.taskListBreadCrumb');
-  })();
+  const form = useEasiForm<LinkedSystemsFormFields>({
+    resolver: yupResolver(linkedSystemsSchema)
+  });
+
+  const {
+    control,
+    handleSubmit,
+    watch,
+    register,
+    setFocus,
+    formState: { isDirty, errors }
+  } = form;
+
+  const fieldErrors = flattenFormErrors<LinkedSystemsFormFields>(errors);
+
+  const updateSystemIntake = useCallback(async () => {
+    const values = watch();
+    const payload = { ...values };
+
+    console.log('payload', payload);
+
+    // return mutate({
+    //   variables: {
+    //     input: {}
+    //   }
+    // });
+
+    return {};
+  }, [watch, id]);
+
+  /** Update contacts and system intake form */
+  const submit = async (callback: () => void = () => {}) => {
+    if (!isDirty) return;
+
+    // Update intake
+    const result = await updateSystemIntake(); // TODO Get this working
+
+    console.log('result', result);
+
+    console.log('errors', fieldErrors, errors);
+
+    callback();
+  };
 
   return (
     <MainContent className="grid-container margin-bottom-15">
-      {hasErrors && (
-        <Alert id="link-form-error" type="error" slim className="margin-top-2">
-          {t('error:encounteredIssueTryAgain')}
-        </Alert>
-      )}
-
       <>
-        <BreadcrumbBar variant="wrap">
-          <Breadcrumb>
-            <BreadcrumbLink asCustom={Link} to="/">
-              <span>{t('intake:navigation.itGovernance')}</span>
-            </BreadcrumbLink>
-          </Breadcrumb>
-          {isNew ? (
-            <Breadcrumb current>
-              {t('intake:navigation.startRequest')}
-            </Breadcrumb>
-          ) : (
-            <>
-              <Breadcrumb>
-                <BreadcrumbLink asCustom={Link} to="/">
-                  <span>{breadCrumb}</span>
-                </BreadcrumbLink>
-              </Breadcrumb>
-              <Breadcrumb current>
-                {t('intake:navigation.editLinkRelation')}
-              </Breadcrumb>
-            </>
-          )}
-        </BreadcrumbBar>
         <PageHeading className="margin-top-4 margin-bottom-0">
           {t('header')}
         </PageHeading>
@@ -150,102 +162,213 @@ const LinkedSystemsForm = () => {
           </IconButton>
         </p>
 
+        {hasErrors && (
+          <Alert
+            id="link-form-error"
+            type="error"
+            slim
+            className="margin-top-2"
+          >
+            {t('error:unableToRetrieveCedarSystems')}
+          </Alert>
+        )}
+
+        {Object.keys(errors).length > 0 && (
+          <ErrorAlert
+            testId="contact-details-errors"
+            classNames="margin-top-3"
+            heading={t('form:inputError.checkFix')}
+            autoFocus={false}
+          >
+            {Object.keys(fieldErrors).map(key => {
+              return (
+                <ErrorMessage
+                  errors={errors}
+                  name={key}
+                  key={key}
+                  render={({ message }) => (
+                    <ErrorAlertMessage
+                      message={message}
+                      onClick={() =>
+                        setFocus(key as FieldPath<LinkedSystemsFormFields>)
+                      }
+                    />
+                  )}
+                />
+              );
+            })}
+          </ErrorAlert>
+        )}
+
+        <ErrorMessage errors={errors} name="root" as={<Alert type="error" />} />
+
+        {relationError && (
+          <Alert type="warning" className="margin-top-5">
+            <Trans
+              i18nKey="linkedSystems:unableToRetrieveCedarSystems"
+              components={{
+                link1: <Link href="EnterpriseArchitecture@cms.hhs.gov"> </Link>
+              }}
+            />
+          </Alert>
+        )}
+
         <Form
           className="easi-form maxw-full"
-          onSubmit={e => e.preventDefault()}
+          onSubmit={handleSubmit(() =>
+            submit(() => history.push(`/linked-systems/${id}`))
+          )}
         >
           <Grid row>
             <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
               <Fieldset>
+                {relationLoading && <Spinner size="small" />}
+                {!relationLoading && (
+                  <>
+                    <Controller
+                      name="cedarSystemIDs"
+                      control={control}
+                      render={({ field }) => (
+                        <FormGroup>
+                          <Label
+                            htmlFor="cedarSystemIDs"
+                            hint={t('cmsSystemsDropdown.hint')}
+                          >
+                            {t('cmsSystemsDropdown.title')} <RequiredAsterisk />
+                          </Label>
+                          <MultiSelect
+                            name={field.name}
+                            selectedLabel={t(
+                              'link.form.field.cmsSystem.selectedLabel'
+                            )}
+                            initialValues={field.value}
+                            options={cedarSystemIdOptions}
+                            onChange={values => field.onChange(values)}
+                          />
+                        </FormGroup>
+                      )}
+                    />
+                    <Label
+                      htmlFor="cedarSystemIDs"
+                      hint={t('relationship.hint')}
+                    >
+                      {t('relationship.title')} <RequiredAsterisk />
+                    </Label>
+                  </>
+                )}
+
                 <Controller
-                  name="cedarSystemIDs"
                   control={control}
-                  render={({ field }) => (
-                    <FormGroup>
-                      <Label
-                        htmlFor="cedarSystemIDs"
-                        hint={t('cmsSystemsDropdown.hint')}
-                      >
-                        {t('cmsSystemsDropdown.title')} <RequiredAsterisk />
-                      </Label>
-                      <MultiSelect
-                        name={field.name}
-                        selectedLabel={t(
-                          'link.form.field.cmsSystem.selectedLabel'
-                        )}
-                        initialValues={field.value}
-                        options={cedarSystemIdOptions}
-                        onChange={values => field.onChange(values)}
-                      />
-                    </FormGroup>
+                  name="primarySupport"
+                  render={({ field: { ref, ...field } }) => (
+                    <CheckboxField
+                      label={t('relationshipTypes.primarySupport')}
+                      id="primarySupport"
+                      name="primarySupport"
+                      value={SystemRelationshipType.PRIMARY_SUPPORT}
+                      checked={field.value ?? false}
+                      onChange={e => field.onChange(e.target.checked)}
+                      onBlur={() => null}
+                    />
                   )}
                 />
-                <Label htmlFor="cedarSystemIDs" hint={t('relationship.hint')}>
-                  {t('relationship.title')} <RequiredAsterisk />
-                </Label>
 
-                {/* relationshipTypes: {
-    primarySupport: '',
-    partialSupport: '',
-    usesOrImpactedBySelectedSystems: '',
-    impactsSelectedSystem: '',
-    other: ''
-  } */}
+                <Controller
+                  control={control}
+                  name="partialSupport"
+                  render={({ field: { ref, ...field } }) => (
+                    <CheckboxField
+                      label={t('relationshipTypes.partialSupport')}
+                      id="partialSupport"
+                      name="partialSupport"
+                      value={SystemRelationshipType.PARTIAL_SUPPORT}
+                      checked={field.value ?? false}
+                      onChange={e => field.onChange(e.target.checked)}
+                      onBlur={() => null}
+                    />
+                  )}
+                />
 
-                <CheckboxField
-                  label={t('relationshipTypes.primarySupport')}
-                  id="idOne"
-                  name="datavalue"
-                  value={SystemRelationshipType.PRIMARY_SUPPORT}
-                  checked={primarySupport}
-                  onChange={e => setPrimarySupport(e.target.checked)}
-                  onBlur={() => null}
+                <Controller
+                  control={control}
+                  name="usesOrImpactedBySelectedSystem"
+                  render={({ field: { ref, ...field } }) => (
+                    <CheckboxField
+                      label={t(
+                        'relationshipTypes.usesOrImpactedBySelectedSystems'
+                      )}
+                      id="usesOrImpactedBySelectedSystem"
+                      name="usesOrImpactedBySelectedSystem"
+                      value={
+                        SystemRelationshipType.USES_OR_IMPACTED_BY_SELECTED_SYSTEM
+                      }
+                      checked={field.value ?? false}
+                      onChange={e => field.onChange(e.target.checked)}
+                      onBlur={() => null}
+                    />
+                  )}
                 />
-                <CheckboxField
-                  label={t('relationshipTypes.partialSupport')}
-                  id="idTwo"
-                  name="datavalue"
-                  value={SystemRelationshipType.PARTIAL_SUPPORT}
-                  checked={partialSupport}
-                  onChange={e => setPartialSupport(e.target.checked)}
-                  onBlur={() => null}
+
+                <Controller
+                  control={control}
+                  name="impactsSelectedSystem"
+                  render={({ field: { ref, ...field } }) => (
+                    <CheckboxField
+                      label={t('relationshipTypes.impactsSelectedSystem')}
+                      id="impactsSelectedSystem"
+                      name="impactsSelectedSystem"
+                      value={SystemRelationshipType.IMPACTS_SELECTED_SYSTEM}
+                      checked={field.value ?? false}
+                      onChange={e => field.onChange(e.target.checked)}
+                      onBlur={() => null}
+                    />
+                  )}
                 />
-                <CheckboxField
-                  label={t('relationshipTypes.usesOrImpactedBySelectedSystems')}
-                  id="idThree"
-                  name="datavalue"
-                  value={
-                    SystemRelationshipType.USES_OR_IMPACTED_BY_SELECTED_SYSTEM
-                  }
-                  checked={usesOrImpactedBySelectedSystem}
-                  onChange={e =>
-                    setUsesOrImpactedBySelectedSystem(e.target.checked)
-                  }
-                  onBlur={() => null}
+                <Controller
+                  name="other"
+                  control={control}
+                  defaultValue={false}
+                  render={({ field }) => (
+                    <CheckboxField
+                      label={t('relationshipTypes.other')}
+                      id="other"
+                      name="other"
+                      value={SystemRelationshipType.OTHER}
+                      checked={field.value}
+                      onChange={e => field.onChange(e.target.checked)}
+                      onBlur={field.onBlur}
+                    />
+                  )}
                 />
-                <CheckboxField
-                  label={t('relationshipTypes.impactsSelectedSystem')}
-                  id="idFour"
-                  name="datavalue"
-                  value={SystemRelationshipType.IMPACTS_SELECTED_SYSTEM}
-                  checked={impactsSelectedSystem}
-                  onChange={e => setImpactsSelectedSystem(e.target.checked)}
-                  onBlur={() => null}
-                />
-                <CheckboxField
-                  label={t('relationshipTypes.other')}
-                  id="idFive"
-                  name="datavalue"
-                  value={SystemRelationshipType.OTHER}
-                  checked={otherSystemRelationship}
-                  onChange={e => setOtherSystemRelationship(e.target.checked)}
-                  onBlur={() => null}
-                />
+
+                {watch('other') && (
+                  <FormGroup
+                    className="margin-top-1 margin-left-4"
+                    error={!!errors.otherDescription}
+                  >
+                    <Label htmlFor="otherDescription">
+                      {t('relationshipTypes.pleaseExplain')}
+                      <RequiredAsterisk />
+                    </Label>
+                    <ErrorMessage
+                      errors={errors}
+                      name="otherDescription"
+                      message={t('technicalAssistance:errors.fillBlank')}
+                    />
+                    <TextInput
+                      {...register('otherDescription', {
+                        shouldUnregister: true
+                      })}
+                      id="otherDescription"
+                      type="text"
+                    />
+                  </FormGroup>
+                )}
               </Fieldset>
             </Grid>
           </Grid>
 
-          <Button type="button">{t('addSystem')}</Button>
+          <Button type="submit">{t('addSystem')}</Button>
 
           <IconButton
             icon={<Icon.ArrowBack className="margin-right-05" aria-hidden />}
