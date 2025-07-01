@@ -219,13 +219,17 @@ const ParticipantsTable = ({
       <Table bordered={false} fullWidth scrollable {...getTableProps()}>
         <thead>
           {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column, index) => (
+            <tr
+              {...headerGroup.getHeaderGroupProps()}
+              key={{ ...headerGroup.getHeaderGroupProps() }.key}
+            >
+              {headerGroup.headers.map(column => (
                 <th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   aria-sort={getColumnSortStatus(column)}
                   scope="col"
                   className="border-bottom-2px"
+                  key={column.id}
                 >
                   <Button
                     type="button"
@@ -247,10 +251,16 @@ const ParticipantsTable = ({
               <tr
                 {...row.getRowProps()}
                 data-testid={`grbReviewer-${row.original.userAccount.username}`}
+                key={row.id}
               >
-                {row.cells.map((cell, index) => {
+                {row.cells.map(cell => {
                   return (
-                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                    <td
+                      {...cell.getCellProps()}
+                      key={{ ...cell.getCellProps() }.key}
+                    >
+                      {cell.render('Cell')}
+                    </td>
                   );
                 })}
               </tr>

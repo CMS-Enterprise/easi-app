@@ -51,6 +51,7 @@ describe('GRB review participants table', () => {
                   state={SystemIntakeState.OPEN}
                   grbReviewers={[grbReviewer]}
                   grbReviewStartedAt={null}
+                  asyncStatus={SystemIntakeGRBReviewAsyncStatusType.IN_PROGRESS}
                 />
               </ITGovAdminContext.Provider>
             </ModalProvider>
