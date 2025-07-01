@@ -164,7 +164,7 @@ describe('GRB review participants table', () => {
     expect(screen.queryByTestId('grbReviewerActions')).toBeNull();
   });
 
-  it.only('renders Complete Async Status in admin view', async () => {
+  it('renders Complete Async Status in admin view', async () => {
     render(
       <MemoryRouter>
         <VerboseMockedProvider
