@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { DatePicker } from '@trussworks/react-uswds';
 // eslint-disable-next-line import/no-unresolved
 import { DatePickerProps } from '@trussworks/react-uswds/lib/components/forms/DatePicker/DatePicker';
@@ -20,7 +20,7 @@ type DatePickerFormattedProps = Omit<DatePickerProps, 'value'> & {
  */
 const DatePickerFormatted = ({
   onChange,
-  format,
+  format = defaultFormat,
   ...props
 }: DatePickerFormattedProps) => {
   /**
@@ -30,7 +30,32 @@ const DatePickerFormatted = ({
    */
   const [value, setValue] = useState(props.value || props.defaultValue || '');
 
-  const dtFormat = format || defaultFormat;
+  /**
+   * Format valid dates and execute onChange handler.
+   * Returns undefined if no onChange handler is provided.
+   */
+  const handleChange = useCallback(
+    (val: string | undefined): void | undefined => {
+      if (onChange) {
+        // Check if date is complete (MM/dd/yyyy = 10 characters)
+        if (typeof val === 'string' && val.length === 10) {
+          const dt = DateTime.fromFormat(val, 'MM/dd/yyyy');
+
+          // Check if date is valid before formatting
+          if (dt.isValid) {
+            return onChange(format(dt) || undefined);
+          }
+        }
+
+        // Execute onChange with undefined value if the date is invalid
+        return onChange(undefined);
+      }
+
+      // Return undefined if no onChange handler is provided
+      return undefined;
+    },
+    [onChange, format]
+  );
 
   useEffect(() => {
     // Check if props.value contains a valid string before updating state
@@ -43,17 +68,7 @@ const DatePickerFormatted = ({
   return (
     <DatePicker
       {...props}
-      onChange={val => {
-        if (typeof onChange === 'function') {
-          if (val === '') {
-            onChange('');
-          } else if (typeof val === 'string') {
-            onChange(
-              dtFormat(DateTime.fromFormat(val, 'MM/dd/yyyy')) || undefined
-            );
-          }
-        }
-      }}
+      onChange={handleChange}
       // Set `defaultValue` and `key` props to the value in state
       defaultValue={value}
       key={value}
