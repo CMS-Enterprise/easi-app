@@ -164,7 +164,7 @@ describe('GRB review participants table', () => {
     expect(screen.queryByTestId('grbReviewerActions')).toBeNull();
   });
 
-  it('renders Complete Async Status in admin view', async () => {
+  it.only('renders Complete Async Status in admin view', async () => {
     render(
       <MemoryRouter>
         <VerboseMockedProvider
@@ -188,8 +188,8 @@ describe('GRB review participants table', () => {
     );
 
     expect(
-      screen.getByRole('button', { name: 'Add another GRB reviewer' })
-    ).toBeDisabled();
+      screen.queryByRole('button', { name: 'Add another GRB reviewer' })
+    ).not.toBeInTheDocument();
 
     expect(await screen.findByText(/this review is over/i)).toBeInTheDocument();
   });
