@@ -180,6 +180,7 @@ describe('GRB review participants table', () => {
                   grbReviewers={[grbReviewer]}
                   grbReviewStartedAt={null}
                   asyncStatus={SystemIntakeGRBReviewAsyncStatusType.COMPLETED}
+                  grbReviewStandardStatus={null}
                 />
               </ITGovAdminContext.Provider>
             </ModalProvider>
