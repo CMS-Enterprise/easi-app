@@ -46,6 +46,7 @@ const ParticipantsSection = ({
 
   const { openModal } = useRestartReviewModal();
 
+  // Both review status have not been set yet (e.g. grb review form not started)
   const bothStatusNotSet =
     asyncStatus === null && grbReviewStandardStatus === null;
 
