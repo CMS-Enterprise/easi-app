@@ -27,16 +27,18 @@ INSERT INTO system_intake_contacts
     component,
     role,
     created_at,
-    updated_at
+    updated_at,
+    common_name
 )
 SELECT
     gen_random_uuid() AS id,
     si.eua_user_id,
     si.id AS system_intake_id,
-    si.component,
+    coalesce(si.component, 'Other') AS component,  -- Use 'Other' if null
     'Requester' AS role,
     si.created_at,
-    si.updated_at
+    si.updated_at,
+    si.requester AS common_name
 FROM system_intakes si
 WHERE NOT EXISTS (
     SELECT 1 
@@ -62,7 +64,7 @@ INSERT INTO system_intake_contacts
 SELECT
     gen_random_uuid() AS id,
     si.id AS system_intake_id,
-    si.business_owner_component AS component,
+    coalesce(si.business_owner_component, 'Other') AS component,  -- Use 'Other' if null
     'Business Owner' AS role,
     si.created_at,
     si.updated_at,
@@ -92,7 +94,7 @@ INSERT INTO system_intake_contacts
 SELECT
     gen_random_uuid() AS id,
     si.id AS system_intake_id,
-    si.product_manager_component AS component,
+    coalesce(si.product_manager_component, 'Other') AS component,  -- Use 'Other' if null
     'Product Manager' AS role,
     si.created_at,
     si.updated_at,
