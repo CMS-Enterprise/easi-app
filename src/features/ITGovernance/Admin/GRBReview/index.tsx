@@ -222,7 +222,7 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
               to="./documents/upload"
               className="display-flex flex-align-center"
             >
-              <Icon.Add className="margin-right-1" />
+              <Icon.Add className="margin-right-1" aria-hidden />
               <span>{t('additionalDocsLink')}</span>
             </UswdsReactLink>
           ) : (
