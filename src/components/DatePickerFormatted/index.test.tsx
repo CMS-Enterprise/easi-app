@@ -52,7 +52,7 @@ describe('DatePickerFormatted', () => {
     expect(handleChange).toHaveBeenCalledWith('2020/12/31');
   });
 
-  it('calls onChange with undefined for invalid dates', () => {
+  it('calls onChange with empty string for invalid dates', () => {
     const handleChange = vi.fn();
     const { getByRole } = render(
       <DatePickerFormatted
@@ -63,10 +63,10 @@ describe('DatePickerFormatted', () => {
     );
 
     userEvent.type(getByRole('textbox'), '99/99/9999');
-    expect(handleChange).toHaveBeenCalledWith(undefined);
+    expect(handleChange).toHaveBeenCalledWith('');
   });
 
-  it('calls onChange with undefined for incomplete dates', () => {
+  it('calls onChange with empty string for incomplete dates', () => {
     const handleChange = vi.fn();
     const { getByRole } = render(
       <DatePickerFormatted
@@ -77,7 +77,7 @@ describe('DatePickerFormatted', () => {
     );
 
     userEvent.type(getByRole('textbox'), '11/11/1');
-    expect(handleChange).toHaveBeenCalledWith(undefined);
+    expect(handleChange).toHaveBeenCalledWith('');
   });
 
   it('updates the textbox value when the value prop changes', () => {

@@ -43,12 +43,12 @@ const DatePickerFormatted = ({
 
           // Check if date is valid before formatting
           if (dt.isValid) {
-            return onChange(format(dt) || undefined);
+            return onChange(format(dt) || '');
           }
         }
 
-        // Execute onChange with undefined value if the date is invalid
-        return onChange(undefined);
+        // Execute onChange with empty string if the date is invalid
+        return onChange('');
       }
 
       // Return undefined if no onChange handler is provided
