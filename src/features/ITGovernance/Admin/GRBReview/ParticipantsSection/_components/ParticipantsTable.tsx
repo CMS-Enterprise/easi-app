@@ -62,9 +62,9 @@ const ParticipantsTable = ({
   // Only one status will be relevant at a time; the other will be null.
   const shouldShowActionColumn =
     isITGovAdmin &&
-    ((asyncStatus &&
+    ((asyncStatus !== null &&
       asyncStatus !== SystemIntakeGRBReviewAsyncStatusType.COMPLETED) ||
-      (grbReviewStandardStatus &&
+      (grbReviewStandardStatus !== null &&
         grbReviewStandardStatus !==
           SystemIntakeGRBReviewStandardStatusType.COMPLETED));
 
