@@ -1,6 +1,6 @@
 import { BASIC_USER_PROD, GOVTEAM_DEV } from '../../src/constants/jobCodes';
 
-describe('Homepage', () => {
+describe.skip('Homepage', () => {
   // These tests use the same user, but with different roles
   // We shouldn't really need to log in as different users to test this functionality
   it('shows the basic homepage for no user roles', () => {

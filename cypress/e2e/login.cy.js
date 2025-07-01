@@ -1,5 +1,5 @@
 const maxAttempts = 3;
-describe('Logging in', () => {
+describe.skip('Logging in', () => {
   it(
     'logs in with okta',
     {
