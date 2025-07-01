@@ -46,15 +46,19 @@ const ParticipantsSection = ({
 
   const { openModal } = useRestartReviewModal();
 
+  const bothStatusNotSet =
+    asyncStatus === null && grbReviewStandardStatus === null;
+
   const statusIsNotCompleted =
-    (asyncStatus &&
+    // Async review is active and not yet completed
+    (asyncStatus !== null &&
       asyncStatus !== SystemIntakeGRBReviewAsyncStatusType.COMPLETED) ||
-    (grbReviewStandardStatus &&
+    // Standard review is active and not yet completed
+    (grbReviewStandardStatus !== null &&
       grbReviewStandardStatus !==
         SystemIntakeGRBReviewStandardStatusType.COMPLETED);
 
-  const showButton =
-    statusIsNotCompleted || (!asyncStatus && !grbReviewStandardStatus);
+  const showButton = statusIsNotCompleted || bothStatusNotSet;
 
   return (
     <>
