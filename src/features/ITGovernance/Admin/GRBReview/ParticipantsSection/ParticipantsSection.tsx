@@ -78,6 +78,7 @@ const ParticipantsSection = ({
                 }
                 disabled={state === SystemIntakeState.CLOSED}
                 outline={grbReviewers?.length > 0}
+                className="desktop:margin-right-1"
               >
                 {t(
                   grbReviewers?.length > 0
@@ -88,7 +89,7 @@ const ParticipantsSection = ({
             )}
 
             {state === SystemIntakeState.CLOSED && (
-              <p className="desktop:margin-y-0 desktop:margin-left-1">
+              <p className="desktop:margin-y-0">
                 <Trans
                   i18nKey="grbReview:closedRequest"
                   components={{
@@ -104,7 +105,7 @@ const ParticipantsSection = ({
               </p>
             )}
             {asyncStatus === SystemIntakeGRBReviewAsyncStatusType.COMPLETED && (
-              <p className="desktop:margin-y-0 desktop:margin-left-1">
+              <p className="desktop:margin-y-0">
                 <Trans
                   i18nKey="grbReview:asyncCompleted.reviewers"
                   components={{
