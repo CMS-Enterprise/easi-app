@@ -11,9 +11,7 @@ import {
 } from '@trussworks/react-uswds';
 import {
   GetSystemIntakeGRBReviewDocument,
-  SystemIntakeGRBReviewAsyncStatusType,
   SystemIntakeGRBReviewerFragment,
-  SystemIntakeGRBReviewStandardStatusType,
   useDeleteSystemIntakeGRBReviewerMutation
 } from 'gql/generated/graphql';
 import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
@@ -29,15 +27,13 @@ import {
 type ParticipantsTableProps = {
   grbReviewers: SystemIntakeGRBReviewerFragment[];
   fromGRBSetup?: boolean;
-  asyncStatus?: SystemIntakeGRBReviewAsyncStatusType | null;
-  grbReviewStandardStatus?: SystemIntakeGRBReviewStandardStatusType | null;
+  showParticipantEditButton?: boolean;
 };
 
 const ParticipantsTable = ({
   grbReviewers,
   fromGRBSetup,
-  asyncStatus,
-  grbReviewStandardStatus
+  showParticipantEditButton
 }: ParticipantsTableProps) => {
   const { t } = useTranslation('grbReview');
 
@@ -56,23 +52,6 @@ const ParticipantsTable = ({
   const [deleteReviewer] = useDeleteSystemIntakeGRBReviewerMutation({
     refetchQueries: [GetSystemIntakeGRBReviewDocument]
   });
-
-  // Determine whether to show the action column.
-  // This is only shown if the user is an IT Governance Admin
-  // AND one of the following is true:
-  //   - Neither asyncStatus nor grbReviewStandardStatus is set (initial state)
-  //   - The relevant status (async or standard) is not yet marked as COMPLETED
-  const showActionColumn =
-    isITGovAdmin &&
-    // Both statuses are unset (e.g., form not yet started)
-    ((asyncStatus === null && grbReviewStandardStatus === null) ||
-      // Async review is active and not yet completed
-      (asyncStatus !== null &&
-        asyncStatus !== SystemIntakeGRBReviewAsyncStatusType.COMPLETED) ||
-      // Standard review is active and not yet completed
-      (grbReviewStandardStatus !== null &&
-        grbReviewStandardStatus !==
-          SystemIntakeGRBReviewStandardStatusType.COMPLETED));
 
   /** Columns for table */
   const columns = useMemo<Column<SystemIntakeGRBReviewerFragment>[]>(() => {
@@ -138,16 +117,17 @@ const ParticipantsTable = ({
           return <>{t<string>(`reviewerRoles.${value}`)}</>;
         }
       },
-      ...(showActionColumn ? [actionColumn] : [])
+      ...(isITGovAdmin && showParticipantEditButton ? [actionColumn] : [])
     ];
   }, [
-    t,
-    setReviewerToRemove,
-    history,
-    pathname,
     fromGRBSetup,
-    showActionColumn,
-    systemId
+    history,
+    isITGovAdmin,
+    pathname,
+    setReviewerToRemove,
+    showParticipantEditButton,
+    systemId,
+    t
   ]);
 
   const table = useTable(

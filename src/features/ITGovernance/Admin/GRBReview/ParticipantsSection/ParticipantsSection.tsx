@@ -58,7 +58,7 @@ const ParticipantsSection = ({
       grbReviewStandardStatus !==
         SystemIntakeGRBReviewStandardStatusType.COMPLETED);
 
-  const showButton = statusIsNotCompleted || bothStatusNotSet;
+  const showParticipantEditButton = statusIsNotCompleted || bothStatusNotSet;
 
   return (
     <>
@@ -74,7 +74,7 @@ const ParticipantsSection = ({
         /* IT Gov Admin view */
         <>
           <div className="desktop:display-flex flex-align-center">
-            {showButton && (
+            {showParticipantEditButton && (
               <Button
                 type="button"
                 onClick={() =>
@@ -167,8 +167,7 @@ const ParticipantsSection = ({
 
       <ParticipantsTable
         grbReviewers={grbReviewers}
-        asyncStatus={asyncStatus}
-        grbReviewStandardStatus={grbReviewStandardStatus}
+        showParticipantEditButton={showParticipantEditButton}
       />
     </>
   );
