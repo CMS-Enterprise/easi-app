@@ -156,6 +156,7 @@ const GRBReviewStatusCard = ({
 
   return (
     <div
+      data-testid="grb-review-status-card"
       className={classNames(
         className,
         'padding-3 radius-md',
