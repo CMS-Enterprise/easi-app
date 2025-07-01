@@ -57,13 +57,19 @@ const ParticipantsTable = ({
     refetchQueries: [GetSystemIntakeGRBReviewDocument]
   });
 
-  // Only show the action column if the user is an IT Gov Admin
-  // and the active review type (either async or standard) is not completed.
-  // Only one status will be relevant at a time; the other will be null.
-  const shouldShowActionColumn =
+  // Determine whether to show the action column.
+  // This is only shown if the user is an IT Governance Admin
+  // AND one of the following is true:
+  //   - Neither asyncStatus nor grbReviewStandardStatus is set (initial state)
+  //   - The relevant status (async or standard) is not yet marked as COMPLETED
+  const showActionColumn =
     isITGovAdmin &&
-    ((asyncStatus !== null &&
-      asyncStatus !== SystemIntakeGRBReviewAsyncStatusType.COMPLETED) ||
+    // Both statuses are unset (e.g., form not yet started)
+    ((asyncStatus === null && grbReviewStandardStatus === null) ||
+      // Async review is active and not yet completed
+      (asyncStatus !== null &&
+        asyncStatus !== SystemIntakeGRBReviewAsyncStatusType.COMPLETED) ||
+      // Standard review is active and not yet completed
       (grbReviewStandardStatus !== null &&
         grbReviewStandardStatus !==
           SystemIntakeGRBReviewStandardStatusType.COMPLETED));
@@ -132,7 +138,7 @@ const ParticipantsTable = ({
           return <>{t<string>(`reviewerRoles.${value}`)}</>;
         }
       },
-      ...(shouldShowActionColumn ? [actionColumn] : [])
+      ...(showActionColumn ? [actionColumn] : [])
     ];
   }, [
     t,
@@ -140,7 +146,7 @@ const ParticipantsTable = ({
     history,
     pathname,
     fromGRBSetup,
-    shouldShowActionColumn,
+    showActionColumn,
     systemId
   ]);
 
