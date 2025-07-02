@@ -6,6 +6,7 @@
 
 import React, { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 import {
   Column,
   Row,
@@ -67,6 +68,8 @@ const LinkedSystemsTable = ({
   const flags = useFlags();
   const { t } = useTranslation('linkedSystems');
 
+  const history = useHistory();
+
   const {
     loading: loadingSystems,
     error: cedarSystemsError,
@@ -88,10 +91,7 @@ const LinkedSystemsTable = ({
       Cell: ({ row }: { row: Row<SystemIntakeSystem> }) => {
         return (
           <p>
-            {t(
-              `${organizedCedarSystems[row.cells[0]?.value]?.name}` ||
-                'supercoolsystem'
-            )}
+            {t(`${organizedCedarSystems[row.cells[0]?.value]?.name}` || '')}
           </p>
         );
       }
@@ -102,25 +102,32 @@ const LinkedSystemsTable = ({
       accessor: 'systemRelationshipType',
       id: 'systemRelationshipType',
       Cell: ({ row }: { row: Row<SystemIntakeSystem> }) => {
-        return <p>{t(row.cells[1]?.value ?? '')}</p>;
+        return <p>{t(row.cells[1]?.value.toString() ?? '')}</p>;
       }
     });
 
     if (flags.showAtoColumn) {
       cols.push({
         Header: t<string>('linkedSystemsTable.header.actions'),
-        Cell: ({ row }: { row: Row<SystemIntakeSystem> }) => (
-          <div>
-            <Button type="button" unstyled>
-              Edit
-            </Button>
-            <span style={{ margin: '0 0.5rem' }} />
-            <Button type="button" unstyled>
-              Remove
-            </Button>
-            <span style={{ margin: '0 0.5rem' }} />
-          </div>
-        ),
+        Cell: ({ row }: { row: Row<SystemIntakeSystem> }) => {
+          console.log(row);
+          return (
+            <div>
+              <Button
+                type="button"
+                unstyled
+                onClick={() => history.push(`/linked-systems-form`)}
+              >
+                Edit
+              </Button>
+              <span style={{ margin: '0 0.5rem' }} />
+              <Button type="button" unstyled>
+                Remove
+              </Button>
+              <span style={{ margin: '0 0.5rem' }} />
+            </div>
+          );
+        },
         sortType: (a, b) =>
           (a.values.atoExpirationDate ?? '') >
           (b.values.atoExpirationDate ?? '')

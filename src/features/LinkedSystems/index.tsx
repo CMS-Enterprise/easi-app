@@ -79,11 +79,13 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
 
   const {
     data,
-    // error: undefined,
+    error: systemIntakeError,
     loading: relationLoading
   } = useSystemIntakeQuery({
     variables: { id }
   });
+
+  console.log(data, systemIntakeError);
 
   const submitEnabled: boolean = (() => {
     // if there are relationships added or the checkbox is filled

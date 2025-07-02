@@ -2630,6 +2630,7 @@ export enum SystemIntakeStepToProgressTo {
 
 export type SystemIntakeSystem = {
   __typename: 'SystemIntakeSystem';
+  id: Scalars['UUID']['output'];
   otherSystemRelationship?: Maybe<Scalars['String']['output']>;
   systemID?: Maybe<Scalars['String']['output']>;
   systemIntakeID: Scalars['UUID']['output'];

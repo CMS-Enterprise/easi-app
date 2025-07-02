@@ -1091,6 +1091,7 @@ input SystemRelationshipInput {
 }
 
 type SystemIntakeSystem {
+  id: UUID!
   systemIntakeID: UUID!
   systemID: String
   systemRelationshipType: [SystemRelationshipType!]!

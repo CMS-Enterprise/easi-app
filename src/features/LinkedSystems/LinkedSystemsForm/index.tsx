@@ -114,6 +114,14 @@ const LinkedSystemsForm = () => {
     variables: { id }
   });
 
+  console.log(
+    'lkajsdf;lkjsa',
+    systemIntakeAndCedarSystems,
+    relationError,
+    relationLoading
+  );
+  console.log('lkajsdf;lkjsa', systemIntakeAndCedarSystems);
+
   const cedarSystemIdOptions = useMemo(() => {
     const cedarSystemsData = systemIntakeAndCedarSystems?.cedarSystems;
     return !cedarSystemsData
