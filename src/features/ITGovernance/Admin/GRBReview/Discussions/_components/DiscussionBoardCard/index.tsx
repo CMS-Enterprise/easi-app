@@ -5,6 +5,7 @@ import {
   SystemIntakeGRBDiscussionBoardType,
   SystemIntakeGRBReviewDiscussionFragment
 } from 'gql/generated/graphql';
+import { lowerCase } from 'lodash';
 
 import Alert from 'components/Alert';
 import IconButton from 'components/IconButton';
@@ -44,8 +45,11 @@ const DiscussionBoardCard = ({
       : Icon.LockOpen;
 
   return (
-    <div className="internal-discussion-board bg-white padding-3 padding-bottom-4 margin-top-4 border-base-lighter shadow-2">
-      <div className="internal-discussions-board__header desktop:display-flex flex-align-start">
+    <div
+      data-testid={`${lowerCase(discussionBoardType)}-discussion-board-card`}
+      className="grb-discussion-board-card bg-white padding-3 padding-bottom-4 margin-top-4 border-base-lighter shadow-2"
+    >
+      <div className="grb-discussion-board-card__header desktop:display-flex flex-align-start">
         <h3 className="margin-top-0 margin-bottom-1">
           {t(`discussionBoardType.${discussionBoardType}`)}
         </h3>

@@ -241,7 +241,12 @@ const ParticipantsTable = ({
               >
                 {row.cells.map((cell, index) => {
                   return (
-                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                    <td
+                      {...cell.getCellProps()}
+                      data-testid={`grb-reviewer-${cell.column.id}`}
+                    >
+                      {cell.render('Cell')}
+                    </td>
                   );
                 })}
               </tr>
