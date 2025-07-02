@@ -157,9 +157,7 @@ const ParticipantsTable = ({
           { type: 'success' }
         )
       )
-      .catch(() =>
-        showMessage(t('form.messages.error.remove'), { type: 'error' })
-      );
+      .catch(() => showMessage(t('messages.error.remove'), { type: 'error' }));
 
     // Reset `reviewerToRemove` to close modal
     setReviewerToRemove(null);
