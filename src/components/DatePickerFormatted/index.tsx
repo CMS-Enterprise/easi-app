@@ -8,9 +8,10 @@ import { DateTime } from 'luxon';
 
 import Alert from 'components/Alert';
 
-type DatePickerFormattedProps = Omit<DatePickerProps, 'value'> & {
+type DatePickerFormattedProps = Omit<DatePickerProps, 'value' | 'onChange'> & {
+  value?: string | null;
+  onChange?: (val?: string | null) => void;
   format?: (dt: DateTime, suppressMilliseconds?: boolean) => string | null;
-  value?: string;
   dateInPastWarning?: boolean;
   suppressMilliseconds?: boolean;
 };
@@ -41,7 +42,9 @@ const DatePickerFormatted = ({
    * Fixes bug where <DatePicker> does not rerender to show updated value when set dynamically.
    * https://github.com/trussworks/react-uswds/issues/3000#issuecomment-2884731383
    */
-  const [value, setValue] = useState(props.value || props.defaultValue || '');
+  const [value, setValue] = useState<string | null | undefined>(
+    props.value || props.defaultValue
+  );
 
   /**
    * Format valid dates and execute onChange handler.
@@ -83,8 +86,9 @@ const DatePickerFormatted = ({
       <DatePicker
         {...props}
         onChange={handleChange}
+        value={value || undefined}
         // Set `defaultValue` and `key` props to the value in state
-        defaultValue={value}
+        defaultValue={value || undefined}
         key={value}
       />
       {

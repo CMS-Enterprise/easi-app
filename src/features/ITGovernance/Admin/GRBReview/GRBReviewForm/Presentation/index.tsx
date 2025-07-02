@@ -33,7 +33,7 @@ import GRBReviewFormStepWrapper, {
 
 type StandardPresentationFields = {
   grbMeetingDate: {
-    grbDate: string;
+    grbDate: string | null;
   };
   presentationDeck: {
     presentationDeckFileData: File | null;
@@ -46,7 +46,7 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
   const standardForm = useEasiForm<StandardPresentationFields>({
     defaultValues: {
       grbMeetingDate: {
-        grbDate: grbReview.grbDate || ''
+        grbDate: grbReview.grbDate || null
       },
       presentationDeck: {
         presentationDeckFileData: {
@@ -206,22 +206,17 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
                       >
                         {t('presentationGRBReviewForm.meetingDateLabel')}
                       </Label>
-
                       <HelpText className="margin-top-1">
                         {t('presentationGRBReviewForm.meetingDateDescription')}
                       </HelpText>
-
                       <ErrorMessage
                         errors={errors}
                         name="grbMeetingDate.grbDate"
                         as={<FieldErrorMsg />}
                       />
-
                       <DatePickerFormatted
                         {...field}
                         id={field.name}
-                        defaultValue={grbReview.grbDate || ''}
-                        onChange={e => field.onChange(e || undefined)}
                         dateInPastWarning
                         suppressMilliseconds
                       />

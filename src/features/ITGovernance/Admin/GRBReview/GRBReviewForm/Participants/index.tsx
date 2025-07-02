@@ -209,13 +209,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
                         id="grbReviewAsyncEndDate"
                         {...field}
                         dateInPastWarning
-                        value={field.value ?? ''}
                         aria-describedby="selectReviewEndDateHelpText"
-                        onChange={date => {
-                          if (date !== field.value) {
-                            field.onChange(date || ''); // Only update when there's a change
-                          }
-                        }}
                         format={dt =>
                           dt
                             .setZone('America/New_York')
