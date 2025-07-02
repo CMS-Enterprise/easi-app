@@ -384,7 +384,7 @@ export const linkedSystemsSchema = Yup.object({
   usesOrImpactedBySelectedSystem: Yup.boolean(),
   impactsSelectedSystem: Yup.boolean(),
   other: Yup.boolean(),
-  otherText: Yup.string().when('other', {
+  otherDescription: Yup.string().when('other', {
     is: true,
     then: schema => schema.required('Please provide details for "Other".'),
     otherwise: schema => schema.notRequired()
