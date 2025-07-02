@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"html/template"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
@@ -43,18 +42,8 @@ func CreateSystemIntakeGRBDiscussionPost(
 			return nil, errors.New("problem finding system intake when handling GRB post")
 		}
 
-		isGRBReviewComplete, err := isGRBReviewCompleted(ctx, systemIntake)
-		if err != nil {
-			return nil, err
-		}
-
-		if isGRBReviewComplete {
-			return nil, errors.New("cannot post to a completed system intake")
-		}
-
-		// cannot post after GRB review is over
-		if systemIntake.GrbReviewAsyncManualEndDate != nil || (systemIntake.GrbReviewAsyncEndDate != nil && systemIntake.GrbReviewAsyncEndDate.Before(time.Now())) {
-			return nil, errors.New("GRB review is over, no more posts allowed")
+		if systemIntake.Step != models.SystemIntakeStepGRBMEETING {
+			return nil, errors.New("discussion posts can only be made if the system intake is in the GRB Meeting step")
 		}
 
 		if input.DiscussionBoardType == models.SystemIntakeGRBDiscussionBoardTypeInternal && !isAuthorizedForInternalBoard(ctx, intakeID) {
@@ -141,6 +130,19 @@ func CreateSystemIntakeGRBDiscussionReply(
 			return nil, errors.New("only top level posts can be replied to")
 		}
 
+		systemIntake, err := store.FetchSystemIntakeByIDNP(ctx, tx, intakeID)
+		if err != nil {
+			return nil, err
+		}
+
+		if systemIntake == nil {
+			return nil, errors.New("problem finding system intake when handling GRB reply")
+		}
+
+		if systemIntake.Step != models.SystemIntakeStepGRBMEETING {
+			return nil, errors.New("replies can only be made if the system intake is in the GRB Meeting step")
+		}
+
 		principalGRBReviewer, err := GetPrincipalAsGRBReviewerBySystemIntakeID(ctx, intakeID)
 		if err != nil {
 			return nil, err
@@ -163,31 +165,8 @@ func CreateSystemIntakeGRBDiscussionReply(
 		}
 		post.DiscussionBoardType = &input.DiscussionBoardType
 
-		systemIntake, err := store.FetchSystemIntakeByIDNP(ctx, tx, intakeID)
-		if err != nil {
-			return nil, err
-		}
-
-		if systemIntake == nil {
-			return nil, errors.New("problem finding system intake when handling GRB reply")
-		}
-
-		isGRBReviewComplete, err := isGRBReviewCompleted(ctx, systemIntake)
-		if err != nil {
-			return nil, err
-		}
-
-		if isGRBReviewComplete {
-			return nil, errors.New("cannot reply to a discussion on a completed system intake")
-		}
-
 		if input.DiscussionBoardType == models.SystemIntakeGRBDiscussionBoardTypeInternal && !isAuthorizedForInternalBoard(ctx, intakeID) {
 			return nil, errors.New("user is not authorized to reply on the Internal board")
-		}
-
-		// cannot post after GRB review is over
-		if systemIntake.GrbReviewAsyncManualEndDate != nil || (systemIntake.GrbReviewAsyncEndDate != nil && systemIntake.GrbReviewAsyncEndDate.Before(time.Now())) {
-			return nil, errors.New("GRB review is over, no more replies allowed")
 		}
 
 		// the initial poster will receive a notification
