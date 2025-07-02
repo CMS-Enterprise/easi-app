@@ -52,6 +52,10 @@ type TableProps = {
   isHomePage?: boolean;
 };
 
+const removeLink = (systemLinkedSystemId: string) => {
+  console.log('remove this!', systemLinkedSystemId);
+};
+
 const organizeCedarSystems = (data: GetCedarSystemsQuery | undefined) => {
   if (!data || !data.cedarSystems) return {};
   return data.cedarSystems.reduce((acc: any, item: any) => {
@@ -116,12 +120,18 @@ const LinkedSystemsTable = ({
               <Button
                 type="button"
                 unstyled
-                onClick={() => history.push(`/linked-systems-form`)}
+                onClick={() =>
+                  history.push(`/linked-systems-form/${row.original.id}`)
+                }
               >
                 Edit
               </Button>
               <span style={{ margin: '0 0.5rem' }} />
-              <Button type="button" unstyled>
+              <Button
+                type="button"
+                unstyled
+                onClick={() => removeLink(row.original.id)}
+              >
                 Remove
               </Button>
               <span style={{ margin: '0 0.5rem' }} />

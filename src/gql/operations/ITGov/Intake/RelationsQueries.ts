@@ -95,6 +95,7 @@ export const GetTrbRequestRelations = gql(/* GraphQL */ `
     systemIntake(id: $id) {
       id
       cedarSystemRelationShips {
+        id
         systemIntakeID
         systemID
         systemRelationshipType
