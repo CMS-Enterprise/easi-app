@@ -214,11 +214,13 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussions() {
 		}
 	})
 
-	s.Run("create GRB discussion when intake is not in GRB meeting", func() {
+	s.Run("create GRB discussion when intake is not in GRB meeting step", func() {
 		emailClient, _ := NewEmailClient()
 
 		intake := s.createNewIntake()
 
+		// explicitly set to something other than GRB Meeting
+		intake.Step = models.SystemIntakeStepFINALBIZCASE
 		intake.GrbReviewAsyncManualEndDate = helpers.PointerTo(time.Now().Add(time.Hour * -24))
 
 		var err error
