@@ -226,86 +226,91 @@ function PresentationLinksCard({
             />
           </CardBody>
         )}
-        {/* {hasAnyLinks && grbReviewStartedAt && ( */}
-        <CardFooter
-          data-cy="presentation-card-details"
-          className="presentation-card-links display-flex flex-wrap flex-column-gap-3 flex-row-gap-1 padding-x-0 padding-bottom-205 padding-top-2 margin-x-3 border-top-1px border-gray-10"
-        >
-          {isVirusScanning ? (
-            <em
-              data-testid="presentation-files-virus-scanning"
-              data-testdeckurl={presentationDeckFileURL || transcriptFileURL}
-            >
-              {t('asyncPresentation.virusScanning')}
-            </em>
-          ) : (
-            <>
-              {(recordingLink || recordingPasscode || transcriptLink) && (
-                <div className="display-flex flex-wrap flex-gap-1">
-                  {recordingLink && (
-                    <ExternalLinkAndModal href={recordingLink}>
-                      {t('asyncPresentation.viewRecording')}
-                    </ExternalLinkAndModal>
-                  )}
+        {hasAnyLinks && grbReviewStartedAt && (
+          <CardFooter
+            data-cy="presentation-card-details"
+            className="presentation-card-links display-flex flex-wrap flex-column-gap-3 flex-row-gap-1 padding-x-0 padding-bottom-205 padding-top-2 margin-x-3 border-top-1px border-gray-10"
+          >
+            {isVirusScanning ? (
+              <em
+                data-testid="presentation-files-virus-scanning"
+                data-testdeckurl={presentationDeckFileURL || transcriptFileURL}
+              >
+                {t('asyncPresentation.virusScanning')}
+              </em>
+            ) : (
+              <>
+                {(recordingLink || recordingPasscode || transcriptLink) && (
+                  <div className="display-flex flex-wrap flex-gap-1">
+                    {recordingLink && (
+                      <ExternalLinkAndModal href={recordingLink}>
+                        {t('asyncPresentation.viewRecording')}
+                      </ExternalLinkAndModal>
+                    )}
 
-                  {!recordingLink && (recordingPasscode || transcriptLink) && (
-                    <span>
-                      {t('asyncPresentation.noRecordingLinkAvailable')}
-                    </span>
-                  )}
+                    {!recordingLink &&
+                      (recordingPasscode || transcriptLink) && (
+                        <span>
+                          {t('asyncPresentation.noRecordingLinkAvailable')}
+                        </span>
+                      )}
 
-                  {recordingPasscode && (
-                    <span className="text-base">
-                      {t('asyncPresentation.passcode', {
-                        passcode: recordingPasscode
-                      })}
-                    </span>
-                  )}
-                </div>
-              )}
+                    {recordingPasscode && (
+                      <span className="text-base">
+                        {t('asyncPresentation.passcode', {
+                          passcode: recordingPasscode
+                        })}
+                      </span>
+                    )}
+                  </div>
+                )}
 
-              {transcriptLink && (
-                <ExternalLinkAndModal href={transcriptLink}>
-                  {t('asyncPresentation.viewTranscript')}
-                </ExternalLinkAndModal>
-              )}
-
-              {transcriptFileStatus === SystemIntakeDocumentStatus.AVAILABLE &&
-                transcriptFileURL &&
-                transcriptFileName && (
-                  <Button
-                    type="button"
-                    onClick={() =>
-                      downloadFileFromURL(transcriptFileURL, transcriptFileName)
-                    }
-                    unstyled
-                  >
+                {transcriptLink && (
+                  <ExternalLinkAndModal href={transcriptLink}>
                     {t('asyncPresentation.viewTranscript')}
-                  </Button>
+                  </ExternalLinkAndModal>
                 )}
 
-              {presentationDeckFileStatus ===
-                SystemIntakeDocumentStatus.AVAILABLE &&
-                presentationDeckFileURL &&
-                presentationDeckFileName && (
-                  <Button
-                    type="button"
-                    data-testid="view-presentation-deck-file"
-                    onClick={() =>
-                      downloadFileFromURL(
-                        presentationDeckFileURL,
-                        presentationDeckFileName
-                      )
-                    }
-                    unstyled
-                  >
-                    {t('asyncPresentation.viewSlideDeck')}
-                  </Button>
-                )}
-            </>
-          )}
-        </CardFooter>
-        {/* )} */}
+                {transcriptFileStatus ===
+                  SystemIntakeDocumentStatus.AVAILABLE &&
+                  transcriptFileURL &&
+                  transcriptFileName && (
+                    <Button
+                      type="button"
+                      onClick={() =>
+                        downloadFileFromURL(
+                          transcriptFileURL,
+                          transcriptFileName
+                        )
+                      }
+                      unstyled
+                    >
+                      {t('asyncPresentation.viewTranscript')}
+                    </Button>
+                  )}
+
+                {presentationDeckFileStatus ===
+                  SystemIntakeDocumentStatus.AVAILABLE &&
+                  presentationDeckFileURL &&
+                  presentationDeckFileName && (
+                    <Button
+                      type="button"
+                      data-testid="view-presentation-deck-file"
+                      onClick={() =>
+                        downloadFileFromURL(
+                          presentationDeckFileURL,
+                          presentationDeckFileName
+                        )
+                      }
+                      unstyled
+                    >
+                      {t('asyncPresentation.viewSlideDeck')}
+                    </Button>
+                  )}
+              </>
+            )}
+          </CardFooter>
+        )}
       </Card>
 
       {/* Modal to remove presentation links */}
