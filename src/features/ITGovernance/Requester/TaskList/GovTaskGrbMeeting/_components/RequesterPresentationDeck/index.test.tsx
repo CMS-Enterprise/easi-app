@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -9,14 +9,12 @@ import {
   GetGovernanceTaskListDocument,
   GetGovernanceTaskListQuery,
   GetGovernanceTaskListQueryVariables,
+  ITGovGRBStatus,
   SystemIntakeDocumentStatus,
-  SystemIntakeGRBPresentationLinksFragment
+  SystemIntakeGRBReviewType
 } from 'gql/generated/graphql';
 import { taskListState } from 'tests/mock/govTaskList';
-import {
-  grbPresentationLinks as mockGRBPresentationLinks,
-  systemIntake
-} from 'tests/mock/systemIntake';
+import { grbPresentationLinks, systemIntake } from 'tests/mock/systemIntake';
 import { describe, expect, it } from 'vitest';
 
 import { MessageProvider } from 'hooks/useMessage';
@@ -63,7 +61,10 @@ const mockGetGovernanceTaskListQuery: MockedQuery<
 
 describe('RequesterPresentationDeck', () => {
   const renderComponent = (
-    grbPresentationLinks?: SystemIntakeGRBPresentationLinksFragment | null
+    props: Omit<
+      ComponentProps<typeof RequesterPresentationDeck>,
+      'systemIntakeID'
+    >
   ) =>
     render(
       <MemoryRouter>
@@ -76,7 +77,9 @@ describe('RequesterPresentationDeck', () => {
           <MessageProvider>
             <RequesterPresentationDeck
               systemIntakeID={systemIntake.id}
-              grbPresentationLinks={grbPresentationLinks}
+              grbMeetingStatus={props.grbMeetingStatus}
+              grbReviewType={props.grbReviewType}
+              grbPresentationLinks={props.grbPresentationLinks}
             />
           </MessageProvider>
         </VerboseMockedProvider>
@@ -84,25 +87,61 @@ describe('RequesterPresentationDeck', () => {
     );
 
   it('matches snapshot with available presentation deck', () => {
-    const { asFragment } = renderComponent(mockGRBPresentationLinks);
+    const { asFragment } = renderComponent({
+      grbMeetingStatus: ITGovGRBStatus.REVIEW_IN_PROGRESS,
+      grbReviewType: SystemIntakeGRBReviewType.ASYNC,
+      grbPresentationLinks
+    });
     expect(asFragment()).toMatchSnapshot();
   });
 
-  it('renders file name and view/remove buttons when presentation deck is available', () => {
-    renderComponent(mockGRBPresentationLinks);
+  it('renders correctly when async review is in progress', () => {
+    renderComponent({
+      grbMeetingStatus: ITGovGRBStatus.REVIEW_IN_PROGRESS,
+      grbReviewType: SystemIntakeGRBReviewType.ASYNC,
+      grbPresentationLinks
+    });
 
     expect(
-      screen.getByText(mockGRBPresentationLinks.presentationDeckFileName!)
+      screen.getByText(grbPresentationLinks.presentationDeckFileName!)
     ).toBeInTheDocument();
 
     expect(screen.getByRole('link', { name: 'View' })).toBeInTheDocument();
 
+    expect(
+      screen.queryByRole('button', { name: 'Remove' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('renders correctly for standard meetings', () => {
+    renderComponent({
+      grbMeetingStatus: ITGovGRBStatus.SCHEDULED,
+      grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+      grbPresentationLinks
+    });
+
+    expect(
+      screen.getByText(grbPresentationLinks.presentationDeckFileName!)
+    ).toBeInTheDocument();
+
+    // Check that both buttons render
+    expect(screen.getByRole('link', { name: 'View' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Remove' })).toBeInTheDocument();
   });
 
   it('allows user to remove presentation deck', async () => {
-    renderComponent(mockGRBPresentationLinks);
+    renderComponent({
+      grbMeetingStatus: ITGovGRBStatus.AWAITING_GRB_REVIEW,
+      grbReviewType: SystemIntakeGRBReviewType.ASYNC,
+      grbPresentationLinks
+    });
 
+    // Hides View button when review is not in progress
+    expect(
+      screen.queryByRole('link', { name: 'View' })
+    ).not.toBeInTheDocument();
+
+    // Click remove button to open modal
     userEvent.click(screen.getByRole('button', { name: 'Remove' }));
 
     const removePresentationLinksModal = screen.getByRole('dialog', {
@@ -125,8 +164,12 @@ describe('RequesterPresentationDeck', () => {
 
   it('renders pending status when presentation deck is pending', () => {
     renderComponent({
-      ...mockGRBPresentationLinks,
-      presentationDeckFileStatus: SystemIntakeDocumentStatus.PENDING
+      grbMeetingStatus: ITGovGRBStatus.REVIEW_IN_PROGRESS,
+      grbReviewType: SystemIntakeGRBReviewType.ASYNC,
+      grbPresentationLinks: {
+        ...grbPresentationLinks,
+        presentationDeckFileStatus: SystemIntakeDocumentStatus.PENDING
+      }
     });
 
     expect(
@@ -135,7 +178,11 @@ describe('RequesterPresentationDeck', () => {
   });
 
   it('renders upload button when presentation links are null', () => {
-    renderComponent(null);
+    renderComponent({
+      grbMeetingStatus: ITGovGRBStatus.REVIEW_IN_PROGRESS,
+      grbReviewType: SystemIntakeGRBReviewType.ASYNC,
+      grbPresentationLinks: null
+    });
 
     expect(
       screen.getByRole('link', { name: 'Upload presentation deck' })
@@ -144,10 +191,14 @@ describe('RequesterPresentationDeck', () => {
 
   it('renders upload button when no presentation deck has been uploaded', () => {
     renderComponent({
-      ...mockGRBPresentationLinks,
-      presentationDeckFileStatus: null,
-      presentationDeckFileURL: null,
-      presentationDeckFileName: null
+      grbMeetingStatus: ITGovGRBStatus.REVIEW_IN_PROGRESS,
+      grbReviewType: SystemIntakeGRBReviewType.ASYNC,
+      grbPresentationLinks: {
+        ...grbPresentationLinks,
+        presentationDeckFileStatus: null,
+        presentationDeckFileURL: null,
+        presentationDeckFileName: null
+      }
     });
 
     expect(

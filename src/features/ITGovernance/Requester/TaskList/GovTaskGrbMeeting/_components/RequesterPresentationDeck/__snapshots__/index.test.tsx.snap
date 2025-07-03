@@ -23,13 +23,6 @@ exports[`RequesterPresentationDeck > matches snapshot with available presentatio
     >
       View
     </a>
-    <button
-      class="usa-button usa-button--unstyled text-error"
-      data-testid="presentation-deck-remove-button"
-      type="button"
-    >
-      Remove
-    </button>
   </div>
 </DocumentFragment>
 `;

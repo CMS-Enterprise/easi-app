@@ -3,7 +3,9 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Button, ButtonGroup } from '@trussworks/react-uswds';
 import {
   GetGovernanceTaskListDocument,
+  ITGovGRBStatus,
   SystemIntakeGRBPresentationLinksFragment,
+  SystemIntakeGRBReviewType,
   useDeleteSystemIntakeGRBPresentationLinksMutation
 } from 'gql/generated/graphql';
 
@@ -14,7 +16,12 @@ import useMessage from 'hooks/useMessage';
 
 interface RequesterPresentationDeckProps {
   systemIntakeID: string;
-  grbPresentationLinks?: SystemIntakeGRBPresentationLinksFragment | null;
+  grbMeetingStatus: ITGovGRBStatus;
+  grbReviewType: SystemIntakeGRBReviewType;
+  grbPresentationLinks:
+    | SystemIntakeGRBPresentationLinksFragment
+    | null
+    | undefined;
 }
 
 /**
@@ -24,6 +31,8 @@ interface RequesterPresentationDeckProps {
  */
 const RequesterPresentationDeck = ({
   systemIntakeID,
+  grbMeetingStatus,
+  grbReviewType,
   grbPresentationLinks
 }: RequesterPresentationDeckProps) => {
   const { t } = useTranslation('itGov');
@@ -159,23 +168,36 @@ const RequesterPresentationDeck = ({
                   />
                 </span>
 
-                <UswdsReactLink
-                  to={presentationDeckFileURL}
-                  target="_blank"
-                  className="margin-right-1"
-                  data-testid="presentation-deck-view-link"
-                >
-                  {t('taskList.step.grbMeeting.view')}
-                </UswdsReactLink>
-                <Button
-                  className="text-error"
-                  type="button"
-                  unstyled
-                  onClick={() => setRemovalModalOpen(true)}
-                  data-testid="presentation-deck-remove-button"
-                >
-                  {t('taskList.step.grbMeeting.remove')}
-                </Button>
+                {
+                  // For standard meetings, always render view button
+                  (grbReviewType === SystemIntakeGRBReviewType.STANDARD ||
+                    // For async reviews, only render view button if review is in progress
+                    grbMeetingStatus === ITGovGRBStatus.REVIEW_IN_PROGRESS) && (
+                    <UswdsReactLink
+                      to={presentationDeckFileURL}
+                      target="_blank"
+                      className="margin-right-1"
+                      data-testid="presentation-deck-view-link"
+                    >
+                      {t('taskList.step.grbMeeting.view')}
+                    </UswdsReactLink>
+                  )
+                }
+
+                {
+                  // For async reviews, hide the remove button if review is in progress
+                  grbMeetingStatus !== ITGovGRBStatus.REVIEW_IN_PROGRESS && (
+                    <Button
+                      className="text-error"
+                      type="button"
+                      unstyled
+                      onClick={() => setRemovalModalOpen(true)}
+                      data-testid="presentation-deck-remove-button"
+                    >
+                      {t('taskList.step.grbMeeting.remove')}
+                    </Button>
+                  )
+                }
               </>
             )}
           </>

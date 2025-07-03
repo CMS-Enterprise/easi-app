@@ -181,12 +181,12 @@ const GovTaskGrbMeeting = ({
                     }
                   )}
                 </Alert>
-                {grbReviewType === SystemIntakeGRBReviewType.ASYNC && (
-                  <RequesterPresentationDeck
-                    systemIntakeID={id}
-                    grbPresentationLinks={grbPresentationLinks}
-                  />
-                )}
+                <RequesterPresentationDeck
+                  systemIntakeID={id}
+                  grbMeetingStatus={grbMeetingStatus}
+                  grbReviewType={grbReviewType}
+                  grbPresentationLinks={grbPresentationLinks}
+                />
               </>
             )}
 
