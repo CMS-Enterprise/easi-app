@@ -1,0 +1,394 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Discussions > matches the snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="grb-discussions bg-base-lightest padding-x-3 padding-y-3 radius-md"
+    id="discussions"
+  >
+    <h2
+      class="margin-top-0 margin-bottom-1"
+    >
+      Discussions
+    </h2>
+    <p
+      class="margin-top-0 line-height-body-5"
+    >
+      Use the discussion boards below to discuss this project. The internal GRB discussion board is a space for the Governance Admin Team and GRB members to discuss privately; the project team will not be able to view discussions there. The primary discussion board is open to all participating in this GRB review.
+    </p>
+    <div
+      class="easi-collapsable-link"
+    >
+      <button
+        aria-controls="discussionBoardTips"
+        aria-expanded="false"
+        class="usa-button usa-button--unstyled display-flex flex-align-center text-bold"
+        data-testid="collapsable-link"
+        type="button"
+      >
+        <svg
+          aria-hidden="true"
+          class="usa-icon margin-right-05"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+          />
+        </svg>
+        Tips for using the discussion boards
+      </button>
+    </div>
+    <div
+      class="internal-discussion-board bg-white padding-3 padding-bottom-4 margin-top-4 border-base-lighter shadow-2"
+    >
+      <div
+        class="internal-discussions-board__header desktop:display-flex flex-align-start"
+      >
+        <h3
+          class="margin-top-0 margin-bottom-1"
+        >
+          Primary discussion board
+        </h3>
+        <p
+          class="margin-0 margin-top-05 text-base display-flex text-no-wrap"
+        >
+          <svg
+            aria-hidden="true"
+            class="usa-icon margin-right-05"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6h1.9c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm0 12H6V10h12v10z"
+            />
+          </svg>
+          Not restricted
+        </p>
+        <button
+          class="usa-button usa-button--outline margin-right-0 margin-y-2 desktop:margin-y-0 text-no-wrap"
+          data-testid="button"
+          type="button"
+        >
+          View discussion board
+        </button>
+      </div>
+      <div
+        class="display-flex"
+      >
+        <p
+          class="margin-0 margin-right-105 display-flex"
+        >
+          <svg
+            aria-label="warning icon"
+            class="usa-icon text-warning-dark margin-right-05"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
+            />
+          </svg>
+          4 discussions without replies
+        </p>
+        <button
+          class="usa-button usa-button--unstyled display-flex flex-align-center"
+          data-testid="button"
+          type="button"
+        >
+          View
+          <svg
+            aria-hidden="true"
+            class="usa-icon margin-left-1"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="m12 4-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
+            />
+          </svg>
+        </button>
+      </div>
+      <h4
+        class="margin-bottom-2"
+      >
+        Most recent activity
+      </h4>
+      <div
+        class="easi-discussion-post display-flex line-height-body-1"
+        data-testid="discussion-post-d6cd88e2-d330-4b7c-9006-d6cf95b775e9"
+      >
+        <div
+          class="margin-right-105"
+        >
+          <div
+            class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-green-5 easi-discussion-avatar"
+            data-testid="avatar--basic"
+          >
+            AA
+          </div>
+        </div>
+        <div
+          class="width-full"
+        >
+          <div
+            class="easi-discussion-post__header tablet:display-flex margin-top-1 margin-bottom-105"
+          >
+            <div>
+              <p
+                class="margin-y-0"
+              >
+                Audrey Abrams
+              </p>
+              <h5
+                class="margin-top-05 margin-bottom-0 font-body-xs text-base text-normal"
+              >
+                Non-voting, CCIIO Rep
+              </h5>
+            </div>
+            <p
+              class="margin-top-105 tablet:margin-top-0 margin-bottom-0 text-base"
+            >
+              11/18/2024
+            </p>
+          </div>
+          <div
+            class="easi-discussion-post__content tiptap__readonly font-body-sm line-height-body-5 tiptap__readonly--truncated"
+            id="easiDiscussionPostContent-editorContent"
+          >
+            <div
+              aria-label="Rich text area"
+              class="tiptap ProseMirror"
+              contenteditable="false"
+              id="easiDiscussionPostContent"
+              role="textbox"
+              translate="no"
+            >
+              <p>
+                This is a discussion without replies.
+              </p>
+            </div>
+          </div>
+          <div
+            class="easi-discussion-post__replies display-flex margin-top-2"
+            data-testid="discussionReplies"
+          >
+            <button
+              class="usa-button usa-button--unstyled display-flex flex-align-center margin-right-205"
+              data-testid="button"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="usa-icon text-primary margin-right-1"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 9h-2V5h2v6zm0 4h-2v-2h2v2z"
+                />
+              </svg>
+              Reply
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="internal-discussion-board bg-white padding-3 padding-bottom-4 margin-top-4 border-base-lighter shadow-2"
+    >
+      <div
+        class="internal-discussions-board__header desktop:display-flex flex-align-start"
+      >
+        <h3
+          class="margin-top-0 margin-bottom-1"
+        >
+          Internal GRB discussion board
+        </h3>
+        <p
+          class="margin-0 margin-top-05 text-base display-flex text-no-wrap"
+        >
+          <svg
+            aria-hidden="true"
+            class="usa-icon margin-right-05"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM8.9 6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2H8.9V6zM18 20H6V10h12v10z"
+            />
+          </svg>
+          Visibility restricted
+        </p>
+        <button
+          class="usa-button usa-button--outline margin-right-0 margin-y-2 desktop:margin-y-0 text-no-wrap"
+          data-testid="button"
+          type="button"
+        >
+          View discussion board
+        </button>
+      </div>
+      <div
+        class="display-flex"
+      >
+        <p
+          class="margin-0 margin-right-105 display-flex"
+        >
+          <svg
+            aria-label="warning icon"
+            class="usa-icon text-warning-dark margin-right-05"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
+            />
+          </svg>
+          4 discussions without replies
+        </p>
+        <button
+          class="usa-button usa-button--unstyled display-flex flex-align-center"
+          data-testid="button"
+          type="button"
+        >
+          View
+          <svg
+            aria-hidden="true"
+            class="usa-icon margin-left-1"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="m12 4-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
+            />
+          </svg>
+        </button>
+      </div>
+      <h4
+        class="margin-bottom-2"
+      >
+        Most recent activity
+      </h4>
+      <div
+        class="easi-discussion-post display-flex line-height-body-1"
+        data-testid="discussion-post-d6cd88e2-d330-4b7c-9006-d6cf95b775e9"
+      >
+        <div
+          class="margin-right-105"
+        >
+          <div
+            class="display-flex flex-align-center flex-justify-center minw-4 circle-4 bg-green-5 easi-discussion-avatar"
+            data-testid="avatar--basic"
+          >
+            AA
+          </div>
+        </div>
+        <div
+          class="width-full"
+        >
+          <div
+            class="easi-discussion-post__header tablet:display-flex margin-top-1 margin-bottom-105"
+          >
+            <div>
+              <p
+                class="margin-y-0"
+              >
+                Audrey Abrams
+              </p>
+              <h5
+                class="margin-top-05 margin-bottom-0 font-body-xs text-base text-normal"
+              >
+                Non-voting, CCIIO Rep
+              </h5>
+            </div>
+            <p
+              class="margin-top-105 tablet:margin-top-0 margin-bottom-0 text-base"
+            >
+              11/18/2024
+            </p>
+          </div>
+          <div
+            class="easi-discussion-post__content tiptap__readonly font-body-sm line-height-body-5 tiptap__readonly--truncated"
+            id="easiDiscussionPostContent-editorContent"
+          >
+            <div
+              aria-label="Rich text area"
+              class="tiptap ProseMirror"
+              contenteditable="false"
+              id="easiDiscussionPostContent"
+              role="textbox"
+              translate="no"
+            >
+              <p>
+                This is a discussion without replies.
+              </p>
+            </div>
+          </div>
+          <div
+            class="easi-discussion-post__replies display-flex margin-top-2"
+            data-testid="discussionReplies"
+          >
+            <button
+              class="usa-button usa-button--unstyled display-flex flex-align-center margin-right-205"
+              data-testid="button"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="usa-icon text-primary margin-right-1"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 9h-2V5h2v6zm0 4h-2v-2h2v2z"
+                />
+              </svg>
+              Reply
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

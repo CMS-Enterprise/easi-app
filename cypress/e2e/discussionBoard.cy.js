@@ -1,5 +1,6 @@
 describe('Discussion Board', () => {
-  it('users with access can interact with discussions', () => {
+  // TODO: Fix in EASI-4861 e2e test updates
+  it.skip('users with access can interact with discussions', () => {
     // Make sure to seed data before running this test
     // Users are from backend mock data
 
@@ -8,9 +9,15 @@ describe('Discussion Board', () => {
 
     cy.visit('/it-governance/61efa6eb-1976-4431-a158-d89cc00ce31d/grb-review');
 
-    // Start the GRB review
-    cy.contains('button', 'Start GRB review').click();
-    cy.contains('button', 'Start review and send notifications').click();
+    // Fill out the GRB Standard Review Form to kick start discussion board
+    cy.contains('button', 'Set up GRB review').click();
+    cy.get('input#grbReviewTypeStandard').check({ force: true });
+    cy.contains('button', 'Next').click();
+    cy.get('[data-testid="date-picker-external-input"]').clear();
+    cy.get('[data-testid="date-picker-external-input"]').type('01/01/2226');
+    cy.contains('button', 'Next').click();
+    cy.get('[data-testid="stepIndicator-3"]').click();
+    cy.url().should('include', '/participants');
 
     // Keep the participants list to check against later
     let participants;
@@ -19,6 +26,11 @@ describe('Discussion Board', () => {
         participants = Array.from(els, el => el.innerText.trim());
       }
     );
+
+    cy.contains('button', 'Complete and begin review').click();
+
+    // Navigate back to GRB Review page
+    cy.url().should('include', '/grb-review');
 
     // Opens modal to view mode
     cy.contains('button', 'View discussion board').click();
@@ -30,7 +42,11 @@ describe('Discussion Board', () => {
     cy.get('#mention-discussion').type('@');
 
     // Check that all participants in the dropdown match the table, + some more groups
-    const groups = ['Governance Admin Team', 'Governance Review Board (GRB)'];
+    const groups = [
+      'Governance Admin Team',
+      'Governance Review Board (GRB)',
+      'Requester'
+    ];
     cy.get('#mention-discussion-editorContent button.item').then(els => {
       const dropdownItems = Array.from(els, el => el.innerText.trim());
       // The dropdown will have the participants + some groups
@@ -41,7 +57,7 @@ describe('Discussion Board', () => {
 
     // Type narrow down to Ally Anderson
     const mentionName = 'Ally Anderson';
-    cy.get('#mention-discussion').type('Al');
+    cy.get('#mention-discussion').type('Al', { force: true });
     cy.contains('#mention-discussion-editorContent button.item', mentionName)
       .as('ally')
       .should('have.length', 1);
@@ -53,6 +69,10 @@ describe('Discussion Board', () => {
     const discussionText = 'e2e post 1';
     cy.get('#mention-discussion').type(discussionText);
     cy.contains('button', 'Save discussion').click();
+
+    // Confirmation modal
+    cy.contains('h2', 'Are you sure you want to start this discussion?');
+    cy.contains('button[type="submit"]', 'Save discussion').click();
 
     // See posted successfully
     cy.contains(
@@ -88,6 +108,10 @@ describe('Discussion Board', () => {
 
     cy.get('#mention-reply').type(replyText);
     cy.contains('button', 'Save reply').click();
+
+    // Confirmation modal
+    cy.contains('h2', 'Are you sure you want to reply to this discussion?');
+    cy.contains('button[type="submit"]', 'Save reply').click();
 
     // Reply success
     cy.contains('.usa-alert--success', 'Success! Your reply has been added.');

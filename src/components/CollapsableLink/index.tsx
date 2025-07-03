@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Button, Icon } from '@trussworks/react-uswds';
-import classnames from 'classnames';
+import classNames from 'classnames';
 
 import './index.scss';
 
 type CollapsableLinkProps = {
   id: string;
   className?: string;
+  innerClassName?: string;
   children: React.ReactNode | React.ReactNodeArray;
   label: string;
   closeLabel?: string;
@@ -20,6 +21,7 @@ type CollapsableLinkProps = {
 const CollapsableLink = ({
   id,
   className,
+  innerClassName,
   children,
   label,
   closeLabel,
@@ -62,7 +64,7 @@ const CollapsableLink = ({
       onClick={() => setOpen(!isOpen)}
       aria-expanded={isOpen}
       aria-controls={id}
-      className={classnames(
+      className={classNames(
         'display-flex flex-align-center',
         { 'text-bold': isOpen && bold },
         className
@@ -74,18 +76,16 @@ const CollapsableLink = ({
       {isOpen ? closeLabel || label : label}
     </Button>
   );
+
+  const leftBarStyle = styleLeftBar
+    ? 'easi-collapsable-link__content'
+    : 'easi-collapsable-link__content-no-bar';
+
   return (
     <div className="easi-collapsable-link">
       {labelPosition === 'top' && collapseButton}
       {isOpen && (
-        <div
-          id={id}
-          className={
-            styleLeftBar
-              ? 'easi-collapsable-link__content'
-              : 'easi-collapsable-link__content-no-bar'
-          }
-        >
+        <div id={id} className={classNames(innerClassName, leftBarStyle)}>
           {children}
         </div>
       )}

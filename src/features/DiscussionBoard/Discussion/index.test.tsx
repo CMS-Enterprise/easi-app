@@ -3,6 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
+  SystemIntakeGRBDiscussionBoardType,
   SystemIntakeGRBReviewDiscussionFragment,
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole
@@ -26,9 +27,9 @@ describe('Discussion component', () => {
       <MemoryRouter>
         <VerboseMockedProvider>
           <Discussion
+            discussionBoardType={SystemIntakeGRBDiscussionBoardType.PRIMARY}
             mentionSuggestions={[]}
             discussion={discussion}
-            closeModal={vi.fn()}
             setDiscussionAlert={vi.fn()}
           />
         </VerboseMockedProvider>
@@ -112,9 +113,9 @@ describe('Discussion component', () => {
       <MemoryRouter>
         <VerboseMockedProvider>
           <Discussion
+            discussionBoardType={SystemIntakeGRBDiscussionBoardType.INTERNAL}
             mentionSuggestions={[]}
             discussion={discussion}
-            closeModal={vi.fn()}
             setDiscussionAlert={vi.fn()}
           />
         </VerboseMockedProvider>
@@ -154,5 +155,27 @@ describe('Discussion component', () => {
     expect(
       screen.getByRole('button', { name: 'Show replies' })
     ).toBeInTheDocument();
+  });
+
+  it('renders the read only view', () => {
+    const [discussion] = discussions;
+
+    render(
+      <MemoryRouter>
+        <VerboseMockedProvider>
+          <Discussion
+            discussionBoardType={SystemIntakeGRBDiscussionBoardType.PRIMARY}
+            mentionSuggestions={[]}
+            discussion={discussion}
+            setDiscussionAlert={vi.fn()}
+            readOnly
+          />
+        </VerboseMockedProvider>
+      </MemoryRouter>
+    );
+
+    expect(
+      screen.queryByRole('heading', { name: 'Reply' })
+    ).not.toBeInTheDocument();
   });
 });

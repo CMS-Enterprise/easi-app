@@ -5,6 +5,9 @@ const SystemIntakeGRBReviewer = gql(/* GraphQL */ `
     id
     grbRole
     votingRole
+    vote
+    voteComment
+    dateVoted
     userAccount {
       id
       username
