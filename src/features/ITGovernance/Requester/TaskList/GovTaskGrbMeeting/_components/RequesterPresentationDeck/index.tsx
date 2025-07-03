@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Button, ButtonGroup } from '@trussworks/react-uswds';
 import {
+  GetGovernanceTaskListDocument,
   SystemIntakeGRBPresentationLinksFragment,
   useDeleteSystemIntakeGRBPresentationLinksMutation
 } from 'gql/generated/graphql';
@@ -42,7 +43,12 @@ const RequesterPresentationDeck = ({
           systemIntakeID
         }
       },
-      refetchQueries: ['GetGovernanceTaskList']
+      refetchQueries: [
+        {
+          query: GetGovernanceTaskListDocument,
+          variables: { id: systemIntakeID }
+        }
+      ]
     });
 
   /** Remove presentation links and handle error/success messages */
@@ -81,8 +87,12 @@ const RequesterPresentationDeck = ({
         }}
         shouldCloseOnOverlayClick
         className="maxw-mobile-lg height-auto"
+        id="removePresentationModal"
+        aria={{
+          labelledby: 'removePresentationModalTitle'
+        }}
       >
-        <h3 className="margin-top-0">
+        <h3 className="margin-top-0" id="removePresentationModalTitle">
           {t('taskList.step.grbMeeting.removeModal.title')}
         </h3>
         {errorMessageInModal && (
@@ -128,7 +138,7 @@ const RequesterPresentationDeck = ({
             {presentationDeckFileStatus === 'PENDING' ? (
               <span
                 className="text-italic"
-                data-testid="presentation-deck-pending-status"
+                data-testid="presentation-deck-virus-scanning"
               >
                 {t('itGov:taskList.step.grbMeeting.scanning')}
               </span>

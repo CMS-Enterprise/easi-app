@@ -1,0 +1,35 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`RequesterPresentationDeck > matches snapshot with available presentation deck 1`] = `
+<DocumentFragment>
+  <div
+    class="margin-top-2"
+    data-testid="presentation-deck-container"
+  >
+    <span
+      class="margin-right-1"
+      data-testid="presentation-deck-file-name"
+    >
+      <strong>
+        Uploaded presentation deck:
+      </strong>
+       presentationDeck.pptx
+    </span>
+    <a
+      class="usa-link margin-right-1"
+      data-testid="presentation-deck-view-link"
+      href="/https://google.com"
+      target="_blank"
+    >
+      View
+    </a>
+    <button
+      class="usa-button usa-button--unstyled text-error"
+      data-testid="presentation-deck-remove-button"
+      type="button"
+    >
+      Remove
+    </button>
+  </div>
+</DocumentFragment>
+`;
