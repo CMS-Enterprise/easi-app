@@ -33,7 +33,7 @@ const GRBReviewerForm = ({
 }: GRBReviewerFormProps) => {
   const { t } = useTranslation('grbReview');
 
-  const { showMessage, showMessageOnNextPage } = useMessage();
+  const { Message, showMessage, showMessageOnNextPage } = useMessage();
 
   const history = useHistory();
 
@@ -77,8 +77,10 @@ const GRBReviewerForm = ({
         showMessage(t(`messages.error.add`), { type: 'error' });
 
         // Scroll to error
-        const err = document.querySelector('.usa-alert');
-        err?.scrollIntoView();
+        setTimeout(() => {
+          const err = document.querySelector('.usa-alert');
+          err?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
       });
 
   return (
@@ -103,6 +105,8 @@ const GRBReviewerForm = ({
         >
           {t('form.returnToRequest', { context: action })}
         </IconLink>
+
+        <Message className="margin-y-2" />
 
         {
           /**

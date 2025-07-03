@@ -66,7 +66,7 @@ const GRBReviewStatusTag = ({
           className="margin-left-3"
         >
           {t('statusCard.restartReview')}
-          <Icon.ArrowForward />
+          <Icon.ArrowForward aria-hidden />
         </Button>
       )}
 
@@ -74,7 +74,7 @@ const GRBReviewStatusTag = ({
         <IconLink
           to="grb-review/review-type"
           className="margin-left-3"
-          icon={<Icon.ArrowForward />}
+          icon={<Icon.ArrowForward aria-hidden />}
           iconPosition="after"
         >
           {t('adminTask.setUpGRBReview.title')}

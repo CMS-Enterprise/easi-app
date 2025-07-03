@@ -6,6 +6,7 @@ import { Button, ButtonGroup } from '@trussworks/react-uswds';
 import {
   SystemIntakeGRBReviewAsyncStatusType,
   SystemIntakeGRBReviewerFragment,
+  SystemIntakeGRBReviewStandardStatusType,
   SystemIntakeState
 } from 'gql/generated/graphql';
 
@@ -23,6 +24,7 @@ type ParticipantsSectionProps = {
   grbReviewers: SystemIntakeGRBReviewerFragment[];
   grbReviewStartedAt?: string | null;
   asyncStatus?: SystemIntakeGRBReviewAsyncStatusType | null;
+  grbReviewStandardStatus?: SystemIntakeGRBReviewStandardStatusType | null;
 };
 
 /**
@@ -33,7 +35,8 @@ const ParticipantsSection = ({
   state,
   grbReviewers,
   grbReviewStartedAt,
-  asyncStatus
+  asyncStatus,
+  grbReviewStandardStatus
 }: ParticipantsSectionProps) => {
   const { t } = useTranslation('grbReview');
 
@@ -42,6 +45,21 @@ const ParticipantsSection = ({
   const isITGovAdmin = useContext(ITGovAdminContext);
 
   const { openModal } = useRestartReviewModal();
+
+  // Both review status have not been set yet (e.g. grb review form not started)
+  const bothStatusNotSet =
+    asyncStatus === null && grbReviewStandardStatus === null;
+
+  const statusIsNotCompleted =
+    // Async review is active and not yet completed
+    (asyncStatus !== null &&
+      asyncStatus !== SystemIntakeGRBReviewAsyncStatusType.COMPLETED) ||
+    // Standard review is active and not yet completed
+    (grbReviewStandardStatus !== null &&
+      grbReviewStandardStatus !==
+        SystemIntakeGRBReviewStandardStatusType.COMPLETED);
+
+  const showParticipantEditButton = statusIsNotCompleted || bothStatusNotSet;
 
   return (
     <>
@@ -57,26 +75,26 @@ const ParticipantsSection = ({
         /* IT Gov Admin view */
         <>
           <div className="desktop:display-flex flex-align-center">
-            <Button
-              type="button"
-              onClick={() =>
-                history.push(`/it-governance/${id}/grb-review/add`)
-              }
-              disabled={
-                state === SystemIntakeState.CLOSED ||
-                asyncStatus === SystemIntakeGRBReviewAsyncStatusType.COMPLETED
-              }
-              outline={grbReviewers?.length > 0}
-            >
-              {t(
-                grbReviewers?.length > 0
-                  ? 'addAnotherGrbReviewer'
-                  : 'addGrbReviewer'
-              )}
-            </Button>
+            {showParticipantEditButton && (
+              <Button
+                type="button"
+                onClick={() =>
+                  history.push(`/it-governance/${id}/grb-review/add`)
+                }
+                disabled={state === SystemIntakeState.CLOSED}
+                outline={grbReviewers?.length > 0}
+                className="desktop:margin-right-1"
+              >
+                {t(
+                  grbReviewers?.length > 0
+                    ? 'addAnotherGrbReviewer'
+                    : 'addGrbReviewer'
+                )}
+              </Button>
+            )}
 
             {state === SystemIntakeState.CLOSED && (
-              <p className="desktop:margin-y-0 desktop:margin-left-1">
+              <p className="desktop:margin-y-0">
                 <Trans
                   i18nKey="grbReview:closedRequest"
                   components={{
@@ -92,7 +110,7 @@ const ParticipantsSection = ({
               </p>
             )}
             {asyncStatus === SystemIntakeGRBReviewAsyncStatusType.COMPLETED && (
-              <p className="desktop:margin-y-0 desktop:margin-left-1">
+              <p className="desktop:margin-y-0">
                 <Trans
                   i18nKey="grbReview:asyncCompleted.reviewers"
                   components={{
@@ -150,7 +168,7 @@ const ParticipantsSection = ({
 
       <ParticipantsTable
         grbReviewers={grbReviewers}
-        asyncStatus={asyncStatus}
+        showParticipantEditButton={showParticipantEditButton}
       />
     </>
   );

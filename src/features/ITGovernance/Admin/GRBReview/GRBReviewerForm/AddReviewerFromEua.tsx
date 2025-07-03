@@ -144,7 +144,7 @@ const AddReviewerFromEua = ({
           )
         )
         .catch(() =>
-          showMessage(t('form.messages.error.remove'), { type: 'error' })
+          showMessage(t('messages.error.remove'), { type: 'error' })
         );
 
       // // Reset `reviewerToRemove` to close modal

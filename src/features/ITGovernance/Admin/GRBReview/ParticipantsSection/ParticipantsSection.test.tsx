@@ -51,6 +51,7 @@ describe('GRB review participants table', () => {
                   state={SystemIntakeState.OPEN}
                   grbReviewers={[grbReviewer]}
                   grbReviewStartedAt={null}
+                  asyncStatus={SystemIntakeGRBReviewAsyncStatusType.IN_PROGRESS}
                 />
               </ITGovAdminContext.Provider>
             </ModalProvider>
@@ -179,6 +180,7 @@ describe('GRB review participants table', () => {
                   grbReviewers={[grbReviewer]}
                   grbReviewStartedAt={null}
                   asyncStatus={SystemIntakeGRBReviewAsyncStatusType.COMPLETED}
+                  grbReviewStandardStatus={null}
                 />
               </ITGovAdminContext.Provider>
             </ModalProvider>
@@ -188,8 +190,8 @@ describe('GRB review participants table', () => {
     );
 
     expect(
-      screen.getByRole('button', { name: 'Add another GRB reviewer' })
-    ).toBeDisabled();
+      screen.queryByRole('button', { name: 'Add another GRB reviewer' })
+    ).not.toBeInTheDocument();
 
     expect(await screen.findByText(/this review is over/i)).toBeInTheDocument();
   });
