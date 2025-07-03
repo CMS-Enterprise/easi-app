@@ -6,7 +6,11 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"go.uber.org/zap"
 
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
+	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -100,6 +104,7 @@ func UpdateSystemIntakeGRBReviewFormInputPresentationAsync(
 func UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(
 	ctx context.Context,
 	store *storage.Store,
+	emailClient *email.Client,
 	input models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync,
 ) (*models.UpdateSystemIntakePayload, error) {
 	// Fetch intake by ID
@@ -118,6 +123,47 @@ func UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(
 		}
 
 		intake.GRBReviewStartedAt = helpers.PointerTo(time.Now())
+
+		if emailClient != nil {
+			// get GRB reviewers
+			reviewers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{intake.ID})
+			if err != nil {
+				return nil, err
+			}
+
+			// get user emails
+			var emails []string
+			for _, reviewer := range reviewers {
+				userAccount, err := dataloaders.GetUserAccountByID(ctx, reviewer.UserID)
+				if err != nil {
+					return nil, err
+				}
+
+				emails = append(emails, userAccount.Email)
+			}
+
+			// send emails here
+			if intake.GrbReviewAsyncEndDate != nil {
+				for _, userEmail := range emails {
+					if err := emailClient.SystemIntake.SendGRBReviewerInvitedToVoteEmail(
+						ctx,
+						email.SendGRBReviewerInvitedToVoteInput{
+							Recipient:          models.EmailAddress(userEmail),
+							StartDate:          *intake.GRBReviewStartedAt,
+							EndDate:            *intake.GrbReviewAsyncEndDate,
+							SystemIntakeID:     intake.ID,
+							ProjectName:        intake.ProjectName.String,
+							RequesterName:      intake.Requester,
+							RequesterComponent: intake.Component.String,
+						},
+					); err != nil {
+						appcontext.ZLogger(ctx).Error("problem sending invite to vote email to GRB reviewer", zap.Error(err), zap.String("user.email", userEmail))
+						// don't exit, we can send out the rest
+						continue
+					}
+				}
+			}
+		}
 	}
 
 	// Update system intake

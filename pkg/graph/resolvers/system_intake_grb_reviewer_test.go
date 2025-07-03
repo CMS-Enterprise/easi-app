@@ -112,7 +112,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
 			},
 		}
-		_, err = CreateSystemIntakeGRBReviewers(s.testConfigs.Context, s.testConfigs.Store, nil, userhelpers.GetUserInfoAccountInfosWrapperFunc(mock.FetchUserInfosMock), &models.CreateSystemIntakeGRBReviewersInput{
+		_, err = CreateSystemIntakeGRBReviewers(s.testConfigs.Context, s.testConfigs.Store, emailClient, userhelpers.GetUserInfoAccountInfosWrapperFunc(mock.FetchUserInfosMock), &models.CreateSystemIntakeGRBReviewersInput{
 			SystemIntakeID: intake.ID,
 			Reviewers:      reviewers,
 		})
@@ -136,22 +136,16 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 		intake, err = store.UpdateSystemIntake(ctx, intake)
 		s.NoError(err)
 
-		_, err = CreateSystemIntakeGRBReviewers(
-			s.ctxWithNewDataloaders(),
-			store,
-			emailClient,
-			userhelpers.GetUserInfoAccountInfosWrapperFunc(okta.FetchUserInfos),
-			&models.CreateSystemIntakeGRBReviewersInput{
-				SystemIntakeID: intake.ID,
-				Reviewers: []*models.CreateGRBReviewerInput{
-					{
-						EuaUserID:  reviewerEUA,
-						VotingRole: votingRole,
-						GrbRole:    grbRole,
-					},
+		_, err = CreateSystemIntakeGRBReviewers(s.ctxWithNewDataloaders(), store, s.testConfigs.EmailClient, userhelpers.GetUserInfoAccountInfosWrapperFunc(okta.FetchUserInfos), &models.CreateSystemIntakeGRBReviewersInput{
+			SystemIntakeID: intake.ID,
+			Reviewers: []*models.CreateGRBReviewerInput{
+				{
+					EuaUserID:  reviewerEUA,
+					VotingRole: votingRole,
+					GrbRole:    grbRole,
 				},
 			},
-		)
+		})
 		s.Error(err)
 		s.False(sender.emailWasSent)
 	})
@@ -253,7 +247,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
 			},
 		}
-		res, err := CreateSystemIntakeGRBReviewers(s.testConfigs.Context, s.testConfigs.Store, nil, userhelpers.GetUserInfoAccountInfosWrapperFunc(mock.FetchUserInfosMock), &models.CreateSystemIntakeGRBReviewersInput{
+		res, err := CreateSystemIntakeGRBReviewers(s.testConfigs.Context, s.testConfigs.Store, s.testConfigs.EmailClient, userhelpers.GetUserInfoAccountInfosWrapperFunc(mock.FetchUserInfosMock), &models.CreateSystemIntakeGRBReviewersInput{
 			SystemIntakeID: intake.ID,
 			Reviewers:      reviewers,
 		})
@@ -356,7 +350,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
 			},
 		}
-		res, err := CreateSystemIntakeGRBReviewers(s.testConfigs.Context, s.testConfigs.Store, nil, userhelpers.GetUserInfoAccountInfosWrapperFunc(mock.FetchUserInfosMock), &models.CreateSystemIntakeGRBReviewersInput{
+		res, err := CreateSystemIntakeGRBReviewers(s.testConfigs.Context, s.testConfigs.Store, s.testConfigs.EmailClient, userhelpers.GetUserInfoAccountInfosWrapperFunc(mock.FetchUserInfosMock), &models.CreateSystemIntakeGRBReviewersInput{
 			SystemIntakeID: intake.ID,
 			Reviewers:      reviewers,
 		})
@@ -437,16 +431,10 @@ func (s *ResolverSuite) TestSystemIntakeStartGRBReview() {
 
 	s.Run("adding reviewers should not email them before start", func() {
 		emailClient, sender := NewEmailClient()
-		payload, err := CreateSystemIntakeGRBReviewers(
-			ctx,
-			store,
-			emailClient,
-			userhelpers.GetUserInfoAccountInfosWrapperFunc(okta.FetchUserInfos),
-			&models.CreateSystemIntakeGRBReviewersInput{
-				SystemIntakeID: intake.ID,
-				Reviewers:      reviewers[0:2], //first two
-			},
-		)
+		payload, err := CreateSystemIntakeGRBReviewers(ctx, store, emailClient, userhelpers.GetUserInfoAccountInfosWrapperFunc(okta.FetchUserInfos), &models.CreateSystemIntakeGRBReviewersInput{
+			SystemIntakeID: intake.ID,
+			Reviewers:      reviewers[0:2], //first two
+		})
 		s.NoError(err)
 		s.Len(payload.Reviewers, 2)
 		s.False(sender.emailWasSent)
@@ -474,16 +462,10 @@ func (s *ResolverSuite) TestSystemIntakeStartGRBReview() {
 
 	s.Run("adding a reviewer after review starts sends email", func() {
 		emailClient, sender := NewEmailClient()
-		payload, err := CreateSystemIntakeGRBReviewers(
-			ctx,
-			store,
-			emailClient,
-			userhelpers.GetUserInfoAccountInfosWrapperFunc(okta.FetchUserInfos),
-			&models.CreateSystemIntakeGRBReviewersInput{
-				SystemIntakeID: intake.ID,
-				Reviewers:      reviewers[2:], //last
-			},
-		)
+		payload, err := CreateSystemIntakeGRBReviewers(ctx, store, emailClient, userhelpers.GetUserInfoAccountInfosWrapperFunc(okta.FetchUserInfos), &models.CreateSystemIntakeGRBReviewersInput{
+			SystemIntakeID: intake.ID,
+			Reviewers:      reviewers[2:], //last
+		})
 		s.NoError(err)
 		s.Len(payload.Reviewers, 1)
 		s.True(sender.emailWasSent)
@@ -619,16 +601,10 @@ func (s *ResolverSuite) createIntakeAndAddReviewers(reviewers ...*models.CreateG
 	okta := local.NewOktaAPIClient()
 
 	intake := s.createNewIntake()
-	createPayload, err := CreateSystemIntakeGRBReviewers(
-		ctx,
-		store,
-		nil,
-		userhelpers.GetUserInfoAccountInfosWrapperFunc(okta.FetchUserInfos),
-		&models.CreateSystemIntakeGRBReviewersInput{
-			SystemIntakeID: intake.ID,
-			Reviewers:      reviewers,
-		},
-	)
+	createPayload, err := CreateSystemIntakeGRBReviewers(ctx, store, s.testConfigs.EmailClient, userhelpers.GetUserInfoAccountInfosWrapperFunc(okta.FetchUserInfos), &models.CreateSystemIntakeGRBReviewersInput{
+		SystemIntakeID: intake.ID,
+		Reviewers:      reviewers,
+	})
 	s.NoError(err)
 	return intake, createPayload.Reviewers
 }

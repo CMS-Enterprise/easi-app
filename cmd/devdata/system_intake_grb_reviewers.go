@@ -16,16 +16,10 @@ func createSystemIntakeGRBReviewers(
 	intake *models.SystemIntake,
 	reviewers []*models.CreateGRBReviewerInput,
 ) {
-	_, err := resolvers.CreateSystemIntakeGRBReviewers(
-		ctx,
-		store,
-		nil, // email client
-		userhelpers.GetUserInfoAccountInfosWrapperFunc(mock.FetchUserInfosMock),
-		&models.CreateSystemIntakeGRBReviewersInput{
-			SystemIntakeID: intake.ID,
-			Reviewers:      reviewers,
-		},
-	)
+	_, err := resolvers.CreateSystemIntakeGRBReviewers(ctx, store, nil, userhelpers.GetUserInfoAccountInfosWrapperFunc(mock.FetchUserInfosMock), &models.CreateSystemIntakeGRBReviewersInput{
+		SystemIntakeID: intake.ID,
+		Reviewers:      reviewers,
+	})
 	if err != nil {
 		panic(err)
 	}

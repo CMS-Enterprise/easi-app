@@ -810,16 +810,10 @@ func (s *ResolverSuite) createIntakeAndAddReviewersByEUAs(reviewerEuaIDs ...stri
 
 	var createdReviewers []*models.SystemIntakeGRBReviewer
 	if len(reviewers) > 0 {
-		payload, err := CreateSystemIntakeGRBReviewers(
-			s.testConfigs.Context,
-			s.testConfigs.Store,
-			nil, //email client
-			userhelpers.GetUserInfoAccountInfosWrapperFunc(s.testConfigs.UserSearchClient.FetchUserInfos),
-			&models.CreateSystemIntakeGRBReviewersInput{
-				SystemIntakeID: intake.ID,
-				Reviewers:      reviewers,
-			},
-		)
+		payload, err := CreateSystemIntakeGRBReviewers(s.testConfigs.Context, s.testConfigs.Store, s.testConfigs.EmailClient, userhelpers.GetUserInfoAccountInfosWrapperFunc(s.testConfigs.UserSearchClient.FetchUserInfos), &models.CreateSystemIntakeGRBReviewersInput{
+			SystemIntakeID: intake.ID,
+			Reviewers:      reviewers,
+		})
 		s.NoError(err)
 		s.Equal(len(payload.Reviewers), len(reviewerEuaIDs))
 		createdReviewers = payload.Reviewers
