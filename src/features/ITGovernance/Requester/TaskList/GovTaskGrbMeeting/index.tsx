@@ -6,7 +6,8 @@ import DiscussionBoard from 'features/DiscussionBoard';
 import {
   GetGovernanceTaskListQuery,
   ITGovGRBStatus,
-  SystemIntakeGRBReviewType
+  SystemIntakeGRBReviewType,
+  SystemIntakeStep
 } from 'gql/generated/graphql';
 import { kebabCase } from 'lodash';
 
@@ -22,6 +23,7 @@ import RequesterPresentationDeck from './_components/RequesterPresentationDeck';
 
 const GovTaskGrbMeeting = ({
   id,
+  step,
   itGovTaskStatuses: { grbMeetingStatus },
   state,
   grbDate,
@@ -81,9 +83,18 @@ const GovTaskGrbMeeting = ({
     }
   }, [grbMeetingStatus, grbReviewType, grbPresentationLinks]);
 
-  const renderDiscussionBoard =
-    grbMeetingStatus === ITGovGRBStatus.AWAITING_DECISION ||
-    grbMeetingStatus === ITGovGRBStatus.REVIEW_IN_PROGRESS;
+  /** Render review type and status alert during and after the GRB meeting step, if step was not skipped */
+  const renderReviewDetails =
+    grbMeetingStatus !== ITGovGRBStatus.CANT_START &&
+    grbMeetingStatus !== ITGovGRBStatus.NOT_NEEDED;
+
+  /** Render presentation deck info if in GRB meeting step and not awaiting decision */
+  const renderPresentationDeck =
+    step === SystemIntakeStep.GRB_MEETING &&
+    grbMeetingStatus !== ITGovGRBStatus.AWAITING_DECISION;
+
+  /** Render discussion board if in GRB meeting step */
+  const renderDiscussionBoard = step === SystemIntakeStep.GRB_MEETING;
 
   return (
     <>
@@ -118,12 +129,8 @@ const GovTaskGrbMeeting = ({
                 {
                   returnObjects: true
                 }
-              ).map((description, index) => (
-                <dd
-                  // eslint-disable-next-line react/no-array-index-key
-                  key={index}
-                  className="margin-left-0 margin-y-1"
-                >
+              ).map(description => (
+                <dd key={description} className="margin-left-0 margin-y-1">
                   {description}
                 </dd>
               ))}
@@ -149,46 +156,42 @@ const GovTaskGrbMeeting = ({
         <TaskListDescription>
           <p>{t('taskList.step.grbMeeting.description')}</p>
 
-          {grbMeetingStatus !== ITGovGRBStatus.CANT_START &&
-            grbMeetingStatus !== ITGovGRBStatus.NOT_NEEDED && (
-              <>
-                <p>
-                  <Trans
-                    i18nKey="itGov:taskList.step.grbMeeting.reviewType.copy"
-                    components={{
-                      strong: <strong />
-                    }}
-                    values={{
-                      type: t(
-                        `taskList.step.grbMeeting.reviewType.${grbReviewType}`
-                      )
-                    }}
-                  />
-                </p>
-                <Alert slim type="info">
-                  {t(
-                    `taskList.step.grbMeeting.alertType.${grbReviewType}.${grbMeetingStatus}`,
-                    {
-                      date: formatDateUtc(dateValue, 'MM/dd/yyyy'),
-                      dateStart: formatDateUtc(
-                        grbReviewStartedAt,
-                        'MM/dd/yyyy'
-                      ),
-                      dateEnd: formatDateUtc(
-                        grbReviewAsyncEndDate,
-                        'MM/dd/yyyy'
-                      )
-                    }
-                  )}
-                </Alert>
-                <RequesterPresentationDeck
-                  systemIntakeID={id}
-                  grbMeetingStatus={grbMeetingStatus}
-                  grbReviewType={grbReviewType}
-                  grbPresentationLinks={grbPresentationLinks}
+          {renderReviewDetails && (
+            <>
+              <p>
+                <Trans
+                  i18nKey="itGov:taskList.step.grbMeeting.reviewType.copy"
+                  components={{
+                    strong: <strong />
+                  }}
+                  values={{
+                    type: t(
+                      `taskList.step.grbMeeting.reviewType.${grbReviewType}`
+                    )
+                  }}
                 />
-              </>
-            )}
+              </p>
+              <Alert slim type="info">
+                {t(
+                  `taskList.step.grbMeeting.alertType.${grbReviewType}.${grbMeetingStatus}`,
+                  {
+                    date: formatDateUtc(dateValue, 'MM/dd/yyyy'),
+                    dateStart: formatDateUtc(grbReviewStartedAt, 'MM/dd/yyyy'),
+                    dateEnd: formatDateUtc(grbReviewAsyncEndDate, 'MM/dd/yyyy')
+                  }
+                )}
+              </Alert>
+            </>
+          )}
+
+          {renderPresentationDeck && (
+            <RequesterPresentationDeck
+              systemIntakeID={id}
+              grbMeetingStatus={grbMeetingStatus}
+              grbReviewType={grbReviewType}
+              grbPresentationLinks={grbPresentationLinks}
+            />
+          )}
 
           {
             /** Discussions card */
