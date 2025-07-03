@@ -710,6 +710,12 @@ export type DeleteSystemIntakeGRBReviewerInput = {
   reviewerID: Scalars['UUID']['input'];
 };
 
+export type DeleteSystemLinkPayload = {
+  __typename: 'DeleteSystemLinkPayload';
+  systemIntakeSystem?: Maybe<SystemIntakeSystem>;
+  userErrors?: Maybe<Array<UserError>>;
+};
+
 /** Data returned after deleting a document attached to a TRB request */
 export type DeleteTRBRequestDocumentPayload = {
   __typename: 'DeleteTRBRequestDocumentPayload';
@@ -1000,6 +1006,7 @@ export type Mutation = {
   deleteSystemIntakeDocument?: Maybe<DeleteSystemIntakeDocumentPayload>;
   deleteSystemIntakeGRBPresentationLinks: Scalars['UUID']['output'];
   deleteSystemIntakeGRBReviewer: Scalars['UUID']['output'];
+  deleteSystemLink?: Maybe<DeleteSystemLinkPayload>;
   deleteTRBGuidanceLetterInsight: TRBGuidanceLetterInsight;
   deleteTRBRequestAttendee: TRBRequestAttendee;
   deleteTRBRequestDocument?: Maybe<DeleteTRBRequestDocumentPayload>;
@@ -1283,6 +1290,12 @@ export type MutationDeleteSystemIntakeGRBPresentationLinksArgs = {
 /** Defines the mutations for the schema */
 export type MutationDeleteSystemIntakeGRBReviewerArgs = {
   input: DeleteSystemIntakeGRBReviewerInput;
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationDeleteSystemLinkArgs = {
+  systemIntakeSystem: Scalars['UUID']['input'];
 };
 
 

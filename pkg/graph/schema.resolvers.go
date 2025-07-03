@@ -639,6 +639,16 @@ func (r *mutationResolver) UnlinkSystemIntakeRelation(ctx context.Context, intak
 	}, nil
 }
 
+// DeleteSystemLink is the resolver for the deleteSystemLink field.
+func (r *mutationResolver) DeleteSystemLink(ctx context.Context, systemIntakeSystem uuid.UUID) (*models.DeleteSystemLinkPayload, error) {
+	err := resolvers.DeleteSystemIntakeSystemByID(ctx, r.store, systemIntakeSystem)
+
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
+}
+
 // CreateSystemIntakeContact is the resolver for the createSystemIntakeContact field.
 func (r *mutationResolver) CreateSystemIntakeContact(ctx context.Context, input models.CreateSystemIntakeContactInput) (*models.CreateSystemIntakeContactPayload, error) {
 	return resolvers.CreateSystemIntakeContact(ctx, r.store, input)

@@ -4,11 +4,14 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 // SystemIntakeSystems utilizes dataloaders to retrieve systems linked to a given system intake ID
@@ -43,4 +46,10 @@ func SystemIntakeSystemsByIntakeID(ctx context.Context, systemIntakeID uuid.UUID
 		return nil, err
 	}
 	return systems, nil
+}
+
+func DeleteSystemIntakeSystemByID(ctx context.Context, store *storage.Store, systemIntakeID uuid.UUID) error {
+	return sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
+		return store.DeleteSystemIntakeSystemByID(ctx, tx, systemIntakeID)
+	})
 }

@@ -320,6 +320,11 @@ type DeleteSystemIntakeGRBReviewerInput struct {
 	ReviewerID uuid.UUID `json:"reviewerID"`
 }
 
+type DeleteSystemLinkPayload struct {
+	SystemIntakeSystem *SystemIntakeSystem `json:"systemIntakeSystem,omitempty"`
+	UserErrors         []*UserError        `json:"userErrors,omitempty"`
+}
+
 // Data returned after deleting a document attached to a TRB request
 type DeleteTRBRequestDocumentPayload struct {
 	Document *TRBRequestDocument `json:"document,omitempty"`
