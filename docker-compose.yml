@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres:14.11
+    image: postgres:17.5
     command: ['postgres', '-c', 'log_statement=all', '-c', 'max_connections=25']
     environment:
       - POSTGRES_PASSWORD=mysecretpassword
