@@ -83,3 +83,13 @@ func (s *Store) SystemIntakesByCedarSystemIDs(ctx context.Context, requests []mo
 		"states":           pq.Array(states),
 	})
 }
+
+func (s *Store) DeleteSystemIntakeSystemByID(ctx context.Context, tx *sqlx.Tx, systemIntakeSystemID uuid.UUID) error {
+	if _, err := namedExec(ctx, tx, sqlqueries.SystemIntakeSystemForm.DeleteByID, args{
+		"system_intake_system_id": systemIntakeSystemID,
+	}); err != nil {
+		appcontext.ZLogger(ctx).Error("failed to delete a Linked System from system_intake_systems", zap.Error(err))
+		return err
+	}
+	return nil
+}

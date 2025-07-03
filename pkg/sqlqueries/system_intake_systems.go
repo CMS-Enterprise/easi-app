@@ -22,10 +22,14 @@ var selectSystemsBySystemIntakeIDsSQL string
 //go:embed SQL/system_intake_system/select_by_cedar_system_ids.sql
 var systemIntakeSelectByCedarSystemIDs string
 
+//go:embed SQL/system_intake_system/delete_system_intake_system.sql
+var deleteSystemIntakeSystemByID string
+
 // SystemIntakeSystemForm holds all relevant SQL scripts for a System Intake system
 var SystemIntakeSystemForm = systemIntakeSystemScripts{
 	Set:                     setSystemIntakeSystemsSQL,
 	Delete:                  deleteSystemIntakeSystemsSQL,
+	DeleteByID:              deleteSystemIntakeSystemByID,
 	SelectByCedarSystemIDs:  systemIntakeSelectByCedarSystemIDs,
 	SelectBySystemIntakeIDs: selectSystemsBySystemIntakeIDsSQL,
 }
@@ -33,6 +37,7 @@ var SystemIntakeSystemForm = systemIntakeSystemScripts{
 type systemIntakeSystemScripts struct {
 	Set                     string
 	Delete                  string
+	DeleteByID              string
 	SelectByCedarSystemIDs  string
 	SelectBySystemIntakeIDs string
 }

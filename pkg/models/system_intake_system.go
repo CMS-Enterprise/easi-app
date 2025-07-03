@@ -8,7 +8,7 @@ type SystemRelationshipType string
 
 const (
 	SystemRelationshipTypePrimarySupport     SystemRelationshipType = "PRIMARY_SUPPORT"
-	SystemRelationshipTypePartialSupport     SystemRelationshipType = "PARTIAL_SUPORT"
+	SystemRelationshipTypePartialSupport     SystemRelationshipType = "PARTIAL_SUPPORT"
 	SystemRelationshipTypeUsesInTechSolution SystemRelationshipType = "USES_OR_IMPACTED_BY_SELECTED_SYSTEM"
 	SystemRelationshipTypeUsedInTechSolution SystemRelationshipType = "IMPACTS_SELECTED_SYSTEM"
 	SystemRelationshipTypeOther              SystemRelationshipType = "OTHER"
