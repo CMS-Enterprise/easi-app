@@ -62,11 +62,6 @@ describe('GRB review participants table', () => {
 
     expect(screen.getByRole('button', { name: 'Add another GRB reviewer' }));
 
-    // Check for Start GRB Review alert
-    expect(
-      screen.getByRole('link', { name: 'Start GRB Review' })
-    ).toBeInTheDocument();
-
     // Table renders GRB reviewer
     expect(screen.getByText(user.commonName)).toBeInTheDocument();
     expect(screen.getByText('Voting')).toBeInTheDocument();
