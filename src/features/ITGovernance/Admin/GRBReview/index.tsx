@@ -265,7 +265,6 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
           id={id}
           state={state}
           grbReviewers={grbReview.grbVotingInformation?.grbReviewers}
-          grbReviewStartedAt={grbReviewStartedAt}
           asyncStatus={grbReviewAsyncStatus}
           grbReviewStandardStatus={grbReviewStandardStatus}
         />

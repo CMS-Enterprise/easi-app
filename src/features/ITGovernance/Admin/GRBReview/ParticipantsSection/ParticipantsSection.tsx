@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { HashLink } from 'react-router-hash-link';
 import { Button, ButtonGroup } from '@trussworks/react-uswds';
 import {
   SystemIntakeGRBReviewAsyncStatusType,
@@ -10,7 +9,6 @@ import {
   SystemIntakeState
 } from 'gql/generated/graphql';
 
-import Alert from 'components/Alert';
 import UswdsReactLink from 'components/LinkWrapper';
 
 import ITGovAdminContext from '../../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
@@ -22,7 +20,6 @@ type ParticipantsSectionProps = {
   id: string;
   state: SystemIntakeState;
   grbReviewers: SystemIntakeGRBReviewerFragment[];
-  grbReviewStartedAt?: string | null;
   asyncStatus?: SystemIntakeGRBReviewAsyncStatusType | null;
   grbReviewStandardStatus?: SystemIntakeGRBReviewStandardStatusType | null;
 };
@@ -34,7 +31,6 @@ const ParticipantsSection = ({
   id,
   state,
   grbReviewers,
-  grbReviewStartedAt,
   asyncStatus,
   grbReviewStandardStatus
 }: ParticipantsSectionProps) => {
