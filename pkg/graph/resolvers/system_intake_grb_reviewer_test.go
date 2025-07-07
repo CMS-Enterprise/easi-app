@@ -136,7 +136,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 		intake, err = store.UpdateSystemIntake(ctx, intake)
 		s.NoError(err)
 
-		_, err = CreateSystemIntakeGRBReviewers(s.ctxWithNewDataloaders(), store, s.testConfigs.EmailClient, userhelpers.GetUserInfoAccountInfosWrapperFunc(okta.FetchUserInfos), &models.CreateSystemIntakeGRBReviewersInput{
+		_, err = CreateSystemIntakeGRBReviewers(s.ctxWithNewDataloaders(), store, emailClient, userhelpers.GetUserInfoAccountInfosWrapperFunc(okta.FetchUserInfos), &models.CreateSystemIntakeGRBReviewersInput{
 			SystemIntakeID: intake.ID,
 			Reviewers: []*models.CreateGRBReviewerInput{
 				{
@@ -147,7 +147,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 			},
 		})
 		s.Error(err)
-		s.False(sender.emailWasSent)
+		s.True(sender.emailWasSent)
 	})
 
 	s.Run("fetch GRB reviewers", func() {
