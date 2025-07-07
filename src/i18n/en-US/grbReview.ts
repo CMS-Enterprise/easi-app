@@ -105,7 +105,7 @@ export default {
     'Adding GRB reviewers will not send them an invitation until you start the GRB review using the <a>Start GRB Review</a> button above, though they will still be able to access content if they sign into EASi.',
   participants: 'Participants',
   participantsText:
-    'The Governance Admin Team has invited you to view documentation related to this IT Governance request. Use the navigation to the left or the buttons below to view the documentation.',
+    'Add the GRB members who should review this IT Governance request. They will be able to view the Intake Request, Business Case, and any supporting documents.',
   availableDocumentation: 'Available documentation',
   viewBusinessCase: 'View Business Case',
   viewIntakeRequest: 'View Intake Request',
