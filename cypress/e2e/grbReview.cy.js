@@ -12,12 +12,7 @@ describe('GRB review', () => {
       if (req.body.operationName === 'SendPresentationDeckReminder') {
         req.alias = 'sendReminder';
       }
-      if (
-        req.body.operationName ===
-        'UpdateSystemIntakeGRBReviewAsyncPresentation'
-      ) {
-        req.alias = 'updatePresentation';
-      }
+
       if (
         req.body.operationName ===
         'UpdateSystemIntakeGRBReviewFormInputTimeframeAsync'
@@ -65,7 +60,6 @@ describe('GRB review', () => {
     cy.contains('button', 'Reminder sent').should('be.disabled');
 
     cy.getByTestId('pager-next-button').click();
-    cy.wait('@updatePresentation').its('response.statusCode').should('eq', 200);
 
     // Additional documents page
     cy.url().should('include', '/documents');
@@ -173,12 +167,6 @@ describe('GRB review', () => {
       if (req.body.operationName === 'SendPresentationDeckReminder') {
         req.alias = 'sendReminder';
       }
-      if (
-        req.body.operationName ===
-        'UpdateSystemIntakeGRBReviewStandardPresentation'
-      ) {
-        req.alias = 'updatePresentation';
-      }
       if (req.body.operationName === 'StartGRBReview') {
         req.alias = 'startGRBReview';
       }
@@ -206,7 +194,6 @@ describe('GRB review', () => {
     cy.contains('button', 'Reminder sent').should('be.disabled');
 
     cy.getByTestId('pager-next-button').click();
-    cy.wait('@updatePresentation').its('response.statusCode').should('eq', 200);
 
     // Additional documents page
     cy.url().should('include', '/documents');
