@@ -124,21 +124,6 @@ const ParticipantsSection = ({
               </p>
             )}
           </div>
-
-          {state === SystemIntakeState.OPEN && !grbReviewStartedAt && (
-            <Alert type="info" slim>
-              <Trans
-                i18nKey="grbReview:participantsStartReviewAlert"
-                components={{
-                  a: (
-                    <HashLink to="#startGrbReview" className="usa-link">
-                      Start GRB Review
-                    </HashLink>
-                  )
-                }}
-              />
-            </Alert>
-          )}
         </>
       ) : (
         /* GRB Reviewer view */
