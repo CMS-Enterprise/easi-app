@@ -6,7 +6,11 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"go.uber.org/zap"
 
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/email"
+	"github.com/cms-enterprise/easi-app/pkg/email/translation"
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -248,6 +252,7 @@ func ExtendGRBReviewDeadlineAsync(
 func RestartGRBReviewAsync(
 	ctx context.Context,
 	store *storage.Store,
+	emailClient *email.Client,
 	input models.RestartGRBReviewInput,
 ) (*models.UpdateSystemIntakePayload, error) {
 	// Fetch intake by ID
@@ -269,6 +274,26 @@ func RestartGRBReviewAsync(
 	updatedIntake, err := store.UpdateSystemIntake(ctx, intake)
 	if err != nil {
 		return nil, err
+	}
+
+	if intake.GRBReviewStartedAt != nil && intake.GrbReviewAsyncEndDate != nil {
+		if err := emailClient.SystemIntake.SendSystemIntakeGRBReviewRestarted(
+			ctx,
+			models.EmailNotificationRecipients{
+				RegularRecipientEmails:   nil,
+				ShouldNotifyITGovernance: true,
+				ShouldNotifyITInvestment: false,
+			},
+			intake.ID,
+			intake.ProjectName.String,
+			intake.Requester,
+			translation.GetComponentAcronym(intake.Component.String),
+			*intake.GRBReviewStartedAt,
+			*intake.GrbReviewAsyncEndDate,
+		); err != nil {
+			appcontext.ZLogger(ctx).Error("problem sending GRB review restarted email", zap.Error(err))
+			// no need to fail here, just continue
+		}
 	}
 
 	return &models.UpdateSystemIntakePayload{

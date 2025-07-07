@@ -824,7 +824,6 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		"STP",
 		time.Date(2025, 6, 1, 0, 0, 0, 0, time.UTC),
 		time.Date(2026, 6, 7, 0, 0, 0, 0, time.UTC),
-		time.Date(2026, 6, 7, 0, 0, 0, 0, time.UTC),
 	)
 	noErr(err)
 

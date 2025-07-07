@@ -416,6 +416,7 @@ func (s *ResolverSuite) TestRestartGRBReviewAsync() {
 	updatedPayload, err := RestartGRBReviewAsync(
 		s.testConfigs.Context,
 		s.testConfigs.Store,
+		s.testConfigs.EmailClient,
 		input,
 	)
 

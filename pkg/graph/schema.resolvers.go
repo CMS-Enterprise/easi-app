@@ -730,7 +730,7 @@ func (r *mutationResolver) ExtendGRBReviewDeadlineAsync(ctx context.Context, inp
 
 // RestartGRBReviewAsync is the resolver for the restartGRBReviewAsync field.
 func (r *mutationResolver) RestartGRBReviewAsync(ctx context.Context, input models.RestartGRBReviewInput) (*models.UpdateSystemIntakePayload, error) {
-	return resolvers.RestartGRBReviewAsync(ctx, r.store, input)
+	return resolvers.RestartGRBReviewAsync(ctx, r.store, r.emailClient, input)
 }
 
 // UpdateSystemIntakeLinkedCedarSystem is the resolver for the updateSystemIntakeLinkedCedarSystem field.
