@@ -27,7 +27,6 @@ import {
   SystemIntakeSystem,
   useGetCedarSystemsQuery
 } from 'gql/generated/graphql';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Alert from 'components/Alert';
 import UswdsReactLink from 'components/LinkWrapper';
@@ -50,10 +49,7 @@ type TableProps = {
   systems?: SystemIntakeSystem[];
   defaultPageSize?: number;
   isHomePage?: boolean;
-};
-
-const removeLink = (systemLinkedSystemId: string) => {
-  console.log('remove this!', systemLinkedSystemId);
+  onRemoveLink: (id: string) => void;
 };
 
 const organizeCedarSystems = (data: GetCedarSystemsQuery | undefined) => {
@@ -67,9 +63,9 @@ const organizeCedarSystems = (data: GetCedarSystemsQuery | undefined) => {
 const LinkedSystemsTable = ({
   systems = [],
   defaultPageSize = 10,
-  isHomePage
+  isHomePage,
+  onRemoveLink
 }: TableProps) => {
-  const flags = useFlags();
   const { t } = useTranslation('linkedSystems');
 
   const history = useHistory();
@@ -84,6 +80,17 @@ const LinkedSystemsTable = ({
     () => organizeCedarSystems(data),
     [data]
   );
+
+  const translateSystemRelationships = (systemRelationships: string[]) => {
+    const translatedRelationships = systemRelationships.map(relationship => {
+      console.log(relationship, `relationshipTypes.${relationship}`);
+      if (relationship) {
+        return t(`relationshipTypes.${relationship}` || '');
+      }
+      return <></>;
+    }, []);
+    return <>{translatedRelationships.toString()}</>;
+  };
 
   const columns: Column<SystemIntakeSystem>[] = useMemo(() => {
     const cols: Column<SystemIntakeSystem>[] = [];
@@ -106,48 +113,45 @@ const LinkedSystemsTable = ({
       accessor: 'systemRelationshipType',
       id: 'systemRelationshipType',
       Cell: ({ row }: { row: Row<SystemIntakeSystem> }) => {
-        return <p>{t(row.cells[1]?.value.toString() ?? '')}</p>;
+        return translateSystemRelationships({ ...row }.cells[1]?.value);
       }
     });
 
-    if (flags.showAtoColumn) {
-      cols.push({
-        Header: t<string>('linkedSystemsTable.header.actions'),
-        Cell: ({ row }: { row: Row<SystemIntakeSystem> }) => {
-          console.log(row);
-          return (
-            <div>
-              <Button
-                type="button"
-                unstyled
-                onClick={() =>
-                  history.push(`/linked-systems-form/${row.original.id}`)
-                }
-              >
-                Edit
-              </Button>
-              <span style={{ margin: '0 0.5rem' }} />
-              <Button
-                type="button"
-                unstyled
-                onClick={() => removeLink(row.original.id)}
-              >
-                Remove
-              </Button>
-              <span style={{ margin: '0 0.5rem' }} />
-            </div>
-          );
-        },
-        sortType: (a, b) =>
-          (a.values.atoExpirationDate ?? '') >
-          (b.values.atoExpirationDate ?? '')
-            ? 1
-            : -1
-      });
-    }
+    cols.push({
+      Header: t<string>('linkedSystemsTable.header.actions'),
+      Cell: ({ row }: { row: Row<SystemIntakeSystem> }) => {
+        return (
+          <div>
+            <Button
+              type="button"
+              unstyled
+              onClick={() =>
+                history.push(`/linked-systems-form/${row.original.id}`)
+              }
+            >
+              Edit
+            </Button>
+            <span style={{ margin: '0 0.5rem' }} />
+            <Button
+              type="button"
+              unstyled
+              className="text-error"
+              onClick={() => onRemoveLink(row.original.id)}
+            >
+              Remove
+            </Button>
+            <span style={{ margin: '0 0.5rem' }} />
+          </div>
+        );
+      },
+      sortType: (a, b) =>
+        (a.values.atoExpirationDate ?? '') > (b.values.atoExpirationDate ?? '')
+          ? 1
+          : -1
+    });
 
     return cols;
-  }, [t, flags.showAtoColumn, organizedCedarSystems]);
+  }, [t, history, onRemoveLink, organizedCedarSystems]);
 
   const {
     getTableProps,

@@ -35,7 +35,15 @@ export default {
       'This request uses the selected system in its existing or proposed technical solution or is impacted by the selected system.',
     impactsSelectedSystem: 'This request impacts the selected system. ',
     other: 'Other',
-    pleaseExplain: 'Please Explain'
+    pleaseExplain: 'Please Explain',
+    PRIMARY_SUPPORT:
+      'This request primarily supports the selected system or is the main ADO contract for the selected system',
+    PARTIAL_SUPPORT:
+      'This request partially contributes financially to the selected system',
+    USES_OR_IMPACTED_BY_SELECTED_SYSTEM:
+      'This request uses the selected system in its existing or proposed technical solution or is impacted by the selected system',
+    IMPACTS_SELECTED_SYSTEM: 'This request impacts the selected system ',
+    OTHER: 'Other'
   },
   unableToRetrieveCedarSystems:
     'We were unable to retrieve Cedar Systems. Please try again. If this issue persists, please contact <link1>EnterpriseArchitecture@cms.hhs.gov</link1>',

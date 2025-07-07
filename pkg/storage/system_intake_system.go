@@ -45,7 +45,7 @@ func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemI
 		systemIDLink.SystemIntakeID = systemIntakeID
 		systemIDLink.ModifiedBy = &userID
 		systemIDLink.SystemRelationshipType = relationship.SystemRelationshipType
-		systemIDLink.OtherSystemRelationship = relationship.OtherTypeDescription
+		systemIDLink.OtherSystemRelationshipDescription = relationship.OtherSystemRelationshipDescription
 
 		setSystemIntakeSystemsLinks[i] = systemIDLink
 	}

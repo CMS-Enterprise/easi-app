@@ -16,6 +16,7 @@ import {
 import {
   // RequestRelationType,
   SystemIntakeSystem,
+  useDeleteSystemLinkMutation,
   useSystemIntakeQuery
 } from 'gql/generated/graphql';
 
@@ -80,12 +81,44 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
   const {
     data,
     error: systemIntakeError,
-    loading: relationLoading
+    loading: relationLoading,
+    refetch: refetchSystemIntakes
   } = useSystemIntakeQuery({
     variables: { id }
   });
 
   console.log(data, systemIntakeError);
+
+  const [
+    deleteSystemLink,
+    {
+      data: deleteSystemLinkResponse,
+      loading: deleteSystemLinkLoading,
+      error: deleteSystemLinkError
+    }
+  ] = useDeleteSystemLinkMutation();
+
+  console.log(
+    deleteSystemLinkResponse,
+    deleteSystemLinkLoading,
+    deleteSystemLinkError
+  );
+
+  const handleRemoveLink = async (systemLinkedSystemId: string) => {
+    console.log('remove this!', systemLinkedSystemId);
+    // deleteSystemLink
+    // deleteSystemLink(systemLinkedSystemId);
+    try {
+      const response = await deleteSystemLink({
+        variables: { systemIntakeSystem: systemLinkedSystemId }
+      });
+
+      console.log(response.data);
+      refetchSystemIntakes();
+    } catch (error) {
+      console.error('error deleting the ilinkl');
+    }
+  };
 
   const submitEnabled: boolean = (() => {
     // if there are relationships added or the checkbox is filled
@@ -228,6 +261,7 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
             }
             defaultPageSize={20}
             isHomePage={false}
+            onRemoveLink={handleRemoveLink}
           />
 
           <ButtonGroup>

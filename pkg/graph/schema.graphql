@@ -1087,7 +1087,7 @@ Input data for creating a system intake's relationship to a CEDAR system
 input SystemRelationshipInput {
   cedarSystemId: String
   systemRelationshipType: [SystemRelationshipType!]!
-  otherTypeDescription: String
+  otherSystemRelationshipDescription: String
 }
 
 type SystemIntakeSystem {
@@ -1095,7 +1095,7 @@ type SystemIntakeSystem {
   systemIntakeID: UUID!
   systemID: String
   systemRelationshipType: [SystemRelationshipType!]!
-  otherSystemRelationship: String
+  otherSystemRelationshipDescription: String
 }
 """
 Input data for updating a system intake's relationship to a CEDAR system
@@ -1116,6 +1116,7 @@ input SetSystemIntakeRelationExistingSystemInput {
   systemIntakeID: UUID!
   cedarSystemRelationShips: [SystemRelationshipInput!]!
   contractNumbers: [String!]!
+
 }
 
 # RequestRelationType.EXISTING_SERVICE

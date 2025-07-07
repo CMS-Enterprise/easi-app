@@ -98,7 +98,7 @@ const LinkedSystemsForm = () => {
 
   //   const { getValues } = useForm();
 
-  const { t } = useTranslation('linkedSystems');
+  const { t } = useTranslation(['linkedSystems', 'error']);
 
   const [setExistingIntakeSystem, { error: existingIntakeSystemError }] =
     useSetSystemIntakeRelationExistingSystemMutation();
@@ -113,14 +113,6 @@ const LinkedSystemsForm = () => {
   } = useGetSystemIntakeRelationQuery({
     variables: { id }
   });
-
-  console.log(
-    'lkajsdf;lkjsa',
-    systemIntakeAndCedarSystems,
-    relationError,
-    relationLoading
-  );
-  console.log('lkajsdf;lkjsa', systemIntakeAndCedarSystems);
 
   const cedarSystemIdOptions = useMemo(() => {
     const cedarSystemsData = systemIntakeAndCedarSystems?.cedarSystems;
@@ -196,6 +188,31 @@ const LinkedSystemsForm = () => {
   return (
     <MainContent className="grid-container margin-bottom-15">
       <>
+        {(hasErrors || existingIntakeSystemError) && (
+          <Alert
+            id="link-form-error"
+            type="error"
+            slim
+            className="margin-top-2"
+          >
+            <Trans
+              i18nKey="linkedSystems:unableToUpdateSystemLinks"
+              components={{
+                link1: <Link href="EnterpriseArchitecture@cms.hhs.gov"> </Link>
+              }}
+            />
+          </Alert>
+        )}
+        {cedarSystemSelectedError && (
+          <Alert
+            id="link-form-error"
+            type="error"
+            slim
+            className="margin-top-2"
+          >
+            {t('error:pleaseSelectASystem')}
+          </Alert>
+        )}
         <PageHeading className="margin-top-4 margin-bottom-0">
           {t('header')}
         </PageHeading>
@@ -220,36 +237,6 @@ const LinkedSystemsForm = () => {
             {t('dontEditAndReturn')}
           </IconButton>
         </p>
-        {hasErrors && (
-          <Alert
-            id="link-form-error"
-            type="error"
-            slim
-            className="margin-top-2"
-          >
-            {t('error:unableToUpdateSystemLinks')}
-          </Alert>
-        )}
-        {existingIntakeSystemError && (
-          <Alert
-            id="link-form-error"
-            type="error"
-            slim
-            className="margin-top-2"
-          >
-            {t('error:unableToUpdateSystemLinks')}
-          </Alert>
-        )}
-        {cedarSystemSelectedError && (
-          <Alert
-            id="link-form-error"
-            type="error"
-            slim
-            className="margin-top-2"
-          >
-            {t('error:pleaseSelectASystem')}
-          </Alert>
-        )}
         {Object.keys(errors).length > 0 && (
           <ErrorAlert
             testId="contact-details-errors"

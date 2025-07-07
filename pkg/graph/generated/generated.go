@@ -968,11 +968,11 @@ type ComplexityRoot struct {
 	}
 
 	SystemIntakeSystem struct {
-		ID                      func(childComplexity int) int
-		OtherSystemRelationship func(childComplexity int) int
-		SystemID                func(childComplexity int) int
-		SystemIntakeID          func(childComplexity int) int
-		SystemRelationshipType  func(childComplexity int) int
+		ID                                 func(childComplexity int) int
+		OtherSystemRelationshipDescription func(childComplexity int) int
+		SystemID                           func(childComplexity int) int
+		SystemIntakeID                     func(childComplexity int) int
+		SystemRelationshipType             func(childComplexity int) int
 	}
 
 	TRBAdminNote struct {
@@ -6878,12 +6878,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.SystemIntakeSystem.ID(childComplexity), true
 
-	case "SystemIntakeSystem.otherSystemRelationship":
-		if e.complexity.SystemIntakeSystem.OtherSystemRelationship == nil {
+	case "SystemIntakeSystem.otherSystemRelationshipDescription":
+		if e.complexity.SystemIntakeSystem.OtherSystemRelationshipDescription == nil {
 			break
 		}
 
-		return e.complexity.SystemIntakeSystem.OtherSystemRelationship(childComplexity), true
+		return e.complexity.SystemIntakeSystem.OtherSystemRelationshipDescription(childComplexity), true
 
 	case "SystemIntakeSystem.systemID":
 		if e.complexity.SystemIntakeSystem.SystemID == nil {
@@ -9408,7 +9408,7 @@ Input data for creating a system intake's relationship to a CEDAR system
 input SystemRelationshipInput {
   cedarSystemId: String
   systemRelationshipType: [SystemRelationshipType!]!
-  otherTypeDescription: String
+  otherSystemRelationshipDescription: String
 }
 
 type SystemIntakeSystem {
@@ -9416,7 +9416,7 @@ type SystemIntakeSystem {
   systemIntakeID: UUID!
   systemID: String
   systemRelationshipType: [SystemRelationshipType!]!
-  otherSystemRelationship: String
+  otherSystemRelationshipDescription: String
 }
 """
 Input data for updating a system intake's relationship to a CEDAR system
@@ -9437,6 +9437,7 @@ input SetSystemIntakeRelationExistingSystemInput {
   systemIntakeID: UUID!
   cedarSystemRelationShips: [SystemRelationshipInput!]!
   contractNumbers: [String!]!
+
 }
 
 # RequestRelationType.EXISTING_SERVICE
@@ -29291,8 +29292,8 @@ func (ec *executionContext) fieldContext_DeleteSystemLinkPayload_systemIntakeSys
 				return ec.fieldContext_SystemIntakeSystem_systemID(ctx, field)
 			case "systemRelationshipType":
 				return ec.fieldContext_SystemIntakeSystem_systemRelationshipType(ctx, field)
-			case "otherSystemRelationship":
-				return ec.fieldContext_SystemIntakeSystem_otherSystemRelationship(ctx, field)
+			case "otherSystemRelationshipDescription":
+				return ec.fieldContext_SystemIntakeSystem_otherSystemRelationshipDescription(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeSystem", field.Name)
 		},
@@ -46266,8 +46267,8 @@ func (ec *executionContext) fieldContext_SystemIntake_cedarSystemRelationShips(_
 				return ec.fieldContext_SystemIntakeSystem_systemID(ctx, field)
 			case "systemRelationshipType":
 				return ec.fieldContext_SystemIntakeSystem_systemRelationshipType(ctx, field)
-			case "otherSystemRelationship":
-				return ec.fieldContext_SystemIntakeSystem_otherSystemRelationship(ctx, field)
+			case "otherSystemRelationshipDescription":
+				return ec.fieldContext_SystemIntakeSystem_otherSystemRelationshipDescription(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeSystem", field.Name)
 		},
@@ -51916,8 +51917,8 @@ func (ec *executionContext) fieldContext_SystemIntakeSystem_systemRelationshipTy
 	return fc, nil
 }
 
-func (ec *executionContext) _SystemIntakeSystem_otherSystemRelationship(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeSystem) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntakeSystem_otherSystemRelationship(ctx, field)
+func (ec *executionContext) _SystemIntakeSystem_otherSystemRelationshipDescription(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeSystem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeSystem_otherSystemRelationshipDescription(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -51930,7 +51931,7 @@ func (ec *executionContext) _SystemIntakeSystem_otherSystemRelationship(ctx cont
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.OtherSystemRelationship, nil
+		return obj.OtherSystemRelationshipDescription, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -51944,7 +51945,7 @@ func (ec *executionContext) _SystemIntakeSystem_otherSystemRelationship(ctx cont
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_SystemIntakeSystem_otherSystemRelationship(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_SystemIntakeSystem_otherSystemRelationshipDescription(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeSystem",
 		Field:      field,
@@ -65305,7 +65306,7 @@ func (ec *executionContext) unmarshalInputSystemRelationshipInput(ctx context.Co
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"cedarSystemId", "systemRelationshipType", "otherTypeDescription"}
+	fieldsInOrder := [...]string{"cedarSystemId", "systemRelationshipType", "otherSystemRelationshipDescription"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -65326,13 +65327,13 @@ func (ec *executionContext) unmarshalInputSystemRelationshipInput(ctx context.Co
 				return it, err
 			}
 			it.SystemRelationshipType = data
-		case "otherTypeDescription":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("otherTypeDescription"))
+		case "otherSystemRelationshipDescription":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("otherSystemRelationshipDescription"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.OtherTypeDescription = data
+			it.OtherSystemRelationshipDescription = data
 		}
 	}
 
@@ -74149,8 +74150,8 @@ func (ec *executionContext) _SystemIntakeSystem(ctx context.Context, sel ast.Sel
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-		case "otherSystemRelationship":
-			out.Values[i] = ec._SystemIntakeSystem_otherSystemRelationship(ctx, field, obj)
+		case "otherSystemRelationshipDescription":
+			out.Values[i] = ec._SystemIntakeSystem_otherSystemRelationshipDescription(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

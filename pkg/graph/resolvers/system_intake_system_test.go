@@ -41,9 +41,9 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 		// set contract for the created system intake
 		linkedSystems := []*models.SystemRelationshipInput{
 			{
-				CedarSystemID:          &systemID1,
-				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-				OtherTypeDescription:   &description,
+				CedarSystemID:                      &systemID1,
+				SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+				OtherSystemRelationshipDescription: &description,
 			},
 			{
 				CedarSystemID:          &systemID2,
@@ -151,9 +151,9 @@ func (s *ResolverSuite) TestSystemIntakesByCedarSystemID() {
 		// link all systems to all system intakes
 		linkedSystems := []*models.SystemRelationshipInput{
 			{
-				CedarSystemID:          &systemID1,
-				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-				OtherTypeDescription:   &description,
+				CedarSystemID:                      &systemID1,
+				SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+				OtherSystemRelationshipDescription: &description,
 			},
 			{
 				CedarSystemID:          &systemID2,

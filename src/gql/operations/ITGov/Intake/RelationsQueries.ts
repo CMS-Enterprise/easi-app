@@ -23,7 +23,7 @@ export const SetSystemIntakeRelationExistingSystem = gql(/* GraphQL */ `
           systemIntakeID
           systemID
           systemRelationshipType
-          otherSystemRelationship
+          otherSystemRelationshipDescription
         }
       }
     }
@@ -99,7 +99,25 @@ export const GetTrbRequestRelations = gql(/* GraphQL */ `
         systemIntakeID
         systemID
         systemRelationshipType
-        otherSystemRelationship
+        otherSystemRelationshipDescription
+      }
+    }
+  }
+`);
+
+export const DeleteSystemLink = gql(/* GraphQL */ `
+  mutation deleteSystemLink($systemIntakeSystem: UUID!) {
+    deleteSystemLink(systemIntakeSystem: $systemIntakeSystem) {
+      systemIntakeSystem {
+        id
+        systemIntakeID
+        systemID
+        systemRelationshipType
+        otherSystemRelationshipDescription
+      }
+      userErrors {
+        message
+        path
       }
     }
   }
