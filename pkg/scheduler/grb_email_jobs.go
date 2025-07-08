@@ -34,6 +34,7 @@ type grbEmailJobs struct {
 }
 
 // GRBEmailJobs is the exported representation of all GRB email scheduled jobs
+// this line initializes GRB email jobs
 var GRBEmailJobs = getGRBEmailJobs(SharedScheduler)
 
 // getGRBEmailJobs initializes all GRB email jobs
