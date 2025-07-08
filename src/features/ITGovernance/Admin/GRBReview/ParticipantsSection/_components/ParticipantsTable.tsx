@@ -11,7 +11,6 @@ import {
 } from '@trussworks/react-uswds';
 import {
   GetSystemIntakeGRBReviewDocument,
-  SystemIntakeGRBReviewAsyncStatusType,
   SystemIntakeGRBReviewerFragment,
   useDeleteSystemIntakeGRBReviewerMutation
 } from 'gql/generated/graphql';
@@ -28,13 +27,13 @@ import {
 type ParticipantsTableProps = {
   grbReviewers: SystemIntakeGRBReviewerFragment[];
   fromGRBSetup?: boolean;
-  asyncStatus?: SystemIntakeGRBReviewAsyncStatusType | null;
+  showParticipantEditButton?: boolean;
 };
 
 const ParticipantsTable = ({
   grbReviewers,
   fromGRBSetup,
-  asyncStatus
+  showParticipantEditButton
 }: ParticipantsTableProps) => {
   const { t } = useTranslation('grbReview');
 
@@ -118,21 +117,17 @@ const ParticipantsTable = ({
           return <>{t<string>(`reviewerRoles.${value}`)}</>;
         }
       },
-      // Only display action column if user is GRT admin and asyncStatus is not COMPLETED
-      ...(isITGovAdmin &&
-      asyncStatus !== SystemIntakeGRBReviewAsyncStatusType.COMPLETED
-        ? [actionColumn]
-        : [])
+      ...(isITGovAdmin && showParticipantEditButton ? [actionColumn] : [])
     ];
   }, [
-    t,
-    isITGovAdmin,
-    setReviewerToRemove,
-    history,
-    pathname,
     fromGRBSetup,
+    history,
+    isITGovAdmin,
+    pathname,
+    setReviewerToRemove,
+    showParticipantEditButton,
     systemId,
-    asyncStatus
+    t
   ]);
 
   const table = useTable(
@@ -162,9 +157,7 @@ const ParticipantsTable = ({
           { type: 'success' }
         )
       )
-      .catch(() =>
-        showMessage(t('form.messages.error.remove'), { type: 'error' })
-      );
+      .catch(() => showMessage(t('messages.error.remove'), { type: 'error' }));
 
     // Reset `reviewerToRemove` to close modal
     setReviewerToRemove(null);
@@ -210,13 +203,17 @@ const ParticipantsTable = ({
       <Table bordered={false} fullWidth scrollable {...getTableProps()}>
         <thead>
           {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column, index) => (
+            <tr
+              {...headerGroup.getHeaderGroupProps()}
+              key={{ ...headerGroup.getHeaderGroupProps() }.key}
+            >
+              {headerGroup.headers.map(column => (
                 <th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   aria-sort={getColumnSortStatus(column)}
                   scope="col"
                   className="border-bottom-2px"
+                  key={column.id}
                 >
                   <Button
                     type="button"
@@ -238,12 +235,14 @@ const ParticipantsTable = ({
               <tr
                 {...row.getRowProps()}
                 data-testid={`grbReviewer-${row.original.userAccount.username}`}
+                key={row.id}
               >
-                {row.cells.map((cell, index) => {
+                {row.cells.map(cell => {
                   return (
                     <td
                       {...cell.getCellProps()}
                       data-testid={`grb-reviewer-${cell.column.id}`}
+                      key={{ ...cell.getCellProps() }.key}
                     >
                       {cell.render('Cell')}
                     </td>

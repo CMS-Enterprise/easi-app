@@ -156,6 +156,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
             <ParticipantsTable
               grbReviewers={grbReview.grbVotingInformation?.grbReviewers}
               fromGRBSetup
+              showParticipantEditButton
             />
           </Grid>
         </FormGroup>
