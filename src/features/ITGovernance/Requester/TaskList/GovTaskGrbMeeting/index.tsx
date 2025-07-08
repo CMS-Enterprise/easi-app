@@ -58,30 +58,19 @@ const GovTaskGrbMeeting = ({
 
   const dateValue = dateMapping[grbReviewType]?.[grbMeetingStatus] ?? null;
 
-  /**
-   * Whether to render `Prepare for the GRB review` link as button
-   * based on review type and meeting status
-   */
+  /** Whether to render `Prepare for the GRB review` link as button */
   const renderPrepareGRBReviewButton = useMemo(() => {
-    switch (grbMeetingStatus) {
-      case ITGovGRBStatus.READY_TO_SCHEDULE:
-        return !(
-          grbReviewType === SystemIntakeGRBReviewType.ASYNC &&
-          !grbPresentationLinks
-        );
-
-      case ITGovGRBStatus.SCHEDULED:
-        return !(
-          grbReviewType === SystemIntakeGRBReviewType.ASYNC &&
-          !grbPresentationLinks
-        );
-
-      case ITGovGRBStatus.AWAITING_GRB_REVIEW:
-        return !grbPresentationLinks;
-      default:
-        return false;
+    // Render link if awaiting decision or out of GRB meeting step
+    if (
+      step !== SystemIntakeStep.GRB_MEETING ||
+      grbMeetingStatus === ITGovGRBStatus.AWAITING_DECISION
+    ) {
+      return false;
     }
-  }, [grbMeetingStatus, grbReviewType, grbPresentationLinks]);
+
+    // For all other statuses, render link if presentation deck has NOT been uploaded
+    return !grbPresentationLinks?.presentationDeckFileName;
+  }, [grbMeetingStatus, grbPresentationLinks, step]);
 
   /** Render review type and status alert during and after the GRB meeting step, if step was not skipped */
   const renderReviewDetails =
@@ -158,7 +147,7 @@ const GovTaskGrbMeeting = ({
 
           {renderReviewDetails && (
             <>
-              <p>
+              <p data-testid="review-type">
                 <Trans
                   i18nKey="itGov:taskList.step.grbMeeting.reviewType.copy"
                   components={{
@@ -171,7 +160,7 @@ const GovTaskGrbMeeting = ({
                   }}
                 />
               </p>
-              <Alert slim type="info">
+              <Alert slim type="info" data-testid="review-status-alert">
                 {t(
                   `taskList.step.grbMeeting.alertType.${grbReviewType}.${grbMeetingStatus}`,
                   {

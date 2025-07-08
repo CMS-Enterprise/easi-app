@@ -1,9 +1,9 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { SystemIntakeGRBReviewType } from 'gql/generated/graphql';
-import i18next from 'i18next';
 import { getSystemIntakeGRBDiscussionsQuery } from 'tests/mock/discussions';
 import { taskListState } from 'tests/mock/govTaskList';
 import { getSystemIntakeGRBReviewQuery } from 'tests/mock/grbReview';
@@ -12,10 +12,7 @@ import { grbPresentationLinks } from 'tests/mock/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
 import { ITGovTaskSystemIntake } from 'types/itGov';
 import easiMockStore from 'utils/testing/easiMockStore';
-import {
-  expectTaskStatusTagToHaveTextKey,
-  getExpectedAlertType
-} from 'utils/testing/helpers';
+import { expectTaskStatusTagToHaveTextKey } from 'utils/testing/helpers';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import GovTaskGrbMeeting from '.';
@@ -43,100 +40,131 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
   }
 
   describe('Standard GRB Meeting', () => {
-    it('Can’t start', () => {
+    it('Cannot start yet', () => {
       renderGovTaskGrbMeeting(taskListState.grbMeetingCantStart.systemIntake!);
+
       // Cannot start yet
       expectTaskStatusTagToHaveTextKey('CANT_START');
 
-      // Link to prep grb meeting
-      expect(
-        screen.getByRole('link', { name: 'Prepare for the GRB review' })
-      ).not.toHaveClass('usa-button');
+      // Hides review type and status alert
+      expect(screen.queryByTestId('review-type')).toBeNull();
+      expect(screen.queryByTestId('review-status-alert')).toBeNull();
+
+      // Hides presentation deck
+      expect(screen.queryByTestId('presentation-deck-container')).toBeNull();
 
       // Hides discussions card
       expect(screen.queryByTestId('requester-discussions-card')).toBeNull();
     });
 
-    it('Skipped', () => {
+    it('Not needed', () => {
       renderGovTaskGrbMeeting(taskListState.grbMeetingSkipped.systemIntake!);
+
       // Not needed
       expectTaskStatusTagToHaveTextKey('NOT_NEEDED');
 
-      // Link to prep grb meeting
-      expect(
-        screen.getByRole('link', { name: 'Prepare for the GRB review' })
-      ).not.toHaveClass('usa-button');
+      // Hides review type and status alert
+      expect(screen.queryByTestId('review-type')).toBeNull();
+      expect(screen.queryByTestId('review-status-alert')).toBeNull();
+
+      // Hides presentation deck
+      expect(screen.queryByTestId('presentation-deck-container')).toBeNull();
 
       // Hides discussions card
       expect(screen.queryByTestId('requester-discussions-card')).toBeNull();
     });
 
-    it('In progress - not scheduled', () => {
+    it('Ready to schedule', () => {
       renderGovTaskGrbMeeting(
         taskListState.grbMeetingInProgressNotScheduled.systemIntake!
       );
+
       // Ready to schedule
       expectTaskStatusTagToHaveTextKey('READY_TO_SCHEDULE');
 
-      // Button to prep grb meeting
-      expect(
-        screen.getByRole('link', { name: 'Prepare for the GRB review' })
-      ).toHaveClass('usa-button');
+      // Review type and status alert
+      expect(screen.getByTestId('review-type')).toHaveTextContent(
+        'Standard GRB meeting'
+      );
+      expect(screen.getByTestId('review-status-alert')).toHaveTextContent(
+        'The Governance Admin Team will schedule a GRB review.'
+      );
 
-      // Hides discussions card
-      expect(screen.queryByTestId('requester-discussions-card')).toBeNull();
+      // Renders presentation deck
+      expect(
+        screen.getByTestId('presentation-deck-container')
+      ).toBeInTheDocument();
+
+      // Renders discussions card
+      expect(
+        screen.getByTestId('requester-discussions-card')
+      ).toBeInTheDocument();
     });
 
-    it('In progress - scheduled', () => {
+    it('Scheduled', () => {
       renderGovTaskGrbMeeting(
         taskListState.grbMeetingInProgressScheduled.systemIntake!
       );
+
       // Scheduled
       expectTaskStatusTagToHaveTextKey('SCHEDULED');
-      // Meeting scheduled info
-      expect(getExpectedAlertType('info')).toHaveTextContent(
-        i18next.t<string>(
-          'itGov:taskList.step.grbMeeting.alertType.STANDARD.SCHEDULED',
-          {
-            date: '07/20/2023'
-          }
-        )
+
+      // Review type and status alert
+      expect(screen.getByTestId('review-type')).toBeInTheDocument();
+      expect(screen.getByTestId('review-status-alert')).toHaveTextContent(
+        'GRB meeting scheduled for 07/20/2023'
       );
+
+      // Renders presentation deck
       expect(
-        screen.getByText(
-          i18next.t<string>(
-            `itGov:taskList.step.grbMeeting.reviewType.STANDARD`
-          )
-        )
+        screen.getByTestId('presentation-deck-container')
       ).toBeInTheDocument();
 
-      // Button to prep grb meeting
+      // Renders discussions card
       expect(
-        screen.getByRole('link', { name: 'Prepare for the GRB review' })
-      ).toHaveClass('usa-button');
-
-      // Hides discussions card
-      expect(screen.queryByTestId('requester-discussions-card')).toBeNull();
+        screen.getByTestId('requester-discussions-card')
+      ).toBeInTheDocument();
     });
 
-    it('Done', () => {
-      renderGovTaskGrbMeeting(taskListState.grbMeetingDone.systemIntake!);
-      // Awaiting decision
-      expectTaskStatusTagToHaveTextKey('COMPLETED');
-      // Meeting attended info
-      expect(getExpectedAlertType('info')).toHaveTextContent(
-        i18next.t<string>(
-          'itGov:taskList.step.grbMeeting.alertType.STANDARD.COMPLETED',
-          {
-            date: '07/20/2023'
-          }
-        )
+    it('Awaiting decision', () => {
+      renderGovTaskGrbMeeting(
+        taskListState.grbMeetingAwaitingDecision.systemIntake!
       );
 
-      // Link to prep grb meeting
+      // Awaiting decision
+      expectTaskStatusTagToHaveTextKey('AWAITING_DECISION');
+
+      // Review type and status alert
+      expect(screen.getByTestId('review-type')).toBeInTheDocument();
+      expect(screen.getByTestId('review-status-alert')).toHaveTextContent(
+        'You attended the GRB meeting on 07/20/2023'
+      );
+
+      // Hides presentation deck
+      expect(screen.queryByTestId('presentation-deck-container')).toBeNull();
+
+      // Renders discussions card
       expect(
-        screen.getByRole('link', { name: 'Prepare for the GRB review' })
-      ).not.toHaveClass('usa-button');
+        screen.getByTestId('requester-discussions-card')
+      ).toBeInTheDocument();
+    });
+
+    it('Completed', () => {
+      renderGovTaskGrbMeeting(
+        taskListState.decisionAndNextStepsInProgress.systemIntake!
+      );
+
+      // Completed
+      expectTaskStatusTagToHaveTextKey('COMPLETED');
+
+      // Review type and status alert
+      expect(screen.getByTestId('review-type')).toBeInTheDocument();
+      expect(screen.getByTestId('review-status-alert')).toHaveTextContent(
+        'You attended the GRB meeting on 08/02/2023'
+      );
+
+      // Hides presentation deck
+      expect(screen.queryByTestId('presentation-deck-container')).toBeNull();
 
       // Hides discussions card
       expect(screen.queryByTestId('requester-discussions-card')).toBeNull();
@@ -144,7 +172,7 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
   });
 
   describe('Async GRB Meeting', () => {
-    it('Can’t start', () => {
+    it('Cannot start yet', () => {
       const modifiedMock = {
         ...taskListState.grbMeetingCantStart.systemIntake!,
         grbReviewType: SystemIntakeGRBReviewType.ASYNC
@@ -154,13 +182,18 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
       // Cannot start yet
       expectTaskStatusTagToHaveTextKey('CANT_START');
 
-      // Link to prep grb meeting
-      expect(
-        screen.getByRole('link', { name: 'Prepare for the GRB review' })
-      ).not.toHaveClass('usa-button');
+      // Hides review type and status alert
+      expect(screen.queryByTestId('review-type')).toBeNull();
+      expect(screen.queryByTestId('review-status-alert')).toBeNull();
+
+      // Hides presentation deck
+      expect(screen.queryByTestId('presentation-deck-container')).toBeNull();
+
+      // Hides discussions card
+      expect(screen.queryByTestId('requester-discussions-card')).toBeNull();
     });
 
-    it('Skipped', () => {
+    it('Not needed', () => {
       const modifiedMock = {
         ...taskListState.grbMeetingSkipped.systemIntake!,
         grbReviewType: SystemIntakeGRBReviewType.ASYNC
@@ -170,13 +203,18 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
       // Not needed
       expectTaskStatusTagToHaveTextKey('NOT_NEEDED');
 
-      // Link to prep grb meeting
-      expect(
-        screen.getByRole('link', { name: 'Prepare for the GRB review' })
-      ).not.toHaveClass('usa-button');
+      // Hides review type and status alert
+      expect(screen.queryByTestId('review-type')).toBeNull();
+      expect(screen.queryByTestId('review-status-alert')).toBeNull();
+
+      // Hides presentation deck
+      expect(screen.queryByTestId('presentation-deck-container')).toBeNull();
+
+      // Hides discussions card
+      expect(screen.queryByTestId('requester-discussions-card')).toBeNull();
     });
 
-    it('In progress - not scheduled', () => {
+    it('Ready to schedule (with presentation deck)', () => {
       const modifiedMock = {
         ...taskListState.grbMeetingInProgressNotScheduled.systemIntake!,
         grbReviewType: SystemIntakeGRBReviewType.ASYNC,
@@ -187,40 +225,123 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
       // Ready to schedule
       expectTaskStatusTagToHaveTextKey('READY_TO_SCHEDULE');
 
-      // Button to prep grb meeting
+      // Renders review type and status alert
+      expect(screen.getByTestId('review-type')).toHaveTextContent(
+        'Asynchronous'
+      );
+      expect(screen.getByTestId('review-status-alert')).toHaveTextContent(
+        'The Governance Admin Team will schedule a time to record your presentation.'
+      );
+
+      // Renders presentation deck
+      expect(
+        screen.getByTestId('presentation-deck-container')
+      ).toBeInTheDocument();
+
+      // Renders discussions card
+      expect(
+        screen.getByTestId('requester-discussions-card')
+      ).toBeInTheDocument();
+
+      // Prep for GRB review - renders as link if presentation deck is uploaded
+      expect(
+        screen.getByRole('link', { name: 'Prepare for the GRB review' })
+      ).not.toHaveClass('usa-button');
+    });
+
+    it('Ready to schedule (without presentation deck)', () => {
+      const modifiedMock = {
+        ...taskListState.grbMeetingInProgressNotScheduled.systemIntake!,
+        grbReviewType: SystemIntakeGRBReviewType.ASYNC,
+        grbPresentationLinks: null
+      };
+      renderGovTaskGrbMeeting(modifiedMock);
+
+      // Prep for GRB review - renders as button if presentation deck is NOT uploaded
       expect(
         screen.getByRole('link', { name: 'Prepare for the GRB review' })
       ).toHaveClass('usa-button');
     });
 
-    it('In progress - scheduled', () => {
+    it('Scheduled', () => {
       const modifiedMock = {
         ...taskListState.grbMeetingInProgressScheduled.systemIntake!,
-        grbReviewType: SystemIntakeGRBReviewType.ASYNC,
-        grbPresentationLinks
+        grbReviewType: SystemIntakeGRBReviewType.ASYNC
       };
+
       renderGovTaskGrbMeeting(modifiedMock);
 
       // Scheduled
       expectTaskStatusTagToHaveTextKey('SCHEDULED');
 
-      // Meeting scheduled info
-      expect(getExpectedAlertType('info')).toHaveTextContent(
-        i18next.t<string>(
-          'itGov:taskList.step.grbMeeting.alertType.ASYNC.SCHEDULED',
-          {
-            date: '07/20/2023'
-          }
-        )
+      // Renders review type and status alert
+      expect(screen.getByTestId('review-type')).toBeInTheDocument();
+      expect(screen.getByTestId('review-status-alert')).toHaveTextContent(
+        'Your presentation recording session is scheduled for 07/20/2023.'
       );
 
-      // Button to prep grb meeting
+      // Renders presentation deck
       expect(
-        screen.getByRole('link', { name: 'Prepare for the GRB review' })
-      ).toHaveClass('usa-button');
+        screen.getByTestId('presentation-deck-container')
+      ).toBeInTheDocument();
+
+      // Renders discussions card
+      expect(
+        screen.getByTestId('requester-discussions-card')
+      ).toBeInTheDocument();
     });
 
-    it('Awaiting decision (past end date)', () => {
+    it('Awaiting GRB review', () => {
+      renderGovTaskGrbMeeting(
+        taskListState.grbMeetingInProgressAwaitingGrbReview.systemIntake
+      );
+
+      // Awaiting GRB review
+      expectTaskStatusTagToHaveTextKey('AWAITING_GRB_REVIEW');
+
+      // Renders review type and status alert
+      expect(screen.getByTestId('review-type')).toBeInTheDocument();
+      expect(screen.getByTestId('review-status-alert')).toHaveTextContent(
+        'You attended the presentation recording session on 06/02/2023.'
+      );
+
+      // Renders presentation deck
+      expect(
+        screen.getByTestId('presentation-deck-container')
+      ).toBeInTheDocument();
+
+      // Renders discussions card
+      expect(
+        screen.getByTestId('requester-discussions-card')
+      ).toBeInTheDocument();
+    });
+
+    it('Review in progress', () => {
+      renderGovTaskGrbMeeting(
+        taskListState.grbMeetingReviewInProgress.systemIntake
+      );
+
+      // Review in progress
+      expectTaskStatusTagToHaveTextKey('REVIEW_IN_PROGRESS');
+
+      // Renders review type and status alert
+      expect(screen.getByTestId('review-type')).toBeInTheDocument();
+      expect(screen.getByTestId('review-status-alert')).toHaveTextContent(
+        'This asynchronous review is from 06/02/2023 to 07/20/2023.'
+      );
+
+      // Renders presentation deck
+      expect(
+        screen.getByTestId('presentation-deck-container')
+      ).toBeInTheDocument();
+
+      // Renders discussions card
+      expect(
+        screen.getByTestId('requester-discussions-card')
+      ).toBeInTheDocument();
+    });
+
+    it('Awaiting decision', () => {
       const modifiedMock = {
         ...taskListState.grbMeetingAwaitingDecision.systemIntake!,
         grbReviewType: SystemIntakeGRBReviewType.ASYNC
@@ -228,10 +349,18 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
 
       renderGovTaskGrbMeeting(modifiedMock);
 
-      // Displays correct end date
-      expect(screen.findByText('This GRB review ended on 07/20/2023.'));
+      expectTaskStatusTagToHaveTextKey('AWAITING_DECISION');
 
-      // renders the discussion card
+      // Renders review type and status alert
+      expect(screen.getByTestId('review-type')).toBeInTheDocument();
+      expect(screen.getByTestId('review-status-alert')).toHaveTextContent(
+        'This GRB review ended on 07/20/2023.'
+      );
+
+      // Hides presentation deck
+      expect(screen.queryByTestId('presentation-deck-container')).toBeNull();
+
+      // Renders discussions card
       expect(
         screen.getByTestId('requester-discussions-card')
       ).toBeInTheDocument();
@@ -241,43 +370,38 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
       const modifiedMock = {
         ...taskListState.grbMeetingAwaitingDecision.systemIntake!,
         grbReviewType: SystemIntakeGRBReviewType.ASYNC,
-        grbReviewAsyncManualEndDate: '2025-06-02T00:00:00.000Z'
+        grbReviewAsyncManualEndDate: '2025-06-02T00:00:00'
       };
 
       renderGovTaskGrbMeeting(modifiedMock);
 
-      // Displays correct end date
-      expect(screen.findByText('This GRB review ended on 06/02/2025.'));
-
-      // renders the discussion card
-      expect(
-        screen.getByTestId('requester-discussions-card')
-      ).toBeInTheDocument();
+      // Displays manual end date
+      expect(screen.getByTestId('review-status-alert')).toHaveTextContent(
+        'This GRB review ended on 06/02/2025.'
+      );
     });
 
-    it('Done', () => {
+    it('Completed', () => {
       const modifiedMock = {
-        ...taskListState.grbMeetingDone.systemIntake!,
+        ...taskListState.decisionAndNextStepsInProgress.systemIntake!,
         grbReviewType: SystemIntakeGRBReviewType.ASYNC
       };
       renderGovTaskGrbMeeting(modifiedMock);
 
       // Awaiting decision
       expectTaskStatusTagToHaveTextKey('COMPLETED');
-      // Meeting attended info
-      expect(getExpectedAlertType('info')).toHaveTextContent(
-        i18next.t<string>(
-          'itGov:taskList.step.grbMeeting.alertType.ASYNC.COMPLETED',
-          {
-            date: '07/20/2023'
-          }
-        )
+
+      // Renders review type and status alert
+      expect(screen.getByTestId('review-type')).toBeInTheDocument();
+      expect(screen.getByTestId('review-status-alert')).toHaveTextContent(
+        'This GRB review ended on 08/02/2023.'
       );
 
-      // Link to prep grb meeting
-      expect(
-        screen.getByRole('link', { name: 'Prepare for the GRB review' })
-      ).not.toHaveClass('usa-button');
+      // Hides presentation deck
+      expect(screen.queryByTestId('presentation-deck-container')).toBeNull();
+
+      // Hides discussions card
+      expect(screen.queryByTestId('requester-discussions-card')).toBeNull();
     });
   });
 
@@ -288,10 +412,10 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
       );
 
       // Click the Learn more button
-      fireEvent.click(
-        screen.getByText(
-          i18next.t<string>('itGov:taskList.step.grbMeeting.learnMore')
-        )
+      userEvent.click(
+        screen.getByRole('button', {
+          name: 'Learn more about the GRB review types'
+        })
       );
 
       // Expect Modal to pop up
@@ -302,12 +426,8 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
       expect(modalTitle).toBeInTheDocument();
 
       // Click the Go back button
-      fireEvent.click(
-        screen.getByText(
-          i18next.t<string>(
-            'itGov:taskList.step.grbMeeting.reviewTypeModal.goBack'
-          )
-        )
+      userEvent.click(
+        screen.getByRole('button', { name: 'Go back to task list' })
       );
 
       // Expect Modal to close

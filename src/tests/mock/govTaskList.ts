@@ -897,6 +897,64 @@ export const taskListState: {
       grbReviewAsyncManualEndDate: null
     }
   },
+  grbMeetingInProgressAwaitingGrbReview: {
+    systemIntake: {
+      ...taskListSystemIntake,
+      itGovTaskStatuses: {
+        __typename: 'ITGovTaskStatuses',
+        intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
+        feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
+        grtMeetingStatus: ITGovGRTStatus.COMPLETED,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.DONE,
+        grbMeetingStatus: ITGovGRBStatus.AWAITING_GRB_REVIEW,
+        decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
+      },
+      step: SystemIntakeStep.GRB_MEETING,
+      submittedAt: '2023-07-09T00:30:28Z',
+      updatedAt: '2023-07-09T00:30:28Z',
+      grtDate: '2023-07-17T00:30:28Z',
+      grbDate: null,
+      businessCase: {
+        __typename: 'BusinessCase',
+        id: '1a4baff0-12ba-4087-8483-678d92b48733'
+      },
+      grbReviewType: SystemIntakeGRBReviewType.ASYNC,
+      grbReviewStartedAt: null,
+      grbReviewAsyncRecordingTime: '2023-06-02T00:30:28Z',
+      grbReviewAsyncEndDate: null,
+      grbReviewAsyncManualEndDate: null
+    }
+  },
+  grbMeetingReviewInProgress: {
+    systemIntake: {
+      ...taskListSystemIntake,
+      itGovTaskStatuses: {
+        __typename: 'ITGovTaskStatuses',
+        intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
+        feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
+        grtMeetingStatus: ITGovGRTStatus.COMPLETED,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.DONE,
+        grbMeetingStatus: ITGovGRBStatus.REVIEW_IN_PROGRESS,
+        decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
+      },
+      step: SystemIntakeStep.GRB_MEETING,
+      submittedAt: '2023-07-09T00:30:28Z',
+      updatedAt: '2023-07-09T00:30:28Z',
+      grtDate: '2023-07-17T00:30:28Z',
+      grbDate: null,
+      businessCase: {
+        __typename: 'BusinessCase',
+        id: '1a4baff0-12ba-4087-8483-678d92b48733'
+      },
+      grbReviewType: SystemIntakeGRBReviewType.ASYNC,
+      grbReviewStartedAt: '2023-06-02T00:30:28Z',
+      grbReviewAsyncRecordingTime: null,
+      grbReviewAsyncEndDate: '2023-07-20T00:30:28Z',
+      grbReviewAsyncManualEndDate: null
+    }
+  },
   grbMeetingAwaitingDecision: {
     systemIntake: {
       ...taskListSystemIntake,
@@ -997,11 +1055,16 @@ export const taskListState: {
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
-      grbDate: '2023-07-20T00:30:28Z',
+      grbDate: '2023-08-02T00:30:28Z',
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
-      }
+      },
+      grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+      grbReviewStartedAt: '2023-07-20T00:30:28Z',
+      grbReviewAsyncRecordingTime: null,
+      grbReviewAsyncEndDate: '2023-08-02T00:30:28Z',
+      grbReviewAsyncManualEndDate: null
     }
   },
   decisionAndNextStepsDone: {
