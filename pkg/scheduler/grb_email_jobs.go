@@ -256,11 +256,31 @@ func sendGRBReviewEndedEmailJobFunction(ctx context.Context, scheduledJob *Sched
 			continue
 		}
 
-		if intake.RequesterEmailAddress.Valid && intake.ProjectName.Valid {
+		// get GRB reviewers
+		reviewers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{intake.ID})
+		if err != nil {
+			// don't exit with error, just log
+			logger.Error("problem getting reviewers when sending Deadline Extended email", zap.Error(err), zap.String("intake.id", intake.ID.String()))
+			continue
+		}
+
+		// get user emails
+		var emails []string
+		for _, reviewer := range reviewers {
+			userAccount, err := dataloaders.GetUserAccountByID(ctx, reviewer.UserID)
+			if err != nil {
+				// don't exit with error, just log
+				logger.Error("problem getting accounts when sending Deadline Extended email", zap.Error(err), zap.String("intake.id", intake.ID.String()))
+			}
+
+			emails = append(emails, userAccount.Email)
+		}
+
+		for _, userEmail := range emails {
 			if err := emailClient.SystemIntake.SendSystemIntakeGRBReviewEnded(
 				ctx,
 				email.SendSystemIntakeGRBReviewEndedInput{
-					Recipient:          models.NewEmailAddress(intake.RequesterEmailAddress.String),
+					Recipient:          models.EmailAddress(userEmail),
 					SystemIntakeID:     intake.ID,
 					ProjectName:        intake.ProjectName.String,
 					RequesterName:      intake.Requester,
@@ -269,7 +289,7 @@ func sendGRBReviewEndedEmailJobFunction(ctx context.Context, scheduledJob *Sched
 					GRBReviewDeadline:  *intake.GrbReviewAsyncEndDate,
 				},
 			); err != nil {
-				logger.Error("failed to send GRB Review Ended email", logfields.IntakeID(intake.ID), zap.Error(err))
+				logger.Error("failed to send GRB Review Ended email", logfields.IntakeID(intake.ID), zap.Error(err), zap.String("user.email", userEmail))
 				continue
 			}
 
