@@ -52,10 +52,7 @@ const mockGetGovernanceTaskListQuery: MockedQuery<
     variables: { id: systemIntake.id }
   },
   result: {
-    data: {
-      __typename: 'Query',
-      systemIntake: taskListState.grbMeetingInProgressScheduled.systemIntake
-    }
+    data: taskListState.grbMeetingInProgressScheduled
   }
 };
 

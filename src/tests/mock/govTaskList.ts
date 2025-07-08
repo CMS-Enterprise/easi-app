@@ -1,4 +1,5 @@
 import {
+  GetGovernanceTaskListQuery,
   GovernanceRequestFeedbackTargetForm,
   ITGovDecisionStatus,
   ITGovDraftBusinessCaseStatus,
@@ -13,8 +14,6 @@ import {
   SystemIntakeStep
 } from 'gql/generated/graphql';
 
-import { GetGovernanceTaskListWithMockData } from 'types/itGov';
-
 import { taskListSystemIntake } from './systemIntake';
 
 const { id } = taskListSystemIntake;
@@ -22,12 +21,14 @@ const { id } = taskListSystemIntake;
 /** IT Gov Task List status states */
 // eslint-disable-next-line import/prefer-default-export
 export const taskListState: {
-  [k: string]: GetGovernanceTaskListWithMockData;
+  [k: string]: GetGovernanceTaskListQuery;
 } = {
   intakeFormNotStarted: {
-    systemIntake: taskListSystemIntake
+    systemIntake: taskListSystemIntake,
+    __typename: 'Query'
   },
   intakeFormInProgress: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -43,6 +44,7 @@ export const taskListState: {
     }
   },
   intakeFormSubmitted: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -59,6 +61,7 @@ export const taskListState: {
     }
   },
   intakeFormEditsRequested: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -83,6 +86,7 @@ export const taskListState: {
     }
   },
   intakeFormResubmittedAfterEdits: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -108,6 +112,7 @@ export const taskListState: {
   },
 
   feedbackFromInitialReviewCantStart: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -123,6 +128,7 @@ export const taskListState: {
     }
   },
   feedbackFromInitialReviewInProgress: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -138,6 +144,7 @@ export const taskListState: {
     }
   },
   feedbackFromInitialReviewDoneNoFeedback: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -153,6 +160,7 @@ export const taskListState: {
     }
   },
   feedbackFromInitialReviewDoneWithFeedback: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -175,6 +183,7 @@ export const taskListState: {
     }
   },
   feedbackFromInitialReviewResubmittedWithFeedback: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -198,6 +207,7 @@ export const taskListState: {
   },
 
   bizCaseDraftCantStart: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -215,6 +225,7 @@ export const taskListState: {
     }
   },
   bizCaseDraftSkipped: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -233,6 +244,7 @@ export const taskListState: {
     }
   },
   bizCaseDraftNotStarted: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -251,6 +263,7 @@ export const taskListState: {
     }
   },
   bizCaseDraftInProgress: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -273,6 +286,7 @@ export const taskListState: {
     }
   },
   bizCaseDraftSubmitted: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -295,6 +309,7 @@ export const taskListState: {
     }
   },
   bizCaseDraftEditsRequestedFromAdmins: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -324,6 +339,7 @@ export const taskListState: {
     }
   },
   bizCaseDraftReSubmitted: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -353,6 +369,7 @@ export const taskListState: {
     }
   },
   bizCaseDraftDoneWithFeedback: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -382,6 +399,7 @@ export const taskListState: {
     }
   },
   bizCaseDraftDoneNoFeedback: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -405,6 +423,7 @@ export const taskListState: {
   },
 
   grtMeetingCantStart: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -427,6 +446,7 @@ export const taskListState: {
     }
   },
   grtMeetingSkipped: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -449,6 +469,7 @@ export const taskListState: {
     }
   },
   grtMeetingInProgressNotScheduled: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -471,6 +492,7 @@ export const taskListState: {
     }
   },
   grtMeetingInProgressScheduled: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -494,6 +516,7 @@ export const taskListState: {
     }
   },
   grtMeetingDone: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -517,6 +540,7 @@ export const taskListState: {
     }
   },
   grtMeetingDoneDecisionWithFeedback: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -547,6 +571,7 @@ export const taskListState: {
     }
   },
   grtMeetingDoneDecisionWithoutFeedback: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -571,6 +596,7 @@ export const taskListState: {
   },
 
   bizCaseFinalCantStart: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -594,6 +620,7 @@ export const taskListState: {
     }
   },
   bizCaseFinalSkipped: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -614,6 +641,7 @@ export const taskListState: {
     }
   },
   bizCaseFinalNotStarted: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -637,6 +665,7 @@ export const taskListState: {
     }
   },
   bizCaseFinalInProgress: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -660,6 +689,7 @@ export const taskListState: {
     }
   },
   bizCaseFinalSubmitted: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -683,6 +713,7 @@ export const taskListState: {
     }
   },
   bizCaseFinalEditsRequestedFromAdmins: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -713,6 +744,7 @@ export const taskListState: {
     }
   },
   bizCaseFinalReSubmitted: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -743,6 +775,7 @@ export const taskListState: {
     }
   },
   bizCaseFinalDoneWithFeedback: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -773,6 +806,7 @@ export const taskListState: {
     }
   },
   bizCaseFinalDoneNoFeedback: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -797,6 +831,7 @@ export const taskListState: {
   },
 
   grbMeetingCantStart: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -821,6 +856,7 @@ export const taskListState: {
     }
   },
   grbMeetingSkipped: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -845,6 +881,7 @@ export const taskListState: {
     }
   },
   grbMeetingInProgressNotScheduled: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -869,6 +906,7 @@ export const taskListState: {
     }
   },
   grbMeetingInProgressScheduled: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -898,6 +936,7 @@ export const taskListState: {
     }
   },
   grbMeetingInProgressAwaitingGrbReview: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -927,6 +966,7 @@ export const taskListState: {
     }
   },
   grbMeetingReviewInProgress: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -956,6 +996,7 @@ export const taskListState: {
     }
   },
   grbMeetingAwaitingDecision: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -985,6 +1026,7 @@ export const taskListState: {
     }
   },
   grbMeetingDone: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -1015,6 +1057,7 @@ export const taskListState: {
   },
 
   decisionAndNextStepsCantStart: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -1039,6 +1082,7 @@ export const taskListState: {
     }
   },
   decisionAndNextStepsInProgress: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -1068,6 +1112,7 @@ export const taskListState: {
     }
   },
   decisionAndNextStepsDone: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {

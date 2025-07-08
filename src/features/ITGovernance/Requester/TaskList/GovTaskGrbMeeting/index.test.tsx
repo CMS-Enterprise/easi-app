@@ -293,7 +293,7 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
 
     it('Awaiting GRB review', () => {
       renderGovTaskGrbMeeting(
-        taskListState.grbMeetingInProgressAwaitingGrbReview.systemIntake
+        taskListState.grbMeetingInProgressAwaitingGrbReview.systemIntake!
       );
 
       // Awaiting GRB review
@@ -318,7 +318,7 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
 
     it('Review in progress', () => {
       renderGovTaskGrbMeeting(
-        taskListState.grbMeetingReviewInProgress.systemIntake
+        taskListState.grbMeetingReviewInProgress.systemIntake!
       );
 
       // Review in progress
