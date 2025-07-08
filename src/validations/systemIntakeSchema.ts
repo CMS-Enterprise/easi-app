@@ -61,19 +61,6 @@ const SystemIntakeValidationSchema = {
         'Select a Project/Product Manager or Lead Component'
       )
     }),
-    isso: Yup.object().shape({
-      isPresent: Yup.boolean()
-        .nullable()
-        .required('Select Yes or No to indicate if you have an ISSO'),
-      commonName: Yup.string().when('isPresent', {
-        is: true,
-        then: Yup.string().trim().required('Tell us the name of your ISSO')
-      }),
-      component: Yup.string().when('isPresent', {
-        is: true,
-        then: Yup.string().required('Select an ISSO component')
-      })
-    }),
     governanceTeams
   }),
   requestDetails: Yup.object().shape({

@@ -641,12 +641,12 @@ func (r *mutationResolver) UnlinkSystemIntakeRelation(ctx context.Context, intak
 
 // CreateSystemIntakeContact is the resolver for the createSystemIntakeContact field.
 func (r *mutationResolver) CreateSystemIntakeContact(ctx context.Context, input models.CreateSystemIntakeContactInput) (*models.CreateSystemIntakeContactPayload, error) {
-	return resolvers.CreateSystemIntakeContact(ctx, r.store, input)
+	return resolvers.CreateSystemIntakeContact(ctx, r.store, input, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo))
 }
 
 // UpdateSystemIntakeContact is the resolver for the updateSystemIntakeContact field.
 func (r *mutationResolver) UpdateSystemIntakeContact(ctx context.Context, input models.UpdateSystemIntakeContactInput) (*models.CreateSystemIntakeContactPayload, error) {
-	return resolvers.UpdateSystemIntakeContact(ctx, r.store, input)
+	return resolvers.UpdateSystemIntakeContact(ctx, r.store, input, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo))
 }
 
 // DeleteSystemIntakeContact is the resolver for the deleteSystemIntakeContact field.
@@ -883,7 +883,7 @@ func (r *mutationResolver) CreateTRBRequest(ctx context.Context, requestType mod
 }
 
 // UpdateTRBRequest is the resolver for the updateTRBRequest field.
-func (r *mutationResolver) UpdateTRBRequest(ctx context.Context, id uuid.UUID, changes map[string]interface{}) (*models.TRBRequest, error) {
+func (r *mutationResolver) UpdateTRBRequest(ctx context.Context, id uuid.UUID, changes map[string]any) (*models.TRBRequest, error) {
 	return resolvers.UpdateTRBRequest(ctx, id, changes, r.store)
 }
 
@@ -969,7 +969,7 @@ func (r *mutationResolver) DeleteSystemIntakeDocument(ctx context.Context, id uu
 }
 
 // UpdateTRBRequestForm is the resolver for the updateTRBRequestForm field.
-func (r *mutationResolver) UpdateTRBRequestForm(ctx context.Context, input map[string]interface{}) (*models.TRBRequestForm, error) {
+func (r *mutationResolver) UpdateTRBRequestForm(ctx context.Context, input map[string]any) (*models.TRBRequestForm, error) {
 	return resolvers.UpdateTRBRequestForm(
 		ctx,
 		r.store,
@@ -1096,7 +1096,7 @@ func (r *mutationResolver) CreateTRBGuidanceLetter(ctx context.Context, trbReque
 }
 
 // UpdateTRBGuidanceLetter is the resolver for the updateTRBGuidanceLetter field.
-func (r *mutationResolver) UpdateTRBGuidanceLetter(ctx context.Context, input map[string]interface{}) (*models.TRBGuidanceLetter, error) {
+func (r *mutationResolver) UpdateTRBGuidanceLetter(ctx context.Context, input map[string]any) (*models.TRBGuidanceLetter, error) {
 	return resolvers.UpdateTRBGuidanceLetter(ctx, r.store, input)
 }
 
@@ -1140,7 +1140,7 @@ func (r *mutationResolver) CreateTRBGuidanceLetterInsight(ctx context.Context, i
 }
 
 // UpdateTRBGuidanceLetterInsight is the resolver for the updateTRBGuidanceLetterInsight field.
-func (r *mutationResolver) UpdateTRBGuidanceLetterInsight(ctx context.Context, input map[string]interface{}) (*models.TRBGuidanceLetterInsight, error) {
+func (r *mutationResolver) UpdateTRBGuidanceLetterInsight(ctx context.Context, input map[string]any) (*models.TRBGuidanceLetterInsight, error) {
 	return resolvers.UpdateTRBGuidanceLetterInsight(ctx, r.store, input)
 }
 
@@ -1806,16 +1806,6 @@ func (r *systemIntakeResolver) NextMeetingDate(ctx context.Context, obj *models.
 // GrbReviewers is the resolver for the grbReviewers field.
 func (r *systemIntakeResolver) GrbReviewers(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewer, error) {
 	return resolvers.SystemIntakeGRBReviewers(ctx, obj.ID)
-}
-
-// Isso is the resolver for the isso field.
-func (r *systemIntakeResolver) Isso(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeIsso, error) {
-	isPresent := len(obj.ISSOName.String) > 0
-
-	return &models.SystemIntakeIsso{
-		IsPresent: &isPresent,
-		Name:      obj.ISSOName.Ptr(),
-	}, nil
 }
 
 // Lcid is the resolver for the lcid field.

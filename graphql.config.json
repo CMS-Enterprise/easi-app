@@ -1,0 +1,13 @@
+{
+  "schema": [
+    "pkg/graph/**/*.graphql"
+  ],
+  "documents": [
+    "src/gql/operations/**/*.ts"
+  ],
+  "exclude": [
+    "**/__tests__/**",
+    "**/*.test.*",
+    "**/node_modules/**"
+  ]
+}

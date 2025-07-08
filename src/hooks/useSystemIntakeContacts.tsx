@@ -21,8 +21,7 @@ import {
 const rolesMap = {
   Requester: 'requester',
   'Business Owner': 'businessOwner',
-  'Product Manager': 'productManager',
-  ISSO: 'isso'
+  'Product Manager': 'productManager'
 } as const;
 type Role = keyof typeof rolesMap;
 
@@ -73,11 +72,6 @@ function useSystemIntakeContacts(
         ...initialContactsObject.productManager,
         commonName: systemIntake.productManager?.name || '',
         component: systemIntake.productManager?.component || '',
-        systemIntakeId
-      },
-      isso: {
-        ...initialContactsObject.isso,
-        commonName: systemIntake.isso?.name || '',
         systemIntakeId
       }
     };

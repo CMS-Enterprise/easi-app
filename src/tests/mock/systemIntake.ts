@@ -249,11 +249,6 @@ export const emptySystemIntake: SystemIntakeFragmentFragment = {
     name: null,
     component: null
   },
-  isso: {
-    __typename: 'SystemIntakeISSO',
-    isPresent: false,
-    name: null
-  },
   governanceTeams: {
     __typename: 'SystemIntakeGovernanceTeam',
     isPresent: false,
@@ -379,11 +374,6 @@ export const systemIntake: SystemIntakeFragmentFragment = {
     __typename: 'SystemIntakeProductManager',
     name: productManager.commonName,
     component: productManager.component
-  },
-  isso: {
-    __typename: 'SystemIntakeISSO',
-    isPresent: true,
-    name: isso.commonName
   },
   governanceTeams: {
     __typename: 'SystemIntakeGovernanceTeam',
@@ -528,7 +518,6 @@ export const systemIntakeForTable: GetSystemIntakesTableQuery['systemIntakes'][n
     requesterComponent: systemIntake.requester.component,
     businessOwner: systemIntake.businessOwner,
     productManager: systemIntake.productManager,
-    isso: systemIntake.isso,
     trbCollaboratorName: '',
     oitSecurityCollaboratorName: '',
     eaCollaboratorName: '',
