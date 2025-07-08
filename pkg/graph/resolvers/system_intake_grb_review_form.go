@@ -386,7 +386,7 @@ func RestartGRBReviewAsync(
 			*intake.GRBReviewStartedAt,
 			*intake.GrbReviewAsyncEndDate,
 		); err != nil {
-			appcontext.ZLogger(ctx).Error("problem sending GRB review restarted email", zap.Error(err))
+			appcontext.ZLogger(ctx).Error("problem sending GRB review restarted email", zap.Error(err), zap.String("intake.id", intake.ID.String()))
 			// no need to fail here, just continue
 		}
 	}
