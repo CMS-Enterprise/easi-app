@@ -5,6 +5,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/google/uuid"
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
@@ -312,6 +313,9 @@ func sendGRBReviewLastDayReminderJobFunction(
 	todayUTC := time.Now().UTC().Truncate(24 * time.Hour)
 
 	for _, intake := range intakes {
+		if intake.GRBReviewStartedAt == nil {
+			continue // incomplete data
+		}
 
 		var deadline time.Time
 
@@ -332,8 +336,8 @@ func sendGRBReviewLastDayReminderJobFunction(
 			}
 		}
 
-		if intake.GRBReviewStartedAt == nil {
-			continue // incomplete data
+		if deadline.IsZero() {
+			continue
 		}
 
 		// Is the async end-date **today**?
@@ -342,27 +346,56 @@ func sendGRBReviewLastDayReminderJobFunction(
 			continue // not the last-day yet (or already passed)
 		}
 
-		// ---- Build + send email ----
-		if !intake.RequesterEmailAddress.Valid || !intake.ProjectName.Valid {
-			continue // can’t send without these
+		grbReviewers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{intake.ID})
+		if err != nil {
+			logger.Error("problem getting GRB reviewers when sending Last Day email", zap.Error(err), zap.String("intake.id", intake.ID.String()))
+			continue
 		}
 
-		sendErr := emailClient.SystemIntake.SendSystemIntakeGRBReviewLastDay(
-			ctx,
-			email.SendSystemIntakeGRBReviewLastDayInput{
-				Recipient:          models.NewEmailAddress(intake.RequesterEmailAddress.String),
-				SystemIntakeID:     intake.ID,
-				ProjectName:        intake.ProjectName.String,
-				RequesterName:      intake.Requester,
-				RequesterComponent: intake.Component.String,
-				GRBReviewStart:     *intake.GRBReviewStartedAt,
-				GRBReviewDeadline:  deadline,
-			},
-		)
-		if sendErr != nil {
-			logger.Error("failed to send GRB last-day reminder",
-				logfields.IntakeID(intake.ID), zap.Error(sendErr))
-			continue // keep processing other intakes
+		// we only want to send this email to voting roles who have not voted
+		var recipients []*models.SystemIntakeGRBReviewer
+		for _, grbReviewer := range grbReviewers {
+			// if reviewer is not a voter, skip
+			if grbReviewer.GRBVotingRole != models.SystemIntakeGRBReviewerVotingRoleVoting {
+				continue
+			}
+
+			// if reviewer has already voted, skip
+			if grbReviewer.Vote != nil {
+				continue
+			}
+
+			recipients = append(recipients, grbReviewer)
+		}
+
+		// get user emails
+		var emails []string
+		for _, reviewer := range recipients {
+			userAccount, err := dataloaders.GetUserAccountByID(ctx, reviewer.UserID)
+			if err != nil {
+				logger.Error("problem getting accounts when sending Last Day email", zap.Error(err), zap.String("intake.id", intake.ID.String()))
+				continue
+			}
+
+			emails = append(emails, userAccount.Email)
+		}
+
+		for _, userEmail := range emails {
+			if err := emailClient.SystemIntake.SendSystemIntakeGRBReviewLastDay(
+				ctx,
+				email.SendSystemIntakeGRBReviewLastDayInput{
+					Recipient:          models.EmailAddress(userEmail),
+					SystemIntakeID:     intake.ID,
+					ProjectName:        intake.ProjectName.String,
+					RequesterName:      intake.Requester,
+					RequesterComponent: intake.Component.String,
+					GRBReviewStart:     *intake.GRBReviewStartedAt,
+					GRBReviewDeadline:  deadline,
+				},
+			); err != nil {
+				logger.Error("problem sending Last Day email", zap.Error(err), zap.String("intake.id", intake.ID.String()), zap.String("user.email", userEmail))
+				continue
+			}
 		}
 
 		logger.Info("sent GRB last-day reminder", logfields.IntakeID(intake.ID))

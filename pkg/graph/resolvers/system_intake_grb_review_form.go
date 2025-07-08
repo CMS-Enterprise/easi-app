@@ -331,8 +331,7 @@ func ExtendGRBReviewDeadlineAsync(
 				*intake.GRBReviewStartedAt,
 				*intake.GrbReviewAsyncEndDate,
 			); err != nil {
-				appcontext.ZLogger(ctx).Error("problem sending Deadline Extended email", zap.Error(err))
-
+				appcontext.ZLogger(ctx).Error("problem sending Deadline Extended email", zap.Error(err), zap.String("intake.id", intake.ID.String()), zap.String("user.email", userEmail))
 				continue
 			}
 		}
