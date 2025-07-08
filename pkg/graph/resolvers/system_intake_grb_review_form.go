@@ -268,6 +268,7 @@ func ManuallyEndSystemIntakeGRBReviewAsyncVoting(
 func ExtendGRBReviewDeadlineAsync(
 	ctx context.Context,
 	store *storage.Store,
+	emailClient *email.Client,
 	input models.ExtendGRBReviewDeadlineInput,
 ) (*models.UpdateSystemIntakePayload, error) {
 	// Fetch intake by ID
@@ -284,6 +285,58 @@ func ExtendGRBReviewDeadlineAsync(
 	updatedIntake, err := store.UpdateSystemIntake(ctx, intake)
 	if err != nil {
 		return nil, err
+	}
+
+	// send email if able
+	if intake.GRBReviewStartedAt != nil && intake.GrbReviewAsyncEndDate != nil {
+		logger := appcontext.ZLogger(ctx)
+		// get GRB reviewers
+		reviewers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{intake.ID})
+		if err != nil {
+			// don't exit with error, just log
+			logger.Error("problem getting reviewers when sending Deadline Extended email", zap.Error(err), zap.String("intake.id", intake.ID.String()))
+
+			return &models.UpdateSystemIntakePayload{
+				SystemIntake: updatedIntake,
+			}, nil
+		}
+
+		// get user emails
+		var emails []string
+		for _, reviewer := range reviewers {
+			userAccount, err := dataloaders.GetUserAccountByID(ctx, reviewer.UserID)
+			if err != nil {
+				// don't exit with error, just log
+				logger.Error("problem getting accounts when sending Deadline Extended email", zap.Error(err), zap.String("intake.id", intake.ID.String()))
+				return &models.UpdateSystemIntakePayload{
+					SystemIntake: updatedIntake,
+				}, nil
+			}
+
+			emails = append(emails, userAccount.Email)
+		}
+
+		for _, userEmail := range emails {
+			if err := emailClient.SystemIntake.SendSystemIntakeGRBReviewDeadlineExtended(
+				ctx,
+				models.EmailNotificationRecipients{
+					RegularRecipientEmails:   []models.EmailAddress{models.EmailAddress(userEmail)},
+					ShouldNotifyITGovernance: false,
+					ShouldNotifyITInvestment: false,
+				},
+				intake.ID,
+				intake.ProjectName.String,
+				intake.Requester,
+				translation.GetComponentAcronym(intake.Component.String),
+				*intake.GRBReviewStartedAt,
+				*intake.GrbReviewAsyncEndDate,
+			); err != nil {
+				appcontext.ZLogger(ctx).Error("problem sending Deadline Extended email", zap.Error(err))
+
+				continue
+			}
+		}
+
 	}
 
 	return &models.UpdateSystemIntakePayload{

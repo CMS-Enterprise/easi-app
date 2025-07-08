@@ -367,6 +367,7 @@ func (s *ResolverSuite) TestExtendGRBReviewDeadlineAsync() {
 	updatedPayload, err := ExtendGRBReviewDeadlineAsync(
 		s.testConfigs.Context,
 		s.testConfigs.Store,
+		s.testConfigs.EmailClient,
 		models.ExtendGRBReviewDeadlineInput{
 			SystemIntakeID:        systemIntake.ID,
 			GrbReviewAsyncEndDate: twoHoursLater,
