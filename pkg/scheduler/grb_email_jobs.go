@@ -106,7 +106,7 @@ func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, schedule
 				return errors.New("missing start and/or end date for sending halfway through email")
 			}
 
-			reviewers, err := dataloaders.GetSystemIntakeGRBReviewersBySystemIntakeID(ctx, intake.ID)
+			reviewers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{intake.ID})
 			if err != nil {
 				return err
 			}
@@ -175,7 +175,7 @@ func sendAsyncPastDueNoQuorumEmailJobFunction(ctx context.Context, scheduledJob 
 				return errors.New("missing start and/or end date for sending past due no quorum email")
 			}
 
-			reviewers, err := dataloaders.GetSystemIntakeGRBReviewersBySystemIntakeID(ctx, intake.ID)
+			reviewers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{intake.ID})
 			if err != nil {
 				return err
 			}
@@ -436,7 +436,7 @@ func sendAsyncReviewCompleteQuorumMetJobFunction(ctx context.Context, scheduledJ
 				return errors.New("missing start and/or end date for sending review complete quorum met email")
 			}
 
-			reviewers, err := dataloaders.GetSystemIntakeGRBReviewersBySystemIntakeID(ctx, intake.ID)
+			reviewers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{intake.ID})
 			if err != nil {
 				return err
 			}
