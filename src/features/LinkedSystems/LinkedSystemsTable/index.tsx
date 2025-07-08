@@ -89,7 +89,7 @@ const LinkedSystemsTable = ({
       }
       return <></>;
     }, []);
-    return <>{translatedRelationships.toString()}</>;
+    return <>{translatedRelationships.join(', ')}</>;
   };
 
   const columns: Column<SystemIntakeSystem>[] = useMemo(() => {

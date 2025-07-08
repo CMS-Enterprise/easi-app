@@ -38,11 +38,14 @@ import { linkedSystemsSchema } from 'validations/systemIntakeSchema';
 
 type LinkedSystemsFormFields = {
   cedarSystemIDs: string[];
-  primarySupport: boolean;
-  partialSupport: boolean;
-  usesOrImpactedBySelectedSystem: boolean;
-  impactsSelectedSystem: boolean;
-  other: boolean;
+  relationshipTypes: {
+    primarySupport: boolean;
+    partialSupport: boolean;
+    usesOrImpactedBySelectedSystem: boolean;
+    impactsSelectedSystem: boolean;
+    other: boolean;
+  };
+
   otherDescription: string;
 };
 
@@ -53,27 +56,27 @@ const buildCedarSystemRelationshipObjects = (
 ) => {
   const selectedSystemRelationshipTypes: Array<SystemRelationshipType> = [];
 
-  if (payload.primarySupport) {
+  if (payload.relationshipTypes.primarySupport) {
     selectedSystemRelationshipTypes.push(
       SystemRelationshipType.PRIMARY_SUPPORT
     );
   }
-  if (payload.partialSupport) {
+  if (payload.relationshipTypes.partialSupport) {
     selectedSystemRelationshipTypes.push(
       SystemRelationshipType.PARTIAL_SUPPORT
     );
   }
-  if (payload.usesOrImpactedBySelectedSystem) {
+  if (payload.relationshipTypes.usesOrImpactedBySelectedSystem) {
     selectedSystemRelationshipTypes.push(
       SystemRelationshipType.USES_OR_IMPACTED_BY_SELECTED_SYSTEM
     );
   }
-  if (payload.impactsSelectedSystem) {
+  if (payload.relationshipTypes.impactsSelectedSystem) {
     selectedSystemRelationshipTypes.push(
       SystemRelationshipType.IMPACTS_SELECTED_SYSTEM
     );
   }
-  if (payload.other) {
+  if (payload.relationshipTypes.other) {
     selectedSystemRelationshipTypes.push(SystemRelationshipType.OTHER);
   }
 
@@ -98,7 +101,7 @@ const LinkedSystemsForm = () => {
 
   //   const { getValues } = useForm();
 
-  const { t } = useTranslation(['linkedSystems', 'error']);
+  const { t } = useTranslation(['linkedSystems', 'itGov', 'error']);
 
   const [setExistingIntakeSystem, { error: existingIntakeSystemError }] =
     useSetSystemIntakeRelationExistingSystemMutation();
@@ -302,7 +305,7 @@ const LinkedSystemsForm = () => {
                             <MultiSelect
                               name={field.name}
                               selectedLabel={t(
-                                'link.form.field.cmsSystem.selectedLabel'
+                                'ItGov:link.form.field.cmsSystem.selectedLabel'
                               )}
                               initialValues={field.value}
                               options={cedarSystemIdOptions}
@@ -322,7 +325,7 @@ const LinkedSystemsForm = () => {
 
                   <Controller
                     control={control}
-                    name="primarySupport"
+                    name="relationshipTypes.primarySupport"
                     render={({ field: { ref, ...field } }) => (
                       <CheckboxField
                         label={t('relationshipTypes.primarySupport')}
@@ -338,7 +341,7 @@ const LinkedSystemsForm = () => {
 
                   <Controller
                     control={control}
-                    name="partialSupport"
+                    name="relationshipTypes.partialSupport"
                     render={({ field: { ref, ...field } }) => (
                       <CheckboxField
                         label={t('relationshipTypes.partialSupport')}
@@ -354,7 +357,7 @@ const LinkedSystemsForm = () => {
 
                   <Controller
                     control={control}
-                    name="usesOrImpactedBySelectedSystem"
+                    name="relationshipTypes.usesOrImpactedBySelectedSystem"
                     render={({ field: { ref, ...field } }) => (
                       <CheckboxField
                         label={t(
@@ -374,7 +377,7 @@ const LinkedSystemsForm = () => {
 
                   <Controller
                     control={control}
-                    name="impactsSelectedSystem"
+                    name="relationshipTypes.impactsSelectedSystem"
                     render={({ field: { ref, ...field } }) => (
                       <CheckboxField
                         label={t('relationshipTypes.impactsSelectedSystem')}
@@ -388,7 +391,7 @@ const LinkedSystemsForm = () => {
                     )}
                   />
                   <Controller
-                    name="other"
+                    name="relationshipTypes.other"
                     control={control}
                     defaultValue={false}
                     render={({ field }) => (
@@ -404,7 +407,7 @@ const LinkedSystemsForm = () => {
                     )}
                   />
 
-                  {watch('other') && (
+                  {watch('relationshipTypes.other') && (
                     <FormGroup
                       className="margin-top-1 margin-left-4"
                       error={!!errors.otherDescription}
