@@ -29,7 +29,7 @@ jobs:
     secrets: inherit
 
   # Commented out while we figure out some issues with teardown / cost.
-  # TODO: DON'T COMMIT THIS TO MAIN, ONLY ENABLING ON ASYNC GRB SO WE GET A FEATURE BRANCH IN EKS
+  # This has been updated to only deploy to EKS if the PR has the `eks_deploy` label.
   Deploy_to_EKS:
     uses: ./.github/workflows/deploy_to_eks.yml
     needs: [Build_Application_Images,Build_easi-frontend_image]
