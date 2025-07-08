@@ -3,9 +3,9 @@ package resolvers
 import (
 	"time"
 
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
-
 	"github.com/99designs/gqlgen/graphql"
+
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 
 	"github.com/google/uuid"
 
@@ -115,6 +115,7 @@ func (s *ResolverSuite) TestSystemIntakeUpdateSystemIntakeGRBReviewFormInputTime
 	updatedPayload, err := UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(
 		s.testConfigs.Context,
 		s.testConfigs.Store,
+		s.testConfigs.EmailClient,
 		models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync{
 			SystemIntakeID:        systemIntake.ID,
 			GrbReviewAsyncEndDate: timeNow,
@@ -138,6 +139,7 @@ func (s *ResolverSuite) TestSystemIntakeUpdateSystemIntakeGRBReviewFormInputTime
 	updatedPayloadStarted, err := UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(
 		s.testConfigs.Context,
 		s.testConfigs.Store,
+		s.testConfigs.EmailClient,
 		models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync{
 			SystemIntakeID:        systemIntake.ID,
 			GrbReviewAsyncEndDate: tomorrowTime,
@@ -162,6 +164,7 @@ func (s *ResolverSuite) TestSystemIntakeUpdateSystemIntakeGRBReviewFormInputTime
 	erroredPayload, err := UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(
 		s.testConfigs.Context,
 		s.testConfigs.Store,
+		s.testConfigs.EmailClient,
 		models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync{
 			SystemIntakeID:        systemIntake.ID,
 			GrbReviewAsyncEndDate: tomorrowTime,
