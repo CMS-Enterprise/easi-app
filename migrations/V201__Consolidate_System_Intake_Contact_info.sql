@@ -34,20 +34,32 @@ SELECT
     gen_random_uuid() AS id,
     si.eua_user_id,
     si.id AS system_intake_id,
-    coalesce(si.component, 'Other') AS component,  -- Use 'Other' if null
+    CASE
+        WHEN component IS NULL OR component = '' THEN 'Other' -- Use 'Other' if null or empty string
+        ELSE component
+    END AS component,
     'Requester' AS role,
     si.created_at,
     si.updated_at,
-    si.requester AS common_name
+    CASE
+        WHEN si.eua_user_id IS NULL THEN si.requester -- Only insert requester name if eua_user_id is NULL
+        ELSE NULL
+    END AS common_name
 FROM system_intakes si
 WHERE NOT EXISTS (
     SELECT 1 
     FROM system_intake_contacts sic 
     WHERE
-        sic.system_intake_id = si.id 
+        sic.system_intake_id = si.id
+        AND sic.role = 'Requester'
         AND (
-            (sic.eua_user_id IS NOT NULL AND sic.eua_user_id = si.eua_user_id)
+            sic.eua_user_id = si.eua_user_id
+            OR (sic.eua_user_id IS NULL AND si.eua_user_id IS NULL) 
         )
+)
+AND (
+    si.eua_user_id IS NOT NULL
+    OR (si.requester IS NOT NULL AND si.requester <> '')
 );
 
 -- Handle Business Owner
@@ -64,14 +76,17 @@ INSERT INTO system_intake_contacts
 SELECT
     gen_random_uuid() AS id,
     si.id AS system_intake_id,
-    coalesce(si.business_owner_component, 'Other') AS component,  -- Use 'Other' if null
+    CASE
+        WHEN si.business_owner_component IS NULL OR si.business_owner_component = '' THEN 'Other' -- Use 'Other' if null or empty string
+        ELSE si.business_owner_component
+    END AS business_owner_component,
     'Business Owner' AS role,
     si.created_at,
     si.updated_at,
     si.business_owner AS common_name
 FROM system_intakes si
 WHERE
-    si.business_owner IS NOT NULL
+    si.business_owner IS NOT NULL AND si.business_owner <> ''
     AND NOT EXISTS (
         SELECT 1 
         FROM system_intake_contacts sic 
@@ -94,14 +109,17 @@ INSERT INTO system_intake_contacts
 SELECT
     gen_random_uuid() AS id,
     si.id AS system_intake_id,
-    coalesce(si.product_manager_component, 'Other') AS component,  -- Use 'Other' if null
+    CASE
+        WHEN si.product_manager_component IS NULL OR si.product_manager_component = '' THEN 'Other' -- Use 'Other' if null or empty string
+        ELSE si.product_manager_component
+    END AS component,
     'Product Manager' AS role,
     si.created_at,
     si.updated_at,
     si.product_manager AS common_name
 FROM system_intakes si
 WHERE
-    si.product_manager IS NOT NULL
+    si.product_manager IS NOT NULL AND si.product_manager <> ''
     AND NOT EXISTS (
         SELECT 1 
         FROM system_intake_contacts sic 
