@@ -26,12 +26,13 @@ type SendGRBReviewVoteSubmittedInput struct {
 }
 
 type grbReviewVoteSubmittedBody struct {
-	ProjectTitle       string
-	Link               string
-	RequesterName      string
-	RequesterComponent string
-	DateInfo           string
-	Vote               string
+	ProjectTitle             string
+	Link                     string
+	RequesterName            string
+	RequesterComponent       string
+	DateInfo                 string
+	Vote                     string
+	ITGovernanceInboxAddress models.EmailAddress
 }
 
 func (sie systemIntakeEmails) grbReviewVoteSubmittedBody(input SendGRBReviewVoteSubmittedInput) (string, error) {
@@ -45,7 +46,6 @@ func (sie systemIntakeEmails) grbReviewVoteSubmittedBody(input SendGRBReviewVote
 		voteStr = "No Objection"
 	case models.SystemIntakeAsyncGRBVotingOptionObjection:
 		voteStr = "Objection"
-
 	default:
 		return "", fmt.Errorf("unexpected/missing vote data: %s", input.Vote.String())
 	}
@@ -56,12 +56,13 @@ func (sie systemIntakeEmails) grbReviewVoteSubmittedBody(input SendGRBReviewVote
 	formattedEnd := input.EndDate.Format("01/02/2006")
 
 	data := grbReviewVoteSubmittedBody{
-		ProjectTitle:       input.ProjectTitle,
-		Link:               sie.client.urlFromPath(grbReviewPath),
-		RequesterName:      input.RequesterName,
-		RequesterComponent: translation.GetComponentAcronym(input.RequesterComponent),
-		DateInfo:           fmt.Sprintf("%[1]s-%[2]s", formattedStart, formattedEnd),
-		Vote:               voteStr,
+		ProjectTitle:             input.ProjectTitle,
+		Link:                     sie.client.urlFromPath(grbReviewPath),
+		RequesterName:            input.RequesterName,
+		RequesterComponent:       translation.GetComponentAcronym(input.RequesterComponent),
+		DateInfo:                 fmt.Sprintf("%[1]s-%[2]s", formattedStart, formattedEnd),
+		Vote:                     voteStr,
+		ITGovernanceInboxAddress: sie.client.config.GRTEmail,
 	}
 
 	var b bytes.Buffer

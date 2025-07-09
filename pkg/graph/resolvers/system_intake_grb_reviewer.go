@@ -196,10 +196,14 @@ func CastSystemIntakeGRBReviewerVote(ctx context.Context, store *storage.Store, 
 		return nil, err
 	}
 
-	canVote := false
+	var (
+		existingReviewer *models.SystemIntakeGRBReviewer
+		canVote          = false
+	)
 	for _, grbReviewer := range grbReviewers {
 		if grbReviewer.UserID == userID && grbReviewer.GRBVotingRole == models.SystemIntakeGRBReviewerVotingRoleVoting {
 			canVote = true
+			existingReviewer = grbReviewer
 			break
 		}
 	}
@@ -260,20 +264,28 @@ func CastSystemIntakeGRBReviewerVote(ctx context.Context, store *storage.Store, 
 			return reviewer, nil
 		}
 
-		if err := emailClient.SystemIntake.SendGRBReviewVoteSubmitted(ctx, email.SendGRBReviewVoteSubmittedInput{
-			Recipient:          models.EmailAddress(userAccount[0].Email),
-			SystemIntakeID:     systemIntake.ID,
-			ProjectTitle:       systemIntake.ProjectName.String,
-			RequesterName:      systemIntake.Requester,
-			RequesterComponent: systemIntake.Component.String,
-			StartDate:          *systemIntake.GRBReviewStartedAt,
-			EndDate:            *systemIntake.GrbReviewAsyncEndDate,
-			Vote:               *reviewer.Vote,
-		}); err != nil {
-			appcontext.ZLogger(ctx).Error("problem sending vote submitted email", zap.Error(err), zap.String("intake.id", systemIntake.ID.String()), zap.String("user.id", reviewer.UserID.String()))
+		// check existing reviewer to see if this is the initial vote or a changed vote
+		if existingReviewer.Vote != nil {
+			// this is a changed vote
 
-			// don't err here
+		} else {
+			// this is an initial vote
+			if err := emailClient.SystemIntake.SendGRBReviewVoteSubmitted(ctx, email.SendGRBReviewVoteSubmittedInput{
+				Recipient:          models.EmailAddress(userAccount[0].Email),
+				SystemIntakeID:     systemIntake.ID,
+				ProjectTitle:       systemIntake.ProjectName.String,
+				RequesterName:      systemIntake.Requester,
+				RequesterComponent: systemIntake.Component.String,
+				StartDate:          *systemIntake.GRBReviewStartedAt,
+				EndDate:            *systemIntake.GrbReviewAsyncEndDate,
+				Vote:               *reviewer.Vote,
+			}); err != nil {
+				appcontext.ZLogger(ctx).Error("problem sending vote submitted email", zap.Error(err), zap.String("intake.id", systemIntake.ID.String()), zap.String("user.id", reviewer.UserID.String()))
+
+				// don't err here
+			}
 		}
+
 	}
 
 	return reviewer, nil

@@ -1,15 +1,15 @@
 {{template "easi_header.gohtml"}}
 
-<p>Thank you for submitting your vote for {{.ProjectName}}. If you would like to change your vote, you may use the link
+<p>Thank you for submitting your vote for {{.ProjectTitle}}. If you would like to change your vote, you may use the link
   below to do so before the review is over.</p>
 
 <p><strong>Your vote:</strong> {{.Vote}}</p>
 
-<p><strong><a href="{{.SystemIntakeLink}}">View this request in EASi</a></strong></p>
+<p><strong><a href="{{.Link}}">View this request in EASi</a></strong></p>
 
 <div class="no-margin">
   <p><strong>Request summary:</strong></p>
-  <p>Project title: {{.ProjectName}}</p>
+  <p>Project title: {{.ProjectTitle}}</p>
   <p>Requester: {{.RequesterName}}{{if .RequesterComponent}}, {{.RequesterComponent}}{{else}}{{end}}</p>
   <p>GRB review dates: {{.DateInfo}}</p>
 </div>
