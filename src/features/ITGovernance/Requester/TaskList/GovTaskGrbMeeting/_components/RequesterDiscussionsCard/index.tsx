@@ -101,20 +101,18 @@ const RequesterDiscussionsCard = ({
           {t('general.viewDiscussionBoard')}
         </Button>
 
-        {grbMeetingStatus !== ITGovGRBStatus.AWAITING_DECISION && (
-          <Button
-            type="button"
-            onClick={() =>
-              pushDiscussionQuery({
-                discussionBoardType: SystemIntakeGRBDiscussionBoardType.PRIMARY,
-                discussionMode: 'start'
-              })
-            }
-            unstyled
-          >
-            {t('general.startDiscussion.heading')}
-          </Button>
-        )}
+        <Button
+          type="button"
+          onClick={() =>
+            pushDiscussionQuery({
+              discussionBoardType: SystemIntakeGRBDiscussionBoardType.PRIMARY,
+              discussionMode: 'start'
+            })
+          }
+          unstyled
+        >
+          {t('general.startDiscussion.heading')}
+        </Button>
       </ButtonGroup>
     </div>
   );

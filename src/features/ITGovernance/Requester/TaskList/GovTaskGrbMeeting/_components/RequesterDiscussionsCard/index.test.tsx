@@ -58,11 +58,6 @@ describe('Requester discussions card', () => {
     expect(
       screen.getByRole('button', { name: 'View discussion board' })
     ).toHaveClass('usa-button--unstyled');
-
-    // Start a discussion button should be hidden when awaiting decision
-    expect(
-      screen.queryByRole('button', { name: 'Start a discussion' })
-    ).toBeNull();
   });
 
   it('renders in progress with no discussions', async () => {
