@@ -918,4 +918,17 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 			Recipient:         requesterEmail,
 		})
 	noErr(err)
+
+	err = client.SystemIntake.SendGRBReviewVoteSubmitted(ctx,
+		email.SendGRBReviewVoteSubmittedInput{
+			Recipient:          requesterEmail,
+			SystemIntakeID:     intakeID,
+			ProjectTitle:       "Vote Submitted Title",
+			RequesterName:      "Some Voter",
+			RequesterComponent: "Center for Medicaid and CHIP Services",
+			StartDate:          time.Now().AddDate(0, 0, -5),
+			EndDate:            time.Now().AddDate(0, 0, 5),
+			Vote:               models.SystemIntakeAsyncGRBVotingOptionNoObjection,
+		})
+	noErr(err)
 }
