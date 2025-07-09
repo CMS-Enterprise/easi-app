@@ -52,7 +52,7 @@ const SystemCardTable = ({
         }
       }
     ];
-  }, []);
+  }, [systemRelationshipType]);
 
   const {
     getTableProps,
