@@ -26,7 +26,8 @@ const AdditionalInformation = ({
     | SystemIntakeFragmentFragment;
   type: RequestType;
 }) => {
-  const { t } = useTranslation('admin');
+  const { t: adminT } = useTranslation('admin');
+  const { t: linkedSystemsT } = useTranslation('linkedSystems');
 
   const parentRoute = type === 'itgov' ? 'it-governance' : 'trb';
 
@@ -34,23 +35,27 @@ const AdditionalInformation = ({
 
   return (
     <div>
-      <PageHeading className="margin-y-0">{t('title')}</PageHeading>
+      <PageHeading className="margin-y-0">
+        {parentRoute ? linkedSystemsT('title') : adminT('title')}
+      </PageHeading>
 
       <p className="font-body-md line-height-body-4 text-light margin-top-05 margin-bottom-1">
-        {t('description')}
+        {parentRoute ? linkedSystemsT('description') : adminT('description')}
       </p>
 
       {(request.relationType === RequestRelationType.EXISTING_SYSTEM ||
         request.relationType === RequestRelationType.EXISTING_SERVICE) && (
         <div className="margin-bottom-3">
           <span className="font-body-md line-height-body-4 margin-right-1 text-base">
-            {t('somethingIncorrect')}
+            {adminT('somethingIncorrect')}
           </span>
 
           <UswdsReactLink
-            to={`/${parentRoute}/${request.id}/additional-information/link`}
+            to={`/${parentRoute}/${request.id}/system-information/link`}
           >
-            {t('editInformation')}
+            {parentRoute
+              ? linkedSystemsT('editInformation')
+              : adminT('editInformation')}
           </UswdsReactLink>
         </div>
       )}
@@ -62,7 +67,7 @@ const AdditionalInformation = ({
 
       {request.relationType === RequestRelationType.EXISTING_SERVICE && (
         <div className="margin-top-3">
-          <strong>{t('serviceOrContract')}</strong>
+          <strong>{adminT('serviceOrContract')}</strong>
 
           <p className="margin-top-1">{request.contractName}</p>
         </div>
@@ -75,7 +80,7 @@ const AdditionalInformation = ({
           slim
           className="margin-top-3 margin-bottom-2"
         >
-          {t('unlinkedAlert')}
+          {adminT('unlinkedAlert')}
         </Alert>
       )}
 
@@ -86,7 +91,7 @@ const AdditionalInformation = ({
           slim
           className="margin-top-3 margin-bottom-2"
         >
-          {t('newSystemAlert')}
+          {adminT('newSystemAlert')}
         </Alert>
       )}
 
@@ -94,12 +99,12 @@ const AdditionalInformation = ({
         (request.relationType === null ||
           request.relationType === RequestRelationType.NEW_SYSTEM) && (
           <UswdsReactLink
-            to={`/${parentRoute}/${request.id}/additional-information/link`}
+            to={`/${parentRoute}/${request.id}/system-information/link`}
             className={classNames('usa-button', {
               'usa-button--outline': request.relationType !== null
             })}
           >
-            {t('linkSystem')}
+            {adminT('linkSystem')}
           </UswdsReactLink>
         )}
 
@@ -108,7 +113,7 @@ const AdditionalInformation = ({
           {request.contractNumbers?.length > 0 && (
             <div className="margin-top-3">
               <strong>
-                {t('contractNumber', {
+                {adminT('contractNumber', {
                   count: request.contractNumbers.length
                 })}
               </strong>
@@ -120,9 +125,9 @@ const AdditionalInformation = ({
 
           {(!request.contractNumbers || request.contractNumbers.length < 1) && (
             <div className="margin-top-3">
-              <strong>{t('contractNumber')}</strong>
+              <strong>{adminT('contractNumber')}</strong>
               <p className="margin-top-1 text-base text-italic">
-                {t('noContractNumber')}
+                {adminT('noContractNumber')}
               </p>
             </div>
           )}
