@@ -29,9 +29,7 @@ describe('Discussion board', () => {
               ]}
             >
               <Route>
-                <div id="root">
-                  <DiscussionBoard systemIntakeID={systemIntake.id} />
-                </div>
+                <DiscussionBoard systemIntakeID={systemIntake.id} />
               </Route>
             </VerboseMockedProvider>
           </MemoryRouter>
@@ -69,9 +67,7 @@ describe('Discussion board', () => {
               ]}
             >
               <Route>
-                <div id="root">
-                  <DiscussionBoard systemIntakeID={systemIntake.id} />
-                </div>
+                <DiscussionBoard systemIntakeID={systemIntake.id} />
               </Route>
             </VerboseMockedProvider>
           </MemoryRouter>
@@ -110,9 +106,7 @@ describe('Discussion board', () => {
               ]}
             >
               <Route>
-                <div id="root">
-                  <DiscussionBoard systemIntakeID={systemIntake.id} />
-                </div>
+                <DiscussionBoard systemIntakeID={systemIntake.id} />
               </Route>
             </VerboseMockedProvider>
           </MemoryRouter>
@@ -145,9 +139,7 @@ describe('Discussion board', () => {
               ]}
             >
               <Route>
-                <div id="root">
-                  <DiscussionBoard systemIntakeID={systemIntake.id} />
-                </div>
+                <DiscussionBoard systemIntakeID={systemIntake.id} />
               </Route>
             </VerboseMockedProvider>
           </MemoryRouter>
@@ -189,9 +181,7 @@ describe('Discussion board', () => {
               ]}
             >
               <Route>
-                <div id="root">
-                  <DiscussionBoard systemIntakeID={systemIntake.id} />
-                </div>
+                <DiscussionBoard systemIntakeID={systemIntake.id} />
               </Route>
             </VerboseMockedProvider>
           </MemoryRouter>
@@ -229,9 +219,7 @@ describe('Discussion board', () => {
               ]}
             >
               <Route>
-                <div id="root">
-                  <DiscussionBoard systemIntakeID={systemIntake.id} />
-                </div>
+                <DiscussionBoard systemIntakeID={systemIntake.id} />
               </Route>
             </VerboseMockedProvider>
           </MemoryRouter>

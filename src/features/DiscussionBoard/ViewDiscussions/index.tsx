@@ -81,7 +81,7 @@ const ViewDiscussions = ({
               discussionMode: 'start'
             });
           }}
-          icon={<Icon.Announcement />}
+          icon={<Icon.Announcement aria-hidden />}
           unstyled
         >
           {t('general.startNewDiscussion')}
