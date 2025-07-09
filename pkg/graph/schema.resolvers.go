@@ -720,7 +720,7 @@ func (r *mutationResolver) UpdateSystemIntakeGRBReviewFormPresentationAsync(ctx 
 
 // UpdateSystemIntakeGRBReviewFormTimeframeAsync is the resolver for the updateSystemIntakeGRBReviewFormTimeframeAsync field.
 func (r *mutationResolver) UpdateSystemIntakeGRBReviewFormTimeframeAsync(ctx context.Context, input models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync) (*models.UpdateSystemIntakePayload, error) {
-	return resolvers.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(ctx, r.store, input)
+	return resolvers.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(ctx, r.store, r.emailClient, input)
 }
 
 // ExtendGRBReviewDeadlineAsync is the resolver for the extendGRBReviewDeadlineAsync field.
