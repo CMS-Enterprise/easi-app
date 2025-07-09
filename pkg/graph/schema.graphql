@@ -1076,7 +1076,7 @@ Types of System Relationships
 """
 enum SystemRelationshipType {
   PRIMARY_SUPPORT
-  PARTIAL_SUPPORT
+  PARTIAL_SUPORT
   USES_OR_IMPACTED_BY_SELECTED_SYSTEM
   IMPACTS_SELECTED_SYSTEM
   OTHER
@@ -1087,15 +1087,14 @@ Input data for creating a system intake's relationship to a CEDAR system
 input SystemRelationshipInput {
   cedarSystemId: String
   systemRelationshipType: [SystemRelationshipType!]!
-  otherSystemRelationshipDescription: String
+  otherTypeDescription: String
 }
 
 type SystemIntakeSystem {
-  id: UUID!
   systemIntakeID: UUID!
   systemID: String
   systemRelationshipType: [SystemRelationshipType!]!
-  otherSystemRelationshipDescription: String
+  otherSystemRelationship: String
 }
 """
 Input data for updating a system intake's relationship to a CEDAR system
@@ -1382,31 +1381,6 @@ The payload for updating a system's IT governance request
 """
 type UpdateSystemIntakePayload {
   systemIntake: SystemIntake
-  userErrors: [UserError!]
-}
-
-"""
-The payload for deleting a system intake's linked system
-"""
-type DeleteSystemLinkPayload {
-  systemIntakeSystem: SystemIntakeSystem
-  userErrors: [UserError!]
-}
-
-"""
-The input type for updating a system intake's linked system by id
-"""
-input UpdateSystemLinkInput {
-  systemIntakeSystemID: UUID!
-  cedarSystemRelationShip: SystemRelationshipInput!
-}
-
-"""
-The payload for updating a system intake's linked system
-"""
-type UpdateSystemLinkPayload {
-  id: UUID!
-  systemIntakeSystem: SystemIntakeSystem!
   userErrors: [UserError!]
 }
 
@@ -2682,8 +2656,6 @@ type Mutation {
     input: SetSystemIntakeRelationExistingServiceInput
   ): UpdateSystemIntakePayload
   unlinkSystemIntakeRelation(intakeID: UUID!): UpdateSystemIntakePayload
-  deleteSystemLink(systemIntakeSystem: UUID!): DeleteSystemLinkPayload
-  updateSystemLink(input: UpdateSystemLinkInput!): UpdateSystemLinkPayload
 
   createSystemIntakeContact(
     input: CreateSystemIntakeContactInput!
@@ -2868,7 +2840,6 @@ type Query {
   trbAdminNote(id: UUID!): TRBAdminNote! @hasRole(role: EASI_TRB_ADMIN)
   requesterUpdateEmailData: [RequesterUpdateEmailData!]!
   userAccount(username: String!): UserAccount
-  systemIntakeSystem(systemIntakeSystemID: UUID!): SystemIntakeSystem
 }
 
 enum TRBRequestType {

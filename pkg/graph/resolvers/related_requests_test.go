@@ -26,21 +26,21 @@ func (s *ResolverSuite) TestRelatedRequests() {
 	)
 
 	system1 := models.SystemRelationshipInput{
-		CedarSystemID:                      helpers.PointerTo(string(systemID1)),
-		SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-		OtherSystemRelationshipDescription: &description,
+		CedarSystemID:          helpers.PointerTo(string(systemID1)),
+		SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+		OtherTypeDescription:   &description,
 	}
 
 	system2 := models.SystemRelationshipInput{
-		CedarSystemID:                      helpers.PointerTo(string(systemID2)),
-		SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-		OtherSystemRelationshipDescription: &description,
+		CedarSystemID:          helpers.PointerTo(string(systemID2)),
+		SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+		OtherTypeDescription:   &description,
 	}
 
 	system3 := models.SystemRelationshipInput{
-		CedarSystemID:                      helpers.PointerTo(string(systemID3)),
-		SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-		OtherSystemRelationshipDescription: &description,
+		CedarSystemID:          helpers.PointerTo(string(systemID3)),
+		SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+		OtherTypeDescription:   &description,
 	}
 
 	unrelatedSystem := models.SystemRelationshipInput{

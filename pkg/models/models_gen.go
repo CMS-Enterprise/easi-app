@@ -320,12 +320,6 @@ type DeleteSystemIntakeGRBReviewerInput struct {
 	ReviewerID uuid.UUID `json:"reviewerID"`
 }
 
-// The payload for deleting a system intake's linked system
-type DeleteSystemLinkPayload struct {
-	SystemIntakeSystem *SystemIntakeSystem `json:"systemIntakeSystem,omitempty"`
-	UserErrors         []*UserError        `json:"userErrors,omitempty"`
-}
-
 // Data returned after deleting a document attached to a TRB request
 type DeleteTRBRequestDocumentPayload struct {
 	Document *TRBRequestDocument `json:"document,omitempty"`
@@ -831,9 +825,9 @@ type SystemIntakeUpdateLCIDInput struct {
 
 // Input data for creating a system intake's relationship to a CEDAR system
 type SystemRelationshipInput struct {
-	CedarSystemID                      *string                  `json:"cedarSystemId,omitempty"`
-	SystemRelationshipType             []SystemRelationshipType `json:"systemRelationshipType"`
-	OtherSystemRelationshipDescription *string                  `json:"otherSystemRelationshipDescription,omitempty"`
+	CedarSystemID          *string                  `json:"cedarSystemId,omitempty"`
+	SystemRelationshipType []SystemRelationshipType `json:"systemRelationshipType"`
+	OtherTypeDescription   *string                  `json:"otherTypeDescription,omitempty"`
 }
 
 // Data specific to admin notes in the Consult Session category
@@ -969,19 +963,6 @@ type UpdateSystemIntakeReviewDatesInput struct {
 	GrbDate *time.Time `json:"grbDate,omitempty"`
 	GrtDate *time.Time `json:"grtDate,omitempty"`
 	ID      uuid.UUID  `json:"id"`
-}
-
-// The input type for updating a system intake's linked system by id
-type UpdateSystemLinkInput struct {
-	SystemIntakeSystemID    uuid.UUID                `json:"systemIntakeSystemID"`
-	CedarSystemRelationShip *SystemRelationshipInput `json:"cedarSystemRelationShip"`
-}
-
-// The payload for updating a system intake's linked system
-type UpdateSystemLinkPayload struct {
-	ID                 uuid.UUID           `json:"id"`
-	SystemIntakeSystem *SystemIntakeSystem `json:"systemIntakeSystem"`
-	UserErrors         []*UserError        `json:"userErrors,omitempty"`
 }
 
 type UpdateTRBGuidanceLetterInsightOrderInput struct {

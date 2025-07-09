@@ -58,9 +58,9 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 			NewSystemIDs:           []string{},
 			InitialLinkedSystems: []*models.SystemRelationshipInput{
 				{
-					CedarSystemID:                      &idOne,
-					SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-					OtherSystemRelationshipDescription: &descriptionOne,
+					CedarSystemID:          &idOne,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+					OtherTypeDescription:   &descriptionOne,
 				},
 				{
 					CedarSystemID:          &idTwo,
@@ -177,9 +177,9 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			InitialLinkedSystems:   []*models.SystemRelationshipInput{},
 			NewLinkedSystems: []*models.SystemRelationshipInput{
 				{
-					CedarSystemID:                      &idOne,
-					SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-					OtherSystemRelationshipDescription: &descriptionOne,
+					CedarSystemID:          &idOne,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+					OtherTypeDescription:   &descriptionOne,
 				},
 				{
 					CedarSystemID:          &idTwo,
@@ -195,9 +195,9 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 
 			InitialLinkedSystems: []*models.SystemRelationshipInput{
 				{
-					CedarSystemID:                      &idOne,
-					SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-					OtherSystemRelationshipDescription: &descriptionOne,
+					CedarSystemID:          &idOne,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+					OtherTypeDescription:   &descriptionOne,
 				},
 				{
 					CedarSystemID:          &idTwo,
@@ -213,9 +213,9 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}", "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"},
 			InitialLinkedSystems: []*models.SystemRelationshipInput{
 				{
-					CedarSystemID:                      &idOne,
-					SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-					OtherSystemRelationshipDescription: &descriptionOne,
+					CedarSystemID:          &idOne,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+					OtherTypeDescription:   &descriptionOne,
 				},
 				{
 					CedarSystemID:          &idTwo,
@@ -224,9 +224,9 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			},
 			NewLinkedSystems: []*models.SystemRelationshipInput{
 				{
-					CedarSystemID:                      &idThree,
-					SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-					OtherSystemRelationshipDescription: &descriptionOne,
+					CedarSystemID:          &idThree,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+					OtherTypeDescription:   &descriptionOne,
 				},
 				{
 					CedarSystemID:          &idFour,
@@ -241,9 +241,9 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}", "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}", "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"},
 			InitialLinkedSystems: []*models.SystemRelationshipInput{
 				{
-					CedarSystemID:                      &idOne,
-					SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-					OtherSystemRelationshipDescription: &descriptionOne,
+					CedarSystemID:          &idOne,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+					OtherTypeDescription:   &descriptionOne,
 				},
 				{
 					CedarSystemID:          &idTwo,
@@ -252,9 +252,9 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			},
 			NewLinkedSystems: []*models.SystemRelationshipInput{
 				{
-					CedarSystemID:                      &idThree,
-					SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-					OtherSystemRelationshipDescription: &descriptionOne,
+					CedarSystemID:          &idThree,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+					OtherTypeDescription:   &descriptionOne,
 				},
 				{
 					CedarSystemID:          &idFour,
@@ -273,9 +273,9 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"},
 			InitialLinkedSystems: []*models.SystemRelationshipInput{
 				{
-					CedarSystemID:                      &idOne,
-					SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-					OtherSystemRelationshipDescription: &descriptionOne,
+					CedarSystemID:          &idOne,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+					OtherTypeDescription:   &descriptionOne,
 				},
 				{
 					CedarSystemID:          &idTwo,
@@ -284,9 +284,9 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			},
 			NewLinkedSystems: []*models.SystemRelationshipInput{
 				{
-					CedarSystemID:                      &idOne,
-					SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-					OtherSystemRelationshipDescription: &descriptionOne,
+					CedarSystemID:          &idOne,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+					OtherTypeDescription:   &descriptionOne,
 				},
 			},
 		},
@@ -411,9 +411,9 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 			NewSystemIDs:           []string{},
 			InitialLinkedSystems: []*models.SystemRelationshipInput{
 				{
-					CedarSystemID:                      &idOne,
-					SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-					OtherSystemRelationshipDescription: &descriptionOne,
+					CedarSystemID:          &idOne,
+					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+					OtherTypeDescription:   &descriptionOne,
 				},
 				{
 					CedarSystemID:          &idTwo,

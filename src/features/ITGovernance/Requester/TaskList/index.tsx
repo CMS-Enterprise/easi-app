@@ -268,7 +268,7 @@ function GovernanceTaskList() {
                   </div>
                 )}
 
-                <UswdsReactLink to={`/linked-systems/${systemId}`}>
+                <UswdsReactLink to={`/edit-linked-systems/${systemId}`}>
                   {t('additionalRequestInfo.viewOrEditSystemInformation')}
                 </UswdsReactLink>
 
