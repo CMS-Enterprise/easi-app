@@ -685,7 +685,7 @@ func (r *mutationResolver) DeleteSystemIntakeGRBReviewer(ctx context.Context, in
 
 // CastSystemIntakeGRBReviewerVote is the resolver for the castSystemIntakeGRBReviewerVote field.
 func (r *mutationResolver) CastSystemIntakeGRBReviewerVote(ctx context.Context, input models.CastSystemIntakeGRBReviewerVoteInput) (*models.SystemIntakeGRBReviewer, error) {
-	return resolvers.CastSystemIntakeGRBReviewerVote(ctx, r.store, input)
+	return resolvers.CastSystemIntakeGRBReviewerVote(ctx, r.store, r.emailClient, input)
 }
 
 // SendSystemIntakeGRBReviewerReminder is the resolver for the sendSystemIntakeGRBReviewerReminder field.

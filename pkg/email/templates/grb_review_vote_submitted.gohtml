@@ -1,0 +1,20 @@
+{{template "easi_header.gohtml"}}
+
+<p>Thank you for submitting your vote for {{.ProjectName}}. If you would like to change your vote, you may use the link
+  below to do so before the review is over.</p>
+
+<p><strong>Your vote:</strong> {{.Vote}}</p>
+
+<p><strong><a href="{{.SystemIntakeLink}}">View this request in EASi</a></strong></p>
+
+<div class="no-margin">
+  <p><strong>Request summary:</strong></p>
+  <p>Project title: {{.ProjectName}}</p>
+  <p>Requester: {{.RequesterName}}{{if .RequesterComponent}}, {{.RequesterComponent}}{{else}}{{end}}</p>
+  <p>GRB review dates: {{.DateInfo}}</p>
+</div>
+
+<p>If you have questions, please contact the Governance Team at <a
+    href="mailto:{{.ITGovernanceInboxAddress}}">{{.ITGovernanceInboxAddress}}</a>.</p>
+<hr>
+<p>You may continue to receive email notifications about this request until a decision is issued and it is closed.</p>

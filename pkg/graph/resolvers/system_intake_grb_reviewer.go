@@ -183,7 +183,7 @@ func DeleteSystemIntakeGRBReviewer(
 	})
 }
 
-func CastSystemIntakeGRBReviewerVote(ctx context.Context, store *storage.Store, input models.CastSystemIntakeGRBReviewerVoteInput) (*models.SystemIntakeGRBReviewer, error) {
+func CastSystemIntakeGRBReviewerVote(ctx context.Context, store *storage.Store, emailClient *email.Client, input models.CastSystemIntakeGRBReviewerVoteInput) (*models.SystemIntakeGRBReviewer, error) {
 	// first, if "OBJECT" is the vote selection, confirm there is a comment (required for objections)
 	if input.Vote == models.SystemIntakeAsyncGRBVotingOptionObjection && (input.VoteComment == nil || len(*input.VoteComment) < 1) {
 		return nil, errors.New("vote comment is required with an `Objection` vote")
@@ -237,7 +237,46 @@ func CastSystemIntakeGRBReviewerVote(ctx context.Context, store *storage.Store, 
 	}
 
 	// set vote
-	return store.CastSystemIntakeGRBReviewerVote(ctx, input)
+	reviewer, err := store.CastSystemIntakeGRBReviewerVote(ctx, input)
+	if err != nil {
+		return nil, err
+	}
+
+	// send email here
+	if emailClient != nil && systemIntake.GRBReviewStartedAt != nil && systemIntake.GrbReviewAsyncEndDate != nil && reviewer.Vote != nil {
+		// get email
+		userAccount, err := store.UserAccountsByIDs(ctx, []uuid.UUID{reviewer.UserID})
+		if err != nil {
+			appcontext.ZLogger(ctx).Error("problem getting user account when sending vote submitted email", zap.Error(err), zap.String("intake.id", systemIntake.ID.String()), zap.String("user.id", reviewer.UserID.String()))
+
+			// don't err here
+			return reviewer, nil
+		}
+
+		if len(userAccount) < 1 {
+			appcontext.ZLogger(ctx).Error("no user accounts found when sending vote submitted email", zap.String("intake.id", systemIntake.ID.String()), zap.String("user.id", reviewer.UserID.String()))
+
+			// don't err here
+			return reviewer, nil
+		}
+
+		if err := emailClient.SystemIntake.SendGRBReviewVoteSubmitted(ctx, email.SendGRBReviewVoteSubmittedInput{
+			Recipient:          models.EmailAddress(userAccount[0].Email),
+			SystemIntakeID:     systemIntake.ID,
+			ProjectTitle:       systemIntake.ProjectName.String,
+			RequesterName:      systemIntake.Requester,
+			RequesterComponent: systemIntake.Component.String,
+			StartDate:          *systemIntake.GRBReviewStartedAt,
+			EndDate:            *systemIntake.GrbReviewAsyncEndDate,
+			Vote:               *reviewer.Vote,
+		}); err != nil {
+			appcontext.ZLogger(ctx).Error("problem sending vote submitted email", zap.Error(err), zap.String("intake.id", systemIntake.ID.String()), zap.String("user.id", reviewer.UserID.String()))
+
+			// don't err here
+		}
+	}
+
+	return reviewer, nil
 }
 
 func SystemIntakeGRBReviewers(
