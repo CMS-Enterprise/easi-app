@@ -4,7 +4,8 @@ import { Table as UswdsTable } from '@trussworks/react-uswds';
 import { getPersonFullName } from 'features/Systems/SystemProfile/util';
 import {
   GetTRBRequestSummaryQuery,
-  SystemIntakeFragmentFragment
+  SystemIntakeFragmentFragment,
+  SystemRelationshipType
 } from 'gql/generated/graphql';
 
 import TablePagination from 'components/TablePagination';
@@ -13,6 +14,7 @@ import SystemCard from '.';
 
 type SystemCardTableProps = {
   systems: GetTRBRequestSummaryQuery['trbRequest']['systems'];
+  systemRelationshipType?: SystemRelationshipType[];
 };
 
 /**
@@ -20,7 +22,10 @@ type SystemCardTableProps = {
  * Utilizing pagination for each/single card
  * */
 
-const SystemCardTable = ({ systems }: SystemCardTableProps) => {
+const SystemCardTable = ({
+  systems,
+  systemRelationshipType
+}: SystemCardTableProps) => {
   const columns: any = useMemo(() => {
     return [
       {
@@ -41,6 +46,7 @@ const SystemCardTable = ({ systems }: SystemCardTableProps) => {
               businessOwners={row.original.businessOwnerRoles
                 .map(role => getPersonFullName(role))
                 .join(', ')}
+              systemRelationshipType={systemRelationshipType}
             />
           );
         }

@@ -155,6 +155,7 @@ const RequestOverview = ({
               <PageLoading />
             </div>
           )}
+
           {!loading && !!systemIntake && (
             <section
               className={classnames({ 'desktop:grid-col-9': !fullPageLayout })}

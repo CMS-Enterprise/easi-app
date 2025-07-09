@@ -32,17 +32,18 @@ const AdditionalInformation = ({
   const parentRoute = type === 'itgov' ? 'it-governance' : 'trb';
 
   const isITGovAdmin = useContext(ITGovAdminContext);
-
   return (
     <div>
       <PageHeading className="margin-y-0">
-        {parentRoute ? linkedSystemsT('title') : adminT('title')}
+        {parentRoute === 'it-governance'
+          ? linkedSystemsT('title')
+          : adminT('title')}
       </PageHeading>
-
       <p className="font-body-md line-height-body-4 text-light margin-top-05 margin-bottom-1">
-        {parentRoute ? linkedSystemsT('description') : adminT('description')}
+        {parentRoute === 'it-governance'
+          ? linkedSystemsT('description')
+          : adminT('description')}
       </p>
-
       {(request.relationType === RequestRelationType.EXISTING_SYSTEM ||
         request.relationType === RequestRelationType.EXISTING_SERVICE) && (
         <div className="margin-bottom-3">
@@ -53,18 +54,25 @@ const AdditionalInformation = ({
           <UswdsReactLink
             to={`/${parentRoute}/${request.id}/system-information/link`}
           >
-            {parentRoute
+            {parentRoute === 'it-governance'
               ? linkedSystemsT('editInformation')
               : adminT('editInformation')}
           </UswdsReactLink>
         </div>
       )}
-
       {request.relationType === RequestRelationType.EXISTING_SYSTEM &&
         request.systems.length > 0 && (
-          <SystemCardTable systems={request.systems} />
+          <SystemCardTable
+            systems={request.systems}
+            systemRelationshipType={
+              // Type guard: 'cedarSystemRelationShips' only exists on SystemIntakeFragment.
+              // This narrows the union type, so we can safely access the first system’s relationshipType.
+              'cedarSystemRelationShips' in request
+                ? request.cedarSystemRelationShips?.[0]?.systemRelationshipType
+                : undefined
+            }
+          />
         )}
-
       {request.relationType === RequestRelationType.EXISTING_SERVICE && (
         <div className="margin-top-3">
           <strong>{adminT('serviceOrContract')}</strong>
@@ -72,7 +80,6 @@ const AdditionalInformation = ({
           <p className="margin-top-1">{request.contractName}</p>
         </div>
       )}
-
       {request.relationType === null && (
         <Alert
           type="warning"
@@ -83,7 +90,6 @@ const AdditionalInformation = ({
           {adminT('unlinkedAlert')}
         </Alert>
       )}
-
       {request.relationType === RequestRelationType.NEW_SYSTEM && (
         <Alert
           type="info"
@@ -94,7 +100,6 @@ const AdditionalInformation = ({
           {adminT('newSystemAlert')}
         </Alert>
       )}
-
       {isITGovAdmin &&
         (request.relationType === null ||
           request.relationType === RequestRelationType.NEW_SYSTEM) && (
@@ -107,7 +112,6 @@ const AdditionalInformation = ({
             {adminT('linkSystem')}
           </UswdsReactLink>
         )}
-
       {request.relationType !== null && (
         <>
           {request.contractNumbers?.length > 0 && (
@@ -133,7 +137,6 @@ const AdditionalInformation = ({
           )}
         </>
       )}
-
       <RelatedRequestsTable requestID={request.id} type={type} />
     </div>
   );

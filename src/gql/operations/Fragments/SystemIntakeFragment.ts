@@ -144,5 +144,10 @@ export default gql(/* GraphQL */ `
     grbPresentationLinks {
       ...SystemIntakeGRBPresentationLinksFragment
     }
+    cedarSystemRelationShips {
+      systemIntakeID
+      systemID
+      systemRelationshipType
+    }
   }
 `);

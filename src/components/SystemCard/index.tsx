@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, Grid, Icon } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import { SystemRelationshipType } from 'gql/generated/graphql';
 
 import {
   DescriptionDefinition,
@@ -20,6 +21,7 @@ export type SystemCardProps = {
   acronym: string | null | undefined;
   businessOwnerOrg: string | null | undefined;
   businessOwners: string | null | undefined;
+  systemRelationshipType?: SystemRelationshipType[];
 };
 
 const SystemCard = ({
@@ -29,7 +31,8 @@ const SystemCard = ({
   description,
   acronym,
   businessOwnerOrg,
-  businessOwners
+  businessOwners,
+  systemRelationshipType
 }: SystemCardProps) => {
   const { t } = useTranslation('admin');
 
@@ -46,17 +49,19 @@ const SystemCard = ({
           {acronym && <p className="margin-0 margin-left-1">({acronym})</p>}
         </div>
 
-        <div className="bg-primary-lighter margin-bottom-1 padding-y-105 padding-right-105">
-          <ul className="margin-y-0">
-            {(
-              t('list', {
-                returnObjects: true
-              }) as string[]
-            ).map(item => {
-              return <li key={item}>{item}</li>;
-            })}
-          </ul>
-        </div>
+        {!!systemRelationshipType && (
+          <div className="bg-primary-lighter margin-bottom-1 padding-y-105 padding-right-105">
+            <ul className="margin-y-0">
+              {(
+                t('list', {
+                  returnObjects: true
+                }) as string[]
+              ).map(item => {
+                return <li key={item}>{item}</li>;
+              })}
+            </ul>
+          </div>
+        )}
 
         <p className="system-card__body-text line-height-body-4">
           {description}
