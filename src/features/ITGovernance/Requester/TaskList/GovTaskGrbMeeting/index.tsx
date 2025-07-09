@@ -63,7 +63,8 @@ const GovTaskGrbMeeting = ({
     // Render link if awaiting decision or out of GRB meeting step
     if (
       step !== SystemIntakeStep.GRB_MEETING ||
-      grbMeetingStatus === ITGovGRBStatus.AWAITING_DECISION
+      grbMeetingStatus === ITGovGRBStatus.AWAITING_DECISION ||
+      grbMeetingStatus === ITGovGRBStatus.REVIEW_IN_PROGRESS
     ) {
       return false;
     }

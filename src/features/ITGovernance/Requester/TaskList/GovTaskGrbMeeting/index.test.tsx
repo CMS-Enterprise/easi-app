@@ -339,6 +339,11 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
       expect(
         screen.getByTestId('requester-discussions-card')
       ).toBeInTheDocument();
+
+      // Prep for GRB review renders as link
+      expect(
+        screen.getByRole('link', { name: 'Prepare for the GRB review' })
+      ).not.toHaveClass('usa-button');
     });
 
     it('Awaiting decision', () => {
