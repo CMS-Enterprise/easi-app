@@ -2868,7 +2868,7 @@ type Query {
   trbAdminNote(id: UUID!): TRBAdminNote! @hasRole(role: EASI_TRB_ADMIN)
   requesterUpdateEmailData: [RequesterUpdateEmailData!]!
   userAccount(username: String!): UserAccount
-  systemIntakeSystem(systemIntakeSystemID: UUID): SystemIntakeSystem
+  systemIntakeSystem(systemIntakeSystemID: UUID!): SystemIntakeSystem
 }
 
 enum TRBRequestType {

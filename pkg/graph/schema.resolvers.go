@@ -1612,13 +1612,10 @@ func (r *queryResolver) UserAccount(ctx context.Context, username string) (*auth
 }
 
 // SystemIntakeSystem is the resolver for the systemIntakeSystem field.
-func (r *queryResolver) SystemIntakeSystem(ctx context.Context, systemIntakeSystemID *uuid.UUID) (*models.SystemIntakeSystem, error) {
-	fmt.Println("resolver hit with ID", systemIntakeSystemID)
-
-	fmt.Printf("test")
-	if systemIntakeSystemID == nil {
-		return nil, errors.New("missing systemIntakeSystemID")
-	}
+func (r *queryResolver) SystemIntakeSystem(ctx context.Context, systemIntakeSystemID uuid.UUID) (*models.SystemIntakeSystem, error) {
+	fmt.Println("1")
+	fmt.Println("2")
+	fmt.Println("3")
 	return resolvers.GetLinkedSystemByID(ctx, r.store, systemIntakeSystemID)
 }
 

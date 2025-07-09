@@ -60,8 +60,8 @@ func UpdateSystemLinkByID(ctx context.Context, store *storage.Store, input model
 	})
 }
 
-func GetLinkedSystemByID(ctx context.Context, store *storage.Store, systemIntakeSystemID *uuid.UUID) (*models.SystemIntakeSystem, error) {
-	linkedSystems, err := dataloaders.GetSystemIntakeSystemByID(ctx, *systemIntakeSystemID)
+func GetLinkedSystemByID(ctx context.Context, store *storage.Store, systemIntakeSystemID uuid.UUID) (*models.SystemIntakeSystem, error) {
+	linkedSystems, err := dataloaders.GetSystemIntakeSystemByID(ctx, systemIntakeSystemID)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error("unable to retrieve cedar system ids from db", zap.Error(err))
 		return nil, err

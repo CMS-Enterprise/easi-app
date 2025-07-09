@@ -671,7 +671,7 @@ type ComplexityRoot struct {
 		Roles                            func(childComplexity int, cedarSystemID string, roleTypeID *string) int
 		SystemIntake                     func(childComplexity int, id uuid.UUID) int
 		SystemIntakeContacts             func(childComplexity int, id uuid.UUID) int
-		SystemIntakeSystem               func(childComplexity int, systemIntakeSystemID *uuid.UUID) int
+		SystemIntakeSystem               func(childComplexity int, systemIntakeSystemID uuid.UUID) int
 		SystemIntakes                    func(childComplexity int, openRequests bool) int
 		SystemIntakesWithLcids           func(childComplexity int) int
 		SystemIntakesWithReviewRequested func(childComplexity int) int
@@ -1381,7 +1381,7 @@ type QueryResolver interface {
 	TrbAdminNote(ctx context.Context, id uuid.UUID) (*models.TRBAdminNote, error)
 	RequesterUpdateEmailData(ctx context.Context) ([]*models.RequesterUpdateEmailData, error)
 	UserAccount(ctx context.Context, username string) (*authentication.UserAccount, error)
-	SystemIntakeSystem(ctx context.Context, systemIntakeSystemID *uuid.UUID) (*models.SystemIntakeSystem, error)
+	SystemIntakeSystem(ctx context.Context, systemIntakeSystemID uuid.UUID) (*models.SystemIntakeSystem, error)
 }
 type SystemIntakeResolver interface {
 	Actions(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeAction, error)
@@ -5354,7 +5354,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Query.SystemIntakeSystem(childComplexity, args["systemIntakeSystemID"].(*uuid.UUID)), true
+		return e.complexity.Query.SystemIntakeSystem(childComplexity, args["systemIntakeSystemID"].(uuid.UUID)), true
 
 	case "Query.systemIntakes":
 		if e.complexity.Query.SystemIntakes == nil {
@@ -11245,7 +11245,7 @@ type Query {
   trbAdminNote(id: UUID!): TRBAdminNote! @hasRole(role: EASI_TRB_ADMIN)
   requesterUpdateEmailData: [RequesterUpdateEmailData!]!
   userAccount(username: String!): UserAccount
-  systemIntakeSystem(systemIntakeSystemID: UUID): SystemIntakeSystem
+  systemIntakeSystem(systemIntakeSystemID: UUID!): SystemIntakeSystem
 }
 
 enum TRBRequestType {
@@ -14776,18 +14776,18 @@ func (ec *executionContext) field_Query_systemIntakeSystem_args(ctx context.Cont
 func (ec *executionContext) field_Query_systemIntakeSystem_argsSystemIntakeSystemID(
 	ctx context.Context,
 	rawArgs map[string]any,
-) (*uuid.UUID, error) {
+) (uuid.UUID, error) {
 	if _, ok := rawArgs["systemIntakeSystemID"]; !ok {
-		var zeroVal *uuid.UUID
+		var zeroVal uuid.UUID
 		return zeroVal, nil
 	}
 
 	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeSystemID"))
 	if tmp, ok := rawArgs["systemIntakeSystemID"]; ok {
-		return ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		return ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
 	}
 
-	var zeroVal *uuid.UUID
+	var zeroVal uuid.UUID
 	return zeroVal, nil
 }
 
@@ -42078,7 +42078,7 @@ func (ec *executionContext) _Query_systemIntakeSystem(ctx context.Context, field
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().SystemIntakeSystem(rctx, fc.Args["systemIntakeSystemID"].(*uuid.UUID))
+		return ec.resolvers.Query().SystemIntakeSystem(rctx, fc.Args["systemIntakeSystemID"].(uuid.UUID))
 	})
 	if err != nil {
 		ec.Error(ctx, err)

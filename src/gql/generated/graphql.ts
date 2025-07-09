@@ -1733,7 +1733,7 @@ export type QuerySystemIntakeContactsArgs = {
 
 /** Query definition for the schema */
 export type QuerySystemIntakeSystemArgs = {
-  systemIntakeSystemID?: InputMaybe<Scalars['UUID']['input']>;
+  systemIntakeSystemID: Scalars['UUID']['input'];
 };
 
 
