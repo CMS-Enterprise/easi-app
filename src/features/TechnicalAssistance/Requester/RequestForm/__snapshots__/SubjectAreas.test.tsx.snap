@@ -461,7 +461,7 @@ exports[`Trb Request form: Subject areas > checks subject area form elements 1`]
           >
             <button
               class="usa-button usa-button--outline margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
-              data-testid="button"
+              data-testid="pager-back-button"
               type="button"
             >
               Back
@@ -476,7 +476,7 @@ exports[`Trb Request form: Subject areas > checks subject area form elements 1`]
           >
             <button
               class="usa-button margin-top-0"
-              data-testid="button"
+              data-testid="pager-next-button"
               type="submit"
             >
               Next
