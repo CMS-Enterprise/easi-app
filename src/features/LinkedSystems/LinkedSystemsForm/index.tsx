@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Controller, FieldPath, FormProvider } from 'react-hook-form';
 // import { useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
@@ -14,10 +14,11 @@ import {
   Icon,
   Label,
   Link,
+  Select,
   TextInput
 } from '@trussworks/react-uswds';
 import {
-  SystemRelationshipInput,
+  // SystemRelationshipInput,
   SystemRelationshipType,
   useGetSystemIntakeRelationQuery,
   useSetSystemIntakeRelationExistingSystemMutation
@@ -29,7 +30,6 @@ import { useEasiForm } from 'components/EasiForm';
 import { ErrorAlert, ErrorAlertMessage } from 'components/ErrorAlert';
 import IconButton from 'components/IconButton';
 import MainContent from 'components/MainContent';
-import MultiSelect from 'components/MultiSelect';
 import PageHeading from 'components/PageHeading';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import Spinner from 'components/Spinner';
@@ -37,7 +37,7 @@ import flattenFormErrors from 'utils/flattenFormErrors';
 import { linkedSystemsSchema } from 'validations/systemIntakeSchema';
 
 type LinkedSystemsFormFields = {
-  cedarSystemIDs: string[];
+  cedarSystemID: string;
   relationshipTypes: {
     primarySupport: boolean;
     partialSupport: boolean;
@@ -51,46 +51,43 @@ type LinkedSystemsFormFields = {
 
 const hasErrors = false; // todo fix this
 
-const buildCedarSystemRelationshipObjects = (
-  payload: LinkedSystemsFormFields
-) => {
-  const selectedSystemRelationshipTypes: Array<SystemRelationshipType> = [];
+// const buildCedarSystemRelationshipObjects = (
+//   payload: LinkedSystemsFormFields
+// ) => {
+//   const selectedSystemRelationshipTypes: Array<SystemRelationshipType> = [];
 
-  if (payload.relationshipTypes.primarySupport) {
-    selectedSystemRelationshipTypes.push(
-      SystemRelationshipType.PRIMARY_SUPPORT
-    );
-  }
-  if (payload.relationshipTypes.partialSupport) {
-    selectedSystemRelationshipTypes.push(
-      SystemRelationshipType.PARTIAL_SUPPORT
-    );
-  }
-  if (payload.relationshipTypes.usesOrImpactedBySelectedSystem) {
-    selectedSystemRelationshipTypes.push(
-      SystemRelationshipType.USES_OR_IMPACTED_BY_SELECTED_SYSTEM
-    );
-  }
-  if (payload.relationshipTypes.impactsSelectedSystem) {
-    selectedSystemRelationshipTypes.push(
-      SystemRelationshipType.IMPACTS_SELECTED_SYSTEM
-    );
-  }
-  if (payload.relationshipTypes.other) {
-    selectedSystemRelationshipTypes.push(SystemRelationshipType.OTHER);
-  }
+//   if (payload.relationshipTypes.primarySupport) {
+//     selectedSystemRelationshipTypes.push(
+//       SystemRelationshipType.PRIMARY_SUPPORT
+//     );
+//   }
+//   if (payload.relationshipTypes.partialSupport) {
+//     selectedSystemRelationshipTypes.push(
+//       SystemRelationshipType.PARTIAL_SUPPORT
+//     );
+//   }
+//   if (payload.relationshipTypes.usesOrImpactedBySelectedSystem) {
+//     selectedSystemRelationshipTypes.push(
+//       SystemRelationshipType.USES_OR_IMPACTED_BY_SELECTED_SYSTEM
+//     );
+//   }
+//   if (payload.relationshipTypes.impactsSelectedSystem) {
+//     selectedSystemRelationshipTypes.push(
+//       SystemRelationshipType.IMPACTS_SELECTED_SYSTEM
+//     );
+//   }
+//   if (payload.relationshipTypes.other) {
+//     selectedSystemRelationshipTypes.push(SystemRelationshipType.OTHER);
+//   }
 
-  const systemRelationships: Array<SystemRelationshipInput> =
-    payload.cedarSystemIDs.map((systemId: string) => {
-      return {
-        cedarSystemId: systemId,
-        systemRelationshipType: selectedSystemRelationshipTypes,
-        otherSystemRelationshipDescription: payload.otherDescription
-      };
-    });
+//   const systemRelationships: SystemRelationshipInput = {
+//     cedarSystemId: payload.cedarSystemID,
+//     systemRelationshipType: selectedSystemRelationshipTypes,
+//     otherSystemRelationshipDescription: payload.otherDescription
+//   };
 
-  return systemRelationships;
-};
+//   return systemRelationships;
+// };
 
 const LinkedSystemsForm = () => {
   const { id } = useParams<{
@@ -101,13 +98,20 @@ const LinkedSystemsForm = () => {
 
   //   const { getValues } = useForm();
 
-  const { t } = useTranslation(['linkedSystems', 'itGov', 'error']);
+  const { t } = useTranslation([
+    'linkedSystems',
+    'itGov',
+    'technicalAssistance',
+    'error'
+  ]);
 
   const [setExistingIntakeSystem, { error: existingIntakeSystemError }] =
     useSetSystemIntakeRelationExistingSystemMutation();
 
   const [cedarSystemSelectedError, setCedarSystemSelectedError] =
     useState<boolean>(false);
+
+  console.log(setExistingIntakeSystem, setCedarSystemSelectedError);
 
   const {
     data: systemIntakeAndCedarSystems,
@@ -142,33 +146,33 @@ const LinkedSystemsForm = () => {
 
   const fieldErrors = flattenFormErrors<LinkedSystemsFormFields>(errors);
 
-  const updateSystemIntake = useCallback(async () => {
-    const values = watch();
-    const payload = { ...values };
+  // const updateSystemIntake = useCallback(async () => {
+  //   const values = watch();
+  //   const payload = { ...values };
 
-    console.log('payload', payload);
+  //   console.log('payload', payload);
 
-    if (!payload.cedarSystemIDs || payload.cedarSystemIDs.length === 0) {
-      setCedarSystemSelectedError(true);
-      return () => {};
-    }
-    setCedarSystemSelectedError(false);
+  //   if (!payload.cedarSystemID) {
+  //     setCedarSystemSelectedError(true);
+  //     return () => {};
+  //   }
+  //   setCedarSystemSelectedError(false);
 
-    const request = {
-      variables: {
-        input: {
-          systemIntakeID: id,
-          cedarSystemRelationShips:
-            buildCedarSystemRelationshipObjects(payload),
-          contractNumbers: [] // TODO: Will this overwrite existing contract numbers?
-        }
-      }
-    };
+  //   const request = {
+  //     variables: {
+  //       input: {
+  //         systemIntakeID: id,
+  //         cedarSystemRelationShips:
+  //           buildCedarSystemRelationshipObjects(payload),
+  //         contractNumbers: [] // TODO: Will this overwrite existing contract numbers?
+  //       }
+  //     }
+  //   };
 
-    console.log(request);
+  //   console.log(request);
 
-    return setExistingIntakeSystem(request);
-  }, [watch, id]);
+  //   return setExistingIntakeSystem(request);
+  // }, [watch, id]);
 
   /** Update contacts and system intake form */
   const submit = async (callback: () => void = () => {}) => {
@@ -181,9 +185,9 @@ const LinkedSystemsForm = () => {
     if (!isDirty) return;
 
     // Update intake
-    const result = await updateSystemIntake(); // TODO Get this working
+    // const result = await updateSystemIntake(); // TODO Get this working
 
-    console.log('result', result);
+    // console.log('result', result);
 
     callback();
   };
@@ -291,31 +295,42 @@ const LinkedSystemsForm = () => {
                   {!relationLoading && (
                     <>
                       <Controller
-                        name="cedarSystemIDs"
+                        name="cedarSystemID"
                         control={control}
+                        defaultValue=""
                         render={({ field }) => (
                           <FormGroup>
                             <Label
-                              htmlFor="cedarSystemIDs"
+                              htmlFor="cedarSystemID"
                               hint={t('cmsSystemsDropdown.hint')}
                             >
                               {t('cmsSystemsDropdown.title')}{' '}
                               <RequiredAsterisk />
                             </Label>
-                            <MultiSelect
-                              name={field.name}
-                              selectedLabel={t(
-                                'ItGov:link.form.field.cmsSystem.selectedLabel'
-                              )}
-                              initialValues={field.value}
-                              options={cedarSystemIdOptions}
-                              onChange={values => field.onChange(values)}
-                            />
+                            <Select
+                              id="cedarSystemID"
+                              data-testid="cedarSystemID"
+                              {...field}
+                              ref={null}
+                              value={field.value || ''}
+                            >
+                              <option
+                                label={`- ${t('technicalAssistance:basic.options.select')} -`}
+                                disabled
+                              />
+                              {cedarSystemIdOptions.map(system => (
+                                <option
+                                  key={system.label}
+                                  value={system.value}
+                                  label={t(`${system.label}`)}
+                                />
+                              ))}
+                            </Select>
                           </FormGroup>
                         )}
                       />
                       <Label
-                        htmlFor="cedarSystemIDs"
+                        htmlFor="cedarSystemID"
                         hint={t('relationship.hint')}
                       >
                         {t('relationship.title')} <RequiredAsterisk />

@@ -1,3 +1,3 @@
 DELETE FROM system_intake_systems
 WHERE
-    system_intake_id = :system_intake_id;
+    id = :system_intake_system_id;

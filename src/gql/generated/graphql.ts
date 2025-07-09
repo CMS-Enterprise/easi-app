@@ -710,6 +710,7 @@ export type DeleteSystemIntakeGRBReviewerInput = {
   reviewerID: Scalars['UUID']['input'];
 };
 
+/** The payload for deleting a system intake's linked system */
 export type DeleteSystemLinkPayload = {
   __typename: 'DeleteSystemLinkPayload';
   systemIntakeSystem?: Maybe<SystemIntakeSystem>;
@@ -1041,6 +1042,7 @@ export type Mutation = {
   updateSystemIntakeRequestDetails?: Maybe<UpdateSystemIntakePayload>;
   updateSystemIntakeRequestType: SystemIntake;
   updateSystemIntakeReviewDates?: Maybe<UpdateSystemIntakePayload>;
+  updateSystemLink?: Maybe<UpdateSystemLinkPayload>;
   updateTRBGuidanceLetter: TRBGuidanceLetter;
   updateTRBGuidanceLetterInsight: TRBGuidanceLetterInsight;
   updateTRBGuidanceLetterInsightOrder: Array<TRBGuidanceLetterInsight>;
@@ -1506,6 +1508,12 @@ export type MutationUpdateSystemIntakeReviewDatesArgs = {
 
 
 /** Defines the mutations for the schema */
+export type MutationUpdateSystemLinkArgs = {
+  input: UpdateSystemLinkInput;
+};
+
+
+/** Defines the mutations for the schema */
 export type MutationUpdateTRBGuidanceLetterArgs = {
   input: UpdateTRBGuidanceLetterInput;
 };
@@ -1604,6 +1612,7 @@ export type Query = {
    */
   systemIntake?: Maybe<SystemIntake>;
   systemIntakeContacts: SystemIntakeContactsPayload;
+  systemIntakeSystem?: Maybe<SystemIntakeSystem>;
   systemIntakes: Array<SystemIntake>;
   systemIntakesWithLcids: Array<SystemIntake>;
   systemIntakesWithReviewRequested: Array<SystemIntake>;
@@ -1719,6 +1728,12 @@ export type QuerySystemIntakeArgs = {
 /** Query definition for the schema */
 export type QuerySystemIntakeContactsArgs = {
   id: Scalars['UUID']['input'];
+};
+
+
+/** Query definition for the schema */
+export type QuerySystemIntakeSystemArgs = {
+  systemIntakeSystemID?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 
@@ -3218,6 +3233,20 @@ export type UpdateSystemIntakeReviewDatesInput = {
   grbDate?: InputMaybe<Scalars['Time']['input']>;
   grtDate?: InputMaybe<Scalars['Time']['input']>;
   id: Scalars['UUID']['input'];
+};
+
+/** The input type for updating a system intake's linked system by id */
+export type UpdateSystemLinkInput = {
+  cedarSystemRelationShip: SystemRelationshipInput;
+  systemIntakeSystemID: Scalars['UUID']['input'];
+};
+
+/** The payload for updating a system intake's linked system */
+export type UpdateSystemLinkPayload = {
+  __typename: 'UpdateSystemLinkPayload';
+  id: Scalars['UUID']['output'];
+  systemIntakeSystem: SystemIntakeSystem;
+  userErrors?: Maybe<Array<UserError>>;
 };
 
 /** The data needed to update a TRB guidance letter */

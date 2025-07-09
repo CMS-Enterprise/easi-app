@@ -1116,7 +1116,6 @@ input SetSystemIntakeRelationExistingSystemInput {
   systemIntakeID: UUID!
   cedarSystemRelationShips: [SystemRelationshipInput!]!
   contractNumbers: [String!]!
-
 }
 
 # RequestRelationType.EXISTING_SERVICE
@@ -1386,8 +1385,28 @@ type UpdateSystemIntakePayload {
   userErrors: [UserError!]
 }
 
+"""
+The payload for deleting a system intake's linked system
+"""
 type DeleteSystemLinkPayload {
   systemIntakeSystem: SystemIntakeSystem
+  userErrors: [UserError!]
+}
+
+"""
+The input type for updating a system intake's linked system by id
+"""
+input UpdateSystemLinkInput {
+  systemIntakeSystemID: UUID!
+  cedarSystemRelationShip: SystemRelationshipInput!
+}
+
+"""
+The payload for updating a system intake's linked system
+"""
+type UpdateSystemLinkPayload {
+  id: UUID!
+  systemIntakeSystem: SystemIntakeSystem!
   userErrors: [UserError!]
 }
 
@@ -2664,6 +2683,7 @@ type Mutation {
   ): UpdateSystemIntakePayload
   unlinkSystemIntakeRelation(intakeID: UUID!): UpdateSystemIntakePayload
   deleteSystemLink(systemIntakeSystem: UUID!): DeleteSystemLinkPayload
+  updateSystemLink(input: UpdateSystemLinkInput!): UpdateSystemLinkPayload
 
   createSystemIntakeContact(
     input: CreateSystemIntakeContactInput!
@@ -2848,6 +2868,7 @@ type Query {
   trbAdminNote(id: UUID!): TRBAdminNote! @hasRole(role: EASI_TRB_ADMIN)
   requesterUpdateEmailData: [RequesterUpdateEmailData!]!
   userAccount(username: String!): UserAccount
+  systemIntakeSystem(systemIntakeSystemID: UUID): SystemIntakeSystem
 }
 
 enum TRBRequestType {

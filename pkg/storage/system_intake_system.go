@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 
 	"github.com/google/uuid"
@@ -10,6 +11,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlqueries"
 )
@@ -21,13 +23,13 @@ func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemI
 		return errors.New("unexpected nil system intake ID when linking system intake to system id")
 	}
 
-	_, err := tx.NamedExec(sqlqueries.SystemIntakeSystemForm.Delete, map[string]interface{}{
-		"system_intake_id": systemIntakeID,
-	})
-	if err != nil {
-		appcontext.ZLogger(ctx).Error("Failed to delete system ids linked to system intake", zap.Error(err))
-		return err
-	}
+	// _, err := tx.NamedExec(sqlqueries.SystemIntakeSystemForm.Delete, map[string]interface{}{
+	// 	"system_intake_id": systemIntakeID,
+	// })
+	// if err != nil {
+	// 	appcontext.ZLogger(ctx).Error("Failed to delete system ids linked to system intake", zap.Error(err))
+	// 	return err
+	// }
 
 	// no need to run insert if we are not inserting new system ids
 	if len(systemRelationships) < 1 {
@@ -92,4 +94,44 @@ func (s *Store) DeleteSystemIntakeSystemByID(ctx context.Context, tx *sqlx.Tx, s
 		return err
 	}
 	return nil
+}
+
+func (s *Store) UpdateSystemIntakeSystemByID(ctx context.Context, tx *sqlx.Tx, input models.UpdateSystemLinkInput) error {
+	if _, err := namedExec(ctx, tx, sqlqueries.SystemIntakeSystemForm.UpdateByID, args{
+		"system_intake_system_id":               input.SystemIntakeSystemID,
+		"system_id":                             input.CedarSystemRelationShip.CedarSystemID,
+		"relationship_type":                     input.CedarSystemRelationShip.SystemRelationshipType,
+		"other_system_relationship_description": input.CedarSystemRelationShip.OtherSystemRelationshipDescription,
+	}); err != nil {
+		appcontext.ZLogger(ctx).Error("failed to update a Linked System from system_intake_systems", zap.Error(err))
+		return err
+	}
+	return nil
+}
+
+func (s *Store) GetLinkedSystemByID(ctx context.Context, systemIntakeSystemID uuid.UUID) (*models.SystemIntakeSystem, error) {
+	var systemIntakeSystem models.SystemIntakeSystem
+
+	err := s.db.Get(
+		&systemIntakeSystem,
+		sqlqueries.SystemIntakeSystemForm.GetByID,
+		systemIntakeSystemID,
+	)
+
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch system intake system",
+			zap.Error(err),
+			zap.String("systemIntakeSystemID", systemIntakeSystemID.String()),
+		)
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, &apperrors.ResourceNotFoundError{
+				Err:      err,
+				Resource: models.SystemIntakeSystem{},
+			}
+		}
+		return nil, err
+	}
+
+	return &systemIntakeSystem, nil
 }
