@@ -227,9 +227,13 @@ function PresentationLinksCard({
           </CardBody>
         )}
         {hasAnyLinks && grbReviewStartedAt && (
-          <CardFooter className="presentation-card-links display-flex flex-wrap flex-column-gap-3 flex-row-gap-1 padding-x-0 padding-bottom-205 padding-top-2 margin-x-3 border-top-1px border-gray-10">
+          <CardFooter
+            data-cy="presentation-card-details"
+            className="presentation-card-links display-flex flex-wrap flex-column-gap-3 flex-row-gap-1 padding-x-0 padding-bottom-205 padding-top-2 margin-x-3 border-top-1px border-gray-10"
+          >
             {isVirusScanning ? (
               <em
+                data-testid="presentation-files-virus-scanning"
                 data-testdeckurl={presentationDeckFileURL || transcriptFileURL}
               >
                 {t('asyncPresentation.virusScanning')}
@@ -291,6 +295,7 @@ function PresentationLinksCard({
                   presentationDeckFileName && (
                     <Button
                       type="button"
+                      data-testid="view-presentation-deck-file"
                       onClick={() =>
                         downloadFileFromURL(
                           presentationDeckFileURL,

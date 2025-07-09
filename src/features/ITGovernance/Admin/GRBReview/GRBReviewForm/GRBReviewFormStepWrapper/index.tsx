@@ -104,7 +104,9 @@ function GRBReviewFormStepWrapper<
     }) =>
       handleSubmit(
         async formData => {
-          if (!isDirty) return history.push(`${grbReviewPath}/${path}`);
+          if (!isDirty && !formData.startGRBReview) {
+            return history.push(`${grbReviewPath}/${path}`);
+          }
 
           return onSubmit(formData)
             .then(() => history.push(`${grbReviewPath}/${path}`))
