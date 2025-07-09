@@ -90,7 +90,11 @@ const SystemCardTable = ({
               <tr {...row.getRowProps()}>
                 {row.cells.map((cell, i) => {
                   return (
-                    <td className="border-0 padding-0" {...cell.getCellProps()}>
+                    <td
+                      className="border-0 padding-0"
+                      {...cell.getCellProps()}
+                      key={{ ...cell.getCellProps() }.key}
+                    >
                       {cell.render('Cell')}
                     </td>
                   );

@@ -28,20 +28,6 @@ exports[`System Card Componenet > matches snapshot 1`] = `
             (SO)
           </p>
         </div>
-        <div
-          class="bg-primary-lighter margin-bottom-1 padding-y-105 padding-right-105"
-        >
-          <ul
-            class="margin-y-0"
-          >
-            <li>
-              This request uses the selected system in its existing or proposed technical solution or is impacted by the selected system
-            </li>
-            <li>
-              This request impacts the selected system
-            </li>
-          </ul>
-        </div>
         <p
           class="system-card__body-text line-height-body-4"
         >
