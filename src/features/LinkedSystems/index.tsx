@@ -62,7 +62,7 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
   // Also for a breadcrumb navigation link
   const redirectUrl = (() => {
     if (fromAdmin) {
-      return `/it-governance/${id}/additional-information`;
+      return `/it-governance/${id}/system-information`;
     }
     return `/governance-task-list/${id}`;
   })();

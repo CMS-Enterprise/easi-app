@@ -49,7 +49,7 @@ const GovernanceReviewTeam = () => {
           <Switch>
             {isITGovAdmin && (
               /* Defining outside parent route to trigger parent rerender/refetch after mutation */
-              <Route path="/it-governance/:id/additional-information/link">
+              <Route path="/it-governance/:id/system-information/link">
                 <RequestLinkForm requestType="itgov" fromAdmin />
               </Route>
             )}

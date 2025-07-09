@@ -204,7 +204,7 @@ const RequestOverview = ({
 
                 <Route
                   exact
-                  path="/it-governance/:systemId/additional-information"
+                  path="/it-governance/:systemId/system-information"
                   render={() => (
                     <AdditionalInformation
                       request={systemIntake}

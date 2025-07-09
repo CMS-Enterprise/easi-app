@@ -65,7 +65,7 @@ const subNavItems = (
       groupEnd: true
     },
     {
-      route: `/it-governance/${systemId}/additional-information`,
+      route: `/it-governance/${systemId}/system-information`,
       text: 'governanceReviewTeam:systemInformation.title',
       groupEnd: isITGovAdmin
     },
