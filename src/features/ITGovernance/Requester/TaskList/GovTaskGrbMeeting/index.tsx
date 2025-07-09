@@ -69,7 +69,7 @@ const GovTaskGrbMeeting = ({
     }
 
     // For all other statuses, render link if presentation deck has NOT been uploaded
-    return !grbPresentationLinks?.presentationDeckFileName;
+    return !!grbPresentationLinks?.presentationDeckFileName;
   }, [grbMeetingStatus, grbPresentationLinks, step]);
 
   /** Render review type and status alert during and after the GRB meeting step, if step was not skipped */

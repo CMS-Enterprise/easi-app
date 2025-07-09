@@ -243,10 +243,10 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
         screen.getByTestId('requester-discussions-card')
       ).toBeInTheDocument();
 
-      // Prep for GRB review - renders as link if presentation deck is uploaded
+      // Prep for GRB review - renders as button if presentation deck is uploaded
       expect(
         screen.getByRole('link', { name: 'Prepare for the GRB review' })
-      ).not.toHaveClass('usa-button');
+      ).toHaveClass('usa-button');
     });
 
     it('Ready to schedule (without presentation deck)', () => {
@@ -257,10 +257,10 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
       };
       renderGovTaskGrbMeeting(modifiedMock);
 
-      // Prep for GRB review - renders as button if presentation deck is NOT uploaded
+      // Prep for GRB review - renders as link if presentation deck is NOT uploaded
       expect(
         screen.getByRole('link', { name: 'Prepare for the GRB review' })
-      ).toHaveClass('usa-button');
+      ).not.toHaveClass('usa-button');
     });
 
     it('Scheduled', () => {
