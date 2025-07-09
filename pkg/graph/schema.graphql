@@ -1397,15 +1397,16 @@ type DeleteSystemLinkPayload {
 The input type for updating a system intake's linked system by id
 """
 input UpdateSystemLinkInput {
-  systemIntakeSystemID: UUID!
-  cedarSystemRelationShip: SystemRelationshipInput!
+  id: UUID!
+  systemID: String
+  systemRelationshipType: [SystemRelationshipType!]!
+  otherSystemRelationshipDescription: String
 }
 
 """
 The payload for updating a system intake's linked system
 """
 type UpdateSystemLinkPayload {
-  id: UUID!
   systemIntakeSystem: SystemIntakeSystem!
   userErrors: [UserError!]
 }

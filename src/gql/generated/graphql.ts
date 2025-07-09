@@ -3237,14 +3237,15 @@ export type UpdateSystemIntakeReviewDatesInput = {
 
 /** The input type for updating a system intake's linked system by id */
 export type UpdateSystemLinkInput = {
-  cedarSystemRelationShip: SystemRelationshipInput;
-  systemIntakeSystemID: Scalars['UUID']['input'];
+  id: Scalars['UUID']['input'];
+  otherSystemRelationshipDescription?: InputMaybe<Scalars['String']['input']>;
+  systemID?: InputMaybe<Scalars['String']['input']>;
+  systemRelationshipType: Array<SystemRelationshipType>;
 };
 
 /** The payload for updating a system intake's linked system */
 export type UpdateSystemLinkPayload = {
   __typename: 'UpdateSystemLinkPayload';
-  id: Scalars['UUID']['output'];
   systemIntakeSystem: SystemIntakeSystem;
   userErrors?: Maybe<Array<UserError>>;
 };

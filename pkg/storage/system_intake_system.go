@@ -2,7 +2,6 @@ package storage
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 
 	"github.com/google/uuid"
@@ -11,7 +10,6 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
-	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlqueries"
 )
@@ -96,42 +94,34 @@ func (s *Store) DeleteSystemIntakeSystemByID(ctx context.Context, tx *sqlx.Tx, s
 	return nil
 }
 
-func (s *Store) UpdateSystemIntakeSystemByID(ctx context.Context, tx *sqlx.Tx, input models.UpdateSystemLinkInput) error {
-	if _, err := namedExec(ctx, tx, sqlqueries.SystemIntakeSystemForm.UpdateByID, args{
-		"system_intake_system_id":               input.SystemIntakeSystemID,
-		"system_id":                             input.CedarSystemRelationShip.CedarSystemID,
-		"relationship_type":                     input.CedarSystemRelationShip.SystemRelationshipType,
-		"other_system_relationship_description": input.CedarSystemRelationShip.OtherSystemRelationshipDescription,
-	}); err != nil {
-		appcontext.ZLogger(ctx).Error("failed to update a Linked System from system_intake_systems", zap.Error(err))
-		return err
-	}
-	return nil
-}
+func (s *Store) UpdateSystemIntakeSystemByID(ctx context.Context, tx *sqlx.Tx, input models.UpdateSystemLinkInput) (*models.SystemIntakeSystem, error) {
+	var linkedSystemToUpdate models.SystemIntakeSystem
 
-func (s *Store) GetLinkedSystemByID(ctx context.Context, systemIntakeSystemID uuid.UUID) (*models.SystemIntakeSystem, error) {
-	var systemIntakeSystem models.SystemIntakeSystem
+	linkedSystemToUpdate.ID = input.ID
+	linkedSystemToUpdate.SystemID = *input.SystemID
+	linkedSystemToUpdate.SystemRelationshipType = input.SystemRelationshipType
+	linkedSystemToUpdate.OtherSystemRelationshipDescription = input.OtherSystemRelationshipDescription
 
-	err := s.db.Get(
-		&systemIntakeSystem,
-		sqlqueries.SystemIntakeSystemForm.GetByID,
-		systemIntakeSystemID,
-	)
-
+	// Assuming namedExec returns (sql.Result, error)
+	_, err := namedExec(ctx, tx, sqlqueries.SystemIntakeSystemForm.UpdateByID, linkedSystemToUpdate)
 	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			"Failed to fetch system intake system",
-			zap.Error(err),
-			zap.String("systemIntakeSystemID", systemIntakeSystemID.String()),
-		)
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, &apperrors.ResourceNotFoundError{
-				Err:      err,
-				Resource: models.SystemIntakeSystem{},
-			}
-		}
+		appcontext.ZLogger(ctx).Error("failed to update a Linked System from system_intake_systems", zap.Error(err))
 		return nil, err
 	}
 
-	return &systemIntakeSystem, nil
+	return &linkedSystemToUpdate, nil
+}
+
+func (s *Store) GetLinkedSystemByID(ctx context.Context, systemIntakeSystemID uuid.UUID) (*models.SystemIntakeSystem, error) {
+	var systemIntakeSystems []*models.SystemIntakeSystem
+
+	err := namedSelect(ctx, s.db, &systemIntakeSystems, sqlqueries.SystemIntakeSystemForm.GetByID, args{
+		"id": systemIntakeSystemID,
+	})
+
+	if len(systemIntakeSystems) > 0 {
+		return systemIntakeSystems[0], err
+	}
+
+	return nil, err
 }

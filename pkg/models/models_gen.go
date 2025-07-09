@@ -973,13 +973,14 @@ type UpdateSystemIntakeReviewDatesInput struct {
 
 // The input type for updating a system intake's linked system by id
 type UpdateSystemLinkInput struct {
-	SystemIntakeSystemID    uuid.UUID                `json:"systemIntakeSystemID"`
-	CedarSystemRelationShip *SystemRelationshipInput `json:"cedarSystemRelationShip"`
+	ID                                 uuid.UUID                `json:"id"`
+	SystemID                           *string                  `json:"systemID,omitempty"`
+	SystemRelationshipType             []SystemRelationshipType `json:"systemRelationshipType"`
+	OtherSystemRelationshipDescription *string                  `json:"otherSystemRelationshipDescription,omitempty"`
 }
 
 // The payload for updating a system intake's linked system
 type UpdateSystemLinkPayload struct {
-	ID                 uuid.UUID           `json:"id"`
 	SystemIntakeSystem *SystemIntakeSystem `json:"systemIntakeSystem"`
 	UserErrors         []*UserError        `json:"userErrors,omitempty"`
 }

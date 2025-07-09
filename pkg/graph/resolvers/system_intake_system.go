@@ -54,20 +54,24 @@ func DeleteSystemIntakeSystemByID(ctx context.Context, store *storage.Store, sys
 	})
 }
 
-func UpdateSystemLinkByID(ctx context.Context, store *storage.Store, input models.UpdateSystemLinkInput) error {
-	return sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
-		return store.UpdateSystemIntakeSystemByID(ctx, tx, input)
+func UpdateSystemLinkByID(ctx context.Context, store *storage.Store, input models.UpdateSystemLinkInput) (*models.UpdateSystemLinkPayload, error) {
+	var updatedSystem *models.SystemIntakeSystem
+
+	err := sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
+		var err error
+		updatedSystem, err = store.UpdateSystemIntakeSystemByID(ctx, tx, input)
+		return err
 	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &models.UpdateSystemLinkPayload{
+		SystemIntakeSystem: updatedSystem,
+	}, nil
 }
 
 func GetLinkedSystemByID(ctx context.Context, store *storage.Store, systemIntakeSystemID uuid.UUID) (*models.SystemIntakeSystem, error) {
-	linkedSystems, err := dataloaders.GetSystemIntakeSystemByID(ctx, systemIntakeSystemID)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error("unable to retrieve cedar system ids from db", zap.Error(err))
-		return nil, err
-	}
-	if len(linkedSystems) > 0 {
-		return linkedSystems[0], nil
-	}
-	return nil, nil
+	return store.GetLinkedSystemByID(ctx, systemIntakeSystemID)
 }

@@ -1191,7 +1191,6 @@ type ComplexityRoot struct {
 	}
 
 	UpdateSystemLinkPayload struct {
-		ID                 func(childComplexity int) int
 		SystemIntakeSystem func(childComplexity int) int
 		UserErrors         func(childComplexity int) int
 	}
@@ -8053,13 +8052,6 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.UpdateSystemIntakePayload.UserErrors(childComplexity), true
 
-	case "UpdateSystemLinkPayload.id":
-		if e.complexity.UpdateSystemLinkPayload.ID == nil {
-			break
-		}
-
-		return e.complexity.UpdateSystemLinkPayload.ID(childComplexity), true
-
 	case "UpdateSystemLinkPayload.systemIntakeSystem":
 		if e.complexity.UpdateSystemLinkPayload.SystemIntakeSystem == nil {
 			break
@@ -9774,15 +9766,16 @@ type DeleteSystemLinkPayload {
 The input type for updating a system intake's linked system by id
 """
 input UpdateSystemLinkInput {
-  systemIntakeSystemID: UUID!
-  cedarSystemRelationShip: SystemRelationshipInput!
+  id: UUID!
+  systemID: String
+  systemRelationshipType: [SystemRelationshipType!]!
+  otherSystemRelationshipDescription: String
 }
 
 """
 The payload for updating a system intake's linked system
 """
 type UpdateSystemLinkPayload {
-  id: UUID!
   systemIntakeSystem: SystemIntakeSystem!
   userErrors: [UserError!]
 }
@@ -33775,8 +33768,6 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemLink(ctx context.C
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "id":
-				return ec.fieldContext_UpdateSystemLinkPayload_id(ctx, field)
 			case "systemIntakeSystem":
 				return ec.fieldContext_UpdateSystemLinkPayload_systemIntakeSystem(ctx, field)
 			case "userErrors":
@@ -60026,50 +60017,6 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_userErrors(_ 
 	return fc, nil
 }
 
-func (ec *executionContext) _UpdateSystemLinkPayload_id(ctx context.Context, field graphql.CollectedField, obj *models.UpdateSystemLinkPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_UpdateSystemLinkPayload_id(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(uuid.UUID)
-	fc.Result = res
-	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_UpdateSystemLinkPayload_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "UpdateSystemLinkPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _UpdateSystemLinkPayload_systemIntakeSystem(ctx context.Context, field graphql.CollectedField, obj *models.UpdateSystemLinkPayload) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_UpdateSystemLinkPayload_systemIntakeSystem(ctx, field)
 	if err != nil {
@@ -66252,27 +66199,41 @@ func (ec *executionContext) unmarshalInputUpdateSystemLinkInput(ctx context.Cont
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemIntakeSystemID", "cedarSystemRelationShip"}
+	fieldsInOrder := [...]string{"id", "systemID", "systemRelationshipType", "otherSystemRelationshipDescription"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
-		case "systemIntakeSystemID":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeSystemID"))
+		case "id":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
 			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.SystemIntakeSystemID = data
-		case "cedarSystemRelationShip":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemRelationShip"))
-			data, err := ec.unmarshalNSystemRelationshipInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemRelationshipInput(ctx, v)
+			it.ID = data
+		case "systemID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemID"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.CedarSystemRelationShip = data
+			it.SystemID = data
+		case "systemRelationshipType":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemRelationshipType"))
+			data, err := ec.unmarshalNSystemRelationshipType2ᚕgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemRelationshipTypeᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SystemRelationshipType = data
+		case "otherSystemRelationshipDescription":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("otherSystemRelationshipDescription"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.OtherSystemRelationshipDescription = data
 		}
 	}
 
@@ -76978,11 +76939,6 @@ func (ec *executionContext) _UpdateSystemLinkPayload(ctx context.Context, sel as
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("UpdateSystemLinkPayload")
-		case "id":
-			out.Values[i] = ec._UpdateSystemLinkPayload_id(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
 		case "systemIntakeSystem":
 			out.Values[i] = ec._UpdateSystemLinkPayload_systemIntakeSystem(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
