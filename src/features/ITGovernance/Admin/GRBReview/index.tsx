@@ -155,7 +155,7 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
           {t('reviewDetails.text')}
         </p>
         {/* GRB Review Status */}
-        <GRBReviewStatusCard grbReview={grbReview} />
+        <GRBReviewStatusCard systemIntakeId={id} grbReview={grbReview} />
         {/* Decision Record */}
         <DecisionRecordCard
           grbVotingInformation={grbReview.grbVotingInformation}

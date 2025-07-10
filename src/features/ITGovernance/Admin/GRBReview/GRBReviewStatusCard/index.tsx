@@ -19,18 +19,15 @@ import { useRestartReviewModal } from '../RestartReviewModal/RestartReviewModalC
 import EndGRBAsyncVoting from './EndGRBAsyncVoting';
 import ExtendGRBAsyncReview from './ExtendGRBAsyncReview';
 
-export type GRBReviewStatusCardProps = {
-  grbReview: SystemIntakeGRBReviewFragment;
-  className?: string;
-};
-
 type GRBReviewStatusTagProps = {
+  systemIntakeId: string;
   isITGovAdmin: boolean;
   grbReviewType: SystemIntakeGRBReviewType;
   grbReviewStatus: GRBReviewStatus;
 };
 
 const GRBReviewStatusTag = ({
+  systemIntakeId,
   isITGovAdmin,
   grbReviewType,
   grbReviewStatus
@@ -72,7 +69,7 @@ const GRBReviewStatusTag = ({
 
       {showSetupButton && (
         <IconLink
-          to="grb-review/review-type"
+          to={`/it-governance/${systemIntakeId}/grb-review/review-type`}
           className="margin-left-3"
           icon={<Icon.ArrowForward aria-hidden />}
           iconPosition="after"
@@ -84,7 +81,14 @@ const GRBReviewStatusTag = ({
   );
 };
 
+export type GRBReviewStatusCardProps = {
+  systemIntakeId: string;
+  grbReview: SystemIntakeGRBReviewFragment;
+  className?: string;
+};
+
 const GRBReviewStatusCard = ({
+  systemIntakeId,
   grbReview,
   className
 }: GRBReviewStatusCardProps) => {
@@ -170,6 +174,7 @@ const GRBReviewStatusCard = ({
 
       {/* Status Section */}
       <GRBReviewStatusTag
+        systemIntakeId={systemIntakeId}
         grbReviewType={grbReviewType}
         grbReviewStatus={grbReviewStatus}
         isITGovAdmin={isITGovAdmin}
