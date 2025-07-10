@@ -19,6 +19,12 @@ export const SetSystemIntakeRelationExistingSystem = gql(/* GraphQL */ `
     setSystemIntakeRelationExistingSystem(input: $input) {
       systemIntake {
         id
+        cedarSystemRelationShips {
+          systemIntakeID
+          systemID
+          systemRelationshipType
+          otherSystemRelationshipDescription
+        }
       }
     }
   }
