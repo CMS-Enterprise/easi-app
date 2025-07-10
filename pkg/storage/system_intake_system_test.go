@@ -235,7 +235,7 @@ func (s *StoreTestSuite) TestUpdateSystemIntakeSystemByID() {
 		// Step 2: Link a system
 		systemID := "system-to-update"
 		initialDescription := "initial description"
-		initialRelationship := []models.SystemRelationshipType{"PRIMARY_SUPPORT"}
+		initialRelationship := []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"}
 
 		linkedSystems := []*models.SystemRelationshipInput{
 			{
@@ -257,7 +257,7 @@ func (s *StoreTestSuite) TestUpdateSystemIntakeSystemByID() {
 
 		original := allSystems[0]
 		s.Equal(systemID, original.SystemID)
-		s.Equal(initialRelationship, original.SystemRelationshipType)
+		s.ElementsMatch(initialRelationship, original.SystemRelationshipType)
 		s.Equal(initialDescription, *original.OtherSystemRelationshipDescription)
 
 		// Step 4: Prepare the update input
