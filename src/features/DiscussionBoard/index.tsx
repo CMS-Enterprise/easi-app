@@ -6,7 +6,6 @@ import { NotFoundPartial } from 'features/Miscellaneous/NotFound';
 import {
   SystemIntakeGRBDiscussionBoardType,
   SystemIntakeGRBReviewDiscussionFragment,
-  SystemIntakeStatusAdmin,
   TagType,
   useGetSystemIntakeGRBDiscussionsQuery,
   useGetSystemIntakeGRBReviewQuery
@@ -136,19 +135,6 @@ function DiscussionBoard({ systemIntakeID, readOnly }: DiscussionBoardProps) {
     );
   }, [groups, isUserSet, euaId, flags, grbReviewers, discussionBoardType]);
 
-  /** Lock discussion board before and after GRB review step */
-  const discussionBoardLocked: boolean = useMemo(() => {
-    if (!grbReviewData?.systemIntake) return false;
-
-    const { statusAdmin } = grbReviewData.systemIntake;
-
-    return ![
-      SystemIntakeStatusAdmin.GRB_MEETING_READY,
-      SystemIntakeStatusAdmin.GRB_MEETING_COMPLETE,
-      SystemIntakeStatusAdmin.GRB_REVIEW_IN_PROGRESS
-    ].includes(statusAdmin);
-  }, [grbReviewData]);
-
   useEffect(() => {
     if (lastMode !== discussionMode) {
       if (lastMode === 'view' || lastMode === 'reply') {
@@ -157,11 +143,6 @@ function DiscussionBoard({ systemIntakeID, readOnly }: DiscussionBoardProps) {
       setLastMode(discussionMode);
     }
   }, [discussionMode, lastMode, setDiscussionAlert]);
-
-  // Hide discusion board if GRB review has not yet started
-  // if (!grbReviewStartedAt || !grbDiscussions) {
-  //   return null;
-  // }
 
   const activeDiscussion =
     grbDiscussions.find(d => d.initialPost.id === discussionId) || null;
@@ -172,7 +153,7 @@ function DiscussionBoard({ systemIntakeID, readOnly }: DiscussionBoardProps) {
       isOpen={discussionMode !== undefined}
       closeModal={() => pushDiscussionQuery(false)}
     >
-      {!discussionBoardLocked && canViewDiscussionBoard ? (
+      {canViewDiscussionBoard ? (
         <>
           {discussionAlert && (
             <Alert
