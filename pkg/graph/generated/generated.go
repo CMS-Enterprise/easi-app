@@ -645,13 +645,13 @@ type ComplexityRoot struct {
 		UpdateSystemIntakeRequestDetails                    func(childComplexity int, input models.UpdateSystemIntakeRequestDetailsInput) int
 		UpdateSystemIntakeRequestType                       func(childComplexity int, id uuid.UUID, newType models.SystemIntakeRequestType) int
 		UpdateSystemIntakeReviewDates                       func(childComplexity int, input models.UpdateSystemIntakeReviewDatesInput) int
-		UpdateTRBGuidanceLetter                             func(childComplexity int, input map[string]interface{}) int
-		UpdateTRBGuidanceLetterInsight                      func(childComplexity int, input map[string]interface{}) int
+		UpdateTRBGuidanceLetter                             func(childComplexity int, input map[string]any) int
+		UpdateTRBGuidanceLetterInsight                      func(childComplexity int, input map[string]any) int
 		UpdateTRBGuidanceLetterInsightOrder                 func(childComplexity int, input models.UpdateTRBGuidanceLetterInsightOrderInput) int
-		UpdateTRBRequest                                    func(childComplexity int, id uuid.UUID, changes map[string]interface{}) int
+		UpdateTRBRequest                                    func(childComplexity int, id uuid.UUID, changes map[string]any) int
 		UpdateTRBRequestAttendee                            func(childComplexity int, input models.UpdateTRBRequestAttendeeInput) int
 		UpdateTRBRequestConsultMeetingTime                  func(childComplexity int, input models.UpdateTRBRequestConsultMeetingTimeInput) int
-		UpdateTRBRequestForm                                func(childComplexity int, input map[string]interface{}) int
+		UpdateTRBRequestForm                                func(childComplexity int, input map[string]any) int
 		UpdateTRBRequestFundingSources                      func(childComplexity int, input models.UpdateTRBRequestFundingSourcesInput) int
 		UpdateTRBRequestTRBLead                             func(childComplexity int, input models.UpdateTRBRequestTRBLeadInput) int
 		UploadSystemIntakeGRBPresentationDeck               func(childComplexity int, input models.UploadSystemIntakeGRBPresentationDeckInput) int
@@ -1323,7 +1323,7 @@ type MutationResolver interface {
 	SendCantFindSomethingEmail(ctx context.Context, input models.SendCantFindSomethingEmailInput) (*string, error)
 	SendReportAProblemEmail(ctx context.Context, input models.SendReportAProblemEmailInput) (*string, error)
 	CreateTRBRequest(ctx context.Context, requestType models.TRBRequestType) (*models.TRBRequest, error)
-	UpdateTRBRequest(ctx context.Context, id uuid.UUID, changes map[string]interface{}) (*models.TRBRequest, error)
+	UpdateTRBRequest(ctx context.Context, id uuid.UUID, changes map[string]any) (*models.TRBRequest, error)
 	CreateTRBRequestAttendee(ctx context.Context, input models.CreateTRBRequestAttendeeInput) (*models.TRBRequestAttendee, error)
 	UpdateTRBRequestAttendee(ctx context.Context, input models.UpdateTRBRequestAttendeeInput) (*models.TRBRequestAttendee, error)
 	DeleteTRBRequestAttendee(ctx context.Context, id uuid.UUID) (*models.TRBRequestAttendee, error)
@@ -1331,7 +1331,7 @@ type MutationResolver interface {
 	DeleteTRBRequestDocument(ctx context.Context, id uuid.UUID) (*models.DeleteTRBRequestDocumentPayload, error)
 	CreateSystemIntakeDocument(ctx context.Context, input models.CreateSystemIntakeDocumentInput) (*models.CreateSystemIntakeDocumentPayload, error)
 	DeleteSystemIntakeDocument(ctx context.Context, id uuid.UUID) (*models.DeleteSystemIntakeDocumentPayload, error)
-	UpdateTRBRequestForm(ctx context.Context, input map[string]interface{}) (*models.TRBRequestForm, error)
+	UpdateTRBRequestForm(ctx context.Context, input map[string]any) (*models.TRBRequestForm, error)
 	UpdateTRBRequestFundingSources(ctx context.Context, input models.UpdateTRBRequestFundingSourcesInput) ([]*models.TRBFundingSource, error)
 	DeleteTRBRequestFundingSources(ctx context.Context, input models.DeleteTRBRequestFundingSourcesInput) ([]*models.TRBFundingSource, error)
 	SetRolesForUserOnSystem(ctx context.Context, input models.SetRolesForUserOnSystemInput) (*string, error)
@@ -1349,11 +1349,11 @@ type MutationResolver interface {
 	CreateTRBAdminNoteGuidanceLetter(ctx context.Context, input models.CreateTRBAdminNoteGuidanceLetterInput) (*models.TRBAdminNote, error)
 	SetTRBAdminNoteArchived(ctx context.Context, id uuid.UUID, isArchived bool) (*models.TRBAdminNote, error)
 	CreateTRBGuidanceLetter(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBGuidanceLetter, error)
-	UpdateTRBGuidanceLetter(ctx context.Context, input map[string]interface{}) (*models.TRBGuidanceLetter, error)
+	UpdateTRBGuidanceLetter(ctx context.Context, input map[string]any) (*models.TRBGuidanceLetter, error)
 	RequestReviewForTRBGuidanceLetter(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetter, error)
 	SendTRBGuidanceLetter(ctx context.Context, input models.SendTRBGuidanceLetterInput) (*models.TRBGuidanceLetter, error)
 	CreateTRBGuidanceLetterInsight(ctx context.Context, input models.CreateTRBGuidanceLetterInsightInput) (*models.TRBGuidanceLetterInsight, error)
-	UpdateTRBGuidanceLetterInsight(ctx context.Context, input map[string]interface{}) (*models.TRBGuidanceLetterInsight, error)
+	UpdateTRBGuidanceLetterInsight(ctx context.Context, input map[string]any) (*models.TRBGuidanceLetterInsight, error)
 	UpdateTRBGuidanceLetterInsightOrder(ctx context.Context, input models.UpdateTRBGuidanceLetterInsightOrderInput) ([]*models.TRBGuidanceLetterInsight, error)
 	DeleteTRBGuidanceLetterInsight(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetterInsight, error)
 	CloseTRBRequest(ctx context.Context, input models.CloseTRBRequestInput) (*models.TRBRequest, error)
@@ -5125,7 +5125,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateTRBGuidanceLetter(childComplexity, args["input"].(map[string]interface{})), true
+		return e.complexity.Mutation.UpdateTRBGuidanceLetter(childComplexity, args["input"].(map[string]any)), true
 
 	case "Mutation.updateTRBGuidanceLetterInsight":
 		if e.complexity.Mutation.UpdateTRBGuidanceLetterInsight == nil {
@@ -5137,7 +5137,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateTRBGuidanceLetterInsight(childComplexity, args["input"].(map[string]interface{})), true
+		return e.complexity.Mutation.UpdateTRBGuidanceLetterInsight(childComplexity, args["input"].(map[string]any)), true
 
 	case "Mutation.updateTRBGuidanceLetterInsightOrder":
 		if e.complexity.Mutation.UpdateTRBGuidanceLetterInsightOrder == nil {
@@ -5161,7 +5161,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateTRBRequest(childComplexity, args["id"].(uuid.UUID), args["changes"].(map[string]interface{})), true
+		return e.complexity.Mutation.UpdateTRBRequest(childComplexity, args["id"].(uuid.UUID), args["changes"].(map[string]any)), true
 
 	case "Mutation.updateTRBRequestAttendee":
 		if e.complexity.Mutation.UpdateTRBRequestAttendee == nil {
@@ -5197,7 +5197,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateTRBRequestForm(childComplexity, args["input"].(map[string]interface{})), true
+		return e.complexity.Mutation.UpdateTRBRequestForm(childComplexity, args["input"].(map[string]any)), true
 
 	case "Mutation.updateTRBRequestFundingSources":
 		if e.complexity.Mutation.UpdateTRBRequestFundingSources == nil {
@@ -36439,7 +36439,7 @@ func (ec *executionContext) _Mutation_updateTRBRequest(ctx context.Context, fiel
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateTRBRequest(rctx, fc.Args["id"].(uuid.UUID), fc.Args["changes"].(map[string]interface{}))
+		return ec.resolvers.Mutation().UpdateTRBRequest(rctx, fc.Args["id"].(uuid.UUID), fc.Args["changes"].(map[string]any))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -37013,7 +37013,7 @@ func (ec *executionContext) _Mutation_updateTRBRequestForm(ctx context.Context, 
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateTRBRequestForm(rctx, fc.Args["input"].(map[string]interface{}))
+		return ec.resolvers.Mutation().UpdateTRBRequestForm(rctx, fc.Args["input"].(map[string]any))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -38937,7 +38937,7 @@ func (ec *executionContext) _Mutation_updateTRBGuidanceLetter(ctx context.Contex
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		directive0 := func(rctx context.Context) (any, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().UpdateTRBGuidanceLetter(rctx, fc.Args["input"].(map[string]interface{}))
+			return ec.resolvers.Mutation().UpdateTRBGuidanceLetter(rctx, fc.Args["input"].(map[string]any))
 		}
 
 		directive1 := func(ctx context.Context) (any, error) {
@@ -39375,7 +39375,7 @@ func (ec *executionContext) _Mutation_updateTRBGuidanceLetterInsight(ctx context
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		directive0 := func(rctx context.Context) (any, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().UpdateTRBGuidanceLetterInsight(rctx, fc.Args["input"].(map[string]interface{}))
+			return ec.resolvers.Mutation().UpdateTRBGuidanceLetterInsight(rctx, fc.Args["input"].(map[string]any))
 		}
 
 		directive1 := func(ctx context.Context) (any, error) {

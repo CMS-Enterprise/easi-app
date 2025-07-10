@@ -106,13 +106,13 @@ export default {
           },
           ASYNC: {
             READY_TO_SCHEDULE:
-              'The Governance Admin Team may schedule a time to asynchronously record your presentation.',
+              'The Governance Admin Team will schedule a time to record your presentation.',
             SCHEDULED:
               'Your presentation recording session is scheduled for {{date}}.',
             AWAITING_GRB_REVIEW:
               'You attended the presentation recording session on {{date}}.',
             REVIEW_IN_PROGRESS:
-              'This asynchronous review starts {{dateStart}} and ends {{dateEnd}}.',
+              'This asynchronous review is from {{dateStart}} to {{dateEnd}}.',
             AWAITING_DECISION: 'This GRB review ended on {{date}}.',
             COMPLETED: 'This GRB review ended on {{date}}.'
           }

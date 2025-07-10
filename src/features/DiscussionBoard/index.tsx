@@ -6,6 +6,7 @@ import { NotFoundPartial } from 'features/Miscellaneous/NotFound';
 import {
   SystemIntakeGRBDiscussionBoardType,
   SystemIntakeGRBReviewDiscussionFragment,
+  SystemIntakeStatusAdmin,
   TagType,
   useGetSystemIntakeGRBDiscussionsQuery,
   useGetSystemIntakeGRBReviewQuery
@@ -59,17 +60,16 @@ function DiscussionBoard({ systemIntakeID, readOnly }: DiscussionBoardProps) {
     fetchPolicy: 'cache-first'
   });
 
-  const { data: grbDiscussionsData, loading: grbDiscussionsLoading } =
-    useGetSystemIntakeGRBDiscussionsQuery({
-      variables: { id: systemIntakeID },
-      fetchPolicy: 'cache-first'
-    });
+  const { data: grbDiscussionsData } = useGetSystemIntakeGRBDiscussionsQuery({
+    variables: { id: systemIntakeID },
+    fetchPolicy: 'cache-first'
+  });
 
   /** Return GRB discussions based on board type */
-  const grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[] | undefined =
+  const grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[] =
     useMemo(() => {
-      if (grbDiscussionsLoading || !grbDiscussionsData?.systemIntake) {
-        return undefined;
+      if (!grbDiscussionsData?.systemIntake) {
+        return [];
       }
 
       const { grbDiscussionsInternal, grbDiscussionsPrimary } =
@@ -80,9 +80,8 @@ function DiscussionBoard({ systemIntakeID, readOnly }: DiscussionBoardProps) {
       }
 
       return grbDiscussionsPrimary;
-    }, [grbDiscussionsLoading, grbDiscussionsData, discussionBoardType]);
+    }, [grbDiscussionsData, discussionBoardType]);
 
-  const { grbReviewStartedAt } = grbReviewData?.systemIntake || {};
   const grbReviewers =
     grbReviewData?.systemIntake?.grbVotingInformation?.grbReviewers;
 
@@ -137,6 +136,19 @@ function DiscussionBoard({ systemIntakeID, readOnly }: DiscussionBoardProps) {
     );
   }, [groups, isUserSet, euaId, flags, grbReviewers, discussionBoardType]);
 
+  /** Lock discussion board before and after GRB review step */
+  const discussionBoardLocked: boolean = useMemo(() => {
+    if (!grbReviewData?.systemIntake) return false;
+
+    const { statusAdmin } = grbReviewData.systemIntake;
+
+    return ![
+      SystemIntakeStatusAdmin.GRB_MEETING_READY,
+      SystemIntakeStatusAdmin.GRB_MEETING_COMPLETE,
+      SystemIntakeStatusAdmin.GRB_REVIEW_IN_PROGRESS
+    ].includes(statusAdmin);
+  }, [grbReviewData]);
+
   useEffect(() => {
     if (lastMode !== discussionMode) {
       if (lastMode === 'view' || lastMode === 'reply') {
@@ -147,9 +159,9 @@ function DiscussionBoard({ systemIntakeID, readOnly }: DiscussionBoardProps) {
   }, [discussionMode, lastMode, setDiscussionAlert]);
 
   // Hide discusion board if GRB review has not yet started
-  if (!grbReviewStartedAt || !grbDiscussions) {
-    return null;
-  }
+  // if (!grbReviewStartedAt || !grbDiscussions) {
+  //   return null;
+  // }
 
   const activeDiscussion =
     grbDiscussions.find(d => d.initialPost.id === discussionId) || null;
@@ -160,7 +172,7 @@ function DiscussionBoard({ systemIntakeID, readOnly }: DiscussionBoardProps) {
       isOpen={discussionMode !== undefined}
       closeModal={() => pushDiscussionQuery(false)}
     >
-      {canViewDiscussionBoard ? (
+      {!discussionBoardLocked && canViewDiscussionBoard ? (
         <>
           {discussionAlert && (
             <Alert
