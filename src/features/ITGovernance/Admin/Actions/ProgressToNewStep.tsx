@@ -43,7 +43,13 @@ const MeetingDateField = ({
       shouldUnregister
       disabled={disabled}
       render={({ field: { ref, ...field }, fieldState: { error } }) => (
-        <FormGroup error={!!error} className="margin-left-4 margin-top-1">
+        <FormGroup
+          error={!!error}
+          className="margin-left-4 margin-top-1"
+          // Force re-render and value update when disabled prop changes
+          // TODO: Find a better way to handle clearing the DatePickerFormatted field
+          key={disabled ? 'disabled' : 'enabled'}
+        >
           <Label htmlFor={field.name}>
             {t('progressToNewStep.meetingDate')}
           </Label>
