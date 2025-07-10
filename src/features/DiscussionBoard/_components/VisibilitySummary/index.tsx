@@ -22,17 +22,17 @@ const VisibilitySummary = ({ discussionBoardType }: VisibilitySummaryProps) => {
       <ul className="usa-list usa-list--unstyled margin-top-1">
         {discussionBoardType === SystemIntakeGRBDiscussionBoardType.PRIMARY && (
           <li className="display-flex flex-align-center flex-column-gap-05">
-            <Icon.Person />
+            <Icon.Person aria-hidden />
             {t('tags.REQUESTER')}
           </li>
         )}
 
         <li className="display-flex flex-align-center flex-column-gap-05">
-          <Icon.People />
+          <Icon.People aria-hidden />
           {t('tags.GROUP_GRB_REVIEWERS')}
         </li>
         <li className="display-flex flex-align-center flex-column-gap-05">
-          <Icon.People />
+          <Icon.People aria-hidden />
           {t('tags.GROUP_IT_GOV')}
         </li>
       </ul>

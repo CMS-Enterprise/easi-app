@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { SystemIntakeStatusAdmin } from 'gql/generated/graphql';
 import { getSystemIntakeGRBDiscussionsQuery } from 'tests/mock/discussions';
 import { getSystemIntakeGRBReviewQuery } from 'tests/mock/grbReview';
 import { systemIntake } from 'tests/mock/systemIntake';
@@ -14,7 +15,7 @@ import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 import DiscussionBoard from '.';
 
 describe('Discussion board', () => {
-  describe('Primary  discussion board', () => {
+  describe('Primary  discussion board', async () => {
     it('renders the discussion board', async () => {
       const store = easiMockStore({ groups: [BASIC_USER_PROD] });
 
@@ -24,15 +25,11 @@ describe('Discussion board', () => {
             <VerboseMockedProvider
               mocks={[
                 getSystemIntakeGRBDiscussionsQuery(),
-                getSystemIntakeGRBReviewQuery({
-                  grbReviewStartedAt: '2025-04-06T15:02:20.066496346Z'
-                })
+                getSystemIntakeGRBReviewQuery()
               ]}
             >
               <Route>
-                <div id="root">
-                  <DiscussionBoard systemIntakeID={systemIntake.id} />
-                </div>
+                <DiscussionBoard systemIntakeID={systemIntake.id} />
               </Route>
             </VerboseMockedProvider>
           </MemoryRouter>
@@ -70,9 +67,7 @@ describe('Discussion board', () => {
               ]}
             >
               <Route>
-                <div id="root">
-                  <DiscussionBoard systemIntakeID={systemIntake.id} />
-                </div>
+                <DiscussionBoard systemIntakeID={systemIntake.id} />
               </Route>
             </VerboseMockedProvider>
           </MemoryRouter>
@@ -93,6 +88,33 @@ describe('Discussion board', () => {
 
       expect(
         screen.getByRole('button', { name: 'Requester' })
+      ).toBeInTheDocument();
+    });
+
+    it('locks discussion board if outside of GRB review step', async () => {
+      const store = easiMockStore({ groups: [BASIC_USER_PROD] });
+
+      render(
+        <Provider store={store}>
+          <MemoryRouter initialEntries={['?discussionMode=view']}>
+            <VerboseMockedProvider
+              mocks={[
+                getSystemIntakeGRBDiscussionsQuery(),
+                getSystemIntakeGRBReviewQuery({
+                  statusAdmin: SystemIntakeStatusAdmin.CLOSED
+                })
+              ]}
+            >
+              <Route>
+                <DiscussionBoard systemIntakeID={systemIntake.id} />
+              </Route>
+            </VerboseMockedProvider>
+          </MemoryRouter>
+        </Provider>
+      );
+
+      expect(
+        screen.queryByRole('heading', { name: 'This page cannot be found.' })
       ).toBeInTheDocument();
     });
   });
@@ -117,9 +139,7 @@ describe('Discussion board', () => {
               ]}
             >
               <Route>
-                <div id="root">
-                  <DiscussionBoard systemIntakeID={systemIntake.id} />
-                </div>
+                <DiscussionBoard systemIntakeID={systemIntake.id} />
               </Route>
             </VerboseMockedProvider>
           </MemoryRouter>
@@ -161,9 +181,7 @@ describe('Discussion board', () => {
               ]}
             >
               <Route>
-                <div id="root">
-                  <DiscussionBoard systemIntakeID={systemIntake.id} />
-                </div>
+                <DiscussionBoard systemIntakeID={systemIntake.id} />
               </Route>
             </VerboseMockedProvider>
           </MemoryRouter>
@@ -201,9 +219,7 @@ describe('Discussion board', () => {
               ]}
             >
               <Route>
-                <div id="root">
-                  <DiscussionBoard systemIntakeID={systemIntake.id} />
-                </div>
+                <DiscussionBoard systemIntakeID={systemIntake.id} />
               </Route>
             </VerboseMockedProvider>
           </MemoryRouter>
