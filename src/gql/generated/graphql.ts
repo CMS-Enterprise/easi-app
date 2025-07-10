@@ -710,6 +710,13 @@ export type DeleteSystemIntakeGRBReviewerInput = {
   reviewerID: Scalars['UUID']['input'];
 };
 
+/** The payload for deleting a system intake's linked system */
+export type DeleteSystemLinkPayload = {
+  __typename: 'DeleteSystemLinkPayload';
+  systemIntakeSystem?: Maybe<SystemIntakeSystem>;
+  userErrors?: Maybe<Array<UserError>>;
+};
+
 /** Data returned after deleting a document attached to a TRB request */
 export type DeleteTRBRequestDocumentPayload = {
   __typename: 'DeleteTRBRequestDocumentPayload';
@@ -1000,6 +1007,7 @@ export type Mutation = {
   deleteSystemIntakeDocument?: Maybe<DeleteSystemIntakeDocumentPayload>;
   deleteSystemIntakeGRBPresentationLinks: Scalars['UUID']['output'];
   deleteSystemIntakeGRBReviewer: Scalars['UUID']['output'];
+  deleteSystemLink?: Maybe<DeleteSystemLinkPayload>;
   deleteTRBGuidanceLetterInsight: TRBGuidanceLetterInsight;
   deleteTRBRequestAttendee: TRBRequestAttendee;
   deleteTRBRequestDocument?: Maybe<DeleteTRBRequestDocumentPayload>;
@@ -1034,6 +1042,7 @@ export type Mutation = {
   updateSystemIntakeRequestDetails?: Maybe<UpdateSystemIntakePayload>;
   updateSystemIntakeRequestType: SystemIntake;
   updateSystemIntakeReviewDates?: Maybe<UpdateSystemIntakePayload>;
+  updateSystemLink?: Maybe<UpdateSystemLinkPayload>;
   updateTRBGuidanceLetter: TRBGuidanceLetter;
   updateTRBGuidanceLetterInsight: TRBGuidanceLetterInsight;
   updateTRBGuidanceLetterInsightOrder: Array<TRBGuidanceLetterInsight>;
@@ -1287,6 +1296,12 @@ export type MutationDeleteSystemIntakeGRBReviewerArgs = {
 
 
 /** Defines the mutations for the schema */
+export type MutationDeleteSystemLinkArgs = {
+  systemIntakeSystem: Scalars['UUID']['input'];
+};
+
+
+/** Defines the mutations for the schema */
 export type MutationDeleteTRBGuidanceLetterInsightArgs = {
   id: Scalars['UUID']['input'];
 };
@@ -1493,6 +1508,12 @@ export type MutationUpdateSystemIntakeReviewDatesArgs = {
 
 
 /** Defines the mutations for the schema */
+export type MutationUpdateSystemLinkArgs = {
+  input: UpdateSystemLinkInput;
+};
+
+
+/** Defines the mutations for the schema */
 export type MutationUpdateTRBGuidanceLetterArgs = {
   input: UpdateTRBGuidanceLetterInput;
 };
@@ -1591,6 +1612,7 @@ export type Query = {
    */
   systemIntake?: Maybe<SystemIntake>;
   systemIntakeContacts: SystemIntakeContactsPayload;
+  systemIntakeSystem?: Maybe<SystemIntakeSystem>;
   systemIntakes: Array<SystemIntake>;
   systemIntakesWithLcids: Array<SystemIntake>;
   systemIntakesWithReviewRequested: Array<SystemIntake>;
@@ -1706,6 +1728,12 @@ export type QuerySystemIntakeArgs = {
 /** Query definition for the schema */
 export type QuerySystemIntakeContactsArgs = {
   id: Scalars['UUID']['input'];
+};
+
+
+/** Query definition for the schema */
+export type QuerySystemIntakeSystemArgs = {
+  systemIntakeSystemID: Scalars['UUID']['input'];
 };
 
 
@@ -2630,7 +2658,8 @@ export enum SystemIntakeStepToProgressTo {
 
 export type SystemIntakeSystem = {
   __typename: 'SystemIntakeSystem';
-  otherSystemRelationship?: Maybe<Scalars['String']['output']>;
+  id: Scalars['UUID']['output'];
+  otherSystemRelationshipDescription?: Maybe<Scalars['String']['output']>;
   systemID?: Maybe<Scalars['String']['output']>;
   systemIntakeID: Scalars['UUID']['output'];
   systemRelationshipType: Array<SystemRelationshipType>;
@@ -2667,7 +2696,7 @@ export type SystemIntakeUpdateLCIDInput = {
 /** Input data for creating a system intake's relationship to a CEDAR system */
 export type SystemRelationshipInput = {
   cedarSystemId?: InputMaybe<Scalars['String']['input']>;
-  otherTypeDescription?: InputMaybe<Scalars['String']['input']>;
+  otherSystemRelationshipDescription?: InputMaybe<Scalars['String']['input']>;
   systemRelationshipType: Array<SystemRelationshipType>;
 };
 
@@ -2675,7 +2704,7 @@ export type SystemRelationshipInput = {
 export enum SystemRelationshipType {
   IMPACTS_SELECTED_SYSTEM = 'IMPACTS_SELECTED_SYSTEM',
   OTHER = 'OTHER',
-  PARTIAL_SUPORT = 'PARTIAL_SUPORT',
+  PARTIAL_SUPPORT = 'PARTIAL_SUPPORT',
   PRIMARY_SUPPORT = 'PRIMARY_SUPPORT',
   USES_OR_IMPACTED_BY_SELECTED_SYSTEM = 'USES_OR_IMPACTED_BY_SELECTED_SYSTEM'
 }
@@ -3206,6 +3235,22 @@ export type UpdateSystemIntakeReviewDatesInput = {
   id: Scalars['UUID']['input'];
 };
 
+/** The input type for updating a system intake's linked system by id */
+export type UpdateSystemLinkInput = {
+  id: Scalars['UUID']['input'];
+  otherSystemRelationshipDescription?: InputMaybe<Scalars['String']['input']>;
+  systemID: Scalars['String']['input'];
+  systemIntakeID: Scalars['UUID']['input'];
+  systemRelationshipType: Array<SystemRelationshipType>;
+};
+
+/** The payload for updating a system intake's linked system */
+export type UpdateSystemLinkPayload = {
+  __typename: 'UpdateSystemLinkPayload';
+  systemIntakeSystem: SystemIntakeSystem;
+  userErrors?: Maybe<Array<UserError>>;
+};
+
 /** The data needed to update a TRB guidance letter */
 export type UpdateTRBGuidanceLetterInput = {
   followupPoint?: InputMaybe<Scalars['String']['input']>;
@@ -3689,7 +3734,7 @@ export type SetSystemIntakeRelationExistingSystemMutationVariables = Exact<{
 }>;
 
 
-export type SetSystemIntakeRelationExistingSystemMutation = { __typename: 'Mutation', setSystemIntakeRelationExistingSystem?: { __typename: 'UpdateSystemIntakePayload', systemIntake?: { __typename: 'SystemIntake', id: UUID } | null } | null };
+export type SetSystemIntakeRelationExistingSystemMutation = { __typename: 'Mutation', setSystemIntakeRelationExistingSystem?: { __typename: 'UpdateSystemIntakePayload', systemIntake?: { __typename: 'SystemIntake', id: UUID, cedarSystemRelationShips?: Array<{ __typename: 'SystemIntakeSystem', id: UUID, systemIntakeID: UUID, systemID?: string | null, systemRelationshipType: Array<SystemRelationshipType>, otherSystemRelationshipDescription?: string | null } | null> | null } | null } | null };
 
 export type SetSystemIntakeRelationExistingServiceMutationVariables = Exact<{
   input: SetSystemIntakeRelationExistingServiceInput;
@@ -6618,6 +6663,13 @@ export const SetSystemIntakeRelationExistingSystemDocument = gql`
   setSystemIntakeRelationExistingSystem(input: $input) {
     systemIntake {
       id
+      cedarSystemRelationShips {
+        id
+        systemIntakeID
+        systemID
+        systemRelationshipType
+        otherSystemRelationshipDescription
+      }
     }
   }
 }
@@ -10259,7 +10311,7 @@ export const TypedGetSystemIntakeRelationDocument = {"kind":"Document","definiti
 export const TypedGetSystemIntakesTableDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSystemIntakesTable"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"openRequests"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakes"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"openRequests"},"value":{"kind":"Variable","name":{"kind":"Name","value":"openRequests"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}},{"kind":"Field","name":{"kind":"Name","value":"requestName"}},{"kind":"Field","name":{"kind":"Name","value":"statusAdmin"}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"requesterName"}},{"kind":"Field","name":{"kind":"Name","value":"requesterComponent"}},{"kind":"Field","name":{"kind":"Name","value":"businessOwner"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"component"}}]}},{"kind":"Field","name":{"kind":"Name","value":"productManager"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"component"}}]}},{"kind":"Field","name":{"kind":"Name","value":"isso"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"trbCollaboratorName"}},{"kind":"Field","name":{"kind":"Name","value":"oitSecurityCollaboratorName"}},{"kind":"Field","name":{"kind":"Name","value":"eaCollaboratorName"}},{"kind":"Field","name":{"kind":"Name","value":"existingFunding"}},{"kind":"Field","name":{"kind":"Name","value":"fundingSources"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"FundingSourceFragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"annualSpending"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentAnnualSpending"}},{"kind":"Field","name":{"kind":"Name","value":"currentAnnualSpendingITPortion"}},{"kind":"Field","name":{"kind":"Name","value":"plannedYearOneSpending"}},{"kind":"Field","name":{"kind":"Name","value":"plannedYearOneSpendingITPortion"}}]}},{"kind":"Field","name":{"kind":"Name","value":"contract"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasContract"}},{"kind":"Field","name":{"kind":"Name","value":"contractor"}},{"kind":"Field","name":{"kind":"Name","value":"vehicle"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"day"}},{"kind":"Field","name":{"kind":"Name","value":"month"}},{"kind":"Field","name":{"kind":"Name","value":"year"}}]}},{"kind":"Field","name":{"kind":"Name","value":"endDate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"day"}},{"kind":"Field","name":{"kind":"Name","value":"month"}},{"kind":"Field","name":{"kind":"Name","value":"year"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"contractName"}},{"kind":"Field","name":{"kind":"Name","value":"contractNumbers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"contractNumber"}}]}},{"kind":"Field","name":{"kind":"Name","value":"systems"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"businessNeed"}},{"kind":"Field","name":{"kind":"Name","value":"businessSolution"}},{"kind":"Field","name":{"kind":"Name","value":"currentStage"}},{"kind":"Field","name":{"kind":"Name","value":"needsEaSupport"}},{"kind":"Field","name":{"kind":"Name","value":"grtDate"}},{"kind":"Field","name":{"kind":"Name","value":"grbDate"}},{"kind":"Field","name":{"kind":"Name","value":"lcid"}},{"kind":"Field","name":{"kind":"Name","value":"lcidScope"}},{"kind":"Field","name":{"kind":"Name","value":"lcidExpiresAt"}},{"kind":"Field","name":{"kind":"Name","value":"adminLead"}},{"kind":"Field","name":{"kind":"Name","value":"notes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"content"}}]}},{"kind":"Field","name":{"kind":"Name","value":"actions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"hasUiChanges"}},{"kind":"Field","name":{"kind":"Name","value":"usesAiTech"}},{"kind":"Field","name":{"kind":"Name","value":"usingSoftware"}},{"kind":"Field","name":{"kind":"Name","value":"acquisitionMethods"}},{"kind":"Field","name":{"kind":"Name","value":"decidedAt"}},{"kind":"Field","name":{"kind":"Name","value":"submittedAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FundingSourceFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeFundingSource"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fundingNumber"}},{"kind":"Field","name":{"kind":"Name","value":"source"}}]}}]} as unknown as DocumentNode<GetSystemIntakesTableQuery, GetSystemIntakesTableQueryVariables>;
 export const TypedGetSystemsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSystems"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"openRequests"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakes"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"openRequests"},"value":{"kind":"Variable","name":{"kind":"Name","value":"openRequests"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"lcid"}},{"kind":"Field","name":{"kind":"Name","value":"businessOwner"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"component"}}]}}]}}]}}]} as unknown as DocumentNode<GetSystemsQuery, GetSystemsQueryVariables>;
 export const TypedSetSystemIntakeRelationNewSystemDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetSystemIntakeRelationNewSystem"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SetSystemIntakeRelationNewSystemInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setSystemIntakeRelationNewSystem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<SetSystemIntakeRelationNewSystemMutation, SetSystemIntakeRelationNewSystemMutationVariables>;
-export const TypedSetSystemIntakeRelationExistingSystemDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetSystemIntakeRelationExistingSystem"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SetSystemIntakeRelationExistingSystemInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setSystemIntakeRelationExistingSystem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<SetSystemIntakeRelationExistingSystemMutation, SetSystemIntakeRelationExistingSystemMutationVariables>;
+export const TypedSetSystemIntakeRelationExistingSystemDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetSystemIntakeRelationExistingSystem"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SetSystemIntakeRelationExistingSystemInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setSystemIntakeRelationExistingSystem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"cedarSystemRelationShips"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"systemIntakeID"}},{"kind":"Field","name":{"kind":"Name","value":"systemID"}},{"kind":"Field","name":{"kind":"Name","value":"systemRelationshipType"}},{"kind":"Field","name":{"kind":"Name","value":"otherSystemRelationshipDescription"}}]}}]}}]}}]}}]} as unknown as DocumentNode<SetSystemIntakeRelationExistingSystemMutation, SetSystemIntakeRelationExistingSystemMutationVariables>;
 export const TypedSetSystemIntakeRelationExistingServiceDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetSystemIntakeRelationExistingService"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SetSystemIntakeRelationExistingServiceInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setSystemIntakeRelationExistingService"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<SetSystemIntakeRelationExistingServiceMutation, SetSystemIntakeRelationExistingServiceMutationVariables>;
 export const TypedUnlinkSystemIntakeRelationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UnlinkSystemIntakeRelation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"intakeID"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"unlinkSystemIntakeRelation"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"intakeID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"intakeID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<UnlinkSystemIntakeRelationMutation, UnlinkSystemIntakeRelationMutationVariables>;
 export const TypedSetTrbRequestRelationNewSystemDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetTrbRequestRelationNewSystem"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SetTRBRequestRelationNewSystemInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setTRBRequestRelationNewSystem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<SetTrbRequestRelationNewSystemMutation, SetTrbRequestRelationNewSystemMutationVariables>;

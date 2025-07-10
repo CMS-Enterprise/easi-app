@@ -156,9 +156,9 @@ func main() {
 			[]string{"111111", "111112"},
 			[]*models.SystemRelationshipInput{
 				{
-					CedarSystemID:          helpers.PointerTo("11AB1A00-1234-5678-ABC1-1A001B00CC6G"),
-					SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-					OtherTypeDescription:   helpers.PointerTo("other description"),
+					CedarSystemID:                      helpers.PointerTo("11AB1A00-1234-5678-ABC1-1A001B00CC6G"),
+					SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+					OtherSystemRelationshipDescription: helpers.PointerTo("other description"),
 				},
 			},
 		)
@@ -781,9 +781,9 @@ func main() {
 		[]string{"00001", "00002"},
 		[]*models.SystemRelationshipInput{
 			{
-				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"),
-				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-				OtherTypeDescription:   helpers.PointerTo("other description"),
+				CedarSystemID:                      helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"),
+				SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+				OtherSystemRelationshipDescription: helpers.PointerTo("other description"),
 			},
 			{
 				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"),
@@ -802,9 +802,9 @@ func main() {
 		[]string{"00003", "00004"},
 		[]*models.SystemRelationshipInput{
 			{
-				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"),
-				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-				OtherTypeDescription:   helpers.PointerTo("other description"),
+				CedarSystemID:                      helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"),
+				SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+				OtherSystemRelationshipDescription: helpers.PointerTo("other description"),
 			},
 			{
 				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC3D}"),
@@ -823,9 +823,9 @@ func main() {
 		[]string{"00003", "00004"},
 		[]*models.SystemRelationshipInput{
 			{
-				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"),
-				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-				OtherTypeDescription:   helpers.PointerTo("other description"),
+				CedarSystemID:                      helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"),
+				SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+				OtherSystemRelationshipDescription: helpers.PointerTo("other description"),
 			},
 			{
 				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"),
@@ -844,9 +844,9 @@ func main() {
 		[]string{"00005", "00001"},
 		[]*models.SystemRelationshipInput{
 			{
-				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC5F}"),
-				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-				OtherTypeDescription:   helpers.PointerTo("other description"),
+				CedarSystemID:                      helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC5F}"),
+				SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+				OtherSystemRelationshipDescription: helpers.PointerTo("other description"),
 			},
 			{
 				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC6G}"),
@@ -876,9 +876,9 @@ func main() {
 		[]string{"12345", "67890"},
 		[]*models.SystemRelationshipInput{
 			{
-				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"),
-				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-				OtherTypeDescription:   helpers.PointerTo("other description"),
+				CedarSystemID:                      helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"),
+				SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+				OtherSystemRelationshipDescription: helpers.PointerTo("other description"),
 			},
 			{
 				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"),
@@ -899,9 +899,9 @@ func main() {
 		[]string{"12345", "67890"},
 		[]*models.SystemRelationshipInput{
 			{
-				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC5F}"),
-				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
-				OtherTypeDescription:   helpers.PointerTo("other description"),
+				CedarSystemID:                      helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC5F}"),
+				SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+				OtherSystemRelationshipDescription: helpers.PointerTo("other description"),
 			},
 			{
 				CedarSystemID:          helpers.PointerTo("{11AB1A00-1234-5678-ABC1-1A001B00CC6G}"),

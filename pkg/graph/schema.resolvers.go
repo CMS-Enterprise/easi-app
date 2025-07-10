@@ -639,6 +639,26 @@ func (r *mutationResolver) UnlinkSystemIntakeRelation(ctx context.Context, intak
 	}, nil
 }
 
+// DeleteSystemLink is the resolver for the deleteSystemLink field.
+func (r *mutationResolver) DeleteSystemLink(ctx context.Context, systemIntakeSystem uuid.UUID) (*models.DeleteSystemLinkPayload, error) {
+	err := resolvers.DeleteSystemIntakeSystemByID(ctx, r.store, systemIntakeSystem)
+
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
+}
+
+// UpdateSystemLink is the resolver for the updateSystemLink field.
+func (r *mutationResolver) UpdateSystemLink(ctx context.Context, input models.UpdateSystemLinkInput) (*models.UpdateSystemLinkPayload, error) {
+	updatedSystemLinkPayload, err := resolvers.UpdateSystemLinkByID(ctx, r.store, input)
+
+	if err != nil {
+		return nil, err
+	}
+	return updatedSystemLinkPayload, nil
+}
+
 // CreateSystemIntakeContact is the resolver for the createSystemIntakeContact field.
 func (r *mutationResolver) CreateSystemIntakeContact(ctx context.Context, input models.CreateSystemIntakeContactInput) (*models.CreateSystemIntakeContactPayload, error) {
 	return resolvers.CreateSystemIntakeContact(ctx, r.store, input)
@@ -1588,6 +1608,11 @@ func (r *queryResolver) RequesterUpdateEmailData(ctx context.Context) ([]*models
 // UserAccount is the resolver for the userAccount field.
 func (r *queryResolver) UserAccount(ctx context.Context, username string) (*authentication.UserAccount, error) {
 	return resolvers.UserAccountGetByUsername(ctx, r.store, r.store, username)
+}
+
+// SystemIntakeSystem is the resolver for the systemIntakeSystem field.
+func (r *queryResolver) SystemIntakeSystem(ctx context.Context, systemIntakeSystemID uuid.UUID) (*models.SystemIntakeSystem, error) {
+	return resolvers.GetLinkedSystemByID(ctx, r.store, systemIntakeSystemID)
 }
 
 // Actions is the resolver for the actions field.

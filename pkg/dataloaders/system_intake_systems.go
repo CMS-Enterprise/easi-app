@@ -27,3 +27,12 @@ func GetSystemIntakeSystemsBySystemIntakeID(ctx context.Context, systemIntakeID 
 
 	return loaders.SystemIntakeSystems.Load(ctx, systemIntakeID)
 }
+
+func GetSystemIntakeSystemByID(ctx context.Context, systemIntakeSystemID uuid.UUID) ([]*models.SystemIntakeSystem, error) {
+	loaders, ok := loadersFromCTX(ctx)
+	if !ok {
+		return nil, errors.New("unexpected nil loaders in GetSystemIntakeSystemByID")
+	}
+
+	return loaders.SystemIntakeSystems.Load(ctx, systemIntakeSystemID)
+}

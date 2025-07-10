@@ -4,11 +4,14 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 // SystemIntakeSystems utilizes dataloaders to retrieve systems linked to a given system intake ID
@@ -43,4 +46,32 @@ func SystemIntakeSystemsByIntakeID(ctx context.Context, systemIntakeID uuid.UUID
 		return nil, err
 	}
 	return systems, nil
+}
+
+func DeleteSystemIntakeSystemByID(ctx context.Context, store *storage.Store, systemIntakeID uuid.UUID) error {
+	return sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
+		return store.DeleteSystemIntakeSystemByID(ctx, tx, systemIntakeID)
+	})
+}
+
+func UpdateSystemLinkByID(ctx context.Context, store *storage.Store, input models.UpdateSystemLinkInput) (*models.UpdateSystemLinkPayload, error) {
+	var updatedSystem *models.SystemIntakeSystem
+
+	err := sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
+		var err error
+		updatedSystem, err = store.UpdateSystemIntakeSystemByID(ctx, tx, input)
+		return err
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &models.UpdateSystemLinkPayload{
+		SystemIntakeSystem: updatedSystem,
+	}, nil
+}
+
+func GetLinkedSystemByID(ctx context.Context, store *storage.Store, systemIntakeSystemID uuid.UUID) (*models.SystemIntakeSystem, error) {
+	return store.GetLinkedSystemByID(ctx, systemIntakeSystemID)
 }
