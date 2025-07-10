@@ -1,13 +1,12 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 import {
   SystemIntakeDocumentStatus,
-  SystemIntakeGRBPresentationLinksFragmentFragment,
   SystemIntakeGRBReviewAsyncStatusType
 } from 'gql/generated/graphql';
-import { systemIntake } from 'tests/mock/systemIntake';
+import { grbPresentationLinks, systemIntake } from 'tests/mock/systemIntake';
 
 import { MessageProvider } from 'hooks/useMessage';
 import { getExpectedAlertType } from 'utils/testing/helpers';
@@ -18,13 +17,14 @@ import { ModalProvider } from '../RestartReviewModal/RestartReviewModalContext';
 import PresentationLinksCard from './PresentationLinksCard';
 
 describe('Async Presentation Links Card', () => {
-  const grbPresentationLinksMock = systemIntake.grbPresentationLinks!;
-  const formattedRecordingPasscode = `(Passcode: ${grbPresentationLinksMock?.recordingPasscode})`;
+  const formattedRecordingPasscode = `(Passcode: ${grbPresentationLinks?.recordingPasscode})`;
 
   function renderCard(
-    grbPresentationLinks: SystemIntakeGRBPresentationLinksFragmentFragment | null,
+    props: Partial<ComponentProps<typeof PresentationLinksCard>>,
     isAdmin: boolean = true
   ) {
+    const { grbReviewStartedAt = '2025-04-04T19:56:57.994482Z' } = props;
+
     return render(
       <MemoryRouter
         initialEntries={[`/it-governance/${systemIntake.id}/grb-review`]}
@@ -34,9 +34,13 @@ describe('Async Presentation Links Card', () => {
             <ModalProvider>
               <ITGovAdminContext.Provider value={isAdmin}>
                 <PresentationLinksCard
-                  grbReviewStartedAt="2025-04-04T19:56:57.994482Z"
                   systemIntakeID={systemIntake.id}
-                  grbPresentationLinks={grbPresentationLinks}
+                  grbPresentationLinks={props.grbPresentationLinks}
+                  asyncStatus={props.asyncStatus}
+                  grbReviewStartedAt={grbReviewStartedAt}
+                  grbReviewAsyncRecordingTime={
+                    props.grbReviewAsyncRecordingTime
+                  }
                 />
               </ITGovAdminContext.Provider>
             </ModalProvider>
@@ -47,7 +51,7 @@ describe('Async Presentation Links Card', () => {
   }
 
   it('renders the presentation links with transcript file', () => {
-    renderCard(grbPresentationLinksMock);
+    renderCard({ grbPresentationLinks });
 
     expect(screen.queryByTestId('alert')).not.toBeInTheDocument();
 
@@ -68,9 +72,13 @@ describe('Async Presentation Links Card', () => {
 
   it('renders the transcript link', () => {
     renderCard({
-      ...grbPresentationLinksMock,
-      transcriptFileStatus: SystemIntakeDocumentStatus.UNAVAILABLE,
-      transcriptLink: 'http://transcriptlink.com'
+      grbPresentationLinks: {
+        ...grbPresentationLinks,
+        transcriptFileStatus: null,
+        transcriptFileURL: null,
+        transcriptFileName: null,
+        transcriptLink: 'http://transcriptlink.com'
+      }
     });
 
     screen.getByRole('button', { name: 'View transcript' });
@@ -78,8 +86,10 @@ describe('Async Presentation Links Card', () => {
 
   it('renders virus scanning text', () => {
     renderCard({
-      ...grbPresentationLinksMock,
-      presentationDeckFileStatus: SystemIntakeDocumentStatus.PENDING
+      grbPresentationLinks: {
+        ...grbPresentationLinks,
+        presentationDeckFileStatus: SystemIntakeDocumentStatus.PENDING
+      }
     });
 
     screen.queryByText('Virus scanning in progress...');
@@ -87,11 +97,13 @@ describe('Async Presentation Links Card', () => {
 
   it('hides empty fields', () => {
     renderCard({
-      ...grbPresentationLinksMock,
-      recordingPasscode: '',
-      transcriptLink: '',
-      transcriptFileStatus: null,
-      presentationDeckFileStatus: null
+      grbPresentationLinks: {
+        ...grbPresentationLinks,
+        recordingPasscode: '',
+        transcriptLink: '',
+        transcriptFileStatus: null,
+        presentationDeckFileStatus: null
+      }
     });
 
     expect(screen.queryByTestId('alert')).not.toBeInTheDocument();
@@ -118,7 +130,7 @@ describe('Async Presentation Links Card', () => {
   });
 
   it('hides empty card for GRB reviewers', () => {
-    renderCard(null, false);
+    renderCard({ grbPresentationLinks: null }, false);
 
     expect(
       screen.queryByRole('header', { name: 'Asynchronous presentation' })
@@ -126,7 +138,7 @@ describe('Async Presentation Links Card', () => {
   });
 
   it('renders admin empty state', () => {
-    renderCard(null);
+    renderCard({ grbPresentationLinks: null });
 
     expect(getExpectedAlertType('info')).toHaveTextContent(
       'If this GRB review has an asynchronous presentation and recording, you may add that content to EASi to provide additional information for GRB reviews.'
@@ -136,7 +148,7 @@ describe('Async Presentation Links Card', () => {
   });
 
   it('hides action links for GRB reviewers', () => {
-    renderCard(grbPresentationLinksMock, false);
+    renderCard({ grbPresentationLinks }, false);
 
     expect(
       screen.queryByRole('link', { name: 'Edit presentation links' })
@@ -147,51 +159,34 @@ describe('Async Presentation Links Card', () => {
     ).not.toBeInTheDocument();
   });
 
+  it('renders the async presentation date', () => {
+    renderCard({
+      grbPresentationLinks,
+      grbReviewAsyncRecordingTime: '2025-07-26T05:00:00Z'
+    });
+
+    screen.getByText('Asynchronous presentation: 07/26/2025');
+  });
+
+  it('renders async presentation not scheduled', () => {
+    renderCard({
+      grbPresentationLinks
+    });
+
+    screen.getByText('Asynchronous presentation not scheduled yet');
+  });
+
   it('renders the Complete Async Status variant', async () => {
-    render(
-      <MemoryRouter
-        initialEntries={[`/it-governance/${systemIntake.id}/grb-review`]}
-      >
-        <MessageProvider>
-          <MockedProvider>
-            <ModalProvider>
-              <ITGovAdminContext.Provider value>
-                <PresentationLinksCard
-                  systemIntakeID={systemIntake.id}
-                  grbPresentationLinks={grbPresentationLinksMock}
-                  asyncStatus={SystemIntakeGRBReviewAsyncStatusType.COMPLETED}
-                  grbReviewStartedAt="2025-04-04T19:56:57.994482Z"
-                />
-              </ITGovAdminContext.Provider>
-            </ModalProvider>
-          </MockedProvider>
-        </MessageProvider>
-      </MemoryRouter>
-    );
+    renderCard({
+      grbPresentationLinks,
+      asyncStatus: SystemIntakeGRBReviewAsyncStatusType.COMPLETED
+    });
 
     expect(await screen.findByText(/this review is over/i)).toBeInTheDocument();
   });
 
   it('renders the review not started variant', () => {
-    render(
-      <MemoryRouter
-        initialEntries={[`/it-governance/${systemIntake.id}/grb-review`]}
-      >
-        <MessageProvider>
-          <MockedProvider>
-            <ModalProvider>
-              <ITGovAdminContext.Provider value>
-                <PresentationLinksCard
-                  grbReviewStartedAt={null}
-                  systemIntakeID={systemIntake.id}
-                  grbPresentationLinks={null}
-                />
-              </ITGovAdminContext.Provider>
-            </ModalProvider>
-          </MockedProvider>
-        </MessageProvider>
-      </MemoryRouter>
-    );
+    renderCard({ grbReviewStartedAt: null });
 
     expect(
       screen.getByText(

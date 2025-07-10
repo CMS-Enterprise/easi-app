@@ -35,7 +35,7 @@ export type PresentationCardActionsProps = {
   hasAnyLinks: boolean;
   setRemovePresentationLinksModalOpen: (open: boolean) => void;
   grbReviewStartedAt: string | null | undefined;
-  asyncStatus?: SystemIntakeGRBReviewAsyncStatusType | null;
+  asyncStatus: SystemIntakeGRBReviewAsyncStatusType | null | undefined;
 };
 
 /**
@@ -124,10 +124,13 @@ const PresentationCardActions = ({
 
 export type PresentationLinksCardProps = {
   systemIntakeID: string;
-  grbReviewStartedAt?: string | null;
-  grbPresentationLinks?: SystemIntakeGRBPresentationLinksFragmentFragment | null;
-  asyncStatus?: SystemIntakeGRBReviewAsyncStatusType | null;
-  grbReviewAsyncRecordingTime?: string | null;
+  grbReviewStartedAt: string | null | undefined;
+  asyncStatus: SystemIntakeGRBReviewAsyncStatusType | null | undefined;
+  grbReviewAsyncRecordingTime: string | null | undefined;
+  grbPresentationLinks:
+    | SystemIntakeGRBPresentationLinksFragmentFragment
+    | null
+    | undefined;
 };
 
 function PresentationLinksCard({
