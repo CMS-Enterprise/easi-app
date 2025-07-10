@@ -974,7 +974,8 @@ type UpdateSystemIntakeReviewDatesInput struct {
 // The input type for updating a system intake's linked system by id
 type UpdateSystemLinkInput struct {
 	ID                                 uuid.UUID                `json:"id"`
-	SystemID                           *string                  `json:"systemID,omitempty"`
+	SystemIntakeID                     uuid.UUID                `json:"systemIntakeID"`
+	SystemID                           string                   `json:"systemID"`
 	SystemRelationshipType             []SystemRelationshipType `json:"systemRelationshipType"`
 	OtherSystemRelationshipDescription *string                  `json:"otherSystemRelationshipDescription,omitempty"`
 }

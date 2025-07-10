@@ -265,7 +265,8 @@ func (s *StoreTestSuite) TestUpdateSystemIntakeSystemByID() {
 		newDescription := "updated description"
 		updateInput := models.UpdateSystemLinkInput{
 			ID:                                 original.ID,
-			SystemID:                           &original.SystemID,
+			SystemIntakeID:                     original.SystemIntakeID,
+			SystemID:                           original.SystemID,
 			SystemRelationshipType:             newRelationship,
 			OtherSystemRelationshipDescription: &newDescription,
 		}

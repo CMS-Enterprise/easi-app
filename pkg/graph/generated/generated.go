@@ -9767,7 +9767,8 @@ The input type for updating a system intake's linked system by id
 """
 input UpdateSystemLinkInput {
   id: UUID!
-  systemID: String
+  systemIntakeID: UUID!
+  systemID: String!
   systemRelationshipType: [SystemRelationshipType!]!
   otherSystemRelationshipDescription: String
 }
@@ -66199,7 +66200,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemLinkInput(ctx context.Cont
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "systemID", "systemRelationshipType", "otherSystemRelationshipDescription"}
+	fieldsInOrder := [...]string{"id", "systemIntakeID", "systemID", "systemRelationshipType", "otherSystemRelationshipDescription"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -66213,9 +66214,16 @@ func (ec *executionContext) unmarshalInputUpdateSystemLinkInput(ctx context.Cont
 				return it, err
 			}
 			it.ID = data
+		case "systemIntakeID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SystemIntakeID = data
 		case "systemID":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemID"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			data, err := ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}

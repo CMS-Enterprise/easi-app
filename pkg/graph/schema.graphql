@@ -1398,7 +1398,8 @@ The input type for updating a system intake's linked system by id
 """
 input UpdateSystemLinkInput {
   id: UUID!
-  systemID: String
+  systemIntakeID: UUID!
+  systemID: String!
   systemRelationshipType: [SystemRelationshipType!]!
   otherSystemRelationshipDescription: String
 }

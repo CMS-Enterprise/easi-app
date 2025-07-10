@@ -1499,7 +1499,7 @@
 									"mode": "graphql",
 									"graphql": {
 										"query": "mutation UpdateSystemLink ($input: UpdateSystemLinkInput!) {\n    updateSystemLink(input: $input) {\n        systemIntakeSystem {\n            id\n            systemID\n            systemRelationshipType\n            otherSystemRelationshipDescription\n        }\n    }\n}",
-										"variables": "{\n    \"input\":\n    {\n        \"id\": \"{{systemIntakeSystemId}}\",\n        \"systemID\": \"{11AB1A00-1234-5678-ABC1-1A001B00CC5F}\",\n        \"systemRelationshipType\": [\"PARTIAL_SUPPORT\", \"OTHER\"],\n        \"otherSystemRelationshipDescription\":\"new description\"\n    }\n}"
+										"variables": "{\n    \"input\":\n    {\n        \"id\": \"{{systemIntakeSystemId}}\",\n        \"systemID\": \"{11AB1A00-1234-5678-ABC1-1A001B00CC5F}\",\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\n        \"systemRelationshipType\": [\"PARTIAL_SUPPORT\", \"OTHER\"],\n        \"otherSystemRelationshipDescription\":\"new description\"\n    }\n}"
 									}
 								},
 								"url": {

@@ -90,7 +90,8 @@ func (s *Store) UpdateSystemIntakeSystemByID(ctx context.Context, tx *sqlx.Tx, i
 	var linkedSystemToUpdate models.SystemIntakeSystem
 
 	linkedSystemToUpdate.ID = input.ID
-	linkedSystemToUpdate.SystemID = *input.SystemID
+	linkedSystemToUpdate.SystemIntakeID = input.SystemIntakeID
+	linkedSystemToUpdate.SystemID = input.SystemID
 	linkedSystemToUpdate.SystemRelationshipType = input.SystemRelationshipType
 	linkedSystemToUpdate.OtherSystemRelationshipDescription = input.OtherSystemRelationshipDescription
 

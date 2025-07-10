@@ -3239,7 +3239,8 @@ export type UpdateSystemIntakeReviewDatesInput = {
 export type UpdateSystemLinkInput = {
   id: Scalars['UUID']['input'];
   otherSystemRelationshipDescription?: InputMaybe<Scalars['String']['input']>;
-  systemID?: InputMaybe<Scalars['String']['input']>;
+  systemID: Scalars['String']['input'];
+  systemIntakeID: Scalars['UUID']['input'];
   systemRelationshipType: Array<SystemRelationshipType>;
 };
 
