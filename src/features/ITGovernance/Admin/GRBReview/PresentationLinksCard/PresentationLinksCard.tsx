@@ -15,6 +15,7 @@ import {
   SystemIntakeDocumentStatus,
   SystemIntakeGRBPresentationLinksFragmentFragment,
   SystemIntakeGRBReviewAsyncStatusType,
+  SystemIntakeGRBReviewType,
   useDeleteSystemIntakeGRBPresentationLinksMutation
 } from 'gql/generated/graphql';
 
@@ -124,6 +125,7 @@ const PresentationCardActions = ({
 
 export type PresentationLinksCardProps = {
   systemIntakeID: string;
+  grbReviewType: SystemIntakeGRBReviewType | undefined;
   grbReviewStartedAt: string | null | undefined;
   asyncStatus: SystemIntakeGRBReviewAsyncStatusType | null | undefined;
   grbReviewAsyncRecordingTime: string | null | undefined;
@@ -135,6 +137,7 @@ export type PresentationLinksCardProps = {
 
 function PresentationLinksCard({
   systemIntakeID,
+  grbReviewType,
   grbReviewStartedAt,
   grbPresentationLinks,
   asyncStatus,
@@ -214,16 +217,21 @@ function PresentationLinksCard({
           <h3 className="margin-y-0 margin-right-2 display-inline-block">
             {t('asyncPresentation.title')}
           </h3>
-          <span className="text-base">
-            {t(
-              grbReviewAsyncRecordingTime
-                ? 'asyncPresentation.asyncPresentationDate'
-                : 'asyncPresentation.asyncPresentationNotScheduled',
-              {
-                date: formatDateLocal(grbReviewAsyncRecordingTime, 'MM/dd/yyyy')
-              }
-            )}
-          </span>
+          {grbReviewType === SystemIntakeGRBReviewType.ASYNC && (
+            <span className="text-base">
+              {t(
+                grbReviewAsyncRecordingTime
+                  ? 'asyncPresentation.asyncPresentationDate'
+                  : 'asyncPresentation.asyncPresentationNotScheduled',
+                {
+                  date: formatDateLocal(
+                    grbReviewAsyncRecordingTime,
+                    'MM/dd/yyyy'
+                  )
+                }
+              )}
+            </span>
+          )}
         </CardHeader>
         {/* Render action links for admins only */}
         {isITGovAdmin && (

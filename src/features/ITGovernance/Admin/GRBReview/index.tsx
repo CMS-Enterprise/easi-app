@@ -199,6 +199,7 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
         {/* Presentation Links */}
         <PresentationLinksCard
           systemIntakeID={id}
+          grbReviewType={grbReviewType}
           grbReviewStartedAt={grbReviewStartedAt}
           grbPresentationLinks={grbReview.grbPresentationLinks}
           asyncStatus={grbReviewAsyncStatus}

@@ -4,7 +4,8 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 import {
   SystemIntakeDocumentStatus,
-  SystemIntakeGRBReviewAsyncStatusType
+  SystemIntakeGRBReviewAsyncStatusType,
+  SystemIntakeGRBReviewType
 } from 'gql/generated/graphql';
 import { grbPresentationLinks, systemIntake } from 'tests/mock/systemIntake';
 
@@ -23,7 +24,10 @@ describe('Async Presentation Links Card', () => {
     props: Partial<ComponentProps<typeof PresentationLinksCard>>,
     isAdmin: boolean = true
   ) {
-    const { grbReviewStartedAt = '2025-04-04T19:56:57.994482Z' } = props;
+    const {
+      grbReviewStartedAt = '2025-04-04T19:56:57.994482Z',
+      grbReviewType = SystemIntakeGRBReviewType.ASYNC
+    } = props;
 
     return render(
       <MemoryRouter
@@ -35,6 +39,7 @@ describe('Async Presentation Links Card', () => {
               <ITGovAdminContext.Provider value={isAdmin}>
                 <PresentationLinksCard
                   systemIntakeID={systemIntake.id}
+                  grbReviewType={grbReviewType}
                   grbPresentationLinks={props.grbPresentationLinks}
                   asyncStatus={props.asyncStatus}
                   grbReviewStartedAt={grbReviewStartedAt}
@@ -92,7 +97,9 @@ describe('Async Presentation Links Card', () => {
       }
     });
 
-    screen.queryByText('Virus scanning in progress...');
+    expect(
+      screen.getByText('Virus scanning in progress...')
+    ).toBeInTheDocument();
   });
 
   it('hides empty fields', () => {
@@ -174,6 +181,16 @@ describe('Async Presentation Links Card', () => {
     });
 
     screen.getByText('Asynchronous presentation not scheduled yet');
+  });
+
+  it('hides presentation date text for standard meetings', () => {
+    renderCard({
+      grbReviewType: SystemIntakeGRBReviewType.STANDARD
+    });
+
+    expect(
+      screen.queryByText('Asynchronous presentation not scheduled yet')
+    ).not.toBeInTheDocument();
   });
 
   it('renders the Complete Async Status variant', async () => {
