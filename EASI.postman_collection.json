@@ -671,7 +671,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -681,8 +682,8 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation UpdateSystemIntakeRequestDetails($input: UpdateSystemIntakeRequestDetailsInput!) {\n  updateSystemIntakeRequestDetails(input: $input) {\n    systemIntake {\n      id\n      status\n      requestName\n      businessNeed\n      businessSolution\n      needsEaSupport\n      hasUiChanges\n      __typename\n    }\n    __typename\n  }\n}",
-										"variables": "{\n  \"input\": {\n    \"id\": \"{{systemIntakeID}}\",\n    \"requestName\": \"Happy Happy Fun TIme\",\n    \"businessNeed\": \"This will make sure everyone has a good day. Believe me\",\n    \"businessSolution\": \"Pizza parties every 3 hours.\",\n    \"currentStage\": \"I have done some initial research\",\n    \"needsEaSupport\": false,\n    \"hasUiChanges\": true\n  }\n}"
+										"query": "mutation UpdateSystemIntakeRequestDetails($input: UpdateSystemIntakeRequestDetailsInput!) {\n  updateSystemIntakeRequestDetails(input: $input) {\n    systemIntake {\n      id\n      state\n      requestName\n      businessNeed\n      businessSolution\n      needsEaSupport\n      hasUiChanges\n      __typename\n    }\n    __typename\n  }\n}",
+										"variables": "{\n  \"input\": {\n    \"id\": \"{{systemIntakeID}}\",\n    \"acquisitionMethods\": [\"CONTRACTOR_FURNISHED\"],\n    \"requestName\": \"Happy Happy Fun TIme\",\n    \"businessNeed\": \"This will make sure everyone has a good day. Believe me\",\n    \"businessSolution\": \"Pizza parties every 3 hours.\",\n    \"currentStage\": \"I have done some initial research\",\n    \"needsEaSupport\": false,\n    \"hasUiChanges\": true\n  }\n}"
 									}
 								},
 								"url": {
@@ -1363,7 +1364,7 @@
 					]
 				},
 				{
-					"name": "Set Intake Relations",
+					"name": "Linked Systems",
 					"item": [
 						{
 							"name": "Set New System",
@@ -1409,6 +1410,24 @@
 						},
 						{
 							"name": "Set Existing System",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let responseData = pm.response.json().data.setSystemIntakeRelationExistingSystem",
+											"",
+											"systemIntakeSystemId = responseData.systemIntake.cedarSystemRelationShips[0].id",
+											"",
+											"",
+											"pm.collectionVariables.set(\"systemIntakeSystemId\", systemIntakeSystemId);",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [],
@@ -1478,8 +1497,43 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation UpdateSystemLink ($systemIntakeSystem: UUID!) {\n    updateSystemLink(systemIntakeSystem: $systemIntakeSystem) {\n        systemIntakeSystem {\n            systemID\n            systemRelationshipType\n        }\n    }\n}",
-										"variables": "{\n    \"systemIntakeSystem\": \"65b548fe-76dc-4d4f-8ad7-b573dae045a6\"\n}"
+										"query": "mutation UpdateSystemLink ($input: UpdateSystemLinkInput!) {\n    updateSystemLink(input: $input) {\n        systemIntakeSystem {\n            id\n            systemID\n            systemRelationshipType\n            otherSystemRelationshipDescription\n        }\n    }\n}",
+										"variables": "{\n    \"input\":\n    {\n        \"id\": \"fdf8ee5c-8481-4389-ae98-16cdf21f8b64\",\n        \"systemID\": \"{11AB1A00-1234-5678-ABC1-1A001B00CC5F}\",\n        \"systemRelationshipType\": [\"PARTIAL_SUPPORT\", \"OTHER\"],\n        \"otherSystemRelationshipDescription\":\"new cool description\"\n    }\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get System Link",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const systemIntakeSystemId = pm.collectionVariables.get(\"systemIntakeSystemId\");",
+											"console.log(\"Using systemIntakeSystemId:\", systemIntakeSystemId ? systemIntakeSystemId : \"fdf8ee5c-8481-4389-ae98-16cdf21f8b64\");",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query {\n  systemIntakeSystem(systemIntakeSystemID: \"{{systemIntakeSystemId}}\") {\n    id\n    systemRelationshipType\n    systemIntakeID\n    otherSystemRelationshipDescription\n  }\n}\n",
+										"variables": ""
 									}
 								},
 								"url": {
@@ -4418,6 +4472,10 @@
 		},
 		{
 			"key": "UserAccountID",
+			"value": ""
+		},
+		{
+			"key": "systemIntakeSystemId",
 			"value": ""
 		}
 	]
