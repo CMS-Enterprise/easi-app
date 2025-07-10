@@ -70,6 +70,7 @@ func (sie systemIntakeEmails) grbReviewVoteSubmittedAdminBody(input SendGRBRevie
 		DateInfo:           fmt.Sprintf("%[1]s-%[2]s", formattedStart, formattedEnd),
 		VoteInfo:           fmt.Sprintf("%[1]d objection, %[2]d no objection, %[3]d no vote", input.ObjectionVotes, input.NoObjectionVotes, input.NotYetVoted),
 		Vote:               voteStr,
+		AdditionalComments: input.AdditionalComments,
 	}
 
 	var b bytes.Buffer

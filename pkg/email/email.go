@@ -96,6 +96,7 @@ type templates struct {
 	grbReviewCompleteQuorumMet                      templateCaller
 	grbReviewVoteSubmitted                          templateCaller
 	grbReviewVoteSubmittedAdmin                     templateCaller
+	grbReviewVoteChangedAdmin                       templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -564,6 +565,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(grbReviewVoteSubmittedAdminTemplateName)
 	}
 	appTemplates.grbReviewVoteSubmittedAdmin = grbReviewVoteSubmittedAdmin
+
+	grbReviewVoteChangedAdminTemplateName := "grb_review_vote_changed_admin.gohtml"
+	grbReviewVoteChangedAdmin := rawTemplates.Lookup(grbReviewVoteChangedAdminTemplateName)
+	if grbReviewVoteChangedAdmin == nil {
+		return Client{}, templateError(grbReviewVoteChangedAdminTemplateName)
+	}
+	appTemplates.grbReviewVoteChangedAdmin = grbReviewVoteChangedAdmin
 
 	client := Client{
 		config:    config,
