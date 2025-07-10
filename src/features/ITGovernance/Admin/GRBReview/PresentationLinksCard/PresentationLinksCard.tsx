@@ -65,7 +65,7 @@ const PresentationCardActions = ({
           to={`/it-governance/${systemIntakeID}/grb-review/review-type`}
           iconPosition="after"
         >
-          {t('adminTask.setUpGRBReview.title')}
+          {t('asyncPresentation.continueReviewSetup')}
         </IconLink>
       </>
     );

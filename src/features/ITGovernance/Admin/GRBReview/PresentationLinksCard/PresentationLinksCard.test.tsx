@@ -200,6 +200,8 @@ describe('Async Presentation Links Card', () => {
     });
 
     expect(await screen.findByText(/this review is over/i)).toBeInTheDocument();
+
+    expect(screen.getByRole('button', { name: 'restart' })).toBeInTheDocument();
   });
 
   it('renders the review not started variant', () => {
@@ -207,12 +209,12 @@ describe('Async Presentation Links Card', () => {
 
     expect(
       screen.getByText(
-        'You have not completed setup for this asynchronous review. Continue the GRB review setup process to add information about this asynchronous presentation.'
+        'You have not completed setup for this review. Continue the GRB review setup process to add presentation links and/or a slide deck.'
       )
     ).toBeInTheDocument();
 
     expect(
-      screen.getByRole('link', { name: 'Set up GRB review' })
+      screen.getByRole('link', { name: 'Continue GRB review setup' })
     ).toBeInTheDocument();
   });
 });
