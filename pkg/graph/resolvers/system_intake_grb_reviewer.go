@@ -306,6 +306,8 @@ func CastSystemIntakeGRBReviewerVote(ctx context.Context, store *storage.Store, 
 				NotYetVoted:        votingInformation.NumberOfNotVoted(),
 			}); err != nil {
 				appcontext.ZLogger(ctx).Error("problem sending grb review vote changed admin email", zap.Error(err), zap.String("intake.id", systemIntake.ID.String()), zap.String("user.id", reviewer.UserID.String()))
+
+				// don't err here
 			}
 		} else {
 			// this is an initial vote
@@ -324,6 +326,8 @@ func CastSystemIntakeGRBReviewerVote(ctx context.Context, store *storage.Store, 
 				NotYetVoted:        votingInformation.NumberOfNotVoted(),
 			}); err != nil {
 				appcontext.ZLogger(ctx).Error("problem sending grb review vote submitted admin email", zap.Error(err), zap.String("intake.id", systemIntake.ID.String()), zap.String("user.id", reviewer.UserID.String()))
+
+				// don't err here
 			}
 		}
 
