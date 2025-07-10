@@ -935,9 +935,26 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 	err = client.SystemIntake.SendGRBReviewVoteSubmittedAdmin(ctx,
 		email.SendGRBReviewVoteSubmittedAdminInput{
 			SystemIntakeID:     intakeID,
-			GRBMemberName:      "Admin Vote Submitted",
+			GRBMemberName:      "Admin Vote Submitter",
 			ProjectTitle:       "Admin Vote Submitted Title",
-			RequesterName:      "Admin Voter",
+			RequesterName:      "Admin Vote Submitted Requester",
+			RequesterComponent: "Center for Medicaid and CHIP Services",
+			StartDate:          time.Now().AddDate(0, 0, -5),
+			EndDate:            time.Now().AddDate(0, 0, 5),
+			Vote:               models.SystemIntakeAsyncGRBVotingOptionNoObjection,
+			AdditionalComments: "I agree",
+			NoObjectionVotes:   3,
+			ObjectionVotes:     4,
+			NotYetVoted:        2,
+		})
+	noErr(err)
+
+	err = client.SystemIntake.SendGRBReviewVoteChangedAdmin(ctx,
+		email.SendGRBReviewVoteChangedAdminInput{
+			SystemIntakeID:     intakeID,
+			GRBMemberName:      "Admin Vote Changer",
+			ProjectTitle:       "Admin Vote Changed Title",
+			RequesterName:      "Admin Vote Change Requester",
 			RequesterComponent: "Center for Medicaid and CHIP Services",
 			StartDate:          time.Now().AddDate(0, 0, -5),
 			EndDate:            time.Now().AddDate(0, 0, 5),
