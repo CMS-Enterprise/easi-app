@@ -970,6 +970,7 @@ type ComplexityRoot struct {
 	}
 
 	SystemIntakeSystem struct {
+		ID                                 func(childComplexity int) int
 		OtherSystemRelationshipDescription func(childComplexity int) int
 		SystemID                           func(childComplexity int) int
 		SystemIntakeID                     func(childComplexity int) int
@@ -6903,6 +6904,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.SystemIntakeRequester.Name(childComplexity), true
 
+	case "SystemIntakeSystem.id":
+		if e.complexity.SystemIntakeSystem.ID == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeSystem.ID(childComplexity), true
+
 	case "SystemIntakeSystem.otherSystemRelationshipDescription":
 		if e.complexity.SystemIntakeSystem.OtherSystemRelationshipDescription == nil {
 			break
@@ -9452,6 +9460,7 @@ input SystemRelationshipInput {
 }
 
 type SystemIntakeSystem {
+  id: UUID!
   systemIntakeID: UUID!
   systemID: String
   systemRelationshipType: [SystemRelationshipType!]!
@@ -29401,6 +29410,8 @@ func (ec *executionContext) fieldContext_DeleteSystemLinkPayload_systemIntakeSys
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "id":
+				return ec.fieldContext_SystemIntakeSystem_id(ctx, field)
 			case "systemIntakeID":
 				return ec.fieldContext_SystemIntakeSystem_systemIntakeID(ctx, field)
 			case "systemID":
@@ -42080,6 +42091,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakeSystem(ctx context.Co
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "id":
+				return ec.fieldContext_SystemIntakeSystem_id(ctx, field)
 			case "systemIntakeID":
 				return ec.fieldContext_SystemIntakeSystem_systemIntakeID(ctx, field)
 			case "systemID":
@@ -46494,6 +46507,8 @@ func (ec *executionContext) fieldContext_SystemIntake_cedarSystemRelationShips(_
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "id":
+				return ec.fieldContext_SystemIntakeSystem_id(ctx, field)
 			case "systemIntakeID":
 				return ec.fieldContext_SystemIntakeSystem_systemIntakeID(ctx, field)
 			case "systemID":
@@ -51972,6 +51987,50 @@ func (ec *executionContext) fieldContext_SystemIntakeRequester_name(_ context.Co
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeSystem_id(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeSystem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeSystem_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeSystem_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeSystem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type UUID does not have child fields")
 		},
 	}
 	return fc, nil
@@ -59997,6 +60056,8 @@ func (ec *executionContext) fieldContext_UpdateSystemLinkPayload_systemIntakeSys
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "id":
+				return ec.fieldContext_SystemIntakeSystem_id(ctx, field)
 			case "systemIntakeID":
 				return ec.fieldContext_SystemIntakeSystem_systemIntakeID(ctx, field)
 			case "systemID":
@@ -74463,6 +74524,11 @@ func (ec *executionContext) _SystemIntakeSystem(ctx context.Context, sel ast.Sel
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("SystemIntakeSystem")
+		case "id":
+			out.Values[i] = ec._SystemIntakeSystem_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
 		case "systemIntakeID":
 			out.Values[i] = ec._SystemIntakeSystem_systemIntakeID(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
