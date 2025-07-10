@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -1613,9 +1612,6 @@ func (r *queryResolver) UserAccount(ctx context.Context, username string) (*auth
 
 // SystemIntakeSystem is the resolver for the systemIntakeSystem field.
 func (r *queryResolver) SystemIntakeSystem(ctx context.Context, systemIntakeSystemID uuid.UUID) (*models.SystemIntakeSystem, error) {
-	fmt.Println("1")
-	fmt.Println("2")
-	fmt.Println("3")
 	return resolvers.GetLinkedSystemByID(ctx, r.store, systemIntakeSystemID)
 }
 

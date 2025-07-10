@@ -21,14 +21,6 @@ func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemI
 		return errors.New("unexpected nil system intake ID when linking system intake to system id")
 	}
 
-	// _, err := tx.NamedExec(sqlqueries.SystemIntakeSystemForm.Delete, map[string]interface{}{
-	// 	"system_intake_id": systemIntakeID,
-	// })
-	// if err != nil {
-	// 	appcontext.ZLogger(ctx).Error("Failed to delete system ids linked to system intake", zap.Error(err))
-	// 	return err
-	// }
-
 	// no need to run insert if we are not inserting new system ids
 	if len(systemRelationships) < 1 {
 		return nil
@@ -98,7 +90,8 @@ func (s *Store) UpdateSystemIntakeSystemByID(ctx context.Context, tx *sqlx.Tx, i
 	var linkedSystemToUpdate models.SystemIntakeSystem
 
 	linkedSystemToUpdate.ID = input.ID
-	linkedSystemToUpdate.SystemID = *input.SystemID
+	linkedSystemToUpdate.SystemIntakeID = input.SystemIntakeID
+	linkedSystemToUpdate.SystemID = input.SystemID
 	linkedSystemToUpdate.SystemRelationshipType = input.SystemRelationshipType
 	linkedSystemToUpdate.OtherSystemRelationshipDescription = input.OtherSystemRelationshipDescription
 

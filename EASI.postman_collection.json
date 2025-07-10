@@ -502,7 +502,8 @@
 											"",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -1477,7 +1478,7 @@
 									"mode": "graphql",
 									"graphql": {
 										"query": "mutation DeleteSystemLink ($systemIntakeSystem: UUID!) {\n    deleteSystemLink(systemIntakeSystem: $systemIntakeSystem) {\n        systemIntakeSystem {\n            systemID\n            systemRelationshipType\n        }\n    }\n}",
-										"variables": "{\n    \"systemIntakeSystem\": \"65b548fe-76dc-4d4f-8ad7-b573dae045a6\"\n}"
+										"variables": "{\n    \"systemIntakeSystem\": \"{{systemIntakeSystemId}}\"\n}"
 									}
 								},
 								"url": {
@@ -1498,7 +1499,7 @@
 									"mode": "graphql",
 									"graphql": {
 										"query": "mutation UpdateSystemLink ($input: UpdateSystemLinkInput!) {\n    updateSystemLink(input: $input) {\n        systemIntakeSystem {\n            id\n            systemID\n            systemRelationshipType\n            otherSystemRelationshipDescription\n        }\n    }\n}",
-										"variables": "{\n    \"input\":\n    {\n        \"id\": \"fdf8ee5c-8481-4389-ae98-16cdf21f8b64\",\n        \"systemID\": \"{11AB1A00-1234-5678-ABC1-1A001B00CC5F}\",\n        \"systemRelationshipType\": [\"PARTIAL_SUPPORT\", \"OTHER\"],\n        \"otherSystemRelationshipDescription\":\"new cool description\"\n    }\n}"
+										"variables": "{\n    \"input\":\n    {\n        \"id\": \"{{systemIntakeSystemId}}\",\n        \"systemID\": \"{11AB1A00-1234-5678-ABC1-1A001B00CC5F}\",\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\n        \"systemRelationshipType\": [\"PARTIAL_SUPPORT\", \"OTHER\"],\n        \"otherSystemRelationshipDescription\":\"new description\"\n    }\n}"
 									}
 								},
 								"url": {
