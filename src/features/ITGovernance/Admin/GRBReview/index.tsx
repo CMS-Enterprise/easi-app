@@ -80,7 +80,8 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
     grbReviewType,
     grbReviewStartedAt,
     grbReviewAsyncStatus,
-    grbReviewStandardStatus
+    grbReviewStandardStatus,
+    grbReviewAsyncRecordingTime
   } = grbReview || {};
 
   const { euaId } = useSelector((appState: AppState) => appState.auth);
@@ -201,6 +202,7 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
           grbReviewStartedAt={grbReviewStartedAt}
           grbPresentationLinks={grbReview.grbPresentationLinks}
           asyncStatus={grbReviewAsyncStatus}
+          grbReviewAsyncRecordingTime={grbReviewAsyncRecordingTime}
         />
         {/* Business Case Card */}
         <BusinessCaseCard businessCase={businessCase} systemIntakeID={id} />

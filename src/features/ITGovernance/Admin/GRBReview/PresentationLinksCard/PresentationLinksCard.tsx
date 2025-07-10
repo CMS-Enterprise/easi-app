@@ -24,6 +24,7 @@ import IconLink from 'components/IconLink';
 import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
 import useMessage from 'hooks/useMessage';
+import { formatDateLocal } from 'utils/date';
 import { downloadFileFromURL } from 'utils/downloadFile';
 
 import ITGovAdminContext from '../../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
@@ -126,13 +127,15 @@ export type PresentationLinksCardProps = {
   grbReviewStartedAt?: string | null;
   grbPresentationLinks?: SystemIntakeGRBPresentationLinksFragmentFragment | null;
   asyncStatus?: SystemIntakeGRBReviewAsyncStatusType | null;
+  grbReviewAsyncRecordingTime?: string | null;
 };
 
 function PresentationLinksCard({
   systemIntakeID,
   grbReviewStartedAt,
   grbPresentationLinks,
-  asyncStatus
+  asyncStatus,
+  grbReviewAsyncRecordingTime
 }: PresentationLinksCardProps) {
   const { t } = useTranslation('grbReview');
 
@@ -205,7 +208,19 @@ function PresentationLinksCard({
         className="margin-top-2"
       >
         <CardHeader>
-          <h3>{t('asyncPresentation.title')}</h3>
+          <h3 className="margin-y-0 margin-right-2 display-inline-block">
+            {t('asyncPresentation.title')}
+          </h3>
+          <span className="text-base">
+            {t(
+              grbReviewAsyncRecordingTime
+                ? 'asyncPresentation.asyncPresentationDate'
+                : 'asyncPresentation.asyncPresentationNotScheduled',
+              {
+                date: formatDateLocal(grbReviewAsyncRecordingTime, 'MM/dd/yyyy')
+              }
+            )}
+          </span>
         </CardHeader>
         {/* Render action links for admins only */}
         {isITGovAdmin && (

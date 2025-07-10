@@ -136,6 +136,9 @@ export default {
   },
   asyncPresentation: {
     title: 'Asynchronous presentation',
+    asyncPresentationDate: 'Asynchronous presentation: {{date}}',
+    asyncPresentationNotScheduled:
+      'Asynchronous presentation not scheduled yet',
     editPresentationLinks: 'Edit presentation links',
     removeAllPresentationLinks: 'Remove all presentation links',
     viewRecording: 'View recording',
