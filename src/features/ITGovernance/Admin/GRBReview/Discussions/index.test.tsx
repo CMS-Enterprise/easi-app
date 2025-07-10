@@ -2,6 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
+import { SystemIntakeStatusAdmin } from 'gql/generated/graphql';
 import { getSystemIntakeGRBDiscussionsQuery } from 'tests/mock/discussions';
 import { getSystemIntakeGRBReviewQuery } from 'tests/mock/grbReview';
 import { systemIntake } from 'tests/mock/systemIntake';
@@ -26,7 +27,7 @@ describe('Discussions', () => {
           >
             <Discussions
               systemIntakeID={systemIntake.id}
-              grbReviewStartedAt="2025-03-11T01:50:35.146458Z"
+              statusAdmin={SystemIntakeStatusAdmin.GRB_MEETING_READY}
             />
           </VerboseMockedProvider>
         </MemoryRouter>
@@ -36,5 +37,31 @@ describe('Discussions', () => {
     expect(await screen.findByText('Discussions')).toBeInTheDocument();
 
     expect(asFragment()).toMatchSnapshot();
+  });
+
+  it('renders the read only view if the request is not in the GRB step', async () => {
+    render(
+      <Provider store={store}>
+        <MemoryRouter>
+          <VerboseMockedProvider
+            mocks={[
+              getSystemIntakeGRBDiscussionsQuery(),
+              getSystemIntakeGRBReviewQuery()
+            ]}
+          >
+            <Discussions
+              systemIntakeID={systemIntake.id}
+              statusAdmin={
+                SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_SUBMITTED
+              }
+            />
+          </VerboseMockedProvider>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    expect(
+      screen.queryByRole('button', { name: 'Start a discussion' })
+    ).not.toBeInTheDocument();
   });
 });

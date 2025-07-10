@@ -9,7 +9,6 @@ import {
   SystemIntakeFragmentFragment,
   SystemIntakeGRBReviewAsyncStatusType,
   SystemIntakeGRBReviewerVotingRole,
-  SystemIntakeGRBReviewStandardStatusType,
   SystemIntakeGRBReviewType,
   SystemIntakeState,
   SystemIntakeStatusAdmin,
@@ -250,15 +249,8 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
         {/* Discussion Board */}
         <Discussions
           systemIntakeID={id}
-          grbReviewStartedAt={grbReviewStartedAt}
           className="margin-top-4 margin-bottom-6"
-          // Make discussions read only when review is completed
-          readOnly={
-            grbReviewAsyncStatus ===
-              SystemIntakeGRBReviewAsyncStatusType.COMPLETED ||
-            grbReviewStandardStatus ===
-              SystemIntakeGRBReviewStandardStatusType.COMPLETED
-          }
+          statusAdmin={statusAdmin}
         />
         {/* Participants Table */}
         <ParticipantsSection
