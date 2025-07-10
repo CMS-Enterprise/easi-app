@@ -264,9 +264,11 @@ func CastSystemIntakeGRBReviewerVote(ctx context.Context, store *storage.Store, 
 			return reviewer, nil
 		}
 
+		user := userAccount[0]
+
 		// send email to user making the vote
 		if err := emailClient.SystemIntake.SendGRBReviewVoteSubmitted(ctx, email.SendGRBReviewVoteSubmittedInput{
-			Recipient:          models.EmailAddress(userAccount[0].Email),
+			Recipient:          models.EmailAddress(user.Email),
 			SystemIntakeID:     systemIntake.ID,
 			ProjectTitle:       systemIntake.ProjectName.String,
 			RequesterName:      systemIntake.Requester,
@@ -280,26 +282,46 @@ func CastSystemIntakeGRBReviewerVote(ctx context.Context, store *storage.Store, 
 			// don't err here
 		}
 
+		votingInformation := models.GRBVotingInformation{
+			SystemIntake: systemIntake,
+			GRBReviewers: grbReviewers,
+		}
+
 		// check existing reviewer to see if this is the initial vote or a changed vote
 		// send email to admin
 		if existingReviewer.Vote != nil {
 			// this is a changed vote
-			_ = 1
+			if err := emailClient.SystemIntake.SendGRBReviewVoteChangedAdmin(ctx, email.SendGRBReviewVoteChangedAdminInput{
+				SystemIntakeID:     systemIntake.ID,
+				GRBMemberName:      fmt.Sprintf("%[1]s %[2]s", user.GivenName, user.FamilyName),
+				ProjectTitle:       systemIntake.ProjectName.String,
+				RequesterName:      systemIntake.Requester,
+				RequesterComponent: systemIntake.Component.String,
+				StartDate:          *systemIntake.GRBReviewStartedAt,
+				EndDate:            *systemIntake.GrbReviewAsyncEndDate,
+				Vote:               *reviewer.Vote,
+				AdditionalComments: reviewer.VoteComment.String,
+				NoObjectionVotes:   votingInformation.NumberOfNoObjection(),
+				ObjectionVotes:     votingInformation.NumberOfObjection(),
+				NotYetVoted:        votingInformation.NumberOfNotVoted(),
+			}); err != nil {
+				appcontext.ZLogger(ctx).Error("problem sending grb review vote changed admin email", zap.Error(err), zap.String("intake.id", systemIntake.ID.String()), zap.String("user.id", reviewer.UserID.String()))
+			}
 		} else {
 			// this is an initial vote
 			if err := emailClient.SystemIntake.SendGRBReviewVoteSubmittedAdmin(ctx, email.SendGRBReviewVoteSubmittedAdminInput{
-				SystemIntakeID:     uuid.UUID{},
-				GRBMemberName:      "",
-				ProjectTitle:       "",
-				RequesterName:      "",
-				RequesterComponent: "",
-				StartDate:          time.Time{},
-				EndDate:            time.Time{},
-				Vote:               "",
-				AdditionalComments: "",
-				NoObjectionVotes:   0,
-				ObjectionVotes:     0,
-				NotYetVoted:        0,
+				SystemIntakeID:     systemIntake.ID,
+				GRBMemberName:      fmt.Sprintf("%[1]s %[2]s", user.GivenName, user.FamilyName),
+				ProjectTitle:       systemIntake.ProjectName.String,
+				RequesterName:      systemIntake.Requester,
+				RequesterComponent: systemIntake.Component.String,
+				StartDate:          *systemIntake.GRBReviewStartedAt,
+				EndDate:            *systemIntake.GrbReviewAsyncEndDate,
+				Vote:               *reviewer.Vote,
+				AdditionalComments: reviewer.VoteComment.String,
+				NoObjectionVotes:   votingInformation.NumberOfNoObjection(),
+				ObjectionVotes:     votingInformation.NumberOfObjection(),
+				NotYetVoted:        votingInformation.NumberOfNotVoted(),
 			}); err != nil {
 				appcontext.ZLogger(ctx).Error("problem sending grb review vote submitted admin email", zap.Error(err), zap.String("intake.id", systemIntake.ID.String()), zap.String("user.id", reviewer.UserID.String()))
 			}
