@@ -64,7 +64,7 @@ func (sie systemIntakeEmails) grbReviewVoteChangedBody(input SendGRBReviewVoteCh
 	data := grbReviewVoteChangedBody{
 		GRBMemberName:      input.GRBMemberName,
 		ProjectTitle:       input.ProjectTitle,
-		Link:               grbReviewPath,
+		Link:               sie.client.urlFromPath(grbReviewPath),
 		RequesterName:      input.RequesterName,
 		RequesterComponent: translation.GetComponentAcronym(input.RequesterComponent),
 		DateInfo:           fmt.Sprintf("%[1]s-%[2]s", formattedStart, formattedEnd),
