@@ -10,6 +10,7 @@ exports[`Requester discussions card > matches the snapshot 1`] = `
       class="display-flex flex-align-center"
     >
       <svg
+        aria-hidden="true"
         class="usa-icon margin-right-1"
         focusable="false"
         height="1em"

@@ -54,10 +54,10 @@ describe('Requester discussions card', () => {
       await screen.findByText('There were no discussions during this review.')
     ).toBeInTheDocument();
 
-    // Start a discussion button should be hidden when awaiting decision
+    // View button is unstyled
     expect(
-      screen.queryByRole('button', { name: 'Start a discussion' })
-    ).toBeNull();
+      screen.getByRole('button', { name: 'View discussion board' })
+    ).toHaveClass('usa-button--unstyled');
   });
 
   it('renders in progress with no discussions', async () => {
@@ -75,6 +75,11 @@ describe('Requester discussions card', () => {
         </VerboseMockedProvider>
       </MemoryRouter>
     );
+
+    // View button is not unstyled
+    expect(
+      screen.getByRole('button', { name: 'View discussion board' })
+    ).not.toHaveClass('usa-button--unstyled');
 
     expect(
       await screen.findByText(

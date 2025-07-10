@@ -1,4 +1,4 @@
-import React, { ReactNode, ReactNodeArray } from 'react';
+import React, { ComponentProps, ReactNode, ReactNodeArray } from 'react';
 import ReactModal from 'react-modal';
 import { Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
@@ -18,6 +18,7 @@ export type ModalProps = {
   shouldCloseOnOverlayClick?: boolean;
   noScrollOnClose?: boolean;
   id?: string;
+  aria?: ComponentProps<typeof ReactModal>['aria'];
 };
 
 const Modal = ({
@@ -31,7 +32,8 @@ const Modal = ({
   closeModal,
   shouldCloseOnOverlayClick = false,
   noScrollOnClose,
-  id
+  id,
+  aria
 }: ModalProps) => {
   const handleOpenModal = () => {
     if (!noScrollOnClose) noScroll.on();
@@ -65,6 +67,7 @@ const Modal = ({
       // Fix for "App element is not defined" unit test error
       ariaHideApp={root ? undefined : false}
       id={id}
+      aria={aria}
     >
       <button
         type="button"

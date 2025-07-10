@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Button, ButtonGroup, Icon } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 import {
   ITGovGRBStatus,
   SystemIntakeGRBDiscussionBoardType,
@@ -44,6 +45,9 @@ const RequesterDiscussionsCard = ({
       .length;
   }, [grbDiscussionsPrimary]);
 
+  const renderViewButton =
+    grbMeetingStatus === ITGovGRBStatus.REVIEW_IN_PROGRESS;
+
   return (
     <div
       className="bg-base-lightest padding-2 margin-top-2"
@@ -53,7 +57,7 @@ const RequesterDiscussionsCard = ({
         <Spinner />
       ) : (
         <p className="display-flex flex-align-center">
-          <Icon.Announcement className="margin-right-1" />
+          <Icon.Announcement className="margin-right-1" aria-hidden />
 
           {grbDiscussionsPrimary?.length === 0 ? (
             t('taskList.noDiscussions', { context: grbMeetingStatus })
@@ -89,25 +93,26 @@ const RequesterDiscussionsCard = ({
               discussionMode: 'view'
             })
           }
-          className="margin-right-1"
+          className={classNames('margin-right-1', {
+            'usa-button--unstyled padding-right-2 border-base-light border-right-1px':
+              !renderViewButton
+          })}
         >
           {t('general.viewDiscussionBoard')}
         </Button>
 
-        {grbMeetingStatus !== ITGovGRBStatus.AWAITING_DECISION && (
-          <Button
-            type="button"
-            onClick={() =>
-              pushDiscussionQuery({
-                discussionBoardType: SystemIntakeGRBDiscussionBoardType.PRIMARY,
-                discussionMode: 'start'
-              })
-            }
-            unstyled
-          >
-            {t('general.startDiscussion.heading')}
-          </Button>
-        )}
+        <Button
+          type="button"
+          onClick={() =>
+            pushDiscussionQuery({
+              discussionBoardType: SystemIntakeGRBDiscussionBoardType.PRIMARY,
+              discussionMode: 'start'
+            })
+          }
+          unstyled
+        >
+          {t('general.startDiscussion.heading')}
+        </Button>
       </ButtonGroup>
     </div>
   );

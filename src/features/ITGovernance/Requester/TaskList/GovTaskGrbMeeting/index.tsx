@@ -1,29 +1,29 @@
 import React, { useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Button, ButtonGroup, Link } from '@trussworks/react-uswds';
+import { Button, ButtonGroup } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import DiscussionBoard from 'features/DiscussionBoard';
 import {
   GetGovernanceTaskListQuery,
   ITGovGRBStatus,
-  SystemIntakeDocumentStatus,
   SystemIntakeGRBReviewType,
-  useDeleteSystemIntakeGRBPresentationLinksMutation
+  SystemIntakeStep
 } from 'gql/generated/graphql';
 import { kebabCase } from 'lodash';
 
 import Alert from 'components/Alert';
 import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
-import PageHeading from 'components/PageHeading';
 import TaskListItem, { TaskListDescription } from 'components/TaskList';
 import useMessage from 'hooks/useMessage';
 import { formatDateUtc } from 'utils/date';
 
 import RequesterDiscussionsCard from './_components/RequesterDiscussionsCard';
+import RequesterPresentationDeck from './_components/RequesterPresentationDeck';
 
 const GovTaskGrbMeeting = ({
   id,
+  step,
   itGovTaskStatuses: { grbMeetingStatus },
   state,
   grbDate,
@@ -34,16 +34,9 @@ const GovTaskGrbMeeting = ({
   grbReviewAsyncRecordingTime,
   grbPresentationLinks
 }: NonNullable<GetGovernanceTaskListQuery['systemIntake']>) => {
-  const stepKey = 'grbMeeting';
   const { t } = useTranslation('itGov');
-  const [removalModalOpen, setRemovalModalOpen] = useState(false);
   const [reviewTypesModalOpen, setReviewTypesModalOpen] = useState(false);
-  const {
-    showMessage,
-    showErrorMessageInModal,
-    errorMessageInModal,
-    clearMessage
-  } = useMessage();
+  const { clearMessage } = useMessage();
 
   const dateMapping: Record<
     SystemIntakeGRBReviewType,
@@ -65,108 +58,37 @@ const GovTaskGrbMeeting = ({
 
   const dateValue = dateMapping[grbReviewType]?.[grbMeetingStatus] ?? null;
 
-  const [deleteSystemIntakeGRBPresentationLinks] =
-    useDeleteSystemIntakeGRBPresentationLinksMutation({
-      variables: {
-        input: {
-          systemIntakeID: id
-        }
-      },
-      refetchQueries: ['GetGovernanceTaskList']
-    });
-
-  const removePresentationLinks = () => {
-    deleteSystemIntakeGRBPresentationLinks()
-      .then(() => {
-        showMessage(t('grbReview:asyncPresentation.modalRemoveLinks.success'), {
-          type: 'success'
-        });
-        setRemovalModalOpen(false);
-      })
-      .catch(() => {
-        showErrorMessageInModal(
-          t('grbReview:asyncPresentation.modalRemoveLinks.error')
-        );
-      });
-  };
-
-  /**
-   * Whether to render `Prepare for the GRB review` link as button
-   * based on review type and meeting status
-   */
+  /** Whether to render `Prepare for the GRB review` link as button */
   const renderPrepareGRBReviewButton = useMemo(() => {
-    switch (grbMeetingStatus) {
-      case ITGovGRBStatus.READY_TO_SCHEDULE:
-        return !(
-          grbReviewType === SystemIntakeGRBReviewType.ASYNC &&
-          !grbPresentationLinks
-        );
-
-      case ITGovGRBStatus.SCHEDULED:
-        return !(
-          grbReviewType === SystemIntakeGRBReviewType.ASYNC &&
-          !grbPresentationLinks
-        );
-
-      case ITGovGRBStatus.AWAITING_GRB_REVIEW:
-        return !grbPresentationLinks;
-      default:
-        return false;
+    // Render link if awaiting decision or out of GRB meeting step
+    if (
+      step !== SystemIntakeStep.GRB_MEETING ||
+      grbMeetingStatus === ITGovGRBStatus.AWAITING_DECISION ||
+      grbMeetingStatus === ITGovGRBStatus.REVIEW_IN_PROGRESS
+    ) {
+      return false;
     }
-  }, [grbMeetingStatus, grbReviewType, grbPresentationLinks]);
 
-  const renderDiscussionBoard =
-    grbMeetingStatus === ITGovGRBStatus.AWAITING_DECISION ||
-    grbMeetingStatus === ITGovGRBStatus.REVIEW_IN_PROGRESS;
+    // For all other statuses, render link if presentation deck has NOT been uploaded
+    return !!grbPresentationLinks?.presentationDeckFileName;
+  }, [grbMeetingStatus, grbPresentationLinks, step]);
+
+  /** Render review type and status alert during and after the GRB meeting step, if step was not skipped */
+  const renderReviewDetails =
+    grbMeetingStatus !== ITGovGRBStatus.CANT_START &&
+    grbMeetingStatus !== ITGovGRBStatus.NOT_NEEDED;
+
+  /** Render presentation deck info if in GRB meeting step and not awaiting decision */
+  const renderPresentationDeck =
+    step === SystemIntakeStep.GRB_MEETING &&
+    grbMeetingStatus !== ITGovGRBStatus.AWAITING_DECISION;
+
+  /** Render discussion board if in GRB meeting step */
+  const renderDiscussionBoard = step === SystemIntakeStep.GRB_MEETING;
 
   return (
     <>
       {renderDiscussionBoard && <DiscussionBoard systemIntakeID={id} />}
-
-      {/* Remove Presentation Modal */}
-      <Modal
-        isOpen={removalModalOpen}
-        closeModal={() => {
-          setRemovalModalOpen(false);
-          clearMessage();
-        }}
-        shouldCloseOnOverlayClick
-        className="maxw-mobile-lg height-auto"
-      >
-        <PageHeading
-          headingLevel="h3"
-          className="margin-top-0 margin-bottom-2 line-height-sans-2"
-        >
-          {t(`taskList.step.${stepKey}.removeModal.title`)}
-        </PageHeading>
-        {errorMessageInModal && (
-          <Alert type="error" className="margin-top-2">
-            {errorMessageInModal}
-          </Alert>
-        )}
-        <p
-          className="font-body-md line-height-sans-4 margin-top-0 margin-bottom-2"
-          style={{ whiteSpace: 'break-spaces' }}
-        >
-          {t(`taskList.step.${stepKey}.removeModal.text`)}
-        </p>
-        <ButtonGroup style={{ gap: '0.5rem 1.5rem' }}>
-          <Button
-            type="button"
-            className="bg-error"
-            onClick={() => removePresentationLinks()}
-          >
-            {t(`taskList.step.${stepKey}.removeModal.confirm`)}
-          </Button>
-          <Button
-            type="button"
-            unstyled
-            onClick={() => setRemovalModalOpen(false)}
-          >
-            {t(`taskList.step.${stepKey}.removeModal.goBack`)}
-          </Button>
-        </ButtonGroup>
-      </Modal>
 
       {/* GRB Review Type Modal */}
       <Modal
@@ -179,7 +101,7 @@ const GovTaskGrbMeeting = ({
         className="height-auto"
       >
         <h3 className="margin-y-0">
-          {t(`taskList.step.${stepKey}.reviewTypeModal.title`)}
+          {t('taskList.step.grbMeeting.reviewTypeModal.title')}
         </h3>
 
         <dl className="margin-top-0 font-body-sm line-height-body-5">
@@ -188,21 +110,17 @@ const GovTaskGrbMeeting = ({
               <dt>
                 <h4 className="margin-bottom-0">
                   {t(
-                    `taskList.step.${stepKey}.reviewTypeModal.${type}.heading`
+                    `taskList.step.grbMeeting.reviewTypeModal.${type}.heading`
                   )}
                 </h4>
               </dt>
               {t<string, string[]>(
-                `taskList.step.${stepKey}.reviewTypeModal.${type}.description`,
+                `taskList.step.grbMeeting.reviewTypeModal.${type}.description`,
                 {
                   returnObjects: true
                 }
-              ).map((description, index) => (
-                <dd
-                  // eslint-disable-next-line react/no-array-index-key
-                  key={index}
-                  className="margin-left-0 margin-y-1"
-                >
+              ).map(description => (
+                <dd key={description} className="margin-left-0 margin-y-1">
                   {description}
                 </dd>
               ))}
@@ -215,113 +133,55 @@ const GovTaskGrbMeeting = ({
           onClick={() => setReviewTypesModalOpen(false)}
           className="margin-top-2"
         >
-          {t(`taskList.step.${stepKey}.reviewTypeModal.goBack`)}
+          {t('taskList.step.grbMeeting.reviewTypeModal.goBack')}
         </Button>
       </Modal>
 
       <TaskListItem
-        heading={t(`taskList.step.${stepKey}.title`)}
+        heading={t('taskList.step.grbMeeting.title')}
         status={grbMeetingStatus}
         state={state}
-        testId={kebabCase(t(`taskList.step.${stepKey}.title`))}
+        testId={kebabCase(t('taskList.step.grbMeeting.title'))}
       >
         <TaskListDescription>
-          <p>{t(`taskList.step.${stepKey}.description`)}</p>
+          <p>{t('taskList.step.grbMeeting.description')}</p>
 
-          {grbMeetingStatus !== ITGovGRBStatus.CANT_START &&
-            grbMeetingStatus !== ITGovGRBStatus.NOT_NEEDED && (
-              <>
-                <p>
-                  <Trans
-                    i18nKey={`itGov:taskList.step.${stepKey}.reviewType.copy`}
-                    components={{
-                      strong: <strong />
-                    }}
-                    values={{
-                      type: t(
-                        `taskList.step.${stepKey}.reviewType.${grbReviewType}`
-                      )
-                    }}
-                  />
-                </p>
-                <Alert slim type="info">
-                  {t(
-                    `taskList.step.${stepKey}.alertType.${grbReviewType}.${grbMeetingStatus}`,
-                    {
-                      date: formatDateUtc(dateValue, 'MM/dd/yyyy'),
-                      dateStart: formatDateUtc(
-                        grbReviewStartedAt,
-                        'MM/dd/yyyy'
-                      ),
-                      dateEnd: formatDateUtc(
-                        grbReviewAsyncEndDate,
-                        'MM/dd/yyyy'
-                      )
-                    }
-                  )}
-                </Alert>
-                {grbReviewType === SystemIntakeGRBReviewType.ASYNC && (
-                  <div className="margin-top-2">
-                    {/* If presentation deck is not uploaded, then show upload button */}
-                    {!grbPresentationLinks && (
-                      <UswdsReactLink
-                        variant="unstyled"
-                        className="usa-button"
-                        to={`/governance-task-list/${id}/presentation-deck-upload`}
-                      >
-                        {t(`taskList.step.${stepKey}.presentationUploadButton`)}
-                      </UswdsReactLink>
-                    )}
-                    {/* Else, render file status as pending or the actual file name */}
-                    {grbPresentationLinks && (
-                      <div>
-                        {grbPresentationLinks.presentationDeckFileStatus ===
-                        SystemIntakeDocumentStatus.PENDING ? (
-                          <span>
-                            <em>
-                              {t(`itGov:taskList.step.${stepKey}.scanning`)}
-                            </em>
-                          </span>
-                        ) : (
-                          <>
-                            <span className="margin-right-1">
-                              <Trans
-                                i18nKey={`itGov:taskList.step.${stepKey}.uploadPresentation`}
-                                components={{
-                                  strong: <strong />
-                                }}
-                                values={{
-                                  fileName:
-                                    grbPresentationLinks.presentationDeckFileName
-                                }}
-                              />
-                            </span>
-
-                            <Link
-                              href={
-                                grbPresentationLinks.presentationDeckFileURL!
-                              }
-                              target="_blank"
-                              className="margin-right-1"
-                            >
-                              {t(`taskList.step.${stepKey}.view`)}
-                            </Link>
-                            <Button
-                              className="text-error"
-                              type="button"
-                              unstyled
-                              onClick={() => setRemovalModalOpen(true)}
-                            >
-                              {t(`taskList.step.${stepKey}.remove`)}
-                            </Button>
-                          </>
-                        )}
-                      </div>
-                    )}
-                  </div>
+          {renderReviewDetails && (
+            <>
+              <p data-testid="review-type">
+                <Trans
+                  i18nKey="itGov:taskList.step.grbMeeting.reviewType.copy"
+                  components={{
+                    strong: <strong />
+                  }}
+                  values={{
+                    type: t(
+                      `taskList.step.grbMeeting.reviewType.${grbReviewType}`
+                    )
+                  }}
+                />
+              </p>
+              <Alert slim type="info" data-testid="review-status-alert">
+                {t(
+                  `taskList.step.grbMeeting.alertType.${grbReviewType}.${grbMeetingStatus}`,
+                  {
+                    date: formatDateUtc(dateValue, 'MM/dd/yyyy'),
+                    dateStart: formatDateUtc(grbReviewStartedAt, 'MM/dd/yyyy'),
+                    dateEnd: formatDateUtc(grbReviewAsyncEndDate, 'MM/dd/yyyy')
+                  }
                 )}
-              </>
-            )}
+              </Alert>
+            </>
+          )}
+
+          {renderPresentationDeck && (
+            <RequesterPresentationDeck
+              systemIntakeID={id}
+              grbMeetingStatus={grbMeetingStatus}
+              grbReviewType={grbReviewType}
+              grbPresentationLinks={grbPresentationLinks}
+            />
+          )}
 
           {
             /** Discussions card */
