@@ -50,7 +50,6 @@ describe('GRB review participants table', () => {
                   id={systemIntake.id}
                   state={SystemIntakeState.OPEN}
                   grbReviewers={[grbReviewer]}
-                  grbReviewStartedAt={null}
                   asyncStatus={SystemIntakeGRBReviewAsyncStatusType.IN_PROGRESS}
                 />
               </ITGovAdminContext.Provider>
@@ -61,11 +60,6 @@ describe('GRB review participants table', () => {
     );
 
     expect(screen.getByRole('button', { name: 'Add another GRB reviewer' }));
-
-    // Check for Start GRB Review alert
-    expect(
-      screen.getByRole('link', { name: 'Start GRB Review' })
-    ).toBeInTheDocument();
 
     // Table renders GRB reviewer
     expect(screen.getByText(user.commonName)).toBeInTheDocument();
@@ -89,7 +83,6 @@ describe('GRB review participants table', () => {
                   id={systemIntake.id}
                   state={SystemIntakeState.OPEN}
                   grbReviewers={[grbReviewer]}
-                  grbReviewStartedAt="2024-09-10T14:42:47.422022Z"
                 />
               </ITGovAdminContext.Provider>
             </ModalProvider>
@@ -114,7 +107,6 @@ describe('GRB review participants table', () => {
                   id={systemIntake.id}
                   state={SystemIntakeState.CLOSED}
                   grbReviewers={[]}
-                  grbReviewStartedAt={null}
                 />
               </ITGovAdminContext.Provider>
             </ModalProvider>
@@ -145,7 +137,6 @@ describe('GRB review participants table', () => {
                   id={systemIntake.id}
                   state={SystemIntakeState.OPEN}
                   grbReviewers={[grbReviewer]}
-                  grbReviewStartedAt={null}
                 />
               </ITGovAdminContext.Provider>
             </ModalProvider>
@@ -178,7 +169,6 @@ describe('GRB review participants table', () => {
                   id={systemIntake.id}
                   state={SystemIntakeState.OPEN}
                   grbReviewers={[grbReviewer]}
-                  grbReviewStartedAt={null}
                   asyncStatus={SystemIntakeGRBReviewAsyncStatusType.COMPLETED}
                   grbReviewStandardStatus={null}
                 />

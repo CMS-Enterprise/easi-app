@@ -261,7 +261,6 @@ describe('GRB reviewer form', () => {
                           ...grbReviewer
                         }
                       ]}
-                      grbReviewStartedAt={grbReview.grbReviewStartedAt}
                     />
                   </ITGovAdminContext.Provider>
                 </Route>
@@ -372,7 +371,6 @@ describe('GRB reviewer form', () => {
                           ...updatedGRBReviewer
                         }
                       ]}
-                      grbReviewStartedAt={grbReview.grbReviewStartedAt}
                     />
                   </ITGovAdminContext.Provider>
                 </Route>

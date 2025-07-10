@@ -216,29 +216,29 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
           <h3 className="margin-bottom-1">{t('additionalDocuments')}</h3>
 
           {isITGovAdmin &&
-          grbReviewAsyncStatus !==
+            (grbReviewAsyncStatus !==
             SystemIntakeGRBReviewAsyncStatusType.COMPLETED ? (
-            <UswdsReactLink
-              to="./documents/upload"
-              className="display-flex flex-align-center"
-            >
-              <Icon.Add className="margin-right-1" aria-hidden />
-              <span>{t('additionalDocsLink')}</span>
-            </UswdsReactLink>
-          ) : (
-            <span className="text-base-dark">
-              <Trans
-                i18nKey="grbReview:asyncCompleted.documents"
-                components={{
-                  link1: (
-                    <Button type="button" unstyled onClick={openModal}>
-                      {t('restartReview')}
-                    </Button>
-                  )
-                }}
-              />
-            </span>
-          )}
+              <UswdsReactLink
+                to="./documents/upload"
+                className="display-flex flex-align-center"
+              >
+                <Icon.Add className="margin-right-1" aria-hidden />
+                <span>{t('additionalDocsLink')}</span>
+              </UswdsReactLink>
+            ) : (
+              <span className="text-base-dark">
+                <Trans
+                  i18nKey="grbReview:asyncCompleted.documents"
+                  components={{
+                    link1: (
+                      <Button type="button" unstyled onClick={openModal}>
+                        {t('restartReview')}
+                      </Button>
+                    )
+                  }}
+                />
+              </span>
+            ))}
         </div>
         {/* GRB Documents */}
         <DocumentsTable
@@ -265,7 +265,6 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
           id={id}
           state={state}
           grbReviewers={grbReview.grbVotingInformation?.grbReviewers}
-          grbReviewStartedAt={grbReviewStartedAt}
           asyncStatus={grbReviewAsyncStatus}
           grbReviewStandardStatus={grbReviewStandardStatus}
         />
