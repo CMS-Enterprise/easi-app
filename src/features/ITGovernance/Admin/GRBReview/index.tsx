@@ -236,7 +236,8 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
             grbReviewType={grbReviewType}
             grbReviewStartedAt={grbReviewStartedAt}
             grbPresentationLinks={grbReview.grbPresentationLinks}
-            asyncStatus={grbReviewAsyncStatus}
+            grbReviewAsyncStatus={grbReviewAsyncStatus}
+            grbReviewStandardStatus={grbReviewStandardStatus}
             grbReviewAsyncRecordingTime={grbReviewAsyncRecordingTime}
           />
         )}

@@ -5,6 +5,7 @@ import { render, screen } from '@testing-library/react';
 import {
   SystemIntakeDocumentStatus,
   SystemIntakeGRBReviewAsyncStatusType,
+  SystemIntakeGRBReviewStandardStatusType,
   SystemIntakeGRBReviewType
 } from 'gql/generated/graphql';
 import { grbPresentationLinks, systemIntake } from 'tests/mock/systemIntake';
@@ -41,8 +42,9 @@ describe('Async Presentation Links Card', () => {
                   systemIntakeID={systemIntake.id}
                   grbReviewType={grbReviewType}
                   grbPresentationLinks={props.grbPresentationLinks}
-                  asyncStatus={props.asyncStatus}
+                  grbReviewAsyncStatus={props.grbReviewAsyncStatus}
                   grbReviewStartedAt={grbReviewStartedAt}
+                  grbReviewStandardStatus={props.grbReviewStandardStatus}
                   grbReviewAsyncRecordingTime={
                     props.grbReviewAsyncRecordingTime
                   }
@@ -65,6 +67,8 @@ describe('Async Presentation Links Card', () => {
         name: 'Add asynchronous presentation links'
       })
     ).not.toBeInTheDocument();
+
+    expect(screen.getByTestId('presentation-card-actions')).toBeInTheDocument();
 
     screen.getByRole('link', { name: 'Edit presentation links' });
     screen.getByRole('button', { name: 'Remove all presentation links' });
@@ -154,18 +158,6 @@ describe('Async Presentation Links Card', () => {
     screen.getByRole('link', { name: 'Add asynchronous presentation links' });
   });
 
-  it('hides action links for GRB reviewers', () => {
-    renderCard({ grbPresentationLinks }, false);
-
-    expect(
-      screen.queryByRole('link', { name: 'Edit presentation links' })
-    ).not.toBeInTheDocument();
-
-    expect(
-      screen.queryByRole('button', { name: 'Remove all presentation links' })
-    ).not.toBeInTheDocument();
-  });
-
   it('renders the async presentation date', () => {
     renderCard({
       grbPresentationLinks,
@@ -193,15 +185,77 @@ describe('Async Presentation Links Card', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('renders the Complete Async Status variant', async () => {
+  it('hides action links for GRB reviewers', () => {
+    renderCard({ grbPresentationLinks }, false);
+
+    // Hides action buttons
+
+    expect(
+      screen.queryByTestId('presentation-card-actions')
+    ).not.toBeInTheDocument();
+
+    expect(
+      screen.queryByRole('link', { name: 'Edit presentation links' })
+    ).not.toBeInTheDocument();
+
+    expect(
+      screen.queryByRole('button', { name: 'Remove all presentation links' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('renders the complete state - async review', async () => {
     renderCard({
       grbPresentationLinks,
-      asyncStatus: SystemIntakeGRBReviewAsyncStatusType.COMPLETED
+      grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType.COMPLETED
     });
 
     expect(await screen.findByText(/this review is over/i)).toBeInTheDocument();
 
     expect(screen.getByRole('button', { name: 'restart' })).toBeInTheDocument();
+
+    // Hides action buttons
+
+    expect(
+      screen.queryByTestId('presentation-card-actions')
+    ).not.toBeInTheDocument();
+
+    expect(
+      screen.queryByRole('link', { name: 'Edit presentation links' })
+    ).not.toBeInTheDocument();
+
+    expect(
+      screen.queryByRole('button', { name: 'Remove all presentation links' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('renders the complete state - standard meeting', async () => {
+    renderCard({
+      grbPresentationLinks,
+      grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+      grbReviewStandardStatus: SystemIntakeGRBReviewStandardStatusType.COMPLETED
+    });
+
+    // Restart review button does not render for standard meetings
+
+    expect(screen.queryByText(/this review is over/i)).not.toBeInTheDocument();
+
+    expect(
+      screen.queryByRole('button', { name: 'restart' })
+    ).not.toBeInTheDocument();
+
+    // Hides action buttons
+
+    expect(
+      screen.queryByTestId('presentation-card-actions')
+    ).not.toBeInTheDocument();
+
+    expect(
+      screen.queryByRole('link', { name: 'Edit presentation links' })
+    ).not.toBeInTheDocument();
+
+    expect(
+      screen.queryByRole('button', { name: 'Remove all presentation links' })
+    ).not.toBeInTheDocument();
   });
 
   it('renders the review not started variant', () => {
