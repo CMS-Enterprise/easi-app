@@ -6,7 +6,6 @@ import {
   SystemIntakeGRBReviewDiscussionFragment
 } from 'gql/generated/graphql';
 
-import Alert from 'components/Alert';
 import IconButton from 'components/IconButton';
 import useDiscussionParams from 'hooks/useDiscussionParams';
 
@@ -15,7 +14,6 @@ import RecentDiscussion from '../RecentDiscussion';
 type DiscussionBoardCardProps = {
   discussionBoardType: SystemIntakeGRBDiscussionBoardType;
   grbDiscussions: SystemIntakeGRBReviewDiscussionFragment[];
-  grbReviewStartedAt: string | null | undefined;
   loading: boolean;
   readOnly?: boolean;
 };
@@ -26,7 +24,6 @@ type DiscussionBoardCardProps = {
 const DiscussionBoardCard = ({
   discussionBoardType,
   grbDiscussions,
-  grbReviewStartedAt,
   loading,
   readOnly
 }: DiscussionBoardCardProps) => {
@@ -66,7 +63,6 @@ const DiscussionBoardCard = ({
             });
           }}
           className="margin-right-0 margin-y-2 desktop:margin-y-0 text-no-wrap"
-          disabled={!grbReviewStartedAt}
           outline
         >
           {t('general.viewDiscussionBoard')}
@@ -106,19 +102,13 @@ const DiscussionBoardCard = ({
         )}
       </div>
 
-      {grbReviewStartedAt ? (
-        <RecentDiscussion
-          loading={loading}
-          discussionBoardType={discussionBoardType}
-          grbDiscussions={grbDiscussions}
-          pushDiscussionQuery={pushDiscussionQuery}
-          readOnly={readOnly}
-        />
-      ) : (
-        <Alert type="info" slim>
-          {t('general.alerts.reviewNotStarted')}
-        </Alert>
-      )}
+      <RecentDiscussion
+        loading={loading}
+        discussionBoardType={discussionBoardType}
+        grbDiscussions={grbDiscussions}
+        pushDiscussionQuery={pushDiscussionQuery}
+        readOnly={readOnly}
+      />
     </div>
   );
 };

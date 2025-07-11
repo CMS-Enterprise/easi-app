@@ -5,12 +5,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch, useParams } from 'react-router-dom';
 import classnames from 'classnames';
 import DocumentUploadForm from 'features/ITGovernance/_components/DocumentUploadForm';
-import PresentationLinksForm from 'features/ITGovernance/Admin/GRBReview/PresentationLinksForm';
 import PresentationDeckUpload from 'features/ITGovernance/Requester/TaskList/PresentationDeckUpload';
 import AdditionalInformation from 'features/Miscellaneous/AdditionalInformation';
 import NotFound from 'features/Miscellaneous/NotFound';
 import {
-  SystemIntakeGRBPresentationLinks,
   SystemIntakeStatusAdmin,
   useGetSystemIntakeQuery
 } from 'gql/generated/graphql';
@@ -210,20 +208,6 @@ const RequestOverview = () => {
                   path="/it-governance/:systemId/lcid"
                   render={() => <LifecycleID systemIntake={systemIntake} />}
                 />
-
-                {flags?.grbReviewTab && (
-                  <Route
-                    path="/it-governance/:systemId/grb-review/presentation-links"
-                    render={() => (
-                      <PresentationLinksForm
-                        {...systemIntake}
-                        grbPresentationLinks={
-                          systemIntake.grbPresentationLinks as SystemIntakeGRBPresentationLinks
-                        }
-                      />
-                    )}
-                  />
-                )}
 
                 {flags?.grbReviewTab && (
                   <Route

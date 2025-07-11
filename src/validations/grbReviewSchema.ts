@@ -102,9 +102,9 @@ export const SetGRBPresentationLinksSchema = Yup.object().shape(
     }),
 
     // Optional fields
-    recordingPasscode: Yup.string(),
+    recordingPasscode: Yup.string().nullable(),
     transcriptFileData: Yup.mixed(),
-    transcriptLink: Yup.string()
+    transcriptLink: Yup.string().nullable()
   },
   // Prevents cyclic dependency error
   [['recordingLink', 'presentationDeckFileData']]

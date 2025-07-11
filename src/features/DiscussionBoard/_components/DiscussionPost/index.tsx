@@ -108,6 +108,7 @@ const DiscussionPost = ({
           id="easiDiscussionPostContent"
           className="easi-discussion-post__content"
           truncateText={truncateText}
+          key={content}
         />
 
         {

@@ -150,7 +150,7 @@ func CreateSystemIntakeGRBDiscussionReply(
 
 		isAdmin := services.AuthorizeRequireGRTJobCode(ctx)
 		if principalGRBReviewer == nil && !isAdmin {
-			return nil, errors.New("user not authorized to create discussion post")
+			return nil, errors.New("user not authorized to create discussion reply")
 		}
 
 		// get user who made this reply post

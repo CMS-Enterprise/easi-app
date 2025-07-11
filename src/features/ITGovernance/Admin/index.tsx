@@ -14,6 +14,7 @@ import user from 'utils/user';
 import DecisionRecord from './GRBReview/DecisionRecord';
 import GRBReviewerForm from './GRBReview/GRBReviewerForm';
 import GRBReviewForm from './GRBReview/GRBReviewForm';
+import PresentationLinksForm from './GRBReview/PresentationLinksForm';
 import RequestOverview from './RequestOverview/RequestOverview';
 
 const GovernanceReviewTeam = () => {
@@ -90,6 +91,22 @@ const GovernanceReviewTeam = () => {
                   grbReviewers={grbReview.grbVotingInformation.grbReviewers}
                 />
               </Route>
+            )}
+
+            {flags?.grbReviewTab && (
+              <Route
+                path="/it-governance/:systemId/grb-review/presentation-links"
+                render={() => (
+                  <PresentationLinksForm
+                    id={id}
+                    grbReviewType={grbReview.grbReviewType}
+                    grbPresentationLinks={grbReview.grbPresentationLinks}
+                    grbReviewAsyncRecordingTime={
+                      grbReview.grbReviewAsyncRecordingTime
+                    }
+                  />
+                )}
+              />
             )}
 
             <Route

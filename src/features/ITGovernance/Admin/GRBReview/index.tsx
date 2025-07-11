@@ -9,7 +9,6 @@ import {
   SystemIntakeFragmentFragment,
   SystemIntakeGRBReviewAsyncStatusType,
   SystemIntakeGRBReviewerVotingRole,
-  SystemIntakeGRBReviewStandardStatusType,
   SystemIntakeGRBReviewType,
   SystemIntakeState,
   SystemIntakeStatusAdmin,
@@ -80,7 +79,8 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
     grbReviewType,
     grbReviewStartedAt,
     grbReviewAsyncStatus,
-    grbReviewStandardStatus
+    grbReviewStandardStatus,
+    grbReviewAsyncRecordingTime
   } = grbReview || {};
 
   const { euaId } = useSelector((appState: AppState) => appState.auth);
@@ -154,7 +154,7 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
           {t('reviewDetails.text')}
         </p>
         {/* GRB Review Status */}
-        <GRBReviewStatusCard grbReview={grbReview} />
+        <GRBReviewStatusCard systemIntakeId={id} grbReview={grbReview} />
         {/* Decision Record */}
         <DecisionRecordCard
           grbVotingInformation={grbReview.grbVotingInformation}
@@ -198,9 +198,11 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
         {/* Presentation Links */}
         <PresentationLinksCard
           systemIntakeID={id}
+          grbReviewType={grbReviewType}
           grbReviewStartedAt={grbReviewStartedAt}
           grbPresentationLinks={grbReview.grbPresentationLinks}
           asyncStatus={grbReviewAsyncStatus}
+          grbReviewAsyncRecordingTime={grbReviewAsyncRecordingTime}
         />
         {/* Business Case Card */}
         <BusinessCaseCard businessCase={businessCase} systemIntakeID={id} />
@@ -250,15 +252,8 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
         {/* Discussion Board */}
         <Discussions
           systemIntakeID={id}
-          grbReviewStartedAt={grbReviewStartedAt}
           className="margin-top-4 margin-bottom-6"
-          // Make discussions read only when review is completed
-          readOnly={
-            grbReviewAsyncStatus ===
-              SystemIntakeGRBReviewAsyncStatusType.COMPLETED ||
-            grbReviewStandardStatus ===
-              SystemIntakeGRBReviewStandardStatusType.COMPLETED
-          }
+          statusAdmin={statusAdmin}
         />
         {/* Participants Table */}
         <ParticipantsSection

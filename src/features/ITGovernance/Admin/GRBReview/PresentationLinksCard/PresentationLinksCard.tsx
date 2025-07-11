@@ -15,6 +15,7 @@ import {
   SystemIntakeDocumentStatus,
   SystemIntakeGRBPresentationLinksFragmentFragment,
   SystemIntakeGRBReviewAsyncStatusType,
+  SystemIntakeGRBReviewType,
   useDeleteSystemIntakeGRBPresentationLinksMutation
 } from 'gql/generated/graphql';
 
@@ -24,6 +25,7 @@ import IconLink from 'components/IconLink';
 import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
 import useMessage from 'hooks/useMessage';
+import { formatDateLocal } from 'utils/date';
 import { downloadFileFromURL } from 'utils/downloadFile';
 
 import ITGovAdminContext from '../../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
@@ -34,7 +36,7 @@ export type PresentationCardActionsProps = {
   hasAnyLinks: boolean;
   setRemovePresentationLinksModalOpen: (open: boolean) => void;
   grbReviewStartedAt: string | null | undefined;
-  asyncStatus?: SystemIntakeGRBReviewAsyncStatusType | null;
+  asyncStatus: SystemIntakeGRBReviewAsyncStatusType | null | undefined;
 };
 
 /**
@@ -63,7 +65,7 @@ const PresentationCardActions = ({
           to={`/it-governance/${systemIntakeID}/grb-review/review-type`}
           iconPosition="after"
         >
-          {t('adminTask.setUpGRBReview.title')}
+          {t('asyncPresentation.continueReviewSetup')}
         </IconLink>
       </>
     );
@@ -93,7 +95,7 @@ const PresentationCardActions = ({
           {t('asyncPresentation.adminEmptyAlert')}
         </Alert>
         <IconLink
-          icon={<Icon.Add />}
+          icon={<Icon.Add aria-hidden />}
           to={`/it-governance/${systemIntakeID}/grb-review/presentation-links`}
         >
           {t('asyncPresentation.addAsynchronousPresentationLinks')}
@@ -123,16 +125,23 @@ const PresentationCardActions = ({
 
 export type PresentationLinksCardProps = {
   systemIntakeID: string;
-  grbReviewStartedAt?: string | null;
-  grbPresentationLinks?: SystemIntakeGRBPresentationLinksFragmentFragment | null;
-  asyncStatus?: SystemIntakeGRBReviewAsyncStatusType | null;
+  grbReviewType: SystemIntakeGRBReviewType | undefined;
+  grbReviewStartedAt: string | null | undefined;
+  asyncStatus: SystemIntakeGRBReviewAsyncStatusType | null | undefined;
+  grbReviewAsyncRecordingTime: string | null | undefined;
+  grbPresentationLinks:
+    | SystemIntakeGRBPresentationLinksFragmentFragment
+    | null
+    | undefined;
 };
 
 function PresentationLinksCard({
   systemIntakeID,
+  grbReviewType,
   grbReviewStartedAt,
   grbPresentationLinks,
-  asyncStatus
+  asyncStatus,
+  grbReviewAsyncRecordingTime
 }: PresentationLinksCardProps) {
   const { t } = useTranslation('grbReview');
 
@@ -205,7 +214,24 @@ function PresentationLinksCard({
         className="margin-top-2"
       >
         <CardHeader>
-          <h3>{t('asyncPresentation.title')}</h3>
+          <h3 className="margin-y-0 margin-right-2 display-inline-block">
+            {t('asyncPresentation.title')}
+          </h3>
+          {grbReviewType === SystemIntakeGRBReviewType.ASYNC && (
+            <span className="text-base">
+              {t(
+                grbReviewAsyncRecordingTime
+                  ? 'asyncPresentation.asyncPresentationDate'
+                  : 'asyncPresentation.asyncPresentationNotScheduled',
+                {
+                  date: formatDateLocal(
+                    grbReviewAsyncRecordingTime,
+                    'MM/dd/yyyy'
+                  )
+                }
+              )}
+            </span>
+          )}
         </CardHeader>
         {/* Render action links for admins only */}
         {isITGovAdmin && (

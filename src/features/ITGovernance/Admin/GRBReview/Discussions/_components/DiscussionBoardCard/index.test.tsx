@@ -16,7 +16,6 @@ describe('Discussion board card', () => {
         <DiscussionBoardCard
           discussionBoardType={SystemIntakeGRBDiscussionBoardType.PRIMARY}
           grbDiscussions={mockDiscussions()}
-          grbReviewStartedAt="2025-03-11T01:50:35.146458Z"
           loading={false}
         />
       </MemoryRouter>
@@ -33,7 +32,6 @@ describe('Discussion board card', () => {
         <DiscussionBoardCard
           discussionBoardType={SystemIntakeGRBDiscussionBoardType.INTERNAL}
           grbDiscussions={mockDiscussions()}
-          grbReviewStartedAt="2025-03-11T01:50:35.146458Z"
           loading={false}
         />
       </MemoryRouter>
@@ -52,7 +50,6 @@ describe('Discussion board card', () => {
         <DiscussionBoardCard
           discussionBoardType={SystemIntakeGRBDiscussionBoardType.PRIMARY}
           grbDiscussions={mockDiscussions()}
-          grbReviewStartedAt="2025-03-11T01:50:35.146458Z"
           loading={false}
         />
       </MemoryRouter>
@@ -72,7 +69,6 @@ describe('Discussion board card', () => {
         <DiscussionBoardCard
           discussionBoardType={SystemIntakeGRBDiscussionBoardType.PRIMARY}
           grbDiscussions={mockDiscussionsWithoutReplies()}
-          grbReviewStartedAt="2025-03-11T01:50:35.146458Z"
           loading={false}
         />
       </MemoryRouter>
@@ -87,28 +83,5 @@ describe('Discussion board card', () => {
     ).toBeInTheDocument();
 
     expect(screen.getByRole('button', { name: 'View' })).toBeInTheDocument();
-  });
-
-  it('locks discussion board if review not started', async () => {
-    render(
-      <MemoryRouter>
-        <DiscussionBoardCard
-          discussionBoardType={SystemIntakeGRBDiscussionBoardType.PRIMARY}
-          grbDiscussions={[]}
-          grbReviewStartedAt={undefined}
-          loading={false}
-        />
-      </MemoryRouter>
-    );
-
-    expect(
-      screen.getByText(
-        'This review is not yet started. Start the review to enable discussions.'
-      )
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByRole('button', { name: 'View discussion board' })
-    ).toBeDisabled();
   });
 });
