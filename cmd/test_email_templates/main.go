@@ -785,6 +785,20 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 	)
 	noErr(err)
 
+	err = client.SystemIntake.SendSystemIntakeGRBReviewEndedEarly(
+		ctx,
+		email.SendSystemIntakeGRBReviewEndedEarlyInput{
+			Recipient:          requesterEmail,
+			SystemIntakeID:     intakeID,
+			ProjectTitle:       "Voting Ended Early",
+			RequesterName:      "Early Voter",
+			RequesterComponent: "Center for Medicare",
+			StartDate:          time.Now().AddDate(0, 0, -3),
+			EndDate:            time.Now().AddDate(0, 0, 2),
+		},
+	)
+	noErr(err)
+
 	err = client.SystemIntake.SendSystemIntakeGRBReviewTimeAdded(
 		ctx,
 		emailNotificationRecipients,

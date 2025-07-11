@@ -241,6 +241,7 @@ func CalcSystemIntakeGRBReviewStandardStatus(
 func ManuallyEndSystemIntakeGRBReviewAsyncVoting(
 	ctx context.Context,
 	store *storage.Store,
+	emailClient *email.Client,
 	systemIntakeID uuid.UUID,
 ) (*models.UpdateSystemIntakePayload, error) {
 	currentTime := time.Now()

@@ -320,6 +320,7 @@ func (s *ResolverSuite) TestManuallyEndSystemIntakeGRBReviewAsyncVoting() {
 	updatedPayload, err := ManuallyEndSystemIntakeGRBReviewAsyncVoting(
 		s.testConfigs.Context,
 		s.testConfigs.Store,
+		s.testConfigs.EmailClient,
 		systemIntake.ID,
 	)
 

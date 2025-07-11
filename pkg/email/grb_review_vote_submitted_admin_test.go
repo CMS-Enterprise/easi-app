@@ -74,9 +74,11 @@ func (s *EmailTestSuite) TestSendGRBReviewVoteSubmittedAdmin() {
 
 		<p><strong>Vote:</strong> No Objection</p>
 
-		<p><strong>Additional comments:</strong></p>
-
-		<p>%[3]s</p>
+		<p>
+		  <strong>Additional comments:</strong>
+		  <br>
+		  <em>%[3]s</em>
+		</p>
 
 		<p>If you would like to send a reminder to the remaining voting members you may do so from the link below.</p>
 
@@ -89,7 +91,7 @@ func (s *EmailTestSuite) TestSendGRBReviewVoteSubmittedAdmin() {
 		  <p>GRB review dates: %[7]s</p>
 		  <p>Current votes: %[8]s</p>
 		</div>
-
+		<br />
 		<div class="no-margin">
 		  <p>Next steps:</p>
 		  <ul>
