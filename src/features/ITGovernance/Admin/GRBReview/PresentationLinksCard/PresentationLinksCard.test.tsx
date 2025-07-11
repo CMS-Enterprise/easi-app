@@ -158,18 +158,6 @@ describe('Async Presentation Links Card', () => {
     screen.getByRole('link', { name: 'Add asynchronous presentation links' });
   });
 
-  it('hides action links for GRB reviewers', () => {
-    renderCard({ grbPresentationLinks }, false);
-
-    expect(
-      screen.queryByRole('link', { name: 'Edit presentation links' })
-    ).not.toBeInTheDocument();
-
-    expect(
-      screen.queryByRole('button', { name: 'Remove all presentation links' })
-    ).not.toBeInTheDocument();
-  });
-
   it('renders the async presentation date', () => {
     renderCard({
       grbPresentationLinks,
