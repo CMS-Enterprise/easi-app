@@ -289,7 +289,7 @@ func CastSystemIntakeGRBReviewerVote(ctx context.Context, store *storage.Store, 
 
 		// check existing reviewer to see if this is the initial vote or a changed vote
 		// send email to admin
-		if existingReviewer.Vote != nil {
+		if existingReviewer.Vote != nil && *existingReviewer.Vote != input.Vote {
 			// this is a changed vote
 			if err := emailClient.SystemIntake.SendGRBReviewVoteChangedAdmin(ctx, email.SendGRBReviewVoteChangedAdminInput{
 				SystemIntakeID:     systemIntake.ID,
