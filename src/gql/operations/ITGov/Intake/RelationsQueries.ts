@@ -19,6 +19,13 @@ export const SetSystemIntakeRelationExistingSystem = gql(/* GraphQL */ `
     setSystemIntakeRelationExistingSystem(input: $input) {
       systemIntake {
         id
+        cedarSystemRelationShips {
+          id
+          systemIntakeID
+          systemID
+          systemRelationshipType
+          otherSystemRelationshipDescription
+        }
       }
     }
   }
@@ -80,6 +87,39 @@ export const UnlinkTrbRequestRelation = gql(/* GraphQL */ `
   mutation UnlinkTrbRequestRelation($trbRequestID: UUID!) {
     unlinkTRBRequestRelation(trbRequestID: $trbRequestID) {
       id
+    }
+  }
+`);
+
+export const GetTrbRequestRelations = gql(/* GraphQL */ `
+  query systemIntake($id: UUID!) {
+    systemIntake(id: $id) {
+      id
+      cedarSystemRelationShips {
+        id
+        systemIntakeID
+        systemID
+        systemRelationshipType
+        otherSystemRelationshipDescription
+      }
+    }
+  }
+`);
+
+export const DeleteSystemLink = gql(/* GraphQL */ `
+  mutation deleteSystemLink($systemIntakeSystem: UUID!) {
+    deleteSystemLink(systemIntakeSystem: $systemIntakeSystem) {
+      systemIntakeSystem {
+        id
+        systemIntakeID
+        systemID
+        systemRelationshipType
+        otherSystemRelationshipDescription
+      }
+      userErrors {
+        message
+        path
+      }
     }
   }
 `);

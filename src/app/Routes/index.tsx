@@ -23,6 +23,8 @@ import GovernanceTaskList from 'features/ITGovernance/Requester/TaskList';
 import GovernanceFeedback from 'features/ITGovernance/Requester/TaskList/Feedback';
 import LcidInfo from 'features/ITGovernance/Requester/TaskList/LcidInfo';
 import RequestDecision from 'features/ITGovernance/Requester/TaskList/RequestDecision';
+import LinkedSystems from 'features/LinkedSystems';
+import LinkedSystemsForm from 'features/LinkedSystems/LinkedSystemsForm';
 import Login from 'features/Login';
 import AccessibilityStatement from 'features/Miscellaneous/AccessibilityStatement';
 import Cookies from 'features/Miscellaneous/Cookies';
@@ -78,11 +80,9 @@ const AppRoutes = () => {
       <Route path="/signin" exact component={Login} />
       <SecureRoute path="/user-diagnostics" component={UserInfo} />
       <SecureRoute path="/my-requests" component={MyRequests} />
-
       {/* GRT/GRB Routes */}
       <Redirect from="/governance-review-team/*" to="/it-governance/*" />
       <SecureRoute path="/it-governance/:id" component={GovernanceReviewTeam} />
-
       {/* Requester / Business Owner Routes */}
       <SecureRoute path="/system/making-a-request" component={MakingARequest} />
       <SecureRoute
@@ -93,6 +93,13 @@ const AppRoutes = () => {
       <SecureRoute exact path="/system/link/:id?">
         <RequestLinkForm requestType="itgov" />
       </SecureRoute>
+      <SecureRoute exact path="/linked-systems/:id?">
+        <LinkedSystems />
+      </SecureRoute>
+      <SecureRoute exact path="/linked-systems-form/:id?">
+        <LinkedSystemsForm />
+      </SecureRoute>
+
       <SecureRoute
         path="/governance-overview/:systemId?"
         component={GovernanceOverview}
@@ -127,7 +134,6 @@ const AppRoutes = () => {
         path="/governance-task-list/:systemId/lcid-info"
         component={LcidInfo}
       />
-
       <Redirect
         exact
         from="/system/:systemId"
@@ -137,9 +143,7 @@ const AppRoutes = () => {
         path="/system/:systemId/:formPage/:subPage?"
         component={SystemIntake}
       />
-
       <SecureRoute exact path="/systems" component={SystemList} />
-
       {flags.systemWorkspace ? (
         [
           <SecureRoute
@@ -162,15 +166,12 @@ const AppRoutes = () => {
           to="/systems/:systemId"
         />
       )}
-
       <SecureRoute path="/systems/:systemId" exact component={SystemProfile} />
-
       <SecureRoute
         path="/systems/:systemId/:subinfo/:edit(edit)?/:action(team-member)?/:top(top)?"
         exact
         component={SystemProfile}
       />
-
       <Redirect
         exact
         from="/business/:businessCaseId"
@@ -180,11 +181,8 @@ const AppRoutes = () => {
         path="/business/:businessCaseId/:formPage"
         component={BusinessCase}
       />
-
       <SecureRoute path="/trb" component={TechnicalAssistance} />
-
       <SecureRoute path="/help" component={Help} />
-
       {/* Static Page Routes  */}
       <Route path="/privacy-policy" exact component={PrivacyPolicy} />
       <Route path="/cookies" exact component={Cookies} />
@@ -198,9 +196,7 @@ const AppRoutes = () => {
         path="/terms-and-conditions"
         component={TermsAndConditions}
       />
-
       <Route path="/implicit/callback" component={LoginCallback} />
-
       {/* 404 */}
       <SecureRoute path="*" component={NotFound} />
     </Switch>
