@@ -203,14 +203,17 @@ function PresentationLinksCard({
       });
   };
 
-  // Render empty if not an admin and no links
-  if (!isITGovAdmin && !hasAnyLinks) return null;
-
   return (
     <>
       {/* Asynchronous presentation links card */}
       <Card
-        containerProps={{ className: 'margin-0 radius-md shadow-2' }}
+        containerProps={
+          {
+            className: 'margin-0 radius-md shadow-2',
+            'data-testid': 'presentation-links-card'
+            // Fix for 'data-testid' type error - attr does render on container
+          } as React.HTMLAttributes<HTMLDivElement>
+        }
         className="margin-top-2"
       >
         <CardHeader>
