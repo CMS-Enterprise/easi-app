@@ -9,7 +9,6 @@ import {
   Fieldset,
   Form,
   FormGroup,
-  Radio,
   Select,
   TextInput
 } from '@trussworks/react-uswds';
@@ -65,8 +64,7 @@ type SystemIntakeRoleKeys = keyof Omit<ContactDetailsForm, 'governanceTeams'>;
 const systemIntakeRolesMap: Record<SystemIntakeRoleKeys, string> = {
   requester: 'Requester',
   businessOwner: 'Business Owner',
-  productManager: 'Product Manager',
-  isso: 'ISSO'
+  productManager: 'Product Manager'
 };
 
 const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
@@ -81,8 +79,9 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const [activeContact, setActiveContact] =
     useState<SystemIntakeContactProps | null>(null);
 
-  const { contacts, createContact, updateContact, deleteContact } =
-    useSystemIntakeContacts(systemIntake.id);
+  const { contacts, createContact, updateContact } = useSystemIntakeContacts(
+    systemIntake.id
+  );
 
   const [mutate] = useUpdateSystemIntakeContactDetailsMutation({
     refetchQueries: [
@@ -162,7 +161,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const updateSystemIntake = async () => {
     const values = watch();
 
-    const { requester, businessOwner, productManager, isso } = values;
+    const { requester, businessOwner, productManager } = values;
 
     const governanceTeams: SystemIntakeGovernanceTeamInput = {
       isPresent: values.governanceTeams.isPresent,
@@ -173,15 +172,8 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     await Promise.all([
       setContact('requester', requester),
       setContact('businessOwner', businessOwner),
-      setContact('productManager', productManager),
-      // If ISSO is not present, send undefined `values` prop
-      setContact('isso', isso?.isPresent ? isso : undefined)
+      setContact('productManager', productManager)
     ]);
-
-    // If ISSO is not present in field values but was previously added, delete contact
-    if (!isso?.isPresent && contacts.data.isso.id) {
-      deleteContact(contacts.data.isso.id);
-    }
 
     // Update system intake
     return mutate({
@@ -199,10 +191,6 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           productManager: {
             name: productManager.commonName,
             component: productManager.component
-          },
-          isso: {
-            isPresent: isso.isPresent,
-            name: isso.commonName
           },
           governanceTeams
         }
@@ -300,23 +288,13 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
             data.productManager.euaUserId === data.requester.euaUserId &&
             data.productManager.component === data.requester.component
         },
-        isso: {
-          isPresent: !!systemIntake.isso.isPresent,
-          ...formatContactFields(data.isso)
-        },
         governanceTeams: {
           isPresent: !!systemIntake.governanceTeams.isPresent,
           teams: formatGovTeamsField(systemIntake.governanceTeams.teams)
         }
       });
     }
-  }, [
-    contacts,
-    defaultValues,
-    reset,
-    systemIntake.governanceTeams,
-    systemIntake.isso.isPresent
-  ]);
+  }, [contacts, defaultValues, reset, systemIntake.governanceTeams]);
 
   // Wait until default values have been updated
   if (!defaultValues) return <PageLoading />;
@@ -610,135 +588,6 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               {cmsDivisionsAndOfficesOptions('productManager.component')}
             </Select>
           </FormGroup>
-        </Fieldset>
-
-        {/* ISSO */}
-        {/* TODO: ITGO Request to remove this section */}
-
-        <Fieldset className="margin-top-3 border-top border-base-light padding-top-1">
-          <p className="margin-y-1 text-bold">
-            {t('contactDetails.isso.label')}
-          </p>
-
-          <HelpText id="issoHelpText">
-            {t('contactDetails.isso.helpText')}
-          </HelpText>
-
-          <Controller
-            control={control}
-            name="isso.isPresent"
-            render={({ field: { ref, value, ...field } }) => (
-              <Radio
-                {...field}
-                inputRef={ref}
-                id="issoIsPresentTrue"
-                label={t('Yes')}
-                checked={value}
-                onChange={() => field.onChange(true)}
-              />
-            )}
-          />
-
-          {watch('isso.isPresent') && (
-            <div className="margin-left-4 margin-bottom-3">
-              <FormGroup error={!!errors?.isso?.commonName}>
-                <Label htmlFor="issoCommonName">
-                  {t('contactDetails.isso.name')}
-                </Label>
-                <ErrorMessage
-                  errors={errors}
-                  name="isso.commonName"
-                  as={FieldErrorMsg}
-                />
-                <Controller
-                  control={control}
-                  name="isso.commonName"
-                  render={({ field: { ref, ...field } }) => {
-                    return (
-                      <CedarContactSelect
-                        {...field}
-                        inputRef={ref}
-                        id="issoCommonName"
-                        // Manually set value
-                        value={{
-                          euaUserId: watch('isso.euaUserId'),
-                          commonName: watch('isso.commonName'),
-                          email: watch('isso.email')
-                        }}
-                        // Manually update fields so that email field rerenders
-                        onChange={contact => {
-                          setValue(
-                            'isso.commonName',
-                            contact?.commonName || ''
-                          );
-                          setValue('isso.euaUserId', contact?.euaUserId || '');
-                          setValue('isso.email', contact?.email || '');
-                        }}
-                        autoSearch
-                      />
-                    );
-                  }}
-                />
-              </FormGroup>
-
-              <FormGroup error={!!errors?.isso?.component}>
-                <Label htmlFor="issoComponent">
-                  {t('contactDetails.isso.component')}
-                </Label>
-                <ErrorMessage
-                  errors={errors}
-                  name="isso.component"
-                  as={FieldErrorMsg}
-                />
-                <Select
-                  {...register('isso.component')}
-                  ref={null}
-                  id="issoComponent"
-                >
-                  <option value="" disabled>
-                    {t('Select an option')}
-                  </option>
-                  {cmsDivisionsAndOfficesOptions('isso.component')}
-                </Select>
-              </FormGroup>
-
-              <FormGroup>
-                <Label htmlFor="issoEmail">
-                  {t('contactDetails.isso.email')}
-                </Label>
-                <TextInput
-                  {...register('isso.email')}
-                  ref={null}
-                  id="issoEmail"
-                  type="text"
-                  disabled
-                />
-              </FormGroup>
-            </div>
-          )}
-
-          <Controller
-            control={control}
-            name="isso.isPresent"
-            render={({ field: { ref, value, ...field } }) => (
-              <Radio
-                {...field}
-                inputRef={ref}
-                id="issoIsPresentFalse"
-                label={t('No')}
-                checked={!value}
-                onChange={() => {
-                  field.onChange(false);
-
-                  // Reset ISSO fields
-                  setValue('isso.commonName', '');
-                  setValue('isso.euaUserId', '');
-                  setValue('isso.email', '');
-                  setValue('isso.component', '');
-                }}
-              />
-            )}
-          />
         </Fieldset>
 
         {/* Add new contacts */}
