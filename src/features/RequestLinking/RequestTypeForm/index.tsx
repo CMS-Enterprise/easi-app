@@ -174,7 +174,10 @@ const RequestTypeForm = () => {
                   id={`when-should-i-choose-this-option-${type.toLowerCase()}`}
                   label={card.collapseLink}
                 >
-                  <ul className="margin-bottom-0 margin-top-1 padding-left-205 line-height-body-5">
+                  <ul
+                    className="margin-bottom-0 margin-top-1 padding-left-205 line-height-body-5"
+                    style={{ listStyleType: 'disc' }}
+                  >
                     {card.collapseLinkList.map(item => (
                       <li key={item}>{item}</li>
                     ))}
@@ -184,7 +187,7 @@ const RequestTypeForm = () => {
               <CardFooter>
                 <Button
                   type="button"
-                  className="margin-right-1"
+                  className="margin-top-2 margin-right-1"
                   data-testid={`start-button--${type.toLowerCase()}`}
                   onClick={() => handleCreateIntake(type)}
                 >
