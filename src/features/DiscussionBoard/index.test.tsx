@@ -3,7 +3,6 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { SystemIntakeStatusAdmin } from 'gql/generated/graphql';
 import { getSystemIntakeGRBDiscussionsQuery } from 'tests/mock/discussions';
 import { getSystemIntakeGRBReviewQuery } from 'tests/mock/grbReview';
 import { systemIntake } from 'tests/mock/systemIntake';
@@ -88,33 +87,6 @@ describe('Discussion board', () => {
 
       expect(
         screen.getByRole('button', { name: 'Requester' })
-      ).toBeInTheDocument();
-    });
-
-    it('locks discussion board if outside of GRB review step', async () => {
-      const store = easiMockStore({ groups: [BASIC_USER_PROD] });
-
-      render(
-        <Provider store={store}>
-          <MemoryRouter initialEntries={['?discussionMode=view']}>
-            <VerboseMockedProvider
-              mocks={[
-                getSystemIntakeGRBDiscussionsQuery(),
-                getSystemIntakeGRBReviewQuery({
-                  statusAdmin: SystemIntakeStatusAdmin.CLOSED
-                })
-              ]}
-            >
-              <Route>
-                <DiscussionBoard systemIntakeID={systemIntake.id} />
-              </Route>
-            </VerboseMockedProvider>
-          </MemoryRouter>
-        </Provider>
-      );
-
-      expect(
-        screen.queryByRole('heading', { name: 'This page cannot be found.' })
       ).toBeInTheDocument();
     });
   });

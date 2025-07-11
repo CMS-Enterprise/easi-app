@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import DiscussionBoard from 'features/DiscussionBoard';
 import {
   SystemIntakeGRBDiscussionBoardType,
+  SystemIntakeStatusAdmin,
   useGetSystemIntakeGRBDiscussionsQuery
 } from 'gql/generated/graphql';
 
@@ -13,16 +14,14 @@ import DiscussionBoardCard from './_components/DiscussionBoardCard';
 
 type DiscussionsProps = {
   systemIntakeID: string;
-  grbReviewStartedAt?: string | null;
-  readOnly?: boolean;
+  statusAdmin: SystemIntakeStatusAdmin;
   className?: string;
 };
 
 /** Displays discussion boards on GRB review tab */
 const Discussions = ({
   systemIntakeID,
-  grbReviewStartedAt,
-  readOnly,
+  statusAdmin,
   className
 }: DiscussionsProps) => {
   const { t } = useTranslation('discussions');
@@ -33,6 +32,13 @@ const Discussions = ({
 
   const { grbDiscussionsInternal, grbDiscussionsPrimary } =
     data?.systemIntake || {};
+
+  /** Returns true if the request is not in the GRB step */
+  const readOnly = ![
+    SystemIntakeStatusAdmin.GRB_MEETING_READY,
+    SystemIntakeStatusAdmin.GRB_REVIEW_IN_PROGRESS,
+    SystemIntakeStatusAdmin.GRB_MEETING_COMPLETE
+  ].includes(statusAdmin);
 
   if (!grbDiscussionsInternal || !grbDiscussionsPrimary) return null;
 
@@ -76,7 +82,6 @@ const Discussions = ({
         <DiscussionBoardCard
           discussionBoardType={SystemIntakeGRBDiscussionBoardType.PRIMARY}
           grbDiscussions={grbDiscussionsPrimary}
-          grbReviewStartedAt={grbReviewStartedAt}
           loading={loading}
           readOnly={readOnly}
         />
@@ -84,7 +89,6 @@ const Discussions = ({
         <DiscussionBoardCard
           discussionBoardType={SystemIntakeGRBDiscussionBoardType.INTERNAL}
           grbDiscussions={grbDiscussionsInternal}
-          grbReviewStartedAt={grbReviewStartedAt}
           loading={loading}
           readOnly={readOnly}
         />
