@@ -174,7 +174,7 @@ exports[`Governance Overview Content > renders default version without crashing 
             href="/help/it-governance/prepare-for-grb"
             target="_blank"
           >
-            Prepare for the GRB meeting (opens in new tab)
+            Prepare for the GRB review (opens in new tab)
           </a>
         </li>
         <li
@@ -430,7 +430,7 @@ exports[`Governance Overview Content > renders help section version without cras
             href="/help/it-governance/prepare-for-grb"
             target="_blank"
           >
-            Prepare for the GRB meeting (opens in new tab)
+            Prepare for the GRB review (opens in new tab)
           </a>
         </li>
         <li

@@ -12,6 +12,7 @@ import {
   GetSystemIntakesWithLCIDSQuery,
   GovernanceRequestFeedbackTargetForm,
   GovernanceRequestFeedbackType,
+  GRBVotingInformationStatus,
   ITGovDecisionStatus,
   ITGovDraftBusinessCaseStatus,
   ITGovFeedbackStatus,
@@ -28,6 +29,7 @@ import {
   SystemIntakeFormState,
   SystemIntakeFragmentFragment,
   SystemIntakeGRBPresentationLinksFragmentFragment,
+  SystemIntakeGRBReviewType,
   SystemIntakeRequestType,
   SystemIntakeState,
   SystemIntakeStatusAdmin,
@@ -347,7 +349,16 @@ export const emptySystemIntake: SystemIntakeFragmentFragment = {
   ],
   relatedIntakes: [],
   relatedTRBRequests: [],
-  grbPresentationLinks
+  grbPresentationLinks,
+  grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+  grbVotingInformation: {
+    __typename: 'GRBVotingInformation',
+    grbReviewers: [],
+    numberOfNoObjection: 0,
+    numberOfNotVoted: 0,
+    numberOfObjection: 0,
+    votingStatus: GRBVotingInformationStatus.NOT_STARTED
+  }
 };
 
 export const systemIntake: SystemIntakeFragmentFragment = {
@@ -503,7 +514,17 @@ export const systemIntake: SystemIntakeFragmentFragment = {
       createdAt: new Date().toString()
     }
   ],
-  grbPresentationLinks
+  grbPresentationLinks,
+  grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+  grbVotingInformation: {
+    __typename: 'GRBVotingInformation',
+    grbReviewers: [],
+    votingStatus: GRBVotingInformationStatus.IN_PROGRESS,
+    numberOfNoObjection: 1,
+    numberOfObjection: 2,
+    numberOfNotVoted: 3
+  },
+  grbReviewAsyncEndDate: null
 };
 
 export const systemIntakeForTable: GetSystemIntakesTableQuery['systemIntakes'][number] =
@@ -670,7 +691,12 @@ export const taskListSystemIntake: NonNullable<
   systems: [],
   statusAdmin: SystemIntakeStatusAdmin.GRB_MEETING_READY,
   lcid: '123',
-  lcidRetiresAt: '2020-10-08T03:11:24.478056Z'
+  lcidRetiresAt: '2020-10-08T03:11:24.478056Z',
+  grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+  grbReviewStartedAt: null,
+  grbReviewAsyncEndDate: null,
+  grbReviewAsyncRecordingTime: null,
+  grbPresentationLinks: null
 };
 
 export const getGovernanceTaskListQuery = (

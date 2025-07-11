@@ -1,16 +1,25 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DatePicker } from '@trussworks/react-uswds';
 // eslint-disable-next-line import/no-unresolved
 import { DatePickerProps } from '@trussworks/react-uswds/lib/components/forms/DatePicker/DatePicker';
+import { actionDateInPast } from 'features/ITGovernance/Admin/Actions/ManageLcid/RetireLcid';
 import { DateTime } from 'luxon';
 
-function defaultFormat(dt: DateTime): string | null {
-  return dt.toUTC().toISO();
+import Alert from 'components/Alert';
+
+function defaultFormat(
+  dt: DateTime,
+  suppressMilliseconds?: boolean
+): string | null {
+  return dt.toUTC().toISO({ suppressMilliseconds });
 }
 
 type DatePickerFormattedProps = Omit<DatePickerProps, 'value'> & {
   format?: (dt: DateTime) => string | null;
   value?: string;
+  dateInPastWarning?: boolean;
+  suppressMilliseconds?: boolean;
 };
 
 /**
@@ -21,8 +30,12 @@ type DatePickerFormattedProps = Omit<DatePickerProps, 'value'> & {
 const DatePickerFormatted = ({
   onChange,
   format = defaultFormat,
+  dateInPastWarning,
+  suppressMilliseconds,
   ...props
 }: DatePickerFormattedProps) => {
+  const { t } = useTranslation('action');
+
   /**
    * Store value in state to use as key for <DatePicker>.
    * Fixes bug where <DatePicker> does not rerender to show updated value when set dynamically.
@@ -66,13 +79,23 @@ const DatePickerFormatted = ({
   }, [props.value]);
 
   return (
-    <DatePicker
-      {...props}
-      onChange={handleChange}
-      // Set `defaultValue` and `key` props to the value in state
-      defaultValue={value}
-      key={value}
-    />
+    <>
+      <DatePicker
+        {...props}
+        onChange={handleChange}
+        // Set `defaultValue` and `key` props to the value in state
+        defaultValue={value}
+        key={value}
+      />
+      {
+        // If past date is selected, show alert
+        dateInPastWarning && actionDateInPast(value || null) && (
+          <Alert type="warning" slim>
+            {t('pastDateAlert')}
+          </Alert>
+        )
+      }
+    </>
   );
 };
 

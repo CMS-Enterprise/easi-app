@@ -566,8 +566,10 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
               />
             </table>
           </div>
-          <p>
-            No documents uploaded
+          <p
+            class="text-italic"
+          >
+            There are no documents uploaded for this request.
           </p>
         </div>
       </div>
