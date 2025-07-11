@@ -50,18 +50,13 @@ func CreateSystemIntakeGRBDiscussionPost(
 			return nil, errors.New("user not authorized to post on Internal board")
 		}
 
-		// requester, GRB reviewers, and admins can post/reply
-		principalAcct := principal.Account()
-		principalIsRequester := principalAcct != nil && len(principalAcct.Username) > 0 && principalAcct.Username == systemIntake.EUAUserID.String
+		if !canParticipateInDiscussions(ctx, store, intakeID) {
+			return nil, errors.New("user is not authorized to create a discussion post")
+		}
 
 		principalAsGRBReviewer, err := getPrincipalAsGRBReviewerBySystemIntakeID(ctx, intakeID)
 		if err != nil {
 			return nil, err
-		}
-
-		isAdmin := services.AuthorizeRequireGRTJobCode(ctx)
-		if !principalIsRequester && principalAsGRBReviewer == nil && !isAdmin {
-			return nil, errors.New("user not authorized to create discussion post")
 		}
 
 		post := models.NewSystemIntakeGRBReviewDiscussionPost(principal.Account().ID)
@@ -151,18 +146,13 @@ func CreateSystemIntakeGRBDiscussionReply(
 			return nil, errors.New("user is not authorized to reply on the Internal board")
 		}
 
-		// requester, GRB reviewers, and admins can post/reply
-		principalAcct := appcontext.Principal(ctx).Account()
-		principalIsRequester := principalAcct != nil && len(principalAcct.Username) > 0 && principalAcct.Username == systemIntake.EUAUserID.String
+		if !canParticipateInDiscussions(ctx, store, intakeID) {
+			return nil, errors.New("user is not authorized to create a discussion reply")
+		}
 
 		principalGRBReviewer, err := getPrincipalAsGRBReviewerBySystemIntakeID(ctx, intakeID)
 		if err != nil {
 			return nil, err
-		}
-
-		isAdmin := services.AuthorizeRequireGRTJobCode(ctx)
-		if !principalIsRequester && principalGRBReviewer == nil && !isAdmin {
-			return nil, errors.New("user not authorized to create discussion reply")
 		}
 
 		// get user who made this reply post
@@ -494,4 +484,49 @@ func isAuthorizedForInternalBoard(ctx context.Context, systemIntakeID uuid.UUID)
 	}
 
 	return false
+}
+
+func canParticipateInDiscussions(ctx context.Context, store *storage.Store, systemIntakeID uuid.UUID) bool {
+	// acting user is an admin
+	if services.AuthorizeRequireGRTJobCode(ctx) {
+		return true
+	}
+
+	// get grb reviewers
+	grbReviewers, err := dataloaders.GetSystemIntakeGRBReviewersBySystemIntakeID(ctx, systemIntakeID)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error("problem getting grb reviewers when checking to see if user can participate in discussions", zap.Error(err))
+		return false
+	}
+
+	principalAcct := appcontext.Principal(ctx).Account()
+	if principalAcct == nil {
+		return false
+	}
+
+	for _, grbReviewer := range grbReviewers {
+		// acting user is a reviewer
+		if grbReviewer.UserID == principalAcct.ID {
+			return true
+		}
+	}
+
+	// no username available
+	if len(principalAcct.Username) < 1 {
+		return false
+	}
+
+	// check if the user is the requester
+	intake, err := store.FetchSystemIntakeByID(ctx, systemIntakeID)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error("problem getting intake when checking to see if user can participate in discussions", zap.Error(err))
+		return false
+	}
+
+	// missing EUA
+	if intake.EUAUserID.IsZero() {
+		return false
+	}
+
+	return principalAcct.Username == intake.EUAUserID.String
 }
