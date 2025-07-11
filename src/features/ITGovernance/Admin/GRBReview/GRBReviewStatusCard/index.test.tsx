@@ -11,6 +11,7 @@ import {
   SystemIntakeStatusAdmin
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
+import { systemIntake } from 'tests/mock/systemIntake';
 import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import { MessageProvider } from 'hooks/useMessage';
@@ -71,7 +72,10 @@ describe('GRBReviewStatusCard', () => {
           <MessageProvider>
             <ModalProvider>
               <ITGovAdminContext.Provider value={isITGovAdmin}>
-                <GRBReviewStatusCard grbReview={grbReview} />
+                <GRBReviewStatusCard
+                  systemIntakeId={systemIntake.id}
+                  grbReview={grbReview}
+                />
               </ITGovAdminContext.Provider>
             </ModalProvider>
           </MessageProvider>

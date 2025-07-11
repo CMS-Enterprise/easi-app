@@ -128,14 +128,17 @@ export default {
     'The documents below will help the GRB review this IT Governance request, and were completed during the course of this IT Governance request or were added by the requester and/or the Governance Admin Team. You may add additional documents and may remove any that have been added by Governance Admin Team members.',
   asyncCompleted: {
     presentationLinks:
-      'This review is over. Please <link1>restart</link1> it if you would like to update presentation links.',
+      'This review is over. For an asynchronous review, you may <link1>restart</link1> to update presentation links.',
     documents:
       'This review is over. Please <link1>restart</link1> it if you would like to add additional documents.',
     reviewers:
       'This review is over. Please <link1>restart</link1> it to add additional reviewers.'
   },
   asyncPresentation: {
-    title: 'Asynchronous presentation',
+    title: 'Presentation links',
+    asyncPresentationDate: 'Asynchronous presentation: {{date}}',
+    asyncPresentationNotScheduled:
+      'Asynchronous presentation not scheduled yet',
     editPresentationLinks: 'Edit presentation links',
     removeAllPresentationLinks: 'Remove all presentation links',
     viewRecording: 'View recording',
@@ -147,8 +150,9 @@ export default {
     virusScanning: 'Virus scanning in progress...',
     adminEmptyAlert:
       'If this GRB review has an asynchronous presentation and recording, you may add that content to EASi to provide additional information for GRB reviews.',
+    continueReviewSetup: 'Continue GRB review setup',
     reviewSetupNotCompleted:
-      'You have not completed setup for this asynchronous review. Continue the GRB review setup process to add information about this asynchronous presentation.',
+      'You have not completed setup for this review. Continue the GRB review setup process to add presentation links and/or a slide deck.',
     emptyAlert: 'The GRB have not yet added presentation links.',
 
     modalRemoveLinks: {
