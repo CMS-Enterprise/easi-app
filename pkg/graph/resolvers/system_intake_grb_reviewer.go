@@ -361,7 +361,7 @@ func StartGRBReview(
 	})
 }
 
-func GetPrincipalAsGRBReviewerBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) (*models.SystemIntakeGRBReviewer, error) {
+func getPrincipalAsGRBReviewerBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) (*models.SystemIntakeGRBReviewer, error) {
 	principalUserAcctID := appcontext.Principal(ctx).Account().ID
 	grbReviewers, err := dataloaders.GetSystemIntakeGRBReviewersBySystemIntakeID(ctx, systemIntakeID)
 	if err != nil {

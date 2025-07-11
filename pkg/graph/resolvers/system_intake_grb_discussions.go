@@ -50,13 +50,17 @@ func CreateSystemIntakeGRBDiscussionPost(
 			return nil, errors.New("user not authorized to post on Internal board")
 		}
 
-		principalAsGRBReviewer, err := GetPrincipalAsGRBReviewerBySystemIntakeID(ctx, intakeID)
+		// requester, GRB reviewers, and admins can post/reply
+		principalAcct := principal.Account()
+		principalIsRequester := principalAcct != nil && len(principalAcct.Username) > 0 && principalAcct.Username == systemIntake.EUAUserID.String
+
+		principalAsGRBReviewer, err := getPrincipalAsGRBReviewerBySystemIntakeID(ctx, intakeID)
 		if err != nil {
 			return nil, err
 		}
 
 		isAdmin := services.AuthorizeRequireGRTJobCode(ctx)
-		if principalAsGRBReviewer == nil && !isAdmin {
+		if !principalIsRequester && principalAsGRBReviewer == nil && !isAdmin {
 			return nil, errors.New("user not authorized to create discussion post")
 		}
 
@@ -143,13 +147,21 @@ func CreateSystemIntakeGRBDiscussionReply(
 			return nil, errors.New("replies can only be made if the system intake is in the GRB Meeting step")
 		}
 
-		principalGRBReviewer, err := GetPrincipalAsGRBReviewerBySystemIntakeID(ctx, intakeID)
+		if input.DiscussionBoardType == models.SystemIntakeGRBDiscussionBoardTypeInternal && !isAuthorizedForInternalBoard(ctx, intakeID) {
+			return nil, errors.New("user is not authorized to reply on the Internal board")
+		}
+
+		// requester, GRB reviewers, and admins can post/reply
+		principalAcct := appcontext.Principal(ctx).Account()
+		principalIsRequester := principalAcct != nil && len(principalAcct.Username) > 0 && principalAcct.Username == systemIntake.EUAUserID.String
+
+		principalGRBReviewer, err := getPrincipalAsGRBReviewerBySystemIntakeID(ctx, intakeID)
 		if err != nil {
 			return nil, err
 		}
 
 		isAdmin := services.AuthorizeRequireGRTJobCode(ctx)
-		if principalGRBReviewer == nil && !isAdmin {
+		if !principalIsRequester && principalGRBReviewer == nil && !isAdmin {
 			return nil, errors.New("user not authorized to create discussion reply")
 		}
 
@@ -164,10 +176,6 @@ func CreateSystemIntakeGRBDiscussionReply(
 			post.GRBRole = &principalGRBReviewer.GRBReviewerRole
 		}
 		post.DiscussionBoardType = &input.DiscussionBoardType
-
-		if input.DiscussionBoardType == models.SystemIntakeGRBDiscussionBoardTypeInternal && !isAuthorizedForInternalBoard(ctx, intakeID) {
-			return nil, errors.New("user is not authorized to reply on the Internal board")
-		}
 
 		// the initial poster will receive a notification
 		// in the event the initial poster is also tagged in a reply, we do not send both emails
@@ -464,6 +472,11 @@ func getAuthorRoleFromPost(post *models.SystemIntakeGRBReviewDiscussionPost) (st
 }
 
 func isAuthorizedForInternalBoard(ctx context.Context, systemIntakeID uuid.UUID) bool {
+	// acting user is an admin
+	if services.AuthorizeRequireGRTJobCode(ctx) {
+		return true
+	}
+
 	// get grb reviewers
 	grbReviewers, err := dataloaders.GetSystemIntakeGRBReviewersBySystemIntakeID(ctx, systemIntakeID)
 	if err != nil {
@@ -472,11 +485,6 @@ func isAuthorizedForInternalBoard(ctx context.Context, systemIntakeID uuid.UUID)
 	}
 
 	actingUserID := appcontext.Principal(ctx).Account().ID
-
-	// acting user is an admin
-	if services.AuthorizeRequireGRTJobCode(ctx) {
-		return true
-	}
 
 	for _, grbReviewer := range grbReviewers {
 		// acting user is a reviewer
