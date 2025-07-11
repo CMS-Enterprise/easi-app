@@ -2,7 +2,6 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import {
   GetSystemIntakeGRBDiscussionsDocument,
   GetSystemIntakeGRBDiscussionsQuery,
@@ -12,6 +11,7 @@ import {
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole,
+  SystemIntakeGRBReviewStandardStatusType,
   SystemIntakeState,
   SystemIntakeStatusAdmin
 } from 'gql/generated/graphql';
@@ -141,100 +141,6 @@ describe('GRB review tab', () => {
     ).toBeInTheDocument();
   });
 
-  // TODO: Update unit test once feature is further developed
-  test.skip('renders GRB review start date', () => {
-    // const date = '2024-09-10T14:42:47.422022Z';
-
-    // const grbReviewWithDate = {
-    //   ...grbReview,
-    //   grbReviewStartedAt: date
-    // };
-
-    render(
-      <MemoryRouter>
-        <VerboseMockedProvider mocks={[getSystemIntakeGRBReviewQuery()]}>
-          <Provider store={store}>
-            <MessageProvider>
-              <ITGovAdminContext.Provider value>
-                <GRBReview
-                  systemIntake={systemIntake}
-                  businessCase={businessCase}
-                />
-              </ITGovAdminContext.Provider>
-            </MessageProvider>
-          </Provider>
-        </VerboseMockedProvider>
-      </MemoryRouter>
-    );
-
-    expect(
-      screen.getByText('Review started on 09/10/2024')
-    ).toBeInTheDocument();
-  });
-
-  // TODO: Update unit test once feature is further developed
-  test.skip('renders Set up GRB review modal', async () => {
-    const grbReviewers: SystemIntakeGRBReviewerFragment[] = [
-      {
-        __typename: 'SystemIntakeGRBReviewer',
-        id: 'b62addad-d490-42ab-a170-9b178a2f24eb',
-        grbRole: SystemIntakeGRBReviewerRole.CMCS_REP,
-        votingRole: SystemIntakeGRBReviewerVotingRole.VOTING,
-        userAccount: {
-          __typename: 'UserAccount',
-          id: '38e6e472-5de2-49b4-aad2-cf1fd61ca87e',
-          username: users[0].euaUserId,
-          commonName: users[0].commonName,
-          email: users[0].email
-        }
-      },
-      {
-        __typename: 'SystemIntakeGRBReviewer',
-        id: 'b62addad-d490-42ab-a170-9b178a2f24eb',
-        grbRole: SystemIntakeGRBReviewerRole.PROGRAM_INTEGRITY_BDG_CHAIR,
-        votingRole: SystemIntakeGRBReviewerVotingRole.NON_VOTING,
-        userAccount: {
-          __typename: 'UserAccount',
-          id: '38e6e472-5de2-49b4-aad2-cf1fd61ca87e',
-          username: users[1].euaUserId,
-          commonName: users[1].commonName,
-          email: users[1].email
-        }
-      }
-    ];
-
-    render(
-      <MemoryRouter>
-        <VerboseMockedProvider mocks={[getSystemIntakeGRBReviewQuery()]}>
-          <Provider store={store}>
-            <MessageProvider>
-              <ITGovAdminContext.Provider value>
-                <GRBReview
-                  systemIntake={systemIntake}
-                  businessCase={businessCase}
-                />
-              </ITGovAdminContext.Provider>
-            </MessageProvider>
-          </Provider>
-        </VerboseMockedProvider>
-      </MemoryRouter>
-    );
-
-    const startGrbReviewButton = screen.getByRole('button', {
-      name: 'Set up GRB review'
-    });
-
-    userEvent.click(startGrbReviewButton);
-
-    // Check that modal text displays correct number of reviewers
-    const modalText = await screen.findByText(
-      `Starting this review will send email notifications to ${grbReviewers.length} GRB reviewers.`,
-      { exact: false }
-    );
-
-    expect(modalText).toBeInTheDocument();
-  });
-
   it('renders the discussion summary', async () => {
     render(
       <MemoryRouter>
@@ -274,6 +180,84 @@ describe('GRB review tab', () => {
     ).toBeInTheDocument();
 
     expect(screen.getByRole('link', { name: 'Jump to discussions' }));
+  });
+
+  describe('Presentation links card', () => {
+    it('hides empty card for GRB reviewers', () => {
+      render(
+        <MemoryRouter>
+          <VerboseMockedProvider
+            mocks={[
+              getSystemIntakeGRBReviewDiscussionsQuery,
+              getSystemIntakeGRBReviewQuery({
+                grbPresentationLinks: null,
+                grbReviewStandardStatus:
+                  SystemIntakeGRBReviewStandardStatusType.COMPLETED
+              })
+            ]}
+          >
+            <Provider store={store}>
+              <MessageProvider>
+                <ModalProvider>
+                  <ITGovAdminContext.Provider value={false}>
+                    <GRBReview
+                      systemIntake={systemIntake}
+                      businessCase={businessCase}
+                    />
+                  </ITGovAdminContext.Provider>
+                </ModalProvider>
+              </MessageProvider>
+            </Provider>
+          </VerboseMockedProvider>
+        </MemoryRouter>
+      );
+
+      expect(
+        screen.queryByTestId('presentation-links-card')
+      ).not.toBeInTheDocument();
+
+      expect(
+        screen.queryByRole('header', { name: 'Presentation links' })
+      ).not.toBeInTheDocument();
+    });
+
+    it('hides the presentation links card for completed standard meeting type', async () => {
+      render(
+        <MemoryRouter>
+          <VerboseMockedProvider
+            mocks={[
+              getSystemIntakeGRBReviewDiscussionsQuery,
+              getSystemIntakeGRBReviewQuery({
+                ...grbReview,
+                grbReviewStandardStatus:
+                  SystemIntakeGRBReviewStandardStatusType.COMPLETED
+              })
+            ]}
+          >
+            <Provider store={store}>
+              <MessageProvider>
+                <ModalProvider>
+                  <ITGovAdminContext.Provider value>
+                    <GRBReview
+                      systemIntake={systemIntake}
+                      businessCase={businessCase}
+                    />
+                  </ITGovAdminContext.Provider>
+                </ModalProvider>
+              </MessageProvider>
+            </Provider>
+          </VerboseMockedProvider>
+        </MemoryRouter>
+      );
+
+      expect(
+        screen.queryByTestId('presentation-links-card')
+      ).not.toBeInTheDocument();
+
+      expect(
+        screen.queryByRole('heading', { name: 'Presentation links' })
+      ).not.toBeInTheDocument();
+    });
   });
 
   describe('Admin task card', () => {
