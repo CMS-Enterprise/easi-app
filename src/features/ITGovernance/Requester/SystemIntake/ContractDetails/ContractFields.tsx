@@ -58,7 +58,9 @@ const ContractFields = ({ id }: ContractFieldsProps) => {
         scrollElement="contract.contractor"
         error={!!errors.contract?.contractor}
       >
-        <Label htmlFor="contractor">{t('contractDetails.contractors')}</Label>
+        <Label htmlFor="contractor" required>
+          {t('contractDetails.contractors')}
+        </Label>
         <ErrorMessage
           errors={errors}
           name="contract.contractor"
@@ -77,7 +79,9 @@ const ContractFields = ({ id }: ContractFieldsProps) => {
         scrollElement="contract.numbers"
         error={!!errors.contract?.numbers}
       >
-        <Label htmlFor="numbers">{t('fields.contractNumber')}</Label>
+        <Label htmlFor="numbers" required>
+          {t('fields.contractNumber')}
+        </Label>
         <ErrorMessage
           errors={errors}
           name="contract.numbers"
@@ -118,6 +122,7 @@ const ContractFields = ({ id }: ContractFieldsProps) => {
             />
           ))}
 
+          {/* TODO: Change this to a datepicker */}
           <div className="display-flex flex-align-center">
             <div
               className="usa-memorable-date"

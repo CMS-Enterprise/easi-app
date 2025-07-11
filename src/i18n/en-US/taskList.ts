@@ -41,13 +41,14 @@ const taskList = {
   },
   navigation: {
     home: 'IT Governance',
-    governanceTaskList: 'Governance task list',
+    governanceTaskList: 'Task list',
     feedback: 'Feedback',
     lcidInfo: 'About this LCID',
     nextSteps: 'Decision and next steps',
     returnToTaskList: 'Return to task list',
     returnToGovernanceTaskList: 'Return to governance task list',
-    returnToForm: 'Return to {{type}}'
+    returnToForm: 'Return to {{type}}',
+    intakeRequest: 'Intake Request form'
   },
   feedback: {
     heading: 'Recommendations',
