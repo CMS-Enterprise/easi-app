@@ -27,7 +27,6 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotification() 
 	s.NoError(err)
 
 	viewIntakeLink := client.urlFromPath(path.Join("governance-task-list", intakeID.String()))
-
 	discussionLink := client.urlFromPathAndQuery(path.Join("governance-task-list", intakeID.String()), fmt.Sprintf("discussionMode=reply&amp;discussionId=%s", postID.String()))
 
 	ITGovInboxAddress := s.config.GRTEmail.String()
@@ -126,7 +125,6 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionGroupTaggedNotificationAdm
 	s.NoError(err)
 
 	viewIntakeLink := client.urlFromPath(path.Join("governance-task-list", intakeID.String()))
-
 	discussionLink := client.urlFromPathAndQuery(path.Join("governance-task-list", intakeID.String()), fmt.Sprintf("discussionMode=reply&amp;discussionId=%s", postID.String()))
 
 	recipient := models.NewEmailAddress("fake@fake.com")
