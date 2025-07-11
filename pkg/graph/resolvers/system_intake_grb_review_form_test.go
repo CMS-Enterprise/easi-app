@@ -4,11 +4,9 @@ import (
 	"time"
 
 	"github.com/99designs/gqlgen/graphql"
-
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
-
 	"github.com/google/uuid"
 
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 

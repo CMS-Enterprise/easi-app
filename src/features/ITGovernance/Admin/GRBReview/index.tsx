@@ -9,6 +9,7 @@ import {
   SystemIntakeFragmentFragment,
   SystemIntakeGRBReviewAsyncStatusType,
   SystemIntakeGRBReviewerVotingRole,
+  SystemIntakeGRBReviewStandardStatusType,
   SystemIntakeGRBReviewType,
   SystemIntakeState,
   SystemIntakeStatusAdmin,
@@ -80,8 +81,12 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
     grbReviewStartedAt,
     grbReviewAsyncStatus,
     grbReviewStandardStatus,
-    grbReviewAsyncRecordingTime
+    grbReviewAsyncRecordingTime,
+    grbPresentationLinks
   } = grbReview || {};
+
+  const { recordingLink, transcriptLink, presentationDeckFileURL } =
+    grbPresentationLinks || {};
 
   const { euaId } = useSelector((appState: AppState) => appState.auth);
 
@@ -117,6 +122,34 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
     statusAdmin === SystemIntakeStatusAdmin.GRB_MEETING_COMPLETE ||
     // Request has been closed or issued a decision
     state === SystemIntakeState.CLOSED;
+
+  /** Returns true if presentation links card should render */
+  const renderPresentationLinksCard = useMemo(() => {
+    const hasPresentationLinks: boolean =
+      !!recordingLink || !!transcriptLink || !!presentationDeckFileURL;
+
+    // Return true if presentation links are uploaded
+    if (hasPresentationLinks) return true;
+
+    // Return false if no links and not an admin
+    if (!isITGovAdmin) return false;
+
+    // Return false if no links and standard meeting is completed
+    if (
+      grbReviewStandardStatus ===
+      SystemIntakeGRBReviewStandardStatusType.COMPLETED
+    ) {
+      return false;
+    }
+
+    return true;
+  }, [
+    grbReviewStandardStatus,
+    isITGovAdmin,
+    recordingLink,
+    transcriptLink,
+    presentationDeckFileURL
+  ]);
 
   if (!grbReview) {
     return null;
@@ -195,15 +228,19 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
         <p className="margin-top-05 line-height-body-5">
           {t('supportingDocumentsText')}
         </p>
-        {/* Presentation Links */}
-        <PresentationLinksCard
-          systemIntakeID={id}
-          grbReviewType={grbReviewType}
-          grbReviewStartedAt={grbReviewStartedAt}
-          grbPresentationLinks={grbReview.grbPresentationLinks}
-          asyncStatus={grbReviewAsyncStatus}
-          grbReviewAsyncRecordingTime={grbReviewAsyncRecordingTime}
-        />
+
+        {/* Presentation links card */}
+        {renderPresentationLinksCard && (
+          <PresentationLinksCard
+            systemIntakeID={id}
+            grbReviewType={grbReviewType}
+            grbReviewStartedAt={grbReviewStartedAt}
+            grbPresentationLinks={grbReview.grbPresentationLinks}
+            grbReviewAsyncStatus={grbReviewAsyncStatus}
+            grbReviewStandardStatus={grbReviewStandardStatus}
+            grbReviewAsyncRecordingTime={grbReviewAsyncRecordingTime}
+          />
+        )}
         {/* Business Case Card */}
         <BusinessCaseCard businessCase={businessCase} systemIntakeID={id} />
         {/* Intake Request Link */}

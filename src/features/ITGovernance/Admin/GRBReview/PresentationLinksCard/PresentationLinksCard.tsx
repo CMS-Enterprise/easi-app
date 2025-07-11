@@ -15,6 +15,7 @@ import {
   SystemIntakeDocumentStatus,
   SystemIntakeGRBPresentationLinksFragmentFragment,
   SystemIntakeGRBReviewAsyncStatusType,
+  SystemIntakeGRBReviewStandardStatusType,
   SystemIntakeGRBReviewType,
   useDeleteSystemIntakeGRBPresentationLinksMutation
 } from 'gql/generated/graphql';
@@ -36,7 +37,7 @@ export type PresentationCardActionsProps = {
   hasAnyLinks: boolean;
   setRemovePresentationLinksModalOpen: (open: boolean) => void;
   grbReviewStartedAt: string | null | undefined;
-  asyncStatus: SystemIntakeGRBReviewAsyncStatusType | null | undefined;
+  grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType | null | undefined;
 };
 
 /**
@@ -48,7 +49,7 @@ const PresentationCardActions = ({
   grbReviewStartedAt,
   hasAnyLinks,
   setRemovePresentationLinksModalOpen,
-  asyncStatus
+  grbReviewAsyncStatus
 }: PresentationCardActionsProps) => {
   const { t } = useTranslation('grbReview');
 
@@ -71,7 +72,7 @@ const PresentationCardActions = ({
     );
   }
 
-  if (asyncStatus === SystemIntakeGRBReviewAsyncStatusType.COMPLETED) {
+  if (grbReviewAsyncStatus === SystemIntakeGRBReviewAsyncStatusType.COMPLETED) {
     return (
       <p className="text-base-dark margin-y-0">
         <Trans
@@ -105,9 +106,10 @@ const PresentationCardActions = ({
   }
 
   return (
-    <>
+    <ButtonGroup data-testid="presentation-card-actions">
       <UswdsReactLink
         to={`/it-governance/${systemIntakeID}/grb-review/presentation-links`}
+        className="margin-right-1"
       >
         {t('asyncPresentation.editPresentationLinks')}
       </UswdsReactLink>
@@ -119,7 +121,7 @@ const PresentationCardActions = ({
       >
         {t('asyncPresentation.removeAllPresentationLinks')}
       </Button>
-    </>
+    </ButtonGroup>
   );
 };
 
@@ -127,7 +129,11 @@ export type PresentationLinksCardProps = {
   systemIntakeID: string;
   grbReviewType: SystemIntakeGRBReviewType | undefined;
   grbReviewStartedAt: string | null | undefined;
-  asyncStatus: SystemIntakeGRBReviewAsyncStatusType | null | undefined;
+  grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType | null | undefined;
+  grbReviewStandardStatus:
+    | SystemIntakeGRBReviewStandardStatusType
+    | null
+    | undefined;
   grbReviewAsyncRecordingTime: string | null | undefined;
   grbPresentationLinks:
     | SystemIntakeGRBPresentationLinksFragmentFragment
@@ -140,7 +146,8 @@ function PresentationLinksCard({
   grbReviewType,
   grbReviewStartedAt,
   grbPresentationLinks,
-  asyncStatus,
+  grbReviewAsyncStatus,
+  grbReviewStandardStatus,
   grbReviewAsyncRecordingTime
 }: PresentationLinksCardProps) {
   const { t } = useTranslation('grbReview');
@@ -203,14 +210,17 @@ function PresentationLinksCard({
       });
   };
 
-  // Render empty if not an admin and no links
-  if (!isITGovAdmin && !hasAnyLinks) return null;
-
   return (
     <>
       {/* Asynchronous presentation links card */}
       <Card
-        containerProps={{ className: 'margin-0 radius-md shadow-2' }}
+        containerProps={
+          {
+            className: 'margin-0 radius-md shadow-2',
+            'data-testid': 'presentation-links-card'
+            // Fix for 'data-testid' type error - attr does render on container
+          } as React.HTMLAttributes<HTMLDivElement>
+        }
         className="margin-top-2"
       >
         <CardHeader>
@@ -234,24 +244,27 @@ function PresentationLinksCard({
           )}
         </CardHeader>
         {/* Render action links for admins only */}
-        {isITGovAdmin && (
-          <CardBody
-            className={classNames('padding-top-0', {
-              'display-flex flex-gap-105 padding-bottom-105 margin-top-neg-1':
-                hasAnyLinks
-            })}
-          >
-            <PresentationCardActions
-              systemIntakeID={systemIntakeID}
-              grbReviewStartedAt={grbReviewStartedAt}
-              hasAnyLinks={hasAnyLinks}
-              setRemovePresentationLinksModalOpen={
-                setRemovePresentationLinksModalOpen
-              }
-              asyncStatus={asyncStatus}
-            />
-          </CardBody>
-        )}
+        {isITGovAdmin &&
+          // Hide actions if standard meeting is complete
+          grbReviewStandardStatus !==
+            SystemIntakeGRBReviewStandardStatusType.COMPLETED && (
+            <CardBody
+              className={classNames('padding-top-0', {
+                'display-flex flex-gap-105 padding-bottom-105 margin-top-neg-1':
+                  hasAnyLinks
+              })}
+            >
+              <PresentationCardActions
+                systemIntakeID={systemIntakeID}
+                grbReviewStartedAt={grbReviewStartedAt}
+                hasAnyLinks={hasAnyLinks}
+                setRemovePresentationLinksModalOpen={
+                  setRemovePresentationLinksModalOpen
+                }
+                grbReviewAsyncStatus={grbReviewAsyncStatus}
+              />
+            </CardBody>
+          )}
         {hasAnyLinks && grbReviewStartedAt && (
           <CardFooter className="presentation-card-links display-flex flex-wrap flex-column-gap-3 flex-row-gap-1 padding-x-0 padding-bottom-205 padding-top-2 margin-x-3 border-top-1px border-gray-10">
             {isVirusScanning ? (
