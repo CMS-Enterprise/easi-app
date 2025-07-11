@@ -46,22 +46,20 @@ func (s *EmailTestSuite) TestSystemIntakeGRBReviewDeadlineExtended() {
 	s.Equal(expectedSubject, sender.subject)
 
 	// Adjust link to match your urlFromPath() logic
-	requestLink := fmt.Sprintf("%s://%s/governance-task-list/%s", s.config.URLScheme, s.config.URLHost, intakeID.String())
+	requestLink := fmt.Sprintf("%[1]s://%[2]s/governance-task-list/%[3]s", s.config.URLScheme, s.config.URLHost, intakeID.String())
 
-	// In your template, GRB review dates: if GRBReviewStart is empty, it just displays the .GRBReviewDeadline,
-	// or if it’s set, it displays “start-deadline”. We’ll illustrate the "no start date" scenario here.
 	expectedEmail := fmt.Sprintf(`
 <h1 class="header-title">EASi</h1>
 <p class="header-subtitle">Easy Access to System Information</p>
 
-<p>The Governance Admin Team has extended the deadline for this asynchronous review. The new deadline is now %s at 5pm Eastern Time. You may cast your vote or change your existing vote using the link below.</p>
-<p><a href="%s">View this request in EASi</a></p>
+<p>The Governance Admin Team has extended the deadline for this asynchronous review. The new deadline is now %[1]s at 5pm Eastern Time. You may cast your vote or change your existing vote using the link below.</p>
+<p><a href="%[2]s">View this request in EASi</a></p>
 <p><b>Request Summary:</b>
-  Project title: %s
-  Requester: %s, %s
-  GRB review dates: %s-%s
+  Project title: %[3]s
+  Requester: %[4]s, %[5]s
+  GRB review dates: %[6]s-%[1]s
 </p>
-<p>If you have questions, please contact the Governance Team at  <a href="mailto:%s">%s</a>.</p>
+<p>If you have questions, please contact the Governance Team at  <a href="mailto:%[7]s">%[7]s</a>.</p>
 <hr>
 <p>You may continue to receive email notifications about this request until a decision is issued and it is closed.</p>
 `,
@@ -71,8 +69,6 @@ func (s *EmailTestSuite) TestSystemIntakeGRBReviewDeadlineExtended() {
 		requesterName,
 		componentAcronym,
 		grbReviewStart.Format("01/02/2006"),
-		deadline.Format("01/02/2006"),
-		s.config.GRTEmail.String(),
 		s.config.GRTEmail.String(),
 	)
 

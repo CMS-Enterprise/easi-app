@@ -19,7 +19,6 @@ type systemIntakeGRBReviewRestartedParameters struct {
 	RequesterName           string
 	ComponentAcronym        string
 	GRBReviewStart          string
-	GRBReviewDeadline       string
 	GRBReviewEndDate        string
 }
 
@@ -29,7 +28,6 @@ func (sie systemIntakeEmails) systemIntakeGRBReviewRestartedBody(
 	requesterName string,
 	componentAcronym string,
 	grbReviewStart time.Time,
-	grbReviewDeadline time.Time,
 	grbReviewEndDate time.Time,
 ) (string, error) {
 	requestLink := sie.client.urlFromPath(path.Join("governance-task-list", systemIntakeID.String()))
@@ -40,7 +38,6 @@ func (sie systemIntakeEmails) systemIntakeGRBReviewRestartedBody(
 		RequesterName:           requesterName,
 		ComponentAcronym:        componentAcronym,
 		GRBReviewStart:          grbReviewStart.Format("01/02/2006"),
-		GRBReviewDeadline:       grbReviewDeadline.Format("01/02/2006"),
 		GRBReviewEndDate:        grbReviewEndDate.Format("01/02/2006"),
 	}
 
@@ -65,7 +62,6 @@ func (sie systemIntakeEmails) SendSystemIntakeGRBReviewRestarted(
 	requesterName string,
 	componentAcronym string,
 	grbReviewStart time.Time,
-	grbReviewDeadline time.Time,
 	grbReviewEndDate time.Time,
 ) error {
 	subject := fmt.Sprintf("The GRB review for %s was restarted", projectTitle)
@@ -76,7 +72,6 @@ func (sie systemIntakeEmails) SendSystemIntakeGRBReviewRestarted(
 		requesterName,
 		componentAcronym,
 		grbReviewStart,
-		grbReviewDeadline,
 		grbReviewEndDate,
 	)
 	if err != nil {

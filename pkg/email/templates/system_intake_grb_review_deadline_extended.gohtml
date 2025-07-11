@@ -1,11 +1,11 @@
 {{template "easi_header.gohtml"}}
 
-<p>The Governance Admin Team has extended the deadline for this asynchronous review. The new deadline is now {{.GRBReviewDeadline}} at 5pm Eastern Time. You may cast your vote or change your existing vote using the link below.</p>
+<p>The Governance Admin Team has extended the deadline for this asynchronous review. The new deadline is now {{.GRBReviewEnd}} at 5pm Eastern Time. You may cast your vote or change your existing vote using the link below.</p>
 <p><a href="{{.SystemIntakeRequestLink}}">View this request in EASi</a></p>
 <p><b>Request Summary:</b>
   Project title: {{.ProjectTitle}}
   Requester: {{.RequesterName}}, {{.ComponentAcronym}}
-  GRB review dates: {{if .GRBReviewStart}}{{.GRBReviewStart}}-{{.GRBReviewDeadline}}{{else}}{{.GRBReviewDeadline}}{{end}}
+  GRB review dates: {{.GRBReviewStart}}-{{.GRBReviewEnd}}
 </p>
 <p>If you have questions, please contact the Governance Team at  <a href="mailto:{{.ITGovernanceInboxAddress}}">{{.ITGovernanceInboxAddress}}</a>.</p>
 <hr>

@@ -16,6 +16,7 @@ func castSystemIntakeGRBReviewerVote(
 	_, err := resolvers.CastSystemIntakeGRBReviewerVote(
 		ctx,
 		store,
+		nil,
 		input,
 	)
 

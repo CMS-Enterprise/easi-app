@@ -21,7 +21,7 @@ type systemIntakeGRBReviewDeadlineExtendedParameters struct {
 	ITGovernanceInboxAddress string
 	GRBHelpLink              string
 	GRBReviewStart           string
-	GRBReviewDeadline        string
+	GRBReviewEnd             string
 }
 
 func (sie systemIntakeEmails) systemIntakeGRBReviewDeadlineExtendedBody(
@@ -30,8 +30,12 @@ func (sie systemIntakeEmails) systemIntakeGRBReviewDeadlineExtendedBody(
 	requesterName string,
 	componentAcronym string,
 	grbReviewStart time.Time,
-	grbReviewDeadline time.Time,
+	grbReviewEnd time.Time,
 ) (string, error) {
+	if sie.client.templates.systemIntakeGRBReviewDeadlineExtendedTemplate == nil {
+		return "", errors.New("systemIntakeGRBReviewDeadlineExtended template is not defined")
+	}
+
 	requesterURL := sie.client.urlFromPath(path.Join("governance-task-list", systemIntakeID.String()))
 
 	data := systemIntakeGRBReviewDeadlineExtendedParameters{
@@ -42,19 +46,14 @@ func (sie systemIntakeEmails) systemIntakeGRBReviewDeadlineExtendedBody(
 		ITGovernanceInboxAddress: sie.client.config.GRTEmail.String(),
 		GRBHelpLink:              sie.client.urlFromPath(path.Join("help", "it-governance", "prepare-for-grb")),
 		GRBReviewStart:           grbReviewStart.Format("01/02/2006"),
-		GRBReviewDeadline:        grbReviewDeadline.Format("01/02/2006"),
+		GRBReviewEnd:             grbReviewEnd.Format("01/02/2006"),
 	}
 
 	var b bytes.Buffer
-	if sie.client.templates.systemIntakeGRBReviewDeadlineExtendedTemplate == nil {
-		return "", errors.New("systemIntakeGRBReviewDeadlineExtended template is not defined")
-	}
-
-	// TODO: Update the template reference to the correct template for the GRB review deadline extended email
-	err := sie.client.templates.systemIntakeGRBReviewDeadlineExtendedTemplate.Execute(&b, data)
-	if err != nil {
+	if err := sie.client.templates.systemIntakeGRBReviewDeadlineExtendedTemplate.Execute(&b, data); err != nil {
 		return "", err
 	}
+
 	return b.String(), nil
 }
 
@@ -67,7 +66,7 @@ func (sie systemIntakeEmails) SendSystemIntakeGRBReviewDeadlineExtended(
 	requesterName string,
 	componentAcronym string,
 	grbReviewStart time.Time,
-	grbReviewDeadline time.Time,
+	grbReviewEnd time.Time,
 ) error {
 	subject := fmt.Sprintf("The Governance Admin Team has extended the deadline for this GRB review (%s)", projectTitle)
 
@@ -77,7 +76,7 @@ func (sie systemIntakeEmails) SendSystemIntakeGRBReviewDeadlineExtended(
 		requesterName,
 		componentAcronym,
 		grbReviewStart,
-		grbReviewDeadline,
+		grbReviewEnd,
 	)
 	if err != nil {
 		return err

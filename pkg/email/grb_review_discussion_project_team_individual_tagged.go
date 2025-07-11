@@ -38,15 +38,15 @@ func (sie systemIntakeEmails) grbReviewDiscussionProjectTeamIndividualTaggedBody
 		return "", errors.New("grb review discussion project team individual tagged template is nil")
 	}
 
-	grbReviewPath := path.Join("it-governance", input.SystemIntakeID.String(), "grb-review")
+	intakePath := path.Join("governance-task-list", input.SystemIntakeID.String())
 
 	data := grbReviewDiscussionProjectTeamIndividualTaggedBody{
 		RequestName:              input.RequestName,
-		GRBReviewLink:            sie.client.urlFromPath(grbReviewPath),
+		GRBReviewLink:            sie.client.urlFromPath(intakePath),
 		UserName:                 input.UserName,
 		Role:                     input.Role,
 		DiscussionContent:        input.DiscussionContent,
-		DiscussionLink:           sie.client.urlFromPathAndQuery(grbReviewPath, fmt.Sprintf("discussionBoardType=%[1]s&discussionMode=reply&discussionId=%[2]s", input.DiscussionBoard.String(), input.DiscussionID.String())),
+		DiscussionLink:           sie.client.urlFromPathAndQuery(intakePath, fmt.Sprintf("discussionBoardType=%[1]s&discussionMode=reply&discussionId=%[2]s", input.DiscussionBoard.String(), input.DiscussionID.String())),
 		ITGovernanceInboxAddress: sie.client.config.GRTEmail,
 	}
 

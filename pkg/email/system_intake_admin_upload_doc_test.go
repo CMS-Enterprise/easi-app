@@ -76,7 +76,7 @@ func (s *EmailTestSuite) TestSendSystemIntakeAdminUploadDocEmail() {
 		expectedEmail := getExpectedEmail()
 		s.EqualHTML(expectedEmail, ms.body)
 
-		// confirm ITGOV email is added before email send
-		s.ElementsMatch([]models.EmailAddress{recipient, s.config.GRTEmail}, ms.bccAddresses)
+		s.ElementsMatch([]models.EmailAddress{s.config.GRTEmail}, ms.ccAddresses)
+		s.ElementsMatch([]models.EmailAddress{recipient}, ms.bccAddresses)
 	})
 }

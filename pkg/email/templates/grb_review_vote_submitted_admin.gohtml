@@ -1,0 +1,37 @@
+{{template "easi_header.gohtml"}}
+
+<p>{{.GRBMemberName}} has submitted a vote in the GRB review for {{.ProjectTitle}}.</p>
+
+<p><strong>Vote:</strong> {{.Vote}}</p>
+
+<p>
+  <strong>Additional comments:</strong>
+  <br>
+  <em>{{.AdditionalComments}}</em>
+</p>
+
+<p>If you would like to send a reminder to the remaining voting members you may do so from the link below.</p>
+
+<p><strong><a href="{{.Link}}">View this request in EASi</a></strong></p>
+
+<div class="no-margin">
+  <p><strong>Request summary:</strong></p>
+  <p>Project title: {{.ProjectTitle}}</p>
+  <p>Requester: {{.RequesterName}}{{if .RequesterComponent}}, {{.RequesterComponent}}{{else}}{{end}}</p>
+  <p>GRB review dates: {{.DateInfo}}</p>
+  <p>Current votes: {{.VoteInfo}}</p>
+</div>
+<br />
+<div class="no-margin">
+  <p>Next steps:</p>
+  <ul>
+    <li>Wait for the end of the review timeframe, end the voting early, or add additional time to the voting period.
+    </li>
+    <li>Once the voting is over and a quorum of votes has been cast, issue a decision in EASi.</li>
+  </ul>
+</div>
+
+<br>
+<hr>
+
+<p>You will continue to receive email notifications about this request until it is closed.</p>

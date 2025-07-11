@@ -9,7 +9,7 @@ import (
 )
 
 type oktaJobs struct {
-	// SendAsyncVotingHalfwayThroughEmailJob is a job that sends a request after fifteen days, to prevent the token from expiring
+	// ReauthenticateWithOktaJob is a job that sends a request after fifteen days, to prevent the token from expiring
 	ReauthenticateWithOktaJob ScheduledJob
 }
 

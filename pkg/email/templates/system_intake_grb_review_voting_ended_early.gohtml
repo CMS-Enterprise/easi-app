@@ -1,0 +1,29 @@
+{{template "easi_header.gohtml"}}
+
+<p>The Governance Admin Team has ended the GRB review for {{.ProjectTitle}}. You are no longer able to submit a vote or
+  change an existing one.</p>
+
+<div class="no-margin">
+  <p><strong>Request summary:</strong></p>
+  <p>Project title: {{.ProjectTitle}}</p>
+  <p>Requester: {{.RequesterName}}{{if .RequesterComponent}}, {{.RequesterComponent}}{{end}}</p>
+  <p>GRB review dates: {{.DateInfo}}</p>
+</div>
+
+<br />
+
+<div class="no-margin">
+  <p>Next steps:</p>
+  <list>
+    <li>The Governance Admin Team and the GRB will issue an official decision based on the results of the asynchronous
+      review.
+    </li>
+  </list>
+</div>
+
+<p>If you have questions, please contact the Governance Team at <a
+    href="mailto:{{.ITGovernanceInboxAddress}}">{{.ITGovernanceInboxAddress}}</a>.</p>
+
+<hr>
+
+<p>You may continue to receive email notifications about this request until a decision is issued and it is closed.</p>

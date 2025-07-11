@@ -4,11 +4,9 @@ import (
 	"time"
 
 	"github.com/99designs/gqlgen/graphql"
-
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
-
 	"github.com/google/uuid"
 
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -322,6 +320,7 @@ func (s *ResolverSuite) TestManuallyEndSystemIntakeGRBReviewAsyncVoting() {
 	updatedPayload, err := ManuallyEndSystemIntakeGRBReviewAsyncVoting(
 		s.testConfigs.Context,
 		s.testConfigs.Store,
+		s.testConfigs.EmailClient,
 		systemIntake.ID,
 	)
 
@@ -367,6 +366,7 @@ func (s *ResolverSuite) TestExtendGRBReviewDeadlineAsync() {
 	updatedPayload, err := ExtendGRBReviewDeadlineAsync(
 		s.testConfigs.Context,
 		s.testConfigs.Store,
+		s.testConfigs.EmailClient,
 		models.ExtendGRBReviewDeadlineInput{
 			SystemIntakeID:        systemIntake.ID,
 			GrbReviewAsyncEndDate: twoHoursLater,
@@ -419,6 +419,7 @@ func (s *ResolverSuite) TestRestartGRBReviewAsync() {
 	updatedPayload, err := RestartGRBReviewAsync(
 		s.testConfigs.Context,
 		s.testConfigs.Store,
+		s.testConfigs.EmailClient,
 		input,
 	)
 
