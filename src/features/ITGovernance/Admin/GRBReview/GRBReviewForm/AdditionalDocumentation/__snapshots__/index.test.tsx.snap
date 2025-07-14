@@ -300,6 +300,7 @@ exports[`GRB review form - additional documents > renders the step 1`] = `
         </button>
         <div
           class="margin-top-4"
+          data-testid="system-intake-documents"
           id="systemIntakeDocuments"
         >
           <div
@@ -457,6 +458,7 @@ exports[`GRB review form - additional documents > renders the step 1`] = `
                 role="rowgroup"
               >
                 <tr
+                  data-testid="document-row-f7138102-c9aa-4215-a331-6ee9aedf5ef3"
                   role="row"
                 >
                   <td
@@ -492,6 +494,7 @@ exports[`GRB review form - additional documents > renders the step 1`] = `
                   </td>
                 </tr>
                 <tr
+                  data-testid="document-row-3b23fcf9-85d3-4211-a7d8-d2d08148f196"
                   role="row"
                 >
                   <td
@@ -544,6 +547,7 @@ exports[`GRB review form - additional documents > renders the step 1`] = `
                   </td>
                 </tr>
                 <tr
+                  data-testid="document-row-8cd01e45-810d-445d-b702-b31b8e1b1f14"
                   role="row"
                 >
                   <td

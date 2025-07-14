@@ -408,6 +408,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
           Documents
         </h2>
         <div
+          data-testid="system-intake-documents"
           id="systemIntakeDocuments"
         >
           <div

@@ -13,7 +13,6 @@ import {
   SystemIntakeDocumentCommonType,
   SystemIntakeDocumentFragmentFragment,
   SystemIntakeDocumentStatus,
-  SystemIntakeGRBReviewAsyncStatusType,
   useDeleteSystemIntakeDocumentMutation
 } from 'gql/generated/graphql';
 
@@ -29,7 +28,7 @@ type DocumentsTableProps = {
   systemIntakeId: string;
   documents: SystemIntakeDocumentFragmentFragment[];
   className?: string;
-  asyncStatus?: SystemIntakeGRBReviewAsyncStatusType | null;
+  hideRemoveButton?: boolean;
 };
 
 /**
@@ -39,7 +38,7 @@ const DocumentsTable = ({
   systemIntakeId,
   documents,
   className,
-  asyncStatus
+  hideRemoveButton
 }: DocumentsTableProps) => {
   const { t } = useTranslation();
 
@@ -147,18 +146,16 @@ const DocumentsTable = ({
 
                 {
                   /* Delete document */
-                  canDelete &&
-                    asyncStatus !==
-                      SystemIntakeGRBReviewAsyncStatusType.COMPLETED && (
-                      <Button
-                        unstyled
-                        type="button"
-                        className="margin-left-2 text-error"
-                        onClick={() => setFileToDelete(row.original)}
-                      >
-                        {t('intake:documents.table.removeBtn')}
-                      </Button>
-                    )
+                  canDelete && !hideRemoveButton && (
+                    <Button
+                      unstyled
+                      type="button"
+                      className="margin-left-2 text-error"
+                      onClick={() => setFileToDelete(row.original)}
+                    >
+                      {t('intake:documents.table.removeBtn')}
+                    </Button>
+                  )
                 }
               </div>
             );
@@ -171,7 +168,7 @@ const DocumentsTable = ({
         }
       }
     ];
-  }, [t, asyncStatus]);
+  }, [t, hideRemoveButton]);
 
   const table = useTable(
     {
@@ -251,7 +248,11 @@ const DocumentsTable = ({
   };
 
   return (
-    <div id="systemIntakeDocuments" className={className}>
+    <div
+      id="systemIntakeDocuments"
+      data-testid="system-intake-documents"
+      className={className}
+    >
       <ConfirmDeleteModal />
 
       <Table bordered={false} fullWidth scrollable {...getTableProps()}>
@@ -286,7 +287,11 @@ const DocumentsTable = ({
           {page.map(row => {
             prepareRow(row);
             return (
-              <tr {...row.getRowProps()} key={row.id}>
+              <tr
+                {...row.getRowProps()}
+                key={row.original.id}
+                data-testid={`document-row-${row.original.id}`}
+              >
                 {row.cells.map(cell => {
                   return (
                     <td
