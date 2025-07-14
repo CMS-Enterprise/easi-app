@@ -248,7 +248,11 @@ const DocumentsTable = ({
   };
 
   return (
-    <div id="systemIntakeDocuments" className={className}>
+    <div
+      id="systemIntakeDocuments"
+      data-testid="system-intake-documents"
+      className={className}
+    >
       <ConfirmDeleteModal />
 
       <Table bordered={false} fullWidth scrollable {...getTableProps()}>
@@ -283,7 +287,11 @@ const DocumentsTable = ({
           {page.map(row => {
             prepareRow(row);
             return (
-              <tr {...row.getRowProps()} key={row.id}>
+              <tr
+                {...row.getRowProps()}
+                key={row.original.id}
+                data-testid={`document-row-${row.original.id}`}
+              >
                 {row.cells.map(cell => {
                   return (
                     <td
