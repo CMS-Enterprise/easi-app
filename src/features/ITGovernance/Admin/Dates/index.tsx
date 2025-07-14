@@ -13,14 +13,12 @@ import {
 import { DateTime } from 'luxon';
 
 import CheckboxField from 'components/CheckboxField';
-import FieldErrorMsg from 'components/FieldErrorMsg';
 import HelpText from 'components/HelpText';
 import Label from 'components/Label';
 import PageHeading from 'components/PageHeading';
 import { GRBReviewStatus } from 'types/grbReview';
 import { SubmitDatesForm } from 'types/systemIntake';
 import { parseAsUTC } from 'utils/date';
-import flattenErrors from 'utils/flattenErrors';
 import { DateValidationSchema } from 'validations/systemIntakeSchema';
 
 const Dates = ({
@@ -61,13 +59,7 @@ const Dates = ({
     grbReviewType: systemIntake.grbReviewType
   };
 
-  const {
-    control,
-    handleSubmit,
-    watch,
-    setValue,
-    formState: { errors }
-  } = useForm<
+  const { control, handleSubmit, watch, setValue } = useForm<
     SubmitDatesForm & {
       grbReviewType: SystemIntakeGRBReviewType;
     }
@@ -75,8 +67,6 @@ const Dates = ({
     defaultValues: initialValues,
     resolver: yupResolver(DateValidationSchema)
   });
-
-  const flatErrors = flattenErrors(errors);
 
   const onSubmit = (
     values: SubmitDatesForm & {
@@ -258,9 +248,6 @@ const Dates = ({
           <HelpText id="TestDate-DateHelp-grb" className="text-pre-line">
             {t('governanceReviewTeam:dates.grbDate.description')}
           </HelpText>
-          <FieldErrorMsg>{flatErrors.grbDateMonth}</FieldErrorMsg>
-          <FieldErrorMsg>{flatErrors.grbDateDay}</FieldErrorMsg>
-          <FieldErrorMsg>{flatErrors.grbDateYear}</FieldErrorMsg>
           <div className="usa-memorable-date">
             <div className="usa-form-group usa-form-group--month">
               <Controller
