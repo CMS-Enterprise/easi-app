@@ -180,7 +180,7 @@ const Dates = ({
           <legend className="usa-label margin-bottom-1">
             {t('governanceReviewTeam:dates.grtDate.label')}
           </legend>
-          <HelpText id="TestDate-DateHelp">
+          <HelpText id="TestDate-DateHelp-grt">
             {t('governanceReviewTeam:dates.grtDate.format')}
           </HelpText>
           <div className="usa-memorable-date">
@@ -197,7 +197,7 @@ const Dates = ({
                     <TextInput
                       {...field}
                       ref={null}
-                      id="name"
+                      id="grtDateMonth"
                       type="text"
                       validationStatus={error && 'error'}
                     />
@@ -218,7 +218,7 @@ const Dates = ({
                     <TextInput
                       {...field}
                       ref={null}
-                      id="name"
+                      id="grtDateDay"
                       type="text"
                       validationStatus={error && 'error'}
                     />
@@ -239,7 +239,7 @@ const Dates = ({
                     <TextInput
                       {...field}
                       ref={null}
-                      id="name"
+                      id="grtDateYear"
                       type="text"
                       validationStatus={error && 'error'}
                     />
@@ -255,7 +255,7 @@ const Dates = ({
           <legend className="usa-label margin-bottom-1">
             {t('governanceReviewTeam:dates.grbDate.label')}
           </legend>
-          <HelpText id="TestDate-DateHelp" className="text-pre-line">
+          <HelpText id="TestDate-DateHelp-grb" className="text-pre-line">
             {t('governanceReviewTeam:dates.grbDate.description')}
           </HelpText>
           <FieldErrorMsg>{flatErrors.grbDateMonth}</FieldErrorMsg>
