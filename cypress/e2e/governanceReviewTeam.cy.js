@@ -507,9 +507,9 @@ describe('Governance Review Team', () => {
 
     cy.get('li.usa-sidenav__item a[href*="dates"]').click();
 
-    cy.get('#Dates-GrbDateMonth').should('have.value', '1');
-    cy.get('#Dates-GrbDateDay').should('have.value', '1');
-    cy.get('#Dates-GrbDateYear').should('have.value', '2050');
+    cy.get('#grbDateMonth').should('have.value', '1');
+    cy.get('#grbDateDay').should('have.value', '1');
+    cy.get('#grbDateYear').should('have.value', '2050');
   });
 
   it('can close a request', () => {
