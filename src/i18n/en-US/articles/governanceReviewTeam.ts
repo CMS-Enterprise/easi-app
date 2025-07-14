@@ -251,7 +251,7 @@ const governanceReviewTeam = {
     grbDate: {
       label: 'GRB Date',
       description:
-        'This content will be prepopulated if you have already entered it elsewhere. Changing it here will also update GRB information elsewhere.\nFormat: 04 28 2020'
+        'This content will be prepopulated if you have already entered it elsewhere. Changing it here will also update GRB information elsewhere.'
     }
   },
   aria: {

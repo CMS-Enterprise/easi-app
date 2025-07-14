@@ -247,7 +247,8 @@ const Dates = ({
             {t('governanceReviewTeam:dates.grbDate.label')}
           </legend>
           <HelpText id="TestDate-DateHelp-grb" className="text-pre-line">
-            {t('governanceReviewTeam:dates.grbDate.description')}
+            {`${t('governanceReviewTeam:dates.grbDate.description')}
+            ${t('governanceReviewTeam:dates.grtDate.format')}`}
           </HelpText>
           <div className="usa-memorable-date">
             <div className="usa-form-group usa-form-group--month">
