@@ -178,15 +178,17 @@ const Dates = ({
               <Controller
                 name="grtDateMonth"
                 control={control}
-                render={({ field, fieldState: { error } }) => (
+                render={({
+                  field: { ref, ...rest },
+                  fieldState: { error }
+                }) => (
                   <FormGroup className="margin-top-2" error={!!error}>
                     <Label className="text-normal" htmlFor="grtDateMonth">
                       {t('general:date.month')}
                     </Label>
 
                     <TextInput
-                      {...field}
-                      ref={null}
+                      {...rest}
                       id="grtDateMonth"
                       type="text"
                       validationStatus={error && 'error'}
@@ -199,15 +201,17 @@ const Dates = ({
               <Controller
                 name="grtDateDay"
                 control={control}
-                render={({ field, fieldState: { error } }) => (
+                render={({
+                  field: { ref, ...rest },
+                  fieldState: { error }
+                }) => (
                   <FormGroup className="margin-top-2" error={!!error}>
                     <Label className="text-normal" htmlFor="grtDateDay">
                       {t('general:date.day')}
                     </Label>
 
                     <TextInput
-                      {...field}
-                      ref={null}
+                      {...rest}
                       id="grtDateDay"
                       type="text"
                       validationStatus={error && 'error'}
@@ -220,15 +224,17 @@ const Dates = ({
               <Controller
                 name="grtDateYear"
                 control={control}
-                render={({ field, fieldState: { error } }) => (
+                render={({
+                  field: { ref, ...rest },
+                  fieldState: { error }
+                }) => (
                   <FormGroup className="margin-top-2" error={!!error}>
                     <Label className="text-normal" htmlFor="grtDateYear">
                       {t('general:date.year')}
                     </Label>
 
                     <TextInput
-                      {...field}
-                      ref={null}
+                      {...rest}
                       id="grtDateYear"
                       type="text"
                       validationStatus={error && 'error'}
@@ -253,15 +259,17 @@ const Dates = ({
               <Controller
                 name="grbDateMonth"
                 control={control}
-                render={({ field, fieldState: { error } }) => (
+                render={({
+                  field: { ref, ...rest },
+                  fieldState: { error }
+                }) => (
                   <FormGroup className="margin-top-2" error={!!error}>
                     <Label className="text-normal" htmlFor="grbDateMonth">
                       {t('general:date.month')}
                     </Label>
 
                     <TextInput
-                      {...field}
-                      ref={null}
+                      {...rest}
                       id="grbDateMonth"
                       type="text"
                       validationStatus={error && 'error'}
@@ -278,15 +286,17 @@ const Dates = ({
               <Controller
                 name="grbDateDay"
                 control={control}
-                render={({ field, fieldState: { error } }) => (
+                render={({
+                  field: { ref, ...rest },
+                  fieldState: { error }
+                }) => (
                   <FormGroup className="margin-top-2" error={!!error}>
                     <Label className="text-normal" htmlFor="grbDateDay">
                       {t('general:date.day')}
                     </Label>
 
                     <TextInput
-                      {...field}
-                      ref={null}
+                      {...rest}
                       id="grbDateDay"
                       type="text"
                       validationStatus={error && 'error'}
@@ -303,15 +313,17 @@ const Dates = ({
               <Controller
                 name="grbDateYear"
                 control={control}
-                render={({ field, fieldState: { error } }) => (
+                render={({
+                  field: { ref, ...rest },
+                  fieldState: { error }
+                }) => (
                   <FormGroup className="margin-top-2" error={!!error}>
                     <Label className="text-normal" htmlFor="grbDateYear">
                       {t('general:date.year')}
                     </Label>
 
                     <TextInput
-                      {...field}
-                      ref={null}
+                      {...rest}
                       id="grbDateYear"
                       type="text"
                       validationStatus={error && 'error'}
@@ -364,11 +376,7 @@ const Dates = ({
             );
           }}
         />
-        <Button
-          className="margin-top-8"
-          type="submit"
-          // onClick={() => setErrors({})}
-        >
+        <Button className="margin-top-8" type="submit">
           {t('governanceReviewTeam:dates.submit')}
         </Button>
       </Form>
