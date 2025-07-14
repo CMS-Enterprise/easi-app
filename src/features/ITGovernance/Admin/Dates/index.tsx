@@ -68,7 +68,7 @@ const Dates = ({
     resolver: yupResolver(DateValidationSchema)
   });
 
-  const onSubmit = (
+  const onSubmit = async (
     values: SubmitDatesForm & {
       grbReviewType: SystemIntakeGRBReviewType;
     }
@@ -83,26 +83,21 @@ const Dates = ({
       grbReviewType
     } = values;
 
+    const updateType = updateReviewType({
+      variables: {
+        input: {
+          systemIntakeID: systemId,
+          grbReviewType
+        }
+      }
+    });
+
     if (grbReviewType === SystemIntakeGRBReviewType.ASYNC) {
-      updateReviewType({
-        variables: {
-          input: {
-            systemIntakeID: systemId,
-            grbReviewType
-          }
-        }
-      }).then(() => {
-        history.push(`/it-governance/${systemId}/intake-request`);
-      });
+      await updateType;
+      history.push(`/it-governance/${systemId}/intake-request`);
     } else {
-      updateReviewType({
-        variables: {
-          input: {
-            systemIntakeID: systemId,
-            grbReviewType
-          }
-        }
-      });
+      await updateType;
+
       const newGrtDate = DateTime.fromObject(
         {
           day: Number(grtDateDay),
@@ -121,7 +116,7 @@ const Dates = ({
         { zone: 'UTC' }
       ).toISO();
 
-      updateReviewDates({
+      await updateReviewDates({
         variables: {
           input: {
             id: systemId,
@@ -129,9 +124,9 @@ const Dates = ({
             grbDate: newGrbDate
           }
         }
-      }).then(() => {
-        history.push(`/it-governance/${systemId}/intake-request`);
       });
+
+      history.push(`/it-governance/${systemId}/intake-request`);
     }
   };
 
