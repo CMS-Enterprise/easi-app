@@ -65,13 +65,6 @@ RUN --mount=type=bind,target=/tmp/packages/,source=/tmp/packages/,from=builder \
     apt-get update \
     && . /tmp/packages/modules.env \
     && for module in $BUILT_MODULES; do \
-        for deb in /tmp/packages/nginx-module-${module}_${NGINX_VERSION}*.deb; do \
-            if [ -f "$deb" ]; then \
-                echo "Installing $deb"; \
-                apt-get install --no-install-suggests --no-install-recommends -y "$deb"; \
-            else \
-                echo "No .deb found for module ${module}, skipping..."; \
-            fi; \
-        done; \
-    done \
+           apt-get install --no-install-suggests --no-install-recommends -y /tmp/packages/nginx-module-${module}_${NGINX_VERSION}*.deb; \
+       done \
     && rm -rf /var/lib/apt/lists/*
