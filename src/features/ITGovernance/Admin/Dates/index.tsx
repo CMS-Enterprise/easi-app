@@ -262,7 +262,7 @@ const Dates = ({
                     <TextInput
                       {...field}
                       ref={null}
-                      id="name"
+                      id="grbDateMonth"
                       type="text"
                       validationStatus={error && 'error'}
                       disabled={
@@ -287,7 +287,7 @@ const Dates = ({
                     <TextInput
                       {...field}
                       ref={null}
-                      id="name"
+                      id="grbDateDay"
                       type="text"
                       validationStatus={error && 'error'}
                       disabled={
@@ -312,7 +312,7 @@ const Dates = ({
                     <TextInput
                       {...field}
                       ref={null}
-                      id="name"
+                      id="grbDateYear"
                       type="text"
                       validationStatus={error && 'error'}
                       disabled={
