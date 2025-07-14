@@ -1,17 +1,19 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import {
   GetSystemIntakeGRBDiscussionsDocument,
   GetSystemIntakeGRBDiscussionsQuery,
   GetSystemIntakeGRBDiscussionsQueryVariables,
   GRBVotingInformationStatus,
   SystemIntakeFragmentFragment,
+  SystemIntakeGRBReviewAsyncStatusType,
   SystemIntakeGRBReviewerFragment,
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole,
   SystemIntakeGRBReviewStandardStatusType,
+  SystemIntakeGRBReviewType,
   SystemIntakeState,
   SystemIntakeStatusAdmin
 } from 'gql/generated/graphql';
@@ -21,7 +23,7 @@ import {
   mockDiscussionsWithoutReplies
 } from 'tests/mock/discussions';
 import { getSystemIntakeGRBReviewQuery, grbReview } from 'tests/mock/grbReview';
-import { systemIntake } from 'tests/mock/systemIntake';
+import { documents, systemIntake } from 'tests/mock/systemIntake';
 import users from 'tests/mock/users';
 
 import { MessageProvider } from 'hooks/useMessage';
@@ -102,10 +104,17 @@ describe('GRB review tab', () => {
 
     expect(await screen.findByRole('heading', { name: 'GRB review' }));
 
-    // Hide start review button
+    // Hide set up GRB review button
     expect(
       screen.queryByRole('button', { name: 'Set up GRB review' })
     ).toBeNull();
+
+    // Hide remove documents button
+    const grbReviewDocuments = screen.getByTestId('system-intake-documents');
+
+    expect(
+      within(grbReviewDocuments).queryByRole('button', { name: 'Remove' })
+    ).not.toBeInTheDocument();
   });
 
   it('renders admin view', async () => {
@@ -530,6 +539,92 @@ describe('GRB review tab', () => {
         screen.queryByRole('heading', {
           name: 'Review this IT Governance request and share your opinion on its merit'
         })
+      ).not.toBeInTheDocument();
+    });
+  });
+
+  describe('Documents table', () => {
+    it('hides the remove button if the standard meeting is complete', async () => {
+      render(
+        <MemoryRouter>
+          <VerboseMockedProvider
+            mocks={[
+              getSystemIntakeGRBReviewDiscussionsQuery,
+              getSystemIntakeGRBReviewQuery({
+                grbReviewStandardStatus:
+                  SystemIntakeGRBReviewStandardStatusType.COMPLETED,
+                documents
+              })
+            ]}
+          >
+            <Provider store={store}>
+              <MessageProvider>
+                <ModalProvider>
+                  <ITGovAdminContext.Provider value>
+                    <GRBReview
+                      systemIntake={{
+                        ...systemIntake,
+                        documents
+                      }}
+                      businessCase={businessCase}
+                    />
+                  </ITGovAdminContext.Provider>
+                </ModalProvider>
+              </MessageProvider>
+            </Provider>
+          </VerboseMockedProvider>
+        </MemoryRouter>
+      );
+
+      const grbReviewDocuments = await screen.findByTestId(
+        'system-intake-documents'
+      );
+
+      expect(
+        within(grbReviewDocuments).queryByRole('button', { name: 'Remove' })
+      ).not.toBeInTheDocument();
+    });
+
+    it('hides the remove button if the async review is complete', async () => {
+      render(
+        <MemoryRouter>
+          <VerboseMockedProvider
+            mocks={[
+              getSystemIntakeGRBReviewDiscussionsQuery,
+              getSystemIntakeGRBReviewQuery({
+                grbReviewType: SystemIntakeGRBReviewType.ASYNC,
+                grbReviewAsyncStatus:
+                  SystemIntakeGRBReviewAsyncStatusType.COMPLETED,
+                documents
+              })
+            ]}
+          >
+            <Provider store={store}>
+              <MessageProvider>
+                <ModalProvider>
+                  <ITGovAdminContext.Provider value>
+                    <GRBReview
+                      systemIntake={{
+                        ...systemIntake,
+                        grbReviewType: SystemIntakeGRBReviewType.ASYNC,
+                        documents
+                      }}
+                      businessCase={businessCase}
+                    />
+                  </ITGovAdminContext.Provider>
+                </ModalProvider>
+              </MessageProvider>
+            </Provider>
+          </VerboseMockedProvider>
+        </MemoryRouter>
+      );
+
+      const grbReviewDocuments = await screen.findByTestId(
+        'system-intake-documents'
+      );
+
+      expect(
+        within(grbReviewDocuments).queryByRole('button', { name: 'Remove' })
       ).not.toBeInTheDocument();
     });
   });
