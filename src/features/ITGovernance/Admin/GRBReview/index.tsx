@@ -6,6 +6,7 @@ import { Button, Icon } from '@trussworks/react-uswds';
 import DocumentsTable from 'features/ITGovernance/_components/DocumentsTable';
 import {
   GRBVotingInformationStatus,
+  SystemIntakeDocumentStatus,
   SystemIntakeFragmentFragment,
   SystemIntakeGRBReviewAsyncStatusType,
   SystemIntakeGRBReviewerVotingRole,
@@ -90,10 +91,14 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
 
   const { euaId } = useSelector((appState: AppState) => appState.auth);
 
-  const currentGRBReviewer = grbReview?.grbVotingInformation?.grbReviewers.find(
-    reviewer =>
-      reviewer.userAccount.username === euaId &&
-      reviewer.votingRole === SystemIntakeGRBReviewerVotingRole.VOTING
+  const currentGRBReviewer = useMemo(
+    () =>
+      grbReview?.grbVotingInformation?.grbReviewers.find(
+        reviewer =>
+          reviewer.userAccount.username === euaId &&
+          reviewer.votingRole === SystemIntakeGRBReviewerVotingRole.VOTING
+      ),
+    [euaId, grbReview?.grbVotingInformation?.grbReviewers]
   );
 
   const grbReviewers = grbReview?.grbVotingInformation?.grbReviewers || [];
@@ -150,6 +155,15 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
     transcriptLink,
     presentationDeckFileURL
   ]);
+
+  const hideRemoveDocumentsButton = useMemo(() => {
+    const reviewIsComplete =
+      grbReviewAsyncStatus === SystemIntakeGRBReviewAsyncStatusType.COMPLETED ||
+      grbReviewStandardStatus ===
+        SystemIntakeGRBReviewStandardStatusType.COMPLETED;
+
+    return reviewIsComplete || !!currentGRBReviewer;
+  }, [grbReviewAsyncStatus, grbReviewStandardStatus, currentGRBReviewer]);
 
   if (!grbReview) {
     return null;
@@ -282,8 +296,11 @@ const GRBReview = ({ systemIntake, businessCase }: GRBReviewProps) => {
         {/* GRB Documents */}
         <DocumentsTable
           systemIntakeId={id}
-          documents={grbReview.documents}
-          asyncStatus={grbReviewAsyncStatus}
+          documents={grbReview.documents.map(doc => ({
+            ...doc,
+            status: SystemIntakeDocumentStatus.AVAILABLE
+          }))}
+          hideRemoveButton={hideRemoveDocumentsButton}
         />
 
         {/* Discussion Board */}
