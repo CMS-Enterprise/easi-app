@@ -260,6 +260,51 @@ func ManuallyEndSystemIntakeGRBReviewAsyncVoting(
 		return nil, err
 	}
 
+	if emailClient != nil && intake.GRBReviewStartedAt != nil && intake.GrbReviewAsyncEndDate != nil {
+		logger := appcontext.ZLogger(ctx)
+		// get GRB reviewers
+		reviewers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{intake.ID})
+		if err != nil {
+			// don't exit with error, just log
+			logger.Error("problem getting reviewers when sending Voting Ended Early email", zap.Error(err), zap.String("intake.id", intake.ID.String()))
+
+			return &models.UpdateSystemIntakePayload{
+				SystemIntake: updatedIntake,
+			}, nil
+		}
+
+		// get user emails
+		var emails []string
+		for _, reviewer := range reviewers {
+			userAccount, err := dataloaders.GetUserAccountByID(ctx, reviewer.UserID)
+			if err != nil {
+				// don't exit with error, just log
+				logger.Error("problem getting accounts when sending Voting Ended Early email", zap.Error(err), zap.String("intake.id", intake.ID.String()))
+
+				return &models.UpdateSystemIntakePayload{
+					SystemIntake: updatedIntake,
+				}, nil
+			}
+
+			emails = append(emails, userAccount.Email)
+		}
+
+		for _, userEmail := range emails {
+			if err := emailClient.SystemIntake.SendSystemIntakeGRBReviewEndedEarly(ctx, email.SendSystemIntakeGRBReviewEndedEarlyInput{
+				Recipient:          models.EmailAddress(userEmail),
+				SystemIntakeID:     intake.ID,
+				ProjectTitle:       intake.ProjectName.String,
+				RequesterName:      intake.Requester,
+				RequesterComponent: intake.Component.String,
+				StartDate:          *intake.GRBReviewStartedAt,
+				EndDate:            *intake.GrbReviewAsyncEndDate,
+			}); err != nil {
+				logger.Error("problem sending Voting Ended Early email", zap.Error(err), zap.String("intake.id", intake.ID.String()), zap.String("user.email", userEmail))
+				continue
+			}
+		}
+	}
+
 	return &models.UpdateSystemIntakePayload{
 		SystemIntake: updatedIntake,
 	}, nil
@@ -332,7 +377,7 @@ func ExtendGRBReviewDeadlineAsync(
 				*intake.GRBReviewStartedAt,
 				*intake.GrbReviewAsyncEndDate,
 			); err != nil {
-				appcontext.ZLogger(ctx).Error("problem sending Deadline Extended email", zap.Error(err), zap.String("intake.id", intake.ID.String()), zap.String("user.email", userEmail))
+				logger.Error("problem sending Deadline Extended email", zap.Error(err), zap.String("intake.id", intake.ID.String()), zap.String("user.email", userEmail))
 				continue
 			}
 		}
