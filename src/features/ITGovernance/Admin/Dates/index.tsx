@@ -18,6 +18,7 @@ import FieldGroup from 'components/FieldGroup';
 import HelpText from 'components/HelpText';
 import Label from 'components/Label';
 import PageHeading from 'components/PageHeading';
+import useMessage from 'hooks/useMessage';
 import { SubmitDatesForm } from 'types/systemIntake';
 import { parseAsUTC } from 'utils/date';
 import { DateValidationSchema } from 'validations/systemIntakeSchema';
@@ -28,6 +29,7 @@ const Dates = ({
   systemIntake: SystemIntakeFragmentFragment;
 }) => {
   const { t } = useTranslation();
+  const { showMessage } = useMessage();
   const history = useHistory();
   const { systemId } = useParams<{ systemId: string }>();
 
@@ -63,7 +65,6 @@ const Dates = ({
     resolver: yupResolver(DateValidationSchema)
   });
 
-  console.log(errors);
   const onSubmit = async (values: SubmitDatesForm) => {
     try {
       const {
@@ -118,8 +119,7 @@ const Dates = ({
 
       history.push(`/it-governance/${systemId}/intake-request`);
     } catch (error) {
-      // TODO: Gary do this
-      console.error('Error submitting review dates:', error);
+      showMessage(t('error.message'), { type: 'error' });
     }
   };
 
