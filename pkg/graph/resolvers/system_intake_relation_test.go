@@ -133,6 +133,7 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 			s.NoError(err)
 
 			// Ensure the system IDs were modified properly
+			// New System relation should always remove existing system IDs
 			s.Equal(len(caseValues.NewSystemIDs), len(updatedIntakeSystemIDs))
 			for _, v := range updatedIntakeSystemIDs {
 				s.Contains(caseValues.NewSystemIDs, v.ID)
@@ -237,7 +238,7 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			InitialContractNumbers: []string{"1", "2"},
 			NewContractNumbers:     []string{"1", "2", "3"},
 			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
-			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}", "{11AB1A00-1234-5678-ABC1-1A001B00CC3D}", "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}", "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"},
+			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}", "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}", "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"},
 			InitialLinkedSystems: []*models.SystemRelationshipInput{
 				{
 					CedarSystemID:                      &idOne,
@@ -269,7 +270,7 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			InitialContractNumbers: []string{"1", "2"},
 			NewContractNumbers:     []string{"1"},
 			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
-			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
+			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"},
 			InitialLinkedSystems: []*models.SystemRelationshipInput{
 				{
 					CedarSystemID:                      &idOne,
@@ -403,14 +404,6 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 			InitialContractNumbers: []string{"1", "2"},
 			NewContractNumbers:     []string{"1"},
 		},
-		"should not add system IDs": {
-			InitialContractNumbers: []string{"1", "2"},
-			NewContractNumbers:     []string{"1"},
-			InitialSystemIDs:       []string{},
-			NewSystemIDs:           []string{},
-			InitialLinkedSystems:   []*models.SystemRelationshipInput{},
-			NewLinkedSystems:       []*models.SystemRelationshipInput{},
-		},
 		"should remove existing system IDs": {
 			InitialContractNumbers: []string{"1", "2"},
 			NewContractNumbers:     []string{"1"},
@@ -428,6 +421,14 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 				},
 			},
 			NewLinkedSystems: []*models.SystemRelationshipInput{},
+		},
+		"should not add system IDs": {
+			InitialContractNumbers: []string{"1", "2"},
+			NewContractNumbers:     []string{"1"},
+			InitialSystemIDs:       []string{},
+			NewSystemIDs:           []string{},
+			InitialLinkedSystems:   []*models.SystemRelationshipInput{},
+			NewLinkedSystems:       []*models.SystemRelationshipInput{},
 		},
 	}
 
