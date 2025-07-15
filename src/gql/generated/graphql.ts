@@ -33,6 +33,24 @@ export type Scalars = {
   Upload: { input: Upload; output: Upload; }
 };
 
+/** The input type for adding a new System Link */
+export type AddSystemLinkInput = {
+  otherSystemRelationshipDescription?: InputMaybe<Scalars['String']['input']>;
+  systemID: Scalars['String']['input'];
+  systemIntakeID: Scalars['UUID']['input'];
+  systemRelationshipType: Array<SystemRelationshipType>;
+};
+
+/** The payload for adding a new System Link */
+export type AddSystemLinkPayload = {
+  __typename: 'AddSystemLinkPayload';
+  id: Scalars['UUID']['output'];
+  otherSystemRelationshipDescription?: Maybe<Scalars['String']['output']>;
+  systemID: Scalars['String']['output'];
+  systemIntakeID: Scalars['UUID']['output'];
+  systemRelationshipType: Array<SystemRelationshipType>;
+};
+
 /** Represents a contact associated with a system intake, including additional fields from CEDAR */
 export type AugmentedSystemIntakeContact = {
   __typename: 'AugmentedSystemIntakeContact';
@@ -967,6 +985,7 @@ export enum LifecycleCostYear {
 /** Defines the mutations for the schema */
 export type Mutation = {
   __typename: 'Mutation';
+  addSystemLink?: Maybe<AddSystemLinkPayload>;
   archiveSystemIntake: SystemIntake;
   closeTRBRequest: TRBRequest;
   createCedarSystemBookmark?: Maybe<CreateCedarSystemBookmarkPayload>;
@@ -1052,6 +1071,12 @@ export type Mutation = {
   updateTRBRequestForm: TRBRequestForm;
   updateTRBRequestFundingSources: Array<TRBFundingSource>;
   updateTRBRequestTRBLead: TRBRequest;
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationAddSystemLinkArgs = {
+  input: AddSystemLinkInput;
 };
 
 

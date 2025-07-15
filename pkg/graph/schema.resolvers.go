@@ -639,6 +639,16 @@ func (r *mutationResolver) UnlinkSystemIntakeRelation(ctx context.Context, intak
 	}, nil
 }
 
+// AddSystemLink is the resolver for the addSystemLink field.
+func (r *mutationResolver) AddSystemLink(ctx context.Context, input models.AddSystemLinkInput) (*models.AddSystemLinkPayload, error) {
+	newSystemLink, err := resolvers.AddSystemLink(ctx, r.store, input)
+
+	if err != nil {
+		return nil, err
+	}
+	return newSystemLink, nil
+}
+
 // DeleteSystemLink is the resolver for the deleteSystemLink field.
 func (r *mutationResolver) DeleteSystemLink(ctx context.Context, systemIntakeSystem uuid.UUID) (*models.DeleteSystemLinkPayload, error) {
 	err := resolvers.DeleteSystemIntakeSystemByID(ctx, r.store, systemIntakeSystem)

@@ -1378,6 +1378,27 @@ input UpdateSystemIntakeNoteInput {
 }
 
 """
+The input type for adding a new System Link
+"""
+input AddSystemLinkInput {
+  systemIntakeID: UUID!
+  systemID: String!
+  systemRelationshipType: [SystemRelationshipType!]!
+  otherSystemRelationshipDescription: String
+}
+
+"""
+The payload for adding a new System Link
+"""
+type AddSystemLinkPayload {
+  id: UUID!
+  systemIntakeID: UUID!
+  systemID: String!
+  systemRelationshipType: [SystemRelationshipType!]!
+  otherSystemRelationshipDescription: String
+}
+
+"""
 The payload for updating a system's IT governance request
 """
 type UpdateSystemIntakePayload {
@@ -1392,7 +1413,6 @@ type DeleteSystemLinkPayload {
   systemIntakeSystem: SystemIntakeSystem
   userErrors: [UserError!]
 }
-
 """
 The input type for updating a system intake's linked system by id
 """
@@ -2684,6 +2704,7 @@ type Mutation {
     input: SetSystemIntakeRelationExistingServiceInput
   ): UpdateSystemIntakePayload
   unlinkSystemIntakeRelation(intakeID: UUID!): UpdateSystemIntakePayload
+  addSystemLink(input: AddSystemLinkInput!): AddSystemLinkPayload
   deleteSystemLink(systemIntakeSystem: UUID!): DeleteSystemLinkPayload
   updateSystemLink(input: UpdateSystemLinkInput!): UpdateSystemLinkPayload
 
