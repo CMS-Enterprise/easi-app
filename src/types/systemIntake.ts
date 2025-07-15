@@ -2,6 +2,7 @@ import {
   AugmentedSystemIntakeContact,
   FundingSourceFragmentFragment,
   SystemIntakeCollaboratorInput,
+  SystemIntakeGRBReviewType,
   SystemIntakeStatusAdmin
 } from 'gql/generated/graphql';
 
@@ -146,6 +147,7 @@ export type SubmitDatesForm = {
   grbDateDay: string;
   grbDateMonth: string;
   grbDateYear: string;
+  grbReviewType: SystemIntakeGRBReviewType;
 };
 
 /** Cedar contact properties */

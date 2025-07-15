@@ -47,9 +47,7 @@ const Dates = ({
   const parsedGrtDate = grtDate ? parseAsUTC(grtDate) : null;
 
   // TODO: Fix Text Field so we don't have to set initial empty values
-  const initialValues: SubmitDatesForm & {
-    grbReviewType: SystemIntakeGRBReviewType;
-  } = {
+  const initialValues: SubmitDatesForm = {
     grtDateDay: grtDate && parsedGrtDate ? String(parsedGrtDate.day) : '',
     grtDateMonth: grtDate && parsedGrtDate ? String(parsedGrtDate.month) : '',
     grtDateYear: grtDate && parsedGrtDate ? String(parsedGrtDate.year) : '',
@@ -59,44 +57,31 @@ const Dates = ({
     grbReviewType: systemIntake.grbReviewType
   };
 
-  const { control, handleSubmit, watch, setValue } = useForm<
-    SubmitDatesForm & {
-      grbReviewType: SystemIntakeGRBReviewType;
-    }
-  >({
+  const { control, handleSubmit, watch, setValue } = useForm<SubmitDatesForm>({
     defaultValues: initialValues,
     resolver: yupResolver(DateValidationSchema)
   });
 
-  const onSubmit = async (
-    values: SubmitDatesForm & {
-      grbReviewType: SystemIntakeGRBReviewType;
-    }
-  ) => {
-    const {
-      grtDateDay,
-      grtDateMonth,
-      grtDateYear,
-      grbDateMonth,
-      grbDateDay,
-      grbDateYear,
-      grbReviewType
-    } = values;
+  const onSubmit = async (values: SubmitDatesForm) => {
+    try {
+      const {
+        grtDateDay,
+        grtDateMonth,
+        grtDateYear,
+        grbDateMonth,
+        grbDateDay,
+        grbDateYear,
+        grbReviewType
+      } = values;
 
-    const updateType = updateReviewType({
-      variables: {
-        input: {
-          systemIntakeID: systemId,
-          grbReviewType
+      await updateReviewType({
+        variables: {
+          input: {
+            systemIntakeID: systemId,
+            grbReviewType
+          }
         }
-      }
-    });
-
-    if (grbReviewType === SystemIntakeGRBReviewType.ASYNC) {
-      await updateType;
-      history.push(`/it-governance/${systemId}/intake-request`);
-    } else {
-      await updateType;
+      });
 
       const newGrtDate = DateTime.fromObject(
         {
@@ -107,26 +92,32 @@ const Dates = ({
         { zone: 'UTC' }
       ).toISO();
 
-      const newGrbDate = DateTime.fromObject(
-        {
-          day: Number(grbDateDay),
-          month: Number(grbDateMonth),
-          year: Number(grbDateYear)
-        },
-        { zone: 'UTC' }
-      ).toISO();
+      let newGrbDate: string | null = null;
+      if (grbReviewType !== SystemIntakeGRBReviewType.ASYNC) {
+        newGrbDate = DateTime.fromObject(
+          {
+            day: Number(grbDateDay),
+            month: Number(grbDateMonth),
+            year: Number(grbDateYear)
+          },
+          { zone: 'UTC' }
+        ).toISO();
+      }
 
       await updateReviewDates({
         variables: {
           input: {
             id: systemId,
             grtDate: newGrtDate,
-            grbDate: newGrbDate
+            ...(newGrbDate ? { grbDate: newGrbDate } : {})
           }
         }
       });
 
       history.push(`/it-governance/${systemId}/intake-request`);
+    } catch (error) {
+      // TODO: Gary do this
+      console.error('Error submitting review dates:', error);
     }
   };
 
