@@ -87,7 +87,7 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
     variables: { id }
   });
 
-  console.log(data, systemIntakeError);
+  console.log('data', data, systemIntakeError);
 
   const [
     deleteSystemLink,

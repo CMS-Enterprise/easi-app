@@ -18,10 +18,11 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 import {
-  SetSystemIntakeRelationExistingSystemInput,
+  AddSystemLinkInput,
   SystemRelationshipType,
-  useGetSystemIntakeRelationQuery,
-  useSetSystemIntakeRelationExistingSystemMutation
+  useAddSystemLinkMutation,
+  useGetSystemIntakeRelationQuery
+  // useUpdateSystemLinkMutation
 } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
@@ -52,7 +53,8 @@ type LinkedSystemsFormFields = {
 const hasErrors = false; // todo fix this
 
 const buildCedarSystemRelationshipObjects = (
-  payload: LinkedSystemsFormFields
+  payload: LinkedSystemsFormFields,
+  id: string
 ) => {
   const selectedSystemRelationshipTypes: Array<SystemRelationshipType> = [];
 
@@ -80,16 +82,11 @@ const buildCedarSystemRelationshipObjects = (
     selectedSystemRelationshipTypes.push(SystemRelationshipType.OTHER);
   }
 
-  const systemRelationships: SetSystemIntakeRelationExistingSystemInput = {
-    systemIntakeID: '',
-    cedarSystemRelationShips: [
-      {
-        cedarSystemId: payload.cedarSystemID,
-        systemRelationshipType: selectedSystemRelationshipTypes,
-        otherSystemRelationshipDescription: payload.otherDescription
-      }
-    ],
-    contractNumbers: []
+  const systemRelationships: AddSystemLinkInput = {
+    systemID: payload.cedarSystemID,
+    systemIntakeID: id,
+    systemRelationshipType: selectedSystemRelationshipTypes,
+    otherSystemRelationshipDescription: payload.otherDescription
   };
   return systemRelationships;
 };
@@ -110,8 +107,8 @@ const LinkedSystemsForm = () => {
     'error'
   ]);
 
-  const [setExistingIntakeSystem, { error: existingIntakeSystemError }] =
-    useSetSystemIntakeRelationExistingSystemMutation();
+  const [addSystemLink, { error: addSystemLinkError }] =
+    useAddSystemLinkMutation();
 
   const [cedarSystemSelectedError, setCedarSystemSelectedError] =
     useState<boolean>(false);
@@ -162,18 +159,13 @@ const LinkedSystemsForm = () => {
     setCedarSystemSelectedError(false);
 
     const request = {
-      variables: {
-        input: {
-          systemIntakeID: id,
-          cedarSystemRelationShips: buildCedarSystemRelationshipObjects(payload)
-        }
-      }
+      input: buildCedarSystemRelationshipObjects(payload, id)
     };
 
-    console.log(request);
+    console.log('REQUEST: ', request);
 
-    return setExistingIntakeSystem();
-  }, [watch, id]);
+    return addSystemLink({ variables: request });
+  }, [watch, addSystemLink, id]);
 
   /** Update contacts and system intake form */
   const submit = async (callback: () => void = () => {}) => {
@@ -198,7 +190,7 @@ const LinkedSystemsForm = () => {
   return (
     <MainContent className="grid-container margin-bottom-15">
       <>
-        {(hasErrors || existingIntakeSystemError) && (
+        {(hasErrors || addSystemLinkError) && (
           <Alert
             id="link-form-error"
             type="error"

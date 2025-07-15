@@ -92,7 +92,6 @@ export const GetTrbRequestRelations = gql(/* GraphQL */ `
         id
         systemIntakeID
         systemID
-        systemRelationshipType
         otherSystemRelationshipDescription
       }
     }
@@ -102,6 +101,36 @@ export const GetTrbRequestRelations = gql(/* GraphQL */ `
 export const DeleteSystemLink = gql(/* GraphQL */ `
   mutation deleteSystemLink($systemIntakeSystem: UUID!) {
     deleteSystemLink(systemIntakeSystem: $systemIntakeSystem) {
+      systemIntakeSystem {
+        id
+        systemIntakeID
+        systemID
+        systemRelationshipType
+        otherSystemRelationshipDescription
+      }
+      userErrors {
+        message
+        path
+      }
+    }
+  }
+`);
+
+export const AddSystemLink = gql(/* GraphQL */ `
+  mutation addSystemLink($input: AddSystemLinkInput!) {
+    addSystemLink(input: $input) {
+      id
+      systemIntakeID
+      systemID
+      systemRelationshipType
+      otherSystemRelationshipDescription
+    }
+  }
+`);
+
+export const UpdateSystemLink = gql(/* GraphQL */ `
+  mutation updateSystemLink($input: UpdateSystemLinkInput!) {
+    updateSystemLink(input: $input) {
       systemIntakeSystem {
         id
         systemIntakeID
