@@ -20,6 +20,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 	"github.com/cms-enterprise/easi-app/pkg/upload"
+	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 )
 
 // creates, fills out the initial request form, and submits a system intake
@@ -251,7 +252,8 @@ func createSystemIntakeContact(
 		EuaUserID:      euaUserID,
 		SystemIntakeID: intake.ID,
 	}
-	_, err := resolvers.CreateSystemIntakeContact(ctx, store, input)
+	_, err := resolvers.CreateSystemIntakeContact(ctx, store, input,
+		userhelpers.GetUserInfoAccountInfoWrapperFunc(mock.FetchUserInfoMock))
 	if err != nil {
 		panic(err)
 	}
@@ -269,7 +271,9 @@ func updateSystemIntakeContact(
 		Role:      role,
 		EuaUserID: euaUserID,
 	}
-	_, err := resolvers.UpdateSystemIntakeContact(ctx, store, input)
+	_, err := resolvers.UpdateSystemIntakeContact(ctx, store, input,
+		userhelpers.GetUserInfoAccountInfoWrapperFunc(mock.FetchUserInfoMock),
+	)
 	if err != nil {
 		panic(err)
 	}
@@ -407,10 +411,6 @@ func updateSystemIntakeContactDetails(
 		ProductManager: &models.SystemIntakeProductManagerInput{
 			Name:      productManagerName,
 			Component: productManagerComponent,
-		},
-		Isso: &models.SystemIntakeISSOInput{
-			IsPresent: &issoIsPresent,
-			Name:      &issoName,
 		},
 		GovernanceTeams: &models.SystemIntakeGovernanceTeamInput{
 			IsPresent: &govTeamsPresent,

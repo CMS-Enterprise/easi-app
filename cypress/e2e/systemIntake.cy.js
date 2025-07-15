@@ -81,8 +81,6 @@ describe('The System Intake Form', () => {
       'Center for Medicare'
     );
 
-    cy.get('#issoIsPresentFalse').check({ force: true }).should('be.checked');
-
     cy.get('#governanceTeamsIsPresentFalse')
       .check({ force: true })
       .should('be.checked');
@@ -136,19 +134,6 @@ describe('The System Intake Form', () => {
     cy.systemIntake.contactDetails.fillNonBranchingFields();
 
     // Test "same as requester" checkbox
-
-    // ISSO
-    cy.get('#issoIsPresentTrue').check({ force: true }).should('be.checked');
-
-    cy.get('#react-select-issoCommonName-input')
-      .type('Rudolph')
-      .wait(2000)
-      .type('{downArrow}{enter}')
-      .should('have.value', 'Rudolph Pagac, POJG (rudolph.pagac@local.fake)');
-
-    cy.get('#issoComponent')
-      .select('Center for Program Integrity')
-      .should('have.value', 'Center for Program Integrity');
 
     // Add additional contact
     cy.contains('button', 'Add another contact').click();
@@ -351,13 +336,6 @@ describe('The System Intake Form', () => {
       .siblings('dd')
       .contains('Office of Legislation');
 
-    cy.contains(
-      '.easi-review-row dt',
-      'Does your project have an Information System Security Officer (ISSO)?'
-    )
-      .siblings('dd')
-      .contains('Yes, Rudolph Pagac');
-
     cy.contains('.easi-review-row dt', 'I have started collaborating with')
       .siblings('dd')
       .eq(0)
@@ -435,7 +413,6 @@ describe('The System Intake Form', () => {
 
   it('saves on back click', () => {
     cy.systemIntake.contactDetails.fillNonBranchingFields();
-    cy.get('#issoIsPresentFalse').check({ force: true }).should('be.checked');
 
     cy.get('#governanceTeamsIsPresentFalse')
       .check({ force: true })

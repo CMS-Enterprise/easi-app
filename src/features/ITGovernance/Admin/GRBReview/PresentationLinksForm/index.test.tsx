@@ -1,8 +1,8 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
-import { SystemIntakeGRBPresentationLinks } from 'gql/generated/graphql';
-import { systemIntake } from 'tests/mock/systemIntake';
+import { SystemIntakeGRBReviewType } from 'gql/generated/graphql';
+import { grbPresentationLinks, systemIntake } from 'tests/mock/systemIntake';
 
 import { MessageProvider } from 'hooks/useMessage';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
@@ -16,8 +16,10 @@ describe('GRB presentation links form', () => {
         <VerboseMockedProvider>
           <MessageProvider>
             <PresentationLinksForm
-              {...systemIntake}
+              id={systemIntake.id}
+              grbReviewType={SystemIntakeGRBReviewType.ASYNC}
               grbPresentationLinks={null}
+              grbReviewAsyncRecordingTime={null}
             />
           </MessageProvider>
         </VerboseMockedProvider>
@@ -47,18 +49,15 @@ describe('GRB presentation links form', () => {
   });
 
   it('renders the edit links form', () => {
-    const { recordingLink, transcriptFileName, presentationDeckFileName } =
-      systemIntake?.grbPresentationLinks!;
-
     render(
       <MemoryRouter>
         <VerboseMockedProvider>
           <MessageProvider>
             <PresentationLinksForm
-              {...systemIntake}
-              grbPresentationLinks={
-                systemIntake.grbPresentationLinks as SystemIntakeGRBPresentationLinks
-              }
+              id={systemIntake.id}
+              grbReviewType={SystemIntakeGRBReviewType.ASYNC}
+              grbPresentationLinks={grbPresentationLinks}
+              grbReviewAsyncRecordingTime="2025-07-10T12:00:00Z"
             />
           </MessageProvider>
         </VerboseMockedProvider>
@@ -66,7 +65,7 @@ describe('GRB presentation links form', () => {
     );
 
     expect(
-      screen.getByRole('heading', { level: 1, name: 'Edit presentation link' })
+      screen.getByRole('heading', { level: 1, name: 'Edit presentation links' })
     ).toBeInTheDocument();
 
     expect(
@@ -82,16 +81,43 @@ describe('GRB presentation links form', () => {
     ).toHaveLength(2);
 
     expect(screen.getByRole('textbox', { name: 'Recording link' })).toHaveValue(
-      recordingLink
+      'https://google.com'
     );
 
-    expect(screen.getByText(presentationDeckFileName!)).toBeInTheDocument();
+    expect(screen.getByText('presentationDeck.pptx')).toBeInTheDocument();
 
-    expect(screen.getByText(transcriptFileName!)).toBeInTheDocument();
+    expect(
+      screen.getByRole('textbox', {
+        name: 'Asynchronous presentation recording date'
+      })
+    ).toHaveValue('07/10/2025');
 
     // Button should be disabled before any changes are made
     expect(
       screen.getByRole('button', { name: 'Save presentation details' })
     ).toBeDisabled();
+  });
+
+  it('hides the async presentation recording date field for standard meetings', () => {
+    render(
+      <MemoryRouter>
+        <VerboseMockedProvider>
+          <MessageProvider>
+            <PresentationLinksForm
+              id={systemIntake.id}
+              grbReviewType={SystemIntakeGRBReviewType.STANDARD}
+              grbPresentationLinks={grbPresentationLinks}
+              grbReviewAsyncRecordingTime={null}
+            />
+          </MessageProvider>
+        </VerboseMockedProvider>
+      </MemoryRouter>
+    );
+
+    expect(
+      screen.queryByRole('textbox', {
+        name: 'Asynchronous presentation recording date'
+      })
+    ).not.toBeInTheDocument();
   });
 });

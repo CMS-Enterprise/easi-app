@@ -8,7 +8,7 @@ import {
   useLocation
 } from 'react-router-dom';
 import { LoginCallback, SecureRoute } from '@okta/okta-react';
-import { GovBanner } from '@trussworks/react-uswds';
+import { GovBanner, GridContainer } from '@trussworks/react-uswds';
 import Help from 'features/Help';
 import Home from 'features/Home';
 import MyRequests from 'features/Home/MyRequests';
@@ -22,6 +22,7 @@ import SystemIntake from 'features/ITGovernance/Requester/SystemIntake';
 import GovernanceTaskList from 'features/ITGovernance/Requester/TaskList';
 import GovernanceFeedback from 'features/ITGovernance/Requester/TaskList/Feedback';
 import LcidInfo from 'features/ITGovernance/Requester/TaskList/LcidInfo';
+import PresentationDeckUpload from 'features/ITGovernance/Requester/TaskList/PresentationDeckUpload';
 import RequestDecision from 'features/ITGovernance/Requester/TaskList/RequestDecision';
 import LinkedSystems from 'features/LinkedSystems';
 import LinkedSystemsForm from 'features/LinkedSystems/LinkedSystemsForm';
@@ -49,6 +50,7 @@ import UserInfoWrapper from 'wrappers/UserInfoWrapper';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
+import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import { MessageProvider } from 'hooks/useMessage';
 
@@ -134,6 +136,18 @@ const AppRoutes = () => {
         path="/governance-task-list/:systemId/lcid-info"
         component={LcidInfo}
       />
+      <SecureRoute
+        exact
+        path="/governance-task-list/:systemId/presentation-deck-upload"
+        render={() => (
+          <MainContent>
+            <GridContainer>
+              <PresentationDeckUpload type="requester" />
+            </GridContainer>
+          </MainContent>
+        )}
+      />
+
       <Redirect
         exact
         from="/system/:systemId"

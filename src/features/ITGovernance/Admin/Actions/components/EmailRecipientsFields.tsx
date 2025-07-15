@@ -232,7 +232,6 @@ const EmailRecipientsFields = ({
     return [
       contacts.businessOwner,
       contacts.productManager,
-      ...(contacts.isso.commonName ? [contacts.isso] : []),
       ...contacts.additionalContacts
     ];
   }, [contacts]);

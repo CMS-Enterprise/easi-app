@@ -11,6 +11,7 @@ import {
 } from '@trussworks/react-uswds';
 import NotFound from 'features/Miscellaneous/NotFound';
 import {
+  ITGovIntakeFormStatus,
   SystemIntakeState,
   SystemIntakeStatusAdmin
 } from 'gql/generated/graphql';
@@ -28,7 +29,6 @@ import useMessage from 'hooks/useMessage';
 import { formatDateUtc } from 'utils/date';
 
 import {
-  ITGovIntakeFormStatus,
   SystemIntakeDecisionState,
   SystemIntakeStep,
   useArchiveSystemIntakeMutation,
@@ -235,7 +235,7 @@ function GovernanceTaskList() {
                   <GovTaskGrtMeeting {...systemIntake} />
                   {/* 5. Submit your Business Case for final approval */}
                   <GovTaskBizCaseFinal {...systemIntake} />
-                  {/* 6. Attend the GRB meeting */}
+                  {/* 6. Attend the GRB review */}
                   <GovTaskGrbMeeting {...systemIntake} />
                   {/* 7. Decision and next steps */}
                   <GovTaskDecisionAndNextSteps {...systemIntake} />

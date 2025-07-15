@@ -1,9 +1,9 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
-import { Grid, Icon } from '@trussworks/react-uswds';
+import { Grid, GridContainer, Icon } from '@trussworks/react-uswds';
 import {
-  GetSystemIntakeGRBReviewersDocument,
+  GetSystemIntakeGRBReviewDocument,
   SystemIntakeGRBReviewerFragment,
   useCreateSystemIntakeGRBReviewersMutation
 } from 'gql/generated/graphql';
@@ -18,8 +18,8 @@ import AddReviewerFromEua from './AddReviewerFromEua';
 import AddReviewersFromRequest from './AddReviewersFromRequest';
 
 type GRBReviewerFormProps = {
+  isFromGRBSetup: boolean;
   initialGRBReviewers: SystemIntakeGRBReviewerFragment[];
-  setReviewerToRemove: (reviewer: SystemIntakeGRBReviewerFragment) => void;
   grbReviewStartedAt?: string | null;
 };
 
@@ -27,12 +27,14 @@ type GRBReviewerFormProps = {
  * Form to add or edit a GRB reviewer
  */
 const GRBReviewerForm = ({
+  isFromGRBSetup,
   initialGRBReviewers,
-  setReviewerToRemove,
   grbReviewStartedAt
 }: GRBReviewerFormProps) => {
   const { t } = useTranslation('grbReview');
-  const { showMessage, showMessageOnNextPage } = useMessage();
+
+  const { Message, showMessage, showMessageOnNextPage } = useMessage();
+
   const history = useHistory();
 
   const { systemId, action } = useParams<{
@@ -41,8 +43,12 @@ const GRBReviewerForm = ({
   }>();
 
   const [mutate] = useCreateSystemIntakeGRBReviewersMutation({
-    refetchQueries: [GetSystemIntakeGRBReviewersDocument]
+    refetchQueries: [GetSystemIntakeGRBReviewDocument]
   });
+
+  const grbReviewPath = isFromGRBSetup
+    ? `/it-governance/${systemId}/grb-review/participants`
+    : `/it-governance/${systemId}/grb-review`;
 
   const createGRBReviewers = (reviewers: GRBReviewerFields[]) =>
     mutate({
@@ -71,14 +77,14 @@ const GRBReviewerForm = ({
         showMessage(t(`messages.error.add`), { type: 'error' });
 
         // Scroll to error
-        const err = document.querySelector('.usa-alert');
-        err?.scrollIntoView();
+        setTimeout(() => {
+          const err = document.querySelector('.usa-alert');
+          err?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
       });
 
-  const grbReviewPath = `/it-governance/${systemId}/grb-review`;
-
   return (
-    <>
+    <GridContainer>
       <Grid className="padding-y-4 margin-bottom-205">
         <h1 className="margin-bottom-1">{t('form.title')}</h1>
         <p className="font-body-md line-height-body-4 text-light margin-top-05 margin-bottom-105 tablet:grid-col-8">
@@ -100,6 +106,8 @@ const GRBReviewerForm = ({
           {t('form.returnToRequest', { context: action })}
         </IconLink>
 
+        <Message className="margin-y-2" />
+
         {
           /**
            * Only show tabbed layout when adding new reviewer(s)
@@ -114,11 +122,12 @@ const GRBReviewerForm = ({
                 className="outline-0"
               >
                 <AddReviewerFromEua
+                  grbReviewPath={grbReviewPath}
                   systemId={systemId}
                   initialGRBReviewers={initialGRBReviewers}
                   createGRBReviewers={createGRBReviewers}
-                  setReviewerToRemove={setReviewerToRemove}
                   grbReviewStartedAt={grbReviewStartedAt}
+                  isFromGRBSetup={isFromGRBSetup}
                 />
               </TabPanel>
               <TabPanel
@@ -127,6 +136,7 @@ const GRBReviewerForm = ({
                 className="outline-0"
               >
                 <AddReviewersFromRequest
+                  grbReviewPath={grbReviewPath}
                   systemId={systemId}
                   createGRBReviewers={createGRBReviewers}
                 />
@@ -134,16 +144,17 @@ const GRBReviewerForm = ({
             </Tabs>
           ) : (
             <AddReviewerFromEua
+              grbReviewPath={grbReviewPath}
               systemId={systemId}
               initialGRBReviewers={initialGRBReviewers}
               createGRBReviewers={createGRBReviewers}
-              setReviewerToRemove={setReviewerToRemove}
               grbReviewStartedAt={grbReviewStartedAt}
+              isFromGRBSetup={isFromGRBSetup}
             />
           )
         }
       </Grid>
-    </>
+    </GridContainer>
   );
 };
 
