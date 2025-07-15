@@ -13,6 +13,8 @@ import {
 import { DateTime } from 'luxon';
 
 import CheckboxField from 'components/CheckboxField';
+import FieldErrorMsg from 'components/FieldErrorMsg';
+import FieldGroup from 'components/FieldGroup';
 import HelpText from 'components/HelpText';
 import Label from 'components/Label';
 import PageHeading from 'components/PageHeading';
@@ -50,11 +52,18 @@ const Dates = ({
     grbReviewType: systemIntake.grbReviewType
   };
 
-  const { control, handleSubmit, watch, setValue } = useForm<SubmitDatesForm>({
+  const {
+    control,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors }
+  } = useForm<SubmitDatesForm>({
     defaultValues: initialValues,
     resolver: yupResolver(DateValidationSchema)
   });
 
+  console.log(errors);
   const onSubmit = async (values: SubmitDatesForm) => {
     try {
       const {
@@ -121,15 +130,23 @@ const Dates = ({
       </PageHeading>
       <h2>{t('governanceReviewTeam:dates.subheading')}</h2>
       <Form onSubmit={handleSubmit(onSubmit)} className="maxw-mobile-lg">
-        <fieldset className="usa-fieldset margin-top-4">
-          <legend className="usa-label margin-bottom-1">
-            {t('governanceReviewTeam:dates.grtDate.label')}
-          </legend>
-          <HelpText id="TestDate-DateHelp-grt">
-            {t('governanceReviewTeam:dates.grtDate.format')}
-          </HelpText>
-          <div className="usa-memorable-date">
-            <div className="usa-form-group usa-form-group--month">
+        <FieldGroup
+          error={
+            !!errors.grtDateDay || !!errors.grtDateMonth || !!errors.grtDateYear
+          }
+        >
+          <fieldset className="usa-fieldset margin-top-4">
+            <legend className="usa-label margin-bottom-1">
+              {t('governanceReviewTeam:dates.grtDate.label')}
+            </legend>
+            <HelpText id="TestDate-DateHelp-grt">
+              {t('governanceReviewTeam:dates.grtDate.format')}
+            </HelpText>
+            <FieldErrorMsg>{errors.grtDateMonth?.message}</FieldErrorMsg>
+            <FieldErrorMsg>{errors.grtDateDay?.message}</FieldErrorMsg>
+            <FieldErrorMsg>{errors.grtDateYear?.message}</FieldErrorMsg>
+            <div className="usa-memorable-date">
+              {/* <div className="usa-form-group usa-form-group--month"> */}
               <Controller
                 name="grtDateMonth"
                 control={control}
@@ -137,7 +154,7 @@ const Dates = ({
                   field: { ref, ...rest },
                   fieldState: { error }
                 }) => (
-                  <FormGroup className="margin-top-2" error={!!error}>
+                  <FormGroup className="usa-form-group--month margin-top-2">
                     <Label className="text-normal" htmlFor="grtDateMonth">
                       {t('general:date.month')}
                     </Label>
@@ -151,8 +168,8 @@ const Dates = ({
                   </FormGroup>
                 )}
               />
-            </div>
-            <div className="usa-form-group usa-form-group--day">
+              {/* </div> */}
+              {/* <div className="usa-form-group usa-form-group--day"> */}
               <Controller
                 name="grtDateDay"
                 control={control}
@@ -160,7 +177,7 @@ const Dates = ({
                   field: { ref, ...rest },
                   fieldState: { error }
                 }) => (
-                  <FormGroup className="margin-top-2" error={!!error}>
+                  <FormGroup className="margin-top-2 usa-form-group--day">
                     <Label className="text-normal" htmlFor="grtDateDay">
                       {t('general:date.day')}
                     </Label>
@@ -174,8 +191,8 @@ const Dates = ({
                   </FormGroup>
                 )}
               />
-            </div>
-            <div className="usa-form-group usa-form-group--year">
+              {/* </div> */}
+              {/* <div className="usa-form-group usa-form-group--year"> */}
               <Controller
                 name="grtDateYear"
                 control={control}
@@ -183,7 +200,7 @@ const Dates = ({
                   field: { ref, ...rest },
                   fieldState: { error }
                 }) => (
-                  <FormGroup className="margin-top-2" error={!!error}>
+                  <FormGroup className="margin-top-2 usa-form-group--year">
                     <Label className="text-normal" htmlFor="grtDateYear">
                       {t('general:date.year')}
                     </Label>
@@ -197,21 +214,29 @@ const Dates = ({
                   </FormGroup>
                 )}
               />
+              {/* </div> */}
             </div>
-          </div>
-        </fieldset>
+          </fieldset>
+        </FieldGroup>
 
         {/* GRB Dates */}
-        <fieldset className="usa-fieldset margin-top-4">
-          <legend className="usa-label margin-bottom-1">
-            {t('governanceReviewTeam:dates.grbDate.label')}
-          </legend>
-          <HelpText id="TestDate-DateHelp-grb" className="text-pre-line">
-            {`${t('governanceReviewTeam:dates.grbDate.description')}
+        <FieldGroup
+          error={
+            !!errors.grbDateDay || !!errors.grbDateMonth || !!errors.grbDateYear
+          }
+        >
+          <fieldset className="usa-fieldset margin-top-4">
+            <legend className="usa-label margin-bottom-1">
+              {t('governanceReviewTeam:dates.grbDate.label')}
+            </legend>
+            <HelpText id="TestDate-DateHelp-grb" className="text-pre-line">
+              {`${t('governanceReviewTeam:dates.grbDate.description')}
             ${t('governanceReviewTeam:dates.grtDate.format')}`}
-          </HelpText>
-          <div className="usa-memorable-date">
-            <div className="usa-form-group usa-form-group--month">
+            </HelpText>
+            <FieldErrorMsg>{errors.grbDateMonth?.message}</FieldErrorMsg>
+            <FieldErrorMsg>{errors.grbDateDay?.message}</FieldErrorMsg>
+            <FieldErrorMsg>{errors.grbDateYear?.message}</FieldErrorMsg>
+            <div className="usa-memorable-date">
               <Controller
                 name="grbDateMonth"
                 control={control}
@@ -219,7 +244,7 @@ const Dates = ({
                   field: { ref, ...rest },
                   fieldState: { error }
                 }) => (
-                  <FormGroup className="margin-top-2" error={!!error}>
+                  <FormGroup className="margin-top-2 usa-form-group--month">
                     <Label className="text-normal" htmlFor="grbDateMonth">
                       {t('general:date.month')}
                     </Label>
@@ -237,8 +262,6 @@ const Dates = ({
                   </FormGroup>
                 )}
               />
-            </div>
-            <div className="usa-form-group usa-form-group--day">
               <Controller
                 name="grbDateDay"
                 control={control}
@@ -246,7 +269,7 @@ const Dates = ({
                   field: { ref, ...rest },
                   fieldState: { error }
                 }) => (
-                  <FormGroup className="margin-top-2" error={!!error}>
+                  <FormGroup className="margin-top-2 usa-form-group--day">
                     <Label className="text-normal" htmlFor="grbDateDay">
                       {t('general:date.day')}
                     </Label>
@@ -264,8 +287,6 @@ const Dates = ({
                   </FormGroup>
                 )}
               />
-            </div>
-            <div className="usa-form-group usa-form-group--year">
               <Controller
                 name="grbDateYear"
                 control={control}
@@ -273,7 +294,7 @@ const Dates = ({
                   field: { ref, ...rest },
                   fieldState: { error }
                 }) => (
-                  <FormGroup className="margin-top-2" error={!!error}>
+                  <FormGroup className="margin-top-2 usa-form-group--year">
                     <Label className="text-normal" htmlFor="grbDateYear">
                       {t('general:date.year')}
                     </Label>
@@ -292,8 +313,8 @@ const Dates = ({
                 )}
               />
             </div>
-          </div>
-        </fieldset>
+          </fieldset>
+        </FieldGroup>
         <Controller
           control={control}
           name="grbReviewType"
