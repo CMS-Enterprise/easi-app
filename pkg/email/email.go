@@ -87,6 +87,7 @@ type templates struct {
 	grbReviewDiscussionGroupTagged                  templateCaller
 	grbReviewDiscussionProjectTeamIndividualTagged  templateCaller
 	grbReviewEnded                                  templateCaller
+	grbReviewEndedEarly                             templateCaller
 	grbReviewLastDay                                templateCaller
 	grbReviewPresentationLinksUpdated               templateCaller
 	grbReviewReminder                               templateCaller
@@ -94,6 +95,9 @@ type templates struct {
 	grbReviewHalfwayThrough                         templateCaller
 	grbReviewPastDueNoQuorum                        templateCaller
 	grbReviewCompleteQuorumMet                      templateCaller
+	grbReviewVoteSubmitted                          templateCaller
+	grbReviewVoteSubmittedAdmin                     templateCaller
+	grbReviewVoteChangedAdmin                       templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -500,6 +504,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 	}
 	appTemplates.grbReviewEnded = grbReviewEndedTemplate
 
+	grbReviewEndedEarlyTemplateName := "system_intake_grb_review_voting_ended_early.gohtml"
+	grbReviewEndedEarly := rawTemplates.Lookup(grbReviewEndedEarlyTemplateName)
+	if grbReviewEndedEarly == nil {
+		return Client{}, templateError(grbReviewEndedEarlyTemplateName)
+	}
+	appTemplates.grbReviewEndedEarly = grbReviewEndedEarly
+
 	grbReviewLastDayTemplateName := "system_intake_grb_review_last_day_reminder.gohtml"
 	grbReviewLastDayTemplate := rawTemplates.Lookup(grbReviewLastDayTemplateName)
 	if grbReviewLastDayTemplate == nil {
@@ -548,6 +559,27 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(grbReviewCompleteQuorumMetTemplateName)
 	}
 	appTemplates.grbReviewCompleteQuorumMet = grbReviewCompleteQuorumMet
+
+	grbReviewVoteSubmittedTemplateName := "grb_review_vote_submitted.gohtml"
+	grbReviewVoteSubmitted := rawTemplates.Lookup(grbReviewVoteSubmittedTemplateName)
+	if grbReviewVoteSubmitted == nil {
+		return Client{}, templateError(grbReviewVoteSubmittedTemplateName)
+	}
+	appTemplates.grbReviewVoteSubmitted = grbReviewVoteSubmitted
+
+	grbReviewVoteSubmittedAdminTemplateName := "grb_review_vote_submitted_admin.gohtml"
+	grbReviewVoteSubmittedAdmin := rawTemplates.Lookup(grbReviewVoteSubmittedAdminTemplateName)
+	if grbReviewVoteSubmittedAdmin == nil {
+		return Client{}, templateError(grbReviewVoteSubmittedAdminTemplateName)
+	}
+	appTemplates.grbReviewVoteSubmittedAdmin = grbReviewVoteSubmittedAdmin
+
+	grbReviewVoteChangedAdminTemplateName := "grb_review_vote_changed_admin.gohtml"
+	grbReviewVoteChangedAdmin := rawTemplates.Lookup(grbReviewVoteChangedAdminTemplateName)
+	if grbReviewVoteChangedAdmin == nil {
+		return Client{}, templateError(grbReviewVoteChangedAdminTemplateName)
+	}
+	appTemplates.grbReviewVoteChangedAdmin = grbReviewVoteChangedAdmin
 
 	client := Client{
 		config:    config,

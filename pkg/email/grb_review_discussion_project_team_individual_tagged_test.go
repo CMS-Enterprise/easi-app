@@ -40,11 +40,8 @@ func (s *EmailTestSuite) TestSendGRBReviewDiscussionProjectTeamIndividualTaggedE
 	err = client.SystemIntake.SendGRBReviewDiscussionProjectTeamIndividualTaggedEmail(ctx, input)
 	s.NoError(err)
 
-	intakePath := path.Join("it-governance", intakeID.String(), "grb-review")
-
-	grbReviewLink := client.urlFromPath(intakePath)
-
-	discussionLink := client.urlFromPathAndQuery(intakePath, fmt.Sprintf("discussionBoardType=%[1]s&amp;discussionMode=reply&amp;discussionId=%[2]s", discussionBoard.String(), postID.String()))
+	viewIntakeLink := client.urlFromPath(path.Join("governance-task-list", intakeID.String()))
+	discussionLink := client.urlFromPathAndQuery(path.Join("governance-task-list", intakeID.String()), fmt.Sprintf("discussionBoardType=%[1]s&amp;discussionMode=reply&amp;discussionId=%[2]s", discussionBoard.String(), postID.String()))
 
 	expectedEmail := fmt.Sprintf(`
 		<h1 class="header-title">EASi</h1>
@@ -75,7 +72,7 @@ func (s *EmailTestSuite) TestSendGRBReviewDiscussionProjectTeamIndividualTaggedE
 
 		<p>You will continue to receive email notifications about this request until it is closed.</p>`,
 		requestName,
-		grbReviewLink,
+		viewIntakeLink,
 		userName,
 		role,
 		discussionContent,

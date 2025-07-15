@@ -101,7 +101,7 @@ func (s *ResolverSuite) TestUploadSystemIntakeGRBPresentationDeckOnCompletedGRBR
 	// set votes for each one
 	for _, reviewer := range reviewers {
 		rctx, _ := s.getTestContextWithPrincipal(reviewer.EuaUserID, false)
-		_, err := CastSystemIntakeGRBReviewerVote(rctx, s.testConfigs.Store, models.CastSystemIntakeGRBReviewerVoteInput{
+		_, err := CastSystemIntakeGRBReviewerVote(rctx, s.testConfigs.Store, s.testConfigs.EmailClient, models.CastSystemIntakeGRBReviewerVoteInput{
 			SystemIntakeID: intake.ID,
 			Vote:           models.SystemIntakeAsyncGRBVotingOptionNoObjection,
 			VoteComment:    nil,
