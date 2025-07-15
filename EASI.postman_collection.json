@@ -1545,6 +1545,27 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Create New System Link",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation AddSystemLink($input: AddSystemLinkInput!) {\n  addSystemLink(input: $input) {\n    id\n    systemIntakeID\n    systemID\n    systemRelationshipType\n    otherSystemRelationshipDescription\n  }\n}\n",
+										"variables": "{\n    \"input\":\n    {\n        \"systemID\": \"{11AB1A00-1234-5678-ABC1-1A001B00CC5F}\",\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\n        \"systemRelationshipType\": [\"USES_OR_IMPACTED_BY_SELECTED_SYSTEM\", \"OTHER\"],\n        \"otherSystemRelationshipDescription\":\"Adding new description\"\n    }\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
