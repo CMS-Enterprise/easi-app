@@ -867,6 +867,7 @@ type SystemIntake {
   grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType
   grbReviewAsyncManualEndDate: Time
   grbReviewReminderLastSent: Time
+  cedarSystemRelationShips: [SystemIntakeSystem]
 }
 
 """

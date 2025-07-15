@@ -2064,6 +2064,7 @@ export type SystemIntake = {
   businessOwner: SystemIntakeBusinessOwner;
   businessSolution?: Maybe<Scalars['String']['output']>;
   cedarSystemId?: Maybe<Scalars['String']['output']>;
+  cedarSystemRelationShips?: Maybe<Array<Maybe<SystemIntakeSystem>>>;
   contract: SystemIntakeContract;
   contractName?: Maybe<Scalars['String']['output']>;
   /** Linked contract numbers */

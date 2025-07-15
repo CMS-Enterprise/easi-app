@@ -2075,6 +2075,11 @@ func (r *systemIntakeResolver) GrbReviewAsyncStatus(ctx context.Context, obj *mo
 	return resolvers.CalcSystemIntakeGRBReviewAsyncStatus(ctx, obj), nil
 }
 
+// CedarSystemRelationShips is the resolver for the cedarSystemRelationShips field.
+func (r *systemIntakeResolver) CedarSystemRelationShips(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeSystem, error) {
+	panic(fmt.Errorf("not implemented: CedarSystemRelationShips - cedarSystemRelationShips"))
+}
+
 // DocumentType is the resolver for the documentType field.
 func (r *systemIntakeDocumentResolver) DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*models.SystemIntakeDocumentType, error) {
 	return &models.SystemIntakeDocumentType{
