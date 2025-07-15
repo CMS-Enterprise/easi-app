@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
@@ -16,7 +16,6 @@ import CheckboxField from 'components/CheckboxField';
 import HelpText from 'components/HelpText';
 import Label from 'components/Label';
 import PageHeading from 'components/PageHeading';
-import { GRBReviewStatus } from 'types/grbReview';
 import { SubmitDatesForm } from 'types/systemIntake';
 import { parseAsUTC } from 'utils/date';
 import { DateValidationSchema } from 'validations/systemIntakeSchema';
@@ -36,13 +35,7 @@ const Dates = ({
 
   const [updateReviewType] = useUpdateSystemIntakeGRBReviewTypeMutation();
 
-  const {
-    grtDate,
-    grbDate,
-    grbReviewStartedAt,
-    grbReviewStandardStatus,
-    grbReviewAsyncStatus
-  } = systemIntake;
+  const { grtDate, grbDate, grbReviewStartedAt } = systemIntake;
   const parsedGrbDate = grbDate ? parseAsUTC(grbDate) : null;
   const parsedGrtDate = grtDate ? parseAsUTC(grtDate) : null;
 
@@ -120,30 +113,6 @@ const Dates = ({
       console.error('Error submitting review dates:', error);
     }
   };
-
-  /**
-   * Returns the correct status data for the review type,
-   * or NOT_STARTED if status is null
-   */
-  const grbReviewStatus: GRBReviewStatus | null | undefined = useMemo(() => {
-    if (!grbReviewStartedAt) return 'NOT_STARTED';
-
-    return systemIntake.grbReviewType === SystemIntakeGRBReviewType.STANDARD
-      ? grbReviewStandardStatus
-      : grbReviewAsyncStatus;
-  }, [
-    grbReviewAsyncStatus,
-    grbReviewStandardStatus,
-    grbReviewStartedAt,
-    systemIntake.grbReviewType
-  ]);
-
-  const reviewIsInProgress: boolean =
-    grbReviewStatus !== 'NOT_STARTED' && grbReviewStatus !== 'COMPLETED';
-
-  if (!grbReviewStatus) {
-    return null;
-  }
 
   return (
     <>
@@ -342,7 +311,7 @@ const Dates = ({
                   checked={
                     checkboxField.value === SystemIntakeGRBReviewType.ASYNC
                   }
-                  disabled={reviewIsInProgress}
+                  disabled={!!grbReviewStartedAt}
                   onChange={e => {
                     const isChecked = e.target.checked;
                     if (isChecked) {

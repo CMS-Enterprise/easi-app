@@ -145,8 +145,6 @@ export default gql(/* GraphQL */ `
       ...SystemIntakeGRBPresentationLinksFragment
     }
     grbReviewStartedAt
-    grbReviewAsyncStatus
-    grbReviewStandardStatus
     grbVotingInformation {
       grbReviewers {
         ...SystemIntakeGRBReviewer
