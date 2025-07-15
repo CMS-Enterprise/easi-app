@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -2155,7 +2156,7 @@ func (r *systemIntakeNoteResolver) Editor(ctx context.Context, obj *models.Syste
 
 // SystemRelationshipType is the resolver for the systemRelationshipType field.
 func (r *systemIntakeSystemResolver) SystemRelationshipType(ctx context.Context, obj *models.SystemIntakeSystem) ([]models.SystemRelationshipType, error) {
-	return obj.SystemRelationshipType, nil
+	panic(fmt.Errorf("not implemented: SystemRelationshipType - systemRelationshipType"))
 }
 
 // Author is the resolver for the author field.

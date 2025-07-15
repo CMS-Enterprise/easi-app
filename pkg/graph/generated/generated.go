@@ -11604,15 +11604,9 @@ type Mutation {
 
   startGRBReview(input: StartGRBReviewInput!): String
 
-  createSystemIntakeGRBReviewers(
-    input: CreateSystemIntakeGRBReviewersInput!
-  ): CreateSystemIntakeGRBReviewersPayload
-  updateSystemIntakeGRBReviewer(
-    input: UpdateSystemIntakeGRBReviewerInput!
-  ): SystemIntakeGRBReviewer!
-  deleteSystemIntakeGRBReviewer(
-    input: DeleteSystemIntakeGRBReviewerInput!
-  ): UUID!
+  createSystemIntakeGRBReviewers(input: CreateSystemIntakeGRBReviewersInput!): CreateSystemIntakeGRBReviewersPayload
+  updateSystemIntakeGRBReviewer(input: UpdateSystemIntakeGRBReviewerInput!): SystemIntakeGRBReviewer!
+  deleteSystemIntakeGRBReviewer(input: DeleteSystemIntakeGRBReviewerInput!): UUID!
 
   castSystemIntakeGRBReviewerVote(input: CastSystemIntakeGRBReviewerVoteInput!): SystemIntakeGRBReviewer!
 
