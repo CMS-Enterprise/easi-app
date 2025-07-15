@@ -358,3 +358,45 @@ func (s *StoreTestSuite) TestGetLinkedSystemByID() {
 		s.Nil(found)
 	})
 }
+
+func (s *StoreTestSuite) TestAddSystemIntakeSystem() {
+	ctx := context.Background()
+
+	s.Run("successfully adds a new linked system to a system intake", func() {
+		// Step 1: Create a system intake to link against
+		intake := models.SystemIntake{
+			EUAUserID:   testhelpers.RandomEUAIDNull(),
+			RequestType: models.SystemIntakeRequestTypeNEW,
+			Requester:   "test add system link",
+		}
+		createdIntake, err := s.store.CreateSystemIntake(ctx, &intake)
+		initialDescription := "initial description"
+		s.NoError(err)
+
+		// Step 2: Prepare system intake system input
+		systemLink := models.SystemIntakeSystem{
+			BaseStructUser:                     models.NewBaseStructUser(uuid.New()),
+			SystemIntakeID:                     createdIntake.ID,
+			SystemID:                           "system-test-id",
+			SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+			OtherSystemRelationshipDescription: &initialDescription,
+		}
+
+		// Step 3: Add the system link using the function under test
+		var newSystem *models.SystemIntakeSystem
+		err = sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
+			newSystem, err = AddSystemIntakeSystem(ctx, tx, systemLink)
+			return err
+		})
+		s.NoError(err)
+		s.NotNil(newSystem)
+		s.Equal(systemLink.SystemID, newSystem.SystemID)
+		s.Equal(systemLink.SystemIntakeID, newSystem.SystemIntakeID)
+		s.Equal(systemLink.SystemRelationshipType, newSystem.SystemRelationshipType)
+		s.Equal(systemLink.OtherSystemRelationshipDescription, newSystem.OtherSystemRelationshipDescription)
+
+		// Cleanup
+		_, err = s.db.Exec("DELETE FROM system_intakes WHERE id = $1", createdIntake.ID)
+		s.NoError(err)
+	})
+}
