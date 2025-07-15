@@ -51,7 +51,8 @@ const Dates = ({
     grbDateDay: grbDate && parsedGrbDate ? String(parsedGrbDate.day) : '',
     grbDateMonth: grbDate && parsedGrbDate ? String(parsedGrbDate.month) : '',
     grbDateYear: grbDate && parsedGrbDate ? String(parsedGrbDate.year) : '',
-    grbReviewType: systemIntake.grbReviewType || SystemIntakeGRBReviewType.STANDARD
+    grbReviewType:
+      systemIntake.grbReviewType || SystemIntakeGRBReviewType.STANDARD
   };
 
   const {
