@@ -88,11 +88,12 @@ const intake = {
     tableDescription:
       'Upload any documents relevant to your Intake Request. This could include documents such as draft IGCEs, contracting documents such as a SOO or SOW, presentation slide decks, or other informational documents.',
     continueWithoutDocuments: 'Continue without documents',
-    noDocuments: 'No documents uploaded',
+    noDocuments: 'There are no documents uploaded for this request.',
     formDescription:
       'Choose a document to upload such as a draft IGCE, contracting document, RAF or other document related to this project and Intake Request.',
     dontUpload_requester: "Don't upload and return to Intake Request",
     dontUpload_admin: "Don't upload and return to request details",
+    dontUpload_grbReviewForm: "Don't upload and return to GRB review setup",
     selectDocument: 'Select your document',
     supportingDocuments: 'Supporting documents',
     adminDescription:
@@ -265,15 +266,6 @@ const intake = {
       component: 'CMS Product Manager component',
       email: 'CMS Product Manager email'
     },
-    isso: {
-      label:
-        'Does your project have an Information System Security Officer (ISSO)?',
-      helpText:
-        'If yes, please tell us the name of your Information System Security Officer so we can get in touch with them',
-      name: 'ISSO Name',
-      component: 'ISSO Component',
-      email: 'ISSO email'
-    },
     additionalContacts: {
       titleContacts: 'Additional contacts',
       titleRecipients: 'Choose recipients',
@@ -422,7 +414,6 @@ const intake = {
     cmsBusinessOwnerComponent: 'CMS Business Owner component',
     cmsProjectManagerName: 'CMS Project/Product Manager or Lead',
     cmsProjectManagerComponent: 'CMS Project/Product Manager or Lead component',
-    isso: 'Does your project have an Information System Security Officer (ISSO)?',
     collaborating: 'I have started collaborating with',
     requestDetails: 'Request details',
     projectName: 'Project name',

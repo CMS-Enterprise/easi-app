@@ -42,7 +42,13 @@ func IsIntakeValid(intake *models.SystemIntake, newStep models.SystemIntakeStepT
 }
 
 // UpdateIntake updates an intake based on a previously validated Progress to New Step action
-func UpdateIntake(intake *models.SystemIntake, newStep models.SystemIntakeStepToProgressTo, newMeetingDate *time.Time, currentTime time.Time) error {
+func UpdateIntake(
+	intake *models.SystemIntake,
+	newStep models.SystemIntakeStepToProgressTo,
+	newMeetingDate *time.Time,
+	currentTime time.Time,
+	grbReviewType *models.SystemIntakeGRBReviewType,
+) error {
 	intake.UpdatedAt = &currentTime
 
 	switch newStep {
@@ -67,6 +73,10 @@ func UpdateIntake(intake *models.SystemIntake, newStep models.SystemIntakeStepTo
 
 	case models.SystemIntakeStepToProgressToGrbMeeting:
 		intake.Step = models.SystemIntakeStepGRBMEETING
+
+		if grbReviewType != nil {
+			intake.GrbReviewType = *grbReviewType
+		}
 
 		if newMeetingDate != nil {
 			intake.GRBDate = newMeetingDate
