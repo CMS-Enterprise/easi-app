@@ -136,23 +136,11 @@ func main() {
 			store,
 			time.Now().AddDate(2, 0, 0),
 		)
-		createSystemIntakeGRBReviewers(ctx, store, sysIn, []*models.CreateGRBReviewerInput{
-			{
-				EuaUserID:  "BTMN",
-				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
-				GrbRole:    models.SystemIntakeGRBReviewerRoleAca3021Rep,
-			},
-			{
-				EuaUserID:  "A11Y",
-				VotingRole: models.SystemIntakeGRBReviewerVotingRoleAlternate,
-				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
-			},
-		})
 
 		setSystemIntakeRelationExistingSystem(
 			ctx,
 			store,
-			ID,
+			sysIn.ID,
 			[]string{"111111", "111112"},
 			[]*models.SystemRelationshipInput{
 				{
@@ -268,16 +256,42 @@ func main() {
 	intakeID = uuid.MustParse("9ab475a8-a691-45e9-b55d-648b6e752efa")
 	makeSystemIntakeAndIssueLCID(ctx, "LCID issued", &intakeID, mock.PrincipalUser, store, lcidExpirationDate)
 
-	intakeID = uuid.MustParse("5af245bc-fc54-4677-bab1-1b3e798bb43c")
+	intakeID = uuid.MustParse("1a261eb8-162d-46a6-afaf-b5c9507dedd1")
 	intake = makeSystemIntakeAndProgressToStep(
 		ctx,
-		"System Intake with GRB Reviewers",
+		"GRB meeting with date set in past",
 		&intakeID,
 		mock.PrincipalUser,
 		store,
 		models.SystemIntakeStepToProgressToGrbMeeting,
 		&progressOptions{
-			meetingDate:        &futureMeetingDate,
+			completeOtherSteps: true,
+		},
+	)
+	setupSystemIntakeGRBReview(ctx, store, intake, models.SystemIntakeGRBReviewTypeStandard, &pastMeetingDate)
+
+	intakeID = uuid.MustParse("d80cf287-35cb-4e76-b8b3-0467eabd75b8")
+	makeSystemIntakeAndProgressToStep(
+		ctx,
+		"Skip to GRB meeting with date set in past",
+		&intakeID,
+		mock.PrincipalUser,
+		store,
+		models.SystemIntakeStepToProgressToGrbMeeting,
+		&progressOptions{
+			meetingDate: &pastMeetingDate,
+		},
+	)
+
+	intakeID = uuid.MustParse("b569ae1e-bf04-4c1b-96a5-b9604d74d979")
+	intake = makeSystemIntakeAndProgressToStep(
+		ctx,
+		"Async GRB review (voting complete)",
+		&intakeID,
+		mock.PrincipalUser,
+		store,
+		models.SystemIntakeStepToProgressToGrbMeeting,
+		&progressOptions{
 			completeOtherSteps: true,
 			fillForm:           true,
 		},
@@ -293,33 +307,154 @@ func main() {
 				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
 			},
 			{
+				EuaUserID:  "USR2",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCciioRep,
+			},
+			{
+				EuaUserID:  "USR3",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleOther,
+			},
+			{
+				EuaUserID:  "USR4",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
+			},
+			{
+				EuaUserID:  "USR5",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
+			},
+		},
+	)
+	setupSystemIntakeGRBReview(ctx, store, intake, models.SystemIntakeGRBReviewTypeAsync, &pastMeetingDate)
+
+	castSystemIntakeGRBReviewerVote(ctx, store, models.CastSystemIntakeGRBReviewerVoteInput{
+		SystemIntakeID: intake.ID,
+		Vote:           models.SystemIntakeAsyncGRBVotingOptionNoObjection,
+	})
+
+	grbReviewerCtx := userCtxNonAdmin("USR2")
+	castSystemIntakeGRBReviewerVote(grbReviewerCtx, store, models.CastSystemIntakeGRBReviewerVoteInput{
+		SystemIntakeID: intake.ID,
+		Vote:           models.SystemIntakeAsyncGRBVotingOptionNoObjection,
+	})
+
+	grbReviewerCtx = userCtxNonAdmin("USR3")
+	castSystemIntakeGRBReviewerVote(grbReviewerCtx, store, models.CastSystemIntakeGRBReviewerVoteInput{
+		SystemIntakeID: intake.ID,
+		Vote:           models.SystemIntakeAsyncGRBVotingOptionNoObjection,
+	})
+
+	grbReviewerCtx = userCtxNonAdmin("USR4")
+	castSystemIntakeGRBReviewerVote(grbReviewerCtx, store, models.CastSystemIntakeGRBReviewerVoteInput{
+		SystemIntakeID: intake.ID,
+		Vote:           models.SystemIntakeAsyncGRBVotingOptionNoObjection,
+	})
+
+	grbReviewerCtx = userCtxNonAdmin("USR5")
+	castSystemIntakeGRBReviewerVote(grbReviewerCtx, store, models.CastSystemIntakeGRBReviewerVoteInput{
+		SystemIntakeID: intake.ID,
+		Vote:           models.SystemIntakeAsyncGRBVotingOptionNoObjection,
+	})
+
+	intakeID = uuid.MustParse("c0d1e2f3-4567-89ab-cdef-0123456789ab")
+	intake = makeSystemIntakeAndProgressToStep(
+		ctx,
+		"Async GRB review (with votes)",
+		&intakeID,
+		mock.PrincipalUser,
+		store,
+		models.SystemIntakeStepToProgressToGrbMeeting,
+		&progressOptions{
+			completeOtherSteps: true,
+			fillForm:           true,
+		},
+	)
+	createSystemIntakeGRBReviewers(
+		ctx,
+		store,
+		intake,
+		[]*models.CreateGRBReviewerInput{
+			{
+				EuaUserID:  mock.PrincipalUser,
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
+			},
+			{
+				EuaUserID:  "USR2",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCciioRep,
+			},
+			{
+				EuaUserID:  "USR3",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleNonVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleSubjectMatterExpert,
+			},
+			{
+				EuaUserID:  "USR4",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleAlternate,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleOther,
+			},
+			{
 				EuaUserID:  "BTMN",
 				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
 				GrbRole:    models.SystemIntakeGRBReviewerRoleOther,
 			},
 			{
 				EuaUserID:  "ABCD",
-				VotingRole: models.SystemIntakeGRBReviewerVotingRoleAlternate,
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
 				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
 			},
 			{
 				EuaUserID:  "A11Y",
-				VotingRole: models.SystemIntakeGRBReviewerVotingRoleNonVoting,
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
 				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
 			},
 		},
 	)
+	setupSystemIntakeGRBReview(ctx, store, intake, models.SystemIntakeGRBReviewTypeAsync, &futureMeetingDate)
+
+	castSystemIntakeGRBReviewerVote(ctx, store, models.CastSystemIntakeGRBReviewerVoteInput{
+		SystemIntakeID: intake.ID,
+		Vote:           models.SystemIntakeAsyncGRBVotingOptionNoObjection,
+	})
+
+	grbReviewerCtx = userCtxNonAdmin("USR2")
+	castSystemIntakeGRBReviewerVote(grbReviewerCtx, store, models.CastSystemIntakeGRBReviewerVoteInput{
+		SystemIntakeID: intake.ID,
+		Vote:           models.SystemIntakeAsyncGRBVotingOptionNoObjection,
+	})
+
+	grbReviewerCtx = userCtxNonAdmin("BTMN")
+	castSystemIntakeGRBReviewerVote(grbReviewerCtx, store, models.CastSystemIntakeGRBReviewerVoteInput{
+		SystemIntakeID: intake.ID,
+		Vote:           models.SystemIntakeAsyncGRBVotingOptionNoObjection,
+	})
+
+	grbReviewerCtx = userCtxNonAdmin("ABCD")
+	castSystemIntakeGRBReviewerVote(grbReviewerCtx, store, models.CastSystemIntakeGRBReviewerVoteInput{
+		SystemIntakeID: intake.ID,
+		Vote:           models.SystemIntakeAsyncGRBVotingOptionNoObjection,
+	})
+
+	grbReviewerCtx = userCtxNonAdmin("A11Y")
+	castSystemIntakeGRBReviewerVote(grbReviewerCtx, store, models.CastSystemIntakeGRBReviewerVoteInput{
+		SystemIntakeID: intake.ID,
+		Vote:           models.SystemIntakeAsyncGRBVotingOptionObjection,
+		VoteComment:    helpers.PointerTo("I object to this request because it is terrible."),
+	})
 
 	intakeID = uuid.MustParse("61efa6eb-1976-4431-a158-d89cc00ce31d")
 	intake = makeSystemIntakeAndProgressToStep(
 		ctx,
-		"System Intake with some different GRB Reviewers (and discussions)",
+		"Async GRB review (with discussions)",
 		&intakeID,
 		mock.PrincipalUser,
 		store,
 		models.SystemIntakeStepToProgressToGrbMeeting,
 		&progressOptions{
-			meetingDate:        &futureMeetingDate,
 			completeOtherSteps: true,
 			fillForm:           true,
 		},
@@ -341,11 +476,21 @@ func main() {
 			},
 			{
 				EuaUserID:  "USR3",
-				VotingRole: models.SystemIntakeGRBReviewerVotingRoleAlternate,
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
 				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
 			},
 			{
 				EuaUserID:  "USR4",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
+			},
+			{
+				EuaUserID:  "USR5",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
+			},
+			{
+				EuaUserID:  "SF13",
 				VotingRole: models.SystemIntakeGRBReviewerVotingRoleNonVoting,
 				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
 			},
@@ -356,6 +501,7 @@ func main() {
 			},
 		},
 	)
+	setupSystemIntakeGRBReview(ctx, store, intake, models.SystemIntakeGRBReviewTypeAsync, &futureMeetingDate)
 
 	// Forgive my incredibly uncreative seed data...
 	// Initial Post
@@ -422,18 +568,52 @@ func main() {
 
 	makeSystemIntakeGRBPresentationLinks(ctx, store, links)
 
-	intakeID = uuid.MustParse("d80cf287-35cb-4e76-b8b3-0467eabd75b8")
-	makeSystemIntakeAndProgressToStep(
+	intakeID = uuid.MustParse("cc1fef8e-cb7f-4f55-a97b-1d46fc9dae27")
+	intake = makeSystemIntakeAndProgressToStep(
 		ctx,
-		"skip to grb meeting with date set in past",
+		"Async GRB review (with presentation links)",
 		&intakeID,
 		mock.PrincipalUser,
 		store,
 		models.SystemIntakeStepToProgressToGrbMeeting,
 		&progressOptions{
-			meetingDate: &pastMeetingDate,
+			completeOtherSteps: true,
+			fillForm:           true,
 		},
 	)
+	createSystemIntakeGRBReviewers(
+		ctx,
+		store,
+		intake,
+		[]*models.CreateGRBReviewerInput{
+			{
+				EuaUserID:  mock.PrincipalUser,
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
+			},
+			{
+				EuaUserID:  "SF13",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleOther,
+			},
+			{
+				EuaUserID:  "KR14",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
+			},
+			{
+				EuaUserID:  "GBRG",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
+			},
+			{
+				EuaUserID:  "ER3Z",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
+			},
+		},
+	)
+	setupSystemIntakeGRBReview(ctx, store, intake, models.SystemIntakeGRBReviewTypeAsync, &futureMeetingDate)
 
 	// create one with recording link and transcript link
 	links = models.NewSystemIntakeGRBPresentationLinks(mockUser.ID)
@@ -445,10 +625,72 @@ func main() {
 
 	makeSystemIntakeGRBPresentationLinks(ctx, store, links)
 
+	intakeID = uuid.MustParse("5af245bc-fc54-4677-bab1-1b3e798bb43c")
+	intake = makeSystemIntakeAndProgressToStep(
+		ctx,
+		"Async GRB review in progress",
+		&intakeID,
+		mock.PrincipalUser,
+		store,
+		models.SystemIntakeStepToProgressToGrbMeeting,
+		&progressOptions{
+			completeOtherSteps: true,
+			fillForm:           true,
+		},
+	)
+	createSystemIntakeGRBReviewers(
+		ctx,
+		store,
+		intake,
+		[]*models.CreateGRBReviewerInput{
+			{
+				EuaUserID:  mock.PrincipalUser,
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
+			},
+			{
+				EuaUserID:  "TEST",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleOther,
+			},
+			{
+				EuaUserID:  "GRTB",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
+			},
+			{
+				EuaUserID:  "CMSU",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
+			},
+			{
+				EuaUserID:  "ADMI",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
+			},
+		},
+	)
+	setupSystemIntakeGRBReview(ctx, store, intake, models.SystemIntakeGRBReviewTypeAsync, &futureMeetingDate)
+
+	intakeID = uuid.MustParse("a5689bec-e4cf-4f2b-a7de-72020e8d65be")
+	intake = makeSystemIntakeAndProgressToStep(
+		ctx,
+		"GRB meeting scheduled",
+		&intakeID,
+		mock.PrincipalUser,
+		store,
+		models.SystemIntakeStepToProgressToGrbMeeting,
+		&progressOptions{
+			meetingDate:        &futureMeetingDate,
+			completeOtherSteps: true,
+		},
+	)
+	setupSystemIntakeGRBReview(ctx, store, intake, models.SystemIntakeGRBReviewTypeStandard, &futureMeetingDate)
+
 	intakeID = uuid.MustParse("5c82f10a-0413-4a43-9b0f-e9e5c4f2699f")
 	makeSystemIntakeAndProgressToStep(
 		ctx,
-		"skip to grb meeting with date set in future",
+		"Skip to GRB meeting with date set in future",
 		&intakeID,
 		mock.PrincipalUser,
 		store,
@@ -461,7 +703,7 @@ func main() {
 	intakeID = uuid.MustParse("8f0b8dfc-acb2-4cd3-a79e-241c355f551c")
 	makeSystemIntakeAndProgressToStep(
 		ctx,
-		"skip to grb meeting without date set",
+		"Skip to GRB meeting without date set",
 		&intakeID,
 		mock.PrincipalUser,
 		store,
@@ -469,24 +711,10 @@ func main() {
 		nil,
 	)
 
-	intakeID = uuid.MustParse("1a261eb8-162d-46a6-afaf-b5c9507dedd1")
-	makeSystemIntakeAndProgressToStep(
-		ctx,
-		"grb meeting with date set in past",
-		&intakeID,
-		mock.PrincipalUser,
-		store,
-		models.SystemIntakeStepToProgressToGrbMeeting,
-		&progressOptions{
-			meetingDate:        &pastMeetingDate,
-			completeOtherSteps: true,
-		},
-	)
-
 	intakeID = uuid.MustParse("8ef9d0fb-e673-441c-9876-f874b179f89c")
 	makeSystemIntakeAndProgressToStep(
 		ctx,
-		"grb meeting with date set in future",
+		"GRB meeting with date set in future",
 		&intakeID,
 		mock.PrincipalUser,
 		store,
@@ -498,15 +726,52 @@ func main() {
 	)
 
 	intakeID = uuid.MustParse("d9c931c6-0858-494d-b991-e02a94a42f38")
-	makeSystemIntakeAndProgressToStep(
+	intake = makeSystemIntakeAndProgressToStep(
 		ctx,
-		"grb meeting without date set",
+		"GRB meeting without date set",
 		&intakeID,
 		mock.PrincipalUser,
 		store,
 		models.SystemIntakeStepToProgressToGrbMeeting,
 		&progressOptions{
 			completeOtherSteps: true,
+		},
+	)
+	createSystemIntakeGRBReviewers(
+		ctx,
+		store,
+		intake,
+		[]*models.CreateGRBReviewerInput{
+			{
+				EuaUserID:  mock.PrincipalUser,
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
+			},
+			{
+				EuaUserID:  "BTMN",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleOther,
+			},
+			{
+				EuaUserID:  "ABCD",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleAlternate,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleCmcsRep,
+			},
+			{
+				EuaUserID:  "A11Y",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleNonVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
+			},
+			{
+				EuaUserID:  "USR2",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleSubjectMatterExpert,
+			},
+			{
+				EuaUserID:  "USR3",
+				VotingRole: models.SystemIntakeGRBReviewerVotingRoleVoting,
+				GrbRole:    models.SystemIntakeGRBReviewerRoleQioRep,
+			},
 		},
 	)
 
@@ -750,7 +1015,7 @@ func main() {
 	)
 
 	intakeID = uuid.MustParse("29486f85-1aba-4eaf-a7dd-6137b9873adc")
-	makeSystemIntakeAndSubmit(
+	intake = makeSystemIntakeAndSubmit(
 		ctx,
 		"Edits requested on initial request form",
 		&intakeID,
@@ -947,7 +1212,6 @@ func main() {
 		i.BusinessOwnerComponent = null.StringFrom("Center for Consumer Information and Insurance Oversight")
 		i.ProductManager = null.StringFrom("John ProductManager")
 		i.ProductManagerComponent = null.StringFrom("Center for Consumer Information and Insurance Oversight")
-		i.ISSO = null.StringFrom("")
 		i.TRBCollaborator = null.StringFrom("")
 		i.OITSecurityCollaborator = null.StringFrom("")
 		i.EACollaborator = null.StringFrom("")
@@ -988,20 +1252,6 @@ func main() {
 		models.SystemIntakeStepToProgressToDraftBusinessCase,
 		&progressOptions{
 			fillForm: true,
-		},
-	)
-
-	intakeID = uuid.MustParse("a5689bec-e4cf-4f2b-a7de-72020e8d65be")
-	makeSystemIntakeAndProgressToStep(
-		ctx,
-		"With GRB scheduled",
-		&intakeID,
-		mock.PrincipalUser,
-		store,
-		models.SystemIntakeStepToProgressToGrbMeeting,
-		&progressOptions{
-			meetingDate:        &futureMeetingDate,
-			completeOtherSteps: true,
 		},
 	)
 

@@ -146,8 +146,8 @@ const useRequestTableColumns = (
       ) as string;
     },
     sortType: (a: Row<SystemIntakeForTable>, b: Row<SystemIntakeForTable>) => {
-      const astatus = a.original.statusAdmin as SystemIntakeStatusAdmin;
-      const bstatus = b.original.statusAdmin as SystemIntakeStatusAdmin;
+      const astatus = a.original.statusAdmin;
+      const bstatus = b.original.statusAdmin;
 
       if (
         (astatus === SystemIntakeStatusAdmin.LCID_ISSUED &&

@@ -28,10 +28,6 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
     name: '',
     component: ''
   },
-  isso: {
-    isPresent: null,
-    name: ''
-  },
   governanceTeams: {
     isPresent: null,
     teams: []

@@ -2,12 +2,11 @@ package resolvers
 
 import (
 	"fmt"
-	"testing"
 	"time"
 
 	"github.com/guregu/null"
-	"github.com/stretchr/testify/assert"
 
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -23,22 +22,23 @@ type testCasesForStep struct {
 	testCases []calculateSystemIntakeRequesterStatusTestCase
 }
 
-func TestCalculateSystemIntakeRequesterStatus(t *testing.T) {
+func (s *ResolverSuite) TestCalculateSystemIntakeRequesterStatus() {
+	ctx := s.ctxWithNewDataloaders()
 	mockCurrentTime := time.Unix(0, 0)
 	allTestCases := systemIntakeStatusRequesterTestCases(mockCurrentTime)
 
 	for _, singleStepTestCases := range allTestCases {
-		t.Run(fmt.Sprintf("Testing statuses for the %v step", singleStepTestCases.stepName), func(t *testing.T) {
+		s.Run(fmt.Sprintf("Testing statuses for the %v step", singleStepTestCases.stepName), func() {
 			for i := range singleStepTestCases.testCases {
 				testCase := singleStepTestCases.testCases[i]
 
-				t.Run(testCase.testName, func(t *testing.T) {
-					actualStatus, err := CalculateSystemIntakeRequesterStatus(&testCase.intake, mockCurrentTime)
-					assert.EqualValues(t, testCase.expectedStatus, actualStatus)
+				s.Run(testCase.testName, func() {
+					actualStatus, err := CalculateSystemIntakeRequesterStatus(ctx, &testCase.intake, mockCurrentTime)
+					s.EqualValues(testCase.expectedStatus, actualStatus)
 					if testCase.errorExpected {
-						assert.Error(t, err)
+						s.Error(err)
 					} else {
-						assert.NoError(t, err)
+						s.NoError(err)
 					}
 				})
 			}
@@ -58,6 +58,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					Step:             models.SystemIntakeStepINITIALFORM,
 					RequestFormState: models.SIRFSNotStarted,
 					State:            models.SystemIntakeStateOpen,
+					GrbReviewType:    models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRInitialRequestFormNew,
 				errorExpected:  false,
@@ -68,6 +69,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					Step:             models.SystemIntakeStepINITIALFORM,
 					RequestFormState: models.SIRFSInProgress,
 					State:            models.SystemIntakeStateOpen,
+					GrbReviewType:    models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRInitialRequestFormInProgress,
 				errorExpected:  false,
@@ -78,6 +80,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					Step:             models.SystemIntakeStepINITIALFORM,
 					RequestFormState: models.SIRFSEditsRequested,
 					State:            models.SystemIntakeStateOpen,
+					GrbReviewType:    models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRInitialRequestFormEditsRequested,
 				errorExpected:  false,
@@ -88,6 +91,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					Step:             models.SystemIntakeStepINITIALFORM,
 					RequestFormState: models.SIRFSSubmitted,
 					State:            models.SystemIntakeStateOpen,
+					GrbReviewType:    models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRInitialRequestFormSubmitted,
 				errorExpected:  false,
@@ -99,8 +103,113 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					RequestFormState: models.SIRFSInProgress,
 					State:            models.SystemIntakeStateClosed,
 					DecisionState:    models.SIDSNoDecision,
+					GrbReviewType:    models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRClosed,
+				errorExpected:  false,
+			},
+			{
+				testName: "Sync GRB  - Meeting Ready. Missing date",
+				intake: models.SystemIntake{
+					Step:             models.SystemIntakeStepGRBMEETING,
+					RequestFormState: models.SIRFSInProgress,
+					State:            models.SystemIntakeStateOpen,
+					DecisionState:    models.SIDSNoDecision,
+					GrbReviewType:    models.SystemIntakeGRBReviewTypeStandard,
+				},
+				expectedStatus: models.SISRGrbMeetingReady,
+				errorExpected:  false,
+			},
+			{
+				testName: "Sync GRB  - Meeting Ready",
+				intake: models.SystemIntake{
+					Step:             models.SystemIntakeStepGRBMEETING,
+					RequestFormState: models.SIRFSInProgress,
+					State:            models.SystemIntakeStateOpen,
+					DecisionState:    models.SIDSNoDecision,
+					GrbReviewType:    models.SystemIntakeGRBReviewTypeStandard,
+					GRBDate:          &tomorrow,
+				},
+				expectedStatus: models.SISRGrbMeetingReady,
+				errorExpected:  false,
+			},
+			{
+				testName: "Sync GRB  - Awaiting Decision",
+				intake: models.SystemIntake{
+					Step:             models.SystemIntakeStepGRBMEETING,
+					RequestFormState: models.SIRFSInProgress,
+					State:            models.SystemIntakeStateOpen,
+					DecisionState:    models.SIDSNoDecision,
+					GrbReviewType:    models.SystemIntakeGRBReviewTypeStandard,
+					GRBDate:          &yesterday,
+				},
+				expectedStatus: models.SISRGrbMeetingAwaitingDecision,
+				errorExpected:  false,
+			},
+			{
+				testName: "Async GRB  - Ready for review. Missing dates",
+				intake: models.SystemIntake{
+					Step:             models.SystemIntakeStepGRBMEETING,
+					RequestFormState: models.SIRFSInProgress,
+					State:            models.SystemIntakeStateOpen,
+					DecisionState:    models.SIDSNoDecision,
+					GrbReviewType:    models.SystemIntakeGRBReviewTypeAsync,
+				},
+				expectedStatus: models.SISRGrbMeetingReady,
+				errorExpected:  false,
+			},
+			{
+				testName: "Async GRB  - Ready for review. Start date missing",
+				intake: models.SystemIntake{
+					Step:                  models.SystemIntakeStepGRBMEETING,
+					RequestFormState:      models.SIRFSInProgress,
+					State:                 models.SystemIntakeStateOpen,
+					DecisionState:         models.SIDSNoDecision,
+					GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
+					GrbReviewAsyncEndDate: &tomorrow,
+				},
+				expectedStatus: models.SISRGrbMeetingReady,
+				errorExpected:  false,
+			},
+			{
+				testName: "Async GRB  - Ready for review. End date missing",
+				intake: models.SystemIntake{
+					Step:               models.SystemIntakeStepGRBMEETING,
+					RequestFormState:   models.SIRFSInProgress,
+					State:              models.SystemIntakeStateOpen,
+					DecisionState:      models.SIDSNoDecision,
+					GrbReviewType:      models.SystemIntakeGRBReviewTypeAsync,
+					GRBReviewStartedAt: &yesterday,
+				},
+				expectedStatus: models.SISRGrbMeetingReady,
+				errorExpected:  false,
+			},
+			{
+				testName: "Async GRB  - Review in progress",
+				intake: models.SystemIntake{
+					Step:                  models.SystemIntakeStepGRBMEETING,
+					RequestFormState:      models.SIRFSInProgress,
+					State:                 models.SystemIntakeStateOpen,
+					DecisionState:         models.SIDSNoDecision,
+					GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
+					GRBReviewStartedAt:    &yesterday,
+					GrbReviewAsyncEndDate: &tomorrow,
+				},
+				expectedStatus: models.SISRGrbReviewInProgress,
+				errorExpected:  false,
+			},
+			{
+				testName: "Async GRB  - Past due but no quorum",
+				intake: models.SystemIntake{
+					Step:                  models.SystemIntakeStepGRBMEETING,
+					RequestFormState:      models.SIRFSInProgress,
+					State:                 models.SystemIntakeStateOpen,
+					DecisionState:         models.SIDSNoDecision,
+					GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
+					GRBReviewStartedAt:    helpers.PointerTo(yesterday.AddDate(0, 0, -1)),
+					GrbReviewAsyncEndDate: &yesterday,
+				},
+				expectedStatus: models.SISRGrbReviewInProgress,
 				errorExpected:  false,
 			},
 		},
@@ -115,6 +224,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					Step:                   models.SystemIntakeStepDRAFTBIZCASE,
 					DraftBusinessCaseState: models.SIRFSNotStarted,
 					State:                  models.SystemIntakeStateOpen,
+					GrbReviewType:          models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRDraftBusinessCaseInProgress,
 				errorExpected:  false,
@@ -125,6 +235,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					Step:                   models.SystemIntakeStepDRAFTBIZCASE,
 					DraftBusinessCaseState: models.SIRFSInProgress,
 					State:                  models.SystemIntakeStateOpen,
+					GrbReviewType:          models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRDraftBusinessCaseInProgress,
 				errorExpected:  false,
@@ -135,6 +246,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					Step:                   models.SystemIntakeStepDRAFTBIZCASE,
 					DraftBusinessCaseState: models.SIRFSEditsRequested,
 					State:                  models.SystemIntakeStateOpen,
+					GrbReviewType:          models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRDraftBusinessCaseEditsRequested,
 				errorExpected:  false,
@@ -145,6 +257,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					Step:                   models.SystemIntakeStepDRAFTBIZCASE,
 					DraftBusinessCaseState: models.SIRFSSubmitted,
 					State:                  models.SystemIntakeStateOpen,
+					GrbReviewType:          models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRDraftBusinessCaseSubmitted,
 				errorExpected:  false,
@@ -156,6 +269,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					DraftBusinessCaseState: models.SIRFSInProgress,
 					State:                  models.SystemIntakeStateClosed,
 					DecisionState:          models.SIDSNoDecision,
+					GrbReviewType:          models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRClosed,
 				errorExpected:  false,
@@ -169,9 +283,10 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "GRT meeting not scheduled yet",
 				intake: models.SystemIntake{
-					Step:    models.SystemIntakeStepGRTMEETING,
-					GRTDate: nil,
-					State:   models.SystemIntakeStateOpen,
+					Step:          models.SystemIntakeStepGRTMEETING,
+					GRTDate:       nil,
+					State:         models.SystemIntakeStateOpen,
+					GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRGrtMeetingReady,
 				errorExpected:  false,
@@ -179,9 +294,10 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "GRT meeting scheduled for tomorrow",
 				intake: models.SystemIntake{
-					Step:    models.SystemIntakeStepGRTMEETING,
-					GRTDate: &tomorrow,
-					State:   models.SystemIntakeStateOpen,
+					Step:          models.SystemIntakeStepGRTMEETING,
+					GRTDate:       &tomorrow,
+					State:         models.SystemIntakeStateOpen,
+					GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRGrtMeetingReady,
 				errorExpected:  false,
@@ -189,9 +305,10 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "GRT meeting happened yesterday",
 				intake: models.SystemIntake{
-					Step:    models.SystemIntakeStepGRTMEETING,
-					GRTDate: &yesterday,
-					State:   models.SystemIntakeStateOpen,
+					Step:          models.SystemIntakeStepGRTMEETING,
+					GRTDate:       &yesterday,
+					State:         models.SystemIntakeStateOpen,
+					GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRGrtMeetingAwaitingDecision,
 				errorExpected:  false,
@@ -203,6 +320,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					GRTDate:       &tomorrow,
 					State:         models.SystemIntakeStateClosed,
 					DecisionState: models.SIDSNoDecision,
+					GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRClosed,
 				errorExpected:  false,
@@ -219,6 +337,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					Step:                   models.SystemIntakeStepFINALBIZCASE,
 					FinalBusinessCaseState: models.SIRFSNotStarted,
 					State:                  models.SystemIntakeStateOpen,
+					GrbReviewType:          models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRFinalBusinessCaseInProgress,
 				errorExpected:  false,
@@ -229,6 +348,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					Step:                   models.SystemIntakeStepFINALBIZCASE,
 					FinalBusinessCaseState: models.SIRFSInProgress,
 					State:                  models.SystemIntakeStateOpen,
+					GrbReviewType:          models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRFinalBusinessCaseInProgress,
 				errorExpected:  false,
@@ -239,6 +359,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					Step:                   models.SystemIntakeStepFINALBIZCASE,
 					FinalBusinessCaseState: models.SIRFSEditsRequested,
 					State:                  models.SystemIntakeStateOpen,
+					GrbReviewType:          models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRFinalBusinessCaseEditsRequested,
 				errorExpected:  false,
@@ -249,6 +370,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					Step:                   models.SystemIntakeStepFINALBIZCASE,
 					FinalBusinessCaseState: models.SIRFSSubmitted,
 					State:                  models.SystemIntakeStateOpen,
+					GrbReviewType:          models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRFinalBusinessCaseSubmitted,
 				errorExpected:  false,
@@ -260,6 +382,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					FinalBusinessCaseState: models.SIRFSInProgress,
 					State:                  models.SystemIntakeStateClosed,
 					DecisionState:          models.SIDSNoDecision,
+					GrbReviewType:          models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRClosed,
 				errorExpected:  false,
@@ -273,9 +396,10 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "GRB meeting not scheduled yet",
 				intake: models.SystemIntake{
-					Step:    models.SystemIntakeStepGRBMEETING,
-					GRBDate: nil,
-					State:   models.SystemIntakeStateOpen,
+					Step:          models.SystemIntakeStepGRBMEETING,
+					GRBDate:       nil,
+					State:         models.SystemIntakeStateOpen,
+					GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRGrbMeetingReady,
 				errorExpected:  false,
@@ -283,9 +407,10 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "GRB meeting scheduled for tomorrow",
 				intake: models.SystemIntake{
-					Step:    models.SystemIntakeStepGRBMEETING,
-					GRBDate: &tomorrow,
-					State:   models.SystemIntakeStateOpen,
+					Step:          models.SystemIntakeStepGRBMEETING,
+					GRBDate:       &tomorrow,
+					State:         models.SystemIntakeStateOpen,
+					GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRGrbMeetingReady,
 				errorExpected:  false,
@@ -293,9 +418,24 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "GRB meeting happened yesterday",
 				intake: models.SystemIntake{
-					Step:    models.SystemIntakeStepGRBMEETING,
-					GRBDate: &yesterday,
-					State:   models.SystemIntakeStateOpen,
+					Step:          models.SystemIntakeStepGRBMEETING,
+					GRBDate:       &yesterday,
+					State:         models.SystemIntakeStateOpen,
+					GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
+				},
+				expectedStatus: models.SISRGrbMeetingAwaitingDecision,
+				errorExpected:  false,
+			},
+			{
+				testName: "Async: Voting ended manually",
+				intake: models.SystemIntake{
+					Step:                        models.SystemIntakeStepGRBMEETING,
+					GRBReviewStartedAt:          &yesterday,
+					GrbReviewAsyncEndDate:       &tomorrow,
+					GrbReviewAsyncManualEndDate: &yesterday,
+					State:                       models.SystemIntakeStateOpen,
+					DecisionState:               models.SIDSNoDecision,
+					GrbReviewType:               models.SystemIntakeGRBReviewTypeAsync,
 				},
 				expectedStatus: models.SISRGrbMeetingAwaitingDecision,
 				errorExpected:  false,
@@ -307,6 +447,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					GRBDate:       &tomorrow,
 					State:         models.SystemIntakeStateClosed,
 					DecisionState: models.SIDSNoDecision,
+					GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRClosed,
 				errorExpected:  false,
@@ -323,6 +464,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					Step:          models.SystemIntakeStepDECISION,
 					DecisionState: models.SIDSLcidIssued,
 					State:         models.SystemIntakeStateClosed,
+					GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRLcidIssued,
 				errorExpected:  false,
@@ -336,6 +478,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					LifecycleExpiresAt: &yesterday,
 					LifecycleRetiresAt: &yesterday,
 					State:              models.SystemIntakeStateClosed,
+					GrbReviewType:      models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRLcidIssued,
 				errorExpected:  false,
@@ -348,6 +491,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					LifecycleID:        null.StringFrom("fake"),
 					LifecycleExpiresAt: &yesterday,
 					State:              models.SystemIntakeStateClosed,
+					GrbReviewType:      models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRLcidExpired,
 				errorExpected:  false,
@@ -361,6 +505,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					LifecycleID:        null.StringFrom("fake"),
 					LifecycleRetiresAt: &yesterday,
 					State:              models.SystemIntakeStateClosed,
+					GrbReviewType:      models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRLcidRetired,
 				errorExpected:  false,
@@ -371,6 +516,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					Step:          models.SystemIntakeStepDECISION,
 					DecisionState: models.SIDSLcidIssued,
 					State:         models.SystemIntakeStateOpen,
+					GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRLcidIssued,
 				errorExpected:  false,
@@ -381,6 +527,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					Step:          models.SystemIntakeStepDECISION,
 					DecisionState: models.SIDSNotGovernance,
 					State:         models.SystemIntakeStateClosed,
+					GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRNotGovernance,
 				errorExpected:  false,
@@ -391,6 +538,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					Step:          models.SystemIntakeStepDECISION,
 					DecisionState: models.SIDSNotGovernance,
 					State:         models.SystemIntakeStateOpen,
+					GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRNotGovernance,
 				errorExpected:  false,
@@ -401,6 +549,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					Step:          models.SystemIntakeStepDECISION,
 					DecisionState: models.SIDSNotApproved,
 					State:         models.SystemIntakeStateClosed,
+					GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRNotApproved,
 				errorExpected:  false,
@@ -411,6 +560,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					Step:          models.SystemIntakeStepDECISION,
 					DecisionState: models.SIDSNotApproved,
 					State:         models.SystemIntakeStateOpen,
+					GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRNotApproved,
 				errorExpected:  false,
@@ -421,6 +571,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					Step:          models.SystemIntakeStepFINALBIZCASE,
 					DecisionState: models.SIDSNotApproved,
 					State:         models.SystemIntakeStateClosed,
+					GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: models.SISRClosed,
 				errorExpected:  false,
@@ -432,6 +583,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					Step:          models.SystemIntakeStepDECISION,
 					DecisionState: models.SIDSNoDecision,
 					State:         models.SystemIntakeStateClosed,
+					GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: "",
 				errorExpected:  true,
@@ -443,6 +595,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					Step:          models.SystemIntakeStepDECISION,
 					DecisionState: models.SIDSNoDecision,
 					State:         models.SystemIntakeStateOpen,
+					GrbReviewType: models.SystemIntakeGRBReviewTypeStandard,
 				},
 				expectedStatus: "",
 				errorExpected:  true,

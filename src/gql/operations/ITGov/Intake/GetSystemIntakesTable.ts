@@ -27,9 +27,6 @@ export default gql(/* GraphQL */ `
         name
         component
       }
-      isso {
-        name
-      }
 
       trbCollaboratorName
       oitSecurityCollaboratorName
