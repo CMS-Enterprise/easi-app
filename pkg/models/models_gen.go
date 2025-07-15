@@ -18,6 +18,23 @@ type TRBAdminNoteCategorySpecificData interface {
 	IsTRBAdminNoteCategorySpecificData()
 }
 
+// The input type for adding a new System Link
+type AddSystemLinkInput struct {
+	SystemIntakeID                     uuid.UUID                `json:"systemIntakeID"`
+	SystemID                           string                   `json:"systemID"`
+	SystemRelationshipType             []SystemRelationshipType `json:"systemRelationshipType"`
+	OtherSystemRelationshipDescription *string                  `json:"otherSystemRelationshipDescription,omitempty"`
+}
+
+// The payload for adding a new System Link
+type AddSystemLinkPayload struct {
+	ID                                 uuid.UUID                `json:"id"`
+	SystemIntakeID                     uuid.UUID                `json:"systemIntakeID"`
+	SystemID                           string                   `json:"systemID"`
+	SystemRelationshipType             []SystemRelationshipType `json:"systemRelationshipType"`
+	OtherSystemRelationshipDescription *string                  `json:"otherSystemRelationshipDescription,omitempty"`
+}
+
 // A solution proposal within a Business Case
 type BusinessCaseSolution struct {
 	AcquisitionApproach     *string    `json:"acquisitionApproach,omitempty"`

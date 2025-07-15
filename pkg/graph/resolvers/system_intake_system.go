@@ -48,6 +48,39 @@ func SystemIntakeSystemsByIntakeID(ctx context.Context, systemIntakeID uuid.UUID
 	return systems, nil
 }
 
+func AddSystemLink(ctx context.Context, store *storage.Store, input models.AddSystemLinkInput) (*models.AddSystemLinkPayload, error) {
+
+	userID := appcontext.Principal(ctx).Account().ID
+
+	systemLink := models.SystemIntakeSystem{
+		BaseStructUser:                     models.NewBaseStructUser(userID),
+		SystemIntakeID:                     input.SystemIntakeID,
+		SystemID:                           input.SystemID,
+		SystemRelationshipType:             input.SystemRelationshipType,
+		OtherSystemRelationshipDescription: input.OtherSystemRelationshipDescription,
+	}
+
+	var newSystemLink *models.SystemIntakeSystem
+
+	err := sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
+		var err error
+		newSystemLink, err = storage.AddSystemIntakeSystem(ctx, tx, systemLink)
+		return err
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &models.AddSystemLinkPayload{
+		ID:                                 newSystemLink.ID,
+		SystemIntakeID:                     newSystemLink.SystemIntakeID,
+		SystemID:                           newSystemLink.SystemID,
+		SystemRelationshipType:             newSystemLink.SystemRelationshipType,
+		OtherSystemRelationshipDescription: newSystemLink.OtherSystemRelationshipDescription,
+	}, nil
+}
+
 func DeleteSystemIntakeSystemByID(ctx context.Context, store *storage.Store, systemIntakeID uuid.UUID) error {
 	return sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
 		return store.DeleteSystemIntakeSystemByID(ctx, tx, systemIntakeID)

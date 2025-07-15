@@ -21,6 +21,14 @@ func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemI
 		return errors.New("unexpected nil system intake ID when linking system intake to system id")
 	}
 
+	_, err := tx.NamedExec(sqlqueries.SystemIntakeSystemForm.Delete, map[string]interface{}{
+		"system_intake_id": systemIntakeID,
+	})
+	if err != nil {
+		appcontext.ZLogger(ctx).Error("Failed to delete system ids linked to system intake", zap.Error(err))
+		return err
+	}
+
 	// no need to run insert if we are not inserting new system ids
 	if len(systemRelationships) < 1 {
 		return nil
@@ -74,6 +82,23 @@ func (s *Store) SystemIntakesByCedarSystemIDs(ctx context.Context, requests []mo
 		"cedar_system_ids": pq.Array(cedarSystemIDs),
 		"states":           pq.Array(states),
 	})
+}
+
+func AddSystemIntakeSystem(ctx context.Context, tx *sqlx.Tx, input models.SystemIntakeSystem) (*models.SystemIntakeSystem, error) {
+	var newSystemIntakeSystem models.SystemIntakeSystem
+
+	newSystemIntakeSystem.ID = uuid.New()
+	newSystemIntakeSystem.SystemIntakeID = input.SystemIntakeID
+	newSystemIntakeSystem.SystemID = input.SystemID
+	newSystemIntakeSystem.SystemRelationshipType = input.SystemRelationshipType
+	newSystemIntakeSystem.OtherSystemRelationshipDescription = input.OtherSystemRelationshipDescription
+
+	if _, err := namedExec(ctx, tx, sqlqueries.SystemIntakeSystemForm.Insert, newSystemIntakeSystem); err != nil {
+		appcontext.ZLogger(ctx).Error("failed to delete a Linked System from system_intake_systems", zap.Error(err))
+		return nil, err
+	}
+
+	return &newSystemIntakeSystem, nil
 }
 
 func (s *Store) DeleteSystemIntakeSystemByID(ctx context.Context, tx *sqlx.Tx, systemIntakeSystemID uuid.UUID) error {

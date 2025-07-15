@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -637,6 +638,16 @@ func (r *mutationResolver) UnlinkSystemIntakeRelation(ctx context.Context, intak
 	return &models.UpdateSystemIntakePayload{
 		SystemIntake: intake,
 	}, nil
+}
+
+// AddSystemLink is the resolver for the addSystemLink field.
+func (r *mutationResolver) AddSystemLink(ctx context.Context, input models.AddSystemLinkInput) (*models.AddSystemLinkPayload, error) {
+	newSystemLink, err := resolvers.AddSystemLink(ctx, r.store, input)
+
+	if err != nil {
+		return nil, err
+	}
+	return newSystemLink, nil
 }
 
 // DeleteSystemLink is the resolver for the deleteSystemLink field.
@@ -2143,6 +2154,11 @@ func (r *systemIntakeNoteResolver) Editor(ctx context.Context, obj *models.Syste
 	return resolvers.SystemIntakeNoteEditor(ctx, obj)
 }
 
+// SystemRelationshipType is the resolver for the systemRelationshipType field.
+func (r *systemIntakeSystemResolver) SystemRelationshipType(ctx context.Context, obj *models.SystemIntakeSystem) ([]models.SystemRelationshipType, error) {
+	panic(fmt.Errorf("not implemented: SystemRelationshipType - systemRelationshipType"))
+}
+
 // Author is the resolver for the author field.
 func (r *tRBAdminNoteResolver) Author(ctx context.Context, obj *models.TRBAdminNote) (*models.UserInfo, error) {
 	authorInfo, err := dataloaders.FetchUserInfoByEUAUserID(ctx, obj.CreatedBy)
@@ -2426,6 +2442,11 @@ func (r *Resolver) SystemIntakeNote() generated.SystemIntakeNoteResolver {
 	return &systemIntakeNoteResolver{r}
 }
 
+// SystemIntakeSystem returns generated.SystemIntakeSystemResolver implementation.
+func (r *Resolver) SystemIntakeSystem() generated.SystemIntakeSystemResolver {
+	return &systemIntakeSystemResolver{r}
+}
+
 // TRBAdminNote returns generated.TRBAdminNoteResolver implementation.
 func (r *Resolver) TRBAdminNote() generated.TRBAdminNoteResolver { return &tRBAdminNoteResolver{r} }
 
@@ -2479,6 +2500,7 @@ type systemIntakeDocumentResolver struct{ *Resolver }
 type systemIntakeGRBPresentationLinksResolver struct{ *Resolver }
 type systemIntakeGRBReviewerResolver struct{ *Resolver }
 type systemIntakeNoteResolver struct{ *Resolver }
+type systemIntakeSystemResolver struct{ *Resolver }
 type tRBAdminNoteResolver struct{ *Resolver }
 type tRBGuidanceLetterResolver struct{ *Resolver }
 type tRBGuidanceLetterInsightResolver struct{ *Resolver }
