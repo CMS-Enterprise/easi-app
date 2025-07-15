@@ -129,7 +129,7 @@ const Dates = ({
         {t('governanceReviewTeam:dates.heading')}
       </PageHeading>
       <h2>{t('governanceReviewTeam:dates.subheading')}</h2>
-      <Form onSubmit={handleSubmit(onSubmit)} className="maxw-mobile-lg">
+      <Form onSubmit={handleSubmit(onSubmit)} className="maxw-none grid-col-8">
         <FieldGroup
           error={
             !!errors.grtDateDay || !!errors.grtDateMonth || !!errors.grtDateYear
@@ -161,6 +161,7 @@ const Dates = ({
 
                     <TextInput
                       {...rest}
+                      inputRef={ref}
                       id="grtDateMonth"
                       type="text"
                       validationStatus={error && 'error'}
@@ -184,6 +185,7 @@ const Dates = ({
 
                     <TextInput
                       {...rest}
+                      inputRef={ref}
                       id="grtDateDay"
                       type="text"
                       validationStatus={error && 'error'}
@@ -207,6 +209,7 @@ const Dates = ({
 
                     <TextInput
                       {...rest}
+                      inputRef={ref}
                       id="grtDateYear"
                       type="text"
                       validationStatus={error && 'error'}
@@ -251,6 +254,7 @@ const Dates = ({
 
                     <TextInput
                       {...rest}
+                      inputRef={ref}
                       id="grbDateMonth"
                       type="text"
                       validationStatus={error && 'error'}
@@ -276,6 +280,7 @@ const Dates = ({
 
                     <TextInput
                       {...rest}
+                      inputRef={ref}
                       id="grbDateDay"
                       type="text"
                       validationStatus={error && 'error'}
@@ -301,6 +306,7 @@ const Dates = ({
 
                     <TextInput
                       {...rest}
+                      inputRef={ref}
                       id="grbDateYear"
                       type="text"
                       validationStatus={error && 'error'}
