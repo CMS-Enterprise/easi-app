@@ -146,7 +146,6 @@ const Dates = ({
             <FieldErrorMsg>{errors.grtDateDay?.message}</FieldErrorMsg>
             <FieldErrorMsg>{errors.grtDateYear?.message}</FieldErrorMsg>
             <div className="usa-memorable-date">
-              {/* <div className="usa-form-group usa-form-group--month"> */}
               <Controller
                 name="grtDateMonth"
                 control={control}
@@ -169,8 +168,6 @@ const Dates = ({
                   </FormGroup>
                 )}
               />
-              {/* </div> */}
-              {/* <div className="usa-form-group usa-form-group--day"> */}
               <Controller
                 name="grtDateDay"
                 control={control}
@@ -193,8 +190,6 @@ const Dates = ({
                   </FormGroup>
                 )}
               />
-              {/* </div> */}
-              {/* <div className="usa-form-group usa-form-group--year"> */}
               <Controller
                 name="grtDateYear"
                 control={control}
@@ -217,7 +212,6 @@ const Dates = ({
                   </FormGroup>
                 )}
               />
-              {/* </div> */}
             </div>
           </fieldset>
         </FieldGroup>
