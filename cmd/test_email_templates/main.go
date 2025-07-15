@@ -785,6 +785,20 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 	)
 	noErr(err)
 
+	err = client.SystemIntake.SendSystemIntakeGRBReviewEndedEarly(
+		ctx,
+		email.SendSystemIntakeGRBReviewEndedEarlyInput{
+			Recipient:          requesterEmail,
+			SystemIntakeID:     intakeID,
+			ProjectTitle:       "Voting Ended Early",
+			RequesterName:      "Early Voter",
+			RequesterComponent: "Center for Medicare",
+			StartDate:          time.Now().AddDate(0, 0, -3),
+			EndDate:            time.Now().AddDate(0, 0, 2),
+		},
+	)
+	noErr(err)
+
 	err = client.SystemIntake.SendSystemIntakeGRBReviewTimeAdded(
 		ctx,
 		emailNotificationRecipients,
@@ -823,7 +837,6 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		"Taco King",
 		"STP",
 		time.Date(2025, 6, 1, 0, 0, 0, 0, time.UTC),
-		time.Date(2026, 6, 7, 0, 0, 0, 0, time.UTC),
 		time.Date(2026, 6, 7, 0, 0, 0, 0, time.UTC),
 	)
 	noErr(err)
@@ -917,6 +930,53 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 			Role:              "Center for Medicaid and CHIP Services",
 			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!</p>`,
 			Recipient:         requesterEmail,
+		})
+	noErr(err)
+
+	err = client.SystemIntake.SendGRBReviewVoteSubmitted(ctx,
+		email.SendGRBReviewVoteSubmittedInput{
+			Recipient:          requesterEmail,
+			SystemIntakeID:     intakeID,
+			ProjectTitle:       "Vote Submitted Title",
+			RequesterName:      "Some Voter",
+			RequesterComponent: "Center for Medicaid and CHIP Services",
+			StartDate:          time.Now().AddDate(0, 0, -5),
+			EndDate:            time.Now().AddDate(0, 0, 5),
+			Vote:               models.SystemIntakeAsyncGRBVotingOptionNoObjection,
+		})
+	noErr(err)
+
+	err = client.SystemIntake.SendGRBReviewVoteSubmittedAdmin(ctx,
+		email.SendGRBReviewVoteSubmittedAdminInput{
+			SystemIntakeID:     intakeID,
+			GRBMemberName:      "Admin Vote Submitter",
+			ProjectTitle:       "Admin Vote Submitted Title",
+			RequesterName:      "Admin Vote Submitted Requester",
+			RequesterComponent: "Center for Medicaid and CHIP Services",
+			StartDate:          time.Now().AddDate(0, 0, -5),
+			EndDate:            time.Now().AddDate(0, 0, 5),
+			Vote:               models.SystemIntakeAsyncGRBVotingOptionNoObjection,
+			AdditionalComments: "I agree",
+			NoObjectionVotes:   3,
+			ObjectionVotes:     4,
+			NotYetVoted:        2,
+		})
+	noErr(err)
+
+	err = client.SystemIntake.SendGRBReviewVoteChangedAdmin(ctx,
+		email.SendGRBReviewVoteChangedAdminInput{
+			SystemIntakeID:     intakeID,
+			GRBMemberName:      "Admin Vote Changer",
+			ProjectTitle:       "Admin Vote Changed Title",
+			RequesterName:      "Admin Vote Change Requester",
+			RequesterComponent: "Center for Medicaid and CHIP Services",
+			StartDate:          time.Now().AddDate(0, 0, -5),
+			EndDate:            time.Now().AddDate(0, 0, 5),
+			Vote:               models.SystemIntakeAsyncGRBVotingOptionNoObjection,
+			AdditionalComments: "I agree",
+			NoObjectionVotes:   3,
+			ObjectionVotes:     4,
+			NotYetVoted:        2,
 		})
 	noErr(err)
 }
