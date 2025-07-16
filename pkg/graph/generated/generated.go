@@ -700,6 +700,7 @@ type ComplexityRoot struct {
 		SystemIntake                     func(childComplexity int, id uuid.UUID) int
 		SystemIntakeContacts             func(childComplexity int, id uuid.UUID) int
 		SystemIntakeSystem               func(childComplexity int, systemIntakeSystemID uuid.UUID) int
+		SystemIntakeSystems              func(childComplexity int, systemIntakeID uuid.UUID) int
 		SystemIntakes                    func(childComplexity int, openRequests bool) int
 		SystemIntakesWithLcids           func(childComplexity int) int
 		SystemIntakesWithReviewRequested func(childComplexity int) int
@@ -737,7 +738,6 @@ type ComplexityRoot struct {
 		BusinessOwner                                     func(childComplexity int) int
 		BusinessSolution                                  func(childComplexity int) int
 		CedarSystemID                                     func(childComplexity int) int
-		CedarSystemRelationShips                          func(childComplexity int) int
 		Contract                                          func(childComplexity int) int
 		ContractName                                      func(childComplexity int) int
 		ContractNumbers                                   func(childComplexity int) int
@@ -809,6 +809,7 @@ type ComplexityRoot struct {
 		StatusRequester                                   func(childComplexity int) int
 		Step                                              func(childComplexity int) int
 		SubmittedAt                                       func(childComplexity int) int
+		SystemIntakeSystems                               func(childComplexity int) int
 		Systems                                           func(childComplexity int) int
 		TRBCollaborator                                   func(childComplexity int) int
 		TRBCollaboratorName                               func(childComplexity int) int
@@ -1432,6 +1433,7 @@ type QueryResolver interface {
 	RequesterUpdateEmailData(ctx context.Context) ([]*models.RequesterUpdateEmailData, error)
 	UserAccount(ctx context.Context, username string) (*authentication.UserAccount, error)
 	SystemIntakeSystem(ctx context.Context, systemIntakeSystemID uuid.UUID) (*models.SystemIntakeSystem, error)
+	SystemIntakeSystems(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeSystem, error)
 }
 type SystemIntakeResolver interface {
 	Actions(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeAction, error)
@@ -1494,7 +1496,7 @@ type SystemIntakeResolver interface {
 	GrbReviewStandardStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBReviewStandardStatusType, error)
 	GrbReviewAsyncStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBReviewAsyncStatusType, error)
 
-	CedarSystemRelationShips(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeSystem, error)
+	SystemIntakeSystems(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeSystem, error)
 }
 type SystemIntakeDocumentResolver interface {
 	DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*models.SystemIntakeDocumentType, error)
@@ -5626,6 +5628,18 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Query.SystemIntakeSystem(childComplexity, args["systemIntakeSystemID"].(uuid.UUID)), true
 
+	case "Query.systemIntakeSystems":
+		if e.complexity.Query.SystemIntakeSystems == nil {
+			break
+		}
+
+		args, err := ec.field_Query_systemIntakeSystems_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.SystemIntakeSystems(childComplexity, args["systemIntakeId"].(uuid.UUID)), true
+
 	case "Query.systemIntakes":
 		if e.complexity.Query.SystemIntakes == nil {
 			break
@@ -5851,13 +5865,6 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.SystemIntake.CedarSystemID(childComplexity), true
-
-	case "SystemIntake.cedarSystemRelationShips":
-		if e.complexity.SystemIntake.CedarSystemRelationShips == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.CedarSystemRelationShips(childComplexity), true
 
 	case "SystemIntake.contract":
 		if e.complexity.SystemIntake.Contract == nil {
@@ -6355,6 +6362,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.SystemIntake.SubmittedAt(childComplexity), true
+
+	case "SystemIntake.systemIntakeSystems":
+		if e.complexity.SystemIntake.SystemIntakeSystems == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.SystemIntakeSystems(childComplexity), true
 
 	case "SystemIntake.systems":
 		if e.complexity.SystemIntake.Systems == nil {
@@ -9592,7 +9606,7 @@ type SystemIntake {
   grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType
   grbReviewAsyncManualEndDate: Time
   grbReviewReminderLastSent: Time
-  cedarSystemRelationShips: [SystemIntakeSystem]
+  systemIntakeSystems: [SystemIntakeSystem!]!
 }
 
 """
@@ -11797,6 +11811,7 @@ type Query {
   requesterUpdateEmailData: [RequesterUpdateEmailData!]!
   userAccount(username: String!): UserAccount
   systemIntakeSystem(systemIntakeSystemID: UUID!): SystemIntakeSystem
+  systemIntakeSystems(systemIntakeId: UUID!): [SystemIntakeSystem!]!
 }
 
 enum TRBRequestType {
@@ -15688,6 +15703,34 @@ func (ec *executionContext) field_Query_systemIntakeSystem_argsSystemIntakeSyste
 	return zeroVal, nil
 }
 
+func (ec *executionContext) field_Query_systemIntakeSystems_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Query_systemIntakeSystems_argsSystemIntakeID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["systemIntakeId"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Query_systemIntakeSystems_argsSystemIntakeID(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (uuid.UUID, error) {
+	if _, ok := rawArgs["systemIntakeId"]; !ok {
+		var zeroVal uuid.UUID
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeId"))
+	if tmp, ok := rawArgs["systemIntakeId"]; ok {
+		return ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+	}
+
+	var zeroVal uuid.UUID
+	return zeroVal, nil
+}
+
 func (ec *executionContext) field_Query_systemIntake_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -17694,8 +17737,8 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(_ context.Con
 				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
 			case "grbReviewReminderLastSent":
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
-			case "cedarSystemRelationShips":
-				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
+			case "systemIntakeSystems":
+				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -26813,8 +26856,8 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(ctx con
 				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
 			case "grbReviewReminderLastSent":
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
-			case "cedarSystemRelationShips":
-				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
+			case "systemIntakeSystems":
+				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -34089,8 +34132,8 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
 			case "grbReviewReminderLastSent":
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
-			case "cedarSystemRelationShips":
-				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
+			case "systemIntakeSystems":
+				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -34353,8 +34396,8 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeRequestType(
 				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
 			case "grbReviewReminderLastSent":
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
-			case "cedarSystemRelationShips":
-				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
+			case "systemIntakeSystems":
+				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -37084,8 +37127,8 @@ func (ec *executionContext) fieldContext_Mutation_archiveSystemIntake(ctx contex
 				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
 			case "grbReviewReminderLastSent":
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
-			case "cedarSystemRelationShips":
-				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
+			case "systemIntakeSystems":
+				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -41402,8 +41445,8 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
 			case "grbReviewReminderLastSent":
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
-			case "cedarSystemRelationShips":
-				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
+			case "systemIntakeSystems":
+				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -41639,8 +41682,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
 			case "grbReviewReminderLastSent":
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
-			case "cedarSystemRelationShips":
-				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
+			case "systemIntakeSystems":
+				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -41876,8 +41919,8 @@ func (ec *executionContext) fieldContext_Query_mySystemIntakes(_ context.Context
 				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
 			case "grbReviewReminderLastSent":
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
-			case "cedarSystemRelationShips":
-				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
+			case "systemIntakeSystems":
+				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -42102,8 +42145,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithReviewRequested(
 				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
 			case "grbReviewReminderLastSent":
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
-			case "cedarSystemRelationShips":
-				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
+			case "systemIntakeSystems":
+				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -42328,8 +42371,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(_ context.
 				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
 			case "grbReviewReminderLastSent":
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
-			case "cedarSystemRelationShips":
-				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
+			case "systemIntakeSystems":
+				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -44635,6 +44678,73 @@ func (ec *executionContext) fieldContext_Query_systemIntakeSystem(ctx context.Co
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Query_systemIntakeSystem_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_systemIntakeSystems(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_systemIntakeSystems(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().SystemIntakeSystems(rctx, fc.Args["systemIntakeId"].(uuid.UUID))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.SystemIntakeSystem)
+	fc.Result = res
+	return ec.marshalNSystemIntakeSystem2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSystemᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_systemIntakeSystems(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_SystemIntakeSystem_id(ctx, field)
+			case "systemIntakeID":
+				return ec.fieldContext_SystemIntakeSystem_systemIntakeID(ctx, field)
+			case "systemID":
+				return ec.fieldContext_SystemIntakeSystem_systemID(ctx, field)
+			case "systemRelationshipType":
+				return ec.fieldContext_SystemIntakeSystem_systemRelationshipType(ctx, field)
+			case "otherSystemRelationshipDescription":
+				return ec.fieldContext_SystemIntakeSystem_otherSystemRelationshipDescription(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeSystem", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_systemIntakeSystems_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -48829,8 +48939,8 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedIntakes(_ context.C
 				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
 			case "grbReviewReminderLastSent":
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
-			case "cedarSystemRelationShips":
-				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
+			case "systemIntakeSystems":
+				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -49448,8 +49558,8 @@ func (ec *executionContext) fieldContext_SystemIntake_grbReviewReminderLastSent(
 	return fc, nil
 }
 
-func (ec *executionContext) _SystemIntake_cedarSystemRelationShips(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
+func (ec *executionContext) _SystemIntake_systemIntakeSystems(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -49462,21 +49572,24 @@ func (ec *executionContext) _SystemIntake_cedarSystemRelationShips(ctx context.C
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().CedarSystemRelationShips(rctx, obj)
+		return ec.resolvers.SystemIntake().SystemIntakeSystems(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.([]*models.SystemIntakeSystem)
 	fc.Result = res
-	return ec.marshalOSystemIntakeSystem2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSystem(ctx, field.Selections, res)
+	return ec.marshalNSystemIntakeSystem2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSystemᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_SystemIntake_cedarSystemRelationShips(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_SystemIntake_systemIntakeSystems(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntake",
 		Field:      field,
@@ -49762,8 +49875,8 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(_ conte
 				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
 			case "grbReviewReminderLastSent":
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
-			case "cedarSystemRelationShips":
-				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
+			case "systemIntakeSystems":
+				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -59380,8 +59493,8 @@ func (ec *executionContext) fieldContext_TRBRequest_relatedIntakes(_ context.Con
 				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
 			case "grbReviewReminderLastSent":
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
-			case "cedarSystemRelationShips":
-				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
+			case "systemIntakeSystems":
+				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -62271,8 +62384,8 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(_ context.
 				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
 			case "grbReviewReminderLastSent":
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
-			case "cedarSystemRelationShips":
-				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
+			case "systemIntakeSystems":
+				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -63051,8 +63164,8 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
 			case "grbReviewReminderLastSent":
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
-			case "cedarSystemRelationShips":
-				return ec.fieldContext_SystemIntake_cedarSystemRelationShips(ctx, field)
+			case "systemIntakeSystems":
+				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -74739,6 +74852,28 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "systemIntakeSystems":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_systemIntakeSystems(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
 		case "__type":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Query___type(ctx, field)
@@ -76425,16 +76560,19 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			out.Values[i] = ec._SystemIntake_grbReviewAsyncManualEndDate(ctx, field, obj)
 		case "grbReviewReminderLastSent":
 			out.Values[i] = ec._SystemIntake_grbReviewReminderLastSent(ctx, field, obj)
-		case "cedarSystemRelationShips":
+		case "systemIntakeSystems":
 			field := field
 
-			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._SystemIntake_cedarSystemRelationShips(ctx, field, obj)
+				res = ec._SystemIntake_systemIntakeSystems(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
 				return res
 			}
 
@@ -84139,6 +84277,50 @@ func (ec *executionContext) marshalNSystemIntakeStepToProgressTo2githubᚗcomᚋ
 	return v
 }
 
+func (ec *executionContext) marshalNSystemIntakeSystem2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSystemᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.SystemIntakeSystem) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNSystemIntakeSystem2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSystem(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
 func (ec *executionContext) marshalNSystemIntakeSystem2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSystem(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeSystem) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -86611,47 +86793,6 @@ func (ec *executionContext) marshalOSystemIntakeStep2ᚖgithubᚗcomᚋcmsᚑent
 	_ = ctx
 	res := graphql.MarshalString(string(*v))
 	return res
-}
-
-func (ec *executionContext) marshalOSystemIntakeSystem2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSystem(ctx context.Context, sel ast.SelectionSet, v []*models.SystemIntakeSystem) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalOSystemIntakeSystem2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSystem(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	return ret
 }
 
 func (ec *executionContext) marshalOSystemIntakeSystem2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeSystem(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeSystem) graphql.Marshaler {

@@ -1760,6 +1760,7 @@ export type Query = {
   systemIntake?: Maybe<SystemIntake>;
   systemIntakeContacts: SystemIntakeContactsPayload;
   systemIntakeSystem?: Maybe<SystemIntakeSystem>;
+  systemIntakeSystems: Array<SystemIntakeSystem>;
   systemIntakes: Array<SystemIntake>;
   systemIntakesWithLcids: Array<SystemIntake>;
   systemIntakesWithReviewRequested: Array<SystemIntake>;
@@ -1881,6 +1882,12 @@ export type QuerySystemIntakeContactsArgs = {
 /** Query definition for the schema */
 export type QuerySystemIntakeSystemArgs = {
   systemIntakeSystemID: Scalars['UUID']['input'];
+};
+
+
+/** Query definition for the schema */
+export type QuerySystemIntakeSystemsArgs = {
+  systemIntakeId: Scalars['UUID']['input'];
 };
 
 
@@ -2064,7 +2071,6 @@ export type SystemIntake = {
   businessOwner: SystemIntakeBusinessOwner;
   businessSolution?: Maybe<Scalars['String']['output']>;
   cedarSystemId?: Maybe<Scalars['String']['output']>;
-  cedarSystemRelationShips?: Maybe<Array<Maybe<SystemIntakeSystem>>>;
   contract: SystemIntakeContract;
   contractName?: Maybe<Scalars['String']['output']>;
   /** Linked contract numbers */
@@ -2152,6 +2158,7 @@ export type SystemIntake = {
   statusRequester: SystemIntakeStatusRequester;
   step: SystemIntakeStep;
   submittedAt?: Maybe<Scalars['Time']['output']>;
+  systemIntakeSystems: Array<SystemIntakeSystem>;
   /** Linked systems */
   systems: Array<CedarSystem>;
   trbCollaborator?: Maybe<Scalars['String']['output']>;
@@ -4094,7 +4101,7 @@ export type SystemIntakeQueryVariables = Exact<{
 }>;
 
 
-export type SystemIntakeQuery = { __typename: 'Query', systemIntake?: { __typename: 'SystemIntake', id: UUID, cedarSystemRelationShips?: Array<{ __typename: 'SystemIntakeSystem', id: UUID, systemIntakeID: UUID, systemID?: string | null, otherSystemRelationshipDescription?: string | null } | null> | null } | null };
+export type SystemIntakeQuery = { __typename: 'Query', systemIntake?: { __typename: 'SystemIntake', id: UUID, systemIntakeSystems: Array<{ __typename: 'SystemIntakeSystem', id: UUID, systemIntakeID: UUID, systemID?: string | null, otherSystemRelationshipDescription?: string | null }> } | null };
 
 export type DeleteSystemLinkMutationVariables = Exact<{
   systemIntakeSystem: Scalars['UUID']['input'];
@@ -7704,7 +7711,7 @@ export const SystemIntakeDocument = gql`
     query systemIntake($id: UUID!) {
   systemIntake(id: $id) {
     id
-    cedarSystemRelationShips {
+    systemIntakeSystems {
       id
       systemIntakeID
       systemID
@@ -11294,7 +11301,7 @@ export const TypedSetTrbRequestRelationNewSystemDocument = {"kind":"Document","d
 export const TypedSetTrbRequestRelationExistingSystemDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetTrbRequestRelationExistingSystem"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SetTRBRequestRelationExistingSystemInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setTRBRequestRelationExistingSystem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<SetTrbRequestRelationExistingSystemMutation, SetTrbRequestRelationExistingSystemMutationVariables>;
 export const TypedSetTrbRequestRelationExistingServiceDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetTrbRequestRelationExistingService"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SetTRBRequestRelationExistingServiceInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setTRBRequestRelationExistingService"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<SetTrbRequestRelationExistingServiceMutation, SetTrbRequestRelationExistingServiceMutationVariables>;
 export const TypedUnlinkTrbRequestRelationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UnlinkTrbRequestRelation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"trbRequestID"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"unlinkTRBRequestRelation"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"trbRequestID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"trbRequestID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<UnlinkTrbRequestRelationMutation, UnlinkTrbRequestRelationMutationVariables>;
-export const TypedsystemIntakeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"systemIntake"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"cedarSystemRelationShips"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"systemIntakeID"}},{"kind":"Field","name":{"kind":"Name","value":"systemID"}},{"kind":"Field","name":{"kind":"Name","value":"otherSystemRelationshipDescription"}}]}}]}}]}}]} as unknown as DocumentNode<SystemIntakeQuery, SystemIntakeQueryVariables>;
+export const TypedsystemIntakeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"systemIntake"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"systemIntakeSystems"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"systemIntakeID"}},{"kind":"Field","name":{"kind":"Name","value":"systemID"}},{"kind":"Field","name":{"kind":"Name","value":"otherSystemRelationshipDescription"}}]}}]}}]}}]} as unknown as DocumentNode<SystemIntakeQuery, SystemIntakeQueryVariables>;
 export const TypeddeleteSystemLinkDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"deleteSystemLink"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"systemIntakeSystem"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteSystemLink"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"systemIntakeSystem"},"value":{"kind":"Variable","name":{"kind":"Name","value":"systemIntakeSystem"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakeSystem"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"systemIntakeID"}},{"kind":"Field","name":{"kind":"Name","value":"systemID"}},{"kind":"Field","name":{"kind":"Name","value":"systemRelationshipType"}},{"kind":"Field","name":{"kind":"Name","value":"otherSystemRelationshipDescription"}}]}},{"kind":"Field","name":{"kind":"Name","value":"userErrors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"path"}}]}}]}}]}}]} as unknown as DocumentNode<DeleteSystemLinkMutation, DeleteSystemLinkMutationVariables>;
 export const TypedaddSystemLinkDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"addSystemLink"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"AddSystemLinkInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addSystemLink"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"systemIntakeID"}},{"kind":"Field","name":{"kind":"Name","value":"systemID"}},{"kind":"Field","name":{"kind":"Name","value":"systemRelationshipType"}},{"kind":"Field","name":{"kind":"Name","value":"otherSystemRelationshipDescription"}}]}}]}}]} as unknown as DocumentNode<AddSystemLinkMutation, AddSystemLinkMutationVariables>;
 export const TypedupdateSystemLinkDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateSystemLink"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateSystemLinkInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateSystemLink"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakeSystem"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"systemIntakeID"}},{"kind":"Field","name":{"kind":"Name","value":"systemID"}},{"kind":"Field","name":{"kind":"Name","value":"systemRelationshipType"}},{"kind":"Field","name":{"kind":"Name","value":"otherSystemRelationshipDescription"}}]}},{"kind":"Field","name":{"kind":"Name","value":"userErrors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"path"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateSystemLinkMutation, UpdateSystemLinkMutationVariables>;
