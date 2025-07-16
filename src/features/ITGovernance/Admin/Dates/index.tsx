@@ -31,13 +31,11 @@ const Dates = ({
   systemIntake: SystemIntakeFragmentFragment;
 }) => {
   const { t } = useTranslation();
-  const { showMessage } = useMessage();
+  const { showMessage, Message } = useMessage();
   const history = useHistory();
   const { systemId } = useParams<{ systemId: string }>();
 
-  const [updateReviewDates] = useUpdateSystemIntakeReviewDatesMutation({
-    errorPolicy: 'all'
-  });
+  const [updateReviewDates] = useUpdateSystemIntakeReviewDatesMutation();
 
   const [updateReviewType] = useUpdateSystemIntakeGRBReviewTypeMutation();
 
@@ -112,6 +110,7 @@ const Dates = ({
         {t('governanceReviewTeam:dates.heading')}
       </PageHeading>
       <h2>{t('governanceReviewTeam:dates.subheading')}</h2>
+      <Message />
       <Form onSubmit={handleSubmit(onSubmit)} className="maxw-none grid-col-8">
         <FieldGroup error={!!errors.grtDate}>
           <Controller
@@ -127,10 +126,15 @@ const Dates = ({
                 )}
                 <DatePickerFormatted
                   {...field}
-                  // Fix for empty string throwing off field validation
-                  onChange={e => field.onChange(e || undefined)}
-                  value={field.value || ''}
-                  id="meetingDate"
+                  value={field.value ?? ''}
+                  onChange={val => {
+                    if (!val) {
+                      field.onChange('');
+                    } else {
+                      field.onChange(val);
+                    }
+                  }}
+                  id="grtDate"
                 />
 
                 {
@@ -151,9 +155,6 @@ const Dates = ({
           <Controller
             control={control}
             name="grbDate"
-            disabled={
-              watch('grbReviewType') === SystemIntakeGRBReviewType.ASYNC
-            }
             render={({ field: { ref, ...field }, fieldState: { error } }) => (
               <FormGroup error={!!error} className="margin-top-1">
                 <Label htmlFor={field.name}>
@@ -167,10 +168,18 @@ const Dates = ({
                 )}
                 <DatePickerFormatted
                   {...field}
-                  // Fix for empty string throwing off field validation
-                  onChange={e => field.onChange(e || undefined)}
-                  value={field.value || ''}
-                  id="meetingDate"
+                  value={field.value ?? ''}
+                  onChange={val => {
+                    if (!val) {
+                      field.onChange('');
+                    } else {
+                      field.onChange(val);
+                    }
+                  }}
+                  id="grbDate"
+                  disabled={
+                    watch('grbReviewType') === SystemIntakeGRBReviewType.ASYNC
+                  }
                 />
 
                 {
