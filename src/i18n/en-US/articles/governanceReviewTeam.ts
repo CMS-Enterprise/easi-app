@@ -245,10 +245,13 @@ const governanceReviewTeam = {
     subheading: 'Add GRT and GRB dates',
     submit: 'Save',
     grtDate: {
-      label: 'GRT Date'
+      label: 'GRT Date',
+      format: 'Format: 04 28 2020'
     },
     grbDate: {
-      label: 'GRB Date'
+      label: 'GRB Date',
+      description:
+        'This content will be prepopulated if you have already entered it elsewhere. Changing it here will also update GRB information elsewhere.'
     }
   },
   aria: {

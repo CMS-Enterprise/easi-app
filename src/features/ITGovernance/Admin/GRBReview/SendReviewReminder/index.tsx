@@ -47,6 +47,11 @@ const SendReviewReminder = ({
     refetchQueries: ['GetSystemIntakeGRBReview']
   });
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    showErrorMessageInModal('');
+  };
+
   const handleSendReminder = () => {
     if (!systemIntakeId) return;
 
@@ -66,7 +71,7 @@ const SendReviewReminder = ({
     <Modal
       isOpen={isOpen}
       shouldCloseOnOverlayClick
-      closeModal={() => setIsModalOpen(false)}
+      closeModal={handleCloseModal}
       className="easi-modal__content--narrow"
     >
       <div data-testid="send-review-reminder-modal">
@@ -92,7 +97,7 @@ const SendReviewReminder = ({
           >
             {t('adminTask.sendReviewReminder.modal.sendReminder')}
           </Button>
-          <Button type="button" onClick={() => setIsModalOpen(false)} unstyled>
+          <Button type="button" onClick={handleCloseModal} unstyled>
             {t('adminTask.sendReviewReminder.modal.cancel')}
           </Button>
         </ModalFooter>

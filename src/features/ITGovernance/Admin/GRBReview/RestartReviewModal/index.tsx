@@ -37,6 +37,11 @@ const RestartReviewModal = ({ systemIntakeId }: { systemIntakeId: string }) => {
     refetchQueries: [GetSystemIntakeGRBReviewDocument, GetSystemIntakeDocument]
   });
 
+  const handleCloseModal = () => {
+    closeModal();
+    showErrorMessageInModal('');
+  };
+
   const handleSubmit: ReactEventHandler = event => {
     event.preventDefault();
     restartReview({
@@ -60,7 +65,7 @@ const RestartReviewModal = ({ systemIntakeId }: { systemIntakeId: string }) => {
         );
 
         // Close modal on success
-        closeModal();
+        handleCloseModal();
       })
       .catch(() => {
         showErrorMessageInModal(t('adminTask.restartReview.error'));
@@ -71,7 +76,7 @@ const RestartReviewModal = ({ systemIntakeId }: { systemIntakeId: string }) => {
     <Modal
       isOpen={isOpen}
       shouldCloseOnOverlayClick
-      closeModal={closeModal}
+      closeModal={handleCloseModal}
       className="easi-modal__content--narrow"
     >
       <div data-testid="restart-review-modal">
@@ -120,7 +125,7 @@ const RestartReviewModal = ({ systemIntakeId }: { systemIntakeId: string }) => {
             >
               {t('adminTask.restartReview.restart')}
             </Button>
-            <Button type="button" onClick={closeModal} unstyled>
+            <Button type="button" onClick={handleCloseModal} unstyled>
               {t('adminTask.restartReview.cancel')}
             </Button>
           </ModalFooter>

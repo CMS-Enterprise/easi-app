@@ -35,7 +35,7 @@ const (
 	devEnv Environment = "dev"
 	// implEnv is the environment for the impl deployed env
 	implEnv Environment = "impl"
-	// prodEnv is the environment for the impl deployed env
+	// prodEnv is the environment for the prod deployed env
 	prodEnv Environment = "prod"
 )
 
