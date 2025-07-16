@@ -50,19 +50,13 @@ describe('Governance Review Team', () => {
       'a[href="/it-governance/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/dates"]'
     ).click();
 
-    cy.get('#Dates-GrtDateMonth').clear().type('11').should('have.value', '11');
-    cy.get('#Dates-GrtDateDay').clear().type('24').should('have.value', '24');
-    cy.get('#Dates-GrtDateYear')
-      .clear()
-      .type('2020')
-      .should('have.value', '2020');
+    cy.get('#grtDateMonth').clear().type('11').should('have.value', '11');
+    cy.get('#grtDateDay').clear().type('24').should('have.value', '24');
+    cy.get('#grtDateYear').clear().type('2020').should('have.value', '2020');
 
-    cy.get('#Dates-GrbDateMonth').clear().type('12').should('have.value', '12');
-    cy.get('#Dates-GrbDateDay').clear().type('25').should('have.value', '25');
-    cy.get('#Dates-GrbDateYear')
-      .clear()
-      .type('2020')
-      .should('have.value', '2020');
+    cy.get('#grbDateMonth').clear().type('12').should('have.value', '12');
+    cy.get('#grbDateDay').clear().type('25').should('have.value', '25');
+    cy.get('#grbDateYear').clear().type('2020').should('have.value', '2020');
 
     cy.get('button[type="submit"]').click();
     cy.wait('@updateDates').its('response.statusCode').should('eq', 200);
@@ -79,13 +73,13 @@ describe('Governance Review Team', () => {
       'a[href="/it-governance/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/dates"]'
     ).click();
 
-    cy.get('#Dates-GrtDateMonth').should('have.value', '11');
-    cy.get('#Dates-GrtDateDay').should('have.value', '24');
-    cy.get('#Dates-GrtDateYear').should('have.value', '2020');
+    cy.get('#grtDateMonth').should('have.value', '11');
+    cy.get('#grtDateDay').should('have.value', '24');
+    cy.get('#grtDateYear').should('have.value', '2020');
 
-    cy.get('#Dates-GrbDateMonth').should('have.value', '12');
-    cy.get('#Dates-GrbDateDay').should('have.value', '25');
-    cy.get('#Dates-GrbDateYear').should('have.value', '2020');
+    cy.get('#grbDateMonth').should('have.value', '12');
+    cy.get('#grbDateDay').should('have.value', '25');
+    cy.get('#grbDateYear').should('have.value', '2020');
 
     cy.visit('/');
 
@@ -513,9 +507,9 @@ describe('Governance Review Team', () => {
 
     cy.get('li.usa-sidenav__item a[href*="dates"]').click();
 
-    cy.get('#Dates-GrbDateMonth').should('have.value', '1');
-    cy.get('#Dates-GrbDateDay').should('have.value', '1');
-    cy.get('#Dates-GrbDateYear').should('have.value', '2050');
+    cy.get('#grbDateMonth').should('have.value', '1');
+    cy.get('#grbDateDay').should('have.value', '1');
+    cy.get('#grbDateYear').should('have.value', '2050');
   });
 
   it('can close a request', () => {
