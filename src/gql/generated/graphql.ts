@@ -1384,7 +1384,7 @@ export type MutationDeleteSystemIntakeGRBReviewerArgs = {
 
 /** Defines the mutations for the schema */
 export type MutationDeleteSystemLinkArgs = {
-  systemIntakeSystem: Scalars['UUID']['input'];
+  systemIntakeSystemID: Scalars['UUID']['input'];
 };
 
 

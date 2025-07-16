@@ -2875,7 +2875,7 @@ type Mutation {
   ): UpdateSystemIntakePayload
   unlinkSystemIntakeRelation(intakeID: UUID!): UpdateSystemIntakePayload
   addSystemLink(input: AddSystemLinkInput!): AddSystemLinkPayload
-  deleteSystemLink(systemIntakeSystem: UUID!): DeleteSystemLinkPayload
+  deleteSystemLink(systemIntakeSystemID: UUID!): DeleteSystemLinkPayload
   updateSystemLink(input: UpdateSystemLinkInput!): UpdateSystemLinkPayload
 
   createSystemIntakeContact(

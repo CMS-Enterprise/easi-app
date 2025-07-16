@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 
 	"github.com/google/uuid"
@@ -84,7 +85,7 @@ func (s *Store) SystemIntakesByCedarSystemIDs(ctx context.Context, requests []mo
 	})
 }
 
-func AddSystemIntakeSystem(ctx context.Context, tx *sqlx.Tx, input models.SystemIntakeSystem) (*models.SystemIntakeSystem, error) {
+func (s *Store) AddSystemIntakeSystem(ctx context.Context, input models.SystemIntakeSystem) (models.SystemIntakeSystem, error) {
 	var newSystemIntakeSystem models.SystemIntakeSystem
 
 	newSystemIntakeSystem.ID = uuid.New()
@@ -93,28 +94,17 @@ func AddSystemIntakeSystem(ctx context.Context, tx *sqlx.Tx, input models.System
 	newSystemIntakeSystem.SystemRelationshipType = input.SystemRelationshipType
 	newSystemIntakeSystem.OtherSystemRelationshipDescription = input.OtherSystemRelationshipDescription
 
-	appcontext.ZLogger(ctx).Info("input ID", zap.String("input_id", input.ID.String()))
-	appcontext.ZLogger(ctx).Info("newSystemIntakeSystem ID", zap.String("newSystemIntakeSystem.ID", newSystemIntakeSystem.ID.String()))
-
-	if _, err := namedExec(ctx, tx, sqlqueries.SystemIntakeSystemForm.Insert, newSystemIntakeSystem); err != nil {
-		appcontext.ZLogger(ctx).Error("failed to delete a Linked System from system_intake_systems", zap.Error(err))
-		return nil, err
-	}
-
-	return &newSystemIntakeSystem, nil
+	return newSystemIntakeSystem, namedGet(ctx, s.db, &newSystemIntakeSystem, sqlqueries.SystemIntakeSystemForm.Insert, newSystemIntakeSystem)
 }
 
-func (s *Store) DeleteSystemIntakeSystemByID(ctx context.Context, tx *sqlx.Tx, systemIntakeSystemID uuid.UUID) error {
-	if _, err := namedExec(ctx, tx, sqlqueries.SystemIntakeSystemForm.DeleteByID, args{
+func (s *Store) DeleteSystemIntakeSystemByID(ctx context.Context, systemIntakeSystemID uuid.UUID) (models.SystemIntakeSystem, error) {
+	var deletedSystem models.SystemIntakeSystem
+	return deletedSystem, namedGet(ctx, s.db, &deletedSystem, sqlqueries.SystemIntakeSystemForm.DeleteByID, args{
 		"system_intake_system_id": systemIntakeSystemID,
-	}); err != nil {
-		appcontext.ZLogger(ctx).Error("failed to delete a Linked System from system_intake_systems", zap.Error(err))
-		return err
-	}
-	return nil
+	})
 }
 
-func (s *Store) UpdateSystemIntakeSystemByID(ctx context.Context, tx *sqlx.Tx, input models.UpdateSystemLinkInput) (*models.SystemIntakeSystem, error) {
+func (s *Store) UpdateSystemIntakeSystemByID(ctx context.Context, input models.UpdateSystemLinkInput) (models.SystemIntakeSystem, error) {
 	var linkedSystemToUpdate models.SystemIntakeSystem
 
 	linkedSystemToUpdate.ID = input.ID
@@ -123,26 +113,21 @@ func (s *Store) UpdateSystemIntakeSystemByID(ctx context.Context, tx *sqlx.Tx, i
 	linkedSystemToUpdate.SystemRelationshipType = input.SystemRelationshipType
 	linkedSystemToUpdate.OtherSystemRelationshipDescription = input.OtherSystemRelationshipDescription
 
-	// Assuming namedExec returns (sql.Result, error)
-	_, err := namedExec(ctx, tx, sqlqueries.SystemIntakeSystemForm.UpdateByID, linkedSystemToUpdate)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error("failed to update a Linked System from system_intake_systems", zap.Error(err))
-		return nil, err
-	}
-
-	return &linkedSystemToUpdate, nil
+	return linkedSystemToUpdate, namedGet(ctx, s.db, &linkedSystemToUpdate, sqlqueries.SystemIntakeSystemForm.UpdateByID, linkedSystemToUpdate)
 }
 
 func (s *Store) GetLinkedSystemByID(ctx context.Context, systemIntakeSystemID uuid.UUID) (*models.SystemIntakeSystem, error) {
-	var systemIntakeSystems []*models.SystemIntakeSystem
+	var systemIntakeSystem models.SystemIntakeSystem
 
-	err := namedSelect(ctx, s.db, &systemIntakeSystems, sqlqueries.SystemIntakeSystemForm.GetByID, args{
+	err := namedGet(ctx, s.db, &systemIntakeSystem, sqlqueries.SystemIntakeSystemForm.GetByID, args{
 		"id": systemIntakeSystemID,
 	})
-
-	if len(systemIntakeSystems) > 0 {
-		return systemIntakeSystems[0], err
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, nil // Treat "not found" as a nil result, no error
+	}
+	if err != nil {
+		return nil, err
 	}
 
-	return nil, err
+	return &systemIntakeSystem, nil
 }
