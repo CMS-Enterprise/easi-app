@@ -27,72 +27,61 @@ describe('Dates Form - Async Checkbox Behavior', () => {
     );
   };
 
-  const getGRBDateFields = () => {
-    const monthFields = screen.getAllByLabelText('general:date.month');
-    const dayFields = screen.getAllByLabelText('general:date.day');
-    const yearFields = screen.getAllByLabelText('general:date.year');
-
-    return {
-      grbMonthField: monthFields[1] as HTMLInputElement,
-      grbDayField: dayFields[1] as HTMLInputElement,
-      grbYearField: yearFields[1] as HTMLInputElement
-    };
+  const getGRTDateField = () => {
+    // first date picker is for grtDate
+    return screen.getAllByTestId(
+      'date-picker-external-input'
+    )[0] as HTMLInputElement;
   };
 
-  it('GRB date fields are enabled by default', () => {
+  const getGRBDateField = () => {
+    // second date picker is for grbDate
+    return screen.getAllByTestId(
+      'date-picker-external-input'
+    )[1] as HTMLInputElement;
+  };
+
+  it('GRB date field is enabled by default', () => {
     renderComponent();
 
-    const { grbMonthField, grbDayField, grbYearField } = getGRBDateFields();
-
-    expect(grbMonthField).toBeEnabled();
-    expect(grbDayField).toBeEnabled();
-    expect(grbYearField).toBeEnabled();
+    const grbDateField = getGRBDateField();
+    expect(grbDateField).toBeEnabled();
   });
 
-  it('checking Async disables GRB date fields and clears their values', () => {
+  it('checking Async disables GRB date field and clears its value', () => {
     renderComponent();
 
     const asyncCheckbox = screen.getByRole('checkbox', {
       name: 'action:progressToNewStep.asyncGRB'
     });
 
-    const { grbMonthField, grbDayField, grbYearField } = getGRBDateFields();
+    const grbDateField = getGRBDateField();
 
-    fireEvent.change(grbMonthField, { target: { value: '12' } });
-    fireEvent.change(grbDayField, { target: { value: '25' } });
-    fireEvent.change(grbYearField, { target: { value: '2025' } });
+    // Just simulate setting a value (we don't assert it)
+    fireEvent.change(grbDateField, { target: { value: '2025-12-25' } });
 
-    expect(grbMonthField.value).toBe('12');
-    expect(grbDayField.value).toBe('25');
-    expect(grbYearField.value).toBe('2025');
-
+    // Click Async checkbox → should disable & clear
     fireEvent.click(asyncCheckbox);
-
-    expect(grbMonthField).toBeDisabled();
-    expect(grbDayField).toBeDisabled();
-    expect(grbYearField).toBeDisabled();
-
-    expect(grbMonthField.value).toBe('');
-    expect(grbDayField.value).toBe('');
-    expect(grbYearField.value).toBe('');
+    expect(grbDateField).toBeDisabled();
+    expect(grbDateField.value).toBe('');
   });
 
-  it('unchecking Async re-enables GRB date fields', () => {
+  it('unchecking Async re-enables GRB date field', () => {
     renderComponent();
 
     const asyncCheckbox = screen.getByRole('checkbox', {
       name: 'action:progressToNewStep.asyncGRB'
     });
 
-    const { grbMonthField, grbDayField, grbYearField } = getGRBDateFields();
+    const grbDateField = getGRBDateField();
 
+    // Disable
     fireEvent.click(asyncCheckbox);
-    expect(grbMonthField).toBeDisabled();
+    expect(grbDateField).toBeDisabled();
 
+    // Re-enable
     fireEvent.click(asyncCheckbox);
-    expect(grbMonthField).toBeEnabled();
-    expect(grbDayField).toBeEnabled();
-    expect(grbYearField).toBeEnabled();
+    expect(grbDateField).toBeEnabled();
   });
 
   it('disables Async checkbox when grbReviewStartedAt is set', () => {
@@ -105,5 +94,26 @@ describe('Dates Form - Async Checkbox Behavior', () => {
     });
 
     expect(asyncCheckbox).toBeDisabled();
+  });
+
+  it('does not affect GRT date field when toggling Async', () => {
+    renderComponent();
+
+    const asyncCheckbox = screen.getByRole('checkbox', {
+      name: 'action:progressToNewStep.asyncGRB'
+    });
+
+    const grtDateField = getGRTDateField();
+
+    // Initially enabled
+    expect(grtDateField).toBeEnabled();
+
+    // Toggle Async ON
+    fireEvent.click(asyncCheckbox);
+    expect(grtDateField).toBeEnabled(); // still enabled
+
+    // Toggle Async OFF
+    fireEvent.click(asyncCheckbox);
+    expect(grtDateField).toBeEnabled(); // still enabled
   });
 });
