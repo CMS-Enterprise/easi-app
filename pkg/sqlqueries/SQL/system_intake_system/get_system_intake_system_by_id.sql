@@ -1,9 +1,4 @@
-SELECT
-    id,
-    system_id,
-    system_intake_id,
-    relationship_type,
-    other_system_relationship_description
+SELECT *
 FROM system_intake_systems
 WHERE 
     id = :id;
