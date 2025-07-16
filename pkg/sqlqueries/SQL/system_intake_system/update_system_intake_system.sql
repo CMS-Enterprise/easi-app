@@ -6,4 +6,4 @@ SET
     modified_at = NOW()
 WHERE
     id = :id
-RETURNING id, system_id, relationship_type, other_system_relationship_description;
+RETURNING *;

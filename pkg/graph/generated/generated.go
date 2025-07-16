@@ -617,7 +617,7 @@ type ComplexityRoot struct {
 		DeleteSystemIntakeDocument                          func(childComplexity int, id uuid.UUID) int
 		DeleteSystemIntakeGRBPresentationLinks              func(childComplexity int, input models.DeleteSystemIntakeGRBPresentationLinksInput) int
 		DeleteSystemIntakeGRBReviewer                       func(childComplexity int, input models.DeleteSystemIntakeGRBReviewerInput) int
-		DeleteSystemLink                                    func(childComplexity int, systemIntakeSystem uuid.UUID) int
+		DeleteSystemLink                                    func(childComplexity int, systemIntakeSystemID uuid.UUID) int
 		DeleteTRBGuidanceLetterInsight                      func(childComplexity int, id uuid.UUID) int
 		DeleteTRBRequestAttendee                            func(childComplexity int, id uuid.UUID) int
 		DeleteTRBRequestDocument                            func(childComplexity int, id uuid.UUID) int
@@ -1330,7 +1330,7 @@ type MutationResolver interface {
 	SetSystemIntakeRelationExistingService(ctx context.Context, input *models.SetSystemIntakeRelationExistingServiceInput) (*models.UpdateSystemIntakePayload, error)
 	UnlinkSystemIntakeRelation(ctx context.Context, intakeID uuid.UUID) (*models.UpdateSystemIntakePayload, error)
 	AddSystemLink(ctx context.Context, input models.AddSystemLinkInput) (*models.AddSystemLinkPayload, error)
-	DeleteSystemLink(ctx context.Context, systemIntakeSystem uuid.UUID) (*models.DeleteSystemLinkPayload, error)
+	DeleteSystemLink(ctx context.Context, systemIntakeSystemID uuid.UUID) (*models.DeleteSystemLinkPayload, error)
 	UpdateSystemLink(ctx context.Context, input models.UpdateSystemLinkInput) (*models.UpdateSystemLinkPayload, error)
 	CreateSystemIntakeContact(ctx context.Context, input models.CreateSystemIntakeContactInput) (*models.CreateSystemIntakeContactPayload, error)
 	UpdateSystemIntakeContact(ctx context.Context, input models.UpdateSystemIntakeContactInput) (*models.CreateSystemIntakeContactPayload, error)
@@ -4713,7 +4713,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Mutation.DeleteSystemLink(childComplexity, args["systemIntakeSystem"].(uuid.UUID)), true
+		return e.complexity.Mutation.DeleteSystemLink(childComplexity, args["systemIntakeSystemID"].(uuid.UUID)), true
 
 	case "Mutation.deleteTRBGuidanceLetterInsight":
 		if e.complexity.Mutation.DeleteTRBGuidanceLetterInsight == nil {
@@ -11614,7 +11614,7 @@ type Mutation {
   ): UpdateSystemIntakePayload
   unlinkSystemIntakeRelation(intakeID: UUID!): UpdateSystemIntakePayload
   addSystemLink(input: AddSystemLinkInput!): AddSystemLinkPayload
-  deleteSystemLink(systemIntakeSystem: UUID!): DeleteSystemLinkPayload
+  deleteSystemLink(systemIntakeSystemID: UUID!): DeleteSystemLinkPayload
   updateSystemLink(input: UpdateSystemLinkInput!): UpdateSystemLinkPayload
 
   createSystemIntakeContact(
@@ -13501,24 +13501,24 @@ func (ec *executionContext) field_Mutation_deleteSystemIntakeGRBReviewer_argsInp
 func (ec *executionContext) field_Mutation_deleteSystemLink_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := ec.field_Mutation_deleteSystemLink_argsSystemIntakeSystem(ctx, rawArgs)
+	arg0, err := ec.field_Mutation_deleteSystemLink_argsSystemIntakeSystemID(ctx, rawArgs)
 	if err != nil {
 		return nil, err
 	}
-	args["systemIntakeSystem"] = arg0
+	args["systemIntakeSystemID"] = arg0
 	return args, nil
 }
-func (ec *executionContext) field_Mutation_deleteSystemLink_argsSystemIntakeSystem(
+func (ec *executionContext) field_Mutation_deleteSystemLink_argsSystemIntakeSystemID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (uuid.UUID, error) {
-	if _, ok := rawArgs["systemIntakeSystem"]; !ok {
+	if _, ok := rawArgs["systemIntakeSystemID"]; !ok {
 		var zeroVal uuid.UUID
 		return zeroVal, nil
 	}
 
-	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeSystem"))
-	if tmp, ok := rawArgs["systemIntakeSystem"]; ok {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeSystemID"))
+	if tmp, ok := rawArgs["systemIntakeSystemID"]; ok {
 		return ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
 	}
 
@@ -35240,7 +35240,7 @@ func (ec *executionContext) _Mutation_deleteSystemLink(ctx context.Context, fiel
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteSystemLink(rctx, fc.Args["systemIntakeSystem"].(uuid.UUID))
+		return ec.resolvers.Mutation().DeleteSystemLink(rctx, fc.Args["systemIntakeSystemID"].(uuid.UUID))
 	})
 	if err != nil {
 		ec.Error(ctx, err)

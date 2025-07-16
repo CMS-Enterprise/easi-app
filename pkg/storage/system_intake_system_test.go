@@ -202,9 +202,13 @@ func (s *StoreTestSuite) TestDeleteSystemIntakeSystemByID() {
 		}
 		s.False(toDeleteID == uuid.Nil)
 
-		err = sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
-			return s.store.DeleteSystemIntakeSystemByID(ctx, tx, toDeleteID)
-		})
+		deletedSystemIntakeSystem, err := s.store.DeleteSystemIntakeSystemByID(ctx, toDeleteID)
+		s.NoError(err)
+		s.NotNil(deletedSystemIntakeSystem)
+		s.Equal(toDeleteID, deletedSystemIntakeSystem.ID)
+		s.Equal(idOne, deletedSystemIntakeSystem.SystemID)
+		s.Equal(createdIntake.ID, deletedSystemIntakeSystem.SystemIntakeID)
+
 		s.NoError(err)
 
 		// Step 5: Fetch again and confirm only the second system remains
@@ -272,11 +276,9 @@ func (s *StoreTestSuite) TestUpdateSystemIntakeSystemByID() {
 		}
 
 		// Step 5: Perform the update
-		var updated *models.SystemIntakeSystem
-		err = sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
-			updated, err = s.store.UpdateSystemIntakeSystemByID(ctx, tx, updateInput)
-			return err
-		})
+		var updated models.SystemIntakeSystem
+		updated, err = s.store.UpdateSystemIntakeSystemByID(ctx, updateInput)
+
 		s.NoError(err)
 
 		// Step 6: Validate the updated values
@@ -383,11 +385,9 @@ func (s *StoreTestSuite) TestAddSystemIntakeSystem() {
 		}
 
 		// Step 3: Add the system link using the function under test
-		var newSystem *models.SystemIntakeSystem
-		err = sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
-			newSystem, err = AddSystemIntakeSystem(ctx, tx, systemLink)
-			return err
-		})
+		var newSystem models.SystemIntakeSystem
+		newSystem, err = s.store.AddSystemIntakeSystem(ctx, systemLink)
+
 		s.NoError(err)
 		s.NotNil(newSystem)
 		s.Equal(systemLink.SystemID, newSystem.SystemID)

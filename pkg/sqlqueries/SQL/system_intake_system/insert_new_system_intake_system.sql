@@ -18,9 +18,4 @@ VALUES (
     :relationship_type,
     :other_system_relationship_description
 )
-RETURNING 
-    id,
-    system_intake_id,
-    system_id,
-    relationship_type,
-    other_system_relationship_description;
+RETURNING *;
