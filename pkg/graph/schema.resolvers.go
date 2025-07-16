@@ -716,7 +716,7 @@ func (r *mutationResolver) DeleteSystemIntakeGRBReviewer(ctx context.Context, in
 
 // CastSystemIntakeGRBReviewerVote is the resolver for the castSystemIntakeGRBReviewerVote field.
 func (r *mutationResolver) CastSystemIntakeGRBReviewerVote(ctx context.Context, input models.CastSystemIntakeGRBReviewerVoteInput) (*models.SystemIntakeGRBReviewer, error) {
-	return resolvers.CastSystemIntakeGRBReviewerVote(ctx, r.store, input)
+	return resolvers.CastSystemIntakeGRBReviewerVote(ctx, r.store, r.emailClient, input)
 }
 
 // SendSystemIntakeGRBReviewerReminder is the resolver for the sendSystemIntakeGRBReviewerReminder field.
@@ -756,12 +756,12 @@ func (r *mutationResolver) UpdateSystemIntakeGRBReviewFormTimeframeAsync(ctx con
 
 // ExtendGRBReviewDeadlineAsync is the resolver for the extendGRBReviewDeadlineAsync field.
 func (r *mutationResolver) ExtendGRBReviewDeadlineAsync(ctx context.Context, input models.ExtendGRBReviewDeadlineInput) (*models.UpdateSystemIntakePayload, error) {
-	return resolvers.ExtendGRBReviewDeadlineAsync(ctx, r.store, input)
+	return resolvers.ExtendGRBReviewDeadlineAsync(ctx, r.store, r.emailClient, input)
 }
 
 // RestartGRBReviewAsync is the resolver for the restartGRBReviewAsync field.
 func (r *mutationResolver) RestartGRBReviewAsync(ctx context.Context, input models.RestartGRBReviewInput) (*models.UpdateSystemIntakePayload, error) {
-	return resolvers.RestartGRBReviewAsync(ctx, r.store, input)
+	return resolvers.RestartGRBReviewAsync(ctx, r.store, r.emailClient, input)
 }
 
 // UpdateSystemIntakeLinkedCedarSystem is the resolver for the updateSystemIntakeLinkedCedarSystem field.
@@ -803,7 +803,7 @@ func (r *mutationResolver) DeleteSystemIntakeGRBPresentationLinks(ctx context.Co
 
 // ManuallyEndSystemIntakeGRBReviewAsyncVoting is the resolver for the manuallyEndSystemIntakeGRBReviewAsyncVoting field.
 func (r *mutationResolver) ManuallyEndSystemIntakeGRBReviewAsyncVoting(ctx context.Context, systemIntakeID uuid.UUID) (*models.UpdateSystemIntakePayload, error) {
-	return resolvers.ManuallyEndSystemIntakeGRBReviewAsyncVoting(ctx, r.store, systemIntakeID)
+	return resolvers.ManuallyEndSystemIntakeGRBReviewAsyncVoting(ctx, r.store, r.emailClient, systemIntakeID)
 }
 
 // ArchiveSystemIntake is the resolver for the archiveSystemIntake field.

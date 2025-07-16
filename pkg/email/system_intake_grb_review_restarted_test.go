@@ -17,7 +17,6 @@ func (s *EmailTestSuite) TestSystemIntakeGRBReviewRestarted() {
 	requesterName := "Alice"
 	componentAcronym := "XYZ"
 	grbReviewStart := time.Date(2026, 4, 5, 0, 0, 0, 0, time.UTC)
-	grbReviewDeadline := time.Date(2026, 4, 10, 0, 0, 0, 0, time.UTC)
 	grbReviewEndDate := time.Date(2026, 4, 10, 0, 0, 0, 0, time.UTC)
 
 	recipient := models.NewEmailAddress("someone@fake.com")
@@ -37,7 +36,6 @@ func (s *EmailTestSuite) TestSystemIntakeGRBReviewRestarted() {
 		requesterName,
 		componentAcronym,
 		grbReviewStart,
-		grbReviewDeadline,
 		grbReviewEndDate,
 	)
 	s.NoError(err)
@@ -45,12 +43,12 @@ func (s *EmailTestSuite) TestSystemIntakeGRBReviewRestarted() {
 	expectedSubject := fmt.Sprintf("The GRB review for %s was restarted", projectTitle)
 	s.Equal(expectedSubject, sender.subject)
 
-	requestLink := fmt.Sprintf("%s://%s/governance-task-list/%s", s.config.URLScheme, s.config.URLHost, intakeID.String())
+	requestLink := fmt.Sprintf("%[1]s://%[2]s/governance-task-list/%[3]s", s.config.URLScheme, s.config.URLHost, intakeID.String())
 	expectedEmail := fmt.Sprintf(`
 <h1 class="header-title">EASi</h1>
 <p class="header-subtitle">Easy Access to System Information</p>
 
-<p>The Governance Admin Team has restarted the review for %s. It will now end on %s at 5:00pm EST.</p>
+<p>The Governance Admin Team has restarted the review for %[1]s. It will now end on %[2]s at 5:00pm EST.</p>
 <div class="no-margin">
   <p>Use the link below to:</p>
   <ul>
@@ -59,11 +57,11 @@ func (s *EmailTestSuite) TestSystemIntakeGRBReviewRestarted() {
     <li>Change your vote.</li>
   </ul>
 </div>
-<p><a href="%s">View this request in EASi</a></p>
+<p><a href="%[3]s">View this request in EASi</a></p>
 <p><b>Request Summary:</b>
-  Project title: %s
-  Requester: %s, %s
-  GRB review dates: %s-%s
+  Project title: %[1]s
+  Requester: %[4]s, %[5]s
+  GRB review dates: %[6]s-%[2]s
 </p>
 <hr>
 <p>You may continue to receive email notifications about this request until a decision is issued and it is closed.</p>
@@ -71,11 +69,9 @@ func (s *EmailTestSuite) TestSystemIntakeGRBReviewRestarted() {
 		projectTitle,
 		grbReviewEndDate.Format("01/02/2006"),
 		requestLink,
-		projectTitle,
 		requesterName,
 		componentAcronym,
 		grbReviewStart.Format("01/02/2006"),
-		grbReviewDeadline.Format("01/02/2006"),
 	)
 
 	s.ElementsMatch(sender.toAddresses, []models.EmailAddress{recipient})

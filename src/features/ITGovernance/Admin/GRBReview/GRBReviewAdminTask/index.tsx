@@ -48,6 +48,7 @@ const GRBReviewAdminTask = ({
       {grbReviewStartedAt ? (
         <AdminAction
           type="ITGov"
+          data-testid="grb-review-admin-task"
           title={t('adminTask.sendReviewReminder.title')}
           buttons={[
             {

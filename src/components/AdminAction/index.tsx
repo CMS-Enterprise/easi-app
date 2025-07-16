@@ -28,6 +28,7 @@ type AdminActionProps = {
   description?: string;
   children?: React.ReactNode;
   className?: string;
+  'data-testid'?: string;
 };
 
 /**
@@ -39,13 +40,17 @@ const AdminAction = ({
   description,
   children,
   buttons,
-  className
+  className,
+  'data-testid': testId
 }: AdminActionProps) => {
   const { t } = useTranslation('technicalAssistance');
   const { t: grbReviewT } = useTranslation('grbReview');
 
   return (
-    <div className={classNames('usa-summary-box', className)}>
+    <div
+      className={classNames('usa-summary-box', className)}
+      data-testid={testId}
+    >
       <h5 className="text-base-dark text-uppercase margin-top-0 margin-bottom-05 line-height-body-1 text-normal text-body-xs">
         {type === 'TRB'
           ? t('adminAction.title')
