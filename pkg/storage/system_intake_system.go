@@ -118,7 +118,12 @@ func (s *Store) UpdateSystemIntakeSystemByID(ctx context.Context, input models.U
 func (s *Store) GetLinkedSystemByID(ctx context.Context, systemIntakeSystemID uuid.UUID) (*models.SystemIntakeSystem, error) {
 	var systemIntakeSystem models.SystemIntakeSystem
 
-	return &systemIntakeSystem, namedGet(ctx, s.db, &systemIntakeSystem, sqlqueries.SystemIntakeSystemForm.GetByID, args{
+	err := namedGet(ctx, s.db, &systemIntakeSystem, sqlqueries.SystemIntakeSystemForm.GetByID, args{
 		"id": systemIntakeSystemID,
 	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &systemIntakeSystem, nil
 }
