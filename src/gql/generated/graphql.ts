@@ -1760,6 +1760,7 @@ export type Query = {
   systemIntake?: Maybe<SystemIntake>;
   systemIntakeContacts: SystemIntakeContactsPayload;
   systemIntakeSystem?: Maybe<SystemIntakeSystem>;
+  systemIntakeSystems: Array<SystemIntakeSystem>;
   systemIntakes: Array<SystemIntake>;
   systemIntakesWithLcids: Array<SystemIntake>;
   systemIntakesWithReviewRequested: Array<SystemIntake>;
@@ -1881,6 +1882,12 @@ export type QuerySystemIntakeContactsArgs = {
 /** Query definition for the schema */
 export type QuerySystemIntakeSystemArgs = {
   systemIntakeSystemID: Scalars['UUID']['input'];
+};
+
+
+/** Query definition for the schema */
+export type QuerySystemIntakeSystemsArgs = {
+  systemIntakeId: Scalars['UUID']['input'];
 };
 
 
@@ -2151,6 +2158,7 @@ export type SystemIntake = {
   statusRequester: SystemIntakeStatusRequester;
   step: SystemIntakeStep;
   submittedAt?: Maybe<Scalars['Time']['output']>;
+  systemIntakeSystems: Array<SystemIntakeSystem>;
   /** Linked systems */
   systems: Array<CedarSystem>;
   trbCollaborator?: Maybe<Scalars['String']['output']>;

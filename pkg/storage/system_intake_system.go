@@ -93,6 +93,9 @@ func AddSystemIntakeSystem(ctx context.Context, tx *sqlx.Tx, input models.System
 	newSystemIntakeSystem.SystemRelationshipType = input.SystemRelationshipType
 	newSystemIntakeSystem.OtherSystemRelationshipDescription = input.OtherSystemRelationshipDescription
 
+	appcontext.ZLogger(ctx).Info("input ID", zap.String("input_id", input.ID.String()))
+	appcontext.ZLogger(ctx).Info("newSystemIntakeSystem ID", zap.String("newSystemIntakeSystem.ID", newSystemIntakeSystem.ID.String()))
+
 	if _, err := namedExec(ctx, tx, sqlqueries.SystemIntakeSystemForm.Insert, newSystemIntakeSystem); err != nil {
 		appcontext.ZLogger(ctx).Error("failed to delete a Linked System from system_intake_systems", zap.Error(err))
 		return nil, err

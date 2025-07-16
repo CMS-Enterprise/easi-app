@@ -1681,6 +1681,11 @@ func (r *queryResolver) SystemIntakeSystem(ctx context.Context, systemIntakeSyst
 	return resolvers.GetLinkedSystemByID(ctx, r.store, systemIntakeSystemID)
 }
 
+// SystemIntakeSystems is the resolver for the systemIntakeSystems field.
+func (r *queryResolver) SystemIntakeSystems(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeSystem, error) {
+	return resolvers.SystemIntakeSystemsByIntakeID(ctx, systemIntakeID)
+}
+
 // Actions is the resolver for the actions field.
 func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeAction, error) {
 	actions, actionsErr := dataloaders.GetSystemIntakeActionsBySystemIntakeID(ctx, obj.ID)
@@ -2075,6 +2080,11 @@ func (r *systemIntakeResolver) GrbReviewAsyncStatus(ctx context.Context, obj *mo
 	return resolvers.CalcSystemIntakeGRBReviewAsyncStatus(ctx, obj), nil
 }
 
+// SystemIntakeSystems is the resolver for the systemIntakeSystems field.
+func (r *systemIntakeResolver) SystemIntakeSystems(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeSystem, error) {
+	panic(fmt.Errorf("not implemented: SystemIntakeSystems - systemIntakeSystems"))
+}
+
 // DocumentType is the resolver for the documentType field.
 func (r *systemIntakeDocumentResolver) DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*models.SystemIntakeDocumentType, error) {
 	return &models.SystemIntakeDocumentType{
@@ -2156,7 +2166,7 @@ func (r *systemIntakeNoteResolver) Editor(ctx context.Context, obj *models.Syste
 
 // SystemRelationshipType is the resolver for the systemRelationshipType field.
 func (r *systemIntakeSystemResolver) SystemRelationshipType(ctx context.Context, obj *models.SystemIntakeSystem) ([]models.SystemRelationshipType, error) {
-	panic(fmt.Errorf("not implemented: SystemRelationshipType - systemRelationshipType"))
+	return obj.SystemRelationshipType, nil
 }
 
 // Author is the resolver for the author field.

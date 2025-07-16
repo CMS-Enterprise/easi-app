@@ -867,6 +867,7 @@ type SystemIntake {
   grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType
   grbReviewAsyncManualEndDate: Time
   grbReviewReminderLastSent: Time
+  systemIntakeSystems: [SystemIntakeSystem!]!
 }
 
 """
@@ -3071,6 +3072,7 @@ type Query {
   requesterUpdateEmailData: [RequesterUpdateEmailData!]!
   userAccount(username: String!): UserAccount
   systemIntakeSystem(systemIntakeSystemID: UUID!): SystemIntakeSystem
+  systemIntakeSystems(systemIntakeId: UUID!): [SystemIntakeSystem!]!
 }
 
 enum TRBRequestType {
