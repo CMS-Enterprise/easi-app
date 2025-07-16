@@ -145,3 +145,15 @@ export const UpdateSystemLink = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const GetSystemIntakeSystems = gql(/* GraphQL */ `
+  query GetSystemIntakeSystems($systemIntakeId: UUID!) {
+    systemIntakeSystems(systemIntakeId: $systemIntakeId) {
+      id
+      systemIntakeID
+      systemID
+      systemRelationshipType
+      otherSystemRelationshipDescription
+    }
+  }
+`);

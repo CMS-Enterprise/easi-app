@@ -22,7 +22,6 @@ import {
   SystemRelationshipType,
   useAddSystemLinkMutation,
   useGetSystemIntakeRelationQuery
-  // useUpdateSystemLinkMutation
 } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
@@ -178,13 +177,14 @@ const LinkedSystemsForm = () => {
     if (!isDirty) return;
 
     // Update intake
-    const result = await updateSystemIntake(); // TODO Get this working
+    const result = await updateSystemIntake();
 
     console.log('result from  update system intake', result);
 
     // console.log('result', result);
-
+    // if (result && result.addSystemLink.id) {
     callback();
+    // }
   };
 
   return (

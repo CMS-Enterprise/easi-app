@@ -17,7 +17,7 @@ import {
   // RequestRelationType,
   SystemIntakeSystem,
   useDeleteSystemLinkMutation,
-  useSystemIntakeQuery
+  useGetSystemIntakeSystemsQuery
 } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
@@ -83,8 +83,8 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
     error: systemIntakeError,
     loading: relationLoading,
     refetch: refetchSystemIntakes
-  } = useSystemIntakeQuery({
-    variables: { id }
+  } = useGetSystemIntakeSystemsQuery({
+    variables: { systemIntakeId: id }
   });
 
   console.log('data', data, systemIntakeError);
@@ -124,8 +124,8 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
     // if there are relationships added or the checkbox is filled
     if (
       data &&
-      data?.systemIntake?.cedarSystemRelationShips &&
-      data?.systemIntake?.cedarSystemRelationShips?.length > 0
+      data?.systemIntakeSystems &&
+      data?.systemIntakeSystems?.length > 0
     ) {
       return true;
     }
@@ -255,10 +255,7 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
           </Grid>
 
           <LinkedSystemTable
-            systems={
-              (data?.systemIntake
-                ?.cedarSystemRelationShips as SystemIntakeSystem[]) || []
-            }
+            systems={(data?.systemIntakeSystems as SystemIntakeSystem[]) || []}
             defaultPageSize={20}
             isHomePage={false}
             onRemoveLink={handleRemoveLink}
