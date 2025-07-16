@@ -2,7 +2,7 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
-// import { yupResolver } from '@hookform/resolvers/yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Form, FormGroup } from '@trussworks/react-uswds';
 import {
   SystemIntakeFragmentFragment,
@@ -16,12 +16,13 @@ import CheckboxField from 'components/CheckboxField';
 import DatePickerFormatted from 'components/DatePickerFormatted';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
+import HelpText from 'components/HelpText';
 import Label from 'components/Label';
 import PageHeading from 'components/PageHeading';
 import useMessage from 'hooks/useMessage';
 import { SubmitDatesForm } from 'types/systemIntake';
+import { DateValidationSchema } from 'validations/systemIntakeSchema';
 
-// import { DateValidationSchema } from 'validations/systemIntakeSchema';
 import { actionDateInPast } from '../Actions/ManageLcid/RetireLcid';
 
 const Dates = ({
@@ -49,7 +50,7 @@ const Dates = ({
     setValue,
     formState: { errors }
   } = useForm<SubmitDatesForm>({
-    // resolver: yupResolver(DateValidationSchema)
+    resolver: yupResolver(DateValidationSchema),
     defaultValues: {
       grtDate: grtDate ?? '',
       grbDate: grbDate ?? '',
@@ -140,6 +141,9 @@ const Dates = ({
                 <Label htmlFor={field.name}>
                   {t('governanceReviewTeam:dates.grbDate.label')}
                 </Label>
+                <HelpText>
+                  {t('governanceReviewTeam:dates.grbDate.description')}
+                </HelpText>
                 {!!error?.message && (
                   <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
                 )}
