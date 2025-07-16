@@ -37,7 +37,7 @@ func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wir
 		})
 	}
 
-	clientStatus, err := resolvers.CalculateSystemIntakeAdminStatus(helpers.PointerTo(models.SystemIntake(*si)))
+	clientStatus, err := resolvers.CalculateSystemIntakeAdminStatus(ctx, helpers.PointerTo(models.SystemIntake(*si)))
 	if err != nil {
 		return nil, err
 	}

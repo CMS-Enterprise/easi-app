@@ -1,0 +1,30 @@
+{{template "easi_header.gohtml"}}
+
+<p>The Governance Admin Team has requested that the Governance Review Board (GRB) review an IT Governance request and
+  give their input on the merit of the project.</p>
+
+<br>
+<p>Use the link below to:</p>
+<div class="no-margin">
+  <uL>
+    <li>Review project materials and documentation.</li>
+    <li>Ask questions or have discussions with other GRB members, the project team, and the Governance Admin Team.</li>
+    <li>Cast your vote if you are a voting member of the GRB.</li>
+  </uL>
+</div>
+
+<p>You will have until {{.EndDate}} at 5pm Eastern Time to submit your vote.</p>
+
+<p><strong><a href="{{.SystemIntakeLink}}">View this request in EASi</a></strong></p>
+
+<div class="no-margin">
+  <p><strong>Request summary:</strong></p>
+  <p>Project title: {{.ProjectName}}</p>
+  <p>Requester: {{.RequesterName}}{{if .RequesterComponent}}, {{.RequesterComponent}}{{else}}{{end}}</p>
+  <p>GRB review dates: {{.DateInfo}}</p>
+</div>
+
+<p>If you have questions, please contact the Governance Admin Team at <a
+    href="mailto:{{.ITGovernanceInboxAddress}}">{{.ITGovernanceInboxAddress}}</a>.</p>
+<hr>
+<p>You may continue to receive email notifications about this request until a decision is issued and it is closed.</p>

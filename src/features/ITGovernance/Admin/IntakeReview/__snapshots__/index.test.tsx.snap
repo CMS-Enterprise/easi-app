@@ -408,6 +408,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
           Documents
         </h2>
         <div
+          data-testid="system-intake-documents"
           id="systemIntakeDocuments"
         >
           <div
@@ -566,8 +567,10 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
               />
             </table>
           </div>
-          <p>
-            No documents uploaded
+          <p
+            class="text-italic"
+          >
+            There are no documents uploaded for this request.
           </p>
         </div>
       </div>

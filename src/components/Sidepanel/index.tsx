@@ -34,6 +34,8 @@ const Sidepanel = ({
     }
   };
 
+  const root = document.getElementById('root');
+
   return (
     <ReactModal
       isOpen={isOpen}
@@ -44,7 +46,9 @@ const Sidepanel = ({
       onRequestClose={closeModal}
       shouldCloseOnOverlayClick
       contentLabel={ariaLabel}
-      appElement={document.getElementById('root')! as HTMLElement}
+      appElement={root!}
+      // Fix for "App element is not defined" unit test error
+      ariaHideApp={root ? undefined : false}
     >
       <div data-testid={testid}>
         <div className="easi-sidepanel__x-button-container display-flex text-base flex-align-center">
