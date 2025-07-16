@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -2082,7 +2081,7 @@ func (r *systemIntakeResolver) GrbReviewAsyncStatus(ctx context.Context, obj *mo
 
 // SystemIntakeSystems is the resolver for the systemIntakeSystems field.
 func (r *systemIntakeResolver) SystemIntakeSystems(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeSystem, error) {
-	panic(fmt.Errorf("not implemented: SystemIntakeSystems - systemIntakeSystems"))
+	return resolvers.SystemIntakeSystemsByIntakeID(ctx, obj.ID)
 }
 
 // DocumentType is the resolver for the documentType field.
