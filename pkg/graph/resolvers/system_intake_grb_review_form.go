@@ -11,6 +11,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
+	"github.com/cms-enterprise/easi-app/pkg/email/translation"
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -240,6 +241,7 @@ func CalcSystemIntakeGRBReviewStandardStatus(
 func ManuallyEndSystemIntakeGRBReviewAsyncVoting(
 	ctx context.Context,
 	store *storage.Store,
+	emailClient *email.Client,
 	systemIntakeID uuid.UUID,
 ) (*models.UpdateSystemIntakePayload, error) {
 	currentTime := time.Now()
@@ -258,6 +260,51 @@ func ManuallyEndSystemIntakeGRBReviewAsyncVoting(
 		return nil, err
 	}
 
+	if emailClient != nil && intake.GRBReviewStartedAt != nil && intake.GrbReviewAsyncEndDate != nil {
+		logger := appcontext.ZLogger(ctx)
+		// get GRB reviewers
+		reviewers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{intake.ID})
+		if err != nil {
+			// don't exit with error, just log
+			logger.Error("problem getting reviewers when sending Voting Ended Early email", zap.Error(err), zap.String("intake.id", intake.ID.String()))
+
+			return &models.UpdateSystemIntakePayload{
+				SystemIntake: updatedIntake,
+			}, nil
+		}
+
+		// get user emails
+		var emails []string
+		for _, reviewer := range reviewers {
+			userAccount, err := dataloaders.GetUserAccountByID(ctx, reviewer.UserID)
+			if err != nil {
+				// don't exit with error, just log
+				logger.Error("problem getting accounts when sending Voting Ended Early email", zap.Error(err), zap.String("intake.id", intake.ID.String()))
+
+				return &models.UpdateSystemIntakePayload{
+					SystemIntake: updatedIntake,
+				}, nil
+			}
+
+			emails = append(emails, userAccount.Email)
+		}
+
+		for _, userEmail := range emails {
+			if err := emailClient.SystemIntake.SendSystemIntakeGRBReviewEndedEarly(ctx, email.SendSystemIntakeGRBReviewEndedEarlyInput{
+				Recipient:          models.EmailAddress(userEmail),
+				SystemIntakeID:     intake.ID,
+				ProjectTitle:       intake.ProjectName.String,
+				RequesterName:      intake.Requester,
+				RequesterComponent: intake.Component.String,
+				StartDate:          *intake.GRBReviewStartedAt,
+				EndDate:            *intake.GrbReviewAsyncEndDate,
+			}); err != nil {
+				logger.Error("problem sending Voting Ended Early email", zap.Error(err), zap.String("intake.id", intake.ID.String()), zap.String("user.email", userEmail))
+				continue
+			}
+		}
+	}
+
 	return &models.UpdateSystemIntakePayload{
 		SystemIntake: updatedIntake,
 	}, nil
@@ -267,6 +314,7 @@ func ManuallyEndSystemIntakeGRBReviewAsyncVoting(
 func ExtendGRBReviewDeadlineAsync(
 	ctx context.Context,
 	store *storage.Store,
+	emailClient *email.Client,
 	input models.ExtendGRBReviewDeadlineInput,
 ) (*models.UpdateSystemIntakePayload, error) {
 	// Fetch intake by ID
@@ -285,6 +333,57 @@ func ExtendGRBReviewDeadlineAsync(
 		return nil, err
 	}
 
+	// send email if able
+	if intake.GRBReviewStartedAt != nil && intake.GrbReviewAsyncEndDate != nil {
+		logger := appcontext.ZLogger(ctx)
+		// get GRB reviewers
+		reviewers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{intake.ID})
+		if err != nil {
+			// don't exit with error, just log
+			logger.Error("problem getting reviewers when sending Deadline Extended email", zap.Error(err), zap.String("intake.id", intake.ID.String()))
+
+			return &models.UpdateSystemIntakePayload{
+				SystemIntake: updatedIntake,
+			}, nil
+		}
+
+		// get user emails
+		var emails []string
+		for _, reviewer := range reviewers {
+			userAccount, err := dataloaders.GetUserAccountByID(ctx, reviewer.UserID)
+			if err != nil {
+				// don't exit with error, just log
+				logger.Error("problem getting accounts when sending Deadline Extended email", zap.Error(err), zap.String("intake.id", intake.ID.String()))
+				return &models.UpdateSystemIntakePayload{
+					SystemIntake: updatedIntake,
+				}, nil
+			}
+
+			emails = append(emails, userAccount.Email)
+		}
+
+		for _, userEmail := range emails {
+			if err := emailClient.SystemIntake.SendSystemIntakeGRBReviewDeadlineExtended(
+				ctx,
+				models.EmailNotificationRecipients{
+					RegularRecipientEmails:   []models.EmailAddress{models.EmailAddress(userEmail)},
+					ShouldNotifyITGovernance: false,
+					ShouldNotifyITInvestment: false,
+				},
+				intake.ID,
+				intake.ProjectName.String,
+				intake.Requester,
+				translation.GetComponentAcronym(intake.Component.String),
+				*intake.GRBReviewStartedAt,
+				*intake.GrbReviewAsyncEndDate,
+			); err != nil {
+				logger.Error("problem sending Deadline Extended email", zap.Error(err), zap.String("intake.id", intake.ID.String()), zap.String("user.email", userEmail))
+				continue
+			}
+		}
+
+	}
+
 	return &models.UpdateSystemIntakePayload{
 		SystemIntake: updatedIntake,
 	}, nil
@@ -294,6 +393,7 @@ func ExtendGRBReviewDeadlineAsync(
 func RestartGRBReviewAsync(
 	ctx context.Context,
 	store *storage.Store,
+	emailClient *email.Client,
 	input models.RestartGRBReviewInput,
 ) (*models.UpdateSystemIntakePayload, error) {
 	// Fetch intake by ID
@@ -315,6 +415,26 @@ func RestartGRBReviewAsync(
 	updatedIntake, err := store.UpdateSystemIntake(ctx, intake)
 	if err != nil {
 		return nil, err
+	}
+
+	if intake.GRBReviewStartedAt != nil && intake.GrbReviewAsyncEndDate != nil {
+		if err := emailClient.SystemIntake.SendSystemIntakeGRBReviewRestarted(
+			ctx,
+			models.EmailNotificationRecipients{
+				RegularRecipientEmails:   nil,
+				ShouldNotifyITGovernance: true,
+				ShouldNotifyITInvestment: false,
+			},
+			intake.ID,
+			intake.ProjectName.String,
+			intake.Requester,
+			translation.GetComponentAcronym(intake.Component.String),
+			*intake.GRBReviewStartedAt,
+			*intake.GrbReviewAsyncEndDate,
+		); err != nil {
+			appcontext.ZLogger(ctx).Error("problem sending GRB review restarted email", zap.Error(err), zap.String("intake.id", intake.ID.String()))
+			// no need to fail here, just continue
+		}
 	}
 
 	return &models.UpdateSystemIntakePayload{
