@@ -164,7 +164,7 @@ const Dates = ({
                   {t('governanceReviewTeam:dates.grbDate.description')}
                 </HelpText>
                 {!!error?.message && (
-                  <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
+                  <FieldErrorMsg>{error.message}</FieldErrorMsg>
                 )}
                 <DatePickerFormatted
                   {...field}
