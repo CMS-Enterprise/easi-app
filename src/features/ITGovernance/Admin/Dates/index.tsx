@@ -122,7 +122,7 @@ const Dates = ({
                   {t('governanceReviewTeam:dates.grtDate.label')}
                 </Label>
                 {!!error?.message && (
-                  <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
+                  <FieldErrorMsg>{error.message}</FieldErrorMsg>
                 )}
                 <DatePickerFormatted
                   {...field}
