@@ -26,7 +26,6 @@ func NewSystemIntake() models.SystemIntake {
 		ProductManagerComponent: null.StringFrom("Test Product Manager Component"),
 		TRBCollaborator:         null.StringFrom("Test TRB Collaborator"),
 		OITSecurityCollaborator: null.StringFrom("Test OIT Collaborator"),
-		EACollaborator:          null.StringFrom("Test EA Collaborator"),
 		ProjectName:             null.StringFrom("Test Project name"),
 		ExistingFunding:         null.BoolFrom(true),
 		FundingNumber:           null.StringFrom("123456"),

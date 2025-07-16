@@ -343,7 +343,6 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithNoCollaboratorsQuery() {
 		EUAUserID:                   null.StringFrom("TEST"),
 		ProjectName:                 null.StringFrom(projectName),
 		RequestType:                 models.SystemIntakeRequestTypeNEW,
-		EACollaboratorName:          null.StringFrom(""),
 		OITSecurityCollaboratorName: null.StringFrom(""),
 		TRBCollaboratorName:         null.StringFrom(""),
 	})
@@ -355,11 +354,10 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithNoCollaboratorsQuery() {
 			GovernanceTeams struct {
 				IsPresent bool
 				Teams     []struct {
-					Acronym      string
-					Collaborator string
-					Key          string
-					Label        string
-					Name         string
+					Acronym string
+					Key     string
+					Label   string
+					Name    string
 				}
 			}
 		}
@@ -392,7 +390,6 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithNoCollaboratorsQuery() {
 func (s *GraphQLTestSuite) TestFetchSystemIntakeWithCollaboratorsQuery() {
 	ctx := s.context
 	projectName := "My cool project"
-	eaName := "My EA Rep"
 	oitName := "My OIT Rep"
 	trbName := "My TRB Rep"
 
@@ -400,7 +397,6 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithCollaboratorsQuery() {
 		EUAUserID:                   null.StringFrom("TEST"),
 		ProjectName:                 null.StringFrom(projectName),
 		RequestType:                 models.SystemIntakeRequestTypeNEW,
-		EACollaboratorName:          null.StringFrom(eaName),
 		OITSecurityCollaboratorName: null.StringFrom(oitName),
 		TRBCollaboratorName:         null.StringFrom(trbName),
 	})
@@ -445,7 +441,6 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithCollaboratorsQuery() {
 	s.True(resp.SystemIntake.GovernanceTeams.IsPresent)
 	s.Equal(trbName, resp.SystemIntake.GovernanceTeams.Teams[0].Collaborator)
 	s.Equal(oitName, resp.SystemIntake.GovernanceTeams.Teams[1].Collaborator)
-	s.Equal(eaName, resp.SystemIntake.GovernanceTeams.Teams[2].Collaborator)
 }
 
 func (s *GraphQLTestSuite) TestFetchSystemIntakeWithActionsQuery() {
@@ -831,9 +826,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWithTeams() {
 
 	s.Equal("Iama Ispgperson", teams[1].Collaborator)
 	s.Equal("securityPrivacy", teams[1].Key)
-
-	s.Equal("Iama Eaperson", teams[2].Collaborator)
-	s.Equal("enterpriseArchitecture", teams[2].Key)
 }
 
 func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearTeams() {
@@ -847,7 +839,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearTeams() {
 
 	intake.TRBCollaboratorName = null.StringFrom("TRB Person")
 	intake.OITSecurityCollaboratorName = null.StringFrom("OIT Person")
-	intake.EACollaboratorName = null.StringFrom("EA Person")
 	_, err := s.store.UpdateSystemIntake(ctx, intake)
 	s.NoError(err)
 
@@ -942,7 +933,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearOneTeam() {
 
 	intake.TRBCollaboratorName = null.StringFrom("TRB Person")
 	intake.OITSecurityCollaboratorName = null.StringFrom("OIT Person")
-	intake.EACollaboratorName = null.StringFrom("EA Person")
 	_, err := s.store.UpdateSystemIntake(ctx, intake)
 	s.NoError(err)
 
