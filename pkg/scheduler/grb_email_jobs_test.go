@@ -66,7 +66,6 @@ func (suite *SchedulerTestSuite) TestSendGRBReviewEndedEmailJobFunction() {
 	// Step 1: Create a test intake that has completed async voting (ended yesterday)
 	testIntake := &models.SystemIntake{
 		Requester:             "Ended Voting User",
-		RequesterEmailAddress: null.StringFrom("endedvoting@example.com"),
 		Component:             null.StringFrom("Test Component"),
 		ProjectName:           null.StringFrom("Voting Ended Project"),
 		GRBReviewStartedAt:    helpers.PointerTo(now.AddDate(0, 0, -5)),
