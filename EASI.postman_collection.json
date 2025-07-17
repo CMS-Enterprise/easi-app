@@ -145,27 +145,6 @@
 									"response": []
 								},
 								{
-									"name": "Progress to GRB meeting with GRB Review Type",
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "graphql",
-											"graphql": {
-												"query": "mutation CreateSystemIntakeActionProgressToNewStep($input: SystemIntakeProgressToNewStepsInput!) {\r\n    createSystemIntakeActionProgressToNewStep(input: $input) {\r\n        systemIntake {\r\n            step\r\n            grbDate\r\n            grbReviewType\r\n        }\r\n    }\r\n}\r\n",
-												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"notificationRecipients\": {\r\n            \"regularRecipientEmails\": [\r\n                \"{{testEmailAddress}}\"\r\n            ],\r\n            \"shouldNotifyITGovernance\": false,\r\n            \"shouldNotifyITInvestment\": false\r\n        },\r\n        \"newStep\": \"GRB_MEETING\",\r\n        \"meetingDate\": \"2029-07-28T20:12:31.703Z\",\r\n        \"feedback\": \"this is more feedback\",\r\n        \"additionalInfo\": \"add'l info\",\r\n        \"grbReviewType\": \"STANDARD\"\r\n    }\r\n}"
-											}
-										},
-										"url": {
-											"raw": "{{url}}",
-											"host": [
-												"{{url}}"
-											]
-										}
-									},
-									"response": []
-								},
-								{
 									"name": "Progress to Draft Biz Case",
 									"request": {
 										"method": "POST",
@@ -534,7 +513,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation createSystemIntake{\n  \n  createSystemIntake(input:{\n      requestType :MAJOR_CHANGES\n      requester: {\n          name: \"Mr. Fun Person\"\n      }\n    } )\n  \n  {\n    id\n    step\n    state\n    requestFormState\n\n  adminLead\n  archivedAt\n#   businessCase\n  businessNeed\n#   businessOwner\n  businessSolution\n  createdAt\n  currentStage\n  decisionNextSteps\n  eaCollaborator\n  eaCollaboratorName\n  euaUserId\n  existingFunding\n  grbDate\n  grtDate\n  id\n  lcid\n  lcidExpiresAt\n  lcidScope\n  lcidCostBaseline\n  needsEaSupport\n#   notes\n  oitSecurityCollaborator\n  oitSecurityCollaboratorName\n#   productManager\n  projectAcronym\n  rejectionReason\n  requestName\n  requestType\n#   requester\n#   status\n  submittedAt\n  trbCollaborator\n  trbCollaboratorName\n  updatedAt\n  grtReviewEmailBody\n  decidedAt\n  businessCaseId\n#   lastAdminNote\n  cedarSystemId\n#   documents\n  hasUiChanges\n  grbReviewType  \n    \n  }\n  \n  \n}",
+										"query": "mutation createSystemIntake{\n  \n  createSystemIntake(input:{\n      requestType :MAJOR_CHANGES\n      requester: {\n          name: \"Mr. Fun Person\"\n      }\n    } )\n  \n  {\n    id\n    step\n    state\n    requestFormState\n\n  adminLead\n  archivedAt\n#   businessCase\n  businessNeed\n#   businessOwner\n  businessSolution\n  createdAt\n  currentStage\n  decisionNextSteps\n  eaCollaborator\n  eaCollaboratorName\n  euaUserId\n  existingFunding\n  grbDate\n  grtDate\n  id\n  lcid\n  lcidExpiresAt\n  lcidScope\n  lcidCostBaseline\n  needsEaSupport\n#   notes\n  oitSecurityCollaborator\n  oitSecurityCollaboratorName\n#   productManager\n  projectAcronym\n  rejectionReason\n  requestName\n  requestType\n#   requester\n#   status\n  submittedAt\n  trbCollaborator\n  trbCollaboratorName\n  updatedAt\n  grtReviewEmailBody\n  decidedAt\n  businessCaseId\n#   lastAdminNote\n  cedarSystemId\n#   documents\n  hasUiChanges\n    \n    \n  }\n  \n  \n}",
 										"variables": ""
 									}
 								},
@@ -661,8 +640,7 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript",
-										"packages": {}
+										"type": "text/javascript"
 									}
 								}
 							],
@@ -672,8 +650,8 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation UpdateSystemIntakeContactDetails($input: UpdateSystemIntakeContactDetailsInput!) {\n  updateSystemIntakeContactDetails(input: $input) {\n    systemIntake {\n      id\n      businessOwner {\n        component\n        name\n        __typename\n      }\n      governanceTeams {\n        isPresent\n        teams {\n          acronym\n          collaborator\n          key\n          label\n          name\n          __typename\n        }\n        __typename\n      }\n      productManager {\n        component\n        name\n        __typename\n      }\n      requester {\n        component\n        name\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}",
-										"variables": "{\n  \"input\": {\n    \"id\": \"{{systemIntakeID}}\",\n    \"requester\": {\n      \"name\": \"User ABCD\",\n      \"component\": \"Center for Clinical Standards and Quality\"\n    },\n    \"businessOwner\": {\n      \"name\": \"Caden Schmeler\",\n      \"component\": \"Center for Program Integrity\"\n    },\n    \"productManager\": {\n      \"name\": \"Zechariah Wyman\",\n      \"component\": \"Center for Consumer Information and Insurance Oversight\"\n    },\n    \"governanceTeams\": {\n      \"isPresent\": true,\n      \"teams\": [\n        {\n          \"name\": \"Technical Review Board\",\n          \"key\": \"technicalReviewBoard\",\n          \"collaborator\": \"Billy Bob\"\n        }\n      ]\n    }\n  }\n}\n\n"
+										"query": "mutation UpdateSystemIntakeContactDetails($input: UpdateSystemIntakeContactDetailsInput!) {\n  updateSystemIntakeContactDetails(input: $input) {\n    systemIntake {\n      id\n      businessOwner {\n        component\n        name\n        __typename\n      }\n      governanceTeams {\n        isPresent\n        teams {\n          acronym\n          collaborator\n          key\n          label\n          name\n          __typename\n        }\n        __typename\n      }\n      isso {\n        isPresent\n        name\n        __typename\n      }\n      productManager {\n        component\n        name\n        __typename\n      }\n      requester {\n        component\n        name\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}",
+										"variables": "{\n  \"input\": {\n    \"id\": \"{{systemIntakeID}}\",\n    \"requester\": {\n      \"name\": \"User ABCD\",\n      \"component\": \"Center for Clinical Standards and Quality\"\n    },\n    \"businessOwner\": {\n      \"name\": \"Caden Schmeler\",\n      \"component\": \"Center for Program Integrity\"\n    },\n    \"productManager\": {\n      \"name\": \"Zechariah Wyman\",\n      \"component\": \"Center for Consumer Information and Insurance Oversight\"\n    },\n    \"isso\": {\n      \"isPresent\": true,\n      \"name\": \"Alyce Haag\"\n    },\n    \"governanceTeams\": {\n      \"isPresent\": true,\n      \"teams\": [\n        {\n          \"name\": \"Technical Review Board\",\n          \"key\": \"technicalReviewBoard\",\n          \"collaborator\": \"Billy Bob\"\n        }\n      ]\n    }\n  }\n}\n\n"
 									}
 								},
 								"url": {
@@ -694,7 +672,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -704,8 +683,8 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation UpdateSystemIntakeRequestDetails($input: UpdateSystemIntakeRequestDetailsInput!) {\n  updateSystemIntakeRequestDetails(input: $input) {\n    systemIntake {\n      id\n      status\n      requestName\n      businessNeed\n      businessSolution\n      needsEaSupport\n      hasUiChanges\n      __typename\n    }\n    __typename\n  }\n}",
-										"variables": "{\n  \"input\": {\n    \"id\": \"{{systemIntakeID}}\",\n    \"requestName\": \"Happy Happy Fun TIme\",\n    \"businessNeed\": \"This will make sure everyone has a good day. Believe me\",\n    \"businessSolution\": \"Pizza parties every 3 hours.\",\n    \"currentStage\": \"I have done some initial research\",\n    \"needsEaSupport\": false,\n    \"hasUiChanges\": true\n  }\n}"
+										"query": "mutation UpdateSystemIntakeRequestDetails($input: UpdateSystemIntakeRequestDetailsInput!) {\n  updateSystemIntakeRequestDetails(input: $input) {\n    systemIntake {\n      id\n      state\n      requestName\n      businessNeed\n      businessSolution\n      needsEaSupport\n      hasUiChanges\n      __typename\n    }\n    __typename\n  }\n}",
+										"variables": "{\n  \"input\": {\n    \"id\": \"{{systemIntakeID}}\",\n    \"acquisitionMethods\": [\"CONTRACTOR_FURNISHED\"],\n    \"requestName\": \"Happy Happy Fun TIme\",\n    \"businessNeed\": \"This will make sure everyone has a good day. Believe me\",\n    \"businessSolution\": \"Pizza parties every 3 hours.\",\n    \"currentStage\": \"I have done some initial research\",\n    \"needsEaSupport\": false,\n    \"hasUiChanges\": true\n  }\n}"
 									}
 								},
 								"url": {
@@ -1007,41 +986,8 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query getSystemIntakeGRBReviewers($systemIntakeID: UUID!) {\n  systemIntake(id: $systemIntakeID) {\n    id\n    grbVotingInformation {\n      grbReviewers {\n        id\n        systemIntakeID\n        grbRole\n        votingRole\n        userAccount {\n          username\n          id\n          givenName\n          commonName\n          email\n        }\n        vote\n        voteComment\n        createdAt\n        createdBy\n        modifiedAt\n        modifiedBy\n      }\n    }\n  }\n}\n",
+										"query": "query getSystemIntakeGRBReviewers($systemIntakeID: UUID!) {\n  systemIntake(id: $systemIntakeID) {\n    id\n    grbReviewers {\n        id\n        systemIntakeID\n        grbRole\n        votingRole\n        userAccount {\n            username\n            id\n            givenName\n            commonName\n            email\n        }\n        createdAt\n        createdBy\n        modifiedAt\n        modifiedBy\n    }\n  }\n}",
 										"variables": "{\r\n    \"systemIntakeID\": \"5af245bc-fc54-4677-bab1-1b3e798bb43c\"\r\n}"
-									}
-								},
-								"url": {
-									"raw": "{{url}}",
-									"host": [
-										"{{url}}"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "GetGRBVotingInformation(AndReviewers)",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "graphql",
-									"graphql": {
-										"query": "query getSystemIntakeGRBReviewers {\n  systemIntake(id: \"{{systemIntakeID}}\") {\n    id\n    grbVotingInformation {\n      votingStatus\n      numberOfNoObjection\n      numberOfObjection\n      numberOfNotVoted\n      grbReviewers {\n        id\n        systemIntakeID\n        grbRole\n        votingRole\n        userAccount {\n          username\n          id\n          givenName\n          commonName\n          email\n        }\n        vote\n        voteComment\n        createdAt\n        createdBy\n        modifiedAt\n        modifiedBy\n      }\n    }\n  }\n}\n",
-										"variables": ""
 									}
 								},
 								"url": {
@@ -1073,8 +1019,8 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation createSystemIntakeGRBReviewer(\n  $input: CreateSystemIntakeGRBReviewersInput!\n) {\n  createSystemIntakeGRBReviewers(input: $input) {\n    reviewers {\n      id\n      userAccount {\n        id\n      }\n      grbRole\n      votingRole\n      systemIntakeID\n      createdBy\n      createdAt\n      modifiedBy\n      modifiedAt\n    }\n  }\n}\n",
-										"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"8edb237e-ad48-49b2-91cf-8534362bc6cf\",\r\n    \"reviewers\": {\r\n        \"euaUserId\": \"USR1\",\r\n        \"votingRole\": \"NON_VOTING\",\r\n        \"grbRole\": \"CMCS_REP\"\r\n    }\r\n  }\r\n}"
+										"query": "mutation createSystemIntakeGRBReviewer($input: CreateSystemIntakeGRBReviewersInput!) {\n  createSystemIntakeGRBReviewers(input: $input) {\n    reviewers {\n        id\n        userAccount {\n        id\n        }\n        grbRole\n        votingRole\n        systemIntakeID\n        createdBy\n        createdAt\n        modifiedBy\n        modifiedAt\n    }\n    \n  }\n}",
+										"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"8edb237e-ad48-49b2-91cf-8534362bc6cf\",\r\n    \"reviewers\": {\r\n        \"euaUserId\": \"ABCD\",\r\n        \"votingRole\": \"NON_VOTING\",\r\n        \"grbRole\": \"CMCS_REP\"\r\n    }\r\n  }\r\n}"
 									}
 								},
 								"url": {
@@ -1106,29 +1052,8 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation updateGRBReviewer($input: UpdateSystemIntakeGRBReviewerInput!) {\n  updateSystemIntakeGRBReviewer(input: $input) {\n    id\n    systemIntakeID\n    grbRole\n    votingRole\n    userAccount {\n      username\n      id\n      givenName\n      commonName\n      email\n    }\n    vote\n    voteComment\n    createdAt\n    createdBy\n    modifiedAt\n    modifiedBy\n  }\n}\n",
+										"query": "mutation updateGRBReviewer($input: UpdateSystemIntakeGRBReviewerInput!) {\n  updateSystemIntakeGRBReviewer(input: $input) {\n    id\n    systemIntakeID\n    grbRole\n    votingRole\n    userAccount {\n        username\n        id\n        givenName\n        commonName\n        email\n    }\n    createdAt\n    createdBy\n    modifiedAt\n    modifiedBy\n  }\n}",
 										"variables": "{\r\n    \"input\": {\r\n        \"reviewerID\": \"{{SystemIntakeGRBReviewerID}}\",\r\n        \"votingRole\": \"VOTING\",\r\n        \"grbRole\": \"ACA_3021_REP\"\r\n    }\r\n}"
-									}
-								},
-								"url": {
-									"raw": "{{url}}",
-									"host": [
-										"{{url}}"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Cast GRB Reviewer Vote",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "graphql",
-									"graphql": {
-										"query": "mutation castSystemIntakeGRBReviewerVote(\n  $input: CastSystemIntakeGRBReviewerVoteInput!\n) {\n  castSystemIntakeGRBReviewerVote(input: $input) {\n    id\n    systemIntakeID\n    grbRole\n    votingRole\n    userAccount {\n      username\n      id\n      givenName\n      commonName\n      email\n    }\n    vote\n    voteComment\n    dateVoted\n    createdAt\n    createdBy\n    modifiedAt\n    modifiedBy\n  }\n}\n",
-										"variables": "{\n  \"input\": {\n    \"systemIntakeID\": \"8edb237e-ad48-49b2-91cf-8534362bc6cf\",\n    \"vote\": \"OBJECTION\",\n    \"voteComment\": \"Could be better\"\n  }\n}"
 									}
 								},
 								"url": {
@@ -1193,7 +1118,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query getReviewersComparisons($systemIntakeID: UUID!) {\n  compareGRBReviewersByIntakeID(id: $systemIntakeID) {\n    id\n    requestName\n    reviewers {\n      euaUserId\n      userAccount {\n        commonName\n      }\n      isCurrentReviewer\n      grbRole\n    }\n  }\n}\n",
+										"query": "query getReviewersComparisons($systemIntakeID: UUID!) {\n  compareGRBReviewersByIntakeID(id: $systemIntakeID) {\n    id\n    requestName\n    reviewers {\n      euaUserId\n      userAccount {\n        commonName\n      }\n      isCurrentReviewer\n      grbRole\n    }\n  }\n}",
 										"variables": "{\r\n    \"systemIntakeID\": \"5af245bc-fc54-4677-bab1-1b3e798bb43c\"\r\n}"
 									}
 								},
@@ -1226,7 +1151,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query getSystemIntakeGRBReviewers($systemIntakeID: UUID!) {\n  systemIntake(id: $systemIntakeID) {\n    id\n    grbDiscussions {\n      initialPost {\n        id\n        content\n        votingRole\n        grbRole\n        systemIntakeID\n        createdAt\n        createdByUserAccount {\n          givenName\n          familyName\n        }\n        modifiedAt\n        modifiedByUserAccount {\n          givenName\n          familyName\n        }\n      }\n      replies {\n        id\n        content\n        votingRole\n        grbRole\n        systemIntakeID\n        createdAt\n        createdByUserAccount {\n          givenName\n          familyName\n        }\n        modifiedAt\n        modifiedByUserAccount {\n          givenName\n          familyName\n        }\n      }\n    }\n  }\n}\n",
+										"query": "query getSystemIntakeGRBReviewers($systemIntakeID: UUID!) {\n  systemIntake(id: $systemIntakeID) {\n    id\n    grbDiscussions {\n        initialPost {\n            id\n            content\n            votingRole\n            grbRole\n            systemIntakeID\n            createdAt\n            createdByUserAccount {\n                givenName\n                familyName\n            }\n            modifiedAt\n            modifiedByUserAccount {\n                givenName\n                familyName\n            }\n        }\n        replies {\n            id\n            content\n            votingRole\n            grbRole\n            systemIntakeID\n            createdAt\n            createdByUserAccount {\n                givenName\n                familyName\n            }\n            modifiedAt\n            modifiedByUserAccount {\n                givenName\n                familyName\n            }\n        }\n    }\n  }\n}",
 										"variables": "{\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\"\r\n}"
 									}
 								},
@@ -1325,7 +1250,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation createSystemIntakeGRBDiscussionReply(\n  $input: createSystemIntakeGRBDiscussionReplyInput!\n) {\n  createSystemIntakeGRBDiscussionReply(input: $input) {\n    id\n    content\n    grbRole\n    votingRole\n    systemIntakeID\n    createdByUserAccount {\n      id\n      username\n    }\n  }\n}\n",
+										"query": "mutation createSystemIntakeGRBDiscussionReply($input: createSystemIntakeGRBDiscussionReplyInput!) {\n  createSystemIntakeGRBDiscussionReply(input: $input) {\n    id\n    content\n    grbRole\n    votingRole\n    systemIntakeID\n    createdByUserAccount {\n        id\n        username\n    }\n  }\n}",
 										"variables": "{\r\n  \"input\": {\r\n    \"initialPostID\": \"{{SystemIntakeGRBDiscussionID}}\",\r\n    \"content\": \"<p>monkey kiwi maduros senor <span data-type=\\\"mention\\\" tag-type=\\\"USER_ACCOUNT\\\" class=\\\"mention\\\" data-id-db=\\\"{{UserAccountID}}\\\">@Mckayla Fritsch</span>!</p>\"\r\n  }\r\n}"
 									}
 								},
@@ -1358,7 +1283,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation createSystemIntakeGRBDiscussionReply(\n  $input: createSystemIntakeGRBDiscussionReplyInput!\n) {\n  createSystemIntakeGRBDiscussionReply(input: $input) {\n    id\n    content\n    grbRole\n    votingRole\n    systemIntakeID\n    createdByUserAccount {\n      id\n      username\n    }\n  }\n}\n",
+										"query": "mutation createSystemIntakeGRBDiscussionReply($input: createSystemIntakeGRBDiscussionReplyInput!) {\n  createSystemIntakeGRBDiscussionReply(input: $input) {\n    id\n    content\n    grbRole\n    votingRole\n    systemIntakeID\n    createdByUserAccount {\n        id\n        username\n    }\n  }\n}",
 										"variables": "{\r\n  \"input\": {\r\n    \"initialPostID\": \"{{SystemIntakeGRBDiscussionID}}\",\r\n    \"content\": \"<p>Let me look into it, ok? <span data-type=\\\"mention\\\" tag-type=\\\"GROUP_IT_GOV\\\" class=\\\"mention\\\">@Group</span><span data-type=\\\"mention\\\" tag-type=\\\"GROUP_GRB_REVIEWERS\\\" class=\\\"mention\\\">@Group2</span>!</p>\"\r\n  }\r\n}"
 									}
 								},
@@ -1391,7 +1316,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query getSystemIntakeGRBReviewers($systemIntakeID: UUID!) {\n  systemIntake(id: $systemIntakeID) {\n    id\n    grbPresentationLinks {\n      systemIntakeID\n      createdAt\n      createdBy\n      modifiedAt\n      modifiedBy\n      recordingLink\n      recordingPasscode\n      transcriptFileName\n      transcriptFileStatus\n      transcriptFileURL\n      presentationDeckFileName\n      presentationDeckFileStatus\n      presentationDeckFileURL\n    }\n  }\n}\n",
+										"query": "query getSystemIntakeGRBReviewers($systemIntakeID: UUID!) {\n  systemIntake(id: $systemIntakeID) {\n    id\n    grbPresentationLinks {\n        systemIntakeID\n        createdAt\n        createdBy\n        modifiedAt\n        modifiedBy\n        recordingLink\n        recordingPasscode\n        transcriptFileName\n        transcriptFileStatus\n        transcriptFileURL\n        presentationDeckFileName\n        presentationDeckFileStatus\n        presentationDeckFileURL\n    }\n  }\n}",
 										"variables": "{\r\n    \"systemIntakeID\": \"5af245bc-fc54-4677-bab1-1b3e798bb43c\"\r\n}"
 									}
 								},
@@ -1424,29 +1349,8 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation setSystemIntakeGRBPresentationLinks(\n  $input: SystemIntakeGRBPresentationLinksInput!\n) {\n  setSystemIntakeGRBPresentationLinks(input: $input) {\n    systemIntakeID\n    createdAt\n    createdBy\n    modifiedAt\n    modifiedBy\n    recordingLink\n    recordingPasscode\n    transcriptFileName\n    transcriptFileStatus\n    transcriptFileURL\n    presentationDeckFileName\n    presentationDeckFileStatus\n    presentationDeckFileURL\n  }\n}\n",
+										"query": "mutation setSystemIntakeGRBPresentationLinks(\n    $input: SystemIntakeGRBPresentationLinksInput!\n) {\n  setSystemIntakeGRBPresentationLinks(input: $input) {\n    systemIntakeID\n    createdAt\n    createdBy\n    modifiedAt\n    modifiedBy\n    recordingLink\n    recordingPasscode\n    transcriptFileName\n    transcriptFileStatus\n    transcriptFileURL\n    presentationDeckFileName\n    presentationDeckFileStatus\n    presentationDeckFileURL\n  }\n}",
 										"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"8edb237e-ad48-49b2-91cf-8534362bc6cf\",\r\n    \"recordingLink\": \"https://google.com\",\r\n    \"recordingPasscode\": \"123456\"\r\n  }\r\n}"
-									}
-								},
-								"url": {
-									"raw": "{{url}}",
-									"host": [
-										"{{url}}"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Send GRB Review Voting Reminder",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "graphql",
-									"graphql": {
-										"query": "mutation sendSystemIntakeGRBReviewerReminder($systemIntakeID: UUID!) {\n  sendSystemIntakeGRBReviewerReminder(systemIntakeID: $systemIntakeID) {\n    timeSent\n  }\n}\n",
-										"variables": "{\n    \"systemIntakeID\":\"a5689bec-e4cf-4f2b-a7de-72020e8d65be\"\n}"
 									}
 								},
 								"url": {
@@ -1461,7 +1365,7 @@
 					]
 				},
 				{
-					"name": "Set Intake Relations",
+					"name": "Linked Systems",
 					"item": [
 						{
 							"name": "Set New System",
@@ -1507,14 +1411,32 @@
 						},
 						{
 							"name": "Set Existing System",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let responseData = pm.response.json().data.setSystemIntakeRelationExistingSystem",
+											"",
+											"systemIntakeSystemId = responseData.systemIntake.cedarSystemRelationShips[0].id",
+											"",
+											"",
+											"pm.collectionVariables.set(\"systemIntakeSystemId\", systemIntakeSystemId);",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation SetSystemIntakeRelationExistingSystem ($input: SetSystemIntakeRelationExistingSystemInput!) {\r\n    setSystemIntakeRelationExistingSystem(input:$input) {\r\n        userErrors {\r\n            message\r\n            path\r\n        }\r\n        systemIntake {\r\n            id\r\n            systems {\r\n                id\r\n                name\r\n                acronym\r\n            }\r\n            cedarSystemRelationShips{\r\n                systemIntakeID\r\n                systemID\r\n                systemRelationshipType\r\n                otherSystemRelationship\r\n            }\r\n        }\r\n    }\r\n}",
-										"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"contractNumbers\": [\r\n            \"abcde\",\r\n            \"fghij\"\r\n        ],\r\n        \"cedarSystemRelationShips\": [\r\n            {\r\n                \"cedarSystemId\": \"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}\",\r\n                \"systemRelationshipType\": [\"PRIMARY_SUPPORT\",\r\n                \"USES_IN_TECH_SOLUTION\", \"OTHER\"],\r\n                \"otherTypeDescription\": \"other description\"\r\n            }\r\n        ]\r\n    }\r\n}"
+										"query": "mutation SetSystemIntakeRelationExistingSystem ($input: SetSystemIntakeRelationExistingSystemInput!) {\r\n    setSystemIntakeRelationExistingSystem(input:$input) {\r\n        userErrors {\r\n            message\r\n            path\r\n        }\r\n        systemIntake {\r\n            id\r\n            systems {\r\n                id\r\n                name\r\n                acronym\r\n            }\r\n            systemIntakeSystems{\r\n                id\r\n                systemIntakeID\r\n                systemID\r\n                systemRelationshipType\r\n                otherSystemRelationshipDescription\r\n            }\r\n        }\r\n    }\r\n}",
+										"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"contractNumbers\": [],\r\n        \"cedarSystemRelationShips\": [\r\n            {\r\n                \"cedarSystemId\": \"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}\",\r\n                \"systemRelationshipType\": [\"IMPACTS_SELECTED_SYSTEM\", \"OTHER\"],\r\n                \"otherSystemRelationshipDescription\":\"yea\"\r\n            }\r\n        ]\r\n    }\r\n}"
 									}
 								},
 								"url": {
@@ -1534,8 +1456,145 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation UnlinkSystemIntakeRelation ($intakeID: UUID!) {\r\n    unlinkSystemIntakeRelation(intakeID: $intakeID) {\r\n        userErrors {\r\n            message\r\n            path\r\n        }\r\n        systemIntake {\r\n            id\r\n            step\r\n            state\r\n            relationType\r\n            contractName\r\n            contractNumbers {\r\n                contractNumber\r\n            }\r\n        }\r\n    }\r\n}",
+										"query": "mutation UnlinkSystemIntakeRelation ($intakeID: UUID!) {\r\n    unlinkSystemIntakeRelation(intakeID: $intakeID) {\r\n        userErrors {\r\n            message\r\n            path\r\n        }\r\n        systemIntake {\r\n            id\r\n            step\r\n            state\r\n            relationType\r\n            contractName\r\n            contractNumbers {\r\n                contractNumber\r\n            }\r\n            systemIntakeSystems {\r\n                id\r\n            }\r\n        }\r\n    }\r\n}",
 										"variables": "{\r\n    \"intakeID\": \"{{systemIntakeID}}\"\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete System Link",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation DeleteSystemLink ($systemIntakeSystemID: UUID!) {\n    deleteSystemLink(systemIntakeSystemID: $systemIntakeSystemID) {\n        systemIntakeSystem {\n            systemID\n            systemRelationshipType\n        }\n    }\n}",
+										"variables": "{\n    \"systemIntakeSystemID\": \"{{systemIntakeSystemId}}\"\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update System Link",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation UpdateSystemLink ($input: UpdateSystemLinkInput!) {\n    updateSystemLink(input: $input) {\n        systemIntakeSystem {\n            id\n            systemID\n            systemRelationshipType\n            otherSystemRelationshipDescription\n        }\n    }\n}",
+										"variables": "{\n    \"input\":\n    {\n        \"id\": \"{{systemIntakeSystemId}}\",\n        \"systemID\": \"{11AB1A00-1234-5678-ABC1-1A001B00CC5F}\",\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\n        \"systemRelationshipType\": [\"PARTIAL_SUPPORT\", \"OTHER\"],\n        \"otherSystemRelationshipDescription\":\"new description\"\n    }\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get System Link",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// const systemIntakeSystemId = pm.collectionVariables.get(\"systemIntakeSystemId\");",
+											"// console.log(\"Using systemIntakeSystemId:\", systemIntakeSystemId ? systemIntakeSystemId : \"fdf8ee5c-8481-4389-ae98-16cdf21f8b64\");",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query {\n  systemIntakeSystem(systemIntakeSystemID: \"{{systemIntakeSystemId}}\") {\n    id\n    systemRelationshipType\n    systemIntakeID\n    otherSystemRelationshipDescription\n  }\n}\n",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create New System Link",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let responseData = pm.response.json().data.addSystemLink",
+											"",
+											"systemIntakeSystemId = responseData.id",
+											"",
+											"",
+											"pm.collectionVariables.set(\"systemIntakeSystemId\", systemIntakeSystemId);",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation AddSystemLink($input: AddSystemLinkInput!) {\n  addSystemLink(input: $input) {\n    id\n    systemIntakeID\n    systemID\n    systemRelationshipType\n    otherSystemRelationshipDescription\n  }\n}\n",
+										"variables": "{\n    \"input\":\n    {\n        \"systemID\": \"{11AB1A00-1234-5678-ABC1-1A001B0TDCTG}\",\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\n        \"systemRelationshipType\": [\"OTHER\"],\n        \"otherSystemRelationshipDescription\": \"important info\"\n    }\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get System Links",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query {\n  systemIntakeSystems(systemIntakeId: \"{{systemIntakeID}}\") {\n    id\n    systemRelationshipType\n    systemIntakeID\n    otherSystemRelationshipDescription\n  }\n}\n",
+										"variables": ""
 									}
 								},
 								"url": {
@@ -1569,7 +1628,7 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "query systemIntake {\n  systemIntake(id:\"{{systemIntakeID}}\") {\n    step\n    state\n    archivedAt\n    requestFormState\n    draftBusinessCaseState\n    grtMeetingState\n    finalBusinessCaseState\n    grbMeetingState\n    decisionState\n    itGovTaskStatuses {      \n        intakeFormStatus\n        feedbackFromInitialReviewStatus\n        decisionAndNextStepsStatus\n        bizCaseDraftStatus\n        grtMeetingStatus\n        bizCaseFinalStatus\n        grbMeetingStatus\n    }\n    id\n    actions {\n        type\n        actor {\n            name\n        }\n        step\n        feedback\n    }\n    contractName\n#   adminLead\n# #   businessCase\n#   businessNeed\n# #   businessOwner\n#   businessSolution\n# #   contract\n# #   costs\n#   createdAt\n#   currentStage\n#   decisionNextSteps\n#   eaCollaborator\n#   eaCollaboratorName\n#   euaUserId\n#   existingFunding\n# #   fundingSources\n# #   governanceTeams\n#   grbDate\n#   grtDate\n# #   grtFeedbacks\n#   id\n#   lcid\n#   lcidExpiresAt\n#   lcidScope\n#   lcidCostBaseline\n#   needsEaSupport\n# #   notes\n#   oitSecurityCollaborator\n#   oitSecurityCollaboratorName\n# #   productManager\n#   projectAcronym\n#   rejectionReason\n#   requestName\n#   requestType\n# #   requester\n#   status\n#   submittedAt\n#   trbCollaborator\n#   trbCollaboratorName\n#   updatedAt\n#   grtReviewEmailBody\n#   decidedAt\n#   businessCaseId\n# #   lastAdminNote\n#   cedarSystemId\n# #   documents\n#   hasUiChanges\n    grbReviewAsyncStatus\n  }\n}",
+								"query": "query systemIntake {\n    systemIntake(id: \"{{systemIntakeID}}\") {\n    step\n    state\n    archivedAt\n    requestFormState\n    draftBusinessCaseState\n    grtMeetingState\n    finalBusinessCaseState\n    grbMeetingState\n    decisionState\n    itGovTaskStatuses {      \n        intakeFormStatus\n        feedbackFromInitialReviewStatus\n        decisionAndNextStepsStatus\n        bizCaseDraftStatus\n        grtMeetingStatus\n        bizCaseFinalStatus\n        grbMeetingStatus\n    }\n    id\n    actions {\n        type\n        actor {\n            name\n        }\n        step\n        feedback\n    }\n    contractName\n    systemIntakeSystem{\n        systemIntakeID\n        systemID\n        systemRelationshipType\n        otherSystemRelationshipDescription\n    }\n#   adminLead\n# #   businessCase\n#   businessNeed\n# #   businessOwner\n#   businessSolution\n# #   contract\n# #   costs\n#   createdAt\n#   currentStage\n#   decisionNextSteps\n#   eaCollaborator\n#   eaCollaboratorName\n#   euaUserId\n#   existingFunding\n# #   fundingSources\n# #   governanceTeams\n#   grbDate\n#   grtDate\n# #   grtFeedbacks\n#   id\n# #   isso\n#   lcid\n#   lcidExpiresAt\n#   lcidScope\n#   lcidCostBaseline\n#   needsEaSupport\n# #   notes\n#   oitSecurityCollaborator\n#   oitSecurityCollaboratorName\n# #   productManager\n#   projectAcronym\n#   rejectionReason\n#   requestName\n#   requestType\n# #   requester\n#   status\n#   submittedAt\n#   trbCollaborator\n#   trbCollaboratorName\n#   updatedAt\n#   grtReviewEmailBody\n#   decidedAt\n#   businessCaseId\n# #   lastAdminNote\n#   cedarSystemId\n# #   documents\n#   hasUiChanges\n    \n    \n  }\n  \n  \n}",
 								"variables": ""
 							}
 						},
@@ -1602,7 +1661,7 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "query systemIntakeGRBReviewRequested {\n  systemIntakesWithReviewRequested {\n    step\n    state\n    id\n    grbVotingInformation {\n        grbReviewers {\n            id\n            userAccount {\n                commonName\n            }\n    }\n    }\n  }\n}",
+								"query": "query systemIntakeGRBReviewRequested {\n  systemIntakesWithReviewRequested {\n    step\n    state\n    id\n    grbReviewers {\n        id\n        userAccount {\n            commonName\n        }\n    }\n  }\n}",
 								"variables": ""
 							}
 						},
@@ -1960,204 +2019,6 @@
 							"graphql": {
 								"query": "mutation {\n  updateSystemIntakeRequestType(id:\"{{systemIntakeID}}\", newType: MAJOR_CHANGES) {\n    id\n\n    requestType\n\n    state\n    decisionState\n  }\n}",
 								"variables": "{\r\n    \"id\": \"{{systemIntakeID}}\"\r\n}"
-							}
-						},
-						"url": {
-							"raw": "{{url}}",
-							"host": [
-								"{{url}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "SystemIntake Update GRB Review Type",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "graphql",
-							"graphql": {
-								"query": "mutation UpdateSystemIntakeGRBReviewType($input: updateSystemIntakeGRBReviewTypeInput!) {\n  updateSystemIntakeGRBReviewType(input: $input) {\n    systemIntake {\n      id\n      grbReviewType\n    }\n  }\n}",
-								"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n    \"grbReviewType\": \"ASYNC\"\r\n  }\r\n}"
-							}
-						},
-						"url": {
-							"raw": "{{url}}",
-							"host": [
-								"{{url}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Manually End SystemIntake GRB Review Async Voting",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "graphql",
-							"graphql": {
-								"query": "mutation ManuallyEndSystemIntakeGRBReviewAsyncVoting {\n  manuallyEndSystemIntakeGRBReviewAsyncVoting(systemIntakeID: \"{{systemIntakeID}}\") {\n    systemIntake {\n      id\n      grbReviewAsyncStatus\n    }\n  }\n}",
-								"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\"\r\n  }\r\n}"
-							}
-						},
-						"url": {
-							"raw": "{{url}}",
-							"host": [
-								"{{url}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Restart Async GRB Review",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "graphql",
-							"graphql": {
-								"query": "mutation restartGRBReviewAsync(\n  $input: RestartGRBReviewInput!\n) {\n  restartGRBReviewAsync(input: $input) {\n    systemIntake {\n      grbReviewStartedAt\n      grbReviewAsyncEndDate\n      grbReviewAsyncManualEndDate\n\n      statusAdmin\n      grbReviewAsyncStatus\n\n      itGovTaskStatuses {\n        grbMeetingStatus\n      }\n\n      grbVotingInformation {\n        votingStatus\n      }\n    }\n  }\n}",
-								"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n    \"newGRBEndDate\": \"2030-03-10T14:00:00Z\"\r\n  }\r\n}"
-							}
-						},
-						"url": {
-							"raw": "{{url}}",
-							"host": [
-								"{{url}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update System Intake GRB Review Form Presentation (Standard)",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "graphql",
-							"graphql": {
-								"query": "mutation UpdateSystemIntakeGRBReviewFormPresentationStandard($input: updateSystemIntakeGRBReviewFormInputPresentationStandard!) {\n  updateSystemIntakeGRBReviewFormPresentationStandard(input: $input) {\n    systemIntake {\n      id\n      grbDate\n    }\n  }\n}",
-								"variables": "{\n  \"input\": {\n    \"systemIntakeID\": \"{{systemIntakeID}}\",\n    \"grbDate\": \"2025-03-10T14:00:00Z\"\n  }\n}"
-							}
-						},
-						"url": {
-							"raw": "{{url}}",
-							"host": [
-								"{{url}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update System Intake GRB Review Form Presentation (Async)",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "graphql",
-							"graphql": {
-								"query": "mutation UpdateSystemIntakeGRBReviewFormPresentationAsync($input: updateSystemIntakeGRBReviewFormInputPresentationAsync!) {\n  updateSystemIntakeGRBReviewFormPresentationAsync(input: $input) {\n    systemIntake {\n      id\n      grbReviewAsyncRecordingTime\n    }\n  }\n}",
-								"variables": "{\n  \"input\": {\n    \"systemIntakeID\": \"{{systemIntakeID}}\",\n    \"grbReviewAsyncRecordingTime\": \"2025-03-10T14:00:00Z\"\n  }\n}"
-							}
-						},
-						"url": {
-							"raw": "{{url}}",
-							"host": [
-								"{{url}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update System Intake GRB Review Form Timeframe (Async)",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "graphql",
-							"graphql": {
-								"query": "mutation UpdateSystemIntakeGRBReviewFormTimeframeAsync{\n  updateSystemIntakeGRBReviewFormTimeframeAsync(input: {\n    systemIntakeID: \"{{systemIntakeID}}\",\n    grbReviewAsyncEndDate: \"2026-03-10T14:00:00Z\",\n    # startGRBReview: true\n     }){\n    systemIntake {\n      id\n      grbReviewAsyncEndDate\n    }\n  }\n}",
-								"variables": ""
 							}
 						},
 						"url": {
@@ -4672,6 +4533,10 @@
 		},
 		{
 			"key": "UserAccountID",
+			"value": ""
+		},
+		{
+			"key": "systemIntakeSystemId",
 			"value": ""
 		}
 	]
