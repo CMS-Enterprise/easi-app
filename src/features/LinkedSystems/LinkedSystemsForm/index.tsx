@@ -1,6 +1,5 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, FieldPath, FormProvider } from 'react-hook-form';
-// import { useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { ErrorMessage } from '@hookform/error-message';
@@ -21,6 +20,7 @@ import {
   SystemRelationshipType,
   useAddSystemLinkMutation,
   useGetCedarSystemsQuery,
+  useGetSystemIntakeSystemQuery,
   useUpdateSystemLinkMutation
 } from 'gql/generated/graphql';
 
@@ -45,8 +45,7 @@ type LinkedSystemsFormFields = {
     impactsSelectedSystem: boolean;
     other: boolean;
   };
-
-  otherDescription: string;
+  otherDescription?: string;
 };
 
 const hasErrors = false; // todo fix this
@@ -89,12 +88,22 @@ const LinkedSystemsForm = () => {
     linkedSystemID?: string;
   }>();
 
-  console.log('System Intake ID:', systemIntakeID);
-  console.log('Linked System Id:', linkedSystemID);
-
   const history = useHistory();
 
-  //   const { getValues } = useForm();
+  // const { register, setValue, watch } = useForm<LinkedSystemFormFields>();
+  const form = useEasiForm<LinkedSystemsFormFields>({
+    resolver: yupResolver(linkedSystemsSchema)
+  });
+
+  const {
+    control,
+    handleSubmit,
+    watch,
+    register,
+    setFocus,
+    setValue,
+    formState: { isDirty, errors }
+  } = form;
 
   const { t } = useTranslation([
     'linkedSystems',
@@ -130,18 +139,51 @@ const LinkedSystemsForm = () => {
         }));
   }, [systemIntakeAndCedarSystems?.cedarSystems]);
 
-  const form = useEasiForm<LinkedSystemsFormFields>({
-    resolver: yupResolver(linkedSystemsSchema)
+  const {
+    data: linkedSystem,
+    error: linkedSystemQueryError,
+    loading: linkedSystemLoading
+  } = useGetSystemIntakeSystemQuery({
+    variables: { systemIntakeSystemID: linkedSystemID || '' },
+    skip: !linkedSystemID
   });
 
-  const {
-    control,
-    handleSubmit,
-    watch,
-    register,
-    setFocus,
-    formState: { isDirty, errors }
-  } = form;
+  console.log(
+    'Linked system data: ',
+    linkedSystem,
+    linkedSystemQueryError,
+    linkedSystemLoading
+  );
+
+  useEffect(() => {
+    if (linkedSystem?.systemIntakeSystem) {
+      const data = linkedSystem.systemIntakeSystem;
+      setValue('cedarSystemID', data.systemID || '');
+      setValue(
+        'otherDescription',
+        data.systemRelationshipType.includes(SystemRelationshipType.OTHER)
+          ? (data.otherSystemRelationshipDescription ?? '')
+          : undefined
+      );
+      setValue('relationshipTypes', {
+        primarySupport: data.systemRelationshipType.includes(
+          SystemRelationshipType.PRIMARY_SUPPORT
+        ),
+        partialSupport: data.systemRelationshipType.includes(
+          SystemRelationshipType.PARTIAL_SUPPORT
+        ),
+        usesOrImpactedBySelectedSystem: data.systemRelationshipType.includes(
+          SystemRelationshipType.USES_OR_IMPACTED_BY_SELECTED_SYSTEM
+        ),
+        impactsSelectedSystem: data.systemRelationshipType.includes(
+          SystemRelationshipType.IMPACTS_SELECTED_SYSTEM
+        ),
+        other: data.systemRelationshipType.includes(
+          SystemRelationshipType.OTHER
+        )
+      });
+    }
+  }, [linkedSystem, setValue]);
 
   const fieldErrors = flattenFormErrors<LinkedSystemsFormFields>(errors);
 
@@ -324,6 +366,7 @@ const LinkedSystemsForm = () => {
                               {...field}
                               ref={null}
                               value={field.value || ''}
+                              disabled={!!linkedSystemID}
                             >
                               <option
                                 label={`- ${t('technicalAssistance:basic.options.select')} -`}
@@ -460,7 +503,13 @@ const LinkedSystemsForm = () => {
               </Grid>
             </Grid>
 
-            <Button type="submit">{t('addSystem')}</Button>
+            <Button type="submit">
+              {linkedSystemID ? (
+                <Trans i18nKey="itGov:link.form.saveChanges" />
+              ) : (
+                t('addSystem')
+              )}
+            </Button>
 
             <IconButton
               icon={<Icon.ArrowBack className="margin-right-05" aria-hidden />}
