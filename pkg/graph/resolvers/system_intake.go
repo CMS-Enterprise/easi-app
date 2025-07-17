@@ -189,13 +189,13 @@ func SystemIntakeUpdateContactDetails(ctx context.Context, store *storage.Store,
 		}
 		intake.OITSecurityCollaboratorName = oitCollaboratorName
 
-		eaCollaboratorName := null.StringFromPtr(nil)
+		collaboratorName508 := null.StringFromPtr(nil)
 		for _, team := range input.GovernanceTeams.Teams {
-			if team.Key == "enterpriseArchitecture" {
-				eaCollaboratorName = null.StringFrom(team.Collaborator)
+			if team.Key == "clearanceOfficer508" {
+				collaboratorName508 = null.StringFrom(team.Collaborator)
 			}
 		}
-		intake.EACollaboratorName = eaCollaboratorName
+		intake.CollaboratorName508 = collaboratorName508
 	} else {
 		intake.TRBCollaboratorName = null.StringFromPtr(nil)
 		intake.OITSecurityCollaboratorName = null.StringFromPtr(nil)

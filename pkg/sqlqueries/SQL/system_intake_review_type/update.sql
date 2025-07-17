@@ -3,7 +3,7 @@ UPDATE
 SET
     grb_review_type=:grb_review_type,
     updated_at=CURRENT_TIMESTAMP
-WHERE id=:system_intake_id
+WHERE id = :system_intake_id
 RETURNING
     id,
     eua_user_id,
@@ -54,7 +54,8 @@ RETURNING
     isso_name,
     trb_collaborator_name,
     oit_security_collaborator_name,
-    ea_collaborator_name,
+    collaborator_508,
+    collaborator_name_508,
     admin_lead,
     contract_start_date,
     contract_end_date,
