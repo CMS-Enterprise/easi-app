@@ -43,6 +43,8 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
     id: string;
   }>();
 
+  console.log('system intake id:', id);
+
   const history = useHistory();
 
   const { t } = useTranslation([
@@ -110,7 +112,7 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
     // deleteSystemLink(systemLinkedSystemId);
     try {
       const response = await deleteSystemLink({
-        variables: { systemIntakeSystem: systemLinkedSystemId }
+        variables: { systemIntakeSystemID: systemLinkedSystemId }
       });
 
       console.log(response.data);
@@ -258,6 +260,7 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
             systems={(data?.systemIntakeSystems as SystemIntakeSystem[]) || []}
             defaultPageSize={20}
             isHomePage={false}
+            systemIntakeId={id}
             onRemoveLink={handleRemoveLink}
           />
 

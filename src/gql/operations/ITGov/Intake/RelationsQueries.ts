@@ -99,8 +99,8 @@ export const GetTrbRequestRelations = gql(/* GraphQL */ `
 `);
 
 export const DeleteSystemLink = gql(/* GraphQL */ `
-  mutation deleteSystemLink($systemIntakeSystem: UUID!) {
-    deleteSystemLink(systemIntakeSystem: $systemIntakeSystem) {
+  mutation deleteSystemLink($systemIntakeSystemID: UUID!) {
+    deleteSystemLink(systemIntakeSystemID: $systemIntakeSystemID) {
       systemIntakeSystem {
         id
         systemIntakeID

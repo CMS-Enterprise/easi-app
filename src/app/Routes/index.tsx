@@ -98,7 +98,10 @@ const AppRoutes = () => {
       <SecureRoute exact path="/linked-systems/:id?">
         <LinkedSystems />
       </SecureRoute>
-      <SecureRoute exact path="/linked-systems-form/:id?">
+      <SecureRoute
+        exact
+        path="/linked-systems-form/:systemIntakeID/:linkedSystemID?"
+      >
         <LinkedSystemsForm />
       </SecureRoute>
 

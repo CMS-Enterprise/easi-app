@@ -49,6 +49,7 @@ type TableProps = {
   systems?: SystemIntakeSystem[];
   defaultPageSize?: number;
   isHomePage?: boolean;
+  systemIntakeId: string;
   onRemoveLink: (id: string) => void;
 };
 
@@ -64,6 +65,7 @@ const LinkedSystemsTable = ({
   systems = [],
   defaultPageSize = 10,
   isHomePage,
+  systemIntakeId,
   onRemoveLink
 }: TableProps) => {
   const { t } = useTranslation('linkedSystems');
@@ -81,19 +83,19 @@ const LinkedSystemsTable = ({
     [data]
   );
 
-  const translateSystemRelationships = (systemRelationships: string[]) => {
-    const translatedRelationships = systemRelationships.map(relationship => {
-      console.log(relationship, `relationshipTypes.${relationship}`);
-      if (relationship) {
-        return t(`relationshipTypes.${relationship}` || '');
-      }
-      return <></>;
-    }, []);
-    return <>{translatedRelationships.join(', ')}</>;
-  };
-
   const columns: Column<SystemIntakeSystem>[] = useMemo(() => {
     const cols: Column<SystemIntakeSystem>[] = [];
+
+    const translateSystemRelationships = (systemRelationships: string[]) => {
+      const translatedRelationships = systemRelationships.map(relationship => {
+        console.log(relationship, `relationshipTypes.${relationship}`);
+        if (relationship) {
+          return t(`relationshipTypes.${relationship}` || '');
+        }
+        return <></>;
+      }, []);
+      return <>{translatedRelationships.join(', ')}</>;
+    };
 
     cols.push({
       Header: t<string>('linkedSystemsTable.header.systemName'),
@@ -126,7 +128,9 @@ const LinkedSystemsTable = ({
               type="button"
               unstyled
               onClick={() =>
-                history.push(`/linked-systems-form/${row.original.id}`)
+                history.push(
+                  `/linked-systems-form/${systemIntakeId}${row.original.id ? `/${row.original.id}` : ''}`
+                )
               }
             >
               Edit
