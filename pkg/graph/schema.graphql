@@ -867,6 +867,7 @@ type SystemIntake {
   grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType
   grbReviewAsyncManualEndDate: Time
   grbReviewReminderLastSent: Time
+  systemIntakeSystems: [SystemIntakeSystem!]!
 }
 
 """
@@ -1157,7 +1158,7 @@ Types of System Relationships
 """
 enum SystemRelationshipType {
   PRIMARY_SUPPORT
-  PARTIAL_SUPORT
+  PARTIAL_SUPPORT
   USES_OR_IMPACTED_BY_SELECTED_SYSTEM
   IMPACTS_SELECTED_SYSTEM
   OTHER
@@ -1168,9 +1169,16 @@ Input data for creating a system intake's relationship to a CEDAR system
 input SystemRelationshipInput {
   cedarSystemId: String
   systemRelationshipType: [SystemRelationshipType!]!
-  otherTypeDescription: String
+  otherSystemRelationshipDescription: String
 }
 
+type SystemIntakeSystem {
+  id: UUID!
+  systemIntakeID: UUID!
+  systemID: String
+  systemRelationshipType: [SystemRelationshipType!]!
+  otherSystemRelationshipDescription: String
+}
 """
 Input data for updating a system intake's relationship to a CEDAR system
 """
@@ -1521,10 +1529,57 @@ input UpdateSystemIntakeNoteInput {
 }
 
 """
+The input type for adding a new System Link
+"""
+input AddSystemLinkInput {
+  systemIntakeID: UUID!
+  systemID: String!
+  systemRelationshipType: [SystemRelationshipType!]!
+  otherSystemRelationshipDescription: String
+}
+
+"""
+The payload for adding a new System Link
+"""
+type AddSystemLinkPayload {
+  id: UUID!
+  systemIntakeID: UUID!
+  systemID: String!
+  systemRelationshipType: [SystemRelationshipType!]!
+  otherSystemRelationshipDescription: String
+}
+
+"""
 The payload for updating a system's IT governance request
 """
 type UpdateSystemIntakePayload {
   systemIntake: SystemIntake
+  userErrors: [UserError!]
+}
+
+"""
+The payload for deleting a system intake's linked system
+"""
+type DeleteSystemLinkPayload {
+  systemIntakeSystem: SystemIntakeSystem
+  userErrors: [UserError!]
+}
+"""
+The input type for updating a system intake's linked system by id
+"""
+input UpdateSystemLinkInput {
+  id: UUID!
+  systemIntakeID: UUID!
+  systemID: String!
+  systemRelationshipType: [SystemRelationshipType!]!
+  otherSystemRelationshipDescription: String
+}
+
+"""
+The payload for updating a system intake's linked system
+"""
+type UpdateSystemLinkPayload {
+  systemIntakeSystem: SystemIntakeSystem!
   userErrors: [UserError!]
 }
 
@@ -2819,6 +2874,9 @@ type Mutation {
     input: SetSystemIntakeRelationExistingServiceInput
   ): UpdateSystemIntakePayload
   unlinkSystemIntakeRelation(intakeID: UUID!): UpdateSystemIntakePayload
+  addSystemLink(input: AddSystemLinkInput!): AddSystemLinkPayload
+  deleteSystemLink(systemIntakeSystemID: UUID!): DeleteSystemLinkPayload
+  updateSystemLink(input: UpdateSystemLinkInput!): UpdateSystemLinkPayload
 
   createSystemIntakeContact(
     input: CreateSystemIntakeContactInput!
@@ -3013,6 +3071,8 @@ type Query {
   trbAdminNote(id: UUID!): TRBAdminNote! @hasRole(role: EASI_TRB_ADMIN)
   requesterUpdateEmailData: [RequesterUpdateEmailData!]!
   userAccount(username: String!): UserAccount
+  systemIntakeSystem(systemIntakeSystemID: UUID!): SystemIntakeSystem
+  systemIntakeSystems(systemIntakeId: UUID!): [SystemIntakeSystem!]!
 }
 
 enum TRBRequestType {

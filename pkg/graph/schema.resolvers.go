@@ -639,6 +639,36 @@ func (r *mutationResolver) UnlinkSystemIntakeRelation(ctx context.Context, intak
 	}, nil
 }
 
+// AddSystemLink is the resolver for the addSystemLink field.
+func (r *mutationResolver) AddSystemLink(ctx context.Context, input models.AddSystemLinkInput) (*models.AddSystemLinkPayload, error) {
+	newSystemLink, err := resolvers.AddSystemLink(ctx, r.store, input)
+
+	if err != nil {
+		return nil, err
+	}
+	return newSystemLink, nil
+}
+
+// DeleteSystemLink is the resolver for the deleteSystemLink field.
+func (r *mutationResolver) DeleteSystemLink(ctx context.Context, systemIntakeSystemID uuid.UUID) (*models.DeleteSystemLinkPayload, error) {
+	deletedSystemIntake, err := resolvers.DeleteSystemIntakeSystemByID(ctx, r.store, systemIntakeSystemID)
+
+	if err != nil {
+		return nil, err
+	}
+	return &models.DeleteSystemLinkPayload{SystemIntakeSystem: &deletedSystemIntake}, nil
+}
+
+// UpdateSystemLink is the resolver for the updateSystemLink field.
+func (r *mutationResolver) UpdateSystemLink(ctx context.Context, input models.UpdateSystemLinkInput) (*models.UpdateSystemLinkPayload, error) {
+	systemIntakeSystem, err := resolvers.UpdateSystemLinkByID(ctx, r.store, input)
+
+	if err != nil {
+		return nil, err
+	}
+	return &models.UpdateSystemLinkPayload{SystemIntakeSystem: &systemIntakeSystem}, nil
+}
+
 // CreateSystemIntakeContact is the resolver for the createSystemIntakeContact field.
 func (r *mutationResolver) CreateSystemIntakeContact(ctx context.Context, input models.CreateSystemIntakeContactInput) (*models.CreateSystemIntakeContactPayload, error) {
 	return resolvers.CreateSystemIntakeContact(ctx, r.store, input, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo))
@@ -1645,6 +1675,16 @@ func (r *queryResolver) UserAccount(ctx context.Context, username string) (*auth
 	return resolvers.UserAccountGetByUsername(ctx, r.store, r.store, username)
 }
 
+// SystemIntakeSystem is the resolver for the systemIntakeSystem field.
+func (r *queryResolver) SystemIntakeSystem(ctx context.Context, systemIntakeSystemID uuid.UUID) (*models.SystemIntakeSystem, error) {
+	return resolvers.GetLinkedSystemByID(ctx, r.store, systemIntakeSystemID)
+}
+
+// SystemIntakeSystems is the resolver for the systemIntakeSystems field.
+func (r *queryResolver) SystemIntakeSystems(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeSystem, error) {
+	return resolvers.SystemIntakeSystemsByIntakeID(ctx, systemIntakeID)
+}
+
 // Actions is the resolver for the actions field.
 func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeAction, error) {
 	actions, actionsErr := dataloaders.GetSystemIntakeActionsBySystemIntakeID(ctx, obj.ID)
@@ -2039,6 +2079,11 @@ func (r *systemIntakeResolver) GrbReviewAsyncStatus(ctx context.Context, obj *mo
 	return resolvers.CalcSystemIntakeGRBReviewAsyncStatus(ctx, obj), nil
 }
 
+// SystemIntakeSystems is the resolver for the systemIntakeSystems field.
+func (r *systemIntakeResolver) SystemIntakeSystems(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeSystem, error) {
+	return resolvers.SystemIntakeSystemsByIntakeID(ctx, obj.ID)
+}
+
 // DocumentType is the resolver for the documentType field.
 func (r *systemIntakeDocumentResolver) DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*models.SystemIntakeDocumentType, error) {
 	return &models.SystemIntakeDocumentType{
@@ -2116,6 +2161,11 @@ func (r *systemIntakeNoteResolver) Author(ctx context.Context, obj *models.Syste
 // Editor is the resolver for the editor field.
 func (r *systemIntakeNoteResolver) Editor(ctx context.Context, obj *models.SystemIntakeNote) (*models.UserInfo, error) {
 	return resolvers.SystemIntakeNoteEditor(ctx, obj)
+}
+
+// SystemRelationshipType is the resolver for the systemRelationshipType field.
+func (r *systemIntakeSystemResolver) SystemRelationshipType(ctx context.Context, obj *models.SystemIntakeSystem) ([]models.SystemRelationshipType, error) {
+	return obj.SystemRelationshipType, nil
 }
 
 // Author is the resolver for the author field.
@@ -2401,6 +2451,11 @@ func (r *Resolver) SystemIntakeNote() generated.SystemIntakeNoteResolver {
 	return &systemIntakeNoteResolver{r}
 }
 
+// SystemIntakeSystem returns generated.SystemIntakeSystemResolver implementation.
+func (r *Resolver) SystemIntakeSystem() generated.SystemIntakeSystemResolver {
+	return &systemIntakeSystemResolver{r}
+}
+
 // TRBAdminNote returns generated.TRBAdminNoteResolver implementation.
 func (r *Resolver) TRBAdminNote() generated.TRBAdminNoteResolver { return &tRBAdminNoteResolver{r} }
 
@@ -2454,6 +2509,7 @@ type systemIntakeDocumentResolver struct{ *Resolver }
 type systemIntakeGRBPresentationLinksResolver struct{ *Resolver }
 type systemIntakeGRBReviewerResolver struct{ *Resolver }
 type systemIntakeNoteResolver struct{ *Resolver }
+type systemIntakeSystemResolver struct{ *Resolver }
 type tRBAdminNoteResolver struct{ *Resolver }
 type tRBGuidanceLetterResolver struct{ *Resolver }
 type tRBGuidanceLetterInsightResolver struct{ *Resolver }
