@@ -14,7 +14,6 @@ import {
   Icon
 } from '@trussworks/react-uswds';
 import {
-  // RequestRelationType,
   SystemIntakeSystem,
   useDeleteSystemLinkMutation,
   useGetSystemIntakeSystemsQuery
@@ -55,10 +54,16 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
     'error'
   ]);
 
-  const { state } = useLocation<{ isNew?: boolean }>();
+  const location = useLocation<{
+    successfullyUpdated?: boolean;
+    systemUpdated?: string;
+    successfullyAdded?: boolean;
+  }>();
 
-  // Form edit mode is either new or edit
-  const isNew = !!state?.isNew;
+  const showSuccessfullyUpdated = location.state?.successfullyUpdated;
+  const showSuccessfullyAdded = location.state?.successfullyAdded;
+
+  const systemUpdatedName = location.state?.systemUpdated;
 
   // Url of next view after successful form submit
   // Also for a breadcrumb navigation link
@@ -70,13 +75,6 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
   })();
 
   const addASystemUrl = `/linked-systems-form/${id}`;
-
-  const breadCrumb = (() => {
-    if (fromAdmin) {
-      return t('additionalRequestInfo.itGovBreadcrumb');
-    }
-    return t('additionalRequestInfo.taskListBreadCrumb');
-  })();
 
   const [noSystemsUsed, setNoSystemsUsed] = useState<boolean>(false);
 
@@ -149,12 +147,44 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
 
   return (
     <MainContent className="grid-container margin-bottom-15">
+      {showSuccessfullyUpdated && (
+        <Alert
+          id="link-form-error"
+          type="success"
+          slim
+          className="margin-top-2"
+        >
+          <Trans
+            i18nKey="linkedSystems:savedChangesToALink"
+            values={{ updatedSystem: systemUpdatedName }}
+            components={{
+              span: <span className="text-bold" />
+            }}
+          />
+        </Alert>
+      )}
+
+      {showSuccessfullyAdded && (
+        <Alert
+          id="link-form-error"
+          type="success"
+          slim
+          className="margin-top-2"
+        >
+          <Trans
+            i18nKey="linkedSystems:successfullyLinked"
+            values={{ updatedSystem: systemUpdatedName }}
+            components={{
+              span: <span />
+            }}
+          />
+        </Alert>
+      )}
       {hasErrors && (
         <Alert id="link-form-error" type="error" slim className="margin-top-2">
           {t('error:encounteredIssueTryAgain')}
         </Alert>
       )}
-
       {relationLoading && <PageLoading />}
       <>
         <BreadcrumbBar variant="wrap">
@@ -163,22 +193,6 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
               <span>{t('intake:navigation.itGovernance')}</span>
             </BreadcrumbLink>
           </Breadcrumb>
-          {isNew ? (
-            <Breadcrumb current>
-              {t('intake:navigation.startRequest')}
-            </Breadcrumb>
-          ) : (
-            <>
-              <Breadcrumb>
-                <BreadcrumbLink asCustom={Link} to={redirectUrl}>
-                  <span>{breadCrumb}</span>
-                </BreadcrumbLink>
-              </Breadcrumb>
-              <Breadcrumb current>
-                {t('intake:navigation.editLinkRelation')}
-              </Breadcrumb>
-            </>
-          )}
         </BreadcrumbBar>
         <PageHeading className="margin-top-4 margin-bottom-0">
           {t('link.header')}

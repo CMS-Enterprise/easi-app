@@ -82,6 +82,42 @@ const buildCedarSystemRelationshipObjects = (
   return selectedSystemRelationshipTypes;
 };
 
+const buildInputPayload = (
+  payload: LinkedSystemsFormFields,
+  systemIntakeID: string
+) => ({
+  systemID: payload.cedarSystemID,
+  systemIntakeID,
+  systemRelationshipType: buildCedarSystemRelationshipObjects(payload),
+  otherSystemRelationshipDescription: payload.otherDescription
+});
+
+const updateLink = async (
+  payload: LinkedSystemsFormFields,
+  linkedSystemID: string,
+  systemIntakeID: string,
+  updateSystemLink: any
+) => {
+  const updateInput = {
+    input: {
+      id: linkedSystemID,
+      ...buildInputPayload(payload, systemIntakeID)
+    }
+  };
+  return updateSystemLink({ variables: updateInput });
+};
+
+const addLink = async (
+  payload: LinkedSystemsFormFields,
+  systemIntakeID: string,
+  addSystemLink: any
+) => {
+  const addInput = {
+    input: buildInputPayload(payload, systemIntakeID)
+  };
+  return addSystemLink({ variables: addInput });
+};
+
 const LinkedSystemsForm = () => {
   const { systemIntakeID, linkedSystemID } = useParams<{
     systemIntakeID: string;
@@ -117,8 +153,6 @@ const LinkedSystemsForm = () => {
 
   const [updateSystemLink, { error: updateSystemLinkError }] =
     useUpdateSystemLinkMutation();
-
-  console.log('updateSystemLinkError', updateSystemLinkError);
 
   const [cedarSystemSelectedError, setCedarSystemSelectedError] =
     useState<boolean>(false);
@@ -187,68 +221,68 @@ const LinkedSystemsForm = () => {
 
   const fieldErrors = flattenFormErrors<LinkedSystemsFormFields>(errors);
 
-  const updateSystemIntake = useCallback(async () => {
+  const submit = useCallback(async () => {
+    if (!isDirty) return;
+
     const values = watch();
     const payload = { ...values };
+    console.log('payload', payload, cedarSystemIdOptions);
 
-    console.log('payload', payload);
+    const systemName = cedarSystemIdOptions.find(
+      option => option.value === payload.cedarSystemID
+    )?.label;
 
     if (!payload.cedarSystemID) {
       setCedarSystemSelectedError(true);
-      return () => {};
+      return;
     }
     setCedarSystemSelectedError(false);
 
     if (linkedSystemID) {
-      const updateInput = {
-        input: {
-          id: linkedSystemID,
-          systemID: payload.cedarSystemID,
-          systemIntakeID,
-          systemRelationshipType: buildCedarSystemRelationshipObjects(payload),
-          otherSystemRelationshipDescription: payload.otherDescription
-        }
-      };
-      return updateSystemLink({ variables: updateInput });
+      const updateLinkResult = await updateLink(
+        payload,
+        linkedSystemID,
+        systemIntakeID,
+        updateSystemLink
+      );
+
+      if (updateLinkResult && updateLinkResult.data) {
+        history.push(`/linked-systems/${systemIntakeID}`, {
+          successfullyUpdated: true,
+          systemUpdated: systemName
+        });
+      }
+
+      return;
     }
 
-    const addInput = {
-      input: {
-        systemID: payload.cedarSystemID,
-        systemIntakeID,
-        systemRelationshipType: buildCedarSystemRelationshipObjects(payload),
-        otherSystemRelationshipDescription: payload.otherDescription
-      }
-    };
+    const addLinkResult = await addLink(payload, systemIntakeID, addSystemLink);
 
-    return addSystemLink({ variables: addInput });
-  }, [watch, updateSystemLink, addSystemLink, systemIntakeID, linkedSystemID]);
-
-  /** Update contacts and system intake form */
-  const submit = async (callback: () => void = () => {}) => {
-    // console.log('cedar system ids: ', getValues('cedarSystemIDs'));
-    // if (getValues('cedarSystemIDs')) {
-    //   setCedarSystemSelectedError(true);
-    //   return;
-    // }
-    // setCedarSystemSelectedError(false);
-    if (!isDirty) return;
-
-    // Update intake
-    const result = await updateSystemIntake();
-
-    console.log('result from  update system intake', result);
-
-    // console.log('result', result);
-    // if (result && result.addSystemLink.id) {
-    callback();
-    // }
-  };
+    if (
+      addLinkResult &&
+      addLinkResult.data &&
+      addLinkResult.data.addSystemLink !== null
+    ) {
+      history.push(`/linked-systems/${systemIntakeID}`, {
+        successfullyAdded: true,
+        systemUpdated: systemName
+      });
+    }
+  }, [
+    history,
+    systemIntakeID,
+    linkedSystemID,
+    isDirty,
+    cedarSystemIdOptions,
+    watch,
+    updateSystemLink,
+    addSystemLink
+  ]);
 
   return (
     <MainContent className="grid-container margin-bottom-15">
       <>
-        {(hasErrors || addSystemLinkError) && (
+        {(hasErrors || addSystemLinkError || updateSystemLinkError) && (
           <Alert
             id="link-form-error"
             type="error"
@@ -337,9 +371,7 @@ const LinkedSystemsForm = () => {
         <FormProvider<LinkedSystemsFormFields> {...form}>
           <Form
             className="easi-form maxw-full"
-            onSubmit={handleSubmit(() =>
-              submit(() => history.push(`/linked-systems/${systemIntakeID}`))
-            )}
+            onSubmit={handleSubmit(() => submit())}
           >
             <Grid row>
               <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
