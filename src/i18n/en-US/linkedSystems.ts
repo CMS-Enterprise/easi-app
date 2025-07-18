@@ -63,5 +63,13 @@ export default {
       'This action will remove the link between this request and the selected system. Are you sure you want to continue? You may re-link the system later if needed.',
     remove: 'Remove linked system',
     dontRemove: "Don't remove"
+  },
+  removeAllLinkedSystemModal: {
+    heading:
+      'Are you sure this project does not support or use any existing CMS systems',
+    message:
+      'Checking this box will remove all previously -added links to systems. Are you sure you want to continue? You may re-link systems later if needed.',
+    remove: 'Remove linked system',
+    dontRemove: "Don't remove"
   }
 };
