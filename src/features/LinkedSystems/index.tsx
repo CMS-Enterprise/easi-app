@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-// import { useForm } from 'react-hook-form';
+import React, { useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import {
@@ -49,11 +48,13 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
     'error'
   ]);
 
-  const location = useLocation<{
+  type LinkedSystemsLocationState = {
     successfullyUpdated?: boolean;
     systemUpdated?: string;
     successfullyAdded?: boolean;
-  }>();
+  };
+
+  const location = useLocation<LinkedSystemsLocationState>();
 
   const showSuccessfullyUpdated = location.state?.successfullyUpdated;
   const showSuccessfullyAdded = location.state?.successfullyAdded;
@@ -95,21 +96,9 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
 
   const [unlinkAllSystems] = useUnlinkSystemIntakeRelationMutation();
 
-  const submitEnabled: boolean = (() => {
-    // if there are relationships added or the checkbox is filled
-    if (
-      data &&
-      data?.systemIntakeSystems &&
-      data?.systemIntakeSystems?.length > 0
-    ) {
-      return true;
-    }
-    if (noSystemsUsed) {
-      return true;
-    }
-
-    return false;
-  })();
+  const submitEnabled = useMemo(() => {
+    return (data?.systemIntakeSystems?.length ?? 0) > 0 || noSystemsUsed;
+  }, [data, noSystemsUsed]);
 
   const [removeLinkedSystemModalOpen, setRemoveLinkedSystemModalOpen] =
     useState(false);
@@ -187,258 +176,245 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
   return (
     <MainContent className="grid-container margin-bottom-15">
       {relationLoading && <PageLoading />}
-      <>
-        <BreadcrumbBar variant="wrap">
-          <Breadcrumb>
-            <BreadcrumbLink asCustom={Link} to="/">
-              <span>{t('intake:navigation.itGovernance')}</span>
-            </BreadcrumbLink>
-          </Breadcrumb>
-        </BreadcrumbBar>
+      <BreadcrumbBar variant="wrap">
+        <Breadcrumb>
+          <BreadcrumbLink asCustom={Link} to="/">
+            <span>{t('intake:navigation.itGovernance')}</span>
+          </BreadcrumbLink>
+        </Breadcrumb>
+      </BreadcrumbBar>
 
-        {showSuccessfullyUpdated && (
-          <Alert
-            id="link-form-error"
-            type="success"
-            slim
-            className="margin-top-2"
-          >
-            <Trans
-              i18nKey="linkedSystems:savedChangesToALink"
-              values={{ updatedSystem: systemUpdatedName }}
-              components={{
-                span: <span className="text-bold" />
-              }}
-            />
-          </Alert>
-        )}
-
-        {showSuccessfullyAdded && (
-          <Alert
-            id="link-form-error"
-            type="success"
-            slim
-            className="margin-top-2"
-          >
-            <Trans
-              i18nKey="linkedSystems:successfullyLinked"
-              values={{ updatedSystem: systemUpdatedName }}
-              components={{
-                span: <span className="text-bold" />
-              }}
-            />
-          </Alert>
-        )}
-
-        {showSuccessfullyDeleted && (
-          <Alert
-            id="link-form-error"
-            type="success"
-            slim
-            className="margin-top-2"
-          >
-            <Trans i18nKey="linkedSystems:successfullyDeleted" />
-          </Alert>
-        )}
-
-        <PageHeading className="margin-top-4 margin-bottom-0">
-          {t('itGov:link.header')}
-        </PageHeading>
-        <p className="font-body-lg line-height-body-5 text-light margin-y-0">
-          {t(`itGov:link.description`)}
-        </p>
-        <p className="margin-top-2 margin-bottom-5 text-base">
-          <Trans
-            i18nKey="action:fieldsMarkedRequired"
-            components={{ asterisk: <RequiredAsterisk /> }}
-          />
-        </p>
-
-        <Form
-          className="easi-form maxw-full"
-          onSubmit={e => e.preventDefault()}
+      {showSuccessfullyUpdated && (
+        <Alert
+          id="link-form-error"
+          type="success"
+          slim
+          className="margin-top-2"
         >
-          <Grid row>
-            <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-              <Fieldset
-                legend={
-                  <h4 className="margin-top-0 margin-bottom-1 line-height-heading-2">
-                    {t(`itGov:link.form.field.systemOrService.label`)}
-                  </h4>
-                }
-              >
-                <p className="text-base margin-top-1 margin-bottom-3">
-                  {t(`itGov:link.form.field.systemOrService.hint`)}
-                </p>
-                <ul className="text-base">
-                  <li>
-                    {t(
-                      'itGov:link.form.field.systemOrService.reasonsToAddSystem.primarySupport'
-                    )}
-                  </li>
-                  <li>
-                    {t(
-                      'itGov:link.form.field.systemOrService.reasonsToAddSystem.partialSupport'
-                    )}
-                  </li>
-                  <li>
-                    {t(
-                      'itGov:link.form.field.systemOrService.reasonsToAddSystem.usesOrImpactedBySelectedSystem'
-                    )}
-                  </li>
-                  <li>
-                    {t(
-                      'itGov:link.form.field.systemOrService.reasonsToAddSystem.impactsSelectedSystem'
-                    )}
-                  </li>
-                  <li>
-                    {t(
-                      'itGov:link.form.field.systemOrService.reasonsToAddSystem.other'
-                    )}
-                  </li>
-                </ul>
-              </Fieldset>
-              <Button
-                type="button"
-                outline
-                onClick={() => history.push(addASystemUrl)}
-              >
-                {t('itGov:link.form.addASystem')}
-              </Button>
-              <CheckboxField
-                label={t('itGov:link.form.doesNotSupportOrUseAnySystems')}
-                id={'innerProps.id'!}
-                name="datavalue"
-                value="systemsUsed"
-                checked={noSystemsUsed}
-                onChange={e => handleNoSystemsUsedCheckbox()}
-                onBlur={() => null}
-              />
-            </Grid>
-          </Grid>
-
-          <LinkedSystemTable
-            systems={(data?.systemIntakeSystems as SystemIntakeSystem[]) || []}
-            defaultPageSize={20}
-            isHomePage={false}
-            systemIntakeId={id}
-            onRemoveLink={handleRemoveModal}
+          <Trans
+            i18nKey="linkedSystems:savedChangesToALink"
+            values={{ updatedSystem: systemUpdatedName }}
+            components={{
+              span: <span className="text-bold" />
+            }}
           />
+        </Alert>
+      )}
 
-          <ButtonGroup>
-            <Button type="button" outline>
-              {t('itGov:link.form.back')}
-            </Button>
-            <Button
-              type="submit"
-              disabled={!submitEnabled}
-              onClick={() => history.push(redirectUrl)}
+      {showSuccessfullyAdded && (
+        <Alert
+          id="link-form-error"
+          type="success"
+          slim
+          className="margin-top-2"
+        >
+          <Trans
+            i18nKey="linkedSystems:successfullyLinked"
+            values={{ updatedSystem: systemUpdatedName }}
+            components={{
+              span: <span className="text-bold" />
+            }}
+          />
+        </Alert>
+      )}
+
+      {showSuccessfullyDeleted && (
+        <Alert
+          id="link-form-error"
+          type="success"
+          slim
+          className="margin-top-2"
+        >
+          <Trans i18nKey="linkedSystems:successfullyDeleted" />
+        </Alert>
+      )}
+
+      <PageHeading className="margin-top-4 margin-bottom-0">
+        {t('itGov:link.header')}
+      </PageHeading>
+      <p className="font-body-lg line-height-body-5 text-light margin-y-0">
+        {t(`itGov:link.description`)}
+      </p>
+      <p className="margin-top-2 margin-bottom-5 text-base">
+        <Trans
+          i18nKey="action:fieldsMarkedRequired"
+          components={{ asterisk: <RequiredAsterisk /> }}
+        />
+      </p>
+
+      <Form className="easi-form maxw-full" onSubmit={e => e.preventDefault()}>
+        <Grid row>
+          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
+            <Fieldset
+              legend={
+                <h4 className="margin-top-0 margin-bottom-1 line-height-heading-2">
+                  {t(`itGov:link.form.field.systemOrService.label`)}
+                </h4>
+              }
             >
-              {t(`itGov:link.form.continueTaskList`)}
+              <p className="text-base margin-top-1 margin-bottom-3">
+                {t(`itGov:link.form.field.systemOrService.hint`)}
+              </p>
+              <ul className="text-base">
+                <li>
+                  {t(
+                    'itGov:link.form.field.systemOrService.reasonsToAddSystem.primarySupport'
+                  )}
+                </li>
+                <li>
+                  {t(
+                    'itGov:link.form.field.systemOrService.reasonsToAddSystem.partialSupport'
+                  )}
+                </li>
+                <li>
+                  {t(
+                    'itGov:link.form.field.systemOrService.reasonsToAddSystem.usesOrImpactedBySelectedSystem'
+                  )}
+                </li>
+                <li>
+                  {t(
+                    'itGov:link.form.field.systemOrService.reasonsToAddSystem.impactsSelectedSystem'
+                  )}
+                </li>
+                <li>
+                  {t(
+                    'itGov:link.form.field.systemOrService.reasonsToAddSystem.other'
+                  )}
+                </li>
+              </ul>
+            </Fieldset>
+            <Button
+              type="button"
+              outline
+              onClick={() => history.push(addASystemUrl)}
+            >
+              {t('itGov:link.form.addASystem')}
             </Button>
-          </ButtonGroup>
+            <CheckboxField
+              label={t('itGov:link.form.doesNotSupportOrUseAnySystems')}
+              id="systemsUsed"
+              name="datavalue"
+              value="systemsUsed"
+              checked={noSystemsUsed}
+              onChange={e => handleNoSystemsUsedCheckbox()}
+              onBlur={() => null}
+            />
+          </Grid>
+        </Grid>
 
-          <IconButton
-            icon={<Icon.ArrowBack className="margin-right-05" aria-hidden />}
+        <LinkedSystemTable
+          systems={(data?.systemIntakeSystems as SystemIntakeSystem[]) || []}
+          defaultPageSize={20}
+          isHomePage={false}
+          systemIntakeId={id}
+          onRemoveLink={handleRemoveModal}
+        />
+
+        <ButtonGroup>
+          <Button type="button" outline>
+            {t('itGov:link.form.back')}
+          </Button>
+          <Button
+            type="submit"
+            disabled={!submitEnabled}
+            onClick={() => history.push(redirectUrl)}
+          >
+            {t(`itGov:link.form.continueTaskList`)}
+          </Button>
+        </ButtonGroup>
+
+        <IconButton
+          icon={<Icon.ArrowBack className="margin-right-05" aria-hidden />}
+          type="button"
+          unstyled
+          onClick={() => {
+            history.goBack();
+          }}
+        >
+          {t('itGov:link.form.dontEditAndReturn')}
+        </IconButton>
+      </Form>
+      <Modal
+        isOpen={removeLinkedSystemModalOpen}
+        closeModal={() => setRemoveLinkedSystemModalOpen(false)}
+        className="font-body-sm height-auto"
+        id="removeLinkedSystemModal"
+      >
+        <ModalHeading className="margin-top-0 margin-bottom-105">
+          {t('removeLinkedSystemModal.heading')}
+        </ModalHeading>
+        {showRemoveLinkedSystemError && (
+          <Alert
+            id="link-form-error"
+            type="error"
+            slim
+            className="margin-top-2"
+          >
+            <Trans i18nKey="linkedSystems:unableToRemoveLinkedSystem" />
+          </Alert>
+        )}
+        <p className="margin-top-0 text-light font-body-md">
+          {t('removeLinkedSystemModal.message')}
+        </p>
+
+        <ButtonGroup className="margin-top-3">
+          <Button
+            type="submit"
+            className="bg-error margin-right-1"
+            onClick={() => handleRemoveLink()}
+          >
+            {t('removeLinkedSystemModal.remove')}
+          </Button>
+          <Button
             type="button"
             unstyled
-            onClick={() => {
-              history.goBack();
-            }}
+            onClick={() => handleCloseRemoveLinkedSystemModal()}
           >
-            {t('itGov:link.form.dontEditAndReturn')}
-          </IconButton>
-        </Form>
-        <Modal
-          isOpen={removeLinkedSystemModalOpen}
-          closeModal={() => setRemoveLinkedSystemModalOpen(false)}
-          className="font-body-sm height-auto"
-          id="confirmDiscussionModal"
-        >
-          <ModalHeading className="margin-top-0 margin-bottom-105">
-            {t('removeLinkedSystemModal.heading')}
-          </ModalHeading>
-          {showRemoveLinkedSystemError && (
-            <Alert
-              id="link-form-error"
-              type="error"
-              slim
-              className="margin-top-2"
-            >
-              <Trans i18nKey="linkedSystems:unableToRemoveLinkedSystem" />
-            </Alert>
-          )}
-          <p
-            className="margin-top-0 text-light font-body-md"
-            data-testid="discussion-board-type"
+            {t('removeLinkedSystemModal.dontRemove')}
+          </Button>
+        </ButtonGroup>
+      </Modal>
+
+      <Modal
+        isOpen={removeAllLinkedSystemsModalOpen}
+        closeModal={() => setRemoveAllLinkedSystemModalOpen(false)}
+        className="font-body-sm height-auto"
+        id="removeAllLinkedSystemsModal"
+      >
+        <ModalHeading className="margin-top-0 margin-bottom-105">
+          {t('removeAllLinkedSystemModal.heading')}
+        </ModalHeading>
+        {showRemoveAllLinkedSystemError && (
+          <Alert
+            id="link-form-error"
+            type="error"
+            slim
+            className="margin-top-2"
           >
-            {t('removeLinkedSystemModal.message')}
-          </p>
+            <Trans i18nKey="linkedSystems:unableToRemoveAllLinkedSystem" />
+          </Alert>
+        )}
+        <p className="margin-top-0 text-light font-body-md">
+          {t('removeAllLinkedSystemModal.message')}
+        </p>
 
-          <ButtonGroup className="margin-top-3">
-            <Button
-              type="submit"
-              className="bg-error margin-right-1"
-              form="discussionForm"
-              onClick={() => handleRemoveLink()}
-            >
-              {t('removeLinkedSystemModal.remove')}
-            </Button>
-            <Button
-              type="button"
-              unstyled
-              onClick={() => handleCloseRemoveLinkedSystemModal()}
-            >
-              {t('removeLinkedSystemModal.dontRemove')}
-            </Button>
-          </ButtonGroup>
-        </Modal>
-
-        <Modal
-          isOpen={removeAllLinkedSystemsModalOpen}
-          closeModal={() => setRemoveAllLinkedSystemModalOpen(false)}
-          className="font-body-sm height-auto"
-          id="confirmDiscussionModal"
-        >
-          <ModalHeading className="margin-top-0 margin-bottom-105">
-            {t('removeAllLinkedSystemModal.heading')}
-          </ModalHeading>
-          {showRemoveAllLinkedSystemError && (
-            <Alert
-              id="link-form-error"
-              type="error"
-              slim
-              className="margin-top-2"
-            >
-              <Trans i18nKey="linkedSystems:unableToRemoveAllLinkedSystem" />
-            </Alert>
-          )}
-          <p
-            className="margin-top-0 text-light font-body-md"
-            data-testid="discussion-board-type"
+        <ButtonGroup className="margin-top-3">
+          <Button
+            type="submit"
+            className="bg-error margin-right-1"
+            onClick={() => handleRemoveAllSystemLinks()}
           >
-            {t('removeAllLinkedSystemModal.message')}
-          </p>
-
-          <ButtonGroup className="margin-top-3">
-            <Button
-              type="submit"
-              className="bg-error margin-right-1"
-              form="discussionForm"
-              onClick={() => handleRemoveAllSystemLinks()}
-            >
-              {t('removeAllLinkedSystemModal.remove')}
-            </Button>
-            <Button
-              type="button"
-              unstyled
-              onClick={() => handleCloseRemoveAllLinkedSystemModal()}
-            >
-              {t('removeAllLinkedSystemModal.dontRemove')}
-            </Button>
-          </ButtonGroup>
-        </Modal>
-      </>
+            {t('removeAllLinkedSystemModal.remove')}
+          </Button>
+          <Button
+            type="button"
+            unstyled
+            onClick={() => handleCloseRemoveAllLinkedSystemModal()}
+          >
+            {t('removeAllLinkedSystemModal.dontRemove')}
+          </Button>
+        </ButtonGroup>
+      </Modal>
     </MainContent>
   );
 };
