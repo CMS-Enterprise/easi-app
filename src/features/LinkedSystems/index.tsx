@@ -32,20 +32,11 @@ import RequiredAsterisk from 'components/RequiredAsterisk';
 
 import LinkedSystemTable from './LinkedSystemsTable';
 
-// type EditLinkedSystemsFormType = {
-//   relationType: RequestRelationType | null;
-//   cedarSystemIDs: string[];
-//   contractNumbers: string;
-//   contractName: string;
-// };
-
 const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
   // Id refers to system intake
   const { id } = useParams<{
     id: string;
   }>();
-
-  console.log('system intake id:', id);
 
   const history = useHistory();
 
@@ -66,8 +57,6 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
 
   const showSuccessfullyUpdated = location.state?.successfullyUpdated;
   const showSuccessfullyAdded = location.state?.successfullyAdded;
-
-  console.log('STATE:', location.state);
 
   const systemUpdatedName = location.state?.systemUpdated;
 
@@ -91,24 +80,20 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
   const [showRemoveLinkedSystemError, setShowRemoveLinkedSystemError] =
     useState<boolean>(false);
 
+  const [showRemoveAllLinkedSystemError, setShowRemoveAllLinkedSystemError] =
+    useState<boolean>(false);
+
   const {
     data,
-    error: systemIntakeError,
     loading: relationLoading,
     refetch: refetchSystemIntakes
   } = useGetSystemIntakeSystemsQuery({
     variables: { systemIntakeId: id }
   });
 
-  console.log('data', data, systemIntakeError);
+  const [deleteSystemLink] = useDeleteSystemLinkMutation();
 
-  const [deleteSystemLink, { data: deleteSystemLinkResponse }] =
-    useDeleteSystemLinkMutation();
-
-  const [unlinkAllSystems, { data: unlinkSystemResponse }] =
-    useUnlinkSystemIntakeRelationMutation();
-
-  console.log(unlinkSystemResponse);
+  const [unlinkAllSystems] = useUnlinkSystemIntakeRelationMutation();
 
   const submitEnabled: boolean = (() => {
     // if there are relationships added or the checkbox is filled
@@ -142,7 +127,6 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
       if (data && data?.systemIntakeSystems.length > 0) {
         setRemoveAllLinkedSystemModalOpen(true);
       }
-      setNoSystemsUsed(true);
       return;
     }
 
@@ -150,8 +134,6 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
   };
 
   const handleRemoveLink = async () => {
-    console.log('remove this systemid!', systemToBeRemoved);
-
     if (!systemToBeRemoved) {
       return;
     }
@@ -159,17 +141,14 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
     try {
       const response = await deleteSystemLink({
         variables: { systemIntakeSystemID: systemToBeRemoved }
-        // variables: { systemIntakeSystemID: 'asd' }
       });
 
-      console.log('response.data', response.data);
-      console.log('deleteSystemLinkResponse', deleteSystemLinkResponse);
-      refetchSystemIntakes();
-      setShowSuccessfullyDeleted(true);
-      setRemoveLinkedSystemModalOpen(false);
+      if (response && response.data) {
+        refetchSystemIntakes();
+        setShowSuccessfullyDeleted(true);
+        setRemoveLinkedSystemModalOpen(false);
+      }
     } catch (error) {
-      console.error('Error: Unable to remove linked system.', error);
-      console.error('error:', deleteSystemLinkResponse);
       setShowRemoveLinkedSystemError(true);
     }
   };
@@ -180,19 +159,16 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
   };
 
   const handleCloseRemoveAllLinkedSystemModal = () => {
-    console.log('close this modal');
-    // setShowRemoveLinkedSystemError(false); todo fix this
+    setShowRemoveAllLinkedSystemError(false);
     setRemoveAllLinkedSystemModalOpen(false);
   };
 
   const handleRemoveAllSystemLinks = async () => {
-    console.log('handle no systems used checkbox?!', data?.systemIntakeSystems);
     if (data && data?.systemIntakeSystems.length > 0) {
       try {
         const response = await unlinkAllSystems({
           variables: { intakeID: id }
         });
-        console.log('unlink response', response);
         if (
           response &&
           response.data &&
@@ -200,10 +176,10 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
         ) {
           refetchSystemIntakes();
           setNoSystemsUsed(true);
+          setRemoveAllLinkedSystemModalOpen(false);
         }
-        setRemoveAllLinkedSystemModalOpen(false);
       } catch (error) {
-        console.error(error);
+        setShowRemoveAllLinkedSystemError(true);
       }
     }
   };
@@ -427,14 +403,14 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
           <ModalHeading className="margin-top-0 margin-bottom-105">
             {t('removeAllLinkedSystemModal.heading')}
           </ModalHeading>
-          {showRemoveLinkedSystemError && (
+          {showRemoveAllLinkedSystemError && (
             <Alert
               id="link-form-error"
               type="error"
               slim
               className="margin-top-2"
             >
-              <Trans i18nKey="linkedSystems:unableToRemoveLinkedSystem" />
+              <Trans i18nKey="linkedSystems:unableToRemoveAllLinkedSystem" />
             </Alert>
           )}
           <p

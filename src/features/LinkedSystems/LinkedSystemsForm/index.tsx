@@ -171,21 +171,10 @@ const LinkedSystemsForm = () => {
         }));
   }, [systemIntakeAndCedarSystems?.cedarSystems]);
 
-  const {
-    data: linkedSystem,
-    error: linkedSystemQueryError,
-    loading: linkedSystemLoading
-  } = useGetSystemIntakeSystemQuery({
+  const { data: linkedSystem } = useGetSystemIntakeSystemQuery({
     variables: { systemIntakeSystemID: linkedSystemID || '' },
     skip: !linkedSystemID
   });
-
-  console.log(
-    'Linked system data: ',
-    linkedSystem,
-    linkedSystemQueryError,
-    linkedSystemLoading
-  );
 
   useEffect(() => {
     if (linkedSystem?.systemIntakeSystem) {
@@ -222,10 +211,7 @@ const LinkedSystemsForm = () => {
   const submit = useCallback(async () => {
     if (!isDirty) return;
 
-    const values = watch();
-    const payload = { ...values };
-    console.log('payload', payload, cedarSystemIdOptions);
-
+    const payload = watch();
     const systemName = cedarSystemIdOptions.find(
       option => option.value === payload.cedarSystemID
     )?.label;
@@ -236,33 +222,14 @@ const LinkedSystemsForm = () => {
     }
     setCedarSystemSelectedError(false);
 
-    if (linkedSystemID) {
-      const updateLinkResult = await updateLink(
-        payload,
-        linkedSystemID,
-        systemIntakeID,
-        updateSystemLink
-      );
+    const addOrUpdateLinkMutation = linkedSystemID
+      ? updateLink(payload, linkedSystemID, systemIntakeID, updateSystemLink)
+      : addLink(payload, systemIntakeID, addSystemLink);
 
-      if (updateLinkResult && updateLinkResult.data) {
-        history.push(`/linked-systems/${systemIntakeID}`, {
-          successfullyUpdated: true,
-          systemUpdated: systemName
-        });
-      }
-
-      return;
-    }
-
-    const addLinkResult = await addLink(payload, systemIntakeID, addSystemLink);
-
-    if (
-      addLinkResult &&
-      addLinkResult.data &&
-      addLinkResult.data.addSystemLink !== null
-    ) {
+    const result = await addOrUpdateLinkMutation;
+    if (result?.data) {
       history.push(`/linked-systems/${systemIntakeID}`, {
-        successfullyAdded: true,
+        [linkedSystemID ? 'successfullyUpdated' : 'successfullyAdded']: true,
         systemUpdated: systemName
       });
     }
@@ -373,7 +340,7 @@ const LinkedSystemsForm = () => {
           >
             <Grid row>
               <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-                <Fieldset>
+                <Fieldset disabled={relationLoading}>
                   {relationLoading && <Spinner size="small" />}
                   {!relationLoading && (
                     <>

@@ -53,6 +53,8 @@ export default {
     'We were unable to update the linked Cedar Systems. Please try again. If this issue persists, please contact <link1>EnterpriseArchitecture@cms.hhs.gov</link1>',
   unableToRemoveLinkedSystem:
     'There was an issue removing the link between this request and the selected system. Please try again, and if the problem persists, try again later.',
+  unableToRemoveAllLinkedSystem:
+    'There was an issue removing the link between this request and all of the selected systems. Please try again, and if the problem persists, try again later.',
   pleaseSelectASystem: 'Please select a system.',
   successfullyLinked:
     'You linked <span>{{updatedSystem}}</span> to this IT Governance request.',
