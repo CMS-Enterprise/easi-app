@@ -122,10 +122,11 @@ func (s *Store) GetLinkedSystemByID(ctx context.Context, systemIntakeSystemID uu
 	err := namedGet(ctx, s.db, &systemIntakeSystem, sqlqueries.SystemIntakeSystemForm.GetByID, args{
 		"id": systemIntakeSystemID,
 	})
-	if errors.Is(err, sql.ErrNoRows) {
-		return nil, nil // Treat "not found" as a nil result, no error
-	}
+
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil // Treat "not found" as a nil result, no error
+		}
 		return nil, err
 	}
 
