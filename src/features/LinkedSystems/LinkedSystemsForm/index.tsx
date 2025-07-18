@@ -48,8 +48,6 @@ type LinkedSystemsFormFields = {
   otherDescription?: string;
 };
 
-const hasErrors = false; // todo fix this
-
 const buildCedarSystemRelationshipObjects = (
   payload: LinkedSystemsFormFields
 ) => {
@@ -282,7 +280,7 @@ const LinkedSystemsForm = () => {
   return (
     <MainContent className="grid-container margin-bottom-15">
       <>
-        {(hasErrors || addSystemLinkError || updateSystemLinkError) && (
+        {(addSystemLinkError || updateSystemLinkError) && (
           <Alert
             id="link-form-error"
             type="error"

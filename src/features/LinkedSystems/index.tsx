@@ -210,51 +210,6 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
 
   return (
     <MainContent className="grid-container margin-bottom-15">
-      {showSuccessfullyUpdated && (
-        <Alert
-          id="link-form-error"
-          type="success"
-          slim
-          className="margin-top-2"
-        >
-          <Trans
-            i18nKey="linkedSystems:savedChangesToALink"
-            values={{ updatedSystem: systemUpdatedName }}
-            components={{
-              span: <span className="text-bold" />
-            }}
-          />
-        </Alert>
-      )}
-
-      {showSuccessfullyAdded && (
-        <Alert
-          id="link-form-error"
-          type="success"
-          slim
-          className="margin-top-2"
-        >
-          <Trans
-            i18nKey="linkedSystems:successfullyLinked"
-            values={{ updatedSystem: systemUpdatedName }}
-            components={{
-              span: <span className="text-bold" />
-            }}
-          />
-        </Alert>
-      )}
-
-      {showSuccessfullyDeleted && (
-        <Alert
-          id="link-form-error"
-          type="success"
-          slim
-          className="margin-top-2"
-        >
-          <Trans i18nKey="linkedSystems:successfullyDeleted" />
-        </Alert>
-      )}
-
       {relationLoading && <PageLoading />}
       <>
         <BreadcrumbBar variant="wrap">
@@ -264,6 +219,52 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
             </BreadcrumbLink>
           </Breadcrumb>
         </BreadcrumbBar>
+
+        {showSuccessfullyUpdated && (
+          <Alert
+            id="link-form-error"
+            type="success"
+            slim
+            className="margin-top-2"
+          >
+            <Trans
+              i18nKey="linkedSystems:savedChangesToALink"
+              values={{ updatedSystem: systemUpdatedName }}
+              components={{
+                span: <span className="text-bold" />
+              }}
+            />
+          </Alert>
+        )}
+
+        {showSuccessfullyAdded && (
+          <Alert
+            id="link-form-error"
+            type="success"
+            slim
+            className="margin-top-2"
+          >
+            <Trans
+              i18nKey="linkedSystems:successfullyLinked"
+              values={{ updatedSystem: systemUpdatedName }}
+              components={{
+                span: <span className="text-bold" />
+              }}
+            />
+          </Alert>
+        )}
+
+        {showSuccessfullyDeleted && (
+          <Alert
+            id="link-form-error"
+            type="success"
+            slim
+            className="margin-top-2"
+          >
+            <Trans i18nKey="linkedSystems:successfullyDeleted" />
+          </Alert>
+        )}
+
         <PageHeading className="margin-top-4 margin-bottom-0">
           {t('itGov:link.header')}
         </PageHeading>

@@ -2860,7 +2860,7 @@ export type SystemIntakeSystem = {
   __typename: 'SystemIntakeSystem';
   id: Scalars['UUID']['output'];
   otherSystemRelationshipDescription?: Maybe<Scalars['String']['output']>;
-  systemID?: Maybe<Scalars['String']['output']>;
+  systemID: Scalars['String']['output'];
   systemIntakeID: Scalars['UUID']['output'];
   systemRelationshipType: Array<SystemRelationshipType>;
 };
@@ -4101,14 +4101,14 @@ export type SystemIntakeQueryVariables = Exact<{
 }>;
 
 
-export type SystemIntakeQuery = { __typename: 'Query', systemIntake?: { __typename: 'SystemIntake', id: UUID, systemIntakeSystems: Array<{ __typename: 'SystemIntakeSystem', id: UUID, systemIntakeID: UUID, systemID?: string | null, otherSystemRelationshipDescription?: string | null }> } | null };
+export type SystemIntakeQuery = { __typename: 'Query', systemIntake?: { __typename: 'SystemIntake', id: UUID, systemIntakeSystems: Array<{ __typename: 'SystemIntakeSystem', id: UUID, systemIntakeID: UUID, systemID: string, otherSystemRelationshipDescription?: string | null }> } | null };
 
 export type DeleteSystemLinkMutationVariables = Exact<{
   systemIntakeSystemID: Scalars['UUID']['input'];
 }>;
 
 
-export type DeleteSystemLinkMutation = { __typename: 'Mutation', deleteSystemLink?: { __typename: 'DeleteSystemLinkPayload', systemIntakeSystem?: { __typename: 'SystemIntakeSystem', id: UUID, systemIntakeID: UUID, systemID?: string | null, systemRelationshipType: Array<SystemRelationshipType>, otherSystemRelationshipDescription?: string | null } | null, userErrors?: Array<{ __typename: 'UserError', message: string, path: Array<string> }> | null } | null };
+export type DeleteSystemLinkMutation = { __typename: 'Mutation', deleteSystemLink?: { __typename: 'DeleteSystemLinkPayload', systemIntakeSystem?: { __typename: 'SystemIntakeSystem', id: UUID, systemIntakeID: UUID, systemID: string, systemRelationshipType: Array<SystemRelationshipType>, otherSystemRelationshipDescription?: string | null } | null, userErrors?: Array<{ __typename: 'UserError', message: string, path: Array<string> }> | null } | null };
 
 export type AddSystemLinkMutationVariables = Exact<{
   input: AddSystemLinkInput;
@@ -4122,21 +4122,21 @@ export type UpdateSystemLinkMutationVariables = Exact<{
 }>;
 
 
-export type UpdateSystemLinkMutation = { __typename: 'Mutation', updateSystemLink?: { __typename: 'UpdateSystemLinkPayload', systemIntakeSystem: { __typename: 'SystemIntakeSystem', id: UUID, systemIntakeID: UUID, systemID?: string | null, systemRelationshipType: Array<SystemRelationshipType>, otherSystemRelationshipDescription?: string | null }, userErrors?: Array<{ __typename: 'UserError', message: string, path: Array<string> }> | null } | null };
+export type UpdateSystemLinkMutation = { __typename: 'Mutation', updateSystemLink?: { __typename: 'UpdateSystemLinkPayload', systemIntakeSystem: { __typename: 'SystemIntakeSystem', id: UUID, systemIntakeID: UUID, systemID: string, systemRelationshipType: Array<SystemRelationshipType>, otherSystemRelationshipDescription?: string | null }, userErrors?: Array<{ __typename: 'UserError', message: string, path: Array<string> }> | null } | null };
 
 export type GetSystemIntakeSystemsQueryVariables = Exact<{
   systemIntakeId: Scalars['UUID']['input'];
 }>;
 
 
-export type GetSystemIntakeSystemsQuery = { __typename: 'Query', systemIntakeSystems: Array<{ __typename: 'SystemIntakeSystem', id: UUID, systemIntakeID: UUID, systemID?: string | null, systemRelationshipType: Array<SystemRelationshipType>, otherSystemRelationshipDescription?: string | null }> };
+export type GetSystemIntakeSystemsQuery = { __typename: 'Query', systemIntakeSystems: Array<{ __typename: 'SystemIntakeSystem', id: UUID, systemIntakeID: UUID, systemID: string, systemRelationshipType: Array<SystemRelationshipType>, otherSystemRelationshipDescription?: string | null }> };
 
 export type GetSystemIntakeSystemQueryVariables = Exact<{
   systemIntakeSystemID: Scalars['UUID']['input'];
 }>;
 
 
-export type GetSystemIntakeSystemQuery = { __typename: 'Query', systemIntakeSystem?: { __typename: 'SystemIntakeSystem', id: UUID, systemIntakeID: UUID, systemID?: string | null, systemRelationshipType: Array<SystemRelationshipType>, otherSystemRelationshipDescription?: string | null } | null };
+export type GetSystemIntakeSystemQuery = { __typename: 'Query', systemIntakeSystem?: { __typename: 'SystemIntakeSystem', id: UUID, systemIntakeID: UUID, systemID: string, systemRelationshipType: Array<SystemRelationshipType>, otherSystemRelationshipDescription?: string | null } | null };
 
 export type CreateSystemIntakeMutationVariables = Exact<{
   input: CreateSystemIntakeInput;

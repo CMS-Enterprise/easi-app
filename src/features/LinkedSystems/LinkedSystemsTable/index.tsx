@@ -1,10 +1,4 @@
-/**
- * TODO: This component is not complete. It was prototyped as part of
- * https://jiraent.cms.gov/browse/EASI-1367, but has not undergone any 508 testing,
- * UX review, etc.
- */
-
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import {
@@ -23,6 +17,7 @@ import {
   Table as UswdsTable
 } from '@trussworks/react-uswds';
 import {
+  CedarSystem,
   GetCedarSystemsQuery,
   SystemIntakeSystem,
   useGetCedarSystemsQuery
@@ -53,10 +48,14 @@ type TableProps = {
   onRemoveLink: (id: string) => void;
 };
 
-const organizeCedarSystems = (data: GetCedarSystemsQuery | undefined) => {
+const organizeCedarSystems = (
+  data: GetCedarSystemsQuery | undefined
+): Record<string, CedarSystem> => {
   if (!data || !data.cedarSystems) return {};
-  return data.cedarSystems.reduce((acc: any, item: any) => {
-    acc[item.id] = item;
+  console.log('organize cedar systems', data);
+
+  return data.cedarSystems.reduce<Record<string, CedarSystem>>((acc, item) => {
+    acc[item.id] = item as CedarSystem;
     return acc;
   }, {});
 };
@@ -83,19 +82,17 @@ const LinkedSystemsTable = ({
     [data]
   );
 
+  const translateSystemRelationships = useCallback(
+    (systemRelationships: string[]) =>
+      systemRelationships
+        .filter(Boolean)
+        .map(relationship => t(`relationshipTypes.${relationship}`))
+        .join(', '),
+    [t]
+  );
+
   const columns: Column<SystemIntakeSystem>[] = useMemo(() => {
     const cols: Column<SystemIntakeSystem>[] = [];
-
-    const translateSystemRelationships = (systemRelationships: string[]) => {
-      const translatedRelationships = systemRelationships.map(relationship => {
-        console.log(relationship, `relationshipTypes.${relationship}`);
-        if (relationship) {
-          return t(`relationshipTypes.${relationship}` || '');
-        }
-        return <></>;
-      }, []);
-      return <>{translatedRelationships.join(', ')}</>;
-    };
 
     cols.push({
       Header: t<string>('linkedSystemsTable.header.systemName'),
@@ -104,7 +101,7 @@ const LinkedSystemsTable = ({
       Cell: ({ row }: { row: Row<SystemIntakeSystem> }) => {
         return (
           <p>
-            {t(`${organizedCedarSystems[row.cells[0]?.value]?.name}` || '')}
+            {t(`${organizedCedarSystems[row.original.systemID]?.name}` || '')}
           </p>
         );
       }
@@ -115,7 +112,7 @@ const LinkedSystemsTable = ({
       accessor: 'systemRelationshipType',
       id: 'systemRelationshipType',
       Cell: ({ row }: { row: Row<SystemIntakeSystem> }) => {
-        return translateSystemRelationships({ ...row }.cells[1]?.value);
+        return <>{translateSystemRelationships({ ...row }.cells[1]?.value)}</>;
       }
     });
 
@@ -133,29 +130,32 @@ const LinkedSystemsTable = ({
                 )
               }
             >
-              Edit
+              {t('linkedSystemsTable.edit')}
             </Button>
-            <span style={{ margin: '0 0.5rem' }} />
+            <span className="margin-x-1" />
             <Button
               type="button"
               unstyled
               className="text-error"
               onClick={() => onRemoveLink(row.original.id)}
             >
-              Remove
+              {t('linkedSystemsTable.remove')}
             </Button>
-            <span style={{ margin: '0 0.5rem' }} />
+            <span className="margin-x-1" />
           </div>
         );
-      },
-      sortType: (a, b) =>
-        (a.values.atoExpirationDate ?? '') > (b.values.atoExpirationDate ?? '')
-          ? 1
-          : -1
+      }
     });
 
     return cols;
-  }, [t, history, onRemoveLink, organizedCedarSystems]);
+  }, [
+    systemIntakeId,
+    t,
+    history,
+    onRemoveLink,
+    translateSystemRelationships,
+    organizedCedarSystems
+  ]);
 
   const {
     getTableProps,
@@ -203,7 +203,7 @@ const LinkedSystemsTable = ({
     usePagination
   );
 
-  rows.map(row => prepareRow(row));
+  rows.forEach(row => prepareRow(row));
 
   return (
     <div className="margin-bottom-6">
@@ -307,30 +307,27 @@ const LinkedSystemsTable = ({
         </>
       )}
       {loadingSystems && <PageLoading />}
-      {!systems ||
-        (systems.length === 0 && (
-          <Alert type="info" className="margin-top-5">
-            {isHomePage ? (
-              <Trans
-                i18nKey="systemProfile:systemTable.noMySystem.description"
-                components={{
-                  link1: (
-                    <Link href="EnterpriseArchitecture@cms.hhs.gov"> </Link>
-                  ),
-                  link2: <UswdsReactLink to="/systems"> </UswdsReactLink>,
-                  iconForward: (
-                    <Icon.ArrowForward
-                      className="icon-top margin-left-05"
-                      aria-hidden
-                    />
-                  )
-                }}
-              />
-            ) : (
-              <Trans i18nKey="linkedSystems:linkedSystemsTable.noSystemsListed" />
-            )}
-          </Alert>
-        ))}
+      {(!systems || systems.length === 0) && (
+        <Alert type="info" className="margin-top-5">
+          {isHomePage ? (
+            <Trans
+              i18nKey="systemProfile:systemTable.noMySystem.description"
+              components={{
+                link1: <Link href="EnterpriseArchitecture@cms.hhs.gov"> </Link>,
+                link2: <UswdsReactLink to="/systems"> </UswdsReactLink>,
+                iconForward: (
+                  <Icon.ArrowForward
+                    className="icon-top margin-left-05"
+                    aria-hidden
+                  />
+                )
+              }}
+            />
+          ) : (
+            <Trans i18nKey="linkedSystems:linkedSystemsTable.noSystemsListed" />
+          )}
+        </Alert>
+      )}
       {cedarSystemsError && (
         <Alert type="warning" className="margin-top-5">
           <Trans
