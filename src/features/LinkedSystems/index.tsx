@@ -11,7 +11,8 @@ import {
   Fieldset,
   Form,
   Grid,
-  Icon
+  Icon,
+  ModalHeading
 } from '@trussworks/react-uswds';
 import {
   SystemIntakeSystem,
@@ -23,6 +24,7 @@ import Alert from 'components/Alert';
 import CheckboxField from 'components/CheckboxField';
 import IconButton from 'components/IconButton';
 import MainContent from 'components/MainContent';
+import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import RequiredAsterisk from 'components/RequiredAsterisk';
@@ -47,6 +49,7 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
   const history = useHistory();
 
   const { t } = useTranslation([
+    'linkedSystems',
     'itGov',
     'intake',
     'technicalAssistance',
@@ -63,6 +66,8 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
   const showSuccessfullyUpdated = location.state?.successfullyUpdated;
   const showSuccessfullyAdded = location.state?.successfullyAdded;
 
+  console.log('STATE:', location.state);
+
   const systemUpdatedName = location.state?.systemUpdated;
 
   // Url of next view after successful form submit
@@ -77,6 +82,13 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
   const addASystemUrl = `/linked-systems-form/${id}`;
 
   const [noSystemsUsed, setNoSystemsUsed] = useState<boolean>(false);
+  const [systemToBeRemoved, setSystemToBeRemoved] = useState<string>();
+
+  const [showSuccessfullyDeleted, setShowSuccessfullyDeleted] =
+    useState<boolean>(false);
+
+  const [showRemoveLinkedSystemError, setShowRemoveLinkedSystemError] =
+    useState<boolean>(false);
 
   const {
     data,
@@ -104,22 +116,6 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
     deleteSystemLinkError
   );
 
-  const handleRemoveLink = async (systemLinkedSystemId: string) => {
-    console.log('remove this!', systemLinkedSystemId);
-    // deleteSystemLink
-    // deleteSystemLink(systemLinkedSystemId);
-    try {
-      const response = await deleteSystemLink({
-        variables: { systemIntakeSystemID: systemLinkedSystemId }
-      });
-
-      console.log(response.data);
-      refetchSystemIntakes();
-    } catch (error) {
-      console.error('error deleting the ilinkl');
-    }
-  };
-
   const submitEnabled: boolean = (() => {
     // if there are relationships added or the checkbox is filled
     if (
@@ -136,7 +132,42 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
     return false;
   })();
 
-  const hasErrors = false;
+  const hasErrors = false; // TODO fix
+
+  const [removeLinkedSystemModalOpen, setRemoveLinkedSystemModalOpen] =
+    useState(false);
+
+  const handleRemoveModal = (systemLinkedSystemId: string) => {
+    setSystemToBeRemoved(systemLinkedSystemId);
+    setRemoveLinkedSystemModalOpen(true);
+  };
+
+  const handleRemoveLink = async () => {
+    console.log('remove this!', systemToBeRemoved);
+
+    if (!systemToBeRemoved) {
+      return;
+    }
+
+    try {
+      const response = await deleteSystemLink({
+        variables: { systemIntakeSystemID: systemToBeRemoved }
+      });
+
+      console.log(response.data);
+      refetchSystemIntakes();
+      setShowSuccessfullyDeleted(true);
+      setRemoveLinkedSystemModalOpen(false);
+    } catch (error) {
+      console.error('Error: Unable to remove linked system.', error);
+      setShowRemoveLinkedSystemError(true);
+    }
+  };
+
+  const handleCloseRemoveLinkedSystemModal = () => {
+    setShowRemoveLinkedSystemError(false);
+    setRemoveLinkedSystemModalOpen(false);
+  };
 
   useEffect(() => {
     if (hasErrors) {
@@ -175,7 +206,7 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
             i18nKey="linkedSystems:successfullyLinked"
             values={{ updatedSystem: systemUpdatedName }}
             components={{
-              span: <span />
+              span: <span className="text-bold" />
             }}
           />
         </Alert>
@@ -185,6 +216,18 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
           {t('error:encounteredIssueTryAgain')}
         </Alert>
       )}
+
+      {showSuccessfullyDeleted && (
+        <Alert
+          id="link-form-error"
+          type="success"
+          slim
+          className="margin-top-2"
+        >
+          <Trans i18nKey="linkedSystems:successfullyDeleted" />
+        </Alert>
+      )}
+
       {relationLoading && <PageLoading />}
       <>
         <BreadcrumbBar variant="wrap">
@@ -195,10 +238,10 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
           </Breadcrumb>
         </BreadcrumbBar>
         <PageHeading className="margin-top-4 margin-bottom-0">
-          {t('link.header')}
+          {t('itGov:link.header')}
         </PageHeading>
         <p className="font-body-lg line-height-body-5 text-light margin-y-0">
-          {t(`link.description`)}
+          {t(`itGov:link.description`)}
         </p>
         <p className="margin-top-2 margin-bottom-5 text-base">
           <Trans
@@ -226,27 +269,27 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
                 <ul className="text-base">
                   <li>
                     {t(
-                      'link.form.field.systemOrService.reasonsToAddSystem.primarySupport'
+                      'itGov:link.form.field.systemOrService.reasonsToAddSystem.primarySupport'
                     )}
                   </li>
                   <li>
                     {t(
-                      'link.form.field.systemOrService.reasonsToAddSystem.partialSupport'
+                      'itGov:link.form.field.systemOrService.reasonsToAddSystem.partialSupport'
                     )}
                   </li>
                   <li>
                     {t(
-                      'link.form.field.systemOrService.reasonsToAddSystem.usesOrImpactedBySelectedSystem'
+                      'itGov:link.form.field.systemOrService.reasonsToAddSystem.usesOrImpactedBySelectedSystem'
                     )}
                   </li>
                   <li>
                     {t(
-                      'link.form.field.systemOrService.reasonsToAddSystem.impactsSelectedSystem'
+                      'itGov:link.form.field.systemOrService.reasonsToAddSystem.impactsSelectedSystem'
                     )}
                   </li>
                   <li>
                     {t(
-                      'link.form.field.systemOrService.reasonsToAddSystem.other'
+                      'itGov:link.form.field.systemOrService.reasonsToAddSystem.other'
                     )}
                   </li>
                 </ul>
@@ -256,10 +299,10 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
                 outline
                 onClick={() => history.push(addASystemUrl)}
               >
-                {t('link.form.addASystem')}
+                {t('itGov:link.form.addASystem')}
               </Button>
               <CheckboxField
-                label={t('link.form.doesNotSupportOrUseAnySystems')}
+                label={t('itGov:link.form.doesNotSupportOrUseAnySystems')}
                 id={'innerProps.id'!}
                 name="datavalue"
                 value="systemsUsed"
@@ -275,12 +318,12 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
             defaultPageSize={20}
             isHomePage={false}
             systemIntakeId={id}
-            onRemoveLink={handleRemoveLink}
+            onRemoveLink={handleRemoveModal}
           />
 
           <ButtonGroup>
             <Button type="button" outline>
-              {t('link.form.back')}
+              {t('itGov:link.form.back')}
             </Button>
             <Button
               type="submit"
@@ -302,6 +345,50 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
             {t('link.form.dontEditAndReturn')}
           </IconButton>
         </Form>
+        <Modal
+          isOpen={removeLinkedSystemModalOpen}
+          closeModal={() => setRemoveLinkedSystemModalOpen(false)}
+          className="font-body-sm height-auto"
+          id="confirmDiscussionModal"
+        >
+          <ModalHeading className="margin-top-0 margin-bottom-105">
+            {t('removeLinkedSystemModal.heading')}
+          </ModalHeading>
+          {showRemoveLinkedSystemError && (
+            <Alert
+              id="link-form-error"
+              type="error"
+              slim
+              className="margin-top-2"
+            >
+              <Trans i18nKey="linkedSystems:unableToRemoveLinkedSystem" />
+            </Alert>
+          )}
+          <p
+            className="margin-top-0 text-light font-body-md"
+            data-testid="discussion-board-type"
+          >
+            {t('removeLinkedSystemModal.message')}
+          </p>
+
+          <ButtonGroup className="margin-top-3">
+            <Button
+              type="submit"
+              className="bg-error margin-right-1"
+              form="discussionForm"
+              onClick={() => handleRemoveLink()}
+            >
+              {t('removeLinkedSystemModal.remove')}
+            </Button>
+            <Button
+              type="button"
+              unstyled
+              onClick={() => handleCloseRemoveLinkedSystemModal()}
+            >
+              {t('removeLinkedSystemModal.dontRemove')}
+            </Button>
+          </ButtonGroup>
+        </Modal>
       </>
     </MainContent>
   );
