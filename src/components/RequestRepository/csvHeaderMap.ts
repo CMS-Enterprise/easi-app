@@ -34,8 +34,8 @@ const csvHeaderMap = (t: any) => [
     label: t('intake:csvHeadings.oitCollaborator')
   },
   {
-    key: 'eaCollaboratorName',
-    label: t('intake:csvHeadings.eaCollaborator')
+    key: 'collaboratorName508',
+    label: t('intake:csvHeadings.collaborator508')
   },
   {
     key: 'requestName',

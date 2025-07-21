@@ -183,7 +183,7 @@ const intake = {
     isso: 'ISSO Name',
     trbCollaborator: 'TRB Collaborator Name',
     oitCollaborator: 'OIT security Collaborator Name',
-    eaCollaborator: 'EA Collaborator Name',
+    collaborator508: '508 Clearance Officer',
     projectName: 'Project name',
     existingFunding: 'Existing Funding',
     fundingSource: 'Funding Number and Source',
