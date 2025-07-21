@@ -311,7 +311,13 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
         />
 
         <ButtonGroup>
-          <Button type="button" outline>
+          <Button
+            type="button"
+            outline
+            onClick={() => {
+              history.goBack();
+            }}
+          >
             {t('itGov:link.form.back')}
           </Button>
           <Button
