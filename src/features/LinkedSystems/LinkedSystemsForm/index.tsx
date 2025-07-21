@@ -272,9 +272,17 @@ const LinkedSystemsForm = () => {
             {t('error:pleaseSelectASystem')}
           </Alert>
         )}
-        <PageHeading className="margin-top-4 margin-bottom-0">
-          {t('header')}
-        </PageHeading>
+        {linkedSystemID && (
+          <PageHeading className="margin-top-4 margin-bottom-0">
+            {t('editHeader')}
+          </PageHeading>
+        )}
+        {!linkedSystemID && (
+          <PageHeading className="margin-top-4 margin-bottom-0">
+            {t('addHeader')}
+          </PageHeading>
+        )}
+
         <p className="font-body-lg line-height-body-5 text-light margin-y-0">
           {t('subHeader')}
         </p>

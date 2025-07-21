@@ -1,5 +1,6 @@
 export default {
-  header: 'Add a system link',
+  addHeader: 'Add a system link',
+  editHeader: 'Edit linked system(s)',
   subHeader: 'Add a CMS system that is supported by or supports this request.',
   linkedSystemsTable: {
     title: 'Linked Cedar Systems',
