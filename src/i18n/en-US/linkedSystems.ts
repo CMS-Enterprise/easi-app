@@ -1,7 +1,10 @@
 export default {
   addHeader: 'Add a system link',
   editHeader: 'Edit linked system(s)',
-  subHeader: 'Add a CMS system that is supported by or supports this request.',
+  editSubheader:
+    'If you are requesting a Life Cycle ID (LCID) and governance approval for a new IT investment that is a part of an existing system, please include additional details below. ',
+  addSubheader:
+    'Add a CMS system that is supported by or supports this request.',
   linkedSystemsTable: {
     title: 'Linked Cedar Systems',
     jumpToSystems: 'Jump to all CMS systems',

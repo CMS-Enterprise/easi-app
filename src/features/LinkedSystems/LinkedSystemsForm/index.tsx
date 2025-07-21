@@ -273,19 +273,25 @@ const LinkedSystemsForm = () => {
           </Alert>
         )}
         {linkedSystemID && (
-          <PageHeading className="margin-top-4 margin-bottom-0">
-            {t('editHeader')}
-          </PageHeading>
+          <>
+            <PageHeading className="margin-top-4 margin-bottom-0">
+              {t('editHeader')}
+            </PageHeading>
+            <p className="font-body-lg line-height-body-5 text-light margin-y-0">
+              {t('editSubheader')}
+            </p>
+          </>
         )}
         {!linkedSystemID && (
-          <PageHeading className="margin-top-4 margin-bottom-0">
-            {t('addHeader')}
-          </PageHeading>
+          <>
+            <PageHeading className="margin-top-4 margin-bottom-0">
+              {t('addHeader')}
+            </PageHeading>
+            <p className="font-body-lg line-height-body-5 text-light margin-y-0">
+              {t('addSubheader')}
+            </p>
+          </>
         )}
-
-        <p className="font-body-lg line-height-body-5 text-light margin-y-0">
-          {t('subHeader')}
-        </p>
         <p className="margin-top-2 margin-bottom-5 text-base">
           <Trans
             i18nKey="action:fieldsMarkedRequired"
