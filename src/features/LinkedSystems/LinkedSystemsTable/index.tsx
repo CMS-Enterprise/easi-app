@@ -52,7 +52,6 @@ const organizeCedarSystems = (
   data: GetCedarSystemsQuery | undefined
 ): Record<string, CedarSystem> => {
   if (!data || !data.cedarSystems) return {};
-  console.log('organize cedar systems', data);
 
   return data.cedarSystems.reduce<Record<string, CedarSystem>>((acc, item) => {
     acc[item.id] = item as CedarSystem;

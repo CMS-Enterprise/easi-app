@@ -44,6 +44,8 @@ import GovTaskGrbMeeting from './GovTaskGrbMeeting';
 import GovTaskGrtMeeting from './GovTaskGrtMeeting';
 import GovTaskIntakeForm from './GovTaskIntakeForm';
 
+import './index.scss';
+
 function GovernanceTaskList() {
   const { systemId } = useParams<{ systemId: string }>();
   const { t } = useTranslation('itGov');
@@ -268,15 +270,14 @@ function GovernanceTaskList() {
                   </div>
                 )}
 
-                <UswdsReactLink to={`/linked-systems/${systemId}`}>
-                  {t('additionalRequestInfo.viewOrEditSystemInformation')}
-                </UswdsReactLink>
-
                 <AdditionalRequestInfo {...systemIntake} requestType="itgov" />
 
                 <h4 className="line-height-body-2 margin-top-3 margin-bottom-1">
                   {t('taskList.help')}
                 </h4>
+                <div className="task-list-sidebar__subtitle">
+                  {t('taskList.helpLinksOpenInANewTab')}
+                </div>
                 <div className="margin-top-1">
                   <UswdsReactLink
                     to="/help/it-governance/steps-overview/new-system"

@@ -12,10 +12,10 @@ export default {
   taskList: {
     heading: 'Governance task list',
     description: 'for {{requestName}}',
-    help: 'Help',
-    stepsInvolved:
-      'Steps involved in an IT Governance request (opens in a new tab)',
-    sampleBusinessCase: 'Sample Business Case (opens in a new tab)',
+    help: 'Additional help',
+    stepsInvolved: 'Steps involved in an IT Governance request',
+    helpLinksOpenInANewTab: 'All help links open in a new tab',
+    sampleBusinessCase: 'Sample Business Case',
     decisionAlert: {
       heading: 'Decision issued',
       text: 'A decision has been made for this request, and you can view the decision at the <decisionLink>bottom of this page</decisionLink>. For additional information, please check the email sent to you. If you have further questions, contact the Governance Team at <emailLink>{{email}}</emailLink>.'
@@ -167,7 +167,7 @@ export default {
       'You have identified this request as part of an existing service or other contract.',
     newSystem:
       'You have identified this request as for a completely new system, service, or contract.',
-    edit: 'Edit information',
+    edit: 'View or edit system information',
     viewSystemProfile: 'View system profile',
     contractName: 'Service or contract name',
     contractNumber: 'Contract number',
@@ -177,6 +177,9 @@ export default {
       text: 'Is this request part of an existing system, service, or other contract?',
       answer: 'Answer'
     },
+    doesNotSupportOrUseOtherSystems:
+      'You have indicated that this project does not support or use any existing CMS Systems.',
+    linkedSystems: 'You have linked this request to existing CMS system(s)',
     viewOrEditSystemInformation: 'View or edit system information',
     show: {
       more: 'Show {{count}} more',

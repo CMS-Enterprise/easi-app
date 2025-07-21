@@ -115,7 +115,9 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
     if (!noSystemsUsed) {
       if (data && data?.systemIntakeSystems.length > 0) {
         setRemoveAllLinkedSystemModalOpen(true);
+        return;
       }
+      setNoSystemsUsed(true);
       return;
     }
 
@@ -182,6 +184,7 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
             <span>{t('intake:navigation.itGovernance')}</span>
           </BreadcrumbLink>
         </Breadcrumb>
+        <Breadcrumb current>{t('intake:navigation.startRequest')}</Breadcrumb>
       </BreadcrumbBar>
 
       {showSuccessfullyUpdated && (

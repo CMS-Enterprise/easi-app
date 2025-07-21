@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 import {
   Breadcrumb,
@@ -36,8 +36,8 @@ const RequestTypeForm = () => {
   // Set isNew from checking loc state false explicitly
   // This is done in such a way as a stop gap to fix the problem where
   // changing Intake Request Types, from the overview page, will create new Intake Requests
-  // const { state } = useLocation<{ isNew?: boolean }>();
-  // const isNew = state?.isNew !== false;
+  const { state } = useLocation<{ isNew?: boolean }>();
+  const isNew = state?.isNew !== false;
 
   const { t } = useTranslation('intake');
   const { oktaAuth } = useOktaAuth();
@@ -78,23 +78,7 @@ const RequestTypeForm = () => {
 
       const nextPage = (id: string) => {
         const linkqs = linkCedarSystemIdQueryString(linkCedarSystemId);
-        // const navigationLink = `/system/link/${id}?${linkqs}`;
-
-        switch (requestType) {
-          // case 'NEW':
-          //   history.push(`/governance-overview/${id}?${linkqs}`, { isNew });
-          //   break;
-          // case 'MAJOR_CHANGES':
-          //   history.push(navigationLink, { isNew });
-          //   break;
-          // case 'RECOMPETE':
-          //   history.push(navigationLink, { isNew });
-          //   break;
-          default:
-            // console.warn(`Unknown request type: ${requestType}`);
-            history.push(`/linked-systems/${id}?${linkqs}`);
-            break;
-        }
+        history.push(`/linked-systems/${id}?${linkqs}`, { isNew });
       };
 
       if (!systemId) {
