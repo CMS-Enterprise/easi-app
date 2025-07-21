@@ -16,6 +16,7 @@ import { formatDateUtc, formatDaysHoursMinutes } from 'utils/date';
 
 import { useRestartReviewModal } from '../RestartReviewModal/RestartReviewModalContext';
 
+import getGRBReviewStatus from './_utils/getGRBReviewStatus';
 import EndGRBAsyncVoting from './EndGRBAsyncVoting';
 import ExtendGRBAsyncReview from './ExtendGRBAsyncReview';
 
@@ -112,20 +113,12 @@ const GRBReviewStatusCard = ({
 
   /**
    * Returns the correct status data for the review type,
-   * or NOT_STARTED if status is null
+   * or NOT_STARTED if set up form has not been submitted yet
    */
-  const grbReviewStatus: GRBReviewStatus | null | undefined = useMemo(() => {
-    if (!grbReviewStartedAt) return 'NOT_STARTED';
-
-    return grbReviewType === SystemIntakeGRBReviewType.STANDARD
-      ? grbReviewStandardStatus
-      : grbReviewAsyncStatus;
-  }, [
-    grbReviewAsyncStatus,
-    grbReviewStandardStatus,
-    grbReviewType,
+  const grbReviewStatus = getGRBReviewStatus(
+    grbReviewAsyncStatus || grbReviewStandardStatus,
     grbReviewStartedAt
-  ]);
+  );
 
   const backgroundColorClass = useMemo(() => {
     switch (grbReviewStatus) {
