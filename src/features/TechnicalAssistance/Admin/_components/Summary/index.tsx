@@ -126,14 +126,16 @@ export default function Summary({
                 )}
                 {trbLead || t('adminHome.notAssigned')}
               </span>
-              <TrbAssignLeadModalOpener
-                trbRequestId={trbRequestId}
-                modalRef={assignLeadModalRef}
-                trbRequestIdRef={assignLeadModalTrbRequestIdRef}
-                className="usa-button--unstyled width-auto"
-              >
-                {trbLead ? t('adminHome.change') : t('adminHome.assign')}
-              </TrbAssignLeadModalOpener>
+              {state === TRBRequestState.OPEN && (
+                <TrbAssignLeadModalOpener
+                  trbRequestId={trbRequestId}
+                  modalRef={assignLeadModalRef}
+                  trbRequestIdRef={assignLeadModalTrbRequestIdRef}
+                  className="usa-button--unstyled width-auto"
+                >
+                  {trbLead ? t('adminHome.change') : t('adminHome.assign')}
+                </TrbAssignLeadModalOpener>
+              )}
             </Grid>
           </Grid>
         </GridContainer>
