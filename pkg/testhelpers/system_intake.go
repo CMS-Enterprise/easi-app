@@ -24,7 +24,6 @@ func NewSystemIntake() models.SystemIntake {
 		BusinessOwnerComponent:  null.StringFrom("Test Business Owner Component"),
 		ProductManager:          null.StringFrom("Test Product Manager"),
 		ProductManagerComponent: null.StringFrom("Test Product Manager Component"),
-		ISSO:                    null.StringFrom("Test ISSO"),
 		TRBCollaborator:         null.StringFrom("Test TRB Collaborator"),
 		OITSecurityCollaborator: null.StringFrom("Test OIT Collaborator"),
 		EACollaborator:          null.StringFrom("Test EA Collaborator"),

@@ -96,10 +96,6 @@ export const UpdateSystemIntakeContactDetails = gql(/* GraphQL */ `
             name
           }
         }
-        isso {
-          isPresent
-          name
-        }
         productManager {
           component
           name

@@ -72,6 +72,7 @@ const ExternalLinkAndModal = ({
           href={href}
           className="usa-button text-white text-no-underline"
           variant="unstyled"
+          onClick={() => setIsModalOpen(false)}
         >
           {modalType !== 'GENERIC'
             ? externalT('continueButton', {

@@ -2,6 +2,7 @@ import {
   AugmentedSystemIntakeContact,
   FundingSourceFragmentFragment,
   SystemIntakeCollaboratorInput,
+  SystemIntakeGRBReviewType,
   SystemIntakeStatusAdmin
 } from 'gql/generated/graphql';
 
@@ -33,10 +34,6 @@ export type SystemIntakeForm = {
   productManager: {
     name: string;
     component: string;
-  };
-  isso: {
-    isPresent: boolean | null;
-    name: string;
   };
   governanceTeams: {
     isPresent: boolean | null;
@@ -78,7 +75,6 @@ export type ContactDetailsForm = {
   requester: ContactFields;
   businessOwner: ContactFields & { sameAsRequester: boolean };
   productManager: ContactFields & { sameAsRequester: boolean };
-  isso: ContactFields & { isPresent: boolean };
   governanceTeams: {
     isPresent: boolean;
     teams: CollaboratorFields;
@@ -151,6 +147,7 @@ export type SubmitDatesForm = {
   grbDateDay: string;
   grbDateMonth: string;
   grbDateYear: string;
+  grbReviewType: SystemIntakeGRBReviewType;
 };
 
 /** Cedar contact properties */
@@ -176,7 +173,6 @@ export type FormattedContacts = {
   requester: SystemIntakeContactProps;
   businessOwner: SystemIntakeContactProps;
   productManager: SystemIntakeContactProps;
-  isso: SystemIntakeContactProps;
   additionalContacts: SystemIntakeContactProps[];
 };
 

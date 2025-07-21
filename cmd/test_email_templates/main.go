@@ -637,6 +637,20 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 			UserName:          "Discussion Tester #1",
 			RequestName:       "GRB Review Discussion Test",
 			Role:              "Voting Member",
+			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!</p>`,
+			Recipient:         requesterEmail,
+		},
+	)
+	noErr(err)
+
+	err = client.SystemIntake.SendGRBReviewDiscussionReplyRequesterEmail(
+		ctx,
+		email.SendGRBReviewDiscussionReplyRequesterEmailInput{
+			SystemIntakeID:    intakeID,
+			RequestName:       "GRB Review Discussion Test",
+			ReplierName:       "Discussion Tester #1",
+			VotingRole:        "Voting Member",
+			GRBRole:           "Governance Admin Team",
 			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`,
 			Recipient:         requesterEmail,
 		},
@@ -650,7 +664,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 			UserName:          "Discussion Tester #1",
 			RequestName:       "GRB Review Discussion Test",
 			Role:              "Voting Member",
-			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`,
+			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!</p>`,
 			Recipients:        []models.EmailAddress{requesterEmail},
 		},
 	)
@@ -664,7 +678,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 			UserName:          "Discussion Tester #1",
 			RequestName:       "GRB Review Discussion Test",
 			Role:              "Governance Admin Team",
-			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`,
+			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!</p>`,
 			Recipients:        []models.EmailAddress{requesterEmail},
 		},
 	)
@@ -678,7 +692,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 			UserName:          "Discussion Tester #1",
 			RequestName:       "GRB Review Discussion Test",
 			Role:              "Governance Admin Team",
-			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`,
+			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!</p>`,
 			Recipients:        []models.EmailAddress{requesterEmail},
 		},
 	)
@@ -692,7 +706,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 			RequestName:       "GRB Review Discussion Test",
 			Role:              "Voting Member, CIO",
 			GroupName:         "Governance Admin Team",
-			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`,
+			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!</p>`,
 			Recipients:        emailNotificationRecipients,
 		},
 	)
@@ -707,7 +721,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 			RequestName:       "GRB Review Discussion Test",
 			Role:              "Governance Admin Team",
 			GroupName:         "GRB",
-			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`,
+			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!</p>`,
 			Recipients:        emailNotificationRecipients,
 		},
 	)
@@ -735,5 +749,234 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 			Recipients:         emailNotificationRecipients.RegularRecipientEmails,
 		},
 	)
+	noErr(err)
+
+	err = client.SystemIntake.SendPresentationDeckUploadReminder(
+		ctx,
+		emailNotificationRecipients,
+		intakeID,
+		"Project with Presentation",
+	)
+	noErr(err)
+
+	err = client.SystemIntake.SendSystemIntakeGRBReviewDeadlineExtended(
+		ctx,
+		emailNotificationRecipients,
+		intakeID,
+		"Supreme Taco Project",
+		"Taco King",
+		"STP",
+		time.Date(2025, 1, 10, 0, 0, 0, 0, time.UTC),
+		time.Date(2026, 5, 10, 0, 0, 0, 0, time.UTC),
+	)
+	noErr(err)
+
+	err = client.SystemIntake.SendSystemIntakeGRBReviewEnded(
+		ctx,
+		email.SendSystemIntakeGRBReviewEndedInput{
+			Recipient:          requesterEmail,
+			SystemIntakeID:     intakeID,
+			ProjectName:        "Project Ended Email Test",
+			RequesterName:      "Ended Email - Name",
+			RequesterComponent: "Center for Medicare",
+			GRBReviewStart:     time.Now().AddDate(0, 0, -5),
+			GRBReviewDeadline:  time.Now(),
+		},
+	)
+	noErr(err)
+
+	err = client.SystemIntake.SendSystemIntakeGRBReviewEndedEarly(
+		ctx,
+		email.SendSystemIntakeGRBReviewEndedEarlyInput{
+			Recipient:          requesterEmail,
+			SystemIntakeID:     intakeID,
+			ProjectTitle:       "Voting Ended Early",
+			RequesterName:      "Early Voter",
+			RequesterComponent: "Center for Medicare",
+			StartDate:          time.Now().AddDate(0, 0, -3),
+			EndDate:            time.Now().AddDate(0, 0, 2),
+		},
+	)
+	noErr(err)
+
+	err = client.SystemIntake.SendSystemIntakeGRBReviewTimeAdded(
+		ctx,
+		emailNotificationRecipients,
+		intakeID,
+		"Supreme Taco Admin",
+		"2 days",
+		"Supreme Taco Project",
+		"Taco King",
+		"STP",
+		time.Date(2026, 7, 1, 0, 0, 0, 0, time.UTC),
+		time.Date(2026, 7, 3, 0, 0, 0, 0, time.UTC),
+		time.Date(2026, 7, 5, 0, 0, 0, 0, time.UTC),
+		5,
+	)
+	noErr(err)
+
+	err = client.SystemIntake.SendSystemIntakeGRBReviewRestartedAdmin(
+		ctx,
+		emailNotificationRecipients,
+		intakeID,
+		"Taco Administrator",
+		"Supreme Taco Project",
+		"Taco King",
+		"STP",
+		time.Date(2025, 6, 1, 0, 0, 0, 0, time.UTC),
+		time.Date(2026, 6, 7, 0, 0, 0, 0, time.UTC),
+		time.Date(2026, 6, 7, 0, 0, 0, 0, time.UTC),
+	)
+	noErr(err)
+
+	err = client.SystemIntake.SendSystemIntakeGRBReviewRestarted(
+		ctx,
+		emailNotificationRecipients,
+		intakeID,
+		"Supreme Taco Project",
+		"Taco King",
+		"STP",
+		time.Date(2025, 6, 1, 0, 0, 0, 0, time.UTC),
+		time.Date(2026, 6, 7, 0, 0, 0, 0, time.UTC),
+	)
+	noErr(err)
+
+	err = client.SystemIntake.SendSystemIntakeGRBReviewerReminder(
+		ctx,
+		email.SendSystemIntakeGRBReviewerReminderInput{
+			Recipient:          requesterEmail,
+			SystemIntakeID:     intakeID,
+			RequestName:        "Reminder Email Test",
+			RequesterName:      "Reminder Email - Name",
+			RequesterComponent: "Offices of Hearings and Inquiries",
+			StartDate:          time.Now().AddDate(0, 0, -1),
+			EndDate:            time.Now().AddDate(0, 0, 3),
+		},
+	)
+	noErr(err)
+
+	err = client.SystemIntake.SendGRBReviewerInvitedToVoteEmail(ctx,
+		email.SendGRBReviewerInvitedToVoteInput{
+			Recipient:          requesterEmail,
+			StartDate:          time.Now().AddDate(0, 0, -1),
+			EndDate:            time.Now().AddDate(0, 0, 3),
+			SystemIntakeID:     intakeID,
+			ProjectName:        "Invited to Vote Project",
+			RequesterName:      "Requester Inviting",
+			RequesterComponent: "Center for Medicare",
+		})
+	noErr(err)
+
+	err = client.SystemIntake.SendGRBReviewHalfwayThrough(ctx,
+		email.SendGRBReviewHalfwayThroughInput{
+			SystemIntakeID:     intakeID,
+			ProjectTitle:       "Halfway through title",
+			RequesterName:      "Requester Halfway",
+			RequesterComponent: "Center for Medicare",
+			StartDate:          time.Now().AddDate(0, 0, -1),
+			EndDate:            time.Now().AddDate(0, 0, 5),
+			NoObjectionVotes:   2,
+			ObjectionVotes:     3,
+			NotYetVoted:        1,
+		})
+	noErr(err)
+
+	err = client.SystemIntake.SendGRBReviewPastDueNoQuorum(ctx,
+		email.SendGRBReviewPastDueNoQuorumInput{
+			SystemIntakeID:     intakeID,
+			ProjectTitle:       "Past Due No Quorum title",
+			RequesterName:      "Requester Past Due No Quorum",
+			RequesterComponent: "Office of Legislation",
+			StartDate:          time.Now().AddDate(0, 0, -1),
+			EndDate:            time.Now().AddDate(0, 0, 5),
+			NoObjectionVotes:   1,
+			ObjectionVotes:     1,
+			NotYetVoted:        1,
+		})
+	noErr(err)
+
+	err = client.SystemIntake.SendSystemIntakeGRBReviewLastDay(
+		ctx,
+		email.SendSystemIntakeGRBReviewLastDayInput{
+			Recipient:          requesterEmail,
+			SystemIntakeID:     intakeID,
+			ProjectName:        "Last Day Project",
+			RequesterName:      "Last Day - Name",
+			RequesterComponent: "Last Day - Component",
+			GRBReviewStart:     time.Now().AddDate(0, 0, -1),
+			GRBReviewDeadline:  time.Now(),
+		})
+	noErr(err)
+
+	err = client.SystemIntake.SendGRBReviewCompleteQuorumMet(ctx,
+		email.SendGRBReviewCompleteQuorumMetInput{
+			SystemIntakeID:     intakeID,
+			ProjectTitle:       "Review Complete Quorum Met title",
+			RequesterName:      "Requester Review Complete Quorum Met",
+			RequesterComponent: "Emergency Preparedness and Response Operations",
+			StartDate:          time.Now().AddDate(0, 0, -10),
+			EndDate:            time.Now().AddDate(0, 0, -1),
+			NoObjectionVotes:   6,
+			ObjectionVotes:     1,
+			NotYetVoted:        3,
+		})
+	noErr(err)
+
+	err = client.SystemIntake.SendGRBReviewDiscussionProjectTeamIndividualTaggedEmail(ctx,
+		email.SendGRBReviewDiscussionProjectTeamIndividualTaggedInput{
+			SystemIntakeID:    intakeID,
+			UserName:          "Sally Ride",
+			RequestName:       "Project Team title",
+			Role:              "Center for Medicaid and CHIP Services",
+			DiscussionContent: `<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!</p>`,
+			Recipient:         requesterEmail,
+		})
+	noErr(err)
+
+	err = client.SystemIntake.SendGRBReviewVoteSubmitted(ctx,
+		email.SendGRBReviewVoteSubmittedInput{
+			Recipient:          requesterEmail,
+			SystemIntakeID:     intakeID,
+			ProjectTitle:       "Vote Submitted Title",
+			RequesterName:      "Some Voter",
+			RequesterComponent: "Center for Medicaid and CHIP Services",
+			StartDate:          time.Now().AddDate(0, 0, -5),
+			EndDate:            time.Now().AddDate(0, 0, 5),
+			Vote:               models.SystemIntakeAsyncGRBVotingOptionNoObjection,
+		})
+	noErr(err)
+
+	err = client.SystemIntake.SendGRBReviewVoteSubmittedAdmin(ctx,
+		email.SendGRBReviewVoteSubmittedAdminInput{
+			SystemIntakeID:     intakeID,
+			GRBMemberName:      "Admin Vote Submitter",
+			ProjectTitle:       "Admin Vote Submitted Title",
+			RequesterName:      "Admin Vote Submitted Requester",
+			RequesterComponent: "Center for Medicaid and CHIP Services",
+			StartDate:          time.Now().AddDate(0, 0, -5),
+			EndDate:            time.Now().AddDate(0, 0, 5),
+			Vote:               models.SystemIntakeAsyncGRBVotingOptionNoObjection,
+			AdditionalComments: "I agree",
+			NoObjectionVotes:   3,
+			ObjectionVotes:     4,
+			NotYetVoted:        2,
+		})
+	noErr(err)
+
+	err = client.SystemIntake.SendGRBReviewVoteChangedAdmin(ctx,
+		email.SendGRBReviewVoteChangedAdminInput{
+			SystemIntakeID:     intakeID,
+			GRBMemberName:      "Admin Vote Changer",
+			ProjectTitle:       "Admin Vote Changed Title",
+			RequesterName:      "Admin Vote Change Requester",
+			RequesterComponent: "Center for Medicaid and CHIP Services",
+			StartDate:          time.Now().AddDate(0, 0, -5),
+			EndDate:            time.Now().AddDate(0, 0, 5),
+			Vote:               models.SystemIntakeAsyncGRBVotingOptionNoObjection,
+			AdditionalComments: "I agree",
+			NoObjectionVotes:   3,
+			ObjectionVotes:     4,
+			NotYetVoted:        2,
+		})
 	noErr(err)
 }

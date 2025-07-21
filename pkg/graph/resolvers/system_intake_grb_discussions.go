@@ -12,6 +12,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/services"
@@ -37,14 +38,25 @@ func CreateSystemIntakeGRBDiscussionPost(
 			return nil, err
 		}
 
-		principalAsGRBReviewer, err := GetPrincipalAsGRBReviewerBySystemIntakeID(ctx, intakeID)
-		if err != nil {
-			return nil, err
+		if systemIntake == nil {
+			return nil, errors.New("problem finding system intake when handling GRB post")
 		}
 
-		isAdmin := services.AuthorizeRequireGRTJobCode(ctx)
-		if principalAsGRBReviewer == nil && !isAdmin {
-			return nil, errors.New("user not authorized to create discussion post")
+		if systemIntake.Step != models.SystemIntakeStepGRBMEETING {
+			return nil, errors.New("discussion posts can only be made if the system intake is in the GRB Meeting step")
+		}
+
+		if input.DiscussionBoardType == models.SystemIntakeGRBDiscussionBoardTypeInternal && !isAuthorizedForInternalBoard(ctx, intakeID) {
+			return nil, errors.New("user not authorized to post on Internal board")
+		}
+
+		if !canParticipateInDiscussions(ctx, store, intakeID) {
+			return nil, errors.New("user is not authorized to create a discussion post")
+		}
+
+		principalAsGRBReviewer, err := getPrincipalAsGRBReviewerBySystemIntakeID(ctx, intakeID)
+		if err != nil {
+			return nil, err
 		}
 
 		post := models.NewSystemIntakeGRBReviewDiscussionPost(principal.Account().ID)
@@ -54,6 +66,7 @@ func CreateSystemIntakeGRBDiscussionPost(
 			post.VotingRole = &principalAsGRBReviewer.GRBVotingRole
 			post.GRBRole = &principalAsGRBReviewer.GRBReviewerRole
 		}
+		post.DiscussionBoardType = &input.DiscussionBoardType
 
 		// save in DB
 		result, err := store.CreateSystemIntakeGRBDiscussionPost(ctx, tx, post)
@@ -103,19 +116,43 @@ func CreateSystemIntakeGRBDiscussionReply(
 			return nil, err
 		}
 
+		if initialPost.DiscussionBoardType == nil {
+			return nil, errors.New("unexpected nil discussion board type on initial post")
+		}
+
+		if *initialPost.DiscussionBoardType != input.DiscussionBoardType {
+			return nil, errors.New("discussion board type mismatch in discussion reply, aborting")
+		}
+
 		intakeID := initialPost.SystemIntakeID
 		if initialPost.ReplyToID != nil {
 			return nil, errors.New("only top level posts can be replied to")
 		}
 
-		principalGRBReviewer, err := GetPrincipalAsGRBReviewerBySystemIntakeID(ctx, intakeID)
+		systemIntake, err := store.FetchSystemIntakeByIDNP(ctx, tx, intakeID)
 		if err != nil {
 			return nil, err
 		}
 
-		isAdmin := services.AuthorizeRequireGRTJobCode(ctx)
-		if principalGRBReviewer == nil && !isAdmin {
-			return nil, errors.New("user not authorized to create discussion post")
+		if systemIntake == nil {
+			return nil, errors.New("problem finding system intake when handling GRB reply")
+		}
+
+		if systemIntake.Step != models.SystemIntakeStepGRBMEETING {
+			return nil, errors.New("replies can only be made if the system intake is in the GRB Meeting step")
+		}
+
+		if input.DiscussionBoardType == models.SystemIntakeGRBDiscussionBoardTypeInternal && !isAuthorizedForInternalBoard(ctx, intakeID) {
+			return nil, errors.New("user is not authorized to reply on the Internal board")
+		}
+
+		if !canParticipateInDiscussions(ctx, store, intakeID) {
+			return nil, errors.New("user is not authorized to create a discussion reply")
+		}
+
+		principalGRBReviewer, err := getPrincipalAsGRBReviewerBySystemIntakeID(ctx, intakeID)
+		if err != nil {
+			return nil, err
 		}
 
 		// get user who made this reply post
@@ -128,20 +165,7 @@ func CreateSystemIntakeGRBDiscussionReply(
 			post.VotingRole = &principalGRBReviewer.GRBVotingRole
 			post.GRBRole = &principalGRBReviewer.GRBReviewerRole
 		}
-
-		result, err := store.CreateSystemIntakeGRBDiscussionPost(ctx, tx, post)
-		if err != nil {
-			return nil, err
-		}
-
-		systemIntake, err := store.FetchSystemIntakeByIDNP(ctx, tx, intakeID)
-		if err != nil {
-			return nil, err
-		}
-
-		if systemIntake == nil {
-			return nil, errors.New("problem finding system intake when handling GRB reply")
-		}
+		post.DiscussionBoardType = &input.DiscussionBoardType
 
 		// the initial poster will receive a notification
 		// in the event the initial poster is also tagged in a reply, we do not send both emails
@@ -153,6 +177,11 @@ func CreateSystemIntakeGRBDiscussionReply(
 
 		if initialPoster == nil {
 			return nil, errors.New("problem finding initial poster when handling GRB reply")
+		}
+
+		result, err := store.CreateSystemIntakeGRBDiscussionPost(ctx, tx, post)
+		if err != nil {
+			return nil, err
 		}
 
 		// if no email client, do not proceed
@@ -177,6 +206,30 @@ func CreateSystemIntakeGRBDiscussionReply(
 				DiscussionContent: input.Content.ToTemplate(),
 				Recipient:         models.EmailAddress(initialPoster.Email),
 			}); err != nil {
+				return nil, err
+			}
+		}
+
+		// Send a notification to the initial poster
+		if initialPoster.ID != replyPoster.ID {
+			// Note: Confirmed with UX, we should never hit this but in the case we do this is an acceptable default
+			grbRole := "Other"
+			if post.GRBRole != nil {
+				grbRole = post.GRBRole.String()
+			}
+
+			if err := emailClient.SystemIntake.SendGRBReviewDiscussionReplyRequesterEmail(
+				ctx,
+				email.SendGRBReviewDiscussionReplyRequesterEmailInput{
+					SystemIntakeID:    intakeID,
+					RequestName:       systemIntake.ProjectName.String,
+					ReplierName:       replyPoster.CommonName,
+					VotingRole:        authorRole,
+					GRBRole:           grbRole,
+					DiscussionContent: input.Content.ToTemplate(),
+					Recipient:         models.EmailAddress(initialPoster.Email),
+				},
+			); err != nil {
 				return nil, err
 			}
 		}
@@ -253,16 +306,49 @@ func sendDiscussionEmailsForTags(
 	}
 
 	// check if the grb group is being emailed, in which case we should make sure we do not send any individual emails out
-	var grbGroupFound bool
+	var (
+		grbGroupFound bool
 
-	groupTagTypes := []models.TagType{}
-	individualTagAcctIDs := []uuid.UUID{}
+		groupTagTypes        []models.TagType
+		individualTagAcctIDs []uuid.UUID
+	)
 
 	// split individual and group tags
 	for _, tag := range uniqueTags {
 		if tag == nil {
 			continue
 		}
+
+		// check if the requester was tagged
+		if tag.TagType == models.TagTypeRequester {
+			// get requester
+			intake, err := store.FetchSystemIntakeByID(ctx, intakeID)
+			if err != nil {
+				logger.Error("problem getting intake when requester tagged", zap.Error(err))
+				return err
+			}
+
+			requesterAcct, err := store.UserAccountGetByUsername(ctx, store, intake.EUAUserID.String)
+			if err != nil {
+				logger.Error("problem getting requester account when requester tagged", zap.Error(err))
+				return err
+			}
+
+			// send email to requester
+			if err := emailClient.SystemIntake.SendGRBReviewDiscussionProjectTeamIndividualTaggedEmail(ctx, email.SendGRBReviewDiscussionProjectTeamIndividualTaggedInput{
+				SystemIntakeID:    intakeID,
+				UserName:          principal.Account().CommonName,
+				RequestName:       intakeRequestName,
+				Role:              postAuthorRole,
+				DiscussionID:      discussionID,
+				DiscussionContent: content,
+				DiscussionBoard:   models.SystemIntakeGRBDiscussionBoardTypePrimary, // requester can only be tagged on the Primary board
+				Recipient:         models.EmailAddress(requesterAcct.Email),
+			}); err != nil {
+				return err
+			}
+		}
+
 		if tag.TagType == models.TagTypeUserAccount {
 			if _, ok := grbReviewerCache[tag.TaggedContentID]; !ok {
 				// this means someone was tagged who should not have been
@@ -373,4 +459,74 @@ func getAuthorRoleFromPost(post *models.SystemIntakeGRBReviewDiscussionPost) (st
 	}
 
 	return fmt.Sprintf("%[1]s member, %[2]s", votingRoleStr, grbRoleStr), nil
+}
+
+func isAuthorizedForInternalBoard(ctx context.Context, systemIntakeID uuid.UUID) bool {
+	// acting user is an admin
+	if services.AuthorizeRequireGRTJobCode(ctx) {
+		return true
+	}
+
+	// get grb reviewers
+	grbReviewers, err := dataloaders.GetSystemIntakeGRBReviewersBySystemIntakeID(ctx, systemIntakeID)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error("problem getting grb reviewers when checking to see if user is authorized for Internal board", zap.Error(err))
+		return false
+	}
+
+	actingUserID := appcontext.Principal(ctx).Account().ID
+
+	for _, grbReviewer := range grbReviewers {
+		// acting user is a reviewer
+		if grbReviewer.UserID == actingUserID {
+			return true
+		}
+	}
+
+	return false
+}
+
+func canParticipateInDiscussions(ctx context.Context, store *storage.Store, systemIntakeID uuid.UUID) bool {
+	// acting user is an admin
+	if services.AuthorizeRequireGRTJobCode(ctx) {
+		return true
+	}
+
+	// get grb reviewers
+	grbReviewers, err := dataloaders.GetSystemIntakeGRBReviewersBySystemIntakeID(ctx, systemIntakeID)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error("problem getting grb reviewers when checking to see if user can participate in discussions", zap.Error(err))
+		return false
+	}
+
+	principalAcct := appcontext.Principal(ctx).Account()
+	if principalAcct == nil {
+		return false
+	}
+
+	for _, grbReviewer := range grbReviewers {
+		// acting user is a reviewer
+		if grbReviewer.UserID == principalAcct.ID {
+			return true
+		}
+	}
+
+	// no username available
+	if len(principalAcct.Username) < 1 {
+		return false
+	}
+
+	// check if the user is the requester
+	intake, err := store.FetchSystemIntakeByID(ctx, systemIntakeID)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error("problem getting intake when checking to see if user can participate in discussions", zap.Error(err))
+		return false
+	}
+
+	// missing EUA
+	if intake.EUAUserID.IsZero() {
+		return false
+	}
+
+	return principalAcct.Username == intake.EUAUserID.String
 }

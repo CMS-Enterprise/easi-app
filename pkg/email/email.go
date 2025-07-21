@@ -58,6 +58,10 @@ type templates struct {
 	cedarYouHaveBeenAdded                           templateCaller
 	cedarNewTeamMember                              templateCaller
 	systemIntakeAdminUploadDocTemplate              templateCaller
+	systemIntakeGRBReviewDeadlineExtendedTemplate   templateCaller
+	systemIntakeGRBReviewRestartedTemplate          templateCaller
+	systemIntakeGRBReviewRestartedAdminTemplate     templateCaller
+	systemIntakeGRBReviewTimeAddedTemplate          templateCaller
 	systemIntakeSubmitInitialFormRequesterTemplate  templateCaller
 	systemIntakeSubmitInitialFormReviewerTemplate   templateCaller
 	systemIntakeSubmitBusinessCaseRequesterTemplate templateCaller
@@ -65,6 +69,7 @@ type templates struct {
 	systemIntakeRequestEdits                        templateCaller
 	systemIntakeCloseRequest                        templateCaller
 	systemIntakeReopenRequest                       templateCaller
+	systemIntakePresentationDeckUploadReminder      templateCaller
 	systemIntakeProgressToNewStep                   templateCaller
 	systemIntakeNotITGovRequest                     templateCaller
 	systemIntakeNotApproved                         templateCaller
@@ -77,9 +82,22 @@ type templates struct {
 	systemIntakeChangeLCIDRetirementDate            templateCaller
 	systemIntakeCreateGRBReviewer                   templateCaller
 	grbReviewDiscussionReply                        templateCaller
+	grbReviewDiscussionReplyRequester               templateCaller
 	grbReviewDiscussionIndividualTagged             templateCaller
 	grbReviewDiscussionGroupTagged                  templateCaller
+	grbReviewDiscussionProjectTeamIndividualTagged  templateCaller
+	grbReviewEnded                                  templateCaller
+	grbReviewEndedEarly                             templateCaller
+	grbReviewLastDay                                templateCaller
 	grbReviewPresentationLinksUpdated               templateCaller
+	grbReviewReminder                               templateCaller
+	grbReviewerInvitedToVote                        templateCaller
+	grbReviewHalfwayThrough                         templateCaller
+	grbReviewPastDueNoQuorum                        templateCaller
+	grbReviewCompleteQuorumMet                      templateCaller
+	grbReviewVoteSubmitted                          templateCaller
+	grbReviewVoteSubmittedAdmin                     templateCaller
+	grbReviewVoteChangedAdmin                       templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -283,6 +301,34 @@ func NewClient(config Config, sender sender) (Client, error) {
 	}
 	appTemplates.systemIntakeAdminUploadDocTemplate = sisAdminUploadDocTemplate
 
+	sisGRBReviewDeadlineExtendedTemplateName := "system_intake_grb_review_deadline_extended.gohtml"
+	sisGRBReviewDeadlineExtendedTemplate := rawTemplates.Lookup(sisGRBReviewDeadlineExtendedTemplateName)
+	if sisGRBReviewDeadlineExtendedTemplate == nil {
+		return Client{}, templateError(sisGRBReviewDeadlineExtendedTemplateName)
+	}
+	appTemplates.systemIntakeGRBReviewDeadlineExtendedTemplate = sisGRBReviewDeadlineExtendedTemplate
+
+	sisGRBReviewRestartedTemplateName := "system_intake_grb_review_restarted.gohtml"
+	sisGRBReviewRestartedTemplate := rawTemplates.Lookup(sisGRBReviewRestartedTemplateName)
+	if sisGRBReviewRestartedTemplate == nil {
+		return Client{}, templateError(sisGRBReviewRestartedTemplateName)
+	}
+	appTemplates.systemIntakeGRBReviewRestartedTemplate = sisGRBReviewRestartedTemplate
+
+	sisGRBReviewRestartedAdminTemplateName := "system_intake_grb_review_restarted_admin.gohtml"
+	sisGRBReviewRestartedAdminTemplate := rawTemplates.Lookup(sisGRBReviewRestartedAdminTemplateName)
+	if sisGRBReviewRestartedAdminTemplate == nil {
+		return Client{}, templateError(sisGRBReviewRestartedAdminTemplateName)
+	}
+	appTemplates.systemIntakeGRBReviewRestartedAdminTemplate = sisGRBReviewRestartedAdminTemplate
+
+	sisGRBReviewTimeAddedTemplateName := "system_intake_grb_review_time_added.gohtml"
+	sisGRBReviewTimeAddedTemplate := rawTemplates.Lookup(sisGRBReviewTimeAddedTemplateName)
+	if sisGRBReviewTimeAddedTemplate == nil {
+		return Client{}, templateError(sisGRBReviewTimeAddedTemplateName)
+	}
+	appTemplates.systemIntakeGRBReviewTimeAddedTemplate = sisGRBReviewTimeAddedTemplate
+
 	sisInitialFormRequesterTemplateName := "system_intake_submit_initial_form_requester.gohtml"
 	sisInitialFormRequesterTemplate := rawTemplates.Lookup(sisInitialFormRequesterTemplateName)
 	if sisInitialFormRequesterTemplate == nil {
@@ -331,6 +377,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(systemIntakeReopenRequestTemplateName)
 	}
 	appTemplates.systemIntakeReopenRequest = systemIntakeReopenRequest
+
+	systemIntakePresentationDeckUploadReminderTemplateName := "system_intake_presentation_deck_upload_reminder.gohtml"
+	systemIntakePresentationDeckUploadReminder := rawTemplates.Lookup(systemIntakePresentationDeckUploadReminderTemplateName)
+	if systemIntakePresentationDeckUploadReminder == nil {
+		return Client{}, templateError(systemIntakePresentationDeckUploadReminderTemplateName)
+	}
+	appTemplates.systemIntakePresentationDeckUploadReminder = systemIntakePresentationDeckUploadReminder
 
 	systemIntakeProgressToNewStepTemplateName := "system_intake_progress_to_new_step.gohtml"
 	systemIntakeProgressToNewStep := rawTemplates.Lookup(systemIntakeProgressToNewStepTemplateName)
@@ -416,6 +469,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 	}
 	appTemplates.grbReviewDiscussionReply = grbReviewDiscussionReply
 
+	grbReviewDiscussionReplyRequesterName := "grb_review_discussion_reply_requester.gohtml"
+	tpl := rawTemplates.Lookup(grbReviewDiscussionReplyRequesterName)
+	if tpl == nil {
+		return Client{}, templateError(grbReviewDiscussionReplyRequesterName)
+	}
+	appTemplates.grbReviewDiscussionReplyRequester = tpl
+
 	grbReviewDiscussionIndividualTaggedTemplateName := "grb_review_discussion_individual_tagged.gohtml"
 	grbReviewDiscussionIndividualTagged := rawTemplates.Lookup(grbReviewDiscussionIndividualTaggedTemplateName)
 	if grbReviewDiscussionIndividualTagged == nil {
@@ -430,12 +490,96 @@ func NewClient(config Config, sender sender) (Client, error) {
 	}
 	appTemplates.grbReviewDiscussionGroupTagged = grbReviewDiscussionGroupTagged
 
+	grbReviewDiscussionProjectTeamIndividualTaggedTemplateName := "grb_review_discussion_project_team_individual_tagged.gohtml"
+	grbReviewDiscussionProjectTeamIndividualTagged := rawTemplates.Lookup(grbReviewDiscussionProjectTeamIndividualTaggedTemplateName)
+	if grbReviewDiscussionProjectTeamIndividualTagged == nil {
+		return Client{}, templateError(grbReviewDiscussionProjectTeamIndividualTaggedTemplateName)
+	}
+	appTemplates.grbReviewDiscussionProjectTeamIndividualTagged = grbReviewDiscussionProjectTeamIndividualTagged
+
+	grbReviewEndedTemplateName := "system_intake_grb_review_voting_ended.gohtml"
+	grbReviewEndedTemplate := rawTemplates.Lookup(grbReviewEndedTemplateName)
+	if grbReviewEndedTemplate == nil {
+		return Client{}, templateError(grbReviewEndedTemplateName)
+	}
+	appTemplates.grbReviewEnded = grbReviewEndedTemplate
+
+	grbReviewEndedEarlyTemplateName := "system_intake_grb_review_voting_ended_early.gohtml"
+	grbReviewEndedEarly := rawTemplates.Lookup(grbReviewEndedEarlyTemplateName)
+	if grbReviewEndedEarly == nil {
+		return Client{}, templateError(grbReviewEndedEarlyTemplateName)
+	}
+	appTemplates.grbReviewEndedEarly = grbReviewEndedEarly
+
+	grbReviewLastDayTemplateName := "system_intake_grb_review_last_day_reminder.gohtml"
+	grbReviewLastDayTemplate := rawTemplates.Lookup(grbReviewLastDayTemplateName)
+	if grbReviewLastDayTemplate == nil {
+		return Client{}, templateError(grbReviewLastDayTemplateName)
+	}
+	appTemplates.grbReviewLastDay = grbReviewLastDayTemplate
+
 	grbReviewPresentationLinksUpdatedTemplateName := "grb_review_presentation_links_updated.gohtml"
 	grbReviewPresentationLinksUpdated := rawTemplates.Lookup(grbReviewPresentationLinksUpdatedTemplateName)
 	if grbReviewPresentationLinksUpdated == nil {
 		return Client{}, templateError(grbReviewPresentationLinksUpdatedTemplateName)
 	}
 	appTemplates.grbReviewPresentationLinksUpdated = grbReviewPresentationLinksUpdated
+
+	grbReviewReminderTemplateName := "system_intake_grb_reviewer_reminder.gohtml"
+	grbReviewReminder := rawTemplates.Lookup(grbReviewReminderTemplateName)
+	if grbReviewReminder == nil {
+		return Client{}, templateError(grbReviewReminderTemplateName)
+	}
+	appTemplates.grbReviewReminder = grbReviewReminder
+
+	grbReviewerInvitedToVoteTemplateName := "grb_reviewer_invited_to_vote.gohtml"
+	grbReviewerInvitedToVote := rawTemplates.Lookup(grbReviewerInvitedToVoteTemplateName)
+	if grbReviewerInvitedToVote == nil {
+		return Client{}, templateError(grbReviewerInvitedToVoteTemplateName)
+	}
+	appTemplates.grbReviewerInvitedToVote = grbReviewerInvitedToVote
+
+	grbReviewHalfwayThroughTemplateName := "grb_review_halfway_done.gohtml"
+	grbReviewHalfwayThrough := rawTemplates.Lookup(grbReviewHalfwayThroughTemplateName)
+	if grbReviewHalfwayThrough == nil {
+		return Client{}, templateError(grbReviewHalfwayThroughTemplateName)
+	}
+	appTemplates.grbReviewHalfwayThrough = grbReviewHalfwayThrough
+
+	grbReviewPastDueNoQuorumTemplateName := "grb_review_past_due_no_quorum.gohtml"
+	grbReviewPastDueNoQuorum := rawTemplates.Lookup(grbReviewPastDueNoQuorumTemplateName)
+	if grbReviewPastDueNoQuorum == nil {
+		return Client{}, templateError(grbReviewPastDueNoQuorumTemplateName)
+	}
+	appTemplates.grbReviewPastDueNoQuorum = grbReviewPastDueNoQuorum
+
+	grbReviewCompleteQuorumMetTemplateName := "grb_review_complete_quorum_met.gohtml"
+	grbReviewCompleteQuorumMet := rawTemplates.Lookup(grbReviewCompleteQuorumMetTemplateName)
+	if grbReviewCompleteQuorumMet == nil {
+		return Client{}, templateError(grbReviewCompleteQuorumMetTemplateName)
+	}
+	appTemplates.grbReviewCompleteQuorumMet = grbReviewCompleteQuorumMet
+
+	grbReviewVoteSubmittedTemplateName := "grb_review_vote_submitted.gohtml"
+	grbReviewVoteSubmitted := rawTemplates.Lookup(grbReviewVoteSubmittedTemplateName)
+	if grbReviewVoteSubmitted == nil {
+		return Client{}, templateError(grbReviewVoteSubmittedTemplateName)
+	}
+	appTemplates.grbReviewVoteSubmitted = grbReviewVoteSubmitted
+
+	grbReviewVoteSubmittedAdminTemplateName := "grb_review_vote_submitted_admin.gohtml"
+	grbReviewVoteSubmittedAdmin := rawTemplates.Lookup(grbReviewVoteSubmittedAdminTemplateName)
+	if grbReviewVoteSubmittedAdmin == nil {
+		return Client{}, templateError(grbReviewVoteSubmittedAdminTemplateName)
+	}
+	appTemplates.grbReviewVoteSubmittedAdmin = grbReviewVoteSubmittedAdmin
+
+	grbReviewVoteChangedAdminTemplateName := "grb_review_vote_changed_admin.gohtml"
+	grbReviewVoteChangedAdmin := rawTemplates.Lookup(grbReviewVoteChangedAdminTemplateName)
+	if grbReviewVoteChangedAdmin == nil {
+		return Client{}, templateError(grbReviewVoteChangedAdminTemplateName)
+	}
+	appTemplates.grbReviewVoteChangedAdmin = grbReviewVoteChangedAdmin
 
 	client := Client{
 		config:    config,
