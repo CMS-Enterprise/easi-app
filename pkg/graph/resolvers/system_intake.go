@@ -199,7 +199,6 @@ func SystemIntakeUpdateContactDetails(ctx context.Context, store *storage.Store,
 	} else {
 		intake.TRBCollaboratorName = null.StringFromPtr(nil)
 		intake.OITSecurityCollaboratorName = null.StringFromPtr(nil)
-		intake.EACollaboratorName = null.StringFromPtr(nil)
 	}
 
 	savedIntake, err := store.UpdateSystemIntake(ctx, intake)
