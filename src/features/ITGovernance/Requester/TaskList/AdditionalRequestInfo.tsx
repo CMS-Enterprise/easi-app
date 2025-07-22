@@ -91,8 +91,6 @@ function AdditionalRequestInfo({
 }) {
   const { t } = useTranslation('itGov');
 
-  console.log(system);
-
   const editLink =
     system.requestType === 'trb'
       ? `/trb/link/${system.id}`

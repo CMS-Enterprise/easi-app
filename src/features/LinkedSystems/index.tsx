@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import {
@@ -52,9 +52,12 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
     successfullyUpdated?: boolean;
     systemUpdated?: string;
     successfullyAdded?: boolean;
+    requestType?: string;
+    isNew?: string;
   };
 
   const location = useLocation<LinkedSystemsLocationState>();
+  console.log('location', location);
 
   const showSuccessfullyUpdated = location.state?.successfullyUpdated;
   const showSuccessfullyAdded = location.state?.successfullyAdded;
@@ -64,15 +67,24 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
   // Url of next view after successful form submit
   // Also for a breadcrumb navigation link
   const redirectUrl = (() => {
-    if (fromAdmin) {
-      return `/it-governance/${id}/additional-information`;
-    }
+    // if (fromAdmin) {
+    //   return `/it-governance/${id}/additional-information`;
+    // }
     return `/governance-task-list/${id}`;
   })();
 
   const addASystemUrl = `/linked-systems-form/${id}`;
 
+  const {
+    data,
+    loading: relationLoading,
+    refetch: refetchSystemIntakes
+  } = useGetSystemIntakeSystemsQuery({
+    variables: { systemIntakeId: id }
+  });
+
   const [noSystemsUsed, setNoSystemsUsed] = useState<boolean>(false);
+
   const [systemToBeRemoved, setSystemToBeRemoved] = useState<string>();
 
   const [showSuccessfullyDeleted, setShowSuccessfullyDeleted] =
@@ -83,14 +95,6 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
 
   const [showRemoveAllLinkedSystemError, setShowRemoveAllLinkedSystemError] =
     useState<boolean>(false);
-
-  const {
-    data,
-    loading: relationLoading,
-    refetch: refetchSystemIntakes
-  } = useGetSystemIntakeSystemsQuery({
-    variables: { systemIntakeId: id }
-  });
 
   const [deleteSystemLink] = useDeleteSystemLinkMutation();
 
@@ -105,6 +109,16 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
 
   const [removeAllLinkedSystemsModalOpen, setRemoveAllLinkedSystemModalOpen] =
     useState(false);
+
+  useEffect(() => {
+    if (location && location.state && location.state.isNew) {
+      setNoSystemsUsed(false);
+      return;
+    }
+    if (data && !relationLoading) {
+      setNoSystemsUsed(data.systemIntakeSystems.length === 0);
+    }
+  }, [data, location, relationLoading]);
 
   const handleRemoveModal = (systemLinkedSystemId: string) => {
     setSystemToBeRemoved(systemLinkedSystemId);
@@ -326,7 +340,11 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
           <Button
             type="submit"
             disabled={!submitEnabled}
-            onClick={() => history.push(redirectUrl)}
+            onClick={() =>
+              history.push(redirectUrl, {
+                requestType: location.state?.requestType
+              })
+            }
           >
             {t(`itGov:link.form.continueTaskList`)}
           </Button>

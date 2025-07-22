@@ -688,6 +688,7 @@ export const taskListSystemIntake: NonNullable<
   relationType: null,
   contractName: null,
   contractNumbers: [],
+  requestType: SystemIntakeRequestType.NEW,
   systems: [],
   statusAdmin: SystemIntakeStatusAdmin.GRB_MEETING_READY,
   lcid: '123',

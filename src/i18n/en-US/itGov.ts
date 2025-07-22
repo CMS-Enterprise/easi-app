@@ -154,6 +154,13 @@ export default {
         button: 'Read the decision',
         viewPreviousDecision: 'View previous decision'
       }
+    },
+    changeRequestType: 'Change request type',
+    requestType: {
+      NEW: 'Add a new system or service',
+      RECOMPETE: 'Re-compete',
+      MAJOR_CHANGES: 'Major change or upgrade',
+      SHUTDOWN: 'Decommission a system'
     }
   },
   additionalRequestInfo: {

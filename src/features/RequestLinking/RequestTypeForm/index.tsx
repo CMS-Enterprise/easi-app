@@ -77,8 +77,17 @@ const RequestTypeForm = () => {
       };
 
       const nextPage = (id: string) => {
-        const linkqs = linkCedarSystemIdQueryString(linkCedarSystemId);
-        history.push(`/linked-systems/${id}?${linkqs}`, { isNew });
+        const linkqs = linkCedarSystemIdQueryString(linkCedarSystemId); // TODO this may break something else
+        console.log(linkqs);
+        console.log(systemId, isNew, requestType);
+        if (systemId) {
+          history.push(`/governance-task-list/${id}`);
+          return;
+        }
+        history.push(`/linked-systems/${id}`, {
+          isNew,
+          requestType
+        });
       };
 
       if (!systemId) {
