@@ -345,7 +345,7 @@ describe('GRB review', () => {
 
     // Verify presentation deck is uploaded as well as other details
 
-    cy.getByTestId('presentation-deck-container').within(() => {
+    cy.getByTestId('presentation-links-card').within(() => {
       cy.contains('button', 'View recording').should('be.visible');
       cy.contains('span', '(Passcode: 3465376)').should('be.visible');
       cy.contains('button', 'View transcript').should('be.visible');
@@ -381,7 +381,7 @@ describe('GRB review', () => {
     cy.reload();
 
     // Check that the presentation deck file was deleted
-    cy.getByTestId('presentation-deck-view-link').should('not.exist');
+    cy.contains('button', 'View slide deck').should('not.exist');
 
     // Remove all presentation links
     cy.contains('button', 'Remove all presentation links').click();

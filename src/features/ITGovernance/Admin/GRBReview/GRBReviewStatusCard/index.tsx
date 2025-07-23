@@ -43,10 +43,7 @@ const GRBReviewStatusTag = ({
   const showSetupButton = isITGovAdmin && grbReviewStatus === 'NOT_STARTED';
 
   return (
-    <div
-      className={classNames('display-flex flex-align-center')}
-      data-testid="grb-review-status-card"
-    >
+    <div className={classNames('display-flex flex-align-center')}>
       <h4 className="margin-0 margin-right-1 flex-align-self-center">
         {t('statusCard.reviewStatus')}
       </h4>
@@ -163,6 +160,7 @@ const GRBReviewStatusCard = ({
 
   return (
     <div
+      data-testid="grb-review-status-card"
       className={classNames(
         className,
         'padding-3 radius-md',
