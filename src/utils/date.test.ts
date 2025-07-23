@@ -5,6 +5,7 @@ import {
   formatDateLocal,
   formatDateUtc,
   formatDaysHoursMinutes,
+  formatEndOfDayDeadline,
   getFiscalYear,
   getRelativeDate,
   parseAsUTC
@@ -185,5 +186,23 @@ describe('formatDaysHoursMinutes', () => {
       hours: NaN,
       minutes: NaN
     });
+  });
+});
+
+describe('formatEndOfDayDeadline', () => {
+  it('returns a valid ISO string', () => {
+    const date = DateTime.fromObject({ year: 2021, month: 1, day: 1 });
+
+    const result = formatEndOfDayDeadline(date);
+
+    expect(result).toEqual('2021-01-01T22:00:00Z');
+  });
+
+  it('returns an empty string if input is invalid', () => {
+    const date = 'invalid-date';
+
+    const result = formatEndOfDayDeadline(date);
+
+    expect(result).toEqual('');
   });
 });
