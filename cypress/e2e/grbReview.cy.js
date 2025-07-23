@@ -406,9 +406,21 @@ describe('GRB review', () => {
     cy.getByTestId('addTimeModalButton').should('be.disabled');
 
     cy.getDateString({ years: 2 }).then(futureDate => {
-      cy.getByTestId('date-picker-external-input').type(futureDate);
+      // Use invoke instead of type to fix bug with DatePickerFormatted
+      // Type passes locally but not in CI
+      cy.getByTestId('date-picker-external-input')
+        .invoke('val', futureDate)
+        .trigger('input');
 
-      cy.contains('p', `This review will now end on ${futureDate}.`);
+      cy.getByTestId('date-picker-external-input').should(
+        'have.value',
+        futureDate
+      );
+
+      cy.getByTestId('grb-review-async-end-date').should(
+        'contain.text',
+        `This review will now end on ${futureDate}.`
+      );
 
       // Click button to add time and close modal
       cy.getByTestId('addTimeModalButton').should('not.be.disabled').click();
@@ -442,21 +454,30 @@ describe('GRB review', () => {
 
     cy.contains('button', 'Restart review').click();
 
-    cy.get('[role="dialog"]')
-      .should('be.visible')
-      .within(() => {
-        cy.contains('button', 'Restart').should('be.disabled');
+    cy.get('@futureDate').then(futureDate => {
+      cy.get('[role="dialog"]')
+        .should('be.visible')
+        .within(() => {
+          cy.contains('button', 'Restart').should('be.disabled');
 
-        cy.getByTestId('date-picker-external-input').clear();
+          cy.getByTestId('date-picker-external-input').clear();
 
-        cy.get('@futureDate').then(futureDate => {
-          cy.getByTestId('date-picker-external-input').type(futureDate);
+          cy.getByTestId('date-picker-external-input')
+            // Use invoke instead of type to fix bug with DatePickerFormatted
+            // Type passes locally but not in CI
+            .invoke('val', futureDate)
+            .trigger('input');
+
+          cy.getByTestId('date-picker-external-input').should(
+            'have.value',
+            futureDate
+          );
+
+          cy.contains('button', 'Restart').should('be.not.disabled').click();
         });
 
-        cy.contains('button', 'Restart').should('be.not.disabled').click();
-      });
+      cy.get('[role="dialog"]').should('not.exist');
 
-    cy.get('@futureDate').then(futureDate => {
       cy.getByTestId('alert').should(
         'contain.text',
         `You restarted this GRB review. The new end date is ${futureDate} at 5:00pm EST.`

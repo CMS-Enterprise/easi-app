@@ -154,7 +154,10 @@ const ExtendGRBAsyncReview = () => {
                 />
 
                 {!!watch('grbReviewAsyncEndDate') && (
-                  <p className="text-base">
+                  <p
+                    className="text-base"
+                    data-testid="grb-review-async-end-date"
+                  >
                     {t('statusCard.addTimeModal.newEnd', {
                       date: formatDateUtc(
                         watch('grbReviewAsyncEndDate'),
