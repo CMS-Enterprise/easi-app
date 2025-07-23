@@ -12,6 +12,7 @@ exports[`GRBReviewStatusCard > Standard meeting card > renders the card 1`] = `
     </h3>
     <div
       class="display-flex flex-align-center"
+      data-testid="grb-review-status-card"
     >
       <h4
         class="margin-0 margin-right-1 flex-align-self-center"
