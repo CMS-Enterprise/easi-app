@@ -24,7 +24,7 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
-import { DateTime } from 'luxon';
+// import { DateTime } from 'luxon';
 
 import 'cypress-file-upload';
 
@@ -40,11 +40,11 @@ Cypress.Commands.add('getByTestId', (testId, options = {}) =>
  *
  * Ex: cy.getDateString({ years: 1, months: 0, days: 0 }) returns date one year in future
  */
-Cypress.Commands.add(
-  'getDateString',
-  ({ years, months = 0, days = 0 } = {}) => {
-    const date = DateTime.now().plus({ years, months, days });
-    const formatted = date.toFormat('MM/dd/yyyy');
-    return cy.wrap(formatted);
-  }
-);
+// Cypress.Commands.add(
+//   'getDateString',
+//   ({ years, months = 0, days = 0 } = {}) => {
+//     const date = DateTime.now().plus({ years, months, days });
+//     const formatted = date.toFormat('MM/dd/yyyy');
+//     return cy.wrap(formatted);
+//   }
+// );
