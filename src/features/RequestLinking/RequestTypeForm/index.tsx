@@ -77,17 +77,25 @@ const RequestTypeForm = () => {
       };
 
       const nextPage = (id: string) => {
-        const linkqs = linkCedarSystemIdQueryString(linkCedarSystemId); // TODO this may break something else
+        const linkqs = linkCedarSystemIdQueryString(linkCedarSystemId);
         console.log(linkqs);
         console.log(systemId, isNew, requestType);
-        if (systemId) {
-          history.push(`/governance-task-list/${id}`);
-          return;
+        const navigationLink = `/linked-systems/${id}?${linkqs || ''}`;
+
+        switch (requestType) {
+          case 'NEW':
+            history.push(`/governance-overview/${id}?${linkqs}`, { isNew });
+            break;
+          case 'MAJOR_CHANGES':
+            history.push(navigationLink, { isNew });
+            break;
+          case 'RECOMPETE':
+            history.push(navigationLink, { isNew });
+            break;
+          default:
+            // console.warn(`Unknown request type: ${requestType}`);
+            break;
         }
-        history.push(`/linked-systems/${id}`, {
-          isNew,
-          requestType
-        });
       };
 
       if (!systemId) {
