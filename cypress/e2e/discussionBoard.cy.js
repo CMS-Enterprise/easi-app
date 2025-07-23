@@ -1,7 +1,7 @@
 describe('Discussion Board', () => {
   // Request name: Async GRB review (with discussions)
   // System intake ID: 61efa6eb-1976-4431-a158-d89cc00ce31d
-  it('users with access can interact with discussions', () => {
+  it('can interact with discussions as an admin', () => {
     // Start a discussion thread as an admin (not participant)
     cy.localLogin({ name: 'ABCD', role: 'EASI_D_GOVTEAM' });
 
@@ -89,11 +89,10 @@ describe('Discussion Board', () => {
     const replyText = 'e2e post 2';
 
     cy.get('#mention-reply').type(replyText);
-    cy.contains('button', 'Save reply').click();
+    cy.getByTestId('open-discussion-form-modal-button').click();
 
     // Confirmation modal
-    cy.contains('h2', 'Are you sure you want to reply to this discussion?');
-    cy.contains('button[type="submit"]', 'Save reply').click();
+    cy.getByTestId('discussion-form-submit-button').click();
 
     // Reply success
     cy.contains('.usa-alert--success', 'Success! Your reply has been added.');
@@ -123,5 +122,95 @@ describe('Discussion Board', () => {
         cy.contains('h5', 'Voting, CMCS Rep');
         cy.contains('p', replyText);
       });
+  });
+
+  // Request name: Async GRB review (with discussions)
+  // System intake ID: 61efa6eb-1976-4431-a158-d89cc00ce31d
+  it('can interact with primary discussion board as the requester', () => {
+    cy.localLogin({ name: 'USR1' });
+
+    cy.visit('/governance-task-list/61efa6eb-1976-4431-a158-d89cc00ce31d');
+
+    // Get discussion counts and save for later use
+    cy.getByTestId('discussions-without-replies')
+      .then(el => Number(el.text()))
+      .as('discussionsWithoutReplies');
+
+    cy.getByTestId('discussions-total')
+      .then(el => Number(el.text()))
+      .as('discussionsTotal');
+
+    cy.contains('button', 'View discussion board').click();
+
+    cy.contains('h1', 'Primary discussion board');
+
+    cy.getByTestId('close-discussions').click();
+
+    cy.expect(cy.getByTestId('discussion-modal').should('not.exist'));
+
+    cy.contains('button', 'Start a discussion').click();
+
+    const discussionText = 'This is a post from the requester.';
+    cy.get('#mention-discussion').type(discussionText);
+
+    cy.getByTestId('open-discussion-form-modal-button').click();
+
+    // Confirmation modal
+    cy.getByTestId('discussion-form-submit-button').click();
+
+    // See posted successfully
+    cy.contains(
+      '.usa-alert--success',
+      'You have successfully added to the discussion board.'
+    );
+
+    cy.getByTestId('close-discussions').click();
+
+    // Check that discussion counts increase by 1
+
+    cy.get('@discussionsWithoutReplies').then(initialCount => {
+      cy.getByTestId('discussions-without-replies').should(
+        'have.text',
+        initialCount + 1
+      );
+    });
+
+    cy.get('@discussionsTotal').then(initialCount => {
+      cy.getByTestId('discussions-total').should('have.text', initialCount + 1);
+    });
+
+    cy.contains('button', 'View discussion board').click();
+
+    // Reply to the discussion
+
+    cy.get('#grbDiscussionsNew li:first-child').within(() => {
+      // Check contents
+      cy.contains('p', discussionText);
+
+      // Go to its reply thread
+      cy.contains('button', 'Reply').click();
+    });
+
+    const replyText = 'This is a reply from the requester.';
+    cy.get('#mention-reply').type(replyText);
+
+    cy.getByTestId('open-discussion-form-modal-button').click();
+
+    // Confirmation modal
+    cy.getByTestId('discussion-form-submit-button').click();
+
+    // Reply success
+    cy.contains('.usa-alert--success', 'Success! Your reply has been added.');
+    cy.contains('p', replyText);
+
+    cy.getByTestId('close-discussions').click();
+
+    // Check that discussions without replies count returns to original value
+    cy.get('@discussionsWithoutReplies').then(initialCount => {
+      cy.getByTestId('discussions-without-replies').should(
+        'have.text',
+        initialCount
+      );
+    });
   });
 });
