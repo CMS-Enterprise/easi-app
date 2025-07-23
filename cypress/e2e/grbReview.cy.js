@@ -449,7 +449,7 @@ describe('GRB review', () => {
 
   // Request name: Async GRB review (voting complete)
   // System intake ID: b569ae1e-bf04-4c1b-96a5-b9604d74d979
-  it.only('Restart GRB review', () => {
+  it('Restart GRB review', () => {
     cy.visit('/it-governance/b569ae1e-bf04-4c1b-96a5-b9604d74d979/grb-review');
 
     cy.contains('button', 'Restart review').click();

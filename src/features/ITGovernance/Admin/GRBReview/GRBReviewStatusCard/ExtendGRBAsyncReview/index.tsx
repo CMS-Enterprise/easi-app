@@ -3,7 +3,14 @@ import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { ErrorMessage } from '@hookform/error-message';
-import { Button, ButtonGroup, FormGroup, Label } from '@trussworks/react-uswds';
+import {
+  Button,
+  ButtonGroup,
+  DatePicker,
+  FormGroup,
+  Label
+} from '@trussworks/react-uswds';
+import { actionDateInPast } from 'features/ITGovernance/Admin/Actions/ManageLcid/RetireLcid';
 import {
   GetSystemIntakeDocument,
   GetSystemIntakeGRBReviewDocument,
@@ -11,13 +18,12 @@ import {
 } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
-import DatePickerFormatted from 'components/DatePickerFormatted';
 import { useEasiForm } from 'components/EasiForm';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import Modal from 'components/Modal';
 import RequiredFieldsText from 'components/RequiredFieldsText';
 import useMessage from 'hooks/useMessage';
-import { formatDateUtc } from 'utils/date';
+import { formatDateUtc, formatEndOfDayDeadline } from 'utils/date';
 
 /**
  * Displays Add Time button that triggers modal to extend the GRB review deadline
@@ -134,24 +140,23 @@ const ExtendGRBAsyncReview = () => {
                   as={<FieldErrorMsg />}
                 />
 
-                <DatePickerFormatted
-                  id="grbReviewAsyncEndDate"
+                {/* Uses basic DatePicker instead of DatePickerFormatted to avoid issue with e2e tests */}
+                {/* DatePickerFormatted input was cycling through random dates after using cy.type() */}
+                <DatePicker
                   {...field}
-                  dateInPastWarning
-                  value={field.value ?? ''}
-                  onChange={date => {
-                    if (date !== field.value) {
-                      field.onChange(date || ''); // Only update when there's a change
-                    }
+                  id="grbReviewAsyncEndDate"
+                  className="date-picker-override"
+                  onChange={val => {
+                    const formattedDate = formatEndOfDayDeadline(val || '');
+                    field.onChange(formattedDate);
                   }}
-                  format={dt =>
-                    dt
-                      .setZone('America/New_York')
-                      .set({ hour: 17, minute: 0, second: 0 })
-                      .toUTC()
-                      .toISO({ suppressMilliseconds: true })
-                  }
                 />
+
+                {actionDateInPast(watch('grbReviewAsyncEndDate')) && (
+                  <Alert type="warning" slim>
+                    {t('action:pastDateAlert')}
+                  </Alert>
+                )}
 
                 {!!watch('grbReviewAsyncEndDate') && (
                   <p
