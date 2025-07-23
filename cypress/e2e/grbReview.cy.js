@@ -398,6 +398,8 @@ describe('GRB review', () => {
   // Request name: Async GRB review in progress
   // System intake ID: 5af245bc-fc54-4677-bab1-1b3e798bb43c
   it('Adds time to voting and Ends time to voting', () => {
+    const futureDate = '07/01/2027';
+
     cy.visit('/it-governance/5af245bc-fc54-4677-bab1-1b3e798bb43c/grb-review');
 
     // Open Add Time modal
@@ -405,36 +407,30 @@ describe('GRB review', () => {
 
     cy.getByTestId('addTimeModalButton').should('be.disabled');
 
-    cy.getDateString({ years: 2 }).then(futureDate => {
-      // Use invoke instead of type to fix bug with DatePickerFormatted
-      // Type passes locally but not in CI
-      cy.getByTestId('date-picker-external-input')
-        .invoke('val', futureDate)
-        .trigger('input');
+    cy.getByTestId('date-picker-external-input').type(futureDate);
 
-      cy.getByTestId('date-picker-external-input').should(
-        'have.value',
-        futureDate
-      );
+    cy.getByTestId('date-picker-external-input').should(
+      'have.value',
+      futureDate
+    );
 
-      cy.getByTestId('grb-review-async-end-date').should(
-        'contain.text',
-        `This review will now end on ${futureDate}.`
-      );
+    cy.getByTestId('grb-review-async-end-date').should(
+      'contain.text',
+      `This review will now end on ${futureDate}.`
+    );
 
-      // Click button to add time and close modal
-      cy.getByTestId('addTimeModalButton').should('not.be.disabled').click();
+    // Click button to add time and close modal
+    cy.getByTestId('addTimeModalButton').should('not.be.disabled').click();
 
-      // Success alert text
-      cy.getByTestId('alert').contains(
-        `You added time to this GRB review. The new end date is ${futureDate} at 5:00pm EST.`
-      );
+    // Success alert text
+    cy.getByTestId('alert').contains(
+      `You added time to this GRB review. The new end date is ${futureDate} at 5:00pm EST.`
+    );
 
-      cy.getByTestId('grb-review-status-card').should(
-        'contain.text',
-        `Review ends ${futureDate}, 5:00pm EST`
-      );
-    });
+    cy.getByTestId('grb-review-status-card').should(
+      'contain.text',
+      `Review ends ${futureDate}, 5:00pm EST`
+    );
 
     // Open End Voting modal
     cy.get('button').contains('End voting').click();
@@ -450,43 +446,39 @@ describe('GRB review', () => {
   // Request name: Async GRB review (voting complete)
   // System intake ID: b569ae1e-bf04-4c1b-96a5-b9604d74d979
   it('Restart GRB review', () => {
+    const futureDate = '06/01/2028';
+
     cy.visit('/it-governance/b569ae1e-bf04-4c1b-96a5-b9604d74d979/grb-review');
 
     cy.contains('button', 'Restart review').click();
 
-    cy.get('@futureDate').then(futureDate => {
-      cy.get('[role="dialog"]')
-        .should('be.visible')
-        .within(() => {
-          cy.contains('button', 'Restart').should('be.disabled');
+    cy.get('[role="dialog"]')
+      .should('be.visible')
+      .within(() => {
+        cy.contains('button', 'Restart').should('be.disabled');
 
-          cy.getByTestId('date-picker-external-input').clear();
+        cy.getByTestId('date-picker-external-input').clear();
 
-          cy.getByTestId('date-picker-external-input')
-            // Use invoke instead of type to fix bug with DatePickerFormatted
-            // Type passes locally but not in CI
-            .invoke('val', futureDate)
-            .trigger('input');
+        cy.getByTestId('date-picker-external-input').type(futureDate);
 
-          cy.getByTestId('date-picker-external-input').should(
-            'have.value',
-            futureDate
-          );
+        cy.getByTestId('date-picker-external-input').should(
+          'have.value',
+          futureDate
+        );
 
-          cy.contains('button', 'Restart').should('be.not.disabled').click();
-        });
+        cy.contains('button', 'Restart').should('be.not.disabled').click();
+      });
 
-      cy.get('[role="dialog"]').should('not.exist');
+    cy.get('[role="dialog"]').should('not.exist');
 
-      cy.getByTestId('alert').should(
-        'contain.text',
-        `You restarted this GRB review. The new end date is ${futureDate} at 5:00pm EST.`
-      );
+    cy.getByTestId('alert').should(
+      'contain.text',
+      `You restarted this GRB review. The new end date is ${futureDate} at 5:00pm EST.`
+    );
 
-      cy.getByTestId('grb-review-status-card').should(
-        'contain.text',
-        `Review ends ${futureDate}, 5:00pm EST`
-      );
-    });
+    cy.getByTestId('grb-review-status-card').should(
+      'contain.text',
+      `Review ends ${futureDate}, 5:00pm EST`
+    );
   });
 });
