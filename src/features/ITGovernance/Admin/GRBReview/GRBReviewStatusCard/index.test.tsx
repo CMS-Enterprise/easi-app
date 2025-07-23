@@ -126,6 +126,19 @@ describe('GRBReviewStatusCard', () => {
         screen.getByRole('link', { name: 'Set up GRB review' })
       ).toBeInTheDocument();
     });
+
+    it('renders status: complete if form was skipped', () => {
+      const reviewWithoutStartDate = {
+        ...mockStandardReview,
+        grbReviewStandardStatus:
+          SystemIntakeGRBReviewStandardStatusType.COMPLETED,
+        grbReviewStartedAt: null
+      };
+
+      renderComponent(reviewWithoutStartDate);
+
+      expect(screen.getByTestId('async-status')).toHaveTextContent('Complete');
+    });
   });
 
   describe('Asynchronous review card', () => {

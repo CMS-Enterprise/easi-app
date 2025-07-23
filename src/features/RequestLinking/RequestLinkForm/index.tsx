@@ -269,8 +269,6 @@ const RequestLinkForm = ({
               variables: {
                 input: {
                   systemIntakeID: id,
-                  // TODO Update in frontend ticket
-                  // cedarSystemIDs: formData.cedarSystemIDs,
                   cedarSystemRelationShips: [],
                   contractNumbers
                 }

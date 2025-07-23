@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Controller } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
@@ -25,6 +25,7 @@ import RequiredAsterisk from 'components/RequiredAsterisk';
 import { GRBReviewFormStepProps } from 'types/grbReview';
 import { SetGRBParticipantsAsyncSchema } from 'validations/grbReviewSchema';
 
+import getGRBReviewStatus from '../../GRBReviewStatusCard/_utils/getGRBReviewStatus';
 import ParticipantsTable from '../../ParticipantsSection/_components/ParticipantsTable';
 import GRBReviewFormStepWrapper, {
   GRBReviewFormStepSubmit
@@ -43,7 +44,13 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
   const { pathname } = useLocation();
   const { systemId } = useParams<{ systemId: string }>();
 
-  const reviewType: SystemIntakeGRBReviewType = grbReview.grbReviewType;
+  const {
+    grbReviewType,
+    grbReviewStartedAt,
+    statusAdmin,
+    grbReviewAsyncStatus,
+    grbReviewStandardStatus
+  } = grbReview;
 
   const [startStandardReview] = useStartGRBReviewMutation({
     refetchQueries: [GetSystemIntakeGRBReviewDocument]
@@ -56,7 +63,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
 
   const form = useEasiForm<ParticipantsFields>({
     resolver:
-      reviewType === SystemIntakeGRBReviewType.ASYNC
+      grbReviewType === SystemIntakeGRBReviewType.ASYNC
         ? yupResolver(SetGRBParticipantsAsyncSchema)
         : undefined,
     defaultValues: {
@@ -76,7 +83,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
   } = form;
 
   const onSubmit: GRBReviewFormStepSubmit<ParticipantsFields> = async input => {
-    if (reviewType === SystemIntakeGRBReviewType.STANDARD) {
+    if (grbReviewType === SystemIntakeGRBReviewType.STANDARD) {
       return startStandardReview({
         variables: {
           input: {
@@ -96,17 +103,34 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
     });
   };
 
+  const showCantStartAlert = useMemo(() => {
+    const status = getGRBReviewStatus(
+      grbReviewAsyncStatus || grbReviewStandardStatus,
+      grbReviewStartedAt
+    );
+
+    return (
+      status === 'NOT_STARTED' &&
+      statusAdmin !== SystemIntakeStatusAdmin.GRB_MEETING_READY
+    );
+  }, [
+    grbReviewAsyncStatus,
+    grbReviewStartedAt,
+    grbReviewStandardStatus,
+    statusAdmin
+  ]);
+
   return (
     <EasiFormProvider<ParticipantsFields> {...form}>
       <GRBReviewFormStepWrapper<ParticipantsFields>
         grbReview={grbReview}
         onSubmit={onSubmit}
-        requiredFields={reviewType === SystemIntakeGRBReviewType.ASYNC}
+        requiredFields={grbReviewType === SystemIntakeGRBReviewType.ASYNC}
         startGRBReview
       >
         {
           // Only show alert for standard review type
-          reviewType === SystemIntakeGRBReviewType.STANDARD && (
+          grbReviewType === SystemIntakeGRBReviewType.STANDARD && (
             <Alert type="info" slim>
               {t('setUpGrbReviewForm.participants.standardAlert')}
             </Alert>
@@ -118,7 +142,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
             <div className="margin-top-5 border-top-1px border-base-light padding-top-1">
               <h4 className="margin-y-0">
                 {t('setUpGrbReviewForm.participants.grbReviewers.heading')}
-                {reviewType === SystemIntakeGRBReviewType.ASYNC && (
+                {grbReviewType === SystemIntakeGRBReviewType.ASYNC && (
                   <RequiredAsterisk />
                 )}
               </h4>
@@ -160,7 +184,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
             />
           </Grid>
         </FormGroup>
-        {reviewType === SystemIntakeGRBReviewType.ASYNC && (
+        {grbReviewType === SystemIntakeGRBReviewType.ASYNC && (
           <Grid col={12} tablet={{ col: 6 }}>
             <div className="margin-top-5 border-top-1px border-base-light padding-top-1">
               <h4 className="margin-y-0">
@@ -234,28 +258,26 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
         )}
 
         {/* Show alert if review cannot be started yet */}
-        {!grbReview.grbReviewStartedAt &&
-          grbReview.statusAdmin !==
-            SystemIntakeStatusAdmin.GRB_MEETING_READY && (
-            <Alert
-              type="warning"
-              slim
-              className="margin-top-8 margin-bottom-neg-4"
-              data-testid="cant-start-alert"
-            >
-              <Trans
-                i18nKey="grbReview:form.cantStartAlert"
-                tOptions={{ context: reviewType }}
-                components={{
-                  link1: (
-                    <UswdsReactLink to={`/it-governance/${systemId}/actions`}>
-                      actions link
-                    </UswdsReactLink>
-                  )
-                }}
-              />
-            </Alert>
-          )}
+        {showCantStartAlert && (
+          <Alert
+            type="warning"
+            slim
+            className="margin-top-8 margin-bottom-neg-4"
+            data-testid="cant-start-alert"
+          >
+            <Trans
+              i18nKey="grbReview:form.cantStartAlert"
+              tOptions={{ context: grbReviewType }}
+              components={{
+                link1: (
+                  <UswdsReactLink to={`/it-governance/${systemId}/actions`}>
+                    actions link
+                  </UswdsReactLink>
+                )
+              }}
+            />
+          </Alert>
+        )}
       </GRBReviewFormStepWrapper>
     </EasiFormProvider>
   );

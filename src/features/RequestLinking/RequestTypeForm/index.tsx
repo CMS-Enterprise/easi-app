@@ -78,7 +78,9 @@ const RequestTypeForm = () => {
 
       const nextPage = (id: string) => {
         const linkqs = linkCedarSystemIdQueryString(linkCedarSystemId);
-        const navigationLink = `/system/link/${id}?${linkqs}`;
+        console.log(linkqs);
+        console.log(systemId, isNew, requestType);
+        const navigationLink = `/linked-systems/${id}?${linkqs || ''}`;
 
         switch (requestType) {
           case 'NEW':

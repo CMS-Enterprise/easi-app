@@ -11,6 +11,7 @@ export default gql(/* GraphQL */ `
       lcid
       lcidRetiresAt
       relationType
+      requestType
       requestName
       state
       statusAdmin

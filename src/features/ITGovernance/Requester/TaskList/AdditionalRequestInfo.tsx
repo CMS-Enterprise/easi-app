@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, Button, Icon } from '@trussworks/react-uswds';
+import { Button, Icon } from '@trussworks/react-uswds';
 import { RequestRelationType } from 'gql/generated/graphql';
 
 import Divider from 'components/Divider';
 import UswdsReactLink from 'components/LinkWrapper';
 import { RequestType } from 'types/requestType';
 import formatContractNumbers from 'utils/formatContractNumbers';
+
+import './index.scss';
 
 type SystemCardItemProps = {
   id: string;
@@ -92,7 +94,7 @@ function AdditionalRequestInfo({
   const editLink =
     system.requestType === 'trb'
       ? `/trb/link/${system.id}`
-      : `/system/link/${system.id}`;
+      : `/linked-systems/${system.id}`;
 
   return (
     <div>
@@ -100,17 +102,15 @@ function AdditionalRequestInfo({
         {t('additionalRequestInfo.header')}
       </h4>
 
-      {system.relationType === null && (
-        <Alert
-          type="warning"
-          headingLevel="h4"
-          heading={t('additionalRequestInfo.actionRequiredAlert.header')}
-        >
-          {t('additionalRequestInfo.actionRequiredAlert.text')}
+      {(!system.systems || system.systems.length === 0) && (
+        <>
+          <div className="task-list-sidebar__subtitle">
+            {t('additionalRequestInfo.doesNotSupportOrUseOtherSystems')}
+          </div>
           <UswdsReactLink to={editLink}>
-            {t('additionalRequestInfo.actionRequiredAlert.answer')}
+            {t('additionalRequestInfo.viewOrEditSystemInformation')}
           </UswdsReactLink>
-        </Alert>
+        </>
       )}
 
       {system.relationType !== null && (
@@ -128,7 +128,17 @@ function AdditionalRequestInfo({
         </p>
       )}
 
-      <SystemCardList items={system.systems} />
+      {system.systems && system.systems.length > 0 && (
+        <>
+          <div className="task-list-sidebar__subtitle">
+            {t('additionalRequestInfo.linkedSystems')}
+          </div>
+          <UswdsReactLink to={editLink}>
+            {t('additionalRequestInfo.edit')}
+          </UswdsReactLink>
+          <SystemCardList items={system.systems} />
+        </>
+      )}
 
       {system.contractName !== null && (
         <p>
