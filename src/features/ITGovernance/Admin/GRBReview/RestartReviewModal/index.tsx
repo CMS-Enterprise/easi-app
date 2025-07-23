@@ -3,6 +3,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import {
   Alert,
   Button,
+  DatePicker,
   FormGroup,
   Label,
   ModalFooter,
@@ -14,8 +15,8 @@ import {
   GetSystemIntakeGRBReviewDocument,
   useRestartGRBReviewAsyncMutation
 } from 'gql/generated/graphql';
+import { DateTime } from 'luxon';
 
-import DatePickerFormatted from 'components/DatePickerFormatted';
 import HelpText from 'components/HelpText';
 import Modal from 'components/Modal';
 import RequiredFieldsText from 'components/RequiredFieldsText';
@@ -72,6 +73,12 @@ const RestartReviewModal = ({ systemIntakeId }: { systemIntakeId: string }) => {
       });
   };
 
+  const format = (date: string) => {
+    return DateTime.fromFormat(date, 'MM/dd/yyyy')
+      .toUTC()
+      .toISO({ suppressMilliseconds: true });
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -100,7 +107,16 @@ const RestartReviewModal = ({ systemIntakeId }: { systemIntakeId: string }) => {
             <HelpText className="margin-top-1">
               {t('adminTask.restartReview.setNewEndDateHelpText')}
             </HelpText>
-            <DatePickerFormatted
+
+            <DatePicker
+              id="grbReviewAsyncEndDate"
+              name="grbReviewAsyncEndDate"
+              className="date-picker-override"
+              onChange={val => setSelectedDate(val ? format(val) || '' : '')}
+              value={selectedDate}
+            />
+
+            {/* <DatePickerFormatted
               id="grbReviewAsyncEndDate"
               name="grbReviewAsyncEndDate"
               // classname used to target specifically the date picker calendar and have it render above the input field
@@ -115,7 +131,7 @@ const RestartReviewModal = ({ systemIntakeId }: { systemIntakeId: string }) => {
                   .toUTC()
                   .toISO({ suppressMilliseconds: true })
               }
-            />
+            /> */}
           </FormGroup>
           <ModalFooter>
             <Button
