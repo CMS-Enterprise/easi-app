@@ -84,7 +84,19 @@ func (s *Store) UpdateSystemIntakeContact(ctx context.Context, systemIntakeConta
 func (s *Store) FetchSystemIntakeContactsBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeContact, error) {
 	results := []*models.SystemIntakeContact{}
 
-	err := s.db.Select(&results, `SELECT * FROM system_intake_contacts WHERE system_intake_id=$1`, systemIntakeID)
+	const selectSystemIntakeContactSQL = `
+		SELECT
+			id,
+			eua_user_id,
+			system_intake_id,
+			role,
+			component,
+			created_at,
+			updated_at
+		FROM system_intake_contacts
+		WHERE system_intake_id=$1
+	`
+	err := s.db.Select(&results, selectSystemIntakeContactSQL, systemIntakeID)
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		appcontext.ZLogger(ctx).Error("Failed to fetch system intake contacts", zap.Error(err), zap.String("id", systemIntakeID.String()))
