@@ -68,32 +68,17 @@ const Dates = ({
         }
       });
 
-      // ✅ Normalize grtDate
-      // If the user selected a date, keep the ISO string.
-      // If it's empty (""), undefined, or just whitespace, set it to null.
-      const normalizedGrtDate =
-        values.grtDate && values.grtDate.trim() !== '' ? values.grtDate : null;
-
-      // ✅ Normalize grbDate
-      let normalizedGrbDate: string | null = null;
-
-      // Only include grbDate if the review type is NOT ASYNC
-      if (values.grbReviewType !== SystemIntakeGRBReviewType.ASYNC) {
-        if (values.grbDate && values.grbDate.trim() !== '') {
-          normalizedGrbDate = values.grbDate;
-        } else {
-          normalizedGrbDate = null; // explicitly set null if empty
-        }
-      }
-
       // ✅ Only include the date fields in the mutation if they are truthy.
       // This avoids sending empty strings to the backend, which would cause parsing errors.
       await updateReviewDates({
         variables: {
           input: {
             id: systemId,
-            ...(normalizedGrtDate ? { grtDate: normalizedGrtDate } : {}),
-            ...(normalizedGrbDate ? { grbDate: normalizedGrbDate } : {})
+            ...(values.grtDate ? { grtDate: values.grtDate } : {}),
+            ...(values.grbReviewType !== SystemIntakeGRBReviewType.ASYNC &&
+            values.grbDate
+              ? { grbDate: values.grbDate }
+              : {})
           }
         }
       });
