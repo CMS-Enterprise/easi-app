@@ -20,7 +20,7 @@ import HelpText from 'components/HelpText';
 import Modal from 'components/Modal';
 import RequiredFieldsText from 'components/RequiredFieldsText';
 import { useMessage } from 'hooks/useMessage';
-import { formatDateLocal, formatEndOfDayDeadline } from 'utils/date';
+import { formatDateLocal, formatToUTCISO } from 'utils/date';
 
 import { useRestartReviewModal } from './RestartReviewModalContext';
 
@@ -113,7 +113,8 @@ const RestartReviewModal = ({ systemIntakeId }: { systemIntakeId: string }) => {
               className="date-picker-override"
               aria-describedby="grbReviewAsyncEndDateHelpText"
               onChange={val => {
-                const formattedDate = formatEndOfDayDeadline(val || '');
+                // const formattedDate = formatEndOfDayDeadline(val || '');
+                const formattedDate = formatToUTCISO(val || '', 'MM/dd/yyyy');
                 setSelectedDate(formattedDate);
               }}
             />
