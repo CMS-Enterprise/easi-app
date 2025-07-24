@@ -84,7 +84,7 @@ const DatePickerFormatted = ({
         defaultValue={internalValue}
         onChange={handleChange}
         // Only force-remount when clearing
-        key={internalValue === '' ? 'empty' : undefined}
+        key={internalValue === '' ? 'empty' : `value-${internalValue}`}
       />
 
       {dateInPastWarning &&
