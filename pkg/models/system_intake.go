@@ -101,8 +101,8 @@ type SystemIntake struct {
 	TRBCollaboratorName                               null.String                  `json:"trbCollaboratorName" db:"trb_collaborator_name"`
 	OITSecurityCollaborator                           null.String                  `json:"oitSecurityCollaborator" db:"oit_security_collaborator"`
 	OITSecurityCollaboratorName                       null.String                  `json:"oitSecurityCollaboratorName" db:"oit_security_collaborator_name"`
-	EACollaborator                                    null.String                  `json:"eaCollaborator" db:"ea_collaborator"`          // deprecated
-	EACollaboratorName                                null.String                  `json:"eaCollaboratorName" db:"ea_collaborator_name"` // deprecated
+	EACollaborator                                    null.String                  `json:"eaCollaborator" db:"ea_collaborator"`
+	EACollaboratorName                                null.String                  `json:"eaCollaboratorName" db:"ea_collaborator_name"`
 	Collaborator508                                   null.String                  `json:"collaborator508" db:"collaborator_508"`
 	CollaboratorName508                               null.String                  `json:"collaboratorName508" db:"collaborator_name_508"`
 	ProjectName                                       null.String                  `json:"projectName" db:"project_name"`

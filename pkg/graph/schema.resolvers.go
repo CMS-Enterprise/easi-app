@@ -6,7 +6,9 @@ package graph
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
+	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -1256,6 +1258,11 @@ func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models
 		return nil, err
 	}
 
+	b, _ := json.Marshal(intake)
+	fmt.Println("==== string(b) ====")
+	fmt.Println(string(b))
+	fmt.Println("==== string(b) ====")
+
 	// if this user created the intake
 	if ok := services.AuthorizeUserIsIntakeRequester(ctx, intake); ok {
 		return intake, nil
@@ -1838,6 +1845,21 @@ func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.
 			Acronym:      acronym,
 			Name:         name,
 			Collaborator: obj.CollaboratorName508.String,
+		})
+	}
+
+	if len(obj.EACollaboratorName.String) > 0 {
+		key := "enterpriseArchitecture"
+		label := "Enterprise Architecture (EA)"
+		acronym := "EA"
+		name := "Enterprise Architecture"
+
+		teams = append(teams, &models.SystemIntakeCollaborator{
+			Key:          key,
+			Label:        label,
+			Acronym:      acronym,
+			Name:         name,
+			Collaborator: obj.EACollaboratorName.String,
 		})
 	}
 

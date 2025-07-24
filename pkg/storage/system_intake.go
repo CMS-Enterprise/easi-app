@@ -353,6 +353,7 @@ func (s *Store) FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPr
 	const whereClause = `
 		WHERE system_intakes.id = :id
 	`
+
 	intakeStmt, err := np.PrepareNamed(fetchSystemIntakeSQL + whereClause)
 	if err != nil {
 		return nil, err
