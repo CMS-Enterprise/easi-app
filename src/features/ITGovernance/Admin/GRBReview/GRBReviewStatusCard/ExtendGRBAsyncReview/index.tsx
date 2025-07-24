@@ -23,7 +23,7 @@ import FieldErrorMsg from 'components/FieldErrorMsg';
 import Modal from 'components/Modal';
 import RequiredFieldsText from 'components/RequiredFieldsText';
 import useMessage from 'hooks/useMessage';
-import { formatDateUtc, formatToUTCISO } from 'utils/date';
+import { formatDateUtc, formatEndOfDayDeadline } from 'utils/date';
 
 /**
  * Displays Add Time button that triggers modal to extend the GRB review deadline
@@ -147,11 +147,7 @@ const ExtendGRBAsyncReview = () => {
                   id="grbReviewAsyncEndDate"
                   className="date-picker-override"
                   onChange={val => {
-                    // const formattedDate = formatEndOfDayDeadline(val || '');
-                    const formattedDate = formatToUTCISO(
-                      val || '',
-                      'MM/dd/yyyy'
-                    );
+                    const formattedDate = formatEndOfDayDeadline(val || '');
                     field.onChange(formattedDate);
                   }}
                 />

@@ -67,14 +67,19 @@ export const formatTimeLocal = (
 };
 
 /**
- * Sets current time to 5pm Eastern, converts to UTC, and returns ISO string
+ * Converts a date string in MM/dd/yyyy format to 5pm Eastern, then to UTC
+ *
+ * Returns ISO string
  */
 export const formatEndOfDayDeadline = (date: DateTime | string): string => {
   let dt: DateTime;
 
   // If date is a string, convert to DateTime object
   if (typeof date === 'string') {
-    dt = DateTime.fromFormat(date, 'MM/dd/yyyy');
+    dt = DateTime.fromFormat(date, 'MM/dd/yyyy', {
+      zone: 'America/New_York',
+      setZone: true
+    });
   } else {
     dt = date;
   }
