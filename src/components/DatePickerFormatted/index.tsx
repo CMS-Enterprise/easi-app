@@ -31,7 +31,7 @@ const DatePickerFormatted = ({
   onChange,
   format = defaultFormat,
   dateInPastWarning,
-  suppressMilliseconds,
+  value: controlledValue,
   ...props
 }: DatePickerFormattedProps) => {
   const { t } = useTranslation('action');
@@ -41,60 +41,59 @@ const DatePickerFormatted = ({
    * Fixes bug where <DatePicker> does not rerender to show updated value when set dynamically.
    * https://github.com/trussworks/react-uswds/issues/3000#issuecomment-2884731383
    */
-  const [value, setValue] = useState(props.value || props.defaultValue || '');
+  const [internalValue, setInternalValue] = useState(
+    controlledValue || props.defaultValue || ''
+  );
+
+  // Sync internalValue whenever controlledValue changes
+  useEffect(() => {
+    // Allow empty string to propagate so it visually clears
+    if (controlledValue !== undefined) {
+      setInternalValue(controlledValue || '');
+    }
+  }, [controlledValue]);
 
   /**
    * Format valid dates and execute onChange handler.
    * Returns undefined if no onChange handler is provided.
    */
   const handleChange = useCallback(
-    (val: string | undefined): void | undefined => {
-      if (onChange) {
-        // Check if date is complete (MM/dd/yyyy = 10 characters)
-        if (typeof val === 'string' && val.length === 10) {
-          const dt = DateTime.fromFormat(val, 'MM/dd/yyyy');
+    (val: string | undefined): void => {
+      if (!onChange) return;
 
-          // Check if date is valid before formatting
-          if (dt.isValid) {
-            return onChange(format(dt) || '');
-          }
+      // A full US date (MM/DD/YYYY) has 10 chars
+      if (typeof val === 'string' && val.length === 10) {
+        const dt = DateTime.fromFormat(val, 'MM/dd/yyyy');
+        if (dt.isValid) {
+          onChange(format(dt) || '');
+          return;
         }
-
-        // Execute onChange with empty string if the date is invalid
-        return onChange('');
       }
 
-      // Return undefined if no onChange handler is provided
-      return undefined;
+      // Incomplete or invalid date → clear
+      onChange('');
     },
     [onChange, format]
   );
-
-  useEffect(() => {
-    // Check if props.value contains a valid string before updating state
-    // This ensures that the key prop is only updated when the value changes
-    if (props.value) {
-      setValue(props.value);
-    }
-  }, [props.value]);
 
   return (
     <>
       <DatePicker
         {...props}
+        // Pass the synced internal value as defaultValue (Trussworks workaround)
+        defaultValue={internalValue}
         onChange={handleChange}
-        // Set `defaultValue` and `key` props to the value in state
-        defaultValue={value}
-        key={value}
+        // Only force-remount when clearing
+        key={internalValue === '' ? 'empty' : `value-${internalValue}`}
       />
-      {
-        // If past date is selected, show alert
-        dateInPastWarning && actionDateInPast(value || null) && (
+
+      {dateInPastWarning &&
+        internalValue &&
+        actionDateInPast(internalValue) && (
           <Alert type="warning" slim>
             {t('pastDateAlert')}
           </Alert>
-        )
-      }
+        )}
     </>
   );
 };
