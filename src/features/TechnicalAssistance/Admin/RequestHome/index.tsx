@@ -2,6 +2,7 @@ import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { CardGroup, Icon, Link } from '@trussworks/react-uswds';
 import {
+  TRBRequestState,
   TRBRequestStatus,
   useGetTRBRequestHomeQuery
 } from 'gql/generated/graphql';
@@ -103,7 +104,7 @@ const RequestHome = ({
 
           <p className="text-bold">{t('adminHome.trbLead')}</p>
 
-          {trbLeadInfo?.commonName ? (
+          {trbLeadInfo?.commonName && (
             <>
               <div className="display-flex flex-align-center">
                 <AvatarCircle
@@ -123,15 +124,26 @@ const RequestHome = ({
                 {trbLeadInfo.email}
               </Link>
             </>
-          ) : (
-            <TrbAssignLeadModalOpener
-              trbRequestId={trbRequest.id}
-              modalRef={assignLeadModalRef}
-              trbRequestIdRef={assignLeadModalTrbRequestIdRef}
-              className="usa-button--outline"
-            >
-              {t('adminHome.assignLead')}
-            </TrbAssignLeadModalOpener>
+          )}
+
+          {!trbLeadInfo?.commonName && (
+            <>
+              {trbRequest.state !== TRBRequestState.CLOSED && (
+                <TrbAssignLeadModalOpener
+                  trbRequestId={trbRequest.id}
+                  modalRef={assignLeadModalRef}
+                  trbRequestIdRef={assignLeadModalTrbRequestIdRef}
+                  className="usa-button--outline"
+                >
+                  {t('adminHome.assignLead')}
+                </TrbAssignLeadModalOpener>
+              )}
+              {trbRequest.state === TRBRequestState.CLOSED && (
+                <p className="text-bold margin-0">
+                  {t('adminHome.notAssigned')}
+                </p>
+              )}
+            </>
           )}
 
           <Divider className="margin-top-6 margin-bottom-5" />

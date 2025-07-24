@@ -248,6 +248,25 @@ func (s *ResolverSuite) TestUpdateTRBRequestTRBLead() {
 
 	s.NoError(err)
 	s.EqualValues("MCLV", *updated.TRBLead)
+
+	// check that you cannot change the TRB lead on a closed TRB request
+	_, err = UpdateTRBRequest(s.testConfigs.Context,
+		trb.ID,
+		map[string]interface{}{
+			"state": models.TRBRequestStateClosed,
+		},
+		s.testConfigs.Store)
+	s.NoError(err)
+
+	_, err = UpdateTRBRequestTRBLead(
+		s.testConfigs.Context,
+		s.testConfigs.Store,
+		nil,
+		fetchUserInfo,
+		trb.ID,
+		"MCLV",
+	)
+	s.Error(err)
 }
 
 // TestIsRecentTRBRequest tests the IsRecentTRBRequest function
