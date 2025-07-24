@@ -66,6 +66,37 @@ export const formatTimeLocal = (
   return '';
 };
 
+/**
+ * Converts a date string in MM/dd/yyyy format to 5pm Eastern, then to UTC
+ *
+ * Returns ISO string
+ */
+export const formatEndOfDayDeadline = (date: DateTime | string): string => {
+  let dt: DateTime;
+
+  // If date is a string, convert to DateTime object
+  if (typeof date === 'string') {
+    dt = DateTime.fromFormat(date, 'MM/dd/yyyy', {
+      zone: 'America/New_York',
+      setZone: true
+    });
+  } else {
+    dt = date;
+  }
+
+  if (!dt.isValid) return '';
+
+  /** DateTime object converted to 5pm Eastern, then to UTC */
+  const formattedDateTime = dt
+    .setZone('America/New_York')
+    .set({ hour: 17, minute: 0, second: 0 })
+    .toUTC();
+
+  if (!formattedDateTime.isValid) return '';
+
+  return formattedDateTime.toISO({ suppressMilliseconds: true });
+};
+
 type ContractDate = {
   day?: string | null | undefined;
   month?: string | null | undefined;

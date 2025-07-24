@@ -22,7 +22,7 @@ const DiscussionModalWrapper = ({
 
   return (
     <Sidepanel
-      ariaLabel={t('ariaLabel')}
+      ariaLabel={t(`discussionBoardType.${discussionBoardType}`)}
       closeModal={closeModal}
       isOpen={isOpen}
       modalHeading={t(`discussionBoardType.${discussionBoardType}`)}

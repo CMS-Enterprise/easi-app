@@ -4,6 +4,7 @@ exports[`GRBReviewStatusCard > Standard meeting card > renders the card 1`] = `
 <DocumentFragment>
   <div
     class="padding-3 radius-md bg-primary-lighter"
+    data-testid="grb-review-status-card"
   >
     <h3
       class="margin-top-0 margin-bottom-2"

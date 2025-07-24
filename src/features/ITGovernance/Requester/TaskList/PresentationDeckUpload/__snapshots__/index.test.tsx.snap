@@ -120,7 +120,7 @@ exports[`UploadForm page > renders correct navigation text if requester and take
             >
               <button
                 class="usa-button margin-top-0"
-                data-testid="button"
+                data-testid="pager-next-button"
                 disabled=""
                 type="submit"
               >

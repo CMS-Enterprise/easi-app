@@ -832,7 +832,7 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
               >
                 <button
                   class="usa-button usa-button--outline margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
-                  data-testid="button"
+                  data-testid="pager-back-button"
                   type="button"
                 >
                   Back
@@ -847,7 +847,7 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
               >
                 <button
                   class="usa-button margin-top-0"
-                  data-testid="button"
+                  data-testid="pager-next-button"
                   type="submit"
                 >
                   Next
