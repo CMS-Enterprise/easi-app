@@ -38,9 +38,9 @@ const GovernanceTeams = () => {
   useEffect(() => {
     if (!isPresent) {
       clearErrors('governanceTeams.teams');
-      setValue('governanceTeams.teams.enterpriseArchitecture.isPresent', false);
       setValue('governanceTeams.teams.securityPrivacy.isPresent', false);
       setValue('governanceTeams.teams.technicalReviewBoard.isPresent', false);
+      setValue('governanceTeams.teams.clearanceOfficer508.isPresent', false);
     }
   }, [isPresent, setValue, clearErrors]);
 

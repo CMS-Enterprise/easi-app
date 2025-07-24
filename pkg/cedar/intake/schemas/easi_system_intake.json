@@ -39,6 +39,7 @@
         "businessNeed",
         "businessOwner",
         "businessOwnerComponent",
+        "collaboratorName508",
         "component",
         "costIncrease",
         "existingContract",
@@ -94,6 +95,13 @@
           "description": "Component of the Business Owner",
           "examples": [
             "OIT"
+          ]
+        },
+        "collaboratorName508": {
+          "type": "string",
+          "description": "508 Collaborator",
+          "examples": [
+            "John Doe"
           ]
         },
         "component": {

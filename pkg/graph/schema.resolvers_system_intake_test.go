@@ -343,8 +343,8 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithNoCollaboratorsQuery() {
 		EUAUserID:                   null.StringFrom("TEST"),
 		ProjectName:                 null.StringFrom(projectName),
 		RequestType:                 models.SystemIntakeRequestTypeNEW,
-		EACollaboratorName:          null.StringFrom(""),
 		OITSecurityCollaboratorName: null.StringFrom(""),
+		CollaboratorName508:         null.StringFrom(""),
 		TRBCollaboratorName:         null.StringFrom(""),
 	})
 	s.NoError(intakeErr)
@@ -392,7 +392,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithNoCollaboratorsQuery() {
 func (s *GraphQLTestSuite) TestFetchSystemIntakeWithCollaboratorsQuery() {
 	ctx := s.context
 	projectName := "My cool project"
-	eaName := "My EA Rep"
+	name508 := "My 508 Rep"
 	oitName := "My OIT Rep"
 	trbName := "My TRB Rep"
 
@@ -400,9 +400,9 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithCollaboratorsQuery() {
 		EUAUserID:                   null.StringFrom("TEST"),
 		ProjectName:                 null.StringFrom(projectName),
 		RequestType:                 models.SystemIntakeRequestTypeNEW,
-		EACollaboratorName:          null.StringFrom(eaName),
 		OITSecurityCollaboratorName: null.StringFrom(oitName),
 		TRBCollaboratorName:         null.StringFrom(trbName),
+		CollaboratorName508:         null.StringFrom(name508),
 	})
 	s.NoError(intakeErr)
 
@@ -445,7 +445,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithCollaboratorsQuery() {
 	s.True(resp.SystemIntake.GovernanceTeams.IsPresent)
 	s.Equal(trbName, resp.SystemIntake.GovernanceTeams.Teams[0].Collaborator)
 	s.Equal(oitName, resp.SystemIntake.GovernanceTeams.Teams[1].Collaborator)
-	s.Equal(eaName, resp.SystemIntake.GovernanceTeams.Teams[2].Collaborator)
+	s.Equal(name508, resp.SystemIntake.GovernanceTeams.Teams[2].Collaborator)
 }
 
 func (s *GraphQLTestSuite) TestFetchSystemIntakeWithActionsQuery() {
@@ -791,7 +791,7 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWithTeams() {
 					teams: [
 						{ name: "Technical Review Board", key: "technicalReviewBoard", collaborator: "Iama Trbperson" },
 						{ name: "OIT's Security and Privacy Group", key: "securityPrivacy", collaborator: "Iama Ispgperson" },
-						{ name: "Enterprise Architecture", key: "enterpriseArchitecture", collaborator: "Iama Eaperson" }
+						{ name: "508 Clearance Officer", key: "clearanceOfficer508", collaborator: "Iama 508person" }
 					]
 				}
 			}) {
@@ -832,8 +832,8 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWithTeams() {
 	s.Equal("Iama Ispgperson", teams[1].Collaborator)
 	s.Equal("securityPrivacy", teams[1].Key)
 
-	s.Equal("Iama Eaperson", teams[2].Collaborator)
-	s.Equal("enterpriseArchitecture", teams[2].Key)
+	s.Equal("Iama 508person", teams[2].Collaborator)
+	s.Equal("clearanceOfficer508", teams[2].Key)
 }
 
 func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearTeams() {
@@ -847,7 +847,7 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearTeams() {
 
 	intake.TRBCollaboratorName = null.StringFrom("TRB Person")
 	intake.OITSecurityCollaboratorName = null.StringFrom("OIT Person")
-	intake.EACollaboratorName = null.StringFrom("EA Person")
+	intake.CollaboratorName508 = null.StringFrom("508 Person")
 	_, err := s.store.UpdateSystemIntake(ctx, intake)
 	s.NoError(err)
 
@@ -942,7 +942,7 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearOneTeam() {
 
 	intake.TRBCollaboratorName = null.StringFrom("TRB Person")
 	intake.OITSecurityCollaboratorName = null.StringFrom("OIT Person")
-	intake.EACollaboratorName = null.StringFrom("EA Person")
+	intake.CollaboratorName508 = null.StringFrom("508 Person")
 	_, err := s.store.UpdateSystemIntake(ctx, intake)
 	s.NoError(err)
 
@@ -996,7 +996,8 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearOneTeam() {
 					isPresent: true,
 					teams: [
 						{ name: "Technical Review Board", key: "technicalReviewBoard", collaborator: "Iama Trbperson" },
-						{ name: "OIT's Security and Privacy Group", key: "securityPrivacy", collaborator: "Iama Ispgperson" }
+						{ name: "OIT's Security and Privacy Group", key: "securityPrivacy", collaborator: "Iama Ispgperson" },
+						{ name: "508 Clearance Officer", key: "clearanceOfficer508", collaborator: "Iama 508person" }
 					]
 				}
 			}) {
@@ -1030,12 +1031,15 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearOneTeam() {
 	respIntake := resp.UpdateSystemIntakeContactDetails.SystemIntake
 	s.True(respIntake.GovernanceTeams.IsPresent)
 	teams := respIntake.GovernanceTeams.Teams
-	s.Equal(2, len(teams))
+	s.Equal(3, len(teams))
 	s.Equal("Iama Trbperson", teams[0].Collaborator)
 	s.Equal("technicalReviewBoard", teams[0].Key)
 
 	s.Equal("Iama Ispgperson", teams[1].Collaborator)
 	s.Equal("securityPrivacy", teams[1].Key)
+
+	s.Equal("Iama 508person", teams[2].Collaborator)
+	s.Equal("clearanceOfficer508", teams[2].Key)
 }
 
 func (s *GraphQLTestSuite) TestUpdateRequestDetails() {
