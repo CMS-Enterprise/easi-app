@@ -23,8 +23,9 @@ type DatePickerFormattedProps = Omit<DatePickerProps, 'value'> & {
 };
 
 /**
- * Wrapper around USWDS DatePicker to handle controlled value formatting
- * and force rerenders correctly when parent value changes.
+ * A `DatePicker` wrapper with date formatting. Defaults to the utc iso format.
+ * Bind an `onChange` handler to get the formatted value.
+ * Use the `format` function to return a formatted value from a `DateTime` object.
  */
 const DatePickerFormatted = ({
   onChange,
@@ -35,6 +36,11 @@ const DatePickerFormatted = ({
 }: DatePickerFormattedProps) => {
   const { t } = useTranslation('action');
 
+  /**
+   * Store value in state to use as key for <DatePicker>.
+   * Fixes bug where <DatePicker> does not rerender to show updated value when set dynamically.
+   * https://github.com/trussworks/react-uswds/issues/3000#issuecomment-2884731383
+   */
   const [internalValue, setInternalValue] = useState(
     controlledValue || props.defaultValue || ''
   );
@@ -47,6 +53,10 @@ const DatePickerFormatted = ({
     }
   }, [controlledValue]);
 
+  /**
+   * Format valid dates and execute onChange handler.
+   * Returns undefined if no onChange handler is provided.
+   */
   const handleChange = useCallback(
     (val: string | undefined): void => {
       if (!onChange) return;
@@ -73,7 +83,7 @@ const DatePickerFormatted = ({
         // Pass the synced internal value as defaultValue (Trussworks workaround)
         defaultValue={internalValue}
         onChange={handleChange}
-        // ✅ Only force-remount when clearing
+        // Only force-remount when clearing
         key={internalValue === '' ? 'empty' : undefined}
       />
 
