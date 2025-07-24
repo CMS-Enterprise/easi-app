@@ -406,11 +406,7 @@ describe('GRB review', () => {
     cy.getByTestId('addTimeModalButton').should('be.disabled');
 
     cy.getDateString({ years: 2 }).then(futureDate => {
-      // Use invoke instead of type to fix bug with DatePickerFormatted
-      // Type passes locally but not in CI
-      cy.getByTestId('date-picker-external-input')
-        .invoke('val', futureDate)
-        .trigger('input');
+      cy.getByTestId('date-picker-external-input').type(futureDate);
 
       cy.getByTestId('date-picker-external-input').should(
         'have.value',
@@ -462,11 +458,7 @@ describe('GRB review', () => {
 
           cy.getByTestId('date-picker-external-input').clear();
 
-          cy.getByTestId('date-picker-external-input')
-            // Use invoke instead of type to fix bug with DatePickerFormatted
-            // Type passes locally but not in CI
-            .invoke('val', futureDate)
-            .trigger('input');
+          cy.getByTestId('date-picker-external-input').type(futureDate);
 
           cy.getByTestId('date-picker-external-input').should(
             'have.value',

@@ -146,7 +146,7 @@ describe.skip('Discussion Board', () => {
 
     cy.getByTestId('close-discussions').click();
 
-    cy.expect(cy.getByTestId('discussion-modal').should('not.exist'));
+    cy.getByTestId('discussion-modal').should('not.exist');
 
     cy.contains('button', 'Start a discussion').click();
 
