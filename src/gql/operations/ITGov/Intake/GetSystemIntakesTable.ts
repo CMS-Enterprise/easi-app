@@ -30,6 +30,7 @@ export default gql(/* GraphQL */ `
 
       trbCollaboratorName
       oitSecurityCollaboratorName
+      eaCollaboratorName
       collaboratorName508
 
       existingFunding
