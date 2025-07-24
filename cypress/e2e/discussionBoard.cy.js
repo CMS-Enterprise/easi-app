@@ -1,4 +1,4 @@
-describe.skip('Discussion Board', () => {
+describe('Discussion Board', () => {
   // Request name: Async GRB review (with discussions)
   // System intake ID: 61efa6eb-1976-4431-a158-d89cc00ce31d
   it('can interact with discussions as an admin', () => {

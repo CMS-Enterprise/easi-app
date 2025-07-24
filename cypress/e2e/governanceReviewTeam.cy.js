@@ -2,7 +2,7 @@ import { DateTime } from 'luxon';
 
 import governaceReviewTeam from '../../src/i18n/en-US/articles/governanceReviewTeam';
 
-describe.skip('Governance Review Team', () => {
+describe('Governance Review Team', () => {
   // Expiration and retirement dates
   // Matches pattern set in seed data: +1 year for expiration, +2 years for retirement
   const expirationDate = DateTime.local().plus({ year: 1 });
