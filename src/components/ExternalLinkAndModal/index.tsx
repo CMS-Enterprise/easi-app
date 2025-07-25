@@ -72,6 +72,7 @@ const ExternalLinkAndModal = ({
           href={href}
           className="usa-button text-white text-no-underline"
           variant="unstyled"
+          onClick={() => setIsModalOpen(false)}
         >
           {modalType !== 'GENERIC'
             ? externalT('continueButton', {
@@ -96,7 +97,7 @@ const ExternalLinkAndModal = ({
           type="button"
           unstyled
           onClick={() => setIsModalOpen(true)}
-          icon={<Icon.Launch className="margin-left-0" />}
+          icon={<Icon.Launch aria-hidden className="margin-left-0" />}
           iconPosition="after"
           className="flex-gap-05"
         >

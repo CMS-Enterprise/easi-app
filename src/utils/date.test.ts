@@ -4,6 +4,7 @@ import {
   formatContractDate,
   formatDateLocal,
   formatDateUtc,
+  formatDaysHoursMinutes,
   getFiscalYear,
   getRelativeDate,
   parseAsUTC
@@ -120,5 +121,69 @@ describe('getRelativeDate', () => {
     const relativeDate = getRelativeDate(date.toISO());
 
     expect(relativeDate).toEqual('today');
+  });
+});
+
+describe('formatDaysHoursMinutes', () => {
+  it('calculates the difference for a past date', () => {
+    // Mock a past ISO string
+    const pastDate = DateTime.utc()
+      .minus({ days: 2, hours: 5, minutes: 30 })
+      .toISO();
+
+    const result = formatDaysHoursMinutes(pastDate);
+
+    expect(result).toEqual({
+      days: 2,
+      hours: 5,
+      minutes: 30
+    });
+  });
+
+  it('calculates the difference for a future date', () => {
+    // Set current date to fix flaky unit test
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2025-06-01T12:00:00Z'));
+
+    // Mock a future ISO string
+    const futureDate = DateTime.utc()
+      .plus({ days: 0, hours: 3, minutes: 15 })
+      .toISO();
+
+    const result = formatDaysHoursMinutes(futureDate);
+
+    expect(result).toEqual({
+      days: 0,
+      hours: 3,
+      minutes: 15
+    });
+
+    vi.useRealTimers();
+  });
+
+  it('returns 0 for all values when the input date is now', () => {
+    // Mock the current time
+    const now = DateTime.utc().toISO();
+
+    const result = formatDaysHoursMinutes(now);
+
+    expect(result).toEqual({
+      days: 0,
+      hours: 0,
+      minutes: 0
+    });
+  });
+
+  it('handles invalid ISO strings gracefully', () => {
+    // Pass an invalid ISO string
+    const invalidDate = 'invalid-date';
+
+    const result = formatDaysHoursMinutes(invalidDate);
+
+    expect(result).toEqual({
+      days: NaN,
+      hours: NaN,
+      minutes: NaN
+    });
   });
 });

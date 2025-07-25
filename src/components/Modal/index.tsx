@@ -1,4 +1,4 @@
-import React, { ReactNode, ReactNodeArray } from 'react';
+import React, { ComponentProps, ReactNode, ReactNodeArray } from 'react';
 import ReactModal from 'react-modal';
 import { Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
@@ -17,6 +17,8 @@ export type ModalProps = {
   closeModal: () => void;
   shouldCloseOnOverlayClick?: boolean;
   noScrollOnClose?: boolean;
+  id?: string;
+  aria?: ComponentProps<typeof ReactModal>['aria'];
 };
 
 const Modal = ({
@@ -29,7 +31,9 @@ const Modal = ({
   openModal,
   closeModal,
   shouldCloseOnOverlayClick = false,
-  noScrollOnClose
+  noScrollOnClose,
+  id,
+  aria
 }: ModalProps) => {
   const handleOpenModal = () => {
     if (!noScrollOnClose) noScroll.on();
@@ -62,16 +66,19 @@ const Modal = ({
       appElement={root!}
       // Fix for "App element is not defined" unit test error
       ariaHideApp={root ? undefined : false}
+      id={id}
+      aria={aria}
     >
       <button
         type="button"
-        className="usa-button usa-modal__close margin-top-0"
+        className="usa-button usa-modal__close margin-top-05 margin-right-1"
         aria-label="Close Modal"
         onClick={closeModal}
       >
-        <Icon.Close size={4} />
+        <Icon.Close size={4} aria-hidden />
         {title && <h4 className="text-base margin-0 margin-left-1">{title}</h4>}
       </button>
+
       <div className="easi-modal__body">{children}</div>
     </ReactModal>
   );

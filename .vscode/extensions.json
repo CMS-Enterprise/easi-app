@@ -6,6 +6,7 @@
         "golang.go",
         "ms-azuretools.vscode-docker",
         "eamodio.gitlens",
-        "bierner.markdown-mermaid"
+        "bierner.markdown-mermaid",
+        "GraphQL.vscode-graphql"
     ]
   }

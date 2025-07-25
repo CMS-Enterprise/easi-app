@@ -13,7 +13,7 @@ import PDFExport from 'components/PDFExport';
 import { BusinessCaseModel } from 'types/businessCase';
 import { getFiscalYear } from 'utils/date';
 
-import ITGovAdminContext from '../ITGovAdminContext';
+import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
 type BusinessCaseReviewProps = {
   businessCase: BusinessCaseModel;
@@ -54,6 +54,7 @@ const BusinessCaseReview = ({
         <GeneralRequestInfoReview
           values={{
             requestName: businessCase.requestName,
+            projectAcronym: businessCase.projectAcronym,
             businessOwner: {
               name: businessCase.businessOwner.name
             },
@@ -69,9 +70,11 @@ const BusinessCaseReview = ({
           values={{
             businessNeed: businessCase.businessNeed,
             cmsBenefit: businessCase.cmsBenefit,
+            collaborationNeeded: businessCase.collaborationNeeded,
             currentSolutionSummary: businessCase.currentSolutionSummary,
             priorityAlignment: businessCase.priorityAlignment,
-            successIndicators: businessCase.successIndicators
+            successIndicators: businessCase.successIndicators,
+            responseToGRTFeedback: businessCase.responseToGRTFeedback
           }}
         />
         <h2 className="font-heading-xl margin-top-6 margin-bottom-2">

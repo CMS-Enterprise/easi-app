@@ -145,18 +145,6 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
               <dt
                 class="text-bold margin-bottom-05"
               >
-                Does your project have an Information System Security Officer (ISSO)?
-              </dt>
-              <dd
-                class="description-definition margin-0"
-              >
-                Yes, Aaron Adams
-              </dd>
-            </div>
-            <div>
-              <dt
-                class="text-bold margin-bottom-05"
-              >
                 I have started collaborating with
               </dt>
               <dd
@@ -420,6 +408,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
           Documents
         </h2>
         <div
+          data-testid="system-intake-documents"
           id="systemIntakeDocuments"
         >
           <div
@@ -453,6 +442,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
                     >
                       File name
                       <svg
+                        aria-hidden="true"
                         class="usa-icon margin-left-05"
                         data-testid="caret--sort"
                         focusable="false"
@@ -486,6 +476,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
                     >
                       Document type
                       <svg
+                        aria-hidden="true"
                         class="usa-icon margin-left-05"
                         data-testid="caret--sort"
                         focusable="false"
@@ -519,6 +510,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
                     >
                       Date added
                       <svg
+                        aria-hidden="true"
                         class="usa-icon margin-left-05"
                         data-testid="caret--down"
                         focusable="false"
@@ -552,6 +544,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
                     >
                       Actions
                       <svg
+                        aria-hidden="true"
                         class="usa-icon margin-left-05"
                         data-testid="caret--sort"
                         focusable="false"
@@ -574,8 +567,10 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
               />
             </table>
           </div>
-          <p>
-            No documents uploaded
+          <p
+            class="text-italic"
+          >
+            There are no documents uploaded for this request.
           </p>
         </div>
       </div>
@@ -589,6 +584,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
         type="button"
       >
         <svg
+          aria-hidden="true"
           class="usa-icon margin-right-1"
           focusable="false"
           height="1em"

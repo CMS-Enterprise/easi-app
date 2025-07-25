@@ -11,6 +11,7 @@ exports[`New System > matches the snapshot 1`] = `
       type="button"
     >
       <svg
+        aria-hidden="true"
         class="usa-icon margin-right-05 margin-top-3px text-tbottom"
         focusable="false"
         height="1em"
@@ -108,6 +109,7 @@ exports[`New System > matches the snapshot 1`] = `
             type="button"
           >
             <svg
+              aria-hidden="true"
               class="usa-icon margin-right-05"
               focusable="false"
               height="1em"
@@ -250,7 +252,7 @@ exports[`New System > matches the snapshot 1`] = `
               href="/help/it-governance/prepare-for-grb"
               target="_blank"
             >
-              Prepare for the GRB meeting (opens in new tab)
+              Prepare for the GRB review (opens in new tab)
             </a>
           </li>
           <li
@@ -302,7 +304,7 @@ exports[`New System > matches the snapshot 1`] = `
           <div
             class="usa-card__container radius-md shadow-2 minh-mobile"
           >
-            <header
+            <div
               class="usa-card__header padding-x-3 padding-top-3"
               data-testid="CardHeader"
             >
@@ -322,7 +324,7 @@ exports[`New System > matches the snapshot 1`] = `
                   IT Governance
                 </span>
               </a>
-            </header>
+            </div>
             <div
               class="usa-card__body padding-top-0 article__body"
               data-testid="CardBody"
@@ -351,7 +353,7 @@ exports[`New System > matches the snapshot 1`] = `
           <div
             class="usa-card__container radius-md shadow-2 minh-mobile"
           >
-            <header
+            <div
               class="usa-card__header padding-x-3 padding-top-3"
               data-testid="CardHeader"
             >
@@ -371,7 +373,7 @@ exports[`New System > matches the snapshot 1`] = `
                   IT Governance
                 </span>
               </a>
-            </header>
+            </div>
             <div
               class="usa-card__body padding-top-0 article__body"
               data-testid="CardBody"
@@ -400,7 +402,7 @@ exports[`New System > matches the snapshot 1`] = `
           <div
             class="usa-card__container radius-md shadow-2 minh-mobile"
           >
-            <header
+            <div
               class="usa-card__header padding-x-3 padding-top-3"
               data-testid="CardHeader"
             >
@@ -420,7 +422,7 @@ exports[`New System > matches the snapshot 1`] = `
                   IT Governance
                 </span>
               </a>
-            </header>
+            </div>
             <div
               class="usa-card__body padding-top-0 article__body"
               data-testid="CardBody"

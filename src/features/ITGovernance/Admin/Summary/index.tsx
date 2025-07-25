@@ -30,7 +30,7 @@ import { RequestType } from 'types/systemIntake';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 import { translateRequestType } from 'utils/systemIntake';
 
-import ITGovAdminContext from '../ITGovAdminContext';
+import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import './index.scss';
 
@@ -88,7 +88,9 @@ const RequestSummary = ({
           className="display-flex flex-align-center"
           data-testid="admin-lead"
         >
-          {!adminLead && <Icon.Error className="text-error margin-right-05" />}
+          {!adminLead && (
+            <Icon.Error className="text-error margin-right-05" aria-hidden />
+          )}
           {adminLead || t('governanceReviewTeam:adminLeads.notAssigned')}
         </span>
         {isITGovAdmin && (

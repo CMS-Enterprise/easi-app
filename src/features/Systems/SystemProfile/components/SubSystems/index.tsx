@@ -95,6 +95,7 @@ const SystemSubSystems = ({ system }: SystemProfileSubviewProps) => {
                 }`
               )}
               <Icon.ExpandMore
+                aria-hidden
                 className="margin-left-05 margin-bottom-2px text-tbottom"
                 style={{
                   transform: isSystemsExpanded ? 'rotate(180deg)' : ''

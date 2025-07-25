@@ -55,7 +55,11 @@ const ExternalDocumentLinkModal = ({
               showFullUrl ? 'text-bold' : ''
             }`}
           >
-            {showFullUrl ? <Icon.ExpandMore /> : <Icon.NavigateNext />}
+            {showFullUrl ? (
+              <Icon.ExpandMore aria-hidden />
+            ) : (
+              <Icon.NavigateNext aria-hidden />
+            )}
             {externalT('viewFullURL')}
           </span>
         </Button>

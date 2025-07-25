@@ -19,6 +19,7 @@ const (
 	SISRFinalBusinessCaseEditsRequested  SystemIntakeStatusRequester = "FINAL_BUSINESS_CASE_EDITS_REQUESTED"
 	SISRGrbMeetingReady                  SystemIntakeStatusRequester = "GRB_MEETING_READY"
 	SISRGrbMeetingAwaitingDecision       SystemIntakeStatusRequester = "GRB_MEETING_AWAITING_DECISION"
+	SISRGrbReviewInProgress              SystemIntakeStatusRequester = "GRB_REVIEW_IN_PROGRESS"
 	SISRLcidIssued                       SystemIntakeStatusRequester = "LCID_ISSUED"
 	SISRLcidExpired                      SystemIntakeStatusRequester = "LCID_EXPIRED"
 	SISRLcidRetired                      SystemIntakeStatusRequester = "LCID_RETIRED"

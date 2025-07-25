@@ -40,10 +40,13 @@ const BusinessCaseReview = ({
             helpArticle ? 'request-information-wrapper margin-top-4' : ''
           }
         >
+          <hr className="margin-bottom-1 margin-top-4 opacity-30" aria-hidden />
+
           <h2>{t('generalRequest')}</h2>
           <GeneralRequestInfoReview
             values={{
               requestName: values.requestName,
+              projectAcronym: values.projectAcronym,
               businessOwner: {
                 name: values.businessOwner.name
               },
@@ -59,17 +62,23 @@ const BusinessCaseReview = ({
           borderBottom={!!helpArticle}
           className={helpArticle ? 'padding-bottom-3' : ''}
         >
+          <hr className="margin-bottom-1 margin-top-4 opacity-30" aria-hidden />
+
           <h2>{t('requestDescription')}</h2>
           <RequestDescriptionReview
             values={{
               businessNeed: values.businessNeed,
+              collaborationNeeded: values.collaborationNeeded,
               currentSolutionSummary: values.currentSolutionSummary,
               cmsBenefit: values.cmsBenefit,
               priorityAlignment: values.priorityAlignment,
-              successIndicators: values.successIndicators
+              successIndicators: values.successIndicators,
+              responseToGRTFeedback: values.responseToGRTFeedback
             }}
           />
         </SectionWrapper>
+
+        <hr className="margin-bottom-1 margin-top-4 opacity-30" aria-hidden />
 
         <h2 className="easi-no-print">{t('alternatives')}</h2>
         <div className="alternative-analysis-wrapper">

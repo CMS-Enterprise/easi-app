@@ -46,36 +46,29 @@ describe('Retire LCID action form', async () => {
 
     // Reason field shows if setting initial retirement date
     expect(
-      screen.getByRole('textbox', {
-        name: 'Why are you retiring this Life Cycle ID? (optional)'
-      })
+      screen.getByLabelText(
+        'Why are you retiring this Life Cycle ID? (optional)'
+      )
     ).toBeInTheDocument();
   });
 
   it('renders form for updating retirement date', async () => {
     const dateInFuture = DateTime.local().plus({ year: 1 }).toISO();
-
     renderComponent(dateInFuture);
 
-    // Check selected action title
     expect(
       await screen.findByText('Change retirement date')
     ).toBeInTheDocument();
 
-    // Check that retirement date field shows correct date
-    const retireDateField = screen.getByRole('textbox', {
-      name: 'Life Cycle ID retirement date *'
-    });
-    expect(retireDateField).toHaveValue(
-      formatDateLocal(dateInFuture, 'MM/dd/yyyy')
-    );
+    // Wait for the external input to be populated
+    const expectedValue = formatDateLocal(dateInFuture, 'MM/dd/yyyy');
 
-    // Past retirement date alert should not show for future date
+    await screen.findByDisplayValue(expectedValue);
+
     expect(
       screen.queryByText(i18next.t<string>('action:pastDateAlert'))
     ).toBeNull();
 
-    // Reason field should not show if updating retirement date
     expect(
       screen.queryByRole('textbox', {
         name: 'Why are you retiring this Life Cycle ID? (optional)'

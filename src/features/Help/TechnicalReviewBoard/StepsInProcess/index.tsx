@@ -48,12 +48,12 @@ export const StepsInProcessContent = ({
 }) => {
   const { t } = useTranslation('stepsInTRBProcess');
 
-  const infoText = t<Record<string, string[]>>('info', {
+  const infoText = t('info', {
     returnObjects: true
-  });
-  const stepsText = t<Record<string, string | string[]>[]>('list', {
+  }) as Record<string, string[]>;
+  const stepsText = t('list', {
     returnObjects: true
-  });
+  }) as Record<string, string | string[]>[];
 
   return (
     <>

@@ -40,9 +40,9 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wir
 		PriorityAlignment:      bc.PriorityAlignment.Ptr(),
 		SuccessIndicators:      bc.SuccessIndicators.Ptr(),
 		Status:                 string(bc.Status),
-		// CollaborationNeeded:    pStr(""), // TODO: fill this out after field is added to business case
-		// ProjectAcronym:         pStr(""), // TODO: fill this out after field is added to business case
-		// ResponseToGRTFeedback:  pStr(""), // TODO: fill this out after field is added to business case
+		CollaborationNeeded:    bc.CollaborationNeeded.Ptr(),
+		ProjectAcronym:         bc.ProjectAcronym.Ptr(),
+		ResponseToGRTFeedback:  bc.ResponseToGRTFeedback.Ptr(),
 
 		ArchivedAt: pStr(strDateTime(bc.ArchivedAt)),
 
@@ -63,16 +63,16 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wir
 		HostingType:             bc.PreferredHostingType.Ptr(),
 		HostingLocation:         bc.PreferredHostingLocation.Ptr(),
 		HostingCloudServiceType: bc.PreferredHostingCloudServiceType.Ptr(),
-		HostingCloudStrategy:    pStr(""), // TODO: fill this out after field is added to business case
+		HostingCloudStrategy:    bc.PreferredHostingCloudStrategy.Ptr(),
 		HasUI:                   bc.PreferredHasUI.Ptr(),
 		Pros:                    bc.PreferredPros.Ptr(),
 		Cons:                    bc.PreferredCons.Ptr(),
 		CostSavings:             bc.PreferredCostSavings.Ptr(),
 		LifecycleCostLines:      []intakemodels.EASILifecycleCost{},
-		// TargetContractAward:     pStr(""), // TODO: fill this out after field is added to business case
-		// TargetCompletionDate:    pStr(""), // TODO: fill this out after field is added to business case
-		// WorkforceTrainingReqs:   pStr(""), // TODO: fill this out after field is added to business case
-		// ZeroTrustAlignment:      pStr(""), // TODO: fill this out after field is added to business case
+		TargetContractAward:     pStr(strDateTime(bc.PreferredTargetContractAwardDate)),
+		TargetCompletionDate:    pStr(strDateTime(bc.PreferredTargetCompletionDate)),
+		WorkforceTrainingReqs:   bc.PreferredWorkforceTrainingReqs.Ptr(),
+		ZeroTrustAlignment:      bc.PreferredZeroTrustAlignment.Ptr(),
 	}
 
 	// TODO: do we need to check if alternative a and b are filled out?
@@ -88,16 +88,17 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wir
 		SecurityIsBeingReviewed: bc.AlternativeASecurityIsBeingReviewed.Ptr(),
 		HostingType:             bc.AlternativeAHostingType.Ptr(),
 		HostingLocation:         bc.AlternativeAHostingLocation.Ptr(),
+		HostingCloudStrategy:    bc.AlternativeAHostingCloudStrategy.Ptr(),
 		HostingCloudServiceType: bc.AlternativeAHostingCloudServiceType.Ptr(),
 		HasUI:                   bc.AlternativeAHasUI.Ptr(),
 		Pros:                    bc.AlternativeAPros.Ptr(),
 		Cons:                    bc.AlternativeACons.Ptr(),
 		CostSavings:             bc.AlternativeACostSavings.Ptr(),
 		LifecycleCostLines:      []intakemodels.EASILifecycleCost{},
-		// TargetContractAward:     pStr(""), // TODO: fill this out after field is added to business case
-		// TargetCompletionDate:    pStr(""), // TODO: fill this out after field is added to business case
-		// WorkforceTrainingReqs:   pStr(""), // TODO: fill this out after field is added to business case
-		// ZeroTrustAlignment:      pStr(""), // TODO: fill this out after field is added to business case
+		TargetContractAward:     pStr(strDateTime(bc.AlternativeATargetContractAwardDate)),
+		TargetCompletionDate:    pStr(strDateTime(bc.AlternativeATargetCompletionDate)),
+		WorkforceTrainingReqs:   bc.AlternativeAWorkforceTrainingReqs.Ptr(),
+		ZeroTrustAlignment:      bc.AlternativeAZeroTrustAlignment.Ptr(),
 	}
 
 	// Alternative b (optional)
@@ -110,16 +111,17 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wir
 		SecurityIsBeingReviewed: bc.AlternativeBSecurityIsBeingReviewed.Ptr(),
 		HostingType:             bc.AlternativeBHostingType.Ptr(),
 		HostingLocation:         bc.AlternativeBHostingLocation.Ptr(),
+		HostingCloudStrategy:    bc.AlternativeBHostingCloudStrategy.Ptr(),
 		HostingCloudServiceType: bc.AlternativeBHostingCloudServiceType.Ptr(),
 		HasUI:                   bc.AlternativeBHasUI.Ptr(),
 		Pros:                    bc.AlternativeBPros.Ptr(),
 		Cons:                    bc.AlternativeBCons.Ptr(),
 		CostSavings:             bc.AlternativeBCostSavings.Ptr(),
 		LifecycleCostLines:      []intakemodels.EASILifecycleCost{},
-		// TargetContractAward:     pStr(""), // TODO: fill this out after field is added to business case
-		// TargetCompletionDate:    pStr(""), // TODO: fill this out after field is added to business case
-		// WorkforceTrainingReqs:   pStr(""), // TODO: fill this out after field is added to business case
-		// ZeroTrustAlignment:      pStr(""), // TODO: fill this out after field is added to business case
+		TargetContractAward:     pStr(strDateTime(bc.AlternativeBTargetContractAwardDate)),
+		TargetCompletionDate:    pStr(strDateTime(bc.AlternativeBTargetCompletionDate)),
+		WorkforceTrainingReqs:   bc.AlternativeBWorkforceTrainingReqs.Ptr(),
+		ZeroTrustAlignment:      bc.AlternativeBZeroTrustAlignment.Ptr(),
 	}
 
 	// Add lifecycle cost lines to business solutions

@@ -19,17 +19,14 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionIndividualTaggedNotificati
 	requestName := "Salad/Sandwich Program"
 	discussionBoardType := "Internal GRB Discussion Board"
 	role := "Consumer"
-	discussionContent := template.HTML(`<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`)
+	discussionContent := template.HTML(`<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!</p>`)
 
 	sender := mockSender{}
 	client, err := NewClient(s.config, &sender)
 	s.NoError(err)
 
-	intakePath := path.Join("it-governance", intakeID.String(), "grb-review")
-
-	grbReviewLink := client.urlFromPath(intakePath)
-
-	discussionLink := client.urlFromPathAndQuery(intakePath, fmt.Sprintf("discussionMode=reply&amp;discussionId=%s", postID.String()))
+	viewIntakeLink := client.urlFromPath(path.Join("governance-task-list", intakeID.String()))
+	discussionLink := client.urlFromPathAndQuery(path.Join("governance-task-list", intakeID.String()), fmt.Sprintf("discussionMode=reply&amp;discussionId=%s", postID.String()))
 
 	ITGovInboxAddress := s.config.GRTEmail.String()
 
@@ -77,7 +74,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionIndividualTaggedNotificati
 		userName,
 		discussionBoardType,
 		requestName,
-		grbReviewLink,
+		viewIntakeLink,
 		userName,
 		role,
 		discussionContent,
@@ -112,17 +109,14 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionIndividualTaggedNotificati
 	requestName := "Salad/Sandwich Program"
 	discussionBoardType := "Internal GRB Discussion Board"
 	role := "Governance Admin Team"
-	discussionContent := template.HTML(`<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!"</p>`)
+	discussionContent := template.HTML(`<p>banana apple carburetor Let me look into it, ok? <span data-type="mention" tag-type="USER_ACCOUNT" class="mention" data-id-db="8dc55eda-be23-4822-aa69-a3f67de6078b">@Audrey Abrams</span>!</p>`)
 
 	sender := mockSender{}
 	client, err := NewClient(s.config, &sender)
 	s.NoError(err)
 
-	intakePath := path.Join("it-governance", intakeID.String(), "grb-review")
-
-	grbReviewLink := client.urlFromPath(intakePath)
-
-	discussionLink := client.urlFromPathAndQuery(intakePath, fmt.Sprintf("discussionMode=reply&amp;discussionId=%s", postID.String()))
+	viewIntakeLink := client.urlFromPath(path.Join("governance-task-list", intakeID.String()))
+	discussionLink := client.urlFromPathAndQuery(path.Join("governance-task-list", intakeID.String()), fmt.Sprintf("discussionMode=reply&amp;discussionId=%s", postID.String()))
 
 	recipients := []models.EmailAddress{"fake@fake.com"}
 
@@ -167,7 +161,7 @@ func (s *EmailTestSuite) TestCreateGRBReviewDiscussionIndividualTaggedNotificati
 		userName,
 		discussionBoardType,
 		requestName,
-		grbReviewLink,
+		viewIntakeLink,
 		userName,
 		discussionContent,
 		discussionLink,

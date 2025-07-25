@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import DocumentsTable from 'features/ITGovernance/Requester/SystemIntake/Documents/DocumentsTable';
+import DocumentsTable from 'features/ITGovernance/_components/DocumentsTable';
 import { SystemIntakeFragmentFragment } from 'gql/generated/graphql';
 import i18next from 'i18next';
 
@@ -36,7 +36,7 @@ export const SystemIntakeReview = ({
     systemIntake;
   const {
     contacts: {
-      data: { requester, businessOwner, productManager, isso }
+      data: { requester, businessOwner, productManager }
     }
   } = useSystemIntakeContacts(systemIntake.id);
 
@@ -96,13 +96,6 @@ export const SystemIntakeReview = ({
         )}
       </ul>
     );
-  };
-  const issoDefinition = () => {
-    const hasIsso = convertBoolToYesNo(!!isso.commonName);
-    if (isso.commonName) {
-      return `${hasIsso}, ${isso.commonName}`;
-    }
-    return hasIsso;
   };
 
   const getSubmissionDate = () => {
@@ -303,10 +296,6 @@ export const SystemIntakeReview = ({
           </div>
         </ReviewRow>
         <ReviewRow>
-          <div>
-            <DescriptionTerm term={t('review.isso')} />
-            <DescriptionDefinition definition={issoDefinition()} />
-          </div>
           <div>
             <DescriptionTerm term={t('review.collaborating')} />
             {systemIntake.governanceTeams.isPresent ? (

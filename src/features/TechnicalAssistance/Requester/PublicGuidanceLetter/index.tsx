@@ -112,7 +112,10 @@ function PublicGuidanceLetter() {
         {fromTaskList ? (
           <>
             <UswdsReactLink to={`/trb/task-list/${id}`}>
-              <Icon.ArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+              <Icon.ArrowBack
+                className="margin-right-05 margin-bottom-2px text-tbottom"
+                aria-hidden
+              />
               {t('requestFeedback.returnToTaskList')}
             </UswdsReactLink>
 
@@ -124,9 +127,11 @@ function PublicGuidanceLetter() {
           <p className="line-height-body-5 font-body-lg text-light margin-top-0 margin-bottom-2">
             <Trans
               i18nKey="technicalAssistance:guidanceLetter.description"
-              components={{
-                a: <Link href={`mailto:${CMS_TRB_EMAIL}`}> </Link>,
+              values={{
                 email: CMS_TRB_EMAIL
+              }}
+              components={{
+                a: <Link href={`mailto:${CMS_TRB_EMAIL}`}> </Link>
               }}
             />
           </p>
@@ -223,9 +228,11 @@ function PublicGuidanceLetter() {
               <SummaryBoxContent>
                 <Trans
                   i18nKey="technicalAssistance:guidanceLetter.haveQuestionsContact"
-                  components={{
-                    a: <Link href={`mailto:${CMS_TRB_EMAIL}`}> </Link>,
+                  values={{
                     email: CMS_TRB_EMAIL
+                  }}
+                  components={{
+                    a: <Link href={`mailto:${CMS_TRB_EMAIL}`}> </Link>
                   }}
                 />
               </SummaryBoxContent>
@@ -238,7 +245,10 @@ function PublicGuidanceLetter() {
             className="display-inline-block margin-top-5"
             to={`/trb/task-list/${id}`}
           >
-            <Icon.ArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
+            <Icon.ArrowBack
+              className="margin-right-05 margin-bottom-2px text-tbottom"
+              aria-hidden
+            />
             {t('requestFeedback.returnToTaskList')}
           </UswdsReactLink>
         )}

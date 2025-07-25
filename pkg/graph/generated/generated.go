@@ -89,6 +89,7 @@ type ComplexityRoot struct {
 		BusinessNeed           func(childComplexity int) int
 		BusinessOwner          func(childComplexity int) int
 		CMSBenefit             func(childComplexity int) int
+		CollaborationNeeded    func(childComplexity int) int
 		CreatedAt              func(childComplexity int) int
 		CurrentSolutionSummary func(childComplexity int) int
 		EUAUserID              func(childComplexity int) int
@@ -96,9 +97,11 @@ type ComplexityRoot struct {
 		LifecycleCostLines     func(childComplexity int) int
 		PreferredSolution      func(childComplexity int) int
 		PriorityAlignment      func(childComplexity int) int
+		ProjectAcronym         func(childComplexity int) int
 		ProjectName            func(childComplexity int) int
 		Requester              func(childComplexity int) int
 		RequesterPhoneNumber   func(childComplexity int) int
+		ResponseToGRTFeedback  func(childComplexity int) int
 		Status                 func(childComplexity int) int
 		SuccessIndicators      func(childComplexity int) int
 		SystemIntake           func(childComplexity int) int
@@ -111,13 +114,18 @@ type ComplexityRoot struct {
 		CostSavings             func(childComplexity int) int
 		HasUI                   func(childComplexity int) int
 		HostingCloudServiceType func(childComplexity int) int
+		HostingCloudStrategy    func(childComplexity int) int
 		HostingLocation         func(childComplexity int) int
 		HostingType             func(childComplexity int) int
 		Pros                    func(childComplexity int) int
 		SecurityIsApproved      func(childComplexity int) int
 		SecurityIsBeingReviewed func(childComplexity int) int
 		Summary                 func(childComplexity int) int
+		TargetCompletionDate    func(childComplexity int) int
+		TargetContractAwardDate func(childComplexity int) int
 		Title                   func(childComplexity int) int
+		WorkforceTrainingReqs   func(childComplexity int) int
+		ZeroTrustAlignment      func(childComplexity int) int
 	}
 
 	CedarAuthorityToOperate struct {
@@ -515,6 +523,14 @@ type ComplexityRoot struct {
 		Reviewers       func(childComplexity int) int
 	}
 
+	GRBVotingInformation struct {
+		GRBReviewers        func(childComplexity int) int
+		NumberOfNoObjection func(childComplexity int) int
+		NumberOfNotVoted    func(childComplexity int) int
+		NumberOfObjection   func(childComplexity int) int
+		VotingStatus        func(childComplexity int) int
+	}
+
 	GovernanceRequestFeedback struct {
 		Author       func(childComplexity int) int
 		CreatedAt    func(childComplexity int) int
@@ -545,89 +561,100 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		ArchiveSystemIntake                              func(childComplexity int, id uuid.UUID) int
-		CloseTRBRequest                                  func(childComplexity int, input models.CloseTRBRequestInput) int
-		CreateCedarSystemBookmark                        func(childComplexity int, input models.CreateCedarSystemBookmarkInput) int
-		CreateSystemIntake                               func(childComplexity int, input models.CreateSystemIntakeInput) int
-		CreateSystemIntakeActionChangeLCIDRetirementDate func(childComplexity int, input models.SystemIntakeChangeLCIDRetirementDateInput) int
-		CreateSystemIntakeActionCloseRequest             func(childComplexity int, input models.SystemIntakeCloseRequestInput) int
-		CreateSystemIntakeActionConfirmLcid              func(childComplexity int, input models.SystemIntakeConfirmLCIDInput) int
-		CreateSystemIntakeActionExpireLcid               func(childComplexity int, input models.SystemIntakeExpireLCIDInput) int
-		CreateSystemIntakeActionIssueLcid                func(childComplexity int, input models.SystemIntakeIssueLCIDInput) int
-		CreateSystemIntakeActionNotITGovRequest          func(childComplexity int, input models.SystemIntakeNotITGovReqInput) int
-		CreateSystemIntakeActionProgressToNewStep        func(childComplexity int, input models.SystemIntakeProgressToNewStepsInput) int
-		CreateSystemIntakeActionRejectIntake             func(childComplexity int, input models.SystemIntakeRejectIntakeInput) int
-		CreateSystemIntakeActionReopenRequest            func(childComplexity int, input models.SystemIntakeReopenRequestInput) int
-		CreateSystemIntakeActionRequestEdits             func(childComplexity int, input models.SystemIntakeRequestEditsInput) int
-		CreateSystemIntakeActionRetireLcid               func(childComplexity int, input models.SystemIntakeRetireLCIDInput) int
-		CreateSystemIntakeActionUnretireLcid             func(childComplexity int, input models.SystemIntakeUnretireLCIDInput) int
-		CreateSystemIntakeActionUpdateLcid               func(childComplexity int, input models.SystemIntakeUpdateLCIDInput) int
-		CreateSystemIntakeContact                        func(childComplexity int, input models.CreateSystemIntakeContactInput) int
-		CreateSystemIntakeDocument                       func(childComplexity int, input models.CreateSystemIntakeDocumentInput) int
-		CreateSystemIntakeGRBDiscussionPost              func(childComplexity int, input models.CreateSystemIntakeGRBDiscussionPostInput) int
-		CreateSystemIntakeGRBDiscussionReply             func(childComplexity int, input models.CreateSystemIntakeGRBDiscussionReplyInput) int
-		CreateSystemIntakeGRBReviewers                   func(childComplexity int, input models.CreateSystemIntakeGRBReviewersInput) int
-		CreateSystemIntakeNote                           func(childComplexity int, input models.CreateSystemIntakeNoteInput) int
-		CreateTRBAdminNoteConsultSession                 func(childComplexity int, input models.CreateTRBAdminNoteConsultSessionInput) int
-		CreateTRBAdminNoteGeneralRequest                 func(childComplexity int, input models.CreateTRBAdminNoteGeneralRequestInput) int
-		CreateTRBAdminNoteGuidanceLetter                 func(childComplexity int, input models.CreateTRBAdminNoteGuidanceLetterInput) int
-		CreateTRBAdminNoteInitialRequestForm             func(childComplexity int, input models.CreateTRBAdminNoteInitialRequestFormInput) int
-		CreateTRBAdminNoteSupportingDocuments            func(childComplexity int, input models.CreateTRBAdminNoteSupportingDocumentsInput) int
-		CreateTRBGuidanceLetter                          func(childComplexity int, trbRequestID uuid.UUID) int
-		CreateTRBGuidanceLetterInsight                   func(childComplexity int, input models.CreateTRBGuidanceLetterInsightInput) int
-		CreateTRBRequest                                 func(childComplexity int, requestType models.TRBRequestType) int
-		CreateTRBRequestAttendee                         func(childComplexity int, input models.CreateTRBRequestAttendeeInput) int
-		CreateTRBRequestDocument                         func(childComplexity int, input models.CreateTRBRequestDocumentInput) int
-		CreateTRBRequestFeedback                         func(childComplexity int, input models.CreateTRBRequestFeedbackInput) int
-		CreateTrbLeadOption                              func(childComplexity int, eua string) int
-		DeleteCedarSystemBookmark                        func(childComplexity int, input models.CreateCedarSystemBookmarkInput) int
-		DeleteSystemIntakeContact                        func(childComplexity int, input models.DeleteSystemIntakeContactInput) int
-		DeleteSystemIntakeDocument                       func(childComplexity int, id uuid.UUID) int
-		DeleteSystemIntakeGRBPresentationLinks           func(childComplexity int, input models.DeleteSystemIntakeGRBPresentationLinksInput) int
-		DeleteSystemIntakeGRBReviewer                    func(childComplexity int, input models.DeleteSystemIntakeGRBReviewerInput) int
-		DeleteTRBGuidanceLetterInsight                   func(childComplexity int, id uuid.UUID) int
-		DeleteTRBRequestAttendee                         func(childComplexity int, id uuid.UUID) int
-		DeleteTRBRequestDocument                         func(childComplexity int, id uuid.UUID) int
-		DeleteTRBRequestFundingSources                   func(childComplexity int, input models.DeleteTRBRequestFundingSourcesInput) int
-		DeleteTrbLeadOption                              func(childComplexity int, eua string) int
-		ReopenTrbRequest                                 func(childComplexity int, input models.ReopenTRBRequestInput) int
-		RequestReviewForTRBGuidanceLetter                func(childComplexity int, id uuid.UUID) int
-		SendCantFindSomethingEmail                       func(childComplexity int, input models.SendCantFindSomethingEmailInput) int
-		SendFeedbackEmail                                func(childComplexity int, input models.SendFeedbackEmailInput) int
-		SendReportAProblemEmail                          func(childComplexity int, input models.SendReportAProblemEmailInput) int
-		SendTRBGuidanceLetter                            func(childComplexity int, input models.SendTRBGuidanceLetterInput) int
-		SetRolesForUserOnSystem                          func(childComplexity int, input models.SetRolesForUserOnSystemInput) int
-		SetSystemIntakeGRBPresentationLinks              func(childComplexity int, input models.SystemIntakeGRBPresentationLinksInput) int
-		SetSystemIntakeRelationExistingService           func(childComplexity int, input *models.SetSystemIntakeRelationExistingServiceInput) int
-		SetSystemIntakeRelationExistingSystem            func(childComplexity int, input *models.SetSystemIntakeRelationExistingSystemInput) int
-		SetSystemIntakeRelationNewSystem                 func(childComplexity int, input *models.SetSystemIntakeRelationNewSystemInput) int
-		SetTRBAdminNoteArchived                          func(childComplexity int, id uuid.UUID, isArchived bool) int
-		SetTRBRequestRelationExistingService             func(childComplexity int, input models.SetTRBRequestRelationExistingServiceInput) int
-		SetTRBRequestRelationExistingSystem              func(childComplexity int, input models.SetTRBRequestRelationExistingSystemInput) int
-		SetTRBRequestRelationNewSystem                   func(childComplexity int, input models.SetTRBRequestRelationNewSystemInput) int
-		StartGRBReview                                   func(childComplexity int, input models.StartGRBReviewInput) int
-		SubmitIntake                                     func(childComplexity int, input models.SubmitIntakeInput) int
-		UnlinkSystemIntakeRelation                       func(childComplexity int, intakeID uuid.UUID) int
-		UnlinkTRBRequestRelation                         func(childComplexity int, trbRequestID uuid.UUID) int
-		UpdateSystemIntakeAdminLead                      func(childComplexity int, input models.UpdateSystemIntakeAdminLeadInput) int
-		UpdateSystemIntakeContact                        func(childComplexity int, input models.UpdateSystemIntakeContactInput) int
-		UpdateSystemIntakeContactDetails                 func(childComplexity int, input models.UpdateSystemIntakeContactDetailsInput) int
-		UpdateSystemIntakeContractDetails                func(childComplexity int, input models.UpdateSystemIntakeContractDetailsInput) int
-		UpdateSystemIntakeGRBReviewer                    func(childComplexity int, input models.UpdateSystemIntakeGRBReviewerInput) int
-		UpdateSystemIntakeLinkedCedarSystem              func(childComplexity int, input models.UpdateSystemIntakeLinkedCedarSystemInput) int
-		UpdateSystemIntakeNote                           func(childComplexity int, input models.UpdateSystemIntakeNoteInput) int
-		UpdateSystemIntakeRequestDetails                 func(childComplexity int, input models.UpdateSystemIntakeRequestDetailsInput) int
-		UpdateSystemIntakeRequestType                    func(childComplexity int, id uuid.UUID, newType models.SystemIntakeRequestType) int
-		UpdateSystemIntakeReviewDates                    func(childComplexity int, input models.UpdateSystemIntakeReviewDatesInput) int
-		UpdateTRBGuidanceLetter                          func(childComplexity int, input map[string]interface{}) int
-		UpdateTRBGuidanceLetterInsight                   func(childComplexity int, input map[string]interface{}) int
-		UpdateTRBGuidanceLetterInsightOrder              func(childComplexity int, input models.UpdateTRBGuidanceLetterInsightOrderInput) int
-		UpdateTRBRequest                                 func(childComplexity int, id uuid.UUID, changes map[string]interface{}) int
-		UpdateTRBRequestAttendee                         func(childComplexity int, input models.UpdateTRBRequestAttendeeInput) int
-		UpdateTRBRequestConsultMeetingTime               func(childComplexity int, input models.UpdateTRBRequestConsultMeetingTimeInput) int
-		UpdateTRBRequestForm                             func(childComplexity int, input map[string]interface{}) int
-		UpdateTRBRequestFundingSources                   func(childComplexity int, input models.UpdateTRBRequestFundingSourcesInput) int
-		UpdateTRBRequestTRBLead                          func(childComplexity int, input models.UpdateTRBRequestTRBLeadInput) int
+		ArchiveSystemIntake                                 func(childComplexity int, id uuid.UUID) int
+		CastSystemIntakeGRBReviewerVote                     func(childComplexity int, input models.CastSystemIntakeGRBReviewerVoteInput) int
+		CloseTRBRequest                                     func(childComplexity int, input models.CloseTRBRequestInput) int
+		CreateCedarSystemBookmark                           func(childComplexity int, input models.CreateCedarSystemBookmarkInput) int
+		CreateSystemIntake                                  func(childComplexity int, input models.CreateSystemIntakeInput) int
+		CreateSystemIntakeActionChangeLCIDRetirementDate    func(childComplexity int, input models.SystemIntakeChangeLCIDRetirementDateInput) int
+		CreateSystemIntakeActionCloseRequest                func(childComplexity int, input models.SystemIntakeCloseRequestInput) int
+		CreateSystemIntakeActionConfirmLcid                 func(childComplexity int, input models.SystemIntakeConfirmLCIDInput) int
+		CreateSystemIntakeActionExpireLcid                  func(childComplexity int, input models.SystemIntakeExpireLCIDInput) int
+		CreateSystemIntakeActionIssueLcid                   func(childComplexity int, input models.SystemIntakeIssueLCIDInput) int
+		CreateSystemIntakeActionNotITGovRequest             func(childComplexity int, input models.SystemIntakeNotITGovReqInput) int
+		CreateSystemIntakeActionProgressToNewStep           func(childComplexity int, input models.SystemIntakeProgressToNewStepsInput) int
+		CreateSystemIntakeActionRejectIntake                func(childComplexity int, input models.SystemIntakeRejectIntakeInput) int
+		CreateSystemIntakeActionReopenRequest               func(childComplexity int, input models.SystemIntakeReopenRequestInput) int
+		CreateSystemIntakeActionRequestEdits                func(childComplexity int, input models.SystemIntakeRequestEditsInput) int
+		CreateSystemIntakeActionRetireLcid                  func(childComplexity int, input models.SystemIntakeRetireLCIDInput) int
+		CreateSystemIntakeActionUnretireLcid                func(childComplexity int, input models.SystemIntakeUnretireLCIDInput) int
+		CreateSystemIntakeActionUpdateLcid                  func(childComplexity int, input models.SystemIntakeUpdateLCIDInput) int
+		CreateSystemIntakeContact                           func(childComplexity int, input models.CreateSystemIntakeContactInput) int
+		CreateSystemIntakeDocument                          func(childComplexity int, input models.CreateSystemIntakeDocumentInput) int
+		CreateSystemIntakeGRBDiscussionPost                 func(childComplexity int, input models.CreateSystemIntakeGRBDiscussionPostInput) int
+		CreateSystemIntakeGRBDiscussionReply                func(childComplexity int, input models.CreateSystemIntakeGRBDiscussionReplyInput) int
+		CreateSystemIntakeGRBReviewers                      func(childComplexity int, input models.CreateSystemIntakeGRBReviewersInput) int
+		CreateSystemIntakeNote                              func(childComplexity int, input models.CreateSystemIntakeNoteInput) int
+		CreateTRBAdminNoteConsultSession                    func(childComplexity int, input models.CreateTRBAdminNoteConsultSessionInput) int
+		CreateTRBAdminNoteGeneralRequest                    func(childComplexity int, input models.CreateTRBAdminNoteGeneralRequestInput) int
+		CreateTRBAdminNoteGuidanceLetter                    func(childComplexity int, input models.CreateTRBAdminNoteGuidanceLetterInput) int
+		CreateTRBAdminNoteInitialRequestForm                func(childComplexity int, input models.CreateTRBAdminNoteInitialRequestFormInput) int
+		CreateTRBAdminNoteSupportingDocuments               func(childComplexity int, input models.CreateTRBAdminNoteSupportingDocumentsInput) int
+		CreateTRBGuidanceLetter                             func(childComplexity int, trbRequestID uuid.UUID) int
+		CreateTRBGuidanceLetterInsight                      func(childComplexity int, input models.CreateTRBGuidanceLetterInsightInput) int
+		CreateTRBRequest                                    func(childComplexity int, requestType models.TRBRequestType) int
+		CreateTRBRequestAttendee                            func(childComplexity int, input models.CreateTRBRequestAttendeeInput) int
+		CreateTRBRequestDocument                            func(childComplexity int, input models.CreateTRBRequestDocumentInput) int
+		CreateTRBRequestFeedback                            func(childComplexity int, input models.CreateTRBRequestFeedbackInput) int
+		CreateTrbLeadOption                                 func(childComplexity int, eua string) int
+		DeleteCedarSystemBookmark                           func(childComplexity int, input models.CreateCedarSystemBookmarkInput) int
+		DeleteSystemIntakeContact                           func(childComplexity int, input models.DeleteSystemIntakeContactInput) int
+		DeleteSystemIntakeDocument                          func(childComplexity int, id uuid.UUID) int
+		DeleteSystemIntakeGRBPresentationLinks              func(childComplexity int, input models.DeleteSystemIntakeGRBPresentationLinksInput) int
+		DeleteSystemIntakeGRBReviewer                       func(childComplexity int, input models.DeleteSystemIntakeGRBReviewerInput) int
+		DeleteTRBGuidanceLetterInsight                      func(childComplexity int, id uuid.UUID) int
+		DeleteTRBRequestAttendee                            func(childComplexity int, id uuid.UUID) int
+		DeleteTRBRequestDocument                            func(childComplexity int, id uuid.UUID) int
+		DeleteTRBRequestFundingSources                      func(childComplexity int, input models.DeleteTRBRequestFundingSourcesInput) int
+		DeleteTrbLeadOption                                 func(childComplexity int, eua string) int
+		ExtendGRBReviewDeadlineAsync                        func(childComplexity int, input models.ExtendGRBReviewDeadlineInput) int
+		ManuallyEndSystemIntakeGRBReviewAsyncVoting         func(childComplexity int, systemIntakeID uuid.UUID) int
+		ReopenTrbRequest                                    func(childComplexity int, input models.ReopenTRBRequestInput) int
+		RequestReviewForTRBGuidanceLetter                   func(childComplexity int, id uuid.UUID) int
+		RestartGRBReviewAsync                               func(childComplexity int, input models.RestartGRBReviewInput) int
+		SendCantFindSomethingEmail                          func(childComplexity int, input models.SendCantFindSomethingEmailInput) int
+		SendFeedbackEmail                                   func(childComplexity int, input models.SendFeedbackEmailInput) int
+		SendGRBReviewPresentationDeckReminderEmail          func(childComplexity int, systemIntakeID uuid.UUID) int
+		SendReportAProblemEmail                             func(childComplexity int, input models.SendReportAProblemEmailInput) int
+		SendSystemIntakeGRBReviewerReminder                 func(childComplexity int, systemIntakeID uuid.UUID) int
+		SendTRBGuidanceLetter                               func(childComplexity int, input models.SendTRBGuidanceLetterInput) int
+		SetRolesForUserOnSystem                             func(childComplexity int, input models.SetRolesForUserOnSystemInput) int
+		SetSystemIntakeGRBPresentationLinks                 func(childComplexity int, input models.SystemIntakeGRBPresentationLinksInput) int
+		SetSystemIntakeRelationExistingService              func(childComplexity int, input *models.SetSystemIntakeRelationExistingServiceInput) int
+		SetSystemIntakeRelationExistingSystem               func(childComplexity int, input *models.SetSystemIntakeRelationExistingSystemInput) int
+		SetSystemIntakeRelationNewSystem                    func(childComplexity int, input *models.SetSystemIntakeRelationNewSystemInput) int
+		SetTRBAdminNoteArchived                             func(childComplexity int, id uuid.UUID, isArchived bool) int
+		SetTRBRequestRelationExistingService                func(childComplexity int, input models.SetTRBRequestRelationExistingServiceInput) int
+		SetTRBRequestRelationExistingSystem                 func(childComplexity int, input models.SetTRBRequestRelationExistingSystemInput) int
+		SetTRBRequestRelationNewSystem                      func(childComplexity int, input models.SetTRBRequestRelationNewSystemInput) int
+		StartGRBReview                                      func(childComplexity int, input models.StartGRBReviewInput) int
+		SubmitIntake                                        func(childComplexity int, input models.SubmitIntakeInput) int
+		UnlinkSystemIntakeRelation                          func(childComplexity int, intakeID uuid.UUID) int
+		UnlinkTRBRequestRelation                            func(childComplexity int, trbRequestID uuid.UUID) int
+		UpdateSystemIntakeAdminLead                         func(childComplexity int, input models.UpdateSystemIntakeAdminLeadInput) int
+		UpdateSystemIntakeContact                           func(childComplexity int, input models.UpdateSystemIntakeContactInput) int
+		UpdateSystemIntakeContactDetails                    func(childComplexity int, input models.UpdateSystemIntakeContactDetailsInput) int
+		UpdateSystemIntakeContractDetails                   func(childComplexity int, input models.UpdateSystemIntakeContractDetailsInput) int
+		UpdateSystemIntakeGRBReviewFormPresentationAsync    func(childComplexity int, input models.UpdateSystemIntakeGRBReviewFormInputPresentationAsync) int
+		UpdateSystemIntakeGRBReviewFormPresentationStandard func(childComplexity int, input models.UpdateSystemIntakeGRBReviewFormInputPresentationStandard) int
+		UpdateSystemIntakeGRBReviewFormTimeframeAsync       func(childComplexity int, input models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync) int
+		UpdateSystemIntakeGRBReviewType                     func(childComplexity int, input models.UpdateSystemIntakeGRBReviewTypeInput) int
+		UpdateSystemIntakeGRBReviewer                       func(childComplexity int, input models.UpdateSystemIntakeGRBReviewerInput) int
+		UpdateSystemIntakeLinkedCedarSystem                 func(childComplexity int, input models.UpdateSystemIntakeLinkedCedarSystemInput) int
+		UpdateSystemIntakeNote                              func(childComplexity int, input models.UpdateSystemIntakeNoteInput) int
+		UpdateSystemIntakeRequestDetails                    func(childComplexity int, input models.UpdateSystemIntakeRequestDetailsInput) int
+		UpdateSystemIntakeRequestType                       func(childComplexity int, id uuid.UUID, newType models.SystemIntakeRequestType) int
+		UpdateSystemIntakeReviewDates                       func(childComplexity int, input models.UpdateSystemIntakeReviewDatesInput) int
+		UpdateTRBGuidanceLetter                             func(childComplexity int, input map[string]any) int
+		UpdateTRBGuidanceLetterInsight                      func(childComplexity int, input map[string]any) int
+		UpdateTRBGuidanceLetterInsightOrder                 func(childComplexity int, input models.UpdateTRBGuidanceLetterInsightOrderInput) int
+		UpdateTRBRequest                                    func(childComplexity int, id uuid.UUID, changes map[string]any) int
+		UpdateTRBRequestAttendee                            func(childComplexity int, input models.UpdateTRBRequestAttendeeInput) int
+		UpdateTRBRequestConsultMeetingTime                  func(childComplexity int, input models.UpdateTRBRequestConsultMeetingTimeInput) int
+		UpdateTRBRequestForm                                func(childComplexity int, input map[string]any) int
+		UpdateTRBRequestFundingSources                      func(childComplexity int, input models.UpdateTRBRequestFundingSourcesInput) int
+		UpdateTRBRequestTRBLead                             func(childComplexity int, input models.UpdateTRBRequestTRBLeadInput) int
+		UploadSystemIntakeGRBPresentationDeck               func(childComplexity int, input models.UploadSystemIntakeGRBPresentationDeckInput) int
 	}
 
 	Query struct {
@@ -676,87 +703,100 @@ type ComplexityRoot struct {
 		RequesterEmail func(childComplexity int) int
 	}
 
+	SendSystemIntakeGRBReviewReminderPayload struct {
+		TimeSent func(childComplexity int) int
+	}
+
 	SystemIntake struct {
-		AcquisitionMethods          func(childComplexity int) int
-		Actions                     func(childComplexity int) int
-		AdminLead                   func(childComplexity int) int
-		AnnualSpending              func(childComplexity int) int
-		ArchivedAt                  func(childComplexity int) int
-		BusinessCase                func(childComplexity int) int
-		BusinessCaseID              func(childComplexity int) int
-		BusinessNeed                func(childComplexity int) int
-		BusinessOwner               func(childComplexity int) int
-		BusinessSolution            func(childComplexity int) int
-		CedarSystemID               func(childComplexity int) int
-		Contract                    func(childComplexity int) int
-		ContractName                func(childComplexity int) int
-		ContractNumbers             func(childComplexity int) int
-		Costs                       func(childComplexity int) int
-		CreatedAt                   func(childComplexity int) int
-		CurrentStage                func(childComplexity int) int
-		DecidedAt                   func(childComplexity int) int
-		DecisionNextSteps           func(childComplexity int) int
-		DecisionState               func(childComplexity int) int
-		Documents                   func(childComplexity int) int
-		DraftBusinessCaseState      func(childComplexity int) int
-		EACollaborator              func(childComplexity int) int
-		EACollaboratorName          func(childComplexity int) int
-		EUAUserID                   func(childComplexity int) int
-		ExistingFunding             func(childComplexity int) int
-		FinalBusinessCaseState      func(childComplexity int) int
-		FundingSources              func(childComplexity int) int
-		GRBDate                     func(childComplexity int) int
-		GRBMeetingState             func(childComplexity int) int
-		GRBReviewStartedAt          func(childComplexity int) int
-		GRTDate                     func(childComplexity int) int
-		GRTMeetingState             func(childComplexity int) int
-		GovernanceRequestFeedbacks  func(childComplexity int) int
-		GovernanceTeams             func(childComplexity int) int
-		GrbDiscussions              func(childComplexity int) int
-		GrbPresentationLinks        func(childComplexity int) int
-		GrbReviewers                func(childComplexity int) int
-		GrtReviewEmailBody          func(childComplexity int) int
-		HasUIChanges                func(childComplexity int) int
-		ID                          func(childComplexity int) int
-		Isso                        func(childComplexity int) int
-		ItGovTaskStatuses           func(childComplexity int) int
-		LastMeetingDate             func(childComplexity int) int
-		Lcid                        func(childComplexity int) int
-		LcidCostBaseline            func(childComplexity int) int
-		LcidScope                   func(childComplexity int) int
-		LcidStatus                  func(childComplexity int) int
-		LifecycleExpiresAt          func(childComplexity int) int
-		LifecycleIssuedAt           func(childComplexity int) int
-		LifecycleRetiresAt          func(childComplexity int) int
-		NeedsEaSupport              func(childComplexity int) int
-		NextMeetingDate             func(childComplexity int) int
-		Notes                       func(childComplexity int) int
-		OITSecurityCollaborator     func(childComplexity int) int
-		OITSecurityCollaboratorName func(childComplexity int) int
-		ProductManager              func(childComplexity int) int
-		ProjectAcronym              func(childComplexity int) int
-		RejectionReason             func(childComplexity int) int
-		RelatedIntakes              func(childComplexity int) int
-		RelatedTRBRequests          func(childComplexity int) int
-		RelationType                func(childComplexity int) int
-		RequestFormState            func(childComplexity int) int
-		RequestName                 func(childComplexity int) int
-		RequestType                 func(childComplexity int) int
-		Requester                   func(childComplexity int) int
-		RequesterComponent          func(childComplexity int) int
-		RequesterName               func(childComplexity int) int
-		State                       func(childComplexity int) int
-		StatusAdmin                 func(childComplexity int) int
-		StatusRequester             func(childComplexity int) int
-		Step                        func(childComplexity int) int
-		SubmittedAt                 func(childComplexity int) int
-		Systems                     func(childComplexity int) int
-		TRBCollaborator             func(childComplexity int) int
-		TRBCollaboratorName         func(childComplexity int) int
-		TRBFollowUpRecommendation   func(childComplexity int) int
-		UpdatedAt                   func(childComplexity int) int
-		UsesAITech                  func(childComplexity int) int
-		UsingSoftware               func(childComplexity int) int
+		AcquisitionMethods                                func(childComplexity int) int
+		Actions                                           func(childComplexity int) int
+		AdminLead                                         func(childComplexity int) int
+		AnnualSpending                                    func(childComplexity int) int
+		ArchivedAt                                        func(childComplexity int) int
+		BusinessCase                                      func(childComplexity int) int
+		BusinessCaseID                                    func(childComplexity int) int
+		BusinessNeed                                      func(childComplexity int) int
+		BusinessOwner                                     func(childComplexity int) int
+		BusinessSolution                                  func(childComplexity int) int
+		CedarSystemID                                     func(childComplexity int) int
+		Contract                                          func(childComplexity int) int
+		ContractName                                      func(childComplexity int) int
+		ContractNumbers                                   func(childComplexity int) int
+		Costs                                             func(childComplexity int) int
+		CreatedAt                                         func(childComplexity int) int
+		CurrentStage                                      func(childComplexity int) int
+		DecidedAt                                         func(childComplexity int) int
+		DecisionNextSteps                                 func(childComplexity int) int
+		DecisionState                                     func(childComplexity int) int
+		Documents                                         func(childComplexity int) int
+		DraftBusinessCaseState                            func(childComplexity int) int
+		EACollaborator                                    func(childComplexity int) int
+		EACollaboratorName                                func(childComplexity int) int
+		EUAUserID                                         func(childComplexity int) int
+		ExistingFunding                                   func(childComplexity int) int
+		FinalBusinessCaseState                            func(childComplexity int) int
+		FundingSources                                    func(childComplexity int) int
+		GRBDate                                           func(childComplexity int) int
+		GRBMeetingState                                   func(childComplexity int) int
+		GRBReviewStartedAt                                func(childComplexity int) int
+		GRTDate                                           func(childComplexity int) int
+		GRTMeetingState                                   func(childComplexity int) int
+		GovernanceRequestFeedbacks                        func(childComplexity int) int
+		GovernanceTeams                                   func(childComplexity int) int
+		GrbDiscussionsInternal                            func(childComplexity int) int
+		GrbDiscussionsPrimary                             func(childComplexity int) int
+		GrbPresentationDeckRequesterReminderEmailSentTime func(childComplexity int) int
+		GrbPresentationLinks                              func(childComplexity int) int
+		GrbReviewAsyncEndDate                             func(childComplexity int) int
+		GrbReviewAsyncManualEndDate                       func(childComplexity int) int
+		GrbReviewAsyncRecordingTime                       func(childComplexity int) int
+		GrbReviewAsyncStatus                              func(childComplexity int) int
+		GrbReviewReminderLastSent                         func(childComplexity int) int
+		GrbReviewStandardStatus                           func(childComplexity int) int
+		GrbReviewType                                     func(childComplexity int) int
+		GrbReviewers                                      func(childComplexity int) int
+		GrbVotingInformation                              func(childComplexity int) int
+		GrtReviewEmailBody                                func(childComplexity int) int
+		HasUIChanges                                      func(childComplexity int) int
+		ID                                                func(childComplexity int) int
+		ItGovTaskStatuses                                 func(childComplexity int) int
+		LastMeetingDate                                   func(childComplexity int) int
+		Lcid                                              func(childComplexity int) int
+		LcidCostBaseline                                  func(childComplexity int) int
+		LcidScope                                         func(childComplexity int) int
+		LcidStatus                                        func(childComplexity int) int
+		LifecycleExpiresAt                                func(childComplexity int) int
+		LifecycleIssuedAt                                 func(childComplexity int) int
+		LifecycleRetiresAt                                func(childComplexity int) int
+		NeedsEaSupport                                    func(childComplexity int) int
+		NextMeetingDate                                   func(childComplexity int) int
+		Notes                                             func(childComplexity int) int
+		OITSecurityCollaborator                           func(childComplexity int) int
+		OITSecurityCollaboratorName                       func(childComplexity int) int
+		ProductManager                                    func(childComplexity int) int
+		ProjectAcronym                                    func(childComplexity int) int
+		RejectionReason                                   func(childComplexity int) int
+		RelatedIntakes                                    func(childComplexity int) int
+		RelatedTRBRequests                                func(childComplexity int) int
+		RelationType                                      func(childComplexity int) int
+		RequestFormState                                  func(childComplexity int) int
+		RequestName                                       func(childComplexity int) int
+		RequestType                                       func(childComplexity int) int
+		Requester                                         func(childComplexity int) int
+		RequesterComponent                                func(childComplexity int) int
+		RequesterName                                     func(childComplexity int) int
+		State                                             func(childComplexity int) int
+		StatusAdmin                                       func(childComplexity int) int
+		StatusRequester                                   func(childComplexity int) int
+		Step                                              func(childComplexity int) int
+		SubmittedAt                                       func(childComplexity int) int
+		Systems                                           func(childComplexity int) int
+		TRBCollaborator                                   func(childComplexity int) int
+		TRBCollaboratorName                               func(childComplexity int) int
+		TRBFollowUpRecommendation                         func(childComplexity int) int
+		UpdatedAt                                         func(childComplexity int) int
+		UsesAITech                                        func(childComplexity int) int
+		UsingSoftware                                     func(childComplexity int) int
 	}
 
 	SystemIntakeAction struct {
@@ -894,23 +934,21 @@ type ComplexityRoot struct {
 	SystemIntakeGRBReviewer struct {
 		CreatedAt      func(childComplexity int) int
 		CreatedBy      func(childComplexity int) int
+		DateVoted      func(childComplexity int) int
 		GrbRole        func(childComplexity int) int
 		ID             func(childComplexity int) int
 		ModifiedAt     func(childComplexity int) int
 		ModifiedBy     func(childComplexity int) int
 		SystemIntakeID func(childComplexity int) int
 		UserAccount    func(childComplexity int) int
+		Vote           func(childComplexity int) int
+		VoteComment    func(childComplexity int) int
 		VotingRole     func(childComplexity int) int
 	}
 
 	SystemIntakeGovernanceTeam struct {
 		IsPresent func(childComplexity int) int
 		Teams     func(childComplexity int) int
-	}
-
-	SystemIntakeISSO struct {
-		IsPresent func(childComplexity int) int
-		Name      func(childComplexity int) int
 	}
 
 	SystemIntakeLCIDExpirationChange struct {
@@ -1265,17 +1303,27 @@ type MutationResolver interface {
 	CreateSystemIntakeGRBReviewers(ctx context.Context, input models.CreateSystemIntakeGRBReviewersInput) (*models.CreateSystemIntakeGRBReviewersPayload, error)
 	UpdateSystemIntakeGRBReviewer(ctx context.Context, input models.UpdateSystemIntakeGRBReviewerInput) (*models.SystemIntakeGRBReviewer, error)
 	DeleteSystemIntakeGRBReviewer(ctx context.Context, input models.DeleteSystemIntakeGRBReviewerInput) (uuid.UUID, error)
+	CastSystemIntakeGRBReviewerVote(ctx context.Context, input models.CastSystemIntakeGRBReviewerVoteInput) (*models.SystemIntakeGRBReviewer, error)
+	SendSystemIntakeGRBReviewerReminder(ctx context.Context, systemIntakeID uuid.UUID) (*models.SendSystemIntakeGRBReviewReminderPayload, error)
 	CreateSystemIntakeGRBDiscussionPost(ctx context.Context, input models.CreateSystemIntakeGRBDiscussionPostInput) (*models.SystemIntakeGRBReviewDiscussionPost, error)
 	CreateSystemIntakeGRBDiscussionReply(ctx context.Context, input models.CreateSystemIntakeGRBDiscussionReplyInput) (*models.SystemIntakeGRBReviewDiscussionPost, error)
+	UpdateSystemIntakeGRBReviewType(ctx context.Context, input models.UpdateSystemIntakeGRBReviewTypeInput) (*models.UpdateSystemIntakePayload, error)
+	UpdateSystemIntakeGRBReviewFormPresentationStandard(ctx context.Context, input models.UpdateSystemIntakeGRBReviewFormInputPresentationStandard) (*models.UpdateSystemIntakePayload, error)
+	UpdateSystemIntakeGRBReviewFormPresentationAsync(ctx context.Context, input models.UpdateSystemIntakeGRBReviewFormInputPresentationAsync) (*models.UpdateSystemIntakePayload, error)
+	UpdateSystemIntakeGRBReviewFormTimeframeAsync(ctx context.Context, input models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync) (*models.UpdateSystemIntakePayload, error)
+	ExtendGRBReviewDeadlineAsync(ctx context.Context, input models.ExtendGRBReviewDeadlineInput) (*models.UpdateSystemIntakePayload, error)
+	RestartGRBReviewAsync(ctx context.Context, input models.RestartGRBReviewInput) (*models.UpdateSystemIntakePayload, error)
 	UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, input models.UpdateSystemIntakeLinkedCedarSystemInput) (*models.UpdateSystemIntakePayload, error)
 	SetSystemIntakeGRBPresentationLinks(ctx context.Context, input models.SystemIntakeGRBPresentationLinksInput) (*models.SystemIntakeGRBPresentationLinks, error)
+	UploadSystemIntakeGRBPresentationDeck(ctx context.Context, input models.UploadSystemIntakeGRBPresentationDeckInput) (*models.SystemIntakeGRBPresentationLinks, error)
 	DeleteSystemIntakeGRBPresentationLinks(ctx context.Context, input models.DeleteSystemIntakeGRBPresentationLinksInput) (uuid.UUID, error)
+	ManuallyEndSystemIntakeGRBReviewAsyncVoting(ctx context.Context, systemIntakeID uuid.UUID) (*models.UpdateSystemIntakePayload, error)
 	ArchiveSystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error)
 	SendFeedbackEmail(ctx context.Context, input models.SendFeedbackEmailInput) (*string, error)
 	SendCantFindSomethingEmail(ctx context.Context, input models.SendCantFindSomethingEmailInput) (*string, error)
 	SendReportAProblemEmail(ctx context.Context, input models.SendReportAProblemEmailInput) (*string, error)
 	CreateTRBRequest(ctx context.Context, requestType models.TRBRequestType) (*models.TRBRequest, error)
-	UpdateTRBRequest(ctx context.Context, id uuid.UUID, changes map[string]interface{}) (*models.TRBRequest, error)
+	UpdateTRBRequest(ctx context.Context, id uuid.UUID, changes map[string]any) (*models.TRBRequest, error)
 	CreateTRBRequestAttendee(ctx context.Context, input models.CreateTRBRequestAttendeeInput) (*models.TRBRequestAttendee, error)
 	UpdateTRBRequestAttendee(ctx context.Context, input models.UpdateTRBRequestAttendeeInput) (*models.TRBRequestAttendee, error)
 	DeleteTRBRequestAttendee(ctx context.Context, id uuid.UUID) (*models.TRBRequestAttendee, error)
@@ -1283,7 +1331,7 @@ type MutationResolver interface {
 	DeleteTRBRequestDocument(ctx context.Context, id uuid.UUID) (*models.DeleteTRBRequestDocumentPayload, error)
 	CreateSystemIntakeDocument(ctx context.Context, input models.CreateSystemIntakeDocumentInput) (*models.CreateSystemIntakeDocumentPayload, error)
 	DeleteSystemIntakeDocument(ctx context.Context, id uuid.UUID) (*models.DeleteSystemIntakeDocumentPayload, error)
-	UpdateTRBRequestForm(ctx context.Context, input map[string]interface{}) (*models.TRBRequestForm, error)
+	UpdateTRBRequestForm(ctx context.Context, input map[string]any) (*models.TRBRequestForm, error)
 	UpdateTRBRequestFundingSources(ctx context.Context, input models.UpdateTRBRequestFundingSourcesInput) ([]*models.TRBFundingSource, error)
 	DeleteTRBRequestFundingSources(ctx context.Context, input models.DeleteTRBRequestFundingSourcesInput) ([]*models.TRBFundingSource, error)
 	SetRolesForUserOnSystem(ctx context.Context, input models.SetRolesForUserOnSystemInput) (*string, error)
@@ -1301,17 +1349,18 @@ type MutationResolver interface {
 	CreateTRBAdminNoteGuidanceLetter(ctx context.Context, input models.CreateTRBAdminNoteGuidanceLetterInput) (*models.TRBAdminNote, error)
 	SetTRBAdminNoteArchived(ctx context.Context, id uuid.UUID, isArchived bool) (*models.TRBAdminNote, error)
 	CreateTRBGuidanceLetter(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBGuidanceLetter, error)
-	UpdateTRBGuidanceLetter(ctx context.Context, input map[string]interface{}) (*models.TRBGuidanceLetter, error)
+	UpdateTRBGuidanceLetter(ctx context.Context, input map[string]any) (*models.TRBGuidanceLetter, error)
 	RequestReviewForTRBGuidanceLetter(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetter, error)
 	SendTRBGuidanceLetter(ctx context.Context, input models.SendTRBGuidanceLetterInput) (*models.TRBGuidanceLetter, error)
 	CreateTRBGuidanceLetterInsight(ctx context.Context, input models.CreateTRBGuidanceLetterInsightInput) (*models.TRBGuidanceLetterInsight, error)
-	UpdateTRBGuidanceLetterInsight(ctx context.Context, input map[string]interface{}) (*models.TRBGuidanceLetterInsight, error)
+	UpdateTRBGuidanceLetterInsight(ctx context.Context, input map[string]any) (*models.TRBGuidanceLetterInsight, error)
 	UpdateTRBGuidanceLetterInsightOrder(ctx context.Context, input models.UpdateTRBGuidanceLetterInsightOrderInput) ([]*models.TRBGuidanceLetterInsight, error)
 	DeleteTRBGuidanceLetterInsight(ctx context.Context, id uuid.UUID) (*models.TRBGuidanceLetterInsight, error)
 	CloseTRBRequest(ctx context.Context, input models.CloseTRBRequestInput) (*models.TRBRequest, error)
 	ReopenTrbRequest(ctx context.Context, input models.ReopenTRBRequestInput) (*models.TRBRequest, error)
 	CreateTrbLeadOption(ctx context.Context, eua string) (*models.UserInfo, error)
 	DeleteTrbLeadOption(ctx context.Context, eua string) (bool, error)
+	SendGRBReviewPresentationDeckReminderEmail(ctx context.Context, systemIntakeID uuid.UUID) (bool, error)
 }
 type QueryResolver interface {
 	SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error)
@@ -1369,8 +1418,8 @@ type SystemIntakeResolver interface {
 	NextMeetingDate(ctx context.Context, obj *models.SystemIntake) (*time.Time, error)
 
 	GrbReviewers(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewer, error)
+	GrbVotingInformation(ctx context.Context, obj *models.SystemIntake) (*models.GRBVotingInformation, error)
 
-	Isso(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeIsso, error)
 	Lcid(ctx context.Context, obj *models.SystemIntake) (*string, error)
 
 	LcidScope(ctx context.Context, obj *models.SystemIntake) (*models.HTML, error)
@@ -1402,8 +1451,12 @@ type SystemIntakeResolver interface {
 	ContractNumbers(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeContractNumber, error)
 	RelatedIntakes(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntake, error)
 	RelatedTRBRequests(ctx context.Context, obj *models.SystemIntake) ([]*models.TRBRequest, error)
-	GrbDiscussions(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewDiscussion, error)
+	GrbDiscussionsPrimary(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewDiscussion, error)
+	GrbDiscussionsInternal(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewDiscussion, error)
 	GrbPresentationLinks(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBPresentationLinks, error)
+
+	GrbReviewStandardStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBReviewStandardStatusType, error)
+	GrbReviewAsyncStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBReviewAsyncStatusType, error)
 }
 type SystemIntakeDocumentResolver interface {
 	DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*models.SystemIntakeDocumentType, error)
@@ -1424,6 +1477,7 @@ type SystemIntakeGRBPresentationLinksResolver interface {
 }
 type SystemIntakeGRBReviewerResolver interface {
 	VotingRole(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (models.SystemIntakeGRBReviewerVotingRole, error)
+
 	GrbRole(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (models.SystemIntakeGRBReviewerRole, error)
 }
 type SystemIntakeNoteResolver interface {
@@ -1600,6 +1654,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.BusinessCase.CMSBenefit(childComplexity), true
 
+	case "BusinessCase.collaborationNeeded":
+		if e.complexity.BusinessCase.CollaborationNeeded == nil {
+			break
+		}
+
+		return e.complexity.BusinessCase.CollaborationNeeded(childComplexity), true
+
 	case "BusinessCase.createdAt":
 		if e.complexity.BusinessCase.CreatedAt == nil {
 			break
@@ -1649,6 +1710,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.BusinessCase.PriorityAlignment(childComplexity), true
 
+	case "BusinessCase.projectAcronym":
+		if e.complexity.BusinessCase.ProjectAcronym == nil {
+			break
+		}
+
+		return e.complexity.BusinessCase.ProjectAcronym(childComplexity), true
+
 	case "BusinessCase.projectName":
 		if e.complexity.BusinessCase.ProjectName == nil {
 			break
@@ -1669,6 +1737,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.BusinessCase.RequesterPhoneNumber(childComplexity), true
+
+	case "BusinessCase.responseToGRTFeedback":
+		if e.complexity.BusinessCase.ResponseToGRTFeedback == nil {
+			break
+		}
+
+		return e.complexity.BusinessCase.ResponseToGRTFeedback(childComplexity), true
 
 	case "BusinessCase.status":
 		if e.complexity.BusinessCase.Status == nil {
@@ -1733,6 +1808,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.BusinessCaseSolution.HostingCloudServiceType(childComplexity), true
 
+	case "BusinessCaseSolution.hostingCloudStrategy":
+		if e.complexity.BusinessCaseSolution.HostingCloudStrategy == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseSolution.HostingCloudStrategy(childComplexity), true
+
 	case "BusinessCaseSolution.hostingLocation":
 		if e.complexity.BusinessCaseSolution.HostingLocation == nil {
 			break
@@ -1775,12 +1857,40 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.BusinessCaseSolution.Summary(childComplexity), true
 
+	case "BusinessCaseSolution.targetCompletionDate":
+		if e.complexity.BusinessCaseSolution.TargetCompletionDate == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseSolution.TargetCompletionDate(childComplexity), true
+
+	case "BusinessCaseSolution.targetContractAwardDate":
+		if e.complexity.BusinessCaseSolution.TargetContractAwardDate == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseSolution.TargetContractAwardDate(childComplexity), true
+
 	case "BusinessCaseSolution.title":
 		if e.complexity.BusinessCaseSolution.Title == nil {
 			break
 		}
 
 		return e.complexity.BusinessCaseSolution.Title(childComplexity), true
+
+	case "BusinessCaseSolution.workforceTrainingReqs":
+		if e.complexity.BusinessCaseSolution.WorkforceTrainingReqs == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseSolution.WorkforceTrainingReqs(childComplexity), true
+
+	case "BusinessCaseSolution.zeroTrustAlignment":
+		if e.complexity.BusinessCaseSolution.ZeroTrustAlignment == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseSolution.ZeroTrustAlignment(childComplexity), true
 
 	case "CedarAuthorityToOperate.actualDispositionDate":
 		if e.complexity.CedarAuthorityToOperate.ActualDispositionDate == nil {
@@ -3822,6 +3932,41 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.GRBReviewerComparisonIntake.Reviewers(childComplexity), true
 
+	case "GRBVotingInformation.grbReviewers":
+		if e.complexity.GRBVotingInformation.GRBReviewers == nil {
+			break
+		}
+
+		return e.complexity.GRBVotingInformation.GRBReviewers(childComplexity), true
+
+	case "GRBVotingInformation.numberOfNoObjection":
+		if e.complexity.GRBVotingInformation.NumberOfNoObjection == nil {
+			break
+		}
+
+		return e.complexity.GRBVotingInformation.NumberOfNoObjection(childComplexity), true
+
+	case "GRBVotingInformation.numberOfNotVoted":
+		if e.complexity.GRBVotingInformation.NumberOfNotVoted == nil {
+			break
+		}
+
+		return e.complexity.GRBVotingInformation.NumberOfNotVoted(childComplexity), true
+
+	case "GRBVotingInformation.numberOfObjection":
+		if e.complexity.GRBVotingInformation.NumberOfObjection == nil {
+			break
+		}
+
+		return e.complexity.GRBVotingInformation.NumberOfObjection(childComplexity), true
+
+	case "GRBVotingInformation.votingStatus":
+		if e.complexity.GRBVotingInformation.VotingStatus == nil {
+			break
+		}
+
+		return e.complexity.GRBVotingInformation.VotingStatus(childComplexity), true
+
 	case "GovernanceRequestFeedback.author":
 		if e.complexity.GovernanceRequestFeedback.Author == nil {
 			break
@@ -3973,6 +4118,18 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Mutation.ArchiveSystemIntake(childComplexity, args["id"].(uuid.UUID)), true
+
+	case "Mutation.castSystemIntakeGRBReviewerVote":
+		if e.complexity.Mutation.CastSystemIntakeGRBReviewerVote == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_castSystemIntakeGRBReviewerVote_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CastSystemIntakeGRBReviewerVote(childComplexity, args["input"].(models.CastSystemIntakeGRBReviewerVoteInput)), true
 
 	case "Mutation.closeTRBRequest":
 		if e.complexity.Mutation.CloseTRBRequest == nil {
@@ -4502,6 +4659,30 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Mutation.DeleteTrbLeadOption(childComplexity, args["eua"].(string)), true
 
+	case "Mutation.extendGRBReviewDeadlineAsync":
+		if e.complexity.Mutation.ExtendGRBReviewDeadlineAsync == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_extendGRBReviewDeadlineAsync_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.ExtendGRBReviewDeadlineAsync(childComplexity, args["input"].(models.ExtendGRBReviewDeadlineInput)), true
+
+	case "Mutation.manuallyEndSystemIntakeGRBReviewAsyncVoting":
+		if e.complexity.Mutation.ManuallyEndSystemIntakeGRBReviewAsyncVoting == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_manuallyEndSystemIntakeGRBReviewAsyncVoting_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.ManuallyEndSystemIntakeGRBReviewAsyncVoting(childComplexity, args["systemIntakeID"].(uuid.UUID)), true
+
 	case "Mutation.reopenTrbRequest":
 		if e.complexity.Mutation.ReopenTrbRequest == nil {
 			break
@@ -4525,6 +4706,18 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Mutation.RequestReviewForTRBGuidanceLetter(childComplexity, args["id"].(uuid.UUID)), true
+
+	case "Mutation.restartGRBReviewAsync":
+		if e.complexity.Mutation.RestartGRBReviewAsync == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_restartGRBReviewAsync_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.RestartGRBReviewAsync(childComplexity, args["input"].(models.RestartGRBReviewInput)), true
 
 	case "Mutation.sendCantFindSomethingEmail":
 		if e.complexity.Mutation.SendCantFindSomethingEmail == nil {
@@ -4550,6 +4743,18 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Mutation.SendFeedbackEmail(childComplexity, args["input"].(models.SendFeedbackEmailInput)), true
 
+	case "Mutation.sendGRBReviewPresentationDeckReminderEmail":
+		if e.complexity.Mutation.SendGRBReviewPresentationDeckReminderEmail == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_sendGRBReviewPresentationDeckReminderEmail_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.SendGRBReviewPresentationDeckReminderEmail(childComplexity, args["systemIntakeID"].(uuid.UUID)), true
+
 	case "Mutation.sendReportAProblemEmail":
 		if e.complexity.Mutation.SendReportAProblemEmail == nil {
 			break
@@ -4561,6 +4766,18 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Mutation.SendReportAProblemEmail(childComplexity, args["input"].(models.SendReportAProblemEmailInput)), true
+
+	case "Mutation.sendSystemIntakeGRBReviewerReminder":
+		if e.complexity.Mutation.SendSystemIntakeGRBReviewerReminder == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_sendSystemIntakeGRBReviewerReminder_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.SendSystemIntakeGRBReviewerReminder(childComplexity, args["systemIntakeID"].(uuid.UUID)), true
 
 	case "Mutation.sendTRBGuidanceLetter":
 		if e.complexity.Mutation.SendTRBGuidanceLetter == nil {
@@ -4778,6 +4995,54 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Mutation.UpdateSystemIntakeContractDetails(childComplexity, args["input"].(models.UpdateSystemIntakeContractDetailsInput)), true
 
+	case "Mutation.updateSystemIntakeGRBReviewFormPresentationAsync":
+		if e.complexity.Mutation.UpdateSystemIntakeGRBReviewFormPresentationAsync == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateSystemIntakeGRBReviewFormPresentationAsync_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateSystemIntakeGRBReviewFormPresentationAsync(childComplexity, args["input"].(models.UpdateSystemIntakeGRBReviewFormInputPresentationAsync)), true
+
+	case "Mutation.updateSystemIntakeGRBReviewFormPresentationStandard":
+		if e.complexity.Mutation.UpdateSystemIntakeGRBReviewFormPresentationStandard == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateSystemIntakeGRBReviewFormPresentationStandard_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateSystemIntakeGRBReviewFormPresentationStandard(childComplexity, args["input"].(models.UpdateSystemIntakeGRBReviewFormInputPresentationStandard)), true
+
+	case "Mutation.updateSystemIntakeGRBReviewFormTimeframeAsync":
+		if e.complexity.Mutation.UpdateSystemIntakeGRBReviewFormTimeframeAsync == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateSystemIntakeGRBReviewFormTimeframeAsync_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateSystemIntakeGRBReviewFormTimeframeAsync(childComplexity, args["input"].(models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync)), true
+
+	case "Mutation.updateSystemIntakeGRBReviewType":
+		if e.complexity.Mutation.UpdateSystemIntakeGRBReviewType == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateSystemIntakeGRBReviewType_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateSystemIntakeGRBReviewType(childComplexity, args["input"].(models.UpdateSystemIntakeGRBReviewTypeInput)), true
+
 	case "Mutation.updateSystemIntakeGRBReviewer":
 		if e.complexity.Mutation.UpdateSystemIntakeGRBReviewer == nil {
 			break
@@ -4860,7 +5125,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateTRBGuidanceLetter(childComplexity, args["input"].(map[string]interface{})), true
+		return e.complexity.Mutation.UpdateTRBGuidanceLetter(childComplexity, args["input"].(map[string]any)), true
 
 	case "Mutation.updateTRBGuidanceLetterInsight":
 		if e.complexity.Mutation.UpdateTRBGuidanceLetterInsight == nil {
@@ -4872,7 +5137,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateTRBGuidanceLetterInsight(childComplexity, args["input"].(map[string]interface{})), true
+		return e.complexity.Mutation.UpdateTRBGuidanceLetterInsight(childComplexity, args["input"].(map[string]any)), true
 
 	case "Mutation.updateTRBGuidanceLetterInsightOrder":
 		if e.complexity.Mutation.UpdateTRBGuidanceLetterInsightOrder == nil {
@@ -4896,7 +5161,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateTRBRequest(childComplexity, args["id"].(uuid.UUID), args["changes"].(map[string]interface{})), true
+		return e.complexity.Mutation.UpdateTRBRequest(childComplexity, args["id"].(uuid.UUID), args["changes"].(map[string]any)), true
 
 	case "Mutation.updateTRBRequestAttendee":
 		if e.complexity.Mutation.UpdateTRBRequestAttendee == nil {
@@ -4932,7 +5197,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateTRBRequestForm(childComplexity, args["input"].(map[string]interface{})), true
+		return e.complexity.Mutation.UpdateTRBRequestForm(childComplexity, args["input"].(map[string]any)), true
 
 	case "Mutation.updateTRBRequestFundingSources":
 		if e.complexity.Mutation.UpdateTRBRequestFundingSources == nil {
@@ -4957,6 +5222,18 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Mutation.UpdateTRBRequestTRBLead(childComplexity, args["input"].(models.UpdateTRBRequestTRBLeadInput)), true
+
+	case "Mutation.uploadSystemIntakeGRBPresentationDeck":
+		if e.complexity.Mutation.UploadSystemIntakeGRBPresentationDeck == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_uploadSystemIntakeGRBPresentationDeck_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UploadSystemIntakeGRBPresentationDeck(childComplexity, args["input"].(models.UploadSystemIntakeGRBPresentationDeckInput)), true
 
 	case "Query.cedarAuthorityToOperate":
 		if e.complexity.Query.CedarAuthorityToOperate == nil {
@@ -5353,6 +5630,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.RequesterUpdateEmailData.RequesterEmail(childComplexity), true
 
+	case "SendSystemIntakeGRBReviewReminderPayload.timeSent":
+		if e.complexity.SendSystemIntakeGRBReviewReminderPayload.TimeSent == nil {
+			break
+		}
+
+		return e.complexity.SendSystemIntakeGRBReviewReminderPayload.TimeSent(childComplexity), true
+
 	case "SystemIntake.acquisitionMethods":
 		if e.complexity.SystemIntake.AcquisitionMethods == nil {
 			break
@@ -5598,12 +5882,26 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.SystemIntake.GovernanceTeams(childComplexity), true
 
-	case "SystemIntake.grbDiscussions":
-		if e.complexity.SystemIntake.GrbDiscussions == nil {
+	case "SystemIntake.grbDiscussionsInternal":
+		if e.complexity.SystemIntake.GrbDiscussionsInternal == nil {
 			break
 		}
 
-		return e.complexity.SystemIntake.GrbDiscussions(childComplexity), true
+		return e.complexity.SystemIntake.GrbDiscussionsInternal(childComplexity), true
+
+	case "SystemIntake.grbDiscussionsPrimary":
+		if e.complexity.SystemIntake.GrbDiscussionsPrimary == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.GrbDiscussionsPrimary(childComplexity), true
+
+	case "SystemIntake.grbPresentationDeckRequesterReminderEmailSentTime":
+		if e.complexity.SystemIntake.GrbPresentationDeckRequesterReminderEmailSentTime == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.GrbPresentationDeckRequesterReminderEmailSentTime(childComplexity), true
 
 	case "SystemIntake.grbPresentationLinks":
 		if e.complexity.SystemIntake.GrbPresentationLinks == nil {
@@ -5612,12 +5910,68 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.SystemIntake.GrbPresentationLinks(childComplexity), true
 
+	case "SystemIntake.grbReviewAsyncEndDate":
+		if e.complexity.SystemIntake.GrbReviewAsyncEndDate == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.GrbReviewAsyncEndDate(childComplexity), true
+
+	case "SystemIntake.grbReviewAsyncManualEndDate":
+		if e.complexity.SystemIntake.GrbReviewAsyncManualEndDate == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.GrbReviewAsyncManualEndDate(childComplexity), true
+
+	case "SystemIntake.grbReviewAsyncRecordingTime":
+		if e.complexity.SystemIntake.GrbReviewAsyncRecordingTime == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.GrbReviewAsyncRecordingTime(childComplexity), true
+
+	case "SystemIntake.grbReviewAsyncStatus":
+		if e.complexity.SystemIntake.GrbReviewAsyncStatus == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.GrbReviewAsyncStatus(childComplexity), true
+
+	case "SystemIntake.grbReviewReminderLastSent":
+		if e.complexity.SystemIntake.GrbReviewReminderLastSent == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.GrbReviewReminderLastSent(childComplexity), true
+
+	case "SystemIntake.grbReviewStandardStatus":
+		if e.complexity.SystemIntake.GrbReviewStandardStatus == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.GrbReviewStandardStatus(childComplexity), true
+
+	case "SystemIntake.grbReviewType":
+		if e.complexity.SystemIntake.GrbReviewType == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.GrbReviewType(childComplexity), true
+
 	case "SystemIntake.grbReviewers":
 		if e.complexity.SystemIntake.GrbReviewers == nil {
 			break
 		}
 
 		return e.complexity.SystemIntake.GrbReviewers(childComplexity), true
+
+	case "SystemIntake.grbVotingInformation":
+		if e.complexity.SystemIntake.GrbVotingInformation == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.GrbVotingInformation(childComplexity), true
 
 	case "SystemIntake.grtReviewEmailBody":
 		if e.complexity.SystemIntake.GrtReviewEmailBody == nil {
@@ -5639,13 +5993,6 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.SystemIntake.ID(childComplexity), true
-
-	case "SystemIntake.isso":
-		if e.complexity.SystemIntake.Isso == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.Isso(childComplexity), true
 
 	case "SystemIntake.itGovTaskStatuses":
 		if e.complexity.SystemIntake.ItGovTaskStatuses == nil {
@@ -6515,6 +6862,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.SystemIntakeGRBReviewer.CreatedBy(childComplexity), true
 
+	case "SystemIntakeGRBReviewer.dateVoted":
+		if e.complexity.SystemIntakeGRBReviewer.DateVoted == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeGRBReviewer.DateVoted(childComplexity), true
+
 	case "SystemIntakeGRBReviewer.grbRole":
 		if e.complexity.SystemIntakeGRBReviewer.GrbRole == nil {
 			break
@@ -6557,6 +6911,20 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.SystemIntakeGRBReviewer.UserAccount(childComplexity), true
 
+	case "SystemIntakeGRBReviewer.vote":
+		if e.complexity.SystemIntakeGRBReviewer.Vote == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeGRBReviewer.Vote(childComplexity), true
+
+	case "SystemIntakeGRBReviewer.voteComment":
+		if e.complexity.SystemIntakeGRBReviewer.VoteComment == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeGRBReviewer.VoteComment(childComplexity), true
+
 	case "SystemIntakeGRBReviewer.votingRole":
 		if e.complexity.SystemIntakeGRBReviewer.VotingRole == nil {
 			break
@@ -6577,20 +6945,6 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.SystemIntakeGovernanceTeam.Teams(childComplexity), true
-
-	case "SystemIntakeISSO.isPresent":
-		if e.complexity.SystemIntakeISSO.IsPresent == nil {
-			break
-		}
-
-		return e.complexity.SystemIntakeISSO.IsPresent(childComplexity), true
-
-	case "SystemIntakeISSO.name":
-		if e.complexity.SystemIntakeISSO.Name == nil {
-			break
-		}
-
-		return e.complexity.SystemIntakeISSO.Name(childComplexity), true
 
 	case "SystemIntakeLCIDExpirationChange.newCostBaseline":
 		if e.complexity.SystemIntakeLCIDExpirationChange.NewCostBaseline == nil {
@@ -7986,6 +8340,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	opCtx := graphql.GetOperationContext(ctx)
 	ec := executionContext{opCtx, e, 0, 0, make(chan graphql.DeferredResult)}
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
+		ec.unmarshalInputCastSystemIntakeGRBReviewerVoteInput,
 		ec.unmarshalInputCloseTRBRequestInput,
 		ec.unmarshalInputCreateCedarSystemBookmarkInput,
 		ec.unmarshalInputCreateGRBReviewerInput,
@@ -8008,7 +8363,9 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputDeleteSystemIntakeGRBReviewerInput,
 		ec.unmarshalInputDeleteTRBRequestFundingSourcesInput,
 		ec.unmarshalInputEmailNotificationRecipients,
+		ec.unmarshalInputExtendGRBReviewDeadlineInput,
 		ec.unmarshalInputReopenTRBRequestInput,
+		ec.unmarshalInputRestartGRBReviewInput,
 		ec.unmarshalInputSendCantFindSomethingEmailInput,
 		ec.unmarshalInputSendFeedbackEmailInput,
 		ec.unmarshalInputSendReportAProblemEmailInput,
@@ -8035,7 +8392,6 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputSystemIntakeFundingSourcesInput,
 		ec.unmarshalInputSystemIntakeGRBPresentationLinksInput,
 		ec.unmarshalInputSystemIntakeGovernanceTeamInput,
-		ec.unmarshalInputSystemIntakeISSOInput,
 		ec.unmarshalInputSystemIntakeIssueLCIDInput,
 		ec.unmarshalInputSystemIntakeNotITGovReqInput,
 		ec.unmarshalInputSystemIntakeProductManagerInput,
@@ -8066,8 +8422,13 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputUpdateTRBRequestFormInput,
 		ec.unmarshalInputUpdateTRBRequestFundingSourcesInput,
 		ec.unmarshalInputUpdateTRBRequestTRBLeadInput,
+		ec.unmarshalInputUploadSystemIntakeGRBPresentationDeckInput,
 		ec.unmarshalInputcreateSystemIntakeGRBDiscussionPostInput,
 		ec.unmarshalInputcreateSystemIntakeGRBDiscussionReplyInput,
+		ec.unmarshalInputupdateSystemIntakeGRBReviewFormInputPresentationAsync,
+		ec.unmarshalInputupdateSystemIntakeGRBReviewFormInputPresentationStandard,
+		ec.unmarshalInputupdateSystemIntakeGRBReviewFormInputTimeframeAsync,
+		ec.unmarshalInputupdateSystemIntakeGRBReviewTypeInput,
 	)
 	first := true
 
@@ -8641,13 +9002,18 @@ type BusinessCaseSolution {
   costSavings: String
   hasUi: String
   hostingCloudServiceType: String
+  hostingCloudStrategy: String
   hostingLocation: String
   hostingType: String
   pros: String
   securityIsApproved: Boolean
   securityIsBeingReviewed: String
   summary: String
+  targetContractAwardDate: Time
+  targetCompletionDate: Time
   title: String
+  workforceTrainingReqs: String
+  zeroTrustAlignment: String
 }
 
 """
@@ -8710,6 +9076,7 @@ type BusinessCase {
   businessNeed: String
   businessOwner: String
   cmsBenefit: String
+  collaborationNeeded: String
   createdAt: Time!
   currentSolutionSummary: String
   euaUserId: String!
@@ -8717,9 +9084,11 @@ type BusinessCase {
   lifecycleCostLines: [EstimatedLifecycleCost!]
   preferredSolution: BusinessCaseSolution
   priorityAlignment: String
+  projectAcronym: String
   projectName: String
   requester: String
   requesterPhoneNumber: String
+  responseToGRTFeedback: String
   status: BusinessCaseStatus!
   successIndicators: String
   systemIntake: SystemIntake!
@@ -8803,15 +9172,6 @@ type SystemIntakeGovernanceTeam {
 }
 
 """
-The Information System Security Officer (ISSO) that is
-assicuated with a system request, if any
-"""
-type SystemIntakeISSO {
-  isPresent: Boolean
-  name: String
-}
-
-"""
 The author of a note added to a system request
 """
 type SystemIntakeNoteAuthor {
@@ -8884,6 +9244,14 @@ input SystemIntakeGRBPresentationLinksInput {
   presentationDeckFileData: Upload @goField(omittable: true)
 }
 
+"""
+Data needed to upload a presentation deck
+"""
+input UploadSystemIntakeGRBPresentationDeckInput {
+  systemIntakeID: UUID!
+  presentationDeckFileData: Upload
+}
+
 input DeleteSystemIntakeGRBPresentationLinksInput {
   systemIntakeID: UUID!
 }
@@ -8917,9 +9285,15 @@ type SystemIntake {
   lastMeetingDate: Time
   nextMeetingDate: Time
   grbReviewStartedAt: Time
-  grbReviewers: [SystemIntakeGRBReviewer!]!
+  """
+  All users are are involved in a GRB review. This will be deprecated in favor of grbVotingInformation
+  """
+  grbReviewers: [SystemIntakeGRBReviewer!]! @deprecated(reason: "Use grbVotingInformation.grbReviewers instead")
+  """
+  All information about voting activity in a GRB review
+  """
+  grbVotingInformation: GRBVotingInformation!
   id: UUID!
-  isso: SystemIntakeISSO!
   lcid: String
   lcidIssuedAt: Time
   lcidExpiresAt: Time
@@ -8997,13 +9371,99 @@ type SystemIntake {
   """
   relatedTRBRequests: [TRBRequest!]!
   """
-  GRB Review Discussion Posts/Threads
+  GRB Review Primary Discussion Board Posts/Threads
   """
-  grbDiscussions: [SystemIntakeGRBReviewDiscussion!]!
+  grbDiscussionsPrimary: [SystemIntakeGRBReviewDiscussion!]!
+  """
+  GRB Review Internal Discussion Board Posts/Threads
+  """
+  grbDiscussionsInternal: [SystemIntakeGRBReviewDiscussion!]!
   """
   GRB Presentation Link Data
   """
   grbPresentationLinks: SystemIntakeGRBPresentationLinks
+  """
+  GRB Presentation Deck Metadata
+  """
+  grbPresentationDeckRequesterReminderEmailSentTime: Time
+  """
+  GRB Review Form
+  """
+  grbReviewType: SystemIntakeGRBReviewType!
+  grbReviewAsyncRecordingTime: Time
+  grbReviewAsyncEndDate: Time
+  grbReviewStandardStatus: SystemIntakeGRBReviewStandardStatusType
+  grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType
+  grbReviewAsyncManualEndDate: Time
+  grbReviewReminderLastSent: Time
+}
+
+"""
+GRBVotingInformation holds all the information about the voting session for a GRB Review.
+"""
+type GRBVotingInformation {
+  """
+  Who is doing the review for these GRB sessions
+  """
+  grbReviewers: [SystemIntakeGRBReviewer!]!
+  """
+  The status of the voting session, this can include if it is not started or in progress, as well as the suggested decision of the voting session
+  """
+  votingStatus: GRBVotingInformationStatus!
+  """
+  How many people have voted no objection
+  """
+  numberOfNoObjection: Int!
+  """
+  How many people have voted with an objection
+  """
+  numberOfObjection: Int!
+  """
+  How many people have not voted
+  """
+  numberOfNotVoted: Int!
+}
+"""
+All possible permutations of the status of a GRB ASYNC voting session
+"""
+enum GRBVotingInformationStatus {
+  """
+  This status is not rendered to the front end, but it is to show a state where the GRB async voting button has not yet been pressed
+  """
+  NOT_STARTED
+  """
+  Setup button has been pressed. This shows for the In progress and Past due statuses
+  """
+  IN_PROGRESS
+  """
+  End date has passed, quorum of votes has been met (5 votes), vote count for approval met (0 votes with objections).
+  """
+  APPROVED
+  """
+  End date has passed, quorum of votes has been met (5 votes), vote count has two or more objections.
+  """
+  NOT_APPROVED
+  """
+  End date has passed, quorum of votes has been met (5 votes), vote count is mostly no objections but has one objection vote OR voting has been ended early and a quorum has not been met.
+  """
+  INCONCLUSIVE
+}
+
+"""
+The status type of the System Intake GRB Review (For Async Reviews only)
+"""
+enum SystemIntakeGRBReviewAsyncStatusType {
+  IN_PROGRESS
+  COMPLETED
+  PAST_DUE
+}
+
+"""
+The status type of the System Intake GRB Review (For Standard reviews only)
+"""
+enum SystemIntakeGRBReviewStandardStatusType {
+  SCHEDULED
+  COMPLETED
 }
 
 type SystemIntakeContractNumber {
@@ -9109,14 +9569,6 @@ input SystemIntakeProductManagerInput {
 }
 
 """
-The input data used to set the ISSO associated with a system request, if any
-"""
-input SystemIntakeISSOInput {
-  isPresent: Boolean
-  name: String
-}
-
-"""
 The input data used to add an OIT collaborator for a system request
 """
 input SystemIntakeCollaboratorInput {
@@ -9139,11 +9591,10 @@ a system request
 """
 input UpdateSystemIntakeContactDetailsInput {
   id: UUID!
-  requester: SystemIntakeRequesterWithComponentInput!,
-  businessOwner: SystemIntakeBusinessOwnerInput!,
-  productManager: SystemIntakeProductManagerInput!,
-  isso: SystemIntakeISSOInput!,
-  governanceTeams: SystemIntakeGovernanceTeamInput!,
+  requester: SystemIntakeRequesterWithComponentInput!
+  businessOwner: SystemIntakeBusinessOwnerInput!
+  productManager: SystemIntakeProductManagerInput!
+  governanceTeams: SystemIntakeGovernanceTeamInput!
 }
 
 """
@@ -9365,6 +9816,9 @@ type SystemIntakeGRBReviewer {
   userAccount: UserAccount!
   systemIntakeID: UUID!
   votingRole: SystemIntakeGRBReviewerVotingRole!
+  vote: SystemIntakeAsyncGRBVotingOption
+  voteComment: String
+  dateVoted: Time
   grbRole: SystemIntakeGRBReviewerRole!
   createdBy: UUID!
   createdAt: Time!
@@ -9424,6 +9878,12 @@ input UpdateSystemIntakeGRBReviewerInput {
   grbRole: SystemIntakeGRBReviewerRole!
 }
 
+input CastSystemIntakeGRBReviewerVoteInput {
+  systemIntakeID: UUID!
+  vote: SystemIntakeAsyncGRBVotingOption!
+  voteComment: String
+}
+
 input DeleteSystemIntakeGRBReviewerInput {
   reviewerID: UUID!
 }
@@ -9449,6 +9909,11 @@ enum SystemIntakeGRBReviewerVotingRole {
   NON_VOTING
 }
 
+enum SystemIntakeAsyncGRBVotingOption {
+  NO_OBJECTION
+  OBJECTION
+}
+
 type SystemIntakeGRBReviewDiscussionPost {
   id: UUID!
   content: HTML!
@@ -9466,15 +9931,69 @@ type SystemIntakeGRBReviewDiscussion {
   replies: [SystemIntakeGRBReviewDiscussionPost!]!
 }
 
+enum SystemIntakeGRBReviewType {
+  STANDARD
+  ASYNC
+}
+
+enum SystemIntakeGRBDiscussionBoardType {
+  PRIMARY
+  INTERNAL
+}
 
 input createSystemIntakeGRBDiscussionPostInput {
   systemIntakeID: UUID!
+  discussionBoardType: SystemIntakeGRBDiscussionBoardType!
   content: TaggedHTML!
 }
 
 input createSystemIntakeGRBDiscussionReplyInput {
   initialPostID: UUID!
+  discussionBoardType: SystemIntakeGRBDiscussionBoardType!
   content: TaggedHTML!
+}
+
+type SendSystemIntakeGRBReviewReminderPayload {
+  timeSent: Time!
+}
+
+"""
+Input data used to set or update a System Intake's GRB Review Type
+"""
+input updateSystemIntakeGRBReviewTypeInput {
+  systemIntakeID: UUID!
+  grbReviewType: SystemIntakeGRBReviewType!
+}
+
+"""
+Input data used to set or update a System Intake's GRB Review Presentation (Standard) data
+"""
+input updateSystemIntakeGRBReviewFormInputPresentationStandard {
+  systemIntakeID: UUID!
+  """
+  the date of the GRB review meeting. It is omittable for simplicity on the front end, but if it is omitted or null the date will not be updated
+  """
+  grbDate: Time @goField(omittable: true)
+}
+
+"""
+Input data used to set or update a System Intake's GRB Review Presentation (Async) data
+"""
+input updateSystemIntakeGRBReviewFormInputPresentationAsync {
+  systemIntakeID: UUID!
+  grbReviewAsyncRecordingTime: Time @goField(omittable: true)
+}
+
+"""
+Input data used to set or update a System Intake's GRB Review Timeframe (Async) data
+"""
+input updateSystemIntakeGRBReviewFormInputTimeframeAsync {
+  systemIntakeID: UUID!
+  grbReviewAsyncEndDate: Time!
+  """
+  Whether or not to start the GRB review meeting now or not. It defaults to false
+  """
+  startGRBReview: Boolean! = false
 }
 
 """
@@ -9543,7 +10062,9 @@ input SystemIntakeProgressToNewStepsInput {
   grbRecommendations: HTML
   additionalInfo: HTML
   adminNote: HTML
+  grbReviewType: SystemIntakeGRBReviewType
 }
+
 """
 Input for updating an intake's LCID in IT Gov v2
 """
@@ -9948,6 +10469,7 @@ type TRBRequestAttendee {
 # lint-disable defined-types-are-used
 enum TagType {
   USER_ACCOUNT
+  REQUESTER
   GROUP_IT_GOV
   GROUP_GRB_REVIEWERS
 }
@@ -10139,6 +10661,22 @@ Represents the possible types of feedback on governance requests, based on who i
 enum GovernanceRequestFeedbackType {
   REQUESTER
   GRB
+}
+
+"""
+Input structure to extend the GRB review deadline
+"""
+input ExtendGRBReviewDeadlineInput {
+  systemIntakeID: UUID!
+  grbReviewAsyncEndDate: Time!
+}
+
+"""
+Input structure to restart the GRB review process
+"""
+input RestartGRBReviewInput {
+  systemIntakeID: UUID!
+  newGRBEndDate: Time!
 }
 
 """
@@ -10779,13 +11317,33 @@ type Mutation {
   updateSystemIntakeGRBReviewer(input: UpdateSystemIntakeGRBReviewerInput!): SystemIntakeGRBReviewer!
   deleteSystemIntakeGRBReviewer(input: DeleteSystemIntakeGRBReviewerInput!): UUID!
 
+  castSystemIntakeGRBReviewerVote(input: CastSystemIntakeGRBReviewerVoteInput!): SystemIntakeGRBReviewer!
+
+  sendSystemIntakeGRBReviewerReminder(systemIntakeID: UUID!): SendSystemIntakeGRBReviewReminderPayload!
+
   createSystemIntakeGRBDiscussionPost(input: createSystemIntakeGRBDiscussionPostInput!): SystemIntakeGRBReviewDiscussionPost
   createSystemIntakeGRBDiscussionReply(input: createSystemIntakeGRBDiscussionReplyInput!): SystemIntakeGRBReviewDiscussionPost
+
+  updateSystemIntakeGRBReviewType(input: updateSystemIntakeGRBReviewTypeInput!): UpdateSystemIntakePayload
+  @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeGRBReviewFormPresentationStandard(input: updateSystemIntakeGRBReviewFormInputPresentationStandard!): UpdateSystemIntakePayload
+  @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeGRBReviewFormPresentationAsync(input: updateSystemIntakeGRBReviewFormInputPresentationAsync!): UpdateSystemIntakePayload
+  @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeGRBReviewFormTimeframeAsync(input: updateSystemIntakeGRBReviewFormInputTimeframeAsync!): UpdateSystemIntakePayload
+  @hasRole(role: EASI_GOVTEAM)
+  extendGRBReviewDeadlineAsync(input: ExtendGRBReviewDeadlineInput!): UpdateSystemIntakePayload
+  @hasRole(role: EASI_GOVTEAM)
+  restartGRBReviewAsync(input: RestartGRBReviewInput!): UpdateSystemIntakePayload
+  @hasRole(role: EASI_GOVTEAM)
 
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
 
   setSystemIntakeGRBPresentationLinks(input: SystemIntakeGRBPresentationLinksInput!): SystemIntakeGRBPresentationLinks
+  uploadSystemIntakeGRBPresentationDeck(input: UploadSystemIntakeGRBPresentationDeckInput!): SystemIntakeGRBPresentationLinks
   deleteSystemIntakeGRBPresentationLinks(input: DeleteSystemIntakeGRBPresentationLinksInput!): UUID!
+  manuallyEndSystemIntakeGRBReviewAsyncVoting(systemIntakeID: UUID!): UpdateSystemIntakePayload
+  @hasRole(role: EASI_GOVTEAM)
 
   archiveSystemIntake(id: UUID!): SystemIntake!
 
@@ -10854,6 +11412,8 @@ type Mutation {
   @hasRole(role: EASI_TRB_ADMIN)
   deleteTrbLeadOption(eua: String!): Boolean!
   @hasRole(role: EASI_TRB_ADMIN)
+  sendGRBReviewPresentationDeckReminderEmail(systemIntakeID: UUID!): Boolean!
+  @hasRole(role: EASI_GOVTEAM)
 }
 
 """
@@ -11177,6 +11737,14 @@ enum ITGovGRBStatus {
   """
   SCHEDULED
   """
+  The GRB meeting is waiting for review
+  """
+  AWAITING_GRB_REVIEW,
+  """
+  The GRB review is currently in progress
+  """
+  REVIEW_IN_PROGRESS,
+  """
   The GRT meeting has already happened, and an outcome hasn't been noted yet
   """
   AWAITING_DECISION
@@ -11226,6 +11794,7 @@ enum SystemIntakeStatusAdmin {
   GRT_MEETING_COMPLETE
   GRB_MEETING_READY
   GRB_MEETING_COMPLETE
+  GRB_REVIEW_IN_PROGRESS
   FINAL_BUSINESS_CASE_IN_PROGRESS
   FINAL_BUSINESS_CASE_SUBMITTED
   LCID_ISSUED
@@ -11255,6 +11824,7 @@ enum SystemIntakeStatusRequester {
   FINAL_BUSINESS_CASE_EDITS_REQUESTED
   GRB_MEETING_READY
   GRB_MEETING_AWAITING_DECISION
+  GRB_REVIEW_IN_PROGRESS
   LCID_ISSUED
   LCID_EXPIRED
   LCID_RETIRED
@@ -11427,6 +11997,34 @@ func (ec *executionContext) field_Mutation_archiveSystemIntake_argsID(
 	}
 
 	var zeroVal uuid.UUID
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_castSystemIntakeGRBReviewerVote_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_castSystemIntakeGRBReviewerVote_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_castSystemIntakeGRBReviewerVote_argsInput(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (models.CastSystemIntakeGRBReviewerVoteInput, error) {
+	if _, ok := rawArgs["input"]; !ok {
+		var zeroVal models.CastSystemIntakeGRBReviewerVoteInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNCastSystemIntakeGRBReviewerVoteInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCastSystemIntakeGRBReviewerVoteInput(ctx, tmp)
+	}
+
+	var zeroVal models.CastSystemIntakeGRBReviewerVoteInput
 	return zeroVal, nil
 }
 
@@ -12662,6 +13260,62 @@ func (ec *executionContext) field_Mutation_deleteTrbLeadOption_argsEua(
 	return zeroVal, nil
 }
 
+func (ec *executionContext) field_Mutation_extendGRBReviewDeadlineAsync_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_extendGRBReviewDeadlineAsync_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_extendGRBReviewDeadlineAsync_argsInput(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (models.ExtendGRBReviewDeadlineInput, error) {
+	if _, ok := rawArgs["input"]; !ok {
+		var zeroVal models.ExtendGRBReviewDeadlineInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNExtendGRBReviewDeadlineInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐExtendGRBReviewDeadlineInput(ctx, tmp)
+	}
+
+	var zeroVal models.ExtendGRBReviewDeadlineInput
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_manuallyEndSystemIntakeGRBReviewAsyncVoting_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_manuallyEndSystemIntakeGRBReviewAsyncVoting_argsSystemIntakeID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["systemIntakeID"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_manuallyEndSystemIntakeGRBReviewAsyncVoting_argsSystemIntakeID(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (uuid.UUID, error) {
+	if _, ok := rawArgs["systemIntakeID"]; !ok {
+		var zeroVal uuid.UUID
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
+	if tmp, ok := rawArgs["systemIntakeID"]; ok {
+		return ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+	}
+
+	var zeroVal uuid.UUID
+	return zeroVal, nil
+}
+
 func (ec *executionContext) field_Mutation_reopenTrbRequest_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -12715,6 +13369,34 @@ func (ec *executionContext) field_Mutation_requestReviewForTRBGuidanceLetter_arg
 	}
 
 	var zeroVal uuid.UUID
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_restartGRBReviewAsync_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_restartGRBReviewAsync_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_restartGRBReviewAsync_argsInput(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (models.RestartGRBReviewInput, error) {
+	if _, ok := rawArgs["input"]; !ok {
+		var zeroVal models.RestartGRBReviewInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNRestartGRBReviewInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRestartGRBReviewInput(ctx, tmp)
+	}
+
+	var zeroVal models.RestartGRBReviewInput
 	return zeroVal, nil
 }
 
@@ -12774,6 +13456,34 @@ func (ec *executionContext) field_Mutation_sendFeedbackEmail_argsInput(
 	return zeroVal, nil
 }
 
+func (ec *executionContext) field_Mutation_sendGRBReviewPresentationDeckReminderEmail_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_sendGRBReviewPresentationDeckReminderEmail_argsSystemIntakeID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["systemIntakeID"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_sendGRBReviewPresentationDeckReminderEmail_argsSystemIntakeID(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (uuid.UUID, error) {
+	if _, ok := rawArgs["systemIntakeID"]; !ok {
+		var zeroVal uuid.UUID
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
+	if tmp, ok := rawArgs["systemIntakeID"]; ok {
+		return ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+	}
+
+	var zeroVal uuid.UUID
+	return zeroVal, nil
+}
+
 func (ec *executionContext) field_Mutation_sendReportAProblemEmail_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -12799,6 +13509,34 @@ func (ec *executionContext) field_Mutation_sendReportAProblemEmail_argsInput(
 	}
 
 	var zeroVal models.SendReportAProblemEmailInput
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_sendSystemIntakeGRBReviewerReminder_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_sendSystemIntakeGRBReviewerReminder_argsSystemIntakeID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["systemIntakeID"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_sendSystemIntakeGRBReviewerReminder_argsSystemIntakeID(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (uuid.UUID, error) {
+	if _, ok := rawArgs["systemIntakeID"]; !ok {
+		var zeroVal uuid.UUID
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
+	if tmp, ok := rawArgs["systemIntakeID"]; ok {
+		return ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+	}
+
+	var zeroVal uuid.UUID
 	return zeroVal, nil
 }
 
@@ -13329,6 +14067,118 @@ func (ec *executionContext) field_Mutation_updateSystemIntakeContractDetails_arg
 	return zeroVal, nil
 }
 
+func (ec *executionContext) field_Mutation_updateSystemIntakeGRBReviewFormPresentationAsync_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_updateSystemIntakeGRBReviewFormPresentationAsync_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_updateSystemIntakeGRBReviewFormPresentationAsync_argsInput(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (models.UpdateSystemIntakeGRBReviewFormInputPresentationAsync, error) {
+	if _, ok := rawArgs["input"]; !ok {
+		var zeroVal models.UpdateSystemIntakeGRBReviewFormInputPresentationAsync
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNupdateSystemIntakeGRBReviewFormInputPresentationAsync2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemIntakeGRBReviewFormInputPresentationAsync(ctx, tmp)
+	}
+
+	var zeroVal models.UpdateSystemIntakeGRBReviewFormInputPresentationAsync
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_updateSystemIntakeGRBReviewFormPresentationStandard_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_updateSystemIntakeGRBReviewFormPresentationStandard_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_updateSystemIntakeGRBReviewFormPresentationStandard_argsInput(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (models.UpdateSystemIntakeGRBReviewFormInputPresentationStandard, error) {
+	if _, ok := rawArgs["input"]; !ok {
+		var zeroVal models.UpdateSystemIntakeGRBReviewFormInputPresentationStandard
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNupdateSystemIntakeGRBReviewFormInputPresentationStandard2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemIntakeGRBReviewFormInputPresentationStandard(ctx, tmp)
+	}
+
+	var zeroVal models.UpdateSystemIntakeGRBReviewFormInputPresentationStandard
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_updateSystemIntakeGRBReviewFormTimeframeAsync_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_updateSystemIntakeGRBReviewFormTimeframeAsync_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_updateSystemIntakeGRBReviewFormTimeframeAsync_argsInput(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync, error) {
+	if _, ok := rawArgs["input"]; !ok {
+		var zeroVal models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNupdateSystemIntakeGRBReviewFormInputTimeframeAsync2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemIntakeGRBReviewFormInputTimeframeAsync(ctx, tmp)
+	}
+
+	var zeroVal models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_updateSystemIntakeGRBReviewType_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_updateSystemIntakeGRBReviewType_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_updateSystemIntakeGRBReviewType_argsInput(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (models.UpdateSystemIntakeGRBReviewTypeInput, error) {
+	if _, ok := rawArgs["input"]; !ok {
+		var zeroVal models.UpdateSystemIntakeGRBReviewTypeInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNupdateSystemIntakeGRBReviewTypeInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemIntakeGRBReviewTypeInput(ctx, tmp)
+	}
+
+	var zeroVal models.UpdateSystemIntakeGRBReviewTypeInput
+	return zeroVal, nil
+}
+
 func (ec *executionContext) field_Mutation_updateSystemIntakeGRBReviewer_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -13792,6 +14642,34 @@ func (ec *executionContext) field_Mutation_updateTRBRequest_argsChanges(
 	}
 
 	var zeroVal map[string]any
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_uploadSystemIntakeGRBPresentationDeck_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_uploadSystemIntakeGRBPresentationDeck_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_uploadSystemIntakeGRBPresentationDeck_argsInput(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (models.UploadSystemIntakeGRBPresentationDeckInput, error) {
+	if _, ok := rawArgs["input"]; !ok {
+		var zeroVal models.UploadSystemIntakeGRBPresentationDeckInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNUploadSystemIntakeGRBPresentationDeckInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUploadSystemIntakeGRBPresentationDeckInput(ctx, tmp)
+	}
+
+	var zeroVal models.UploadSystemIntakeGRBPresentationDeckInput
 	return zeroVal, nil
 }
 
@@ -15027,6 +15905,8 @@ func (ec *executionContext) fieldContext_BusinessCase_alternativeASolution(_ con
 				return ec.fieldContext_BusinessCaseSolution_hasUi(ctx, field)
 			case "hostingCloudServiceType":
 				return ec.fieldContext_BusinessCaseSolution_hostingCloudServiceType(ctx, field)
+			case "hostingCloudStrategy":
+				return ec.fieldContext_BusinessCaseSolution_hostingCloudStrategy(ctx, field)
 			case "hostingLocation":
 				return ec.fieldContext_BusinessCaseSolution_hostingLocation(ctx, field)
 			case "hostingType":
@@ -15039,8 +15919,16 @@ func (ec *executionContext) fieldContext_BusinessCase_alternativeASolution(_ con
 				return ec.fieldContext_BusinessCaseSolution_securityIsBeingReviewed(ctx, field)
 			case "summary":
 				return ec.fieldContext_BusinessCaseSolution_summary(ctx, field)
+			case "targetContractAwardDate":
+				return ec.fieldContext_BusinessCaseSolution_targetContractAwardDate(ctx, field)
+			case "targetCompletionDate":
+				return ec.fieldContext_BusinessCaseSolution_targetCompletionDate(ctx, field)
 			case "title":
 				return ec.fieldContext_BusinessCaseSolution_title(ctx, field)
+			case "workforceTrainingReqs":
+				return ec.fieldContext_BusinessCaseSolution_workforceTrainingReqs(ctx, field)
+			case "zeroTrustAlignment":
+				return ec.fieldContext_BusinessCaseSolution_zeroTrustAlignment(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type BusinessCaseSolution", field.Name)
 		},
@@ -15094,6 +15982,8 @@ func (ec *executionContext) fieldContext_BusinessCase_alternativeBSolution(_ con
 				return ec.fieldContext_BusinessCaseSolution_hasUi(ctx, field)
 			case "hostingCloudServiceType":
 				return ec.fieldContext_BusinessCaseSolution_hostingCloudServiceType(ctx, field)
+			case "hostingCloudStrategy":
+				return ec.fieldContext_BusinessCaseSolution_hostingCloudStrategy(ctx, field)
 			case "hostingLocation":
 				return ec.fieldContext_BusinessCaseSolution_hostingLocation(ctx, field)
 			case "hostingType":
@@ -15106,8 +15996,16 @@ func (ec *executionContext) fieldContext_BusinessCase_alternativeBSolution(_ con
 				return ec.fieldContext_BusinessCaseSolution_securityIsBeingReviewed(ctx, field)
 			case "summary":
 				return ec.fieldContext_BusinessCaseSolution_summary(ctx, field)
+			case "targetContractAwardDate":
+				return ec.fieldContext_BusinessCaseSolution_targetContractAwardDate(ctx, field)
+			case "targetCompletionDate":
+				return ec.fieldContext_BusinessCaseSolution_targetCompletionDate(ctx, field)
 			case "title":
 				return ec.fieldContext_BusinessCaseSolution_title(ctx, field)
+			case "workforceTrainingReqs":
+				return ec.fieldContext_BusinessCaseSolution_workforceTrainingReqs(ctx, field)
+			case "zeroTrustAlignment":
+				return ec.fieldContext_BusinessCaseSolution_zeroTrustAlignment(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type BusinessCaseSolution", field.Name)
 		},
@@ -15226,6 +16124,47 @@ func (ec *executionContext) _BusinessCase_cmsBenefit(ctx context.Context, field 
 }
 
 func (ec *executionContext) fieldContext_BusinessCase_cmsBenefit(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "BusinessCase",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _BusinessCase_collaborationNeeded(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_BusinessCase_collaborationNeeded(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CollaborationNeeded, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(null.String)
+	fc.Result = res
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_BusinessCase_collaborationNeeded(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "BusinessCase",
 		Field:      field,
@@ -15512,6 +16451,8 @@ func (ec *executionContext) fieldContext_BusinessCase_preferredSolution(_ contex
 				return ec.fieldContext_BusinessCaseSolution_hasUi(ctx, field)
 			case "hostingCloudServiceType":
 				return ec.fieldContext_BusinessCaseSolution_hostingCloudServiceType(ctx, field)
+			case "hostingCloudStrategy":
+				return ec.fieldContext_BusinessCaseSolution_hostingCloudStrategy(ctx, field)
 			case "hostingLocation":
 				return ec.fieldContext_BusinessCaseSolution_hostingLocation(ctx, field)
 			case "hostingType":
@@ -15524,8 +16465,16 @@ func (ec *executionContext) fieldContext_BusinessCase_preferredSolution(_ contex
 				return ec.fieldContext_BusinessCaseSolution_securityIsBeingReviewed(ctx, field)
 			case "summary":
 				return ec.fieldContext_BusinessCaseSolution_summary(ctx, field)
+			case "targetContractAwardDate":
+				return ec.fieldContext_BusinessCaseSolution_targetContractAwardDate(ctx, field)
+			case "targetCompletionDate":
+				return ec.fieldContext_BusinessCaseSolution_targetCompletionDate(ctx, field)
 			case "title":
 				return ec.fieldContext_BusinessCaseSolution_title(ctx, field)
+			case "workforceTrainingReqs":
+				return ec.fieldContext_BusinessCaseSolution_workforceTrainingReqs(ctx, field)
+			case "zeroTrustAlignment":
+				return ec.fieldContext_BusinessCaseSolution_zeroTrustAlignment(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type BusinessCaseSolution", field.Name)
 		},
@@ -15562,6 +16511,47 @@ func (ec *executionContext) _BusinessCase_priorityAlignment(ctx context.Context,
 }
 
 func (ec *executionContext) fieldContext_BusinessCase_priorityAlignment(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "BusinessCase",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _BusinessCase_projectAcronym(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_BusinessCase_projectAcronym(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ProjectAcronym, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(null.String)
+	fc.Result = res
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_BusinessCase_projectAcronym(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "BusinessCase",
 		Field:      field,
@@ -15685,6 +16675,47 @@ func (ec *executionContext) _BusinessCase_requesterPhoneNumber(ctx context.Conte
 }
 
 func (ec *executionContext) fieldContext_BusinessCase_requesterPhoneNumber(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "BusinessCase",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _BusinessCase_responseToGRTFeedback(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_BusinessCase_responseToGRTFeedback(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ResponseToGRTFeedback, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(null.String)
+	fc.Result = res
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_BusinessCase_responseToGRTFeedback(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "BusinessCase",
 		Field:      field,
@@ -15873,10 +16904,10 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(_ context.Con
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -15977,10 +17008,28 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(_ context.Con
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
+			case "grbReviewType":
+				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
+			case "grbReviewAsyncRecordingTime":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncRecordingTime(ctx, field)
+			case "grbReviewAsyncEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
+			case "grbReviewStandardStatus":
+				return ec.fieldContext_SystemIntake_grbReviewStandardStatus(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
+			case "grbReviewAsyncManualEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
+			case "grbReviewReminderLastSent":
+				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -16225,6 +17274,47 @@ func (ec *executionContext) _BusinessCaseSolution_hostingCloudServiceType(ctx co
 }
 
 func (ec *executionContext) fieldContext_BusinessCaseSolution_hostingCloudServiceType(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "BusinessCaseSolution",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _BusinessCaseSolution_hostingCloudStrategy(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCaseSolution) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_BusinessCaseSolution_hostingCloudStrategy(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.HostingCloudStrategy, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_BusinessCaseSolution_hostingCloudStrategy(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "BusinessCaseSolution",
 		Field:      field,
@@ -16483,6 +17573,88 @@ func (ec *executionContext) fieldContext_BusinessCaseSolution_summary(_ context.
 	return fc, nil
 }
 
+func (ec *executionContext) _BusinessCaseSolution_targetContractAwardDate(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCaseSolution) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_BusinessCaseSolution_targetContractAwardDate(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TargetContractAwardDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_BusinessCaseSolution_targetContractAwardDate(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "BusinessCaseSolution",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _BusinessCaseSolution_targetCompletionDate(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCaseSolution) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_BusinessCaseSolution_targetCompletionDate(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TargetCompletionDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_BusinessCaseSolution_targetCompletionDate(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "BusinessCaseSolution",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _BusinessCaseSolution_title(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCaseSolution) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_BusinessCaseSolution_title(ctx, field)
 	if err != nil {
@@ -16512,6 +17684,88 @@ func (ec *executionContext) _BusinessCaseSolution_title(ctx context.Context, fie
 }
 
 func (ec *executionContext) fieldContext_BusinessCaseSolution_title(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "BusinessCaseSolution",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _BusinessCaseSolution_workforceTrainingReqs(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCaseSolution) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_BusinessCaseSolution_workforceTrainingReqs(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.WorkforceTrainingReqs, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_BusinessCaseSolution_workforceTrainingReqs(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "BusinessCaseSolution",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _BusinessCaseSolution_zeroTrustAlignment(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCaseSolution) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_BusinessCaseSolution_zeroTrustAlignment(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ZeroTrustAlignment, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_BusinessCaseSolution_zeroTrustAlignment(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "BusinessCaseSolution",
 		Field:      field,
@@ -24767,10 +26021,10 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(ctx con
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -24871,10 +26125,28 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(ctx con
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
+			case "grbReviewType":
+				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
+			case "grbReviewAsyncRecordingTime":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncRecordingTime(ctx, field)
+			case "grbReviewAsyncEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
+			case "grbReviewStandardStatus":
+				return ec.fieldContext_SystemIntake_grbReviewStandardStatus(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
+			case "grbReviewAsyncManualEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
+			case "grbReviewReminderLastSent":
+				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -28307,6 +29579,12 @@ func (ec *executionContext) fieldContext_CreateSystemIntakeGRBReviewersPayload_r
 				return ec.fieldContext_SystemIntakeGRBReviewer_systemIntakeID(ctx, field)
 			case "votingRole":
 				return ec.fieldContext_SystemIntakeGRBReviewer_votingRole(ctx, field)
+			case "vote":
+				return ec.fieldContext_SystemIntakeGRBReviewer_vote(ctx, field)
+			case "voteComment":
+				return ec.fieldContext_SystemIntakeGRBReviewer_voteComment(ctx, field)
+			case "dateVoted":
+				return ec.fieldContext_SystemIntakeGRBReviewer_dateVoted(ctx, field)
 			case "grbRole":
 				return ec.fieldContext_SystemIntakeGRBReviewer_grbRole(ctx, field)
 			case "createdBy":
@@ -29366,6 +30644,252 @@ func (ec *executionContext) fieldContext_GRBReviewerComparisonIntake_intakeCreat
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GRBVotingInformation_grbReviewers(ctx context.Context, field graphql.CollectedField, obj *models.GRBVotingInformation) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBVotingInformation_grbReviewers(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.GRBReviewers, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.SystemIntakeGRBReviewer)
+	fc.Result = res
+	return ec.marshalNSystemIntakeGRBReviewer2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewerᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBVotingInformation_grbReviewers(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBVotingInformation",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_SystemIntakeGRBReviewer_id(ctx, field)
+			case "userAccount":
+				return ec.fieldContext_SystemIntakeGRBReviewer_userAccount(ctx, field)
+			case "systemIntakeID":
+				return ec.fieldContext_SystemIntakeGRBReviewer_systemIntakeID(ctx, field)
+			case "votingRole":
+				return ec.fieldContext_SystemIntakeGRBReviewer_votingRole(ctx, field)
+			case "vote":
+				return ec.fieldContext_SystemIntakeGRBReviewer_vote(ctx, field)
+			case "voteComment":
+				return ec.fieldContext_SystemIntakeGRBReviewer_voteComment(ctx, field)
+			case "dateVoted":
+				return ec.fieldContext_SystemIntakeGRBReviewer_dateVoted(ctx, field)
+			case "grbRole":
+				return ec.fieldContext_SystemIntakeGRBReviewer_grbRole(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_SystemIntakeGRBReviewer_createdBy(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_SystemIntakeGRBReviewer_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_SystemIntakeGRBReviewer_modifiedBy(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_SystemIntakeGRBReviewer_modifiedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeGRBReviewer", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GRBVotingInformation_votingStatus(ctx context.Context, field graphql.CollectedField, obj *models.GRBVotingInformation) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBVotingInformation_votingStatus(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.VotingStatus(), nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(models.GRBVotingInformationStatus)
+	fc.Result = res
+	return ec.marshalNGRBVotingInformationStatus2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBVotingInformationStatus(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBVotingInformation_votingStatus(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBVotingInformation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type GRBVotingInformationStatus does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GRBVotingInformation_numberOfNoObjection(ctx context.Context, field graphql.CollectedField, obj *models.GRBVotingInformation) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBVotingInformation_numberOfNoObjection(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.NumberOfNoObjection(), nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBVotingInformation_numberOfNoObjection(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBVotingInformation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GRBVotingInformation_numberOfObjection(ctx context.Context, field graphql.CollectedField, obj *models.GRBVotingInformation) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBVotingInformation_numberOfObjection(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.NumberOfObjection(), nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBVotingInformation_numberOfObjection(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBVotingInformation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GRBVotingInformation_numberOfNotVoted(ctx context.Context, field graphql.CollectedField, obj *models.GRBVotingInformation) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GRBVotingInformation_numberOfNotVoted(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.NumberOfNotVoted(), nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GRBVotingInformation_numberOfNotVoted(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GRBVotingInformation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
 		},
 	}
 	return fc, nil
@@ -31671,10 +33195,10 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -31775,10 +33299,28 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
+			case "grbReviewType":
+				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
+			case "grbReviewAsyncRecordingTime":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncRecordingTime(ctx, field)
+			case "grbReviewAsyncEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
+			case "grbReviewStandardStatus":
+				return ec.fieldContext_SystemIntake_grbReviewStandardStatus(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
+			case "grbReviewAsyncManualEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
+			case "grbReviewReminderLastSent":
+				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -31915,10 +33457,10 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeRequestType(
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -32019,10 +33561,28 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeRequestType(
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
+			case "grbReviewType":
+				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
+			case "grbReviewAsyncRecordingTime":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncRecordingTime(ctx, field)
+			case "grbReviewAsyncEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
+			case "grbReviewStandardStatus":
+				return ec.fieldContext_SystemIntake_grbReviewStandardStatus(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
+			case "grbReviewAsyncManualEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
+			case "grbReviewReminderLastSent":
+				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -33110,6 +34670,12 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeGRBReviewer(
 				return ec.fieldContext_SystemIntakeGRBReviewer_systemIntakeID(ctx, field)
 			case "votingRole":
 				return ec.fieldContext_SystemIntakeGRBReviewer_votingRole(ctx, field)
+			case "vote":
+				return ec.fieldContext_SystemIntakeGRBReviewer_vote(ctx, field)
+			case "voteComment":
+				return ec.fieldContext_SystemIntakeGRBReviewer_voteComment(ctx, field)
+			case "dateVoted":
+				return ec.fieldContext_SystemIntakeGRBReviewer_dateVoted(ctx, field)
 			case "grbRole":
 				return ec.fieldContext_SystemIntakeGRBReviewer_grbRole(ctx, field)
 			case "createdBy":
@@ -33187,6 +34753,146 @@ func (ec *executionContext) fieldContext_Mutation_deleteSystemIntakeGRBReviewer(
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_deleteSystemIntakeGRBReviewer_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_castSystemIntakeGRBReviewerVote(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_castSystemIntakeGRBReviewerVote(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CastSystemIntakeGRBReviewerVote(rctx, fc.Args["input"].(models.CastSystemIntakeGRBReviewerVoteInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.SystemIntakeGRBReviewer)
+	fc.Result = res
+	return ec.marshalNSystemIntakeGRBReviewer2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewer(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_castSystemIntakeGRBReviewerVote(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_SystemIntakeGRBReviewer_id(ctx, field)
+			case "userAccount":
+				return ec.fieldContext_SystemIntakeGRBReviewer_userAccount(ctx, field)
+			case "systemIntakeID":
+				return ec.fieldContext_SystemIntakeGRBReviewer_systemIntakeID(ctx, field)
+			case "votingRole":
+				return ec.fieldContext_SystemIntakeGRBReviewer_votingRole(ctx, field)
+			case "vote":
+				return ec.fieldContext_SystemIntakeGRBReviewer_vote(ctx, field)
+			case "voteComment":
+				return ec.fieldContext_SystemIntakeGRBReviewer_voteComment(ctx, field)
+			case "dateVoted":
+				return ec.fieldContext_SystemIntakeGRBReviewer_dateVoted(ctx, field)
+			case "grbRole":
+				return ec.fieldContext_SystemIntakeGRBReviewer_grbRole(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_SystemIntakeGRBReviewer_createdBy(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_SystemIntakeGRBReviewer_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_SystemIntakeGRBReviewer_modifiedBy(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_SystemIntakeGRBReviewer_modifiedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeGRBReviewer", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_castSystemIntakeGRBReviewerVote_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_sendSystemIntakeGRBReviewerReminder(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_sendSystemIntakeGRBReviewerReminder(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().SendSystemIntakeGRBReviewerReminder(rctx, fc.Args["systemIntakeID"].(uuid.UUID))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.SendSystemIntakeGRBReviewReminderPayload)
+	fc.Result = res
+	return ec.marshalNSendSystemIntakeGRBReviewReminderPayload2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSendSystemIntakeGRBReviewReminderPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_sendSystemIntakeGRBReviewerReminder(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "timeSent":
+				return ec.fieldContext_SendSystemIntakeGRBReviewReminderPayload_timeSent(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SendSystemIntakeGRBReviewReminderPayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_sendSystemIntakeGRBReviewerReminder_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -33337,6 +35043,516 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntakeGRBDiscussio
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_updateSystemIntakeGRBReviewType(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateSystemIntakeGRBReviewType(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateSystemIntakeGRBReviewType(rctx, fc.Args["input"].(models.UpdateSystemIntakeGRBReviewTypeInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				var zeroVal *models.UpdateSystemIntakePayload
+				return zeroVal, err
+			}
+			if ec.directives.HasRole == nil {
+				var zeroVal *models.UpdateSystemIntakePayload
+				return zeroVal, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*models.UpdateSystemIntakePayload); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cms-enterprise/easi-app/pkg/models.UpdateSystemIntakePayload`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.UpdateSystemIntakePayload)
+	fc.Result = res
+	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeGRBReviewType(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "systemIntake":
+				return ec.fieldContext_UpdateSystemIntakePayload_systemIntake(ctx, field)
+			case "userErrors":
+				return ec.fieldContext_UpdateSystemIntakePayload_userErrors(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdateSystemIntakePayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateSystemIntakeGRBReviewType_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updateSystemIntakeGRBReviewFormPresentationStandard(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateSystemIntakeGRBReviewFormPresentationStandard(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateSystemIntakeGRBReviewFormPresentationStandard(rctx, fc.Args["input"].(models.UpdateSystemIntakeGRBReviewFormInputPresentationStandard))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				var zeroVal *models.UpdateSystemIntakePayload
+				return zeroVal, err
+			}
+			if ec.directives.HasRole == nil {
+				var zeroVal *models.UpdateSystemIntakePayload
+				return zeroVal, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*models.UpdateSystemIntakePayload); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cms-enterprise/easi-app/pkg/models.UpdateSystemIntakePayload`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.UpdateSystemIntakePayload)
+	fc.Result = res
+	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeGRBReviewFormPresentationStandard(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "systemIntake":
+				return ec.fieldContext_UpdateSystemIntakePayload_systemIntake(ctx, field)
+			case "userErrors":
+				return ec.fieldContext_UpdateSystemIntakePayload_userErrors(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdateSystemIntakePayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateSystemIntakeGRBReviewFormPresentationStandard_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updateSystemIntakeGRBReviewFormPresentationAsync(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateSystemIntakeGRBReviewFormPresentationAsync(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateSystemIntakeGRBReviewFormPresentationAsync(rctx, fc.Args["input"].(models.UpdateSystemIntakeGRBReviewFormInputPresentationAsync))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				var zeroVal *models.UpdateSystemIntakePayload
+				return zeroVal, err
+			}
+			if ec.directives.HasRole == nil {
+				var zeroVal *models.UpdateSystemIntakePayload
+				return zeroVal, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*models.UpdateSystemIntakePayload); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cms-enterprise/easi-app/pkg/models.UpdateSystemIntakePayload`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.UpdateSystemIntakePayload)
+	fc.Result = res
+	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeGRBReviewFormPresentationAsync(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "systemIntake":
+				return ec.fieldContext_UpdateSystemIntakePayload_systemIntake(ctx, field)
+			case "userErrors":
+				return ec.fieldContext_UpdateSystemIntakePayload_userErrors(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdateSystemIntakePayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateSystemIntakeGRBReviewFormPresentationAsync_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updateSystemIntakeGRBReviewFormTimeframeAsync(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateSystemIntakeGRBReviewFormTimeframeAsync(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateSystemIntakeGRBReviewFormTimeframeAsync(rctx, fc.Args["input"].(models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				var zeroVal *models.UpdateSystemIntakePayload
+				return zeroVal, err
+			}
+			if ec.directives.HasRole == nil {
+				var zeroVal *models.UpdateSystemIntakePayload
+				return zeroVal, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*models.UpdateSystemIntakePayload); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cms-enterprise/easi-app/pkg/models.UpdateSystemIntakePayload`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.UpdateSystemIntakePayload)
+	fc.Result = res
+	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeGRBReviewFormTimeframeAsync(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "systemIntake":
+				return ec.fieldContext_UpdateSystemIntakePayload_systemIntake(ctx, field)
+			case "userErrors":
+				return ec.fieldContext_UpdateSystemIntakePayload_userErrors(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdateSystemIntakePayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateSystemIntakeGRBReviewFormTimeframeAsync_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_extendGRBReviewDeadlineAsync(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_extendGRBReviewDeadlineAsync(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().ExtendGRBReviewDeadlineAsync(rctx, fc.Args["input"].(models.ExtendGRBReviewDeadlineInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				var zeroVal *models.UpdateSystemIntakePayload
+				return zeroVal, err
+			}
+			if ec.directives.HasRole == nil {
+				var zeroVal *models.UpdateSystemIntakePayload
+				return zeroVal, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*models.UpdateSystemIntakePayload); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cms-enterprise/easi-app/pkg/models.UpdateSystemIntakePayload`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.UpdateSystemIntakePayload)
+	fc.Result = res
+	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_extendGRBReviewDeadlineAsync(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "systemIntake":
+				return ec.fieldContext_UpdateSystemIntakePayload_systemIntake(ctx, field)
+			case "userErrors":
+				return ec.fieldContext_UpdateSystemIntakePayload_userErrors(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdateSystemIntakePayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_extendGRBReviewDeadlineAsync_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_restartGRBReviewAsync(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_restartGRBReviewAsync(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().RestartGRBReviewAsync(rctx, fc.Args["input"].(models.RestartGRBReviewInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				var zeroVal *models.UpdateSystemIntakePayload
+				return zeroVal, err
+			}
+			if ec.directives.HasRole == nil {
+				var zeroVal *models.UpdateSystemIntakePayload
+				return zeroVal, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*models.UpdateSystemIntakePayload); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cms-enterprise/easi-app/pkg/models.UpdateSystemIntakePayload`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.UpdateSystemIntakePayload)
+	fc.Result = res
+	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_restartGRBReviewAsync(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "systemIntake":
+				return ec.fieldContext_UpdateSystemIntakePayload_systemIntake(ctx, field)
+			case "userErrors":
+				return ec.fieldContext_UpdateSystemIntakePayload_userErrors(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdateSystemIntakePayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_restartGRBReviewAsync_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Mutation_updateSystemIntakeLinkedCedarSystem(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_updateSystemIntakeLinkedCedarSystem(ctx, field)
 	if err != nil {
@@ -33477,6 +35693,88 @@ func (ec *executionContext) fieldContext_Mutation_setSystemIntakeGRBPresentation
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_uploadSystemIntakeGRBPresentationDeck(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_uploadSystemIntakeGRBPresentationDeck(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UploadSystemIntakeGRBPresentationDeck(rctx, fc.Args["input"].(models.UploadSystemIntakeGRBPresentationDeckInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.SystemIntakeGRBPresentationLinks)
+	fc.Result = res
+	return ec.marshalOSystemIntakeGRBPresentationLinks2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBPresentationLinks(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_uploadSystemIntakeGRBPresentationDeck(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "systemIntakeID":
+				return ec.fieldContext_SystemIntakeGRBPresentationLinks_systemIntakeID(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_SystemIntakeGRBPresentationLinks_createdBy(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_SystemIntakeGRBPresentationLinks_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_SystemIntakeGRBPresentationLinks_modifiedBy(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_SystemIntakeGRBPresentationLinks_modifiedAt(ctx, field)
+			case "recordingLink":
+				return ec.fieldContext_SystemIntakeGRBPresentationLinks_recordingLink(ctx, field)
+			case "recordingPasscode":
+				return ec.fieldContext_SystemIntakeGRBPresentationLinks_recordingPasscode(ctx, field)
+			case "transcriptLink":
+				return ec.fieldContext_SystemIntakeGRBPresentationLinks_transcriptLink(ctx, field)
+			case "transcriptFileName":
+				return ec.fieldContext_SystemIntakeGRBPresentationLinks_transcriptFileName(ctx, field)
+			case "transcriptFileURL":
+				return ec.fieldContext_SystemIntakeGRBPresentationLinks_transcriptFileURL(ctx, field)
+			case "transcriptFileStatus":
+				return ec.fieldContext_SystemIntakeGRBPresentationLinks_transcriptFileStatus(ctx, field)
+			case "presentationDeckFileName":
+				return ec.fieldContext_SystemIntakeGRBPresentationLinks_presentationDeckFileName(ctx, field)
+			case "presentationDeckFileURL":
+				return ec.fieldContext_SystemIntakeGRBPresentationLinks_presentationDeckFileURL(ctx, field)
+			case "presentationDeckFileStatus":
+				return ec.fieldContext_SystemIntakeGRBPresentationLinks_presentationDeckFileStatus(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeGRBPresentationLinks", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_uploadSystemIntakeGRBPresentationDeck_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Mutation_deleteSystemIntakeGRBPresentationLinks(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_deleteSystemIntakeGRBPresentationLinks(ctx, field)
 	if err != nil {
@@ -33526,6 +35824,91 @@ func (ec *executionContext) fieldContext_Mutation_deleteSystemIntakeGRBPresentat
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_deleteSystemIntakeGRBPresentationLinks_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_manuallyEndSystemIntakeGRBReviewAsyncVoting(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_manuallyEndSystemIntakeGRBReviewAsyncVoting(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().ManuallyEndSystemIntakeGRBReviewAsyncVoting(rctx, fc.Args["systemIntakeID"].(uuid.UUID))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				var zeroVal *models.UpdateSystemIntakePayload
+				return zeroVal, err
+			}
+			if ec.directives.HasRole == nil {
+				var zeroVal *models.UpdateSystemIntakePayload
+				return zeroVal, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*models.UpdateSystemIntakePayload); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cms-enterprise/easi-app/pkg/models.UpdateSystemIntakePayload`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.UpdateSystemIntakePayload)
+	fc.Result = res
+	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_manuallyEndSystemIntakeGRBReviewAsyncVoting(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "systemIntake":
+				return ec.fieldContext_UpdateSystemIntakePayload_systemIntake(ctx, field)
+			case "userErrors":
+				return ec.fieldContext_UpdateSystemIntakePayload_userErrors(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdateSystemIntakePayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_manuallyEndSystemIntakeGRBReviewAsyncVoting_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -33623,10 +36006,10 @@ func (ec *executionContext) fieldContext_Mutation_archiveSystemIntake(ctx contex
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -33727,10 +36110,28 @@ func (ec *executionContext) fieldContext_Mutation_archiveSystemIntake(ctx contex
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
+			case "grbReviewType":
+				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
+			case "grbReviewAsyncRecordingTime":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncRecordingTime(ctx, field)
+			case "grbReviewAsyncEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
+			case "grbReviewStandardStatus":
+				return ec.fieldContext_SystemIntake_grbReviewStandardStatus(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
+			case "grbReviewAsyncManualEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
+			case "grbReviewReminderLastSent":
+				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -34038,7 +36439,7 @@ func (ec *executionContext) _Mutation_updateTRBRequest(ctx context.Context, fiel
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateTRBRequest(rctx, fc.Args["id"].(uuid.UUID), fc.Args["changes"].(map[string]interface{}))
+		return ec.resolvers.Mutation().UpdateTRBRequest(rctx, fc.Args["id"].(uuid.UUID), fc.Args["changes"].(map[string]any))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -34612,7 +37013,7 @@ func (ec *executionContext) _Mutation_updateTRBRequestForm(ctx context.Context, 
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateTRBRequestForm(rctx, fc.Args["input"].(map[string]interface{}))
+		return ec.resolvers.Mutation().UpdateTRBRequestForm(rctx, fc.Args["input"].(map[string]any))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -36536,7 +38937,7 @@ func (ec *executionContext) _Mutation_updateTRBGuidanceLetter(ctx context.Contex
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		directive0 := func(rctx context.Context) (any, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().UpdateTRBGuidanceLetter(rctx, fc.Args["input"].(map[string]interface{}))
+			return ec.resolvers.Mutation().UpdateTRBGuidanceLetter(rctx, fc.Args["input"].(map[string]any))
 		}
 
 		directive1 := func(ctx context.Context) (any, error) {
@@ -36974,7 +39375,7 @@ func (ec *executionContext) _Mutation_updateTRBGuidanceLetterInsight(ctx context
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		directive0 := func(rctx context.Context) (any, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().UpdateTRBGuidanceLetterInsight(rctx, fc.Args["input"].(map[string]interface{}))
+			return ec.resolvers.Mutation().UpdateTRBGuidanceLetterInsight(rctx, fc.Args["input"].(map[string]any))
 		}
 
 		directive1 := func(ctx context.Context) (any, error) {
@@ -37751,6 +40152,88 @@ func (ec *executionContext) fieldContext_Mutation_deleteTrbLeadOption(ctx contex
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_sendGRBReviewPresentationDeckReminderEmail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_sendGRBReviewPresentationDeckReminderEmail(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().SendGRBReviewPresentationDeckReminderEmail(rctx, fc.Args["systemIntakeID"].(uuid.UUID))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				var zeroVal bool
+				return zeroVal, err
+			}
+			if ec.directives.HasRole == nil {
+				var zeroVal bool
+				return zeroVal, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(bool); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be bool`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_sendGRBReviewPresentationDeckReminderEmail(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_sendGRBReviewPresentationDeckReminderEmail_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Query_systemIntake(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Query_systemIntake(ctx, field)
 	if err != nil {
@@ -37839,10 +40322,10 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -37943,10 +40426,28 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
+			case "grbReviewType":
+				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
+			case "grbReviewAsyncRecordingTime":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncRecordingTime(ctx, field)
+			case "grbReviewAsyncEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
+			case "grbReviewStandardStatus":
+				return ec.fieldContext_SystemIntake_grbReviewStandardStatus(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
+			case "grbReviewAsyncManualEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
+			case "grbReviewReminderLastSent":
+				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -38056,10 +40557,10 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -38160,10 +40661,28 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
+			case "grbReviewType":
+				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
+			case "grbReviewAsyncRecordingTime":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncRecordingTime(ctx, field)
+			case "grbReviewAsyncEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
+			case "grbReviewStandardStatus":
+				return ec.fieldContext_SystemIntake_grbReviewStandardStatus(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
+			case "grbReviewAsyncManualEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
+			case "grbReviewReminderLastSent":
+				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -38273,10 +40792,10 @@ func (ec *executionContext) fieldContext_Query_mySystemIntakes(_ context.Context
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -38377,10 +40896,28 @@ func (ec *executionContext) fieldContext_Query_mySystemIntakes(_ context.Context
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
+			case "grbReviewType":
+				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
+			case "grbReviewAsyncRecordingTime":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncRecordingTime(ctx, field)
+			case "grbReviewAsyncEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
+			case "grbReviewStandardStatus":
+				return ec.fieldContext_SystemIntake_grbReviewStandardStatus(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
+			case "grbReviewAsyncManualEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
+			case "grbReviewReminderLastSent":
+				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -38479,10 +41016,10 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithReviewRequested(
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -38583,10 +41120,28 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithReviewRequested(
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
+			case "grbReviewType":
+				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
+			case "grbReviewAsyncRecordingTime":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncRecordingTime(ctx, field)
+			case "grbReviewAsyncEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
+			case "grbReviewStandardStatus":
+				return ec.fieldContext_SystemIntake_grbReviewStandardStatus(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
+			case "grbReviewAsyncManualEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
+			case "grbReviewReminderLastSent":
+				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -38685,10 +41240,10 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(_ context.
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -38789,10 +41344,28 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(_ context.
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
+			case "grbReviewType":
+				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
+			case "grbReviewAsyncRecordingTime":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncRecordingTime(ctx, field)
+			case "grbReviewAsyncEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
+			case "grbReviewStandardStatus":
+				return ec.fieldContext_SystemIntake_grbReviewStandardStatus(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
+			case "grbReviewAsyncManualEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
+			case "grbReviewReminderLastSent":
+				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -41467,6 +44040,50 @@ func (ec *executionContext) fieldContext_RequesterUpdateEmailData_requesterEmail
 	return fc, nil
 }
 
+func (ec *executionContext) _SendSystemIntakeGRBReviewReminderPayload_timeSent(ctx context.Context, field graphql.CollectedField, obj *models.SendSystemIntakeGRBReviewReminderPayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SendSystemIntakeGRBReviewReminderPayload_timeSent(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TimeSent, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SendSystemIntakeGRBReviewReminderPayload_timeSent(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SendSystemIntakeGRBReviewReminderPayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntake_actions(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntake_actions(ctx, field)
 	if err != nil {
@@ -41661,6 +44278,8 @@ func (ec *executionContext) fieldContext_SystemIntake_businessCase(_ context.Con
 				return ec.fieldContext_BusinessCase_businessOwner(ctx, field)
 			case "cmsBenefit":
 				return ec.fieldContext_BusinessCase_cmsBenefit(ctx, field)
+			case "collaborationNeeded":
+				return ec.fieldContext_BusinessCase_collaborationNeeded(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_BusinessCase_createdAt(ctx, field)
 			case "currentSolutionSummary":
@@ -41675,12 +44294,16 @@ func (ec *executionContext) fieldContext_SystemIntake_businessCase(_ context.Con
 				return ec.fieldContext_BusinessCase_preferredSolution(ctx, field)
 			case "priorityAlignment":
 				return ec.fieldContext_BusinessCase_priorityAlignment(ctx, field)
+			case "projectAcronym":
+				return ec.fieldContext_BusinessCase_projectAcronym(ctx, field)
 			case "projectName":
 				return ec.fieldContext_BusinessCase_projectName(ctx, field)
 			case "requester":
 				return ec.fieldContext_BusinessCase_requester(ctx, field)
 			case "requesterPhoneNumber":
 				return ec.fieldContext_BusinessCase_requesterPhoneNumber(ctx, field)
+			case "responseToGRTFeedback":
+				return ec.fieldContext_BusinessCase_responseToGRTFeedback(ctx, field)
 			case "status":
 				return ec.fieldContext_BusinessCase_status(ctx, field)
 			case "successIndicators":
@@ -42691,6 +45314,12 @@ func (ec *executionContext) fieldContext_SystemIntake_grbReviewers(_ context.Con
 				return ec.fieldContext_SystemIntakeGRBReviewer_systemIntakeID(ctx, field)
 			case "votingRole":
 				return ec.fieldContext_SystemIntakeGRBReviewer_votingRole(ctx, field)
+			case "vote":
+				return ec.fieldContext_SystemIntakeGRBReviewer_vote(ctx, field)
+			case "voteComment":
+				return ec.fieldContext_SystemIntakeGRBReviewer_voteComment(ctx, field)
+			case "dateVoted":
+				return ec.fieldContext_SystemIntakeGRBReviewer_dateVoted(ctx, field)
 			case "grbRole":
 				return ec.fieldContext_SystemIntakeGRBReviewer_grbRole(ctx, field)
 			case "createdBy":
@@ -42703,6 +45332,62 @@ func (ec *executionContext) fieldContext_SystemIntake_grbReviewers(_ context.Con
 				return ec.fieldContext_SystemIntakeGRBReviewer_modifiedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeGRBReviewer", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntake_grbVotingInformation(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().GrbVotingInformation(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.GRBVotingInformation)
+	fc.Result = res
+	return ec.marshalNGRBVotingInformation2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBVotingInformation(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_grbVotingInformation(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "grbReviewers":
+				return ec.fieldContext_GRBVotingInformation_grbReviewers(ctx, field)
+			case "votingStatus":
+				return ec.fieldContext_GRBVotingInformation_votingStatus(ctx, field)
+			case "numberOfNoObjection":
+				return ec.fieldContext_GRBVotingInformation_numberOfNoObjection(ctx, field)
+			case "numberOfObjection":
+				return ec.fieldContext_GRBVotingInformation_numberOfObjection(ctx, field)
+			case "numberOfNotVoted":
+				return ec.fieldContext_GRBVotingInformation_numberOfNotVoted(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type GRBVotingInformation", field.Name)
 		},
 	}
 	return fc, nil
@@ -42747,56 +45432,6 @@ func (ec *executionContext) fieldContext_SystemIntake_id(_ context.Context, fiel
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type UUID does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _SystemIntake_isso(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntake_isso(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().Isso(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*models.SystemIntakeIsso)
-	fc.Result = res
-	return ec.marshalNSystemIntakeISSO2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeIsso(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_SystemIntake_isso(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "isPresent":
-				return ec.fieldContext_SystemIntakeISSO_isPresent(ctx, field)
-			case "name":
-				return ec.fieldContext_SystemIntakeISSO_name(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeISSO", field.Name)
 		},
 	}
 	return fc, nil
@@ -45040,10 +47675,10 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedIntakes(_ context.C
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -45144,10 +47779,28 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedIntakes(_ context.C
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
+			case "grbReviewType":
+				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
+			case "grbReviewAsyncRecordingTime":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncRecordingTime(ctx, field)
+			case "grbReviewAsyncEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
+			case "grbReviewStandardStatus":
+				return ec.fieldContext_SystemIntake_grbReviewStandardStatus(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
+			case "grbReviewAsyncManualEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
+			case "grbReviewReminderLastSent":
+				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -45263,8 +47916,8 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedTRBRequests(_ conte
 	return fc, nil
 }
 
-func (ec *executionContext) _SystemIntake_grbDiscussions(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+func (ec *executionContext) _SystemIntake_grbDiscussionsPrimary(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -45277,7 +47930,7 @@ func (ec *executionContext) _SystemIntake_grbDiscussions(ctx context.Context, fi
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().GrbDiscussions(rctx, obj)
+		return ec.resolvers.SystemIntake().GrbDiscussionsPrimary(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -45294,7 +47947,57 @@ func (ec *executionContext) _SystemIntake_grbDiscussions(ctx context.Context, fi
 	return ec.marshalNSystemIntakeGRBReviewDiscussion2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewDiscussionᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_SystemIntake_grbDiscussions(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_SystemIntake_grbDiscussionsPrimary(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "initialPost":
+				return ec.fieldContext_SystemIntakeGRBReviewDiscussion_initialPost(ctx, field)
+			case "replies":
+				return ec.fieldContext_SystemIntakeGRBReviewDiscussion_replies(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeGRBReviewDiscussion", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntake_grbDiscussionsInternal(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().GrbDiscussionsInternal(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.SystemIntakeGRBReviewDiscussion)
+	fc.Result = res
+	return ec.marshalNSystemIntakeGRBReviewDiscussion2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewDiscussionᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_grbDiscussionsInternal(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntake",
 		Field:      field,
@@ -45379,6 +48082,337 @@ func (ec *executionContext) fieldContext_SystemIntake_grbPresentationLinks(_ con
 				return ec.fieldContext_SystemIntakeGRBPresentationLinks_presentationDeckFileStatus(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeGRBPresentationLinks", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.GrbPresentationDeckRequesterReminderEmailSentTime, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntake_grbReviewType(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.GrbReviewType, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(models.SystemIntakeGRBReviewType)
+	fc.Result = res
+	return ec.marshalNSystemIntakeGRBReviewType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewType(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_grbReviewType(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SystemIntakeGRBReviewType does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntake_grbReviewAsyncRecordingTime(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_grbReviewAsyncRecordingTime(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.GrbReviewAsyncRecordingTime, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_grbReviewAsyncRecordingTime(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntake_grbReviewAsyncEndDate(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.GrbReviewAsyncEndDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_grbReviewAsyncEndDate(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntake_grbReviewStandardStatus(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_grbReviewStandardStatus(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().GrbReviewStandardStatus(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.SystemIntakeGRBReviewStandardStatusType)
+	fc.Result = res
+	return ec.marshalOSystemIntakeGRBReviewStandardStatusType2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewStandardStatusType(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_grbReviewStandardStatus(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SystemIntakeGRBReviewStandardStatusType does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntake_grbReviewAsyncStatus(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().GrbReviewAsyncStatus(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.SystemIntakeGRBReviewAsyncStatusType)
+	fc.Result = res
+	return ec.marshalOSystemIntakeGRBReviewAsyncStatusType2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewAsyncStatusType(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_grbReviewAsyncStatus(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SystemIntakeGRBReviewAsyncStatusType does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntake_grbReviewAsyncManualEndDate(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.GrbReviewAsyncManualEndDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_grbReviewAsyncManualEndDate(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntake_grbReviewReminderLastSent(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.GrbReviewReminderLastSent, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_grbReviewReminderLastSent(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
 		},
 	}
 	return fc, nil
@@ -45519,10 +48553,10 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(_ conte
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -45623,10 +48657,28 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(_ conte
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
+			case "grbReviewType":
+				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
+			case "grbReviewAsyncRecordingTime":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncRecordingTime(ctx, field)
+			case "grbReviewAsyncEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
+			case "grbReviewStandardStatus":
+				return ec.fieldContext_SystemIntake_grbReviewStandardStatus(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
+			case "grbReviewAsyncManualEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
+			case "grbReviewReminderLastSent":
+				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -49469,6 +52521,129 @@ func (ec *executionContext) fieldContext_SystemIntakeGRBReviewer_votingRole(_ co
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntakeGRBReviewer_vote(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeGRBReviewer) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeGRBReviewer_vote(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Vote, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.SystemIntakeAsyncGRBVotingOption)
+	fc.Result = res
+	return ec.marshalOSystemIntakeAsyncGRBVotingOption2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeGRBReviewer_vote(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeGRBReviewer",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SystemIntakeAsyncGRBVotingOption does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeGRBReviewer_voteComment(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeGRBReviewer) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeGRBReviewer_voteComment(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.VoteComment, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(zero.String)
+	fc.Result = res
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeGRBReviewer_voteComment(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeGRBReviewer",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeGRBReviewer_dateVoted(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeGRBReviewer) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeGRBReviewer_dateVoted(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DateVoted, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(zero.Time)
+	fc.Result = res
+	return ec.marshalOTime2githubᚗcomᚋgureguᚋnullᚋzeroᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeGRBReviewer_dateVoted(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeGRBReviewer",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntakeGRBReviewer_grbRole(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeGRBReviewer) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntakeGRBReviewer_grbRole(ctx, field)
 	if err != nil {
@@ -49772,88 +52947,6 @@ func (ec *executionContext) fieldContext_SystemIntakeGovernanceTeam_teams(_ cont
 				return ec.fieldContext_SystemIntakeCollaborator_name(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeCollaborator", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _SystemIntakeISSO_isPresent(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeIsso) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntakeISSO_isPresent(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.IsPresent, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*bool)
-	fc.Result = res
-	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_SystemIntakeISSO_isPresent(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "SystemIntakeISSO",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Boolean does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _SystemIntakeISSO_name(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeIsso) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntakeISSO_name(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Name, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_SystemIntakeISSO_name(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "SystemIntakeISSO",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -54862,10 +57955,10 @@ func (ec *executionContext) fieldContext_TRBRequest_relatedIntakes(_ context.Con
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -54966,10 +58059,28 @@ func (ec *executionContext) fieldContext_TRBRequest_relatedIntakes(_ context.Con
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
+			case "grbReviewType":
+				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
+			case "grbReviewAsyncRecordingTime":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncRecordingTime(ctx, field)
+			case "grbReviewAsyncEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
+			case "grbReviewStandardStatus":
+				return ec.fieldContext_SystemIntake_grbReviewStandardStatus(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
+			case "grbReviewAsyncManualEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
+			case "grbReviewReminderLastSent":
+				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -57733,10 +60844,10 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(_ context.
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -57837,10 +60948,28 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(_ context.
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
+			case "grbReviewType":
+				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
+			case "grbReviewAsyncRecordingTime":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncRecordingTime(ctx, field)
+			case "grbReviewAsyncEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
+			case "grbReviewStandardStatus":
+				return ec.fieldContext_SystemIntake_grbReviewStandardStatus(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
+			case "grbReviewAsyncManualEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
+			case "grbReviewReminderLastSent":
+				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -58493,10 +61622,10 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_grbReviewStartedAt(ctx, field)
 			case "grbReviewers":
 				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grbVotingInformation":
+				return ec.fieldContext_SystemIntake_grbVotingInformation(ctx, field)
 			case "id":
 				return ec.fieldContext_SystemIntake_id(ctx, field)
-			case "isso":
-				return ec.fieldContext_SystemIntake_isso(ctx, field)
 			case "lcid":
 				return ec.fieldContext_SystemIntake_lcid(ctx, field)
 			case "lcidIssuedAt":
@@ -58597,10 +61726,28 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_relatedIntakes(ctx, field)
 			case "relatedTRBRequests":
 				return ec.fieldContext_SystemIntake_relatedTRBRequests(ctx, field)
-			case "grbDiscussions":
-				return ec.fieldContext_SystemIntake_grbDiscussions(ctx, field)
+			case "grbDiscussionsPrimary":
+				return ec.fieldContext_SystemIntake_grbDiscussionsPrimary(ctx, field)
+			case "grbDiscussionsInternal":
+				return ec.fieldContext_SystemIntake_grbDiscussionsInternal(ctx, field)
 			case "grbPresentationLinks":
 				return ec.fieldContext_SystemIntake_grbPresentationLinks(ctx, field)
+			case "grbPresentationDeckRequesterReminderEmailSentTime":
+				return ec.fieldContext_SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field)
+			case "grbReviewType":
+				return ec.fieldContext_SystemIntake_grbReviewType(ctx, field)
+			case "grbReviewAsyncRecordingTime":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncRecordingTime(ctx, field)
+			case "grbReviewAsyncEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncEndDate(ctx, field)
+			case "grbReviewStandardStatus":
+				return ec.fieldContext_SystemIntake_grbReviewStandardStatus(ctx, field)
+			case "grbReviewAsyncStatus":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncStatus(ctx, field)
+			case "grbReviewAsyncManualEndDate":
+				return ec.fieldContext_SystemIntake_grbReviewAsyncManualEndDate(ctx, field)
+			case "grbReviewReminderLastSent":
+				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -61307,6 +64454,47 @@ func (ec *executionContext) fieldContext___Type_isOneOf(_ context.Context, field
 
 // region    **************************** input.gotpl *****************************
 
+func (ec *executionContext) unmarshalInputCastSystemIntakeGRBReviewerVoteInput(ctx context.Context, obj any) (models.CastSystemIntakeGRBReviewerVoteInput, error) {
+	var it models.CastSystemIntakeGRBReviewerVoteInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"systemIntakeID", "vote", "voteComment"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "systemIntakeID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SystemIntakeID = data
+		case "vote":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("vote"))
+			data, err := ec.unmarshalNSystemIntakeAsyncGRBVotingOption2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Vote = data
+		case "voteComment":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("voteComment"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.VoteComment = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputCloseTRBRequestInput(ctx context.Context, obj any) (models.CloseTRBRequestInput, error) {
 	var it models.CloseTRBRequestInput
 	asMap := map[string]any{}
@@ -62223,6 +65411,40 @@ func (ec *executionContext) unmarshalInputEmailNotificationRecipients(ctx contex
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputExtendGRBReviewDeadlineInput(ctx context.Context, obj any) (models.ExtendGRBReviewDeadlineInput, error) {
+	var it models.ExtendGRBReviewDeadlineInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"systemIntakeID", "grbReviewAsyncEndDate"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "systemIntakeID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SystemIntakeID = data
+		case "grbReviewAsyncEndDate":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("grbReviewAsyncEndDate"))
+			data, err := ec.unmarshalNTime2timeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.GrbReviewAsyncEndDate = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputReopenTRBRequestInput(ctx context.Context, obj any) (models.ReopenTRBRequestInput, error) {
 	var it models.ReopenTRBRequestInput
 	asMap := map[string]any{}
@@ -62265,6 +65487,40 @@ func (ec *executionContext) unmarshalInputReopenTRBRequestInput(ctx context.Cont
 				return it, err
 			}
 			it.NotifyEuaIds = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputRestartGRBReviewInput(ctx context.Context, obj any) (models.RestartGRBReviewInput, error) {
+	var it models.RestartGRBReviewInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"systemIntakeID", "newGRBEndDate"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "systemIntakeID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SystemIntakeID = data
+		case "newGRBEndDate":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("newGRBEndDate"))
+			data, err := ec.unmarshalNTime2timeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.NewGRBEndDate = data
 		}
 	}
 
@@ -63456,40 +66712,6 @@ func (ec *executionContext) unmarshalInputSystemIntakeGovernanceTeamInput(ctx co
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputSystemIntakeISSOInput(ctx context.Context, obj any) (models.SystemIntakeISSOInput, error) {
-	var it models.SystemIntakeISSOInput
-	asMap := map[string]any{}
-	for k, v := range obj.(map[string]any) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"isPresent", "name"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "isPresent":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isPresent"))
-			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.IsPresent = data
-		case "name":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Name = data
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputSystemIntakeIssueLCIDInput(ctx context.Context, obj any) (models.SystemIntakeIssueLCIDInput, error) {
 	var it models.SystemIntakeIssueLCIDInput
 	asMap := map[string]any{}
@@ -63676,7 +66898,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeProgressToNewStepsInput(ct
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemIntakeID", "newStep", "meetingDate", "notificationRecipients", "feedback", "grbRecommendations", "additionalInfo", "adminNote"}
+	fieldsInOrder := [...]string{"systemIntakeID", "newStep", "meetingDate", "notificationRecipients", "feedback", "grbRecommendations", "additionalInfo", "adminNote", "grbReviewType"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -63739,6 +66961,13 @@ func (ec *executionContext) unmarshalInputSystemIntakeProgressToNewStepsInput(ct
 				return it, err
 			}
 			it.AdminNote = data
+		case "grbReviewType":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("grbReviewType"))
+			data, err := ec.unmarshalOSystemIntakeGRBReviewType2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewType(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.GrbReviewType = data
 		}
 	}
 
@@ -64267,7 +67496,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeContactDetailsInput(
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "requester", "businessOwner", "productManager", "isso", "governanceTeams"}
+	fieldsInOrder := [...]string{"id", "requester", "businessOwner", "productManager", "governanceTeams"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -64302,13 +67531,6 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeContactDetailsInput(
 				return it, err
 			}
 			it.ProductManager = data
-		case "isso":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isso"))
-			data, err := ec.unmarshalNSystemIntakeISSOInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeISSOInput(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Isso = data
 		case "governanceTeams":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("governanceTeams"))
 			data, err := ec.unmarshalNSystemIntakeGovernanceTeamInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGovernanceTeamInput(ctx, v)
@@ -65189,14 +68411,14 @@ func (ec *executionContext) unmarshalInputUpdateTRBRequestTRBLeadInput(ctx conte
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputcreateSystemIntakeGRBDiscussionPostInput(ctx context.Context, obj any) (models.CreateSystemIntakeGRBDiscussionPostInput, error) {
-	var it models.CreateSystemIntakeGRBDiscussionPostInput
+func (ec *executionContext) unmarshalInputUploadSystemIntakeGRBPresentationDeckInput(ctx context.Context, obj any) (models.UploadSystemIntakeGRBPresentationDeckInput, error) {
+	var it models.UploadSystemIntakeGRBPresentationDeckInput
 	asMap := map[string]any{}
 	for k, v := range obj.(map[string]any) {
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemIntakeID", "content"}
+	fieldsInOrder := [...]string{"systemIntakeID", "presentationDeckFileData"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -65210,6 +68432,47 @@ func (ec *executionContext) unmarshalInputcreateSystemIntakeGRBDiscussionPostInp
 				return it, err
 			}
 			it.SystemIntakeID = data
+		case "presentationDeckFileData":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("presentationDeckFileData"))
+			data, err := ec.unmarshalOUpload2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUpload(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.PresentationDeckFileData = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputcreateSystemIntakeGRBDiscussionPostInput(ctx context.Context, obj any) (models.CreateSystemIntakeGRBDiscussionPostInput, error) {
+	var it models.CreateSystemIntakeGRBDiscussionPostInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"systemIntakeID", "discussionBoardType", "content"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "systemIntakeID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SystemIntakeID = data
+		case "discussionBoardType":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("discussionBoardType"))
+			data, err := ec.unmarshalNSystemIntakeGRBDiscussionBoardType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBDiscussionBoardType(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.DiscussionBoardType = data
 		case "content":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("content"))
 			data, err := ec.unmarshalNTaggedHTML2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTaggedHTML(ctx, v)
@@ -65230,7 +68493,7 @@ func (ec *executionContext) unmarshalInputcreateSystemIntakeGRBDiscussionReplyIn
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"initialPostID", "content"}
+	fieldsInOrder := [...]string{"initialPostID", "discussionBoardType", "content"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -65244,6 +68507,13 @@ func (ec *executionContext) unmarshalInputcreateSystemIntakeGRBDiscussionReplyIn
 				return it, err
 			}
 			it.InitialPostID = data
+		case "discussionBoardType":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("discussionBoardType"))
+			data, err := ec.unmarshalNSystemIntakeGRBDiscussionBoardType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBDiscussionBoardType(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.DiscussionBoardType = data
 		case "content":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("content"))
 			data, err := ec.unmarshalNTaggedHTML2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐTaggedHTML(ctx, v)
@@ -65251,6 +68521,153 @@ func (ec *executionContext) unmarshalInputcreateSystemIntakeGRBDiscussionReplyIn
 				return it, err
 			}
 			it.Content = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputupdateSystemIntakeGRBReviewFormInputPresentationAsync(ctx context.Context, obj any) (models.UpdateSystemIntakeGRBReviewFormInputPresentationAsync, error) {
+	var it models.UpdateSystemIntakeGRBReviewFormInputPresentationAsync
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"systemIntakeID", "grbReviewAsyncRecordingTime"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "systemIntakeID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SystemIntakeID = data
+		case "grbReviewAsyncRecordingTime":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("grbReviewAsyncRecordingTime"))
+			data, err := ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.GrbReviewAsyncRecordingTime = graphql.OmittableOf(data)
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputupdateSystemIntakeGRBReviewFormInputPresentationStandard(ctx context.Context, obj any) (models.UpdateSystemIntakeGRBReviewFormInputPresentationStandard, error) {
+	var it models.UpdateSystemIntakeGRBReviewFormInputPresentationStandard
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"systemIntakeID", "grbDate"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "systemIntakeID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SystemIntakeID = data
+		case "grbDate":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("grbDate"))
+			data, err := ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.GrbDate = graphql.OmittableOf(data)
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputupdateSystemIntakeGRBReviewFormInputTimeframeAsync(ctx context.Context, obj any) (models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync, error) {
+	var it models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	if _, present := asMap["startGRBReview"]; !present {
+		asMap["startGRBReview"] = false
+	}
+
+	fieldsInOrder := [...]string{"systemIntakeID", "grbReviewAsyncEndDate", "startGRBReview"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "systemIntakeID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SystemIntakeID = data
+		case "grbReviewAsyncEndDate":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("grbReviewAsyncEndDate"))
+			data, err := ec.unmarshalNTime2timeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.GrbReviewAsyncEndDate = data
+		case "startGRBReview":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("startGRBReview"))
+			data, err := ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.StartGRBReview = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputupdateSystemIntakeGRBReviewTypeInput(ctx context.Context, obj any) (models.UpdateSystemIntakeGRBReviewTypeInput, error) {
+	var it models.UpdateSystemIntakeGRBReviewTypeInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"systemIntakeID", "grbReviewType"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "systemIntakeID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SystemIntakeID = data
+		case "grbReviewType":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("grbReviewType"))
+			data, err := ec.unmarshalNSystemIntakeGRBReviewType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewType(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.GrbReviewType = data
 		}
 	}
 
@@ -65455,6 +68872,8 @@ func (ec *executionContext) _BusinessCase(ctx context.Context, sel ast.Selection
 			out.Values[i] = ec._BusinessCase_businessOwner(ctx, field, obj)
 		case "cmsBenefit":
 			out.Values[i] = ec._BusinessCase_cmsBenefit(ctx, field, obj)
+		case "collaborationNeeded":
+			out.Values[i] = ec._BusinessCase_collaborationNeeded(ctx, field, obj)
 		case "createdAt":
 			out.Values[i] = ec._BusinessCase_createdAt(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -65540,12 +68959,16 @@ func (ec *executionContext) _BusinessCase(ctx context.Context, sel ast.Selection
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "priorityAlignment":
 			out.Values[i] = ec._BusinessCase_priorityAlignment(ctx, field, obj)
+		case "projectAcronym":
+			out.Values[i] = ec._BusinessCase_projectAcronym(ctx, field, obj)
 		case "projectName":
 			out.Values[i] = ec._BusinessCase_projectName(ctx, field, obj)
 		case "requester":
 			out.Values[i] = ec._BusinessCase_requester(ctx, field, obj)
 		case "requesterPhoneNumber":
 			out.Values[i] = ec._BusinessCase_requesterPhoneNumber(ctx, field, obj)
+		case "responseToGRTFeedback":
+			out.Values[i] = ec._BusinessCase_responseToGRTFeedback(ctx, field, obj)
 		case "status":
 			out.Values[i] = ec._BusinessCase_status(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -65638,6 +69061,8 @@ func (ec *executionContext) _BusinessCaseSolution(ctx context.Context, sel ast.S
 			out.Values[i] = ec._BusinessCaseSolution_hasUi(ctx, field, obj)
 		case "hostingCloudServiceType":
 			out.Values[i] = ec._BusinessCaseSolution_hostingCloudServiceType(ctx, field, obj)
+		case "hostingCloudStrategy":
+			out.Values[i] = ec._BusinessCaseSolution_hostingCloudStrategy(ctx, field, obj)
 		case "hostingLocation":
 			out.Values[i] = ec._BusinessCaseSolution_hostingLocation(ctx, field, obj)
 		case "hostingType":
@@ -65650,8 +69075,16 @@ func (ec *executionContext) _BusinessCaseSolution(ctx context.Context, sel ast.S
 			out.Values[i] = ec._BusinessCaseSolution_securityIsBeingReviewed(ctx, field, obj)
 		case "summary":
 			out.Values[i] = ec._BusinessCaseSolution_summary(ctx, field, obj)
+		case "targetContractAwardDate":
+			out.Values[i] = ec._BusinessCaseSolution_targetContractAwardDate(ctx, field, obj)
+		case "targetCompletionDate":
+			out.Values[i] = ec._BusinessCaseSolution_targetCompletionDate(ctx, field, obj)
 		case "title":
 			out.Values[i] = ec._BusinessCaseSolution_title(ctx, field, obj)
+		case "workforceTrainingReqs":
+			out.Values[i] = ec._BusinessCaseSolution_workforceTrainingReqs(ctx, field, obj)
+		case "zeroTrustAlignment":
+			out.Values[i] = ec._BusinessCaseSolution_zeroTrustAlignment(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -67876,6 +71309,65 @@ func (ec *executionContext) _GRBReviewerComparisonIntake(ctx context.Context, se
 	return out
 }
 
+var gRBVotingInformationImplementors = []string{"GRBVotingInformation"}
+
+func (ec *executionContext) _GRBVotingInformation(ctx context.Context, sel ast.SelectionSet, obj *models.GRBVotingInformation) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, gRBVotingInformationImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("GRBVotingInformation")
+		case "grbReviewers":
+			out.Values[i] = ec._GRBVotingInformation_grbReviewers(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "votingStatus":
+			out.Values[i] = ec._GRBVotingInformation_votingStatus(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "numberOfNoObjection":
+			out.Values[i] = ec._GRBVotingInformation_numberOfNoObjection(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "numberOfObjection":
+			out.Values[i] = ec._GRBVotingInformation_numberOfObjection(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "numberOfNotVoted":
+			out.Values[i] = ec._GRBVotingInformation_numberOfNotVoted(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var governanceRequestFeedbackImplementors = []string{"GovernanceRequestFeedback"}
 
 func (ec *executionContext) _GovernanceRequestFeedback(ctx context.Context, sel ast.SelectionSet, obj *models.GovernanceRequestFeedback) graphql.Marshaler {
@@ -68492,6 +71984,20 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "castSystemIntakeGRBReviewerVote":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_castSystemIntakeGRBReviewerVote(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "sendSystemIntakeGRBReviewerReminder":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_sendSystemIntakeGRBReviewerReminder(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		case "createSystemIntakeGRBDiscussionPost":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createSystemIntakeGRBDiscussionPost(ctx, field)
@@ -68499,6 +72005,30 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "createSystemIntakeGRBDiscussionReply":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createSystemIntakeGRBDiscussionReply(ctx, field)
+			})
+		case "updateSystemIntakeGRBReviewType":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateSystemIntakeGRBReviewType(ctx, field)
+			})
+		case "updateSystemIntakeGRBReviewFormPresentationStandard":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateSystemIntakeGRBReviewFormPresentationStandard(ctx, field)
+			})
+		case "updateSystemIntakeGRBReviewFormPresentationAsync":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateSystemIntakeGRBReviewFormPresentationAsync(ctx, field)
+			})
+		case "updateSystemIntakeGRBReviewFormTimeframeAsync":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateSystemIntakeGRBReviewFormTimeframeAsync(ctx, field)
+			})
+		case "extendGRBReviewDeadlineAsync":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_extendGRBReviewDeadlineAsync(ctx, field)
+			})
+		case "restartGRBReviewAsync":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_restartGRBReviewAsync(ctx, field)
 			})
 		case "updateSystemIntakeLinkedCedarSystem":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
@@ -68508,6 +72038,10 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_setSystemIntakeGRBPresentationLinks(ctx, field)
 			})
+		case "uploadSystemIntakeGRBPresentationDeck":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_uploadSystemIntakeGRBPresentationDeck(ctx, field)
+			})
 		case "deleteSystemIntakeGRBPresentationLinks":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_deleteSystemIntakeGRBPresentationLinks(ctx, field)
@@ -68515,6 +72049,10 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "manuallyEndSystemIntakeGRBReviewAsyncVoting":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_manuallyEndSystemIntakeGRBReviewAsyncVoting(ctx, field)
+			})
 		case "archiveSystemIntake":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_archiveSystemIntake(ctx, field)
@@ -68769,6 +72307,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "deleteTrbLeadOption":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_deleteTrbLeadOption(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "sendGRBReviewPresentationDeckReminderEmail":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_sendGRBReviewPresentationDeckReminderEmail(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
@@ -69605,6 +73150,45 @@ func (ec *executionContext) _RequesterUpdateEmailData(ctx context.Context, sel a
 	return out
 }
 
+var sendSystemIntakeGRBReviewReminderPayloadImplementors = []string{"SendSystemIntakeGRBReviewReminderPayload"}
+
+func (ec *executionContext) _SendSystemIntakeGRBReviewReminderPayload(ctx context.Context, sel ast.SelectionSet, obj *models.SendSystemIntakeGRBReviewReminderPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, sendSystemIntakeGRBReviewReminderPayloadImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SendSystemIntakeGRBReviewReminderPayload")
+		case "timeSent":
+			out.Values[i] = ec._SendSystemIntakeGRBReviewReminderPayload_timeSent(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var systemIntakeImplementors = []string{"SystemIntake"}
 
 func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.SelectionSet, obj *models.SystemIntake) graphql.Marshaler {
@@ -70123,12 +73707,7 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-		case "id":
-			out.Values[i] = ec._SystemIntake_id(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
-		case "isso":
+		case "grbVotingInformation":
 			field := field
 
 			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
@@ -70137,7 +73716,7 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._SystemIntake_isso(ctx, field, obj)
+				res = ec._SystemIntake_grbVotingInformation(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
@@ -70164,6 +73743,11 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "id":
+			out.Values[i] = ec._SystemIntake_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
 		case "lcid":
 			field := field
 
@@ -70978,7 +74562,7 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-		case "grbDiscussions":
+		case "grbDiscussionsPrimary":
 			field := field
 
 			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
@@ -70987,7 +74571,43 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._SystemIntake_grbDiscussions(ctx, field, obj)
+				res = ec._SystemIntake_grbDiscussionsPrimary(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "grbDiscussionsInternal":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_grbDiscussionsInternal(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
@@ -71047,6 +74667,87 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "grbPresentationDeckRequesterReminderEmailSentTime":
+			out.Values[i] = ec._SystemIntake_grbPresentationDeckRequesterReminderEmailSentTime(ctx, field, obj)
+		case "grbReviewType":
+			out.Values[i] = ec._SystemIntake_grbReviewType(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
+		case "grbReviewAsyncRecordingTime":
+			out.Values[i] = ec._SystemIntake_grbReviewAsyncRecordingTime(ctx, field, obj)
+		case "grbReviewAsyncEndDate":
+			out.Values[i] = ec._SystemIntake_grbReviewAsyncEndDate(ctx, field, obj)
+		case "grbReviewStandardStatus":
+			field := field
+
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_grbReviewStandardStatus(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "grbReviewAsyncStatus":
+			field := field
+
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_grbReviewAsyncStatus(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "grbReviewAsyncManualEndDate":
+			out.Values[i] = ec._SystemIntake_grbReviewAsyncManualEndDate(ctx, field, obj)
+		case "grbReviewReminderLastSent":
+			out.Values[i] = ec._SystemIntake_grbReviewReminderLastSent(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -72388,6 +76089,12 @@ func (ec *executionContext) _SystemIntakeGRBReviewer(ctx context.Context, sel as
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "vote":
+			out.Values[i] = ec._SystemIntakeGRBReviewer_vote(ctx, field, obj)
+		case "voteComment":
+			out.Values[i] = ec._SystemIntakeGRBReviewer_voteComment(ctx, field, obj)
+		case "dateVoted":
+			out.Values[i] = ec._SystemIntakeGRBReviewer_dateVoted(ctx, field, obj)
 		case "grbRole":
 			field := field
 
@@ -72476,44 +76183,6 @@ func (ec *executionContext) _SystemIntakeGovernanceTeam(ctx context.Context, sel
 			out.Values[i] = ec._SystemIntakeGovernanceTeam_isPresent(ctx, field, obj)
 		case "teams":
 			out.Values[i] = ec._SystemIntakeGovernanceTeam_teams(ctx, field, obj)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
-var systemIntakeISSOImplementors = []string{"SystemIntakeISSO"}
-
-func (ec *executionContext) _SystemIntakeISSO(ctx context.Context, sel ast.SelectionSet, obj *models.SystemIntakeIsso) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeISSOImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("SystemIntakeISSO")
-		case "isPresent":
-			out.Values[i] = ec._SystemIntakeISSO_isPresent(ctx, field, obj)
-		case "name":
-			out.Values[i] = ec._SystemIntakeISSO_name(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -75839,6 +79508,11 @@ func (ec *executionContext) marshalNBusinessCaseStatus2githubᚗcomᚋcmsᚑente
 	return res
 }
 
+func (ec *executionContext) unmarshalNCastSystemIntakeGRBReviewerVoteInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCastSystemIntakeGRBReviewerVoteInput(ctx context.Context, v any) (models.CastSystemIntakeGRBReviewerVoteInput, error) {
+	res, err := ec.unmarshalInputCastSystemIntakeGRBReviewerVoteInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNCedarAuthorityToOperate2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarAuthorityToOperateᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarAuthorityToOperate) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -76820,6 +80494,11 @@ func (ec *executionContext) marshalNEstimatedLifecycleCost2ᚖgithubᚗcomᚋcms
 	return ec._EstimatedLifecycleCost(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNExtendGRBReviewDeadlineInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐExtendGRBReviewDeadlineInput(ctx context.Context, v any) (models.ExtendGRBReviewDeadlineInput, error) {
+	res, err := ec.unmarshalInputExtendGRBReviewDeadlineInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNGRBReviewerComparison2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBReviewerComparisonᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.GRBReviewerComparison) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -76926,6 +80605,37 @@ func (ec *executionContext) marshalNGRBReviewerComparisonIntake2ᚖgithubᚗcom�
 		return graphql.Null
 	}
 	return ec._GRBReviewerComparisonIntake(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNGRBVotingInformation2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBVotingInformation(ctx context.Context, sel ast.SelectionSet, v models.GRBVotingInformation) graphql.Marshaler {
+	return ec._GRBVotingInformation(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNGRBVotingInformation2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBVotingInformation(ctx context.Context, sel ast.SelectionSet, v *models.GRBVotingInformation) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._GRBVotingInformation(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNGRBVotingInformationStatus2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBVotingInformationStatus(ctx context.Context, v any) (models.GRBVotingInformationStatus, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.GRBVotingInformationStatus(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNGRBVotingInformationStatus2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGRBVotingInformationStatus(ctx context.Context, sel ast.SelectionSet, v models.GRBVotingInformationStatus) graphql.Marshaler {
+	_ = sel
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) marshalNGovernanceRequestFeedback2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐGovernanceRequestFeedbackᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.GovernanceRequestFeedback) graphql.Marshaler {
@@ -77294,6 +81004,11 @@ func (ec *executionContext) marshalNRequesterUpdateEmailData2ᚖgithubᚗcomᚋc
 	return ec._RequesterUpdateEmailData(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNRestartGRBReviewInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRestartGRBReviewInput(ctx context.Context, v any) (models.RestartGRBReviewInput, error) {
+	res, err := ec.unmarshalInputRestartGRBReviewInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx context.Context, v any) (models.Role, error) {
 	var res models.Role
 	err := res.UnmarshalGQL(v)
@@ -77317,6 +81032,20 @@ func (ec *executionContext) unmarshalNSendFeedbackEmailInput2githubᚗcomᚋcms�
 func (ec *executionContext) unmarshalNSendReportAProblemEmailInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSendReportAProblemEmailInput(ctx context.Context, v any) (models.SendReportAProblemEmailInput, error) {
 	res, err := ec.unmarshalInputSendReportAProblemEmailInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSendSystemIntakeGRBReviewReminderPayload2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSendSystemIntakeGRBReviewReminderPayload(ctx context.Context, sel ast.SelectionSet, v models.SendSystemIntakeGRBReviewReminderPayload) graphql.Marshaler {
+	return ec._SendSystemIntakeGRBReviewReminderPayload(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNSendSystemIntakeGRBReviewReminderPayload2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSendSystemIntakeGRBReviewReminderPayload(ctx context.Context, sel ast.SelectionSet, v *models.SendSystemIntakeGRBReviewReminderPayload) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._SendSystemIntakeGRBReviewReminderPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNSendTRBGuidanceLetterInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSendTRBGuidanceLetterInput(ctx context.Context, v any) (models.SendTRBGuidanceLetterInput, error) {
@@ -77621,6 +81350,16 @@ func (ec *executionContext) unmarshalNSystemIntakeActionType2githubᚗcomᚋcms�
 }
 
 func (ec *executionContext) marshalNSystemIntakeActionType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeActionType(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeActionType) graphql.Marshaler {
+	return v
+}
+
+func (ec *executionContext) unmarshalNSystemIntakeAsyncGRBVotingOption2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx context.Context, v any) (models.SystemIntakeAsyncGRBVotingOption, error) {
+	var res models.SystemIntakeAsyncGRBVotingOption
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSystemIntakeAsyncGRBVotingOption2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeAsyncGRBVotingOption) graphql.Marshaler {
 	return v
 }
 
@@ -77992,6 +81731,16 @@ func (ec *executionContext) unmarshalNSystemIntakeFundingSourceInput2ᚖgithub�
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNSystemIntakeGRBDiscussionBoardType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBDiscussionBoardType(ctx context.Context, v any) (models.SystemIntakeGRBDiscussionBoardType, error) {
+	var res models.SystemIntakeGRBDiscussionBoardType
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSystemIntakeGRBDiscussionBoardType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBDiscussionBoardType(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeGRBDiscussionBoardType) graphql.Marshaler {
+	return v
+}
+
 func (ec *executionContext) unmarshalNSystemIntakeGRBPresentationLinksInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBPresentationLinksInput(ctx context.Context, v any) (models.SystemIntakeGRBPresentationLinksInput, error) {
 	res, err := ec.unmarshalInputSystemIntakeGRBPresentationLinksInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -78105,6 +81854,23 @@ func (ec *executionContext) marshalNSystemIntakeGRBReviewDiscussionPost2ᚖgithu
 	return ec._SystemIntakeGRBReviewDiscussionPost(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNSystemIntakeGRBReviewType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewType(ctx context.Context, v any) (models.SystemIntakeGRBReviewType, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.SystemIntakeGRBReviewType(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSystemIntakeGRBReviewType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewType(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeGRBReviewType) graphql.Marshaler {
+	_ = sel
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
+}
+
 func (ec *executionContext) marshalNSystemIntakeGRBReviewer2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewer(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeGRBReviewer) graphql.Marshaler {
 	return ec._SystemIntakeGRBReviewer(ctx, sel, &v)
 }
@@ -78199,25 +81965,6 @@ func (ec *executionContext) marshalNSystemIntakeGovernanceTeam2ᚖgithubᚗcom�
 
 func (ec *executionContext) unmarshalNSystemIntakeGovernanceTeamInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGovernanceTeamInput(ctx context.Context, v any) (*models.SystemIntakeGovernanceTeamInput, error) {
 	res, err := ec.unmarshalInputSystemIntakeGovernanceTeamInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNSystemIntakeISSO2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeIsso(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeIsso) graphql.Marshaler {
-	return ec._SystemIntakeISSO(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNSystemIntakeISSO2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeIsso(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeIsso) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._SystemIntakeISSO(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalNSystemIntakeISSOInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeISSOInput(ctx context.Context, v any) (*models.SystemIntakeISSOInput, error) {
-	res, err := ec.unmarshalInputSystemIntakeISSOInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -79623,6 +83370,11 @@ func (ec *executionContext) marshalNUpload2githubᚗcomᚋ99designsᚋgqlgenᚋg
 	return res
 }
 
+func (ec *executionContext) unmarshalNUploadSystemIntakeGRBPresentationDeckInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUploadSystemIntakeGRBPresentationDeckInput(ctx context.Context, v any) (models.UploadSystemIntakeGRBPresentationDeckInput, error) {
+	res, err := ec.unmarshalInputUploadSystemIntakeGRBPresentationDeckInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNUserAccount2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋauthenticationᚐUserAccount(ctx context.Context, sel ast.SelectionSet, v *authentication.UserAccount) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -79961,6 +83713,26 @@ func (ec *executionContext) unmarshalNcreateSystemIntakeGRBDiscussionPostInput2g
 
 func (ec *executionContext) unmarshalNcreateSystemIntakeGRBDiscussionReplyInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCreateSystemIntakeGRBDiscussionReplyInput(ctx context.Context, v any) (models.CreateSystemIntakeGRBDiscussionReplyInput, error) {
 	res, err := ec.unmarshalInputcreateSystemIntakeGRBDiscussionReplyInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNupdateSystemIntakeGRBReviewFormInputPresentationAsync2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemIntakeGRBReviewFormInputPresentationAsync(ctx context.Context, v any) (models.UpdateSystemIntakeGRBReviewFormInputPresentationAsync, error) {
+	res, err := ec.unmarshalInputupdateSystemIntakeGRBReviewFormInputPresentationAsync(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNupdateSystemIntakeGRBReviewFormInputPresentationStandard2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemIntakeGRBReviewFormInputPresentationStandard(ctx context.Context, v any) (models.UpdateSystemIntakeGRBReviewFormInputPresentationStandard, error) {
+	res, err := ec.unmarshalInputupdateSystemIntakeGRBReviewFormInputPresentationStandard(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNupdateSystemIntakeGRBReviewFormInputTimeframeAsync2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemIntakeGRBReviewFormInputTimeframeAsync(ctx context.Context, v any) (models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync, error) {
+	res, err := ec.unmarshalInputupdateSystemIntakeGRBReviewFormInputTimeframeAsync(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNupdateSystemIntakeGRBReviewTypeInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemIntakeGRBReviewTypeInput(ctx context.Context, v any) (models.UpdateSystemIntakeGRBReviewTypeInput, error) {
+	res, err := ec.unmarshalInputupdateSystemIntakeGRBReviewTypeInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -80574,6 +84346,22 @@ func (ec *executionContext) unmarshalOSystemIntakeAnnualSpendingInput2ᚖgithub�
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalOSystemIntakeAsyncGRBVotingOption2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx context.Context, v any) (*models.SystemIntakeAsyncGRBVotingOption, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(models.SystemIntakeAsyncGRBVotingOption)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOSystemIntakeAsyncGRBVotingOption2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeAsyncGRBVotingOption(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeAsyncGRBVotingOption) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
+}
+
 func (ec *executionContext) marshalOSystemIntakeCollaborator2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeCollaboratorᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.SystemIntakeCollaborator) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -80718,11 +84506,62 @@ func (ec *executionContext) marshalOSystemIntakeGRBPresentationLinks2ᚖgithub�
 	return ec._SystemIntakeGRBPresentationLinks(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalOSystemIntakeGRBReviewAsyncStatusType2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewAsyncStatusType(ctx context.Context, v any) (*models.SystemIntakeGRBReviewAsyncStatusType, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(models.SystemIntakeGRBReviewAsyncStatusType)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOSystemIntakeGRBReviewAsyncStatusType2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewAsyncStatusType(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeGRBReviewAsyncStatusType) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
+}
+
 func (ec *executionContext) marshalOSystemIntakeGRBReviewDiscussionPost2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewDiscussionPost(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeGRBReviewDiscussionPost) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._SystemIntakeGRBReviewDiscussionPost(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOSystemIntakeGRBReviewStandardStatusType2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewStandardStatusType(ctx context.Context, v any) (*models.SystemIntakeGRBReviewStandardStatusType, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(models.SystemIntakeGRBReviewStandardStatusType)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOSystemIntakeGRBReviewStandardStatusType2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewStandardStatusType(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeGRBReviewStandardStatusType) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
+}
+
+func (ec *executionContext) unmarshalOSystemIntakeGRBReviewType2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewType(ctx context.Context, v any) (*models.SystemIntakeGRBReviewType, error) {
+	if v == nil {
+		return nil, nil
+	}
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.SystemIntakeGRBReviewType(tmp)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOSystemIntakeGRBReviewType2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewType(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeGRBReviewType) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	_ = sel
+	_ = ctx
+	res := graphql.MarshalString(string(*v))
+	return res
 }
 
 func (ec *executionContext) unmarshalOSystemIntakeGRBReviewerRole2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewerRole(ctx context.Context, v any) (*models.SystemIntakeGRBReviewerRole, error) {

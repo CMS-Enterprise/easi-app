@@ -119,18 +119,23 @@ export default function Summary({
               </h4>
               <span className="display-flex flex-align-center">
                 {!trbLead && (
-                  <Icon.Error className="text-error margin-right-05" />
+                  <Icon.Error
+                    className="text-error margin-right-05"
+                    aria-hidden
+                  />
                 )}
                 {trbLead || t('adminHome.notAssigned')}
               </span>
-              <TrbAssignLeadModalOpener
-                trbRequestId={trbRequestId}
-                modalRef={assignLeadModalRef}
-                trbRequestIdRef={assignLeadModalTrbRequestIdRef}
-                className="usa-button--unstyled width-auto"
-              >
-                {trbLead ? t('adminHome.change') : t('adminHome.assign')}
-              </TrbAssignLeadModalOpener>
+              {state === TRBRequestState.OPEN && (
+                <TrbAssignLeadModalOpener
+                  trbRequestId={trbRequestId}
+                  modalRef={assignLeadModalRef}
+                  trbRequestIdRef={assignLeadModalTrbRequestIdRef}
+                  className="usa-button--unstyled width-auto"
+                >
+                  {trbLead ? t('adminHome.change') : t('adminHome.assign')}
+                </TrbAssignLeadModalOpener>
+              )}
             </Grid>
           </Grid>
         </GridContainer>

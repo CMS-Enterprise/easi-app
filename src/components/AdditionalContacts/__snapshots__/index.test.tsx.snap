@@ -59,10 +59,10 @@ exports[`Additional contacts component > displays form when editing contact 1`] 
                 class="cedar-contact-select__control css-79rxjr-control"
               >
                 <div
-                  class="cedar-contact-select__value-container cedar-contact-select__value-container--has-value css-1fdsijx-ValueContainer"
+                  class="cedar-contact-select__value-container cedar-contact-select__value-container--has-value css-hlgwow"
                 >
                   <div
-                    class="cedar-contact-select__input-container css-166bipr-Input"
+                    class="cedar-contact-select__input-container css-1cfo1cf"
                     data-value="Jerry Seinfeld, SF13 (jerry.seinfeld@local.fake)"
                   >
                     <input
@@ -86,7 +86,7 @@ exports[`Additional contacts component > displays form when editing contact 1`] 
                   </div>
                 </div>
                 <div
-                  class="cedar-contact-select__indicators css-1hb7zxy-IndicatorsContainer"
+                  class="cedar-contact-select__indicators css-1wy0on6"
                 >
                   <div
                     aria-hidden="true"

@@ -126,7 +126,7 @@ const AlternativeAnalysis = ({
                 }}
               >
                 <b>{t(`alternativesTable.solutions.${index}.add`)}</b>
-                <Icon.ArrowForward className="margin-left-1" />
+                <Icon.ArrowForward className="margin-left-1" aria-hidden />
               </Button>
             </>
           );
@@ -281,7 +281,7 @@ const AlternativeAnalysis = ({
             <PageHeading className="margin-top-4 margin-bottom-2">
               {t('alternatives')}
             </PageHeading>
-            <div className="font-body-lg text-light">
+            <div className="font-body-lg text-light line-height-sans-4">
               <p className="margin-top-0">
                 {t('alternativesDescription.text.0')}
               </p>
@@ -295,9 +295,11 @@ const AlternativeAnalysis = ({
                 <li>{t('alternativesDescription.list.3')}</li>
                 <li>{t('alternativesDescription.list.4')}</li>
               </ul>
-              <p>{t('alternativesDescription.text.2')}</p>
+              <p className="margin-bottom-1">
+                {t('alternativesDescription.text.2')}
+              </p>
               {/* Required fields help text */}
-              <HelpText className="margin-top-1 text-base">
+              <HelpText className="font-body-sm">
                 <Trans
                   i18nKey="businessCase:requiredFields"
                   components={{ red: <span className="text-red" /> }}
@@ -404,7 +406,7 @@ const AlternativeAnalysis = ({
             </ButtonGroup>
 
             <IconButton
-              icon={<Icon.ArrowBack />}
+              icon={<Icon.ArrowBack aria-hidden />}
               type="button"
               unstyled
               onClick={() => {

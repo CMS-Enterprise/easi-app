@@ -77,6 +77,8 @@ export const defaultProposedSolution = {
   title: '',
   summary: '',
   acquisitionApproach: '',
+  targetContractAwardDate: '',
+  targetCompletionDate: '',
   pros: '',
   cons: '',
   estimatedLifecycleCost: cloneDeep(defaultEstimatedLifecycle),
@@ -85,18 +87,22 @@ export const defaultProposedSolution = {
     isApproved: null,
     isBeingReviewed: ''
   },
+  zeroTrustAlignment: '',
   hosting: {
     type: '',
     location: '',
+    cloudStrategy: '',
     cloudServiceType: ''
   },
-  hasUserInterface: ''
+  hasUserInterface: '',
+  workforceTrainingReqs: ''
 };
 
 export const businessCaseInitialData: BusinessCaseModel = {
   status: 'OPEN',
   systemIntakeId: '',
   requestName: '',
+  projectAcronym: '',
   requester: {
     name: '',
     phoneNumber: ''
@@ -105,10 +111,12 @@ export const businessCaseInitialData: BusinessCaseModel = {
     name: ''
   },
   businessNeed: '',
+  collaborationNeeded: '',
   currentSolutionSummary: '',
   cmsBenefit: '',
   priorityAlignment: '',
   successIndicators: '',
+  responseToGRTFeedback: '',
   // proposedSolutions: [cloneDeep(defaultProposedSolution)],
   preferredSolution: cloneDeep(defaultProposedSolution),
   alternativeA: cloneDeep(defaultProposedSolution),
@@ -134,12 +142,16 @@ export const solutionHasFilledFields = (
     title,
     summary,
     acquisitionApproach,
+    targetContractAwardDate,
+    targetCompletionDate,
     security,
+    zeroTrustAlignment,
     hosting,
     hasUserInterface,
     pros,
     cons,
     costSavings,
+    workforceTrainingReqs,
     estimatedLifecycleCost
   } = bizCaseSolution;
 
@@ -157,15 +169,20 @@ export const solutionHasFilledFields = (
     title ||
     summary ||
     acquisitionApproach ||
+    targetContractAwardDate ||
+    targetCompletionDate ||
     security.isApproved ||
     security.isBeingReviewed ||
+    zeroTrustAlignment ||
     hosting.type ||
     hosting.location ||
+    hosting.cloudStrategy ||
     hosting.cloudServiceType ||
     hasUserInterface ||
     pros ||
     cons ||
     costSavings ||
+    workforceTrainingReqs ||
     hasRequiredPhaseCosts ||
     hasRelatedCosts
   );
@@ -221,6 +238,7 @@ export const prepareBusinessCaseForApp = (
     status: businessCase.status,
     systemIntakeId: businessCase.systemIntakeId,
     requestName: businessCase.projectName || '',
+    projectAcronym: businessCase.projectAcronym || '',
     requester: {
       name: businessCase.requester || '',
       phoneNumber: businessCase.requesterPhoneNumber || ''
@@ -229,15 +247,20 @@ export const prepareBusinessCaseForApp = (
       name: businessCase.businessOwner || ''
     },
     businessNeed: businessCase.businessNeed || '',
+    collaborationNeeded: businessCase.collaborationNeeded || '',
     currentSolutionSummary: businessCase.currentSolutionSummary || '',
     cmsBenefit: businessCase.cmsBenefit || '',
     priorityAlignment: businessCase.priorityAlignment || '',
     successIndicators: businessCase.successIndicators || '',
+    responseToGRTFeedback: businessCase.responseToGRTFeedback || '',
     // proposedSolutions: [],
     preferredSolution: {
       title: businessCase.preferredTitle || '',
       summary: businessCase.preferredSummary || '',
       acquisitionApproach: businessCase.preferredAcquisitionApproach || '',
+      targetContractAwardDate:
+        businessCase.preferredTargetContractAwardDate || '',
+      targetCompletionDate: businessCase.preferredTargetCompletionDate || '',
       pros: businessCase.preferredPros || '',
       cons: businessCase.preferredCons || '',
       costSavings: businessCase.preferredCostSavings || '',
@@ -246,17 +269,23 @@ export const prepareBusinessCaseForApp = (
         isApproved: businessCase.preferredSecurityIsApproved,
         isBeingReviewed: businessCase.preferredSecurityIsBeingReviewed || ''
       },
+      zeroTrustAlignment: businessCase.preferredZeroTrustAlignment || '',
       hosting: {
         type: businessCase.preferredHostingType || '',
         location: businessCase.preferredHostingLocation || '',
+        cloudStrategy: businessCase.preferredHostingCloudStrategy || '',
         cloudServiceType: businessCase.preferredHostingCloudServiceType || ''
       },
-      hasUserInterface: businessCase.preferredHasUI || ''
+      hasUserInterface: businessCase.preferredHasUI || '',
+      workforceTrainingReqs: businessCase.preferredWorkforceTrainingReqs || ''
     },
     alternativeA: {
       title: businessCase.alternativeATitle || '',
       summary: businessCase.alternativeASummary || '',
       acquisitionApproach: businessCase.alternativeAAcquisitionApproach || '',
+      targetContractAwardDate:
+        businessCase.alternativeATargetContractAwardDate || '',
+      targetCompletionDate: businessCase.alternativeATargetCompletionDate || '',
       pros: businessCase.alternativeAPros || '',
       cons: businessCase.alternativeACons || '',
       costSavings: businessCase.alternativeACostSavings || '',
@@ -265,17 +294,24 @@ export const prepareBusinessCaseForApp = (
         isApproved: businessCase.alternativeASecurityIsApproved,
         isBeingReviewed: businessCase.alternativeASecurityIsBeingReviewed
       },
+      zeroTrustAlignment: businessCase.alternativeAZeroTrustAlignment || '',
       hosting: {
         type: businessCase.alternativeAHostingType || '',
         location: businessCase.alternativeAHostingLocation || '',
+        cloudStrategy: businessCase.alternativeAHostingCloudStrategy || '',
         cloudServiceType: businessCase.alternativeAHostingCloudServiceType || ''
       },
-      hasUserInterface: businessCase.alternativeAHasUI
+      hasUserInterface: businessCase.alternativeAHasUI || '',
+      workforceTrainingReqs:
+        businessCase.alternativeAWorkforceTrainingReqs || ''
     },
     alternativeB: {
       title: businessCase.alternativeBTitle || '',
       summary: businessCase.alternativeBSummary || '',
       acquisitionApproach: businessCase.alternativeBAcquisitionApproach || '',
+      targetContractAwardDate:
+        businessCase.alternativeBTargetContractAwardDate || '',
+      targetCompletionDate: businessCase.alternativeBTargetCompletionDate || '',
       pros: businessCase.alternativeBPros || '',
       cons: businessCase.alternativeBCons || '',
       costSavings: businessCase.alternativeBCostSavings || '',
@@ -284,12 +320,16 @@ export const prepareBusinessCaseForApp = (
         isApproved: businessCase.alternativeBSecurityIsApproved,
         isBeingReviewed: businessCase.alternativeBSecurityIsBeingReviewed || ''
       },
+      zeroTrustAlignment: businessCase.alternativeBZeroTrustAlignment || '',
       hosting: {
         type: businessCase.alternativeBHostingType || '',
         location: businessCase.alternativeBHostingLocation || '',
+        cloudStrategy: businessCase.alternativeBHostingCloudStrategy || '',
         cloudServiceType: businessCase.alternativeBHostingCloudServiceType || ''
       },
-      hasUserInterface: businessCase.alternativeBHasUI || ''
+      hasUserInterface: businessCase.alternativeBHasUI || '',
+      workforceTrainingReqs:
+        businessCase.alternativeBWorkforceTrainingReqs || ''
     },
     createdAt: businessCase.createdAt,
     updatedAt: businessCase.updatedAt
@@ -377,71 +417,104 @@ export const prepareBusinessCaseForApi = (
     status: businessCase.status,
     systemIntakeId: businessCase.systemIntakeId,
     projectName: businessCase.requestName || null,
+    projectAcronym: businessCase.projectAcronym || null,
     requester: businessCase.requester.name || null,
     requesterPhoneNumber: businessCase.requester.phoneNumber || null,
     businessOwner: businessCase.businessOwner.name || null,
     businessNeed: businessCase.businessNeed || null,
+    collaborationNeeded: businessCase.collaborationNeeded || null,
     currentSolutionSummary: businessCase.currentSolutionSummary || null,
     cmsBenefit: businessCase.cmsBenefit || null,
     priorityAlignment: businessCase.priorityAlignment || null,
     successIndicators: businessCase.successIndicators || null,
+    responseToGRTFeedback: businessCase.responseToGRTFeedback || null,
 
     // Preferred solution
     preferredTitle: businessCase.preferredSolution.title || null,
     preferredSummary: businessCase.preferredSolution.summary || null,
     preferredAcquisitionApproach:
       businessCase.preferredSolution.acquisitionApproach || null,
+    preferredTargetContractAwardDate:
+      businessCase.preferredSolution.targetContractAwardDate || null,
+    preferredTargetCompletionDate:
+      businessCase.preferredSolution.targetCompletionDate || null,
     preferredSecurityIsApproved:
       businessCase.preferredSolution.security.isApproved,
     preferredSecurityisBeingReviewed:
       businessCase.preferredSolution.security.isBeingReviewed || null,
+    preferredZeroTrustAlignment:
+      businessCase.preferredSolution.zeroTrustAlignment || null,
     preferredHostingType: businessCase.preferredSolution.hosting.type || null,
     preferredHostingLocation:
       businessCase.preferredSolution.hosting.location || null,
+    preferredHostingCloudStrategy:
+      businessCase.preferredSolution.hosting.cloudStrategy || null,
     preferredHostingCloudServiceType:
       businessCase.preferredSolution.hosting.cloudServiceType || null,
     preferredHasUI: businessCase.preferredSolution.hasUserInterface || null,
     preferredPros: businessCase.preferredSolution.pros || null,
     preferredCons: businessCase.preferredSolution.cons || null,
     preferredCostSavings: businessCase.preferredSolution.costSavings || null,
+    preferredWorkforceTrainingReqs:
+      businessCase.preferredSolution.workforceTrainingReqs || null,
 
     // Alternative A
     alternativeATitle: businessCase.alternativeA.title || null,
     alternativeASummary: businessCase.alternativeA.summary || null,
     alternativeAAcquisitionApproach:
       businessCase.alternativeA.acquisitionApproach || null,
+    alternativeATargetContractAwardDate:
+      businessCase.alternativeA.targetContractAwardDate || null,
+    alternativeATargetCompletionDate:
+      businessCase.alternativeA.targetCompletionDate || null,
     alternativeASecurityIsApproved:
       businessCase.alternativeA.security.isApproved,
     alternativeASecurityisBeingReviewed:
       businessCase.alternativeA.security.isBeingReviewed || null,
+    alternativeAZeroTrustAlignment:
+      businessCase.alternativeA.zeroTrustAlignment || null,
     alternativeAHostingType: businessCase.alternativeA.hosting.type || null,
     alternativeAHostingLocation:
       businessCase.alternativeA.hosting.location || null,
+    alternativeAHostingCloudStrategy:
+      businessCase.alternativeA.hosting.cloudStrategy || null,
     alternativeAHostingCloudServiceType:
       businessCase.alternativeA.hosting.cloudServiceType || null,
     alternativeAHasUI: businessCase.alternativeA.hasUserInterface || null,
     alternativeAPros: businessCase.alternativeA.pros || null,
     alternativeACons: businessCase.alternativeA.cons || null,
     alternativeACostSavings: businessCase.alternativeA.costSavings || null,
+    alternativeAWorkforceTrainingReqs:
+      businessCase.alternativeA.workforceTrainingReqs || null,
 
     // Alternative B
     alternativeBTitle: businessCase.alternativeB.title || null,
     alternativeBSummary: businessCase.alternativeB.summary || null,
     alternativeBAcquisitionApproach:
       businessCase.alternativeB.acquisitionApproach || null,
+    alternativeBTargetContractAwardDate:
+      businessCase.alternativeB.targetContractAwardDate || null,
+    alternativeBTargetCompletionDate:
+      businessCase.alternativeB.targetCompletionDate || null,
     alternativeBSecurityIsApproved:
       businessCase.alternativeB.security.isApproved || null,
     alternativeBSecurityisBeingReviewed:
       businessCase.alternativeB.security.isBeingReviewed || null,
+    alternativeBZeroTrustAlignment:
+      businessCase.alternativeB.zeroTrustAlignment || null,
     alternativeBHostingType: businessCase.alternativeB.hosting.type || null,
     alternativeBHostingLocation:
       businessCase.alternativeB.hosting.location || null,
+    alternativeBHostingCloudStrategy:
+      businessCase.alternativeB.hosting.cloudStrategy || null,
     alternativeBHostingCloudServiceType:
       businessCase.alternativeB.hosting.cloudServiceType || null,
     alternativeBHasUI: businessCase.alternativeB.hasUserInterface || null,
     alternativeBPros: businessCase.alternativeB.pros || null,
     alternativeBCons: businessCase.alternativeB.cons || null,
     alternativeBCostSavings: businessCase.alternativeB.costSavings || null,
+    alternativeBWorkforceTrainingReqs:
+      businessCase.alternativeB.workforceTrainingReqs || null,
     lifecycleCostLines
   };
 };

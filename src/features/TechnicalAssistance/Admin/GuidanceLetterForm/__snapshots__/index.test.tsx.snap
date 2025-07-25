@@ -88,6 +88,7 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
                 type="button"
               >
                 <svg
+                  aria-hidden="true"
                   class="usa-icon margin-right-05 margin-bottom-2px text-tbottom"
                   focusable="false"
                   height="1em"
@@ -120,27 +121,37 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
           class="usa-step-indicator__segments"
         >
           <li
+            aria-disabled="false"
+            class="usa-step-indicator__segment usa-step-indicator__segment--complete maxw-none usa-step-indicator__segment--clickable"
+            data-testid="stepIndicator-0"
+          >
+            <span
+              class="usa-step-indicator__segment-label"
+            >
+              <span
+                class="name"
+              >
+                What we heard
+              </span>
+              <span
+                class="long"
+              >
+                What we heard
+              </span>
+               
+              <span
+                class="usa-sr-only"
+                data-testid="srStatusText"
+              >
+                completed
+              </span>
+            </span>
+          </li>
+          <li
             aria-current="true"
-            class="usa-step-indicator__segment usa-step-indicator__segment--current usa-step-indicator__segment--disabled"
-          >
-            <span
-              class="usa-step-indicator__segment-label"
-            >
-              <span
-                class="name"
-              >
-                What we heard
-              </span>
-              <span
-                class="long"
-              >
-                What we heard
-              </span>
-               
-            </span>
-          </li>
-          <li
-            class="usa-step-indicator__segment usa-step-indicator__segment--clickable"
+            aria-disabled="true"
+            class="usa-step-indicator__segment usa-step-indicator__segment--current maxw-none usa-step-indicator__segment--disabled"
+            data-testid="stepIndicator-1"
           >
             <span
               class="usa-step-indicator__segment-label"
@@ -156,15 +167,12 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
                 Guidance and insights
               </span>
                
-              <span
-                class="usa-sr-only"
-              >
-                not completed
-              </span>
             </span>
           </li>
           <li
-            class="usa-step-indicator__segment usa-step-indicator__segment--clickable"
+            aria-disabled="false"
+            class="usa-step-indicator__segment maxw-none usa-step-indicator__segment--clickable"
+            data-testid="stepIndicator-2"
           >
             <span
               class="usa-step-indicator__segment-label"
@@ -182,13 +190,16 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
                
               <span
                 class="usa-sr-only"
+                data-testid="srStatusText"
               >
                 not completed
               </span>
             </span>
           </li>
           <li
-            class="usa-step-indicator__segment usa-step-indicator__segment--clickable"
+            aria-disabled="false"
+            class="usa-step-indicator__segment maxw-none usa-step-indicator__segment--clickable"
+            data-testid="stepIndicator-3"
           >
             <span
               class="usa-step-indicator__segment-label"
@@ -206,13 +217,16 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
                
               <span
                 class="usa-sr-only"
+                data-testid="srStatusText"
               >
                 not completed
               </span>
             </span>
           </li>
           <li
-            class="usa-step-indicator__segment usa-step-indicator__segment--disabled"
+            aria-disabled="true"
+            class="usa-step-indicator__segment maxw-none usa-step-indicator__segment--disabled"
+            data-testid="stepIndicator-4"
           >
             <span
               class="usa-step-indicator__segment-label"
@@ -230,6 +244,7 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
                
               <span
                 class="usa-sr-only"
+                data-testid="srStatusText"
               >
                 not completed
               </span>
@@ -247,13 +262,14 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
             >
               <span
                 class="usa-sr-only"
+                data-testid="step-text"
               >
                 Step
               </span>
               <span
                 class="usa-step-indicator__current-step"
               >
-                1
+                2
               </span>
                
               <span
@@ -269,12 +285,12 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
               <span
                 class="name"
               >
-                What we heard
+                Guidance and insights
               </span>
               <span
                 class="long"
               >
-                What we heard
+                Guidance and insights
               </span>
             </span>
           </h4>
@@ -283,7 +299,7 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
       <div
         class="line-height-body-5 text-light"
       >
-        Provide a brief but detailed summary of the purpose of the session, what was discussed or presented, and any other meeting details of note.
+        Add requirements, recommendations, considerations for the project team. Provide a title, description, and any useful resources for each one. Requirements stipulate that the project team must implement this change or solution in order to maintain their LCID and continue receiving funding. Requirements may be submitted to CFACTS if not implemented, or in the process of implementation, within the provided timeline. The TRB should inform project teams if requirements will be submitted. A recommendation indicates that the project team should strongly consider implementing this change, as it will benefit both the project team and CMS. A consideration suggests that the project team should evaluate this option, but it will not significantly impact their system or CMS.
       </div>
     </div>
   </div>
@@ -295,249 +311,509 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
       class=""
       data-testid="grid"
     >
-      <form
-        class="usa-form maxw-tablet"
-        data-testid="form"
-        id="trbGuidanceSummary"
+      <div
+        id="trbGuidanceInsights"
       >
-        <div
-          class="easi-help-text margin-top-1 margin-bottom-1 text-base"
+        <button
+          class="usa-button usa-button--outline margin-top-5 margin-bottom-1"
+          data-testid="button"
+          type="button"
         >
-          Fields marked with an asterisk ( 
-          <span
-            class="text-red"
-          >
-            *
-          </span>
-           ) are required.
-        </div>
+          Add additional guidance
+        </button>
         <div
-          class="usa-form-group"
-          data-testid="formGroup"
+          class="easi-divider margin-top-2 margin-bottom-4"
+        />
+        <div
+          class="margin-bottom-7"
         >
-          <label
-            class="usa-label text-normal"
-            for="meetingSummary"
-            id="meetingSummary-label"
-          >
-            Meeting summary 
-            <span
-              class="text-red"
-            >
-               *
-            </span>
-          </label>
           <div
-            class="easi-toast easi-toast-editor"
+            class="usa-alert usa-alert--info usa-alert--slim margin-bottom-4"
+            data-testid="alert"
           >
             <div
-              style="height: 100%;"
+              class="usa-alert__body"
+            >
+              <p
+                class="usa-alert__text"
+              >
+                If you have two or more items per category, you can use arrows on the left side of each to reorder them within the category. Edit the guidance to change the category.
+              </p>
+            </div>
+          </div>
+          <div>
+            <h3
+              class="margin-bottom-05"
+              id="categoryHeading"
+            >
+              Requirements
+            </h3>
+            <p
+              class="margin-top-05 margin-bottom-3 line-height-body-5"
+            >
+              A requirement stipulates that the project team must implement this change or solution in order to maintain their LCID and continue receiving funding. Requirements may be submitted to CFACTS if not implemented or are still in the process of implementation within the provided timeline. The TRB will inform project teams if requirements will be submitted.
+            </p>
+            <div
+              class="usa-alert usa-alert--info usa-alert--slim margin-top-neg-1 margin-bottom-4"
+              data-testid="alert"
             >
               <div
-                class="toastui-editor-defaultUI"
+                class="usa-alert__body"
+              >
+                <p
+                  class="usa-alert__text"
+                >
+                  This guidance letter does not have any guidance categorized as a requirement.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3
+              class="margin-bottom-05"
+              id="categoryHeading"
+            >
+              Recommendations
+            </h3>
+            <p
+              class="margin-top-05 margin-bottom-3 line-height-body-5"
+            >
+              A recommendation indicates that the project team should strongly consider implementing this change, as it will benefit both the project team and CMS.
+            </p>
+            <ul
+              aria-labelledby="categoryHeading"
+              class="usa-list usa-list--unstyled"
+            >
+              <li
+                class="margin-bottom-3"
+                data-testid="insights_list-item"
               >
                 <div
-                  class="toastui-editor-toolbar"
+                  class="bg-base-lightest padding-top-2 padding-bottom-105 padding-left-105 padding-right-3 display-flex"
                 >
                   <div
-                    class="toastui-editor-md-tab-container"
-                    style="display: none"
+                    class="margin-right-2 display-flex flex-column flex-align-center line-height-body-1"
+                    data-testid="reorder-controls"
                   >
-                    <div
-                      aria-role="tabpanel"
-                      class="toastui-editor-tabs"
+                    <button
+                      aria-label="Increase guidance sort order"
+                      class="usa-button usa-button--unstyled height-3"
+                      data-testid="button"
+                      type="button"
                     >
-                      <div
-                        aria-label="Write"
-                        aria-role="tab"
-                        aria-selected="true"
-                        class="tab-item active"
-                        tabindex="0"
+                      <svg
+                        aria-label="dropup"
+                        class="usa-icon usa-icon--size-3 text-primary"
+                        focusable="false"
+                        height="1em"
+                        role="img"
+                        viewBox="0 0 24 24"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
                       >
-                        Write
-                      </div>
-                      <div
-                        aria-label="Preview"
-                        aria-role="tab"
-                        aria-selected="false"
-                        class="tab-item"
-                        tabindex="-1"
-                      >
-                        Preview
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="toastui-editor-defaultUI-toolbar"
-                    style="border-top-left-radius: 0px;"
-                  >
-                    <div
-                      class="toastui-editor-toolbar-group"
-                    >
-                      <button
-                        aria-label="Bold"
-                        class="bold toastui-editor-toolbar-icons"
-                        type="button"
-                      />
-                      <button
-                        aria-label="Italic"
-                        class="italic toastui-editor-toolbar-icons"
-                        type="button"
-                      />
-                      <div
-                        class="toastui-editor-toolbar-divider"
-                      />
-                    </div>
-                    <div
-                      class="toastui-editor-toolbar-group"
-                    >
-                      <button
-                        aria-label="Ordered list"
-                        class="ordered-list toastui-editor-toolbar-icons"
-                        type="button"
-                      />
-                      <button
-                        aria-label="Unordered list"
-                        class="bullet-list toastui-editor-toolbar-icons"
-                        type="button"
-                      />
-                      <div
-                        class="toastui-editor-toolbar-divider"
-                      />
-                    </div>
-                    <div
-                      class="toastui-editor-toolbar-group"
-                    >
-                      <button
-                        aria-label="Insert link"
-                        class="link toastui-editor-toolbar-icons"
-                        type="button"
-                      />
-                      <div
-                        class="toastui-editor-toolbar-divider"
-                        style="display: none;"
-                      />
-                    </div>
-                    <div
-                      class="toastui-editor-toolbar-group"
-                      style="display: none;"
-                    >
-                      <button
-                        class="more toastui-editor-toolbar-icons"
-                        type="button"
-                      />
-                      <div
-                        class="toastui-editor-dropdown-toolbar"
-                        style="display: none;"
-                      />
-                    </div>
-                    <div
-                      class="toastui-editor-tooltip"
-                      style="display:none"
-                    >
-                      
-        
-                      <div
-                        class="arrow"
-                      />
-                      
-        
-                      <span
-                        class="text"
-                      />
-                      
-      
-                    </div>
-                  </div>
-                  <div
-                    aria-role="dialog"
-                    class="toastui-editor-popup "
-                    style="display: none;"
-                  >
-                    <div
-                      class="toastui-editor-popup-body"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="toastui-editor-main toastui-editor-ww-mode"
-                >
-                  <div
-                    class="toastui-editor-main-container"
-                  >
-                    <div
-                      class="toastui-editor-md-container toastui-editor-md-tab-style"
-                    >
-                      <div
-                        class="toastui-editor md-mode active"
-                        style="min-height: 25px;"
-                      >
-                        <textarea
-                          class="toastui-editor-pseudo-clipboard"
+                        <path
+                          d="m7 14 5-5 5 5z"
                         />
-                        <div
-                          class="ProseMirror"
-                          contenteditable="true"
-                          translate="no"
-                        >
-                          <div>
-                            Meeting summary text
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        class="toastui-editor-md-splitter"
-                      />
-                      <div
-                        class="toastui-editor-md-preview"
-                        style="min-height: 25px;"
+                      </svg>
+                    </button>
+                    <span
+                      data-testid="order-index"
+                    >
+                      1
+                    </span>
+                    <button
+                      aria-label="Decrease guidance sort order"
+                      class="usa-button usa-button--unstyled height-3"
+                      data-testid="button"
+                      type="button"
+                    >
+                      <svg
+                        aria-label="dropdown"
+                        class="usa-icon usa-icon--size-3 text-primary"
+                        focusable="false"
+                        height="1em"
+                        role="img"
+                        viewBox="0 0 24 24"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
                       >
+                        <path
+                          d="m7 10 5 5 5-5z"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                  <div
+                    class="width-full padding-bottom-2 padding-top-105"
+                  >
+                    <h4
+                      class="margin-top-0 margin-bottom-2"
+                    >
+                      Insight 1
+                    </h4>
+                    <div
+                      class="easi-toast easi-toast-viewer margin-top-1 font-body-md text-light line-height-body-4"
+                    >
+                      <div>
                         <div
                           class="toastui-editor-contents"
+                          style="overflow-wrap: break-word;"
                         >
                           <p
-                            class=""
                             data-nodeid="1"
                           >
-                            Meeting summary text
+                            This is the insight text
                           </p>
                           
 
                         </div>
                       </div>
                     </div>
-                    <div
-                      class="toastui-editor-ww-container"
+                    <p
+                      class="margin-bottom-0 margin-top-2 font-body-xs"
                     >
-                      <div
-                        class="toastui-editor ww-mode"
-                        style="min-height: 25px;"
-                      >
-                        <div
-                          aria-describedby="meetingSummary-hint"
-                          aria-labelledby="meetingSummary-label"
-                          aria-multiline="true"
-                          aria-required="true"
-                          class="ProseMirror toastui-editor-contents"
-                          contenteditable="true"
-                          data-testid="meetingSummary"
-                          id="meetingSummary"
-                          role="textbox"
-                          translate="no"
+                      Resources
+                    </p>
+                    <ul
+                      class="usa-list usa-list--unstyled margin-bottom-05"
+                    >
+                      <li>
+                        <a
+                          aria-label="Open easi.cms.gov in a new tab"
+                          class="usa-link"
+                          href="/"
+                          rel="noopener noreferrer"
+                          target="_blank"
                         >
-                          <p>
-                            Meeting summary text
+                          easi.cms.gov
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          aria-label="Open https://google.com in a new tab"
+                          class="usa-link usa-link--external"
+                          href="https://google.com/"
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          google.com
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <ul
+                  class="usa-button-group"
+                >
+                  <li
+                    class="usa-button-group__item"
+                  >
+                    <button
+                      class="usa-button usa-button--unstyled"
+                      data-testid="button"
+                      type="button"
+                    >
+                      Edit guidance
+                    </button>
+                  </li>
+                  <li
+                    class="usa-button-group__item"
+                  >
+                    <button
+                      class="usa-button usa-button--unstyled text-secondary margin-left-1"
+                      data-testid="button"
+                      type="button"
+                    >
+                      Remove guidance
+                    </button>
+                  </li>
+                </ul>
+              </li>
+              <li
+                class="margin-bottom-3"
+                data-testid="insights_list-item"
+              >
+                <div
+                  class="bg-base-lightest padding-top-2 padding-bottom-105 padding-left-105 padding-right-3 display-flex"
+                >
+                  <div
+                    class="margin-right-2 display-flex flex-column flex-align-center line-height-body-1"
+                    data-testid="reorder-controls"
+                  >
+                    <button
+                      aria-label="Increase guidance sort order"
+                      class="usa-button usa-button--unstyled height-3"
+                      data-testid="button"
+                      type="button"
+                    >
+                      <svg
+                        aria-label="dropup"
+                        class="usa-icon usa-icon--size-3 text-primary"
+                        focusable="false"
+                        height="1em"
+                        role="img"
+                        viewBox="0 0 24 24"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="m7 14 5-5 5 5z"
+                        />
+                      </svg>
+                    </button>
+                    <span
+                      data-testid="order-index"
+                    >
+                      2
+                    </span>
+                    <button
+                      aria-label="Decrease guidance sort order"
+                      class="usa-button usa-button--unstyled height-3"
+                      data-testid="button"
+                      type="button"
+                    >
+                      <svg
+                        aria-label="dropdown"
+                        class="usa-icon usa-icon--size-3 text-primary"
+                        focusable="false"
+                        height="1em"
+                        role="img"
+                        viewBox="0 0 24 24"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="m7 10 5 5 5-5z"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                  <div
+                    class="width-full padding-bottom-2 padding-top-105"
+                  >
+                    <h4
+                      class="margin-top-0 margin-bottom-2"
+                    >
+                      Insight 2
+                    </h4>
+                    <div
+                      class="easi-toast easi-toast-viewer margin-top-1 font-body-md text-light line-height-body-4"
+                    >
+                      <div>
+                        <div
+                          class="toastui-editor-contents"
+                          style="overflow-wrap: break-word;"
+                        >
+                          <p
+                            data-nodeid="3"
+                          >
+                            This is the insight text
                           </p>
+                          
+
+                        </div>
+                      </div>
+                    </div>
+                    <p
+                      class="margin-bottom-0 margin-top-2 font-body-xs"
+                    >
+                      Resources
+                    </p>
+                    <ul
+                      class="usa-list usa-list--unstyled margin-bottom-05"
+                    >
+                      <li>
+                        <a
+                          aria-label="Open easi.cms.gov in a new tab"
+                          class="usa-link"
+                          href="/"
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          easi.cms.gov
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          aria-label="Open cms.gov in a new tab"
+                          class="usa-link usa-link--external"
+                          href="https://cms.gov/"
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          cms.gov
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <ul
+                  class="usa-button-group"
+                >
+                  <li
+                    class="usa-button-group__item"
+                  >
+                    <button
+                      class="usa-button usa-button--unstyled"
+                      data-testid="button"
+                      type="button"
+                    >
+                      Edit guidance
+                    </button>
+                  </li>
+                  <li
+                    class="usa-button-group__item"
+                  >
+                    <button
+                      class="usa-button usa-button--unstyled text-secondary margin-left-1"
+                      data-testid="button"
+                      type="button"
+                    >
+                      Remove guidance
+                    </button>
+                  </li>
+                </ul>
+              </li>
+              <li
+                class="margin-bottom-3"
+                data-testid="insights_list-item"
+              >
+                <div
+                  class="bg-base-lightest padding-top-2 padding-bottom-105 padding-left-105 padding-right-3 display-flex"
+                >
+                  <div
+                    class="margin-right-2 display-flex flex-column flex-align-center line-height-body-1"
+                    data-testid="reorder-controls"
+                  >
+                    <button
+                      aria-label="Increase guidance sort order"
+                      class="usa-button usa-button--unstyled height-3"
+                      data-testid="button"
+                      type="button"
+                    >
+                      <svg
+                        aria-label="dropup"
+                        class="usa-icon usa-icon--size-3 text-primary"
+                        focusable="false"
+                        height="1em"
+                        role="img"
+                        viewBox="0 0 24 24"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="m7 14 5-5 5 5z"
+                        />
+                      </svg>
+                    </button>
+                    <span
+                      data-testid="order-index"
+                    >
+                      3
+                    </span>
+                    <button
+                      aria-label="Decrease guidance sort order"
+                      class="usa-button usa-button--unstyled height-3"
+                      data-testid="button"
+                      type="button"
+                    >
+                      <svg
+                        aria-label="dropdown"
+                        class="usa-icon usa-icon--size-3 text-primary"
+                        focusable="false"
+                        height="1em"
+                        role="img"
+                        viewBox="0 0 24 24"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="m7 10 5 5 5-5z"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                  <div
+                    class="width-full padding-bottom-2 padding-top-105"
+                  >
+                    <h4
+                      class="margin-top-0 margin-bottom-2"
+                    >
+                      Insight 3
+                    </h4>
+                    <div
+                      class="easi-toast easi-toast-viewer margin-top-1 font-body-md text-light line-height-body-4"
+                    >
+                      <div>
+                        <div
+                          class="toastui-editor-contents"
+                          style="overflow-wrap: break-word;"
+                        >
+                          <p
+                            data-nodeid="5"
+                          >
+                            This is the insight text
+                          </p>
+                          
+
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div
-                  aria-role="menu"
-                  class="toastui-editor-context-menu"
-                  style="display: none;"
-                />
+                <ul
+                  class="usa-button-group"
+                >
+                  <li
+                    class="usa-button-group__item"
+                  >
+                    <button
+                      class="usa-button usa-button--unstyled"
+                      data-testid="button"
+                      type="button"
+                    >
+                      Edit guidance
+                    </button>
+                  </li>
+                  <li
+                    class="usa-button-group__item"
+                  >
+                    <button
+                      class="usa-button usa-button--unstyled text-secondary margin-left-1"
+                      data-testid="button"
+                      type="button"
+                    >
+                      Remove guidance
+                    </button>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3
+              class="margin-bottom-05"
+              id="categoryHeading"
+            >
+              Considerations
+            </h3>
+            <p
+              class="margin-top-05 margin-bottom-3 line-height-body-5"
+            >
+              A consideration suggests that the project team should evaluate this option, but it will not significantly impact their system or CMS.
+            </p>
+            <div
+              class="usa-alert usa-alert--info usa-alert--slim margin-top-neg-1 margin-bottom-4"
+              data-testid="alert"
+            >
+              <div
+                class="usa-alert__body"
+              >
+                <p
+                  class="usa-alert__text"
+                >
+                  This guidance letter does not have any guidance categorized as a consideration.
+                </p>
               </div>
             </div>
           </div>
@@ -559,7 +835,7 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
                   data-testid="button"
                   type="button"
                 >
-                  Cancel
+                  Back
                 </button>
               </div>
             </li>
@@ -585,6 +861,7 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
             type="button"
           >
             <svg
+              aria-hidden="true"
               class="usa-icon margin-right-05"
               focusable="false"
               height="1em"
@@ -600,7 +877,7 @@ exports[`TRB Guidance Letter Form > matches the snapshot 1`] = `
             Save and return to request
           </button>
         </div>
-      </form>
+      </div>
     </div>
   </div>
 </DocumentFragment>

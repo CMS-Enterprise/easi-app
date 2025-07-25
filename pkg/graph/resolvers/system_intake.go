@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	"slices"
 	"time"
 
 	"github.com/google/uuid"
@@ -16,6 +17,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 )
 
 // CreateSystemIntake creates a system intake.
@@ -40,6 +42,7 @@ func CreateSystemIntakeContact(
 	ctx context.Context,
 	store *storage.Store,
 	input models.CreateSystemIntakeContactInput,
+	getAccountInformation userhelpers.GetAccountInfoFunc,
 ) (*models.CreateSystemIntakeContactPayload, error) {
 	contact := &models.SystemIntakeContact{
 		SystemIntakeID: input.SystemIntakeID,
@@ -47,6 +50,13 @@ func CreateSystemIntakeContact(
 		Component:      input.Component,
 		Role:           input.Role,
 	}
+	contactUserAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, input.EuaUserID, false, getAccountInformation)
+	if err != nil {
+		return nil, err
+	}
+	// We comment this out for now, we will use this eventually to link the contact to the user account
+	_ = contactUserAccount
+
 	createdContact, err := store.CreateSystemIntakeContact(ctx, contact)
 	if err != nil {
 		return nil, err
@@ -61,6 +71,7 @@ func UpdateSystemIntakeContact(
 	ctx context.Context,
 	store *storage.Store,
 	input models.UpdateSystemIntakeContactInput,
+	getAccountInformation userhelpers.GetAccountInfoFunc,
 ) (*models.CreateSystemIntakeContactPayload, error) {
 	contact := &models.SystemIntakeContact{
 		ID:             input.ID,
@@ -69,6 +80,13 @@ func UpdateSystemIntakeContact(
 		Component:      input.Component,
 		Role:           input.Role,
 	}
+
+	contactUserAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, input.EuaUserID, false, getAccountInformation)
+	if err != nil {
+		return nil, err
+	}
+	// We comment this out for now, we will use this eventually to link the contact to the user account
+	_ = contactUserAccount
 
 	updatedContact, err := store.UpdateSystemIntakeContact(ctx, contact)
 	if err != nil {
@@ -153,12 +171,6 @@ func SystemIntakeUpdateContactDetails(ctx context.Context, store *storage.Store,
 	intake.BusinessOwnerComponent = null.StringFrom(input.BusinessOwner.Component)
 	intake.ProductManager = null.StringFrom(input.ProductManager.Name)
 	intake.ProductManagerComponent = null.StringFrom(input.ProductManager.Component)
-
-	if input.Isso.IsPresent != nil && *input.Isso.IsPresent {
-		intake.ISSOName = null.StringFromPtr(input.Isso.Name)
-	} else {
-		intake.ISSOName = null.StringFromPtr(nil)
-	}
 
 	if input.GovernanceTeams.IsPresent != nil {
 		trbCollaboratorName := null.StringFromPtr(nil)
@@ -369,6 +381,8 @@ func GetMySystemIntakes(ctx context.Context, store *storage.Store) ([]*models.Sy
 	return store.GetMySystemIntakes(ctx)
 }
 
+const maxEUAsPerRequest = 200
+
 func GetRequesterUpdateEmailData(
 	ctx context.Context,
 	store *storage.Store,
@@ -381,15 +395,31 @@ func GetRequesterUpdateEmailData(
 		return nil, err
 	}
 
-	var euaIDs []string
+	var (
+		euaIDs []string
+		euaSet = map[string]struct{}{}
+	)
+
 	for _, item := range data {
+		// de-duplicate
+		if _, seen := euaSet[item.EuaUserID]; seen {
+			continue
+		}
+
+		euaSet[item.EuaUserID] = helpers.EmptyStruct
 		euaIDs = append(euaIDs, item.EuaUserID)
 	}
 
-	// then, get user data from Okta
-	userData, err := fetchUserInfos(ctx, euaIDs)
-	if err != nil {
-		return nil, err
+	// chunk the data into the maximum, which is 200
+	var userData []*models.UserInfo
+	for chunk := range slices.Chunk(euaIDs, maxEUAsPerRequest) {
+		// then, get user data from Okta
+		res, err := fetchUserInfos(ctx, chunk)
+		if err != nil {
+			return nil, err
+		}
+
+		userData = append(userData, res...)
 	}
 
 	// map emails for ease
