@@ -297,6 +297,7 @@ func sendGRBReviewEndedEmailJobFunction(ctx context.Context, scheduledJob *Sched
 			if err != nil {
 				// don't exit with error, just log
 				logger.Error("problem getting accounts when sending Review Ended email", zap.Error(err), zap.String("intake.id", intake.ID.String()))
+				continue
 			}
 
 			emails = append(emails, userAccount.Email)

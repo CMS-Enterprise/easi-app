@@ -280,10 +280,7 @@ func ManuallyEndSystemIntakeGRBReviewAsyncVoting(
 			if err != nil {
 				// don't exit with error, just log
 				logger.Error("problem getting accounts when sending Voting Ended Early email", zap.Error(err), zap.String("intake.id", intake.ID.String()))
-
-				return &models.UpdateSystemIntakePayload{
-					SystemIntake: updatedIntake,
-				}, nil
+				continue
 			}
 
 			emails = append(emails, userAccount.Email)
@@ -354,6 +351,7 @@ func ExtendGRBReviewDeadlineAsync(
 			if err != nil {
 				// don't exit with error, just log
 				logger.Error("problem getting accounts when sending Deadline Extended email", zap.Error(err), zap.String("intake.id", intake.ID.String()))
+				continue
 			}
 
 			emails = append(emails, userAccount.Email)
