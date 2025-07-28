@@ -9289,6 +9289,9 @@ type SystemIntake {
   createdAt: Time # TODO - This should probably not be nullable, but some data in IMPL & PROD has it nulled out. We should fix this in the future. (see EASI-3090)
   currentStage: String
   decisionNextSteps: HTML
+  """
+  This stores legacy ea collaborator information. We no longer collect it, but we display it for historic requests
+  """
   eaCollaborator: String
   eaCollaboratorName: String
   collaborator508: String

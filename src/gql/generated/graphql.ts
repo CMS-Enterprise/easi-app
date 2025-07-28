@@ -2025,6 +2025,7 @@ export type SystemIntake = {
   decisionState: SystemIntakeDecisionState;
   documents: Array<SystemIntakeDocument>;
   draftBusinessCaseState: SystemIntakeFormState;
+  /** This stores legacy ea collaborator information. We no longer collect it, but we display it for historic requests */
   eaCollaborator?: Maybe<Scalars['String']['output']>;
   eaCollaboratorName?: Maybe<Scalars['String']['output']>;
   euaUserId?: Maybe<Scalars['String']['output']>;
