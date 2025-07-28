@@ -366,6 +366,7 @@ const intake = {
         'If you are unsure or need help, please get in touch with your Front Office or reach out to the Governance Admin Team at <a>IT_Governance@cms.hhs.gov</a>.',
       addFundingSource: 'Add a funding source',
       addAnotherFundingSource: 'Add another funding source',
+      modalSubmit: 'Add funding source',
       projectNumber: 'Project number',
       projectNumberHelpText:
         'Must be 6 digits long. Comma-separate multiple project numbers.',

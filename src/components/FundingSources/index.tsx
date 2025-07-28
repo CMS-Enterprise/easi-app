@@ -21,6 +21,7 @@ import intakeFundingSources from 'constants/enums/intakeFundingSources';
 import { FundingSource } from 'types/systemIntake';
 import { FundingSourcesValidationSchema } from 'validations/systemIntakeSchema';
 
+import FundingSourcesModal from './FundingSourcesModal';
 import {
   formatFundingSourcesForApi,
   formatFundingSourcesForApp
@@ -44,8 +45,6 @@ type FundingSourcesProps = {
 };
 
 /** Funding sources component for system intake form */
-
-// TODO: Refactor to work with both system intake and TRB forms
 const FundingSources = ({ disableParentForm }: FundingSourcesProps) => {
   const { t } = useTranslation('intake');
 
@@ -117,6 +116,8 @@ const FundingSources = ({ disableParentForm }: FundingSourcesProps) => {
 
   return (
     <div id="intakeFundingSources">
+      <FundingSourcesModal />
+
       {fields.map((source, index) => {
         const { projectNumber, investments, id } = source;
 
