@@ -1,0 +1,5 @@
+ALTER TABLE IF EXISTS system_intakes
+ADD COLUMN IF NOT EXISTS collaborator_508 TEXT;
+
+ALTER TABLE IF EXISTS system_intakes
+ADD COLUMN IF NOT EXISTS collaborator_name_508 TEXT;
