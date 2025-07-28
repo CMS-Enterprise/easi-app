@@ -61,17 +61,22 @@ const DatePickerFormatted = ({
     (val: string | undefined): void => {
       if (!onChange) return;
 
-      // A full US date (MM/DD/YYYY) has 10 chars
-      if (typeof val === 'string' && val.length === 10) {
-        const dt = DateTime.fromFormat(val, 'MM/dd/yyyy');
-        if (dt.isValid) {
-          onChange(format(dt) || '');
-          return;
+      // Allow user to type freely and only update on full, valid date
+      if (typeof val === 'string') {
+        if (val.length === 10) {
+          const dt = DateTime.fromFormat(val, 'MM/dd/yyyy');
+          if (dt.isValid) {
+            onChange(format(dt) || '');
+            return;
+          }
+        }
+
+        // If still typing or invalid format, don't wipe the field
+        // Only propagate blank string if user deleted everything
+        if (val.trim() === '') {
+          onChange('');
         }
       }
-
-      // Incomplete or invalid date → clear
-      onChange('');
     },
     [onChange, format]
   );
