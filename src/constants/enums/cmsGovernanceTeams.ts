@@ -14,11 +14,11 @@ const cmsGovernanceTeams = [
     collaboratorKey: 'oitSecurityCollaboratorName'
   },
   {
-    key: 'enterpriseArchitecture',
-    label: 'Enterprise Architecture (EA)',
-    acronym: 'EA',
-    name: 'Enterprise Architecture',
-    collaboratorKey: 'eaCollaboratorName'
+    key: 'clearanceOfficer508',
+    label: '508 Clearance Officer',
+    acronym: '508',
+    name: '508 Clearance Officer',
+    collaboratorKey: 'collaboratorName508'
   }
 ] as const;
 
