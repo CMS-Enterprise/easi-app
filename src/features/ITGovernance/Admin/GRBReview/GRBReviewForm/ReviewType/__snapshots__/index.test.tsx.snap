@@ -369,7 +369,7 @@ exports[`GRB review form - review type > renders the step 1`] = `
               >
                 <button
                   class="usa-button margin-top-0"
-                  data-testid="button"
+                  data-testid="pager-next-button"
                   disabled=""
                   type="submit"
                 >
