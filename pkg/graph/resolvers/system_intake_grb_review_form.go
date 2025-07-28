@@ -354,9 +354,6 @@ func ExtendGRBReviewDeadlineAsync(
 			if err != nil {
 				// don't exit with error, just log
 				logger.Error("problem getting accounts when sending Deadline Extended email", zap.Error(err), zap.String("intake.id", intake.ID.String()))
-				return &models.UpdateSystemIntakePayload{
-					SystemIntake: updatedIntake,
-				}, nil
 			}
 
 			emails = append(emails, userAccount.Email)

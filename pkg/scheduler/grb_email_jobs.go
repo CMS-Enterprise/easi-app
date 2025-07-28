@@ -85,19 +85,28 @@ func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, schedule
 
 	store, err := scheduledJob.store()
 	if err != nil {
-		logger.Error("error getting store from scheduler", zap.Error(err))
+		logger.Error("error getting store from scheduler for halfway through email", zap.Error(err))
 		return err
 	}
-	logger.Info("Running GRB voting halfway through email job")
 	emailClient, err := scheduledJob.emailClient()
 	if err != nil {
-		logger.Error("error getting email client from scheduler", zap.Error(err))
+		logger.Error("error getting email client from scheduler for halfway through email", zap.Error(err))
 		return err
 	}
 
+	buildDataLoaders, err := scheduledJob.buildDataLoaders()
+	if err != nil {
+		logger.Error("error building dataloaders for halfway through email", zap.Error(err))
+		return err
+	}
+
+	ctx = dataloaders.CTXWithLoaders(ctx, buildDataLoaders)
+
+	logger.Info("Running GRB voting halfway through email job")
+
 	intakes, err := storage.GetSystemIntakesWithGRBReviewHalfwayThrough(ctx, store, logger)
 	if err != nil {
-		logger.Error("error fetching system intakes", zap.Error(err))
+		logger.Error("error fetching system intakes for halfway through email", zap.Error(err))
 		return err
 	}
 
@@ -152,17 +161,25 @@ func sendAsyncPastDueNoQuorumEmailJobFunction(ctx context.Context, scheduledJob 
 
 	store, err := scheduledJob.store()
 	if err != nil {
-		logger.Error("error getting store from scheduler", zap.Error(err))
+		logger.Error("error getting store from scheduler for past due no quorum email", zap.Error(err))
 		return err
 	}
-
-	logger.Info("Running GRB review past due no quorum email job")
 
 	emailClient, err := scheduledJob.emailClient()
 	if err != nil {
-		logger.Error("error getting email client from scheduler", zap.Error(err))
+		logger.Error("error getting email client from scheduler for past due no quorum email", zap.Error(err))
 		return err
 	}
+
+	buildDataLoaders, err := scheduledJob.buildDataLoaders()
+	if err != nil {
+		logger.Error("error building dataloaders for past due no quorum email", zap.Error(err))
+		return err
+	}
+
+	ctx = dataloaders.CTXWithLoaders(ctx, buildDataLoaders)
+
+	logger.Info("Running GRB review past due no quorum email job")
 
 	intakes, err := storage.GetSystemIntakesWithGRBReviewPastDueNoQuorum(ctx, store, logger)
 	if err != nil {
@@ -221,21 +238,29 @@ func sendGRBReviewEndedEmailJobFunction(ctx context.Context, scheduledJob *Sched
 
 	store, err := scheduledJob.store()
 	if err != nil {
-		logger.Error("error getting store from scheduler", zap.Error(err))
+		logger.Error("error getting store from scheduler for review ended email", zap.Error(err))
 		return err
 	}
 
 	emailClient, err := scheduledJob.emailClient()
 	if err != nil {
-		logger.Error("error getting email client from scheduler", zap.Error(err))
+		logger.Error("error getting email client from scheduler for review ended email", zap.Error(err))
 		return err
 	}
+
+	buildDataLoaders, err := scheduledJob.buildDataLoaders()
+	if err != nil {
+		logger.Error("error building dataloaders for review ended email", zap.Error(err))
+		return err
+	}
+
+	ctx = dataloaders.CTXWithLoaders(ctx, buildDataLoaders)
 
 	logger.Info("Running GRB review ended email job")
 
 	intakes, err := store.FetchSystemIntakes(ctx)
 	if err != nil {
-		logger.Error("error fetching system intakes", zap.Error(err))
+		logger.Error("error fetching system intakes for review ended email", zap.Error(err))
 		return err
 	}
 
@@ -261,7 +286,7 @@ func sendGRBReviewEndedEmailJobFunction(ctx context.Context, scheduledJob *Sched
 		reviewers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{intake.ID})
 		if err != nil {
 			// don't exit with error, just log
-			logger.Error("problem getting reviewers when sending Deadline Extended email", zap.Error(err), zap.String("intake.id", intake.ID.String()))
+			logger.Error("problem getting reviewers when sending Review Ended email", zap.Error(err), zap.String("intake.id", intake.ID.String()))
 			continue
 		}
 
@@ -271,7 +296,7 @@ func sendGRBReviewEndedEmailJobFunction(ctx context.Context, scheduledJob *Sched
 			userAccount, err := dataloaders.GetUserAccountByID(ctx, reviewer.UserID)
 			if err != nil {
 				// don't exit with error, just log
-				logger.Error("problem getting accounts when sending Deadline Extended email", zap.Error(err), zap.String("intake.id", intake.ID.String()))
+				logger.Error("problem getting accounts when sending Review Ended email", zap.Error(err), zap.String("intake.id", intake.ID.String()))
 			}
 
 			emails = append(emails, userAccount.Email)
@@ -312,21 +337,29 @@ func sendGRBReviewLastDayReminderJobFunction(
 	}
 	store, err := scheduledJob.store()
 	if err != nil {
-		logger.Error("error getting store from scheduler", zap.Error(err))
+		logger.Error("error getting store from scheduler for last day reminder email", zap.Error(err))
 		return err
 	}
 	emailClient, err := scheduledJob.emailClient()
 	if err != nil {
-		logger.Error("error getting email client from scheduler", zap.Error(err))
+		logger.Error("error getting email client from scheduler for last day reminder email", zap.Error(err))
 		return err
 	}
+
+	buildDataLoaders, err := scheduledJob.buildDataLoaders()
+	if err != nil {
+		logger.Error("error building dataloaders for last day reminder email", zap.Error(err))
+		return err
+	}
+
+	ctx = dataloaders.CTXWithLoaders(ctx, buildDataLoaders)
 
 	logger.Info("Running GRB review LAST-DAY reminder job")
 
 	// Fetch *all* intakes, we’ll filter in memory
 	intakes, err := store.FetchSystemIntakes(ctx)
 	if err != nil {
-		logger.Error("error fetching system intakes", zap.Error(err))
+		logger.Error("error fetching system intakes for last day reminder email", zap.Error(err))
 		return err
 	}
 
@@ -433,17 +466,25 @@ func sendAsyncReviewCompleteQuorumMetJobFunction(ctx context.Context, scheduledJ
 
 	store, err := scheduledJob.store()
 	if err != nil {
-		logger.Error("error getting store from scheduler", zap.Error(err))
+		logger.Error("error getting store from scheduler for review complete quorum met email", zap.Error(err))
 		return err
 	}
-
-	logger.Info("Running GRB review complete with quorum met email job")
 
 	emailClient, err := scheduledJob.emailClient()
 	if err != nil {
-		logger.Error("error getting email client from scheduler", zap.Error(err))
+		logger.Error("error getting email client from scheduler for review complete quorum met email", zap.Error(err))
 		return err
 	}
+
+	buildDataLoaders, err := scheduledJob.buildDataLoaders()
+	if err != nil {
+		logger.Error("error building dataloaders for review complete quorum met email", zap.Error(err))
+		return err
+	}
+
+	ctx = dataloaders.CTXWithLoaders(ctx, buildDataLoaders)
+
+	logger.Info("Running GRB review complete with quorum met email job")
 
 	intakes, err := storage.GetSystemaIntakesWithGRBReviewCompleteQuorumMet(ctx, store, logger)
 	if err != nil {
