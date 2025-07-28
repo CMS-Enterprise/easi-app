@@ -47,8 +47,9 @@ const systemIntakeStatusAdmin: Record<SystemIntakeStatusAdmin, string> = {
   DRAFT_BUSINESS_CASE_SUBMITTED: 'Draft Business Case submitted',
   FINAL_BUSINESS_CASE_IN_PROGRESS: 'Final Business Case in progress',
   FINAL_BUSINESS_CASE_SUBMITTED: 'Final Business Case submitted',
-  GRB_MEETING_COMPLETE: 'GRB meeting complete',
-  GRB_MEETING_READY: 'Ready for GRB meeting',
+  GRB_MEETING_COMPLETE: 'GRB review complete',
+  GRB_MEETING_READY: 'Ready for GRB review',
+  GRB_REVIEW_IN_PROGRESS: 'GRB review in progress',
   GRT_MEETING_COMPLETE: 'GRT meeting complete',
   GRT_MEETING_READY: 'Ready for GRT meeting',
   INITIAL_REQUEST_FORM_IN_PROGRESS: 'Intake Request in progress',
@@ -71,7 +72,8 @@ const systemIntakeStatusRequester: Record<SystemIntakeStatusRequester, string> =
     FINAL_BUSINESS_CASE_IN_PROGRESS: 'Final Business Case in progress',
     FINAL_BUSINESS_CASE_SUBMITTED: 'Final Business Case submitted',
     GRB_MEETING_AWAITING_DECISION: 'Awaiting GRB decision',
-    GRB_MEETING_READY: 'Ready for GRB meeting',
+    GRB_MEETING_READY: 'Ready for GRB review',
+    GRB_REVIEW_IN_PROGRESS: 'GRB review in progress',
     GRT_MEETING_AWAITING_DECISION: 'Awaiting GRT decision',
     GRT_MEETING_READY: 'Ready for GRT meeting',
     INITIAL_REQUEST_FORM_EDITS_REQUESTED: 'Edits requested',
@@ -243,10 +245,13 @@ const governanceReviewTeam = {
     subheading: 'Add GRT and GRB dates',
     submit: 'Save',
     grtDate: {
-      label: 'GRT Date'
+      label: 'GRT Date',
+      format: 'Format: 04 28 2020'
     },
     grbDate: {
-      label: 'GRB Date'
+      label: 'GRB Date',
+      description:
+        'This content will be prepopulated if you have already entered it elsewhere. Changing it here will also update GRB information elsewhere.'
     }
   },
   aria: {

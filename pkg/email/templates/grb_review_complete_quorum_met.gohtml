@@ -1,0 +1,31 @@
+{{template "easi_header.gohtml"}}
+
+<p>The review timeframe for {{.ProjectTitle}} is ended. You may view the results of the review and issue a decision on
+  behalf of the GRB.</p>
+
+<p><strong><a href="{{.Link}}">View this request in EASi</a></strong></p>
+
+<div class="no-margin">
+  <p><strong>Request summary:</strong></p>
+  <p>Project title: {{.ProjectTitle}}</p>
+  <p>Requester: {{.RequesterName}}{{if .RequesterComponent}}, {{.RequesterComponent}}{{else}}{{end}}</p>
+  <p>GRB review dates: {{.DateInfo}}</p>
+  <p>Votes: {{.VoteInfo}}</p>
+</div>
+<br>
+<div class="no-margin">
+  <p>Next steps:</p>
+  <ul>
+    <li>Issue a decision in EASi.</li>
+    <li>If there is not a consensus or the review needs more time, you may restart the GRB review or add more time from
+      EASi.
+    </li>
+    <li>If there is not a consensus or there are objection votes, you may attempt to address the lack of consensus by
+      working with the project team to resolve GRB concerns.
+    </li>
+  </ul>
+</div>
+<br>
+<hr>
+
+<p>You will continue to receive email notifications about this request until it is closed.</p>

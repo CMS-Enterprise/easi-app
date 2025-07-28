@@ -7,6 +7,7 @@ import { DateTime } from 'luxon';
 import * as Yup from 'yup';
 
 import { FormattedFundingSource } from 'components/FundingSources';
+import { ITGovernanceViewType } from 'types/itGov';
 
 const govTeam = (name: string) =>
   Yup.object().shape({
@@ -60,19 +61,6 @@ const SystemIntakeValidationSchema = {
       component: Yup.string().required(
         'Select a Project/Product Manager or Lead Component'
       )
-    }),
-    isso: Yup.object().shape({
-      isPresent: Yup.boolean()
-        .nullable()
-        .required('Select Yes or No to indicate if you have an ISSO'),
-      commonName: Yup.string().when('isPresent', {
-        is: true,
-        then: Yup.string().trim().required('Tell us the name of your ISSO')
-      }),
-      component: Yup.string().when('isPresent', {
-        is: true,
-        then: Yup.string().required('Select an ISSO component')
-      })
     }),
     governanceTeams
   }),
@@ -364,16 +352,14 @@ export const documentSchema = Yup.object({
     then: schema => schema.required()
   }),
   version: Yup.mixed<SystemIntakeDocumentVersion>().required(),
-  sendNotification: Yup.boolean().when(
-    '$type',
-    (type: 'admin' | 'requester', schema: Yup.BooleanSchema) => {
-      if (type === 'admin') {
-        return schema.required(
-          i18next.t('technicalAssistance:errors.makeSelection')
-        );
-      }
-
-      return schema;
-    }
-  )
+  sendNotification: Yup.boolean().when(['$type', '$uploadSource'], {
+    is: (
+      type: ITGovernanceViewType,
+      uploadSource: 'request' | 'grbReviewForm'
+    ) => type === 'admin' && uploadSource === 'request',
+    then: Yup.boolean().required(
+      i18next.t('technicalAssistance:errors.makeSelection')
+    ),
+    otherwise: Yup.boolean()
+  })
 });

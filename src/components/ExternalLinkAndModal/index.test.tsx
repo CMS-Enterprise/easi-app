@@ -68,4 +68,20 @@ describe('The ExternalLinkAndModal component', async () => {
       screen.getByRole('button', { name: 'Go back to EASi' })
     ).toBeInTheDocument();
   });
+
+  it('closes the modal when the link is clicked', async () => {
+    render(
+      <ExternalLinkAndModal href="https://www.example.com">
+        Go to example
+      </ExternalLinkAndModal>
+    );
+
+    userEvent.click(screen.getByRole('button', { name: 'Go to example' }));
+
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+
+    userEvent.click(screen.getByRole('link', { name: 'Open in a new tab' }));
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
 });

@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 
 	"github.com/google/uuid"
@@ -45,7 +46,7 @@ func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemI
 		systemIDLink.SystemIntakeID = systemIntakeID
 		systemIDLink.ModifiedBy = &userID
 		systemIDLink.SystemRelationshipType = relationship.SystemRelationshipType
-		systemIDLink.OtherSystemRelationship = relationship.OtherTypeDescription
+		systemIDLink.OtherSystemRelationshipDescription = relationship.OtherSystemRelationshipDescription
 
 		setSystemIntakeSystemsLinks[i] = systemIDLink
 	}
@@ -82,4 +83,52 @@ func (s *Store) SystemIntakesByCedarSystemIDs(ctx context.Context, requests []mo
 		"cedar_system_ids": pq.Array(cedarSystemIDs),
 		"states":           pq.Array(states),
 	})
+}
+
+func (s *Store) AddSystemIntakeSystem(ctx context.Context, input models.SystemIntakeSystem) (models.SystemIntakeSystem, error) {
+	var newSystemIntakeSystem models.SystemIntakeSystem
+
+	newSystemIntakeSystem.ID = uuid.New()
+	newSystemIntakeSystem.SystemIntakeID = input.SystemIntakeID
+	newSystemIntakeSystem.SystemID = input.SystemID
+	newSystemIntakeSystem.SystemRelationshipType = input.SystemRelationshipType
+	newSystemIntakeSystem.OtherSystemRelationshipDescription = input.OtherSystemRelationshipDescription
+
+	return newSystemIntakeSystem, namedGet(ctx, s.db, &newSystemIntakeSystem, sqlqueries.SystemIntakeSystemForm.Insert, newSystemIntakeSystem)
+}
+
+func (s *Store) DeleteSystemIntakeSystemByID(ctx context.Context, systemIntakeSystemID uuid.UUID) (models.SystemIntakeSystem, error) {
+	var deletedSystem models.SystemIntakeSystem
+	return deletedSystem, namedGet(ctx, s.db, &deletedSystem, sqlqueries.SystemIntakeSystemForm.DeleteByID, args{
+		"system_intake_system_id": systemIntakeSystemID,
+	})
+}
+
+func (s *Store) UpdateSystemIntakeSystemByID(ctx context.Context, input models.UpdateSystemLinkInput) (models.SystemIntakeSystem, error) {
+	var linkedSystemToUpdate models.SystemIntakeSystem
+
+	linkedSystemToUpdate.ID = input.ID
+	linkedSystemToUpdate.SystemIntakeID = input.SystemIntakeID
+	linkedSystemToUpdate.SystemID = input.SystemID
+	linkedSystemToUpdate.SystemRelationshipType = input.SystemRelationshipType
+	linkedSystemToUpdate.OtherSystemRelationshipDescription = input.OtherSystemRelationshipDescription
+
+	return linkedSystemToUpdate, namedGet(ctx, s.db, &linkedSystemToUpdate, sqlqueries.SystemIntakeSystemForm.UpdateByID, linkedSystemToUpdate)
+}
+
+func (s *Store) GetLinkedSystemByID(ctx context.Context, systemIntakeSystemID uuid.UUID) (*models.SystemIntakeSystem, error) {
+	var systemIntakeSystem models.SystemIntakeSystem
+
+	err := namedGet(ctx, s.db, &systemIntakeSystem, sqlqueries.SystemIntakeSystemForm.GetByID, args{
+		"id": systemIntakeSystemID,
+	})
+
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil // Treat "not found" as a nil result, no error
+		}
+		return nil, err
+	}
+
+	return &systemIntakeSystem, nil
 }

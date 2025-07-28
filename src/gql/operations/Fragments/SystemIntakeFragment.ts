@@ -42,6 +42,7 @@ export default gql(/* GraphQL */ `
     currentStage
     decisionNextSteps
     grbDate
+    grbReviewAsyncEndDate
     grtDate
     governanceRequestFeedbacks {
       ...GovernanceRequestFeedbackFragment
@@ -55,10 +56,6 @@ export default gql(/* GraphQL */ `
         label
         name
       }
-    }
-    isso {
-      isPresent
-      name
     }
     existingFunding
     fundingSources {
@@ -141,13 +138,21 @@ export default gql(/* GraphQL */ `
       decisionState
       submittedAt
     }
+
+    grbDate
+    grbReviewType
     grbPresentationLinks {
       ...SystemIntakeGRBPresentationLinksFragment
     }
-    cedarSystemRelationShips {
-      systemIntakeID
-      systemID
-      systemRelationshipType
+    grbReviewStartedAt
+    grbVotingInformation {
+      grbReviewers {
+        ...SystemIntakeGRBReviewer
+      }
+      votingStatus
+      numberOfNoObjection
+      numberOfObjection
+      numberOfNotVoted
     }
   }
 `);

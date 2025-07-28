@@ -18,6 +18,23 @@ type TRBAdminNoteCategorySpecificData interface {
 	IsTRBAdminNoteCategorySpecificData()
 }
 
+// The input type for adding a new System Link
+type AddSystemLinkInput struct {
+	SystemIntakeID                     uuid.UUID                `json:"systemIntakeID"`
+	SystemID                           string                   `json:"systemID"`
+	SystemRelationshipType             []SystemRelationshipType `json:"systemRelationshipType"`
+	OtherSystemRelationshipDescription *string                  `json:"otherSystemRelationshipDescription,omitempty"`
+}
+
+// The payload for adding a new System Link
+type AddSystemLinkPayload struct {
+	ID                                 uuid.UUID                `json:"id"`
+	SystemIntakeID                     uuid.UUID                `json:"systemIntakeID"`
+	SystemID                           string                   `json:"systemID"`
+	SystemRelationshipType             []SystemRelationshipType `json:"systemRelationshipType"`
+	OtherSystemRelationshipDescription *string                  `json:"otherSystemRelationshipDescription,omitempty"`
+}
+
 // A solution proposal within a Business Case
 type BusinessCaseSolution struct {
 	AcquisitionApproach     *string    `json:"acquisitionApproach,omitempty"`
@@ -37,6 +54,12 @@ type BusinessCaseSolution struct {
 	Title                   *string    `json:"title,omitempty"`
 	WorkforceTrainingReqs   *string    `json:"workforceTrainingReqs,omitempty"`
 	ZeroTrustAlignment      *string    `json:"zeroTrustAlignment,omitempty"`
+}
+
+type CastSystemIntakeGRBReviewerVoteInput struct {
+	SystemIntakeID uuid.UUID                        `json:"systemIntakeID"`
+	Vote           SystemIntakeAsyncGRBVotingOption `json:"vote"`
+	VoteComment    *string                          `json:"voteComment,omitempty"`
 }
 
 // CedarBudgetActualCost represents an individual budget actual cost item; this information is returned from the CEDAR Core API
@@ -320,6 +343,12 @@ type DeleteSystemIntakeGRBReviewerInput struct {
 	ReviewerID uuid.UUID `json:"reviewerID"`
 }
 
+// The payload for deleting a system intake's linked system
+type DeleteSystemLinkPayload struct {
+	SystemIntakeSystem *SystemIntakeSystem `json:"systemIntakeSystem,omitempty"`
+	UserErrors         []*UserError        `json:"userErrors,omitempty"`
+}
+
 // Data returned after deleting a document attached to a TRB request
 type DeleteTRBRequestDocumentPayload struct {
 	Document *TRBRequestDocument `json:"document,omitempty"`
@@ -389,6 +418,12 @@ type RequesterUpdateEmailData struct {
 	RequesterEmail EmailAddress            `json:"requesterEmail"`
 }
 
+// Input structure to restart the GRB review process
+type RestartGRBReviewInput struct {
+	SystemIntakeID uuid.UUID `json:"systemIntakeID"`
+	NewGRBEndDate  time.Time `json:"newGRBEndDate"`
+}
+
 type SendCantFindSomethingEmailInput struct {
 	Body string `json:"body"`
 }
@@ -414,6 +449,10 @@ type SendReportAProblemEmailInput struct {
 	WhatWereYouDoing       string `json:"whatWereYouDoing"`
 	WhatWentWrong          string `json:"whatWentWrong"`
 	HowSevereWasTheProblem string `json:"howSevereWasTheProblem"`
+}
+
+type SendSystemIntakeGRBReviewReminderPayload struct {
+	TimeSent time.Time `json:"timeSent"`
 }
 
 // The data needed to send a TRB guidance letter, including who to notify
@@ -665,19 +704,6 @@ type SystemIntakeGovernanceTeamInput struct {
 	Teams     []*SystemIntakeCollaboratorInput `json:"teams,omitempty"`
 }
 
-// The Information System Security Officer (ISSO) that is
-// assicuated with a system request, if any
-type SystemIntakeIsso struct {
-	IsPresent *bool   `json:"isPresent,omitempty"`
-	Name      *string `json:"name,omitempty"`
-}
-
-// The input data used to set the ISSO associated with a system request, if any
-type SystemIntakeISSOInput struct {
-	IsPresent *bool   `json:"isPresent,omitempty"`
-	Name      *string `json:"name,omitempty"`
-}
-
 // Input for setting an intake's decision to issuing an LCID in IT Gov v2
 type SystemIntakeIssueLCIDInput struct {
 	SystemIntakeID         uuid.UUID                    `json:"systemIntakeID"`
@@ -741,6 +767,7 @@ type SystemIntakeProgressToNewStepsInput struct {
 	GrbRecommendations     *HTML                        `json:"grbRecommendations,omitempty"`
 	AdditionalInfo         *HTML                        `json:"additionalInfo,omitempty"`
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
+	GrbReviewType          *SystemIntakeGRBReviewType   `json:"grbReviewType,omitempty"`
 }
 
 // Input for setting an intake's decision to Not Approved by GRB in IT Gov v2
@@ -825,9 +852,9 @@ type SystemIntakeUpdateLCIDInput struct {
 
 // Input data for creating a system intake's relationship to a CEDAR system
 type SystemRelationshipInput struct {
-	CedarSystemID          *string                  `json:"cedarSystemId,omitempty"`
-	SystemRelationshipType []SystemRelationshipType `json:"systemRelationshipType"`
-	OtherTypeDescription   *string                  `json:"otherTypeDescription,omitempty"`
+	CedarSystemID                      *string                  `json:"cedarSystemId,omitempty"`
+	SystemRelationshipType             []SystemRelationshipType `json:"systemRelationshipType"`
+	OtherSystemRelationshipDescription *string                  `json:"otherSystemRelationshipDescription,omitempty"`
 }
 
 // Data specific to admin notes in the Consult Session category
@@ -896,7 +923,6 @@ type UpdateSystemIntakeContactDetailsInput struct {
 	Requester       *SystemIntakeRequesterWithComponentInput `json:"requester"`
 	BusinessOwner   *SystemIntakeBusinessOwnerInput          `json:"businessOwner"`
 	ProductManager  *SystemIntakeProductManagerInput         `json:"productManager"`
-	Isso            *SystemIntakeISSOInput                   `json:"isso"`
 	GovernanceTeams *SystemIntakeGovernanceTeamInput         `json:"governanceTeams"`
 }
 
@@ -965,6 +991,21 @@ type UpdateSystemIntakeReviewDatesInput struct {
 	ID      uuid.UUID  `json:"id"`
 }
 
+// The input type for updating a system intake's linked system by id
+type UpdateSystemLinkInput struct {
+	ID                                 uuid.UUID                `json:"id"`
+	SystemIntakeID                     uuid.UUID                `json:"systemIntakeID"`
+	SystemID                           string                   `json:"systemID"`
+	SystemRelationshipType             []SystemRelationshipType `json:"systemRelationshipType"`
+	OtherSystemRelationshipDescription *string                  `json:"otherSystemRelationshipDescription,omitempty"`
+}
+
+// The payload for updating a system intake's linked system
+type UpdateSystemLinkPayload struct {
+	SystemIntakeSystem *SystemIntakeSystem `json:"systemIntakeSystem"`
+	UserErrors         []*UserError        `json:"userErrors,omitempty"`
+}
+
 type UpdateTRBGuidanceLetterInsightOrderInput struct {
 	TrbRequestID uuid.UUID `json:"trbRequestId"`
 	// List of the insight IDs in the new order they should be displayed
@@ -1000,6 +1041,12 @@ type UpdateTRBRequestTRBLeadInput struct {
 	TrbLead      string    `json:"trbLead"`
 }
 
+// Data needed to upload a presentation deck
+type UploadSystemIntakeGRBPresentationDeckInput struct {
+	SystemIntakeID           uuid.UUID       `json:"systemIntakeID"`
+	PresentationDeckFileData *graphql.Upload `json:"presentationDeckFileData,omitempty"`
+}
+
 // UserError represents application-level errors that are the result of
 // either user or application developer error.
 type UserError struct {
@@ -1008,13 +1055,42 @@ type UserError struct {
 }
 
 type CreateSystemIntakeGRBDiscussionPostInput struct {
-	SystemIntakeID uuid.UUID  `json:"systemIntakeID"`
-	Content        TaggedHTML `json:"content"`
+	SystemIntakeID      uuid.UUID                          `json:"systemIntakeID"`
+	DiscussionBoardType SystemIntakeGRBDiscussionBoardType `json:"discussionBoardType"`
+	Content             TaggedHTML                         `json:"content"`
 }
 
 type CreateSystemIntakeGRBDiscussionReplyInput struct {
-	InitialPostID uuid.UUID  `json:"initialPostID"`
-	Content       TaggedHTML `json:"content"`
+	InitialPostID       uuid.UUID                          `json:"initialPostID"`
+	DiscussionBoardType SystemIntakeGRBDiscussionBoardType `json:"discussionBoardType"`
+	Content             TaggedHTML                         `json:"content"`
+}
+
+// Input data used to set or update a System Intake's GRB Review Presentation (Async) data
+type UpdateSystemIntakeGRBReviewFormInputPresentationAsync struct {
+	SystemIntakeID              uuid.UUID                     `json:"systemIntakeID"`
+	GrbReviewAsyncRecordingTime graphql.Omittable[*time.Time] `json:"grbReviewAsyncRecordingTime,omitempty"`
+}
+
+// Input data used to set or update a System Intake's GRB Review Presentation (Standard) data
+type UpdateSystemIntakeGRBReviewFormInputPresentationStandard struct {
+	SystemIntakeID uuid.UUID `json:"systemIntakeID"`
+	// the date of the GRB review meeting. It is omittable for simplicity on the front end, but if it is omitted or null the date will not be updated
+	GrbDate graphql.Omittable[*time.Time] `json:"grbDate,omitempty"`
+}
+
+// Input data used to set or update a System Intake's GRB Review Timeframe (Async) data
+type UpdateSystemIntakeGRBReviewFormInputTimeframeAsync struct {
+	SystemIntakeID        uuid.UUID `json:"systemIntakeID"`
+	GrbReviewAsyncEndDate time.Time `json:"grbReviewAsyncEndDate"`
+	// Whether or not to start the GRB review meeting now or not. It defaults to false
+	StartGRBReview bool `json:"startGRBReview"`
+}
+
+// Input data used to set or update a System Intake's GRB Review Type
+type UpdateSystemIntakeGRBReviewTypeInput struct {
+	SystemIntakeID uuid.UUID                 `json:"systemIntakeID"`
+	GrbReviewType  SystemIntakeGRBReviewType `json:"grbReviewType"`
 }
 
 // A user role associated with a job code
@@ -1190,6 +1266,61 @@ func (e SystemIntakeActionType) MarshalJSON() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
+type SystemIntakeAsyncGRBVotingOption string
+
+const (
+	SystemIntakeAsyncGRBVotingOptionNoObjection SystemIntakeAsyncGRBVotingOption = "NO_OBJECTION"
+	SystemIntakeAsyncGRBVotingOptionObjection   SystemIntakeAsyncGRBVotingOption = "OBJECTION"
+)
+
+var AllSystemIntakeAsyncGRBVotingOption = []SystemIntakeAsyncGRBVotingOption{
+	SystemIntakeAsyncGRBVotingOptionNoObjection,
+	SystemIntakeAsyncGRBVotingOptionObjection,
+}
+
+func (e SystemIntakeAsyncGRBVotingOption) IsValid() bool {
+	switch e {
+	case SystemIntakeAsyncGRBVotingOptionNoObjection, SystemIntakeAsyncGRBVotingOptionObjection:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeAsyncGRBVotingOption) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeAsyncGRBVotingOption) UnmarshalGQL(v any) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeAsyncGRBVotingOption(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeAsyncGRBVotingOption", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeAsyncGRBVotingOption) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+func (e *SystemIntakeAsyncGRBVotingOption) UnmarshalJSON(b []byte) error {
+	s, err := strconv.Unquote(string(b))
+	if err != nil {
+		return err
+	}
+	return e.UnmarshalGQL(s)
+}
+
+func (e SystemIntakeAsyncGRBVotingOption) MarshalJSON() ([]byte, error) {
+	var buf bytes.Buffer
+	e.MarshalGQL(&buf)
+	return buf.Bytes(), nil
+}
+
 // SystemIntakeRequestEditsOptions represents the current step in the intake process
 type SystemIntakeFormStep string
 
@@ -1243,6 +1374,175 @@ func (e *SystemIntakeFormStep) UnmarshalJSON(b []byte) error {
 }
 
 func (e SystemIntakeFormStep) MarshalJSON() ([]byte, error) {
+	var buf bytes.Buffer
+	e.MarshalGQL(&buf)
+	return buf.Bytes(), nil
+}
+
+type SystemIntakeGRBDiscussionBoardType string
+
+const (
+	SystemIntakeGRBDiscussionBoardTypePrimary  SystemIntakeGRBDiscussionBoardType = "PRIMARY"
+	SystemIntakeGRBDiscussionBoardTypeInternal SystemIntakeGRBDiscussionBoardType = "INTERNAL"
+)
+
+var AllSystemIntakeGRBDiscussionBoardType = []SystemIntakeGRBDiscussionBoardType{
+	SystemIntakeGRBDiscussionBoardTypePrimary,
+	SystemIntakeGRBDiscussionBoardTypeInternal,
+}
+
+func (e SystemIntakeGRBDiscussionBoardType) IsValid() bool {
+	switch e {
+	case SystemIntakeGRBDiscussionBoardTypePrimary, SystemIntakeGRBDiscussionBoardTypeInternal:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeGRBDiscussionBoardType) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeGRBDiscussionBoardType) UnmarshalGQL(v any) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeGRBDiscussionBoardType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeGRBDiscussionBoardType", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeGRBDiscussionBoardType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+func (e *SystemIntakeGRBDiscussionBoardType) UnmarshalJSON(b []byte) error {
+	s, err := strconv.Unquote(string(b))
+	if err != nil {
+		return err
+	}
+	return e.UnmarshalGQL(s)
+}
+
+func (e SystemIntakeGRBDiscussionBoardType) MarshalJSON() ([]byte, error) {
+	var buf bytes.Buffer
+	e.MarshalGQL(&buf)
+	return buf.Bytes(), nil
+}
+
+// The status type of the System Intake GRB Review (For Async Reviews only)
+type SystemIntakeGRBReviewAsyncStatusType string
+
+const (
+	SystemIntakeGRBReviewAsyncStatusTypeInProgress SystemIntakeGRBReviewAsyncStatusType = "IN_PROGRESS"
+	SystemIntakeGRBReviewAsyncStatusTypeCompleted  SystemIntakeGRBReviewAsyncStatusType = "COMPLETED"
+	SystemIntakeGRBReviewAsyncStatusTypePastDue    SystemIntakeGRBReviewAsyncStatusType = "PAST_DUE"
+)
+
+var AllSystemIntakeGRBReviewAsyncStatusType = []SystemIntakeGRBReviewAsyncStatusType{
+	SystemIntakeGRBReviewAsyncStatusTypeInProgress,
+	SystemIntakeGRBReviewAsyncStatusTypeCompleted,
+	SystemIntakeGRBReviewAsyncStatusTypePastDue,
+}
+
+func (e SystemIntakeGRBReviewAsyncStatusType) IsValid() bool {
+	switch e {
+	case SystemIntakeGRBReviewAsyncStatusTypeInProgress, SystemIntakeGRBReviewAsyncStatusTypeCompleted, SystemIntakeGRBReviewAsyncStatusTypePastDue:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeGRBReviewAsyncStatusType) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeGRBReviewAsyncStatusType) UnmarshalGQL(v any) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeGRBReviewAsyncStatusType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeGRBReviewAsyncStatusType", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeGRBReviewAsyncStatusType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+func (e *SystemIntakeGRBReviewAsyncStatusType) UnmarshalJSON(b []byte) error {
+	s, err := strconv.Unquote(string(b))
+	if err != nil {
+		return err
+	}
+	return e.UnmarshalGQL(s)
+}
+
+func (e SystemIntakeGRBReviewAsyncStatusType) MarshalJSON() ([]byte, error) {
+	var buf bytes.Buffer
+	e.MarshalGQL(&buf)
+	return buf.Bytes(), nil
+}
+
+// The status type of the System Intake GRB Review (For Standard reviews only)
+type SystemIntakeGRBReviewStandardStatusType string
+
+const (
+	SystemIntakeGRBReviewStandardStatusTypeScheduled SystemIntakeGRBReviewStandardStatusType = "SCHEDULED"
+	SystemIntakeGRBReviewStandardStatusTypeCompleted SystemIntakeGRBReviewStandardStatusType = "COMPLETED"
+)
+
+var AllSystemIntakeGRBReviewStandardStatusType = []SystemIntakeGRBReviewStandardStatusType{
+	SystemIntakeGRBReviewStandardStatusTypeScheduled,
+	SystemIntakeGRBReviewStandardStatusTypeCompleted,
+}
+
+func (e SystemIntakeGRBReviewStandardStatusType) IsValid() bool {
+	switch e {
+	case SystemIntakeGRBReviewStandardStatusTypeScheduled, SystemIntakeGRBReviewStandardStatusTypeCompleted:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeGRBReviewStandardStatusType) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeGRBReviewStandardStatusType) UnmarshalGQL(v any) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeGRBReviewStandardStatusType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeGRBReviewStandardStatusType", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeGRBReviewStandardStatusType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+func (e *SystemIntakeGRBReviewStandardStatusType) UnmarshalJSON(b []byte) error {
+	s, err := strconv.Unquote(string(b))
+	if err != nil {
+		return err
+	}
+	return e.UnmarshalGQL(s)
+}
+
+func (e SystemIntakeGRBReviewStandardStatusType) MarshalJSON() ([]byte, error) {
 	var buf bytes.Buffer
 	e.MarshalGQL(&buf)
 	return buf.Bytes(), nil
@@ -1506,19 +1806,21 @@ type TagType string
 
 const (
 	TagTypeUserAccount       TagType = "USER_ACCOUNT"
+	TagTypeRequester         TagType = "REQUESTER"
 	TagTypeGroupItGov        TagType = "GROUP_IT_GOV"
 	TagTypeGroupGrbReviewers TagType = "GROUP_GRB_REVIEWERS"
 )
 
 var AllTagType = []TagType{
 	TagTypeUserAccount,
+	TagTypeRequester,
 	TagTypeGroupItGov,
 	TagTypeGroupGrbReviewers,
 }
 
 func (e TagType) IsValid() bool {
 	switch e {
-	case TagTypeUserAccount, TagTypeGroupItGov, TagTypeGroupGrbReviewers:
+	case TagTypeUserAccount, TagTypeRequester, TagTypeGroupItGov, TagTypeGroupGrbReviewers:
 		return true
 	}
 	return false
