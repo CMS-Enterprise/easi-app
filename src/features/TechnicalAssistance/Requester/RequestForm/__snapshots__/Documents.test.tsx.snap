@@ -274,7 +274,7 @@ exports[`Trb Request form: Supporting documents > renders states with documents 
         >
           <button
             class="usa-button usa-button--outline margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
-            data-testid="button"
+            data-testid="pager-back-button"
             type="button"
           >
             Back
@@ -289,7 +289,7 @@ exports[`Trb Request form: Supporting documents > renders states with documents 
         >
           <button
             class="usa-button margin-top-0"
-            data-testid="button"
+            data-testid="pager-next-button"
             type="submit"
           >
             Next
@@ -366,7 +366,7 @@ exports[`Trb Request form: Supporting documents > renders states without documen
         >
           <button
             class="usa-button usa-button--outline margin-top-0 margin-bottom-1 mobile-lg:margin-bottom-0"
-            data-testid="button"
+            data-testid="pager-back-button"
             type="button"
           >
             Back
@@ -381,7 +381,7 @@ exports[`Trb Request form: Supporting documents > renders states without documen
         >
           <button
             class="usa-button usa-button--outline margin-top-0"
-            data-testid="button"
+            data-testid="pager-next-button"
             type="submit"
           >
             Continue without adding documents
