@@ -242,6 +242,7 @@ const ParticipantsTable = ({
                     <td
                       {...cell.getCellProps()}
                       key={{ ...cell.getCellProps() }.key}
+                      data-testid={`grb-reviewer-${cell.column.id}`}
                     >
                       {cell.render('Cell')}
                     </td>
