@@ -79,6 +79,8 @@ func getGRBEmailJobs(scheduler *Scheduler) *grbEmailJobs {
 
 func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, scheduledJob *ScheduledJob) error {
 	logger, err := scheduledJob.logger()
+	logger = logger.With(logfields.EmailType("GRBReviewHalfwayThrough"))
+	// TODO verify the logger, and update to this paradigm for the rest
 	if err != nil {
 		return err
 	}
