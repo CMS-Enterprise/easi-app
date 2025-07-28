@@ -79,36 +79,36 @@ func getGRBEmailJobs(scheduler *Scheduler) *grbEmailJobs {
 
 func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, scheduledJob *ScheduledJob) error {
 	logger, err := scheduledJob.logger()
-	logger = logger.With(logfields.EmailType("GRBReviewHalfwayThrough"))
-	// TODO verify the logger, and update to this paradigm for the rest
 	if err != nil {
 		return err
 	}
 
+	logger = logger.With(logfields.EmailType("GRBReviewHalfwayThrough"))
+
 	store, err := scheduledJob.store()
 	if err != nil {
-		logger.Error("error getting store from scheduler for halfway through email", zap.Error(err))
+		logger.Error(errGettingStore.Error(), zap.Error(err))
 		return err
 	}
 	emailClient, err := scheduledJob.emailClient()
 	if err != nil {
-		logger.Error("error getting email client from scheduler for halfway through email", zap.Error(err))
+		logger.Error(errGettingEmailClient.Error(), zap.Error(err))
 		return err
 	}
 
 	buildDataLoaders, err := scheduledJob.buildDataLoaders()
 	if err != nil {
-		logger.Error("error building dataloaders for halfway through email", zap.Error(err))
+		logger.Error(errBuildingDataloaders.Error(), zap.Error(err))
 		return err
 	}
 
 	ctx = dataloaders.CTXWithLoaders(ctx, buildDataLoaders)
 
-	logger.Info("Running GRB voting halfway through email job")
+	logger.Info(runningJob)
 
 	intakes, err := storage.GetSystemIntakesWithGRBReviewHalfwayThrough(ctx, store, logger)
 	if err != nil {
-		logger.Error("error fetching system intakes for halfway through email", zap.Error(err))
+		logger.Error(errFetchingIntakes.Error(), zap.Error(err))
 		return err
 	}
 
@@ -120,6 +120,7 @@ func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, schedule
 
 			reviewers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{intake.ID})
 			if err != nil {
+				logger.Error(errProblemGettingReviewers.Error(), zap.Error(err), logfields.IntakeID(intake.ID))
 				return err
 			}
 
@@ -142,10 +143,10 @@ func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, schedule
 				return err
 			}
 
-			logger.Info("sending voting halfway through email", logfields.IntakeID(intake.ID))
+			logger.Info(emailSent, logfields.IntakeID(intake.ID))
 			return nil
 		}); err != nil {
-			logger.Error("error scheduling voting halfway through email job", logfields.IntakeID(intake.ID), zap.Error(err))
+			logger.Error(errProblemSendingEmail.Error(), logfields.IntakeID(intake.ID), zap.Error(err))
 			// we chose to continue here instead of returning an error, because we want to send emails to all intakes
 			// even if one of them fails
 			continue
@@ -161,31 +162,33 @@ func sendAsyncPastDueNoQuorumEmailJobFunction(ctx context.Context, scheduledJob 
 		return err
 	}
 
+	logger = logger.With(logfields.EmailType("PastDueNoQuorum"))
+
 	store, err := scheduledJob.store()
 	if err != nil {
-		logger.Error("error getting store from scheduler for past due no quorum email", zap.Error(err))
+		logger.Error(errGettingStore.Error(), zap.Error(err))
 		return err
 	}
 
 	emailClient, err := scheduledJob.emailClient()
 	if err != nil {
-		logger.Error("error getting email client from scheduler for past due no quorum email", zap.Error(err))
+		logger.Error(errGettingEmailClient.Error(), zap.Error(err))
 		return err
 	}
 
 	buildDataLoaders, err := scheduledJob.buildDataLoaders()
 	if err != nil {
-		logger.Error("error building dataloaders for past due no quorum email", zap.Error(err))
+		logger.Error(errBuildingDataloaders.Error(), zap.Error(err))
 		return err
 	}
 
 	ctx = dataloaders.CTXWithLoaders(ctx, buildDataLoaders)
 
-	logger.Info("Running GRB review past due no quorum email job")
+	logger.Info(runningJob)
 
 	intakes, err := storage.GetSystemIntakesWithGRBReviewPastDueNoQuorum(ctx, store, logger)
 	if err != nil {
-		logger.Error("error getting past due no quorum intakes", zap.Error(err))
+		logger.Error(errFetchingIntakes.Error(), zap.Error(err))
 		return err
 	}
 
@@ -197,6 +200,7 @@ func sendAsyncPastDueNoQuorumEmailJobFunction(ctx context.Context, scheduledJob 
 
 			reviewers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{intake.ID})
 			if err != nil {
+				logger.Error(errProblemGettingReviewers.Error(), zap.Error(err), logfields.IntakeID(intake.ID))
 				return err
 			}
 
@@ -219,10 +223,10 @@ func sendAsyncPastDueNoQuorumEmailJobFunction(ctx context.Context, scheduledJob 
 				return err
 			}
 
-			logger.Info("sending past due no quorum email", logfields.IntakeID(intake.ID))
+			logger.Info(emailSent, logfields.IntakeID(intake.ID))
 			return nil
 		}); err != nil {
-			logger.Error("error scheduling past due no quorum email job", logfields.IntakeID(intake.ID), zap.Error(err))
+			logger.Error(errProblemSendingEmail.Error(), logfields.IntakeID(intake.ID), zap.Error(err))
 			// we chose to continue here instead of returning an error, because we want to send emails to all intakes
 			// even if one of them fails
 			continue
@@ -238,31 +242,33 @@ func sendGRBReviewEndedEmailJobFunction(ctx context.Context, scheduledJob *Sched
 		return err
 	}
 
+	logger = logger.With(logfields.EmailType("GRBReviewEnded"))
+
 	store, err := scheduledJob.store()
 	if err != nil {
-		logger.Error("error getting store from scheduler for review ended email", zap.Error(err))
+		logger.Error(errGettingStore.Error(), zap.Error(err))
 		return err
 	}
 
 	emailClient, err := scheduledJob.emailClient()
 	if err != nil {
-		logger.Error("error getting email client from scheduler for review ended email", zap.Error(err))
+		logger.Error(errGettingEmailClient.Error(), zap.Error(err))
 		return err
 	}
 
 	buildDataLoaders, err := scheduledJob.buildDataLoaders()
 	if err != nil {
-		logger.Error("error building dataloaders for review ended email", zap.Error(err))
+		logger.Error(errBuildingDataloaders.Error(), zap.Error(err))
 		return err
 	}
 
 	ctx = dataloaders.CTXWithLoaders(ctx, buildDataLoaders)
 
-	logger.Info("Running GRB review ended email job")
+	logger.Info(runningJob)
 
 	intakes, err := store.FetchSystemIntakes(ctx)
 	if err != nil {
-		logger.Error("error fetching system intakes for review ended email", zap.Error(err))
+		logger.Error(errFetchingIntakes.Error(), zap.Error(err))
 		return err
 	}
 
@@ -288,7 +294,7 @@ func sendGRBReviewEndedEmailJobFunction(ctx context.Context, scheduledJob *Sched
 		reviewers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{intake.ID})
 		if err != nil {
 			// don't exit with error, just log
-			logger.Error("problem getting reviewers when sending Review Ended email", zap.Error(err), zap.String("intake.id", intake.ID.String()))
+			logger.Error(errProblemGettingReviewers.Error(), zap.Error(err), logfields.IntakeID(intake.ID))
 			continue
 		}
 
@@ -298,7 +304,7 @@ func sendGRBReviewEndedEmailJobFunction(ctx context.Context, scheduledJob *Sched
 			userAccount, err := dataloaders.GetUserAccountByID(ctx, reviewer.UserID)
 			if err != nil {
 				// don't exit with error, just log
-				logger.Error("problem getting accounts when sending Review Ended email", zap.Error(err), zap.String("intake.id", intake.ID.String()))
+				logger.Error(errProblemGettingAccounts.Error(), zap.Error(err), logfields.IntakeID(intake.ID))
 				continue
 			}
 
@@ -318,11 +324,11 @@ func sendGRBReviewEndedEmailJobFunction(ctx context.Context, scheduledJob *Sched
 					GRBReviewDeadline:  *intake.GrbReviewAsyncEndDate,
 				},
 			); err != nil {
-				logger.Error("failed to send GRB Review Ended email", logfields.IntakeID(intake.ID), zap.Error(err), zap.String("user.email", userEmail))
+				logger.Error(errProblemSendingEmail.Error(), logfields.IntakeID(intake.ID), zap.Error(err), zap.String("user.email", userEmail))
 				continue
 			}
 
-			logger.Info("sent GRB Review Ended email", logfields.IntakeID(intake.ID))
+			logger.Info(emailSent, logfields.IntakeID(intake.ID))
 		}
 	}
 
@@ -333,36 +339,39 @@ func sendGRBReviewLastDayReminderJobFunction(
 	ctx context.Context,
 	scheduledJob *ScheduledJob,
 ) error {
-	// ---- helpers ----
 	logger, err := scheduledJob.logger()
 	if err != nil {
 		return err
 	}
+
+	logger = logger.With(logfields.EmailType("GRBReviewLastDayReminder"))
+
 	store, err := scheduledJob.store()
 	if err != nil {
-		logger.Error("error getting store from scheduler for last day reminder email", zap.Error(err))
+		logger.Error(errGettingStore.Error(), zap.Error(err))
 		return err
 	}
+
 	emailClient, err := scheduledJob.emailClient()
 	if err != nil {
-		logger.Error("error getting email client from scheduler for last day reminder email", zap.Error(err))
+		logger.Error(errGettingEmailClient.Error(), zap.Error(err))
 		return err
 	}
 
 	buildDataLoaders, err := scheduledJob.buildDataLoaders()
 	if err != nil {
-		logger.Error("error building dataloaders for last day reminder email", zap.Error(err))
+		logger.Error(errBuildingDataloaders.Error(), zap.Error(err))
 		return err
 	}
 
 	ctx = dataloaders.CTXWithLoaders(ctx, buildDataLoaders)
 
-	logger.Info("Running GRB review LAST-DAY reminder job")
+	logger.Info(runningJob)
 
 	// Fetch *all* intakes, we’ll filter in memory
 	intakes, err := store.FetchSystemIntakes(ctx)
 	if err != nil {
-		logger.Error("error fetching system intakes for last day reminder email", zap.Error(err))
+		logger.Error(errFetchingIntakes.Error(), zap.Error(err))
 		return err
 	}
 
@@ -405,7 +414,7 @@ func sendGRBReviewLastDayReminderJobFunction(
 
 		grbReviewers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{intake.ID})
 		if err != nil {
-			logger.Error("problem getting GRB reviewers when sending Last Day email", zap.Error(err), zap.String("intake.id", intake.ID.String()))
+			logger.Error(errProblemGettingReviewers.Error(), zap.Error(err), logfields.IntakeID(intake.ID))
 			continue
 		}
 
@@ -430,7 +439,7 @@ func sendGRBReviewLastDayReminderJobFunction(
 		for _, reviewer := range recipients {
 			userAccount, err := dataloaders.GetUserAccountByID(ctx, reviewer.UserID)
 			if err != nil {
-				logger.Error("problem getting accounts when sending Last Day email", zap.Error(err), zap.String("intake.id", intake.ID.String()))
+				logger.Error(errProblemGettingAccounts.Error(), zap.Error(err), logfields.IntakeID(intake.ID))
 				continue
 			}
 
@@ -450,12 +459,12 @@ func sendGRBReviewLastDayReminderJobFunction(
 					GRBReviewDeadline:  deadline,
 				},
 			); err != nil {
-				logger.Error("problem sending Last Day email", zap.Error(err), zap.String("intake.id", intake.ID.String()), zap.String("user.email", userEmail))
+				logger.Error(errProblemSendingEmail.Error(), zap.Error(err), logfields.IntakeID(intake.ID), zap.String("user.email", userEmail))
 				continue
 			}
 		}
 
-		logger.Info("sent GRB last-day reminder", logfields.IntakeID(intake.ID))
+		logger.Info(emailSent, logfields.IntakeID(intake.ID))
 	}
 
 	return nil
@@ -467,31 +476,33 @@ func sendAsyncReviewCompleteQuorumMetJobFunction(ctx context.Context, scheduledJ
 		return err
 	}
 
+	logger = logger.With(logfields.EmailType("ReviewCompleteQuorumMet"))
+
 	store, err := scheduledJob.store()
 	if err != nil {
-		logger.Error("error getting store from scheduler for review complete quorum met email", zap.Error(err))
+		logger.Error(errGettingStore.Error(), zap.Error(err))
 		return err
 	}
 
 	emailClient, err := scheduledJob.emailClient()
 	if err != nil {
-		logger.Error("error getting email client from scheduler for review complete quorum met email", zap.Error(err))
+		logger.Error(errGettingEmailClient.Error(), zap.Error(err))
 		return err
 	}
 
 	buildDataLoaders, err := scheduledJob.buildDataLoaders()
 	if err != nil {
-		logger.Error("error building dataloaders for review complete quorum met email", zap.Error(err))
+		logger.Error(errBuildingDataloaders.Error(), zap.Error(err))
 		return err
 	}
 
 	ctx = dataloaders.CTXWithLoaders(ctx, buildDataLoaders)
 
-	logger.Info("Running GRB review complete with quorum met email job")
+	logger.Info(runningJob)
 
 	intakes, err := storage.GetSystemaIntakesWithGRBReviewCompleteQuorumMet(ctx, store, logger)
 	if err != nil {
-		logger.Error("error getting review complete quorum met intakes", zap.Error(err))
+		logger.Error(errFetchingIntakes.Error(), zap.Error(err))
 		return err
 	}
 
