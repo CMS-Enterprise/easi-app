@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FieldErrors, FieldPath } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -292,7 +292,12 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                 {t('contractDetails.fundingSources.label')}
               </legend>
               <HelpText className="margin-top-1" id="fundingSourcesHelpText">
-                {t('contractDetails.fundingSources.helpText')}
+                <Trans
+                  i18nKey="intake:contractDetails.fundingSources.helpText"
+                  components={{
+                    a: <a href="mailto:IT_Governance@cms.hhs.gov">email</a>
+                  }}
+                />
               </HelpText>
 
               <FundingSources disableParentForm={setDisableSubmit} />

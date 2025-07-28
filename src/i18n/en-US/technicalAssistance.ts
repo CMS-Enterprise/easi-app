@@ -598,7 +598,29 @@ const technicalAssistance = {
         'Your basic request details were not saved. Please try again. If the error persists, please try again at a later date.'
     },
     allFieldsMandatory: 'All fields are mandatory',
-    noAnswer: 'No answer selected'
+    noAnswer: 'No answer selected',
+    fundingSources: {
+      label: 'Which existing funding sources will fund this project?',
+      helpText:
+        'If you are unsure, please get in touch with your Front Office. If this will not use an existing funding source, skip this question.',
+      addFundingSource: 'Add a funding source',
+      addAnotherFundingSource: 'Add another funding source',
+      fundingNumber: 'Funding number',
+      fundingNumberHelpText: 'Must be 6 digits long',
+      fundingNumberLink:
+        'You can find your funding number in the CMS Operating Plan page',
+      fundingSource: 'Funding source',
+      fundingSources: 'Funding sources',
+      fundingNumberLabel: 'Funding number: {{fundingNumber}}',
+      fundingSourcesLabel: 'Funding sources: {{sources}}',
+      formLegend: '{{action}} funding source',
+      errors: {
+        fundingNumberMinDigits: 'Funding number must be exactly 6 digits',
+        fundingNumberDigits: 'Funding number can only contain digits',
+        fundingNumberUnique: 'Funding number must be unique',
+        fundingSource: 'Select a funding source'
+      }
+    }
   },
   subject: {
     labels: {

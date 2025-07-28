@@ -361,25 +361,26 @@ const intake = {
   contractDetails: {
     heading: 'Contract details',
     fundingSources: {
-      label: 'Which existing funding sources will fund this project?',
+      label: 'Which funding sources will fund this project?',
       helpText:
-        'If you are unsure, please get in touch with your Front Office. If this will not use an existing funding source, skip this question.',
+        'If you are unsure or need help, please get in touch with your Front Office or reach out to the Governance Admin Team at <a>IT_Governance@cms.hhs.gov</a>.',
       addFundingSource: 'Add a funding source',
       addAnotherFundingSource: 'Add another funding source',
-      fundingNumber: 'Funding number',
-      fundingNumberHelpText: 'Must be 6 digits long',
-      fundingNumberLink:
-        'You can find your funding number in the CMS Operating Plan page',
-      fundingSource: 'Funding source',
-      fundingSources: 'Funding sources',
-      fundingNumberLabel: 'Funding number: {{fundingNumber}}',
-      fundingSourcesLabel: 'Funding sources: {{sources}}',
-      formLegend: '{{action}} funding source',
+      projectNumber: 'Project number',
+      projectNumberHelpText:
+        'Must be 6 digits long. Comma-separate multiple project numbers.',
+      projectNumberLink:
+        'You can find your project number in the CMS Operating Plan page',
+      investment: 'Investment',
+      selectedInvestments: 'Selected investments',
+      projectNumberLabel: 'Project number: {{projectNumber}}',
+      investmentsLabel: 'Investments: {{investment}}',
+      formLegend: '{{action}} a funding source',
       errors: {
-        fundingNumberMinDigits: 'Funding number must be exactly 6 digits',
-        fundingNumberDigits: 'Funding number can only contain digits',
-        fundingNumberUnique: 'Funding number must be unique',
-        fundingSource: 'Select a funding source'
+        projectNumberMinDigits: 'Project number must be exactly 6 digits',
+        projectNumberDigits: 'Project number can only contain digits',
+        projectNumberUnique: 'Project number must be unique',
+        investment: 'Select an investment'
       }
     },
     currentAnnualSpending: 'What is the current annual spending?',

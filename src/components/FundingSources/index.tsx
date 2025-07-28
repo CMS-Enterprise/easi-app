@@ -30,8 +30,8 @@ import {
 export type FormattedFundingSource = {
   __typename: 'SystemIntakeFundingSource';
   id: string;
-  fundingNumber: string | null;
-  sources: string[];
+  projectNumber: string | null;
+  investments: string[];
 };
 
 type FundingSourcesForm = {
@@ -118,14 +118,14 @@ const FundingSources = ({ disableParentForm }: FundingSourcesProps) => {
   return (
     <div id="intakeFundingSources">
       {fields.map((source, index) => {
-        const { fundingNumber, sources, id } = source;
+        const { projectNumber, investments, id } = source;
 
         // Show form if adding or editing funding source
         if (id === activeFundingSource?.id) {
           return (
             <Fieldset
               key={id}
-              id={`fundingSources.${index}.fundingNumber`}
+              id={`fundingSources.${index}.projectNumber`}
               className="margin-top-3"
             >
               <legend className="usa-legend text-bold">
@@ -135,62 +135,66 @@ const FundingSources = ({ disableParentForm }: FundingSourcesProps) => {
               </legend>
               <FieldGroup
                 className="margin-top-2"
-                error={!!errors?.fundingSources?.[index]?.fundingNumber}
+                error={!!errors?.fundingSources?.[index]?.projectNumber}
               >
-                <Label htmlFor="fundingNumber" className="text-normal">
-                  {t('contractDetails.fundingSources.fundingNumber')}
+                <Label htmlFor="projectNumber" className="text-normal">
+                  {t('contractDetails.fundingSources.projectNumber')}
                 </Label>
-                <HelpText id="fundingNumberHelpText">
-                  {t('contractDetails.fundingSources.fundingNumberHelpText')}
+                <HelpText id="projectNumberHelpText">
+                  {t('contractDetails.fundingSources.projectNumberHelpText')}
                 </HelpText>
                 <ErrorMessage
                   errors={errors}
-                  name={`fundingSources.${index}.fundingNumber`}
+                  name={`fundingSources.${index}.projectNumber`}
                   as={FieldErrorMsg}
                 />
                 <TextInput
-                  {...register(`fundingSources.${index}.fundingNumber`)}
+                  {...register(`fundingSources.${index}.projectNumber`)}
                   ref={null}
                   type="text"
-                  id="fundingNumber"
-                  aria-describedby="fundingNumberHelptext fundingNumberHelpLink"
+                  id="projectNumber"
+                  aria-describedby="projectNumberHelptext projectNumberHelpLink"
                 />
 
-                <HelpText id="fundingNumberHelpLink" className="margin-top-1">
+                <HelpText id="projectNumberHelpLink" className="margin-top-1">
                   <Link
                     href="https://cmsintranet.share.cms.gov/JT/Pages/Budget.aspx"
                     target="_blank"
                     rel="noopener noreferrer"
                     variant="external"
                   >
-                    {t('contractDetails.fundingSources.fundingNumberLink')}
+                    {t('contractDetails.fundingSources.projectNumberLink')}
                   </Link>
                 </HelpText>
               </FieldGroup>
 
-              <FieldGroup error={!!errors?.fundingSources?.[index]?.sources}>
+              <FieldGroup
+                error={!!errors?.fundingSources?.[index]?.investments}
+              >
                 <Label htmlFor="sources" className="text-normal">
-                  {t('contractDetails.fundingSources.fundingSource')}
+                  {t('contractDetails.fundingSources.investment')}
                 </Label>
                 <ErrorMessage
                   errors={errors}
-                  name={`fundingSources.${index}.sources`}
+                  name={`fundingSources.${index}.investments`}
                   as={FieldErrorMsg}
                 />
                 <Controller
-                  name={`fundingSources.${index}.sources`}
+                  name={`fundingSources.${index}.investments`}
                   control={control}
                   render={({ field: { ref, ...field } }) => (
                     <MultiSelect
                       {...field}
                       id="sources"
-                      selectedLabel={t('Funding sources')}
+                      selectedLabel={t(
+                        'contractDetails.fundingSources.selectedInvestments'
+                      )}
                       options={intakeFundingSources.map(option => ({
                         value: option,
                         label: t(option)
                       }))}
                       onChange={values => field.onChange(values)}
-                      initialValues={activeFundingSource.sources}
+                      initialValues={activeFundingSource.investments}
                     />
                   )}
                 />
@@ -232,21 +236,21 @@ const FundingSources = ({ disableParentForm }: FundingSourcesProps) => {
         // Display funding source
         return (
           <div
-            id={`fundingSource${fundingNumber}`}
+            id={`fundingSource${projectNumber}`}
             key={id}
             className="margin-top-205"
           >
             <p className="text-bold font-body-sm margin-bottom-0">
-              {t('contractDetails.fundingSources.fundingSource')}
+              {t('contractDetails.fundingSources.investment')}
             </p>
             <p className="margin-y-05">
-              {t('contractDetails.fundingSources.fundingNumberLabel', {
-                fundingNumber
+              {t('contractDetails.fundingSources.projectNumberLabel', {
+                projectNumber
               })}
             </p>
             <p className="margin-y-05">
-              {t('contractDetails.fundingSources.fundingSourcesLabel', {
-                sources: sources.join(', ')
+              {t('contractDetails.fundingSources.investmentsLabel', {
+                investments: investments.join(', ')
               })}
             </p>
 
@@ -300,8 +304,8 @@ const FundingSources = ({ disableParentForm }: FundingSourcesProps) => {
             onClick={() => {
               const newSource: Omit<FormattedFundingSource, 'id'> = {
                 __typename: 'SystemIntakeFundingSource',
-                fundingNumber: '',
-                sources: []
+                projectNumber: '',
+                investments: []
               };
 
               append(newSource);
