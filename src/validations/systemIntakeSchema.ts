@@ -47,7 +47,14 @@ export const FundingSourceValidationSchema = Yup.object({
     .trim()
     .required('Project number is required')
     .length(6, 'Project number must be exactly 6 digits')
-    .matches(/^\d+$/, 'Project number can only contain digits'),
+    .matches(/^\d+$/, 'Project number can only contain digits')
+    .when('$initialProjectNumbers', (initialProjectNumbers: string[], schema) =>
+      schema.test(
+        'is-unique',
+        'Project number has already been added to this request',
+        (value: string) => !initialProjectNumbers.includes(value)
+      )
+    ),
   investments: Yup.array().of(Yup.string()).min(1, 'Select an investment')
 });
 

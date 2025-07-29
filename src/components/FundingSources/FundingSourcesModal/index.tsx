@@ -29,12 +29,17 @@ type FundingSourcesModalProps = {
   isOpen: boolean;
   closeModal: () => void;
   addFundingSource: (data: FormattedFundingSource) => void;
+  initialFundingSources: FormattedFundingSource[];
 };
 
+/**
+ * Modal that contains the form for adding a funding source to a system intake
+ */
 const FundingSourcesModal = ({
   isOpen,
   closeModal,
-  addFundingSource
+  addFundingSource,
+  initialFundingSources
 }: FundingSourcesModalProps) => {
   const { t } = useTranslation('intake');
 
@@ -45,10 +50,16 @@ const FundingSourcesModal = ({
     reset,
     formState: { errors }
   } = useEasiForm<FormattedFundingSource>({
-    resolver: yupResolver(FundingSourceValidationSchema),
     defaultValues: {
       projectNumber: '',
       investments: []
+    },
+    resolver: yupResolver(FundingSourceValidationSchema),
+    // Pass initial project numbers as context to resolver to validate uniqueness
+    context: {
+      initialProjectNumbers: initialFundingSources.map(
+        source => source.projectNumber
+      )
     }
   });
 

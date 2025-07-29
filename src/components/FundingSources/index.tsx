@@ -29,6 +29,7 @@ const FundingSources = () => {
         isOpen={isModalOpen}
         closeModal={() => setIsModalOpen(false)}
         addFundingSource={fundingSource => append(fundingSource)}
+        initialFundingSources={fields}
       />
 
       {fields.map((source, index) => {
@@ -37,8 +38,9 @@ const FundingSources = () => {
         // Display funding source
         return (
           <div
-            id={`fundingSource-${projectNumber}`}
-            key={`fundingSource-${projectNumber}`}
+            id={`fundingSource-${index}`}
+            // eslint-disable-next-line react/no-array-index-key
+            key={`fundingSource-${index}`}
             className="margin-top-205"
           >
             <p className="text-bold font-body-sm margin-bottom-0">
