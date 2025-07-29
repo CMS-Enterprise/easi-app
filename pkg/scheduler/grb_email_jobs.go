@@ -3,6 +3,7 @@ package scheduler
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -87,19 +88,22 @@ func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, schedule
 
 	store, err := scheduledJob.store()
 	if err != nil {
-		logger.Error(errGettingStore.Error(), zap.Error(err))
-		return err
+		wrappedErr := fmt.Errorf("%[1]w: %[2]w", errGettingStore, err)
+		logger.Error(errGettingStore.Error(), zap.Error(wrappedErr))
+		return wrappedErr
 	}
 	emailClient, err := scheduledJob.emailClient()
 	if err != nil {
-		logger.Error(errGettingEmailClient.Error(), zap.Error(err))
-		return err
+		wrappedErr := fmt.Errorf("%[1]w: %[2]w", errGettingEmailClient, err)
+		logger.Error(errGettingEmailClient.Error(), zap.Error(wrappedErr))
+		return wrappedErr
 	}
 
 	buildDataLoaders, err := scheduledJob.buildDataLoaders()
 	if err != nil {
-		logger.Error(errBuildingDataloaders.Error(), zap.Error(err))
-		return err
+		wrappedErr := fmt.Errorf("%[1]w: %[2]w", errBuildingDataloaders, err)
+		logger.Error(errBuildingDataloaders.Error(), zap.Error(wrappedErr))
+		return wrappedErr
 	}
 
 	ctx = dataloaders.CTXWithLoaders(ctx, buildDataLoaders)
@@ -108,8 +112,9 @@ func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, schedule
 
 	intakes, err := storage.GetSystemIntakesWithGRBReviewHalfwayThrough(ctx, store, logger)
 	if err != nil {
-		logger.Error(errFetchingIntakes.Error(), zap.Error(err))
-		return err
+		wrappedErr := fmt.Errorf("%[1]w: %[2]w", errFetchingIntakes, err)
+		logger.Error(errFetchingIntakes.Error(), zap.Error(wrappedErr))
+		return wrappedErr
 	}
 
 	for _, intake := range intakes {
@@ -120,8 +125,9 @@ func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, schedule
 
 			reviewers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{intake.ID})
 			if err != nil {
-				logger.Error(errProblemGettingReviewers.Error(), zap.Error(err), logfields.IntakeID(intake.ID))
-				return err
+				wrappedErr := fmt.Errorf("%[1]w: %[2]w", errProblemGettingReviewers, err)
+				logger.Error(errProblemGettingReviewers.Error(), zap.Error(wrappedErr), logfields.IntakeID(intake.ID))
+				return wrappedErr
 			}
 
 			votingInformation := models.GRBVotingInformation{
@@ -166,20 +172,23 @@ func sendAsyncPastDueNoQuorumEmailJobFunction(ctx context.Context, scheduledJob 
 
 	store, err := scheduledJob.store()
 	if err != nil {
-		logger.Error(errGettingStore.Error(), zap.Error(err))
-		return err
+		wrappedErr := fmt.Errorf("%[1]w: %[2]w", errGettingStore, err)
+		logger.Error(errGettingStore.Error(), zap.Error(wrappedErr))
+		return wrappedErr
 	}
 
 	emailClient, err := scheduledJob.emailClient()
 	if err != nil {
-		logger.Error(errGettingEmailClient.Error(), zap.Error(err))
-		return err
+		wrappedErr := fmt.Errorf("%[1]w: %[2]w", errGettingEmailClient, err)
+		logger.Error(errGettingEmailClient.Error(), zap.Error(wrappedErr))
+		return wrappedErr
 	}
 
 	buildDataLoaders, err := scheduledJob.buildDataLoaders()
 	if err != nil {
-		logger.Error(errBuildingDataloaders.Error(), zap.Error(err))
-		return err
+		wrappedErr := fmt.Errorf("%[1]w: %[2]w", errBuildingDataloaders, err)
+		logger.Error(errBuildingDataloaders.Error(), zap.Error(wrappedErr))
+		return wrappedErr
 	}
 
 	ctx = dataloaders.CTXWithLoaders(ctx, buildDataLoaders)
@@ -188,8 +197,9 @@ func sendAsyncPastDueNoQuorumEmailJobFunction(ctx context.Context, scheduledJob 
 
 	intakes, err := storage.GetSystemIntakesWithGRBReviewPastDueNoQuorum(ctx, store, logger)
 	if err != nil {
-		logger.Error(errFetchingIntakes.Error(), zap.Error(err))
-		return err
+		wrappedErr := fmt.Errorf("%[1]w: %[2]w", errFetchingIntakes, err)
+		logger.Error(errFetchingIntakes.Error(), zap.Error(wrappedErr))
+		return wrappedErr
 	}
 
 	for _, intake := range intakes {
@@ -200,8 +210,9 @@ func sendAsyncPastDueNoQuorumEmailJobFunction(ctx context.Context, scheduledJob 
 
 			reviewers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{intake.ID})
 			if err != nil {
-				logger.Error(errProblemGettingReviewers.Error(), zap.Error(err), logfields.IntakeID(intake.ID))
-				return err
+				wrappedErr := fmt.Errorf("%[1]w: %[2]w", errProblemGettingReviewers, err)
+				logger.Error(errProblemGettingReviewers.Error(), zap.Error(wrappedErr), logfields.IntakeID(intake.ID))
+				return wrappedErr
 			}
 
 			votingInformation := models.GRBVotingInformation{
@@ -246,20 +257,23 @@ func sendGRBReviewEndedEmailJobFunction(ctx context.Context, scheduledJob *Sched
 
 	store, err := scheduledJob.store()
 	if err != nil {
-		logger.Error(errGettingStore.Error(), zap.Error(err))
-		return err
+		wrappedErr := fmt.Errorf("%[1]w: %[2]w", errGettingStore, err)
+		logger.Error(errGettingStore.Error(), zap.Error(wrappedErr))
+		return wrappedErr
 	}
 
 	emailClient, err := scheduledJob.emailClient()
 	if err != nil {
-		logger.Error(errGettingEmailClient.Error(), zap.Error(err))
-		return err
+		wrappedErr := fmt.Errorf("%[1]w: %[2]w", errGettingEmailClient, err)
+		logger.Error(errGettingEmailClient.Error(), zap.Error(wrappedErr))
+		return wrappedErr
 	}
 
 	buildDataLoaders, err := scheduledJob.buildDataLoaders()
 	if err != nil {
-		logger.Error(errBuildingDataloaders.Error(), zap.Error(err))
-		return err
+		wrappedErr := fmt.Errorf("%[1]w: %[2]w", errBuildingDataloaders, err)
+		logger.Error(errBuildingDataloaders.Error(), zap.Error(wrappedErr))
+		return wrappedErr
 	}
 
 	ctx = dataloaders.CTXWithLoaders(ctx, buildDataLoaders)
@@ -268,8 +282,9 @@ func sendGRBReviewEndedEmailJobFunction(ctx context.Context, scheduledJob *Sched
 
 	intakes, err := store.FetchSystemIntakes(ctx)
 	if err != nil {
-		logger.Error(errFetchingIntakes.Error(), zap.Error(err))
-		return err
+		wrappedErr := fmt.Errorf("%[1]w: %[2]w", errFetchingIntakes, err)
+		logger.Error(errFetchingIntakes.Error(), zap.Error(wrappedErr))
+		return wrappedErr
 	}
 
 	now := time.Now().UTC().Truncate(24 * time.Hour)
@@ -348,20 +363,23 @@ func sendGRBReviewLastDayReminderJobFunction(
 
 	store, err := scheduledJob.store()
 	if err != nil {
-		logger.Error(errGettingStore.Error(), zap.Error(err))
-		return err
+		wrappedErr := fmt.Errorf("%[1]w: %[2]w", errGettingStore, err)
+		logger.Error(errGettingStore.Error(), zap.Error(wrappedErr))
+		return wrappedErr
 	}
 
 	emailClient, err := scheduledJob.emailClient()
 	if err != nil {
-		logger.Error(errGettingEmailClient.Error(), zap.Error(err))
-		return err
+		wrappedErr := fmt.Errorf("%[1]w: %[2]w", errGettingEmailClient, err)
+		logger.Error(errGettingEmailClient.Error(), zap.Error(wrappedErr))
+		return wrappedErr
 	}
 
 	buildDataLoaders, err := scheduledJob.buildDataLoaders()
 	if err != nil {
-		logger.Error(errBuildingDataloaders.Error(), zap.Error(err))
-		return err
+		wrappedErr := fmt.Errorf("%[1]w: %[2]w", errBuildingDataloaders, err)
+		logger.Error(errBuildingDataloaders.Error(), zap.Error(wrappedErr))
+		return wrappedErr
 	}
 
 	ctx = dataloaders.CTXWithLoaders(ctx, buildDataLoaders)
@@ -371,8 +389,9 @@ func sendGRBReviewLastDayReminderJobFunction(
 	// Fetch *all* intakes, we’ll filter in memory
 	intakes, err := store.FetchSystemIntakes(ctx)
 	if err != nil {
-		logger.Error(errFetchingIntakes.Error(), zap.Error(err))
-		return err
+		wrappedErr := fmt.Errorf("%[1]w: %[2]w", errFetchingIntakes, err)
+		logger.Error(errFetchingIntakes.Error(), zap.Error(wrappedErr))
+		return wrappedErr
 	}
 
 	// Today truncated to 00:00 UTC
@@ -480,20 +499,23 @@ func sendAsyncReviewCompleteQuorumMetJobFunction(ctx context.Context, scheduledJ
 
 	store, err := scheduledJob.store()
 	if err != nil {
-		logger.Error(errGettingStore.Error(), zap.Error(err))
-		return err
+		wrappedErr := fmt.Errorf("%[1]w: %[2]w", errGettingStore, err)
+		logger.Error(errGettingStore.Error(), zap.Error(wrappedErr))
+		return wrappedErr
 	}
 
 	emailClient, err := scheduledJob.emailClient()
 	if err != nil {
-		logger.Error(errGettingEmailClient.Error(), zap.Error(err))
-		return err
+		wrappedErr := fmt.Errorf("%[1]w: %[2]w", errGettingEmailClient, err)
+		logger.Error(errGettingEmailClient.Error(), zap.Error(wrappedErr))
+		return wrappedErr
 	}
 
 	buildDataLoaders, err := scheduledJob.buildDataLoaders()
 	if err != nil {
-		logger.Error(errBuildingDataloaders.Error(), zap.Error(err))
-		return err
+		wrappedErr := fmt.Errorf("%[1]w: %[2]w", errBuildingDataloaders, err)
+		logger.Error(errBuildingDataloaders.Error(), zap.Error(wrappedErr))
+		return wrappedErr
 	}
 
 	ctx = dataloaders.CTXWithLoaders(ctx, buildDataLoaders)
@@ -502,8 +524,9 @@ func sendAsyncReviewCompleteQuorumMetJobFunction(ctx context.Context, scheduledJ
 
 	intakes, err := storage.GetSystemaIntakesWithGRBReviewCompleteQuorumMet(ctx, store, logger)
 	if err != nil {
-		logger.Error(errFetchingIntakes.Error(), zap.Error(err))
-		return err
+		wrappedErr := fmt.Errorf("%[1]w: %[2]w", errFetchingIntakes, err)
+		logger.Error(errFetchingIntakes.Error(), zap.Error(wrappedErr))
+		return wrappedErr
 	}
 
 	for _, intake := range intakes {
@@ -514,7 +537,9 @@ func sendAsyncReviewCompleteQuorumMetJobFunction(ctx context.Context, scheduledJ
 
 			reviewers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{intake.ID})
 			if err != nil {
-				return err
+				wrappedErr := fmt.Errorf("%[1]w: %[2]w", errProblemGettingReviewers, err)
+				logger.Error(errProblemGettingReviewers.Error(), zap.Error(wrappedErr), logfields.IntakeID(intake.ID))
+				return wrappedErr
 			}
 
 			votingInformation := models.GRBVotingInformation{
