@@ -2,6 +2,7 @@ import React from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { ErrorMessage } from '@hookform/error-message';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
   ButtonGroup,
@@ -22,6 +23,7 @@ import MultiSelect from 'components/MultiSelect';
 import RequiredFieldsText from 'components/RequiredFieldsText';
 import intakeFundingSources from 'constants/enums/intakeFundingSources';
 import { FormattedFundingSource } from 'types/systemIntake';
+import { FundingSourceValidationSchema } from 'validations/systemIntakeSchema';
 
 type FundingSourcesModalProps = {
   isOpen: boolean;
@@ -42,6 +44,7 @@ const FundingSourcesModal = ({
     register,
     formState: { errors }
   } = useEasiForm<FormattedFundingSource>({
+    resolver: yupResolver(FundingSourceValidationSchema),
     defaultValues: {
       projectNumber: '',
       investments: []
@@ -97,7 +100,7 @@ const FundingSourcesModal = ({
         </FieldGroup>
 
         <FieldGroup error={!!errors?.investments}>
-          <Label htmlFor="investments" className="text-normal">
+          <Label htmlFor="investments" className="text-normal" requiredMarker>
             {t('contractDetails.fundingSources.investment')}
           </Label>
           <ErrorMessage errors={errors} name="investments" as={FieldErrorMsg} />

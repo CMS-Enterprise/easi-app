@@ -42,30 +42,36 @@ const governanceTeams = Yup.object().shape({
     )
 });
 
+export const FundingSourceValidationSchema = Yup.object({
+  projectNumber: Yup.string()
+    .trim()
+    .required('Project number is required')
+    .length(6, 'Project number must be exactly 6 digits')
+    .matches(/^\d+$/, 'Project number can only contain digits'),
+  investments: Yup.array().of(Yup.string()).min(1, 'Select an investment')
+});
+
 export const FundingSourcesValidationSchema = Yup.object().shape({
   fundingSources: Yup.array().of(
-    Yup.object({
-      projectNumber: Yup.string()
-        .trim()
-        .required('Project number is required')
-        .length(6, 'Project number must be exactly 6 digits')
-        .matches(/^\d+$/, 'Project number can only contain digits'),
-      investments: Yup.array().of(Yup.string()).min(1, 'Select an investment')
-    }).test('is-unique', 'Must be unique', (value, context) => {
-      const projectNumbers: string[] = context.parent.map(
-        (source: FormattedFundingSource) => source.projectNumber
-      );
+    FundingSourceValidationSchema.test(
+      'is-unique',
+      'Must be unique',
+      (value, context) => {
+        const projectNumbers: string[] = context.parent.map(
+          (source: FormattedFundingSource) => source.projectNumber
+        );
 
-      const isUnique = !projectNumbers.includes(value?.projectNumber!);
+        const isUnique = !projectNumbers.includes(value?.projectNumber!);
 
-      return (
-        isUnique ||
-        context.createError({
-          path: `${context.path}.projectNumber`,
-          message: 'Project number must be unique'
-        })
-      );
-    })
+        return (
+          isUnique ||
+          context.createError({
+            path: `${context.path}.projectNumber`,
+            message: 'Project number must be unique'
+          })
+        );
+      }
+    )
   )
 });
 

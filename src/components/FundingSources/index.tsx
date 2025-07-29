@@ -32,13 +32,13 @@ const FundingSources = () => {
       />
 
       {fields.map((source, index) => {
-        const { projectNumber, investments, id } = source;
+        const { projectNumber, investments } = source;
 
         // Display funding source
         return (
           <div
-            id={`fundingSource${projectNumber}`}
-            key={id}
+            id={`fundingSource-${projectNumber}`}
+            key={`fundingSource-${projectNumber}`}
             className="margin-top-205"
           >
             <p className="text-bold font-body-sm margin-bottom-0">
