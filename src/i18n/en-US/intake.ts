@@ -375,7 +375,7 @@ const intake = {
       investment: 'Investment',
       selectedInvestments: 'Selected investments',
       projectNumberLabel: 'Project number: {{projectNumber}}',
-      investmentsLabel: 'Investments: {{investment}}',
+      investmentsLabel: 'Investments: {{investments}}',
       formLegend: '{{action}} a funding source',
       errors: {
         projectNumberMinDigits: 'Project number must be exactly 6 digits',
