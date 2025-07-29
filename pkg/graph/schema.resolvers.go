@@ -6,9 +6,7 @@ package graph
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
-	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -1257,11 +1255,6 @@ func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models
 	if err != nil {
 		return nil, err
 	}
-
-	b, _ := json.Marshal(intake)
-	fmt.Println("==== string(b) ====")
-	fmt.Println(string(b))
-	fmt.Println("==== string(b) ====")
 
 	// if this user created the intake
 	if ok := services.AuthorizeUserIsIntakeRequester(ctx, intake); ok {
