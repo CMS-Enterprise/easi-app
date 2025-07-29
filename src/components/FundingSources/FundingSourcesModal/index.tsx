@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { ErrorMessage } from '@hookform/error-message';
@@ -48,6 +48,7 @@ const FundingSourcesModal = ({
     handleSubmit,
     register,
     reset,
+    watch,
     formState: { errors }
   } = useEasiForm<FormattedFundingSource>({
     defaultValues: {
@@ -67,6 +68,14 @@ const FundingSourcesModal = ({
     addFundingSource(data);
     closeModal();
   });
+
+  const projectNumber = watch('projectNumber');
+  const investments = watch('investments');
+
+  /** Disable form submit if required fields are blank */
+  const disableSubmit = useMemo(() => {
+    return !projectNumber || investments.length === 0;
+  }, [projectNumber, investments]);
 
   // Reset form on modal close
   useEffect(() => {
@@ -148,6 +157,7 @@ const FundingSourcesModal = ({
               type="button"
               onClick={submitForm}
               className="margin-right-2"
+              disabled={disableSubmit}
             >
               {t('contractDetails.fundingSources.modalSubmit')}
             </Button>
