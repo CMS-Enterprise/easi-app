@@ -360,26 +360,6 @@ const intake = {
   },
   contractDetails: {
     heading: 'Contract details',
-    fundingSources: {
-      label: 'Which funding sources will fund this project?',
-      helpText:
-        'If you are unsure or need help, please get in touch with your Front Office or reach out to the Governance Admin Team at <a>IT_Governance@cms.hhs.gov</a>.',
-      addFundingSource: 'Add a funding source',
-      addAnotherFundingSource: 'Add another funding source',
-      modalSubmit: 'Add funding source',
-      projectNumber: 'Project number',
-      projectNumberHelpText:
-        'Must be 6 digits long. Comma-separate multiple project numbers.',
-      projectNumberLink:
-        'You can find your project number in the CMS Operating Plan page',
-      investment: 'Investment',
-      selectedInvestments: 'Selected investments',
-      projectNumberLabel: 'Project number: {{projectNumber}}',
-      investmentsLabel: 'Investments: {{investments}}',
-      formLegend: '{{action}} a funding source',
-      skipFundingSourcesLabel:
-        'or, check this box if a new investment and/or project number is still being set up for this project'
-    },
     currentAnnualSpending: 'What is the current annual spending?',
     currentAnnualSpendingITPortion:
       'What portion (% or amount) of the current annual spending is IT?',

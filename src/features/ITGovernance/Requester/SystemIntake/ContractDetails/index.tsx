@@ -290,11 +290,11 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
           >
             <Fieldset>
               <legend className="usa-label">
-                {t('contractDetails.fundingSources.label')}
+                {t('fundingSources:whichFundingSources')}
               </legend>
               <HelpText className="margin-top-05" id="fundingSourcesHelpText">
                 <Trans
-                  i18nKey="intake:contractDetails.fundingSources.helpText"
+                  i18nKey="fundingSources:helpText"
                   components={{
                     a: <a href="mailto:IT_Governance@cms.hhs.gov">email</a>
                   }}

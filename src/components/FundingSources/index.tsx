@@ -11,9 +11,10 @@ import FundingSourcesModal from './FundingSourcesModal';
 
 /** Funding sources component for system intake form */
 const FundingSources = () => {
-  const { t } = useTranslation('intake');
+  const { t } = useTranslation('fundingSources');
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFundingSourcesModalOpen, setIsFundingSourcesModalOpen] =
+    useState(false);
 
   const { control, watch } = useEasiFormContext<ContractDetailsForm>();
 
@@ -36,8 +37,8 @@ const FundingSources = () => {
   return (
     <div id="intakeFundingSources">
       <FundingSourcesModal
-        isOpen={isModalOpen}
-        closeModal={() => setIsModalOpen(false)}
+        isOpen={isFundingSourcesModalOpen}
+        closeModal={() => setIsFundingSourcesModalOpen(false)}
         addFundingSource={fundingSource => append(fundingSource)}
         initialFundingSources={fields}
       />
@@ -54,15 +55,15 @@ const FundingSources = () => {
             className="margin-top-205"
           >
             <p className="text-bold font-body-sm margin-bottom-0">
-              {t('contractDetails.fundingSources.investment')}
+              {t('investment')}
             </p>
             <p className="margin-y-05">
-              {t('contractDetails.fundingSources.projectNumberLabel', {
+              {t('projectNumberLabel', {
                 projectNumber
               })}
             </p>
             <p className="margin-y-05">
-              {t('contractDetails.fundingSources.investmentsLabel', {
+              {t('investmentsLabel', {
                 investments: investments.join(', ')
               })}
             </p>
@@ -81,17 +82,13 @@ const FundingSources = () => {
 
       <Button
         type="button"
-        onClick={() => setIsModalOpen(true)}
+        onClick={() => setIsFundingSourcesModalOpen(true)}
         disabled={skipFundingSources}
         className="margin-top-2"
         data-testid="fundingSourcesAction-add"
         outline
       >
-        {t(
-          `contractDetails.fundingSources.${
-            fields.length > 0 ? 'addAnotherFundingSource' : 'addFundingSource'
-          }`
-        )}
+        {t('addFundingSource', { count: fields.length + 1 })}
       </Button>
 
       <Controller
@@ -104,9 +101,7 @@ const FundingSources = () => {
               id={field.name}
               value="true"
               onChange={e => field.onChange(e.target.checked)}
-              label={t(
-                'contractDetails.fundingSources.skipFundingSourcesLabel'
-              )}
+              label={t('clearFundingSourcesCheckbox')}
             />
           );
         }}

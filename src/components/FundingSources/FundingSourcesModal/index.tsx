@@ -41,7 +41,7 @@ const FundingSourcesModal = ({
   addFundingSource,
   initialFundingSources
 }: FundingSourcesModalProps) => {
-  const { t } = useTranslation('intake');
+  const { t } = useTranslation('fundingSources');
 
   const {
     control,
@@ -89,7 +89,7 @@ const FundingSourcesModal = ({
       <Fieldset>
         <legend>
           <ModalHeading className="margin-bottom-0">
-            {t('contractDetails.fundingSources.addFundingSource')}
+            {t('addFundingSource')}
           </ModalHeading>
         </legend>
 
@@ -97,10 +97,10 @@ const FundingSourcesModal = ({
 
         <FieldGroup className="margin-top-2" error={!!errors?.projectNumber}>
           <Label htmlFor="projectNumber" className="text-normal" requiredMarker>
-            {t('contractDetails.fundingSources.projectNumber')}
+            {t('projectNumber')}
           </Label>
           <HelpText id="projectNumberHelpText">
-            {t('contractDetails.fundingSources.projectNumberHelpText')}
+            {t('form.projectNumberHelpText')}
           </HelpText>
           <ErrorMessage
             errors={errors}
@@ -122,14 +122,14 @@ const FundingSourcesModal = ({
               rel="noopener noreferrer"
               variant="external"
             >
-              {t('contractDetails.fundingSources.projectNumberLink')}
+              {t('form.projectNumberLink')}
             </Link>
           </HelpText>
         </FieldGroup>
 
         <FieldGroup error={!!errors?.investments}>
           <Label htmlFor="investments" className="text-normal" requiredMarker>
-            {t('contractDetails.fundingSources.investment')}
+            {t('investment')}
           </Label>
           <ErrorMessage errors={errors} name="investments" as={FieldErrorMsg} />
           <Controller
@@ -139,9 +139,7 @@ const FundingSourcesModal = ({
               <MultiSelect
                 {...field}
                 id="investments"
-                selectedLabel={t(
-                  'contractDetails.fundingSources.selectedInvestments'
-                )}
+                selectedLabel={t('form.selectedInvestments')}
                 options={intakeFundingSources.map(option => ({
                   value: option,
                   label: t(option)
@@ -159,7 +157,7 @@ const FundingSourcesModal = ({
               className="margin-right-2"
               disabled={disableSubmit}
             >
-              {t('contractDetails.fundingSources.modalSubmit')}
+              {t('form.addFundingSource')}
             </Button>
             <Button
               type="button"
