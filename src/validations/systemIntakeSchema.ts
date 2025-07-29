@@ -6,8 +6,8 @@ import i18next from 'i18next';
 import { DateTime } from 'luxon';
 import * as Yup from 'yup';
 
-import { FormattedFundingSource } from 'components/FundingSources';
 import { ITGovernanceViewType } from 'types/itGov';
+import { FormattedFundingSource } from 'types/systemIntake';
 
 const govTeam = (name: string) =>
   Yup.object().shape({
@@ -40,6 +40,33 @@ const governanceTeams = Yup.object().shape({
           : true;
       }
     )
+});
+
+export const FundingSourcesValidationSchema = Yup.object().shape({
+  fundingSources: Yup.array().of(
+    Yup.object({
+      projectNumber: Yup.string()
+        .trim()
+        .required('Project number is required')
+        .length(6, 'Project number must be exactly 6 digits')
+        .matches(/^\d+$/, 'Project number can only contain digits'),
+      investments: Yup.array().of(Yup.string()).min(1, 'Select an investment')
+    }).test('is-unique', 'Must be unique', (value, context) => {
+      const projectNumbers: string[] = context.parent.map(
+        (source: FormattedFundingSource) => source.projectNumber
+      );
+
+      const isUnique = !projectNumbers.includes(value?.projectNumber!);
+
+      return (
+        isUnique ||
+        context.createError({
+          path: `${context.path}.projectNumber`,
+          message: 'Project number must be unique'
+        })
+      );
+    })
+  )
 });
 
 const SystemIntakeValidationSchema = {
@@ -208,34 +235,6 @@ const SystemIntakeValidationSchema = {
 };
 
 export default SystemIntakeValidationSchema;
-
-export const FundingSourcesValidationSchema = Yup.object().shape({
-  fundingSources: Yup.array().of(
-    Yup.object({
-      id: Yup.string(),
-      projectNumber: Yup.string()
-        .trim()
-        .required('Project number is required')
-        .length(6, 'Project number must be exactly 6 digits')
-        .matches(/^\d+$/, 'Project number can only contain digits'),
-      investments: Yup.array().of(Yup.string()).min(1, 'Select an investment')
-    }).test('is-unique', 'Must be unique', (value, context) => {
-      const projectNumbers: string[] = context.parent
-        .filter((source: FormattedFundingSource) => source.id !== value.id)
-        .map((source: FormattedFundingSource) => source.projectNumber);
-
-      const isUnique = !projectNumbers.includes(value?.projectNumber!);
-
-      return (
-        isUnique ||
-        context.createError({
-          path: `${context.path}.projectNumber`,
-          message: 'Project number must be unique'
-        })
-      );
-    })
-  )
-});
 
 export const DateValidationSchema: any = Yup.object().shape(
   {

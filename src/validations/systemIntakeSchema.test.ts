@@ -1,4 +1,4 @@
-import { FormattedFundingSource } from 'components/FundingSources';
+import { FormattedFundingSource } from 'types/systemIntake';
 
 import SystemIntakeValidationSchema, {
   FundingSourcesValidationSchema
@@ -59,22 +59,16 @@ describe('System intake validation', () => {
 describe('Funding sources form validation', () => {
   const fundingSources: FormattedFundingSource[] = [
     {
-      __typename: 'SystemIntakeFundingSource',
-      id: '414c80dc-8f8a-4bed-9aa0-29342d860190',
       projectNumber: '111111',
       investments: ['Fed Admin', 'ACA 3021']
     },
     {
-      __typename: 'SystemIntakeFundingSource',
-      id: '00a5db89-d05b-49e1-b6ac-f6f21c5d0992',
       projectNumber: '222222',
       investments: ['HITECH Medicaid']
     }
   ];
 
   const newFundingSource: FormattedFundingSource = {
-    __typename: 'SystemIntakeFundingSource',
-    id: '75e52b6f-f120-48b2-b87d-137cfc0388b9',
     projectNumber: '333333',
     investments: ['HITECH Medicare', 'Fed Admin', 'ACA 3021']
   };

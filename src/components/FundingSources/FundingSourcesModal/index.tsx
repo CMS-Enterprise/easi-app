@@ -1,40 +1,145 @@
 import React from 'react';
+import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { ErrorMessage } from '@hookform/error-message';
 import {
   Button,
   ButtonGroup,
+  Fieldset,
+  Label,
+  Link,
   ModalFooter,
-  ModalHeading
+  ModalHeading,
+  TextInput
 } from '@trussworks/react-uswds';
 
+import { useEasiForm } from 'components/EasiForm';
+import FieldErrorMsg from 'components/FieldErrorMsg';
+import FieldGroup from 'components/FieldGroup';
+import HelpText from 'components/HelpText';
 import Modal from 'components/Modal';
+import MultiSelect from 'components/MultiSelect';
 import RequiredFieldsText from 'components/RequiredFieldsText';
+import intakeFundingSources from 'constants/enums/intakeFundingSources';
+import { FormattedFundingSource } from 'types/systemIntake';
 
-const FundingSourcesModal = () => {
+type FundingSourcesModalProps = {
+  isOpen: boolean;
+  closeModal: () => void;
+  addFundingSource: (data: FormattedFundingSource) => void;
+};
+
+const FundingSourcesModal = ({
+  isOpen,
+  closeModal,
+  addFundingSource
+}: FundingSourcesModalProps) => {
   const { t } = useTranslation('intake');
+
+  const {
+    control,
+    handleSubmit,
+    register,
+    formState: { errors }
+  } = useEasiForm<FormattedFundingSource>({
+    defaultValues: {
+      projectNumber: '',
+      investments: []
+    }
+  });
+
+  const submitForm = handleSubmit(data => {
+    addFundingSource(data);
+    closeModal();
+  });
+
   return (
-    <Modal isOpen closeModal={() => {}} className="font-body-md">
-      <ModalHeading className="margin-bottom-0">
-        {t('contractDetails.fundingSources.addFundingSource')}
-      </ModalHeading>
+    <Modal isOpen={isOpen} closeModal={closeModal} className="font-body-md">
+      <Fieldset>
+        <legend>
+          <ModalHeading className="margin-bottom-0">
+            {t('contractDetails.fundingSources.addFundingSource')}
+          </ModalHeading>
+        </legend>
 
-      <RequiredFieldsText className="margin-y-0" />
+        <RequiredFieldsText className="margin-y-0" />
 
-      <ModalFooter>
-        <ButtonGroup>
-          <Button type="button" onClick={() => {}} className="margin-right-2">
-            {t('contractDetails.fundingSources.modalSubmit')}
-          </Button>
-          <Button
-            type="button"
-            onClick={() => {}}
-            unstyled
-            className="text-error"
-          >
-            {t('Cancel')}
-          </Button>
-        </ButtonGroup>
-      </ModalFooter>
+        <FieldGroup className="margin-top-2" error={!!errors?.projectNumber}>
+          <Label htmlFor="projectNumber" className="text-normal" requiredMarker>
+            {t('contractDetails.fundingSources.projectNumber')}
+          </Label>
+          <HelpText id="projectNumberHelpText">
+            {t('contractDetails.fundingSources.projectNumberHelpText')}
+          </HelpText>
+          <ErrorMessage
+            errors={errors}
+            name="projectNumber"
+            as={FieldErrorMsg}
+          />
+          <TextInput
+            {...register(`projectNumber`)}
+            type="text"
+            id="projectNumber"
+            className="maxw-none"
+            aria-describedby="projectNumberHelptext projectNumberHelpLink"
+          />
+
+          <HelpText id="projectNumberHelpLink" className="margin-top-1">
+            <Link
+              href="https://cmsintranet.share.cms.gov/JT/Pages/Budget.aspx"
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="external"
+            >
+              {t('contractDetails.fundingSources.projectNumberLink')}
+            </Link>
+          </HelpText>
+        </FieldGroup>
+
+        <FieldGroup error={!!errors?.investments}>
+          <Label htmlFor="investments" className="text-normal">
+            {t('contractDetails.fundingSources.investment')}
+          </Label>
+          <ErrorMessage errors={errors} name="investments" as={FieldErrorMsg} />
+          <Controller
+            name="investments"
+            control={control}
+            render={({ field: { ref, ...field } }) => (
+              <MultiSelect
+                {...field}
+                id="investments"
+                selectedLabel={t(
+                  'contractDetails.fundingSources.selectedInvestments'
+                )}
+                options={intakeFundingSources.map(option => ({
+                  value: option,
+                  label: t(option)
+                }))}
+              />
+            )}
+          />
+        </FieldGroup>
+
+        <ModalFooter>
+          <ButtonGroup>
+            <Button
+              type="button"
+              onClick={submitForm}
+              className="margin-right-2"
+            >
+              {t('contractDetails.fundingSources.modalSubmit')}
+            </Button>
+            <Button
+              type="button"
+              onClick={closeModal}
+              unstyled
+              className="text-error"
+            >
+              {t('Cancel')}
+            </Button>
+          </ButtonGroup>
+        </ModalFooter>
+      </Fieldset>
     </Modal>
   );
 };

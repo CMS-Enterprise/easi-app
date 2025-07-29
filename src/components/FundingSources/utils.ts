@@ -1,16 +1,14 @@
-import { FundingSource } from 'types/systemIntake';
+import { SystemIntakeFundingSourceInput } from 'gql/generated/graphql';
 
-import { FormattedFundingSource } from '.';
+import { FormattedFundingSource, FundingSource } from 'types/systemIntake';
 
 /** Formats funding sources for API */
 export const formatFundingSourcesForApi = (
   fundingSources: FormattedFundingSource[]
-): FundingSource[] => {
+): Array<SystemIntakeFundingSourceInput> => {
   return fundingSources
-    .map(({ id, projectNumber, investments }) => {
+    .map(({ projectNumber, investments }) => {
       return investments.map(investment => ({
-        __typename: 'SystemIntakeFundingSource' as const,
-        id,
         projectNumber,
         investment
       }));
@@ -23,7 +21,7 @@ export const formatFundingSourcesForApp = (
   fundingSources: FundingSource[]
 ): FormattedFundingSource[] => {
   return fundingSources.reduce<FormattedFundingSource[]>(
-    (acc, { id, projectNumber, investment }) => {
+    (acc, { projectNumber, investment }) => {
       const existingSource = acc.find(s => s.projectNumber === projectNumber);
 
       if (investment && existingSource) {
@@ -34,8 +32,6 @@ export const formatFundingSourcesForApp = (
       return [
         ...acc,
         {
-          __typename: 'SystemIntakeFundingSource',
-          id,
           projectNumber: projectNumber ?? null,
           investments: investment ? [investment] : []
         }

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { FieldErrors, FieldPath } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -28,6 +28,10 @@ import FeedbackBanner from 'components/FeedbackBanner';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
 import FundingSources from 'components/FundingSources';
+import {
+  formatFundingSourcesForApi,
+  formatFundingSourcesForApp
+} from 'components/FundingSources/utils';
 import HelpText from 'components/HelpText';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
@@ -65,8 +69,6 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
   const history = useHistory();
   const { t } = useTranslation('intake');
 
-  const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
-
   const {
     id,
     fundingSources,
@@ -91,7 +93,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
     resolver: yupResolver(SystemIntakeValidationSchema.contractDetails),
     defaultValues: {
       existingFunding,
-      fundingSources,
+      fundingSources: formatFundingSourcesForApp(fundingSources),
       annualSpending: {
         currentAnnualSpending: annualSpending?.currentAnnualSpending || '',
         currentAnnualSpendingITPortion:
@@ -170,9 +172,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
           id,
           fundingSources: {
             existingFunding: payload.fundingSources.length > 0,
-            fundingSources: payload.fundingSources.map(
-              ({ id: sourceId, ...source }) => source
-            )
+            fundingSources: formatFundingSourcesForApi(payload.fundingSources)
           },
           annualSpending: payload.annualSpending,
           contract: {
@@ -300,7 +300,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                 />
               </HelpText>
 
-              <FundingSources disableParentForm={setDisableSubmit} />
+              <FundingSources />
             </Fieldset>
           </FieldGroup>
 
@@ -479,8 +479,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
 
           <Pager
             next={{
-              type: 'submit',
-              disabled: disableSubmit
+              type: 'submit'
             }}
             back={{
               type: 'button',
