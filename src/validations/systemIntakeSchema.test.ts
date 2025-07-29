@@ -1,10 +1,6 @@
-import { FormattedFundingSource } from 'types/systemIntake';
+import SystemIntakeValidationSchema from './systemIntakeSchema';
 
-import SystemIntakeValidationSchema, {
-  FundingSourceValidationSchema
-} from './systemIntakeSchema';
-
-describe('System intake validation', () => {
+describe('System intake contract dates', () => {
   it.each([
     { month: '01', day: '20', year: '1999' },
     { month: '12', day: '9', year: '2000' }
@@ -53,67 +49,5 @@ describe('System intake validation', () => {
         ).rejects.toThrow();
       })
     );
-  });
-});
-
-describe('Funding source form validation', () => {
-  const fundingSource: FormattedFundingSource = {
-    projectNumber: '333333',
-    investments: ['HITECH Medicare', 'Fed Admin', 'ACA 3021']
-  };
-
-  it('passes basic validation', async () => {
-    await expect(
-      FundingSourceValidationSchema.isValid(fundingSource)
-    ).resolves.toBeTruthy();
-  });
-
-  it('validates funding number', async () => {
-    // Empty funding number
-    await expect(
-      FundingSourceValidationSchema.validate({
-        ...fundingSource,
-        projectNumber: ''
-      })
-    ).rejects.toThrow('Project number is required');
-
-    // Must be exactly 6 digits
-    await expect(
-      FundingSourceValidationSchema.validate({
-        ...fundingSource,
-        projectNumber: '1'
-      })
-    ).rejects.toThrow('Project number must be exactly 6 digits');
-
-    await expect(
-      FundingSourceValidationSchema.validate({
-        ...fundingSource,
-        projectNumber: '1234567'
-      })
-    ).rejects.toThrow('Project number must be exactly 6 digits');
-
-    // Only accepts numbers
-    await expect(
-      FundingSourceValidationSchema.validate({
-        ...fundingSource,
-        projectNumber: 'abcdef'
-      })
-    ).rejects.toThrow('Project number can only contain digits');
-
-    // Must be unique
-    await expect(
-      FundingSourceValidationSchema.validate(fundingSource, {
-        context: { initialProjectNumbers: [fundingSource.projectNumber] }
-      })
-    ).rejects.toThrow('Project number has already been added to this request');
-  });
-
-  it('validates investments', async () => {
-    await expect(
-      FundingSourceValidationSchema.validate({
-        ...fundingSource,
-        investments: []
-      })
-    ).rejects.toThrow('Select an investment');
   });
 });

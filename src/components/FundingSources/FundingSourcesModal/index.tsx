@@ -23,7 +23,7 @@ import MultiSelect from 'components/MultiSelect';
 import RequiredFieldsText from 'components/RequiredFieldsText';
 import intakeFundingSources from 'constants/enums/intakeFundingSources';
 import { FormattedFundingSource } from 'types/systemIntake';
-import { FundingSourceValidationSchema } from 'validations/systemIntakeSchema';
+import FundingSourceValidationSchema from 'validations/fundingSources';
 
 type FundingSourcesModalProps = {
   isOpen: boolean;

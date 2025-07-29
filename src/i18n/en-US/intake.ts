@@ -378,13 +378,7 @@ const intake = {
       investmentsLabel: 'Investments: {{investments}}',
       formLegend: '{{action}} a funding source',
       skipFundingSourcesLabel:
-        'or, check this box if a new investment and/or project number is still being set up for this project',
-      errors: {
-        projectNumberMinDigits: 'Project number must be exactly 6 digits',
-        projectNumberDigits: 'Project number can only contain digits',
-        projectNumberUnique: 'Project number must be unique',
-        investment: 'Select an investment'
-      }
+        'or, check this box if a new investment and/or project number is still being set up for this project'
     },
     currentAnnualSpending: 'What is the current annual spending?',
     currentAnnualSpendingITPortion:

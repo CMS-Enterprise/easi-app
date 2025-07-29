@@ -7,7 +7,6 @@ import { DateTime } from 'luxon';
 import * as Yup from 'yup';
 
 import { ITGovernanceViewType } from 'types/itGov';
-import { FormattedFundingSource } from 'types/systemIntake';
 
 const govTeam = (name: string) =>
   Yup.object().shape({
@@ -40,46 +39,6 @@ const governanceTeams = Yup.object().shape({
           : true;
       }
     )
-});
-
-export const FundingSourceValidationSchema = Yup.object({
-  projectNumber: Yup.string()
-    .trim()
-    .required('Project number is required')
-    .length(6, 'Project number must be exactly 6 digits')
-    .matches(/^\d+$/, 'Project number can only contain digits')
-    .when('$initialProjectNumbers', (initialProjectNumbers: string[], schema) =>
-      schema.test(
-        'is-unique',
-        'Project number has already been added to this request',
-        (value: string) => !(initialProjectNumbers || []).includes(value)
-      )
-    ),
-  investments: Yup.array().of(Yup.string()).min(1, 'Select an investment')
-});
-
-export const FundingSourcesValidationSchema = Yup.object().shape({
-  fundingSources: Yup.array().of(
-    FundingSourceValidationSchema.test(
-      'is-unique',
-      'Must be unique',
-      (value, context) => {
-        const projectNumbers: string[] = context.parent.map(
-          (source: FormattedFundingSource) => source.projectNumber
-        );
-
-        const isUnique = !projectNumbers.includes(value?.projectNumber!);
-
-        return (
-          isUnique ||
-          context.createError({
-            path: `${context.path}.projectNumber`,
-            message: 'Project number must be unique'
-          })
-        );
-      }
-    )
-  )
 });
 
 const SystemIntakeValidationSchema = {
