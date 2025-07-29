@@ -94,7 +94,6 @@ export type FormattedFundingSource = {
 export type ContractDetailsForm = {
   existingFunding: boolean | null;
   fundingSources: FormattedFundingSource[];
-  skipFundingSources: boolean;
   annualSpending: {
     currentAnnualSpending: string;
     currentAnnualSpendingITPortion: string;

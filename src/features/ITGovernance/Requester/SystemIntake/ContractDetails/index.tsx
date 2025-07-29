@@ -94,7 +94,6 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
     defaultValues: {
       existingFunding,
       fundingSources: formatFundingSourcesForApp(fundingSources),
-      skipFundingSources: false,
       annualSpending: {
         currentAnnualSpending: annualSpending?.currentAnnualSpending || '',
         currentAnnualSpendingITPortion:
@@ -172,7 +171,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
         input: {
           id,
           fundingSources: {
-            existingFunding: payload.fundingSources.length > 0,
+            existingFunding: payload.existingFunding,
             fundingSources: formatFundingSourcesForApi(payload.fundingSources)
           },
           annualSpending: payload.annualSpending,
