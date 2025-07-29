@@ -313,7 +313,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
               <dt
                 class="text-bold margin-bottom-05"
               >
-                Which existing funding sources will fund this project?
+                Which funding sources will fund this project?
               </dt>
               <dd
                 class="description-definition margin-0"

@@ -3,20 +3,19 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
-import { FundingSource } from 'types/systemIntake';
+import { FormattedFundingSource } from 'types/systemIntake';
 
 import FundingSources from '.';
 
-type FormType = { fundingSources: FundingSource[] };
+type FormType = { fundingSources: FormattedFundingSource[] };
 
 describe('Funding sources', () => {
   /** Returns form provider for unit tests */
   const Wrapper = ({
     children,
     fundingSources = []
-  }: {
+  }: FormType & {
     children: React.ReactNode;
-    fundingSources?: FundingSource[];
   }) => {
     const form = useEasiForm<FormType>({
       defaultValues: {
@@ -29,7 +28,7 @@ describe('Funding sources', () => {
 
   it('renders with no funding sources', () => {
     render(
-      <Wrapper>
+      <Wrapper fundingSources={[]}>
         <FundingSources />
       </Wrapper>
     );
@@ -44,10 +43,8 @@ describe('Funding sources', () => {
       <Wrapper
         fundingSources={[
           {
-            __typename: 'SystemIntakeFundingSource',
-            id: 'a07b4819-ae01-4995-8aaa-a342a7c20e96',
             projectNumber: '123456',
-            investment: 'Fed Admin'
+            investments: ['Fed Admin']
           }
         ]}
       >
@@ -59,44 +56,50 @@ describe('Funding sources', () => {
       screen.getByRole('button', { name: 'Add another funding source' })
     );
 
-    // Renders error messages for empty fields
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
 
-    const saveButton = await screen.findByRole('button', { name: 'Save' });
-    userEvent.click(saveButton);
+    userEvent.click(
+      screen.getByRole('button', {
+        name: 'Add funding source'
+      })
+    );
 
+    // Button is disabled with empty fields
     expect(
-      await screen.findByText('Funding number must be exactly 6 digits')
-    ).toBeInTheDocument();
+      screen.getByRole('button', { name: 'Add funding source' })
+    ).toBeDisabled();
 
-    expect(
-      await screen.findByText('Select a funding source')
-    ).toBeInTheDocument();
-
-    const fundingNumberField = screen.getByRole('textbox', {
-      name: 'Funding number'
-    });
+    // Add investment
+    userEvent.type(screen.getByRole('combobox'), 'Fed Admin {enter}');
+    expect(await screen.findByText('1 selected')).toBeInTheDocument();
 
     // Check funding number is numeric
 
-    userEvent.type(fundingNumberField, 'aaaaaa');
-    expect(fundingNumberField).toHaveValue('aaaaaa');
+    const projectNumberField = screen.getByRole('textbox', {
+      name: 'Project number *'
+    });
 
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    userEvent.type(projectNumberField, 'aaaaaa');
+    expect(projectNumberField).toHaveValue('aaaaaa');
+
+    userEvent.click(screen.getByRole('button', { name: 'Add funding source' }));
 
     expect(
-      await screen.findByText('Funding number can only contain digits')
+      await screen.findByText('Project number can only contain digits')
     ).toBeInTheDocument();
 
     // Check unique funding number
 
-    userEvent.clear(fundingNumberField);
-    userEvent.type(fundingNumberField, '123456');
-    expect(fundingNumberField).toHaveValue('123456');
+    userEvent.clear(projectNumberField);
+    userEvent.type(projectNumberField, '123456');
+    expect(projectNumberField).toHaveValue('123456');
 
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    userEvent.click(screen.getByRole('button', { name: 'Add funding source' }));
 
     expect(
-      await screen.findByText('Funding number must be unique')
+      await screen.findByText(
+        'Project number has already been added to this request'
+      )
     ).toBeInTheDocument();
   });
 });

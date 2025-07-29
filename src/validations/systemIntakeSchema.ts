@@ -52,7 +52,7 @@ export const FundingSourceValidationSchema = Yup.object({
       schema.test(
         'is-unique',
         'Project number has already been added to this request',
-        (value: string) => !initialProjectNumbers.includes(value)
+        (value: string) => !(initialProjectNumbers || []).includes(value)
       )
     ),
   investments: Yup.array().of(Yup.string()).min(1, 'Select an investment')

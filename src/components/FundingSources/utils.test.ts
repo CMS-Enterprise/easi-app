@@ -5,7 +5,7 @@ import {
   formatFundingSourcesForApp
 } from './utils';
 
-const fundingSourcesForApi: FundingSource[] = [
+const fundingSourcesFromApi: FundingSource[] = [
   {
     __typename: 'SystemIntakeFundingSource',
     id: 'eaf3b006-e9ab-45f6-959a-c24930ea8087',
@@ -62,11 +62,14 @@ const fundingSourcesForApp: FormattedFundingSource[] = [
 describe('Formats funding sources', () => {
   it('formats funding sources for API', () =>
     expect(formatFundingSourcesForApi(fundingSourcesForApp)).toEqual(
-      fundingSourcesForApi
+      fundingSourcesFromApi.map(source => ({
+        projectNumber: source.projectNumber,
+        investment: source.investment
+      }))
     ));
 
   it('formats funding sources for app', () =>
-    expect(formatFundingSourcesForApp(fundingSourcesForApi)).toEqual(
+    expect(formatFundingSourcesForApp(fundingSourcesFromApi)).toEqual(
       fundingSourcesForApp
     ));
 });

@@ -102,7 +102,7 @@ const FundingSources = () => {
             <CheckboxField
               {...field}
               id={field.name}
-              value={field.value.toString()}
+              value="true"
               onChange={e => field.onChange(e.target.checked)}
               label={t(
                 'contractDetails.fundingSources.skipFundingSourcesLabel'
