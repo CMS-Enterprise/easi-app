@@ -377,6 +377,8 @@ const intake = {
       projectNumberLabel: 'Project number: {{projectNumber}}',
       investmentsLabel: 'Investments: {{investments}}',
       formLegend: '{{action}} a funding source',
+      skipFundingSourcesLabel:
+        'or, check this box if a new investment and/or project number is still being set up for this project',
       errors: {
         projectNumberMinDigits: 'Project number must be exactly 6 digits',
         projectNumberDigits: 'Project number can only contain digits',

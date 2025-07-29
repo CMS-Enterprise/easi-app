@@ -6,6 +6,8 @@ import { FormattedFundingSource, FundingSource } from 'types/systemIntake';
 export const formatFundingSourcesForApi = (
   fundingSources: FormattedFundingSource[]
 ): Array<SystemIntakeFundingSourceInput> => {
+  if (fundingSources.length === 0) return [];
+
   return fundingSources
     .map(({ projectNumber, investments }) => {
       return investments.map(investment => ({

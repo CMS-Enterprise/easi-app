@@ -34,6 +34,7 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   },
   existingFunding: null,
   fundingSources: [],
+  skipFundingSources: false,
   annualSpending: {
     currentAnnualSpending: '',
     currentAnnualSpendingITPortion: '',

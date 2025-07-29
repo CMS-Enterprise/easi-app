@@ -94,6 +94,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
     defaultValues: {
       existingFunding,
       fundingSources: formatFundingSourcesForApp(fundingSources),
+      skipFundingSources: false,
       annualSpending: {
         currentAnnualSpending: annualSpending?.currentAnnualSpending || '',
         currentAnnualSpendingITPortion:
@@ -291,7 +292,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
               <legend className="usa-label">
                 {t('contractDetails.fundingSources.label')}
               </legend>
-              <HelpText className="margin-top-1" id="fundingSourcesHelpText">
+              <HelpText className="margin-top-05" id="fundingSourcesHelpText">
                 <Trans
                   i18nKey="intake:contractDetails.fundingSources.helpText"
                   components={{

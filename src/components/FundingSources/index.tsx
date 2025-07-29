@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { useFieldArray } from 'react-hook-form';
+import React, { useEffect, useState } from 'react';
+import { Controller, useFieldArray } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@trussworks/react-uswds';
 
+import CheckboxField from 'components/CheckboxField';
 import { useEasiFormContext } from 'components/EasiForm';
 import { ContractDetailsForm } from 'types/systemIntake';
 
@@ -14,7 +15,7 @@ const FundingSources = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { control } = useEasiFormContext<ContractDetailsForm>();
+  const { control, watch } = useEasiFormContext<ContractDetailsForm>();
 
   const arrayfield = useFieldArray({
     control,
@@ -22,6 +23,15 @@ const FundingSources = () => {
   });
 
   const { fields, append, remove } = arrayfield;
+
+  const skipFundingSources = watch('skipFundingSources');
+
+  /** Remove all funding sources if checkbox is checked */
+  useEffect(() => {
+    if (skipFundingSources) {
+      remove();
+    }
+  }, [skipFundingSources, remove]);
 
   return (
     <div id="intakeFundingSources">
@@ -70,9 +80,11 @@ const FundingSources = () => {
       })}
 
       <Button
-        data-testid="fundingSourcesAction-add"
         type="button"
         onClick={() => setIsModalOpen(true)}
+        disabled={skipFundingSources}
+        className="margin-top-2"
+        data-testid="fundingSourcesAction-add"
         outline
       >
         {t(
@@ -81,6 +93,24 @@ const FundingSources = () => {
           }`
         )}
       </Button>
+
+      <Controller
+        control={control}
+        name="skipFundingSources"
+        render={({ field: { ref, ...field } }) => {
+          return (
+            <CheckboxField
+              {...field}
+              id={field.name}
+              value={field.value.toString()}
+              onChange={e => field.onChange(e.target.checked)}
+              label={t(
+                'contractDetails.fundingSources.skipFundingSourcesLabel'
+              )}
+            />
+          );
+        }}
+      />
     </div>
   );
 };
