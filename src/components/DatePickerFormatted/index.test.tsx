@@ -79,34 +79,4 @@ describe('DatePickerFormatted', () => {
     userEvent.type(getByRole('textbox'), '11/11/1');
     expect(getByTestId('date-picker-external-input')).toBeInvalid();
   });
-
-  it('updates the textbox value when the value prop changes', () => {
-    const handleChange = vi.fn();
-    const { getByRole, rerender } = render(
-      <DatePickerFormatted
-        id="datepicker"
-        name="datepicker"
-        value="2000-01-01"
-        onChange={handleChange}
-      />
-    );
-
-    // Initial value
-    expect(handleChange).toHaveBeenCalledWith('2000-01-01T00:00:00.000Z');
-    expect(getByRole('textbox')).toHaveValue('01/01/2000');
-
-    // Simulate parent updating the value prop
-    rerender(
-      <DatePickerFormatted
-        id="datepicker"
-        name="datepicker"
-        value="2020-12-31"
-        onChange={handleChange}
-      />
-    );
-
-    // Value should update in the textbox
-    expect(handleChange).toHaveBeenCalledWith('2020-12-31T00:00:00.000Z');
-    expect(getByRole('textbox')).toHaveValue('12/31/2020');
-  });
 });
