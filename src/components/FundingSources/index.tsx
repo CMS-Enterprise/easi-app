@@ -21,7 +21,7 @@ const FundingSources = () => {
     name: 'fundingSources'
   });
 
-  const { fields, append } = arrayfield;
+  const { fields, append, remove } = arrayfield;
 
   return (
     <div id="intakeFundingSources">
@@ -31,7 +31,7 @@ const FundingSources = () => {
         addFundingSource={fundingSource => append(fundingSource)}
       />
 
-      {/* {fields.map((source, index) => {
+      {fields.map((source, index) => {
         const { projectNumber, investments, id } = source;
 
         // Display funding source
@@ -57,17 +57,7 @@ const FundingSources = () => {
 
             <Button
               unstyled
-              onClick={() => {
-                remove(index);
-
-                // Remove from parent form funding sources
-                intakeForm.setValue(
-                  'fundingSources',
-                  formatFundingSourcesForApi(fields).filter(
-                    value => value.id !== id
-                  )
-                );
-              }}
+              onClick={() => remove(index)}
               type="button"
               className="text-error margin-top-1"
             >
@@ -75,7 +65,7 @@ const FundingSources = () => {
             </Button>
           </div>
         );
-      })} */}
+      })}
 
       <Button
         data-testid="fundingSourcesAction-add"
