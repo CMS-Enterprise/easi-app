@@ -237,110 +237,21 @@ export const FundingSourcesValidationSchema = Yup.object().shape({
   )
 });
 
-export const DateValidationSchema: any = Yup.object().shape(
-  {
-    grtDateDay: Yup.string().when(['grtDateMonth', 'grtDateYear'], {
-      is: (grtDateMonth: string, grtDateYear: string) => {
-        return grtDateMonth || grtDateYear;
-      },
-      then: Yup.string().trim().required('The day is required')
+export const DateValidationSchema = Yup.object().shape({
+  grtDate: Yup.string()
+    .nullable()
+    .test('valid-grt-date', 'GRT Date: Please enter a valid date', value => {
+      if (!value) return true;
+      return DateTime.fromISO(value).isValid;
     }),
-    grtDateMonth: Yup.string().when(['grtDateDay', 'grtDateYear'], {
-      is: (grtDateDay: string, grtDateYear: string) => {
-        return grtDateDay || grtDateYear;
-      },
-      then: Yup.string().trim().required('The month is required')
-    }),
-    grtDateYear: Yup.string().when(['grtDateDay', 'grtDateMonth'], {
-      is: (grtDateDay: string, grtDateMonth: string) => {
-        return grtDateDay || grtDateMonth;
-      },
-      then: Yup.string().trim().required('The year is required')
-    }),
-    validGrtDate: Yup.string().when(
-      ['grtDateDay', 'grtDateMonth', 'grtDateYear'],
-      {
-        is: (grtDateDay: string, grtDateMonth: string, grtDateYear: string) => {
-          // Only check for a valid date if monday, date, and year a filled
-          if (grtDateDay && grtDateMonth && grtDateYear) {
-            // If the date is valid, it passes the validation
-            if (
-              DateTime.fromObject({
-                month: Number(grtDateMonth) || 0,
-                day: Number(grtDateDay) || 0,
-                year: Number(grtDateYear) || 0
-              }).isValid
-            ) {
-              return true;
-            }
-            return false;
-          }
-          // If month, day, and year aren't ALL filled, don't run the validation
-          return true;
-        },
-        otherwise: Yup.string().test(
-          'validateGrtDate',
-          'GRT Date: Please enter a valid date',
-          () => false
-        )
-      }
-    ),
-    grbDateDay: Yup.string().when(['grbDateMonth', 'grbDateYear'], {
-      is: (grbDateMonth: string, grbDateYear: string) => {
-        return grbDateMonth || grbDateYear;
-      },
-      then: Yup.string().trim().required('The day is required')
-    }),
-    grbDateMonth: Yup.string().when(['grbDateDay', 'grbDateYear'], {
-      is: (grbDateDay: string, grbDateYear: string) => {
-        return grbDateDay || grbDateYear;
-      },
-      then: Yup.string().trim().required('The month is required')
-    }),
-    grbDateYear: Yup.string().when(['grbDateDay', 'grbDateMonth'], {
-      is: (grbDateDay: string, grbDateMonth: string) => {
-        return grbDateDay || grbDateMonth;
-      },
-      then: Yup.string().trim().required('The year is required')
-    }),
-    validGrbDate: Yup.string().when(
-      ['grbDateDay', 'grbDateMonth', 'grbDateYear'],
-      {
-        is: (grbDateDay: string, grbDateMonth: string, grbDateYear: string) => {
-          // Only check for a valid date if monday, date, and year a filled
-          if (grbDateDay && grbDateMonth && grbDateYear) {
-            // If the date is valid, it passes the validation
-            if (
-              DateTime.fromObject({
-                month: Number(grbDateMonth) || 0,
-                day: Number(grbDateDay) || 0,
-                year: Number(grbDateYear) || 0
-              }).isValid
-            ) {
-              return true;
-            }
-            return false;
-          }
-          // If month, day, and year aren't ALL filled, don't run the validation
-          return true;
-        },
-        otherwise: Yup.string().test(
-          'validateGrbDate',
-          'GRB Date: Please enter a valid date',
-          () => false
-        )
-      }
-    )
-  },
-  [
-    ['grtDateDay', 'grtDateMonth'],
-    ['grtDateDay', 'grtDateYear'],
-    ['grtDateMonth', 'grtDateYear'],
-    ['grbDateDay', 'grbDateMonth'],
-    ['grbDateDay', 'grbDateYear'],
-    ['grbDateMonth', 'grbDateYear']
-  ]
-);
+
+  grbDate: Yup.string()
+    .nullable()
+    .test('valid-grb-date', 'GRB Date: Please enter a valid date', value => {
+      if (!value) return true;
+      return DateTime.fromISO(value).isValid;
+    })
+});
 
 export const documentSchema = Yup.object({
   fileData: Yup.mixed().required(),

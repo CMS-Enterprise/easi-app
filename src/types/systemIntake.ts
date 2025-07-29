@@ -141,12 +141,8 @@ export type SystemIntakesState = {
 
 // Form for reviewer to add dates
 export type SubmitDatesForm = {
-  grtDateDay: string;
-  grtDateMonth: string;
-  grtDateYear: string;
-  grbDateDay: string;
-  grbDateMonth: string;
-  grbDateYear: string;
+  grtDate: string;
+  grbDate: string;
   grbReviewType: SystemIntakeGRBReviewType;
 };
 

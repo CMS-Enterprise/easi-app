@@ -85,7 +85,7 @@ const DatePickerFormatted = ({
         onChange={handleChange}
         // Set `defaultValue` and `key` props to the value in state
         defaultValue={value}
-        key={value}
+        // key={value}
       />
       {
         // If past date is selected, show alert
