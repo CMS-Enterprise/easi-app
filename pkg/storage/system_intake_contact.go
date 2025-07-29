@@ -94,7 +94,7 @@ func (s *Store) FetchSystemIntakeContactsBySystemIntakeID(ctx context.Context, s
 			created_at,
 			updated_at
 		FROM system_intake_contacts
-		WHERE system_intake_id=$1
+		WHERE system_intake_id=$1 AND eua_user_id IS NOT NULL
 	`
 	err := s.db.Select(&results, selectSystemIntakeContactSQL, systemIntakeID)
 
