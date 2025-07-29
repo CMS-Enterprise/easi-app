@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { ErrorMessage } from '@hookform/error-message';
@@ -42,6 +42,7 @@ const FundingSourcesModal = ({
     control,
     handleSubmit,
     register,
+    reset,
     formState: { errors }
   } = useEasiForm<FormattedFundingSource>({
     resolver: yupResolver(FundingSourceValidationSchema),
@@ -55,6 +56,13 @@ const FundingSourcesModal = ({
     addFundingSource(data);
     closeModal();
   });
+
+  // Reset form on modal close
+  useEffect(() => {
+    if (!isOpen) {
+      reset();
+    }
+  }, [isOpen, reset]);
 
   return (
     <Modal isOpen={isOpen} closeModal={closeModal} className="font-body-md">
