@@ -85,11 +85,8 @@ const DatePickerFormatted = ({
     <>
       <DatePicker
         {...props}
-        // Pass the synced internal value as defaultValue (Trussworks workaround)
         defaultValue={internalValue}
         onChange={handleChange}
-        // Only force-remount when clearing
-        key={internalValue === '' ? 'empty' : `value-${internalValue}`}
       />
 
       {dateInPastWarning &&
