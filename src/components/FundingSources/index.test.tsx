@@ -26,6 +26,23 @@ describe('Funding sources', () => {
     return <EasiFormProvider<FormType> {...form}>{children}</EasiFormProvider>;
   };
 
+  it('matches the snapshot', () => {
+    const { asFragment } = render(
+      <Wrapper
+        fundingSources={[
+          { projectNumber: '123456', investments: ['Fed Admin'] },
+          { projectNumber: '789012', investments: ['HITECH Medicare'] }
+        ]}
+      >
+        <FundingSources />
+      </Wrapper>
+    );
+
+    expect(screen.getByRole('table')).toBeInTheDocument();
+
+    expect(asFragment()).toMatchSnapshot();
+  });
+
   it('renders with no funding sources', () => {
     render(
       <Wrapper fundingSources={[]}>
@@ -36,9 +53,12 @@ describe('Funding sources', () => {
     expect(
       screen.getByRole('button', { name: 'Add a funding source' })
     ).toBeInTheDocument();
+
+    // Table should not be rendered if there are no funding sources
+    expect(screen.queryByRole('table')).not.toBeInTheDocument();
   });
 
-  it('opens and closes the modal', async () => {
+  it('opens and closes the form modal', async () => {
     render(
       <Wrapper fundingSources={[]}>
         <FundingSources />
@@ -77,7 +97,7 @@ describe('Funding sources', () => {
     userEvent.click(screen.getByRole('button', { name: 'Add funding source' }));
 
     expect(
-      await screen.findByText('Project number: 123456')
+      await screen.findByRole('cell', { name: '123456' })
     ).toBeInTheDocument();
   });
 
@@ -96,7 +116,7 @@ describe('Funding sources', () => {
       'clearFundingSourcesCheckbox'
     );
 
-    expect(screen.getByText('Project number: 123456')).toBeInTheDocument();
+    expect(screen.getByRole('cell', { name: '123456' })).toBeInTheDocument();
     expect(clearFundingSourcesCheckbox).not.toBeChecked();
 
     // Open modal
@@ -107,7 +127,7 @@ describe('Funding sources', () => {
     userEvent.click(screen.getByRole('button', { name: "Don't remove" }));
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-    expect(screen.getByText('Project number: 123456')).toBeInTheDocument();
+    expect(screen.getByRole('cell', { name: '123456' })).toBeInTheDocument();
     expect(clearFundingSourcesCheckbox).not.toBeChecked();
 
     // Open modal
@@ -122,12 +142,38 @@ describe('Funding sources', () => {
 
     expect(clearFundingSourcesCheckbox).toBeChecked();
     expect(
-      screen.queryByText('Project number: 123456')
+      screen.queryByRole('cell', { name: '123456' })
     ).not.toBeInTheDocument();
 
     // Add funding sources button is disabled
     expect(
       screen.getByRole('button', { name: 'Add a funding source' })
     ).toBeDisabled();
+  });
+
+  it('removes a funding source', async () => {
+    render(
+      <Wrapper
+        fundingSources={[
+          { projectNumber: '123456', investments: ['Fed Admin'] }
+        ]}
+      >
+        <FundingSources />
+      </Wrapper>
+    );
+
+    expect(screen.getByRole('cell', { name: '123456' })).toBeInTheDocument();
+
+    userEvent.click(screen.getByRole('button', { name: 'Remove' }));
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
+
+    userEvent.click(
+      screen.getByRole('button', { name: 'Remove funding source' })
+    );
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+
+    expect(
+      screen.queryByRole('cell', { name: '123456' })
+    ).not.toBeInTheDocument();
   });
 });

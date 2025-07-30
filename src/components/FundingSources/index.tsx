@@ -14,6 +14,7 @@ import Modal from 'components/Modal';
 import { ContractDetailsForm } from 'types/systemIntake';
 
 import FundingSourceFormModal from './FundingSourceFormModal';
+import FundingSourcesTable from './FundingSourcesTable';
 
 /** Funding sources component for system intake form */
 const FundingSources = () => {
@@ -67,42 +68,6 @@ const FundingSources = () => {
       />
 
       <div id="intakeFundingSources">
-        {fields.map((source, index) => {
-          const { projectNumber, investments } = source;
-
-          // Display funding source
-          return (
-            <div
-              id={`fundingSource${projectNumber}`}
-              key={`fundingSource${projectNumber}`}
-              className="margin-top-205"
-            >
-              <p className="text-bold font-body-sm margin-bottom-0">
-                {t('investment')}
-              </p>
-              <p className="margin-y-05">
-                {t('projectNumberLabel', {
-                  projectNumber
-                })}
-              </p>
-              <p className="margin-y-05">
-                {t('investmentsLabel', {
-                  investments: investments.join(', ')
-                })}
-              </p>
-
-              <Button
-                unstyled
-                onClick={() => remove(index)}
-                type="button"
-                className="text-error margin-top-1"
-              >
-                {t('Delete')}
-              </Button>
-            </div>
-          );
-        })}
-
         <Button
           type="button"
           onClick={() => setIsFundingSourcesModalOpen(true)}
@@ -131,6 +96,13 @@ const FundingSources = () => {
             );
           }}
         />
+
+        {fields.length > 0 && (
+          <FundingSourcesTable
+            fundingSources={fields}
+            removeFundingSource={remove}
+          />
+        )}
       </div>
 
       {/* Clear funding sources modal */}
