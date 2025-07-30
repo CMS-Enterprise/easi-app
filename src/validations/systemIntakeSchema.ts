@@ -97,6 +97,11 @@ const SystemIntakeValidationSchema = {
       })
   }),
   contractDetails: Yup.object().shape({
+    existingFunding: Yup.boolean().nullable(),
+    fundingSources: Yup.array().when('existingFunding', {
+      is: true,
+      then: Yup.array().min(1, 'Add at least one funding source to the request')
+    }),
     annualSpending: Yup.object().shape({
       currentAnnualSpending: Yup.string().required(
         'Tell us what the current annual spending for the contract'

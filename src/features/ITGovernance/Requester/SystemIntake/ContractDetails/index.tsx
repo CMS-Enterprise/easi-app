@@ -92,7 +92,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
   const form = useEasiForm<ContractDetailsForm>({
     resolver: yupResolver(SystemIntakeValidationSchema.contractDetails),
     defaultValues: {
-      existingFunding,
+      existingFunding: existingFunding !== false,
       fundingSources: formatFundingSourcesForApp(fundingSources),
       annualSpending: {
         currentAnnualSpending: annualSpending?.currentAnnualSpending || '',
@@ -299,6 +299,12 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                   }}
                 />
               </HelpText>
+
+              <ErrorMessage
+                errors={errors}
+                name="fundingSources"
+                as={FieldErrorMsg}
+              />
 
               <FundingSources />
             </Fieldset>
