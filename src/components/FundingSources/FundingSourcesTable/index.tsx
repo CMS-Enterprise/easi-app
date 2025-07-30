@@ -1,8 +1,15 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Column, useSortBy, useTable } from 'react-table';
-import { Button, Table } from '@trussworks/react-uswds';
+import {
+  Button,
+  ButtonGroup,
+  ModalFooter,
+  ModalHeading,
+  Table
+} from '@trussworks/react-uswds';
 
+import Modal from 'components/Modal';
 import { FormattedFundingSource } from 'types/systemIntake';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 
@@ -16,6 +23,9 @@ const FundingSourcesTable = ({
   removeFundingSource
 }: FundingSourcesTableProps) => {
   const { t } = useTranslation('fundingSources');
+
+  const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
+  const [indexToRemove, setIndexToRemove] = useState<number | null>(null);
 
   const columns = useMemo<Column<FormattedFundingSource>[]>(() => {
     return [
@@ -39,7 +49,10 @@ const FundingSourcesTable = ({
               unstyled
               type="button"
               className="text-error margin-y-0"
-              onClick={() => removeFundingSource(index)}
+              onClick={() => {
+                setIndexToRemove(index);
+                setIsRemoveModalOpen(true);
+              }}
               data-testid={`removeFundingSource-${index}`}
             >
               {t('general:remove')}
@@ -48,7 +61,7 @@ const FundingSourcesTable = ({
         }
       }
     ];
-  }, [t, removeFundingSource]);
+  }, [t]);
 
   const table = useTable(
     {
@@ -64,7 +77,7 @@ const FundingSourcesTable = ({
     table;
 
   return (
-    <div>
+    <>
       <Table bordered={false} fullWidth scrollable {...getTableProps()}>
         <thead>
           {headerGroups.map(headerGroup => {
@@ -130,7 +143,42 @@ const FundingSourcesTable = ({
           })}
         </tbody>
       </Table>
-    </div>
+
+      {/* Remove funding source modal */}
+      <Modal
+        isOpen={isRemoveModalOpen}
+        closeModal={() => setIsRemoveModalOpen(false)}
+        className="font-body-md"
+      >
+        <ModalHeading>{t('removeFundingSourcesModal.heading')}</ModalHeading>
+        <p>{t('removeFundingSourcesModal.description')}</p>
+
+        <ModalFooter>
+          <ButtonGroup>
+            <Button
+              type="button"
+              className="margin-right-2 bg-error"
+              onClick={() => {
+                if (indexToRemove !== null) {
+                  removeFundingSource(indexToRemove);
+                }
+                setIsRemoveModalOpen(false);
+              }}
+            >
+              {t('removeFundingSourcesModal.removeFundingSource')}
+            </Button>
+
+            <Button
+              type="button"
+              onClick={() => setIsRemoveModalOpen(false)}
+              unstyled
+            >
+              {t('general:cancel')}
+            </Button>
+          </ButtonGroup>
+        </ModalFooter>
+      </Modal>
+    </>
   );
 };
 
