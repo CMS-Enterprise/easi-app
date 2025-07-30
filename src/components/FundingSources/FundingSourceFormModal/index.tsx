@@ -35,7 +35,7 @@ type FundingSourcesModalProps = {
 /**
  * Modal that contains the form for adding a funding source to a system intake
  */
-const FundingSourcesModal = ({
+const FundingSourceFormModal = ({
   isOpen,
   closeModal,
   addFundingSource,
@@ -177,4 +177,4 @@ const FundingSourcesModal = ({
   );
 };
 
-export default FundingSourcesModal;
+export default FundingSourceFormModal;

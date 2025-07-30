@@ -13,7 +13,7 @@ import { useEasiFormContext } from 'components/EasiForm';
 import Modal from 'components/Modal';
 import { ContractDetailsForm } from 'types/systemIntake';
 
-import FundingSourcesModal from './FundingSourcesModal';
+import FundingSourceFormModal from './FundingSourceFormModal';
 
 /** Funding sources component for system intake form */
 const FundingSources = () => {
@@ -59,7 +59,7 @@ const FundingSources = () => {
 
   return (
     <>
-      <FundingSourcesModal
+      <FundingSourceFormModal
         isOpen={isFundingSourcesModalOpen}
         closeModal={() => setIsFundingSourcesModalOpen(false)}
         addFundingSource={fundingSource => append(fundingSource)}

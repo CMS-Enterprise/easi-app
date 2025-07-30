@@ -2,12 +2,12 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import FundingSourcesModal from '.';
+import FundingSourceFormModal from '.';
 
-describe('FundingSourcesModal', () => {
+describe('FundingSourceFormModal', () => {
   it('renders error messages', async () => {
     render(
-      <FundingSourcesModal
+      <FundingSourceFormModal
         isOpen
         closeModal={() => {}}
         addFundingSource={() => {}}
