@@ -15,9 +15,13 @@ import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 
 type FundingSourcesTableProps = {
   fundingSources: FormattedFundingSource[];
-  removeFundingSource: (index: number) => void;
+  /** Actions column with remove button will be hidden if removeFundingSource is not provided */
+  removeFundingSource?: (index: number) => void;
 };
 
+/**
+ * Table component to display system intake funding sources
+ */
 const FundingSourcesTable = ({
   fundingSources,
   removeFundingSource
@@ -28,6 +32,27 @@ const FundingSourcesTable = ({
   const [indexToRemove, setIndexToRemove] = useState<number | null>(null);
 
   const columns = useMemo<Column<FormattedFundingSource>[]>(() => {
+    const actionsColumn: Column<FormattedFundingSource> = {
+      Header: t<string>('general:actions'),
+      id: 'actions',
+      accessor: (_, index) => {
+        return (
+          <Button
+            unstyled
+            type="button"
+            className="text-error margin-y-0"
+            onClick={() => {
+              setIndexToRemove(index);
+              setIsRemoveModalOpen(true);
+            }}
+            data-testid={`removeFundingSource-${index}`}
+          >
+            {t('general:remove')}
+          </Button>
+        );
+      }
+    };
+
     return [
       {
         Header: t<string>('projectNumber'),
@@ -40,28 +65,9 @@ const FundingSourcesTable = ({
         id: 'investments',
         Cell: ({ value }: { value: string[] }) => <>{value.join(', ')}</>
       },
-      {
-        Header: t<string>('general:actions'),
-        id: 'actions',
-        accessor: (_, index) => {
-          return (
-            <Button
-              unstyled
-              type="button"
-              className="text-error margin-y-0"
-              onClick={() => {
-                setIndexToRemove(index);
-                setIsRemoveModalOpen(true);
-              }}
-              data-testid={`removeFundingSource-${index}`}
-            >
-              {t('general:remove')}
-            </Button>
-          );
-        }
-      }
+      ...(removeFundingSource ? [actionsColumn] : [])
     ];
-  }, [t]);
+  }, [t, removeFundingSource]);
 
   const table = useTable(
     {
@@ -151,39 +157,41 @@ const FundingSourcesTable = ({
       </Table>
 
       {/* Remove funding source modal */}
-      <Modal
-        isOpen={isRemoveModalOpen}
-        closeModal={() => setIsRemoveModalOpen(false)}
-        className="font-body-md"
-      >
-        <ModalHeading>{t('removeFundingSourcesModal.heading')}</ModalHeading>
-        <p>{t('removeFundingSourcesModal.description')}</p>
+      {removeFundingSource && (
+        <Modal
+          isOpen={isRemoveModalOpen}
+          closeModal={() => setIsRemoveModalOpen(false)}
+          className="font-body-md"
+        >
+          <ModalHeading>{t('removeFundingSourcesModal.heading')}</ModalHeading>
+          <p>{t('removeFundingSourcesModal.description')}</p>
 
-        <ModalFooter>
-          <ButtonGroup>
-            <Button
-              type="button"
-              className="margin-right-2 bg-error"
-              onClick={() => {
-                if (indexToRemove !== null) {
-                  removeFundingSource(indexToRemove);
-                }
-                setIsRemoveModalOpen(false);
-              }}
-            >
-              {t('removeFundingSourcesModal.removeFundingSource')}
-            </Button>
+          <ModalFooter>
+            <ButtonGroup>
+              <Button
+                type="button"
+                className="margin-right-2 bg-error"
+                onClick={() => {
+                  if (indexToRemove !== null) {
+                    removeFundingSource(indexToRemove);
+                  }
+                  setIsRemoveModalOpen(false);
+                }}
+              >
+                {t('removeFundingSourcesModal.removeFundingSource')}
+              </Button>
 
-            <Button
-              type="button"
-              onClick={() => setIsRemoveModalOpen(false)}
-              unstyled
-            >
-              {t('general:cancel')}
-            </Button>
-          </ButtonGroup>
-        </ModalFooter>
-      </Modal>
+              <Button
+                type="button"
+                onClick={() => setIsRemoveModalOpen(false)}
+                unstyled
+              >
+                {t('general:cancel')}
+              </Button>
+            </ButtonGroup>
+          </ModalFooter>
+        </Modal>
+      )}
     </>
   );
 };
