@@ -8,6 +8,7 @@ const fundingSources = {
   projectNumber: 'Project number',
   projectNumberLabel: 'Project number: {{projectNumber}}',
   investment: 'Investment',
+  investments: 'Investment(s)',
   investmentsLabel: 'Investments: {{investments}}',
   clearFundingSourcesCheckbox:
     'or, check this box if a new investment and/or project number is still being set up for this project',
