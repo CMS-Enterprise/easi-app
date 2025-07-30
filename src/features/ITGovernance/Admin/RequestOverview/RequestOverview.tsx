@@ -146,6 +146,7 @@ const RequestOverview = () => {
               <PageLoading />
             </div>
           )}
+
           {!loading && !!systemIntake && (
             <section
               className={classnames({ 'desktop:grid-col-9': !fullPageLayout })}
@@ -195,7 +196,7 @@ const RequestOverview = () => {
 
                 <Route
                   exact
-                  path="/it-governance/:systemId/additional-information"
+                  path="/it-governance/:systemId/system-information"
                   render={() => (
                     <AdditionalInformation
                       request={systemIntake}

@@ -93,7 +93,7 @@ const RequestLinkForm = ({
     if (fromAdmin) {
       return requestType === 'trb'
         ? `/trb/${id}/additional-information`
-        : `/it-governance/${id}/additional-information`;
+        : `/it-governance/${id}/system-information`;
     }
     return requestType === 'trb'
       ? `/trb/task-list/${id}`
