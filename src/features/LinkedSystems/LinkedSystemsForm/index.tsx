@@ -16,7 +16,7 @@ import {
 import {
   RequestRelationType,
   SystemIntakeSystem,
-  useSystemIntakeQuery
+  useGetSystemIntakeSystemsQuery
 } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
@@ -30,14 +30,14 @@ import RequiredAsterisk from 'components/RequiredAsterisk';
 
 import LinkedSystemTable from '../LinkedSystemsTable';
 
-type EditLinkedSystemsFormType = {
+type LinkedSystemsFormType = {
   relationType: RequestRelationType | null;
   cedarSystemIDs: string[];
   contractNumbers: string;
   contractName: string;
 };
 
-const EditLinkedSystemsForm = ({ fromAdmin }: { fromAdmin?: boolean }) => {
+const LinkedSystemsForm = ({ fromAdmin }: { fromAdmin?: boolean }) => {
   // Id refers to trb request or system intake
   const { id } = useParams<{
     id: string;
@@ -81,18 +81,13 @@ const EditLinkedSystemsForm = ({ fromAdmin }: { fromAdmin?: boolean }) => {
 
   const {
     data,
-    // error: undefined,
-    loading: relationLoading
-  } = useSystemIntakeQuery({
-    variables: { id }
+    loading: relationLoading,
+    refetch: refetchSystemIntakes
+  } = useGetSystemIntakeSystemsQuery({
+    variables: { systemIntakeId: id }
   });
 
-  console.log(
-    'Cedar Relationships:',
-    data?.systemIntake?.cedarSystemRelationShips as SystemIntakeSystem[]
-  );
-
-  const { watch, handleSubmit } = useForm<EditLinkedSystemsFormType>({
+  const { watch, handleSubmit } = useForm<LinkedSystemsFormType>({
     defaultValues: {
       relationType: null,
       cedarSystemIDs: [],
@@ -378,4 +373,4 @@ const EditLinkedSystemsForm = ({ fromAdmin }: { fromAdmin?: boolean }) => {
   );
 };
 
-export default EditLinkedSystemsForm;
+export default LinkedSystemsForm;

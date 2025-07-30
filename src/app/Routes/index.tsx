@@ -9,7 +9,6 @@ import {
 } from 'react-router-dom';
 import { LoginCallback, SecureRoute } from '@okta/okta-react';
 import { GovBanner, GridContainer } from '@trussworks/react-uswds';
-import EditLinkedSystemsForm from 'features/EditLinkedSystems/EditLinkedSystemsForm';
 import Help from 'features/Help';
 import Home from 'features/Home';
 import MyRequests from 'features/Home/MyRequests';
@@ -25,6 +24,7 @@ import GovernanceFeedback from 'features/ITGovernance/Requester/TaskList/Feedbac
 import LcidInfo from 'features/ITGovernance/Requester/TaskList/LcidInfo';
 import PresentationDeckUpload from 'features/ITGovernance/Requester/TaskList/PresentationDeckUpload';
 import RequestDecision from 'features/ITGovernance/Requester/TaskList/RequestDecision';
+import LinkedSystemsForm from 'features/LinkedSystems/LinkedSystemsForm';
 import Login from 'features/Login';
 import AccessibilityStatement from 'features/Miscellaneous/AccessibilityStatement';
 import Cookies from 'features/Miscellaneous/Cookies';
@@ -97,7 +97,7 @@ const AppRoutes = () => {
         <RequestLinkForm requestType="itgov" />
       </SecureRoute>
       <SecureRoute exact path="/edit-linked-systems/:id?">
-        <EditLinkedSystemsForm />
+        <LinkedSystemsForm />
       </SecureRoute>
 
       <SecureRoute
