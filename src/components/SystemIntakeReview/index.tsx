@@ -78,16 +78,16 @@ export const SystemIntakeReview = ({
                 id={`fundingSource${fundingNumber}`}
               >
                 <p className="text-bold font-body-sm margin-bottom-0">
-                  {t('contractDetails.fundingSources.fundingSource')}
+                  {t('fundingSources:fundingSource')}
                 </p>
                 <p className="margin-y-05">
-                  {t('contractDetails.fundingSources.fundingNumberLabel', {
-                    fundingNumber
+                  {t('fundingSources:projectNumberLabel', {
+                    projectNumber: fundingNumber
                   })}
                 </p>
                 <p className="margin-y-05">
-                  {t('contractDetails.fundingSources.fundingSourcesLabel', {
-                    sources: sources.join(', ')
+                  {t('fundingSources:investmentsLabel', {
+                    investments: sources.join(', ')
                   })}
                 </p>
               </li>
@@ -380,7 +380,7 @@ export const SystemIntakeReview = ({
       <DescriptionList title={t('review.contractDetails')}>
         <ReviewRow>
           <div>
-            <DescriptionTerm term={t('contractDetails.fundingSources.label')} />
+            <DescriptionTerm term={t('fundingSources:whichFundingSources')} />
             <DescriptionDefinition definition={fundingDefinition()} />
           </div>
         </ReviewRow>

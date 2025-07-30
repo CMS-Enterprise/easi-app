@@ -3,20 +3,19 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
-import { FundingSource } from 'types/systemIntake';
+import { FormattedFundingSource } from 'types/systemIntake';
 
 import FundingSources from '.';
 
-type FormType = { fundingSources: FundingSource[] };
+type FormType = { fundingSources: FormattedFundingSource[] };
 
 describe('Funding sources', () => {
   /** Returns form provider for unit tests */
   const Wrapper = ({
     children,
     fundingSources = []
-  }: {
+  }: FormType & {
     children: React.ReactNode;
-    fundingSources?: FundingSource[];
   }) => {
     const form = useEasiForm<FormType>({
       defaultValues: {
@@ -29,7 +28,7 @@ describe('Funding sources', () => {
 
   it('renders with no funding sources', () => {
     render(
-      <Wrapper>
+      <Wrapper fundingSources={[]}>
         <FundingSources />
       </Wrapper>
     );
@@ -39,64 +38,96 @@ describe('Funding sources', () => {
     ).toBeInTheDocument();
   });
 
-  it('renders error messages', async () => {
+  it('opens and closes the modal', async () => {
+    render(
+      <Wrapper fundingSources={[]}>
+        <FundingSources />
+      </Wrapper>
+    );
+
+    userEvent.click(
+      screen.getByRole('button', { name: 'Add a funding source' })
+    );
+
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
+
+    userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('adds a funding source', async () => {
+    render(
+      <Wrapper fundingSources={[]}>
+        <FundingSources />
+      </Wrapper>
+    );
+
+    userEvent.click(
+      screen.getByRole('button', { name: 'Add a funding source' })
+    );
+
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
+
+    userEvent.type(
+      screen.getByRole('textbox', { name: 'Project number *' }),
+      '123456'
+    );
+    userEvent.type(screen.getByRole('combobox'), 'Fed Admin {enter}');
+    userEvent.click(screen.getByRole('button', { name: 'Add funding source' }));
+
+    expect(
+      await screen.findByText('Project number: 123456')
+    ).toBeInTheDocument();
+  });
+
+  it('clears funding sources with checkbox', async () => {
     render(
       <Wrapper
         fundingSources={[
-          {
-            __typename: 'SystemIntakeFundingSource',
-            id: 'a07b4819-ae01-4995-8aaa-a342a7c20e96',
-            projectNumber: '123456',
-            investment: 'Fed Admin'
-          }
+          { projectNumber: '123456', investments: ['Fed Admin'] }
         ]}
       >
         <FundingSources />
       </Wrapper>
     );
 
-    userEvent.click(
-      screen.getByRole('button', { name: 'Add another funding source' })
+    const clearFundingSourcesCheckbox = screen.getByTestId(
+      'clearFundingSourcesCheckbox'
     );
 
-    // Renders error messages for empty fields
+    expect(screen.getByText('Project number: 123456')).toBeInTheDocument();
+    expect(clearFundingSourcesCheckbox).not.toBeChecked();
 
-    const saveButton = await screen.findByRole('button', { name: 'Save' });
-    userEvent.click(saveButton);
+    // Open modal
+    userEvent.click(clearFundingSourcesCheckbox);
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
 
+    // Close modal without removing funding sources
+    userEvent.click(screen.getByRole('button', { name: "Don't remove" }));
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(screen.getByText('Project number: 123456')).toBeInTheDocument();
+    expect(clearFundingSourcesCheckbox).not.toBeChecked();
+
+    // Open modal
+    userEvent.click(clearFundingSourcesCheckbox);
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
+
+    // Remove funding sources
+    userEvent.click(
+      screen.getByRole('button', { name: 'Remove funding sources' })
+    );
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+
+    expect(clearFundingSourcesCheckbox).toBeChecked();
     expect(
-      await screen.findByText('Funding number must be exactly 6 digits')
-    ).toBeInTheDocument();
+      screen.queryByText('Project number: 123456')
+    ).not.toBeInTheDocument();
 
+    // Add funding sources button is disabled
     expect(
-      await screen.findByText('Select a funding source')
-    ).toBeInTheDocument();
-
-    const fundingNumberField = screen.getByRole('textbox', {
-      name: 'Funding number'
-    });
-
-    // Check funding number is numeric
-
-    userEvent.type(fundingNumberField, 'aaaaaa');
-    expect(fundingNumberField).toHaveValue('aaaaaa');
-
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
-
-    expect(
-      await screen.findByText('Funding number can only contain digits')
-    ).toBeInTheDocument();
-
-    // Check unique funding number
-
-    userEvent.clear(fundingNumberField);
-    userEvent.type(fundingNumberField, '123456');
-    expect(fundingNumberField).toHaveValue('123456');
-
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
-
-    expect(
-      await screen.findByText('Funding number must be unique')
-    ).toBeInTheDocument();
+      screen.getByRole('button', { name: 'Add a funding source' })
+    ).toBeDisabled();
   });
 });
