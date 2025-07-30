@@ -136,16 +136,16 @@ const FundingSourcesTable = ({
             const { projectNumber } = row.original;
 
             return (
-              <tr {...rowProps} key={rowKey}>
+              <tr
+                {...rowProps}
+                key={rowKey}
+                data-testid={`fundingSource${projectNumber}`}
+              >
                 {row.cells.map(cell => {
                   const { key: cellKey, ...cellProps } = cell.getCellProps();
 
                   return (
-                    <td
-                      {...cellProps}
-                      key={cellKey}
-                      data-testid={`fundingSource${projectNumber}`}
-                    >
+                    <td {...cellProps} key={cellKey}>
                       {cell.render('Cell')}
                     </td>
                   );
