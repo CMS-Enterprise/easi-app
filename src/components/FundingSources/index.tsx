@@ -97,10 +97,12 @@ const FundingSources = () => {
           }}
         />
 
-        <FundingSourcesTable
-          fundingSources={fields}
-          removeFundingSource={remove}
-        />
+        {fields.length > 0 && (
+          <FundingSourcesTable
+            fundingSources={fields}
+            removeFundingSource={remove}
+          />
+        )}
       </div>
 
       {/* Clear funding sources modal */}
