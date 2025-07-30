@@ -62,16 +62,7 @@ const AdditionalInformation = ({
       )}
       {request.relationType === RequestRelationType.EXISTING_SYSTEM &&
         request.systems.length > 0 && (
-          <SystemCardTable
-            systems={request.systems}
-            systemRelationshipType={
-              // Type guard: 'cedarSystemRelationShips' only exists on SystemIntakeFragment.
-              // This narrows the union type, so we can safely access the first system’s relationshipType.
-              'cedarSystemRelationShips' in request
-                ? request.cedarSystemRelationShips?.[0]?.systemRelationshipType
-                : undefined
-            }
-          />
+          <SystemCardTable systems={request.systems} />
         )}
       {request.relationType === RequestRelationType.EXISTING_SERVICE && (
         <div className="margin-top-3">

@@ -15,7 +15,6 @@ import {
 } from '@trussworks/react-uswds';
 import {
   RequestRelationType,
-  SystemIntakeSystem,
   useGetSystemIntakeSystemsQuery
 } from 'gql/generated/graphql';
 
@@ -81,8 +80,8 @@ const LinkedSystemsForm = ({ fromAdmin }: { fromAdmin?: boolean }) => {
 
   const {
     data,
-    loading: relationLoading,
-    refetch: refetchSystemIntakes
+    loading: relationLoading
+    // refetch: refetchSystemIntakes
   } = useGetSystemIntakeSystemsQuery({
     variables: { systemIntakeId: id }
   });
@@ -281,10 +280,7 @@ const LinkedSystemsForm = ({ fromAdmin }: { fromAdmin?: boolean }) => {
           </Grid>
 
           <LinkedSystemTable
-            systems={
-              data?.systemIntake
-                ?.cedarSystemRelationShips as SystemIntakeSystem[]
-            }
+            systems={data?.systemIntakeSystems}
             defaultPageSize={20}
             isHomePage={false}
           />
