@@ -99,6 +99,12 @@ describe('The System Intake Form', () => {
     cy.contains('button', 'Next').click();
 
     // Contract details
+    cy.systemIntake.contractDetails.addFundingSource({
+      projectNumber: '123456',
+      investments: ['Fed Admin', 'Research'],
+      restart: true
+    });
+
     cy.get('#currentAnnualSpending')
       .type('Mock Current Annual Spend')
       .should('have.value', 'Mock Current Annual Spend');
@@ -196,14 +202,14 @@ describe('The System Intake Form', () => {
     cy.contains('button', 'Next').click();
 
     // Contract details
-    const fundingNumber = '123456';
+    const projectNumber = '123456';
 
     cy.systemIntake.contractDetails.addFundingSource({
-      fundingNumber,
-      sources: ['Fed Admin', 'Research'],
+      projectNumber,
+      investments: ['Fed Admin', 'Research'],
       restart: true
     });
-    cy.get(`#fundingSource${fundingNumber}`);
+    cy.get(`#fundingSource${projectNumber}`);
 
     cy.get('#currentAnnualSpending')
       .type('Mock Current Annual Spend')
@@ -403,10 +409,10 @@ describe('The System Intake Form', () => {
 
     cy.contains(
       '.easi-review-row dt',
-      'Which existing funding sources will fund this project?'
+      'Which funding sources will fund this project?'
     )
       .siblings('dd')
-      .get(`li#fundingSource${fundingNumber}`);
+      .get(`li#fundingSource${projectNumber}`);
 
     cy.get('#systemIntakeDocuments').contains('td', 'test.pdf');
   });

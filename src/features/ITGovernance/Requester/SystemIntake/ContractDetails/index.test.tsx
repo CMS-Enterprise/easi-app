@@ -40,6 +40,12 @@ describe('System intake form - Contract details', () => {
 
     expect(
       within(errorSummary).getByText(
+        'Add at least one funding source to the request'
+      )
+    ).toBeInTheDocument();
+
+    expect(
+      within(errorSummary).getByText(
         'Tell us what the current annual spending for the contract'
       )
     ).toBeInTheDocument();

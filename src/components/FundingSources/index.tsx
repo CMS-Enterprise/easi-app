@@ -1,326 +1,168 @@
 import React, { useEffect, useState } from 'react';
 import { Controller, useFieldArray } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { ErrorMessage } from '@hookform/error-message';
-import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
   ButtonGroup,
-  Fieldset,
-  Link,
-  TextInput
+  ModalFooter,
+  ModalHeading
 } from '@trussworks/react-uswds';
 
-import { useEasiForm, useEasiFormContext } from 'components/EasiForm';
-import FieldErrorMsg from 'components/FieldErrorMsg';
-import FieldGroup from 'components/FieldGroup';
-import HelpText from 'components/HelpText';
-import Label from 'components/Label';
-import MultiSelect from 'components/MultiSelect';
-import intakeFundingSources from 'constants/enums/intakeFundingSources';
-import { FundingSource } from 'types/systemIntake';
-import { FundingSourcesValidationSchema } from 'validations/systemIntakeSchema';
+import CheckboxField from 'components/CheckboxField';
+import { useEasiFormContext } from 'components/EasiForm';
+import Modal from 'components/Modal';
+import { ContractDetailsForm } from 'types/systemIntake';
 
-import {
-  formatFundingSourcesForApi,
-  formatFundingSourcesForApp
-} from './utils';
-
-/** Funding source formatted for app */
-export type FormattedFundingSource = {
-  __typename: 'SystemIntakeFundingSource';
-  id: string;
-  fundingNumber: string | null;
-  sources: string[];
-};
-
-type FundingSourcesForm = {
-  fundingSources: Omit<FormattedFundingSource, 'id'>[];
-};
-
-type FundingSourcesProps = {
-  /** Function to disable submit on parent form when add/edit form is open */
-  disableParentForm?: React.Dispatch<React.SetStateAction<boolean>>;
-};
+import FundingSourceFormModal from './FundingSourceFormModal';
 
 /** Funding sources component for system intake form */
+const FundingSources = () => {
+  const { t } = useTranslation('fundingSources');
 
-// TODO: Refactor to work with both system intake and TRB forms
-const FundingSources = ({ disableParentForm }: FundingSourcesProps) => {
-  const { t } = useTranslation('intake');
+  const [isFundingSourcesModalOpen, setIsFundingSourcesModalOpen] =
+    useState(false);
 
-  const [activeFundingSource, setActiveFundingSource] =
-    useState<FormattedFundingSource | null>(null);
+  const [isClearFundingSourcesModalOpen, setIsClearFundingSourcesModalOpen] =
+    useState(false);
 
-  const [action, setAction] = useState<'Add' | 'Edit' | null>(null);
+  const { control, watch, setValue } =
+    useEasiFormContext<ContractDetailsForm>();
 
-  const intakeForm = useEasiFormContext<{
-    fundingSources: FundingSource[];
-  }>();
-
-  const {
-    control,
-    handleSubmit,
-    register,
-    formState: { errors }
-  } = useEasiForm<FundingSourcesForm>({
-    resolver: yupResolver(FundingSourcesValidationSchema),
-    defaultValues: {
-      // Get default values from parent form
-      fundingSources: formatFundingSourcesForApp(
-        intakeForm.getValues().fundingSources
-      )
-    }
-  });
-
-  const { fields, append, remove, update } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: 'fundingSources'
   });
 
-  /** Update parent form funding sources and reset active funding source */
-  const submit = (
-    /** Index of the funding source being added or edited */
-    index: number
-  ) =>
-    handleSubmit(values => {
-      update(index, values.fundingSources[index]);
+  const existingFunding = watch('existingFunding');
 
-      const fundingSourcesWithIds = values.fundingSources.map((source, i) => ({
-        ...source,
-        id: fields[i].id
-      }));
-
-      intakeForm.setValue(
-        'fundingSources',
-        formatFundingSourcesForApi(fundingSourcesWithIds)
-      );
-
-      setActiveFundingSource(null);
-      setAction(null);
-    })();
-
-  // For new funding sources, set correct ID
-  useEffect(() => {
-    if (fields.length > 0 && activeFundingSource?.id === '') {
-      setActiveFundingSource(fields[fields.length - 1]);
+  const toggleClearFundingSources = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (e.target.checked) {
+      if (fields.length > 0) {
+        setIsClearFundingSourcesModalOpen(true);
+      } else {
+        setValue('existingFunding', false);
+      }
+    } else {
+      setValue('existingFunding', true);
     }
-  }, [fields, activeFundingSource, setActiveFundingSource]);
+  };
 
-  /** Disable parent form while adding/editing funding source */
+  /** Remove all funding sources if checkbox is checked */
   useEffect(() => {
-    // Check if `disableParentForm` prop was provided
-    if (disableParentForm) {
-      disableParentForm(!!activeFundingSource);
+    if (existingFunding === false) {
+      remove();
+      setIsClearFundingSourcesModalOpen(false);
     }
-  }, [activeFundingSource, disableParentForm]);
+  }, [existingFunding, remove]);
 
   return (
-    <div id="intakeFundingSources">
-      {fields.map((source, index) => {
-        const { fundingNumber, sources, id } = source;
+    <>
+      <FundingSourceFormModal
+        isOpen={isFundingSourcesModalOpen}
+        closeModal={() => setIsFundingSourcesModalOpen(false)}
+        addFundingSource={fundingSource => append(fundingSource)}
+        initialFundingSources={fields}
+      />
 
-        // Show form if adding or editing funding source
-        if (id === activeFundingSource?.id) {
+      <div id="intakeFundingSources">
+        {fields.map((source, index) => {
+          const { projectNumber, investments } = source;
+
+          // Display funding source
           return (
-            <Fieldset
-              key={id}
-              id={`fundingSources.${index}.fundingNumber`}
-              className="margin-top-3"
+            <div
+              id={`fundingSource${projectNumber}`}
+              key={`fundingSource${projectNumber}`}
+              className="margin-top-205"
             >
-              <legend className="usa-legend text-bold">
-                {t('contractDetails.fundingSources.formLegend', {
-                  action
+              <p className="text-bold font-body-sm margin-bottom-0">
+                {t('investment')}
+              </p>
+              <p className="margin-y-05">
+                {t('projectNumberLabel', {
+                  projectNumber
                 })}
-              </legend>
-              <FieldGroup
-                className="margin-top-2"
-                error={!!errors?.fundingSources?.[index]?.fundingNumber}
-              >
-                <Label htmlFor="fundingNumber" className="text-normal">
-                  {t('contractDetails.fundingSources.fundingNumber')}
-                </Label>
-                <HelpText id="fundingNumberHelpText">
-                  {t('contractDetails.fundingSources.fundingNumberHelpText')}
-                </HelpText>
-                <ErrorMessage
-                  errors={errors}
-                  name={`fundingSources.${index}.fundingNumber`}
-                  as={FieldErrorMsg}
-                />
-                <TextInput
-                  {...register(`fundingSources.${index}.fundingNumber`)}
-                  ref={null}
-                  type="text"
-                  id="fundingNumber"
-                  aria-describedby="fundingNumberHelptext fundingNumberHelpLink"
-                />
-
-                <HelpText id="fundingNumberHelpLink" className="margin-top-1">
-                  <Link
-                    href="https://cmsintranet.share.cms.gov/JT/Pages/Budget.aspx"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    variant="external"
-                  >
-                    {t('contractDetails.fundingSources.fundingNumberLink')}
-                  </Link>
-                </HelpText>
-              </FieldGroup>
-
-              <FieldGroup error={!!errors?.fundingSources?.[index]?.sources}>
-                <Label htmlFor="sources" className="text-normal">
-                  {t('contractDetails.fundingSources.fundingSource')}
-                </Label>
-                <ErrorMessage
-                  errors={errors}
-                  name={`fundingSources.${index}.sources`}
-                  as={FieldErrorMsg}
-                />
-                <Controller
-                  name={`fundingSources.${index}.sources`}
-                  control={control}
-                  render={({ field: { ref, ...field } }) => (
-                    <MultiSelect
-                      {...field}
-                      id="sources"
-                      selectedLabel={t('Funding sources')}
-                      options={intakeFundingSources.map(option => ({
-                        value: option,
-                        label: t(option)
-                      }))}
-                      onChange={values => field.onChange(values)}
-                      initialValues={activeFundingSource.sources}
-                    />
-                  )}
-                />
-              </FieldGroup>
-
-              <ButtonGroup>
-                <Button
-                  type="button"
-                  outline
-                  onClick={() => {
-                    // If cancelling new funding source, remove from array
-                    if (action === 'Add') remove(index);
-
-                    // If cancelling edit, restore previous values
-                    if (action === 'Edit') {
-                      update(index, fields[index]);
-                    }
-
-                    // reset form
-                    setActiveFundingSource(null);
-                    setAction(null);
-                  }}
-                >
-                  {t('Cancel')}
-                </Button>
-
-                <Button
-                  type="button"
-                  onClick={() => submit(index)}
-                  data-testid="fundingSourcesAction-save"
-                >
-                  {t('Save')}
-                </Button>
-              </ButtonGroup>
-            </Fieldset>
-          );
-        }
-
-        // Display funding source
-        return (
-          <div
-            id={`fundingSource${fundingNumber}`}
-            key={id}
-            className="margin-top-205"
-          >
-            <p className="text-bold font-body-sm margin-bottom-0">
-              {t('contractDetails.fundingSources.fundingSource')}
-            </p>
-            <p className="margin-y-05">
-              {t('contractDetails.fundingSources.fundingNumberLabel', {
-                fundingNumber
-              })}
-            </p>
-            <p className="margin-y-05">
-              {t('contractDetails.fundingSources.fundingSourcesLabel', {
-                sources: sources.join(', ')
-              })}
-            </p>
-
-            <ButtonGroup>
-              <Button
-                unstyled
-                onClick={() => {
-                  // If currently adding new funding source, remove from array
-                  if (action === 'Add') {
-                    remove(fields.length - 1);
-                  }
-
-                  setActiveFundingSource(source);
-                  setAction('Edit');
-                }}
-                type="button"
-                className="margin-top-1"
-              >
-                {t('Edit')}
-              </Button>
+              </p>
+              <p className="margin-y-05">
+                {t('investmentsLabel', {
+                  investments: investments.join(', ')
+                })}
+              </p>
 
               <Button
                 unstyled
-                onClick={() => {
-                  remove(index);
-
-                  // Remove from parent form funding sources
-                  intakeForm.setValue(
-                    'fundingSources',
-                    formatFundingSourcesForApi(fields).filter(
-                      value => value.id !== id
-                    )
-                  );
-                }}
+                onClick={() => remove(index)}
                 type="button"
                 className="text-error margin-top-1"
               >
                 {t('Delete')}
               </Button>
-            </ButtonGroup>
-          </div>
-        );
-      })}
+            </div>
+          );
+        })}
 
-      {
-        // Add funding source button
-        !activeFundingSource && (
-          <Button
-            data-testid="fundingSourcesAction-add"
-            type="button"
-            onClick={() => {
-              const newSource: Omit<FormattedFundingSource, 'id'> = {
-                __typename: 'SystemIntakeFundingSource',
-                fundingNumber: '',
-                sources: []
-              };
+        <Button
+          type="button"
+          onClick={() => setIsFundingSourcesModalOpen(true)}
+          disabled={existingFunding === false}
+          className="margin-top-2"
+          data-testid="addFundingSourceButton"
+          outline
+        >
+          {t('addFundingSource', { count: fields.length + 1 })}
+        </Button>
 
-              append(newSource);
-              setActiveFundingSource({ ...newSource, id: '' });
-              setAction('Add');
-            }}
-            outline
-          >
-            {t(
-              `contractDetails.fundingSources.${
-                fields.length > 0
-                  ? 'addAnotherFundingSource'
-                  : 'addFundingSource'
-              }`
-            )}
-          </Button>
-        )
-      }
-    </div>
+        <Controller
+          control={control}
+          name="existingFunding"
+          render={({ field: { ref, ...field } }) => {
+            return (
+              <CheckboxField
+                {...field}
+                id={field.name}
+                value="true"
+                checked={field.value === false}
+                onChange={toggleClearFundingSources}
+                label={t('clearFundingSourcesCheckbox')}
+                data-testid="clearFundingSourcesCheckbox"
+              />
+            );
+          }}
+        />
+      </div>
+
+      {/* Clear funding sources modal */}
+      <Modal
+        isOpen={isClearFundingSourcesModalOpen}
+        closeModal={() => setIsClearFundingSourcesModalOpen(false)}
+        className="font-body-md"
+      >
+        <ModalHeading>{t('clearFundingSourcesModal.heading')}</ModalHeading>
+
+        <p>{t('clearFundingSourcesModal.description')}</p>
+
+        <ModalFooter>
+          <ButtonGroup>
+            <Button
+              type="button"
+              onClick={() => setValue('existingFunding', false)}
+              className="margin-right-2 bg-error"
+            >
+              {t('clearFundingSourcesModal.removeFundingSources')}
+            </Button>
+            <Button
+              type="button"
+              onClick={() => setIsClearFundingSourcesModalOpen(false)}
+              unstyled
+            >
+              {t('clearFundingSourcesModal.dontRemove')}
+            </Button>
+          </ButtonGroup>
+        </ModalFooter>
+      </Modal>
+    </>
   );
 };
 
