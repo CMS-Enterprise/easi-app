@@ -1,9 +1,10 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Column, useTable } from 'react-table';
+import { Column, useSortBy, useTable } from 'react-table';
 import { Button, Table } from '@trussworks/react-uswds';
 
 import { FormattedFundingSource } from 'types/systemIntake';
+import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 
 type FundingSourcesTableProps = {
   fundingSources: FormattedFundingSource[];
@@ -49,12 +50,15 @@ const FundingSourcesTable = ({
     ];
   }, [t, removeFundingSource]);
 
-  const table = useTable({
-    columns,
-    data: fundingSources,
-    autoResetSortBy: false,
-    autoResetPage: true
-  });
+  const table = useTable(
+    {
+      columns,
+      data: fundingSources,
+      autoResetSortBy: false,
+      autoResetPage: true
+    },
+    useSortBy
+  );
 
   const { getTableBodyProps, getTableProps, headerGroups, prepareRow, rows } =
     table;
@@ -73,9 +77,30 @@ const FundingSourcesTable = ({
                   const { key: headerKey, ...headerProps } =
                     column.getHeaderProps();
 
+                  if (column.id === 'actions') {
+                    return (
+                      <th {...headerProps} key={headerKey}>
+                        {column.render('Header')}
+                      </th>
+                    );
+                  }
+
                   return (
-                    <th {...headerProps} key={headerKey}>
-                      {column.render('Header')}
+                    <th
+                      {...headerProps}
+                      key={headerKey}
+                      aria-sort={getColumnSortStatus(column)}
+                      scope="col"
+                    >
+                      <Button
+                        type="button"
+                        className="width-full flex-justify margin-y-0"
+                        unstyled
+                        {...column.getSortByToggleProps()}
+                      >
+                        {column.render('Header')}
+                        {getHeaderSortIcon(column)}
+                      </Button>
                     </th>
                   );
                 })}
