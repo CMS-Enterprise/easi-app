@@ -111,6 +111,7 @@ const FundingSourcesModal = ({
             {...register(`projectNumber`)}
             type="text"
             id="projectNumber"
+            data-testid="projectNumberInput"
             className="maxw-none"
             aria-describedby="projectNumberHelptext projectNumberHelpLink"
           />
@@ -139,6 +140,7 @@ const FundingSourcesModal = ({
               <MultiSelect
                 {...field}
                 id="investments"
+                data-testid="investmentsInput"
                 selectedLabel={t('form.selectedInvestments')}
                 options={intakeFundingSources.map(option => ({
                   value: option,
@@ -156,6 +158,7 @@ const FundingSourcesModal = ({
               onClick={submitForm}
               className="margin-right-2"
               disabled={disableSubmit}
+              data-testid="submitFundingSourceButton"
             >
               {t('form.addFundingSource')}
             </Button>

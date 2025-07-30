@@ -73,9 +73,8 @@ const FundingSources = () => {
           // Display funding source
           return (
             <div
-              id={`fundingSource-${index}`}
-              // eslint-disable-next-line react/no-array-index-key
-              key={`fundingSource-${index}`}
+              id={`fundingSource-${projectNumber}`}
+              key={`fundingSource-${projectNumber}`}
               className="margin-top-205"
             >
               <p className="text-bold font-body-sm margin-bottom-0">
@@ -109,7 +108,7 @@ const FundingSources = () => {
           onClick={() => setIsFundingSourcesModalOpen(true)}
           disabled={existingFunding === false}
           className="margin-top-2"
-          data-testid="fundingSourcesAction-add"
+          data-testid="addFundingSourceButton"
           outline
         >
           {t('addFundingSource', { count: fields.length + 1 })}
