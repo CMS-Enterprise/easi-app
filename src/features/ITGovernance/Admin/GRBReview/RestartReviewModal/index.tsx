@@ -1,8 +1,8 @@
 import React, { ReactEventHandler, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import {
-  Alert,
   Button,
+  DatePicker,
   FormGroup,
   Label,
   ModalFooter,
@@ -15,12 +15,12 @@ import {
   useRestartGRBReviewAsyncMutation
 } from 'gql/generated/graphql';
 
-import DatePickerFormatted from 'components/DatePickerFormatted';
+import Alert from 'components/Alert';
 import HelpText from 'components/HelpText';
 import Modal from 'components/Modal';
 import RequiredFieldsText from 'components/RequiredFieldsText';
 import { useMessage } from 'hooks/useMessage';
-import { formatDateLocal } from 'utils/date';
+import { formatDateLocal, formatEndOfDayDeadline } from 'utils/date';
 
 import { useRestartReviewModal } from './RestartReviewModalContext';
 
@@ -44,6 +44,7 @@ const RestartReviewModal = ({ systemIntakeId }: { systemIntakeId: string }) => {
 
   const handleSubmit: ReactEventHandler = event => {
     event.preventDefault();
+
     restartReview({
       variables: {
         input: {
@@ -82,7 +83,7 @@ const RestartReviewModal = ({ systemIntakeId }: { systemIntakeId: string }) => {
       <div data-testid="restart-review-modal">
         <ModalHeading>{t('adminTask.restartReview.title')}</ModalHeading>
         {errorMessageInModal && (
-          <Alert type="error" className="margin-top-2" headingLevel="h4">
+          <Alert type="error" className="margin-top-2">
             {errorMessageInModal}
           </Alert>
         )}
@@ -97,25 +98,31 @@ const RestartReviewModal = ({ systemIntakeId }: { systemIntakeId: string }) => {
             >
               {t('adminTask.restartReview.setNewEndDateLabel')}
             </Label>
-            <HelpText className="margin-top-1">
+            <HelpText
+              id="grbReviewAsyncEndDateHelpText"
+              className="margin-top-1"
+            >
               {t('adminTask.restartReview.setNewEndDateHelpText')}
             </HelpText>
-            <DatePickerFormatted
+
+            {/* Uses basic DatePicker instead of DatePickerFormatted to avoid issue with e2e tests */}
+            {/* DatePickerFormatted input was cycling through random dates after using cy.type() */}
+            <DatePicker
               id="grbReviewAsyncEndDate"
               name="grbReviewAsyncEndDate"
-              // classname used to target specifically the date picker calendar and have it render above the input field
               className="date-picker-override"
-              onChange={val => setSelectedDate(val || '')}
-              value={selectedDate}
-              dateInPastWarning
-              format={dt =>
-                dt
-                  .setZone('America/New_York')
-                  .set({ hour: 17, minute: 0, second: 0 })
-                  .toUTC()
-                  .toISO({ suppressMilliseconds: true })
-              }
+              aria-describedby="grbReviewAsyncEndDateHelpText"
+              onChange={val => {
+                const formattedDate = formatEndOfDayDeadline(val || '');
+                setSelectedDate(formattedDate);
+              }}
             />
+
+            {actionDateInPast(selectedDate) && (
+              <Alert type="warning" slim>
+                {t('action:pastDateAlert')}
+              </Alert>
+            )}
           </FormGroup>
           <ModalFooter>
             <Button

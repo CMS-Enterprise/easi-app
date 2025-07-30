@@ -359,9 +359,7 @@ describe('The System Intake Form', () => {
     cy.contains('.easi-review-row dt', 'I have started collaborating with')
       .siblings('dd')
       .eq(2)
-      .contains(
-        /^Enterprise Architecture, Enterprise Architecture Collaborator$/
-      );
+      .contains(/^508 Clearance Officer, 508 Clearance Officer Collaborator$/);
 
     cy.contains('.easi-review-row dt', 'Project name')
       .siblings('dd')
@@ -409,7 +407,7 @@ describe('The System Intake Form', () => {
 
     cy.contains(
       '.easi-review-row dt',
-      'Which existing funding sources will fund this project?'
+      'Which funding sources will fund this project?'
     )
       .siblings('dd')
       .get(`li#fundingSource${projectNumber}`);

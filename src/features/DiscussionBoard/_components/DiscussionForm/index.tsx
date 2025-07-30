@@ -176,6 +176,7 @@ const DiscussionForm = ({
             type="submit"
             className="margin-right-105"
             form="discussionForm"
+            data-testid="discussion-form-submit-button"
           >
             {t('general.discussionForm.save', { type })}
           </Button>
@@ -247,6 +248,7 @@ const DiscussionForm = ({
             type="button"
             onClick={() => setModalIsOpen(true)}
             disabled={!isValid}
+            data-testid="open-discussion-form-modal-button"
           >
             {t('general.discussionForm.save', { type })}
           </Button>

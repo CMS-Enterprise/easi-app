@@ -67,6 +67,7 @@ func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wir
 		TrbCollaboratorName:             si.TRBCollaboratorName.Ptr(),
 		OitSecurityCollaboratorName:     si.OITSecurityCollaboratorName.Ptr(),
 		EaCollaboratorName:              si.EACollaboratorName.Ptr(),
+		CollaboratorName508:             si.CollaboratorName508.Ptr(),
 		ProjectName:                     si.ProjectName.ValueOrZero(),
 		ProjectAcronym:                  si.ProjectAcronym.Ptr(),
 		FundingSource:                   si.FundingSource.Ptr(),
