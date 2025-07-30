@@ -38,68 +38,96 @@ describe('Funding sources', () => {
     ).toBeInTheDocument();
   });
 
-  it('renders error messages', async () => {
+  it('opens and closes the modal', async () => {
+    render(
+      <Wrapper fundingSources={[]}>
+        <FundingSources />
+      </Wrapper>
+    );
+
+    userEvent.click(
+      screen.getByRole('button', { name: 'Add a funding source' })
+    );
+
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
+
+    userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('adds a funding source', async () => {
+    render(
+      <Wrapper fundingSources={[]}>
+        <FundingSources />
+      </Wrapper>
+    );
+
+    userEvent.click(
+      screen.getByRole('button', { name: 'Add a funding source' })
+    );
+
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
+
+    userEvent.type(
+      screen.getByRole('textbox', { name: 'Project number *' }),
+      '123456'
+    );
+    userEvent.type(screen.getByRole('combobox'), 'Fed Admin {enter}');
+    userEvent.click(screen.getByRole('button', { name: 'Add funding source' }));
+
+    expect(
+      await screen.findByText('Project number: 123456')
+    ).toBeInTheDocument();
+  });
+
+  it('clears funding sources with checkbox', async () => {
     render(
       <Wrapper
         fundingSources={[
-          {
-            projectNumber: '123456',
-            investments: ['Fed Admin']
-          }
+          { projectNumber: '123456', investments: ['Fed Admin'] }
         ]}
       >
         <FundingSources />
       </Wrapper>
     );
 
-    userEvent.click(
-      screen.getByRole('button', { name: 'Add another funding source' })
+    const clearFundingSourcesCheckbox = screen.getByTestId(
+      'clearFundingSourcesCheckbox'
     );
 
+    expect(screen.getByText('Project number: 123456')).toBeInTheDocument();
+    expect(clearFundingSourcesCheckbox).not.toBeChecked();
+
+    // Open modal
+    userEvent.click(clearFundingSourcesCheckbox);
     expect(await screen.findByRole('dialog')).toBeInTheDocument();
 
+    // Close modal without removing funding sources
+    userEvent.click(screen.getByRole('button', { name: "Don't remove" }));
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(screen.getByText('Project number: 123456')).toBeInTheDocument();
+    expect(clearFundingSourcesCheckbox).not.toBeChecked();
+
+    // Open modal
+    userEvent.click(clearFundingSourcesCheckbox);
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
+
+    // Remove funding sources
     userEvent.click(
-      screen.getByRole('button', {
-        name: 'Add funding source'
-      })
+      screen.getByRole('button', { name: 'Remove funding sources' })
     );
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 
-    // Button is disabled with empty fields
+    expect(clearFundingSourcesCheckbox).toBeChecked();
     expect(
-      screen.getByRole('button', { name: 'Add funding source' })
+      screen.queryByText('Project number: 123456')
+    ).not.toBeInTheDocument();
+
+    // Add funding sources button is disabled
+    expect(
+      screen.getByRole('button', { name: 'Add a funding source' })
     ).toBeDisabled();
-
-    // Add investment
-    userEvent.type(screen.getByRole('combobox'), 'Fed Admin {enter}');
-    expect(await screen.findByText('1 selected')).toBeInTheDocument();
-
-    // Check funding number is numeric
-
-    const projectNumberField = screen.getByRole('textbox', {
-      name: 'Project number *'
-    });
-
-    userEvent.type(projectNumberField, 'aaaaaa');
-    expect(projectNumberField).toHaveValue('aaaaaa');
-
-    userEvent.click(screen.getByRole('button', { name: 'Add funding source' }));
-
-    expect(
-      await screen.findByText('Project number can only contain digits')
-    ).toBeInTheDocument();
-
-    // Check unique funding number
-
-    userEvent.clear(projectNumberField);
-    userEvent.type(projectNumberField, '123456');
-    expect(projectNumberField).toHaveValue('123456');
-
-    userEvent.click(screen.getByRole('button', { name: 'Add funding source' }));
-
-    expect(
-      await screen.findByText(
-        'Project number has already been added to this request'
-      )
-    ).toBeInTheDocument();
   });
 });

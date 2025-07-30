@@ -127,6 +127,7 @@ const FundingSources = () => {
                 checked={field.value === false}
                 onChange={toggleClearFundingSources}
                 label={t('clearFundingSourcesCheckbox')}
+                data-testid="clearFundingSourcesCheckbox"
               />
             );
           }}
