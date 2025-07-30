@@ -297,16 +297,16 @@ const RequestLinkForm = ({
             });
     }
 
-    p
-      ?.then(
+    if (p) {
+      p.then(
         res => {
           if (res?.data) history.push(redirectUrl);
         },
         () => {}
-      )
-      .catch(() => {
+      ).catch(() => {
         setUserError(true);
       });
+    }
   });
 
   const unlink = () => {
