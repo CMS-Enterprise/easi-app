@@ -380,7 +380,7 @@ export const SystemIntakeReview = ({
       <DescriptionList title={t('review.contractDetails')}>
         <ReviewRow>
           <div>
-            <DescriptionTerm term={t('contractDetails.fundingSources.label')} />
+            <DescriptionTerm term={t('fundingSources:whichFundingSources')} />
             <DescriptionDefinition definition={fundingDefinition()} />
           </div>
         </ReviewRow>

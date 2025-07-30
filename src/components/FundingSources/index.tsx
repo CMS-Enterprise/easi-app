@@ -73,8 +73,8 @@ const FundingSources = () => {
           // Display funding source
           return (
             <div
-              id={`fundingSource-${projectNumber}`}
-              key={`fundingSource-${projectNumber}`}
+              id={`fundingSource${projectNumber}`}
+              key={`fundingSource${projectNumber}`}
               className="margin-top-205"
             >
               <p className="text-bold font-body-sm margin-bottom-0">
