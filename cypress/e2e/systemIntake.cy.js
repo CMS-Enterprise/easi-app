@@ -209,7 +209,7 @@ describe('The System Intake Form', () => {
       investments: ['Fed Admin', 'Research'],
       restart: true
     });
-    cy.get(`#fundingSource${projectNumber}`);
+    cy.get(`[data-testid="fundingSource${projectNumber}"]`);
 
     cy.get('#currentAnnualSpending')
       .type('Mock Current Annual Spend')
