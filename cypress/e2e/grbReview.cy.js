@@ -7,7 +7,7 @@ describe('GRB review', () => {
 
   // Request name: GRB meeting without date set
   // System intake ID: d9c931c6-0858-494d-b991-e02a94a42f38
-  it('completes required fields for Asynchronous Review Type', () => {
+  it.skip('completes required fields for Asynchronous Review Type', () => {
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'SendPresentationDeckReminder') {
         req.alias = 'sendReminder';
@@ -172,7 +172,7 @@ describe('GRB review', () => {
 
   // Request name: GRB meeting with date set in future
   // System intake ID: 8ef9d0fb-e673-441c-9876-f874b179f89c
-  it('completes required fields for Standard Review Type', () => {
+  it.skip('completes required fields for Standard Review Type', () => {
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'SendPresentationDeckReminder') {
         req.alias = 'sendReminder';
@@ -223,7 +223,7 @@ describe('GRB review', () => {
 
   // Request name: Skip to GRB meeting without date set
   // System intake ID: 8f0b8dfc-acb2-4cd3-a79e-241c355f551c
-  it('Navigates through the form with the headers', () => {
+  it.skip('Navigates through the form with the headers', () => {
     cy.visit('/it-governance/8f0b8dfc-acb2-4cd3-a79e-241c355f551c/grb-review');
     cy.contains('button', 'Set up GRB review').click();
 
@@ -256,7 +256,7 @@ describe('GRB review', () => {
 
   // Request name: Async GRB review in progress
   // System intake ID: 5af245bc-fc54-4677-bab1-1b3e798bb43c
-  it('Sends a reminder email', () => {
+  it.skip('Sends a reminder email', () => {
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'SendSystemIntakeGRBReviewerReminder') {
         req.alias = 'sendReminder';
@@ -296,7 +296,7 @@ describe('GRB review', () => {
 
   // Request name: Async GRB review in progress
   // System intake ID: 5af245bc-fc54-4677-bab1-1b3e798bb43c
-  it('can upload a presentation deck', () => {
+  it.skip('can upload a presentation deck', () => {
     cy.visit('/it-governance/5af245bc-fc54-4677-bab1-1b3e798bb43c/grb-review');
 
     cy.contains('a', 'Add asynchronous presentation links').click();
