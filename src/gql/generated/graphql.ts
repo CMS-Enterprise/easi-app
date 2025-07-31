@@ -137,6 +137,7 @@ export type CedarAuthorityToOperate = {
   lastAssessmentDate?: Maybe<Scalars['Time']['output']>;
   lastContingencyPlanCompletionDate?: Maybe<Scalars['Time']['output']>;
   lastPenTestDate?: Maybe<Scalars['Time']['output']>;
+  oaStatus?: Maybe<Scalars['String']['output']>;
   piaCompletionDate?: Maybe<Scalars['Time']['output']>;
   primaryCyberRiskAdvisor?: Maybe<Scalars['String']['output']>;
   privacySubjectMatterExpert?: Maybe<Scalars['String']['output']>;

@@ -30,6 +30,7 @@ type CedarAuthorityToOperate struct {
 	LastAssessmentDate                        zero.Time   `json:"lastAssessmentDate"`
 	LastContingencyPlanCompletionDate         zero.Time   `json:"lastContingencyPlanCompletionDate"`
 	LastPenTestDate                           zero.Time   `json:"lastPenTestDate"`
+	OaStatus                                  zero.String `json:"oaStatus"`
 	PiaCompletionDate                         zero.Time   `json:"piaCompletionDate"`
 	PrimaryCyberRiskAdvisor                   zero.String `json:"primaryCyberRiskAdvisor"`
 	PrivacySubjectMatterExpert                zero.String `json:"privacySubjectMatterExpert"`
