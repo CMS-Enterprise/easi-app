@@ -8,6 +8,7 @@ const fundingSources = {
   projectNumber: 'Project number',
   projectNumberLabel: 'Project number: {{projectNumber}}',
   investment: 'Investment',
+  investments: 'Investment(s)',
   investmentsLabel: 'Investments: {{investments}}',
   clearFundingSourcesCheckbox:
     'or, check this box if a new investment and/or project number is still being set up for this project',
@@ -28,6 +29,13 @@ const fundingSources = {
       'Checking this box will remove all previously-added funding sources. Are you sure you want to continue? You may re-add funding sources again if needed.',
     removeFundingSources: 'Remove funding sources',
     dontRemove: "Don't remove"
+  },
+
+  removeFundingSourcesModal: {
+    heading: 'Are you sure you want to remove this funding source?',
+    description:
+      'This action cannot be undone, though you may add this funding source again if needed.',
+    removeFundingSource: 'Remove funding source'
   }
 };
 

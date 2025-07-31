@@ -1,0 +1,176 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Funding sources > matches the snapshot 1`] = `
+<DocumentFragment>
+  <div
+    id="intakeFundingSources"
+  >
+    <button
+      class="usa-button usa-button--outline margin-top-2"
+      data-testid="addFundingSourceButton"
+      type="button"
+    >
+      Add another funding source
+    </button>
+    <div
+      class="easi-checkbox usa-checkbox"
+    >
+      <input
+        class="usa-checkbox__input"
+        data-testid="clearFundingSourcesCheckbox"
+        id="existingFunding"
+        name="existingFunding"
+        type="checkbox"
+        value="true"
+      />
+      <label
+        class="usa-checkbox__label"
+        for="existingFunding"
+      >
+        or, check this box if a new investment and/or project number is still being set up for this project
+      </label>
+    </div>
+    <div
+      class="usa-table-container--scrollable"
+      data-testid="scrollable-table-container"
+      tabindex="0"
+    >
+      <table
+        class="usa-table usa-table--borderless width-full"
+        data-testid="table"
+      >
+        <thead>
+          <tr
+            role="row"
+          >
+            <th
+              aria-sort="none"
+              colspan="1"
+              role="columnheader"
+              scope="col"
+            >
+              <button
+                class="usa-button usa-button--unstyled width-full flex-justify margin-y-0"
+                data-testid="button"
+                style="cursor: pointer;"
+                title="Toggle SortBy"
+                type="button"
+              >
+                Project number
+                <svg
+                  aria-hidden="true"
+                  class="usa-icon margin-left-05"
+                  data-testid="caret--sort"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                  />
+                </svg>
+              </button>
+            </th>
+            <th
+              aria-sort="none"
+              colspan="1"
+              role="columnheader"
+              scope="col"
+            >
+              <button
+                class="usa-button usa-button--unstyled width-full flex-justify margin-y-0"
+                data-testid="button"
+                style="cursor: pointer;"
+                title="Toggle SortBy"
+                type="button"
+              >
+                Investment(s)
+                <svg
+                  aria-hidden="true"
+                  class="usa-icon margin-left-05"
+                  data-testid="caret--sort"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                  />
+                </svg>
+              </button>
+            </th>
+            <th
+              colspan="1"
+              role="columnheader"
+            >
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody
+          role="rowgroup"
+        >
+          <tr
+            data-testid="fundingSource123456"
+            role="row"
+          >
+            <td
+              role="cell"
+            >
+              123456
+            </td>
+            <td
+              role="cell"
+            >
+              Fed Admin
+            </td>
+            <td
+              role="cell"
+            >
+              <button
+                class="usa-button usa-button--unstyled text-error margin-y-0"
+                data-testid="removeFundingSource-0"
+                type="button"
+              >
+                Remove
+              </button>
+            </td>
+          </tr>
+          <tr
+            data-testid="fundingSource789012"
+            role="row"
+          >
+            <td
+              role="cell"
+            >
+              789012
+            </td>
+            <td
+              role="cell"
+            >
+              HITECH Medicare
+            </td>
+            <td
+              role="cell"
+            >
+              <button
+                class="usa-button usa-button--unstyled text-error margin-y-0"
+                data-testid="removeFundingSource-1"
+                type="button"
+              >
+                Remove
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</DocumentFragment>
+`;
