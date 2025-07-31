@@ -3,14 +3,7 @@ import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { ErrorMessage } from '@hookform/error-message';
-import {
-  Button,
-  ButtonGroup,
-  DatePicker,
-  FormGroup,
-  Label
-} from '@trussworks/react-uswds';
-import { actionDateInPast } from 'features/ITGovernance/Admin/Actions/ManageLcid/RetireLcid';
+import { Button, ButtonGroup, FormGroup, Label } from '@trussworks/react-uswds';
 import {
   GetSystemIntakeDocument,
   GetSystemIntakeGRBReviewDocument,
@@ -18,6 +11,7 @@ import {
 } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
+import DatePickerFormatted from 'components/DatePickerFormatted';
 import { useEasiForm } from 'components/EasiForm';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import Modal from 'components/Modal';
@@ -142,21 +136,14 @@ const ExtendGRBAsyncReview = () => {
 
                 {/* Uses basic DatePicker instead of DatePickerFormatted to avoid issue with e2e tests */}
                 {/* DatePickerFormatted input was cycling through random dates after using cy.type() */}
-                <DatePicker
+                <DatePickerFormatted
                   {...field}
                   id="grbReviewAsyncEndDate"
-                  className="date-picker-override"
-                  onChange={val => {
-                    const formattedDate = formatEndOfDayDeadline(val || '');
-                    field.onChange(formattedDate);
-                  }}
+                  name="grbReviewAsyncEndDate"
+                  value={field.value || ''}
+                  format={formatEndOfDayDeadline}
+                  dateInPastWarning
                 />
-
-                {actionDateInPast(watch('grbReviewAsyncEndDate')) && (
-                  <Alert type="warning" slim>
-                    {t('action:pastDateAlert')}
-                  </Alert>
-                )}
 
                 {!!watch('grbReviewAsyncEndDate') && (
                   <p
