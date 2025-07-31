@@ -10,6 +10,7 @@ import (
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/logfields"
@@ -45,12 +46,12 @@ func (sjw *ScheduledJobWrapper[input]) store() (*storage.Store, error) {
 }
 
 // logger returns the logger from the scheduler
-func (sjw *ScheduledJobWrapper[input]) logger() (*zap.Logger, error) {
+func (sjw *ScheduledJobWrapper[input]) logger(ctx context.Context) (*zap.Logger, error) {
 	if sjw.scheduler == nil || sjw.scheduler.logger == nil {
 		return nil, errors.New("scheduler is not initialized")
 	}
 
-	return sjw.decoratedLogger(sjw.scheduler.logger), nil
+	return sjw.decoratedLogger(ctx, sjw.scheduler.logger), nil
 }
 
 // emailClient returns the email client from the scheduler
@@ -85,7 +86,9 @@ type ScheduledJob struct {
 // RunJob is a wrapper for running the job. The scheduler itself doesn't do anything with errors,
 // so we wrap logging information here
 func (sjw *ScheduledJobWrapper[input]) RunJob(ctx context.Context, params input) error {
-	logger, err := sjw.logger()
+	ctx, _ = appcontext.WithTrace(ctx)
+
+	logger, err := sjw.logger(ctx)
 	if err != nil {
 		return err
 	}
@@ -118,17 +121,25 @@ func (sjw *ScheduledJobWrapper[input]) Register(scheduler *Scheduler) {
 
 // decoratedLogger returns a logger with the job's metadata
 // ideally, you should just call the logger method on the ScheduledJobWrapper, which in turn calls this.
-func (sjw *ScheduledJobWrapper[input]) decoratedLogger(logger *zap.Logger) *zap.Logger {
+func (sjw *ScheduledJobWrapper[input]) decoratedLogger(ctx context.Context, logger *zap.Logger) *zap.Logger {
 	var lastRun time.Time
 	var nextRun time.Time
 	var errLastRun error
 	var errNextRun error
 	var jobID uuid.UUID
+	var traceIDString string
 
 	if sjw.job != nil {
 		lastRun, errLastRun = sjw.job.LastRun()
 		nextRun, errNextRun = sjw.job.NextRun()
 		jobID = sjw.job.ID()
+	}
+	traceIDUUID, traceIDExists := appcontext.Trace(ctx)
+	if !traceIDExists {
+		traceIDUUID = uuid.New()
+		traceIDString = traceIDUUID.String() + "new"
+	} else {
+		traceIDString = traceIDUUID.String()
 	}
 
 	decoratedLogger := logger.With(logfields.SchedulerAppSection,
@@ -136,6 +147,7 @@ func (sjw *ScheduledJobWrapper[input]) decoratedLogger(logger *zap.Logger) *zap.
 		logfields.JobName(sjw.name),
 		logfields.NextRunTime(nextRun),
 		logfields.LastRunTime(lastRun),
+		logfields.TraceField(traceIDString),
 	)
 	if errLastRun != nil {
 		decoratedLogger.Warn("error getting last run time", zap.Error(errLastRun))
