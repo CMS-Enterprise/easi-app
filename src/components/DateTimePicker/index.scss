@@ -1,0 +1,39 @@
+.react-datepicker-wrapper,
+.react-datepicker__input-container,
+.react-datepicker__input-container input {
+  height: 2.5rem;
+  width: 100%;
+}
+
+.react-datepicker__input-container input {
+  padding: 0.5rem;
+}
+
+.mint-datetime-picker-warning {
+    position: absolute;
+    right: 40px;
+    height: 35px;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+}
+
+.usa-tooltip__trigger {
+  cursor: initial !important;
+}
+
+.usa-tooltip__body {
+  white-space: pre-wrap !important;
+  max-width: 20rem !important;
+  width: max-content !important;
+}
+
+/* Make tooltip not focusable */
+.mint-datetime-picker-warning .usa-tooltip {
+  pointer-events: none;
+}
+
+/* Re-enable pointer events for the icon itself if needed */
+.mint-datetime-picker-warning .usa-icon {
+  pointer-events: auto;
+}
