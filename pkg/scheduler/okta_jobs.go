@@ -29,7 +29,7 @@ func getOktaJobs(scheduler *Scheduler) *oktaJobs {
 }
 
 func reauthenticateWithOktaJobFunction(ctx context.Context, scheduledJob *ScheduledJob) error {
-	logger, err := scheduledJob.logger()
+	logger, err := scheduledJob.logger(ctx)
 	if err != nil {
 		return err
 	}
