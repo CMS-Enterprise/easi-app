@@ -28,6 +28,7 @@ exports[`DateTimePicker Component > matches snapshot 1`] = `
         type="button"
       >
         <svg
+          aria-hidden="true"
           class="usa-icon usa-icon--size-3"
           focusable="false"
           height="1em"
@@ -75,7 +76,7 @@ exports[`DateTimePicker Component > matches snapshot with alertText disabled 1`]
           data-testid="tooltipWrapper"
         >
           <button
-            aria-describedby="tooltip-689361"
+            aria-describedby="tooltip-482238"
             class="usa-button usa-tooltip__trigger padding-0 margin-0 margin-top-1 bg-transparent outline-0"
             data-testid="triggerElement"
             tabindex="0"
@@ -101,7 +102,7 @@ exports[`DateTimePicker Component > matches snapshot with alertText disabled 1`]
             aria-hidden="true"
             class="usa-tooltip__body"
             data-testid="tooltipBody"
-            id="tooltip-689361"
+            id="tooltip-482238"
             role="tooltip"
             title="You’ve entered one or more dates that are in the past. Please double-check your dates to make sure they’re accurate."
           >
@@ -116,6 +117,7 @@ exports[`DateTimePicker Component > matches snapshot with alertText disabled 1`]
         type="button"
       >
         <svg
+          aria-hidden="true"
           class="usa-icon usa-icon--size-3"
           focusable="false"
           height="1em"
@@ -162,6 +164,7 @@ exports[`DateTimePicker Component > matches snapshot with custom className 1`] =
         type="button"
       >
         <svg
+          aria-hidden="true"
           class="usa-icon usa-icon--size-3"
           focusable="false"
           height="1em"
@@ -210,6 +213,7 @@ exports[`DateTimePicker Component > matches snapshot with disabled state 1`] = `
         type="button"
       >
         <svg
+          aria-hidden="true"
           class="usa-icon usa-icon--size-3"
           focusable="false"
           height="1em"
@@ -257,7 +261,7 @@ exports[`DateTimePicker Component > matches snapshot with past date warning 1`] 
           data-testid="tooltipWrapper"
         >
           <button
-            aria-describedby="tooltip-389057"
+            aria-describedby="tooltip-159017"
             class="usa-button usa-tooltip__trigger padding-0 margin-0 margin-top-1 bg-transparent outline-0"
             data-testid="triggerElement"
             tabindex="0"
@@ -283,7 +287,7 @@ exports[`DateTimePicker Component > matches snapshot with past date warning 1`] 
             aria-hidden="true"
             class="usa-tooltip__body"
             data-testid="tooltipBody"
-            id="tooltip-389057"
+            id="tooltip-159017"
             role="tooltip"
             title="You’ve entered one or more dates that are in the past. Please double-check your dates to make sure they’re accurate."
           >
@@ -298,6 +302,7 @@ exports[`DateTimePicker Component > matches snapshot with past date warning 1`] 
         type="button"
       >
         <svg
+          aria-hidden="true"
           class="usa-icon usa-icon--size-3"
           focusable="false"
           height="1em"
