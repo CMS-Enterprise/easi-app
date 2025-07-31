@@ -117,6 +117,7 @@ exports[`Funding sources > matches the snapshot 1`] = `
           role="rowgroup"
         >
           <tr
+            data-testid="fundingSource123456"
             role="row"
           >
             <td
@@ -142,6 +143,7 @@ exports[`Funding sources > matches the snapshot 1`] = `
             </td>
           </tr>
           <tr
+            data-testid="fundingSource789012"
             role="row"
           >
             <td
