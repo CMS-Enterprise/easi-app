@@ -11,7 +11,7 @@ import {
 } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
-import DatePickerFormatted from 'components/DatePickerFormatted';
+import DateTimePicker from 'components/DateTimePicker';
 import { useEasiForm } from 'components/EasiForm';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import Modal from 'components/Modal';
@@ -134,15 +134,18 @@ const ExtendGRBAsyncReview = () => {
                   as={<FieldErrorMsg />}
                 />
 
-                {/* Uses basic DatePicker instead of DatePickerFormatted to avoid issue with e2e tests */}
-                {/* DatePickerFormatted input was cycling through random dates after using cy.type() */}
-                <DatePickerFormatted
+                <DateTimePicker
                   {...field}
                   id="grbReviewAsyncEndDate"
                   name="grbReviewAsyncEndDate"
                   value={field.value || ''}
-                  format={formatEndOfDayDeadline}
-                  dateInPastWarning
+                  onChange={val => {
+                    const formattedDate = formatEndOfDayDeadline(
+                      val?.toISOString() || ''
+                    );
+                    field.onChange(formattedDate);
+                  }}
+                  isDateInPast={false}
                 />
 
                 {!!watch('grbReviewAsyncEndDate') && (
