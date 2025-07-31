@@ -1,0 +1,14 @@
+meta {
+  name: Set Intake Relations
+  seq: 5
+}
+
+auth {
+  mode: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}

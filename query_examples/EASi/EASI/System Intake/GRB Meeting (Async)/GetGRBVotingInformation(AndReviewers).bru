@@ -1,0 +1,51 @@
+meta {
+  name: GetGRBVotingInformation(AndReviewers)
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  query getSystemIntakeGRBReviewers {
+    systemIntake(id: "{{systemIntakeID}}") {
+      id
+      grbVotingInformation {
+        votingStatus
+        numberOfNoObjection
+        numberOfObjection
+        numberOfNotVoted
+        grbReviewers {
+          id
+          systemIntakeID
+          grbRole
+          votingRole
+          userAccount {
+            username
+            id
+            givenName
+            commonName
+            email
+          }
+          vote
+          voteComment
+          createdAt
+          createdBy
+          modifiedAt
+          modifiedBy
+        }
+      }
+    }
+  }
+  
+}

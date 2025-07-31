@@ -1,0 +1,37 @@
+meta {
+  name: Get Software Products By System
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  query($systemID: String!) {
+    cedarSoftwareProducts(cedarSystemId: $systemID){
+      apiDataArea
+      apiDescPublished
+      apiDescPubLocation
+      apiFHIRUse
+      softwareProducts {
+          apiGatewayUse
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+      "systemID": "{{CedarSystemId}}"
+  }
+}

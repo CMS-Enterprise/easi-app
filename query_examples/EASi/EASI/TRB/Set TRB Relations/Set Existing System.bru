@@ -1,0 +1,48 @@
+meta {
+  name: Set Existing System
+  type: graphql
+  seq: 3
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation SetTRBRequestRelationExistingSystem ($input: SetTRBRequestRelationExistingSystemInput!) {
+      setTRBRequestRelationExistingSystem(input:$input) {
+          id
+          contractName
+          relationType
+          contractNumbers {
+              contractNumber
+          }
+          systems {
+              id
+              name
+          }
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+      "input": {
+          "trbRequestID": "0750a172-233d-4890-9d9a-07eaa14d00d8",
+          "contractNumbers": ["123"],
+          "cedarSystemIDs": [
+              "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
+              "{11AB1A00-1234-5678-ABC1-1A001B00CC2C}",
+              "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"
+          ]
+      }
+  }
+}

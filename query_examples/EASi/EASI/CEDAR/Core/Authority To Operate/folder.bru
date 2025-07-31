@@ -1,0 +1,14 @@
+meta {
+  name: Authority To Operate
+  seq: 6
+}
+
+auth {
+  mode: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}

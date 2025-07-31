@@ -1,0 +1,36 @@
+meta {
+  name: Manually End SystemIntake GRB Review Async Voting
+  type: graphql
+  seq: 20
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation ManuallyEndSystemIntakeGRBReviewAsyncVoting {
+    manuallyEndSystemIntakeGRBReviewAsyncVoting(systemIntakeID: "{{systemIntakeID}}") {
+      systemIntake {
+        id
+        grbReviewAsyncStatus
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "systemIntakeID": "{{systemIntakeID}}"
+    }
+  }
+}

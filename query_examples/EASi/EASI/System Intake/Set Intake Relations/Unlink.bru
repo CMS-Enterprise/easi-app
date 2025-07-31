@@ -1,0 +1,44 @@
+meta {
+  name: Unlink
+  type: graphql
+  seq: 4
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation UnlinkSystemIntakeRelation ($intakeID: UUID!) {
+      unlinkSystemIntakeRelation(intakeID: $intakeID) {
+          userErrors {
+              message
+              path
+          }
+          systemIntake {
+              id
+              step
+              state
+              relationType
+              contractName
+              contractNumbers {
+                  contractNumber
+              }
+          }
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+      "intakeID": "{{systemIntakeID}}"
+  }
+}

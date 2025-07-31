@@ -1,0 +1,79 @@
+meta {
+  name: Add User Role to System
+  type: http
+  seq: 12
+}
+
+post {
+  url: {{CedarApiUrl}}/role?objectId={{CedarSystemId}}
+  body: json
+  auth: apikey
+}
+
+params:query {
+  objectId: {{CedarSystemId}}
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:apikey {
+  key: x-Gateway-APIKey
+  value: {{CedarApiKey}}
+  placement: header
+}
+
+body:json {
+  {
+      "Roles": [
+          {
+              "application": "{{CedarApplication}}",
+              "objectId": "{{CedarSystemId}}",
+              "assigneeUserName": "{{EUAID}}",
+              "roleTypeId": "{{CedarApiContactRoleID}}"
+          }
+      ],
+      "application": "{{CedarApplication}}"
+  }
+}
+
+script:pre-request {
+  const CedarSystemId = bru.getVar("CedarSystemId")
+  test("CedarSystemId is set (Call \"Get Systems\" first if it is not)", function() {
+          expect(CedarSystemId).to.exist
+          expect(CedarSystemId).to.not.be.empty
+  })
+  if (!CedarSystemId) return bru.runner.skipRequest();
+  
+  // Gets the Cedar ID for API Contact before making request
+  let existingRoleID = bru.getVar("CedarApiContactRoleID")
+  if (existingRoleID) return
+  await bru.sendRequest({
+      url: `${bru.getVar("CedarApiUrl")}/role/type/${bru.getVar("CedarApplication")}`,
+      method: "GET",
+      headers: {
+          "x-Gateway-APIKey": bru.getVar("CedarApiKey"),
+          "Content-Type": "application/json"
+      }
+  }, async function(err, res) {
+      test("Could not make request for Role Types", function() {
+          expect(err).to.not.exist
+      })
+      if (err) return bru.runner.skipRequest();
+  
+      const data = res.data
+      test("Could not parse json for Role Types", function() {
+          expect(data).to.exist
+      })
+      if (!data) return bru.runner.skipRequest();
+  
+      const ApiRole = data.RoleTypes.find(role => role.name === "API Contact")
+      test("Could not find API Contact Role Type ID", function() {
+          expect(ApiRole).to.exist
+      })
+      if (!ApiRole) return bru.runner.skipRequest();
+  
+      bru.setVar("CedarApiContactRoleID", ApiRole.id)
+  })
+}

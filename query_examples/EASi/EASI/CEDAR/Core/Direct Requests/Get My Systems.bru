@@ -1,0 +1,27 @@
+meta {
+  name: Get My Systems
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{CedarApiUrl}}/system/summary?includeInSurvey=true&state=active&userName={{EUAID}}
+  body: none
+  auth: apikey
+}
+
+params:query {
+  includeInSurvey: true
+  state: active
+  userName: {{EUAID}}
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:apikey {
+  key: x-Gateway-APIKey
+  value: {{CedarApiKey}}
+  placement: header
+}

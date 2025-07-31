@@ -1,0 +1,47 @@
+meta {
+  name: Get GRB Presentation Links
+  type: graphql
+  seq: 13
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  query getSystemIntakeGRBReviewers($systemIntakeID: UUID!) {
+    systemIntake(id: $systemIntakeID) {
+      id
+      grbPresentationLinks {
+        systemIntakeID
+        createdAt
+        createdBy
+        modifiedAt
+        modifiedBy
+        recordingLink
+        recordingPasscode
+        transcriptFileName
+        transcriptFileStatus
+        transcriptFileURL
+        presentationDeckFileName
+        presentationDeckFileStatus
+        presentationDeckFileURL
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+      "systemIntakeID": "5af245bc-fc54-4677-bab1-1b3e798bb43c"
+  }
+}

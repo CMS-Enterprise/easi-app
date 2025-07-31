@@ -1,0 +1,33 @@
+meta {
+  name: Get My Systems
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  query {
+    myCedarSystems{
+      id
+      name
+      description
+      acronym
+      status
+      businessOwnerOrg
+      businessOwnerOrgComp
+      systemMaintainerOrg
+      systemMaintainerOrgComp
+    }
+  }
+}

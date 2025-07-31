@@ -1,0 +1,28 @@
+meta {
+  name: Delete Insight
+  type: graphql
+  seq: 4
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation {
+      deleteTRBGuidanceLetterInsight(id:"db4f0bb0-1352-4428-92b1-eeab8131d379") {
+          id
+          trbRequestId
+          title
+          insight
+      }
+  }
+}

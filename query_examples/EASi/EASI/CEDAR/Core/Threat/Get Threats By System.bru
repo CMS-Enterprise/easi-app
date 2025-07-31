@@ -1,0 +1,37 @@
+meta {
+  name: Get Threats By System
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  query GetThreatsBySystem($cedarSystemId: String!) {
+   cedarThreat(cedarSystemId: $cedarSystemId){
+     alternativeId
+     controlFamily
+     daysOpen
+     id
+     parentId
+     type
+     weaknessRiskLevel
+   }
+  }
+}
+
+body:graphql:vars {
+  {
+      "cedarSystemId": "{{CedarSystemId}}"
+  }
+}

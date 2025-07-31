@@ -1,0 +1,39 @@
+meta {
+  name: EASiCedarSystemRolesGet
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  query($cedarSystemId: String!) {
+    cedarSystemDetails(cedarSystemId: $cedarSystemId) {
+      cedarSystem {
+        name
+      }
+      roles {
+        roleID
+        assigneeUsername
+        roleTypeID
+        roleTypeName
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+      "cedarSystemId": "{{CedarSystemId}}"
+  }
+}

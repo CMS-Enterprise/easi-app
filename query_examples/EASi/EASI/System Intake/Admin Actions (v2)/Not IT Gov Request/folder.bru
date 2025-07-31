@@ -1,0 +1,14 @@
+meta {
+  name: Not IT Gov Request
+  seq: 6
+}
+
+auth {
+  mode: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}

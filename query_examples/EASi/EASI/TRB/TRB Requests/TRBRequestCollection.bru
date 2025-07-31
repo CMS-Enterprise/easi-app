@@ -1,0 +1,38 @@
+meta {
+  name: TRBRequestCollection
+  type: graphql
+  seq: 4
+}
+
+post {
+  url: http://localhost:8080/api/graph/query
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  query trbRequests{
+   trbRequests(archived: false){
+   id
+   name
+   archived
+   type
+   status
+   relationType
+   contractName
+   contractNumbers {
+   contractNumber
+   }
+   createdBy
+   createdAt
+   modifiedBy
+   modifiedAt
+   }
+  }
+}

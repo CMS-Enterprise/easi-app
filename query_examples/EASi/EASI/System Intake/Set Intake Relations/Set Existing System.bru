@@ -1,0 +1,59 @@
+meta {
+  name: Set Existing System
+  type: graphql
+  seq: 3
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation SetSystemIntakeRelationExistingSystem ($input: SetSystemIntakeRelationExistingSystemInput!) {
+      setSystemIntakeRelationExistingSystem(input:$input) {
+          userErrors {
+              message
+              path
+          }
+          systemIntake {
+              id
+              step
+              state
+              relationType
+              contractName
+              contractNumbers {
+                  contractNumber
+              }
+              systems {
+                  id
+                  name
+                  acronym
+              }
+          }
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+      "input": {
+          "systemIntakeID": "{{systemIntakeID}}",
+          "contractNumbers": [
+              "abcde",
+              "fghij"
+          ],
+          "cedarSystemIDs": [
+              "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
+              "{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"
+          ]
+      }
+  }
+}

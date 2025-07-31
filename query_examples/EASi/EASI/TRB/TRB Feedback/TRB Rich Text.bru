@@ -1,0 +1,48 @@
+meta {
+  name: TRB Rich Text
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation CreateTrbRequestFeedback($input: CreateTRBRequestFeedbackInput!) {
+    createTRBRequestFeedback(input: $input) {
+          id
+          trbRequestId
+          feedbackMessage
+          copyTrbMailbox
+          notifyEuaIds
+          action
+          createdBy
+          createdAt
+          modifiedBy
+          modifiedAt
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "copyTrbMailbox": true,
+      "feedbackMessage": "<p><strong>Notification email</strong></p><p>A <a href=\"asdasd\" target=\"_blank\">notification</a> email will be sent to the requester when you complete this action. If you would like, you may also send a copy to the TRB mailbox and/or to any additional attendees.</p><p>Choose recipients</p><ol><li><p>asd</p></li><li><p>asd</p></li><li><p>asdewg</p></li></ol><ul><li><p>Hello</p></li><li><p><em>;l;lk;kl;</em></p></li></ul><script>This is a script that will be sanitized</script>",
+      "notifyEuaIds": [
+        "USR1"
+      ],
+      "trbRequestId": "{{trbRequestID}}",
+      "action": "READY_FOR_CONSULT"
+    }
+  }
+}

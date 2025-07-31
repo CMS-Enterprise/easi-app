@@ -1,0 +1,14 @@
+meta {
+  name: System Summary
+  seq: 3
+}
+
+auth {
+  mode: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}

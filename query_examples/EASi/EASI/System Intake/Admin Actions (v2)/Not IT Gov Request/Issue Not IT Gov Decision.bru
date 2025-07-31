@@ -1,0 +1,52 @@
+meta {
+  name: Issue Not IT Gov Decision
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation CreateSystemIntakeActionNotITGovRequest (
+      $input: SystemIntakeNotITGovReqInput!
+      ) {
+      createSystemIntakeActionNotITGovRequest(input: $input) {
+          systemIntake {
+              id
+              state
+              step
+              decisionNextSteps
+              decisionState
+              updatedAt
+          }
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+      "input": {
+          "systemIntakeID": "{{systemIntakeID}}",
+          "notificationRecipients": {
+              "regularRecipientEmails": [
+                  "{{testEmailAddress}}"
+              ],
+              "shouldNotifyITGovernance": false,
+              "shouldNotifyITInvestment": false
+          },
+          "reason": "This is the reason",
+          "additionalInfo": "additional info",
+          "adminNote": "my admin note"
+      }
+  }
+}

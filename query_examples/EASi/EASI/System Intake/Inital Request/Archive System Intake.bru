@@ -1,0 +1,32 @@
+meta {
+  name: Archive System Intake
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation ArchiveSystemIntake($id: UUID!) {
+      archiveSystemIntake(id: $id) {
+          id
+          archivedAt
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+      "id": "{{systemIntakeID}}"
+  }
+}

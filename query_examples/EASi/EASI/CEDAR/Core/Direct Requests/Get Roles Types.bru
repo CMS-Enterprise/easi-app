@@ -1,0 +1,29 @@
+meta {
+  name: Get Roles Types
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{CedarApiUrl}}/role/type/{{CedarApplication}}
+  body: none
+  auth: apikey
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:apikey {
+  key: x-Gateway-APIKey
+  value: {{CedarApiKey}}
+  placement: header
+}
+
+script:post-response {
+  const data = res.getBody()
+  if (!data) return
+  const ApiRole = data.RoleTypes.find(role => role.name === "API Contact")
+  if (!ApiRole) return
+  bru.setVar("CedarApiContactRoleID", ApiRole.id)
+}

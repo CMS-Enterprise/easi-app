@@ -1,0 +1,33 @@
+meta {
+  name: Get Organizations
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  query GetOrganizations($organizationId: String, $organizationAcronym: String, $organizationName: String) {
+      organizations(organizationId: $organizationId, organizationAcronym: $organizationAcronym, organizationName: $organizationName) {
+          id
+          name
+          acronym
+          component
+          description
+          fullPath
+          isComponent
+          level
+          parentId
+      }
+  }
+}

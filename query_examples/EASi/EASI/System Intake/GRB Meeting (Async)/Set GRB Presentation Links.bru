@@ -1,0 +1,50 @@
+meta {
+  name: Set GRB Presentation Links
+  type: graphql
+  seq: 14
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation setSystemIntakeGRBPresentationLinks(
+    $input: SystemIntakeGRBPresentationLinksInput!
+  ) {
+    setSystemIntakeGRBPresentationLinks(input: $input) {
+      systemIntakeID
+      createdAt
+      createdBy
+      modifiedAt
+      modifiedBy
+      recordingLink
+      recordingPasscode
+      transcriptFileName
+      transcriptFileStatus
+      transcriptFileURL
+      presentationDeckFileName
+      presentationDeckFileStatus
+      presentationDeckFileURL
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "systemIntakeID": "8edb237e-ad48-49b2-91cf-8534362bc6cf",
+      "recordingLink": "https://google.com",
+      "recordingPasscode": "123456"
+    }
+  }
+}

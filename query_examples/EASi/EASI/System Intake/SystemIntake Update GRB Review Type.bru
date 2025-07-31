@@ -1,0 +1,37 @@
+meta {
+  name: SystemIntake Update GRB Review Type
+  type: graphql
+  seq: 19
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation UpdateSystemIntakeGRBReviewType($input: updateSystemIntakeGRBReviewTypeInput!) {
+    updateSystemIntakeGRBReviewType(input: $input) {
+      systemIntake {
+        id
+        grbReviewType
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "systemIntakeID": "{{systemIntakeID}}",
+      "grbReviewType": "ASYNC"
+    }
+  }
+}

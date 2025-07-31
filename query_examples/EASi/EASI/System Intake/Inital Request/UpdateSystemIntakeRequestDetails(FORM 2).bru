@@ -1,0 +1,49 @@
+meta {
+  name: UpdateSystemIntakeRequestDetails(FORM 2)
+  type: graphql
+  seq: 6
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation UpdateSystemIntakeRequestDetails($input: UpdateSystemIntakeRequestDetailsInput!) {
+    updateSystemIntakeRequestDetails(input: $input) {
+      systemIntake {
+        id
+        status
+        requestName
+        businessNeed
+        businessSolution
+        needsEaSupport
+        hasUiChanges
+        __typename
+      }
+      __typename
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "id": "{{systemIntakeID}}",
+      "requestName": "Happy Happy Fun TIme",
+      "businessNeed": "This will make sure everyone has a good day. Believe me",
+      "businessSolution": "Pizza parties every 3 hours.",
+      "currentStage": "I have done some initial research",
+      "needsEaSupport": false,
+      "hasUiChanges": true
+    }
+  }
+}

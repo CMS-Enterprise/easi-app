@@ -1,0 +1,51 @@
+meta {
+  name: Restart Async GRB Review
+  type: graphql
+  seq: 21
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation restartGRBReviewAsync(
+    $input: RestartGRBReviewInput!
+  ) {
+    restartGRBReviewAsync(input: $input) {
+      systemIntake {
+        grbReviewStartedAt
+        grbReviewAsyncEndDate
+        grbReviewAsyncManualEndDate
+  
+        statusAdmin
+        grbReviewAsyncStatus
+  
+        itGovTaskStatuses {
+          grbMeetingStatus
+        }
+  
+        grbVotingInformation {
+          votingStatus
+        }
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "systemIntakeID": "{{systemIntakeID}}",
+      "newGRBEndDate": "2030-03-10T14:00:00Z"
+    }
+  }
+}

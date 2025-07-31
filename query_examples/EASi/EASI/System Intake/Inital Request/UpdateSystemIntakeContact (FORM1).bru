@@ -1,0 +1,48 @@
+meta {
+  name: UpdateSystemIntakeContact (FORM1)
+  type: graphql
+  seq: 4
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation UpdateSystemIntakeContact($input: UpdateSystemIntakeContactInput!) {
+    updateSystemIntakeContact(input: $input) {
+      #   "{{$guid}}" #use this to make a guid
+        #this gets submitted 3 times to provide all the contacts we need
+      systemIntakeContact {
+        id # NOTE, this is provided by the front end!
+        euaUserId
+        systemIntakeId
+        component
+        role
+        __typename
+      }
+      __typename
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "id": "{{systemIntakeContactID}}",
+      "euaUserId": "ADMN",
+      "component": "Center for Clinical Standards and Quality",
+      "role": "Business Owner",
+      "systemIntakeId": "{{systemIntakeID}}"
+    }
+  }
+}

@@ -1,0 +1,97 @@
+meta {
+  name: Req Edits on Final Business Case
+  type: graphql
+  seq: 3
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation CreateSystemIntakeActionRequestEdits($input: SystemIntakeRequestEditsInput!) {
+    createSystemIntakeActionRequestEdits(input: $input) {
+      systemIntake {
+        id
+        currentStage
+        step
+        state
+        requestFormState
+        grtMeetingState
+        grbMeetingState
+        draftBusinessCaseState
+        finalBusinessCaseState
+        fundingSources {
+          source
+          fundingNumber
+          __typename
+        }
+        costs {
+          expectedIncreaseAmount
+          __typename
+        }
+        annualSpending {
+          currentAnnualSpending
+          plannedYearOneSpending
+          __typename
+        }
+        contract {
+          contractor
+          endDate {
+            day
+            month
+            year
+            __typename
+          }
+          hasContract
+          startDate {
+            day
+            month
+            year
+            __typename
+          }
+          __typename
+        }
+        contractNumbers {
+          id
+          systemIntakeID
+          contractNumber
+          createdBy
+          createdAt
+          modifiedBy
+          modifiedAt
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+      "input": {
+          "systemIntakeID": "{{systemIntakeID}}",
+          "intakeFormStep": "FINAL_BUSINESS_CASE",
+          "notificationRecipients": {
+              "regularRecipientEmails": [
+                  "{{testEmailAddress}}"
+              ],
+              "shouldNotifyITGovernance": false,
+              "shouldNotifyITInvestment": false
+          },
+          "emailFeedback": "email feedback goes here",
+          "additionalInfo": "additional info",
+          "adminNote": "my admin note"
+      }
+  }
+}

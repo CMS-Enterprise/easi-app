@@ -1,0 +1,61 @@
+meta {
+  name: Issue LCID, generating new LCID
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation IssueLCID ($input: SystemIntakeIssueLCIDInput!) {
+      createSystemIntakeActionIssueLCID(input:$input) {
+          userErrors {
+              message
+              path
+          }
+          systemIntake {
+              step
+              state
+              decisionState
+              lcid
+              lcidExpiresAt
+              lcidScope
+              decisionNextSteps
+              trbFollowUpRecommendation
+              lcidCostBaseline
+          }
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+      "input": {
+          "systemIntakeID": "{{systemIntakeID}}",
+          "notificationRecipients": {
+              "regularRecipientEmails": [
+                  "{{testEmailAddress}}"
+              ],
+              "shouldNotifyITGovernance": false,
+              "shouldNotifyITInvestment": false
+          },
+          "expiresAt": "2040-07-28T20:12:31.703Z",
+          "scope": "scope for generated LCID",
+          "nextSteps": "do what you want with your fancy new LCID",
+          "trbFollowUp": "RECOMMENDED_BUT_NOT_CRITICAL",
+          "costBaseline": "one billion dollars",
+          "additionalInfo": "some info for the email about the new LCID",
+          "adminNote": "a billion here, a billion there, sooner or later you're talking real money"
+      }
+  }
+}
