@@ -79,7 +79,7 @@ func getGRBEmailJobs(scheduler *Scheduler) *grbEmailJobs {
 }
 
 func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, scheduledJob *ScheduledJob) error {
-	logger, err := scheduledJob.logger()
+	logger, err := scheduledJob.logger(ctx)
 	if err != nil {
 		return err
 	}
@@ -163,7 +163,7 @@ func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, schedule
 }
 
 func sendAsyncPastDueNoQuorumEmailJobFunction(ctx context.Context, scheduledJob *ScheduledJob) error {
-	logger, err := scheduledJob.logger()
+	logger, err := scheduledJob.logger(ctx)
 	if err != nil {
 		return err
 	}
@@ -248,7 +248,7 @@ func sendAsyncPastDueNoQuorumEmailJobFunction(ctx context.Context, scheduledJob 
 }
 
 func sendGRBReviewEndedEmailJobFunction(ctx context.Context, scheduledJob *ScheduledJob) error {
-	logger, err := scheduledJob.logger()
+	logger, err := scheduledJob.logger(ctx)
 	if err != nil {
 		return err
 	}
@@ -354,7 +354,7 @@ func sendGRBReviewLastDayReminderJobFunction(
 	ctx context.Context,
 	scheduledJob *ScheduledJob,
 ) error {
-	logger, err := scheduledJob.logger()
+	logger, err := scheduledJob.logger(ctx)
 	if err != nil {
 		return err
 	}
@@ -490,7 +490,7 @@ func sendGRBReviewLastDayReminderJobFunction(
 }
 
 func sendAsyncReviewCompleteQuorumMetJobFunction(ctx context.Context, scheduledJob *ScheduledJob) error {
-	logger, err := scheduledJob.logger()
+	logger, err := scheduledJob.logger(ctx)
 	if err != nil {
 		return err
 	}

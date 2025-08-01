@@ -26,7 +26,7 @@ func GetExampleJobs(scheduler *Scheduler) *exampleJobs {
 	}
 }
 func simplifiedJobFunction(ctx context.Context, scheduledJob *ScheduledJob) error {
-	logger, err := scheduledJob.logger()
+	logger, err := scheduledJob.logger(ctx)
 	if err != nil {
 		return err
 	}
