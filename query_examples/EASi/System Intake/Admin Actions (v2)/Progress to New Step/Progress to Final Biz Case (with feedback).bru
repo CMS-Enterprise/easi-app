@@ -1,0 +1,71 @@
+meta {
+  name: Progress to Final Biz Case (with feedback)
+  type: graphql
+  seq: 7
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation CreateSystemIntakeActionProgressToNewStep($input: SystemIntakeProgressToNewStepsInput!) {
+      createSystemIntakeActionProgressToNewStep(input: $input) {
+          systemIntake {
+              step
+              governanceRequestFeedbacks {
+                  id
+                  feedback
+                  sourceAction
+                  targetForm
+                  type
+                  author {
+                      euaUserId
+                      commonName
+                      email
+                  }
+              }
+              actions {
+                  feedback
+                  type
+              }
+              notes {
+                  content
+                  author {
+                      eua
+                      name
+                  }
+              }
+          }
+      }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+      "input": {
+          "systemIntakeID": "{{systemIntakeID}}",
+          "notificationRecipients": {
+              "regularRecipientEmails": [
+                  "{{testEmailAddress}}"
+              ],
+              "shouldNotifyITGovernance": false,
+              "shouldNotifyITInvestment": false
+          },
+          "newStep": "FINAL_BUSINESS_CASE",
+          "feedback": "You're doing good!",
+          "additionalInfo": "This is a note in the email",
+          "adminNote": "Team - make sure this looks ready to go",
+          "grbRecommendations": "Make sure to ask the Business Owner how they plan to reverse the polarity of the neutron flow"
+      }
+  }
+}

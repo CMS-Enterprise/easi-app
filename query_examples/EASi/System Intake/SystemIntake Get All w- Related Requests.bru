@@ -1,0 +1,34 @@
+meta {
+  name: SystemIntake Get All w/ Related Requests
+  type: graphql
+  seq: 11
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  query systemIntake {
+      systemIntakes(openRequests: true) {
+          id
+          requestName
+          relatedIntakes {
+              id
+              requestName
+          }
+          relatedTRBRequests {
+              id
+              name
+          }
+      }
+  }
+}

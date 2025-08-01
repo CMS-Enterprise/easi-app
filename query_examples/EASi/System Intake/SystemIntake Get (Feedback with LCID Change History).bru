@@ -1,0 +1,67 @@
+meta {
+  name: SystemIntake Get (Feedback with LCID Change History)
+  type: graphql
+  seq: 15
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  query {
+    systemIntake(id:"{{systemIntakeID}}") {
+      requestName
+      governanceRequestFeedbacks {
+        id
+        feedback
+        sourceAction
+        targetForm
+        type
+        author {
+            euaUserId
+            commonName
+            email
+        }
+      }
+      actions {
+          feedback
+          type
+          step
+          previousRetirementDate
+          newRetirementDate
+          lcidExpirationChange{
+              previousDate
+              newDate
+              previousScope
+              newScope
+              previousNextSteps
+              newNextSteps
+              previousCostBaseline
+              newCostBaseline
+          }
+      }
+      notes {
+          content
+          author {
+              eua
+              name
+          }
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+      "id": "{{systemIntakeID}}"
+  }
+}

@@ -1,0 +1,32 @@
+meta {
+  name: Update System Intake GRB Review Form Timeframe (Async)
+  type: graphql
+  seq: 24
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation UpdateSystemIntakeGRBReviewFormTimeframeAsync{
+    updateSystemIntakeGRBReviewFormTimeframeAsync(input: {
+      systemIntakeID: "{{systemIntakeID}}",
+      grbReviewAsyncEndDate: "2026-03-10T14:00:00Z",
+      # startGRBReview: true
+       }){
+      systemIntake {
+        id
+        grbReviewAsyncEndDate
+      }
+    }
+  }
+}

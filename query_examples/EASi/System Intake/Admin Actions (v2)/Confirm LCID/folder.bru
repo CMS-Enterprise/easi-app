@@ -1,0 +1,14 @@
+meta {
+  name: Confirm LCID
+  seq: 7
+}
+
+auth {
+  mode: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}

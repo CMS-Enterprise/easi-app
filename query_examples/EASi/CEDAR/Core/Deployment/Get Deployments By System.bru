@@ -1,0 +1,65 @@
+meta {
+  name: Get Deployments By System
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  query GetDeploymentsBySystem($cedarSystemId: String!, $deploymentType: String, $state: String, $status: String){
+      deployments(cedarSystemId: $cedarSystemId, deploymentType: $deploymentType, state: $state, status: $status) {
+          id
+          name
+          systemID
+          startDate
+          endDate
+          isHotSite
+          description
+          contractorName
+          systemVersion
+          hasProductionData
+          replicatedSystemElements
+          deploymentType
+          systemName
+          deploymentElementID
+          state
+          status
+          wanType
+          dataCenter {
+              id
+              name
+              version
+              description
+              state
+              status
+              startDate
+              endDate
+              address1
+              address2
+              city
+              addressState
+              zip
+          }
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+      "cedarSystemId": "{{CedarSystemId}}",
+      "deploymentType": "",
+      "state": "",
+      "status": ""
+  }
+}

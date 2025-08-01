@@ -1,0 +1,43 @@
+meta {
+  name: Set New System
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation SetTRBRequestRelationNewSystem ($input: SetTRBRequestRelationNewSystemInput!) {
+      setTRBRequestRelationNewSystem(input:$input) {
+          id
+          relationType
+          contractName
+          contractNumbers {
+              contractNumber
+          }
+          systems {
+              id
+              name
+          }
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+      "input": {
+          "trbRequestID": "{{trbRequestID}}",
+          "contractNumbers": ["123", "456"]
+      }
+  }
+}

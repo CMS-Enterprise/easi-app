@@ -1,0 +1,41 @@
+meta {
+  name: EASI
+  seq: 1
+}
+
+auth {
+  mode: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+vars:pre-request {
+  EUAID: USR1
+  testEmailAddress: user.one@local.fake
+  jobCodes: ["EASI_USER", "EASI_D_GOVTEAM","EASI_TRB_ADMIN_D"]
+  authHeader: Local {"EUAID":"{{EUAID}}","jobCodes":{{jobCodes}},"favorLocalAuth":true}
+  trbAttendeeID: 
+  trbRequestID: 
+  trbRequestFormID: 
+  host: http://localhost:8080
+  url: {{host}}/api/graph/query
+  systemIntakeID: 
+  systemIntakeContactID: 
+  apiURL: {{host}}/api/v1
+  businessCaseID: 
+  OktaApiUrl: https://test.idp.idm.cms.gov
+  OktaApiToken: 
+  CedarApiKey: 
+  CedarApiUrl: https://webmethods-apigw.cedarimpl.cms.gov/gateway/CEDAR Core API/2.0.0
+  CedarSystemId: 
+  CedarApplication: alfabet
+  CedarSystemApiRoleIds: 
+  CedarApiContactRoleID: 
+  CedarAtoIds: 
+  SystemIntakeGRBReviewerID: 
+  SystemIntakeGRBDiscussionID: 
+  UserAccountID: 
+}

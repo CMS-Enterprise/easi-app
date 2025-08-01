@@ -1,0 +1,21 @@
+meta {
+  name: Get Organizations
+  type: http
+  seq: 17
+}
+
+get {
+  url: {{CedarApiUrl}}/organization
+  body: none
+  auth: apikey
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:apikey {
+  key: x-Gateway-APIKey
+  value: {{CedarApiKey}}
+  placement: header
+}

@@ -1,0 +1,35 @@
+meta {
+  name: TRBRequestAttendeesUPDATE
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/api/graph/query
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation {
+    updateTRBRequestAttendee(input: { 
+        id: "{{trbAttendeeID}}"
+        , component: "Services", role: PRIVACY_ADVISOR}) {
+      id
+      euaUserId
+      trbRequestId
+      component
+      role
+      createdBy
+      createdAt
+      modifiedBy
+      modifiedAt
+    }
+  }
+}

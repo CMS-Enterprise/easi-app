@@ -1,0 +1,33 @@
+meta {
+  name: Direct Requests
+  seq: 1
+}
+
+auth {
+  mode: apikey
+}
+
+auth:apikey {
+  key: x-Gateway-APIKey
+  value: {{CedarApiKey}}
+  placement: header
+}
+script:pre-request {
+  const CedarApiKey = bru.getVar("CedarApiKey")
+  test("CedarApiKey is set (Can be found in 1pass)", function() {
+          expect(CedarApiKey).to.exist
+          expect(CedarApiKey).to.not.be.empty
+  })
+  if (!CedarApiKey) return bru.runner.skipRequest();
+  
+  const CedarApiUrl = bru.getVar("CedarApiUrl")
+  test("CedarApiUrl is set  (Can be found in .envrc)", function() {
+          expect(CedarApiUrl).to.exist
+          expect(CedarApiUrl).to.not.be.empty
+  })
+  if (!CedarApiUrl) return bru.runner.skipRequest();
+}
+
+docs {
+  These requests bypass the EASi GraphQL API and make calls directly to CEDAR.
+}

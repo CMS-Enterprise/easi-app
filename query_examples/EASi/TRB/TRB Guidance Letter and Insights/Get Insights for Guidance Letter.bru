@@ -1,0 +1,36 @@
+meta {
+  name: Get Insights for Guidance Letter
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  query {
+      trbRequest(id: "{{trbRequestID}}") {
+          id
+          name
+          guidanceLetter {
+              id
+              insights {
+                  id
+                  title
+                  insight
+                  category
+                  links
+              }
+          }
+      }
+  }
+}

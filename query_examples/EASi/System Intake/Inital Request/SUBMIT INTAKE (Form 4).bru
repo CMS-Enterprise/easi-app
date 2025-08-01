@@ -1,0 +1,91 @@
+meta {
+  name: SUBMIT INTAKE (Form 4)
+  type: graphql
+  seq: 8
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation SubmitIntake($input: SubmitIntakeInput!) {
+    submitIntake(input: $input) {
+      systemIntake {
+      requestFormState
+      # status
+        id
+        __typename
+              id
+  #   actions
+    adminLead
+    archivedAt
+  #   businessCase
+    businessNeed
+  #   businessOwner
+    businessSolution
+  #   contract
+  #   costs
+    createdAt
+    currentStage
+    decisionNextSteps
+    collaborator508
+    collaboratorName508
+    euaUserId
+    existingFunding
+  #   fundingSources
+  #   governanceTeams
+    grbDate
+    grtDate
+  #   grtFeedbacks
+    id
+  #   isso
+    lcid
+    lcidExpiresAt
+    lcidScope
+    lcidCostBaseline
+    needsEaSupport
+  #   notes
+    oitSecurityCollaborator
+    oitSecurityCollaboratorName
+  #   productManager
+    projectAcronym
+    rejectionReason
+    requestName
+    requestType
+  #   requester
+    # status
+    submittedAt
+    trbCollaborator
+    trbCollaboratorName
+    updatedAt
+    grtReviewEmailBody
+    decidedAt
+    businessCaseId
+  #   lastAdminNote
+    cedarSystemId
+  #   documents
+    hasUiChanges
+      
+  
+      }
+      __typename
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "id": "{{systemIntakeID}}"
+    }
+  }
+}

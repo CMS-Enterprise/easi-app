@@ -1,0 +1,48 @@
+meta {
+  name: Progress to Draft Biz Case
+  type: graphql
+  seq: 6
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation CreateSystemIntakeActionProgressToNewStep($input: SystemIntakeProgressToNewStepsInput!) {
+      createSystemIntakeActionProgressToNewStep(input: $input) {
+          systemIntake {
+              step
+          }
+      }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+      "input": {
+          "systemIntakeID": "{{systemIntakeID}}",
+          "notificationRecipients": {
+              "regularRecipientEmails": [
+                  "{{testEmailAddress}}"
+              ],
+              "shouldNotifyITGovernance": false,
+              "shouldNotifyITInvestment": false
+          },
+          "newStep": "DRAFT_BUSINESS_CASE",
+          "feedback": "",
+          "additionalInfo": "add'l info",
+          "grbRecommendations": "",
+          "adminNote": "admin note"
+      }
+  }
+}
