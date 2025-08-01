@@ -50,20 +50,23 @@ const FundingSourcesTable = ({
             {t('general:remove')}
           </Button>
         );
-      }
+      },
+      width: 'auto'
     };
 
     return [
       {
         Header: t<string>('projectNumber'),
         accessor: 'projectNumber',
-        id: 'projectNumber'
+        id: 'projectNumber',
+        width: removeFundingSource ? 250 : 300
       },
       {
         Header: t<string>('investments'),
         accessor: 'investments',
         id: 'investments',
-        Cell: ({ value }: { value: string[] }) => <>{value.join(', ')}</>
+        Cell: ({ value }: { value: string[] }) => <>{value.join(', ')}</>,
+        width: 'auto'
       },
       ...(removeFundingSource ? [actionsColumn] : [])
     ];
@@ -110,6 +113,9 @@ const FundingSourcesTable = ({
                       key={headerKey}
                       aria-sort={getColumnSortStatus(column)}
                       scope="col"
+                      style={{
+                        width: column.width
+                      }}
                     >
                       <Button
                         type="button"
