@@ -55,6 +55,7 @@ const FundingSourceFormModal = ({
       projectNumber: '',
       investments: []
     },
+    reValidateMode: 'onSubmit',
     resolver: yupResolver(FundingSourceValidationSchema),
     // Pass initial project numbers as context to resolver to validate uniqueness
     context: {

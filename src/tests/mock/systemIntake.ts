@@ -524,7 +524,8 @@ export const systemIntake: SystemIntakeFragmentFragment = {
     numberOfObjection: 2,
     numberOfNotVoted: 3
   },
-  grbReviewAsyncEndDate: null
+  grbReviewAsyncEndDate: null,
+  grbReviewStartedAt: null
 };
 
 export const systemIntakeForTable: GetSystemIntakesTableQuery['systemIntakes'][number] =

@@ -47,7 +47,7 @@ export default function TruncatedContent({
             buttonClassName
           )}
         >
-          <ArrowIcon className="margin-x-05" />{' '}
+          <ArrowIcon className="margin-x-05" aria-hidden />{' '}
           {isExpanded ? labelLess : labelMore}
         </Button>
       )}
