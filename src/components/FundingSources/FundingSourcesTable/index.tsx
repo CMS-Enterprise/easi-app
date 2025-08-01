@@ -101,7 +101,11 @@ const FundingSourcesTable = ({
 
                   if (column.id === 'actions') {
                     return (
-                      <th {...headerProps} key={headerKey}>
+                      <th
+                        {...headerProps}
+                        key={headerKey}
+                        className="border-bottom-2px"
+                      >
                         {column.render('Header')}
                       </th>
                     );
@@ -113,6 +117,7 @@ const FundingSourcesTable = ({
                       key={headerKey}
                       aria-sort={getColumnSortStatus(column)}
                       scope="col"
+                      className="border-bottom-2px"
                       style={{
                         width: column.width
                       }}

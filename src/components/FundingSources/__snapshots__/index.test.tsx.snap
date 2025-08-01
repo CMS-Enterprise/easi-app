@@ -45,6 +45,7 @@ exports[`Funding sources > matches the snapshot 1`] = `
           >
             <th
               aria-sort="none"
+              class="border-bottom-2px"
               colspan="1"
               role="columnheader"
               scope="col"
@@ -77,6 +78,7 @@ exports[`Funding sources > matches the snapshot 1`] = `
             </th>
             <th
               aria-sort="none"
+              class="border-bottom-2px"
               colspan="1"
               role="columnheader"
               scope="col"
@@ -108,6 +110,7 @@ exports[`Funding sources > matches the snapshot 1`] = `
               </button>
             </th>
             <th
+              class="border-bottom-2px"
               colspan="1"
               role="columnheader"
             >
