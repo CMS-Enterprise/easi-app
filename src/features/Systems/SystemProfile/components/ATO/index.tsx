@@ -158,9 +158,13 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
                       />
                       <DescriptionDefinition
                         className="line-height-body-3 font-body-md"
-                        definition={showAtoExpirationDate(
-                          ato.dateAuthorizationMemoExpires
-                        )}
+                        definition={
+                          ato.oaStatus === 'OA Member'
+                            ? t('singleSystem.ato.atoOngoing')
+                            : showAtoExpirationDate(
+                                ato.dateAuthorizationMemoExpires
+                              )
+                        }
                       />
                     </Grid>
                     <Grid desktop={{ col: 6 }}>
