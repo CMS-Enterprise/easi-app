@@ -509,6 +509,7 @@ export default {
     restartReview: 'Restart review',
     grbReviewStatus,
     timeRemaining: 'Time remaining for review',
+    timePastDue: 'Time past due',
     countdown: '{{days}} days, {{hours}} hours, {{minutes}} minutes',
     reviewEnds: 'Review ends {{date}}, 5:00pm EST',
     reviewEnds_PAST_DUE: 'Original end date: {{date}}, 5:00pm EST',
