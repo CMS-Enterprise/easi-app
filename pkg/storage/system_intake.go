@@ -655,6 +655,11 @@ func GetSystemIntakesWithGRBReviewCompleteQuorumMet(ctx context.Context, np sqlu
 func GetSystemIntakesWithGRBReviewEnded(ctx context.Context, np sqlutils.NamedPreparer, logger *zap.Logger) ([]*models.SystemIntake, error) {
 	var intakes []*models.SystemIntake
 
+	if err := namedSelect(ctx, np, &intakes, sqlqueries.SystemIntake.GetWhereGRBReviewEnded, nil); err != nil {
+		logger.Error("Failed to fetch system intakes where GRB Review ended", zap.Error(err))
+		return nil, err
+	}
+
 	return intakes, nil
 }
 
