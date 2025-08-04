@@ -170,6 +170,7 @@ describe('GRBReviewStatusCard', () => {
       });
 
       expect(screen.getByTestId('async-status')).toHaveTextContent('Past due');
+      expect(screen.getByText('Time past due')).toBeInTheDocument();
       expect(
         screen.getByText('Original end date: 03/30/2025, 5:00pm EST')
       ).toBeInTheDocument();
