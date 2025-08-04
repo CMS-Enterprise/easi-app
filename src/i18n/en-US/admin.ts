@@ -24,10 +24,6 @@ const admin = {
     status: 'Status',
     submissionDate: 'Submission date'
   },
-  list: [
-    'This request uses the selected system in its existing or proposed technical solution or is impacted by the selected system',
-    'This request impacts the selected system'
-  ],
   relatedRequestsTable: {
     id: 'related-requests-table',
     title: 'Related requests',
