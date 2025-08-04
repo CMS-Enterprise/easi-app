@@ -55,7 +55,7 @@ const AdditionalInformation = ({
             to={`/${parentRoute}/${request.id}/system-information/link`}
           >
             {parentRoute === 'it-governance'
-              ? linkedSystemsT('editInformation')
+              ? linkedSystemsT('editSystemInformation')
               : adminT('editInformation')}
           </UswdsReactLink>
         </div>
