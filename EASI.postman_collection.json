@@ -1,7 +1,9 @@
 {
 	"info": {
+		"_postman_id": "8303fa43-4330-4e7c-a01d-2c258ee11413",
 		"name": "EASI",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20541818"
 	},
 	"item": [
 		{
@@ -1418,7 +1420,7 @@
 										"exec": [
 											"let responseData = pm.response.json().data.setSystemIntakeRelationExistingSystem",
 											"",
-											"systemIntakeSystemId = responseData.systemIntake.cedarSystemRelationShips[0].id",
+											"systemIntakeSystemId = responseData.systemIntake.systemIntakeSystems[0].id",
 											"",
 											"",
 											"pm.collectionVariables.set(\"systemIntakeSystemId\", systemIntakeSystemId);",
