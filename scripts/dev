@@ -458,6 +458,23 @@ namespace :test do
   end
 end
 
+namespace :job do
+  desc "Run a named scheduled job manually (e.g. scripts/dev job:run grb_review_ended)"
+  task :run => :consume_args do |t, args|
+    job_name = $extra_args&.first
+
+    unless job_name
+      puts "⚠️  Please pass a job name, e.g. scripts/dev job:run grb_review_ended"
+      exit 1
+    end
+
+    sh "go run cmd/scheduled_job_runner/main.go -job=#{job_name}"
+  end
+  task :list do
+    sh "go run cmd/scheduled_job_runner/main.go --list"
+  end
+end
+
 desc "Build the Go application"
 task :build do
   sh("go build -a -o bin/easi ./cmd/easi")

@@ -97,3 +97,15 @@ func (s *Scheduler) Stop() error {
 	s.logger.Info("Scheduler stopped successfully")
 	return nil
 }
+
+func (s *Scheduler) Registry() map[string]RegisterJobFunction {
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
+
+	// Return a copy to avoid outside mutation
+	copy := make(map[string]RegisterJobFunction, len(s.registry))
+	for k, v := range s.registry {
+		copy[k] = v
+	}
+	return copy
+}
