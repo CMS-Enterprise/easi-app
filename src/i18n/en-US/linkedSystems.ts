@@ -33,7 +33,7 @@ export default {
   dontEditAndReturn: "Don't add a system and return to request",
   addSystem: 'Add system',
   relationshipTypes: {
-    pleaseExplain: 'Please Explain',
+    pleaseExplain: 'Please explain',
     PRIMARY_SUPPORT:
       'This request primarily supports the selected system or is the main ADO contract for the selected system',
     PARTIAL_SUPPORT:

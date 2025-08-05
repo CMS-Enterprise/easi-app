@@ -353,7 +353,7 @@ const LinkedSystemsForm = () => {
             onSubmit={handleSubmit(() => submit())}
           >
             <Grid row>
-              <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
+              <Grid tablet={{ col: 12 }} desktop={{ col: 9 }}>
                 <Fieldset disabled={relationLoading}>
                   {relationLoading && <Spinner size="small" />}
                   {!relationLoading && (
@@ -367,6 +367,7 @@ const LinkedSystemsForm = () => {
                             <Label
                               htmlFor="cedarSystemID"
                               hint={t('cmsSystemsDropdown.hint')}
+                              className="text-normal"
                             >
                               {t('cmsSystemsDropdown.title')}{' '}
                               <RequiredAsterisk />
@@ -397,6 +398,7 @@ const LinkedSystemsForm = () => {
                       <Label
                         htmlFor="cedarSystemID"
                         hint={t('relationship.hint')}
+                        className="text-normal"
                       >
                         {t('relationship.title')} <RequiredAsterisk />
                       </Label>
@@ -408,7 +410,7 @@ const LinkedSystemsForm = () => {
                     name="relationshipTypes.primarySupport"
                     render={({ field: { ref, ...field } }) => (
                       <CheckboxField
-                        label={t('relationshipTypes.primarySupport')}
+                        label={t('relationshipTypes.PRIMARY_SUPPORT')}
                         id="primarySupport"
                         name="primarySupport"
                         value={SystemRelationshipType.PRIMARY_SUPPORT}
@@ -424,7 +426,7 @@ const LinkedSystemsForm = () => {
                     name="relationshipTypes.partialSupport"
                     render={({ field: { ref, ...field } }) => (
                       <CheckboxField
-                        label={t('relationshipTypes.partialSupport')}
+                        label={t('relationshipTypes.PARTIAL_SUPPORT')}
                         id="partialSupport"
                         name="partialSupport"
                         value={SystemRelationshipType.PARTIAL_SUPPORT}
@@ -441,7 +443,7 @@ const LinkedSystemsForm = () => {
                     render={({ field: { ref, ...field } }) => (
                       <CheckboxField
                         label={t(
-                          'relationshipTypes.usesOrImpactedBySelectedSystems'
+                          'relationshipTypes.USES_OR_IMPACTED_BY_SELECTED_SYSTEM'
                         )}
                         id="usesOrImpactedBySelectedSystem"
                         name="usesOrImpactedBySelectedSystem"
@@ -460,7 +462,7 @@ const LinkedSystemsForm = () => {
                     name="relationshipTypes.impactsSelectedSystem"
                     render={({ field: { ref, ...field } }) => (
                       <CheckboxField
-                        label={t('relationshipTypes.impactsSelectedSystem')}
+                        label={t('relationshipTypes.IMPACTS_SELECTED_SYSTEM')}
                         id="impactsSelectedSystem"
                         name="impactsSelectedSystem"
                         value={SystemRelationshipType.IMPACTS_SELECTED_SYSTEM}
@@ -476,7 +478,7 @@ const LinkedSystemsForm = () => {
                     defaultValue={false}
                     render={({ field }) => (
                       <CheckboxField
-                        label={t('relationshipTypes.other')}
+                        label={t('relationshipTypes.OTHER')}
                         id="other"
                         name="other"
                         value={SystemRelationshipType.OTHER}
@@ -492,9 +494,8 @@ const LinkedSystemsForm = () => {
                       className="margin-top-1 margin-left-4"
                       error={!!errors.otherDescription}
                     >
-                      <Label htmlFor="otherDescription">
+                      <Label htmlFor="otherDescription" className="text-normal">
                         {t('relationshipTypes.pleaseExplain')}
-                        <RequiredAsterisk />
                       </Label>
                       <ErrorMessage
                         errors={errors}
