@@ -10,12 +10,7 @@ import {
   useSortBy,
   useTable
 } from 'react-table';
-import {
-  Button,
-  Icon,
-  Link,
-  Table as UswdsTable
-} from '@trussworks/react-uswds';
+import { Button, Link, Table as UswdsTable } from '@trussworks/react-uswds';
 import {
   CedarSystem,
   GetCedarSystemsQuery,
@@ -24,11 +19,9 @@ import {
 } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
-import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
-import TableResults from 'components/TableResults';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   getColumnSortStatus,
@@ -70,11 +63,7 @@ const LinkedSystemsTable = ({
 
   const history = useHistory();
 
-  const {
-    loading: loadingSystems,
-    error: cedarSystemsError,
-    data
-  } = useGetCedarSystemsQuery();
+  const { loading, error: cedarSystemsError, data } = useGetCedarSystemsQuery();
 
   const organizedCedarSystems = useMemo(
     () => organizeCedarSystems(data),
@@ -90,71 +79,62 @@ const LinkedSystemsTable = ({
     [t]
   );
 
-  const columns: Column<SystemIntakeSystem>[] = useMemo(() => {
-    const cols: Column<SystemIntakeSystem>[] = [];
-
-    cols.push({
-      Header: t<string>('linkedSystemsTable.header.systemName'),
-      accessor: 'systemID',
-      id: 'systemID',
-      Cell: ({ row }: { row: Row<SystemIntakeSystem> }) => {
-        return (
-          <p>
-            {t(`${organizedCedarSystems[row.original.systemID]?.name}` || '')}
-          </p>
-        );
+  const columns = useMemo<Column<SystemIntakeSystem>[]>(() => {
+    return [
+      {
+        Header: t<string>('linkedSystemsTable.header.systemName'),
+        accessor: 'systemID',
+        id: 'systemID',
+        Cell: ({ row }: { row: Row<SystemIntakeSystem> }) => {
+          return (
+            <p>
+              {t(`${organizedCedarSystems[row.original.systemID]?.name}` || '')}
+            </p>
+          );
+        }
+      },
+      {
+        Header: t<string>('linkedSystemsTable.header.relationships'),
+        accessor: 'systemRelationshipType',
+        id: 'systemRelationshipType',
+        Cell: ({ row }: { row: Row<SystemIntakeSystem> }) => {
+          return (
+            <>{translateSystemRelationships({ ...row }.cells[1]?.value)}</>
+          );
+        }
+      },
+      {
+        Header: t<string>('linkedSystemsTable.header.actions'),
+        Cell: ({ row }: { row: Row<SystemIntakeSystem> }) => {
+          return (
+            <div>
+              <Button
+                type="button"
+                unstyled
+                onClick={() =>
+                  history.push(
+                    `/linked-systems-form/${systemIntakeId}${row.original.id ? `/${row.original.id}` : ''}`
+                  )
+                }
+              >
+                {t('linkedSystemsTable.edit')}
+              </Button>
+              <span className="margin-x-1" />
+              <Button
+                type="button"
+                unstyled
+                className="text-error"
+                onClick={() => onRemoveLink(row.original.id)}
+              >
+                {t('linkedSystemsTable.remove')}
+              </Button>
+              <span className="margin-x-1" />
+            </div>
+          );
+        }
       }
-    });
-
-    cols.push({
-      Header: t<string>('linkedSystemsTable.header.relationships'),
-      accessor: 'systemRelationshipType',
-      id: 'systemRelationshipType',
-      Cell: ({ row }: { row: Row<SystemIntakeSystem> }) => {
-        return <>{translateSystemRelationships({ ...row }.cells[1]?.value)}</>;
-      }
-    });
-
-    cols.push({
-      Header: t<string>('linkedSystemsTable.header.actions'),
-      Cell: ({ row }: { row: Row<SystemIntakeSystem> }) => {
-        return (
-          <div>
-            <Button
-              type="button"
-              unstyled
-              onClick={() =>
-                history.push(
-                  `/linked-systems-form/${systemIntakeId}${row.original.id ? `/${row.original.id}` : ''}`
-                )
-              }
-            >
-              {t('linkedSystemsTable.edit')}
-            </Button>
-            <span className="margin-x-1" />
-            <Button
-              type="button"
-              unstyled
-              className="text-error"
-              onClick={() => onRemoveLink(row.original.id)}
-            >
-              {t('linkedSystemsTable.remove')}
-            </Button>
-            <span className="margin-x-1" />
-          </div>
-        );
-      }
-    });
-
-    return cols;
-  }, [
-    systemIntakeId,
-    t,
-    history,
-    onRemoveLink,
-    translateSystemRelationships,
-    organizedCedarSystems
-  ]);
+    ];
+  }, []);
 
   const {
     getTableProps,
@@ -171,8 +151,7 @@ const LinkedSystemsTable = ({
     rows,
     nextPage,
     previousPage,
-    setPageSize,
-    state: { pageIndex, pageSize }
+    setPageSize
   } = useTable(
     {
       sortTypes: {
@@ -204,131 +183,106 @@ const LinkedSystemsTable = ({
 
   rows.forEach(row => prepareRow(row));
 
+  if (loading) {
+    return <PageLoading />;
+  }
+
   return (
-    <div className="margin-bottom-6">
-      {systems.length > 0 && (
-        <>
-          <TableResults
-            globalFilter={state.globalFilter}
-            pageIndex={pageIndex}
-            pageSize={pageSize}
-            filteredRowLength={rows.length}
-            rowLength={systems.length}
-            className="margin-bottom-4"
+    <>
+      <UswdsTable
+        bordered={false}
+        fullWidth
+        scrollable
+        {...getTableProps()}
+        // className="margin-bottom-5"
+      >
+        <caption className="usa-sr-only">{t('systemTable.caption')}</caption>
+
+        <thead>
+          {headerGroups.map(headerGroup => {
+            return (
+              <tr key={{ ...headerGroup.getHeaderGroupProps() }.key}>
+                {headerGroup.headers.map((column, index) => (
+                  <th
+                    aria-sort={getColumnSortStatus(column)}
+                    scope="col"
+                    style={{
+                      minWidth: index === 0 ? '50px' : '150px',
+                      padding: index === 0 ? '0' : 'auto',
+                      paddingLeft: index === 0 ? '.5em' : 'auto',
+                      position: 'relative'
+                    }}
+                    key={column.id}
+                  >
+                    <button
+                      className="usa-button usa-button--unstyled"
+                      type="button"
+                      {...column.getSortByToggleProps()}
+                    >
+                      {column.render('Header')}
+                      {getHeaderSortIcon(column)}
+                    </button>
+                  </th>
+                ))}
+              </tr>
+            );
+          })}
+        </thead>
+
+        <tbody {...getTableBodyProps()}>
+          {page.map(row => {
+            const { id, cells } = { ...row };
+            return (
+              <tr key={id}>
+                {cells.map((cell, index) => (
+                  <td
+                    style={{
+                      paddingLeft: index === 0 ? '.5em' : 'auto'
+                    }}
+                    key={{ ...cell.getCellProps() }.key}
+                  >
+                    {cell.render('Cell')}
+                  </td>
+                ))}
+              </tr>
+            );
+          })}
+        </tbody>
+      </UswdsTable>
+
+      <div className="grid-row grid-gap grid-gap-lg">
+        {systems.length > state.pageSize && (
+          <TablePagination
+            gotoPage={gotoPage}
+            previousPage={previousPage}
+            nextPage={nextPage}
+            canNextPage={canNextPage}
+            pageIndex={state.pageIndex}
+            pageOptions={pageOptions}
+            canPreviousPage={canPreviousPage}
+            pageCount={pageCount}
+            pageSize={state.pageSize}
+            setPageSize={setPageSize}
+            page={[]}
+            className="desktop:grid-col-fill"
           />
-          <UswdsTable
-            bordered={false}
-            fullWidth
-            scrollable
-            {...getTableProps()}
-          >
-            <caption className="usa-sr-only">
-              {t('systemTable.caption')}
-            </caption>
+        )}
+        {systems.length > 5 && (
+          <TablePageSize
+            className="desktop:grid-col-auto"
+            pageSize={state.pageSize}
+            setPageSize={setPageSize}
+          />
+        )}
+      </div>
 
-            <thead>
-              {headerGroups.map(headerGroup => {
-                return (
-                  <tr key={{ ...headerGroup.getHeaderGroupProps() }.key}>
-                    {headerGroup.headers.map((column, index) => (
-                      <th
-                        aria-sort={getColumnSortStatus(column)}
-                        scope="col"
-                        style={{
-                          minWidth: index === 0 ? '50px' : '150px',
-                          padding: index === 0 ? '0' : 'auto',
-                          paddingLeft: index === 0 ? '.5em' : 'auto',
-                          position: 'relative'
-                        }}
-                        key={column.id}
-                      >
-                        <button
-                          className="usa-button usa-button--unstyled"
-                          type="button"
-                          {...column.getSortByToggleProps()}
-                        >
-                          {column.render('Header')}
-                          {getHeaderSortIcon(column)}
-                        </button>
-                      </th>
-                    ))}
-                  </tr>
-                );
-              })}
-            </thead>
-
-            <tbody {...getTableBodyProps()}>
-              {page.map(row => {
-                const { id, cells } = { ...row };
-                return (
-                  <tr key={id}>
-                    {cells.map((cell, index) => (
-                      <td
-                        style={{
-                          paddingLeft: index === 0 ? '.5em' : 'auto'
-                        }}
-                        key={{ ...cell.getCellProps() }.key}
-                      >
-                        {cell.render('Cell')}
-                      </td>
-                    ))}
-                  </tr>
-                );
-              })}
-            </tbody>
-          </UswdsTable>
-
-          <div className="grid-row grid-gap grid-gap-lg">
-            {systems.length > state.pageSize && (
-              <TablePagination
-                gotoPage={gotoPage}
-                previousPage={previousPage}
-                nextPage={nextPage}
-                canNextPage={canNextPage}
-                pageIndex={state.pageIndex}
-                pageOptions={pageOptions}
-                canPreviousPage={canPreviousPage}
-                pageCount={pageCount}
-                pageSize={state.pageSize}
-                setPageSize={setPageSize}
-                page={[]}
-                className="desktop:grid-col-fill"
-              />
-            )}
-            {systems.length > 5 && (
-              <TablePageSize
-                className="desktop:grid-col-auto"
-                pageSize={state.pageSize}
-                setPageSize={setPageSize}
-              />
-            )}
-          </div>
-        </>
-      )}
-      {loadingSystems && <PageLoading />}
       {(!systems || systems.length === 0) && (
-        <Alert type="info" className="margin-top-5">
-          {isHomePage ? (
-            <Trans
-              i18nKey="systemProfile:systemTable.noMySystem.description"
-              components={{
-                link1: <Link href="EnterpriseArchitecture@cms.hhs.gov"> </Link>,
-                link2: <UswdsReactLink to="/systems"> </UswdsReactLink>,
-                iconForward: (
-                  <Icon.ArrowForward
-                    className="icon-top margin-left-05"
-                    aria-hidden
-                  />
-                )
-              }}
-            />
-          ) : (
-            <Trans i18nKey="linkedSystems:linkedSystemsTable.noSystemsListed" />
-          )}
+        <Alert type="info" className="margin-top-0">
+          <Trans i18nKey="linkedSystems:linkedSystemsTable.noSystemsListed" />
         </Alert>
       )}
       {cedarSystemsError && (
-        <Alert type="warning" className="margin-top-5">
+        <Alert type="warning" className="margin-top-0">
           <Trans
             i18nKey="linkedSystems:linkedSystemsTable.errorRetrievingCedarSystems"
             components={{
@@ -337,7 +291,7 @@ const LinkedSystemsTable = ({
           />
         </Alert>
       )}
-    </div>
+    </>
   );
 };
 
