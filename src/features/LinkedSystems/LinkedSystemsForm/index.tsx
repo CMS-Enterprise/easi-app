@@ -6,6 +6,7 @@ import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
+  Checkbox,
   Fieldset,
   Form,
   FormGroup,
@@ -409,10 +410,13 @@ const LinkedSystemsForm = () => {
                     control={control}
                     name="relationshipTypes.primarySupport"
                     render={({ field: { ref, ...field } }) => (
-                      <CheckboxField
-                        label={t('relationshipTypes.PRIMARY_SUPPORT')}
+                      <Checkbox
                         id="primarySupport"
                         name="primarySupport"
+                        label={t('relationshipTypes.PRIMARY_SUPPORT')}
+                        labelDescription={t(
+                          'relationshipTypes.primarySupportHint'
+                        )}
                         value={SystemRelationshipType.PRIMARY_SUPPORT}
                         checked={field.value ?? false}
                         onChange={e => field.onChange(e.target.checked)}

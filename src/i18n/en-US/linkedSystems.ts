@@ -36,6 +36,8 @@ export default {
     pleaseExplain: 'Please explain',
     PRIMARY_SUPPORT:
       'This request primarily supports the selected system or is the main ADO contract for the selected system',
+    primarySupportHint:
+      'For example, choose this option if the content in this request is mostly for one specific system, or if this is the only contract supporting a particular system.',
     PARTIAL_SUPPORT:
       'This request partially contributes financially to the selected system',
     USES_OR_IMPACTED_BY_SELECTED_SYSTEM:
