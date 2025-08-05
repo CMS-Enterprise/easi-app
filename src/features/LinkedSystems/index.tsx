@@ -40,6 +40,7 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
   }>();
 
   const history = useHistory();
+  console.log(history.location.state);
 
   const { t } = useTranslation([
     'linkedSystems',

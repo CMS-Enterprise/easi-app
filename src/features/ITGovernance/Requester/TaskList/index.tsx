@@ -283,10 +283,6 @@ function GovernanceTaskList() {
                   </div>
                 )}
 
-                <UswdsReactLink to={`/edit-linked-systems/${systemId}`}>
-                  {t('additionalRequestInfo.viewOrEditSystemInformation')}
-                </UswdsReactLink>
-
                 <AdditionalRequestInfo {...systemIntake} requestType="itgov" />
 
                 <h4 className="line-height-body-2 margin-top-3 margin-bottom-1">

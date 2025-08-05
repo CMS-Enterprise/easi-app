@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 import { Button, Icon } from '@trussworks/react-uswds';
 import { RequestRelationType } from 'gql/generated/graphql';
 
@@ -90,6 +91,7 @@ function AdditionalRequestInfo({
   requestType: RequestType;
 }) {
   const { t } = useTranslation('itGov');
+  const history = useHistory();
 
   const editLink =
     system.requestType === 'trb'
@@ -107,25 +109,43 @@ function AdditionalRequestInfo({
           <div className="task-list-sidebar__subtitle">
             {t('additionalRequestInfo.doesNotSupportOrUseOtherSystems')}
           </div>
-          <UswdsReactLink to={editLink}>
+          <Button
+            type="button"
+            onClick={() =>
+              history.push(editLink, {
+                from: 'task-list'
+              })
+            }
+            unstyled
+          >
             {t('additionalRequestInfo.viewOrEditSystemInformation')}
-          </UswdsReactLink>
+          </Button>
         </>
       )}
 
       {system.relationType !== null && (
-        <p className="text-base margin-top-1 margin-bottom-0">
-          {system.relationType === RequestRelationType.EXISTING_SERVICE &&
-            t('additionalRequestInfo.existingService')}
-          {system.relationType === RequestRelationType.EXISTING_SYSTEM &&
-            t('additionalRequestInfo.existingSystem')}
-          {system.relationType === RequestRelationType.NEW_SYSTEM &&
-            t('additionalRequestInfo.newSystem')}
-          <br />
-          <UswdsReactLink to={editLink}>
+        <>
+          <p className="text-base margin-top-1 margin-bottom-0">
+            {system.relationType === RequestRelationType.EXISTING_SERVICE &&
+              t('additionalRequestInfo.existingService')}
+            {system.relationType === RequestRelationType.EXISTING_SYSTEM &&
+              t('additionalRequestInfo.existingSystem')}
+            {system.relationType === RequestRelationType.NEW_SYSTEM &&
+              t('additionalRequestInfo.newSystem')}
+            <br />
+          </p>
+          <Button
+            type="button"
+            onClick={() =>
+              history.push(editLink, {
+                from: 'task-list'
+              })
+            }
+            unstyled
+          >
             {t('additionalRequestInfo.edit')}
-          </UswdsReactLink>
-        </p>
+          </Button>
+        </>
       )}
 
       {system.systems && system.systems.length > 0 && (
@@ -133,9 +153,18 @@ function AdditionalRequestInfo({
           <div className="task-list-sidebar__subtitle">
             {t('additionalRequestInfo.linkedSystems')}
           </div>
-          <UswdsReactLink to={editLink}>
+
+          <Button
+            type="button"
+            onClick={() =>
+              history.push(editLink, {
+                from: 'task-list'
+              })
+            }
+            unstyled
+          >
             {t('additionalRequestInfo.edit')}
-          </UswdsReactLink>
+          </Button>
           <SystemCardList items={system.systems} />
         </>
       )}

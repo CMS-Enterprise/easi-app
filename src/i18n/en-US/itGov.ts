@@ -195,6 +195,7 @@ export default {
   },
   link: {
     header: 'Does this request involve any CMS systems?',
+    editHeader: 'Edit linked system(s)',
     description:
       'If you are requesting a Life Cycle ID (LCID) and governance approval for a new IT investment that is a part of an existing system, please include additional details below.',
     form: {
