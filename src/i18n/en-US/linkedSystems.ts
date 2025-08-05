@@ -33,14 +33,6 @@ export default {
   dontEditAndReturn: "Don't add a system and return to request",
   addSystem: 'Add system',
   relationshipTypes: {
-    primarySupport:
-      'This request primarily supports the selected system or is the main ADO contract for the selected system.',
-    partialSupport:
-      'This request partially contributes financially to the selected system.',
-    usesOrImpactedBySelectedSystems:
-      'This request uses the selected system in its existing or proposed technical solution or is impacted by the selected system.',
-    impactsSelectedSystem: 'This request impacts the selected system. ',
-    other: 'Other',
     pleaseExplain: 'Please Explain',
     PRIMARY_SUPPORT:
       'This request primarily supports the selected system or is the main ADO contract for the selected system',
@@ -79,5 +71,9 @@ export default {
       'Checking this box will remove all previously -added links to systems. Are you sure you want to continue? You may re-link systems later if needed.',
     remove: 'Remove linked system',
     dontRemove: "Don't remove"
-  }
+  },
+  title: 'System information',
+  description:
+    'This request is related to the system(s) indicated below. They could be related for a variety of reasons, including because this request funds the system or because this request uses the system in its proposed technical solution.',
+  editSystemInformation: 'Edit system information'
 };

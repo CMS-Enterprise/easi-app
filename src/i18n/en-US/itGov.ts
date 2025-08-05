@@ -205,7 +205,7 @@ export default {
           reasonsToAddSystem: {
             primarySupport: 'This is the primary contract to fund a system',
             partialSupport:
-              'Funding allocated to this project is used to support a system, even if it not the primary support contract',
+              'Funding allocated to this project is used to support a system, even if it is not the primary support contract',
             usesOrImpactedBySelectedSystem:
               'This project uses a system in its technical solution',
             impactsSelectedSystem:
