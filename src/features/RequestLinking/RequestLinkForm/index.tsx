@@ -299,16 +299,14 @@ const RequestLinkForm = ({
             });
     }
 
-    p
-      ?.then(
-        res => {
-          if (res?.data) history.push(redirectUrl);
-        },
-        () => {}
-      )
-      .catch(() => {
-        setUserError(true);
-      });
+    p?.then(
+      res => {
+        if (res?.data) history.push(redirectUrl);
+      },
+      () => {}
+    ).catch(() => {
+      setUserError(true);
+    });
   });
 
   const unlink = () => {
