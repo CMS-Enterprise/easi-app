@@ -355,7 +355,7 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
             history.goBack();
           }}
         >
-          {t('itGov:link.form.dontEditAndReturn')}
+          {t('itGov:link.cancelAndExit')}
         </IconButton>
       </Form>
       <Modal
