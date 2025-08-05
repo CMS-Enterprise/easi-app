@@ -201,18 +201,16 @@ export default {
       field: {
         systemOrService: {
           label: 'Does this project support or involve any other CMS systems?',
+          needHelp:
+            'If you are unsure or need help, please reach out to the Governance Admin Team at <emailLink>{{email}}</emailLink>.',
           hint: 'Please add a CMS system here if:',
-          reasonsToAddSystem: {
-            primarySupport: 'This is the primary contract to fund a system',
-            partialSupport:
-              'Funding allocated to this project is used to support a system, even if it is not the primary support contract',
-            usesOrImpactedBySelectedSystem:
-              'This project uses a system in its technical solution',
-            impactsSelectedSystem:
-              'Your project is used by another system to support its business need',
-            other:
-              'Your project has any other relationship with a CMS system not described above'
-          },
+          reasonsToAddSystem: [
+            'This is the primary contract to fund a system',
+            'Funding allocated to this project is used to support a system, even if it is not the primary support contract',
+            'This project uses a system in its technical solution',
+            'Your project is used by another system to support its business need',
+            'Your project has any other relationship with a CMS system not described above'
+          ],
           options: [
             'No, this is a completely new system, service, or contract',
             'Yes, an existing system',

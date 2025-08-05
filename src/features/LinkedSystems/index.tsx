@@ -11,6 +11,7 @@ import {
   Form,
   Grid,
   Icon,
+  Link as TrussLink,
   ModalHeading
 } from '@trussworks/react-uswds';
 import {
@@ -28,6 +29,7 @@ import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import RequiredAsterisk from 'components/RequiredAsterisk';
+import { IT_GOV_EMAIL } from 'constants/externalUrls';
 
 import LinkedSystemTable from './LinkedSystemsTable';
 
@@ -57,7 +59,6 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
   };
 
   const location = useLocation<LinkedSystemsLocationState>();
-  console.log('location', location);
 
   const showSuccessfullyUpdated = location.state?.successfullyUpdated;
   const showSuccessfullyAdded = location.state?.successfullyAdded;
@@ -261,44 +262,40 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
 
       <Form className="easi-form maxw-full" onSubmit={e => e.preventDefault()}>
         <Grid row>
-          <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
+          <Grid tablet={{ col: 12 }} desktop={{ col: 9 }}>
             <Fieldset
               legend={
-                <h4 className="margin-top-0 margin-bottom-1 line-height-heading-2">
+                <h4 className="margin-top-0 margin-bottom-05 line-height-heading-2">
                   {t(`itGov:link.form.field.systemOrService.label`)}
                 </h4>
               }
             >
-              <p className="text-base margin-top-1 margin-bottom-3">
+              <p className="text-base margin-y-0">
                 {t(`itGov:link.form.field.systemOrService.hint`)}
               </p>
-              <ul className="text-base">
-                <li>
-                  {t(
-                    'itGov:link.form.field.systemOrService.reasonsToAddSystem.primarySupport'
-                  )}
-                </li>
-                <li>
-                  {t(
-                    'itGov:link.form.field.systemOrService.reasonsToAddSystem.partialSupport'
-                  )}
-                </li>
-                <li>
-                  {t(
-                    'itGov:link.form.field.systemOrService.reasonsToAddSystem.usesOrImpactedBySelectedSystem'
-                  )}
-                </li>
-                <li>
-                  {t(
-                    'itGov:link.form.field.systemOrService.reasonsToAddSystem.impactsSelectedSystem'
-                  )}
-                </li>
-                <li>
-                  {t(
-                    'itGov:link.form.field.systemOrService.reasonsToAddSystem.other'
-                  )}
-                </li>
+              <ul className="text-base margin-top-05 margin-bottom-3 padding-left-3">
+                {(
+                  t(
+                    'itGov:link.form.field.systemOrService.reasonsToAddSystem',
+                    {
+                      returnObjects: true
+                    }
+                  ) as string[]
+                ).map(item => {
+                  return <li key={item}>{item}</li>;
+                })}
               </ul>
+              <p className="text-base margin-y-0">
+                <Trans
+                  i18nKey="itGov:link.form.field.systemOrService.needHelp"
+                  values={{ email: IT_GOV_EMAIL }}
+                  components={{
+                    emailLink: (
+                      <TrussLink href={`mailto:${IT_GOV_EMAIL}`}> </TrussLink>
+                    )
+                  }}
+                />
+              </p>
             </Fieldset>
             <Button
               type="button"
