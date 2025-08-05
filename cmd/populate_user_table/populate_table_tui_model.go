@@ -70,6 +70,18 @@ func newPopulateUserTableModel() populateUserTableTuiModel {
 				CommandName: "Generate User Accounts By Full Name List",
 				CommandRun:  func() { generateUserAccountByDisplayNameCmd.Run(generateUserAccountByDisplayNameCmd, []string{}) },
 			},
+			genericCommandOption{
+				CommandName: "Generate User Accounts By Contact User Name List",
+				CommandRun: func() {
+					generateUserAccountsByContactUsernamesCmd.Run(generateUserAccountsByContactUsernamesCmd, []string{})
+				},
+			},
+			genericCommandOption{
+				CommandName: "Generate User Accounts By Contact Common Name List",
+				CommandRun: func() {
+					generateUserAccountsByContactCommonNamesCmd.Run(generateUserAccountsByContactCommonNamesCmd, []string{})
+				},
+			},
 		},
 		// A map which indicates which choices are selected. We're using
 		// the  map like a mathematical set. The keys refer to the indexes
