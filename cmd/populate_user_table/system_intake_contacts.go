@@ -128,10 +128,9 @@ func ReadContactUsernamesFromJSONAndCreateAccounts() {
 			zap.Error(attempt.ErrorMessage),
 		)
 	}
-	filePathOutput := "contact_usernames_accounts.JSON"
-	fullPath := outputFolder + "/" + filePathOutput
-	fmt.Printf("Outputting results to %s \n", fullPath)
-	writeObjectToJSONFile(userAccountAttempts, fullPath)
+
+	fmt.Printf("Outputting results to %s \n", contactUsernamesAccountsPath)
+	writeObjectToJSONFile(userAccountAttempts, contactUsernamesAccountsPath)
 }
 
 // ReadContactCommonNamesFromJSONAndCreateAccounts reads contact_common_names.JSON and creates user accounts
@@ -148,6 +147,7 @@ func ReadContactCommonNamesFromJSONAndCreateAccounts() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Printf("Names read successfully. Proceeding to attempt to create accounts")
 	userAccountAttempts := uploader.GetOrCreateUserAccountsByFullName(ctx, commonNames)
 	for _, attempt := range userAccountAttempts {
 		fmt.Printf("\n Println for %s. Success: %v", attempt.Username, attempt.Success)
@@ -163,8 +163,7 @@ func ReadContactCommonNamesFromJSONAndCreateAccounts() {
 			zap.Error(attempt.ErrorMessage),
 		)
 	}
-	filePathOutput := "contact_common_names_accounts.JSON"
-	fullPath := outputFolder + "/" + filePathOutput
-	fmt.Printf("Outputting results to %s \n", fullPath)
-	writeObjectToJSONFile(userAccountAttempts, fullPath)
+
+	fmt.Printf("Outputting results to %s \n", contactCommonNamesAccountsPath)
+	writeObjectToJSONFile(userAccountAttempts, contactCommonNamesAccountsPath)
 }

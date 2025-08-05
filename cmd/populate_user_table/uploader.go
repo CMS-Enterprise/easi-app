@@ -32,9 +32,21 @@ const outputFolder = "cmd/populate_user_table/output"
 
 const contactCommonNamesFileName = "contact_common_names.JSON"
 const contactUsernamesFileName = "contact_usernames.JSON"
+const usernamesFileName = "usernames.JSON"
+const fullNamesFileName = "full_names.JSON"
+const contactCommonNamesAccountsFileName = "contact_common_names_accounts.JSON"
+const contactUsernamesAccountsFileName = "contact_usernames_accounts.JSON"
+const usernamesAccountsFileName = "usernames_accounts.JSON"
+const fullNamesAccountsFileName = "full_names_accounts.JSON"
 
 const contactUsernamesPath = outputFolder + "/" + contactUsernamesFileName
-const contactCommonNamesPath = outputFolder + `/` + contactCommonNamesFileName
+const contactCommonNamesPath = outputFolder + "/" + contactCommonNamesFileName
+const usernamesPath = outputFolder + "/" + usernamesFileName
+const fullNamesPath = outputFolder + "/" + fullNamesFileName
+const contactCommonNamesAccountsPath = outputFolder + "/" + contactCommonNamesAccountsFileName
+const contactUsernamesAccountsPath = outputFolder + "/" + contactUsernamesAccountsFileName
+const usernamesAccountsPath = outputFolder + "/" + usernamesAccountsFileName
+const fullNamesAccountsPath = outputFolder + "/" + fullNamesAccountsFileName
 
 // Uploader is a struct which holds relevant utilities for uploading data to the database
 type Uploader struct {
@@ -95,11 +107,8 @@ func QueryUserNamesAndExportToJSON() {
 	}
 	fmt.Printf("%d distinct usernames found. \n", len(userNames))
 
-	filePath := "usernames.JSON"
-	fullPath := outputFolder + `/` + filePath
-	// TODO: query args for a path if desired
-	fmt.Printf("Outputting results to %s \n", fullPath)
-	writeObjectToJSONFile(userNames, fullPath)
+	fmt.Printf("Outputting results to %s \n", usernamesPath)
+	writeObjectToJSONFile(userNames, usernamesPath)
 }
 
 // QueryFullNamesAndExportToJSON finds all distinct full names in the database and exports to JSON
@@ -116,11 +125,8 @@ func QueryFullNamesAndExportToJSON() {
 	}
 	fmt.Printf("%d distinct full names found. \n", len(userNames))
 
-	filePath := "full_names.JSON"
-	fullPath := outputFolder + `/` + filePath
-	// TODO: query args for a path if desired
-	fmt.Printf("Outputting results to %s \n", fullPath)
-	writeObjectToJSONFile(userNames, fullPath)
+	fmt.Printf("Outputting results to %s \n", fullNamesPath)
+	writeObjectToJSONFile(userNames, fullNamesPath)
 }
 
 // ReadUsernamesFromJSONAndCreateAccounts reads usernames and creates a user account in the db
@@ -131,11 +137,10 @@ func ReadUsernamesFromJSONAndCreateAccounts() {
 	uploader := NewUploader(config)
 	ctx = appcontext.WithLogger(ctx, &uploader.Logger)
 
-	filePath := outputFolder + `/` + "usernames.JSON"
 	userNames := []string{}
-	fmt.Printf("Attempting to read usernames from %s", filePath)
+	fmt.Printf("Attempting to read usernames from %s", usernamesPath)
 
-	err := readJSONFromFile(filePath, &userNames)
+	err := readJSONFromFile(usernamesPath, &userNames)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -154,10 +159,8 @@ func ReadUsernamesFromJSONAndCreateAccounts() {
 			zap.Error(attempt.ErrorMessage),
 		)
 	}
-	filePathOutput := "usernames_accounts.JSON"
-	fullPath := outputFolder + `/` + filePathOutput
-	fmt.Printf("Outputting results to %s \n", fullPath)
-	writeObjectToJSONFile(userAccountAttempts, fullPath) //TODO, figure out how to serialize the output better....
+	fmt.Printf("Outputting results to %s \n", usernamesAccountsPath)
+	writeObjectToJSONFile(userAccountAttempts, usernamesAccountsPath) //TODO, figure out how to serialize the output better....
 
 }
 
@@ -169,11 +172,10 @@ func ReadFullNamesFromJSONAndCreateAccounts() {
 	uploader := NewUploader(config)
 	ctx = appcontext.WithLogger(ctx, &uploader.Logger)
 
-	filePath := outputFolder + `/` + "full_names.JSON"
 	fullNames := []string{}
-	fmt.Printf("Attempting to read full_names from %s", filePath)
+	fmt.Printf("Attempting to read full_names from %s", fullNamesPath)
 
-	err := readJSONFromFile(filePath, &fullNames)
+	err := readJSONFromFile(fullNamesPath, &fullNames)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -192,10 +194,8 @@ func ReadFullNamesFromJSONAndCreateAccounts() {
 			zap.Error(attempt.ErrorMessage),
 		)
 	}
-	filePathOutput := "full_names_accounts.JSON"
-	fullPath := outputFolder + `/` + filePathOutput
-	fmt.Printf("Outputting results to %s \n", fullPath)
-	writeObjectToJSONFile(userAccountAttempts, fullPath) //TODO, figure out how to serialize the output better....
+	fmt.Printf("Outputting results to %s \n", fullNamesAccountsPath)
+	writeObjectToJSONFile(userAccountAttempts, fullNamesAccountsPath) //TODO, figure out how to serialize the output better....
 
 }
 
