@@ -59,6 +59,10 @@ func newPopulateUserTableModel() populateUserTableTuiModel {
 				CommandRun:  func() { queryContactCommonNameCmd.Run(queryContactCommonNameCmd, []string{}) },
 			},
 			genericCommandOption{
+				CommandName: "Query system intake contact Usernames and Export to file",
+				CommandRun:  func() { queryContactUsernameCmd.Run(queryContactUsernameCmd, []string{}) },
+			},
+			genericCommandOption{
 				CommandName: "Generate User Accounts By User Name List",
 				CommandRun:  func() { generateUserAccountByUsernameCmd.Run(generateUserAccountByUsernameCmd, []string{}) },
 			},

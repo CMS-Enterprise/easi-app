@@ -29,9 +29,12 @@ var getAllFullNamesSQL string
 // Uploader handles functionality for uploading data to the DB
 
 const outputFolder = "cmd/populate_user_table/output"
-const contactCommonNamesFileName = "contact_common_names.JSON"
 
-var contactCommonNamesPath = outputFolder + `/` + contactCommonNamesFileName
+const contactCommonNamesFileName = "contact_common_names.JSON"
+const contactUsernamesFileName = "contact_usernames.JSON"
+
+const contactUsernamesPath = outputFolder + "/" + contactUsernamesFileName
+const contactCommonNamesPath = outputFolder + `/` + contactCommonNamesFileName
 
 // Uploader is a struct which holds relevant utilities for uploading data to the database
 type Uploader struct {

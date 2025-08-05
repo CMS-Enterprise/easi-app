@@ -1,5 +1,5 @@
 SELECT DISTINCT
-    eua_user_id
+    eua_user_id AS username
 FROM system_intake_contacts
 WHERE eua_user_id IS NOT NULL
-ORDER BY eua_user_id;
+ORDER BY username;
