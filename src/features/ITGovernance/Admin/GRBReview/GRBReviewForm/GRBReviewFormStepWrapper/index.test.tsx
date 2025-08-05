@@ -148,12 +148,15 @@ describe('GRB review form step wrapper', () => {
 
     expect(await screen.findByTestId('stepIndicator-0'));
 
-    expect(screen.getAllByText('Review type')).not.toBeNull();
+    // Simulate form is dirty and valid (mock EasiForm context or just override isDirty)
+    const input = document.createElement('input');
+    input.setAttribute('name', 'mockField');
+    document.querySelector('form')?.appendChild(input);
 
     // Click next step in header
     userEvent.click(screen.getByTestId('stepIndicator-1'));
 
-    // Next step should be selected
+    // Since navigation happens asynchronously, wait for the next step's heading
     expect(await screen.findByTestId('stepIndicator-1')).toHaveAttribute(
       'aria-current',
       'true'

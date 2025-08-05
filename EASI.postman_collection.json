@@ -1418,7 +1418,7 @@
 										"exec": [
 											"let responseData = pm.response.json().data.setSystemIntakeRelationExistingSystem",
 											"",
-											"systemIntakeSystemId = responseData.systemIntake.cedarSystemRelationShips[0].id",
+											"systemIntakeSystemId = responseData.systemIntake.systemIntakeSystems[0].id",
 											"",
 											"",
 											"pm.collectionVariables.set(\"systemIntakeSystemId\", systemIntakeSystemId);",

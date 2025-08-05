@@ -177,21 +177,32 @@ export default {
       text: 'Is this request part of an existing system, service, or other contract?',
       answer: 'Answer'
     },
+    viewOrEditSystemInformation: 'View or edit system information',
     show: {
       more: 'Show {{count}} more',
       less: 'Show {{count}} less'
     }
   },
   link: {
-    header: 'Is this request part of an existing system, service, or contract?',
+    header: 'Edit linked system(s)?',
     description:
-      'If you are requesting a Life Cycle ID (LCID) and governance approval for a new IT investment that is a part of an existing system, service, or contract (such as a major change based on a new business need or the creation of a new sub-system) please include additional details below.',
+      'If you are requesting a Life Cycle ID (LCID) and governance approval for a new IT investment that is a part of an existing system, please include additional details below.',
     form: {
       field: {
         systemOrService: {
-          label:
-            'Is this IT Governance request part of an existing system, service, or contract?',
-          hint: 'With any of the selections below, you may add contract number(s) if there are any in place to support this effort.',
+          label: 'Does this project support or involve any other CMS systems?',
+          hint: 'Please add a CMS system here if:',
+          reasonsToAddSystem: {
+            primarySupport: 'This is the primary contract to fund a system',
+            partialSupport:
+              'Funding allocated to this project is used to support a system, even if it is not the primary support contract',
+            usesOrImpactedBySelectedSystem:
+              'This project uses a system in its technical solution',
+            impactsSelectedSystem:
+              'Your project is used by another system to support its business need',
+            other:
+              'Your project has any other relationship with a CMS system not described above'
+          },
           options: [
             'No, this is a completely new system, service, or contract',
             'Yes, an existing system',
@@ -221,9 +232,13 @@ export default {
       next: 'Next',
       skip: 'I’m not sure (skip this step)',
       back: 'Back',
+      dontEditAndReturn: "Don't edit and return to task list",
       save: 'Save',
       saveChanges: 'Save changes',
-      unlink: 'or, unlink all information'
+      unlink: 'or, unlink all information',
+      addASystem: 'Add a system',
+      doesNotSupportOrUseAnySystems:
+        'or, check this box if this project does not support or use any existing CMS systems'
     },
     cancelAndExit: 'Cancel request and exit',
     dontUpdate: 'Don’t update and return to task list',

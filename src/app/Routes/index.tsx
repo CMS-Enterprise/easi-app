@@ -24,6 +24,7 @@ import GovernanceFeedback from 'features/ITGovernance/Requester/TaskList/Feedbac
 import LcidInfo from 'features/ITGovernance/Requester/TaskList/LcidInfo';
 import PresentationDeckUpload from 'features/ITGovernance/Requester/TaskList/PresentationDeckUpload';
 import RequestDecision from 'features/ITGovernance/Requester/TaskList/RequestDecision';
+import LinkedSystemsForm from 'features/LinkedSystems/LinkedSystemsForm';
 import Login from 'features/Login';
 import AccessibilityStatement from 'features/Miscellaneous/AccessibilityStatement';
 import Cookies from 'features/Miscellaneous/Cookies';
@@ -95,6 +96,10 @@ const AppRoutes = () => {
       <SecureRoute exact path="/system/link/:id?">
         <RequestLinkForm requestType="itgov" />
       </SecureRoute>
+      <SecureRoute exact path="/edit-linked-systems/:id?">
+        <LinkedSystemsForm />
+      </SecureRoute>
+
       <SecureRoute
         path="/governance-overview/:systemId?"
         component={GovernanceOverview}
