@@ -40,7 +40,6 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
   }>();
 
   const history = useHistory();
-  console.log(history.location.state);
 
   const { t } = useTranslation([
     'linkedSystems',
@@ -57,13 +56,14 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
     successfullyAdded?: boolean;
     requestType?: string;
     isNew?: string;
+    from?: string;
   };
 
   const location = useLocation<LinkedSystemsLocationState>();
 
   const showSuccessfullyUpdated = location.state?.successfullyUpdated;
   const showSuccessfullyAdded = location.state?.successfullyAdded;
-
+  const isFromTaskList = location.state?.from === 'task-list';
   const systemUpdatedName = location.state?.systemUpdated;
 
   // Url of next view after successful form submit
@@ -249,7 +249,7 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
       )}
 
       <PageHeading className="margin-top-4 margin-bottom-0">
-        {t('itGov:link.header')}
+        {isFromTaskList ? t('itGov:link.editHeader') : t('itGov:link.header')}
       </PageHeading>
       <p className="font-body-lg line-height-body-5 text-light margin-y-0">
         {t(`itGov:link.description`)}
@@ -355,7 +355,9 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
             history.goBack();
           }}
         >
-          {t('itGov:link.cancelAndExit')}
+          {isFromTaskList
+            ? t('itGov:link.form.dontEditAndReturn')
+            : t('itGov:link.cancelAndExit')}
         </IconButton>
       </Form>
       <Modal
