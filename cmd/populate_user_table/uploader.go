@@ -286,11 +286,13 @@ func (u *Uploader) GetOrCreateUserAccounts(ctx context.Context, userNames []stri
 // GetOrCreateUserAccountsByFullName wraps the get or create user account functionality by FullName with information about if it successfully created an account or not
 func (u *Uploader) GetOrCreateUserAccountsByFullName(ctx context.Context, fullNames []string) []*UserAccountAttempt {
 	attempts := []*UserAccountAttempt{}
+	totalAmount := len(fullNames) //TODO, make this more efficient, maybe use a channel to do this concurrently?
 
-	for _, fullName := range fullNames {
+	for indexCount, fullName := range fullNames {
 		attempt := UserAccountAttempt{ //TODO, make a different struct for this specifically so we can record the name
 			Username: fullName,
 		}
+		fmt.Printf("%d of %d: Attempting to create user account for %s \n", indexCount, totalAmount, fullName)
 		account, err := userhelpers.GetOrCreateUserAccountFullName(ctx,
 			u.Store,
 			u.Store,
