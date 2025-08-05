@@ -107,10 +107,11 @@ const LinkedSystemsTable = ({
         Header: t<string>('linkedSystemsTable.header.actions'),
         Cell: ({ row }: { row: Row<SystemIntakeSystem> }) => {
           return (
-            <div>
+            <>
               <Button
                 type="button"
                 unstyled
+                className="margin-top-0"
                 onClick={() =>
                   history.push(
                     `/linked-systems-form/${systemIntakeId}${row.original.id ? `/${row.original.id}` : ''}`
@@ -119,22 +120,27 @@ const LinkedSystemsTable = ({
               >
                 {t('linkedSystemsTable.edit')}
               </Button>
-              <span className="margin-x-1" />
               <Button
                 type="button"
                 unstyled
-                className="text-error"
+                className="margin-top-0 margin-left-2 text-error"
                 onClick={() => onRemoveLink(row.original.id)}
               >
                 {t('linkedSystemsTable.remove')}
               </Button>
-              <span className="margin-x-1" />
-            </div>
+            </>
           );
         }
       }
     ];
-  }, []);
+  }, [
+    history,
+    onRemoveLink,
+    organizedCedarSystems,
+    systemIntakeId,
+    t,
+    translateSystemRelationships
+  ]);
 
   const {
     getTableProps,
