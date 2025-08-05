@@ -314,14 +314,16 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
               onChange={e => handleNoSystemsUsedCheckbox()}
               onBlur={() => null}
             />
+            <LinkedSystemTable
+              systems={
+                (data?.systemIntakeSystems as SystemIntakeSystem[]) || []
+              }
+              defaultPageSize={20}
+              isHomePage={false}
+              systemIntakeId={id}
+              onRemoveLink={handleRemoveModal}
+            />
           </Grid>
-          <LinkedSystemTable
-            systems={(data?.systemIntakeSystems as SystemIntakeSystem[]) || []}
-            defaultPageSize={20}
-            isHomePage={false}
-            systemIntakeId={id}
-            onRemoveLink={handleRemoveModal}
-          />
         </Grid>
 
         <ButtonGroup>
