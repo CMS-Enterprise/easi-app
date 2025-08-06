@@ -120,6 +120,13 @@ export default gql(/* GraphQL */ `
         assigneeLastName
       }
     }
+    systemIntakeSystems {
+      id
+      systemIntakeID
+      systemID
+      systemRelationshipType
+      otherSystemRelationshipDescription
+    }
     relatedTRBRequests {
       id
       name
