@@ -1,0 +1,122 @@
+import React, { useContext } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Alert } from '@trussworks/react-uswds';
+import classNames from 'classnames';
+import RelatedRequestsTable from 'features/Miscellaneous/AdditionalInformation/RelatedRequestsTable';
+import {
+  RequestRelationType,
+  SystemIntakeFragmentFragment
+} from 'gql/generated/graphql';
+import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
+
+import UswdsReactLink from 'components/LinkWrapper';
+import PageHeading from 'components/PageHeading';
+import SystemCardTable from 'components/SystemCard/table';
+import formatContractNumbers from 'utils/formatContractNumbers';
+
+const SystemInformation = ({
+  request
+}: {
+  request: SystemIntakeFragmentFragment;
+}) => {
+  const { t: adminT } = useTranslation('admin');
+  const { t: linkedSystemsT } = useTranslation('linkedSystems');
+
+  const isITGovAdmin = useContext(ITGovAdminContext);
+
+  return (
+    <div>
+      <PageHeading className="margin-y-0">
+        {linkedSystemsT('title')}
+      </PageHeading>
+      <p className="font-body-md line-height-body-4 text-light margin-top-05 margin-bottom-1">
+        {linkedSystemsT('description')}
+      </p>
+      {(request.relationType === RequestRelationType.EXISTING_SYSTEM ||
+        request.relationType === RequestRelationType.EXISTING_SERVICE) && (
+        <div className="margin-bottom-3">
+          <span className="font-body-md line-height-body-4 margin-right-1 text-base">
+            {adminT('somethingIncorrect')}
+          </span>
+
+          <UswdsReactLink
+            to={`/it-governance/${request.id}/system-information/link`}
+          >
+            {linkedSystemsT('editSystemInformation')}
+          </UswdsReactLink>
+        </div>
+      )}
+      {request.relationType === RequestRelationType.EXISTING_SYSTEM &&
+        request.systems.length > 0 && (
+          <SystemCardTable systems={request.systems} />
+        )}
+      {request.relationType === RequestRelationType.EXISTING_SERVICE && (
+        <div className="margin-top-3">
+          <strong>{adminT('serviceOrContract')}</strong>
+
+          <p className="margin-top-1">{request.contractName}</p>
+        </div>
+      )}
+      {request.relationType === null && (
+        <Alert
+          type="warning"
+          headingLevel="h4"
+          slim
+          className="margin-top-3 margin-bottom-2"
+        >
+          {adminT('unlinkedAlert')}
+        </Alert>
+      )}
+      {request.relationType === RequestRelationType.NEW_SYSTEM && (
+        <Alert
+          type="info"
+          headingLevel="h4"
+          slim
+          className="margin-top-3 margin-bottom-2"
+        >
+          {adminT('newSystemAlert')}
+        </Alert>
+      )}
+      {isITGovAdmin &&
+        (request.relationType === null ||
+          request.relationType === RequestRelationType.NEW_SYSTEM) && (
+          <UswdsReactLink
+            to={`/it-governance/${request.id}/system-information/link`}
+            className={classNames('usa-button', {
+              'usa-button--outline': request.relationType !== null
+            })}
+          >
+            {adminT('linkSystem')}
+          </UswdsReactLink>
+        )}
+      {request.relationType !== null && (
+        <>
+          {request.contractNumbers?.length > 0 && (
+            <div className="margin-top-3">
+              <strong>
+                {adminT('contractNumber', {
+                  count: request.contractNumbers.length
+                })}
+              </strong>
+              <p className="margin-top-1">
+                {formatContractNumbers(request.contractNumbers)}
+              </p>
+            </div>
+          )}
+
+          {(!request.contractNumbers || request.contractNumbers.length < 1) && (
+            <div className="margin-top-3">
+              <strong>{adminT('contractNumber')}</strong>
+              <p className="margin-top-1 text-base text-italic">
+                {adminT('noContractNumber')}
+              </p>
+            </div>
+          )}
+        </>
+      )}
+      <RelatedRequestsTable requestID={request.id} type="itgov" />
+    </div>
+  );
+};
+
+export default SystemInformation;
