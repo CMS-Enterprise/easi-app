@@ -1,17 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import {
-  Breadcrumb,
-  BreadcrumbBar,
-  BreadcrumbLink,
   Button,
   ButtonGroup,
   Fieldset,
   Form,
   Grid,
   Icon,
-  Link as TrussLink,
+  Link,
   ModalHeading
 } from '@trussworks/react-uswds';
 import {
@@ -22,6 +19,7 @@ import {
 } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
+import Breadcrumbs from 'components/Breadcrumbs';
 import CheckboxField from 'components/CheckboxField';
 import IconButton from 'components/IconButton';
 import MainContent from 'components/MainContent';
@@ -117,7 +115,7 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
       setNoSystemsUsed(false);
       return;
     }
-    if (data && !relationLoading) {
+    if (data && !relationLoading && location.state.from === 'task-list') {
       setNoSystemsUsed(data.systemIntakeSystems.length === 0);
     }
   }, [data, location, relationLoading]);
@@ -191,17 +189,30 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
     }
   };
 
+  if (relationLoading) {
+    return <PageLoading />;
+  }
+
   return (
     <MainContent className="grid-container margin-bottom-15">
-      {relationLoading && <PageLoading />}
-      <BreadcrumbBar variant="wrap">
-        <Breadcrumb>
-          <BreadcrumbLink asCustom={Link} to="/">
-            <span>{t('intake:navigation.itGovernance')}</span>
-          </BreadcrumbLink>
-        </Breadcrumb>
-        <Breadcrumb current>{t('intake:navigation.startRequest')}</Breadcrumb>
-      </BreadcrumbBar>
+      <Breadcrumbs
+        items={[
+          { text: t('intake:navigation.itGovernance'), url: '/' },
+          ...(isFromTaskList
+            ? [
+                {
+                  text: t('itGov:additionalRequestInfo.taskListBreadCrumb'),
+                  url: `/governance-task-list/${id}`
+                },
+                { text: t('intake:navigation.editLinkRelation') }
+              ]
+            : [
+                {
+                  text: t('intake:navigation.startRequest')
+                }
+              ])
+        ]}
+      />
 
       {showSuccessfullyUpdated && (
         <Alert
@@ -291,9 +302,7 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
                   i18nKey="itGov:link.form.field.systemOrService.needHelp"
                   values={{ email: IT_GOV_EMAIL }}
                   components={{
-                    emailLink: (
-                      <TrussLink href={`mailto:${IT_GOV_EMAIL}`}> </TrussLink>
-                    )
+                    emailLink: <Link href={`mailto:${IT_GOV_EMAIL}`}> </Link>
                   }}
                 />
               </p>
