@@ -57,12 +57,13 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
     from?: string;
   };
 
-  const location = useLocation<LinkedSystemsLocationState>();
+  const location = useLocation();
+  const state = location.state as LinkedSystemsLocationState | undefined;
 
-  const showSuccessfullyUpdated = location.state?.successfullyUpdated;
-  const showSuccessfullyAdded = location.state?.successfullyAdded;
-  const isFromTaskList = location.state?.from === 'task-list';
-  const systemUpdatedName = location.state?.systemUpdated;
+  const showSuccessfullyUpdated = state?.successfullyUpdated;
+  const showSuccessfullyAdded = state?.successfullyAdded;
+  const isFromTaskList = state?.from === 'task-list';
+  const systemUpdatedName = state?.systemUpdated;
 
   // Url of next view after successful form submit
   // Also for a breadcrumb navigation link
@@ -111,11 +112,11 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
     useState(false);
 
   useEffect(() => {
-    if (location && location.state && location.state.isNew) {
+    if (location && location.state && state?.isNew) {
       setNoSystemsUsed(false);
       return;
     }
-    if (data && !relationLoading && location.state.from === 'task-list') {
+    if (data && !relationLoading && state?.from === 'task-list') {
       setNoSystemsUsed(data.systemIntakeSystems.length === 0);
     }
   }, [data, location, relationLoading]);
@@ -350,7 +351,7 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
             disabled={!submitEnabled}
             onClick={() =>
               history.push(redirectUrl, {
-                requestType: location.state?.requestType
+                requestType: state?.requestType
               })
             }
           >
