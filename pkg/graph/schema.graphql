@@ -1176,6 +1176,10 @@ type SystemIntakeSystem {
   id: UUID!
   systemIntakeID: UUID!
   systemID: String!
+  """
+  Note: This should be a system but is nullable in case of error
+  """
+  cedarSystem: CedarSystem
   systemRelationshipType: [SystemRelationshipType!]!
   otherSystemRelationshipDescription: String
 }
