@@ -95,6 +95,10 @@ type AuthorityToOperate struct {
 	// Format: date
 	LastPenTestDate strfmt.Date `json:"lastPenTestDate,omitempty"`
 
+	// oa status
+	// Example: Traditional
+	OaStatus string `json:"oaStatus,omitempty"`
+
 	// pia completion date
 	// Example: 2021-10-13T00:00:00.000Z
 	// Format: date
