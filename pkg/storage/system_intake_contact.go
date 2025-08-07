@@ -32,6 +32,7 @@ func (s *Store) CreateSystemIntakeContact(ctx context.Context, systemIntakeConta
 			system_intake_id,
 			role,
 			component,
+			user_id,
 			created_at,
 			updated_at
 		)
@@ -41,6 +42,7 @@ func (s *Store) CreateSystemIntakeContact(ctx context.Context, systemIntakeConta
 			:system_intake_id,
 			:role,
 			:component,
+		    :user_id,
 			:created_at,
 			:updated_at
 		)`
@@ -66,6 +68,7 @@ func (s *Store) UpdateSystemIntakeContact(ctx context.Context, systemIntakeConta
 			system_intake_id = :system_intake_id,
 			role = :role,
 			component = :component,
+			user_id = :user_id,
 			updated_at = :updated_at
 		WHERE system_intake_contacts.id = :id
 	`
@@ -92,7 +95,8 @@ func (s *Store) FetchSystemIntakeContactsBySystemIntakeID(ctx context.Context, s
 			role,
 			component,
 			created_at,
-			updated_at
+			updated_at,
+			user_id
 		FROM system_intake_contacts
 		WHERE system_intake_id=$1 AND eua_user_id IS NOT NULL
 	`
