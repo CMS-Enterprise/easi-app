@@ -33,7 +33,6 @@ all_accounts AS (
     UNION
     SELECT * FROM common_name_accounts
 )
--- TODO update the contacts table
 
 UPDATE system_intake_contacts
 SET user_id = all_accounts.user_id
