@@ -20,6 +20,7 @@ type SystemIntakeContact struct {
 	SystemIntakeID uuid.UUID  `json:"systemIntakeId" db:"system_intake_id"`
 	Component      string     `json:"component" db:"component"`
 	Role           string     `json:"role" db:"role"`
+	UserID         uuid.UUID  `json:"userID" db:"user_id"`
 	UpdatedAt      *time.Time `db:"updated_at"`
 	CreatedAt      *time.Time `db:"created_at"`
 }
