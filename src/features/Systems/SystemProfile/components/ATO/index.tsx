@@ -21,7 +21,6 @@ import {
   showAtoEffectiveDate,
   showAtoExpirationDate
 } from 'features/Systems/SystemProfile/util';
-// eslint-disable-next-line camelcase
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { camelCase } from 'lodash';
 
@@ -51,7 +50,6 @@ import './index.scss';
  * Get counts of Security Findings from Cedar threat levels.
  */
 function getSecurityFindings(
-  // eslint-disable-next-line camelcase
   cedarThreat: GetSystemProfileCedarThreat[]
 ): SecurityFindings {
   // Init finding props with 0 count
@@ -71,7 +69,6 @@ function getSecurityFindings(
 }
 
 function getLongestOpenFinding(
-  // eslint-disable-next-line camelcase
   cedarThreat: GetSystemProfileCedarThreat[]
 ): number {
   let longestOpenFinding = 0;
