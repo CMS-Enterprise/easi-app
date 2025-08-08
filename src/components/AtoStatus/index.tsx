@@ -19,7 +19,7 @@ export function getAtoStatus(
   oaStatus: string | null | undefined
 ): AtoStatus {
   // override anything else if this system is an OA Member
-  if (oaStatus && oaStatus === 'OA Member') {
+  if (oaStatus === 'OA Member') {
     return 'Active';
   }
 
@@ -102,10 +102,15 @@ export function AtoStatusIconText({
         size={3}
         className={`margin-right-1 ${atoStatusIconClassNames[status]}`}
       />
-      <span>
-        {t(`systemTable.atoStatusColumn.${status}`)}{' '}
-        {formatDateUtc(atoExpirationDate || null, 'MM/yyyy')}
-      </span>
+      {oaStatus === 'OA Member' && (
+        <span>{t('singleSystem.ato.atoOngoing')}</span>
+      )}
+      {oaStatus !== 'OA Member' && (
+        <span>
+          {t(`systemTable.atoStatusColumn.${status}`)}{' '}
+          {formatDateUtc(atoExpirationDate || null, 'MM/yyyy')}
+        </span>
+      )}
     </div>
   );
 }
