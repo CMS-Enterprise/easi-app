@@ -16,8 +16,6 @@ const SystemInformation = ({
   const { t: adminT } = useTranslation('admin');
   const { t: linkedSystemsT } = useTranslation('linkedSystems');
 
-  console.log(request);
-
   return (
     <div>
       <PageHeading className="margin-y-0">
@@ -48,7 +46,7 @@ const SystemInformation = ({
       )}
 
       {request.systems.length > 0 && (
-        <SystemCardTable systems={request.systems} />
+        <SystemCardTable systems={request.systemIntakeSystems} />
       )}
       {/* {request.relationType === RequestRelationType.EXISTING_SERVICE && (
         <div className="margin-top-3">
