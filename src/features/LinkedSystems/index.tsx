@@ -119,7 +119,7 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
     if (data && !relationLoading && state?.from === 'task-list') {
       setNoSystemsUsed(data.systemIntakeSystems.length === 0);
     }
-  }, [data, location, relationLoading]);
+  }, [data, location, relationLoading, state]);
 
   const handleRemoveModal = (systemLinkedSystemId: string) => {
     setSystemToBeRemoved(systemLinkedSystemId);
