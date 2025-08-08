@@ -2858,6 +2858,8 @@ export enum SystemIntakeStepToProgressTo {
 
 export type SystemIntakeSystem = {
   __typename: 'SystemIntakeSystem';
+  /** Note: This should be a system but is nullable in case of error */
+  cedarSystem?: Maybe<CedarSystem>;
   id: Scalars['UUID']['output'];
   otherSystemRelationshipDescription?: Maybe<Scalars['String']['output']>;
   systemID: Scalars['String']['output'];
