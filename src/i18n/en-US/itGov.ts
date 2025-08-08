@@ -12,10 +12,10 @@ export default {
   taskList: {
     heading: 'Governance task list',
     description: 'for {{requestName}}',
-    help: 'Help',
-    stepsInvolved:
-      'Steps involved in an IT Governance request (opens in a new tab)',
-    sampleBusinessCase: 'Sample Business Case (opens in a new tab)',
+    help: 'Additional help',
+    stepsInvolved: 'Steps involved in an IT Governance request',
+    helpLinksOpenInANewTab: 'All help links open in a new tab',
+    sampleBusinessCase: 'Sample Business Case',
     decisionAlert: {
       heading: 'Decision issued',
       text: 'A decision has been made for this request, and you can view the decision at the <decisionLink>bottom of this page</decisionLink>. For additional information, please check the email sent to you. If you have further questions, contact the Governance Team at <emailLink>{{email}}</emailLink>.'
@@ -154,6 +154,13 @@ export default {
         button: 'Read the decision',
         viewPreviousDecision: 'View previous decision'
       }
+    },
+    changeRequestType: 'Change request type',
+    requestType: {
+      NEW: 'Add a new system or service',
+      RECOMPETE: 'Re-compete',
+      MAJOR_CHANGES: 'Major change or upgrade',
+      SHUTDOWN: 'Decommission a system'
     }
   },
   additionalRequestInfo: {
@@ -167,7 +174,7 @@ export default {
       'You have identified this request as part of an existing service or other contract.',
     newSystem:
       'You have identified this request as for a completely new system, service, or contract.',
-    edit: 'Edit information',
+    edit: 'View or edit system information',
     viewSystemProfile: 'View system profile',
     contractName: 'Service or contract name',
     contractNumber: 'Contract number',
@@ -177,6 +184,9 @@ export default {
       text: 'Is this request part of an existing system, service, or other contract?',
       answer: 'Answer'
     },
+    doesNotSupportOrUseOtherSystems:
+      'You have indicated that this project does not support or use any existing CMS Systems.',
+    linkedSystems: 'You have linked this request to existing CMS system(s)',
     viewOrEditSystemInformation: 'View or edit system information',
     show: {
       more: 'Show {{count}} more',
@@ -184,25 +194,24 @@ export default {
     }
   },
   link: {
-    header: 'Edit linked system(s)?',
+    header: 'Does this request involve any CMS systems?',
+    editHeader: 'Edit linked system(s)',
     description:
       'If you are requesting a Life Cycle ID (LCID) and governance approval for a new IT investment that is a part of an existing system, please include additional details below.',
     form: {
       field: {
         systemOrService: {
           label: 'Does this project support or involve any other CMS systems?',
+          needHelp:
+            'If you are unsure or need help, please reach out to the Governance Admin Team at <emailLink>{{email}}</emailLink>.',
           hint: 'Please add a CMS system here if:',
-          reasonsToAddSystem: {
-            primarySupport: 'This is the primary contract to fund a system',
-            partialSupport:
-              'Funding allocated to this project is used to support a system, even if it is not the primary support contract',
-            usesOrImpactedBySelectedSystem:
-              'This project uses a system in its technical solution',
-            impactsSelectedSystem:
-              'Your project is used by another system to support its business need',
-            other:
-              'Your project has any other relationship with a CMS system not described above'
-          },
+          reasonsToAddSystem: [
+            'This is the primary contract to fund a system',
+            'Funding allocated to this project is used to support a system, even if it is not the primary support contract',
+            'This project uses a system in its technical solution',
+            'Your project is used by another system to support its business need',
+            'Your project has any other relationship with a CMS system not described above'
+          ],
           options: [
             'No, this is a completely new system, service, or contract',
             'Yes, an existing system',

@@ -2163,6 +2163,11 @@ func (r *systemIntakeNoteResolver) Editor(ctx context.Context, obj *models.Syste
 	return resolvers.SystemIntakeNoteEditor(ctx, obj)
 }
 
+// CedarSystem is the resolver for the cedarSystem field.
+func (r *systemIntakeSystemResolver) CedarSystem(ctx context.Context, obj *models.SystemIntakeSystem) (*models.CedarSystem, error) {
+	return dataloaders.GetCedarSystemByID(ctx, obj.SystemID)
+}
+
 // SystemRelationshipType is the resolver for the systemRelationshipType field.
 func (r *systemIntakeSystemResolver) SystemRelationshipType(ctx context.Context, obj *models.SystemIntakeSystem) ([]models.SystemRelationshipType, error) {
 	return obj.SystemRelationshipType, nil
