@@ -8,5 +8,5 @@ SELECT
     family_name,
     zone_info,
     has_logged_in
-
-FROM user_account WHERE common_name = :common_name
+FROM user_account
+WHERE LOWER(TRIM(common_name)) = LOWER(TRIM(:common_name)) -- This ensures case-insensitive matching and trims whitespace

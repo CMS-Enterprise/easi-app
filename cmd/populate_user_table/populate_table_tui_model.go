@@ -55,12 +55,32 @@ func newPopulateUserTableModel() populateUserTableTuiModel {
 				CommandRun:  func() { queryFullNameCmd.Run(queryFullNameCmd, []string{}) },
 			},
 			genericCommandOption{
+				CommandName: "Query system intake contact Common Names and Export to file",
+				CommandRun:  func() { queryContactCommonNameCmd.Run(queryContactCommonNameCmd, []string{}) },
+			},
+			genericCommandOption{
+				CommandName: "Query system intake contact Usernames and Export to file",
+				CommandRun:  func() { queryContactUsernameCmd.Run(queryContactUsernameCmd, []string{}) },
+			},
+			genericCommandOption{
 				CommandName: "Generate User Accounts By User Name List",
 				CommandRun:  func() { generateUserAccountByUsernameCmd.Run(generateUserAccountByUsernameCmd, []string{}) },
 			},
 			genericCommandOption{
 				CommandName: "Generate User Accounts By Full Name List",
 				CommandRun:  func() { generateUserAccountByDisplayNameCmd.Run(generateUserAccountByDisplayNameCmd, []string{}) },
+			},
+			genericCommandOption{
+				CommandName: "Generate User Accounts By Contact User Name List",
+				CommandRun: func() {
+					generateUserAccountsByContactUsernamesCmd.Run(generateUserAccountsByContactUsernamesCmd, []string{})
+				},
+			},
+			genericCommandOption{
+				CommandName: "Generate User Accounts By Contact Common Name List",
+				CommandRun: func() {
+					generateUserAccountsByContactCommonNamesCmd.Run(generateUserAccountsByContactCommonNamesCmd, []string{})
+				},
 			},
 		},
 		// A map which indicates which choices are selected. We're using
