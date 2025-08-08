@@ -138,7 +138,8 @@ export const SystemWorkspace = () => {
             />
 
             <AtoCard
-              status={atoStatus}
+              atoStatus={atoStatus}
+              oaStatus={ato?.oaStatus}
               dateAuthorizationMemoExpires={ato?.dateAuthorizationMemoExpires}
               isso={isso}
             />

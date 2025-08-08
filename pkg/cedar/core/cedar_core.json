@@ -3604,6 +3604,10 @@
           "format": "date",
           "example": "2021-10-13T00:00:00.000Z"
         },
+        "oaStatus": {
+          "type": "string",
+          "example": "Traditional"
+        },
         "actualDispositionDate": {
           "type": "string",
           "format": "date",
@@ -4317,6 +4321,14 @@
         },
         "editBeneficiaryInformation": {
           "type": "boolean"
+        },
+        "systemOwnership": {
+          "type": "string",
+          "enum": [
+            "CMS Owned",
+            "Contractor Owned",
+            "External"
+          ]
         },
         "beneficiaryAddressPurposeOther": {
           "type": "string",

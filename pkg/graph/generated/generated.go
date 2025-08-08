@@ -148,6 +148,7 @@ type ComplexityRoot struct {
 		LastAssessmentDate                        func(childComplexity int) int
 		LastContingencyPlanCompletionDate         func(childComplexity int) int
 		LastPenTestDate                           func(childComplexity int) int
+		OaStatus                                  func(childComplexity int) int
 		PiaCompletionDate                         func(childComplexity int) int
 		PrimaryCyberRiskAdvisor                   func(childComplexity int) int
 		PrivacySubjectMatterExpert                func(childComplexity int) int
@@ -2026,6 +2027,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.CedarAuthorityToOperate.LastPenTestDate(childComplexity), true
+
+	case "CedarAuthorityToOperate.oaStatus":
+		if e.complexity.CedarAuthorityToOperate.OaStatus == nil {
+			break
+		}
+
+		return e.complexity.CedarAuthorityToOperate.OaStatus(childComplexity), true
 
 	case "CedarAuthorityToOperate.piaCompletionDate":
 		if e.complexity.CedarAuthorityToOperate.PiaCompletionDate == nil {
@@ -8591,6 +8599,7 @@ type CedarAuthorityToOperate {
   lastAssessmentDate: Time
   lastContingencyPlanCompletionDate: Time
   lastPenTestDate: Time
+  oaStatus: String
   piaCompletionDate: Time
   primaryCyberRiskAdvisor: String
   privacySubjectMatterExpert: String
@@ -16382,6 +16391,47 @@ func (ec *executionContext) fieldContext_CedarAuthorityToOperate_lastPenTestDate
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarAuthorityToOperate_oaStatus(ctx context.Context, field graphql.CollectedField, obj *models.CedarAuthorityToOperate) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarAuthorityToOperate_oaStatus(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.OaStatus, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(zero.String)
+	fc.Result = res
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarAuthorityToOperate_oaStatus(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarAuthorityToOperate",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -39372,6 +39422,8 @@ func (ec *executionContext) fieldContext_Query_cedarAuthorityToOperate(ctx conte
 				return ec.fieldContext_CedarAuthorityToOperate_lastContingencyPlanCompletionDate(ctx, field)
 			case "lastPenTestDate":
 				return ec.fieldContext_CedarAuthorityToOperate_lastPenTestDate(ctx, field)
+			case "oaStatus":
+				return ec.fieldContext_CedarAuthorityToOperate_oaStatus(ctx, field)
 			case "piaCompletionDate":
 				return ec.fieldContext_CedarAuthorityToOperate_piaCompletionDate(ctx, field)
 			case "primaryCyberRiskAdvisor":
@@ -67086,6 +67138,8 @@ func (ec *executionContext) _CedarAuthorityToOperate(ctx context.Context, sel as
 			out.Values[i] = ec._CedarAuthorityToOperate_lastContingencyPlanCompletionDate(ctx, field, obj)
 		case "lastPenTestDate":
 			out.Values[i] = ec._CedarAuthorityToOperate_lastPenTestDate(ctx, field, obj)
+		case "oaStatus":
+			out.Values[i] = ec._CedarAuthorityToOperate_oaStatus(ctx, field, obj)
 		case "piaCompletionDate":
 			out.Values[i] = ec._CedarAuthorityToOperate_piaCompletionDate(ctx, field, obj)
 		case "primaryCyberRiskAdvisor":

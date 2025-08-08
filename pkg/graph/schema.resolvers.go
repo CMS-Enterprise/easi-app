@@ -1958,11 +1958,9 @@ func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.System
 		return requesterWithoutEmail, nil
 	}
 
-	email := user.Email.String()
-
 	return &models.SystemIntakeRequester{
 		Component: obj.Component.Ptr(),
-		Email:     &email,
+		Email:     helpers.PointerTo(user.Email.String()),
 		Name:      obj.Requester,
 	}, nil
 }
