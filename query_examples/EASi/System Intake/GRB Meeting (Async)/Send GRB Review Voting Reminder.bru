@@ -1,0 +1,32 @@
+meta {
+  name: Send GRB Review Voting Reminder
+  type: graphql
+  seq: 15
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation sendSystemIntakeGRBReviewerReminder($systemIntakeID: UUID!) {
+    sendSystemIntakeGRBReviewerReminder(systemIntakeID: $systemIntakeID) {
+      timeSent
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+      "systemIntakeID":"a5689bec-e4cf-4f2b-a7de-72020e8d65be"
+  }
+}

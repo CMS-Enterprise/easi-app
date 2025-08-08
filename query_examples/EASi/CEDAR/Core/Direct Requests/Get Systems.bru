@@ -1,0 +1,46 @@
+meta {
+  name: Get Systems
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{CedarApiUrl}}/system/summary?includeInSurvey=true&state=active
+  body: none
+  auth: apikey
+}
+
+params:query {
+  includeInSurvey: true
+  state: active
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:apikey {
+  key: x-Gateway-APIKey
+  value: {{CedarApiKey}}
+  placement: header
+}
+
+script:post-response {
+  if (res.getStatus() !== 200) return
+  
+  const data = res.getBody()
+  test("Can parse JSON response", function() {
+      expect(data).to.exist
+      expect(data).to.have.property("SystemSummary")
+  })
+  if (!data) return
+  
+  const easi = data.SystemSummary.find(sys => sys.name.includes("Easy"))
+  test("Can find EASi in list of systems and assign its ID to CedarSystemId", function() {
+      expect(easi).to.exist
+      expect(easi).to.have.property("id")
+  })
+  if (!easi) return
+  
+  bru.setVar("CedarSystemId", easi.id)
+}

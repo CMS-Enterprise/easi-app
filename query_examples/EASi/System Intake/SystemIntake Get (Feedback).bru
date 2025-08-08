@@ -1,0 +1,55 @@
+meta {
+  name: SystemIntake Get (Feedback)
+  type: graphql
+  seq: 14
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  query {
+    systemIntake(id:"{{systemIntakeID}}") {
+      requestName
+      governanceRequestFeedbacks {
+        id
+        feedback
+        sourceAction
+        targetForm
+        type
+        author {
+            euaUserId
+            commonName
+            email
+        }
+      }
+      actions {
+          feedback
+          type
+          step
+      }
+      notes {
+          content
+          author {
+              eua
+              name
+          }
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+      "id": "{{systemIntakeID}}"
+  }
+}

@@ -1,0 +1,14 @@
+meta {
+  name: Admin Actions (v2)
+  seq: 1
+}
+
+auth {
+  mode: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}

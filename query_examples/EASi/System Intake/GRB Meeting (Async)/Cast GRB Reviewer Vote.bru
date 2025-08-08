@@ -1,0 +1,55 @@
+meta {
+  name: Cast GRB Reviewer Vote
+  type: graphql
+  seq: 5
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation castSystemIntakeGRBReviewerVote(
+    $input: CastSystemIntakeGRBReviewerVoteInput!
+  ) {
+    castSystemIntakeGRBReviewerVote(input: $input) {
+      id
+      systemIntakeID
+      grbRole
+      votingRole
+      userAccount {
+        username
+        id
+        givenName
+        commonName
+        email
+      }
+      vote
+      voteComment
+      dateVoted
+      createdAt
+      createdBy
+      modifiedAt
+      modifiedBy
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "systemIntakeID": "8edb237e-ad48-49b2-91cf-8534362bc6cf",
+      "vote": "OBJECTION",
+      "voteComment": "Could be better"
+    }
+  }
+}

@@ -1,0 +1,50 @@
+meta {
+  name: Progress to GRB meeting with GRB Review Type
+  type: graphql
+  seq: 5
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation CreateSystemIntakeActionProgressToNewStep($input: SystemIntakeProgressToNewStepsInput!) {
+      createSystemIntakeActionProgressToNewStep(input: $input) {
+          systemIntake {
+              step
+              grbDate
+              grbReviewType
+          }
+      }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+      "input": {
+          "systemIntakeID": "{{systemIntakeID}}",
+          "notificationRecipients": {
+              "regularRecipientEmails": [
+                  "{{testEmailAddress}}"
+              ],
+              "shouldNotifyITGovernance": false,
+              "shouldNotifyITInvestment": false
+          },
+          "newStep": "GRB_MEETING",
+          "meetingDate": "2029-07-28T20:12:31.703Z",
+          "feedback": "this is more feedback",
+          "additionalInfo": "add'l info",
+          "grbReviewType": "STANDARD"
+      }
+  }
+}

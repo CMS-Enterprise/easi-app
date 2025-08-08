@@ -1,0 +1,45 @@
+meta {
+  name: Add GRB Discussion Reply
+  type: graphql
+  seq: 11
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation createSystemIntakeGRBDiscussionReply(
+    $input: createSystemIntakeGRBDiscussionReplyInput!
+  ) {
+    createSystemIntakeGRBDiscussionReply(input: $input) {
+      id
+      content
+      grbRole
+      votingRole
+      systemIntakeID
+      createdByUserAccount {
+        id
+        username
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "initialPostID": "{{SystemIntakeGRBDiscussionID}}",
+      "content": "<p>monkey kiwi maduros senor <span data-type=\"mention\" tag-type=\"USER_ACCOUNT\" class=\"mention\" data-id-db=\"{{UserAccountID}}\">@Mckayla Fritsch</span>!</p>"
+    }
+  }
+}

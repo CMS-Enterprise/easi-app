@@ -1,0 +1,24 @@
+meta {
+  name: Submit Draft Business Case
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{apiURL}}/system_intake/{{systemIntakeID}}/actions
+  body: json
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:json {
+  {
+    "intakeId": "{{systemIntakeID}}",
+    "actionType": "SUBMIT_BIZ_CASE"
+  }
+}

@@ -1,0 +1,27 @@
+meta {
+  name: Get Systems (include inactive)
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{CedarApiUrl}}/system/summary
+  body: none
+  auth: apikey
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:apikey {
+  key: x-Gateway-APIKey
+  value: {{CedarApiKey}}
+  placement: header
+}
+
+script:post-response {
+  const systems = JSON.parse(JSON.stringify(res.getBody()))
+  console.log(systems.count)
+  console.log(systems.SystemSummary.filter(sys => sys.state !== 'Active').map(({name, id, state}) => ({name, id, state})))
+}
