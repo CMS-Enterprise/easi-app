@@ -126,6 +126,18 @@ export default gql(/* GraphQL */ `
       systemID
       systemRelationshipType
       otherSystemRelationshipDescription
+      cedarSystem {
+        id
+        name
+        description
+        acronym
+        businessOwnerOrg
+        businessOwnerRoles {
+          objectID
+          assigneeFirstName
+          assigneeLastName
+        }
+      }
     }
     relatedTRBRequests {
       id
