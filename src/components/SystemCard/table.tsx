@@ -1,11 +1,12 @@
 import React, { useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 import { Row, useFlexLayout, usePagination, useTable } from 'react-table';
 import { Table as UswdsTable } from '@trussworks/react-uswds';
 import { getPersonFullName } from 'features/Systems/SystemProfile/util';
 import {
-  GetTRBRequestSummaryQuery,
   SystemIntakeFragmentFragment,
-  SystemRelationshipType
+  SystemRelationshipType,
+  useGetSystemIntakeSystemsQuery
 } from 'gql/generated/graphql';
 
 import TablePagination from 'components/TablePagination';
@@ -13,7 +14,7 @@ import TablePagination from 'components/TablePagination';
 import SystemCard from '.';
 
 type SystemCardTableProps = {
-  systems: GetTRBRequestSummaryQuery['trbRequest']['systems'];
+  systems: SystemIntakeFragmentFragment['systems'];
   systemRelationshipType?: SystemRelationshipType[];
 };
 
@@ -26,6 +27,18 @@ const SystemCardTable = ({
   systems,
   systemRelationshipType
 }: SystemCardTableProps) => {
+  const { systemId } = useParams<{ systemId: string }>();
+
+  console.log(`systems[0].id: ${systems[0].id}`);
+  // console.log('systemRelationshipType', systemRelationshipType);
+
+  const { data, loading, error } = useGetSystemIntakeSystemsQuery({
+    variables: {
+      systemIntakeId: systemId
+    }
+  });
+  console.log(data?.systemIntakeSystems);
+
   const columns: any = useMemo(() => {
     return [
       {
