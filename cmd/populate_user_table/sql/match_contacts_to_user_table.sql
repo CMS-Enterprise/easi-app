@@ -4,12 +4,16 @@ WITH user_name_accounts AS (
         u.common_name,
         sic.eua_user_id,
         sic.role,
-        u.id AS user_id
+        u.id AS user_id,
+        sic.user_id AS contact_user_id
 
 
     FROM system_intake_contacts sic
     JOIN user_account u ON sic.eua_user_id = u.username AND sic.user_id IS NULL
-    WHERE u.id IS NOT NULL AND  sic.eua_user_id IS NOT NULL
+    WHERE
+        u.id IS NOT NULL AND  sic.eua_user_id IS NOT NULL
+        AND sic.user_id IS NULL
+-- Get entries where there is a user account, but not yet referenced on the contact table
 ),
 
 common_name_accounts AS (
@@ -19,13 +23,16 @@ common_name_accounts AS (
         u.common_name,
         sic.eua_user_id,
         sic.role,
-        u.id AS user_id
+        u.id AS user_id,
+        sic.user_id AS contact_user_id
 
 
     FROM system_intake_contacts sic
-    JOIN user_account u ON sic.common_name = u.common_name
-    WHERE u.id IS NULL AND sic.eua_user_id IS NOT NULL
-
+    JOIN user_account u ON LOWER(TRIM(sic.common_name)) = LOWER(TRIM(u.common_name)) -- Case insensitive join
+    WHERE
+        u.id IS NOT NULL AND sic.common_name IS NOT NULL AND sic.eua_user_id IS NULL
+        AND sic.user_id IS NULL
+-- Get entries where there is a user account, but not yet referenced on the contact table
 ),
 
 all_accounts AS (
