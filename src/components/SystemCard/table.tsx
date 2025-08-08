@@ -1,12 +1,10 @@
 import React, { useMemo } from 'react';
-import { useParams } from 'react-router-dom';
 import { Row, useFlexLayout, usePagination, useTable } from 'react-table';
 import { Table as UswdsTable } from '@trussworks/react-uswds';
 import { getPersonFullName } from 'features/Systems/SystemProfile/util';
 import {
   SystemIntakeFragmentFragment,
-  SystemRelationshipType,
-  useGetSystemIntakeSystemsQuery
+  SystemRelationshipType
 } from 'gql/generated/graphql';
 
 import TablePagination from 'components/TablePagination';
@@ -14,7 +12,7 @@ import TablePagination from 'components/TablePagination';
 import SystemCard from '.';
 
 type SystemCardTableProps = {
-  systems: SystemIntakeFragmentFragment['systems'];
+  systems: SystemIntakeFragmentFragment['systemIntakeSystems'];
   systemRelationshipType?: SystemRelationshipType[];
 };
 
@@ -27,17 +25,7 @@ const SystemCardTable = ({
   systems,
   systemRelationshipType
 }: SystemCardTableProps) => {
-  const { systemId } = useParams<{ systemId: string }>();
-
-  console.log(`systems[0].id: ${systems[0].id}`);
-  // console.log('systemRelationshipType', systemRelationshipType);
-
-  const { data, loading, error } = useGetSystemIntakeSystemsQuery({
-    variables: {
-      systemIntakeId: systemId
-    }
-  });
-  console.log(data?.systemIntakeSystems);
+  // console.log(systems);
 
   const columns: any = useMemo(() => {
     return [
@@ -47,25 +35,25 @@ const SystemCardTable = ({
         Cell: ({
           row
         }: {
-          row: Row<SystemIntakeFragmentFragment['systems'][number]>;
+          row: Row<SystemIntakeFragmentFragment['systemIntakeSystems'][number]>;
         }) => {
           return (
             <SystemCard
-              id={row.original.id}
-              name={row.original.name}
-              description={row.original.description}
-              acronym={row.original.acronym}
-              businessOwnerOrg={row.original.businessOwnerOrg}
-              businessOwners={row.original.businessOwnerRoles
+              id={row.original.cedarSystem?.id!}
+              name={row.original.cedarSystem?.name!}
+              description={row.original.cedarSystem?.description!}
+              acronym={row.original.cedarSystem?.acronym}
+              businessOwnerOrg={row.original.cedarSystem?.businessOwnerOrg}
+              businessOwners={row.original.cedarSystem?.businessOwnerRoles
                 .map(role => getPersonFullName(role))
                 .join(', ')}
-              systemRelationshipType={systemRelationshipType}
+              systemRelationshipType={row.original.systemRelationshipType}
             />
           );
         }
       }
     ];
-  }, [systemRelationshipType]);
+  }, []);
 
   const {
     getTableProps,
