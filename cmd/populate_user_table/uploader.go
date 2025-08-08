@@ -179,7 +179,7 @@ func ReadFullNamesFromJSONAndCreateAccounts() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	userAccountAttempts := uploader.GetOrCreateUserAccountsByFullName(ctx, fullNames)
+	userAccountAttempts := uploader.GetOrCreateUserAccountsByFullName(ctx, fullNames, true)
 	for _, attempt := range userAccountAttempts {
 		fmt.Printf("\n Println for %s. Success: %v", attempt.Username, attempt.Success)
 		CommonName := ""
@@ -284,7 +284,7 @@ func (u *Uploader) GetOrCreateUserAccounts(ctx context.Context, userNames []stri
 }
 
 // GetOrCreateUserAccountsByFullName wraps the get or create user account functionality by FullName with information about if it successfully created an account or not
-func (u *Uploader) GetOrCreateUserAccountsByFullName(ctx context.Context, fullNames []string) []*UserAccountAttempt {
+func (u *Uploader) GetOrCreateUserAccountsByFullName(ctx context.Context, fullNames []string, verbose bool) []*UserAccountAttempt {
 	attempts := []*UserAccountAttempt{}
 	totalAmount := len(fullNames) //TODO, make this more efficient, maybe use a channel to do this concurrently?
 
@@ -292,7 +292,11 @@ func (u *Uploader) GetOrCreateUserAccountsByFullName(ctx context.Context, fullNa
 		attempt := UserAccountAttempt{ //TODO, make a different struct for this specifically so we can record the name
 			Username: fullName,
 		}
-		fmt.Printf("%d of %d: Attempting to create user account for %s \n", indexCount, totalAmount, fullName)
+		// u.Logger.Info("Attempting to create user account for "+fullName, zap.Int("Index", indexCount), zap.Int("Total", totalAmount))
+
+		if verbose {
+			fmt.Printf(" \r\n %d of %d: Attempting to create user account for %s :", indexCount, totalAmount, fullName)
+		}
 		account, err := userhelpers.GetOrCreateUserAccountFullName(ctx,
 			u.Store,
 			u.Store,
@@ -304,10 +308,14 @@ func (u *Uploader) GetOrCreateUserAccountsByFullName(ctx context.Context, fullNa
 			attempt.ErrorMessage = err
 			attempt.Success = false
 			attempt.Message = " failed to create or get user account"
+			fmt.Printf("❌ Failed created user account for %s ", fullName)
 		} else {
 			attempt.Account = account
 			attempt.Success = true
 			attempt.Message = "success"
+			if verbose {
+				fmt.Printf("✅ Successfully created user account for %s ", fullName)
+			}
 
 		}
 		attempts = append(attempts, &attempt)

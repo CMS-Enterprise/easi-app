@@ -148,7 +148,7 @@ func ReadContactCommonNamesFromJSONAndCreateAccounts() {
 		log.Fatal(err)
 	}
 	fmt.Printf("Names read successfully. Proceeding to attempt to create accounts")
-	userAccountAttempts := uploader.GetOrCreateUserAccountsByFullName(ctx, commonNames)
+	userAccountAttempts := uploader.GetOrCreateUserAccountsByFullName(ctx, commonNames, true)
 	for _, attempt := range userAccountAttempts {
 		fmt.Printf("\n Println for %s. Success: %v", attempt.Username, attempt.Success)
 		CommonName := ""
