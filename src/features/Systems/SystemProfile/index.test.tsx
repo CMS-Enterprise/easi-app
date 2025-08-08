@@ -94,11 +94,11 @@ describe('System profile description is expandable', () => {
 
 describe('System Profile ATO Status', () => {
   it('output "No ATO" on missing invalid date property', () => {
-    expect(getAtoStatus('')).toBe('No ATO');
+    expect(getAtoStatus('', null)).toBe('No ATO');
 
-    expect(getAtoStatus(null)).toBe('No ATO');
+    expect(getAtoStatus(null, null)).toBe('No ATO');
 
-    expect(getAtoStatus(undefined)).toBe('No ATO');
+    expect(getAtoStatus(undefined, null)).toBe('No ATO');
   });
 
   it.each([
@@ -112,7 +112,7 @@ describe('System Profile ATO Status', () => {
       dt: DateTime.utc().plus({ days: ATO_STATUS_DUE_SOON_DAYS + 1 })
     }
   ])('output based on current date %j', ({ status, dt }) => {
-    expect(getAtoStatus(dt.toString())).toBe(status);
+    expect(getAtoStatus(dt.toString(), null)).toBe(status);
   });
 });
 

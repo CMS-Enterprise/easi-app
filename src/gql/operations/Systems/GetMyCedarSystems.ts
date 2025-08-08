@@ -14,6 +14,7 @@ export default gql(/* GraphQL */ `
       systemMaintainerOrgComp
       isBookmarked
       atoExpirationDate
+      oaStatus
       linkedSystemIntakes(state: OPEN) {
         id
       }

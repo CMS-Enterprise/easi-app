@@ -364,6 +364,7 @@ type ComplexityRoot struct {
 		LinkedSystemIntakes     func(childComplexity int, state models.SystemIntakeState) int
 		LinkedTrbRequests       func(childComplexity int, state models.TRBRequestState) int
 		Name                    func(childComplexity int) int
+		OaStatus                func(childComplexity int) int
 		Status                  func(childComplexity int) int
 		SystemMaintainerOrg     func(childComplexity int) int
 		SystemMaintainerOrgComp func(childComplexity int) int
@@ -1247,6 +1248,8 @@ type CedarSoftwareProductsResolver interface {
 	SoftwareProducts(ctx context.Context, obj *models.CedarSoftwareProducts) ([]*models.CedarSoftwareProductItem, error)
 }
 type CedarSystemResolver interface {
+	OaStatus(ctx context.Context, obj *models.CedarSystem) (*string, error)
+
 	BusinessOwnerRoles(ctx context.Context, obj *models.CedarSystem) ([]*models.CedarRole, error)
 
 	IsBookmarked(ctx context.Context, obj *models.CedarSystem) (bool, error)
@@ -3234,6 +3237,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.CedarSystem.Name(childComplexity), true
+
+	case "CedarSystem.oaStatus":
+		if e.complexity.CedarSystem.OaStatus == nil {
+			break
+		}
+
+		return e.complexity.CedarSystem.OaStatus(childComplexity), true
 
 	case "CedarSystem.status":
 		if e.complexity.CedarSystem.Status == nil {
@@ -8697,6 +8707,7 @@ type CedarSystem {
   acronym: String
   atoEffectiveDate: Time
   atoExpirationDate: Time
+  oaStatus: String
   status: String
   businessOwnerOrg: String
   businessOwnerOrgComp: String
@@ -23267,6 +23278,47 @@ func (ec *executionContext) fieldContext_CedarSystem_atoExpirationDate(_ context
 	return fc, nil
 }
 
+func (ec *executionContext) _CedarSystem_oaStatus(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSystem_oaStatus(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.CedarSystem().OaStatus(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSystem_oaStatus(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSystem",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _CedarSystem_status(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystem) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_CedarSystem_status(ctx, field)
 	if err != nil {
@@ -24173,6 +24225,8 @@ func (ec *executionContext) fieldContext_CedarSystemDetails_cedarSystem(_ contex
 				return ec.fieldContext_CedarSystem_atoEffectiveDate(ctx, field)
 			case "atoExpirationDate":
 				return ec.fieldContext_CedarSystem_atoExpirationDate(ctx, field)
+			case "oaStatus":
+				return ec.fieldContext_CedarSystem_oaStatus(ctx, field)
 			case "status":
 				return ec.fieldContext_CedarSystem_status(ctx, field)
 			case "businessOwnerOrg":
@@ -39783,6 +39837,8 @@ func (ec *executionContext) fieldContext_Query_cedarSystem(ctx context.Context, 
 				return ec.fieldContext_CedarSystem_atoEffectiveDate(ctx, field)
 			case "atoExpirationDate":
 				return ec.fieldContext_CedarSystem_atoExpirationDate(ctx, field)
+			case "oaStatus":
+				return ec.fieldContext_CedarSystem_oaStatus(ctx, field)
 			case "status":
 				return ec.fieldContext_CedarSystem_status(ctx, field)
 			case "businessOwnerOrg":
@@ -39874,6 +39930,8 @@ func (ec *executionContext) fieldContext_Query_cedarSystems(_ context.Context, f
 				return ec.fieldContext_CedarSystem_atoEffectiveDate(ctx, field)
 			case "atoExpirationDate":
 				return ec.fieldContext_CedarSystem_atoExpirationDate(ctx, field)
+			case "oaStatus":
+				return ec.fieldContext_CedarSystem_oaStatus(ctx, field)
 			case "status":
 				return ec.fieldContext_CedarSystem_status(ctx, field)
 			case "businessOwnerOrg":
@@ -40094,6 +40152,8 @@ func (ec *executionContext) fieldContext_Query_myCedarSystems(_ context.Context,
 				return ec.fieldContext_CedarSystem_atoEffectiveDate(ctx, field)
 			case "atoExpirationDate":
 				return ec.fieldContext_CedarSystem_atoExpirationDate(ctx, field)
+			case "oaStatus":
+				return ec.fieldContext_CedarSystem_oaStatus(ctx, field)
 			case "status":
 				return ec.fieldContext_CedarSystem_status(ctx, field)
 			case "businessOwnerOrg":
@@ -45439,6 +45499,8 @@ func (ec *executionContext) fieldContext_SystemIntake_systems(_ context.Context,
 				return ec.fieldContext_CedarSystem_atoEffectiveDate(ctx, field)
 			case "atoExpirationDate":
 				return ec.fieldContext_CedarSystem_atoExpirationDate(ctx, field)
+			case "oaStatus":
+				return ec.fieldContext_CedarSystem_oaStatus(ctx, field)
 			case "status":
 				return ec.fieldContext_CedarSystem_status(ctx, field)
 			case "businessOwnerOrg":
@@ -55787,6 +55849,8 @@ func (ec *executionContext) fieldContext_TRBRequest_systems(_ context.Context, f
 				return ec.fieldContext_CedarSystem_atoEffectiveDate(ctx, field)
 			case "atoExpirationDate":
 				return ec.fieldContext_CedarSystem_atoExpirationDate(ctx, field)
+			case "oaStatus":
+				return ec.fieldContext_CedarSystem_oaStatus(ctx, field)
 			case "status":
 				return ec.fieldContext_CedarSystem_status(ctx, field)
 			case "businessOwnerOrg":
@@ -68113,6 +68177,39 @@ func (ec *executionContext) _CedarSystem(ctx context.Context, sel ast.SelectionS
 			out.Values[i] = ec._CedarSystem_atoEffectiveDate(ctx, field, obj)
 		case "atoExpirationDate":
 			out.Values[i] = ec._CedarSystem_atoExpirationDate(ctx, field, obj)
+		case "oaStatus":
+			field := field
+
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarSystem_oaStatus(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "status":
 			out.Values[i] = ec._CedarSystem_status(ctx, field, obj)
 		case "businessOwnerOrg":

@@ -188,6 +188,7 @@ export interface SystemProfileData extends GetSystemProfileQuery {
   numberOfContractorFte?: number;
   numberOfFederalFte?: number;
   numberOfFte?: number;
+  oaStatus?: string | null;
   personRoles: CedarRoleAssigneePerson[];
   plannedRetirement: string | null;
   productionLocation?: UrlLocation;

@@ -162,6 +162,21 @@ func (r *cedarSoftwareProductsResolver) SoftwareProducts(ctx context.Context, ob
 	return softwareProductItems, nil
 }
 
+// OaStatus is the resolver for the oaStatus field.
+func (r *cedarSystemResolver) OaStatus(ctx context.Context, obj *models.CedarSystem) (*string, error) {
+	ato, err := r.cedarCoreClient.GetAuthorityToOperate(ctx, obj.ID.String)
+	if err != nil {
+		return nil, err
+	}
+
+	// not really an error, just means the system doesn't have an ATO
+	if len(ato) < 1 || ato[0] == nil {
+		return nil, nil
+	}
+
+	return &ato[0].OaStatus.String, nil
+}
+
 // BusinessOwnerRoles is the resolver for the businessOwnerRoles field.
 func (r *cedarSystemResolver) BusinessOwnerRoles(ctx context.Context, obj *models.CedarSystem) ([]*models.CedarRole, error) {
 	cedarRoles, err := r.cedarCoreClient.GetBusinessOwnerRolesBySystem(ctx, obj.ID.String)

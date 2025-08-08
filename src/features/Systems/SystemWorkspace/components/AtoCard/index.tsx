@@ -41,18 +41,17 @@ function AtoCard({
                 status={atoStatus}
                 className="display-flex flex-align-center margin-right-1"
               />
-              {oaStatus && oaStatus === 'OA Member' && (
+              {oaStatus === 'OA Member' && (
                 <span className="display-flex flex-align-center text-base">
                   {t('spaces.ato.atoOngoing')}
                 </span>
               )}
-              {(!oaStatus || oaStatus !== 'OA Member') &&
-                dateAuthorizationMemoExpires && (
-                  <span className="display-flex flex-align-center text-base">
-                    {atoStatus === 'Expired' ? 'Expired' : 'Expires'}{' '}
-                    {formatDateUtc(dateAuthorizationMemoExpires, 'MM/dd/yyyy')}
-                  </span>
-                )}
+              {oaStatus !== 'OA Member' && dateAuthorizationMemoExpires && (
+                <span className="display-flex flex-align-center text-base">
+                  {atoStatus === 'Expired' ? 'Expired' : 'Expires'}{' '}
+                  {formatDateUtc(dateAuthorizationMemoExpires, 'MM/dd/yyyy')}
+                </span>
+              )}
             </div>
             <p>
               <strong>{t('spaces.ato.isso')}</strong>

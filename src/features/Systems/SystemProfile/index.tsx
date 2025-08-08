@@ -210,7 +210,8 @@ export function getSystemProfileData(
     id: cedarSystem.id,
     ato: cedarAuthorityToOperate,
     atoStatus: getAtoStatus(
-      cedarAuthorityToOperate?.dateAuthorizationMemoExpires
+      cedarAuthorityToOperate?.dateAuthorizationMemoExpires,
+      cedarAuthorityToOperate?.oaStatus
     ),
     budgetSystemCosts: cedarBudgetSystemCost,
     budgets: cedarBudget,
@@ -220,6 +221,7 @@ export function getSystemProfileData(
     numberOfContractorFte,
     numberOfFederalFte,
     numberOfFte,
+    oaStatus: cedarAuthorityToOperate?.oaStatus,
     personRoles,
     plannedRetirement: getPlannedRetirement(cedarSystemDetails),
     productionLocation,

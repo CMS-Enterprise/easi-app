@@ -8,7 +8,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
 import {
-  CellProps,
   Column,
   Row,
   useFilters,
@@ -211,10 +210,11 @@ export const Table = ({
       cols.push({
         Header: t<string>('systemTable.header.systemStatus'),
         accessor: 'atoExpirationDate',
-        Cell: ({
-          value
-        }: CellProps<CedarSystem, CedarSystem['atoExpirationDate']>) => (
-          <AtoStatusIconText dt={value} />
+        Cell: ({ row }: { row: Row<CedarSystem> }) => (
+          <AtoStatusIconText
+            atoExpirationDate={row.original.atoExpirationDate}
+            oaStatus={row.original.oaStatus}
+          />
         ),
         sortType: (a, b) =>
           (a.values.atoExpirationDate ?? '') >
