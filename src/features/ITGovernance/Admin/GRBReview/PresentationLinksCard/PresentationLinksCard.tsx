@@ -270,6 +270,7 @@ function PresentationLinksCard({
             {isVirusScanning ? (
               <em
                 data-testdeckurl={presentationDeckFileURL || transcriptFileURL}
+                data-testid="presentation-deck-virus-scanning"
               >
                 {t('asyncPresentation.virusScanning')}
               </em>

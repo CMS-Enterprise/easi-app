@@ -116,8 +116,6 @@ func fillOutInitialIntake(
 		"Office of Minority Health",
 		"Hallie O'Hara",
 		"Emergency Preparedness and Response Operations",
-		true,
-		"Leatha Gorczany",
 	)
 	return updateSystemIntakeContractDetails(ctx, store, intake)
 }
@@ -393,8 +391,6 @@ func updateSystemIntakeContactDetails(
 	businessOwnerComponent string,
 	productManagerName string,
 	productManagerComponent string,
-	issoIsPresent bool,
-	issoName string,
 ) *models.SystemIntake {
 	govTeamsPresent := true
 
@@ -424,8 +420,8 @@ func updateSystemIntakeContactDetails(
 					Key:          "securityPrivacy",
 				},
 				{
-					Collaborator: "Mr Enterprise Architecture",
-					Key:          "enterpriseArchitecture",
+					Collaborator: "Mr 508 Officer",
+					Key:          "clearanceOfficer508",
 				},
 			},
 		},

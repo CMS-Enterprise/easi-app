@@ -153,6 +153,7 @@ const GRBReviewStatusCard = ({
 
   return (
     <div
+      data-testid="grb-review-status-card"
       className={classNames(
         className,
         'padding-3 radius-md',
@@ -185,7 +186,9 @@ const GRBReviewStatusCard = ({
             // ASYNC review type
             <>
               <h4 className="margin-0 margin-right-1 margin-top-2px margin-bottom-05">
-                {t('statusCard.timeRemaining')}
+                {grbReviewStatus === 'PAST_DUE'
+                  ? t('statusCard.timePastDue')
+                  : t('statusCard.timeRemaining')}
               </h4>
 
               <Grid row className="margin-bottom-05">

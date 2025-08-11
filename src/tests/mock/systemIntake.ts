@@ -543,6 +543,7 @@ export const systemIntakeForTable: GetSystemIntakesTableQuery['systemIntakes'][n
     productManager: systemIntake.productManager,
     trbCollaboratorName: '',
     oitSecurityCollaboratorName: '',
+    collaboratorName508: '',
     eaCollaboratorName: '',
     existingFunding: false,
     fundingSources: [],

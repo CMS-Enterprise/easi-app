@@ -17,9 +17,15 @@ var getWhereGRBReviewIsHalfwayThrough string
 //go:embed SQL/system_intake/get_where_grb_review_past_due_no_quorum.sql
 var getWhereGRBReviewPastDueNoQuorum string
 
+// getWhereGRBReviewCompleteQuorumMet holds the SQL query to get intakes with completed GRB Reviews where quorum has been met
 //
 //go:embed SQL/system_intake/get_where_grb_review_complete_quorum_met.sql
 var getWhereGRBReviewCompleteQuorumMet string
+
+// getWhereGRBReviewEnded holds the SQL query to get intakes that have ended in the last day
+//
+//go:embed SQL/system_intake/get_where_grb_review_ended.sql
+var getWhereGRBReviewEnded string
 
 // getRequesterUpdateEmailData holds the SQL query to get requester update email data
 //
@@ -36,6 +42,7 @@ var SystemIntake = systemIntakeScripts{
 	GetWhereGRBReviewIsHalfwayThrough: getWhereGRBReviewIsHalfwayThrough,
 	GetWhereGRBPastDueNoQuorum:        getWhereGRBReviewPastDueNoQuorum,
 	GetWhereReviewCompleteQuorumMet:   getWhereGRBReviewCompleteQuorumMet,
+	GetWhereGRBReviewEnded:            getWhereGRBReviewEnded,
 	GetRequesterUpdateEmailData:       getRequesterUpdateEmailData,
 	GetSystemIntakeByGRBReviewerID:    getSystemIntakeByGRBReviewerID,
 }
@@ -45,6 +52,7 @@ type systemIntakeScripts struct {
 	GetWhereGRBReviewIsHalfwayThrough string
 	GetWhereGRBPastDueNoQuorum        string
 	GetWhereReviewCompleteQuorumMet   string
+	GetWhereGRBReviewEnded            string
 	GetRequesterUpdateEmailData       string
 	GetSystemIntakeByGRBReviewerID    string
 }

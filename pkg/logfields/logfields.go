@@ -23,6 +23,7 @@ const (
 	jobNameKey     string = "jobName"
 	lastRunTimeKey string = "lastRunTime"
 	nextRunTimeKey string = "nextRunTime"
+	emailTypeKey   string = "emailType"
 )
 
 // JobID returns a zap field for a job ID
@@ -47,4 +48,9 @@ func NextRunTime(nextRunTime time.Time) zapcore.Field {
 
 func IntakeID(intakeID uuid.UUID) zapcore.Field {
 	return zap.Any("intakeID", intakeID)
+}
+
+// EmailType returns a zap field for the type of email being sent
+func EmailType(emailType string) zapcore.Field {
+	return zap.String(emailTypeKey, emailType)
 }

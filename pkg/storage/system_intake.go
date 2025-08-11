@@ -76,8 +76,8 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			trb_collaborator_name,
 			oit_security_collaborator,
 			oit_security_collaborator_name,
-			ea_collaborator,
-			ea_collaborator_name,
+		    collaborator_508,
+			collaborator_name_508,
 			project_name,
 			project_acronym,
 			existing_funding,
@@ -141,8 +141,8 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			:trb_collaborator_name,
 			:oit_security_collaborator,
 			:oit_security_collaborator_name,
-			:ea_collaborator,
-			:ea_collaborator_name,
+			:collaborator_508,
+			:collaborator_name_508,
 			:project_name,
 			:project_acronym,
 			:existing_funding,
@@ -239,8 +239,8 @@ func (s *Store) UpdateSystemIntakeNP(ctx context.Context, np sqlutils.NamedPrepa
 			trb_collaborator_name = :trb_collaborator_name,
 			oit_security_collaborator = :oit_security_collaborator,
 			oit_security_collaborator_name = :oit_security_collaborator_name,
-			ea_collaborator = :ea_collaborator,
-			ea_collaborator_name = :ea_collaborator_name,
+			collaborator_508 = :collaborator_508,
+			collaborator_name_508 = :collaborator_name_508,
 			project_name = :project_name,
 			project_acronym = :project_acronym,
 			existing_funding = :existing_funding,
@@ -353,6 +353,7 @@ func (s *Store) FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPr
 	const whereClause = `
 		WHERE system_intakes.id = :id
 	`
+
 	intakeStmt, err := np.PrepareNamed(fetchSystemIntakeSQL + whereClause)
 	if err != nil {
 		return nil, err
@@ -640,11 +641,22 @@ func GetSystemIntakesWithGRBReviewPastDueNoQuorum(ctx context.Context, np sqluti
 	return intakes, nil
 }
 
-func GetSystemaIntakesWithGRBReviewCompleteQuorumMet(ctx context.Context, np sqlutils.NamedPreparer, logger *zap.Logger) ([]*models.SystemIntake, error) {
+func GetSystemIntakesWithGRBReviewCompleteQuorumMet(ctx context.Context, np sqlutils.NamedPreparer, logger *zap.Logger) ([]*models.SystemIntake, error) {
 	var intakes []*models.SystemIntake
 
 	if err := namedSelect(ctx, np, &intakes, sqlqueries.SystemIntake.GetWhereReviewCompleteQuorumMet, nil); err != nil {
 		logger.Error("Failed to fetch system intakes with GRB review complete with quorum met", zap.Error(err))
+		return nil, err
+	}
+
+	return intakes, nil
+}
+
+func GetSystemIntakesWithGRBReviewEnded(ctx context.Context, np sqlutils.NamedPreparer, logger *zap.Logger) ([]*models.SystemIntake, error) {
+	var intakes []*models.SystemIntake
+
+	if err := namedSelect(ctx, np, &intakes, sqlqueries.SystemIntake.GetWhereGRBReviewEnded, nil); err != nil {
+		logger.Error("Failed to fetch system intakes where GRB Review ended", zap.Error(err))
 		return nil, err
 	}
 
