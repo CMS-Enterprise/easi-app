@@ -32,3 +32,33 @@ func (s *StoreTestSuite) TestCreateSystemIntakeContact() {
 		s.True(len(fetched) > 0)
 	})
 }
+
+func (s *StoreTestSuite) TestFetchSystemIntakeContactsBySystemIntakeID() {
+	ctx := context.Background()
+
+	// create intake
+	intake := testhelpers.NewSystemIntake()
+	createdIntake, err := s.store.CreateSystemIntake(ctx, &intake)
+	s.NoError(err)
+
+	// create system intake contacts
+	_, err = s.store.CreateSystemIntakeContact(ctx, &models.SystemIntakeContact{
+		EUAUserID:      "AAAA",
+		SystemIntakeID: createdIntake.ID,
+		Component:      "Component",
+		Role:           "Role",
+	})
+	s.NoError(err)
+
+	contacts, err := s.store.FetchSystemIntakeContactsBySystemIntakeID(ctx, createdIntake.ID)
+	s.NoError(err)
+	s.Len(contacts, 1)
+
+	// set that eua to NULL
+	_, err = s.db.ExecContext(ctx, "UPDATE system_intake_contacts SET eua_user_id = NULL, common_name = 'sam' WHERE system_intake_id = $1", createdIntake.ID)
+	s.NoError(err)
+
+	contacts, err = s.store.FetchSystemIntakeContactsBySystemIntakeID(ctx, createdIntake.ID)
+	s.NoError(err)
+	s.Empty(contacts)
+}

@@ -29,7 +29,7 @@ func getOktaJobs(scheduler *Scheduler) *oktaJobs {
 }
 
 func reauthenticateWithOktaJobFunction(ctx context.Context, scheduledJob *ScheduledJob) error {
-	logger, err := scheduledJob.logger()
+	logger, err := scheduledJob.logger(ctx)
 	if err != nil {
 		return err
 	}
@@ -41,7 +41,8 @@ func reauthenticateWithOktaJobFunction(ctx context.Context, scheduledJob *Schedu
 	}
 	logger.Info("Running Okta Bimonthly Re-authentication job")
 
-	_, err = userSearchClient.FetchUserInfo(ctx, "calling to re-auth")
+	// We search with common name contains as we don't expect a result. We just want to trigger the Okta re-authentication. This should not error if no result is returned
+	_, err = userSearchClient.SearchCommonNameContains(ctx, "calling to re-auth")
 	if err != nil {
 		logger.Error("error fetching user info from Okta in the 15 day window", zap.Error(err))
 		return err

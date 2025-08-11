@@ -76,6 +76,7 @@ func (c *Client) GetAuthorityToOperate(ctx context.Context, cedarSystemID string
 			LastAssessmentDate:                        zero.TimeFrom(time.Time(ato.LastAssessmentDate)),
 			LastContingencyPlanCompletionDate:         zero.TimeFrom(time.Time(ato.LastContingencyPlanCompletionDate)),
 			LastPenTestDate:                           zero.TimeFrom(time.Time(ato.LastPenTestDate)),
+			OaStatus:                                  zero.StringFrom(ato.OaStatus),
 			PiaCompletionDate:                         zero.TimeFrom(time.Time(ato.PiaCompletionDate)),
 			PrimaryCyberRiskAdvisor:                   zero.StringFrom(ato.PrimaryCyberRiskAdvisor),
 			PrivacySubjectMatterExpert:                zero.StringFrom(ato.PrivacySubjectMatterExpert),

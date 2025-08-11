@@ -1866,6 +1866,21 @@ func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.
 		})
 	}
 
+	if len(obj.CollaboratorName508.String) > 0 {
+		key := "clearanceOfficer508"
+		label := "508 Clearance Officer"
+		acronym := "508"
+		name := "508 Clearance Officer"
+
+		teams = append(teams, &models.SystemIntakeCollaborator{
+			Key:          key,
+			Label:        label,
+			Acronym:      acronym,
+			Name:         name,
+			Collaborator: obj.CollaboratorName508.String,
+		})
+	}
+
 	if len(obj.EACollaboratorName.String) > 0 {
 		key := "enterpriseArchitecture"
 		label := "Enterprise Architecture (EA)"
@@ -1983,11 +1998,9 @@ func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.System
 		return requesterWithoutEmail, nil
 	}
 
-	email := user.Email.String()
-
 	return &models.SystemIntakeRequester{
 		Component: obj.Component.Ptr(),
-		Email:     &email,
+		Email:     helpers.PointerTo(user.Email.String()),
 		Name:      obj.Requester,
 	}, nil
 }

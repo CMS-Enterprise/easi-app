@@ -71,6 +71,7 @@ const systemProfile = {
       expirationDate: 'Expiration Date',
       effectiveDate: 'Effective Date',
       atoExpiration: 'ATO Expiration',
+      atoOngoing: 'Ongoing',
       securityAndPrivacy: {
         header: 'Security and privacy compliance at CMS',
         atoInfo:

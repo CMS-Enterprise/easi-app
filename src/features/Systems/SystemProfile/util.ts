@@ -14,9 +14,8 @@ import showVal from 'utils/showVal';
  * Format the name in title case if the full name is in all caps.
  */
 export function getPersonFullName(
-  role: // eslint-disable-next-line camelcase
-  | GetSystemProfileRoles
-    // eslint-disable-next-line camelcase
+  role:
+    | GetSystemProfileRoles
     | SystemIntakeFragmentFragment['systems'][number]['businessOwnerRoles'][number]
 ): string {
   const fullname = `${role.assigneeFirstName} ${role.assigneeLastName}`;
@@ -36,7 +35,6 @@ export function showAtoExpirationDate(
 
 // TODO: combine this and above into one? showAtoDate? showDate?
 export function showAtoEffectiveDate(
-  // eslint-disable-next-line camelcase
   systemProfileAto?: GetSystemProfileATO
 ): React.ReactNode {
   return showVal(

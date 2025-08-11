@@ -44,10 +44,11 @@ exports[`Discussions > matches the snapshot 1`] = `
       </button>
     </div>
     <div
-      class="internal-discussion-board bg-white padding-3 padding-bottom-4 margin-top-4 border-base-lighter shadow-2"
+      class="grb-discussion-board-card bg-white padding-3 padding-bottom-4 margin-top-4 border-base-lighter shadow-2"
+      data-testid="primary-discussion-board-card"
     >
       <div
-        class="internal-discussions-board__header desktop:display-flex flex-align-start"
+        class="grb-discussion-board-card__header desktop:display-flex flex-align-start"
       >
         <h3
           class="margin-top-0 margin-bottom-1"
@@ -215,10 +216,11 @@ exports[`Discussions > matches the snapshot 1`] = `
       </div>
     </div>
     <div
-      class="internal-discussion-board bg-white padding-3 padding-bottom-4 margin-top-4 border-base-lighter shadow-2"
+      class="grb-discussion-board-card bg-white padding-3 padding-bottom-4 margin-top-4 border-base-lighter shadow-2"
+      data-testid="internal-discussion-board-card"
     >
       <div
-        class="internal-discussions-board__header desktop:display-flex flex-align-start"
+        class="grb-discussion-board-card__header desktop:display-flex flex-align-start"
       >
         <h3
           class="margin-top-0 margin-bottom-1"

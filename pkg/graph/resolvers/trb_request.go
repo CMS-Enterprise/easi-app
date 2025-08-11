@@ -8,6 +8,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
+	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
@@ -211,17 +212,11 @@ func UpdateTRBRequestTRBLead(
 		return nil, err
 	}
 
+	if trb.State != models.TRBRequestStateOpen {
+		return nil, errors.New("cannot change TRB Request Lead if the TRB request is not in OPEN state")
+	}
+
 	form, err := store.GetTRBRequestFormByTRBRequestID(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-
-	requesterInfo, err := fetchUserInfo(ctx, trb.GetCreatedBy())
-	if err != nil {
-		return nil, err
-	}
-
-	leadInfo, err := fetchUserInfo(ctx, trbLead)
 	if err != nil {
 		return nil, err
 	}
@@ -230,8 +225,7 @@ func UpdateTRBRequestTRBLead(
 		"trbLead": &trbLead,
 	}
 
-	err = ApplyChangesAndMetaData(changes, trb, appcontext.Principal(ctx))
-	if err != nil {
+	if err := ApplyChangesAndMetaData(changes, trb, appcontext.Principal(ctx)); err != nil {
 		return nil, err
 	}
 
@@ -240,30 +234,39 @@ func UpdateTRBRequestTRBLead(
 		return nil, err
 	}
 
-	component := ""
-	if form.Component != nil {
-		component = *form.Component
-	}
-
-	emailInput := email.SendTRBRequestTRBLeadEmailInput{
-		TRBRequestID:   trb.ID,
-		TRBRequestName: trb.GetName(),
-		TRBLeadName:    leadInfo.DisplayName,
-		RequesterName:  requesterInfo.DisplayName,
-		Component:      component,
-		TRBLeadEmail:   leadInfo.Email,
-	}
-
 	// Email client can be nil when this is called from tests - the email client itself tests this
 	// separately in the email package test
 	if emailClient != nil {
-		err = emailClient.SendTRBRequestTRBLeadAssignedEmails(ctx, emailInput)
+		component := ""
+		if form.Component != nil {
+			component = *form.Component
+		}
+
+		requesterInfo, err := fetchUserInfo(ctx, trb.GetCreatedBy())
 		if err != nil {
 			return nil, err
 		}
+
+		leadInfo, err := fetchUserInfo(ctx, trbLead)
+		if err != nil {
+			return nil, err
+		}
+
+		emailInput := email.SendTRBRequestTRBLeadEmailInput{
+			TRBRequestID:   trb.ID,
+			TRBRequestName: trb.GetName(),
+			TRBLeadName:    leadInfo.DisplayName,
+			RequesterName:  requesterInfo.DisplayName,
+			Component:      component,
+			TRBLeadEmail:   leadInfo.Email,
+		}
+		if err := emailClient.SendTRBRequestTRBLeadAssignedEmails(ctx, emailInput); err != nil {
+			// shouldn't error here as the lead did get updated at this point, we should just log the email error
+			appcontext.ZLogger(ctx).Error("problem sending TRB Request TRB Lead Assigned email", zap.Error(err), zap.String("trb.id", trb.ID.String()))
+		}
 	}
 
-	return updatedTrb, err
+	return updatedTrb, nil
 }
 
 // CloseTRBRequest closes a TRB request and sends an email if recipients are specified

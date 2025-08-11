@@ -54,8 +54,8 @@ func CreateSystemIntakeContact(
 	if err != nil {
 		return nil, err
 	}
-	// We comment this out for now, we will use this eventually to link the contact to the user account
-	_ = contactUserAccount
+
+	contact.UserID = contactUserAccount.ID
 
 	createdContact, err := store.CreateSystemIntakeContact(ctx, contact)
 	if err != nil {
@@ -84,9 +84,9 @@ func UpdateSystemIntakeContact(
 	contactUserAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, input.EuaUserID, false, getAccountInformation)
 	if err != nil {
 		return nil, err
-	}
-	// We comment this out for now, we will use this eventually to link the contact to the user account
-	_ = contactUserAccount
+	} // We comment this out for now, we will use this eventually to link the contact to the user account
+
+	contact.UserID = contactUserAccount.ID
 
 	updatedContact, err := store.UpdateSystemIntakeContact(ctx, contact)
 	if err != nil {
@@ -189,17 +189,17 @@ func SystemIntakeUpdateContactDetails(ctx context.Context, store *storage.Store,
 		}
 		intake.OITSecurityCollaboratorName = oitCollaboratorName
 
-		eaCollaboratorName := null.StringFromPtr(nil)
+		collaboratorName508 := null.StringFromPtr(nil)
 		for _, team := range input.GovernanceTeams.Teams {
-			if team.Key == "enterpriseArchitecture" {
-				eaCollaboratorName = null.StringFrom(team.Collaborator)
+			if team.Key == "clearanceOfficer508" {
+				collaboratorName508 = null.StringFrom(team.Collaborator)
 			}
 		}
-		intake.EACollaboratorName = eaCollaboratorName
+		intake.CollaboratorName508 = collaboratorName508
 	} else {
 		intake.TRBCollaboratorName = null.StringFromPtr(nil)
 		intake.OITSecurityCollaboratorName = null.StringFromPtr(nil)
-		intake.EACollaboratorName = null.StringFromPtr(nil)
+		intake.CollaboratorName508 = null.StringFromPtr(nil)
 	}
 
 	savedIntake, err := store.UpdateSystemIntake(ctx, intake)

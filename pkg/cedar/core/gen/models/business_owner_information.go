@@ -72,6 +72,10 @@ type BusinessOwnerInformation struct {
 	// stores beneficiary address
 	// Example: true
 	StoresBeneficiaryAddress bool `json:"storesBeneficiaryAddress,omitempty"`
+
+	// system ownership
+	// Enum: [CMS Owned Contractor Owned External]
+	SystemOwnership string `json:"systemOwnership,omitempty"`
 }
 
 // Validate validates this business owner information
@@ -87,6 +91,10 @@ func (m *BusinessOwnerInformation) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateBeneficiaryInformation(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSystemOwnership(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -211,6 +219,51 @@ func (m *BusinessOwnerInformation) validateBeneficiaryInformation(formats strfmt
 			return err
 		}
 
+	}
+
+	return nil
+}
+
+var businessOwnerInformationTypeSystemOwnershipPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["CMS Owned","Contractor Owned","External"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		businessOwnerInformationTypeSystemOwnershipPropEnum = append(businessOwnerInformationTypeSystemOwnershipPropEnum, v)
+	}
+}
+
+const (
+
+	// BusinessOwnerInformationSystemOwnershipCMSOwned captures enum value "CMS Owned"
+	BusinessOwnerInformationSystemOwnershipCMSOwned string = "CMS Owned"
+
+	// BusinessOwnerInformationSystemOwnershipContractorOwned captures enum value "Contractor Owned"
+	BusinessOwnerInformationSystemOwnershipContractorOwned string = "Contractor Owned"
+
+	// BusinessOwnerInformationSystemOwnershipExternal captures enum value "External"
+	BusinessOwnerInformationSystemOwnershipExternal string = "External"
+)
+
+// prop value enum
+func (m *BusinessOwnerInformation) validateSystemOwnershipEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, businessOwnerInformationTypeSystemOwnershipPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *BusinessOwnerInformation) validateSystemOwnership(formats strfmt.Registry) error {
+	if swag.IsZero(m.SystemOwnership) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateSystemOwnershipEnum("systemOwnership", "body", m.SystemOwnership); err != nil {
+		return err
 	}
 
 	return nil
