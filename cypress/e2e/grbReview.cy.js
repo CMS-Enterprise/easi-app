@@ -1,4 +1,4 @@
-describe.skip('GRB review', () => {
+describe('GRB review', () => {
   beforeEach(() => {
     cy.localLogin({ name: 'E2E2', role: 'EASI_D_GOVTEAM' });
   });

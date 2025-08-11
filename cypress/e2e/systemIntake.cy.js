@@ -3,7 +3,7 @@ import SystemIntakeSoftwareAcquisitionMethods from '../../src/constants/enums/Sy
 import { BASIC_USER_PROD } from '../../src/constants/jobCodes';
 import testSystemIntakeName from '../support/systemIntake';
 
-describe.skip('The System Intake Form', () => {
+describe('The System Intake Form', () => {
   beforeEach(() => {
     cy.localLogin({ name: 'E2E1', role: BASIC_USER_PROD });
 
