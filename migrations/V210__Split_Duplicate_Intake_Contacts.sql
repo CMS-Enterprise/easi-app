@@ -76,8 +76,8 @@ new_records AS ( --noqa
         du.component,
         du.role,
         du.created_at, --todo, should this be now?
-        du.updated_at,
-        du.clean_name_titlecase,         
+        CURRENT_TIMESTAMP AS updated_at,
+        du.clean_name_titlecase,
         c.user_id
     FROM data_to_update du
     JOIN system_intake_contacts c ON c.id = du.original_contact_id
@@ -85,8 +85,16 @@ new_records AS ( --noqa
 )
 
 UPDATE system_intake_contacts c
-SET common_name = du.clean_name_titlecase
+SET
+    common_name = du.clean_name_titlecase,
+    updated_at = CURRENT_TIMESTAMP
 FROM (
     SELECT * FROM data_to_update WHERE split_index = 1
 ) du
-WHERE c.id = du.original_contact_id
+WHERE c.id = du.original_contact_id;
+
+
+-- Do one final update. This looks for any records where common name has at least two concurrent whitespace instances.
+UPDATE system_intake_contacts
+SET common_name = REGEXP_REPLACE(TRIM(common_name), '\s+', ' ', 'g')
+WHERE common_name IS NOT NULL AND common_name ~ '\s{2,}';
