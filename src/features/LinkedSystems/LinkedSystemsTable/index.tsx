@@ -237,7 +237,7 @@ const LinkedSystemsTable = ({
 
         <tbody {...getTableBodyProps()}>
           {page.map(row => {
-            const { id, cells } = { ...row };
+            const { id, cells } = row;
             return (
               <tr key={id}>
                 {cells.map((cell, index) => (
