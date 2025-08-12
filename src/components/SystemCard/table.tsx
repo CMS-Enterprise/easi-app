@@ -26,16 +26,11 @@ type SystemCardTableProps = {
 type IntakeRow = SystemIntakeFragmentFragment['systemIntakeSystems'][number];
 type TrbRow = GetTRBRequestSummaryQuery['trbRequest']['systems'][number];
 
-function isSystemIntakeSystems(
+const isSystemIntakeSystems = (
   systems: SystemCardTableProps['systems']
-): systems is SystemIntakeFragmentFragment['systemIntakeSystems'] {
-  return (
-    Array.isArray(systems) &&
-    systems.length > 0 &&
-    // eslint-disable-next-line no-underscore-dangle
-    (systems[0] as any).__typename === 'SystemIntakeSystem'
-  );
-}
+): systems is SystemIntakeFragmentFragment['systemIntakeSystems'] =>
+  // eslint-disable-next-line no-underscore-dangle
+  Array.isArray(systems) && systems[0]?.__typename === 'SystemIntakeSystem';
 
 /**
  * One table; we only switch the column Cell mapper based on the type guard.
@@ -135,7 +130,6 @@ const SystemCardTable = ({ systems }: SystemCardTableProps) => {
                       <td
                         className="border-0 padding-0"
                         {...cell.getCellProps()}
-                        key={{ ...cell.getCellProps() }.key}
                       >
                         {cell.render('Cell')}
                       </td>
