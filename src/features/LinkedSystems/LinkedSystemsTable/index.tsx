@@ -245,7 +245,8 @@ const LinkedSystemsTable = ({
                     style={{
                       paddingLeft: index === 0 ? '.5em' : 'auto'
                     }}
-                    key={{ ...cell.getCellProps() }.key}
+                    key={`${row.id}-${cell.column.id}`}
+                    {...cell.getCellProps()}
                   >
                     {cell.render('Cell')}
                   </td>
