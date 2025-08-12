@@ -72,7 +72,7 @@ describe('Trb Request form: Attendees', () => {
     request: {
       query: GetCedarContactsDocument,
       variables: {
-        commonName: cedarDisplay
+        commonName: initialRequester.userInfo?.commonName
       }
     },
     result: {
