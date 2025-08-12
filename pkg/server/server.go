@@ -3,7 +3,6 @@ package server
 
 import (
 	"crypto/tls"
-	"fmt"
 	"log"
 	"net/http"
 
