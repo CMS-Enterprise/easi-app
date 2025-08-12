@@ -99,7 +99,7 @@ const LinkedSystemsTable = ({
         id: 'systemRelationshipType',
         Cell: ({ row }: { row: Row<SystemIntakeSystem> }) => {
           return (
-            <>{translateSystemRelationships(row.cells[1]?.value)}</>
+            <>{translateSystemRelationships(row.original.systemRelationshipType)}</>
           );
         }
       },
