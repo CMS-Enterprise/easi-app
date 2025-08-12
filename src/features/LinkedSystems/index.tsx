@@ -67,12 +67,7 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
 
   // Url of next view after successful form submit
   // Also for a breadcrumb navigation link
-  const redirectUrl = (() => {
-    // if (fromAdmin) {
-    //   return `/it-governance/${id}/additional-information`;
-    // }
-    return `/governance-task-list/${id}`;
-  })();
+  const redirectUrl = `/governance-task-list/${id}`;
 
   const addASystemUrl = `/linked-systems-form/${id}`;
 
