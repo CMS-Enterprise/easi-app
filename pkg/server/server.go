@@ -24,7 +24,6 @@ type Server struct {
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Incoming GraphQL request")
 	s.router.ServeHTTP(w, r)
 }
 
