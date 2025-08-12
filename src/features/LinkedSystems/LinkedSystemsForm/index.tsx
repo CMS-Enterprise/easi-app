@@ -95,7 +95,7 @@ const updateLink = async (
   payload: LinkedSystemsFormFields,
   linkedSystemID: string,
   systemIntakeID: string,
-  updateSystemLink: any
+  updateSystemLink: UpdateSystemLinkMutationFn
 ) => {
   const updateInput = {
     input: {
