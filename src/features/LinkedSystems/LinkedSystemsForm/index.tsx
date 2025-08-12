@@ -109,7 +109,7 @@ const updateLink = async (
 const addLink = async (
   payload: LinkedSystemsFormFields,
   systemIntakeID: string,
-  addSystemLink: any
+  addSystemLink: ReturnType<typeof useAddSystemLinkMutation>[0]
 ) => {
   const addInput = {
     input: buildInputPayload(payload, systemIntakeID)
