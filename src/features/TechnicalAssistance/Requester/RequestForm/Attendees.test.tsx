@@ -2,7 +2,7 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { ApolloQueryResult, NetworkStatus } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
-import { render } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   GetCedarContactsDocument,
@@ -12,6 +12,8 @@ import {
   GetTRBRequestQuery
 } from 'gql/generated/graphql';
 import { attendees, requester, trbRequest } from 'tests/mock/trbRequest';
+
+import contactRoles from 'constants/enums/contactRoles';
 
 import Attendees from './Attendees';
 
@@ -109,19 +111,41 @@ describe('Trb Request form: Attendees', () => {
       `${requester.userInfo?.commonName}, ${requester.userInfo?.euaUserId} (${requester.userInfo?.email})`
     );
 
-    const requesterComponentField = getByTestId('trb-requester-component');
-    const requesterRoleField = getByTestId('trb-requester-role');
+    const requesterComponentField = getByTestId(
+      'trb-requester-component'
+    ) as HTMLSelectElement;
+    const requesterRoleField = getByTestId(
+      'trb-requester-role'
+    ) as HTMLSelectElement;
 
-    // Check that form loads initial null values for requester component and role
-    expect(requesterComponentField).not.toHaveValue();
-    expect(requesterRoleField).not.toHaveValue();
+    // Wait until the component option is rendered after reset()
+    const componentOption = await screen.findByRole('option', {
+      name: requester.component! // visible label
+    });
 
-    // Select requester component
-    userEvent.selectOptions(requesterComponentField, [requester.component!]);
-    expect(requesterComponentField).toHaveValue(requester.component);
+    // Select and await
+    await userEvent.selectOptions(requesterComponentField, componentOption);
 
-    // Select requester role
-    userEvent.selectOptions(requesterRoleField, [requester.role!]);
-    expect(requesterRoleField).toHaveValue(requester.role);
+    // Assert by display value (matches visible text in the dropdown)
+    expect(requesterComponentField).toHaveDisplayValue(requester.component!);
+
+    // Wait until the role option is rendered after reset()
+    const roleOption = await screen.findByRole('option', {
+      name: contactRoles[requester.role!]
+    });
+
+    await userEvent.selectOptions(requesterRoleField, roleOption);
+
+    // Assert by display label
+    expect(requesterRoleField).toHaveDisplayValue(
+      contactRoles[requester.role!]
+    );
+
+    // Also assert the underlying value attribute matches the role enum
+    await waitFor(() =>
+      expect(requesterRoleField).toHaveValue(
+        (roleOption as HTMLOptionElement).value
+      )
+    );
   });
 });
