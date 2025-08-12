@@ -99,7 +99,7 @@ const LinkedSystemsTable = ({
         id: 'systemRelationshipType',
         Cell: ({ row }: { row: Row<SystemIntakeSystem> }) => {
           return (
-            <>{translateSystemRelationships(row.cells[1]?.value)}</>
+            <>{translateSystemRelationships(row.original.systemRelationshipType)}</>
           );
         }
       },
@@ -207,7 +207,7 @@ const LinkedSystemsTable = ({
         <thead>
           {headerGroups.map(headerGroup => {
             return (
-              <tr key={{ ...headerGroup.getHeaderGroupProps() }.key}>
+              <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column, index) => (
                   <th
                     aria-sort={getColumnSortStatus(column)}
@@ -245,7 +245,8 @@ const LinkedSystemsTable = ({
                     style={{
                       paddingLeft: index === 0 ? '.5em' : 'auto'
                     }}
-                    key={{ ...cell.getCellProps() }.key}
+                    key={`${row.id}-${cell.column.id}`}
+                    {...cell.getCellProps()}
                   >
                     {cell.render('Cell')}
                   </td>

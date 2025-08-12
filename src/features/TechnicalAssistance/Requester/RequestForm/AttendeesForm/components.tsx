@@ -470,7 +470,7 @@ const AttendeesTable = ({
                   return (
                     <td
                       {...cell.getCellProps()}
-                      key={{ ...cell.getCellProps() }.key}
+                      key={cell.column.id}
                       style={{
                         border: 'none',
                         padding: 0
