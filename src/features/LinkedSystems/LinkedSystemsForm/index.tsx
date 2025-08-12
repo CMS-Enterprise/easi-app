@@ -125,7 +125,6 @@ const LinkedSystemsForm = () => {
 
   const history = useHistory();
 
-  // const { register, setValue, watch } = useForm<LinkedSystemFormFields>();
   const form = useEasiForm<LinkedSystemsFormFields>({
     resolver: yupResolver(linkedSystemsSchema)
   });
