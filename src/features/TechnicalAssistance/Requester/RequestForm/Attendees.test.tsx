@@ -2,7 +2,7 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { ApolloQueryResult, NetworkStatus } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { render, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   GetCedarContactsDocument,
@@ -119,7 +119,9 @@ describe('Trb Request form: Attendees', () => {
     ) as HTMLSelectElement;
 
     // Wait for component options (post-reset) and pick first real option (skip placeholder)
-    const componentOptions = await within(requesterComponentField).findAllByRole('option');
+    const componentOptions = await within(
+      requesterComponentField
+    ).findAllByRole('option');
     const firstRealComponentOption = componentOptions.find(o => {
       const opt = o as HTMLOptionElement;
       const label = opt.getAttribute('label') || opt.textContent || '';
@@ -127,13 +129,19 @@ describe('Trb Request form: Attendees', () => {
     });
     expect(firstRealComponentOption).toBeTruthy();
 
-    await userEvent.selectOptions(requesterComponentField, firstRealComponentOption!);
+    await userEvent.selectOptions(
+      requesterComponentField,
+      firstRealComponentOption!
+    );
 
     // Assert by display value (visible text)
-    expect(requesterComponentField).toHaveDisplayValue((firstRealComponentOption as HTMLOptionElement).textContent!);
+    expect(requesterComponentField).toHaveDisplayValue(
+      (firstRealComponentOption as HTMLOptionElement).textContent!
+    );
 
     // Wait for role options and pick first real option (skip placeholder/empty)
-    const roleOptions = await within(requesterRoleField).findAllByRole('option');
+    const roleOptions =
+      await within(requesterRoleField).findAllByRole('option');
     const firstRealRoleOption = roleOptions.find(o => {
       const opt = o as HTMLOptionElement;
       return !opt.disabled && opt.value !== '';
@@ -143,9 +151,13 @@ describe('Trb Request form: Attendees', () => {
     await userEvent.selectOptions(requesterRoleField, firstRealRoleOption!);
 
     // Assert by display label and underlying value
-    expect(requesterRoleField).toHaveDisplayValue((firstRealRoleOption as HTMLOptionElement).textContent!);
+    expect(requesterRoleField).toHaveDisplayValue(
+      (firstRealRoleOption as HTMLOptionElement).textContent!
+    );
     await waitFor(() =>
-      expect(requesterRoleField).toHaveValue((firstRealRoleOption as HTMLOptionElement).value)
+      expect(requesterRoleField).toHaveValue(
+        (firstRealRoleOption as HTMLOptionElement).value
+      )
     );
   });
 });
