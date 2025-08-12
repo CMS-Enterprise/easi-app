@@ -99,7 +99,7 @@ const LinkedSystemsTable = ({
         id: 'systemRelationshipType',
         Cell: ({ row }: { row: Row<SystemIntakeSystem> }) => {
           return (
-            <>{translateSystemRelationships({ ...row }.cells[1]?.value)}</>
+            <>{translateSystemRelationships(row.cells[1]?.value)}</>
           );
         }
       },
@@ -237,7 +237,7 @@ const LinkedSystemsTable = ({
 
         <tbody {...getTableBodyProps()}>
           {page.map(row => {
-            const { id, cells } = { ...row };
+            const { id, cells } = row;
             return (
               <tr key={id}>
                 {cells.map((cell, index) => (
