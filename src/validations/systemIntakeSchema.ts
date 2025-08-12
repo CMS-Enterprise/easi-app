@@ -398,7 +398,7 @@ export const linkedSystemsSchema = Yup.object({
     if (!optionSelected) {
       return this.createError({
         path: 'relationshipTypes',
-        message: 'Form values are missing'
+        message: 'Please select at least one relationship type'
       });
     }
     return true;
