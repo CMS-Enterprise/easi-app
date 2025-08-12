@@ -146,18 +146,15 @@ describe('GRB review form step wrapper', () => {
     const mockOnSubmit = vi.fn().mockResolvedValue({});
     renderComponent({ onSubmit: mockOnSubmit });
 
-    expect(await screen.findByTestId('stepIndicator-0'));
+    await screen.findByTestId('stepIndicator-0');
 
-    // Simulate form is dirty and valid (mock EasiForm context or just override isDirty)
-    const input = document.createElement('input');
-    input.setAttribute('name', 'mockField');
-    document.querySelector('form')?.appendChild(input);
+    // Await the async interaction
+    await userEvent.click(screen.getByTestId('stepIndicator-1'));
 
-    // Click next step in header
-    userEvent.click(screen.getByTestId('stepIndicator-1'));
+    // Wait for the page to reflect navigation
+    await screen.findByRole('heading', { name: 'Step 2 of 4 Presentation' });
 
-    // Since navigation happens asynchronously, wait for the next step's heading
-    expect(await screen.findByTestId('stepIndicator-1')).toHaveAttribute(
+    expect(screen.getByTestId('stepIndicator-1')).toHaveAttribute(
       'aria-current',
       'true'
     );
