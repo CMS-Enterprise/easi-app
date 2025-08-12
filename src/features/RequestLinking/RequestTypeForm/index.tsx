@@ -78,7 +78,6 @@ const RequestTypeForm = () => {
 
       const nextPage = (id: string) => {
         const linkqs = linkCedarSystemIdQueryString(linkCedarSystemId);
-        console.log(linkqs);
         const navigationLink = `/linked-systems/${id}?${linkqs || ''}`;
 
         switch (requestType) {
