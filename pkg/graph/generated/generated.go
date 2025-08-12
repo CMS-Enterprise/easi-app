@@ -12317,29 +12317,12 @@ func (ec *executionContext) field_CedarSystem_linkedTrbRequests_args(ctx context
 func (ec *executionContext) field_Mutation_addSystemLink_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := ec.field_Mutation_addSystemLink_argsInput(ctx, rawArgs)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNAddSystemLinkInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐAddSystemLinkInput)
 	if err != nil {
 		return nil, err
 	}
 	args["input"] = arg0
 	return args, nil
-}
-func (ec *executionContext) field_Mutation_addSystemLink_argsInput(
-	ctx context.Context,
-	rawArgs map[string]any,
-) (models.AddSystemLinkInput, error) {
-	if _, ok := rawArgs["input"]; !ok {
-		var zeroVal models.AddSystemLinkInput
-		return zeroVal, nil
-	}
-
-	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-	if tmp, ok := rawArgs["input"]; ok {
-		return ec.unmarshalNAddSystemLinkInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐAddSystemLinkInput(ctx, tmp)
-	}
-
-	var zeroVal models.AddSystemLinkInput
-	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_archiveSystemIntake_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
@@ -12796,29 +12779,12 @@ func (ec *executionContext) field_Mutation_deleteSystemIntakeGRBReviewer_args(ct
 func (ec *executionContext) field_Mutation_deleteSystemLink_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := ec.field_Mutation_deleteSystemLink_argsSystemIntakeSystemID(ctx, rawArgs)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "systemIntakeSystemID", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
 	if err != nil {
 		return nil, err
 	}
 	args["systemIntakeSystemID"] = arg0
 	return args, nil
-}
-func (ec *executionContext) field_Mutation_deleteSystemLink_argsSystemIntakeSystemID(
-	ctx context.Context,
-	rawArgs map[string]any,
-) (uuid.UUID, error) {
-	if _, ok := rawArgs["systemIntakeSystemID"]; !ok {
-		var zeroVal uuid.UUID
-		return zeroVal, nil
-	}
-
-	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeSystemID"))
-	if tmp, ok := rawArgs["systemIntakeSystemID"]; ok {
-		return ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
-	}
-
-	var zeroVal uuid.UUID
-	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_deleteTRBGuidanceLetterInsight_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
@@ -13307,29 +13273,12 @@ func (ec *executionContext) field_Mutation_updateSystemIntakeReviewDates_args(ct
 func (ec *executionContext) field_Mutation_updateSystemLink_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := ec.field_Mutation_updateSystemLink_argsInput(ctx, rawArgs)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNUpdateSystemLinkInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemLinkInput)
 	if err != nil {
 		return nil, err
 	}
 	args["input"] = arg0
 	return args, nil
-}
-func (ec *executionContext) field_Mutation_updateSystemLink_argsInput(
-	ctx context.Context,
-	rawArgs map[string]any,
-) (models.UpdateSystemLinkInput, error) {
-	if _, ok := rawArgs["input"]; !ok {
-		var zeroVal models.UpdateSystemLinkInput
-		return zeroVal, nil
-	}
-
-	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-	if tmp, ok := rawArgs["input"]; ok {
-		return ec.unmarshalNUpdateSystemLinkInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemLinkInput(ctx, tmp)
-	}
-
-	var zeroVal models.UpdateSystemLinkInput
-	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_updateTRBGuidanceLetterInsightOrder_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
@@ -13657,57 +13606,23 @@ func (ec *executionContext) field_Query_systemIntakeContacts_args(ctx context.Co
 func (ec *executionContext) field_Query_systemIntakeSystem_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := ec.field_Query_systemIntakeSystem_argsSystemIntakeSystemID(ctx, rawArgs)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "systemIntakeSystemID", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
 	if err != nil {
 		return nil, err
 	}
 	args["systemIntakeSystemID"] = arg0
 	return args, nil
 }
-func (ec *executionContext) field_Query_systemIntakeSystem_argsSystemIntakeSystemID(
-	ctx context.Context,
-	rawArgs map[string]any,
-) (uuid.UUID, error) {
-	if _, ok := rawArgs["systemIntakeSystemID"]; !ok {
-		var zeroVal uuid.UUID
-		return zeroVal, nil
-	}
-
-	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeSystemID"))
-	if tmp, ok := rawArgs["systemIntakeSystemID"]; ok {
-		return ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
-	}
-
-	var zeroVal uuid.UUID
-	return zeroVal, nil
-}
 
 func (ec *executionContext) field_Query_systemIntakeSystems_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := ec.field_Query_systemIntakeSystems_argsSystemIntakeID(ctx, rawArgs)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "systemIntakeId", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
 	if err != nil {
 		return nil, err
 	}
 	args["systemIntakeId"] = arg0
 	return args, nil
-}
-func (ec *executionContext) field_Query_systemIntakeSystems_argsSystemIntakeID(
-	ctx context.Context,
-	rawArgs map[string]any,
-) (uuid.UUID, error) {
-	if _, ok := rawArgs["systemIntakeId"]; !ok {
-		var zeroVal uuid.UUID
-		return zeroVal, nil
-	}
-
-	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeId"))
-	if tmp, ok := rawArgs["systemIntakeId"]; ok {
-		return ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
-	}
-
-	var zeroVal uuid.UUID
-	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Query_systemIntake_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
