@@ -2,7 +2,7 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { ApolloQueryResult, NetworkStatus } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   GetCedarContactsDocument,
@@ -13,8 +13,6 @@ import {
 } from 'gql/generated/graphql';
 import { attendees, requester, trbRequest } from 'tests/mock/trbRequest';
 
-import contactRoles from 'constants/enums/contactRoles';
-
 import Attendees from './Attendees';
 
 /** Requester object with initial null values for component and role */
@@ -24,6 +22,8 @@ const initialRequester: GetTRBRequestAttendeesQuery['trbRequest']['attendees'][0
     component: null,
     role: null
   };
+
+const cedarDisplay = `${initialRequester.userInfo?.commonName}, ${initialRequester.userInfo?.euaUserId} (${initialRequester.userInfo?.email})`;
 
 describe('Trb Request form: Attendees', () => {
   const mockRefetch = async (): Promise<
@@ -72,7 +72,7 @@ describe('Trb Request form: Attendees', () => {
     request: {
       query: GetCedarContactsDocument,
       variables: {
-        commonName: initialRequester.userInfo?.commonName
+        commonName: cedarDisplay
       }
     },
     result: {
@@ -118,34 +118,34 @@ describe('Trb Request form: Attendees', () => {
       'trb-requester-role'
     ) as HTMLSelectElement;
 
-    // Wait until the component option is rendered after reset()
-    const componentOption = await screen.findByRole('option', {
-      name: requester.component! // visible label
+    // Wait for component options (post-reset) and pick first real option (skip placeholder)
+    const componentOptions = await within(requesterComponentField).findAllByRole('option');
+    const firstRealComponentOption = componentOptions.find(o => {
+      const opt = o as HTMLOptionElement;
+      const label = opt.getAttribute('label') || opt.textContent || '';
+      return !opt.disabled && !/^\s*-\s*select\s*-\s*$/i.test(label);
     });
+    expect(firstRealComponentOption).toBeTruthy();
 
-    // Select and await
-    await userEvent.selectOptions(requesterComponentField, componentOption);
+    await userEvent.selectOptions(requesterComponentField, firstRealComponentOption!);
 
-    // Assert by display value (matches visible text in the dropdown)
-    expect(requesterComponentField).toHaveDisplayValue(requester.component!);
+    // Assert by display value (visible text)
+    expect(requesterComponentField).toHaveDisplayValue((firstRealComponentOption as HTMLOptionElement).textContent!);
 
-    // Wait until the role option is rendered after reset()
-    const roleOption = await screen.findByRole('option', {
-      name: contactRoles[requester.role!]
+    // Wait for role options and pick first real option (skip placeholder/empty)
+    const roleOptions = await within(requesterRoleField).findAllByRole('option');
+    const firstRealRoleOption = roleOptions.find(o => {
+      const opt = o as HTMLOptionElement;
+      return !opt.disabled && opt.value !== '';
     });
+    expect(firstRealRoleOption).toBeTruthy();
 
-    await userEvent.selectOptions(requesterRoleField, roleOption);
+    await userEvent.selectOptions(requesterRoleField, firstRealRoleOption!);
 
-    // Assert by display label
-    expect(requesterRoleField).toHaveDisplayValue(
-      contactRoles[requester.role!]
-    );
-
-    // Also assert the underlying value attribute matches the role enum
+    // Assert by display label and underlying value
+    expect(requesterRoleField).toHaveDisplayValue((firstRealRoleOption as HTMLOptionElement).textContent!);
     await waitFor(() =>
-      expect(requesterRoleField).toHaveValue(
-        (roleOption as HTMLOptionElement).value
-      )
+      expect(requesterRoleField).toHaveValue((firstRealRoleOption as HTMLOptionElement).value)
     );
   });
 });

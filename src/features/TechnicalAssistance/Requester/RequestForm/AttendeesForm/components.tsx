@@ -462,6 +462,7 @@ const AttendeesTable = ({
             return (
               <tr
                 {...row.getRowProps()}
+                key={row.id}
                 className="tablet:grid-col-6 margin-bottom-1"
               >
                 {row.cells.map(cell => {
@@ -469,6 +470,7 @@ const AttendeesTable = ({
                   return (
                     <td
                       {...cell.getCellProps()}
+                      key={{ ...cell.getCellProps() }.key}
                       style={{
                         border: 'none',
                         padding: 0
