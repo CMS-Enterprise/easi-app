@@ -30,8 +30,12 @@ common_name_accounts AS (
     FROM system_intake_contacts sic
     JOIN user_account u
         ON
-            TRIM(u.common_name) ILIKE TRIM(sic.common_name) || '%' -- Case insensitive join that allows pronouns etc after name
-            AND TRIM(u.common_name) ~* ('^' || REGEXP_REPLACE(TRIM(sic.common_name), '([.*+?^${}()|\[\]\/\\])', '\\\1', 'g') || ' \((she\/her|he\/him|they\/them|she\/they|he\/they)\)$')
+            LOWER(TRIM(u.common_name)) = LOWER(TRIM(sic.common_name))
+            OR LOWER(TRIM(u.common_name)) = LOWER(TRIM(sic.common_name)) || ' (she/her)'
+            OR LOWER(TRIM(u.common_name)) = LOWER(TRIM(sic.common_name)) || ' (he/him)'
+            OR LOWER(TRIM(u.common_name)) = LOWER(TRIM(sic.common_name)) || ' (they/them)'
+            OR LOWER(TRIM(u.common_name)) = LOWER(TRIM(sic.common_name)) || ' (she/they)'
+            OR LOWER(TRIM(u.common_name)) = LOWER(TRIM(sic.common_name)) || ' (he/they)'
     WHERE
         u.id IS NOT NULL AND sic.common_name IS NOT NULL AND sic.eua_user_id IS NULL
         AND sic.user_id IS NULL
