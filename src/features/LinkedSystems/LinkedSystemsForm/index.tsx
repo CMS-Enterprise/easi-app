@@ -287,7 +287,7 @@ const LinkedSystemsForm = () => {
             slim
             className="margin-top-2"
           >
-            {t('error:pleaseSelectASystem')}
+            {t('linkedSystems:pleaseSelectASystem')}
           </Alert>
         )}
         {!linkedSystemID && (
