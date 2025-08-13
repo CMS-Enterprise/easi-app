@@ -53271,6 +53271,8 @@ func (ec *executionContext) fieldContext_SystemIntakeSystem_cedarSystem(_ contex
 				return ec.fieldContext_CedarSystem_atoEffectiveDate(ctx, field)
 			case "atoExpirationDate":
 				return ec.fieldContext_CedarSystem_atoExpirationDate(ctx, field)
+			case "oaStatus":
+				return ec.fieldContext_CedarSystem_oaStatus(ctx, field)
 			case "status":
 				return ec.fieldContext_CedarSystem_status(ctx, field)
 			case "businessOwnerOrg":
