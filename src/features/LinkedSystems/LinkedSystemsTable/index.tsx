@@ -70,10 +70,17 @@ const LinkedSystemsTable = ({
   );
 
   const translateSystemRelationships = useCallback(
-    (systemRelationships: string[]) =>
+    (systemRelationships: string[] = [], otherDesc?: string | null) =>
       systemRelationships
         .filter(Boolean)
-        .map(relationship => t(`relationshipTypes.${relationship}`))
+        .map(relationship => {
+          if (relationship === 'OTHER') {
+            return otherDesc
+              ? `${t(`relationshipTypes.${relationship}`)} (${otherDesc})`
+              : t(`relationshipTypes.${relationship}`);
+          }
+          return t(`relationshipTypes.${relationship}`);
+        })
         .join(', '),
     [t]
   );
@@ -94,15 +101,14 @@ const LinkedSystemsTable = ({
         Header: t<string>('linkedSystemsTable.header.relationships'),
         accessor: 'systemRelationshipType',
         id: 'systemRelationshipType',
-        Cell: ({ row }: { row: Row<SystemIntakeSystem> }) => {
-          return (
-            <>
-              {translateSystemRelationships(
-                row.original.systemRelationshipType
-              )}
-            </>
-          );
-        }
+        Cell: ({ row }: { row: Row<SystemIntakeSystem> }) => (
+          <>
+            {translateSystemRelationships(
+              row.original.systemRelationshipType,
+              row.original.otherSystemRelationshipDescription
+            )}
+          </>
+        )
       },
       {
         Header: t<string>('linkedSystemsTable.header.actions'),
