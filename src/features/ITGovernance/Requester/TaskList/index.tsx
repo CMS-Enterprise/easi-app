@@ -44,14 +44,20 @@ import GovTaskGrbMeeting from './GovTaskGrbMeeting';
 import GovTaskGrtMeeting from './GovTaskGrtMeeting';
 import GovTaskIntakeForm from './GovTaskIntakeForm';
 
+import './index.scss';
+
 function GovernanceTaskList() {
   const { systemId } = useParams<{ systemId: string }>();
-  const { t } = useTranslation('itGov');
+  const { t } = useTranslation(['itGov', 'intake']);
   const history = useHistory();
 
   const { showMessageOnNextPage, showMessage, Message } = useMessage();
 
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
+
+  const requestTypeText = t('itGov:taskList.requestType', {
+    returnObjects: true
+  }) as Record<string, string>;
 
   const { data, loading, error } = useGetGovernanceTaskListQuery({
     variables: {
@@ -113,7 +119,6 @@ function GovernanceTaskList() {
     >
       <GridContainer className="width-full">
         <Message className="margin-top-5 margin-bottom-3" />
-
         <Breadcrumbs
           items={[
             { text: t('itGovernance'), url: '/system/making-a-request' },
@@ -122,7 +127,6 @@ function GovernanceTaskList() {
             }
           ]}
         />
-
         {loading && <PageLoading />}
 
         {!loading && systemIntake && (
@@ -131,6 +135,17 @@ function GovernanceTaskList() {
               <PageHeading className="margin-y-0">
                 {t('taskList.heading')}
               </PageHeading>
+              <div>
+                {data && data.systemIntake && (
+                  <span className="font-body-md line-height-body-4 text-base margin-right-1">
+                    {requestTypeText[systemIntake.requestType]}
+                  </span>
+                )}
+
+                <UswdsReactLink to={`/system/request-type/${systemId}`}>
+                  {t('taskList.changeRequestType')}
+                </UswdsReactLink>
+              </div>
 
               <div className="line-height-body-4">
                 {requestName && (
@@ -268,15 +283,14 @@ function GovernanceTaskList() {
                   </div>
                 )}
 
-                <UswdsReactLink to={`/edit-linked-systems/${systemId}`}>
-                  {t('additionalRequestInfo.viewOrEditSystemInformation')}
-                </UswdsReactLink>
-
                 <AdditionalRequestInfo {...systemIntake} requestType="itgov" />
 
                 <h4 className="line-height-body-2 margin-top-3 margin-bottom-1">
                   {t('taskList.help')}
                 </h4>
+                <div className="task-list-sidebar__subtitle">
+                  {t('taskList.helpLinksOpenInANewTab')}
+                </div>
                 <div className="margin-top-1">
                   <UswdsReactLink
                     to="/help/it-governance/steps-overview/new-system"

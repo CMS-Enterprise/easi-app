@@ -1013,6 +1013,7 @@ type ComplexityRoot struct {
 	}
 
 	SystemIntakeSystem struct {
+		CedarSystem                        func(childComplexity int) int
 		ID                                 func(childComplexity int) int
 		OtherSystemRelationshipDescription func(childComplexity int) int
 		SystemID                           func(childComplexity int) int
@@ -1529,6 +1530,7 @@ type SystemIntakeNoteResolver interface {
 	Editor(ctx context.Context, obj *models.SystemIntakeNote) (*models.UserInfo, error)
 }
 type SystemIntakeSystemResolver interface {
+	CedarSystem(ctx context.Context, obj *models.SystemIntakeSystem) (*models.CedarSystem, error)
 	SystemRelationshipType(ctx context.Context, obj *models.SystemIntakeSystem) ([]models.SystemRelationshipType, error)
 }
 type TRBAdminNoteResolver interface {
@@ -7290,6 +7292,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.SystemIntakeRequester.Name(childComplexity), true
 
+	case "SystemIntakeSystem.cedarSystem":
+		if e.complexity.SystemIntakeSystem.CedarSystem == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeSystem.CedarSystem(childComplexity), true
+
 	case "SystemIntakeSystem.id":
 		if e.complexity.SystemIntakeSystem.ID == nil {
 			break
@@ -9944,7 +9953,11 @@ input SystemRelationshipInput {
 type SystemIntakeSystem {
   id: UUID!
   systemIntakeID: UUID!
-  systemID: String
+  systemID: String!
+  """
+  Note: This should be a system but is nullable in case of error
+  """
+  cedarSystem: CedarSystem
   systemRelationshipType: [SystemRelationshipType!]!
   otherSystemRelationshipDescription: String
 }
@@ -12304,29 +12317,12 @@ func (ec *executionContext) field_CedarSystem_linkedTrbRequests_args(ctx context
 func (ec *executionContext) field_Mutation_addSystemLink_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := ec.field_Mutation_addSystemLink_argsInput(ctx, rawArgs)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNAddSystemLinkInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐAddSystemLinkInput)
 	if err != nil {
 		return nil, err
 	}
 	args["input"] = arg0
 	return args, nil
-}
-func (ec *executionContext) field_Mutation_addSystemLink_argsInput(
-	ctx context.Context,
-	rawArgs map[string]any,
-) (models.AddSystemLinkInput, error) {
-	if _, ok := rawArgs["input"]; !ok {
-		var zeroVal models.AddSystemLinkInput
-		return zeroVal, nil
-	}
-
-	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-	if tmp, ok := rawArgs["input"]; ok {
-		return ec.unmarshalNAddSystemLinkInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐAddSystemLinkInput(ctx, tmp)
-	}
-
-	var zeroVal models.AddSystemLinkInput
-	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_archiveSystemIntake_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
@@ -12783,29 +12779,12 @@ func (ec *executionContext) field_Mutation_deleteSystemIntakeGRBReviewer_args(ct
 func (ec *executionContext) field_Mutation_deleteSystemLink_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := ec.field_Mutation_deleteSystemLink_argsSystemIntakeSystemID(ctx, rawArgs)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "systemIntakeSystemID", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
 	if err != nil {
 		return nil, err
 	}
 	args["systemIntakeSystemID"] = arg0
 	return args, nil
-}
-func (ec *executionContext) field_Mutation_deleteSystemLink_argsSystemIntakeSystemID(
-	ctx context.Context,
-	rawArgs map[string]any,
-) (uuid.UUID, error) {
-	if _, ok := rawArgs["systemIntakeSystemID"]; !ok {
-		var zeroVal uuid.UUID
-		return zeroVal, nil
-	}
-
-	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeSystemID"))
-	if tmp, ok := rawArgs["systemIntakeSystemID"]; ok {
-		return ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
-	}
-
-	var zeroVal uuid.UUID
-	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_deleteTRBGuidanceLetterInsight_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
@@ -13294,29 +13273,12 @@ func (ec *executionContext) field_Mutation_updateSystemIntakeReviewDates_args(ct
 func (ec *executionContext) field_Mutation_updateSystemLink_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := ec.field_Mutation_updateSystemLink_argsInput(ctx, rawArgs)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNUpdateSystemLinkInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemLinkInput)
 	if err != nil {
 		return nil, err
 	}
 	args["input"] = arg0
 	return args, nil
-}
-func (ec *executionContext) field_Mutation_updateSystemLink_argsInput(
-	ctx context.Context,
-	rawArgs map[string]any,
-) (models.UpdateSystemLinkInput, error) {
-	if _, ok := rawArgs["input"]; !ok {
-		var zeroVal models.UpdateSystemLinkInput
-		return zeroVal, nil
-	}
-
-	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-	if tmp, ok := rawArgs["input"]; ok {
-		return ec.unmarshalNUpdateSystemLinkInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemLinkInput(ctx, tmp)
-	}
-
-	var zeroVal models.UpdateSystemLinkInput
-	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_updateTRBGuidanceLetterInsightOrder_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
@@ -13644,57 +13606,23 @@ func (ec *executionContext) field_Query_systemIntakeContacts_args(ctx context.Co
 func (ec *executionContext) field_Query_systemIntakeSystem_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := ec.field_Query_systemIntakeSystem_argsSystemIntakeSystemID(ctx, rawArgs)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "systemIntakeSystemID", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
 	if err != nil {
 		return nil, err
 	}
 	args["systemIntakeSystemID"] = arg0
 	return args, nil
 }
-func (ec *executionContext) field_Query_systemIntakeSystem_argsSystemIntakeSystemID(
-	ctx context.Context,
-	rawArgs map[string]any,
-) (uuid.UUID, error) {
-	if _, ok := rawArgs["systemIntakeSystemID"]; !ok {
-		var zeroVal uuid.UUID
-		return zeroVal, nil
-	}
-
-	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeSystemID"))
-	if tmp, ok := rawArgs["systemIntakeSystemID"]; ok {
-		return ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
-	}
-
-	var zeroVal uuid.UUID
-	return zeroVal, nil
-}
 
 func (ec *executionContext) field_Query_systemIntakeSystems_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := ec.field_Query_systemIntakeSystems_argsSystemIntakeID(ctx, rawArgs)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "systemIntakeId", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
 	if err != nil {
 		return nil, err
 	}
 	args["systemIntakeId"] = arg0
 	return args, nil
-}
-func (ec *executionContext) field_Query_systemIntakeSystems_argsSystemIntakeID(
-	ctx context.Context,
-	rawArgs map[string]any,
-) (uuid.UUID, error) {
-	if _, ok := rawArgs["systemIntakeId"]; !ok {
-		var zeroVal uuid.UUID
-		return zeroVal, nil
-	}
-
-	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeId"))
-	if tmp, ok := rawArgs["systemIntakeId"]; ok {
-		return ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
-	}
-
-	var zeroVal uuid.UUID
-	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Query_systemIntake_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
@@ -28450,6 +28378,8 @@ func (ec *executionContext) fieldContext_DeleteSystemLinkPayload_systemIntakeSys
 				return ec.fieldContext_SystemIntakeSystem_systemIntakeID(ctx, field)
 			case "systemID":
 				return ec.fieldContext_SystemIntakeSystem_systemID(ctx, field)
+			case "cedarSystem":
+				return ec.fieldContext_SystemIntakeSystem_cedarSystem(ctx, field)
 			case "systemRelationshipType":
 				return ec.fieldContext_SystemIntakeSystem_systemRelationshipType(ctx, field)
 			case "otherSystemRelationshipDescription":
@@ -42524,6 +42454,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakeSystem(ctx context.Co
 				return ec.fieldContext_SystemIntakeSystem_systemIntakeID(ctx, field)
 			case "systemID":
 				return ec.fieldContext_SystemIntakeSystem_systemID(ctx, field)
+			case "cedarSystem":
+				return ec.fieldContext_SystemIntakeSystem_cedarSystem(ctx, field)
 			case "systemRelationshipType":
 				return ec.fieldContext_SystemIntakeSystem_systemRelationshipType(ctx, field)
 			case "otherSystemRelationshipDescription":
@@ -42591,6 +42523,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakeSystems(ctx context.C
 				return ec.fieldContext_SystemIntakeSystem_systemIntakeID(ctx, field)
 			case "systemID":
 				return ec.fieldContext_SystemIntakeSystem_systemID(ctx, field)
+			case "cedarSystem":
+				return ec.fieldContext_SystemIntakeSystem_cedarSystem(ctx, field)
 			case "systemRelationshipType":
 				return ec.fieldContext_SystemIntakeSystem_systemRelationshipType(ctx, field)
 			case "otherSystemRelationshipDescription":
@@ -47551,6 +47485,8 @@ func (ec *executionContext) fieldContext_SystemIntake_systemIntakeSystems(_ cont
 				return ec.fieldContext_SystemIntakeSystem_systemIntakeID(ctx, field)
 			case "systemID":
 				return ec.fieldContext_SystemIntakeSystem_systemID(ctx, field)
+			case "cedarSystem":
+				return ec.fieldContext_SystemIntakeSystem_cedarSystem(ctx, field)
 			case "systemRelationshipType":
 				return ec.fieldContext_SystemIntakeSystem_systemRelationshipType(ctx, field)
 			case "otherSystemRelationshipDescription":
@@ -53202,11 +53138,14 @@ func (ec *executionContext) _SystemIntakeSystem_systemID(ctx context.Context, fi
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeSystem_systemID(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -53217,6 +53156,83 @@ func (ec *executionContext) fieldContext_SystemIntakeSystem_systemID(_ context.C
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeSystem_cedarSystem(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeSystem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeSystem_cedarSystem(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntakeSystem().CedarSystem(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.CedarSystem)
+	fc.Result = res
+	return ec.marshalOCedarSystem2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystem(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeSystem_cedarSystem(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeSystem",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_CedarSystem_id(ctx, field)
+			case "name":
+				return ec.fieldContext_CedarSystem_name(ctx, field)
+			case "description":
+				return ec.fieldContext_CedarSystem_description(ctx, field)
+			case "acronym":
+				return ec.fieldContext_CedarSystem_acronym(ctx, field)
+			case "atoEffectiveDate":
+				return ec.fieldContext_CedarSystem_atoEffectiveDate(ctx, field)
+			case "atoExpirationDate":
+				return ec.fieldContext_CedarSystem_atoExpirationDate(ctx, field)
+			case "status":
+				return ec.fieldContext_CedarSystem_status(ctx, field)
+			case "businessOwnerOrg":
+				return ec.fieldContext_CedarSystem_businessOwnerOrg(ctx, field)
+			case "businessOwnerOrgComp":
+				return ec.fieldContext_CedarSystem_businessOwnerOrgComp(ctx, field)
+			case "businessOwnerRoles":
+				return ec.fieldContext_CedarSystem_businessOwnerRoles(ctx, field)
+			case "systemMaintainerOrg":
+				return ec.fieldContext_CedarSystem_systemMaintainerOrg(ctx, field)
+			case "systemMaintainerOrgComp":
+				return ec.fieldContext_CedarSystem_systemMaintainerOrgComp(ctx, field)
+			case "versionId":
+				return ec.fieldContext_CedarSystem_versionId(ctx, field)
+			case "isBookmarked":
+				return ec.fieldContext_CedarSystem_isBookmarked(ctx, field)
+			case "linkedTrbRequests":
+				return ec.fieldContext_CedarSystem_linkedTrbRequests(ctx, field)
+			case "linkedSystemIntakes":
+				return ec.fieldContext_CedarSystem_linkedSystemIntakes(ctx, field)
+			case "uuid":
+				return ec.fieldContext_CedarSystem_uuid(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CedarSystem", field.Name)
 		},
 	}
 	return fc, nil
@@ -61229,6 +61245,8 @@ func (ec *executionContext) fieldContext_UpdateSystemLinkPayload_systemIntakeSys
 				return ec.fieldContext_SystemIntakeSystem_systemIntakeID(ctx, field)
 			case "systemID":
 				return ec.fieldContext_SystemIntakeSystem_systemID(ctx, field)
+			case "cedarSystem":
+				return ec.fieldContext_SystemIntakeSystem_cedarSystem(ctx, field)
 			case "systemRelationshipType":
 				return ec.fieldContext_SystemIntakeSystem_systemRelationshipType(ctx, field)
 			case "otherSystemRelationshipDescription":
@@ -76355,6 +76373,42 @@ func (ec *executionContext) _SystemIntakeSystem(ctx context.Context, sel ast.Sel
 			}
 		case "systemID":
 			out.Values[i] = ec._SystemIntakeSystem_systemID(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
+		case "cedarSystem":
+			field := field
+
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntakeSystem_cedarSystem(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "systemRelationshipType":
 			field := field
 

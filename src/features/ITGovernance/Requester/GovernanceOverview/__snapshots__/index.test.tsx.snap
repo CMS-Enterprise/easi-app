@@ -301,7 +301,7 @@ exports[`The governance overview page > matches the snapshot (w/ id param) 1`] =
     </div>
     <a
       class="usa-button margin-bottom-5"
-      href="/system/link/test-intake-guid"
+      href="/linked-systems/test-intake-guid"
     >
       Get started
     </a>
