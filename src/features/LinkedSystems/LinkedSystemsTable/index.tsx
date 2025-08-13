@@ -87,9 +87,7 @@ const LinkedSystemsTable = ({
         id: 'systemID',
         Cell: ({ row }: { row: Row<SystemIntakeSystem> }) => {
           return (
-            <p>
-              {t(`${organizedCedarSystems[row.original.systemID]?.name}` || '')}
-            </p>
+            <p>{organizedCedarSystems[row.original.systemID]?.name ?? ''}</p>
           );
         }
       },
@@ -99,7 +97,11 @@ const LinkedSystemsTable = ({
         id: 'systemRelationshipType',
         Cell: ({ row }: { row: Row<SystemIntakeSystem> }) => {
           return (
-            <>{translateSystemRelationships(row.original.systemRelationshipType)}</>
+            <>
+              {translateSystemRelationships(
+                row.original.systemRelationshipType
+              )}
+            </>
           );
         }
       },
@@ -154,7 +156,6 @@ const LinkedSystemsTable = ({
     pageCount,
     gotoPage,
     state,
-    rows,
     nextPage,
     previousPage,
     setPageSize
@@ -187,8 +188,6 @@ const LinkedSystemsTable = ({
     usePagination
   );
 
-  rows.forEach(row => prepareRow(row));
-
   if (loading) {
     return <PageLoading />;
   }
@@ -207,7 +206,7 @@ const LinkedSystemsTable = ({
         <thead>
           {headerGroups.map(headerGroup => {
             return (
-              <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
+              <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column, index) => (
                   <th
                     aria-sort={getColumnSortStatus(column)}
@@ -236,21 +235,23 @@ const LinkedSystemsTable = ({
         </thead>
 
         <tbody {...getTableBodyProps()}>
-          {page.map(row => {
+          {page.map((row: Row<SystemIntakeSystem>) => {
+            prepareRow(row);
+            // eslint-disable-next-line react/prop-types
             const { id, cells } = row;
             return (
               <tr key={id}>
-                {cells.map((cell, index) => (
-                  <td
-                    style={{
-                      paddingLeft: index === 0 ? '.5em' : 'auto'
-                    }}
-                    key={`${row.id}-${cell.column.id}`}
-                    {...cell.getCellProps()}
-                  >
-                    {cell.render('Cell')}
-                  </td>
-                ))}
+                {
+                  // eslint-disable-next-line react/prop-types
+                  cells.map((cell, index) => (
+                    <td
+                      style={{ paddingLeft: index === 0 ? '.5em' : 'auto' }}
+                      {...cell.getCellProps()}
+                    >
+                      {cell.render('Cell')}
+                    </td>
+                  ))
+                }
               </tr>
             );
           })}

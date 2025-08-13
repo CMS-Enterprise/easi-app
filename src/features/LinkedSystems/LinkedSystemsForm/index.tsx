@@ -19,6 +19,7 @@ import {
 } from '@trussworks/react-uswds';
 import {
   SystemRelationshipType,
+  UpdateSystemLinkMutationFn,
   useAddSystemLinkMutation,
   useGetCedarSystemsQuery,
   useGetSystemIntakeSystemQuery,
