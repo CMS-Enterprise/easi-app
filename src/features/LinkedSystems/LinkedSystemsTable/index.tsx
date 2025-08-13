@@ -55,7 +55,6 @@ const organizeCedarSystems = (
 const LinkedSystemsTable = ({
   systems = [],
   defaultPageSize = 10,
-  isHomePage,
   systemIntakeId,
   onRemoveLink
 }: TableProps) => {
@@ -194,13 +193,7 @@ const LinkedSystemsTable = ({
 
   return (
     <>
-      <UswdsTable
-        bordered={false}
-        fullWidth
-        scrollable
-        {...getTableProps()}
-        // className="margin-bottom-5"
-      >
+      <UswdsTable bordered={false} fullWidth scrollable {...getTableProps()}>
         <caption className="usa-sr-only">{t('systemTable.caption')}</caption>
 
         <thead>
