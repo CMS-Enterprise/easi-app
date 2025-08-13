@@ -23,6 +23,7 @@ import {
   useAddSystemLinkMutation,
   useGetCedarSystemsQuery,
   useGetSystemIntakeSystemQuery,
+  useGetSystemIntakeSystemsQuery,
   useUpdateSystemLinkMutation
 } from 'gql/generated/graphql';
 
@@ -176,6 +177,22 @@ const LinkedSystemsForm = () => {
     variables: { systemIntakeSystemID: linkedSystemID || '' },
     skip: !linkedSystemID
   });
+  const { data: systemsData } = useGetSystemIntakeSystemsQuery({
+    variables: { systemIntakeId: systemIntakeID },
+    skip: !systemIntakeID
+  });
+
+  const filteredCedarSystemIdOptions = useMemo<
+    { label: string; value: string }[]
+  >(() => {
+    const idsToRemove = new Set(
+      (systemsData?.systemIntakeSystems ?? [])
+        .map(item => item.systemID)
+        .filter((id): id is string => Boolean(id))
+    );
+
+    return cedarSystemIdOptions.filter(item => !idsToRemove.has(item.value));
+  }, [systemsData?.systemIntakeSystems, cedarSystemIdOptions]);
 
   useEffect(() => {
     if (linkedSystem?.systemIntakeSystem) {
@@ -385,11 +402,11 @@ const LinkedSystemsForm = () => {
                                 label={`- ${t('technicalAssistance:basic.options.select')} -`}
                                 disabled
                               />
-                              {cedarSystemIdOptions.map(system => (
+                              {filteredCedarSystemIdOptions.map(system => (
                                 <option
-                                  key={system.label}
+                                  key={system.value}
                                   value={system.value}
-                                  label={t(`${system.label}`)}
+                                  label={t(system.label)}
                                 />
                               ))}
                             </Select>
