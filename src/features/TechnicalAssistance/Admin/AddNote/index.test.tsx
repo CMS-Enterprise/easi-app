@@ -3,11 +3,7 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import selectEvent from 'react-select-event';
 import { MockedProvider } from '@apollo/client/testing';
-import {
-  render,
-  screen,
-  waitForElementToBeRemoved
-} from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   CreateTRBAdminNoteGeneralRequestDocument,
