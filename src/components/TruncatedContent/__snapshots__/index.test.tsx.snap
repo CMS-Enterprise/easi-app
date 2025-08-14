@@ -15,6 +15,7 @@ exports[`CedarContactSelect > matches the snapshot 1`] = `
       type="button"
     >
       <svg
+        aria-hidden="true"
         class="usa-icon margin-x-05"
         focusable="false"
         height="1em"

@@ -1,43 +1,41 @@
-import { FundingSource } from 'types/systemIntake';
+import { SystemIntakeFundingSourceInput } from 'gql/generated/graphql';
 
-import { FormattedFundingSource } from '.';
+import { FormattedFundingSource, FundingSource } from 'types/systemIntake';
 
 /** Formats funding sources for API */
 export const formatFundingSourcesForApi = (
   fundingSources: FormattedFundingSource[]
-): FundingSource[] => {
+): Array<SystemIntakeFundingSourceInput> => {
+  if (fundingSources.length === 0) return [];
+
   return fundingSources
-    .map(({ id, fundingNumber, sources }) => {
-      return sources.map(source => ({
-        __typename: 'SystemIntakeFundingSource' as const,
-        id,
-        fundingNumber,
-        source
+    .map(({ projectNumber, investments }) => {
+      return investments.map(investment => ({
+        projectNumber,
+        investment
       }));
     })
     .flat();
 };
 
-/** Formats funding sources for app by grouping objects by funding number */
+/** Formats funding sources for app by grouping objects by project number */
 export const formatFundingSourcesForApp = (
   fundingSources: FundingSource[]
 ): FormattedFundingSource[] => {
   return fundingSources.reduce<FormattedFundingSource[]>(
-    (acc, { id, fundingNumber, source }) => {
-      const existingSource = acc.find(s => s.fundingNumber === fundingNumber);
+    (acc, { projectNumber, investment }) => {
+      const existingSource = acc.find(s => s.projectNumber === projectNumber);
 
-      if (source && existingSource) {
-        existingSource.sources.push(source);
+      if (investment && existingSource) {
+        existingSource.investments.push(investment);
         return acc;
       }
 
       return [
         ...acc,
         {
-          __typename: 'SystemIntakeFundingSource',
-          id,
-          fundingNumber: fundingNumber ?? null,
-          sources: source ? [source] : []
+          projectNumber: projectNumber ?? null,
+          investments: investment ? [investment] : []
         }
       ];
     },

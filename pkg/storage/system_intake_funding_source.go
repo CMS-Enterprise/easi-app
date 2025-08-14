@@ -51,15 +51,15 @@ func (s *Store) UpdateSystemIntakeFundingSourcesNP(ctx context.Context, tx *sqlx
 				INSERT INTO system_intake_funding_sources (
 					id,
 					system_intake_id,
-					source,
-					funding_number,
+					investment,
+					project_number,
 					created_at
 				)
 				VALUES (
 					:id,
 					:system_intake_id,
-					:source,
-					:funding_number,
+					:investment,
+					:project_number,
 					:created_at
 				)`
 

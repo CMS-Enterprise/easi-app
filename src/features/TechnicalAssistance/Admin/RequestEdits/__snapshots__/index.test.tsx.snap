@@ -396,6 +396,7 @@ exports[`Trb Admin: Action: Request Edits > submits a feedback message 1`] = `
             type="button"
           >
             <svg
+              aria-hidden="true"
               class="usa-icon margin-x-05"
               focusable="false"
               height="1em"

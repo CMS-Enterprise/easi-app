@@ -84,10 +84,16 @@ export type ContactDetailsForm = {
 /** Funding source formatted for API */
 export type FundingSource = FundingSourceFragmentFragment;
 
+/** Funding source formatted for app */
+export type FormattedFundingSource = {
+  projectNumber: string | null;
+  investments: string[];
+};
+
 /** Contract details form */
 export type ContractDetailsForm = {
   existingFunding: boolean | null;
-  fundingSources: FundingSource[] | [];
+  fundingSources: FormattedFundingSource[];
   annualSpending: {
     currentAnnualSpending: string;
     currentAnnualSpendingITPortion: string;

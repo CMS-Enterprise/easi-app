@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import classNames from 'classnames';
 import DocumentsTable from 'features/ITGovernance/_components/DocumentsTable';
 import { SystemIntakeFragmentFragment } from 'gql/generated/graphql';
 import i18next from 'i18next';
@@ -9,6 +10,8 @@ import {
   DescriptionList,
   DescriptionTerm
 } from 'components/DescriptionGroup';
+import FundingSourcesTable from 'components/FundingSources/FundingSourcesTable';
+import { formatFundingSourcesForApp } from 'components/FundingSources/utils';
 import ReviewRow from 'components/ReviewRow';
 import { yesNoMap } from 'data/common';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
@@ -20,13 +23,6 @@ import './index.scss';
 
 type SystemIntakeReviewProps = {
   systemIntake: SystemIntakeFragmentFragment;
-};
-
-type FundingSourcesObject = {
-  [number: string]: {
-    fundingNumber: string | null;
-    sources: (string | null)[];
-  };
 };
 
 export const SystemIntakeReview = ({
@@ -41,62 +37,6 @@ export const SystemIntakeReview = ({
   } = useSystemIntakeContacts(systemIntake.id);
 
   const { t } = useTranslation('intake');
-
-  const fundingDefinition = () => {
-    const { existingFunding, fundingSources } = systemIntake;
-
-    // Format funding sources object
-    const fundingSourcesObject = fundingSources.reduce<FundingSourcesObject>(
-      (acc, { fundingNumber, source }) => {
-        if (!fundingNumber || !source) return acc;
-        const sourcesArray = acc[fundingNumber]
-          ? [...acc[fundingNumber].sources, source]
-          : [source];
-        // Return formatted object of funding sources
-        return {
-          ...acc,
-          [fundingNumber]: {
-            fundingNumber,
-            sources: sourcesArray
-          }
-        };
-      },
-      {}
-    );
-
-    // If no funding sources, return no
-    if (!existingFunding) return 'N/A';
-
-    return (
-      <ul className="usa-list--unstyled">
-        {Object.values(fundingSourcesObject).map(
-          ({ fundingNumber, sources }) => {
-            return (
-              <li
-                key={fundingNumber}
-                className="margin-top-205"
-                id={`fundingSource${fundingNumber}`}
-              >
-                <p className="text-bold font-body-sm margin-bottom-0">
-                  {t('contractDetails.fundingSources.fundingSource')}
-                </p>
-                <p className="margin-y-05">
-                  {t('contractDetails.fundingSources.fundingNumberLabel', {
-                    fundingNumber
-                  })}
-                </p>
-                <p className="margin-y-05">
-                  {t('contractDetails.fundingSources.fundingSourcesLabel', {
-                    sources: sources.join(', ')
-                  })}
-                </p>
-              </li>
-            );
-          }
-        )}
-      </ul>
-    );
-  };
 
   const getSubmissionDate = () => {
     if (submittedAt) {
@@ -380,8 +320,23 @@ export const SystemIntakeReview = ({
       <DescriptionList title={t('review.contractDetails')}>
         <ReviewRow>
           <div>
-            <DescriptionTerm term={t('contractDetails.fundingSources.label')} />
-            <DescriptionDefinition definition={fundingDefinition()} />
+            <DescriptionTerm term={t('fundingSources:whichFundingSources')} />
+            <DescriptionDefinition
+              className={classNames({
+                'margin-top-neg-2': systemIntake.existingFunding
+              })}
+              definition={
+                systemIntake.existingFunding ? (
+                  <FundingSourcesTable
+                    fundingSources={formatFundingSourcesForApp(
+                      systemIntake.fundingSources
+                    )}
+                  />
+                ) : (
+                  'N/A'
+                )
+              }
+            />
           </div>
         </ReviewRow>
         {/* Conditionally render annual spending (current) or cost (legacy) questions and answers */}

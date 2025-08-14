@@ -247,7 +247,7 @@ function GRBReviewFormStepWrapper<
       >
         {currentStepIndex >= 0 && (
           <IconButton
-            icon={<Icon.ArrowBack />}
+            icon={<Icon.ArrowBack aria-hidden />}
             type="button"
             onClick={() => submitStep({ shouldValidate: false })}
             unstyled
