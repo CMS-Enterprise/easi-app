@@ -47,6 +47,7 @@ type CedarAuthorityToOperate {
   lastAssessmentDate: Time
   lastContingencyPlanCompletionDate: Time
   lastPenTestDate: Time
+  oaStatus: String
   piaCompletionDate: Time
   primaryCyberRiskAdvisor: String
   privacySubjectMatterExpert: String
@@ -144,6 +145,7 @@ type CedarSystem {
   acronym: String
   atoEffectiveDate: Time
   atoExpirationDate: Time
+  oaStatus: String
   status: String
   businessOwnerOrg: String
   businessOwnerOrgComp: String

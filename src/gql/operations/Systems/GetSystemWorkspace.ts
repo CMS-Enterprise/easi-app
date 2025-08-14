@@ -8,6 +8,7 @@ export default gql(/* GraphQL */ `
       dateAuthorizationMemoExpires
       countOfOpenPoams
       lastAssessmentDate
+      oaStatus
     }
     cedarSystemDetails(cedarSystemId: $cedarSystemId) {
       isMySystem

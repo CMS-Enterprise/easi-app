@@ -22,6 +22,7 @@ export default gql(/* GraphQL */ `
       lastAssessmentDate
       lastContingencyPlanCompletionDate
       lastPenTestDate
+      oaStatus
       piaCompletionDate
       primaryCyberRiskAdvisor
       privacySubjectMatterExpert

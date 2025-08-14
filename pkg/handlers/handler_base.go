@@ -11,6 +11,7 @@ import (
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/logfields"
 )
 
 // NewHandlerBase is a constructor for HandlerBase
@@ -63,7 +64,7 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 	traceID, ok := appcontext.Trace(ctx)
 	if !ok {
 		traceID = uuid.New()
-		logger.With(zap.String("traceID", traceID.String()))
+		logger.With(logfields.TraceField(traceID.String()))
 	}
 
 	// get code and response

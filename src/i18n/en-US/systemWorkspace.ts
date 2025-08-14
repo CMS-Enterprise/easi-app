@@ -81,6 +81,7 @@ const systemWorkspace = {
       contact: 'Contact ISSO',
       cfacts: 'Go to CFACTs',
       learn: 'Learn more',
+      atoOngoing: 'Ongoing',
       modal: {
         header: 'Are you sure you want to leave EASi?',
         text: 'CFACTS requires additional job codes and/or permissions as well as connectivity via VPN in order to access content within the system.',

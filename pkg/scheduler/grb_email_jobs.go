@@ -79,7 +79,7 @@ func getGRBEmailJobs(scheduler *Scheduler) *grbEmailJobs {
 }
 
 func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, scheduledJob *ScheduledJob) error {
-	logger, err := scheduledJob.logger()
+	logger, err := scheduledJob.logger(ctx)
 	if err != nil {
 		return err
 	}
@@ -163,7 +163,7 @@ func sendAsyncVotingHalfwayThroughEmailJobFunction(ctx context.Context, schedule
 }
 
 func sendAsyncPastDueNoQuorumEmailJobFunction(ctx context.Context, scheduledJob *ScheduledJob) error {
-	logger, err := scheduledJob.logger()
+	logger, err := scheduledJob.logger(ctx)
 	if err != nil {
 		return err
 	}
@@ -248,7 +248,7 @@ func sendAsyncPastDueNoQuorumEmailJobFunction(ctx context.Context, scheduledJob 
 }
 
 func sendGRBReviewEndedEmailJobFunction(ctx context.Context, scheduledJob *ScheduledJob) error {
-	logger, err := scheduledJob.logger()
+	logger, err := scheduledJob.logger(ctx)
 	if err != nil {
 		return err
 	}
@@ -280,31 +280,14 @@ func sendGRBReviewEndedEmailJobFunction(ctx context.Context, scheduledJob *Sched
 
 	logger.Info(runningJob)
 
-	intakes, err := store.FetchSystemIntakes(ctx)
+	intakes, err := storage.GetSystemIntakesWithGRBReviewEnded(ctx, store, logger)
 	if err != nil {
 		wrappedErr := fmt.Errorf("%[1]w: %[2]w", errFetchingIntakes, err)
 		logger.Error(errFetchingIntakes.Error(), zap.Error(wrappedErr))
 		return wrappedErr
 	}
 
-	now := time.Now().UTC().Truncate(24 * time.Hour)
-
 	for _, intake := range intakes {
-		if intake.GrbReviewType != models.SystemIntakeGRBReviewTypeAsync {
-			continue
-		}
-		if intake.GRBReviewStartedAt == nil || intake.GrbReviewAsyncEndDate == nil {
-			continue
-		}
-		// Don't resend if voting has been manually ended
-		if intake.GrbReviewAsyncManualEndDate != nil {
-			continue
-		}
-		// Only send if the review end was reached
-		if intake.GrbReviewAsyncEndDate.After(now) {
-			continue
-		}
-
 		// get GRB reviewers
 		reviewers, err := store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{intake.ID})
 		if err != nil {
@@ -354,7 +337,7 @@ func sendGRBReviewLastDayReminderJobFunction(
 	ctx context.Context,
 	scheduledJob *ScheduledJob,
 ) error {
-	logger, err := scheduledJob.logger()
+	logger, err := scheduledJob.logger(ctx)
 	if err != nil {
 		return err
 	}
@@ -490,7 +473,7 @@ func sendGRBReviewLastDayReminderJobFunction(
 }
 
 func sendAsyncReviewCompleteQuorumMetJobFunction(ctx context.Context, scheduledJob *ScheduledJob) error {
-	logger, err := scheduledJob.logger()
+	logger, err := scheduledJob.logger(ctx)
 	if err != nil {
 		return err
 	}
@@ -522,7 +505,7 @@ func sendAsyncReviewCompleteQuorumMetJobFunction(ctx context.Context, scheduledJ
 
 	logger.Info(runningJob)
 
-	intakes, err := storage.GetSystemaIntakesWithGRBReviewCompleteQuorumMet(ctx, store, logger)
+	intakes, err := storage.GetSystemIntakesWithGRBReviewCompleteQuorumMet(ctx, store, logger)
 	if err != nil {
 		wrappedErr := fmt.Errorf("%[1]w: %[2]w", errFetchingIntakes, err)
 		logger.Error(errFetchingIntakes.Error(), zap.Error(wrappedErr))
