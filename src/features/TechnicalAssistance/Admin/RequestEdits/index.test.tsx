@@ -67,7 +67,7 @@ describe('Trb Admin: Action: Request Edits', () => {
       variables: {
         input: {
           trbRequestId,
-          feedbackMessage: `<p>${feedbackMessage}</p>`,
+          feedbackMessage: `<p><br></p><p>${feedbackMessage}</p>`,
           copyTrbMailbox: true,
           notifyEuaIds: [requester.userInfo.euaUserId],
           action: TRBFeedbackAction.REQUEST_EDITS
