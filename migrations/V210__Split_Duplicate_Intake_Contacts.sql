@@ -75,7 +75,7 @@ new_records AS ( --noqa
         du.system_intake_id,
         du.component,
         du.role,
-        du.created_at, --todo, should this be now?
+        du.created_at,
         CURRENT_TIMESTAMP AS updated_at,
         du.clean_name_titlecase,
         c.user_id
