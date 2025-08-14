@@ -144,8 +144,10 @@ function DiscussionBoard({ systemIntakeID, readOnly }: DiscussionBoardProps) {
     }
   }, [discussionMode, lastMode, setDiscussionAlert]);
 
-  const activeDiscussion =
-    grbDiscussions.find(d => d.initialPost.id === discussionId) || null;
+  const activeDiscussion = useMemo(
+    () => grbDiscussions.find(d => d?.initialPost?.id === discussionId) ?? null,
+    [grbDiscussions, discussionId]
+  );
 
   return (
     <DiscussionModalWrapper
