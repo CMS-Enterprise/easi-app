@@ -406,7 +406,7 @@ const LinkedSystemsForm = () => {
                                 <option
                                   key={system.value}
                                   value={system.value}
-                                  label={t(system.label)}
+                                  label={system.label}
                                 />
                               ))}
                             </Select>
