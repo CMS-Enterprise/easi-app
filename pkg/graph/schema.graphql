@@ -145,6 +145,7 @@ type CedarSystem {
   acronym: String
   atoEffectiveDate: Time
   atoExpirationDate: Time
+  oaStatus: String
   status: String
   businessOwnerOrg: String
   businessOwnerOrgComp: String
