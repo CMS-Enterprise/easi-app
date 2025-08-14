@@ -199,7 +199,6 @@ describe('Trb Admin Notes: Add Note', () => {
     /* Supporting documents */
 
     await user.selectOptions(categorySelect, ['Supporting documents']);
-    await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
 
     const documentSelect = screen.getByRole('combobox', {
       name: 'Which document?'
