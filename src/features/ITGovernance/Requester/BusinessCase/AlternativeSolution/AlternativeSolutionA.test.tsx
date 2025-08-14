@@ -96,7 +96,7 @@ describe('Business case alternative a solution', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByTestId('alternative-solution-a')).toBeInTheDocument();
+      expect(screen.getByTestId('alternative-analysis')).toBeInTheDocument();
     });
   });
 
@@ -153,9 +153,7 @@ describe('Business case alternative a solution', () => {
       );
 
       await waitFor(() => {
-        expect(
-          screen.getByTestId('alternative-solution-b')
-        ).toBeInTheDocument();
+        expect(screen.getByTestId('alternative-analysis')).toBeInTheDocument();
       });
     });
   });
