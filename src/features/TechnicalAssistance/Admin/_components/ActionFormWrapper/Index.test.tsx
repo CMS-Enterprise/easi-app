@@ -145,8 +145,6 @@ describe('Email recipient fields component', () => {
       'Av'
     );
 
-    await waitForElementToBeRemoved(() => getByRole('progressbar'));
-
     await user.click(
       await findByText(
         `${newAttendee.userInfo?.commonName}, ${newAttendee.userInfo?.euaUserId} (${newAttendee.userInfo?.email})`
