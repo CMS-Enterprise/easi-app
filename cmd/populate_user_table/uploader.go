@@ -308,7 +308,7 @@ func (u *Uploader) GetOrCreateUserAccountsByFullName(ctx context.Context, fullNa
 			attempt.ErrorMessage = err
 			attempt.Success = false
 			attempt.Message = " failed to create or get user account"
-			fmt.Printf("❌ Failed created user account for %s ", fullName)
+			fmt.Printf("❌ Failed to create user account for %s ", fullName)
 		} else {
 			attempt.Account = account
 			attempt.Success = true
