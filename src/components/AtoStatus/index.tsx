@@ -14,11 +14,20 @@ import Tag from '../Tag';
 /**
  * Get the ATO Status from a date property
  */
-export function getAtoStatus(dt: string | null | undefined): AtoStatus {
-  // No ato if it doesn't exist or invalid empty string
-  if (typeof dt !== 'string' || dt === '') return 'No ATO';
+export function getAtoStatus(
+  atoExpirationDate: string | null | undefined,
+  oaStatus: string | null | undefined
+): AtoStatus {
+  // override anything else if this system is an OA Member
+  if (oaStatus === 'OA Member') {
+    return 'Active';
+  }
 
-  const expiry = parseAsUTC(dt).toString();
+  // No ato if it doesn't exist or invalid empty string
+  if (typeof atoExpirationDate !== 'string' || atoExpirationDate === '')
+    return 'No ATO';
+
+  const expiry = parseAsUTC(atoExpirationDate).toString();
 
   const date = new Date().toISOString();
 
@@ -77,8 +86,14 @@ const atoStatusIcon: Record<AtoStatus, React.ComponentType<IconProps>> = {
   'No ATO': Icon.HelpOutline
 };
 
-export function AtoStatusIconText({ dt }: { dt: string | null | undefined }) {
-  const status = getAtoStatus(dt);
+export function AtoStatusIconText({
+  atoExpirationDate,
+  oaStatus
+}: {
+  atoExpirationDate: string | null | undefined;
+  oaStatus: string | null | undefined;
+}) {
+  const status = getAtoStatus(atoExpirationDate, oaStatus);
   const StatusIcon = atoStatusIcon[status];
   const { t } = useTranslation('systemProfile');
   return (
@@ -87,10 +102,15 @@ export function AtoStatusIconText({ dt }: { dt: string | null | undefined }) {
         size={3}
         className={`margin-right-1 ${atoStatusIconClassNames[status]}`}
       />
-      <span>
-        {t(`systemTable.atoStatusColumn.${status}`)}{' '}
-        {formatDateUtc(dt || null, 'MM/yyyy')}
-      </span>
+      {oaStatus === 'OA Member' && (
+        <span>{t('singleSystem.ato.atoOngoing')}</span>
+      )}
+      {oaStatus !== 'OA Member' && (
+        <span>
+          {t(`systemTable.atoStatusColumn.${status}`)}{' '}
+          {formatDateUtc(atoExpirationDate || null, 'MM/yyyy')}
+        </span>
+      )}
     </div>
   );
 }
