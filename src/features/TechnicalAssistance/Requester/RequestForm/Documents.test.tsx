@@ -448,7 +448,7 @@ describe('Trb Request form: Supporting documents', () => {
   });
 
   it('deletes a document from the table', async () => {
-    const { findByText, findByRole } = render(
+    const { findByText, queryByText, findByRole } = render(
       <MemoryRouter
         initialEntries={[
           '/trb/requests/f3b4cff8-321d-4d2a-a9a2-4b05810756d7/documents'
@@ -523,8 +523,6 @@ describe('Trb Request form: Supporting documents', () => {
       </MemoryRouter>
     );
 
-    const fileText = await findByText('test.pdf');
-
     // ReactModel is throwing warning - App element is not defined. Please use `Modal.setAppElement(el)`.  The app is being set within the modal but RTL is not picking up on it
     // eslint-disable-next-line
     console.error = vi.fn();
@@ -535,10 +533,10 @@ describe('Trb Request form: Supporting documents', () => {
     // Removes document from modal
     await user.click(await findByRole('button', { name: 'Remove document' }));
 
-    await waitFor(() => {
-      findByText('There are no documents uploaded for this request.');
-      expect(fileText).toBeInTheDocument();
-    });
+    await findByText(
+      i18next.t<string>('technicalAssistance:documents.table.noDocuments')
+    );
+    expect(queryByText('test.pdf')).not.toBeInTheDocument();
   });
 
   it('toggles the optional other document type field', async () => {
