@@ -410,7 +410,7 @@ describe('The System Intake Form', () => {
       'Which funding sources will fund this project?'
     )
       .siblings('dd')
-      .get(`li#fundingSource${projectNumber}`);
+      .get(`[data-testid="fundingSource${projectNumber}"]`);
 
     cy.get('#systemIntakeDocuments').contains('td', 'test.pdf');
   });
