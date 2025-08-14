@@ -56,6 +56,7 @@ describe('GRB Feedback Card', () => {
 
   it('renders expanded', async () => {
     renderCard(governanceRequestFeedbacksMock);
+    const user = userEvent.setup();
 
     expect(screen.queryByTestId('alert')).not.toBeInTheDocument();
 
@@ -64,7 +65,7 @@ describe('GRB Feedback Card', () => {
     const expand = screen.getByRole('button', {
       name: 'Show GRT recommendations'
     });
-    userEvent.click(expand);
+    await user.click(expand);
 
     // Check that the list element is in the document
     // It is not part of the dom tree when "collapsed"

@@ -175,19 +175,21 @@ describe('IT Gov Actions', () => {
         ]
       });
 
+      const user = userEvent.setup();
+
       expect(
         await screen.findByRole('heading', { name: 'Action: request edits' })
       ).toBeInTheDocument();
 
       // Fill in required fields
 
-      userEvent.selectOptions(screen.getByTestId('intakeFormStep'), [
+      await user.selectOptions(screen.getByTestId('intakeFormStep'), [
         'Intake Request form'
       ]);
 
       await typeRichText(screen.getByTestId('emailFeedback'), 'Ch-ch-changes');
 
-      userEvent.click(screen.getByRole('button', { name: 'Complete action' }));
+      await user.click(screen.getByRole('button', { name: 'Complete action' }));
 
       expect(
         await screen.findByText(
@@ -196,7 +198,7 @@ describe('IT Gov Actions', () => {
       ).toBeInTheDocument();
 
       // Continue through confirmation
-      userEvent.click(
+      await user.click(
         screen.getAllByRole('button', { name: 'Complete action' })[1]
       );
 
@@ -218,16 +220,18 @@ describe('IT Gov Actions', () => {
         ]
       });
 
+      const user = userEvent.setup();
+
       await screen.findByRole('heading', {
         name: 'Action: progress to a new step'
       });
 
-      userEvent.click(screen.getByRole('radio', { name: 'GRB review' }));
+      await user.click(screen.getByRole('radio', { name: 'GRB review' }));
 
       const meetingDateField = screen.getByRole('textbox', {
         name: 'Meeting date'
       });
-      userEvent.type(meetingDateField, '01/01/2000');
+      await user.type(meetingDateField, '01/01/2000');
 
       expect(
         await screen.findByText(i18next.t<string>('action:pastDateAlert'))
@@ -243,13 +247,14 @@ describe('IT Gov Actions', () => {
           getGovernanceTaskListQuery({ step: SystemIntakeStep.GRB_MEETING })
         ]
       });
+      const user = userEvent.setup();
 
       await screen.findByRole('heading', {
         name: 'Action: progress to a new step'
       });
 
-      userEvent.click(screen.getByRole('radio', { name: 'GRB review' }));
-      userEvent.click(screen.getByRole('button', { name: 'Complete action' }));
+      await user.click(screen.getByRole('radio', { name: 'GRB review' }));
+      await user.click(screen.getByRole('button', { name: 'Complete action' }));
 
       // Error for selecting current step
       await screen.findByText(

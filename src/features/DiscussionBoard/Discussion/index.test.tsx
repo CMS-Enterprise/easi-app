@@ -59,7 +59,7 @@ describe('Discussion component', () => {
     ).toBeNull();
   });
 
-  it('renders the replies', () => {
+  it('renders the replies', async () => {
     const discussion: SystemIntakeGRBReviewDiscussionFragment = {
       ...discussions[0],
       replies: [
@@ -121,6 +121,7 @@ describe('Discussion component', () => {
         </VerboseMockedProvider>
       </MemoryRouter>
     );
+    const user = userEvent.setup();
 
     // Toggle view more replies
 
@@ -132,7 +133,7 @@ describe('Discussion component', () => {
       name: 'View more replies'
     });
 
-    userEvent.click(viewMoreButton);
+    await user.click(viewMoreButton);
 
     expect(within(repliesList).getAllByRole('listitem')).toHaveLength(
       discussion.replies.length
@@ -148,7 +149,7 @@ describe('Discussion component', () => {
       name: 'Hide replies'
     });
 
-    userEvent.click(hideRepliesButton);
+    await user.click(hideRepliesButton);
 
     expect(screen.queryByTestId('discussionList')).toBeNull();
 

@@ -20,8 +20,9 @@ describe('The Collapsable Link componnet', () => {
         <div data-testid="children" />
       </CollapsableLink>
     );
+    const user = userEvent.setup();
 
-    userEvent.click(screen.getByTestId('collapsable-link'));
+    await user.click(screen.getByTestId('collapsable-link'));
     await screen.findByTestId('children');
 
     expect(screen.getByRole('button', { name: 'Test' })).toHaveAttribute(

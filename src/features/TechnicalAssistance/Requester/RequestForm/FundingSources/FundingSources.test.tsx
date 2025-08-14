@@ -36,14 +36,15 @@ describe('Funding sources', () => {
         setFieldValue={vi.fn()}
       />
     );
+    const user = userEvent.setup();
 
-    userEvent.click(
+    await user.click(
       screen.getByRole('button', { name: 'Add another funding source' })
     );
 
     // Renders error messages for empty fields
 
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await user.click(screen.getByRole('button', { name: 'Save' }));
 
     expect(
       await screen.findByText('Funding number must be exactly 6 digits')
@@ -59,10 +60,10 @@ describe('Funding sources', () => {
 
     // Check funding number is numeric
 
-    userEvent.type(fundingNumberField, 'aaaaaa');
+    await user.type(fundingNumberField, 'aaaaaa');
     expect(fundingNumberField).toHaveValue('aaaaaa');
 
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await user.click(screen.getByRole('button', { name: 'Save' }));
 
     expect(
       screen.getByText('Funding number can only contain digits')
@@ -70,11 +71,11 @@ describe('Funding sources', () => {
 
     // Check unique funding number
 
-    userEvent.clear(fundingNumberField);
-    userEvent.type(fundingNumberField, '123456');
+    await user.clear(fundingNumberField);
+    await user.type(fundingNumberField, '123456');
     expect(fundingNumberField).toHaveValue('123456');
 
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await user.click(screen.getByRole('button', { name: 'Save' }));
 
     expect(
       screen.getByText('Funding number must be unique')

@@ -71,7 +71,7 @@ describe('ViewDiscussions component', () => {
     expect(screen.getByText(noDiscussionsWithRepliesText)).toBeInTheDocument();
   });
 
-  it('renders accordion components with formatted discussion lists', () => {
+  it('renders accordion components with formatted discussion lists', async () => {
     const grbDiscussions = [
       ...mockDiscussions(),
       ...mockDiscussionsWithoutReplies()
@@ -92,6 +92,7 @@ describe('ViewDiscussions component', () => {
         />
       </MemoryRouter>
     );
+    const user = userEvent.setup();
 
     /* Discussions with replies */
 
@@ -130,7 +131,7 @@ describe('ViewDiscussions component', () => {
       name: 'View more discussions'
     });
 
-    userEvent.click(expandButton);
+    await user.click(expandButton);
 
     const expandedNewDiscussionListItems = within(
       newDiscussionsAccordion

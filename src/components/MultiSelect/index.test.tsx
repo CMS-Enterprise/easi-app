@@ -51,6 +51,8 @@ describe('MultiSelect', () => {
       </form>
     );
 
+    const user = userEvent.setup();
+
     const label = getByLabelText('Colors');
 
     // Toggle on Red
@@ -66,7 +68,7 @@ describe('MultiSelect', () => {
     expect(getByTestId('multiselect-tag--Green')).toBeInTheDocument();
 
     // Remove red via tag
-    userEvent.click(getByLabelText('Remove Red'));
+    await user.click(getByLabelText('Remove Red'));
     expect(getByTestId('form')).toHaveFormValues({ colors: 'green' });
     expect(getByTestId('multiselect-tag--Green')).toBeInTheDocument();
     expect(queryByTestId('multiselect-tag--Red')).not.toBeInTheDocument();

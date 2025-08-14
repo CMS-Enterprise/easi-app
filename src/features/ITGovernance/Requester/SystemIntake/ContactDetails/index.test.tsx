@@ -77,11 +77,12 @@ describe('System intake form - Contact details', () => {
         <ContactDetails systemIntake={emptySystemIntake} />
       </VerboseMockedProvider>
     );
+    const user = userEvent.setup();
 
     await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
 
     // Submit empty form
-    userEvent.click(screen.getByRole('button', { name: 'Next' }));
+    await user.click(screen.getByRole('button', { name: 'Next' }));
 
     expect(
       await screen.findByRole('heading', {

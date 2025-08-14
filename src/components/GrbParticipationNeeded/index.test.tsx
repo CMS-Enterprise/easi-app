@@ -74,11 +74,13 @@ describe('GRB participation needed', () => {
       </MemoryRouter>
     );
 
+    const user = userEvent.setup();
     const testIntake = mockSystemIntakes[0];
 
-    userEvent.click(
-      await screen.findByRole('button', { name: /Show GRB reviews/i })
-    );
+    const btn = await screen.findByRole('button', {
+      name: /Show GRB reviews/i
+    });
+    await user.click(btn);
 
     expect(
       screen.getByRole('link', { name: testIntake.requestName! })

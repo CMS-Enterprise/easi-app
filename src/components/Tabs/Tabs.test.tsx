@@ -73,7 +73,7 @@ it('renders tabs based on tab panel children', async () => {
   expect(getAllByRole('tab').length).toEqual(3);
 });
 
-it('renders new tab panel on click', () => {
+it('renders new tab panel on click', async () => {
   const { getByTestId } = render(
     <Tabs defaultActiveTab="Tab 2">
       <TabPanel id="Tab1" tabName="Tab 1">
@@ -88,12 +88,19 @@ it('renders new tab panel on click', () => {
     </Tabs>
   );
 
-  userEvent.click(getByTestId('Tab3-tab-btn'));
+  const user = userEvent.setup();
+
+  await user.click(getByTestId('Tab3-tab-btn'));
   expect(getByTestId('Tab3-tab')).toHaveClass('easi-tabs__tab--selected');
   expect(getByTestId('Tab3-panel')).not.toHaveClass('easi-print-only');
 });
 
 describe('keyboard actions', () => {
+  let user: ReturnType<typeof userEvent.setup>;
+  beforeEach(() => {
+    user = userEvent.setup();
+  });
+
   it('switches tabs on arrow right', async () => {
     const { getByTestId } = render(
       <Tabs>
@@ -110,14 +117,15 @@ describe('keyboard actions', () => {
     );
     const startingTab = getByTestId('Tab1-tab-btn');
 
+    await user.click(startingTab);
+    await user.type(startingTab, '{arrowright}');
     await waitFor(() => {
-      userEvent.click(startingTab);
-      userEvent.type(startingTab, '{arrowright}');
       expect(getByTestId('Tab2-tab-btn')).toHaveFocus();
       expect(getByTestId('Tab2-tab')).toHaveClass('easi-tabs__tab--selected');
       expect(getByTestId('Tab2-panel')).not.toHaveClass('easi-print-only');
     });
   });
+
   it('switches tabs on left right', async () => {
     const { getByTestId } = render(
       <Tabs>
@@ -134,15 +142,15 @@ describe('keyboard actions', () => {
     );
     const startingTab = getByTestId('Tab3-tab-btn');
 
+    await user.click(startingTab);
+    await user.type(startingTab, '{arrowleft}');
     await waitFor(() => {
-      userEvent.click(startingTab);
-      userEvent.type(startingTab, '{arrowleft}');
-
       expect(getByTestId('Tab2-tab-btn')).toHaveFocus();
       expect(getByTestId('Tab2-tab')).toHaveClass('easi-tabs__tab--selected');
       expect(getByTestId('Tab2-panel')).not.toHaveClass('easi-print-only');
     });
   });
+
   it('loops to last tab on left arrow click', async () => {
     const { getByTestId } = render(
       <Tabs>
@@ -159,14 +167,15 @@ describe('keyboard actions', () => {
     );
     const startingTab = getByTestId('Tab1-tab-btn');
 
+    await user.click(startingTab);
+    await user.type(startingTab, '{arrowleft}');
     await waitFor(() => {
-      userEvent.click(startingTab);
-      userEvent.type(startingTab, '{arrowleft}');
       expect(getByTestId('Tab3-tab-btn')).toHaveFocus();
       expect(getByTestId('Tab3-tab')).toHaveClass('easi-tabs__tab--selected');
       expect(getByTestId('Tab3-panel')).not.toHaveClass('easi-print-only');
     });
   });
+
   it('loops to first tab on right arrow click', async () => {
     const { getByTestId } = render(
       <Tabs>
@@ -183,14 +192,15 @@ describe('keyboard actions', () => {
     );
     const startingTab = getByTestId('Tab3-tab-btn');
 
+    await user.click(startingTab);
+    await user.type(startingTab, '{arrowright}');
     await waitFor(() => {
-      userEvent.click(startingTab);
-      userEvent.type(startingTab, '{arrowright}');
       expect(getByTestId('Tab1-tab-btn')).toHaveFocus();
       expect(getByTestId('Tab1-tab')).toHaveClass('easi-tabs__tab--selected');
       expect(getByTestId('Tab1-panel')).not.toHaveClass('easi-print-only');
     });
   });
+
   it('focuses tab panel on tab', async () => {
     const { getByTestId } = render(
       <Tabs>
@@ -207,13 +217,14 @@ describe('keyboard actions', () => {
     );
     const startingTab = getByTestId('Tab1-tab-btn');
 
+    await user.click(startingTab);
+    await user.tab();
     await waitFor(() => {
-      userEvent.click(startingTab);
-      userEvent.tab();
       expect(getByTestId('Tab1-panel')).toHaveFocus();
       expect(getByTestId('Tab1-panel')).not.toHaveClass('easi-print-only');
     });
   });
+
   it('focuses first tab on home key press', async () => {
     const { getByTestId } = render(
       <Tabs>
@@ -230,14 +241,15 @@ describe('keyboard actions', () => {
     );
     const startingTab = getByTestId('Tab3-tab-btn');
 
+    await user.click(startingTab);
+    await user.type(startingTab, '{home}');
     await waitFor(() => {
-      userEvent.click(startingTab);
-      userEvent.type(startingTab, '{home}');
       expect(getByTestId('Tab1-tab-btn')).toHaveFocus();
       expect(getByTestId('Tab1-tab')).toHaveClass('easi-tabs__tab--selected');
       expect(getByTestId('Tab1-panel')).not.toHaveClass('easi-print-only');
     });
   });
+
   it('focuses last tab on end key press', async () => {
     const { getByTestId } = render(
       <Tabs>
@@ -254,9 +266,9 @@ describe('keyboard actions', () => {
     );
     const startingTab = getByTestId('Tab3-tab-btn');
 
+    await user.click(startingTab);
+    await user.type(startingTab, '{end}');
     await waitFor(() => {
-      userEvent.click(startingTab);
-      userEvent.type(startingTab, '{end}');
       expect(getByTestId('Tab3-tab-btn')).toHaveFocus();
       expect(getByTestId('Tab3-tab')).toHaveClass('easi-tabs__tab--selected');
       expect(getByTestId('Tab3-panel')).not.toHaveClass('easi-print-only');

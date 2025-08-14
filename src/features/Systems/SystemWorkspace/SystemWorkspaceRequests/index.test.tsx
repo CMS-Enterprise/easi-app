@@ -84,6 +84,7 @@ describe('System Workspace Requests Table', () => {
         </MemoryRouter>
       </MockedProvider>
     );
+    const user = userEvent.setup();
     await screen.findByTestId('system-linked-requests');
 
     // Open requests loads first by default
@@ -96,7 +97,7 @@ describe('System Workspace Requests Table', () => {
       name: 'Closed requests'
     });
 
-    userEvent.click(closed);
+    await user.click(closed);
 
     expect(
       await screen.findByText('Most recent meeting date')

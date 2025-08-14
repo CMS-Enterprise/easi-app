@@ -121,6 +121,11 @@ const documents = (
 describe('Trb Request form: Supporting documents', () => {
   const testFile = new File(['1'], 'test.pdf', { type: 'application/pdf' });
 
+  let user: ReturnType<typeof userEvent.setup>;
+  beforeEach(() => {
+    user = userEvent.setup();
+  });
+
   it('renders states without documents', async () => {
     const { getByRole, findByText, asFragment } = render(
       <MemoryRouter
@@ -264,12 +269,12 @@ describe('Trb Request form: Supporting documents', () => {
     );
 
     // Add document button can open the upload document form
-    userEvent.click(await findByRole('link', { name: 'Add a document' }));
+    await user.click(await findByRole('link', { name: 'Add a document' }));
 
     getByText('Upload a document', { selector: 'h1' });
 
     // Can close without uploading
-    userEvent.click(
+    await user.click(
       getByRole('link', { name: 'Don’t upload and return to previous page' })
     );
 
@@ -372,20 +377,20 @@ describe('Trb Request form: Supporting documents', () => {
     ).toBeInTheDocument();
 
     // Add document button opens upload document form
-    userEvent.click(getByRole('link', { name: 'Add a document' }));
+    await user.click(getByRole('link', { name: 'Add a document' }));
 
     // Upload doc disabled on empty form
     const uploadButton = getByRole('button', { name: 'Upload document' });
     expect(uploadButton).toBeDisabled();
 
     const documentUploadLabel = getByLabelText('Document upload');
-    userEvent.upload(documentUploadLabel, testFile);
+    await user.upload(documentUploadLabel, testFile);
 
-    userEvent.click(getByTestId('documentType-ARCHITECTURE_DIAGRAM'));
+    await user.click(getByTestId('documentType-ARCHITECTURE_DIAGRAM'));
 
     // Attempt submit
     expect(uploadButton).not.toBeDisabled();
-    userEvent.click(uploadButton);
+    await user.click(uploadButton);
 
     // Successful if file info is displayed
     await findByTestId('table');
@@ -431,13 +436,13 @@ describe('Trb Request form: Supporting documents', () => {
     );
 
     const documentUploadLabel = getByLabelText('Document upload');
-    userEvent.upload(documentUploadLabel, testFile);
+    await user.upload(documentUploadLabel, testFile);
 
-    userEvent.click(getByTestId('documentType-ARCHITECTURE_DIAGRAM'));
+    await user.click(getByTestId('documentType-ARCHITECTURE_DIAGRAM'));
 
     // Attempt submit
     const uploadButton = getByRole('button', { name: 'Upload document' });
-    userEvent.click(uploadButton);
+    await user.click(uploadButton);
 
     await findByText(/There was an issue uploading your document/);
   });
@@ -525,10 +530,10 @@ describe('Trb Request form: Supporting documents', () => {
     console.error = vi.fn();
 
     // Opens modal
-    userEvent.click(await findByRole('button', { name: 'Remove' }));
+    await user.click(await findByRole('button', { name: 'Remove' }));
 
     // Removes document from modal
-    userEvent.click(await findByRole('button', { name: 'Remove document' }));
+    await user.click(await findByRole('button', { name: 'Remove document' }));
 
     await waitFor(() => {
       findByText('There are no documents uploaded for this request.');
@@ -552,10 +557,10 @@ describe('Trb Request form: Supporting documents', () => {
     );
 
     // On
-    userEvent.click(getByTestId('documentType-OTHER'));
+    await user.click(getByTestId('documentType-OTHER'));
     const otherLabel = await findByLabelText('What kind of document is this?');
     // Off
-    userEvent.click(getByTestId('documentType-ARCHITECTURE_DIAGRAM'));
+    await user.click(getByTestId('documentType-ARCHITECTURE_DIAGRAM'));
     await waitFor(() => {
       expect(otherLabel).not.toBeInTheDocument();
     });
@@ -584,14 +589,14 @@ describe('Trb Request form: Supporting documents', () => {
 
     // Add a document
     const documentUploadLabel = getByLabelText('Document upload');
-    userEvent.upload(documentUploadLabel, testFile);
+    await user.upload(documentUploadLabel, testFile);
 
     // Select the "Other" document type so that the form submit button is enabled
     // The file input and the other text field will be left empty to catch errors
-    userEvent.click(getByTestId('documentType-OTHER'));
+    await user.click(getByTestId('documentType-OTHER'));
 
     // Submit attempt
-    userEvent.click(uploadButton);
+    await user.click(uploadButton);
 
     // Other document input error
     const otherDocError = await findByText('Please fill in the blank');
@@ -600,7 +605,7 @@ describe('Trb Request form: Supporting documents', () => {
     expect(otherDocError).toBeInTheDocument();
 
     // Fill in text
-    userEvent.type(getByLabelText('What kind of document is this?'), 'test');
+    await user.type(getByLabelText('What kind of document is this?'), 'test');
     // Text error gone
     await waitFor(() => {
       expect(otherDocError).not.toBeInTheDocument();

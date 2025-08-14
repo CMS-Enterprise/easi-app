@@ -63,6 +63,10 @@ const checkFieldDefaults = async () => {
 };
 
 describe('Issue LCID form', async () => {
+  let user: ReturnType<typeof userEvent.setup>;
+  beforeEach(() => {
+    user = userEvent.setup();
+  });
   it('Populates fields when existing LCID is selected', async () => {
     render(
       <VerboseMockedProvider
@@ -86,13 +90,13 @@ describe('Issue LCID form', async () => {
       name: 'Use an existing Life Cycle ID'
     });
 
-    userEvent.click(useExisting);
+    await user.click(useExisting);
 
     const selectLcid = screen.getByRole('combobox', {
       name: 'Life Cycle ID *'
     });
 
-    userEvent.selectOptions(selectLcid, [systemIntakeWithLcid.lcid!]);
+    await user.selectOptions(selectLcid, [systemIntakeWithLcid.lcid!]);
     expect(selectLcid).toHaveValue(systemIntakeWithLcid.lcid);
 
     checkFieldDefaults();
@@ -120,13 +124,13 @@ describe('Issue LCID form', async () => {
 
     await screen.findByText('Issue a Life Cycle ID');
 
-    userEvent.click(
+    await user.click(
       screen.getByRole('radio', {
         name: 'Generate a new Life Cycle ID'
       })
     );
 
-    userEvent.type(
+    await user.type(
       screen.getByRole('textbox', { name: 'Expiration date *' }),
       '01/01/2024'
     );
@@ -135,7 +139,7 @@ describe('Issue LCID form', async () => {
 
     await typeRichText(screen.getByTestId('nextSteps'), 'Test next steps');
 
-    userEvent.click(
+    await user.click(
       screen.getByRole('radio', {
         name: 'No, they may if they wish but it’s not necessary'
       })
@@ -147,7 +151,7 @@ describe('Issue LCID form', async () => {
 
     expect(submitButton).not.toBeDisabled();
 
-    userEvent.click(submitButton);
+    await user.click(submitButton);
 
     // Check for modal
 

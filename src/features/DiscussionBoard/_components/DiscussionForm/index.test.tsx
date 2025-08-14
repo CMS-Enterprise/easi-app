@@ -25,8 +25,9 @@ describe('DiscussionForm', () => {
         </VerboseMockedProvider>
       </MemoryRouter>
     );
+    const user = userEvent.setup();
 
-    userEvent.type(screen.getByRole('textbox'), 'Test discussion content');
+    await user.type(screen.getByRole('textbox'), 'Test discussion content');
 
     const submitButton = screen.getByRole('button', {
       name: 'Save discussion'
@@ -34,7 +35,7 @@ describe('DiscussionForm', () => {
 
     await waitFor(() => expect(submitButton).toBeEnabled());
 
-    userEvent.click(submitButton);
+    await user.click(submitButton);
 
     expect(
       await screen.findByRole('heading', {

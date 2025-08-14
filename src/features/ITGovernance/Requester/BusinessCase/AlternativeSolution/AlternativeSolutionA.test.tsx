@@ -89,8 +89,9 @@ describe('Business case alternative a solution', () => {
 
   it('adds alternative a and navigates to it', async () => {
     await renderPage(defaultStore);
+    const user = userEvent.setup();
 
-    userEvent.click(
+    await user.click(
       screen.getByRole('button', { name: /Finish alternative A/i })
     );
 
@@ -145,8 +146,9 @@ describe('Business case alternative a solution', () => {
         undefined,
         'alternative-solution-b'
       );
+      const user = userEvent.setup();
 
-      userEvent.click(
+      await user.click(
         screen.getByRole('button', { name: /Finish alternative B/i })
       );
 
@@ -186,15 +188,16 @@ describe('Business case alternative a solution', () => {
         'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
         SystemIntakeStep.FINAL_BUSINESS_CASE
       );
-
+      const user = userEvent.setup();
       // Fill one field so we can trigger validation errors
       const titleField = screen.getByRole('textbox', {
         name: /title/i
       });
-      userEvent.type(titleField, 'Alternative A solution title');
+
+      await user.type(titleField, 'Alternative A solution title');
       expect(titleField).toHaveValue('Alternative A solution title');
 
-      userEvent.click(
+      await user.click(
         screen.getByRole('button', { name: /Finish alternative A/i })
       );
 

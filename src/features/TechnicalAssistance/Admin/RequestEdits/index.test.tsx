@@ -122,6 +122,7 @@ describe('Trb Admin: Action: Request Edits', () => {
         </VerboseMockedProvider>
       </Provider>
     );
+    const user = userEvent.setup();
 
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
@@ -137,7 +138,7 @@ describe('Trb Admin: Action: Request Edits', () => {
 
     await typeRichText(screen.getByTestId('feedbackMessage'), feedbackMessage);
 
-    userEvent.click(submitButton);
+    await user.click(submitButton);
 
     await screen.findByText(
       i18next.t<string>('technicalAssistance:actionRequestEdits.success')
@@ -171,6 +172,7 @@ describe('Trb Admin: Action: Request Edits', () => {
         </MemoryRouter>
       </MockedProvider>
     );
+    const user = userEvent.setup();
 
     await screen.findByText(
       i18next.t<string>('technicalAssistance:actionRequestEdits.heading')
@@ -178,7 +180,7 @@ describe('Trb Admin: Action: Request Edits', () => {
 
     await typeRichText(screen.getByTestId('feedbackMessage'), feedbackMessage);
 
-    userEvent.click(
+    await user.click(
       screen.getByRole('button', {
         name: i18next.t<string>('technicalAssistance:actionRequestEdits.submit')
       })
