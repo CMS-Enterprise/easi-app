@@ -145,13 +145,14 @@ describe('GRB review form step wrapper', () => {
   it('navigates to next step', async () => {
     const mockOnSubmit = vi.fn().mockResolvedValue({});
     renderComponent({ onSubmit: mockOnSubmit });
+    const user = userEvent.setup();
 
     expect(await screen.findByTestId('stepIndicator-0'));
 
     expect(screen.getAllByText('Review type')).not.toBeNull();
 
     // Click next step in header
-    userEvent.click(screen.getByTestId('stepIndicator-1'));
+    await user.click(screen.getByTestId('stepIndicator-1'));
 
     // Next step should be selected
     expect(await screen.findByTestId('stepIndicator-1')).toHaveAttribute(
