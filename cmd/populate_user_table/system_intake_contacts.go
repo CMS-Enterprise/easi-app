@@ -20,7 +20,7 @@ var getAllNamesSQL string
 var getAllUsernamesSQL string
 
 var queryContactCommonNameCmd = &cobra.Command{
-	Use:   "contact common name",
+	Use:   "contactCommonName",
 	Short: "Query unique common names in the database and output to json file",
 	Long:  "Query unique common names in the database and output to json file",
 	Run: func(cmd *cobra.Command, args []string) {
@@ -29,7 +29,7 @@ var queryContactCommonNameCmd = &cobra.Command{
 }
 
 var queryContactUsernameCmd = &cobra.Command{
-	Use:   "contact username",
+	Use:   "contactUsername",
 	Short: "Query unique usernames in the system intake contacts table and output to json file",
 	Long:  "Query unique usernames in the system intake contacts table and output to json file",
 	Run: func(cmd *cobra.Command, args []string) {

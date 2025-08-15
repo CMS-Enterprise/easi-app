@@ -25,6 +25,8 @@ func init() {
 	rootCmd.AddCommand(queryUserNameCmd)
 	rootCmd.AddCommand(queryFullNameCmd)
 	rootCmd.AddCommand(generateUserAccountByUsernameCmd)
+	rootCmd.AddCommand(queryContactCommonNameCmd)
+	rootCmd.AddCommand(queryContactUsernameCmd)
 }
 
 func execute() {

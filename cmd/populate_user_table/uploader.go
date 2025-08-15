@@ -292,7 +292,6 @@ func (u *Uploader) GetOrCreateUserAccountsByFullName(ctx context.Context, fullNa
 		attempt := UserAccountAttempt{ //TODO, make a different struct for this specifically so we can record the name
 			Username: fullName,
 		}
-		// u.Logger.Info("Attempting to create user account for "+fullName, zap.Int("Index", indexCount), zap.Int("Total", totalAmount))
 
 		if verbose {
 			fmt.Printf(" \r\n %d of %d: Attempting to create user account for %s :", indexCount, totalAmount, fullName)
