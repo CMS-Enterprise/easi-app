@@ -155,9 +155,6 @@ const LinkedSystemsForm = () => {
 
   const [updateSystemLink] = useUpdateSystemLinkMutation();
 
-  const [cedarSystemSelectedError, setCedarSystemSelectedError] =
-    useState<boolean>(false);
-
   const {
     data: systemIntakeAndCedarSystems,
     error: relationError,
@@ -230,13 +227,6 @@ const LinkedSystemsForm = () => {
   const submit = handleSubmit((payload: LinkedSystemsFormFields) => {
     if (!isDirty) return;
 
-    // Validate required select
-    if (!payload.cedarSystemID) {
-      setCedarSystemSelectedError(true);
-      return;
-    }
-    setCedarSystemSelectedError(false);
-
     // For the success banner copy after redirect
     const systemName = cedarSystemIdOptions.find(
       option => option.value === payload.cedarSystemID
@@ -278,36 +268,13 @@ const LinkedSystemsForm = () => {
     <MainContent className="grid-container margin-bottom-15">
       <>
         <Message />
-        {cedarSystemSelectedError && (
-          <Alert
-            id="link-form-error"
-            type="error"
-            slim
-            className="margin-top-2"
-          >
-            {t('linkedSystems:pleaseSelectASystem')}
-          </Alert>
-        )}
-        {!linkedSystemID && (
-          <>
-            <PageHeading className="margin-top-4 margin-bottom-0">
-              {t('addFormHeader')}
-            </PageHeading>
-            <p className="font-body-lg line-height-body-5 text-light margin-y-0">
-              {t('addFormSubheader')}
-            </p>
-          </>
-        )}
-        {linkedSystemID && (
-          <>
-            <PageHeading className="margin-top-4 margin-bottom-0">
-              {t('editFormHeader')}
-            </PageHeading>
-            <p className="font-body-lg line-height-body-5 text-light margin-y-0">
-              {t('editFormSubheader')}
-            </p>
-          </>
-        )}
+        <PageHeading className="margin-top-4 margin-bottom-0">
+          {linkedSystemID ? t('editFormHeader') : t('addFormHeader')}
+        </PageHeading>
+        <p className="font-body-lg line-height-body-5 text-light margin-y-0">
+          {linkedSystemID ? t('editFormSubheader') : t('addFormSubheader')}
+        </p>
+
         <p className="margin-top-2 margin-bottom-5 text-base">
           <Trans
             i18nKey="action:fieldsMarkedRequired"
