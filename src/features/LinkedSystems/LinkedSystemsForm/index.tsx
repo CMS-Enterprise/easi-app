@@ -34,6 +34,7 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/ErrorAlert';
 import IconButton from 'components/IconButton';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
+import PageLoading from 'components/PageLoading';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import RequiredFieldsText from 'components/RequiredFieldsText';
 import Spinner from 'components/Spinner';
@@ -176,6 +177,7 @@ const LinkedSystemsForm = () => {
     variables: { systemIntakeSystemID: linkedSystemID || '' },
     skip: !linkedSystemID
   });
+
   const { data: systemsData } = useGetSystemIntakeSystemsQuery({
     variables: { systemIntakeId: systemIntakeID },
     skip: !systemIntakeID
@@ -265,6 +267,14 @@ const LinkedSystemsForm = () => {
       });
   });
 
+  const systemOptions = linkedSystemID
+    ? cedarSystemIdOptions
+    : filteredCedarSystemIdOptions;
+
+  if (relationLoading) {
+    <PageLoading />;
+  }
+
   return (
     <MainContent className="grid-container margin-bottom-15">
       <>
@@ -334,55 +344,51 @@ const LinkedSystemsForm = () => {
             <Grid row>
               <Grid tablet={{ col: 12 }} desktop={{ col: 9 }}>
                 <Fieldset disabled={relationLoading}>
-                  {relationLoading && <Spinner size="small" />}
-                  {!relationLoading && (
-                    <>
-                      <Controller
-                        name="cedarSystemID"
-                        control={control}
-                        defaultValue=""
-                        render={({ field }) => (
-                          <FormGroup>
-                            <Label
-                              htmlFor="cedarSystemID"
-                              hint={t('cmsSystemsDropdown.hint')}
-                              className="text-normal"
-                            >
-                              {t('cmsSystemsDropdown.title')}{' '}
-                              <RequiredAsterisk />
-                            </Label>
-                            <Select
-                              id="cedarSystemID"
-                              data-testid="cedarSystemID"
-                              {...field}
-                              ref={null}
-                              value={field.value || ''}
-                              disabled={!!linkedSystemID}
-                            >
+                  <>
+                    <Controller
+                      name="cedarSystemID"
+                      control={control}
+                      defaultValue=""
+                      render={({ field }) => (
+                        <FormGroup>
+                          <Label
+                            htmlFor="cedarSystemID"
+                            hint={t('cmsSystemsDropdown.hint')}
+                            className="text-normal"
+                          >
+                            {t('cmsSystemsDropdown.title')} <RequiredAsterisk />
+                          </Label>
+                          <Select
+                            id="cedarSystemID"
+                            data-testid="cedarSystemID"
+                            {...field}
+                            ref={null}
+                            value={field.value || ''}
+                            disabled={!!linkedSystemID}
+                          >
+                            <option
+                              label={`- ${t('technicalAssistance:basic.options.select')} -`}
+                              disabled
+                            />
+                            {systemOptions.map(system => (
                               <option
-                                label={`- ${t('technicalAssistance:basic.options.select')} -`}
-                                disabled
+                                key={system.value}
+                                value={system.value}
+                                label={system.label}
                               />
-                              {filteredCedarSystemIdOptions.map(system => (
-                                <option
-                                  key={system.value}
-                                  value={system.value}
-                                  label={system.label}
-                                />
-                              ))}
-                            </Select>
-                          </FormGroup>
-                        )}
-                      />
-                      <Label
-                        htmlFor="cedarSystemID"
-                        hint={t('relationship.hint')}
-                        className="text-normal"
-                      >
-                        {t('relationship.title')} <RequiredAsterisk />
-                      </Label>
-                    </>
-                  )}
+                            ))}
+                          </Select>
+                        </FormGroup>
+                      )}
+                    />
+                    <Label
+                      htmlFor="cedarSystemID"
+                      hint={t('relationship.hint')}
+                      className="text-normal"
+                    >
+                      {t('relationship.title')} <RequiredAsterisk />
+                    </Label>
+                  </>
 
                   <Controller
                     control={control}
@@ -497,7 +503,7 @@ const LinkedSystemsForm = () => {
               </Grid>
             </Grid>
 
-            <Button type="submit" disabled={!isValid}>
+            <Button type="submit" disabled={!isValid || !isDirty}>
               {linkedSystemID ? (
                 <Trans i18nKey="itGov:link.form.saveChanges" />
               ) : (
