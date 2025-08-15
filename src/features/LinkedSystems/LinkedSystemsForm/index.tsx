@@ -326,7 +326,7 @@ const LinkedSystemsForm = () => {
               history.goBack();
             }}
           >
-            {t('dontEditAndReturn')}
+            {linkedSystemID ? t('dontEditAndReturn') : t('dontAddAndReturn')}
           </IconButton>
         </p>
         {Object.keys(errors).length > 0 && (
@@ -553,7 +553,7 @@ const LinkedSystemsForm = () => {
                 history.goBack();
               }}
             >
-              {t('dontEditAndReturn')}
+              {linkedSystemID ? t('dontEditAndReturn') : t('dontAddAndReturn')}
             </IconButton>
           </Form>
         </FormProvider>

@@ -30,7 +30,8 @@ export default {
     hint: 'Choose the options below that describe the relationship that the selected system has to your request/project. Select all that apply.'
   },
   continueToTaskList: 'Continue to task list',
-  dontEditAndReturn: "Don't add a system and return to request",
+  dontAddAndReturn: "Don't add a system and return to request",
+  dontEditAndReturn: "Don't edit and return to request",
   addSystem: 'Add system',
   relationshipTypes: {
     pleaseExplain: 'Please explain',
