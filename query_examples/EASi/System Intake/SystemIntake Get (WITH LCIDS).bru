@@ -1,0 +1,82 @@
+meta {
+  name: SystemIntake Get (WITH LCIDS)
+  type: graphql
+  seq: 16
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  query systemIntakesWithLcids{
+    
+    systemIntakesWithLcids()
+    
+    {
+      id
+  #   actions
+    adminLead
+    archivedAt
+  #   businessCase
+    businessNeed
+  #   businessOwner
+    businessSolution
+  #   contract
+  #   costs
+    createdAt
+    currentStage
+    decisionNextSteps
+    eaCollaborator
+    eaCollaboratorName
+    collaborator508
+    collaboratorName508
+    euaUserId
+    existingFunding
+  #   fundingSources
+  #   governanceTeams
+    grbDate
+    grtDate
+  #   grtFeedbacks
+    id
+  #   isso
+    lcid
+    lcidExpiresAt
+    lcidScope
+    lcidCostBaseline
+    needsEaSupport
+  #   notes
+    oitSecurityCollaborator
+    oitSecurityCollaboratorName
+  #   productManager
+    projectAcronym
+    rejectionReason
+    requestName
+    requestType
+  #   requester
+    submittedAt
+    trbCollaborator
+    trbCollaboratorName
+    updatedAt
+    grtReviewEmailBody
+    decidedAt
+    businessCaseId
+  #   lastAdminNote
+    cedarSystemId
+  #   documents
+    hasUiChanges
+      
+      
+    }
+    
+    
+  }
+}

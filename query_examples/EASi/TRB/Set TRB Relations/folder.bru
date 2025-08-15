@@ -1,0 +1,14 @@
+meta {
+  name: Set TRB Relations
+  seq: 7
+}
+
+auth {
+  mode: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}

@@ -1,0 +1,65 @@
+meta {
+  name: Get Threats By ATO IDs
+  type: http
+  seq: 15
+}
+
+get {
+  url: {{CedarApiUrl}}/threat?ids={{CedarAtoIds}}
+  body: none
+  auth: apikey
+}
+
+params:query {
+  ids: {{CedarAtoIds}}
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:apikey {
+  key: x-Gateway-APIKey
+  value: {{CedarApiKey}}
+  placement: header
+}
+
+script:pre-request {
+  const CedarSystemId = bru.getVar("CedarSystemId")
+  test("CedarSystemId is set (Call \"Get Systems\" first if it is not)", function() {
+          expect(CedarSystemId).to.exist
+          expect(CedarSystemId).to.not.be.empty
+  })
+  if (!CedarSystemId) return bru.runner.skipRequest();
+  
+  let cedarAtoIds = bru.getVar("CedarAtoIds")
+  if (cedarAtoIds) return
+  await bru.sendRequest({
+      url: `${bru.getVar("CedarApiUrl")}/authorityToOperate?systemId=${CedarSystemId}`,
+      method: "GET",
+      headers: {
+          "x-Gateway-APIKey": bru.getVar("CedarApiKey"),
+          "Content-Type": "application/json"
+      }
+  }, async function(err, res) {
+      test("Could make request for ATOs", function() {
+          expect(err).to.not.exist
+      })
+      if (err) return bru.runner.skipRequest();
+  
+      const data = res.data
+      test("Could parse json for ATOs", function() {
+          expect(data).to.exist
+      })
+      if (!data) return bru.runner.skipRequest();
+  
+      const ATOIDs = data.AuthorityToOperateList.map(ato => ato.cedarId)
+      test("Could find and map ATO IDs for system", function() {
+          expect(ATOIDs).to.exist
+          expect(ATOIDs).to.not.be.empty
+      })
+      if (!ATOIDs) return bru.runner.skipRequest();
+  
+      bru.setVar("CedarAtoIds", ATOIDs.join(","))
+  })
+}

@@ -1,0 +1,14 @@
+meta {
+  name: Retire LCID
+  seq: 10
+}
+
+auth {
+  mode: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}

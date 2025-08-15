@@ -1,0 +1,558 @@
+meta {
+  name: Business Case Create
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{apiURL}}/business_case
+  body: json
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:json {
+  //NOTE, you actually create a new buisness case each time you click this, there is no constraint in the DB. This also creates an action
+  {
+    "status": "OPEN",
+    "systemIntakeId": "{{systemIntakeID}}",
+    "projectName": "",
+    "requester": "",
+    "requesterPhoneNumber": "",
+    "businessOwner": "",
+    "businessNeed": "",
+    "currentSolutionSummary": "",
+    "cmsBenefit": "",
+    "priorityAlignment": "",
+    "successIndicators": "",
+    "preferredTitle": "",
+    "preferredSummary": "",
+    "preferredAcquisitionApproach": "",
+    "preferredSecurityIsApproved": null,
+    "preferredSecurityisBeingReviewed": "",
+    "preferredHostingType": "",
+    "preferredHostingLocation": "",
+    "preferredHostingCloudServiceType": "",
+    "preferredHasUI": "",
+    "preferredPros": "",
+    "preferredCons": "",
+    "preferredCostSavings": "",
+    "alternativeATitle": "",
+    "alternativeASummary": "",
+    "alternativeAAcquisitionApproach": "",
+    "alternativeASecurityIsApproved": null,
+    "alternativeASecurityisBeingReviewed": "",
+    "alternativeAHostingType": "",
+    "alternativeAHostingLocation": "",
+    "alternativeAHostingCloudServiceType": "",
+    "alternativeAHasUI": "",
+    "alternativeAPros": "",
+    "alternativeACons": "",
+    "alternativeACostSavings": "",
+    "alternativeBTitle": null,
+    "alternativeBSummary": null,
+    "alternativeBAcquisitionApproach": null,
+    "alternativeBSecurityIsApproved": null,
+    "alternativeBSecurityisBeingReviewed": null,
+    "alternativeBHostingType": null,
+    "alternativeBHostingLocation": null,
+    "alternativeBHostingCloudServiceType": null,
+    "alternativeBHasUI": null,
+    "alternativeBPros": null,
+    "alternativeBCons": null,
+    "alternativeBCostSavings": null,
+    "lifecycleCostLines": [
+      {
+        "solution": "Preferred",
+        "phase": "Development",
+        "cost": null,
+        "year": "1"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Development",
+        "cost": null,
+        "year": "2"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Development",
+        "cost": null,
+        "year": "3"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Development",
+        "cost": null,
+        "year": "4"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Development",
+        "cost": null,
+        "year": "5"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Operations and Maintenance",
+        "cost": null,
+        "year": "1"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Operations and Maintenance",
+        "cost": null,
+        "year": "2"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Operations and Maintenance",
+        "cost": null,
+        "year": "3"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Operations and Maintenance",
+        "cost": null,
+        "year": "4"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Operations and Maintenance",
+        "cost": null,
+        "year": "5"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Help desk/call center",
+        "cost": null,
+        "year": "1"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Help desk/call center",
+        "cost": null,
+        "year": "2"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Help desk/call center",
+        "cost": null,
+        "year": "3"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Help desk/call center",
+        "cost": null,
+        "year": "4"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Help desk/call center",
+        "cost": null,
+        "year": "5"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Software licenses",
+        "cost": null,
+        "year": "1"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Software licenses",
+        "cost": null,
+        "year": "2"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Software licenses",
+        "cost": null,
+        "year": "3"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Software licenses",
+        "cost": null,
+        "year": "4"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Software licenses",
+        "cost": null,
+        "year": "5"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Planning, support, and professional services",
+        "cost": null,
+        "year": "1"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Planning, support, and professional services",
+        "cost": null,
+        "year": "2"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Planning, support, and professional services",
+        "cost": null,
+        "year": "3"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Planning, support, and professional services",
+        "cost": null,
+        "year": "4"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Planning, support, and professional services",
+        "cost": null,
+        "year": "5"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Infrastructure",
+        "cost": null,
+        "year": "1"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Infrastructure",
+        "cost": null,
+        "year": "2"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Infrastructure",
+        "cost": null,
+        "year": "3"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Infrastructure",
+        "cost": null,
+        "year": "4"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Infrastructure",
+        "cost": null,
+        "year": "5"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "OIT services, tools, and pilots",
+        "cost": null,
+        "year": "1"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "OIT services, tools, and pilots",
+        "cost": null,
+        "year": "2"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "OIT services, tools, and pilots",
+        "cost": null,
+        "year": "3"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "OIT services, tools, and pilots",
+        "cost": null,
+        "year": "4"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "OIT services, tools, and pilots",
+        "cost": null,
+        "year": "5"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Other",
+        "cost": null,
+        "year": "1"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Other",
+        "cost": null,
+        "year": "2"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Other",
+        "cost": null,
+        "year": "3"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Other",
+        "cost": null,
+        "year": "4"
+      },
+      {
+        "solution": "Preferred",
+        "phase": "Other",
+        "cost": null,
+        "year": "5"
+      },
+      {
+        "solution": "A",
+        "phase": "Development",
+        "cost": null,
+        "year": "1"
+      },
+      {
+        "solution": "A",
+        "phase": "Development",
+        "cost": null,
+        "year": "2"
+      },
+      {
+        "solution": "A",
+        "phase": "Development",
+        "cost": null,
+        "year": "3"
+      },
+      {
+        "solution": "A",
+        "phase": "Development",
+        "cost": null,
+        "year": "4"
+      },
+      {
+        "solution": "A",
+        "phase": "Development",
+        "cost": null,
+        "year": "5"
+      },
+      {
+        "solution": "A",
+        "phase": "Operations and Maintenance",
+        "cost": null,
+        "year": "1"
+      },
+      {
+        "solution": "A",
+        "phase": "Operations and Maintenance",
+        "cost": null,
+        "year": "2"
+      },
+      {
+        "solution": "A",
+        "phase": "Operations and Maintenance",
+        "cost": null,
+        "year": "3"
+      },
+      {
+        "solution": "A",
+        "phase": "Operations and Maintenance",
+        "cost": null,
+        "year": "4"
+      },
+      {
+        "solution": "A",
+        "phase": "Operations and Maintenance",
+        "cost": null,
+        "year": "5"
+      },
+      {
+        "solution": "A",
+        "phase": "Help desk/call center",
+        "cost": null,
+        "year": "1"
+      },
+      {
+        "solution": "A",
+        "phase": "Help desk/call center",
+        "cost": null,
+        "year": "2"
+      },
+      {
+        "solution": "A",
+        "phase": "Help desk/call center",
+        "cost": null,
+        "year": "3"
+      },
+      {
+        "solution": "A",
+        "phase": "Help desk/call center",
+        "cost": null,
+        "year": "4"
+      },
+      {
+        "solution": "A",
+        "phase": "Help desk/call center",
+        "cost": null,
+        "year": "5"
+      },
+      {
+        "solution": "A",
+        "phase": "Software licenses",
+        "cost": null,
+        "year": "1"
+      },
+      {
+        "solution": "A",
+        "phase": "Software licenses",
+        "cost": null,
+        "year": "2"
+      },
+      {
+        "solution": "A",
+        "phase": "Software licenses",
+        "cost": null,
+        "year": "3"
+      },
+      {
+        "solution": "A",
+        "phase": "Software licenses",
+        "cost": null,
+        "year": "4"
+      },
+      {
+        "solution": "A",
+        "phase": "Software licenses",
+        "cost": null,
+        "year": "5"
+      },
+      {
+        "solution": "A",
+        "phase": "Planning, support, and professional services",
+        "cost": null,
+        "year": "1"
+      },
+      {
+        "solution": "A",
+        "phase": "Planning, support, and professional services",
+        "cost": null,
+        "year": "2"
+      },
+      {
+        "solution": "A",
+        "phase": "Planning, support, and professional services",
+        "cost": null,
+        "year": "3"
+      },
+      {
+        "solution": "A",
+        "phase": "Planning, support, and professional services",
+        "cost": null,
+        "year": "4"
+      },
+      {
+        "solution": "A",
+        "phase": "Planning, support, and professional services",
+        "cost": null,
+        "year": "5"
+      },
+      {
+        "solution": "A",
+        "phase": "Infrastructure",
+        "cost": null,
+        "year": "1"
+      },
+      {
+        "solution": "A",
+        "phase": "Infrastructure",
+        "cost": null,
+        "year": "2"
+      },
+      {
+        "solution": "A",
+        "phase": "Infrastructure",
+        "cost": null,
+        "year": "3"
+      },
+      {
+        "solution": "A",
+        "phase": "Infrastructure",
+        "cost": null,
+        "year": "4"
+      },
+      {
+        "solution": "A",
+        "phase": "Infrastructure",
+        "cost": null,
+        "year": "5"
+      },
+      {
+        "solution": "A",
+        "phase": "OIT services, tools, and pilots",
+        "cost": null,
+        "year": "1"
+      },
+      {
+        "solution": "A",
+        "phase": "OIT services, tools, and pilots",
+        "cost": null,
+        "year": "2"
+      },
+      {
+        "solution": "A",
+        "phase": "OIT services, tools, and pilots",
+        "cost": null,
+        "year": "3"
+      },
+      {
+        "solution": "A",
+        "phase": "OIT services, tools, and pilots",
+        "cost": null,
+        "year": "4"
+      },
+      {
+        "solution": "A",
+        "phase": "OIT services, tools, and pilots",
+        "cost": null,
+        "year": "5"
+      },
+      {
+        "solution": "A",
+        "phase": "Other",
+        "cost": null,
+        "year": "1"
+      },
+      {
+        "solution": "A",
+        "phase": "Other",
+        "cost": null,
+        "year": "2"
+      },
+      {
+        "solution": "A",
+        "phase": "Other",
+        "cost": null,
+        "year": "3"
+      },
+      {
+        "solution": "A",
+        "phase": "Other",
+        "cost": null,
+        "year": "4"
+      },
+      {
+        "solution": "A",
+        "phase": "Other",
+        "cost": null,
+        "year": "5"
+      }
+    ]
+  }
+}
+
+script:post-response {
+  businessCaseID = res.getBody().id
+  
+  bru.setVar("businessCaseID", businessCaseID);
+}

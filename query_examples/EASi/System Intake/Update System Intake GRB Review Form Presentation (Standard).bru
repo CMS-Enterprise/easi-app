@@ -1,0 +1,37 @@
+meta {
+  name: Update System Intake GRB Review Form Presentation (Standard)
+  type: graphql
+  seq: 22
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation UpdateSystemIntakeGRBReviewFormPresentationStandard($input: updateSystemIntakeGRBReviewFormInputPresentationStandard!) {
+    updateSystemIntakeGRBReviewFormPresentationStandard(input: $input) {
+      systemIntake {
+        id
+        grbDate
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "systemIntakeID": "{{systemIntakeID}}",
+      "grbDate": "2025-03-10T14:00:00Z"
+    }
+  }
+}

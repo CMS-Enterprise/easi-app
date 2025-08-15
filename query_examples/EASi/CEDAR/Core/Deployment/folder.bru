@@ -1,0 +1,14 @@
+meta {
+  name: Deployment
+  seq: 8
+}
+
+auth {
+  mode: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}

@@ -1,0 +1,41 @@
+meta {
+  name: Unlink
+  type: graphql
+  seq: 4
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation UnlinkTRBRequestRelation($trbRequestID: UUID!) {
+      unlinkTRBRequestRelation(trbRequestID: $trbRequestID) {
+          id
+          name
+          contractName
+          relationType
+          contractNumbers {
+              contractNumber
+          }
+          systems {
+              id
+              name
+          }
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+      "trbRequestID": "{{trbRequestID}}"
+  }
+}

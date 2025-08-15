@@ -1,0 +1,14 @@
+meta {
+  name: TRB Feedback
+  seq: 3
+}
+
+auth {
+  mode: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}

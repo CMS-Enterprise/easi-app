@@ -1,0 +1,14 @@
+meta {
+  name: Okta
+  seq: 5
+}
+
+auth {
+  mode: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}

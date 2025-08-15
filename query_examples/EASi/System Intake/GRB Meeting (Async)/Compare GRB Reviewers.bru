@@ -1,0 +1,41 @@
+meta {
+  name: Compare GRB Reviewers
+  type: graphql
+  seq: 7
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  query getReviewersComparisons($systemIntakeID: UUID!) {
+    compareGRBReviewersByIntakeID(id: $systemIntakeID) {
+      id
+      requestName
+      reviewers {
+        euaUserId
+        userAccount {
+          commonName
+        }
+        isCurrentReviewer
+        grbRole
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+      "systemIntakeID": "5af245bc-fc54-4677-bab1-1b3e798bb43c"
+  }
+}

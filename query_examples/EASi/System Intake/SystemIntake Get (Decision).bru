@@ -1,0 +1,41 @@
+meta {
+  name: SystemIntake Get (Decision)
+  type: graphql
+  seq: 17
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  query {
+    systemIntake(id:"{{systemIntakeID}}") {
+      state
+      decisionState
+      decisionNextSteps
+      trbFollowUpRecommendation
+      lcid
+      lcidExpiresAt
+      lcidScope
+      lcidCostBaseline
+      lcidStatus
+      rejectionReason
+      lcidRetiresAt
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+      "id": "{{systemIntakeID}}"
+  }
+}

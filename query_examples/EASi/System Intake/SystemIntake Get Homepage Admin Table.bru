@@ -1,0 +1,104 @@
+meta {
+  name: SystemIntake Get Homepage Admin Table
+  type: graphql
+  seq: 8
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  query systemIntake {
+    systemIntake(id:"{{systemIntakeID}}") {
+      step
+      state
+      archivedAt
+      requestFormState
+      draftBusinessCaseState
+      grtMeetingState
+      finalBusinessCaseState
+      grbMeetingState
+      decisionState
+      itGovTaskStatuses {      
+          intakeFormStatus
+          feedbackFromInitialReviewStatus
+          decisionAndNextStepsStatus
+          bizCaseDraftStatus
+          grtMeetingStatus
+          bizCaseFinalStatus
+          grbMeetingStatus
+      }
+      id
+      actions {
+          type
+          actor {
+              name
+          }
+          step
+          feedback
+      }
+  #   adminLead
+  # #   businessCase
+  #   businessNeed
+  # #   businessOwner
+  #   businessSolution
+  # #   contract
+  # #   costs
+  #   createdAt
+  #   currentStage
+  #   decisionNextSteps
+  #   eaCollaborator
+  #   eaCollaboratorName
+      collaborator508
+      collaboratorName508
+  #   euaUserId
+  #   existingFunding
+  # #   fundingSources
+  # #   governanceTeams
+  #   grbDate
+  #   grtDate
+  # #   grtFeedbacks
+  #   id
+  # #   isso
+  #   lcid
+  #   lcidExpiresAt
+  #   lcidScope
+  #   lcidCostBaseline
+  #   needsEaSupport
+  # #   notes
+  #   oitSecurityCollaborator
+  #   oitSecurityCollaboratorName
+  # #   productManager
+  #   projectAcronym
+  #   rejectionReason
+  #   requestName
+  #   requestType
+  # #   requester
+  #   status
+  #   submittedAt
+  #   trbCollaborator
+  #   trbCollaboratorName
+  #   updatedAt
+  #   grtReviewEmailBody
+  #   decidedAt
+  #   businessCaseId
+  # #   lastAdminNote
+  #   cedarSystemId
+  # #   documents
+  #   hasUiChanges
+      
+      
+    }
+    
+    
+  }
+}

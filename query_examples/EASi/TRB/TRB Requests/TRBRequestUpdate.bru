@@ -1,0 +1,41 @@
+meta {
+  name: TRBRequestUpdate
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/api/graph/query
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation updateTRBRequest{
+    
+    updateTRBRequest(id: "{{trbRequestID}}", changes: {
+        name: "My newly archived request"
+        archived: true
+    } ){
+      id
+      name
+      archived
+      type
+      status
+      createdBy
+      createdAt
+      modifiedBy
+      modifiedAt
+      
+      
+    }
+    
+    
+  }
+}

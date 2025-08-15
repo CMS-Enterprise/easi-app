@@ -1,0 +1,48 @@
+meta {
+  name: Progress to GRT meeting, with date in future
+  type: graphql
+  seq: 3
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation CreateSystemIntakeActionProgressToNewStep($input: SystemIntakeProgressToNewStepsInput!) {
+      createSystemIntakeActionProgressToNewStep(input: $input) {
+          systemIntake {
+              step
+              grtDate
+          }
+      }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+      "input": {
+          "systemIntakeID": "{{systemIntakeID}}",
+          "notificationRecipients": {
+              "regularRecipientEmails": [
+                  "{{testEmailAddress}}"
+              ],
+              "shouldNotifyITGovernance": false,
+              "shouldNotifyITInvestment": false
+          },
+          "newStep": "GRT_MEETING",
+          "meetingDate": "2030-07-28T20:12:31.703Z",
+          "feedback": "this is more feedback",
+          "additionalInfo": "add'l info"
+      }
+  }
+}

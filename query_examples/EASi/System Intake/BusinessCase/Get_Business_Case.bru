@@ -1,0 +1,17 @@
+meta {
+  name: Get_Business_Case
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{apiURL}}/business_case/{{businessCaseID}}
+  body: json
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}

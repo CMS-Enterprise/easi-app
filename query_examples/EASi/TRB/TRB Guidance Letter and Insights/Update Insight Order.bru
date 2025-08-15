@@ -1,0 +1,42 @@
+meta {
+  name: Update Insight Order
+  type: graphql
+  seq: 3
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  mutation UpdateInsightOrder($input: UpdateTRBGuidanceLetterInsightOrderInput!) {
+      updateTRBGuidanceLetterInsightOrder(input: $input) {
+          id
+          title
+          insight
+          category
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+      "input": {
+          "trbRequestId": "{{trbRequestID}}",
+          "newOrder": [
+              "cf8f6038-4ccc-4814-bd7f-9b0643dc7b20",
+              "13a78a54-450d-4674-ae7a-3423159f81ee",
+              "f625d3c1-c27e-4772-9665-8668f5ca8076"
+          ],
+          "category": "REQUIREMENT"
+      }
+  }
+}

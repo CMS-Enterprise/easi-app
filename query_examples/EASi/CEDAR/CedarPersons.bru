@@ -1,0 +1,28 @@
+meta {
+  name: CedarPersons
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: {{authHeader}}
+  placement: header
+}
+
+body:graphql {
+  query {
+    cedarPersonsByCommonName(commonName: "Aaron") {
+     commonName
+     email
+     euaUserId
+    
+      }
+  }
+}
