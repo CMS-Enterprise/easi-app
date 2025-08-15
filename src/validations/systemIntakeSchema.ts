@@ -365,7 +365,7 @@ export const documentSchema = Yup.object({
 });
 
 export const linkedSystemsSchema = Yup.object({
-  cedarSystemID: Yup.string().required('Please select a Cedar System'),
+  cedarSystemID: Yup.string().required('Please select a CMS System'),
 
   relationshipTypes: Yup.object({
     primarySupport: Yup.boolean(),

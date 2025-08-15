@@ -22,7 +22,7 @@ export default {
     remove: 'Remove'
   },
   cmsSystemsDropdown: {
-    title: 'CMS System',
+    title: 'CMS system',
     hint: 'Search existing CMS systems by name or acronym.'
   },
   relationship: {
@@ -69,10 +69,10 @@ export default {
   },
   removeAllLinkedSystemModal: {
     heading:
-      'Are you sure this project does not support or use any existing CMS systems',
+      'Are you sure this project does not support or use any existing CMS systems?',
     message:
       'Checking this box will remove all previously -added links to systems. Are you sure you want to continue? You may re-link systems later if needed.',
-    remove: 'Remove linked system',
+    remove: 'Remove linked systems',
     dontRemove: "Don't remove"
   },
   title: 'System information',

@@ -211,7 +211,7 @@ const LinkedSystemsTable = ({
                     aria-sort={getColumnSortStatus(column)}
                     scope="col"
                     style={{
-                      minWidth: index === 0 ? '50px' : '150px',
+                      minWidth: index === 2 ? '150px' : '200px',
                       padding: index === 0 ? '0' : 'auto',
                       paddingLeft: index === 0 ? '.5em' : 'auto',
                       position: 'relative'
