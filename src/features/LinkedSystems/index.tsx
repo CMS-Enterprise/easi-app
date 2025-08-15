@@ -213,7 +213,7 @@ const LinkedSystems = () => {
       />
 
       <Message />
-      {/* TODO: add message here */}
+
       {showSuccessfullyUpdated && (
         <Alert
           id="link-form-error"
@@ -310,7 +310,12 @@ const LinkedSystems = () => {
             <Button
               type="button"
               outline
-              onClick={() => history.push(addASystemUrl)}
+              onClick={() => {
+                history.push(
+                  addASystemUrl,
+                  isFromTaskList ? { from: 'task-list' } : undefined
+                );
+              }}
             >
               {t('itGov:link.form.addASystem')}
             </Button>
@@ -331,6 +336,7 @@ const LinkedSystems = () => {
               isHomePage={false}
               systemIntakeId={id}
               onRemoveLink={handleRemoveModal}
+              isFromTaskList={isFromTaskList}
             />
           </Grid>
         </Grid>
@@ -365,7 +371,11 @@ const LinkedSystems = () => {
           type="button"
           unstyled
           onClick={() => {
-            history.goBack();
+            if (isFromTaskList) {
+              history.push(redirectUrl);
+            } else {
+              history.goBack();
+            }
           }}
         >
           {isFromTaskList

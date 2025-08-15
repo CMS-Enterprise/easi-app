@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { Controller, FieldPath, FormProvider } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
@@ -128,6 +128,9 @@ const LinkedSystemsForm = () => {
   }>();
 
   const history = useHistory();
+  const location = useLocation<{ from?: string }>();
+  const isFromTaskList = location.state?.from === 'task-list';
+
   const { showMessageOnNextPage, showMessage, Message } = useMessage();
 
   const form = useEasiForm<LinkedSystemsFormFields>({
@@ -256,7 +259,10 @@ const LinkedSystemsForm = () => {
             type: 'success'
           }
         );
-        history.push(`/linked-systems/${systemIntakeID}`);
+        history.push(
+          `/linked-systems/${systemIntakeID}`,
+          isFromTaskList ? { from: 'task-list' } : undefined
+        );
       })
       .catch(() => {
         showMessage(t('linkedSystems:errorLinking'), {

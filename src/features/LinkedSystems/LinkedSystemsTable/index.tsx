@@ -39,6 +39,7 @@ type TableProps = {
   isHomePage?: boolean;
   systemIntakeId: string;
   onRemoveLink: (id: string) => void;
+  isFromTaskList?: boolean;
 };
 
 const organizeCedarSystems = (
@@ -56,7 +57,8 @@ const LinkedSystemsTable = ({
   systems = [],
   defaultPageSize = 10,
   systemIntakeId,
-  onRemoveLink
+  onRemoveLink,
+  isFromTaskList
 }: TableProps) => {
   const { t } = useTranslation('linkedSystems');
 
@@ -121,7 +123,8 @@ const LinkedSystemsTable = ({
                 className="margin-top-0"
                 onClick={() =>
                   history.push(
-                    `/linked-systems-form/${systemIntakeId}${row.original.id ? `/${row.original.id}` : ''}`
+                    `/linked-systems-form/${systemIntakeId}${row.original.id ? `/${row.original.id}` : ''}`,
+                    isFromTaskList ? { from: 'task-list' } : undefined
                   )
                 }
               >
@@ -146,7 +149,8 @@ const LinkedSystemsTable = ({
     organizedCedarSystems,
     systemIntakeId,
     t,
-    translateSystemRelationships
+    translateSystemRelationships,
+    isFromTaskList
   ]);
 
   const {
