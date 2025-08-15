@@ -36,6 +36,7 @@ import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import Spinner from 'components/Spinner';
+import useMessage from 'hooks/useMessage';
 import flattenFormErrors from 'utils/flattenFormErrors';
 import { linkedSystemsSchema } from 'validations/systemIntakeSchema';
 
@@ -126,6 +127,7 @@ const LinkedSystemsForm = () => {
   }>();
 
   const history = useHistory();
+  const { showMessageOnNextPage, showMessage, Message } = useMessage();
 
   const form = useEasiForm<LinkedSystemsFormFields>({
     resolver: yupResolver(linkedSystemsSchema),
@@ -149,11 +151,9 @@ const LinkedSystemsForm = () => {
     'error'
   ]);
 
-  const [addSystemLink, { error: addSystemLinkError }] =
-    useAddSystemLinkMutation();
+  const [addSystemLink] = useAddSystemLinkMutation();
 
-  const [updateSystemLink, { error: updateSystemLinkError }] =
-    useUpdateSystemLinkMutation();
+  const [updateSystemLink] = useUpdateSystemLinkMutation();
 
   const [cedarSystemSelectedError, setCedarSystemSelectedError] =
     useState<boolean>(false);
@@ -227,60 +227,57 @@ const LinkedSystemsForm = () => {
 
   const fieldErrors = flattenFormErrors<LinkedSystemsFormFields>(errors);
 
-  const submit = useCallback(async () => {
+  const submit = handleSubmit((payload: LinkedSystemsFormFields) => {
     if (!isDirty) return;
 
-    const payload = watch();
-    const systemName = cedarSystemIdOptions.find(
-      option => option.value === payload.cedarSystemID
-    )?.label;
-
+    // Validate required select
     if (!payload.cedarSystemID) {
       setCedarSystemSelectedError(true);
       return;
     }
     setCedarSystemSelectedError(false);
 
-    const addOrUpdateLinkMutation = linkedSystemID
+    // For the success banner copy after redirect
+    const systemName = cedarSystemIdOptions.find(
+      option => option.value === payload.cedarSystemID
+    )?.label;
+
+    const mutation = linkedSystemID
       ? updateLink(payload, linkedSystemID, systemIntakeID, updateSystemLink)
       : addLink(payload, systemIntakeID, addSystemLink);
 
-    const result = await addOrUpdateLinkMutation;
-    if (result?.data) {
-      history.push(`/linked-systems/${systemIntakeID}`, {
-        [linkedSystemID ? 'successfullyUpdated' : 'successfullyAdded']: true,
-        systemUpdated: systemName
+    mutation
+      .then(() => {
+        showMessageOnNextPage(
+          <Trans
+            i18nKey={
+              linkedSystemID
+                ? 'linkedSystems:savedChangesToALink'
+                : 'linkedSystems:successfullyLinked'
+            }
+            values={{ updatedSystem: systemName }}
+            components={{
+              span: <span className="text-bold" />
+            }}
+          />,
+          {
+            type: 'success'
+          }
+        );
+        history.push(`/linked-systems/${systemIntakeID}`);
+      })
+      .catch(() => {
+        showMessage(t('linkedSystems:errorLinking'), {
+          type: 'error',
+          className: 'margin-top-2'
+        });
       });
-    }
-  }, [
-    history,
-    systemIntakeID,
-    linkedSystemID,
-    isDirty,
-    cedarSystemIdOptions,
-    watch,
-    updateSystemLink,
-    addSystemLink
-  ]);
+  });
 
   return (
     <MainContent className="grid-container margin-bottom-15">
       <>
-        {(addSystemLinkError || updateSystemLinkError) && (
-          <Alert
-            id="link-form-error"
-            type="error"
-            slim
-            className="margin-top-2"
-          >
-            <Trans
-              i18nKey="linkedSystems:unableToUpdateSystemLinks"
-              components={{
-                link1: <Link href="EnterpriseArchitecture@cms.hhs.gov"> </Link>
-              }}
-            />
-          </Alert>
-        )}
+        <Message />
         {cedarSystemSelectedError && (
           <Alert
             id="link-form-error"

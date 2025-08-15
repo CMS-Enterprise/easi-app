@@ -28,16 +28,18 @@ import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
+import useMessage from 'hooks/useMessage';
 
 import LinkedSystemTable from './LinkedSystemsTable';
 
-const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
+const LinkedSystems = () => {
   // Id refers to system intake
   const { id } = useParams<{
     id: string;
   }>();
 
   const history = useHistory();
+  const { Message } = useMessage();
 
   const { t } = useTranslation([
     'linkedSystems',
@@ -210,6 +212,8 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
         ]}
       />
 
+      <Message />
+      {/* TODO: add message here */}
       {showSuccessfullyUpdated && (
         <Alert
           id="link-form-error"
