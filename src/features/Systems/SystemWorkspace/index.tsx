@@ -46,7 +46,10 @@ export const SystemWorkspace = () => {
 
   const cedarSystem = data?.cedarSystemDetails?.cedarSystem;
   const ato = data?.cedarAuthorityToOperate[0];
-  const atoStatus = getAtoStatus(ato?.dateAuthorizationMemoExpires);
+  const atoStatus = getAtoStatus(
+    ato?.dateAuthorizationMemoExpires,
+    ato?.oaStatus
+  );
 
   const { isso } = useMemo(
     () => ({
@@ -138,7 +141,8 @@ export const SystemWorkspace = () => {
             />
 
             <AtoCard
-              status={atoStatus}
+              atoStatus={atoStatus}
+              oaStatus={ato?.oaStatus}
               dateAuthorizationMemoExpires={ato?.dateAuthorizationMemoExpires}
               isso={isso}
             />

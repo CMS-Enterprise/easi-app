@@ -15,17 +15,17 @@ import showVal from 'utils/showVal';
 import SpacesCard from '../SpacesCard';
 
 type Props = {
-  status: AtoStatus;
+  atoStatus: AtoStatus;
+  oaStatus?: string | null;
   dateAuthorizationMemoExpires?: GetSystemProfileATO['dateAuthorizationMemoExpires'];
   isso?: CedarRole;
-  className?: string;
 };
 
 function AtoCard({
-  status,
+  atoStatus,
+  oaStatus,
   dateAuthorizationMemoExpires,
-  isso,
-  className
+  isso
 }: Props) {
   const { t } = useTranslation('systemWorkspace');
 
@@ -38,12 +38,17 @@ function AtoCard({
           <>
             <div className="display-flex">
               <AtoStatusTag
-                status={status}
+                status={atoStatus}
                 className="display-flex flex-align-center margin-right-1"
               />
-              {dateAuthorizationMemoExpires && (
+              {oaStatus === 'OA Member' && (
                 <span className="display-flex flex-align-center text-base">
-                  {status === 'Expired' ? 'Expired' : 'Expires'}{' '}
+                  {t('spaces.ato.atoOngoing')}
+                </span>
+              )}
+              {oaStatus !== 'OA Member' && dateAuthorizationMemoExpires && (
+                <span className="display-flex flex-align-center text-base">
+                  {atoStatus === 'Expired' ? 'Expired' : 'Expires'}{' '}
                   {formatDateUtc(dateAuthorizationMemoExpires, 'MM/dd/yyyy')}
                 </span>
               )}

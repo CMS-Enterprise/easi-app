@@ -162,6 +162,21 @@ func (r *cedarSoftwareProductsResolver) SoftwareProducts(ctx context.Context, ob
 	return softwareProductItems, nil
 }
 
+// OaStatus is the resolver for the oaStatus field.
+func (r *cedarSystemResolver) OaStatus(ctx context.Context, obj *models.CedarSystem) (*string, error) {
+	ato, err := r.cedarCoreClient.GetAuthorityToOperate(ctx, obj.ID.String)
+	if err != nil {
+		return nil, err
+	}
+
+	// not really an error, just means the system doesn't have an ATO
+	if len(ato) < 1 || ato[0] == nil {
+		return nil, nil
+	}
+
+	return &ato[0].OaStatus.String, nil
+}
+
 // BusinessOwnerRoles is the resolver for the businessOwnerRoles field.
 func (r *cedarSystemResolver) BusinessOwnerRoles(ctx context.Context, obj *models.CedarSystem) ([]*models.CedarRole, error) {
 	cedarRoles, err := r.cedarCoreClient.GetBusinessOwnerRolesBySystem(ctx, obj.ID.String)
@@ -286,12 +301,12 @@ func (r *iTGovTaskStatusesResolver) BizCaseFinalStatus(ctx context.Context, obj 
 
 // GrbMeetingStatus is the resolver for the grbMeetingStatus field.
 func (r *iTGovTaskStatusesResolver) GrbMeetingStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovGRBStatus, error) {
-	return resolvers.GrbMeetingStatus(obj.ParentSystemIntake)
+	return resolvers.GrbMeetingStatus(ctx, obj.ParentSystemIntake)
 }
 
 // DecisionAndNextStepsStatus is the resolver for the decisionAndNextStepsStatus field.
 func (r *iTGovTaskStatusesResolver) DecisionAndNextStepsStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovDecisionStatus, error) {
-	return resolvers.DecisionAndNextStepsStatus(obj.ParentSystemIntake)
+	return resolvers.DecisionAndNextStepsStatus(ctx, obj.ParentSystemIntake)
 }
 
 // CreateSystemIntakeActionProgressToNewStep is the resolver for the createSystemIntakeActionProgressToNewStep field.
@@ -683,6 +698,16 @@ func (r *mutationResolver) DeleteSystemIntakeGRBReviewer(ctx context.Context, in
 	return input.ReviewerID, resolvers.DeleteSystemIntakeGRBReviewer(ctx, r.store, input.ReviewerID)
 }
 
+// CastSystemIntakeGRBReviewerVote is the resolver for the castSystemIntakeGRBReviewerVote field.
+func (r *mutationResolver) CastSystemIntakeGRBReviewerVote(ctx context.Context, input models.CastSystemIntakeGRBReviewerVoteInput) (*models.SystemIntakeGRBReviewer, error) {
+	return resolvers.CastSystemIntakeGRBReviewerVote(ctx, r.store, r.emailClient, input)
+}
+
+// SendSystemIntakeGRBReviewerReminder is the resolver for the sendSystemIntakeGRBReviewerReminder field.
+func (r *mutationResolver) SendSystemIntakeGRBReviewerReminder(ctx context.Context, systemIntakeID uuid.UUID) (*models.SendSystemIntakeGRBReviewReminderPayload, error) {
+	return resolvers.SendSystemIntakeGRBReviewerReminder(ctx, r.store, r.emailClient, systemIntakeID)
+}
+
 // CreateSystemIntakeGRBDiscussionPost is the resolver for the createSystemIntakeGRBDiscussionPost field.
 func (r *mutationResolver) CreateSystemIntakeGRBDiscussionPost(ctx context.Context, input models.CreateSystemIntakeGRBDiscussionPostInput) (*models.SystemIntakeGRBReviewDiscussionPost, error) {
 	return resolvers.CreateSystemIntakeGRBDiscussionPost(ctx, r.store, r.emailClient, input)
@@ -691,6 +716,36 @@ func (r *mutationResolver) CreateSystemIntakeGRBDiscussionPost(ctx context.Conte
 // CreateSystemIntakeGRBDiscussionReply is the resolver for the createSystemIntakeGRBDiscussionReply field.
 func (r *mutationResolver) CreateSystemIntakeGRBDiscussionReply(ctx context.Context, input models.CreateSystemIntakeGRBDiscussionReplyInput) (*models.SystemIntakeGRBReviewDiscussionPost, error) {
 	return resolvers.CreateSystemIntakeGRBDiscussionReply(ctx, r.store, r.emailClient, input)
+}
+
+// UpdateSystemIntakeGRBReviewType is the resolver for the updateSystemIntakeGRBReviewType field.
+func (r *mutationResolver) UpdateSystemIntakeGRBReviewType(ctx context.Context, input models.UpdateSystemIntakeGRBReviewTypeInput) (*models.UpdateSystemIntakePayload, error) {
+	return resolvers.UpdateSystemIntakeGRBReviewType(ctx, r.store, input)
+}
+
+// UpdateSystemIntakeGRBReviewFormPresentationStandard is the resolver for the updateSystemIntakeGRBReviewFormPresentationStandard field.
+func (r *mutationResolver) UpdateSystemIntakeGRBReviewFormPresentationStandard(ctx context.Context, input models.UpdateSystemIntakeGRBReviewFormInputPresentationStandard) (*models.UpdateSystemIntakePayload, error) {
+	return resolvers.UpdateSystemIntakeGRBReviewFormInputPresentationStandard(ctx, r.store, input)
+}
+
+// UpdateSystemIntakeGRBReviewFormPresentationAsync is the resolver for the updateSystemIntakeGRBReviewFormPresentationAsync field.
+func (r *mutationResolver) UpdateSystemIntakeGRBReviewFormPresentationAsync(ctx context.Context, input models.UpdateSystemIntakeGRBReviewFormInputPresentationAsync) (*models.UpdateSystemIntakePayload, error) {
+	return resolvers.UpdateSystemIntakeGRBReviewFormInputPresentationAsync(ctx, r.store, input)
+}
+
+// UpdateSystemIntakeGRBReviewFormTimeframeAsync is the resolver for the updateSystemIntakeGRBReviewFormTimeframeAsync field.
+func (r *mutationResolver) UpdateSystemIntakeGRBReviewFormTimeframeAsync(ctx context.Context, input models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync) (*models.UpdateSystemIntakePayload, error) {
+	return resolvers.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(ctx, r.store, r.emailClient, input)
+}
+
+// ExtendGRBReviewDeadlineAsync is the resolver for the extendGRBReviewDeadlineAsync field.
+func (r *mutationResolver) ExtendGRBReviewDeadlineAsync(ctx context.Context, input models.ExtendGRBReviewDeadlineInput) (*models.UpdateSystemIntakePayload, error) {
+	return resolvers.ExtendGRBReviewDeadlineAsync(ctx, r.store, r.emailClient, input)
+}
+
+// RestartGRBReviewAsync is the resolver for the restartGRBReviewAsync field.
+func (r *mutationResolver) RestartGRBReviewAsync(ctx context.Context, input models.RestartGRBReviewInput) (*models.UpdateSystemIntakePayload, error) {
+	return resolvers.RestartGRBReviewAsync(ctx, r.store, r.emailClient, input)
 }
 
 // UpdateSystemIntakeLinkedCedarSystem is the resolver for the updateSystemIntakeLinkedCedarSystem field.
@@ -720,9 +775,19 @@ func (r *mutationResolver) SetSystemIntakeGRBPresentationLinks(ctx context.Conte
 	return resolvers.SetSystemIntakeGRBPresentationLinks(ctx, r.store, r.s3Client, input)
 }
 
+// UploadSystemIntakeGRBPresentationDeck is the resolver for the uploadSystemIntakeGRBPresentationDeck field.
+func (r *mutationResolver) UploadSystemIntakeGRBPresentationDeck(ctx context.Context, input models.UploadSystemIntakeGRBPresentationDeckInput) (*models.SystemIntakeGRBPresentationLinks, error) {
+	return resolvers.UploadSystemIntakeGRBPresentationDeck(ctx, r.store, r.s3Client, input)
+}
+
 // DeleteSystemIntakeGRBPresentationLinks is the resolver for the deleteSystemIntakeGRBPresentationLinks field.
 func (r *mutationResolver) DeleteSystemIntakeGRBPresentationLinks(ctx context.Context, input models.DeleteSystemIntakeGRBPresentationLinksInput) (uuid.UUID, error) {
 	return input.SystemIntakeID, r.store.DeleteSystemIntakeGRBPresentationLinks(ctx, input.SystemIntakeID)
+}
+
+// ManuallyEndSystemIntakeGRBReviewAsyncVoting is the resolver for the manuallyEndSystemIntakeGRBReviewAsyncVoting field.
+func (r *mutationResolver) ManuallyEndSystemIntakeGRBReviewAsyncVoting(ctx context.Context, systemIntakeID uuid.UUID) (*models.UpdateSystemIntakePayload, error) {
+	return resolvers.ManuallyEndSystemIntakeGRBReviewAsyncVoting(ctx, r.store, r.emailClient, systemIntakeID)
 }
 
 // ArchiveSystemIntake is the resolver for the archiveSystemIntake field.
@@ -1192,6 +1257,11 @@ func (r *mutationResolver) CreateTrbLeadOption(ctx context.Context, eua string) 
 // DeleteTrbLeadOption is the resolver for the deleteTrbLeadOption field.
 func (r *mutationResolver) DeleteTrbLeadOption(ctx context.Context, eua string) (bool, error) {
 	return resolvers.DeleteTRBLeadOption(ctx, r.store, eua)
+}
+
+// SendGRBReviewPresentationDeckReminderEmail is the resolver for the sendGRBReviewPresentationDeckReminderEmail field.
+func (r *mutationResolver) SendGRBReviewPresentationDeckReminderEmail(ctx context.Context, systemIntakeID uuid.UUID) (bool, error) {
+	return resolvers.SendGRBReviewPresentationDeckReminderEmail(ctx, systemIntakeID, r.emailClient, r.store, r.service.FetchUserInfo)
 }
 
 // SystemIntake is the resolver for the systemIntake field.
@@ -1771,6 +1841,21 @@ func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.
 		})
 	}
 
+	if len(obj.CollaboratorName508.String) > 0 {
+		key := "clearanceOfficer508"
+		label := "508 Clearance Officer"
+		acronym := "508"
+		name := "508 Clearance Officer"
+
+		teams = append(teams, &models.SystemIntakeCollaborator{
+			Key:          key,
+			Label:        label,
+			Acronym:      acronym,
+			Name:         name,
+			Collaborator: obj.CollaboratorName508.String,
+		})
+	}
+
 	if len(obj.EACollaboratorName.String) > 0 {
 		key := "enterpriseArchitecture"
 		label := "Enterprise Architecture (EA)"
@@ -1805,7 +1890,13 @@ func (r *systemIntakeResolver) NextMeetingDate(ctx context.Context, obj *models.
 
 // GrbReviewers is the resolver for the grbReviewers field.
 func (r *systemIntakeResolver) GrbReviewers(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewer, error) {
+	//TODO: this method is being deprecated. Remove it once the new method is implemented on the FE
 	return resolvers.SystemIntakeGRBReviewers(ctx, obj.ID)
+}
+
+// GrbVotingInformation is the resolver for the grbVotingInformation field.
+func (r *systemIntakeResolver) GrbVotingInformation(ctx context.Context, obj *models.SystemIntake) (*models.GRBVotingInformation, error) {
+	return resolvers.GRBVotingInformationGetBySystemIntake(ctx, obj)
 }
 
 // Lcid is the resolver for the lcid field.
@@ -1882,11 +1973,9 @@ func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.System
 		return requesterWithoutEmail, nil
 	}
 
-	email := user.Email.String()
-
 	return &models.SystemIntakeRequester{
 		Component: obj.Component.Ptr(),
-		Email:     &email,
+		Email:     helpers.PointerTo(user.Email.String()),
 		Name:      obj.Requester,
 	}, nil
 }
@@ -1915,12 +2004,12 @@ func (r *systemIntakeResolver) ItGovTaskStatuses(ctx context.Context, obj *model
 
 // StatusRequester is the resolver for the statusRequester field.
 func (r *systemIntakeResolver) StatusRequester(ctx context.Context, obj *models.SystemIntake) (models.SystemIntakeStatusRequester, error) {
-	return resolvers.CalculateSystemIntakeRequesterStatus(obj, time.Now())
+	return resolvers.CalculateSystemIntakeRequesterStatus(ctx, obj, time.Now())
 }
 
 // StatusAdmin is the resolver for the statusAdmin field.
 func (r *systemIntakeResolver) StatusAdmin(ctx context.Context, obj *models.SystemIntake) (models.SystemIntakeStatusAdmin, error) {
-	return resolvers.CalculateSystemIntakeAdminStatus(obj)
+	return resolvers.CalculateSystemIntakeAdminStatus(ctx, obj)
 }
 
 // LcidStatus is the resolver for the lcidStatus field.
@@ -1953,14 +2042,29 @@ func (r *systemIntakeResolver) RelatedTRBRequests(ctx context.Context, obj *mode
 	return resolvers.SystemIntakeRelatedTRBRequests(ctx, obj.ID)
 }
 
-// GrbDiscussions is the resolver for the grbDiscussions field.
-func (r *systemIntakeResolver) GrbDiscussions(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewDiscussion, error) {
-	return resolvers.SystemIntakeGRBDiscussions(ctx, obj.ID)
+// GrbDiscussionsPrimary is the resolver for the grbDiscussionsPrimary field.
+func (r *systemIntakeResolver) GrbDiscussionsPrimary(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewDiscussion, error) {
+	return resolvers.SystemIntakeGRBDiscussions(ctx, obj.ID, models.SystemIntakeGRBDiscussionBoardTypePrimary)
+}
+
+// GrbDiscussionsInternal is the resolver for the grbDiscussionsInternal field.
+func (r *systemIntakeResolver) GrbDiscussionsInternal(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewDiscussion, error) {
+	return resolvers.SystemIntakeGRBDiscussions(ctx, obj.ID, models.SystemIntakeGRBDiscussionBoardTypeInternal)
 }
 
 // GrbPresentationLinks is the resolver for the grbPresentationLinks field.
 func (r *systemIntakeResolver) GrbPresentationLinks(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBPresentationLinks, error) {
 	return dataloaders.GetSystemIntakeGRBPresentationLinksByIntakeID(ctx, obj.ID)
+}
+
+// GrbReviewStandardStatus is the resolver for the grbReviewStandardStatus field.
+func (r *systemIntakeResolver) GrbReviewStandardStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBReviewStandardStatusType, error) {
+	return resolvers.CalcSystemIntakeGRBReviewStandardStatus(obj), nil
+}
+
+// GrbReviewAsyncStatus is the resolver for the grbReviewAsyncStatus field.
+func (r *systemIntakeResolver) GrbReviewAsyncStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBReviewAsyncStatusType, error) {
+	return resolvers.CalcSystemIntakeGRBReviewAsyncStatus(ctx, obj), nil
 }
 
 // DocumentType is the resolver for the documentType field.

@@ -6,6 +6,20 @@ export const parseAsUTC = (date: string) => DateTime.fromISO(date).toUTC();
 type DateFormat = 'MM/dd/yyyy' | 'MMMM d, yyyy' | 'MM/yyyy';
 
 /**
+ * Output from format to UTC ISO string
+ */
+export const formatToUTCISO = (
+  date: string | null | undefined,
+  format: DateFormat
+): string => {
+  if (date) {
+    const parsedDate = DateTime.fromFormat(date, format).toUTC().toISO();
+    if (parsedDate !== 'Invalid DateTime') return parsedDate || '';
+  }
+  return '';
+};
+
+/**
  * Output local timezoned dates from iso string.
  * Typically used for dates generated with time, or server generated dates
  * Dates may differ depending on local time zone
@@ -35,6 +49,52 @@ export const formatDateUtc = (
     if (parsedDate !== 'Invalid DateTime') return parsedDate;
   }
   return '';
+};
+
+/**
+ * Output local time (e.g., 2:37 PM) from an ISO string.
+ * Useful for displaying only the time portion based on the user's local time zone.
+ */
+export const formatTimeLocal = (
+  date: string | null | undefined,
+  format = 'h:mm a'
+): string => {
+  if (date) {
+    const parsedTime = DateTime.fromISO(date).toFormat(format);
+    if (parsedTime !== 'Invalid DateTime') return parsedTime;
+  }
+  return '';
+};
+
+/**
+ * Converts a date string in MM/dd/yyyy format to 5pm Eastern, then to UTC
+ *
+ * Returns ISO string
+ */
+export const formatEndOfDayDeadline = (date: DateTime | string): string => {
+  let dt: DateTime;
+
+  // If date is a string, convert to DateTime object
+  if (typeof date === 'string') {
+    dt = DateTime.fromFormat(date, 'MM/dd/yyyy', {
+      zone: 'America/New_York',
+      setZone: true
+    });
+  } else {
+    dt = date;
+  }
+
+  if (!dt.isValid) return '';
+
+  /** DateTime object converted to 5pm Eastern, then to UTC */
+  const formattedDateTime = dt
+    .setZone('America/New_York')
+    .set({ hour: 17, minute: 0, second: 0 })
+    .toUTC();
+
+  if (!formattedDateTime.isValid) return '';
+
+  return formattedDateTime.toISO({ suppressMilliseconds: true });
 };
 
 type ContractDate = {
@@ -107,4 +167,27 @@ export const getRelativeDate = (
 
   // Return relative date
   return dateTime.toRelativeCalendar({ unit: 'days' });
+};
+
+// Formats whole days, hours, and minutes between now and a given ISO string
+export const formatDaysHoursMinutes = (
+  isoString: string | null | undefined
+) => {
+  if (!isoString) return { days: 0, hours: 0, minutes: 0 };
+
+  // Parse the ISO string into a Luxon DateTime object in UTC
+  const dateTime = DateTime.fromISO(isoString, { zone: 'utc' });
+
+  // Get the current time in UTC
+  const now = DateTime.utc();
+
+  // Calculate the difference between the two DateTime objects
+  const diff = dateTime.diff(now, ['days', 'hours', 'minutes']);
+
+  // Extract whole number of days, hours, and minutes and make them absolute
+  const days = Math.abs(diff.days);
+  const hours = Math.abs(diff.hours);
+  const minutes = Math.floor(Math.abs(diff.minutes));
+
+  return { days, hours, minutes };
 };

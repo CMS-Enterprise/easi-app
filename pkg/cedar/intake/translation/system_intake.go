@@ -37,7 +37,7 @@ func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wir
 		})
 	}
 
-	clientStatus, err := resolvers.CalculateSystemIntakeAdminStatus(helpers.PointerTo(models.SystemIntake(*si)))
+	clientStatus, err := resolvers.CalculateSystemIntakeAdminStatus(ctx, helpers.PointerTo(models.SystemIntake(*si)))
 	if err != nil {
 		return nil, err
 	}
@@ -67,6 +67,7 @@ func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wir
 		TrbCollaboratorName:             si.TRBCollaboratorName.Ptr(),
 		OitSecurityCollaboratorName:     si.OITSecurityCollaboratorName.Ptr(),
 		EaCollaboratorName:              si.EACollaboratorName.Ptr(),
+		CollaboratorName508:             si.CollaboratorName508.Ptr(),
 		ProjectName:                     si.ProjectName.ValueOrZero(),
 		ProjectAcronym:                  si.ProjectAcronym.Ptr(),
 		FundingSource:                   si.FundingSource.Ptr(),

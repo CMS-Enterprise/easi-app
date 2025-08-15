@@ -50,7 +50,7 @@ const governanceOverview = {
       content:
         'Depending on the complexity of your request and the costs involved, the Governance Admin Team may ask that you get approval from the GRB. This may be completed asynchronously within EASi, or they may ask you to present your Business Case at a GRB meeting. The GRB will discuss and make decisions based on any or all of the following: your Intake Request, business need, Business Case, and recommendations from the GRT.',
       link: {
-        text: 'Prepare for the GRB meeting (opens in new tab)',
+        text: 'Prepare for the GRB review (opens in new tab)',
         path: '/help/it-governance/prepare-for-grb'
       }
     },

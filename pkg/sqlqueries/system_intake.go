@@ -2,22 +2,57 @@ package sqlqueries
 
 import _ "embed"
 
-// getByUser holds the SQL query to get system intakes by user and archived state
+// getByUser holds the SQL query to get non-archived system intakes by EUA
 //
 //go:embed SQL/system_intake/get_by_user.sql
 var getByUser string
+
+// getWhereGRBReviewIsHalfwayThrough holds the SQL query to get system intakes where the GRB review is halfway through
+//
+//go:embed SQL/system_intake/get_where_grb_voting_halfway_through.sql
+var getWhereGRBReviewIsHalfwayThrough string
+
+// getWhereGRBReviewPastDueNoQuorum holds the SQL query to get intakes with a past due GRB review but no quorum
+//
+//go:embed SQL/system_intake/get_where_grb_review_past_due_no_quorum.sql
+var getWhereGRBReviewPastDueNoQuorum string
+
+// getWhereGRBReviewCompleteQuorumMet holds the SQL query to get intakes with completed GRB Reviews where quorum has been met
+//
+//go:embed SQL/system_intake/get_where_grb_review_complete_quorum_met.sql
+var getWhereGRBReviewCompleteQuorumMet string
+
+// getWhereGRBReviewEnded holds the SQL query to get intakes that have ended in the last day
+//
+//go:embed SQL/system_intake/get_where_grb_review_ended.sql
+var getWhereGRBReviewEnded string
 
 // getRequesterUpdateEmailData holds the SQL query to get requester update email data
 //
 //go:embed SQL/system_intake/get_requester_update_email_data.sql
 var getRequesterUpdateEmailData string
 
+// getSystemIntakeByGRBReviewerID holds the SQL query to get system intakes by GRB reviewer ID
+//
+//go:embed SQL/system_intake/get_by_grb_reviewer_id.sql
+var getSystemIntakeByGRBReviewerID string
+
 var SystemIntake = systemIntakeScripts{
-	GetByUser:                   getByUser,
-	GetRequesterUpdateEmailData: getRequesterUpdateEmailData,
+	GetByUser:                         getByUser,
+	GetWhereGRBReviewIsHalfwayThrough: getWhereGRBReviewIsHalfwayThrough,
+	GetWhereGRBPastDueNoQuorum:        getWhereGRBReviewPastDueNoQuorum,
+	GetWhereReviewCompleteQuorumMet:   getWhereGRBReviewCompleteQuorumMet,
+	GetWhereGRBReviewEnded:            getWhereGRBReviewEnded,
+	GetRequesterUpdateEmailData:       getRequesterUpdateEmailData,
+	GetSystemIntakeByGRBReviewerID:    getSystemIntakeByGRBReviewerID,
 }
 
 type systemIntakeScripts struct {
-	GetByUser                   string
-	GetRequesterUpdateEmailData string
+	GetByUser                         string
+	GetWhereGRBReviewIsHalfwayThrough string
+	GetWhereGRBPastDueNoQuorum        string
+	GetWhereReviewCompleteQuorumMet   string
+	GetWhereGRBReviewEnded            string
+	GetRequesterUpdateEmailData       string
+	GetSystemIntakeByGRBReviewerID    string
 }

@@ -6,13 +6,13 @@ import {
   BreadcrumbBar,
   BreadcrumbLink
 } from '@trussworks/react-uswds';
+import DocumentUploadForm from 'features/ITGovernance/_components/DocumentUploadForm';
 import NotFound, { NotFoundPartial } from 'features/Miscellaneous/NotFound';
 import { useGetSystemIntakeQuery } from 'gql/generated/graphql';
 
 import MainContent from 'components/MainContent';
 import PageLoading from 'components/PageLoading';
 
-import UploadForm from './Documents/UploadForm';
 import Confirmation from './Confirmation';
 import ContactDetails from './ContactDetails';
 import ContractDetails from './ContractDetails';
@@ -89,7 +89,7 @@ export const SystemIntake = () => {
           />
           <Route
             path="/system/:systemId/documents/upload"
-            render={() => <UploadForm type="requester" />}
+            render={() => <DocumentUploadForm type="requester" />}
           />
           <Route
             path="/system/:systemId/documents"

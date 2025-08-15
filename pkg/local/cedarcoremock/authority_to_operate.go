@@ -30,6 +30,7 @@ var mockATOs = []*models.CedarAuthorityToOperate{
 		LastAssessmentDate:                        zero.TimeFrom(time.Now().AddDate(0, -9, 0)),
 		LastContingencyPlanCompletionDate:         zero.TimeFrom(time.Now().AddDate(-1, 0, 0)),
 		LastPenTestDate:                           zero.TimeFrom(time.Now().AddDate(0, -9, 0)),
+		OaStatus:                                  zero.StringFrom("Traditional"),
 		PiaCompletionDate:                         zero.TimeFrom(time.Now().AddDate(-1, 0, 0)),
 		PrimaryCyberRiskAdvisor:                   zero.StringFrom("USR1"),
 		PrivacySubjectMatterExpert:                zero.StringFrom("A11Y"),

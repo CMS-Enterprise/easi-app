@@ -42,6 +42,7 @@ export default gql(/* GraphQL */ `
     currentStage
     decisionNextSteps
     grbDate
+    grbReviewAsyncEndDate
     grtDate
     governanceRequestFeedbacks {
       ...GovernanceRequestFeedbackFragment
@@ -137,8 +138,21 @@ export default gql(/* GraphQL */ `
       decisionState
       submittedAt
     }
+
+    grbDate
+    grbReviewType
     grbPresentationLinks {
       ...SystemIntakeGRBPresentationLinksFragment
+    }
+    grbReviewStartedAt
+    grbVotingInformation {
+      grbReviewers {
+        ...SystemIntakeGRBReviewer
+      }
+      votingStatus
+      numberOfNoObjection
+      numberOfObjection
+      numberOfNotVoted
     }
   }
 `);

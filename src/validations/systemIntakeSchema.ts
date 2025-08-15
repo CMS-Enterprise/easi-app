@@ -7,6 +7,7 @@ import { DateTime } from 'luxon';
 import * as Yup from 'yup';
 
 import { FormattedFundingSource } from 'components/FundingSources';
+import { ITGovernanceViewType } from 'types/itGov';
 
 const govTeam = (name: string) =>
   Yup.object().shape({
@@ -27,7 +28,7 @@ const governanceTeams = Yup.object().shape({
     .shape({
       technicalReviewBoard: govTeam('Technical Review Board'),
       securityPrivacy: govTeam("OIT's Security and Privacy Group"),
-      enterpriseArchitecture: govTeam('Enterprise Architecture')
+      clearanceOfficer: govTeam('508 Clearance Officer')
     })
     .test(
       'min',
@@ -346,16 +347,14 @@ export const documentSchema = Yup.object({
     then: schema => schema.required()
   }),
   version: Yup.mixed<SystemIntakeDocumentVersion>().required(),
-  sendNotification: Yup.boolean().when(
-    '$type',
-    (type: 'admin' | 'requester', schema: Yup.BooleanSchema) => {
-      if (type === 'admin') {
-        return schema.required(
-          i18next.t('technicalAssistance:errors.makeSelection')
-        );
-      }
-
-      return schema;
-    }
-  )
+  sendNotification: Yup.boolean().when(['$type', '$uploadSource'], {
+    is: (
+      type: ITGovernanceViewType,
+      uploadSource: 'request' | 'grbReviewForm'
+    ) => type === 'admin' && uploadSource === 'request',
+    then: Yup.boolean().required(
+      i18next.t('technicalAssistance:errors.makeSelection')
+    ),
+    otherwise: Yup.boolean()
+  })
 });

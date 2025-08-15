@@ -25,6 +25,13 @@
       width: 668px;
       height: auto;
     }
+
+    &--narrow {
+      font-size: 1em;
+      @media screen and (min-width: $tablet) {
+        width: 480px;
+      }
+    }
   }
 
   &__align-left {

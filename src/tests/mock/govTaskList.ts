@@ -1,4 +1,5 @@
 import {
+  GetGovernanceTaskListQuery,
   GovernanceRequestFeedbackTargetForm,
   ITGovDecisionStatus,
   ITGovDraftBusinessCaseStatus,
@@ -8,11 +9,10 @@ import {
   ITGovGRTStatus,
   ITGovIntakeFormStatus,
   SystemIntakeDecisionState,
+  SystemIntakeGRBReviewType,
   SystemIntakeState,
   SystemIntakeStep
 } from 'gql/generated/graphql';
-
-import { GetGovernanceTaskListWithMockData } from 'types/itGov';
 
 import { taskListSystemIntake } from './systemIntake';
 
@@ -21,12 +21,14 @@ const { id } = taskListSystemIntake;
 /** IT Gov Task List status states */
 // eslint-disable-next-line import/prefer-default-export
 export const taskListState: {
-  [k: string]: GetGovernanceTaskListWithMockData;
+  [k: string]: GetGovernanceTaskListQuery;
 } = {
   intakeFormNotStarted: {
-    systemIntake: taskListSystemIntake
+    systemIntake: taskListSystemIntake,
+    __typename: 'Query'
   },
   intakeFormInProgress: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -42,6 +44,7 @@ export const taskListState: {
     }
   },
   intakeFormSubmitted: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -58,6 +61,7 @@ export const taskListState: {
     }
   },
   intakeFormEditsRequested: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -82,6 +86,7 @@ export const taskListState: {
     }
   },
   intakeFormResubmittedAfterEdits: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -107,6 +112,7 @@ export const taskListState: {
   },
 
   feedbackFromInitialReviewCantStart: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -122,6 +128,7 @@ export const taskListState: {
     }
   },
   feedbackFromInitialReviewInProgress: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -137,6 +144,7 @@ export const taskListState: {
     }
   },
   feedbackFromInitialReviewDoneNoFeedback: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -152,6 +160,7 @@ export const taskListState: {
     }
   },
   feedbackFromInitialReviewDoneWithFeedback: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -174,6 +183,7 @@ export const taskListState: {
     }
   },
   feedbackFromInitialReviewResubmittedWithFeedback: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -197,6 +207,7 @@ export const taskListState: {
   },
 
   bizCaseDraftCantStart: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -214,6 +225,7 @@ export const taskListState: {
     }
   },
   bizCaseDraftSkipped: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -232,6 +244,7 @@ export const taskListState: {
     }
   },
   bizCaseDraftNotStarted: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -250,6 +263,7 @@ export const taskListState: {
     }
   },
   bizCaseDraftInProgress: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -272,6 +286,7 @@ export const taskListState: {
     }
   },
   bizCaseDraftSubmitted: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -294,6 +309,7 @@ export const taskListState: {
     }
   },
   bizCaseDraftEditsRequestedFromAdmins: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -323,6 +339,7 @@ export const taskListState: {
     }
   },
   bizCaseDraftReSubmitted: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -352,6 +369,7 @@ export const taskListState: {
     }
   },
   bizCaseDraftDoneWithFeedback: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -381,6 +399,7 @@ export const taskListState: {
     }
   },
   bizCaseDraftDoneNoFeedback: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -404,6 +423,7 @@ export const taskListState: {
   },
 
   grtMeetingCantStart: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -426,6 +446,7 @@ export const taskListState: {
     }
   },
   grtMeetingSkipped: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -448,6 +469,7 @@ export const taskListState: {
     }
   },
   grtMeetingInProgressNotScheduled: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -470,6 +492,7 @@ export const taskListState: {
     }
   },
   grtMeetingInProgressScheduled: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -493,6 +516,7 @@ export const taskListState: {
     }
   },
   grtMeetingDone: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -516,6 +540,7 @@ export const taskListState: {
     }
   },
   grtMeetingDoneDecisionWithFeedback: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -546,6 +571,7 @@ export const taskListState: {
     }
   },
   grtMeetingDoneDecisionWithoutFeedback: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -570,6 +596,7 @@ export const taskListState: {
   },
 
   bizCaseFinalCantStart: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -593,6 +620,7 @@ export const taskListState: {
     }
   },
   bizCaseFinalSkipped: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -613,6 +641,7 @@ export const taskListState: {
     }
   },
   bizCaseFinalNotStarted: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -636,6 +665,7 @@ export const taskListState: {
     }
   },
   bizCaseFinalInProgress: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -659,6 +689,7 @@ export const taskListState: {
     }
   },
   bizCaseFinalSubmitted: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -682,6 +713,7 @@ export const taskListState: {
     }
   },
   bizCaseFinalEditsRequestedFromAdmins: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -712,6 +744,7 @@ export const taskListState: {
     }
   },
   bizCaseFinalReSubmitted: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -742,6 +775,7 @@ export const taskListState: {
     }
   },
   bizCaseFinalDoneWithFeedback: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -772,6 +806,7 @@ export const taskListState: {
     }
   },
   bizCaseFinalDoneNoFeedback: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -796,6 +831,7 @@ export const taskListState: {
   },
 
   grbMeetingCantStart: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -815,10 +851,12 @@ export const taskListState: {
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
-      }
+      },
+      grbReviewType: SystemIntakeGRBReviewType.STANDARD
     }
   },
   grbMeetingSkipped: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -838,10 +876,12 @@ export const taskListState: {
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
-      }
+      },
+      grbReviewType: SystemIntakeGRBReviewType.STANDARD
     }
   },
   grbMeetingInProgressNotScheduled: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -861,10 +901,12 @@ export const taskListState: {
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
-      }
+      },
+      grbReviewType: SystemIntakeGRBReviewType.STANDARD
     }
   },
   grbMeetingInProgressScheduled: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -885,10 +927,106 @@ export const taskListState: {
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
-      }
+      },
+      grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+      grbReviewStartedAt: '2023-07-20T00:30:28Z',
+      grbReviewAsyncRecordingTime: '2023-07-20T00:30:28Z',
+      grbReviewAsyncEndDate: '2023-07-20T00:30:28Z',
+      grbReviewAsyncManualEndDate: null
+    }
+  },
+  grbMeetingInProgressAwaitingGrbReview: {
+    __typename: 'Query',
+    systemIntake: {
+      ...taskListSystemIntake,
+      itGovTaskStatuses: {
+        __typename: 'ITGovTaskStatuses',
+        intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
+        feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
+        grtMeetingStatus: ITGovGRTStatus.COMPLETED,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.DONE,
+        grbMeetingStatus: ITGovGRBStatus.AWAITING_GRB_REVIEW,
+        decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
+      },
+      step: SystemIntakeStep.GRB_MEETING,
+      submittedAt: '2023-07-09T00:30:28Z',
+      updatedAt: '2023-07-09T00:30:28Z',
+      grtDate: '2023-07-17T00:30:28Z',
+      grbDate: null,
+      businessCase: {
+        __typename: 'BusinessCase',
+        id: '1a4baff0-12ba-4087-8483-678d92b48733'
+      },
+      grbReviewType: SystemIntakeGRBReviewType.ASYNC,
+      grbReviewStartedAt: null,
+      grbReviewAsyncRecordingTime: '2023-06-02T00:30:28Z',
+      grbReviewAsyncEndDate: null,
+      grbReviewAsyncManualEndDate: null
+    }
+  },
+  grbMeetingReviewInProgress: {
+    __typename: 'Query',
+    systemIntake: {
+      ...taskListSystemIntake,
+      itGovTaskStatuses: {
+        __typename: 'ITGovTaskStatuses',
+        intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
+        feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
+        grtMeetingStatus: ITGovGRTStatus.COMPLETED,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.DONE,
+        grbMeetingStatus: ITGovGRBStatus.REVIEW_IN_PROGRESS,
+        decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
+      },
+      step: SystemIntakeStep.GRB_MEETING,
+      submittedAt: '2023-07-09T00:30:28Z',
+      updatedAt: '2023-07-09T00:30:28Z',
+      grtDate: '2023-07-17T00:30:28Z',
+      grbDate: null,
+      businessCase: {
+        __typename: 'BusinessCase',
+        id: '1a4baff0-12ba-4087-8483-678d92b48733'
+      },
+      grbReviewType: SystemIntakeGRBReviewType.ASYNC,
+      grbReviewStartedAt: '2023-06-02T00:30:28Z',
+      grbReviewAsyncRecordingTime: null,
+      grbReviewAsyncEndDate: '2023-07-20T00:30:28Z',
+      grbReviewAsyncManualEndDate: null
+    }
+  },
+  grbMeetingAwaitingDecision: {
+    __typename: 'Query',
+    systemIntake: {
+      ...taskListSystemIntake,
+      itGovTaskStatuses: {
+        __typename: 'ITGovTaskStatuses',
+        intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
+        feedbackFromInitialReviewStatus: ITGovFeedbackStatus.COMPLETED,
+        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.DONE,
+        grtMeetingStatus: ITGovGRTStatus.COMPLETED,
+        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.DONE,
+        grbMeetingStatus: ITGovGRBStatus.AWAITING_DECISION,
+        decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
+      },
+      step: SystemIntakeStep.GRB_MEETING,
+      submittedAt: '2023-07-09T00:30:28Z',
+      updatedAt: '2023-07-09T00:30:28Z',
+      grtDate: '2023-07-17T00:30:28Z',
+      grbDate: '2023-07-20T00:30:28Z',
+      businessCase: {
+        __typename: 'BusinessCase',
+        id: '1a4baff0-12ba-4087-8483-678d92b48733'
+      },
+      grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+      grbReviewStartedAt: '2023-07-20T00:30:28Z',
+      grbReviewAsyncRecordingTime: '2023-07-20T00:30:28Z',
+      grbReviewAsyncEndDate: '2023-07-20T00:30:28Z',
+      grbReviewAsyncManualEndDate: null
     }
   },
   grbMeetingDone: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -909,11 +1047,17 @@ export const taskListState: {
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
-      }
+      },
+      grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+      grbReviewStartedAt: '2023-07-20T00:30:28Z',
+      grbReviewAsyncRecordingTime: '2023-07-20T00:30:28Z',
+      grbReviewAsyncEndDate: '2023-07-20T00:30:28Z',
+      grbReviewAsyncManualEndDate: null
     }
   },
 
   decisionAndNextStepsCantStart: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -938,6 +1082,7 @@ export const taskListState: {
     }
   },
   decisionAndNextStepsInProgress: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {
@@ -954,14 +1099,20 @@ export const taskListState: {
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
-      grbDate: '2023-07-20T00:30:28Z',
+      grbDate: '2023-08-02T00:30:28Z',
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
-      }
+      },
+      grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+      grbReviewStartedAt: '2023-07-20T00:30:28Z',
+      grbReviewAsyncRecordingTime: null,
+      grbReviewAsyncEndDate: '2023-08-02T00:30:28Z',
+      grbReviewAsyncManualEndDate: null
     }
   },
   decisionAndNextStepsDone: {
+    __typename: 'Query',
     systemIntake: {
       ...taskListSystemIntake,
       itGovTaskStatuses: {

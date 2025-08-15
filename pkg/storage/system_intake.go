@@ -49,6 +49,10 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 	if intake.DecisionState == "" {
 		intake.DecisionState = models.SIDSNoDecision
 	}
+	if intake.GrbReviewType == "" {
+		intake.GrbReviewType = models.SystemIntakeGRBReviewTypeStandard
+	}
+
 	const createIntakeSQL = `
 		INSERT INTO system_intakes (
 			id,
@@ -72,8 +76,8 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			trb_collaborator_name,
 			oit_security_collaborator,
 			oit_security_collaborator_name,
-			ea_collaborator,
-			ea_collaborator_name,
+		    collaborator_508,
+			collaborator_name_508,
 			project_name,
 			project_acronym,
 			existing_funding,
@@ -106,6 +110,12 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			acquisition_methods,
 			trb_follow_up_recommendation,
 			contract_name,
+			grb_review_type,
+			grb_review_async_reporting_date,
+			grb_review_async_recording_time,
+			grb_review_async_end_date,
+			grb_presentation_deck_requester_reminder_email_sent_time,
+			grb_review_async_manual_end_date,
 			created_at,
 			updated_at
 		)
@@ -131,8 +141,8 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			:trb_collaborator_name,
 			:oit_security_collaborator,
 			:oit_security_collaborator_name,
-			:ea_collaborator,
-			:ea_collaborator_name,
+			:collaborator_508,
+			:collaborator_name_508,
 			:project_name,
 			:project_acronym,
 			:existing_funding,
@@ -165,6 +175,12 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			:acquisition_methods,
 			:trb_follow_up_recommendation,
 			:contract_name,
+			:grb_review_type,
+			:grb_review_async_reporting_date,
+			:grb_review_async_recording_time,
+			:grb_review_async_end_date,
+			:grb_presentation_deck_requester_reminder_email_sent_time,
+			:grb_review_async_manual_end_date,
 			:created_at,
 			:updated_at
 		)`
@@ -223,8 +239,8 @@ func (s *Store) UpdateSystemIntakeNP(ctx context.Context, np sqlutils.NamedPrepa
 			trb_collaborator_name = :trb_collaborator_name,
 			oit_security_collaborator = :oit_security_collaborator,
 			oit_security_collaborator_name = :oit_security_collaborator_name,
-			ea_collaborator = :ea_collaborator,
-			ea_collaborator_name = :ea_collaborator_name,
+			collaborator_508 = :collaborator_508,
+			collaborator_name_508 = :collaborator_name_508,
 			project_name = :project_name,
 			project_acronym = :project_acronym,
 			existing_funding = :existing_funding,
@@ -272,7 +288,13 @@ func (s *Store) UpdateSystemIntakeNP(ctx context.Context, np sqlutils.NamedPrepa
 			acquisition_methods = :acquisition_methods,
 			trb_follow_up_recommendation = :trb_follow_up_recommendation,
 			contract_name = :contract_name,
-			system_relation_type = :system_relation_type
+			system_relation_type = :system_relation_type,
+			grb_review_type = :grb_review_type,
+			grb_review_async_reporting_date = :grb_review_async_reporting_date,
+			grb_review_async_recording_time = :grb_review_async_recording_time,
+			grb_review_async_end_date = :grb_review_async_end_date,
+			grb_presentation_deck_requester_reminder_email_sent_time = :grb_presentation_deck_requester_reminder_email_sent_time,
+			grb_review_async_manual_end_date = :grb_review_async_manual_end_date
 		WHERE system_intakes.id = :id
 	`
 	updateStmt, err := np.PrepareNamed(updateSystemIntakeSQL)
@@ -331,6 +353,7 @@ func (s *Store) FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPr
 	const whereClause = `
 		WHERE system_intakes.id = :id
 	`
+
 	intakeStmt, err := np.PrepareNamed(fetchSystemIntakeSQL + whereClause)
 	if err != nil {
 		return nil, err
@@ -594,6 +617,52 @@ func (s *Store) GetMySystemIntakes(ctx context.Context) ([]*models.SystemIntake,
 	return intakes, err
 }
 
+// GetSystemIntakesWithGRBReviewHalfwayThrough retrieves all system intakes where the GRB review is halfway through
+func GetSystemIntakesWithGRBReviewHalfwayThrough(ctx context.Context, np sqlutils.NamedPreparer, logger *zap.Logger) ([]*models.SystemIntake, error) {
+	var intakes []*models.SystemIntake
+
+	err := namedSelect(ctx, np, &intakes, sqlqueries.SystemIntake.GetWhereGRBReviewIsHalfwayThrough, map[string]interface{}{})
+	if err != nil {
+		logger.Error("Failed to fetch system intakes with GRB review halfway through", zap.Error(err))
+	}
+
+	return intakes, err
+
+}
+
+func GetSystemIntakesWithGRBReviewPastDueNoQuorum(ctx context.Context, np sqlutils.NamedPreparer, logger *zap.Logger) ([]*models.SystemIntake, error) {
+	var intakes []*models.SystemIntake
+
+	if err := namedSelect(ctx, np, &intakes, sqlqueries.SystemIntake.GetWhereGRBPastDueNoQuorum, nil); err != nil {
+		logger.Error("Failed to fetch system intakes with GRB review past due with no quorum met", zap.Error(err))
+		return nil, err
+	}
+
+	return intakes, nil
+}
+
+func GetSystemIntakesWithGRBReviewCompleteQuorumMet(ctx context.Context, np sqlutils.NamedPreparer, logger *zap.Logger) ([]*models.SystemIntake, error) {
+	var intakes []*models.SystemIntake
+
+	if err := namedSelect(ctx, np, &intakes, sqlqueries.SystemIntake.GetWhereReviewCompleteQuorumMet, nil); err != nil {
+		logger.Error("Failed to fetch system intakes with GRB review complete with quorum met", zap.Error(err))
+		return nil, err
+	}
+
+	return intakes, nil
+}
+
+func GetSystemIntakesWithGRBReviewEnded(ctx context.Context, np sqlutils.NamedPreparer, logger *zap.Logger) ([]*models.SystemIntake, error) {
+	var intakes []*models.SystemIntake
+
+	if err := namedSelect(ctx, np, &intakes, sqlqueries.SystemIntake.GetWhereGRBReviewEnded, nil); err != nil {
+		logger.Error("Failed to fetch system intakes where GRB Review ended", zap.Error(err))
+		return nil, err
+	}
+
+	return intakes, nil
+}
+
 func (s *Store) GetRequesterUpdateEmailData(ctx context.Context) ([]*models.RequesterUpdateEmailData, error) {
 	var res []models.SystemIntake
 	if err := namedSelect(ctx, s.db, &res, sqlqueries.SystemIntake.GetRequesterUpdateEmailData, nil); err != nil {
@@ -614,4 +683,31 @@ func (s *Store) GetRequesterUpdateEmailData(ctx context.Context) ([]*models.Requ
 	}
 
 	return data, nil
+}
+
+// GetSystemIntakeByGRBReviewerID retrieves the system intake where the user is a GRB reviewer
+// specified by the reviewer row ID
+func (s *Store) GetSystemIntakeByGRBReviewerID(
+	ctx context.Context,
+	reviewerID uuid.UUID,
+) (*models.SystemIntake, error) {
+	intake := &models.SystemIntake{}
+	err := namedGet(ctx, s.db, intake, sqlqueries.SystemIntake.GetSystemIntakeByGRBReviewerID, args{
+		"grb_reviewer_id": reviewerID,
+	})
+
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"failed to fetch system intake by GRB reviewer ID",
+			zap.Error(err),
+			zap.String("reviewerID", reviewerID.String()),
+		)
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     intake,
+			Operation: apperrors.QueryFetch,
+		}
+	}
+
+	return intake, nil
 }

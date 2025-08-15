@@ -3,6 +3,9 @@ package resolvers
 import (
 	"context"
 	"fmt"
+	"time"
+
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 
 	"github.com/google/uuid"
 	"github.com/samber/lo"
@@ -20,6 +23,13 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussions() {
 		emailClient, _ := NewEmailClient()
 
 		intake := s.createNewIntake()
+
+		intake.Step = models.SystemIntakeStepGRBMEETING
+
+		var err error
+		intake, err = s.testConfigs.Store.UpdateSystemIntake(s.ctxWithNewDataloaders(), intake)
+		s.NoError(err)
+
 		ctx, _ := s.getTestContextWithPrincipal("ABCD", true)
 		post := s.createGRBDiscussion(
 			ctx,
@@ -29,7 +39,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussions() {
 		)
 
 		// test the resolver for retrieving discussions
-		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID)
+		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID, models.SystemIntakeGRBDiscussionBoardTypePrimary)
 		s.NotNil(discussions)
 		s.NoError(err)
 		s.Len(discussions, 1)
@@ -43,6 +53,13 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussions() {
 		emailClient, _ := NewEmailClient()
 
 		intake := s.createNewIntake()
+
+		intake.Step = models.SystemIntakeStepGRBMEETING
+
+		var err error
+		intake, err = s.testConfigs.Store.UpdateSystemIntake(s.ctxWithNewDataloaders(), intake)
+		s.NoError(err)
+
 		ctx, _ := s.getTestContextWithPrincipal("ABCD", true)
 		s.createGRBDiscussion(
 			ctx,
@@ -58,6 +75,12 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussions() {
 
 		intake, _ := s.createIntakeAndAddReviewersByEUAs("ABCD")
 
+		intake.Step = models.SystemIntakeStepGRBMEETING
+
+		var err error
+		intake, err = s.testConfigs.Store.UpdateSystemIntake(s.ctxWithNewDataloaders(), intake)
+		s.NoError(err)
+
 		ctx, _ := s.getTestContextWithPrincipal("ABCD", false)
 		s.createGRBDiscussion(
 			ctx,
@@ -71,6 +94,13 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussions() {
 		emailClient, _ := NewEmailClient()
 
 		intake := s.createNewIntake()
+
+		intake.Step = models.SystemIntakeStepGRBMEETING
+
+		var err error
+		intake, err = s.testConfigs.Store.UpdateSystemIntake(s.ctxWithNewDataloaders(), intake)
+		s.NoError(err)
+
 		ctx, _ := s.getTestContextWithPrincipal("ABCD", false)
 		post, err := CreateSystemIntakeGRBDiscussionPost(
 			ctx,
@@ -81,6 +111,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussions() {
 				Content: models.TaggedHTML{
 					RawContent: "<p>banana</p>",
 				},
+				DiscussionBoardType: models.SystemIntakeGRBDiscussionBoardTypePrimary,
 			},
 		)
 		s.Nil(post)
@@ -91,6 +122,12 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussions() {
 		emailClient, sender := NewEmailClient()
 
 		intake, _ := s.createIntakeAndAddReviewersByEUAs("ABCD", "BTMN", "USR2")
+
+		intake.Step = models.SystemIntakeStepGRBMEETING
+
+		var err error
+		intake, err = s.testConfigs.Store.UpdateSystemIntake(s.ctxWithNewDataloaders(), intake)
+		s.NoError(err)
 
 		ctx, _ := s.getTestContextWithPrincipal("ABCD", false)
 		content := "<p>banana</p>"
@@ -126,6 +163,12 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussions() {
 		emailClient, sender := NewEmailClient()
 
 		intake, _ := s.createIntakeAndAddReviewersByEUAs("ABCD", "BTMN", "USR2")
+
+		intake.Step = models.SystemIntakeStepGRBMEETING
+
+		var err error
+		intake, err = s.testConfigs.Store.UpdateSystemIntake(s.ctxWithNewDataloaders(), intake)
+		s.NoError(err)
 
 		ctx, _ := s.getTestContextWithPrincipal("ABCD", false)
 		content := "<p>banana</p>"
@@ -170,6 +213,28 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussions() {
 			s.Contains(grbEmail.BccAddresses, models.EmailAddress(user.Email))
 		}
 	})
+
+	s.Run("create GRB discussion when intake is not in GRB meeting step", func() {
+		emailClient, _ := NewEmailClient()
+
+		intake := s.createNewIntake()
+
+		// explicitly set to something other than GRB Meeting
+		intake.Step = models.SystemIntakeStepFINALBIZCASE
+		intake.GrbReviewAsyncManualEndDate = helpers.PointerTo(time.Now().Add(time.Hour * -24))
+
+		var err error
+		intake, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intake)
+		s.NoError(err)
+
+		ctx, _ := s.getTestContextWithPrincipal("ABCD", true)
+		s.createGRBDiscussionWithExpectedError(
+			ctx,
+			emailClient,
+			intake.ID,
+			"<p>banana</p>",
+		)
+	})
 }
 
 func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
@@ -179,6 +244,13 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 		emailClient, _ := NewEmailClient()
 
 		intake := s.createNewIntake()
+
+		intake.Step = models.SystemIntakeStepGRBMEETING
+
+		// set intake to grb step
+		var err error
+		intake, err = s.testConfigs.Store.UpdateSystemIntake(s.ctxWithNewDataloaders(), intake)
+		s.NoError(err)
 
 		ctx, princ := s.getTestContextWithPrincipal("USR1", true)
 		discussionPost := s.createGRBDiscussion(ctx, emailClient, intake.ID, "<p>this is a newerDiscussion</p>")
@@ -200,7 +272,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 		discussionPost2 := s.createGRBDiscussion(ctx, emailClient, intake.ID, "<p>this is a newer newerDiscussion</p>")
 
 		// fetch newerDiscussion using resolver
-		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID)
+		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID, models.SystemIntakeGRBDiscussionBoardTypePrimary)
 		s.NoError(err)
 		s.NotNil(discussions)
 		s.Len(discussions, 2)
@@ -229,6 +301,12 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 
 		intake, _ := s.createIntakeAndAddReviewersByEUAs("BTMN")
 
+		intake.Step = models.SystemIntakeStepGRBMEETING
+
+		var err error
+		intake, err = s.testConfigs.Store.UpdateSystemIntake(s.ctxWithNewDataloaders(), intake)
+		s.NoError(err)
+
 		ctx, discAuthor := s.getTestContextWithPrincipal("USR1", true)
 		discussionPost := s.createGRBDiscussion(ctx, emailClient, intake.ID, "<p>this is a discussion</p>")
 
@@ -241,7 +319,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 		)
 
 		// fetch discussion using resolver
-		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID)
+		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID, models.SystemIntakeGRBDiscussionBoardTypePrimary)
 		s.NoError(err)
 		s.NotNil(discussions)
 		s.Len(discussions, 1)
@@ -264,6 +342,12 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 
 		intake := s.createNewIntake()
 
+		intake.Step = models.SystemIntakeStepGRBMEETING
+
+		var err error
+		intake, err = s.testConfigs.Store.UpdateSystemIntake(s.ctxWithNewDataloaders(), intake)
+		s.NoError(err)
+
 		ctx, discAuthor := s.getTestContextWithPrincipal("USR1", true)
 		discussionPost := s.createGRBDiscussion(ctx, emailClient, intake.ID, "<p>this is a discussion</p>")
 
@@ -277,13 +361,14 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 				Content: models.TaggedHTML{
 					RawContent: "<p>banana</p>",
 				},
+				DiscussionBoardType: models.SystemIntakeGRBDiscussionBoardTypePrimary,
 			},
 		)
 		s.Nil(replyPost)
 		s.Error(err)
 
 		// fetch discussion using resolver
-		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID)
+		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID, models.SystemIntakeGRBDiscussionBoardTypePrimary)
 		s.NoError(err)
 		s.NotNil(discussions)
 		s.Len(discussions, 1)
@@ -299,6 +384,12 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 		emailClient, _ := NewEmailClient()
 
 		intake, _ := s.createIntakeAndAddReviewersByEUAs("BTMN", "ABCD")
+
+		intake.Step = models.SystemIntakeStepGRBMEETING
+
+		var err error
+		intake, err = s.testConfigs.Store.UpdateSystemIntake(s.ctxWithNewDataloaders(), intake)
+		s.NoError(err)
 
 		ctx, discAuthor := s.getTestContextWithPrincipal("USR1", true)
 		discussionPost := s.createGRBDiscussion(ctx, emailClient, intake.ID, "<p>this is a discussion</p>")
@@ -320,7 +411,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 		)
 
 		// fetch discussion using resolver
-		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID)
+		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID, models.SystemIntakeGRBDiscussionBoardTypePrimary)
 		s.NoError(err)
 		s.NotNil(discussions)
 		s.Len(discussions, 1)
@@ -351,6 +442,12 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 
 		intake, _ := s.createIntakeAndAddReviewersByEUAs("BTMN", "ABCD")
 
+		intake.Step = models.SystemIntakeStepGRBMEETING
+
+		var err error
+		intake, err = s.testConfigs.Store.UpdateSystemIntake(s.ctxWithNewDataloaders(), intake)
+		s.NoError(err)
+
 		// create two discussions
 		ctx, disc1Author := s.getTestContextWithPrincipal("USR1", true)
 		discussion1Post := s.createGRBDiscussion(ctx, emailClient, intake.ID, "<p>this is a discussion</p>")
@@ -377,7 +474,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 		)
 
 		// fetch discussions using resolver
-		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID)
+		discussions, err := SystemIntakeGRBDiscussions(ctx, intake.ID, models.SystemIntakeGRBDiscussionBoardTypePrimary)
 		s.NoError(err)
 		s.NotNil(discussions)
 		s.Len(discussions, 2)
@@ -412,6 +509,12 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 
 		intake := s.createNewIntake()
 
+		intake.Step = models.SystemIntakeStepGRBMEETING
+
+		var err error
+		intake, err = s.testConfigs.Store.UpdateSystemIntake(s.ctxWithNewDataloaders(), intake)
+		s.NoError(err)
+
 		ctx, discussionAuthor := s.getTestContextWithPrincipal("USR1", true)
 		discussionPost := s.createGRBDiscussion(ctx, emailClient, intake.ID, "<p>this is a discussion</p>")
 
@@ -433,6 +536,12 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 
 		intake := s.createNewIntake()
 
+		intake.Step = models.SystemIntakeStepGRBMEETING
+
+		var err error
+		intake, err = s.testConfigs.Store.UpdateSystemIntake(s.ctxWithNewDataloaders(), intake)
+		s.NoError(err)
+
 		ctx, _ := s.getTestContextWithPrincipal("USR1", true)
 		discussionPost := s.createGRBDiscussion(ctx, emailClient, intake.ID, "<p>this is a discussion</p>")
 
@@ -450,6 +559,12 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 		emailClient, sender := NewEmailClient()
 
 		intake, _ := s.createIntakeAndAddReviewersByEUAs("USR1", "BTMN", "ABCD")
+
+		intake.Step = models.SystemIntakeStepGRBMEETING
+
+		var err error
+		intake, err = s.testConfigs.Store.UpdateSystemIntake(s.ctxWithNewDataloaders(), intake)
+		s.NoError(err)
 
 		ctx, _ := s.getTestContextWithPrincipal("USR1", true)
 		discussionPost := s.createGRBDiscussion(ctx, emailClient, intake.ID, "<p>this is a discussion</p>")
@@ -484,6 +599,12 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 		emailClient, sender := NewEmailClient()
 
 		intake, _ := s.createIntakeAndAddReviewersByEUAs("ABCD", "BTMN", "USR2")
+
+		intake.Step = models.SystemIntakeStepGRBMEETING
+
+		var err error
+		intake, err = s.testConfigs.Store.UpdateSystemIntake(s.ctxWithNewDataloaders(), intake)
+		s.NoError(err)
 
 		ctx, _ := s.getTestContextWithPrincipal("ABCD", false)
 		content := "<p>banana</p>"
@@ -534,6 +655,35 @@ func (s *ResolverSuite) TestSystemIntakeGRBDiscussionReplies() {
 			s.Contains(grbEmail.BccAddresses, models.EmailAddress(user.Email))
 		}
 	})
+
+	// Test replying on an intake when not in GRB meeting step
+	s.Run("reply to GRB discussion when intake is not in GRB meeting step", func() {
+		emailClient, _ := NewEmailClient()
+
+		intake := s.createNewIntake()
+
+		intake.Step = models.SystemIntakeStepGRBMEETING
+
+		var err error
+		intake, err = s.testConfigs.Store.UpdateSystemIntake(s.ctxWithNewDataloaders(), intake)
+		s.NoError(err)
+
+		ctx, _ := s.getTestContextWithPrincipal("USR1", true)
+		discussionPost := s.createGRBDiscussion(ctx, emailClient, intake.ID, "<p>this is a discussion</p>")
+
+		// set step back to something else
+		intake.Step = models.SystemIntakeStepDRAFTBIZCASE
+		intake.GrbReviewAsyncManualEndDate = helpers.PointerTo(time.Now().Add(time.Hour * -24))
+		_, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intake)
+		s.NoError(err)
+
+		s.createGRBDiscussionReplyWithExpectedError(
+			ctx,
+			emailClient,
+			discussionPost,
+			"<p>banana</p>",
+		)
+	})
 }
 
 // helper to create a discussion
@@ -550,16 +700,45 @@ func (s *ResolverSuite) createGRBDiscussion(
 		s.testConfigs.Store,
 		emailClient,
 		models.CreateSystemIntakeGRBDiscussionPostInput{
-			SystemIntakeID: intakeID,
-			Content:        taggedHTMLContent,
+			SystemIntakeID:      intakeID,
+			Content:             taggedHTMLContent,
+			DiscussionBoardType: models.SystemIntakeGRBDiscussionBoardTypePrimary,
 		},
 	)
-	s.NotNil(discussion)
+
 	s.NoError(err)
-	s.Equal(discussion.Content, models.HTML(content))
-	s.Equal(discussion.SystemIntakeID, intakeID)
+	s.NotNil(discussion)
 	s.NotNil(discussion.ID)
 	s.Nil(discussion.ReplyToID)
+	s.Equal(discussion.Content, models.HTML(content))
+	s.Equal(discussion.SystemIntakeID, intakeID)
+
+	return discussion
+}
+
+// helper to create a discussion
+func (s *ResolverSuite) createGRBDiscussionWithExpectedError(
+	ctx context.Context,
+	emailClient *email.Client,
+	intakeID uuid.UUID,
+	content string,
+) *models.SystemIntakeGRBReviewDiscussionPost {
+	taggedHTMLContent, err := models.NewTaggedHTMLFromString(content)
+	s.NoError(err)
+	discussion, err := CreateSystemIntakeGRBDiscussionPost(
+		ctx,
+		s.testConfigs.Store,
+		emailClient,
+		models.CreateSystemIntakeGRBDiscussionPostInput{
+			SystemIntakeID:      intakeID,
+			Content:             taggedHTMLContent,
+			DiscussionBoardType: models.SystemIntakeGRBDiscussionBoardTypePrimary,
+		},
+	)
+
+	s.Error(err)
+	s.Nil(discussion)
+
 	return discussion
 }
 
@@ -576,8 +755,9 @@ func (s *ResolverSuite) createGRBDiscussionReply(
 		s.testConfigs.Store,
 		emailClient,
 		models.CreateSystemIntakeGRBDiscussionReplyInput{
-			InitialPostID: discussionPost.ID,
-			Content:       taggedHTMLContent,
+			InitialPostID:       discussionPost.ID,
+			Content:             taggedHTMLContent,
+			DiscussionBoardType: models.SystemIntakeGRBDiscussionBoardTypePrimary,
 		},
 	)
 	// test returned reply post
@@ -588,6 +768,30 @@ func (s *ResolverSuite) createGRBDiscussionReply(
 	s.Equal(appcontext.Principal(ctx).Account().ID, replyPost.CreatedBy)
 	s.NotNil(replyPost.ReplyToID)
 	s.Equal(*replyPost.ReplyToID, discussionPost.ID)
+	return replyPost
+}
+
+func (s *ResolverSuite) createGRBDiscussionReplyWithExpectedError(
+	ctx context.Context,
+	emailClient *email.Client,
+	discussionPost *models.SystemIntakeGRBReviewDiscussionPost,
+	content string,
+) *models.SystemIntakeGRBReviewDiscussionPost {
+	taggedHTMLContent, err := models.NewTaggedHTMLFromString(content)
+	s.NoError(err)
+	replyPost, err := CreateSystemIntakeGRBDiscussionReply(
+		ctx,
+		s.testConfigs.Store,
+		emailClient,
+		models.CreateSystemIntakeGRBDiscussionReplyInput{
+			InitialPostID:       discussionPost.ID,
+			Content:             taggedHTMLContent,
+			DiscussionBoardType: models.SystemIntakeGRBDiscussionBoardTypePrimary,
+		},
+	)
+
+	s.Error(err)
+	s.Nil(replyPost)
 	return replyPost
 }
 
@@ -606,16 +810,10 @@ func (s *ResolverSuite) createIntakeAndAddReviewersByEUAs(reviewerEuaIDs ...stri
 
 	var createdReviewers []*models.SystemIntakeGRBReviewer
 	if len(reviewers) > 0 {
-		payload, err := CreateSystemIntakeGRBReviewers(
-			s.testConfigs.Context,
-			s.testConfigs.Store,
-			nil, //email client
-			userhelpers.GetUserInfoAccountInfosWrapperFunc(s.testConfigs.UserSearchClient.FetchUserInfos),
-			&models.CreateSystemIntakeGRBReviewersInput{
-				SystemIntakeID: intake.ID,
-				Reviewers:      reviewers,
-			},
-		)
+		payload, err := CreateSystemIntakeGRBReviewers(s.testConfigs.Context, s.testConfigs.Store, s.testConfigs.EmailClient, userhelpers.GetUserInfoAccountInfosWrapperFunc(s.testConfigs.UserSearchClient.FetchUserInfos), &models.CreateSystemIntakeGRBReviewersInput{
+			SystemIntakeID: intake.ID,
+			Reviewers:      reviewers,
+		})
 		s.NoError(err)
 		s.Equal(len(payload.Reviewers), len(reviewerEuaIDs))
 		createdReviewers = payload.Reviewers
