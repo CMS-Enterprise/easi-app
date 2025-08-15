@@ -65,11 +65,15 @@ const LinkedSystems = () => {
   const showSuccessfullyUpdated = state?.successfullyUpdated;
   const showSuccessfullyAdded = state?.successfullyAdded;
   const isFromTaskList = state?.from === 'task-list';
+  const isFromAdmin = state?.from === 'admin';
+
+  console.log(isFromAdmin);
   const systemUpdatedName = state?.systemUpdated;
 
   // Url of next view after successful form submit
   // Also for a breadcrumb navigation link
   const redirectUrl = `/governance-task-list/${id}`;
+  const adminUrl = `/it-governance/${id}/system-information`;
 
   const addASystemUrl = `/linked-systems-form/${id}`;
 
@@ -356,13 +360,17 @@ const LinkedSystems = () => {
           <Button
             type="submit"
             disabled={!submitEnabled}
-            onClick={() =>
-              history.push(redirectUrl, {
-                requestType: state?.requestType
-              })
-            }
+            onClick={() => {
+              if (isFromAdmin) {
+                history.push(adminUrl);
+              } else {
+                history.push(redirectUrl, {
+                  requestType: state?.requestType
+                });
+              }
+            }}
           >
-            {isFromTaskList
+            {isFromTaskList || isFromAdmin
               ? t(`itGov:link.form.saveChanges`)
               : t(`itGov:link.form.continueTaskList`)}
           </Button>

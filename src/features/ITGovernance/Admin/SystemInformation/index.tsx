@@ -29,7 +29,12 @@ const SystemInformation = ({
           {adminT('somethingIncorrect')}
         </span>
 
-        <UswdsReactLink to={`/linked-systems/${request.id}`}>
+        <UswdsReactLink
+          to={{
+            pathname: `/linked-systems/${request.id}`,
+            state: { from: 'admin' }
+          }}
+        >
           {linkedSystemsT('editSystemInformation')}
         </UswdsReactLink>
       </div>
