@@ -48,51 +48,6 @@ const SystemInformation = ({
       {request.systems.length > 0 && (
         <SystemCardTable systems={request.systemIntakeSystems} />
       )}
-      {/* {request.relationType === RequestRelationType.EXISTING_SERVICE && (
-        <div className="margin-top-3">
-          <strong>{adminT('serviceOrContract')}</strong>
-
-          <p className="margin-top-1">{request.contractName}</p>
-        </div>
-      )} */}
-      {/* {request.relationType === null && (
-        <Alert
-          type="warning"
-          headingLevel="h4"
-          slim
-          className="margin-top-3 margin-bottom-2"
-        >
-          {adminT('unlinkedAlert')}
-        </Alert>
-      )} */}
-      {/* {request.relationType === RequestRelationType.NEW_SYSTEM && ( */}
-
-      {/* )} */}
-      {/* {request.relationType !== null && (
-        <>
-          {request.contractNumbers?.length > 0 && (
-            <div className="margin-top-3">
-              <strong>
-                {adminT('contractNumber', {
-                  count: request.contractNumbers.length
-                })}
-              </strong>
-              <p className="margin-top-1">
-                {formatContractNumbers(request.contractNumbers)}
-              </p>
-            </div>
-          )}
-
-          {(!request.contractNumbers || request.contractNumbers.length < 1) && (
-            <div className="margin-top-3">
-              <strong>{adminT('contractNumber')}</strong>
-              <p className="margin-top-1 text-base text-italic">
-                {adminT('noContractNumber')}
-              </p>
-            </div>
-          )}
-        </>
-      )} */}
       <RelatedRequestsTable requestID={request.id} type="itgov" />
     </div>
   );
