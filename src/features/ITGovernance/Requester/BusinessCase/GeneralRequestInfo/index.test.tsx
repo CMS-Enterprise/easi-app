@@ -82,17 +82,18 @@ describe('Business case general request info form', () => {
 
   it('fills all fields', async () => {
     await renderPage(defaultStore);
+    const user = userEvent.setup();
 
     const requestNameField = screen.getByRole('textbox', {
       name: /Contract \/ request title/i
     });
-    userEvent.type(requestNameField, 'Test Project 1');
+    await user.type(requestNameField, 'Test Project 1');
     expect(requestNameField).toHaveValue('Test Project 1');
 
     const projectAcronymField = screen.getByRole('textbox', {
       name: /Contract \/ request acronym/i
     });
-    userEvent.type(projectAcronymField, 'TP1');
+    await user.type(projectAcronymField, 'TP1');
     expect(projectAcronymField).toHaveValue('TP1');
 
     const requesterField = screen.getByRole('textbox', {
@@ -101,20 +102,20 @@ describe('Business case general request info form', () => {
 
     expect(requesterField).toBeDisabled();
 
-    userEvent.type(requesterField, 'John Doe');
+    await user.type(requesterField, 'John Doe');
     expect(requesterField).toHaveValue('John Doe');
 
     const businessOwnerField = screen.getByTestId('cedar-contact-select');
 
-    userEvent.type(businessOwnerField, 'Jane McModel');
-    userEvent.keyboard('[Enter]');
+    await user.type(businessOwnerField, 'Jane McModel');
+    await user.keyboard('[Enter]');
 
     expect(businessOwnerField).toHaveValue('Jane McModel');
 
     const phoneNumberField = screen.getByRole('textbox', {
       name: /Phone Number/i
     });
-    userEvent.type(phoneNumberField, '1234567890');
+    await user.type(phoneNumberField, '1234567890');
     expect(phoneNumberField).toHaveValue('1234567890');
   });
 

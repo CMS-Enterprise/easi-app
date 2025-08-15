@@ -71,6 +71,10 @@ describe('Business case preferred solution form', () => {
       actions: []
     }
   });
+  let user: ReturnType<typeof userEvent.setup>;
+  beforeEach(() => {
+    user = userEvent.setup();
+  });
 
   it('renders without errors', async () => {
     await renderPage(defaultStore);
@@ -84,7 +88,7 @@ describe('Business case preferred solution form', () => {
     const titleField = screen.getByRole('textbox', {
       name: /title/i
     });
-    userEvent.type(titleField, 'Preferred solution title');
+    await user.type(titleField, 'Preferred solution title');
     await waitFor(() => {
       expect(titleField).toHaveValue('Preferred solution title');
     });
@@ -92,7 +96,7 @@ describe('Business case preferred solution form', () => {
     const summaryField = screen.getByRole('textbox', {
       name: /summary/i
     });
-    userEvent.type(summaryField, 'Preferred solution summary');
+    await user.type(summaryField, 'Preferred solution summary');
     await waitFor(() => {
       expect(summaryField).toHaveValue('Preferred solution summary');
     });
@@ -100,7 +104,7 @@ describe('Business case preferred solution form', () => {
     const acquisitionApproachField = screen.getByRole('textbox', {
       name: /acquisition approach/i
     });
-    userEvent.type(
+    await user.type(
       acquisitionApproachField,
       'Preferred solution acquisition approach'
     );
@@ -141,7 +145,10 @@ describe('Business case preferred solution form', () => {
     const hostingLocationField = screen.getByRole('textbox', {
       name: /where are you planning to host/i
     });
-    userEvent.type(hostingLocationField, 'Preferred solution hosting location');
+    await user.type(
+      hostingLocationField,
+      'Preferred solution hosting location'
+    );
     await waitFor(() => {
       expect(hostingLocationField).toHaveValue(
         'Preferred solution hosting location'
@@ -151,7 +158,7 @@ describe('Business case preferred solution form', () => {
     const cloudServiceTypeField = screen.getByRole('textbox', {
       name: /cloud service/i
     });
-    userEvent.type(
+    await user.type(
       cloudServiceTypeField,
       'Preferred solution hosting cloud service'
     );
@@ -176,7 +183,7 @@ describe('Business case preferred solution form', () => {
     const prosField = screen.getByRole('textbox', {
       name: /pros/i
     });
-    userEvent.type(prosField, 'Preferred solution pros');
+    await user.type(prosField, 'Preferred solution pros');
     await waitFor(() => {
       expect(prosField).toHaveValue('Preferred solution pros');
     });
@@ -184,7 +191,7 @@ describe('Business case preferred solution form', () => {
     const consField = screen.getByRole('textbox', {
       name: /cons/i
     });
-    userEvent.type(consField, 'Preferred solution cons');
+    await user.type(consField, 'Preferred solution cons');
     await waitFor(() => {
       expect(consField).toHaveValue('Preferred solution cons');
     });
@@ -194,7 +201,7 @@ describe('Business case preferred solution form', () => {
     const costSavingsField = screen.getByRole('textbox', {
       name: /cost savings/i
     });
-    userEvent.type(costSavingsField, 'Preferred solution cost savings');
+    await user.type(costSavingsField, 'Preferred solution cost savings');
     await waitFor(() => {
       expect(costSavingsField).toHaveValue('Preferred solution cost savings');
     });
@@ -232,7 +239,7 @@ describe('Business case preferred solution form', () => {
     const dataCenterLocationField = screen.getByRole('textbox', {
       name: /which data center/i
     });
-    userEvent.type(
+    await user.type(
       dataCenterLocationField,
       'Preferred solution data center location'
     );

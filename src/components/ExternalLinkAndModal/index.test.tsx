@@ -8,6 +8,11 @@ import { CFACTS } from 'constants/externalUrls';
 import ExternalLinkAndModal from './index';
 
 describe('The ExternalLinkAndModal component', async () => {
+  let user: ReturnType<typeof userEvent.setup>;
+  beforeEach(() => {
+    user = userEvent.setup();
+  });
+
   it('renders an external link', async () => {
     render(
       <ExternalLinkAndModal href="https://www.example.com">
@@ -25,7 +30,7 @@ describe('The ExternalLinkAndModal component', async () => {
       </ExternalLinkAndModal>
     );
 
-    userEvent.click(screen.getByRole('button', { name: 'Example' }));
+    await user.click(screen.getByRole('button', { name: 'Example' }));
 
     const modalTitle = screen.getByText(
       i18next.t<string>('externalLinkModal:genericHeading')
@@ -53,7 +58,7 @@ describe('The ExternalLinkAndModal component', async () => {
       </ExternalLinkAndModal>
     );
 
-    userEvent.click(screen.getByRole('button', { name: 'Example' }));
+    await user.click(screen.getByRole('button', { name: 'Example' }));
 
     const cfactsModalText = screen.getByText(
       i18next.t<string>('externalLinkModal:description.cfacts')
@@ -76,11 +81,11 @@ describe('The ExternalLinkAndModal component', async () => {
       </ExternalLinkAndModal>
     );
 
-    userEvent.click(screen.getByRole('button', { name: 'Go to example' }));
+    await user.click(screen.getByRole('button', { name: 'Go to example' }));
 
     expect(screen.getByRole('dialog')).toBeInTheDocument();
 
-    userEvent.click(screen.getByRole('link', { name: 'Open in a new tab' }));
+    await user.click(screen.getByRole('link', { name: 'Open in a new tab' }));
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });

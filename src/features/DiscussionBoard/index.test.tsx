@@ -73,6 +73,8 @@ describe('Discussion board', () => {
         </Provider>
       );
 
+      const user = userEvent.setup();
+
       expect(
         await screen.findByRole('heading', {
           level: 4,
@@ -80,7 +82,7 @@ describe('Discussion board', () => {
         })
       ).toBeInTheDocument();
 
-      userEvent.type(screen.getByRole('textbox'), '@');
+      await user.type(screen.getByRole('textbox'), '@');
 
       const mentions = await screen.findByRole('tooltip');
       waitFor(() => expect(mentions).toHaveAttribute('data-state', 'visible'));
@@ -198,6 +200,7 @@ describe('Discussion board', () => {
         </Provider>
       );
 
+      const user = userEvent.setup();
       expect(
         await screen.findByRole('heading', {
           level: 4,
@@ -205,7 +208,7 @@ describe('Discussion board', () => {
         })
       ).toBeInTheDocument();
 
-      userEvent.type(screen.getByRole('textbox'), '@');
+      await user.type(screen.getByRole('textbox'), '@');
 
       const mentions = await screen.findByRole('tooltip');
       waitFor(() => expect(mentions).toHaveAttribute('data-state', 'visible'));

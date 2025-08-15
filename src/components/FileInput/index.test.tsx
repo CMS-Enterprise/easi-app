@@ -50,8 +50,10 @@ describe('FileInput component', () => {
       />
     );
 
+    const user = userEvent.setup();
+
     const clearButton = screen.getByRole('button', { name: 'Clear file' });
-    userEvent.click(clearButton);
+    await user.click(clearButton);
 
     // File upload input should render after clearing default
     expect(await screen.findByTestId('file-input-input')).toBeInTheDocument();

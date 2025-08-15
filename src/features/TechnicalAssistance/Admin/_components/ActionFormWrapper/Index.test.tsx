@@ -59,6 +59,11 @@ const Form = () => {
 };
 
 describe('Email recipient fields component', () => {
+  let user: ReturnType<typeof userEvent.setup>;
+  beforeEach(() => {
+    user = userEvent.setup();
+  });
+
   it('renders recipients', async () => {
     const { getAllByRole, getByRole, asFragment } = render(
       <Provider store={store}>
@@ -91,7 +96,7 @@ describe('Email recipient fields component', () => {
     ).toBeChecked();
 
     // Expand recipients list
-    userEvent.click(
+    await user.click(
       getByRole('button', {
         name: `Show ${attendees.length} more recipients`
       })
@@ -124,25 +129,23 @@ describe('Email recipient fields component', () => {
 
     await waitForElementToBeRemoved(() => getByRole('progressbar'));
 
-    userEvent.click(
+    await user.click(
       getByRole('button', {
         name: `Show ${attendees.length} more recipients`
       })
     );
 
-    userEvent.click(getByRole('button', { name: 'Add another recipient' }));
+    await user.click(getByRole('button', { name: 'Add another recipient' }));
 
     const submitButton = getByRole('button', { name: 'Add recipient' });
     expect(submitButton).toBeDisabled();
 
-    userEvent.type(
+    await user.type(
       getByRole('combobox', { name: 'New recipient name *' }),
       'Av'
     );
 
-    await waitForElementToBeRemoved(() => getByRole('progressbar'));
-
-    userEvent.click(
+    await user.click(
       await findByText(
         `${newAttendee.userInfo?.commonName}, ${newAttendee.userInfo?.euaUserId} (${newAttendee.userInfo?.email})`
       )
@@ -151,13 +154,13 @@ describe('Email recipient fields component', () => {
     const componentSelect = getByRole('combobox', {
       name: 'New recipient component'
     });
-    userEvent.selectOptions(componentSelect, [newAttendee.component!]);
+    await user.selectOptions(componentSelect, [newAttendee.component!]);
     expect(componentSelect).toHaveValue(newAttendee.component);
 
     const roleSelect = getByRole('combobox', {
       name: 'New recipient role *'
     });
-    userEvent.selectOptions(roleSelect, [newAttendee.role!]);
+    await user.selectOptions(roleSelect, [newAttendee.role!]);
     expect(roleSelect).toHaveValue(newAttendee.role);
   });
 });

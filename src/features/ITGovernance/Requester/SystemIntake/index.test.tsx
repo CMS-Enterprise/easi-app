@@ -82,6 +82,7 @@ describe('The System Intake page', () => {
         </MockedProvider>
       </MemoryRouter>
     );
+    const user = userEvent.setup();
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
     expect(
@@ -92,7 +93,7 @@ describe('The System Intake page', () => {
     ).toBeInTheDocument();
 
     const button = screen.getByRole('button', { name: 'Add another document' });
-    userEvent.click(button);
+    await user.click(button);
 
     // Check that upload form page renders
     expect(

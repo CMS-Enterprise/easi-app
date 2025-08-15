@@ -61,7 +61,7 @@ describe('GRB review decision record table', () => {
     ).toBeInTheDocument();
   });
 
-  it('Opens the vote comment modal', () => {
+  it('Opens the vote comment modal', async () => {
     render(
       <MemoryRouter>
         <DecisionRecord
@@ -70,6 +70,7 @@ describe('GRB review decision record table', () => {
         />
       </MemoryRouter>
     );
+    const user = userEvent.setup();
 
     const mockReviewer = grbReviewers[1];
 
@@ -81,7 +82,7 @@ describe('GRB review decision record table', () => {
       name: 'View comment'
     });
 
-    userEvent.click(viewCommentButton);
+    await user.click(viewCommentButton);
 
     const modal = screen.getByRole('dialog');
 

@@ -73,17 +73,19 @@ function RequestEdits() {
     ),
     defaultValues: {
       feedbackMessage: '',
-      copyTrbMailbox: true,
-      notifyEuaIds: []
+      copyTrbMailbox: true
     }
   });
 
   const [sendFeedback, feedbackResult] = useCreateTRBRequestFeedbackMutation();
 
   const submitForm = (formData: RequestEditsFields) => {
+    // Filter out fields that don't belong in the TRB feedback input
+    const { copyITGovMailbox, ...trbFeedbackData } = formData;
+
     sendFeedback({
       variables: {
-        input: { ...formData, trbRequestId: id, action: feedbackAction }
+        input: { ...trbFeedbackData, trbRequestId: id, action: feedbackAction }
       }
     })
       .then(result => {

@@ -38,9 +38,8 @@ import { ModalProvider } from '../RestartReviewModal/RestartReviewModalContext';
 import AddReviewerFromEua from './AddReviewerFromEua';
 import GRBReviewerForm from '.';
 
-const mockUsers = new MockUsers();
-const user = mockUsers.findByCommonName('Jerry Seinfeld')!;
-const contact = user.userInfo;
+const mockUsers = new MockUsers().findByCommonName('Jerry Seinfeld')!;
+const contact = mockUsers.userInfo;
 
 const contactLabel = `${contact.commonName}, ${contact.euaUserId} (${contact.email})`;
 
@@ -217,6 +216,10 @@ updatedGRBVotingInformation.grbReviewers = [updatedGRBReviewer];
 
 describe('GRB reviewer form', () => {
   const store = easiMockStore();
+  let user: ReturnType<typeof userEvent.setup>;
+  beforeEach(() => {
+    user = userEvent.setup();
+  });
   it('adds a GRB reviewer', async () => {
     render(
       <MemoryRouter
@@ -281,20 +284,20 @@ describe('GRB reviewer form', () => {
       name: 'GRB member name *'
     });
 
-    userEvent.type(contactInput, 'Je');
-    userEvent.click(await formContainer.findByText(contactLabel));
+    await user.type(contactInput, 'Je');
+    await user.click(await formContainer.findByText(contactLabel));
     expect(contactInput).toHaveValue(contactLabel);
 
     const votingRoleField = formContainer.getByRole('combobox', {
       name: 'Voting role *'
     });
-    userEvent.selectOptions(votingRoleField, 'VOTING');
+    await user.selectOptions(votingRoleField, 'VOTING');
     expect(votingRoleField).toHaveValue('VOTING');
 
     const grbRoleField = formContainer.getByRole('combobox', {
       name: 'GRB role *'
     });
-    userEvent.selectOptions(grbRoleField, 'CMCS_REP');
+    await user.selectOptions(grbRoleField, 'CMCS_REP');
     expect(grbRoleField).toHaveValue('CMCS_REP');
 
     const submitButton = formContainer.getByRole('button', {
@@ -306,7 +309,7 @@ describe('GRB reviewer form', () => {
     // TODO: Figure out why this is not valid at this point - then re-enable
     // expect(submitButton).not.toBeDisabled();
 
-    userEvent.click(submitButton);
+    await user.click(submitButton);
 
     const reviewerRow = await screen.findByTestId(
       `grbReviewer-${contact.euaUserId}`
@@ -393,11 +396,11 @@ describe('GRB reviewer form', () => {
     const votingRoleField = screen.getByRole('combobox', {
       name: 'Voting role *'
     });
-    userEvent.selectOptions(votingRoleField, 'NON_VOTING');
+    await user.selectOptions(votingRoleField, 'NON_VOTING');
     expect(votingRoleField).toHaveValue('NON_VOTING');
 
     const grbRoleField = screen.getByRole('combobox', { name: 'GRB role *' });
-    userEvent.selectOptions(grbRoleField, 'QIO_REP');
+    await user.selectOptions(grbRoleField, 'QIO_REP');
     expect(grbRoleField).toHaveValue('QIO_REP');
 
     const submitButton = screen.getByRole('button', { name: 'Save changes' });
@@ -407,7 +410,7 @@ describe('GRB reviewer form', () => {
     // TODO: Figure out why this is not valid at this point - then re-enable
     // expect(submitButton).not.toBeDisabled();
 
-    userEvent.click(submitButton);
+    await user.click(submitButton);
 
     const reviewerRow = await screen.findByTestId(
       `grbReviewer-${contact.euaUserId}`
@@ -443,8 +446,8 @@ describe('GRB reviewer form', () => {
       name: 'GRB member name *'
     });
 
-    userEvent.type(contactInput, 'Je');
-    userEvent.click(await screen.findByText(contactLabel));
+    await user.type(contactInput, 'Je');
+    await user.click(await screen.findByText(contactLabel));
     expect(contactInput).toHaveValue(contactLabel);
 
     const duplicateReviewerWarning = await screen.findByText(

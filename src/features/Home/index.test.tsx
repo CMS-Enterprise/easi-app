@@ -137,6 +137,8 @@ describe('The home page', () => {
           </MockedProvider>
         </MemoryRouter>
       );
+      const user = userEvent.setup();
+
       // Check open requests count
       expect(
         await screen.findByText(
@@ -148,7 +150,7 @@ describe('The home page', () => {
       const closedTab = await screen.findByRole('button', {
         name: 'Closed requests'
       });
-      userEvent.click(closedTab);
+      await user.click(closedTab);
 
       // Check closed requests count
       expect(
@@ -173,6 +175,8 @@ describe('The home page', () => {
         </MemoryRouter>
       );
 
+      const user = userEvent.setup();
+
       // check that select field defaults to TRB
       const selectField = getByTestId('select-admin-view');
       expect(selectField).toHaveValue('TRB');
@@ -181,7 +185,7 @@ describe('The home page', () => {
       ).toBeInTheDocument();
 
       // Switch to GRT view
-      userEvent.selectOptions(selectField, ['GRT']);
+      await user.selectOptions(selectField, ['GRT']);
       await findByRole('heading', { name: 'IT Governance requests' });
     });
   });

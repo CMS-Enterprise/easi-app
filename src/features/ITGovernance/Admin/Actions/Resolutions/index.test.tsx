@@ -34,7 +34,7 @@ describe('Resolutions page', () => {
     ).toBeInTheDocument();
   });
 
-  it('Renders for closed request with decision issued', () => {
+  it('Renders for closed request with decision issued', async () => {
     render(
       <MemoryRouter
         initialEntries={[`/it-governance/${systemIntake.id}/resolutions`]}
@@ -50,6 +50,7 @@ describe('Resolutions page', () => {
         </Route>
       </MemoryRouter>
     );
+    const user = userEvent.setup();
 
     expect(
       screen.getByRole('heading', {
@@ -59,7 +60,7 @@ describe('Resolutions page', () => {
 
     // Select first option
     const options = screen.getAllByRole('radio');
-    userEvent.click(options[0]);
+    await user.click(options[0]);
 
     // Check that current decision option is listed first and checked
     const currentDecisionOption = screen.getByRole('radio', {

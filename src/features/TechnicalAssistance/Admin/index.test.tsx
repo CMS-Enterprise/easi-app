@@ -1,6 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
+import { InMemoryCache } from '@apollo/client';
 import {
   render,
   screen,
@@ -20,6 +21,46 @@ import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import TRBRequestInfoWrapper from './_components/RequestContext';
 import AdminHome from '.';
+
+// Reusable constants to keep mocks consistent and avoid cache warnings
+const UNASSIGNED_LEAD = {
+  __typename: 'UserInfo' as const,
+  euaUserId: 'UNASSIGNED',
+  commonName: '',
+  email: ''
+};
+
+const COMPLETE_TASK_STATUSES = {
+  __typename: 'TRBTaskStatuses' as const,
+  formStatus: 'IN_PROGRESS',
+  feedbackStatus: 'CANNOT_START_YET',
+  consultPrepStatus: 'CANNOT_START_YET',
+  attendConsultStatus: 'CANNOT_START_YET',
+  guidanceLetterStatus: 'CANNOT_START_YET'
+};
+
+// Apollo cache with typePolicies to prevent merge warnings
+const cache = new InMemoryCache({
+  typePolicies: {
+    UserInfo: { keyFields: ['euaUserId'] },
+    // Treat embedded statuses as value objects and merge partials
+    TRBTaskStatuses: { keyFields: false },
+    TRBRequest: {
+      fields: {
+        trbLeadInfo: {
+          merge(_existing, incoming) {
+            return incoming;
+          }
+        },
+        taskStatuses: {
+          merge(existing, incoming) {
+            return { ...existing, ...incoming };
+          }
+        }
+      }
+    }
+  }
+});
 
 const trbRequestId = trbRequestSummary.id;
 
@@ -54,18 +95,14 @@ const getTrbRequestHomeQuery = {
         __typename: 'TRBRequest',
         id: trbRequestId,
         consultMeetingTime: null,
-        taskStatuses: trbRequestSummary.taskStatuses,
+        taskStatuses: COMPLETE_TASK_STATUSES,
         form: {
           id: 'c92ec6a6-cd5b-4be3-895a-e88f7de76c22',
           modifiedAt: null,
           __typename: 'TRBRequestForm'
         },
         guidanceLetter: null,
-        trbLeadInfo: {
-          commonName: '',
-          email: '',
-          __typename: 'UserInfo'
-        },
+        trbLeadInfo: UNASSIGNED_LEAD,
         documents: [],
         adminNotes: trbRequestSummary.adminNotes
       }
@@ -114,7 +151,11 @@ const getTrbRequestSummaryQuery = {
   },
   result: {
     data: {
-      trbRequest: trbRequestSummary
+      trbRequest: {
+        ...trbRequestSummary,
+        trbLeadInfo: UNASSIGNED_LEAD,
+        taskStatuses: COMPLETE_TASK_STATUSES
+      }
     }
   }
 };
@@ -137,7 +178,9 @@ describe('TRB admin home', () => {
         <MessageProvider>
           <Provider store={defaultStore}>
             <VerboseMockedProvider
+              cache={cache}
               mocks={[
+                // Some components may re-request; keep duplicate mocks
                 getTrbRequestSummaryQuery,
                 getTrbRequestSummaryQuery,
                 getTrbRequestHomeQuery,

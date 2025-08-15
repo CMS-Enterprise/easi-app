@@ -11,6 +11,7 @@ export default async function typeRichText(
   content: string
 ) {
   return act(async () => {
-    userEvent.type(element, content);
+    const user = userEvent.setup();
+    await user.type(element, content);
   });
 }

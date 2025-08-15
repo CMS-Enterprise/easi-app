@@ -6,6 +6,11 @@ import { DateTime } from 'luxon';
 import DatePickerFormatted from '.';
 
 describe('DatePickerFormatted', () => {
+  let user: ReturnType<typeof userEvent.setup>;
+  beforeEach(() => {
+    user = userEvent.setup();
+  });
+
   it('converts the `defaultValue` prop value to the default utc iso format on mount', () => {
     const handleChange = vi.fn();
     render(
@@ -20,7 +25,7 @@ describe('DatePickerFormatted', () => {
     expect(handleChange).toHaveBeenCalledWith('1999-09-09T00:00:00.000Z');
   });
 
-  it('converts the input value to the default utc iso format on change', () => {
+  it('converts the input value to the default utc iso format on change', async () => {
     const handleChange = vi.fn();
     const { getByRole } = render(
       <DatePickerFormatted
@@ -30,11 +35,11 @@ describe('DatePickerFormatted', () => {
       />
     );
 
-    userEvent.type(getByRole('textbox'), '09/09/1999');
+    await user.type(getByRole('textbox'), '09/09/1999');
     expect(handleChange).toHaveBeenCalledWith('1999-09-09T00:00:00.000Z');
   });
 
-  it('uses a custom format function if provided', () => {
+  it('uses a custom format function if provided', async () => {
     const handleChange = vi.fn();
 
     const customFormat = (dt: DateTime) => dt.toFormat('yyyy/MM/dd');
@@ -48,11 +53,11 @@ describe('DatePickerFormatted', () => {
       />
     );
 
-    userEvent.type(getByRole('textbox'), '12/31/2020');
+    await user.type(getByRole('textbox'), '12/31/2020');
     expect(handleChange).toHaveBeenCalledWith('2020/12/31');
   });
 
-  it('calls onChange with empty string for invalid dates', () => {
+  it('calls onChange with empty string for invalid dates', async () => {
     const handleChange = vi.fn();
     const { getByRole } = render(
       <DatePickerFormatted
@@ -62,11 +67,11 @@ describe('DatePickerFormatted', () => {
       />
     );
 
-    userEvent.type(getByRole('textbox'), '99/99/9999');
+    await user.type(getByRole('textbox'), '99/99/9999');
     expect(handleChange).toHaveBeenCalledWith('');
   });
 
-  it('calls onChange with empty string for incomplete dates', () => {
+  it('calls onChange with empty string for incomplete dates', async () => {
     const handleChange = vi.fn();
     const { getByRole } = render(
       <DatePickerFormatted
@@ -76,7 +81,7 @@ describe('DatePickerFormatted', () => {
       />
     );
 
-    userEvent.type(getByRole('textbox'), '11/11/1');
+    await user.type(getByRole('textbox'), '11/11/1');
     expect(handleChange).toHaveBeenCalledWith('');
   });
 

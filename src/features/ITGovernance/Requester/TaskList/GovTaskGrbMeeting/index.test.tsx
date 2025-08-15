@@ -415,9 +415,10 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
       renderGovTaskGrbMeeting(
         taskListState.grbMeetingInProgressNotScheduled.systemIntake!
       );
+      const user = userEvent.setup();
 
       // Click the Learn more button
-      userEvent.click(
+      await user.click(
         screen.getByRole('button', {
           name: 'Learn more about the GRB review types'
         })
@@ -431,7 +432,7 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
       expect(modalTitle).toBeInTheDocument();
 
       // Click the Go back button
-      userEvent.click(
+      await user.click(
         screen.getByRole('button', { name: 'Go back to task list' })
       );
 

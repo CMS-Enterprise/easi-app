@@ -52,6 +52,10 @@ const updateTrbRequestLeadMutation: MockedQuery<
 
 describe('TrbAssignLeadModal', () => {
   const store = easiMockStore({ euaUserId: trbLeadInfo.euaUserId });
+  let user: ReturnType<typeof userEvent.setup>;
+  beforeEach(() => {
+    user = userEvent.setup();
+  });
 
   it('opens and lists trb members', async () => {
     const modalRef = React.createRef<ModalRef>();
@@ -125,9 +129,9 @@ describe('TrbAssignLeadModal', () => {
       i18next.t<string>('technicalAssistance:assignTrbLeadModal.assignMyself')
     );
 
-    userEvent.click(getByTestId(`trbLead-${trbLeadInfo.euaUserId}`));
+    await user.click(getByTestId(`trbLead-${trbLeadInfo.euaUserId}`));
 
-    userEvent.click(
+    await user.click(
       getByRole('button', {
         name: i18next.t<string>('technicalAssistance:assignTrbLeadModal.submit')
       })
@@ -175,9 +179,9 @@ describe('TrbAssignLeadModal', () => {
       </Provider>
     );
 
-    userEvent.click(await findByTestId(`trbLead-${trbLeadInfo.euaUserId}`));
+    await user.click(await findByTestId(`trbLead-${trbLeadInfo.euaUserId}`));
 
-    userEvent.click(
+    await user.click(
       getByRole('button', {
         name: i18next.t<string>('technicalAssistance:assignTrbLeadModal.submit')
       })

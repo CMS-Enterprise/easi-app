@@ -38,7 +38,14 @@ exports[`MentionTextArea component > renders the editable text area component 1`
       tabindex="0"
       translate="no"
     >
-      This is the text!
+      <p>
+        <br
+          class="ProseMirror-trailingBreak"
+        />
+      </p>
+      <p>
+        This is the text!
+      </p>
     </div>
   </div>
 </DocumentFragment>
