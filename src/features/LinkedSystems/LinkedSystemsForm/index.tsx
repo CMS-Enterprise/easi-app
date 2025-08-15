@@ -128,7 +128,8 @@ const LinkedSystemsForm = () => {
   const history = useHistory();
 
   const form = useEasiForm<LinkedSystemsFormFields>({
-    resolver: yupResolver(linkedSystemsSchema)
+    resolver: yupResolver(linkedSystemsSchema),
+    mode: 'onChange'
   });
 
   const {
@@ -138,7 +139,7 @@ const LinkedSystemsForm = () => {
     register,
     setFocus,
     setValue,
-    formState: { isDirty, errors }
+    formState: { isDirty, errors, isValid }
   } = form;
 
   const { t } = useTranslation([
@@ -536,7 +537,7 @@ const LinkedSystemsForm = () => {
               </Grid>
             </Grid>
 
-            <Button type="submit">
+            <Button type="submit" disabled={!isValid}>
               {linkedSystemID ? (
                 <Trans i18nKey="itGov:link.form.saveChanges" />
               ) : (
