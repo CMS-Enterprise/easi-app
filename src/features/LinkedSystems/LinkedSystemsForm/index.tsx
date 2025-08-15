@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Controller, FieldPath, FormProvider } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
@@ -35,6 +35,7 @@ import IconButton from 'components/IconButton';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import RequiredAsterisk from 'components/RequiredAsterisk';
+import RequiredFieldsText from 'components/RequiredFieldsText';
 import Spinner from 'components/Spinner';
 import useMessage from 'hooks/useMessage';
 import flattenFormErrors from 'utils/flattenFormErrors';
@@ -275,24 +276,19 @@ const LinkedSystemsForm = () => {
           {linkedSystemID ? t('editFormSubheader') : t('addFormSubheader')}
         </p>
 
-        <p className="margin-top-2 margin-bottom-5 text-base">
-          <Trans
-            i18nKey="action:fieldsMarkedRequired"
-            components={{ asterisk: <RequiredAsterisk /> }}
-          />
-        </p>
-        <p>
-          <IconButton
-            icon={<Icon.ArrowBack className="margin-right-05" aria-hidden />}
-            type="button"
-            unstyled
-            onClick={() => {
-              history.goBack();
-            }}
-          >
-            {linkedSystemID ? t('dontEditAndReturn') : t('dontAddAndReturn')}
-          </IconButton>
-        </p>
+        <RequiredFieldsText className="margin-top-2 margin-bottom-5" />
+
+        <IconButton
+          icon={<Icon.ArrowBack className="margin-right-05" aria-hidden />}
+          type="button"
+          unstyled
+          onClick={() => {
+            history.goBack();
+          }}
+        >
+          {linkedSystemID ? t('dontEditAndReturn') : t('dontAddAndReturn')}
+        </IconButton>
+
         {Object.keys(errors).length > 0 && (
           <ErrorAlert
             testId="contact-details-errors"
