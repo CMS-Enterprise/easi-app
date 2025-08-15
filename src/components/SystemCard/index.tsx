@@ -22,6 +22,7 @@ export type SystemCardProps = {
   businessOwnerOrg: string | null | undefined;
   businessOwners: string | null | undefined;
   systemRelationshipType?: SystemRelationshipType[];
+  otherSystemRelationshipDescription?: string;
 };
 
 const SystemCard = ({
@@ -32,7 +33,8 @@ const SystemCard = ({
   acronym,
   businessOwnerOrg,
   businessOwners,
-  systemRelationshipType
+  systemRelationshipType,
+  otherSystemRelationshipDescription
 }: SystemCardProps) => {
   const { t } = useTranslation('admin');
 
@@ -52,9 +54,11 @@ const SystemCard = ({
         {!!systemRelationshipType && (
           <div className="bg-primary-lighter margin-bottom-1 padding-y-105 padding-right-105">
             <ul className="margin-y-0">
-              {systemRelationshipType?.map(type => (
+              {systemRelationshipType.map(type => (
                 <li key={type}>
                   {t(`linkedSystems:relationshipTypes.${type}`)}
+                  {type === SystemRelationshipType.OTHER &&
+                    ` (${otherSystemRelationshipDescription})`}
                 </li>
               ))}
             </ul>

@@ -63,6 +63,9 @@ const SystemCardTable = ({ systems }: SystemCardTableProps) => {
                 ?.map(role => getPersonFullName(role))
                 .join(', ')}
               systemRelationshipType={row.original.systemRelationshipType}
+              otherSystemRelationshipDescription={
+                row.original.otherSystemRelationshipDescription
+              }
             />
           )
         }
