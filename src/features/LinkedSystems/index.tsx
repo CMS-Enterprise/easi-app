@@ -30,7 +30,7 @@ import RequiredAsterisk from 'components/RequiredAsterisk';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import useMessage from 'hooks/useMessage';
 
-import LinkedSystemTable from './LinkedSystemsTable';
+import LinkedSystemsTable from './LinkedSystemsTable';
 
 const LinkedSystems = () => {
   // Id refers to system intake
@@ -316,6 +316,7 @@ const LinkedSystems = () => {
                   isFromTaskList ? { from: 'task-list' } : undefined
                 );
               }}
+              disabled={noSystemsUsed}
             >
               {t('itGov:link.form.addASystem')}
             </Button>
@@ -328,7 +329,7 @@ const LinkedSystems = () => {
               onChange={e => handleNoSystemsUsedCheckbox()}
               onBlur={() => null}
             />
-            <LinkedSystemTable
+            <LinkedSystemsTable
               systems={
                 (data?.systemIntakeSystems as SystemIntakeSystem[]) || []
               }
@@ -337,6 +338,7 @@ const LinkedSystems = () => {
               systemIntakeId={id}
               onRemoveLink={handleRemoveModal}
               isFromTaskList={isFromTaskList}
+              noSystemsUsed={noSystemsUsed}
             />
           </Grid>
         </Grid>

@@ -40,6 +40,7 @@ type TableProps = {
   systemIntakeId: string;
   onRemoveLink: (id: string) => void;
   isFromTaskList?: boolean;
+  noSystemsUsed?: boolean;
 };
 
 const organizeCedarSystems = (
@@ -58,7 +59,8 @@ const LinkedSystemsTable = ({
   defaultPageSize = 10,
   systemIntakeId,
   onRemoveLink,
-  isFromTaskList
+  isFromTaskList,
+  noSystemsUsed
 }: TableProps) => {
   const { t } = useTranslation('linkedSystems');
 
@@ -287,9 +289,15 @@ const LinkedSystemsTable = ({
         )}
       </div>
 
-      {(!systems || systems.length === 0) && (
+      {!noSystemsUsed && (!systems || systems.length === 0) && (
         <Alert type="info" className="margin-top-0">
           <Trans i18nKey="linkedSystems:linkedSystemsTable.noSystemsListed" />
+        </Alert>
+      )}
+
+      {noSystemsUsed && (
+        <Alert type="info" className="margin-top-0">
+          <Trans i18nKey="linkedSystems:linkedSystemsTable.noSystemsRelated" />
         </Alert>
       )}
       {cedarSystemsError && (
