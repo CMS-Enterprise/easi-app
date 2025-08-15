@@ -83,3 +83,89 @@ export const UnlinkTrbRequestRelation = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const GetTrbRequestRelations = gql(/* GraphQL */ `
+  query systemIntake($id: UUID!) {
+    systemIntake(id: $id) {
+      id
+      systemIntakeSystems {
+        id
+        systemIntakeID
+        systemID
+        otherSystemRelationshipDescription
+      }
+    }
+  }
+`);
+
+export const DeleteSystemLink = gql(/* GraphQL */ `
+  mutation deleteSystemLink($systemIntakeSystemID: UUID!) {
+    deleteSystemLink(systemIntakeSystemID: $systemIntakeSystemID) {
+      systemIntakeSystem {
+        id
+        systemIntakeID
+        systemID
+        systemRelationshipType
+        otherSystemRelationshipDescription
+      }
+      userErrors {
+        message
+        path
+      }
+    }
+  }
+`);
+
+export const AddSystemLink = gql(/* GraphQL */ `
+  mutation addSystemLink($input: AddSystemLinkInput!) {
+    addSystemLink(input: $input) {
+      id
+      systemIntakeID
+      systemID
+      systemRelationshipType
+      otherSystemRelationshipDescription
+    }
+  }
+`);
+
+export const UpdateSystemLink = gql(/* GraphQL */ `
+  mutation updateSystemLink($input: UpdateSystemLinkInput!) {
+    updateSystemLink(input: $input) {
+      systemIntakeSystem {
+        id
+        systemIntakeID
+        systemID
+        systemRelationshipType
+        otherSystemRelationshipDescription
+      }
+      userErrors {
+        message
+        path
+      }
+    }
+  }
+`);
+
+export const GetSystemIntakeSystems = gql(/* GraphQL */ `
+  query GetSystemIntakeSystems($systemIntakeId: UUID!) {
+    systemIntakeSystems(systemIntakeId: $systemIntakeId) {
+      id
+      systemIntakeID
+      systemID
+      systemRelationshipType
+      otherSystemRelationshipDescription
+    }
+  }
+`);
+
+export const GetSystemIntakeSystem = gql(/* GraphQL */ `
+  query GetSystemIntakeSystem($systemIntakeSystemID: UUID!) {
+    systemIntakeSystem(systemIntakeSystemID: $systemIntakeSystemID) {
+      id
+      systemIntakeID
+      systemID
+      systemRelationshipType
+      otherSystemRelationshipDescription
+    }
+  }
+`);

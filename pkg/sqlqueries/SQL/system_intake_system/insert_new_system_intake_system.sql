@@ -17,4 +17,5 @@ VALUES (
     NOW(),
     :relationship_type,
     :other_system_relationship_description
-) ON CONFLICT DO NOTHING;
+)
+RETURNING *;

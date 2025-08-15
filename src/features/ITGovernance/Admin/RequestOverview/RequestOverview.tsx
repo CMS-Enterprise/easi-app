@@ -6,7 +6,6 @@ import { Route, Switch, useParams } from 'react-router-dom';
 import classnames from 'classnames';
 import DocumentUploadForm from 'features/ITGovernance/_components/DocumentUploadForm';
 import PresentationDeckUpload from 'features/ITGovernance/Requester/TaskList/PresentationDeckUpload';
-import AdditionalInformation from 'features/Miscellaneous/AdditionalInformation';
 import NotFound from 'features/Miscellaneous/NotFound';
 import {
   SystemIntakeStatusAdmin,
@@ -38,6 +37,7 @@ import LifecycleID from '../LifecycleID';
 import Notes from '../Notes';
 import subNavItems from '../subNavItems';
 import Summary from '../Summary';
+import SystemInformation from '../SystemInformation';
 
 import '../index.scss';
 
@@ -146,6 +146,7 @@ const RequestOverview = () => {
               <PageLoading />
             </div>
           )}
+
           {!loading && !!systemIntake && (
             <section
               className={classnames({ 'desktop:grid-col-9': !fullPageLayout })}
@@ -195,13 +196,8 @@ const RequestOverview = () => {
 
                 <Route
                   exact
-                  path="/it-governance/:systemId/additional-information"
-                  render={() => (
-                    <AdditionalInformation
-                      request={systemIntake}
-                      type="itgov"
-                    />
-                  )}
+                  path="/it-governance/:systemId/system-information"
+                  render={() => <SystemInformation request={systemIntake} />}
                 />
 
                 <Route

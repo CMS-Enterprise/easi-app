@@ -1,6 +1,6 @@
 import React, { ComponentProps } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   SystemIntakeGRBReviewType,
@@ -102,24 +102,33 @@ describe('GRB review form step wrapper', () => {
       }
     });
 
-    expect(await screen.findByTestId('stepIndicator-0')).toHaveAttribute(
-      'aria-disabled',
-      'false'
+    // Wait for the async step-formatting effect to complete
+    await waitFor(() =>
+      expect(screen.getByTestId('stepIndicator-0')).toHaveAttribute(
+        'aria-disabled',
+        'false'
+      )
     );
 
-    expect(await screen.findByTestId('stepIndicator-1')).toHaveAttribute(
-      'aria-disabled',
-      'false'
+    await waitFor(() =>
+      expect(screen.getByTestId('stepIndicator-1')).toHaveAttribute(
+        'aria-disabled',
+        'false'
+      )
     );
 
-    expect(await screen.findByTestId('stepIndicator-2')).toHaveAttribute(
-      'aria-disabled',
-      'false'
+    await waitFor(() =>
+      expect(screen.getByTestId('stepIndicator-2')).toHaveAttribute(
+        'aria-disabled',
+        'false'
+      )
     );
 
-    expect(await screen.findByTestId('stepIndicator-3')).toHaveAttribute(
-      'aria-disabled',
-      'false'
+    await waitFor(() =>
+      expect(screen.getByTestId('stepIndicator-3')).toHaveAttribute(
+        'aria-disabled',
+        'false'
+      )
     );
   });
 
@@ -146,17 +155,26 @@ describe('GRB review form step wrapper', () => {
     const mockOnSubmit = vi.fn().mockResolvedValue({});
     renderComponent({ onSubmit: mockOnSubmit });
 
-    expect(await screen.findByTestId('stepIndicator-0'));
+    await waitFor(() =>
+      expect(screen.getByTestId('stepIndicator-1')).toHaveAttribute(
+        'aria-disabled',
+        'false'
+      )
+    );
 
-    expect(screen.getAllByText('Review type')).not.toBeNull();
+    await userEvent.click(screen.getByTestId('stepIndicator-1'));
 
-    // Click next step in header
-    userEvent.click(screen.getByTestId('stepIndicator-1'));
+    await waitFor(() =>
+      expect(
+        screen.getByRole('heading', { name: 'Step 2 of 4 Presentation' })
+      ).toBeInTheDocument()
+    );
 
-    // Next step should be selected
-    expect(await screen.findByTestId('stepIndicator-1')).toHaveAttribute(
-      'aria-current',
-      'true'
+    await waitFor(() =>
+      expect(screen.getByTestId('stepIndicator-1')).toHaveAttribute(
+        'aria-current',
+        'true'
+      )
     );
   });
 

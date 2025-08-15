@@ -1,6 +1,7 @@
 import React from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { GridContainer } from '@trussworks/react-uswds';
+import LinkedSystemsForm from 'features/LinkedSystems/LinkedSystemsForm';
 import { NotFoundPartial } from 'features/Miscellaneous/NotFound';
 import RequestLinkForm from 'features/RequestLinking/RequestLinkForm';
 
@@ -97,7 +98,7 @@ function TechnicalAssistance() {
         <TRBRequestInfoWrapper>
           {/* Defining outside parent route to trigger parent rerender/refetch after mutation */}
           <Route path="/trb/:id/additional-information/link">
-            <RequestLinkForm requestType="trb" fromAdmin />
+            <LinkedSystemsForm />
           </Route>
 
           <Route exact path={`${path}/:id/:activePage`}>

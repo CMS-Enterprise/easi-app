@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, Grid, Icon } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import { SystemRelationshipType } from 'gql/generated/graphql';
 
 import {
   DescriptionDefinition,
@@ -20,6 +21,8 @@ export type SystemCardProps = {
   acronym: string | null | undefined;
   businessOwnerOrg: string | null | undefined;
   businessOwners: string | null | undefined;
+  systemRelationshipType?: SystemRelationshipType[];
+  otherSystemRelationshipDescription?: string | null;
 };
 
 const SystemCard = ({
@@ -29,7 +32,9 @@ const SystemCard = ({
   description,
   acronym,
   businessOwnerOrg,
-  businessOwners
+  businessOwners,
+  systemRelationshipType,
+  otherSystemRelationshipDescription
 }: SystemCardProps) => {
   const { t } = useTranslation('admin');
 
@@ -39,13 +44,26 @@ const SystemCard = ({
       className={classnames('grid-col-12 system-card', className)}
     >
       <Grid mobile={{ col: 12 }}>
-        <div className="system-card__header easi-header__basic">
+        <div className="system-card__header">
           <h3 className="system-card__title margin-top-0 margin-bottom-1">
             {name}
           </h3>
+          {acronym && <p className="margin-0 margin-left-1">({acronym})</p>}
         </div>
 
-        <p className="margin-0">{acronym}</p>
+        {!!systemRelationshipType && (
+          <div className="bg-primary-lighter margin-bottom-1 padding-y-105 padding-right-105">
+            <ul className="margin-y-0">
+              {systemRelationshipType.map(type => (
+                <li key={type}>
+                  {t(`linkedSystems:relationshipTypes.${type}`)}
+                  {type === SystemRelationshipType.OTHER &&
+                    ` (${otherSystemRelationshipDescription})`}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <p className="system-card__body-text line-height-body-4">
           {description}
