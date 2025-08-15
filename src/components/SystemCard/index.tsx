@@ -22,7 +22,7 @@ export type SystemCardProps = {
   businessOwnerOrg: string | null | undefined;
   businessOwners: string | null | undefined;
   systemRelationshipType?: SystemRelationshipType[];
-  otherSystemRelationshipDescription?: string;
+  otherSystemRelationshipDescription?: string | null;
 };
 
 const SystemCard = ({
