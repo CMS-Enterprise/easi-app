@@ -350,7 +350,9 @@ const LinkedSystems = ({ fromAdmin }: { fromAdmin?: boolean }) => {
               })
             }
           >
-            {t(`itGov:link.form.continueTaskList`)}
+            {isFromTaskList
+              ? t(`itGov:link.form.saveChanges`)
+              : t(`itGov:link.form.continueTaskList`)}
           </Button>
         </ButtonGroup>
 
