@@ -48,8 +48,6 @@ export default {
   },
   unableToRetrieveCedarSystems:
     'We were unable to retrieve Cedar Systems. Please try again. If this issue persists, please contact <link1>EnterpriseArchitecture@cms.hhs.gov</link1>',
-  unableToUpdateSystemLinks:
-    'We were unable to update the linked Cedar Systems. Please try again. If this issue persists, please contact <link1>EnterpriseArchitecture@cms.hhs.gov</link1>',
   unableToRemoveLinkedSystem:
     'There was an issue removing the link between this request and the selected system. Please try again, and if the problem persists, try again later.',
   unableToRemoveAllLinkedSystem:
@@ -59,6 +57,8 @@ export default {
     'You linked <span>{{updatedSystem}}</span> to this IT Governance request.',
   savedChangesToALink:
     'You saved changes to the system link for <span>{{updatedSystem}}</span>.',
+  errorLinking:
+    'There was an issue saving your changes. Please try again, and if the problem persists, try again later.',
   successfullyDeleted: 'You have removed a linked system from this request.',
   removeLinkedSystemModal: {
     heading: 'Remove linked system?',
