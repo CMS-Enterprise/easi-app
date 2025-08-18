@@ -1,0 +1,507 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`DateTimePicker Component > matches snapshot 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="display-flex margin-top-1"
+    >
+      <div
+        class="react-datepicker-wrapper"
+      >
+        <div
+          class="react-datepicker__input-container"
+        >
+          <input
+            class=""
+            id="test-date-picker"
+            name="testDate"
+            type="text"
+            value="06/15/2023"
+          />
+        </div>
+      </div>
+      <div
+        class="mint-datetime-picker-warning"
+      >
+        <span
+          class="usa-tooltip"
+          data-testid="tooltipWrapper"
+        >
+          <button
+            aria-describedby="tooltip-550000"
+            class="usa-button usa-tooltip__trigger padding-0 margin-0 margin-top-1 bg-transparent outline-0"
+            data-testid="triggerElement"
+            tabindex="0"
+            title=""
+            type="button"
+          >
+            <svg
+              aria-label="Date is in the past"
+              class="usa-icon usa-icon--size-3 text-warning-dark"
+              focusable="false"
+              height="1em"
+              role="img"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
+              />
+            </svg>
+          </button>
+          <span
+            aria-hidden="true"
+            class="usa-tooltip__body"
+            data-testid="tooltipBody"
+            id="tooltip-550000"
+            role="tooltip"
+            title="You’ve entered one or more dates that are in the past. Please double-check your dates to make sure they’re accurate."
+          >
+            You’ve entered one or more dates that are in the past. Please double-check your dates to make sure they’re accurate.
+          </span>
+        </span>
+      </div>
+      <button
+        aria-label="Open date picker"
+        class="usa-button usa-button--unstyled text-black padding-0 margin-left-1 margin-top-0"
+        data-testid="button"
+        type="button"
+      >
+        <svg
+          class="usa-icon usa-icon--size-3"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z"
+          />
+        </svg>
+      </button>
+    </div>
+    <div
+      aria-label="Date is in the past"
+      class="usa-alert usa-alert--warning usa-alert--slim margin-top-2"
+      data-testid="alert"
+      role="alert"
+    >
+      <div
+        class="usa-alert__body"
+      >
+        <p
+          class="usa-alert__text"
+        >
+          You’ve entered one or more dates that are in the past. Please double-check your dates to make sure they’re accurate.
+        </p>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`DateTimePicker Component > matches snapshot with alertText disabled 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="display-flex margin-top-1"
+    >
+      <div
+        class="react-datepicker-wrapper"
+      >
+        <div
+          class="react-datepicker__input-container"
+        >
+          <input
+            class=""
+            id="test-date-picker"
+            name="testDate"
+            type="text"
+            value="01/01/2020"
+          />
+        </div>
+      </div>
+      <div
+        class="mint-datetime-picker-warning"
+      >
+        <span
+          class="usa-tooltip"
+          data-testid="tooltipWrapper"
+        >
+          <button
+            aria-describedby="tooltip-550000"
+            class="usa-button usa-tooltip__trigger padding-0 margin-0 margin-top-1 bg-transparent outline-0"
+            data-testid="triggerElement"
+            tabindex="0"
+            title=""
+            type="button"
+          >
+            <svg
+              aria-label="Date is in the past"
+              class="usa-icon usa-icon--size-3 text-warning-dark"
+              focusable="false"
+              height="1em"
+              role="img"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
+              />
+            </svg>
+          </button>
+          <span
+            aria-hidden="true"
+            class="usa-tooltip__body"
+            data-testid="tooltipBody"
+            id="tooltip-550000"
+            role="tooltip"
+            title="You’ve entered one or more dates that are in the past. Please double-check your dates to make sure they’re accurate."
+          >
+            You’ve entered one or more dates that are in the past. Please double-check your dates to make sure they’re accurate.
+          </span>
+        </span>
+      </div>
+      <button
+        aria-label="Open date picker"
+        class="usa-button usa-button--unstyled text-black padding-0 margin-left-1 margin-top-0"
+        data-testid="button"
+        type="button"
+      >
+        <svg
+          class="usa-icon usa-icon--size-3"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z"
+          />
+        </svg>
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`DateTimePicker Component > matches snapshot with custom className 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="display-flex margin-top-1 test-class"
+    >
+      <div
+        class="react-datepicker-wrapper"
+      >
+        <div
+          class="react-datepicker__input-container"
+        >
+          <input
+            class=""
+            id="test-date-picker"
+            name="testDate"
+            type="text"
+            value="06/15/2023"
+          />
+        </div>
+      </div>
+      <div
+        class="mint-datetime-picker-warning"
+      >
+        <span
+          class="usa-tooltip"
+          data-testid="tooltipWrapper"
+        >
+          <button
+            aria-describedby="tooltip-550000"
+            class="usa-button usa-tooltip__trigger padding-0 margin-0 margin-top-1 bg-transparent outline-0"
+            data-testid="triggerElement"
+            tabindex="0"
+            title=""
+            type="button"
+          >
+            <svg
+              aria-label="Date is in the past"
+              class="usa-icon usa-icon--size-3 text-warning-dark"
+              focusable="false"
+              height="1em"
+              role="img"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
+              />
+            </svg>
+          </button>
+          <span
+            aria-hidden="true"
+            class="usa-tooltip__body"
+            data-testid="tooltipBody"
+            id="tooltip-550000"
+            role="tooltip"
+            title="You’ve entered one or more dates that are in the past. Please double-check your dates to make sure they’re accurate."
+          >
+            You’ve entered one or more dates that are in the past. Please double-check your dates to make sure they’re accurate.
+          </span>
+        </span>
+      </div>
+      <button
+        aria-label="Open date picker"
+        class="usa-button usa-button--unstyled text-black padding-0 margin-left-1 margin-top-0"
+        data-testid="button"
+        type="button"
+      >
+        <svg
+          class="usa-icon usa-icon--size-3"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z"
+          />
+        </svg>
+      </button>
+    </div>
+    <div
+      aria-label="Date is in the past"
+      class="usa-alert usa-alert--warning usa-alert--slim margin-top-2"
+      data-testid="alert"
+      role="alert"
+    >
+      <div
+        class="usa-alert__body"
+      >
+        <p
+          class="usa-alert__text"
+        >
+          You’ve entered one or more dates that are in the past. Please double-check your dates to make sure they’re accurate.
+        </p>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`DateTimePicker Component > matches snapshot with disabled state 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="display-flex margin-top-1"
+    >
+      <div
+        class="react-datepicker-wrapper"
+      >
+        <div
+          class="react-datepicker__input-container"
+        >
+          <input
+            class=""
+            disabled=""
+            id="test-date-picker"
+            name="testDate"
+            type="text"
+            value="06/15/2023"
+          />
+        </div>
+      </div>
+      <div
+        class="mint-datetime-picker-warning"
+      >
+        <span
+          class="usa-tooltip"
+          data-testid="tooltipWrapper"
+        >
+          <button
+            aria-describedby="tooltip-550000"
+            class="usa-button usa-tooltip__trigger padding-0 margin-0 margin-top-1 bg-transparent outline-0"
+            data-testid="triggerElement"
+            tabindex="0"
+            title=""
+            type="button"
+          >
+            <svg
+              aria-label="Date is in the past"
+              class="usa-icon usa-icon--size-3 text-warning-dark"
+              focusable="false"
+              height="1em"
+              role="img"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
+              />
+            </svg>
+          </button>
+          <span
+            aria-hidden="true"
+            class="usa-tooltip__body"
+            data-testid="tooltipBody"
+            id="tooltip-550000"
+            role="tooltip"
+            title="You’ve entered one or more dates that are in the past. Please double-check your dates to make sure they’re accurate."
+          >
+            You’ve entered one or more dates that are in the past. Please double-check your dates to make sure they’re accurate.
+          </span>
+        </span>
+      </div>
+      <button
+        aria-label="Open date picker"
+        class="usa-button usa-button--unstyled text-black padding-0 margin-left-1 margin-top-0"
+        data-testid="button"
+        disabled=""
+        type="button"
+      >
+        <svg
+          class="usa-icon usa-icon--size-3"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z"
+          />
+        </svg>
+      </button>
+    </div>
+    <div
+      aria-label="Date is in the past"
+      class="usa-alert usa-alert--warning usa-alert--slim margin-top-2"
+      data-testid="alert"
+      role="alert"
+    >
+      <div
+        class="usa-alert__body"
+      >
+        <p
+          class="usa-alert__text"
+        >
+          You’ve entered one or more dates that are in the past. Please double-check your dates to make sure they’re accurate.
+        </p>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`DateTimePicker Component > matches snapshot with past date warning 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="display-flex margin-top-1"
+    >
+      <div
+        class="react-datepicker-wrapper"
+      >
+        <div
+          class="react-datepicker__input-container"
+        >
+          <input
+            class=""
+            id="test-date-picker"
+            name="testDate"
+            type="text"
+            value="01/01/2020"
+          />
+        </div>
+      </div>
+      <div
+        class="mint-datetime-picker-warning"
+      >
+        <span
+          class="usa-tooltip"
+          data-testid="tooltipWrapper"
+        >
+          <button
+            aria-describedby="tooltip-550000"
+            class="usa-button usa-tooltip__trigger padding-0 margin-0 margin-top-1 bg-transparent outline-0"
+            data-testid="triggerElement"
+            tabindex="0"
+            title=""
+            type="button"
+          >
+            <svg
+              aria-label="Date is in the past"
+              class="usa-icon usa-icon--size-3 text-warning-dark"
+              focusable="false"
+              height="1em"
+              role="img"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
+              />
+            </svg>
+          </button>
+          <span
+            aria-hidden="true"
+            class="usa-tooltip__body"
+            data-testid="tooltipBody"
+            id="tooltip-550000"
+            role="tooltip"
+            title="You’ve entered one or more dates that are in the past. Please double-check your dates to make sure they’re accurate."
+          >
+            You’ve entered one or more dates that are in the past. Please double-check your dates to make sure they’re accurate.
+          </span>
+        </span>
+      </div>
+      <button
+        aria-label="Open date picker"
+        class="usa-button usa-button--unstyled text-black padding-0 margin-left-1 margin-top-0"
+        data-testid="button"
+        type="button"
+      >
+        <svg
+          class="usa-icon usa-icon--size-3"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z"
+          />
+        </svg>
+      </button>
+    </div>
+    <div
+      aria-label="Date is in the past"
+      class="usa-alert usa-alert--warning usa-alert--slim margin-top-2"
+      data-testid="alert"
+      role="alert"
+    >
+      <div
+        class="usa-alert__body"
+      >
+        <p
+          class="usa-alert__text"
+        >
+          You’ve entered one or more dates that are in the past. Please double-check your dates to make sure they’re accurate.
+        </p>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
