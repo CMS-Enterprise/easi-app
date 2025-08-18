@@ -643,8 +643,8 @@ type SystemIntakeExpireLCIDInput struct {
 
 // Represents the source of funding for a system
 type SystemIntakeFundingSourceInput struct {
-	FundingNumber *string `json:"fundingNumber,omitempty"`
-	Source        *string `json:"source,omitempty"`
+	ProjectNumber *string `json:"projectNumber,omitempty"`
+	Investment    *string `json:"investment,omitempty"`
 }
 
 // The input required to specify the funding source(s) for a system intake

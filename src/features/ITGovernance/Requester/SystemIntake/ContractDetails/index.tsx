@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { FieldErrors, FieldPath } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -28,6 +28,10 @@ import FeedbackBanner from 'components/FeedbackBanner';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
 import FundingSources from 'components/FundingSources';
+import {
+  formatFundingSourcesForApi,
+  formatFundingSourcesForApp
+} from 'components/FundingSources/utils';
 import HelpText from 'components/HelpText';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
@@ -65,8 +69,6 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
   const history = useHistory();
   const { t } = useTranslation('intake');
 
-  const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
-
   const {
     id,
     fundingSources,
@@ -90,8 +92,8 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
   const form = useEasiForm<ContractDetailsForm>({
     resolver: yupResolver(SystemIntakeValidationSchema.contractDetails),
     defaultValues: {
-      existingFunding,
-      fundingSources,
+      existingFunding: existingFunding !== false,
+      fundingSources: formatFundingSourcesForApp(fundingSources),
       annualSpending: {
         currentAnnualSpending: annualSpending?.currentAnnualSpending || '',
         currentAnnualSpendingITPortion:
@@ -169,10 +171,8 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
         input: {
           id,
           fundingSources: {
-            existingFunding: payload.fundingSources.length > 0,
-            fundingSources: payload.fundingSources.map(
-              ({ id: sourceId, ...source }) => source
-            )
+            existingFunding: payload.existingFunding,
+            fundingSources: formatFundingSourcesForApi(payload.fundingSources)
           },
           annualSpending: payload.annualSpending,
           contract: {
@@ -289,13 +289,24 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
           >
             <Fieldset>
               <legend className="usa-label">
-                {t('contractDetails.fundingSources.label')}
+                {t('fundingSources:whichFundingSources')}
               </legend>
-              <HelpText className="margin-top-1" id="fundingSourcesHelpText">
-                {t('contractDetails.fundingSources.helpText')}
+              <HelpText className="margin-top-05" id="fundingSourcesHelpText">
+                <Trans
+                  i18nKey="fundingSources:helpText"
+                  components={{
+                    a: <a href="mailto:IT_Governance@cms.hhs.gov">email</a>
+                  }}
+                />
               </HelpText>
 
-              <FundingSources disableParentForm={setDisableSubmit} />
+              <ErrorMessage
+                errors={errors}
+                name="fundingSources"
+                as={FieldErrorMsg}
+              />
+
+              <FundingSources />
             </Fieldset>
           </FieldGroup>
 
@@ -474,8 +485,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
 
           <Pager
             next={{
-              type: 'submit',
-              disabled: disableSubmit
+              type: 'submit'
             }}
             back={{
               type: 'button',

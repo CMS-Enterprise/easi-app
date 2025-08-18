@@ -37,13 +37,13 @@ const FundingSourcesListItem = ({
   handleEdit,
   className
 }: FundingSourcesListItemProps) => {
-  const { t } = useTranslation('intake');
+  const { t } = useTranslation('technicalAssistance');
 
   const fundingNumberText = `${t(
-    'contractDetails.fundingSources.fundingNumber'
+    'basic.fundingSources.fundingNumber'
   )}: ${fundingNumber}`;
   const fundingSourceText = `${t(
-    'contractDetails.fundingSources.fundingSources'
+    'basic.fundingSources.fundingSources'
   )}: ${sources.join(', ')}`;
   return (
     <li
@@ -51,7 +51,7 @@ const FundingSourcesListItem = ({
       id={`fundingNumber-${fundingNumber}`}
     >
       <p className="text-bold font-body-sm margin-bottom-0">
-        {t('contractDetails.fundingSources.fundingSource')}
+        {t('basic.fundingSources.fundingSource')}
       </p>
       <p className="margin-y-05">{fundingNumberText}</p>
       <p className="margin-y-05">{fundingSourceText}</p>
@@ -98,7 +98,7 @@ const FundingSourceForm = ({
   fundingSourceOptions,
   action
 }: FundingSourceFormProps) => {
-  const { t } = useTranslation('intake');
+  const { t } = useTranslation('technicalAssistance');
   const { sources, fundingNumber } = activeFundingSource;
   const initialFundingNumber = useRef(fundingNumber);
   const [errors, setErrors] = useState({
@@ -113,14 +113,14 @@ const FundingSourceForm = ({
     // Check funding number is 6 digits
     if (fundingNumber.length !== 6) {
       updatedErrors.fundingNumber = t(
-        'contractDetails.fundingSources.errors.fundingNumberMinDigits'
+        'basic.fundingSources.errors.fundingNumberMinDigits'
       );
     }
 
     // Check if funding number is a number
     if (fundingNumber.length > 0 && !fundingNumber.match(/^\d+$/)) {
       updatedErrors.fundingNumber = t(
-        'contractDetails.fundingSources.errors.fundingNumberDigits'
+        'basic.fundingSources.errors.fundingNumberDigits'
       );
     }
 
@@ -130,15 +130,13 @@ const FundingSourceForm = ({
       fundingSources[fundingNumber]
     ) {
       updatedErrors.fundingNumber = t(
-        'contractDetails.fundingSources.errors.fundingNumberUnique'
+        'basic.fundingSources.errors.fundingNumberUnique'
       );
     }
 
     // Check if funding source is selected
     if (sources.length < 1) {
-      updatedErrors.sources = t(
-        'contractDetails.fundingSources.errors.fundingSource'
-      );
+      updatedErrors.sources = t('basic.fundingSources.errors.fundingSource');
     }
 
     if (updatedErrors.fundingNumber || updatedErrors.sources) {
@@ -183,13 +181,13 @@ const FundingSourceForm = ({
           error={!!errors.fundingNumber}
         >
           <Label htmlFor="IntakeForm-FundingNumber" className="text-normal">
-            {t('contractDetails.fundingSources.fundingNumber')}
+            {t('basic.fundingSources.fundingNumber')}
           </Label>
           <HelpText
             id="IntakeForm-FundingNumberRestrictions"
             className="margin-top-1"
           >
-            {t('contractDetails.fundingSources.fundingNumberHelpText')}
+            {t('basic.fundingSources.fundingNumberHelpText')}
           </HelpText>
           <FieldErrorMsg>{errors.fundingNumber}</FieldErrorMsg>
           <input
@@ -213,13 +211,13 @@ const FundingSourceForm = ({
               rel="noopener noreferrer"
               variant="external"
             >
-              {t('contractDetails.fundingSources.fundingNumberLink')}
+              {t('basic.fundingSources.fundingNumberLink')}
             </Link>
           </HelpText>
         </FieldGroup>
         <FieldGroup error={!!errors.sources} className="margin-y-2">
           <Label htmlFor="IntakeForm-FundingSources" className="text-normal">
-            {t('contractDetails.fundingSources.fundingSource')}
+            {t('basic.fundingSources.fundingSource')}
           </Label>
           <FieldErrorMsg>{errors.sources}</FieldErrorMsg>
           <MultiSelect
@@ -299,7 +297,7 @@ const FundingSources = ({
   const [fundingSources, setFundingSources] = fundingSourcesData.fundingSources;
   const [activeFundingSource, setActiveFundingSource, action] =
     fundingSourcesData.activeFundingSource;
-  const { t } = useTranslation('intake');
+  const { t } = useTranslation('technicalAssistance');
   const editFundingSourceNumber = useRef('');
 
   useEffect(() => {
@@ -367,8 +365,8 @@ const FundingSources = ({
           outline
         >
           {Object.keys(fundingSources).length > 0
-            ? t('contractDetails.fundingSources.addAnotherFundingSource')
-            : t('contractDetails.fundingSources.addFundingSource')}
+            ? t('basic.fundingSources.addAnotherFundingSource')
+            : t('basic.fundingSources.addFundingSource')}
         </Button>
       )}
     </>
