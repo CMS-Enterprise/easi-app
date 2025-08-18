@@ -52,7 +52,7 @@ export default {
     'We were unable to retrieve Cedar Systems. Please try again. If this issue persists, please contact <link1>EnterpriseArchitecture@cms.hhs.gov</link1>',
   unableToRemoveLinkedSystem:
     'There was an issue removing the link between this request and the selected system. Please try again, and if the problem persists, try again later.',
-  unableToRemoveAllLinkedSystem:
+  unableToRemoveAllLinkedSystems:
     'There was an issue removing the link between this request and all of the selected systems. Please try again, and if the problem persists, try again later.',
   pleaseSelectASystem: 'Please select a system.',
   successfullyLinked:
@@ -69,7 +69,7 @@ export default {
     remove: 'Remove linked system',
     dontRemove: "Don't remove"
   },
-  removeAllLinkedSystemModal: {
+  removeAllLinkedSystemsModal: {
     heading:
       'Are you sure this project does not support or use any existing CMS systems?',
     message:

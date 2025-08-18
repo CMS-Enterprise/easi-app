@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import {
@@ -32,6 +32,42 @@ import useMessage from 'hooks/useMessage';
 
 import LinkedSystemsTable from './LinkedSystemsTable';
 
+// --- Dirty-check helpers (track membership + relationship edits) ---
+type Snapshot = {
+  noSystemsUsed: boolean;
+  systemSignatures: string[]; // stable, sorted
+};
+
+const sortStrings = (arr?: (string | null | undefined)[]) =>
+  (arr ?? [])
+    .filter(Boolean)
+    .map(String)
+    .sort((a, b) => (a > b ? 1 : a < b ? -1 : 0));
+
+const trim = (s?: string | null) => (s ?? '').trim();
+
+/** Build a stable signature for one linked system object.
+ *  Uses property names from the user's example shape.
+ */
+const systemSignature = (s: SystemIntakeSystem): string => {
+  const sys = s as any; // tolerate minor schema diffs from codegen
+  return JSON.stringify({
+    id: String(sys.id),
+    systemID: String(sys.systemID),
+    systemRelationshipType: sortStrings(sys.systemRelationshipType),
+    otherSystemRelationshipDescription: trim(
+      sys.otherSystemRelationshipDescription
+    )
+  });
+};
+
+const getSystemSignatures = (systems: SystemIntakeSystem[] = []) =>
+  systems.map(systemSignature).sort();
+
+const arraysEqual = (a: string[], b: string[]) =>
+  a.length === b.length && a.every((v, i) => v === b[i]);
+// --- end helpers ---
+
 const LinkedSystems = () => {
   // Id refers to system intake
   const { id } = useParams<{
@@ -62,12 +98,8 @@ const LinkedSystems = () => {
   const location = useLocation();
   const state = location.state as LinkedSystemsLocationState | undefined;
 
-  const showSuccessfullyUpdated = state?.successfullyUpdated;
-  const showSuccessfullyAdded = state?.successfullyAdded;
   const isFromTaskList = state?.from === 'task-list';
   const isFromAdmin = state?.from === 'admin';
-
-  const systemUpdatedName = state?.systemUpdated;
 
   // Url of next view after successful form submit
   // Also for a breadcrumb navigation link
@@ -101,15 +133,14 @@ const LinkedSystems = () => {
 
   const [unlinkAllSystems] = useUnlinkSystemIntakeRelationMutation();
 
-  const submitEnabled = useMemo(() => {
-    return (data?.systemIntakeSystems?.length ?? 0) > 0 || noSystemsUsed;
-  }, [data, noSystemsUsed]);
-
   const [removeLinkedSystemModalOpen, setRemoveLinkedSystemModalOpen] =
     useState(false);
 
-  const [removeAllLinkedSystemsModalOpen, setRemoveAllLinkedSystemModalOpen] =
+  const [removeAllLinkedSystemsModalOpen, setRemoveAllLinkedSystemsModalOpen] =
     useState(false);
+
+  // One-time baseline snapshot to compare against
+  const initialSnapshotRef = useRef<Snapshot | null>(null);
 
   useEffect(() => {
     if (location && location.state && state?.isNew) {
@@ -121,6 +152,18 @@ const LinkedSystems = () => {
     }
   }, [data, location, relationLoading, state]);
 
+  // Capture initial snapshot once when data + derived checkbox state are ready
+  useEffect(() => {
+    if (!relationLoading && data && initialSnapshotRef.current === null) {
+      initialSnapshotRef.current = {
+        noSystemsUsed,
+        systemSignatures: getSystemSignatures(
+          (data.systemIntakeSystems as SystemIntakeSystem[]) || []
+        )
+      };
+    }
+  }, [relationLoading, data, noSystemsUsed]);
+
   const handleRemoveModal = (systemLinkedSystemId: string) => {
     setSystemToBeRemoved(systemLinkedSystemId);
     setRemoveLinkedSystemModalOpen(true);
@@ -129,7 +172,7 @@ const LinkedSystems = () => {
   const handleNoSystemsUsedCheckbox = () => {
     if (!noSystemsUsed) {
       if (data && data?.systemIntakeSystems.length > 0) {
-        setRemoveAllLinkedSystemModalOpen(true);
+        setRemoveAllLinkedSystemsModalOpen(true);
         return;
       }
       setNoSystemsUsed(true);
@@ -166,7 +209,7 @@ const LinkedSystems = () => {
 
   const handleCloseRemoveAllLinkedSystemModal = () => {
     setShowRemoveAllLinkedSystemError(false);
-    setRemoveAllLinkedSystemModalOpen(false);
+    setRemoveAllLinkedSystemsModalOpen(false);
   };
 
   const handleRemoveAllSystemLinks = async () => {
@@ -182,13 +225,47 @@ const LinkedSystems = () => {
         ) {
           refetchSystemIntakes();
           setNoSystemsUsed(true);
-          setRemoveAllLinkedSystemModalOpen(false);
+          setRemoveAllLinkedSystemsModalOpen(false);
         }
       } catch (error) {
         setShowRemoveAllLinkedSystemError(true);
       }
     }
   };
+
+  // Current signatures reflect membership and relationship changes
+  const currentSystemSignatures = useMemo(
+    () =>
+      getSystemSignatures(
+        ((data?.systemIntakeSystems as SystemIntakeSystem[]) ||
+          []) as SystemIntakeSystem[]
+      ),
+    [data?.systemIntakeSystems]
+  );
+
+  // If we navigated back after add/update elsewhere and set flags in location.state, allow saving
+  const addedOrUpdatedElsewhere = Boolean(
+    state?.successfullyAdded || state?.successfullyUpdated
+  );
+
+  // Dirty when checkbox differs OR system signatures differ OR we know it was updated elsewhere
+  const isDirty = useMemo(() => {
+    if (addedOrUpdatedElsewhere) return true;
+
+    const snap = initialSnapshotRef.current;
+    if (!snap) return false;
+
+    return (
+      noSystemsUsed !== snap.noSystemsUsed ||
+      !arraysEqual(currentSystemSignatures, snap.systemSignatures)
+    );
+  }, [addedOrUpdatedElsewhere, noSystemsUsed, currentSystemSignatures]);
+
+  // Must be valid per business rules AND dirty
+  const submitEnabled = useMemo(() => {
+    const hasSystems = (data?.systemIntakeSystems?.length ?? 0) > 0;
+    return (hasSystems || noSystemsUsed) && isDirty;
+  }, [data, noSystemsUsed, isDirty]);
 
   if (relationLoading) {
     return <PageLoading />;
@@ -216,40 +293,6 @@ const LinkedSystems = () => {
       />
 
       <Message />
-
-      {showSuccessfullyUpdated && (
-        <Alert
-          id="link-form-error"
-          type="success"
-          slim
-          className="margin-top-2"
-        >
-          <Trans
-            i18nKey="linkedSystems:savedChangesToALink"
-            values={{ updatedSystem: systemUpdatedName }}
-            components={{
-              span: <span className="text-bold" />
-            }}
-          />
-        </Alert>
-      )}
-
-      {showSuccessfullyAdded && (
-        <Alert
-          id="link-form-error"
-          type="success"
-          slim
-          className="margin-top-2"
-        >
-          <Trans
-            i18nKey="linkedSystems:successfullyLinked"
-            values={{ updatedSystem: systemUpdatedName }}
-            components={{
-              span: <span className="text-bold" />
-            }}
-          />
-        </Alert>
-      )}
 
       {showSuccessfullyDeleted && (
         <Alert
@@ -362,6 +405,11 @@ const LinkedSystems = () => {
             type="submit"
             disabled={!submitEnabled}
             onClick={() => {
+              // Optional: reset snapshot so dirty clears right before leaving
+              initialSnapshotRef.current = {
+                noSystemsUsed,
+                systemSignatures: currentSystemSignatures
+              };
               if (isFromAdmin) {
                 history.push(adminUrl);
               } else {
@@ -437,12 +485,12 @@ const LinkedSystems = () => {
 
       <Modal
         isOpen={removeAllLinkedSystemsModalOpen}
-        closeModal={() => setRemoveAllLinkedSystemModalOpen(false)}
+        closeModal={() => setRemoveAllLinkedSystemsModalOpen(false)}
         className="font-body-sm height-auto"
         id="removeAllLinkedSystemsModal"
       >
         <ModalHeading className="margin-top-0 margin-bottom-105">
-          {t('removeAllLinkedSystemModal.heading')}
+          {t('removeAllLinkedSystemsModal.heading')}
         </ModalHeading>
         {showRemoveAllLinkedSystemError && (
           <Alert
@@ -455,7 +503,7 @@ const LinkedSystems = () => {
           </Alert>
         )}
         <p className="margin-top-0 text-light font-body-md">
-          {t('removeAllLinkedSystemModal.message')}
+          {t('removeAllLinkedSystemsModal.message')}
         </p>
 
         <ButtonGroup className="margin-top-3">
@@ -464,14 +512,14 @@ const LinkedSystems = () => {
             className="bg-error margin-right-1"
             onClick={() => handleRemoveAllSystemLinks()}
           >
-            {t('removeAllLinkedSystemModal.remove')}
+            {t('removeAllLinkedSystemsModal.remove')}
           </Button>
           <Button
             type="button"
             unstyled
             onClick={() => handleCloseRemoveAllLinkedSystemModal()}
           >
-            {t('removeAllLinkedSystemModal.dontRemove')}
+            {t('removeAllLinkedSystemsModal.dontRemove')}
           </Button>
         </ButtonGroup>
       </Modal>

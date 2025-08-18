@@ -259,10 +259,25 @@ const LinkedSystemsForm = () => {
             type: 'success'
           }
         );
-        history.push(
-          `/linked-systems/${systemIntakeID}`,
-          isFromTaskList ? { from: 'task-list' } : undefined
-        );
+        const nextState: {
+          from?: 'task-list';
+          successfullyAdded?: boolean;
+          successfullyUpdated?: boolean;
+          systemUpdated?: string;
+        } = {};
+
+        if (isFromTaskList) nextState.from = 'task-list';
+
+        // If we were editing an existing link, mark "updated"; otherwise "added"
+        if (linkedSystemID) {
+          nextState.successfullyUpdated = true;
+        } else {
+          nextState.successfullyAdded = true;
+        }
+
+        if (systemName) nextState.systemUpdated = systemName;
+
+        history.push(`/linked-systems/${systemIntakeID}`, nextState);
       })
       .catch(() => {
         showMessage(t('linkedSystems:errorLinking'), {
