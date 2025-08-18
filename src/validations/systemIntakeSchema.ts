@@ -383,17 +383,14 @@ export const linkedSystemsSchema = Yup.object({
 }).test(
   'at-least-one-selected',
   'Please select at least one relationship type',
-  function (values) {
+  function atLeastOneSelected(values) {
     if (!values) {
       return this.createError({ message: 'Form values are missing' });
     }
 
-    const optionSelected =
-      values.relationshipTypes.primarySupport ||
-      values.relationshipTypes.partialSupport ||
-      values.relationshipTypes.usesOrImpactedBySelectedSystem ||
-      values.relationshipTypes.impactsSelectedSystem ||
-      values.relationshipTypes.other;
+    const optionSelected = Object.values(values.relationshipTypes || {}).some(
+      Boolean
+    );
 
     if (!optionSelected) {
       return this.createError({
@@ -401,6 +398,7 @@ export const linkedSystemsSchema = Yup.object({
         message: 'Please select at least one relationship type'
       });
     }
+
     return true;
   }
 );
