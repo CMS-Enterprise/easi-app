@@ -130,6 +130,7 @@ const LinkedSystemsForm = () => {
   const history = useHistory();
   const location = useLocation<{ from?: string }>();
   const isFromTaskList = location.state?.from === 'task-list';
+  const isFromAdmin = location.state?.from === 'admin';
 
   const { showMessageOnNextPage, showMessage, Message } = useMessage();
 
@@ -260,13 +261,14 @@ const LinkedSystemsForm = () => {
           }
         );
         const nextState: {
-          from?: 'task-list';
+          from?: string;
           successfullyAdded?: boolean;
           successfullyUpdated?: boolean;
           systemUpdated?: string;
         } = {};
 
         if (isFromTaskList) nextState.from = 'task-list';
+        if (isFromAdmin) nextState.from = 'admin';
 
         // If we were editing an existing link, mark "updated"; otherwise "added"
         if (linkedSystemID) {

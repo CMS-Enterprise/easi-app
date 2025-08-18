@@ -40,6 +40,7 @@ type TableProps = {
   systemIntakeId: string;
   onRemoveLink: (id: string) => void;
   isFromTaskList?: boolean;
+  isFromAdmin?: boolean;
   noSystemsUsed?: boolean;
 };
 
@@ -60,6 +61,7 @@ const LinkedSystemsTable = ({
   systemIntakeId,
   onRemoveLink,
   isFromTaskList,
+  isFromAdmin,
   noSystemsUsed
 }: TableProps) => {
   const { t } = useTranslation('linkedSystems');
@@ -123,12 +125,20 @@ const LinkedSystemsTable = ({
                 type="button"
                 unstyled
                 className="margin-top-0"
-                onClick={() =>
+                onClick={() => {
+                  let navigationData;
+
+                  if (isFromTaskList) {
+                    navigationData = { from: 'task-list' };
+                  } else if (isFromAdmin) {
+                    navigationData = { from: 'admin' };
+                  }
+
                   history.push(
                     `/linked-systems-form/${systemIntakeId}${row.original.id ? `/${row.original.id}` : ''}`,
-                    isFromTaskList ? { from: 'task-list' } : undefined
-                  )
-                }
+                    navigationData
+                  );
+                }}
               >
                 {t('linkedSystemsTable.edit')}
               </Button>
@@ -152,7 +162,8 @@ const LinkedSystemsTable = ({
     systemIntakeId,
     t,
     translateSystemRelationships,
-    isFromTaskList
+    isFromTaskList,
+    isFromAdmin
   ]);
 
   const {

@@ -359,10 +359,15 @@ const LinkedSystems = () => {
               type="button"
               outline
               onClick={() => {
-                history.push(
-                  addASystemUrl,
-                  isFromTaskList ? { from: 'task-list' } : undefined
-                );
+                let navigationData;
+
+                if (isFromTaskList) {
+                  navigationData = { from: 'task-list' };
+                } else if (isFromAdmin) {
+                  navigationData = { from: 'admin' };
+                }
+
+                history.push(addASystemUrl, navigationData);
               }}
               disabled={noSystemsUsed}
             >
@@ -387,6 +392,7 @@ const LinkedSystems = () => {
               onRemoveLink={handleRemoveModal}
               isFromTaskList={isFromTaskList}
               noSystemsUsed={noSystemsUsed}
+              isFromAdmin={isFromAdmin}
             />
           </Grid>
         </Grid>
@@ -396,7 +402,11 @@ const LinkedSystems = () => {
             type="button"
             outline
             onClick={() => {
-              history.goBack();
+              if (isFromAdmin) {
+                history.push(adminUrl);
+              } else {
+                history.goBack();
+              }
             }}
           >
             {t('itGov:link.form.back')}
@@ -432,6 +442,8 @@ const LinkedSystems = () => {
           onClick={() => {
             if (isFromTaskList) {
               history.push(redirectUrl);
+            } else if (isFromAdmin) {
+              history.push(adminUrl);
             } else {
               history.goBack();
             }
