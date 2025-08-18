@@ -67,7 +67,6 @@ const LinkedSystems = () => {
   const isFromTaskList = state?.from === 'task-list';
   const isFromAdmin = state?.from === 'admin';
 
-  console.log(isFromAdmin);
   const systemUpdatedName = state?.systemUpdated;
 
   // Url of next view after successful form submit
