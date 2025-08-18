@@ -24,7 +24,7 @@ const fundingSources = {
 
   clearFundingSourcesModal: {
     heading:
-      'Are you sure this project does use any existing investments and/or project numbers?',
+      'Are you sure this project does not use any existing investments and/or project numbers?',
     description:
       'Checking this box will remove all previously-added funding sources. Are you sure you want to continue? You may re-add funding sources again if needed.',
     removeFundingSources: 'Remove funding sources',
