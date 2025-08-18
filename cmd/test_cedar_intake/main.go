@@ -91,15 +91,15 @@ func makeTestSystemIntake(times usefulTimes, projectName string) *models.SystemI
 		FundingSources: []*models.SystemIntakeFundingSource{
 			{
 				ID:             uuid.New(),
-				FundingNumber:  null.StringFrom("123456"),
-				Source:         null.StringFrom("HITECH Medicare"),
+				ProjectNumber:  null.StringFrom("123456"),
+				Investment:     null.StringFrom("HITECH Medicare"),
 				SystemIntakeID: systemIntakeID,
 				CreatedAt:      &times.now,
 			},
 			{
 				ID:             uuid.New(),
-				FundingNumber:  null.StringFrom("789012"),
-				Source:         null.StringFrom("Recovery Audit Contractors"),
+				ProjectNumber:  null.StringFrom("789012"),
+				Investment:     null.StringFrom("Recovery Audit Contractors"),
 				SystemIntakeID: systemIntakeID,
 				CreatedAt:      &times.now,
 			},

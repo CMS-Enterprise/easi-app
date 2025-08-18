@@ -1098,16 +1098,16 @@ Represents the source of funding for a system
 """
 type SystemIntakeFundingSource {
   id: UUID!
-  fundingNumber: String
-  source: String
+  projectNumber: String
+  investment: String
 }
 
 """
 Represents the source of funding for a system
 """
 input SystemIntakeFundingSourceInput {
-  fundingNumber: String
-  source: String
+  projectNumber: String
+  investment: String
 }
 
 """

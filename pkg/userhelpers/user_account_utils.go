@@ -81,6 +81,16 @@ func GetOrCreateUserAccountFullName(
 	if userAccount.ID == uuid.Nil {
 		newAccount, newErr := store.UserAccountCreate(ctx, np, userAccount)
 		if newErr != nil {
+			accountCreationErr := sqlutils.ProcessDataBaseErrors("failed to create user account", newErr)
+			if errors.As(accountCreationErr, &sqlutils.ErrDuplicateConstraint) {
+				// If we hit a unique violation, it means the account already exists
+				// We should try to retrieve it instead of creating a new one
+				existingAccount, getErr := store.UserAccountGetByUsername(ctx, np, userAccount.Username)
+				if getErr != nil {
+					return nil, getErr
+				}
+				return existingAccount, nil
+			}
 			return nil, newErr
 		}
 		return newAccount, nil
