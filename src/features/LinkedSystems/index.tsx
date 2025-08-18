@@ -42,7 +42,7 @@ const sortStrings = (arr?: (string | null | undefined)[]) =>
   (arr ?? [])
     .filter(Boolean)
     .map(String)
-    .sort((a, b) => (a > b ? 1 : a < b ? -1 : 0));
+    .sort((a, b) => a.localeCompare(b));
 
 const trim = (s?: string | null) => (s ?? '').trim();
 
