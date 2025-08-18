@@ -110,6 +110,7 @@ func writeObjectToJSONFile(object interface{}, path string) {
 
 	file, err := os.Create(filepath.Clean(path))
 	if err != nil {
+		fmt.Printf("Error creating file: %v\n", err)
 
 		panic("Can't create the file")
 	}
