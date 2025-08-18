@@ -437,9 +437,15 @@ const LinkedSystems = () => {
             }
           }}
         >
-          {isFromTaskList
-            ? t('itGov:link.form.dontEditAndReturn')
-            : t('itGov:link.cancelAndExit')}
+          {isFromTaskList &&
+            !isFromAdmin &&
+            t('itGov:link.form.dontEditAndReturn')}
+
+          {!isFromTaskList &&
+            isFromAdmin &&
+            t('dontEditAndReturnRequestDetails')}
+
+          {!isFromTaskList && !isFromAdmin && t('itGov:link.cancelAndExit')}
         </IconButton>
       </Form>
       <Modal
