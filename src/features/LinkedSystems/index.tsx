@@ -263,7 +263,9 @@ const LinkedSystems = () => {
       )}
 
       <PageHeading className="margin-top-4 margin-bottom-0">
-        {isFromTaskList ? t('itGov:link.editHeader') : t('itGov:link.header')}
+        {isFromTaskList || isFromAdmin
+          ? t('itGov:link.editHeader')
+          : t('itGov:link.header')}
       </PageHeading>
       <p className="font-body-lg line-height-body-5 text-light margin-y-0">
         {t(`itGov:link.description`)}
