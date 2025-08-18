@@ -8,13 +8,13 @@ import {
   ButtonGroup,
   Fieldset,
   Label,
-  Link,
   ModalFooter,
   ModalHeading,
   TextInput
 } from '@trussworks/react-uswds';
 
 import { useEasiForm } from 'components/EasiForm';
+import ExternalLinkAndModal from 'components/ExternalLinkAndModal';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
 import HelpText from 'components/HelpText';
@@ -113,20 +113,15 @@ const FundingSourceFormModal = ({
             type="text"
             id="projectNumber"
             data-testid="projectNumberInput"
-            className="maxw-none"
+            className="maxw-none margin-bottom-1"
             aria-describedby="projectNumberHelptext projectNumberHelpLink"
           />
 
-          <HelpText id="projectNumberHelpLink" className="margin-top-1">
-            <Link
-              href="https://cmsintranet.share.cms.gov/JT/Pages/Budget.aspx"
-              target="_blank"
-              rel="noopener noreferrer"
-              variant="external"
-            >
+          <ExternalLinkAndModal href="https://cmsintranet.share.cms.gov/JT/Pages/Budget.aspx">
+            <span id="projectNumberHelpLink">
               {t('form.projectNumberLink')}
-            </Link>
-          </HelpText>
+            </span>
+          </ExternalLinkAndModal>
         </FieldGroup>
 
         <FieldGroup error={!!errors?.investments}>
