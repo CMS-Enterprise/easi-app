@@ -22,11 +22,11 @@ WHERE
 -- remove duplicate rows
 DELETE
 FROM copy_system_intake_contacts c
-USING copy_system_intake_contacts dup
+USING copy_system_intake_contacts c2
 WHERE
-    c.user_id = dup.user_id
-    AND c.system_intake_id = dup.system_intake_id
-    AND c.ctid > dup.ctid;
+    c.user_id = c2.user_id
+    AND c.system_intake_id = c2.system_intake_id
+    AND c.ctid > c2.ctid;
 
 ALTER TABLE copy_system_intake_contacts
 DROP COLUMN role;
