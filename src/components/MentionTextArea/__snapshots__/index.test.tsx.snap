@@ -21,25 +21,3 @@ exports[`MentionTextArea component > renders the component to view text 1`] = `
   </div>
 </DocumentFragment>
 `;
-
-exports[`MentionTextArea component > renders the editable text area component 1`] = `
-<DocumentFragment>
-  <div
-    class="tiptap__editable usa-textarea"
-    id="mentionTextArea-editorContent"
-    tabindex="-1"
-  >
-    <div
-      aria-label="Rich text area"
-      class="tiptap ProseMirror ProseMirror-focused"
-      contenteditable="true"
-      id="mentionTextArea"
-      role="textbox"
-      tabindex="0"
-      translate="no"
-    >
-      This is the text!
-    </div>
-  </div>
-</DocumentFragment>
-`;
