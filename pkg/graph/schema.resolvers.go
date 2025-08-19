@@ -641,9 +641,9 @@ func (r *mutationResolver) SetSystemIntakeRelationExistingService(ctx context.Co
 	}, nil
 }
 
-// UnlinkSystemIntakeRelation is the resolver for the unlinkSystemIntakeRelation field.
-func (r *mutationResolver) UnlinkSystemIntakeRelation(ctx context.Context, intakeID uuid.UUID) (*models.UpdateSystemIntakePayload, error) {
-	intake, err := resolvers.UnlinkSystemIntakeRelation(ctx, r.store, intakeID)
+// SetSystemSupportAndUnlinkSystemIntakeRelation is the resolver for the setSystemSupportAndUnlinkSystemIntakeRelation field.
+func (r *mutationResolver) SetSystemSupportAndUnlinkSystemIntakeRelation(ctx context.Context, intakeID uuid.UUID, doesNotSupportSystems bool) (*models.UpdateSystemIntakePayload, error) {
+	intake, err := resolvers.SetSystemSupportAndUnlinkSystemIntakeRelation(ctx, r.store, intakeID, doesNotSupportSystems)
 
 	if err != nil {
 		return nil, err

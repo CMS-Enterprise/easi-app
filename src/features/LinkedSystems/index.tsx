@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import {
@@ -13,6 +13,7 @@ import {
 import {
   SystemIntakeSystem,
   useDeleteSystemLinkMutation,
+  useGetSystemIntakeQuery,
   useGetSystemIntakeSystemsQuery,
   useUnlinkSystemIntakeRelationMutation
 } from 'gql/generated/graphql';
@@ -32,9 +33,7 @@ import LinkedSystemsTable from './LinkedSystemsTable';
 
 const LinkedSystems = () => {
   // Id refers to system intake
-  const { id } = useParams<{
-    id: string;
-  }>();
+  const { id } = useParams<{ id: string }>();
 
   const history = useHistory();
   const { Message } = useMessage();
@@ -63,13 +62,12 @@ const LinkedSystems = () => {
   const isFromTaskList = state?.from === 'task-list';
   const isFromAdmin = state?.from === 'admin';
 
-  // Url of next view after successful form submit
-  // Also for a breadcrumb navigation link
+  // Urls
   const redirectUrl = `/governance-task-list/${id}`;
   const adminUrl = `/it-governance/${id}/system-information`;
-
   const addASystemUrl = `/linked-systems-form/${id}`;
 
+  // Queries
   const {
     data,
     loading: relationLoading,
@@ -78,73 +76,70 @@ const LinkedSystems = () => {
     variables: { systemIntakeId: id }
   });
 
-  const [noSystemsUsed, setNoSystemsUsed] = useState<boolean>(false);
+  const { data: systemData, refetch: refetchIntake } = useGetSystemIntakeQuery({
+    variables: { id }
+  });
 
+  // Derived source of truth
+  const noSystemsUsed = !!systemData?.systemIntake?.doesNotSupportSystems;
+
+  // Local UI state
   const [systemToBeRemoved, setSystemToBeRemoved] = useState<string>();
-
   const [showSuccessfullyDeleted, setShowSuccessfullyDeleted] =
     useState<boolean>(false);
-
   const [showRemoveLinkedSystemError, setShowRemoveLinkedSystemError] =
     useState<boolean>(false);
-
   const [showRemoveAllLinkedSystemError, setShowRemoveAllLinkedSystemError] =
     useState<boolean>(false);
-
-  const [deleteSystemLink] = useDeleteSystemLinkMutation();
-
-  const [unlinkAllSystems] = useUnlinkSystemIntakeRelationMutation();
-
   const [removeLinkedSystemModalOpen, setRemoveLinkedSystemModalOpen] =
     useState(false);
-
   const [removeAllLinkedSystemsModalOpen, setRemoveAllLinkedSystemsModalOpen] =
     useState(false);
 
-  useEffect(() => {
-    if (location && location.state && state?.isNew) {
-      setNoSystemsUsed(false);
-      return;
-    }
-    if (data && !relationLoading && state?.from === 'task-list') {
-      setNoSystemsUsed(data.systemIntakeSystems.length === 0);
-    }
-  }, [data, location, relationLoading, state]);
+  // Mutations
+  const [deleteSystemLink] = useDeleteSystemLinkMutation();
+  const [unlinkAllSystems] = useUnlinkSystemIntakeRelationMutation();
 
   const handleRemoveModal = (systemLinkedSystemId: string) => {
     setSystemToBeRemoved(systemLinkedSystemId);
     setRemoveLinkedSystemModalOpen(true);
   };
 
-  const handleNoSystemsUsedCheckbox = () => {
-    if (!noSystemsUsed) {
-      if (data && data?.systemIntakeSystems.length > 0) {
-        setRemoveAllLinkedSystemsModalOpen(true);
-        return;
-      }
-      setNoSystemsUsed(true);
+  // Toggle checkbox: persist via unlink mutation (also sets the flag)
+  const handleNoSystemsUsedCheckbox = async () => {
+    const hasSystems = (data?.systemIntakeSystems?.length ?? 0) > 0;
+
+    // Turning on while systems exist -> prompt first
+    if (!noSystemsUsed && hasSystems) {
+      setRemoveAllLinkedSystemsModalOpen(true);
       return;
     }
 
-    setNoSystemsUsed(false);
+    // Otherwise directly flip the flag
+    try {
+      await unlinkAllSystems({
+        variables: { intakeID: id, doesNotSupportSystems: !noSystemsUsed }
+      });
+      await Promise.all([refetchIntake(), refetchSystemIntakes()]);
+    } catch {
+      setShowRemoveAllLinkedSystemError(true);
+    }
   };
 
   const handleRemoveLink = async () => {
-    if (!systemToBeRemoved) {
-      return;
-    }
+    if (!systemToBeRemoved) return;
 
     try {
       const response = await deleteSystemLink({
         variables: { systemIntakeSystemID: systemToBeRemoved }
       });
 
-      if (response && response.data) {
-        refetchSystemIntakes();
+      if (response?.data) {
+        await refetchSystemIntakes();
         setShowSuccessfullyDeleted(true);
         setRemoveLinkedSystemModalOpen(false);
       }
-    } catch (error) {
+    } catch {
       setShowRemoveLinkedSystemError(true);
     }
   };
@@ -159,24 +154,16 @@ const LinkedSystems = () => {
     setRemoveAllLinkedSystemsModalOpen(false);
   };
 
+  // Confirm remove-all: unlink all and set flag true in one mutation
   const handleRemoveAllSystemLinks = async () => {
-    if (data && data?.systemIntakeSystems.length > 0) {
-      try {
-        const response = await unlinkAllSystems({
-          variables: { intakeID: id }
-        });
-        if (
-          response &&
-          response.data &&
-          response.data.unlinkSystemIntakeRelation
-        ) {
-          refetchSystemIntakes();
-          setNoSystemsUsed(true);
-          setRemoveAllLinkedSystemsModalOpen(false);
-        }
-      } catch (error) {
-        setShowRemoveAllLinkedSystemError(true);
-      }
+    try {
+      await unlinkAllSystems({
+        variables: { intakeID: id, doesNotSupportSystems: true }
+      });
+      await Promise.all([refetchSystemIntakes(), refetchIntake()]);
+      setRemoveAllLinkedSystemsModalOpen(false);
+    } catch {
+      setShowRemoveAllLinkedSystemError(true);
     }
   };
 
@@ -268,12 +255,12 @@ const LinkedSystems = () => {
                 />
               </p>
             </Fieldset>
+
             <Button
               type="button"
               outline
               onClick={() => {
                 let navigationData;
-
                 if (isFromTaskList) {
                   navigationData = { from: 'task-list' };
                 } else if (isFromAdmin) {
@@ -286,15 +273,17 @@ const LinkedSystems = () => {
             >
               {t('itGov:link.form.addASystem')}
             </Button>
+
             <CheckboxField
               label={t('itGov:link.form.doesNotSupportOrUseAnySystems')}
               id="systemsUsed"
               name="datavalue"
               value="systemsUsed"
               checked={noSystemsUsed}
-              onChange={e => handleNoSystemsUsedCheckbox()}
+              onChange={handleNoSystemsUsedCheckbox}
               onBlur={() => null}
             />
+
             <LinkedSystemsTable
               systems={
                 (data?.systemIntakeSystems as SystemIntakeSystem[]) || []
@@ -327,6 +316,8 @@ const LinkedSystems = () => {
           </Button>
         </ButtonGroup>
       </Form>
+
+      {/* Remove single link */}
       <Modal
         isOpen={removeLinkedSystemModalOpen}
         closeModal={() => setRemoveLinkedSystemModalOpen(false)}
@@ -368,6 +359,7 @@ const LinkedSystems = () => {
         </ButtonGroup>
       </Modal>
 
+      {/* Remove all + set flag true */}
       <Modal
         isOpen={removeAllLinkedSystemsModalOpen}
         closeModal={() => setRemoveAllLinkedSystemsModalOpen(false)}

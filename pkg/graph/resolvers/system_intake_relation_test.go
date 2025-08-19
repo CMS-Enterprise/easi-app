@@ -4,9 +4,11 @@ import (
 	"context"
 	"time"
 
+	"github.com/guregu/null"
 	"github.com/guregu/null/zero"
 	"github.com/jmoiron/sqlx"
 
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 )
@@ -533,9 +535,26 @@ func (s *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		}
 		_, err = SetSystemIntakeRelationNewSystem(ctx, store, input)
 		s.NoError(err) // we don't need to test the SetSystemIntakeRelationNewSystem function here
+		_, err = AddSystemLink(ctx, store, models.AddSystemLinkInput{
+			SystemID:                           "{11AB1A00-1234-5678-ABC1-1A001B0TDCTG}",
+			SystemIntakeID:                     openIntake.ID,
+			SystemRelationshipType:             []models.SystemRelationshipType{models.SystemRelationshipTypePrimarySupport, models.SystemRelationshipTypeOther},
+			OtherSystemRelationshipDescription: helpers.PointerTo("Test description"),
+		})
+		s.NoError(err)
+
+		// Send the request to SetSystemSupportAndUnlinkSystemIntakeRelation with does not support to false the relationship
+		stillLinkedIntake, err := SetSystemSupportAndUnlinkSystemIntakeRelation(ctx, store, openIntake.ID, false)
+
+		s.NoError(err)
+		s.EqualValues(null.BoolFrom(false), stillLinkedIntake.DoesNotSupportSystems)
+		// Verify that there are still linked systems
+		currentSystems, err := SystemIntakeSystemsByIntakeID(s.ctxWithNewDataloaders(), stillLinkedIntake.ID)
+		s.NoError(err)
+		s.NotEmpty(currentSystems)
 
 		// Now unlink the relationship
-		unlinkedIntake, err := UnlinkSystemIntakeRelation(ctx, store, openIntake.ID)
+		unlinkedIntake, err := SetSystemSupportAndUnlinkSystemIntakeRelation(ctx, store, openIntake.ID, true)
 		s.NoError(err)
 
 		// Assert that all values are cleared appropriately
@@ -549,7 +568,7 @@ func (s *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		// s.Empty(nums)
 
 		// Check system IDs are cleared
-		systemIDs, err := SystemIntakeSystems(s.ctxWithNewDataloaders(), unlinkedIntake.ID)
+		systemIDs, err := SystemIntakeSystemsByIntakeID(s.ctxWithNewDataloaders(), stillLinkedIntake.ID)
 		s.NoError(err)
 		s.Empty(systemIDs)
 	})
@@ -582,7 +601,7 @@ func (s *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		s.NoError(err) // we don't need to test the SetSystemIntakeRelationExistingSystem function here
 
 		// Now unlink the relationship
-		unlinkedIntake, err := UnlinkSystemIntakeRelation(ctx, store, openIntake.ID)
+		unlinkedIntake, err := SetSystemSupportAndUnlinkSystemIntakeRelation(ctx, store, openIntake.ID, true)
 		s.NoError(err)
 
 		// Assert that all values are cleared appropriately
@@ -622,7 +641,7 @@ func (s *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		s.NoError(err) // we don't need to test the SetSystemIntakeRelationExistingService function here
 
 		// Now unlink the relationship
-		unlinkedIntake, err := UnlinkSystemIntakeRelation(ctx, store, openIntake.ID)
+		unlinkedIntake, err := SetSystemSupportAndUnlinkSystemIntakeRelation(ctx, store, openIntake.ID, true)
 		s.NoError(err)
 
 		// Assert that all values are cleared appropriately

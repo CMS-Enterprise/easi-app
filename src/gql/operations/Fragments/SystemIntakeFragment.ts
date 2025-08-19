@@ -10,6 +10,7 @@ export default gql(/* GraphQL */ `
       component
       name
     }
+    doesNotSupportSystems
     contract {
       contractor
       endDate {

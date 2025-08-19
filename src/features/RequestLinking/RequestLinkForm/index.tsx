@@ -322,7 +322,9 @@ const RequestLinkForm = ({
           setUserError(true);
         });
     } else {
-      unlinkIntakeRelation({ variables: { intakeID: id } })
+      unlinkIntakeRelation({
+        variables: { intakeID: id, doesNotSupportSystems: false }
+      })
         .then(
           res => {
             if (res?.data) history.push(redirectUrl);
