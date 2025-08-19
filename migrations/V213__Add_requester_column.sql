@@ -7,6 +7,10 @@ ADD COLUMN roles TEXT[] NOT NULL DEFAULT '{}';
 -- create copy of table for safety and testing purposes
 CREATE TABLE IF NOT EXISTS copy_system_intake_contacts AS TABLE system_intake_contacts;
 
+UPDATE copy_system_intake_contacts
+SET is_requester = TRUE
+WHERE role = 'Requester';
+
 -- operate only on the copy table
 UPDATE copy_system_intake_contacts c
 SET roles = sub.roles
@@ -26,7 +30,8 @@ USING copy_system_intake_contacts c2
 WHERE
     c.user_id = c2.user_id
     AND c.system_intake_id = c2.system_intake_id
-    AND c.ctid > c2.ctid;
+    AND c.ctid > c2.ctid
+    AND c.is_requester IS NOT TRUE;
 
 ALTER TABLE copy_system_intake_contacts
 DROP COLUMN role;
