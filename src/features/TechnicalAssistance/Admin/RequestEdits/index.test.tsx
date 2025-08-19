@@ -67,7 +67,7 @@ describe('Trb Admin: Action: Request Edits', () => {
       variables: {
         input: {
           trbRequestId,
-          feedbackMessage: `<p>${feedbackMessage}</p>`,
+          feedbackMessage: `<p><br></p><p>${feedbackMessage}</p>`,
           copyTrbMailbox: true,
           notifyEuaIds: [requester.userInfo.euaUserId],
           action: TRBFeedbackAction.REQUEST_EDITS
@@ -86,6 +86,7 @@ describe('Trb Admin: Action: Request Edits', () => {
   };
 
   it('submits a feedback message', async () => {
+    const user = userEvent.setup();
     const { asFragment } = render(
       <Provider store={store}>
         <VerboseMockedProvider
@@ -137,7 +138,7 @@ describe('Trb Admin: Action: Request Edits', () => {
 
     await typeRichText(screen.getByTestId('feedbackMessage'), feedbackMessage);
 
-    userEvent.click(submitButton);
+    await user.click(submitButton);
 
     await screen.findByText(
       i18next.t<string>('technicalAssistance:actionRequestEdits.success')
@@ -145,6 +146,7 @@ describe('Trb Admin: Action: Request Edits', () => {
   });
 
   it('shows error notice when submission fails', async () => {
+    const user = userEvent.setup();
     render(
       <MockedProvider
         mocks={[
@@ -178,7 +180,7 @@ describe('Trb Admin: Action: Request Edits', () => {
 
     await typeRichText(screen.getByTestId('feedbackMessage'), feedbackMessage);
 
-    userEvent.click(
+    await user.click(
       screen.getByRole('button', {
         name: i18next.t<string>('technicalAssistance:actionRequestEdits.submit')
       })

@@ -62,7 +62,7 @@ const AccordionNavigation = ({
         onClick={() => setIsAccordionOpen(!isAccordionOpen)}
         aria-expanded={isAccordionOpen}
         aria-controls="easiAccordionNav"
-        icon={<MenuButtonIcon size={3} />}
+        icon={<MenuButtonIcon size={3} aria-hidden />}
       >
         <h3 className="padding-left-1">{t(activePageTitle || defaultTitle)}</h3>
       </IconButton>

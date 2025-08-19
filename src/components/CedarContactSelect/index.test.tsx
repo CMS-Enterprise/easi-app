@@ -31,6 +31,8 @@ describe('CedarContactSelect', () => {
   };
 
   it('selects contact from dropdown', async () => {
+    const user = userEvent.setup();
+
     const { asFragment, getByTestId, findByText } = render(
       <MockedProvider mocks={[cedarContactsQuery]} addTypename={false}>
         <CedarContactSelect
@@ -43,7 +45,7 @@ describe('CedarContactSelect', () => {
 
     // Type first name into select field input
     const input = getByTestId('cedar-contact-select');
-    userEvent.type(input, contact.commonName);
+    await user.type(input, contact.commonName);
 
     // Get mocked CEDAR result
     const userOption = await findByText(contactLabel);
@@ -53,7 +55,7 @@ describe('CedarContactSelect', () => {
     expect(asFragment()).toMatchSnapshot();
 
     // Select option
-    userEvent.click(userOption);
+    await user.click(userOption);
 
     // Check that select field displays correct value
     expect(input).toHaveValue(contactLabel);

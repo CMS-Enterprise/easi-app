@@ -49,7 +49,8 @@ describe('IT Gov Request relation link form', () => {
                       {
                         id: '{11AB1A00-1234-5678-ABC1-1A001B00CC0A}',
                         name: 'Centers for Management Services',
-                        __typename: 'CedarSystem'
+                        __typename: 'CedarSystem',
+                        acronym: 'CMS'
                       }
                     ]
                   }

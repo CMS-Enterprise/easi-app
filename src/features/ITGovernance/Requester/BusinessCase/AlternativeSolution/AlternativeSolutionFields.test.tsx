@@ -8,6 +8,10 @@ import { defaultProposedSolution } from 'data/businessCase';
 import AlternativeSolutionFields from './AlternativeSolutionFields';
 
 describe('Alternative Solution Fields', () => {
+  let user: ReturnType<typeof userEvent.setup>;
+  beforeEach(() => {
+    user = userEvent.setup();
+  });
   const renderFields = () =>
     render(
       <Formik
@@ -39,25 +43,25 @@ describe('Alternative Solution Fields', () => {
     ).toBeInTheDocument();
   });
 
-  it('fill deepest question branch', () => {
+  it('fill deepest question branch', async () => {
     renderFields();
 
     const titleField = screen.getByRole('textbox', {
       name: /title/i
     });
-    userEvent.type(titleField, 'Alternative A solution title');
+    await user.type(titleField, 'Alternative A solution title');
     expect(titleField).toHaveValue('Alternative A solution title');
 
     const summaryField = screen.getByRole('textbox', {
       name: /summary/i
     });
-    userEvent.type(summaryField, 'Alternative A solution summary');
+    await user.type(summaryField, 'Alternative A solution summary');
     expect(summaryField).toHaveValue('Alternative A solution summary');
 
     const acquisitionApproachField = screen.getByRole('textbox', {
       name: /acquisition approach/i
     });
-    userEvent.type(
+    await user.type(
       acquisitionApproachField,
       'Alternative A solution acquisition approach'
     );
@@ -90,7 +94,7 @@ describe('Alternative Solution Fields', () => {
     const hostingLocationField = screen.getByRole('textbox', {
       name: /where are you planning to host/i
     });
-    userEvent.type(
+    await user.type(
       hostingLocationField,
       'Alternative A solution hosting location'
     );
@@ -101,7 +105,7 @@ describe('Alternative Solution Fields', () => {
     const cloudServiceTypeField = screen.getByRole('textbox', {
       name: /cloud service/i
     });
-    userEvent.type(
+    await user.type(
       cloudServiceTypeField,
       'Alternative A solution hosting cloud service'
     );
@@ -122,23 +126,23 @@ describe('Alternative Solution Fields', () => {
     const prosField = screen.getByRole('textbox', {
       name: /pros/i
     });
-    userEvent.type(prosField, 'Alternative A solution pros');
+    await user.type(prosField, 'Alternative A solution pros');
     expect(prosField).toHaveValue('Alternative A solution pros');
 
     const consField = screen.getByRole('textbox', {
       name: /cons/i
     });
-    userEvent.type(consField, 'Alternative A solution cons');
+    await user.type(consField, 'Alternative A solution cons');
     expect(consField).toHaveValue('Alternative A solution cons');
 
     const costSavingsField = screen.getByRole('textbox', {
       name: /cost savings/i
     });
-    userEvent.type(costSavingsField, 'Alternative A solution cost savings');
+    await user.type(costSavingsField, 'Alternative A solution cost savings');
     expect(costSavingsField).toHaveValue('Alternative A solution cost savings');
   }, 10000); // Increase timeout to 10000ms for this test
 
-  it('is approved by cms security', () => {
+  it('is approved by cms security', async () => {
     renderFields();
 
     const securityApprovalGroup = screen.getByTestId('security-approval');
@@ -152,7 +156,7 @@ describe('Alternative Solution Fields', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('fills out data center branch', () => {
+  it('fills out data center branch', async () => {
     renderFields();
 
     const dataCenterHostingRadio = screen.getByRole('radio', {
@@ -164,7 +168,7 @@ describe('Alternative Solution Fields', () => {
     const dataCenterLocationField = screen.getByRole('textbox', {
       name: /which data center/i
     });
-    userEvent.type(
+    await user.type(
       dataCenterLocationField,
       'Alternative A solution data center location'
     );

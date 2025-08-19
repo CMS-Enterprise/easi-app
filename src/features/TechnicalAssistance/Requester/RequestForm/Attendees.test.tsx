@@ -81,6 +81,7 @@ describe('Trb Request form: Attendees', () => {
   };
 
   it('Renders the attendees form', async () => {
+    const user = userEvent.setup();
     const { getByTestId, findByTestId } = render(
       <MemoryRouter>
         <MockedProvider
@@ -129,7 +130,7 @@ describe('Trb Request form: Attendees', () => {
     });
     expect(firstRealComponentOption).toBeTruthy();
 
-    await userEvent.selectOptions(
+    await user.selectOptions(
       requesterComponentField,
       firstRealComponentOption!
     );
@@ -148,7 +149,7 @@ describe('Trb Request form: Attendees', () => {
     });
     expect(firstRealRoleOption).toBeTruthy();
 
-    await userEvent.selectOptions(requesterRoleField, firstRealRoleOption!);
+    await user.selectOptions(requesterRoleField, firstRealRoleOption!);
 
     // Assert by display label and underlying value
     expect(requesterRoleField).toHaveDisplayValue(
