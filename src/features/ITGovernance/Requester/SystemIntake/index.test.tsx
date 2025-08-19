@@ -69,6 +69,7 @@ describe('The System Intake page', () => {
       systemIntake: { systemIntake: {} },
       action: {}
     });
+    const user = userEvent.setup();
     render(
       <MemoryRouter initialEntries={[`/system/${systemIntake.id}/documents`]}>
         <MockedProvider mocks={[getSystemIntakeQuery({ documents })]}>
@@ -82,7 +83,6 @@ describe('The System Intake page', () => {
         </MockedProvider>
       </MemoryRouter>
     );
-    const user = userEvent.setup();
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
     expect(

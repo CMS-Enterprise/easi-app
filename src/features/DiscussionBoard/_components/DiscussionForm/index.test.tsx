@@ -12,6 +12,7 @@ import DiscussionForm from './index';
 
 describe('DiscussionForm', () => {
   it('Opens the modal when button is clicked', async () => {
+    const user = userEvent.setup();
     render(
       <MemoryRouter>
         <VerboseMockedProvider>
@@ -25,7 +26,6 @@ describe('DiscussionForm', () => {
         </VerboseMockedProvider>
       </MemoryRouter>
     );
-    const user = userEvent.setup();
 
     await user.type(screen.getByRole('textbox'), 'Test discussion content');
 

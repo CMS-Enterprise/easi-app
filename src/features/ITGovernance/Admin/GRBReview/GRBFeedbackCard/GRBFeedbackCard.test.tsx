@@ -55,8 +55,8 @@ describe('GRB Feedback Card', () => {
   });
 
   it('renders expanded', async () => {
-    renderCard(governanceRequestFeedbacksMock);
     const user = userEvent.setup();
+    renderCard(governanceRequestFeedbacksMock);
 
     expect(screen.queryByTestId('alert')).not.toBeInTheDocument();
 

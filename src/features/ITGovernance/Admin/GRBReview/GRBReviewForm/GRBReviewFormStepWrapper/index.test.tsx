@@ -154,8 +154,8 @@ describe('GRB review form step wrapper', () => {
 
   it('navigates to next step', async () => {
     const mockOnSubmit = vi.fn().mockResolvedValue({});
-    renderComponent({ onSubmit: mockOnSubmit });
     const user = userEvent.setup();
+    renderComponent({ onSubmit: mockOnSubmit });
 
     expect(await screen.findByTestId('stepIndicator-0'));
 

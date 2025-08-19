@@ -31,6 +31,8 @@ describe('CedarContactSelect', () => {
   };
 
   it('selects contact from dropdown', async () => {
+    const user = userEvent.setup();
+
     const { asFragment, getByTestId, findByText } = render(
       <MockedProvider mocks={[cedarContactsQuery]} addTypename={false}>
         <CedarContactSelect
@@ -40,8 +42,6 @@ describe('CedarContactSelect', () => {
         />
       </MockedProvider>
     );
-
-    const user = userEvent.setup();
 
     // Type first name into select field input
     const input = getByTestId('cedar-contact-select');

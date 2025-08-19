@@ -81,8 +81,8 @@ describe('Business case general request info form', () => {
   });
 
   it('fills all fields', async () => {
-    await renderPage(defaultStore);
     const user = userEvent.setup();
+    await renderPage(defaultStore);
 
     const requestNameField = screen.getByRole('textbox', {
       name: /Contract \/ request title/i

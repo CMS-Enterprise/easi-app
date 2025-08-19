@@ -21,12 +21,12 @@ describe('System intake form - Request details', () => {
   });
 
   it('renders error messages', async () => {
+    const user = userEvent.setup();
     render(
       <VerboseMockedProvider>
         <RequestDetails systemIntake={emptySystemIntake} />
       </VerboseMockedProvider>
     );
-    const user = userEvent.setup();
 
     // Submit empty form
     await user.click(screen.getByRole('button', { name: 'Next' }));

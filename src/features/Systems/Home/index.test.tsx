@@ -77,6 +77,7 @@ describe('System List View', () => {
     });
 
     it('displays relevant results from filter', async () => {
+      const user = userEvent.setup();
       render(
         <MemoryRouter>
           <MockedProvider mocks={mocks} addTypename={false}>
@@ -84,7 +85,6 @@ describe('System List View', () => {
           </MockedProvider>
         </MemoryRouter>
       );
-      const user = userEvent.setup();
 
       // User event to typing in query with debounce
       await user.type(

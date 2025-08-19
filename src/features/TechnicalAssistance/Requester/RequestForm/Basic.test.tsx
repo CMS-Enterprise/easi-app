@@ -71,6 +71,7 @@ const mockRefetch = async (
 
 describe('Trb Request form: Basic', () => {
   it('submits the form successfully after a failed attempt', async () => {
+    const user = userEvent.setup();
     const { asFragment, findByText, getByLabelText, getByRole, getByTestId } =
       render(
         <MemoryRouter>
@@ -107,8 +108,6 @@ describe('Trb Request form: Basic', () => {
           </MockedProvider>
         </MemoryRouter>
       );
-
-    const user = userEvent.setup();
 
     // Snapshot of the form's initial state
     expect(asFragment()).toMatchSnapshot();

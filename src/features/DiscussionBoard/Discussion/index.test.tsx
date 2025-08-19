@@ -108,6 +108,7 @@ describe('Discussion component', () => {
         }
       ]
     };
+    const user = userEvent.setup();
 
     render(
       <MemoryRouter>
@@ -121,7 +122,6 @@ describe('Discussion component', () => {
         </VerboseMockedProvider>
       </MemoryRouter>
     );
-    const user = userEvent.setup();
 
     // Toggle view more replies
 

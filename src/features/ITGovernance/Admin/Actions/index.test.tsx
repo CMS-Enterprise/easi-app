@@ -169,6 +169,7 @@ describe('IT Gov Actions', () => {
     });
 
     it('submits the form successfully', async () => {
+      const user = userEvent.setup();
       renderWithProvider({
         initialEntry: `/it-governance/${systemIntake.id}/actions/request-edits`,
         mocks: [
@@ -182,8 +183,6 @@ describe('IT Gov Actions', () => {
           getGovernanceTaskListQuery()
         ]
       });
-
-      const user = userEvent.setup();
 
       expect(
         await screen.findByRole('heading', { name: 'Action: request edits' })
@@ -217,6 +216,7 @@ describe('IT Gov Actions', () => {
 
   describe('Progress to a new step', () => {
     it('displays past date warning', async () => {
+      const user = userEvent.setup();
       renderWithProvider({
         initialEntry: `/it-governance/${systemIntake.id}/actions/new-step`,
         mocks: [
@@ -225,8 +225,6 @@ describe('IT Gov Actions', () => {
           getGovernanceTaskListQuery()
         ]
       });
-
-      const user = userEvent.setup();
 
       await screen.findByRole('heading', {
         name: 'Action: progress to a new step'
@@ -245,6 +243,7 @@ describe('IT Gov Actions', () => {
     });
 
     it('handles field errors', async () => {
+      const user = userEvent.setup();
       renderWithProvider({
         initialEntry: `/it-governance/${systemIntake.id}/actions/new-step`,
         mocks: [
@@ -253,7 +252,6 @@ describe('IT Gov Actions', () => {
           getGovernanceTaskListQuery({ step: SystemIntakeStep.GRB_MEETING })
         ]
       });
-      const user = userEvent.setup();
 
       await screen.findByRole('heading', {
         name: 'Action: progress to a new step'

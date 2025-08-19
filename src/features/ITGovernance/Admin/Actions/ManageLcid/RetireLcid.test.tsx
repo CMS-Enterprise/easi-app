@@ -81,8 +81,8 @@ describe('Retire LCID action form', async () => {
   });
 
   it('renders alert if retirement date is in the past', async () => {
-    renderComponent();
     const user = userEvent.setup();
+    renderComponent();
 
     const retireDateField = await screen.findByRole('textbox', {
       name: 'Life Cycle ID retirement date *'

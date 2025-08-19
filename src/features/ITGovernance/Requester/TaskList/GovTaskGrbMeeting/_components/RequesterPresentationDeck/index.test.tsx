@@ -127,12 +127,12 @@ describe('RequesterPresentationDeck', () => {
   });
 
   it('allows user to remove presentation deck', async () => {
+    const user = userEvent.setup();
     renderComponent({
       grbMeetingStatus: ITGovGRBStatus.AWAITING_GRB_REVIEW,
       grbReviewType: SystemIntakeGRBReviewType.ASYNC,
       grbPresentationLinks
     });
-    const user = userEvent.setup();
 
     // Hides View button when review is not in progress
     expect(

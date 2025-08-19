@@ -64,6 +64,7 @@ describe('GRB participation needed', () => {
   });
 
   it('formats system intake for table', async () => {
+    const user = userEvent.setup();
     render(
       <MemoryRouter>
         <VerboseMockedProvider
@@ -74,7 +75,6 @@ describe('GRB participation needed', () => {
       </MemoryRouter>
     );
 
-    const user = userEvent.setup();
     const testIntake = mockSystemIntakes[0];
 
     const btn = await screen.findByRole('button', {

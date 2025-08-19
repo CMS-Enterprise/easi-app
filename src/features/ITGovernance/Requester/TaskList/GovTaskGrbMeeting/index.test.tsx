@@ -412,10 +412,10 @@ describe('Gov Task: Attend the GRB meeting statuses', () => {
 
   describe('Review types modal', () => {
     it('opens and closes the modal', async () => {
+      const user = userEvent.setup();
       renderGovTaskGrbMeeting(
         taskListState.grbMeetingInProgressNotScheduled.systemIntake!
       );
-      const user = userEvent.setup();
 
       // Click the Learn more button
       await user.click(

@@ -84,6 +84,7 @@ describe('ViewDiscussions component', () => {
       discussion => discussion.replies.length === 0
     );
 
+    const user = userEvent.setup();
     render(
       <MemoryRouter>
         <ViewDiscussions
@@ -92,7 +93,6 @@ describe('ViewDiscussions component', () => {
         />
       </MemoryRouter>
     );
-    const user = userEvent.setup();
 
     /* Discussions with replies */
 

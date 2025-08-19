@@ -35,6 +35,7 @@ describe('Resolutions page', () => {
   });
 
   it('Renders for closed request with decision issued', async () => {
+    const user = userEvent.setup();
     render(
       <MemoryRouter
         initialEntries={[`/it-governance/${systemIntake.id}/resolutions`]}
@@ -50,7 +51,6 @@ describe('Resolutions page', () => {
         </Route>
       </MemoryRouter>
     );
-    const user = userEvent.setup();
 
     expect(
       screen.getByRole('heading', {

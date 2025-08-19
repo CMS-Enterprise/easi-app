@@ -22,6 +22,7 @@ describe('Funding sources', () => {
   });
 
   it('renders error messages', async () => {
+    const user = userEvent.setup();
     render(
       <FundingSources
         initialValues={[
@@ -36,7 +37,6 @@ describe('Funding sources', () => {
         setFieldValue={vi.fn()}
       />
     );
-    const user = userEvent.setup();
 
     await user.click(
       screen.getByRole('button', { name: 'Add another funding source' })

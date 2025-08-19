@@ -74,6 +74,7 @@ it('renders tabs based on tab panel children', async () => {
 });
 
 it('renders new tab panel on click', async () => {
+  const user = userEvent.setup();
   const { getByTestId } = render(
     <Tabs defaultActiveTab="Tab 2">
       <TabPanel id="Tab1" tabName="Tab 1">
@@ -87,8 +88,6 @@ it('renders new tab panel on click', async () => {
       </TabPanel>
     </Tabs>
   );
-
-  const user = userEvent.setup();
 
   await user.click(getByTestId('Tab3-tab-btn'));
   expect(getByTestId('Tab3-tab')).toHaveClass('easi-tabs__tab--selected');

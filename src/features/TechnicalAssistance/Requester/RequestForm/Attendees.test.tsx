@@ -79,6 +79,7 @@ describe('Trb Request form: Attendees', () => {
   };
 
   it('Renders the attendees form', async () => {
+    const user = userEvent.setup();
     const { getByTestId, findByTestId } = render(
       <MemoryRouter>
         <MockedProvider
@@ -101,7 +102,6 @@ describe('Trb Request form: Attendees', () => {
         </MockedProvider>
       </MemoryRouter>
     );
-    const user = userEvent.setup();
 
     const requesterContactSelect = await findByTestId('cedar-contact-select');
 

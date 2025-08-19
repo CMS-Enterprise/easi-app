@@ -68,6 +68,7 @@ describe('System Workspace Requests Table', () => {
       result
     };
 
+    const user = userEvent.setup();
     const { asFragment } = render(
       <MockedProvider
         mocks={[
@@ -84,7 +85,6 @@ describe('System Workspace Requests Table', () => {
         </MemoryRouter>
       </MockedProvider>
     );
-    const user = userEvent.setup();
     await screen.findByTestId('system-linked-requests');
 
     // Open requests loads first by default

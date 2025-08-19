@@ -53,6 +53,7 @@ describe('Discussion board', () => {
 
     it('lists the requester as a tag option', async () => {
       const store = easiMockStore({ groups: [BASIC_USER_PROD] });
+      const user = userEvent.setup();
 
       render(
         <Provider store={store}>
@@ -72,8 +73,6 @@ describe('Discussion board', () => {
           </MemoryRouter>
         </Provider>
       );
-
-      const user = userEvent.setup();
 
       expect(
         await screen.findByRole('heading', {
@@ -176,6 +175,7 @@ describe('Discussion board', () => {
 
     it('does not list the requester as a tag option', async () => {
       const store = easiMockStore({ groups: [GOVTEAM_PROD] });
+      const user = userEvent.setup();
 
       render(
         <Provider store={store}>
@@ -200,7 +200,6 @@ describe('Discussion board', () => {
         </Provider>
       );
 
-      const user = userEvent.setup();
       expect(
         await screen.findByRole('heading', {
           level: 4,

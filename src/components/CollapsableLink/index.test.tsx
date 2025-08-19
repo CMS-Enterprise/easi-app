@@ -15,12 +15,12 @@ describe('The Collapsable Link componnet', () => {
   });
 
   it('renders children content when expanded', async () => {
+    const user = userEvent.setup();
     render(
       <CollapsableLink id="Test" label="Test">
         <div data-testid="children" />
       </CollapsableLink>
     );
-    const user = userEvent.setup();
 
     await user.click(screen.getByTestId('collapsable-link'));
     await screen.findByTestId('children');

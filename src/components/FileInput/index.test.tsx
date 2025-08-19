@@ -39,6 +39,7 @@ describe('FileInput component', () => {
   });
 
   it('clears default filename', async () => {
+    const user = userEvent.setup();
     render(
       <FileInput
         name="fileUpload"
@@ -49,8 +50,6 @@ describe('FileInput component', () => {
         onPointerMoveCapture={() => {}}
       />
     );
-
-    const user = userEvent.setup();
 
     const clearButton = screen.getByRole('button', { name: 'Clear file' });
     await user.click(clearButton);

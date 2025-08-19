@@ -86,6 +86,7 @@ describe('Trb Admin: Action: Request Edits', () => {
   };
 
   it('submits a feedback message', async () => {
+    const user = userEvent.setup();
     const { asFragment } = render(
       <Provider store={store}>
         <VerboseMockedProvider
@@ -122,7 +123,6 @@ describe('Trb Admin: Action: Request Edits', () => {
         </VerboseMockedProvider>
       </Provider>
     );
-    const user = userEvent.setup();
 
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
@@ -146,6 +146,7 @@ describe('Trb Admin: Action: Request Edits', () => {
   });
 
   it('shows error notice when submission fails', async () => {
+    const user = userEvent.setup();
     render(
       <MockedProvider
         mocks={[
@@ -172,7 +173,6 @@ describe('Trb Admin: Action: Request Edits', () => {
         </MemoryRouter>
       </MockedProvider>
     );
-    const user = userEvent.setup();
 
     await screen.findByText(
       i18next.t<string>('technicalAssistance:actionRequestEdits.heading')

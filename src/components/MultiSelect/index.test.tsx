@@ -39,6 +39,7 @@ describe('MultiSelect', () => {
   });
 
   it('updates input values when changing options and their associated tags', async () => {
+    const user = userEvent.setup();
     const { getByLabelText, getByTestId, queryByTestId } = render(
       <form data-testid="form">
         <label htmlFor="colors">Colors</label>
@@ -50,8 +51,6 @@ describe('MultiSelect', () => {
         />
       </form>
     );
-
-    const user = userEvent.setup();
 
     const label = getByLabelText('Colors');
 

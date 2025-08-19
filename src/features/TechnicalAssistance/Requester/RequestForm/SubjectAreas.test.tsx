@@ -109,8 +109,8 @@ function renderSubjectAreas() {
 
 describe('Trb Request form: Subject areas', () => {
   it('checks subject area form elements', async () => {
-    const { asFragment, getByRole, getByTestId } = renderSubjectAreas();
     const user = userEvent.setup();
+    const { asFragment, getByRole, getByTestId } = renderSubjectAreas();
 
     expect(asFragment()).toMatchSnapshot();
 

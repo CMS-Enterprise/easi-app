@@ -126,6 +126,7 @@ describe('The home page', () => {
 
   describe('is a grt reviewer', () => {
     it('renders the open and closed requests', async () => {
+      const user = userEvent.setup();
       render(
         <MemoryRouter initialEntries={['/']} initialIndex={0}>
           <MockedProvider mocks={mocks}>
@@ -137,7 +138,6 @@ describe('The home page', () => {
           </MockedProvider>
         </MemoryRouter>
       );
-      const user = userEvent.setup();
 
       // Check open requests count
       expect(
@@ -163,6 +163,7 @@ describe('The home page', () => {
     it('renders the select admin view dropdown', async () => {
       window.localStorage.clear();
 
+      const user = userEvent.setup();
       const { getByTestId, getByRole, findByRole } = render(
         <MemoryRouter>
           <Provider store={adminStore}>
@@ -174,8 +175,6 @@ describe('The home page', () => {
           </Provider>
         </MemoryRouter>
       );
-
-      const user = userEvent.setup();
 
       // check that select field defaults to TRB
       const selectField = getByTestId('select-admin-view');

@@ -14,6 +14,7 @@ import SendFeedback from '.';
 
 describe('Help forms', () => {
   it('submits the "Send Feedback" form successfully after a failed attempt', async () => {
+    const user = userEvent.setup();
     const { asFragment, findByText, getByLabelText, getByRole, getByTestId } =
       render(
         <MemoryRouter initialEntries={['/help/send-feedback']}>
@@ -52,7 +53,6 @@ describe('Help forms', () => {
           </Route>
         </MemoryRouter>
       );
-    const user = userEvent.setup();
 
     // Snapshot of the form's initial state
     expect(asFragment()).toMatchSnapshot();
@@ -90,6 +90,7 @@ describe('Help forms', () => {
   });
 
   it('submits the "Report A Problem" form successfully after a failed attempt', async () => {
+    const user = userEvent.setup();
     const { asFragment, findByText, getByLabelText, getByRole, getByTestId } =
       render(
         <MemoryRouter initialEntries={['/help/report-a-problem']}>
@@ -125,8 +126,6 @@ describe('Help forms', () => {
           </Route>
         </MemoryRouter>
       );
-
-    const user = userEvent.setup();
 
     // Snapshot of the form's initial state
     expect(asFragment()).toMatchSnapshot();

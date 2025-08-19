@@ -19,6 +19,7 @@ describe('Table Filter Componenet', () => {
   });
 
   it('display query text in input', async () => {
+    const user = userEvent.setup();
     render(
       <GlobalClientFilter
         setGlobalFilter={() => true}
@@ -27,7 +28,6 @@ describe('Table Filter Componenet', () => {
         className="margin-bottom-5"
       />
     );
-    const user = userEvent.setup();
 
     await user.type(screen.getByRole('searchbox'), 'system-1');
     expect(screen.getByRole('searchbox')).toHaveValue('system-1');

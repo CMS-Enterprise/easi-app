@@ -290,6 +290,7 @@ describe('Trb Admin Team Home', () => {
   });
 
   it('switches table data between open and closed tabs', async () => {
+    const user = userEvent.setup();
     const { findByRole, findByTestId } = render(
       <Provider store={store}>
         <MemoryRouter>
@@ -303,7 +304,6 @@ describe('Trb Admin Team Home', () => {
         </MemoryRouter>
       </Provider>
     );
-    const user = userEvent.setup();
 
     const open = await findByRole('button', {
       name: i18next.t<string>(

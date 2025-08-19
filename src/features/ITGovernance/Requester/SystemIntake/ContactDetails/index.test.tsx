@@ -66,6 +66,7 @@ describe('System intake form - Contact details', () => {
   });
 
   it('renders error messages', async () => {
+    const user = userEvent.setup();
     render(
       <VerboseMockedProvider
         addTypename
@@ -77,7 +78,6 @@ describe('System intake form - Contact details', () => {
         <ContactDetails systemIntake={emptySystemIntake} />
       </VerboseMockedProvider>
     );
-    const user = userEvent.setup();
 
     await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
 

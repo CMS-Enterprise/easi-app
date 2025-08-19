@@ -78,8 +78,8 @@ describe('Business case request description form', () => {
   });
 
   it('fills all fields', async () => {
-    await renderPage(defaultStore);
     const user = userEvent.setup();
+    await renderPage(defaultStore);
 
     const businessNeedField = screen.getByRole('textbox', {
       name: /business or user need/i
