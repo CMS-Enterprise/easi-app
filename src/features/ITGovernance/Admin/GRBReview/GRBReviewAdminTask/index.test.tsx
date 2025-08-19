@@ -22,6 +22,10 @@ import GRBReviewAdminTask from './index';
 
 describe('GRBReviewAdminTask', () => {
   describe('Send review reminder', () => {
+    let user: ReturnType<typeof userEvent.setup>;
+    beforeEach(() => {
+      user = userEvent.setup();
+    });
     it('renders the task with no previous reminder sent', async () => {
       render(
         <MemoryRouter>
@@ -99,7 +103,7 @@ describe('GRBReviewAdminTask', () => {
         </MemoryRouter>
       );
 
-      userEvent.click(
+      await user.click(
         screen.getByRole('button', {
           name: 'Send reminder'
         })
@@ -160,7 +164,7 @@ describe('GRBReviewAdminTask', () => {
 
       // Open send remindermodal
 
-      userEvent.click(openModalButton);
+      await user.click(openModalButton);
 
       const modal = await screen.findByRole('dialog');
 
@@ -170,7 +174,7 @@ describe('GRBReviewAdminTask', () => {
 
       // Check that clicking the send reminder button shows an error message
 
-      userEvent.click(sendReminderButton);
+      await user.click(sendReminderButton);
 
       expect(await screen.findByTestId('alert')).toHaveTextContent(
         'There was an issue sending your reminder.'
@@ -178,7 +182,7 @@ describe('GRBReviewAdminTask', () => {
 
       // Close modal
 
-      userEvent.click(
+      await user.click(
         screen.getByRole('button', { name: 'Go back without sending' })
       );
 
@@ -186,7 +190,7 @@ describe('GRBReviewAdminTask', () => {
 
       // Open modal and check that error message has been cleared
 
-      userEvent.click(openModalButton);
+      await user.click(openModalButton);
 
       expect(await screen.findByRole('dialog')).toBeInTheDocument();
 

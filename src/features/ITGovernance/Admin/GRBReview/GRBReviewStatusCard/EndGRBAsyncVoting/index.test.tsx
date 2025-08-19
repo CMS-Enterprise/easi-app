@@ -27,6 +27,10 @@ const grbVotingInformation: SystemIntakeGRBReviewFragment['grbVotingInformation'
 const grbReviewAsyncEndDate = '2050-10-01T00:00:00Z';
 
 describe('End GRB async voting modal', () => {
+  let user: ReturnType<typeof userEvent.setup>;
+  beforeEach(() => {
+    user = userEvent.setup();
+  });
   it('calculates the time remaining', async () => {
     render(
       <MemoryRouter>
@@ -45,7 +49,7 @@ describe('End GRB async voting modal', () => {
       grbReviewAsyncEndDate
     );
 
-    userEvent.click(screen.getByRole('button', { name: 'End voting' }));
+    await user.click(screen.getByRole('button', { name: 'End voting' }));
 
     expect(
       await screen.findByRole('heading', { name: 'End voting early?' })
@@ -70,7 +74,7 @@ describe('End GRB async voting modal', () => {
       </MemoryRouter>
     );
 
-    userEvent.click(screen.getByRole('button', { name: 'End voting' }));
+    await user.click(screen.getByRole('button', { name: 'End voting' }));
 
     expect(
       await screen.findByRole('heading', { name: 'End voting early?' })

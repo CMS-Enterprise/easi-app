@@ -1,10 +1,6 @@
-import { FormattedFundingSource } from 'components/FundingSources';
+import SystemIntakeValidationSchema from './systemIntakeSchema';
 
-import SystemIntakeValidationSchema, {
-  FundingSourcesValidationSchema
-} from './systemIntakeSchema';
-
-describe('System intake validation', () => {
+describe('System intake contract dates', () => {
   it.each([
     { month: '01', day: '20', year: '1999' },
     { month: '12', day: '9', year: '2000' }
@@ -53,87 +49,5 @@ describe('System intake validation', () => {
         ).rejects.toThrow();
       })
     );
-  });
-});
-
-describe('Funding sources form validation', () => {
-  const fundingSources: FormattedFundingSource[] = [
-    {
-      __typename: 'SystemIntakeFundingSource',
-      id: '414c80dc-8f8a-4bed-9aa0-29342d860190',
-      fundingNumber: '111111',
-      sources: ['Fed Admin', 'ACA 3021']
-    },
-    {
-      __typename: 'SystemIntakeFundingSource',
-      id: '00a5db89-d05b-49e1-b6ac-f6f21c5d0992',
-      fundingNumber: '222222',
-      sources: ['HITECH Medicaid']
-    }
-  ];
-
-  const newFundingSource: FormattedFundingSource = {
-    __typename: 'SystemIntakeFundingSource',
-    id: '75e52b6f-f120-48b2-b87d-137cfc0388b9',
-    fundingNumber: '333333',
-    sources: ['HITECH Medicare', 'Fed Admin', 'ACA 3021']
-  };
-
-  it('passes basic validation', async () => {
-    await expect(
-      FundingSourcesValidationSchema.isValid({
-        fundingSources: [newFundingSource]
-      })
-    ).resolves.toBeTruthy();
-  });
-
-  it('validates funding number', async () => {
-    // Empty funding number
-    await expect(
-      FundingSourcesValidationSchema.validate({
-        fundingSources: [{ ...newFundingSource, fundingNumber: '' }]
-      })
-    ).rejects.toThrow('Funding number must be exactly 6 digits');
-
-    // Must be exactly 6 digits
-    await expect(
-      FundingSourcesValidationSchema.validate({
-        fundingSources: [{ ...newFundingSource, fundingNumber: '1' }]
-      })
-    ).rejects.toThrow('Funding number must be exactly 6 digits');
-
-    await expect(
-      FundingSourcesValidationSchema.validate({
-        fundingSources: [{ ...newFundingSource, fundingNumber: '1234567' }]
-      })
-    ).rejects.toThrow('Funding number must be exactly 6 digits');
-
-    // Only accepts numbers
-    await expect(
-      FundingSourcesValidationSchema.validate({
-        fundingSources: [{ ...newFundingSource, fundingNumber: 'abcdef' }]
-      })
-    ).rejects.toThrow('Funding number can only contain digits');
-
-    // Must be unique
-    await expect(
-      FundingSourcesValidationSchema.validate({
-        fundingSources: [
-          ...fundingSources,
-          {
-            ...newFundingSource,
-            fundingNumber: fundingSources[0].fundingNumber
-          }
-        ]
-      })
-    ).rejects.toThrow('Funding number must be unique');
-  });
-
-  it('validates funding sources', async () => {
-    await expect(
-      FundingSourcesValidationSchema.validate({
-        fundingSources: [{ ...newFundingSource, sources: [] }]
-      })
-    ).rejects.toThrow('Select a funding source');
   });
 });

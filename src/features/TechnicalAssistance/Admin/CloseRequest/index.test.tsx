@@ -66,6 +66,11 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
     }
   };
 
+  let user: ReturnType<typeof userEvent.setup>;
+  beforeEach(() => {
+    user = userEvent.setup();
+  });
+
   it('closes a request with a reason', async () => {
     const { getByLabelText, findByText, findByRole } = render(
       <Provider store={store}>
@@ -175,7 +180,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
     });
     expect(requester).toBeChecked();
 
-    userEvent.type(
+    await user.type(
       getByLabelText(
         RegExp(
           i18next.t<string>('technicalAssistance:actionCloseRequest.label')
@@ -185,7 +190,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
     );
 
     // Click through the modal
-    userEvent.click(
+    await user.click(
       await findByRole('button', {
         name: i18next.t<string>(
           'technicalAssistance:actionCloseRequest.confirmModal.close'
@@ -235,7 +240,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
       i18next.t<string>('technicalAssistance:actionCloseRequest.heading')
     );
 
-    userEvent.type(
+    await user.type(
       getByLabelText(
         RegExp(
           i18next.t<string>('technicalAssistance:actionCloseRequest.label')
@@ -244,7 +249,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
       text
     );
 
-    userEvent.click(
+    await user.click(
       await findByRole('button', {
         name: i18next.t<string>(
           'technicalAssistance:actionCloseRequest.confirmModal.close'
@@ -366,7 +371,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
     });
     expect(requester).toBeChecked();
 
-    userEvent.type(
+    await user.type(
       getByLabelText(
         RegExp(
           i18next.t<string>('technicalAssistance:actionReopenRequest.label')
@@ -375,7 +380,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
       text
     );
 
-    userEvent.click(
+    await user.click(
       getByRole('button', {
         name: i18next.t<string>(
           'technicalAssistance:actionReopenRequest.submit'
@@ -427,7 +432,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
       i18next.t<string>('technicalAssistance:actionReopenRequest.heading')
     );
 
-    userEvent.type(
+    await user.type(
       getByLabelText(
         RegExp(
           i18next.t<string>('technicalAssistance:actionReopenRequest.label')
@@ -436,7 +441,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
       text
     );
 
-    userEvent.click(
+    await user.click(
       getByRole('button', {
         name: i18next.t<string>(
           'technicalAssistance:actionReopenRequest.submit'

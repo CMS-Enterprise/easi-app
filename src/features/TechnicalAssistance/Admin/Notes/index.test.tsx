@@ -186,6 +186,7 @@ describe('Trb Admin Notes: View Notes', () => {
         </VerboseMockedProvider>
       </Provider>
     );
+    const user = userEvent.setup();
 
     screen.getByText(
       i18next.t<string>('technicalAssistance:notes.description')
@@ -221,7 +222,7 @@ describe('Trb Admin Notes: View Notes', () => {
       )
     });
 
-    userEvent.click(moreNotes);
+    await user.click(moreNotes);
     expect(moreNotes).not.toBeInTheDocument();
 
     const hiddenNote2 = screen.queryByText(adminNotes[5].noteText);

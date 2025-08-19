@@ -59,12 +59,12 @@ export const formatFundingSources = (
   /** Formats sources into {fundingNumber: [keys]} object */
   const sourcesObject = fundingSources.reduce<{
     [index: string]: Array<string>;
-  }>((acc, { fundingNumber, source }) => {
-    if (!fundingNumber || !source) return acc;
+  }>((acc, { projectNumber, investment }) => {
+    if (!projectNumber || !investment) return acc;
 
     return {
       ...acc,
-      [fundingNumber]: [...(acc[fundingNumber] || []), source]
+      [projectNumber]: [...(acc[projectNumber] || []), investment]
     };
   }, {});
 

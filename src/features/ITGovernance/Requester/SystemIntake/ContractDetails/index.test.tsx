@@ -21,6 +21,7 @@ describe('System intake form - Contract details', () => {
   });
 
   it('renders error messages', async () => {
+    const user = userEvent.setup();
     render(
       <VerboseMockedProvider>
         <ContractDetails systemIntake={emptySystemIntake} />
@@ -28,7 +29,7 @@ describe('System intake form - Contract details', () => {
     );
 
     // Submit empty form
-    userEvent.click(screen.getByRole('button', { name: 'Next' }));
+    await user.click(screen.getByRole('button', { name: 'Next' }));
 
     expect(
       await screen.findByRole('heading', {
@@ -37,6 +38,12 @@ describe('System intake form - Contract details', () => {
     ).toBeInTheDocument();
 
     const errorSummary = screen.getByTestId('contract-details-errors');
+
+    expect(
+      within(errorSummary).getByText(
+        'Add at least one funding source to the request'
+      )
+    ).toBeInTheDocument();
 
     expect(
       within(errorSummary).getByText(
