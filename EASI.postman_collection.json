@@ -1450,15 +1450,15 @@
 							"response": []
 						},
 						{
-							"name": "Unlink",
+							"name": "SetSystemSupportAndUnlinkSystemIntakeRelation",
 							"request": {
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation UnlinkSystemIntakeRelation ($intakeID: UUID!) {\r\n    unlinkSystemIntakeRelation(intakeID: $intakeID) {\r\n        userErrors {\r\n            message\r\n            path\r\n        }\r\n        systemIntake {\r\n            id\r\n            step\r\n            state\r\n            relationType\r\n            contractName\r\n            contractNumbers {\r\n                contractNumber\r\n            }\r\n            systemIntakeSystems {\r\n                id\r\n            }\r\n        }\r\n    }\r\n}",
-										"variables": "{\r\n    \"intakeID\": \"{{systemIntakeID}}\"\r\n}"
+										"query": "mutation setSystemSupportAndUnlinkSystemIntakeRelation ($intakeID: UUID!, $doesNotSupportSystems: Boolean!) {\r\n    setSystemSupportAndUnlinkSystemIntakeRelation(intakeID: $intakeID, doesNotSupportSystems: $doesNotSupportSystems) {\r\n        userErrors {\r\n            message\r\n            path\r\n        }\r\n        systemIntake {\r\n            doesNotSupportSystems\r\n            id\r\n            step\r\n            state\r\n            relationType\r\n            contractName\r\n            contractNumbers {\r\n                contractNumber\r\n            }\r\n            systemIntakeSystems {\r\n                id\r\n            }\r\n        }\r\n    }\r\n}",
+										"variables": "{\r\n    \"intakeID\": \"{{systemIntakeID}}\",\r\n    \"doesNotSupportSystems\": true\r\n}"
 									}
 								},
 								"url": {
