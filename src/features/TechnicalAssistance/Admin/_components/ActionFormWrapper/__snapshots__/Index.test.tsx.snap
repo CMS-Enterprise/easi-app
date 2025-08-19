@@ -1,0 +1,307 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Email recipient fields component > renders recipients 1`] = `
+<DocumentFragment>
+  <div
+    class="grid-container width-full"
+    data-testid="gridContainer"
+  >
+    <nav
+      aria-label="Breadcrumbs"
+      class="usa-breadcrumb usa-breadcrumb--wrap padding-bottom-0"
+      style="background-color: transparent;"
+    >
+      <ol
+        class="usa-breadcrumb__list"
+      >
+        <li
+          class="usa-breadcrumb__list-item"
+        >
+          <a
+            class="text-primary usa-breadcrumb__link"
+            href="/trb"
+          >
+            <span>
+              Home
+            </span>
+          </a>
+        </li>
+        <li
+          class="usa-breadcrumb__list-item"
+        >
+          <a
+            class="text-primary usa-breadcrumb__link"
+            href="/trb/undefined/initial-request-form"
+          >
+            <span>
+              TRB request details
+            </span>
+          </a>
+        </li>
+        <li
+          aria-current="page"
+          class="usa-breadcrumb__list-item usa-current"
+        >
+          <span>
+            Page title
+          </span>
+        </li>
+      </ol>
+    </nav>
+    <h1
+      aria-live="polite"
+      class="easi-h1 margin-bottom-0"
+      tabindex="-1"
+    >
+      form title
+    </h1>
+    <p
+      class="line-height-body-5 font-body-lg text-light margin-0"
+    >
+      Form description
+    </p>
+    <p
+      class="margin-top-1 text-base"
+    >
+      Fields marked with an asterisk (
+      <span
+        class="text-red margin-x-05"
+      >
+        *
+      </span>
+      ) are required.
+    </p>
+    <form
+      class="usa-form maxw-none tablet:grid-col-12 desktop:grid-col-6"
+      data-testid="form"
+    >
+      <h3
+        class="margin-top-6 margin-bottom-0"
+      >
+        Notification email
+      </h3>
+      <p
+        class="margin-0 line-height-body-5"
+      >
+        A notification email will be sent to the requester when you complete this action. If you would like, you may also send a copy to the TRB mailbox and/or to any additional attendees.
+      </p>
+      <div
+        class="usa-form-group margin-top-4"
+      >
+        <legend>
+          Choose recipients
+        </legend>
+        <p
+          class="margin-bottom-0 margin-top-05"
+        >
+          <span
+            class="text-bold"
+          >
+            3
+          </span>
+           recipients selected
+        </p>
+        <ul
+          class="usa-list usa-list--unstyled"
+        >
+          <li>
+            <div
+              class="easi-checkbox usa-checkbox"
+            >
+              <input
+                checked=""
+                class="usa-checkbox__input"
+                id="notifyEuaIds.0"
+                name="notifyEuaIds"
+                type="checkbox"
+                value="ABCD"
+              />
+              <label
+                class="usa-checkbox__label"
+                for="notifyEuaIds.0"
+              >
+                <span>
+                  Adeline Aarons, CMS (Requester)
+                </span>
+                <span
+                  class="display-block text-base-dark"
+                >
+                  adeline.aarons@local.fake
+                </span>
+              </label>
+            </div>
+          </li>
+          <li>
+            <div
+              class="easi-checkbox usa-checkbox"
+            >
+              <input
+                checked=""
+                class="usa-checkbox__input"
+                id="copyTrbMailbox"
+                name="copyTrbMailbox"
+                type="checkbox"
+                value="true"
+              />
+              <label
+                class="usa-checkbox__label"
+                for="copyTrbMailbox"
+              >
+                <span>
+                  Copy TRB Mailbox
+                </span>
+                <span
+                  class="display-block text-base-dark"
+                >
+                  cms-trb@cms.hhs.gov
+                </span>
+              </label>
+            </div>
+          </li>
+          <li>
+            <div
+              class="easi-checkbox usa-checkbox"
+            >
+              <input
+                checked=""
+                class="usa-checkbox__input"
+                id="copyITGovMailbox"
+                name="copyITGovMailbox"
+                type="checkbox"
+                value="true"
+              />
+              <label
+                class="usa-checkbox__label"
+                for="copyITGovMailbox"
+              >
+                <span>
+                  Copy ITGO Mailbox
+                </span>
+                <span
+                  class="display-block text-base-dark"
+                >
+                  IT_Governance@cms.hhs.gov
+                </span>
+              </label>
+            </div>
+          </li>
+          <button
+            class="usa-button usa-button--unstyled truncated-content-button display-flex flex-align-center margin-top-2"
+            data-testid="truncatedContentButton"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="usa-icon margin-x-05"
+              focusable="false"
+              height="1em"
+              role="img"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m7 14 5-5 5 5z"
+              />
+            </svg>
+             Show 3 fewer recipients
+          </button>
+          <div
+            class="easi-checkbox usa-checkbox"
+          >
+            <input
+              class="usa-checkbox__input"
+              id="notifyEuaIds.2"
+              name="notifyEuaIds"
+              type="checkbox"
+              value="A11Y"
+            />
+            <label
+              class="usa-checkbox__label"
+              for="notifyEuaIds.2"
+            >
+              <span>
+                Ally Anderson, CCSQ (Cloud Navigator)
+              </span>
+              <span
+                class="display-block text-base-dark"
+              >
+                ally.anderson@local.fake
+              </span>
+            </label>
+          </div>
+          <div
+            class="easi-checkbox usa-checkbox"
+          >
+            <input
+              class="usa-checkbox__input"
+              id="notifyEuaIds.3"
+              name="notifyEuaIds"
+              type="checkbox"
+              value="ADMI"
+            />
+            <label
+              class="usa-checkbox__label"
+              for="notifyEuaIds.3"
+            >
+              <span>
+                Audrey Abrams, CM (Privacy Advisor)
+              </span>
+              <span
+                class="display-block text-base-dark"
+              >
+                audrey.abrams@local.fake
+              </span>
+            </label>
+          </div>
+          <div
+            class="easi-checkbox usa-checkbox"
+          >
+            <input
+              class="usa-checkbox__input"
+              id="notifyEuaIds.4"
+              name="notifyEuaIds"
+              type="checkbox"
+              value="ADMN"
+            />
+            <label
+              class="usa-checkbox__label"
+              for="notifyEuaIds.4"
+            >
+              <span>
+                Aaron Adams, CPI (System Maintainer)
+              </span>
+              <span
+                class="display-block text-base-dark"
+              >
+                aaron.adams@local.fake
+              </span>
+            </label>
+          </div>
+          <div
+            class="usa-alert usa-alert--warning usa-alert--slim"
+            data-testid="alert"
+          >
+            <div
+              class="usa-alert__body"
+            >
+              <p
+                class="usa-alert__text"
+              >
+                One or more of the selected recipients are external to the CMS organization. Please be sure they should see the information in this notification email before proceeding.
+              </p>
+            </div>
+          </div>
+          <button
+            class="usa-button usa-button--outline margin-top-3"
+            data-testid="button"
+            type="button"
+          >
+            Add another recipient
+          </button>
+        </ul>
+      </div>
+    </form>
+  </div>
+</DocumentFragment>
+`;

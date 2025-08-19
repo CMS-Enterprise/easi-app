@@ -365,6 +365,91 @@ exports[`Help forms > submits the "Report A Problem" form successfully after a f
 </DocumentFragment>
 `;
 
+exports[`Help forms > submits the "Report A Problem" form successfully after a failed attempt 2`] = `
+<DocumentFragment>
+  <main
+    class="easi-main-content grid-container help-send-feedback"
+    id="main-content"
+    role="main"
+    tabindex="-1"
+  >
+    <button
+      class="usa-button usa-button--unstyled margin-top-6"
+      data-testid="button"
+      type="button"
+    >
+      <svg
+        aria-hidden="true"
+        class="usa-icon margin-right-05 margin-top-3px text-tbottom"
+        focusable="false"
+        height="1em"
+        role="img"
+        viewBox="0 0 24 24"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+        />
+      </svg>
+      Close tab
+    </button>
+    <h1
+      class="margin-top-2 margin-bottom-1"
+    >
+      Thank you for your feedback
+    </h1>
+    <div
+      class="font-body-lg line-height-body-2 line-height-body-5 text-light"
+    >
+      The EASi team has received your report and will review it.
+    </div>
+    <div
+      class="margin-top-3 height-card-lg"
+    >
+      <button
+        class="usa-button"
+        data-testid="button"
+        type="button"
+      >
+        Close tab and return to EASi
+      </button>
+      <div
+        class="margin-top-5"
+      >
+        <div
+          class="text-bold"
+        >
+          Send another report
+        </div>
+        <div
+          class="margin-top-1"
+        >
+          <button
+            class="usa-button usa-button--unstyled"
+            data-testid="button"
+            type="button"
+          >
+            Report a problem with EASi
+          </button>
+        </div>
+        <div
+          class="margin-top-05"
+        >
+          <button
+            class="usa-button usa-button--unstyled"
+            data-testid="button"
+            type="button"
+          >
+            Send feedback for the EASi team
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+</DocumentFragment>
+`;
+
 exports[`Help forms > submits the "Send Feedback" form successfully after a failed attempt 1`] = `
 <DocumentFragment>
   <main
@@ -1089,6 +1174,91 @@ exports[`Help forms > submits the "Send Feedback" form successfully after a fail
             </button>
           </div>
         </form>
+      </div>
+    </div>
+  </main>
+</DocumentFragment>
+`;
+
+exports[`Help forms > submits the "Send Feedback" form successfully after a failed attempt 2`] = `
+<DocumentFragment>
+  <main
+    class="easi-main-content grid-container help-send-feedback"
+    id="main-content"
+    role="main"
+    tabindex="-1"
+  >
+    <button
+      class="usa-button usa-button--unstyled margin-top-6"
+      data-testid="button"
+      type="button"
+    >
+      <svg
+        aria-hidden="true"
+        class="usa-icon margin-right-05 margin-top-3px text-tbottom"
+        focusable="false"
+        height="1em"
+        role="img"
+        viewBox="0 0 24 24"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+        />
+      </svg>
+      Close tab
+    </button>
+    <h1
+      class="margin-top-2 margin-bottom-1"
+    >
+      Thank you for your feedback
+    </h1>
+    <div
+      class="font-body-lg line-height-body-2 line-height-body-5 text-light"
+    >
+      The EASi team has received your report and will review it.
+    </div>
+    <div
+      class="margin-top-3 height-card-lg"
+    >
+      <button
+        class="usa-button"
+        data-testid="button"
+        type="button"
+      >
+        Close tab and return to EASi
+      </button>
+      <div
+        class="margin-top-5"
+      >
+        <div
+          class="text-bold"
+        >
+          Send another report
+        </div>
+        <div
+          class="margin-top-1"
+        >
+          <button
+            class="usa-button usa-button--unstyled"
+            data-testid="button"
+            type="button"
+          >
+            Report a problem with EASi
+          </button>
+        </div>
+        <div
+          class="margin-top-05"
+        >
+          <button
+            class="usa-button usa-button--unstyled"
+            data-testid="button"
+            type="button"
+          >
+            Send feedback for the EASi team
+          </button>
+        </div>
       </div>
     </div>
   </main>

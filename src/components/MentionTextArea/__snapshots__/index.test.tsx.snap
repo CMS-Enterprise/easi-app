@@ -21,8 +21,6 @@ exports[`MentionTextArea component > renders the component to view text 1`] = `
   </div>
 </DocumentFragment>
 `;
-<<<<<<< HEAD
-=======
 
 exports[`MentionTextArea component > renders the editable text area component 1`] = `
 <DocumentFragment>
@@ -52,4 +50,3 @@ exports[`MentionTextArea component > renders the editable text area component 1`
   </div>
 </DocumentFragment>
 `;
->>>>>>> feature/EASI-4827_expanded_system_linking
