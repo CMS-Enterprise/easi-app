@@ -35,6 +35,7 @@ export default {
   dontAddAndReturn: "Don't add a system and return to request",
   dontEditAndReturn: "Don't edit and return to request",
   dontEditAndReturnRequestDetails: "Don't edit and return to request details",
+  returnToRequestDetails: 'Return to request details',
   addSystem: 'Add system',
   relationshipTypes: {
     pleaseExplain: 'Please explain',
