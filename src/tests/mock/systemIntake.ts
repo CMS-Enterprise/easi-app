@@ -526,6 +526,7 @@ export const systemIntake: SystemIntakeFragmentFragment = {
     numberOfNotVoted: 3
   },
   grbReviewAsyncEndDate: null,
+  grbReviewStartedAt: null,
   systemIntakeSystems: []
 };
 

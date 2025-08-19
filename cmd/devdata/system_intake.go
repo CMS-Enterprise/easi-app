@@ -439,10 +439,10 @@ func updateSystemIntakeContractDetails(
 	intake *models.SystemIntake,
 ) *models.SystemIntake {
 	existingFunding := true
-	fundingNumber1 := "123456"
-	fundingNumber2 := "789012"
-	source1 := "ACA 3021"
-	source2 := "Fed Admin"
+	projectNumber1 := "123456"
+	projectNumber2 := "789012"
+	investment1 := "ACA 3021"
+	investment2 := "Fed Admin"
 	source3 := "MIP Base"
 	currentAnnualSpending := "It's kind of a lot"
 	currentAnnualSpendingITPortion := "75%"
@@ -459,16 +459,16 @@ func updateSystemIntakeContractDetails(
 			ExistingFunding: &existingFunding,
 			FundingSources: []*models.SystemIntakeFundingSourceInput{
 				{
-					FundingNumber: &fundingNumber1,
-					Source:        &source1,
+					ProjectNumber: &projectNumber1,
+					Investment:    &investment1,
 				},
 				{
-					FundingNumber: &fundingNumber2,
-					Source:        &source2,
+					ProjectNumber: &projectNumber2,
+					Investment:    &investment2,
 				},
 				{
-					FundingNumber: &fundingNumber2,
-					Source:        &source3,
+					ProjectNumber: &projectNumber2,
+					Investment:    &source3,
 				},
 			},
 		},

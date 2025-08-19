@@ -17,6 +17,7 @@ import error from './error';
 import externalLinkModal from './externalLinkModal';
 import footer from './footer';
 import form from './form';
+import fundingSources from './fundingSources';
 import general from './general';
 import governanceOverview from './governanceOverview';
 import grbReview from './grbReview';
@@ -68,7 +69,8 @@ const enUS = {
   tableAndPagination,
   taskList,
   technicalAssistance,
-  termsAndConditions
+  termsAndConditions,
+  fundingSources
 };
 
 export default enUS;

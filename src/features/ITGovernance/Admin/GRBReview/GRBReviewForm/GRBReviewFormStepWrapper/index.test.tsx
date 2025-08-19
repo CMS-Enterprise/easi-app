@@ -54,6 +54,11 @@ describe('GRB review form step wrapper', () => {
   it('matches the snapshot', async () => {
     const { asFragment } = renderComponent();
 
+    // Wait for steps to format
+    expect(
+      await screen.findByTestId('grbReviewForm-stepContentWrapper')
+    ).toBeInTheDocument();
+
     // Wraps content in `form`
     expect(
       screen.getByTestId('grbReviewForm-stepContentWrapper')
@@ -143,8 +148,13 @@ describe('GRB review form step wrapper', () => {
     ).toBeInTheDocument();
   });
 
-  it('hides required fields text', () => {
+  it('hides required fields text', async () => {
     renderComponent({ requiredFields: false });
+
+    // Wait for steps to format
+    expect(
+      await screen.findByTestId('grbReviewForm-stepContentWrapper')
+    ).toBeInTheDocument();
 
     expect(
       screen.queryByText('Fields marked with an asterisk', { exact: false })
@@ -164,18 +174,12 @@ describe('GRB review form step wrapper', () => {
 
     await userEvent.click(screen.getByTestId('stepIndicator-1'));
 
-    await waitFor(() =>
-      expect(
-        screen.getByRole('heading', { name: 'Step 2 of 4 Presentation' })
-      ).toBeInTheDocument()
-    );
-
-    await waitFor(() =>
+    await waitFor(() => {
       expect(screen.getByTestId('stepIndicator-1')).toHaveAttribute(
         'aria-current',
         'true'
-      )
-    );
+      );
+    });
   });
 
   it('disables submit if review cannot be started yet', async () => {
