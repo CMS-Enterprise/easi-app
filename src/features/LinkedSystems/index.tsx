@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import {
@@ -7,7 +7,6 @@ import {
   Fieldset,
   Form,
   Grid,
-  Icon,
   Link,
   ModalHeading
 } from '@trussworks/react-uswds';
@@ -22,7 +21,6 @@ import {
 import Alert from 'components/Alert';
 import Breadcrumbs from 'components/Breadcrumbs';
 import CheckboxField from 'components/CheckboxField';
-import IconButton from 'components/IconButton';
 import MainContent from 'components/MainContent';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
@@ -32,40 +30,6 @@ import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import useMessage from 'hooks/useMessage';
 
 import LinkedSystemsTable from './LinkedSystemsTable';
-
-// --- Dirty-check helpers (track membership + relationship edits) ---
-type Snapshot = {
-  noSystemsUsed: boolean;
-  systemSignatures: string[]; // stable, sorted
-};
-
-const sortStrings = (arr?: (string | null | undefined)[]) =>
-  (arr ?? [])
-    .filter(Boolean)
-    .map(String)
-    .sort((a, b) => a.localeCompare(b));
-
-const trim = (s?: string | null) => (s ?? '').trim();
-
-/** Build a stable signature for one linked system object. */
-const systemSignature = (s: SystemIntakeSystem): string => {
-  const sys = s as any;
-  return JSON.stringify({
-    id: String(sys.id),
-    systemID: String(sys.systemID),
-    systemRelationshipType: sortStrings(sys.systemRelationshipType),
-    otherSystemRelationshipDescription: trim(
-      sys.otherSystemRelationshipDescription
-    )
-  });
-};
-
-const getSystemSignatures = (systems: SystemIntakeSystem[] = []) =>
-  systems.map(systemSignature).sort();
-
-const arraysEqual = (a: string[], b: string[]) =>
-  a.length === b.length && a.every((v, i) => v === b[i]);
-// --- end helpers ---
 
 const LinkedSystems = () => {
   // Id refers to system intake
@@ -218,39 +182,6 @@ const LinkedSystems = () => {
     }
   };
 
-  // Current signatures reflect membership and relationship changes
-  const currentSystemSignatures = useMemo(
-    () =>
-      getSystemSignatures(
-        ((data?.systemIntakeSystems as SystemIntakeSystem[]) ||
-          []) as SystemIntakeSystem[]
-      ),
-    [data?.systemIntakeSystems]
-  );
-
-  // If we navigated back after add/update elsewhere and set flags in location.state, allow saving
-  const addedOrUpdatedElsewhere = Boolean(
-    state?.successfullyAdded || state?.successfullyUpdated
-  );
-
-  // Dirty when checkbox (derived) differs OR system signatures differ OR updated elsewhere
-  const isDirty = useMemo(() => {
-    if (addedOrUpdatedElsewhere) return true;
-    const snap = initialSnapshotRef.current;
-    if (!snap) return false;
-
-    return (
-      noSystemsUsed !== snap.noSystemsUsed ||
-      !arraysEqual(currentSystemSignatures, snap.systemSignatures)
-    );
-  }, [addedOrUpdatedElsewhere, noSystemsUsed, currentSystemSignatures]);
-
-  // Must be valid per business rules AND dirty
-  const submitEnabled = useMemo(() => {
-    const hasSystems = (data?.systemIntakeSystems?.length ?? 0) > 0;
-    return (hasSystems || noSystemsUsed) && isDirty;
-  }, [data, noSystemsUsed, isDirty]);
-
   if (relationLoading) {
     return <PageLoading />;
   }
@@ -385,27 +316,8 @@ const LinkedSystems = () => {
 
         <ButtonGroup>
           <Button
-            type="button"
-            outline
-            onClick={() => {
-              if (isFromAdmin) {
-                history.push(adminUrl);
-              } else {
-                history.goBack();
-              }
-            }}
-          >
-            {t('itGov:link.form.back')}
-          </Button>
-          <Button
             type="submit"
-            disabled={!submitEnabled}
             onClick={() => {
-              // Optional: reset snapshot so dirty clears right before leaving
-              initialSnapshotRef.current = {
-                noSystemsUsed,
-                systemSignatures: currentSystemSignatures
-              };
               if (isFromAdmin) {
                 history.push(adminUrl);
               } else {
@@ -415,36 +327,9 @@ const LinkedSystems = () => {
               }
             }}
           >
-            {isFromTaskList || isFromAdmin
-              ? t(`itGov:link.form.saveChanges`)
-              : t(`itGov:link.form.continueTaskList`)}
+            {t('linkedSystems:returnToRequestDetails')}
           </Button>
         </ButtonGroup>
-
-        <IconButton
-          icon={<Icon.ArrowBack className="margin-right-05" aria-hidden />}
-          type="button"
-          unstyled
-          onClick={() => {
-            if (isFromTaskList) {
-              history.push(redirectUrl);
-            } else if (isFromAdmin) {
-              history.push(adminUrl);
-            } else {
-              history.goBack();
-            }
-          }}
-        >
-          {isFromTaskList &&
-            !isFromAdmin &&
-            t('itGov:link.form.dontEditAndReturn')}
-
-          {!isFromTaskList &&
-            isFromAdmin &&
-            t('dontEditAndReturnRequestDetails')}
-
-          {!isFromTaskList && !isFromAdmin && t('itGov:link.cancelAndExit')}
-        </IconButton>
       </Form>
 
       {/* Remove single link */}
