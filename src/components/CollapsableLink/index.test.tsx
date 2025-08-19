@@ -15,13 +15,14 @@ describe('The Collapsable Link componnet', () => {
   });
 
   it('renders children content when expanded', async () => {
+    const user = userEvent.setup();
     render(
       <CollapsableLink id="Test" label="Test">
         <div data-testid="children" />
       </CollapsableLink>
     );
 
-    userEvent.click(screen.getByTestId('collapsable-link'));
+    await user.click(screen.getByTestId('collapsable-link'));
     await screen.findByTestId('children');
 
     expect(screen.getByRole('button', { name: 'Test' })).toHaveAttribute(

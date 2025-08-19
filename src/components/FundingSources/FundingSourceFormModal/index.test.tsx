@@ -6,6 +6,7 @@ import FundingSourceFormModal from '.';
 
 describe('FundingSourceFormModal', () => {
   it('renders error messages', async () => {
+    const user = userEvent.setup();
     render(
       <FundingSourceFormModal
         isOpen
@@ -17,7 +18,7 @@ describe('FundingSourceFormModal', () => {
       />
     );
 
-    userEvent.click(
+    await user.click(
       screen.getByRole('button', {
         name: 'Add funding source'
       })
@@ -29,7 +30,7 @@ describe('FundingSourceFormModal', () => {
     ).toBeDisabled();
 
     // Add investment
-    userEvent.type(screen.getByRole('combobox'), 'Fed Admin {enter}');
+    await user.type(screen.getByRole('combobox'), 'Fed Admin {enter}');
     expect(await screen.findByText('1 selected')).toBeInTheDocument();
 
     // Check funding number is numeric
@@ -38,10 +39,12 @@ describe('FundingSourceFormModal', () => {
       name: 'Project number *'
     });
 
-    userEvent.type(projectNumberField, 'aaaaaa');
+    await user.type(projectNumberField, 'aaaaaa');
     expect(projectNumberField).toHaveValue('aaaaaa');
 
-    userEvent.click(screen.getByRole('button', { name: 'Add funding source' }));
+    await user.click(
+      screen.getByRole('button', { name: 'Add funding source' })
+    );
 
     expect(
       await screen.findByText('Project number(s) can only contain digits')
@@ -49,11 +52,13 @@ describe('FundingSourceFormModal', () => {
 
     // Check unique funding number
 
-    userEvent.clear(projectNumberField);
-    userEvent.type(projectNumberField, '123456');
+    await user.clear(projectNumberField);
+    await user.type(projectNumberField, '123456');
     expect(projectNumberField).toHaveValue('123456');
 
-    userEvent.click(screen.getByRole('button', { name: 'Add funding source' }));
+    await user.click(
+      screen.getByRole('button', { name: 'Add funding source' })
+    );
 
     expect(
       await screen.findByText(

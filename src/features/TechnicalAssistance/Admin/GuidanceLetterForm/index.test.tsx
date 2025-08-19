@@ -124,6 +124,11 @@ const waitForPageLoad = async () =>
   waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
 describe('TRB Guidance Letter Form', () => {
+  let user: ReturnType<typeof userEvent.setup>;
+  beforeEach(() => {
+    user = userEvent.setup();
+  });
+
   it('matches the snapshot', async () => {
     const { asFragment } = renderForm('insights');
 
@@ -168,11 +173,11 @@ describe('TRB Guidance Letter Form', () => {
       name: 'Add additional guidance'
     });
 
-    userEvent.click(button);
+    await user.click(button);
 
     // Title field
     const titleInput = await findByRole('textbox', { name: 'Title *' });
-    userEvent.type(titleInput, mockInsight.title);
+    await user.type(titleInput, mockInsight.title);
     expect(titleInput).toHaveValue(mockInsight.title);
 
     // Description field
@@ -184,7 +189,7 @@ describe('TRB Guidance Letter Form', () => {
     const addLinkButton = await findByRole('button', {
       name: 'Add a resource link'
     });
-    userEvent.click(addLinkButton);
+    await user.click(addLinkButton);
 
     const addAnotherLinkButton = await findByRole('button', {
       name: 'Add another resource link'
@@ -194,15 +199,15 @@ describe('TRB Guidance Letter Form', () => {
 
     let linkInput = await findByTestId('links.0.link');
 
-    userEvent.type(linkInput, mockInsight.links[0]);
+    await user.type(linkInput, mockInsight.links[0]);
     expect(linkInput).toHaveValue(mockInsight.links[0]);
 
-    userEvent.click(addAnotherLinkButton);
+    await user.click(addAnotherLinkButton);
 
     linkInput = await findByTestId('links.1.link');
 
     const linkText = `https://www.${mockInsight.links[1]}`;
-    userEvent.type(linkInput, linkText);
+    await user.type(linkInput, linkText);
     expect(linkInput).toHaveValue(linkText);
   });
 
@@ -223,7 +228,7 @@ describe('TRB Guidance Letter Form', () => {
     expect(followupPointInput).toHaveValue(guidanceLetter.followupPoint);
 
     // Check that followup point input is hidden when followup radio field is false
-    userEvent.click(getByRole('radio', { name: 'Not necessary' }));
+    await user.click(getByRole('radio', { name: 'Not necessary' }));
     expect(followupPointInput).not.toBeInTheDocument();
   });
 });

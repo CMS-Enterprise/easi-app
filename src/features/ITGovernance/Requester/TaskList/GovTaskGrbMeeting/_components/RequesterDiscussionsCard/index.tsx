@@ -39,10 +39,9 @@ const RequesterDiscussionsCard = ({
   );
 
   const discussionsWithoutRepliesCount = useMemo(() => {
-    if (!grbDiscussionsPrimary) return 0;
-
-    return grbDiscussionsPrimary.filter(({ replies }) => replies.length === 0)
-      .length;
+    return (grbDiscussionsPrimary ?? []).filter(
+      ({ replies }) => (replies ?? []).length === 0
+    ).length;
   }, [grbDiscussionsPrimary]);
 
   const renderViewButton =

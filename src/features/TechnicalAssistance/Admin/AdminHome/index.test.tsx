@@ -290,6 +290,7 @@ describe('Trb Admin Team Home', () => {
   });
 
   it('switches table data between open and closed tabs', async () => {
+    const user = userEvent.setup();
     const { findByRole, findByTestId } = render(
       <Provider store={store}>
         <MemoryRouter>
@@ -329,7 +330,7 @@ describe('Trb Admin Team Home', () => {
     );
 
     // Switch to closed
-    userEvent.click(closed);
+    await user.click(closed);
 
     expect(open.closest('.easi-request-repo__tab')).not.toHaveClass(
       'easi-request-repo__tab--active'
@@ -344,7 +345,7 @@ describe('Trb Admin Team Home', () => {
     );
 
     // Back to open
-    userEvent.click(open);
+    await user.click(open);
     expect(await findByTestId('trb-existing-cell-1-1')).toHaveTextContent(
       'Second brainstorm'
     );

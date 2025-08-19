@@ -95,6 +95,11 @@ describe('Workspace team page', () => {
     );
   }
 
+  let user: ReturnType<typeof userEvent.setup>;
+  beforeEach(() => {
+    user = userEvent.setup();
+  });
+
   it('renders', async () => {
     const team = getUsernamesWithRoles(teamRoles);
     const { asFragment } = renderWorkspaceEditTeam(team);
@@ -145,7 +150,7 @@ describe('Workspace team page', () => {
 
       const rms = screen.getAllByRole('button', { name: 'Remove' });
 
-      userEvent.click(rms[i]);
+      await user.click(rms[i]);
 
       await screen.findByRole('heading', {
         name: 'Are you sure you want to remove this team member?'
@@ -167,7 +172,7 @@ describe('Workspace team page', () => {
 
     const rms = screen.getAllByRole('button', { name: 'Remove' });
 
-    userEvent.click(rms[1]);
+    await user.click(rms[1]);
 
     await screen.findByRole('heading', {
       name: 'Are you sure you want to remove this team member?'

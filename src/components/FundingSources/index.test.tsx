@@ -59,42 +59,46 @@ describe('Funding sources', () => {
   });
 
   it('opens and closes the form modal', async () => {
+    const user = userEvent.setup();
     render(
       <Wrapper fundingSources={[]}>
         <FundingSources />
       </Wrapper>
     );
 
-    userEvent.click(
+    await user.click(
       screen.getByRole('button', { name: 'Add a funding source' })
     );
 
     expect(await screen.findByRole('dialog')).toBeInTheDocument();
 
-    userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    await user.click(screen.getByRole('button', { name: 'Cancel' }));
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
   it('adds a funding source', async () => {
+    const user = userEvent.setup();
     render(
       <Wrapper fundingSources={[]}>
         <FundingSources />
       </Wrapper>
     );
 
-    userEvent.click(
+    await user.click(
       screen.getByRole('button', { name: 'Add a funding source' })
     );
 
     expect(await screen.findByRole('dialog')).toBeInTheDocument();
 
-    userEvent.type(
+    await user.type(
       screen.getByRole('textbox', { name: 'Project number *' }),
       '123456'
     );
-    userEvent.type(screen.getByRole('combobox'), 'Fed Admin {enter}');
-    userEvent.click(screen.getByRole('button', { name: 'Add funding source' }));
+    await user.type(screen.getByRole('combobox'), 'Fed Admin {enter}');
+    await user.click(
+      screen.getByRole('button', { name: 'Add funding source' })
+    );
 
     expect(
       await screen.findByRole('cell', { name: '123456' })
@@ -102,6 +106,7 @@ describe('Funding sources', () => {
   });
 
   it('clears funding sources with checkbox', async () => {
+    const user = userEvent.setup();
     render(
       <Wrapper
         fundingSources={[
@@ -120,22 +125,22 @@ describe('Funding sources', () => {
     expect(clearFundingSourcesCheckbox).not.toBeChecked();
 
     // Open modal
-    userEvent.click(clearFundingSourcesCheckbox);
+    await user.click(clearFundingSourcesCheckbox);
     expect(await screen.findByRole('dialog')).toBeInTheDocument();
 
     // Close modal without removing funding sources
-    userEvent.click(screen.getByRole('button', { name: "Don't remove" }));
+    await user.click(screen.getByRole('button', { name: "Don't remove" }));
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     expect(screen.getByRole('cell', { name: '123456' })).toBeInTheDocument();
     expect(clearFundingSourcesCheckbox).not.toBeChecked();
 
     // Open modal
-    userEvent.click(clearFundingSourcesCheckbox);
+    await user.click(clearFundingSourcesCheckbox);
     expect(await screen.findByRole('dialog')).toBeInTheDocument();
 
     // Remove funding sources
-    userEvent.click(
+    await user.click(
       screen.getByRole('button', { name: 'Remove funding sources' })
     );
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
@@ -152,6 +157,7 @@ describe('Funding sources', () => {
   });
 
   it('removes a funding source', async () => {
+    const user = userEvent.setup();
     render(
       <Wrapper
         fundingSources={[
@@ -164,10 +170,10 @@ describe('Funding sources', () => {
 
     expect(screen.getByRole('cell', { name: '123456' })).toBeInTheDocument();
 
-    userEvent.click(screen.getByRole('button', { name: 'Remove' }));
+    await user.click(screen.getByRole('button', { name: 'Remove' }));
     expect(await screen.findByRole('dialog')).toBeInTheDocument();
 
-    userEvent.click(
+    await user.click(
       screen.getByRole('button', { name: 'Remove funding source' })
     );
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();

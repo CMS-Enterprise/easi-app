@@ -78,12 +78,13 @@ describe('Business case request description form', () => {
   });
 
   it('fills all fields', async () => {
+    const user = userEvent.setup();
     await renderPage(defaultStore);
 
     const businessNeedField = screen.getByRole('textbox', {
       name: /business or user need/i
     });
-    userEvent.type(businessNeedField, 'My business need');
+    await user.type(businessNeedField, 'My business need');
     await waitFor(() => {
       expect(businessNeedField).toHaveValue('My business need');
     });
@@ -91,7 +92,7 @@ describe('Business case request description form', () => {
     const cmsBenefitField = screen.getByRole('textbox', {
       name: /cms benefit/i
     });
-    userEvent.type(cmsBenefitField, 'CMS benefit');
+    await user.type(cmsBenefitField, 'CMS benefit');
     await waitFor(() => {
       expect(cmsBenefitField).toHaveValue('CMS benefit');
     });
@@ -99,7 +100,7 @@ describe('Business case request description form', () => {
     const currentSolutionSummaryField = screen.getByRole('textbox', {
       name: /current process/i
     });
-    userEvent.type(currentSolutionSummaryField, 'Current Solution');
+    await user.type(currentSolutionSummaryField, 'Current Solution');
     await waitFor(() => {
       expect(currentSolutionSummaryField).toHaveValue('Current Solution');
     });
@@ -107,7 +108,7 @@ describe('Business case request description form', () => {
     const priorityAlignmentField = screen.getByRole('textbox', {
       name: /organizational priorities/i
     });
-    userEvent.type(priorityAlignmentField, 'Organizational priorities');
+    await user.type(priorityAlignmentField, 'Organizational priorities');
     await waitFor(() => {
       expect(priorityAlignmentField).toHaveValue('Organizational priorities');
     });
@@ -115,7 +116,7 @@ describe('Business case request description form', () => {
     const successIndicatorsField = screen.getByRole('textbox', {
       name: /effort is successful/i
     });
-    userEvent.type(successIndicatorsField, 'Success indicators');
+    await user.type(successIndicatorsField, 'Success indicators');
     await waitFor(() => {
       expect(successIndicatorsField).toHaveValue('Success indicators');
     });

@@ -127,6 +127,7 @@ describe('RequesterPresentationDeck', () => {
   });
 
   it('allows user to remove presentation deck', async () => {
+    const user = userEvent.setup();
     renderComponent({
       grbMeetingStatus: ITGovGRBStatus.AWAITING_GRB_REVIEW,
       grbReviewType: SystemIntakeGRBReviewType.ASYNC,
@@ -139,7 +140,7 @@ describe('RequesterPresentationDeck', () => {
     ).not.toBeInTheDocument();
 
     // Click remove button to open modal
-    userEvent.click(screen.getByRole('button', { name: 'Remove' }));
+    await user.click(screen.getByRole('button', { name: 'Remove' }));
 
     const removePresentationLinksModal = screen.getByRole('dialog', {
       name: 'Are you sure you want to remove this GRB presentation?'
@@ -147,7 +148,7 @@ describe('RequesterPresentationDeck', () => {
 
     expect(removePresentationLinksModal).toBeInTheDocument();
 
-    userEvent.click(
+    await user.click(
       within(removePresentationLinksModal).getByRole('button', {
         name: 'Remove presentation'
       })
