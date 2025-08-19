@@ -16,6 +16,7 @@ type CollapsableLinkProps = {
   startOpen?: boolean;
   labelPosition?: 'top' | 'bottom';
   bold?: boolean;
+  onClick?: () => void;
 };
 
 const CollapsableLink = ({
