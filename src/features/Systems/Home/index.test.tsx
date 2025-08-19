@@ -77,6 +77,7 @@ describe('System List View', () => {
     });
 
     it('displays relevant results from filter', async () => {
+      const user = userEvent.setup();
       render(
         <MemoryRouter>
           <MockedProvider mocks={mocks} addTypename={false}>
@@ -86,12 +87,10 @@ describe('System List View', () => {
       );
 
       // User event to typing in query with debounce
-      await waitFor(() => {
-        userEvent.type(
-          screen.getByRole('searchbox'),
-          'Happiness Achievement Module'
-        );
-      });
+      await user.type(
+        screen.getByRole('searchbox'),
+        'Happiness Achievement Module'
+      );
 
       // Mocked time for debounce of input
       await waitFor(() => new Promise(res => setTimeout(res, 200)));

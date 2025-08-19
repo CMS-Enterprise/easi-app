@@ -109,6 +109,7 @@ function renderSubjectAreas() {
 
 describe('Trb Request form: Subject areas', () => {
   it('checks subject area form elements', async () => {
+    const user = userEvent.setup();
     const { asFragment, getByRole, getByTestId } = renderSubjectAreas();
 
     expect(asFragment()).toMatchSnapshot();
@@ -125,7 +126,7 @@ describe('Trb Request form: Subject areas', () => {
     expect(checkboxCloud).toBeChecked();
 
     // Unselect checkboxCloud
-    userEvent.click(checkboxCloud);
+    await user.click(checkboxCloud);
     expect(checkboxCloud).not.toBeChecked();
 
     // Check submit button has changed in the presence of no subject areas selected
@@ -140,12 +141,12 @@ describe('Trb Request form: Subject areas', () => {
     expect(checkboxACIM).not.toBeChecked();
 
     // Click and assert clicked
-    userEvent.click(checkboxACIM);
+    await user.click(checkboxACIM);
     expect(checkboxACIM).toBeChecked();
 
     // Fills text in Other subject areas textAreaField
     const textAreaInput = getByTestId('subjectAreaOptionOther');
-    userEvent.type(textAreaInput, 'System Architecture Review');
+    await user.type(textAreaInput, 'System Architecture Review');
 
     // Get typed text
     expect(textAreaInput).toHaveValue('System Architecture Review');

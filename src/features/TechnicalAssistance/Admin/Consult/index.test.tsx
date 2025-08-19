@@ -77,6 +77,11 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
     }
   };
 
+  let user: ReturnType<typeof userEvent.setup>;
+  beforeEach(() => {
+    user = userEvent.setup();
+  });
+
   it('submits successfully ', async () => {
     const { findByText, getByLabelText, getByRole, findByRole } = render(
       <Provider store={store}>
@@ -132,7 +137,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
       name: i18next.t<string>('technicalAssistance:actionRequestEdits.submit')
     });
 
-    userEvent.type(
+    await user.type(
       getByLabelText(
         RegExp(
           i18next.t<string>(
@@ -143,7 +148,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
       '02/23/2023'
     );
 
-    userEvent.type(
+    await user.type(
       getByLabelText(
         RegExp(
           i18next.t<string>(
@@ -154,7 +159,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
       '1:00pm{enter}'
     );
 
-    userEvent.click(submitButton);
+    await user.click(submitButton);
 
     // This test will check that the meetingDate and meetingTime field inputs
     // are properly parsed to utc iso for the query
@@ -201,7 +206,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
 
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
-    userEvent.type(
+    await user.type(
       getByLabelText(
         RegExp(
           i18next.t<string>(
@@ -214,7 +219,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
 
     // Submit the required date and time missing
 
-    userEvent.click(
+    await user.click(
       getByRole('button', {
         name: i18next.t<string>('technicalAssistance:actionRequestEdits.submit')
       })
@@ -272,7 +277,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
 
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
-    userEvent.type(
+    await user.type(
       getByLabelText(
         RegExp(
           i18next.t<string>(
@@ -283,7 +288,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
       '02/23/2023'
     );
 
-    userEvent.type(
+    await user.type(
       getByLabelText(
         RegExp(
           i18next.t<string>(
@@ -294,7 +299,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
       '1:00pm{enter}'
     );
 
-    userEvent.click(
+    await user.click(
       getByRole('button', {
         name: i18next.t<string>('technicalAssistance:actionRequestEdits.submit')
       })

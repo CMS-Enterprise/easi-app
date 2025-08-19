@@ -14,6 +14,7 @@ import SendFeedback from '.';
 
 describe('Help forms', () => {
   it('submits the "Send Feedback" form successfully after a failed attempt', async () => {
+    const user = userEvent.setup();
     const { asFragment, findByText, getByLabelText, getByRole, getByTestId } =
       render(
         <MemoryRouter initialEntries={['/help/send-feedback']}>
@@ -57,26 +58,26 @@ describe('Help forms', () => {
     expect(asFragment()).toMatchSnapshot();
 
     // Fill incomplete form
-    userEvent.click(getByTestId('isAnonymous-yes'));
+    await user.click(getByTestId('isAnonymous-yes'));
 
     const submitButton = getByRole('button', { name: 'Send feedback' });
-    userEvent.click(submitButton);
+    await user.click(submitButton);
 
     // Submit validation error
     const formErrorText = await findByText('Please check and fix the form');
     expect(formErrorText).toBeInTheDocument();
 
     // Continue to fill out the minimum required
-    userEvent.click(getByTestId('easiServicesUsed-itGovernance'));
-    userEvent.type(getByLabelText('What is your role at CMS?'), 'role');
-    userEvent.click(getByTestId('systemEasyToUse-agree'));
-    userEvent.click(getByTestId('didntNeedHelpAnswering-agree'));
-    userEvent.click(getByTestId('questionsWereRelevant-agree'));
-    userEvent.click(getByTestId('hadAccessToInformation-agree'));
-    userEvent.click(getByTestId('howSatisfied-verySatisfied'));
-    userEvent.type(getByLabelText('How can we improve EASi?'), 'improve');
+    await user.click(getByTestId('easiServicesUsed-itGovernance'));
+    await user.type(getByLabelText('What is your role at CMS?'), 'role');
+    await user.click(getByTestId('systemEasyToUse-agree'));
+    await user.click(getByTestId('didntNeedHelpAnswering-agree'));
+    await user.click(getByTestId('questionsWereRelevant-agree'));
+    await user.click(getByTestId('hadAccessToInformation-agree'));
+    await user.click(getByTestId('howSatisfied-verySatisfied'));
+    await user.type(getByLabelText('How can we improve EASi?'), 'improve');
 
-    userEvent.click(submitButton);
+    await user.click(submitButton);
 
     // Submit success
     await waitFor(() => {
@@ -89,6 +90,7 @@ describe('Help forms', () => {
   });
 
   it('submits the "Report A Problem" form successfully after a failed attempt', async () => {
+    const user = userEvent.setup();
     const { asFragment, findByText, getByLabelText, getByRole, getByTestId } =
       render(
         <MemoryRouter initialEntries={['/help/report-a-problem']}>
@@ -129,22 +131,22 @@ describe('Help forms', () => {
     expect(asFragment()).toMatchSnapshot();
 
     // Fill incomplete form
-    userEvent.click(getByTestId('isAnonymous-yes'));
+    await user.click(getByTestId('isAnonymous-yes'));
 
     const submitButton = getByRole('button', { name: 'Send report' });
-    userEvent.click(submitButton);
+    await user.click(submitButton);
 
     // Submit validation error
     const formErrorText = await findByText('Please check and fix the form');
     expect(formErrorText).toBeInTheDocument();
 
     // Continue to fill out the minimum required
-    userEvent.click(getByTestId('easiService-itGovernance'));
-    userEvent.type(getByLabelText('What were you doing?'), 'were');
-    userEvent.type(getByLabelText('What went wrong?'), 'went');
-    userEvent.click(getByTestId('howSevereWasTheProblem-itPreventedMe'));
+    await user.click(getByTestId('easiService-itGovernance'));
+    await user.type(getByLabelText('What were you doing?'), 'were');
+    await user.type(getByLabelText('What went wrong?'), 'went');
+    await user.click(getByTestId('howSevereWasTheProblem-itPreventedMe'));
 
-    userEvent.click(submitButton);
+    await user.click(submitButton);
 
     // Submit success
     await waitFor(() => {

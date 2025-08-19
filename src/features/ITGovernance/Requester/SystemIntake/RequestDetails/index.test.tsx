@@ -21,6 +21,7 @@ describe('System intake form - Request details', () => {
   });
 
   it('renders error messages', async () => {
+    const user = userEvent.setup();
     render(
       <VerboseMockedProvider>
         <RequestDetails systemIntake={emptySystemIntake} />
@@ -28,7 +29,7 @@ describe('System intake form - Request details', () => {
     );
 
     // Submit empty form
-    userEvent.click(screen.getByRole('button', { name: 'Next' }));
+    await user.click(screen.getByRole('button', { name: 'Next' }));
 
     expect(
       await screen.findByRole('heading', {

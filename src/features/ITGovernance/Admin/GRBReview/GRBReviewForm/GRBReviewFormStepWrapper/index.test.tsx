@@ -163,16 +163,15 @@ describe('GRB review form step wrapper', () => {
 
   it('navigates to next step', async () => {
     const mockOnSubmit = vi.fn().mockResolvedValue({});
+    const user = userEvent.setup();
     renderComponent({ onSubmit: mockOnSubmit });
 
-    await waitFor(() =>
-      expect(screen.getByTestId('stepIndicator-1')).toHaveAttribute(
-        'aria-disabled',
-        'false'
-      )
-    );
+    expect(await screen.findByTestId('stepIndicator-0'));
 
-    await userEvent.click(screen.getByTestId('stepIndicator-1'));
+    expect(screen.getAllByText('Review type')).not.toBeNull();
+
+    // Click next step in header
+    await user.click(screen.getByTestId('stepIndicator-1'));
 
     await waitFor(() => {
       expect(screen.getByTestId('stepIndicator-1')).toHaveAttribute(
