@@ -21,3 +21,10 @@ COMMENT ON CONSTRAINT system_intake_systems_check_other_system_relationship_desc
 ALTER TABLE system_intakes ADD COLUMN does_not_support_systems BOOLEAN;
 
 COMMENT ON COLUMN system_intakes.does_not_support_systems IS 'Indicates that the system does not support systems. This is used to indicate that the system does not have any relationships with other systems. When this is set to true, we dont expect any systems to be linked in the system_intake_systems table.';
+
+-- Set does_not_support_systems to false for all system_intakes with a related system in system_intake_systems
+UPDATE system_intakes
+SET does_not_support_systems = FALSE
+WHERE id IN (
+    SELECT DISTINCT system_intake_id FROM system_intake_systems
+);
