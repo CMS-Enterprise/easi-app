@@ -535,7 +535,7 @@ func (s *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		s.NoError(err) // we don't need to test the SetSystemIntakeRelationNewSystem function here
 
 		// Now unlink the relationship
-		unlinkedIntake, err := UnlinkSystemIntakeRelation(ctx, store, openIntake.ID)
+		unlinkedIntake, err := SetSystemSupportAndUnlinkSystemIntakeRelation(ctx, store, openIntake.ID, false)
 		s.NoError(err)
 
 		// Assert that all values are cleared appropriately
@@ -582,7 +582,7 @@ func (s *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		s.NoError(err) // we don't need to test the SetSystemIntakeRelationExistingSystem function here
 
 		// Now unlink the relationship
-		unlinkedIntake, err := UnlinkSystemIntakeRelation(ctx, store, openIntake.ID)
+		unlinkedIntake, err := SetSystemSupportAndUnlinkSystemIntakeRelation(ctx, store, openIntake.ID, false)
 		s.NoError(err)
 
 		// Assert that all values are cleared appropriately
@@ -622,7 +622,7 @@ func (s *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		s.NoError(err) // we don't need to test the SetSystemIntakeRelationExistingService function here
 
 		// Now unlink the relationship
-		unlinkedIntake, err := UnlinkSystemIntakeRelation(ctx, store, openIntake.ID)
+		unlinkedIntake, err := SetSystemSupportAndUnlinkSystemIntakeRelation(ctx, store, openIntake.ID, true)
 		s.NoError(err)
 
 		// Assert that all values are cleared appropriately

@@ -376,7 +376,7 @@ func unlinkSystemIntakeRelation(ctx context.Context, store *storage.Store, intak
 		panic(err)
 	}
 
-	if _, err := resolvers.UnlinkSystemIntakeRelation(ctx, store, intakeID); err != nil {
+	if _, err := resolvers.SetSystemSupportAndUnlinkSystemIntakeRelation(ctx, store, intakeID, true); err != nil {
 		panic(err)
 	}
 }

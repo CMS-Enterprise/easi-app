@@ -644,7 +644,7 @@ func (r *mutationResolver) SetSystemIntakeRelationExistingService(ctx context.Co
 // SetSystemSupportAndUnlinkSystemIntakeRelation is the resolver for the setSystemSupportAndUnlinkSystemIntakeRelation field.
 func (r *mutationResolver) SetSystemSupportAndUnlinkSystemIntakeRelation(ctx context.Context, intakeID uuid.UUID, doesNotSupportSystems bool) (*models.UpdateSystemIntakePayload, error) {
 	//TODO implement to set the bool on the intake now as well
-	intake, err := resolvers.UnlinkSystemIntakeRelation(ctx, r.store, intakeID)
+	intake, err := resolvers.SetSystemSupportAndUnlinkSystemIntakeRelation(ctx, r.store, intakeID, doesNotSupportSystems)
 
 	if err != nil {
 		return nil, err
