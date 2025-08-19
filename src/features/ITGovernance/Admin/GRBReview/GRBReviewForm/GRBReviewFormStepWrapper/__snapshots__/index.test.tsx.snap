@@ -132,8 +132,8 @@ exports[`GRB review form step wrapper > matches the snapshot 1`] = `
           >
             <li
               aria-current="true"
-              aria-disabled="true"
-              class="usa-step-indicator__segment usa-step-indicator__segment--current maxw-none usa-step-indicator__segment--disabled"
+              aria-disabled="false"
+              class="usa-step-indicator__segment usa-step-indicator__segment--current maxw-none usa-step-indicator__segment--clickable"
               data-testid="stepIndicator-0"
             >
               <span
@@ -143,8 +143,8 @@ exports[`GRB review form step wrapper > matches the snapshot 1`] = `
               </span>
             </li>
             <li
-              aria-disabled="true"
-              class="usa-step-indicator__segment maxw-none usa-step-indicator__segment--disabled"
+              aria-disabled="false"
+              class="usa-step-indicator__segment maxw-none usa-step-indicator__segment--clickable"
               data-testid="stepIndicator-1"
             >
               <span
@@ -275,7 +275,6 @@ exports[`GRB review form step wrapper > matches the snapshot 1`] = `
                 <button
                   class="usa-button margin-top-0"
                   data-testid="pager-next-button"
-                  disabled=""
                   type="submit"
                 >
                   Next

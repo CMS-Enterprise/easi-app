@@ -1,7 +1,7 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { SystemIntakeLCIDStatus } from 'gql/generated/graphql';
 import i18next from 'i18next';
@@ -21,7 +21,11 @@ const renderComponent = (lcidRetiresAt?: string) =>
   render(
     <MemoryRouter>
       <MockedProvider
-        mocks={[getSystemIntakeContactsQuery, getSystemIntakeQuery()]}
+        mocks={[
+          getSystemIntakeContactsQuery,
+          getSystemIntakeQuery(),
+          getSystemIntakeQuery()
+        ]}
       >
         <MessageProvider>
           <RetireLcid
@@ -86,8 +90,10 @@ describe('Retire LCID action form', async () => {
 
     await user.type(retireDateField, '01/01/2023');
 
-    expect(
-      screen.getByText(i18next.t<string>('action:pastDateAlert'))
-    ).toBeInTheDocument();
+    await waitFor(() =>
+      expect(
+        screen.getByText(i18next.t<string>('action:pastDateAlert'))
+      ).toBeInTheDocument()
+    );
   });
 });
