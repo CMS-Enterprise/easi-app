@@ -832,6 +832,10 @@ type SystemIntake {
   relationType: RequestRelationType
 
   """
+  This bool says if an intake supports a system or not. When it is set to true, all linked systems are removed from the intake
+  """
+  doesNotSupportSystems: Boolean
+  """
   Linked systems
   """
   systems: [CedarSystem!]!
@@ -2884,7 +2888,15 @@ type Mutation {
   setSystemIntakeRelationExistingService(
     input: SetSystemIntakeRelationExistingServiceInput
   ): UpdateSystemIntakePayload
-  unlinkSystemIntakeRelation(intakeID: UUID!): UpdateSystemIntakePayload
+  """
+  This mutation sets the bool doesNotSupportSystems on system intake.
+  If set to true, it removes all linked systems from the intake.
+  If set to false, it simply sets the bool on the system intake without taking action on the linked systems.
+  """
+  setSystemSupportAndUnlinkSystemIntakeRelation(
+    intakeID: UUID!
+    doesNotSupportSystems: Boolean!
+  ): UpdateSystemIntakePayload
   addSystemLink(input: AddSystemLinkInput!): AddSystemLinkPayload
   deleteSystemLink(systemIntakeSystemID: UUID!): DeleteSystemLinkPayload
   updateSystemLink(input: UpdateSystemLinkInput!): UpdateSystemLinkPayload
@@ -3026,13 +3038,13 @@ type Mutation {
   closeTRBRequest(input: CloseTRBRequestInput!): TRBRequest!
     @hasRole(role: EASI_TRB_ADMIN)
   reopenTrbRequest(input: ReopenTRBRequestInput!): TRBRequest!
-  @hasRole(role: EASI_TRB_ADMIN)
+    @hasRole(role: EASI_TRB_ADMIN)
   createTrbLeadOption(eua: String!): UserInfo!
   @hasRole(role: EASI_TRB_ADMIN)
   deleteTrbLeadOption(eua: String!): Boolean!
   @hasRole(role: EASI_TRB_ADMIN)
   sendGRBReviewPresentationDeckReminderEmail(systemIntakeID: UUID!): Boolean!
-  @hasRole(role: EASI_GOVTEAM)
+    @hasRole(role: EASI_GOVTEAM)
 }
 
 """

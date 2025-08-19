@@ -641,13 +641,13 @@ type ComplexityRoot struct {
 		SetSystemIntakeRelationExistingService              func(childComplexity int, input *models.SetSystemIntakeRelationExistingServiceInput) int
 		SetSystemIntakeRelationExistingSystem               func(childComplexity int, input *models.SetSystemIntakeRelationExistingSystemInput) int
 		SetSystemIntakeRelationNewSystem                    func(childComplexity int, input *models.SetSystemIntakeRelationNewSystemInput) int
+		SetSystemSupportAndUnlinkSystemIntakeRelation       func(childComplexity int, intakeID uuid.UUID, doesNotSupportSystems bool) int
 		SetTRBAdminNoteArchived                             func(childComplexity int, id uuid.UUID, isArchived bool) int
 		SetTRBRequestRelationExistingService                func(childComplexity int, input models.SetTRBRequestRelationExistingServiceInput) int
 		SetTRBRequestRelationExistingSystem                 func(childComplexity int, input models.SetTRBRequestRelationExistingSystemInput) int
 		SetTRBRequestRelationNewSystem                      func(childComplexity int, input models.SetTRBRequestRelationNewSystemInput) int
 		StartGRBReview                                      func(childComplexity int, input models.StartGRBReviewInput) int
 		SubmitIntake                                        func(childComplexity int, input models.SubmitIntakeInput) int
-		UnlinkSystemIntakeRelation                          func(childComplexity int, intakeID uuid.UUID) int
 		UnlinkTRBRequestRelation                            func(childComplexity int, trbRequestID uuid.UUID) int
 		UpdateSystemIntakeAdminLead                         func(childComplexity int, input models.UpdateSystemIntakeAdminLeadInput) int
 		UpdateSystemIntakeContact                           func(childComplexity int, input models.UpdateSystemIntakeContactInput) int
@@ -752,6 +752,7 @@ type ComplexityRoot struct {
 		DecisionNextSteps                                 func(childComplexity int) int
 		DecisionState                                     func(childComplexity int) int
 		Documents                                         func(childComplexity int) int
+		DoesNotSupportSystems                             func(childComplexity int) int
 		DraftBusinessCaseState                            func(childComplexity int) int
 		EACollaborator                                    func(childComplexity int) int
 		EACollaboratorName                                func(childComplexity int) int
@@ -1335,7 +1336,7 @@ type MutationResolver interface {
 	SetSystemIntakeRelationNewSystem(ctx context.Context, input *models.SetSystemIntakeRelationNewSystemInput) (*models.UpdateSystemIntakePayload, error)
 	SetSystemIntakeRelationExistingSystem(ctx context.Context, input *models.SetSystemIntakeRelationExistingSystemInput) (*models.UpdateSystemIntakePayload, error)
 	SetSystemIntakeRelationExistingService(ctx context.Context, input *models.SetSystemIntakeRelationExistingServiceInput) (*models.UpdateSystemIntakePayload, error)
-	UnlinkSystemIntakeRelation(ctx context.Context, intakeID uuid.UUID) (*models.UpdateSystemIntakePayload, error)
+	SetSystemSupportAndUnlinkSystemIntakeRelation(ctx context.Context, intakeID uuid.UUID, doesNotSupportSystems bool) (*models.UpdateSystemIntakePayload, error)
 	AddSystemLink(ctx context.Context, input models.AddSystemLinkInput) (*models.AddSystemLinkPayload, error)
 	DeleteSystemLink(ctx context.Context, systemIntakeSystemID uuid.UUID) (*models.DeleteSystemLinkPayload, error)
 	UpdateSystemLink(ctx context.Context, input models.UpdateSystemLinkInput) (*models.UpdateSystemLinkPayload, error)
@@ -1492,6 +1493,7 @@ type SystemIntakeResolver interface {
 	LcidStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeLCIDStatus, error)
 
 	RelationType(ctx context.Context, obj *models.SystemIntake) (*models.RequestRelationType, error)
+
 	Systems(ctx context.Context, obj *models.SystemIntake) ([]*models.CedarSystem, error)
 	ContractNumbers(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeContractNumber, error)
 	RelatedIntakes(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntake, error)
@@ -4989,6 +4991,18 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Mutation.SetSystemIntakeRelationNewSystem(childComplexity, args["input"].(*models.SetSystemIntakeRelationNewSystemInput)), true
 
+	case "Mutation.setSystemSupportAndUnlinkSystemIntakeRelation":
+		if e.complexity.Mutation.SetSystemSupportAndUnlinkSystemIntakeRelation == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_setSystemSupportAndUnlinkSystemIntakeRelation_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.SetSystemSupportAndUnlinkSystemIntakeRelation(childComplexity, args["intakeID"].(uuid.UUID), args["doesNotSupportSystems"].(bool)), true
+
 	case "Mutation.setTRBAdminNoteArchived":
 		if e.complexity.Mutation.SetTRBAdminNoteArchived == nil {
 			break
@@ -5060,18 +5074,6 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Mutation.SubmitIntake(childComplexity, args["input"].(models.SubmitIntakeInput)), true
-
-	case "Mutation.unlinkSystemIntakeRelation":
-		if e.complexity.Mutation.UnlinkSystemIntakeRelation == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_unlinkSystemIntakeRelation_args(ctx, rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.UnlinkSystemIntakeRelation(childComplexity, args["intakeID"].(uuid.UUID)), true
 
 	case "Mutation.unlinkTRBRequestRelation":
 		if e.complexity.Mutation.UnlinkTRBRequestRelation == nil {
@@ -5971,6 +5973,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.SystemIntake.Documents(childComplexity), true
+
+	case "SystemIntake.doesNotSupportSystems":
+		if e.complexity.SystemIntake.DoesNotSupportSystems == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.DoesNotSupportSystems(childComplexity), true
 
 	case "SystemIntake.draftBusinessCaseState":
 		if e.complexity.SystemIntake.DraftBusinessCaseState == nil {
@@ -9614,6 +9623,10 @@ type SystemIntake {
   relationType: RequestRelationType
 
   """
+  This bool says if an intake supports a system or not. When it is set to true, all linked systems are removed from the intake
+  """
+  doesNotSupportSystems: Boolean
+  """
   Linked systems
   """
   systems: [CedarSystem!]!
@@ -11666,7 +11679,15 @@ type Mutation {
   setSystemIntakeRelationExistingService(
     input: SetSystemIntakeRelationExistingServiceInput
   ): UpdateSystemIntakePayload
-  unlinkSystemIntakeRelation(intakeID: UUID!): UpdateSystemIntakePayload
+  """
+  This mutation sets the bool doesNotSupportSystems on system intake.
+  If set to true, it removes all linked systems from the intake.
+  If set to false, it simply sets the bool on the system intake without taking action on the linked systems.
+  """
+  setSystemSupportAndUnlinkSystemIntakeRelation(
+    intakeID: UUID!
+    doesNotSupportSystems: Boolean!
+  ): UpdateSystemIntakePayload
   addSystemLink(input: AddSystemLinkInput!): AddSystemLinkPayload
   deleteSystemLink(systemIntakeSystemID: UUID!): DeleteSystemLinkPayload
   updateSystemLink(input: UpdateSystemLinkInput!): UpdateSystemLinkPayload
@@ -11808,13 +11829,13 @@ type Mutation {
   closeTRBRequest(input: CloseTRBRequestInput!): TRBRequest!
     @hasRole(role: EASI_TRB_ADMIN)
   reopenTrbRequest(input: ReopenTRBRequestInput!): TRBRequest!
-  @hasRole(role: EASI_TRB_ADMIN)
+    @hasRole(role: EASI_TRB_ADMIN)
   createTrbLeadOption(eua: String!): UserInfo!
   @hasRole(role: EASI_TRB_ADMIN)
   deleteTrbLeadOption(eua: String!): Boolean!
   @hasRole(role: EASI_TRB_ADMIN)
   sendGRBReviewPresentationDeckReminderEmail(systemIntakeID: UUID!): Boolean!
-  @hasRole(role: EASI_GOVTEAM)
+    @hasRole(role: EASI_GOVTEAM)
 }
 
 """
@@ -13029,6 +13050,22 @@ func (ec *executionContext) field_Mutation_setSystemIntakeRelationNewSystem_args
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_setSystemSupportAndUnlinkSystemIntakeRelation_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "intakeID", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
+	if err != nil {
+		return nil, err
+	}
+	args["intakeID"] = arg0
+	arg1, err := graphql.ProcessArgField(ctx, rawArgs, "doesNotSupportSystems", ec.unmarshalNBoolean2bool)
+	if err != nil {
+		return nil, err
+	}
+	args["doesNotSupportSystems"] = arg1
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_setTRBAdminNoteArchived_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -13097,17 +13134,6 @@ func (ec *executionContext) field_Mutation_submitIntake_args(ctx context.Context
 		return nil, err
 	}
 	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_unlinkSystemIntakeRelation_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
-	var err error
-	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "intakeID", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
-	if err != nil {
-		return nil, err
-	}
-	args["intakeID"] = arg0
 	return args, nil
 }
 
@@ -15429,6 +15455,8 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(_ context.Con
 				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
+			case "doesNotSupportSystems":
+				return ec.fieldContext_SystemIntake_doesNotSupportSystems(ctx, field)
 			case "systems":
 				return ec.fieldContext_SystemIntake_systems(ctx, field)
 			case "contractNumbers":
@@ -24634,6 +24662,8 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(ctx con
 				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
+			case "doesNotSupportSystems":
+				return ec.fieldContext_SystemIntake_doesNotSupportSystems(ctx, field)
 			case "systems":
 				return ec.fieldContext_SystemIntake_systems(ctx, field)
 			case "contractNumbers":
@@ -31918,6 +31948,8 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
+			case "doesNotSupportSystems":
+				return ec.fieldContext_SystemIntake_doesNotSupportSystems(ctx, field)
 			case "systems":
 				return ec.fieldContext_SystemIntake_systems(ctx, field)
 			case "contractNumbers":
@@ -32186,6 +32218,8 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeRequestType(
 				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
+			case "doesNotSupportSystems":
+				return ec.fieldContext_SystemIntake_doesNotSupportSystems(ctx, field)
 			case "systems":
 				return ec.fieldContext_SystemIntake_systems(ctx, field)
 			case "contractNumbers":
@@ -32924,8 +32958,8 @@ func (ec *executionContext) fieldContext_Mutation_setSystemIntakeRelationExistin
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_unlinkSystemIntakeRelation(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_unlinkSystemIntakeRelation(ctx, field)
+func (ec *executionContext) _Mutation_setSystemSupportAndUnlinkSystemIntakeRelation(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_setSystemSupportAndUnlinkSystemIntakeRelation(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -32938,7 +32972,7 @@ func (ec *executionContext) _Mutation_unlinkSystemIntakeRelation(ctx context.Con
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UnlinkSystemIntakeRelation(rctx, fc.Args["intakeID"].(uuid.UUID))
+		return ec.resolvers.Mutation().SetSystemSupportAndUnlinkSystemIntakeRelation(rctx, fc.Args["intakeID"].(uuid.UUID), fc.Args["doesNotSupportSystems"].(bool))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -32952,7 +32986,7 @@ func (ec *executionContext) _Mutation_unlinkSystemIntakeRelation(ctx context.Con
 	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Mutation_unlinkSystemIntakeRelation(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Mutation_setSystemSupportAndUnlinkSystemIntakeRelation(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Mutation",
 		Field:      field,
@@ -32975,7 +33009,7 @@ func (ec *executionContext) fieldContext_Mutation_unlinkSystemIntakeRelation(ctx
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_unlinkSystemIntakeRelation_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Mutation_setSystemSupportAndUnlinkSystemIntakeRelation_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -34921,6 +34955,8 @@ func (ec *executionContext) fieldContext_Mutation_archiveSystemIntake(ctx contex
 				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
+			case "doesNotSupportSystems":
+				return ec.fieldContext_SystemIntake_doesNotSupportSystems(ctx, field)
 			case "systems":
 				return ec.fieldContext_SystemIntake_systems(ctx, field)
 			case "contractNumbers":
@@ -39243,6 +39279,8 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
+			case "doesNotSupportSystems":
+				return ec.fieldContext_SystemIntake_doesNotSupportSystems(ctx, field)
 			case "systems":
 				return ec.fieldContext_SystemIntake_systems(ctx, field)
 			case "contractNumbers":
@@ -39484,6 +39522,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
+			case "doesNotSupportSystems":
+				return ec.fieldContext_SystemIntake_doesNotSupportSystems(ctx, field)
 			case "systems":
 				return ec.fieldContext_SystemIntake_systems(ctx, field)
 			case "contractNumbers":
@@ -39725,6 +39765,8 @@ func (ec *executionContext) fieldContext_Query_mySystemIntakes(_ context.Context
 				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
+			case "doesNotSupportSystems":
+				return ec.fieldContext_SystemIntake_doesNotSupportSystems(ctx, field)
 			case "systems":
 				return ec.fieldContext_SystemIntake_systems(ctx, field)
 			case "contractNumbers":
@@ -39955,6 +39997,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithReviewRequested(
 				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
+			case "doesNotSupportSystems":
+				return ec.fieldContext_SystemIntake_doesNotSupportSystems(ctx, field)
 			case "systems":
 				return ec.fieldContext_SystemIntake_systems(ctx, field)
 			case "contractNumbers":
@@ -40185,6 +40229,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(_ context.
 				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
+			case "doesNotSupportSystems":
+				return ec.fieldContext_SystemIntake_doesNotSupportSystems(ctx, field)
 			case "systems":
 				return ec.fieldContext_SystemIntake_systems(ctx, field)
 			case "contractNumbers":
@@ -46520,6 +46566,47 @@ func (ec *executionContext) fieldContext_SystemIntake_relationType(_ context.Con
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntake_doesNotSupportSystems(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_doesNotSupportSystems(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DoesNotSupportSystems, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(null.Bool)
+	fc.Result = res
+	return ec.marshalOBoolean2githubᚗcomᚋgureguᚋnullᚐBool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_doesNotSupportSystems(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntake_systems(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntake_systems(ctx, field)
 	if err != nil {
@@ -46853,6 +46940,8 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedIntakes(_ context.C
 				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
+			case "doesNotSupportSystems":
+				return ec.fieldContext_SystemIntake_doesNotSupportSystems(ctx, field)
 			case "systems":
 				return ec.fieldContext_SystemIntake_systems(ctx, field)
 			case "contractNumbers":
@@ -47795,6 +47884,8 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(_ conte
 				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
+			case "doesNotSupportSystems":
+				return ec.fieldContext_SystemIntake_doesNotSupportSystems(ctx, field)
 			case "systems":
 				return ec.fieldContext_SystemIntake_systems(ctx, field)
 			case "contractNumbers":
@@ -57501,6 +57592,8 @@ func (ec *executionContext) fieldContext_TRBRequest_relatedIntakes(_ context.Con
 				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
+			case "doesNotSupportSystems":
+				return ec.fieldContext_SystemIntake_doesNotSupportSystems(ctx, field)
 			case "systems":
 				return ec.fieldContext_SystemIntake_systems(ctx, field)
 			case "contractNumbers":
@@ -60396,6 +60489,8 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(_ context.
 				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
+			case "doesNotSupportSystems":
+				return ec.fieldContext_SystemIntake_doesNotSupportSystems(ctx, field)
 			case "systems":
 				return ec.fieldContext_SystemIntake_systems(ctx, field)
 			case "contractNumbers":
@@ -61180,6 +61275,8 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
+			case "doesNotSupportSystems":
+				return ec.fieldContext_SystemIntake_doesNotSupportSystems(ctx, field)
 			case "systems":
 				return ec.fieldContext_SystemIntake_systems(ctx, field)
 			case "contractNumbers":
@@ -71788,9 +71885,9 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_setSystemIntakeRelationExistingService(ctx, field)
 			})
-		case "unlinkSystemIntakeRelation":
+		case "setSystemSupportAndUnlinkSystemIntakeRelation":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_unlinkSystemIntakeRelation(ctx, field)
+				return ec._Mutation_setSystemSupportAndUnlinkSystemIntakeRelation(ctx, field)
 			})
 		case "addSystemLink":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
@@ -74317,6 +74414,8 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "doesNotSupportSystems":
+			out.Values[i] = ec._SystemIntake_doesNotSupportSystems(ctx, field, obj)
 		case "systems":
 			field := field
 

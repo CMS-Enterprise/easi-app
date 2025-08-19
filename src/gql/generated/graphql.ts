@@ -1096,13 +1096,18 @@ export type Mutation = {
   setSystemIntakeRelationExistingService?: Maybe<UpdateSystemIntakePayload>;
   setSystemIntakeRelationExistingSystem?: Maybe<UpdateSystemIntakePayload>;
   setSystemIntakeRelationNewSystem?: Maybe<UpdateSystemIntakePayload>;
+  /**
+   * This mutation sets the bool doesNotSupportSystems on system intake.
+   * If set to true, it removes all linked systems from the intake.
+   * If set to false, it simply sets the bool on the system intake without taking action on the linked systems.
+   */
+  setSystemSupportAndUnlinkSystemIntakeRelation?: Maybe<UpdateSystemIntakePayload>;
   setTRBAdminNoteArchived: TRBAdminNote;
   setTRBRequestRelationExistingService?: Maybe<TRBRequest>;
   setTRBRequestRelationExistingSystem?: Maybe<TRBRequest>;
   setTRBRequestRelationNewSystem?: Maybe<TRBRequest>;
   startGRBReview?: Maybe<Scalars['String']['output']>;
   submitIntake?: Maybe<UpdateSystemIntakePayload>;
-  unlinkSystemIntakeRelation?: Maybe<UpdateSystemIntakePayload>;
   unlinkTRBRequestRelation?: Maybe<TRBRequest>;
   updateSystemIntakeAdminLead?: Maybe<UpdateSystemIntakePayload>;
   updateSystemIntakeContact?: Maybe<CreateSystemIntakeContactPayload>;
@@ -1517,6 +1522,13 @@ export type MutationSetSystemIntakeRelationNewSystemArgs = {
 
 
 /** Defines the mutations for the schema */
+export type MutationSetSystemSupportAndUnlinkSystemIntakeRelationArgs = {
+  doesNotSupportSystems: Scalars['Boolean']['input'];
+  intakeID: Scalars['UUID']['input'];
+};
+
+
+/** Defines the mutations for the schema */
 export type MutationSetTRBAdminNoteArchivedArgs = {
   id: Scalars['UUID']['input'];
   isArchived: Scalars['Boolean']['input'];
@@ -1550,12 +1562,6 @@ export type MutationStartGRBReviewArgs = {
 /** Defines the mutations for the schema */
 export type MutationSubmitIntakeArgs = {
   input: SubmitIntakeInput;
-};
-
-
-/** Defines the mutations for the schema */
-export type MutationUnlinkSystemIntakeRelationArgs = {
-  intakeID: Scalars['UUID']['input'];
 };
 
 
@@ -2086,6 +2092,8 @@ export type SystemIntake = {
   decisionNextSteps?: Maybe<Scalars['HTML']['output']>;
   decisionState: SystemIntakeDecisionState;
   documents: Array<SystemIntakeDocument>;
+  /** This bool says if an intake supports a system or not. When it is set to true, all linked systems are removed from the intake */
+  doesNotSupportSystems?: Maybe<Scalars['Boolean']['output']>;
   draftBusinessCaseState: SystemIntakeFormState;
   /** This stores legacy ea collaborator information. We no longer collect it, but we display it for historic requests */
   eaCollaborator?: Maybe<Scalars['String']['output']>;
@@ -4070,10 +4078,11 @@ export type SetSystemIntakeRelationExistingServiceMutation = { __typename: 'Muta
 
 export type UnlinkSystemIntakeRelationMutationVariables = Exact<{
   intakeID: Scalars['UUID']['input'];
+  doesNotSupportSystems: Scalars['Boolean']['input'];
 }>;
 
 
-export type UnlinkSystemIntakeRelationMutation = { __typename: 'Mutation', unlinkSystemIntakeRelation?: { __typename: 'UpdateSystemIntakePayload', systemIntake?: { __typename: 'SystemIntake', id: UUID } | null } | null };
+export type UnlinkSystemIntakeRelationMutation = { __typename: 'Mutation', setSystemSupportAndUnlinkSystemIntakeRelation?: { __typename: 'UpdateSystemIntakePayload', systemIntake?: { __typename: 'SystemIntake', id: UUID, doesNotSupportSystems?: boolean | null } | null } | null };
 
 export type SetTrbRequestRelationNewSystemMutationVariables = Exact<{
   input: SetTRBRequestRelationNewSystemInput;
@@ -7583,10 +7592,14 @@ export type SetSystemIntakeRelationExistingServiceMutationHookResult = ReturnTyp
 export type SetSystemIntakeRelationExistingServiceMutationResult = Apollo.MutationResult<SetSystemIntakeRelationExistingServiceMutation>;
 export type SetSystemIntakeRelationExistingServiceMutationOptions = Apollo.BaseMutationOptions<SetSystemIntakeRelationExistingServiceMutation, SetSystemIntakeRelationExistingServiceMutationVariables>;
 export const UnlinkSystemIntakeRelationDocument = gql`
-    mutation UnlinkSystemIntakeRelation($intakeID: UUID!) {
-  unlinkSystemIntakeRelation(intakeID: $intakeID) {
+    mutation UnlinkSystemIntakeRelation($intakeID: UUID!, $doesNotSupportSystems: Boolean!) {
+  setSystemSupportAndUnlinkSystemIntakeRelation(
+    intakeID: $intakeID
+    doesNotSupportSystems: $doesNotSupportSystems
+  ) {
     systemIntake {
       id
+      doesNotSupportSystems
     }
   }
 }
@@ -7607,6 +7620,7 @@ export type UnlinkSystemIntakeRelationMutationFn = Apollo.MutationFunction<Unlin
  * const [unlinkSystemIntakeRelationMutation, { data, loading, error }] = useUnlinkSystemIntakeRelationMutation({
  *   variables: {
  *      intakeID: // value for 'intakeID'
+ *      doesNotSupportSystems: // value for 'doesNotSupportSystems'
  *   },
  * });
  */
@@ -11430,7 +11444,7 @@ export const TypedGetSystemsDocument = {"kind":"Document","definitions":[{"kind"
 export const TypedSetSystemIntakeRelationNewSystemDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetSystemIntakeRelationNewSystem"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SetSystemIntakeRelationNewSystemInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setSystemIntakeRelationNewSystem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<SetSystemIntakeRelationNewSystemMutation, SetSystemIntakeRelationNewSystemMutationVariables>;
 export const TypedSetSystemIntakeRelationExistingSystemDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetSystemIntakeRelationExistingSystem"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SetSystemIntakeRelationExistingSystemInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setSystemIntakeRelationExistingSystem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<SetSystemIntakeRelationExistingSystemMutation, SetSystemIntakeRelationExistingSystemMutationVariables>;
 export const TypedSetSystemIntakeRelationExistingServiceDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetSystemIntakeRelationExistingService"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SetSystemIntakeRelationExistingServiceInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setSystemIntakeRelationExistingService"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<SetSystemIntakeRelationExistingServiceMutation, SetSystemIntakeRelationExistingServiceMutationVariables>;
-export const TypedUnlinkSystemIntakeRelationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UnlinkSystemIntakeRelation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"intakeID"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"unlinkSystemIntakeRelation"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"intakeID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"intakeID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<UnlinkSystemIntakeRelationMutation, UnlinkSystemIntakeRelationMutationVariables>;
+export const TypedUnlinkSystemIntakeRelationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UnlinkSystemIntakeRelation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"intakeID"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"doesNotSupportSystems"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setSystemSupportAndUnlinkSystemIntakeRelation"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"intakeID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"intakeID"}}},{"kind":"Argument","name":{"kind":"Name","value":"doesNotSupportSystems"},"value":{"kind":"Variable","name":{"kind":"Name","value":"doesNotSupportSystems"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"doesNotSupportSystems"}}]}}]}}]}}]} as unknown as DocumentNode<UnlinkSystemIntakeRelationMutation, UnlinkSystemIntakeRelationMutationVariables>;
 export const TypedSetTrbRequestRelationNewSystemDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetTrbRequestRelationNewSystem"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SetTRBRequestRelationNewSystemInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setTRBRequestRelationNewSystem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<SetTrbRequestRelationNewSystemMutation, SetTrbRequestRelationNewSystemMutationVariables>;
 export const TypedSetTrbRequestRelationExistingSystemDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetTrbRequestRelationExistingSystem"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SetTRBRequestRelationExistingSystemInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setTRBRequestRelationExistingSystem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<SetTrbRequestRelationExistingSystemMutation, SetTrbRequestRelationExistingSystemMutationVariables>;
 export const TypedSetTrbRequestRelationExistingServiceDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetTrbRequestRelationExistingService"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SetTRBRequestRelationExistingServiceInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setTRBRequestRelationExistingService"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<SetTrbRequestRelationExistingServiceMutation, SetTrbRequestRelationExistingServiceMutationVariables>;

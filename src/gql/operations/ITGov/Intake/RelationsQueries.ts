@@ -37,10 +37,17 @@ export const SetSystemIntakeRelationExistingService = gql(/* GraphQL */ `
 `);
 
 export const UnlinkSystemIntakeRelation = gql(/* GraphQL */ `
-  mutation UnlinkSystemIntakeRelation($intakeID: UUID!) {
-    unlinkSystemIntakeRelation(intakeID: $intakeID) {
+  mutation UnlinkSystemIntakeRelation(
+    $intakeID: UUID!
+    $doesNotSupportSystems: Boolean!
+  ) {
+    setSystemSupportAndUnlinkSystemIntakeRelation(
+      intakeID: $intakeID
+      doesNotSupportSystems: $doesNotSupportSystems
+    ) {
       systemIntake {
         id
+        doesNotSupportSystems
       }
     }
   }
