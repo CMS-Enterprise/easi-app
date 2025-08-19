@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import {
@@ -99,21 +99,6 @@ const LinkedSystems = () => {
   // Mutations
   const [deleteSystemLink] = useDeleteSystemLinkMutation();
   const [unlinkAllSystems] = useUnlinkSystemIntakeRelationMutation();
-
-  // One-time baseline snapshot to compare against (uses derived value)
-  const initialSnapshotRef = useRef<Snapshot | null>(null);
-
-  // Capture initial snapshot once when data + derived checkbox state are ready
-  useEffect(() => {
-    if (!relationLoading && data && initialSnapshotRef.current === null) {
-      initialSnapshotRef.current = {
-        noSystemsUsed,
-        systemSignatures: getSystemSignatures(
-          (data.systemIntakeSystems as SystemIntakeSystem[]) || []
-        )
-      };
-    }
-  }, [relationLoading, data, noSystemsUsed]);
 
   const handleRemoveModal = (systemLinkedSystemId: string) => {
     setSystemToBeRemoved(systemLinkedSystemId);
