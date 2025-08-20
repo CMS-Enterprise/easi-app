@@ -135,6 +135,7 @@ function AdditionalRequestInfo({
           )}
           <Button
             type="button"
+            className="display-block margin-top-1"
             onClick={() =>
               history.push(editLink, {
                 from: 'task-list'

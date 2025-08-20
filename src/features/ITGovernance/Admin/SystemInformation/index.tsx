@@ -38,8 +38,21 @@ const SystemInformation = ({
           {linkedSystemsT('editSystemInformation')}
         </UswdsReactLink>
       </div>
-      {/* When it is in empty state */}
-      {request.systems.length === 0 && (
+
+      {/* No pre-existing systems linked */}
+      {request.doesNotSupportSystems === null && (
+        <Alert
+          type="warning"
+          headingLevel="h4"
+          slim
+          className="margin-top-3 margin-bottom-2"
+        >
+          {adminT('noExistingCMSSystem')}
+        </Alert>
+      )}
+
+      {/* User checked does not support systems */}
+      {request.doesNotSupportSystems && (
         <Alert
           type="info"
           headingLevel="h4"
@@ -50,6 +63,7 @@ const SystemInformation = ({
         </Alert>
       )}
 
+      {/* Show systems that are linked */}
       {request.systems.length > 0 && (
         <SystemCardTable systems={request.systemIntakeSystems} />
       )}
