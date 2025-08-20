@@ -13,3 +13,7 @@ WHERE
 -- Delete from contacts table now that they are in the legacy table
 DELETE FROM system_intake_contacts
 WHERE user_id IS NULL;
+
+-- Update user_id column to be NOT NULL now that all NULL values have been moved
+ALTER TABLE system_intake_contacts
+ALTER COLUMN user_id SET NOT NULL;
