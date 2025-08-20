@@ -79,6 +79,7 @@ describe('Trb Request form: Attendees', () => {
   };
 
   it('Renders the attendees form', async () => {
+    const user = userEvent.setup();
     const { getByTestId, findByTestId } = render(
       <MemoryRouter>
         <MockedProvider
@@ -117,11 +118,11 @@ describe('Trb Request form: Attendees', () => {
     expect(requesterRoleField).not.toHaveValue();
 
     // Select requester component
-    userEvent.selectOptions(requesterComponentField, [requester.component!]);
+    await user.selectOptions(requesterComponentField, [requester.component!]);
     expect(requesterComponentField).toHaveValue(requester.component);
 
     // Select requester role
-    userEvent.selectOptions(requesterRoleField, [requester.role!]);
+    await user.selectOptions(requesterRoleField, [requester.role!]);
     expect(requesterRoleField).toHaveValue(requester.role);
   });
 });

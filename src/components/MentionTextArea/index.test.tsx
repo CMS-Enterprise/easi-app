@@ -25,7 +25,8 @@ describe('MentionTextArea component', () => {
     expect(screen.queryByRole('button', { name: 'Read more' })).toBeNull();
   });
 
-  it('renders the editable text area component', () => {
+  it('renders the editable text area component', async () => {
+    const user = userEvent.setup();
     const { asFragment } = render(
       <MentionTextArea id="mentionTextArea" editable />
     );
@@ -33,7 +34,7 @@ describe('MentionTextArea component', () => {
     const editor = screen.getByRole('textbox');
     const text = 'This is the text!';
 
-    userEvent.type(editor, text);
+    await user.type(editor, text);
 
     expect(editor).toHaveTextContent(text);
 
@@ -41,6 +42,7 @@ describe('MentionTextArea component', () => {
   });
 
   it('truncates text with read more/less button', async () => {
+    const user = userEvent.setup();
     render(
       <MentionTextArea
         id="mentionTextArea"
@@ -55,7 +57,7 @@ describe('MentionTextArea component', () => {
 
     const readMoreButton = screen.getByRole('button', { name: 'Read more' });
     expect(readMoreButton).toBeInTheDocument();
-    userEvent.click(readMoreButton);
+    await user.click(readMoreButton);
 
     const readLessButton = await screen.findByRole('button', {
       name: 'Read less'

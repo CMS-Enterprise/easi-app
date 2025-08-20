@@ -39,6 +39,7 @@ describe('FileInput component', () => {
   });
 
   it('clears default filename', async () => {
+    const user = userEvent.setup();
     render(
       <FileInput
         name="fileUpload"
@@ -51,7 +52,7 @@ describe('FileInput component', () => {
     );
 
     const clearButton = screen.getByRole('button', { name: 'Clear file' });
-    userEvent.click(clearButton);
+    await user.click(clearButton);
 
     // File upload input should render after clearing default
     expect(await screen.findByTestId('file-input-input')).toBeInTheDocument();

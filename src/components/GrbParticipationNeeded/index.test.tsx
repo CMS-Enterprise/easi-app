@@ -64,6 +64,7 @@ describe('GRB participation needed', () => {
   });
 
   it('formats system intake for table', async () => {
+    const user = userEvent.setup();
     render(
       <MemoryRouter>
         <VerboseMockedProvider
@@ -76,9 +77,10 @@ describe('GRB participation needed', () => {
 
     const testIntake = mockSystemIntakes[0];
 
-    userEvent.click(
-      await screen.findByRole('button', { name: /Show GRB reviews/i })
-    );
+    const btn = await screen.findByRole('button', {
+      name: /Show GRB reviews/i
+    });
+    await user.click(btn);
 
     expect(
       screen.getByRole('link', { name: testIntake.requestName! })

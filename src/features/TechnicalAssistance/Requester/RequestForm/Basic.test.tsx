@@ -71,6 +71,7 @@ const mockRefetch = async (
 
 describe('Trb Request form: Basic', () => {
   it('submits the form successfully after a failed attempt', async () => {
+    const user = userEvent.setup();
     const { asFragment, findByText, getByLabelText, getByRole, getByTestId } =
       render(
         <MemoryRouter>
@@ -115,7 +116,7 @@ describe('Trb Request form: Basic', () => {
 
     // Submit validation error with incomplete form
     const submitButton = getByRole('button', { name: 'Next' });
-    userEvent.click(submitButton);
+    await user.click(submitButton);
 
     const formErrorText = await findByText(
       'Please check and fix the following'
@@ -123,23 +124,23 @@ describe('Trb Request form: Basic', () => {
     expect(formErrorText).toBeInTheDocument();
 
     // Continue to fill out the minimum required
-    userEvent.selectOptions(getByTestId('component'), [
+    await user.selectOptions(getByTestId('component'), [
       'Center for Medicaid and CHIP Services'
     ]);
-    userEvent.type(
+    await user.type(
       getByLabelText(/What do you need technical assistance with\?/),
       'assistance'
     );
-    userEvent.click(getByTestId('hasSolutionInMind-no'));
-    userEvent.selectOptions(getByTestId('whereInProcess'), [
+    await user.click(getByTestId('hasSolutionInMind-no'));
+    await user.selectOptions(getByTestId('whereInProcess'), [
       'I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM'
     ]);
-    userEvent.click(getByTestId('hasExpectedStartEndDates-no'));
-    userEvent.click(getByLabelText('Security'));
-    userEvent.type(getByLabelText(/When did you meet with them\?/), '10/2022');
+    await user.click(getByTestId('hasExpectedStartEndDates-no'));
+    await user.click(getByLabelText('Security'));
+    await user.type(getByLabelText(/When did you meet with them\?/), '10/2022');
 
     // Submit success
-    userEvent.click(submitButton);
+    await user.click(submitButton);
     await waitFor(() => {
       expect(formErrorText).not.toBeInTheDocument();
     });

@@ -53,6 +53,7 @@ describe('Discussion board', () => {
 
     it('lists the requester as a tag option', async () => {
       const store = easiMockStore({ groups: [BASIC_USER_PROD] });
+      const user = userEvent.setup();
 
       render(
         <Provider store={store}>
@@ -80,7 +81,7 @@ describe('Discussion board', () => {
         })
       ).toBeInTheDocument();
 
-      userEvent.type(screen.getByRole('textbox'), '@');
+      await user.type(screen.getByRole('textbox'), '@');
 
       const mentions = await screen.findByRole('tooltip');
       waitFor(() => expect(mentions).toHaveAttribute('data-state', 'visible'));
@@ -174,6 +175,7 @@ describe('Discussion board', () => {
 
     it('does not list the requester as a tag option', async () => {
       const store = easiMockStore({ groups: [GOVTEAM_PROD] });
+      const user = userEvent.setup();
 
       render(
         <Provider store={store}>
@@ -205,7 +207,7 @@ describe('Discussion board', () => {
         })
       ).toBeInTheDocument();
 
-      userEvent.type(screen.getByRole('textbox'), '@');
+      await user.type(screen.getByRole('textbox'), '@');
 
       const mentions = await screen.findByRole('tooltip');
       waitFor(() => expect(mentions).toHaveAttribute('data-state', 'visible'));
