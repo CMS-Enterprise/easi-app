@@ -7,6 +7,7 @@ import {
   Fieldset,
   Form,
   Grid,
+  Icon,
   Link,
   ModalHeading
 } from '@trussworks/react-uswds';
@@ -21,6 +22,7 @@ import {
 import Alert from 'components/Alert';
 import Breadcrumbs from 'components/Breadcrumbs';
 import CheckboxField from 'components/CheckboxField';
+import IconButton from 'components/IconButton';
 import MainContent from 'components/MainContent';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
@@ -299,22 +301,75 @@ const LinkedSystems = () => {
           </Grid>
         </Grid>
 
-        <ButtonGroup>
-          <Button
-            type="submit"
-            onClick={() => {
-              if (isFromAdmin) {
-                history.push(adminUrl);
-              } else {
-                history.push(redirectUrl, {
-                  requestType: state?.requestType
-                });
+        {(isFromAdmin || isFromTaskList) && (
+          <ButtonGroup>
+            <Button
+              type="submit"
+              disabled={
+                (data?.systemIntakeSystems?.length === 0) !==
+                Boolean(noSystemsUsed)
               }
-            }}
-          >
-            {t('linkedSystems:returnToRequestDetails')}
-          </Button>
-        </ButtonGroup>
+              onClick={() => {
+                if (isFromAdmin) {
+                  history.push(adminUrl);
+                } else {
+                  history.push(redirectUrl, {
+                    requestType: state?.requestType
+                  });
+                }
+              }}
+            >
+              {t('linkedSystems:returnToRequestDetails')}
+            </Button>
+          </ButtonGroup>
+        )}
+
+        {!isFromAdmin && !isFromTaskList && (
+          <>
+            <ButtonGroup>
+              <Button type="button" outline onClick={() => history.goBack()}>
+                {t('itGov:link.form.back')}
+              </Button>
+              <Button
+                type="submit"
+                disabled={
+                  (data?.systemIntakeSystems?.length === 0) !==
+                  Boolean(noSystemsUsed)
+                }
+                onClick={() => {
+                  if (isFromAdmin) {
+                    history.push(adminUrl);
+                  } else {
+                    history.push(redirectUrl, {
+                      requestType: state?.requestType
+                    });
+                  }
+                }}
+              >
+                {isFromTaskList || isFromAdmin
+                  ? t(`itGov:link.form.saveChanges`)
+                  : t(`itGov:link.form.continueTaskList`)}
+              </Button>
+            </ButtonGroup>
+
+            <IconButton
+              icon={<Icon.ArrowBack className="margin-right-05" aria-hidden />}
+              type="button"
+              unstyled
+              onClick={() => history.goBack()}
+            >
+              {isFromTaskList &&
+                !isFromAdmin &&
+                t('itGov:link.form.dontEditAndReturn')}
+
+              {!isFromTaskList &&
+                isFromAdmin &&
+                t('dontEditAndReturnRequestDetails')}
+
+              {!isFromTaskList && !isFromAdmin && t('itGov:link.cancelAndExit')}
+            </IconButton>
+          </>
+        )}
       </Form>
 
       {/* Remove single link */}
