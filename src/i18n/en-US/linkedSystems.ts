@@ -33,6 +33,7 @@ export default {
   },
   continueToTaskList: 'Continue to task list',
   dontAddAndReturn: "Don't add a system and return to request",
+  dontEditAndReturn: "Don't edit and return to request",
   returnToRequestDetails: 'Return to request details',
   addSystem: 'Add system',
   relationshipTypes: {

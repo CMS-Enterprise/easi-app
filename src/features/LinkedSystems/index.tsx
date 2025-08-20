@@ -319,7 +319,9 @@ const LinkedSystems = () => {
                 }
               }}
             >
-              {t('linkedSystems:returnToRequestDetails')}
+              {isFromTaskList
+                ? t('taskList:navigation.returnToTaskList')
+                : t('linkedSystems:returnToRequestDetails')}
             </Button>
           </ButtonGroup>
         )}
@@ -346,9 +348,7 @@ const LinkedSystems = () => {
                   }
                 }}
               >
-                {isFromTaskList || isFromAdmin
-                  ? t(`itGov:link.form.saveChanges`)
-                  : t(`itGov:link.form.continueTaskList`)}
+                {t('itGov:link.form.continueTaskList')}
               </Button>
             </ButtonGroup>
 
