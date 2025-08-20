@@ -173,26 +173,38 @@ const LinkedSystems = () => {
     return <PageLoading />;
   }
 
+  type BreadcrumbType = {
+    text: string;
+    url?: string; // optional now
+  };
+
+  const breadcrumbs: BreadcrumbType[] = [
+    { text: t('intake:navigation.itGovernance'), url: '/' }
+  ];
+
+  if (isFromTaskList) {
+    breadcrumbs.push({
+      text: t('itGov:additionalRequestInfo.taskListBreadCrumb'),
+      url: `/governance-task-list/${id}`
+    });
+  }
+
+  if (isFromAdmin) {
+    breadcrumbs.push({
+      text: t('itGov:additionalRequestInfo.itGovBreadcrumb'),
+      url: `/it-governance/${id}/system-information`
+    });
+  }
+
+  if (isFromTaskList || isFromAdmin) {
+    breadcrumbs.push({ text: t('intake:navigation.editLinkRelation') });
+  } else {
+    breadcrumbs.push({ text: t('intake:navigation.startRequest') });
+  }
+
   return (
     <MainContent className="grid-container margin-bottom-15">
-      <Breadcrumbs
-        items={[
-          { text: t('intake:navigation.itGovernance'), url: '/' },
-          ...(isFromTaskList
-            ? [
-                {
-                  text: t('itGov:additionalRequestInfo.taskListBreadCrumb'),
-                  url: `/governance-task-list/${id}`
-                },
-                { text: t('intake:navigation.editLinkRelation') }
-              ]
-            : [
-                {
-                  text: t('intake:navigation.startRequest')
-                }
-              ])
-        ]}
-      />
+      <Breadcrumbs items={breadcrumbs} />
 
       <Message />
 
