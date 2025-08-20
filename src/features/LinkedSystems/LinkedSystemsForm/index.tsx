@@ -294,7 +294,7 @@ const LinkedSystemsForm = () => {
     : filteredCedarSystemIdOptions;
 
   if (relationLoading) {
-    <PageLoading />;
+    return <PageLoading />;
   }
 
   return (
