@@ -95,12 +95,18 @@ func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryPara
 		}
 	}
 
+	const maxConcurrency = 100
+	sem := make(chan struct{}, maxConcurrency)
+
 	var wg sync.WaitGroup
 	wg.Add(len(retVal))
 	// tack on the oaStatus (comes from separate API call)
 	for i := range retVal {
 		go func(idx int) {
 			defer wg.Done()
+			sem <- struct{}{}
+			defer func() { <-sem }()
+
 			ato, err := c.GetAuthorityToOperate(ctx, retVal[i].ID.String)
 			if err != nil {
 				logger.Error("problem getting ato for system id", zap.Error(err), zap.String("system.id", retVal[i].ID.String))
