@@ -70,6 +70,7 @@ export default gql(/* GraphQL */ `
       contractNumbers {
         contractNumber
       }
+      doesNotSupportSystems
       systems {
         id
         name
