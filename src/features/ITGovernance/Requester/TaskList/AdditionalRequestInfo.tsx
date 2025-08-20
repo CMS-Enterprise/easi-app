@@ -17,20 +17,20 @@ type SystemCardItemProps = {
   acronym?: string | null;
 };
 
-function SystemCardItem({ item }: { item: SystemCardItemProps }) {
+function SystemCardItem({ id, name, acronym }: SystemCardItemProps) {
   const { t } = useTranslation('itGov');
   return (
     <div className="margin-top-2 padding-3 border border-base-lighter radius-md box-shadow-2">
       <h4 className="margin-top-0 margin-bottom-1 line-height-heading-2">
-        {item.name}
+        {name}
       </h4>
-      {item.acronym && (
+      {acronym && (
         <h5 className="margin-y-0 text-normal line-height-heading-1">
-          {item.acronym}
+          ({acronym})
         </h5>
       )}
       <Divider className="margin-y-2" />
-      <UswdsReactLink to={`/systems/${item.id}`}>
+      <UswdsReactLink to={`/systems/${id}`}>
         {t('additionalRequestInfo.viewSystemProfile')}
         <Icon.ArrowForward className="text-middle margin-left-05" aria-hidden />
       </UswdsReactLink>
@@ -98,6 +98,7 @@ function AdditionalRequestInfo({
       ? `/trb/link/${system.id}`
       : `/linked-systems/${system.id}`;
 
+  console.log(system);
   return (
     <div>
       <h4 className="line-height-body-2 margin-top-3 margin-bottom-1">
