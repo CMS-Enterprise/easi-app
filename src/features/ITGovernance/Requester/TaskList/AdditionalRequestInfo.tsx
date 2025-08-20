@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button, Icon } from '@trussworks/react-uswds';
-import { RequestRelationType } from 'gql/generated/graphql';
 
+import Alert from 'components/Alert';
 import Divider from 'components/Divider';
 import UswdsReactLink from 'components/LinkWrapper';
 import { RequestType } from 'types/requestType';
@@ -90,6 +90,7 @@ function AdditionalRequestInfo({
   contractName?: string | null;
   contractNumbers: { contractNumber: string }[];
   requestType: RequestType;
+  doesNotSupportSystems?: boolean | null;
 }) {
   const { t } = useTranslation('itGov');
   const history = useHistory();
@@ -99,14 +100,13 @@ function AdditionalRequestInfo({
       ? `/trb/link/${system.id}`
       : `/linked-systems/${system.id}`;
 
-  console.log(system);
   return (
     <div>
       <h4 className="line-height-body-2 margin-top-3 margin-bottom-1">
         {t('additionalRequestInfo.header')}
       </h4>
 
-      {(!system.systems || system.systems.length === 0) && (
+      {system.doesNotSupportSystems && (
         <>
           <div className="task-list-sidebar__subtitle">
             {t('additionalRequestInfo.doesNotSupportOrUseOtherSystems')}
@@ -125,17 +125,14 @@ function AdditionalRequestInfo({
         </>
       )}
 
-      {system.relationType !== null && (
-        <>
-          <p className="text-base margin-top-1 margin-bottom-0">
-            {system.relationType === RequestRelationType.EXISTING_SERVICE &&
-              t('additionalRequestInfo.existingService')}
-            {system.relationType === RequestRelationType.EXISTING_SYSTEM &&
-              t('additionalRequestInfo.existingSystem')}
-            {system.relationType === RequestRelationType.NEW_SYSTEM &&
-              t('additionalRequestInfo.newSystem')}
-            <br />
-          </p>
+      {system.doesNotSupportSystems === null && (
+        <Alert
+          type="warning"
+          heading={t('itGov:additionalRequestInfo.actionRequiredAlert.header')}
+        >
+          {t(
+            'itGov:additionalRequestInfo.actionRequiredAlert.doesThisRequestInvolve'
+          )}
           <Button
             type="button"
             onClick={() =>
@@ -145,9 +142,9 @@ function AdditionalRequestInfo({
             }
             unstyled
           >
-            {t('additionalRequestInfo.edit')}
+            {t('itGov:additionalRequestInfo.actionRequiredAlert.answer')}
           </Button>
-        </>
+        </Alert>
       )}
 
       {system.systems && system.systems.length > 0 && (
