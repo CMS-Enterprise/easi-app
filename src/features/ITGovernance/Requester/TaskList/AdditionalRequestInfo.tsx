@@ -17,8 +17,9 @@ type SystemCardItemProps = {
   acronym?: string | null;
 };
 
-function SystemCardItem({ id, name, acronym }: SystemCardItemProps) {
+function SystemCardItem({ item }: { item: SystemCardItemProps }) {
   const { t } = useTranslation('itGov');
+  const { id, name, acronym } = item;
   return (
     <div className="margin-top-2 padding-3 border border-base-lighter radius-md box-shadow-2">
       <h4 className="margin-top-0 margin-bottom-1 line-height-heading-2">
