@@ -20,6 +20,8 @@ type CedarSystem struct {
 	SystemMaintainerOrgComp zero.String `json:"systemMaintainerOrgComp"`
 	VersionID               zero.String `json:"versionId"`
 	UUID                    zero.String `json:"uuid"`
+
+	OaStatus zero.String `json:"oaStatus"`
 }
 
 type CedarSubSystem struct {

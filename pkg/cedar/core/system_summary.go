@@ -3,9 +3,11 @@ package cedarcore
 import (
 	"context"
 	"fmt"
+	"sync"
 	"time"
 
 	"github.com/guregu/null/zero"
+	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
@@ -25,15 +27,16 @@ func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryPara
 	params.SetState(helpers.PointerTo("active"))
 	params.SetIncludeInSurvey(helpers.PointerTo(true))
 
-	// set additinoal param filters
+	// set additional param filters
 	for _, opt := range opts {
 		if opt != nil {
 			opt(params)
 		}
 	}
 
+	logger := appcontext.ZLogger(ctx)
 	if c.mockEnabled {
-		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
+		logger.Info("CEDAR Core is disabled")
 
 		// Simulate a filter by only returning a subset of the mock systems
 		if params.UserName != nil || params.BelongsTo != nil {
@@ -91,6 +94,28 @@ func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryPara
 			retVal = append(retVal, cedarSys)
 		}
 	}
+
+	var wg sync.WaitGroup
+	wg.Add(len(retVal))
+	// tack on the oaStatus (comes from separate API call)
+	for i := range retVal {
+		go func(idx int) {
+			defer wg.Done()
+			ato, err := c.GetAuthorityToOperate(ctx, retVal[i].ID.String)
+			if err != nil {
+				logger.Error("problem getting ato for system id", zap.Error(err), zap.String("system.id", retVal[i].ID.String))
+				return
+			}
+
+			if len(ato) < 1 {
+				return
+			}
+
+			retVal[i].OaStatus = ato[0].OaStatus
+		}(i)
+	}
+
+	wg.Wait()
 
 	return retVal, nil
 }
