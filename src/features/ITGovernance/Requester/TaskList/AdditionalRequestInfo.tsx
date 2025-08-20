@@ -125,7 +125,7 @@ function AdditionalRequestInfo({
         </>
       )}
 
-      {system.doesNotSupportSystems === null && (
+      {system.doesNotSupportSystems === null && system.systems.length === 0 && (
         <Alert
           type="warning"
           heading={t('itGov:additionalRequestInfo.actionRequiredAlert.header')}
