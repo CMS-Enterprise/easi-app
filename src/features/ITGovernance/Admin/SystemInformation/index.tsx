@@ -46,7 +46,7 @@ const SystemInformation = ({
           slim
           className="margin-top-3 margin-bottom-2"
         >
-          {adminT('newSystemAlert')}
+          {adminT('noSystemLinkedAlert')}
         </Alert>
       )}
 
