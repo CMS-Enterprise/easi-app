@@ -238,7 +238,7 @@ describe('IT Gov Actions', () => {
       await user.type(meetingDateField, '01/01/2000');
 
       expect(
-        await screen.findByText(i18next.t<string>('action:pastDateAlert'))
+        await screen.findByText(i18next.t<string>('general:dateWarning'))
       ).toBeInTheDocument();
     });
 

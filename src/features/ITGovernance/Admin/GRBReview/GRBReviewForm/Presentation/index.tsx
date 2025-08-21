@@ -18,6 +18,7 @@ import {
 
 import Alert from 'components/Alert';
 import DatePickerFormatted from 'components/DatePickerFormatted';
+import DateTimePicker from 'components/DateTimePicker';
 import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import FileInput from 'components/FileInput';
@@ -217,14 +218,7 @@ const Presentation = ({ grbReview }: GRBReviewFormStepProps) => {
                         as={<FieldErrorMsg />}
                       />
 
-                      <DatePickerFormatted
-                        {...field}
-                        id={field.name}
-                        defaultValue={grbReview.grbDate || ''}
-                        onChange={e => field.onChange(e || undefined)}
-                        dateInPastWarning
-                        suppressMilliseconds
-                      />
+                      <DateTimePicker id={field.name} {...field} />
                     </FormGroup>
                   )}
                 />

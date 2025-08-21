@@ -11,9 +11,8 @@ import {
   useCreateSystemIntakeActionProgressToNewStepMutation
 } from 'gql/generated/graphql';
 
-import Alert from 'components/Alert';
 import CheckboxField from 'components/CheckboxField';
-import DatePickerFormatted from 'components/DatePickerFormatted';
+import DateTimePicker from 'components/DateTimePicker';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import HelpText from 'components/HelpText';
 import Label from 'components/Label';
@@ -22,7 +21,6 @@ import RichTextEditor from 'components/RichTextEditor';
 import { progressToNewStepSchema } from 'validations/actionSchema';
 
 import ActionForm, { SystemIntakeActionFields } from './components/ActionForm';
-import { actionDateInPast } from './ManageLcid/RetireLcid';
 import { EditsRequestedContext } from '.';
 
 /** Meeting date sub-field for the GRT and GRB review radio fields */
@@ -43,13 +41,7 @@ const MeetingDateField = ({
       shouldUnregister
       disabled={disabled}
       render={({ field: { ref, ...field }, fieldState: { error } }) => (
-        <FormGroup
-          error={!!error}
-          className="margin-left-4 margin-top-1"
-          // Force re-render and value update when disabled prop changes
-          // TODO: Find a better way to handle clearing the DatePickerFormatted field
-          key={disabled ? 'disabled' : 'enabled'}
-        >
+        <FormGroup error={!!error} className="margin-left-4 margin-top-1">
           <Label htmlFor={field.name}>
             {t('progressToNewStep.meetingDate')}
           </Label>
@@ -60,22 +52,14 @@ const MeetingDateField = ({
           {!!error?.message && (
             <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
           )}
-          <DatePickerFormatted
-            {...field}
-            // Fix for empty string throwing off field validation
-            onChange={e => field.onChange(e || undefined)}
-            value={field.value || ''}
-            id="meetingDate"
-          />
 
-          {
-            // If past date is selected, show alert
-            field.value && actionDateInPast(field.value) && (
-              <Alert type="warning" slim>
-                {t('pastDateAlert')}
-              </Alert>
-            )
-          }
+          <DateTimePicker
+            {...field}
+            id="meetingDate"
+            value={field.value || ''}
+            // TODO: Fix alert icon overlapping end of date picker input
+            alertIcon={false}
+          />
         </FormGroup>
       )}
     />
