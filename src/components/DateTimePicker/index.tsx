@@ -4,17 +4,25 @@ import { useTranslation } from 'react-i18next';
 import { Alert, Button, Icon, Tooltip } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
-import { isDateInPast } from 'utils/date';
+import { convertDateToISOString, isDateInPast } from 'utils/date';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import './index.scss';
 
-type DateTimePickerProps = DatePickerProps & {
+/** Extends the DatePickerProps type from react-datepicker to force single-date selection variant of ReactDatePicker's union type. */
+type SingleDatePickerProps = DatePickerProps & {
+  selectsMultiple?: never;
+  selectsRange?: never;
+};
+
+type DateTimePickerProps = Omit<SingleDatePickerProps, 'onChange'> & {
   id: string;
   name: string;
   alertIcon?: boolean; // Whether to show the warning icon
   alertText?: boolean; // Whether to show the warning text. Sometimes we want to render the warning text under a different parent/UI element - outside the scope of this component
   className?: string;
+  /** Uses date converted to UTC timezone in ISO string format */
+  onChange: (date: string | null) => void;
 };
 
 /*
@@ -29,6 +37,7 @@ const DateTimePicker = ({
   alertText = true,
   className,
   value,
+  onChange,
   ...props
 }: DateTimePickerProps) => {
   const { t: generalT } = useTranslation('general');
@@ -49,7 +58,8 @@ const DateTimePicker = ({
     <div>
       <div className={classNames('display-flex margin-top-1', className)}>
         <ReactDatePicker
-          {...props}
+          // Type assertion needed to force single-date selection variant of ReactDatePicker's union type
+          {...(props as SingleDatePickerProps)}
           ref={datePickerRef}
           id={id}
           name={name}
@@ -57,6 +67,8 @@ const DateTimePicker = ({
           onClickOutside={() => setIsOpen(false)}
           onSelect={() => setIsOpen(false)}
           selected={value ? new Date(value) : null}
+          // Convert date to UTC ISO string before calling onChange
+          onChange={date => onChange(convertDateToISOString(date))}
           aria-label={generalT('datePicker.label')}
           popperPlacement="bottom-start"
         />

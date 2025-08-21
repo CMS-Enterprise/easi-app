@@ -70,6 +70,7 @@ exports[`DateTimePicker Component > matches snapshot 1`] = `
         type="button"
       >
         <svg
+          aria-hidden="true"
           class="usa-icon usa-icon--size-3"
           focusable="false"
           height="1em"
@@ -174,6 +175,7 @@ exports[`DateTimePicker Component > matches snapshot with alertText disabled 1`]
         type="button"
       >
         <svg
+          aria-hidden="true"
           class="usa-icon usa-icon--size-3"
           focusable="false"
           height="1em"
@@ -262,6 +264,7 @@ exports[`DateTimePicker Component > matches snapshot with custom className 1`] =
         type="button"
       >
         <svg
+          aria-hidden="true"
           class="usa-icon usa-icon--size-3"
           focusable="false"
           height="1em"
@@ -368,6 +371,7 @@ exports[`DateTimePicker Component > matches snapshot with disabled state 1`] = `
         type="button"
       >
         <svg
+          aria-hidden="true"
           class="usa-icon usa-icon--size-3"
           focusable="false"
           height="1em"
@@ -472,6 +476,7 @@ exports[`DateTimePicker Component > matches snapshot with past date warning 1`] 
         type="button"
       >
         <svg
+          aria-hidden="true"
           class="usa-icon usa-icon--size-3"
           focusable="false"
           height="1em"

@@ -266,7 +266,7 @@ describe('DateTimePicker Component', () => {
         id="completeICIP"
         name="completeICIP"
         value="2023-06-15T00:00:00Z"
-        onChange={(date: Date | null) => {}}
+        onChange={date => {}}
         alertText={false}
       />
     );
