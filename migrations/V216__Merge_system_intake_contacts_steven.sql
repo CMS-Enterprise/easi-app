@@ -52,7 +52,8 @@ data_to_update AS (
         raw_data.eua_user_id,
         raw_data.user_id,
         raw_data.system_intake_id,
-        raw_data.group_component,
+        -- force null group_component to Other. It just means it was never set
+        COALESCE(raw_data.group_component,'Other') AS group_component,
         raw_data.component,
         raw_data.role,
         raw_data.created_at,
@@ -66,6 +67,8 @@ data_to_update AS (
         raw_data.isrequester
     FROM raw_data_to_update AS raw_data
 )
+
+-- SELECT * FROM data_to_update WHERE group_component IS NULL
 
 
 UPDATE system_intake_contacts c
