@@ -84,7 +84,7 @@ const DateTimePicker = ({
           disabled={props.disabled}
           onClick={() => setIsOpen(!isOpen)}
         >
-          <Icon.CalendarToday size={3} />
+          <Icon.CalendarToday size={3} aria-hidden />
         </Button>
       </div>
 
