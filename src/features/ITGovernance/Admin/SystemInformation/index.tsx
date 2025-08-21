@@ -42,7 +42,7 @@ const SystemInformation = ({
       </div>
 
       {/* No pre-existing systems linked */}
-      {doesNotSupportSystems === null && systems.length === 0 && (
+      {doesNotSupportSystems === null && (
         <Alert
           type="warning"
           headingLevel="h4"

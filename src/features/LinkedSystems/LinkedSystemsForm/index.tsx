@@ -24,6 +24,7 @@ import {
   useGetCedarSystemsQuery,
   useGetSystemIntakeSystemQuery,
   useGetSystemIntakeSystemsQuery,
+  useUnlinkSystemIntakeRelationMutation,
   useUpdateSystemLinkMutation
 } from 'gql/generated/graphql';
 
@@ -113,11 +114,22 @@ const updateLink = async (
 const addLink = async (
   payload: LinkedSystemsFormFields,
   systemIntakeID: string,
-  addSystemLink: ReturnType<typeof useAddSystemLinkMutation>[0]
+  addSystemLink: ReturnType<typeof useAddSystemLinkMutation>[0],
+  setSystemSupport: ReturnType<typeof useUnlinkSystemIntakeRelationMutation>[0]
 ) => {
+  // First set doesNotSupportSystems from null to false
+  await setSystemSupport({
+    variables: {
+      intakeID: systemIntakeID,
+      doesNotSupportSystems: false
+    }
+  });
+
+  // Then add the new link
   const addInput = {
     input: buildInputPayload(payload, systemIntakeID)
   };
+
   return addSystemLink({ variables: addInput });
 };
 
@@ -157,7 +169,7 @@ const LinkedSystemsForm = () => {
   ]);
 
   const [addSystemLink] = useAddSystemLinkMutation();
-
+  const [setSystemSupport] = useUnlinkSystemIntakeRelationMutation();
   const [updateSystemLink] = useUpdateSystemLinkMutation();
 
   const {
@@ -240,7 +252,7 @@ const LinkedSystemsForm = () => {
 
     const mutation = linkedSystemID
       ? updateLink(payload, linkedSystemID, systemIntakeID, updateSystemLink)
-      : addLink(payload, systemIntakeID, addSystemLink);
+      : addLink(payload, systemIntakeID, addSystemLink, setSystemSupport);
 
     mutation
       .then(() => {
