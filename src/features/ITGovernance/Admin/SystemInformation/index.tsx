@@ -16,6 +16,8 @@ const SystemInformation = ({
   const { t: adminT } = useTranslation('admin');
   const { t: linkedSystemsT } = useTranslation('linkedSystems');
 
+  const { id, doesNotSupportSystems, systems, systemIntakeSystems } = request;
+
   return (
     <div>
       <PageHeading className="margin-y-0">
@@ -31,7 +33,7 @@ const SystemInformation = ({
 
         <UswdsReactLink
           to={{
-            pathname: `/linked-systems/${request.id}`,
+            pathname: `/linked-systems/${id}`,
             state: { from: 'admin' }
           }}
         >
@@ -40,7 +42,7 @@ const SystemInformation = ({
       </div>
 
       {/* No pre-existing systems linked */}
-      {request.doesNotSupportSystems === null && (
+      {doesNotSupportSystems === null && systems.length === 0 && (
         <Alert
           type="warning"
           headingLevel="h4"
@@ -52,7 +54,7 @@ const SystemInformation = ({
       )}
 
       {/* User checked does not support systems */}
-      {request.doesNotSupportSystems && (
+      {doesNotSupportSystems && (
         <Alert
           type="info"
           headingLevel="h4"
@@ -64,10 +66,8 @@ const SystemInformation = ({
       )}
 
       {/* Show systems that are linked */}
-      {request.systems.length > 0 && (
-        <SystemCardTable systems={request.systemIntakeSystems} />
-      )}
-      <RelatedRequestsTable requestID={request.id} type="itgov" />
+      {systems.length > 0 && <SystemCardTable systems={systemIntakeSystems} />}
+      <RelatedRequestsTable requestID={id} type="itgov" />
     </div>
   );
 };
