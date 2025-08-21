@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -1377,7 +1378,13 @@ func (r *queryResolver) CedarSystem(ctx context.Context, cedarSystemID string) (
 	if err != nil {
 		return nil, err
 	}
-	return cedarSystem, nil
+	withOA := resolvers.AttachOAStatus(ctx, r.cedarCoreClient, []*models.CedarSystem{cedarSystem})
+
+	if len(withOA) < 1 {
+		return nil, fmt.Errorf("expected 1 system back when attaching OA status, got %[1]d for system %[2]s", len(withOA), cedarSystemID)
+	}
+
+	return withOA[0], nil
 }
 
 // CedarSystems is the resolver for the cedarSystems field.
@@ -1418,7 +1425,12 @@ func (r *queryResolver) CedarContractsBySystem(ctx context.Context, cedarSystemI
 // MyCedarSystems is the resolver for the myCedarSystems field.
 func (r *queryResolver) MyCedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
 	requesterEUAID := appcontext.Principal(ctx).ID()
-	return r.cedarCoreClient.GetSystemSummary(ctx, cedarcore.SystemSummaryOpts.WithEuaIDFilter(requesterEUAID))
+	systems, err := r.cedarCoreClient.GetSystemSummary(ctx, cedarcore.SystemSummaryOpts.WithEuaIDFilter(requesterEUAID))
+	if err != nil {
+		return nil, err
+	}
+
+	return resolvers.AttachOAStatus(ctx, r.cedarCoreClient, systems), nil
 }
 
 // CedarSystemBookmarks is the resolver for the cedarSystemBookmarks field.
