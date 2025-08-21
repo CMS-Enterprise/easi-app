@@ -1,3 +1,9 @@
+-- add roles column to the DB. TODO change this to an enum
+ALTER TABLE IF EXISTS system_intake_contacts
+ADD COLUMN roles TEXT[] NOT NULL DEFAULT '{}',
+ADD COLUMN is_requester BOOLEAN NOT NULL DEFAULT FALSE,
+ADD COLUMN created_by UUID REFERENCES user_account(id), -- TODO set this not null later
+ADD COLUMN modified_by UUID REFERENCES user_account(id);
 
 -- data to update aggregates contacts using partition by logic. We can then programatically update the contact to have a list of all roles, and drop the old columns
 WITH raw_data_to_update AS (
@@ -61,10 +67,42 @@ data_to_update AS (
     FROM raw_data_to_update AS raw_data
 )
 
--- UPDATE 
+
+UPDATE system_intake_contacts c
+SET
+    roles = du.roles_array,
+    is_requester = du.isrequester,
+    component = du.group_component,
+    updated_at = CURRENT_TIMESTAMP,
+    created_by = '00000000-0000-0000-0000-000000000000', -- Unknown User Account
+    modified_by = '00000001-0001-0001-0001-000000000001' -- System Account
+FROM (
+    SELECT * FROM data_to_update WHERE split_index = 1
+) du
+WHERE c.id = du.original_contact_id;
+
+-- Delete duplicate contacts, noted by the split_index > 1
+DELETE FROM system_intake_contacts
+WHERE id IN (SELECT id FROM data_to_update WHERE split_index > 1);
+
+UPDATE system_intake_contacts
+SET roles = data_to_update.roles_array
+FROM data_to_update
+WHERE system_intake_contacts.id = data_to_update.id;
 
 -- SELECT * FROM raw_data_to_update
 -- WHERE roles_array = '{}' 
 
-SELECT * FROM data_to_update
+-- SELECT * FROM data_to_update;
 --WHERE group_component <> component
+
+
+-- Remove placeholder columns
+ALTER TABLE system_intake_contacts
+DROP COLUMN role,
+DROP COLUMN eua_user_id,
+DROP COLUMN common_name;
+
+-- unique constraint between user_id and system_intake_id
+ALTER TABLE system_intake_contacts
+ADD CONSTRAINT user_intake_unique UNIQUE (user_id, system_intake_id);
