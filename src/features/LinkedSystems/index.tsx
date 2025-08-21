@@ -225,7 +225,9 @@ const LinkedSystems = () => {
           : t('itGov:link.header')}
       </PageHeading>
       <p className="font-body-lg line-height-body-5 text-light margin-y-0">
-        {t(`itGov:link.description`)}
+        {isFromAdmin
+          ? t(`itGov:link.adminDescription`)
+          : t(`itGov:link.description`)}
       </p>
       <p className="margin-top-2 margin-bottom-5 text-base">
         <Trans
