@@ -236,7 +236,7 @@ const LinkedSystemsTable = ({
                     key={column.id}
                   >
                     <button
-                      className="usa-button usa-button--unstyled"
+                      className="usa-button usa-button--unstyled margin-top-0"
                       type="button"
                       {...column.getSortByToggleProps()}
                     >

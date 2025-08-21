@@ -2,7 +2,7 @@ export default {
   addFormHeader: 'Add a system link',
   editFormHeader: 'Edit a system link',
   editFormSubheader:
-    'If you are requesting a Life Cycle ID (LCID) and governance approval for a new IT investment that is a part of an existing system, please include additional details below. ',
+    'Edit details for a CMS system that is supported by or supports this request.',
   addFormSubheader:
     'Add a CMS system that is supported by or supports this request.',
   linkedSystemsTable: {

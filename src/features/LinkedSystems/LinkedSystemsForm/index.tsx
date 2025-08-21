@@ -308,12 +308,13 @@ const LinkedSystemsForm = () => {
           {linkedSystemID ? t('editFormSubheader') : t('addFormSubheader')}
         </p>
 
-        <RequiredFieldsText className="margin-top-2 margin-bottom-5" />
+        <RequiredFieldsText className="margin-y-2" />
 
         <IconButton
           icon={<Icon.ArrowBack className="margin-right-05" aria-hidden />}
           type="button"
           unstyled
+          className="margin-bottom-5"
           onClick={() => {
             history.goBack();
           }}
@@ -525,7 +526,11 @@ const LinkedSystemsForm = () => {
               </Grid>
             </Grid>
 
-            <Button type="submit" disabled={!isValid || !isDirty}>
+            <Button
+              className="margin-top-5"
+              type="submit"
+              disabled={!isValid || !isDirty}
+            >
               {linkedSystemID ? (
                 <Trans i18nKey="itGov:link.form.saveChanges" />
               ) : (
