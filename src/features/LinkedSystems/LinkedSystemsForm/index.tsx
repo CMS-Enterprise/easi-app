@@ -22,6 +22,7 @@ import {
   UpdateSystemLinkMutationFn,
   useAddSystemLinkMutation,
   useGetCedarSystemsQuery,
+  useGetSystemIntakeQuery,
   useGetSystemIntakeSystemQuery,
   useGetSystemIntakeSystemsQuery,
   useUnlinkSystemIntakeRelationMutation,
@@ -115,15 +116,18 @@ const addLink = async (
   payload: LinkedSystemsFormFields,
   systemIntakeID: string,
   addSystemLink: ReturnType<typeof useAddSystemLinkMutation>[0],
-  setSystemSupport: ReturnType<typeof useUnlinkSystemIntakeRelationMutation>[0]
+  setSystemSupport: ReturnType<typeof useUnlinkSystemIntakeRelationMutation>[0],
+  doesNotSupportSystems: boolean | null | undefined
 ) => {
-  // First set doesNotSupportSystems from null to false
-  await setSystemSupport({
-    variables: {
-      intakeID: systemIntakeID,
-      doesNotSupportSystems: false
-    }
-  });
+  // Only update if doesNotSupportSystems is null
+  if (doesNotSupportSystems === null || doesNotSupportSystems === undefined) {
+    await setSystemSupport({
+      variables: {
+        intakeID: systemIntakeID,
+        doesNotSupportSystems: false
+      }
+    });
+  }
 
   // Then add the new link
   const addInput = {
@@ -198,6 +202,12 @@ const LinkedSystemsForm = () => {
     skip: !systemIntakeID
   });
 
+  const { data: systemData } = useGetSystemIntakeQuery({
+    variables: { id: systemIntakeID }
+  });
+
+  const doesNotSupportSystems = systemData?.systemIntake?.doesNotSupportSystems;
+
   const filteredCedarSystemIdOptions = useMemo<
     { label: string; value: string }[]
   >(() => {
@@ -252,7 +262,13 @@ const LinkedSystemsForm = () => {
 
     const mutation = linkedSystemID
       ? updateLink(payload, linkedSystemID, systemIntakeID, updateSystemLink)
-      : addLink(payload, systemIntakeID, addSystemLink, setSystemSupport);
+      : addLink(
+          payload,
+          systemIntakeID,
+          addSystemLink,
+          setSystemSupport,
+          doesNotSupportSystems
+        );
 
     mutation
       .then(() => {
