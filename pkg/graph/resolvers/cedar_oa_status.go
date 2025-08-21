@@ -16,11 +16,11 @@ const maxConcurrency = 50
 func AttachOAStatus(ctx context.Context, client *cedarcore.Client, systems []*models.CedarSystem) []*models.CedarSystem {
 	logger := appcontext.ZLogger(ctx)
 
-	sem := make(chan struct{}, maxConcurrency)
-
 	var wg sync.WaitGroup
 	wg.Add(len(systems))
-	// tack on the oaStatus (comes from separate API call)
+
+	sem := make(chan struct{}, maxConcurrency)
+
 	for i := range systems {
 		go func(idx int) {
 			defer wg.Done()

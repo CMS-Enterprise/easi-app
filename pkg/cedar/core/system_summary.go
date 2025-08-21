@@ -32,8 +32,10 @@ func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryPara
 		}
 	}
 
+	logger := appcontext.ZLogger(ctx)
+
 	if c.mockEnabled {
-		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
+		logger.Info("CEDAR Core is disabled")
 
 		// Simulate a filter by only returning a subset of the mock systems
 		if params.UserName != nil || params.BelongsTo != nil {

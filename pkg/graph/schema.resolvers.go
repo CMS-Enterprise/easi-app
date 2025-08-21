@@ -1387,7 +1387,6 @@ func (r *queryResolver) CedarSystems(ctx context.Context) ([]*models.CedarSystem
 		return nil, err
 	}
 
-	// tack on the oaStatus (comes from separate API call)
 	return resolvers.AttachOAStatus(ctx, r.cedarCoreClient, systems), nil
 }
 
