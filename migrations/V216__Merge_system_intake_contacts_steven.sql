@@ -66,34 +66,27 @@ data_to_update AS (
         raw_data.the_actual_requester,
         raw_data.isrequester
     FROM raw_data_to_update AS raw_data
+),
+
+-- update the records of the first record. We put in a CTE so we can still reference the CTE later
+updated_records AS ( --noqa
+    UPDATE system_intake_contacts c
+    SET
+        roles = du.roles_array,
+        is_requester = du.isrequester,
+        component = du.group_component,
+        updated_at = CURRENT_TIMESTAMP,
+        created_by = '00000000-0000-0000-0000-000000000000', -- Unknown User Account
+        modified_by = '00000001-0001-0001-0001-000000000001' -- System Account
+    FROM (
+        SELECT * FROM data_to_update WHERE split_index = 1
+    ) du
+    WHERE c.id = du.id
 )
-
--- SELECT * FROM data_to_update WHERE group_component IS NULL
-
-
-UPDATE system_intake_contacts c
-SET
-    roles = du.roles_array,
-    is_requester = du.isrequester,
-    component = du.group_component,
-    updated_at = CURRENT_TIMESTAMP,
-    created_by = '00000000-0000-0000-0000-000000000000', -- Unknown User Account
-    modified_by = '00000001-0001-0001-0001-000000000001' -- System Account
-FROM (
-    SELECT * FROM data_to_update WHERE split_index = 1
-) du
-WHERE c.id = du.id;
 
 -- Delete duplicate contacts, noted by the split_index > 1
 DELETE FROM system_intake_contacts
 WHERE id IN (SELECT id FROM data_to_update WHERE split_index > 1);
-
--- SELECT * FROM raw_data_to_update
--- WHERE roles_array = '{}' 
-
--- SELECT * FROM data_to_update;
---WHERE group_component <> component
-
 
 -- Remove placeholder columns
 ALTER TABLE system_intake_contacts
