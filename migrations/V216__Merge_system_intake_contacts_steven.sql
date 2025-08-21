@@ -79,16 +79,11 @@ SET
 FROM (
     SELECT * FROM data_to_update WHERE split_index = 1
 ) du
-WHERE c.id = du.original_contact_id;
+WHERE c.id = du.id;
 
 -- Delete duplicate contacts, noted by the split_index > 1
 DELETE FROM system_intake_contacts
 WHERE id IN (SELECT id FROM data_to_update WHERE split_index > 1);
-
-UPDATE system_intake_contacts
-SET roles = data_to_update.roles_array
-FROM data_to_update
-WHERE system_intake_contacts.id = data_to_update.id;
 
 -- SELECT * FROM raw_data_to_update
 -- WHERE roles_array = '{}' 
@@ -106,3 +101,6 @@ DROP COLUMN common_name;
 -- unique constraint between user_id and system_intake_id
 ALTER TABLE system_intake_contacts
 ADD CONSTRAINT user_intake_unique UNIQUE (user_id, system_intake_id);
+
+ALTER TABLE system_intake_contacts
+ALTER COLUMN created_by SET NOT NULL;
