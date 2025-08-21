@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Alert, Button, Icon, Tooltip } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
-import { formatDateUtc, isDateInPast } from 'utils/date';
+import { isDateInPast } from 'utils/date';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import './index.scss';
@@ -28,6 +28,7 @@ const DateTimePicker = ({
   alertIcon = true,
   alertText = true,
   className,
+  value,
   ...props
 }: DateTimePickerProps) => {
   const { t: generalT } = useTranslation('general');
@@ -38,11 +39,11 @@ const DateTimePicker = ({
 
   // Check if the date is in the past
   const dateIsInPast = useMemo<boolean>(() => {
-    if (props.value) {
-      return isDateInPast(props.value);
+    if (value) {
+      return isDateInPast(value);
     }
     return false;
-  }, [props.value]);
+  }, [value]);
 
   return (
     <div>
@@ -55,12 +56,7 @@ const DateTimePicker = ({
           open={isOpen}
           onClickOutside={() => setIsOpen(false)}
           onSelect={() => setIsOpen(false)}
-          selected={props.value ? new Date(props.value) : null}
-          value={
-            typeof props.value === 'string'
-              ? formatDateUtc(props.value, 'MM/dd/yyyy')
-              : props.value
-          }
+          selected={value ? new Date(value) : null}
           aria-label={generalT('datePicker.label')}
           popperPlacement="bottom-start"
         />
