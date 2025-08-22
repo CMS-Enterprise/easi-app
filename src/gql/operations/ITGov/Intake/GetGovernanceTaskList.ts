@@ -11,6 +11,7 @@ export default gql(/* GraphQL */ `
       lcid
       lcidRetiresAt
       relationType
+      requestType
       requestName
       state
       statusAdmin
@@ -69,6 +70,7 @@ export default gql(/* GraphQL */ `
       contractNumbers {
         contractNumber
       }
+      doesNotSupportSystems
       systems {
         id
         name

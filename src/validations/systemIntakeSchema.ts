@@ -339,3 +339,42 @@ export const documentSchema = Yup.object({
     otherwise: Yup.boolean()
   })
 });
+
+export const linkedSystemsSchema = Yup.object({
+  cedarSystemID: Yup.string().required('Please select a CMS System'),
+
+  relationshipTypes: Yup.object({
+    primarySupport: Yup.boolean(),
+    partialSupport: Yup.boolean(),
+    usesOrImpactedBySelectedSystem: Yup.boolean(),
+    impactsSelectedSystem: Yup.boolean(),
+    other: Yup.boolean()
+  }),
+
+  otherDescription: Yup.string().when('relationshipTypes.other', {
+    is: true,
+    then: schema => schema.required('Please provide details for "Other".'),
+    otherwise: schema => schema.notRequired()
+  })
+}).test(
+  'at-least-one-selected',
+  'Please select at least one relationship type',
+  function atLeastOneSelected(values) {
+    if (!values) {
+      return this.createError({ message: 'Form values are missing' });
+    }
+
+    const optionSelected = Object.values(values.relationshipTypes || {}).some(
+      Boolean
+    );
+
+    if (!optionSelected) {
+      return this.createError({
+        path: 'relationshipTypes',
+        message: 'Please select at least one relationship type'
+      });
+    }
+
+    return true;
+  }
+);

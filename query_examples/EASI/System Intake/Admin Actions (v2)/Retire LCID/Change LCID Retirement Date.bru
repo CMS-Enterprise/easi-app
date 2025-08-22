@@ -1,0 +1,49 @@
+meta {
+  name: Change LCID Retirement Date
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation ChangeLCIDRetirementDate($input: SystemIntakeChangeLCIDRetirementDateInput!) {
+      createSystemIntakeActionChangeLCIDRetirementDate(input:$input) {
+          userErrors {
+              message
+              path
+          }
+          systemIntake {
+              lcidStatus
+              lcidRetiresAt
+          }
+      }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+      "input": {
+          "systemIntakeID": "{{systemIntakeID}}",
+          "retiresAt": "2015-10-01T00:00:00.000Z",
+          "notificationRecipients": {
+              "regularRecipientEmails": [
+                  "{{testEmailAddress}}"
+              ],
+              "shouldNotifyITGovernance": false,
+              "shouldNotifyITInvestment": false
+          },
+          "additionalInfo": "Here's a new retirement date",
+          "adminNote": "changing retirement around"
+      }
+  }
+}
+
+settings {
+  encodeUrl: true
+}

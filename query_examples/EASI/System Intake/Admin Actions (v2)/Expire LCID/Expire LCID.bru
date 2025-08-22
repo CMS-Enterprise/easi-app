@@ -1,0 +1,50 @@
+meta {
+  name: Expire LCID
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation CreateSystemIntakeActionExpireLCID($input: SystemIntakeExpireLCIDInput!) {
+      createSystemIntakeActionExpireLCID(input: $input) {
+          userErrors {
+              message
+              path
+          }
+          systemIntake {
+              lcid
+              lcidExpiresAt
+              lcidStatus
+          }
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+      "input": {
+          "systemIntakeID": "{{systemIntakeID}}",
+          "notificationRecipients": {
+              "regularRecipientEmails": [
+                  "{{testEmailAddress}}"
+              ],
+              "shouldNotifyITGovernance": false,
+              "shouldNotifyITInvestment": false
+          },
+          "reason": "Testing expiration LCID",
+          "nextSteps": "LCID expired; create a new LCID",
+          "additionalInfo": "im in ur intake, expiring ur lcid",
+          "adminNote": "look how I'm expiring this manually"
+      }
+  }
+}
+
+settings {
+  encodeUrl: true
+}

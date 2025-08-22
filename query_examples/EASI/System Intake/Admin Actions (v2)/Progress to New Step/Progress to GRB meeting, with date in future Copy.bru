@@ -1,0 +1,46 @@
+meta {
+  name: Progress to GRB meeting, with date in future Copy
+  type: graphql
+  seq: 4
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation CreateSystemIntakeActionProgressToNewStep($input: SystemIntakeProgressToNewStepsInput!) {
+      createSystemIntakeActionProgressToNewStep(input: $input) {
+          systemIntake {
+              step
+              grbDate
+          }
+      }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+      "input": {
+          "systemIntakeID": "{{systemIntakeID}}",
+          "notificationRecipients": {
+              "regularRecipientEmails": [
+                  "{{testEmailAddress}}"
+              ],
+              "shouldNotifyITGovernance": false,
+              "shouldNotifyITInvestment": false
+          },
+          "newStep": "GRB_MEETING",
+          "meetingDate": "2029-07-28T20:12:31.703Z",
+          "feedback": "this is more feedback",
+          "additionalInfo": "add'l info"
+      }
+  }
+}
+
+settings {
+  encodeUrl: true
+}

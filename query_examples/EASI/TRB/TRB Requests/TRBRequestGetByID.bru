@@ -1,0 +1,81 @@
+meta {
+  name: TRBRequestGetByID
+  type: graphql
+  seq: 3
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query TRBRequestGetByID{
+    
+    trbRequest(id: "{{trbRequestID}}"){
+      id
+      name
+      archived
+      type
+      status
+      taskStatuses {
+          formStatus
+          feedbackStatus
+          consultPrepStatus
+      }
+      feedback {
+          id
+          trbRequestId
+          feedbackMessage
+          copyTrbMailbox
+          notifyEuaIds
+          action
+          createdBy
+          createdAt
+          modifiedBy
+          modifiedAt
+      }
+      createdBy
+      createdAt
+      modifiedBy
+      modifiedAt
+      # form {
+      #     status
+      #     id
+      #     trbRequestId
+      #     component
+      #     needsAssistanceWith
+      #     hasSolutionInMind
+      #     whereInProcess
+      #     hasExpectedStartEndDates
+      #     collabGroups
+  
+      #     createdBy
+      #     createdAt
+      #     modifiedBy
+      #     modifiedAt
+      # }
+      attendees{
+          id
+          euaUserId
+          # userInfo {
+          #     euaUserId
+          #     commonName
+          #     email
+          # }
+          trbRequestId
+          component
+          role
+      }
+      
+      
+    }
+    
+    
+  }
+}
+
+settings {
+  encodeUrl: true
+}

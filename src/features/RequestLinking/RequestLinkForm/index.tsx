@@ -93,7 +93,7 @@ const RequestLinkForm = ({
     if (fromAdmin) {
       return requestType === 'trb'
         ? `/trb/${id}/additional-information`
-        : `/it-governance/${id}/additional-information`;
+        : `/it-governance/${id}/system-information`;
     }
     return requestType === 'trb'
       ? `/trb/task-list/${id}`
@@ -269,7 +269,7 @@ const RequestLinkForm = ({
               variables: {
                 input: {
                   systemIntakeID: id,
-                  cedarSystemIDs: formData.cedarSystemIDs,
+                  cedarSystemRelationShips: [],
                   contractNumbers
                 }
               }
@@ -322,7 +322,9 @@ const RequestLinkForm = ({
           setUserError(true);
         });
     } else {
-      unlinkIntakeRelation({ variables: { intakeID: id } })
+      unlinkIntakeRelation({
+        variables: { intakeID: id, doesNotSupportSystems: false }
+      })
         .then(
           res => {
             if (res?.data) history.push(redirectUrl);
