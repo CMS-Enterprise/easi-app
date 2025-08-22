@@ -67,7 +67,7 @@ export type SystemIntakeForm = {
 
 export type ContactFields = Omit<
   SystemIntakeContactProps,
-  'role' | 'systemIntakeId'
+  'roles' | 'systemIntakeId'
 >;
 
 export type ContactDetailsForm = {
@@ -168,7 +168,7 @@ export type SystemIntakeContactProps = {
   euaUserId: string | null;
   systemIntakeId: string;
   component: string;
-  role: string;
+  roles: string[];
   commonName: string;
   email: string;
 };

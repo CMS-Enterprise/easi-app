@@ -53,7 +53,7 @@ const Recipient = ({
 }: RecipientProps) => {
   const { t } = useTranslation('action');
 
-  const { commonName, euaUserId, role, component, email, id } = contact;
+  const { commonName, euaUserId, roles, component, email, id } = contact;
 
   // Whether or not to show verify recipient form
   const [isActive, setActive] = useState(false);
@@ -61,18 +61,18 @@ const Recipient = ({
   return (
     <div
       className="recipient-container"
-      data-testid={`recipient-${role?.replaceAll(' ', '')}-${euaUserId}`}
+      data-testid={`recipient-${roles[0]?.replaceAll(' ', '')}-${euaUserId}`}
     >
       {/* Checkbox with label */}
       <CheckboxField
-        id={`${euaUserId || 'contact'}-${role?.replaceAll(' ', '')}`}
-        name={`${euaUserId || 'contact'}-${role?.replaceAll(' ', '')}`}
+        id={`${euaUserId || 'contact'}-${roles[0]?.replaceAll(' ', '')}`}
+        name={`${euaUserId || 'contact'}-${roles[0]?.replaceAll(' ', '')}`}
         label={
           <RecipientLabel
             name={`${getPersonNameAndComponentAcronym(
               commonName,
               component
-            )} (${contact?.role})`}
+            )} (${contact?.roles[0]})`}
             email={email}
           />
         }
@@ -525,13 +525,13 @@ const EmailRecipientsFields = ({
                     <CheckboxField
                       key={`verified-${index}`} // eslint-disable-line react/no-array-index-key
                       id={contact.id}
-                      name={`${contact.euaUserId}-${contact.role}`}
+                      name={`${contact.euaUserId}-${contact.roles[0]}`}
                       label={
                         <RecipientLabel
                           name={`${getPersonNameAndComponentAcronym(
                             contact.commonName,
                             contact.component
-                          )} (${contact?.role})`}
+                          )} (${contact?.roles[0]})`}
                           email={contact?.email}
                         />
                       }

@@ -47,7 +47,7 @@ const Contact = ({
     /** Used to automatically hide contact when deleted instead of waiting for deleteContact mutation to complete */
     setHideContact
   ] = useState(false);
-  const { commonName, component, role, id } = contact;
+  const { commonName, component, roles, id } = contact;
   const { t } = useTranslation('intake');
 
   if (hideContact) return null;
@@ -56,7 +56,7 @@ const Contact = ({
       <p className="text-bold">
         {commonName}, {component}
       </p>
-      <p>{role}</p>
+      <p>{roles[0]}</p>
       <p>{contact.email}</p>
       <div className="system-intake-contacts__contact-actions">
         <Button
@@ -139,7 +139,7 @@ const ContactForm = ({
       component: activeContact.component
         ? ''
         : t('contactDetails.additionalContacts.errors.component', { type }),
-      role: activeContact.role
+      role: activeContact.roles[0]
         ? ''
         : t('contactDetails.additionalContacts.errors.role', { type })
     };
@@ -222,9 +222,9 @@ const ContactForm = ({
           id="IntakeForm-ContactRole"
           name="systemIntakeContact.role"
           data-testid="IntakeForm-ContactRole"
-          value={activeContact.role}
+          value={activeContact.roles[0]}
           onChange={e =>
-            setActiveContact({ ...activeContact, role: e.target.value })
+            setActiveContact({ ...activeContact, roles: [e.target.value] })
           }
         >
           <option value="" disabled>

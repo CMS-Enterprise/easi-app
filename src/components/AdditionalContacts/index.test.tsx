@@ -42,7 +42,7 @@ const additionalContacts: SystemIntakeContactProps[] = [
     email: 'jerry.seinfeld@local.fake',
     euaUserId: 'SF13',
     component: 'Office of Information Technology',
-    role: 'Cloud Navigator'
+    roles: ['Cloud Navigator']
   },
   {
     systemIntakeId: systemIntake.id,
@@ -51,7 +51,7 @@ const additionalContacts: SystemIntakeContactProps[] = [
     email: 'cosmo.kramer@local.fake',
     euaUserId: 'KR14',
     component: 'Other',
-    role: 'System Maintainer'
+    roles: ['System Maintainer']
   }
 ];
 
@@ -162,7 +162,7 @@ describe('Additional contacts component', () => {
             email: activeContact.email,
             euaUserId: activeContact.euaUserId,
             component: activeContact.component,
-            role: activeContact.role
+            roles: [activeContact.roles[0]]
           }}
           setActiveContact={() => null}
           contacts={additionalContacts}
@@ -187,7 +187,7 @@ describe('Additional contacts component', () => {
 
     // Check that role field displays correct value
     const roleField = getByTestId('IntakeForm-ContactRole');
-    expect(roleField).toHaveValue(activeContact.role);
+    expect(roleField).toHaveValue(activeContact.roles[0]);
 
     // Edit form snapshot
     expect(asFragment()).toMatchSnapshot();

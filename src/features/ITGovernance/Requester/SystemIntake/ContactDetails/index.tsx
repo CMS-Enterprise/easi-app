@@ -151,7 +151,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     return mutation({
       ...contact,
       systemIntakeId: systemIntake.id,
-      role: systemIntakeRolesMap[role]
+      roles: [systemIntakeRolesMap[role]]
     }).then(contactData =>
       // Set ID field for new contacts
       setValue(`${role}.id`, contactData?.id)

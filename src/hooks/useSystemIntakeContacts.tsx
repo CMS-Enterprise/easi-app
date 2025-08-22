@@ -92,7 +92,7 @@ function useSystemIntakeContacts(
           if (rolesMap[role as Role]) {
             return {
               ...contactsObject,
-              [rolesMap[role as Role]]: { ...contact, role }
+              [rolesMap[role as Role]]: { ...contact, roles: [role] }
             };
           }
           // If contact is additional contacts, add to additional contacts array
@@ -102,7 +102,7 @@ function useSystemIntakeContacts(
               ...contactsObject.additionalContacts,
               {
                 ...contact,
-                role,
+                roles: [role],
                 commonName: contact.userAccount?.commonName || '',
                 email: contact.userAccount?.email || '',
                 systemIntakeId
@@ -146,7 +146,7 @@ function useSystemIntakeContacts(
     /** Contact field values submitted from form */
     contact: SystemIntakeContactProps
   ): Promise<SystemIntakeContactProps> => {
-    const { euaUserId, component, role } = contact;
+    const { euaUserId, component, roles } = contact;
     return (
       // Create system intake contact
       createSystemIntakeContact({
@@ -154,7 +154,7 @@ function useSystemIntakeContacts(
           input: {
             euaUserId: euaUserId?.toUpperCase() || '',
             component,
-            roles: [role],
+            roles,
             systemIntakeId
           }
         }
@@ -190,7 +190,7 @@ function useSystemIntakeContacts(
     /** Contact field values submitted from form */
     contact: SystemIntakeContactProps
   ): Promise<SystemIntakeContactProps> => {
-    const { id, component, euaUserId, role } = contact;
+    const { id, component, euaUserId, roles } = contact;
 
     /** Updated contact response from mutation */
     return (
@@ -200,7 +200,7 @@ function useSystemIntakeContacts(
             id: id || '',
             euaUserId: euaUserId?.toUpperCase() || '',
             component,
-            roles: [role],
+            roles,
             systemIntakeId
           }
         }
