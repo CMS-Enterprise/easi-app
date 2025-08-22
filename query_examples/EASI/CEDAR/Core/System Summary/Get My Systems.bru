@@ -1,0 +1,31 @@
+meta {
+  name: Get My Systems
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query {
+    myCedarSystems{
+      id
+      name
+      description
+      acronym
+      status
+      businessOwnerOrg
+      businessOwnerOrgComp
+      systemMaintainerOrg
+      systemMaintainerOrgComp
+    }
+  }
+}
+
+settings {
+  encodeUrl: true
+}

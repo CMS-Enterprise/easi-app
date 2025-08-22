@@ -1,0 +1,46 @@
+meta {
+  name: Get GRB Reviewers
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query getSystemIntakeGRBReviewers($systemIntakeID: UUID!) {
+    systemIntake(id: $systemIntakeID) {
+      id
+      grbReviewers {
+          id
+          systemIntakeID
+          grbRole
+          votingRole
+          userAccount {
+              username
+              id
+              givenName
+              commonName
+              email
+          }
+          createdAt
+          createdBy
+          modifiedAt
+          modifiedBy
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+      "systemIntakeID": "5af245bc-fc54-4677-bab1-1b3e798bb43c"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

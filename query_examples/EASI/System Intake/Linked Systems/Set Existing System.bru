@@ -1,0 +1,67 @@
+meta {
+  name: Set Existing System
+  type: graphql
+  seq: 3
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation SetSystemIntakeRelationExistingSystem ($input: SetSystemIntakeRelationExistingSystemInput!) {
+      setSystemIntakeRelationExistingSystem(input:$input) {
+          userErrors {
+              message
+              path
+          }
+          systemIntake {
+              id
+              systems {
+                  id
+                  name
+                  acronym
+              }
+              systemIntakeSystems{
+                  id
+                  systemIntakeID
+                  systemID
+                  systemRelationshipType
+                  otherSystemRelationshipDescription
+              }
+          }
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+      "input": {
+          "systemIntakeID": "{{systemIntakeID}}",
+          "contractNumbers": [],
+          "cedarSystemRelationShips": [
+              {
+                  "cedarSystemId": "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
+                  "systemRelationshipType": ["IMPACTS_SELECTED_SYSTEM", "OTHER"],
+                  "otherSystemRelationshipDescription":"yea"
+              }
+          ]
+      }
+  }
+}
+
+script:post-response {
+  let responseData = res.getBody().data.setSystemIntakeRelationExistingSystem
+  
+  systemIntakeSystemId = responseData.systemIntake.systemIntakeSystems[0].id
+  
+  
+  bru.setVar("systemIntakeSystemId", systemIntakeSystemId);
+  
+}
+
+settings {
+  encodeUrl: true
+}

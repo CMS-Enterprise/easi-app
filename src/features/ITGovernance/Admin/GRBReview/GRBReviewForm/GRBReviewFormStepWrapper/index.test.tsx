@@ -107,24 +107,33 @@ describe('GRB review form step wrapper', () => {
       }
     });
 
-    expect(await screen.findByTestId('stepIndicator-0')).toHaveAttribute(
-      'aria-disabled',
-      'false'
+    // Wait for the async step-formatting effect to complete
+    await waitFor(() =>
+      expect(screen.getByTestId('stepIndicator-0')).toHaveAttribute(
+        'aria-disabled',
+        'false'
+      )
     );
 
-    expect(await screen.findByTestId('stepIndicator-1')).toHaveAttribute(
-      'aria-disabled',
-      'false'
+    await waitFor(() =>
+      expect(screen.getByTestId('stepIndicator-1')).toHaveAttribute(
+        'aria-disabled',
+        'false'
+      )
     );
 
-    expect(await screen.findByTestId('stepIndicator-2')).toHaveAttribute(
-      'aria-disabled',
-      'false'
+    await waitFor(() =>
+      expect(screen.getByTestId('stepIndicator-2')).toHaveAttribute(
+        'aria-disabled',
+        'false'
+      )
     );
 
-    expect(await screen.findByTestId('stepIndicator-3')).toHaveAttribute(
-      'aria-disabled',
-      'false'
+    await waitFor(() =>
+      expect(screen.getByTestId('stepIndicator-3')).toHaveAttribute(
+        'aria-disabled',
+        'false'
+      )
     );
   });
 
