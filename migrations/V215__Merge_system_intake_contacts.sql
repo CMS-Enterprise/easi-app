@@ -25,6 +25,12 @@ SET
     roles        = ARRAY_REMOVE(roles, 'Requester'),
     is_requester = roles @> ARRAY ['Requester'];
 
+--  We need to add a placeholder role for requesters that don't have any other roles
+UPDATE copy_system_intake_contacts
+SET roles = ARRAY_APPEND(roles, 'Other')
+WHERE
+    AND roles = '{}';
+
 -- remove duplicate rows
 DELETE
 FROM copy_system_intake_contacts c
