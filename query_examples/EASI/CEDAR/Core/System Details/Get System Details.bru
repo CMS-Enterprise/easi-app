@@ -1,0 +1,187 @@
+meta {
+  name: Get System Details
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query cedarSystemDetails($cedarSystemId: String!) {
+      cedarSystemDetails(cedarSystemId: $cedarSystemId){
+          cedarSystem {
+              id
+              name
+              description
+              acronym
+              status
+              businessOwnerOrg
+              businessOwnerOrgComp
+              businessOwnerRoles {
+                  application
+                  objectID
+                  roleTypeID
+                  assigneeType
+                  assigneeUsername
+                  assigneeEmail
+                  assigneeOrgID
+                  assigneeOrgName
+                  assigneeFirstName
+                  assigneeLastName
+                  assigneePhone
+                  assigneeDesc
+                  roleTypeName
+                  roleTypeDesc
+                  roleID
+                  objectType
+              }
+              systemMaintainerOrg
+              systemMaintainerOrgComp
+              versionId
+          }
+          systemMaintainerInformation {
+              agileUsed
+              adHocAgileDeploymentFrequency
+              authoritativeDatasource
+              businessArtifactsOnDemand
+              dataAtRestEncryptionKeyManagement
+              deploymentFrequency
+              devCompletionPercent
+              devWorkDescription
+              ecapParticipation
+              frontendAccessType
+              hardCodedIPAddress
+              ip6EnabledAssetPercent
+              ip6TransitionPlan
+              ipEnabledAssetCount
+              legalHoldCaseName
+              locallyStoredUserInformation
+              majorRefreshDate
+              multifactorAuthenticationMethod
+              multifactorAuthenticationMethodOther
+              netAccessibility
+              networkTrafficEncryptionKeyManagement
+              noMajorRefresh
+              noPersistentRecordsFlag
+              noPlannedMajorRefresh
+              omDocumentationOnDemand
+              plansToRetireReplace
+              quarterToRetireReplace
+              recordsManagementBucket
+              recordsManagementDisposalLocation
+              recordsManagementDisposalPlan
+              recordsUnderLegalHold
+              sourceCodeOnDemand
+              systemCustomization
+              systemDataLocation
+              systemDataLocationNotes
+              systemDesignOnDemand
+              systemProductionDate
+              systemRequirementsOnDemand
+              testPlanOnDemand
+              testReportsOnDemand
+              testScriptsOnDemand
+              yearToRetireReplace
+          }
+          businessOwnerInformation {
+              beneficiaryAddressPurpose
+              beneficiaryAddressPurposeOther
+              beneficiaryAddressSource
+              beneficiaryAddressSourceOther
+              beneficiaryInformation
+              costPerYear
+              editBeneficiaryInformation
+              isCmsOwned
+              nr508UserInterface
+              numberOfContractorFte
+              numberOfFederalFte
+              numberOfSupportedUsersPerMonth
+              storesBankingData
+              storesBeneficiaryAddress
+          }
+          roles {
+              application
+              objectID
+              roleTypeID
+              assigneeType
+              assigneeUsername
+              assigneeEmail
+              assigneeOrgID
+              assigneeOrgName
+              assigneeFirstName
+              assigneeLastName
+              assigneePhone
+              assigneeDesc
+              roleTypeName
+              roleTypeDesc
+              roleID
+              objectType
+          }
+          deployments {
+              id
+              name
+              systemID
+              startDate
+              endDate
+              isHotSite
+              description
+              contractorName
+              systemVersion
+              hasProductionData
+              replicatedSystemElements
+              deploymentType
+              systemName
+              deploymentElementID
+              state
+              status
+              wanType
+              dataCenter {
+                  id
+                  name
+                  version
+                  description
+                  state
+                  status
+                  startDate
+                  endDate
+                  address1
+                  address2
+                  city
+                  addressState
+                  zip
+              }
+          }
+          threats {
+              alternativeId
+              controlFamily
+              daysOpen
+              id
+              parentId
+              type
+              weaknessRiskLevel
+          }
+          urls {
+              id
+              address
+              isBehindWebApplicationFirewall
+              isAPIEndpoint
+              isVersionCodeRepository
+              urlHostingEnv
+          }
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+      "cedarSystemId": "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

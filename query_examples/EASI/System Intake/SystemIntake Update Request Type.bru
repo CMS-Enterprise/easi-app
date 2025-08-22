@@ -1,0 +1,34 @@
+meta {
+  name: SystemIntake Update Request Type
+  type: graphql
+  seq: 18
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation {
+    updateSystemIntakeRequestType(id:"{{systemIntakeID}}", newType: MAJOR_CHANGES) {
+      id
+  
+      requestType
+  
+      state
+      decisionState
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+      "id": "{{systemIntakeID}}"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

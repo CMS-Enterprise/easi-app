@@ -1,0 +1,44 @@
+meta {
+  name: SystemIntake Get (Workflow state/statuses)
+  type: graphql
+  seq: 13
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query systemIntake {
+    systemIntake(id:"{{systemIntakeID}}")
+    {
+      step
+      state
+      requestFormState
+      draftBusinessCaseState
+      grtDate
+      grtMeetingState
+      finalBusinessCaseState
+      grbDate
+      grbMeetingState
+      decisionState
+      statusAdmin
+      statusRequester
+      itGovTaskStatuses {      
+          intakeFormStatus
+          feedbackFromInitialReviewStatus
+          bizCaseDraftStatus
+          grtMeetingStatus
+          bizCaseFinalStatus
+          grbMeetingStatus
+          decisionAndNextStepsStatus
+      }
+    }
+  }
+}
+
+settings {
+  encodeUrl: true
+}

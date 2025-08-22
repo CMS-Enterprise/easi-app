@@ -1,0 +1,31 @@
+meta {
+  name: SystemIntake Get (GRB Review Requested)
+  type: graphql
+  seq: 7
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query systemIntakeGRBReviewRequested {
+    systemIntakesWithReviewRequested {
+      step
+      state
+      id
+      grbReviewers {
+          id
+          userAccount {
+              commonName
+          }
+      }
+    }
+  }
+}
+
+settings {
+  encodeUrl: true
+}

@@ -1,0 +1,70 @@
+meta {
+  name: Remove User Roles from System
+  type: http
+  seq: 13
+}
+
+delete {
+  url: {{CedarApiUrl}}/role?application={{CedarApplication}}&id={{CedarSystemApiRoleIds}}
+  body: none
+  auth: inherit
+}
+
+params:query {
+  application: {{CedarApplication}}
+  id: {{CedarSystemApiRoleIds}}
+}
+
+headers {
+  Content-Type: application/json
+}
+
+script:pre-request {
+  // Gets existing user roles from CEDAR to remove
+  let userRoles = bru.getVar("CedarUserRoles")
+  if (userRoles) return
+  
+  const CedarSystemId = bru.getVar("CedarSystemId")
+  test("CedarSystemId is set (Call \"Get Systems\" first if it is not)", function() {
+          expect(CedarSystemId).to.exist
+  })
+  if (!CedarSystemId) return bru.runner.skipRequest();
+  
+  const CedarApiUrl = bru.getVar("CedarApiUrl")
+  const CedarApplication = bru.getVar("CedarApplication")
+  const eua = bru.getVar("EUAID")
+  
+  await bru.sendRequest({
+      url: `${CedarApiUrl}/role?objectId=${CedarSystemId}&application=${CedarApplication}`,
+      method: "GET",
+      headers: {
+          "x-Gateway-APIKey": bru.getVar("CedarApiKey"),
+          "Content-Type": "application/json"
+      }
+  }, async function(err, res) {
+      test("Could get User's Roles", function() {
+          expect(err).to.not.exist
+      })
+      if (err) return bru.runner.skipRequest();
+  
+      const data = res.data
+      test("Could parse JSON for User's Roles", function() {
+          expect(data).to.exist
+          expect(data).to.have.property("Roles")
+      })
+      if (!data) return bru.runner.skipRequest();
+      const ApiRoleIDs = data.Roles
+          .filter(role => role.assigneeUserName === eua)
+          .map(role => role.roleId)
+  
+      test("User has roles to delete", function() {
+          expect(ApiRoleIDs.length).to.be.above(0)
+      })
+      if (!ApiRoleIDs.length) return bru.runner.skipRequest();
+      bru.setVar("CedarSystemApiRoleIds", ApiRoleIDs.join(","))
+  })
+}
+
+settings {
+  encodeUrl: true
+}

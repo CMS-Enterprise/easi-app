@@ -1,0 +1,32 @@
+meta {
+  name: Get Budget System Cost By System ID
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{CedarApiUrl}}/budgetSystemCost?systemId={{CedarSystemId}}
+  body: none
+  auth: inherit
+}
+
+params:query {
+  systemId: {{CedarSystemId}}
+}
+
+headers {
+  Content-Type: application/json
+}
+
+script:pre-request {
+  const CedarSystemId = bru.getVar("CedarSystemId")
+  test("CedarSystemId is set (Call \"Get Systems\" first if it is not)", function() {
+          expect(CedarSystemId).to.exist
+          expect(CedarSystemId).to.not.be.empty
+  })
+  if (!CedarSystemId) return bru.runner.skipRequest();
+}
+
+settings {
+  encodeUrl: true
+}

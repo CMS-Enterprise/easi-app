@@ -1,0 +1,46 @@
+meta {
+  name: Progress to GRT meeting, with no date specified Copy
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation CreateSystemIntakeActionProgressToNewStep($input: SystemIntakeProgressToNewStepsInput!) {
+      createSystemIntakeActionProgressToNewStep(input: $input) {
+          systemIntake {
+              step
+              grtDate
+          }
+      }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+      "input": {
+          "systemIntakeID": "{{systemIntakeID}}",
+          "notificationRecipients": {
+              "regularRecipientEmails": [
+                  "{{testEmailAddress}}"
+              ],
+              "shouldNotifyITGovernance": false,
+              "shouldNotifyITInvestment": false
+          },
+          "newStep": "GRT_MEETING",
+          "feedback": "this is feedback",
+          "additionalInfo": "add'l info",
+          "adminNote": "Without a date specified in this query, if the existing date is in the past, the existing date will be cleared (a date in the future will be preserved)"
+      }
+  }
+}
+
+settings {
+  encodeUrl: true
+}

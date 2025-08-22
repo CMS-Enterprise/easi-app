@@ -1,0 +1,101 @@
+meta {
+  name: UpdateSystemIntakeContractDetails (FORM 3)
+  type: graphql
+  seq: 6
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation UpdateSystemIntakeContractDetails($input: UpdateSystemIntakeContractDetailsInput!) {
+    updateSystemIntakeContractDetails(input: $input) {
+      systemIntake {
+        id
+        requestFormState
+        currentStage
+        statusRequester
+        statusAdmin
+        fundingSources {
+          id
+          projectNumber
+          investment
+          __typename
+        }
+        costs {
+          expectedIncreaseAmount
+          isExpectingIncrease
+          __typename
+        }
+        contract {
+          contractor
+          endDate {
+            day
+            month
+            year
+            __typename
+          }
+          hasContract
+          startDate {
+            day
+            month
+            year
+            __typename
+          }
+          __typename
+        }
+        contractNumbers {
+          id
+          systemIntakeID
+          contractNumber
+          createdBy
+          createdAt
+          modifiedBy
+          modifiedAt
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "id": "{{systemIntakeID}}",
+      "fundingSources": {
+        "existingFunding": true,
+        "fundingSources": [
+          {
+            "projectNumber": "656909",
+            "investment": "Other"
+          },
+          {
+            "projectNumber": "867530",
+            "investment": "Recovery Audit Contractors"
+          }
+        ]
+      },
+      "costs": {
+        "expectedIncreaseAmount": "$10 every 3 hours",
+        "isExpectingIncrease": "YES"
+      },
+      "contract": {
+        "contractor": "",
+        "endDate": null,
+        "hasContract": "NOT_STARTED",
+        "startDate": null,
+        "numbers": []
+      }
+    }
+  }
+}
+
+settings {
+  encodeUrl: true
+}

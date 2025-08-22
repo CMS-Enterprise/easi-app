@@ -1,0 +1,44 @@
+meta {
+  name: Get System
+  type: graphql
+  seq: 3
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query($systemID: String!) {
+    cedarSystem(cedarSystemId: $systemID){
+      id
+      name
+      description
+      acronym
+      status
+      businessOwnerOrg
+      businessOwnerOrgComp
+      systemMaintainerOrg
+      systemMaintainerOrgComp
+      isBookmarked
+      linkedSystemIntakes(state: OPEN) {
+          id
+      }
+      linkedTrbRequests(state: OPEN) {
+          id
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+      "systemID": "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"
+  }
+}
+
+settings {
+  encodeUrl: true
+}
