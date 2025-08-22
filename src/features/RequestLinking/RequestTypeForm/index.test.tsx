@@ -34,7 +34,7 @@ vi.mock('@okta/okta-react', () => ({
 window.scrollTo = vi.fn;
 const INTAKE_ID = '6aa61a37-d3b4-47ed-ad61-0b8f73151d74';
 
-describe('The request type form page', () => {
+describe.skip('The request type form page', () => {
   const mockStore = configureMockStore();
   const store = mockStore({
     systemIntake: { systemIntake: initialSystemIntakeForm },

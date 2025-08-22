@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 
 	"github.com/google/uuid"
@@ -16,34 +17,36 @@ import (
 
 // SetSystemIntakeSystems links given System IDs to given System Intake ID
 // This function opts to take a *sqlx.Tx instead of a NamedPreparer because the SQL calls inside this function are heavily intertwined, and we never want to call them outside the scope of a transaction
-func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemIntakeID uuid.UUID, systemIDs []string) error {
+func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemIntakeID uuid.UUID, systemRelationships []*models.SystemRelationshipInput) error {
 	if systemIntakeID == uuid.Nil {
 		return errors.New("unexpected nil system intake ID when linking system intake to system id")
 	}
 
-	if _, err := tx.NamedExec(sqlqueries.SystemIntakeSystemForm.Delete, map[string]interface{}{
-		"system_ids":       pq.StringArray(systemIDs),
+	_, err := tx.NamedExec(sqlqueries.SystemIntakeSystemForm.Delete, map[string]interface{}{
 		"system_intake_id": systemIntakeID,
-	}); err != nil {
+	})
+	if err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to delete system ids linked to system intake", zap.Error(err))
 		return err
 	}
 
 	// no need to run insert if we are not inserting new system ids
-	if len(systemIDs) < 1 {
+	if len(systemRelationships) < 1 {
 		return nil
 	}
 
 	userID := appcontext.Principal(ctx).Account().ID
 
-	setSystemIntakeSystemsLinks := make([]models.SystemIntakeSystem, len(systemIDs))
+	setSystemIntakeSystemsLinks := make([]models.SystemIntakeSystem, len(systemRelationships))
 
-	for i, systemID := range systemIDs {
+	for i, relationship := range systemRelationships {
 		systemIDLink := models.NewSystemIntakeSystem(userID)
+		systemIDLink.SystemID = *relationship.CedarSystemID
 		systemIDLink.ID = uuid.New()
-		systemIDLink.ModifiedBy = &userID
 		systemIDLink.SystemIntakeID = systemIntakeID
-		systemIDLink.SystemID = systemID
+		systemIDLink.ModifiedBy = &userID
+		systemIDLink.SystemRelationshipType = relationship.SystemRelationshipType
+		systemIDLink.OtherSystemRelationshipDescription = relationship.OtherSystemRelationshipDescription
 
 		setSystemIntakeSystemsLinks[i] = systemIDLink
 	}
@@ -80,4 +83,52 @@ func (s *Store) SystemIntakesByCedarSystemIDs(ctx context.Context, requests []mo
 		"cedar_system_ids": pq.Array(cedarSystemIDs),
 		"states":           pq.Array(states),
 	})
+}
+
+func (s *Store) AddSystemIntakeSystem(ctx context.Context, input models.SystemIntakeSystem) (models.SystemIntakeSystem, error) {
+	var newSystemIntakeSystem models.SystemIntakeSystem
+
+	newSystemIntakeSystem.ID = uuid.New()
+	newSystemIntakeSystem.SystemIntakeID = input.SystemIntakeID
+	newSystemIntakeSystem.SystemID = input.SystemID
+	newSystemIntakeSystem.SystemRelationshipType = input.SystemRelationshipType
+	newSystemIntakeSystem.OtherSystemRelationshipDescription = input.OtherSystemRelationshipDescription
+
+	return newSystemIntakeSystem, namedGet(ctx, s.db, &newSystemIntakeSystem, sqlqueries.SystemIntakeSystemForm.Insert, newSystemIntakeSystem)
+}
+
+func (s *Store) DeleteSystemIntakeSystemByID(ctx context.Context, systemIntakeSystemID uuid.UUID) (models.SystemIntakeSystem, error) {
+	var deletedSystem models.SystemIntakeSystem
+	return deletedSystem, namedGet(ctx, s.db, &deletedSystem, sqlqueries.SystemIntakeSystemForm.DeleteByID, args{
+		"system_intake_system_id": systemIntakeSystemID,
+	})
+}
+
+func (s *Store) UpdateSystemIntakeSystemByID(ctx context.Context, input models.UpdateSystemLinkInput) (models.SystemIntakeSystem, error) {
+	var linkedSystemToUpdate models.SystemIntakeSystem
+
+	linkedSystemToUpdate.ID = input.ID
+	linkedSystemToUpdate.SystemIntakeID = input.SystemIntakeID
+	linkedSystemToUpdate.SystemID = input.SystemID
+	linkedSystemToUpdate.SystemRelationshipType = input.SystemRelationshipType
+	linkedSystemToUpdate.OtherSystemRelationshipDescription = input.OtherSystemRelationshipDescription
+
+	return linkedSystemToUpdate, namedGet(ctx, s.db, &linkedSystemToUpdate, sqlqueries.SystemIntakeSystemForm.UpdateByID, linkedSystemToUpdate)
+}
+
+func (s *Store) GetLinkedSystemByID(ctx context.Context, systemIntakeSystemID uuid.UUID) (*models.SystemIntakeSystem, error) {
+	var systemIntakeSystem models.SystemIntakeSystem
+
+	err := namedGet(ctx, s.db, &systemIntakeSystem, sqlqueries.SystemIntakeSystemForm.GetByID, args{
+		"id": systemIntakeSystemID,
+	})
+
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil // Treat "not found" as a nil result, no error
+		}
+		return nil, err
+	}
+
+	return &systemIntakeSystem, nil
 }
