@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from 'react';
 import { FetchResult } from '@apollo/client';
 import {
-  AugmentedSystemIntakeContact,
   CreateSystemIntakeContactMutation,
+  SystemIntakeContactFragment,
   UpdateSystemIntakeContactMutation,
   useCreateSystemIntakeContactMutation,
   useDeleteSystemIntakeContactMutation,
@@ -37,7 +37,7 @@ function useSystemIntakeContacts(
   });
 
   /** Array of system intake contacts */
-  const systemIntakeContacts: AugmentedSystemIntakeContact[] | undefined =
+  const systemIntakeContacts: SystemIntakeContactFragment[] | undefined =
     data?.systemIntakeContacts?.systemIntakeContacts;
 
   /** System intake query results */
@@ -80,7 +80,7 @@ function useSystemIntakeContacts(
   /** Format system intake contacts array */
   const formatContacts = useCallback(
     (
-      contactsArray: AugmentedSystemIntakeContact[] | undefined
+      contactsArray: SystemIntakeContactFragment[] | undefined
     ): FormattedContacts => {
       // Return empty values if no systemIntakeContacts
       if (!contactsArray) return legacyContacts;
@@ -101,8 +101,8 @@ function useSystemIntakeContacts(
               ...contactsObject.additionalContacts,
               {
                 ...contact,
-                commonName: contact.commonName || '',
-                email: contact.email || '',
+                commonName: contact.userAccount?.commonName || '',
+                email: contact.userAccount?.email || '',
                 systemIntakeId
               }
             ]
@@ -141,7 +141,7 @@ function useSystemIntakeContacts(
   const createContact = async (
     /** Contact field values submitted from form */
     contact: SystemIntakeContactProps
-  ): Promise<AugmentedSystemIntakeContact> => {
+  ): Promise<SystemIntakeContactProps> => {
     const { euaUserId, component, role } = contact;
     return (
       // Create system intake contact
@@ -164,19 +164,18 @@ function useSystemIntakeContacts(
           const { euaUserId: euaUserIdUpdate, ...contactUpdate } = contact;
 
           /** Merged contact data with mutation response */
-          const mergedContact: AugmentedSystemIntakeContact = {
+          const mergedContact: SystemIntakeContactProps = {
             euaUserId: euaUserIdUpdate || '',
             ...contactUpdate,
             ...systemIntakeContact,
-            id: systemIntakeContact?.id || '',
-            __typename: 'AugmentedSystemIntakeContact'
+            id: systemIntakeContact?.id || ''
           };
 
           // Return merged contact data
           return mergedContact;
         })
         // If error, return submitted data
-        .catch(() => contact as AugmentedSystemIntakeContact)
+        .catch(() => contact)
     );
   };
 
@@ -186,7 +185,7 @@ function useSystemIntakeContacts(
   const updateContact = async (
     /** Contact field values submitted from form */
     contact: SystemIntakeContactProps
-  ): Promise<AugmentedSystemIntakeContact> => {
+  ): Promise<SystemIntakeContactProps> => {
     const { id, component, euaUserId, role } = contact;
 
     /** Updated contact response from mutation */
@@ -211,19 +210,18 @@ function useSystemIntakeContacts(
           const { euaUserId: euaUserIdUpdate, ...contactUpdate } = contact;
 
           /** Merged contact data with mutation response */
-          const mergedContact: AugmentedSystemIntakeContact = {
+          const mergedContact: SystemIntakeContactProps = {
             euaUserId: euaUserIdUpdate || '',
             ...contactUpdate,
             ...systemIntakeContact,
-            id: contact?.id || '',
-            __typename: 'AugmentedSystemIntakeContact'
+            id: contact?.id || ''
           };
 
           // Return merged contact data
           return mergedContact;
         })
         // If error, return submitted data
-        .catch(() => contact as AugmentedSystemIntakeContact)
+        .catch(() => contact)
     );
   };
 

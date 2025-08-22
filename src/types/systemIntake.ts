@@ -1,5 +1,4 @@
 import {
-  AugmentedSystemIntakeContact,
   FundingSourceFragmentFragment,
   SystemIntakeCollaboratorInput,
   SystemIntakeGRBReviewType,
@@ -185,12 +184,12 @@ export type FormattedContacts = {
 /** Function to create system intake contact */
 export type CreateContactType = (
   contact: SystemIntakeContactProps
-) => Promise<AugmentedSystemIntakeContact | undefined>;
+) => Promise<SystemIntakeContactProps | undefined>;
 
 /** Function to update system intake contact */
 export type UpdateContactType = (
   contact: SystemIntakeContactProps
-) => Promise<AugmentedSystemIntakeContact | undefined>;
+) => Promise<SystemIntakeContactProps | undefined>;
 
 /** Function to delete system intake contact */
 export type DeleteContactType = (

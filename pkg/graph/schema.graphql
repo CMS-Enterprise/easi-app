@@ -1748,19 +1748,6 @@ type SystemIntakeContact {
 }
 
 """
-Represents a contact associated with a system intake, including additional fields from CEDAR
-"""
-type AugmentedSystemIntakeContact {
-  id: UUID!
-  euaUserId: String!
-  systemIntakeId: UUID!
-  component: String!
-  role: String!
-  commonName: String
-  email: EmailAddress
-}
-
-"""
 The data needed to associate a contact with a system intake
 """
 input CreateSystemIntakeContactInput {
@@ -1812,7 +1799,7 @@ input EmailNotificationRecipients {
 The payload when retrieving system intake contacts
 """
 type SystemIntakeContactsPayload {
-  systemIntakeContacts: [AugmentedSystemIntakeContact!]!
+  systemIntakeContacts: [SystemIntakeContact!]!
   invalidEUAIDs: [String!]!
 }
 

@@ -1594,34 +1594,26 @@ func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) 
 		euaIDs[i] = contact.EUAUserID
 	}
 
-	userInfos, err := r.service.FetchUserInfos(ctx, euaIDs)
+	// Fetch user accounts to validate EUA IDs
+	userAccounts, err := r.store.UserAccountGetByUsernames(ctx, r.store, euaIDs)
 	if err != nil {
 		return nil, err
 	}
 
-	userInfoMap := make(map[string]*models.UserInfo)
-	for _, userInfo := range userInfos {
-		if userInfo != nil {
-			userInfoMap[userInfo.Username] = userInfo
-		}
+	validUsernames := make(map[string]bool)
+	for _, userAccount := range userAccounts {
+		validUsernames[userAccount.Username] = true
 	}
 
-	augmentedContacts := make([]*models.AugmentedSystemIntakeContact, 0, len(contacts))
-	invalidEUAIDs := make([]string, 0, len(contacts))
+	var invalidEUAIDs []string
 	for _, contact := range contacts {
-		if userInfo, found := userInfoMap[contact.EUAUserID]; found {
-			augmentedContacts = append(augmentedContacts, &models.AugmentedSystemIntakeContact{
-				SystemIntakeContact: *contact,
-				CommonName:          userInfo.DisplayName,
-				Email:               userInfo.Email,
-			})
-		} else {
+		if !validUsernames[contact.EUAUserID] {
 			invalidEUAIDs = append(invalidEUAIDs, contact.EUAUserID)
 		}
 	}
 
 	return &models.SystemIntakeContactsPayload{
-		SystemIntakeContacts: augmentedContacts,
+		SystemIntakeContacts: contacts,
 		InvalidEUAIDs:        invalidEUAIDs,
 	}, nil
 }

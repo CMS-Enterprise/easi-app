@@ -6,10 +6,7 @@ import {
   ExternalRecipientAlert,
   RecipientLabel
 } from 'features/TechnicalAssistance/Admin/_components/ActionFormWrapper/Recipients';
-import {
-  AugmentedSystemIntakeContact,
-  EmailNotificationRecipients
-} from 'gql/generated/graphql';
+import { EmailNotificationRecipients } from 'gql/generated/graphql';
 
 import AdditionalContacts from 'components/AdditionalContacts';
 import Alert from 'components/Alert';
@@ -341,12 +338,9 @@ const EmailRecipientsFields = ({
    *
    * Adds contact as recipient and to verifiedContacts array
    */
-  const createContactCallback = (contact: AugmentedSystemIntakeContact) => {
+  const createContactCallback = (contact: SystemIntakeContactProps) => {
     // Add contact to verified contacts array
-    setVerifiedContacts([
-      ...verifiedContacts,
-      contact as SystemIntakeContactProps
-    ]);
+    setVerifiedContacts([...verifiedContacts, contact]);
 
     // New contacts should automatically be selected as recipients
     if (

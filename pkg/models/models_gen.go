@@ -588,8 +588,8 @@ type SystemIntakeConfirmLCIDInput struct {
 
 // The payload when retrieving system intake contacts
 type SystemIntakeContactsPayload struct {
-	SystemIntakeContacts []*AugmentedSystemIntakeContact `json:"systemIntakeContacts"`
-	InvalidEUAIDs        []string                        `json:"invalidEUAIDs"`
+	SystemIntakeContacts []*SystemIntakeContact `json:"systemIntakeContacts"`
+	InvalidEUAIDs        []string               `json:"invalidEUAIDs"`
 }
 
 // Represents a contract for work on a system

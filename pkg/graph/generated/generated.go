@@ -74,16 +74,6 @@ type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
-	AugmentedSystemIntakeContact struct {
-		CommonName     func(childComplexity int) int
-		Component      func(childComplexity int) int
-		EUAUserID      func(childComplexity int) int
-		Email          func(childComplexity int) int
-		ID             func(childComplexity int) int
-		Role           func(childComplexity int) int
-		SystemIntakeID func(childComplexity int) int
-	}
-
 	BusinessCase struct {
 		AlternativeASolution   func(childComplexity int) int
 		AlternativeBSolution   func(childComplexity int) int
@@ -1580,55 +1570,6 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 	ec := executionContext{nil, e, 0, 0, nil}
 	_ = ec
 	switch typeName + "." + field {
-
-	case "AugmentedSystemIntakeContact.commonName":
-		if e.complexity.AugmentedSystemIntakeContact.CommonName == nil {
-			break
-		}
-
-		return e.complexity.AugmentedSystemIntakeContact.CommonName(childComplexity), true
-
-	case "AugmentedSystemIntakeContact.component":
-		if e.complexity.AugmentedSystemIntakeContact.Component == nil {
-			break
-		}
-
-		return e.complexity.AugmentedSystemIntakeContact.Component(childComplexity), true
-
-	case "AugmentedSystemIntakeContact.euaUserId":
-		if e.complexity.AugmentedSystemIntakeContact.EUAUserID == nil {
-			break
-		}
-
-		return e.complexity.AugmentedSystemIntakeContact.EUAUserID(childComplexity), true
-
-	case "AugmentedSystemIntakeContact.email":
-		if e.complexity.AugmentedSystemIntakeContact.Email == nil {
-			break
-		}
-
-		return e.complexity.AugmentedSystemIntakeContact.Email(childComplexity), true
-
-	case "AugmentedSystemIntakeContact.id":
-		if e.complexity.AugmentedSystemIntakeContact.ID == nil {
-			break
-		}
-
-		return e.complexity.AugmentedSystemIntakeContact.ID(childComplexity), true
-
-	case "AugmentedSystemIntakeContact.role":
-		if e.complexity.AugmentedSystemIntakeContact.Role == nil {
-			break
-		}
-
-		return e.complexity.AugmentedSystemIntakeContact.Role(childComplexity), true
-
-	case "AugmentedSystemIntakeContact.systemIntakeId":
-		if e.complexity.AugmentedSystemIntakeContact.SystemIntakeID == nil {
-			break
-		}
-
-		return e.complexity.AugmentedSystemIntakeContact.SystemIntakeID(childComplexity), true
 
 	case "BusinessCase.alternativeASolution":
 		if e.complexity.BusinessCase.AlternativeASolution == nil {
@@ -10322,19 +10263,6 @@ type SystemIntakeContact {
 }
 
 """
-Represents a contact associated with a system intake, including additional fields from CEDAR
-"""
-type AugmentedSystemIntakeContact {
-  id: UUID!
-  euaUserId: String!
-  systemIntakeId: UUID!
-  component: String!
-  role: String!
-  commonName: String
-  email: EmailAddress
-}
-
-"""
 The data needed to associate a contact with a system intake
 """
 input CreateSystemIntakeContactInput {
@@ -10386,7 +10314,7 @@ input EmailNotificationRecipients {
 The payload when retrieving system intake contacts
 """
 type SystemIntakeContactsPayload {
-  systemIntakeContacts: [AugmentedSystemIntakeContact!]!
+  systemIntakeContacts: [SystemIntakeContact!]!
   invalidEUAIDs: [String!]!
 }
 
@@ -13359,308 +13287,6 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 // endregion ************************** directives.gotpl **************************
 
 // region    **************************** field.gotpl *****************************
-
-func (ec *executionContext) _AugmentedSystemIntakeContact_id(ctx context.Context, field graphql.CollectedField, obj *models.AugmentedSystemIntakeContact) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AugmentedSystemIntakeContact_id(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(uuid.UUID)
-	fc.Result = res
-	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AugmentedSystemIntakeContact_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AugmentedSystemIntakeContact",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AugmentedSystemIntakeContact_euaUserId(ctx context.Context, field graphql.CollectedField, obj *models.AugmentedSystemIntakeContact) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AugmentedSystemIntakeContact_euaUserId(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.EUAUserID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AugmentedSystemIntakeContact_euaUserId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AugmentedSystemIntakeContact",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AugmentedSystemIntakeContact_systemIntakeId(ctx context.Context, field graphql.CollectedField, obj *models.AugmentedSystemIntakeContact) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AugmentedSystemIntakeContact_systemIntakeId(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.SystemIntakeID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(uuid.UUID)
-	fc.Result = res
-	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AugmentedSystemIntakeContact_systemIntakeId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AugmentedSystemIntakeContact",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AugmentedSystemIntakeContact_component(ctx context.Context, field graphql.CollectedField, obj *models.AugmentedSystemIntakeContact) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AugmentedSystemIntakeContact_component(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Component, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AugmentedSystemIntakeContact_component(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AugmentedSystemIntakeContact",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AugmentedSystemIntakeContact_role(ctx context.Context, field graphql.CollectedField, obj *models.AugmentedSystemIntakeContact) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AugmentedSystemIntakeContact_role(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Role, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AugmentedSystemIntakeContact_role(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AugmentedSystemIntakeContact",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AugmentedSystemIntakeContact_commonName(ctx context.Context, field graphql.CollectedField, obj *models.AugmentedSystemIntakeContact) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AugmentedSystemIntakeContact_commonName(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.CommonName, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AugmentedSystemIntakeContact_commonName(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AugmentedSystemIntakeContact",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AugmentedSystemIntakeContact_email(ctx context.Context, field graphql.CollectedField, obj *models.AugmentedSystemIntakeContact) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AugmentedSystemIntakeContact_email(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Email, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(models.EmailAddress)
-	fc.Result = res
-	return ec.marshalOEmailAddress2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐEmailAddress(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AugmentedSystemIntakeContact_email(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AugmentedSystemIntakeContact",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type EmailAddress does not have child fields")
-		},
-	}
-	return fc, nil
-}
 
 func (ec *executionContext) _BusinessCase_alternativeASolution(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_BusinessCase_alternativeASolution(ctx, field)
@@ -47942,9 +47568,9 @@ func (ec *executionContext) _SystemIntakeContactsPayload_systemIntakeContacts(ct
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*models.AugmentedSystemIntakeContact)
+	res := resTmp.([]*models.SystemIntakeContact)
 	fc.Result = res
-	return ec.marshalNAugmentedSystemIntakeContact2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐAugmentedSystemIntakeContactᚄ(ctx, field.Selections, res)
+	return ec.marshalNSystemIntakeContact2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeContactsPayload_systemIntakeContacts(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -47956,21 +47582,19 @@ func (ec *executionContext) fieldContext_SystemIntakeContactsPayload_systemIntak
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
-				return ec.fieldContext_AugmentedSystemIntakeContact_id(ctx, field)
+				return ec.fieldContext_SystemIntakeContact_id(ctx, field)
+			case "userAccount":
+				return ec.fieldContext_SystemIntakeContact_userAccount(ctx, field)
 			case "euaUserId":
-				return ec.fieldContext_AugmentedSystemIntakeContact_euaUserId(ctx, field)
+				return ec.fieldContext_SystemIntakeContact_euaUserId(ctx, field)
 			case "systemIntakeId":
-				return ec.fieldContext_AugmentedSystemIntakeContact_systemIntakeId(ctx, field)
+				return ec.fieldContext_SystemIntakeContact_systemIntakeId(ctx, field)
 			case "component":
-				return ec.fieldContext_AugmentedSystemIntakeContact_component(ctx, field)
+				return ec.fieldContext_SystemIntakeContact_component(ctx, field)
 			case "role":
-				return ec.fieldContext_AugmentedSystemIntakeContact_role(ctx, field)
-			case "commonName":
-				return ec.fieldContext_AugmentedSystemIntakeContact_commonName(ctx, field)
-			case "email":
-				return ec.fieldContext_AugmentedSystemIntakeContact_email(ctx, field)
+				return ec.fieldContext_SystemIntakeContact_role(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type AugmentedSystemIntakeContact", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeContact", field.Name)
 		},
 	}
 	return fc, nil
@@ -66835,69 +66459,6 @@ func (ec *executionContext) _TRBAdminNoteCategorySpecificData(ctx context.Contex
 
 // region    **************************** object.gotpl ****************************
 
-var augmentedSystemIntakeContactImplementors = []string{"AugmentedSystemIntakeContact"}
-
-func (ec *executionContext) _AugmentedSystemIntakeContact(ctx context.Context, sel ast.SelectionSet, obj *models.AugmentedSystemIntakeContact) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, augmentedSystemIntakeContactImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("AugmentedSystemIntakeContact")
-		case "id":
-			out.Values[i] = ec._AugmentedSystemIntakeContact_id(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "euaUserId":
-			out.Values[i] = ec._AugmentedSystemIntakeContact_euaUserId(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "systemIntakeId":
-			out.Values[i] = ec._AugmentedSystemIntakeContact_systemIntakeId(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "component":
-			out.Values[i] = ec._AugmentedSystemIntakeContact_component(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "role":
-			out.Values[i] = ec._AugmentedSystemIntakeContact_role(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "commonName":
-			out.Values[i] = ec._AugmentedSystemIntakeContact_commonName(ctx, field, obj)
-		case "email":
-			out.Values[i] = ec._AugmentedSystemIntakeContact_email(ctx, field, obj)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
 var businessCaseImplementors = []string{"BusinessCase"}
 
 func (ec *executionContext) _BusinessCase(ctx context.Context, sel ast.SelectionSet, obj *models.BusinessCase) graphql.Marshaler {
@@ -77605,60 +77166,6 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 // region    ***************************** type.gotpl *****************************
 
-func (ec *executionContext) marshalNAugmentedSystemIntakeContact2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐAugmentedSystemIntakeContactᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.AugmentedSystemIntakeContact) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNAugmentedSystemIntakeContact2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐAugmentedSystemIntakeContact(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
-func (ec *executionContext) marshalNAugmentedSystemIntakeContact2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐAugmentedSystemIntakeContact(ctx context.Context, sel ast.SelectionSet, v *models.AugmentedSystemIntakeContact) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._AugmentedSystemIntakeContact(ctx, sel, v)
-}
-
 func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v any) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -79589,6 +79096,60 @@ func (ec *executionContext) marshalNSystemIntakeCollaborator2ᚖgithubᚗcomᚋc
 func (ec *executionContext) unmarshalNSystemIntakeConfirmLCIDInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeConfirmLCIDInput(ctx context.Context, v any) (models.SystemIntakeConfirmLCIDInput, error) {
 	res, err := ec.unmarshalInputSystemIntakeConfirmLCIDInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSystemIntakeContact2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.SystemIntakeContact) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNSystemIntakeContact2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContact(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNSystemIntakeContact2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContact(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeContact) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._SystemIntakeContact(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNSystemIntakeContactsPayload2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactsPayload(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeContactsPayload) graphql.Marshaler {
@@ -82158,19 +81719,6 @@ func (ec *executionContext) marshalODeleteTRBRequestDocumentPayload2ᚖgithubᚗ
 	return ec._DeleteTRBRequestDocumentPayload(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOEmailAddress2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐEmailAddress(ctx context.Context, v any) (models.EmailAddress, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.EmailAddress(tmp)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOEmailAddress2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐEmailAddress(ctx context.Context, sel ast.SelectionSet, v models.EmailAddress) graphql.Marshaler {
-	_ = sel
-	_ = ctx
-	res := graphql.MarshalString(string(v))
-	return res
-}
-
 func (ec *executionContext) unmarshalOEmailNotificationRecipients2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐEmailNotificationRecipients(ctx context.Context, v any) (*models.EmailNotificationRecipients, error) {
 	if v == nil {
 		return nil, nil
@@ -82443,18 +81991,6 @@ func (ec *executionContext) marshalOString2githubᚗcomᚋgureguᚋnullᚐString
 	_ = sel
 	_ = ctx
 	res := models.MarshalNullString(v)
-	return res
-}
-
-func (ec *executionContext) unmarshalOString2string(ctx context.Context, v any) (string, error) {
-	res, err := graphql.UnmarshalString(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOString2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
-	_ = sel
-	_ = ctx
-	res := graphql.MarshalString(v)
 	return res
 }
 

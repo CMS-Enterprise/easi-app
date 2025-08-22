@@ -3,10 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Button, Label, Select } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import { ExternalRecipientAlert } from 'features/TechnicalAssistance/Admin/_components/ActionFormWrapper/Recipients';
-import {
-  AugmentedSystemIntakeContact,
-  PersonRole
-} from 'gql/generated/graphql';
+import { PersonRole } from 'gql/generated/graphql';
 import i18next from 'i18next';
 
 import Alert from 'components/Alert';
@@ -282,7 +279,7 @@ type AdditionalContactsProps = {
   /** Whether to show warning for selecting external users */
   showExternalUsersWarning?: boolean;
   /** Function called after contact is created */
-  createContactCallback?: (contact: AugmentedSystemIntakeContact) => any;
+  createContactCallback?: (contact: SystemIntakeContactProps) => any;
   /** Type of form - Recipient type does not display contacts */
   type?: 'recipient' | 'contact';
   /** Outer div class */

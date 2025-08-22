@@ -63,19 +63,22 @@ type ContactRole =
 export interface MockSystemIntakeContact extends SystemIntakeContactFragment {
   component: CMSOffice;
   role: ContactRole;
-  commonName: string;
-  email: string;
 }
 
 const systemIntakeId = 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2';
 
 const contacts: MockSystemIntakeContact[] = users.slice(0, 4).map(userInfo => ({
-  __typename: 'AugmentedSystemIntakeContact',
+  __typename: 'SystemIntakeContact',
   systemIntakeId,
   id: `systemIntakeContact-${userInfo.euaUserId}`,
   euaUserId: userInfo.euaUserId,
-  commonName: userInfo.commonName,
-  email: userInfo.email,
+  userAccount: {
+    __typename: 'UserAccount',
+    id: `userAccount-${userInfo.euaUserId}`,
+    username: userInfo.euaUserId,
+    commonName: userInfo.commonName,
+    email: userInfo.email
+  },
   component: 'CMS Wide',
   role: 'Other'
 }));
@@ -236,7 +239,7 @@ export const emptySystemIntake: SystemIntakeFragmentFragment = {
   statusRequester: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_IN_PROGRESS,
   requester: {
     __typename: 'SystemIntakeRequester',
-    name: requester.commonName!,
+    name: requester.userAccount.commonName!,
     component: null,
     email: null
   },
@@ -371,19 +374,19 @@ export const systemIntake: SystemIntakeFragmentFragment = {
   statusRequester: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_SUBMITTED,
   requester: {
     __typename: 'SystemIntakeRequester',
-    name: requester.commonName!,
+    name: requester.userAccount.commonName!,
     component: requester.component,
-    email: requester.email
+    email: requester.userAccount.email
   },
   requestType: SystemIntakeRequestType.NEW,
   businessOwner: {
     __typename: 'SystemIntakeBusinessOwner',
-    name: businessOwner.commonName,
+    name: businessOwner.userAccount.commonName,
     component: businessOwner.component
   },
   productManager: {
     __typename: 'SystemIntakeProductManager',
-    name: productManager.commonName,
+    name: productManager.userAccount.commonName,
     component: productManager.component
   },
   governanceTeams: {
