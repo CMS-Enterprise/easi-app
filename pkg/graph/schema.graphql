@@ -1746,6 +1746,7 @@ type SystemIntakeContact {
   component: String!
   # TODO: change String to PersonRole
   roles: [String!]!
+  isRequester: Boolean!
 }
 
 """
@@ -1757,6 +1758,7 @@ input CreateSystemIntakeContactInput {
   component: String!
   # TODO: change String to PersonRole
   roles: [String!]!
+  isRequester: Boolean!
 }
 
 """
@@ -1769,6 +1771,7 @@ input UpdateSystemIntakeContactInput {
   component: String!
   # TODO: change String to PersonRole
   roles: [String!]!
+  isRequester: Boolean!
 }
 
 """

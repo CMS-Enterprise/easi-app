@@ -173,6 +173,7 @@ type CreateSystemIntakeContactInput struct {
 	SystemIntakeID uuid.UUID `json:"systemIntakeId"`
 	Component      string    `json:"component"`
 	Roles          []string  `json:"roles"`
+	IsRequester    bool      `json:"isRequester"`
 }
 
 // The payload when creating a system intake contact
@@ -897,6 +898,7 @@ type UpdateSystemIntakeContactInput struct {
 	SystemIntakeID uuid.UUID `json:"systemIntakeId"`
 	Component      string    `json:"component"`
 	Roles          []string  `json:"roles"`
+	IsRequester    bool      `json:"isRequester"`
 }
 
 // Input data for updating contract details related to a system request

@@ -836,6 +836,7 @@ type ComplexityRoot struct {
 		Component      func(childComplexity int) int
 		EUAUserID      func(childComplexity int) int
 		ID             func(childComplexity int) int
+		IsRequester    func(childComplexity int) int
 		Roles          func(childComplexity int) int
 		SystemIntakeID func(childComplexity int) int
 		UserAccount    func(childComplexity int) int
@@ -1453,6 +1454,7 @@ type SystemIntakeResolver interface {
 }
 type SystemIntakeContactResolver interface {
 	Roles(ctx context.Context, obj *models.SystemIntakeContact) ([]string, error)
+	IsRequester(ctx context.Context, obj *models.SystemIntakeContact) (bool, error)
 }
 type SystemIntakeDocumentResolver interface {
 	DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*models.SystemIntakeDocumentType, error)
@@ -6417,6 +6419,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.SystemIntakeContact.ID(childComplexity), true
 
+	case "SystemIntakeContact.isRequester":
+		if e.complexity.SystemIntakeContact.IsRequester == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeContact.IsRequester(childComplexity), true
+
 	case "SystemIntakeContact.roles":
 		if e.complexity.SystemIntakeContact.Roles == nil {
 			break
@@ -10242,6 +10251,7 @@ type SystemIntakeContact {
   component: String!
   # TODO: change String to PersonRole
   roles: [String!]!
+  isRequester: Boolean!
 }
 
 """
@@ -10253,6 +10263,7 @@ input CreateSystemIntakeContactInput {
   component: String!
   # TODO: change String to PersonRole
   roles: [String!]!
+  isRequester: Boolean!
 }
 
 """
@@ -10265,6 +10276,7 @@ input UpdateSystemIntakeContactInput {
   component: String!
   # TODO: change String to PersonRole
   roles: [String!]!
+  isRequester: Boolean!
 }
 
 """
@@ -26961,6 +26973,8 @@ func (ec *executionContext) fieldContext_CreateSystemIntakeContactPayload_system
 				return ec.fieldContext_SystemIntakeContact_component(ctx, field)
 			case "roles":
 				return ec.fieldContext_SystemIntakeContact_roles(ctx, field)
+			case "isRequester":
+				return ec.fieldContext_SystemIntakeContact_isRequester(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeContact", field.Name)
 		},
@@ -27300,6 +27314,8 @@ func (ec *executionContext) fieldContext_DeleteSystemIntakeContactPayload_system
 				return ec.fieldContext_SystemIntakeContact_component(ctx, field)
 			case "roles":
 				return ec.fieldContext_SystemIntakeContact_roles(ctx, field)
+			case "isRequester":
+				return ec.fieldContext_SystemIntakeContact_isRequester(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeContact", field.Name)
 		},
@@ -40466,6 +40482,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakeContacts(ctx context.
 				return ec.fieldContext_SystemIntakeContact_component(ctx, field)
 			case "roles":
 				return ec.fieldContext_SystemIntakeContact_roles(ctx, field)
+			case "isRequester":
+				return ec.fieldContext_SystemIntakeContact_isRequester(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeContact", field.Name)
 		},
@@ -47521,6 +47539,50 @@ func (ec *executionContext) fieldContext_SystemIntakeContact_roles(_ context.Con
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeContact_isRequester(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeContact) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeContact_isRequester(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntakeContact().IsRequester(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeContact_isRequester(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeContact",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
 		},
 	}
 	return fc, nil
@@ -62233,7 +62295,7 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeContactInput(ctx con
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"euaUserId", "systemIntakeId", "component", "roles"}
+	fieldsInOrder := [...]string{"euaUserId", "systemIntakeId", "component", "roles", "isRequester"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -62268,6 +62330,13 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeContactInput(ctx con
 				return it, err
 			}
 			it.Roles = data
+		case "isRequester":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isRequester"))
+			data, err := ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.IsRequester = data
 		}
 	}
 
@@ -65166,7 +65235,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeContactInput(ctx con
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "euaUserId", "systemIntakeId", "component", "roles"}
+	fieldsInOrder := [...]string{"id", "euaUserId", "systemIntakeId", "component", "roles", "isRequester"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -65208,6 +65277,13 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeContactInput(ctx con
 				return it, err
 			}
 			it.Roles = data
+		case "isRequester":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isRequester"))
+			data, err := ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.IsRequester = data
 		}
 	}
 
@@ -72691,6 +72767,42 @@ func (ec *executionContext) _SystemIntakeContact(ctx context.Context, sel ast.Se
 					}
 				}()
 				res = ec._SystemIntakeContact_roles(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "isRequester":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntakeContact_isRequester(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}

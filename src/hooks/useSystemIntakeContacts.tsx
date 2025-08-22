@@ -154,7 +154,9 @@ function useSystemIntakeContacts(
             euaUserId: euaUserId?.toUpperCase() || '',
             component,
             roles,
-            systemIntakeId
+            systemIntakeId,
+            // TODO: get actual isRequester value from contact
+            isRequester: false
           }
         }
       })
@@ -200,7 +202,9 @@ function useSystemIntakeContacts(
             euaUserId: euaUserId?.toUpperCase() || '',
             component,
             roles,
-            systemIntakeId
+            systemIntakeId,
+            // TODO: get actual isRequester value from contact
+            isRequester: false
           }
         }
       })

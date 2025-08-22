@@ -543,6 +543,7 @@ export type CreateGRBReviewerInput = {
 export type CreateSystemIntakeContactInput = {
   component: Scalars['String']['input'];
   euaUserId: Scalars['String']['input'];
+  isRequester: Scalars['Boolean']['input'];
   roles: Array<Scalars['String']['input']>;
   systemIntakeId: Scalars['UUID']['input'];
 };
@@ -2249,6 +2250,7 @@ export type SystemIntakeContact = {
   component: Scalars['String']['output'];
   euaUserId: Scalars['String']['output'];
   id: Scalars['UUID']['output'];
+  isRequester: Scalars['Boolean']['output'];
   roles: Array<Scalars['String']['output']>;
   systemIntakeId: Scalars['UUID']['output'];
   userAccount: UserAccount;
@@ -3275,6 +3277,7 @@ export type UpdateSystemIntakeContactInput = {
   component: Scalars['String']['input'];
   euaUserId: Scalars['String']['input'];
   id: Scalars['UUID']['input'];
+  isRequester: Scalars['Boolean']['input'];
   roles: Array<Scalars['String']['input']>;
   systemIntakeId: Scalars['UUID']['input'];
 };
