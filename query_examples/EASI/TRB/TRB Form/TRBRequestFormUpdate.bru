@@ -1,0 +1,65 @@
+meta {
+  name: TRBRequestFormUpdate
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation {
+    updateTRBRequestForm(input: {
+      trbRequestId: "{{trbRequestID}}",
+      isSubmitted: true
+      component: "Drive Through",
+      needsAssistanceWith: "Stuff",
+      hasSolutionInMind: true,
+      proposedSolution: "Instead of coming in the restaurant, drive through it!",
+      whereInProcess: OTHER,
+      hasExpectedStartEndDates: true,
+      expectedStartDate: "2022-10-13T15:15:20.358346Z",
+      expectedEndDate: "2022-10-13T15:15:20.358346Z",
+      collabGroups: [SECURITY, CLOUD, OTHER]
+      collabDateSecurity: "2022-12-13T15:15:20.358346Z",
+      collabDateEnterpriseArchitecture: "2022-12-13T15:15:20.358346Z",
+      collabDateCloud: "2022-12-13T15:15:20.358346Z",
+      collabDatePrivacyAdvisor: "2022-12-13T15:15:20.358346Z",
+      collabDateGovernanceReviewBoard: "2022-12-13T15:15:20.358346Z"
+      collabDateOther: "2022-12-13T15:15:20.358346Z",
+      # collabGroupOther: "The restaurant advisory board",
+    }) {
+          trbRequestId
+          
+          component
+          needsAssistanceWith
+          hasSolutionInMind
+          proposedSolution
+          whereInProcess
+          hasExpectedStartEndDates
+          expectedStartDate
+          expectedEndDate
+          collabGroups
+          collabDateSecurity
+          collabDateEnterpriseArchitecture
+          collabDateCloud
+          collabDatePrivacyAdvisor
+          collabDateGovernanceReviewBoard
+          collabDateOther
+          collabGroupOther
+          status
+  
+          createdBy
+          createdAt
+          modifiedBy
+          modifiedAt
+    }
+  }
+}
+
+settings {
+  encodeUrl: true
+}

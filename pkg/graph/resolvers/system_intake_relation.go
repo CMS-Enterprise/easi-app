@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"github.com/guregu/null"
 	"github.com/guregu/null/zero"
 	"github.com/jmoiron/sqlx"
 
@@ -29,7 +30,7 @@ func SetSystemIntakeRelationExistingService(
 
 		// Remove CEDAR system relationships
 		// do this first, so we fetch the updated one below in `UpdateSystemIntakeNP`
-		if err := store.SetSystemIntakeSystems(ctx, tx, input.SystemIntakeID, []string{}); err != nil {
+		if err := store.SetSystemIntakeSystems(ctx, tx, input.SystemIntakeID, []*models.SystemRelationshipInput{}); err != nil {
 			return nil, err
 		}
 
@@ -63,7 +64,7 @@ func SetSystemIntakeRelationNewSystem(
 		}
 
 		// Remove CEDAR system relationships
-		if err := store.SetSystemIntakeSystems(ctx, tx, input.SystemIntakeID, []string{}); err != nil {
+		if err := store.SetSystemIntakeSystems(ctx, tx, input.SystemIntakeID, []*models.SystemRelationshipInput{}); err != nil {
 			return nil, err
 		}
 
@@ -98,14 +99,14 @@ func SetSystemIntakeRelationExistingSystem(
 		}
 
 		// ensure all given CEDAR system IDs are valid by checking with CEDAR
-		for _, systemID := range input.CedarSystemIDs {
-			if _, err = getCedarSystem(ctx, systemID); err != nil {
+		for _, systemRelationship := range input.CedarSystemRelationShips {
+			if _, err = getCedarSystem(ctx, *systemRelationship.CedarSystemID); err != nil {
 				return nil, err
 			}
 		}
 
 		// Add CEDAR system relationships
-		if err := store.SetSystemIntakeSystems(ctx, tx, input.SystemIntakeID, input.CedarSystemIDs); err != nil {
+		if err := store.SetSystemIntakeSystems(ctx, tx, input.SystemIntakeID, input.CedarSystemRelationShips); err != nil {
 			return nil, err
 		}
 
@@ -123,12 +124,13 @@ func SetSystemIntakeRelationExistingSystem(
 	})
 }
 
-// UnlinkSystemIntakeRelation clears all the relationship information on a system intake.
+// SetSystemSupportAndUnlinkSystemIntakeRelation clears all the relationship information on a system intake.
 // This includes clearing the system relation type, contract name, contract number relationships, and CEDAR system relationships (TODO).
-func UnlinkSystemIntakeRelation(
+func SetSystemSupportAndUnlinkSystemIntakeRelation(
 	ctx context.Context,
 	store *storage.Store,
 	intakeID uuid.UUID,
+	doesNotSupportSystems bool,
 ) (*models.SystemIntake, error) {
 	return sqlutils.WithTransactionRet[*models.SystemIntake](ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		// Fetch intake by ID
@@ -136,6 +138,7 @@ func UnlinkSystemIntakeRelation(
 		if err != nil {
 			return nil, err
 		}
+		//TODO: there is a bit of business logic that is happening here that could be in resolvers. Leaving here for now for consistency, but consider refactoring
 
 		// Clear contract number relationships by setting an empty array of contract #'s
 		// declare this as an explicit empty slice instead of `nil`
@@ -145,16 +148,22 @@ func UnlinkSystemIntakeRelation(
 		// 	return nil, err
 		// }
 
-		// Clear CEDAR system relationships
-		if err := store.SetSystemIntakeSystems(ctx, tx, intakeID, []string{}); err != nil {
-			return nil, err
+		// Conditionally clear data from the database here
+		if doesNotSupportSystems {
+			// Clear CEDAR system relationships
+			if err := store.SetSystemIntakeSystems(ctx, tx, intakeID, []*models.SystemRelationshipInput{}); err != nil {
+				return nil, err
+			}
+
+			// Clear system relation type by setting to nil
+			intake.SystemRelationType = nil
+
+			// Clear contract name
+			intake.ContractName = zero.StringFromPtr(nil)
 		}
 
-		// Clear system relation type by setting to nil
-		intake.SystemRelationType = nil
-
-		// Clear contract name
-		intake.ContractName = zero.StringFromPtr(nil)
+		// Set the DoesNotSupportSystems field
+		intake.DoesNotSupportSystems = null.BoolFrom(doesNotSupportSystems)
 
 		// Update system intake
 		return store.UpdateSystemIntakeNP(ctx, tx, intake)

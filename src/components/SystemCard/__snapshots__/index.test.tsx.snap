@@ -15,19 +15,19 @@ exports[`System Card Componenet > matches snapshot 1`] = `
         data-testid="grid"
       >
         <div
-          class="system-card__header easi-header__basic"
+          class="system-card__header"
         >
           <h3
             class="system-card__title margin-top-0 margin-bottom-1"
           >
             System Overload
           </h3>
+          <p
+            class="margin-0 margin-left-1"
+          >
+            (SO)
+          </p>
         </div>
-        <p
-          class="margin-0"
-        >
-          SO
-        </p>
         <p
           class="system-card__body-text line-height-body-4"
         >

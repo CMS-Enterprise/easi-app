@@ -1,0 +1,38 @@
+meta {
+  name: TRBRequestFeedbackCreate
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation {
+    createTRBRequestFeedback(input: {
+      trbRequestId: "{{trbRequestID}}",
+      feedbackMessage: "This is TRB request is NICE!",
+      copyTrbMailbox: true,
+      notifyEuaIds: ["FAKE", "REAL", "LOLZ"],
+      action: READY_FOR_CONSULT,
+    }) {
+      id
+      trbRequestId
+      feedbackMessage
+      copyTrbMailbox
+      notifyEuaIds
+      action
+      createdBy
+      createdAt
+      modifiedBy
+      modifiedAt
+    }
+  }
+}
+
+settings {
+  encodeUrl: true
+}

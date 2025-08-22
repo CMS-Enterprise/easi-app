@@ -1,0 +1,50 @@
+meta {
+  name: Close Request
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation CreateSystemIntakeActionCloseRequest (
+      $input: SystemIntakeCloseRequestInput!
+      ) {
+      createSystemIntakeActionCloseRequest(input: $input) {
+          systemIntake {
+              id
+              state
+              step
+              decisionNextSteps
+              decisionState
+              updatedAt
+          }
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+      "input": {
+          "systemIntakeID": "{{systemIntakeID}}",
+          "notificationRecipients": {
+              "regularRecipientEmails": [
+                  "{{testEmailAddress}}"
+              ],
+              "shouldNotifyITGovernance": false,
+              "shouldNotifyITInvestment": false
+          },
+          "reason": "email reason goes here",
+          "additionalInfo": "additional info",
+          "adminNote": "my admin note"
+      }
+  }
+}
+
+settings {
+  encodeUrl: true
+}

@@ -69,7 +69,7 @@ const GovernanceOverview = () => {
           className="usa-button margin-bottom-5"
           variant="unstyled"
           to={{
-            pathname: `/system/link/${systemId}`,
+            pathname: `/linked-systems/${systemId}`,
             search: linkCedarSystemIdQs,
             state: { isNew }
           }}

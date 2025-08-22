@@ -143,12 +143,3 @@ repos:
         # Exclude SQL files in the migrations folder with version numbers V0 to V198.
         # Matches single-digit (e.g., V0), two-digit (e.g., V99), and three-digit (e.g., V198) versions.
         exclude: 'migrations/V([0-9]{1,2}|1[0-8][0-9]|19[0-8])__'
-
-  - repo: local
-    hooks:
-      - id: remove-postman-ids
-        name: Remove Postman Collection IDs
-        language: script
-        entry: scripts/edit_postman_json.sh
-        always_run: true
-        pass_filenames: false

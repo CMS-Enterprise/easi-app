@@ -1,0 +1,35 @@
+meta {
+  name: Update Insight
+  type: graphql
+  seq: 5
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation UpdateRecTRBGuidanceLetterInsight($input: UpdateTRBGuidanceLetterInsightInput!) {
+      updateTRBGuidanceLetterInsight(input: $input) {
+          id
+          title
+          insight
+          category
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+      "input": {
+          "id":"7dd6e2cb-9b21-412a-ae3a-31a1b7557017",
+         "category":"REQUIREMENT"
+      }
+  }
+}
+
+settings {
+  encodeUrl: true
+}

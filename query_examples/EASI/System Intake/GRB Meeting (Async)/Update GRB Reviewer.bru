@@ -1,0 +1,47 @@
+meta {
+  name: Update GRB Reviewer
+  type: graphql
+  seq: 3
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation updateGRBReviewer($input: UpdateSystemIntakeGRBReviewerInput!) {
+    updateSystemIntakeGRBReviewer(input: $input) {
+      id
+      systemIntakeID
+      grbRole
+      votingRole
+      userAccount {
+          username
+          id
+          givenName
+          commonName
+          email
+      }
+      createdAt
+      createdBy
+      modifiedAt
+      modifiedBy
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+      "input": {
+          "reviewerID": "{{SystemIntakeGRBReviewerID}}",
+          "votingRole": "VOTING",
+          "grbRole": "ACA_3021_REP"
+      }
+  }
+}
+
+settings {
+  encodeUrl: true
+}

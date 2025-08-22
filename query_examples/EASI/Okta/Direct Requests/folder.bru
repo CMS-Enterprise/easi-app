@@ -1,0 +1,24 @@
+meta {
+  name: Direct Requests
+  seq: 1
+}
+
+auth {
+  mode: inherit
+}
+
+script:pre-request {
+  const OktaApiToken = bru.getVar("OktaApiToken")
+  test("OktaApiToken is set (can be found in 1pass)", function() {
+          expect(OktaApiToken).to.exist
+          expect(OktaApiToken).to.not.be.empty
+  })
+  if (!OktaApiToken) return bru.runner.skipRequest();
+  
+  const OktaApiUrl = bru.getVar("OktaApiUrl")
+  test("OktaApiUrl is set (can be found in .envrc)", function() {
+          expect(OktaApiUrl).to.exist
+          expect(OktaApiUrl).to.not.be.empty
+  })
+  if (!OktaApiUrl) return bru.runner.skipRequest();
+}
