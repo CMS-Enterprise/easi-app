@@ -4,7 +4,7 @@ export const GetSystemIntakeContacts = gql(/* GraphQL */ `
   query GetSystemIntakeContacts($id: UUID!) {
     systemIntakeContacts(id: $id) {
       systemIntakeContacts {
-        ...SystemIntakeContactFragment
+        ...SystemIntakeContact
       }
     }
   }

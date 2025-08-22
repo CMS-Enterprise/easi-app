@@ -53,6 +53,7 @@ type ResolverRoot interface {
 	Mutation() MutationResolver
 	Query() QueryResolver
 	SystemIntake() SystemIntakeResolver
+	SystemIntakeContact() SystemIntakeContactResolver
 	SystemIntakeDocument() SystemIntakeDocumentResolver
 	SystemIntakeGRBPresentationLinks() SystemIntakeGRBPresentationLinksResolver
 	SystemIntakeGRBReviewer() SystemIntakeGRBReviewerResolver
@@ -847,6 +848,7 @@ type ComplexityRoot struct {
 		ID             func(childComplexity int) int
 		Role           func(childComplexity int) int
 		SystemIntakeID func(childComplexity int) int
+		UserAccount    func(childComplexity int) int
 	}
 
 	SystemIntakeContactsPayload struct {
@@ -1463,6 +1465,9 @@ type SystemIntakeResolver interface {
 
 	GrbReviewStandardStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBReviewStandardStatusType, error)
 	GrbReviewAsyncStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBReviewAsyncStatusType, error)
+}
+type SystemIntakeContactResolver interface {
+	UserAccount(ctx context.Context, obj *models.SystemIntakeContact) (*authentication.UserAccount, error)
 }
 type SystemIntakeDocumentResolver interface {
 	DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*models.SystemIntakeDocumentType, error)
@@ -6490,6 +6495,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.SystemIntakeContact.SystemIntakeID(childComplexity), true
 
+	case "SystemIntakeContact.userAccount":
+		if e.complexity.SystemIntakeContact.UserAccount == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeContact.UserAccount(childComplexity), true
+
 	case "SystemIntakeContactsPayload.invalidEUAIDs":
 		if e.complexity.SystemIntakeContactsPayload.InvalidEUAIDs == nil {
 			break
@@ -10302,6 +10314,7 @@ Represents a contact associated with a system intake
 """
 type SystemIntakeContact {
   id: UUID!
+  userAccount: UserAccount!
   euaUserId: String!
   systemIntakeId: UUID!
   component: String!
@@ -27336,6 +27349,8 @@ func (ec *executionContext) fieldContext_CreateSystemIntakeContactPayload_system
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_SystemIntakeContact_id(ctx, field)
+			case "userAccount":
+				return ec.fieldContext_SystemIntakeContact_userAccount(ctx, field)
 			case "euaUserId":
 				return ec.fieldContext_SystemIntakeContact_euaUserId(ctx, field)
 			case "systemIntakeId":
@@ -27673,6 +27688,8 @@ func (ec *executionContext) fieldContext_DeleteSystemIntakeContactPayload_system
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_SystemIntakeContact_id(ctx, field)
+			case "userAccount":
+				return ec.fieldContext_SystemIntakeContact_userAccount(ctx, field)
 			case "euaUserId":
 				return ec.fieldContext_SystemIntakeContact_euaUserId(ctx, field)
 			case "systemIntakeId":
@@ -47654,6 +47671,70 @@ func (ec *executionContext) fieldContext_SystemIntakeContact_id(_ context.Contex
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeContact_userAccount(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeContact) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeContact_userAccount(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntakeContact().UserAccount(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*authentication.UserAccount)
+	fc.Result = res
+	return ec.marshalNUserAccount2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋauthenticationᚐUserAccount(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeContact_userAccount(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeContact",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_UserAccount_id(ctx, field)
+			case "username":
+				return ec.fieldContext_UserAccount_username(ctx, field)
+			case "commonName":
+				return ec.fieldContext_UserAccount_commonName(ctx, field)
+			case "locale":
+				return ec.fieldContext_UserAccount_locale(ctx, field)
+			case "email":
+				return ec.fieldContext_UserAccount_email(ctx, field)
+			case "givenName":
+				return ec.fieldContext_UserAccount_givenName(ctx, field)
+			case "familyName":
+				return ec.fieldContext_UserAccount_familyName(ctx, field)
+			case "zoneInfo":
+				return ec.fieldContext_UserAccount_zoneInfo(ctx, field)
+			case "hasLoggedIn":
+				return ec.fieldContext_UserAccount_hasLoggedIn(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UserAccount", field.Name)
 		},
 	}
 	return fc, nil
@@ -73104,27 +73185,63 @@ func (ec *executionContext) _SystemIntakeContact(ctx context.Context, sel ast.Se
 		case "id":
 			out.Values[i] = ec._SystemIntakeContact_id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				out.Invalids++
+				atomic.AddUint32(&out.Invalids, 1)
 			}
+		case "userAccount":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntakeContact_userAccount(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "euaUserId":
 			out.Values[i] = ec._SystemIntakeContact_euaUserId(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				out.Invalids++
+				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "systemIntakeId":
 			out.Values[i] = ec._SystemIntakeContact_systemIntakeId(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				out.Invalids++
+				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "component":
 			out.Values[i] = ec._SystemIntakeContact_component(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				out.Invalids++
+				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "role":
 			out.Values[i] = ec._SystemIntakeContact_role(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				out.Invalids++
+				atomic.AddUint32(&out.Invalids, 1)
 			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -81440,6 +81557,10 @@ func (ec *executionContext) marshalNUpload2githubᚗcomᚋ99designsᚋgqlgenᚋg
 func (ec *executionContext) unmarshalNUploadSystemIntakeGRBPresentationDeckInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUploadSystemIntakeGRBPresentationDeckInput(ctx context.Context, v any) (models.UploadSystemIntakeGRBPresentationDeckInput, error) {
 	res, err := ec.unmarshalInputUploadSystemIntakeGRBPresentationDeckInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNUserAccount2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋauthenticationᚐUserAccount(ctx context.Context, sel ast.SelectionSet, v authentication.UserAccount) graphql.Marshaler {
+	return ec._UserAccount(ctx, sel, &v)
 }
 
 func (ec *executionContext) marshalNUserAccount2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋauthenticationᚐUserAccount(ctx context.Context, sel ast.SelectionSet, v *authentication.UserAccount) graphql.Marshaler {

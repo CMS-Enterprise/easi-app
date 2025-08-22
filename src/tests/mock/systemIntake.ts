@@ -20,7 +20,7 @@ import {
   ITGovGRBStatus,
   ITGovGRTStatus,
   ITGovIntakeFormStatus,
-  SystemIntakeContact,
+  SystemIntakeContactFragment,
   SystemIntakeDecisionState,
   SystemIntakeDocumentCommonType,
   SystemIntakeDocumentFragmentFragment,
@@ -60,7 +60,7 @@ type ContactRole =
   | 'CRA'
   | 'Other';
 
-export interface MockSystemIntakeContact extends SystemIntakeContact {
+export interface MockSystemIntakeContact extends SystemIntakeContactFragment {
   component: CMSOffice;
   role: ContactRole;
   commonName: string;
@@ -70,7 +70,7 @@ export interface MockSystemIntakeContact extends SystemIntakeContact {
 const systemIntakeId = 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2';
 
 const contacts: MockSystemIntakeContact[] = users.slice(0, 4).map(userInfo => ({
-  __typename: 'SystemIntakeContact',
+  __typename: 'AugmentedSystemIntakeContact',
   systemIntakeId,
   id: `systemIntakeContact-${userInfo.euaUserId}`,
   euaUserId: userInfo.euaUserId,

@@ -1740,6 +1740,7 @@ Represents a contact associated with a system intake
 """
 type SystemIntakeContact {
   id: UUID!
+  userAccount: UserAccount!
   euaUserId: String!
   systemIntakeId: UUID!
   component: String!
