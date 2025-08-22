@@ -13,11 +13,12 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler/extension"
 	"github.com/99designs/gqlgen/graphql/handler/lru"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
+	s3New "github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/client/metadata"
 	"github.com/aws/aws-sdk-go/aws/request"
 	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/aws/aws-sdk-go/service/s3/s3iface"
+
 	_ "github.com/lib/pq" // required for postgres driver in sql
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
@@ -54,7 +55,7 @@ func (s *GraphQLTestSuite) BeforeTest() {
 }
 
 type mockS3Client struct {
-	s3iface.S3API
+	Client   *s3New.Client
 	AVStatus string
 }
 
@@ -135,7 +136,7 @@ func TestGraphQLTestSuite(t *testing.T) {
 
 	s3Config := upload.Config{Bucket: "easi-test-bucket", Region: "us-west", IsLocal: false}
 	mockClient := mockS3Client{}
-	s3Client := upload.NewS3ClientUsingClient(&mockClient, s3Config)
+	s3Client := upload.NewS3ClientUsingClient(mockClient.Client, s3Config)
 
 	// set up Email Client
 	emailConfig := email.Config{

@@ -167,7 +167,7 @@ func (s *Server) routes() {
 	s3Config := s.NewS3Config()
 	s3Config.IsLocal = s.environment.Local() || s.environment.Test()
 
-	s3Client := upload.NewS3Client(s3Config)
+	s3Client := upload.NewS3Client(context.Background(), s3Config)
 
 	serviceConfig := services.NewConfig(s.logger, ldClient)
 

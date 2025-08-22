@@ -549,7 +549,7 @@ func createSystemIntakeDocument(
 	}
 
 	config := testhelpers.NewConfig()
-	s3Client := upload.NewS3Client(upload.Config{
+	s3Client := upload.NewS3Client(ctx, upload.Config{
 		IsLocal: true,
 		Bucket:  config.GetString(appconfig.AWSS3FileUploadBucket),
 		Region:  config.GetString(appconfig.AWSRegion),

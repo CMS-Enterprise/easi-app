@@ -2122,7 +2122,7 @@ func (r *systemIntakeDocumentResolver) DocumentType(ctx context.Context, obj *mo
 
 // Status is the resolver for the status field.
 func (r *systemIntakeDocumentResolver) Status(ctx context.Context, obj *models.SystemIntakeDocument) (models.SystemIntakeDocumentStatus, error) {
-	return resolvers.GetStatusForSystemIntakeDocument(r.s3Client, obj.S3Key)
+	return resolvers.GetStatusForSystemIntakeDocument(ctx, r.s3Client, obj.S3Key)
 }
 
 // UploadedAt is the resolver for the uploadedAt field.
@@ -2362,7 +2362,7 @@ func (r *tRBRequestDocumentResolver) DocumentType(ctx context.Context, obj *mode
 
 // Status is the resolver for the status field.
 func (r *tRBRequestDocumentResolver) Status(ctx context.Context, obj *models.TRBRequestDocument) (models.TRBRequestDocumentStatus, error) {
-	return resolvers.GetStatusForTRBRequestDocument(r.s3Client, obj.S3Key)
+	return resolvers.GetStatusForTRBRequestDocument(ctx, r.s3Client, obj.S3Key)
 }
 
 // UploadedAt is the resolver for the uploadedAt field.
@@ -2372,7 +2372,7 @@ func (r *tRBRequestDocumentResolver) UploadedAt(ctx context.Context, obj *models
 
 // URL is the resolver for the url field.
 func (r *tRBRequestDocumentResolver) URL(ctx context.Context, obj *models.TRBRequestDocument) (string, error) {
-	return resolvers.GetURLForTRBRequestDocument(r.s3Client, obj.S3Key)
+	return resolvers.GetURLForTRBRequestDocument(ctx, r.s3Client, obj.S3Key)
 }
 
 // NotifyEuaIds is the resolver for the notifyEuaIds field.
