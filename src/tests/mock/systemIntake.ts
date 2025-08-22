@@ -62,7 +62,7 @@ type ContactRole =
 
 export interface MockSystemIntakeContact extends SystemIntakeContactFragment {
   component: CMSOffice;
-  role: ContactRole;
+  roles: ContactRole[];
 }
 
 const systemIntakeId = 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2';
@@ -80,29 +80,29 @@ const contacts: MockSystemIntakeContact[] = users.slice(0, 4).map(userInfo => ({
     email: userInfo.email
   },
   component: 'CMS Wide',
-  role: 'Other'
+  roles: ['Other']
 }));
 
 export const requester: MockSystemIntakeContact = {
   ...contacts[0],
-  role: 'Requester'
+  roles: ['Requester']
 };
 
 const businessOwner: MockSystemIntakeContact = {
   ...contacts[1],
-  role: 'Business Owner',
+  roles: ['Business Owner'],
   component: 'Center for Medicare'
 };
 
 export const productManager: MockSystemIntakeContact = {
   ...contacts[2],
-  role: 'Product Manager',
+  roles: ['Product Manager'],
   component: 'Office of Legislation'
 };
 
 const isso: MockSystemIntakeContact = {
   ...contacts[3],
-  role: 'ISSO',
+  roles: ['ISSO'],
   component: 'Office of Communications'
 };
 

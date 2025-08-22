@@ -85,13 +85,14 @@ function useSystemIntakeContacts(
       // Return empty values if no systemIntakeContacts
       if (!contactsArray) return legacyContacts;
 
-      return contactsArray.reduce<FormattedContacts>(
+      const test = contactsArray.reduce<FormattedContacts>(
         (contactsObject, contact) => {
+          const role = contact.roles[0];
           // If contact is primary role, add to object
-          if (rolesMap[contact.role as Role]) {
+          if (rolesMap[role as Role]) {
             return {
               ...contactsObject,
-              [rolesMap[contact.role as Role]]: contact
+              [rolesMap[role as Role]]: { ...contact, role }
             };
           }
           // If contact is additional contacts, add to additional contacts array
@@ -101,6 +102,7 @@ function useSystemIntakeContacts(
               ...contactsObject.additionalContacts,
               {
                 ...contact,
+                role,
                 commonName: contact.userAccount?.commonName || '',
                 email: contact.userAccount?.email || '',
                 systemIntakeId
@@ -110,6 +112,8 @@ function useSystemIntakeContacts(
         },
         legacyContacts
       );
+
+      return test;
     },
     [legacyContacts, systemIntakeId]
   );

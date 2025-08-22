@@ -18,7 +18,7 @@ export const CreateSystemIntakeContact = gql(/* GraphQL */ `
         euaUserId
         systemIntakeId
         component
-        role
+        roles
       }
     }
   }
@@ -32,7 +32,7 @@ export const UpdateSystemIntakeContact = gql(/* GraphQL */ `
         euaUserId
         systemIntakeId
         component
-        role
+        roles
       }
     }
   }
@@ -46,7 +46,7 @@ export const DeleteSystemIntakeContact = gql(/* GraphQL */ `
         euaUserId
         systemIntakeId
         component
-        role
+        roles
       }
     }
   }

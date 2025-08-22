@@ -12,6 +12,6 @@ export default gql(/* GraphQL */ `
       email
     }
     component
-    role
+    roles
   }
 `);

@@ -1744,7 +1744,8 @@ type SystemIntakeContact {
   euaUserId: String!
   systemIntakeId: UUID!
   component: String!
-  role: String!
+  # TODO: change String to PersonRole
+  roles: [String!]!
 }
 
 """
