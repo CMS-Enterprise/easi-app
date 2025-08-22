@@ -246,7 +246,7 @@ func createSystemIntakeContact(
 ) {
 	input := models.CreateSystemIntakeContactInput{
 		Component:      component,
-		Role:           role,
+		Roles:          []string{role},
 		EuaUserID:      euaUserID,
 		SystemIntakeID: intake.ID,
 	}
@@ -266,7 +266,7 @@ func updateSystemIntakeContact(
 ) {
 	input := models.UpdateSystemIntakeContactInput{
 		Component: component,
-		Role:      role,
+		Roles:     []string{role},
 		EuaUserID: euaUserID,
 	}
 	_, err := resolvers.UpdateSystemIntakeContact(ctx, store, input,

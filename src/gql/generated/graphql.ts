@@ -543,7 +543,7 @@ export type CreateGRBReviewerInput = {
 export type CreateSystemIntakeContactInput = {
   component: Scalars['String']['input'];
   euaUserId: Scalars['String']['input'];
-  role: Scalars['String']['input'];
+  roles: Array<Scalars['String']['input']>;
   systemIntakeId: Scalars['UUID']['input'];
 };
 
@@ -3282,7 +3282,7 @@ export type UpdateSystemIntakeContactInput = {
   component: Scalars['String']['input'];
   euaUserId: Scalars['String']['input'];
   id: Scalars['UUID']['input'];
-  role: Scalars['String']['input'];
+  roles: Array<Scalars['String']['input']>;
   systemIntakeId: Scalars['UUID']['input'];
 };
 

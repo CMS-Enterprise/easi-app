@@ -10270,7 +10270,8 @@ input CreateSystemIntakeContactInput {
   euaUserId: String!
   systemIntakeId: UUID!
   component: String!
-  role: String!
+  # TODO: change String to PersonRole
+  roles: [String!]!
 }
 
 """
@@ -10281,7 +10282,8 @@ input UpdateSystemIntakeContactInput {
   euaUserId: String!
   systemIntakeId: UUID!
   component: String!
-  role: String!
+  # TODO: change String to PersonRole
+  roles: [String!]!
 }
 
 """
@@ -62352,7 +62354,7 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeContactInput(ctx con
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"euaUserId", "systemIntakeId", "component", "role"}
+	fieldsInOrder := [...]string{"euaUserId", "systemIntakeId", "component", "roles"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -62380,13 +62382,13 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeContactInput(ctx con
 				return it, err
 			}
 			it.Component = data
-		case "role":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("role"))
-			data, err := ec.unmarshalNString2string(ctx, v)
+		case "roles":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("roles"))
+			data, err := ec.unmarshalNString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.Role = data
+			it.Roles = data
 		}
 	}
 
@@ -65285,7 +65287,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeContactInput(ctx con
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "euaUserId", "systemIntakeId", "component", "role"}
+	fieldsInOrder := [...]string{"id", "euaUserId", "systemIntakeId", "component", "roles"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -65320,13 +65322,13 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeContactInput(ctx con
 				return it, err
 			}
 			it.Component = data
-		case "role":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("role"))
-			data, err := ec.unmarshalNString2string(ctx, v)
+		case "roles":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("roles"))
+			data, err := ec.unmarshalNString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.Role = data
+			it.Roles = data
 		}
 	}
 

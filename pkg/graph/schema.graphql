@@ -1755,7 +1755,8 @@ input CreateSystemIntakeContactInput {
   euaUserId: String!
   systemIntakeId: UUID!
   component: String!
-  role: String!
+  # TODO: change String to PersonRole
+  roles: [String!]!
 }
 
 """
@@ -1766,7 +1767,8 @@ input UpdateSystemIntakeContactInput {
   euaUserId: String!
   systemIntakeId: UUID!
   component: String!
-  role: String!
+  # TODO: change String to PersonRole
+  roles: [String!]!
 }
 
 """

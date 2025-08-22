@@ -172,7 +172,7 @@ type CreateSystemIntakeContactInput struct {
 	EuaUserID      string    `json:"euaUserId"`
 	SystemIntakeID uuid.UUID `json:"systemIntakeId"`
 	Component      string    `json:"component"`
-	Role           string    `json:"role"`
+	Roles          []string  `json:"roles"`
 }
 
 // The payload when creating a system intake contact
@@ -902,7 +902,7 @@ type UpdateSystemIntakeContactInput struct {
 	EuaUserID      string    `json:"euaUserId"`
 	SystemIntakeID uuid.UUID `json:"systemIntakeId"`
 	Component      string    `json:"component"`
-	Role           string    `json:"role"`
+	Roles          []string  `json:"roles"`
 }
 
 // Input data for updating contract details related to a system request

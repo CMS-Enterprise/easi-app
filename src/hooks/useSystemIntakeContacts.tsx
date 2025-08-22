@@ -154,7 +154,7 @@ function useSystemIntakeContacts(
           input: {
             euaUserId: euaUserId?.toUpperCase() || '',
             component,
-            role,
+            roles: [role],
             systemIntakeId
           }
         }
@@ -200,7 +200,7 @@ function useSystemIntakeContacts(
             id: id || '',
             euaUserId: euaUserId?.toUpperCase() || '',
             component,
-            role,
+            roles: [role],
             systemIntakeId
           }
         }
