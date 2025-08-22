@@ -1,0 +1,46 @@
+meta {
+  name: Set Existing Service/Contract
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation SetTRBRequestRelationExistingService ($input: SetTRBRequestRelationExistingServiceInput!) {
+      setTRBRequestRelationExistingService(input:$input) {
+          id
+          contractName
+          relationType
+          contractNumbers {
+              contractNumber
+          }
+          systems {
+              id
+              name
+          }
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+      "input": {
+          "trbRequestID": "{{trbRequestID}}",
+          "contractName": "New name!",
+          "contractNumbers": [
+              "123",
+              "456",
+              "789"
+          ]
+      }
+  }
+}
+
+settings {
+  encodeUrl: true
+}

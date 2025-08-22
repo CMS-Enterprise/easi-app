@@ -1,0 +1,8 @@
+@use 'uswds-core' as *;
+@use 'colors' as *;
+
+.task-list-sidebar {
+    &__subtitle {
+        color: color('base-dark');
+    }
+}

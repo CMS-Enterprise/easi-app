@@ -1,0 +1,61 @@
+meta {
+  name: Confirm LCID Action
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation CreateSystemIntakeActionConfirmLCID(
+      $input: SystemIntakeConfirmLCIDInput!
+  ) {
+      createSystemIntakeActionConfirmLCID(input: $input) {
+          userErrors {
+              message
+              path
+          }
+          systemIntake {
+              step
+              state
+              decisionState
+              lcid
+              lcidExpiresAt
+              lcidScope
+              lcidCostBaseline
+              decisionNextSteps
+              trbFollowUpRecommendation
+          }
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+      "input":{
+          "notificationRecipients": {
+              "regularRecipientEmails": [
+                  "{{testEmailAddress}}"
+              ],
+              "shouldNotifyITGovernance": false,
+              "shouldNotifyITInvestment": false
+          },
+          "systemIntakeID": "{{systemIntakeID}}",
+          "expiresAt": "2024-04-02T15:04:05.999999999Z",
+          "scope": "<strong>A really great scope </strong>",
+          "nextSteps": "<li> look for new things to do </li>",
+          "costBaseline": "$20",
+          "additionalInfo":"<ul><li>1 Information piece</li> <li>2 Information piece</li></ul>",
+          "trbFollowUp": "RECOMMENDED_BUT_NOT_CRITICAL",
+          "adminNote": "my note here"
+      }
+  }
+}
+
+settings {
+  encodeUrl: true
+}

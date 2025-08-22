@@ -1,0 +1,59 @@
+meta {
+  name: Get Exchanges
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query GetExchanges($cedarSystemId: String!) {
+      exchanges(cedarSystemId: $cedarSystemId) {
+      connectionFrequency
+      containsBankingData
+      containsBeneficiaryAddress
+      containsPhi
+      containsPii
+      containsHealthDisparityData
+      dataExchangeAgreement
+      dataFormat
+      dataFormatOther
+      exchangeDescription
+      exchangeEndDate
+      exchangeId
+      exchangeName
+      exchangeRetiredDate
+      exchangeStartDate
+      exchangeState
+      exchangeVersion
+      exchangeDirection
+      fromOwnerId
+      fromOwnerName
+      fromOwnerType
+      isBeneficiaryMailingFile
+      numOfRecords
+      sharedViaApi
+      toOwnerId
+      toOwnerName
+      toOwnerType
+      typeOfData {
+          id
+          name
+      }
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+      "cedarSystemId": "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

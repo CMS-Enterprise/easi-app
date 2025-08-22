@@ -10,6 +10,7 @@ export default gql(/* GraphQL */ `
       component
       name
     }
+    doesNotSupportSystems
     contract {
       contractor
       endDate {
@@ -118,6 +119,25 @@ export default gql(/* GraphQL */ `
         objectID
         assigneeFirstName
         assigneeLastName
+      }
+    }
+    systemIntakeSystems {
+      id
+      systemIntakeID
+      systemID
+      systemRelationshipType
+      otherSystemRelationshipDescription
+      cedarSystem {
+        id
+        name
+        description
+        acronym
+        businessOwnerOrg
+        businessOwnerRoles {
+          objectID
+          assigneeFirstName
+          assigneeLastName
+        }
       }
     }
     relatedTRBRequests {

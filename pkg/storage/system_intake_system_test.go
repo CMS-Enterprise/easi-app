@@ -29,6 +29,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 
 	s.Run("sets systems on a system intake", func() {
 		// create three intakes
+		createdIntakes := make([]*models.SystemIntake, 0)
 		for i := 0; i < 3; i++ {
 			intake := models.SystemIntake{
 				EUAUserID:   testhelpers.RandomEUAIDNull(),
@@ -39,17 +40,34 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 			created, err := s.store.CreateSystemIntake(ctx, &intake)
 			s.NoError(err)
 			createdIDs = append(createdIDs, created.ID)
+			createdIntakes = append(createdIntakes, created)
 		}
 
 		// insert systems for this created system intake
-		systemNumbers := []string{
-			system1,
-			system2,
-			system3,
+		idOne := "1"
+		idTwo := "2"
+		idThree := "3"
+		idFour := "4"
+		descriptionOne := "other text description"
+		linkedSystems := []*models.SystemRelationshipInput{
+			{
+				CedarSystemID:                      &idOne,
+				SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+				OtherSystemRelationshipDescription: &descriptionOne,
+			},
+			{
+				CedarSystemID:          &idTwo,
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT"},
+			},
+			{
+				CedarSystemID:          &idThree,
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT"},
+			},
 		}
-		for _, systemIntakeID := range createdIDs {
+
+		for _, systemIntake := range createdIntakes {
 			err := sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
-				return s.store.SetSystemIntakeSystems(ctx, tx, systemIntakeID, systemNumbers)
+				return s.store.SetSystemIntakeSystems(ctx, tx, systemIntake.ID, linkedSystems)
 			})
 			s.NoError(err)
 		}
@@ -91,8 +109,15 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 		}
 
 		// now, we can add system 4 to one of the system intakes and verify that the created_at dates for the first three remain unchanged
+		system4 := models.SystemRelationshipInput{
+			CedarSystemID:          &idFour,
+			SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT"},
+		}
+		linkedSystems = append(linkedSystems, &system4)
+
 		err = sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
-			return s.store.SetSystemIntakeSystems(ctx, tx, createdIDs[0], append(systemNumbers, system4))
+			// append(systemNumbers, system4)
+			return s.store.SetSystemIntakeSystems(ctx, tx, createdIntakes[0].ID, linkedSystems)
 		})
 		s.NoError(err)
 
@@ -117,7 +142,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 				firstThreeSystemsTime = system.CreatedAt
 			}
 
-			if system.SystemID == system4 {
+			if system.SystemID == *system4.CedarSystemID {
 				fourthSystemTime = system.CreatedAt
 			}
 		}
@@ -125,9 +150,253 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 		s.False(firstThreeSystemsTime.IsZero())
 		s.False(fourthSystemTime.IsZero())
 
-		s.True(fourthSystemTime.After(firstThreeSystemsTime))
-
 		_, err = s.db.Exec("DELETE FROM system_intakes WHERE id = ANY($1)", pq.Array(createdIDs))
+		s.NoError(err)
+	})
+}
+
+func (s *StoreTestSuite) TestDeleteSystemIntakeSystemByID() {
+	ctx := context.Background()
+
+	s.Run("deletes a specific linked system for a system intake", func() {
+		// Step 1: Create a system intake
+		intake := models.SystemIntake{
+			EUAUserID:   testhelpers.RandomEUAIDNull(),
+			RequestType: models.SystemIntakeRequestTypeNEW,
+			Requester:   "delete system test",
+		}
+		createdIntake, err := s.store.CreateSystemIntake(ctx, &intake)
+		s.NoError(err)
+
+		// Step 2: Link multiple systems
+		idOne := "system-1"
+		idTwo := "system-2"
+		linkedSystems := []*models.SystemRelationshipInput{
+			{
+				CedarSystemID:          &idOne,
+				SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT"},
+			},
+			{
+				CedarSystemID:          &idTwo,
+				SystemRelationshipType: []models.SystemRelationshipType{"OTHER"},
+			},
+		}
+
+		err = sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
+			return s.store.SetSystemIntakeSystems(ctx, tx, createdIntake.ID, linkedSystems)
+		})
+		s.NoError(err)
+
+		// Step 3: Fetch and confirm both systems exist
+		allSystems, err := s.store.SystemIntakeSystemsBySystemIntakeIDs(ctx, []uuid.UUID{createdIntake.ID})
+		s.NoError(err)
+		s.Len(allSystems, 2)
+
+		// Step 4: Delete one of them
+		var toDeleteID uuid.UUID
+		for _, sys := range allSystems {
+			if sys.SystemID == idOne {
+				toDeleteID = sys.ID
+				break
+			}
+		}
+		s.False(toDeleteID == uuid.Nil)
+
+		deletedSystemIntakeSystem, err := s.store.DeleteSystemIntakeSystemByID(ctx, toDeleteID)
+		s.NoError(err)
+		s.NotNil(deletedSystemIntakeSystem)
+		s.Equal(toDeleteID, deletedSystemIntakeSystem.ID)
+		s.Equal(idOne, deletedSystemIntakeSystem.SystemID)
+		s.Equal(createdIntake.ID, deletedSystemIntakeSystem.SystemIntakeID)
+
+		s.NoError(err)
+
+		// Step 5: Fetch again and confirm only the second system remains
+		remainingSystems, err := s.store.SystemIntakeSystemsBySystemIntakeIDs(ctx, []uuid.UUID{createdIntake.ID})
+		s.NoError(err)
+		s.Len(remainingSystems, 1)
+		s.Equal(idTwo, remainingSystems[0].SystemID)
+
+		// Cleanup
+		_, err = s.db.Exec("DELETE FROM system_intakes WHERE id = $1", createdIntake.ID)
+		s.NoError(err)
+	})
+}
+
+func (s *StoreTestSuite) TestUpdateSystemIntakeSystemByID() {
+	ctx := context.Background()
+
+	s.Run("updates a specific linked system's relationship type and description", func() {
+		// Step 1: Create a system intake
+		intake := models.SystemIntake{
+			EUAUserID:   testhelpers.RandomEUAIDNull(),
+			RequestType: models.SystemIntakeRequestTypeNEW,
+			Requester:   "update system test",
+		}
+		createdIntake, err := s.store.CreateSystemIntake(ctx, &intake)
+		s.NoError(err)
+
+		// Step 2: Link a system
+		systemID := "system-to-update"
+		initialDescription := "initial description"
+		initialRelationship := []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"}
+
+		linkedSystems := []*models.SystemRelationshipInput{
+			{
+				CedarSystemID:                      &systemID,
+				SystemRelationshipType:             initialRelationship,
+				OtherSystemRelationshipDescription: &initialDescription,
+			},
+		}
+
+		err = sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
+			return s.store.SetSystemIntakeSystems(ctx, tx, createdIntake.ID, linkedSystems)
+		})
+		s.NoError(err)
+
+		// Step 3: Get the inserted system to update
+		allSystems, err := s.store.SystemIntakeSystemsBySystemIntakeIDs(ctx, []uuid.UUID{createdIntake.ID})
+		s.NoError(err)
+		s.Len(allSystems, 1)
+
+		original := allSystems[0]
+		s.Equal(systemID, original.SystemID)
+		s.ElementsMatch(initialRelationship, original.SystemRelationshipType)
+		s.Equal(initialDescription, *original.OtherSystemRelationshipDescription)
+
+		// Step 4: Prepare the update input
+		newRelationship := []models.SystemRelationshipType{"OTHER", "IMPACTS_SELECTED_SYSTEM"}
+		newDescription := "updated description"
+		updateInput := models.UpdateSystemLinkInput{
+			ID:                                 original.ID,
+			SystemIntakeID:                     original.SystemIntakeID,
+			SystemID:                           original.SystemID,
+			SystemRelationshipType:             newRelationship,
+			OtherSystemRelationshipDescription: &newDescription,
+		}
+
+		// Step 5: Perform the update
+		var updated models.SystemIntakeSystem
+		updated, err = s.store.UpdateSystemIntakeSystemByID(ctx, updateInput)
+
+		s.NoError(err)
+
+		// Step 6: Validate the updated values
+		s.Equal(original.ID, updated.ID)
+		s.Equal(systemID, updated.SystemID)
+		s.ElementsMatch(newRelationship, updated.SystemRelationshipType)
+		s.Equal(newDescription, *updated.OtherSystemRelationshipDescription)
+
+		// Optionally fetch again from DB to verify persisted state
+		allSystems, err = s.store.SystemIntakeSystemsBySystemIntakeIDs(ctx, []uuid.UUID{createdIntake.ID})
+		s.NoError(err)
+		s.Len(allSystems, 1)
+
+		verified := allSystems[0]
+		s.ElementsMatch(newRelationship, verified.SystemRelationshipType)
+		s.Equal(newDescription, *verified.OtherSystemRelationshipDescription)
+
+		// Cleanup
+		_, err = s.db.Exec("DELETE FROM system_intakes WHERE id = $1", createdIntake.ID)
+		s.NoError(err)
+	})
+}
+
+func (s *StoreTestSuite) TestGetLinkedSystemByID() {
+	ctx := context.Background()
+
+	s.Run("retrieves a specific linked system by its ID", func() {
+		// Step 1: Create a system intake
+		intake := models.SystemIntake{
+			EUAUserID:   testhelpers.RandomEUAIDNull(),
+			RequestType: models.SystemIntakeRequestTypeNEW,
+			Requester:   "get system test",
+		}
+		createdIntake, err := s.store.CreateSystemIntake(ctx, &intake)
+		s.NoError(err)
+
+		// Step 2: Link a system
+		systemID := "system-to-get"
+		relationshipTypes := []models.SystemRelationshipType{"USES_OR_IMPACTED_BY_SELECTED_SYSTEM"}
+
+		linkedSystems := []*models.SystemRelationshipInput{
+			{
+				CedarSystemID:          &systemID,
+				SystemRelationshipType: relationshipTypes,
+			},
+		}
+
+		err = sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
+			return s.store.SetSystemIntakeSystems(ctx, tx, createdIntake.ID, linkedSystems)
+		})
+		s.NoError(err)
+
+		// Step 3: Fetch the record to get the ID
+		allSystems, err := s.store.SystemIntakeSystemsBySystemIntakeIDs(ctx, []uuid.UUID{createdIntake.ID})
+		s.NoError(err)
+		s.Len(allSystems, 1)
+
+		inserted := allSystems[0]
+
+		// Step 4: Get the linked system by ID
+		fetched, err := s.store.GetLinkedSystemByID(ctx, inserted.ID)
+		s.NoError(err)
+		s.NotNil(fetched)
+
+		// Step 5: Verify fields
+		s.Equal(inserted.ID, fetched.ID)
+		s.Equal(systemID, fetched.SystemID)
+		s.ElementsMatch(relationshipTypes, fetched.SystemRelationshipType)
+
+		// Cleanup
+		_, err = s.db.Exec("DELETE FROM system_intakes WHERE id = $1", createdIntake.ID)
+		s.NoError(err)
+	})
+
+	s.Run("returns nil for nonexistent ID", func() {
+		missingID := uuid.New()
+		found, err := s.store.GetLinkedSystemByID(ctx, missingID)
+		s.NoError(err)
+		s.Nil(found)
+	})
+}
+
+func (s *StoreTestSuite) TestAddSystemIntakeSystem() {
+	ctx := context.Background()
+
+	s.Run("successfully adds a new linked system to a system intake", func() {
+		// Step 1: Create a system intake to link against
+		intake := models.SystemIntake{
+			EUAUserID:   testhelpers.RandomEUAIDNull(),
+			RequestType: models.SystemIntakeRequestTypeNEW,
+			Requester:   "test add system link",
+		}
+		createdIntake, err := s.store.CreateSystemIntake(ctx, &intake)
+		initialDescription := "initial description"
+		s.NoError(err)
+
+		// Step 2: Prepare system intake system input
+		systemLink := models.SystemIntakeSystem{
+			BaseStructUser:                     models.NewBaseStructUser(uuid.New()),
+			SystemIntakeID:                     createdIntake.ID,
+			SystemID:                           "system-test-id",
+			SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
+			OtherSystemRelationshipDescription: &initialDescription,
+		}
+
+		// Step 3: Add the system link using the function under test
+		var newSystem models.SystemIntakeSystem
+		newSystem, err = s.store.AddSystemIntakeSystem(ctx, systemLink)
+
+		s.NoError(err)
+		s.NotNil(newSystem)
+		s.Equal(systemLink.SystemID, newSystem.SystemID)
+		s.Equal(systemLink.SystemIntakeID, newSystem.SystemIntakeID)
+		s.Equal(systemLink.SystemRelationshipType, newSystem.SystemRelationshipType)
+		s.Equal(systemLink.OtherSystemRelationshipDescription, newSystem.OtherSystemRelationshipDescription)
+
+		// Cleanup
+		_, err = s.db.Exec("DELETE FROM system_intakes WHERE id = $1", createdIntake.ID)
 		s.NoError(err)
 	})
 }

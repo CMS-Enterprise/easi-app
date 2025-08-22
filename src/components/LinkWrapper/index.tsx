@@ -1,12 +1,12 @@
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, LinkProps } from 'react-router-dom';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 type UswdsReactLinkProps = {
   variant?: 'external' | 'unstyled' | 'nav';
   className?: string;
-  to: string | object;
+  to: LinkProps['to'];
   target?: '_blank';
   rel?: 'noopener noreferrer';
   'data-testid'?: string;

@@ -14,6 +14,10 @@ const admin = {
     'EASi cannot display any additional information or related requests because this IT Governance request is not currently linked to a system, service, or contract. If this is an error, please use the button below to link the request.',
   newSystemAlert:
     'This request is for a completely new system, service, or contract and may not have other requests related to it. If this is an error, please use the button below to link the request to a system, service, or contract.',
+  noSystemLinkedAlert:
+    'The requester has indicated that this project does not support or use any existing CMS systems. If this is an error, use the button above to link systems to this request.',
+  noExistingCMSSystem:
+    'The requester has not indicated if this project supports or uses any existing CMS systems. If this is an error, use the button above to link systems to this request.',
   linkSystem: 'Link this request to a system, service, or contract',
   noContractNumber: 'No contract number listed',
   relatedRequests: 'Related requests',

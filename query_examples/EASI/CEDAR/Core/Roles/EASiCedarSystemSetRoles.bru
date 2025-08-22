@@ -1,0 +1,27 @@
+meta {
+  name: EASiCedarSystemSetRoles
+  type: graphql
+  seq: 3
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation {
+    setRolesForUserOnSystem(input:{
+      cedarSystemID:"408-4104-0"
+      euaUserId:"ADMN"
+      desiredRoleTypeIDs:[
+         "238-2-0","238-29-0"
+      ]
+    })
+  }
+}
+
+settings {
+  encodeUrl: true
+}
