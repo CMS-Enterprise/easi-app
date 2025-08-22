@@ -1,0 +1,36 @@
+meta {
+  name: SystemIntake Get My Requests
+  type: graphql
+  seq: 9
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query systemIntake {
+      # first does nothing and should be removed later
+    requests(first: -1) {
+        edges {
+          node {
+            id
+            name
+            submittedAt
+            type
+            status
+            statusRequester
+            statusCreatedAt
+            lcid
+            nextMeetingDate
+          }
+        }
+      }
+  }
+}
+
+settings {
+  encodeUrl: true
+}

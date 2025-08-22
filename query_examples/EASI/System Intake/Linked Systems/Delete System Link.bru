@@ -1,0 +1,32 @@
+meta {
+  name: Delete System Link
+  type: graphql
+  seq: 5
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation DeleteSystemLink ($systemIntakeSystemID: UUID!) {
+      deleteSystemLink(systemIntakeSystemID: $systemIntakeSystemID) {
+          systemIntakeSystem {
+              systemID
+              systemRelationshipType
+          }
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+      "systemIntakeSystemID": "{{systemIntakeSystemId}}"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

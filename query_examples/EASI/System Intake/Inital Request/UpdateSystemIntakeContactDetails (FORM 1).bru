@@ -1,0 +1,89 @@
+meta {
+  name: UpdateSystemIntakeContactDetails (FORM 1)
+  type: graphql
+  seq: 4
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation UpdateSystemIntakeContactDetails($input: UpdateSystemIntakeContactDetailsInput!) {
+    updateSystemIntakeContactDetails(input: $input) {
+      systemIntake {
+        id
+        businessOwner {
+          component
+          name
+          __typename
+        }
+        governanceTeams {
+          isPresent
+          teams {
+            acronym
+            collaborator
+            key
+            label
+            name
+            __typename
+          }
+          __typename
+        }
+        collaborator508
+        eaCollaboratorName
+   
+        productManager {
+          component
+          name
+          __typename
+        }
+        requester {
+          component
+          name
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "id": "{{systemIntakeID}}",
+      "requester": {
+        "name": "User ABCD",
+        "component": "Center for Clinical Standards and Quality"
+      },
+      "businessOwner": {
+        "name": "Caden Schmeler",
+        "component": "Center for Program Integrity"
+      },
+      "productManager": {
+        "name": "Zechariah Wyman",
+        "component": "Center for Consumer Information and Insurance Oversight"
+      },
+      "governanceTeams": {
+        "isPresent": true,
+        "teams": [
+          {
+            "name": "Technical Review Board",
+            "key": "technicalReviewBoard",
+            "collaborator": "Billy Bob"
+          }
+        ]
+      }
+    }
+  }
+  
+  
+}
+
+settings {
+  encodeUrl: true
+}

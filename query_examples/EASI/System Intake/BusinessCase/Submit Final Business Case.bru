@@ -1,0 +1,22 @@
+meta {
+  name: Submit Final Business Case
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{apiURL}}/system_intake/{{systemIntakeID}}/actions
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "intakeId": "{{systemIntakeID}}",
+    "actionType": "SUBMIT_FINAL_BIZ_CASE"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

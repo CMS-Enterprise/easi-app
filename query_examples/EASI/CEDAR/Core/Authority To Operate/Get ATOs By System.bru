@@ -1,0 +1,56 @@
+meta {
+  name: Get ATOs By System
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query($systemID: String!) {
+    cedarAuthorityToOperate(cedarSystemID: $systemID) {
+      cedarId
+      uuid
+      actualDispositionDate
+      containsPersonallyIdentifiableInformation
+      countOfTotalNonPrivilegedUserPopulation
+      countOfOpenPoams
+      countOfTotalPrivilegedUserPopulation
+      dateAuthorizationMemoExpires
+      dateAuthorizationMemoSigned
+      eAuthenticationLevel
+      fips199OverallImpactRating
+      fismaSystemAcronym
+      fismaSystemName
+      isAccessedByNonOrganizationalUsers
+      isPiiLimitedToUserNameAndPass
+      isProtectedHealthInformation
+      lastActScaDate
+      lastAssessmentDate
+      lastContingencyPlanCompletionDate
+      lastPenTestDate
+      piaCompletionDate
+      primaryCyberRiskAdvisor
+      privacySubjectMatterExpert
+      recoveryPointObjective
+      recoveryTimeObjective
+      systemOfRecordsNotice
+      tlcPhase
+      xlcPhase
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+      "systemID": "{{CedarSystemId}}"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

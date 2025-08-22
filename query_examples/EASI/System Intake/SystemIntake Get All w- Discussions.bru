@@ -1,0 +1,34 @@
+meta {
+  name: SystemIntake Get All w/ Discussions
+  type: graphql
+  seq: 12
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query systemIntake {
+      systemIntakes(openRequests: true) {
+          id
+          requestName
+          grbDiscussions {
+              initialPost {
+                  id
+                  content
+              }
+              replies {
+                  id
+                  content
+              }
+          }
+      }
+  }
+}
+
+settings {
+  encodeUrl: true
+}
