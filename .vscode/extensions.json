@@ -1,12 +1,13 @@
 {
-    "recommendations": [
-        "apollographql.vscode-apollo",
-        "esbenp.prettier-vscode",
-        "dbaeumer.vscode-eslint",
-        "golang.go",
-        "ms-azuretools.vscode-docker",
-        "eamodio.gitlens",
-        "bierner.markdown-mermaid",
-        "GraphQL.vscode-graphql"
-    ]
-  }
+  "recommendations": [
+    "apollographql.vscode-apollo",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "golang.go",
+    "ms-azuretools.vscode-docker",
+    "eamodio.gitlens",
+    "bierner.markdown-mermaid",
+    "GraphQL.vscode-graphql",
+    "bruno-api-client.bruno"
+  ]
+}
