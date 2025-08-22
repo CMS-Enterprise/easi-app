@@ -44,18 +44,16 @@ func CreateSystemIntakeContact(
 	input models.CreateSystemIntakeContactInput,
 	getAccountInformation userhelpers.GetAccountInfoFunc,
 ) (*models.CreateSystemIntakeContactPayload, error) {
-	contact := &models.SystemIntakeContact{
-		SystemIntakeID: input.SystemIntakeID,
-		EUAUserID:      input.EuaUserID,
-		Component:      input.Component,
-		Role:           input.Role,
-	}
 	contactUserAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, input.EuaUserID, false, getAccountInformation)
 	if err != nil {
 		return nil, err
 	}
 
-	contact.UserID = contactUserAccount.ID
+	contact := models.NewSystemIntakeContact(contactUserAccount.ID)
+	contact.SystemIntakeID = input.SystemIntakeID
+	contact.EUAUserID = input.EuaUserID
+	contact.Component = input.Component
+	contact.Role = input.Role
 
 	createdContact, err := store.CreateSystemIntakeContact(ctx, contact)
 	if err != nil {
@@ -73,20 +71,17 @@ func UpdateSystemIntakeContact(
 	input models.UpdateSystemIntakeContactInput,
 	getAccountInformation userhelpers.GetAccountInfoFunc,
 ) (*models.CreateSystemIntakeContactPayload, error) {
-	contact := &models.SystemIntakeContact{
-		ID:             input.ID,
-		SystemIntakeID: input.SystemIntakeID,
-		EUAUserID:      input.EuaUserID,
-		Component:      input.Component,
-		Role:           input.Role,
-	}
-
 	contactUserAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, input.EuaUserID, false, getAccountInformation)
 	if err != nil {
 		return nil, err
-	} // We comment this out for now, we will use this eventually to link the contact to the user account
+	}
 
-	contact.UserID = contactUserAccount.ID
+	contact := models.NewSystemIntakeContact(contactUserAccount.ID)
+	contact.ID = input.ID
+	contact.SystemIntakeID = input.SystemIntakeID
+	contact.EUAUserID = input.EuaUserID
+	contact.Component = input.Component
+	contact.Role = input.Role
 
 	updatedContact, err := store.UpdateSystemIntakeContact(ctx, contact)
 	if err != nil {

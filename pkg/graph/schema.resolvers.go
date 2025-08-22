@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -2060,11 +2059,6 @@ func (r *systemIntakeResolver) GrbReviewAsyncStatus(ctx context.Context, obj *mo
 	return resolvers.CalcSystemIntakeGRBReviewAsyncStatus(ctx, obj), nil
 }
 
-// UserAccount is the resolver for the userAccount field.
-func (r *systemIntakeContactResolver) UserAccount(ctx context.Context, obj *models.SystemIntakeContact) (*authentication.UserAccount, error) {
-	panic(fmt.Errorf("not implemented: UserAccount - userAccount"))
-}
-
 // DocumentType is the resolver for the documentType field.
 func (r *systemIntakeDocumentResolver) DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*models.SystemIntakeDocumentType, error) {
 	return &models.SystemIntakeDocumentType{
@@ -2407,11 +2401,6 @@ func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 // SystemIntake returns generated.SystemIntakeResolver implementation.
 func (r *Resolver) SystemIntake() generated.SystemIntakeResolver { return &systemIntakeResolver{r} }
 
-// SystemIntakeContact returns generated.SystemIntakeContactResolver implementation.
-func (r *Resolver) SystemIntakeContact() generated.SystemIntakeContactResolver {
-	return &systemIntakeContactResolver{r}
-}
-
 // SystemIntakeDocument returns generated.SystemIntakeDocumentResolver implementation.
 func (r *Resolver) SystemIntakeDocument() generated.SystemIntakeDocumentResolver {
 	return &systemIntakeDocumentResolver{r}
@@ -2481,7 +2470,6 @@ type iTGovTaskStatusesResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
-type systemIntakeContactResolver struct{ *Resolver }
 type systemIntakeDocumentResolver struct{ *Resolver }
 type systemIntakeGRBPresentationLinksResolver struct{ *Resolver }
 type systemIntakeGRBReviewerResolver struct{ *Resolver }

@@ -53,7 +53,6 @@ type ResolverRoot interface {
 	Mutation() MutationResolver
 	Query() QueryResolver
 	SystemIntake() SystemIntakeResolver
-	SystemIntakeContact() SystemIntakeContactResolver
 	SystemIntakeDocument() SystemIntakeDocumentResolver
 	SystemIntakeGRBPresentationLinks() SystemIntakeGRBPresentationLinksResolver
 	SystemIntakeGRBReviewer() SystemIntakeGRBReviewerResolver
@@ -1455,9 +1454,6 @@ type SystemIntakeResolver interface {
 
 	GrbReviewStandardStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBReviewStandardStatusType, error)
 	GrbReviewAsyncStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBReviewAsyncStatusType, error)
-}
-type SystemIntakeContactResolver interface {
-	UserAccount(ctx context.Context, obj *models.SystemIntakeContact) (*authentication.UserAccount, error)
 }
 type SystemIntakeDocumentResolver interface {
 	DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*models.SystemIntakeDocumentType, error)
@@ -47316,7 +47312,7 @@ func (ec *executionContext) _SystemIntakeContact_userAccount(ctx context.Context
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntakeContact().UserAccount(rctx, obj)
+		return obj.UserAccount(ctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -47338,7 +47334,7 @@ func (ec *executionContext) fieldContext_SystemIntakeContact_userAccount(_ conte
 		Object:     "SystemIntakeContact",
 		Field:      field,
 		IsMethod:   true,
-		IsResolver: true,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
@@ -81118,10 +81114,6 @@ func (ec *executionContext) marshalNUpload2githubᚗcomᚋ99designsᚋgqlgenᚋg
 func (ec *executionContext) unmarshalNUploadSystemIntakeGRBPresentationDeckInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUploadSystemIntakeGRBPresentationDeckInput(ctx context.Context, v any) (models.UploadSystemIntakeGRBPresentationDeckInput, error) {
 	res, err := ec.unmarshalInputUploadSystemIntakeGRBPresentationDeckInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNUserAccount2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋauthenticationᚐUserAccount(ctx context.Context, sel ast.SelectionSet, v authentication.UserAccount) graphql.Marshaler {
-	return ec._UserAccount(ctx, sel, &v)
 }
 
 func (ec *executionContext) marshalNUserAccount2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋauthenticationᚐUserAccount(ctx context.Context, sel ast.SelectionSet, v *authentication.UserAccount) graphql.Marshaler {
