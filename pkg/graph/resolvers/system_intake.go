@@ -77,6 +77,7 @@ func UpdateSystemIntakeContact(
 		return nil, err
 	}
 
+	// TODO: Fix
 	contact := models.NewSystemIntakeContact(contactUserAccount.ID)
 	contact.ID = input.ID
 	contact.SystemIntakeID = input.SystemIntakeID
@@ -445,4 +446,9 @@ func GetRequesterUpdateEmailData(
 	}
 
 	return data, nil
+}
+
+// GetSystemIntakeContactsBySystemIntakeID fetches contacts for a system intake
+func GetSystemIntakeContactsBySystemIntakeID(ctx context.Context, store *storage.Store, systemIntakeID uuid.UUID) ([]*models.SystemIntakeContact, error) {
+	return store.FetchSystemIntakeContactsBySystemIntakeID(ctx, systemIntakeID)
 }

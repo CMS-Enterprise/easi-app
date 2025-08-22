@@ -3,9 +3,7 @@ import { gql } from '@apollo/client';
 export const GetSystemIntakeContacts = gql(/* GraphQL */ `
   query GetSystemIntakeContacts($id: UUID!) {
     systemIntakeContacts(id: $id) {
-      systemIntakeContacts {
-        ...SystemIntakeContact
-      }
+      ...SystemIntakeContact
     }
   }
 `);

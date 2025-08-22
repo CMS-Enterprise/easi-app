@@ -841,11 +841,6 @@ type ComplexityRoot struct {
 		UserAccount    func(childComplexity int) int
 	}
 
-	SystemIntakeContactsPayload struct {
-		InvalidEUAIDs        func(childComplexity int) int
-		SystemIntakeContacts func(childComplexity int) int
-	}
-
 	SystemIntakeContract struct {
 		Contractor  func(childComplexity int) int
 		EndDate     func(childComplexity int) int
@@ -1386,7 +1381,7 @@ type QueryResolver interface {
 	Exchanges(ctx context.Context, cedarSystemID string) ([]*models.CedarExchange, error)
 	Urls(ctx context.Context, cedarSystemID string) ([]*models.CedarURL, error)
 	CedarSystemDetails(ctx context.Context, cedarSystemID string) (*models.CedarSystemDetails, error)
-	SystemIntakeContacts(ctx context.Context, id uuid.UUID) (*models.SystemIntakeContactsPayload, error)
+	SystemIntakeContacts(ctx context.Context, id uuid.UUID) ([]*models.SystemIntakeContact, error)
 	TrbRequest(ctx context.Context, id uuid.UUID) (*models.TRBRequest, error)
 	TrbRequests(ctx context.Context, archived bool) ([]*models.TRBRequest, error)
 	MyTrbRequests(ctx context.Context, archived bool) ([]*models.TRBRequest, error)
@@ -6443,20 +6438,6 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.SystemIntakeContact.UserAccount(childComplexity), true
 
-	case "SystemIntakeContactsPayload.invalidEUAIDs":
-		if e.complexity.SystemIntakeContactsPayload.InvalidEUAIDs == nil {
-			break
-		}
-
-		return e.complexity.SystemIntakeContactsPayload.InvalidEUAIDs(childComplexity), true
-
-	case "SystemIntakeContactsPayload.systemIntakeContacts":
-		if e.complexity.SystemIntakeContactsPayload.SystemIntakeContacts == nil {
-			break
-		}
-
-		return e.complexity.SystemIntakeContactsPayload.SystemIntakeContacts(childComplexity), true
-
 	case "SystemIntakeContract.contractor":
 		if e.complexity.SystemIntakeContract.Contractor == nil {
 			break
@@ -10314,14 +10295,6 @@ input EmailNotificationRecipients {
 }
 
 """
-The payload when retrieving system intake contacts
-"""
-type SystemIntakeContactsPayload {
-  systemIntakeContacts: [SystemIntakeContact!]!
-  invalidEUAIDs: [String!]!
-}
-
-"""
 The inputs to the user feedback form
 """
 input SendFeedbackEmailInput {
@@ -11434,7 +11407,7 @@ type Query {
   exchanges(cedarSystemId: String!): [CedarExchange!]!
   urls(cedarSystemId: String!): [CedarURL!]!
   cedarSystemDetails(cedarSystemId: String!): CedarSystemDetails
-  systemIntakeContacts(id: UUID!): SystemIntakeContactsPayload!
+  systemIntakeContacts(id: UUID!): [SystemIntakeContact!]!
   trbRequest(id: UUID!): TRBRequest!
   trbRequests(archived: Boolean! = false): [TRBRequest!]! @hasRole(role: EASI_TRB_ADMIN)
   myTrbRequests(archived: Boolean! = false): [TRBRequest!]!
@@ -40468,9 +40441,9 @@ func (ec *executionContext) _Query_systemIntakeContacts(ctx context.Context, fie
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*models.SystemIntakeContactsPayload)
+	res := resTmp.([]*models.SystemIntakeContact)
 	fc.Result = res
-	return ec.marshalNSystemIntakeContactsPayload2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactsPayload(ctx, field.Selections, res)
+	return ec.marshalNSystemIntakeContact2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_systemIntakeContacts(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -40481,12 +40454,20 @@ func (ec *executionContext) fieldContext_Query_systemIntakeContacts(ctx context.
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "systemIntakeContacts":
-				return ec.fieldContext_SystemIntakeContactsPayload_systemIntakeContacts(ctx, field)
-			case "invalidEUAIDs":
-				return ec.fieldContext_SystemIntakeContactsPayload_invalidEUAIDs(ctx, field)
+			case "id":
+				return ec.fieldContext_SystemIntakeContact_id(ctx, field)
+			case "userAccount":
+				return ec.fieldContext_SystemIntakeContact_userAccount(ctx, field)
+			case "euaUserId":
+				return ec.fieldContext_SystemIntakeContact_euaUserId(ctx, field)
+			case "systemIntakeId":
+				return ec.fieldContext_SystemIntakeContact_systemIntakeId(ctx, field)
+			case "component":
+				return ec.fieldContext_SystemIntakeContact_component(ctx, field)
+			case "roles":
+				return ec.fieldContext_SystemIntakeContact_roles(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeContactsPayload", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeContact", field.Name)
 		},
 	}
 	defer func() {
@@ -47538,108 +47519,6 @@ func (ec *executionContext) fieldContext_SystemIntakeContact_roles(_ context.Con
 		Field:      field,
 		IsMethod:   true,
 		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _SystemIntakeContactsPayload_systemIntakeContacts(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeContactsPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntakeContactsPayload_systemIntakeContacts(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.SystemIntakeContacts, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*models.SystemIntakeContact)
-	fc.Result = res
-	return ec.marshalNSystemIntakeContact2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_SystemIntakeContactsPayload_systemIntakeContacts(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "SystemIntakeContactsPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_SystemIntakeContact_id(ctx, field)
-			case "userAccount":
-				return ec.fieldContext_SystemIntakeContact_userAccount(ctx, field)
-			case "euaUserId":
-				return ec.fieldContext_SystemIntakeContact_euaUserId(ctx, field)
-			case "systemIntakeId":
-				return ec.fieldContext_SystemIntakeContact_systemIntakeId(ctx, field)
-			case "component":
-				return ec.fieldContext_SystemIntakeContact_component(ctx, field)
-			case "roles":
-				return ec.fieldContext_SystemIntakeContact_roles(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeContact", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _SystemIntakeContactsPayload_invalidEUAIDs(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeContactsPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntakeContactsPayload_invalidEUAIDs(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.InvalidEUAIDs, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]string)
-	fc.Result = res
-	return ec.marshalNString2ᚕstringᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_SystemIntakeContactsPayload_invalidEUAIDs(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "SystemIntakeContactsPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
 		},
@@ -72861,50 +72740,6 @@ func (ec *executionContext) _SystemIntakeContact(ctx context.Context, sel ast.Se
 	return out
 }
 
-var systemIntakeContactsPayloadImplementors = []string{"SystemIntakeContactsPayload"}
-
-func (ec *executionContext) _SystemIntakeContactsPayload(ctx context.Context, sel ast.SelectionSet, obj *models.SystemIntakeContactsPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeContactsPayloadImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("SystemIntakeContactsPayload")
-		case "systemIntakeContacts":
-			out.Values[i] = ec._SystemIntakeContactsPayload_systemIntakeContacts(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "invalidEUAIDs":
-			out.Values[i] = ec._SystemIntakeContactsPayload_invalidEUAIDs(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
 var systemIntakeContractImplementors = []string{"SystemIntakeContract"}
 
 func (ec *executionContext) _SystemIntakeContract(ctx context.Context, sel ast.SelectionSet, obj *models.SystemIntakeContract) graphql.Marshaler {
@@ -79184,20 +79019,6 @@ func (ec *executionContext) marshalNSystemIntakeContact2ᚖgithubᚗcomᚋcmsᚑ
 		return graphql.Null
 	}
 	return ec._SystemIntakeContact(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalNSystemIntakeContactsPayload2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactsPayload(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeContactsPayload) graphql.Marshaler {
-	return ec._SystemIntakeContactsPayload(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNSystemIntakeContactsPayload2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactsPayload(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeContactsPayload) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._SystemIntakeContactsPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNSystemIntakeContract2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContract(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeContract) graphql.Marshaler {

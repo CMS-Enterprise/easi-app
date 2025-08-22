@@ -586,12 +586,6 @@ type SystemIntakeConfirmLCIDInput struct {
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
 }
 
-// The payload when retrieving system intake contacts
-type SystemIntakeContactsPayload struct {
-	SystemIntakeContacts []*SystemIntakeContact `json:"systemIntakeContacts"`
-	InvalidEUAIDs        []string               `json:"invalidEUAIDs"`
-}
-
 // Represents a contract for work on a system
 type SystemIntakeContract struct {
 	Contractor  *string       `json:"contractor,omitempty"`

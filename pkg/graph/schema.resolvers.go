@@ -1578,43 +1578,8 @@ func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID st
 }
 
 // SystemIntakeContacts is the resolver for the systemIntakeContacts field.
-func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) (*models.SystemIntakeContactsPayload, error) {
-	contacts, err := r.store.FetchSystemIntakeContactsBySystemIntakeID(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-
-	if len(contacts) == 0 {
-		return &models.SystemIntakeContactsPayload{}, nil
-	}
-
-	euaIDs := make([]string, len(contacts))
-	for i, contact := range contacts {
-		euaIDs[i] = contact.EUAUserID
-	}
-
-	// Fetch user accounts to validate EUA IDs
-	userAccounts, err := r.store.UserAccountGetByUsernames(ctx, r.store, euaIDs)
-	if err != nil {
-		return nil, err
-	}
-
-	validUsernames := make(map[string]bool)
-	for _, userAccount := range userAccounts {
-		validUsernames[userAccount.Username] = true
-	}
-
-	var invalidEUAIDs []string
-	for _, contact := range contacts {
-		if !validUsernames[contact.EUAUserID] {
-			invalidEUAIDs = append(invalidEUAIDs, contact.EUAUserID)
-		}
-	}
-
-	return &models.SystemIntakeContactsPayload{
-		SystemIntakeContacts: contacts,
-		InvalidEUAIDs:        invalidEUAIDs,
-	}, nil
+func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) ([]*models.SystemIntakeContact, error) {
+	return resolvers.GetSystemIntakeContactsBySystemIntakeID(ctx, r.store, id)
 }
 
 // TrbRequest is the resolver for the trbRequest field.

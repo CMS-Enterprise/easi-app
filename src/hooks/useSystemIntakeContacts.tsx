@@ -37,8 +37,7 @@ function useSystemIntakeContacts(
   });
 
   /** Array of system intake contacts */
-  const systemIntakeContacts: SystemIntakeContactFragment[] | undefined =
-    data?.systemIntakeContacts?.systemIntakeContacts;
+  const { systemIntakeContacts } = data || {};
 
   /** System intake query results */
   const intakeQuery = useGetSystemIntakeQuery({

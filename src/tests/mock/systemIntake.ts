@@ -654,13 +654,9 @@ export const getSystemIntakeContactsQuery: MockedQuery<GetSystemIntakeContactsQu
       }
     },
     result: {
-      // @ts-ignore
       data: {
         __typename: 'Query',
-        systemIntakeContacts: {
-          __typename: 'SystemIntakeContactsPayload',
-          systemIntakeContacts: [requester, businessOwner, isso]
-        }
+        systemIntakeContacts: [requester, businessOwner, isso]
       }
     }
   };

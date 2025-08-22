@@ -5,11 +5,12 @@ import {
   GetCedarContactsDocument,
   GetCedarContactsQuery,
   GetCedarContactsQueryVariables,
-  GetSystemIntakeContactsDocument
+  GetSystemIntakeContactsDocument,
+  GetSystemIntakeContactsQuery,
+  SystemIntakeContactFragment
 } from 'gql/generated/graphql';
 import { getSystemIntakeQuery, systemIntake } from 'tests/mock/systemIntake';
 
-import { SystemIntakeContactProps } from 'types/systemIntake';
 import { MockedQuery } from 'types/util';
 
 import AdditionalContacts from './index';
@@ -34,29 +35,41 @@ vi.mock('@okta/okta-react', () => ({
 }));
 
 /** Additional Contacts */
-const additionalContacts: SystemIntakeContactProps[] = [
+const additionalContacts: SystemIntakeContactFragment[] = [
   {
+    __typename: 'SystemIntakeContact',
     systemIntakeId: systemIntake.id,
     id: '4828a0b0-9474-4ddc-8fc2-662323ef0087',
-    commonName: 'Jerry Seinfeld',
-    email: 'jerry.seinfeld@local.fake',
     euaUserId: 'SF13',
     component: 'Office of Information Technology',
-    roles: ['Cloud Navigator']
+    roles: ['Cloud Navigator'],
+    userAccount: {
+      __typename: 'UserAccount',
+      id: 'user-1',
+      username: 'SF13',
+      commonName: 'Jerry Seinfeld',
+      email: 'jerry.seinfeld@local.fake'
+    }
   },
   {
+    __typename: 'SystemIntakeContact',
     systemIntakeId: systemIntake.id,
     id: 'fa706702-45ab-43fe-ad90-68ff681313af',
-    commonName: 'Cosmo Kramer',
-    email: 'cosmo.kramer@local.fake',
     euaUserId: 'KR14',
     component: 'Other',
-    roles: ['System Maintainer']
+    roles: ['System Maintainer'],
+    userAccount: {
+      __typename: 'UserAccount',
+      id: 'user-2',
+      username: 'KR14',
+      commonName: 'Cosmo Kramer',
+      email: 'cosmo.kramer@local.fake'
+    }
   }
 ];
 
 /** System intake contacts query mock */
-const systemIntakeContactsQuery = {
+const systemIntakeContactsQuery: MockedQuery<GetSystemIntakeContactsQuery> = {
   request: {
     query: GetSystemIntakeContactsDocument,
     variables: {
@@ -65,9 +78,8 @@ const systemIntakeContactsQuery = {
   },
   result: {
     data: {
-      systemIntakeContacts: {
-        systemIntakeContacts: additionalContacts
-      }
+      __typename: 'Query',
+      systemIntakeContacts: additionalContacts
     }
   }
 };
@@ -89,8 +101,8 @@ const cedarContactsQuery: MockedQuery<
       cedarPersonsByCommonName: [
         {
           __typename: 'UserInfo',
-          commonName: additionalContacts[0].commonName,
-          email: additionalContacts[0].email,
+          commonName: additionalContacts[0].userAccount.commonName,
+          email: additionalContacts[0].userAccount.email,
           euaUserId: additionalContacts[0].euaUserId!
         }
       ]
@@ -109,7 +121,12 @@ describe('Additional contacts component', () => {
           systemIntakeId={systemIntake.id}
           activeContact={null}
           setActiveContact={() => null}
-          contacts={additionalContacts}
+          // TODO EASI-4934: temporary type fix for mismatched types
+          contacts={additionalContacts.map(contact => ({
+            ...contact,
+            commonName: contact.userAccount.commonName,
+            email: contact.userAccount.email
+          }))}
         />
       </MockedProvider>
     );
@@ -158,14 +175,19 @@ describe('Additional contacts component', () => {
           activeContact={{
             systemIntakeId: systemIntake.id,
             id: activeContact.id,
-            commonName: activeContact.commonName,
-            email: activeContact.email,
+            commonName: activeContact.userAccount.commonName,
+            email: activeContact.userAccount.email,
             euaUserId: activeContact.euaUserId,
             component: activeContact.component,
             roles: [activeContact.roles[0]]
           }}
           setActiveContact={() => null}
-          contacts={additionalContacts}
+          // TODO EASI-4934: temporary type fix for mismatched types
+          contacts={additionalContacts.map(contact => ({
+            ...contact,
+            commonName: contact.userAccount.commonName,
+            email: contact.userAccount.email
+          }))}
         />
       </MockedProvider>
     );
@@ -178,7 +200,7 @@ describe('Additional contacts component', () => {
     // Check that contact select field displays correct value
     const cedarContactSelectInput = await findByTestId('cedar-contact-select');
     expect(cedarContactSelectInput).toHaveValue(
-      `${activeContact.commonName}, ${activeContact.euaUserId} (${activeContact.email})`
+      `${activeContact.userAccount.commonName}, ${activeContact.euaUserId} (${activeContact.userAccount.email})`
     );
 
     // Check that component field displays correct value

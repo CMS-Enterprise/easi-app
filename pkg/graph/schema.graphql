@@ -1799,14 +1799,6 @@ input EmailNotificationRecipients {
 }
 
 """
-The payload when retrieving system intake contacts
-"""
-type SystemIntakeContactsPayload {
-  systemIntakeContacts: [SystemIntakeContact!]!
-  invalidEUAIDs: [String!]!
-}
-
-"""
 The inputs to the user feedback form
 """
 input SendFeedbackEmailInput {
@@ -2919,7 +2911,7 @@ type Query {
   exchanges(cedarSystemId: String!): [CedarExchange!]!
   urls(cedarSystemId: String!): [CedarURL!]!
   cedarSystemDetails(cedarSystemId: String!): CedarSystemDetails
-  systemIntakeContacts(id: UUID!): SystemIntakeContactsPayload!
+  systemIntakeContacts(id: UUID!): [SystemIntakeContact!]!
   trbRequest(id: UUID!): TRBRequest!
   trbRequests(archived: Boolean! = false): [TRBRequest!]! @hasRole(role: EASI_TRB_ADMIN)
   myTrbRequests(archived: Boolean! = false): [TRBRequest!]!
