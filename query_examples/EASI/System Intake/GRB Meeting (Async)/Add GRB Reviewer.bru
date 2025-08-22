@@ -1,0 +1,53 @@
+meta {
+  name: Add GRB Reviewer
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation createSystemIntakeGRBReviewer($input: CreateSystemIntakeGRBReviewersInput!) {
+    createSystemIntakeGRBReviewers(input: $input) {
+      reviewers {
+          id
+          userAccount {
+          id
+          }
+          grbRole
+          votingRole
+          systemIntakeID
+          createdBy
+          createdAt
+          modifiedBy
+          modifiedAt
+      }
+      
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "systemIntakeID": "8edb237e-ad48-49b2-91cf-8534362bc6cf",
+      "reviewers": {
+          "euaUserId": "ABCD",
+          "votingRole": "NON_VOTING",
+          "grbRole": "CMCS_REP"
+      }
+    }
+  }
+}
+
+script:post-response {
+  bru.setVar("SystemIntakeGRBReviewerID", res.getBody().data.createSystemIntakeGRBReviewers.reviewers[0].id)
+}
+
+settings {
+  encodeUrl: true
+}

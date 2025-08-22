@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, Button, Icon } from '@trussworks/react-uswds';
-import { RequestRelationType } from 'gql/generated/graphql';
+import { useHistory } from 'react-router-dom';
+import { Button, Icon } from '@trussworks/react-uswds';
 
+import Alert from 'components/Alert';
 import Divider from 'components/Divider';
 import UswdsReactLink from 'components/LinkWrapper';
 import { RequestType } from 'types/requestType';
 import formatContractNumbers from 'utils/formatContractNumbers';
+
+import './index.scss';
 
 type SystemCardItemProps = {
   id: string;
@@ -16,18 +19,19 @@ type SystemCardItemProps = {
 
 function SystemCardItem({ item }: { item: SystemCardItemProps }) {
   const { t } = useTranslation('itGov');
+  const { id, name, acronym } = item;
   return (
     <div className="margin-top-2 padding-3 border border-base-lighter radius-md box-shadow-2">
       <h4 className="margin-top-0 margin-bottom-1 line-height-heading-2">
-        {item.name}
+        {name}
       </h4>
-      {item.acronym && (
+      {acronym && (
         <h5 className="margin-y-0 text-normal line-height-heading-1">
-          {item.acronym}
+          ({acronym})
         </h5>
       )}
       <Divider className="margin-y-2" />
-      <UswdsReactLink to={`/systems/${item.id}`}>
+      <UswdsReactLink to={`/systems/${id}`}>
         {t('additionalRequestInfo.viewSystemProfile')}
         <Icon.ArrowForward className="text-middle margin-left-05" aria-hidden />
       </UswdsReactLink>
@@ -86,13 +90,15 @@ function AdditionalRequestInfo({
   contractName?: string | null;
   contractNumbers: { contractNumber: string }[];
   requestType: RequestType;
+  doesNotSupportSystems?: boolean | null;
 }) {
   const { t } = useTranslation('itGov');
+  const history = useHistory();
 
   const editLink =
     system.requestType === 'trb'
       ? `/trb/link/${system.id}`
-      : `/system/link/${system.id}`;
+      : `/linked-systems/${system.id}`;
 
   return (
     <div>
@@ -100,35 +106,68 @@ function AdditionalRequestInfo({
         {t('additionalRequestInfo.header')}
       </h4>
 
-      {system.relationType === null && (
+      {system.doesNotSupportSystems && (
+        <>
+          <div className="task-list-sidebar__subtitle">
+            {t('additionalRequestInfo.doesNotSupportOrUseOtherSystems')}
+          </div>
+          <Button
+            type="button"
+            onClick={() =>
+              history.push(editLink, {
+                from: 'task-list'
+              })
+            }
+            unstyled
+          >
+            {t('additionalRequestInfo.viewOrEditSystemInformation')}
+          </Button>
+        </>
+      )}
+
+      {system.doesNotSupportSystems === null && system.systems.length === 0 && (
         <Alert
           type="warning"
-          headingLevel="h4"
-          heading={t('additionalRequestInfo.actionRequiredAlert.header')}
+          heading={t('itGov:additionalRequestInfo.actionRequiredAlert.header')}
         >
-          {t('additionalRequestInfo.actionRequiredAlert.text')}
-          <UswdsReactLink to={editLink}>
-            {t('additionalRequestInfo.actionRequiredAlert.answer')}
-          </UswdsReactLink>
+          {t(
+            'itGov:additionalRequestInfo.actionRequiredAlert.doesThisRequestInvolve'
+          )}
+          <Button
+            type="button"
+            className="display-block margin-top-1"
+            onClick={() =>
+              history.push(editLink, {
+                from: 'task-list'
+              })
+            }
+            unstyled
+          >
+            {t('itGov:additionalRequestInfo.actionRequiredAlert.answer')}
+          </Button>
         </Alert>
       )}
 
-      {system.relationType !== null && (
-        <p className="text-base margin-top-1 margin-bottom-0">
-          {system.relationType === RequestRelationType.EXISTING_SERVICE &&
-            t('additionalRequestInfo.existingService')}
-          {system.relationType === RequestRelationType.EXISTING_SYSTEM &&
-            t('additionalRequestInfo.existingSystem')}
-          {system.relationType === RequestRelationType.NEW_SYSTEM &&
-            t('additionalRequestInfo.newSystem')}
-          <br />
-          <UswdsReactLink to={editLink}>
-            {t('additionalRequestInfo.edit')}
-          </UswdsReactLink>
-        </p>
-      )}
+      {system.systems && system.systems.length > 0 && (
+        <>
+          <div className="task-list-sidebar__subtitle">
+            {t('additionalRequestInfo.linkedSystems')}
+          </div>
 
-      <SystemCardList items={system.systems} />
+          <Button
+            type="button"
+            onClick={() =>
+              history.push(editLink, {
+                from: 'task-list'
+              })
+            }
+            unstyled
+          >
+            {t('additionalRequestInfo.edit')}
+          </Button>
+          <SystemCardList items={system.systems} />
+        </>
+      )}
 
       {system.contractName !== null && (
         <p>

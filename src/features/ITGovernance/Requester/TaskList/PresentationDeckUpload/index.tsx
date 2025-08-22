@@ -138,7 +138,7 @@ const PresentationDeckUpload = ({ type = 'requester' }: UploadFormProps) => {
           {t('presentationLinks.presentationUpload.description')}
         </p>
 
-        <IconLink to={requestDetailsLink} icon={<Icon.ArrowBack />}>
+        <IconLink to={requestDetailsLink} icon={<Icon.ArrowBack aria-hidden />}>
           {type === 'requester'
             ? t('presentationLinks.presentationUpload.dontUploadRequester')
             : t('presentationLinks.presentationUpload.dontUploadAdmin')}

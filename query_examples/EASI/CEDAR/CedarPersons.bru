@@ -1,0 +1,26 @@
+meta {
+  name: CedarPersons
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query {
+    cedarPersonsByCommonName(commonName: "Aaron") {
+     commonName
+     email
+     euaUserId
+    
+      }
+  }
+}
+
+settings {
+  encodeUrl: true
+}

@@ -12,6 +12,7 @@ import DiscussionForm from './index';
 
 describe('DiscussionForm', () => {
   it('Opens the modal when button is clicked', async () => {
+    const user = userEvent.setup();
     render(
       <MemoryRouter>
         <VerboseMockedProvider>
@@ -26,7 +27,7 @@ describe('DiscussionForm', () => {
       </MemoryRouter>
     );
 
-    userEvent.type(screen.getByRole('textbox'), 'Test discussion content');
+    await user.type(screen.getByRole('textbox'), 'Test discussion content');
 
     const submitButton = screen.getByRole('button', {
       name: 'Save discussion'
@@ -34,7 +35,7 @@ describe('DiscussionForm', () => {
 
     await waitFor(() => expect(submitButton).toBeEnabled());
 
-    userEvent.click(submitButton);
+    await user.click(submitButton);
 
     expect(
       await screen.findByRole('heading', {

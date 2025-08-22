@@ -1,0 +1,27 @@
+meta {
+  name: Get System Links
+  type: graphql
+  seq: 9
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query {
+    systemIntakeSystems(systemIntakeId: "{{systemIntakeID}}") {
+      id
+      systemRelationshipType
+      systemIntakeID
+      otherSystemRelationshipDescription
+    }
+  }
+  
+}
+
+settings {
+  encodeUrl: true
+}

@@ -1,0 +1,22 @@
+meta {
+  name: Submit Draft Business Case
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{apiURL}}/system_intake/{{systemIntakeID}}/actions
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "intakeId": "{{systemIntakeID}}",
+    "actionType": "SUBMIT_BIZ_CASE"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

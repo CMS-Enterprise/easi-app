@@ -71,7 +71,7 @@ describe('System Card Componenet', () => {
 
     expect(getByText('System Overload')).toBeInTheDocument();
     expect(getByText('An awesome system')).toBeInTheDocument();
-    expect(getByText('SO')).toBeInTheDocument();
+    expect(getByText(/SO/)).toBeInTheDocument();
     expect(getByText('Oddball')).toBeInTheDocument();
     expect(getByText('John Doe')).toBeInTheDocument();
   });

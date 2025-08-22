@@ -91,8 +91,9 @@ const AlternativeSolutionA = ({
                 validateForm().then(err => {
                   if (Object.keys(err).length === 0) {
                     dispatchSave();
-                    const newUrl = 'alternative-analysis';
-                    history.push(newUrl);
+                    history.push(
+                      `/business/${businessCase.systemIntakeId}/alternative-analysis`
+                    );
                   } else {
                     window.scrollTo(0, 0);
                   }

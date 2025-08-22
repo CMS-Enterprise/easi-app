@@ -99,6 +99,7 @@ describe('TRB Request Form Feedback', () => {
   });
 
   it('goes to and renders the feedback view', async () => {
+    const user = userEvent.setup();
     const { asFragment, findByText, findByRole, getAllByText, getAllByTestId } =
       renderFeedbackTest();
 
@@ -106,7 +107,7 @@ describe('TRB Request Form Feedback', () => {
       name: i18next.t<string>('technicalAssistance:editsRequested.viewFeedback')
     });
 
-    userEvent.click(feedbackLink);
+    await user.click(feedbackLink);
 
     await findByText(
       i18next.t<string>('technicalAssistance:requestFeedback.heading')

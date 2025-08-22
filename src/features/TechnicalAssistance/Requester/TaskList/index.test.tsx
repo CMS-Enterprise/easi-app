@@ -148,6 +148,7 @@ describe('Trb Task List', () => {
         </VerboseMockedProvider>
       </MemoryRouter>
     );
+    const user = userEvent.setup();
 
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
@@ -156,7 +157,7 @@ describe('Trb Task List', () => {
       'technicalAssistance:button.removeYourRequest'
     );
 
-    userEvent.click(remove);
+    await user.click(remove);
 
     // Click through the confirmation modal
 
@@ -164,7 +165,7 @@ describe('Trb Task List', () => {
       name: i18next.t<string>('taskList:withdraw_modal:confirm')
     });
 
-    userEvent.click(confirm);
+    await user.click(confirm);
 
     await screen.findByText(
       i18next.t<string>('taskList:withdraw_modal:confirmationText', {

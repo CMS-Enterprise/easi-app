@@ -1,0 +1,41 @@
+meta {
+  name: Update System Link
+  type: graphql
+  seq: 6
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation UpdateSystemLink ($input: UpdateSystemLinkInput!) {
+      updateSystemLink(input: $input) {
+          systemIntakeSystem {
+              id
+              systemID
+              systemRelationshipType
+              otherSystemRelationshipDescription
+          }
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+      "input":
+      {
+          "id": "{{systemIntakeSystemId}}",
+          "systemID": "{11AB1A00-1234-5678-ABC1-1A001B00CC5F}",
+          "systemIntakeID": "{{systemIntakeID}}",
+          "systemRelationshipType": ["PARTIAL_SUPPORT", "OTHER"],
+          "otherSystemRelationshipDescription":"new description"
+      }
+  }
+}
+
+settings {
+  encodeUrl: true
+}

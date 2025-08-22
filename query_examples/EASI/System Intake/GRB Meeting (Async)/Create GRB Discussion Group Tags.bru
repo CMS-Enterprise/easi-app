@@ -1,0 +1,47 @@
+meta {
+  name: Create GRB Discussion Group Tags
+  type: graphql
+  seq: 8
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation createSystemIntakeGRBDiscussion(
+    $input: createSystemIntakeGRBDiscussionPostInput!
+  ) {
+    createSystemIntakeGRBDiscussionPost(input: $input) {
+      id
+      content
+      grbRole
+      votingRole
+      systemIntakeID
+      createdByUserAccount {
+        id
+        username
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "systemIntakeID": "{{systemIntakeID}}",
+      "content": "<p>banana apple carburetor Let me look into it, ok? <span data-type=\"mention\" tag-type=\"GROUP_IT_GOV\" class=\"mention\">@Group</span> middle <span data-type=\"mention\" tag-type=\"GROUP_GRB_REVIEWERS\" class=\"mention\">@Group2</span>!\"</p>"
+    }
+  }
+}
+
+script:post-response {
+  bru.setVar("SystemIntakeGRBDiscussionID", res.getBody().data.createSystemIntakeGRBDiscussionPost.id)
+}
+
+settings {
+  encodeUrl: true
+}

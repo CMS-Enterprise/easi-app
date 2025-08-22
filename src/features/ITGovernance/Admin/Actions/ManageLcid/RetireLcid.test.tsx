@@ -50,9 +50,7 @@ describe('Retire LCID action form', async () => {
 
     // Reason field shows if setting initial retirement date
     expect(
-      screen.getByLabelText(
-        'Why are you retiring this Life Cycle ID? (optional)'
-      )
+      screen.getByText('Why are you retiring this Life Cycle ID? (optional)')
     ).toBeInTheDocument();
   });
 
@@ -81,13 +79,14 @@ describe('Retire LCID action form', async () => {
   });
 
   it('renders alert if retirement date is in the past', async () => {
+    const user = userEvent.setup();
     renderComponent();
 
     const retireDateField = await screen.findByRole('textbox', {
       name: 'Life Cycle ID retirement date *'
     });
 
-    userEvent.type(retireDateField, '01/01/2023');
+    await user.type(retireDateField, '01/01/2023');
 
     await waitFor(() =>
       expect(

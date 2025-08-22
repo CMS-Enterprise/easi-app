@@ -1,0 +1,39 @@
+meta {
+  name: Create TRB Admin Note - Guidance Letter
+  type: graphql
+  seq: 5
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  # Note - insightIDs in input need to be manually set, based on other queries/reading the database
+  mutation CreateTRBNoteInGuidanceLetterCategory($input:CreateTRBAdminNoteGuidanceLetterInput!) {
+      createTRBAdminNoteGuidanceLetter(input: $input) {
+          id
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+      "input": {
+          "trbRequestId": "{{trbRequestID}}",
+          "noteText": "test note - guidance letter",
+          "appliesToMeetingSummary": true,
+          "appliesToNextSteps": false,
+          "insightIDs": [
+              "b620fe80-cce1-44a4-be05-35dd0585627d",
+              "51d6691b-f98c-4bee-9207-27832cd4986e"
+          ]
+      }
+  }
+}
+
+settings {
+  encodeUrl: true
+}

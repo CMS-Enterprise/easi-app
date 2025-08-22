@@ -39,6 +39,7 @@ describe('MultiSelect', () => {
   });
 
   it('updates input values when changing options and their associated tags', async () => {
+    const user = userEvent.setup();
     const { getByLabelText, getByTestId, queryByTestId } = render(
       <form data-testid="form">
         <label htmlFor="colors">Colors</label>
@@ -66,7 +67,7 @@ describe('MultiSelect', () => {
     expect(getByTestId('multiselect-tag--Green')).toBeInTheDocument();
 
     // Remove red via tag
-    userEvent.click(getByLabelText('Remove Red'));
+    await user.click(getByLabelText('Remove Red'));
     expect(getByTestId('form')).toHaveFormValues({ colors: 'green' });
     expect(getByTestId('multiselect-tag--Green')).toBeInTheDocument();
     expect(queryByTestId('multiselect-tag--Red')).not.toBeInTheDocument();

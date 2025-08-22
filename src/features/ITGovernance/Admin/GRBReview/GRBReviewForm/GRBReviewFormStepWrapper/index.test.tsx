@@ -107,24 +107,33 @@ describe('GRB review form step wrapper', () => {
       }
     });
 
-    expect(await screen.findByTestId('stepIndicator-0')).toHaveAttribute(
-      'aria-disabled',
-      'false'
+    // Wait for the async step-formatting effect to complete
+    await waitFor(() =>
+      expect(screen.getByTestId('stepIndicator-0')).toHaveAttribute(
+        'aria-disabled',
+        'false'
+      )
     );
 
-    expect(await screen.findByTestId('stepIndicator-1')).toHaveAttribute(
-      'aria-disabled',
-      'false'
+    await waitFor(() =>
+      expect(screen.getByTestId('stepIndicator-1')).toHaveAttribute(
+        'aria-disabled',
+        'false'
+      )
     );
 
-    expect(await screen.findByTestId('stepIndicator-2')).toHaveAttribute(
-      'aria-disabled',
-      'false'
+    await waitFor(() =>
+      expect(screen.getByTestId('stepIndicator-2')).toHaveAttribute(
+        'aria-disabled',
+        'false'
+      )
     );
 
-    expect(await screen.findByTestId('stepIndicator-3')).toHaveAttribute(
-      'aria-disabled',
-      'false'
+    await waitFor(() =>
+      expect(screen.getByTestId('stepIndicator-3')).toHaveAttribute(
+        'aria-disabled',
+        'false'
+      )
     );
   });
 
@@ -154,6 +163,7 @@ describe('GRB review form step wrapper', () => {
 
   it('navigates to next step', async () => {
     const mockOnSubmit = vi.fn().mockResolvedValue({});
+    const user = userEvent.setup();
     renderComponent({ onSubmit: mockOnSubmit });
 
     expect(await screen.findByTestId('stepIndicator-0'));
@@ -161,7 +171,7 @@ describe('GRB review form step wrapper', () => {
     expect(screen.getAllByText('Review type')).not.toBeNull();
 
     // Click next step in header
-    userEvent.click(screen.getByTestId('stepIndicator-1'));
+    await user.click(screen.getByTestId('stepIndicator-1'));
 
     await waitFor(() => {
       expect(screen.getByTestId('stepIndicator-1')).toHaveAttribute(

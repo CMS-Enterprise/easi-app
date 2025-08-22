@@ -1,0 +1,32 @@
+meta {
+  name: Get All w/ Related Requests
+  type: graphql
+  seq: 6
+}
+
+post {
+  url: http://localhost:8080/api/graph/query
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query trbRequests{
+      trbRequests {
+          id
+          name
+          relatedIntakes {
+              id
+              requestName
+          }
+          relatedTRBRequests {
+              id
+              name
+          }
+      }
+  }
+}
+
+settings {
+  encodeUrl: true
+}

@@ -1,0 +1,50 @@
+meta {
+  name: Create New System Link
+  type: graphql
+  seq: 8
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation AddSystemLink($input: AddSystemLinkInput!) {
+    addSystemLink(input: $input) {
+      id
+      systemIntakeID
+      systemID
+      systemRelationshipType
+      otherSystemRelationshipDescription
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+      "input":
+      {
+          "systemID": "{11AB1A00-1234-5678-ABC1-1A001B0TDCTG}",
+          "systemIntakeID": "{{systemIntakeID}}",
+          "systemRelationshipType": ["OTHER"],
+          "otherSystemRelationshipDescription": "important info"
+      }
+  }
+}
+
+script:post-response {
+  let responseData = res.getBody().data.addSystemLink
+  
+  systemIntakeSystemId = responseData.id
+  
+  
+  bru.setVar("systemIntakeSystemId", systemIntakeSystemId);
+  
+}
+
+settings {
+  encodeUrl: true
+}

@@ -1,0 +1,46 @@
+meta {
+  name: TRBRequestAttendeesCREATE
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/api/graph/query
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation {
+    createTRBRequestAttendee(input: { euaUserId: "ADMN", trbRequestId: "{{trbRequestID}}", component: "Awesome component", role: PRODUCT_OWNER}) {
+      id
+      euaUserId
+      userInfo {
+          euaUserId
+          commonName
+          email
+      }
+      
+      trbRequestId
+      component
+      role
+      createdBy
+      createdAt
+      modifiedBy
+      modifiedAt
+    }
+  }
+}
+
+script:post-response {
+  let responseData = res.getBody().data.createTRBRequestAttendee
+  
+  trbAttendeeID = responseData.id
+  
+  bru.setVar("trbAttendeeID", trbAttendeeID);
+  
+}
+
+settings {
+  encodeUrl: true
+}

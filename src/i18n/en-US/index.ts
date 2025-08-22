@@ -26,6 +26,7 @@ import help from './help';
 import home from './home';
 import intake from './intake';
 import itGov from './itGov';
+import linkedSystems from './linkedSystems';
 import makingARequest from './makingARequest';
 import privacyPolicy from './privacyPolicy';
 import systemProfile from './systemProfile';
@@ -57,6 +58,7 @@ const enUS = {
   home,
   intake,
   itGov,
+  linkedSystems,
   makingARequest,
   newSystem,
   prepareTrbConsultMeeting,
