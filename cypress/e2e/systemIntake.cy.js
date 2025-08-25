@@ -30,9 +30,9 @@ describe('The System Intake Form', () => {
     });
 
     cy.visit('/system/request-type');
-    cy.get('#RequestType-NewSystem').check({ force: true });
-    cy.contains('button', 'Continue').click();
-    cy.contains('a', 'Get started').click();
+    cy.get('[data-testid="start-button--new"]').click();
+    cy.contains('a', 'Continue').click();
+    cy.wait(1000);
 
     cy.contains(
       'label',
@@ -74,10 +74,7 @@ describe('The System Intake Form', () => {
       // Requester name shows as User E2E1 instead of "EndToEnd One" (their actual name) during testing
       'User E2E1, E2E1 (endtoend.one@local.fake)'
     );
-    cy.get('#businessOwnerEmail').should(
-      'have.value',
-      'endtoend.one@local.fake'
-    );
+
     cy.get('#businessOwnerComponent').should(
       'have.value',
       'Center for Medicare'
@@ -134,7 +131,7 @@ describe('The System Intake Form', () => {
 
     // Submit
     cy.contains('button', 'Send my Intake Request').click();
-    cy.contains('h1', 'Your Intake Request has been submitted');
+    cy.contains('h1', 'Success!');
   });
 
   it('displays and fills conditional fields', () => {
@@ -317,7 +314,7 @@ describe('The System Intake Form', () => {
     // Review
     cy.contains('h1', 'Check your answers before sending');
 
-    cy.contains('.easi-review-row dt', /^Requester$/)
+    cy.contains('.easi-review-row dt', /^Requester name$/)
       .siblings('dd')
       .contains('EndToEnd One');
 
@@ -325,7 +322,7 @@ describe('The System Intake Form', () => {
       .siblings('dd')
       .contains('Center for Medicare');
 
-    cy.contains('.easi-review-row dt', "CMS Business Owner's name")
+    cy.contains('.easi-review-row dt', 'CMS Business Owner')
       .siblings('dd')
       .contains('Audrey Abrams');
 
@@ -442,11 +439,9 @@ describe('The System Intake Form', () => {
 
     cy.contains('a', 'Start a new request').click();
 
-    cy.contains('label', 'Add a new system or service').click();
+    cy.get('[data-testid="start-button--new"]').click();
 
-    cy.contains('button', 'Continue').click();
-
-    cy.contains('a', 'Get started').click();
+    cy.contains('a', 'Continue').click();
 
     cy.visit('/');
 

@@ -68,7 +68,7 @@ const intake = {
   viewFeedback: 'View feedback',
   fields: {
     projectName: 'Project name',
-    requester: 'Requester',
+    requester: 'Requester name',
     submissionDate: 'Submission date',
     requestFor: 'Request for',
     component: 'Component',
@@ -134,6 +134,23 @@ const intake = {
       subheading: 'Your reference ID is {{referenceId}}',
       homeCta: 'Go back to EASi homepage',
       taskListCta: 'Go back to governance task list'
+    },
+    success: {
+      heading: 'Success!',
+      description:
+        'Your Intake Request form has been submitted. You will receive an automatic email, and a Governance Admin Team member will reach out shortly regarding next steps.',
+      learnMore:
+        'Want to learn more about the IT Governance process? Visit the IT Governance Sharepoint space.',
+      sharepointLink: {
+        copy: 'Go to the IT Governance Sharepoint space',
+        href: 'https://share.cms.gov/Office/OIT/CIOCorner/SitePages/ITGovernance.aspx'
+      }
+    },
+    error: {
+      heading: 'Something went wrong.',
+      description:
+        'Your Intake Request was not submitted. Please either return to the previous page and try again or try again at a later date.',
+      backToIntakeRequest: 'Back to Intake Request'
     }
   },
   lifecycleId: 'Life Cycle ID',
@@ -221,10 +238,49 @@ const intake = {
     adminLead: 'Admin Lead'
   },
   requestTypeForm: {
-    heading: 'Make a Request',
+    heading: 'Start an IT Governance request',
     subheading: 'What is this request for?',
+    start: 'Start',
+    cards: {
+      NEW: {
+        heading: 'Add a system, service, or project',
+        description:
+          'Any new project such as an IT system, service, or other business need is required to submit an IT Governance request and go through the IT Governance process in order to obtain a Life Cycle ID. A Life Cycle ID is the record of approval for your planned IT initiatives from a capital investment and planning perspective, and is a necessary step for all procurement activities at CMS.',
+        collapseLink: 'When should I choose this option?',
+        collapseLinkList: [
+          'I am starting a brand new services contract',
+          'I am planning to build an entirely new IT system',
+          'I am planning to develop an entirely new IT product such as an API or database',
+          'I am starting another type of new project at CMS'
+        ]
+      },
+      MAJOR_CHANGES: {
+        heading: 'Major changes to a system, service, or project',
+        description:
+          'Many IT systems at CMS undergo significant changes throughout their life cycle. Teams should complete a new IT Governance request when considering any significant changes to their IT system, service, or other project.',
+        collapseLink: 'When should I choose this option?',
+        collapseLinkList: [
+          'I am moving from a physical data center to the cloud',
+          'I am making significant changes to my system’s platform or software products',
+          'I am making significant new system integrations or connections',
+          'My system, service, or project is changing its Major Function Alignment or the Data Categories it supports',
+          'My system is undergoing a modernization effort',
+          'I am building an entirely new UI for my system'
+        ]
+      },
+      RECOMPETE: {
+        heading: 'Re-compete with no changes or minor changes',
+        description:
+          'Projects and/or contracts that wish to continue operating must undergo a re-compete at regular intervals (often every 5 years). These projects must submit a new IT Governance request to obtain a new Life Cycle ID even if there are no significant changes to the scope of the contract. Re-compete requests may often take a faster and simpler route through the IT Governance process.',
+        collapseLink: 'When should I choose this option?',
+        collapseLinkList: [
+          'I am completing a standard re-compete with no significant changes to the contract or scope of work',
+          'I am completing a re-compete with minor changes that will not significantly impact the IT spending or technical architecture of my system, service, or other project.'
+        ]
+      }
+    },
     fields: {
-      addNewSystem: 'Add a new system or service',
+      addNewSystem: 'Add a system, service, or project',
       majorChanges:
         'Major changes or upgrades to an existing system or service',
       recompete:
@@ -245,30 +301,34 @@ const intake = {
   },
   contactDetails: {
     intakeProcessDescription:
-      'The EASi System Intake process can guide you through all stages of your procurement/project, connecting you with the resources, people and services that you need. Please complete and submit this CMS IT Intake form to engage with the CMS IT Governance review process. This is the first step to receive a CMS IT Life Cycle ID. Upon submission, you will receive an email promptly from the IT_Governance mailbox, and an IT Governance Team member will reach out regarding next steps.',
+      'Provide the names of any team members or key collaborators for this project. You must provide a name for at least the project’s Business Owner and Project/Product Manager or Lead, but may also use the additional contacts section to list and team members or subject matter experts (SMEs) critical to this project. This will help the Governance Admin Team contact the correct individuals during this IT Governance process.',
     heading: 'Contact details',
-    requester: 'Requester',
+    requesterInformation: 'Requester information',
+    requester: 'Requester name',
     requesterComponent: 'Requester component',
     businessOwner: {
+      info: 'CMS Business Owner information',
       sameAsRequester: 'CMS Business Owner is same as requester',
       name: 'CMS Business Owner',
       helpText:
-        'This person owns a line of business related to this request and will champion the request moving forward',
+        'This person owns a line of business related to this request and will champion the request moving forward.',
       nameField: 'CMS Business Owner name',
+      searchesEUADatabase: 'This field searches CMS’ EUA database.',
       component: 'CMS Business Owner component',
       email: 'CMS Business Owner email'
     },
     productManager: {
-      sameAsRequester: 'CMS Product Manager is same as requester',
-      name: 'CMS Project/Product Manager, or lead',
+      sameAsRequester:
+        'CMS Project/Product Manager or Lead is same as requester',
+      name: 'CMS Project/Product Manager or Lead information',
       helpText:
-        'This person may be contacted for follow ups and to understand the state of the contract',
-      nameField: 'CMS Project/Product Manager, or lead name',
-      component: 'CMS Product Manager component',
-      email: 'CMS Product Manager email'
+        'This person may be contacted for follow ups and to understand the state of the contract.',
+      nameField: 'CMS Project/Product Manager or Lead name',
+      component: 'CMS Project/Product Manager or Lead component',
+      email: 'CMS Project/Product Manager or Lead email'
     },
     additionalContacts: {
-      titleContacts: 'Additional contacts',
+      titleContacts: 'Additional team members and project points of contact',
       titleRecipients: 'Choose recipients',
       recipientsSelected: '{{count}} recipients selected',
       showMore: 'Show {{count}} more recipients',
@@ -305,12 +365,12 @@ const intake = {
     completed: 'Completed {{completedDate}}',
     viewFullIntake: 'View full Intake Request form',
     subsectionHeadings: {
-      projectConcept: 'Project Concept',
+      projectConcept: 'Project concept',
       collaboration: 'Collaboration',
       projectDetails: 'Project Details'
     },
     description:
-      'Provide a brief explanation of the business need/issue/problem that the contract/request will address, including your current plans for how to address the need. This page should speak to what your contract/request accomplishes and how.',
+      'Provide a brief explanation of the business need, issue, or problem that the contract/request will address, including your current plans for how to address the need. This page should speak to what your contract/request accomplishes and how.',
     contractTitle: 'Contract/Request Title',
     contractTitleHelpText:
       'Your request title should match the title of your Acquisition Plan or Interagency Agreement.',
@@ -332,6 +392,7 @@ const intake = {
         'Do you plan to use any software products to fulfill your business needs?',
       usingSoftwareHelp:
         'This could include COTS products, infrastructure products, or other engineering and development tools. <dvsmEmail>Email the Division of Vendor and Software Management (DVSM)</dvsmEmail> to learn more about options at CMS related to software and Enterprise License Agreements (ELAs). If you mark "I\'m not sure", someone from DVSM may reach out to speak with you about available software and enterprise licenses.',
+      notSure: "I'm not sure",
       selectedLabel: 'Selected software',
       whichSoftwareLabel: 'Which software?',
       whichSoftwareHelp:
@@ -361,6 +422,31 @@ const intake = {
   },
   contractDetails: {
     heading: 'Contract details',
+    description:
+      'Document details about your funding, budget, and contract. These details will help assess the spending scope of your project and request.',
+    fundingAndBudget: 'Funding and budget',
+    fundingSources: {
+      label: 'Which existing funding sources will fund this project?',
+      helpText:
+        'If you are unsure, please get in touch with your Front Office. If this will not use an existing funding source, skip this question.',
+      addFundingSource: 'Add a funding source',
+      addAnotherFundingSource: 'Add another funding source',
+      fundingNumber: 'Funding number',
+      fundingNumberHelpText: 'Must be 6 digits long',
+      fundingNumberLink:
+        'You can find your funding number in the CMS Operating Plan page',
+      fundingSource: 'Funding source',
+      fundingSources: 'Funding sources',
+      fundingNumberLabel: 'Funding number: {{fundingNumber}}',
+      fundingSourcesLabel: 'Funding sources: {{sources}}',
+      formLegend: '{{action}} funding source',
+      errors: {
+        fundingNumberMinDigits: 'Funding number must be exactly 6 digits',
+        fundingNumberDigits: 'Funding number can only contain digits',
+        fundingNumberUnique: 'Funding number must be unique',
+        fundingSource: 'Select a funding source'
+      }
+    },
     currentAnnualSpending: 'What is the current annual spending?',
     currentAnnualSpendingITPortion:
       'What portion (% or amount) of the current annual spending is IT?',
@@ -384,12 +470,13 @@ const intake = {
   },
   review: {
     heading: 'Check your answers before sending',
+    edit: 'Edit this section',
     notSubmitted: 'Not yet submitted',
     systemRequest: 'System Request',
     submissionDate: 'Submission date',
     contactDetails: 'Contact details',
     requesterComponent: 'Requester component',
-    cmsBusinessOwnerName: "CMS Business Owner's name",
+    cmsBusinessOwnerName: 'CMS Business Owner',
     cmsBusinessOwnerComponent: 'CMS Business Owner component',
     cmsProjectManagerName: 'CMS Project/Product Manager or Lead',
     cmsProjectManagerComponent: 'CMS Project/Product Manager or Lead component',
@@ -422,18 +509,16 @@ const intake = {
     contractVehicle: 'Contract vehicle',
     contractNumber: 'Contract number',
     noContractNumber: 'No contract number specified',
-    performance: 'Period of performance',
+    performance: 'Period of performance dates for planned project',
     notEntered: 'Not Entered',
     documents: 'Documents',
     nextSteps: {
       heading: 'What happens next?',
       description:
-        'The Governance Review Admin Team will review and get back to you with <strong>one of these</strong> outcomes:',
-      direct: 'direct you to go through the Governance Review process',
-      decide: 'or decide there is no further governance needed',
-      timeline: 'They will get back to you in two business days.'
+        'The Governance Admin Team will review your request and get back to you within two business days. If your project is determined to contain reportable IT, your project may require a full Governance Review. The full IT Governance Review process can take up to 3 weeks assuming no issues are raised.'
     },
-    sendIntakeRequest: 'Send my Intake Request'
+    sendIntakeRequest: 'Send my Intake Request',
+    saveWithoutSubmitting: 'Save and exit without submitting'
   }
 };
 

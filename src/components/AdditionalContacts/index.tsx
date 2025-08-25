@@ -373,7 +373,9 @@ export default function AdditionalContacts({
          */
         contacts && (
           <>
-            <h4>{t('contactDetails.additionalContacts.titleContacts')}</h4>
+            <h4 className="margin-top-0">
+              {t('contactDetails.additionalContacts.titleContacts')}
+            </h4>
             <div
               className="system-intake-contacts__contacts-list"
               data-testid="systemIntakeContacts__contactsList"

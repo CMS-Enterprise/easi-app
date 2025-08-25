@@ -155,7 +155,6 @@ export default {
         viewPreviousDecision: 'View previous decision'
       }
     },
-    changeRequestType: 'Change request type',
     requestType: {
       NEW: 'Add a new system or service',
       RECOMPETE: 'Re-compete',

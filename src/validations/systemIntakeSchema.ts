@@ -203,11 +203,6 @@ const SystemIntakeValidationSchema = {
         })
       })
     })
-  }),
-  requestType: Yup.object().shape({
-    requestType: Yup.string()
-      .trim()
-      .required('Tell us what your request is for')
   })
 };
 
