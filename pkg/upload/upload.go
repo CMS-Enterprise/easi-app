@@ -10,10 +10,9 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/config"
-	credentialsNew "github.com/aws/aws-sdk-go-v2/credentials"
-	s3New "github.com/aws/aws-sdk-go-v2/service/s3"
-	s3NewTypes "github.com/aws/aws-sdk-go-v2/service/s3/types"
-	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go-v2/credentials"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/aws/aws-sdk-go-v2/service/s3/types"
 
 	"github.com/cms-enterprise/easi-app/pkg/appconfig"
 )
@@ -30,7 +29,7 @@ type Config struct {
 
 // S3Client is an EASi s3 client wrapper
 type S3Client struct {
-	client *s3New.Client
+	client *s3.Client
 	config Config
 }
 
@@ -38,7 +37,7 @@ type S3Client struct {
 func NewS3Client(ctx context.Context, s3Config Config) S3Client {
 	var (
 		configOpts []func(*config.LoadOptions) error
-		s3Opts     []func(options *s3New.Options)
+		s3Opts     []func(options *s3.Options)
 	)
 
 	configOpts = append(configOpts, config.WithRegion(s3Config.Region))
@@ -47,7 +46,7 @@ func NewS3Client(ctx context.Context, s3Config Config) S3Client {
 	if s3Config.IsLocal {
 		configOpts = append(configOpts, config.WithBaseEndpoint(os.Getenv(appconfig.LocalMinioAddressKey)))
 		configOpts = append(configOpts, config.WithCredentialsProvider(
-			credentialsNew.NewStaticCredentialsProvider(
+			credentials.NewStaticCredentialsProvider(
 				os.Getenv(appconfig.LocalMinioS3AccessKey),
 				os.Getenv(appconfig.LocalMinioS3SecretKey),
 				""),
@@ -56,7 +55,7 @@ func NewS3Client(ctx context.Context, s3Config Config) S3Client {
 		// MinIO by default uses path-style access, which puts the bucket name in the URL, i.e. https://s3.region-code.amazonaws.com/bucket-name/key-name.
 		// It's possible to configure MinIO to use virtual-hosted style, but it's tricky to get working with our current Docker Compose setup, so we don't bother with it.
 		// See https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html and https://github.com/minio/minio/tree/master/docs/config#domain.
-		s3Opts = append(s3Opts, func(options *s3New.Options) {
+		s3Opts = append(s3Opts, func(options *s3.Options) {
 			options.UsePathStyle = true
 		})
 	}
@@ -66,14 +65,14 @@ func NewS3Client(ctx context.Context, s3Config Config) S3Client {
 		panic(fmt.Errorf("problem creating aws config when creating new s3 s3Client: %w", err))
 	}
 
-	s3Client := s3New.NewFromConfig(awsConfig, s3Opts...)
+	s3Client := s3.NewFromConfig(awsConfig, s3Opts...)
 
 	return NewS3ClientUsingClient(s3Client, s3Config)
 }
 
 // NewS3ClientUsingClient creates a new s3 wrapper using the specified s3 client
 // This is most useful for testing where the s3 client needs to be mocked out.
-func NewS3ClientUsingClient(s3Client *s3New.Client, config Config) S3Client {
+func NewS3ClientUsingClient(s3Client *s3.Client, config Config) S3Client {
 	return S3Client{
 		client: s3Client,
 		config: config,
@@ -93,12 +92,12 @@ type PreSignedURL struct {
 
 // NewGetPresignedURL returns a pre-signed URL used for GET-ing objects
 func (c S3Client) NewGetPresignedURL(ctx context.Context, key string) (*PreSignedURL, error) {
-	objectInput := &s3New.GetObjectInput{
-		Bucket: aws.String(c.config.Bucket),
-		Key:    aws.String(key),
+	objectInput := &s3.GetObjectInput{
+		Bucket: &c.config.Bucket,
+		Key:    &key,
 	}
 
-	req, err := s3New.NewPresignClient(c.client).PresignGetObject(ctx, objectInput, func(options *s3New.PresignOptions) {
+	req, err := s3.NewPresignClient(c.client).PresignGetObject(ctx, objectInput, func(options *s3.PresignOptions) {
 		options.Expires = 90 * time.Minute
 	})
 	if err != nil {
@@ -122,7 +121,7 @@ func (c S3Client) KeyFromURL(url *url.URL) (string, error) {
 // TagValueForKey returns the tag value and if that tag was found for the
 // specified key and tag name. If no value is found, returns an empty string.
 func (c S3Client) TagValueForKey(ctx context.Context, key string, tagName string) (string, error) {
-	input := &s3New.GetObjectTaggingInput{
+	input := &s3.GetObjectTaggingInput{
 		Bucket: &c.config.Bucket,
 		Key:    &key,
 	}
@@ -142,14 +141,14 @@ func (c S3Client) TagValueForKey(ctx context.Context, key string, tagName string
 // SetTagValueForKey sets the tag value and returns an error if any was encountered.
 func (c S3Client) SetTagValueForKey(ctx context.Context, key string, tagName string, tagValue string) error {
 
-	input := &s3New.PutObjectTaggingInput{
-		Bucket: aws.String(c.config.Bucket),
-		Key:    aws.String(key),
-		Tagging: &s3NewTypes.Tagging{
-			TagSet: []s3NewTypes.Tag{
+	input := &s3.PutObjectTaggingInput{
+		Bucket: &c.config.Bucket,
+		Key:    &key,
+		Tagging: &types.Tagging{
+			TagSet: []types.Tag{
 				{
-					Key:   aws.String(tagName),
-					Value: aws.String(tagValue),
+					Key:   &tagName,
+					Value: &tagValue,
 				},
 			},
 		},
@@ -165,9 +164,9 @@ func (c S3Client) SetTagValueForKey(ctx context.Context, key string, tagName str
 // UploadFile uploads a file to the configured bucket for saving documents.
 // Note that no file extension will be added to the key by this method; it assumes the caller has already added an extension, if desired.
 func (c S3Client) UploadFile(ctx context.Context, key string, body io.ReadSeeker) error {
-	_, err := c.client.PutObject(ctx, &s3New.PutObjectInput{
-		Bucket: aws.String(c.config.Bucket),
-		Key:    aws.String(key),
+	_, err := c.client.PutObject(ctx, &s3.PutObjectInput{
+		Bucket: &c.config.Bucket,
+		Key:    &key,
 		Body:   body,
 	})
 
