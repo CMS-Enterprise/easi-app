@@ -246,7 +246,7 @@ func createSystemIntakeContact(
 ) {
 	input := models.CreateSystemIntakeContactInput{
 		Component:      component,
-		Roles:          []string{role},
+		Roles:          []models.SystemIntakeContactRole{models.SystemIntakeContactRole(role)},
 		EuaUserID:      euaUserID,
 		SystemIntakeID: intake.ID,
 	}
@@ -266,8 +266,8 @@ func updateSystemIntakeContact(
 ) {
 	input := models.UpdateSystemIntakeContactInput{
 		Component: component,
-		Roles:     []string{role},
-		EuaUserID: euaUserID,
+		Roles:     []models.SystemIntakeContactRole{models.SystemIntakeContactRole(role)},
+		// EuaUserID: euaUserID,
 	}
 	_, err := resolvers.UpdateSystemIntakeContact(ctx, store, input,
 		userhelpers.GetUserInfoAccountInfoWrapperFunc(mock.FetchUserInfoMock),

@@ -1814,6 +1814,24 @@ type CurrentUser {
 }
 
 """
+SystemIntakeContactRole is the various roles that a user can have as a contact on a system intake
+"""
+enum SystemIntakeContactRole  {
+  BUSINESS_OWNER
+  CLOUD_NAVIGATOR
+  CONTRACTING_OFFICERS_REPRESENTATIVE
+  CYBER_RISK_ADVISOR
+  INFORMATION_SYSTEM_SECURITY_ADVISOR
+  OTHER
+  PRIVACY_ADVISOR
+  PRODUCT_OWNER
+  PROJECT_MANAGER
+  SUBJECT_MATTER_EXPERT
+  SYSTEM_MAINTAINER
+  SYSTEM_OWNER
+}
+
+"""
 Represents a contact associated with a system intake
 """
 type SystemIntakeContact {
@@ -1822,8 +1840,7 @@ type SystemIntakeContact {
   euaUserId: String!
   systemIntakeId: UUID!
   component: String!
-  # TODO: change String to PersonRole
-  roles: [String!]!
+  roles: [SystemIntakeContactRole!]!
   isRequester: Boolean!
 }
 
@@ -1834,8 +1851,7 @@ input CreateSystemIntakeContactInput {
   euaUserId: String!
   systemIntakeId: UUID!
   component: String!
-  # TODO: change String to PersonRole
-  roles: [String!]!
+  roles: [SystemIntakeContactRole!]!
   isRequester: Boolean!
 }
 
@@ -1844,11 +1860,8 @@ The data needed to update a contact associated with a system intake
 """
 input UpdateSystemIntakeContactInput {
   id: UUID!
-  euaUserId: String!
-  systemIntakeId: UUID!
   component: String!
-  # TODO: change String to PersonRole
-  roles: [String!]!
+  roles: [SystemIntakeContactRole!]!
   isRequester: Boolean!
 }
 

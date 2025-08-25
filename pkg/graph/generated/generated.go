@@ -1496,7 +1496,7 @@ type SystemIntakeResolver interface {
 	SystemIntakeSystems(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeSystem, error)
 }
 type SystemIntakeContactResolver interface {
-	Roles(ctx context.Context, obj *models.SystemIntakeContact) ([]string, error)
+	Roles(ctx context.Context, obj *models.SystemIntakeContact) ([]models.SystemIntakeContactRole, error)
 	IsRequester(ctx context.Context, obj *models.SystemIntakeContact) (bool, error)
 }
 type SystemIntakeDocumentResolver interface {
@@ -10548,6 +10548,24 @@ type CurrentUser {
 }
 
 """
+SystemIntakeContactRole is the various roles that a user can have as a contact on a system intake
+"""
+enum SystemIntakeContactRole  {
+  BUSINESS_OWNER
+  CLOUD_NAVIGATOR
+  CONTRACTING_OFFICERS_REPRESENTATIVE
+  CYBER_RISK_ADVISOR
+  INFORMATION_SYSTEM_SECURITY_ADVISOR
+  OTHER
+  PRIVACY_ADVISOR
+  PRODUCT_OWNER
+  PROJECT_MANAGER
+  SUBJECT_MATTER_EXPERT
+  SYSTEM_MAINTAINER
+  SYSTEM_OWNER
+}
+
+"""
 Represents a contact associated with a system intake
 """
 type SystemIntakeContact {
@@ -10556,8 +10574,7 @@ type SystemIntakeContact {
   euaUserId: String!
   systemIntakeId: UUID!
   component: String!
-  # TODO: change String to PersonRole
-  roles: [String!]!
+  roles: [SystemIntakeContactRole!]!
   isRequester: Boolean!
 }
 
@@ -10568,8 +10585,7 @@ input CreateSystemIntakeContactInput {
   euaUserId: String!
   systemIntakeId: UUID!
   component: String!
-  # TODO: change String to PersonRole
-  roles: [String!]!
+  roles: [SystemIntakeContactRole!]!
   isRequester: Boolean!
 }
 
@@ -10578,11 +10594,8 @@ The data needed to update a contact associated with a system intake
 """
 input UpdateSystemIntakeContactInput {
   id: UUID!
-  euaUserId: String!
-  systemIntakeId: UUID!
   component: String!
-  # TODO: change String to PersonRole
-  roles: [String!]!
+  roles: [SystemIntakeContactRole!]!
   isRequester: Boolean!
 }
 
@@ -48751,9 +48764,9 @@ func (ec *executionContext) _SystemIntakeContact_roles(ctx context.Context, fiel
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]string)
+	res := resTmp.([]models.SystemIntakeContactRole)
 	fc.Result = res
-	return ec.marshalNString2ᚕstringᚄ(ctx, field.Selections, res)
+	return ec.marshalNSystemIntakeContactRole2ᚕgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactRoleᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeContact_roles(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -48763,7 +48776,7 @@ func (ec *executionContext) fieldContext_SystemIntakeContact_roles(_ context.Con
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type SystemIntakeContactRole does not have child fields")
 		},
 	}
 	return fc, nil
@@ -64011,7 +64024,7 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeContactInput(ctx con
 			it.Component = data
 		case "roles":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("roles"))
-			data, err := ec.unmarshalNString2ᚕstringᚄ(ctx, v)
+			data, err := ec.unmarshalNSystemIntakeContactRole2ᚕgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactRoleᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -66962,7 +66975,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeContactInput(ctx con
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "euaUserId", "systemIntakeId", "component", "roles", "isRequester"}
+	fieldsInOrder := [...]string{"id", "component", "roles", "isRequester"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -66976,20 +66989,6 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeContactInput(ctx con
 				return it, err
 			}
 			it.ID = data
-		case "euaUserId":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("euaUserId"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.EuaUserID = data
-		case "systemIntakeId":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeId"))
-			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.SystemIntakeID = data
 		case "component":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("component"))
 			data, err := ec.unmarshalNString2string(ctx, v)
@@ -66999,7 +66998,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeContactInput(ctx con
 			it.Component = data
 		case "roles":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("roles"))
-			data, err := ec.unmarshalNString2ᚕstringᚄ(ctx, v)
+			data, err := ec.unmarshalNSystemIntakeContactRole2ᚕgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactRoleᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -81264,6 +81263,75 @@ func (ec *executionContext) marshalNSystemIntakeContact2ᚖgithubᚗcomᚋcmsᚑ
 		return graphql.Null
 	}
 	return ec._SystemIntakeContact(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNSystemIntakeContactRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactRole(ctx context.Context, v any) (models.SystemIntakeContactRole, error) {
+	var res models.SystemIntakeContactRole
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSystemIntakeContactRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactRole(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeContactRole) graphql.Marshaler {
+	return v
+}
+
+func (ec *executionContext) unmarshalNSystemIntakeContactRole2ᚕgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactRoleᚄ(ctx context.Context, v any) ([]models.SystemIntakeContactRole, error) {
+	var vSlice []any
+	vSlice = graphql.CoerceList(v)
+	var err error
+	res := make([]models.SystemIntakeContactRole, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNSystemIntakeContactRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactRole(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalNSystemIntakeContactRole2ᚕgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactRoleᚄ(ctx context.Context, sel ast.SelectionSet, v []models.SystemIntakeContactRole) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNSystemIntakeContactRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactRole(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
 }
 
 func (ec *executionContext) marshalNSystemIntakeContract2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContract(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeContract) graphql.Marshaler {

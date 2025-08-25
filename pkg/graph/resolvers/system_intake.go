@@ -54,7 +54,7 @@ func CreateSystemIntakeContact(
 	contact.EUAUserID = input.EuaUserID
 	contact.Component = input.Component
 	// TODO: Revert to `input.Roles` when database is updated to array
-	contact.Role = input.Roles[0]
+	contact.Role = string(input.Roles[0])
 
 	createdContact, err := store.CreateSystemIntakeContact(ctx, contact)
 	if err != nil {
@@ -72,19 +72,18 @@ func UpdateSystemIntakeContact(
 	input models.UpdateSystemIntakeContactInput,
 	getAccountInformation userhelpers.GetAccountInfoFunc,
 ) (*models.CreateSystemIntakeContactPayload, error) {
-	contactUserAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, input.EuaUserID, false, getAccountInformation)
+	// TODO: Fully implement this. This is a placeholder
+	contact, err := store.GetSystemIntakeContactByID(ctx, input.ID)
 	if err != nil {
 		return nil, err
 	}
 
 	// TODO: Fix
-	contact := models.NewSystemIntakeContact(contactUserAccount.ID)
+
 	contact.ID = input.ID
-	contact.SystemIntakeID = input.SystemIntakeID
-	contact.EUAUserID = input.EuaUserID
 	contact.Component = input.Component
 	// TODO: Revert to `input.Roles` when database is updated to array
-	contact.Role = input.Roles[0]
+	contact.Role = string(input.Roles[0])
 
 	updatedContact, err := store.UpdateSystemIntakeContact(ctx, contact)
 	if err != nil {
