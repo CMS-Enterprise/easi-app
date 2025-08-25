@@ -597,13 +597,17 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
             systemIntakeId={systemIntake.id}
             activeContact={activeContact}
             setActiveContact={setActiveContact}
-            className="margin-top-4"
+            className="margin-top-0"
           />
         </Fieldset>
 
         {/* Governance Teams */}
+        <div className="margin-top-3 border-top border-base-light padding-top-1">
+          <p className="margin-top-0 margin-bottom-1 text-bold">
+            {t('requestDetails.subsectionHeadings.collaboration')}
+          </p>
+        </div>
 
-        {/* TODO: remove EA option and add 508 clearance officer */}
         <EasiFormProvider<ContactDetailsForm> {...form}>
           <GovernanceTeams />
         </EasiFormProvider>
