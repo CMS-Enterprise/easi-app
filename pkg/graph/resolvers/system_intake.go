@@ -53,8 +53,8 @@ func CreateSystemIntakeContact(
 	contact.SystemIntakeID = input.SystemIntakeID
 	contact.EUAUserID = input.EuaUserID
 	contact.Component = input.Component
-	// TODO: Revert to `input.Roles` when database is updated to array
-	contact.Role = string(input.Roles[0])
+
+	contact.Roles = input.Roles
 
 	createdContact, err := store.CreateSystemIntakeContact(ctx, contact)
 	if err != nil {
@@ -83,7 +83,7 @@ func UpdateSystemIntakeContact(
 	contact.ID = input.ID
 	contact.Component = input.Component
 	// TODO: Revert to `input.Roles` when database is updated to array
-	contact.Role = string(input.Roles[0])
+	contact.Roles = input.Roles
 
 	updatedContact, err := store.UpdateSystemIntakeContact(ctx, contact)
 	if err != nil {

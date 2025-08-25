@@ -2070,12 +2070,6 @@ func (r *systemIntakeResolver) SystemIntakeSystems(ctx context.Context, obj *mod
 	return resolvers.SystemIntakeSystemsByIntakeID(ctx, obj.ID)
 }
 
-// Roles is the resolver for the roles field.
-func (r *systemIntakeContactResolver) Roles(ctx context.Context, obj *models.SystemIntakeContact) ([]models.SystemIntakeContactRole, error) {
-	// TODO: Update once roles type is updated in database
-	return []models.SystemIntakeContactRole{models.SystemIntakeContactRole(obj.Role)}, nil
-}
-
 // IsRequester is the resolver for the isRequester field.
 func (r *systemIntakeContactResolver) IsRequester(ctx context.Context, obj *models.SystemIntakeContact) (bool, error) {
 	// TODO EASI-4934: implement isRequester field

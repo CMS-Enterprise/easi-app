@@ -21,7 +21,7 @@ func (s *StoreTestSuite) TestCreateSystemIntakeContact() {
 		createdContact, err := s.store.CreateSystemIntakeContact(ctx, &contact)
 		s.NoError(err)
 
-		createdContact.Role = "Supreme Overlord"
+		createdContact.Roles = models.AllSystemIntakeContactRole
 		_, err = s.store.UpdateSystemIntakeContact(ctx, createdContact)
 		s.NoError(err)
 	})
@@ -46,7 +46,7 @@ func (s *StoreTestSuite) TestFetchSystemIntakeContactsBySystemIntakeID() {
 		EUAUserID:      "AAAA",
 		SystemIntakeID: createdIntake.ID,
 		Component:      "Component",
-		Role:           "Role",
+		Roles:          models.AllSystemIntakeContactRole,
 	})
 	s.NoError(err)
 

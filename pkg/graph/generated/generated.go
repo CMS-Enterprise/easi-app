@@ -1501,7 +1501,6 @@ type SystemIntakeResolver interface {
 	SystemIntakeSystems(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeSystem, error)
 }
 type SystemIntakeContactResolver interface {
-	Roles(ctx context.Context, obj *models.SystemIntakeContact) ([]models.SystemIntakeContactRole, error)
 	IsRequester(ctx context.Context, obj *models.SystemIntakeContact) (bool, error)
 	CreatedBy(ctx context.Context, obj *models.SystemIntakeContact) (uuid.UUID, error)
 	CreatedByUserAccount(ctx context.Context, obj *models.SystemIntakeContact) (*authentication.UserAccount, error)
@@ -48791,7 +48790,7 @@ func (ec *executionContext) _SystemIntakeContact_roles(ctx context.Context, fiel
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntakeContact().Roles(rctx, obj)
+		return obj.Roles, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -48812,8 +48811,8 @@ func (ec *executionContext) fieldContext_SystemIntakeContact_roles(_ context.Con
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeContact",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type SystemIntakeContactRole does not have child fields")
 		},
@@ -75053,41 +75052,10 @@ func (ec *executionContext) _SystemIntakeContact(ctx context.Context, sel ast.Se
 				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "roles":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntakeContact_roles(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
-				return res
+			out.Values[i] = ec._SystemIntakeContact_roles(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
 			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "isRequester":
 			field := field
 
