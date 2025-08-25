@@ -43,7 +43,7 @@ exports[`IT Gov Request relation link form > renders 1`] = `
           aria-current="page"
           class="usa-breadcrumb__list-item usa-current"
         >
-          Edit linked system, service, or contract
+          Edit linked systems
         </li>
       </ol>
     </nav>
@@ -52,12 +52,12 @@ exports[`IT Gov Request relation link form > renders 1`] = `
       class="easi-h1 margin-top-4 margin-bottom-0"
       tabindex="-1"
     >
-      Is this request part of an existing system, service, or contract?
+      Does this request involve any CMS systems?
     </h1>
     <p
       class="font-body-lg line-height-body-5 text-light margin-y-0"
     >
-      If you are requesting a Life Cycle ID (LCID) and governance approval for a new IT investment that is a part of an existing system, service, or contract (such as a major change based on a new business need or the creation of a new sub-system) please include additional details below.
+      If you are requesting a Life Cycle ID (LCID) and governance approval for a new IT investment that is a part of an existing system, please include additional details below.
     </p>
     <p
       class="margin-top-2 margin-bottom-5 text-base"
@@ -92,13 +92,13 @@ exports[`IT Gov Request relation link form > renders 1`] = `
               <h4
                 class="margin-top-0 margin-bottom-1 line-height-heading-2"
               >
-                Is this IT Governance request part of an existing system, service, or contract?
+                Does this project support or involve any other CMS systems?
               </h4>
             </legend>
             <p
               class="text-base margin-top-1 margin-bottom-3"
             >
-              With any of the selections below, you may add contract number(s) if there are any in place to support this effort.
+              Please add a CMS system here if:
             </p>
             <div
               class="usa-radio"

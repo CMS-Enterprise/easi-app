@@ -1,0 +1,36 @@
+meta {
+  name: Get Contracts By System
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query($systemID: String!) {
+    cedarContractsBySystem(cedarSystemId: $systemID){
+      endDate
+      startDate
+      contractName
+      contractNumber
+      description
+      isDeliveryOrg
+      systemID
+      serviceProvided
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+      "systemID": "{{CedarSystemId}}"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

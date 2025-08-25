@@ -1,0 +1,107 @@
+meta {
+  name: SystemIntake Get
+  type: graphql
+  seq: 6
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query systemIntake {
+      systemIntake(id: "{{systemIntakeID}}") {
+      step
+      state
+      archivedAt
+      requestFormState
+      draftBusinessCaseState
+      grtMeetingState
+      finalBusinessCaseState
+      grbMeetingState
+      decisionState
+      itGovTaskStatuses {      
+          intakeFormStatus
+          feedbackFromInitialReviewStatus
+          decisionAndNextStepsStatus
+          bizCaseDraftStatus
+          grtMeetingStatus
+          bizCaseFinalStatus
+          grbMeetingStatus
+      }
+      id
+      actions {
+          type
+          actor {
+              name
+          }
+          step
+          feedback
+      }
+      contractName
+      systemIntakeSystem{
+          systemIntakeID
+          systemID
+          systemRelationshipType
+          otherSystemRelationshipDescription
+      }
+  #   adminLead
+  # #   businessCase
+  #   businessNeed
+  # #   businessOwner
+  #   businessSolution
+  # #   contract
+  # #   costs
+  #   createdAt
+  #   currentStage
+  #   decisionNextSteps
+  #   eaCollaborator
+  #   eaCollaboratorName
+  #   euaUserId
+  #   existingFunding
+  # #   fundingSources
+  # #   governanceTeams
+  #   grbDate
+  #   grtDate
+  # #   grtFeedbacks
+  #   id
+  # #   isso
+  #   lcid
+  #   lcidExpiresAt
+  #   lcidScope
+  #   lcidCostBaseline
+  #   needsEaSupport
+  # #   notes
+  #   oitSecurityCollaborator
+  #   oitSecurityCollaboratorName
+  # #   productManager
+  #   projectAcronym
+  #   rejectionReason
+  #   requestName
+  #   requestType
+  # #   requester
+  #   status
+  #   submittedAt
+  #   trbCollaborator
+  #   trbCollaboratorName
+  #   updatedAt
+  #   grtReviewEmailBody
+  #   decidedAt
+  #   businessCaseId
+  # #   lastAdminNote
+  #   cedarSystemId
+  # #   documents
+  #   hasUiChanges
+      
+      
+    }
+    
+    
+  }
+}
+
+settings {
+  encodeUrl: true
+}

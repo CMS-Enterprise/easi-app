@@ -69,6 +69,7 @@ describe('The System Intake page', () => {
       systemIntake: { systemIntake: {} },
       action: {}
     });
+    const user = userEvent.setup();
     render(
       <MemoryRouter initialEntries={[`/system/${systemIntake.id}/documents`]}>
         <MockedProvider mocks={[getSystemIntakeQuery({ documents })]}>
@@ -92,7 +93,7 @@ describe('The System Intake page', () => {
     ).toBeInTheDocument();
 
     const button = screen.getByRole('button', { name: 'Add another document' });
-    userEvent.click(button);
+    await user.click(button);
 
     // Check that upload form page renders
     expect(

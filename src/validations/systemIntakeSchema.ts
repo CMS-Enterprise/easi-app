@@ -6,7 +6,6 @@ import i18next from 'i18next';
 import { DateTime } from 'luxon';
 import * as Yup from 'yup';
 
-import { FormattedFundingSource } from 'components/FundingSources';
 import { ITGovernanceViewType } from 'types/itGov';
 
 const govTeam = (name: string) =>
@@ -98,6 +97,11 @@ const SystemIntakeValidationSchema = {
       })
   }),
   contractDetails: Yup.object().shape({
+    existingFunding: Yup.boolean().nullable(),
+    fundingSources: Yup.array().when('existingFunding', {
+      is: true,
+      then: Yup.array().min(1, 'Add at least one funding source to the request')
+    }),
     annualSpending: Yup.object().shape({
       currentAnnualSpending: Yup.string().required(
         'Tell us what the current annual spending for the contract'
@@ -203,34 +207,6 @@ const SystemIntakeValidationSchema = {
 };
 
 export default SystemIntakeValidationSchema;
-
-export const FundingSourcesValidationSchema = Yup.object().shape({
-  fundingSources: Yup.array().of(
-    Yup.object({
-      id: Yup.string(),
-      fundingNumber: Yup.string()
-        .trim()
-        .required('Funding number must be exactly 6 digits')
-        .length(6, 'Funding number must be exactly 6 digits')
-        .matches(/^\d+$/, 'Funding number can only contain digits'),
-      sources: Yup.array().of(Yup.string()).min(1, 'Select a funding source')
-    }).test('is-unique', 'Must be unique', (value, context) => {
-      const fundingNumbers: string[] = context.parent
-        .filter((source: FormattedFundingSource) => source.id !== value.id)
-        .map((source: FormattedFundingSource) => source.fundingNumber);
-
-      const isUnique = !fundingNumbers.includes(value?.fundingNumber!);
-
-      return (
-        isUnique ||
-        context.createError({
-          path: `${context.path}.fundingNumber`,
-          message: 'Funding number must be unique'
-        })
-      );
-    })
-  )
-});
 
 export const DateValidationSchema: any = Yup.object().shape(
   {
@@ -358,3 +334,42 @@ export const documentSchema = Yup.object({
     otherwise: Yup.boolean()
   })
 });
+
+export const linkedSystemsSchema = Yup.object({
+  cedarSystemID: Yup.string().required('Please select a CMS System'),
+
+  relationshipTypes: Yup.object({
+    primarySupport: Yup.boolean(),
+    partialSupport: Yup.boolean(),
+    usesOrImpactedBySelectedSystem: Yup.boolean(),
+    impactsSelectedSystem: Yup.boolean(),
+    other: Yup.boolean()
+  }),
+
+  otherDescription: Yup.string().when('relationshipTypes.other', {
+    is: true,
+    then: schema => schema.required('Please provide details for "Other".'),
+    otherwise: schema => schema.notRequired()
+  })
+}).test(
+  'at-least-one-selected',
+  'Please select at least one relationship type',
+  function atLeastOneSelected(values) {
+    if (!values) {
+      return this.createError({ message: 'Form values are missing' });
+    }
+
+    const optionSelected = Object.values(values.relationshipTypes || {}).some(
+      Boolean
+    );
+
+    if (!optionSelected) {
+      return this.createError({
+        path: 'relationshipTypes',
+        message: 'Please select at least one relationship type'
+      });
+    }
+
+    return true;
+  }
+);

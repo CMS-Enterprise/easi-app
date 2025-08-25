@@ -358,7 +358,8 @@ export const emptySystemIntake: SystemIntakeFragmentFragment = {
     numberOfNotVoted: 0,
     numberOfObjection: 0,
     votingStatus: GRBVotingInformationStatus.NOT_STARTED
-  }
+  },
+  systemIntakeSystems: []
 };
 
 export const systemIntake: SystemIntakeFragmentFragment = {
@@ -524,7 +525,9 @@ export const systemIntake: SystemIntakeFragmentFragment = {
     numberOfObjection: 2,
     numberOfNotVoted: 3
   },
-  grbReviewAsyncEndDate: null
+  grbReviewAsyncEndDate: null,
+  grbReviewStartedAt: null,
+  systemIntakeSystems: []
 };
 
 export const systemIntakeForTable: GetSystemIntakesTableQuery['systemIntakes'][number] =
@@ -689,6 +692,7 @@ export const taskListSystemIntake: NonNullable<
   relationType: null,
   contractName: null,
   contractNumbers: [],
+  requestType: SystemIntakeRequestType.NEW,
   systems: [],
   statusAdmin: SystemIntakeStatusAdmin.GRB_MEETING_READY,
   lcid: '123',

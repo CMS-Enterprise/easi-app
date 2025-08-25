@@ -18,7 +18,15 @@ const general = {
   noDataAvailable: 'No data available',
   readMore: 'Read more',
   readLess: 'Read less',
-  newTab: 'Open in a new tab'
+  newTab: 'Open in a new tab',
+  dateWarning:
+    'You’ve entered one or more dates that are in the past. Please double-check your dates to make sure they’re accurate.',
+  datePicker: {
+    label: 'Date picker',
+    open: 'Open date picker',
+    warning: 'Date is in the past'
+  },
+  actions: 'Actions'
 };
 
 export default general;

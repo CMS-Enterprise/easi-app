@@ -17,6 +17,7 @@ import error from './error';
 import externalLinkModal from './externalLinkModal';
 import footer from './footer';
 import form from './form';
+import fundingSources from './fundingSources';
 import general from './general';
 import governanceOverview from './governanceOverview';
 import grbReview from './grbReview';
@@ -25,6 +26,7 @@ import help from './help';
 import home from './home';
 import intake from './intake';
 import itGov from './itGov';
+import linkedSystems from './linkedSystems';
 import makingARequest from './makingARequest';
 import privacyPolicy from './privacyPolicy';
 import systemProfile from './systemProfile';
@@ -56,6 +58,7 @@ const enUS = {
   home,
   intake,
   itGov,
+  linkedSystems,
   makingARequest,
   newSystem,
   prepareTrbConsultMeeting,
@@ -66,7 +69,8 @@ const enUS = {
   tableAndPagination,
   taskList,
   technicalAssistance,
-  termsAndConditions
+  termsAndConditions,
+  fundingSources
 };
 
 export default enUS;

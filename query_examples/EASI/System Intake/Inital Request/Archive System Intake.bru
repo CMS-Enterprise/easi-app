@@ -1,0 +1,30 @@
+meta {
+  name: Archive System Intake
+  type: graphql
+  seq: 8
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation ArchiveSystemIntake($id: UUID!) {
+      archiveSystemIntake(id: $id) {
+          id
+          archivedAt
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+      "id": "{{systemIntakeID}}"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

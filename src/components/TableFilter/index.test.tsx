@@ -18,7 +18,8 @@ describe('Table Filter Componenet', () => {
     expect(getByTestId('table-client-filter')).toBeInTheDocument();
   });
 
-  it('display query text in input', () => {
+  it('display query text in input', async () => {
+    const user = userEvent.setup();
     render(
       <GlobalClientFilter
         setGlobalFilter={() => true}
@@ -28,7 +29,7 @@ describe('Table Filter Componenet', () => {
       />
     );
 
-    userEvent.type(screen.getByRole('searchbox'), 'system-1');
+    await user.type(screen.getByRole('searchbox'), 'system-1');
     expect(screen.getByRole('searchbox')).toHaveValue('system-1');
   });
 

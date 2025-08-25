@@ -427,7 +427,6 @@ type CedarExchangeTypeOfDataItem {
   name: String
 }
 
-
 enum ExchangeDirection {
   SENDER
   RECEIVER
@@ -809,7 +808,7 @@ type SystemIntake {
   documents: [SystemIntakeDocument!]!
   hasUiChanges: Boolean
   usesAiTech: Boolean
-  itGovTaskStatuses:  ITGovTaskStatuses!
+  itGovTaskStatuses: ITGovTaskStatuses!
   requestFormState: SystemIntakeFormState!
   draftBusinessCaseState: SystemIntakeFormState!
   """
@@ -832,6 +831,10 @@ type SystemIntake {
   contractName: String
   relationType: RequestRelationType
 
+  """
+  This bool says if an intake supports a system or not. When it is set to true, all linked systems are removed from the intake
+  """
+  doesNotSupportSystems: Boolean
   """
   Linked systems
   """
@@ -875,6 +878,7 @@ type SystemIntake {
   grbReviewAsyncStatus: SystemIntakeGRBReviewAsyncStatusType
   grbReviewAsyncManualEndDate: Time
   grbReviewReminderLastSent: Time
+  systemIntakeSystems: [SystemIntakeSystem!]!
 }
 
 """
@@ -1098,16 +1102,16 @@ Represents the source of funding for a system
 """
 type SystemIntakeFundingSource {
   id: UUID!
-  fundingNumber: String
-  source: String
+  projectNumber: String
+  investment: String
 }
 
 """
 Represents the source of funding for a system
 """
 input SystemIntakeFundingSourceInput {
-  fundingNumber: String
-  source: String
+  projectNumber: String
+  investment: String
 }
 
 """
@@ -1126,7 +1130,6 @@ NOTE: This field is no longer in intake form but data/query is preserved for exi
 input SystemIntakeCostsInput {
   expectedIncreaseAmount: String
   isExpectingIncrease: String
-
 }
 
 """
@@ -1162,6 +1165,36 @@ input UpdateSystemIntakeContractDetailsInput {
 }
 
 """
+Types of System Relationships
+"""
+enum SystemRelationshipType {
+  PRIMARY_SUPPORT
+  PARTIAL_SUPPORT
+  USES_OR_IMPACTED_BY_SELECTED_SYSTEM
+  IMPACTS_SELECTED_SYSTEM
+  OTHER
+}
+"""
+Input data for creating a system intake's relationship to a CEDAR system
+"""
+input SystemRelationshipInput {
+  cedarSystemId: String
+  systemRelationshipType: [SystemRelationshipType!]!
+  otherSystemRelationshipDescription: String
+}
+
+type SystemIntakeSystem {
+  id: UUID!
+  systemIntakeID: UUID!
+  systemID: String!
+  """
+  Note: This should be a system but is nullable in case of error
+  """
+  cedarSystem: CedarSystem
+  systemRelationshipType: [SystemRelationshipType!]!
+  otherSystemRelationshipDescription: String
+}
+"""
 Input data for updating a system intake's relationship to a CEDAR system
 """
 input UpdateSystemIntakeLinkedCedarSystemInput {
@@ -1178,7 +1211,7 @@ input SetSystemIntakeRelationNewSystemInput {
 # RequestRelationType.EXISTING_SYSTEM
 input SetSystemIntakeRelationExistingSystemInput {
   systemIntakeID: UUID!
-  cedarSystemIDs: [String!]!
+  cedarSystemRelationShips: [SystemRelationshipInput!]!
   contractNumbers: [String!]!
 }
 
@@ -1229,7 +1262,6 @@ enum SystemIntakeActionType {
   SEND_EMAIL
   SUBMIT_BIZ_CASE
   SUBMIT_FINAL_BIZ_CASE
-
 }
 
 """
@@ -1512,10 +1544,57 @@ input UpdateSystemIntakeNoteInput {
 }
 
 """
+The input type for adding a new System Link
+"""
+input AddSystemLinkInput {
+  systemIntakeID: UUID!
+  systemID: String!
+  systemRelationshipType: [SystemRelationshipType!]!
+  otherSystemRelationshipDescription: String
+}
+
+"""
+The payload for adding a new System Link
+"""
+type AddSystemLinkPayload {
+  id: UUID!
+  systemIntakeID: UUID!
+  systemID: String!
+  systemRelationshipType: [SystemRelationshipType!]!
+  otherSystemRelationshipDescription: String
+}
+
+"""
 The payload for updating a system's IT governance request
 """
 type UpdateSystemIntakePayload {
   systemIntake: SystemIntake
+  userErrors: [UserError!]
+}
+
+"""
+The payload for deleting a system intake's linked system
+"""
+type DeleteSystemLinkPayload {
+  systemIntakeSystem: SystemIntakeSystem
+  userErrors: [UserError!]
+}
+"""
+The input type for updating a system intake's linked system by id
+"""
+input UpdateSystemLinkInput {
+  id: UUID!
+  systemIntakeID: UUID!
+  systemID: String!
+  systemRelationshipType: [SystemRelationshipType!]!
+  otherSystemRelationshipDescription: String
+}
+
+"""
+The payload for updating a system intake's linked system
+"""
+type UpdateSystemLinkPayload {
+  systemIntakeSystem: SystemIntakeSystem!
   userErrors: [UserError!]
 }
 
@@ -1586,7 +1665,6 @@ input SystemIntakeRequestEditsInput {
   additionalInfo: HTML
   adminNote: HTML
 }
-
 
 """
 Different options for whether the Governance team believes a requester's team should consult with the TRB
@@ -1875,7 +1953,6 @@ type TRBRequest {
   modifiedAt: Time
   contractName: String
   relationType: RequestRelationType # TODO: NOT IMPLEMENTED
-
   """
   Linked contract numbers
   """
@@ -2054,7 +2131,7 @@ input CreateTRBRequestDocumentInput {
   requestID: UUID!
   fileData: Upload!
   documentType: TRBDocumentCommonType!
-  otherTypeDescription: String  # Needed if documentType == OTHER
+  otherTypeDescription: String # Needed if documentType == OTHER
 }
 
 """
@@ -2083,7 +2160,9 @@ type DeleteTRBRequestDocumentPayload {
   document: TRBRequestDocument
 }
 
-"""Represents a document attached to a System Intake"""
+"""
+Represents a document attached to a System Intake
+"""
 type SystemIntakeDocument {
   documentType: SystemIntakeDocumentType!
   id: UUID!
@@ -2106,12 +2185,16 @@ type SystemIntakeDocumentType {
   otherTypeDescription: String
 }
 
-"""Data returned after uploading a document to a System Intake"""
+"""
+Data returned after uploading a document to a System Intake
+"""
 type CreateSystemIntakeDocumentPayload {
   document: SystemIntakeDocument
 }
 
-"""Data returned after deleting a document attached to a System Intake"""
+"""
+Data returned after deleting a document attached to a System Intake
+"""
 type DeleteSystemIntakeDocumentPayload {
   document: SystemIntakeDocument
 }
@@ -2508,7 +2591,12 @@ type TRBAdminNoteGuidanceLetterCategoryData {
   insights: [TRBGuidanceLetterInsight!]!
 }
 
-union TRBAdminNoteCategorySpecificData = TRBAdminNoteGeneralRequestCategoryData | TRBAdminNoteInitialRequestFormCategoryData | TRBAdminNoteSupportingDocumentsCategoryData | TRBAdminNoteConsultSessionCategoryData | TRBAdminNoteGuidanceLetterCategoryData
+union TRBAdminNoteCategorySpecificData =
+  | TRBAdminNoteGeneralRequestCategoryData
+  | TRBAdminNoteInitialRequestFormCategoryData
+  | TRBAdminNoteSupportingDocumentsCategoryData
+  | TRBAdminNoteConsultSessionCategoryData
+  | TRBAdminNoteGuidanceLetterCategoryData
 
 """
 Represents an admin note attached to a TRB request
@@ -2664,7 +2752,8 @@ input CreateTRBGuidanceLetterInsightInput {
 """
 The input required to update an insight to a TRB guidance letter
 """
-input UpdateTRBGuidanceLetterInsightInput @goModel(model: "map[string]interface{}") {
+input UpdateTRBGuidanceLetterInsightInput
+  @goModel(model: "map[string]interface{}") {
   id: UUID!
   title: String
   insight: HTML
@@ -2756,24 +2845,33 @@ type Mutation {
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
 
   createSystemIntakeNote(input: CreateSystemIntakeNoteInput!): SystemIntakeNote
-  @hasRole(role: EASI_GOVTEAM)
-  updateSystemIntakeNote(input: UpdateSystemIntakeNoteInput!): SystemIntakeNote!
-  @hasRole(role: EASI_GOVTEAM)
+    @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeNote(
+    input: UpdateSystemIntakeNoteInput!
+  ): SystemIntakeNote! @hasRole(role: EASI_GOVTEAM)
   createSystemIntake(input: CreateSystemIntakeInput!): SystemIntake
-  @hasRole(role: EASI_USER)
-  updateSystemIntakeRequestType(id: UUID!, newType: SystemIntakeRequestType!): SystemIntake!
-  @hasRole(role: EASI_USER)
+    @hasRole(role: EASI_USER)
+  updateSystemIntakeRequestType(
+    id: UUID!
+    newType: SystemIntakeRequestType!
+  ): SystemIntake! @hasRole(role: EASI_USER)
 
-  submitIntake(
-    input: SubmitIntakeInput!
+  submitIntake(input: SubmitIntakeInput!): UpdateSystemIntakePayload
+  updateSystemIntakeAdminLead(
+    input: UpdateSystemIntakeAdminLeadInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeReviewDates(
+    input: UpdateSystemIntakeReviewDatesInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeContactDetails(
+    input: UpdateSystemIntakeContactDetailsInput!
   ): UpdateSystemIntakePayload
-  updateSystemIntakeAdminLead(input: UpdateSystemIntakeAdminLeadInput!): UpdateSystemIntakePayload
-  @hasRole(role: EASI_GOVTEAM)
-  updateSystemIntakeReviewDates(input: UpdateSystemIntakeReviewDatesInput!): UpdateSystemIntakePayload
-  @hasRole(role: EASI_GOVTEAM)
-  updateSystemIntakeContactDetails(input: UpdateSystemIntakeContactDetailsInput!): UpdateSystemIntakePayload
-  updateSystemIntakeRequestDetails(input: UpdateSystemIntakeRequestDetailsInput!): UpdateSystemIntakePayload
-  updateSystemIntakeContractDetails(input: UpdateSystemIntakeContractDetailsInput!): UpdateSystemIntakePayload
+  updateSystemIntakeRequestDetails(
+    input: UpdateSystemIntakeRequestDetailsInput!
+  ): UpdateSystemIntakePayload
+  updateSystemIntakeContractDetails(
+    input: UpdateSystemIntakeContractDetailsInput!
+  ): UpdateSystemIntakePayload
   createCedarSystemBookmark(
     input: CreateCedarSystemBookmarkInput!
   ): CreateCedarSystemBookmarkPayload
@@ -2781,14 +2879,37 @@ type Mutation {
     input: CreateCedarSystemBookmarkInput!
   ): DeleteCedarSystemBookmarkPayload
 
-  setSystemIntakeRelationNewSystem(input: SetSystemIntakeRelationNewSystemInput): UpdateSystemIntakePayload
-  setSystemIntakeRelationExistingSystem(input: SetSystemIntakeRelationExistingSystemInput): UpdateSystemIntakePayload
-  setSystemIntakeRelationExistingService(input: SetSystemIntakeRelationExistingServiceInput): UpdateSystemIntakePayload
-  unlinkSystemIntakeRelation(intakeID: UUID!): UpdateSystemIntakePayload
+  setSystemIntakeRelationNewSystem(
+    input: SetSystemIntakeRelationNewSystemInput
+  ): UpdateSystemIntakePayload
+  setSystemIntakeRelationExistingSystem(
+    input: SetSystemIntakeRelationExistingSystemInput
+  ): UpdateSystemIntakePayload
+  setSystemIntakeRelationExistingService(
+    input: SetSystemIntakeRelationExistingServiceInput
+  ): UpdateSystemIntakePayload
+  """
+  This mutation sets the bool doesNotSupportSystems on system intake.
+  If set to true, it removes all linked systems from the intake.
+  If set to false, it simply sets the bool on the system intake without taking action on the linked systems.
+  """
+  setSystemSupportAndUnlinkSystemIntakeRelation(
+    intakeID: UUID!
+    doesNotSupportSystems: Boolean!
+  ): UpdateSystemIntakePayload
+  addSystemLink(input: AddSystemLinkInput!): AddSystemLinkPayload
+  deleteSystemLink(systemIntakeSystemID: UUID!): DeleteSystemLinkPayload
+  updateSystemLink(input: UpdateSystemLinkInput!): UpdateSystemLinkPayload
 
-  createSystemIntakeContact(input: CreateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
-  updateSystemIntakeContact(input: UpdateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
-  deleteSystemIntakeContact(input: DeleteSystemIntakeContactInput!): DeleteSystemIntakeContactPayload
+  createSystemIntakeContact(
+    input: CreateSystemIntakeContactInput!
+  ): CreateSystemIntakeContactPayload
+  updateSystemIntakeContact(
+    input: UpdateSystemIntakeContactInput!
+  ): CreateSystemIntakeContactPayload
+  deleteSystemIntakeContact(
+    input: DeleteSystemIntakeContactInput!
+  ): DeleteSystemIntakeContactPayload
 
   startGRBReview(input: StartGRBReviewInput!): String
 
@@ -2816,7 +2937,9 @@ type Mutation {
   restartGRBReviewAsync(input: RestartGRBReviewInput!): UpdateSystemIntakePayload
   @hasRole(role: EASI_GOVTEAM)
 
-  updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
+  updateSystemIntakeLinkedCedarSystem(
+    input: UpdateSystemIntakeLinkedCedarSystemInput!
+  ): UpdateSystemIntakePayload
 
   setSystemIntakeGRBPresentationLinks(input: SystemIntakeGRBPresentationLinksInput!): SystemIntakeGRBPresentationLinks
   uploadSystemIntakeGRBPresentationDeck(input: UploadSystemIntakeGRBPresentationDeckInput!): SystemIntakeGRBPresentationLinks
@@ -2831,68 +2954,97 @@ type Mutation {
   sendReportAProblemEmail(input: SendReportAProblemEmailInput!): String
   createTRBRequest(requestType: TRBRequestType!): TRBRequest!
   updateTRBRequest(id: UUID!, changes: TRBRequestChanges): TRBRequest!
-  createTRBRequestAttendee(input: CreateTRBRequestAttendeeInput!): TRBRequestAttendee!
-  updateTRBRequestAttendee(input: UpdateTRBRequestAttendeeInput!): TRBRequestAttendee!
+  createTRBRequestAttendee(
+    input: CreateTRBRequestAttendeeInput!
+  ): TRBRequestAttendee!
+  updateTRBRequestAttendee(
+    input: UpdateTRBRequestAttendeeInput!
+  ): TRBRequestAttendee!
   deleteTRBRequestAttendee(id: UUID!): TRBRequestAttendee!
-  createTRBRequestDocument(input: CreateTRBRequestDocumentInput!): CreateTRBRequestDocumentPayload
+  createTRBRequestDocument(
+    input: CreateTRBRequestDocumentInput!
+  ): CreateTRBRequestDocumentPayload
   deleteTRBRequestDocument(id: UUID!): DeleteTRBRequestDocumentPayload
-  createSystemIntakeDocument(input: CreateSystemIntakeDocumentInput!): CreateSystemIntakeDocumentPayload
+  createSystemIntakeDocument(
+    input: CreateSystemIntakeDocumentInput!
+  ): CreateSystemIntakeDocumentPayload
   deleteSystemIntakeDocument(id: UUID!): DeleteSystemIntakeDocumentPayload
   updateTRBRequestForm(input: UpdateTRBRequestFormInput!): TRBRequestForm!
-  updateTRBRequestFundingSources(input: UpdateTRBRequestFundingSourcesInput!): [TRBFundingSource!]!
-  deleteTRBRequestFundingSources(input: DeleteTRBRequestFundingSourcesInput!): [TRBFundingSource!]!
+  updateTRBRequestFundingSources(
+    input: UpdateTRBRequestFundingSourcesInput!
+  ): [TRBFundingSource!]!
+  deleteTRBRequestFundingSources(
+    input: DeleteTRBRequestFundingSourcesInput!
+  ): [TRBFundingSource!]!
   setRolesForUserOnSystem(input: SetRolesForUserOnSystemInput!): String
-  createTRBRequestFeedback(input: CreateTRBRequestFeedbackInput!): TRBRequestFeedback!
-  @hasRole(role: EASI_TRB_ADMIN)
-  updateTRBRequestConsultMeetingTime(input: UpdateTRBRequestConsultMeetingTimeInput!): TRBRequest!
-  @hasRole(role: EASI_TRB_ADMIN)
+  createTRBRequestFeedback(
+    input: CreateTRBRequestFeedbackInput!
+  ): TRBRequestFeedback! @hasRole(role: EASI_TRB_ADMIN)
+  updateTRBRequestConsultMeetingTime(
+    input: UpdateTRBRequestConsultMeetingTimeInput!
+  ): TRBRequest! @hasRole(role: EASI_TRB_ADMIN)
   updateTRBRequestTRBLead(input: UpdateTRBRequestTRBLeadInput!): TRBRequest!
-  @hasRole(role: EASI_TRB_ADMIN)
+    @hasRole(role: EASI_TRB_ADMIN)
 
-  setTRBRequestRelationNewSystem(input: SetTRBRequestRelationNewSystemInput!): TRBRequest
-  setTRBRequestRelationExistingSystem(input: SetTRBRequestRelationExistingSystemInput!): TRBRequest
-  setTRBRequestRelationExistingService(input: SetTRBRequestRelationExistingServiceInput!): TRBRequest
+  setTRBRequestRelationNewSystem(
+    input: SetTRBRequestRelationNewSystemInput!
+  ): TRBRequest
+  setTRBRequestRelationExistingSystem(
+    input: SetTRBRequestRelationExistingSystemInput!
+  ): TRBRequest
+  setTRBRequestRelationExistingService(
+    input: SetTRBRequestRelationExistingServiceInput!
+  ): TRBRequest
   unlinkTRBRequestRelation(trbRequestID: UUID!): TRBRequest
 
   # separate mutations for each category of admin note
-  createTRBAdminNoteGeneralRequest(input: CreateTRBAdminNoteGeneralRequestInput!): TRBAdminNote!
-  @hasRole(role: EASI_TRB_ADMIN)
-  createTRBAdminNoteInitialRequestForm(input: CreateTRBAdminNoteInitialRequestFormInput!): TRBAdminNote!
-  @hasRole(role: EASI_TRB_ADMIN)
-  createTRBAdminNoteSupportingDocuments(input: CreateTRBAdminNoteSupportingDocumentsInput!): TRBAdminNote!
-  @hasRole(role: EASI_TRB_ADMIN)
-  createTRBAdminNoteConsultSession(input: CreateTRBAdminNoteConsultSessionInput!): TRBAdminNote!
-  @hasRole(role: EASI_TRB_ADMIN)
-  createTRBAdminNoteGuidanceLetter(input: CreateTRBAdminNoteGuidanceLetterInput!): TRBAdminNote!
-  @hasRole(role: EASI_TRB_ADMIN)
+  createTRBAdminNoteGeneralRequest(
+    input: CreateTRBAdminNoteGeneralRequestInput!
+  ): TRBAdminNote! @hasRole(role: EASI_TRB_ADMIN)
+  createTRBAdminNoteInitialRequestForm(
+    input: CreateTRBAdminNoteInitialRequestFormInput!
+  ): TRBAdminNote! @hasRole(role: EASI_TRB_ADMIN)
+  createTRBAdminNoteSupportingDocuments(
+    input: CreateTRBAdminNoteSupportingDocumentsInput!
+  ): TRBAdminNote! @hasRole(role: EASI_TRB_ADMIN)
+  createTRBAdminNoteConsultSession(
+    input: CreateTRBAdminNoteConsultSessionInput!
+  ): TRBAdminNote! @hasRole(role: EASI_TRB_ADMIN)
+  createTRBAdminNoteGuidanceLetter(
+    input: CreateTRBAdminNoteGuidanceLetterInput!
+  ): TRBAdminNote! @hasRole(role: EASI_TRB_ADMIN)
   setTRBAdminNoteArchived(id: UUID!, isArchived: Boolean!): TRBAdminNote!
-  @hasRole(role: EASI_TRB_ADMIN)
+    @hasRole(role: EASI_TRB_ADMIN)
   createTRBGuidanceLetter(trbRequestId: UUID!): TRBGuidanceLetter!
-  @hasRole(role: EASI_TRB_ADMIN)
-  updateTRBGuidanceLetter(input: UpdateTRBGuidanceLetterInput!): TRBGuidanceLetter!
-  @hasRole(role: EASI_TRB_ADMIN)
+    @hasRole(role: EASI_TRB_ADMIN)
+  updateTRBGuidanceLetter(
+    input: UpdateTRBGuidanceLetterInput!
+  ): TRBGuidanceLetter! @hasRole(role: EASI_TRB_ADMIN)
   requestReviewForTRBGuidanceLetter(id: UUID!): TRBGuidanceLetter!
-  @hasRole(role: EASI_TRB_ADMIN)
+    @hasRole(role: EASI_TRB_ADMIN)
   sendTRBGuidanceLetter(input: SendTRBGuidanceLetterInput!): TRBGuidanceLetter!
-  @hasRole(role: EASI_TRB_ADMIN)
-  createTRBGuidanceLetterInsight(input: CreateTRBGuidanceLetterInsightInput!): TRBGuidanceLetterInsight!
-  @hasRole(role: EASI_TRB_ADMIN)
-  updateTRBGuidanceLetterInsight(input: UpdateTRBGuidanceLetterInsightInput!): TRBGuidanceLetterInsight!
-  @hasRole(role: EASI_TRB_ADMIN)
-  updateTRBGuidanceLetterInsightOrder(input: UpdateTRBGuidanceLetterInsightOrderInput!): [TRBGuidanceLetterInsight!]!
-  @hasRole(role: EASI_TRB_ADMIN)
+    @hasRole(role: EASI_TRB_ADMIN)
+  createTRBGuidanceLetterInsight(
+    input: CreateTRBGuidanceLetterInsightInput!
+  ): TRBGuidanceLetterInsight! @hasRole(role: EASI_TRB_ADMIN)
+  updateTRBGuidanceLetterInsight(
+    input: UpdateTRBGuidanceLetterInsightInput!
+  ): TRBGuidanceLetterInsight! @hasRole(role: EASI_TRB_ADMIN)
+  updateTRBGuidanceLetterInsightOrder(
+    input: UpdateTRBGuidanceLetterInsightOrderInput!
+  ): [TRBGuidanceLetterInsight!]! @hasRole(role: EASI_TRB_ADMIN)
   deleteTRBGuidanceLetterInsight(id: UUID!): TRBGuidanceLetterInsight!
-  @hasRole(role: EASI_TRB_ADMIN)
+    @hasRole(role: EASI_TRB_ADMIN)
   closeTRBRequest(input: CloseTRBRequestInput!): TRBRequest!
-  @hasRole(role: EASI_TRB_ADMIN)
+    @hasRole(role: EASI_TRB_ADMIN)
   reopenTrbRequest(input: ReopenTRBRequestInput!): TRBRequest!
-  @hasRole(role: EASI_TRB_ADMIN)
+    @hasRole(role: EASI_TRB_ADMIN)
   createTrbLeadOption(eua: String!): UserInfo!
   @hasRole(role: EASI_TRB_ADMIN)
   deleteTrbLeadOption(eua: String!): Boolean!
   @hasRole(role: EASI_TRB_ADMIN)
   sendGRBReviewPresentationDeckReminderEmail(systemIntakeID: UUID!): Boolean!
-  @hasRole(role: EASI_GOVTEAM)
+    @hasRole(role: EASI_GOVTEAM)
 }
 
 """
@@ -2905,7 +3057,7 @@ type Query {
   """
   systemIntake(id: UUID!): SystemIntake
   systemIntakes(openRequests: Boolean!): [SystemIntake!]!
-  mySystemIntakes:[SystemIntake!]!
+  mySystemIntakes: [SystemIntake!]!
   systemIntakesWithReviewRequested: [SystemIntake!]!
   systemIntakesWithLcids: [SystemIntake!]!
   compareGRBReviewersByIntakeID(id: UUID!): [GRBReviewerComparisonIntake!]!
@@ -2922,7 +3074,12 @@ type Query {
   myCedarSystems: [CedarSystem!]!
   cedarSystemBookmarks: [CedarSystemBookmark!]!
   cedarThreat(cedarSystemId: String!): [CedarThreat!]!
-  deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
+  deployments(
+    cedarSystemId: String!
+    deploymentType: String
+    state: String
+    status: String
+  ): [CedarDeployment!]!
   roleTypes: [CedarRoleType!]!
   roles(cedarSystemId: String!, roleTypeID: String): [CedarRole!]!
   exchanges(cedarSystemId: String!): [CedarExchange!]!
@@ -2930,12 +3087,15 @@ type Query {
   cedarSystemDetails(cedarSystemId: String!): CedarSystemDetails
   systemIntakeContacts(id: UUID!): SystemIntakeContactsPayload!
   trbRequest(id: UUID!): TRBRequest!
-  trbRequests(archived: Boolean! = false): [TRBRequest!]! @hasRole(role: EASI_TRB_ADMIN)
+  trbRequests(archived: Boolean! = false): [TRBRequest!]!
+    @hasRole(role: EASI_TRB_ADMIN)
   myTrbRequests(archived: Boolean! = false): [TRBRequest!]!
   trbLeadOptions: [UserInfo!]!
   trbAdminNote(id: UUID!): TRBAdminNote! @hasRole(role: EASI_TRB_ADMIN)
   requesterUpdateEmailData: [RequesterUpdateEmailData!]!
   userAccount(username: String!): UserAccount
+  systemIntakeSystem(systemIntakeSystemID: UUID!): SystemIntakeSystem
+  systemIntakeSystems(systemIntakeId: UUID!): [SystemIntakeSystem!]!
 }
 
 enum TRBRequestType {
@@ -3029,7 +3189,6 @@ enum Role {
   EASI_USER
 }
 
-
 """
 The requester view of the IT gov intake step status
 """
@@ -3052,7 +3211,6 @@ enum ITGovIntakeFormStatus {
   COMPLETED
 }
 
-
 """
 The requester view of the IT gov feedback step status
 """
@@ -3071,7 +3229,6 @@ enum ITGovFeedbackStatus {
   COMPLETED
 }
 
-
 """
 The requester view of the IT gov Decision step status
 """
@@ -3089,7 +3246,6 @@ enum ITGovDecisionStatus {
   """
   COMPLETED
 }
-
 
 """
 The requester view of the IT gov draft Business Case step status
@@ -3127,7 +3283,6 @@ enum ITGovDraftBusinessCaseStatus {
   """
   DONE
 }
-
 
 """
 The requester view of the IT Gov GRT step status

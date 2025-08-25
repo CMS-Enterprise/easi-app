@@ -126,6 +126,7 @@ describe('The home page', () => {
 
   describe('is a grt reviewer', () => {
     it('renders the open and closed requests', async () => {
+      const user = userEvent.setup();
       render(
         <MemoryRouter initialEntries={['/']} initialIndex={0}>
           <MockedProvider mocks={mocks}>
@@ -137,6 +138,7 @@ describe('The home page', () => {
           </MockedProvider>
         </MemoryRouter>
       );
+
       // Check open requests count
       expect(
         await screen.findByText(
@@ -148,7 +150,7 @@ describe('The home page', () => {
       const closedTab = await screen.findByRole('button', {
         name: 'Closed requests'
       });
-      userEvent.click(closedTab);
+      await user.click(closedTab);
 
       // Check closed requests count
       expect(
@@ -161,6 +163,7 @@ describe('The home page', () => {
     it('renders the select admin view dropdown', async () => {
       window.localStorage.clear();
 
+      const user = userEvent.setup();
       const { getByTestId, getByRole, findByRole } = render(
         <MemoryRouter>
           <Provider store={adminStore}>
@@ -181,7 +184,7 @@ describe('The home page', () => {
       ).toBeInTheDocument();
 
       // Switch to GRT view
-      userEvent.selectOptions(selectField, ['GRT']);
+      await user.selectOptions(selectField, ['GRT']);
       await findByRole('heading', { name: 'IT Governance requests' });
     });
   });

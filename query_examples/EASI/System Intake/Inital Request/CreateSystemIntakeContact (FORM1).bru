@@ -1,0 +1,54 @@
+meta {
+  name: CreateSystemIntakeContact (FORM1)
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation CreateSystemIntakeContact($input: CreateSystemIntakeContactInput!) {
+    createSystemIntakeContact(input: $input) {
+      systemIntakeContact {
+        id
+        euaUserId
+        systemIntakeId
+        component
+        role
+        __typename
+      }
+      __typename
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "euaUserId": "ABCD",
+      "component": "Center for Clinical Standards and Quality",
+      "role": "Requester",
+      "systemIntakeId": "{{systemIntakeID}}"
+    }
+  }
+}
+
+script:post-response {
+  let responseData = res.getBody().data.createSystemIntakeContact
+  
+  systemIntakeContactID = responseData.systemIntakeContact.id
+  
+  
+  bru.setVar("systemIntakeContactID", systemIntakeContactID);
+  
+  
+  
+}
+
+settings {
+  encodeUrl: true
+}

@@ -67,6 +67,19 @@ export const formatTimeLocal = (
 };
 
 /**
+ * Converts a Date object to a UTC ISO string
+ */
+export const convertDateToISOString = (date: Date | null) => {
+  if (!date) return null;
+
+  const dt = DateTime.fromJSDate(date, { zone: 'UTC' });
+
+  if (!dt.isValid) return null;
+
+  return dt.toISO({ suppressMilliseconds: true });
+};
+
+/**
  * Converts a date string in MM/dd/yyyy format to 5pm Eastern, then to UTC
  *
  * Returns ISO string

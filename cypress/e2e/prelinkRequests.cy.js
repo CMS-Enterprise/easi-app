@@ -14,6 +14,7 @@ describe('Creating requests from the workspace that are linked to cedar systems'
     cy.get('[data-testid="new-request-trb"]a').click();
     cy.contains('a', 'Start').click();
     cy.contains('button', 'Continue').click();
+
     cy.get(`[data-testid="multiselect-tag--${systemName} (OFW)"]`).should(
       'be.visible'
     );

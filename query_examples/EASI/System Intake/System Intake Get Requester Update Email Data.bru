@@ -1,0 +1,27 @@
+meta {
+  name: System Intake Get Requester Update Email Data
+  type: graphql
+  seq: 19
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query getRequesterUpdateEmailData {
+      requesterUpdateEmailData{
+          lcidStatus
+          lcidIssuedAt
+          lcidExpiresAt
+          lcidRetiresAt
+          requesterEmail
+      }
+  }
+}
+
+settings {
+  encodeUrl: true
+}

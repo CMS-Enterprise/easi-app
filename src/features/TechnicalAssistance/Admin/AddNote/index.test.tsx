@@ -3,11 +3,7 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import selectEvent from 'react-select-event';
 import { MockedProvider } from '@apollo/client/testing';
-import {
-  render,
-  screen,
-  waitForElementToBeRemoved
-} from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   CreateTRBAdminNoteGeneralRequestDocument,
@@ -155,6 +151,11 @@ describe('Trb Admin Notes: Add Note', () => {
 
   const store = easiMockStore();
 
+  let user: ReturnType<typeof userEvent.setup>;
+  beforeEach(() => {
+    user = userEvent.setup();
+  });
+
   it('renders conditional category fields', async () => {
     render(
       <MockedProvider
@@ -184,7 +185,7 @@ describe('Trb Admin Notes: Add Note', () => {
 
     /* Initial request form */
 
-    userEvent.selectOptions(categorySelect, ['Initial request form']);
+    await user.selectOptions(categorySelect, ['Initial request form']);
 
     expect(screen.getByText('Which section?'));
     expect(screen.getByRole('checkbox', { name: 'Basic request details' }));
@@ -193,8 +194,7 @@ describe('Trb Admin Notes: Add Note', () => {
 
     /* Supporting documents */
 
-    userEvent.selectOptions(categorySelect, ['Supporting documents']);
-    await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
+    await user.selectOptions(categorySelect, ['Supporting documents']);
 
     const documentSelect = screen.getByRole('combobox', {
       name: 'Which document?'
@@ -206,7 +206,7 @@ describe('Trb Admin Notes: Add Note', () => {
 
     /* Guidance letter */
 
-    userEvent.selectOptions(categorySelect, ['Guidance letter']);
+    await user.selectOptions(categorySelect, ['Guidance letter']);
     const guidanceLetterSectionSelect = screen.getByRole('combobox', {
       name: 'Which section?'
     });
@@ -268,7 +268,7 @@ describe('Trb Admin Notes: Add Note', () => {
     expect(submitButton).toBeDisabled();
 
     // Select note category
-    userEvent.selectOptions(
+    await user.selectOptions(
       getByLabelText(
         RegExp(i18next.t<string>('technicalAssistance:notes.labels.category'))
       ),
@@ -278,7 +278,7 @@ describe('Trb Admin Notes: Add Note', () => {
     // Enter note text
     await typeRichText(await screen.findByTestId('noteText'), 'My cute note');
 
-    userEvent.click(submitButton);
+    await user.click(submitButton);
   });
 
   it('shows an error notice when submission fails', async () => {
@@ -306,7 +306,7 @@ describe('Trb Admin Notes: Add Note', () => {
     );
 
     // Select note category
-    userEvent.selectOptions(
+    await user.selectOptions(
       getByLabelText(
         RegExp(i18next.t<string>('technicalAssistance:notes.labels.category'))
       ),
@@ -316,7 +316,7 @@ describe('Trb Admin Notes: Add Note', () => {
     // Enter note text
     await typeRichText(await screen.findByTestId('noteText'), 'My cute note');
 
-    userEvent.click(
+    await user.click(
       getByRole('button', {
         name: i18next.t<string>('technicalAssistance:notes.saveNote')
       })

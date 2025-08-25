@@ -1,0 +1,47 @@
+meta {
+  name: SetSystemSupportAndUnlinkSystemIntakeRelation
+  type: graphql
+  seq: 4
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation setSystemSupportAndUnlinkSystemIntakeRelation ($intakeID: UUID!, $doesNotSupportSystems: Boolean!) {
+      setSystemSupportAndUnlinkSystemIntakeRelation(intakeID: $intakeID, doesNotSupportSystems: $doesNotSupportSystems) {
+          userErrors {
+              message
+              path
+          }
+          systemIntake {
+              doesNotSupportSystems
+              id
+              step
+              state
+              relationType
+              contractName
+              contractNumbers {
+                  contractNumber
+              }
+              systemIntakeSystems {
+                  id
+              }
+          }
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+      "intakeID": "{{systemIntakeID}}",
+      "doesNotSupportSystems": true
+  }
+}
+
+settings {
+  encodeUrl: true
+}

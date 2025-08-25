@@ -1,0 +1,33 @@
+meta {
+  name: Get System Link
+  type: graphql
+  seq: 7
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query {
+    systemIntakeSystem(systemIntakeSystemID: "{{systemIntakeSystemId}}") {
+      id
+      systemRelationshipType
+      systemIntakeID
+      otherSystemRelationshipDescription
+    }
+  }
+  
+}
+
+script:pre-request {
+  // // const systemIntakeSystemId = pm.collectionVariables.get("systemIntakeSystemId");
+  // console.log("Using systemIntakeSystemId:", systemIntakeSystemId ? systemIntakeSystemId : "fdf8ee5c-8481-4389-ae98-16cdf21f8b64");
+  
+}
+
+settings {
+  encodeUrl: true
+}

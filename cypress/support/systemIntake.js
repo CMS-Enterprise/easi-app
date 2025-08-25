@@ -59,24 +59,24 @@ cy.systemIntake = {
     }
   },
   contractDetails: {
-    addFundingSource: ({ fundingNumber, sources, restart }) => {
-      if (restart) cy.get('[data-testid="fundingSourcesAction-add"]').click();
+    addFundingSource: ({ projectNumber, investments, restart }) => {
+      if (restart) cy.get('[data-testid="addFundingSourceButton"]').click();
 
-      if (fundingNumber) {
-        cy.get('#fundingNumber')
-          .clear()
-          .type(fundingNumber)
-          .should('have.value', fundingNumber);
+      if (projectNumber) {
+        cy.get('#projectNumber').clear();
+        cy.get('#projectNumber').type(projectNumber);
+        cy.get('#projectNumber').should('have.value', projectNumber);
       }
 
-      if (sources) {
-        sources.forEach(source => {
-          cy.get('#sources').type(`${source}{enter}{esc}`);
-          cy.get(`[data-testid="multiselect-tag--${source}"]`);
+      if (investments) {
+        investments.forEach(investment => {
+          cy.get('#investments').type(`${investment}{enter}`);
+          cy.get(`[data-testid="multiselect-tag--${investment}"]`);
+          cy.get('#investments').click();
         });
       }
 
-      cy.get('[data-testid="fundingSourcesAction-save"').click();
+      cy.get('[data-testid="submitFundingSourceButton"]').click();
     }
   }
 };

@@ -66,6 +66,7 @@ describe('System intake form - Contact details', () => {
   });
 
   it('renders error messages', async () => {
+    const user = userEvent.setup();
     render(
       <VerboseMockedProvider
         addTypename
@@ -81,7 +82,7 @@ describe('System intake form - Contact details', () => {
     await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
 
     // Submit empty form
-    userEvent.click(screen.getByRole('button', { name: 'Next' }));
+    await user.click(screen.getByRole('button', { name: 'Next' }));
 
     expect(
       await screen.findByRole('heading', {

@@ -1,0 +1,56 @@
+meta {
+  name: Get Admin Notes, with category-specific fields
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query {
+      trbRequest(id:"{{trbRequestID}}") {
+          adminNotes {
+              id
+              category
+              noteText
+              categorySpecificData {
+                  ... on TRBAdminNoteGeneralRequestCategoryData {
+                      placeholderField
+                  }
+                  ... on TRBAdminNoteInitialRequestFormCategoryData {
+                      appliesToBasicRequestDetails
+                      appliesToSubjectAreas
+                      appliesToAttendees
+                  }
+                  ... on TRBAdminNoteSupportingDocumentsCategoryData {
+                      documents {
+                          id
+                          fileName
+                          deletedAt
+                      }
+                  }
+                  ... on TRBAdminNoteConsultSessionCategoryData {
+                      placeholderField
+                  }
+                  ... on TRBAdminNoteGuidanceLetterCategoryData {
+                      appliesToMeetingSummary
+                      appliesToNextSteps
+                      insights {
+                          id
+                          title
+                          deletedAt
+                      }
+                  }
+              }
+          }
+      }
+  }
+}
+
+settings {
+  encodeUrl: true
+}
