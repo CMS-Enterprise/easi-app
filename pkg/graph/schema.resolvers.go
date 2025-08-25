@@ -697,10 +697,7 @@ func (r *mutationResolver) UpdateSystemIntakeContact(ctx context.Context, input 
 
 // DeleteSystemIntakeContact is the resolver for the deleteSystemIntakeContact field.
 func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input models.DeleteSystemIntakeContactInput) (*models.DeleteSystemIntakeContactPayload, error) {
-	contact := &models.SystemIntakeContact{
-		ID: input.ID,
-	}
-	_, err := r.store.DeleteSystemIntakeContact(ctx, contact)
+	contact, err := resolvers.SystemIntakeContactDelete(ctx, r.store, input.ID)
 	if err != nil {
 		return nil, err
 	}

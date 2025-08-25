@@ -65,6 +65,16 @@ func CreateSystemIntakeContact(
 	}, nil
 }
 
+// SystemIntakeContactDelete will, delete a System Intake contact
+func SystemIntakeContactDelete(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.SystemIntakeContact, error) {
+	contact := &models.SystemIntakeContact{
+		ID: id,
+	}
+	// TODO, consider expanding error handling, and make sure the delete returns the contact
+	return store.DeleteSystemIntakeContact(ctx, contact)
+
+}
+
 // UpdateSystemIntakeContact updates a system intake's contact info.
 func UpdateSystemIntakeContact(
 	ctx context.Context,
