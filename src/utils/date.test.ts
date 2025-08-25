@@ -1,6 +1,7 @@
 import { DateTime, Settings } from 'luxon';
 
 import {
+  convertDateToISOString,
   formatContractDate,
   formatDateLocal,
   formatDateUtc,
@@ -186,6 +187,39 @@ describe('formatDaysHoursMinutes', () => {
       hours: NaN,
       minutes: NaN
     });
+  });
+});
+
+describe('convertDateToISOString', () => {
+  it('converts a valid Date object to UTC ISO string', () => {
+    const date = new Date('2023-06-15T10:30:00.000Z');
+
+    const result = convertDateToISOString(date);
+
+    expect(result).toEqual('2023-06-15T10:30:00Z');
+  });
+
+  it('returns null when input is null', () => {
+    const result = convertDateToISOString(null);
+
+    expect(result).toBeNull();
+  });
+
+  it('returns null when input is an invalid Date object', () => {
+    const invalidDate = new Date('invalid-date');
+
+    const result = convertDateToISOString(invalidDate);
+
+    expect(result).toBeNull();
+  });
+
+  it('handles dates in different timezones and converts to UTC', () => {
+    // Create a date in Eastern time zone
+    const date = new Date('2023-06-15T10:30:00-04:00');
+
+    const result = convertDateToISOString(date);
+
+    expect(result).toEqual('2023-06-15T14:30:00Z');
   });
 });
 
