@@ -1,0 +1,19 @@
+meta {
+  name: Get Organizations
+  type: http
+  seq: 17
+}
+
+get {
+  url: {{CedarApiUrl}}/organization
+  body: none
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+settings {
+  encodeUrl: true
+}

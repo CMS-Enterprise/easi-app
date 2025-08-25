@@ -1,0 +1,21 @@
+meta {
+  name: Delete GRB Reviewer
+  type: graphql
+  seq: 4
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation deleteGRBReviewer {
+    deleteSystemIntakeGRBReviewer(input: {reviewerID: "{{SystemIntakeGRBReviewerID}}"})
+  }
+}
+
+settings {
+  encodeUrl: true
+}

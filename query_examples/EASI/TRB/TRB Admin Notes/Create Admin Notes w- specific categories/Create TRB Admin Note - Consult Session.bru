@@ -1,0 +1,32 @@
+meta {
+  name: Create TRB Admin Note - Consult Session
+  type: graphql
+  seq: 4
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation CreateTRBNoteInConsultSessionCategory($input:CreateTRBAdminNoteConsultSessionInput!) {
+      createTRBAdminNoteConsultSession(input: $input) {
+          id
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+      "input": {
+          "trbRequestId": "{{trbRequestID}}",
+          "noteText": "test note - consult session"
+      }
+  }
+}
+
+settings {
+  encodeUrl: true
+}

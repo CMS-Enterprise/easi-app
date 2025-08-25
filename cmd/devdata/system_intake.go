@@ -306,12 +306,17 @@ func setSystemIntakeRelationExistingSystem(
 	store *storage.Store,
 	intakeID uuid.UUID,
 	contractNumbers []string,
-	cedarSystemIDs []string,
+	cedarSystemRelationships []*models.SystemRelationshipInput,
 ) {
+
+	if len(cedarSystemRelationships) < 1 {
+		return
+	}
+
 	input := &models.SetSystemIntakeRelationExistingSystemInput{
-		SystemIntakeID:  intakeID,
-		ContractNumbers: contractNumbers,
-		CedarSystemIDs:  cedarSystemIDs,
+		SystemIntakeID:           intakeID,
+		ContractNumbers:          contractNumbers,
+		CedarSystemRelationShips: cedarSystemRelationships,
 	}
 
 	// temp, manually set these contract numbers
@@ -371,7 +376,7 @@ func unlinkSystemIntakeRelation(ctx context.Context, store *storage.Store, intak
 		panic(err)
 	}
 
-	if _, err := resolvers.UnlinkSystemIntakeRelation(ctx, store, intakeID); err != nil {
+	if _, err := resolvers.SetSystemSupportAndUnlinkSystemIntakeRelation(ctx, store, intakeID, true); err != nil {
 		panic(err)
 	}
 }

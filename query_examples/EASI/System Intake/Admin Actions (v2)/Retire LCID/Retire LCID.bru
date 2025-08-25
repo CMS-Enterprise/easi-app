@@ -1,0 +1,50 @@
+meta {
+  name: Retire LCID
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation RetireLCID($input: SystemIntakeRetireLCIDInput!) {
+      createSystemIntakeActionRetireLCID(input:$input) {
+          userErrors {
+              message
+              path
+          }
+          systemIntake {
+              lcidStatus
+              lcidRetiresAt
+          }
+      }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+      "input": {
+          "notificationRecipients": {
+              "regularRecipientEmails": [
+                  "{{testEmailAddress}}"
+              ],
+              "shouldNotifyITGovernance": false,
+              "shouldNotifyITInvestment": false
+          },
+          "systemIntakeID": "{{systemIntakeID}}",
+          "retiresAt": "2024-10-01T00:00:00.000Z",
+          "reason": "Testing retirement of LCID",
+          "additionalInfo": "Time to retire",
+          "adminNote": "Intake now retired, don't worry about it"
+      }
+  }
+}
+
+settings {
+  encodeUrl: true
+}

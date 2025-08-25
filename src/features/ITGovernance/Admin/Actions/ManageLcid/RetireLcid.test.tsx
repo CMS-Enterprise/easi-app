@@ -50,9 +50,7 @@ describe('Retire LCID action form', async () => {
 
     // Reason field shows if setting initial retirement date
     expect(
-      screen.getByLabelText(
-        'Why are you retiring this Life Cycle ID? (optional)'
-      )
+      screen.getByText('Why are you retiring this Life Cycle ID? (optional)')
     ).toBeInTheDocument();
   });
 

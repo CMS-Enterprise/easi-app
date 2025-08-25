@@ -1,5 +1,11 @@
 import React, { useMemo } from 'react';
-import { Row, useFlexLayout, usePagination, useTable } from 'react-table';
+import {
+  Column,
+  Row,
+  useFlexLayout,
+  usePagination,
+  useTable
+} from 'react-table';
 import { Table as UswdsTable } from '@trussworks/react-uswds';
 import { getPersonFullName } from 'features/Systems/SystemProfile/util';
 import {
@@ -12,41 +18,80 @@ import TablePagination from 'components/TablePagination';
 import SystemCard from '.';
 
 type SystemCardTableProps = {
-  systems: GetTRBRequestSummaryQuery['trbRequest']['systems'];
+  systems:
+    | SystemIntakeFragmentFragment['systemIntakeSystems']
+    | GetTRBRequestSummaryQuery['trbRequest']['systems'];
 };
 
-/**
- * Creating a bare table for SystemCard
- * Utilizing pagination for each/single card
- * */
+type IntakeRow = SystemIntakeFragmentFragment['systemIntakeSystems'][number];
+type TrbRow = GetTRBRequestSummaryQuery['trbRequest']['systems'][number];
 
+const isSystemIntakeSystems = (
+  systems: SystemCardTableProps['systems']
+): systems is SystemIntakeFragmentFragment['systemIntakeSystems'] =>
+  // eslint-disable-next-line no-underscore-dangle
+  Array.isArray(systems) && systems[0]?.__typename === 'SystemIntakeSystem';
+
+/**
+ * One table; we only switch the column Cell mapper based on the type guard.
+ */
 const SystemCardTable = ({ systems }: SystemCardTableProps) => {
-  const columns: any = useMemo(() => {
+  const isIntake = isSystemIntakeSystems(systems);
+
+  // Typed data per branch
+  const data = useMemo(
+    () => (isIntake ? (systems as IntakeRow[]) : (systems as TrbRow[])),
+    [isIntake, systems]
+  );
+
+  // Build columns based on which row type we're rendering
+  const columns = useMemo<Column<IntakeRow | TrbRow>[]>(() => {
+    if (isIntake) {
+      // Intake Cell mapping
+      return [
+        {
+          accessor: 'id',
+          disableGlobalFilter: true,
+          Cell: ({ row }: { row: Row<IntakeRow> }) => (
+            <SystemCard
+              id={row.original.cedarSystem?.id!}
+              name={row.original.cedarSystem?.name!}
+              description={row.original.cedarSystem?.description!}
+              acronym={row.original.cedarSystem?.acronym}
+              businessOwnerOrg={row.original.cedarSystem?.businessOwnerOrg}
+              businessOwners={row.original.cedarSystem?.businessOwnerRoles
+                ?.map(role => getPersonFullName(role))
+                .join(', ')}
+              systemRelationshipType={row.original.systemRelationshipType}
+              otherSystemRelationshipDescription={
+                row.original.otherSystemRelationshipDescription
+              }
+            />
+          )
+        }
+      ];
+    }
+
+    // TRB Cell mapping
     return [
       {
         accessor: 'id',
         disableGlobalFilter: true,
-        Cell: ({
-          row
-        }: {
-          row: Row<SystemIntakeFragmentFragment['systems'][number]>;
-        }) => {
-          return (
-            <SystemCard
-              id={row.original.id}
-              name={row.original.name}
-              description={row.original.description}
-              acronym={row.original.acronym}
-              businessOwnerOrg={row.original.businessOwnerOrg}
-              businessOwners={row.original.businessOwnerRoles
-                .map(role => getPersonFullName(role))
-                .join(', ')}
-            />
-          );
-        }
+        Cell: ({ row }: { row: Row<TrbRow> }) => (
+          <SystemCard
+            id={row.original.id}
+            name={row.original.name}
+            description={row.original.description}
+            acronym={row.original.acronym}
+            businessOwnerOrg={row.original.businessOwnerOrg}
+            businessOwners={row.original.businessOwnerRoles
+              ?.map(role => getPersonFullName(role))
+              .join(', ')}
+          />
+        )
       }
     ];
-  }, []);
+  }, [isIntake]);
 
   const {
     getTableProps,
@@ -62,13 +107,11 @@ const SystemCardTable = ({ systems }: SystemCardTableProps) => {
     page,
     state,
     prepareRow
-  } = useTable(
+  } = useTable<IntakeRow | TrbRow>(
     {
       columns,
-      data: systems,
-      initialState: {
-        pageSize: 1
-      }
+      data,
+      initialState: { pageSize: 1 }
     },
     usePagination,
     useFlexLayout
@@ -81,21 +124,28 @@ const SystemCardTable = ({ systems }: SystemCardTableProps) => {
           {page.map(row => {
             prepareRow(row);
             return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map((cell, i) => {
-                  return (
-                    <td className="border-0 padding-0" {...cell.getCellProps()}>
-                      {cell.render('Cell')}
-                    </td>
-                  );
-                })}
+              // eslint-disable-next-line react/prop-types
+              <tr {...row.getRowProps()} key={row.id}>
+                {
+                  // eslint-disable-next-line react/prop-types
+                  row.cells.map(cell => {
+                    return (
+                      <td
+                        className="border-0 padding-0"
+                        {...cell.getCellProps()}
+                      >
+                        {cell.render('Cell')}
+                      </td>
+                    );
+                  })
+                }
               </tr>
             );
           })}
         </tbody>
       </UswdsTable>
 
-      {systems.length > 1 && (
+      {data.length > 1 && (
         <TablePagination
           gotoPage={gotoPage}
           previousPage={previousPage}

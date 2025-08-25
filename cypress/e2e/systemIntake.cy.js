@@ -33,9 +33,11 @@ describe('The System Intake Form', () => {
     cy.get('#RequestType-NewSystem').check({ force: true });
     cy.contains('button', 'Continue').click();
     cy.contains('a', 'Get started').click();
-    cy.wait(1000);
 
-    cy.get('#relationType-newSystem').check({ force: true });
+    cy.contains(
+      'label',
+      'or, check this box if this project does not support or use any existing CMS systems'
+    ).click();
     cy.contains('button', 'Continue to task list').click();
 
     cy.get('li[data-testid="fill-out-the-intake-request-form"]')

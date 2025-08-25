@@ -1,0 +1,39 @@
+meta {
+  name: UserAccountGetByUsername
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query($username: String!) {
+    userAccount(username: $username) {
+      id
+      username
+      commonName
+      familyName
+      givenName
+      email
+      locale
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+      "username": "USR1"
+  }
+}
+
+script:post-response {
+  bru.setVar("UserAccountID", res.getBody().data.userAccount.id)
+}
+
+settings {
+  encodeUrl: true
+}

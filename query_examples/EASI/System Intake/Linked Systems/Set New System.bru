@@ -1,0 +1,53 @@
+meta {
+  name: Set New System
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation SetSystemIntakeRelationNewSystem ($input: SetSystemIntakeRelationNewSystemInput!) {
+      setSystemIntakeRelationNewSystem(input:$input) {
+          userErrors {
+              message
+              path
+          }
+          systemIntake {
+              id
+              step
+              state
+              relationType
+              contractName
+              contractNumbers {
+                  contractNumber
+              }
+              systems {
+                  id
+                  name
+                  acronym
+              }
+          }
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+      "input": {
+          "systemIntakeID": "{{systemIntakeID}}",
+          "contractNumbers": [
+              "12345",
+              "67890"
+          ]
+      }
+  }
+}
+
+settings {
+  encodeUrl: true
+}

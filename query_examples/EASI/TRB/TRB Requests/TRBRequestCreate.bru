@@ -1,0 +1,69 @@
+meta {
+  name: TRBRequestCreate
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation createTRBRequest{
+    
+    createTRBRequest(requestType: FOLLOWUP ){
+      id
+      name
+      archived
+      type
+      status
+      taskStatuses {
+          formStatus
+          feedbackStatus
+          consultPrepStatus
+      }
+      form {
+          id
+          trbRequestId
+          component
+          needsAssistanceWith
+          hasSolutionInMind
+          whereInProcess
+          hasExpectedStartEndDates
+          collabGroups
+  
+          createdBy
+          createdAt
+          modifiedBy
+          modifiedAt
+      }
+      createdBy
+      createdAt
+      modifiedBy
+      modifiedAt
+      
+      
+    }
+    
+    
+  }
+}
+
+script:post-response {
+  let responseData = res.getBody().data.createTRBRequest
+  
+  trbRequestID = responseData.id
+  trbRequestFormID = responseData.form.id
+  
+  bru.setVar("trbRequestFormID", trbRequestFormID);
+  
+  
+  bru.setVar("trbRequestID", trbRequestID);
+  
+}
+
+settings {
+  encodeUrl: true
+}
