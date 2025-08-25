@@ -1,0 +1,15 @@
+meta {
+  name: Get_Business_Case
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{apiURL}}/business_case/{{businessCaseID}}
+  body: json
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

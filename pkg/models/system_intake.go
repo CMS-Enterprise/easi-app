@@ -171,6 +171,9 @@ type SystemIntake struct {
 	GrbReviewAsyncEndDate                             *time.Time                   `json:"grbReviewAsyncEndDate" db:"grb_review_async_end_date"`
 	GrbReviewAsyncManualEndDate                       *time.Time                   `json:"grbReviewAsyncManualEndDate" db:"grb_review_async_manual_end_date"`
 	GrbReviewReminderLastSent                         *time.Time                   `json:"grbReviewReminderLastSent" db:"grb_review_reminder_last_sent"`
+	// This bool says if an intake supports a system or not.
+	// It is set through setSystemSupportAndUnlinkSystemIntakeRelation mutation
+	DoesNotSupportSystems null.Bool `json:"doesNotSupportSystems" db:"does_not_support_systems"`
 }
 
 // SystemIntakes is a list of System Intakes

@@ -35,8 +35,6 @@ import AttendeesForm from './AttendeesForm';
 import Pager from './Pager';
 import { FormStepComponentProps, StepSubmit, TrbFormAlert } from '.';
 
-// Make FormStepComponentProps conditionally required on the presence of fromTaskList
-// Used to render Attendees/form from task list outside the scope of initial request form
 type AttendeesProps =
   | {
       fromTaskList: true;
@@ -94,9 +92,7 @@ function Attendees({
   const { path, url } = useRouteMatch();
   const history = useHistory();
 
-  const { id: trbID } = useParams<{
-    id: string;
-  }>();
+  const { id: trbID } = useParams<{ id: string }>();
 
   const taskListAttendeesURL = `/trb/task-list/${trbID}/attendees`;
 
@@ -145,36 +141,27 @@ function Attendees({
    * Reset form with default values after useTRBAttendees query returns requester
    */
   useEffect(() => {
-    /** Default reqiester values */
     const defaultValues: TRBAttendeeFields = {
       euaUserId: requester?.userInfo?.euaUserId || '',
       component: requester?.component,
       role: requester?.role
     };
-    // Reset form
     reset(defaultValues);
   }, [requester, reset]);
 
   /** Submit requester as attendee */
   const submitForm = useCallback<StepSubmit>(
     (callback, shouldValidate = true) =>
-      // Start the submit promise
       handleSubmit(
-        // Validation passed
         async formData => {
           try {
-            // Submit the input only if there are changes
             if (isDirty) {
               const { component, role } = formData;
-              // Update requester
               await updateAttendee({
                 id: requester.id,
                 component: component || '',
                 role: role as PersonRole
-              })
-                // Refresh the RequestForm parent request query
-                // to update things like `stepsCompleted`
-                .then(() => refetchRequest?.());
+              }).then(() => refetchRequest?.());
             }
             callback?.();
           } catch (e) {
@@ -220,7 +207,6 @@ function Attendees({
     if (setIsStepSubmitting) setIsStepSubmitting(isSubmitting);
   }, [setIsStepSubmitting, isSubmitting]);
 
-  // Wait until attendees query has completed to load form
   if (loading) return <PageLoading />;
 
   if (fromTaskList && attendees.length === 0 && !path.includes('list')) {
@@ -264,7 +250,6 @@ function Attendees({
                   setValue={setValue}
                   control={control}
                 />
-
                 <Divider className="margin-top-4" />
               </>
             )}
@@ -313,13 +298,8 @@ function Attendees({
                   'usa-button--outline': attendees.length > 0
                 })}
                 to={`${url}/list`}
-                // Save requester when navigating to additional attendees form
                 onClick={() => {
-                  // Clear out alert from previous action
                   setFormAlert(false);
-
-                  // Check that all requester fields are filled out
-                  // This submission should not throw errors if missing fields
                   if (
                     getValues().euaUserId &&
                     getValues().component &&
@@ -336,7 +316,6 @@ function Attendees({
                 )}
               </UswdsReactLink>
 
-              {/* List of additional attendees */}
               <AttendeesTable
                 attendees={attendees}
                 setActiveAttendee={setActiveAttendee}
@@ -349,7 +328,6 @@ function Attendees({
             <Pager
               className="margin-top-5"
               next={
-                // Hides button on task list
                 stepUrl && {
                   disabled: isSubmitting,
                   onClick: () => {

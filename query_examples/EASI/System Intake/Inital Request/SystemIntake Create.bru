@@ -1,0 +1,93 @@
+meta {
+  name: SystemIntake Create
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation createSystemIntake{
+    
+    createSystemIntake(input:{
+        requestType :MAJOR_CHANGES
+        requester: {
+            name: "Mr. Fun Person"
+        }
+      } )
+    
+    {
+      id
+      step
+      state
+      requestFormState
+  
+    adminLead
+    archivedAt
+  #   businessCase
+    businessNeed
+  #   businessOwner
+    businessSolution
+    createdAt
+    currentStage
+    decisionNextSteps
+    collaborator508
+    collaboratorName508
+    euaUserId
+    existingFunding
+    grbDate
+    grtDate
+    id
+    lcid
+    lcidExpiresAt
+    lcidScope
+    lcidCostBaseline
+    needsEaSupport
+  #   notes
+    oitSecurityCollaborator
+    oitSecurityCollaboratorName
+  #   productManager
+    projectAcronym
+    rejectionReason
+    requestName
+    requestType
+  #   requester
+  #   status
+    submittedAt
+    trbCollaborator
+    trbCollaboratorName
+    updatedAt
+    grtReviewEmailBody
+    decidedAt
+    businessCaseId
+  #   lastAdminNote
+    cedarSystemId
+  #   documents
+    hasUiChanges
+    grbReviewType  
+      
+    }
+    
+    
+  }
+}
+
+script:post-response {
+  let responseData = res.getBody().data.createSystemIntake
+  
+  systemIntakeID = responseData.id
+  
+  
+  bru.setVar("systemIntakeID", systemIntakeID);
+  
+  
+  
+}
+
+settings {
+  encodeUrl: true
+}

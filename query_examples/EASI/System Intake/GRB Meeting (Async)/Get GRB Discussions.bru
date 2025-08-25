@@ -1,0 +1,65 @@
+meta {
+  name: Get GRB Discussions
+  type: graphql
+  seq: 6
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query getSystemIntakeGRBReviewers($systemIntakeID: UUID!) {
+    systemIntake(id: $systemIntakeID) {
+      id
+      grbDiscussions {
+          initialPost {
+              id
+              content
+              votingRole
+              grbRole
+              systemIntakeID
+              createdAt
+              createdByUserAccount {
+                  givenName
+                  familyName
+              }
+              modifiedAt
+              modifiedByUserAccount {
+                  givenName
+                  familyName
+              }
+          }
+          replies {
+              id
+              content
+              votingRole
+              grbRole
+              systemIntakeID
+              createdAt
+              createdByUserAccount {
+                  givenName
+                  familyName
+              }
+              modifiedAt
+              modifiedByUserAccount {
+                  givenName
+                  familyName
+              }
+          }
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+      "systemIntakeID": "{{systemIntakeID}}"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

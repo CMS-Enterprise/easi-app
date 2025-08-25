@@ -1,0 +1,39 @@
+meta {
+  name: TRBRequestFeedbackGetByID
+  type: graphql
+  seq: 3
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query TRBRequestGetByID{
+    
+    trbRequest(id: "{{trbRequestID}}"){
+      id
+      feedback {
+          id
+          trbRequestId
+          feedbackMessage
+          copyTrbMailbox
+          notifyEuaIds
+          action
+          createdBy
+          createdAt
+          modifiedBy
+          modifiedAt
+      }
+      
+    }
+    
+    
+  }
+}
+
+settings {
+  encodeUrl: true
+}

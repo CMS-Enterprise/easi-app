@@ -1,0 +1,38 @@
+meta {
+  name: Create Insight
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation CreateInsight($input: CreateTRBGuidanceLetterInsightInput!) {
+      createTRBGuidanceLetterInsight(input: $input) {
+          id
+          title
+          insight
+          category
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+      "input": {
+          "trbRequestId": "{{trbRequestID}}",
+          "title": "manuallyCreatedRec1",
+          "insight": "testing 1",
+          "links": [],
+          "category": "RECOMMENDATION"
+      }
+  }
+}
+
+settings {
+  encodeUrl: true
+}

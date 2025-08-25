@@ -20,6 +20,7 @@ exports[`UploadForm page > renders correct navigation text if requester and take
       href="/governance-task-list/undefined"
     >
       <svg
+        aria-hidden="true"
         class="usa-icon margin-right-1"
         focusable="false"
         height="1em"

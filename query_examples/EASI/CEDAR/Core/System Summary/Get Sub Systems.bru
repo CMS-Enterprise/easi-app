@@ -1,0 +1,32 @@
+meta {
+  name: Get Sub Systems
+  type: graphql
+  seq: 4
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query ($cedarSystemID: String!) {
+      cedarSubSystems(cedarSystemId: $cedarSystemID) {
+          id
+          name
+          acronym
+          description
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+      "cedarSystemID": "{FE44CFAB-51CB-4650-A13C-87D3C2541DEB}"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

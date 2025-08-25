@@ -1,0 +1,37 @@
+meta {
+  name: Create TRB Admin Note - Supporting Documents
+  type: graphql
+  seq: 3
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  # Note - documentIDs in input need to be manually set, based on other queries/reading the database
+  mutation CreateTRBNoteInSupportingDocumentsCategory($input:CreateTRBAdminNoteSupportingDocumentsInput!) {
+      createTRBAdminNoteSupportingDocuments(input: $input) {
+          id
+      }
+  }
+}
+
+body:graphql:vars {
+  {
+      "input": {
+          "trbRequestId": "{{trbRequestID}}",
+          "noteText": "test note - supporting documents",
+          "documentIDs": [
+              "501cd8f0-4784-4cac-9772-cf01aef4f1d9",
+              "0949bd6e-ed6f-48ee-853f-487e0808de0a"
+          ]
+      }
+  }
+}
+
+settings {
+  encodeUrl: true
+}

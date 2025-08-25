@@ -1,0 +1,19 @@
+meta {
+  name: Get User by EUA
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{OktaApiUrl}}/api/v1/users/{{EUAID}}
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: SSWS {{OktaApiToken}}
+}
+
+settings {
+  encodeUrl: true
+}
