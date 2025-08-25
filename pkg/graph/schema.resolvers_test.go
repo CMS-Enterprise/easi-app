@@ -33,6 +33,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/graph/generated"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/local"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
@@ -101,8 +102,8 @@ func (m mockS3Client) GetObjectTagging(input *s3.GetObjectTaggingInput) (*s3.Get
 
 	return &s3.GetObjectTaggingOutput{
 		TagSet: []*s3.Tag{{
-			Key:   aws.String(upload.AVStatusTagName),
-			Value: aws.String(m.AVStatus),
+			Key:   helpers.PointerTo(upload.AVStatusTagName),
+			Value: &m.AVStatus,
 		}},
 	}, nil
 }

@@ -4,7 +4,6 @@ import (
 	"context"
 	"regexp"
 
-	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ses"
 	"github.com/samber/lo"
@@ -12,6 +11,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/appconfig"
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/email"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -73,18 +73,18 @@ func (s Sender) Send(ctx context.Context, emailData email.Email) error {
 		},
 		Message: &ses.Message{
 			Subject: &ses.Content{
-				Charset: aws.String("UTF-8"),
-				Data:    aws.String(email.AddNonProdEnvToSubject(emailData.Subject, s.environment)),
+				Charset: helpers.PointerTo("UTF-8"),
+				Data:    helpers.PointerTo(email.AddNonProdEnvToSubject(emailData.Subject, s.environment)),
 			},
 			Body: &ses.Body{
 				Html: &ses.Content{
-					Charset: aws.String("UTF-8"),
-					Data:    aws.String(emailData.Body),
+					Charset: helpers.PointerTo("UTF-8"),
+					Data:    &emailData.Body,
 				},
 			},
 		},
-		Source:    aws.String(s.config.Source),
-		SourceArn: aws.String(s.config.SourceARN),
+		Source:    &s.config.Source,
+		SourceArn: &s.config.SourceARN,
 	}
 	_, err := s.client.SendEmail(input)
 	return err
