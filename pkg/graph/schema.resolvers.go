@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -1608,51 +1609,8 @@ func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID st
 }
 
 // SystemIntakeContacts is the resolver for the systemIntakeContacts field.
-func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) (*models.SystemIntakeContactsPayload, error) {
-	contacts, err := r.store.FetchSystemIntakeContactsBySystemIntakeID(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-
-	if len(contacts) == 0 {
-		return &models.SystemIntakeContactsPayload{}, nil
-	}
-
-	euaIDs := make([]string, len(contacts))
-	for i, contact := range contacts {
-		euaIDs[i] = contact.EUAUserID
-	}
-
-	userInfos, err := r.service.FetchUserInfos(ctx, euaIDs)
-	if err != nil {
-		return nil, err
-	}
-
-	userInfoMap := make(map[string]*models.UserInfo)
-	for _, userInfo := range userInfos {
-		if userInfo != nil {
-			userInfoMap[userInfo.Username] = userInfo
-		}
-	}
-
-	augmentedContacts := make([]*models.AugmentedSystemIntakeContact, 0, len(contacts))
-	invalidEUAIDs := make([]string, 0, len(contacts))
-	for _, contact := range contacts {
-		if userInfo, found := userInfoMap[contact.EUAUserID]; found {
-			augmentedContacts = append(augmentedContacts, &models.AugmentedSystemIntakeContact{
-				SystemIntakeContact: *contact,
-				CommonName:          userInfo.DisplayName,
-				Email:               userInfo.Email,
-			})
-		} else {
-			invalidEUAIDs = append(invalidEUAIDs, contact.EUAUserID)
-		}
-	}
-
-	return &models.SystemIntakeContactsPayload{
-		SystemIntakeContacts: augmentedContacts,
-		InvalidEUAIDs:        invalidEUAIDs,
-	}, nil
+func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) ([]*models.SystemIntakeContact, error) {
+	return resolvers.GetSystemIntakeContactsBySystemIntakeID(ctx, r.store, id)
 }
 
 // TrbRequest is the resolver for the trbRequest field.
@@ -2112,6 +2070,43 @@ func (r *systemIntakeResolver) SystemIntakeSystems(ctx context.Context, obj *mod
 	return resolvers.SystemIntakeSystemsByIntakeID(ctx, obj.ID)
 }
 
+// Roles is the resolver for the roles field.
+func (r *systemIntakeContactResolver) Roles(ctx context.Context, obj *models.SystemIntakeContact) ([]models.SystemIntakeContactRole, error) {
+	// TODO: Update once roles type is updated in database
+	return []models.SystemIntakeContactRole{models.SystemIntakeContactRole(obj.Role)}, nil
+}
+
+// IsRequester is the resolver for the isRequester field.
+func (r *systemIntakeContactResolver) IsRequester(ctx context.Context, obj *models.SystemIntakeContact) (bool, error) {
+	// TODO EASI-4934: implement isRequester field
+	panic(fmt.Errorf("not implemented: IsRequester - isRequester"))
+}
+
+// CreatedBy is the resolver for the createdBy field.
+func (r *systemIntakeContactResolver) CreatedBy(ctx context.Context, obj *models.SystemIntakeContact) (uuid.UUID, error) {
+	panic(fmt.Errorf("not implemented: CreatedBy - createdBy"))
+}
+
+// CreatedByUserAccount is the resolver for the createdByUserAccount field.
+func (r *systemIntakeContactResolver) CreatedByUserAccount(ctx context.Context, obj *models.SystemIntakeContact) (*authentication.UserAccount, error) {
+	panic(fmt.Errorf("not implemented: CreatedByUserAccount - createdByUserAccount"))
+}
+
+// ModifiedBy is the resolver for the modifiedBy field.
+func (r *systemIntakeContactResolver) ModifiedBy(ctx context.Context, obj *models.SystemIntakeContact) (*uuid.UUID, error) {
+	panic(fmt.Errorf("not implemented: ModifiedBy - modifiedBy"))
+}
+
+// ModifiedByUserAccount is the resolver for the modifiedByUserAccount field.
+func (r *systemIntakeContactResolver) ModifiedByUserAccount(ctx context.Context, obj *models.SystemIntakeContact) (*authentication.UserAccount, error) {
+	panic(fmt.Errorf("not implemented: ModifiedByUserAccount - modifiedByUserAccount"))
+}
+
+// ModifiedAt is the resolver for the modifiedAt field.
+func (r *systemIntakeContactResolver) ModifiedAt(ctx context.Context, obj *models.SystemIntakeContact) (*time.Time, error) {
+	panic(fmt.Errorf("not implemented: ModifiedAt - modifiedAt"))
+}
+
 // DocumentType is the resolver for the documentType field.
 func (r *systemIntakeDocumentResolver) DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*models.SystemIntakeDocumentType, error) {
 	return &models.SystemIntakeDocumentType{
@@ -2464,6 +2459,11 @@ func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 // SystemIntake returns generated.SystemIntakeResolver implementation.
 func (r *Resolver) SystemIntake() generated.SystemIntakeResolver { return &systemIntakeResolver{r} }
 
+// SystemIntakeContact returns generated.SystemIntakeContactResolver implementation.
+func (r *Resolver) SystemIntakeContact() generated.SystemIntakeContactResolver {
+	return &systemIntakeContactResolver{r}
+}
+
 // SystemIntakeDocument returns generated.SystemIntakeDocumentResolver implementation.
 func (r *Resolver) SystemIntakeDocument() generated.SystemIntakeDocumentResolver {
 	return &systemIntakeDocumentResolver{r}
@@ -2538,6 +2538,7 @@ type iTGovTaskStatusesResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
+type systemIntakeContactResolver struct{ *Resolver }
 type systemIntakeDocumentResolver struct{ *Resolver }
 type systemIntakeGRBPresentationLinksResolver struct{ *Resolver }
 type systemIntakeGRBReviewerResolver struct{ *Resolver }

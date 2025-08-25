@@ -5,14 +5,14 @@ export const initialContactDetails = {
   euaUserId: '',
   systemIntakeId: '',
   component: '',
-  role: '',
+  roles: [],
   commonName: '',
   email: ''
 };
 
 export const initialContactsObject: FormattedContacts = {
-  requester: { ...initialContactDetails, role: 'Requester' },
-  businessOwner: { ...initialContactDetails, role: 'Business Owner' },
-  productManager: { ...initialContactDetails, role: 'Product Manager' },
+  requester: { ...initialContactDetails, roles: ['Requester'] },
+  businessOwner: { ...initialContactDetails, roles: ['Business Owner'] },
+  productManager: { ...initialContactDetails, roles: ['Product Manager'] },
   additionalContacts: []
 };

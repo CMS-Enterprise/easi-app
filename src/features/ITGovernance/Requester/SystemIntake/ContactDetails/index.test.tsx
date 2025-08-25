@@ -31,10 +31,7 @@ const getSystemIntakeContactsQuery: MockedQuery<GetSystemIntakeContactsQuery> =
     result: {
       data: {
         __typename: 'Query',
-        systemIntakeContacts: {
-          __typename: 'SystemIntakeContactsPayload',
-          systemIntakeContacts: []
-        }
+        systemIntakeContacts: []
       }
     }
   };

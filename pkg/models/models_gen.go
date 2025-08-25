@@ -186,10 +186,11 @@ type CreateGRBReviewerInput struct {
 
 // The data needed to associate a contact with a system intake
 type CreateSystemIntakeContactInput struct {
-	EuaUserID      string    `json:"euaUserId"`
-	SystemIntakeID uuid.UUID `json:"systemIntakeId"`
-	Component      string    `json:"component"`
-	Role           string    `json:"role"`
+	EuaUserID      string                    `json:"euaUserId"`
+	SystemIntakeID uuid.UUID                 `json:"systemIntakeId"`
+	Component      string                    `json:"component"`
+	Roles          []SystemIntakeContactRole `json:"roles"`
+	IsRequester    bool                      `json:"isRequester"`
 }
 
 // The payload when creating a system intake contact
@@ -609,12 +610,6 @@ type SystemIntakeConfirmLCIDInput struct {
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
 }
 
-// The payload when retrieving system intake contacts
-type SystemIntakeContactsPayload struct {
-	SystemIntakeContacts []*AugmentedSystemIntakeContact `json:"systemIntakeContacts"`
-	InvalidEUAIDs        []string                        `json:"invalidEUAIDs"`
-}
-
 // Represents a contract for work on a system
 type SystemIntakeContract struct {
 	Contractor  *string       `json:"contractor,omitempty"`
@@ -928,11 +923,10 @@ type UpdateSystemIntakeContactDetailsInput struct {
 
 // The data needed to update a contact associated with a system intake
 type UpdateSystemIntakeContactInput struct {
-	ID             uuid.UUID `json:"id"`
-	EuaUserID      string    `json:"euaUserId"`
-	SystemIntakeID uuid.UUID `json:"systemIntakeId"`
-	Component      string    `json:"component"`
-	Role           string    `json:"role"`
+	ID          uuid.UUID                 `json:"id"`
+	Component   string                    `json:"component"`
+	Roles       []SystemIntakeContactRole `json:"roles"`
+	IsRequester bool                      `json:"isRequester"`
 }
 
 // Input data for updating contract details related to a system request
@@ -1316,6 +1310,82 @@ func (e *SystemIntakeAsyncGRBVotingOption) UnmarshalJSON(b []byte) error {
 }
 
 func (e SystemIntakeAsyncGRBVotingOption) MarshalJSON() ([]byte, error) {
+	var buf bytes.Buffer
+	e.MarshalGQL(&buf)
+	return buf.Bytes(), nil
+}
+
+// SystemIntakeContactRole is the various roles that a user can have as a contact on a system intake
+type SystemIntakeContactRole string
+
+const (
+	SystemIntakeContactRoleBusinessOwner                     SystemIntakeContactRole = "BUSINESS_OWNER"
+	SystemIntakeContactRoleCloudNavigator                    SystemIntakeContactRole = "CLOUD_NAVIGATOR"
+	SystemIntakeContactRoleContractingOfficersRepresentative SystemIntakeContactRole = "CONTRACTING_OFFICERS_REPRESENTATIVE"
+	SystemIntakeContactRoleCyberRiskAdvisor                  SystemIntakeContactRole = "CYBER_RISK_ADVISOR"
+	SystemIntakeContactRoleInformationSystemSecurityAdvisor  SystemIntakeContactRole = "INFORMATION_SYSTEM_SECURITY_ADVISOR"
+	SystemIntakeContactRoleOther                             SystemIntakeContactRole = "OTHER"
+	SystemIntakeContactRolePrivacyAdvisor                    SystemIntakeContactRole = "PRIVACY_ADVISOR"
+	SystemIntakeContactRoleProductOwner                      SystemIntakeContactRole = "PRODUCT_OWNER"
+	SystemIntakeContactRoleProjectManager                    SystemIntakeContactRole = "PROJECT_MANAGER"
+	SystemIntakeContactRoleSubjectMatterExpert               SystemIntakeContactRole = "SUBJECT_MATTER_EXPERT"
+	SystemIntakeContactRoleSystemMaintainer                  SystemIntakeContactRole = "SYSTEM_MAINTAINER"
+	SystemIntakeContactRoleSystemOwner                       SystemIntakeContactRole = "SYSTEM_OWNER"
+)
+
+var AllSystemIntakeContactRole = []SystemIntakeContactRole{
+	SystemIntakeContactRoleBusinessOwner,
+	SystemIntakeContactRoleCloudNavigator,
+	SystemIntakeContactRoleContractingOfficersRepresentative,
+	SystemIntakeContactRoleCyberRiskAdvisor,
+	SystemIntakeContactRoleInformationSystemSecurityAdvisor,
+	SystemIntakeContactRoleOther,
+	SystemIntakeContactRolePrivacyAdvisor,
+	SystemIntakeContactRoleProductOwner,
+	SystemIntakeContactRoleProjectManager,
+	SystemIntakeContactRoleSubjectMatterExpert,
+	SystemIntakeContactRoleSystemMaintainer,
+	SystemIntakeContactRoleSystemOwner,
+}
+
+func (e SystemIntakeContactRole) IsValid() bool {
+	switch e {
+	case SystemIntakeContactRoleBusinessOwner, SystemIntakeContactRoleCloudNavigator, SystemIntakeContactRoleContractingOfficersRepresentative, SystemIntakeContactRoleCyberRiskAdvisor, SystemIntakeContactRoleInformationSystemSecurityAdvisor, SystemIntakeContactRoleOther, SystemIntakeContactRolePrivacyAdvisor, SystemIntakeContactRoleProductOwner, SystemIntakeContactRoleProjectManager, SystemIntakeContactRoleSubjectMatterExpert, SystemIntakeContactRoleSystemMaintainer, SystemIntakeContactRoleSystemOwner:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeContactRole) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeContactRole) UnmarshalGQL(v any) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeContactRole(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeContactRole", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeContactRole) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+func (e *SystemIntakeContactRole) UnmarshalJSON(b []byte) error {
+	s, err := strconv.Unquote(string(b))
+	if err != nil {
+		return err
+	}
+	return e.UnmarshalGQL(s)
+}
+
+func (e SystemIntakeContactRole) MarshalJSON() ([]byte, error) {
 	var buf bytes.Buffer
 	e.MarshalGQL(&buf)
 	return buf.Bytes(), nil

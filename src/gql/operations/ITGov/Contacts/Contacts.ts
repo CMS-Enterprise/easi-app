@@ -3,9 +3,7 @@ import { gql } from '@apollo/client';
 export const GetSystemIntakeContacts = gql(/* GraphQL */ `
   query GetSystemIntakeContacts($id: UUID!) {
     systemIntakeContacts(id: $id) {
-      systemIntakeContacts {
-        ...SystemIntakeContactFragment
-      }
+      ...SystemIntakeContact
     }
   }
 `);
@@ -18,7 +16,7 @@ export const CreateSystemIntakeContact = gql(/* GraphQL */ `
         euaUserId
         systemIntakeId
         component
-        role
+        roles
       }
     }
   }
@@ -32,7 +30,7 @@ export const UpdateSystemIntakeContact = gql(/* GraphQL */ `
         euaUserId
         systemIntakeId
         component
-        role
+        roles
       }
     }
   }
@@ -46,7 +44,7 @@ export const DeleteSystemIntakeContact = gql(/* GraphQL */ `
         euaUserId
         systemIntakeId
         component
-        role
+        roles
       }
     }
   }

@@ -3,10 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Button, Label, Select } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import { ExternalRecipientAlert } from 'features/TechnicalAssistance/Admin/_components/ActionFormWrapper/Recipients';
-import {
-  AugmentedSystemIntakeContact,
-  PersonRole
-} from 'gql/generated/graphql';
+import { PersonRole } from 'gql/generated/graphql';
 import i18next from 'i18next';
 
 import Alert from 'components/Alert';
@@ -50,7 +47,7 @@ const Contact = ({
     /** Used to automatically hide contact when deleted instead of waiting for deleteContact mutation to complete */
     setHideContact
   ] = useState(false);
-  const { commonName, component, role, id } = contact;
+  const { commonName, component, roles, id } = contact;
   const { t } = useTranslation('intake');
 
   if (hideContact) return null;
@@ -59,7 +56,7 @@ const Contact = ({
       <p className="text-bold">
         {commonName}, {component}
       </p>
-      <p>{role}</p>
+      <p>{roles[0]}</p>
       <p>{contact.email}</p>
       <div className="system-intake-contacts__contact-actions">
         <Button
@@ -142,7 +139,7 @@ const ContactForm = ({
       component: activeContact.component
         ? ''
         : t('contactDetails.additionalContacts.errors.component', { type }),
-      role: activeContact.role
+      role: activeContact.roles[0]
         ? ''
         : t('contactDetails.additionalContacts.errors.role', { type })
     };
@@ -225,9 +222,9 @@ const ContactForm = ({
           id="IntakeForm-ContactRole"
           name="systemIntakeContact.role"
           data-testid="IntakeForm-ContactRole"
-          value={activeContact.role}
+          value={activeContact.roles[0]}
           onChange={e =>
-            setActiveContact({ ...activeContact, role: e.target.value })
+            setActiveContact({ ...activeContact, roles: [e.target.value] })
           }
         >
           <option value="" disabled>
@@ -282,7 +279,7 @@ type AdditionalContactsProps = {
   /** Whether to show warning for selecting external users */
   showExternalUsersWarning?: boolean;
   /** Function called after contact is created */
-  createContactCallback?: (contact: AugmentedSystemIntakeContact) => any;
+  createContactCallback?: (contact: SystemIntakeContactProps) => any;
   /** Type of form - Recipient type does not display contacts */
   type?: 'recipient' | 'contact';
   /** Outer div class */
