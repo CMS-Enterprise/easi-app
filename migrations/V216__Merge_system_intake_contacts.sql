@@ -1,6 +1,22 @@
+CREATE TYPE SYSTEM_INTAKE_CONTACT_ROLE AS ENUM (
+    'BUSINESS_OWNER',
+    'CLOUD_NAVIGATOR',
+    'CONTRACTING_OFFICERS_REPRESENTATIVE',
+    'CYBER_RISK_ADVISOR',
+    'INFORMATION_SYSTEM_SECURITY_ADVISOR',
+    'OTHER',
+    'PRIVACY_ADVISOR',
+    'PRODUCT_OWNER',
+    'PROJECT_MANAGER',
+    'SUBJECT_MATTER_EXPERT',
+    'SYSTEM_MAINTAINER',
+    'SYSTEM_OWNER'
+);
+COMMENT ON TYPE SYSTEM_INTAKE_CONTACT_ROLE IS 'Roles that a user can as a contact on a system intake';
+
 -- add roles column to the DB. TODO change this to an enum
 ALTER TABLE IF EXISTS system_intake_contacts
-ADD COLUMN roles TEXT[] NOT NULL DEFAULT '{}',
+ADD COLUMN roles SYSTEM_INTAKE_CONTACT_ROLE[] NOT NULL DEFAULT '{}',
 ADD COLUMN is_requester BOOLEAN NOT NULL DEFAULT FALSE,
 ADD COLUMN created_by UUID REFERENCES user_account(id), -- TODO set this not null later
 ADD COLUMN modified_by UUID REFERENCES user_account(id);
@@ -30,7 +46,26 @@ WITH raw_data_to_update AS (
         -- This makes an array agg of all non-requester roles. We use ARRAY_REMOVE to get rid of any NULLs that are caused we skip requester
         ARRAY_REMOVE(
             ARRAY_AGG(
-                CASE WHEN LOWER(sic.role) <> 'requester' THEN sic.role END
+                CASE 
+                    WHEN LOWER(sic.role) = 'requester' THEN NULL
+                    WHEN sic.role = 'Business owner' THEN 'BUSINESS_OWNER'::SYSTEM_INTAKE_CONTACT_ROLE
+                    WHEN sic.role = 'Business Owner' THEN 'BUSINESS_OWNER'::SYSTEM_INTAKE_CONTACT_ROLE
+                    WHEN sic.role = 'Cloud Navigator' THEN 'CLOUD_NAVIGATOR'::SYSTEM_INTAKE_CONTACT_ROLE
+                    WHEN sic.role = 'Contracting Officer''s Representative (COR)' THEN 'CONTRACTING_OFFICERS_REPRESENTATIVE'::SYSTEM_INTAKE_CONTACT_ROLE
+                    WHEN sic.role = 'Contracting Officer’s Representative (COR)' THEN 'CONTRACTING_OFFICERS_REPRESENTATIVE'::SYSTEM_INTAKE_CONTACT_ROLE
+                    WHEN sic.role = 'CRA' THEN 'CYBER_RISK_ADVISOR'::SYSTEM_INTAKE_CONTACT_ROLE
+                    WHEN sic.role = 'Cyber Risk Advisor (CRA)' THEN 'CYBER_RISK_ADVISOR'::SYSTEM_INTAKE_CONTACT_ROLE
+                    WHEN sic.role = 'Information System Security Advisor (ISSO)' THEN 'INFORMATION_SYSTEM_SECURITY_ADVISOR'::SYSTEM_INTAKE_CONTACT_ROLE
+                    WHEN sic.role = 'ISSO' THEN 'INFORMATION_SYSTEM_SECURITY_ADVISOR'::SYSTEM_INTAKE_CONTACT_ROLE
+                    WHEN sic.role = 'Other' THEN 'OTHER'::SYSTEM_INTAKE_CONTACT_ROLE
+                    WHEN sic.role = 'Product Manager' THEN 'PROJECT_MANAGER'::SYSTEM_INTAKE_CONTACT_ROLE --TODO verify this, should it really go to project manager?
+                    WHEN sic.role = 'Product Owner' THEN 'PRODUCT_OWNER'::SYSTEM_INTAKE_CONTACT_ROLE
+                    WHEN sic.role = 'System Maintainer' THEN 'SYSTEM_MAINTAINER'::SYSTEM_INTAKE_CONTACT_ROLE
+                    WHEN sic.role = 'System Owner' THEN 'SYSTEM_OWNER'::SYSTEM_INTAKE_CONTACT_ROLE
+                    WHEN sic.role = 'Unknown' THEN 'OTHER'::SYSTEM_INTAKE_CONTACT_ROLE --use OTHER for unknown
+                    ELSE sic.role -- FOR now, keep the original to test the test data. Will eventually switch to OTHER
+                    -- ELSE 'OTHER'
+                END
             ) OVER (PARTITION BY sic.user_id, sic.system_intake_id),
             NULL
         ) AS roles_array,
@@ -59,7 +94,7 @@ data_to_update AS (
         raw_data.created_at,
         raw_data.updated_at,
         raw_data.common_name,
-        CASE WHEN raw_data.roles_array = '{}' THEN '{Other}' ELSE raw_data.roles_array END AS roles_array,
+        CASE WHEN raw_data.roles_array = '{}' THEN '{OTHER}' ELSE raw_data.roles_array END AS roles_array,
         
         raw_data.split_index,
         raw_data.split_count,
