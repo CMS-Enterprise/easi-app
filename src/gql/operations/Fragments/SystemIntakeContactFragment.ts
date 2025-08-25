@@ -1,13 +1,17 @@
 import { gql } from '@apollo/client';
 
 export default gql(/* GraphQL */ `
-  fragment SystemIntakeContactFragment on AugmentedSystemIntakeContact {
+  fragment SystemIntakeContact on SystemIntakeContact {
     systemIntakeId
     id
     euaUserId
+    userAccount {
+      id
+      username
+      commonName
+      email
+    }
     component
-    role
-    commonName
-    email
+    roles
   }
 `);

@@ -1814,27 +1814,41 @@ type CurrentUser {
 }
 
 """
+SystemIntakeContactRole is the various roles that a user can have as a contact on a system intake
+"""
+enum SystemIntakeContactRole  {
+  BUSINESS_OWNER
+  CLOUD_NAVIGATOR
+  CONTRACTING_OFFICERS_REPRESENTATIVE
+  CYBER_RISK_ADVISOR
+  INFORMATION_SYSTEM_SECURITY_ADVISOR
+  OTHER
+  PRIVACY_ADVISOR
+  PRODUCT_OWNER
+  PROJECT_MANAGER
+  SUBJECT_MATTER_EXPERT
+  SYSTEM_MAINTAINER
+  SYSTEM_OWNER
+}
+
+"""
 Represents a contact associated with a system intake
 """
 type SystemIntakeContact {
   id: UUID!
-  euaUserId: String!
+  userAccount: UserAccount!
   systemIntakeId: UUID!
   component: String!
-  role: String!
-}
+  roles: [SystemIntakeContactRole!]!
+  isRequester: Boolean!
 
-"""
-Represents a contact associated with a system intake, including additional fields from CEDAR
-"""
-type AugmentedSystemIntakeContact {
-  id: UUID!
-  euaUserId: String!
-  systemIntakeId: UUID!
-  component: String!
-  role: String!
-  commonName: String
-  email: EmailAddress
+  # Meta Data
+  createdBy: UUID!
+  createdByUserAccount: UserAccount!
+  createdAt: Time!
+  modifiedBy: UUID
+  modifiedByUserAccount: UserAccount
+  modifiedAt: Time
 }
 
 """
@@ -1844,7 +1858,8 @@ input CreateSystemIntakeContactInput {
   euaUserId: String!
   systemIntakeId: UUID!
   component: String!
-  role: String!
+  roles: [SystemIntakeContactRole!]!
+  isRequester: Boolean!
 }
 
 """
@@ -1852,10 +1867,9 @@ The data needed to update a contact associated with a system intake
 """
 input UpdateSystemIntakeContactInput {
   id: UUID!
-  euaUserId: String!
-  systemIntakeId: UUID!
   component: String!
-  role: String!
+  roles: [SystemIntakeContactRole!]!
+  isRequester: Boolean!
 }
 
 """
@@ -1883,14 +1897,6 @@ input EmailNotificationRecipients {
   regularRecipientEmails: [EmailAddress!]!
   shouldNotifyITGovernance: Boolean!
   shouldNotifyITInvestment: Boolean!
-}
-
-"""
-The payload when retrieving system intake contacts
-"""
-type SystemIntakeContactsPayload {
-  systemIntakeContacts: [AugmentedSystemIntakeContact!]!
-  invalidEUAIDs: [String!]!
 }
 
 """
@@ -3085,7 +3091,7 @@ type Query {
   exchanges(cedarSystemId: String!): [CedarExchange!]!
   urls(cedarSystemId: String!): [CedarURL!]!
   cedarSystemDetails(cedarSystemId: String!): CedarSystemDetails
-  systemIntakeContacts(id: UUID!): SystemIntakeContactsPayload!
+  systemIntakeContacts(id: UUID!): [SystemIntakeContact!]!
   trbRequest(id: UUID!): TRBRequest!
   trbRequests(archived: Boolean! = false): [TRBRequest!]!
     @hasRole(role: EASI_TRB_ADMIN)

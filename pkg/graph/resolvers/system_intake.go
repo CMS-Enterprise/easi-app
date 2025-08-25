@@ -44,18 +44,17 @@ func CreateSystemIntakeContact(
 	input models.CreateSystemIntakeContactInput,
 	getAccountInformation userhelpers.GetAccountInfoFunc,
 ) (*models.CreateSystemIntakeContactPayload, error) {
-	contact := &models.SystemIntakeContact{
-		SystemIntakeID: input.SystemIntakeID,
-		EUAUserID:      input.EuaUserID,
-		Component:      input.Component,
-		Role:           input.Role,
-	}
 	contactUserAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, input.EuaUserID, false, getAccountInformation)
 	if err != nil {
 		return nil, err
 	}
 
-	contact.UserID = contactUserAccount.ID
+	contact := models.NewSystemIntakeContact(contactUserAccount.ID)
+	contact.SystemIntakeID = input.SystemIntakeID
+	contact.EUAUserID = input.EuaUserID
+	contact.Component = input.Component
+	// TODO: Revert to `input.Roles` when database is updated to array
+	contact.Role = string(input.Roles[0])
 
 	createdContact, err := store.CreateSystemIntakeContact(ctx, contact)
 	if err != nil {
@@ -73,20 +72,18 @@ func UpdateSystemIntakeContact(
 	input models.UpdateSystemIntakeContactInput,
 	getAccountInformation userhelpers.GetAccountInfoFunc,
 ) (*models.CreateSystemIntakeContactPayload, error) {
-	contact := &models.SystemIntakeContact{
-		ID:             input.ID,
-		SystemIntakeID: input.SystemIntakeID,
-		EUAUserID:      input.EuaUserID,
-		Component:      input.Component,
-		Role:           input.Role,
-	}
-
-	contactUserAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, input.EuaUserID, false, getAccountInformation)
+	// TODO: Fully implement this. This is a placeholder
+	contact, err := store.GetSystemIntakeContactByID(ctx, input.ID)
 	if err != nil {
 		return nil, err
-	} // We comment this out for now, we will use this eventually to link the contact to the user account
+	}
 
-	contact.UserID = contactUserAccount.ID
+	// TODO: Fix
+
+	contact.ID = input.ID
+	contact.Component = input.Component
+	// TODO: Revert to `input.Roles` when database is updated to array
+	contact.Role = string(input.Roles[0])
 
 	updatedContact, err := store.UpdateSystemIntakeContact(ctx, contact)
 	if err != nil {
@@ -448,4 +445,9 @@ func GetRequesterUpdateEmailData(
 	}
 
 	return data, nil
+}
+
+// GetSystemIntakeContactsBySystemIntakeID fetches contacts for a system intake
+func GetSystemIntakeContactsBySystemIntakeID(ctx context.Context, store *storage.Store, systemIntakeID uuid.UUID) ([]*models.SystemIntakeContact, error) {
+	return store.FetchSystemIntakeContactsBySystemIntakeID(ctx, systemIntakeID)
 }

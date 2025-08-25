@@ -1,5 +1,4 @@
 import {
-  AugmentedSystemIntakeContact,
   FundingSourceFragmentFragment,
   SystemIntakeCollaboratorInput,
   SystemIntakeGRBReviewType,
@@ -68,7 +67,7 @@ export type SystemIntakeForm = {
 
 export type ContactFields = Omit<
   SystemIntakeContactProps,
-  'role' | 'systemIntakeId'
+  'roles' | 'systemIntakeId'
 >;
 
 export type ContactDetailsForm = {
@@ -169,7 +168,7 @@ export type SystemIntakeContactProps = {
   euaUserId: string | null;
   systemIntakeId: string;
   component: string;
-  role: string;
+  roles: string[];
   commonName: string;
   email: string;
 };
@@ -185,12 +184,12 @@ export type FormattedContacts = {
 /** Function to create system intake contact */
 export type CreateContactType = (
   contact: SystemIntakeContactProps
-) => Promise<AugmentedSystemIntakeContact | undefined>;
+) => Promise<SystemIntakeContactProps | undefined>;
 
 /** Function to update system intake contact */
 export type UpdateContactType = (
   contact: SystemIntakeContactProps
-) => Promise<AugmentedSystemIntakeContact | undefined>;
+) => Promise<SystemIntakeContactProps | undefined>;
 
 /** Function to delete system intake contact */
 export type DeleteContactType = (

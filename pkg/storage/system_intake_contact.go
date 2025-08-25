@@ -14,6 +14,38 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
+// GetSystemIntakeContactByID returns a system intake contact by it's ID
+func (s *Store) GetSystemIntakeContactByID(ctx context.Context, id uuid.UUID) (*models.SystemIntakeContact, error) {
+	//TODO this is just a placeholder, refactor and put SQL in it's own package etc. Ideally, make this a data loader
+	var contact models.SystemIntakeContact
+	const selectSystemIntakeContactSQL = `
+		SELECT
+			id,
+			eua_user_id,
+			system_intake_id,
+			role,
+			component,
+			created_at,
+			updated_at,
+			user_id
+		FROM system_intake_contacts
+		WHERE id = $1
+	`
+	err := s.db.Get(&contact, selectSystemIntakeContactSQL, id)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, &apperrors.QueryError{
+				Err:       err,
+				Model:     models.SystemIntakeContact{},
+				Operation: apperrors.QueryFetch,
+			}
+		}
+		appcontext.ZLogger(ctx).Error("Failed to fetch system intake contact", zap.Error(err), zap.String("id", id.String()))
+		return nil, err
+	}
+	return &contact, nil
+}
+
 // CreateSystemIntakeContact creates a new system intake contact object in the database
 func (s *Store) CreateSystemIntakeContact(ctx context.Context, systemIntakeContact *models.SystemIntakeContact) (*models.SystemIntakeContact, error) {
 	now := s.clock.Now().UTC()
