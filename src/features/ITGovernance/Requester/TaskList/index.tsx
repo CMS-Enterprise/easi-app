@@ -65,10 +65,6 @@ function GovernanceTaskList() {
 
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
 
-  const requestTypeText = t('itGov:taskList.requestType', {
-    returnObjects: true
-  }) as Record<string, string>;
-
   const { data, loading, error } = useGetGovernanceTaskListQuery({
     variables: {
       id: systemId
@@ -148,17 +144,6 @@ function GovernanceTaskList() {
               <PageHeading className="margin-y-0">
                 {t('taskList.heading')}
               </PageHeading>
-              <div>
-                {data && data.systemIntake && (
-                  <span className="font-body-md line-height-body-4 text-base margin-right-1">
-                    {requestTypeText[systemIntake.requestType]}
-                  </span>
-                )}
-
-                <UswdsReactLink to={`/system/request-type/${systemId}`}>
-                  {t('taskList.changeRequestType')}
-                </UswdsReactLink>
-              </div>
 
               <div className="line-height-body-4">
                 {requestName && (
@@ -169,6 +154,8 @@ function GovernanceTaskList() {
                 <span className="text-base-dark margin-right-2">
                   {t('governanceOverview:changeRequestTypeCopy')}
                 </span>
+                {/* UPDATE this to go back ot request type and throw a state there too */}
+
                 <ReactRouterLink
                   to={{
                     pathname: `/system/request-type/${systemId || ''}`,

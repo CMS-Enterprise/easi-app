@@ -65,17 +65,31 @@ const GovernanceOverview = () => {
       <GovernanceOverviewContent />
 
       {systemId && (
-        <UswdsReactLink
-          className="usa-button margin-bottom-5"
-          variant="unstyled"
-          to={{
-            pathname: `/linked-systems/${systemId}`,
-            search: linkCedarSystemIdQs,
-            state: { isNew }
-          }}
-        >
-          {t('getStarted')}
-        </UswdsReactLink>
+        <div className="margin-top-4">
+          <UswdsReactLink
+            className="usa-button
+            usa-button--outline"
+            variant="unstyled"
+            to={{
+              pathname: `/system/request-type/${systemId}`,
+              search: linkCedarSystemIdQs,
+              state: { isNew }
+            }}
+          >
+            {t('technicalAssistance:button.back')}
+          </UswdsReactLink>
+          <UswdsReactLink
+            className="usa-button"
+            variant="unstyled"
+            to={{
+              pathname: `/linked-systems/${systemId}`,
+              search: linkCedarSystemIdQs,
+              state: { isNew }
+            }}
+          >
+            {t('technicalAssistance:button.continue')}
+          </UswdsReactLink>
+        </div>
       )}
     </MainContent>
   );
