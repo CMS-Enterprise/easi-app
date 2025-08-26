@@ -371,6 +371,7 @@ const intake = {
     },
     description:
       'Provide a brief explanation of the business need, issue, or problem that the contract/request will address, including your current plans for how to address the need. This page should speak to what your contract/request accomplishes and how.',
+    viewExampleAnswer: 'View an example answer',
     projectConceptHelpText:
       'If you would like to see an example of completed Request details, please contact the Governance Admin Team at <emailLink>IT_Governance@cms.hhs.gov</emailLink>.',
     contractTitle: 'Contract/Request Title',
@@ -379,13 +380,27 @@ const intake = {
     businessNeed:
       'What is your business need that this contract/request will meet?',
     businessNeedHelpText:
-      'Include an explanation of the business need/issue/problem that the contract/request will address. This information can be pulled from your draft Acquisition Plan (Statement of Need section) and/or taken from the Statement of Work, Statement of Objectives or Performance Work Statement. Please be brief.',
+      'Include an explanation of the business need, issue, or problem that this project will address. Please be brief.',
+    businessNeedExampleAnswer:
+      'I work in HR/OHC, and I need: to expedite the hiring process, to onboard employees faster and reduce the paperwork burden in order, to retain desirable new hires before they apply to other jobs.',
     businessSolution: 'How are you thinking of solving it?',
     businessSolutionHelpText:
-      'Let us know if you have a solution in mind. This information can be pulled from your draft Acquisition Plan (Capability or Performance section) and/or taken from the Statement of Work, Statement of Objectives or Performance Work Statement. Please be brief.',
-    currentStage: 'Where are you in the process?',
+      'Let us know if you have a solution in mind. Please be brief.',
+    businessSolutionExampleAnswer:
+      'To automate the onboarding process and create more efficient workflows, HR would like to hire a contractor to implement a machine learning system within the CMS enterprise cloud that will analyze and score resumes to bring the best matches forward for each job opening.',
+    currentStage: 'What is your project status?',
     currentStageHelpText:
-      'This helps the governance team provide the right type of guidance for your request',
+      'Please choose the option that best matches the status of the work in the scope of this intake. This helps the governance team provide the right type of guidance for your request. Some options in this dropdown will have follow-up questions.',
+    currentStageCollapseLinkText: 'What do the options in this dropdown mean?',
+    currentStageOptions: [
+      '<bold>I have an idea and want to brainstorm:</bold> You and your team are considering an entirely new project or significant changes to an existing project, but have not yet started any contracting or acquisition efforts.',
+      '<bold>Contracting work has started, but a contractor has not been selected:</bold> You are in the initial stages of contractual planning for your new project or have released the contract, but you have not yet selected a contractor.',
+      '<bold>Development has recently started:</bold> Your team has already begun work on the project you are submitting this request for.',
+      '<bold>Development is significantly underway:</bold> Your team is already over 50% complete with the work on the project you are submitting this request for.',
+      '<bold>Parts of this project are in production, with other parts still in development:</bold> Your team has completed and released some of the work for the project you are submitting this request for.',
+      '<bold>This project is in O&M:</bold> Your team is continuing to support and make only minimal operational improvements to this project. Many teams submitting a re-compete request may choose this option.',
+      '<bold>Other:</bold> Choose this option if none of the above project statuses make sense for your request.'
+    ],
     usesAiTech: 'Does your request involve AI technologies?',
     usesAiTechHelpText:
       'Select "Yes" if you are considering using AI for this request, even if you are not yest sure. This could be for new development or enhancement to an existing solution. For general AI related questions, please contact the AI team at <aiEmail>AI@cms.hhs.gov</aiEmail>. For more targeted and specific AI inquiries, please reach out to the <trbEmail>Technical Review Board (TRB)</trbEmail> for assistance.',

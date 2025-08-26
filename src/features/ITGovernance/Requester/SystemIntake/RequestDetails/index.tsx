@@ -170,6 +170,13 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
     }
   }, [errors, hasErrors, isSubmitting]);
 
+  const currentStageOptions: string[] = t(
+    'requestDetails.currentStageOptions',
+    {
+      returnObjects: true
+    }
+  );
+
   return (
     <>
       {hasErrors && (
@@ -238,7 +245,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
         </HelpText>
 
         <FieldGroup scrollElement="requestName" error={!!errors.requestName}>
-          <Label htmlFor="requestName">
+          <Label htmlFor="requestName" required>
             {t('requestDetails.contractTitle')}
           </Label>
           <HelpText id="requestNameHelpText" className="margin-top-1">
@@ -255,12 +262,21 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
         </FieldGroup>
 
         <FieldGroup scrollElement="businessNeed" error={!!errors.businessNeed}>
-          <Label htmlFor="businessNeed">
+          <Label htmlFor="businessNeed" className="maxw-none" required>
             {t('requestDetails.businessNeed')}
           </Label>
           <HelpText id="businessNeedHelpText" className="margin-top-1">
             {t('requestDetails.businessNeedHelpText')}
           </HelpText>
+          <CollapsableLink
+            id="businessNeed"
+            label={t('requestDetails.viewExampleAnswer')}
+            className="margin-y-1"
+          >
+            <p className="margin-y-0">
+              {t('requestDetails.businessNeedExampleAnswer')}
+            </p>
+          </CollapsableLink>
           <ErrorMessage
             errors={errors}
             name="businessNeed"
@@ -279,12 +295,21 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           scrollElement="businessSolution"
           error={!!errors.businessSolution}
         >
-          <Label htmlFor="businessSolution">
+          <Label htmlFor="businessSolution" required>
             {t('requestDetails.businessSolution')}
           </Label>
           <HelpText id="businessSolutionHelpText" className="margin-top-1">
             {t('requestDetails.businessSolutionHelpText')}
           </HelpText>
+          <CollapsableLink
+            id="businessSolution"
+            label={t('requestDetails.viewExampleAnswer')}
+            className="margin-y-1"
+          >
+            <p className="margin-y-0">
+              {t('requestDetails.businessSolutionExampleAnswer')}
+            </p>
+          </CollapsableLink>
           <ErrorMessage
             errors={errors}
             name="businessSolution"
@@ -300,7 +325,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
         </FieldGroup>
 
         <FieldGroup scrollElement="currentStage" error={!!errors.currentStage}>
-          <Label htmlFor="currentStage">
+          <Label htmlFor="currentStage" required>
             {t('requestDetails.currentStage')}
           </Label>
           <HelpText id="currentStageHelpText" className="margin-top-1">
@@ -326,6 +351,22 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
               </option>
             ))}
           </Select>
+          <CollapsableLink
+            id="businessSolution"
+            label={t('requestDetails.currentStageCollapseLinkText')}
+            className="margin-y-1"
+          >
+            <ul className="margin-y-0 padding-left-3">
+              {currentStageOptions.map((item, index) => (
+                <li key={item} className="line-height-sans-5 margin-bottom-1">
+                  <Trans
+                    i18nKey={`intake:requestDetails.currentStageOptions.${index}`}
+                    components={{ bold: <strong /> }}
+                  />
+                </li>
+              ))}
+            </ul>
+          </CollapsableLink>
         </FieldGroup>
 
         <hr className="margin-bottom-1 margin-top-4 opacity-30" aria-hidden />
