@@ -343,8 +343,9 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
             aria-describedby="currentStageHelpText"
           >
             <option value="" disabled>
-              {t('Select an option')}
+              - {t('Select')} -
             </option>
+
             {processStages.map(({ name, value }) => (
               <option key={value} value={name}>
                 {name}

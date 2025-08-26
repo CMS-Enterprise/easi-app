@@ -1,27 +1,27 @@
 const processStages = [
   {
     value: 'idea',
-    name: 'Just an idea'
+    name: 'I have an idea and want to brainstorm'
   },
   {
-    value: 'initialResearch',
-    name: 'I have done some initial research'
+    value: 'contractingWorkStartedNoContractSelected',
+    name: 'Contracting work has started, but a contract has not been selected'
   },
   {
-    value: 'inDevelopment',
-    name: 'Initial development underway'
+    value: 'inDevelopmentJustStarted',
+    name: 'Development has recently started'
+  },
+  {
+    value: 'inDevelopmentSignificantly',
+    name: 'Development is significantly underway'
   },
   {
     value: 'inOM',
-    name: 'I am in Operations & Maintenance'
+    name: 'The system is in O&M'
   },
   {
-    value: 'inOMProposal',
-    name: 'I am in Operations & Maintenance but will be soliciting proposals for a different direction'
-  },
-  {
-    value: 'servicesContract',
-    name: 'This project is a services contract'
+    value: 'other',
+    name: 'Other'
   }
 ];
 
