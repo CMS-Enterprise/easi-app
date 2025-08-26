@@ -58,7 +58,7 @@ WITH raw_data_to_update AS (
                     WHEN sic.role = 'Information System Security Advisor (ISSO)' THEN 'INFORMATION_SYSTEM_SECURITY_ADVISOR'::SYSTEM_INTAKE_CONTACT_ROLE
                     WHEN sic.role = 'ISSO' THEN 'INFORMATION_SYSTEM_SECURITY_ADVISOR'::SYSTEM_INTAKE_CONTACT_ROLE
                     WHEN sic.role = 'Other' THEN 'OTHER'::SYSTEM_INTAKE_CONTACT_ROLE
-                    WHEN sic.role = 'Product Manager' THEN 'PROJECT_MANAGER'::SYSTEM_INTAKE_CONTACT_ROLE --TODO verify this, should it really go to project manager?
+                    WHEN sic.role = 'Product Manager' THEN 'PRODUCT_OWNER'::SYSTEM_INTAKE_CONTACT_ROLE
                     WHEN sic.role = 'Product Owner' THEN 'PRODUCT_OWNER'::SYSTEM_INTAKE_CONTACT_ROLE
                     WHEN sic.role = 'System Maintainer' THEN 'SYSTEM_MAINTAINER'::SYSTEM_INTAKE_CONTACT_ROLE
                     WHEN sic.role = 'System Owner' THEN 'SYSTEM_OWNER'::SYSTEM_INTAKE_CONTACT_ROLE
