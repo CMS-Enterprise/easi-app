@@ -422,7 +422,7 @@ const intake = {
     },
     needsEaSupport: 'Does your request need Enterprise Architecture support?',
     needsEaSupportHelpText:
-      'If you are unsure, mark "Yes" and someone from the EA team will assess your needs.',
+      'If you are unsure, mark "Yes" and someone from the EA team will assess your needs. You may also reach out to EA directly at <email>EnterpriseArchitecture@cms.hhs.gov</email>.',
     eaTeamHelp: {
       label: 'How can the Enterprise Architecture team help me?',
       description:

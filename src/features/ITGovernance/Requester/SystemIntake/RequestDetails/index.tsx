@@ -43,6 +43,7 @@ import {
   CMS_AI_EMAIL,
   CMS_DVSM_EMAIL,
   CMS_TRB_EMAIL,
+  ENTERPRISE_ARCH_EMAIL,
   IT_GOV_EMAIL
 } from 'constants/externalUrls';
 import flattenFormErrors from 'utils/flattenFormErrors';
@@ -384,7 +385,16 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
               {t('requestDetails.needsEaSupport')}
             </legend>
             <HelpText id="needsEaSupportHelpText" className="margin-top-1">
-              {t('requestDetails.needsEaSupportHelpText')}
+              <Trans
+                i18nKey="intake:requestDetails.needsEaSupportHelpText"
+                components={{
+                  email: (
+                    <UswdsLink href={`mailto:${ENTERPRISE_ARCH_EMAIL}`}>
+                      {' '}
+                    </UswdsLink>
+                  )
+                }}
+              />
             </HelpText>
             <ErrorMessage
               errors={errors}
