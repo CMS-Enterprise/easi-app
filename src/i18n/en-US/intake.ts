@@ -435,7 +435,7 @@ const intake = {
       model: 'Model your business processes and document workflows'
     },
     hasUiChanges:
-      'Does your project involve any user interface component, or changes to an interface component?'
+      'Will your project have a user interface, be public facing, or involve outside customers?'
   },
   contractDetails: {
     heading: 'Contract details',

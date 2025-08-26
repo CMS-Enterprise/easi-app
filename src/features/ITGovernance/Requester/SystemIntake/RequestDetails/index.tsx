@@ -381,9 +381,9 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           error={!!errors.needsEaSupport}
         >
           <Fieldset>
-            <legend className="text-bold">
+            <Label htmlFor="needsEaSupport" required>
               {t('requestDetails.needsEaSupport')}
-            </legend>
+            </Label>
             <HelpText id="needsEaSupportHelpText" className="margin-top-1">
               <Trans
                 i18nKey="intake:requestDetails.needsEaSupportHelpText"
@@ -465,9 +465,9 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
 
         <FieldGroup scrollElement="usesAiTech" error={!!errors.usesAiTech}>
           <Fieldset>
-            <legend className="text-bold">
+            <Label htmlFor="usesAiTech" required>
               {t('requestDetails.usesAiTech')}
-            </legend>
+            </Label>
             <HelpText id="usesAiTechHelpText" className="margin-top-1">
               <Trans
                 i18nKey="intake:requestDetails.usesAiTechHelpText"
@@ -525,9 +525,9 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
 
         <FieldGroup scrollElement="hasUiChanges" error={!!errors.hasUiChanges}>
           <Fieldset>
-            <legend className="text-bold">
+            <Label htmlFor="hasUiChanges" className="maxw-none">
               {t('requestDetails.hasUiChanges')}
-            </legend>
+            </Label>
             <ErrorMessage
               errors={errors}
               name="hasUiChanges"
