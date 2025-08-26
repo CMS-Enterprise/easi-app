@@ -9,6 +9,7 @@ import {
   Fieldset,
   Form,
   FormGroup,
+  Link,
   Link as UswdsLink,
   Radio,
   Select,
@@ -41,7 +42,8 @@ import processStages from 'constants/enums/processStages';
 import {
   CMS_AI_EMAIL,
   CMS_DVSM_EMAIL,
-  CMS_TRB_EMAIL
+  CMS_TRB_EMAIL,
+  IT_GOV_EMAIL
 } from 'constants/externalUrls';
 import flattenFormErrors from 'utils/flattenFormErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
@@ -222,9 +224,19 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
         )}
         className="maxw-none tablet:grid-col-9 margin-bottom-5 border-top border-base-light padding-top-1"
       >
-        <span className="font-body-md text-bold">
+        <p className="margin-y-0 font-body-md text-bold">
           {t('requestDetails.subsectionHeadings.projectConcept')}
-        </span>
+        </p>
+        <HelpText>
+          <Trans
+            i18nKey="intake:requestDetails.projectConceptHelpText"
+            values={{ email: IT_GOV_EMAIL }}
+            components={{
+              emailLink: <Link href={`mailto:${IT_GOV_EMAIL}`}> </Link>
+            }}
+          />
+        </HelpText>
+
         <FieldGroup scrollElement="requestName" error={!!errors.requestName}>
           <Label htmlFor="requestName">
             {t('requestDetails.contractTitle')}

@@ -371,6 +371,8 @@ const intake = {
     },
     description:
       'Provide a brief explanation of the business need, issue, or problem that the contract/request will address, including your current plans for how to address the need. This page should speak to what your contract/request accomplishes and how.',
+    projectConceptHelpText:
+      'If you would like to see an example of completed Request details, please contact the Governance Admin Team at <emailLink>IT_Governance@cms.hhs.gov</emailLink>.',
     contractTitle: 'Contract/Request Title',
     contractTitleHelpText:
       'Your request title should match the title of your Acquisition Plan or Interagency Agreement.',

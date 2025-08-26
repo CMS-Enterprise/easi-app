@@ -591,6 +591,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         </Fieldset>
 
         {/* Add new contacts */}
+        {/* TODO: Update to use modal */}
         <Fieldset className="margin-top-3 border-top border-base-light padding-top-1">
           <AdditionalContacts
             contacts={contacts.data.additionalContacts}
