@@ -40,7 +40,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Configure AWS credentials
         if: ${{ steps.changes.outputs.cedarproxy == 'true' || inputs.force_cedarproxy == true }}
-        uses: aws-actions/configure-aws-credentials@v4.2.1
+        uses: aws-actions/configure-aws-credentials@v4.3.1
         with:
           role-to-assume: ${{ secrets.AWS_INFRA_OIDC_ROLE_TO_ASSUME }}
           aws-region: us-west-2
