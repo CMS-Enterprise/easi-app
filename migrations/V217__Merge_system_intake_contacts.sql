@@ -63,8 +63,7 @@ WITH raw_data_to_update AS (
                     WHEN sic.role = 'System Maintainer' THEN 'SYSTEM_MAINTAINER'::SYSTEM_INTAKE_CONTACT_ROLE
                     WHEN sic.role = 'System Owner' THEN 'SYSTEM_OWNER'::SYSTEM_INTAKE_CONTACT_ROLE
                     WHEN sic.role = 'Unknown' THEN 'OTHER'::SYSTEM_INTAKE_CONTACT_ROLE --use OTHER for unknown
-                    ELSE sic.role -- FOR now, keep the original to test the test data. Will eventually switch to OTHER
-                    -- ELSE 'OTHER'
+                    ELSE 'OTHER'::SYSTEM_INTAKE_CONTACT_ROLE  --default case, set to OTHER
                 END
             ) OVER (PARTITION BY sic.user_id, sic.system_intake_id),
             NULL
