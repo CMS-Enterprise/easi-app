@@ -61,6 +61,8 @@ const RequestTypeForm = () => {
         const linkqs = linkCedarSystemIdQueryString(linkCedarSystemId);
         const navigationLink = `/linked-systems/${id}?${linkqs || ''}`;
 
+        // TODO: revisit how isNew state is passed around
+
         switch (requestType) {
           case 'NEW':
             history.push(`/governance-overview/${id}?${linkqs}`, { isNew });
