@@ -11,7 +11,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-const maxConcurrency = 50
+const maxConcurrency = 20
 
 func AttachOAStatus(ctx context.Context, client *cedarcore.Client, systems []*models.CedarSystem) []*models.CedarSystem {
 	logger := appcontext.ZLogger(ctx)
