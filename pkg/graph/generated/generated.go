@@ -868,6 +868,14 @@ type ComplexityRoot struct {
 		UserAccount           func(childComplexity int) int
 	}
 
+	SystemIntakeContacts struct {
+		AdditionalContacts func(childComplexity int) int
+		AllContacts        func(childComplexity int) int
+		BusinessOwners     func(childComplexity int) int
+		ProductManagers    func(childComplexity int) int
+		Requester          func(childComplexity int) int
+	}
+
 	SystemIntakeContract struct {
 		Contractor  func(childComplexity int) int
 		EndDate     func(childComplexity int) int
@@ -1425,7 +1433,7 @@ type QueryResolver interface {
 	Exchanges(ctx context.Context, cedarSystemID string) ([]*models.CedarExchange, error)
 	Urls(ctx context.Context, cedarSystemID string) ([]*models.CedarURL, error)
 	CedarSystemDetails(ctx context.Context, cedarSystemID string) (*models.CedarSystemDetails, error)
-	SystemIntakeContacts(ctx context.Context, id uuid.UUID) ([]*models.SystemIntakeContact, error)
+	SystemIntakeContacts(ctx context.Context, id uuid.UUID) (*models.SystemIntakeContacts, error)
 	TrbRequest(ctx context.Context, id uuid.UUID) (*models.TRBRequest, error)
 	TrbRequests(ctx context.Context, archived bool) ([]*models.TRBRequest, error)
 	MyTrbRequests(ctx context.Context, archived bool) ([]*models.TRBRequest, error)
@@ -6662,6 +6670,41 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.SystemIntakeContact.UserAccount(childComplexity), true
 
+	case "SystemIntakeContacts.additionalContacts":
+		if e.complexity.SystemIntakeContacts.AdditionalContacts == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeContacts.AdditionalContacts(childComplexity), true
+
+	case "SystemIntakeContacts.allContacts":
+		if e.complexity.SystemIntakeContacts.AllContacts == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeContacts.AllContacts(childComplexity), true
+
+	case "SystemIntakeContacts.businessOwners":
+		if e.complexity.SystemIntakeContacts.BusinessOwners == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeContacts.BusinessOwners(childComplexity), true
+
+	case "SystemIntakeContacts.productManagers":
+		if e.complexity.SystemIntakeContacts.ProductManagers == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeContacts.ProductManagers(childComplexity), true
+
+	case "SystemIntakeContacts.requester":
+		if e.complexity.SystemIntakeContacts.Requester == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeContacts.Requester(childComplexity), true
+
 	case "SystemIntakeContract.contractor":
 		if e.complexity.SystemIntakeContract.Contractor == nil {
 			break
@@ -10604,10 +10647,38 @@ enum SystemIntakeContactRole  {
   OTHER
   PRIVACY_ADVISOR
   PRODUCT_OWNER
+  PRODUCT_MANAGER
   PROJECT_MANAGER
   SUBJECT_MATTER_EXPERT
   SYSTEM_MAINTAINER
   SYSTEM_OWNER
+}
+
+"""
+This is a convenience struct which surfaces information about the contacts associated with a system intake
+"""
+type SystemIntakeContacts {
+  """
+  Returns the requester from the List of Contacts. In practice it should only ever be one requester, and should not be empty. However, some legacy data might be missing a requester or have multiple requesters.
+  """
+  requester: SystemIntakeContact
+  """
+  Returns the business owner from the List of Contacts
+  """
+  businessOwners: [SystemIntakeContact!]!
+  """
+  Returns the product managers from the List of Contacts
+  """
+  productManagers: [SystemIntakeContact!]!
+  """
+  Returns the additional contacts from the List of Contacts. These are all the contacts except for requester, businessOwners, productManagers
+  """
+  additionalContacts: [SystemIntakeContact!]!
+
+  """
+  Returns all the raw contacts from the List of Contacts
+  """
+  allContacts: [SystemIntakeContact!]!
 }
 
 """
@@ -11870,7 +11941,10 @@ type Query {
   exchanges(cedarSystemId: String!): [CedarExchange!]!
   urls(cedarSystemId: String!): [CedarURL!]!
   cedarSystemDetails(cedarSystemId: String!): CedarSystemDetails
-  systemIntakeContacts(id: UUID!): [SystemIntakeContact!]!
+  """
+  This returns a SystemIntakeContacts object. It holds the information about the contacts associated with a specific System Intake.
+  """
+  systemIntakeContacts(id: UUID!): SystemIntakeContacts
   trbRequest(id: UUID!): TRBRequest!
   trbRequests(archived: Boolean! = false): [TRBRequest!]!
     @hasRole(role: EASI_TRB_ADMIN)
@@ -41520,14 +41594,11 @@ func (ec *executionContext) _Query_systemIntakeContacts(ctx context.Context, fie
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.([]*models.SystemIntakeContact)
+	res := resTmp.(*models.SystemIntakeContacts)
 	fc.Result = res
-	return ec.marshalNSystemIntakeContact2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactᚄ(ctx, field.Selections, res)
+	return ec.marshalOSystemIntakeContacts2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContacts(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_systemIntakeContacts(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -41538,32 +41609,18 @@ func (ec *executionContext) fieldContext_Query_systemIntakeContacts(ctx context.
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "id":
-				return ec.fieldContext_SystemIntakeContact_id(ctx, field)
-			case "userAccount":
-				return ec.fieldContext_SystemIntakeContact_userAccount(ctx, field)
-			case "systemIntakeId":
-				return ec.fieldContext_SystemIntakeContact_systemIntakeId(ctx, field)
-			case "component":
-				return ec.fieldContext_SystemIntakeContact_component(ctx, field)
-			case "roles":
-				return ec.fieldContext_SystemIntakeContact_roles(ctx, field)
-			case "isRequester":
-				return ec.fieldContext_SystemIntakeContact_isRequester(ctx, field)
-			case "createdBy":
-				return ec.fieldContext_SystemIntakeContact_createdBy(ctx, field)
-			case "createdByUserAccount":
-				return ec.fieldContext_SystemIntakeContact_createdByUserAccount(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_SystemIntakeContact_createdAt(ctx, field)
-			case "modifiedBy":
-				return ec.fieldContext_SystemIntakeContact_modifiedBy(ctx, field)
-			case "modifiedByUserAccount":
-				return ec.fieldContext_SystemIntakeContact_modifiedByUserAccount(ctx, field)
-			case "modifiedAt":
-				return ec.fieldContext_SystemIntakeContact_modifiedAt(ctx, field)
+			case "requester":
+				return ec.fieldContext_SystemIntakeContacts_requester(ctx, field)
+			case "businessOwners":
+				return ec.fieldContext_SystemIntakeContacts_businessOwners(ctx, field)
+			case "productManagers":
+				return ec.fieldContext_SystemIntakeContacts_productManagers(ctx, field)
+			case "additionalContacts":
+				return ec.fieldContext_SystemIntakeContacts_additionalContacts(ctx, field)
+			case "allContacts":
+				return ec.fieldContext_SystemIntakeContacts_allContacts(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeContact", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeContacts", field.Name)
 		},
 	}
 	defer func() {
@@ -49154,6 +49211,353 @@ func (ec *executionContext) fieldContext_SystemIntakeContact_modifiedAt(_ contex
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeContacts_requester(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeContacts) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeContacts_requester(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Requester()
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.SystemIntakeContact)
+	fc.Result = res
+	return ec.marshalOSystemIntakeContact2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContact(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeContacts_requester(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeContacts",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_SystemIntakeContact_id(ctx, field)
+			case "userAccount":
+				return ec.fieldContext_SystemIntakeContact_userAccount(ctx, field)
+			case "systemIntakeId":
+				return ec.fieldContext_SystemIntakeContact_systemIntakeId(ctx, field)
+			case "component":
+				return ec.fieldContext_SystemIntakeContact_component(ctx, field)
+			case "roles":
+				return ec.fieldContext_SystemIntakeContact_roles(ctx, field)
+			case "isRequester":
+				return ec.fieldContext_SystemIntakeContact_isRequester(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_SystemIntakeContact_createdBy(ctx, field)
+			case "createdByUserAccount":
+				return ec.fieldContext_SystemIntakeContact_createdByUserAccount(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_SystemIntakeContact_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_SystemIntakeContact_modifiedBy(ctx, field)
+			case "modifiedByUserAccount":
+				return ec.fieldContext_SystemIntakeContact_modifiedByUserAccount(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_SystemIntakeContact_modifiedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeContact", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeContacts_businessOwners(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeContacts) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeContacts_businessOwners(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.BusinessOwners()
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.SystemIntakeContact)
+	fc.Result = res
+	return ec.marshalNSystemIntakeContact2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeContacts_businessOwners(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeContacts",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_SystemIntakeContact_id(ctx, field)
+			case "userAccount":
+				return ec.fieldContext_SystemIntakeContact_userAccount(ctx, field)
+			case "systemIntakeId":
+				return ec.fieldContext_SystemIntakeContact_systemIntakeId(ctx, field)
+			case "component":
+				return ec.fieldContext_SystemIntakeContact_component(ctx, field)
+			case "roles":
+				return ec.fieldContext_SystemIntakeContact_roles(ctx, field)
+			case "isRequester":
+				return ec.fieldContext_SystemIntakeContact_isRequester(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_SystemIntakeContact_createdBy(ctx, field)
+			case "createdByUserAccount":
+				return ec.fieldContext_SystemIntakeContact_createdByUserAccount(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_SystemIntakeContact_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_SystemIntakeContact_modifiedBy(ctx, field)
+			case "modifiedByUserAccount":
+				return ec.fieldContext_SystemIntakeContact_modifiedByUserAccount(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_SystemIntakeContact_modifiedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeContact", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeContacts_productManagers(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeContacts) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeContacts_productManagers(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ProductManagers()
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.SystemIntakeContact)
+	fc.Result = res
+	return ec.marshalNSystemIntakeContact2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeContacts_productManagers(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeContacts",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_SystemIntakeContact_id(ctx, field)
+			case "userAccount":
+				return ec.fieldContext_SystemIntakeContact_userAccount(ctx, field)
+			case "systemIntakeId":
+				return ec.fieldContext_SystemIntakeContact_systemIntakeId(ctx, field)
+			case "component":
+				return ec.fieldContext_SystemIntakeContact_component(ctx, field)
+			case "roles":
+				return ec.fieldContext_SystemIntakeContact_roles(ctx, field)
+			case "isRequester":
+				return ec.fieldContext_SystemIntakeContact_isRequester(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_SystemIntakeContact_createdBy(ctx, field)
+			case "createdByUserAccount":
+				return ec.fieldContext_SystemIntakeContact_createdByUserAccount(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_SystemIntakeContact_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_SystemIntakeContact_modifiedBy(ctx, field)
+			case "modifiedByUserAccount":
+				return ec.fieldContext_SystemIntakeContact_modifiedByUserAccount(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_SystemIntakeContact_modifiedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeContact", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeContacts_additionalContacts(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeContacts) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeContacts_additionalContacts(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AdditionalContacts()
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.SystemIntakeContact)
+	fc.Result = res
+	return ec.marshalNSystemIntakeContact2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeContacts_additionalContacts(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeContacts",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_SystemIntakeContact_id(ctx, field)
+			case "userAccount":
+				return ec.fieldContext_SystemIntakeContact_userAccount(ctx, field)
+			case "systemIntakeId":
+				return ec.fieldContext_SystemIntakeContact_systemIntakeId(ctx, field)
+			case "component":
+				return ec.fieldContext_SystemIntakeContact_component(ctx, field)
+			case "roles":
+				return ec.fieldContext_SystemIntakeContact_roles(ctx, field)
+			case "isRequester":
+				return ec.fieldContext_SystemIntakeContact_isRequester(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_SystemIntakeContact_createdBy(ctx, field)
+			case "createdByUserAccount":
+				return ec.fieldContext_SystemIntakeContact_createdByUserAccount(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_SystemIntakeContact_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_SystemIntakeContact_modifiedBy(ctx, field)
+			case "modifiedByUserAccount":
+				return ec.fieldContext_SystemIntakeContact_modifiedByUserAccount(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_SystemIntakeContact_modifiedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeContact", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeContacts_allContacts(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeContacts) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeContacts_allContacts(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AllContacts, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.SystemIntakeContact)
+	fc.Result = res
+	return ec.marshalNSystemIntakeContact2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeContacts_allContacts(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeContacts",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_SystemIntakeContact_id(ctx, field)
+			case "userAccount":
+				return ec.fieldContext_SystemIntakeContact_userAccount(ctx, field)
+			case "systemIntakeId":
+				return ec.fieldContext_SystemIntakeContact_systemIntakeId(ctx, field)
+			case "component":
+				return ec.fieldContext_SystemIntakeContact_component(ctx, field)
+			case "roles":
+				return ec.fieldContext_SystemIntakeContact_roles(ctx, field)
+			case "isRequester":
+				return ec.fieldContext_SystemIntakeContact_isRequester(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_SystemIntakeContact_createdBy(ctx, field)
+			case "createdByUserAccount":
+				return ec.fieldContext_SystemIntakeContact_createdByUserAccount(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_SystemIntakeContact_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_SystemIntakeContact_modifiedBy(ctx, field)
+			case "modifiedByUserAccount":
+				return ec.fieldContext_SystemIntakeContact_modifiedByUserAccount(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_SystemIntakeContact_modifiedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeContact", field.Name)
 		},
 	}
 	return fc, nil
@@ -72775,16 +73179,13 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		case "systemIntakeContacts":
 			field := field
 
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
 				res = ec._Query_systemIntakeContacts(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
 				return res
 			}
 
@@ -75268,6 +75669,62 @@ func (ec *executionContext) _SystemIntakeContact(ctx context.Context, sel ast.Se
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var systemIntakeContactsImplementors = []string{"SystemIntakeContacts"}
+
+func (ec *executionContext) _SystemIntakeContacts(ctx context.Context, sel ast.SelectionSet, obj *models.SystemIntakeContacts) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeContactsImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SystemIntakeContacts")
+		case "requester":
+			out.Values[i] = ec._SystemIntakeContacts_requester(ctx, field, obj)
+		case "businessOwners":
+			out.Values[i] = ec._SystemIntakeContacts_businessOwners(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "productManagers":
+			out.Values[i] = ec._SystemIntakeContacts_productManagers(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "additionalContacts":
+			out.Values[i] = ec._SystemIntakeContacts_additionalContacts(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "allContacts":
+			out.Values[i] = ec._SystemIntakeContacts_allContacts(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -84974,6 +85431,13 @@ func (ec *executionContext) marshalOSystemIntakeContact2ᚖgithubᚗcomᚋcmsᚑ
 		return graphql.Null
 	}
 	return ec._SystemIntakeContact(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOSystemIntakeContacts2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContacts(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeContacts) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SystemIntakeContacts(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOSystemIntakeContractInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContractInput(ctx context.Context, v any) (*models.SystemIntakeContractInput, error) {

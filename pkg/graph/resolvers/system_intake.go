@@ -458,6 +458,13 @@ func GetRequesterUpdateEmailData(
 }
 
 // GetSystemIntakeContactsBySystemIntakeID fetches contacts for a system intake
-func GetSystemIntakeContactsBySystemIntakeID(ctx context.Context, store *storage.Store, systemIntakeID uuid.UUID) ([]*models.SystemIntakeContact, error) {
-	return store.FetchSystemIntakeContactsBySystemIntakeID(ctx, systemIntakeID)
+func GetSystemIntakeContactsBySystemIntakeID(ctx context.Context, store *storage.Store, systemIntakeID uuid.UUID) (*models.SystemIntakeContacts, error) {
+	contacts, err := store.FetchSystemIntakeContactsBySystemIntakeID(ctx, systemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+	// Wrap the returned type, so we can calculate additional information on it.
+	return &models.SystemIntakeContacts{
+		AllContacts: contacts,
+	}, nil
 }
