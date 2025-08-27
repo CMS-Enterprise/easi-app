@@ -24,3 +24,40 @@ func NewSystemIntakeContact(userID uuid.UUID) *SystemIntakeContact {
 		userIDRelation: NewUserIDRelation(userID),
 	}
 }
+
+// This is a convenience struct which surfaces information about the contacts associated with a system intake
+type SystemIntakeContacts struct {
+
+	// Returns all the raw contacts from the List of Contacts
+	AllContacts []*SystemIntakeContact `json:"allContacts"`
+}
+
+func (info *SystemIntakeContacts) Requester() (*SystemIntakeContact, error) {
+	if info == nil || info.AllContacts == nil || len(info.AllContacts) == 0 {
+		return nil, nil
+	}
+	// TODO implement in other branch
+	// lo.Find(info.AllContacts, func(c *SystemIntakeContact) bool {
+	// 	return c.
+	// })
+	// This is a placeholder, just return the first contact for now
+	return info.AllContacts[0], nil
+}
+
+// Returns the business owner from the List of Contacts
+func (info *SystemIntakeContacts) BusinessOwners() ([]*SystemIntakeContact, error) {
+	//TODO Implement
+	return info.AllContacts, nil
+}
+
+// Returns the product managers from the List of Contacts
+func (info *SystemIntakeContacts) ProductManagers() ([]*SystemIntakeContact, error) {
+	//TODO Implement
+	return info.AllContacts, nil
+}
+
+// Returns the additional contacts from the List of Contacts. These are all the contacts except for requester, businessOwners, productOwners
+func (info *SystemIntakeContacts) AdditionalContacts() ([]*SystemIntakeContact, error) {
+	//TODO Implement
+	return info.AllContacts, nil
+}
