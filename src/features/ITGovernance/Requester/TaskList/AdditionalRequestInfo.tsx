@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button, Icon } from '@trussworks/react-uswds';
+import { RequestRelationType } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import Divider from 'components/Divider';
@@ -106,7 +107,34 @@ function AdditionalRequestInfo({
         {t('additionalRequestInfo.header')}
       </h4>
 
-      {system.doesNotSupportSystems && (
+      {system.requestType === 'trb' && system.relationType === null && (
+        <Alert
+          type="warning"
+          heading={t('additionalRequestInfo.actionRequiredAlert.header')}
+        >
+          {t('additionalRequestInfo.actionRequiredAlert.text')}
+          <UswdsReactLink to={editLink}>
+            {t('additionalRequestInfo.actionRequiredAlert.answer')}
+          </UswdsReactLink>
+        </Alert>
+      )}
+
+      {system.requestType === 'trb' && system.relationType !== null && (
+        <p className="text-base margin-top-1 margin-bottom-0">
+          {system.relationType === RequestRelationType.EXISTING_SERVICE &&
+            t('additionalRequestInfo.existingService')}
+          {system.relationType === RequestRelationType.EXISTING_SYSTEM &&
+            t('additionalRequestInfo.existingSystem')}
+          {system.relationType === RequestRelationType.NEW_SYSTEM &&
+            t('additionalRequestInfo.newSystem')}
+          <br />
+          <UswdsReactLink to={editLink}>
+            {t('additionalRequestInfo.edit')}
+          </UswdsReactLink>
+        </p>
+      )}
+
+      {system.requestType !== 'trb' && system.doesNotSupportSystems && (
         <>
           <div className="task-list-sidebar__subtitle">
             {t('additionalRequestInfo.doesNotSupportOrUseOtherSystems')}
@@ -125,49 +153,56 @@ function AdditionalRequestInfo({
         </>
       )}
 
-      {system.doesNotSupportSystems === null && system.systems.length === 0 && (
-        <Alert
-          type="warning"
-          heading={t('itGov:additionalRequestInfo.actionRequiredAlert.header')}
-        >
-          {t(
-            'itGov:additionalRequestInfo.actionRequiredAlert.doesThisRequestInvolve'
-          )}
-          <Button
-            type="button"
-            className="display-block margin-top-1"
-            onClick={() =>
-              history.push(editLink, {
-                from: 'task-list'
-              })
-            }
-            unstyled
+      {system.requestType !== 'trb' &&
+        system.doesNotSupportSystems === null &&
+        system.systems.length === 0 && (
+          <Alert
+            type="warning"
+            heading={t(
+              'itGov:additionalRequestInfo.actionRequiredAlert.header'
+            )}
           >
-            {t('itGov:additionalRequestInfo.actionRequiredAlert.answer')}
-          </Button>
-        </Alert>
-      )}
+            {t(
+              'itGov:additionalRequestInfo.actionRequiredAlert.doesThisRequestInvolve'
+            )}
+            <Button
+              type="button"
+              className="display-block margin-top-1"
+              onClick={() =>
+                history.push(editLink, {
+                  from: 'task-list'
+                })
+              }
+              unstyled
+            >
+              {t('itGov:additionalRequestInfo.actionRequiredAlert.answer')}
+            </Button>
+          </Alert>
+        )}
 
-      {system.systems && system.systems.length > 0 && (
-        <>
-          <div className="task-list-sidebar__subtitle">
-            {t('additionalRequestInfo.linkedSystems')}
-          </div>
+      {system.requestType !== 'trb' &&
+        system.systems &&
+        system.systems.length > 0 && (
+          <>
+            <div className="task-list-sidebar__subtitle">
+              {t('additionalRequestInfo.linkedSystems')}
+            </div>
 
-          <Button
-            type="button"
-            onClick={() =>
-              history.push(editLink, {
-                from: 'task-list'
-              })
-            }
-            unstyled
-          >
-            {t('additionalRequestInfo.edit')}
-          </Button>
-          <SystemCardList items={system.systems} />
-        </>
-      )}
+            <Button
+              type="button"
+              onClick={() =>
+                history.push(editLink, {
+                  from: 'task-list'
+                })
+              }
+              unstyled
+            >
+              {t('additionalRequestInfo.edit')}
+            </Button>
+          </>
+        )}
+
+      <SystemCardList items={system.systems} />
 
       {system.contractName !== null && (
         <p>
