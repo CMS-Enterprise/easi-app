@@ -25,9 +25,9 @@ require (
 	github.com/samber/lo v1.51.0
 	github.com/spf13/cobra v1.9.1
 	github.com/spf13/viper v1.20.1
-	github.com/stretchr/testify v1.10.0
+	github.com/stretchr/testify v1.11.0
 	github.com/vektah/gqlparser/v2 v2.5.30
-	github.com/vikstrous/dataloadgen v0.0.9
+	github.com/vikstrous/dataloadgen v0.0.10
 	go.uber.org/zap v1.27.0
 	golang.org/x/sync v0.16.0
 	gopkg.in/launchdarkly/go-sdk-common.v2 v2.5.1
