@@ -395,7 +395,8 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                     <DateTimePicker
                       id="test"
                       name="test"
-                      value={field.value!}
+                      // TODO: update this gary
+                      value="12/12/2025"
                       onChange={(date: string | null) => field.onChange(date)}
                     />
                   </FormGroup>
@@ -651,7 +652,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                 render={({ field, fieldState: { error } }) => {
                   return (
                     <FormGroup error={!!error}>
-                      <Label htmlFor="acquisitionMethods">
+                      <Label htmlFor="acquisitionMethods" required>
                         {t(
                           'requestDetails.softwareAcquisition.acquisitionStrategyLabel'
                         )}
