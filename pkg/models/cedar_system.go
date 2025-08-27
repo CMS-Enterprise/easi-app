@@ -21,6 +21,7 @@ type CedarSystem struct {
 	VersionID               zero.String `json:"versionId"`
 	UUID                    zero.String `json:"uuid"`
 
+	// OaStatus is not always populated - we have to manually set this via separate API call at the time of this writing
 	OaStatus zero.String `json:"oaStatus"`
 }
 
