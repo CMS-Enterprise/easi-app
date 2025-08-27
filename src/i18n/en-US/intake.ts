@@ -474,6 +474,7 @@ const intake = {
       'What is the planned annual spending of the first year of the new contract?',
     plannedYearOneSpendingITPortion:
       'What portion (% or amount) of the planned annual spending of the first year of the new contract is IT?',
+    contractHeading: 'Contract',
     hasContract:
       'Do you already have a contract in place to support this effort?',
     hasContractHelpText:

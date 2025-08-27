@@ -415,7 +415,11 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
           <FieldGroup
             scrollElement="contract.hasContract"
             error={!!errors.contract?.hasContract}
+            className="border-top border-base-light padding-top-1 margin-top-4"
           >
+            <p className="margin-top-0 margin-bottom-3 text-bold">
+              {t('contractDetails.contractHeading')}
+            </p>
             <Fieldset>
               <Label
                 className="maxw-none"
