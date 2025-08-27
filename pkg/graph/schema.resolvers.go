@@ -1609,7 +1609,7 @@ func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID st
 }
 
 // SystemIntakeContacts is the resolver for the systemIntakeContacts field.
-func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) ([]*models.SystemIntakeContact, error) {
+func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) (*models.SystemIntakeContacts, error) {
 	return resolvers.GetSystemIntakeContactsBySystemIntakeID(ctx, r.store, id)
 }
 

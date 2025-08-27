@@ -1327,6 +1327,7 @@ const (
 	SystemIntakeContactRoleOther                             SystemIntakeContactRole = "OTHER"
 	SystemIntakeContactRolePrivacyAdvisor                    SystemIntakeContactRole = "PRIVACY_ADVISOR"
 	SystemIntakeContactRoleProductOwner                      SystemIntakeContactRole = "PRODUCT_OWNER"
+	SystemIntakeContactRoleProductManager                    SystemIntakeContactRole = "PRODUCT_MANAGER"
 	SystemIntakeContactRoleProjectManager                    SystemIntakeContactRole = "PROJECT_MANAGER"
 	SystemIntakeContactRoleSubjectMatterExpert               SystemIntakeContactRole = "SUBJECT_MATTER_EXPERT"
 	SystemIntakeContactRoleSystemMaintainer                  SystemIntakeContactRole = "SYSTEM_MAINTAINER"
@@ -1342,6 +1343,7 @@ var AllSystemIntakeContactRole = []SystemIntakeContactRole{
 	SystemIntakeContactRoleOther,
 	SystemIntakeContactRolePrivacyAdvisor,
 	SystemIntakeContactRoleProductOwner,
+	SystemIntakeContactRoleProductManager,
 	SystemIntakeContactRoleProjectManager,
 	SystemIntakeContactRoleSubjectMatterExpert,
 	SystemIntakeContactRoleSystemMaintainer,
@@ -1350,7 +1352,7 @@ var AllSystemIntakeContactRole = []SystemIntakeContactRole{
 
 func (e SystemIntakeContactRole) IsValid() bool {
 	switch e {
-	case SystemIntakeContactRoleBusinessOwner, SystemIntakeContactRoleCloudNavigator, SystemIntakeContactRoleContractingOfficersRepresentative, SystemIntakeContactRoleCyberRiskAdvisor, SystemIntakeContactRoleInformationSystemSecurityAdvisor, SystemIntakeContactRoleOther, SystemIntakeContactRolePrivacyAdvisor, SystemIntakeContactRoleProductOwner, SystemIntakeContactRoleProjectManager, SystemIntakeContactRoleSubjectMatterExpert, SystemIntakeContactRoleSystemMaintainer, SystemIntakeContactRoleSystemOwner:
+	case SystemIntakeContactRoleBusinessOwner, SystemIntakeContactRoleCloudNavigator, SystemIntakeContactRoleContractingOfficersRepresentative, SystemIntakeContactRoleCyberRiskAdvisor, SystemIntakeContactRoleInformationSystemSecurityAdvisor, SystemIntakeContactRoleOther, SystemIntakeContactRolePrivacyAdvisor, SystemIntakeContactRoleProductOwner, SystemIntakeContactRoleProductManager, SystemIntakeContactRoleProjectManager, SystemIntakeContactRoleSubjectMatterExpert, SystemIntakeContactRoleSystemMaintainer, SystemIntakeContactRoleSystemOwner:
 		return true
 	}
 	return false
