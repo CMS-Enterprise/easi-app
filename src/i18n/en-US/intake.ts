@@ -468,10 +468,14 @@ const intake = {
       }
     },
     currentAnnualSpending: 'What is the current annual spending?',
+    currentAnnualSpendingHelpText:
+      'Input the dollar amount of the current annual spending.',
     currentAnnualSpendingITPortion:
       'What portion (% or amount) of the current annual spending is IT?',
     plannedYearOneSpending:
-      'What is the planned annual spending of the first year of the new contract?',
+      'What is the planned annual spending for the first year of the new contract?',
+    plannedYearOneSpendingHelpText:
+      'Input the dollar amount of the planned annual spending.',
     plannedYearOneSpendingITPortion:
       'What portion (% or amount) of the planned annual spending of the first year of the new contract is IT?',
     contractHeading: 'Contract',
