@@ -401,6 +401,9 @@ const intake = {
       '<bold>This project is in O&M:</bold> Your team is continuing to support and make only minimal operational improvements to this project. Many teams submitting a re-compete request may choose this option.',
       '<bold>Other:</bold> Choose this option if none of the above project statuses make sense for your request.'
     ],
+    itDev:
+      'If IT development will be a part of this contract, when is the project scheduled to go live in production?',
+    itDevHelp: 'If you are unsure, you may input your best guess.',
     usesAiTech: 'Does your request involve AI technologies?',
     usesAiTechHelpText:
       'Select "Yes" if you are considering using AI for this request, even if you are not yest sure. This could be for new development or enhancement to an existing solution. For general AI related questions, please contact the AI team at <aiEmail>AI@cms.hhs.gov</aiEmail>. For more targeted and specific AI inquiries, please reach out to the <trbEmail>Technical Review Board (TRB)</trbEmail> for assistance.',

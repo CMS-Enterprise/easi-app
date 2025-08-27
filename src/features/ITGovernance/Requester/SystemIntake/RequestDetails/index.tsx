@@ -28,6 +28,7 @@ import {
 import Alert from 'components/Alert';
 import AutoSave from 'components/AutoSave';
 import CollapsableLink from 'components/CollapsableLink';
+import DateTimePicker from 'components/DateTimePicker';
 import { useEasiForm } from 'components/EasiForm';
 import { ErrorAlert, ErrorAlertMessage } from 'components/ErrorAlert';
 import FeedbackBanner from 'components/FeedbackBanner';
@@ -354,7 +355,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
             ))}
           </Select>
           <CollapsableLink
-            id="businessSolution"
+            id="currentStage"
             label={t('requestDetails.currentStageCollapseLinkText')}
             className="margin-y-1"
           >
@@ -369,6 +370,39 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
               ))}
             </ul>
           </CollapsableLink>
+          {watch('currentStage') === processStages[1].name && (
+            <Controller
+              control={control}
+              name="usingSoftware"
+              render={({ field, fieldState: { error } }) => {
+                return (
+                  <FormGroup error={!!error}>
+                    <Label
+                      htmlFor="businessSolution"
+                      className="maxw-none"
+                      required
+                    >
+                      {t('requestDetails.itDev')}
+                    </Label>
+                    <HelpText id="businessSolutionHelpText">
+                      {t('requestDetails.itDevHelp')}
+                    </HelpText>
+                    <ErrorMessage
+                      errors={errors}
+                      name="acquisitionMethods"
+                      as={FieldErrorMsg}
+                    />
+                    <DateTimePicker
+                      id="test"
+                      name="test"
+                      value={field.value!}
+                      onChange={(date: string | null) => field.onChange(date)}
+                    />
+                  </FormGroup>
+                );
+              }}
+            />
+          )}
         </FieldGroup>
 
         <hr className="margin-bottom-1 margin-top-4 opacity-30" aria-hidden />
@@ -459,7 +493,6 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
 
         <hr className="margin-bottom-1 margin-top-4 opacity-30" aria-hidden />
         <span className="font-body-sm text-bold">
-          {' '}
           {t('requestDetails.subsectionHeadings.projectDetails')}
         </span>
 
@@ -525,7 +558,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
 
         <FieldGroup scrollElement="hasUiChanges" error={!!errors.hasUiChanges}>
           <Fieldset>
-            <Label htmlFor="hasUiChanges" className="maxw-none">
+            <Label htmlFor="hasUiChanges" className="maxw-none" required>
               {t('requestDetails.hasUiChanges')}
             </Label>
             <ErrorMessage
@@ -574,7 +607,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           scrollElement="softwareAcquisition"
           error={!!errors.usingSoftware}
         >
-          <Label htmlFor="softwareAcquisition">
+          <Label htmlFor="softwareAcquisition" className="maxw-none" required>
             {t('requestDetails.softwareAcquisition.usingSoftwareLabel')}
           </Label>
           <HelpText id="elasHelpText" className="margin-top-1">
@@ -618,15 +651,12 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                 render={({ field, fieldState: { error } }) => {
                   return (
                     <FormGroup error={!!error}>
-                      <Label htmlFor="businessSolution">
+                      <Label htmlFor="acquisitionMethods">
                         {t(
                           'requestDetails.softwareAcquisition.acquisitionStrategyLabel'
                         )}
                       </Label>
-                      <HelpText
-                        id="businessSolutionHelpText"
-                        className="margin-top-1"
-                      >
+                      <HelpText id="businessSolutionHelpText">
                         {t(
                           'requestDetails.softwareAcquisition.acquisitionStrategyHelp'
                         )}
@@ -639,6 +669,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                       <Alert
                         type="info"
                         data-testid="mandatory-fields-alert"
+                        className="margin-top-1"
                         slim
                       >
                         {t(
