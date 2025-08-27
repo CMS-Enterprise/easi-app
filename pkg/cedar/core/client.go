@@ -83,7 +83,7 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarA
 		},
 	}
 
-	basePath := "/gateway/CEDARIntake/" + cedarAPIVersion
+	basePath := "/gateway/CEDAR Core API/" + cedarAPIVersion
 	cedarPath = "http://" + cedarHost + basePath
 	client = &Client{
 		mockEnabled: mockEnabled,
