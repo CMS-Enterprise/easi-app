@@ -1,5 +1,6 @@
-import React, { useContext } from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { Alert } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
@@ -7,13 +8,15 @@ import {
   RequestRelationType,
   SystemIntakeFragmentFragment
 } from 'gql/generated/graphql';
-import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
+import { useFlags } from 'launchdarkly-react-client-sdk';
+import { AppState } from 'stores/reducers/rootReducer';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import SystemCardTable from 'components/SystemCard/table';
 import { RequestType } from 'types/requestType';
 import formatContractNumbers from 'utils/formatContractNumbers';
+import user from 'utils/user';
 
 import RelatedRequestsTable from './RelatedRequestsTable';
 
@@ -31,9 +34,16 @@ const AdditionalInformation = ({
 
   const parentRoute = type === 'itgov' ? 'it-governance' : 'trb';
 
-  const isITGovAdmin = useContext(ITGovAdminContext);
+  const { groups } = useSelector((state: AppState) => state.auth);
+
+  const flags = useFlags();
+
+  const isITGovAdmin: boolean = useMemo(
+    () => user.isITGovAdmin(groups, flags),
+    [flags, groups]
+  );
   return (
-    <div>
+    <>
       <PageHeading className="margin-y-0">
         {parentRoute === 'it-governance'
           ? linkedSystemsT('title')
@@ -51,13 +61,19 @@ const AdditionalInformation = ({
             {adminT('somethingIncorrect')}
           </span>
 
-          <UswdsReactLink
-            to={`/${parentRoute}/${request.id}/system-information/link`}
-          >
-            {parentRoute === 'it-governance'
-              ? linkedSystemsT('editSystemInformation')
-              : adminT('editInformation')}
-          </UswdsReactLink>
+          {parentRoute === 'it-governance' ? (
+            <UswdsReactLink
+              to={`/${parentRoute}/${request.id}/system-information/link`}
+            >
+              {linkedSystemsT('editSystemInformation')}
+            </UswdsReactLink>
+          ) : (
+            <UswdsReactLink
+              to={`/${parentRoute}/${request.id}/additional-information/link`}
+            >
+              {adminT('editInformation')}
+            </UswdsReactLink>
+          )}
         </div>
       )}
       {request.relationType === RequestRelationType.EXISTING_SYSTEM &&
@@ -91,11 +107,12 @@ const AdditionalInformation = ({
           {adminT('newSystemAlert')}
         </Alert>
       )}
+
       {isITGovAdmin &&
         (request.relationType === null ||
           request.relationType === RequestRelationType.NEW_SYSTEM) && (
           <UswdsReactLink
-            to={`/${parentRoute}/${request.id}/system-information/link`}
+            to={`/${parentRoute}/${request.id}/additional-information/link`}
             className={classNames('usa-button', {
               'usa-button--outline': request.relationType !== null
             })}
@@ -129,7 +146,7 @@ const AdditionalInformation = ({
         </>
       )}
       <RelatedRequestsTable requestID={request.id} type={type} />
-    </div>
+    </>
   );
 };
 
