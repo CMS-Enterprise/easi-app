@@ -11,6 +11,8 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
+// maxConcurrency limits the number of go routines that can spawn at a time
+// the number came from a conversation with CEDAR where it was suggested to use 20 as the upper limit
 const maxConcurrency = 20
 
 func AttachOAStatus(ctx context.Context, client *cedarcore.Client, systems []*models.CedarSystem) []*models.CedarSystem {
