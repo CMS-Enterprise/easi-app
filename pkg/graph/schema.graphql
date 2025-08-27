@@ -1836,9 +1836,9 @@ This is a convenience struct which surfaces information about the contacts assoc
 """
 type SystemIntakeContacts {
   """
-  Returns the requester from the List of Contacts
+  Returns the requester from the List of Contacts. In practice it should only ever be one requester, and should not be empty. However, some legacy data might be missing a requester or have multiple requesters.
   """
-  requester: SystemIntakeContact!
+  requester: SystemIntakeContact
   """
   Returns the business owner from the List of Contacts
   """

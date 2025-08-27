@@ -10659,9 +10659,9 @@ This is a convenience struct which surfaces information about the contacts assoc
 """
 type SystemIntakeContacts {
   """
-  Returns the requester from the List of Contacts
+  Returns the requester from the List of Contacts. In practice it should only ever be one requester, and should not be empty. However, some legacy data might be missing a requester or have multiple requesters.
   """
-  requester: SystemIntakeContact!
+  requester: SystemIntakeContact
   """
   Returns the business owner from the List of Contacts
   """
@@ -10671,7 +10671,7 @@ type SystemIntakeContacts {
   """
   productManagers: [SystemIntakeContact!]!
   """
-  Returns the additional contacts from the List of Contacts. These are all the contacts except for requester, businessOwners, productOwners
+  Returns the additional contacts from the List of Contacts. These are all the contacts except for requester, businessOwners, productManagers
   """
   additionalContacts: [SystemIntakeContact!]!
 
@@ -49237,14 +49237,11 @@ func (ec *executionContext) _SystemIntakeContacts_requester(ctx context.Context,
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(*models.SystemIntakeContact)
 	fc.Result = res
-	return ec.marshalNSystemIntakeContact2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContact(ctx, field.Selections, res)
+	return ec.marshalOSystemIntakeContact2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContact(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeContacts_requester(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -75739,9 +75736,6 @@ func (ec *executionContext) _SystemIntakeContacts(ctx context.Context, sel ast.S
 			out.Values[i] = graphql.MarshalString("SystemIntakeContacts")
 		case "requester":
 			out.Values[i] = ec._SystemIntakeContacts_requester(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
 		case "businessOwners":
 			out.Values[i] = ec._SystemIntakeContacts_businessOwners(ctx, field, obj)
 			if out.Values[i] == graphql.Null {

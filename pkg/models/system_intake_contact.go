@@ -25,13 +25,14 @@ func NewSystemIntakeContact(userID uuid.UUID) *SystemIntakeContact {
 	}
 }
 
-// This is a convenience struct which surfaces information about the contacts associated with a system intake
+// SystemIntakeContacts This is a convenience struct which surfaces information about the contacts associated with a system intake
 type SystemIntakeContacts struct {
 
 	// Returns all the raw contacts from the List of Contacts
 	AllContacts []*SystemIntakeContact `json:"allContacts"`
 }
 
+// Requester returns the primary requester of a system intake. If none are found, it returns nil. This should be a very uncommon situation
 func (info *SystemIntakeContacts) Requester() (*SystemIntakeContact, error) {
 	if info == nil || info.AllContacts == nil || len(info.AllContacts) == 0 {
 		return nil, nil
@@ -50,13 +51,13 @@ func (info *SystemIntakeContacts) BusinessOwners() ([]*SystemIntakeContact, erro
 	return info.AllContacts, nil
 }
 
-// Returns the product managers from the List of Contacts
+// ProductManagers Returns the product managers from the List of Contacts
 func (info *SystemIntakeContacts) ProductManagers() ([]*SystemIntakeContact, error) {
 	//TODO Implement
 	return info.AllContacts, nil
 }
 
-// Returns the additional contacts from the List of Contacts. These are all the contacts except for requester, businessOwners, productOwners
+// AdditionalContacts Returns the additional contacts from the List of Contacts. These are all the contacts except for requester, businessOwners, productOwners
 func (info *SystemIntakeContacts) AdditionalContacts() ([]*SystemIntakeContact, error) {
 	//TODO Implement
 	return info.AllContacts, nil
