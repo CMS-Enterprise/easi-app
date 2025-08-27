@@ -1848,7 +1848,7 @@ type SystemIntakeContacts {
   """
   productManagers: [SystemIntakeContact!]!
   """
-  Returns the additional contacts from the List of Contacts. These are all the contacts except for requester, businessOwners, productOwners
+  Returns the additional contacts from the List of Contacts. These are all the contacts except for requester, businessOwners, productManagers
   """
   additionalContacts: [SystemIntakeContact!]!
 
