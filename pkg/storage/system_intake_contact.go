@@ -90,13 +90,13 @@ func (s *Store) FetchSystemIntakeContactsBySystemIntakeID(ctx context.Context, s
 }
 
 // DeleteSystemIntakeContact deletes an existing system intake contact object in the database
-func (s *Store) DeleteSystemIntakeContact(ctx context.Context, systemIntakeContact *models.SystemIntakeContact) (*models.SystemIntakeContact, error) {
-	_, err := s.db.Exec(sqlqueries.SystemIntakeContact.Delete, systemIntakeContact.ID)
-
+func (s *Store) DeleteSystemIntakeContact(ctx context.Context, id uuid.UUID) (*models.SystemIntakeContact, error) {
+	deletedContact := &models.SystemIntakeContact{}
+	err := namedGet(ctx, s, deletedContact, sqlqueries.SystemIntakeContact.Delete, args{
+		"id": id,
+	})
 	if err != nil {
-		appcontext.ZLogger(ctx).Error("Failed to delete system intake contact with error %s", zap.Error(err))
 		return nil, err
 	}
-
-	return systemIntakeContact, nil
+	return deletedContact, nil
 }
