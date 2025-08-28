@@ -46,20 +46,20 @@ END
 -- Run this on UPDATE 
 CREATE TRIGGER system_intake_contacts_requester_update
 BEFORE UPDATE ON system_intake_contacts
-WHEN (OLD.is_requester = TRUE OR NEW.is_requester = TRUE)
 FOR EACH ROW
+WHEN (OLD.is_requester = TRUE OR NEW.is_requester = TRUE)
 EXECUTE FUNCTION check_system_intake_contacts_requester();
     
 -- Run this on INSERT
 CREATE TRIGGER system_intake_contacts_requester_insert
 BEFORE INSERT ON system_intake_contacts
-WHEN (NEW.is_requester = TRUE)
 FOR EACH ROW
+WHEN (NEW.is_requester = TRUE)
 EXECUTE FUNCTION check_system_intake_contacts_requester();
 
 -- Run on Delete
 CREATE TRIGGER system_intake_contacts_requester_delete
 BEFORE DELETE ON system_intake_contacts
-WHEN (OLD.is_requester = TRUE)
 FOR EACH ROW
+WHEN (OLD.is_requester = TRUE)
 EXECUTE FUNCTION check_system_intake_contacts_requester();
