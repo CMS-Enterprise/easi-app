@@ -16,7 +16,7 @@ import (
 
 // NOTE: This CEDAR endpoint in webMethods is called with a set of optional parameters (including a system ID) with the caveat that if
 //   a system ID is provided then all other provided parameters are ignored. This poses an interesting scenario for EASi b/c we will
-//   always be provide a system ID with our queries which effectively turns the system ID into a required parameter and nullifies/invalidates
+//   always provide a system ID with our queries which effectively turns the system ID into a required parameter and nullifies/invalidates
 //   the other optional parameters. For this reason we are not going to include the optional parameters in the client methods for EASi.
 
 // GetAuthorityToOperate makes a GET call to the /authority_to_operate endpoint
@@ -29,14 +29,9 @@ func (c *Client) GetAuthorityToOperate(ctx context.Context, cedarSystemID string
 		return nil, cedarcoremock.NoSystemFoundError()
 	}
 
-	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
-	if err != nil {
-		return nil, err
-	}
-
 	// Construct the parameters
 	params := apiauthority.NewAuthorityToOperateFindListParams()
-	params.SetSystemID(cedarSystem.VersionID.Ptr())
+	params.SetSystemID(&cedarSystemID)
 	params.HTTPClient = c.hc
 
 	// Make the API call
