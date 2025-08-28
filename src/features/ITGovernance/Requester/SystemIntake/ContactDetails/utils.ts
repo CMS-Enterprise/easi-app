@@ -10,9 +10,9 @@ import {
   SystemIntakeContactProps
 } from 'types/systemIntake';
 
-/** Removes `role` and `systemIntakeId` fields from `SystemIntakeContactProps` type */
+/** Removes `roles` and `systemIntakeId` fields from `SystemIntakeContactProps` type */
 export const formatContactFields = ({
-  role,
+  roles,
   systemIntakeId,
   ...contact
 }: SystemIntakeContactProps): ContactFields => contact;

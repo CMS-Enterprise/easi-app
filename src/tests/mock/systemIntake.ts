@@ -20,7 +20,7 @@ import {
   ITGovGRBStatus,
   ITGovGRTStatus,
   ITGovIntakeFormStatus,
-  SystemIntakeContact,
+  SystemIntakeContactFragment,
   SystemIntakeDecisionState,
   SystemIntakeDocumentCommonType,
   SystemIntakeDocumentFragmentFragment,
@@ -60,11 +60,9 @@ type ContactRole =
   | 'CRA'
   | 'Other';
 
-export interface MockSystemIntakeContact extends SystemIntakeContact {
+export interface MockSystemIntakeContact extends SystemIntakeContactFragment {
   component: CMSOffice;
-  role: ContactRole;
-  commonName: string;
-  email: string;
+  roles: ContactRole[];
 }
 
 const systemIntakeId = 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2';
@@ -74,32 +72,37 @@ const contacts: MockSystemIntakeContact[] = users.slice(0, 4).map(userInfo => ({
   systemIntakeId,
   id: `systemIntakeContact-${userInfo.euaUserId}`,
   euaUserId: userInfo.euaUserId,
-  commonName: userInfo.commonName,
-  email: userInfo.email,
+  userAccount: {
+    __typename: 'UserAccount',
+    id: `userAccount-${userInfo.euaUserId}`,
+    username: userInfo.euaUserId,
+    commonName: userInfo.commonName,
+    email: userInfo.email
+  },
   component: 'CMS Wide',
-  role: 'Other'
+  roles: ['Other']
 }));
 
 export const requester: MockSystemIntakeContact = {
   ...contacts[0],
-  role: 'Requester'
+  roles: ['Requester']
 };
 
 const businessOwner: MockSystemIntakeContact = {
   ...contacts[1],
-  role: 'Business Owner',
+  roles: ['Business Owner'],
   component: 'Center for Medicare'
 };
 
 export const productManager: MockSystemIntakeContact = {
   ...contacts[2],
-  role: 'Product Manager',
+  roles: ['Product Manager'],
   component: 'Office of Legislation'
 };
 
 const isso: MockSystemIntakeContact = {
   ...contacts[3],
-  role: 'ISSO',
+  roles: ['ISSO'],
   component: 'Office of Communications'
 };
 
@@ -236,7 +239,7 @@ export const emptySystemIntake: SystemIntakeFragmentFragment = {
   statusRequester: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_IN_PROGRESS,
   requester: {
     __typename: 'SystemIntakeRequester',
-    name: requester.commonName!,
+    name: requester.userAccount.commonName!,
     component: null,
     email: null
   },
@@ -372,19 +375,19 @@ export const systemIntake: SystemIntakeFragmentFragment = {
   statusRequester: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_SUBMITTED,
   requester: {
     __typename: 'SystemIntakeRequester',
-    name: requester.commonName!,
+    name: requester.userAccount.commonName!,
     component: requester.component,
-    email: requester.email
+    email: requester.userAccount.email
   },
   requestType: SystemIntakeRequestType.NEW,
   businessOwner: {
     __typename: 'SystemIntakeBusinessOwner',
-    name: businessOwner.commonName,
+    name: businessOwner.userAccount.commonName,
     component: businessOwner.component
   },
   productManager: {
     __typename: 'SystemIntakeProductManager',
-    name: productManager.commonName,
+    name: productManager.userAccount.commonName,
     component: productManager.component
   },
   governanceTeams: {
@@ -653,13 +656,9 @@ export const getSystemIntakeContactsQuery: MockedQuery<GetSystemIntakeContactsQu
       }
     },
     result: {
-      // @ts-ignore
       data: {
         __typename: 'Query',
-        systemIntakeContacts: {
-          __typename: 'SystemIntakeContactsPayload',
-          systemIntakeContacts: [requester, businessOwner, isso]
-        }
+        systemIntakeContacts: [requester, businessOwner, isso]
       }
     }
   };
