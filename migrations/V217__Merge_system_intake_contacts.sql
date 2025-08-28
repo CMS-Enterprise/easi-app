@@ -128,9 +128,16 @@ DROP COLUMN role,
 DROP COLUMN eua_user_id,
 DROP COLUMN common_name;
 
+-- rename updated_at to modified_at to fit base struct definition
+ALTER TABLE system_intake_contacts
+RENAME COLUMN updated_at TO modified_at;
+
 -- unique constraint between user_id and system_intake_id
 ALTER TABLE system_intake_contacts
 ADD CONSTRAINT user_intake_unique UNIQUE (user_id, system_intake_id);
 
+ALTER TABLE system_intake_contacts
+ALTER COLUMN created_at SET DEFAULT CURRENT_TIMESTAMP;
+-- created_by can not be null
 ALTER TABLE system_intake_contacts
 ALTER COLUMN created_by SET NOT NULL;
