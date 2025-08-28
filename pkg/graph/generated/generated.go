@@ -1507,13 +1507,7 @@ type SystemIntakeResolver interface {
 	SystemIntakeSystems(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeSystem, error)
 }
 type SystemIntakeContactResolver interface {
-	IsRequester(ctx context.Context, obj *models.SystemIntakeContact) (bool, error)
-	CreatedBy(ctx context.Context, obj *models.SystemIntakeContact) (uuid.UUID, error)
-	CreatedByUserAccount(ctx context.Context, obj *models.SystemIntakeContact) (*authentication.UserAccount, error)
-
-	ModifiedBy(ctx context.Context, obj *models.SystemIntakeContact) (*uuid.UUID, error)
-	ModifiedByUserAccount(ctx context.Context, obj *models.SystemIntakeContact) (*authentication.UserAccount, error)
-	ModifiedAt(ctx context.Context, obj *models.SystemIntakeContact) (*time.Time, error)
+	Roles(ctx context.Context, obj *models.SystemIntakeContact) ([]models.SystemIntakeContactRole, error)
 }
 type SystemIntakeDocumentResolver interface {
 	DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*models.SystemIntakeDocumentType, error)
@@ -48845,7 +48839,7 @@ func (ec *executionContext) _SystemIntakeContact_roles(ctx context.Context, fiel
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Roles, nil
+		return ec.resolvers.SystemIntakeContact().Roles(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -48866,8 +48860,8 @@ func (ec *executionContext) fieldContext_SystemIntakeContact_roles(_ context.Con
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeContact",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type SystemIntakeContactRole does not have child fields")
 		},
@@ -48889,7 +48883,7 @@ func (ec *executionContext) _SystemIntakeContact_isRequester(ctx context.Context
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntakeContact().IsRequester(rctx, obj)
+		return obj.IsRequester, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -48910,8 +48904,8 @@ func (ec *executionContext) fieldContext_SystemIntakeContact_isRequester(_ conte
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeContact",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Boolean does not have child fields")
 		},
@@ -48933,7 +48927,7 @@ func (ec *executionContext) _SystemIntakeContact_createdBy(ctx context.Context, 
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntakeContact().CreatedBy(rctx, obj)
+		return obj.CreatedBy, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -48954,8 +48948,8 @@ func (ec *executionContext) fieldContext_SystemIntakeContact_createdBy(_ context
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeContact",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type UUID does not have child fields")
 		},
@@ -48977,7 +48971,7 @@ func (ec *executionContext) _SystemIntakeContact_createdByUserAccount(ctx contex
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntakeContact().CreatedByUserAccount(rctx, obj)
+		return obj.CreatedByUserAccount(ctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -48999,7 +48993,7 @@ func (ec *executionContext) fieldContext_SystemIntakeContact_createdByUserAccoun
 		Object:     "SystemIntakeContact",
 		Field:      field,
 		IsMethod:   true,
-		IsResolver: true,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
@@ -49053,9 +49047,9 @@ func (ec *executionContext) _SystemIntakeContact_createdAt(ctx context.Context, 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*time.Time)
+	res := resTmp.(time.Time)
 	fc.Result = res
-	return ec.marshalNTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeContact_createdAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -49085,7 +49079,7 @@ func (ec *executionContext) _SystemIntakeContact_modifiedBy(ctx context.Context,
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntakeContact().ModifiedBy(rctx, obj)
+		return obj.ModifiedBy, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -49103,8 +49097,8 @@ func (ec *executionContext) fieldContext_SystemIntakeContact_modifiedBy(_ contex
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeContact",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type UUID does not have child fields")
 		},
@@ -49126,7 +49120,7 @@ func (ec *executionContext) _SystemIntakeContact_modifiedByUserAccount(ctx conte
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntakeContact().ModifiedByUserAccount(rctx, obj)
+		return obj.ModifiedByUserAccount(ctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -49145,7 +49139,7 @@ func (ec *executionContext) fieldContext_SystemIntakeContact_modifiedByUserAccou
 		Object:     "SystemIntakeContact",
 		Field:      field,
 		IsMethod:   true,
-		IsResolver: true,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
@@ -49187,7 +49181,7 @@ func (ec *executionContext) _SystemIntakeContact_modifiedAt(ctx context.Context,
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntakeContact().ModifiedAt(rctx, obj)
+		return obj.ModifiedAt, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -49205,8 +49199,8 @@ func (ec *executionContext) fieldContext_SystemIntakeContact_modifiedAt(_ contex
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeContact",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Time does not have child fields")
 		},
@@ -75420,82 +75414,51 @@ func (ec *executionContext) _SystemIntakeContact(ctx context.Context, sel ast.Se
 				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "roles":
-			out.Values[i] = ec._SystemIntakeContact_roles(ctx, field, obj)
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntakeContact_roles(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "isRequester":
+			out.Values[i] = ec._SystemIntakeContact_isRequester(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
-		case "isRequester":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntakeContact_isRequester(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "createdBy":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntakeContact_createdBy(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
-				return res
+			out.Values[i] = ec._SystemIntakeContact_createdBy(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
 			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "createdByUserAccount":
 			field := field
 
@@ -75538,38 +75501,7 @@ func (ec *executionContext) _SystemIntakeContact(ctx context.Context, sel ast.Se
 				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "modifiedBy":
-			field := field
-
-			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntakeContact_modifiedBy(ctx, field, obj)
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			out.Values[i] = ec._SystemIntakeContact_modifiedBy(ctx, field, obj)
 		case "modifiedByUserAccount":
 			field := field
 
@@ -75604,38 +75536,7 @@ func (ec *executionContext) _SystemIntakeContact(ctx context.Context, sel ast.Se
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "modifiedAt":
-			field := field
-
-			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntakeContact_modifiedAt(ctx, field, obj)
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			out.Values[i] = ec._SystemIntakeContact_modifiedAt(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -84338,10 +84239,6 @@ func (ec *executionContext) marshalNUpload2githubᚗcomᚋ99designsᚋgqlgenᚋg
 func (ec *executionContext) unmarshalNUploadSystemIntakeGRBPresentationDeckInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUploadSystemIntakeGRBPresentationDeckInput(ctx context.Context, v any) (models.UploadSystemIntakeGRBPresentationDeckInput, error) {
 	res, err := ec.unmarshalInputUploadSystemIntakeGRBPresentationDeckInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNUserAccount2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋauthenticationᚐUserAccount(ctx context.Context, sel ast.SelectionSet, v authentication.UserAccount) graphql.Marshaler {
-	return ec._UserAccount(ctx, sel, &v)
 }
 
 func (ec *executionContext) marshalNUserAccount2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋauthenticationᚐUserAccount(ctx context.Context, sel ast.SelectionSet, v *authentication.UserAccount) graphql.Marshaler {

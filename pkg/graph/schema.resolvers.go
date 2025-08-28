@@ -672,7 +672,9 @@ func (r *mutationResolver) UpdateSystemLink(ctx context.Context, input models.Up
 
 // CreateSystemIntakeContact is the resolver for the createSystemIntakeContact field.
 func (r *mutationResolver) CreateSystemIntakeContact(ctx context.Context, input models.CreateSystemIntakeContactInput) (*models.CreateSystemIntakeContactPayload, error) {
-	return resolvers.CreateSystemIntakeContact(ctx, r.store, input, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo))
+	principal := appcontext.Principal(ctx)
+	logger := appcontext.ZLogger(ctx)
+	return resolvers.CreateSystemIntakeContact(ctx, logger, principal, r.store, input, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo))
 }
 
 // UpdateSystemIntakeContact is the resolver for the updateSystemIntakeContact field.
@@ -2068,35 +2070,10 @@ func (r *systemIntakeResolver) SystemIntakeSystems(ctx context.Context, obj *mod
 	return resolvers.SystemIntakeSystemsByIntakeID(ctx, obj.ID)
 }
 
-// IsRequester is the resolver for the isRequester field.
-func (r *systemIntakeContactResolver) IsRequester(ctx context.Context, obj *models.SystemIntakeContact) (bool, error) {
-	// TODO EASI-4934: implement isRequester field
-	panic(fmt.Errorf("not implemented: IsRequester - isRequester"))
-}
-
-// CreatedBy is the resolver for the createdBy field.
-func (r *systemIntakeContactResolver) CreatedBy(ctx context.Context, obj *models.SystemIntakeContact) (uuid.UUID, error) {
-	panic(fmt.Errorf("not implemented: CreatedBy - createdBy"))
-}
-
-// CreatedByUserAccount is the resolver for the createdByUserAccount field.
-func (r *systemIntakeContactResolver) CreatedByUserAccount(ctx context.Context, obj *models.SystemIntakeContact) (*authentication.UserAccount, error) {
-	panic(fmt.Errorf("not implemented: CreatedByUserAccount - createdByUserAccount"))
-}
-
-// ModifiedBy is the resolver for the modifiedBy field.
-func (r *systemIntakeContactResolver) ModifiedBy(ctx context.Context, obj *models.SystemIntakeContact) (*uuid.UUID, error) {
-	panic(fmt.Errorf("not implemented: ModifiedBy - modifiedBy"))
-}
-
-// ModifiedByUserAccount is the resolver for the modifiedByUserAccount field.
-func (r *systemIntakeContactResolver) ModifiedByUserAccount(ctx context.Context, obj *models.SystemIntakeContact) (*authentication.UserAccount, error) {
-	panic(fmt.Errorf("not implemented: ModifiedByUserAccount - modifiedByUserAccount"))
-}
-
-// ModifiedAt is the resolver for the modifiedAt field.
-func (r *systemIntakeContactResolver) ModifiedAt(ctx context.Context, obj *models.SystemIntakeContact) (*time.Time, error) {
-	panic(fmt.Errorf("not implemented: ModifiedAt - modifiedAt"))
+// Roles is the resolver for the roles field.
+func (r *systemIntakeContactResolver) Roles(ctx context.Context, obj *models.SystemIntakeContact) ([]models.SystemIntakeContactRole, error) {
+	//TODO: EASI-4934: See if we can make this auto resolve
+	return obj.Roles, nil
 }
 
 // DocumentType is the resolver for the documentType field.

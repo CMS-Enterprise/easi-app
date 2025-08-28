@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	"fmt"
 	"slices"
 	"time"
 
@@ -10,8 +11,10 @@ import (
 	"github.com/guregu/null/zero"
 	"github.com/jmoiron/sqlx"
 	"github.com/samber/lo"
+	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers/systemintake/formstate"
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
@@ -40,19 +43,25 @@ func CreateSystemIntake(
 // CreateSystemIntakeContact creates a system intake's contact info.
 func CreateSystemIntakeContact(
 	ctx context.Context,
+	logger *zap.Logger,
+	principal authentication.Principal,
 	store *storage.Store,
 	input models.CreateSystemIntakeContactInput,
 	getAccountInformation userhelpers.GetAccountInfoFunc,
 ) (*models.CreateSystemIntakeContactPayload, error) {
+	principalAccount := principal.Account()
+	if principalAccount == nil {
+		return nil, fmt.Errorf("principal doesn't have an account, username %s", principal.String())
+	}
 	contactUserAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, input.EuaUserID, false, getAccountInformation)
 	if err != nil {
 		return nil, err
 	}
 
-	contact := models.NewSystemIntakeContact(contactUserAccount.ID)
+	contact := models.NewSystemIntakeContact(contactUserAccount.ID, principalAccount.ID)
 	contact.SystemIntakeID = input.SystemIntakeID
-	contact.EUAUserID = input.EuaUserID
 	contact.Component = input.Component
+	contact.IsRequester = input.IsRequester
 
 	contact.Roles = input.Roles
 
@@ -67,11 +76,9 @@ func CreateSystemIntakeContact(
 
 // SystemIntakeContactDelete will, delete a System Intake contact
 func SystemIntakeContactDelete(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.SystemIntakeContact, error) {
-	contact := &models.SystemIntakeContact{
-		ID: id,
-	}
+
 	// TODO, consider expanding error handling, and make sure the delete returns the contact
-	return store.DeleteSystemIntakeContact(ctx, contact)
+	return store.DeleteSystemIntakeContact(ctx, id)
 
 }
 

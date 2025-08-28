@@ -12,6 +12,7 @@ import (
 
 	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
 	"github.com/cms-enterprise/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers"
 	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
@@ -238,19 +239,22 @@ func updateSystemIntakeRequestDetails(
 
 func createSystemIntakeContact(
 	ctx context.Context,
+
 	store *storage.Store,
 	intake *models.SystemIntake,
 	euaUserID string,
 	component string,
 	role string,
 ) {
+	logger := appcontext.ZLogger(ctx)
+	userPrincipal := appcontext.Principal(ctx)
 	input := models.CreateSystemIntakeContactInput{
 		Component:      component,
 		Roles:          []models.SystemIntakeContactRole{models.SystemIntakeContactRole(role)},
 		EuaUserID:      euaUserID,
 		SystemIntakeID: intake.ID,
 	}
-	_, err := resolvers.CreateSystemIntakeContact(ctx, store, input,
+	_, err := resolvers.CreateSystemIntakeContact(ctx, logger, userPrincipal, store, input,
 		userhelpers.GetUserInfoAccountInfoWrapperFunc(mock.FetchUserInfoMock))
 	if err != nil {
 		panic(err)

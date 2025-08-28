@@ -36,19 +36,23 @@ func (s *Store) GetSystemIntakeContactByID(ctx context.Context, id uuid.UUID) (*
 
 // CreateSystemIntakeContact creates a new system intake contact object in the database
 func (s *Store) CreateSystemIntakeContact(ctx context.Context, systemIntakeContact *models.SystemIntakeContact) (*models.SystemIntakeContact, error) {
-	now := s.clock.Now().UTC()
-	if systemIntakeContact.CreatedAt == nil {
-		systemIntakeContact.CreatedAt = &now
-	}
-	if systemIntakeContact.UpdatedAt == nil {
-		systemIntakeContact.UpdatedAt = &now
-	}
+	// TODO: this should be re-worked to match base struct paradigms for
+
+	// now := s.clock.Now().UTC()
+	// if systemIntakeContact.CreatedAt == nil {
+	// 	systemIntakeContact.CreatedAt = &now
+	// }
+	// if systemIntakeContact.ModifiedAt == nil {
+	// 	systemIntakeContact.ModifiedAt = &now
+	// }
+	retContact := &models.SystemIntakeContact{}
 
 	systemIntakeContact.ID = uuid.New()
-	_, err := s.db.NamedExec(
-		sqlqueries.SystemIntakeContact.Create,
-		systemIntakeContact,
-	)
+	// _, err := s.db.NamedExec(
+	// 	sqlqueries.SystemIntakeContact.Create,
+	// 	systemIntakeContact,
+	// )
+	err := namedGet(ctx, s, retContact, sqlqueries.SystemIntakeContact.Create, systemIntakeContact)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to create system intake contact with error %s", zap.Error(err))
 		return nil, err
@@ -58,8 +62,9 @@ func (s *Store) CreateSystemIntakeContact(ctx context.Context, systemIntakeConta
 
 // UpdateSystemIntakeContact updates a system intake contact object in the database
 func (s *Store) UpdateSystemIntakeContact(ctx context.Context, systemIntakeContact *models.SystemIntakeContact) (*models.SystemIntakeContact, error) {
-	updatedAt := s.clock.Now().UTC()
-	systemIntakeContact.UpdatedAt = &updatedAt
+	// TODO: this should be re-worked to match base struct paradigms
+	modifiedAt := s.clock.Now().UTC()
+	systemIntakeContact.ModifiedAt = &modifiedAt
 
 	_, err := s.db.NamedExec(
 		sqlqueries.SystemIntakeContact.Update,

@@ -13,9 +13,10 @@ func (s *StoreTestSuite) TestCreateSystemIntakeContact() {
 	_, err := s.store.CreateSystemIntake(ctx, &intake)
 	s.NoError(err)
 
+	// TODO move this test to resolvers
 	s.Run("create a system intake contact", func() {
 		contact := models.SystemIntakeContact{
-			EUAUserID:      "ANON",
+			// EUAUserID:      "ANON",
 			SystemIntakeID: intake.ID,
 		}
 		createdContact, err := s.store.CreateSystemIntakeContact(ctx, &contact)
@@ -34,6 +35,7 @@ func (s *StoreTestSuite) TestCreateSystemIntakeContact() {
 }
 
 func (s *StoreTestSuite) TestFetchSystemIntakeContactsBySystemIntakeID() {
+	// TODO move this test to resolvers
 	ctx := context.Background()
 
 	// create intake
@@ -43,7 +45,7 @@ func (s *StoreTestSuite) TestFetchSystemIntakeContactsBySystemIntakeID() {
 
 	// create system intake contacts
 	_, err = s.store.CreateSystemIntakeContact(ctx, &models.SystemIntakeContact{
-		EUAUserID:      "AAAA",
+		// EUAUserID:      "AAAA",
 		SystemIntakeID: createdIntake.ID,
 		Component:      "Component",
 		Roles:          models.AllSystemIntakeContactRole,
