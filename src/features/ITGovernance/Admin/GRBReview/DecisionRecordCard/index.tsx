@@ -36,7 +36,7 @@ const configureDecisionRender = (
     decisionBanner: <></>
   };
   let decisionText = '';
-  let decisionIcon = <Icon.Help className="margin-right-1" />;
+  let decisionIcon = <Icon.Help className="margin-right-1" aria-hidden />;
 
   switch (votingStatus) {
     case GRBVotingInformationStatus.IN_PROGRESS:
@@ -46,19 +46,21 @@ const configureDecisionRender = (
       decisionConfig.bgColor = 'bg-success-darker';
       decisionConfig.borderColor = 'border-success-dark';
       decisionText = i18next.t<string>('grbReview:decisionCard.approve');
-      decisionIcon = <Icon.CheckCircle className="margin-right-1" />;
+      decisionIcon = (
+        <Icon.CheckCircle className="margin-right-1" aria-hidden />
+      );
       break;
     case GRBVotingInformationStatus.NOT_APPROVED:
       decisionConfig.bgColor = 'bg-secondary-darker';
       decisionConfig.borderColor = 'border-error-dark';
       decisionText = i18next.t<string>('grbReview:decisionCard.notApprove');
-      decisionIcon = <Icon.Cancel className="margin-right-1" />;
+      decisionIcon = <Icon.Cancel className="margin-right-1" aria-hidden />;
       break;
     case GRBVotingInformationStatus.INCONCLUSIVE:
       decisionConfig.bgColor = 'bg-base-dark';
       decisionConfig.borderColor = 'border-base';
       decisionText = i18next.t<string>('grbReview:decisionCard.inconclusive');
-      decisionIcon = <Icon.Help className="margin-right-1" />;
+      decisionIcon = <Icon.Help className="margin-right-1" aria-hidden />;
       break;
     default:
       decisionText = '';
@@ -147,7 +149,7 @@ const DecisionRecordCard = ({
             GRBVotingInformationStatus.IN_PROGRESS
         })}
       >
-        <Icon.Comment className="margin-right-1" />
+        <Icon.Comment className="margin-right-1" aria-hidden />
         {t('decisionCard.additionalComments', {
           count: voteCommentCount
         })}

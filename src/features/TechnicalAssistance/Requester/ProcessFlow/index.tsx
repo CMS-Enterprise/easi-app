@@ -35,7 +35,7 @@ function ProcessFlow() {
   useEffect(() => {
     if (createResult.data) {
       history.push(
-        `/trb/link/${createResult.data.createTRBRequest.id}?${linkCedarSystemIdQs}`,
+        `/trb/link/${createResult.data.createTRBRequest.id}?${linkCedarSystemIdQs || ''}`,
         {
           isNew: true
         }
