@@ -268,12 +268,14 @@ func updateSystemIntakeContact(
 	component string,
 	role string,
 ) {
+	logger := appcontext.ZLogger(ctx)
+	userPrincipal := appcontext.Principal(ctx)
 	input := models.UpdateSystemIntakeContactInput{
 		Component: component,
 		Roles:     []models.SystemIntakeContactRole{models.SystemIntakeContactRole(role)},
 		// EuaUserID: euaUserID,
 	}
-	_, err := resolvers.UpdateSystemIntakeContact(ctx, store, input,
+	_, err := resolvers.UpdateSystemIntakeContact(ctx, logger, userPrincipal, store, input,
 		userhelpers.GetUserInfoAccountInfoWrapperFunc(mock.FetchUserInfoMock),
 	)
 	if err != nil {

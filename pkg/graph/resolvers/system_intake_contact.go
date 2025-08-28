@@ -58,6 +58,8 @@ func SystemIntakeContactDelete(ctx context.Context, store *storage.Store, id uui
 // UpdateSystemIntakeContact updates a system intake's contact info.
 func UpdateSystemIntakeContact(
 	ctx context.Context,
+	logger *zap.Logger,
+	principal authentication.Principal,
 	store *storage.Store,
 	input models.UpdateSystemIntakeContactInput,
 	getAccountInformation userhelpers.GetAccountInfoFunc,
@@ -68,12 +70,12 @@ func UpdateSystemIntakeContact(
 		return nil, err
 	}
 
-	// TODO: Fix
-
-	contact.ID = input.ID
 	contact.Component = input.Component
-	// TODO: Revert to `input.Roles` when database is updated to array
 	contact.Roles = input.Roles
+	err = BaseStructPreUpdate(map[string]any{}, contact, principal, false)
+	if err != nil {
+		return nil, err
+	}
 
 	updatedContact, err := store.UpdateSystemIntakeContact(ctx, contact)
 	if err != nil {
