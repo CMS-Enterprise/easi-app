@@ -2,7 +2,6 @@ package resolvers
 
 import (
 	"context"
-	"fmt"
 	"slices"
 	"time"
 
@@ -11,16 +10,13 @@ import (
 	"github.com/guregu/null/zero"
 	"github.com/jmoiron/sqlx"
 	"github.com/samber/lo"
-	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
-	"github.com/cms-enterprise/easi-app/pkg/authentication"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers/systemintake/formstate"
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
-	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 )
 
 // CreateSystemIntake creates a system intake.
@@ -38,77 +34,6 @@ func CreateSystemIntake(
 	}
 	createdIntake, err := store.CreateSystemIntake(ctx, &systemIntake)
 	return createdIntake, err
-}
-
-// CreateSystemIntakeContact creates a system intake's contact info.
-func CreateSystemIntakeContact(
-	ctx context.Context,
-	logger *zap.Logger,
-	principal authentication.Principal,
-	store *storage.Store,
-	input models.CreateSystemIntakeContactInput,
-	getAccountInformation userhelpers.GetAccountInfoFunc,
-) (*models.CreateSystemIntakeContactPayload, error) {
-	principalAccount := principal.Account()
-	if principalAccount == nil {
-		return nil, fmt.Errorf("principal doesn't have an account, username %s", principal.String())
-	}
-	contactUserAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, input.EuaUserID, false, getAccountInformation)
-	if err != nil {
-		return nil, err
-	}
-
-	contact := models.NewSystemIntakeContact(contactUserAccount.ID, principalAccount.ID)
-	contact.SystemIntakeID = input.SystemIntakeID
-	contact.Component = input.Component
-	contact.IsRequester = input.IsRequester
-
-	contact.Roles = input.Roles
-
-	createdContact, err := store.CreateSystemIntakeContact(ctx, contact)
-	if err != nil {
-		return nil, err
-	}
-	return &models.CreateSystemIntakeContactPayload{
-		SystemIntakeContact: createdContact,
-	}, nil
-}
-
-// SystemIntakeContactDelete will, delete a System Intake contact
-func SystemIntakeContactDelete(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.SystemIntakeContact, error) {
-
-	// TODO, consider expanding error handling, and make sure the delete returns the contact
-	return store.DeleteSystemIntakeContact(ctx, id)
-
-}
-
-// UpdateSystemIntakeContact updates a system intake's contact info.
-func UpdateSystemIntakeContact(
-	ctx context.Context,
-	store *storage.Store,
-	input models.UpdateSystemIntakeContactInput,
-	getAccountInformation userhelpers.GetAccountInfoFunc,
-) (*models.CreateSystemIntakeContactPayload, error) {
-	// TODO: Fully implement this. This is a placeholder
-	contact, err := store.GetSystemIntakeContactByID(ctx, input.ID)
-	if err != nil {
-		return nil, err
-	}
-
-	// TODO: Fix
-
-	contact.ID = input.ID
-	contact.Component = input.Component
-	// TODO: Revert to `input.Roles` when database is updated to array
-	contact.Roles = input.Roles
-
-	updatedContact, err := store.UpdateSystemIntakeContact(ctx, contact)
-	if err != nil {
-		return nil, err
-	}
-	return &models.CreateSystemIntakeContactPayload{
-		SystemIntakeContact: updatedContact,
-	}, nil
 }
 
 // UpdateSystemIntakeRequestType updates a system intake's request type and returns the updated intake.
@@ -462,16 +387,4 @@ func GetRequesterUpdateEmailData(
 	}
 
 	return data, nil
-}
-
-// GetSystemIntakeContactsBySystemIntakeID fetches contacts for a system intake
-func GetSystemIntakeContactsBySystemIntakeID(ctx context.Context, store *storage.Store, systemIntakeID uuid.UUID) (*models.SystemIntakeContacts, error) {
-	contacts, err := store.FetchSystemIntakeContactsBySystemIntakeID(ctx, systemIntakeID)
-	if err != nil {
-		return nil, err
-	}
-	// Wrap the returned type, so we can calculate additional information on it.
-	return &models.SystemIntakeContacts{
-		AllContacts: contacts,
-	}, nil
 }

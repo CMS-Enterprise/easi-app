@@ -45,13 +45,13 @@ func (info *SystemIntakeContacts) Requester() (*SystemIntakeContact, error) {
 	return info.AllContacts[0], nil
 }
 
-// Returns the business owner from the List of Contacts
+// BusinessOwners returns the business owner from the List of Contacts
 func (info *SystemIntakeContacts) BusinessOwners() ([]*SystemIntakeContact, error) {
 	//TODO Implement
 	return info.AllContacts, nil
 }
 
-// ProductManagers Returns the product managers from the List of Contacts
+// ProductManagers returns the product managers from the List of Contacts
 func (info *SystemIntakeContacts) ProductManagers() ([]*SystemIntakeContact, error) {
 	//TODO Implement
 	return info.AllContacts, nil
