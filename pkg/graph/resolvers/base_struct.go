@@ -9,7 +9,7 @@ import (
 // BaseStructPreUpdate is a hook to call before updating a baseStruct object in the database it will
 // 1. Update the base struct meta data
 // 2. If applyChanges is true, Apply changes from the changes object to the provided IBaseStruct
-func BaseStructPreUpdate(changes map[string]interface{}, bs models.IBaseStruct, principal authentication.Principal, applyChanges bool) error {
+func BaseStructPreUpdate(changes map[string]any, bs models.IBaseStruct, principal authentication.Principal, applyChanges bool) error {
 
 	err := bs.SetModifiedBy(principal)
 	if err != nil {
