@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button, Icon } from '@trussworks/react-uswds';
+import { RequestRelationType } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import Divider from 'components/Divider';
@@ -95,80 +96,119 @@ function AdditionalRequestInfo({
   const { t } = useTranslation('itGov');
   const history = useHistory();
 
-  const editLink =
-    system.requestType === 'trb'
-      ? `/trb/link/${system.id}`
-      : `/linked-systems/${system.id}`;
+  const isTrb = system.requestType === 'trb';
+
+  const editLink = isTrb
+    ? `/trb/link/${system.id}`
+    : `/linked-systems/${system.id}`;
+
+  const renderTRB = () => {
+    return (
+      <>
+        {system.relationType === null ? (
+          <Alert
+            type="warning"
+            heading={t('additionalRequestInfo.actionRequiredAlert.header')}
+          >
+            {t('additionalRequestInfo.actionRequiredAlert.text')}
+            <UswdsReactLink to={editLink}>
+              {t('additionalRequestInfo.actionRequiredAlert.answer')}
+            </UswdsReactLink>
+          </Alert>
+        ) : (
+          <p className="text-base margin-top-1 margin-bottom-0">
+            {system.relationType === RequestRelationType.EXISTING_SERVICE &&
+              t('additionalRequestInfo.existingService')}
+            {system.relationType === RequestRelationType.EXISTING_SYSTEM &&
+              t('additionalRequestInfo.existingSystem')}
+            {system.relationType === RequestRelationType.NEW_SYSTEM &&
+              t('additionalRequestInfo.newSystem')}
+            <br />
+            <UswdsReactLink to={editLink}>
+              {t('additionalRequestInfo.edit')}
+            </UswdsReactLink>
+          </p>
+        )}
+      </>
+    );
+  };
+
+  const renderITGO = () => {
+    return (
+      <>
+        {system.doesNotSupportSystems && (
+          <>
+            <div className="task-list-sidebar__subtitle">
+              {t('additionalRequestInfo.doesNotSupportOrUseOtherSystems')}
+            </div>
+            <Button
+              type="button"
+              onClick={() =>
+                history.push(editLink, {
+                  from: 'task-list'
+                })
+              }
+              unstyled
+            >
+              {t('additionalRequestInfo.viewOrEditSystemInformation')}
+            </Button>
+          </>
+        )}
+        {system.doesNotSupportSystems === null &&
+          system.systems.length === 0 && (
+            <Alert
+              type="warning"
+              heading={t(
+                'itGov:additionalRequestInfo.actionRequiredAlert.header'
+              )}
+            >
+              {t(
+                'itGov:additionalRequestInfo.actionRequiredAlert.doesThisRequestInvolve'
+              )}
+              <Button
+                type="button"
+                className="display-block margin-top-1"
+                onClick={() =>
+                  history.push(editLink, {
+                    from: 'task-list'
+                  })
+                }
+                unstyled
+              >
+                {t('itGov:additionalRequestInfo.actionRequiredAlert.answer')}
+              </Button>
+            </Alert>
+          )}
+        {system.systems && system.systems.length > 0 && (
+          <>
+            <div className="task-list-sidebar__subtitle">
+              {t('additionalRequestInfo.linkedSystems')}
+            </div>
+
+            <Button
+              type="button"
+              onClick={() =>
+                history.push(editLink, {
+                  from: 'task-list'
+                })
+              }
+              unstyled
+            >
+              {t('additionalRequestInfo.edit')}
+            </Button>
+          </>
+        )}
+      </>
+    );
+  };
 
   return (
     <div>
       <h4 className="line-height-body-2 margin-top-3 margin-bottom-1">
         {t('additionalRequestInfo.header')}
       </h4>
-
-      {system.doesNotSupportSystems && (
-        <>
-          <div className="task-list-sidebar__subtitle">
-            {t('additionalRequestInfo.doesNotSupportOrUseOtherSystems')}
-          </div>
-          <Button
-            type="button"
-            onClick={() =>
-              history.push(editLink, {
-                from: 'task-list'
-              })
-            }
-            unstyled
-          >
-            {t('additionalRequestInfo.viewOrEditSystemInformation')}
-          </Button>
-        </>
-      )}
-
-      {system.doesNotSupportSystems === null && system.systems.length === 0 && (
-        <Alert
-          type="warning"
-          heading={t('itGov:additionalRequestInfo.actionRequiredAlert.header')}
-        >
-          {t(
-            'itGov:additionalRequestInfo.actionRequiredAlert.doesThisRequestInvolve'
-          )}
-          <Button
-            type="button"
-            className="display-block margin-top-1"
-            onClick={() =>
-              history.push(editLink, {
-                from: 'task-list'
-              })
-            }
-            unstyled
-          >
-            {t('itGov:additionalRequestInfo.actionRequiredAlert.answer')}
-          </Button>
-        </Alert>
-      )}
-
-      {system.systems && system.systems.length > 0 && (
-        <>
-          <div className="task-list-sidebar__subtitle">
-            {t('additionalRequestInfo.linkedSystems')}
-          </div>
-
-          <Button
-            type="button"
-            onClick={() =>
-              history.push(editLink, {
-                from: 'task-list'
-              })
-            }
-            unstyled
-          >
-            {t('additionalRequestInfo.edit')}
-          </Button>
-          <SystemCardList items={system.systems} />
-        </>
-      )}
-
+      {isTrb ? renderTRB() : renderITGO()}
+      <SystemCardList items={system.systems} />
       {system.contractName !== null && (
         <p>
           <span className="text-base">
@@ -178,8 +218,7 @@ function AdditionalRequestInfo({
           {system.contractName}
         </p>
       )}
-
-      {system.requestType !== 'itgov' && // Hide the contract number field from itgov, see Note [EASI-4160 Disable Contract Number Linking]
+      {isTrb && // Hide the contract number field from itgov, see Note [EASI-4160 Disable Contract Number Linking]
         system.relationType !== null && (
           <p>
             <span className="text-base">
