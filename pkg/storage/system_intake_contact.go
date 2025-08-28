@@ -19,7 +19,10 @@ import (
 func (s *Store) GetSystemIntakeContactByID(ctx context.Context, id uuid.UUID) (*models.SystemIntakeContact, error) {
 	//TODO this is just a placeholder, refactor and put SQL in it's own package etc. Ideally, make this a data loader
 	var contact models.SystemIntakeContact
-	err := s.db.Get(&contact, sqlqueries.SystemIntakeContact.GetByID, id)
+
+	err := namedGet(ctx, s, &contact, sqlqueries.SystemIntakeContact.GetByID, args{
+		"id": id,
+	})
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, &apperrors.QueryError{
@@ -53,9 +56,6 @@ func (s *Store) CreateSystemIntakeContact(ctx context.Context, systemIntakeConta
 // UpdateSystemIntakeContact updates a system intake contact object in the database
 func (s *Store) UpdateSystemIntakeContact(ctx context.Context, systemIntakeContact *models.SystemIntakeContact) (*models.SystemIntakeContact, error) {
 	retContact := &models.SystemIntakeContact{}
-	// TODO: this should be re-worked to match base struct paradigms
-	modifiedAt := s.clock.Now().UTC()
-	systemIntakeContact.ModifiedAt = &modifiedAt
 
 	err := namedGet(ctx, s, retContact, sqlqueries.SystemIntakeContact.Update, systemIntakeContact)
 	if err != nil {

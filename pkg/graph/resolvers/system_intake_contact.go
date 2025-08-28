@@ -72,6 +72,7 @@ func UpdateSystemIntakeContact(
 
 	contact.Component = input.Component
 	contact.Roles = input.Roles
+	contact.IsRequester = input.IsRequester
 	err = BaseStructPreUpdate(map[string]any{}, contact, principal, false)
 	if err != nil {
 		return nil, err
