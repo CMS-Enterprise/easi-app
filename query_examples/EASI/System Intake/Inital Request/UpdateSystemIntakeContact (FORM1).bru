@@ -14,14 +14,31 @@ body:graphql {
   mutation UpdateSystemIntakeContact($input: UpdateSystemIntakeContactInput!) {
     updateSystemIntakeContact(input: $input) {
       #   "{{$guid}}" #use this to make a guid
-        #this gets submitted 3 times to provide all the contacts we need
+      #this gets submitted 3 times to provide all the contacts we need
       systemIntakeContact {
-        id # NOTE, this is provided by the front end!
-        euaUserId
+        id
+        userAccount {
+          username
+          commonName
+        }
         systemIntakeId
         component
-        role
-        __typename
+        roles
+        isRequester
+  
+        #
+        createdBy
+        createdByUserAccount {
+          username
+          commonName
+        }
+        createdAt
+        modifiedBy
+        modifiedByUserAccount{
+          username
+          commonName
+        }
+        modifiedAt
       }
       __typename
     }
@@ -33,10 +50,9 @@ body:graphql:vars {
   {
     "input": {
       "id": "{{systemIntakeContactID}}",
-      "euaUserId": "ADMN",
       "component": "Center for Clinical Standards and Quality",
-      "role": "Business Owner",
-      "systemIntakeId": "{{systemIntakeID}}"
+      "roles": ["BUSINESS_OWNER","PRODUCT_MANAGER"],
+      "isRequester": false
     }
   }
 }

@@ -1,11 +1,10 @@
 UPDATE system_intake_contacts
 SET
-    eua_user_id = :eua_user_id,
-    system_intake_id = :system_intake_id,
-    role = :role,
+    roles = :roles,
     component = :component,
-    user_id = :user_id,
-    modified_at = :modified_at
+    is_requester = :is_requester,
+    modified_by = :modified_by,
+    modified_at = NOW()
 WHERE system_intake_contacts.id = :id
 RETURNING
     id,

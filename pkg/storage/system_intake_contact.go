@@ -38,20 +38,10 @@ func (s *Store) GetSystemIntakeContactByID(ctx context.Context, id uuid.UUID) (*
 func (s *Store) CreateSystemIntakeContact(ctx context.Context, systemIntakeContact *models.SystemIntakeContact) (*models.SystemIntakeContact, error) {
 	// TODO: this should be re-worked to match base struct paradigms for
 
-	// now := s.clock.Now().UTC()
-	// if systemIntakeContact.CreatedAt == nil {
-	// 	systemIntakeContact.CreatedAt = &now
-	// }
-	// if systemIntakeContact.ModifiedAt == nil {
-	// 	systemIntakeContact.ModifiedAt = &now
-	// }
 	retContact := &models.SystemIntakeContact{}
 
 	systemIntakeContact.ID = uuid.New()
-	// _, err := s.db.NamedExec(
-	// 	sqlqueries.SystemIntakeContact.Create,
-	// 	systemIntakeContact,
-	// )
+
 	err := namedGet(ctx, s, retContact, sqlqueries.SystemIntakeContact.Create, systemIntakeContact)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to create system intake contact with error %s", zap.Error(err))
@@ -62,19 +52,17 @@ func (s *Store) CreateSystemIntakeContact(ctx context.Context, systemIntakeConta
 
 // UpdateSystemIntakeContact updates a system intake contact object in the database
 func (s *Store) UpdateSystemIntakeContact(ctx context.Context, systemIntakeContact *models.SystemIntakeContact) (*models.SystemIntakeContact, error) {
+	retContact := &models.SystemIntakeContact{}
 	// TODO: this should be re-worked to match base struct paradigms
 	modifiedAt := s.clock.Now().UTC()
 	systemIntakeContact.ModifiedAt = &modifiedAt
 
-	_, err := s.db.NamedExec(
-		sqlqueries.SystemIntakeContact.Update,
-		systemIntakeContact,
-	)
+	err := namedGet(ctx, s, retContact, sqlqueries.SystemIntakeContact.Update, systemIntakeContact)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to create system intake contact with error %s", zap.Error(err))
 		return nil, err
 	}
-	return systemIntakeContact, nil
+	return retContact, nil
 }
 
 // FetchSystemIntakeContactsBySystemIntakeID queries the DB for all the system intake contacts matching the given system intake ID
