@@ -18,3 +18,15 @@ VALUES (
     :created_at,
     :updated_at
 )
+RETURNING
+    id,
+    system_intake_id,
+    component,
+    created_at,
+    updated_at,
+    user_id,
+    roles,
+    is_requester,
+    created_by,
+    modified_by
+;

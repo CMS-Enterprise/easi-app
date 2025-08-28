@@ -1,11 +1,13 @@
 SELECT
     id,
-    eua_user_id,
     system_intake_id,
-    role,
     component,
+    user_id,
+    roles,
+    is_requester,
+    created_by,
     created_at,
-    updated_at,
-    user_id
+    modified_by,
+    updated_at
 FROM system_intake_contacts
 WHERE id=$1 AND eua_user_id IS NOT NULL
