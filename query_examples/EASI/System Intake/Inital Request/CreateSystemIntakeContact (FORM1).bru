@@ -15,10 +15,9 @@ body:graphql {
     createSystemIntakeContact(input: $input) {
       systemIntakeContact {
         id
-        euaUserId
         systemIntakeId
         component
-        role
+        roles
         __typename
       }
       __typename
@@ -31,8 +30,9 @@ body:graphql:vars {
     "input": {
       "euaUserId": "ABCD",
       "component": "Center for Clinical Standards and Quality",
-      "role": "Requester",
-      "systemIntakeId": "{{systemIntakeID}}"
+      "roles": ["BUSINESS_OWNER","PRODUCT_MANAGER"],
+      "systemIntakeId": "{{systemIntakeID}}",
+      "isRequester": false
     }
   }
 }
