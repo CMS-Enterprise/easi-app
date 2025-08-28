@@ -8,6 +8,6 @@ SELECT
     created_by,
     created_at,
     modified_by,
-    updated_at
+    modified_at
 FROM system_intake_contacts
 WHERE system_intake_id=$1 AND eua_user_id IS NOT NULL

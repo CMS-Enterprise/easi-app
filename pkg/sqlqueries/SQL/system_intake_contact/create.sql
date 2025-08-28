@@ -1,32 +1,31 @@
 INSERT INTO system_intake_contacts (
     id,
-    eua_user_id,
     system_intake_id,
-    role,
     component,
     user_id,
-    created_at,
-    updated_at
+    roles,
+    is_requester,
+    created_by
+
 )
 VALUES (
     :id,
-    :eua_user_id,
     :system_intake_id,
-    :role,
     :component,
     :user_id,
-    :created_at,
-    :updated_at
+    :roles,
+    :is_requester,
+    :created_by
 )
 RETURNING
     id,
     system_intake_id,
     component,
-    created_at,
-    updated_at,
     user_id,
     roles,
     is_requester,
     created_by,
-    modified_by
+    created_at,
+    modified_by,
+    modified_at
 ;

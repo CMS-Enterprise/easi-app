@@ -5,7 +5,7 @@ SET
     role = :role,
     component = :component,
     user_id = :user_id,
-    updated_at = :updated_at
+    modified_at = :modified_at
 WHERE system_intake_contacts.id = :id
 RETURNING
     id,
@@ -17,4 +17,4 @@ RETURNING
     created_by,
     created_at,
     modified_by,
-    updated_at
+    modified_at
