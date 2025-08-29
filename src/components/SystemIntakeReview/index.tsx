@@ -24,6 +24,8 @@ import './index.scss';
 
 type SystemIntakeReviewProps = {
   systemIntake: SystemIntakeFragmentFragment;
+  showSubmissionDate?: boolean;
+  showEditSectionLink?: boolean;
 };
 
 export const SystemIntakeReview = ({
@@ -211,7 +213,7 @@ export const SystemIntakeReview = ({
       {showEditSectionLink && (
         <UswdsReactLink
           to="contact-details"
-          className="display-block margin-bottom-3"
+          className="display-block margin-bottom-3 margin-top-1"
         >
           {t('review.edit')}
         </UswdsReactLink>
@@ -274,7 +276,7 @@ export const SystemIntakeReview = ({
       {showEditSectionLink && (
         <UswdsReactLink
           to="request-details"
-          className="display-block margin-bottom-3"
+          className="display-block margin-bottom-3 margin-top-1"
         >
           {t('review.edit')}
         </UswdsReactLink>
@@ -346,7 +348,7 @@ export const SystemIntakeReview = ({
       {showEditSectionLink && (
         <UswdsReactLink
           to="contract-details"
-          className="display-block margin-bottom-3"
+          className="display-block margin-bottom-3 margin-top-1"
         >
           {t('review.edit')}
         </UswdsReactLink>
@@ -445,7 +447,7 @@ export const SystemIntakeReview = ({
       {showEditSectionLink && (
         <UswdsReactLink
           to="documents"
-          className="display-block margin-bottom-3"
+          className="display-block margin-bottom-3 margin-top-1"
         >
           {t('review.edit')}
         </UswdsReactLink>
