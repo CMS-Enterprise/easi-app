@@ -15,6 +15,14 @@ body:graphql {
     createSystemIntakeContact(input: $input) {
       systemIntakeContact {
         id
+        isRequester
+        userID
+        userAccount {
+          id
+          commonName
+          userName
+          email
+        }
         systemIntakeId
         component
         roles
@@ -23,6 +31,7 @@ body:graphql {
       __typename
     }
   }
+  
 }
 
 body:graphql:vars {
@@ -40,7 +49,7 @@ body:graphql:vars {
 script:post-response {
   let responseData = res.getBody().data.createSystemIntakeContact
   
-  systemIntakeContactID = responseData.systemIntakeContact.id
+  var systemIntakeContactID = responseData.systemIntakeContact.id
   
   
   bru.setVar("systemIntakeContactID", systemIntakeContactID);

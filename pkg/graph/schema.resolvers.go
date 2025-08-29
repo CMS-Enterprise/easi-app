@@ -2073,6 +2073,11 @@ func (r *systemIntakeResolver) SystemIntakeSystems(ctx context.Context, obj *mod
 	return resolvers.SystemIntakeSystemsByIntakeID(ctx, obj.ID)
 }
 
+// Contacts is the resolver for the contacts field.
+func (r *systemIntakeResolver) Contacts(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeContacts, error) {
+	return resolvers.GetSystemIntakeContactsBySystemIntakeID(ctx, r.store, obj.ID)
+}
+
 // Roles is the resolver for the roles field.
 func (r *systemIntakeContactResolver) Roles(ctx context.Context, obj *models.SystemIntakeContact) ([]models.SystemIntakeContactRole, error) {
 	//TODO: EASI-4934: See if we can make this auto resolve
