@@ -326,6 +326,12 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
             >
               {t('contractDetails.currentAnnualSpending')}
             </Label>
+            <HelpText
+              className="margin-top-1"
+              id="annualSpending.currentAnnualSpending"
+            >
+              {t('contractDetails.currentAnnualSpendingHelpText')}
+            </HelpText>
             <ErrorMessage
               errors={errors}
               name="annualSpending.currentAnnualSpending"
@@ -350,6 +356,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
             >
               {t('contractDetails.currentAnnualSpendingITPortion')}
             </Label>
+
             <ErrorMessage
               errors={errors}
               name="annualSpending.currentAnnualSpendingITPortion"
@@ -374,6 +381,12 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
             >
               {t('contractDetails.plannedYearOneSpending')}
             </Label>
+            <HelpText
+              className="margin-top-1"
+              id="annualSpending.plannedYearOneSpending"
+            >
+              {t('contractDetails.plannedYearOneSpendingHelpText')}
+            </HelpText>
             <ErrorMessage
               errors={errors}
               name="annualSpending.plannedYearOneSpending"
