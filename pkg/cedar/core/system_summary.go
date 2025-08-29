@@ -25,7 +25,7 @@ func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryPara
 	params.SetState(helpers.PointerTo("active"))
 	params.SetIncludeInSurvey(helpers.PointerTo(true))
 
-	// set additinoal param filters
+	// set additional param filters
 	for _, opt := range opts {
 		if opt != nil {
 			opt(params)
