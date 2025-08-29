@@ -12,7 +12,8 @@ import {
 } from 'gql/generated/graphql';
 import {
   emptySystemIntake,
-  getSystemIntakeQuery
+  getSystemIntakeQuery,
+  requester
 } from 'tests/mock/systemIntake';
 
 import { MockedQuery } from 'types/util';
@@ -31,7 +32,13 @@ const getSystemIntakeContactsQuery: MockedQuery<GetSystemIntakeContactsQuery> =
     result: {
       data: {
         __typename: 'Query',
-        systemIntakeContacts: []
+        systemIntakeContacts: {
+          __typename: 'SystemIntakeContacts',
+          requester,
+          businessOwners: [],
+          productManagers: [],
+          additionalContacts: []
+        }
       }
     }
   };

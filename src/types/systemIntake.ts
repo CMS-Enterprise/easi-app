@@ -1,6 +1,8 @@
 import {
   FundingSourceFragmentFragment,
   SystemIntakeCollaboratorInput,
+  SystemIntakeContactFragment,
+  SystemIntakeContactRole,
   SystemIntakeGRBReviewType,
   SystemIntakeStatusAdmin
 } from 'gql/generated/graphql';
@@ -64,11 +66,6 @@ export type SystemIntakeForm = {
   adminLead: string;
   requesterNameAndComponent: string;
 } & ContractDetailsForm;
-
-export type ContactFields = Omit<
-  SystemIntakeContactProps,
-  'roles' | 'systemIntakeId'
->;
 
 export type ContactDetailsForm = {
   requester: ContactFields;
@@ -162,39 +159,58 @@ export type CedarContactProps = {
   email?: string;
 };
 
-/** System intake contact properties */
-export type SystemIntakeContactProps = {
+/** System intake governance team field types */
+
+type CmsGovernanceTeams = typeof cmsGovernanceTeams;
+type CmsGovernanceTeam = CmsGovernanceTeams[number];
+
+export type CollaboratorFields = Record<
+  CmsGovernanceTeam['key'],
+  {
+    isPresent: boolean;
+    collaborator: string;
+  }
+>;
+
+// TODO EASI-4937 - these types will be removed with useSystemIntakeContacts hook
+// in favor of using the actual queries and mutations
+
+export type ContactFields = {
   id?: string | null;
-  euaUserId: string | null;
-  systemIntakeId: string;
+  username: string | null;
   component: string;
-  roles: string[];
   commonName: string;
   email: string;
 };
 
 /** Formatted system intake contacts */
 export type FormattedContacts = {
-  requester: SystemIntakeContactProps;
-  businessOwner: SystemIntakeContactProps;
-  productManager: SystemIntakeContactProps;
-  additionalContacts: SystemIntakeContactProps[];
+  requester: SystemIntakeContactFragment;
+  businessOwner: SystemIntakeContactFragment;
+  productManager: SystemIntakeContactFragment;
+  additionalContacts: SystemIntakeContactFragment[];
+};
+
+export type ContactInputType = ContactFields & {
+  isRequester: boolean;
+  systemIntakeId: string;
+  roles: SystemIntakeContactRole[];
 };
 
 /** Function to create system intake contact */
 export type CreateContactType = (
-  contact: SystemIntakeContactProps
-) => Promise<SystemIntakeContactProps | undefined>;
+  contact: ContactInputType
+) => Promise<SystemIntakeContactFragment | null | undefined>;
 
 /** Function to update system intake contact */
 export type UpdateContactType = (
-  contact: SystemIntakeContactProps
-) => Promise<SystemIntakeContactProps | undefined>;
+  contact: ContactInputType
+) => Promise<SystemIntakeContactFragment | null | undefined>;
 
 /** Function to delete system intake contact */
 export type DeleteContactType = (
   id: string
-) => Promise<FormattedContacts | undefined>;
+) => Promise<FormattedContacts | null | undefined>;
 
 /** useSystemIntakeContacts custom hook return type */
 export type UseSystemIntakeContactsType = {
@@ -212,23 +228,3 @@ export type UseSystemIntakeContactsType = {
   /** Deletes system intake contact from database */
   deleteContact: DeleteContactType;
 };
-
-/** System intake contact role keys */
-export type SystemIntakeRoleKeys =
-  | 'businessOwner'
-  | 'productManager'
-  | 'isso'
-  | 'requester';
-
-/** System intake governance team field types */
-
-type CmsGovernanceTeams = typeof cmsGovernanceTeams;
-type CmsGovernanceTeam = CmsGovernanceTeams[number];
-
-export type CollaboratorFields = Record<
-  CmsGovernanceTeam['key'],
-  {
-    isPresent: boolean;
-    collaborator: string;
-  }
->;

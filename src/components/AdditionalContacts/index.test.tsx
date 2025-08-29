@@ -5,11 +5,14 @@ import {
   GetCedarContactsDocument,
   GetCedarContactsQuery,
   GetCedarContactsQueryVariables,
-  GetSystemIntakeContactsDocument,
-  GetSystemIntakeContactsQuery,
-  SystemIntakeContactFragment
+  SystemIntakeContactFragment,
+  SystemIntakeContactRole
 } from 'gql/generated/graphql';
-import { getSystemIntakeQuery, systemIntake } from 'tests/mock/systemIntake';
+import {
+  getSystemIntakeContactsQuery,
+  getSystemIntakeQuery,
+  systemIntake
+} from 'tests/mock/systemIntake';
 
 import { MockedQuery } from 'types/util';
 
@@ -34,55 +37,38 @@ vi.mock('@okta/okta-react', () => ({
   }
 }));
 
-/** Additional Contacts */
 const additionalContacts: SystemIntakeContactFragment[] = [
   {
     __typename: 'SystemIntakeContact',
     systemIntakeId: systemIntake.id,
     id: '4828a0b0-9474-4ddc-8fc2-662323ef0087',
-    euaUserId: 'SF13',
     component: 'Office of Information Technology',
-    roles: ['Cloud Navigator'],
+    roles: [SystemIntakeContactRole.CLOUD_NAVIGATOR],
     userAccount: {
       __typename: 'UserAccount',
       id: 'user-1',
       username: 'SF13',
       commonName: 'Jerry Seinfeld',
       email: 'jerry.seinfeld@local.fake'
-    }
+    },
+    isRequester: true
   },
   {
     __typename: 'SystemIntakeContact',
     systemIntakeId: systemIntake.id,
     id: 'fa706702-45ab-43fe-ad90-68ff681313af',
-    euaUserId: 'KR14',
-    component: 'Other',
-    roles: ['System Maintainer'],
     userAccount: {
       __typename: 'UserAccount',
       id: 'user-2',
       username: 'KR14',
       commonName: 'Cosmo Kramer',
       email: 'cosmo.kramer@local.fake'
-    }
+    },
+    component: 'Other',
+    roles: [SystemIntakeContactRole.SYSTEM_MAINTAINER],
+    isRequester: false
   }
 ];
-
-/** System intake contacts query mock */
-const systemIntakeContactsQuery: MockedQuery<GetSystemIntakeContactsQuery> = {
-  request: {
-    query: GetSystemIntakeContactsDocument,
-    variables: {
-      id: systemIntake.id
-    }
-  },
-  result: {
-    data: {
-      __typename: 'Query',
-      systemIntakeContacts: additionalContacts
-    }
-  }
-};
 
 // Cedar contacts query mock
 const cedarContactsQuery: MockedQuery<
@@ -103,7 +89,7 @@ const cedarContactsQuery: MockedQuery<
           __typename: 'UserInfo',
           commonName: additionalContacts[0].userAccount.commonName,
           email: additionalContacts[0].userAccount.email,
-          euaUserId: additionalContacts[0].euaUserId!
+          euaUserId: additionalContacts[0].userAccount.username!
         }
       ]
     }
@@ -114,7 +100,10 @@ describe('Additional contacts component', () => {
   it('renders without crashing', async () => {
     const { asFragment, getByTestId, getByRole } = render(
       <MockedProvider
-        mocks={[getSystemIntakeQuery(), systemIntakeContactsQuery]}
+        mocks={[
+          getSystemIntakeQuery(),
+          getSystemIntakeContactsQuery(additionalContacts)
+        ]}
         addTypename={false}
       >
         <AdditionalContacts
@@ -164,7 +153,7 @@ describe('Additional contacts component', () => {
       <MockedProvider
         mocks={[
           getSystemIntakeQuery(),
-          systemIntakeContactsQuery,
+          getSystemIntakeContactsQuery(),
           cedarContactsQuery
         ]}
         addTypename={false}
@@ -172,22 +161,9 @@ describe('Additional contacts component', () => {
         <AdditionalContacts
           systemIntakeId={systemIntake.id}
           // Set active contact values to display edit form
-          activeContact={{
-            systemIntakeId: systemIntake.id,
-            id: activeContact.id,
-            commonName: activeContact.userAccount.commonName,
-            email: activeContact.userAccount.email,
-            euaUserId: activeContact.euaUserId,
-            component: activeContact.component,
-            roles: [activeContact.roles[0]]
-          }}
+          activeContact={activeContact}
           setActiveContact={() => null}
-          // TODO EASI-4934: temporary type fix for mismatched types
-          contacts={additionalContacts.map(contact => ({
-            ...contact,
-            commonName: contact.userAccount.commonName,
-            email: contact.userAccount.email
-          }))}
+          contacts={additionalContacts}
         />
       </MockedProvider>
     );
@@ -200,7 +176,7 @@ describe('Additional contacts component', () => {
     // Check that contact select field displays correct value
     const cedarContactSelectInput = await findByTestId('cedar-contact-select');
     expect(cedarContactSelectInput).toHaveValue(
-      `${activeContact.userAccount.commonName}, ${activeContact.euaUserId} (${activeContact.userAccount.email})`
+      `${activeContact.userAccount.commonName}, ${activeContact.userAccount.username} (${activeContact.userAccount.email})`
     );
 
     // Check that component field displays correct value
@@ -209,7 +185,7 @@ describe('Additional contacts component', () => {
 
     // Check that role field displays correct value
     const roleField = getByTestId('IntakeForm-ContactRole');
-    expect(roleField).toHaveValue(activeContact.roles[0]);
+    expect(roleField).toHaveValue('Cloud Navigator');
 
     // Edit form snapshot
     expect(asFragment()).toMatchSnapshot();

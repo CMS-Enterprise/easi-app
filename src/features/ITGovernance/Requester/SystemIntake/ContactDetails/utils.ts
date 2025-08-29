@@ -1,21 +1,22 @@
 import {
   SystemIntakeCollaboratorInput,
+  SystemIntakeContactFragment,
   SystemIntakeFragmentFragment
 } from 'gql/generated/graphql';
 
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
-import {
-  CollaboratorFields,
-  ContactFields,
-  SystemIntakeContactProps
-} from 'types/systemIntake';
+import { CollaboratorFields, ContactFields } from 'types/systemIntake';
 
-/** Removes `roles` and `systemIntakeId` fields from `SystemIntakeContactProps` type */
+/** Removes `roles` and `systemIntakeId` fields from `SystemIntakeContactFragment` type */
 export const formatContactFields = ({
-  roles,
-  systemIntakeId,
+  userAccount,
   ...contact
-}: SystemIntakeContactProps): ContactFields => contact;
+}: SystemIntakeContactFragment): ContactFields => ({
+  ...contact,
+  username: userAccount.username,
+  commonName: userAccount.commonName,
+  email: userAccount.email
+});
 
 /** Format system intake governance team field values for gql mutation */
 export const formatGovernanceTeamsInput = (

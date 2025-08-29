@@ -21,6 +21,7 @@ import {
   ITGovGRTStatus,
   ITGovIntakeFormStatus,
   SystemIntakeContactFragment,
+  SystemIntakeContactRole,
   SystemIntakeDecisionState,
   SystemIntakeDocumentCommonType,
   SystemIntakeDocumentFragmentFragment,
@@ -41,69 +42,45 @@ import {
 } from 'gql/generated/graphql';
 import { DateTime } from 'luxon';
 
-import { CMSOffice } from 'constants/enums/cmsDivisionsAndOffices';
 import { MockedQuery } from 'types/util';
 
 import users from './users';
 
-type ContactRole =
-  | 'Requester'
-  | 'Business Owner'
-  | 'Product Manager'
-  | 'ISSO'
-  | 'Product Owner'
-  | 'System Owner'
-  | 'System Maintainer'
-  | 'Contracting Officer’s Representative (COR)'
-  | 'Cloud Navigator'
-  | 'Privacy Advisor'
-  | 'CRA'
-  | 'Other';
-
-export interface MockSystemIntakeContact extends SystemIntakeContactFragment {
-  component: CMSOffice;
-  roles: ContactRole[];
-}
-
 const systemIntakeId = 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2';
 
-const contacts: MockSystemIntakeContact[] = users.slice(0, 4).map(userInfo => ({
-  __typename: 'SystemIntakeContact',
-  systemIntakeId,
-  id: `systemIntakeContact-${userInfo.euaUserId}`,
-  euaUserId: userInfo.euaUserId,
-  userAccount: {
-    __typename: 'UserAccount',
-    id: `userAccount-${userInfo.euaUserId}`,
-    username: userInfo.euaUserId,
-    commonName: userInfo.commonName,
-    email: userInfo.email
-  },
-  component: 'CMS Wide',
-  roles: ['Other']
-}));
+const contacts: SystemIntakeContactFragment[] = users
+  .slice(0, 4)
+  .map(userInfo => ({
+    __typename: 'SystemIntakeContact',
+    systemIntakeId,
+    id: `systemIntakeContact-${userInfo.euaUserId}`,
+    userAccount: {
+      __typename: 'UserAccount',
+      id: `userAccount-${userInfo.euaUserId}`,
+      username: userInfo.euaUserId,
+      commonName: userInfo.commonName,
+      email: userInfo.email
+    },
+    component: 'CMS Wide',
+    roles: [SystemIntakeContactRole.OTHER],
+    isRequester: false
+  }));
 
-export const requester: MockSystemIntakeContact = {
+export const requester: SystemIntakeContactFragment = {
   ...contacts[0],
-  roles: ['Requester']
+  isRequester: true
 };
 
-const businessOwner: MockSystemIntakeContact = {
+const businessOwner: SystemIntakeContactFragment = {
   ...contacts[1],
-  roles: ['Business Owner'],
+  roles: [SystemIntakeContactRole.BUSINESS_OWNER],
   component: 'Center for Medicare'
 };
 
-export const productManager: MockSystemIntakeContact = {
+export const productManager: SystemIntakeContactFragment = {
   ...contacts[2],
-  roles: ['Product Manager'],
+  roles: [SystemIntakeContactRole.PRODUCT_MANAGER],
   component: 'Office of Legislation'
-};
-
-const isso: MockSystemIntakeContact = {
-  ...contacts[3],
-  roles: ['ISSO'],
-  component: 'Office of Communications'
 };
 
 export const documents: SystemIntakeDocumentFragmentFragment[] = [
@@ -233,7 +210,7 @@ export const emptySystemIntake: SystemIntakeFragmentFragment = {
   __typename: 'SystemIntake',
   requestName: null,
   id: systemIntakeId,
-  euaUserId: requester.euaUserId,
+  euaUserId: requester.userAccount.username,
   adminLead: '',
   statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_IN_PROGRESS,
   statusRequester: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_IN_PROGRESS,
@@ -369,7 +346,7 @@ export const systemIntake: SystemIntakeFragmentFragment = {
   __typename: 'SystemIntake',
   requestName: 'Mock System Intake Request',
   id: systemIntakeId,
-  euaUserId: requester.euaUserId,
+  euaUserId: requester.userAccount.username,
   adminLead: '',
   statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_SUBMITTED,
   statusRequester: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_SUBMITTED,
@@ -647,21 +624,28 @@ export const getSystemIntakesWithLcidsQuery: MockedQuery<GetSystemIntakesWithLCI
     }
   };
 
-export const getSystemIntakeContactsQuery: MockedQuery<GetSystemIntakeContactsQuery> =
-  {
-    request: {
-      query: GetSystemIntakeContactsDocument,
-      variables: {
-        id: systemIntakeId
-      }
-    },
-    result: {
-      data: {
-        __typename: 'Query',
-        systemIntakeContacts: [requester, businessOwner, isso]
+export const getSystemIntakeContactsQuery = (
+  additionalContacts: SystemIntakeContactFragment[] = []
+): MockedQuery<GetSystemIntakeContactsQuery> => ({
+  request: {
+    query: GetSystemIntakeContactsDocument,
+    variables: {
+      id: systemIntakeId
+    }
+  },
+  result: {
+    data: {
+      __typename: 'Query',
+      systemIntakeContacts: {
+        __typename: 'SystemIntakeContacts',
+        requester,
+        businessOwners: [businessOwner],
+        productManagers: [productManager],
+        additionalContacts
       }
     }
-  };
+  }
+});
 
 export const taskListSystemIntake: NonNullable<
   GetGovernanceTaskListQuery['systemIntake']

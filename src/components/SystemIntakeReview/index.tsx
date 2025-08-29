@@ -205,10 +205,12 @@ export const SystemIntakeReview = ({
       <DescriptionList title={t('review.contactDetails')}>
         <ReviewRow>
           <div
-            data-testid={`contact-requester-${requester.id || requester.euaUserId}`}
+            data-testid={`contact-requester-${requester.id || requester.userAccount.username}`}
           >
             <DescriptionTerm term={t('fields.requester')} />
-            <DescriptionDefinition definition={requester.commonName} />
+            <DescriptionDefinition
+              definition={requester.userAccount.commonName}
+            />
           </div>
           <div>
             <DescriptionTerm term={t('review.requesterComponent')} />
@@ -218,7 +220,9 @@ export const SystemIntakeReview = ({
         <ReviewRow>
           <div>
             <DescriptionTerm term={t('review.cmsBusinessOwnerName')} />
-            <DescriptionDefinition definition={businessOwner.commonName} />
+            <DescriptionDefinition
+              definition={businessOwner.userAccount.commonName}
+            />
           </div>
           <div>
             <DescriptionTerm term={t('review.cmsBusinessOwnerComponent')} />
@@ -228,7 +232,9 @@ export const SystemIntakeReview = ({
         <ReviewRow>
           <div>
             <DescriptionTerm term={t('review.cmsProjectManagerName')} />
-            <DescriptionDefinition definition={productManager.commonName} />
+            <DescriptionDefinition
+              definition={productManager.userAccount.commonName}
+            />
           </div>
           <div>
             <DescriptionTerm term={t('review.cmsProjectManagerComponent')} />
