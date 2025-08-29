@@ -273,7 +273,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
   // Set default form values after contacts are loaded
   useEffect(() => {
-    if (!contacts.loading && !defaultValues) {
+    if (contacts.data && !contacts.loading && !defaultValues) {
       const { data } = contacts;
 
       reset({
@@ -301,7 +301,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   }, [contacts, defaultValues, reset, systemIntake.governanceTeams]);
 
   // Wait until default values have been updated
-  if (!defaultValues) return <PageLoading />;
+  if (!defaultValues || !contacts.data) return <PageLoading />;
 
   return (
     <>

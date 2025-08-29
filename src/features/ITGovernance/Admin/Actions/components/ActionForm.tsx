@@ -112,7 +112,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
   const {
     contacts: { data: contacts }
   } = useSystemIntakeContacts(systemIntakeId);
-  const { requester } = contacts;
+  const { requester } = contacts || {};
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -217,7 +217,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
     }
   }, [errors, hasErrors]);
 
-  if (isLoading) return <PageLoading />;
+  if (isLoading || !contacts) return <PageLoading />;
 
   const recipients = watch('notificationRecipients');
   const recipientsSelected: boolean =

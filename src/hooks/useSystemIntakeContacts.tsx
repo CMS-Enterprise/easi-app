@@ -33,7 +33,11 @@ function useSystemIntakeContacts(
   // Reformatting contacts data to return primary business owner and product manager.
   // Additional business owners and product managers are added to additionalContacts array.
   // This is a temporary fix to work with existing form.
-  const contacts: FormattedContacts = useMemo(() => {
+  const contacts: FormattedContacts | undefined = useMemo(() => {
+    if (loading || !systemIntakeContacts) {
+      return undefined;
+    }
+
     const [businessOwner, ...additionalBusinessOwners] =
       systemIntakeContacts?.businessOwners || [];
 

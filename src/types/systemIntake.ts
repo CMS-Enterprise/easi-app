@@ -217,7 +217,7 @@ export type UseSystemIntakeContactsType = {
   /** Object containing contacts data and GetSystemIntakeContactsQuery loading state */
   contacts: {
     /** Formatted contacts object */
-    data: FormattedContacts;
+    data: FormattedContacts | undefined;
     /** GetSystemIntakeContactsQuery loading state */
     loading: boolean;
   };
