@@ -238,9 +238,9 @@ const EmailRecipientsFields = ({
 
   const contactsArray = useMemo(() => {
     return [
-      contacts.businessOwner,
-      contacts.productManager,
-      ...contacts.additionalContacts
+      ...(contacts?.businessOwner ? [contacts.businessOwner] : []),
+      ...(contacts?.productManager ? [contacts.productManager] : []),
+      ...(contacts?.additionalContacts ? contacts.additionalContacts : [])
     ];
   }, [contacts]);
 
@@ -409,29 +409,31 @@ const EmailRecipientsFields = ({
         <FieldErrorMsg>{error}</FieldErrorMsg>
 
         {/* Requester */}
-        <CheckboxField
-          id={`${requester?.userAccount.username}-requester`}
-          name={`${requester?.userAccount.username}-requester`}
-          label={
-            <RecipientLabel
-              name={`${getPersonNameAndComponentAcronym(
-                requester.userAccount.commonName,
-                requester.component
-              )} (Requester)`}
-              email={requester.userAccount.email}
-            />
-          }
-          value={requester?.userAccount.email || ''}
-          onChange={e => updateRecipients(e.target.value)}
-          onBlur={() => null}
-          checked={
-            !!requester?.userAccount.email &&
-            recipients.regularRecipientEmails.includes(
-              requester.userAccount.email
-            )
-          }
-          disabled={!requester?.userAccount.email} // Disable if no email provided - only applies to test data
-        />
+        {requester && (
+          <CheckboxField
+            id={`${requester?.userAccount.username}-requester`}
+            name={`${requester?.userAccount.username}-requester`}
+            label={
+              <RecipientLabel
+                name={`${getPersonNameAndComponentAcronym(
+                  requester.userAccount.commonName,
+                  requester.component
+                )} (Requester)`}
+                email={requester.userAccount.email}
+              />
+            }
+            value={requester?.userAccount.email || ''}
+            onChange={e => updateRecipients(e.target.value)}
+            onBlur={() => null}
+            checked={
+              !!requester?.userAccount.email &&
+              recipients.regularRecipientEmails.includes(
+                requester.userAccount.email
+              )
+            }
+            disabled={!requester?.userAccount.email} // Disable if no email provided - only applies to test data
+          />
+        )}
 
         {/* IT Governance */}
         <CheckboxField

@@ -185,7 +185,7 @@ describe('Additional contacts component', () => {
 
     // Check that role field displays correct value
     const roleField = getByTestId('IntakeForm-ContactRole');
-    expect(roleField).toHaveValue('Cloud Navigator');
+    expect(roleField).toHaveValue(activeContact.roles[0]);
 
     // Edit form snapshot
     expect(asFragment()).toMatchSnapshot();

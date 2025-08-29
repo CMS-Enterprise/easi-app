@@ -71,6 +71,7 @@ describe('System intake form - Contact details', () => {
 
   it('renders error messages', async () => {
     const user = userEvent.setup();
+
     render(
       <VerboseMockedProvider
         addTypename
@@ -95,10 +96,6 @@ describe('System intake form - Contact details', () => {
     ).toBeInTheDocument();
 
     const errorSummary = screen.getByTestId('contact-details-errors');
-
-    expect(
-      within(errorSummary).getByText("Select the Requester's component")
-    ).toBeInTheDocument();
 
     expect(
       within(errorSummary).getByText(

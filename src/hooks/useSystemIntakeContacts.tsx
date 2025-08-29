@@ -45,8 +45,7 @@ function useSystemIntakeContacts(
       systemIntakeContacts?.productManagers || [];
 
     return {
-      // Overriding nullable requester type in schema for now to work with form since it will be refactored later
-      requester: systemIntakeContacts?.requester!,
+      requester: systemIntakeContacts?.requester,
       businessOwner,
       productManager,
       additionalContacts: [
@@ -55,7 +54,7 @@ function useSystemIntakeContacts(
         ...additionalProductManagers
       ]
     };
-  }, [systemIntakeContacts]);
+  }, [systemIntakeContacts, loading]);
 
   const [createSystemIntakeContact] = useCreateSystemIntakeContactMutation({
     refetchQueries: ['GetSystemIntakeContacts'],

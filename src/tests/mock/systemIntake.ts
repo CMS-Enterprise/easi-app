@@ -1,4 +1,7 @@
 import {
+  GetCedarContactsDocument,
+  GetCedarContactsQuery,
+  GetCedarContactsQueryVariables,
   GetGovernanceTaskListDocument,
   GetGovernanceTaskListQuery,
   GetGovernanceTaskListQueryVariables,
@@ -71,7 +74,7 @@ export const requester: SystemIntakeContactFragment = {
   isRequester: true
 };
 
-const businessOwner: SystemIntakeContactFragment = {
+export const businessOwner: SystemIntakeContactFragment = {
   ...contacts[1],
   roles: [SystemIntakeContactRole.BUSINESS_OWNER],
   component: 'Center for Medicare'
@@ -507,7 +510,8 @@ export const systemIntake: SystemIntakeFragmentFragment = {
   },
   grbReviewAsyncEndDate: null,
   grbReviewStartedAt: null,
-  systemIntakeSystems: []
+  systemIntakeSystems: [],
+  doesNotSupportSystems: null
 };
 
 export const systemIntakeForTable: GetSystemIntakesTableQuery['systemIntakes'][number] =
@@ -771,3 +775,21 @@ export const systemIntakesWithReviewRequested: SystemIntakeWithReviewRequestedFr
       __typename: 'SystemIntake'
     }
   ];
+
+export const getCedarContactsQuery = (
+  commonName: string,
+  contact: GetCedarContactsQuery['cedarPersonsByCommonName'][number]
+): MockedQuery<GetCedarContactsQuery, GetCedarContactsQueryVariables> => ({
+  request: {
+    query: GetCedarContactsDocument,
+    variables: {
+      commonName
+    }
+  },
+  result: {
+    data: {
+      __typename: 'Query',
+      cedarPersonsByCommonName: [contact]
+    }
+  }
+});

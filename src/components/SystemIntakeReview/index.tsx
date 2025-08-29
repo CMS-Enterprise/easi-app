@@ -205,7 +205,7 @@ export const SystemIntakeReview = ({
         {requester && (
           <ReviewRow>
             <div
-              data-testid={`contact-requester-${requester.id || requester.userAccount.username}`}
+              data-testid={`contact-requester-${requester.userAccount.username}`}
             >
               <DescriptionTerm term={t('fields.requester')} />
               <DescriptionDefinition

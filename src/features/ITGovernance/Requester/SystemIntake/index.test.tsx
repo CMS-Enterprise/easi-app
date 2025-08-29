@@ -9,18 +9,25 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
+  GetCedarContactsQuery,
   GetSystemIntakeDocument,
   SystemIntakeFormState
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
 import configureMockStore from 'redux-mock-store';
 import {
+  businessOwner,
   documents,
+  getCedarContactsQuery,
+  getSystemIntakeContactsQuery,
   getSystemIntakeQuery,
+  productManager,
+  requester,
   systemIntake
 } from 'tests/mock/systemIntake';
 
 import { MessageProvider } from 'hooks/useMessage';
+import formatContactLabel from 'utils/formatContactLabel';
 
 import { SystemIntake } from './index';
 
@@ -42,13 +49,54 @@ vi.mock('@okta/okta-react', () => ({
   }
 }));
 
+const requesterContact: GetCedarContactsQuery['cedarPersonsByCommonName'][number] =
+  {
+    __typename: 'UserInfo',
+    commonName: requester.userAccount.commonName,
+    email: requester.userAccount.email,
+    euaUserId: requester.userAccount.username
+  };
+
+const businessOwnerContact: GetCedarContactsQuery['cedarPersonsByCommonName'][number] =
+  {
+    __typename: 'UserInfo',
+    commonName: businessOwner.userAccount.commonName,
+    email: businessOwner.userAccount.email,
+    euaUserId: businessOwner.userAccount.username
+  };
+
+const productManagerContact: GetCedarContactsQuery['cedarPersonsByCommonName'][number] =
+  {
+    __typename: 'UserInfo',
+    commonName: productManager.userAccount.commonName,
+    email: productManager.userAccount.email,
+    euaUserId: productManager.userAccount.username
+  };
+
 describe('The System Intake page', () => {
   it('renders without crashing', async () => {
     render(
       <MemoryRouter
         initialEntries={[`/system/${systemIntake.id}/contact-details`]}
       >
-        <MockedProvider mocks={[getSystemIntakeQuery()]}>
+        <MockedProvider
+          mocks={[
+            getSystemIntakeQuery(),
+            getSystemIntakeContactsQuery(),
+            getCedarContactsQuery(
+              formatContactLabel(requesterContact),
+              requesterContact
+            ),
+            getCedarContactsQuery(
+              formatContactLabel(businessOwnerContact),
+              businessOwnerContact
+            ),
+            getCedarContactsQuery(
+              formatContactLabel(productManagerContact),
+              productManagerContact
+            )
+          ]}
+        >
           <Route path="/system/:systemId/:formPage">
             <SystemIntake />
           </Route>
@@ -115,7 +163,9 @@ describe('The System Intake page', () => {
     });
     render(
       <MemoryRouter initialEntries={[`/system/${systemIntake.id}/review`]}>
-        <MockedProvider mocks={[getSystemIntakeQuery()]}>
+        <MockedProvider
+          mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery()]}
+        >
           <Provider store={store}>
             <MessageProvider>
               <Route path="/system/:systemId/:formPage">
@@ -160,7 +210,9 @@ describe('The System Intake page', () => {
   it('renders intake view page', async () => {
     render(
       <MemoryRouter initialEntries={[`/system/${systemIntake.id}/view`]}>
-        <MockedProvider mocks={[getSystemIntakeQuery()]}>
+        <MockedProvider
+          mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery()]}
+        >
           <MessageProvider>
             <Route path="/system/:systemId/:formPage">
               <SystemIntake />

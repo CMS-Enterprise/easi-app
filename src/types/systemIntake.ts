@@ -185,9 +185,9 @@ export type ContactFields = {
 
 /** Formatted system intake contacts */
 export type FormattedContacts = {
-  requester: SystemIntakeContactFragment;
-  businessOwner: SystemIntakeContactFragment;
-  productManager: SystemIntakeContactFragment;
+  requester: SystemIntakeContactFragment | null | undefined;
+  businessOwner: SystemIntakeContactFragment | null | undefined;
+  productManager: SystemIntakeContactFragment | null | undefined;
   additionalContacts: SystemIntakeContactFragment[];
 };
 

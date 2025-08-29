@@ -311,54 +311,54 @@ exports[`Additional contacts component > displays form when editing contact 1`] 
                 Select an option
               </option>
               <option
-                value="Business Owner"
+                value="BUSINESS_OWNER"
               >
                 Business Owner
               </option>
               <option
-                value="Product Owner"
-              >
-                Product Owner
-              </option>
-              <option
-                value="System Owner"
-              >
-                System Owner
-              </option>
-              <option
-                value="System Maintainer"
-              >
-                System Maintainer
-              </option>
-              <option
-                value="Contracting Officer’s Representative (COR)"
-              >
-                Contracting Officer’s Representative (COR)
-              </option>
-              <option
-                value="Cloud Navigator"
+                value="CLOUD_NAVIGATOR"
               >
                 Cloud Navigator
               </option>
               <option
-                value="Information System Security Advisor (ISSO)"
+                value="CONTRACT_OFFICE_RSREPRESENTATIVE"
               >
-                Information System Security Advisor (ISSO)
+                Contracting Officer’s Representative (COR)
               </option>
               <option
-                value="Privacy Advisor"
-              >
-                Privacy Advisor
-              </option>
-              <option
-                value="Cyber Risk Advisor (CRA)"
+                value="CRA"
               >
                 Cyber Risk Advisor (CRA)
               </option>
               <option
-                value="Other"
+                value="INFORMATION_SYSTEM_SECURITY_ADVISOR"
+              >
+                Information System Security Advisor (ISSO)
+              </option>
+              <option
+                value="OTHER"
               >
                 Other
+              </option>
+              <option
+                value="PRIVACY_ADVISOR"
+              >
+                Privacy Advisor
+              </option>
+              <option
+                value="PRODUCT_OWNER"
+              >
+                Product Owner
+              </option>
+              <option
+                value="SYSTEM_MAINTAINER"
+              >
+                System Maintainer
+              </option>
+              <option
+                value="SYSTEM_OWNER"
+              >
+                System Owner
               </option>
             </select>
           </div>
@@ -410,12 +410,14 @@ exports[`Additional contacts component > displays form when editing contact 1`] 
         <p
           class="text-bold"
         >
-          , Other
+          Cosmo Kramer, Other
         </p>
         <p>
-          System Maintainer
+          SYSTEM_MAINTAINER
         </p>
-        <p />
+        <p>
+          cosmo.kramer@local.fake
+        </p>
         <div
           class="system-intake-contacts__contact-actions"
         >
@@ -467,12 +469,14 @@ exports[`Additional contacts component > renders without crashing 1`] = `
         <p
           class="text-bold"
         >
-          , Office of Information Technology
+          Jerry Seinfeld, Office of Information Technology
         </p>
         <p>
-          Cloud Navigator
+          CLOUD_NAVIGATOR
         </p>
-        <p />
+        <p>
+          jerry.seinfeld@local.fake
+        </p>
         <div
           class="system-intake-contacts__contact-actions"
         >
@@ -499,12 +503,14 @@ exports[`Additional contacts component > renders without crashing 1`] = `
         <p
           class="text-bold"
         >
-          , Other
+          Cosmo Kramer, Other
         </p>
         <p>
-          System Maintainer
+          SYSTEM_MAINTAINER
         </p>
-        <p />
+        <p>
+          cosmo.kramer@local.fake
+        </p>
         <div
           class="system-intake-contacts__contact-actions"
         >

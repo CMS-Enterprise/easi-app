@@ -68,6 +68,14 @@ const systemIntakeRolesMap: Record<
   productManager: SystemIntakeContactRole.PRODUCT_MANAGER
 };
 
+const emptySystemIntakeContact: ContactFields = {
+  id: '',
+  username: '',
+  commonName: '',
+  email: '',
+  component: ''
+};
+
 const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const { t } = useTranslation('intake');
   const history = useHistory();
@@ -277,20 +285,22 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
       const { data } = contacts;
 
       reset({
-        requester: formatContactFields(data.requester),
+        requester: data.requester
+          ? formatContactFields(data.requester)
+          : emptySystemIntakeContact,
         businessOwner: {
-          ...formatContactFields(data.businessOwner),
-          sameAsRequester:
-            data.businessOwner.userAccount.username ===
-              data.requester.userAccount.username &&
-            data.businessOwner.component === data.requester.component
+          ...(data?.businessOwner
+            ? formatContactFields(data.businessOwner)
+            : emptySystemIntakeContact),
+          // Temp setting this to false instead of fixing since this field will be removed
+          sameAsRequester: false
         },
         productManager: {
-          ...formatContactFields(data.productManager),
-          sameAsRequester:
-            data.productManager.userAccount.username ===
-              data.requester.userAccount.username &&
-            data.productManager.component === data.requester.component
+          ...(data.productManager
+            ? formatContactFields(data.productManager)
+            : emptySystemIntakeContact),
+          // Temp setting this to false instead of fixing since this field will be removed
+          sameAsRequester: false
         },
         governanceTeams: {
           isPresent: !!systemIntake.governanceTeams.isPresent,
