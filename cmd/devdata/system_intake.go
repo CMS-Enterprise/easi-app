@@ -176,7 +176,7 @@ func createSystemIntake(
 				Name: requesterName,
 			},
 		}
-		intake, err := resolvers.CreateSystemIntake(ctx, store, input)
+		intake, err := resolvers.CreateSystemIntake(ctx, store, input, userhelpers.GetUserInfoAccountInfoWrapperFunc(mock.FetchUserInfoMock))
 		if err != nil {
 			panic(err)
 		}

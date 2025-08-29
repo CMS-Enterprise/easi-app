@@ -498,7 +498,7 @@ func (r *mutationResolver) UpdateSystemIntakeNote(ctx context.Context, input mod
 
 // CreateSystemIntake is the resolver for the createSystemIntake field.
 func (r *mutationResolver) CreateSystemIntake(ctx context.Context, input models.CreateSystemIntakeInput) (*models.SystemIntake, error) {
-	return resolvers.CreateSystemIntake(ctx, r.store, input)
+	return resolvers.CreateSystemIntake(ctx, r.store, input, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo))
 }
 
 // UpdateSystemIntakeRequestType is the resolver for the updateSystemIntakeRequestType field.

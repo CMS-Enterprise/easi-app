@@ -17,6 +17,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 )
 
 // CreateSystemIntake creates a system intake.
@@ -24,6 +25,7 @@ func CreateSystemIntake(
 	ctx context.Context,
 	store *storage.Store,
 	input models.CreateSystemIntakeInput,
+	getAccountInformation userhelpers.GetAccountInfoFunc,
 ) (*models.SystemIntake, error) {
 	systemIntake := models.SystemIntake{
 		EUAUserID:   null.StringFrom(appcontext.Principal(ctx).ID()),
@@ -33,6 +35,32 @@ func CreateSystemIntake(
 		Step:        models.SystemIntakeStepINITIALFORM,
 	}
 	createdIntake, err := store.CreateSystemIntake(ctx, &systemIntake)
+	// TODO: EASI-4946 this should be a transaction in case one fails
+	logger := appcontext.ZLogger(ctx)
+	principal := appcontext.Principal(ctx)
+	_, err2 := CreateSystemIntakeContact(ctx, logger, principal, store, models.CreateSystemIntakeContactInput{
+		EuaUserID:      principal.ID(),
+		SystemIntakeID: createdIntake.ID,
+		Roles: []models.SystemIntakeContactRole{
+			models.SystemIntakeContactRolePLACEHOLDER,
+		},
+		Component:   string(models.SystemIntakeContactRolePLACEHOLDER),
+		IsRequester: true,
+	},
+		getAccountInformation,
+	)
+	if err2 != nil {
+		return nil, err2
+	}
+
+	// sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
+	// 	createdIntake, err = store.CreateSystemIntakeNP(ctx, tx, &systemIntake)
+	// 	if err != nil {
+	// 		return nil, err
+	// 	}
+	// 	//TODO create requester contact
+	// 	return createdIntake, nil
+	// })
 	return createdIntake, err
 }
 

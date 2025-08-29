@@ -82064,13 +82064,20 @@ func (ec *executionContext) marshalNSystemIntakeContact2ᚖgithubᚗcomᚋcmsᚑ
 }
 
 func (ec *executionContext) unmarshalNSystemIntakeContactRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactRole(ctx context.Context, v any) (models.SystemIntakeContactRole, error) {
-	var res models.SystemIntakeContactRole
-	err := res.UnmarshalGQL(v)
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.SystemIntakeContactRole(tmp)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNSystemIntakeContactRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactRole(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeContactRole) graphql.Marshaler {
-	return v
+	_ = sel
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) unmarshalNSystemIntakeContactRole2ᚕgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactRoleᚄ(ctx context.Context, v any) ([]models.SystemIntakeContactRole, error) {
