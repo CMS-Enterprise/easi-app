@@ -4,17 +4,35 @@ import (
 	"github.com/google/uuid"
 )
 
+// SystemIntakeContactRole is the various roles that a user can have as a contact on a system intake
+type SystemIntakeContactRole string
+
+const (
+	SystemIntakeContactRoleBusinessOwner                     SystemIntakeContactRole = "BUSINESS_OWNER"
+	SystemIntakeContactRoleCloudNavigator                    SystemIntakeContactRole = "CLOUD_NAVIGATOR"
+	SystemIntakeContactRoleContractingOfficersRepresentative SystemIntakeContactRole = "CONTRACTING_OFFICERS_REPRESENTATIVE"
+	SystemIntakeContactRoleCyberRiskAdvisor                  SystemIntakeContactRole = "CYBER_RISK_ADVISOR"
+	SystemIntakeContactRoleInformationSystemSecurityAdvisor  SystemIntakeContactRole = "INFORMATION_SYSTEM_SECURITY_ADVISOR"
+	SystemIntakeContactRoleOther                             SystemIntakeContactRole = "OTHER"
+	SystemIntakeContactRolePrivacyAdvisor                    SystemIntakeContactRole = "PRIVACY_ADVISOR"
+	SystemIntakeContactRoleProductOwner                      SystemIntakeContactRole = "PRODUCT_OWNER"
+	SystemIntakeContactRoleProductManager                    SystemIntakeContactRole = "PRODUCT_MANAGER"
+	SystemIntakeContactRoleProjectManager                    SystemIntakeContactRole = "PROJECT_MANAGER"
+	SystemIntakeContactRoleSubjectMatterExpert               SystemIntakeContactRole = "SUBJECT_MATTER_EXPERT"
+	SystemIntakeContactRoleSystemMaintainer                  SystemIntakeContactRole = "SYSTEM_MAINTAINER"
+	SystemIntakeContactRoleSystemOwner                       SystemIntakeContactRole = "SYSTEM_OWNER"
+	// SystemIntakeContactRolePLACEHOLDER is the default role given. It is removed before returning the frontend, so they know a user needs to select a role
+	SystemIntakeContactRolePLACEHOLDER SystemIntakeContactRole = "PLACE_HOLDER"
+)
+
 // SystemIntakeContact represents an EUA user's association with a system intake
 type SystemIntakeContact struct {
 	userIDRelation
 	BaseStructUser
-	// ID             uuid.UUID                 `json:"id"`
 	SystemIntakeID uuid.UUID                          `json:"systemIntakeId" db:"system_intake_id"`
 	Component      string                             `json:"component" db:"component"`
 	Roles          EnumArray[SystemIntakeContactRole] `json:"roles" db:"roles"`
 	IsRequester    bool                               `json:"isRequester" db:"is_requester"`
-	// UpdatedAt      *time.Time                `db:"updated_at"`
-	// CreatedAt      *time.Time                `db:"created_at"`
 }
 
 // NewSystemIntakeContact creates a new SystemIntakeContact with the related userAccount
