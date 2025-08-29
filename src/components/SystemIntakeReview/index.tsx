@@ -12,6 +12,7 @@ import {
 } from 'components/DescriptionGroup';
 import FundingSourcesTable from 'components/FundingSources/FundingSourcesTable';
 import { formatFundingSourcesForApp } from 'components/FundingSources/utils';
+import UswdsReactLink from 'components/LinkWrapper';
 import ReviewRow from 'components/ReviewRow';
 import { yesNoMap } from 'data/common';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
@@ -26,7 +27,9 @@ type SystemIntakeReviewProps = {
 };
 
 export const SystemIntakeReview = ({
-  systemIntake
+  systemIntake,
+  showSubmissionDate = false,
+  showEditSectionLink = false
 }: SystemIntakeReviewProps) => {
   const { annualSpending, costs, contract, submittedAt, contractNumbers } =
     systemIntake;
@@ -191,16 +194,28 @@ export const SystemIntakeReview = ({
   return (
     <div>
       <DescriptionList title={t('review.systemRequest')}>
-        <ReviewRow>
-          <div>
-            <DescriptionTerm term={t('review.submissionDate')} />
-            <DescriptionDefinition definition={getSubmissionDate()} />
-          </div>
-        </ReviewRow>
+        {showSubmissionDate && (
+          <ReviewRow>
+            <div>
+              <DescriptionTerm term={t('review.submissionDate')} />
+              <DescriptionDefinition definition={getSubmissionDate()} />
+            </div>
+          </ReviewRow>
+        )}
       </DescriptionList>
 
       <hr className="system-intake__hr" />
-      <h2 className="font-heading-xl">Contact details</h2>
+      <h2 className="font-heading-xl margin-bottom-0">
+        {t('review.contactDetails')}
+      </h2>
+      {showEditSectionLink && (
+        <UswdsReactLink
+          to="contact-details"
+          className="display-block margin-bottom-3"
+        >
+          {t('review.edit')}
+        </UswdsReactLink>
+      )}
 
       <DescriptionList title={t('review.contactDetails')}>
         <ReviewRow>
@@ -253,7 +268,17 @@ export const SystemIntakeReview = ({
       </DescriptionList>
 
       <hr className="system-intake__hr" />
-      <h2 className="font-heading-xl">{t('review.requestDetails')}</h2>
+      <h2 className="font-heading-xl margin-top-3 margin-bottom-0">
+        {t('review.requestDetails')}
+      </h2>
+      {showEditSectionLink && (
+        <UswdsReactLink
+          to="request-details"
+          className="display-block margin-bottom-3"
+        >
+          {t('review.edit')}
+        </UswdsReactLink>
+      )}
 
       <DescriptionList title={t('review.requestDetails')}>
         <ReviewRow>
@@ -315,7 +340,17 @@ export const SystemIntakeReview = ({
       </DescriptionList>
 
       <hr className="system-intake__hr" />
-      <h2 className="font-heading-xl">Contract details</h2>
+      <h2 className="font-heading-xl margin-top-3 margin-bottom-0">
+        {t('contractDetails.heading')}
+      </h2>
+      {showEditSectionLink && (
+        <UswdsReactLink
+          to="contract-details"
+          className="display-block margin-bottom-3"
+        >
+          {t('review.edit')}
+        </UswdsReactLink>
+      )}
 
       <DescriptionList title={t('review.contractDetails')}>
         <ReviewRow>
@@ -404,7 +439,17 @@ export const SystemIntakeReview = ({
       </DescriptionList>
 
       <hr className="system-intake__hr" />
-      <h2 className="font-heading-xl">{t('review.documents')}</h2>
+      <h2 className="font-heading-xl margin-top-3 margin-bottom-0">
+        {t('review.documents')}
+      </h2>
+      {showEditSectionLink && (
+        <UswdsReactLink
+          to="documents"
+          className="display-block margin-bottom-3"
+        >
+          {t('review.edit')}
+        </UswdsReactLink>
+      )}
       <DocumentsTable
         systemIntakeId={systemIntake.id}
         documents={systemIntake.documents}
