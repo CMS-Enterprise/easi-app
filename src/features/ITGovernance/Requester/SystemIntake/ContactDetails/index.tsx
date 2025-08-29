@@ -15,6 +15,8 @@ import {
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
 import {
   GetSystemIntakeDocument,
+  SystemIntakeContactFragment,
+  SystemIntakeContactRole,
   SystemIntakeFormState,
   SystemIntakeFragmentFragment,
   SystemIntakeGovernanceTeamInput,
@@ -38,11 +40,7 @@ import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import PageNumber from 'components/PageNumber';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
-import {
-  ContactDetailsForm,
-  ContactFields,
-  SystemIntakeContactProps
-} from 'types/systemIntake';
+import { ContactDetailsForm, ContactFields } from 'types/systemIntake';
 import flattenFormErrors from 'utils/flattenFormErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
@@ -61,10 +59,21 @@ type ContactDetailsProps = {
 
 type SystemIntakeRoleKeys = keyof Omit<ContactDetailsForm, 'governanceTeams'>;
 
-const systemIntakeRolesMap: Record<SystemIntakeRoleKeys, string> = {
-  requester: 'Requester',
-  businessOwner: 'Business Owner',
-  productManager: 'Product Manager'
+const systemIntakeRolesMap: Record<
+  SystemIntakeRoleKeys,
+  SystemIntakeContactRole
+> = {
+  requester: SystemIntakeContactRole.OTHER,
+  businessOwner: SystemIntakeContactRole.BUSINESS_OWNER,
+  productManager: SystemIntakeContactRole.PRODUCT_MANAGER
+};
+
+const emptySystemIntakeContact: ContactFields = {
+  id: '',
+  username: '',
+  commonName: '',
+  email: '',
+  component: ''
 };
 
 const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
@@ -77,7 +86,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
       : `/governance-task-list/${systemIntake.id}`;
 
   const [activeContact, setActiveContact] =
-    useState<SystemIntakeContactProps | null>(null);
+    useState<SystemIntakeContactFragment | null>(null);
 
   const { contacts, createContact, updateContact } = useSystemIntakeContacts(
     systemIntake.id
@@ -141,7 +150,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   ) => {
     /** Checks if contact fields are set */
     const shouldUpdate =
-      !!dirtyFields[role] && !!contact?.euaUserId && !!contact?.component;
+      !!dirtyFields[role] && !!contact?.username && !!contact?.component;
 
     if (!contact || !shouldUpdate) return null;
 
@@ -151,7 +160,8 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     return mutation({
       ...contact,
       systemIntakeId: systemIntake.id,
-      roles: [systemIntakeRolesMap[role]]
+      roles: [systemIntakeRolesMap[role]],
+      isRequester: role === 'requester'
     }).then(contactData =>
       // Set ID field for new contacts
       setValue(`${role}.id`, contactData?.id)
@@ -236,7 +246,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         setValue(`${role}.component`, requester.component);
 
         if (setNameFields) {
-          setValue(`${role}.euaUserId`, requester.euaUserId);
+          setValue(`${role}.username`, requester.username);
           setValue(`${role}.commonName`, requester.commonName);
           setValue(`${role}.email`, requester.email);
         }
@@ -271,22 +281,26 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
   // Set default form values after contacts are loaded
   useEffect(() => {
-    if (!contacts.loading && !defaultValues) {
+    if (contacts.data && !contacts.loading && !defaultValues) {
       const { data } = contacts;
 
       reset({
-        requester: formatContactFields(data.requester),
+        requester: data.requester
+          ? formatContactFields(data.requester)
+          : emptySystemIntakeContact,
         businessOwner: {
-          ...formatContactFields(data.businessOwner),
-          sameAsRequester:
-            data.businessOwner.euaUserId === data.requester.euaUserId &&
-            data.businessOwner.component === data.requester.component
+          ...(data?.businessOwner
+            ? formatContactFields(data.businessOwner)
+            : emptySystemIntakeContact),
+          // Temp setting this to false instead of fixing since this field will be removed
+          sameAsRequester: false
         },
         productManager: {
-          ...formatContactFields(data.productManager),
-          sameAsRequester:
-            data.productManager.euaUserId === data.requester.euaUserId &&
-            data.productManager.component === data.requester.component
+          ...(data.productManager
+            ? formatContactFields(data.productManager)
+            : emptySystemIntakeContact),
+          // Temp setting this to false instead of fixing since this field will be removed
+          sameAsRequester: false
         },
         governanceTeams: {
           isPresent: !!systemIntake.governanceTeams.isPresent,
@@ -297,7 +311,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   }, [contacts, defaultValues, reset, systemIntake.governanceTeams]);
 
   // Wait until default values have been updated
-  if (!defaultValues) return <PageLoading />;
+  if (!defaultValues || !contacts.data) return <PageLoading />;
 
   return (
     <>
@@ -427,7 +441,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     id="businessOwnerCommonName"
                     // Manually set value so that field rerenders when values are updated
                     value={{
-                      euaUserId: watch('businessOwner.euaUserId'),
+                      euaUserId: watch('businessOwner.username'),
                       commonName: watch('businessOwner.commonName'),
                       email: watch('businessOwner.email')
                     }}
@@ -438,7 +452,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                         contact?.commonName || ''
                       );
                       setValue(
-                        'businessOwner.euaUserId',
+                        'businessOwner.username',
                         contact?.euaUserId || ''
                       );
                       setValue('businessOwner.email', contact?.email || '');
@@ -527,7 +541,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     id="productManagerCommonName"
                     // Manually set value so that field rerenders when values are updated
                     value={{
-                      euaUserId: watch('productManager.euaUserId'),
+                      euaUserId: watch('productManager.username'),
                       commonName: watch('productManager.commonName'),
                       email: watch('productManager.email')
                     }}
@@ -538,7 +552,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                         contact?.commonName || ''
                       );
                       setValue(
-                        'productManager.euaUserId',
+                        'productManager.username',
                         contact?.euaUserId || ''
                       );
                       setValue('productManager.email', contact?.email || '');

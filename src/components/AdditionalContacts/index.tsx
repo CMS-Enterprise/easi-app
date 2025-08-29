@@ -3,7 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { Button, Label, Select } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import { ExternalRecipientAlert } from 'features/TechnicalAssistance/Admin/_components/ActionFormWrapper/Recipients';
-import { PersonRole } from 'gql/generated/graphql';
+import {
+  PersonRole,
+  SystemIntakeContactFragment,
+  SystemIntakeContactRole
+} from 'gql/generated/graphql';
 import i18next from 'i18next';
 
 import Alert from 'components/Alert';
@@ -12,22 +16,34 @@ import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
 import HelpText from 'components/HelpText';
 import Spinner from 'components/Spinner';
-import { initialContactDetails } from 'constants/systemIntake';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
-import {
-  DeleteContactType,
-  SystemIntakeContactProps
-} from 'types/systemIntake';
+import { ContactInputType, DeleteContactType } from 'types/systemIntake';
 
 import cmsDivisionsAndOfficesOptions from './cmsDivisionsAndOfficesOptions';
 
+export const initialContactDetails: SystemIntakeContactFragment = {
+  __typename: 'SystemIntakeContact',
+  id: '',
+  systemIntakeId: '',
+  userAccount: {
+    __typename: 'UserAccount',
+    id: '',
+    username: '',
+    commonName: '',
+    email: ''
+  },
+  component: '',
+  roles: [],
+  isRequester: false
+};
+
 type ContactProps = {
   /** Contact object for display */
-  contact: SystemIntakeContactProps;
+  contact: SystemIntakeContactFragment;
   /** Delete contact from database */
   deleteContact: DeleteContactType;
   /** Set active contact when editing */
-  setActiveContact: (activeContact: SystemIntakeContactProps | null) => void;
+  setActiveContact: (activeContact: SystemIntakeContactFragment | null) => void;
   /** Type of display */
   type: 'contact' | 'recipient';
 };
@@ -47,7 +63,12 @@ const Contact = ({
     /** Used to automatically hide contact when deleted instead of waiting for deleteContact mutation to complete */
     setHideContact
   ] = useState(false);
-  const { commonName, component, roles, id } = contact;
+  const {
+    userAccount: { commonName },
+    component,
+    roles,
+    id
+  } = contact;
   const { t } = useTranslation('intake');
 
   if (hideContact) return null;
@@ -57,7 +78,7 @@ const Contact = ({
         {commonName}, {component}
       </p>
       <p>{roles[0]}</p>
-      <p>{contact.email}</p>
+      <p>{contact.userAccount.email}</p>
       <div className="system-intake-contacts__contact-actions">
         <Button
           type="button"
@@ -97,11 +118,11 @@ const Contact = ({
 
 type ContactFormProps = {
   /** Contact being created or edited */
-  activeContact: SystemIntakeContactProps;
+  activeContact: SystemIntakeContactFragment;
   /** Set active contact */
-  setActiveContact: (contact: SystemIntakeContactProps | null) => void;
+  setActiveContact: (contact: SystemIntakeContactFragment | null) => void;
   /** Create or update contact on form submission */
-  onSubmit: (contact: SystemIntakeContactProps) => any;
+  onSubmit: (contact: ContactInputType) => any;
   /** Type of form */
   type: 'contact' | 'recipient';
 };
@@ -132,24 +153,36 @@ const ContactForm = ({
 
   /** Error handling and save contact */
   const handleSubmit = () => {
+    const {
+      userAccount: { username, commonName, email },
+      ...submittedContact
+    } = activeContact;
+
     const submitErrors = {
-      commonName: activeContact.commonName
+      commonName: commonName
         ? ''
         : t('contactDetails.additionalContacts.errors.commonName', { type }),
-      component: activeContact.component
+      component: submittedContact.component
         ? ''
         : t('contactDetails.additionalContacts.errors.component', { type }),
-      role: activeContact.roles[0]
+      role: submittedContact.roles[0]
         ? ''
         : t('contactDetails.additionalContacts.errors.role', { type })
     };
+
     setErrors(submitErrors);
+
     if (
       !submitErrors.commonName &&
       !submitErrors.component &&
       !submitErrors.role
     ) {
-      onSubmit(activeContact);
+      onSubmit({
+        ...submittedContact,
+        username,
+        commonName,
+        email
+      });
     }
   };
 
@@ -180,9 +213,29 @@ const ContactForm = ({
           id="IntakeForm-ContactCommonName"
           name="systemIntakeContact.commonName"
           ariaDescribedBy="IntakeForm-BusinessOwnerHelp"
-          value={activeContact.euaUserId ? activeContact : undefined}
+          value={
+            activeContact.userAccount.username.length > 0
+              ? {
+                  euaUserId: activeContact.userAccount.username,
+                  commonName: activeContact.userAccount.commonName,
+                  email: activeContact.userAccount.email
+                }
+              : undefined
+          }
           onChange={cedarContact =>
-            setActiveContact({ ...activeContact, ...cedarContact })
+            setActiveContact({
+              ...activeContact,
+              userAccount: {
+                ...activeContact.userAccount,
+                ...(cedarContact
+                  ? {
+                      username: cedarContact.euaUserId || '',
+                      commonName: cedarContact.commonName || '',
+                      email: cedarContact.email || ''
+                    }
+                  : {})
+              }
+            })
           }
         />
       </FieldGroup>
@@ -224,21 +277,24 @@ const ContactForm = ({
           data-testid="IntakeForm-ContactRole"
           value={activeContact.roles[0]}
           onChange={e =>
-            setActiveContact({ ...activeContact, roles: [e.target.value] })
+            setActiveContact({
+              ...activeContact,
+              roles: [e.target.value as SystemIntakeContactRole]
+            })
           }
         >
           <option value="" disabled>
             {t('contactDetails.additionalContacts.select')}
           </option>
-          {Object.values(contactRoles).map(role => (
-            <option key={role} value={role}>
-              {role}
+          {Object.keys(PersonRole).map(role => (
+            <option key={role} value={role as PersonRole}>
+              {contactRoles[role as PersonRole]}
             </option>
           ))}
         </Select>
       </FieldGroup>
 
-      <ExternalRecipientAlert email={activeContact?.email} />
+      <ExternalRecipientAlert email={activeContact.userAccount.email} />
 
       {/* Action Buttons */}
       <div className="margin-top-2">
@@ -268,21 +324,16 @@ const ContactForm = ({
 };
 
 type AdditionalContactsProps = {
-  /** System intake ID */
   systemIntakeId: string;
-  /** System intake additional contacts - used to render contacts list */
-  contacts?: SystemIntakeContactProps[];
+  contacts?: SystemIntakeContactFragment[];
   /** Contact being created or edited */
-  activeContact: SystemIntakeContactProps | null;
+  activeContact: SystemIntakeContactFragment | null;
   /** Set active contact */
-  setActiveContact: (contact: SystemIntakeContactProps | null) => void;
-  /** Whether to show warning for selecting external users */
+  setActiveContact: (contact: SystemIntakeContactFragment | null) => void;
   showExternalUsersWarning?: boolean;
-  /** Function called after contact is created */
-  createContactCallback?: (contact: SystemIntakeContactProps) => any;
+  createContactCallback?: (contact: SystemIntakeContactFragment) => any;
   /** Type of form - Recipient type does not display contacts */
   type?: 'recipient' | 'contact';
-  /** Outer div class */
   className?: string;
 };
 
@@ -317,7 +368,7 @@ export default function AdditionalContacts({
    * Creates contact, handles loading state, and executes createContactCallback
    */
   const handleCreateContact = async (
-    contact: SystemIntakeContactProps
+    contact: ContactInputType
   ): Promise<void> => {
     // Show loading spinner
     setLoading(true);
@@ -343,7 +394,7 @@ export default function AdditionalContacts({
    * Updates contact and handles loading state
    */
   const handleUpdateContact = async (
-    contact: SystemIntakeContactProps
+    contact: ContactInputType
   ): Promise<void> => {
     // Show loading spinner
     setLoading(true);
