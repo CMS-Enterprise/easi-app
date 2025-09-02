@@ -733,6 +733,7 @@ type ComplexityRoot struct {
 		CedarSystemID                                     func(childComplexity int) int
 		Collaborator508                                   func(childComplexity int) int
 		CollaboratorName508                               func(childComplexity int) int
+		Contacts                                          func(childComplexity int) int
 		Contract                                          func(childComplexity int) int
 		ContractName                                      func(childComplexity int) int
 		ContractNumbers                                   func(childComplexity int) int
@@ -866,6 +867,7 @@ type ComplexityRoot struct {
 		Roles                 func(childComplexity int) int
 		SystemIntakeID        func(childComplexity int) int
 		UserAccount           func(childComplexity int) int
+		UserID                func(childComplexity int) int
 	}
 
 	SystemIntakeContacts struct {
@@ -1505,16 +1507,10 @@ type SystemIntakeResolver interface {
 	GrbReviewAsyncStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGRBReviewAsyncStatusType, error)
 
 	SystemIntakeSystems(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeSystem, error)
+	Contacts(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeContacts, error)
 }
 type SystemIntakeContactResolver interface {
 	Roles(ctx context.Context, obj *models.SystemIntakeContact) ([]models.SystemIntakeContactRole, error)
-	IsRequester(ctx context.Context, obj *models.SystemIntakeContact) (bool, error)
-	CreatedBy(ctx context.Context, obj *models.SystemIntakeContact) (uuid.UUID, error)
-	CreatedByUserAccount(ctx context.Context, obj *models.SystemIntakeContact) (*authentication.UserAccount, error)
-
-	ModifiedBy(ctx context.Context, obj *models.SystemIntakeContact) (*uuid.UUID, error)
-	ModifiedByUserAccount(ctx context.Context, obj *models.SystemIntakeContact) (*authentication.UserAccount, error)
-	ModifiedAt(ctx context.Context, obj *models.SystemIntakeContact) (*time.Time, error)
 }
 type SystemIntakeDocumentResolver interface {
 	DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*models.SystemIntakeDocumentType, error)
@@ -5864,6 +5860,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.SystemIntake.CollaboratorName508(childComplexity), true
 
+	case "SystemIntake.contacts":
+		if e.complexity.SystemIntake.Contacts == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.Contacts(childComplexity), true
+
 	case "SystemIntake.contract":
 		if e.complexity.SystemIntake.Contract == nil {
 			break
@@ -6668,6 +6671,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.SystemIntakeContact.UserAccount(childComplexity), true
+
+	case "SystemIntakeContact.userID":
+		if e.complexity.SystemIntakeContact.UserID == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeContact.UserID(childComplexity), true
 
 	case "SystemIntakeContacts.additionalContacts":
 		if e.complexity.SystemIntakeContacts.AdditionalContacts == nil {
@@ -9700,6 +9710,8 @@ type SystemIntake {
   grbReviewAsyncManualEndDate: Time
   grbReviewReminderLastSent: Time
   systemIntakeSystems: [SystemIntakeSystem!]!
+  
+  contacts: SystemIntakeContacts!
 }
 
 """
@@ -10685,6 +10697,7 @@ Represents a contact associated with a system intake
 """
 type SystemIntakeContact {
   id: UUID!
+  userID: UUID!
   userAccount: UserAccount!
   systemIntakeId: UUID!
   component: String!
@@ -15254,6 +15267,8 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(_ context.Con
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			case "systemIntakeSystems":
 				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
+			case "contacts":
+				return ec.fieldContext_SystemIntake_contacts(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -24461,6 +24476,8 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(ctx con
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			case "systemIntakeSystems":
 				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
+			case "contacts":
+				return ec.fieldContext_SystemIntake_contacts(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -27770,6 +27787,8 @@ func (ec *executionContext) fieldContext_CreateSystemIntakeContactPayload_system
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_SystemIntakeContact_id(ctx, field)
+			case "userID":
+				return ec.fieldContext_SystemIntakeContact_userID(ctx, field)
 			case "userAccount":
 				return ec.fieldContext_SystemIntakeContact_userAccount(ctx, field)
 			case "systemIntakeId":
@@ -28121,6 +28140,8 @@ func (ec *executionContext) fieldContext_DeleteSystemIntakeContactPayload_system
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_SystemIntakeContact_id(ctx, field)
+			case "userID":
+				return ec.fieldContext_SystemIntakeContact_userID(ctx, field)
 			case "userAccount":
 				return ec.fieldContext_SystemIntakeContact_userAccount(ctx, field)
 			case "systemIntakeId":
@@ -31775,6 +31796,8 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			case "systemIntakeSystems":
 				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
+			case "contacts":
+				return ec.fieldContext_SystemIntake_contacts(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -32045,6 +32068,8 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeRequestType(
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			case "systemIntakeSystems":
 				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
+			case "contacts":
+				return ec.fieldContext_SystemIntake_contacts(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -34782,6 +34807,8 @@ func (ec *executionContext) fieldContext_Mutation_archiveSystemIntake(ctx contex
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			case "systemIntakeSystems":
 				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
+			case "contacts":
+				return ec.fieldContext_SystemIntake_contacts(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -39106,6 +39133,8 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			case "systemIntakeSystems":
 				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
+			case "contacts":
+				return ec.fieldContext_SystemIntake_contacts(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -39349,6 +39378,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			case "systemIntakeSystems":
 				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
+			case "contacts":
+				return ec.fieldContext_SystemIntake_contacts(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -39592,6 +39623,8 @@ func (ec *executionContext) fieldContext_Query_mySystemIntakes(_ context.Context
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			case "systemIntakeSystems":
 				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
+			case "contacts":
+				return ec.fieldContext_SystemIntake_contacts(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -39824,6 +39857,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithReviewRequested(
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			case "systemIntakeSystems":
 				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
+			case "contacts":
+				return ec.fieldContext_SystemIntake_contacts(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -40056,6 +40091,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(_ context.
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			case "systemIntakeSystems":
 				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
+			case "contacts":
+				return ec.fieldContext_SystemIntake_contacts(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -46770,6 +46807,8 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedIntakes(_ context.C
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			case "systemIntakeSystems":
 				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
+			case "contacts":
+				return ec.fieldContext_SystemIntake_contacts(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -47445,6 +47484,62 @@ func (ec *executionContext) fieldContext_SystemIntake_systemIntakeSystems(_ cont
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntake_contacts(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_contacts(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().Contacts(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.SystemIntakeContacts)
+	fc.Result = res
+	return ec.marshalNSystemIntakeContacts2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContacts(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_contacts(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "requester":
+				return ec.fieldContext_SystemIntakeContacts_requester(ctx, field)
+			case "businessOwners":
+				return ec.fieldContext_SystemIntakeContacts_businessOwners(ctx, field)
+			case "productManagers":
+				return ec.fieldContext_SystemIntakeContacts_productManagers(ctx, field)
+			case "additionalContacts":
+				return ec.fieldContext_SystemIntakeContacts_additionalContacts(ctx, field)
+			case "allContacts":
+				return ec.fieldContext_SystemIntakeContacts_allContacts(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeContacts", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntakeAction_id(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeAction) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntakeAction_id(ctx, field)
 	if err != nil {
@@ -47714,6 +47809,8 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(_ conte
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			case "systemIntakeSystems":
 				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
+			case "contacts":
+				return ec.fieldContext_SystemIntake_contacts(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -48680,6 +48777,50 @@ func (ec *executionContext) fieldContext_SystemIntakeContact_id(_ context.Contex
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntakeContact_userID(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeContact) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeContact_userID(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UserID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeContact_userID(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeContact",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntakeContact_userAccount(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeContact) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntakeContact_userAccount(ctx, field)
 	if err != nil {
@@ -48890,7 +49031,7 @@ func (ec *executionContext) _SystemIntakeContact_isRequester(ctx context.Context
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntakeContact().IsRequester(rctx, obj)
+		return obj.IsRequester, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -48911,8 +49052,8 @@ func (ec *executionContext) fieldContext_SystemIntakeContact_isRequester(_ conte
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeContact",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Boolean does not have child fields")
 		},
@@ -48934,7 +49075,7 @@ func (ec *executionContext) _SystemIntakeContact_createdBy(ctx context.Context, 
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntakeContact().CreatedBy(rctx, obj)
+		return obj.CreatedBy, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -48955,8 +49096,8 @@ func (ec *executionContext) fieldContext_SystemIntakeContact_createdBy(_ context
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeContact",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type UUID does not have child fields")
 		},
@@ -48978,7 +49119,7 @@ func (ec *executionContext) _SystemIntakeContact_createdByUserAccount(ctx contex
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntakeContact().CreatedByUserAccount(rctx, obj)
+		return obj.CreatedByUserAccount(ctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -49000,7 +49141,7 @@ func (ec *executionContext) fieldContext_SystemIntakeContact_createdByUserAccoun
 		Object:     "SystemIntakeContact",
 		Field:      field,
 		IsMethod:   true,
-		IsResolver: true,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
@@ -49054,9 +49195,9 @@ func (ec *executionContext) _SystemIntakeContact_createdAt(ctx context.Context, 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*time.Time)
+	res := resTmp.(time.Time)
 	fc.Result = res
-	return ec.marshalNTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeContact_createdAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -49086,7 +49227,7 @@ func (ec *executionContext) _SystemIntakeContact_modifiedBy(ctx context.Context,
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntakeContact().ModifiedBy(rctx, obj)
+		return obj.ModifiedBy, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -49104,8 +49245,8 @@ func (ec *executionContext) fieldContext_SystemIntakeContact_modifiedBy(_ contex
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeContact",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type UUID does not have child fields")
 		},
@@ -49127,7 +49268,7 @@ func (ec *executionContext) _SystemIntakeContact_modifiedByUserAccount(ctx conte
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntakeContact().ModifiedByUserAccount(rctx, obj)
+		return obj.ModifiedByUserAccount(ctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -49146,7 +49287,7 @@ func (ec *executionContext) fieldContext_SystemIntakeContact_modifiedByUserAccou
 		Object:     "SystemIntakeContact",
 		Field:      field,
 		IsMethod:   true,
-		IsResolver: true,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
@@ -49188,7 +49329,7 @@ func (ec *executionContext) _SystemIntakeContact_modifiedAt(ctx context.Context,
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntakeContact().ModifiedAt(rctx, obj)
+		return obj.ModifiedAt, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -49206,8 +49347,8 @@ func (ec *executionContext) fieldContext_SystemIntakeContact_modifiedAt(_ contex
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeContact",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Time does not have child fields")
 		},
@@ -49253,6 +49394,8 @@ func (ec *executionContext) fieldContext_SystemIntakeContacts_requester(_ contex
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_SystemIntakeContact_id(ctx, field)
+			case "userID":
+				return ec.fieldContext_SystemIntakeContact_userID(ctx, field)
 			case "userAccount":
 				return ec.fieldContext_SystemIntakeContact_userAccount(ctx, field)
 			case "systemIntakeId":
@@ -49323,6 +49466,8 @@ func (ec *executionContext) fieldContext_SystemIntakeContacts_businessOwners(_ c
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_SystemIntakeContact_id(ctx, field)
+			case "userID":
+				return ec.fieldContext_SystemIntakeContact_userID(ctx, field)
 			case "userAccount":
 				return ec.fieldContext_SystemIntakeContact_userAccount(ctx, field)
 			case "systemIntakeId":
@@ -49393,6 +49538,8 @@ func (ec *executionContext) fieldContext_SystemIntakeContacts_productManagers(_ 
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_SystemIntakeContact_id(ctx, field)
+			case "userID":
+				return ec.fieldContext_SystemIntakeContact_userID(ctx, field)
 			case "userAccount":
 				return ec.fieldContext_SystemIntakeContact_userAccount(ctx, field)
 			case "systemIntakeId":
@@ -49463,6 +49610,8 @@ func (ec *executionContext) fieldContext_SystemIntakeContacts_additionalContacts
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_SystemIntakeContact_id(ctx, field)
+			case "userID":
+				return ec.fieldContext_SystemIntakeContact_userID(ctx, field)
 			case "userAccount":
 				return ec.fieldContext_SystemIntakeContact_userAccount(ctx, field)
 			case "systemIntakeId":
@@ -49533,6 +49682,8 @@ func (ec *executionContext) fieldContext_SystemIntakeContacts_allContacts(_ cont
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_SystemIntakeContact_id(ctx, field)
+			case "userID":
+				return ec.fieldContext_SystemIntakeContact_userID(ctx, field)
 			case "userAccount":
 				return ec.fieldContext_SystemIntakeContact_userAccount(ctx, field)
 			case "systemIntakeId":
@@ -58024,6 +58175,8 @@ func (ec *executionContext) fieldContext_TRBRequest_relatedIntakes(_ context.Con
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			case "systemIntakeSystems":
 				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
+			case "contacts":
+				return ec.fieldContext_SystemIntake_contacts(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -60921,6 +61074,8 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(_ context.
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			case "systemIntakeSystems":
 				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
+			case "contacts":
+				return ec.fieldContext_SystemIntake_contacts(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -61707,6 +61862,8 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_grbReviewReminderLastSent(ctx, field)
 			case "systemIntakeSystems":
 				return ec.fieldContext_SystemIntake_systemIntakeSystems(ctx, field)
+			case "contacts":
+				return ec.fieldContext_SystemIntake_contacts(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -75083,6 +75240,42 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "contacts":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_contacts(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -75374,6 +75567,11 @@ func (ec *executionContext) _SystemIntakeContact(ctx context.Context, sel ast.Se
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
+		case "userID":
+			out.Values[i] = ec._SystemIntakeContact_userID(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
 		case "userAccount":
 			field := field
 
@@ -75457,77 +75655,15 @@ func (ec *executionContext) _SystemIntakeContact(ctx context.Context, sel ast.Se
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "isRequester":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntakeContact_isRequester(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
-				return res
+			out.Values[i] = ec._SystemIntakeContact_isRequester(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
 			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "createdBy":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntakeContact_createdBy(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
-				return res
+			out.Values[i] = ec._SystemIntakeContact_createdBy(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
 			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "createdByUserAccount":
 			field := field
 
@@ -75570,38 +75706,7 @@ func (ec *executionContext) _SystemIntakeContact(ctx context.Context, sel ast.Se
 				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "modifiedBy":
-			field := field
-
-			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntakeContact_modifiedBy(ctx, field, obj)
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			out.Values[i] = ec._SystemIntakeContact_modifiedBy(ctx, field, obj)
 		case "modifiedByUserAccount":
 			field := field
 
@@ -75636,38 +75741,7 @@ func (ec *executionContext) _SystemIntakeContact(ctx context.Context, sel ast.Se
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "modifiedAt":
-			field := field
-
-			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntakeContact_modifiedAt(ctx, field, obj)
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			out.Values[i] = ec._SystemIntakeContact_modifiedAt(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -82195,13 +82269,20 @@ func (ec *executionContext) marshalNSystemIntakeContact2ᚖgithubᚗcomᚋcmsᚑ
 }
 
 func (ec *executionContext) unmarshalNSystemIntakeContactRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactRole(ctx context.Context, v any) (models.SystemIntakeContactRole, error) {
-	var res models.SystemIntakeContactRole
-	err := res.UnmarshalGQL(v)
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.SystemIntakeContactRole(tmp)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNSystemIntakeContactRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactRole(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeContactRole) graphql.Marshaler {
-	return v
+	_ = sel
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) unmarshalNSystemIntakeContactRole2ᚕgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactRoleᚄ(ctx context.Context, v any) ([]models.SystemIntakeContactRole, error) {
@@ -82261,6 +82342,20 @@ func (ec *executionContext) marshalNSystemIntakeContactRole2ᚕgithubᚗcomᚋcm
 	}
 
 	return ret
+}
+
+func (ec *executionContext) marshalNSystemIntakeContacts2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContacts(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeContacts) graphql.Marshaler {
+	return ec._SystemIntakeContacts(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNSystemIntakeContacts2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContacts(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeContacts) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._SystemIntakeContacts(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNSystemIntakeContract2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContract(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeContract) graphql.Marshaler {
@@ -84370,10 +84465,6 @@ func (ec *executionContext) marshalNUpload2githubᚗcomᚋ99designsᚋgqlgenᚋg
 func (ec *executionContext) unmarshalNUploadSystemIntakeGRBPresentationDeckInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUploadSystemIntakeGRBPresentationDeckInput(ctx context.Context, v any) (models.UploadSystemIntakeGRBPresentationDeckInput, error) {
 	res, err := ec.unmarshalInputUploadSystemIntakeGRBPresentationDeckInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNUserAccount2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋauthenticationᚐUserAccount(ctx context.Context, sel ast.SelectionSet, v authentication.UserAccount) graphql.Marshaler {
-	return ec._UserAccount(ctx, sel, &v)
 }
 
 func (ec *executionContext) marshalNUserAccount2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋauthenticationᚐUserAccount(ctx context.Context, sel ast.SelectionSet, v *authentication.UserAccount) graphql.Marshaler {

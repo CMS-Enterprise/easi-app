@@ -1,26 +1,44 @@
 package models
 
 import (
-	"time"
-
 	"github.com/google/uuid"
+)
+
+// SystemIntakeContactRole is the various roles that a user can have as a contact on a system intake
+type SystemIntakeContactRole string
+
+const (
+	SystemIntakeContactRoleBusinessOwner                     SystemIntakeContactRole = "BUSINESS_OWNER"
+	SystemIntakeContactRoleCloudNavigator                    SystemIntakeContactRole = "CLOUD_NAVIGATOR"
+	SystemIntakeContactRoleContractingOfficersRepresentative SystemIntakeContactRole = "CONTRACTING_OFFICERS_REPRESENTATIVE"
+	SystemIntakeContactRoleCyberRiskAdvisor                  SystemIntakeContactRole = "CYBER_RISK_ADVISOR"
+	SystemIntakeContactRoleInformationSystemSecurityAdvisor  SystemIntakeContactRole = "INFORMATION_SYSTEM_SECURITY_ADVISOR"
+	SystemIntakeContactRoleOther                             SystemIntakeContactRole = "OTHER"
+	SystemIntakeContactRolePrivacyAdvisor                    SystemIntakeContactRole = "PRIVACY_ADVISOR"
+	SystemIntakeContactRoleProductOwner                      SystemIntakeContactRole = "PRODUCT_OWNER"
+	SystemIntakeContactRoleProductManager                    SystemIntakeContactRole = "PRODUCT_MANAGER"
+	SystemIntakeContactRoleProjectManager                    SystemIntakeContactRole = "PROJECT_MANAGER"
+	SystemIntakeContactRoleSubjectMatterExpert               SystemIntakeContactRole = "SUBJECT_MATTER_EXPERT"
+	SystemIntakeContactRoleSystemMaintainer                  SystemIntakeContactRole = "SYSTEM_MAINTAINER"
+	SystemIntakeContactRoleSystemOwner                       SystemIntakeContactRole = "SYSTEM_OWNER"
+	// SystemIntakeContactRolePLACEHOLDER is the default role given. It is removed before returning the frontend, so they know a user needs to select a role
+	SystemIntakeContactRolePLACEHOLDER SystemIntakeContactRole = "PLACE_HOLDER"
 )
 
 // SystemIntakeContact represents an EUA user's association with a system intake
 type SystemIntakeContact struct {
 	userIDRelation
-	ID             uuid.UUID  `json:"id"`
-	EUAUserID      string     `json:"euaUserId" db:"eua_user_id"`
-	SystemIntakeID uuid.UUID  `json:"systemIntakeId" db:"system_intake_id"`
-	Component      string     `json:"component" db:"component"`
-	Role           string     `json:"role" db:"role"`
-	UpdatedAt      *time.Time `db:"updated_at"`
-	CreatedAt      *time.Time `db:"created_at"`
+	BaseStructUser
+	SystemIntakeID uuid.UUID                          `json:"systemIntakeId" db:"system_intake_id"`
+	Component      string                             `json:"component" db:"component"`
+	Roles          EnumArray[SystemIntakeContactRole] `json:"roles" db:"roles"`
+	IsRequester    bool                               `json:"isRequester" db:"is_requester"`
 }
 
 // NewSystemIntakeContact creates a new SystemIntakeContact with the related userAccount
-func NewSystemIntakeContact(userID uuid.UUID) *SystemIntakeContact {
+func NewSystemIntakeContact(userID uuid.UUID, createdBy uuid.UUID) *SystemIntakeContact {
 	return &SystemIntakeContact{
+		BaseStructUser: NewBaseStructUser(createdBy),
 		userIDRelation: NewUserIDRelation(userID),
 	}
 }
@@ -45,13 +63,13 @@ func (info *SystemIntakeContacts) Requester() (*SystemIntakeContact, error) {
 	return info.AllContacts[0], nil
 }
 
-// Returns the business owner from the List of Contacts
+// BusinessOwners returns the business owner from the List of Contacts
 func (info *SystemIntakeContacts) BusinessOwners() ([]*SystemIntakeContact, error) {
 	//TODO Implement
 	return info.AllContacts, nil
 }
 
-// ProductManagers Returns the product managers from the List of Contacts
+// ProductManagers returns the product managers from the List of Contacts
 func (info *SystemIntakeContacts) ProductManagers() ([]*SystemIntakeContact, error) {
 	//TODO Implement
 	return info.AllContacts, nil

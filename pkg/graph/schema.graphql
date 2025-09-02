@@ -879,6 +879,8 @@ type SystemIntake {
   grbReviewAsyncManualEndDate: Time
   grbReviewReminderLastSent: Time
   systemIntakeSystems: [SystemIntakeSystem!]!
+  
+  contacts: SystemIntakeContacts!
 }
 
 """
@@ -1864,6 +1866,7 @@ Represents a contact associated with a system intake
 """
 type SystemIntakeContact {
   id: UUID!
+  userID: UUID!
   userAccount: UserAccount!
   systemIntakeId: UUID!
   component: String!

@@ -498,7 +498,7 @@ func (r *mutationResolver) UpdateSystemIntakeNote(ctx context.Context, input mod
 
 // CreateSystemIntake is the resolver for the createSystemIntake field.
 func (r *mutationResolver) CreateSystemIntake(ctx context.Context, input models.CreateSystemIntakeInput) (*models.SystemIntake, error) {
-	return resolvers.CreateSystemIntake(ctx, r.store, input)
+	return resolvers.CreateSystemIntake(ctx, r.store, input, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo))
 }
 
 // UpdateSystemIntakeRequestType is the resolver for the updateSystemIntakeRequestType field.
@@ -672,20 +672,22 @@ func (r *mutationResolver) UpdateSystemLink(ctx context.Context, input models.Up
 
 // CreateSystemIntakeContact is the resolver for the createSystemIntakeContact field.
 func (r *mutationResolver) CreateSystemIntakeContact(ctx context.Context, input models.CreateSystemIntakeContactInput) (*models.CreateSystemIntakeContactPayload, error) {
-	return resolvers.CreateSystemIntakeContact(ctx, r.store, input, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo))
+	principal := appcontext.Principal(ctx)
+	logger := appcontext.ZLogger(ctx)
+
+	return resolvers.CreateSystemIntakeContact(ctx, logger, principal, r.store, input, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo))
 }
 
 // UpdateSystemIntakeContact is the resolver for the updateSystemIntakeContact field.
 func (r *mutationResolver) UpdateSystemIntakeContact(ctx context.Context, input models.UpdateSystemIntakeContactInput) (*models.CreateSystemIntakeContactPayload, error) {
-	return resolvers.UpdateSystemIntakeContact(ctx, r.store, input, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo))
+	principal := appcontext.Principal(ctx)
+	logger := appcontext.ZLogger(ctx)
+	return resolvers.UpdateSystemIntakeContact(ctx, logger, principal, r.store, input, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo))
 }
 
 // DeleteSystemIntakeContact is the resolver for the deleteSystemIntakeContact field.
 func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input models.DeleteSystemIntakeContactInput) (*models.DeleteSystemIntakeContactPayload, error) {
-	contact := &models.SystemIntakeContact{
-		ID: input.ID,
-	}
-	_, err := r.store.DeleteSystemIntakeContact(ctx, contact)
+	contact, err := resolvers.SystemIntakeContactDelete(ctx, r.store, input.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -2071,41 +2073,15 @@ func (r *systemIntakeResolver) SystemIntakeSystems(ctx context.Context, obj *mod
 	return resolvers.SystemIntakeSystemsByIntakeID(ctx, obj.ID)
 }
 
+// Contacts is the resolver for the contacts field.
+func (r *systemIntakeResolver) Contacts(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeContacts, error) {
+	return resolvers.GetSystemIntakeContactsBySystemIntakeID(ctx, r.store, obj.ID)
+}
+
 // Roles is the resolver for the roles field.
 func (r *systemIntakeContactResolver) Roles(ctx context.Context, obj *models.SystemIntakeContact) ([]models.SystemIntakeContactRole, error) {
-	// TODO: Update once roles type is updated in database
-	return []models.SystemIntakeContactRole{models.SystemIntakeContactRole(obj.Role)}, nil
-}
-
-// IsRequester is the resolver for the isRequester field.
-func (r *systemIntakeContactResolver) IsRequester(ctx context.Context, obj *models.SystemIntakeContact) (bool, error) {
-	// TODO EASI-4934: implement isRequester field
-	panic(fmt.Errorf("not implemented: IsRequester - isRequester"))
-}
-
-// CreatedBy is the resolver for the createdBy field.
-func (r *systemIntakeContactResolver) CreatedBy(ctx context.Context, obj *models.SystemIntakeContact) (uuid.UUID, error) {
-	panic(fmt.Errorf("not implemented: CreatedBy - createdBy"))
-}
-
-// CreatedByUserAccount is the resolver for the createdByUserAccount field.
-func (r *systemIntakeContactResolver) CreatedByUserAccount(ctx context.Context, obj *models.SystemIntakeContact) (*authentication.UserAccount, error) {
-	panic(fmt.Errorf("not implemented: CreatedByUserAccount - createdByUserAccount"))
-}
-
-// ModifiedBy is the resolver for the modifiedBy field.
-func (r *systemIntakeContactResolver) ModifiedBy(ctx context.Context, obj *models.SystemIntakeContact) (*uuid.UUID, error) {
-	panic(fmt.Errorf("not implemented: ModifiedBy - modifiedBy"))
-}
-
-// ModifiedByUserAccount is the resolver for the modifiedByUserAccount field.
-func (r *systemIntakeContactResolver) ModifiedByUserAccount(ctx context.Context, obj *models.SystemIntakeContact) (*authentication.UserAccount, error) {
-	panic(fmt.Errorf("not implemented: ModifiedByUserAccount - modifiedByUserAccount"))
-}
-
-// ModifiedAt is the resolver for the modifiedAt field.
-func (r *systemIntakeContactResolver) ModifiedAt(ctx context.Context, obj *models.SystemIntakeContact) (*time.Time, error) {
-	panic(fmt.Errorf("not implemented: ModifiedAt - modifiedAt"))
+	//TODO: EASI-4934: See if we can make this auto resolve
+	return obj.Roles, nil
 }
 
 // DocumentType is the resolver for the documentType field.

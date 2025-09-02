@@ -25,6 +25,7 @@ func CreateSystemIntake(
 	ctx context.Context,
 	store *storage.Store,
 	input models.CreateSystemIntakeInput,
+	getAccountInformation userhelpers.GetAccountInfoFunc,
 ) (*models.SystemIntake, error) {
 	systemIntake := models.SystemIntake{
 		EUAUserID:   null.StringFrom(appcontext.Principal(ctx).ID()),
@@ -34,64 +35,33 @@ func CreateSystemIntake(
 		Step:        models.SystemIntakeStepINITIALFORM,
 	}
 	createdIntake, err := store.CreateSystemIntake(ctx, &systemIntake)
+	// TODO: EASI-4946 this should be a transaction in case one fails
+	logger := appcontext.ZLogger(ctx)
+	principal := appcontext.Principal(ctx)
+	_, err2 := CreateSystemIntakeContact(ctx, logger, principal, store, models.CreateSystemIntakeContactInput{
+		EuaUserID:      principal.ID(),
+		SystemIntakeID: createdIntake.ID,
+		Roles: []models.SystemIntakeContactRole{
+			models.SystemIntakeContactRolePLACEHOLDER,
+		},
+		Component:   string(models.SystemIntakeContactRolePLACEHOLDER),
+		IsRequester: true,
+	},
+		getAccountInformation,
+	)
+	if err2 != nil {
+		return nil, err2
+	}
+
+	// sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
+	// 	createdIntake, err = store.CreateSystemIntakeNP(ctx, tx, &systemIntake)
+	// 	if err != nil {
+	// 		return nil, err
+	// 	}
+	// 	//TODO create requester contact
+	// 	return createdIntake, nil
+	// })
 	return createdIntake, err
-}
-
-// CreateSystemIntakeContact creates a system intake's contact info.
-func CreateSystemIntakeContact(
-	ctx context.Context,
-	store *storage.Store,
-	input models.CreateSystemIntakeContactInput,
-	getAccountInformation userhelpers.GetAccountInfoFunc,
-) (*models.CreateSystemIntakeContactPayload, error) {
-	contactUserAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, input.EuaUserID, false, getAccountInformation)
-	if err != nil {
-		return nil, err
-	}
-
-	contact := models.NewSystemIntakeContact(contactUserAccount.ID)
-	contact.SystemIntakeID = input.SystemIntakeID
-	contact.EUAUserID = input.EuaUserID
-	contact.Component = input.Component
-	// TODO: Revert to `input.Roles` when database is updated to array
-	contact.Role = string(input.Roles[0])
-
-	createdContact, err := store.CreateSystemIntakeContact(ctx, contact)
-	if err != nil {
-		return nil, err
-	}
-	return &models.CreateSystemIntakeContactPayload{
-		SystemIntakeContact: createdContact,
-	}, nil
-}
-
-// UpdateSystemIntakeContact updates a system intake's contact info.
-func UpdateSystemIntakeContact(
-	ctx context.Context,
-	store *storage.Store,
-	input models.UpdateSystemIntakeContactInput,
-	getAccountInformation userhelpers.GetAccountInfoFunc,
-) (*models.CreateSystemIntakeContactPayload, error) {
-	// TODO: Fully implement this. This is a placeholder
-	contact, err := store.GetSystemIntakeContactByID(ctx, input.ID)
-	if err != nil {
-		return nil, err
-	}
-
-	// TODO: Fix
-
-	contact.ID = input.ID
-	contact.Component = input.Component
-	// TODO: Revert to `input.Roles` when database is updated to array
-	contact.Role = string(input.Roles[0])
-
-	updatedContact, err := store.UpdateSystemIntakeContact(ctx, contact)
-	if err != nil {
-		return nil, err
-	}
-	return &models.CreateSystemIntakeContactPayload{
-		SystemIntakeContact: updatedContact,
-	}, nil
 }
 
 // UpdateSystemIntakeRequestType updates a system intake's request type and returns the updated intake.
@@ -445,16 +415,4 @@ func GetRequesterUpdateEmailData(
 	}
 
 	return data, nil
-}
-
-// GetSystemIntakeContactsBySystemIntakeID fetches contacts for a system intake
-func GetSystemIntakeContactsBySystemIntakeID(ctx context.Context, store *storage.Store, systemIntakeID uuid.UUID) (*models.SystemIntakeContacts, error) {
-	contacts, err := store.FetchSystemIntakeContactsBySystemIntakeID(ctx, systemIntakeID)
-	if err != nil {
-		return nil, err
-	}
-	// Wrap the returned type, so we can calculate additional information on it.
-	return &models.SystemIntakeContacts{
-		AllContacts: contacts,
-	}, nil
 }
