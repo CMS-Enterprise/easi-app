@@ -25,12 +25,45 @@ const (
 	SystemIntakeContactRolePLACEHOLDER SystemIntakeContactRole = "PLACE_HOLDER"
 )
 
+type SystemIntakeContactComponent string
+
+const (
+	SystemIntakeContactComponentCenterForClinicalStandardsAndQualityCcsq               SystemIntakeContactComponent = "CENTER_FOR_CLINICAL_STANDARDS_AND_QUALITY_CCSQ"
+	SystemIntakeContactComponentCenterForConsumerInformationAndInsuranceOversightCciio SystemIntakeContactComponent = "CENTER_FOR_CONSUMER_INFORMATION_AND_INSURANCE_OVERSIGHT_CCIIO"
+	SystemIntakeContactComponentCenterForMedicareCm                                    SystemIntakeContactComponent = "CENTER_FOR_MEDICARE_CM"
+	SystemIntakeContactComponentCenterForMedicaidAndChipServicesCmcs                   SystemIntakeContactComponent = "CENTER_FOR_MEDICAID_AND_CHIP_SERVICES_CMCS"
+	SystemIntakeContactComponentCenterForMedicareAndMedicaidInnovationCmmi             SystemIntakeContactComponent = "CENTER_FOR_MEDICARE_AND_MEDICAID_INNOVATION_CMMI"
+	SystemIntakeContactComponentCenterForProgramIntegrityCpi                           SystemIntakeContactComponent = "CENTER_FOR_PROGRAM_INTEGRITY_CPI"
+	SystemIntakeContactComponentCmsWide                                                SystemIntakeContactComponent = "CMS_WIDE"
+	SystemIntakeContactComponentEmergencyPreparednessAndResponseOperationsEpro         SystemIntakeContactComponent = "EMERGENCY_PREPAREDNESS_AND_RESPONSE_OPERATIONS_EPRO"
+	SystemIntakeContactComponentFederalCoordinatedHealthCareOffice                     SystemIntakeContactComponent = "FEDERAL_COORDINATED_HEALTH_CARE_OFFICE"
+	SystemIntakeContactComponentOfficeOfAcquisitionAndGrantsManagementOagm             SystemIntakeContactComponent = "OFFICE_OF_ACQUISITION_AND_GRANTS_MANAGEMENT_OAGM"
+	SystemIntakeContactComponentOfficeOfHealthcareExperienceAndInteroperability        SystemIntakeContactComponent = "OFFICE_OF_HEALTHCARE_EXPERIENCE_AND_INTEROPERABILITY"
+	SystemIntakeContactComponentOfficeOfCommunicationsOc                               SystemIntakeContactComponent = "OFFICE_OF_COMMUNICATIONS_OC"
+	SystemIntakeContactComponentOfficeOfEnterpriseDataAndAnalyticsOeda                 SystemIntakeContactComponent = "OFFICE_OF_ENTERPRISE_DATA_AND_ANALYTICS_OEDA"
+	SystemIntakeContactComponentOfficeOfEqualOpportunityAndCivilRights                 SystemIntakeContactComponent = "OFFICE_OF_EQUAL_OPPORTUNITY_AND_CIVIL_RIGHTS"
+	SystemIntakeContactComponentOfficeOfFinancialManagementOfm                         SystemIntakeContactComponent = "OFFICE_OF_FINANCIAL_MANAGEMENT_OFM"
+	SystemIntakeContactComponentOfficeOfHumanCapital                                   SystemIntakeContactComponent = "OFFICE_OF_HUMAN_CAPITAL"
+	SystemIntakeContactComponentOfficeOfInformationTechnologyOit                       SystemIntakeContactComponent = "OFFICE_OF_INFORMATION_TECHNOLOGY_OIT"
+	SystemIntakeContactComponentOfficeOfLegislation                                    SystemIntakeContactComponent = "OFFICE_OF_LEGISLATION"
+	SystemIntakeContactComponentOfficeOfMinorityHealthOmh                              SystemIntakeContactComponent = "OFFICE_OF_MINORITY_HEALTH_OMH"
+	SystemIntakeContactComponentOfficeOfProgramOperationsAndLocalEngagementOpole       SystemIntakeContactComponent = "OFFICE_OF_PROGRAM_OPERATIONS_AND_LOCAL_ENGAGEMENT_OPOLE"
+	SystemIntakeContactComponentOfficeOfSecurityFacilitiesAndLogisticsOperationsOsflo  SystemIntakeContactComponent = "OFFICE_OF_SECURITY_FACILITIES_AND_LOGISTICS_OPERATIONS_OSFLO"
+	SystemIntakeContactComponentOfficeOfStrategicOperationsAndRegulatoryAffairsOsora   SystemIntakeContactComponent = "OFFICE_OF_STRATEGIC_OPERATIONS_AND_REGULATORY_AFFAIRS_OSORA"
+	SystemIntakeContactComponentOfficeOfStrategyPerformanceAndResultsOspr              SystemIntakeContactComponent = "OFFICE_OF_STRATEGY_PERFORMANCE_AND_RESULTS_OSPR"
+	SystemIntakeContactComponentOfficeOfTheActuaryOact                                 SystemIntakeContactComponent = "OFFICE_OF_THE_ACTUARY_OACT"
+	SystemIntakeContactComponentOfficesOfHearingsAndInquiries                          SystemIntakeContactComponent = "OFFICES_OF_HEARINGS_AND_INQUIRIES"
+	SystemIntakeContactComponentOther                                                  SystemIntakeContactComponent = "OTHER"
+	// SystemIntakeContactRolePLACEHOLDER is the default role given. It is removed before returning the frontend, so they know a user needs to select a role
+	SystemIntakeContactComponentPLACEHOLDER SystemIntakeContactComponent = "PLACE_HOLDER"
+)
+
 // SystemIntakeContact represents an EUA user's association with a system intake
 type SystemIntakeContact struct {
 	userIDRelation
 	BaseStructUser
 	SystemIntakeID uuid.UUID                          `json:"systemIntakeId" db:"system_intake_id"`
-	Component      string                             `json:"component" db:"component"`
+	Component      SystemIntakeContactComponent       `json:"component" db:"component"`
 	Roles          EnumArray[SystemIntakeContactRole] `json:"roles" db:"roles"`
 	IsRequester    bool                               `json:"isRequester" db:"is_requester"`
 }

@@ -10665,6 +10665,35 @@ enum SystemIntakeContactRole  {
   SYSTEM_OWNER
 }
 
+enum SystemIntakeContactComponent {
+  CENTER_FOR_CLINICAL_STANDARDS_AND_QUALITY_CCSQ
+  CENTER_FOR_CONSUMER_INFORMATION_AND_INSURANCE_OVERSIGHT_CCIIO
+  CENTER_FOR_MEDICARE_CM
+  CENTER_FOR_MEDICAID_AND_CHIP_SERVICES_CMCS
+  CENTER_FOR_MEDICARE_AND_MEDICAID_INNOVATION_CMMI
+  CENTER_FOR_PROGRAM_INTEGRITY_CPI
+  CMS_WIDE
+  EMERGENCY_PREPAREDNESS_AND_RESPONSE_OPERATIONS_EPRO
+  FEDERAL_COORDINATED_HEALTH_CARE_OFFICE
+  OFFICE_OF_ACQUISITION_AND_GRANTS_MANAGEMENT_OAGM
+  OFFICE_OF_HEALTHCARE_EXPERIENCE_AND_INTEROPERABILITY
+  OFFICE_OF_COMMUNICATIONS_OC
+  OFFICE_OF_ENTERPRISE_DATA_AND_ANALYTICS_OEDA
+  OFFICE_OF_EQUAL_OPPORTUNITY_AND_CIVIL_RIGHTS
+  OFFICE_OF_FINANCIAL_MANAGEMENT_OFM
+  OFFICE_OF_HUMAN_CAPITAL
+  OFFICE_OF_INFORMATION_TECHNOLOGY_OIT
+  OFFICE_OF_LEGISLATION
+  OFFICE_OF_MINORITY_HEALTH_OMH
+  OFFICE_OF_PROGRAM_OPERATIONS_AND_LOCAL_ENGAGEMENT_OPOLE
+  OFFICE_OF_SECURITY_FACILITIES_AND_LOGISTICS_OPERATIONS_OSFLO
+  OFFICE_OF_STRATEGIC_OPERATIONS_AND_REGULATORY_AFFAIRS_OSORA
+  OFFICE_OF_STRATEGY_PERFORMANCE_AND_RESULTS_OSPR
+  OFFICE_OF_THE_ACTUARY_OACT
+  OFFICES_OF_HEARINGS_AND_INQUIRIES
+  OTHER
+}
+
 """
 This is a convenience struct which surfaces information about the contacts associated with a system intake
 """
@@ -10700,7 +10729,7 @@ type SystemIntakeContact {
   userID: UUID!
   userAccount: UserAccount!
   systemIntakeId: UUID!
-  component: String!
+  component: SystemIntakeContactComponent!
   roles: [SystemIntakeContactRole!]!
   isRequester: Boolean!
 
@@ -10719,7 +10748,7 @@ The data needed to associate a contact with a system intake
 input CreateSystemIntakeContactInput {
   euaUserId: String!
   systemIntakeId: UUID!
-  component: String!
+  component: SystemIntakeContactComponent!
   roles: [SystemIntakeContactRole!]!
   isRequester: Boolean!
 }
@@ -10729,7 +10758,7 @@ The data needed to update a contact associated with a system intake
 """
 input UpdateSystemIntakeContactInput {
   id: UUID!
-  component: String!
+  component: SystemIntakeContactComponent!
   roles: [SystemIntakeContactRole!]!
   isRequester: Boolean!
 }
@@ -48955,9 +48984,9 @@ func (ec *executionContext) _SystemIntakeContact_component(ctx context.Context, 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(models.SystemIntakeContactComponent)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNSystemIntakeContactComponent2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactComponent(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeContact_component(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -48967,7 +48996,7 @@ func (ec *executionContext) fieldContext_SystemIntakeContact_component(_ context
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type SystemIntakeContactComponent does not have child fields")
 		},
 	}
 	return fc, nil
@@ -64910,7 +64939,7 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeContactInput(ctx con
 			it.SystemIntakeID = data
 		case "component":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("component"))
-			data, err := ec.unmarshalNString2string(ctx, v)
+			data, err := ec.unmarshalNSystemIntakeContactComponent2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactComponent(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -67884,7 +67913,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeContactInput(ctx con
 			it.ID = data
 		case "component":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("component"))
-			data, err := ec.unmarshalNString2string(ctx, v)
+			data, err := ec.unmarshalNSystemIntakeContactComponent2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactComponent(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -82266,6 +82295,23 @@ func (ec *executionContext) marshalNSystemIntakeContact2ᚖgithubᚗcomᚋcmsᚑ
 		return graphql.Null
 	}
 	return ec._SystemIntakeContact(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNSystemIntakeContactComponent2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactComponent(ctx context.Context, v any) (models.SystemIntakeContactComponent, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.SystemIntakeContactComponent(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSystemIntakeContactComponent2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactComponent(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeContactComponent) graphql.Marshaler {
+	_ = sel
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) unmarshalNSystemIntakeContactRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactRole(ctx context.Context, v any) (models.SystemIntakeContactRole, error) {
