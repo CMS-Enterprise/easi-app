@@ -1,7 +1,7 @@
 meta {
-  name: UpdateSystemIntakeContact (FORM1)
+  name: Update SystemIntakeContact
   type: graphql
-  seq: 3
+  seq: 2
 }
 
 post {
@@ -13,8 +13,6 @@ post {
 body:graphql {
   mutation UpdateSystemIntakeContact($input: UpdateSystemIntakeContactInput!) {
     updateSystemIntakeContact(input: $input) {
-      #   "{{$guid}}" #use this to make a guid
-      #this gets submitted 3 times to provide all the contacts we need
       systemIntakeContact {
         id
         userAccount {
