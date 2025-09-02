@@ -179,7 +179,7 @@ export type CollaboratorFields = Record<
 export type ContactFields = {
   id?: string | null;
   username: string | null;
-  component: SystemIntakeContactComponent | null;
+  component: SystemIntakeContactComponent | null | undefined;
   commonName: string;
   email: string;
 };

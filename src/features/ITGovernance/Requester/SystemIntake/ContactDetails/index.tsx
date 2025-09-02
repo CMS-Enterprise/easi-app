@@ -190,17 +190,18 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
       variables: {
         input: {
           id: systemIntake.id,
+          // TODO we should deprecate this
           requester: {
             name: requester.commonName,
-            component: requester.component
+            component: requester.component!
           },
           businessOwner: {
             name: businessOwner.commonName,
-            component: businessOwner.component
+            component: businessOwner.component!
           },
           productManager: {
             name: productManager.commonName,
-            component: productManager.component
+            component: productManager.component!
           },
           governanceTeams
         }
