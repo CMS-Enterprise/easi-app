@@ -121,7 +121,7 @@ data_to_update AS (
         raw_data.system_intake_id,
         -- force null group_component to Other. It just means it was never set
         COALESCE(raw_data.group_component,'Other') AS group_component,
-        CASE
+        CASE --TODO finalize these cases
             WHEN LOWER(raw_data.group_component) ='center for clinical standards and quality' THEN 'CENTER_FOR_CLINICAL_STANDARDS_AND_QUALITY'::SYSTEM_INTAKE_CONTACT_COMPONENT
             WHEN LOWER(raw_data.group_component) ='center for consumer information and insurance oversight' THEN 'CENTER_FOR_CONSUMER_INFORMATION_AND_INSURANCE_OVERSIGHT'::SYSTEM_INTAKE_CONTACT_COMPONENT
             WHEN LOWER(raw_data.group_component) ='center for medicaid and chip services' THEN 'CENTER_FOR_MEDICAID_AND_CHIP_SERVICES'::SYSTEM_INTAKE_CONTACT_COMPONENT
