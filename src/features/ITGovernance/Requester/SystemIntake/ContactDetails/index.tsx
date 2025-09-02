@@ -73,7 +73,7 @@ const emptySystemIntakeContact: ContactFields = {
   username: '',
   commonName: '',
   email: '',
-  component: ''
+  component: null
 };
 
 const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {

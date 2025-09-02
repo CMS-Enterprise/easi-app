@@ -5,6 +5,7 @@ import {
   GetCedarContactsDocument,
   GetCedarContactsQuery,
   GetCedarContactsQueryVariables,
+  SystemIntakeContactComponent,
   SystemIntakeContactFragment,
   SystemIntakeContactRole
 } from 'gql/generated/graphql';
@@ -42,7 +43,8 @@ const additionalContacts: SystemIntakeContactFragment[] = [
     __typename: 'SystemIntakeContact',
     systemIntakeId: systemIntake.id,
     id: '4828a0b0-9474-4ddc-8fc2-662323ef0087',
-    component: 'Office of Information Technology',
+    component:
+      SystemIntakeContactComponent.OFFICE_OF_INFORMATION_TECHNOLOGY_OIT,
     roles: [SystemIntakeContactRole.CLOUD_NAVIGATOR],
     userAccount: {
       __typename: 'UserAccount',
@@ -64,7 +66,7 @@ const additionalContacts: SystemIntakeContactFragment[] = [
       commonName: 'Cosmo Kramer',
       email: 'cosmo.kramer@local.fake'
     },
-    component: 'Other',
+    component: SystemIntakeContactComponent.OTHER,
     roles: [SystemIntakeContactRole.SYSTEM_MAINTAINER],
     isRequester: false
   }

@@ -2318,7 +2318,7 @@ export type SystemIntakeConfirmLCIDInput = {
 /** Represents a contact associated with a system intake */
 export type SystemIntakeContact = {
   __typename: 'SystemIntakeContact';
-  component: SystemIntakeContactComponent;
+  component?: Maybe<SystemIntakeContactComponent>;
   createdAt: Scalars['Time']['output'];
   createdBy: Scalars['UUID']['output'];
   createdByUserAccount: UserAccount;
@@ -3693,7 +3693,7 @@ export type FundingSourceFragmentFragment = { __typename: 'SystemIntakeFundingSo
 
 export type GovernanceRequestFeedbackFragmentFragment = { __typename: 'GovernanceRequestFeedback', id: UUID, feedback: HTML, targetForm: GovernanceRequestFeedbackTargetForm, type: GovernanceRequestFeedbackType, createdAt: Time, author?: { __typename: 'UserInfo', commonName: string } | null };
 
-export type SystemIntakeContactFragment = { __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component: SystemIntakeContactComponent, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } };
+export type SystemIntakeContactFragment = { __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component?: SystemIntakeContactComponent | null, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } };
 
 export type SystemIntakeDocumentFragmentFragment = { __typename: 'SystemIntakeDocument', id: UUID, fileName: string, version: SystemIntakeDocumentVersion, status: SystemIntakeDocumentStatus, uploadedAt: Time, url?: string | null, canView: boolean, canDelete: boolean, systemIntakeId: UUID, documentType: { __typename: 'SystemIntakeDocumentType', commonType: SystemIntakeDocumentCommonType, otherTypeDescription?: string | null } };
 
@@ -3828,28 +3828,28 @@ export type GetSystemIntakeContactsQueryVariables = Exact<{
 }>;
 
 
-export type GetSystemIntakeContactsQuery = { __typename: 'Query', systemIntakeContacts?: { __typename: 'SystemIntakeContacts', requester?: { __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component: SystemIntakeContactComponent, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } } | null, businessOwners: Array<{ __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component: SystemIntakeContactComponent, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } }>, productManagers: Array<{ __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component: SystemIntakeContactComponent, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } }>, additionalContacts: Array<{ __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component: SystemIntakeContactComponent, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } }> } | null };
+export type GetSystemIntakeContactsQuery = { __typename: 'Query', systemIntakeContacts?: { __typename: 'SystemIntakeContacts', requester?: { __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component?: SystemIntakeContactComponent | null, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } } | null, businessOwners: Array<{ __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component?: SystemIntakeContactComponent | null, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } }>, productManagers: Array<{ __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component?: SystemIntakeContactComponent | null, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } }>, additionalContacts: Array<{ __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component?: SystemIntakeContactComponent | null, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } }> } | null };
 
 export type CreateSystemIntakeContactMutationVariables = Exact<{
   input: CreateSystemIntakeContactInput;
 }>;
 
 
-export type CreateSystemIntakeContactMutation = { __typename: 'Mutation', createSystemIntakeContact?: { __typename: 'CreateSystemIntakeContactPayload', systemIntakeContact?: { __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component: SystemIntakeContactComponent, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } } | null } | null };
+export type CreateSystemIntakeContactMutation = { __typename: 'Mutation', createSystemIntakeContact?: { __typename: 'CreateSystemIntakeContactPayload', systemIntakeContact?: { __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component?: SystemIntakeContactComponent | null, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } } | null } | null };
 
 export type UpdateSystemIntakeContactMutationVariables = Exact<{
   input: UpdateSystemIntakeContactInput;
 }>;
 
 
-export type UpdateSystemIntakeContactMutation = { __typename: 'Mutation', updateSystemIntakeContact?: { __typename: 'CreateSystemIntakeContactPayload', systemIntakeContact?: { __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component: SystemIntakeContactComponent, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } } | null } | null };
+export type UpdateSystemIntakeContactMutation = { __typename: 'Mutation', updateSystemIntakeContact?: { __typename: 'CreateSystemIntakeContactPayload', systemIntakeContact?: { __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component?: SystemIntakeContactComponent | null, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } } | null } | null };
 
 export type DeleteSystemIntakeContactMutationVariables = Exact<{
   input: DeleteSystemIntakeContactInput;
 }>;
 
 
-export type DeleteSystemIntakeContactMutation = { __typename: 'Mutation', deleteSystemIntakeContact?: { __typename: 'DeleteSystemIntakeContactPayload', systemIntakeContact?: { __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component: SystemIntakeContactComponent, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } } | null } | null };
+export type DeleteSystemIntakeContactMutation = { __typename: 'Mutation', deleteSystemIntakeContact?: { __typename: 'DeleteSystemIntakeContactPayload', systemIntakeContact?: { __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component?: SystemIntakeContactComponent | null, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } } | null } | null };
 
 export type CreateSystemIntakeDocumentMutationVariables = Exact<{
   input: CreateSystemIntakeDocumentInput;

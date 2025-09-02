@@ -1,6 +1,7 @@
 import {
   FundingSourceFragmentFragment,
   SystemIntakeCollaboratorInput,
+  SystemIntakeContactComponent,
   SystemIntakeContactFragment,
   SystemIntakeContactRole,
   SystemIntakeGRBReviewType,
@@ -178,7 +179,7 @@ export type CollaboratorFields = Record<
 export type ContactFields = {
   id?: string | null;
   username: string | null;
-  component: string;
+  component: SystemIntakeContactComponent | null;
   commonName: string;
   email: string;
 };

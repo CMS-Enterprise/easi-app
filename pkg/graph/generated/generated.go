@@ -10729,7 +10729,7 @@ type SystemIntakeContact {
   userID: UUID!
   userAccount: UserAccount!
   systemIntakeId: UUID!
-  component: SystemIntakeContactComponent!
+  component: SystemIntakeContactComponent
   roles: [SystemIntakeContactRole!]!
   isRequester: Boolean!
 
@@ -48979,14 +48979,11 @@ func (ec *executionContext) _SystemIntakeContact_component(ctx context.Context, 
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(models.SystemIntakeContactComponent)
 	fc.Result = res
-	return ec.marshalNSystemIntakeContactComponent2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactComponent(ctx, field.Selections, res)
+	return ec.marshalOSystemIntakeContactComponent2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactComponent(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeContact_component(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -75644,9 +75641,6 @@ func (ec *executionContext) _SystemIntakeContact(ctx context.Context, sel ast.Se
 			}
 		case "component":
 			out.Values[i] = ec._SystemIntakeContact_component(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
 		case "roles":
 			field := field
 
@@ -85567,6 +85561,19 @@ func (ec *executionContext) marshalOSystemIntakeContact2ᚖgithubᚗcomᚋcmsᚑ
 		return graphql.Null
 	}
 	return ec._SystemIntakeContact(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOSystemIntakeContactComponent2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactComponent(ctx context.Context, v any) (models.SystemIntakeContactComponent, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.SystemIntakeContactComponent(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOSystemIntakeContactComponent2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactComponent(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeContactComponent) graphql.Marshaler {
+	_ = sel
+	_ = ctx
+	res := graphql.MarshalString(string(v))
+	return res
 }
 
 func (ec *executionContext) marshalOSystemIntakeContacts2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContacts(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeContacts) graphql.Marshaler {

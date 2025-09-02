@@ -23,6 +23,7 @@ import {
   ITGovGRBStatus,
   ITGovGRTStatus,
   ITGovIntakeFormStatus,
+  SystemIntakeContactComponent,
   SystemIntakeContactFragment,
   SystemIntakeContactRole,
   SystemIntakeDecisionState,
@@ -64,7 +65,7 @@ const contacts: SystemIntakeContactFragment[] = users
       commonName: userInfo.commonName,
       email: userInfo.email
     },
-    component: 'CMS Wide',
+    component: SystemIntakeContactComponent.CMS_WIDE,
     roles: [SystemIntakeContactRole.OTHER],
     isRequester: false
   }));
@@ -77,13 +78,13 @@ export const requester: SystemIntakeContactFragment = {
 export const businessOwner: SystemIntakeContactFragment = {
   ...contacts[1],
   roles: [SystemIntakeContactRole.BUSINESS_OWNER],
-  component: 'Center for Medicare'
+  component: SystemIntakeContactComponent.CENTER_FOR_MEDICARE_CM
 };
 
 export const productManager: SystemIntakeContactFragment = {
   ...contacts[2],
   roles: [SystemIntakeContactRole.PRODUCT_MANAGER],
-  component: 'Office of Legislation'
+  component: SystemIntakeContactComponent.OFFICE_OF_LEGISLATION
 };
 
 export const documents: SystemIntakeDocumentFragmentFragment[] = [

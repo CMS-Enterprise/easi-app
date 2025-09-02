@@ -32,7 +32,7 @@ export const initialContactDetails: SystemIntakeContactFragment = {
     commonName: '',
     email: ''
   },
-  component: '',
+  component: undefined,
   roles: [],
   isRequester: false
 };

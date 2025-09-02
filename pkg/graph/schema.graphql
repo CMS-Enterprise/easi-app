@@ -1898,7 +1898,7 @@ type SystemIntakeContact {
   userID: UUID!
   userAccount: UserAccount!
   systemIntakeId: UUID!
-  component: SystemIntakeContactComponent!
+  component: SystemIntakeContactComponent
   roles: [SystemIntakeContactRole!]!
   isRequester: Boolean!
 
