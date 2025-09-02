@@ -7,9 +7,6 @@ import {
   CreateSystemIntakeGRBReviewersDocument,
   CreateSystemIntakeGRBReviewersMutation,
   CreateSystemIntakeGRBReviewersMutationVariables,
-  GetCedarContactsDocument,
-  GetCedarContactsQuery,
-  GetCedarContactsQueryVariables,
   GetGRBReviewersComparisonsDocument,
   GetGRBReviewersComparisonsQuery,
   GetGRBReviewersComparisonsQueryVariables,
@@ -23,7 +20,7 @@ import {
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
 import { getSystemIntakeGRBReviewQuery, grbReview } from 'tests/mock/grbReview';
-import { systemIntake } from 'tests/mock/systemIntake';
+import { getCedarContactsQuery, systemIntake } from 'tests/mock/systemIntake';
 import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import { MessageProvider } from 'hooks/useMessage';
@@ -65,24 +62,6 @@ const updatedGRBReviewer: SystemIntakeGRBReviewerFragment = {
   votingRole: SystemIntakeGRBReviewerVotingRole.NON_VOTING,
   grbRole: SystemIntakeGRBReviewerRole.QIO_REP
 };
-
-// Cedar contacts query mock
-const cedarContactsQuery = (
-  commonName: string
-): MockedQuery<GetCedarContactsQuery, GetCedarContactsQueryVariables> => ({
-  request: {
-    query: GetCedarContactsDocument,
-    variables: {
-      commonName
-    }
-  },
-  result: {
-    data: {
-      __typename: 'Query',
-      cedarPersonsByCommonName: [contact]
-    }
-  }
-});
 
 const createSystemIntakeGRBReviewersQuery: MockedQuery<
   CreateSystemIntakeGRBReviewersMutation,
@@ -152,44 +131,6 @@ const grbVotingInformation: {
   numberOfNotVoted: 0
 };
 
-// const getSystemIntakeGRBReviewQuery = (
-//   reviewer?: SystemIntakeGRBReviewerFragment
-// ): MockedQuery<
-//   GetSystemIntakeGRBReviewQuery,
-//   GetSystemIntakeGRBReviewQueryVariables
-// > => ({
-//   request: {
-//     query: GetSystemIntakeGRBReviewDocument,
-//     variables: {
-//       id: systemIntake.id
-//     }
-//   },
-//   result: {
-//     data: {
-//       __typename: 'Query',
-//       systemIntake: {
-//         __typename: 'SystemIntake',
-//         id: systemIntake.id,
-//         grbDate: '2022-10-21T14:55:47.88283Z',
-//         grbReviewAsyncEndDate: '2022-10-21T14:55:47.88283Z',
-//         grbReviewAsyncRecordingTime: '2022-10-21T14:55:47.88283Z',
-//         grbPresentationLinks: null,
-//         grbVotingInformation: {
-//           __typename: 'GRBVotingInformation',
-//           grbReviewers: reviewer ? [reviewer] : [],
-//           votingStatus: GRBVotingInformationStatus.NOT_STARTED,
-//           numberOfNoObjection: 0,
-//           numberOfObjection: 0,
-//           numberOfNotVoted: 0
-//         },
-//         grbReviewStartedAt: null,
-//         grbReviewType: SystemIntakeGRBReviewType.STANDARD,
-//         documents: []
-//       }
-//     }
-//   }
-// });
-
 const getGRBReviewersComparisonsQuery: MockedQuery<
   GetGRBReviewersComparisonsQuery,
   GetGRBReviewersComparisonsQueryVariables
@@ -228,8 +169,8 @@ describe('GRB reviewer form', () => {
         <VerboseMockedProvider
           mocks={[
             getGRBReviewersComparisonsQuery,
-            cedarContactsQuery('Je'),
-            cedarContactsQuery('Jerry Seinfeld'),
+            getCedarContactsQuery('Je', contact),
+            getCedarContactsQuery('Jerry Seinfeld', contact),
             createSystemIntakeGRBReviewersQuery,
             getSystemIntakeGRBReviewQuery(),
             getSystemIntakeGRBReviewQuery({
@@ -333,7 +274,7 @@ describe('GRB reviewer form', () => {
         <VerboseMockedProvider
           mocks={[
             getGRBReviewersComparisonsQuery,
-            cedarContactsQuery(contactLabel),
+            getCedarContactsQuery(contactLabel, contact),
             updateSystemIntakeGRBReviewerQuery,
             getSystemIntakeGRBReviewQuery(),
             getSystemIntakeGRBReviewQuery({
@@ -426,8 +367,8 @@ describe('GRB reviewer form', () => {
       <MemoryRouter>
         <VerboseMockedProvider
           mocks={[
-            cedarContactsQuery('Je'),
-            cedarContactsQuery('Jerry Seinfeld')
+            getCedarContactsQuery('Je', contact),
+            getCedarContactsQuery('Jerry Seinfeld', contact)
           ]}
         >
           <MessageProvider>
