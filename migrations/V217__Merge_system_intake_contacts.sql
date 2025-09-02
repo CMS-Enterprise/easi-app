@@ -121,6 +121,43 @@ data_to_update AS (
         raw_data.system_intake_id,
         -- force null group_component to Other. It just means it was never set
         COALESCE(raw_data.group_component,'Other') AS group_component,
+        CASE
+            WHEN LOWER(raw_data.group_component) ='center for clinical standards and quality' THEN 'CENTER_FOR_CLINICAL_STANDARDS_AND_QUALITY'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='center for consumer information and insurance oversight' THEN 'CENTER_FOR_CONSUMER_INFORMATION_AND_INSURANCE_OVERSIGHT'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='center for medicaid and chip services' THEN 'CENTER_FOR_MEDICAID_AND_CHIP_SERVICES'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='center for medicare' THEN 'CENTER_FOR_MEDICARE'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='center for medicare and medicaid innovation' THEN 'CENTER_FOR_MEDICARE_AND_MEDICAID_INNOVATION'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='center for program integrity' THEN 'CENTER_FOR_PROGRAM_INTEGRITY'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='cms wide' THEN 'CMS_WIDE'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='cms-wide' THEN 'CMS-WIDE'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='consortium for medicaid and children''s health' THEN 'CONSORTIUM_FOR_MEDICAID_AND_CHILDREN''S_HEALTH'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='consortium for medicare health plans operations' THEN 'CONSORTIUM_FOR_MEDICARE_HEALTH_PLANS_OPERATIONS'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='emergency preparedness and response operations' THEN 'EMERGENCY_PREPAREDNESS_AND_RESPONSE_OPERATIONS'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='federal coordinated health care office' THEN 'FEDERAL_COORDINATED_HEALTH_CARE_OFFICE'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of acquisition and grants management' THEN 'OFFICE_OF_ACQUISITION_AND_GRANTS_MANAGEMENT'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of acquisition & grants management' THEN 'OFFICE_OF_ACQUISITION_&_GRANTS_MANAGEMENT'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of burden reduction and health informatics' THEN 'OFFICE_OF_BURDEN_REDUCTION_AND_HEALTH_INFORMATICS'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of communications' THEN 'OFFICE_OF_COMMUNICATIONS'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of enterprise data and analytics' THEN 'OFFICE_OF_ENTERPRISE_DATA_AND_ANALYTICS'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of equal opportunity and civil rights' THEN 'OFFICE_OF_EQUAL_OPPORTUNITY_AND_CIVIL_RIGHTS'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of financial management' THEN 'OFFICE_OF_FINANCIAL_MANAGEMENT'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of healthcare experience and interoperability' THEN 'OFFICE_OF_HEALTHCARE_EXPERIENCE_AND_INTEROPERABILITY'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of hearings and inquiries' THEN 'OFFICE_OF_HEARINGS_AND_INQUIRIES'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of human capital' THEN 'OFFICE_OF_HUMAN_CAPITAL'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of information technology' THEN 'OFFICE_OF_INFORMATION_TECHNOLOGY'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of legislation' THEN 'OFFICE_OF_LEGISLATION'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of minority health' THEN 'OFFICE_OF_MINORITY_HEALTH'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of program operations and local engagement' THEN 'OFFICE_OF_PROGRAM_OPERATIONS_AND_LOCAL_ENGAGEMENT'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of security, facilities, and logistics operations' THEN 'OFFICE_OF_SECURITY,_FACILITIES,_AND_LOGISTICS_OPERATIONS'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of strategic operations and regulatory affairs' THEN 'OFFICE_OF_STRATEGIC_OPERATIONS_AND_REGULATORY_AFFAIRS'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of strategy, performance, and results' THEN 'OFFICE_OF_STRATEGY,_PERFORMANCE,_AND_RESULTS'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of support services and operations' THEN 'OFFICE_OF_SUPPORT_SERVICES_AND_OPERATIONS'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of the actuary' THEN 'OFFICE_OF_THE_ACTUARY'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='offices of hearings and inquiries' THEN 'OFFICES_OF_HEARINGS_AND_INQUIRIES'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) = 'other' THEN 'OTHER'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            -- WHEN lower(raw_data.group_component) ='' THEN  ''::SYSTEM_INTAKE_CONTACT_COMPONENT
+            ELSE 'OTHER'::SYSTEM_INTAKE_CONTACT_COMPONENT
+        END AS type_cast_component,
         raw_data.component,
         raw_data.role,
         raw_data.created_at,
