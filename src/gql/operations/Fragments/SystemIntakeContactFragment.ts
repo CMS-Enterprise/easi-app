@@ -4,14 +4,11 @@ export default gql(/* GraphQL */ `
   fragment SystemIntakeContact on SystemIntakeContact {
     systemIntakeId
     id
-    euaUserId
     userAccount {
-      id
-      username
-      commonName
-      email
+      ...UserAccount
     }
     component
     roles
+    isRequester
   }
 `);

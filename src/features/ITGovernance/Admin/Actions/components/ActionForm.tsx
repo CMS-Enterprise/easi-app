@@ -14,7 +14,10 @@ import {
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
-import { EmailNotificationRecipients } from 'gql/generated/graphql';
+import {
+  EmailNotificationRecipients,
+  SystemIntakeContactFragment
+} from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import Breadcrumbs from 'components/Breadcrumbs';
@@ -28,7 +31,6 @@ import RequiredAsterisk from 'components/RequiredAsterisk';
 import RichTextEditor from 'components/RichTextEditor';
 import useMessage from 'hooks/useMessage';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
-import { SystemIntakeContactProps } from 'types/systemIntake';
 
 import ActionsSummary, { ActionsSummaryProps } from './ActionsSummary';
 import EmailRecipientsFields from './EmailRecipientsFields';
@@ -110,13 +112,13 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
   const {
     contacts: { data: contacts }
   } = useSystemIntakeContacts(systemIntakeId);
-  const { requester } = contacts;
+  const { requester } = contacts || {};
 
   const [isLoading, setIsLoading] = useState(true);
 
   // Active contact for adding/verifying recipients
   const [activeContact, setActiveContact] =
-    useState<SystemIntakeContactProps | null>(null);
+    useState<SystemIntakeContactFragment | null>(null);
 
   const {
     control,
@@ -193,7 +195,9 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
             shouldNotifyITGovernance: true,
             shouldNotifyITInvestment: false,
             ...defaultValues?.notificationRecipients,
-            regularRecipientEmails: requester.email ? [requester.email] : []
+            regularRecipientEmails: requester.userAccount.email
+              ? [requester.userAccount.email]
+              : []
           }
         },
         { keepDefaultValues: false }
@@ -213,7 +217,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
     }
   }, [errors, hasErrors]);
 
-  if (isLoading) return <PageLoading />;
+  if (isLoading || !contacts) return <PageLoading />;
 
   const recipients = watch('notificationRecipients');
   const recipientsSelected: boolean =
