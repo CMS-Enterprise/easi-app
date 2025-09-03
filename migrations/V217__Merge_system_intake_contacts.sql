@@ -184,7 +184,7 @@ updated_records AS ( --noqa
     SET
         roles = du.roles_array,
         is_requester = du.isrequester,
-        component = du.group_component,
+        component = du.type_cast_component,
         updated_at = CURRENT_TIMESTAMP,
         created_by = '00000000-0000-0000-0000-000000000000', -- Unknown User Account
         modified_by = '00000001-0001-0001-0001-000000000001' -- System Account
@@ -203,6 +203,12 @@ ALTER TABLE system_intake_contacts
 DROP COLUMN role,
 DROP COLUMN eua_user_id,
 DROP COLUMN common_name;
+
+
+-- Make component column take an enum instead of free text
+ALTER TABLE system_intake_contacts
+ALTER COLUMN component TYPE SYSTEM_INTAKE_CONTACT_COMPONENT
+USING component::SYSTEM_INTAKE_CONTACT_COMPONENT;
 
 -- rename updated_at to modified_at to fit base struct definition
 ALTER TABLE system_intake_contacts
