@@ -66,7 +66,7 @@ func UpdateSystemIntakeContact(
 	getAccountInformation userhelpers.GetAccountInfoFunc,
 ) (*models.CreateSystemIntakeContactPayload, error) {
 	// TODO: Fully implement this. This is a placeholder
-	contact, err := store.GetSystemIntakeContactByID(ctx, input.ID)
+	contact, err := dataloaders.SystemIntakeContactGetByID(ctx, input.ID)
 	if err != nil {
 		return nil, err
 	}

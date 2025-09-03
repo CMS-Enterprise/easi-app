@@ -38,28 +38,6 @@ func SystemIntakeContactGetByIDsLoader(ctx context.Context, np sqlutils.NamedPre
 	return contacts, nil
 }
 
-// GetSystemIntakeContactByID returns a system intake contact by it's ID
-func (s *Store) GetSystemIntakeContactByID(ctx context.Context, id uuid.UUID) (*models.SystemIntakeContact, error) {
-	//TODO this is just a placeholder, refactor and put SQL in it's own package etc. Ideally, make this a data loader
-	var contact models.SystemIntakeContact
-
-	err := namedGet(ctx, s, &contact, sqlqueries.SystemIntakeContact.GetByID, args{
-		"id": id,
-	})
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, &apperrors.QueryError{
-				Err:       err,
-				Model:     models.SystemIntakeContact{},
-				Operation: apperrors.QueryFetch,
-			}
-		}
-		appcontext.ZLogger(ctx).Error("Failed to fetch system intake contact", zap.Error(err), zap.String("id", id.String()))
-		return nil, err
-	}
-	return &contact, nil
-}
-
 // CreateSystemIntakeContact creates a new system intake contact object in the database
 func (s *Store) CreateSystemIntakeContact(ctx context.Context, systemIntakeContact *models.SystemIntakeContact) (*models.SystemIntakeContact, error) {
 	// TODO: this should be re-worked to match base struct paradigms for
