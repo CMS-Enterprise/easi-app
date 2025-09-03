@@ -19,6 +19,8 @@ import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 import { formatContractDate, formatDateLocal } from 'utils/date';
 import formatContractNumbers from 'utils/formatContractNumbers';
+import formatNumber from 'utils/formatNumber';
+import { showSystemVal } from 'utils/showVal';
 
 import './index.scss';
 
@@ -112,7 +114,10 @@ export const SystemIntakeReview = ({
             <div>
               <DescriptionTerm term={t('review.currentAnnualSpending')} />
               <DescriptionDefinition
-                definition={annualSpending.currentAnnualSpending}
+                definition={`$${showSystemVal(
+                  annualSpending.currentAnnualSpending,
+                  { format: formatNumber }
+                )}`}
               />
             </div>
             <div>
@@ -128,7 +133,10 @@ export const SystemIntakeReview = ({
             <div>
               <DescriptionTerm term={t('review.plannedYearOneSpending')} />
               <DescriptionDefinition
-                definition={annualSpending.plannedYearOneSpending}
+                definition={`$${showSystemVal(
+                  annualSpending.plannedYearOneSpending,
+                  { format: formatNumber }
+                )}`}
               />
             </div>
             <div>
