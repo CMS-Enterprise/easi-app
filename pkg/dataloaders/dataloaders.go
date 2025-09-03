@@ -64,41 +64,42 @@ type dataReader struct {
 */
 // you can then edit NewDataloaders below to include your new dataloader in the return
 type Dataloaders struct {
-	BusinessCaseLifecycleCosts       *dataloadgen.Loader[uuid.UUID, []*models.EstimatedLifecycleCost]
-	CedarSystemBookmark              *dataloadgen.Loader[models.BookmarkRequest, bool]
-	CedarSystemLinkedSystemIntakes   *dataloadgen.Loader[models.SystemIntakesByCedarSystemIDsRequest, []*models.SystemIntake]
-	CedarSystemLinkedTRBRequests     *dataloadgen.Loader[models.TRBRequestsByCedarSystemIDsRequest, []*models.TRBRequest]
-	FetchUserInfo                    *dataloadgen.Loader[string, *models.UserInfo]
-	GetUserAccount                   *dataloadgen.Loader[uuid.UUID, *authentication.UserAccount]
-	GetCedarSystem                   *dataloadgen.Loader[string, *models.CedarSystem]
-	SystemIntakeActions              *dataloadgen.Loader[uuid.UUID, []*models.Action]
-	SystemIntakeBusinessCase         *dataloadgen.Loader[uuid.UUID, *models.BusinessCase]
-	SystemIntakeContacts             *dataloadgen.Loader[uuid.UUID, *models.SystemIntakeContact]
-	SystemIntakeContractNumbers      *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeContractNumber]
-	SystemIntakeDocuments            *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeDocument]
-	SystemIntakeFundingSources       *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeFundingSource]
-	SystemIntakeGovReqFeedback       *dataloadgen.Loader[uuid.UUID, []*models.GovernanceRequestFeedback]
-	SystemIntakeGRBReviewers         *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeGRBReviewer]
-	SystemIntakeGRBDiscussionPosts   *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeGRBReviewDiscussionPost]
-	SystemIntakeGRBPresentationLinks *dataloadgen.Loader[uuid.UUID, *models.SystemIntakeGRBPresentationLinks]
-	SystemIntakeNotes                *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeNote]
-	SystemIntakeRelatedSystemIntakes *dataloadgen.Loader[uuid.UUID, []*models.SystemIntake]
-	SystemIntakeRelatedTRBRequests   *dataloadgen.Loader[uuid.UUID, []*models.TRBRequest]
-	SystemIntakeSystems              *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeSystem]
-	TRBFundingSources                *dataloadgen.Loader[uuid.UUID, []*models.TRBFundingSource]
-	TRBRequestAdminNotes             *dataloadgen.Loader[uuid.UUID, []*models.TRBAdminNote]
-	TRBRequestGuidanceLetter         *dataloadgen.Loader[uuid.UUID, *models.TRBGuidanceLetter]
-	TRBRequestAttendees              *dataloadgen.Loader[uuid.UUID, []*models.TRBRequestAttendee]
-	TRBRequestAttendeeByEUA          *dataloadgen.Loader[models.TRBAttendeeByTRBAndEUAIDRequest, *models.TRBRequestAttendee]
-	TRBRequestContractNumbers        *dataloadgen.Loader[uuid.UUID, []*models.TRBRequestContractNumber]
-	TRBRequestDocuments              *dataloadgen.Loader[uuid.UUID, []*models.TRBRequestDocument]
-	TRBRequestForm                   *dataloadgen.Loader[uuid.UUID, *models.TRBRequestForm]
-	TRBRequestFeedback               *dataloadgen.Loader[uuid.UUID, []*models.TRBRequestFeedback]
-	TRBRequestFeedbackNewest         *dataloadgen.Loader[uuid.UUID, *models.TRBRequestFeedback]
-	TRBRequestRelatedSystemIntakes   *dataloadgen.Loader[uuid.UUID, []*models.SystemIntake]
-	TRBRequestRelatedTRBRequests     *dataloadgen.Loader[uuid.UUID, []*models.TRBRequest]
-	TRBRequestSystems                *dataloadgen.Loader[uuid.UUID, []*models.TRBRequestSystem]
-	TRBRequestFormSystemIntakes      *dataloadgen.Loader[uuid.UUID, []*models.SystemIntake]
+	BusinessCaseLifecycleCosts           *dataloadgen.Loader[uuid.UUID, []*models.EstimatedLifecycleCost]
+	CedarSystemBookmark                  *dataloadgen.Loader[models.BookmarkRequest, bool]
+	CedarSystemLinkedSystemIntakes       *dataloadgen.Loader[models.SystemIntakesByCedarSystemIDsRequest, []*models.SystemIntake]
+	CedarSystemLinkedTRBRequests         *dataloadgen.Loader[models.TRBRequestsByCedarSystemIDsRequest, []*models.TRBRequest]
+	FetchUserInfo                        *dataloadgen.Loader[string, *models.UserInfo]
+	GetUserAccount                       *dataloadgen.Loader[uuid.UUID, *authentication.UserAccount]
+	GetCedarSystem                       *dataloadgen.Loader[string, *models.CedarSystem]
+	SystemIntakeActions                  *dataloadgen.Loader[uuid.UUID, []*models.Action]
+	SystemIntakeBusinessCase             *dataloadgen.Loader[uuid.UUID, *models.BusinessCase]
+	SystemIntakeContactsByID             *dataloadgen.Loader[uuid.UUID, *models.SystemIntakeContact]
+	SystemIntakeContactsBySystemIntakeID *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeContact]
+	SystemIntakeContractNumbers          *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeContractNumber]
+	SystemIntakeDocuments                *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeDocument]
+	SystemIntakeFundingSources           *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeFundingSource]
+	SystemIntakeGovReqFeedback           *dataloadgen.Loader[uuid.UUID, []*models.GovernanceRequestFeedback]
+	SystemIntakeGRBReviewers             *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeGRBReviewer]
+	SystemIntakeGRBDiscussionPosts       *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeGRBReviewDiscussionPost]
+	SystemIntakeGRBPresentationLinks     *dataloadgen.Loader[uuid.UUID, *models.SystemIntakeGRBPresentationLinks]
+	SystemIntakeNotes                    *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeNote]
+	SystemIntakeRelatedSystemIntakes     *dataloadgen.Loader[uuid.UUID, []*models.SystemIntake]
+	SystemIntakeRelatedTRBRequests       *dataloadgen.Loader[uuid.UUID, []*models.TRBRequest]
+	SystemIntakeSystems                  *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeSystem]
+	TRBFundingSources                    *dataloadgen.Loader[uuid.UUID, []*models.TRBFundingSource]
+	TRBRequestAdminNotes                 *dataloadgen.Loader[uuid.UUID, []*models.TRBAdminNote]
+	TRBRequestGuidanceLetter             *dataloadgen.Loader[uuid.UUID, *models.TRBGuidanceLetter]
+	TRBRequestAttendees                  *dataloadgen.Loader[uuid.UUID, []*models.TRBRequestAttendee]
+	TRBRequestAttendeeByEUA              *dataloadgen.Loader[models.TRBAttendeeByTRBAndEUAIDRequest, *models.TRBRequestAttendee]
+	TRBRequestContractNumbers            *dataloadgen.Loader[uuid.UUID, []*models.TRBRequestContractNumber]
+	TRBRequestDocuments                  *dataloadgen.Loader[uuid.UUID, []*models.TRBRequestDocument]
+	TRBRequestForm                       *dataloadgen.Loader[uuid.UUID, *models.TRBRequestForm]
+	TRBRequestFeedback                   *dataloadgen.Loader[uuid.UUID, []*models.TRBRequestFeedback]
+	TRBRequestFeedbackNewest             *dataloadgen.Loader[uuid.UUID, *models.TRBRequestFeedback]
+	TRBRequestRelatedSystemIntakes       *dataloadgen.Loader[uuid.UUID, []*models.SystemIntake]
+	TRBRequestRelatedTRBRequests         *dataloadgen.Loader[uuid.UUID, []*models.TRBRequest]
+	TRBRequestSystems                    *dataloadgen.Loader[uuid.UUID, []*models.TRBRequestSystem]
+	TRBRequestFormSystemIntakes          *dataloadgen.Loader[uuid.UUID, []*models.SystemIntake]
 }
 
 // NewDataloaders returns a new set of dataloaders
@@ -109,40 +110,41 @@ func NewDataloaders(store *storage.Store, fetchUserInfos fetchUserInfosFunc, get
 		getCedarSystems: getCedarSystems,
 	}
 	return &Dataloaders{
-		BusinessCaseLifecycleCosts:       dataloadgen.NewLoader(dr.batchBusinessCaseLifecycleCostsByBizCaseIDs),
-		CedarSystemBookmark:              dataloadgen.NewLoader(dr.batchCedarSystemIsBookmarked),
-		CedarSystemLinkedTRBRequests:     dataloadgen.NewLoader(dr.batchCedarSystemLinkedTRBRequests),
-		CedarSystemLinkedSystemIntakes:   dataloadgen.NewLoader(dr.batchCedarSystemLinkedSystemIntakes),
-		FetchUserInfo:                    dataloadgen.NewLoader(dr.fetchUserInfosByEUAUserIDs),
-		GetUserAccount:                   dataloadgen.NewLoader(dr.batchUserAccountsByIDs),
-		GetCedarSystem:                   dataloadgen.NewLoader(dr.getCedarSystemsByIDs),
-		SystemIntakeContacts:             dataloadgen.NewLoader(dr.batchSystemIntakeContactsByID),
-		SystemIntakeActions:              dataloadgen.NewLoader(dr.batchSystemIntakeActionsBySystemIntakeIDs),
-		SystemIntakeBusinessCase:         dataloadgen.NewLoader(dr.batchSystemIntakeBusinessCaseByIntakeIDs),
-		SystemIntakeContractNumbers:      dataloadgen.NewLoader(dr.batchSystemIntakeContractNumbersBySystemIntakeIDs),
-		SystemIntakeDocuments:            dataloadgen.NewLoader(dr.batchSystemIntakeDocumentsBySystemIntakeIDs),
-		SystemIntakeFundingSources:       dataloadgen.NewLoader(dr.batchSystemIntakeFundingSourcesBySystemIntakeIDs),
-		SystemIntakeGovReqFeedback:       dataloadgen.NewLoader(dr.batchSystemIntakeGovReqFeedbackByIntakeIDs),
-		SystemIntakeGRBReviewers:         dataloadgen.NewLoader(dr.batchSystemIntakeGRBReviewersBySystemIntakeIDs),
-		SystemIntakeGRBDiscussionPosts:   dataloadgen.NewLoader(dr.batchSystemIntakeGRBDiscussionPostsBySystemIntakeIDs),
-		SystemIntakeGRBPresentationLinks: dataloadgen.NewLoader(dr.batchSystemIntakeGRBPresentationLinksByIntakeIDs),
-		SystemIntakeNotes:                dataloadgen.NewLoader(dr.batchSystemIntakeNotesBySystemIntakeIDs),
-		SystemIntakeRelatedSystemIntakes: dataloadgen.NewLoader(dr.batchRelatedSystemIntakesBySystemIntakeIDs),
-		SystemIntakeRelatedTRBRequests:   dataloadgen.NewLoader(dr.batchRelatedTRBRequestsBySystemIntakeIDs),
-		SystemIntakeSystems:              dataloadgen.NewLoader(dr.batchSystemIntakeSystemsBySystemIntakeIDs),
-		TRBFundingSources:                dataloadgen.NewLoader(dr.batchTRBFundingSourcesByTRBRequestIDs),
-		TRBRequestAdminNotes:             dataloadgen.NewLoader(dr.batchTRBRequestAdminNotesByTRBRequestIDs),
-		TRBRequestGuidanceLetter:         dataloadgen.NewLoader(dr.batchTRBRequestGuidanceLettersByTRBRequestIDs),
-		TRBRequestAttendees:              dataloadgen.NewLoader(dr.batchTRBRequestAttendeesByTRBRequestIDs),
-		TRBRequestAttendeeByEUA:          dataloadgen.NewLoader(dr.batchTRBRequestAttendeesByEUAIDsAndTRBRequestIDs),
-		TRBRequestContractNumbers:        dataloadgen.NewLoader(dr.batchTRBRequestContractNumbersByTRBRequestIDs),
-		TRBRequestDocuments:              dataloadgen.NewLoader(dr.batchTRBRequestDocumentsByTRBRequestIDs),
-		TRBRequestForm:                   dataloadgen.NewLoader(dr.batchTRBRequestFormsByTRBRequestIDs),
-		TRBRequestFeedback:               dataloadgen.NewLoader(dr.batchTRBRequestFeedbackByTRBRequestIDs),
-		TRBRequestFeedbackNewest:         dataloadgen.NewLoader(dr.batchTRBRequestNewestFeedbackByTRBRequestIDs),
-		TRBRequestRelatedSystemIntakes:   dataloadgen.NewLoader(dr.batchRelatedSystemIntakesByTRBRequestIDs),
-		TRBRequestRelatedTRBRequests:     dataloadgen.NewLoader(dr.batchRelatedTRBRequestsByTRBRequestIDs),
-		TRBRequestSystems:                dataloadgen.NewLoader(dr.batchTRBRequestSystemsByTRBRequestIDs),
-		TRBRequestFormSystemIntakes:      dataloadgen.NewLoader(dr.batchTRBRequestFormSystemIntakesByTRBRequestIDs),
+		BusinessCaseLifecycleCosts:           dataloadgen.NewLoader(dr.batchBusinessCaseLifecycleCostsByBizCaseIDs),
+		CedarSystemBookmark:                  dataloadgen.NewLoader(dr.batchCedarSystemIsBookmarked),
+		CedarSystemLinkedTRBRequests:         dataloadgen.NewLoader(dr.batchCedarSystemLinkedTRBRequests),
+		CedarSystemLinkedSystemIntakes:       dataloadgen.NewLoader(dr.batchCedarSystemLinkedSystemIntakes),
+		FetchUserInfo:                        dataloadgen.NewLoader(dr.fetchUserInfosByEUAUserIDs),
+		GetUserAccount:                       dataloadgen.NewLoader(dr.batchUserAccountsByIDs),
+		GetCedarSystem:                       dataloadgen.NewLoader(dr.getCedarSystemsByIDs),
+		SystemIntakeContactsByID:             dataloadgen.NewLoader(dr.batchSystemIntakeContactsByID),
+		SystemIntakeContactsBySystemIntakeID: dataloadgen.NewLoader(dr.batchSystemIntakeContactsBySystemIntakeID),
+		SystemIntakeActions:                  dataloadgen.NewLoader(dr.batchSystemIntakeActionsBySystemIntakeIDs),
+		SystemIntakeBusinessCase:             dataloadgen.NewLoader(dr.batchSystemIntakeBusinessCaseByIntakeIDs),
+		SystemIntakeContractNumbers:          dataloadgen.NewLoader(dr.batchSystemIntakeContractNumbersBySystemIntakeIDs),
+		SystemIntakeDocuments:                dataloadgen.NewLoader(dr.batchSystemIntakeDocumentsBySystemIntakeIDs),
+		SystemIntakeFundingSources:           dataloadgen.NewLoader(dr.batchSystemIntakeFundingSourcesBySystemIntakeIDs),
+		SystemIntakeGovReqFeedback:           dataloadgen.NewLoader(dr.batchSystemIntakeGovReqFeedbackByIntakeIDs),
+		SystemIntakeGRBReviewers:             dataloadgen.NewLoader(dr.batchSystemIntakeGRBReviewersBySystemIntakeIDs),
+		SystemIntakeGRBDiscussionPosts:       dataloadgen.NewLoader(dr.batchSystemIntakeGRBDiscussionPostsBySystemIntakeIDs),
+		SystemIntakeGRBPresentationLinks:     dataloadgen.NewLoader(dr.batchSystemIntakeGRBPresentationLinksByIntakeIDs),
+		SystemIntakeNotes:                    dataloadgen.NewLoader(dr.batchSystemIntakeNotesBySystemIntakeIDs),
+		SystemIntakeRelatedSystemIntakes:     dataloadgen.NewLoader(dr.batchRelatedSystemIntakesBySystemIntakeIDs),
+		SystemIntakeRelatedTRBRequests:       dataloadgen.NewLoader(dr.batchRelatedTRBRequestsBySystemIntakeIDs),
+		SystemIntakeSystems:                  dataloadgen.NewLoader(dr.batchSystemIntakeSystemsBySystemIntakeIDs),
+		TRBFundingSources:                    dataloadgen.NewLoader(dr.batchTRBFundingSourcesByTRBRequestIDs),
+		TRBRequestAdminNotes:                 dataloadgen.NewLoader(dr.batchTRBRequestAdminNotesByTRBRequestIDs),
+		TRBRequestGuidanceLetter:             dataloadgen.NewLoader(dr.batchTRBRequestGuidanceLettersByTRBRequestIDs),
+		TRBRequestAttendees:                  dataloadgen.NewLoader(dr.batchTRBRequestAttendeesByTRBRequestIDs),
+		TRBRequestAttendeeByEUA:              dataloadgen.NewLoader(dr.batchTRBRequestAttendeesByEUAIDsAndTRBRequestIDs),
+		TRBRequestContractNumbers:            dataloadgen.NewLoader(dr.batchTRBRequestContractNumbersByTRBRequestIDs),
+		TRBRequestDocuments:                  dataloadgen.NewLoader(dr.batchTRBRequestDocumentsByTRBRequestIDs),
+		TRBRequestForm:                       dataloadgen.NewLoader(dr.batchTRBRequestFormsByTRBRequestIDs),
+		TRBRequestFeedback:                   dataloadgen.NewLoader(dr.batchTRBRequestFeedbackByTRBRequestIDs),
+		TRBRequestFeedbackNewest:             dataloadgen.NewLoader(dr.batchTRBRequestNewestFeedbackByTRBRequestIDs),
+		TRBRequestRelatedSystemIntakes:       dataloadgen.NewLoader(dr.batchRelatedSystemIntakesByTRBRequestIDs),
+		TRBRequestRelatedTRBRequests:         dataloadgen.NewLoader(dr.batchRelatedTRBRequestsByTRBRequestIDs),
+		TRBRequestSystems:                    dataloadgen.NewLoader(dr.batchTRBRequestSystemsByTRBRequestIDs),
+		TRBRequestFormSystemIntakes:          dataloadgen.NewLoader(dr.batchTRBRequestFormSystemIntakesByTRBRequestIDs),
 	}
 }
