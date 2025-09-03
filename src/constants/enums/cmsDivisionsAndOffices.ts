@@ -141,9 +141,15 @@ const cmsDivisionsAndOffices = [
     legacy: false
   },
   {
-    acronym: 'OA',
+    acronym: 'OA', // This should be OACT
     name: 'Office of the Actuary',
     enum: 'OFFICE_OF_THE_ACTUARY_OACT',
+    legacy: false
+  },
+  {
+    acronym: 'OA', // Note this currently duplicates OACT
+    name: 'Office of the Administrator',
+    enum: 'OFFICE_OF_THE_ADMINISTRATOR',
     legacy: false
   },
   {

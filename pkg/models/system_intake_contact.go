@@ -52,6 +52,7 @@ const (
 	SystemIntakeContactComponentOfficeOfStrategicOperationsAndRegulatoryAffairsOsora   SystemIntakeContactComponent = "OFFICE_OF_STRATEGIC_OPERATIONS_AND_REGULATORY_AFFAIRS_OSORA"
 	SystemIntakeContactComponentOfficeOfStrategyPerformanceAndResultsOspr              SystemIntakeContactComponent = "OFFICE_OF_STRATEGY_PERFORMANCE_AND_RESULTS_OSPR"
 	SystemIntakeContactComponentOfficeOfTheActuaryOact                                 SystemIntakeContactComponent = "OFFICE_OF_THE_ACTUARY_OACT"
+	SystemIntakeContactComponentOfficeOfTheAdministrator                               SystemIntakeContactComponent = "OFFICE_OF_THE_ADMINISTRATOR"
 	SystemIntakeContactComponentOfficesOfHearingsAndInquiries                          SystemIntakeContactComponent = "OFFICES_OF_HEARINGS_AND_INQUIRIES"
 	SystemIntakeContactComponentOther                                                  SystemIntakeContactComponent = "OTHER"
 	// SystemIntakeContactRolePLACEHOLDER is the default role given. It is removed before returning the frontend, so they know a user needs to select a role

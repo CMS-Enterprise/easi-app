@@ -41,8 +41,14 @@ CREATE TYPE SYSTEM_INTAKE_CONTACT_COMPONENT AS ENUM (
     'OFFICE_OF_STRATEGIC_OPERATIONS_AND_REGULATORY_AFFAIRS_OSORA',
     'OFFICE_OF_STRATEGY_PERFORMANCE_AND_RESULTS_OSPR',
     'OFFICE_OF_THE_ACTUARY_OACT',
+    'OFFICE_OF_THE_ADMINISTRATOR',
     'OFFICES_OF_HEARINGS_AND_INQUIRIES',
-    'OTHER'
+    'OTHER',
+    --These are legacy components not currently selectable
+    'CONSORTIUM_FOR_MEDICAID_AND_CHILDRENS_HEALTH',
+    'CONSORTIUM_FOR_MEDICARE_HEALTH_PLANS_OPERATIONS',
+    'OFFICE_OF_BURDEN_REDUCTION_AND_HEALTH_INFORMATICS',
+    'OFFICE_OF_SUPPORT_SERVICES_AND_OPERATIONS'
 );
 
 COMMENT ON TYPE SYSTEM_INTAKE_CONTACT_COMPONENT IS ' Represents the list of options that a contact can belong to at CMS';
@@ -130,13 +136,13 @@ data_to_update AS (
             WHEN LOWER(raw_data.group_component) ='center for program integrity' THEN 'CENTER_FOR_PROGRAM_INTEGRITY_CPI'::SYSTEM_INTAKE_CONTACT_COMPONENT
             WHEN LOWER(raw_data.group_component) ='cms wide' THEN 'CMS_WIDE'::SYSTEM_INTAKE_CONTACT_COMPONENT
             WHEN LOWER(raw_data.group_component) ='cms-wide' THEN 'CMS_WIDE'::SYSTEM_INTAKE_CONTACT_COMPONENT -- match case
-            -- WHEN LOWER(raw_data.group_component) ='consortium for medicaid and children''s health' THEN 'CONSORTIUM_FOR_MEDICAID_AND_CHILDREN''S_HEALTH'::SYSTEM_INTAKE_CONTACT_COMPONENT -- no matching enum value, please update manually
-            -- WHEN LOWER(raw_data.group_component) ='consortium for medicare health plans operations' THEN 'CONSORTIUM_FOR_MEDICARE_HEALTH_PLANS_OPERATIONS'::SYSTEM_INTAKE_CONTACT_COMPONENT -- no matching enum value, please update manually
+            WHEN LOWER(raw_data.group_component) ='consortium for medicaid and children''s health' THEN 'CONSORTIUM_FOR_MEDICAID_AND_CHILDRENS_HEALTH'::SYSTEM_INTAKE_CONTACT_COMPONENT -- no matching enum value, please update manually
+            WHEN LOWER(raw_data.group_component) ='consortium for medicare health plans operations' THEN 'CONSORTIUM_FOR_MEDICARE_HEALTH_PLANS_OPERATIONS'::SYSTEM_INTAKE_CONTACT_COMPONENT -- no matching enum value, please update manually
             WHEN LOWER(raw_data.group_component) ='emergency preparedness and response operations' THEN 'EMERGENCY_PREPAREDNESS_AND_RESPONSE_OPERATIONS_EPRO'::SYSTEM_INTAKE_CONTACT_COMPONENT
             WHEN LOWER(raw_data.group_component) ='federal coordinated health care office' THEN 'FEDERAL_COORDINATED_HEALTH_CARE_OFFICE'::SYSTEM_INTAKE_CONTACT_COMPONENT
             WHEN LOWER(raw_data.group_component) ='office of acquisition and grants management' THEN 'OFFICE_OF_ACQUISITION_AND_GRANTS_MANAGEMENT_OAGM'::SYSTEM_INTAKE_CONTACT_COMPONENT
             WHEN LOWER(raw_data.group_component) ='office of acquisition & grants management' THEN 'OFFICE_OF_ACQUISITION_AND_GRANTS_MANAGEMENT_OAGM'::SYSTEM_INTAKE_CONTACT_COMPONENT -- match case
-            -- WHEN LOWER(raw_data.group_component) ='office of burden reduction and health informatics' THEN 'OFFICE_OF_BURDEN_REDUCTION_AND_HEALTH_INFORMATICS'::SYSTEM_INTAKE_CONTACT_COMPONENT -- no matching enum value, please update manually
+            WHEN LOWER(raw_data.group_component) ='office of burden reduction and health informatics' THEN 'OFFICE_OF_BURDEN_REDUCTION_AND_HEALTH_INFORMATICS'::SYSTEM_INTAKE_CONTACT_COMPONENT -- no matching enum value, please update manually
             WHEN LOWER(raw_data.group_component) ='office of communications' THEN 'OFFICE_OF_COMMUNICATIONS_OC'::SYSTEM_INTAKE_CONTACT_COMPONENT
             WHEN LOWER(raw_data.group_component) ='office of enterprise data and analytics' THEN 'OFFICE_OF_ENTERPRISE_DATA_AND_ANALYTICS_OEDA'::SYSTEM_INTAKE_CONTACT_COMPONENT
             WHEN LOWER(raw_data.group_component) ='office of equal opportunity and civil rights' THEN 'OFFICE_OF_EQUAL_OPPORTUNITY_AND_CIVIL_RIGHTS'::SYSTEM_INTAKE_CONTACT_COMPONENT
@@ -151,7 +157,7 @@ data_to_update AS (
             WHEN LOWER(raw_data.group_component) ='office of security, facilities, and logistics operations' THEN 'OFFICE_OF_SECURITY_FACILITIES_AND_LOGISTICS_OPERATIONS_OSFLO'::SYSTEM_INTAKE_CONTACT_COMPONENT
             WHEN LOWER(raw_data.group_component) ='office of strategic operations and regulatory affairs' THEN 'OFFICE_OF_STRATEGIC_OPERATIONS_AND_REGULATORY_AFFAIRS_OSORA'::SYSTEM_INTAKE_CONTACT_COMPONENT
             WHEN LOWER(raw_data.group_component) ='office of strategy, performance, and results' THEN 'OFFICE_OF_STRATEGY_PERFORMANCE_AND_RESULTS_OSPR'::SYSTEM_INTAKE_CONTACT_COMPONENT
-            -- WHEN LOWER(raw_data.group_component) ='office of support services and operations' THEN 'OFFICE_OF_SUPPORT_SERVICES_AND_OPERATIONS'::SYSTEM_INTAKE_CONTACT_COMPONENT -- no matching enum value, please update manually
+            WHEN LOWER(raw_data.group_component) ='office of support services and operations' THEN 'OFFICE_OF_SUPPORT_SERVICES_AND_OPERATIONS'::SYSTEM_INTAKE_CONTACT_COMPONENT -- no matching enum value, please update manually
             WHEN LOWER(raw_data.group_component) ='office of the actuary' THEN 'OFFICE_OF_THE_ACTUARY_OACT'::SYSTEM_INTAKE_CONTACT_COMPONENT
             WHEN LOWER(raw_data.group_component) ='offices of hearings and inquiries' THEN 'OFFICES_OF_HEARINGS_AND_INQUIRIES'::SYSTEM_INTAKE_CONTACT_COMPONENT
             WHEN LOWER(raw_data.group_component) = 'other' THEN 'OTHER'::SYSTEM_INTAKE_CONTACT_COMPONENT
