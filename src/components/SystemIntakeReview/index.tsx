@@ -125,7 +125,7 @@ export const SystemIntakeReview = ({
                 term={t('review.currentAnnualSpendingITPortion')}
               />
               <DescriptionDefinition
-                definition={annualSpending.currentAnnualSpendingITPortion}
+                definition={`${annualSpending.currentAnnualSpendingITPortion}%`}
               />
             </div>
           </ReviewRow>
@@ -144,7 +144,7 @@ export const SystemIntakeReview = ({
                 term={t('review.plannedYearOneSpendingITPortion')}
               />
               <DescriptionDefinition
-                definition={annualSpending.plannedYearOneSpendingITPortion}
+                definition={`${annualSpending.plannedYearOneSpendingITPortion}%`}
               />
             </div>
           </ReviewRow>
