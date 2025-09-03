@@ -103,16 +103,8 @@ export type ContractDetailsForm = {
   contract: {
     hasContract: SystemIntakeContractStatus | null;
     contractor: string;
-    startDate: {
-      month: string;
-      day: string;
-      year: string;
-    };
-    endDate: {
-      month: string;
-      day: string;
-      year: string;
-    };
+    startDate: string;
+    endDate: string;
     numbers: string;
   };
 };
