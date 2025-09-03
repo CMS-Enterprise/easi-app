@@ -3,6 +3,30 @@
 // *******
 const cmsDivisionsAndOffices = [
   {
+    acronym: '',
+    name: "Consortium For Medicaid And Children's Health",
+    enum: 'CONSORTIUM_FOR_MEDICAID_AND_CHILDRENS_HEALTH',
+    legacy: true
+  },
+  {
+    acronym: '',
+    name: 'Consortium For Medicare Health Plans Operations',
+    enum: 'CONSORTIUM_FOR_MEDICARE_HEALTH_PLANS_OPERATIONS',
+    legacy: true
+  },
+  {
+    acronym: '',
+    name: 'Office Of Burden Reduction And Health Informatics',
+    enum: 'OFFICE_OF_BURDEN_REDUCTION_AND_HEALTH_INFORMATICS',
+    legacy: true
+  },
+  {
+    acronym: '',
+    name: 'Office Of Support Services And Operations',
+    enum: 'OFFICE_OF_SUPPORT_SERVICES_AND_OPERATIONS',
+    legacy: true
+  },
+  {
     acronym: 'CCSQ',
     name: 'Center for Clinical Standards and Quality',
     enum: 'CENTER_FOR_CLINICAL_STANDARDS_AND_QUALITY_CCSQ',

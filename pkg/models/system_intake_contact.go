@@ -57,6 +57,12 @@ const (
 	SystemIntakeContactComponentOther                                                  SystemIntakeContactComponent = "OTHER"
 	// SystemIntakeContactRolePLACEHOLDER is the default role given. It is removed before returning the frontend, so they know a user needs to select a role
 	SystemIntakeContactComponentPLACEHOLDER SystemIntakeContactComponent = "PLACE_HOLDER"
+
+	// These are legacy options
+	SystemIntakeContactComponentConsortiumForMedicaidAndChildrensHealth     SystemIntakeContactComponent = "CONSORTIUM_FOR_MEDICAID_AND_CHILDRENS_HEALTH"
+	SystemIntakeContactComponentConsortiumForMedicareHealthPlansOperations  SystemIntakeContactComponent = "CONSORTIUM_FOR_MEDICARE_HEALTH_PLANS_OPERATIONS"
+	SystemIntakeContactComponentOfficeOfBurdenReductionAndHealthInformatics SystemIntakeContactComponent = "OFFICE_OF_BURDEN_REDUCTION_AND_HEALTH_INFORMATICS"
+	SystemIntakeContactComponentOfficeOfSupportServicesAndOperations        SystemIntakeContactComponent = "OFFICE_OF_SUPPORT_SERVICES_AND_OPERATIONS"
 )
 
 // SystemIntakeContact represents an EUA user's association with a system intake
