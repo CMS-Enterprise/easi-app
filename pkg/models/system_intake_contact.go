@@ -83,6 +83,14 @@ func NewSystemIntakeContact(userID uuid.UUID, createdBy uuid.UUID) *SystemIntake
 	}
 }
 
+func (r SystemIntakeContact) GetMappingKey() uuid.UUID {
+	return r.SystemIntakeID
+}
+
+func (r SystemIntakeContact) GetMappingVal() *SystemIntakeContact {
+	return &r
+}
+
 // SystemIntakeContacts This is a convenience struct which surfaces information about the contacts associated with a system intake
 type SystemIntakeContacts struct {
 

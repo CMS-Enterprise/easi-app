@@ -13,7 +13,29 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlqueries"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 )
+
+// SystemIntakeContactGetByIDsLoader returns system intake contacts by their IDs
+func SystemIntakeContactGetByIDsLoader(ctx context.Context, np sqlutils.NamedPreparer, _ *zap.Logger, systemIntakeContactIDs []uuid.UUID) ([]*models.SystemIntakeContact, error) {
+	var contacts []*models.SystemIntakeContact
+
+	err := namedSelect(ctx, np, &contacts, sqlqueries.SystemIntakeContact.GetByIDsLoader, args{
+		"ids": systemIntakeContactIDs,
+	})
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, &apperrors.QueryError{
+				Err:       err,
+				Model:     models.SystemIntakeContact{},
+				Operation: apperrors.QueryFetch,
+			}
+		}
+		appcontext.ZLogger(ctx).Error("Failed to fetch system intake contacts by ids", zap.Error(err), zap.Any("ids", systemIntakeContactIDs))
+		return nil, err
+	}
+	return contacts, nil
+}
 
 // GetSystemIntakeContactByID returns a system intake contact by it's ID
 func (s *Store) GetSystemIntakeContactByID(ctx context.Context, id uuid.UUID) (*models.SystemIntakeContact, error) {
