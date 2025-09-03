@@ -484,11 +484,13 @@ const intake = {
     hasContractHelpText:
       'This information helps the Office of Acquisition and Grants Management (OAGM) track work',
     contractors: 'Contractor(s)',
-    periodOfPerformance:
-      'Period of Performance dates (include all option years)',
+    periodOfPerformance: 'Period of performance dates for planned project',
+    performanceStartDate: 'Performance start date',
+    performanceEndDate: 'Performance end date',
     newPeriodOfPerformance:
       'New Period of Performance dates (include all option years)',
-    periodOfPerformanceHelpText: 'For example: 4/10/2020 - 4/9/2025',
+    periodOfPerformanceHelpText:
+      'Specify the dates for the development work or contract adjustment that this Life Cycle ID (LCID) should cover. Include all option years. For example: 4/10/2020 - 4/9/2025',
     hasContractRadioHint:
       'Choosing this option will remove previously-entered contract number(s).',
     ...hasContractLabels
