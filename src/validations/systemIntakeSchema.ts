@@ -103,18 +103,28 @@ const SystemIntakeValidationSchema = {
       then: Yup.array().min(1, 'Add at least one funding source to the request')
     }),
     annualSpending: Yup.object().shape({
-      currentAnnualSpending: Yup.string().required(
-        'Tell us what the current annual spending for the contract'
-      ),
-      currentAnnualSpendingITPortion: Yup.string().required(
-        'Tell us what portion (% of amount) of the current annual spending is IT'
-      ),
-      plannedYearOneSpending: Yup.string().required(
-        'Tell us the planned annual spending of the first year of the new contract?'
-      ),
-      plannedYearOneSpendingITPortion: Yup.string().required(
-        'Tell us what portion (% of amount) planned annual spending of the first year of the new contract is IT?'
-      )
+      currentAnnualSpending: Yup.number()
+        .typeError(
+          'Please enter a valid number for the current annual spending'
+        )
+        .required('Tell us what the current annual spending for the contract')
+        .positive('Annual spending must be a positive number'),
+      currentAnnualSpendingITPortion: Yup.number()
+        .typeError('Please enter a valid number')
+        .required(
+          'Please enter a valid number for the current annual spending'
+        ),
+      plannedYearOneSpending: Yup.number()
+        .typeError(
+          'Please enter a valid number for the planned annual spending'
+        )
+        .required(
+          'Tell us the planned annual spending of the first year of the new contract?'
+        )
+        .positive('Annual spending must be a positive number'),
+      plannedYearOneSpendingITPortion: Yup.number()
+        .typeError('Please enter a valid number')
+        .required('Please enter a valid number for the current annual spending')
     }),
     contract: Yup.object().shape({
       hasContract: Yup.string()

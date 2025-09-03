@@ -7,6 +7,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Fieldset,
   Form,
+  InputGroup,
+  InputPrefix,
+  InputSuffix,
   Label,
   Radio,
   TextInput
@@ -336,13 +339,16 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                   name="annualSpending.currentAnnualSpending"
                   as={FieldErrorMsg}
                 />
-                <TextInput
-                  {...register('annualSpending.currentAnnualSpending')}
-                  ref={null}
-                  id="currentAnnualSpending"
-                  type="text"
-                  maxLength={200}
-                />
+                <InputGroup>
+                  <InputPrefix>$</InputPrefix>
+                  <TextInput
+                    {...register('annualSpending.currentAnnualSpending')}
+                    ref={null}
+                    id="currentAnnualSpending"
+                    type="text"
+                    maxLength={200}
+                  />
+                </InputGroup>
               </FieldGroup>
             </div>
 
@@ -363,13 +369,18 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                   name="annualSpending.currentAnnualSpendingITPortion"
                   as={FieldErrorMsg}
                 />
-                <TextInput
-                  {...register('annualSpending.currentAnnualSpendingITPortion')}
-                  ref={null}
-                  id="currentAnnualSpendingITPortion"
-                  type="text"
-                  maxLength={200}
-                />
+                <InputGroup>
+                  <TextInput
+                    {...register(
+                      'annualSpending.currentAnnualSpendingITPortion'
+                    )}
+                    ref={null}
+                    id="currentAnnualSpendingITPortion"
+                    type="text"
+                    maxLength={200}
+                  />
+                  <InputSuffix>%</InputSuffix>
+                </InputGroup>
               </FieldGroup>
             </div>
           </div>
@@ -394,13 +405,16 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                   name="annualSpending.plannedYearOneSpending"
                   as={FieldErrorMsg}
                 />
-                <TextInput
-                  {...register('annualSpending.plannedYearOneSpending')}
-                  ref={null}
-                  id="plannedYearOneSpending"
-                  type="text"
-                  maxLength={200}
-                />
+                <InputGroup>
+                  <InputPrefix>$</InputPrefix>
+                  <TextInput
+                    {...register('annualSpending.plannedYearOneSpending')}
+                    ref={null}
+                    id="plannedYearOneSpending"
+                    type="text"
+                    maxLength={200}
+                  />
+                </InputGroup>
               </FieldGroup>
             </div>
 
@@ -420,15 +434,18 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                   name="annualSpending.plannedYearOneSpendingITPortion"
                   as={FieldErrorMsg}
                 />
-                <TextInput
-                  {...register(
-                    'annualSpending.plannedYearOneSpendingITPortion'
-                  )}
-                  ref={null}
-                  id="plannedYearOneSpendingITPortion"
-                  type="text"
-                  maxLength={200}
-                />
+                <InputGroup>
+                  <TextInput
+                    {...register(
+                      'annualSpending.plannedYearOneSpendingITPortion'
+                    )}
+                    ref={null}
+                    id="plannedYearOneSpendingITPortion"
+                    type="text"
+                    maxLength={200}
+                  />
+                  <InputSuffix>%</InputSuffix>
+                </InputGroup>
               </FieldGroup>
             </div>
           </div>
