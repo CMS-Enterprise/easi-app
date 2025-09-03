@@ -105,6 +105,16 @@ export type ContractDetailsForm = {
     contractor: string;
     startDate: string;
     endDate: string;
+    // startDate: {
+    //   month: string;
+    //   day: string;
+    //   year: string;
+    // };
+    // endDate: {
+    //   month: string;
+    //   day: string;
+    //   year: string;
+    // };
     numbers: string;
   };
 };
