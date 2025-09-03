@@ -6,6 +6,7 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 
 	"go.uber.org/zap"
 
@@ -21,7 +22,7 @@ func SystemIntakeContactGetByIDsLoader(ctx context.Context, np sqlutils.NamedPre
 	var contacts []*models.SystemIntakeContact
 
 	err := namedSelect(ctx, np, &contacts, sqlqueries.SystemIntakeContact.GetByIDsLoader, args{
-		"ids": systemIntakeContactIDs,
+		"ids": pq.Array(systemIntakeContactIDs),
 	})
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -109,8 +110,8 @@ func (s *Store) FetchSystemIntakeContactsBySystemIntakeID(ctx context.Context, s
 func SystemIntakeContactGetBySystemIntakeIDsLoader(ctx context.Context, np sqlutils.NamedPreparer, _ *zap.Logger, systemIntakeIDs []uuid.UUID) ([]*models.SystemIntakeContact, error) {
 	var contacts []*models.SystemIntakeContact
 
-	err := namedSelect(ctx, np, &contacts, sqlqueries.SystemIntakeContact.GetByIDsLoader, args{
-		"system_intake_ids": systemIntakeIDs,
+	err := namedSelect(ctx, np, &contacts, sqlqueries.SystemIntakeContact.GetBySystemIntakeIDsLoader, args{
+		"system_intake_ids": pq.Array(systemIntakeIDs),
 	})
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {

@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 )
 
 // SystemIntakeContactRole is the various roles that a user can have as a contact on a system intake
@@ -73,6 +74,21 @@ type SystemIntakeContact struct {
 	Component      SystemIntakeContactComponent       `json:"component" db:"component"`
 	Roles          EnumArray[SystemIntakeContactRole] `json:"roles" db:"roles"`
 	IsRequester    bool                               `json:"isRequester" db:"is_requester"`
+}
+
+// FilteredComponent returns the component without the PLACEHOLDER component
+func (r *SystemIntakeContact) FilteredComponent() *SystemIntakeContactComponent {
+	if r.Component == SystemIntakeContactComponentPLACEHOLDER {
+		return nil
+	}
+	return &r.Component
+}
+
+// FilteredRoles returns the roles without the PLACEHOLDER role
+func (r *SystemIntakeContact) FilteredRoles() []SystemIntakeContactRole {
+	return lo.Filter(r.Roles, func(role SystemIntakeContactRole, _ int) bool {
+		return role != SystemIntakeContactRolePLACEHOLDER
+	})
 }
 
 // NewSystemIntakeContact creates a new SystemIntakeContact with the related userAccount

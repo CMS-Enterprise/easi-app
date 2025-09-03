@@ -1904,8 +1904,8 @@ type SystemIntakeContact {
   userID: UUID!
   userAccount: UserAccount!
   systemIntakeId: UUID!
-  component: SystemIntakeContactComponent
-  roles: [SystemIntakeContactRole!]!
+  component: SystemIntakeContactComponent @goField(forceResolver: true)
+  roles: [SystemIntakeContactRole!]! @goField(forceResolver: true)
   isRequester: Boolean!
 
   # Meta Data
@@ -3241,6 +3241,7 @@ directive @goModel(
 
 # https://gqlgen.com/config/#inline-config-with-directives
 directive @goField(
+  forceResolver: Boolean
   omittable: Boolean
 ) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
 

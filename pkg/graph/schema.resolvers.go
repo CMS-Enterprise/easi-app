@@ -2078,10 +2078,20 @@ func (r *systemIntakeResolver) Contacts(ctx context.Context, obj *models.SystemI
 	return resolvers.GetSystemIntakeContactsBySystemIntakeID(ctx, r.store, obj.ID)
 }
 
+// Component is the resolver for the component field.
+func (r *systemIntakeContactResolver) Component(ctx context.Context, obj *models.SystemIntakeContact) (*models.SystemIntakeContactComponent, error) {
+	if obj == nil {
+		return nil, nil
+	}
+	return obj.FilteredComponent(), nil
+}
+
 // Roles is the resolver for the roles field.
 func (r *systemIntakeContactResolver) Roles(ctx context.Context, obj *models.SystemIntakeContact) ([]models.SystemIntakeContactRole, error) {
-	//TODO: EASI-4934: See if we can make this auto resolve
-	return obj.Roles, nil
+	if obj == nil {
+		return nil, nil
+	}
+	return obj.FilteredRoles(), nil
 }
 
 // DocumentType is the resolver for the documentType field.

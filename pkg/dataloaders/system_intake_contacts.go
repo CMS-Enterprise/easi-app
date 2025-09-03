@@ -34,7 +34,7 @@ func (d *dataReader) batchSystemIntakeContactsByID(ctx context.Context, ids []uu
 
 }
 
-func GetSystemIntakeContactByID(ctx context.Context, systemIntakeID uuid.UUID) (*models.SystemIntakeContact, error) {
+func SystemIntakeContactGetByID(ctx context.Context, systemIntakeID uuid.UUID) (*models.SystemIntakeContact, error) {
 	loaders, ok := loadersFromCTX(ctx)
 	if !ok {
 		return nil, errors.New("unexpected nil loaders in GetSystemIntakeContactByID")
@@ -54,7 +54,7 @@ func (d *dataReader) batchSystemIntakeContactsBySystemIntakeID(ctx context.Conte
 	return helpers.OneToMany(systemIntakeIDs, data), nil
 }
 
-func GetSystemIntakeContactBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeContact, error) {
+func SystemIntakeContactGetBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeContact, error) {
 	loaders, ok := loadersFromCTX(ctx)
 	if !ok {
 		return nil, errors.New("unexpected nil loaders in GetSystemIntakeContactBySystemIntakeID")

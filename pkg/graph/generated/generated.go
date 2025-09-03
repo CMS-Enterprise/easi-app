@@ -1510,6 +1510,7 @@ type SystemIntakeResolver interface {
 	Contacts(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeContacts, error)
 }
 type SystemIntakeContactResolver interface {
+	Component(ctx context.Context, obj *models.SystemIntakeContact) (*models.SystemIntakeContactComponent, error)
 	Roles(ctx context.Context, obj *models.SystemIntakeContact) ([]models.SystemIntakeContactRole, error)
 }
 type SystemIntakeDocumentResolver interface {
@@ -10735,8 +10736,8 @@ type SystemIntakeContact {
   userID: UUID!
   userAccount: UserAccount!
   systemIntakeId: UUID!
-  component: SystemIntakeContactComponent
-  roles: [SystemIntakeContactRole!]!
+  component: SystemIntakeContactComponent @goField(forceResolver: true)
+  roles: [SystemIntakeContactRole!]! @goField(forceResolver: true)
   isRequester: Boolean!
 
   # Meta Data
@@ -12072,6 +12073,7 @@ directive @goModel(
 
 # https://gqlgen.com/config/#inline-config-with-directives
 directive @goField(
+  forceResolver: Boolean
   omittable: Boolean
 ) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
 
@@ -48978,7 +48980,7 @@ func (ec *executionContext) _SystemIntakeContact_component(ctx context.Context, 
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Component, nil
+		return ec.resolvers.SystemIntakeContact().Component(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -48987,17 +48989,17 @@ func (ec *executionContext) _SystemIntakeContact_component(ctx context.Context, 
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(models.SystemIntakeContactComponent)
+	res := resTmp.(*models.SystemIntakeContactComponent)
 	fc.Result = res
-	return ec.marshalOSystemIntakeContactComponent2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactComponent(ctx, field.Selections, res)
+	return ec.marshalOSystemIntakeContactComponent2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactComponent(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeContact_component(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeContact",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type SystemIntakeContactComponent does not have child fields")
 		},
@@ -75646,7 +75648,38 @@ func (ec *executionContext) _SystemIntakeContact(ctx context.Context, sel ast.Se
 				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "component":
-			out.Values[i] = ec._SystemIntakeContact_component(ctx, field, obj)
+			field := field
+
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntakeContact_component(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "roles":
 			field := field
 
@@ -85569,16 +85602,22 @@ func (ec *executionContext) marshalOSystemIntakeContact2ᚖgithubᚗcomᚋcmsᚑ
 	return ec._SystemIntakeContact(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOSystemIntakeContactComponent2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactComponent(ctx context.Context, v any) (models.SystemIntakeContactComponent, error) {
+func (ec *executionContext) unmarshalOSystemIntakeContactComponent2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactComponent(ctx context.Context, v any) (*models.SystemIntakeContactComponent, error) {
+	if v == nil {
+		return nil, nil
+	}
 	tmp, err := graphql.UnmarshalString(v)
 	res := models.SystemIntakeContactComponent(tmp)
-	return res, graphql.ErrorOnPath(ctx, err)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOSystemIntakeContactComponent2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactComponent(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeContactComponent) graphql.Marshaler {
+func (ec *executionContext) marshalOSystemIntakeContactComponent2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContactComponent(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeContactComponent) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
 	_ = sel
 	_ = ctx
-	res := graphql.MarshalString(string(v))
+	res := graphql.MarshalString(string(*v))
 	return res
 }
 
