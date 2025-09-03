@@ -105,6 +105,27 @@ func (s *Store) FetchSystemIntakeContactsBySystemIntakeID(ctx context.Context, s
 	return results, nil
 }
 
+// SystemIntakeContactGetBySystemIntakeIDsLoader returns system intake contacts by their foreign key, the system intake ID
+func SystemIntakeContactGetBySystemIntakeIDsLoader(ctx context.Context, np sqlutils.NamedPreparer, _ *zap.Logger, systemIntakeIDs []uuid.UUID) ([]*models.SystemIntakeContact, error) {
+	var contacts []*models.SystemIntakeContact
+
+	err := namedSelect(ctx, np, &contacts, sqlqueries.SystemIntakeContact.GetByIDsLoader, args{
+		"system_intake_ids": systemIntakeIDs,
+	})
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, &apperrors.QueryError{
+				Err:       err,
+				Model:     models.SystemIntakeContact{},
+				Operation: apperrors.QueryFetch,
+			}
+		}
+		appcontext.ZLogger(ctx).Error("Failed to fetch system intake contacts by ids", zap.Error(err), zap.Any("ids", systemIntakeIDs))
+		return nil, err
+	}
+	return contacts, nil
+}
+
 // DeleteSystemIntakeContact deletes an existing system intake contact object in the database
 func (s *Store) DeleteSystemIntakeContact(ctx context.Context, id uuid.UUID) (*models.SystemIntakeContact, error) {
 	deletedContact := &models.SystemIntakeContact{}

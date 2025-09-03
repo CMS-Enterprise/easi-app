@@ -7,13 +7,15 @@ import (
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 func (d *dataReader) batchSystemIntakeContactsByID(ctx context.Context, ids []uuid.UUID) ([]*models.SystemIntakeContact, []error) {
-	data, err := storage.SystemIntakeContactGetByIDsLoader(ctx, d.db, nil, ids)
+	logger := appcontext.ZLogger(ctx)
+	data, err := storage.SystemIntakeContactGetByIDsLoader(ctx, d.db, logger, ids)
 
 	if err != nil {
 		return nil, []error{err}
@@ -42,7 +44,8 @@ func GetSystemIntakeContactByID(ctx context.Context, systemIntakeID uuid.UUID) (
 }
 
 func (d *dataReader) batchSystemIntakeContactsBySystemIntakeID(ctx context.Context, systemIntakeIDs []uuid.UUID) ([][]*models.SystemIntakeContact, []error) {
-	data, err := storage.SystemIntakeContactGetByIDsLoader(ctx, d.db, nil, systemIntakeIDs)
+	logger := appcontext.ZLogger(ctx)
+	data, err := storage.SystemIntakeContactGetBySystemIntakeIDsLoader(ctx, d.db, logger, systemIntakeIDs)
 
 	if err != nil {
 		return nil, []error{err}
