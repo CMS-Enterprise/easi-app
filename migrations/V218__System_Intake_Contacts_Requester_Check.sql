@@ -14,7 +14,8 @@ BEGIN
             SELECT 1
             FROM system_intake_contacts
             WHERE system_intake_id = OLD.system_intake_id
-              AND is_requester = TRUE
+                AND is_requester = TRUE
+                AND id <> OLD.id
         ) THEN
             RAISE EXCEPTION 'Cannot delete a primary contact requester when no other requester exists';
         END IF;
@@ -34,7 +35,6 @@ BEGIN
     END IF;
 
     -- Part 2: If a new requester is selected, deselect the old requester for that system intake
-    -- TODO should this perhaps be it's own trigger?
     IF  NEW.is_requester = TRUE THEN
         UPDATE system_intake_contacts
         SET is_requester = FALSE
@@ -51,21 +51,21 @@ END
 -- Create and register the triggers
 -- Run this on UPDATE 
 CREATE TRIGGER system_intake_contacts_requester_update
-BEFORE UPDATE ON system_intake_contacts
+AFTER UPDATE ON system_intake_contacts
 FOR EACH ROW
 WHEN (OLD.is_requester = TRUE OR NEW.is_requester = TRUE)
 EXECUTE FUNCTION check_system_intake_contacts_requester();
     
 -- Run this on INSERT
 CREATE TRIGGER system_intake_contacts_requester_insert
-BEFORE INSERT ON system_intake_contacts
+AFTER INSERT ON system_intake_contacts
 FOR EACH ROW
 WHEN (NEW.is_requester = TRUE)
 EXECUTE FUNCTION check_system_intake_contacts_requester();
 
 -- Run on Delete
 CREATE TRIGGER system_intake_contacts_requester_delete
-BEFORE DELETE ON system_intake_contacts
+AFTER DELETE ON system_intake_contacts
 FOR EACH ROW
 WHEN (OLD.is_requester = TRUE)
 EXECUTE FUNCTION check_system_intake_contacts_requester();
