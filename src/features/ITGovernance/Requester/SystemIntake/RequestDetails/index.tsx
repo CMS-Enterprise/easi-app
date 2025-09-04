@@ -28,7 +28,6 @@ import {
 import Alert from 'components/Alert';
 import AutoSave from 'components/AutoSave';
 import CollapsableLink from 'components/CollapsableLink';
-import DateTimePicker from 'components/DateTimePicker';
 import { useEasiForm } from 'components/EasiForm';
 import { ErrorAlert, ErrorAlertMessage } from 'components/ErrorAlert';
 import FeedbackBanner from 'components/FeedbackBanner';
@@ -370,7 +369,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
               ))}
             </ul>
           </CollapsableLink>
-          {watch('currentStage') === processStages[1].name && (
+          {/* {watch('currentStage') === processStages[1].name && (
             <Controller
               control={control}
               name="usingSoftware"
@@ -395,7 +394,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                     <DateTimePicker
                       id="test"
                       name="test"
-                      // TODO: update this gary
+                      // TODO: Update this when this new section gets added
                       value="12/12/2025"
                       onChange={(date: string | null) => field.onChange(date)}
                     />
@@ -403,7 +402,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                 );
               }}
             />
-          )}
+          )} */}
         </FieldGroup>
 
         <hr className="margin-bottom-1 margin-top-4 opacity-30" aria-hidden />
