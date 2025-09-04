@@ -5,7 +5,9 @@ exports[`Additional contacts component > displays form when editing contact 1`] 
   <div
     class="system-intake-contacts"
   >
-    <h4>
+    <h4
+      class="margin-top-0"
+    >
       Additional team members and project points of contact
     </h4>
     <div
@@ -455,7 +457,9 @@ exports[`Additional contacts component > renders without crashing 1`] = `
   <div
     class="system-intake-contacts"
   >
-    <h4>
+    <h4
+      class="margin-top-0"
+    >
       Additional team members and project points of contact
     </h4>
     <div

@@ -270,12 +270,23 @@ exports[`The governance overview page > matches the snapshot (w/ id param) 1`] =
         </ol>
       </div>
     </div>
-    <a
-      class="usa-button margin-bottom-5"
-      href="/linked-systems/test-intake-guid"
+    <div
+      class="margin-top-4"
     >
-      Get started
-    </a>
+      <a
+        class="usa-button
+            usa-button--outline"
+        href="/system/request-type/test-intake-guid"
+      >
+        Back
+      </a>
+      <a
+        class="usa-button"
+        href="/linked-systems/test-intake-guid"
+      >
+        Continue
+      </a>
+    </div>
   </main>
 </DocumentFragment>
 `;

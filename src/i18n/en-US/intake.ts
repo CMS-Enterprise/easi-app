@@ -547,6 +547,9 @@ const intake = {
     },
     sendIntakeRequest: 'Send my Intake Request',
     saveWithoutSubmitting: 'Save and exit without submitting'
+  },
+  viewIntakeRequest: {
+    heading: 'View submitted Intake Request'
   }
 };
 

@@ -35,7 +35,7 @@ exports[`IntakeRequestCard > renders default version without crashing 1`] = `
             <dt
               class="text-bold margin-bottom-05 font-body-sm margin-bottom-0"
             >
-              Where are you in the process?
+              What is your project status?
             </dt>
             <dd
               class="description-definition margin-0 font-body-md text-light"
