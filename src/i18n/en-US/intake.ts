@@ -502,6 +502,7 @@ const intake = {
     notSubmitted: 'Not yet submitted',
     systemRequest: 'System Request',
     submissionDate: 'Submission date',
+    requestType: 'Request type',
     contactDetails: 'Contact details',
     requesterComponent: 'Requester component',
     cmsBusinessOwnerName: 'CMS Business Owner',
