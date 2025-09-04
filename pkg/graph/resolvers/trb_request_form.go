@@ -100,7 +100,7 @@ func UpdateTRBRequestForm(
 		}
 	}
 
-	err = ApplyChangesAndMetaData(input, form, appcontext.Principal(ctx))
+	err = BaseStructPreUpdate(input, form, appcontext.Principal(ctx), true)
 	if err != nil {
 		return nil, err
 	}

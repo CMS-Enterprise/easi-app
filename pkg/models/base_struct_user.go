@@ -4,6 +4,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
 )
 
 //TODO: This will replace base struct when the user table is fully implemented
@@ -39,6 +41,14 @@ func (b BaseStructUser) GetID() uuid.UUID {
 func (b BaseStructUser) GetModifiedBy() *string {
 	modifiedBy := b.ModifiedBy.String()
 	return &modifiedBy
+}
+
+// SetModifiedBy sets the modifiedBy information based off a Principal object
+func (b *BaseStructUser) SetModifiedBy(principal authentication.Principal) error {
+	userID := principal.Account().ID
+
+	b.ModifiedBy = &userID
+	return nil
 }
 
 // GetCreatedBy implements the CreatedBy property
