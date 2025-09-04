@@ -222,7 +222,10 @@ const LinkedSystemsTable = ({
         <thead>
           {headerGroups.map(headerGroup => {
             return (
-              <tr {...headerGroup.getHeaderGroupProps()}>
+              <tr
+                {...headerGroup.getHeaderGroupProps()}
+                key={{ ...headerGroup.getHeaderGroupProps() }.key}
+              >
                 {headerGroup.headers.map((column, index) => (
                   <th
                     aria-sort={getColumnSortStatus(column)}
