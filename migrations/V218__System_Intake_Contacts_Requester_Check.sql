@@ -22,6 +22,7 @@ BEGIN
             FROM system_intake_contacts
             WHERE system_intake_id = NEW.system_intake_id
               AND is_requester = TRUE
+            --   AND id <> NEW.id -- TODO, this needs work. We need to allow unsetting other requesters, but also require that one exists
         ) THEN
             RAISE EXCEPTION 'Cannot remove primary requester role when no other requester exists';
         END IF;
