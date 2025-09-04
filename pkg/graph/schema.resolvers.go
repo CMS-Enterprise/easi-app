@@ -1613,7 +1613,7 @@ func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID st
 
 // SystemIntakeContacts is the resolver for the systemIntakeContacts field.
 func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) (*models.SystemIntakeContacts, error) {
-	return resolvers.GetSystemIntakeContactsBySystemIntakeID(ctx, id)
+	return resolvers.SystemIntakeContactsGetBySystemIntakeID(ctx, id)
 }
 
 // TrbRequest is the resolver for the trbRequest field.
@@ -2075,7 +2075,7 @@ func (r *systemIntakeResolver) SystemIntakeSystems(ctx context.Context, obj *mod
 
 // Contacts is the resolver for the contacts field.
 func (r *systemIntakeResolver) Contacts(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeContacts, error) {
-	return resolvers.GetSystemIntakeContactsBySystemIntakeID(ctx, obj.ID)
+	return resolvers.SystemIntakeContactsGetBySystemIntakeID(ctx, obj.ID)
 }
 
 // Component is the resolver for the component field.
