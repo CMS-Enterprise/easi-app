@@ -22,6 +22,7 @@ import FeedbackBanner from 'components/FeedbackBanner';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
+import SystemIntakeContactsTable from 'components/SystemIntakeContactsTable';
 import { GovernanceTeamsForm } from 'types/systemIntake';
 import flattenFormErrors from 'utils/flattenFormErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
@@ -187,7 +188,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         )}
         className="maxw-none tablet:grid-col-6 margin-bottom-7"
       >
-        {/* Contacts table & modal */}
+        <SystemIntakeContactsTable systemIntakeId={systemIntake.id} />
 
         <EasiFormProvider<GovernanceTeamsForm> {...form}>
           <GovernanceTeams />
