@@ -33,7 +33,7 @@ const governanceTeams = Yup.object().shape({
     .shape({
       technicalReviewBoard: govTeam('Technical Review Board'),
       securityPrivacy: govTeam("OIT's Security and Privacy Group"),
-      clearanceOfficer: govTeam('508 Clearance Officer')
+      clearanceOfficer508: govTeam('508 Clearance Officer')
     })
     .test(
       'min',

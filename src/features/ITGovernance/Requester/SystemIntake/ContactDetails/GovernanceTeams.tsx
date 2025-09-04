@@ -115,7 +115,10 @@ const GovernanceTeams = () => {
                     }
                     className="margin-top-1 margin-bottom-2 margin-left-4"
                   >
-                    <Label htmlFor={`governanceTeam-${key}-collaborator`}>
+                    <Label
+                      htmlFor={`governanceTeam-${key}-collaborator`}
+                      required
+                    >
                       {t(`${acronym} Collaborator Name`)}
                     </Label>
 
