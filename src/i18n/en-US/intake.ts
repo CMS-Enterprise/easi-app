@@ -241,6 +241,7 @@ const intake = {
     heading: 'Start an IT Governance request',
     subheading: 'What is this request for?',
     start: 'Start',
+    continue: 'Continue',
     cards: {
       NEW: {
         heading: 'Add a system, service, or project',

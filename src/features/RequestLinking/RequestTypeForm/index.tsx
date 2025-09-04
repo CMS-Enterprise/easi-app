@@ -36,7 +36,10 @@ const RequestTypeForm = () => {
   // Set isNew from checking loc state false explicitly
   // This is done in such a way as a stop gap to fix the problem where
   // changing Intake Request Types, from the overview page, will create new Intake Requests
-  const { state } = useLocation<{ isNew?: boolean }>();
+  const { state } = useLocation<{
+    isNew?: boolean;
+    isFromTaskList?: boolean;
+  }>();
   const isNew = state?.isNew !== false;
 
   const { t } = useTranslation('intake');
@@ -47,6 +50,7 @@ const RequestTypeForm = () => {
   const [edit] = useUpdateSystemIntakeRequestTypeMutation();
 
   const linkCedarSystemId = useLinkCedarSystemIdQueryParam();
+  const taskListUrl = `/governance-task-list/${systemId}`;
 
   const handleCreateIntake = (requestType: SystemIntakeRequestType) => {
     oktaAuth.getUser().then((user: any) => {
@@ -187,14 +191,25 @@ const RequestTypeForm = () => {
                 </CollapsableLink>
               </CardBody>
               <CardFooter>
-                <Button
-                  type="button"
-                  className="margin-top-2 margin-right-1"
-                  data-testid={`start-button--${type.toLowerCase()}`}
-                  onClick={() => handleCreateIntake(type)}
-                >
-                  {t('requestTypeForm.start')}
-                </Button>
+                {isNew ? (
+                  <Button
+                    type="button"
+                    className="margin-top-2 margin-right-1"
+                    data-testid={`start-button--${type.toLowerCase()}`}
+                    onClick={() => handleCreateIntake(type)}
+                  >
+                    {t('requestTypeForm.start')}
+                  </Button>
+                ) : (
+                  <Button
+                    type="button"
+                    className="margin-top-2 margin-right-1"
+                    data-testid={`continue-button--${type.toLowerCase()}`}
+                    onClick={() => history.push(taskListUrl)}
+                  >
+                    {t('requestTypeForm.continue')}
+                  </Button>
+                )}
               </CardFooter>
             </Card>
           );

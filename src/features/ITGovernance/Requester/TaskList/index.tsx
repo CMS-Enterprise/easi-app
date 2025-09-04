@@ -160,7 +160,7 @@ function GovernanceTaskList() {
                   to={{
                     pathname: `/system/request-type/${systemId || ''}`,
                     search: linkCedarSystemIdQs,
-                    state: { isNew }
+                    state: { isNew, isFromTaskList: true }
                   }}
                   className="text-primary"
                 >
