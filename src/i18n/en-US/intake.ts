@@ -535,9 +535,9 @@ const intake = {
     plannedYearOneSpendingITPortion:
       'What portion (% or amount) of the planned annual spending of the first year of the new contract is IT?',
     contract: 'Do you already have a contract in place to support this effort?',
-    contractors: 'Contractors',
+    contractors: 'Contractor(s)',
     contractVehicle: 'Contract vehicle',
-    contractNumber: 'Contract number',
+    contractNumber: 'Contract number(s)',
     noContractNumber: 'No contract number specified',
     performance: 'Period of performance dates for planned project',
     notEntered: 'Not Entered',
