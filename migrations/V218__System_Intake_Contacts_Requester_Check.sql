@@ -2,6 +2,11 @@
 -- 2. If a new requester is selected, deselect the old requester for that system intake
 CREATE OR REPLACE FUNCTION check_system_intake_contacts_requester() RETURNS TRIGGER AS $requester_check$
 BEGIN
+    -- Avoid recursion by checking pg_trigger_depth()
+    -- depth of 0 means not created from inside a trigger
+    IF pg_trigger_depth() > 1 THEN
+        RETURN NEW;
+    END IF;
 
   --- Part 0 : Don't allow deletes of contacts that are the only requester.
     IF TG_OP = 'DELETE' AND OLD.is_requester = TRUE THEN
@@ -22,7 +27,7 @@ BEGIN
             FROM system_intake_contacts
             WHERE system_intake_id = NEW.system_intake_id
               AND is_requester = TRUE
-            --   AND id <> NEW.id -- TODO, this needs work. We need to allow unsetting other requesters, but also require that one exists
+              AND id <> NEW.id
         ) THEN
             RAISE EXCEPTION 'Cannot remove primary requester role when no other requester exists';
         END IF;
