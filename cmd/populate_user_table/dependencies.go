@@ -74,7 +74,6 @@ func newDB(dbConfig storage.DBConfig) (*sqlx.DB, error) {
 	var err error
 	if dbConfig.UseIAM {
 		//// Connect using the IAM DB package
-		//sess := session.Must(session.NewSession())
 		awsConfig, err := config.LoadDefaultConfig(context.TODO())
 		if err != nil {
 			return nil, err
