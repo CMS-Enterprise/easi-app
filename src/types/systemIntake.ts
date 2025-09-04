@@ -67,16 +67,6 @@ export type SystemIntakeForm = {
   requesterNameAndComponent: string;
 } & ContractDetailsForm;
 
-export type ContactDetailsForm = {
-  requester: ContactFields;
-  businessOwner: ContactFields & { sameAsRequester: boolean };
-  productManager: ContactFields & { sameAsRequester: boolean };
-  governanceTeams: {
-    isPresent: boolean;
-    teams: CollaboratorFields;
-  };
-};
-
 /** Funding source formatted for API */
 export type FundingSource = FundingSourceFragmentFragment;
 
@@ -171,6 +161,11 @@ export type CollaboratorFields = Record<
     collaborator: string;
   }
 >;
+
+export type GovernanceTeamsForm = {
+  isPresent: boolean;
+  teams: CollaboratorFields;
+};
 
 // TODO EASI-4937 - these types will be removed with useSystemIntakeContacts hook
 // in favor of using the actual queries and mutations
