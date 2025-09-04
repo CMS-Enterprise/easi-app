@@ -249,7 +249,8 @@ func createSystemIntakeContact(
 	logger := appcontext.ZLogger(ctx)
 	userPrincipal := appcontext.Principal(ctx)
 	input := models.CreateSystemIntakeContactInput{
-		Component:      component,
+		//TODO, address the input types
+		Component:      models.SystemIntakeContactComponent(component),
 		Roles:          []models.SystemIntakeContactRole{models.SystemIntakeContactRole(role)},
 		EuaUserID:      euaUserID,
 		SystemIntakeID: intake.ID,
@@ -271,7 +272,7 @@ func updateSystemIntakeContact(
 	logger := appcontext.ZLogger(ctx)
 	userPrincipal := appcontext.Principal(ctx)
 	input := models.UpdateSystemIntakeContactInput{
-		Component: component,
+		Component: models.SystemIntakeContactComponent(component),
 		Roles:     []models.SystemIntakeContactRole{models.SystemIntakeContactRole(role)},
 		// EuaUserID: euaUserID,
 	}

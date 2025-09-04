@@ -44,7 +44,7 @@ func CreateSystemIntake(
 		Roles: []models.SystemIntakeContactRole{
 			models.SystemIntakeContactRolePLACEHOLDER,
 		},
-		Component:   string(models.SystemIntakeContactRolePLACEHOLDER),
+		Component:   models.SystemIntakeContactComponentPLACEHOLDER,
 		IsRequester: true,
 	},
 		getAccountInformation,

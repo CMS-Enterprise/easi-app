@@ -6,6 +6,7 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 
 	"go.uber.org/zap"
 
@@ -13,15 +14,15 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlqueries"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 )
 
-// GetSystemIntakeContactByID returns a system intake contact by it's ID
-func (s *Store) GetSystemIntakeContactByID(ctx context.Context, id uuid.UUID) (*models.SystemIntakeContact, error) {
-	//TODO this is just a placeholder, refactor and put SQL in it's own package etc. Ideally, make this a data loader
-	var contact models.SystemIntakeContact
+// SystemIntakeContactGetByIDsLoader returns system intake contacts by their IDs
+func SystemIntakeContactGetByIDsLoader(ctx context.Context, np sqlutils.NamedPreparer, _ *zap.Logger, systemIntakeContactIDs []uuid.UUID) ([]*models.SystemIntakeContact, error) {
+	var contacts []*models.SystemIntakeContact
 
-	err := namedGet(ctx, s, &contact, sqlqueries.SystemIntakeContact.GetByID, args{
-		"id": id,
+	err := namedSelect(ctx, np, &contacts, sqlqueries.SystemIntakeContact.GetByIDsLoader, args{
+		"ids": pq.Array(systemIntakeContactIDs),
 	})
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -31,10 +32,10 @@ func (s *Store) GetSystemIntakeContactByID(ctx context.Context, id uuid.UUID) (*
 				Operation: apperrors.QueryFetch,
 			}
 		}
-		appcontext.ZLogger(ctx).Error("Failed to fetch system intake contact", zap.Error(err), zap.String("id", id.String()))
+		appcontext.ZLogger(ctx).Error("Failed to fetch system intake contacts by ids", zap.Error(err), zap.Any("ids", systemIntakeContactIDs))
 		return nil, err
 	}
-	return &contact, nil
+	return contacts, nil
 }
 
 // CreateSystemIntakeContact creates a new system intake contact object in the database
@@ -65,22 +66,25 @@ func (s *Store) UpdateSystemIntakeContact(ctx context.Context, systemIntakeConta
 	return retContact, nil
 }
 
-// FetchSystemIntakeContactsBySystemIntakeID queries the DB for all the system intake contacts matching the given system intake ID
-func (s *Store) FetchSystemIntakeContactsBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeContact, error) {
-	results := []*models.SystemIntakeContact{}
-	err := namedSelect(ctx, s, &results, sqlqueries.SystemIntakeContact.GetBySystemIntakeID, args{
-		"system_intake_id": systemIntakeID,
-	})
+// SystemIntakeContactGetBySystemIntakeIDsLoader returns system intake contacts by their foreign key, the system intake ID
+func SystemIntakeContactGetBySystemIntakeIDsLoader(ctx context.Context, np sqlutils.NamedPreparer, _ *zap.Logger, systemIntakeIDs []uuid.UUID) ([]*models.SystemIntakeContact, error) {
+	var contacts []*models.SystemIntakeContact
 
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		appcontext.ZLogger(ctx).Error("Failed to fetch system intake contacts", zap.Error(err), zap.String("id", systemIntakeID.String()))
-		return nil, &apperrors.QueryError{
-			Err:       err,
-			Model:     models.SystemIntakeContact{},
-			Operation: apperrors.QueryFetch,
+	err := namedSelect(ctx, np, &contacts, sqlqueries.SystemIntakeContact.GetBySystemIntakeIDsLoader, args{
+		"system_intake_ids": pq.Array(systemIntakeIDs),
+	})
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, &apperrors.QueryError{
+				Err:       err,
+				Model:     models.SystemIntakeContact{},
+				Operation: apperrors.QueryFetch,
+			}
 		}
+		appcontext.ZLogger(ctx).Error("Failed to fetch system intake contacts by ids", zap.Error(err), zap.Any("ids", systemIntakeIDs))
+		return nil, err
 	}
-	return results, nil
+	return contacts, nil
 }
 
 // DeleteSystemIntakeContact deletes an existing system intake contact object in the database

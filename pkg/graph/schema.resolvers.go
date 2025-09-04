@@ -1613,7 +1613,7 @@ func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID st
 
 // SystemIntakeContacts is the resolver for the systemIntakeContacts field.
 func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) (*models.SystemIntakeContacts, error) {
-	return resolvers.GetSystemIntakeContactsBySystemIntakeID(ctx, r.store, id)
+	return resolvers.SystemIntakeContactsGetBySystemIntakeID(ctx, id)
 }
 
 // TrbRequest is the resolver for the trbRequest field.
@@ -2075,13 +2075,23 @@ func (r *systemIntakeResolver) SystemIntakeSystems(ctx context.Context, obj *mod
 
 // Contacts is the resolver for the contacts field.
 func (r *systemIntakeResolver) Contacts(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeContacts, error) {
-	return resolvers.GetSystemIntakeContactsBySystemIntakeID(ctx, r.store, obj.ID)
+	return resolvers.SystemIntakeContactsGetBySystemIntakeID(ctx, obj.ID)
+}
+
+// Component is the resolver for the component field.
+func (r *systemIntakeContactResolver) Component(ctx context.Context, obj *models.SystemIntakeContact) (*models.SystemIntakeContactComponent, error) {
+	if obj == nil {
+		return nil, nil
+	}
+	return obj.FilteredComponent(), nil
 }
 
 // Roles is the resolver for the roles field.
 func (r *systemIntakeContactResolver) Roles(ctx context.Context, obj *models.SystemIntakeContact) ([]models.SystemIntakeContactRole, error) {
-	//TODO: EASI-4934: See if we can make this auto resolve
-	return obj.Roles, nil
+	if obj == nil {
+		return nil, nil
+	}
+	return obj.FilteredRoles(), nil
 }
 
 // DocumentType is the resolver for the documentType field.

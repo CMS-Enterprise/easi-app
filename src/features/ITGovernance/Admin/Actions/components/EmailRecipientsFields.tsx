@@ -311,7 +311,9 @@ const EmailRecipientsFields = ({
       ...contact,
       username: contact.userAccount.username,
       commonName: contact.userAccount.commonName,
-      email: contact.userAccount.email
+      email: contact.userAccount.email,
+      // TODO address
+      component: contact.component!
     }).then(response => {
       // Check for response
       if (response) {

@@ -8,6 +8,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
@@ -64,8 +65,7 @@ func UpdateSystemIntakeContact(
 	input models.UpdateSystemIntakeContactInput,
 	getAccountInformation userhelpers.GetAccountInfoFunc,
 ) (*models.CreateSystemIntakeContactPayload, error) {
-	// TODO: Fully implement this. This is a placeholder
-	contact, err := store.GetSystemIntakeContactByID(ctx, input.ID)
+	contact, err := dataloaders.SystemIntakeContactGetByID(ctx, input.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -87,10 +87,9 @@ func UpdateSystemIntakeContact(
 	}, nil
 }
 
-// GetSystemIntakeContactsBySystemIntakeID fetches contacts for a system intake
-func GetSystemIntakeContactsBySystemIntakeID(ctx context.Context, store *storage.Store, systemIntakeID uuid.UUID) (*models.SystemIntakeContacts, error) {
-	//TODO: make this a data loader!
-	contacts, err := store.FetchSystemIntakeContactsBySystemIntakeID(ctx, systemIntakeID)
+// SystemIntakeContactsGetBySystemIntakeID fetches contacts for a system intake
+func SystemIntakeContactsGetBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) (*models.SystemIntakeContacts, error) {
+	contacts, err := dataloaders.SystemIntakeContactGetBySystemIntakeID(ctx, systemIntakeID)
 	if err != nil {
 		return nil, err
 	}
@@ -98,4 +97,9 @@ func GetSystemIntakeContactsBySystemIntakeID(ctx context.Context, store *storage
 	return &models.SystemIntakeContacts{
 		AllContacts: contacts,
 	}, nil
+}
+
+// SystemIntakeContactsGetByID fetches contacts for a system intake
+func SystemIntakeContactsGetByID(ctx context.Context, id uuid.UUID) (*models.SystemIntakeContact, error) {
+	return dataloaders.SystemIntakeContactGetByID(ctx, id)
 }

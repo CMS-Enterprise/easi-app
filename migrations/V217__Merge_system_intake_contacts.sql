@@ -16,6 +16,44 @@ CREATE TYPE SYSTEM_INTAKE_CONTACT_ROLE AS ENUM (
 );
 COMMENT ON TYPE SYSTEM_INTAKE_CONTACT_ROLE IS 'Roles that a user can as a contact on a system intake';
 
+CREATE TYPE SYSTEM_INTAKE_CONTACT_COMPONENT AS ENUM (
+    'CENTER_FOR_CLINICAL_STANDARDS_AND_QUALITY_CCSQ',
+    'CENTER_FOR_CONSUMER_INFORMATION_AND_INSURANCE_OVERSIGHT_CCIIO',
+    'CENTER_FOR_MEDICARE_CM',
+    'CENTER_FOR_MEDICAID_AND_CHIP_SERVICES_CMCS',
+    'CENTER_FOR_MEDICARE_AND_MEDICAID_INNOVATION_CMMI',
+    'CENTER_FOR_PROGRAM_INTEGRITY_CPI',
+    'CMS_WIDE',
+    'EMERGENCY_PREPAREDNESS_AND_RESPONSE_OPERATIONS_EPRO',
+    'FEDERAL_COORDINATED_HEALTH_CARE_OFFICE',
+    'OFFICE_OF_ACQUISITION_AND_GRANTS_MANAGEMENT_OAGM',
+    'OFFICE_OF_HEALTHCARE_EXPERIENCE_AND_INTEROPERABILITY',
+    'OFFICE_OF_COMMUNICATIONS_OC',
+    'OFFICE_OF_ENTERPRISE_DATA_AND_ANALYTICS_OEDA',
+    'OFFICE_OF_EQUAL_OPPORTUNITY_AND_CIVIL_RIGHTS',
+    'OFFICE_OF_FINANCIAL_MANAGEMENT_OFM',
+    'OFFICE_OF_HUMAN_CAPITAL',
+    'OFFICE_OF_INFORMATION_TECHNOLOGY_OIT',
+    'OFFICE_OF_LEGISLATION',
+    'OFFICE_OF_MINORITY_HEALTH_OMH',
+    'OFFICE_OF_PROGRAM_OPERATIONS_AND_LOCAL_ENGAGEMENT_OPOLE',
+    'OFFICE_OF_SECURITY_FACILITIES_AND_LOGISTICS_OPERATIONS_OSFLO',
+    'OFFICE_OF_STRATEGIC_OPERATIONS_AND_REGULATORY_AFFAIRS_OSORA',
+    'OFFICE_OF_STRATEGY_PERFORMANCE_AND_RESULTS_OSPR',
+    'OFFICE_OF_THE_ACTUARY_OACT',
+    'OFFICE_OF_THE_ADMINISTRATOR',
+    'OFFICES_OF_HEARINGS_AND_INQUIRIES',
+    'OTHER',
+    --These are legacy components not currently selectable
+    'CONSORTIUM_FOR_MEDICAID_AND_CHILDRENS_HEALTH',
+    'CONSORTIUM_FOR_MEDICARE_HEALTH_PLANS_OPERATIONS',
+    'OFFICE_OF_BURDEN_REDUCTION_AND_HEALTH_INFORMATICS',
+    'OFFICE_OF_SUPPORT_SERVICES_AND_OPERATIONS',
+    'PLACE_HOLDER'
+);
+
+COMMENT ON TYPE SYSTEM_INTAKE_CONTACT_COMPONENT IS ' Represents the list of options that a contact can belong to at CMS';
+
 -- add roles column to the DB. TODO change this to an enum
 ALTER TABLE IF EXISTS system_intake_contacts
 ADD COLUMN roles SYSTEM_INTAKE_CONTACT_ROLE[] NOT NULL DEFAULT '{}',
@@ -23,7 +61,7 @@ ADD COLUMN is_requester BOOLEAN NOT NULL DEFAULT FALSE,
 ADD COLUMN created_by UUID REFERENCES user_account(id), -- TODO set this not null later
 ADD COLUMN modified_by UUID REFERENCES user_account(id);
 
--- data to update aggregates contacts using partition by logic. We can then programatically update the contact to have a list of all roles, and drop the old columns
+-- data to update aggregates contacts using partition by logic. We can then programmatically update the contact to have a list of all roles, and drop the old columns
 WITH raw_data_to_update AS (
     SELECT
         sic.id,
@@ -90,6 +128,43 @@ data_to_update AS (
         raw_data.system_intake_id,
         -- force null group_component to Other. It just means it was never set
         COALESCE(raw_data.group_component,'Other') AS group_component,
+        CASE --TODO finalize these cases
+            WHEN LOWER(raw_data.group_component) ='center for clinical standards and quality' THEN 'CENTER_FOR_CLINICAL_STANDARDS_AND_QUALITY_CCSQ'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='center for consumer information and insurance oversight' THEN 'CENTER_FOR_CONSUMER_INFORMATION_AND_INSURANCE_OVERSIGHT_CCIIO'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='center for medicaid and chip services' THEN 'CENTER_FOR_MEDICAID_AND_CHIP_SERVICES_CMCS'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='center for medicare' THEN 'CENTER_FOR_MEDICARE_CM'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='center for medicare and medicaid innovation' THEN 'CENTER_FOR_MEDICARE_AND_MEDICAID_INNOVATION_CMMI'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='center for program integrity' THEN 'CENTER_FOR_PROGRAM_INTEGRITY_CPI'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='cms wide' THEN 'CMS_WIDE'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='cms-wide' THEN 'CMS_WIDE'::SYSTEM_INTAKE_CONTACT_COMPONENT -- match case
+            WHEN LOWER(raw_data.group_component) ='consortium for medicaid and children''s health' THEN 'CONSORTIUM_FOR_MEDICAID_AND_CHILDRENS_HEALTH'::SYSTEM_INTAKE_CONTACT_COMPONENT -- no matching enum value, please update manually
+            WHEN LOWER(raw_data.group_component) ='consortium for medicare health plans operations' THEN 'CONSORTIUM_FOR_MEDICARE_HEALTH_PLANS_OPERATIONS'::SYSTEM_INTAKE_CONTACT_COMPONENT -- no matching enum value, please update manually
+            WHEN LOWER(raw_data.group_component) ='emergency preparedness and response operations' THEN 'EMERGENCY_PREPAREDNESS_AND_RESPONSE_OPERATIONS_EPRO'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='federal coordinated health care office' THEN 'FEDERAL_COORDINATED_HEALTH_CARE_OFFICE'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of acquisition and grants management' THEN 'OFFICE_OF_ACQUISITION_AND_GRANTS_MANAGEMENT_OAGM'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of acquisition & grants management' THEN 'OFFICE_OF_ACQUISITION_AND_GRANTS_MANAGEMENT_OAGM'::SYSTEM_INTAKE_CONTACT_COMPONENT -- match case
+            WHEN LOWER(raw_data.group_component) ='office of burden reduction and health informatics' THEN 'OFFICE_OF_BURDEN_REDUCTION_AND_HEALTH_INFORMATICS'::SYSTEM_INTAKE_CONTACT_COMPONENT -- no matching enum value, please update manually
+            WHEN LOWER(raw_data.group_component) ='office of communications' THEN 'OFFICE_OF_COMMUNICATIONS_OC'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of enterprise data and analytics' THEN 'OFFICE_OF_ENTERPRISE_DATA_AND_ANALYTICS_OEDA'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of equal opportunity and civil rights' THEN 'OFFICE_OF_EQUAL_OPPORTUNITY_AND_CIVIL_RIGHTS'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of financial management' THEN 'OFFICE_OF_FINANCIAL_MANAGEMENT_OFM'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of healthcare experience and interoperability' THEN 'OFFICE_OF_HEALTHCARE_EXPERIENCE_AND_INTEROPERABILITY'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of hearings and inquiries' THEN 'OFFICES_OF_HEARINGS_AND_INQUIRIES'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of human capital' THEN 'OFFICE_OF_HUMAN_CAPITAL'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of information technology' THEN 'OFFICE_OF_INFORMATION_TECHNOLOGY_OIT'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of legislation' THEN 'OFFICE_OF_LEGISLATION'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of minority health' THEN 'OFFICE_OF_MINORITY_HEALTH_OMH'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of program operations and local engagement' THEN 'OFFICE_OF_PROGRAM_OPERATIONS_AND_LOCAL_ENGAGEMENT_OPOLE'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of security, facilities, and logistics operations' THEN 'OFFICE_OF_SECURITY_FACILITIES_AND_LOGISTICS_OPERATIONS_OSFLO'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of strategic operations and regulatory affairs' THEN 'OFFICE_OF_STRATEGIC_OPERATIONS_AND_REGULATORY_AFFAIRS_OSORA'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of strategy, performance, and results' THEN 'OFFICE_OF_STRATEGY_PERFORMANCE_AND_RESULTS_OSPR'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='office of support services and operations' THEN 'OFFICE_OF_SUPPORT_SERVICES_AND_OPERATIONS'::SYSTEM_INTAKE_CONTACT_COMPONENT -- no matching enum value, please update manually
+            WHEN LOWER(raw_data.group_component) ='office of the actuary' THEN 'OFFICE_OF_THE_ACTUARY_OACT'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) ='offices of hearings and inquiries' THEN 'OFFICES_OF_HEARINGS_AND_INQUIRIES'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            WHEN LOWER(raw_data.group_component) = 'other' THEN 'OTHER'::SYSTEM_INTAKE_CONTACT_COMPONENT
+            -- WHEN lower(raw_data.group_component) ='' THEN  ''::SYSTEM_INTAKE_CONTACT_COMPONENT
+            ELSE 'OTHER'::SYSTEM_INTAKE_CONTACT_COMPONENT
+        END AS type_cast_component,
         raw_data.component,
         raw_data.role,
         raw_data.created_at,
@@ -110,7 +185,7 @@ updated_records AS ( --noqa
     SET
         roles = du.roles_array,
         is_requester = du.isrequester,
-        component = du.group_component,
+        component = du.type_cast_component,
         updated_at = CURRENT_TIMESTAMP,
         created_by = '00000000-0000-0000-0000-000000000000', -- Unknown User Account
         modified_by = '00000001-0001-0001-0001-000000000001' -- System Account
@@ -129,6 +204,12 @@ ALTER TABLE system_intake_contacts
 DROP COLUMN role,
 DROP COLUMN eua_user_id,
 DROP COLUMN common_name;
+
+
+-- Make component column take an enum instead of free text
+ALTER TABLE system_intake_contacts
+ALTER COLUMN component TYPE SYSTEM_INTAKE_CONTACT_COMPONENT
+USING component::SYSTEM_INTAKE_CONTACT_COMPONENT;
 
 -- rename updated_at to modified_at to fit base struct definition
 ALTER TABLE system_intake_contacts

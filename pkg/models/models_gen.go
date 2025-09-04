@@ -186,11 +186,11 @@ type CreateGRBReviewerInput struct {
 
 // The data needed to associate a contact with a system intake
 type CreateSystemIntakeContactInput struct {
-	EuaUserID      string                    `json:"euaUserId"`
-	SystemIntakeID uuid.UUID                 `json:"systemIntakeId"`
-	Component      string                    `json:"component"`
-	Roles          []SystemIntakeContactRole `json:"roles"`
-	IsRequester    bool                      `json:"isRequester"`
+	EuaUserID      string                       `json:"euaUserId"`
+	SystemIntakeID uuid.UUID                    `json:"systemIntakeId"`
+	Component      SystemIntakeContactComponent `json:"component"`
+	Roles          []SystemIntakeContactRole    `json:"roles"`
+	IsRequester    bool                         `json:"isRequester"`
 }
 
 // The payload when creating a system intake contact
@@ -923,10 +923,10 @@ type UpdateSystemIntakeContactDetailsInput struct {
 
 // The data needed to update a contact associated with a system intake
 type UpdateSystemIntakeContactInput struct {
-	ID          uuid.UUID                 `json:"id"`
-	Component   string                    `json:"component"`
-	Roles       []SystemIntakeContactRole `json:"roles"`
-	IsRequester bool                      `json:"isRequester"`
+	ID          uuid.UUID                    `json:"id"`
+	Component   SystemIntakeContactComponent `json:"component"`
+	Roles       []SystemIntakeContactRole    `json:"roles"`
+	IsRequester bool                         `json:"isRequester"`
 }
 
 // Input data for updating contract details related to a system request
