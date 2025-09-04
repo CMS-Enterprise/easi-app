@@ -1,0 +1,67 @@
+meta {
+  name: Get System IntakeContacts For System Intake
+  type: graphql
+  seq: 3
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query systemIntake {
+    systemIntake(id: "{{systemIntakeID}}") {
+      step
+      state
+      archivedAt
+  
+      contacts {
+        requester {
+  
+          roles
+          userAccount {
+            commonName
+          }
+        }
+        businessOwners {
+  			roles
+          userAccount {
+            commonName
+          }
+        }
+        productManagers {
+          roles
+          userAccount {
+            commonName
+          }
+        }
+        additionalContacts {
+          roles
+          userAccount {
+            commonName
+          }
+        }
+        allContacts {
+          isRequester
+          userID
+          userAccount {
+            id
+            commonName
+            username
+            email
+          }
+          systemIntakeId
+          component
+          roles
+        }
+      }
+    }
+  }
+  
+}
+
+settings {
+  encodeUrl: true
+}
