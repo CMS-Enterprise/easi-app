@@ -509,18 +509,19 @@ const intake = {
     cmsBusinessOwnerComponent: 'CMS Business Owner component',
     cmsProjectManagerName: 'CMS Project/Product Manager or Lead',
     cmsProjectManagerComponent: 'CMS Project/Product Manager or Lead component',
-    collaborating: 'I have started collaborating with',
+    collaborating: 'I have started collaborating with:',
     requestDetails: 'Request details',
-    projectName: 'Project name',
-    businessNeed: 'What is your business need?',
+    projectName: 'Contract/request title',
+    businessNeed:
+      'What is your business need that this contract/request will meet?',
     solving: 'How are you thinking of solving it?',
-    process: 'Where are you in the process?',
-    eaSupport: 'Do you need Enterprise Architecture (EA) support?',
-    usesAiTech: 'Does your request involve AI technologies?',
+    process: 'What is your project status?',
+    eaSupport: 'Does your request need Enterprise Architecture support?',
+    usesAiTech: 'Does this project plan to use AI technologies?',
     hasUiChanges:
-      'Does your project involve any user interface component, or changes to an interface component?',
+      'Does your project involve any user interface component or changes to an interface component?',
     usingSoftware:
-      'Do you plan to use any software products to fulfill your business needs?',
+      'Do you plan to use software products to fulfill your business needs?',
     softwareAcquisitionMethods: 'How will the software be acquired?',
     contractDetails: 'Contract details',
     costs:
@@ -530,7 +531,7 @@ const intake = {
     currentAnnualSpendingITPortion:
       'What portion (% or amount) of the current annual spending is IT?',
     plannedYearOneSpending:
-      'What is the planned annual spending of the first year of the new contract?',
+      'What is the planned annual spending for the first year of the new contract?',
     plannedYearOneSpendingITPortion:
       'What portion (% or amount) of the planned annual spending of the first year of the new contract is IT?',
     contract: 'Do you already have a contract in place to support this effort?',
