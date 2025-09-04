@@ -147,7 +147,7 @@ func (s *Server) routes() {
 	switch {
 	case s.environment.Deployed():
 		sesConfig := s.NewSESConfig()
-		sesSender := appses.NewSender(sesConfig, s.environment)
+		sesSender := appses.NewSender(context.Background(), sesConfig, s.environment)
 		emailClient, err = email.NewClient(emailConfig, sesSender)
 		if err != nil {
 			s.logger.Fatal("Failed to create email client", zap.Error(err))

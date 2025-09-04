@@ -48,7 +48,7 @@ func TestSESTestSuite(t *testing.T) {
 		RecipientAllowListRegex: nil,
 	}
 
-	sender := NewSender(sesConfig, env)
+	sender := NewSender(context.Background(), sesConfig, env)
 
 	sesTestSuite := &SESTestSuite{
 		Suite:  suite.Suite{},

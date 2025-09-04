@@ -2,10 +2,12 @@ package appses
 
 import (
 	"context"
+	"fmt"
 	"regexp"
 
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/ses"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/ses"
+	"github.com/aws/aws-sdk-go-v2/service/ses/types"
 	"github.com/samber/lo"
 
 	"github.com/cms-enterprise/easi-app/pkg/appconfig"
@@ -26,19 +28,22 @@ type Config struct {
 // It lives in package "email" for now, but can be pulled out and imported
 // if necessary for testing
 type Sender struct {
-	client      *ses.SES
+	client      *ses.Client
 	config      Config
 	environment appconfig.Environment
 }
 
 // NewSender constructs a Sender
-func NewSender(config Config, environment appconfig.Environment) Sender {
-	sesSession := session.Must(session.NewSession())
-	client := ses.New(sesSession)
+func NewSender(ctx context.Context, sesConfig Config, environment appconfig.Environment) Sender {
+	awsConfig, err := config.LoadDefaultConfig(ctx)
+	if err != nil {
+		panic(fmt.Errorf("problem creating aws config when getting new ses sender: %w", err))
+	}
+
 	return Sender{
-		client,
-		config,
-		environment,
+		client:      ses.NewFromConfig(awsConfig),
+		config:      sesConfig,
+		environment: environment,
 	}
 }
 
@@ -64,20 +69,20 @@ func (s Sender) Send(ctx context.Context, emailData email.Email) error {
 		appcontext.ZLogger(ctx).Warn("attempted to send an email with no recipients")
 		return nil
 	}
-
 	input := &ses.SendEmailInput{
-		Destination: &ses.Destination{
-			ToAddresses:  models.EmailAddressesToStringPtrs(emailData.ToAddresses),
-			CcAddresses:  models.EmailAddressesToStringPtrs(emailData.CcAddresses),
-			BccAddresses: models.EmailAddressesToStringPtrs(emailData.BccAddresses),
+
+		Destination: &types.Destination{
+			ToAddresses:  models.EmailAddressesToStrings(emailData.ToAddresses),
+			CcAddresses:  models.EmailAddressesToStrings(emailData.CcAddresses),
+			BccAddresses: models.EmailAddressesToStrings(emailData.BccAddresses),
 		},
-		Message: &ses.Message{
-			Subject: &ses.Content{
+		Message: &types.Message{
+			Subject: &types.Content{
 				Charset: helpers.PointerTo("UTF-8"),
 				Data:    helpers.PointerTo(email.AddNonProdEnvToSubject(emailData.Subject, s.environment)),
 			},
-			Body: &ses.Body{
-				Html: &ses.Content{
+			Body: &types.Body{
+				Html: &types.Content{
 					Charset: helpers.PointerTo("UTF-8"),
 					Data:    &emailData.Body,
 				},
@@ -86,6 +91,6 @@ func (s Sender) Send(ctx context.Context, emailData email.Email) error {
 		Source:    &s.config.Source,
 		SourceArn: &s.config.SourceARN,
 	}
-	_, err := s.client.SendEmail(input)
+	_, err := s.client.SendEmail(ctx, input)
 	return err
 }
