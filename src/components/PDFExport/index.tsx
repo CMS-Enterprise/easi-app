@@ -3,6 +3,7 @@ import { useReactToPrint } from 'react-to-print';
 import { Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
+import HelpText from 'components/HelpText';
 import IconButton from 'components/IconButton';
 
 type PDFExportButtonProps = {
@@ -37,6 +38,7 @@ type PDFExportProps = {
   title: string;
   children: React.ReactNode;
   label?: string;
+  helpText?: string;
   linkPosition?: 'top' | 'bottom' | 'both';
   disabled?: boolean;
 };
@@ -46,6 +48,7 @@ const PDFExport = ({
   filename,
   children,
   label = 'Download PDF',
+  helpText,
   linkPosition = 'bottom',
   disabled
 }: PDFExportProps) => {
@@ -64,6 +67,7 @@ const PDFExport = ({
       <PDFExportButton handlePrint={handlePrint} disabled={disabled}>
         {label}
       </PDFExportButton>
+      {helpText && <HelpText className="margin-top-1">{helpText}</HelpText>}
     </div>
   );
 
