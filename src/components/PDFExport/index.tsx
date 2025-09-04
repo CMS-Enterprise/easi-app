@@ -37,56 +37,47 @@ type PDFExportProps = {
   title: string;
   children: React.ReactNode;
   label?: string;
-  linkPosition?: 'top' | 'bottom';
+  linkPosition?: 'top' | 'bottom' | 'both';
   disabled?: boolean;
 };
 
-// PDFExport adds a "Download PDF" button to the screen. When this button is clicked,
-// the HTML content of child elements is sent to the server and converted
-// to PDF format.
 const PDFExport = ({
   title,
   filename,
   children,
-  label,
+  label = 'Download PDF',
   linkPosition = 'bottom',
   disabled
 }: PDFExportProps) => {
   const printRef = useRef<HTMLDivElement>(null);
+
   const handlePrint = useReactToPrint({
     documentTitle: filename,
     content: () => printRef.current,
-    // The lib default is to have no margin, which hides window.prints()'s built in pagination
-    // Set auto margins back to show everything the browser renders
     pageStyle: `
-      @page {
-        margin: 1in;
-      }
+      @page { margin: 1in; }
     `
   });
 
-  const PrintContent: JSX.Element = (
-    <div className="easi-pdf-export" ref={printRef}>
-      <h1 className="easi-only-print">{title}</h1>
-      {children}
+  const Controls = ({ className }: { className?: string }) => (
+    <div className={classNames('easi-pdf-export__controls', className)}>
+      <PDFExportButton handlePrint={handlePrint} disabled={disabled}>
+        {label}
+      </PDFExportButton>
     </div>
   );
 
+  const showTop = linkPosition === 'top' || linkPosition === 'both';
+  const showBottom = linkPosition === 'bottom' || linkPosition === 'both';
+
   return (
     <>
-      {linkPosition === 'bottom' && PrintContent}
-
-      <div
-        className={classNames('easi-pdf-export__controls', {
-          'margin-top-6': linkPosition === 'bottom'
-        })}
-      >
-        <PDFExportButton handlePrint={handlePrint} disabled={disabled}>
-          {label || 'Download PDF'}
-        </PDFExportButton>
+      {showTop && <Controls />}
+      <div className="easi-pdf-export" ref={printRef}>
+        <h1 className="easi-only-print">{title}</h1>
+        {children}
       </div>
-
-      {linkPosition === 'top' && PrintContent}
+      {showBottom && <Controls className="margin-top-6" />}
     </>
   );
 };
