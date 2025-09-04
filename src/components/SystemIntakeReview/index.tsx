@@ -44,8 +44,6 @@ export const SystemIntakeReview = ({
     }
   } = useSystemIntakeContacts(systemIntake.id);
 
-  console.log(systemIntake);
-
   const { t } = useTranslation('intake');
 
   const getSubmissionDate = () => {
@@ -208,7 +206,7 @@ export const SystemIntakeReview = ({
     <div>
       <DescriptionList title={t('review.systemRequest')}>
         {showSubmissionDate && (
-          <ReviewRow>
+          <ReviewRow className="margin-top-6">
             <div>
               <DescriptionTerm term={t('review.submissionDate')} />
               <DescriptionDefinition definition={getSubmissionDate()} />
