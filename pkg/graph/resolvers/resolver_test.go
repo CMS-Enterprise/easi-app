@@ -242,7 +242,8 @@ func (s *ResolverSuite) createNewIntake(ops ...func(*models.SystemIntake)) *mode
 }
 
 // createNewIntakeWithResolver creates a new system intake using the CreateSystemIntake resolver function, which will also create a requester contact
-func (s *ResolverSuite) createNewIntakeWithResolver(ops ...func(*models.SystemIntake)) *models.SystemIntake {
+func (s *ResolverSuite) createNewIntakeWithResolver(callbacks ...func(*models.SystemIntake)) *models.SystemIntake {
+
 	CreateSystemIntakeInput := models.CreateSystemIntakeInput{
 		Requester: &models.SystemIntakeRequesterInput{
 			Name: "Test User Common Name",
@@ -253,6 +254,14 @@ func (s *ResolverSuite) createNewIntakeWithResolver(ops ...func(*models.SystemIn
 	intake, err := CreateSystemIntake(s.ctxWithNewDataloaders(), s.testConfigs.Store, CreateSystemIntakeInput, userhelpers.GetUserInfoAccountInfoWrapperFunc(s.testConfigs.UserSearchClient.FetchUserInfo))
 	s.NoError(err)
 	s.NotNil(intake)
+
+	for _, hook := range callbacks {
+		hook(intake)
+	}
+	if len(callbacks) > 0 {
+		intake, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intake)
+		s.NoError(err)
+	}
 	return intake
 
 }
