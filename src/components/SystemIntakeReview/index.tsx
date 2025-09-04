@@ -277,6 +277,7 @@ export const SystemIntakeReview = ({
                 <DescriptionDefinition
                   key={`GovernanceTeam-${team.name.split(' ').join('-')}`}
                   definition={`${team.name}, ${team.collaborator}`}
+                  className="margin-x-0 margin-top-0 margin-bottom-1"
                 />
               ))
             ) : (
