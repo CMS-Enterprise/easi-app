@@ -549,7 +549,10 @@ const intake = {
     saveWithoutSubmitting: 'Save and exit without submitting'
   },
   viewIntakeRequest: {
-    heading: 'View submitted Intake Request'
+    heading: 'View submitted Intake Request',
+    downloadPDF: 'Download Intake Request as PDF',
+    docsNotIncluded:
+      'Documents will not be downloaded as a part of this PDF download.'
   }
 };
 

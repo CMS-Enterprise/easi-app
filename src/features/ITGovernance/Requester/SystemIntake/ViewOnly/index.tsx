@@ -35,10 +35,13 @@ const SystemIntakeView = ({ systemIntake }: SystemIntakeViewOnlyProps) => {
       >
         {t('taskList:navigation.returnToGovernanceTaskList')}
       </IconButton>
+
       <PDFExport
         title="System Intake"
         filename={filename}
-        label="Download System Intake as PDF"
+        label={t('viewIntakeRequest.downloadPDF')}
+        linkPosition="both"
+        helpText={t('viewIntakeRequest.docsNotIncluded')}
       >
         <SystemIntakeReview systemIntake={systemIntake} />
       </PDFExport>
