@@ -21,6 +21,7 @@ import { formatContractDate, formatDateLocal } from 'utils/date';
 import formatContractNumbers from 'utils/formatContractNumbers';
 import formatNumber from 'utils/formatNumber';
 import { showSystemVal } from 'utils/showVal';
+import { translateRequestType } from 'utils/systemIntake';
 
 import './index.scss';
 
@@ -32,7 +33,7 @@ type SystemIntakeReviewProps = {
 
 export const SystemIntakeReview = ({
   systemIntake,
-  showSubmissionDate = false,
+  showSubmissionDate = true,
   showEditSectionLink = false
 }: SystemIntakeReviewProps) => {
   const { annualSpending, costs, contract, submittedAt, contractNumbers } =
@@ -42,6 +43,8 @@ export const SystemIntakeReview = ({
       data: { requester, businessOwner, productManager }
     }
   } = useSystemIntakeContacts(systemIntake.id);
+
+  console.log(systemIntake);
 
   const { t } = useTranslation('intake');
 
@@ -209,6 +212,12 @@ export const SystemIntakeReview = ({
             <div>
               <DescriptionTerm term={t('review.submissionDate')} />
               <DescriptionDefinition definition={getSubmissionDate()} />
+            </div>
+            <div>
+              <DescriptionTerm term={t('review.requestType')} />
+              <DescriptionDefinition
+                definition={translateRequestType(systemIntake.requestType)}
+              />
             </div>
           </ReviewRow>
         )}
