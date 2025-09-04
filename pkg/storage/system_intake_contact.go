@@ -66,24 +66,6 @@ func (s *Store) UpdateSystemIntakeContact(ctx context.Context, systemIntakeConta
 	return retContact, nil
 }
 
-// FetchSystemIntakeContactsBySystemIntakeID queries the DB for all the system intake contacts matching the given system intake ID
-func (s *Store) FetchSystemIntakeContactsBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeContact, error) {
-	results := []*models.SystemIntakeContact{}
-	err := namedSelect(ctx, s, &results, sqlqueries.SystemIntakeContact.GetBySystemIntakeID, args{
-		"system_intake_id": systemIntakeID,
-	})
-
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		appcontext.ZLogger(ctx).Error("Failed to fetch system intake contacts", zap.Error(err), zap.String("id", systemIntakeID.String()))
-		return nil, &apperrors.QueryError{
-			Err:       err,
-			Model:     models.SystemIntakeContact{},
-			Operation: apperrors.QueryFetch,
-		}
-	}
-	return results, nil
-}
-
 // SystemIntakeContactGetBySystemIntakeIDsLoader returns system intake contacts by their foreign key, the system intake ID
 func SystemIntakeContactGetBySystemIntakeIDsLoader(ctx context.Context, np sqlutils.NamedPreparer, _ *zap.Logger, systemIntakeIDs []uuid.UUID) ([]*models.SystemIntakeContact, error) {
 	var contacts []*models.SystemIntakeContact

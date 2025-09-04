@@ -89,7 +89,7 @@ func UpdateSystemIntakeContact(
 }
 
 // GetSystemIntakeContactsBySystemIntakeID fetches contacts for a system intake
-func GetSystemIntakeContactsBySystemIntakeID(ctx context.Context, store *storage.Store, systemIntakeID uuid.UUID) (*models.SystemIntakeContacts, error) {
+func GetSystemIntakeContactsBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) (*models.SystemIntakeContacts, error) {
 	contacts, err := dataloaders.SystemIntakeContactGetBySystemIntakeID(ctx, systemIntakeID)
 	if err != nil {
 		return nil, err
