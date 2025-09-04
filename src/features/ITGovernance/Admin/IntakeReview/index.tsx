@@ -57,7 +57,9 @@ const IntakeReview = ({ systemIntake }: IntakeReviewProps) => {
         linkPosition="both"
         helpText={t('intake:viewIntakeRequest.docsNotIncluded')}
       >
-        <SystemIntakeReview systemIntake={systemIntake} />
+        <div className="border-top border-base-light margin-top-2">
+          <SystemIntakeReview systemIntake={systemIntake} />
+        </div>
       </PDFExport>
     </div>
   );

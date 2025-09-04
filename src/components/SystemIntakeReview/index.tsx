@@ -221,8 +221,7 @@ export const SystemIntakeReview = ({
         )}
       </DescriptionList>
 
-      <hr className="system-intake__hr" />
-      <h2 className="font-heading-xl margin-bottom-0">
+      <h2 className="font-heading-xl margin-bottom-0 border-top border-base-light padding-top-3">
         {t('review.contactDetails')}
       </h2>
       {showEditSectionLink && (
@@ -285,8 +284,7 @@ export const SystemIntakeReview = ({
         </ReviewRow>
       </DescriptionList>
 
-      <hr className="system-intake__hr" />
-      <h2 className="font-heading-xl margin-top-3 margin-bottom-0">
+      <h2 className="font-heading-xl margin-top-3 margin-bottom-0 border-top border-base-light padding-top-3">
         {t('review.requestDetails')}
       </h2>
       {showEditSectionLink && (
@@ -357,8 +355,7 @@ export const SystemIntakeReview = ({
         <SoftwareAcquisition />
       </DescriptionList>
 
-      <hr className="system-intake__hr" />
-      <h2 className="font-heading-xl margin-top-3 margin-bottom-0">
+      <h2 className="font-heading-xl margin-top-3 margin-bottom-0 border-top border-base-light padding-top-3">
         {t('contractDetails.heading')}
       </h2>
       {showEditSectionLink && (
@@ -456,8 +453,7 @@ export const SystemIntakeReview = ({
         )}
       </DescriptionList>
 
-      <hr className="system-intake__hr" />
-      <h2 className="font-heading-xl margin-top-3 margin-bottom-0">
+      <h2 className="font-heading-xl margin-top-3 margin-bottom-0 border-top border-base-light padding-top-3">
         {t('review.documents')}
       </h2>
       {showEditSectionLink && (
