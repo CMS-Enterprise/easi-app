@@ -1,11 +1,17 @@
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SystemIntakeFragmentFragment } from 'gql/generated/graphql';
+import {
+  ITGovIntakeFormStatus,
+  SystemIntakeFragmentFragment
+} from 'gql/generated/graphql';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import PDFExport from 'components/PDFExport';
 import SystemIntakeReview from 'components/SystemIntakeReview';
+import TaskStatusTag from 'components/TaskStatusTag';
+import { TaskListItemDateInfo } from 'types/taskList';
+import { formatDateLocal } from 'utils/date';
 
 import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
@@ -17,28 +23,42 @@ const IntakeReview = ({ systemIntake }: IntakeReviewProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   const filename = `System intake for ${systemIntake.requestName}.pdf`;
 
-  const isITGovAdmin = useContext(ITGovAdminContext);
+  // const isITGovAdmin = useContext(ITGovAdminContext);
+
+  const intakeStatus = systemIntake.itGovTaskStatuses.intakeFormStatus;
+  let dateInfo: string | undefined;
+
+  if (
+    intakeStatus === ITGovIntakeFormStatus.EDITS_REQUESTED &&
+    systemIntake.updatedAt
+  ) {
+    dateInfo = systemIntake.updatedAt;
+  } else if (
+    intakeStatus === ITGovIntakeFormStatus.COMPLETED &&
+    systemIntake.submittedAt
+  ) {
+    dateInfo = systemIntake.submittedAt;
+  }
+
+  // this is the admin view
 
   return (
     <div data-testid="intake-review">
-      <PageHeading className="margin-top-0">{t('general:intake')}</PageHeading>
+      <div className="margin-bottom-4">
+        <PageHeading className="margin-y-0">{t('general:intake')}</PageHeading>
+        {!!intakeStatus && <TaskStatusTag status={intakeStatus} />}
+        {t('general:on')}
+        {formatDateLocal(dateInfo, 'MM/dd/yyyy')}
+      </div>
       <PDFExport
         title="System Intake"
         filename={filename}
-        label="Download System Intake as PDF"
+        label={t('intake:viewIntakeRequest.downloadPDF')}
+        linkPosition="both"
+        helpText={t('intake:viewIntakeRequest.docsNotIncluded')}
       >
         <SystemIntakeReview systemIntake={systemIntake} />
       </PDFExport>
-
-      {isITGovAdmin && (
-        <UswdsReactLink
-          className="usa-button margin-top-5"
-          variant="unstyled"
-          to={`/it-governance/${systemIntake.id}/actions`}
-        >
-          {t('action:takeAnAction')}
-        </UswdsReactLink>
-      )}
     </div>
   );
 };
