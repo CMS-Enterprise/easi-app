@@ -1,6 +1,8 @@
 package resolvers
 
 import (
+	"github.com/google/uuid"
+
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 )
@@ -86,6 +88,74 @@ func (s *ResolverSuite) TestSystemIntakeContactUpdate() {
 	s.EqualValues(updateStruct.IsRequester, updatedContact.SystemIntakeContact.IsRequester)
 }
 
-func (s *ResolverSuite) TestSystemIntakeContactRequesterContstraints() {
-	// TODO implement this
+func (s *ResolverSuite) TestSystemIntakeContactRequesterConstraints() {
+
+	// 1. Create Intake
+	intake := s.createNewIntakeWithResolver()
+
+	// 2. Fetch contacts, ensure only requester
+	fetched, err := SystemIntakeContactsGetBySystemIntakeID(s.ctxWithNewDataloaders(), intake.ID)
+	s.NoError(err)
+	s.Len(fetched.AllContacts, 1)
+	s.True(fetched.AllContacts[0].IsRequester)
+
+	requesterContact := fetched.AllContacts[0]
+
+	// 3. Attempt to delete requester, ensure error
+	_, err = SystemIntakeContactDelete(s.ctxWithNewDataloaders(), s.testConfigs.Store, requesterContact.ID)
+	s.Error(err)
+
+	// 4. Create another contact with isRequester false
+	createInput := models.CreateSystemIntakeContactInput{
+		SystemIntakeID: intake.ID,
+		EuaUserID:      "USR2",
+		Component:      models.SystemIntakeContactComponentCmsWide,
+		Roles:          []models.SystemIntakeContactRole{models.SystemIntakeContactRoleBusinessOwner},
+		IsRequester:    false,
+	}
+	createdContact, err := CreateSystemIntakeContact(s.ctxWithNewDataloaders(), s.testConfigs.Logger, s.testConfigs.Principal, s.testConfigs.Store, createInput, userhelpers.GetUserInfoAccountInfoWrapperFunc(s.fetchUserInfoStub))
+	s.NoError(err)
+	s.NotNil(createdContact.SystemIntakeContact)
+
+	// 5. Update that contact to isRequester true, ensure previous requester is now not requester
+	updateInput := models.UpdateSystemIntakeContactInput{
+		ID:          createdContact.SystemIntakeContact.ID,
+		Component:   createdContact.SystemIntakeContact.Component,
+		Roles:       createdContact.SystemIntakeContact.Roles,
+		IsRequester: true,
+	}
+	updatedContact, err := UpdateSystemIntakeContact(s.ctxWithNewDataloaders(), s.testConfigs.Logger, s.testConfigs.Principal, s.testConfigs.Store, updateInput, userhelpers.GetUserInfoAccountInfoWrapperFunc(s.fetchUserInfoStub))
+	s.NoError(err)
+	s.NotNil(updatedContact.SystemIntakeContact)
+	s.True(updatedContact.SystemIntakeContact.IsRequester)
+
+	// Fetch contacts, ensure only one isRequester
+	fetched, err = SystemIntakeContactsGetBySystemIntakeID(s.ctxWithNewDataloaders(), intake.ID)
+	s.NoError(err)
+	s.Len(fetched.AllContacts, 2)
+	isRequesterCount := 0
+	var firstContactID uuid.UUID
+	for _, c := range fetched.AllContacts {
+		if c.IsRequester {
+			isRequesterCount++
+		}
+		if c.ID != updatedContact.SystemIntakeContact.ID {
+			firstContactID = c.ID
+		}
+	}
+	s.Equal(1, isRequesterCount)
+
+	// 6. Attempt to delete first contact, ensure success
+	deletedContact, err := SystemIntakeContactDelete(s.ctxWithNewDataloaders(), s.testConfigs.Store, firstContactID)
+	s.NoError(err)
+	s.EqualValues(firstContactID, deletedContact.ID)
+
+	// 7. Fetch contacts, ensure only one contact and isRequester true
+	fetched, err = SystemIntakeContactsGetBySystemIntakeID(s.ctxWithNewDataloaders(), intake.ID)
+	s.NoError(err)
+	s.Len(fetched.AllContacts, 1)
+	onlyContact := fetched.AllContacts[0]
+	s.EqualValues(createdContact.SystemIntakeContact.ID, onlyContact.ID)
+	s.True(onlyContact.IsRequester)
+
 }
