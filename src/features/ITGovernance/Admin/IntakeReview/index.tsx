@@ -1,19 +1,15 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ITGovIntakeFormStatus,
   SystemIntakeFragmentFragment
 } from 'gql/generated/graphql';
 
-import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import PDFExport from 'components/PDFExport';
 import SystemIntakeReview from 'components/SystemIntakeReview';
 import TaskStatusTag from 'components/TaskStatusTag';
-import { TaskListItemDateInfo } from 'types/taskList';
 import { formatDateLocal } from 'utils/date';
-
-import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
 type IntakeReviewProps = {
   systemIntake: SystemIntakeFragmentFragment;
@@ -22,8 +18,6 @@ type IntakeReviewProps = {
 const IntakeReview = ({ systemIntake }: IntakeReviewProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   const filename = `System intake for ${systemIntake.requestName}.pdf`;
-
-  // const isITGovAdmin = useContext(ITGovAdminContext);
 
   const intakeStatus = systemIntake.itGovTaskStatuses.intakeFormStatus;
   let dateInfo: string | undefined;
