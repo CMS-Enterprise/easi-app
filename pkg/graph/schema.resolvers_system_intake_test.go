@@ -43,7 +43,7 @@ func (s *GraphQLTestSuite) TestCreateSystemIntakeMutation() {
 					name
 				}
 			}
-		}`, &resp, addAuthWithAllJobCodesToGraphQLClientTest("TEST"))
+		}`, &resp, s.addAuthWithAllJobCodesToGraphQLClientTest("TEST"))
 
 	s.NotNil(resp.CreateSystemIntake.ID)
 	s.Equal("Test User", resp.CreateSystemIntake.Requester.Name)
@@ -94,7 +94,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeQuery() {
 				}
 				businessNeed
 			}
-		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		}`, intake.ID), &resp, s.addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 	s.Equal(projectName, resp.SystemIntake.RequestName)
@@ -169,7 +169,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithNotesQuery() {
 					}
 				}
 			}
-		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest("WWWW"))
+		}`, intake.ID), &resp, s.addAuthWithAllJobCodesToGraphQLClientTest("WWWW"))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 
@@ -249,7 +249,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithContractMonthAndYearQuery() 
 			}
 		}`, intake.ID),
 		&resp,
-		addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()),
+		s.addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()),
 	)
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
@@ -320,7 +320,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithContractDatesQuery() {
 			}
 		}`, intake.ID),
 		&resp,
-		addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		s.addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 
@@ -382,7 +382,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithNoCollaboratorsQuery() {
 					}
 				}
 			}
-		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		}`, intake.ID), &resp, s.addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 	s.False(resp.SystemIntake.GovernanceTeams.IsPresent)
@@ -439,7 +439,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithCollaboratorsQuery() {
 					}
 				}
 			}
-		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		}`, intake.ID), &resp, s.addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 	s.True(resp.SystemIntake.GovernanceTeams.IsPresent)
@@ -512,7 +512,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithActionsQuery() {
 					createdAt
 				}
 			}
-		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		}`, intake.ID), &resp, s.addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(2, len(resp.SystemIntake.Actions))
 
@@ -1391,7 +1391,7 @@ func (s *GraphQLTestSuite) TestContractQueryReturnsVehicleForLegacyIntakes() {
 					contractNumber
 				}
 			}
-		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		}`, intake.ID), &resp, s.addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(contractVehicle, *resp.SystemIntake.Contract.Vehicle)
 	s.Empty(resp.SystemIntake.ContractNumbers)
@@ -1699,7 +1699,7 @@ func (s *GraphQLTestSuite) TestSubmitIntake() {
 					id
 				}
 			}
-		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest("TEST"))
+		}`, intake.ID), &resp, s.addAuthWithAllJobCodesToGraphQLClientTest("TEST"))
 
 	respIntake := resp.SubmitIntake.SystemIntake
 	s.Equal(intake.ID.String(), respIntake.ID)
