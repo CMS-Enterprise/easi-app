@@ -16,6 +16,7 @@ import {
 } from '@trussworks/react-uswds';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
 import {
+  ContractDate,
   GetSystemIntakeDocument,
   SystemIntakeFormState,
   SystemIntakeFragmentFragment,
@@ -49,20 +50,32 @@ import ContractFields from './ContractFields';
 
 import './index.scss';
 
-/** Converts contract date object to ISO */
-const contractDateToISO = ({
-  month,
-  day,
-  year
-}: ContractDetailsForm['contract']['startDate']) =>
-  DateTime.fromObject(
-    {
-      day: Number(day) || 0,
-      month: Number(month) || 0,
-      year: Number(year) || 0
-    },
-    { zone: 'UTC' }
-  ).toISO();
+/**
+ * Convert ISO string or generated GQL ContractDate into a normalized UTC ISO string.
+ * Returns null if invalid/absent.
+ */
+const toIsoOrNull = (d?: string | ContractDate | null): string | null => {
+  if (!d) return null;
+
+  if (typeof d === 'string') {
+    const trimmed = d.trim();
+    if (!trimmed) return null;
+    const dt = DateTime.fromISO(trimmed, { zone: 'utc' });
+    return dt.isValid ? dt.toISO() : null;
+  }
+
+  const { year, month, day } = d;
+  if (!year || !month || !day) return null;
+
+  const dt = DateTime.fromObject(
+    { year: Number(year), month: Number(month), day: Number(day) },
+    { zone: 'utc' }
+  );
+  return dt.isValid ? dt.toISO() : null;
+};
+
+// For API payloads we want ISO or null; the same helper works.
+const contractDateToISOForApi = toIsoOrNull;
 
 type ContractDetailsProps = {
   systemIntake: SystemIntakeFragmentFragment;
@@ -85,9 +98,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
     refetchQueries: [
       {
         query: GetSystemIntakeDocument,
-        variables: {
-          id
-        }
+        variables: { id }
       }
     ]
   });
@@ -107,17 +118,9 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
       },
       contract: {
         contractor: contract.contractor || '',
-        endDate: {
-          day: contract.endDate.day || '',
-          month: contract.endDate.month || '',
-          year: contract.endDate.year || ''
-        },
         hasContract: contract.hasContract as SystemIntakeContractStatus,
-        startDate: {
-          day: contract.startDate.day || '',
-          month: contract.startDate.month || '',
-          year: contract.startDate.year || ''
-        },
+        startDate: toIsoOrNull(contract.startDate),
+        endDate: toIsoOrNull(contract.endDate),
         numbers: formatContractNumbers(contractNumbers)
       }
     }
@@ -134,20 +137,15 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
   const hasContract = watch('contract.hasContract');
 
   const saveExitLink = (() => {
-    let link = '';
-    if (systemIntake.requestType === 'SHUTDOWN') {
-      link = '/';
-    } else {
-      link = `/governance-task-list/${systemIntake.id}`;
-    }
-    return link;
+    if (systemIntake.requestType === 'SHUTDOWN') return '/';
+    return `/governance-task-list/${systemIntake.id}`;
   })();
 
   const updateSystemIntake = useCallback(async () => {
     const values = watch();
     const payload = { ...values };
 
-    // Clear contract subfields
+    // Clear contract subfields if not applicable
     if (
       hasContract === SystemIntakeContractStatus.NOT_STARTED ||
       hasContract === SystemIntakeContractStatus.NOT_NEEDED
@@ -156,16 +154,8 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
         ...values.contract,
         numbers: '',
         contractor: '',
-        startDate: {
-          month: '',
-          day: '',
-          year: ''
-        },
-        endDate: {
-          month: '',
-          day: '',
-          year: ''
-        }
+        startDate: null,
+        endDate: null
       };
     }
 
@@ -180,8 +170,9 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
           annualSpending: payload.annualSpending,
           contract: {
             ...payload.contract,
-            startDate: contractDateToISO(payload.contract.startDate),
-            endDate: contractDateToISO(payload.contract.endDate),
+            // Convert to ISO or null for API
+            startDate: contractDateToISOForApi(payload.contract.startDate),
+            endDate: contractDateToISOForApi(payload.contract.endDate),
             numbers:
               payload.contract.numbers.length > 0
                 ? payload.contract.numbers.split(',').map(c => c.trim())
@@ -198,19 +189,16 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
   ) => {
     if (!isDirty) callback();
 
-    // Update intake
     const result = await updateSystemIntake();
 
     if (!result?.errors) return callback();
 
-    // If validating form, show error on server error
     if (validate) {
       return setError('root', {
         message: t('error:encounteredIssueTryAgain')
       });
     }
 
-    // If skipping errors, return callback
     return callback();
   };
 
@@ -223,7 +211,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
       ...(errors?.contract?.startDate && {
         'contract.startDate': errors?.contract?.startDate
       }),
-      ...(errors?.contract?.startDate && {
+      ...(errors?.contract?.endDate && {
         'contract.endDate': errors?.contract?.endDate
       })
     } as FieldErrors<ContractDetailsForm>);
@@ -545,9 +533,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
           </FieldGroup>
 
           <Pager
-            next={{
-              type: 'submit'
-            }}
+            next={{ type: 'submit' }}
             back={{
               type: 'button',
               onClick: () => submit(() => history.push('request-details'))
