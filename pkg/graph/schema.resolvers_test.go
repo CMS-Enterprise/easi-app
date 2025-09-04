@@ -13,12 +13,11 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler/extension"
 	"github.com/99designs/gqlgen/graphql/handler/lru"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
-	s3New "github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/aws/aws-sdk-go-v2/service/s3/types"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/client/metadata"
 	"github.com/aws/aws-sdk-go/aws/request"
-	"github.com/aws/aws-sdk-go/service/s3"
-
 	_ "github.com/lib/pq" // required for postgres driver in sql
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
@@ -56,7 +55,7 @@ func (s *GraphQLTestSuite) BeforeTest() {
 }
 
 type mockS3Client struct {
-	Client   *s3New.Client
+	Client   *s3.Client
 	AVStatus string
 }
 
@@ -101,7 +100,7 @@ func (m mockS3Client) GetObjectTagging(input *s3.GetObjectTaggingInput) (*s3.Get
 	}
 
 	return &s3.GetObjectTaggingOutput{
-		TagSet: []*s3.Tag{{
+		TagSet: []types.Tag{{
 			Key:   helpers.PointerTo(upload.AVStatusTagName),
 			Value: &m.AVStatus,
 		}},
