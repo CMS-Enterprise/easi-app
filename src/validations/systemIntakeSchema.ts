@@ -8,6 +8,12 @@ import * as Yup from 'yup';
 
 import { ITGovernanceViewType } from 'types/itGov';
 
+// Accepts '...Z' with or without milliseconds, must parse in UTC
+const isIsoUtc = (s: unknown): s is string => {
+  if (typeof s !== 'string' || !s.trim() || !s.endsWith('Z')) return false;
+  return DateTime.fromISO(s, { zone: 'utc' }).isValid;
+};
+
 const govTeam = (name: string) =>
   Yup.object().shape({
     isPresent: Yup.boolean(),
@@ -140,78 +146,56 @@ const SystemIntakeValidationSchema = {
         is: (val: string) => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
         then: Yup.string().trim().required('Tell us about the contract number')
       }),
-      startDate: Yup.mixed().when('hasContract', {
-        is: (val: string) => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
-        then: Yup.object().shape({
-          month: Yup.string()
-            .trim()
-            .matches(/\d{1,2}/, 'Please enter a valid start month')
-            .required('Tell us the contract start month'),
-          day: Yup.string()
-            .trim()
-            .matches(/\d{1,2}/, 'Please enter a valid start day')
-            .required('Tell us the contract start day'),
-          year: Yup.string()
-            .trim()
-            .matches(/\d{4}/, 'Please enter a valid start year')
-            .required('Tell us the contract start year'),
-          validDate: Yup.string().when(['month', 'day', 'year'], {
-            is: (month: string, day: string, year: string) => {
-              if (
-                DateTime.fromObject({
-                  month: Number(month) || 0,
-                  day: Number(day) || 0,
-                  year: Number(year) || 0
-                }).isValid
-              ) {
-                return true;
-              }
-              return false;
-            },
-            otherwise: Yup.string().test(
-              'validStartDate',
-              'Period of performance date: Please enter a valid start date',
-              () => false
+      startDate: Yup.string()
+        .nullable()
+        .when('hasContract', {
+          is: (val: string) => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
+          then: Yup.string()
+            .nullable()
+            .required('Tell us the contract start date')
+            .test('is-iso', 'Please enter a valid start date', val =>
+              val == null ? false : isIsoUtc(val)
+            ),
+          otherwise: Yup.string().nullable().notRequired()
+        }),
+
+      endDate: Yup.string()
+        .nullable()
+        .when(['hasContract', 'startDate'], {
+          is: (hasContract: string) =>
+            ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(hasContract),
+          then: Yup.string()
+            .nullable()
+            .required('Tell us the contract end date')
+            .test('is-iso', 'Please enter a valid end date', val =>
+              val == null ? false : isIsoUtc(val)
             )
-          })
-        })
-      }),
-      endDate: Yup.mixed().when('hasContract', {
-        is: (val: string) => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
-        then: Yup.object().shape({
-          month: Yup.string()
-            .trim()
-            .matches(/\d{1,2}/, 'Please enter a valid end month')
-            .required('Tell us the contract end month'),
-          day: Yup.string()
-            .trim()
-            .matches(/\d{1,2}/, 'Please enter a valid end day')
-            .required('Tell us the contract end day'),
-          year: Yup.string()
-            .trim()
-            .matches(/\d{4}/, 'Please enter a valid end year')
-            .required('Tell us the contract end year'),
-          validDate: Yup.string().when(['month', 'day', 'year'], {
-            is: (month: string, day: string, year: string) => {
-              if (
-                DateTime.fromObject({
-                  month: Number(month) || 0,
-                  day: Number(day) || 0,
-                  year: Number(year) || 0
-                }).isValid
-              ) {
-                return true;
+            .test(
+              'end-after-start',
+              'End date must be on or after the start date',
+              (endVal, ctx) => {
+                const startVal = ctx.parent?.startDate as
+                  | string
+                  | null
+                  | undefined;
+                if (
+                  !endVal ||
+                  !startVal ||
+                  !isIsoUtc(endVal) ||
+                  !isIsoUtc(startVal)
+                )
+                  return true;
+                const end = DateTime.fromISO(endVal, { zone: 'utc' });
+                const start = DateTime.fromISO(startVal, { zone: 'utc' });
+                return (
+                  end.isValid &&
+                  start.isValid &&
+                  end.toMillis() >= start.toMillis()
+                );
               }
-              return false;
-            },
-            otherwise: Yup.string().test(
-              'validStartDate',
-              'Period of performance date: Please enter a valid end date',
-              () => false
-            )
-          })
+            ),
+          otherwise: Yup.string().nullable().notRequired()
         })
-      })
     })
   })
 };
