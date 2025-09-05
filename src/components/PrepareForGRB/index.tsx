@@ -36,8 +36,22 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
         <p className="line-height-sans-5 text-bold margin-bottom-0">
           {t('help.whoIsPart.votingMembers.title')}
         </p>
-        <p className="line-height-sans-5">
+        <p className="line-height-sans-5 margin-top-0">
           {t('help.whoIsPart.votingMembers.body')}
+        </p>
+
+        <p className="line-height-sans-5 text-bold margin-bottom-0">
+          {t('help.whoIsPart.nonVotingMembers.title')}
+        </p>
+        <p className="line-height-sans-5 margin-top-0">
+          {t('help.whoIsPart.nonVotingMembers.body')}
+        </p>
+
+        <p className="line-height-sans-5 text-bold margin-bottom-0">
+          {t('help.whoIsPart.alternativeVotingMembers.title')}
+        </p>
+        <p className="line-height-sans-5 margin-top-0">
+          {t('help.whoIsPart.alternativeVotingMembers.body')}
         </p>
 
         {/* end */}
