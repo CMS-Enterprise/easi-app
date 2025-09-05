@@ -30,13 +30,12 @@ func (s *StoreTestSuite) TestCreateSystemIntake() {
 			Requester:   "Test requester",
 		}
 
-		created, err := s.store.CreateSystemIntake(ctx, &intake)
+		created, err := CreateSystemIntake(ctx, s.store, &intake)
 		s.NoError(err)
 		s.Equal(intake.EUAUserID, created.EUAUserID)
 		s.Equal(intake.Requester, created.Requester)
-		epochTime := time.Unix(0, 0)
-		s.Equal(intake.CreatedAt, &epochTime)
-		s.Equal(intake.UpdatedAt, &epochTime)
+		s.NotNil(created.CreatedAt)
+		s.NotNil(created.UpdatedAt) // This is a weird paradigm. We should revisit and perhaps not set UpdatedAt on create.
 		s.False(created.ID == uuid.Nil)
 	})
 
@@ -53,7 +52,7 @@ func (s *StoreTestSuite) TestCreateSystemIntake() {
 			}
 			partialIntake.EUAUserID = null.StringFrom(tc)
 
-			_, err := s.store.CreateSystemIntake(ctx, &partialIntake)
+			_, err := CreateSystemIntake(ctx, s.store, &partialIntake)
 
 			s.Error(err)
 			s.Equal("pq: new row for relation \"system_intakes\" violates check constraint \"eua_id_check\"", err.Error())
@@ -65,7 +64,7 @@ func (s *StoreTestSuite) TestUpdateSystemIntake() {
 	ctx := context.Background()
 
 	s.Run("update an existing system intake", func() {
-		intake, err := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		intake, err := CreateSystemIntake(ctx, s.store, &models.SystemIntake{
 			EUAUserID:   testhelpers.RandomEUAIDNull(),
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "Test requester",
@@ -87,7 +86,7 @@ func (s *StoreTestSuite) TestUpdateSystemIntake() {
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "Test requester",
 		}
-		createdIntake, err := s.store.CreateSystemIntake(ctx, &originalIntake)
+		createdIntake, err := CreateSystemIntake(ctx, s.store, &originalIntake)
 		s.NoError(err)
 		originalEUA := originalIntake.EUAUserID
 		createdIntake.EUAUserID = null.StringFrom("NEWS")
@@ -114,7 +113,7 @@ func (s *StoreTestSuite) TestUpdateSystemIntake() {
 			LifecycleScope:     models.HTMLPointer("ABCDEF"),
 			DecisionNextSteps:  models.HTMLPointer("ABCDEF"),
 		}
-		_, err := s.store.CreateSystemIntake(ctx, &originalIntake)
+		_, err := CreateSystemIntake(ctx, s.store, &originalIntake)
 		s.NoError(err)
 
 		partial, err := s.store.FetchSystemIntakeByID(ctx, originalIntake.ID)
@@ -155,7 +154,7 @@ func (s *StoreTestSuite) TestUpdateSystemIntake() {
 			RejectionReason:   models.HTMLPointer("ABCDEF"),
 			DecisionNextSteps: models.HTMLPointer("ABCDEF"),
 		}
-		_, err := s.store.CreateSystemIntake(ctx, &originalIntake)
+		_, err := CreateSystemIntake(ctx, s.store, &originalIntake)
 		s.NoError(err)
 
 		partial, err := s.store.FetchSystemIntakeByID(ctx, originalIntake.ID)
@@ -193,7 +192,7 @@ func (s *StoreTestSuite) TestUpdateSystemIntake() {
 			CostIncreaseAmount: null.StringFrom("$10 million"),
 			ExistingContract:   null.StringFrom("NOT_NEEDED"),
 		}
-		_, err := s.store.CreateSystemIntake(ctx, &originalIntake)
+		_, err := CreateSystemIntake(ctx, s.store, &originalIntake)
 		s.NoError(err)
 
 		partial, err := s.store.FetchSystemIntakeByID(ctx, originalIntake.ID)
@@ -242,7 +241,7 @@ func (s *StoreTestSuite) TestUpdateSystemIntake() {
 			Requester:   "Test requester",
 		}
 
-		_, err := s.store.CreateSystemIntake(ctx, &originalIntake)
+		_, err := CreateSystemIntake(ctx, s.store, &originalIntake)
 		s.NoError(err)
 
 		partial, err := s.store.FetchSystemIntakeByID(ctx, originalIntake.ID)
@@ -272,7 +271,7 @@ func (s *StoreTestSuite) TestUpdateSystemIntake() {
 				Requester:   fmt.Sprintf("LCID Exhaust %d", ix),
 			}
 
-			_, err := s.store.CreateSystemIntake(ctx, &original)
+			_, err := CreateSystemIntake(ctx, s.store, &original)
 			s.NoError(err)
 
 			partial, err := s.store.FetchSystemIntakeByID(ctx, original.ID)
@@ -294,7 +293,7 @@ func (s *StoreTestSuite) TestUpdateSystemIntake() {
 			Requester:   "LCID Exhaust 10",
 		}
 
-		_, err := s.store.CreateSystemIntake(ctx, &original)
+		_, err := CreateSystemIntake(ctx, s.store, &original)
 		s.NoError(err)
 
 		partial, err := s.store.FetchSystemIntakeByID(ctx, original.ID)
@@ -320,7 +319,7 @@ func (s *StoreTestSuite) TestUpdateSystemIntake() {
 			GRBDate:        &t2,
 		}
 
-		_, err := s.store.CreateSystemIntake(ctx, &original)
+		_, err := CreateSystemIntake(ctx, s.store, &original)
 		s.NoError(err)
 
 		partial, err := s.store.FetchSystemIntakeByID(ctx, original.ID)
@@ -443,7 +442,7 @@ func (s *StoreTestSuite) TestFetchSystemIntakes() {
 		expected := map[string]bool{}
 		for ix := 0; ix < 5; ix++ {
 			intake := testhelpers.NewSystemIntake()
-			result, err := s.store.CreateSystemIntake(ctx, &intake)
+			result, err := CreateSystemIntake(ctx, s.store, &intake)
 			s.NoError(err)
 			expected[result.ID.String()] = false
 		}

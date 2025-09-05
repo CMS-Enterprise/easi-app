@@ -16,7 +16,7 @@ func (s *StoreTestSuite) TestFetchBusinessCaseByID() {
 
 	s.Run("golden path to fetch a Business Case", func() {
 		intake := testhelpers.NewSystemIntake()
-		_, err := s.store.CreateSystemIntake(ctx, &intake)
+		_, err := CreateSystemIntake(ctx, s.store, &intake)
 		s.NoError(err)
 		businessCase := testhelpers.NewBusinessCase(intake.ID)
 		created, err := s.store.CreateBusinessCase(ctx, &businessCase)
@@ -31,7 +31,7 @@ func (s *StoreTestSuite) TestFetchBusinessCaseByID() {
 
 	s.Run("fetches an open Business Case", func() {
 		intake := testhelpers.NewSystemIntake()
-		retIntake, err := s.store.CreateSystemIntake(ctx, &intake)
+		retIntake, err := CreateSystemIntake(ctx, s.store, &intake)
 		s.NoError(err)
 		businessCase := testhelpers.NewBusinessCase(retIntake.ID)
 		businessCase.Status = models.BusinessCaseStatusOPEN
@@ -60,7 +60,7 @@ func (s *StoreTestSuite) TestCreateBusinessCase() {
 
 	s.Run("golden path to create a Business Case", func() {
 		intake := testhelpers.NewSystemIntake()
-		_, err := s.store.CreateSystemIntake(ctx, &intake)
+		_, err := CreateSystemIntake(ctx, s.store, &intake)
 		s.NoError(err)
 		businessCase := models.BusinessCaseWithCosts{
 			BusinessCase: models.BusinessCase{
@@ -114,7 +114,7 @@ func (s *StoreTestSuite) TestCreateBusinessCase() {
 
 	s.Run("requires an eua user id", func() {
 		intake := testhelpers.NewSystemIntake()
-		_, err := s.store.CreateSystemIntake(ctx, &intake)
+		_, err := CreateSystemIntake(ctx, s.store, &intake)
 		s.NoError(err)
 		businessCase := models.BusinessCaseWithCosts{
 			BusinessCase: models.BusinessCase{
@@ -131,7 +131,7 @@ func (s *StoreTestSuite) TestCreateBusinessCase() {
 
 	s.Run("requires a status", func() {
 		intake := testhelpers.NewSystemIntake()
-		_, err := s.store.CreateSystemIntake(ctx, &intake)
+		_, err := CreateSystemIntake(ctx, s.store, &intake)
 		s.NoError(err)
 		businessCase := models.BusinessCaseWithCosts{
 			BusinessCase: models.BusinessCase{
@@ -151,7 +151,7 @@ func (s *StoreTestSuite) TestUpdateBusinessCase() {
 	ctx := context.Background()
 
 	intake := testhelpers.NewSystemIntake()
-	retIntake, err := s.store.CreateSystemIntake(ctx, &intake)
+	retIntake, err := CreateSystemIntake(ctx, s.store, &intake)
 	s.NoError(err)
 	euaID := intake.EUAUserID.ValueOrZero()
 	businessCaseOriginal := testhelpers.NewBusinessCase(retIntake.ID)

@@ -191,7 +191,7 @@ func createSystemIntake(
 		State:       models.SystemIntakeStateOpen,
 		Step:        models.SystemIntakeStepINITIALFORM,
 	}
-	intake, err := store.CreateSystemIntake(ctx, &i)
+	intake, err := storage.CreateSystemIntake(ctx, store, &i)
 	if err != nil {
 		panic(err)
 	}

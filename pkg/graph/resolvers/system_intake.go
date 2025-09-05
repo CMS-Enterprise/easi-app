@@ -34,7 +34,7 @@ func CreateSystemIntake(
 		State:       models.SystemIntakeStateOpen,
 		Step:        models.SystemIntakeStepINITIALFORM,
 	}
-	createdIntake, err := store.CreateSystemIntake(ctx, &systemIntake)
+	createdIntake, err := storage.CreateSystemIntake(ctx, store, &systemIntake)
 	// TODO: EASI-4946 this should be a transaction in case one fails
 	logger := appcontext.ZLogger(ctx)
 	principal := appcontext.Principal(ctx)

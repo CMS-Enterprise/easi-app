@@ -5,6 +5,7 @@ import (
 	"github.com/guregu/null"
 
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 // TestTRBRequestLCIDCrud tests creation/deletion of TRB request LCIDs
@@ -22,7 +23,7 @@ func (s *ResolverSuite) TestTRBRequestLCID() {
 	lcids := []string{"111111", "111222", "111333"}
 	intakes := make([]*models.SystemIntake, 3)
 	for i, lcid := range lcids {
-		intake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
+		intake, err := storage.CreateSystemIntake(ctx, store, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeMAJORCHANGES,
 		})
 		s.NoError(err)

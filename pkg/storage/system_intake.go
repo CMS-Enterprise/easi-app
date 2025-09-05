@@ -20,11 +20,13 @@ import (
 )
 
 // CreateSystemIntake creates a system intake, though without saving values for LCID-related fields
-func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
+func CreateSystemIntake(ctx context.Context, np sqlutils.NamedPreparer, intake *models.SystemIntake) (*models.SystemIntake, error) {
+	//TODO this business logic should happen in resolvers, not in store.
 	if intake.ID == uuid.Nil {
 		intake.ID = uuid.New()
 	}
-	createAt := s.clock.Now()
+	// this previously used the clock interface, but that just wrapped time.Now()
+	createAt := time.Now()
 	if intake.CreatedAt == nil {
 		intake.CreatedAt = &createAt
 	}
@@ -184,10 +186,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			:created_at,
 			:updated_at
 		)`
-	_, err := s.db.NamedExec(
-		createIntakeSQL,
-		intake,
-	)
+	_, err := namedExec(ctx, np, createIntakeSQL, intake)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to create system intake with error %s", err),
@@ -195,7 +194,9 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 		)
 		return nil, err
 	}
-	return s.FetchSystemIntakeByID(ctx, intake.ID)
+	// TODO, update fetch system intake top
+	return intake, nil
+	// return s.FetchSystemIntakeByID(ctx, intake.ID)
 }
 
 // UpdateSystemIntake serves as a wrapper for UpdateSystemIntakeNP, which is the actual implementation
