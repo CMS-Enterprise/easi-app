@@ -32,11 +32,11 @@ const governanceReviewBoard = {
       }
     },
     tips: {
-      title: 'Tips for the meeting',
+      title: 'Tips for the review',
       items: [
-        'When walking through your Business Case, highlight how this project would benefit CMS and further their current priorities.',
+        'When sharing your Business Case, highlight how this project would benefit CMS and further their current priorities.',
         'Thoroughly review the costs included in your Business Case and identify the assumptions you made when you calculated them.',
-        'If you have been discussing your request with Subject Matter Expert (SME) groups, highlight it during the meeting. This helps the Review Board understand more about the project team’s circumstances and offers them additional reassurances.'
+        'If you have been discussing your request with Subject Matter Expert (SME) groups, highlight it during the review. This helps the GRB understand more about the project team’s circumstances and offers them additional reassurances.'
       ]
     },
     whatToBring: {

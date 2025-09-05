@@ -79,13 +79,15 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
           <h3 className="margin-top-0 margin-bottom-1">
             {t('help.tips.title')}
           </h3>
-          <ul className="usa-list usa-list--unstyled line-height-body-5 padding-y-0">
+          <ul className="usa-list line-height-body-5 padding-y-0">
             {(
               t('help.tips.items', {
                 returnObjects: true
               }) as string[]
             ).map(item => (
-              <li key={item}>{item}</li>
+              <li key={item} className="maxw-none">
+                {item}
+              </li>
             ))}
           </ul>
         </div>
