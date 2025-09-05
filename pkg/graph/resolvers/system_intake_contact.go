@@ -10,6 +10,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 )
@@ -19,7 +20,7 @@ func CreateSystemIntakeContact(
 	ctx context.Context,
 	logger *zap.Logger,
 	principal authentication.Principal,
-	store *storage.Store,
+	np sqlutils.NamedPreparer,
 	input models.CreateSystemIntakeContactInput,
 	getAccountInformation userhelpers.GetAccountInfoFunc,
 ) (*models.CreateSystemIntakeContactPayload, error) {
@@ -27,7 +28,7 @@ func CreateSystemIntakeContact(
 	if principalAccount == nil {
 		return nil, fmt.Errorf("principal doesn't have an account, username %s", principal.String())
 	}
-	contactUserAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, input.EuaUserID, false, getAccountInformation)
+	contactUserAccount, err := userhelpers.GetOrCreateUserAccount(ctx, np, input.EuaUserID, false, getAccountInformation)
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +40,7 @@ func CreateSystemIntakeContact(
 
 	contact.Roles = input.Roles
 
-	createdContact, err := storage.CreateSystemIntakeContact(ctx, store, contact)
+	createdContact, err := storage.CreateSystemIntakeContact(ctx, np, contact)
 	if err != nil {
 		return nil, err
 	}
@@ -49,10 +50,10 @@ func CreateSystemIntakeContact(
 }
 
 // SystemIntakeContactDelete will, delete a System Intake contact
-func SystemIntakeContactDelete(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.SystemIntakeContact, error) {
+func SystemIntakeContactDelete(ctx context.Context, np sqlutils.NamedPreparer, id uuid.UUID) (*models.SystemIntakeContact, error) {
 
 	// TODO, consider expanding error handling, and make sure the delete returns the contact
-	return store.DeleteSystemIntakeContact(ctx, id)
+	return storage.DeleteSystemIntakeContact(ctx, np, id)
 
 }
 
@@ -61,7 +62,7 @@ func UpdateSystemIntakeContact(
 	ctx context.Context,
 	logger *zap.Logger,
 	principal authentication.Principal,
-	store *storage.Store,
+	np sqlutils.NamedPreparer,
 	input models.UpdateSystemIntakeContactInput,
 	getAccountInformation userhelpers.GetAccountInfoFunc,
 ) (*models.CreateSystemIntakeContactPayload, error) {
@@ -78,7 +79,7 @@ func UpdateSystemIntakeContact(
 		return nil, err
 	}
 
-	updatedContact, err := store.UpdateSystemIntakeContact(ctx, contact)
+	updatedContact, err := storage.UpdateSystemIntakeContact(ctx, np, contact)
 	if err != nil {
 		return nil, err
 	}
