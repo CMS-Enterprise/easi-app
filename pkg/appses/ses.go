@@ -37,7 +37,7 @@ type Sender struct {
 func NewSender(ctx context.Context, sesConfig Config, environment appconfig.Environment) Sender {
 	awsConfig, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
-		panic(fmt.Errorf("problem creating aws config when getting new ses sender: %w", err))
+		panic(fmt.Errorf("problem creating aws config when creating new SES sender: %w", err))
 	}
 
 	return Sender{
