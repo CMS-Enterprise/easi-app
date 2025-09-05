@@ -1,6 +1,7 @@
 import {
   AugmentedSystemIntakeContact,
   FundingSourceFragmentFragment,
+  ITGovIntakeFormStatus,
   SystemIntakeCollaboratorInput,
   SystemIntakeGRBReviewType,
   SystemIntakeStatusAdmin
@@ -64,6 +65,9 @@ export type SystemIntakeForm = {
   grbDate: string | null;
   adminLead: string;
   requesterNameAndComponent: string;
+  itGovTaskStatuses: {
+    intakeFormStatus: ITGovIntakeFormStatus;
+  };
 } & ContractDetailsForm;
 
 export type ContactFields = Omit<
@@ -103,16 +107,8 @@ export type ContractDetailsForm = {
   contract: {
     hasContract: SystemIntakeContractStatus | null;
     contractor: string;
-    startDate: {
-      month: string;
-      day: string;
-      year: string;
-    };
-    endDate: {
-      month: string;
-      day: string;
-      year: string;
-    };
+    startDate: string | null;
+    endDate: string | null;
     numbers: string;
   };
 };

@@ -37,7 +37,8 @@ const IconButton = ({
     className: classNames(
       icon.props.className,
       `margin-${iconPosition === 'before' ? 'right' : 'left'}-1`
-    )
+    ),
+    'aria-hidden': true
   });
 
   return (

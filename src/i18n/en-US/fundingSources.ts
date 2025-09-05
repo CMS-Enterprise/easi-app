@@ -1,6 +1,6 @@
 const fundingSources = {
   fundingSource: 'Funding source',
-  whichFundingSources: 'Which funding sources will fund this project?',
+  whichFundingSources: 'Which existing funding sources will fund this project?',
   helpText:
     'If you are unsure or need help, please get in touch with your Front Office or reach out to the Governance Admin Team at <a>IT_Governance@cms.hhs.gov</a>.',
   addFundingSource: 'Add a funding source',

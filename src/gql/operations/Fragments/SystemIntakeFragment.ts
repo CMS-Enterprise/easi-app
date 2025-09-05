@@ -174,5 +174,8 @@ export default gql(/* GraphQL */ `
       numberOfObjection
       numberOfNotVoted
     }
+    itGovTaskStatuses {
+      intakeFormStatus
+    }
   }
 `);

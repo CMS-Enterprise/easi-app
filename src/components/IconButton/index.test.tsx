@@ -16,6 +16,7 @@ describe('Icon button', () => {
     );
 
     // Check that link renders
-    expect(getByRole('img')).toBeInTheDocument();
+    const button = getByRole('button', { name: /link label/i });
+    expect(button.querySelector('svg')).toBeInTheDocument();
   });
 });
