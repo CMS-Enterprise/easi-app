@@ -60,9 +60,21 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
           {t('help.whatToExpect.title')}
         </h2>
         <p className="line-height-sans-5">{t('help.whatToExpect.body')}</p>
-        <Alert type="info" slim>
-          {t('prepare.whatIsIt.alert')}
-        </Alert>
+        <p className="line-height-sans-5 margin-bottom-0">
+          {t('help.whatToExpect.importantItems.copy')}
+        </p>
+        <ul className="usa-list line-height-body-5 padding-y-0 margin-top-0">
+          {(
+            t('help.whatToExpect.importantItems.items', {
+              returnObjects: true
+            }) as string[]
+          ).map(item => (
+            <li key={item} className="maxw-none">
+              {item}
+            </li>
+          ))}
+        </ul>
+
         <div className="margin-top-3 padding-2 bg-base-lightest">
           <h3 className="margin-top-0 margin-bottom-1">
             {t('help.tips.title')}
@@ -78,6 +90,9 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
           </ul>
         </div>
       </div>
+      <Alert type="info" slim>
+        {t('prepare.whatIsIt.alert')}
+      </Alert>
       <div>
         <h2 className="margin-top-6 margin-bottom-2">
           {t('help.whatToBring.title')}
