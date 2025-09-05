@@ -130,7 +130,7 @@ const SystemIntakeValidationSchema = {
         .positive('Annual spending must be a positive number'),
       plannedYearOneSpendingITPortion: Yup.number()
         .typeError('Please enter a valid number')
-        .required('Please enter a valid number for the current annual spending')
+        .required('Please enter a valid number for the planned annual spending')
     }),
     contract: Yup.object().shape({
       hasContract: Yup.string()
