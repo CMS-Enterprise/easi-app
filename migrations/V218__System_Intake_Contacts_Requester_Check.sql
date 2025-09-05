@@ -3,7 +3,7 @@
 CREATE OR REPLACE FUNCTION check_system_intake_contacts_requester() RETURNS TRIGGER AS $requester_check$
 BEGIN
     -- Avoid recursion by checking pg_trigger_depth()
-    -- depth of 0 means not created from inside a trigger
+    -- depth >1 means this function is a nested trigger call
     IF pg_trigger_depth() > 1 THEN
         RETURN NEW;
     END IF;
