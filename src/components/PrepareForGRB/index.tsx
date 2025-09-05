@@ -8,8 +8,6 @@ import HelpPageIntro from 'components/HelpPageIntro';
 import PageHeading from 'components/PageHeading';
 import { ArticleComponentProps } from 'types/articles';
 
-import './index.scss';
-
 export default ({ helpArticle, className }: ArticleComponentProps) => {
   const { t } = useTranslation('governanceReviewBoard');
   return (
