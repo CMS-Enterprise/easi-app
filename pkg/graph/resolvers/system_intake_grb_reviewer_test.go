@@ -402,7 +402,6 @@ func (s *ResolverSuite) TestSystemIntakeStartGRBReview() {
 	accts, err := userhelpers.GetOrCreateUserAccounts(
 		ctx,
 		store,
-		store,
 		[]string{"BTMN", "A11Y", "ABCD"},
 		false,
 		userhelpers.GetUserInfoAccountInfosWrapperFunc(okta.FetchUserInfos),

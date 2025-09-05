@@ -184,7 +184,7 @@ func NewEmailClient() (*email.Client, *mockSender) {
 // getTestPrincipal gets a user principal from database
 func (s *ResolverSuite) getTestPrincipal(ctx context.Context, store *storage.Store, userName string, isAdmin bool) *authentication.EUAPrincipal {
 
-	userAccount, _ := userhelpers.GetOrCreateUserAccount(ctx, store, store, userName, true, userhelpers.GetUserInfoAccountInfoWrapperFunc(s.testConfigs.UserSearchClient.FetchUserInfo))
+	userAccount, _ := userhelpers.GetOrCreateUserAccount(ctx, store, userName, true, userhelpers.GetUserInfoAccountInfoWrapperFunc(s.testConfigs.UserSearchClient.FetchUserInfo))
 
 	princ := &authentication.EUAPrincipal{
 		EUAID:           userName,
@@ -287,7 +287,7 @@ func (s *ResolverSuite) getOrCreateUserAcct(euaUserID string) *authentication.Us
 	store := s.testConfigs.Store
 	okta := local.NewOktaAPIClient()
 	userAcct, err := sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*authentication.UserAccount, error) {
-		user, err := userhelpers.GetOrCreateUserAccount(ctx, tx, store, euaUserID, false, userhelpers.GetUserInfoAccountInfoWrapperFunc(okta.FetchUserInfo))
+		user, err := userhelpers.GetOrCreateUserAccount(ctx, tx, euaUserID, false, userhelpers.GetUserInfoAccountInfoWrapperFunc(okta.FetchUserInfo))
 		if err != nil {
 			return nil, err
 		}
@@ -303,7 +303,7 @@ func (s *ResolverSuite) getOrCreateUserAccts(euaUserIDs ...string) []*authentica
 	store := s.testConfigs.Store
 	okta := local.NewOktaAPIClient()
 	userAccts, err := sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) ([]*authentication.UserAccount, error) {
-		users, err := userhelpers.GetOrCreateUserAccounts(ctx, tx, store, euaUserIDs, false, userhelpers.GetUserInfoAccountInfosWrapperFunc(okta.FetchUserInfos))
+		users, err := userhelpers.GetOrCreateUserAccounts(ctx, tx, euaUserIDs, false, userhelpers.GetUserInfoAccountInfosWrapperFunc(okta.FetchUserInfos))
 		if err != nil {
 			return nil, err
 		}

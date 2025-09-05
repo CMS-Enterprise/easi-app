@@ -43,7 +43,7 @@ func CtxWithPrincipal(ctx context.Context, store *storage.Store, username string
 	}
 
 	//Future Enhancement: consider passing the context with the seeder, and using the seeder.UserSearchClient to return mocked data instead of needing to initialize a client for each mock call
-	userAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, username, true, userhelpers.GetUserInfoAccountInfoWrapperFunc(FetchUserInfoMock))
+	userAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, username, true, userhelpers.GetUserInfoAccountInfoWrapperFunc(FetchUserInfoMock))
 	if err != nil {
 		panic(fmt.Errorf("failed to get or create user account for mock data: %w", err))
 	}

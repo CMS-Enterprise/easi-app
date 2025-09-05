@@ -262,7 +262,6 @@ func (u *Uploader) GetOrCreateUserAccounts(ctx context.Context, userNames []stri
 		}
 		account, err := userhelpers.GetOrCreateUserAccount(ctx,
 			u.Store,
-			u.Store,
 			username,
 			false,
 			userhelpers.GetUserInfoAccountInfoWrapperFunc(u.Okta.FetchUserInfo),

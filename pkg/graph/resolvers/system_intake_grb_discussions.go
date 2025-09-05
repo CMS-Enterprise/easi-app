@@ -328,7 +328,7 @@ func sendDiscussionEmailsForTags(
 				return err
 			}
 
-			requesterAcct, err := store.UserAccountGetByUsername(ctx, store, intake.EUAUserID.String)
+			requesterAcct, err := storage.UserAccountGetByUsername(ctx, store, intake.EUAUserID.String)
 			if err != nil {
 				logger.Error("problem getting requester account when requester tagged", zap.Error(err))
 				return err

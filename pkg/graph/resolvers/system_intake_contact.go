@@ -27,7 +27,7 @@ func CreateSystemIntakeContact(
 	if principalAccount == nil {
 		return nil, fmt.Errorf("principal doesn't have an account, username %s", principal.String())
 	}
-	contactUserAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, input.EuaUserID, false, getAccountInformation)
+	contactUserAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, input.EuaUserID, false, getAccountInformation)
 	if err != nil {
 		return nil, err
 	}

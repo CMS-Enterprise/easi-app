@@ -555,7 +555,7 @@ func main() {
 	})
 
 	// add GRB links to intake
-	mockUser, err := store.UserAccountGetByUsername(ctx, store, mock.PrincipalUser)
+	mockUser, err := storage.UserAccountGetByUsername(ctx, store, mock.PrincipalUser)
 	must(nil, err)
 
 	// create one with recording link and presentation file

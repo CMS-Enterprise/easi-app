@@ -62,7 +62,7 @@ func CreateSystemIntakeGRBReviewers(ctx context.Context, store *storage.Store, e
 		reviewersByEUAMap := lo.KeyBy(input.Reviewers, func(reviewer *models.CreateGRBReviewerInput) string {
 			return reviewer.EuaUserID
 		})
-		accts, err := userhelpers.GetOrCreateUserAccounts(ctx, tx, store, euas, false, fetchUsers)
+		accts, err := userhelpers.GetOrCreateUserAccounts(ctx, tx, euas, false, fetchUsers)
 		if err != nil {
 			return nil, err
 		}

@@ -79,13 +79,13 @@ func GetOrCreateUserAccountFullName(
 	userAccount.HasLoggedIn = hasLoggedIn
 
 	if userAccount.ID == uuid.Nil {
-		newAccount, newErr := store.UserAccountCreate(ctx, np, userAccount)
+		newAccount, newErr := storage.UserAccountCreate(ctx, np, userAccount)
 		if newErr != nil {
 			accountCreationErr := sqlutils.ProcessDataBaseErrors("failed to create user account", newErr)
 			if errors.As(accountCreationErr, &sqlutils.ErrDuplicateConstraint) {
 				// If we hit a unique violation, it means the account already exists
 				// We should try to retrieve it instead of creating a new one
-				existingAccount, getErr := store.UserAccountGetByUsername(ctx, np, userAccount.Username)
+				existingAccount, getErr := storage.UserAccountGetByUsername(ctx, np, userAccount.Username)
 				if getErr != nil {
 					return nil, getErr
 				}
@@ -96,7 +96,7 @@ func GetOrCreateUserAccountFullName(
 		return newAccount, nil
 	}
 
-	updatedAccount, updateErr := store.UserAccountUpdate(ctx, np, userAccount)
+	updatedAccount, updateErr := storage.UserAccountUpdate(ctx, np, userAccount)
 	if updateErr != nil {
 		return nil, updateErr
 	}
@@ -107,12 +107,11 @@ func GetOrCreateUserAccountFullName(
 func GetOrCreateUserAccount(
 	ctx context.Context,
 	np sqlutils.NamedPreparer,
-	store *storage.Store,
 	username string,
 	hasLoggedIn bool,
 	getAccountInformation GetAccountInfoFunc,
 ) (*authentication.UserAccount, error) {
-	userAccount, accErr := store.UserAccountGetByUsername(ctx, np, username) //TODO: this could be expanded to check by either username or commonName
+	userAccount, accErr := storage.UserAccountGetByUsername(ctx, np, username) //TODO: this could be expanded to check by either username or commonName
 	if accErr != nil {
 		return nil, errors.New("failed to get user information from the database")
 	}
@@ -139,14 +138,14 @@ func GetOrCreateUserAccount(
 	userAccount.HasLoggedIn = hasLoggedIn
 
 	if shouldCreateAccount {
-		newAccount, newErr := store.UserAccountCreate(ctx, np, userAccount)
+		newAccount, newErr := storage.UserAccountCreate(ctx, np, userAccount)
 		if newErr != nil {
 			return nil, newErr
 		}
 		return newAccount, nil
 	}
 
-	updatedAccount, updateErr := store.UserAccountUpdate(ctx, np, userAccount)
+	updatedAccount, updateErr := storage.UserAccountUpdate(ctx, np, userAccount)
 	if updateErr != nil {
 		return nil, updateErr
 	}
@@ -157,12 +156,11 @@ func GetOrCreateUserAccount(
 func GetOrCreateUserAccounts(
 	ctx context.Context,
 	np sqlutils.NamedPreparer,
-	store *storage.Store,
 	usernames []string,
 	hasLoggedIn bool,
 	getAccountInformation GetAccountInfosFunc,
 ) ([]*authentication.UserAccount, error) {
-	existingUserAccounts, accErr := store.UserAccountGetByUsernames(ctx, np, usernames)
+	existingUserAccounts, accErr := storage.UserAccountGetByUsernames(ctx, np, usernames)
 	if accErr != nil {
 		return nil, errors.New("failed to get user information from the database")
 	}
@@ -218,7 +216,7 @@ func GetOrCreateUserAccounts(
 
 	if len(accountsToCreate) > 0 {
 		var err error
-		createdAccts, err = store.UserAccountBulkCreate(ctx, np, accountsToCreate)
+		createdAccts, err = storage.UserAccountBulkCreate(ctx, np, accountsToCreate)
 		if err != nil {
 			return nil, err
 		}
@@ -226,7 +224,7 @@ func GetOrCreateUserAccounts(
 
 	if len(accountsToUpdate) > 0 {
 		var err error
-		updatedAccts, err = store.UserAccountBulkUpdate(ctx, np, accountsToUpdate)
+		updatedAccts, err = storage.UserAccountBulkUpdate(ctx, np, accountsToUpdate)
 		if err != nil {
 			return nil, err
 		}
