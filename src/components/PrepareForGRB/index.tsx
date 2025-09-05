@@ -112,21 +112,23 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
         {t('help.types.async.copy')}
       </p>
 
-      <div>
-        <h2 className="margin-top-6 margin-bottom-2">
-          {t('prepare.possibleOutcomes.title')}
-        </h2>
-        <p className="margin-y-0">{t('prepare.possibleOutcomes.body')}</p>
-        <ul className="usa-list usa-list--unstyled list-style-none line-height-body-5 margin-top-1 padding-y-0">
-          {(
-            t('prepare.possibleOutcomes.items', {
-              returnObjects: true
-            }) as string[]
-          ).map(item => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-      </div>
+      <h2 className="margin-top-3 margin-bottom-2">
+        {t('prepare.possibleOutcomes.title')}
+      </h2>
+      <p className="line-height-sans-5 margin-y-0">
+        {t('prepare.possibleOutcomes.body')}
+      </p>
+      <ul className="usa-list line-height-body-5 margin-top-1 padding-y-0">
+        {(
+          t('prepare.possibleOutcomes.items', {
+            returnObjects: true
+          }) as string[]
+        ).map(item => (
+          <li key={item} className="maxw-none">
+            {item}
+          </li>
+        ))}
+      </ul>
       <NeedHelpBox className="desktop:grid-col-6 margin-top-5" />
     </div>
   );

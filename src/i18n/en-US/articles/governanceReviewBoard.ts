@@ -74,14 +74,14 @@ const governanceReviewBoard = {
         'At the meeting, you’ll need to talk through how you arrived at the costs in your Business Case and the assumptions you made when calculating them. '
       ],
       alert:
-        'You’ll be discussing sensitive costing information in this meeting. So please don’t bring any contractors to this session unless you need them to help discuss the technical solution.'
+        'You’ll be discussing sensitive costing information in this meeting. Therefore, please do not bring any contractors to this session unless you need them to help discuss the technical solution.'
     },
     possibleOutcomes: {
       title: 'Possible outcomes',
-      body: 'After this discussion, the Governance Review Board will decide whether to accept your proposed Business Case.',
+      body: 'After the review (either meeting or asynchronous), the Governance Review Board will decide whether to approve your request at this time. They will offer one of the following possible outcomes:',
       items: [
-        'LCID Issued: If the business proposal is acceptable to the Governance Review Board, a Life Cycle ID will be issued, and future review will occur at regular intervals specific to your project.',
-        'LCID Delayed: If there are two or more objections, a Life Cycle ID will not be issued. The project team will receive next steps to outline which concerns or requirements must be addressed before they can apply for an LCID again '
+        'If the GRB approves your request, you will receive a Life Cycle ID (LCID) in EASi. You need this ID to request funding and complete other contract actions. The Life Cycle ID will include an expiration date, next steps, and a documented scope of the work approved under the LCID. The Governance Admin Team may follow up with you at a later date to check in on the status of your project.',
+        'If two or more GRB members voice concerns about a project, a Life Cycle ID won’t be issued. The request will not be approved until all concerns are addressed or the concerned GRB members withdraw their concerns. If you need assistance addressing the concerns of the GRB, contact the Governance Admin Team for possible next steps.'
       ]
     },
     howToBestPrepare: {
