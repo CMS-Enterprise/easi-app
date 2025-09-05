@@ -71,11 +71,13 @@ func (s *ResolverSuite) getTestContextWithPrincipal(euaID string, isAdmin bool) 
 func TestResolverSuite(t *testing.T) {
 	rs := new(ResolverSuite)
 	rs.testConfigs = GetDefaultTestConfigs()
-	rs.fetchUserInfoStub = func(context.Context, string) (*models.UserInfo, error) {
+	rs.fetchUserInfoStub = func(ctx context.Context, username string) (*models.UserInfo, error) {
 		return &models.UserInfo{
-			Username:    "ANON",
-			DisplayName: "Anonymous",
-			Email:       models.NewEmailAddress("anon@local.fake"),
+			Username:    username,
+			FirstName:   username,
+			LastName:    "Doe",
+			DisplayName: username + " Doe",
+			Email:       models.NewEmailAddress(username + ".doe@local.fake"),
 		}, nil
 	}
 	suite.Run(t, rs)
