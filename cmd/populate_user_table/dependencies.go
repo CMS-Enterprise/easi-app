@@ -19,7 +19,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
-// getResolverDependencies takes a Viper dbConfig and returns a Store and Logger object to be used
+// getResolverDependencies takes a Viper config and returns a Store and Logger object to be used
 // by various resolver functions.
 func getResolverDependencies(config *viper.Viper) (
 	*sqlx.DB,

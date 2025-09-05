@@ -200,8 +200,8 @@ func ReadFullNamesFromJSONAndCreateAccounts() {
 
 // NewUploader instantiates an Uploader
 func NewUploader(config *viper.Viper) *Uploader { //TODO make this more configurable if needed
-	// dbConfig := viper.New()
-	// dbConfig.AutomaticEnv()
+	// config := viper.New()
+	// config.AutomaticEnv()
 
 	db, store, logger, okta := getResolverDependencies(config)
 	return &Uploader{
