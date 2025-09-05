@@ -25,7 +25,7 @@ func CreateSystemIntake(ctx context.Context, np sqlutils.NamedPreparer, intake *
 	if intake.ID == uuid.Nil {
 		intake.ID = uuid.New()
 	}
-	// this previously used the clock interface, but that just wrapped time.Now()
+
 	createAt := time.Now()
 	if intake.CreatedAt == nil {
 		intake.CreatedAt = &createAt
