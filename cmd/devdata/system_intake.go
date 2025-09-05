@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/99designs/gqlgen/graphql"
@@ -90,25 +91,34 @@ func fillOutInitialIntake(
 		"YES",
 		acqMethods,
 	)
+	contacts, err := resolvers.SystemIntakeContactsGetBySystemIntakeID(ctx, intake.ID)
+	if err != nil {
+		panic(err)
+	}
+	requester, err := contacts.Requester()
+	if err != nil || requester == nil {
+		panic(fmt.Errorf("unable to find a requester: %w", err))
+	}
 	updateSystemIntakeContact(ctx, store,
-		"USR1",
-		"Center for Medicare",
-		"Requester",
+		requester.ID,
+		models.SystemIntakeContactComponentCenterForMedicareCm,
+		[]models.SystemIntakeContactRole{models.SystemIntakeContactRoleSystemOwner},
+		true,
 	)
 	createSystemIntakeContact(ctx, store, intake,
 		"A11Y",
-		"Office of Healthcare Experience and Interoperability",
-		"Business Owner",
+		models.SystemIntakeContactComponentOfficeOfHealthcareExperienceAndInteroperability,
+		[]models.SystemIntakeContactRole{models.SystemIntakeContactRoleBusinessOwner},
 	)
 	createSystemIntakeContact(ctx, store, intake,
 		"OQYV",
-		"Center for Medicare",
-		"Product Manager",
+		models.SystemIntakeContactComponentCenterForMedicareCm,
+		[]models.SystemIntakeContactRole{models.SystemIntakeContactRoleProductManager},
 	)
 	createSystemIntakeContact(ctx, store, intake,
 		"GP87",
-		"Center for Medicare",
-		"ISSO",
+		models.SystemIntakeContactComponentCenterForMedicareCm,
+		[]models.SystemIntakeContactRole{models.SystemIntakeContactRoleInformationSystemSecurityAdvisor},
 	)
 	intake = updateSystemIntakeContactDetails(ctx, store, intake,
 		"User One",
@@ -167,6 +177,7 @@ func createSystemIntake(
 	if requesterEUAID != "" {
 		requesterEUAIDPtr = &requesterEUAID
 	}
+	getAccountInformation := userhelpers.GetUserInfoAccountInfoWrapperFunc(mock.FetchUserInfoMock)
 	// The resolver requires an EUA ID and creates a random intake ID.
 	// Only use the resolver if there is no pre-made intake ID and the Requester EUA is given.
 	if intakeID == nil && requesterEUAIDPtr != nil {
@@ -176,26 +187,48 @@ func createSystemIntake(
 				Name: requesterName,
 			},
 		}
-		intake, err := resolvers.CreateSystemIntake(ctx, store, input, userhelpers.GetUserInfoAccountInfoWrapperFunc(mock.FetchUserInfoMock))
+		intake, err := resolvers.CreateSystemIntake(ctx, store, input, getAccountInformation)
 		if err != nil {
 			panic(err)
 		}
 		return intake
 	}
+	//TODO refactor so everything uses the resolver
 	// We must use the store method to use a pre-made ID or if the requester EUA isn't given
-	i := models.SystemIntake{
-		ID:          *intakeID,
-		EUAUserID:   null.StringFromPtr(requesterEUAIDPtr),
-		RequestType: requestType,
-		Requester:   requesterName,
-		State:       models.SystemIntakeStateOpen,
-		Step:        models.SystemIntakeStepINITIALFORM,
-	}
-	intake, err := storage.CreateSystemIntake(ctx, store, &i)
+	intakeRetFromTransaction, err := sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
+		i := models.SystemIntake{
+			ID:          *intakeID,
+			EUAUserID:   null.StringFromPtr(requesterEUAIDPtr),
+			RequestType: requestType,
+			Requester:   requesterName,
+			State:       models.SystemIntakeStateOpen,
+			Step:        models.SystemIntakeStepINITIALFORM,
+		}
+		intake, err := storage.CreateSystemIntake(ctx, store, &i)
+		logger := appcontext.ZLogger(ctx)
+
+		principal := appcontext.Principal(ctx)
+		_, err2 := resolvers.CreateSystemIntakeContact(ctx, logger, principal, tx, models.CreateSystemIntakeContactInput{
+			EuaUserID:      principal.ID(),
+			SystemIntakeID: intake.ID,
+			Roles: []models.SystemIntakeContactRole{
+				models.SystemIntakeContactRolePLACEHOLDER,
+			},
+			Component:   models.SystemIntakeContactComponentPLACEHOLDER,
+			IsRequester: true,
+		},
+			getAccountInformation,
+		)
+		if err2 != nil {
+			return nil, err2
+		}
+		return intake, err
+
+	})
 	if err != nil {
 		panic(err)
 	}
-	return intake
+	return intakeRetFromTransaction
 }
 
 // This is a v2 function that uses the resolver to fill in an intake's request details
@@ -243,15 +276,14 @@ func createSystemIntakeContact(
 	store *storage.Store,
 	intake *models.SystemIntake,
 	euaUserID string,
-	component string,
-	role string,
+	component models.SystemIntakeContactComponent,
+	roles []models.SystemIntakeContactRole,
 ) {
 	logger := appcontext.ZLogger(ctx)
 	userPrincipal := appcontext.Principal(ctx)
 	input := models.CreateSystemIntakeContactInput{
-		//TODO, address the input types
-		Component:      models.SystemIntakeContactComponent(component),
-		Roles:          []models.SystemIntakeContactRole{models.SystemIntakeContactRole(role)},
+		Component:      component,
+		Roles:          roles,
 		EuaUserID:      euaUserID,
 		SystemIntakeID: intake.ID,
 	}
@@ -265,16 +297,18 @@ func createSystemIntakeContact(
 func updateSystemIntakeContact(
 	ctx context.Context,
 	store *storage.Store,
-	euaUserID string,
-	component string,
-	role string,
+	requesterID uuid.UUID,
+	component models.SystemIntakeContactComponent,
+	roles []models.SystemIntakeContactRole,
+	IsRequester bool,
 ) {
 	logger := appcontext.ZLogger(ctx)
 	userPrincipal := appcontext.Principal(ctx)
 	input := models.UpdateSystemIntakeContactInput{
-		Component: models.SystemIntakeContactComponent(component),
-		Roles:     []models.SystemIntakeContactRole{models.SystemIntakeContactRole(role)},
-		// EuaUserID: euaUserID,
+		ID:          requesterID,
+		Component:   models.SystemIntakeContactComponent(component),
+		Roles:       roles,
+		IsRequester: IsRequester,
 	}
 	_, err := resolvers.UpdateSystemIntakeContact(ctx, logger, userPrincipal, store, input,
 		userhelpers.GetUserInfoAccountInfoWrapperFunc(mock.FetchUserInfoMock),

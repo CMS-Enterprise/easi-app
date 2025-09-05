@@ -97,7 +97,7 @@ func SystemIntakeContactsGetBySystemIntakeID(ctx context.Context, systemIntakeID
 	}, nil
 }
 
-// SystemIntakeContactsGetByID fetches contacts for a system intake
-func SystemIntakeContactsGetByID(ctx context.Context, id uuid.UUID) (*models.SystemIntakeContact, error) {
+// SystemIntakeContactGetByID fetches contacts for a system intake
+func SystemIntakeContactGetByID(ctx context.Context, id uuid.UUID) (*models.SystemIntakeContact, error) {
 	return dataloaders.SystemIntakeContactGetByID(ctx, id)
 }
