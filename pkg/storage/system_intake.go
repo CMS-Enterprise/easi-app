@@ -194,8 +194,7 @@ func CreateSystemIntake(ctx context.Context, np sqlutils.NamedPreparer, intake *
 		)
 		return nil, err
 	}
-	// TODO, update fetch system intake top
-	// return intake, nil
+
 	return FetchSystemIntakeByIDNP(ctx, np, intake.ID)
 }
 

@@ -51,10 +51,7 @@ func CreateSystemIntakeContact(
 
 // SystemIntakeContactDelete will, delete a System Intake contact
 func SystemIntakeContactDelete(ctx context.Context, np sqlutils.NamedPreparer, id uuid.UUID) (*models.SystemIntakeContact, error) {
-
-	// TODO, consider expanding error handling, and make sure the delete returns the contact
 	return storage.DeleteSystemIntakeContact(ctx, np, id)
-
 }
 
 // UpdateSystemIntakeContact updates a system intake's contact info.
