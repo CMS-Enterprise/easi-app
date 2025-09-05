@@ -26,9 +26,8 @@ const NeedHelpBox = ({
         {t('needHelp.heading')}
       </SummaryBoxHeading>
       <SummaryBoxContent>
-        <div className="margin-top-2 margin-bottom-05">{con}</div>
-        <div>
-          <USWDSLink href={`mailto:${em}`}>{em}</USWDSLink>
+        <div className="margin-top-2 margin-bottom-05">
+          {con} <USWDSLink href={`mailto:${em}`}>{em}</USWDSLink>
         </div>
       </SummaryBoxContent>
     </SummaryBox>

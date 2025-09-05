@@ -1,20 +1,54 @@
 const governanceReviewBoard = {
   title: 'Prepare for the Governance Review Board meeting',
   description:
-    'Learn what you need in order to be successful, including what to expect during and after the meeting, what to prepare for, and what to bring to the meeting.',
+    'Learn what you need in order to be successful, including what to expect during and after the review, what to prepare for, and what to bring to the meeting or have on hand during the asynchronous review.',
   help: {
-    title: 'Prepare for the Governance Review Board meeting',
+    title: 'Prepare for the Governance Review Board (GRB) review',
+    whoIsPart: {
+      title: 'Who is a part of the GRB?',
+      votingMembers: {
+        title: 'Voting members',
+        body: 'The CMS Budget Development Group (BDG) Chairs and representatives make up the voting members of the GRB. They are responsible for bringing their own subject matter and business knowledge to their review of the project. They will raise any questions or concerns they have with the project, and ultimately record their opinion about whether or not the project should move forward.'
+      },
+      nonVotingMembers: {
+        title: 'Non-voting members',
+        body: 'CMS’s Chief Financial Officer (CFO), Chief Information Officer (CIO), and Head of Contracting Activity act as non-voting members of the GRB. They participate in GRB reviews by discussing the project with the rest of the GRB and contributing their expertise and experience to the conversation.'
+      },
+      alternativeVotingMembers: {
+        title: 'Alternate voting members',
+        body: 'When voting members are unable to attend a meeting or participate in a review, they will designate an alternate who will participate in their stead. Occasionally, alternate voting members will participate as non-voting members alongside their voting counterparts.'
+      }
+    },
     whatToExpect: {
-      title: 'What to expect at the meeting',
-      body: 'During the session, you will talk through your Business Case with the board members and how the approval of your project will help benefit CMS programs. You’ll need to talk through how you arrived at the costs in your Business Case and the assumptions you made when calculating them. Next, the GRB will review your proposed alternatives and their pros and cons.'
+      title: 'What to expect during the GRB review',
+      body: 'During the GRB meeting or asynchronous review, you will review your Business Case with the board members and show how the approval of your project will help benefit CMS programs. You’ll need to demonstrate how you arrived at the costs in your Business Case and the assumptions you made when calculating them. The GRB will also review your proposed alternatives and their pros and cons.',
+      importantItems: {
+        copy: 'Important items to bring to the meeting or have on hand during the review:',
+        items: [
+          'a copy of your Business Case',
+          'any contracting materials that you might have in place, for example, a Statement of Work (SOW), a Performance Work Statement (PWS), or other contracting document',
+          'additional materials that you’d like to talk through, such as a concept diagram'
+        ]
+      }
     },
     tips: {
-      title: 'Tips for the meeting',
+      title: 'Tips for the review',
       items: [
-        'When walking through your Business Case, highlight how this project would benefit CMS and further their current priorities.',
+        'When sharing your Business Case, highlight how this project would benefit CMS and further their current priorities.',
         'Thoroughly review the costs included in your Business Case and identify the assumptions you made when you calculated them.',
-        'If you have been discussing your request with Subject Matter Expert (SME) groups, highlight it during the meeting. This helps the Review Board understand more about the project team’s circumstances and offers them additional reassurances.'
+        'If you have been discussing your request with Subject Matter Expert (SME) groups, highlight it during the review. This helps the GRB understand more about the project team’s circumstances and offers them additional reassurances.'
       ]
+    },
+    types: {
+      title: 'Types of GRB reviews',
+      standard: {
+        title: 'Standard meeting',
+        copy: 'The project team presents their project at one of the regularly-scheduled GRB meetings. The Governance Admin Team will work with the project team to select a preferred meeting date out of the available schedule.'
+      },
+      async: {
+        title: 'Asynchronous review',
+        copy: 'The Governance Admin Team will work with the project team to record their presentation and then upload the slide deck and/or recording for asynchronous review by the GRB. This review type is often suitable for projects that cannot fit into the standard schedule of meetings or have other requirements that make an asynchronous review preferable.'
+      }
     },
     whatToBring: {
       title: 'What to bring',
@@ -32,7 +66,7 @@ const governanceReviewBoard = {
 
     whatIsIt: {
       title: 'What is the Governance Review Board?',
-      body: 'The role of the  IT Governance Review Board (GRB) is to ensure  IT Investments are a good use of CMS resources, meeting business needs at acceptable costs. The Governance Review Board consists of CMS Budget Development Group Chairs and representatives who make CMS project funding recommendations to the Administrator, as well as the Chief Financial Officer (CFO), Chief Information Officer (CIO), Chief Technology Officer (CTO), and Head of Contracting Activity.',
+      body: 'The role of the IT Governance Review Board (GRB) is to ensure IT Investments are a good use of CMS resources, meeting business needs at acceptable costs. The GRB consists of CMS Budget Development Group (BDG) Chairs and representatives who make CMS project funding recommendations to the Administrator, as well as the Chief Financial Officer (CFO), Chief Information Officer (CIO), and Head of Contracting Activity.',
 
       items: [
         'At the meeting, you will talk through your Business Case with the board members and how the approval of your project will help benefit CMS Programs.',
@@ -40,14 +74,14 @@ const governanceReviewBoard = {
         'At the meeting, you’ll need to talk through how you arrived at the costs in your Business Case and the assumptions you made when calculating them. '
       ],
       alert:
-        'You’ll be discussing sensitive costing information in this meeting. So please don’t bring any contractors to this session unless you need them to help discuss the technical solution.'
+        'You’ll be discussing sensitive costing information in this meeting. Therefore, please do not bring any contractors to this session unless you need them to help discuss the technical solution.'
     },
     possibleOutcomes: {
       title: 'Possible outcomes',
-      body: 'After this discussion, the Governance Review Board will decide whether to accept your proposed Business Case.',
+      body: 'After the review (either meeting or asynchronous), the Governance Review Board will decide whether to approve your request at this time. They will offer one of the following possible outcomes:',
       items: [
-        'LCID Issued: If the business proposal is acceptable to the Governance Review Board, a Life Cycle ID will be issued, and future review will occur at regular intervals specific to your project.',
-        'LCID Delayed: If there are two or more objections, a Life Cycle ID will not be issued. The project team will receive next steps to outline which concerns or requirements must be addressed before they can apply for an LCID again '
+        'If the GRB approves your request, you will receive a Life Cycle ID (LCID) in EASi. You need this ID to request funding and complete other contract actions. The Life Cycle ID will include an expiration date, next steps, and a documented scope of the work approved under the LCID. The Governance Admin Team may follow up with you at a later date to check in on the status of your project.',
+        'If two or more GRB members voice concerns about a project, a Life Cycle ID won’t be issued. The request will not be approved until all concerns are addressed or the concerned GRB members withdraw their concerns. If you need assistance addressing the concerns of the GRB, contact the Governance Admin Team for possible next steps.'
       ]
     },
     howToBestPrepare: {
