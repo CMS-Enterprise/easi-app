@@ -1180,7 +1180,7 @@ func (s *seederConfig) addDocument(ctx context.Context, trb *models.TRBRequest, 
 	}
 
 	if scanStatus != nil {
-		err = s.s3Client.SetTagValueForKey(document.S3Key, "av-status", *scanStatus)
+		err = s.s3Client.SetTagValueForKey(ctx, document.S3Key, "av-status", *scanStatus)
 		if err != nil {
 			return nil, err
 		}

@@ -21,8 +21,8 @@ func GetTRBRequestDocumentsByRequestID(ctx context.Context, id uuid.UUID) ([]*mo
 }
 
 // GetURLForTRBRequestDocument queries S3 for a presigned URL that can be used to fetch the document with the given s3Key
-func GetURLForTRBRequestDocument(s3Client *upload.S3Client, s3Key string) (string, error) {
-	presignedURL, err := s3Client.NewGetPresignedURL(s3Key)
+func GetURLForTRBRequestDocument(ctx context.Context, s3Client *upload.S3Client, s3Key string) (string, error) {
+	presignedURL, err := s3Client.NewGetPresignedURL(ctx, s3Key)
 	if err != nil {
 		return "", err
 	}
@@ -31,8 +31,8 @@ func GetURLForTRBRequestDocument(s3Client *upload.S3Client, s3Key string) (strin
 }
 
 // GetStatusForTRBRequestDocument queries S3 for the virus-scanning status of a document with the given s3Key
-func GetStatusForTRBRequestDocument(s3Client *upload.S3Client, s3Key string) (models.TRBRequestDocumentStatus, error) {
-	avStatus, err := s3Client.TagValueForKey(s3Key, upload.AVStatusTagName)
+func GetStatusForTRBRequestDocument(ctx context.Context, s3Client *upload.S3Client, s3Key string) (models.TRBRequestDocumentStatus, error) {
+	avStatus, err := s3Client.TagValueForKey(ctx, s3Key, upload.AVStatusTagName)
 	if err != nil {
 		return "", err
 	}
@@ -63,7 +63,7 @@ func CreateTRBRequestDocument(ctx context.Context, store *storage.Store, s3Clien
 		return nil, fmt.Errorf("...%w...FileName: %s", err, input.FileData.Filename) //Wrap error and provide filename
 	}
 
-	err = s3Client.UploadFile(s3Key, decodedReadSeeker)
+	err = s3Client.UploadFile(ctx, s3Key, decodedReadSeeker)
 	if err != nil {
 		return nil, err
 	}

@@ -58,13 +58,11 @@ func (config *Base) GetDefaults(ctxCallbacks ...func(context.Context) context.Co
 	userSearchClient := local.NewOktaAPIClient()
 
 	viperConfig := testhelpers.NewConfig()
-	s3Client := uploadtestconfigs.S3TestClient(viperConfig)
 	config.DBConfig = dbConfig
 	config.LDClient = ldClient
 	config.Logger = logger
 	config.UserInfo = userInfo
 	config.Store = store
-	config.S3Client = &s3Client
 	config.EmailClient = emailClient
 	config.userSearchClient = userSearchClient
 	config.Sender = sender
@@ -73,6 +71,9 @@ func (config *Base) GetDefaults(ctxCallbacks ...func(context.Context) context.Co
 	for _, cb := range ctxCallbacks {
 		config.Context = cb(config.Context)
 	}
+
+	s3Client := uploadtestconfigs.S3TestClient(config.Context, viperConfig)
+	config.S3Client = &s3Client
 
 }
 

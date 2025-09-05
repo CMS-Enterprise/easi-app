@@ -75,20 +75,19 @@ func main() {
 		panic(storeErr)
 	}
 
-	s3Cfg := upload.Config{
-		Bucket:  config.GetString(appconfig.AWSS3FileUploadBucket),
-		Region:  config.GetString(appconfig.AWSRegion),
-		IsLocal: true,
-	}
-
-	s3Client := upload.NewS3Client(s3Cfg)
-
 	// nonUserCtx represents a context that has dataloaders, a logger, and other dependencies EXCEPT a principal
 	// This allows us to use this context as a base to create other contexts with different users without having to re-create all those dependencies each time.
 	nonUserCtx := context.Background()
 	nonUserCtx = mock.CtxWithNewDataloaders(nonUserCtx, store)
 	nonUserCtx = appcontext.WithLogger(nonUserCtx, logger)
 	nonUserCtx = appcontext.WithUserAccountService(nonUserCtx, dataloaders.GetUserAccountByID)
+
+	s3Cfg := upload.Config{
+		Bucket:  config.GetString(appconfig.AWSS3FileUploadBucket),
+		Region:  config.GetString(appconfig.AWSRegion),
+		IsLocal: true,
+	}
+	s3Client := upload.NewS3Client(nonUserCtx, s3Cfg)
 
 	// userCtx is a local helper function (so we can not have to pass local variables all the time) that adds a principal
 	// to a context object and returns it.
