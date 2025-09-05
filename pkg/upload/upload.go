@@ -62,7 +62,7 @@ func NewS3Client(ctx context.Context, s3Config Config) S3Client {
 
 	awsConfig, err := config.LoadDefaultConfig(ctx, configOpts...)
 	if err != nil {
-		panic(fmt.Errorf("problem creating aws config when creating new s3 s3Client: %w", err))
+		panic(fmt.Errorf("problem creating aws config when creating new s3 client: %w", err))
 	}
 
 	s3Client := s3.NewFromConfig(awsConfig, s3Opts...)
