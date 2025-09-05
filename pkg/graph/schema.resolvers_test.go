@@ -81,7 +81,9 @@ func TestGraphQLTestSuite(t *testing.T) {
 	}
 
 	s3Config := upload.Config{Bucket: "easi-test-bucket", Region: "us-west", IsLocal: false}
-	mockClient := mockS3Client{}
+	// Initialize a dummy S3 client for testing
+	dummyS3Client := s3.NewFromConfig(s3.Options{})
+	mockClient := mockS3Client{Client: dummyS3Client}
 	s3Client := upload.NewS3ClientUsingClient(mockClient.Client, s3Config)
 
 	// set up Email Client
