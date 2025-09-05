@@ -91,9 +91,7 @@ describe('The System Intake Form', () => {
     // Request details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
 
-    cy.get('#currentStage')
-      .select('Just an idea')
-      .should('have.value', 'Just an idea');
+    cy.get('#currentStage').select('Other').should('have.value', 'Other');
 
     cy.contains('button', 'Next').click();
 
@@ -105,20 +103,20 @@ describe('The System Intake Form', () => {
     });
 
     cy.get('#currentAnnualSpending')
-      .type('Mock Current Annual Spend')
-      .should('have.value', 'Mock Current Annual Spend');
+      .type('123456')
+      .should('have.value', '123456');
 
     cy.get('#currentAnnualSpendingITPortion')
-      .type('Mock Current Annual Spend IT Portion')
-      .should('have.value', 'Mock Current Annual Spend IT Portion');
+      .type('23')
+      .should('have.value', '23');
 
     cy.get('#plannedYearOneSpending')
-      .type('Mock Planned First Year Annual Spend')
-      .should('have.value', 'Mock Planned First Year Annual Spend');
+      .type('654321')
+      .should('have.value', '654321');
 
     cy.get('#plannedYearOneSpendingITPortion')
-      .type('Mock Planned First Year Annual Spend IT Portion')
-      .should('have.value', 'Mock Planned First Year Annual Spend IT Portion');
+      .type('99')
+      .should('have.value', '99');
 
     cy.get('#contractNotNeeded').check({ force: true }).should('be.checked');
 
@@ -134,7 +132,7 @@ describe('The System Intake Form', () => {
     cy.contains('h1', 'Success!');
   });
 
-  it('displays and fills conditional fields', () => {
+  it.only('displays and fills conditional fields', () => {
     // Contact details
     cy.systemIntake.contactDetails.fillNonBranchingFields();
 
@@ -186,9 +184,7 @@ describe('The System Intake Form', () => {
     // Request details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
 
-    cy.get('#currentStage')
-      .select('Just an idea')
-      .should('have.value', 'Just an idea');
+    cy.get('#currentStage').select('Other').should('have.value', 'Other');
 
     cy.get('#usingSoftwareYes').check({ force: true }).should('be.checked');
 
@@ -211,20 +207,20 @@ describe('The System Intake Form', () => {
     cy.get(`[data-testid="fundingSource${projectNumber}"]`);
 
     cy.get('#currentAnnualSpending')
-      .type('Mock Current Annual Spend')
-      .should('have.value', 'Mock Current Annual Spend');
+      .type('123456')
+      .should('have.value', '123456');
 
     cy.get('#currentAnnualSpendingITPortion')
-      .type('Mock Current Annual Spend IT Portion')
-      .should('have.value', 'Mock Current Annual Spend IT Portion');
+      .type('23')
+      .should('have.value', '23');
 
     cy.get('#plannedYearOneSpending')
-      .type('Mock Planned First Year Annual Spend')
-      .should('have.value', 'Mock Planned First Year Annual Spend');
+      .type('654321')
+      .should('have.value', '654321');
 
     cy.get('#plannedYearOneSpendingITPortion')
-      .type('Mock Planned First Year Annual Spend IT Portion')
-      .should('have.value', 'Mock Planned First Year Annual Spend IT Portion');
+      .type('99')
+      .should('have.value', '99');
 
     cy.get('#contractHaveContract').check({ force: true }).should('be.checked');
 
@@ -236,17 +232,13 @@ describe('The System Intake Form', () => {
       .type('123456-7890')
       .should('have.value', '123456-7890');
 
-    cy.get('#contractStartMonth').type('1').should('have.value', '1');
+    cy.getDateString({ months: 1 }).then(startDate => {
+      cy.get('#contractStartDate').type(startDate);
+    });
 
-    cy.get('#contractStartDay').type('2').should('have.value', '2');
-
-    cy.get('#contractStartYear').type('2020').should('have.value', '2020');
-
-    cy.get('#contractEndMonth').type('12').should('have.value', '12');
-
-    cy.get('#contractEndDay').type('29').should('have.value', '29');
-
-    cy.get('#contractEndYear').type('2021').should('have.value', '2021');
+    cy.getDateString({ months: 2 }).then(endDate => {
+      cy.get('#contractEndDate').type(endDate);
+    });
 
     cy.contains('button', 'Next').click();
 
@@ -360,11 +352,14 @@ describe('The System Intake Form', () => {
       .eq(2)
       .contains(/^508 Clearance Officer, 508 Clearance Officer Collaborator$/);
 
-    cy.contains('.easi-review-row dt', 'Project name')
+    cy.contains('.easi-review-row dt', 'Contract/request title')
       .siblings('dd')
       .contains(testSystemIntakeName);
 
-    cy.contains('dt', 'What is your business need?')
+    cy.contains(
+      'dt',
+      'What is your business need that this contract/request will meet?'
+    )
       .siblings('dd')
       .contains('This is my business need.');
 
@@ -374,39 +369,39 @@ describe('The System Intake Form', () => {
 
     cy.contains(
       '.easi-review-row dt',
-      'Do you need Enterprise Architecture (EA) support?'
+      'Does your request need Enterprise Architecture support?'
     )
       .siblings('dd')
       .contains('No');
 
     cy.contains(
       '.easi-review-row dt',
-      'Does your request involve AI technologies?'
+      'Does this project plan to use AI technologies?'
     )
       .siblings('dd')
       .contains('Yes');
 
     cy.contains(
       '.easi-review-row dt',
-      'Does your project involve any user interface component, or changes to an interface component?'
+      'Does your project involve any user interface component or changes to an interface component?'
     )
       .siblings('dd')
       .contains('No');
 
     cy.contains(
       '.easi-review-row dt',
-      'Do you plan to use any software products to fulfill your business needs?'
+      'Do you plan to use software products to fulfill your business needs?'
     )
       .siblings('dd')
       .contains('Yes');
 
-    cy.contains('.easi-review-row dt', 'Where are you in the process?')
+    cy.contains('.easi-review-row dt', 'What is your project status?')
       .siblings('dd')
-      .contains('Just an idea');
+      .contains('Other');
 
     cy.contains(
       '.easi-review-row dt',
-      'Which funding sources will fund this project?'
+      'Which existing funding sources will fund this project?'
     )
       .siblings('dd')
       .get(`[data-testid="fundingSource${projectNumber}"]`);

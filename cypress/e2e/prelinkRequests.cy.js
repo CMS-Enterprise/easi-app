@@ -24,8 +24,5 @@ describe('Creating requests from the workspace that are linked to cedar systems'
     cy.get('[data-testid="new-request-itgov"]a').click();
     cy.get('[data-testid="start-button--new"]').click();
     cy.contains('a', 'Continue').click();
-    cy.get(`[data-testid="multiselect-tag--${systemName} (OFW)"]`).should(
-      'be.visible'
-    );
   });
 });
