@@ -223,7 +223,7 @@ func newS3Config() upload.Config {
 
 // utility method for creating a valid new system intake, checking for any errors
 func (s *ResolverSuite) createNewIntake(ops ...func(*models.SystemIntake)) *models.SystemIntake {
-	// TODO this should refactored to use a resolver and not a store method
+	// Future Enhancement:  this should refactored to use a resolver and not a store method look at createNewIntakeWithResolver
 	newIntake, err := s.testConfigs.Store.CreateSystemIntake(s.testConfigs.Context, &models.SystemIntake{
 		ProjectName: null.StringFrom("TEST"),
 		// these fields are required by the SQL schema for the system_intakes table, and CreateSystemIntake() doesn't set them to defaults
