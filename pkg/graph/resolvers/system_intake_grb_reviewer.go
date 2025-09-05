@@ -39,7 +39,7 @@ func SystemIntakeGRBDiscussions(
 func CreateSystemIntakeGRBReviewers(ctx context.Context, store *storage.Store, emailClient *email.Client, fetchUsers userhelpers.GetAccountInfosFunc, input *models.CreateSystemIntakeGRBReviewersInput) (*models.CreateSystemIntakeGRBReviewersPayload, error) {
 	return sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.CreateSystemIntakeGRBReviewersPayload, error) {
 		// Fetch intake by ID
-		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, input.SystemIntakeID)
+		intake, err := storage.FetchSystemIntakeByIDNP(ctx, tx, input.SystemIntakeID)
 		if err != nil {
 			return nil, err
 		}
@@ -408,7 +408,7 @@ func StartGRBReview(
 	intakeID uuid.UUID,
 ) (*string, error) {
 	return sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*string, error) {
-		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, intakeID)
+		intake, err := storage.FetchSystemIntakeByIDNP(ctx, tx, intakeID)
 		if err != nil {
 			return nil, err
 		}

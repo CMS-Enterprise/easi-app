@@ -33,7 +33,7 @@ func CreateSystemIntakeGRBDiscussionPost(
 		intakeID := input.SystemIntakeID
 
 		// fetch system intake for email logic
-		systemIntake, err := store.FetchSystemIntakeByIDNP(ctx, tx, intakeID)
+		systemIntake, err := storage.FetchSystemIntakeByIDNP(ctx, tx, intakeID)
 		if err != nil {
 			return nil, err
 		}
@@ -129,7 +129,7 @@ func CreateSystemIntakeGRBDiscussionReply(
 			return nil, errors.New("only top level posts can be replied to")
 		}
 
-		systemIntake, err := store.FetchSystemIntakeByIDNP(ctx, tx, intakeID)
+		systemIntake, err := storage.FetchSystemIntakeByIDNP(ctx, tx, intakeID)
 		if err != nil {
 			return nil, err
 		}

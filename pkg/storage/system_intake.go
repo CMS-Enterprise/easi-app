@@ -195,8 +195,8 @@ func CreateSystemIntake(ctx context.Context, np sqlutils.NamedPreparer, intake *
 		return nil, err
 	}
 	// TODO, update fetch system intake top
-	return intake, nil
-	// return s.FetchSystemIntakeByID(ctx, intake.ID)
+	// return intake, nil
+	return FetchSystemIntakeByIDNP(ctx, np, intake.ID)
 }
 
 // UpdateSystemIntake serves as a wrapper for UpdateSystemIntakeNP, which is the actual implementation
@@ -322,7 +322,7 @@ func (s *Store) UpdateSystemIntakeNP(ctx context.Context, np sqlutils.NamedPrepa
 	// the un-filtered fetch to return the saved object
 	//
 	// Using the "NP" version of the fetch method to allow the update and fetch to be part of a transaction
-	return s.FetchSystemIntakeByIDNP(ctx, np, intake.ID)
+	return FetchSystemIntakeByIDNP(ctx, np, intake.ID)
 }
 
 const fetchSystemIntakeSQL = `
@@ -342,7 +342,7 @@ const fetchSystemIntakeSQL = `
 // using FetchSystemIntakeByIDNP directly (and that function renamed).
 func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 	return sqlutils.WithTransactionRet[*models.SystemIntake](ctx, s, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
-		return s.FetchSystemIntakeByIDNP(ctx, tx, id)
+		return FetchSystemIntakeByIDNP(ctx, tx, id)
 	})
 }
 
@@ -350,7 +350,7 @@ func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*model
 //
 // The "NP" suffix stands for "NamedPreparer", as this function was written to avoid the need to update all
 // of the existing code that uses FetchSystemIntakeByID to use a transactional wrapper.
-func (s *Store) FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPreparer, id uuid.UUID) (*models.SystemIntake, error) {
+func FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPreparer, id uuid.UUID) (*models.SystemIntake, error) {
 	// we do not filter for archived because the update method relies on this method to return the archived intake
 	const whereClause = `
 		WHERE system_intakes.id = :id

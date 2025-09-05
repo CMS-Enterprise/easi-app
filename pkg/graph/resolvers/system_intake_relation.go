@@ -23,7 +23,7 @@ func SetSystemIntakeRelationExistingService(
 ) (*models.SystemIntake, error) {
 	return sqlutils.WithTransactionRet[*models.SystemIntake](ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		// Fetch intake by ID
-		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, input.SystemIntakeID)
+		intake, err := storage.FetchSystemIntakeByIDNP(ctx, tx, input.SystemIntakeID)
 		if err != nil {
 			return nil, err
 		}
@@ -58,7 +58,7 @@ func SetSystemIntakeRelationNewSystem(
 ) (*models.SystemIntake, error) {
 	return sqlutils.WithTransactionRet[*models.SystemIntake](ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		// Fetch intake by ID
-		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, input.SystemIntakeID)
+		intake, err := storage.FetchSystemIntakeByIDNP(ctx, tx, input.SystemIntakeID)
 		if err != nil {
 			return nil, err
 		}
@@ -93,7 +93,7 @@ func SetSystemIntakeRelationExistingSystem(
 ) (*models.SystemIntake, error) {
 	return sqlutils.WithTransactionRet[*models.SystemIntake](ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		// Fetch intake by ID
-		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, input.SystemIntakeID)
+		intake, err := storage.FetchSystemIntakeByIDNP(ctx, tx, input.SystemIntakeID)
 		if err != nil {
 			return nil, err
 		}
@@ -134,7 +134,7 @@ func SetSystemSupportAndUnlinkSystemIntakeRelation(
 ) (*models.SystemIntake, error) {
 	return sqlutils.WithTransactionRet[*models.SystemIntake](ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		// Fetch intake by ID
-		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, intakeID)
+		intake, err := storage.FetchSystemIntakeByIDNP(ctx, tx, intakeID)
 		if err != nil {
 			return nil, err
 		}

@@ -36,14 +36,13 @@ func CreateSystemIntake(
 	}
 
 	intakeRetFromTransaction, err := sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
-		createdIntake, err := storage.CreateSystemIntake(ctx, store, &systemIntake)
+		createdIntake, err := storage.CreateSystemIntake(ctx, tx, &systemIntake)
 		if err != nil {
 			return nil, err
 		}
-		// TODO: EASI-4946 this should be a transaction in case one fails
 		logger := appcontext.ZLogger(ctx)
 		principal := appcontext.Principal(ctx)
-		_, err2 := CreateSystemIntakeContact(ctx, logger, principal, store, models.CreateSystemIntakeContactInput{
+		_, err2 := CreateSystemIntakeContact(ctx, logger, principal, tx, models.CreateSystemIntakeContactInput{
 			EuaUserID:      principal.ID(),
 			SystemIntakeID: createdIntake.ID,
 			Roles: []models.SystemIntakeContactRole{
@@ -179,7 +178,7 @@ func SystemIntakeUpdateContactDetails(ctx context.Context, store *storage.Store,
 func SystemIntakeUpdateContractDetails(ctx context.Context, store *storage.Store, input models.UpdateSystemIntakeContractDetailsInput) (*models.UpdateSystemIntakePayload, error) {
 	return sqlutils.WithTransactionRet[*models.UpdateSystemIntakePayload](ctx, store, func(tx *sqlx.Tx) (*models.UpdateSystemIntakePayload, error) {
 
-		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, input.ID)
+		intake, err := storage.FetchSystemIntakeByIDNP(ctx, tx, input.ID)
 		if err != nil {
 			return nil, err
 		}
