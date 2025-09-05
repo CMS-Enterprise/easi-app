@@ -36,7 +36,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 				Requester:   fmt.Sprintf("link to contracts %d", i),
 			}
 
-			created, err := s.store.CreateSystemIntake(ctx, &intake)
+			created, err := CreateSystemIntake(ctx, s.store, &intake)
 			s.NoError(err)
 			createdIDs = append(createdIDs, created.ID)
 		}

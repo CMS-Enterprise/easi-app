@@ -4,6 +4,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 func (s *ResolverSuite) TestGetUserAccountByID() {
@@ -27,7 +28,7 @@ func (s *ResolverSuite) TestGetUserAccountByID() {
 			HasLoggedIn: false,
 		}
 
-		_, err := store.UserAccountCreate(s.testConfigs.Context, store, &user)
+		_, err := storage.UserAccountCreate(s.testConfigs.Context, store, &user)
 		s.NoError(err)
 
 		// get that user

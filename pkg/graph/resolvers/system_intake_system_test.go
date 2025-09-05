@@ -8,6 +8,7 @@ import (
 
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 )
 
@@ -32,7 +33,7 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 				Requester:   fmt.Sprintf("system intake system data loader %d", i),
 			}
 
-			created, err := s.testConfigs.Store.CreateSystemIntake(ctx, &intake)
+			created, err := storage.CreateSystemIntake(ctx, s.testConfigs.Store, &intake)
 			s.NoError(err)
 			createdIDs = append(createdIDs, created.ID)
 			createdIntakes = append(createdIntakes, created)
@@ -118,7 +119,7 @@ func (s *ResolverSuite) TestSystemIntakesByCedarSystemID() {
 			State:       models.SystemIntakeStateOpen,
 		}
 
-		create1, err := s.testConfigs.Store.CreateSystemIntake(ctx, &intake1)
+		create1, err := storage.CreateSystemIntake(ctx, s.testConfigs.Store, &intake1)
 		s.NoError(err)
 		s.NotNil(create1)
 
@@ -130,7 +131,7 @@ func (s *ResolverSuite) TestSystemIntakesByCedarSystemID() {
 			State:       models.SystemIntakeStateOpen,
 		}
 
-		create2, err := s.testConfigs.Store.CreateSystemIntake(ctx, &intake2)
+		create2, err := storage.CreateSystemIntake(ctx, s.testConfigs.Store, &intake2)
 		s.NoError(err)
 		s.NotNil(create2)
 
@@ -142,7 +143,7 @@ func (s *ResolverSuite) TestSystemIntakesByCedarSystemID() {
 			State:       models.SystemIntakeStateClosed,
 		}
 
-		create3, err := s.testConfigs.Store.CreateSystemIntake(ctx, &intake3)
+		create3, err := storage.CreateSystemIntake(ctx, s.testConfigs.Store, &intake3)
 		s.NoError(err)
 		s.NotNil(create3)
 

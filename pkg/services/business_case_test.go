@@ -11,6 +11,7 @@ import (
 
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 )
 
@@ -61,7 +62,7 @@ func (s *ServicesTestSuite) TestBusinessCaseCreator() {
 		RequestFormState: models.SIRFSSubmitted,
 		Step:             models.SystemIntakeStepDRAFTBIZCASE,
 	}
-	intake, err := s.store.CreateSystemIntake(ctx, intake)
+	intake, err := storage.CreateSystemIntake(ctx, s.store, intake)
 	s.NoError(err)
 
 	input := models.BusinessCaseWithCosts{
@@ -203,7 +204,7 @@ func (s *ServicesTestSuite) TestBusinessCaseUpdater() {
 		RequestType:      models.SystemIntakeRequestTypeNEW,
 		RequestFormState: models.SIRFSSubmitted,
 	}
-	retIntake, err := s.store.CreateSystemIntake(ctx, intake)
+	retIntake, err := storage.CreateSystemIntake(ctx, s.store, intake)
 	s.NoError(err)
 
 	existingBusinessCase := testhelpers.NewBusinessCase(retIntake.ID)

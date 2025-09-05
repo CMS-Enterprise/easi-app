@@ -15,7 +15,7 @@ func (s *StoreTestSuite) TestCreateAction() {
 
 	s.Run("create a new action", func() {
 		intake := testhelpers.NewSystemIntake()
-		_, err := s.store.CreateSystemIntake(ctx, &intake)
+		_, err := CreateSystemIntake(ctx, s.store, &intake)
 		s.NoError(err)
 		feedback := models.HTMLPointer("feedback")
 
@@ -42,7 +42,7 @@ func (s *StoreTestSuite) TestCreateAction() {
 
 	s.Run("cannot save without actor name", func() {
 		intake := testhelpers.NewSystemIntake()
-		_, err := s.store.CreateSystemIntake(ctx, &intake)
+		_, err := CreateSystemIntake(ctx, s.store, &intake)
 		s.NoError(err)
 
 		action := models.Action{
@@ -59,7 +59,7 @@ func (s *StoreTestSuite) TestCreateAction() {
 
 	s.Run("cannot create with invalid type", func() {
 		intake := testhelpers.NewSystemIntake()
-		_, err := s.store.CreateSystemIntake(ctx, &intake)
+		_, err := CreateSystemIntake(ctx, s.store, &intake)
 		s.NoError(err)
 
 		action := models.Action{
@@ -77,7 +77,7 @@ func (s *StoreTestSuite) TestFetchActionsByRequestID() {
 	ctx := context.Background()
 
 	intake := testhelpers.NewSystemIntake()
-	createdIntake, err := s.store.CreateSystemIntake(ctx, &intake)
+	createdIntake, err := CreateSystemIntake(ctx, s.store, &intake)
 	s.NoError(err)
 
 	s.Run("golden path to fetch actions", func() {
@@ -99,7 +99,7 @@ func (s *StoreTestSuite) TestFetchActionsByRequestID() {
 
 	s.Run("does not fetch action for other request", func() {
 		intake2 := testhelpers.NewSystemIntake()
-		createdIntake2, err := s.store.CreateSystemIntake(ctx, &intake2)
+		createdIntake2, err := CreateSystemIntake(ctx, s.store, &intake2)
 		s.NoError(err)
 
 		action := testhelpers.NewAction()

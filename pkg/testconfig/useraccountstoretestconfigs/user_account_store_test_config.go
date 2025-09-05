@@ -11,7 +11,7 @@ import (
 // GetTestPrincipal either inserts a new user account record into the database, or returns the record already in the database
 // the common name of the inserted account is the username for simplicity
 func GetTestPrincipal(store *storage.Store, userName string, isAdmin bool) (*authentication.EUAPrincipal, error) {
-	userAccount, accErr := store.UserAccountGetByUsername(context.Background(), store, userName)
+	userAccount, accErr := storage.UserAccountGetByUsername(context.Background(), store, userName)
 	if accErr != nil {
 		return nil, accErr
 	}
@@ -37,7 +37,7 @@ func GetTestPrincipal(store *storage.Store, userName string, isAdmin bool) (*aut
 		HasLoggedIn: true,
 	}
 
-	newAccount, newErr := store.UserAccountCreate(context.Background(), store, userAccount)
+	newAccount, newErr := storage.UserAccountCreate(context.Background(), store, userAccount)
 	if newErr != nil {
 		return nil, newErr
 	}

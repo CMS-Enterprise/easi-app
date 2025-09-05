@@ -33,7 +33,7 @@ func CreateSystemIntakeGRBDiscussionPost(
 		intakeID := input.SystemIntakeID
 
 		// fetch system intake for email logic
-		systemIntake, err := store.FetchSystemIntakeByIDNP(ctx, tx, intakeID)
+		systemIntake, err := storage.FetchSystemIntakeByIDNP(ctx, tx, intakeID)
 		if err != nil {
 			return nil, err
 		}
@@ -129,7 +129,7 @@ func CreateSystemIntakeGRBDiscussionReply(
 			return nil, errors.New("only top level posts can be replied to")
 		}
 
-		systemIntake, err := store.FetchSystemIntakeByIDNP(ctx, tx, intakeID)
+		systemIntake, err := storage.FetchSystemIntakeByIDNP(ctx, tx, intakeID)
 		if err != nil {
 			return nil, err
 		}
@@ -328,7 +328,7 @@ func sendDiscussionEmailsForTags(
 				return err
 			}
 
-			requesterAcct, err := store.UserAccountGetByUsername(ctx, store, intake.EUAUserID.String)
+			requesterAcct, err := storage.UserAccountGetByUsername(ctx, store, intake.EUAUserID.String)
 			if err != nil {
 				logger.Error("problem getting requester account when requester tagged", zap.Error(err))
 				return err

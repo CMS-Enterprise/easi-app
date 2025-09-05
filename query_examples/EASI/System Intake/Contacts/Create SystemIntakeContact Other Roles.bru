@@ -1,7 +1,7 @@
 meta {
-  name: Create SystemIntakeContact
+  name: Create SystemIntakeContact Other Roles
   type: graphql
-  seq: 1
+  seq: 5
 }
 
 post {
@@ -37,9 +37,9 @@ body:graphql {
 body:graphql:vars {
   {
     "input": {
-      "euaUserId": "RING",
+      "euaUserId": "RUNG",
       "component": "CENTER_FOR_CLINICAL_STANDARDS_AND_QUALITY_CCSQ",
-      "roles": ["BUSINESS_OWNER","PRODUCT_MANAGER"],
+      "roles": ["CLOUD_NAVIGATOR","PRIVACY_ADVISOR"],
       "systemIntakeId": "{{systemIntakeID}}",
       "isRequester": false
     }

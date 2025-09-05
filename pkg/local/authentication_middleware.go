@@ -80,7 +80,7 @@ func devUserContext(ctx context.Context, authHeader string, store *storage.Store
 	}
 	localOktaClient := NewOktaAPIClient()
 
-	userAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, princ.ID(), true, userhelpers.GetUserInfoAccountInfoWrapperFunc(localOktaClient.FetchUserInfo))
+	userAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, princ.ID(), true, userhelpers.GetUserInfoAccountInfoWrapperFunc(localOktaClient.FetchUserInfo))
 	if err != nil {
 		return nil, err
 	}

@@ -15,7 +15,7 @@ func (s *StoreTestSuite) TestSystemIntakeGRBPresentationLinks() {
 	ctx := context.Background()
 	euaID := "ABCD"
 
-	intake, err := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+	intake, err := CreateSystemIntake(ctx, s.store, &models.SystemIntake{
 		RequestType: models.SystemIntakeRequestTypeNEW,
 		EUAUserID:   null.StringFrom(euaID),
 	})
