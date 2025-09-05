@@ -1,9 +1,24 @@
 const governanceReviewBoard = {
   title: 'Prepare for the Governance Review Board meeting',
   description:
-    'Learn what you need in order to be successful, including what to expect during and after the meeting, what to prepare for, and what to bring to the meeting.',
+    'Learn what you need in order to be successful, including what to expect during and after the review, what to prepare for, and what to bring to the meeting or have on hand during the asynchronous review.',
   help: {
-    title: 'Prepare for the Governance Review Board meeting',
+    title: 'Prepare for the Governance Review Board (GRB) review',
+    whoIsPart: {
+      title: 'Who is a part of the GRB?',
+      votingMembers: {
+        title: 'Voting members',
+        body: 'The CMS Budget Development Group (BDG) Chairs and representatives make up the voting members of the GRB. They are responsible for bringing their own subject matter and business knowledge to their review of the project. They will raise any questions or concerns they have with the project, and ultimately record their opinion about whether or not the project should move forward.'
+      },
+      nonVotingMembers: {
+        title: 'Non-voting members',
+        body: 'CMS’s Chief Financial Officer (CFO), Chief Information Officer (CIO), and Head of Contracting Activity act as non-voting members of the GRB. They participate in GRB reviews by discussing the project with the rest of the GRB and contributing their expertise and experience to the conversation.'
+      },
+      alternativeVotingMembers: {
+        title: 'Alternate voting members',
+        body: 'When voting members are unable to attend a meeting or participate in a review, they will designate an alternate who will participate in their stead. Occasionally, alternate voting members will participate as non-voting members alongside their voting counterparts.'
+      }
+    },
     whatToExpect: {
       title: 'What to expect at the meeting',
       body: 'During the session, you will talk through your Business Case with the board members and how the approval of your project will help benefit CMS programs. You’ll need to talk through how you arrived at the costs in your Business Case and the assumptions you made when calculating them. Next, the GRB will review your proposed alternatives and their pros and cons.'
@@ -32,7 +47,7 @@ const governanceReviewBoard = {
 
     whatIsIt: {
       title: 'What is the Governance Review Board?',
-      body: 'The role of the  IT Governance Review Board (GRB) is to ensure  IT Investments are a good use of CMS resources, meeting business needs at acceptable costs. The Governance Review Board consists of CMS Budget Development Group Chairs and representatives who make CMS project funding recommendations to the Administrator, as well as the Chief Financial Officer (CFO), Chief Information Officer (CIO), Chief Technology Officer (CTO), and Head of Contracting Activity.',
+      body: 'The role of the IT Governance Review Board (GRB) is to ensure IT Investments are a good use of CMS resources, meeting business needs at acceptable costs. The GRB consists of CMS Budget Development Group (BDG) Chairs and representatives who make CMS project funding recommendations to the Administrator, as well as the Chief Financial Officer (CFO), Chief Information Officer (CIO), and Head of Contracting Activity.',
 
       items: [
         'At the meeting, you will talk through your Business Case with the board members and how the approval of your project will help benefit CMS Programs.',

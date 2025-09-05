@@ -30,6 +30,18 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
           {t('prepare.whatIsIt.title')}
         </h2>
         <p className="line-height-sans-5">{t('prepare.whatIsIt.body')}</p>
+
+        {/* Who is part of the GRB */}
+        <h3>{t('help.whoIsPart.title')}</h3>
+        <p className="line-height-sans-5 text-bold margin-bottom-0">
+          {t('help.whoIsPart.votingMembers.title')}
+        </p>
+        <p className="line-height-sans-5">
+          {t('help.whoIsPart.votingMembers.body')}
+        </p>
+
+        {/* end */}
+
         <h3>{t('help.whatToExpect.title')}</h3>
         <p className="line-height-sans-5">{t('help.whatToExpect.body')}</p>
         <Alert type="info" slim>
