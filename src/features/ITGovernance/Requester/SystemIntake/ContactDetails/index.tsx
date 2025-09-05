@@ -515,8 +515,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
             <Label
               htmlFor="productManagerCommonName"
               required
-              className="text-normal
-            "
+              className="text-normal"
             >
               {t('contactDetails.productManager.nameField')}
             </Label>

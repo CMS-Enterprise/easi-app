@@ -224,7 +224,7 @@ const LinkedSystemsTable = ({
             return (
               <tr
                 {...headerGroup.getHeaderGroupProps()}
-                key={{ ...headerGroup.getHeaderGroupProps() }.key}
+                key={headerGroup.getHeaderGroupProps().key}
               >
                 {headerGroup.headers.map((column, index) => (
                   <th
