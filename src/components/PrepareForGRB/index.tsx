@@ -92,24 +92,26 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
           </ul>
         </div>
       </div>
+
+      <h3 className="">{t('help.types.title')}</h3>
+      <p className="line-height-sans-5 text-bold margin-y-0">
+        {t('help.types.standard.title')}
+      </p>
+      <p className="line-height-sans-5 margin-y-0">
+        {t('help.types.standard.copy')}
+      </p>
+
       <Alert type="info" slim>
         {t('prepare.whatIsIt.alert')}
       </Alert>
-      <div>
-        <h2 className="margin-top-6 margin-bottom-2">
-          {t('help.whatToBring.title')}
-        </h2>
-        <p className="margin-y-0">{t('help.whatToBring.copy')}</p>
-        <ul className="usa-list usa-list--unstyled line-height-body-5 margin-top-1 padding-y-0">
-          {(
-            t('help.whatToBring.items', {
-              returnObjects: true
-            }) as string[]
-          ).map(item => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-      </div>
+
+      <p className="line-height-sans-5 text-bold margin-bottom-0">
+        {t('help.types.async.title')}
+      </p>
+      <p className="line-height-sans-5 margin-y-0">
+        {t('help.types.async.copy')}
+      </p>
+
       <div>
         <h2 className="margin-top-6 margin-bottom-2">
           {t('prepare.possibleOutcomes.title')}

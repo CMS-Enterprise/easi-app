@@ -39,6 +39,17 @@ const governanceReviewBoard = {
         'If you have been discussing your request with Subject Matter Expert (SME) groups, highlight it during the review. This helps the GRB understand more about the project team’s circumstances and offers them additional reassurances.'
       ]
     },
+    types: {
+      title: 'Types of GRB reviews',
+      standard: {
+        title: 'Standard meeting',
+        copy: 'The project team presents their project at one of the regularly-scheduled GRB meetings. The Governance Admin Team will work with the project team to select a preferred meeting date out of the available schedule.'
+      },
+      async: {
+        title: 'Asynchronous review',
+        copy: 'The Governance Admin Team will work with the project team to record their presentation and then upload the slide deck and/or recording for asynchronous review by the GRB. This review type is often suitable for projects that cannot fit into the standard schedule of meetings or have other requirements that make an asynchronous review preferable.'
+      }
+    },
     whatToBring: {
       title: 'What to bring',
       copy: 'The following are important items to have with you at the GRB review:',
