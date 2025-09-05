@@ -91,7 +91,7 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
         </div>
       </div>
 
-      <h3 className="">{t('help.types.title')}</h3>
+      <h3>{t('help.types.title')}</h3>
       <p className="line-height-sans-5 text-bold margin-y-0">
         {t('help.types.standard.title')}
       </p>
