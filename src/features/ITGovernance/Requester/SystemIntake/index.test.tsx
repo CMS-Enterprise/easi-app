@@ -173,7 +173,7 @@ describe('The System Intake page', () => {
 
     expect(
       screen.getByRole('heading', {
-        name: /review your Intake Request/i,
+        name: /View submitted Intake Request/i,
         level: 1
       })
     ).toBeInTheDocument();
