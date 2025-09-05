@@ -79,7 +79,7 @@ exports[`IntakeRequestCard > renders default version without crashing 1`] = `
             <dt
               class="text-bold margin-bottom-05 font-body-sm margin-bottom-0"
             >
-              What is the planned annual spending of the first year of the new contract?
+              What is the planned annual spending for the first year of the new contract?
             </dt>
             <dd
               class="description-definition margin-0 font-body-md text-light"
