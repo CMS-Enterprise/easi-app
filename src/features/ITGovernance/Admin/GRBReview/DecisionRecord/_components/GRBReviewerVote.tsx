@@ -24,6 +24,7 @@ const VoteIcon = ({ vote, className }: VoteIconProps) => {
           className={classNames('text-error', className)}
           data-testid="icon-Cancel"
           size={3}
+          aria-hidden
         />
       );
 
@@ -33,6 +34,7 @@ const VoteIcon = ({ vote, className }: VoteIconProps) => {
           className={classNames('text-success', className)}
           data-testid="icon-CheckCircle"
           size={3}
+          aria-hidden
         />
       );
 
@@ -42,6 +44,7 @@ const VoteIcon = ({ vote, className }: VoteIconProps) => {
           className={classNames('text-base-light', className)}
           data-testid="icon-Help"
           size={3}
+          aria-hidden
         />
       );
   }
