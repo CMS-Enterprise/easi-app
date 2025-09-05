@@ -20,8 +20,8 @@ const governanceReviewBoard = {
       }
     },
     whatToExpect: {
-      title: 'What to expect at the meeting',
-      body: 'During the session, you will talk through your Business Case with the board members and how the approval of your project will help benefit CMS programs. You’ll need to talk through how you arrived at the costs in your Business Case and the assumptions you made when calculating them. Next, the GRB will review your proposed alternatives and their pros and cons.'
+      title: 'What to expect during the GRB review',
+      body: 'During the GRB meeting or asynchronous review, you will review your Business Case with the board members and show how the approval of your project will help benefit CMS programs. You’ll need to demonstrate how you arrived at the costs in your Business Case and the assumptions you made when calculating them. The GRB will also review your proposed alternatives and their pros and cons.'
     },
     tips: {
       title: 'Tips for the meeting',

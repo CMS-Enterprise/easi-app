@@ -56,7 +56,9 @@ export default ({ helpArticle, className }: ArticleComponentProps) => {
 
         {/* end */}
 
-        <h3>{t('help.whatToExpect.title')}</h3>
+        <h2 className="font-heading-xl line-height-heading-2 margin-top-3 margin-bottom-2">
+          {t('help.whatToExpect.title')}
+        </h2>
         <p className="line-height-sans-5">{t('help.whatToExpect.body')}</p>
         <Alert type="info" slim>
           {t('prepare.whatIsIt.alert')}
