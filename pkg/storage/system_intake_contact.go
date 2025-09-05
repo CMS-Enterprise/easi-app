@@ -39,14 +39,13 @@ func SystemIntakeContactGetByIDsLoader(ctx context.Context, np sqlutils.NamedPre
 }
 
 // CreateSystemIntakeContact creates a new system intake contact object in the database
-func (s *Store) CreateSystemIntakeContact(ctx context.Context, systemIntakeContact *models.SystemIntakeContact) (*models.SystemIntakeContact, error) {
-	// TODO: this should be re-worked to match base struct paradigms for
+func CreateSystemIntakeContact(ctx context.Context, np sqlutils.NamedPreparer, systemIntakeContact *models.SystemIntakeContact) (*models.SystemIntakeContact, error) {
 
 	retContact := &models.SystemIntakeContact{}
 
 	systemIntakeContact.ID = uuid.New()
 
-	err := namedGet(ctx, s, retContact, sqlqueries.SystemIntakeContact.Create, systemIntakeContact)
+	err := namedGet(ctx, np, retContact, sqlqueries.SystemIntakeContact.Create, systemIntakeContact)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to create system intake contact with error %s", zap.Error(err))
 		return nil, err

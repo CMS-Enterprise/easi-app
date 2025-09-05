@@ -39,7 +39,7 @@ func CreateSystemIntakeContact(
 
 	contact.Roles = input.Roles
 
-	createdContact, err := store.CreateSystemIntakeContact(ctx, contact)
+	createdContact, err := storage.CreateSystemIntakeContact(ctx, store, contact)
 	if err != nil {
 		return nil, err
 	}

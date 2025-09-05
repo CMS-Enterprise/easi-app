@@ -54,7 +54,7 @@ func CreateSystemIntake(
 	}
 
 	// sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
-	// 	createdIntake, err = store.CreateSystemIntakeNP(ctx, tx, &systemIntake)
+	// 	createdIntake, err = storage.CreateSystemIntakeNP(ctx, tx, &systemIntake)
 	// 	if err != nil {
 	// 		return nil, err
 	// 	}
