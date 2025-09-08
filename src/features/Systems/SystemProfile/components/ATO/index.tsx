@@ -399,8 +399,10 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
               <Grid row gap>
                 <Grid tablet={{ col: 6 }}>
                   <DescriptionTerm
-                    term={t('singleSystem.ato.lastActScaDate')}
+                    term={t('singleSystem.ato.lastCsrapScaDate')}
                   />
+                  {/* NOTE: lastCsrapScaDate label matches to lastActScaDate date field
+                            ACT was replaced with CSRAP in the FE but not in the CEDAR API which explains the discrepancy */}
                   <DescriptionDefinition
                     className="line-height-body-3 margin-bottom-4"
                     definition={showVal(
@@ -548,11 +550,21 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
             <span aria-hidden>&nbsp;</span>
           </Link>
 
-          {/* ACT */}
-          <p>{t('singleSystem.ato.actAcronym')}</p>
-
           {/* SCA */}
           <p>{t('singleSystem.ato.scaAcronym')}</p>
+
+          {/* CSRAP */}
+          <p>{t('singleSystem.ato.csrapAcronym')}</p>
+          <Link
+            aria-label="Open 'Lean more about CSRAP' in a new tab"
+            className="line-height-body-5"
+            href="https://security.cms.gov/learn/cybersecurity-risk-assessment-program-csrap"
+            variant="external"
+            target="_blank"
+          >
+            {t('singleSystem.ato.csrapLearnMore')}
+            <span aria-hidden>&nbsp;</span>
+          </Link>
 
           {/* PIA */}
           <p>{t('singleSystem.ato.piaAcronym')}</p>
