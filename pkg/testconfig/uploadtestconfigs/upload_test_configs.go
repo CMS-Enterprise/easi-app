@@ -2,6 +2,7 @@
 package uploadtestconfigs
 
 import (
+	"context"
 	"os"
 
 	"github.com/spf13/viper"
@@ -11,7 +12,7 @@ import (
 )
 
 // S3TestClient returns an S3Test client for testing
-func S3TestClient(viperConfig *viper.Viper) upload.S3Client {
+func S3TestClient(ctx context.Context, viperConfig *viper.Viper) upload.S3Client {
 
 	s3Cfg := upload.Config{
 		Bucket:  viperConfig.GetString(appconfig.AWSS3FileUploadBucket),
@@ -23,5 +24,5 @@ func S3TestClient(viperConfig *viper.Viper) upload.S3Client {
 	_ = os.Setenv(appconfig.LocalMinioS3AccessKey, viperConfig.GetString(appconfig.LocalMinioS3AccessKey))
 	_ = os.Setenv(appconfig.LocalMinioS3SecretKey, viperConfig.GetString(appconfig.LocalMinioS3SecretKey))
 
-	return upload.NewS3Client(s3Cfg)
+	return upload.NewS3Client(ctx, s3Cfg)
 }
