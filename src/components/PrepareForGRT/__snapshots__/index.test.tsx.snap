@@ -232,9 +232,7 @@ exports[`Prepare for GRT > renders help mode without crashing 1`] = `
           <div
             class="margin-top-2 margin-bottom-05"
           >
-            Contact the Governance team:
-          </div>
-          <div>
+            Contact the Governance team: 
             <a
               class="usa-link"
               href="mailto:IT_Governance@cms.hhs.gov"
@@ -461,9 +459,7 @@ exports[`Prepare for GRT > renders without crashing 1`] = `
           <div
             class="margin-top-2 margin-bottom-05"
           >
-            Contact the Governance team:
-          </div>
-          <div>
+            Contact the Governance team: 
             <a
               class="usa-link"
               href="mailto:IT_Governance@cms.hhs.gov"

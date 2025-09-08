@@ -139,9 +139,7 @@ exports[`Prepare for GRB > renders help mode without crashing 1`] = `
         </ul>
       </div>
     </div>
-    <h3
-      class=""
-    >
+    <h3>
       Types of GRB reviews
     </h3>
     <p
@@ -354,9 +352,7 @@ exports[`Prepare for GRB > renders without crashing 1`] = `
         </ul>
       </div>
     </div>
-    <h3
-      class=""
-    >
+    <h3>
       Types of GRB reviews
     </h3>
     <p
