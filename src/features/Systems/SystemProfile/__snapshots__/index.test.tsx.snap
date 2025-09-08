@@ -1169,18 +1169,6 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                           </li>
                         </ul>
                       </div>
-                      <div
-                        class="margin-top-6 padding-1 bg-base-lightest"
-                      >
-                        <p
-                          class="margin-0"
-                        >
-                          <strong>
-                            CMS UUID 
-                          </strong>
-                          000-100-0
-                        </p>
-                      </div>
                     </div>
                     <div
                       class="desktop:grid-col-4 sticky side-nav padding-top-7"
