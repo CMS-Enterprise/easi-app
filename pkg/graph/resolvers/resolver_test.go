@@ -139,7 +139,7 @@ func (tc *TestConfigs) GetDefaults() {
 	tc.DBConfig = NewDBConfig()
 	tc.LDClient, _ = ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
 
-	s3Client := upload.NewS3Client(newS3Config())
+	s3Client := upload.NewS3Client(tc.Context, newS3Config())
 	tc.S3Client = &s3Client
 
 	tc.Logger = zap.NewNop()
