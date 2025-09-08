@@ -224,3 +224,9 @@ ALTER COLUMN created_at SET DEFAULT CURRENT_TIMESTAMP;
 -- created_by can not be null
 ALTER TABLE system_intake_contacts
 ALTER COLUMN created_by SET NOT NULL;
+
+-- all users should reference a user_account
+ALTER TABLE system_intake_contacts
+ADD CONSTRAINT fk_system_intake_contacts_user_id
+FOREIGN KEY (user_id)
+REFERENCES user_account(id);
