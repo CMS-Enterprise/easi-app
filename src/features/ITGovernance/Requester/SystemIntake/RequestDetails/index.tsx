@@ -9,6 +9,7 @@ import {
   Fieldset,
   Form,
   FormGroup,
+  Grid,
   Link as UswdsLink,
   Radio,
   Select,
@@ -48,6 +49,7 @@ import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
 type RequestDetailsForm = {
   requestName: string;
+  projectAcronym: string | null;
   businessNeed: string;
   businessSolution: string;
   currentStage: string;
@@ -227,22 +229,62 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
         )}
         className="maxw-none tablet:grid-col-6 margin-bottom-7"
       >
-        <FieldGroup scrollElement="requestName" error={!!errors.requestName}>
-          <Label htmlFor="requestName">
-            {t('requestDetails.contractTitle')}
-          </Label>
-          <HelpText id="requestNameHelpText" className="margin-top-1">
-            {t('requestDetails.contractTitleHelpText')}
-          </HelpText>
-          <ErrorMessage errors={errors} name="requestName" as={FieldErrorMsg} />
-          <TextInput
-            {...register('requestName')}
-            ref={null}
-            id="requestName"
-            type="text"
-            aria-describedby="requestNameHelpText"
-          />
-        </FieldGroup>
+        <Grid row gap="sm">
+          {/* Request Name */}
+          <Grid tablet={{ col: 7 }}>
+            <FieldGroup
+              scrollElement="requestName"
+              error={!!errors.requestName}
+            >
+              <Label htmlFor="requestName">
+                {t('requestDetails.contractTitle')}
+              </Label>
+              <HelpText id="requestNameHelpText" className="margin-top-1">
+                {t('requestDetails.contractTitleHelpText')}
+              </HelpText>
+              <ErrorMessage
+                errors={errors}
+                name="requestName"
+                as={FieldErrorMsg}
+              />
+              <TextInput
+                {...register('requestName')}
+                ref={null}
+                id="requestName"
+                type="text"
+                aria-describedby="requestNameHelpText"
+              />
+            </FieldGroup>
+          </Grid>
+
+          {/* Request / Project Acronym */}
+          <Grid tablet={{ col: 5 }}>
+            <FieldGroup
+              scrollElement="projectAcronym"
+              className="margin-left-1"
+              error={!!errors.projectAcronym}
+            >
+              <Label htmlFor="projectAcronym">
+                {t('requestDetails.projectAcronym')}
+              </Label>
+              <HelpText id="projectAcronymHelpText" className="margin-top-1">
+                {t('requestDetails.projectAcronymHelpText')}
+              </HelpText>
+              <ErrorMessage
+                errors={errors}
+                name="projectAcronym"
+                as={FieldErrorMsg}
+              />
+              <TextInput
+                {...register('projectAcronym')}
+                ref={null}
+                id="projectAcronym"
+                type="text"
+                aria-describedby="projectAcronymHelpText"
+              />
+            </FieldGroup>
+          </Grid>
+        </Grid>
 
         <FieldGroup scrollElement="businessNeed" error={!!errors.businessNeed}>
           <Label htmlFor="businessNeed">

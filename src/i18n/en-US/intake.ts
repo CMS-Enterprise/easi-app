@@ -314,6 +314,9 @@ const intake = {
     contractTitle: 'Contract/Request Title',
     contractTitleHelpText:
       'Your request title should match the title of your Acquisition Plan or Interagency Agreement.',
+    projectAcronym: 'Contract / request acronym',
+    projectAcronymHelpText:
+      'Include any acronym or short name related to this request.',
     businessNeed:
       'What is your business need that this contract/request will meet?',
     businessNeedHelpText:
