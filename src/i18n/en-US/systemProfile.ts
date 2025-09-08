@@ -39,7 +39,6 @@ const systemProfile = {
     pointsOfContact_plural: 'Points of contact',
     noPointsOfContact:
       'This system does not have any points of contact identified.',
-    cmsId: 'CMS UUID ',
     noDataAvailable: 'No data available',
     sendEmail: 'Send an email',
     moreContact: 'More points of contact',
