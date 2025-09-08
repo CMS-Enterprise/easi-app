@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	_ "embed"
 	"fmt"
 	"log"
 
@@ -16,8 +17,6 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/oktaapi"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
-
-	_ "embed"
 )
 
 //go:embed sql/get_all_usernames.sql
