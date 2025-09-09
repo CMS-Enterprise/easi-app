@@ -125,12 +125,12 @@ const RequestTypeForm = () => {
         <Breadcrumb current>{t('navigation.startRequest')}</Breadcrumb>
       </BreadcrumbBar>
 
-      <PageHeading className="margin-bottom-1">
+      <PageHeading className="margin-top-4 margin-bottom-2">
         {isNew
           ? t('requestTypeForm.heading')
           : t('navigation.changeRequestType')}
       </PageHeading>
-      <p className="margin-top-0 margin-bottom-2 font-body-lg">
+      <p className="margin-top-0 margin-bottom-3 font-body-lg text-light">
         {t('requestTypeForm.subheading')}
       </p>
       <IconButton
