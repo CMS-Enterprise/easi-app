@@ -2,13 +2,12 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import {
-  Button,
-  Icon,
   SummaryBox,
   SummaryBoxContent,
   SummaryBoxHeading
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
 import {
   SystemIntakeFormState,
   SystemIntakeFragmentFragment,
@@ -64,20 +63,20 @@ const Review = ({ systemIntake }: ReviewProps) => {
         </SummaryBoxContent>
       </SummaryBox>
 
-      <Button
-        type="button"
-        outline
-        onClick={() => {
-          const newUrl = 'documents';
-          history.push(newUrl);
+      <Pager
+        next={{
+          type: 'submit',
+          text: t('review.submitIntakeRequest'),
+          disabled: mutationResult.loading
         }}
-      >
-        {t('Back')}
-      </Button>
-      <Button
-        type="submit"
-        disabled={mutationResult.loading}
-        onClick={() =>
+        back={{
+          type: 'button',
+          onClick: () => history.push('documents')
+        }}
+        border={false}
+        taskListUrl={`/governance-task-list/${systemIntake.id}`}
+        saveExitText={t('review.saveWithoutSubmitting')}
+        submit={() =>
           mutate({
             variables: {
               input: { id: systemIntake.id }
@@ -90,22 +89,10 @@ const Review = ({ systemIntake }: ReviewProps) => {
             }
           })
         }
-      >
-        {t('review.submitIntakeRequest')}
-      </Button>
-      <Button
-        className="margin-top-2 display-flex flex-align-center"
-        type="button"
-        unstyled
-        onClick={() => {
-          history.push(`/governance-task-list/${systemIntake.id}`);
-        }}
-      >
-        <Icon.ArrowBack className="margin-right-05" aria-hidden />
-        {t('review.saveWithoutSubmitting')}
-      </Button>
+        className="margin-top-5"
+      />
 
-      <PageNumber className="margin-top-8" currentPage={5} totalPages={5} />
+      <PageNumber className="margin-top-6" currentPage={5} totalPages={5} />
     </div>
   );
 };
