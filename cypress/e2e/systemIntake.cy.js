@@ -132,7 +132,7 @@ describe('The System Intake Form', () => {
     cy.contains('h1', 'Success!');
   });
 
-  it.only('displays and fills conditional fields', () => {
+  it('displays and fills conditional fields', () => {
     // Contact details
     cy.systemIntake.contactDetails.fillNonBranchingFields();
 
