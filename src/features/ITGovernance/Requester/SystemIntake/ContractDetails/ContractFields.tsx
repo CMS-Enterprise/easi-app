@@ -152,9 +152,13 @@ const ContractFields = ({ id }: ContractFieldsProps) => {
           ))}
 
           <div className="grid-row grid-gap">
-            <div className="grid-col-6">
+            <div className="grid-col-12 tablet:grid-col-6">
               <FieldGroup>
-                <Label className="text-normal" htmlFor="contractStartDate" required>
+                <Label
+                  className="text-normal"
+                  htmlFor="contractStartDate"
+                  required
+                >
                   {t('contractDetails.performanceStartDate')}
                 </Label>
                 <ErrorMessage
@@ -176,9 +180,13 @@ const ContractFields = ({ id }: ContractFieldsProps) => {
                 />
               </FieldGroup>
             </div>
-            <div className="grid-col-6">
+            <div className="grid-col-12 tablet:grid-col-6">
               <FieldGroup>
-                <Label className="text-normal" htmlFor="contractEndDate" required>
+                <Label
+                  className="text-normal"
+                  htmlFor="contractEndDate"
+                  required
+                >
                   {t('contractDetails.performanceEndDate')}
                 </Label>
                 <ErrorMessage

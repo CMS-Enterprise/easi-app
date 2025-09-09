@@ -465,7 +465,6 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                 ref={null}
                 id="contractHaveContract"
                 value={SystemIntakeContractStatus.HAVE_CONTRACT}
-                aria-describedby="hasContractHelpText"
                 aria-expanded={
                   hasContract === SystemIntakeContractStatus.HAVE_CONTRACT
                 }
@@ -484,7 +483,6 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                 ref={null}
                 id="contractInProgress"
                 value={SystemIntakeContractStatus.IN_PROGRESS}
-                aria-describedby="hasContractHelpText"
                 aria-expanded={
                   hasContract === SystemIntakeContractStatus.IN_PROGRESS
                 }
@@ -503,7 +501,6 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                 ref={null}
                 id="contractNotStarted"
                 value={SystemIntakeContractStatus.NOT_STARTED}
-                aria-describedby="hasContractHelpText"
                 label={t('contractDetails.hasContract', {
                   context: SystemIntakeContractStatus.NOT_STARTED
                 })}
@@ -519,7 +516,6 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                 ref={null}
                 id="contractNotNeeded"
                 value={SystemIntakeContractStatus.NOT_NEEDED}
-                aria-describedby="hasContractHelpText"
                 label={t('contractDetails.hasContract', {
                   context: SystemIntakeContractStatus.NOT_NEEDED
                 })}

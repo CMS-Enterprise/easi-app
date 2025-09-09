@@ -482,8 +482,6 @@ const intake = {
     contractHeading: 'Contract',
     hasContract:
       'Do you already have a contract in place to support this effort?',
-    hasContractHelpText:
-      'This information helps the Office of Acquisition and Grants Management (OAGM) track work',
     contractors: 'Contractor(s)',
     periodOfPerformance: 'Period of performance dates for planned project',
     performanceStartDate: 'Performance start date',
