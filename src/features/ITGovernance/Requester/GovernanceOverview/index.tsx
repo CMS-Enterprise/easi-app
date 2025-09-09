@@ -44,7 +44,7 @@ const GovernanceOverview = () => {
       </BreadcrumbBar>
 
       <PageHeading className="margin-bottom-1">{t('heading')}</PageHeading>
-      <span className="text-base-dark margin-right-2">
+      <span className="text-base-dark margin-right-2 font-body-md">
         {t('changeRequestTypeCopy')}
       </span>
       <Link
