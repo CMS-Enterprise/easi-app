@@ -8,13 +8,14 @@ import (
 	_ "github.com/lib/pq" // required for postgres driver in sql
 
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 )
 
 func (s *GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
 	ctx := context.Background()
 
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+	intake, intakeErr := storage.CreateSystemIntake(ctx, s.store, &models.SystemIntake{
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
 	s.NoError(intakeErr)
@@ -59,7 +60,7 @@ func (s *GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
 					}
 				}
 			}
-		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		}`, intake.ID), &resp, s.addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 
@@ -72,7 +73,7 @@ func (s *GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
 func (s *GraphQLTestSuite) TestFetchBusinessCaseWithSolutionAForSystemIntakeQuery() {
 	ctx := context.Background()
 
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+	intake, intakeErr := storage.CreateSystemIntake(ctx, s.store, &models.SystemIntake{
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
 	s.NoError(intakeErr)
@@ -145,7 +146,7 @@ func (s *GraphQLTestSuite) TestFetchBusinessCaseWithSolutionAForSystemIntakeQuer
 					}
 				}
 			}
-		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		}`, intake.ID), &resp, s.addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 
@@ -170,7 +171,7 @@ func (s *GraphQLTestSuite) TestFetchBusinessCaseWithSolutionAForSystemIntakeQuer
 func (s *GraphQLTestSuite) TestFetchBusinessCaseWithCostLinesForSystemIntakeQuery() {
 	ctx := context.Background()
 
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+	intake, intakeErr := storage.CreateSystemIntake(ctx, s.store, &models.SystemIntake{
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
 	s.NoError(intakeErr)
@@ -242,7 +243,7 @@ func (s *GraphQLTestSuite) TestFetchBusinessCaseWithCostLinesForSystemIntakeQuer
 					}
 				}
 			}
-		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		}`, intake.ID), &resp, s.addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 

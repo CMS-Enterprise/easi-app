@@ -54,11 +54,11 @@ CREATE TYPE SYSTEM_INTAKE_CONTACT_COMPONENT AS ENUM (
 
 COMMENT ON TYPE SYSTEM_INTAKE_CONTACT_COMPONENT IS ' Represents the list of options that a contact can belong to at CMS';
 
--- add roles column to the DB. TODO change this to an enum
+-- add roles column to the DB.
 ALTER TABLE IF EXISTS system_intake_contacts
 ADD COLUMN roles SYSTEM_INTAKE_CONTACT_ROLE[] NOT NULL DEFAULT '{}',
 ADD COLUMN is_requester BOOLEAN NOT NULL DEFAULT FALSE,
-ADD COLUMN created_by UUID REFERENCES user_account(id), -- TODO set this not null later
+ADD COLUMN created_by UUID REFERENCES user_account(id),
 ADD COLUMN modified_by UUID REFERENCES user_account(id);
 
 -- data to update aggregates contacts using partition by logic. We can then programmatically update the contact to have a list of all roles, and drop the old columns
@@ -224,3 +224,9 @@ ALTER COLUMN created_at SET DEFAULT CURRENT_TIMESTAMP;
 -- created_by can not be null
 ALTER TABLE system_intake_contacts
 ALTER COLUMN created_by SET NOT NULL;
+
+-- all users should reference a user_account
+ALTER TABLE system_intake_contacts
+ADD CONSTRAINT fk_system_intake_contacts_user_id
+FOREIGN KEY (user_id)
+REFERENCES user_account(id);

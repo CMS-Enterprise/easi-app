@@ -11,6 +11,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 type systemIntakeRelationTestCase struct {
@@ -83,7 +84,7 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 
 	for caseName, caseValues := range cases {
 		s.Run(caseName, func() {
-			openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
+			openIntake, err := storage.CreateSystemIntake(ctx, store, &models.SystemIntake{
 				State:        models.SystemIntakeStateOpen,
 				RequestType:  models.SystemIntakeRequestTypeNEW,
 				SubmittedAt:  &submittedAt,
@@ -296,7 +297,7 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 
 	for caseName, caseValues := range cases {
 		s.Run(caseName, func() {
-			openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
+			openIntake, err := storage.CreateSystemIntake(ctx, store, &models.SystemIntake{
 				State:        models.SystemIntakeStateOpen,
 				RequestType:  models.SystemIntakeRequestTypeNEW,
 				SubmittedAt:  &submittedAt,
@@ -436,7 +437,7 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 
 	for caseName, caseValues := range cases {
 		s.Run(caseName, func() {
-			openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
+			openIntake, err := storage.CreateSystemIntake(ctx, store, &models.SystemIntake{
 				State:        models.SystemIntakeStateOpen,
 				RequestType:  models.SystemIntakeRequestTypeNEW,
 				SubmittedAt:  &submittedAt,
@@ -519,7 +520,7 @@ func (s *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 
 	s.Run("unlink new system intake", func() {
 		// Create an initial intake
-		openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
+		openIntake, err := storage.CreateSystemIntake(ctx, store, &models.SystemIntake{
 			State:        models.SystemIntakeStateOpen,
 			RequestType:  models.SystemIntakeRequestTypeNEW,
 			SubmittedAt:  &submittedAt,
@@ -575,7 +576,7 @@ func (s *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 
 	s.Run("unlink existing system intake", func() {
 		// Create an initial intake
-		openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
+		openIntake, err := storage.CreateSystemIntake(ctx, store, &models.SystemIntake{
 			State:        models.SystemIntakeStateOpen,
 			RequestType:  models.SystemIntakeRequestTypeNEW,
 			SubmittedAt:  &submittedAt,
@@ -622,7 +623,7 @@ func (s *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 
 	s.Run("unlink existing service intake", func() {
 		// Create an initial intake
-		openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
+		openIntake, err := storage.CreateSystemIntake(ctx, store, &models.SystemIntake{
 			State:       models.SystemIntakeStateOpen,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			SubmittedAt: &submittedAt,

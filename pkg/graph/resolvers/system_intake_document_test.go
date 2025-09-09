@@ -9,14 +9,14 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 func (s *ResolverSuite) TestSystemIntakeDocumentResolvers() {
 	ctx := s.testConfigs.Context
-	store := s.testConfigs.Store
 
 	// Create a system intake
-	intake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
+	intake, err := storage.CreateSystemIntake(ctx, s.testConfigs.Store, &models.SystemIntake{
 		RequestType: models.SystemIntakeRequestTypeMAJORCHANGES,
 	})
 	s.NoError(err)

@@ -27,7 +27,6 @@ import (
 
 	"github.com/cms-enterprise/easi-app/pkg/appconfig"
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
-	"github.com/cms-enterprise/easi-app/pkg/authentication"
 	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
@@ -35,6 +34,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/local"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/testconfig/useraccountstoretestconfigs"
 	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 	"github.com/cms-enterprise/easi-app/pkg/upload"
 )
@@ -241,13 +241,13 @@ func addDataloadersToGraphQLClientTest(buildDataloaders dataloaders.BuildDataloa
 }
 
 // addAuthWithAllJobCodesToGraphQLClientTest adds authentication for all job codes
-func addAuthWithAllJobCodesToGraphQLClientTest(euaID string) func(*client.Request) {
+func (s *GraphQLTestSuite) addAuthWithAllJobCodesToGraphQLClientTest(euaID string) func(*client.Request) {
+
 	return func(request *client.Request) {
-		ctx := appcontext.WithPrincipal(request.HTTP.Context(), &authentication.EUAPrincipal{
-			EUAID:       euaID,
-			JobCodeEASi: true,
-			JobCodeGRT:  true,
-		})
+		princ, err := useraccountstoretestconfigs.GetTestPrincipal(s.store, euaID, true)
+		s.NoError(err)
+		s.NotNil(princ)
+		ctx := appcontext.WithPrincipal(request.HTTP.Context(), princ)
 
 		request.HTTP = request.HTTP.WithContext(ctx)
 	}

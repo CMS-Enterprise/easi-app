@@ -42,7 +42,7 @@ func (s *Store) UserAccountGetByCommonName(commonName string) (*authentication.U
 }
 
 // UserAccountGetByUsername gets a user account by a give username
-func (s *Store) UserAccountGetByUsername(ctx context.Context, np sqlutils.NamedPreparer, username string) (*authentication.UserAccount, error) {
+func UserAccountGetByUsername(ctx context.Context, np sqlutils.NamedPreparer, username string) (*authentication.UserAccount, error) {
 	user := &authentication.UserAccount{}
 
 	err := namedGet(ctx, np, user, sqlqueries.UserAccount.GetByUsername, args{
@@ -59,7 +59,7 @@ func (s *Store) UserAccountGetByUsername(ctx context.Context, np sqlutils.NamedP
 }
 
 // UserAccountGetByUsernames gets a user account by a give username
-func (s *Store) UserAccountGetByUsernames(ctx context.Context, np sqlutils.NamedPreparer, usernames []string) ([]*authentication.UserAccount, error) {
+func UserAccountGetByUsernames(ctx context.Context, np sqlutils.NamedPreparer, usernames []string) ([]*authentication.UserAccount, error) {
 	unmappedUsers := []*authentication.AcctByUsername{}
 
 	err := namedSelect(ctx, np, &unmappedUsers, sqlqueries.UserAccount.GetByUsernames, args{
@@ -106,7 +106,7 @@ func (s *Store) UserAccountsByIDsNP(ctx context.Context, np sqlutils.NamedPrepar
 }
 
 // UserAccountCreate creates a new user account for a given username
-func (s *Store) UserAccountCreate(ctx context.Context, np sqlutils.NamedPreparer, userAccount *authentication.UserAccount) (*authentication.UserAccount, error) {
+func UserAccountCreate(ctx context.Context, np sqlutils.NamedPreparer, userAccount *authentication.UserAccount) (*authentication.UserAccount, error) {
 	user := &authentication.UserAccount{}
 	if userAccount.ID == uuid.Nil {
 		userAccount.ID = uuid.New()
@@ -120,7 +120,7 @@ func (s *Store) UserAccountCreate(ctx context.Context, np sqlutils.NamedPreparer
 }
 
 // UserAccountBulkCreate creates new user accounts for given usernames
-func (s *Store) UserAccountBulkCreate(ctx context.Context, np sqlutils.NamedPreparer, userAccounts []*authentication.UserAccount) ([]*authentication.UserAccount, error) {
+func UserAccountBulkCreate(ctx context.Context, np sqlutils.NamedPreparer, userAccounts []*authentication.UserAccount) ([]*authentication.UserAccount, error) {
 	for i := range userAccounts {
 		if userAccounts[i].ID == uuid.Nil {
 			userAccounts[i].ID = uuid.New()
@@ -135,7 +135,7 @@ func (s *Store) UserAccountBulkCreate(ctx context.Context, np sqlutils.NamedPrep
 }
 
 // UserAccountUpdate updates an existing user account
-func (s *Store) UserAccountUpdate(ctx context.Context, np sqlutils.NamedPreparer, userAccount *authentication.UserAccount) (
+func UserAccountUpdate(ctx context.Context, np sqlutils.NamedPreparer, userAccount *authentication.UserAccount) (
 	*authentication.UserAccount,
 	error,
 ) {
@@ -149,7 +149,7 @@ func (s *Store) UserAccountUpdate(ctx context.Context, np sqlutils.NamedPreparer
 }
 
 // UserAccountBulkUpdate updates existing user accounts
-func (s *Store) UserAccountBulkUpdate(ctx context.Context, np sqlutils.NamedPreparer, userAccounts []*authentication.UserAccount) (
+func UserAccountBulkUpdate(ctx context.Context, np sqlutils.NamedPreparer, userAccounts []*authentication.UserAccount) (
 	[]*authentication.UserAccount,
 	error,
 ) {

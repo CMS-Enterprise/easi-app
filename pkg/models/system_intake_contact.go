@@ -119,28 +119,33 @@ func (info *SystemIntakeContacts) Requester() (*SystemIntakeContact, error) {
 	if info == nil || info.AllContacts == nil || len(info.AllContacts) == 0 {
 		return nil, nil
 	}
-	// TODO implement in other branch
-	// lo.Find(info.AllContacts, func(c *SystemIntakeContact) bool {
-	// 	return c.
-	// })
-	// This is a placeholder, just return the first contact for now
-	return info.AllContacts[0], nil
+
+	requester, _ := lo.Find(info.AllContacts, func(c *SystemIntakeContact) bool {
+		return c.IsRequester
+	})
+	return requester, nil
 }
 
 // BusinessOwners returns the business owner from the List of Contacts
 func (info *SystemIntakeContacts) BusinessOwners() ([]*SystemIntakeContact, error) {
-	//TODO Implement
-	return info.AllContacts, nil
+	contacts := lo.Filter(info.AllContacts, func(c *SystemIntakeContact, index int) bool {
+		return c.Roles != nil && lo.Contains(c.Roles, SystemIntakeContactRoleBusinessOwner)
+	})
+	return contacts, nil
 }
 
 // ProductManagers returns the product managers from the List of Contacts
 func (info *SystemIntakeContacts) ProductManagers() ([]*SystemIntakeContact, error) {
-	//TODO Implement
-	return info.AllContacts, nil
+	contacts := lo.Filter(info.AllContacts, func(c *SystemIntakeContact, index int) bool {
+		return c.Roles != nil && lo.Contains(c.Roles, SystemIntakeContactRoleProductManager)
+	})
+	return contacts, nil
 }
 
 // AdditionalContacts Returns the additional contacts from the List of Contacts. These are all the contacts except for requester, businessOwners, productOwners
 func (info *SystemIntakeContacts) AdditionalContacts() ([]*SystemIntakeContact, error) {
-	//TODO Implement
-	return info.AllContacts, nil
+	contacts := lo.Filter(info.AllContacts, func(c *SystemIntakeContact, index int) bool {
+		return !c.IsRequester && !lo.Some(c.Roles, []SystemIntakeContactRole{SystemIntakeContactRoleBusinessOwner, SystemIntakeContactRoleProductManager})
+	})
+	return contacts, nil
 }

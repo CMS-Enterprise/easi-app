@@ -54,7 +54,7 @@ func (s *ResolverSuite) TestSystemIntakeContactDelete() {
 	s.NoError(err)
 	s.EqualValues(createdContact.SystemIntakeContact.ID, deleteContact.ID)
 
-	retDel, err := SystemIntakeContactsGetByID(s.ctxWithNewDataloaders(), createdContact.SystemIntakeContact.ID)
+	retDel, err := SystemIntakeContactGetByID(s.ctxWithNewDataloaders(), createdContact.SystemIntakeContact.ID)
 	s.Nil(retDel)
 	s.NoError(err)
 }
