@@ -56,7 +56,7 @@ const Confirmation = ({
               ? t('submission.success.heading')
               : t('submission.error.heading')}
           </PageHeading>
-          <p className="font-body-lg line-height-body-5 margin-top-0 margin-bottom-5">
+          <p className="font-body-lg line-height-body-5 margin-top-0 margin-bottom-5 text-light">
             {submissionSuccess
               ? t('submission.success.description')
               : t('submission.error.description')}
