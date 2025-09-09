@@ -272,7 +272,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           <CollapsableLink
             id="businessNeed"
             label={t('requestDetails.viewExampleAnswer')}
-            className="margin-y-1"
+            className="margin-y-2"
           >
             <p className="margin-y-0">
               {t('requestDetails.businessNeedExampleAnswer')}
@@ -305,7 +305,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           <CollapsableLink
             id="businessSolution"
             label={t('requestDetails.viewExampleAnswer')}
-            className="margin-y-1"
+            className="margin-y-2"
           >
             <p className="margin-y-0">
               {t('requestDetails.businessSolutionExampleAnswer')}
@@ -356,7 +356,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           <CollapsableLink
             id="currentStage"
             label={t('requestDetails.currentStageCollapseLinkText')}
-            className="margin-y-1"
+            className="margin-y-2"
           >
             <ul className="margin-y-0 padding-left-3">
               {currentStageOptions.map((item, index) => (
