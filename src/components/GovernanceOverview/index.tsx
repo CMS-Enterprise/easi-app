@@ -23,7 +23,7 @@ const GovProcessCollapse = ({ className }: { className?: string }) => {
     <CollapsableLink
       className={className}
       id="GovernanceOverview-WhyGovernanceExists"
-      label={t('governanceOverview:processExists:heading')}
+      label={t('processExists.heading')}
     >
       <>
         {t('processExists.subheading')}
@@ -76,7 +76,7 @@ const GovernanceOverviewContent = ({
             .filter((_, i) => i < 2)
             .map(step => {
               return (
-                <ProcessListItem key={step.heading} className="maxw-none>
+                <ProcessListItem key={step.heading} className="maxw-none">
                   <ProcessListHeading type="h3">
                     {step.heading}
                   </ProcessListHeading>
