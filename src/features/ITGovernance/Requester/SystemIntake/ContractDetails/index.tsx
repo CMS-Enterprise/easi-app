@@ -12,6 +12,7 @@ import {
   InputSuffix,
   Label,
   Radio,
+  RequiredMarker,
   TextInput
 } from '@trussworks/react-uswds';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
@@ -286,7 +287,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
           >
             <Fieldset>
               <legend className="usa-label">
-                {t('fundingSources:whichFundingSources')}
+                {t('fundingSources:whichFundingSources')} <RequiredMarker />
               </legend>
               <HelpText className="margin-top-05" id="fundingSourcesHelpText">
                 <Trans
@@ -447,13 +448,9 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
               {t('contractDetails.contractHeading')}
             </h4>
             <Fieldset>
-              <Label
-                className="maxw-none"
-                htmlFor="contractHaveContract"
-                requiredMarker
-              >
-                {t('contractDetails.hasContract')}
-              </Label>
+              <legend className="usa-label maxw-none">
+                {t('contractDetails.hasContract')} <RequiredMarker />
+              </legend>
               <ErrorMessage
                 errors={errors}
                 name="contract.hasContract"
