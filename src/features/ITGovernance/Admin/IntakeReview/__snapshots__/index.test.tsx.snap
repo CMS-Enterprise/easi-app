@@ -22,7 +22,11 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
       >
         Ready to start
       </span>
-      on 
+      <span
+        class="text-base"
+      >
+        on 
+      </span>
     </div>
     <div
       class="easi-pdf-export__controls"

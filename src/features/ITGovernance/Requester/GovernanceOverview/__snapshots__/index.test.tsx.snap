@@ -38,13 +38,13 @@ exports[`The governance overview page > matches the snapshot (w/ id param) 1`] =
     </nav>
     <h1
       aria-live="polite"
-      class="easi-h1 margin-bottom-0"
+      class="easi-h1 margin-bottom-1"
       tabindex="-1"
     >
       IT Governance request
     </h1>
     <span
-      class="text-base-dark margin-right-2"
+      class="text-base-dark margin-right-2 font-body-md"
     >
       Add a system, service, or project
     </span>
@@ -139,7 +139,7 @@ exports[`The governance overview page > matches the snapshot (w/ id param) 1`] =
           class="usa-process-list margin-top-2 border-bottom border-bottom-width-1px border-base-lighter margin-bottom-4"
         >
           <li
-            class="usa-process-list__item"
+            class="usa-process-list__item maxw-none"
           >
             <h3
               class="usa-process-list__heading"
@@ -154,7 +154,7 @@ exports[`The governance overview page > matches the snapshot (w/ id param) 1`] =
             </p>
           </li>
           <li
-            class="usa-process-list__item"
+            class="usa-process-list__item maxw-none"
           >
             <h3
               class="usa-process-list__heading"
@@ -329,13 +329,13 @@ exports[`The governance overview page > matches the snapshot (w/o id param) 1`] 
     </nav>
     <h1
       aria-live="polite"
-      class="easi-h1 margin-bottom-0"
+      class="easi-h1 margin-bottom-1"
       tabindex="-1"
     >
       IT Governance request
     </h1>
     <span
-      class="text-base-dark margin-right-2"
+      class="text-base-dark margin-right-2 font-body-md"
     >
       Add a system, service, or project
     </span>
@@ -430,7 +430,7 @@ exports[`The governance overview page > matches the snapshot (w/o id param) 1`] 
           class="usa-process-list margin-top-2 border-bottom border-bottom-width-1px border-base-lighter margin-bottom-4"
         >
           <li
-            class="usa-process-list__item"
+            class="usa-process-list__item maxw-none"
           >
             <h3
               class="usa-process-list__heading"
@@ -445,7 +445,7 @@ exports[`The governance overview page > matches the snapshot (w/o id param) 1`] 
             </p>
           </li>
           <li
-            class="usa-process-list__item"
+            class="usa-process-list__item maxw-none"
           >
             <h3
               class="usa-process-list__heading"

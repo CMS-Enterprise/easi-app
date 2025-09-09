@@ -275,7 +275,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
           onSubmit={handleSubmit(() =>
             submit(() => history.push('documents'), true)
           )}
-          className="maxw-none tablet:grid-col-9 margin-bottom-5 border-top border-base-light padding-top-1"
+          className="maxw-none desktop:grid-col-9 margin-bottom-5 border-top border-base-light padding-top-1"
         >
           <h4 className="text-bold margin-y-0">
             {t('contractDetails.fundingAndBudget')}
@@ -308,7 +308,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
           </FieldGroup>
 
           <div className="grid-row grid-gap">
-            <div className="grid-col-7">
+            <div className="grid-col-12 desktop:grid-col-7">
               <FieldGroup
                 scrollElement="annualSpending.currentAnnualSpending"
                 error={!!errors.annualSpending?.currentAnnualSpending}
@@ -327,7 +327,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                   name="annualSpending.currentAnnualSpending"
                   as={FieldErrorMsg}
                 />
-                <InputGroup>
+                <InputGroup className="maxw-none">
                   <InputPrefix>$</InputPrefix>
                   <TextInput
                     {...register('annualSpending.currentAnnualSpending')}
@@ -340,7 +340,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
               </FieldGroup>
             </div>
 
-            <div className="grid-col-5">
+            <div className="grid-col-12 desktop:grid-col-5">
               <FieldGroup
                 scrollElement="annualSpending.currentAnnualSpendingITPortion"
                 error={!!errors.annualSpending?.currentAnnualSpendingITPortion}
@@ -357,7 +357,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                   name="annualSpending.currentAnnualSpendingITPortion"
                   as={FieldErrorMsg}
                 />
-                <InputGroup>
+                <InputGroup className="maxw-none">
                   <TextInput
                     {...register(
                       'annualSpending.currentAnnualSpendingITPortion'
@@ -374,7 +374,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
           </div>
 
           <div className="grid-row grid-gap">
-            <div className="grid-col-7">
+            <div className="grid-col-12 desktop:grid-col-7">
               <FieldGroup
                 scrollElement="annualSpending.plannedYearOneSpending"
                 error={!!errors.annualSpending?.plannedYearOneSpending}
@@ -393,7 +393,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                   name="annualSpending.plannedYearOneSpending"
                   as={FieldErrorMsg}
                 />
-                <InputGroup>
+                <InputGroup className="maxw-none">
                   <InputPrefix>$</InputPrefix>
                   <TextInput
                     {...register('annualSpending.plannedYearOneSpending')}
@@ -406,7 +406,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
               </FieldGroup>
             </div>
 
-            <div className="grid-col-5">
+            <div className="grid-col-12 desktop:grid-col-5">
               <FieldGroup
                 scrollElement="annualSpending.plannedYearOneSpendingITPortion"
                 error={!!errors.annualSpending?.plannedYearOneSpendingITPortion}
@@ -422,7 +422,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                   name="annualSpending.plannedYearOneSpendingITPortion"
                   as={FieldErrorMsg}
                 />
-                <InputGroup>
+                <InputGroup className="maxw-none">
                   <TextInput
                     {...register(
                       'annualSpending.plannedYearOneSpendingITPortion'
