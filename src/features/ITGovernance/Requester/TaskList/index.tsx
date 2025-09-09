@@ -151,7 +151,7 @@ function GovernanceTaskList() {
                     {t('taskList.description', { requestName })}
                   </p>
                 )}
-                <span className="text-base-dark margin-right-2">
+                <span className="text-base-dark margin-right-2 font-body-md">
                   {t('governanceOverview:changeRequestTypeCopy')}
                 </span>
                 {/* UPDATE this to go back ot request type and throw a state there too */}
