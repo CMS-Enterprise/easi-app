@@ -277,9 +277,9 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
           )}
           className="maxw-none tablet:grid-col-9 margin-bottom-5 border-top border-base-light padding-top-1"
         >
-          <p className="text-bold margin-y-0">
+          <h4 className="text-bold margin-y-0">
             {t('contractDetails.fundingAndBudget')}
-          </p>
+          </h4>
           <FieldGroup
             scrollElement="fundingSources"
             error={!!errors.fundingSources}
@@ -443,9 +443,9 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
             error={!!errors.contract?.hasContract}
             className="border-top border-base-light padding-top-1 margin-top-4"
           >
-            <p className="margin-top-0 margin-bottom-3 text-bold">
+            <h4 className="margin-top-0 margin-bottom-3 text-bold">
               {t('contractDetails.contractHeading')}
-            </p>
+            </h4>
             <Fieldset>
               <Label
                 className="maxw-none"
