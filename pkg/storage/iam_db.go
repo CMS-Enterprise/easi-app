@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/rds/rdsutils"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/feature/rds/auth"
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 )
@@ -17,8 +17,8 @@ import (
 // iamDB is a custom struct that satisfies the driver.Connector so that it can be used with sql.OpenDB.
 // It implements a custom Connect() function that will get a new IAM auth token for each connection.
 type iamDB struct {
-	config     DBConfig
-	awsSession *session.Session
+	dbConfig  DBConfig
+	awsConfig aws.Config
 }
 
 // Connect implements the functionality that is executed each time a new connection is made to the database
@@ -26,11 +26,11 @@ type iamDB struct {
 // Connections made with an auth token will _NOT_ drop when the token expires, so the 15 minute expiry should never matter
 // This function helps satisfy the driver.Connector interface
 func (idb *iamDB) Connect(ctx context.Context) (driver.Conn, error) {
-	awsRegion := *idb.awsSession.Config.Region
-	awsCreds := idb.awsSession.Config.Credentials
-	dbEndpoint := fmt.Sprintf("%s:%s", idb.config.Host, idb.config.Port)
+	awsRegion := idb.awsConfig.Region
+	awsCreds := idb.awsConfig.Credentials
+	dbEndpoint := fmt.Sprintf("%s:%s", idb.dbConfig.Host, idb.dbConfig.Port)
 
-	authToken, err := rdsutils.BuildAuthToken(dbEndpoint, awsRegion, idb.config.Username, awsCreds)
+	authToken, err := auth.BuildAuthToken(ctx, dbEndpoint, awsRegion, idb.dbConfig.Username, awsCreds)
 	if err != nil {
 		return nil, err
 	}
@@ -38,12 +38,12 @@ func (idb *iamDB) Connect(ctx context.Context) (driver.Conn, error) {
 	psqlURL := url.URL{
 		Scheme: "postgres",
 		Host:   dbEndpoint,
-		User:   url.UserPassword(idb.config.Username, authToken),
-		Path:   idb.config.Database,
+		User:   url.UserPassword(idb.dbConfig.Username, authToken),
+		Path:   idb.dbConfig.Database,
 	}
 
 	q := psqlURL.Query()
-	q.Add("sslmode", idb.config.SSLMode)
+	q.Add("sslmode", idb.dbConfig.SSLMode)
 
 	psqlURL.RawQuery = q.Encode()
 
@@ -71,7 +71,7 @@ func (idb *iamDB) Open(name string) (driver.Conn, error) {
 
 // newConnectionPoolWithIam opens a sql.DB using the custom iamDb as a connector.
 // It will wrap that sql.DB and return it as a *sqlx.DB
-func newConnectionPoolWithIam(awsSession *session.Session, config DBConfig) *sqlx.DB {
-	db := sql.OpenDB(&iamDB{config, awsSession})
+func newConnectionPoolWithIam(awsConfig aws.Config, dbConfig DBConfig) *sqlx.DB {
+	db := sql.OpenDB(&iamDB{dbConfig: dbConfig, awsConfig: awsConfig})
 	return sqlx.NewDb(db, "postgres")
 }

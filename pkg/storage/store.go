@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/facebookgo/clock"
 	"github.com/jmoiron/sqlx"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
@@ -55,12 +55,12 @@ func (s *Store) Beginx() (*sqlx.Tx, error) {
 
 // NewStore creates a new Store struct
 // The `db` property on the Store will always be a *sqlx.DB, but a notable difference in the DB is that if
-// config.UseIAM is true, that DB instance will be backed by a custom connector in iam_db.go that generates
+// dbConfig.UseIAM is true, that DB instance will be backed by a custom connector in iam_db.go that generates
 // IAM auth tokens when making new connections to the database.
-// If config.UseIAM is false, it will connect using the "postgres" driver that SQLx registers in its init() function
+// If dbConfig.UseIAM is false, it will connect using the "postgres" driver that SQLx registers in its init() function
 // https://github.com/jmoiron/sqlx/blob/75a7ebf246fd757c9c7742da7dc4d26c6fdb6b5b/bind.go#L33-L40
 func NewStore(
-	config DBConfig,
+	dbConfig DBConfig,
 	ldClient *ld.LDClient,
 ) (*Store, error) {
 	// LifecycleIDs are generated based on Eastern Time
@@ -70,10 +70,14 @@ func NewStore(
 	}
 
 	var db *sqlx.DB
-	if config.UseIAM {
+	if dbConfig.UseIAM {
 		// Connect using the IAM DB package
-		sess := session.Must(session.NewSession())
-		db = newConnectionPoolWithIam(sess, config)
+		awsConfig, err := config.LoadDefaultConfig(context.TODO())
+		if err != nil {
+			return nil, err
+		}
+
+		db = newConnectionPoolWithIam(awsConfig, dbConfig)
 		err = db.Ping()
 		if err != nil {
 			return nil, err
@@ -83,12 +87,12 @@ func NewStore(
 		dataSourceName := fmt.Sprintf(
 			"host=%s port=%s user=%s "+
 				"password=%s dbname=%s sslmode=%s",
-			config.Host,
-			config.Port,
-			config.Username,
-			config.Password,
-			config.Database,
-			config.SSLMode,
+			dbConfig.Host,
+			dbConfig.Port,
+			dbConfig.Username,
+			dbConfig.Password,
+			dbConfig.Database,
+			dbConfig.SSLMode,
 		)
 
 		db, err = sqlx.Connect("postgres", dataSourceName)
@@ -97,7 +101,7 @@ func NewStore(
 		}
 	}
 
-	db.SetMaxOpenConns(config.MaxConnections)
+	db.SetMaxOpenConns(dbConfig.MaxConnections)
 
 	return &Store{
 		db:        db,
