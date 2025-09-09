@@ -91,7 +91,7 @@ const Review = ({ systemIntake }: ReviewProps) => {
           })
         }
       >
-        {t('review.sendIntakeRequest')}
+        {t('review.submitIntakeRequest')}
       </Button>
       <Button
         className="margin-top-2 display-flex flex-align-center"
