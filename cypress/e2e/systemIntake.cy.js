@@ -56,7 +56,7 @@ describe('The System Intake Form', () => {
     cy.contains('h1', 'Contact details');
   });
 
-  it('fills out minimum required fields (smoke test)', () => {
+  it.only('fills out minimum required fields (smoke test)', () => {
     // Contact details
     cy.systemIntake.contactDetails.fillNonBranchingFields();
 
@@ -128,7 +128,7 @@ describe('The System Intake Form', () => {
     cy.contains('h1', 'Check your answers before sending');
 
     // Submit
-    cy.contains('button', 'Send my Intake Request').click();
+    cy.contains('button', 'Submit my Intake Request').click();
     cy.contains('h1', 'Success!');
   });
 

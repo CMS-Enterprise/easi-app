@@ -64,32 +64,31 @@ const Review = ({ systemIntake }: ReviewProps) => {
       </SummaryBox>
 
       <Pager
-        next={{
-          type: 'submit',
-          text: t('review.submitIntakeRequest'),
-          disabled: mutationResult.loading
-        }}
+        className="margin-top-5"
         back={{
-          type: 'button',
           onClick: () => history.push('documents')
+        }}
+        next={{
+          text: t('review.submitIntakeRequest'),
+          disabled: mutationResult.loading,
+          onClick: () => {
+            mutate({
+              variables: {
+                input: { id: systemIntake.id }
+              }
+            }).then(response => {
+              if (!response.errors) {
+                history.push(`/system/${systemIntake.id}/confirmation`);
+              } else {
+                history.push(`/system/${systemIntake.id}/confirmation-error`);
+              }
+            });
+          }
         }}
         border={false}
         taskListUrl={`/governance-task-list/${systemIntake.id}`}
         saveExitText={t('review.saveWithoutSubmitting')}
-        submit={() =>
-          mutate({
-            variables: {
-              input: { id: systemIntake.id }
-            }
-          }).then(response => {
-            if (!response.errors) {
-              history.push(`/system/${systemIntake.id}/confirmation`);
-            } else {
-              history.push(`/system/${systemIntake.id}/confirmation-error`);
-            }
-          })
-        }
-        className="margin-top-5"
+        submitDisabled
       />
 
       <PageNumber className="margin-top-6" currentPage={5} totalPages={5} />
