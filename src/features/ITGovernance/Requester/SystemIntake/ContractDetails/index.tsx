@@ -255,7 +255,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
       <PageHeading className="margin-top-4 margin-bottom-1">
         {t('contractDetails.heading')}
       </PageHeading>
-      <p className="font-body-lg line-height-body-5 margin-top-0 margin-bottom-1">
+      <p className="font-body-lg line-height-body-5 margin-top-0 margin-bottom-2 text-light">
         {t('contractDetails.description')}
       </p>
 
