@@ -43,7 +43,7 @@ const GovernanceOverview = () => {
         <Breadcrumb current>{t('intake:navigation.startRequest')}</Breadcrumb>
       </BreadcrumbBar>
 
-      <PageHeading className="margin-bottom-0">{t('heading')}</PageHeading>
+      <PageHeading className="margin-bottom-1">{t('heading')}</PageHeading>
       <span className="text-base-dark margin-right-2">
         {t('changeRequestTypeCopy')}
       </span>
