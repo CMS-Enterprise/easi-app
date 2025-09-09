@@ -232,9 +232,9 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
         )}
         className="maxw-none tablet:grid-col-9 margin-bottom-5 border-top border-base-light padding-top-1"
       >
-        <p className="margin-y-0 font-body-md text-bold">
+        <h4 className="margin-y-0 font-body-md text-bold">
           {t('requestDetails.subsectionHeadings.projectConcept')}
-        </p>
+        </h4>
         <HelpText>
           <Trans
             i18nKey="intake:requestDetails.projectConceptHelpText"
@@ -406,9 +406,9 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
         </FieldGroup>
 
         <hr className="margin-bottom-1 margin-top-4 opacity-30" aria-hidden />
-        <span className="font-body-sm text-bold">
+        <h4 className="font-body-sm text-bold margin-y-0">
           {t('requestDetails.subsectionHeadings.collaboration')}
-        </span>
+        </h4>
 
         <FieldGroup
           scrollElement="needsEaSupport"
@@ -492,9 +492,9 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
         </CollapsableLink>
 
         <hr className="margin-bottom-1 margin-top-4 opacity-30" aria-hidden />
-        <span className="font-body-sm text-bold">
+        <h4 className="font-body-sm text-bold margin-y-0">
           {t('requestDetails.subsectionHeadings.projectDetails')}
-        </span>
+        </h4>
 
         <FieldGroup scrollElement="usesAiTech" error={!!errors.usesAiTech}>
           <Fieldset>

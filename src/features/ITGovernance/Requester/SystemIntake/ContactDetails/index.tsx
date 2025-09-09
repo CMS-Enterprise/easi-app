@@ -399,7 +399,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           <h4 className="margin-y-1 text-bold">
             {t('contactDetails.businessOwner.info')}
           </h4>
-          <HelpText id="businessOwnerHelpText" className="margin-bottom-3">
+          <HelpText id="businessOwnerHelpText" className="margin-bottom-2">
             {t('contactDetails.businessOwner.helpText')}
           </HelpText>
 
@@ -500,7 +500,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
             {t('contactDetails.productManager.name')}
           </h4>
 
-          <HelpText id="productManagerHelpText" className="margin-bottom-3">
+          <HelpText id="productManagerHelpText" className="margin-bottom-2">
             {t('contactDetails.productManager.helpText')}
           </HelpText>
 
