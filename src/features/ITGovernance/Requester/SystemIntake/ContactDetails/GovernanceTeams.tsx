@@ -119,7 +119,7 @@ const GovernanceTeams = () => {
                       htmlFor={`governanceTeam-${key}-collaborator`}
                       required
                     >
-                      {t(`${acronym} Collaborator Name`)}
+                      {t(`${acronym} collaborator name`)}
                     </Label>
 
                     <ErrorMessage
