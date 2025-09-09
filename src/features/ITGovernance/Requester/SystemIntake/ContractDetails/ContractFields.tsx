@@ -178,7 +178,7 @@ const ContractFields = ({ id }: ContractFieldsProps) => {
             </div>
             <div className="grid-col-6">
               <FieldGroup>
-                <Label htmlFor="contractEndDate" required>
+                <Label className="text-normal" htmlFor="contractEndDate" required>
                   {t('contractDetails.performanceEndDate')}
                 </Label>
                 <ErrorMessage
