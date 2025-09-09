@@ -334,7 +334,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         {t('contactDetails.heading')}
       </PageHeading>
 
-      <p className="font-body-lg line-height-body-5 margin-top-0 margin-bottom-1">
+      <p className="font-body-lg line-height-body-5 margin-top-0 margin-bottom-2 text-light">
         {t('contactDetails.intakeProcessDescription')}
       </p>
 
