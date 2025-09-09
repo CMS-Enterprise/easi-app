@@ -353,9 +353,9 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
       >
         {/* Requester */}
         <FormGroup className="border-top border-base-light padding-top-1">
-          <p className="text-bold margin-y-0">
+          <h4 className="text-bold margin-y-0">
             {t('contactDetails.requesterInformation')}
-          </p>
+          </h4>
           <Label
             htmlFor="requesterCommonName"
             required
@@ -396,9 +396,9 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         {/* Business Owner */}
 
         <Fieldset className="margin-top-3 border-top border-base-light padding-top-1">
-          <p className="margin-y-1 text-bold">
+          <h4 className="margin-y-1 text-bold">
             {t('contactDetails.businessOwner.info')}
-          </p>
+          </h4>
           <HelpText id="businessOwnerHelpText" className="margin-bottom-3">
             {t('contactDetails.businessOwner.helpText')}
           </HelpText>
@@ -496,9 +496,9 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
         {/* Product Manager */}
         <Fieldset className="margin-top-3 border-top border-base-light padding-top-1">
-          <p className="margin-y-1 text-bold">
+          <h4 className="margin-y-1 text-bold">
             {t('contactDetails.productManager.name')}
-          </p>
+          </h4>
 
           <HelpText id="productManagerHelpText" className="margin-bottom-3">
             {t('contactDetails.productManager.helpText')}
