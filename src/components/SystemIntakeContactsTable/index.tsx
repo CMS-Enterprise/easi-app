@@ -15,11 +15,15 @@ import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 
 import './index.scss';
 
-const SystemIntakeContactsTable = ({
-  systemIntakeId
-}: {
+type SystemIntakeContactsTableProps = {
   systemIntakeId: string;
-}) => {
+  showActionsColumn?: boolean;
+};
+
+const SystemIntakeContactsTable = ({
+  systemIntakeId,
+  showActionsColumn = false
+}: SystemIntakeContactsTableProps) => {
   const { t } = useTranslation('intake');
 
   const { data, loading } = useGetSystemIntakeContactsQuery({
@@ -30,8 +34,42 @@ const SystemIntakeContactsTable = ({
 
   const { allContacts = [] } = data?.systemIntakeContacts || {};
 
-  const columns = useMemo<Column<SystemIntakeContactFragment>[]>(
-    () => [
+  const columns = useMemo<Column<SystemIntakeContactFragment>[]>(() => {
+    const actionsColumn: Column<SystemIntakeContactFragment> = {
+      Header: t('general:actions'),
+      id: 'actions',
+      accessor: (row: SystemIntakeContactFragment, index) => {
+        return (
+          <div className="display-flex">
+            <Button
+              type="button"
+              className="margin-top-0 margin-right-2"
+              onClick={() => null}
+              data-testid={`editContact-${index}`}
+              unstyled
+            >
+              {t('general:edit')}
+            </Button>
+            <Button
+              type="button"
+              className={classNames(
+                'margin-top-0',
+                row.isRequester ? 'text-disabled' : 'text-error'
+              )}
+              unstyled
+              onClick={() => null}
+              data-testid={`removeContact-${index}`}
+              disabled={row.isRequester}
+            >
+              {t('general:remove')}
+            </Button>
+          </div>
+        );
+      },
+      width: 140
+    };
+
+    return [
       {
         Header: () => (
           <span className="display-block margin-left-4 padding-left-05">
@@ -41,6 +79,7 @@ const SystemIntakeContactsTable = ({
         accessor: (row: SystemIntakeContactFragment) =>
           row.userAccount.commonName,
         id: 'commonName',
+        width: 320,
         Cell: ({ row }: { row: { original: SystemIntakeContactFragment } }) => (
           <div className="display-flex flex-align-center">
             {row.original.isRequester && (
@@ -77,6 +116,7 @@ const SystemIntakeContactsTable = ({
         Header: t('fields.component'),
         accessor: 'component',
         id: 'component',
+        width: 'auto',
         Cell: ({
           value
         }: {
@@ -101,6 +141,7 @@ const SystemIntakeContactsTable = ({
         Header: t('fields.roles'),
         accessor: 'roles',
         id: 'roles',
+        width: 'auto',
         Cell: ({ value: roles }: { value: SystemIntakeContactRole[] }) => {
           if (roles.length === 0) {
             return (
@@ -122,41 +163,9 @@ const SystemIntakeContactsTable = ({
           );
         }
       },
-      {
-        Header: t('general:actions'),
-        id: 'actions',
-        accessor: (row: SystemIntakeContactFragment, index) => {
-          return (
-            <div className="display-flex">
-              <Button
-                type="button"
-                className="margin-top-0 margin-right-2"
-                onClick={() => null}
-                data-testid={`editContact-${index}`}
-                unstyled
-              >
-                {t('general:edit')}
-              </Button>
-              <Button
-                type="button"
-                className={classNames(
-                  'margin-top-0',
-                  row.isRequester ? 'text-disabled' : 'text-error'
-                )}
-                unstyled
-                onClick={() => null}
-                data-testid={`removeContact-${index}`}
-                disabled={row.isRequester}
-              >
-                {t('general:remove')}
-              </Button>
-            </div>
-          );
-        }
-      }
-    ],
-    [t]
-  );
+      ...(showActionsColumn ? [actionsColumn] : [])
+    ];
+  }, [t, showActionsColumn]);
 
   const table = useTable(
     {

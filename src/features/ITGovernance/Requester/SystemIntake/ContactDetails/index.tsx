@@ -197,7 +197,10 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         >
           {t('contactDetails.addAnotherContact')}
         </Button>
-        <SystemIntakeContactsTable systemIntakeId={systemIntake.id} />
+        <SystemIntakeContactsTable
+          systemIntakeId={systemIntake.id}
+          showActionsColumn
+        />
 
         <EasiFormProvider<GovernanceTeamsForm> {...form}>
           <GovernanceTeams />
