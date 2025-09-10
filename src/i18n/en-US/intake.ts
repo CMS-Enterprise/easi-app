@@ -1,10 +1,12 @@
 import {
+  SystemIntakeContactRole,
   SystemIntakeDocumentCommonType,
   SystemIntakeDocumentVersion
 } from 'gql/generated/graphql';
 
 import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
 import SystemIntakeSoftwareAcquisitionMethods from 'constants/enums/SystemIntakeSoftwareAcquisitionMethods';
+import { Translation } from 'types/util';
 
 const hasContractLabels: Record<
   `hasContract_${SystemIntakeContractStatus}`,
@@ -54,6 +56,24 @@ export const acquistionStrategyLabels: Record<
   ELA_OR_INTERNAL: 'Acquired through an ELA or internal source',
   OTHER: 'Other',
   NOT_YET_DETERMINED: 'Not yet determined'
+};
+
+const systemIntakeContactRoles: Translation<SystemIntakeContactRole> = {
+  BUSINESS_OWNER: 'Business Owner',
+  CLOUD_NAVIGATOR: 'Cloud Navigator',
+  CONTRACTING_OFFICERS_REPRESENTATIVE:
+    "Contracting Officer's Representative (COR)",
+  CYBER_RISK_ADVISOR: 'Cyber Risk Advisor (CRA)',
+  INFORMATION_SYSTEM_SECURITY_ADVISOR:
+    'Information System Security Advisor (ISSO)',
+  PRIVACY_ADVISOR: 'Privacy Advisor',
+  PRODUCT_MANAGER: 'Product Manager',
+  PRODUCT_OWNER: 'Product Owner',
+  PROJECT_MANAGER: 'Project Manager',
+  SUBJECT_MATTER_EXPERT: 'Subject Matter Expert (SME)',
+  SYSTEM_MAINTAINER: 'System Maintainer',
+  SYSTEM_OWNER: 'System Owner',
+  OTHER: 'Other'
 };
 
 const intake = {
@@ -268,6 +288,7 @@ const intake = {
       component: 'CMS Product Manager component',
       email: 'CMS Product Manager email'
     },
+    systemIntakeContactRoles,
     additionalContacts: {
       requesterTooltip:
         'This individual is the primary requester. Primary requesters are able to edit IT governance requests in EASi.',

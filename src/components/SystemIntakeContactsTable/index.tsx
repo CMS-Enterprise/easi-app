@@ -5,6 +5,7 @@ import { Button, Icon, Table, Tooltip } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
   SystemIntakeContactFragment,
+  SystemIntakeContactRole,
   useGetSystemIntakeContactsQuery
 } from 'gql/generated/graphql';
 
@@ -67,13 +68,31 @@ const SystemIntakeContactsTable = ({
       {
         Header: t('fields.component'),
         accessor: 'component',
-        id: 'component'
+        id: 'component',
+        Cell: ({ value: component }: { value: string }) => (
+          <>{component || t('general:noneSpecified')}</>
+        )
       },
       {
         Header: t('fields.roles'),
         accessor: 'roles',
         id: 'roles',
-        Cell: ({ value }: { value: string[] }) => <>{value.join(', ')}</>
+        Cell: ({ value: roles }: { value: SystemIntakeContactRole[] }) => {
+          if (roles.length === 0) {
+            return <>{t('general:noneSpecified')}</>;
+          }
+
+          // Return list of translated enum values
+          return (
+            <>
+              {roles
+                .map(role =>
+                  t(`contactDetails.systemIntakeContactRoles.${role}`)
+                )
+                .join(', ')}
+            </>
+          );
+        }
       },
       {
         Header: t('general:actions'),
