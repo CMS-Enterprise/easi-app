@@ -226,10 +226,13 @@ describe('SystemIntakeContactsTable', () => {
     expect(screen.getByText('None specified')).toBeInTheDocument();
   });
 
-  it('renders edit and remove buttons for all contacts', async () => {
+  it('renders action buttons for all contacts', async () => {
     render(
       <MockedProvider mocks={[getSystemIntakeContactsQuery()]}>
-        <SystemIntakeContactsTable systemIntakeId={systemIntake.id} />
+        <SystemIntakeContactsTable
+          systemIntakeId={systemIntake.id}
+          showActionsColumn
+        />
       </MockedProvider>
     );
 
@@ -247,10 +250,30 @@ describe('SystemIntakeContactsTable', () => {
     ).toBeInTheDocument();
   });
 
-  it('disables remove button for requester contact', async () => {
+  it('hides action buttons if showActionsColumn is false', async () => {
     render(
       <MockedProvider mocks={[getSystemIntakeContactsQuery()]}>
         <SystemIntakeContactsTable systemIntakeId={systemIntake.id} />
+      </MockedProvider>
+    );
+
+    await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
+
+    expect(
+      screen.queryByRole('button', { name: 'Edit' })
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Remove' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('disables remove button for requester contact', async () => {
+    render(
+      <MockedProvider mocks={[getSystemIntakeContactsQuery()]}>
+        <SystemIntakeContactsTable
+          systemIntakeId={systemIntake.id}
+          showActionsColumn
+        />
       </MockedProvider>
     );
 
