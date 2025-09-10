@@ -73,15 +73,17 @@ const SystemIntakeContactsTable = ({
           value: component
         }: {
           value: SystemIntakeContactFragment['component'];
-        }) => (
-          <>
-            {component || (
+        }) => {
+          if (!component) {
+            return (
               <span className="text-base-dark text-italic">
                 {t('general:noneSpecified')}
               </span>
-            )}
-          </>
-        )
+            );
+          }
+
+          return t(`contactDetails.systemIntakeContactComponents.${component}`);
+        }
       },
       {
         Header: t('fields.roles'),
