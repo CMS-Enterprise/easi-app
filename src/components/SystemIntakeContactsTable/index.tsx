@@ -78,7 +78,7 @@ const SystemIntakeContactsTable = ({
       {
         Header: t('general:actions'),
         id: 'actions',
-        accessor: (_, index) => {
+        accessor: (row: SystemIntakeContactFragment, index) => {
           return (
             <div className="display-flex">
               <Button
@@ -92,10 +92,14 @@ const SystemIntakeContactsTable = ({
               </Button>
               <Button
                 type="button"
-                className="margin-top-0 text-error"
+                className={classNames(
+                  'margin-top-0',
+                  row.isRequester ? 'text-disabled' : 'text-error'
+                )}
                 unstyled
                 onClick={() => null}
                 data-testid={`removeContact-${index}`}
+                disabled={row.isRequester}
               >
                 {t('general:remove')}
               </Button>
