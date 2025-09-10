@@ -646,7 +646,13 @@ export const getSystemIntakeContactsQuery = (
         requester,
         businessOwners: [businessOwner],
         productManagers: [productManager],
-        additionalContacts
+        additionalContacts,
+        allContacts: [
+          requester,
+          businessOwner,
+          productManager,
+          ...additionalContacts
+        ]
       }
     }
   }

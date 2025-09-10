@@ -37,7 +37,8 @@ const getSystemIntakeContactsQuery: MockedQuery<GetSystemIntakeContactsQuery> =
           requester,
           businessOwners: [],
           productManagers: [],
-          additionalContacts: []
+          additionalContacts: [],
+          allContacts: []
         }
       }
     }

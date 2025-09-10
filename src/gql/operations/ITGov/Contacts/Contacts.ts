@@ -15,6 +15,9 @@ export const GetSystemIntakeContacts = gql(/* GraphQL */ `
       additionalContacts {
         ...SystemIntakeContact
       }
+      allContacts {
+        ...SystemIntakeContact
+      }
     }
   }
 `);
