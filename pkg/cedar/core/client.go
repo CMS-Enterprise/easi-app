@@ -84,7 +84,7 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarA
 	}
 
 	basePath := "/gateway/CEDAR Core API/" + cedarAPIVersion
-	cedarPath = "http://" + cedarHost + basePath
+	cedarPath = "https://" + cedarHost + basePath
 	client = &Client{
 		mockEnabled: mockEnabled,
 		auth: httptransport.APIKeyAuth(
