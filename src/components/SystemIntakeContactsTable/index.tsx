@@ -49,7 +49,13 @@ const SystemIntakeContactsTable = ({
                 label={t('contactDetails.additionalContacts.requesterTooltip')}
                 className="padding-0 margin-0 margin-top-1 bg-transparent outline-0"
               >
-                <Icon.ContactPage className="text-primary" size={3} />
+                <Icon.ContactPage
+                  className="text-primary"
+                  size={3}
+                  aria-label={t(
+                    'contactDetails.additionalContacts.primaryRequester'
+                  )}
+                />
               </Tooltip>
             )}
             <div
@@ -230,7 +236,12 @@ const SystemIntakeContactsTable = ({
               const { id } = row.original;
 
               return (
-                <tr {...rowProps} key={rowKey} data-testid={`contact-${id}`}>
+                <tr
+                  {...rowProps}
+                  key={rowKey}
+                  data-testid="contact-row"
+                  aria-label={`contact-${id}`}
+                >
                   {row.cells.map(cell => {
                     const { key: cellKey, ...cellProps } = cell.getCellProps();
 

@@ -354,6 +354,7 @@ const intake = {
     additionalContacts: {
       requesterTooltip:
         'This individual is the primary requester. Primary requesters are able to edit IT governance requests in EASi.',
+      primaryRequester: 'Primary requester',
       titleContacts: 'Additional contacts',
       titleRecipients: 'Choose recipients',
       recipientsSelected: '{{count}} recipients selected',
