@@ -9,6 +9,7 @@ import {
   useGetSystemIntakeContactsQuery
 } from 'gql/generated/graphql';
 
+import Spinner from 'components/Spinner';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 
 import './index.scss';
@@ -20,7 +21,7 @@ const SystemIntakeContactsTable = ({
 }) => {
   const { t } = useTranslation('intake');
 
-  const { data } = useGetSystemIntakeContactsQuery({
+  const { data, loading } = useGetSystemIntakeContactsQuery({
     variables: {
       id: systemIntakeId
     }
@@ -215,28 +216,44 @@ const SystemIntakeContactsTable = ({
             );
           })}
         </thead>
-
         <tbody {...getTableBodyProps()}>
-          {rows.map(row => {
-            prepareRow(row);
-            const { key: rowKey, ...rowProps } = row.getRowProps();
+          {rows.length > 0 ? (
+            rows.map(row => {
+              prepareRow(row);
+              const { key: rowKey, ...rowProps } = row.getRowProps();
 
-            const { id } = row.original;
+              const { id } = row.original;
 
-            return (
-              <tr {...rowProps} key={rowKey} data-testid={`contact-${id}`}>
-                {row.cells.map(cell => {
-                  const { key: cellKey, ...cellProps } = cell.getCellProps();
+              return (
+                <tr {...rowProps} key={rowKey} data-testid={`contact-${id}`}>
+                  {row.cells.map(cell => {
+                    const { key: cellKey, ...cellProps } = cell.getCellProps();
 
-                  return (
-                    <td {...cellProps} key={cellKey}>
-                      {cell.render('Cell')}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
+                    return (
+                      <td {...cellProps} key={cellKey}>
+                        {cell.render('Cell')}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })
+          ) : (
+            <tr>
+              <td colSpan={columns.length} className="padding-left-4">
+                <span className="margin-left-05 display-flex flex-align-center text-italic">
+                  {loading ? (
+                    <>
+                      <Spinner size="small" className="margin-right-1" />
+                      {t('contactDetails.loadingContacts')}
+                    </>
+                  ) : (
+                    t('contactDetails.noContacts')
+                  )}
+                </span>
+              </td>
+            </tr>
+          )}
         </tbody>
       </Table>
     </div>
