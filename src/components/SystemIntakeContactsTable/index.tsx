@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Column, useSortBy, useTable } from 'react-table';
 import { Button, Table } from '@trussworks/react-uswds';
 import { useGetSystemIntakeContactsQuery } from 'gql/generated/graphql';
@@ -19,6 +20,8 @@ const SystemIntakeContactsTable = ({
 }: {
   systemIntakeId: string;
 }) => {
+  const { t } = useTranslation('intake');
+
   const { data } = useGetSystemIntakeContactsQuery({
     variables: {
       id: systemIntakeId
@@ -30,23 +33,23 @@ const SystemIntakeContactsTable = ({
   const columns = useMemo<Column<SystemIntakeContact>[]>(
     () => [
       {
-        Header: 'Name',
+        Header: t('general:name'),
         accessor: (row: SystemIntakeContact) => row.userAccount.commonName,
         id: 'commonName'
       },
       {
-        Header: 'Component',
+        Header: t('fields.component'),
         accessor: 'component',
         id: 'component'
       },
       {
-        Header: 'Role(s)',
+        Header: t('fields.roles'),
         accessor: 'roles',
         id: 'roles',
         Cell: ({ value }: { value: string[] }) => <>{value.join(', ')}</>
       },
       {
-        Header: 'Actions',
+        Header: t('general:actions'),
         id: 'actions',
         accessor: (_, index) => {
           return (
@@ -58,7 +61,7 @@ const SystemIntakeContactsTable = ({
                 data-testid={`editContact-${index}`}
                 unstyled
               >
-                Edit
+                {t('general:edit')}
               </Button>
               <Button
                 type="button"
@@ -67,7 +70,7 @@ const SystemIntakeContactsTable = ({
                 onClick={() => null}
                 data-testid={`removeContact-${index}`}
               >
-                Remove
+                {t('general:remove')}
               </Button>
             </div>
           );

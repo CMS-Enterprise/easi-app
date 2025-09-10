@@ -72,6 +72,7 @@ const intake = {
     submissionDate: 'Submission date',
     requestFor: 'Request for',
     component: 'Component',
+    roles: 'Role(s)',
     grtDate: 'GRT Date',
     grbDate: 'GRB Date',
     adminLead: 'Admin Lead',
