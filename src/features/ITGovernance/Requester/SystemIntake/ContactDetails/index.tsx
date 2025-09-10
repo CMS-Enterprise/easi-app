@@ -186,7 +186,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         onSubmit={handleSubmit(() =>
           submit(() => history.push('request-details'), true)
         )}
-        className="maxw-none tablet:grid-col-6 margin-bottom-7"
+        className="maxw-none tablet:grid-col-9 margin-bottom-7"
       >
         <SystemIntakeContactsTable systemIntakeId={systemIntake.id} />
 

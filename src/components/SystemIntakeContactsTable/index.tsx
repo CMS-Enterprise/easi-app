@@ -1,19 +1,14 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Column, useSortBy, useTable } from 'react-table';
-import { Button, Table } from '@trussworks/react-uswds';
-import { useGetSystemIntakeContactsQuery } from 'gql/generated/graphql';
+import { Button, Icon, Table } from '@trussworks/react-uswds';
+import classNames from 'classnames';
+import {
+  SystemIntakeContactFragment,
+  useGetSystemIntakeContactsQuery
+} from 'gql/generated/graphql';
 
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
-
-type SystemIntakeContact = {
-  id: string;
-  userAccount: {
-    commonName: string;
-  };
-  component: string;
-  roles: string[];
-};
 
 const SystemIntakeContactsTable = ({
   systemIntakeId
@@ -30,12 +25,36 @@ const SystemIntakeContactsTable = ({
 
   const { additionalContacts = [] } = data?.systemIntakeContacts || {};
 
-  const columns = useMemo<Column<SystemIntakeContact>[]>(
+  const columns = useMemo<Column<SystemIntakeContactFragment>[]>(
     () => [
       {
-        Header: t('general:name'),
-        accessor: (row: SystemIntakeContact) => row.userAccount.commonName,
-        id: 'commonName'
+        Header: () => (
+          <span className="display-block margin-left-4 padding-left-05">
+            {t('general:name')}
+          </span>
+        ),
+        accessor: (row: SystemIntakeContactFragment) =>
+          row.userAccount.commonName,
+        id: 'commonName',
+        Cell: ({ row }: { row: { original: SystemIntakeContactFragment } }) => (
+          <div className="display-flex flex-align-center">
+            {row.original.isRequester && (
+              <Icon.ContactPage className="text-primary" size={3} />
+            )}
+            <div
+              className={classNames(
+                row.original.isRequester
+                  ? 'margin-left-105'
+                  : 'margin-left-4 padding-left-05'
+              )}
+            >
+              <p data-testid="commonName">
+                {row.original.userAccount.commonName}
+              </p>
+              <p data-testid="email">{row.original.userAccount.email}</p>
+            </div>
+          </div>
+        )
       },
       {
         Header: t('fields.component'),
@@ -77,7 +96,7 @@ const SystemIntakeContactsTable = ({
         }
       }
     ],
-    []
+    [t]
   );
 
   const table = useTable(
@@ -112,6 +131,9 @@ const SystemIntakeContactsTable = ({
                       {...headerProps}
                       key={headerKey}
                       className="border-bottom-2px"
+                      style={{
+                        width: column.width
+                      }}
                     >
                       {column.render('Header')}
                     </th>
