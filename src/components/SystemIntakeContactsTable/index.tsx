@@ -79,7 +79,7 @@ const SystemIntakeContactsTable = ({
         accessor: (row: SystemIntakeContactFragment) =>
           row.userAccount.commonName,
         id: 'commonName',
-        width: 320,
+        width: showActionsColumn ? 320 : 'auto',
         Cell: ({ row }: { row: { original: SystemIntakeContactFragment } }) => (
           <div className="display-flex flex-align-center">
             {row.original.isRequester && (
@@ -116,7 +116,7 @@ const SystemIntakeContactsTable = ({
         Header: t('fields.component'),
         accessor: 'component',
         id: 'component',
-        width: 'auto',
+        width: showActionsColumn ? 150 : 200,
         Cell: ({
           value
         }: {

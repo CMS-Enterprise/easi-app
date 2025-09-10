@@ -13,8 +13,8 @@ import {
 import FundingSourcesTable from 'components/FundingSources/FundingSourcesTable';
 import { formatFundingSourcesForApp } from 'components/FundingSources/utils';
 import ReviewRow from 'components/ReviewRow';
+import SystemIntakeContactsTable from 'components/SystemIntakeContactsTable';
 import { yesNoMap } from 'data/common';
-import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 import { formatContractDate, formatDateLocal } from 'utils/date';
 import formatContractNumbers from 'utils/formatContractNumbers';
@@ -30,10 +30,6 @@ export const SystemIntakeReview = ({
 }: SystemIntakeReviewProps) => {
   const { annualSpending, costs, contract, submittedAt, contractNumbers } =
     systemIntake;
-
-  const {
-    contacts: { data: { requester, businessOwner, productManager } = {} }
-  } = useSystemIntakeContacts(systemIntake.id);
 
   const { t } = useTranslation('intake');
 
@@ -199,53 +195,15 @@ export const SystemIntakeReview = ({
       </DescriptionList>
 
       <hr className="system-intake__hr" />
-      <h2 className="font-heading-xl">Contact details</h2>
+      <h2 className="font-heading-xl margin-bottom-0">Contact details</h2>
 
-      <DescriptionList title={t('review.contactDetails')}>
-        {requester && (
-          <ReviewRow>
-            <div
-              data-testid={`contact-requester-${requester.userAccount.username}`}
-            >
-              <DescriptionTerm term={t('fields.requester')} />
-              <DescriptionDefinition
-                definition={requester.userAccount.commonName}
-              />
-            </div>
-            <div>
-              <DescriptionTerm term={t('review.requesterComponent')} />
-              <DescriptionDefinition definition={requester.component} />
-            </div>
-          </ReviewRow>
-        )}
-        {businessOwner && (
-          <ReviewRow>
-            <div>
-              <DescriptionTerm term={t('review.cmsBusinessOwnerName')} />
-              <DescriptionDefinition
-                definition={businessOwner.userAccount.commonName}
-              />
-            </div>
-            <div>
-              <DescriptionTerm term={t('review.cmsBusinessOwnerComponent')} />
-              <DescriptionDefinition definition={businessOwner.component} />
-            </div>
-          </ReviewRow>
-        )}
-        {productManager && (
-          <ReviewRow>
-            <div>
-              <DescriptionTerm term={t('review.cmsProjectManagerName')} />
-              <DescriptionDefinition
-                definition={productManager.userAccount.commonName}
-              />
-            </div>
-            <div>
-              <DescriptionTerm term={t('review.cmsProjectManagerComponent')} />
-              <DescriptionDefinition definition={productManager.component} />
-            </div>
-          </ReviewRow>
-        )}
+      <DescriptionList
+        title={t('review.contactDetails')}
+        className="margin-top-1"
+      >
+        <ReviewRow>
+          <SystemIntakeContactsTable systemIntakeId={systemIntake.id} />
+        </ReviewRow>
         <ReviewRow>
           <div>
             <DescriptionTerm term={t('review.collaborating')} />
