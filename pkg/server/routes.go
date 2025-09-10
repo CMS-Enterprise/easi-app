@@ -32,6 +32,8 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 	"github.com/cms-enterprise/easi-app/pkg/usersearch"
 
+	cr "github.com/go-openapi/runtime/client"
+
 	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
 	cedarintake "github.com/cms-enterprise/easi-app/pkg/cedar/intake"
 	"github.com/cms-enterprise/easi-app/pkg/email"
@@ -51,6 +53,8 @@ import (
 const publishTimeUTC = 7 // 7 UTC is 2am EST
 
 func (s *Server) routes() {
+	// TEMP
+	cr.DefaultTimeout = time.Minute * 2
 
 	oktaConfig := s.NewOktaClientConfig()
 	jwtVerifier := okta.NewJwtVerifier(oktaConfig.OktaClientID, oktaConfig.OktaIssuer)
