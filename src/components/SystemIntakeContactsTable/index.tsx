@@ -26,7 +26,7 @@ const SystemIntakeContactsTable = ({
     }
   });
 
-  const { additionalContacts = [] } = data?.systemIntakeContacts || {};
+  const { allContacts = [] } = data?.systemIntakeContacts || {};
 
   const columns = useMemo<Column<SystemIntakeContactFragment>[]>(
     () => [
@@ -73,7 +73,15 @@ const SystemIntakeContactsTable = ({
           value: component
         }: {
           value: SystemIntakeContactFragment['component'];
-        }) => <>{component || t('general:noneSpecified')}</>
+        }) => (
+          <>
+            {component || (
+              <span className="text-base-dark text-italic">
+                {t('general:noneSpecified')}
+              </span>
+            )}
+          </>
+        )
       },
       {
         Header: t('fields.roles'),
@@ -81,7 +89,11 @@ const SystemIntakeContactsTable = ({
         id: 'roles',
         Cell: ({ value: roles }: { value: SystemIntakeContactRole[] }) => {
           if (roles.length === 0) {
-            return <>{t('general:noneSpecified')}</>;
+            return (
+              <span className="text-base-dark text-italic">
+                {t('general:noneSpecified')}
+              </span>
+            );
           }
 
           // Return list of translated enum values
@@ -135,7 +147,7 @@ const SystemIntakeContactsTable = ({
   const table = useTable(
     {
       columns,
-      data: additionalContacts,
+      data: allContacts,
       autoResetSortBy: false,
       autoResetPage: true
     },
