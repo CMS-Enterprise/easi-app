@@ -44,6 +44,34 @@ const SystemIntakeContactsTable = ({
         accessor: 'roles',
         id: 'roles',
         Cell: ({ value }: { value: string[] }) => <>{value.join(', ')}</>
+      },
+      {
+        Header: 'Actions',
+        id: 'actions',
+        accessor: (_, index) => {
+          return (
+            <div className="display-flex">
+              <Button
+                type="button"
+                className="margin-top-0 margin-right-2"
+                onClick={() => null}
+                data-testid={`editContact-${index}`}
+                unstyled
+              >
+                Edit
+              </Button>
+              <Button
+                type="button"
+                className="margin-top-0 text-error"
+                unstyled
+                onClick={() => null}
+                data-testid={`removeContact-${index}`}
+              >
+                Remove
+              </Button>
+            </div>
+          );
+        }
       }
     ],
     []
@@ -74,6 +102,18 @@ const SystemIntakeContactsTable = ({
               {headerGroup.headers.map(column => {
                 const { key: headerKey, ...headerProps } =
                   column.getHeaderProps();
+
+                if (column.id === 'actions') {
+                  return (
+                    <th
+                      {...headerProps}
+                      key={headerKey}
+                      className="border-bottom-2px"
+                    >
+                      {column.render('Header')}
+                    </th>
+                  );
+                }
 
                 return (
                   <th
