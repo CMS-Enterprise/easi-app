@@ -269,6 +269,8 @@ const intake = {
       email: 'CMS Product Manager email'
     },
     additionalContacts: {
+      requesterTooltip:
+        'This individual is the primary requester. Primary requesters are able to edit IT governance requests in EASi.',
       titleContacts: 'Additional contacts',
       titleRecipients: 'Choose recipients',
       recipientsSelected: '{{count}} recipients selected',

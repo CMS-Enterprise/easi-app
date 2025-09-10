@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Column, useSortBy, useTable } from 'react-table';
-import { Button, Icon, Table } from '@trussworks/react-uswds';
+import { Button, Icon, Table, Tooltip } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
   SystemIntakeContactFragment,
@@ -9,6 +9,8 @@ import {
 } from 'gql/generated/graphql';
 
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
+
+import './index.scss';
 
 const SystemIntakeContactsTable = ({
   systemIntakeId
@@ -39,7 +41,13 @@ const SystemIntakeContactsTable = ({
         Cell: ({ row }: { row: { original: SystemIntakeContactFragment } }) => (
           <div className="display-flex flex-align-center">
             {row.original.isRequester && (
-              <Icon.ContactPage className="text-primary" size={3} />
+              <Tooltip
+                position="top"
+                label={t('contactDetails.additionalContacts.requesterTooltip')}
+                className="padding-0 margin-0 margin-top-1 bg-transparent outline-0"
+              >
+                <Icon.ContactPage className="text-primary" size={3} />
+              </Tooltip>
             )}
             <div
               className={classNames(
@@ -113,84 +121,86 @@ const SystemIntakeContactsTable = ({
     table;
 
   return (
-    <Table bordered={false} fullWidth scrollable {...getTableProps()}>
-      <thead>
-        {headerGroups.map(headerGroup => {
-          const { key, ...headerGroupProps } =
-            headerGroup.getHeaderGroupProps();
+    <div className="system-intake-contacts-table usa-table-container--scrollable">
+      <Table bordered={false} fullWidth {...getTableProps()}>
+        <thead>
+          {headerGroups.map(headerGroup => {
+            const { key, ...headerGroupProps } =
+              headerGroup.getHeaderGroupProps();
 
-          return (
-            <tr {...headerGroupProps} key={key}>
-              {headerGroup.headers.map(column => {
-                const { key: headerKey, ...headerProps } =
-                  column.getHeaderProps();
+            return (
+              <tr {...headerGroupProps} key={key}>
+                {headerGroup.headers.map(column => {
+                  const { key: headerKey, ...headerProps } =
+                    column.getHeaderProps();
 
-                if (column.id === 'actions') {
+                  if (column.id === 'actions') {
+                    return (
+                      <th
+                        {...headerProps}
+                        key={headerKey}
+                        className="border-bottom-2px"
+                        style={{
+                          width: column.width
+                        }}
+                      >
+                        {column.render('Header')}
+                      </th>
+                    );
+                  }
+
                   return (
                     <th
                       {...headerProps}
                       key={headerKey}
+                      aria-sort={getColumnSortStatus(column)}
+                      scope="col"
                       className="border-bottom-2px"
                       style={{
                         width: column.width
                       }}
                     >
-                      {column.render('Header')}
+                      <Button
+                        type="button"
+                        className="width-full flex-justify margin-y-0"
+                        unstyled
+                        {...column.getSortByToggleProps()}
+                      >
+                        {column.render('Header')}
+                        {getHeaderSortIcon(column)}
+                      </Button>
                     </th>
                   );
-                }
+                })}
+              </tr>
+            );
+          })}
+        </thead>
 
-                return (
-                  <th
-                    {...headerProps}
-                    key={headerKey}
-                    aria-sort={getColumnSortStatus(column)}
-                    scope="col"
-                    className="border-bottom-2px"
-                    style={{
-                      width: column.width
-                    }}
-                  >
-                    <Button
-                      type="button"
-                      className="width-full flex-justify margin-y-0"
-                      unstyled
-                      {...column.getSortByToggleProps()}
-                    >
-                      {column.render('Header')}
-                      {getHeaderSortIcon(column)}
-                    </Button>
-                  </th>
-                );
-              })}
-            </tr>
-          );
-        })}
-      </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map(row => {
+            prepareRow(row);
+            const { key: rowKey, ...rowProps } = row.getRowProps();
 
-      <tbody {...getTableBodyProps()}>
-        {rows.map(row => {
-          prepareRow(row);
-          const { key: rowKey, ...rowProps } = row.getRowProps();
+            const { id } = row.original;
 
-          const { id } = row.original;
+            return (
+              <tr {...rowProps} key={rowKey} data-testid={`contact-${id}`}>
+                {row.cells.map(cell => {
+                  const { key: cellKey, ...cellProps } = cell.getCellProps();
 
-          return (
-            <tr {...rowProps} key={rowKey} data-testid={`contact-${id}`}>
-              {row.cells.map(cell => {
-                const { key: cellKey, ...cellProps } = cell.getCellProps();
-
-                return (
-                  <td {...cellProps} key={cellKey}>
-                    {cell.render('Cell')}
-                  </td>
-                );
-              })}
-            </tr>
-          );
-        })}
-      </tbody>
-    </Table>
+                  return (
+                    <td {...cellProps} key={cellKey}>
+                      {cell.render('Cell')}
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </Table>
+    </div>
   );
 };
 
