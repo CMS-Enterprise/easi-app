@@ -48,6 +48,7 @@ import TableStateWrapper from 'wrappers/TableStateWrapper';
 import TimeOutWrapper from 'wrappers/TimeOutWrapper';
 import UserInfoWrapper from 'wrappers/UserInfoWrapper';
 
+import CedarAlertBanner from 'components/CedarAlertBanner';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
@@ -245,6 +246,7 @@ const App = () => {
                       <GovBanner />
                       <Header />
                       <Navigation>
+                        <CedarAlertBanner />
                         <AppRoutes />
                       </Navigation>
                       <Footer />
