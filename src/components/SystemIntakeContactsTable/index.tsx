@@ -10,6 +10,7 @@ import {
 } from 'gql/generated/graphql';
 
 import Spinner from 'components/Spinner';
+import cmsComponents from 'constants/cmsComponents';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 
 import './index.scss';
@@ -71,11 +72,11 @@ const SystemIntakeContactsTable = ({
         accessor: 'component',
         id: 'component',
         Cell: ({
-          value: component
+          value
         }: {
           value: SystemIntakeContactFragment['component'];
         }) => {
-          if (!component) {
+          if (!value) {
             return (
               <span className="text-base-dark text-italic">
                 {t('general:noneSpecified')}
@@ -83,7 +84,11 @@ const SystemIntakeContactsTable = ({
             );
           }
 
-          return t(`contactDetails.systemIntakeContactComponents.${component}`);
+          // Get component data using enum value
+          const component = cmsComponents[value];
+
+          // Display acronym if available, otherwise display component name
+          return <>{component.acronym || t(component.name)}</>;
         }
       },
       {
