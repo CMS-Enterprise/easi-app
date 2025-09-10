@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Form } from '@trussworks/react-uswds';
+import { Button, Form } from '@trussworks/react-uswds';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
 import {
   GetSystemIntakeDocument,
@@ -188,6 +188,15 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         )}
         className="maxw-none tablet:grid-col-9 margin-bottom-7"
       >
+        <p>{t('contactDetails.addTeamMembers')}</p>
+        <Button
+          type="button"
+          onClick={() => null}
+          outline
+          className="margin-top-0"
+        >
+          {t('contactDetails.addAnotherContact')}
+        </Button>
         <SystemIntakeContactsTable systemIntakeId={systemIntake.id} />
 
         <EasiFormProvider<GovernanceTeamsForm> {...form}>
