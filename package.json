@@ -176,7 +176,7 @@
     "sass-resources-loader": "^2.2.5",
     "text-encoding": "^0.7.0",
     "ts-loader": "^7.0.5",
-    "vite": "^6.3.5",
+    "vite": "^6.3.6",
     "vite-plugin-svgr": "^4.5.0",
     "vite-tsconfig-paths": "^4.2.0",
     "vitest": "^3.2.4",
