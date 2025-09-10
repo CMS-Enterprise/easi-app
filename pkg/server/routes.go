@@ -147,7 +147,7 @@ func (s *Server) routes() {
 	switch {
 	case s.environment.Deployed():
 		sesConfig := s.NewSESConfig()
-		sesSender := appses.NewSender(sesConfig, s.environment)
+		sesSender := appses.NewSender(context.Background(), sesConfig, s.environment)
 		emailClient, err = email.NewClient(emailConfig, sesSender)
 		if err != nil {
 			s.logger.Fatal("Failed to create email client", zap.Error(err))
@@ -167,7 +167,7 @@ func (s *Server) routes() {
 	s3Config := s.NewS3Config()
 	s3Config.IsLocal = s.environment.Local() || s.environment.Test()
 
-	s3Client := upload.NewS3Client(s3Config)
+	s3Client := upload.NewS3Client(context.Background(), s3Config)
 
 	serviceConfig := services.NewConfig(s.logger, ldClient)
 

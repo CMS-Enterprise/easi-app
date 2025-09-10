@@ -32,7 +32,7 @@ export const initialContactDetails: SystemIntakeContactFragment = {
     commonName: '',
     email: ''
   },
-  component: '',
+  component: undefined,
   roles: [],
   isRequester: false
 };
@@ -181,7 +181,8 @@ const ContactForm = ({
         ...submittedContact,
         username,
         commonName,
-        email
+        email,
+        component: submittedContact.component!
       });
     }
   };
@@ -250,11 +251,13 @@ const ContactForm = ({
           id="IntakeForm-ContactComponent"
           name="systemIntakeContact.component"
           data-testid="IntakeForm-ContactComponent"
-          value={activeContact.component}
+          value={activeContact.component!}
           onChange={e =>
             setActiveContact({
               ...activeContact,
-              component: e.target.value
+              // TODO address
+              component: e.target
+                .value as SystemIntakeContactFragment['component']
             })
           }
         >

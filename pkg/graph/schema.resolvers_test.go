@@ -3,7 +3,6 @@ package graph
 import (
 	"context"
 	"fmt"
-	"net/url"
 	"testing"
 	"time"
 
@@ -13,11 +12,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler/extension"
 	"github.com/99designs/gqlgen/graphql/handler/lru"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/client/metadata"
-	"github.com/aws/aws-sdk-go/aws/request"
-	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/aws/aws-sdk-go/service/s3/s3iface"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	_ "github.com/lib/pq" // required for postgres driver in sql
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
@@ -27,7 +22,6 @@ import (
 
 	"github.com/cms-enterprise/easi-app/pkg/appconfig"
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
-	"github.com/cms-enterprise/easi-app/pkg/authentication"
 	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
@@ -35,6 +29,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/local"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/testconfig/useraccountstoretestconfigs"
 	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 	"github.com/cms-enterprise/easi-app/pkg/upload"
 )
@@ -54,56 +49,8 @@ func (s *GraphQLTestSuite) BeforeTest() {
 }
 
 type mockS3Client struct {
-	s3iface.S3API
+	Client   *s3.Client
 	AVStatus string
-}
-
-func (m mockS3Client) PutObjectRequest(input *s3.PutObjectInput) (*request.Request, *s3.PutObjectOutput) {
-
-	newRequest := request.New(
-		aws.Config{},
-		metadata.ClientInfo{},
-		request.Handlers{},
-		nil,
-		&request.Operation{},
-		nil,
-		nil,
-	)
-
-	newRequest.Handlers.Sign.PushFront(func(r *request.Request) {
-		r.HTTPRequest.URL = &url.URL{Host: "signed.example.com", Path: "signed/put/123", Scheme: "https"}
-	})
-	return newRequest, &s3.PutObjectOutput{}
-}
-
-func (m mockS3Client) GetObjectRequest(input *s3.GetObjectInput) (*request.Request, *s3.GetObjectOutput) {
-	newRequest := request.New(
-		aws.Config{},
-		metadata.ClientInfo{},
-		request.Handlers{},
-		nil,
-		&request.Operation{},
-		nil,
-		nil,
-	)
-
-	newRequest.Handlers.Sign.PushFront(func(r *request.Request) {
-		r.HTTPRequest.URL = &url.URL{Host: "signed.example.com", Path: "signed/get/123", Scheme: "https"}
-	})
-	return newRequest, &s3.GetObjectOutput{}
-}
-
-func (m mockS3Client) GetObjectTagging(input *s3.GetObjectTaggingInput) (*s3.GetObjectTaggingOutput, error) {
-	if m.AVStatus == "" {
-		return &s3.GetObjectTaggingOutput{}, nil
-	}
-
-	return &s3.GetObjectTaggingOutput{
-		TagSet: []*s3.Tag{{
-			Key:   aws.String(upload.AVStatusTagName),
-			Value: aws.String(m.AVStatus),
-		}},
-	}, nil
 }
 
 func TestGraphQLTestSuite(t *testing.T) {
@@ -134,8 +81,10 @@ func TestGraphQLTestSuite(t *testing.T) {
 	}
 
 	s3Config := upload.Config{Bucket: "easi-test-bucket", Region: "us-west", IsLocal: false}
-	mockClient := mockS3Client{}
-	s3Client := upload.NewS3ClientUsingClient(&mockClient, s3Config)
+	// Initialize a dummy S3 client for testing
+	dummyS3Client := s3.New(s3.Options{})
+	mockClient := mockS3Client{Client: dummyS3Client}
+	s3Client := upload.NewS3ClientUsingClient(mockClient.Client, s3Config)
 
 	// set up Email Client
 	emailConfig := email.Config{
@@ -241,13 +190,13 @@ func addDataloadersToGraphQLClientTest(buildDataloaders dataloaders.BuildDataloa
 }
 
 // addAuthWithAllJobCodesToGraphQLClientTest adds authentication for all job codes
-func addAuthWithAllJobCodesToGraphQLClientTest(euaID string) func(*client.Request) {
+func (s *GraphQLTestSuite) addAuthWithAllJobCodesToGraphQLClientTest(euaID string) func(*client.Request) {
+
 	return func(request *client.Request) {
-		ctx := appcontext.WithPrincipal(request.HTTP.Context(), &authentication.EUAPrincipal{
-			EUAID:       euaID,
-			JobCodeEASi: true,
-			JobCodeGRT:  true,
-		})
+		princ, err := useraccountstoretestconfigs.GetTestPrincipal(s.store, euaID, true)
+		s.NoError(err)
+		s.NotNil(princ)
+		ctx := appcontext.WithPrincipal(request.HTTP.Context(), princ)
 
 		request.HTTP = request.HTTP.WithContext(ctx)
 	}

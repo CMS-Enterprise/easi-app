@@ -559,7 +559,7 @@ export type CreateGRBReviewerInput = {
 
 /** The data needed to associate a contact with a system intake */
 export type CreateSystemIntakeContactInput = {
-  component: Scalars['String']['input'];
+  component: SystemIntakeContactComponent;
   euaUserId: Scalars['String']['input'];
   isRequester: Scalars['Boolean']['input'];
   roles: Array<SystemIntakeContactRole>;
@@ -2071,6 +2071,7 @@ export type SystemIntake = {
   cedarSystemId?: Maybe<Scalars['String']['output']>;
   collaborator508?: Maybe<Scalars['String']['output']>;
   collaboratorName508?: Maybe<Scalars['String']['output']>;
+  contacts: SystemIntakeContacts;
   contract: SystemIntakeContract;
   contractName?: Maybe<Scalars['String']['output']>;
   /** Linked contract numbers */
@@ -2317,7 +2318,7 @@ export type SystemIntakeConfirmLCIDInput = {
 /** Represents a contact associated with a system intake */
 export type SystemIntakeContact = {
   __typename: 'SystemIntakeContact';
-  component: Scalars['String']['output'];
+  component?: Maybe<SystemIntakeContactComponent>;
   createdAt: Scalars['Time']['output'];
   createdBy: Scalars['UUID']['output'];
   createdByUserAccount: UserAccount;
@@ -2329,7 +2330,42 @@ export type SystemIntakeContact = {
   roles: Array<SystemIntakeContactRole>;
   systemIntakeId: Scalars['UUID']['output'];
   userAccount: UserAccount;
+  userID: Scalars['UUID']['output'];
 };
+
+export enum SystemIntakeContactComponent {
+  CENTER_FOR_CLINICAL_STANDARDS_AND_QUALITY_CCSQ = 'CENTER_FOR_CLINICAL_STANDARDS_AND_QUALITY_CCSQ',
+  CENTER_FOR_CONSUMER_INFORMATION_AND_INSURANCE_OVERSIGHT_CCIIO = 'CENTER_FOR_CONSUMER_INFORMATION_AND_INSURANCE_OVERSIGHT_CCIIO',
+  CENTER_FOR_MEDICAID_AND_CHIP_SERVICES_CMCS = 'CENTER_FOR_MEDICAID_AND_CHIP_SERVICES_CMCS',
+  CENTER_FOR_MEDICARE_AND_MEDICAID_INNOVATION_CMMI = 'CENTER_FOR_MEDICARE_AND_MEDICAID_INNOVATION_CMMI',
+  CENTER_FOR_MEDICARE_CM = 'CENTER_FOR_MEDICARE_CM',
+  CENTER_FOR_PROGRAM_INTEGRITY_CPI = 'CENTER_FOR_PROGRAM_INTEGRITY_CPI',
+  CMS_WIDE = 'CMS_WIDE',
+  CONSORTIUM_FOR_MEDICAID_AND_CHILDRENS_HEALTH = 'CONSORTIUM_FOR_MEDICAID_AND_CHILDRENS_HEALTH',
+  CONSORTIUM_FOR_MEDICARE_HEALTH_PLANS_OPERATIONS = 'CONSORTIUM_FOR_MEDICARE_HEALTH_PLANS_OPERATIONS',
+  EMERGENCY_PREPAREDNESS_AND_RESPONSE_OPERATIONS_EPRO = 'EMERGENCY_PREPAREDNESS_AND_RESPONSE_OPERATIONS_EPRO',
+  FEDERAL_COORDINATED_HEALTH_CARE_OFFICE = 'FEDERAL_COORDINATED_HEALTH_CARE_OFFICE',
+  OFFICES_OF_HEARINGS_AND_INQUIRIES = 'OFFICES_OF_HEARINGS_AND_INQUIRIES',
+  OFFICE_OF_ACQUISITION_AND_GRANTS_MANAGEMENT_OAGM = 'OFFICE_OF_ACQUISITION_AND_GRANTS_MANAGEMENT_OAGM',
+  OFFICE_OF_BURDEN_REDUCTION_AND_HEALTH_INFORMATICS = 'OFFICE_OF_BURDEN_REDUCTION_AND_HEALTH_INFORMATICS',
+  OFFICE_OF_COMMUNICATIONS_OC = 'OFFICE_OF_COMMUNICATIONS_OC',
+  OFFICE_OF_ENTERPRISE_DATA_AND_ANALYTICS_OEDA = 'OFFICE_OF_ENTERPRISE_DATA_AND_ANALYTICS_OEDA',
+  OFFICE_OF_EQUAL_OPPORTUNITY_AND_CIVIL_RIGHTS = 'OFFICE_OF_EQUAL_OPPORTUNITY_AND_CIVIL_RIGHTS',
+  OFFICE_OF_FINANCIAL_MANAGEMENT_OFM = 'OFFICE_OF_FINANCIAL_MANAGEMENT_OFM',
+  OFFICE_OF_HEALTHCARE_EXPERIENCE_AND_INTEROPERABILITY = 'OFFICE_OF_HEALTHCARE_EXPERIENCE_AND_INTEROPERABILITY',
+  OFFICE_OF_HUMAN_CAPITAL = 'OFFICE_OF_HUMAN_CAPITAL',
+  OFFICE_OF_INFORMATION_TECHNOLOGY_OIT = 'OFFICE_OF_INFORMATION_TECHNOLOGY_OIT',
+  OFFICE_OF_LEGISLATION = 'OFFICE_OF_LEGISLATION',
+  OFFICE_OF_MINORITY_HEALTH_OMH = 'OFFICE_OF_MINORITY_HEALTH_OMH',
+  OFFICE_OF_PROGRAM_OPERATIONS_AND_LOCAL_ENGAGEMENT_OPOLE = 'OFFICE_OF_PROGRAM_OPERATIONS_AND_LOCAL_ENGAGEMENT_OPOLE',
+  OFFICE_OF_SECURITY_FACILITIES_AND_LOGISTICS_OPERATIONS_OSFLO = 'OFFICE_OF_SECURITY_FACILITIES_AND_LOGISTICS_OPERATIONS_OSFLO',
+  OFFICE_OF_STRATEGIC_OPERATIONS_AND_REGULATORY_AFFAIRS_OSORA = 'OFFICE_OF_STRATEGIC_OPERATIONS_AND_REGULATORY_AFFAIRS_OSORA',
+  OFFICE_OF_STRATEGY_PERFORMANCE_AND_RESULTS_OSPR = 'OFFICE_OF_STRATEGY_PERFORMANCE_AND_RESULTS_OSPR',
+  OFFICE_OF_SUPPORT_SERVICES_AND_OPERATIONS = 'OFFICE_OF_SUPPORT_SERVICES_AND_OPERATIONS',
+  OFFICE_OF_THE_ACTUARY_OACT = 'OFFICE_OF_THE_ACTUARY_OACT',
+  OFFICE_OF_THE_ADMINISTRATOR = 'OFFICE_OF_THE_ADMINISTRATOR',
+  OTHER = 'OTHER'
+}
 
 /** SystemIntakeContactRole is the various roles that a user can have as a contact on a system intake */
 export enum SystemIntakeContactRole {
@@ -3408,7 +3444,7 @@ export type UpdateSystemIntakeContactDetailsInput = {
 
 /** The data needed to update a contact associated with a system intake */
 export type UpdateSystemIntakeContactInput = {
-  component: Scalars['String']['input'];
+  component: SystemIntakeContactComponent;
   id: Scalars['UUID']['input'];
   isRequester: Scalars['Boolean']['input'];
   roles: Array<SystemIntakeContactRole>;
@@ -3662,7 +3698,7 @@ export type FundingSourceFragmentFragment = { __typename: 'SystemIntakeFundingSo
 
 export type GovernanceRequestFeedbackFragmentFragment = { __typename: 'GovernanceRequestFeedback', id: UUID, feedback: HTML, targetForm: GovernanceRequestFeedbackTargetForm, type: GovernanceRequestFeedbackType, createdAt: Time, author?: { __typename: 'UserInfo', commonName: string } | null };
 
-export type SystemIntakeContactFragment = { __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component: string, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } };
+export type SystemIntakeContactFragment = { __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component?: SystemIntakeContactComponent | null, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } };
 
 export type SystemIntakeDocumentFragmentFragment = { __typename: 'SystemIntakeDocument', id: UUID, fileName: string, version: SystemIntakeDocumentVersion, status: SystemIntakeDocumentStatus, uploadedAt: Time, url?: string | null, canView: boolean, canDelete: boolean, systemIntakeId: UUID, documentType: { __typename: 'SystemIntakeDocumentType', commonType: SystemIntakeDocumentCommonType, otherTypeDescription?: string | null } };
 
@@ -3797,28 +3833,28 @@ export type GetSystemIntakeContactsQueryVariables = Exact<{
 }>;
 
 
-export type GetSystemIntakeContactsQuery = { __typename: 'Query', systemIntakeContacts?: { __typename: 'SystemIntakeContacts', requester?: { __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component: string, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } } | null, businessOwners: Array<{ __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component: string, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } }>, productManagers: Array<{ __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component: string, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } }>, additionalContacts: Array<{ __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component: string, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } }> } | null };
+export type GetSystemIntakeContactsQuery = { __typename: 'Query', systemIntakeContacts?: { __typename: 'SystemIntakeContacts', requester?: { __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component?: SystemIntakeContactComponent | null, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } } | null, businessOwners: Array<{ __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component?: SystemIntakeContactComponent | null, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } }>, productManagers: Array<{ __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component?: SystemIntakeContactComponent | null, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } }>, additionalContacts: Array<{ __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component?: SystemIntakeContactComponent | null, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } }> } | null };
 
 export type CreateSystemIntakeContactMutationVariables = Exact<{
   input: CreateSystemIntakeContactInput;
 }>;
 
 
-export type CreateSystemIntakeContactMutation = { __typename: 'Mutation', createSystemIntakeContact?: { __typename: 'CreateSystemIntakeContactPayload', systemIntakeContact?: { __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component: string, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } } | null } | null };
+export type CreateSystemIntakeContactMutation = { __typename: 'Mutation', createSystemIntakeContact?: { __typename: 'CreateSystemIntakeContactPayload', systemIntakeContact?: { __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component?: SystemIntakeContactComponent | null, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } } | null } | null };
 
 export type UpdateSystemIntakeContactMutationVariables = Exact<{
   input: UpdateSystemIntakeContactInput;
 }>;
 
 
-export type UpdateSystemIntakeContactMutation = { __typename: 'Mutation', updateSystemIntakeContact?: { __typename: 'CreateSystemIntakeContactPayload', systemIntakeContact?: { __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component: string, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } } | null } | null };
+export type UpdateSystemIntakeContactMutation = { __typename: 'Mutation', updateSystemIntakeContact?: { __typename: 'CreateSystemIntakeContactPayload', systemIntakeContact?: { __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component?: SystemIntakeContactComponent | null, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } } | null } | null };
 
 export type DeleteSystemIntakeContactMutationVariables = Exact<{
   input: DeleteSystemIntakeContactInput;
 }>;
 
 
-export type DeleteSystemIntakeContactMutation = { __typename: 'Mutation', deleteSystemIntakeContact?: { __typename: 'DeleteSystemIntakeContactPayload', systemIntakeContact?: { __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component: string, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } } | null } | null };
+export type DeleteSystemIntakeContactMutation = { __typename: 'Mutation', deleteSystemIntakeContact?: { __typename: 'DeleteSystemIntakeContactPayload', systemIntakeContact?: { __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component?: SystemIntakeContactComponent | null, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } } | null } | null };
 
 export type CreateSystemIntakeDocumentMutationVariables = Exact<{
   input: CreateSystemIntakeDocumentInput;

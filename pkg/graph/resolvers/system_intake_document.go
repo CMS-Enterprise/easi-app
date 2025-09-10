@@ -32,7 +32,7 @@ func GetURLForSystemIntakeDocument(ctx context.Context, store *storage.Store, s3
 		return nil, nil
 	}
 
-	presignedURL, err := s3Client.NewGetPresignedURL(s3Key)
+	presignedURL, err := s3Client.NewGetPresignedURL(ctx, s3Key)
 	if err != nil {
 		return nil, err
 	}
@@ -41,8 +41,8 @@ func GetURLForSystemIntakeDocument(ctx context.Context, store *storage.Store, s3
 }
 
 // GetStatusForSystemIntakeDocument queries S3 for the virus-scanning status of a document with the given s3Key
-func GetStatusForSystemIntakeDocument(s3Client *upload.S3Client, s3Key string) (models.SystemIntakeDocumentStatus, error) {
-	avStatus, err := s3Client.TagValueForKey(s3Key, upload.AVStatusTagName)
+func GetStatusForSystemIntakeDocument(ctx context.Context, s3Client *upload.S3Client, s3Key string) (models.SystemIntakeDocumentStatus, error) {
+	avStatus, err := s3Client.TagValueForKey(ctx, s3Key, upload.AVStatusTagName)
 	if err != nil {
 		return "", err
 	}
@@ -94,7 +94,7 @@ func CreateSystemIntakeDocument(
 		return nil, fmt.Errorf("...%w...FileName: %s", err, input.FileData.Filename) //Wrap error and provide filename
 	}
 
-	if err := s3Client.UploadFile(s3Key, decodedReadSeeker); err != nil {
+	if err := s3Client.UploadFile(ctx, s3Key, decodedReadSeeker); err != nil {
 		return nil, err
 	}
 

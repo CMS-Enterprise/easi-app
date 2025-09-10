@@ -1,6 +1,7 @@
 import {
   FundingSourceFragmentFragment,
   SystemIntakeCollaboratorInput,
+  SystemIntakeContactComponent,
   SystemIntakeContactFragment,
   SystemIntakeContactRole,
   SystemIntakeGRBReviewType,
@@ -173,7 +174,7 @@ export type GovernanceTeamsForm = {
 export type ContactFields = {
   id?: string | null;
   username: string | null;
-  component: string;
+  component: SystemIntakeContactComponent | null | undefined;
   commonName: string;
   email: string;
 };

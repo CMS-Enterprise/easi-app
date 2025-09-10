@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	_ "embed"
 	"fmt"
 	"log"
 
@@ -16,8 +17,6 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/oktaapi"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
-
-	_ "embed"
 )
 
 //go:embed sql/get_all_usernames.sql
@@ -261,7 +260,6 @@ func (u *Uploader) GetOrCreateUserAccounts(ctx context.Context, userNames []stri
 			Username: username,
 		}
 		account, err := userhelpers.GetOrCreateUserAccount(ctx,
-			u.Store,
 			u.Store,
 			username,
 			false,

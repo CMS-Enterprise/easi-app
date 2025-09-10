@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -8,7 +9,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/jmoiron/sqlx"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
@@ -67,14 +68,18 @@ func getResolverDependencies(config *viper.Viper) (
 	return db, store, logger, oktaClient
 }
 
-func newDB(config storage.DBConfig) (*sqlx.DB, error) {
+func newDB(dbConfig storage.DBConfig) (*sqlx.DB, error) {
 
 	var db *sqlx.DB
 	var err error
-	if config.UseIAM {
-		// Connect using the IAM DB package
-		sess := session.Must(session.NewSession())
-		db = newConnectionPoolWithIam(sess, config)
+	if dbConfig.UseIAM {
+		//// Connect using the IAM DB package
+		awsConfig, err := config.LoadDefaultConfig(context.TODO())
+		if err != nil {
+			return nil, err
+		}
+
+		db = newConnectionPoolWithIam(awsConfig, dbConfig)
 		err = db.Ping()
 		if err != nil {
 			return nil, err
@@ -84,12 +89,12 @@ func newDB(config storage.DBConfig) (*sqlx.DB, error) {
 		dataSourceName := fmt.Sprintf(
 			"host=%s port=%s user=%s "+
 				"password=%s dbname=%s sslmode=%s",
-			config.Host,
-			config.Port,
-			config.Username,
-			config.Password,
-			config.Database,
-			config.SSLMode,
+			dbConfig.Host,
+			dbConfig.Port,
+			dbConfig.Username,
+			dbConfig.Password,
+			dbConfig.Database,
+			dbConfig.SSLMode,
 		)
 
 		db, err = sqlx.Connect("postgres", dataSourceName)
@@ -98,7 +103,7 @@ func newDB(config storage.DBConfig) (*sqlx.DB, error) {
 		}
 	}
 
-	db.SetMaxOpenConns(config.MaxConnections)
+	db.SetMaxOpenConns(dbConfig.MaxConnections)
 	return db, nil
 }
 

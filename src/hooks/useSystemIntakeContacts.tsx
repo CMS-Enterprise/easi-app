@@ -81,7 +81,7 @@ function useSystemIntakeContacts(
           input: {
             // Temp overriding nullable username
             euaUserId: username!,
-            component,
+            component: component!,
             roles,
             systemIntakeId,
             isRequester
@@ -102,7 +102,8 @@ function useSystemIntakeContacts(
       variables: {
         input: {
           id: id || '',
-          component,
+          // TODO: we need to handle null/undefined component
+          component: component!,
           roles,
           isRequester
         }

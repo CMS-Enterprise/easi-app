@@ -82,7 +82,7 @@ func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Sto
 
 			links.TranscriptFileName = &value.Filename
 
-			s3Key, err := handleS3Upload(s3Client, value)
+			s3Key, err := handleS3Upload(ctx, s3Client, value)
 			if err != nil {
 				return nil, err
 			}
@@ -101,7 +101,7 @@ func SetSystemIntakeGRBPresentationLinks(ctx context.Context, store *storage.Sto
 		} else {
 			links.PresentationDeckFileName = &value.Filename
 
-			s3Key, err := handleS3Upload(s3Client, value)
+			s3Key, err := handleS3Upload(ctx, s3Client, value)
 			if err != nil {
 				return nil, err
 			}
@@ -176,7 +176,7 @@ func UploadSystemIntakeGRBPresentationDeck(
 	} else {
 		links.PresentationDeckFileName = &input.PresentationDeckFileData.Filename
 
-		s3Key, err := handleS3Upload(s3Client, input.PresentationDeckFileData)
+		s3Key, err := handleS3Upload(ctx, s3Client, input.PresentationDeckFileData)
 		if err != nil {
 			return nil, err
 		}
@@ -206,7 +206,7 @@ func SystemIntakeGRBPresentationLinksTranscriptFileURL(ctx context.Context, s3Cl
 		return nil, nil
 	}
 
-	data, err := s3Client.NewGetPresignedURL(*links.TranscriptS3Key)
+	data, err := s3Client.NewGetPresignedURL(ctx, *links.TranscriptS3Key)
 	if err != nil {
 		return nil, err
 	}
@@ -228,7 +228,7 @@ func SystemIntakeGRBPresentationLinksTranscriptFileStatus(ctx context.Context, l
 		return nil, nil
 	}
 
-	fileStatus, err := GetStatusForSystemIntakeDocument(s3Client, *links.TranscriptS3Key)
+	fileStatus, err := GetStatusForSystemIntakeDocument(ctx, s3Client, *links.TranscriptS3Key)
 	if err != nil {
 		logger.Warn("failed to get status for GRBPresentationLinksTranscriptFileStatus", zap.Error(err), zap.Any("s3Key", links.TranscriptS3Key), zap.Any("systemIntakeID", systemIntakeID))
 		return nil, nil
@@ -251,7 +251,7 @@ func SystemIntakeGRBPresentationLinksPresentationDeckFileURL(ctx context.Context
 		return nil, nil
 	}
 
-	data, err := s3Client.NewGetPresignedURL(*links.PresentationDeckS3Key)
+	data, err := s3Client.NewGetPresignedURL(ctx, *links.PresentationDeckS3Key)
 	if err != nil {
 		return nil, err
 	}
@@ -273,7 +273,7 @@ func SystemIntakeGRBPresentationLinksPresentationDeckFileStatus(ctx context.Cont
 		return nil, nil
 	}
 
-	fileStatus, err := GetStatusForSystemIntakeDocument(s3Client, *links.PresentationDeckS3Key)
+	fileStatus, err := GetStatusForSystemIntakeDocument(ctx, s3Client, *links.PresentationDeckS3Key)
 	if err != nil {
 		logger.Warn("failed to get status for GRBPresentationDeckFileStatus", zap.Error(err), zap.Any("s3Key", links.TranscriptS3Key), zap.Any("systemIntakeID", systemIntakeID))
 		return nil, nil
@@ -283,7 +283,7 @@ func SystemIntakeGRBPresentationLinksPresentationDeckFileStatus(ctx context.Cont
 }
 
 // handleS3Upload uploads a file to S3
-func handleS3Upload(s3Client *upload.S3Client, upload *graphql.Upload) (string, error) {
+func handleS3Upload(ctx context.Context, s3Client *upload.S3Client, upload *graphql.Upload) (string, error) {
 	s3Key := uuid.New().String()
 	ext := filepath.Ext(upload.Filename)
 	if len(ext) > 0 {
@@ -297,7 +297,7 @@ func handleS3Upload(s3Client *upload.S3Client, upload *graphql.Upload) (string, 
 		return "", err
 	}
 
-	if err := s3Client.UploadFile(s3Key, decodedReadSeeker); err != nil {
+	if err := s3Client.UploadFile(ctx, s3Key, decodedReadSeeker); err != nil {
 		return "", err
 	}
 

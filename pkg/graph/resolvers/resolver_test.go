@@ -71,11 +71,13 @@ func (s *ResolverSuite) getTestContextWithPrincipal(euaID string, isAdmin bool) 
 func TestResolverSuite(t *testing.T) {
 	rs := new(ResolverSuite)
 	rs.testConfigs = GetDefaultTestConfigs()
-	rs.fetchUserInfoStub = func(context.Context, string) (*models.UserInfo, error) {
+	rs.fetchUserInfoStub = func(ctx context.Context, username string) (*models.UserInfo, error) {
 		return &models.UserInfo{
-			Username:    "ANON",
-			DisplayName: "Anonymous",
-			Email:       models.NewEmailAddress("anon@local.fake"),
+			Username:    username,
+			FirstName:   username,
+			LastName:    "Doe",
+			DisplayName: username + " Doe",
+			Email:       models.NewEmailAddress(username + ".doe@local.fake"),
 		}, nil
 	}
 	suite.Run(t, rs)
@@ -139,7 +141,7 @@ func (tc *TestConfigs) GetDefaults() {
 	tc.DBConfig = NewDBConfig()
 	tc.LDClient, _ = ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
 
-	s3Client := upload.NewS3Client(newS3Config())
+	s3Client := upload.NewS3Client(tc.Context, newS3Config())
 	tc.S3Client = &s3Client
 
 	tc.Logger = zap.NewNop()
@@ -184,7 +186,7 @@ func NewEmailClient() (*email.Client, *mockSender) {
 // getTestPrincipal gets a user principal from database
 func (s *ResolverSuite) getTestPrincipal(ctx context.Context, store *storage.Store, userName string, isAdmin bool) *authentication.EUAPrincipal {
 
-	userAccount, _ := userhelpers.GetOrCreateUserAccount(ctx, store, store, userName, true, userhelpers.GetUserInfoAccountInfoWrapperFunc(s.testConfigs.UserSearchClient.FetchUserInfo))
+	userAccount, _ := userhelpers.GetOrCreateUserAccount(ctx, store, userName, true, userhelpers.GetUserInfoAccountInfoWrapperFunc(s.testConfigs.UserSearchClient.FetchUserInfo))
 
 	princ := &authentication.EUAPrincipal{
 		EUAID:           userName,
@@ -223,7 +225,8 @@ func newS3Config() upload.Config {
 
 // utility method for creating a valid new system intake, checking for any errors
 func (s *ResolverSuite) createNewIntake(ops ...func(*models.SystemIntake)) *models.SystemIntake {
-	newIntake, err := s.testConfigs.Store.CreateSystemIntake(s.testConfigs.Context, &models.SystemIntake{
+	// Future Enhancement:  this should refactored to use a resolver and not a store method look at createNewIntakeWithResolver
+	newIntake, err := storage.CreateSystemIntake(s.testConfigs.Context, s.testConfigs.Store, &models.SystemIntake{
 		ProjectName: null.StringFrom("TEST"),
 		// these fields are required by the SQL schema for the system_intakes table, and CreateSystemIntake() doesn't set them to defaults
 		RequestType: models.SystemIntakeRequestTypeNEW,
@@ -238,6 +241,31 @@ func (s *ResolverSuite) createNewIntake(ops ...func(*models.SystemIntake)) *mode
 	}
 
 	return newIntake
+}
+
+// createNewIntakeWithResolver creates a new system intake using the CreateSystemIntake resolver function, which will also create a requester contact
+func (s *ResolverSuite) createNewIntakeWithResolver(callbacks ...func(*models.SystemIntake)) *models.SystemIntake {
+
+	CreateSystemIntakeInput := models.CreateSystemIntakeInput{
+		Requester: &models.SystemIntakeRequesterInput{
+			Name: "Test User Common Name",
+		},
+		// ProjectName: null.StringFrom("TEST"),
+		RequestType: models.SystemIntakeRequestTypeNEW,
+	}
+	intake, err := CreateSystemIntake(s.ctxWithNewDataloaders(), s.testConfigs.Store, CreateSystemIntakeInput, userhelpers.GetUserInfoAccountInfoWrapperFunc(s.testConfigs.UserSearchClient.FetchUserInfo))
+	s.NoError(err)
+	s.NotNil(intake)
+
+	for _, hook := range callbacks {
+		hook(intake)
+	}
+	if len(callbacks) > 0 {
+		intake, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intake)
+		s.NoError(err)
+	}
+	return intake
+
 }
 
 // utility method for creating a valid new TRB Request, checking for any errors
@@ -261,7 +289,7 @@ func (s *ResolverSuite) getOrCreateUserAcct(euaUserID string) *authentication.Us
 	store := s.testConfigs.Store
 	okta := local.NewOktaAPIClient()
 	userAcct, err := sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*authentication.UserAccount, error) {
-		user, err := userhelpers.GetOrCreateUserAccount(ctx, tx, store, euaUserID, false, userhelpers.GetUserInfoAccountInfoWrapperFunc(okta.FetchUserInfo))
+		user, err := userhelpers.GetOrCreateUserAccount(ctx, tx, euaUserID, false, userhelpers.GetUserInfoAccountInfoWrapperFunc(okta.FetchUserInfo))
 		if err != nil {
 			return nil, err
 		}
@@ -277,7 +305,7 @@ func (s *ResolverSuite) getOrCreateUserAccts(euaUserIDs ...string) []*authentica
 	store := s.testConfigs.Store
 	okta := local.NewOktaAPIClient()
 	userAccts, err := sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) ([]*authentication.UserAccount, error) {
-		users, err := userhelpers.GetOrCreateUserAccounts(ctx, tx, store, euaUserIDs, false, userhelpers.GetUserInfoAccountInfosWrapperFunc(okta.FetchUserInfos))
+		users, err := userhelpers.GetOrCreateUserAccounts(ctx, tx, euaUserIDs, false, userhelpers.GetUserInfoAccountInfosWrapperFunc(okta.FetchUserInfos))
 		if err != nil {
 			return nil, err
 		}

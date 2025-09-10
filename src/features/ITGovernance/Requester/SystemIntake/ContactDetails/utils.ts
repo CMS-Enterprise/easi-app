@@ -15,7 +15,9 @@ export const formatContactFields = ({
   ...contact,
   username: userAccount.username,
   commonName: userAccount.commonName,
-  email: userAccount.email
+  email: userAccount.email,
+  // TODO: fix this
+  component: contact.component!
 });
 
 /** Format system intake governance team field values for gql mutation */

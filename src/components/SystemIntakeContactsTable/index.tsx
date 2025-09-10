@@ -69,9 +69,11 @@ const SystemIntakeContactsTable = ({
         Header: t('fields.component'),
         accessor: 'component',
         id: 'component',
-        Cell: ({ value: component }: { value: string }) => (
-          <>{component || t('general:noneSpecified')}</>
-        )
+        Cell: ({
+          value: component
+        }: {
+          value: SystemIntakeContactFragment['component'];
+        }) => <>{component || t('general:noneSpecified')}</>
       },
       {
         Header: t('fields.roles'),

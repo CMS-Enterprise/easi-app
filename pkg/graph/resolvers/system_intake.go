@@ -34,34 +34,32 @@ func CreateSystemIntake(
 		State:       models.SystemIntakeStateOpen,
 		Step:        models.SystemIntakeStepINITIALFORM,
 	}
-	createdIntake, err := store.CreateSystemIntake(ctx, &systemIntake)
-	// TODO: EASI-4946 this should be a transaction in case one fails
-	logger := appcontext.ZLogger(ctx)
-	principal := appcontext.Principal(ctx)
-	_, err2 := CreateSystemIntakeContact(ctx, logger, principal, store, models.CreateSystemIntakeContactInput{
-		EuaUserID:      principal.ID(),
-		SystemIntakeID: createdIntake.ID,
-		Roles: []models.SystemIntakeContactRole{
-			models.SystemIntakeContactRolePLACEHOLDER,
-		},
-		Component:   string(models.SystemIntakeContactRolePLACEHOLDER),
-		IsRequester: true,
-	},
-		getAccountInformation,
-	)
-	if err2 != nil {
-		return nil, err2
-	}
 
-	// sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
-	// 	createdIntake, err = store.CreateSystemIntakeNP(ctx, tx, &systemIntake)
-	// 	if err != nil {
-	// 		return nil, err
-	// 	}
-	// 	//TODO create requester contact
-	// 	return createdIntake, nil
-	// })
-	return createdIntake, err
+	intakeRetFromTransaction, err := sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
+		createdIntake, err := storage.CreateSystemIntake(ctx, tx, &systemIntake)
+		if err != nil {
+			return nil, err
+		}
+		logger := appcontext.ZLogger(ctx)
+		principal := appcontext.Principal(ctx)
+		_, err2 := CreateSystemIntakeContact(ctx, logger, principal, tx, models.CreateSystemIntakeContactInput{
+			EuaUserID:      principal.ID(),
+			SystemIntakeID: createdIntake.ID,
+			Roles: []models.SystemIntakeContactRole{
+				models.SystemIntakeContactRolePLACEHOLDER,
+			},
+			Component:   models.SystemIntakeContactComponentPLACEHOLDER,
+			IsRequester: true,
+		},
+			getAccountInformation,
+		)
+		if err2 != nil {
+			return nil, err2
+		}
+
+		return createdIntake, nil
+	})
+	return intakeRetFromTransaction, err
 }
 
 // UpdateSystemIntakeRequestType updates a system intake's request type and returns the updated intake.
@@ -180,7 +178,7 @@ func SystemIntakeUpdateContactDetails(ctx context.Context, store *storage.Store,
 func SystemIntakeUpdateContractDetails(ctx context.Context, store *storage.Store, input models.UpdateSystemIntakeContractDetailsInput) (*models.UpdateSystemIntakePayload, error) {
 	return sqlutils.WithTransactionRet[*models.UpdateSystemIntakePayload](ctx, store, func(tx *sqlx.Tx) (*models.UpdateSystemIntakePayload, error) {
 
-		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, input.ID)
+		intake, err := storage.FetchSystemIntakeByIDNP(ctx, tx, input.ID)
 		if err != nil {
 			return nil, err
 		}

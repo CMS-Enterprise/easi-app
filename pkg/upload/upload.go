@@ -1,17 +1,18 @@
 package upload
 
 import (
+	"context"
+	"fmt"
 	"io"
 	"net/url"
 	"os"
 	"strings"
 	"time"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/aws/aws-sdk-go/service/s3/s3iface"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/credentials"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/aws/aws-sdk-go-v2/service/s3/types"
 
 	"github.com/cms-enterprise/easi-app/pkg/appconfig"
 )
@@ -28,41 +29,53 @@ type Config struct {
 
 // S3Client is an EASi s3 client wrapper
 type S3Client struct {
-	client s3iface.S3API
+	client *s3.Client
 	config Config
 }
 
 // NewS3Client creates a new s3 service client
-func NewS3Client(config Config) S3Client {
-	awsConfig := &aws.Config{
-		Region: aws.String(config.Region),
-	}
+func NewS3Client(ctx context.Context, s3Config Config) S3Client {
+	var (
+		configOpts []func(*config.LoadOptions) error
+		s3Opts     []func(options *s3.Options)
+	)
+
+	configOpts = append(configOpts, config.WithRegion(s3Config.Region))
 
 	// if we are in a local dev environment we use Minio for s3
-	if config.IsLocal {
-		awsConfig.Endpoint = aws.String(os.Getenv(appconfig.LocalMinioAddressKey))
-		awsConfig.Credentials = credentials.NewStaticCredentials(
-			os.Getenv(appconfig.LocalMinioS3AccessKey),
-			os.Getenv(appconfig.LocalMinioS3SecretKey),
-			"")
+	if s3Config.IsLocal {
+		configOpts = append(configOpts, config.WithBaseEndpoint(os.Getenv(appconfig.LocalMinioAddressKey)))
+		configOpts = append(configOpts, config.WithCredentialsProvider(
+			credentials.NewStaticCredentialsProvider(
+				os.Getenv(appconfig.LocalMinioS3AccessKey),
+				os.Getenv(appconfig.LocalMinioS3SecretKey),
+				""),
+		))
 
 		// MinIO by default uses path-style access, which puts the bucket name in the URL, i.e. https://s3.region-code.amazonaws.com/bucket-name/key-name.
 		// It's possible to configure MinIO to use virtual-hosted style, but it's tricky to get working with our current Docker Compose setup, so we don't bother with it.
 		// See https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html and https://github.com/minio/minio/tree/master/docs/config#domain.
-		awsConfig.S3ForcePathStyle = aws.Bool(true)
+		s3Opts = append(s3Opts, func(options *s3.Options) {
+			options.UsePathStyle = true
+		})
 	}
 
-	s3Session := session.Must(session.NewSession(awsConfig))
+	awsConfig, err := config.LoadDefaultConfig(ctx, configOpts...)
+	if err != nil {
+		panic(fmt.Errorf("problem creating aws config when creating new s3 client: %w", err))
+	}
 
-	return NewS3ClientUsingClient(s3.New(s3Session), config)
+	s3Client := s3.NewFromConfig(awsConfig, s3Opts...)
+
+	return NewS3ClientUsingClient(s3Client, s3Config)
 }
 
 // NewS3ClientUsingClient creates a new s3 wrapper using the specified s3 client
 // This is most useful for testing where the s3 client needs to be mocked out.
-func NewS3ClientUsingClient(s3Client s3iface.S3API, config Config) S3Client {
+func NewS3ClientUsingClient(s3Client *s3.Client, config Config) S3Client {
 	return S3Client{
-		s3Client,
-		config,
+		client: s3Client,
+		config: config,
 	}
 }
 
@@ -78,21 +91,20 @@ type PreSignedURL struct {
 }
 
 // NewGetPresignedURL returns a pre-signed URL used for GET-ing objects
-func (c S3Client) NewGetPresignedURL(key string) (*PreSignedURL, error) {
+func (c S3Client) NewGetPresignedURL(ctx context.Context, key string) (*PreSignedURL, error) {
 	objectInput := &s3.GetObjectInput{
-		Bucket: aws.String(c.config.Bucket),
-		Key:    aws.String(key),
+		Bucket: &c.config.Bucket,
+		Key:    &key,
 	}
-	req, _ := c.client.GetObjectRequest(objectInput)
 
-	url, err := req.Presign(90 * time.Minute) // to match FE timeout in src/views/TimeOutWrapper/index.tsx
+	req, err := s3.NewPresignClient(c.client).PresignGetObject(ctx, objectInput, func(options *s3.PresignOptions) {
+		options.Expires = 90 * time.Minute
+	})
 	if err != nil {
-		return &PreSignedURL{}, err
+		return nil, err
 	}
 
-	result := PreSignedURL{URL: url, Filename: key}
-
-	return &result, nil
+	return &PreSignedURL{URL: req.URL, Filename: key}, nil
 
 }
 
@@ -108,12 +120,12 @@ func (c S3Client) KeyFromURL(url *url.URL) (string, error) {
 
 // TagValueForKey returns the tag value and if that tag was found for the
 // specified key and tag name. If no value is found, returns an empty string.
-func (c S3Client) TagValueForKey(key string, tagName string) (string, error) {
+func (c S3Client) TagValueForKey(ctx context.Context, key string, tagName string) (string, error) {
 	input := &s3.GetObjectTaggingInput{
-		Bucket: aws.String(c.config.Bucket),
-		Key:    aws.String(key),
+		Bucket: &c.config.Bucket,
+		Key:    &key,
 	}
-	tagging, taggingErr := c.client.GetObjectTagging(input)
+	tagging, taggingErr := c.client.GetObjectTagging(ctx, input)
 	if taggingErr != nil {
 		return "", taggingErr
 	}
@@ -127,20 +139,21 @@ func (c S3Client) TagValueForKey(key string, tagName string) (string, error) {
 }
 
 // SetTagValueForKey sets the tag value and returns an error if any was encountered.
-func (c S3Client) SetTagValueForKey(key string, tagName string, tagValue string) error {
+func (c S3Client) SetTagValueForKey(ctx context.Context, key string, tagName string, tagValue string) error {
+
 	input := &s3.PutObjectTaggingInput{
-		Bucket: aws.String(c.config.Bucket),
-		Key:    aws.String(key),
-		Tagging: &s3.Tagging{
-			TagSet: []*s3.Tag{
+		Bucket: &c.config.Bucket,
+		Key:    &key,
+		Tagging: &types.Tagging{
+			TagSet: []types.Tag{
 				{
-					Key:   aws.String(tagName),
-					Value: aws.String(tagValue),
+					Key:   &tagName,
+					Value: &tagValue,
 				},
 			},
 		},
 	}
-	_, taggingErr := c.client.PutObjectTagging(input)
+	_, taggingErr := c.client.PutObjectTagging(ctx, input)
 	if taggingErr != nil {
 		return taggingErr
 	}
@@ -150,10 +163,10 @@ func (c S3Client) SetTagValueForKey(key string, tagName string, tagValue string)
 
 // UploadFile uploads a file to the configured bucket for saving documents.
 // Note that no file extension will be added to the key by this method; it assumes the caller has already added an extension, if desired.
-func (c S3Client) UploadFile(key string, body io.ReadSeeker) error {
-	_, err := c.client.PutObject(&s3.PutObjectInput{
-		Bucket: aws.String(c.config.Bucket),
-		Key:    aws.String(key),
+func (c S3Client) UploadFile(ctx context.Context, key string, body io.ReadSeeker) error {
+	_, err := c.client.PutObject(ctx, &s3.PutObjectInput{
+		Bucket: &c.config.Bucket,
+		Key:    &key,
 		Body:   body,
 	})
 
