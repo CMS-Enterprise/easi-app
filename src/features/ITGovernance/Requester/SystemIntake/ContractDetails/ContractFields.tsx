@@ -80,6 +80,8 @@ const ContractFields = ({ id }: ContractFieldsProps) => {
     }
   }, [hasEndDateError, isSubmitted, trigger]);
 
+  const hasContractStatus = id === 'hasContractBranchWrapper';
+
   return (
     <div id={id} className="margin-left-4 margin-top-1 margin-bottom-2">
       <FieldGroup
@@ -126,11 +128,15 @@ const ContractFields = ({ id }: ContractFieldsProps) => {
       </FieldGroup>
       <FieldGroup error={hasStartDateError || hasEndDateError}>
         <Fieldset>
-          <legend className="usa-label">
-            {t('contractDetails.periodOfPerformance')}
+          <legend className="usa-label maxw-none">
+            {hasContractStatus
+              ? t('contractDetails.periodOfPerformanceHasContract')
+              : t('contractDetails.periodOfPerformanceInProgress')}
           </legend>
           <HelpText>
-            {t('contractDetails.periodOfPerformanceHelpText')}
+            {hasContractStatus
+              ? t('contractDetails.periodOfPerformanceHasContractHelpText')
+              : t('contractDetails.periodOfPerformanceInProgressHelpText')}
           </HelpText>
 
           {Object.keys(errors?.contract?.startDate || {}).map(key => (

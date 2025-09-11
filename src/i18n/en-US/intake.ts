@@ -483,13 +483,20 @@ const intake = {
     hasContract:
       'Do you already have a contract in place to support this effort?',
     contractors: 'Contractor(s)',
-    periodOfPerformance: 'Period of performance dates for planned project',
+
     performanceStartDate: 'Performance start date',
     performanceEndDate: 'Performance end date',
     newPeriodOfPerformance:
       'New Period of Performance dates (include all option years)',
-    periodOfPerformanceHelpText:
+    periodOfPerformanceHasContract:
+      'Period of performance dates for planned project',
+    periodOfPerformanceHasContractHelpText:
       'Specify the dates for the development work or contract adjustment that this Life Cycle ID (LCID) should cover. Include all option years. For example: 4/10/2020 – 4/9/2025',
+    periodOfPerformanceInProgress:
+      'Period of performance dates for planned contract or development work',
+    periodOfPerformanceInProgressHelpText:
+      'Specify the dates for the development work or contract that this Life Cycle ID (LCID) should cover.Include all option years. For example: 4/10/2020 – 4/9/2025',
+
     hasContractRadioHint:
       'Choosing this option will remove previously-entered contract number(s).',
     ...hasContractLabels
