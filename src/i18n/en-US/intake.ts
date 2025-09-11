@@ -489,7 +489,7 @@ const intake = {
     newPeriodOfPerformance:
       'New Period of Performance dates (include all option years)',
     periodOfPerformanceHelpText:
-      'Specify the dates for the development work or contract adjustment that this Life Cycle ID (LCID) should cover. Include all option years. For example: 4/10/2020 - 4/9/2025',
+      'Specify the dates for the development work or contract adjustment that this Life Cycle ID (LCID) should cover. Include all option years. For example: 4/10/2020 – 4/9/2025',
     hasContractRadioHint:
       'Choosing this option will remove previously-entered contract number(s).',
     ...hasContractLabels
@@ -527,7 +527,7 @@ const intake = {
     increase: 'Approximately how much do you expect the cost to increase?',
     currentAnnualSpending: 'What is the current annual spending?',
     currentAnnualSpendingITPortion:
-      'What portion (% or amount) of the current annual spending is IT?',
+      'What percentage of the current annual spending is IT?',
     plannedYearOneSpending:
       'What is the planned annual spending for the first year of the new contract?',
     plannedYearOneSpendingITPortion:

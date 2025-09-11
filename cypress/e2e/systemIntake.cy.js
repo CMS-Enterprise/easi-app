@@ -56,7 +56,7 @@ describe('The System Intake Form', () => {
     cy.contains('h1', 'Contact details');
   });
 
-  it.only('fills out minimum required fields (smoke test)', () => {
+  it('fills out minimum required fields (smoke test)', () => {
     // Contact details
     cy.systemIntake.contactDetails.fillNonBranchingFields();
 
