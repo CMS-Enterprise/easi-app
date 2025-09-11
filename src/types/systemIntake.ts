@@ -20,6 +20,7 @@ export type SystemIntakeForm = {
   id: string;
   euaUserId: string;
   requestName: string;
+  projectAcronym: string;
   statusAdmin: SystemIntakeStatusAdmin;
   requestType: RequestType;
   requester: {

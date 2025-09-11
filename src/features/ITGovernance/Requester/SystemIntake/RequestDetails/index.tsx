@@ -70,6 +70,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
   const {
     id,
     requestName,
+    projectAcronym,
     businessNeed,
     businessSolution,
     currentStage,
@@ -95,6 +96,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
     resolver: yupResolver(SystemIntakeValidationSchema.requestDetails),
     defaultValues: {
       requestName: requestName || '',
+      projectAcronym: projectAcronym || '',
       businessNeed: businessNeed || '',
       businessSolution: businessSolution || '',
       currentStage: currentStage || '',
@@ -227,7 +229,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
         onSubmit={handleSubmit(() =>
           submit(() => history.push('contract-details'), true)
         )}
-        className="maxw-none tablet:grid-col-6 margin-bottom-7"
+        className="maxw-none tablet:grid-col-9 margin-bottom-7"
       >
         <Grid row gap="sm">
           {/* Request Name */}
