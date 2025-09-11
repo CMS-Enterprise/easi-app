@@ -144,7 +144,7 @@ exports[`ATO subpage for System Profile > matches snapshot 1`] = `
               </a>
             </div>
             <p>
-              CMS FISMA Continuous Tracking System (CFACTS) is a CMS database that tracks application security deficiencies and POA&Ms, and supports the ATO process. IT is the CMS governance, risk, and compliance tool used as a repository to manage CMS' information systems security and privacy requirements.
+              CMS FISMA Continuous Tracking System (CFACTS) is a CMS database that tracks application security deficiencies and POA&Ms, and supports the ATO process. It is the CMS governance, risk, and compliance tool used as a repository to manage CMS' information systems security and privacy requirements.
             </p>
             <div
               class="margin-top-1 margin-bottom-2"
@@ -365,7 +365,7 @@ exports[`ATO subpage for System Profile > matches snapshot 1`] = `
           <dt
             class="text-bold margin-bottom-05"
           >
-            Last ACT* or SCA*
+            Last CSRAP* or SCA*
           </dt>
           <dd
             class="description-definition margin-0 line-height-body-3 margin-bottom-4"
@@ -470,7 +470,7 @@ exports[`ATO subpage for System Profile > matches snapshot 1`] = `
           <dt
             class="text-bold margin-bottom-05"
           >
-            Last Contengency Plan completion
+            Last Contingency Plan completion
           </dt>
           <dd
             class="description-definition margin-0 line-height-body-3 margin-bottom-4"
@@ -521,7 +521,7 @@ exports[`ATO subpage for System Profile > matches snapshot 1`] = `
               class="border-bottom-2px"
               scope="col"
             >
-              Does this sytem have one?
+              Does this system have one?
             </th>
           </tr>
         </thead>
@@ -580,11 +580,24 @@ exports[`ATO subpage for System Profile > matches snapshot 1`] = `
         </span>
       </a>
       <p>
-        ACT: Adaptive Capabilities Testing
-      </p>
-      <p>
         SCA: Security Control Assessment
       </p>
+      <p>
+        CSRAP: Cybersecurity Risk Assessment Program
+      </p>
+      <a
+        aria-label="Open 'Lean more about CSRAP' in a new tab"
+        class="usa-link usa-link--external line-height-body-5"
+        href="https://security.cms.gov/learn/cybersecurity-risk-assessment-program-csrap"
+        target="_blank"
+      >
+        Learn more about CSRAP
+        <span
+          aria-hidden="true"
+        >
+           
+        </span>
+      </a>
       <p>
         PIA: Privacy Impact Assessment
       </p>

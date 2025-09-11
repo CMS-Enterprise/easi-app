@@ -37,7 +37,8 @@ const UserTargetingWrapper = ({ children }: WrapperProps) => {
             systemWorkspaceRequestsCard: false,
             systemWorkspaceTeam: false,
             grbReviewTab: false,
-            showAtoColumn: false
+            showAtoColumn: false,
+            serviceAlertEnabled: false
           }
         });
 
