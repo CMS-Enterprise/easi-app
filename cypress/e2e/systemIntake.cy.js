@@ -234,10 +234,12 @@ describe('The System Intake Form', () => {
 
     cy.getDateString({ months: 1 }).then(startDate => {
       cy.get('#contractStartDate').type(startDate);
+      cy.wrap(startDate).as('startDate');
     });
 
     cy.getDateString({ months: 2 }).then(endDate => {
       cy.get('#contractEndDate').type(endDate);
+      cy.wrap(endDate).as('endDate');
     });
 
     cy.contains('button', 'Next').click();
@@ -405,6 +407,25 @@ describe('The System Intake Form', () => {
     )
       .siblings('dd')
       .get(`[data-testid="fundingSource${projectNumber}"]`);
+
+    cy.contains('.easi-review-row dt', 'Contractor(s)')
+      .siblings('dd')
+      .contains('TrussWorks, Inc.');
+
+    cy.contains('.easi-review-row dt', 'Contract number(s)')
+      .siblings('dd')
+      .contains('123456-7890');
+
+    cy.get('@startDate').then(startDate => {
+      cy.get('@endDate').then(endDate => {
+        cy.contains(
+          '.easi-review-row dt',
+          'Period of performance dates for planned project'
+        )
+          .siblings('dd')
+          .contains(`${startDate} to ${endDate}`);
+      });
+    });
 
     cy.get('#systemIntakeDocuments').contains('td', 'test.pdf');
   });
