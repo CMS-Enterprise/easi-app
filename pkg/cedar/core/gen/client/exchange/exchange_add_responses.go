@@ -6,6 +6,7 @@ package exchange
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -97,11 +98,13 @@ func (o *ExchangeAddOK) Code() int {
 }
 
 func (o *ExchangeAddOK) Error() string {
-	return fmt.Sprintf("[POST /exchange][%d] exchangeAddOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /exchange][%d] exchangeAddOK %s", 200, payload)
 }
 
 func (o *ExchangeAddOK) String() string {
-	return fmt.Sprintf("[POST /exchange][%d] exchangeAddOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /exchange][%d] exchangeAddOK %s", 200, payload)
 }
 
 func (o *ExchangeAddOK) GetPayload() *models.Response {
@@ -165,11 +168,13 @@ func (o *ExchangeAddBadRequest) Code() int {
 }
 
 func (o *ExchangeAddBadRequest) Error() string {
-	return fmt.Sprintf("[POST /exchange][%d] exchangeAddBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /exchange][%d] exchangeAddBadRequest %s", 400, payload)
 }
 
 func (o *ExchangeAddBadRequest) String() string {
-	return fmt.Sprintf("[POST /exchange][%d] exchangeAddBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /exchange][%d] exchangeAddBadRequest %s", 400, payload)
 }
 
 func (o *ExchangeAddBadRequest) GetPayload() *models.Response {
@@ -233,11 +238,13 @@ func (o *ExchangeAddUnauthorized) Code() int {
 }
 
 func (o *ExchangeAddUnauthorized) Error() string {
-	return fmt.Sprintf("[POST /exchange][%d] exchangeAddUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /exchange][%d] exchangeAddUnauthorized %s", 401, payload)
 }
 
 func (o *ExchangeAddUnauthorized) String() string {
-	return fmt.Sprintf("[POST /exchange][%d] exchangeAddUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /exchange][%d] exchangeAddUnauthorized %s", 401, payload)
 }
 
 func (o *ExchangeAddUnauthorized) GetPayload() *models.Response {
@@ -301,11 +308,13 @@ func (o *ExchangeAddInternalServerError) Code() int {
 }
 
 func (o *ExchangeAddInternalServerError) Error() string {
-	return fmt.Sprintf("[POST /exchange][%d] exchangeAddInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /exchange][%d] exchangeAddInternalServerError %s", 500, payload)
 }
 
 func (o *ExchangeAddInternalServerError) String() string {
-	return fmt.Sprintf("[POST /exchange][%d] exchangeAddInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /exchange][%d] exchangeAddInternalServerError %s", 500, payload)
 }
 
 func (o *ExchangeAddInternalServerError) GetPayload() *models.Response {

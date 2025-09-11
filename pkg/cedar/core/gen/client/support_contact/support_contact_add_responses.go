@@ -6,6 +6,7 @@ package support_contact
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -97,11 +98,13 @@ func (o *SupportContactAddOK) Code() int {
 }
 
 func (o *SupportContactAddOK) Error() string {
-	return fmt.Sprintf("[POST /supportContact][%d] supportContactAddOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /supportContact][%d] supportContactAddOK %s", 200, payload)
 }
 
 func (o *SupportContactAddOK) String() string {
-	return fmt.Sprintf("[POST /supportContact][%d] supportContactAddOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /supportContact][%d] supportContactAddOK %s", 200, payload)
 }
 
 func (o *SupportContactAddOK) GetPayload() *models.Response {
@@ -165,11 +168,13 @@ func (o *SupportContactAddBadRequest) Code() int {
 }
 
 func (o *SupportContactAddBadRequest) Error() string {
-	return fmt.Sprintf("[POST /supportContact][%d] supportContactAddBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /supportContact][%d] supportContactAddBadRequest %s", 400, payload)
 }
 
 func (o *SupportContactAddBadRequest) String() string {
-	return fmt.Sprintf("[POST /supportContact][%d] supportContactAddBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /supportContact][%d] supportContactAddBadRequest %s", 400, payload)
 }
 
 func (o *SupportContactAddBadRequest) GetPayload() *models.Response {
@@ -233,11 +238,13 @@ func (o *SupportContactAddUnauthorized) Code() int {
 }
 
 func (o *SupportContactAddUnauthorized) Error() string {
-	return fmt.Sprintf("[POST /supportContact][%d] supportContactAddUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /supportContact][%d] supportContactAddUnauthorized %s", 401, payload)
 }
 
 func (o *SupportContactAddUnauthorized) String() string {
-	return fmt.Sprintf("[POST /supportContact][%d] supportContactAddUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /supportContact][%d] supportContactAddUnauthorized %s", 401, payload)
 }
 
 func (o *SupportContactAddUnauthorized) GetPayload() *models.Response {
@@ -301,11 +308,13 @@ func (o *SupportContactAddInternalServerError) Code() int {
 }
 
 func (o *SupportContactAddInternalServerError) Error() string {
-	return fmt.Sprintf("[POST /supportContact][%d] supportContactAddInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /supportContact][%d] supportContactAddInternalServerError %s", 500, payload)
 }
 
 func (o *SupportContactAddInternalServerError) String() string {
-	return fmt.Sprintf("[POST /supportContact][%d] supportContactAddInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /supportContact][%d] supportContactAddInternalServerError %s", 500, payload)
 }
 
 func (o *SupportContactAddInternalServerError) GetPayload() *models.Response {

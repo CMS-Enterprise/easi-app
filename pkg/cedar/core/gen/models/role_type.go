@@ -22,7 +22,7 @@ type RoleType struct {
 
 	// application
 	// Required: true
-	// Enum: [all alfabet]
+	// Enum: ["all","alfabet"]
 	Application *string `json:"application"`
 
 	// description
@@ -34,7 +34,7 @@ type RoleType struct {
 
 	// name
 	// Required: true
-	// Enum: [AI Contact API Contact Budget Analyst Business Owner Business Question Contact Contracting Officer's Representative (COR) DA Reviewer Data Center Contact ISSO Government Task Lead (GTL) Project Lead QA Reviewer System Maintainer Subject Matter Expert (SME) Support Staff Survey Point of Contact Technical System Issues Contact]
+	// Enum: ["AI Contact","API Contact","Budget Analyst","Business Owner","Business Question Contact","Contracting Officer's Representative (COR)","DA Reviewer","Data Center Contact","ISSO Government Task Lead (GTL)","Project Lead","QA Reviewer","System Maintainer","Subject Matter Expert (SME)","Support Staff","Survey Point of Contact","Technical System Issues Contact"]
 	Name *string `json:"name"`
 }
 

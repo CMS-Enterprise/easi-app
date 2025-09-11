@@ -26,7 +26,7 @@ type IntakeInput struct {
 
 	// body format
 	// Required: true
-	// Enum: [JSON XML]
+	// Enum: ["JSON","XML"]
 	BodyFormat *string `json:"bodyFormat"`
 
 	// Creation date associated with the object being transmitted

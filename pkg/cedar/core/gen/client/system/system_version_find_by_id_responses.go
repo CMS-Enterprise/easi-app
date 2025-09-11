@@ -6,6 +6,7 @@ package system
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -103,11 +104,13 @@ func (o *SystemVersionFindByIDOK) Code() int {
 }
 
 func (o *SystemVersionFindByIDOK) Error() string {
-	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdOK %s", 200, payload)
 }
 
 func (o *SystemVersionFindByIDOK) String() string {
-	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdOK %s", 200, payload)
 }
 
 func (o *SystemVersionFindByIDOK) GetPayload() *models.SystemVersionResponse {
@@ -171,11 +174,13 @@ func (o *SystemVersionFindByIDBadRequest) Code() int {
 }
 
 func (o *SystemVersionFindByIDBadRequest) Error() string {
-	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdBadRequest %s", 400, payload)
 }
 
 func (o *SystemVersionFindByIDBadRequest) String() string {
-	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdBadRequest %s", 400, payload)
 }
 
 func (o *SystemVersionFindByIDBadRequest) GetPayload() *models.Response {
@@ -239,11 +244,13 @@ func (o *SystemVersionFindByIDUnauthorized) Code() int {
 }
 
 func (o *SystemVersionFindByIDUnauthorized) Error() string {
-	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdUnauthorized %s", 401, payload)
 }
 
 func (o *SystemVersionFindByIDUnauthorized) String() string {
-	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdUnauthorized %s", 401, payload)
 }
 
 func (o *SystemVersionFindByIDUnauthorized) GetPayload() *models.Response {
@@ -307,11 +314,13 @@ func (o *SystemVersionFindByIDNotFound) Code() int {
 }
 
 func (o *SystemVersionFindByIDNotFound) Error() string {
-	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdNotFound %s", 404, payload)
 }
 
 func (o *SystemVersionFindByIDNotFound) String() string {
-	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdNotFound %s", 404, payload)
 }
 
 func (o *SystemVersionFindByIDNotFound) GetPayload() *models.Response {
@@ -375,11 +384,13 @@ func (o *SystemVersionFindByIDInternalServerError) Code() int {
 }
 
 func (o *SystemVersionFindByIDInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdInternalServerError %s", 500, payload)
 }
 
 func (o *SystemVersionFindByIDInternalServerError) String() string {
-	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /system/version][%d] systemVersionFindByIdInternalServerError %s", 500, payload)
 }
 
 func (o *SystemVersionFindByIDInternalServerError) GetPayload() *models.Response {

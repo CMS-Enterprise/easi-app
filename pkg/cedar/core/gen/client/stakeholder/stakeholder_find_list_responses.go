@@ -6,6 +6,7 @@ package stakeholder
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -103,11 +104,13 @@ func (o *StakeholderFindListOK) Code() int {
 }
 
 func (o *StakeholderFindListOK) Error() string {
-	return fmt.Sprintf("[GET /stakeholder][%d] stakeholderFindListOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /stakeholder][%d] stakeholderFindListOK %s", 200, payload)
 }
 
 func (o *StakeholderFindListOK) String() string {
-	return fmt.Sprintf("[GET /stakeholder][%d] stakeholderFindListOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /stakeholder][%d] stakeholderFindListOK %s", 200, payload)
 }
 
 func (o *StakeholderFindListOK) GetPayload() *models.StakeholderFindResponse {
@@ -171,11 +174,13 @@ func (o *StakeholderFindListBadRequest) Code() int {
 }
 
 func (o *StakeholderFindListBadRequest) Error() string {
-	return fmt.Sprintf("[GET /stakeholder][%d] stakeholderFindListBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /stakeholder][%d] stakeholderFindListBadRequest %s", 400, payload)
 }
 
 func (o *StakeholderFindListBadRequest) String() string {
-	return fmt.Sprintf("[GET /stakeholder][%d] stakeholderFindListBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /stakeholder][%d] stakeholderFindListBadRequest %s", 400, payload)
 }
 
 func (o *StakeholderFindListBadRequest) GetPayload() *models.Response {
@@ -239,11 +244,13 @@ func (o *StakeholderFindListUnauthorized) Code() int {
 }
 
 func (o *StakeholderFindListUnauthorized) Error() string {
-	return fmt.Sprintf("[GET /stakeholder][%d] stakeholderFindListUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /stakeholder][%d] stakeholderFindListUnauthorized %s", 401, payload)
 }
 
 func (o *StakeholderFindListUnauthorized) String() string {
-	return fmt.Sprintf("[GET /stakeholder][%d] stakeholderFindListUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /stakeholder][%d] stakeholderFindListUnauthorized %s", 401, payload)
 }
 
 func (o *StakeholderFindListUnauthorized) GetPayload() *models.Response {
@@ -307,11 +314,13 @@ func (o *StakeholderFindListNotFound) Code() int {
 }
 
 func (o *StakeholderFindListNotFound) Error() string {
-	return fmt.Sprintf("[GET /stakeholder][%d] stakeholderFindListNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /stakeholder][%d] stakeholderFindListNotFound %s", 404, payload)
 }
 
 func (o *StakeholderFindListNotFound) String() string {
-	return fmt.Sprintf("[GET /stakeholder][%d] stakeholderFindListNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /stakeholder][%d] stakeholderFindListNotFound %s", 404, payload)
 }
 
 func (o *StakeholderFindListNotFound) GetPayload() *models.Response {
@@ -375,11 +384,13 @@ func (o *StakeholderFindListInternalServerError) Code() int {
 }
 
 func (o *StakeholderFindListInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /stakeholder][%d] stakeholderFindListInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /stakeholder][%d] stakeholderFindListInternalServerError %s", 500, payload)
 }
 
 func (o *StakeholderFindListInternalServerError) String() string {
-	return fmt.Sprintf("[GET /stakeholder][%d] stakeholderFindListInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /stakeholder][%d] stakeholderFindListInternalServerError %s", 500, payload)
 }
 
 func (o *StakeholderFindListInternalServerError) GetPayload() *models.Response {

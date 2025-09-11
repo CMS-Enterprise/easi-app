@@ -6,6 +6,7 @@ package intake
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -97,11 +98,13 @@ func (o *IntakeFindByClientIDOK) Code() int {
 }
 
 func (o *IntakeFindByClientIDOK) Error() string {
-	return fmt.Sprintf("[GET /intake/client/{id}][%d] intakeFindByClientIdOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /intake/client/{id}][%d] intakeFindByClientIdOK %s", 200, payload)
 }
 
 func (o *IntakeFindByClientIDOK) String() string {
-	return fmt.Sprintf("[GET /intake/client/{id}][%d] intakeFindByClientIdOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /intake/client/{id}][%d] intakeFindByClientIdOK %s", 200, payload)
 }
 
 func (o *IntakeFindByClientIDOK) GetPayload() *models.Intake {
@@ -165,11 +168,13 @@ func (o *IntakeFindByClientIDBadRequest) Code() int {
 }
 
 func (o *IntakeFindByClientIDBadRequest) Error() string {
-	return fmt.Sprintf("[GET /intake/client/{id}][%d] intakeFindByClientIdBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /intake/client/{id}][%d] intakeFindByClientIdBadRequest %s", 400, payload)
 }
 
 func (o *IntakeFindByClientIDBadRequest) String() string {
-	return fmt.Sprintf("[GET /intake/client/{id}][%d] intakeFindByClientIdBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /intake/client/{id}][%d] intakeFindByClientIdBadRequest %s", 400, payload)
 }
 
 func (o *IntakeFindByClientIDBadRequest) GetPayload() *models.Response {
@@ -233,11 +238,13 @@ func (o *IntakeFindByClientIDUnauthorized) Code() int {
 }
 
 func (o *IntakeFindByClientIDUnauthorized) Error() string {
-	return fmt.Sprintf("[GET /intake/client/{id}][%d] intakeFindByClientIdUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /intake/client/{id}][%d] intakeFindByClientIdUnauthorized %s", 401, payload)
 }
 
 func (o *IntakeFindByClientIDUnauthorized) String() string {
-	return fmt.Sprintf("[GET /intake/client/{id}][%d] intakeFindByClientIdUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /intake/client/{id}][%d] intakeFindByClientIdUnauthorized %s", 401, payload)
 }
 
 func (o *IntakeFindByClientIDUnauthorized) GetPayload() *models.Response {
@@ -301,11 +308,13 @@ func (o *IntakeFindByClientIDInternalServerError) Code() int {
 }
 
 func (o *IntakeFindByClientIDInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /intake/client/{id}][%d] intakeFindByClientIdInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /intake/client/{id}][%d] intakeFindByClientIdInternalServerError %s", 500, payload)
 }
 
 func (o *IntakeFindByClientIDInternalServerError) String() string {
-	return fmt.Sprintf("[GET /intake/client/{id}][%d] intakeFindByClientIdInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /intake/client/{id}][%d] intakeFindByClientIdInternalServerError %s", 500, payload)
 }
 
 func (o *IntakeFindByClientIDInternalServerError) GetPayload() *models.Response {

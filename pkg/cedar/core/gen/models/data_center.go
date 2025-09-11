@@ -56,11 +56,11 @@ type DataCenter struct {
 	StartDate strfmt.Date `json:"startDate,omitempty"`
 
 	// state
-	// Enum: [active planned retired]
+	// Enum: ["active","planned","retired"]
 	State string `json:"state,omitempty"`
 
 	// status
-	// Enum: [approved draft]
+	// Enum: ["approved","draft"]
 	Status string `json:"status,omitempty"`
 
 	// version

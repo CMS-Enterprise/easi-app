@@ -6,6 +6,7 @@ package role
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -97,11 +98,13 @@ func (o *RoleAddOK) Code() int {
 }
 
 func (o *RoleAddOK) Error() string {
-	return fmt.Sprintf("[POST /role][%d] roleAddOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /role][%d] roleAddOK %s", 200, payload)
 }
 
 func (o *RoleAddOK) String() string {
-	return fmt.Sprintf("[POST /role][%d] roleAddOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /role][%d] roleAddOK %s", 200, payload)
 }
 
 func (o *RoleAddOK) GetPayload() *models.Response {
@@ -165,11 +168,13 @@ func (o *RoleAddBadRequest) Code() int {
 }
 
 func (o *RoleAddBadRequest) Error() string {
-	return fmt.Sprintf("[POST /role][%d] roleAddBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /role][%d] roleAddBadRequest %s", 400, payload)
 }
 
 func (o *RoleAddBadRequest) String() string {
-	return fmt.Sprintf("[POST /role][%d] roleAddBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /role][%d] roleAddBadRequest %s", 400, payload)
 }
 
 func (o *RoleAddBadRequest) GetPayload() *models.Response {
@@ -233,11 +238,13 @@ func (o *RoleAddUnauthorized) Code() int {
 }
 
 func (o *RoleAddUnauthorized) Error() string {
-	return fmt.Sprintf("[POST /role][%d] roleAddUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /role][%d] roleAddUnauthorized %s", 401, payload)
 }
 
 func (o *RoleAddUnauthorized) String() string {
-	return fmt.Sprintf("[POST /role][%d] roleAddUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /role][%d] roleAddUnauthorized %s", 401, payload)
 }
 
 func (o *RoleAddUnauthorized) GetPayload() *models.Response {
@@ -301,11 +308,13 @@ func (o *RoleAddInternalServerError) Code() int {
 }
 
 func (o *RoleAddInternalServerError) Error() string {
-	return fmt.Sprintf("[POST /role][%d] roleAddInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /role][%d] roleAddInternalServerError %s", 500, payload)
 }
 
 func (o *RoleAddInternalServerError) String() string {
-	return fmt.Sprintf("[POST /role][%d] roleAddInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /role][%d] roleAddInternalServerError %s", 500, payload)
 }
 
 func (o *RoleAddInternalServerError) GetPayload() *models.Response {

@@ -52,7 +52,7 @@ type Role struct {
 	AssigneePhone string `json:"assigneePhone,omitempty"`
 
 	// assignee type
-	// Enum: [organization person]
+	// Enum: ["organization","person"]
 	AssigneeType string `json:"assigneeType,omitempty"`
 
 	// Username of the role assignee, if a person

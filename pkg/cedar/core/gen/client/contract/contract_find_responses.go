@@ -6,6 +6,7 @@ package contract
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -97,11 +98,13 @@ func (o *ContractFindOK) Code() int {
 }
 
 func (o *ContractFindOK) Error() string {
-	return fmt.Sprintf("[GET /contract][%d] contractFindOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /contract][%d] contractFindOK %s", 200, payload)
 }
 
 func (o *ContractFindOK) String() string {
-	return fmt.Sprintf("[GET /contract][%d] contractFindOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /contract][%d] contractFindOK %s", 200, payload)
 }
 
 func (o *ContractFindOK) GetPayload() *models.ContractFindResponse {
@@ -165,11 +168,13 @@ func (o *ContractFindBadRequest) Code() int {
 }
 
 func (o *ContractFindBadRequest) Error() string {
-	return fmt.Sprintf("[GET /contract][%d] contractFindBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /contract][%d] contractFindBadRequest %s", 400, payload)
 }
 
 func (o *ContractFindBadRequest) String() string {
-	return fmt.Sprintf("[GET /contract][%d] contractFindBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /contract][%d] contractFindBadRequest %s", 400, payload)
 }
 
 func (o *ContractFindBadRequest) GetPayload() *models.Response {
@@ -233,11 +238,13 @@ func (o *ContractFindUnauthorized) Code() int {
 }
 
 func (o *ContractFindUnauthorized) Error() string {
-	return fmt.Sprintf("[GET /contract][%d] contractFindUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /contract][%d] contractFindUnauthorized %s", 401, payload)
 }
 
 func (o *ContractFindUnauthorized) String() string {
-	return fmt.Sprintf("[GET /contract][%d] contractFindUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /contract][%d] contractFindUnauthorized %s", 401, payload)
 }
 
 func (o *ContractFindUnauthorized) GetPayload() *models.Response {
@@ -301,11 +308,13 @@ func (o *ContractFindInternalServerError) Code() int {
 }
 
 func (o *ContractFindInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /contract][%d] contractFindInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /contract][%d] contractFindInternalServerError %s", 500, payload)
 }
 
 func (o *ContractFindInternalServerError) String() string {
-	return fmt.Sprintf("[GET /contract][%d] contractFindInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /contract][%d] contractFindInternalServerError %s", 500, payload)
 }
 
 func (o *ContractFindInternalServerError) GetPayload() *models.Response {

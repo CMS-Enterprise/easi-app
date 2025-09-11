@@ -22,25 +22,25 @@ import (
 type SoftwareProductDetails struct {
 
 	// ai plan
-	// Enum: [Yes - This system has developed AI capabilities. Yes - This system uses a SaaS AI tool like Remesh... No – And this system currently has no plans to utilize AI capabilities No – But there currently are plans to use AI capabilities in the next two years]
+	// Enum: ["Yes - This system has developed AI capabilities.","Yes - This system uses a SaaS AI tool like Remesh...","No – And this system currently has no plans to utilize AI capabilities","No – But there currently are plans to use AI capabilities in the next two years"]
 	AiPlan string `json:"aiPlan,omitempty"`
 
 	// api data area
 	APIDataArea []string `json:"apiDataArea"`
 
 	// api f h i r use
-	// Enum: [No FHIR HL7 Other Standard]
+	// Enum: ["No","FHIR","HL7","Other Standard"]
 	APIFHIRUse string `json:"apiFHIRUse,omitempty"`
 
 	// api f h i r use other
 	APIFHIRUseOther string `json:"apiFHIRUseOther,omitempty"`
 
 	// apis accessibility
-	// Enum: [Both External Access Internal Access]
+	// Enum: ["Both","External Access","Internal Access"]
 	ApisAccessibility string `json:"apisAccessibility,omitempty"`
 
 	// apis developed
-	// Enum: [No Yes API In development but not yet launched.]
+	// Enum: ["No","Yes","API In development but not yet launched."]
 	ApisDeveloped string `json:"apisDeveloped,omitempty"`
 
 	// system ai type

@@ -6,6 +6,7 @@ package budget_system_cost
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -97,11 +98,13 @@ func (o *BudgetSystemCostFindOK) Code() int {
 }
 
 func (o *BudgetSystemCostFindOK) Error() string {
-	return fmt.Sprintf("[GET /budgetSystemCost][%d] budgetSystemCostFindOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /budgetSystemCost][%d] budgetSystemCostFindOK %s", 200, payload)
 }
 
 func (o *BudgetSystemCostFindOK) String() string {
-	return fmt.Sprintf("[GET /budgetSystemCost][%d] budgetSystemCostFindOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /budgetSystemCost][%d] budgetSystemCostFindOK %s", 200, payload)
 }
 
 func (o *BudgetSystemCostFindOK) GetPayload() *models.BudgetActualSystemCostResponse {
@@ -165,11 +168,13 @@ func (o *BudgetSystemCostFindBadRequest) Code() int {
 }
 
 func (o *BudgetSystemCostFindBadRequest) Error() string {
-	return fmt.Sprintf("[GET /budgetSystemCost][%d] budgetSystemCostFindBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /budgetSystemCost][%d] budgetSystemCostFindBadRequest %s", 400, payload)
 }
 
 func (o *BudgetSystemCostFindBadRequest) String() string {
-	return fmt.Sprintf("[GET /budgetSystemCost][%d] budgetSystemCostFindBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /budgetSystemCost][%d] budgetSystemCostFindBadRequest %s", 400, payload)
 }
 
 func (o *BudgetSystemCostFindBadRequest) GetPayload() *models.Response {
@@ -233,11 +238,13 @@ func (o *BudgetSystemCostFindUnauthorized) Code() int {
 }
 
 func (o *BudgetSystemCostFindUnauthorized) Error() string {
-	return fmt.Sprintf("[GET /budgetSystemCost][%d] budgetSystemCostFindUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /budgetSystemCost][%d] budgetSystemCostFindUnauthorized %s", 401, payload)
 }
 
 func (o *BudgetSystemCostFindUnauthorized) String() string {
-	return fmt.Sprintf("[GET /budgetSystemCost][%d] budgetSystemCostFindUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /budgetSystemCost][%d] budgetSystemCostFindUnauthorized %s", 401, payload)
 }
 
 func (o *BudgetSystemCostFindUnauthorized) GetPayload() *models.Response {
@@ -301,11 +308,13 @@ func (o *BudgetSystemCostFindInternalServerError) Code() int {
 }
 
 func (o *BudgetSystemCostFindInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /budgetSystemCost][%d] budgetSystemCostFindInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /budgetSystemCost][%d] budgetSystemCostFindInternalServerError %s", 500, payload)
 }
 
 func (o *BudgetSystemCostFindInternalServerError) String() string {
-	return fmt.Sprintf("[GET /budgetSystemCost][%d] budgetSystemCostFindInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /budgetSystemCost][%d] budgetSystemCostFindInternalServerError %s", 500, payload)
 }
 
 func (o *BudgetSystemCostFindInternalServerError) GetPayload() *models.Response {

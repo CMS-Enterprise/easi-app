@@ -6,6 +6,7 @@ package budget
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -97,11 +98,13 @@ func (o *BudgetAddOK) Code() int {
 }
 
 func (o *BudgetAddOK) Error() string {
-	return fmt.Sprintf("[POST /budget][%d] budgetAddOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /budget][%d] budgetAddOK %s", 200, payload)
 }
 
 func (o *BudgetAddOK) String() string {
-	return fmt.Sprintf("[POST /budget][%d] budgetAddOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /budget][%d] budgetAddOK %s", 200, payload)
 }
 
 func (o *BudgetAddOK) GetPayload() *models.Response {
@@ -165,11 +168,13 @@ func (o *BudgetAddBadRequest) Code() int {
 }
 
 func (o *BudgetAddBadRequest) Error() string {
-	return fmt.Sprintf("[POST /budget][%d] budgetAddBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /budget][%d] budgetAddBadRequest %s", 400, payload)
 }
 
 func (o *BudgetAddBadRequest) String() string {
-	return fmt.Sprintf("[POST /budget][%d] budgetAddBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /budget][%d] budgetAddBadRequest %s", 400, payload)
 }
 
 func (o *BudgetAddBadRequest) GetPayload() *models.Response {
@@ -233,11 +238,13 @@ func (o *BudgetAddUnauthorized) Code() int {
 }
 
 func (o *BudgetAddUnauthorized) Error() string {
-	return fmt.Sprintf("[POST /budget][%d] budgetAddUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /budget][%d] budgetAddUnauthorized %s", 401, payload)
 }
 
 func (o *BudgetAddUnauthorized) String() string {
-	return fmt.Sprintf("[POST /budget][%d] budgetAddUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /budget][%d] budgetAddUnauthorized %s", 401, payload)
 }
 
 func (o *BudgetAddUnauthorized) GetPayload() *models.Response {
@@ -301,11 +308,13 @@ func (o *BudgetAddInternalServerError) Code() int {
 }
 
 func (o *BudgetAddInternalServerError) Error() string {
-	return fmt.Sprintf("[POST /budget][%d] budgetAddInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /budget][%d] budgetAddInternalServerError %s", 500, payload)
 }
 
 func (o *BudgetAddInternalServerError) String() string {
-	return fmt.Sprintf("[POST /budget][%d] budgetAddInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /budget][%d] budgetAddInternalServerError %s", 500, payload)
 }
 
 func (o *BudgetAddInternalServerError) GetPayload() *models.Response {
