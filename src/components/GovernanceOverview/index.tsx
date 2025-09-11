@@ -98,7 +98,7 @@ const GovernanceOverviewContent = ({
             .filter((_, i) => i > 1 && i < 6)
             .map(step => {
               return (
-                <ProcessListItem key={step.heading}>
+                <ProcessListItem key={step.heading} className="maxw-none">
                   <ProcessListHeading type="h3">
                     {step.heading}
                   </ProcessListHeading>
@@ -120,7 +120,7 @@ const GovernanceOverviewContent = ({
             .filter((_, i) => i > 5)
             .map(step => {
               return (
-                <ProcessListItem key={step.heading}>
+                <ProcessListItem key={step.heading} className="maxw-none">
                   <ProcessListHeading type="h3">
                     {step.heading}
                   </ProcessListHeading>
