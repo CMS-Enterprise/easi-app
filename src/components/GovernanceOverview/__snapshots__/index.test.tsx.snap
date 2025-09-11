@@ -117,7 +117,7 @@ exports[`Governance Overview Content > renders default version without crashing 
         start="3"
       >
         <li
-          class="usa-process-list__item"
+          class="usa-process-list__item maxw-none"
         >
           <h3
             class="usa-process-list__heading"
@@ -132,7 +132,7 @@ exports[`Governance Overview Content > renders default version without crashing 
           </p>
         </li>
         <li
-          class="usa-process-list__item"
+          class="usa-process-list__item maxw-none"
         >
           <h3
             class="usa-process-list__heading"
@@ -154,7 +154,7 @@ exports[`Governance Overview Content > renders default version without crashing 
           </a>
         </li>
         <li
-          class="usa-process-list__item"
+          class="usa-process-list__item maxw-none"
         >
           <h3
             class="usa-process-list__heading"
@@ -169,7 +169,7 @@ exports[`Governance Overview Content > renders default version without crashing 
           </p>
         </li>
         <li
-          class="usa-process-list__item"
+          class="usa-process-list__item maxw-none"
         >
           <h3
             class="usa-process-list__heading"
@@ -196,7 +196,7 @@ exports[`Governance Overview Content > renders default version without crashing 
         start="7"
       >
         <li
-          class="usa-process-list__item"
+          class="usa-process-list__item maxw-none"
         >
           <h3
             class="usa-process-list__heading"
@@ -333,7 +333,7 @@ exports[`Governance Overview Content > renders help section version without cras
         start="3"
       >
         <li
-          class="usa-process-list__item"
+          class="usa-process-list__item maxw-none"
         >
           <h3
             class="usa-process-list__heading"
@@ -348,7 +348,7 @@ exports[`Governance Overview Content > renders help section version without cras
           </p>
         </li>
         <li
-          class="usa-process-list__item"
+          class="usa-process-list__item maxw-none"
         >
           <h3
             class="usa-process-list__heading"
@@ -370,7 +370,7 @@ exports[`Governance Overview Content > renders help section version without cras
           </a>
         </li>
         <li
-          class="usa-process-list__item"
+          class="usa-process-list__item maxw-none"
         >
           <h3
             class="usa-process-list__heading"
@@ -385,7 +385,7 @@ exports[`Governance Overview Content > renders help section version without cras
           </p>
         </li>
         <li
-          class="usa-process-list__item"
+          class="usa-process-list__item maxw-none"
         >
           <h3
             class="usa-process-list__heading"
@@ -412,7 +412,7 @@ exports[`Governance Overview Content > renders help section version without cras
         start="7"
       >
         <li
-          class="usa-process-list__item"
+          class="usa-process-list__item maxw-none"
         >
           <h3
             class="usa-process-list__heading"
