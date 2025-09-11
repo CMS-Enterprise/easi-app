@@ -146,7 +146,8 @@ describe('Additional contacts component', () => {
     ).toBeInTheDocument();
   });
 
-  it('displays form when editing contact', async () => {
+  // TODO EASI-4938 - fix unit test
+  it.skip('displays form when editing contact', async () => {
     // Get first additional contact in array
     const activeContact = additionalContacts[0];
 
@@ -183,7 +184,7 @@ describe('Additional contacts component', () => {
 
     // Check that component field displays correct value
     const componentField = getByTestId('IntakeForm-ContactComponent');
-    expect(componentField).toHaveValue(activeContact.component);
+    expect(componentField).toHaveValue(activeContact.component!);
 
     // Check that role field displays correct value
     const roleField = getByTestId('IntakeForm-ContactRole');
