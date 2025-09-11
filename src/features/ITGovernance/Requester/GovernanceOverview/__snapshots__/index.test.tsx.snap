@@ -174,7 +174,7 @@ exports[`The governance overview page > matches the snapshot (w/ id param) 1`] =
           start="3"
         >
           <li
-            class="usa-process-list__item"
+            class="usa-process-list__item maxw-none"
           >
             <h3
               class="usa-process-list__heading"
@@ -189,7 +189,7 @@ exports[`The governance overview page > matches the snapshot (w/ id param) 1`] =
             </p>
           </li>
           <li
-            class="usa-process-list__item"
+            class="usa-process-list__item maxw-none"
           >
             <h3
               class="usa-process-list__heading"
@@ -211,7 +211,7 @@ exports[`The governance overview page > matches the snapshot (w/ id param) 1`] =
             </a>
           </li>
           <li
-            class="usa-process-list__item"
+            class="usa-process-list__item maxw-none"
           >
             <h3
               class="usa-process-list__heading"
@@ -226,7 +226,7 @@ exports[`The governance overview page > matches the snapshot (w/ id param) 1`] =
             </p>
           </li>
           <li
-            class="usa-process-list__item"
+            class="usa-process-list__item maxw-none"
           >
             <h3
               class="usa-process-list__heading"
@@ -253,7 +253,7 @@ exports[`The governance overview page > matches the snapshot (w/ id param) 1`] =
           start="7"
         >
           <li
-            class="usa-process-list__item"
+            class="usa-process-list__item maxw-none"
           >
             <h3
               class="usa-process-list__heading"
@@ -465,7 +465,7 @@ exports[`The governance overview page > matches the snapshot (w/o id param) 1`] 
           start="3"
         >
           <li
-            class="usa-process-list__item"
+            class="usa-process-list__item maxw-none"
           >
             <h3
               class="usa-process-list__heading"
@@ -480,7 +480,7 @@ exports[`The governance overview page > matches the snapshot (w/o id param) 1`] 
             </p>
           </li>
           <li
-            class="usa-process-list__item"
+            class="usa-process-list__item maxw-none"
           >
             <h3
               class="usa-process-list__heading"
@@ -502,7 +502,7 @@ exports[`The governance overview page > matches the snapshot (w/o id param) 1`] 
             </a>
           </li>
           <li
-            class="usa-process-list__item"
+            class="usa-process-list__item maxw-none"
           >
             <h3
               class="usa-process-list__heading"
@@ -517,7 +517,7 @@ exports[`The governance overview page > matches the snapshot (w/o id param) 1`] 
             </p>
           </li>
           <li
-            class="usa-process-list__item"
+            class="usa-process-list__item maxw-none"
           >
             <h3
               class="usa-process-list__heading"
@@ -544,7 +544,7 @@ exports[`The governance overview page > matches the snapshot (w/o id param) 1`] 
           start="7"
         >
           <li
-            class="usa-process-list__item"
+            class="usa-process-list__item maxw-none"
           >
             <h3
               class="usa-process-list__heading"

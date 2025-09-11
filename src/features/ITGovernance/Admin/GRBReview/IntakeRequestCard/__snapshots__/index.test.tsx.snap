@@ -63,7 +63,7 @@ exports[`IntakeRequestCard > renders default version without crashing 1`] = `
             <dt
               class="text-bold margin-bottom-05 font-body-sm margin-bottom-0"
             >
-              What portion (% or amount) of the current annual spending is IT?
+              What percentage of the current annual spending is IT?
             </dt>
             <dd
               class="description-definition margin-0 font-body-md text-light"

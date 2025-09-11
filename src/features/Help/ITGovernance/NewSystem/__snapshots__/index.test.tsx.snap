@@ -168,7 +168,7 @@ exports[`New System > matches the snapshot 1`] = `
           start="3"
         >
           <li
-            class="usa-process-list__item"
+            class="usa-process-list__item maxw-none"
           >
             <h3
               class="usa-process-list__heading"
@@ -183,7 +183,7 @@ exports[`New System > matches the snapshot 1`] = `
             </p>
           </li>
           <li
-            class="usa-process-list__item"
+            class="usa-process-list__item maxw-none"
           >
             <h3
               class="usa-process-list__heading"
@@ -205,7 +205,7 @@ exports[`New System > matches the snapshot 1`] = `
             </a>
           </li>
           <li
-            class="usa-process-list__item"
+            class="usa-process-list__item maxw-none"
           >
             <h3
               class="usa-process-list__heading"
@@ -220,7 +220,7 @@ exports[`New System > matches the snapshot 1`] = `
             </p>
           </li>
           <li
-            class="usa-process-list__item"
+            class="usa-process-list__item maxw-none"
           >
             <h3
               class="usa-process-list__heading"
@@ -247,7 +247,7 @@ exports[`New System > matches the snapshot 1`] = `
           start="7"
         >
           <li
-            class="usa-process-list__item"
+            class="usa-process-list__item maxw-none"
           >
             <h3
               class="usa-process-list__heading"
