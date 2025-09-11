@@ -495,7 +495,7 @@ const intake = {
     periodOfPerformanceInProgress:
       'Period of performance dates for planned contract or development work',
     periodOfPerformanceInProgressHelpText:
-      'Specify the dates for the development work or contract that this Life Cycle ID (LCID) should cover.Include all option years. For example: 4/10/2020 – 4/9/2025',
+      'Specify the dates for the development work or contract that this Life Cycle ID (LCID) should cover. Include all option years. For example: 4/10/2020 – 4/9/2025',
 
     hasContractRadioHint:
       'Choosing this option will remove previously-entered contract number(s).',
