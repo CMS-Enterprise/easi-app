@@ -60,9 +60,9 @@ describe('System intake form - Contact details', () => {
     ).toBeInTheDocument();
 
     // Requester name is filled in
-    expect(screen.getByRole('textbox', { name: 'Requester' })).toHaveValue(
-      emptySystemIntake.requester.name
-    );
+    expect(
+      screen.getByRole('textbox', { name: 'Requester name *' })
+    ).toHaveValue(emptySystemIntake.requester.name);
   });
 
   it('renders error messages', async () => {

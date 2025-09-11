@@ -33,10 +33,10 @@ import FeedbackBanner from 'components/FeedbackBanner';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import HelpText from 'components/HelpText';
 import Label from 'components/Label';
-import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import PageNumber from 'components/PageNumber';
+import RequiredFieldsText from 'components/RequiredFieldsText';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import {
   ContactDetailsForm,
@@ -330,15 +330,15 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
       <ErrorMessage errors={errors} name="root" as={<Alert type="error" />} />
 
-      <p className="line-height-body-5">
+      <PageHeading className="margin-top-4 margin-bottom-1">
+        {t('contactDetails.heading')}
+      </PageHeading>
+
+      <p className="font-body-lg line-height-body-5 margin-top-0 margin-bottom-2 text-light">
         {t('contactDetails.intakeProcessDescription')}
       </p>
 
-      <MandatoryFieldsAlert className="tablet:grid-col-6" />
-
-      <PageHeading className="margin-bottom-3">
-        {t('contactDetails.heading')}
-      </PageHeading>
+      <RequiredFieldsText className="margin-top-0 margin-bottom-5" />
 
       {systemIntake.requestFormState ===
         SystemIntakeFormState.EDITS_REQUESTED && (
@@ -349,11 +349,18 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         onSubmit={handleSubmit(() =>
           submit(() => history.push('request-details'), true)
         )}
-        className="maxw-none tablet:grid-col-6 margin-bottom-7"
+        className="maxw-none tablet:grid-col-9 margin-bottom-7"
       >
         {/* Requester */}
-        <FormGroup>
-          <Label htmlFor="requesterCommonName">
+        <FormGroup className="border-top border-base-light padding-top-1">
+          <h4 className="text-bold margin-y-0">
+            {t('contactDetails.requesterInformation')}
+          </h4>
+          <Label
+            htmlFor="requesterCommonName"
+            required
+            className="margin-top-3 text-normal"
+          >
             {t('contactDetails.requester')}
           </Label>
           <TextInput
@@ -366,7 +373,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         </FormGroup>
 
         <FormGroup error={!!errors?.requester?.component}>
-          <Label htmlFor="requesterComponent">
+          <Label htmlFor="requesterComponent" required className="text-normal">
             {t('contactDetails.requesterComponent')}
           </Label>
           <ErrorMessage
@@ -388,15 +395,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
         {/* Business Owner */}
 
-        <Fieldset className="margin-top-3">
-          <legend
-            className="text-bold margin-bottom-1"
-            aria-describedby="businessOwnerHelpText"
-          >
-            {t('contactDetails.businessOwner.name')}
-          </legend>
-
-          <HelpText id="businessOwnerHelpText">
+        <Fieldset className="margin-top-3 border-top border-base-light padding-top-1">
+          <h4 className="margin-y-1 text-bold">
+            {t('contactDetails.businessOwner.info')}
+          </h4>
+          <HelpText id="businessOwnerHelpText" className="margin-bottom-2">
             {t('contactDetails.businessOwner.helpText')}
           </HelpText>
 
@@ -407,10 +410,20 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
             label={t('contactDetails.businessOwner.sameAsRequester')}
           />
 
-          <FormGroup error={!!errors?.businessOwner?.commonName}>
-            <Label htmlFor="businessOwnerCommonName">
+          <FormGroup
+            error={!!errors?.businessOwner?.commonName}
+            className="margin-bottom-3"
+          >
+            <Label
+              htmlFor="businessOwnerCommonName"
+              required
+              className="text-normal"
+            >
               {t('contactDetails.businessOwner.nameField')}
             </Label>
+            <HelpText id="businessOwnerCommonName">
+              {t('contactDetails.businessOwner.searchesEUADatabase')}
+            </HelpText>
             <ErrorMessage
               errors={errors}
               name="businessOwner.commonName"
@@ -451,8 +464,15 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
             />
           </FormGroup>
 
-          <FormGroup error={!!errors?.businessOwner?.component}>
-            <Label htmlFor="businessOwnerComponent">
+          <FormGroup
+            error={!!errors?.businessOwner?.component}
+            className="margin-bottom-3"
+          >
+            <Label
+              htmlFor="businessOwnerComponent"
+              required
+              className="text-normal"
+            >
               {t('contactDetails.businessOwner.component')}
             </Label>
             <ErrorMessage
@@ -472,31 +492,15 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               {cmsDivisionsAndOfficesOptions('businessOwner.component')}
             </Select>
           </FormGroup>
-
-          <FormGroup>
-            <Label htmlFor="businessOwnerEmail">
-              {t('contactDetails.businessOwner.email')}
-            </Label>
-            <TextInput
-              {...register('businessOwner.email')}
-              ref={null}
-              id="businessOwnerEmail"
-              type="text"
-              disabled
-            />
-          </FormGroup>
         </Fieldset>
 
         {/* Product Manager */}
-        <Fieldset className="margin-top-3">
-          <legend
-            className="text-bold margin-bottom-1"
-            aria-describedby="productManagerHelpText"
-          >
+        <Fieldset className="margin-top-3 border-top border-base-light padding-top-1">
+          <h4 className="margin-y-1 text-bold">
             {t('contactDetails.productManager.name')}
-          </legend>
+          </h4>
 
-          <HelpText id="productManagerHelpText">
+          <HelpText id="productManagerHelpText" className="margin-bottom-2">
             {t('contactDetails.productManager.helpText')}
           </HelpText>
 
@@ -508,9 +512,16 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           />
 
           <FormGroup error={!!errors?.productManager?.commonName}>
-            <Label htmlFor="productManagerCommonName">
+            <Label
+              htmlFor="productManagerCommonName"
+              required
+              className="text-normal"
+            >
               {t('contactDetails.productManager.nameField')}
             </Label>
+            <HelpText id="productManagerCommonName">
+              {t('contactDetails.businessOwner.searchesEUADatabase')}
+            </HelpText>
             <ErrorMessage
               errors={errors}
               name="productManager.commonName"
@@ -552,7 +563,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           </FormGroup>
 
           <FormGroup error={!!errors?.productManager?.component}>
-            <Label htmlFor="productManagerComponent">
+            <Label
+              htmlFor="productManagerComponent"
+              required
+              className="text-normal"
+            >
               {t('contactDetails.productManager.component')}
             </Label>
             <ErrorMessage
@@ -572,31 +587,26 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               {cmsDivisionsAndOfficesOptions('productManager.component')}
             </Select>
           </FormGroup>
-
-          <FormGroup>
-            <Label htmlFor="productManagerEmail">
-              {t('contactDetails.productManager.email')}
-            </Label>
-            <TextInput
-              {...register('productManager.email')}
-              ref={null}
-              id="productManagerEmail"
-              type="text"
-              disabled
-            />
-          </FormGroup>
         </Fieldset>
 
         {/* Add new contacts */}
-        <AdditionalContacts
-          contacts={contacts.data.additionalContacts}
-          systemIntakeId={systemIntake.id}
-          activeContact={activeContact}
-          setActiveContact={setActiveContact}
-          className="margin-top-4"
-        />
+        {/* TODO: Update to use modal */}
+        <Fieldset className="margin-top-3 border-top border-base-light padding-top-1">
+          <AdditionalContacts
+            contacts={contacts.data.additionalContacts}
+            systemIntakeId={systemIntake.id}
+            activeContact={activeContact}
+            setActiveContact={setActiveContact}
+            className="margin-top-0"
+          />
+        </Fieldset>
 
         {/* Governance Teams */}
+        <div className="margin-top-3 border-top border-base-light padding-top-1">
+          <p className="margin-top-0 margin-bottom-1 text-bold">
+            {t('requestDetails.subsectionHeadings.collaboration')}
+          </p>
+        </div>
 
         <EasiFormProvider<ContactDetailsForm> {...form}>
           <GovernanceTeams />
@@ -606,16 +616,16 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           next={{
             type: 'submit'
           }}
-          border={false}
+          border
           taskListUrl={saveExitLink}
           submit={() => submit(() => history.push(saveExitLink))}
-          className="margin-top-4"
+          className="margin-top-5"
         />
       </Form>
 
       <AutoSave values={watch()} onSave={submit} debounceDelay={3000} />
 
-      <PageNumber currentPage={1} totalPages={5} />
+      <PageNumber currentPage={1} totalPages={5} className="margin-bottom-15" />
     </>
   );
 };
