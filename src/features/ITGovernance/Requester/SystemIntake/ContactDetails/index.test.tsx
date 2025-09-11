@@ -12,7 +12,8 @@ import {
 } from 'gql/generated/graphql';
 import {
   emptySystemIntake,
-  getSystemIntakeQuery
+  getSystemIntakeQuery,
+  requester
 } from 'tests/mock/systemIntake';
 
 import { MockedQuery } from 'types/util';
@@ -32,8 +33,11 @@ const getSystemIntakeContactsQuery: MockedQuery<GetSystemIntakeContactsQuery> =
       data: {
         __typename: 'Query',
         systemIntakeContacts: {
-          __typename: 'SystemIntakeContactsPayload',
-          systemIntakeContacts: []
+          __typename: 'SystemIntakeContacts',
+          requester,
+          businessOwners: [],
+          productManagers: [],
+          additionalContacts: []
         }
       }
     }
@@ -67,6 +71,7 @@ describe('System intake form - Contact details', () => {
 
   it('renders error messages', async () => {
     const user = userEvent.setup();
+
     render(
       <VerboseMockedProvider
         addTypename
@@ -91,10 +96,6 @@ describe('System intake form - Contact details', () => {
     ).toBeInTheDocument();
 
     const errorSummary = screen.getByTestId('contact-details-errors');
-
-    expect(
-      within(errorSummary).getByText("Select the Requester's component")
-    ).toBeInTheDocument();
 
     expect(
       within(errorSummary).getByText(

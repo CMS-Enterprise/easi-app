@@ -13,7 +13,7 @@ import (
 // GetTestPrincipal is a utility function to return a principal for tests
 func GetTestPrincipal(store *storage.Store, userName string, UserSearchClient usersearch.Client, isAdmin bool) *authentication.EUAPrincipal {
 
-	userAccount, _ := userhelpers.GetOrCreateUserAccount(context.Background(), store, store, userName, true, userhelpers.GetUserInfoAccountInfoWrapperFunc(UserSearchClient.FetchUserInfo))
+	userAccount, _ := userhelpers.GetOrCreateUserAccount(context.Background(), store, userName, true, userhelpers.GetUserInfoAccountInfoWrapperFunc(UserSearchClient.FetchUserInfo))
 
 	princ := &authentication.EUAPrincipal{
 		EUAID:           userName,

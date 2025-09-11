@@ -51,18 +51,6 @@ export type AddSystemLinkPayload = {
   systemRelationshipType: Array<SystemRelationshipType>;
 };
 
-/** Represents a contact associated with a system intake, including additional fields from CEDAR */
-export type AugmentedSystemIntakeContact = {
-  __typename: 'AugmentedSystemIntakeContact';
-  commonName?: Maybe<Scalars['String']['output']>;
-  component: Scalars['String']['output'];
-  email?: Maybe<Scalars['EmailAddress']['output']>;
-  euaUserId: Scalars['String']['output'];
-  id: Scalars['UUID']['output'];
-  role: Scalars['String']['output'];
-  systemIntakeId: Scalars['UUID']['output'];
-};
-
 /**
  * A Business Case associated with an system IT governence request; contains
  * equester's justification for their system request
@@ -571,9 +559,10 @@ export type CreateGRBReviewerInput = {
 
 /** The data needed to associate a contact with a system intake */
 export type CreateSystemIntakeContactInput = {
-  component: Scalars['String']['input'];
+  component: SystemIntakeContactComponent;
   euaUserId: Scalars['String']['input'];
-  role: Scalars['String']['input'];
+  isRequester: Scalars['Boolean']['input'];
+  roles: Array<SystemIntakeContactRole>;
   systemIntakeId: Scalars['UUID']['input'];
 };
 
@@ -1766,7 +1755,8 @@ export type Query = {
    * first is currently non-functional and can be removed later
    */
   systemIntake?: Maybe<SystemIntake>;
-  systemIntakeContacts: SystemIntakeContactsPayload;
+  /** This returns a SystemIntakeContacts object. It holds the information about the contacts associated with a specific System Intake. */
+  systemIntakeContacts?: Maybe<SystemIntakeContacts>;
   systemIntakeSystem?: Maybe<SystemIntakeSystem>;
   systemIntakeSystems: Array<SystemIntakeSystem>;
   systemIntakes: Array<SystemIntake>;
@@ -2081,6 +2071,7 @@ export type SystemIntake = {
   cedarSystemId?: Maybe<Scalars['String']['output']>;
   collaborator508?: Maybe<Scalars['String']['output']>;
   collaboratorName508?: Maybe<Scalars['String']['output']>;
+  contacts: SystemIntakeContacts;
   contract: SystemIntakeContract;
   contractName?: Maybe<Scalars['String']['output']>;
   /** Linked contract numbers */
@@ -2327,18 +2318,85 @@ export type SystemIntakeConfirmLCIDInput = {
 /** Represents a contact associated with a system intake */
 export type SystemIntakeContact = {
   __typename: 'SystemIntakeContact';
-  component: Scalars['String']['output'];
-  euaUserId: Scalars['String']['output'];
+  component?: Maybe<SystemIntakeContactComponent>;
+  createdAt: Scalars['Time']['output'];
+  createdBy: Scalars['UUID']['output'];
+  createdByUserAccount: UserAccount;
   id: Scalars['UUID']['output'];
-  role: Scalars['String']['output'];
+  isRequester: Scalars['Boolean']['output'];
+  modifiedAt?: Maybe<Scalars['Time']['output']>;
+  modifiedBy?: Maybe<Scalars['UUID']['output']>;
+  modifiedByUserAccount?: Maybe<UserAccount>;
+  roles: Array<SystemIntakeContactRole>;
   systemIntakeId: Scalars['UUID']['output'];
+  userAccount: UserAccount;
+  userID: Scalars['UUID']['output'];
 };
 
-/** The payload when retrieving system intake contacts */
-export type SystemIntakeContactsPayload = {
-  __typename: 'SystemIntakeContactsPayload';
-  invalidEUAIDs: Array<Scalars['String']['output']>;
-  systemIntakeContacts: Array<AugmentedSystemIntakeContact>;
+export enum SystemIntakeContactComponent {
+  CENTER_FOR_CLINICAL_STANDARDS_AND_QUALITY_CCSQ = 'CENTER_FOR_CLINICAL_STANDARDS_AND_QUALITY_CCSQ',
+  CENTER_FOR_CONSUMER_INFORMATION_AND_INSURANCE_OVERSIGHT_CCIIO = 'CENTER_FOR_CONSUMER_INFORMATION_AND_INSURANCE_OVERSIGHT_CCIIO',
+  CENTER_FOR_MEDICAID_AND_CHIP_SERVICES_CMCS = 'CENTER_FOR_MEDICAID_AND_CHIP_SERVICES_CMCS',
+  CENTER_FOR_MEDICARE_AND_MEDICAID_INNOVATION_CMMI = 'CENTER_FOR_MEDICARE_AND_MEDICAID_INNOVATION_CMMI',
+  CENTER_FOR_MEDICARE_CM = 'CENTER_FOR_MEDICARE_CM',
+  CENTER_FOR_PROGRAM_INTEGRITY_CPI = 'CENTER_FOR_PROGRAM_INTEGRITY_CPI',
+  CMS_WIDE = 'CMS_WIDE',
+  CONSORTIUM_FOR_MEDICAID_AND_CHILDRENS_HEALTH = 'CONSORTIUM_FOR_MEDICAID_AND_CHILDRENS_HEALTH',
+  CONSORTIUM_FOR_MEDICARE_HEALTH_PLANS_OPERATIONS = 'CONSORTIUM_FOR_MEDICARE_HEALTH_PLANS_OPERATIONS',
+  EMERGENCY_PREPAREDNESS_AND_RESPONSE_OPERATIONS_EPRO = 'EMERGENCY_PREPAREDNESS_AND_RESPONSE_OPERATIONS_EPRO',
+  FEDERAL_COORDINATED_HEALTH_CARE_OFFICE = 'FEDERAL_COORDINATED_HEALTH_CARE_OFFICE',
+  OFFICES_OF_HEARINGS_AND_INQUIRIES = 'OFFICES_OF_HEARINGS_AND_INQUIRIES',
+  OFFICE_OF_ACQUISITION_AND_GRANTS_MANAGEMENT_OAGM = 'OFFICE_OF_ACQUISITION_AND_GRANTS_MANAGEMENT_OAGM',
+  OFFICE_OF_BURDEN_REDUCTION_AND_HEALTH_INFORMATICS = 'OFFICE_OF_BURDEN_REDUCTION_AND_HEALTH_INFORMATICS',
+  OFFICE_OF_COMMUNICATIONS_OC = 'OFFICE_OF_COMMUNICATIONS_OC',
+  OFFICE_OF_ENTERPRISE_DATA_AND_ANALYTICS_OEDA = 'OFFICE_OF_ENTERPRISE_DATA_AND_ANALYTICS_OEDA',
+  OFFICE_OF_EQUAL_OPPORTUNITY_AND_CIVIL_RIGHTS = 'OFFICE_OF_EQUAL_OPPORTUNITY_AND_CIVIL_RIGHTS',
+  OFFICE_OF_FINANCIAL_MANAGEMENT_OFM = 'OFFICE_OF_FINANCIAL_MANAGEMENT_OFM',
+  OFFICE_OF_HEALTHCARE_EXPERIENCE_AND_INTEROPERABILITY = 'OFFICE_OF_HEALTHCARE_EXPERIENCE_AND_INTEROPERABILITY',
+  OFFICE_OF_HUMAN_CAPITAL = 'OFFICE_OF_HUMAN_CAPITAL',
+  OFFICE_OF_INFORMATION_TECHNOLOGY_OIT = 'OFFICE_OF_INFORMATION_TECHNOLOGY_OIT',
+  OFFICE_OF_LEGISLATION = 'OFFICE_OF_LEGISLATION',
+  OFFICE_OF_MINORITY_HEALTH_OMH = 'OFFICE_OF_MINORITY_HEALTH_OMH',
+  OFFICE_OF_PROGRAM_OPERATIONS_AND_LOCAL_ENGAGEMENT_OPOLE = 'OFFICE_OF_PROGRAM_OPERATIONS_AND_LOCAL_ENGAGEMENT_OPOLE',
+  OFFICE_OF_SECURITY_FACILITIES_AND_LOGISTICS_OPERATIONS_OSFLO = 'OFFICE_OF_SECURITY_FACILITIES_AND_LOGISTICS_OPERATIONS_OSFLO',
+  OFFICE_OF_STRATEGIC_OPERATIONS_AND_REGULATORY_AFFAIRS_OSORA = 'OFFICE_OF_STRATEGIC_OPERATIONS_AND_REGULATORY_AFFAIRS_OSORA',
+  OFFICE_OF_STRATEGY_PERFORMANCE_AND_RESULTS_OSPR = 'OFFICE_OF_STRATEGY_PERFORMANCE_AND_RESULTS_OSPR',
+  OFFICE_OF_SUPPORT_SERVICES_AND_OPERATIONS = 'OFFICE_OF_SUPPORT_SERVICES_AND_OPERATIONS',
+  OFFICE_OF_THE_ACTUARY_OACT = 'OFFICE_OF_THE_ACTUARY_OACT',
+  OFFICE_OF_THE_ADMINISTRATOR = 'OFFICE_OF_THE_ADMINISTRATOR',
+  OTHER = 'OTHER'
+}
+
+/** SystemIntakeContactRole is the various roles that a user can have as a contact on a system intake */
+export enum SystemIntakeContactRole {
+  BUSINESS_OWNER = 'BUSINESS_OWNER',
+  CLOUD_NAVIGATOR = 'CLOUD_NAVIGATOR',
+  CONTRACTING_OFFICERS_REPRESENTATIVE = 'CONTRACTING_OFFICERS_REPRESENTATIVE',
+  CYBER_RISK_ADVISOR = 'CYBER_RISK_ADVISOR',
+  INFORMATION_SYSTEM_SECURITY_ADVISOR = 'INFORMATION_SYSTEM_SECURITY_ADVISOR',
+  OTHER = 'OTHER',
+  PRIVACY_ADVISOR = 'PRIVACY_ADVISOR',
+  PRODUCT_MANAGER = 'PRODUCT_MANAGER',
+  PRODUCT_OWNER = 'PRODUCT_OWNER',
+  PROJECT_MANAGER = 'PROJECT_MANAGER',
+  SUBJECT_MATTER_EXPERT = 'SUBJECT_MATTER_EXPERT',
+  SYSTEM_MAINTAINER = 'SYSTEM_MAINTAINER',
+  SYSTEM_OWNER = 'SYSTEM_OWNER'
+}
+
+/** This is a convenience struct which surfaces information about the contacts associated with a system intake */
+export type SystemIntakeContacts = {
+  __typename: 'SystemIntakeContacts';
+  /** Returns the additional contacts from the List of Contacts. These are all the contacts except for requester, businessOwners, productManagers */
+  additionalContacts: Array<SystemIntakeContact>;
+  /** Returns all the raw contacts from the List of Contacts */
+  allContacts: Array<SystemIntakeContact>;
+  /** Returns the business owner from the List of Contacts */
+  businessOwners: Array<SystemIntakeContact>;
+  /** Returns the product managers from the List of Contacts */
+  productManagers: Array<SystemIntakeContact>;
+  /** Returns the requester from the List of Contacts. In practice it should only ever be one requester, and should not be empty. However, some legacy data might be missing a requester or have multiple requesters. */
+  requester?: Maybe<SystemIntakeContact>;
 };
 
 /** Represents a contract for work on a system */
@@ -3386,11 +3444,10 @@ export type UpdateSystemIntakeContactDetailsInput = {
 
 /** The data needed to update a contact associated with a system intake */
 export type UpdateSystemIntakeContactInput = {
-  component: Scalars['String']['input'];
-  euaUserId: Scalars['String']['input'];
+  component: SystemIntakeContactComponent;
   id: Scalars['UUID']['input'];
-  role: Scalars['String']['input'];
-  systemIntakeId: Scalars['UUID']['input'];
+  isRequester: Scalars['Boolean']['input'];
+  roles: Array<SystemIntakeContactRole>;
 };
 
 /** Input data for updating contract details related to a system request */
@@ -3641,7 +3698,7 @@ export type FundingSourceFragmentFragment = { __typename: 'SystemIntakeFundingSo
 
 export type GovernanceRequestFeedbackFragmentFragment = { __typename: 'GovernanceRequestFeedback', id: UUID, feedback: HTML, targetForm: GovernanceRequestFeedbackTargetForm, type: GovernanceRequestFeedbackType, createdAt: Time, author?: { __typename: 'UserInfo', commonName: string } | null };
 
-export type SystemIntakeContactFragmentFragment = { __typename: 'AugmentedSystemIntakeContact', systemIntakeId: UUID, id: UUID, euaUserId: string, component: string, role: string, commonName?: string | null, email?: EmailAddress | null };
+export type SystemIntakeContactFragment = { __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component?: SystemIntakeContactComponent | null, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } };
 
 export type SystemIntakeDocumentFragmentFragment = { __typename: 'SystemIntakeDocument', id: UUID, fileName: string, version: SystemIntakeDocumentVersion, status: SystemIntakeDocumentStatus, uploadedAt: Time, url?: string | null, canView: boolean, canDelete: boolean, systemIntakeId: UUID, documentType: { __typename: 'SystemIntakeDocumentType', commonType: SystemIntakeDocumentCommonType, otherTypeDescription?: string | null } };
 
@@ -3656,6 +3713,8 @@ export type SystemIntakeGRBReviewFragment = { __typename: 'SystemIntake', id: UU
 export type TRBAttendeeFragmentFragment = { __typename: 'TRBRequestAttendee', id: UUID, trbRequestId: UUID, component?: string | null, role?: PersonRole | null, createdAt: Time, userInfo?: { __typename: 'UserInfo', commonName: string, email: EmailAddress, euaUserId: string } | null };
 
 export type TrbRequestFormFieldsFragmentFragment = { __typename: 'TRBRequest', id: UUID, name?: string | null, type: TRBRequestType, state: TRBRequestState, taskStatuses: { __typename: 'TRBTaskStatuses', formStatus: TRBFormStatus, feedbackStatus: TRBFeedbackStatus, consultPrepStatus: TRBConsultPrepStatus, attendConsultStatus: TRBAttendConsultStatus, guidanceLetterStatus: TRBGuidanceLetterStatus }, form: { __typename: 'TRBRequestForm', id: UUID, component?: string | null, needsAssistanceWith?: string | null, hasSolutionInMind?: boolean | null, proposedSolution?: string | null, whereInProcess?: TRBWhereInProcessOption | null, whereInProcessOther?: string | null, hasExpectedStartEndDates?: boolean | null, expectedStartDate?: Time | null, expectedEndDate?: Time | null, collabGroups: Array<TRBCollabGroupOption>, collabDateSecurity?: string | null, collabDateEnterpriseArchitecture?: string | null, collabDateCloud?: string | null, collabDatePrivacyAdvisor?: string | null, collabDateGovernanceReviewBoard?: string | null, collabDateOther?: string | null, collabGroupOther?: string | null, collabGRBConsultRequested?: boolean | null, subjectAreaOptions?: Array<TRBSubjectAreaOption> | null, subjectAreaOptionOther?: string | null, submittedAt?: Time | null, fundingSources?: Array<{ __typename: 'TRBFundingSource', id: UUID, fundingNumber: string, source: string }> | null, systemIntakes: Array<{ __typename: 'SystemIntake', id: UUID, requestName?: string | null, lcid?: string | null }> }, feedback: Array<{ __typename: 'TRBRequestFeedback', id: UUID, action: TRBFeedbackAction, feedbackMessage: HTML, createdAt: Time, author: { __typename: 'UserInfo', commonName: string } }>, relatedTRBRequests: Array<{ __typename: 'TRBRequest', id: UUID, name?: string | null, status: TRBRequestStatus, createdAt: Time, contractNumbers: Array<{ __typename: 'TRBRequestContractNumber', contractNumber: string }> }>, relatedIntakes: Array<{ __typename: 'SystemIntake', id: UUID, requestName?: string | null, decisionState: SystemIntakeDecisionState, submittedAt?: Time | null, contractNumbers: Array<{ __typename: 'SystemIntakeContractNumber', contractNumber: string }> }> };
+
+export type UserAccountFragment = { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string };
 
 export type SendFeedbackEmailMutationVariables = Exact<{
   input: SendFeedbackEmailInput;
@@ -3774,28 +3833,28 @@ export type GetSystemIntakeContactsQueryVariables = Exact<{
 }>;
 
 
-export type GetSystemIntakeContactsQuery = { __typename: 'Query', systemIntakeContacts: { __typename: 'SystemIntakeContactsPayload', systemIntakeContacts: Array<{ __typename: 'AugmentedSystemIntakeContact', systemIntakeId: UUID, id: UUID, euaUserId: string, component: string, role: string, commonName?: string | null, email?: EmailAddress | null }> } };
+export type GetSystemIntakeContactsQuery = { __typename: 'Query', systemIntakeContacts?: { __typename: 'SystemIntakeContacts', requester?: { __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component?: SystemIntakeContactComponent | null, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } } | null, businessOwners: Array<{ __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component?: SystemIntakeContactComponent | null, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } }>, productManagers: Array<{ __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component?: SystemIntakeContactComponent | null, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } }>, additionalContacts: Array<{ __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component?: SystemIntakeContactComponent | null, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } }> } | null };
 
 export type CreateSystemIntakeContactMutationVariables = Exact<{
   input: CreateSystemIntakeContactInput;
 }>;
 
 
-export type CreateSystemIntakeContactMutation = { __typename: 'Mutation', createSystemIntakeContact?: { __typename: 'CreateSystemIntakeContactPayload', systemIntakeContact?: { __typename: 'SystemIntakeContact', id: UUID, euaUserId: string, systemIntakeId: UUID, component: string, role: string } | null } | null };
+export type CreateSystemIntakeContactMutation = { __typename: 'Mutation', createSystemIntakeContact?: { __typename: 'CreateSystemIntakeContactPayload', systemIntakeContact?: { __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component?: SystemIntakeContactComponent | null, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } } | null } | null };
 
 export type UpdateSystemIntakeContactMutationVariables = Exact<{
   input: UpdateSystemIntakeContactInput;
 }>;
 
 
-export type UpdateSystemIntakeContactMutation = { __typename: 'Mutation', updateSystemIntakeContact?: { __typename: 'CreateSystemIntakeContactPayload', systemIntakeContact?: { __typename: 'SystemIntakeContact', id: UUID, euaUserId: string, systemIntakeId: UUID, component: string, role: string } | null } | null };
+export type UpdateSystemIntakeContactMutation = { __typename: 'Mutation', updateSystemIntakeContact?: { __typename: 'CreateSystemIntakeContactPayload', systemIntakeContact?: { __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component?: SystemIntakeContactComponent | null, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } } | null } | null };
 
 export type DeleteSystemIntakeContactMutationVariables = Exact<{
   input: DeleteSystemIntakeContactInput;
 }>;
 
 
-export type DeleteSystemIntakeContactMutation = { __typename: 'Mutation', deleteSystemIntakeContact?: { __typename: 'DeleteSystemIntakeContactPayload', systemIntakeContact?: { __typename: 'SystemIntakeContact', id: UUID, euaUserId: string, systemIntakeId: UUID, component: string, role: string } | null } | null };
+export type DeleteSystemIntakeContactMutation = { __typename: 'Mutation', deleteSystemIntakeContact?: { __typename: 'DeleteSystemIntakeContactPayload', systemIntakeContact?: { __typename: 'SystemIntakeContact', systemIntakeId: UUID, id: UUID, component?: SystemIntakeContactComponent | null, roles: Array<SystemIntakeContactRole>, isRequester: boolean, userAccount: { __typename: 'UserAccount', id: UUID, username: string, commonName: string, email: string } } | null } | null };
 
 export type CreateSystemIntakeDocumentMutationVariables = Exact<{
   input: CreateSystemIntakeDocumentInput;
@@ -4702,17 +4761,26 @@ export const CedarRoleTypeFragmentFragmentDoc = gql`
   description
 }
     `;
-export const SystemIntakeContactFragmentFragmentDoc = gql`
-    fragment SystemIntakeContactFragment on AugmentedSystemIntakeContact {
-  systemIntakeId
+export const UserAccountFragmentDoc = gql`
+    fragment UserAccount on UserAccount {
   id
-  euaUserId
-  component
-  role
+  username
   commonName
   email
 }
     `;
+export const SystemIntakeContactFragmentDoc = gql`
+    fragment SystemIntakeContact on SystemIntakeContact {
+  systemIntakeId
+  id
+  userAccount {
+    ...UserAccount
+  }
+  component
+  roles
+  isRequester
+}
+    ${UserAccountFragmentDoc}`;
 export const GovernanceRequestFeedbackFragmentFragmentDoc = gql`
     fragment GovernanceRequestFeedbackFragment on GovernanceRequestFeedback {
   id
@@ -5808,12 +5876,21 @@ export type GetAdminNotesAndActionsQueryResult = Apollo.QueryResult<GetAdminNote
 export const GetSystemIntakeContactsDocument = gql`
     query GetSystemIntakeContacts($id: UUID!) {
   systemIntakeContacts(id: $id) {
-    systemIntakeContacts {
-      ...SystemIntakeContactFragment
+    requester {
+      ...SystemIntakeContact
+    }
+    businessOwners {
+      ...SystemIntakeContact
+    }
+    productManagers {
+      ...SystemIntakeContact
+    }
+    additionalContacts {
+      ...SystemIntakeContact
     }
   }
 }
-    ${SystemIntakeContactFragmentFragmentDoc}`;
+    ${SystemIntakeContactFragmentDoc}`;
 
 /**
  * __useGetSystemIntakeContactsQuery__
@@ -5851,15 +5928,11 @@ export const CreateSystemIntakeContactDocument = gql`
     mutation CreateSystemIntakeContact($input: CreateSystemIntakeContactInput!) {
   createSystemIntakeContact(input: $input) {
     systemIntakeContact {
-      id
-      euaUserId
-      systemIntakeId
-      component
-      role
+      ...SystemIntakeContact
     }
   }
 }
-    `;
+    ${SystemIntakeContactFragmentDoc}`;
 export type CreateSystemIntakeContactMutationFn = Apollo.MutationFunction<CreateSystemIntakeContactMutation, CreateSystemIntakeContactMutationVariables>;
 
 /**
@@ -5890,15 +5963,11 @@ export const UpdateSystemIntakeContactDocument = gql`
     mutation UpdateSystemIntakeContact($input: UpdateSystemIntakeContactInput!) {
   updateSystemIntakeContact(input: $input) {
     systemIntakeContact {
-      id
-      euaUserId
-      systemIntakeId
-      component
-      role
+      ...SystemIntakeContact
     }
   }
 }
-    `;
+    ${SystemIntakeContactFragmentDoc}`;
 export type UpdateSystemIntakeContactMutationFn = Apollo.MutationFunction<UpdateSystemIntakeContactMutation, UpdateSystemIntakeContactMutationVariables>;
 
 /**
@@ -5929,15 +5998,11 @@ export const DeleteSystemIntakeContactDocument = gql`
     mutation DeleteSystemIntakeContact($input: DeleteSystemIntakeContactInput!) {
   deleteSystemIntakeContact(input: $input) {
     systemIntakeContact {
-      id
-      euaUserId
-      systemIntakeId
-      component
-      role
+      ...SystemIntakeContact
     }
   }
 }
-    `;
+    ${SystemIntakeContactFragmentDoc}`;
 export type DeleteSystemIntakeContactMutationFn = Apollo.MutationFunction<DeleteSystemIntakeContactMutation, DeleteSystemIntakeContactMutationVariables>;
 
 /**
@@ -11367,7 +11432,8 @@ export type UpdateTRBRequestTypeMutationResult = Apollo.MutationResult<UpdateTRB
 export type UpdateTRBRequestTypeMutationOptions = Apollo.BaseMutationOptions<UpdateTRBRequestTypeMutation, UpdateTRBRequestTypeMutationVariables>;
 export const TypedCedarRoleFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CedarRoleFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CedarRole"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"application"}},{"kind":"Field","name":{"kind":"Name","value":"objectID"}},{"kind":"Field","name":{"kind":"Name","value":"roleTypeID"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeType"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeUsername"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeEmail"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeOrgID"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeOrgName"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeFirstName"}},{"kind":"Field","name":{"kind":"Name","value":"assigneeLastName"}},{"kind":"Field","name":{"kind":"Name","value":"roleTypeName"}},{"kind":"Field","name":{"kind":"Name","value":"roleID"}}]}}]} as unknown as DocumentNode<CedarRoleFragmentFragment, unknown>;
 export const TypedCedarRoleTypeFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CedarRoleTypeFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CedarRoleType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}}]} as unknown as DocumentNode<CedarRoleTypeFragmentFragment, unknown>;
-export const TypedSystemIntakeContactFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeContactFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AugmentedSystemIntakeContact"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakeId"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]} as unknown as DocumentNode<SystemIntakeContactFragmentFragment, unknown>;
+export const TypedUserAccountFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserAccount"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"UserAccount"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]} as unknown as DocumentNode<UserAccountFragment, unknown>;
+export const TypedSystemIntakeContactFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeContact"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeContact"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakeId"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userAccount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"UserAccount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"roles"}},{"kind":"Field","name":{"kind":"Name","value":"isRequester"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserAccount"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"UserAccount"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]} as unknown as DocumentNode<SystemIntakeContactFragment, unknown>;
 export const TypedGovernanceRequestFeedbackFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"GovernanceRequestFeedbackFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"GovernanceRequestFeedback"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"feedback"}},{"kind":"Field","name":{"kind":"Name","value":"targetForm"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]} as unknown as DocumentNode<GovernanceRequestFeedbackFragmentFragment, unknown>;
 export const TypedFundingSourceFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FundingSourceFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeFundingSource"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"projectNumber"}},{"kind":"Field","name":{"kind":"Name","value":"investment"}}]}}]} as unknown as DocumentNode<FundingSourceFragmentFragment, unknown>;
 export const TypedSystemIntakeDocumentFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeDocumentFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeDocument"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"documentType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonType"}},{"kind":"Field","name":{"kind":"Name","value":"otherTypeDescription"}}]}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fileName"}},{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"uploadedAt"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"canView"}},{"kind":"Field","name":{"kind":"Name","value":"canDelete"}},{"kind":"Field","name":{"kind":"Name","value":"systemIntakeId"}}]}}]} as unknown as DocumentNode<SystemIntakeDocumentFragmentFragment, unknown>;
@@ -11403,10 +11469,10 @@ export const TypedCreateSystemIntakeActionRetireLcidDocument = {"kind":"Document
 export const TypedCreateSystemIntakeActionUnretireLCIDDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateSystemIntakeActionUnretireLCID"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeUnretireLCIDInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createSystemIntakeActionUnretireLCID"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"lcid"}}]}}]}}]}}]} as unknown as DocumentNode<CreateSystemIntakeActionUnretireLCIDMutation, CreateSystemIntakeActionUnretireLCIDMutationVariables>;
 export const TypedCreateSystemIntakeActionUpdateLCIDDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateSystemIntakeActionUpdateLCID"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeUpdateLCIDInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createSystemIntakeActionUpdateLCID"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"lcid"}}]}}]}}]}}]} as unknown as DocumentNode<CreateSystemIntakeActionUpdateLCIDMutation, CreateSystemIntakeActionUpdateLCIDMutationVariables>;
 export const TypedGetAdminNotesAndActionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAdminNotesAndActions"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"lcid"}},{"kind":"Field","name":{"kind":"Name","value":"notes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"editor"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"modifiedBy"}},{"kind":"Field","name":{"kind":"Name","value":"modifiedAt"}},{"kind":"Field","name":{"kind":"Name","value":"isArchived"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"eua"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"actions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"feedback"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"lcidExpirationChange"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"previousDate"}},{"kind":"Field","name":{"kind":"Name","value":"newDate"}},{"kind":"Field","name":{"kind":"Name","value":"previousScope"}},{"kind":"Field","name":{"kind":"Name","value":"newScope"}},{"kind":"Field","name":{"kind":"Name","value":"previousNextSteps"}},{"kind":"Field","name":{"kind":"Name","value":"newNextSteps"}},{"kind":"Field","name":{"kind":"Name","value":"previousCostBaseline"}},{"kind":"Field","name":{"kind":"Name","value":"newCostBaseline"}}]}},{"kind":"Field","name":{"kind":"Name","value":"actor"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetAdminNotesAndActionsQuery, GetAdminNotesAndActionsQueryVariables>;
-export const TypedGetSystemIntakeContactsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSystemIntakeContacts"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakeContacts"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakeContacts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeContactFragment"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeContactFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AugmentedSystemIntakeContact"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakeId"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]} as unknown as DocumentNode<GetSystemIntakeContactsQuery, GetSystemIntakeContactsQueryVariables>;
-export const TypedCreateSystemIntakeContactDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateSystemIntakeContact"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateSystemIntakeContactInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createSystemIntakeContact"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakeContact"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}},{"kind":"Field","name":{"kind":"Name","value":"systemIntakeId"}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}}]}}]}}]} as unknown as DocumentNode<CreateSystemIntakeContactMutation, CreateSystemIntakeContactMutationVariables>;
-export const TypedUpdateSystemIntakeContactDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateSystemIntakeContact"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateSystemIntakeContactInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateSystemIntakeContact"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakeContact"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}},{"kind":"Field","name":{"kind":"Name","value":"systemIntakeId"}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateSystemIntakeContactMutation, UpdateSystemIntakeContactMutationVariables>;
-export const TypedDeleteSystemIntakeContactDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteSystemIntakeContact"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DeleteSystemIntakeContactInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteSystemIntakeContact"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakeContact"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"euaUserId"}},{"kind":"Field","name":{"kind":"Name","value":"systemIntakeId"}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}}]}}]}}]} as unknown as DocumentNode<DeleteSystemIntakeContactMutation, DeleteSystemIntakeContactMutationVariables>;
+export const TypedGetSystemIntakeContactsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSystemIntakeContacts"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakeContacts"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"requester"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeContact"}}]}},{"kind":"Field","name":{"kind":"Name","value":"businessOwners"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeContact"}}]}},{"kind":"Field","name":{"kind":"Name","value":"productManagers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeContact"}}]}},{"kind":"Field","name":{"kind":"Name","value":"additionalContacts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeContact"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserAccount"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"UserAccount"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeContact"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeContact"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakeId"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userAccount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"UserAccount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"roles"}},{"kind":"Field","name":{"kind":"Name","value":"isRequester"}}]}}]} as unknown as DocumentNode<GetSystemIntakeContactsQuery, GetSystemIntakeContactsQueryVariables>;
+export const TypedCreateSystemIntakeContactDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateSystemIntakeContact"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateSystemIntakeContactInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createSystemIntakeContact"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakeContact"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeContact"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserAccount"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"UserAccount"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeContact"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeContact"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakeId"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userAccount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"UserAccount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"roles"}},{"kind":"Field","name":{"kind":"Name","value":"isRequester"}}]}}]} as unknown as DocumentNode<CreateSystemIntakeContactMutation, CreateSystemIntakeContactMutationVariables>;
+export const TypedUpdateSystemIntakeContactDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateSystemIntakeContact"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateSystemIntakeContactInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateSystemIntakeContact"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakeContact"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeContact"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserAccount"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"UserAccount"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeContact"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeContact"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakeId"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userAccount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"UserAccount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"roles"}},{"kind":"Field","name":{"kind":"Name","value":"isRequester"}}]}}]} as unknown as DocumentNode<UpdateSystemIntakeContactMutation, UpdateSystemIntakeContactMutationVariables>;
+export const TypedDeleteSystemIntakeContactDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteSystemIntakeContact"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DeleteSystemIntakeContactInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteSystemIntakeContact"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakeContact"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeContact"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserAccount"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"UserAccount"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"commonName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeContact"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeContact"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntakeId"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userAccount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"UserAccount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"roles"}},{"kind":"Field","name":{"kind":"Name","value":"isRequester"}}]}}]} as unknown as DocumentNode<DeleteSystemIntakeContactMutation, DeleteSystemIntakeContactMutationVariables>;
 export const TypedCreateSystemIntakeDocumentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateSystemIntakeDocument"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateSystemIntakeDocumentInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createSystemIntakeDocument"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"document"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeDocumentFragment"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeDocumentFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeDocument"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"documentType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonType"}},{"kind":"Field","name":{"kind":"Name","value":"otherTypeDescription"}}]}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fileName"}},{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"uploadedAt"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"canView"}},{"kind":"Field","name":{"kind":"Name","value":"canDelete"}},{"kind":"Field","name":{"kind":"Name","value":"systemIntakeId"}}]}}]} as unknown as DocumentNode<CreateSystemIntakeDocumentMutation, CreateSystemIntakeDocumentMutationVariables>;
 export const TypedDeleteSystemIntakeDocumentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteSystemIntakeDocument"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteSystemIntakeDocument"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"document"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SystemIntakeDocumentFragment"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SystemIntakeDocumentFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemIntakeDocument"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"documentType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commonType"}},{"kind":"Field","name":{"kind":"Name","value":"otherTypeDescription"}}]}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fileName"}},{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"uploadedAt"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"canView"}},{"kind":"Field","name":{"kind":"Name","value":"canDelete"}},{"kind":"Field","name":{"kind":"Name","value":"systemIntakeId"}}]}}]} as unknown as DocumentNode<DeleteSystemIntakeDocumentMutation, DeleteSystemIntakeDocumentMutationVariables>;
 export const TypedGetSystemIntakeDocumentUrlsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSystemIntakeDocumentUrls"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"systemIntake"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"documents"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"fileName"}}]}}]}}]}}]} as unknown as DocumentNode<GetSystemIntakeDocumentUrlsQuery, GetSystemIntakeDocumentUrlsQueryVariables>;

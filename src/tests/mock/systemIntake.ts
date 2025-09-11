@@ -1,4 +1,7 @@
 import {
+  GetCedarContactsDocument,
+  GetCedarContactsQuery,
+  GetCedarContactsQueryVariables,
   GetGovernanceTaskListDocument,
   GetGovernanceTaskListQuery,
   GetGovernanceTaskListQueryVariables,
@@ -20,7 +23,9 @@ import {
   ITGovGRBStatus,
   ITGovGRTStatus,
   ITGovIntakeFormStatus,
-  SystemIntakeContact,
+  SystemIntakeContactComponent,
+  SystemIntakeContactFragment,
+  SystemIntakeContactRole,
   SystemIntakeDecisionState,
   SystemIntakeDocumentCommonType,
   SystemIntakeDocumentFragmentFragment,
@@ -41,66 +46,45 @@ import {
 } from 'gql/generated/graphql';
 import { DateTime } from 'luxon';
 
-import { CMSOffice } from 'constants/enums/cmsDivisionsAndOffices';
 import { MockedQuery } from 'types/util';
 
 import users from './users';
 
-type ContactRole =
-  | 'Requester'
-  | 'Business Owner'
-  | 'Product Manager'
-  | 'ISSO'
-  | 'Product Owner'
-  | 'System Owner'
-  | 'System Maintainer'
-  | 'Contracting Officer’s Representative (COR)'
-  | 'Cloud Navigator'
-  | 'Privacy Advisor'
-  | 'CRA'
-  | 'Other';
-
-export interface MockSystemIntakeContact extends SystemIntakeContact {
-  component: CMSOffice;
-  role: ContactRole;
-  commonName: string;
-  email: string;
-}
-
 const systemIntakeId = 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2';
 
-const contacts: MockSystemIntakeContact[] = users.slice(0, 4).map(userInfo => ({
-  __typename: 'SystemIntakeContact',
-  systemIntakeId,
-  id: `systemIntakeContact-${userInfo.euaUserId}`,
-  euaUserId: userInfo.euaUserId,
-  commonName: userInfo.commonName,
-  email: userInfo.email,
-  component: 'CMS Wide',
-  role: 'Other'
-}));
+const contacts: SystemIntakeContactFragment[] = users
+  .slice(0, 4)
+  .map(userInfo => ({
+    __typename: 'SystemIntakeContact',
+    systemIntakeId,
+    id: `systemIntakeContact-${userInfo.euaUserId}`,
+    userAccount: {
+      __typename: 'UserAccount',
+      id: `userAccount-${userInfo.euaUserId}`,
+      username: userInfo.euaUserId,
+      commonName: userInfo.commonName,
+      email: userInfo.email
+    },
+    component: SystemIntakeContactComponent.CMS_WIDE,
+    roles: [SystemIntakeContactRole.OTHER],
+    isRequester: false
+  }));
 
-export const requester: MockSystemIntakeContact = {
+export const requester: SystemIntakeContactFragment = {
   ...contacts[0],
-  role: 'Requester'
+  isRequester: true
 };
 
-const businessOwner: MockSystemIntakeContact = {
+export const businessOwner: SystemIntakeContactFragment = {
   ...contacts[1],
-  role: 'Business Owner',
-  component: 'Center for Medicare'
+  roles: [SystemIntakeContactRole.BUSINESS_OWNER],
+  component: SystemIntakeContactComponent.CENTER_FOR_MEDICARE_CM
 };
 
-export const productManager: MockSystemIntakeContact = {
+export const productManager: SystemIntakeContactFragment = {
   ...contacts[2],
-  role: 'Product Manager',
-  component: 'Office of Legislation'
-};
-
-const isso: MockSystemIntakeContact = {
-  ...contacts[3],
-  role: 'ISSO',
-  component: 'Office of Communications'
+  roles: [SystemIntakeContactRole.PRODUCT_MANAGER],
+  component: SystemIntakeContactComponent.OFFICE_OF_LEGISLATION
 };
 
 export const documents: SystemIntakeDocumentFragmentFragment[] = [
@@ -230,13 +214,13 @@ export const emptySystemIntake: SystemIntakeFragmentFragment = {
   __typename: 'SystemIntake',
   requestName: null,
   id: systemIntakeId,
-  euaUserId: requester.euaUserId,
+  euaUserId: requester.userAccount.username,
   adminLead: '',
   statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_IN_PROGRESS,
   statusRequester: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_IN_PROGRESS,
   requester: {
     __typename: 'SystemIntakeRequester',
-    name: requester.commonName!,
+    name: requester.userAccount.commonName!,
     component: null,
     email: null
   },
@@ -366,25 +350,25 @@ export const systemIntake: SystemIntakeFragmentFragment = {
   __typename: 'SystemIntake',
   requestName: 'Mock System Intake Request',
   id: systemIntakeId,
-  euaUserId: requester.euaUserId,
+  euaUserId: requester.userAccount.username,
   adminLead: '',
   statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_SUBMITTED,
   statusRequester: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_SUBMITTED,
   requester: {
     __typename: 'SystemIntakeRequester',
-    name: requester.commonName!,
+    name: requester.userAccount.commonName!,
     component: requester.component,
-    email: requester.email
+    email: requester.userAccount.email
   },
   requestType: SystemIntakeRequestType.NEW,
   businessOwner: {
     __typename: 'SystemIntakeBusinessOwner',
-    name: businessOwner.commonName,
+    name: businessOwner.userAccount.commonName,
     component: businessOwner.component
   },
   productManager: {
     __typename: 'SystemIntakeProductManager',
-    name: productManager.commonName,
+    name: productManager.userAccount.commonName,
     component: productManager.component
   },
   governanceTeams: {
@@ -527,7 +511,8 @@ export const systemIntake: SystemIntakeFragmentFragment = {
   },
   grbReviewAsyncEndDate: null,
   grbReviewStartedAt: null,
-  systemIntakeSystems: []
+  systemIntakeSystems: [],
+  doesNotSupportSystems: null
 };
 
 export const systemIntakeForTable: GetSystemIntakesTableQuery['systemIntakes'][number] =
@@ -644,25 +629,28 @@ export const getSystemIntakesWithLcidsQuery: MockedQuery<GetSystemIntakesWithLCI
     }
   };
 
-export const getSystemIntakeContactsQuery: MockedQuery<GetSystemIntakeContactsQuery> =
-  {
-    request: {
-      query: GetSystemIntakeContactsDocument,
-      variables: {
-        id: systemIntakeId
-      }
-    },
-    result: {
-      // @ts-ignore
-      data: {
-        __typename: 'Query',
-        systemIntakeContacts: {
-          __typename: 'SystemIntakeContactsPayload',
-          systemIntakeContacts: [requester, businessOwner, isso]
-        }
+export const getSystemIntakeContactsQuery = (
+  additionalContacts: SystemIntakeContactFragment[] = []
+): MockedQuery<GetSystemIntakeContactsQuery> => ({
+  request: {
+    query: GetSystemIntakeContactsDocument,
+    variables: {
+      id: systemIntakeId
+    }
+  },
+  result: {
+    data: {
+      __typename: 'Query',
+      systemIntakeContacts: {
+        __typename: 'SystemIntakeContacts',
+        requester,
+        businessOwners: [businessOwner],
+        productManagers: [productManager],
+        additionalContacts
       }
     }
-  };
+  }
+});
 
 export const taskListSystemIntake: NonNullable<
   GetGovernanceTaskListQuery['systemIntake']
@@ -788,3 +776,21 @@ export const systemIntakesWithReviewRequested: SystemIntakeWithReviewRequestedFr
       __typename: 'SystemIntake'
     }
   ];
+
+export const getCedarContactsQuery = (
+  commonName: string,
+  contact: GetCedarContactsQuery['cedarPersonsByCommonName'][number]
+): MockedQuery<GetCedarContactsQuery, GetCedarContactsQueryVariables> => ({
+  request: {
+    query: GetCedarContactsDocument,
+    variables: {
+      commonName
+    }
+  },
+  result: {
+    data: {
+      __typename: 'Query',
+      cedarPersonsByCommonName: [contact]
+    }
+  }
+});

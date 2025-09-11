@@ -1,0 +1,60 @@
+meta {
+  name: Update SystemIntakeContact
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation UpdateSystemIntakeContact($input: UpdateSystemIntakeContactInput!) {
+    updateSystemIntakeContact(input: $input) {
+      systemIntakeContact {
+        id
+        userAccount {
+          username
+          commonName
+        }
+        systemIntakeId
+        component
+        roles
+        isRequester
+  
+        #
+        createdBy
+        createdByUserAccount {
+          username
+          commonName
+        }
+        createdAt
+        modifiedBy
+        modifiedByUserAccount{
+          username
+          commonName
+        }
+        modifiedAt
+      }
+      __typename
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "id": "{{systemIntakeContactID}}",
+      "component": "CENTER_FOR_CLINICAL_STANDARDS_AND_QUALITY_CCSQ",
+      "roles": ["BUSINESS_OWNER","PRODUCT_MANAGER"],
+      "isRequester": false
+    }
+  }
+}
+
+settings {
+  encodeUrl: true
+}

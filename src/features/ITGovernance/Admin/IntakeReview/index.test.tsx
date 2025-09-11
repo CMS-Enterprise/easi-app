@@ -32,7 +32,7 @@ describe('The GRT intake review view', () => {
     render(
       <MemoryRouter>
         <MockedProvider
-          mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery]}
+          mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery()]}
         >
           <MessageProvider>
             <IntakeReview systemIntake={systemIntake} />
@@ -49,7 +49,7 @@ describe('The GRT intake review view', () => {
         initialEntries={[`/it-governance/${systemIntake.id}/intake-request`]}
       >
         <MockedProvider
-          mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery]}
+          mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery()]}
         >
           <Route path={['/it-governance/:systemId/intake-request']}>
             <MessageProvider>
@@ -61,7 +61,9 @@ describe('The GRT intake review view', () => {
     );
 
     expect(
-      await screen.findByTestId(`contact-requester-${requester.euaUserId}`)
+      await screen.findByTestId(
+        `contact-requester-${requester.userAccount.username}`
+      )
     ).toBeInTheDocument();
 
     expect(asFragment()).toMatchSnapshot();
@@ -79,7 +81,7 @@ describe('The GRT intake review view', () => {
         <VerboseMockedProvider
           mocks={[
             getSystemIntakeQuery({ costs }),
-            getSystemIntakeContactsQuery
+            getSystemIntakeContactsQuery()
           ]}
         >
           <MessageProvider>
@@ -111,7 +113,7 @@ describe('The GRT intake review view', () => {
         <MockedProvider
           mocks={[
             getSystemIntakeQuery({ annualSpending }),
-            getSystemIntakeContactsQuery
+            getSystemIntakeContactsQuery()
           ]}
         >
           <MessageProvider>
@@ -136,7 +138,7 @@ describe('The GRT intake review view', () => {
         initialEntries={[`/it-governance/${systemIntake.id}/intake-request`]}
       >
         <MockedProvider
-          mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery]}
+          mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery()]}
         >
           <Route path={['/it-governance/:systemId/intake-request']}>
             <MessageProvider>
@@ -150,7 +152,9 @@ describe('The GRT intake review view', () => {
     );
 
     expect(
-      await screen.findByTestId(`contact-requester-${requester.euaUserId}`)
+      await screen.findByTestId(
+        `contact-requester-${requester.userAccount.username}`
+      )
     ).toBeInTheDocument();
 
     expect(

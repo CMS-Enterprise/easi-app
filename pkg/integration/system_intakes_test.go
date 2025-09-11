@@ -14,6 +14,7 @@ import (
 	"github.com/guregu/null"
 
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
@@ -34,7 +35,7 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		RequestType: models.SystemIntakeRequestTypeNEW,
 		EUAUserID:   null.StringFrom(s.user.euaID),
 	}
-	createdIntake, _ := s.store.CreateSystemIntake(context.Background(), &systemIntake)
+	createdIntake, _ := storage.CreateSystemIntake(context.Background(), s.store, &systemIntake)
 	id := createdIntake.ID
 
 	s.Run("PUT will succeed first time with token", func() {

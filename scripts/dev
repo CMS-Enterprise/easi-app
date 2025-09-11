@@ -345,46 +345,54 @@ namespace :db do
   # Make sure this list of tables matches the list in pkg/storage/truncate.go
   desc "Deletes all rows from all tables and all files in Minio (S3)"
   task :clean do
-    tables = %w{
-      cedar_system_bookmarks
-      trb_request_funding_sources
-      trb_request_system_intakes
-      accessibility_request_status_records
-      accessibility_request_notes
-      accessibility_request_documents
-      test_dates
-      accessibility_requests
-      notes
-      actions
-      estimated_lifecycle_costs
-      business_cases
-      governance_request_feedback
-      system_intake_grb_presentation_links
-      system_intake_grb_reviewers
-      system_intake_internal_grb_review_discussion_posts
-      system_intake_contacts
-      system_intake_funding_sources
-      system_intake_documents
-      system_intake_contract_numbers
-      system_intake_systems
-      system_intakes
-      trb_admin_notes_trb_request_documents_links
-      trb_admin_notes_trb_admin_note_insights_links
-      trb_lead_options
-      trb_request_documents
-      trb_request_forms
-      trb_request_attendees
-      trb_request_feedback
-      trb_guidance_letter_insights
-      trb_admin_notes
-      trb_guidance_letters
-      trb_request_contract_numbers
-      trb_request_systems
-      trb_request
-    }
-    sql = tables.map { |table| "DELETE FROM #{table};" }.join
+    tableList = "
+      cedar_system_bookmarks,
+      trb_request_funding_sources,
+      trb_request_system_intakes,
+      accessibility_request_status_records,
+      accessibility_request_notes,
+      accessibility_request_documents,
+      test_dates,
+      accessibility_requests,
+      notes,
+      actions,
+      estimated_lifecycle_costs,
+      business_cases,
+      governance_request_feedback,
+      system_intake_grb_presentation_links,
+      system_intake_grb_reviewers,
+      system_intake_internal_grb_review_discussion_posts,
+      system_intake_contacts,
+      system_intake_contacts_legacy,
+      system_intake_funding_sources,
+      system_intake_documents,
+      system_intake_contract_numbers,
+      system_intake_systems,
+      system_intakes,
+      trb_admin_notes_trb_request_documents_links,
+      trb_admin_notes_trb_admin_note_insights_links,
+      trb_lead_options,
+      trb_request_documents,
+      trb_request_forms,
+      trb_request_attendees,
+      trb_request_feedback,
+      trb_guidance_letter_insights,
+      trb_admin_notes,
+      trb_guidance_letters,
+      trb_request_contract_numbers,
+      trb_request_systems,
+      trb_request"
+    
     puts "Cleaning database..."
-    `echo "#{sql}" | psql`
+    `echo "TRUNCATE #{tableList}" | psql`
+    # TODO, switch this to use the storage truncate function
+
+    #remove all non system accounts
+    systemAccounts =  "( 'UNKNOWN_USER','MINT_SYSTEM')"
+
+    # remove accounts
+    `echo "DELETE FROM user_account WHERE username NOT IN #{systemAccounts}" | psql`
+
 
     # Delete all files from Minio
     puts "Cleaning Minio file storage..."
