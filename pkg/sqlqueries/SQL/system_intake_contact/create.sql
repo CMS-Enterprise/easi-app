@@ -6,7 +6,6 @@ INSERT INTO system_intake_contacts (
     roles,
     is_requester,
     created_by
-
 )
 VALUES (
     :id,
