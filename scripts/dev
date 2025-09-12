@@ -388,7 +388,7 @@ namespace :db do
     # TODO, switch this to use the storage truncate function
 
     #remove all non system accounts
-    systemAccounts =  "( 'UNKNOWN_USER','MINT_SYSTEM')"
+    systemAccounts =  "( 'UNKNOWN_USER','EASI_SYSTEM')"
 
     # remove accounts
     `echo "DELETE FROM user_account WHERE username NOT IN #{systemAccounts}" | psql`
