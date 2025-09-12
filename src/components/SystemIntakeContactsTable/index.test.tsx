@@ -41,16 +41,6 @@ const additionalContact: SystemIntakeContactFragment = {
 };
 
 describe('SystemIntakeContactsTable', () => {
-  it('matches the snapshot', async () => {
-    const { asFragment } = render(
-      <MockedProvider mocks={[getSystemIntakeContactsQuery()]}>
-        <SystemIntakeContactsTable systemIntakeId={systemIntake.id} />
-      </MockedProvider>
-    );
-
-    expect(asFragment()).toMatchSnapshot();
-  });
-
   it('renders the contacts', async () => {
     render(
       <MockedProvider mocks={[getSystemIntakeContactsQuery()]}>

@@ -191,7 +191,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
                           data-testid="tooltipWrapper"
                         >
                           <button
-                            aria-describedby="tooltip-975969"
+                            aria-describedby="tooltip-550000"
                             class="usa-button usa-tooltip__trigger padding-0 margin-0 margin-top-1 bg-transparent outline-0"
                             data-testid="triggerElement"
                             tabindex="0"
@@ -217,7 +217,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
                             aria-hidden="true"
                             class="usa-tooltip__body"
                             data-testid="tooltipBody"
-                            id="tooltip-975969"
+                            id="tooltip-550000"
                             role="tooltip"
                             title="This individual is the primary requester. Primary requesters are able to edit IT governance requests in EASi."
                           >
