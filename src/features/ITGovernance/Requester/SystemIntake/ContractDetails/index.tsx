@@ -7,12 +7,17 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Fieldset,
   Form,
+  InputGroup,
+  InputPrefix,
+  InputSuffix,
   Label,
   Radio,
+  RequiredMarker,
   TextInput
 } from '@trussworks/react-uswds';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
 import {
+  ContractDate,
   GetSystemIntakeDocument,
   SystemIntakeFormState,
   SystemIntakeFragmentFragment,
@@ -33,9 +38,9 @@ import {
   formatFundingSourcesForApp
 } from 'components/FundingSources/utils';
 import HelpText from 'components/HelpText';
-import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
+import RequiredFieldsText from 'components/RequiredFieldsText';
 import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
 import { ContractDetailsForm } from 'types/systemIntake';
 import flattenFormErrors from 'utils/flattenFormErrors';
@@ -46,20 +51,32 @@ import ContractFields from './ContractFields';
 
 import './index.scss';
 
-/** Converts contract date object to ISO */
-const contractDateToISO = ({
-  month,
-  day,
-  year
-}: ContractDetailsForm['contract']['startDate']) =>
-  DateTime.fromObject(
-    {
-      day: Number(day) || 0,
-      month: Number(month) || 0,
-      year: Number(year) || 0
-    },
-    { zone: 'UTC' }
-  ).toISO();
+/**
+ * Convert ISO string or generated GQL ContractDate into a normalized UTC ISO string.
+ * Returns null if invalid/absent.
+ */
+const toIsoOrNull = (d?: string | ContractDate | null): string | null => {
+  if (!d) return null;
+
+  if (typeof d === 'string') {
+    const trimmed = d.trim();
+    if (!trimmed) return null;
+    const dt = DateTime.fromISO(trimmed, { zone: 'utc' });
+    return dt.isValid ? dt.toISO() : null;
+  }
+
+  const { year, month, day } = d;
+  if (!year || !month || !day) return null;
+
+  const dt = DateTime.fromObject(
+    { year: Number(year), month: Number(month), day: Number(day) },
+    { zone: 'utc' }
+  );
+  return dt.isValid ? dt.toISO() : null;
+};
+
+// For API payloads we want ISO or null; the same helper works.
+const contractDateToISOForApi = toIsoOrNull;
 
 type ContractDetailsProps = {
   systemIntake: SystemIntakeFragmentFragment;
@@ -82,9 +99,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
     refetchQueries: [
       {
         query: GetSystemIntakeDocument,
-        variables: {
-          id
-        }
+        variables: { id }
       }
     ]
   });
@@ -104,17 +119,9 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
       },
       contract: {
         contractor: contract.contractor || '',
-        endDate: {
-          day: contract.endDate.day || '',
-          month: contract.endDate.month || '',
-          year: contract.endDate.year || ''
-        },
         hasContract: contract.hasContract as SystemIntakeContractStatus,
-        startDate: {
-          day: contract.startDate.day || '',
-          month: contract.startDate.month || '',
-          year: contract.startDate.year || ''
-        },
+        startDate: toIsoOrNull(contract.startDate),
+        endDate: toIsoOrNull(contract.endDate),
         numbers: formatContractNumbers(contractNumbers)
       }
     }
@@ -131,20 +138,15 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
   const hasContract = watch('contract.hasContract');
 
   const saveExitLink = (() => {
-    let link = '';
-    if (systemIntake.requestType === 'SHUTDOWN') {
-      link = '/';
-    } else {
-      link = `/governance-task-list/${systemIntake.id}`;
-    }
-    return link;
+    if (systemIntake.requestType === 'SHUTDOWN') return '/';
+    return `/governance-task-list/${systemIntake.id}`;
   })();
 
   const updateSystemIntake = useCallback(async () => {
     const values = watch();
     const payload = { ...values };
 
-    // Clear contract subfields
+    // Clear contract subfields if not applicable
     if (
       hasContract === SystemIntakeContractStatus.NOT_STARTED ||
       hasContract === SystemIntakeContractStatus.NOT_NEEDED
@@ -153,16 +155,8 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
         ...values.contract,
         numbers: '',
         contractor: '',
-        startDate: {
-          month: '',
-          day: '',
-          year: ''
-        },
-        endDate: {
-          month: '',
-          day: '',
-          year: ''
-        }
+        startDate: null,
+        endDate: null
       };
     }
 
@@ -177,8 +171,9 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
           annualSpending: payload.annualSpending,
           contract: {
             ...payload.contract,
-            startDate: contractDateToISO(payload.contract.startDate),
-            endDate: contractDateToISO(payload.contract.endDate),
+            // Convert to ISO or null for API
+            startDate: contractDateToISOForApi(payload.contract.startDate),
+            endDate: contractDateToISOForApi(payload.contract.endDate),
             numbers:
               payload.contract.numbers.length > 0
                 ? payload.contract.numbers.split(',').map(c => c.trim())
@@ -195,19 +190,16 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
   ) => {
     if (!isDirty) callback();
 
-    // Update intake
     const result = await updateSystemIntake();
 
     if (!result?.errors) return callback();
 
-    // If validating form, show error on server error
     if (validate) {
       return setError('root', {
         message: t('error:encounteredIssueTryAgain')
       });
     }
 
-    // If skipping errors, return callback
     return callback();
   };
 
@@ -220,7 +212,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
       ...(errors?.contract?.startDate && {
         'contract.startDate': errors?.contract?.startDate
       }),
-      ...(errors?.contract?.startDate && {
+      ...(errors?.contract?.endDate && {
         'contract.endDate': errors?.contract?.endDate
       })
     } as FieldErrors<ContractDetailsForm>);
@@ -261,9 +253,12 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
 
       <ErrorMessage errors={errors} name="root" as={<Alert type="error" />} />
 
-      <PageHeading className="margin-bottom-3">
+      <PageHeading className="margin-top-4 margin-bottom-1">
         {t('contractDetails.heading')}
       </PageHeading>
+      <p className="font-body-lg line-height-body-5 margin-top-0 margin-bottom-2 text-light">
+        {t('contractDetails.description')}
+      </p>
 
       {systemIntake.requestFormState ===
         SystemIntakeFormState.EDITS_REQUESTED && (
@@ -274,22 +269,25 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
         />
       )}
 
-      <MandatoryFieldsAlert className="tablet:grid-col-6" />
+      <RequiredFieldsText className="margin-top-0 margin-bottom-5" />
 
       <EasiFormProvider<ContractDetailsForm> {...form}>
         <Form
           onSubmit={handleSubmit(() =>
             submit(() => history.push('documents'), true)
           )}
-          className="maxw-none tablet:grid-col-6 margin-bottom-7"
+          className="maxw-none desktop:grid-col-9 margin-bottom-5 border-top border-base-light padding-top-1"
         >
+          <h4 className="text-bold margin-y-0">
+            {t('contractDetails.fundingAndBudget')}
+          </h4>
           <FieldGroup
             scrollElement="fundingSources"
             error={!!errors.fundingSources}
           >
             <Fieldset>
               <legend className="usa-label">
-                {t('fundingSources:whichFundingSources')}
+                {t('fundingSources:whichFundingSources')} <RequiredMarker />
               </legend>
               <HelpText className="margin-top-05" id="fundingSourcesHelpText">
                 <Trans
@@ -310,101 +308,149 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
             </Fieldset>
           </FieldGroup>
 
-          <FieldGroup
-            scrollElement="annualSpending.currentAnnualSpending"
-            error={!!errors.annualSpending?.currentAnnualSpending}
-          >
-            <Label htmlFor="annualSpending.currentAnnualSpending">
-              {t('contractDetails.currentAnnualSpending')}
-            </Label>
-            <ErrorMessage
-              errors={errors}
-              name="annualSpending.currentAnnualSpending"
-              as={FieldErrorMsg}
-            />
-            <TextInput
-              {...register('annualSpending.currentAnnualSpending')}
-              ref={null}
-              id="currentAnnualSpending"
-              type="text"
-              maxLength={200}
-            />
-          </FieldGroup>
+          <div className="grid-row grid-gap">
+            <div className="grid-col-12 desktop:grid-col-7">
+              <FieldGroup
+                scrollElement="annualSpending.currentAnnualSpending"
+                error={!!errors.annualSpending?.currentAnnualSpending}
+              >
+                <Label
+                  className="maxw-none"
+                  htmlFor="annualSpending.currentAnnualSpending"
+                >
+                  {t('contractDetails.currentAnnualSpending')}
+                </Label>
+                <HelpText id="annualSpending.currentAnnualSpending">
+                  {t('contractDetails.currentAnnualSpendingHelpText')}
+                </HelpText>
+                <ErrorMessage
+                  errors={errors}
+                  name="annualSpending.currentAnnualSpending"
+                  as={FieldErrorMsg}
+                />
+                <InputGroup className="maxw-none">
+                  <InputPrefix>$</InputPrefix>
+                  <TextInput
+                    {...register('annualSpending.currentAnnualSpending')}
+                    ref={null}
+                    id="currentAnnualSpending"
+                    type="text"
+                    maxLength={200}
+                  />
+                </InputGroup>
+              </FieldGroup>
+            </div>
 
-          <FieldGroup
-            scrollElement="annualSpending.currentAnnualSpendingITPortion"
-            error={!!errors.annualSpending?.currentAnnualSpendingITPortion}
-          >
-            <Label htmlFor="annualSpending.currentAnnualSpendingITPortion">
-              {t('contractDetails.currentAnnualSpendingITPortion')}
-            </Label>
-            <ErrorMessage
-              errors={errors}
-              name="annualSpending.currentAnnualSpendingITPortion"
-              as={FieldErrorMsg}
-            />
-            <TextInput
-              {...register('annualSpending.currentAnnualSpendingITPortion')}
-              ref={null}
-              id="currentAnnualSpendingITPortion"
-              type="text"
-              maxLength={200}
-            />
-          </FieldGroup>
+            <div className="grid-col-12 desktop:grid-col-5">
+              <FieldGroup
+                scrollElement="annualSpending.currentAnnualSpendingITPortion"
+                error={!!errors.annualSpending?.currentAnnualSpendingITPortion}
+              >
+                <Label
+                  className="maxw-none"
+                  htmlFor="annualSpending.currentAnnualSpendingITPortion"
+                >
+                  {t('contractDetails.currentAnnualSpendingITPortion')}
+                </Label>
 
-          <FieldGroup
-            scrollElement="annualSpending.plannedYearOneSpending"
-            error={!!errors.annualSpending?.plannedYearOneSpending}
-          >
-            <Label htmlFor="annualSpending.plannedYearOneSpending">
-              {t('contractDetails.plannedYearOneSpending')}
-            </Label>
-            <ErrorMessage
-              errors={errors}
-              name="annualSpending.plannedYearOneSpending"
-              as={FieldErrorMsg}
-            />
-            <TextInput
-              {...register('annualSpending.plannedYearOneSpending')}
-              ref={null}
-              id="plannedYearOneSpending"
-              type="text"
-              maxLength={200}
-            />
-          </FieldGroup>
+                <ErrorMessage
+                  errors={errors}
+                  name="annualSpending.currentAnnualSpendingITPortion"
+                  as={FieldErrorMsg}
+                />
+                <InputGroup className="maxw-none">
+                  <TextInput
+                    {...register(
+                      'annualSpending.currentAnnualSpendingITPortion'
+                    )}
+                    ref={null}
+                    id="currentAnnualSpendingITPortion"
+                    type="text"
+                    maxLength={200}
+                  />
+                  <InputSuffix>%</InputSuffix>
+                </InputGroup>
+              </FieldGroup>
+            </div>
+          </div>
 
-          <FieldGroup
-            scrollElement="annualSpending.plannedYearOneSpendingITPortion"
-            error={!!errors.annualSpending?.plannedYearOneSpendingITPortion}
-          >
-            <Label htmlFor="annualSpending.plannedYearOneSpendingITPortion">
-              {t('contractDetails.plannedYearOneSpendingITPortion')}
-            </Label>
-            <ErrorMessage
-              errors={errors}
-              name="annualSpending.plannedYearOneSpendingITPortion"
-              as={FieldErrorMsg}
-            />
-            <TextInput
-              {...register('annualSpending.plannedYearOneSpendingITPortion')}
-              ref={null}
-              id="plannedYearOneSpendingITPortion"
-              type="text"
-              maxLength={200}
-            />
-          </FieldGroup>
+          <div className="grid-row grid-gap">
+            <div className="grid-col-12 desktop:grid-col-7">
+              <FieldGroup
+                scrollElement="annualSpending.plannedYearOneSpending"
+                error={!!errors.annualSpending?.plannedYearOneSpending}
+              >
+                <Label
+                  className="maxw-none"
+                  htmlFor="annualSpending.plannedYearOneSpending"
+                >
+                  {t('contractDetails.plannedYearOneSpending')}
+                </Label>
+                <HelpText id="annualSpending.plannedYearOneSpending">
+                  {t('contractDetails.plannedYearOneSpendingHelpText')}
+                </HelpText>
+                <ErrorMessage
+                  errors={errors}
+                  name="annualSpending.plannedYearOneSpending"
+                  as={FieldErrorMsg}
+                />
+                <InputGroup className="maxw-none">
+                  <InputPrefix>$</InputPrefix>
+                  <TextInput
+                    {...register('annualSpending.plannedYearOneSpending')}
+                    ref={null}
+                    id="plannedYearOneSpending"
+                    type="text"
+                    maxLength={200}
+                  />
+                </InputGroup>
+              </FieldGroup>
+            </div>
+
+            <div className="grid-col-12 desktop:grid-col-5">
+              <FieldGroup
+                scrollElement="annualSpending.plannedYearOneSpendingITPortion"
+                error={!!errors.annualSpending?.plannedYearOneSpendingITPortion}
+              >
+                <Label
+                  className="maxw-none"
+                  htmlFor="annualSpending.plannedYearOneSpendingITPortion"
+                >
+                  {t('contractDetails.plannedYearOneSpendingITPortion')}
+                </Label>
+                <ErrorMessage
+                  errors={errors}
+                  name="annualSpending.plannedYearOneSpendingITPortion"
+                  as={FieldErrorMsg}
+                />
+                <InputGroup className="maxw-none">
+                  <TextInput
+                    {...register(
+                      'annualSpending.plannedYearOneSpendingITPortion'
+                    )}
+                    ref={null}
+                    id="plannedYearOneSpendingITPortion"
+                    type="text"
+                    maxLength={200}
+                  />
+                  <InputSuffix>%</InputSuffix>
+                </InputGroup>
+              </FieldGroup>
+            </div>
+          </div>
 
           <FieldGroup
             scrollElement="contract.hasContract"
             error={!!errors.contract?.hasContract}
+            className="border-top border-base-light padding-top-1 margin-top-4"
           >
+            <h4 className="margin-top-0 margin-bottom-3 text-bold">
+              {t('contractDetails.contractHeading')}
+            </h4>
             <Fieldset>
-              <legend className="usa-label">
-                {t('contractDetails.hasContract')}
+              <legend className="usa-label maxw-none">
+                {t('contractDetails.hasContract')} <RequiredMarker />
               </legend>
-              <HelpText className="margin-top-1" id="haContractHelpText">
-                {t('contractDetails.hasContractHelpText')}
-              </HelpText>
               <ErrorMessage
                 errors={errors}
                 name="contract.hasContract"
@@ -416,7 +462,6 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                 ref={null}
                 id="contractHaveContract"
                 value={SystemIntakeContractStatus.HAVE_CONTRACT}
-                aria-describedby="hasContractHelpText"
                 aria-expanded={
                   hasContract === SystemIntakeContractStatus.HAVE_CONTRACT
                 }
@@ -435,7 +480,6 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                 ref={null}
                 id="contractInProgress"
                 value={SystemIntakeContractStatus.IN_PROGRESS}
-                aria-describedby="hasContractHelpText"
                 aria-expanded={
                   hasContract === SystemIntakeContractStatus.IN_PROGRESS
                 }
@@ -454,7 +498,6 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                 ref={null}
                 id="contractNotStarted"
                 value={SystemIntakeContractStatus.NOT_STARTED}
-                aria-describedby="hasContractHelpText"
                 label={t('contractDetails.hasContract', {
                   context: SystemIntakeContractStatus.NOT_STARTED
                 })}
@@ -470,7 +513,6 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                 ref={null}
                 id="contractNotNeeded"
                 value={SystemIntakeContractStatus.NOT_NEEDED}
-                aria-describedby="hasContractHelpText"
                 label={t('contractDetails.hasContract', {
                   context: SystemIntakeContractStatus.NOT_NEEDED
                 })}
@@ -484,24 +526,22 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
           </FieldGroup>
 
           <Pager
-            next={{
-              type: 'submit'
-            }}
+            next={{ type: 'submit' }}
             back={{
               type: 'button',
               onClick: () => submit(() => history.push('request-details'))
             }}
-            border={false}
+            border
             taskListUrl={saveExitLink}
             submit={() => submit(() => history.push(saveExitLink))}
-            className="margin-top-4"
+            className="margin-top-5"
           />
         </Form>
       </EasiFormProvider>
 
       <AutoSave values={watch()} onSave={submit} debounceDelay={3000} />
 
-      <PageNumber currentPage={3} totalPages={5} />
+      <PageNumber currentPage={3} totalPages={5} className="margin-bottom-15" />
     </>
   );
 };

@@ -26,7 +26,8 @@ const general = {
     open: 'Open date picker',
     warning: 'Date is in the past'
   },
-  actions: 'Actions'
+  actions: 'Actions',
+  on: 'on '
 };
 
 export default general;

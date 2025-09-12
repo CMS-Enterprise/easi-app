@@ -269,6 +269,7 @@ exports[`GRB review decision record table > matches the snapshot 1`] = `
                     class="margin-0 display-flex flex-align-center font-body-sm width-card padding-right-2"
                   >
                     <svg
+                      aria-hidden="true"
                       class="usa-icon usa-icon--size-3 text-success margin-right-1"
                       data-testid="icon-CheckCircle"
                       focusable="false"
@@ -328,6 +329,7 @@ exports[`GRB review decision record table > matches the snapshot 1`] = `
                     class="margin-0 display-flex flex-align-center font-body-sm width-card padding-right-2"
                   >
                     <svg
+                      aria-hidden="true"
                       class="usa-icon usa-icon--size-3 text-error margin-right-1"
                       data-testid="icon-Cancel"
                       focusable="false"
@@ -414,6 +416,7 @@ exports[`GRB review decision record table > matches the snapshot 1`] = `
                     class="margin-0 display-flex flex-align-center font-body-sm"
                   >
                     <svg
+                      aria-hidden="true"
                       class="usa-icon usa-icon--size-3 text-base-light margin-right-1"
                       data-testid="icon-Help"
                       focusable="false"

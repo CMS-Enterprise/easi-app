@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router-dom';
+import {
+  Link as ReactRouterLink,
+  useHistory,
+  useLocation,
+  useParams
+} from 'react-router-dom';
 import {
   Button,
   ButtonGroup,
@@ -27,6 +32,9 @@ import { TaskListContainer } from 'components/TaskList';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import useMessage from 'hooks/useMessage';
 import { formatDateUtc } from 'utils/date';
+import linkCedarSystemIdQueryString, {
+  useLinkCedarSystemIdQueryParam
+} from 'utils/linkCedarSystemIdQueryString';
 
 import {
   SystemIntakeDecisionState,
@@ -50,14 +58,12 @@ function GovernanceTaskList() {
   const { systemId } = useParams<{ systemId: string }>();
   const { t } = useTranslation(['itGov', 'intake']);
   const history = useHistory();
+  const { state } = useLocation<{ isNew?: boolean }>();
+  const isNew = !!state?.isNew;
 
   const { showMessageOnNextPage, showMessage, Message } = useMessage();
 
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
-
-  const requestTypeText = t('itGov:taskList.requestType', {
-    returnObjects: true
-  }) as Record<string, string>;
 
   const { data, loading, error } = useGetGovernanceTaskListQuery({
     variables: {
@@ -73,6 +79,9 @@ function GovernanceTaskList() {
 
   const systemIntake = data?.systemIntake;
   const requestName = systemIntake?.requestName;
+
+  const linkCedarSystemId = useLinkCedarSystemIdQueryParam();
+  const linkCedarSystemIdQs = linkCedarSystemIdQueryString(linkCedarSystemId);
 
   const archiveIntake = async () => {
     archive()
@@ -135,17 +144,6 @@ function GovernanceTaskList() {
               <PageHeading className="margin-y-0">
                 {t('taskList.heading')}
               </PageHeading>
-              <div>
-                {data && data.systemIntake && (
-                  <span className="font-body-md line-height-body-4 text-base margin-right-1">
-                    {requestTypeText[systemIntake.requestType]}
-                  </span>
-                )}
-
-                <UswdsReactLink to={`/system/request-type/${systemId}`}>
-                  {t('taskList.changeRequestType')}
-                </UswdsReactLink>
-              </div>
 
               <div className="line-height-body-4">
                 {requestName && (
@@ -153,6 +151,21 @@ function GovernanceTaskList() {
                     {t('taskList.description', { requestName })}
                   </p>
                 )}
+                <span className="text-base-dark margin-right-2 font-body-md">
+                  {t('governanceOverview:changeRequestTypeCopy')}
+                </span>
+                {/* UPDATE this to go back ot request type and throw a state there too */}
+
+                <ReactRouterLink
+                  to={{
+                    pathname: `/system/request-type/${systemId || ''}`,
+                    search: linkCedarSystemIdQs,
+                    state: { isNew, isFromTaskList: true }
+                  }}
+                  className="text-primary"
+                >
+                  {t('intake:navigation.changeRequestType')}
+                </ReactRouterLink>
                 {isClosed && !hasDecision && (
                   <Alert
                     type="warning"
