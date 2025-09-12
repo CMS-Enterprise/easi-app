@@ -6,7 +6,6 @@ package deployment
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 
@@ -104,13 +103,11 @@ func (o *DeploymentDeleteListOK) Code() int {
 }
 
 func (o *DeploymentDeleteListOK) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /deployment][%d] deploymentDeleteListOK %s", 200, payload)
+	return fmt.Sprintf("[DELETE /deployment][%d] deploymentDeleteListOK  %+v", 200, o.Payload)
 }
 
 func (o *DeploymentDeleteListOK) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /deployment][%d] deploymentDeleteListOK %s", 200, payload)
+	return fmt.Sprintf("[DELETE /deployment][%d] deploymentDeleteListOK  %+v", 200, o.Payload)
 }
 
 func (o *DeploymentDeleteListOK) GetPayload() *models.Response {
@@ -174,13 +171,11 @@ func (o *DeploymentDeleteListBadRequest) Code() int {
 }
 
 func (o *DeploymentDeleteListBadRequest) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /deployment][%d] deploymentDeleteListBadRequest %s", 400, payload)
+	return fmt.Sprintf("[DELETE /deployment][%d] deploymentDeleteListBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *DeploymentDeleteListBadRequest) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /deployment][%d] deploymentDeleteListBadRequest %s", 400, payload)
+	return fmt.Sprintf("[DELETE /deployment][%d] deploymentDeleteListBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *DeploymentDeleteListBadRequest) GetPayload() *models.Response {
@@ -244,13 +239,11 @@ func (o *DeploymentDeleteListUnauthorized) Code() int {
 }
 
 func (o *DeploymentDeleteListUnauthorized) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /deployment][%d] deploymentDeleteListUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[DELETE /deployment][%d] deploymentDeleteListUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *DeploymentDeleteListUnauthorized) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /deployment][%d] deploymentDeleteListUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[DELETE /deployment][%d] deploymentDeleteListUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *DeploymentDeleteListUnauthorized) GetPayload() *models.Response {
@@ -314,13 +307,11 @@ func (o *DeploymentDeleteListNotFound) Code() int {
 }
 
 func (o *DeploymentDeleteListNotFound) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /deployment][%d] deploymentDeleteListNotFound %s", 404, payload)
+	return fmt.Sprintf("[DELETE /deployment][%d] deploymentDeleteListNotFound  %+v", 404, o.Payload)
 }
 
 func (o *DeploymentDeleteListNotFound) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /deployment][%d] deploymentDeleteListNotFound %s", 404, payload)
+	return fmt.Sprintf("[DELETE /deployment][%d] deploymentDeleteListNotFound  %+v", 404, o.Payload)
 }
 
 func (o *DeploymentDeleteListNotFound) GetPayload() *models.Response {
@@ -384,13 +375,11 @@ func (o *DeploymentDeleteListInternalServerError) Code() int {
 }
 
 func (o *DeploymentDeleteListInternalServerError) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /deployment][%d] deploymentDeleteListInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[DELETE /deployment][%d] deploymentDeleteListInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *DeploymentDeleteListInternalServerError) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /deployment][%d] deploymentDeleteListInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[DELETE /deployment][%d] deploymentDeleteListInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *DeploymentDeleteListInternalServerError) GetPayload() *models.Response {

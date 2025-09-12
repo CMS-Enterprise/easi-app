@@ -6,7 +6,6 @@ package software_products
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 
@@ -98,13 +97,11 @@ func (o *SoftwareProductsAddOK) Code() int {
 }
 
 func (o *SoftwareProductsAddOK) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[POST /softwareProducts][%d] softwareProductsAddOK %s", 200, payload)
+	return fmt.Sprintf("[POST /softwareProducts][%d] softwareProductsAddOK  %+v", 200, o.Payload)
 }
 
 func (o *SoftwareProductsAddOK) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[POST /softwareProducts][%d] softwareProductsAddOK %s", 200, payload)
+	return fmt.Sprintf("[POST /softwareProducts][%d] softwareProductsAddOK  %+v", 200, o.Payload)
 }
 
 func (o *SoftwareProductsAddOK) GetPayload() *models.Response {
@@ -168,13 +165,11 @@ func (o *SoftwareProductsAddBadRequest) Code() int {
 }
 
 func (o *SoftwareProductsAddBadRequest) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[POST /softwareProducts][%d] softwareProductsAddBadRequest %s", 400, payload)
+	return fmt.Sprintf("[POST /softwareProducts][%d] softwareProductsAddBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *SoftwareProductsAddBadRequest) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[POST /softwareProducts][%d] softwareProductsAddBadRequest %s", 400, payload)
+	return fmt.Sprintf("[POST /softwareProducts][%d] softwareProductsAddBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *SoftwareProductsAddBadRequest) GetPayload() *models.Response {
@@ -238,13 +233,11 @@ func (o *SoftwareProductsAddUnauthorized) Code() int {
 }
 
 func (o *SoftwareProductsAddUnauthorized) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[POST /softwareProducts][%d] softwareProductsAddUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[POST /softwareProducts][%d] softwareProductsAddUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *SoftwareProductsAddUnauthorized) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[POST /softwareProducts][%d] softwareProductsAddUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[POST /softwareProducts][%d] softwareProductsAddUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *SoftwareProductsAddUnauthorized) GetPayload() *models.Response {
@@ -308,13 +301,11 @@ func (o *SoftwareProductsAddInternalServerError) Code() int {
 }
 
 func (o *SoftwareProductsAddInternalServerError) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[POST /softwareProducts][%d] softwareProductsAddInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[POST /softwareProducts][%d] softwareProductsAddInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *SoftwareProductsAddInternalServerError) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[POST /softwareProducts][%d] softwareProductsAddInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[POST /softwareProducts][%d] softwareProductsAddInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *SoftwareProductsAddInternalServerError) GetPayload() *models.Response {

@@ -6,7 +6,6 @@ package system
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 
@@ -104,13 +103,11 @@ func (o *SystemSummaryFindByIDOK) Code() int {
 }
 
 func (o *SystemSummaryFindByIDOK) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdOK %s", 200, payload)
+	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdOK  %+v", 200, o.Payload)
 }
 
 func (o *SystemSummaryFindByIDOK) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdOK %s", 200, payload)
+	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdOK  %+v", 200, o.Payload)
 }
 
 func (o *SystemSummaryFindByIDOK) GetPayload() *models.SystemSummaryResponse {
@@ -174,13 +171,11 @@ func (o *SystemSummaryFindByIDBadRequest) Code() int {
 }
 
 func (o *SystemSummaryFindByIDBadRequest) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdBadRequest %s", 400, payload)
+	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *SystemSummaryFindByIDBadRequest) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdBadRequest %s", 400, payload)
+	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *SystemSummaryFindByIDBadRequest) GetPayload() *models.Response {
@@ -244,13 +239,11 @@ func (o *SystemSummaryFindByIDUnauthorized) Code() int {
 }
 
 func (o *SystemSummaryFindByIDUnauthorized) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *SystemSummaryFindByIDUnauthorized) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *SystemSummaryFindByIDUnauthorized) GetPayload() *models.Response {
@@ -314,13 +307,11 @@ func (o *SystemSummaryFindByIDNotFound) Code() int {
 }
 
 func (o *SystemSummaryFindByIDNotFound) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdNotFound %s", 404, payload)
+	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdNotFound  %+v", 404, o.Payload)
 }
 
 func (o *SystemSummaryFindByIDNotFound) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdNotFound %s", 404, payload)
+	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdNotFound  %+v", 404, o.Payload)
 }
 
 func (o *SystemSummaryFindByIDNotFound) GetPayload() *models.Response {
@@ -384,13 +375,11 @@ func (o *SystemSummaryFindByIDInternalServerError) Code() int {
 }
 
 func (o *SystemSummaryFindByIDInternalServerError) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *SystemSummaryFindByIDInternalServerError) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *SystemSummaryFindByIDInternalServerError) GetPayload() *models.Response {

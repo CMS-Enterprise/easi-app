@@ -6,7 +6,6 @@ package support_contact
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 
@@ -104,13 +103,11 @@ func (o *SupportContactDeleteListOK) Code() int {
 }
 
 func (o *SupportContactDeleteListOK) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListOK %s", 200, payload)
+	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListOK  %+v", 200, o.Payload)
 }
 
 func (o *SupportContactDeleteListOK) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListOK %s", 200, payload)
+	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListOK  %+v", 200, o.Payload)
 }
 
 func (o *SupportContactDeleteListOK) GetPayload() *models.Response {
@@ -174,13 +171,11 @@ func (o *SupportContactDeleteListBadRequest) Code() int {
 }
 
 func (o *SupportContactDeleteListBadRequest) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListBadRequest %s", 400, payload)
+	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *SupportContactDeleteListBadRequest) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListBadRequest %s", 400, payload)
+	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *SupportContactDeleteListBadRequest) GetPayload() *models.Response {
@@ -244,13 +239,11 @@ func (o *SupportContactDeleteListUnauthorized) Code() int {
 }
 
 func (o *SupportContactDeleteListUnauthorized) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *SupportContactDeleteListUnauthorized) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *SupportContactDeleteListUnauthorized) GetPayload() *models.Response {
@@ -314,13 +307,11 @@ func (o *SupportContactDeleteListNotFound) Code() int {
 }
 
 func (o *SupportContactDeleteListNotFound) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListNotFound %s", 404, payload)
+	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListNotFound  %+v", 404, o.Payload)
 }
 
 func (o *SupportContactDeleteListNotFound) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListNotFound %s", 404, payload)
+	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListNotFound  %+v", 404, o.Payload)
 }
 
 func (o *SupportContactDeleteListNotFound) GetPayload() *models.Response {
@@ -384,13 +375,11 @@ func (o *SupportContactDeleteListInternalServerError) Code() int {
 }
 
 func (o *SupportContactDeleteListInternalServerError) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *SupportContactDeleteListInternalServerError) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *SupportContactDeleteListInternalServerError) GetPayload() *models.Response {

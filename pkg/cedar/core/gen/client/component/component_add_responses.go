@@ -6,7 +6,6 @@ package component
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 
@@ -98,13 +97,11 @@ func (o *ComponentAddOK) Code() int {
 }
 
 func (o *ComponentAddOK) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[POST /component][%d] componentAddOK %s", 200, payload)
+	return fmt.Sprintf("[POST /component][%d] componentAddOK  %+v", 200, o.Payload)
 }
 
 func (o *ComponentAddOK) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[POST /component][%d] componentAddOK %s", 200, payload)
+	return fmt.Sprintf("[POST /component][%d] componentAddOK  %+v", 200, o.Payload)
 }
 
 func (o *ComponentAddOK) GetPayload() *models.ComponentAddResponse {
@@ -168,13 +165,11 @@ func (o *ComponentAddBadRequest) Code() int {
 }
 
 func (o *ComponentAddBadRequest) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[POST /component][%d] componentAddBadRequest %s", 400, payload)
+	return fmt.Sprintf("[POST /component][%d] componentAddBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *ComponentAddBadRequest) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[POST /component][%d] componentAddBadRequest %s", 400, payload)
+	return fmt.Sprintf("[POST /component][%d] componentAddBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *ComponentAddBadRequest) GetPayload() *models.Response {
@@ -238,13 +233,11 @@ func (o *ComponentAddUnauthorized) Code() int {
 }
 
 func (o *ComponentAddUnauthorized) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[POST /component][%d] componentAddUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[POST /component][%d] componentAddUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *ComponentAddUnauthorized) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[POST /component][%d] componentAddUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[POST /component][%d] componentAddUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *ComponentAddUnauthorized) GetPayload() *models.Response {
@@ -308,13 +301,11 @@ func (o *ComponentAddInternalServerError) Code() int {
 }
 
 func (o *ComponentAddInternalServerError) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[POST /component][%d] componentAddInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[POST /component][%d] componentAddInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *ComponentAddInternalServerError) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[POST /component][%d] componentAddInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[POST /component][%d] componentAddInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *ComponentAddInternalServerError) GetPayload() *models.Response {

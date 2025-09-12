@@ -6,7 +6,6 @@ package cost_type
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 
@@ -98,13 +97,11 @@ func (o *CostTypeFindListOK) Code() int {
 }
 
 func (o *CostTypeFindListOK) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /costType][%d] costTypeFindListOK %s", 200, payload)
+	return fmt.Sprintf("[GET /costType][%d] costTypeFindListOK  %+v", 200, o.Payload)
 }
 
 func (o *CostTypeFindListOK) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /costType][%d] costTypeFindListOK %s", 200, payload)
+	return fmt.Sprintf("[GET /costType][%d] costTypeFindListOK  %+v", 200, o.Payload)
 }
 
 func (o *CostTypeFindListOK) GetPayload() *models.CostTypeFindResponse {
@@ -168,13 +165,11 @@ func (o *CostTypeFindListBadRequest) Code() int {
 }
 
 func (o *CostTypeFindListBadRequest) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /costType][%d] costTypeFindListBadRequest %s", 400, payload)
+	return fmt.Sprintf("[GET /costType][%d] costTypeFindListBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *CostTypeFindListBadRequest) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /costType][%d] costTypeFindListBadRequest %s", 400, payload)
+	return fmt.Sprintf("[GET /costType][%d] costTypeFindListBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *CostTypeFindListBadRequest) GetPayload() *models.Response {
@@ -238,13 +233,11 @@ func (o *CostTypeFindListUnauthorized) Code() int {
 }
 
 func (o *CostTypeFindListUnauthorized) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /costType][%d] costTypeFindListUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[GET /costType][%d] costTypeFindListUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *CostTypeFindListUnauthorized) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /costType][%d] costTypeFindListUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[GET /costType][%d] costTypeFindListUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *CostTypeFindListUnauthorized) GetPayload() *models.Response {
@@ -308,13 +301,11 @@ func (o *CostTypeFindListInternalServerError) Code() int {
 }
 
 func (o *CostTypeFindListInternalServerError) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /costType][%d] costTypeFindListInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[GET /costType][%d] costTypeFindListInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *CostTypeFindListInternalServerError) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /costType][%d] costTypeFindListInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[GET /costType][%d] costTypeFindListInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *CostTypeFindListInternalServerError) GetPayload() *models.Response {

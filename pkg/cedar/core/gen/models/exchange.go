@@ -113,7 +113,7 @@ type Exchange struct {
 	FromOwnerName string `json:"fromOwnerName,omitempty"`
 
 	// from owner type
-	// Enum: ["application","organization"]
+	// Enum: [application organization]
 	FromOwnerType string `json:"fromOwnerType,omitempty"`
 
 	// is address editable
@@ -138,7 +138,7 @@ type Exchange struct {
 	ToOwnerName string `json:"toOwnerName,omitempty"`
 
 	// to owner type
-	// Enum: ["application","organization"]
+	// Enum: [application organization]
 	ToOwnerType string `json:"toOwnerType,omitempty"`
 
 	// type of data

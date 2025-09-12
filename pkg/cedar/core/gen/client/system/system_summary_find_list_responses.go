@@ -6,7 +6,6 @@ package system
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 
@@ -104,13 +103,11 @@ func (o *SystemSummaryFindListOK) Code() int {
 }
 
 func (o *SystemSummaryFindListOK) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListOK %s", 200, payload)
+	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListOK  %+v", 200, o.Payload)
 }
 
 func (o *SystemSummaryFindListOK) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListOK %s", 200, payload)
+	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListOK  %+v", 200, o.Payload)
 }
 
 func (o *SystemSummaryFindListOK) GetPayload() *models.SystemSummaryResponse {
@@ -174,13 +171,11 @@ func (o *SystemSummaryFindListBadRequest) Code() int {
 }
 
 func (o *SystemSummaryFindListBadRequest) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListBadRequest %s", 400, payload)
+	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *SystemSummaryFindListBadRequest) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListBadRequest %s", 400, payload)
+	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *SystemSummaryFindListBadRequest) GetPayload() *models.Response {
@@ -244,13 +239,11 @@ func (o *SystemSummaryFindListUnauthorized) Code() int {
 }
 
 func (o *SystemSummaryFindListUnauthorized) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *SystemSummaryFindListUnauthorized) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *SystemSummaryFindListUnauthorized) GetPayload() *models.Response {
@@ -314,13 +307,11 @@ func (o *SystemSummaryFindListNotFound) Code() int {
 }
 
 func (o *SystemSummaryFindListNotFound) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListNotFound %s", 404, payload)
+	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListNotFound  %+v", 404, o.Payload)
 }
 
 func (o *SystemSummaryFindListNotFound) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListNotFound %s", 404, payload)
+	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListNotFound  %+v", 404, o.Payload)
 }
 
 func (o *SystemSummaryFindListNotFound) GetPayload() *models.Response {
@@ -384,13 +375,11 @@ func (o *SystemSummaryFindListInternalServerError) Code() int {
 }
 
 func (o *SystemSummaryFindListInternalServerError) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *SystemSummaryFindListInternalServerError) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *SystemSummaryFindListInternalServerError) GetPayload() *models.Response {

@@ -6,7 +6,6 @@ package data_center
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 
@@ -104,13 +103,11 @@ func (o *DataCenterFindListOK) Code() int {
 }
 
 func (o *DataCenterFindListOK) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListOK %s", 200, payload)
+	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListOK  %+v", 200, o.Payload)
 }
 
 func (o *DataCenterFindListOK) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListOK %s", 200, payload)
+	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListOK  %+v", 200, o.Payload)
 }
 
 func (o *DataCenterFindListOK) GetPayload() *models.DataCenterFindResponse {
@@ -174,13 +171,11 @@ func (o *DataCenterFindListBadRequest) Code() int {
 }
 
 func (o *DataCenterFindListBadRequest) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListBadRequest %s", 400, payload)
+	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *DataCenterFindListBadRequest) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListBadRequest %s", 400, payload)
+	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *DataCenterFindListBadRequest) GetPayload() *models.Response {
@@ -244,13 +239,11 @@ func (o *DataCenterFindListUnauthorized) Code() int {
 }
 
 func (o *DataCenterFindListUnauthorized) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *DataCenterFindListUnauthorized) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *DataCenterFindListUnauthorized) GetPayload() *models.Response {
@@ -314,13 +307,11 @@ func (o *DataCenterFindListNotFound) Code() int {
 }
 
 func (o *DataCenterFindListNotFound) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListNotFound %s", 404, payload)
+	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListNotFound  %+v", 404, o.Payload)
 }
 
 func (o *DataCenterFindListNotFound) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListNotFound %s", 404, payload)
+	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListNotFound  %+v", 404, o.Payload)
 }
 
 func (o *DataCenterFindListNotFound) GetPayload() *models.Response {
@@ -384,13 +375,11 @@ func (o *DataCenterFindListInternalServerError) Code() int {
 }
 
 func (o *DataCenterFindListInternalServerError) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *DataCenterFindListInternalServerError) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[GET /dataCenter][%d] dataCenterFindListInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *DataCenterFindListInternalServerError) GetPayload() *models.Response {

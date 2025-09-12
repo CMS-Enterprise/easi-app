@@ -6,7 +6,6 @@ package user
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 
@@ -98,13 +97,11 @@ func (o *UserFindListOK) Code() int {
 }
 
 func (o *UserFindListOK) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /user][%d] userFindListOK %s", 200, payload)
+	return fmt.Sprintf("[GET /user][%d] userFindListOK  %+v", 200, o.Payload)
 }
 
 func (o *UserFindListOK) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /user][%d] userFindListOK %s", 200, payload)
+	return fmt.Sprintf("[GET /user][%d] userFindListOK  %+v", 200, o.Payload)
 }
 
 func (o *UserFindListOK) GetPayload() *models.UserFindResponse {
@@ -168,13 +165,11 @@ func (o *UserFindListBadRequest) Code() int {
 }
 
 func (o *UserFindListBadRequest) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /user][%d] userFindListBadRequest %s", 400, payload)
+	return fmt.Sprintf("[GET /user][%d] userFindListBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *UserFindListBadRequest) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /user][%d] userFindListBadRequest %s", 400, payload)
+	return fmt.Sprintf("[GET /user][%d] userFindListBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *UserFindListBadRequest) GetPayload() *models.Response {
@@ -238,13 +233,11 @@ func (o *UserFindListUnauthorized) Code() int {
 }
 
 func (o *UserFindListUnauthorized) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /user][%d] userFindListUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[GET /user][%d] userFindListUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *UserFindListUnauthorized) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /user][%d] userFindListUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[GET /user][%d] userFindListUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *UserFindListUnauthorized) GetPayload() *models.Response {
@@ -308,13 +301,11 @@ func (o *UserFindListInternalServerError) Code() int {
 }
 
 func (o *UserFindListInternalServerError) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /user][%d] userFindListInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[GET /user][%d] userFindListInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *UserFindListInternalServerError) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /user][%d] userFindListInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[GET /user][%d] userFindListInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *UserFindListInternalServerError) GetPayload() *models.Response {

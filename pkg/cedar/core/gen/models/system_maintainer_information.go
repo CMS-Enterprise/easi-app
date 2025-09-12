@@ -22,7 +22,7 @@ import (
 type SystemMaintainerInformation struct {
 
 	// ad hoc agile deployment frequency
-	// Enum: ["Annually","Semi-Annually","Quarterly","Monthly","Every Two Weeks","Weekly","Twice a Week","Daily","Hourly","Ad Hoc/As Needed","Not Applicable","Other"]
+	// Enum: [Annually Semi-Annually Quarterly Monthly Every Two Weeks Weekly Twice a Week Daily Hourly Ad Hoc/As Needed Not Applicable Other]
 	AdHocAgileDeploymentFrequency string `json:"adHocAgileDeploymentFrequency,omitempty"`
 
 	// agile used
@@ -37,12 +37,12 @@ type SystemMaintainerInformation struct {
 	BusinessArtifactsOnDemand bool `json:"businessArtifactsOnDemand,omitempty"`
 
 	// data at rest encryption key management
-	// Enum: ["We do not encrypt data at rest.","We perform ad hoc management of encryption keys.","We have a process for managing encryption keys.","We have a process for managing encryption keys and it is automated."]
+	// Enum: [We do not encrypt data at rest. We perform ad hoc management of encryption keys. We have a process for managing encryption keys. We have a process for managing encryption keys and it is automated.]
 	DataAtRestEncryptionKeyManagement string `json:"dataAtRestEncryptionKeyManagement,omitempty"`
 
 	// deployment frequency
 	// Example: Monthly
-	// Enum: ["Annually","Semi-Annually","Quarterly","Monthly","Every Two Weeks","Weekly","Twice a Week","Daily","Hourly","Ad Hoc/As Needed","Not Applicable","Other"]
+	// Enum: [Annually Semi-Annually Quarterly Monthly Every Two Weeks Weekly Twice a Week Daily Hourly Ad Hoc/As Needed Not Applicable Other]
 	DeploymentFrequency string `json:"deploymentFrequency,omitempty"`
 
 	// dev completion percent
@@ -59,7 +59,7 @@ type SystemMaintainerInformation struct {
 
 	// frontend access type
 	// Example: IPv4 and IPv6
-	// Enum: ["IPv4 Only","IPv4 and IPv6","IPv6 Only"]
+	// Enum: [IPv4 Only IPv4 and IPv6 IPv6 Only]
 	FrontendAccessType string `json:"frontendAccessType,omitempty"`
 
 	// hard coded Ip address
@@ -68,12 +68,12 @@ type SystemMaintainerInformation struct {
 
 	// ip6 enabled asset percent
 	// Example: Between 20% and 49%
-	// Enum: ["Less than 20%","Between 20% and 49%","Between 50% and 79%","80% or above"]
+	// Enum: [Less than 20% Between 20% and 49% Between 50% and 79% 80% or above]
 	Ip6EnabledAssetPercent string `json:"ip6EnabledAssetPercent,omitempty"`
 
 	// ip6 transition plan
 	// Example: Yes, transition to IPv6
-	// Enum: ["Yes","transition to IPv6","No","decommission/replace before 2026"]
+	// Enum: [Yes transition to IPv6 No decommission/replace before 2026]
 	Ip6TransitionPlan string `json:"ip6TransitionPlan,omitempty"`
 
 	// ip enabled asset count
@@ -99,11 +99,11 @@ type SystemMaintainerInformation struct {
 
 	// net accessibility
 	// Example: Accessible to a CMS-internal network only
-	// Enum: ["Accessible to the Public Internet (non-restricted access)","Accessible to a CMS-internal network only","Accessible to both public internet and to CMS-internal network"]
+	// Enum: [Accessible to the Public Internet (non-restricted access) Accessible to a CMS-internal network only Accessible to both public internet and to CMS-internal network]
 	NetAccessibility string `json:"netAccessibility,omitempty"`
 
 	// network traffic encryption key management
-	// Enum: ["We do not encrypt any network traffic.","We perform ad hoc management of encryption keys.","We have a process for managing encryption keys.","We have a process for managing encryption keys and it is automated."]
+	// Enum: [We do not encrypt any network traffic. We perform ad hoc management of encryption keys. We have a process for managing encryption keys. We have a process for managing encryption keys and it is automated.]
 	NetworkTrafficEncryptionKeyManagement string `json:"networkTrafficEncryptionKeyManagement,omitempty"`
 
 	// no major refresh
@@ -121,7 +121,7 @@ type SystemMaintainerInformation struct {
 
 	// plans to retire replace
 	// Example: Yes - Retire and Replace
-	// Enum: ["No","Yes - Retire and Replace","Yes - Retire but NOT Replace"]
+	// Enum: [No Yes - Retire and Replace Yes - Retire but NOT Replace]
 	PlansToRetireReplace string `json:"plansToRetireReplace,omitempty"`
 
 	// quarter to retire replace
@@ -146,7 +146,7 @@ type SystemMaintainerInformation struct {
 
 	// system customization
 	// Example: Less Than 20% Customization
-	// Enum: ["COTS - Less than 20% custom coding","GOTS – less than 20% custom coding","Mixed – Uses COTS or GOTS and has more than 20% custom coding","Custom developed"]
+	// Enum: [COTS - Less than 20% custom coding GOTS – less than 20% custom coding Mixed – Uses COTS or GOTS and has more than 20% custom coding Custom developed]
 	SystemCustomization string `json:"systemCustomization,omitempty"`
 
 	// system data location

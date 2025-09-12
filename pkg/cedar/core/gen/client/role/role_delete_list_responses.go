@@ -6,7 +6,6 @@ package role
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 
@@ -104,13 +103,11 @@ func (o *RoleDeleteListOK) Code() int {
 }
 
 func (o *RoleDeleteListOK) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListOK %s", 200, payload)
+	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListOK  %+v", 200, o.Payload)
 }
 
 func (o *RoleDeleteListOK) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListOK %s", 200, payload)
+	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListOK  %+v", 200, o.Payload)
 }
 
 func (o *RoleDeleteListOK) GetPayload() *models.Response {
@@ -174,13 +171,11 @@ func (o *RoleDeleteListBadRequest) Code() int {
 }
 
 func (o *RoleDeleteListBadRequest) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListBadRequest %s", 400, payload)
+	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *RoleDeleteListBadRequest) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListBadRequest %s", 400, payload)
+	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *RoleDeleteListBadRequest) GetPayload() *models.Response {
@@ -244,13 +239,11 @@ func (o *RoleDeleteListUnauthorized) Code() int {
 }
 
 func (o *RoleDeleteListUnauthorized) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *RoleDeleteListUnauthorized) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *RoleDeleteListUnauthorized) GetPayload() *models.Response {
@@ -314,13 +307,11 @@ func (o *RoleDeleteListNotFound) Code() int {
 }
 
 func (o *RoleDeleteListNotFound) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListNotFound %s", 404, payload)
+	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListNotFound  %+v", 404, o.Payload)
 }
 
 func (o *RoleDeleteListNotFound) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListNotFound %s", 404, payload)
+	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListNotFound  %+v", 404, o.Payload)
 }
 
 func (o *RoleDeleteListNotFound) GetPayload() *models.Response {
@@ -384,13 +375,11 @@ func (o *RoleDeleteListInternalServerError) Code() int {
 }
 
 func (o *RoleDeleteListInternalServerError) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *RoleDeleteListInternalServerError) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *RoleDeleteListInternalServerError) GetPayload() *models.Response {

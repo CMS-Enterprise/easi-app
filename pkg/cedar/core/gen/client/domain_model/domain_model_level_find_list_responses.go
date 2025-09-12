@@ -6,7 +6,6 @@ package domain_model
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 
@@ -98,13 +97,11 @@ func (o *DomainModelLevelFindListOK) Code() int {
 }
 
 func (o *DomainModelLevelFindListOK) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /domainModelLevel][%d] domainModelLevelFindListOK %s", 200, payload)
+	return fmt.Sprintf("[GET /domainModelLevel][%d] domainModelLevelFindListOK  %+v", 200, o.Payload)
 }
 
 func (o *DomainModelLevelFindListOK) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /domainModelLevel][%d] domainModelLevelFindListOK %s", 200, payload)
+	return fmt.Sprintf("[GET /domainModelLevel][%d] domainModelLevelFindListOK  %+v", 200, o.Payload)
 }
 
 func (o *DomainModelLevelFindListOK) GetPayload() *models.DomainModelLevelFindResponse {
@@ -168,13 +165,11 @@ func (o *DomainModelLevelFindListBadRequest) Code() int {
 }
 
 func (o *DomainModelLevelFindListBadRequest) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /domainModelLevel][%d] domainModelLevelFindListBadRequest %s", 400, payload)
+	return fmt.Sprintf("[GET /domainModelLevel][%d] domainModelLevelFindListBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *DomainModelLevelFindListBadRequest) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /domainModelLevel][%d] domainModelLevelFindListBadRequest %s", 400, payload)
+	return fmt.Sprintf("[GET /domainModelLevel][%d] domainModelLevelFindListBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *DomainModelLevelFindListBadRequest) GetPayload() *models.Response {
@@ -238,13 +233,11 @@ func (o *DomainModelLevelFindListUnauthorized) Code() int {
 }
 
 func (o *DomainModelLevelFindListUnauthorized) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /domainModelLevel][%d] domainModelLevelFindListUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[GET /domainModelLevel][%d] domainModelLevelFindListUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *DomainModelLevelFindListUnauthorized) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /domainModelLevel][%d] domainModelLevelFindListUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[GET /domainModelLevel][%d] domainModelLevelFindListUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *DomainModelLevelFindListUnauthorized) GetPayload() *models.Response {
@@ -308,13 +301,11 @@ func (o *DomainModelLevelFindListInternalServerError) Code() int {
 }
 
 func (o *DomainModelLevelFindListInternalServerError) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /domainModelLevel][%d] domainModelLevelFindListInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[GET /domainModelLevel][%d] domainModelLevelFindListInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *DomainModelLevelFindListInternalServerError) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /domainModelLevel][%d] domainModelLevelFindListInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[GET /domainModelLevel][%d] domainModelLevelFindListInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *DomainModelLevelFindListInternalServerError) GetPayload() *models.Response {

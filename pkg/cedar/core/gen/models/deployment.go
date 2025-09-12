@@ -40,7 +40,7 @@ type Deployment struct {
 	DeploymentElementID string `json:"deploymentElementId,omitempty"`
 
 	// deployment type
-	// Enum: ["COOP DR","Development","Implementation","Integration","Production","Testing","Training","Validation","Other"]
+	// Enum: [COOP DR Development Implementation Integration Production Testing Training Validation Other]
 	DeploymentType string `json:"deploymentType,omitempty"`
 
 	// description
@@ -93,11 +93,11 @@ type Deployment struct {
 	StartDate strfmt.Date `json:"startDate,omitempty"`
 
 	// state
-	// Enum: ["active","planned","retired"]
+	// Enum: [active planned retired]
 	State string `json:"state,omitempty"`
 
 	// status
-	// Enum: ["approved","draft"]
+	// Enum: [approved draft]
 	Status string `json:"status,omitempty"`
 
 	// system Id

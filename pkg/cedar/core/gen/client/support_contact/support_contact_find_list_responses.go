@@ -6,7 +6,6 @@ package support_contact
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 
@@ -98,13 +97,11 @@ func (o *SupportContactFindListOK) Code() int {
 }
 
 func (o *SupportContactFindListOK) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /supportContact][%d] supportContactFindListOK %s", 200, payload)
+	return fmt.Sprintf("[GET /supportContact][%d] supportContactFindListOK  %+v", 200, o.Payload)
 }
 
 func (o *SupportContactFindListOK) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /supportContact][%d] supportContactFindListOK %s", 200, payload)
+	return fmt.Sprintf("[GET /supportContact][%d] supportContactFindListOK  %+v", 200, o.Payload)
 }
 
 func (o *SupportContactFindListOK) GetPayload() *models.SupportContactFindResponse {
@@ -168,13 +165,11 @@ func (o *SupportContactFindListBadRequest) Code() int {
 }
 
 func (o *SupportContactFindListBadRequest) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /supportContact][%d] supportContactFindListBadRequest %s", 400, payload)
+	return fmt.Sprintf("[GET /supportContact][%d] supportContactFindListBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *SupportContactFindListBadRequest) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /supportContact][%d] supportContactFindListBadRequest %s", 400, payload)
+	return fmt.Sprintf("[GET /supportContact][%d] supportContactFindListBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *SupportContactFindListBadRequest) GetPayload() *models.Response {
@@ -238,13 +233,11 @@ func (o *SupportContactFindListUnauthorized) Code() int {
 }
 
 func (o *SupportContactFindListUnauthorized) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /supportContact][%d] supportContactFindListUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[GET /supportContact][%d] supportContactFindListUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *SupportContactFindListUnauthorized) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /supportContact][%d] supportContactFindListUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[GET /supportContact][%d] supportContactFindListUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *SupportContactFindListUnauthorized) GetPayload() *models.Response {
@@ -308,13 +301,11 @@ func (o *SupportContactFindListInternalServerError) Code() int {
 }
 
 func (o *SupportContactFindListInternalServerError) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /supportContact][%d] supportContactFindListInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[GET /supportContact][%d] supportContactFindListInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *SupportContactFindListInternalServerError) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /supportContact][%d] supportContactFindListInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[GET /supportContact][%d] supportContactFindListInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *SupportContactFindListInternalServerError) GetPayload() *models.Response {

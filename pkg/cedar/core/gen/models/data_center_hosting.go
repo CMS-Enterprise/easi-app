@@ -22,7 +22,7 @@ type DataCenterHosting struct {
 
 	// moving to cloud
 	// Example: Yes
-	// Enum: ["Yes","No","Plans"]
+	// Enum: [Yes No Plans]
 	MovingToCloud string `json:"movingToCloud,omitempty"`
 
 	// moving to cloud date

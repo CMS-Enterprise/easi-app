@@ -22,7 +22,7 @@ import (
 type BusinessOwnerInformation struct {
 
 	// 508 user interface
-	// Enum: ["Yes, UI accessible by external users.","Yes, UI accessible by internal Federal Employees.","Yes, UI accessible by both internal Federal Employees and external users.","No, this system doesn't have a UI."]
+	// Enum: [Yes, UI accessible by external users. Yes, UI accessible by internal Federal Employees. Yes, UI accessible by both internal Federal Employees and external users. No, this system doesn't have a UI.]
 	Nr508UserInterface string `json:"508UserInterface,omitempty"`
 
 	// beneficiary address purpose
@@ -74,7 +74,7 @@ type BusinessOwnerInformation struct {
 	StoresBeneficiaryAddress bool `json:"storesBeneficiaryAddress,omitempty"`
 
 	// system ownership
-	// Enum: ["CMS Owned","Contractor Owned","External"]
+	// Enum: [CMS Owned Contractor Owned External]
 	SystemOwnership string `json:"systemOwnership,omitempty"`
 }
 
