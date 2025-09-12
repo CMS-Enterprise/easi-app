@@ -10,4 +10,4 @@ SELECT
     modified_by,
     modified_at
 FROM system_intake_contacts
-WHERE system_intake_id= :system_intake_id
+WHERE system_intake_id = :system_intake_id
