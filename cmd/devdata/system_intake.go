@@ -96,9 +96,13 @@ func fillOutInitialIntake(
 		panic(err)
 	}
 	requester, err := contacts.Requester()
-	if err != nil || requester == nil {
+	if err != nil {
 		panic(fmt.Errorf("unable to find a requester: %w", err))
 	}
+	if requester == nil {
+		panic("requester is nil")
+	}
+
 	updateSystemIntakeContact(ctx, store,
 		requester.ID,
 		models.SystemIntakeContactComponentCenterForMedicareCm,
