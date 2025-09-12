@@ -795,13 +795,6 @@ type SystemIntakeRequestEditsInput struct {
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
 }
 
-// The contact who made an IT governance request for a system
-type SystemIntakeRequester struct {
-	Component *string `json:"component,omitempty"`
-	Email     *string `json:"email,omitempty"`
-	Name      string  `json:"name"`
-}
-
 // The input data used to set the requester of a system request
 type SystemIntakeRequesterInput struct {
 	Name string `json:"name"`

@@ -12,10 +12,6 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/google/uuid"
-	"github.com/guregu/null"
-	"golang.org/x/sync/errgroup"
-
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
@@ -29,6 +25,9 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/services"
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
+	"github.com/google/uuid"
+	"github.com/guregu/null"
+	"golang.org/x/sync/errgroup"
 )
 
 // AlternativeASolution is the resolver for the alternativeASolution field.
@@ -1945,50 +1944,9 @@ func (r *systemIntakeResolver) RequestName(ctx context.Context, obj *models.Syst
 }
 
 // Requester is the resolver for the requester field.
-func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeRequester, error) {
-	requesterWithoutEmail := &models.SystemIntakeRequester{
-		Component: obj.Component.Ptr(),
-		Email:     nil,
-		Name:      obj.Requester,
-	}
+func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeContact, error) {
+	return resolvers.SystemIntakeContactGetRequester(ctx, obj.ID)
 
-	// if the EUA doesn't exist (Sharepoint imports), don't bother calling Okta
-	if !obj.EUAUserID.Valid {
-		return requesterWithoutEmail, nil
-	}
-
-	user, err := dataloaders.FetchUserInfoByEUAUserID(ctx, obj.EUAUserID.ValueOrZero())
-	if err != nil {
-		// check if the EUA ID is just invalid in Okta (i.e. the requester no longer has an active EUA account)
-		if _, ok := err.(*apperrors.InvalidEUAIDError); ok {
-			return requesterWithoutEmail, nil
-		}
-
-		// error we can't handle, like being unable to communicate with Okta
-		return nil, err
-	}
-
-	// if we can't find the user and there was no error (shouldn't happen normally), omit the email
-	// user is a pointer, so we want to avoid a dereference below with this check
-	if user == nil {
-		return requesterWithoutEmail, nil
-	}
-
-	return &models.SystemIntakeRequester{
-		Component: obj.Component.Ptr(),
-		Email:     helpers.PointerTo(user.Email.String()),
-		Name:      obj.Requester,
-	}, nil
-}
-
-// RequesterName is the resolver for the requesterName field.
-func (r *systemIntakeResolver) RequesterName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return &obj.Requester, nil
-}
-
-// RequesterComponent is the resolver for the requesterComponent field.
-func (r *systemIntakeResolver) RequesterComponent(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.Component.Ptr(), nil
 }
 
 // Documents is the resolver for the documents field.

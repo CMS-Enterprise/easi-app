@@ -55,7 +55,19 @@ body:graphql {
         rejectionReason
         requestName
         requestType
-        #   requester
+        requester {
+          id
+          roles
+          component
+          isRequester
+          userID
+          userAccount {
+            id
+            commonName
+            username
+            email
+          }
+        }
         state
         submittedAt
         trbCollaborator

@@ -675,15 +675,6 @@ type SystemIntakeProductManager {
 }
 
 """
-The contact who made an IT governance request for a system
-"""
-type SystemIntakeRequester {
-  component: String
-  email: String
-  name: String!
-}
-
-"""
 Represents a single row of presentation link and document data for a system intake's Async GRB review
 All data values are optional but there is a constraint to require one data value on insertion
 """
@@ -789,12 +780,10 @@ type SystemIntake {
   rejectionReason: HTML
   requestName: String
   requestType: SystemIntakeRequestType!
-  requester: SystemIntakeRequester!
-  # Both of these fields only really exist because the `requester` type (above) always calls Okta to get the `email` field, and the
-  # 2 below (requesterName & requesterComponent) are just fields right from the system intakes table
-  # TODO Remove them when email is not always fetched on the `requester` type
-  requesterName: String
-  requesterComponent: String
+  """
+  The contact who made the IT governance request. Note that this shouldn't be null, but for some legacy contacts a requester is not set.
+  """
+  requester: SystemIntakeContact
   state: SystemIntakeState!
   step: SystemIntakeStep!
   submittedAt: Time
