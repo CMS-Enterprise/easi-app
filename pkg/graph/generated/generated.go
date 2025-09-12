@@ -799,8 +799,6 @@ type ComplexityRoot struct {
 		RequestName                                       func(childComplexity int) int
 		RequestType                                       func(childComplexity int) int
 		Requester                                         func(childComplexity int) int
-		RequesterComponent                                func(childComplexity int) int
-		RequesterName                                     func(childComplexity int) int
 		State                                             func(childComplexity int) int
 		StatusAdmin                                       func(childComplexity int) int
 		StatusRequester                                   func(childComplexity int) int
@@ -1008,12 +1006,6 @@ type ComplexityRoot struct {
 
 	SystemIntakeProductManager struct {
 		Component func(childComplexity int) int
-		Name      func(childComplexity int) int
-	}
-
-	SystemIntakeRequester struct {
-		Component func(childComplexity int) int
-		Email     func(childComplexity int) int
 		Name      func(childComplexity int) int
 	}
 
@@ -1481,9 +1473,7 @@ type SystemIntakeResolver interface {
 
 	RequestName(ctx context.Context, obj *models.SystemIntake) (*string, error)
 
-	Requester(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeRequester, error)
-	RequesterName(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	RequesterComponent(ctx context.Context, obj *models.SystemIntake) (*string, error)
+	Requester(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeContact, error)
 
 	Documents(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeDocument, error)
 
@@ -6323,20 +6313,6 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.SystemIntake.Requester(childComplexity), true
 
-	case "SystemIntake.requesterComponent":
-		if e.complexity.SystemIntake.RequesterComponent == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.RequesterComponent(childComplexity), true
-
-	case "SystemIntake.requesterName":
-		if e.complexity.SystemIntake.RequesterName == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.RequesterName(childComplexity), true
-
 	case "SystemIntake.state":
 		if e.complexity.SystemIntake.State == nil {
 			break
@@ -7330,27 +7306,6 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.SystemIntakeProductManager.Name(childComplexity), true
-
-	case "SystemIntakeRequester.component":
-		if e.complexity.SystemIntakeRequester.Component == nil {
-			break
-		}
-
-		return e.complexity.SystemIntakeRequester.Component(childComplexity), true
-
-	case "SystemIntakeRequester.email":
-		if e.complexity.SystemIntakeRequester.Email == nil {
-			break
-		}
-
-		return e.complexity.SystemIntakeRequester.Email(childComplexity), true
-
-	case "SystemIntakeRequester.name":
-		if e.complexity.SystemIntakeRequester.Name == nil {
-			break
-		}
-
-		return e.complexity.SystemIntakeRequester.Name(childComplexity), true
 
 	case "SystemIntakeSystem.cedarSystem":
 		if e.complexity.SystemIntakeSystem.CedarSystem == nil {
@@ -9507,15 +9462,6 @@ type SystemIntakeProductManager {
 }
 
 """
-The contact who made an IT governance request for a system
-"""
-type SystemIntakeRequester {
-  component: String
-  email: String
-  name: String!
-}
-
-"""
 Represents a single row of presentation link and document data for a system intake's Async GRB review
 All data values are optional but there is a constraint to require one data value on insertion
 """
@@ -9621,12 +9567,10 @@ type SystemIntake {
   rejectionReason: HTML
   requestName: String
   requestType: SystemIntakeRequestType!
-  requester: SystemIntakeRequester!
-  # Both of these fields only really exist because the ` + "`" + `requester` + "`" + ` type (above) always calls Okta to get the ` + "`" + `email` + "`" + ` field, and the
-  # 2 below (requesterName & requesterComponent) are just fields right from the system intakes table
-  # TODO Remove them when email is not always fetched on the ` + "`" + `requester` + "`" + ` type
-  requesterName: String
-  requesterComponent: String
+  """
+  The contact who made the IT governance request. Note that this shouldn't be null, but for some legacy contacts a requester is not set.
+  """
+  requester: SystemIntakeContact
   state: SystemIntakeState!
   step: SystemIntakeStep!
   submittedAt: Time
@@ -15214,10 +15158,6 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(_ context.Con
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
-			case "requesterName":
-				return ec.fieldContext_SystemIntake_requesterName(ctx, field)
-			case "requesterComponent":
-				return ec.fieldContext_SystemIntake_requesterComponent(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -24423,10 +24363,6 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(ctx con
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
-			case "requesterName":
-				return ec.fieldContext_SystemIntake_requesterName(ctx, field)
-			case "requesterComponent":
-				return ec.fieldContext_SystemIntake_requesterComponent(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -31743,10 +31679,6 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
-			case "requesterName":
-				return ec.fieldContext_SystemIntake_requesterName(ctx, field)
-			case "requesterComponent":
-				return ec.fieldContext_SystemIntake_requesterComponent(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -32015,10 +31947,6 @@ func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeRequestType(
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
-			case "requesterName":
-				return ec.fieldContext_SystemIntake_requesterName(ctx, field)
-			case "requesterComponent":
-				return ec.fieldContext_SystemIntake_requesterComponent(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -34754,10 +34682,6 @@ func (ec *executionContext) fieldContext_Mutation_archiveSystemIntake(ctx contex
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
-			case "requesterName":
-				return ec.fieldContext_SystemIntake_requesterName(ctx, field)
-			case "requesterComponent":
-				return ec.fieldContext_SystemIntake_requesterComponent(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -39080,10 +39004,6 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
-			case "requesterName":
-				return ec.fieldContext_SystemIntake_requesterName(ctx, field)
-			case "requesterComponent":
-				return ec.fieldContext_SystemIntake_requesterComponent(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -39325,10 +39245,6 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
-			case "requesterName":
-				return ec.fieldContext_SystemIntake_requesterName(ctx, field)
-			case "requesterComponent":
-				return ec.fieldContext_SystemIntake_requesterComponent(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -39570,10 +39486,6 @@ func (ec *executionContext) fieldContext_Query_mySystemIntakes(_ context.Context
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
-			case "requesterName":
-				return ec.fieldContext_SystemIntake_requesterName(ctx, field)
-			case "requesterComponent":
-				return ec.fieldContext_SystemIntake_requesterComponent(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -39804,10 +39716,6 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithReviewRequested(
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
-			case "requesterName":
-				return ec.fieldContext_SystemIntake_requesterName(ctx, field)
-			case "requesterComponent":
-				return ec.fieldContext_SystemIntake_requesterComponent(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -40038,10 +39946,6 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(_ context.
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
-			case "requesterName":
-				return ec.fieldContext_SystemIntake_requesterName(ctx, field)
-			case "requesterComponent":
-				return ec.fieldContext_SystemIntake_requesterComponent(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -45183,14 +45087,11 @@ func (ec *executionContext) _SystemIntake_requester(ctx context.Context, field g
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(*models.SystemIntakeRequester)
+	res := resTmp.(*models.SystemIntakeContact)
 	fc.Result = res
-	return ec.marshalNSystemIntakeRequester2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeRequester(ctx, field.Selections, res)
+	return ec.marshalOSystemIntakeContact2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContact(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntake_requester(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -45201,96 +45102,34 @@ func (ec *executionContext) fieldContext_SystemIntake_requester(_ context.Contex
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "id":
+				return ec.fieldContext_SystemIntakeContact_id(ctx, field)
+			case "userID":
+				return ec.fieldContext_SystemIntakeContact_userID(ctx, field)
+			case "userAccount":
+				return ec.fieldContext_SystemIntakeContact_userAccount(ctx, field)
+			case "systemIntakeId":
+				return ec.fieldContext_SystemIntakeContact_systemIntakeId(ctx, field)
 			case "component":
-				return ec.fieldContext_SystemIntakeRequester_component(ctx, field)
-			case "email":
-				return ec.fieldContext_SystemIntakeRequester_email(ctx, field)
-			case "name":
-				return ec.fieldContext_SystemIntakeRequester_name(ctx, field)
+				return ec.fieldContext_SystemIntakeContact_component(ctx, field)
+			case "roles":
+				return ec.fieldContext_SystemIntakeContact_roles(ctx, field)
+			case "isRequester":
+				return ec.fieldContext_SystemIntakeContact_isRequester(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_SystemIntakeContact_createdBy(ctx, field)
+			case "createdByUserAccount":
+				return ec.fieldContext_SystemIntakeContact_createdByUserAccount(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_SystemIntakeContact_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_SystemIntakeContact_modifiedBy(ctx, field)
+			case "modifiedByUserAccount":
+				return ec.fieldContext_SystemIntakeContact_modifiedByUserAccount(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_SystemIntakeContact_modifiedAt(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeRequester", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _SystemIntake_requesterName(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntake_requesterName(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().RequesterName(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_SystemIntake_requesterName(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _SystemIntake_requesterComponent(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntake_requesterComponent(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().RequesterComponent(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_SystemIntake_requesterComponent(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeContact", field.Name)
 		},
 	}
 	return fc, nil
@@ -46754,10 +46593,6 @@ func (ec *executionContext) fieldContext_SystemIntake_relatedIntakes(_ context.C
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
-			case "requesterName":
-				return ec.fieldContext_SystemIntake_requesterName(ctx, field)
-			case "requesterComponent":
-				return ec.fieldContext_SystemIntake_requesterComponent(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -47756,10 +47591,6 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(_ conte
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
-			case "requesterName":
-				return ec.fieldContext_SystemIntake_requesterName(ctx, field)
-			case "requesterComponent":
-				return ec.fieldContext_SystemIntake_requesterComponent(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -53639,132 +53470,6 @@ func (ec *executionContext) fieldContext_SystemIntakeProductManager_name(_ conte
 	return fc, nil
 }
 
-func (ec *executionContext) _SystemIntakeRequester_component(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeRequester) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntakeRequester_component(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Component, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_SystemIntakeRequester_component(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "SystemIntakeRequester",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _SystemIntakeRequester_email(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeRequester) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntakeRequester_email(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Email, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_SystemIntakeRequester_email(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "SystemIntakeRequester",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _SystemIntakeRequester_name(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeRequester) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntakeRequester_name(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Name, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_SystemIntakeRequester_name(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "SystemIntakeRequester",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _SystemIntakeSystem_id(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeSystem) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntakeSystem_id(ctx, field)
 	if err != nil {
@@ -58119,10 +57824,6 @@ func (ec *executionContext) fieldContext_TRBRequest_relatedIntakes(_ context.Con
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
-			case "requesterName":
-				return ec.fieldContext_SystemIntake_requesterName(ctx, field)
-			case "requesterComponent":
-				return ec.fieldContext_SystemIntake_requesterComponent(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -61018,10 +60719,6 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(_ context.
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
-			case "requesterName":
-				return ec.fieldContext_SystemIntake_requesterName(ctx, field)
-			case "requesterComponent":
-				return ec.fieldContext_SystemIntake_requesterComponent(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -61806,10 +61503,6 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_requestType(ctx, field)
 			case "requester":
 				return ec.fieldContext_SystemIntake_requester(ctx, field)
-			case "requesterName":
-				return ec.fieldContext_SystemIntake_requesterName(ctx, field)
-			case "requesterComponent":
-				return ec.fieldContext_SystemIntake_requesterComponent(ctx, field)
 			case "state":
 				return ec.fieldContext_SystemIntake_state(ctx, field)
 			case "step":
@@ -74533,82 +74226,13 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 		case "requester":
 			field := field
 
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
 				res = ec._SystemIntake_requester(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-		case "requesterName":
-			field := field
-
-			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_requesterName(ctx, field, obj)
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-		case "requesterComponent":
-			field := field
-
-			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_requesterComponent(ctx, field, obj)
 				return res
 			}
 
@@ -77205,49 +76829,6 @@ func (ec *executionContext) _SystemIntakeProductManager(ctx context.Context, sel
 			out.Values[i] = ec._SystemIntakeProductManager_component(ctx, field, obj)
 		case "name":
 			out.Values[i] = ec._SystemIntakeProductManager_name(ctx, field, obj)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
-var systemIntakeRequesterImplementors = []string{"SystemIntakeRequester"}
-
-func (ec *executionContext) _SystemIntakeRequester(ctx context.Context, sel ast.SelectionSet, obj *models.SystemIntakeRequester) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeRequesterImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("SystemIntakeRequester")
-		case "component":
-			out.Values[i] = ec._SystemIntakeRequester_component(ctx, field, obj)
-		case "email":
-			out.Values[i] = ec._SystemIntakeRequester_email(ctx, field, obj)
-		case "name":
-			out.Values[i] = ec._SystemIntakeRequester_name(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -83137,20 +82718,6 @@ func (ec *executionContext) marshalNSystemIntakeRequestType2githubᚗcomᚋcms�
 		}
 	}
 	return res
-}
-
-func (ec *executionContext) marshalNSystemIntakeRequester2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeRequester(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeRequester) graphql.Marshaler {
-	return ec._SystemIntakeRequester(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNSystemIntakeRequester2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeRequester(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeRequester) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._SystemIntakeRequester(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNSystemIntakeRequesterInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeRequesterInput(ctx context.Context, v any) (*models.SystemIntakeRequesterInput, error) {
