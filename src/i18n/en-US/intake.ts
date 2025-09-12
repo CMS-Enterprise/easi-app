@@ -1,10 +1,13 @@
 import {
+  SystemIntakeContactComponent,
+  SystemIntakeContactRole,
   SystemIntakeDocumentCommonType,
   SystemIntakeDocumentVersion
 } from 'gql/generated/graphql';
 
 import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
 import SystemIntakeSoftwareAcquisitionMethods from 'constants/enums/SystemIntakeSoftwareAcquisitionMethods';
+import { Translation } from 'types/util';
 
 const hasContractLabels: Record<
   `hasContract_${SystemIntakeContractStatus}`,
@@ -56,6 +59,79 @@ export const acquistionStrategyLabels: Record<
   NOT_YET_DETERMINED: 'Not yet determined'
 };
 
+const systemIntakeContactRoles: Translation<SystemIntakeContactRole> = {
+  BUSINESS_OWNER: 'Business Owner',
+  CLOUD_NAVIGATOR: 'Cloud Navigator',
+  CONTRACTING_OFFICERS_REPRESENTATIVE:
+    "Contracting Officer's Representative (COR)",
+  CYBER_RISK_ADVISOR: 'Cyber Risk Advisor (CRA)',
+  INFORMATION_SYSTEM_SECURITY_ADVISOR:
+    'Information System Security Advisor (ISSO)',
+  PRIVACY_ADVISOR: 'Privacy Advisor',
+  PRODUCT_MANAGER: 'Product Manager',
+  PRODUCT_OWNER: 'Product Owner',
+  PROJECT_MANAGER: 'Project Manager',
+  SUBJECT_MATTER_EXPERT: 'Subject Matter Expert (SME)',
+  SYSTEM_MAINTAINER: 'System Maintainer',
+  SYSTEM_OWNER: 'System Owner',
+  OTHER: 'Other'
+};
+
+const systemIntakeContactComponents: Translation<SystemIntakeContactComponent> =
+  {
+    CENTER_FOR_CLINICAL_STANDARDS_AND_QUALITY_CCSQ:
+      'Center for Clinical Standards and Quality (CCSQ)',
+    CENTER_FOR_CONSUMER_INFORMATION_AND_INSURANCE_OVERSIGHT_CCIIO:
+      'Center for Consumer Information and Insurance Oversight (CCIIO)',
+    CENTER_FOR_MEDICARE_CM: 'Center for Medicare (CM)',
+    CENTER_FOR_MEDICAID_AND_CHIP_SERVICES_CMCS:
+      'Center for Medicaid and Chip Services (CMCS)',
+    CENTER_FOR_MEDICARE_AND_MEDICAID_INNOVATION_CMMI:
+      'Center for Medicare and Medicaid Innovation (CMMI)',
+    CENTER_FOR_PROGRAM_INTEGRITY_CPI: 'Center for Program Integrity (CPI)',
+    CMS_WIDE: 'CMS Wide',
+    EMERGENCY_PREPAREDNESS_AND_RESPONSE_OPERATIONS_EPRO:
+      'Emergency Preparedness and Response Operations (EPRO)',
+    FEDERAL_COORDINATED_HEALTH_CARE_OFFICE:
+      'Federal Coordinated Health Care Office (FCHCO)',
+    OFFICE_OF_ACQUISITION_AND_GRANTS_MANAGEMENT_OAGM:
+      'Office of Acquisition and Grants Management (OAGM)',
+    OFFICE_OF_HEALTHCARE_EXPERIENCE_AND_INTEROPERABILITY:
+      'Office of Healthcare Experience and Interoperability (OHX)',
+    OFFICE_OF_COMMUNICATIONS_OC: 'Office of Communications (OC)',
+    OFFICE_OF_ENTERPRISE_DATA_AND_ANALYTICS_OEDA:
+      'Office of Enterprise Data and Analytics (OEDA)',
+    OFFICE_OF_EQUAL_OPPORTUNITY_AND_CIVIL_RIGHTS:
+      'Office of Equal Opportunity and Civil Rights (EOCR)',
+    OFFICE_OF_FINANCIAL_MANAGEMENT_OFM: 'Office of Financial Management (OFM)',
+    OFFICE_OF_HUMAN_CAPITAL: 'Office of Human Capital (OHC)',
+    OFFICE_OF_INFORMATION_TECHNOLOGY_OIT:
+      'Office of Information Technology (OIT)',
+    OFFICE_OF_LEGISLATION: 'Office of Legislation (OL)',
+    OFFICE_OF_MINORITY_HEALTH_OMH: 'Office of Minority Health (OMH)',
+    OFFICE_OF_PROGRAM_OPERATIONS_AND_LOCAL_ENGAGEMENT_OPOLE:
+      'Office of Program Operations and Local Engagement (OPOLE)',
+    OFFICE_OF_SECURITY_FACILITIES_AND_LOGISTICS_OPERATIONS_OSFLO:
+      'Office of Security Facilities and Logistics Operations (OSFLO)',
+    OFFICE_OF_STRATEGIC_OPERATIONS_AND_REGULATORY_AFFAIRS_OSORA:
+      'Office of Strategic Operations and Regulatory Affairs (OSORA)',
+    OFFICE_OF_STRATEGY_PERFORMANCE_AND_RESULTS_OSPR:
+      'Office of Strategy Performance and Results (OSPR)',
+    OFFICE_OF_THE_ACTUARY_OACT: 'Office of the Actuary (OACT)',
+    OFFICE_OF_THE_ADMINISTRATOR: 'Office of the Administrator (OA)',
+    OFFICES_OF_HEARINGS_AND_INQUIRIES:
+      'Offices of Hearings and Inquiries (OHI)',
+    CONSORTIUM_FOR_MEDICAID_AND_CHILDRENS_HEALTH:
+      "Consortium for Medicaid and Children's Health (CMCH)",
+    CONSORTIUM_FOR_MEDICARE_HEALTH_PLANS_OPERATIONS:
+      'Consortium for Medicare Health Plans Operations (CMHPO)',
+    OFFICE_OF_BURDEN_REDUCTION_AND_HEALTH_INFORMATICS:
+      'Office of Burden Reduction and Health Informatics (OBRI)',
+    OFFICE_OF_SUPPORT_SERVICES_AND_OPERATIONS:
+      'Office of Support Services and Operations (OSSO)',
+    OTHER: 'Other'
+  };
+
 const intake = {
   navigation: {
     itGovernance: 'IT Governance',
@@ -72,6 +148,7 @@ const intake = {
     submissionDate: 'Submission date',
     requestFor: 'Request for',
     component: 'Component',
+    roles: 'Role(s)',
     grtDate: 'GRT Date',
     grbDate: 'GRB Date',
     adminLead: 'Admin Lead',
@@ -267,7 +344,17 @@ const intake = {
       component: 'CMS Product Manager component',
       email: 'CMS Product Manager email'
     },
+    systemIntakeContactRoles,
+    systemIntakeContactComponents,
+    addTeamMembers:
+      'Use the button and table below to add and edit any team members or key collaborators for this project.',
+    addAnotherContact: 'Add another contact',
+    loadingContacts: 'Loading contacts',
+    noContacts: 'No contacts have been added to this request.',
     additionalContacts: {
+      requesterTooltip:
+        'This individual is the primary requester. Primary requesters are able to edit IT governance requests in EASi.',
+      primaryRequester: 'Primary requester',
       titleContacts: 'Additional contacts',
       titleRecipients: 'Choose recipients',
       recipientsSelected: '{{count}} recipients selected',

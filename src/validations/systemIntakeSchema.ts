@@ -42,27 +42,7 @@ const governanceTeams = Yup.object().shape({
 });
 
 const SystemIntakeValidationSchema = {
-  contactDetails: Yup.object().shape({
-    requester: Yup.object().shape({
-      commonName: Yup.string().trim().required('Enter a name for this request'),
-      component: Yup.string().required("Select the Requester's component")
-    }),
-    businessOwner: Yup.object().shape({
-      commonName: Yup.string()
-        .trim()
-        .required("Enter the Business or Product Owner's name"),
-      component: Yup.string().required('Select a Business Owner Component')
-    }),
-    productManager: Yup.object().shape({
-      commonName: Yup.string()
-        .trim()
-        .required('Enter the CMS Project/Product Manager or Lead name'),
-      component: Yup.string().required(
-        'Select a Project/Product Manager or Lead Component'
-      )
-    }),
-    governanceTeams
-  }),
+  governanceTeams,
   requestDetails: Yup.object().shape({
     requestName: Yup.string()
       .trim()

@@ -1,0 +1,16 @@
+@use 'viewports' as *;
+
+// Fix for tooltip content cutting off when table is scrollable
+.system-intake-contacts-table.usa-table-container--scrollable {
+  min-height: 140px;
+
+  .usa-tooltip__body {
+    white-space: pre-wrap;
+    min-width: 240px;
+  }
+  
+  @media (min-width: $desktop) {
+    overflow-y: visible !important;
+    min-height: auto;
+  }
+}

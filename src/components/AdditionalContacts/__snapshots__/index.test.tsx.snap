@@ -157,132 +157,157 @@ exports[`Additional contacts component > displays form when editing contact 1`] 
                 Select an option
               </option>
               <option
-                value="Center for Clinical Standards and Quality"
+                value="CONSORTIUM_FOR_MEDICAID_AND_CHILDRENS_HEALTH"
+              >
+                Consortium For Medicaid And Children's Health
+              </option>
+              <option
+                value="CONSORTIUM_FOR_MEDICARE_HEALTH_PLANS_OPERATIONS"
+              >
+                Consortium For Medicare Health Plans Operations
+              </option>
+              <option
+                value="OFFICE_OF_BURDEN_REDUCTION_AND_HEALTH_INFORMATICS"
+              >
+                Office Of Burden Reduction And Health Informatics
+              </option>
+              <option
+                value="OFFICE_OF_SUPPORT_SERVICES_AND_OPERATIONS"
+              >
+                Office Of Support Services And Operations
+              </option>
+              <option
+                value="CENTER_FOR_CLINICAL_STANDARDS_AND_QUALITY_CCSQ"
               >
                 Center for Clinical Standards and Quality (CCSQ)
               </option>
               <option
-                value="Center for Consumer Information and Insurance Oversight"
+                value="CENTER_FOR_CONSUMER_INFORMATION_AND_INSURANCE_OVERSIGHT_CCIIO"
               >
                 Center for Consumer Information and Insurance Oversight (CCIIO)
               </option>
               <option
-                value="Center for Medicare"
+                value="CENTER_FOR_MEDICARE_CM"
               >
                 Center for Medicare (CM)
               </option>
               <option
-                value="Center for Medicaid and CHIP Services"
+                value="CENTER_FOR_MEDICAID_AND_CHIP_SERVICES_CMCS"
               >
                 Center for Medicaid and CHIP Services (CMCS)
               </option>
               <option
-                value="Center for Medicare and Medicaid Innovation"
+                value="CENTER_FOR_MEDICARE_AND_MEDICAID_INNOVATION_CMMI"
               >
                 Center for Medicare and Medicaid Innovation (CMMI)
               </option>
               <option
-                value="Center for Program Integrity"
+                value="CENTER_FOR_PROGRAM_INTEGRITY_CPI"
               >
                 Center for Program Integrity (CPI)
               </option>
               <option
-                value="CMS Wide"
+                value="CMS_WIDE"
               >
                 CMS Wide (CMS)
               </option>
               <option
-                value="Emergency Preparedness and Response Operations"
+                value="EMERGENCY_PREPAREDNESS_AND_RESPONSE_OPERATIONS_EPRO"
               >
                 Emergency Preparedness and Response Operations (EPRO)
               </option>
               <option
-                value="Federal Coordinated Health Care Office"
+                value="FEDERAL_COORDINATED_HEALTH_CARE_OFFICE"
               >
                 Federal Coordinated Health Care Office (FCHCO)
               </option>
               <option
-                value="Office of Acquisition and Grants Management"
+                value="OFFICE_OF_ACQUISITION_AND_GRANTS_MANAGEMENT_OAGM"
               >
                 Office of Acquisition and Grants Management (OAGM)
               </option>
               <option
-                value="Office of Healthcare Experience and Interoperability"
+                value="OFFICE_OF_HEALTHCARE_EXPERIENCE_AND_INTEROPERABILITY"
               >
                 Office of Healthcare Experience and Interoperability (OHEI)
               </option>
               <option
-                value="Office of Communications"
+                value="OFFICE_OF_COMMUNICATIONS_OC"
               >
                 Office of Communications (OC)
               </option>
               <option
-                value="Office of Enterprise Data and Analytics"
+                value="OFFICE_OF_ENTERPRISE_DATA_AND_ANALYTICS_OEDA"
               >
                 Office of Enterprise Data and Analytics (OEDA)
               </option>
               <option
-                value="Office of Equal Opportunity and Civil Rights"
+                value="OFFICE_OF_EQUAL_OPPORTUNITY_AND_CIVIL_RIGHTS"
               >
                 Office of Equal Opportunity and Civil Rights (OEOCR)
               </option>
               <option
-                value="Office of Financial Management"
+                value="OFFICE_OF_FINANCIAL_MANAGEMENT_OFM"
               >
                 Office of Financial Management (OFM)
               </option>
               <option
-                value="Office of Human Capital"
+                value="OFFICE_OF_HUMAN_CAPITAL"
               >
                 Office of Human Capital (OHC)
               </option>
               <option
-                value="Office of Information Technology"
+                value="OFFICE_OF_INFORMATION_TECHNOLOGY_OIT"
               >
                 Office of Information Technology (OIT)
               </option>
               <option
-                value="Office of Legislation"
+                value="OFFICE_OF_LEGISLATION"
               >
                 Office of Legislation (OL)
               </option>
               <option
-                value="Office of Minority Health"
+                value="OFFICE_OF_MINORITY_HEALTH_OMH"
               >
                 Office of Minority Health (OMH)
               </option>
               <option
-                value="Office of Program Operations and Local Engagement"
+                value="OFFICE_OF_PROGRAM_OPERATIONS_AND_LOCAL_ENGAGEMENT_OPOLE"
               >
                 Office of Program Operations and Local Engagement (OPOLE)
               </option>
               <option
-                value="Office of Security, Facilities, and Logistics Operations"
+                value="OFFICE_OF_SECURITY_FACILITIES_AND_LOGISTICS_OPERATIONS_OSFLO"
               >
                 Office of Security, Facilities, and Logistics Operations (OSFLO)
               </option>
               <option
-                value="Office of Strategic Operations and Regulatory Affairs"
+                value="OFFICE_OF_STRATEGIC_OPERATIONS_AND_REGULATORY_AFFAIRS_OSORA"
               >
                 Office of Strategic Operations and Regulatory Affairs (OSORA)
               </option>
               <option
-                value="Office of Strategy, Performance, and Results"
+                value="OFFICE_OF_STRATEGY_PERFORMANCE_AND_RESULTS_OSPR"
               >
                 Office of Strategy, Performance, and Results (OSPR)
               </option>
               <option
-                value="Office of the Actuary"
+                value="OFFICE_OF_THE_ACTUARY_OACT"
               >
-                Office of the Actuary (OA)
+                Office of the Actuary (OACT)
               </option>
               <option
-                value="Offices of Hearings and Inquiries"
+                value="OFFICE_OF_THE_ADMINISTRATOR"
+              >
+                Office of the Administrator (OA)
+              </option>
+              <option
+                value="OFFICES_OF_HEARINGS_AND_INQUIRIES"
               >
                 Offices of Hearings and Inquiries (OHI)
               </option>
               <option
-                value="Other"
+                value="OTHER"
               >
                 Other
               </option>
@@ -469,7 +494,7 @@ exports[`Additional contacts component > renders without crashing 1`] = `
         <p
           class="text-bold"
         >
-          Jerry Seinfeld, Office of Information Technology
+          Jerry Seinfeld, Office of Information Technology (OIT)
         </p>
         <p>
           CLOUD_NAVIGATOR

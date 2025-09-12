@@ -15,7 +15,7 @@ import FieldErrorMsg from 'components/FieldErrorMsg';
 import HelpText from 'components/HelpText';
 import Label from 'components/Label';
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
-import { ContactDetailsForm } from 'types/systemIntake';
+import { GovernanceTeamsForm } from 'types/systemIntake';
 
 /**
  * Governance team fields for use in Contact details section of System Intake form
@@ -30,17 +30,17 @@ const GovernanceTeams = () => {
     clearErrors,
     setValue,
     formState: { errors }
-  } = useEasiFormContext<ContactDetailsForm>();
+  } = useEasiFormContext<GovernanceTeamsForm>();
 
-  const isPresent = watch('governanceTeams.isPresent');
+  const isPresent = watch('isPresent');
 
   // Reset team fields when `isPresent` is false
   useEffect(() => {
     if (!isPresent) {
-      clearErrors('governanceTeams.teams');
-      setValue('governanceTeams.teams.securityPrivacy.isPresent', false);
-      setValue('governanceTeams.teams.technicalReviewBoard.isPresent', false);
-      setValue('governanceTeams.teams.clearanceOfficer508.isPresent', false);
+      clearErrors('teams');
+      setValue('teams.securityPrivacy.isPresent', false);
+      setValue('teams.technicalReviewBoard.isPresent', false);
+      setValue('teams.clearanceOfficer508.isPresent', false);
     }
   }, [isPresent, setValue, clearErrors]);
 
@@ -60,7 +60,7 @@ const GovernanceTeams = () => {
 
         <Controller
           control={control}
-          name="governanceTeams.isPresent"
+          name="isPresent"
           render={({ field: { ref, ...field } }) => (
             <Radio
               {...field}
@@ -75,23 +75,19 @@ const GovernanceTeams = () => {
         />
 
         <FormGroup
-          error={!!errors?.governanceTeams?.teams?.message}
+          error={!!errors?.teams?.message}
           className="margin-left-4 margin-bottom-3 margin-top-1"
         >
-          <ErrorMessage
-            errors={errors}
-            name="governanceTeams.teams"
-            as={FieldErrorMsg}
-          />
+          <ErrorMessage errors={errors} name="teams" as={FieldErrorMsg} />
 
           {cmsGovernanceTeams.map(({ key, label, acronym }) => {
-            const team = watch(`governanceTeams.teams.${key}`);
+            const team = watch(`teams.${key}`);
 
             return (
               <div key={key}>
                 <Controller
                   control={control}
-                  name={`governanceTeams.teams.${key}.isPresent`}
+                  name={`teams.${key}.isPresent`}
                   render={({ field: { ref, ...field } }) => {
                     return (
                       <Checkbox
@@ -108,11 +104,9 @@ const GovernanceTeams = () => {
                   }}
                 />
 
-                {team.isPresent && (
+                {team?.isPresent && (
                   <FormGroup
-                    error={
-                      !!errors?.governanceTeams?.teams?.[key]?.collaborator
-                    }
+                    error={!!errors?.teams?.[key]?.collaborator}
                     className="margin-top-1 margin-bottom-2 margin-left-4"
                   >
                     <Label htmlFor={`governanceTeam-${key}-collaborator`}>
@@ -121,15 +115,14 @@ const GovernanceTeams = () => {
 
                     <ErrorMessage
                       errors={errors}
-                      name={`governanceTeams.teams.${key}.collaborator`}
+                      name={`teams.${key}.collaborator`}
                       as={FieldErrorMsg}
                     />
 
                     <TextInput
-                      {...register(
-                        `governanceTeams.teams.${key}.collaborator`,
-                        { shouldUnregister: true }
-                      )}
+                      {...register(`teams.${key}.collaborator`, {
+                        shouldUnregister: true
+                      })}
                       ref={null}
                       id={`governanceTeam-${key}-collaborator`}
                       type="text"
@@ -143,7 +136,7 @@ const GovernanceTeams = () => {
 
         <Controller
           control={control}
-          name="governanceTeams.isPresent"
+          name="isPresent"
           render={({ field: { ref, ...field } }) => (
             <Radio
               {...field}

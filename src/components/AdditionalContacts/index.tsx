@@ -18,6 +18,7 @@ import HelpText from 'components/HelpText';
 import Spinner from 'components/Spinner';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { ContactInputType, DeleteContactType } from 'types/systemIntake';
+import { getPersonNameAndComponentVal } from 'utils/getPersonNameAndComponent';
 
 import cmsDivisionsAndOfficesOptions from './cmsDivisionsAndOfficesOptions';
 
@@ -71,11 +72,15 @@ const Contact = ({
   } = contact;
   const { t } = useTranslation('intake');
 
+  const componentString = t(
+    `contactDetails.systemIntakeContactComponents.${component}`
+  );
+
   if (hideContact) return null;
   return (
     <>
       <p className="text-bold">
-        {commonName}, {component}
+        {getPersonNameAndComponentVal(commonName, componentString)}
       </p>
       <p>{roles[0]}</p>
       <p>{contact.userAccount.email}</p>
