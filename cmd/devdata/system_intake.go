@@ -209,6 +209,9 @@ func createSystemIntake(
 			Step:        models.SystemIntakeStepINITIALFORM,
 		}
 		intake, err := storage.CreateSystemIntake(ctx, store, &i)
+		if err != nil {
+			return nil, fmt.Errorf("unable to create system intake: %w", err)
+		}
 		logger := appcontext.ZLogger(ctx)
 
 		principal := appcontext.Principal(ctx)
