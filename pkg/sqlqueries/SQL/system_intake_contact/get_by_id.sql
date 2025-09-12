@@ -10,4 +10,4 @@ SELECT
     modified_by,
     modified_at
 FROM system_intake_contacts
-WHERE id= :id  IS NOT NULL
+WHERE id = :id
