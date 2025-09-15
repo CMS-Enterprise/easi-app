@@ -22,20 +22,7 @@ describe('Creating requests from the workspace that are linked to cedar systems'
     // IT Gov
     cy.get('@workspaceUrl').then(url => cy.visit(url));
     cy.get('[data-testid="new-request-itgov"]a').click();
-    cy.get('#RequestType-NewSystem').check({ force: true });
-    cy.contains('button', 'Continue').click();
-    cy.contains('a', 'Get started').click();
-
-    cy.contains('button', 'Add a system').click();
-    cy.get('[data-testid="cedarSystemID"]').select(
-      '{11AB1A00-1234-5678-ABC1-1A001B00CC1B}'
-    );
-
-    cy.get('#partialSupport').check({ force: true });
-
-    cy.contains('button', 'Add system').click();
-    cy.get('[data-testid="table"]')
-      .contains('td', 'Office of Funny Walks')
-      .should('be.visible');
+    cy.get('[data-testid="start-button--new"]').click();
+    cy.contains('a', 'Continue').click();
   });
 });

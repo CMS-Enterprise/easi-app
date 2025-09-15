@@ -10,6 +10,7 @@ import {
   Form,
   FormGroup,
   Grid,
+  Link,
   Link as UswdsLink,
   Radio,
   Select,
@@ -35,14 +36,16 @@ import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
 import HelpText from 'components/HelpText';
 import Label from 'components/Label';
-import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
+import RequiredFieldsText from 'components/RequiredFieldsText';
 import processStages from 'constants/enums/processStages';
 import {
   CMS_AI_EMAIL,
   CMS_DVSM_EMAIL,
-  CMS_TRB_EMAIL
+  CMS_TRB_EMAIL,
+  ENTERPRISE_ARCH_EMAIL,
+  IT_GOV_EMAIL
 } from 'constants/externalUrls';
 import flattenFormErrors from 'utils/flattenFormErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
@@ -172,6 +175,13 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
     }
   }, [errors, hasErrors, isSubmitting]);
 
+  const currentStageOptions: string[] = t(
+    'requestDetails.currentStageOptions',
+    {
+      returnObjects: true
+    }
+  );
+
   return (
     <>
       {hasErrors && (
@@ -206,39 +216,47 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
         as={<Alert type="error" />}
       />
 
-      <PageHeading className="margin-bottom-3">
+      <PageHeading className="margin-top-4 margin-bottom-1">
         {t('requestDetails.heading')}
       </PageHeading>
+      <p className="font-body-lg line-height-body-5 margin-top-0 margin-bottom-2 text-light">
+        {t('requestDetails.description')}
+      </p>
 
       {systemIntake.requestFormState ===
         SystemIntakeFormState.EDITS_REQUESTED && (
         <FeedbackBanner id={systemIntake.id} type="Intake Request" />
       )}
 
-      <p className="line-height-body-6">{t('requestDetails.description')}</p>
-
-      <MandatoryFieldsAlert className="tablet:grid-col-6" />
-
-      <hr className="margin-bottom-1 margin-top-3 opacity-30" aria-hidden />
-      <span className="font-body-sm text-bold">
-        {' '}
-        {t('requestDetails.subsectionHeadings.projectConcept')}
-      </span>
+      <RequiredFieldsText className="margin-top-0 margin-bottom-5" />
 
       <Form
         onSubmit={handleSubmit(() =>
           submit(() => history.push('contract-details'), true)
         )}
-        className="maxw-none tablet:grid-col-9 margin-bottom-7"
+        className="maxw-none tablet:grid-col-9 margin-bottom-5 border-top border-base-light padding-top-1"
       >
+        <h4 className="margin-y-0 font-body-md text-bold">
+          {t('requestDetails.subsectionHeadings.projectConcept')}
+        </h4>
+        <HelpText>
+          <Trans
+            i18nKey="intake:requestDetails.projectConceptHelpText"
+            values={{ email: IT_GOV_EMAIL }}
+            components={{
+              emailLink: <Link href={`mailto:${IT_GOV_EMAIL}`}> </Link>
+            }}
+          />
+        </HelpText>
+
         <Grid row gap="sm">
           {/* Request Name */}
-          <Grid tablet={{ col: 7 }}>
+          <Grid tablet={{ col: 8 }}>
             <FieldGroup
               scrollElement="requestName"
               error={!!errors.requestName}
             >
-              <Label htmlFor="requestName">
+              <Label htmlFor="requestName" required>
                 {t('requestDetails.contractTitle')}
               </Label>
               <HelpText id="requestNameHelpText" className="margin-top-1">
@@ -260,7 +278,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           </Grid>
 
           {/* Request / Project Acronym */}
-          <Grid tablet={{ col: 5 }}>
+          <Grid tablet={{ col: 4 }}>
             <FieldGroup
               scrollElement="projectAcronym"
               className="margin-left-1"
@@ -289,12 +307,21 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
         </Grid>
 
         <FieldGroup scrollElement="businessNeed" error={!!errors.businessNeed}>
-          <Label htmlFor="businessNeed">
+          <Label htmlFor="businessNeed" className="maxw-none" required>
             {t('requestDetails.businessNeed')}
           </Label>
           <HelpText id="businessNeedHelpText" className="margin-top-1">
             {t('requestDetails.businessNeedHelpText')}
           </HelpText>
+          <CollapsableLink
+            id="businessNeed"
+            label={t('requestDetails.viewExampleAnswer')}
+            className="margin-y-2"
+          >
+            <p className="margin-y-0">
+              {t('requestDetails.businessNeedExampleAnswer')}
+            </p>
+          </CollapsableLink>
           <ErrorMessage
             errors={errors}
             name="businessNeed"
@@ -313,12 +340,21 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           scrollElement="businessSolution"
           error={!!errors.businessSolution}
         >
-          <Label htmlFor="businessSolution">
+          <Label htmlFor="businessSolution" required>
             {t('requestDetails.businessSolution')}
           </Label>
           <HelpText id="businessSolutionHelpText" className="margin-top-1">
             {t('requestDetails.businessSolutionHelpText')}
           </HelpText>
+          <CollapsableLink
+            id="businessSolution"
+            label={t('requestDetails.viewExampleAnswer')}
+            className="margin-y-2"
+          >
+            <p className="margin-y-0">
+              {t('requestDetails.businessSolutionExampleAnswer')}
+            </p>
+          </CollapsableLink>
           <ErrorMessage
             errors={errors}
             name="businessSolution"
@@ -334,7 +370,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
         </FieldGroup>
 
         <FieldGroup scrollElement="currentStage" error={!!errors.currentStage}>
-          <Label htmlFor="currentStage">
+          <Label htmlFor="currentStage" required>
             {t('requestDetails.currentStage')}
           </Label>
           <HelpText id="currentStageHelpText" className="margin-top-1">
@@ -352,31 +388,91 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
             aria-describedby="currentStageHelpText"
           >
             <option value="" disabled>
-              {t('Select an option')}
+              - {t('Select')} -
             </option>
+
             {processStages.map(({ name, value }) => (
               <option key={value} value={name}>
                 {name}
               </option>
             ))}
           </Select>
+          <CollapsableLink
+            id="currentStage"
+            label={t('requestDetails.currentStageCollapseLinkText')}
+            className="margin-y-2"
+          >
+            <ul className="margin-y-0 padding-left-3">
+              {currentStageOptions.map((item, index) => (
+                <li key={item} className="line-height-sans-5 margin-bottom-1">
+                  <Trans
+                    i18nKey={`intake:requestDetails.currentStageOptions.${index}`}
+                    components={{ bold: <strong /> }}
+                  />
+                </li>
+              ))}
+            </ul>
+          </CollapsableLink>
+          {/* {watch('currentStage') === processStages[1].name && (
+            <Controller
+              control={control}
+              name="usingSoftware"
+              render={({ field, fieldState: { error } }) => {
+                return (
+                  <FormGroup error={!!error}>
+                    <Label
+                      htmlFor="businessSolution"
+                      className="maxw-none"
+                      required
+                    >
+                      {t('requestDetails.itDev')}
+                    </Label>
+                    <HelpText id="businessSolutionHelpText">
+                      {t('requestDetails.itDevHelp')}
+                    </HelpText>
+                    <ErrorMessage
+                      errors={errors}
+                      name="acquisitionMethods"
+                      as={FieldErrorMsg}
+                    />
+                    <DateTimePicker
+                      id="test"
+                      name="test"
+                      // TODO: Update this when this new section gets added
+                      value="12/12/2025"
+                      onChange={(date: string | null) => field.onChange(date)}
+                    />
+                  </FormGroup>
+                );
+              }}
+            />
+          )} */}
         </FieldGroup>
 
         <hr className="margin-bottom-1 margin-top-4 opacity-30" aria-hidden />
-        <span className="font-body-sm text-bold">
+        <h4 className="font-body-sm text-bold margin-y-0">
           {t('requestDetails.subsectionHeadings.collaboration')}
-        </span>
+        </h4>
 
         <FieldGroup
           scrollElement="needsEaSupport"
           error={!!errors.needsEaSupport}
         >
           <Fieldset>
-            <legend className="text-bold">
+            <Label htmlFor="needsEaSupport" required>
               {t('requestDetails.needsEaSupport')}
-            </legend>
+            </Label>
             <HelpText id="needsEaSupportHelpText" className="margin-top-1">
-              {t('requestDetails.needsEaSupportHelpText')}
+              <Trans
+                i18nKey="intake:requestDetails.needsEaSupportHelpText"
+                components={{
+                  email: (
+                    <UswdsLink href={`mailto:${ENTERPRISE_ARCH_EMAIL}`}>
+                      {' '}
+                    </UswdsLink>
+                  )
+                }}
+              />
             </HelpText>
             <ErrorMessage
               errors={errors}
@@ -440,16 +536,15 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
         </CollapsableLink>
 
         <hr className="margin-bottom-1 margin-top-4 opacity-30" aria-hidden />
-        <span className="font-body-sm text-bold">
-          {' '}
+        <h4 className="font-body-sm text-bold margin-y-0">
           {t('requestDetails.subsectionHeadings.projectDetails')}
-        </span>
+        </h4>
 
         <FieldGroup scrollElement="usesAiTech" error={!!errors.usesAiTech}>
           <Fieldset>
-            <legend className="text-bold">
+            <Label htmlFor="usesAiTech" required>
               {t('requestDetails.usesAiTech')}
-            </legend>
+            </Label>
             <HelpText id="usesAiTechHelpText" className="margin-top-1">
               <Trans
                 i18nKey="intake:requestDetails.usesAiTechHelpText"
@@ -507,9 +602,9 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
 
         <FieldGroup scrollElement="hasUiChanges" error={!!errors.hasUiChanges}>
           <Fieldset>
-            <legend className="text-bold">
+            <Label htmlFor="hasUiChanges" className="maxw-none" required>
               {t('requestDetails.hasUiChanges')}
-            </legend>
+            </Label>
             <ErrorMessage
               errors={errors}
               name="hasUiChanges"
@@ -556,7 +651,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           scrollElement="softwareAcquisition"
           error={!!errors.usingSoftware}
         >
-          <Label htmlFor="softwareAcquisition">
+          <Label htmlFor="softwareAcquisition" className="maxw-none" required>
             {t('requestDetails.softwareAcquisition.usingSoftwareLabel')}
           </Label>
           <HelpText id="elasHelpText" className="margin-top-1">
@@ -591,7 +686,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           {/* If 'Yes' is selected, display additional software props (software MultiSelect (to come later) and Acquisition Approach Checkboxes) */}
           {watch('usingSoftware') === 'YES' && (
             <div className="margin-left-4 margin-bottom-3">
-              {/* TODO: We eventually want to display a ComboBox/MultiSelect of software the requester can select, before we 
+              {/* TODO: We eventually want to display a ComboBox/MultiSelect of software the requester can select, before we
                 can do this we need a list of "CMS known" software and/or vendors that is currently being evaluated by ICPG / DVSM */}
 
               <Controller
@@ -600,15 +695,12 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                 render={({ field, fieldState: { error } }) => {
                   return (
                     <FormGroup error={!!error}>
-                      <Label htmlFor="businessSolution">
+                      <Label htmlFor="acquisitionMethods" required>
                         {t(
                           'requestDetails.softwareAcquisition.acquisitionStrategyLabel'
                         )}
                       </Label>
-                      <HelpText
-                        id="businessSolutionHelpText"
-                        className="margin-top-1"
-                      >
+                      <HelpText id="businessSolutionHelpText">
                         {t(
                           'requestDetails.softwareAcquisition.acquisitionStrategyHelp'
                         )}
@@ -621,6 +713,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                       <Alert
                         type="info"
                         data-testid="mandatory-fields-alert"
+                        className="margin-top-1"
                         slim
                       >
                         {t(
@@ -686,7 +779,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                 {...field}
                 inputRef={ref}
                 id="usingSoftwareNotSure"
-                label={t('Not Sure')}
+                label={t('requestDetails.softwareAcquisition.notSure')}
                 checked={value === 'NOT_SURE'}
                 onChange={() => {
                   field.onChange('NOT_SURE');
@@ -705,16 +798,16 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
             type: 'button',
             onClick: () => submit(() => history.push('contact-details'))
           }}
-          border={false}
+          border
           taskListUrl={saveExitLink}
           submit={() => submit(() => history.push(saveExitLink))}
-          className="margin-top-4"
+          className="margin-top-5"
         />
       </Form>
 
       <AutoSave values={watch()} onSave={submit} debounceDelay={3000} />
 
-      <PageNumber currentPage={2} totalPages={5} />
+      <PageNumber currentPage={2} totalPages={5} className="margin-bottom-15" />
     </>
   );
 };

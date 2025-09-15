@@ -1,4 +1,7 @@
-import { SystemIntakeStatusAdmin } from 'gql/generated/graphql';
+import {
+  ITGovIntakeFormStatus,
+  SystemIntakeStatusAdmin
+} from 'gql/generated/graphql';
 
 import { SystemIntakeForTable } from 'components/RequestRepository/tableMap';
 import { SystemIntakeForm } from 'types/systemIntake';
@@ -44,17 +47,12 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   contract: {
     hasContract: null,
     contractor: '',
-    startDate: {
-      month: '',
-      day: '',
-      year: ''
-    },
-    endDate: {
-      month: '',
-      day: '',
-      year: ''
-    },
+    startDate: '',
+    endDate: '',
     numbers: ''
+  },
+  itGovTaskStatuses: {
+    intakeFormStatus: ITGovIntakeFormStatus.READY
   },
   businessNeed: '',
   businessSolution: '',

@@ -8,4 +8,5 @@ export type Flags = {
   systemWorkspaceTeam: boolean;
   grbReviewTab: boolean;
   showAtoColumn: boolean;
+  serviceAlertEnabled: boolean;
 };

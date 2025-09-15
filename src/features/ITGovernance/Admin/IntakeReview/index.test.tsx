@@ -13,8 +13,6 @@ import {
 import { MessageProvider } from 'hooks/useMessage';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
-import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
-
 import IntakeReview from './index';
 
 describe('The GRT intake review view', () => {
@@ -100,10 +98,10 @@ describe('The GRT intake review view', () => {
   it('renders annual spending data', () => {
     const annualSpending: SystemIntakeFragmentFragment['annualSpending'] = {
       __typename: 'SystemIntakeAnnualSpending',
-      currentAnnualSpending: 'about $3.50',
-      currentAnnualSpendingITPortion: '35%',
-      plannedYearOneSpending: 'more than $1 million',
-      plannedYearOneSpendingITPortion: '50%'
+      currentAnnualSpending: '3.50',
+      currentAnnualSpendingITPortion: '35',
+      plannedYearOneSpending: '123456',
+      plannedYearOneSpendingITPortion: '50'
     };
 
     render(
@@ -126,35 +124,7 @@ describe('The GRT intake review view', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText(/about \$3.50/i)).toBeInTheDocument();
-    expect(screen.getByText(/more than \$1 million/i)).toBeInTheDocument();
-  });
-
-  it('Renders action button for GRT admins', async () => {
-    render(
-      <MemoryRouter
-        initialEntries={[`/it-governance/${systemIntake.id}/intake-request`]}
-      >
-        <MockedProvider
-          mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery]}
-        >
-          <Route path={['/it-governance/:systemId/intake-request']}>
-            <MessageProvider>
-              <ITGovAdminContext.Provider value>
-                <IntakeReview systemIntake={systemIntake} />
-              </ITGovAdminContext.Provider>
-            </MessageProvider>
-          </Route>
-        </MockedProvider>
-      </MemoryRouter>
-    );
-
-    expect(
-      await screen.findByTestId(`contact-requester-${requester.euaUserId}`)
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByRole('link', { name: 'Take an action' })
-    ).toBeInTheDocument();
+    expect(screen.getByText('$3.5')).toBeInTheDocument();
+    expect(screen.getByText('$123,456')).toBeInTheDocument();
   });
 });

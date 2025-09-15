@@ -216,9 +216,7 @@ exports[`Trb Help Prepare Consult Meeting > renders 1`] = `
           <div
             class="margin-top-2 margin-bottom-05"
           >
-            Contact the Technical Review Board:
-          </div>
-          <div>
+            Contact the Technical Review Board: 
             <a
               class="usa-link"
               href="mailto:cms-trb@cms.hhs.gov"

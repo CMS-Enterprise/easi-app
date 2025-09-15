@@ -12,21 +12,29 @@ import {
 } from 'components/DescriptionGroup';
 import FundingSourcesTable from 'components/FundingSources/FundingSourcesTable';
 import { formatFundingSourcesForApp } from 'components/FundingSources/utils';
+import UswdsReactLink from 'components/LinkWrapper';
 import ReviewRow from 'components/ReviewRow';
 import { yesNoMap } from 'data/common';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 import { formatContractDate, formatDateLocal } from 'utils/date';
 import formatContractNumbers from 'utils/formatContractNumbers';
+import formatNumber from 'utils/formatNumber';
+import { showSystemVal } from 'utils/showVal';
+import { translateRequestType } from 'utils/systemIntake';
 
 import './index.scss';
 
 type SystemIntakeReviewProps = {
   systemIntake: SystemIntakeFragmentFragment;
+  showSubmissionDate?: boolean;
+  showEditSectionLink?: boolean;
 };
 
 export const SystemIntakeReview = ({
-  systemIntake
+  systemIntake,
+  showSubmissionDate = true,
+  showEditSectionLink = false
 }: SystemIntakeReviewProps) => {
   const { annualSpending, costs, contract, submittedAt, contractNumbers } =
     systemIntake;
@@ -107,7 +115,10 @@ export const SystemIntakeReview = ({
             <div>
               <DescriptionTerm term={t('review.currentAnnualSpending')} />
               <DescriptionDefinition
-                definition={annualSpending.currentAnnualSpending}
+                definition={`$${showSystemVal(
+                  annualSpending.currentAnnualSpending,
+                  { format: formatNumber }
+                )}`}
               />
             </div>
             <div>
@@ -115,7 +126,7 @@ export const SystemIntakeReview = ({
                 term={t('review.currentAnnualSpendingITPortion')}
               />
               <DescriptionDefinition
-                definition={annualSpending.currentAnnualSpendingITPortion}
+                definition={`${annualSpending.currentAnnualSpendingITPortion}%`}
               />
             </div>
           </ReviewRow>
@@ -123,7 +134,10 @@ export const SystemIntakeReview = ({
             <div>
               <DescriptionTerm term={t('review.plannedYearOneSpending')} />
               <DescriptionDefinition
-                definition={annualSpending.plannedYearOneSpending}
+                definition={`$${showSystemVal(
+                  annualSpending.plannedYearOneSpending,
+                  { format: formatNumber }
+                )}`}
               />
             </div>
             <div>
@@ -131,7 +145,7 @@ export const SystemIntakeReview = ({
                 term={t('review.plannedYearOneSpendingITPortion')}
               />
               <DescriptionDefinition
-                definition={annualSpending.plannedYearOneSpendingITPortion}
+                definition={`${annualSpending.plannedYearOneSpendingITPortion}%`}
               />
             </div>
           </ReviewRow>
@@ -191,16 +205,33 @@ export const SystemIntakeReview = ({
   return (
     <div>
       <DescriptionList title={t('review.systemRequest')}>
-        <ReviewRow>
-          <div>
-            <DescriptionTerm term={t('review.submissionDate')} />
-            <DescriptionDefinition definition={getSubmissionDate()} />
-          </div>
-        </ReviewRow>
+        {showSubmissionDate && (
+          <ReviewRow className="margin-top-6">
+            <div>
+              <DescriptionTerm term={t('review.submissionDate')} />
+              <DescriptionDefinition definition={getSubmissionDate()} />
+            </div>
+            <div>
+              <DescriptionTerm term={t('review.requestType')} />
+              <DescriptionDefinition
+                definition={translateRequestType(systemIntake.requestType)}
+              />
+            </div>
+          </ReviewRow>
+        )}
       </DescriptionList>
 
-      <hr className="system-intake__hr" />
-      <h2 className="font-heading-xl">Contact details</h2>
+      <h2 className="font-heading-xl margin-bottom-0 border-top border-base-light padding-top-3">
+        {t('review.contactDetails')}
+      </h2>
+      {showEditSectionLink && (
+        <UswdsReactLink
+          to="contact-details"
+          className="display-block margin-bottom-3 margin-top-1"
+        >
+          {t('review.edit')}
+        </UswdsReactLink>
+      )}
 
       <DescriptionList title={t('review.contactDetails')}>
         <ReviewRow>
@@ -243,6 +274,7 @@ export const SystemIntakeReview = ({
                 <DescriptionDefinition
                   key={`GovernanceTeam-${team.name.split(' ').join('-')}`}
                   definition={`${team.name}, ${team.collaborator}`}
+                  className="margin-x-0 margin-top-0 margin-bottom-1"
                 />
               ))
             ) : (
@@ -252,8 +284,17 @@ export const SystemIntakeReview = ({
         </ReviewRow>
       </DescriptionList>
 
-      <hr className="system-intake__hr" />
-      <h2 className="font-heading-xl">{t('review.requestDetails')}</h2>
+      <h2 className="font-heading-xl margin-top-3 margin-bottom-0 border-top border-base-light padding-top-3">
+        {t('review.requestDetails')}
+      </h2>
+      {showEditSectionLink && (
+        <UswdsReactLink
+          to="request-details"
+          className="display-block margin-bottom-3 margin-top-1"
+        >
+          {t('review.edit')}
+        </UswdsReactLink>
+      )}
 
       <DescriptionList title={t('review.requestDetails')}>
         <ReviewRow>
@@ -318,8 +359,17 @@ export const SystemIntakeReview = ({
         <SoftwareAcquisition />
       </DescriptionList>
 
-      <hr className="system-intake__hr" />
-      <h2 className="font-heading-xl">Contract details</h2>
+      <h2 className="font-heading-xl margin-top-3 margin-bottom-0 border-top border-base-light padding-top-3">
+        {t('contractDetails.heading')}
+      </h2>
+      {showEditSectionLink && (
+        <UswdsReactLink
+          to="contract-details"
+          className="display-block margin-bottom-3 margin-top-1"
+        >
+          {t('review.edit')}
+        </UswdsReactLink>
+      )}
 
       <DescriptionList title={t('review.contractDetails')}>
         <ReviewRow>
@@ -407,8 +457,17 @@ export const SystemIntakeReview = ({
         )}
       </DescriptionList>
 
-      <hr className="system-intake__hr" />
-      <h2 className="font-heading-xl">{t('review.documents')}</h2>
+      <h2 className="font-heading-xl margin-top-3 margin-bottom-0 border-top border-base-light padding-top-3">
+        {t('review.documents')}
+      </h2>
+      {showEditSectionLink && (
+        <UswdsReactLink
+          to="documents"
+          className="display-block margin-bottom-3 margin-top-1"
+        >
+          {t('review.edit')}
+        </UswdsReactLink>
+      )}
       <DocumentsTable
         systemIntakeId={systemIntake.id}
         documents={systemIntake.documents}
