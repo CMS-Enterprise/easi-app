@@ -6,7 +6,11 @@ export const CreateSystemIntake = gql(/* GraphQL */ `
       id
       requestType
       requester {
-        name
+        id
+        userAccount {
+          id
+          commonName
+        }
       }
     }
   }
@@ -101,8 +105,12 @@ export const UpdateSystemIntakeContactDetails = gql(/* GraphQL */ `
           name
         }
         requester {
+          id
           component
-          name
+          userAccount {
+            id
+            commonName
+          }
         }
       }
     }

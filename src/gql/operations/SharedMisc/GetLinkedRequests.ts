@@ -18,8 +18,13 @@ export default gql(/* GraphQL */ `
           lcid # lcid is part of the intake's status display value
           # nextMeetingDate # tbd
 
-          # requester
-          requesterName
+          requester {
+            id
+            userAccount {
+              id
+              commonName
+            }
+          }
 
           nextMeetingDate
           lastMeetingDate
