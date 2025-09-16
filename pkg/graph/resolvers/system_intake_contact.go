@@ -87,17 +87,16 @@ func UpdateSystemIntakeContact(
 
 // SystemIntakeContactsGetBySystemIntakeID fetches contacts for a system intake
 func SystemIntakeContactsGetBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) (*models.SystemIntakeContacts, error) {
-	contacts, err := dataloaders.SystemIntakeContactGetBySystemIntakeID(ctx, systemIntakeID)
-	if err != nil {
-		return nil, err
-	}
-	// Wrap the returned type, so we can calculate additional information on it.
-	return &models.SystemIntakeContacts{
-		AllContacts: contacts,
-	}, nil
+	return dataloaders.SystemIntakeContactsGetBySystemIntakeID(ctx, systemIntakeID)
+
 }
 
 // SystemIntakeContactGetByID fetches contacts for a system intake
 func SystemIntakeContactGetByID(ctx context.Context, id uuid.UUID) (*models.SystemIntakeContact, error) {
 	return dataloaders.SystemIntakeContactGetByID(ctx, id)
+}
+
+// SystemIntakeContactGetRequester fetches the requester contact for a system intake
+func SystemIntakeContactGetRequester(ctx context.Context, system_intake_id uuid.UUID) (*models.SystemIntakeContact, error) {
+	return dataloaders.SystemIntakeContactGetRequester(ctx, system_intake_id)
 }
