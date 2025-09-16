@@ -89,8 +89,8 @@ describe('GRB participation needed', () => {
     expect(
       screen.getByText(
         getPersonNameAndComponentAcronym(
-          testIntake.requesterName!,
-          testIntake.requesterComponent
+          testIntake?.requester?.userAccount.commonName!,
+          testIntake?.requester?.component!
         )
       )
     ).toBeInTheDocument();

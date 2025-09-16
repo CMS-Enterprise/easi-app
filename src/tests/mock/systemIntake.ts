@@ -219,10 +219,10 @@ export const emptySystemIntake: SystemIntakeFragmentFragment = {
   statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_IN_PROGRESS,
   statusRequester: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_IN_PROGRESS,
   requester: {
-    __typename: 'SystemIntakeRequester',
-    name: requester.userAccount.commonName!,
-    component: null,
-    email: null
+    __typename: 'SystemIntakeContact',
+    id: requester.id,
+    userAccount: requester.userAccount,
+    component: null
   },
   requestType: SystemIntakeRequestType.NEW,
   businessOwner: {
@@ -359,10 +359,10 @@ export const systemIntake: SystemIntakeFragmentFragment = {
   statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_SUBMITTED,
   statusRequester: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_SUBMITTED,
   requester: {
-    __typename: 'SystemIntakeRequester',
-    name: requester.userAccount.commonName!,
-    component: requester.component,
-    email: requester.userAccount.email
+    __typename: 'SystemIntakeContact',
+    id: requester.id,
+    userAccount: requester.userAccount,
+    component: requester.component
   },
   requestType: SystemIntakeRequestType.NEW,
   businessOwner: {
@@ -531,8 +531,7 @@ export const systemIntakeForTable: GetSystemIntakesTableQuery['systemIntakes'][n
     requestName: '',
     statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_IN_PROGRESS,
     state: SystemIntakeState.OPEN,
-    requesterName: systemIntake.requester.name,
-    requesterComponent: systemIntake.requester.component,
+    requester: systemIntake.requester,
     businessOwner: systemIntake.businessOwner,
     productManager: systemIntake.productManager,
     trbCollaboratorName: '',
@@ -735,40 +734,82 @@ export const systemIntakesWithReviewRequested: SystemIntakeWithReviewRequestedFr
     {
       id: 'a5689bec-e4cf-4f2b-a7de-72020e8d65be',
       requestName: 'With GRB scheduled',
-      requesterName: users[3].commonName,
-      requesterComponent: 'Office of Enterprise Data and Analytics',
+      requester: {
+        __typename: 'SystemIntakeContact',
+        id: users[3].euaUserId,
+        userAccount: {
+          __typename: 'UserAccount',
+          id: users[3].euaUserId,
+          commonName: users[3].commonName
+        },
+        component:
+          SystemIntakeContactComponent.OFFICE_OF_ENTERPRISE_DATA_AND_ANALYTICS_OEDA
+      },
       grbDate: `${currentYear + 2}-10-02T03:11:24.478056Z`,
       __typename: 'SystemIntake'
     },
     {
       id: '5af245bc-fc54-4677-bab1-1b3e798bb43c',
       requestName: 'System Intake with GRB Reviewers',
-      requesterName: 'User One',
-      requesterComponent: 'Office of the Actuary',
+      requester: {
+        __typename: 'SystemIntakeContact',
+        id: users[0].euaUserId,
+        userAccount: {
+          __typename: 'UserAccount',
+          id: users[0].euaUserId,
+          commonName: users[0].commonName
+        },
+        component: SystemIntakeContactComponent.OFFICE_OF_THE_ACTUARY_OACT
+      },
       grbDate: '2020-10-08T03:11:24.478056Z',
       __typename: 'SystemIntake'
     },
     {
       id: '29486f85-1aba-4eaf-a7dd-6137b9873adc',
       requestName: 'Edits requested on initial request form',
-      requesterName: users[0].commonName,
-      requesterComponent: 'Federal Coordinated Health Care Office',
+      requester: {
+        __typename: 'SystemIntakeContact',
+        id: users[0].euaUserId,
+        userAccount: {
+          __typename: 'UserAccount',
+          id: users[0].euaUserId,
+          commonName: users[0].commonName
+        },
+        component:
+          SystemIntakeContactComponent.FEDERAL_COORDINATED_HEALTH_CARE_OFFICE
+      },
       grbDate: null,
       __typename: 'SystemIntake'
     },
     {
       id: '29486f85-1aba-4eaf-a7dd-6137b9873adc',
       requestName: 'Mock System Intake 1',
-      requesterName: users[1].commonName,
-      requesterComponent: 'Office of Communications',
+      requester: {
+        __typename: 'SystemIntakeContact',
+        id: users[1].euaUserId,
+        userAccount: {
+          __typename: 'UserAccount',
+          id: users[1].euaUserId,
+          commonName: users[1].commonName
+        },
+        component: SystemIntakeContactComponent.OFFICE_OF_COMMUNICATIONS_OC
+      },
       grbDate: '2024-03-29T03:11:24.478056Z',
       __typename: 'SystemIntake'
     },
     {
       id: '29486f85-1aba-4eaf-a7dd-6137b9873adc',
       requestName: 'Mock System Intake 2',
-      requesterName: users[2].commonName,
-      requesterComponent: 'Office of the Actuary',
+      requester: {
+        __typename: 'SystemIntakeContact',
+        id: users[2].euaUserId,
+        userAccount: {
+          __typename: 'UserAccount',
+          id: users[2].euaUserId,
+          commonName: users[2].commonName
+        },
+        component: SystemIntakeContactComponent.OFFICE_OF_THE_ACTUARY_OACT
+      },
       grbDate: `${currentYear + 1}-06-09T03:11:24.478056Z`,
       __typename: 'SystemIntake'
     },
@@ -776,16 +817,34 @@ export const systemIntakesWithReviewRequested: SystemIntakeWithReviewRequestedFr
     {
       id: '20cbcfbf-6459-4c96-943b-e76b83122dbf',
       requestName: 'Closable Request',
-      requesterName: users[3].commonName,
-      requesterComponent: 'Office of Information Technology',
+      requester: {
+        __typename: 'SystemIntakeContact',
+        id: users[3].euaUserId,
+        userAccount: {
+          __typename: 'UserAccount',
+          id: users[3].euaUserId,
+          commonName: users[3].commonName
+        },
+        component:
+          SystemIntakeContactComponent.OFFICE_OF_INFORMATION_TECHNOLOGY_OIT
+      },
       grbDate: '2023-01-18T03:11:24.478056Z',
       __typename: 'SystemIntake'
     },
     {
       id: '29486f85-1aba-4eaf-a7dd-6137b9873adc',
       requestName: 'Mock System Intake 3',
-      requesterName: users[2].commonName,
-      requesterComponent: 'Office of Information Technology',
+      requester: {
+        __typename: 'SystemIntakeContact',
+        id: users[2].euaUserId,
+        userAccount: {
+          __typename: 'UserAccount',
+          id: users[2].euaUserId,
+          commonName: users[2].commonName
+        },
+        component:
+          SystemIntakeContactComponent.OFFICE_OF_INFORMATION_TECHNOLOGY_OIT
+      },
       grbDate: null,
       __typename: 'SystemIntake'
     }

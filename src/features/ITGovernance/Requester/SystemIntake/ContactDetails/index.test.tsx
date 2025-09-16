@@ -68,7 +68,7 @@ describe('System intake form - Contact details', () => {
     // Requester name is filled in
     expect(
       screen.getByRole('textbox', { name: 'Requester name *' })
-    ).toHaveValue(emptySystemIntake.requester.name);
+    ).toHaveValue(emptySystemIntake.requester?.userAccount.commonName);
   });
 
   // TODO EASI-4938 - fix unit test
