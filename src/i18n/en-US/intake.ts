@@ -144,7 +144,7 @@ const intake = {
   viewFeedback: 'View feedback',
   fields: {
     projectName: 'Project name',
-    requester: 'Requester',
+    requester: 'Requester name',
     submissionDate: 'Submission date',
     requestFor: 'Request for',
     component: 'Component',
@@ -211,6 +211,23 @@ const intake = {
       subheading: 'Your reference ID is {{referenceId}}',
       homeCta: 'Go back to EASi homepage',
       taskListCta: 'Go back to governance task list'
+    },
+    success: {
+      heading: 'Success!',
+      description:
+        'Your Intake Request form has been submitted. You will receive an automatic email, and a Governance Admin Team member will reach out shortly regarding next steps.',
+      learnMore:
+        'Want to learn more about the IT Governance process? Visit the IT Governance Sharepoint space.',
+      sharepointLink: {
+        copy: 'Go to the IT Governance Sharepoint space',
+        href: 'https://share.cms.gov/Office/OIT/CIOCorner/SitePages/ITGovernance.aspx'
+      }
+    },
+    error: {
+      heading: 'Something went wrong.',
+      description:
+        'Your Intake Request was not submitted. Please either return to the previous page and try again or try again at a later date.',
+      backToIntakeRequest: 'Back to Intake Request'
     }
   },
   lifecycleId: 'Life Cycle ID',
@@ -298,10 +315,50 @@ const intake = {
     adminLead: 'Admin Lead'
   },
   requestTypeForm: {
-    heading: 'Make a Request',
+    heading: 'Start an IT Governance request',
     subheading: 'What is this request for?',
+    start: 'Start',
+    continue: 'Continue',
+    cards: {
+      NEW: {
+        heading: 'Add a system, service, or project',
+        description:
+          'Any new project such as an IT system, service, or other business need is required to submit an IT Governance request and go through the IT Governance process in order to obtain a Life Cycle ID. A Life Cycle ID is the record of approval for your planned IT initiatives from a capital investment and planning perspective, and is a necessary step for all procurement activities at CMS.',
+        collapseLink: 'When should I choose this option?',
+        collapseLinkList: [
+          'I am starting a brand new services contract',
+          'I am planning to build an entirely new IT system',
+          'I am planning to develop an entirely new IT product such as an API or database',
+          'I am starting another type of new project at CMS'
+        ]
+      },
+      MAJOR_CHANGES: {
+        heading: 'Major changes to a system, service, or project',
+        description:
+          'Many IT systems at CMS undergo significant changes throughout their life cycle. Teams should complete a new IT Governance request when considering any significant changes to their IT system, service, or other project.',
+        collapseLink: 'When should I choose this option?',
+        collapseLinkList: [
+          'I am moving from a physical data center to the cloud',
+          'I am making significant changes to my system’s platform or software products',
+          'I am making significant new system integrations or connections',
+          'My system, service, or project is changing its Major Function Alignment or the Data Categories it supports',
+          'My system is undergoing a modernization effort',
+          'I am building an entirely new UI for my system'
+        ]
+      },
+      RECOMPETE: {
+        heading: 'Re-compete with no changes or minor changes',
+        description:
+          'Projects and/or contracts that wish to continue operating must undergo a re-compete at regular intervals (often every 5 years). These projects must submit a new IT Governance request to obtain a new Life Cycle ID even if there are no significant changes to the scope of the contract. Re-compete requests may often take a faster and simpler route through the IT Governance process.',
+        collapseLink: 'When should I choose this option?',
+        collapseLinkList: [
+          'I am completing a standard re-compete with no significant changes to the contract or scope of work',
+          'I am completing a re-compete with minor changes that will not significantly impact the IT spending or technical architecture of my system, service, or other project.'
+        ]
+      }
+    },
     fields: {
-      addNewSystem: 'Add a new system or service',
+      addNewSystem: 'Add a system, service, or project',
       majorChanges:
         'Major changes or upgrades to an existing system or service',
       recompete:
@@ -322,27 +379,31 @@ const intake = {
   },
   contactDetails: {
     intakeProcessDescription:
-      'The EASi System Intake process can guide you through all stages of your procurement/project, connecting you with the resources, people and services that you need. Please complete and submit this CMS IT Intake form to engage with the CMS IT Governance review process. This is the first step to receive a CMS IT Life Cycle ID. Upon submission, you will receive an email promptly from the IT_Governance mailbox, and an IT Governance Team member will reach out regarding next steps.',
+      'Provide the names of any team members or key collaborators for this project. You must provide a name for at least the project’s Business Owner and Project/Product Manager or Lead, but may also use the additional contacts section to list and team members or subject matter experts (SMEs) critical to this project. This will help the Governance Admin Team contact the correct individuals during this IT Governance process.',
     heading: 'Contact details',
-    requester: 'Requester',
+    requesterInformation: 'Requester information',
+    requester: 'Requester name',
     requesterComponent: 'Requester component',
     businessOwner: {
+      info: 'CMS Business Owner information',
       sameAsRequester: 'CMS Business Owner is same as requester',
       name: 'CMS Business Owner',
       helpText:
-        'This person owns a line of business related to this request and will champion the request moving forward',
+        'This person owns a line of business related to this request and will champion the request moving forward.',
       nameField: 'CMS Business Owner name',
+      searchesEUADatabase: 'This field searches CMS’ EUA database.',
       component: 'CMS Business Owner component',
       email: 'CMS Business Owner email'
     },
     productManager: {
-      sameAsRequester: 'CMS Product Manager is same as requester',
-      name: 'CMS Project/Product Manager, or lead',
+      sameAsRequester:
+        'CMS Project/Product Manager or Lead is same as requester',
+      name: 'CMS Project/Product Manager or Lead information',
       helpText:
-        'This person may be contacted for follow ups and to understand the state of the contract',
-      nameField: 'CMS Project/Product Manager, or lead name',
-      component: 'CMS Product Manager component',
-      email: 'CMS Product Manager email'
+        'This person may be contacted for follow ups and to understand the state of the contract.',
+      nameField: 'CMS Project/Product Manager or Lead name',
+      component: 'CMS Project/Product Manager or Lead component',
+      email: 'CMS Project/Product Manager or Lead email'
     },
     systemIntakeContactRoles,
     systemIntakeContactComponents,
@@ -392,25 +453,45 @@ const intake = {
     completed: 'Completed {{completedDate}}',
     viewFullIntake: 'View full Intake Request form',
     subsectionHeadings: {
-      projectConcept: 'Project Concept',
+      projectConcept: 'Project concept',
       collaboration: 'Collaboration',
       projectDetails: 'Project Details'
     },
     description:
-      'Provide a brief explanation of the business need/issue/problem that the contract/request will address, including your current plans for how to address the need. This page should speak to what your contract/request accomplishes and how.',
+      'Provide a brief explanation of the business need, issue, or problem that the contract/request will address, including your current plans for how to address the need. This page should speak to what your contract/request accomplishes and how.',
+    viewExampleAnswer: 'View an example answer',
+    projectConceptHelpText:
+      'If you would like to see an example of completed Request details, please contact the Governance Admin Team at <emailLink>IT_Governance@cms.hhs.gov</emailLink>.',
     contractTitle: 'Contract/Request Title',
     contractTitleHelpText:
       'Your request title should match the title of your Acquisition Plan or Interagency Agreement.',
     businessNeed:
       'What is your business need that this contract/request will meet?',
     businessNeedHelpText:
-      'Include an explanation of the business need/issue/problem that the contract/request will address. This information can be pulled from your draft Acquisition Plan (Statement of Need section) and/or taken from the Statement of Work, Statement of Objectives or Performance Work Statement. Please be brief.',
+      'Include an explanation of the business need, issue, or problem that this project will address. Please be brief.',
+    businessNeedExampleAnswer:
+      'I work in HR/OHC, and I need: to expedite the hiring process, to onboard employees faster and reduce the paperwork burden in order, to retain desirable new hires before they apply to other jobs.',
     businessSolution: 'How are you thinking of solving it?',
     businessSolutionHelpText:
-      'Let us know if you have a solution in mind. This information can be pulled from your draft Acquisition Plan (Capability or Performance section) and/or taken from the Statement of Work, Statement of Objectives or Performance Work Statement. Please be brief.',
-    currentStage: 'Where are you in the process?',
+      'Let us know if you have a solution in mind. Please be brief.',
+    businessSolutionExampleAnswer:
+      'To automate the onboarding process and create more efficient workflows, HR would like to hire a contractor to implement a machine learning system within the CMS enterprise cloud that will analyze and score resumes to bring the best matches forward for each job opening.',
+    currentStage: 'What is your project status?',
     currentStageHelpText:
-      'This helps the governance team provide the right type of guidance for your request',
+      'Please choose the option that best matches the status of the work in the scope of this intake. This helps the governance team provide the right type of guidance for your request. Some options in this dropdown will have follow-up questions.',
+    currentStageCollapseLinkText: 'What do the options in this dropdown mean?',
+    currentStageOptions: [
+      '<bold>I have an idea and want to brainstorm:</bold> You and your team are considering an entirely new project or significant changes to an existing project, but have not yet started any contracting or acquisition efforts.',
+      '<bold>Contracting work has started, but a contractor has not been selected:</bold> You are in the initial stages of contractual planning for your new project or have released the contract, but you have not yet selected a contractor.',
+      '<bold>Development has recently started:</bold> Your team has already begun work on the project you are submitting this request for.',
+      '<bold>Development is significantly underway:</bold> Your team is already over 50% complete with the work on the project you are submitting this request for.',
+      '<bold>Parts of this project are in production, with other parts still in development:</bold> Your team has completed and released some of the work for the project you are submitting this request for.',
+      '<bold>This project is in O&M:</bold> Your team is continuing to support and make only minimal operational improvements to this project. Many teams submitting a re-compete request may choose this option.',
+      '<bold>Other:</bold> Choose this option if none of the above project statuses make sense for your request.'
+    ],
+    itDev:
+      'If IT development will be a part of this contract, when is the project scheduled to go live in production?',
+    itDevHelp: 'If you are unsure, you may input your best guess.',
     usesAiTech: 'Does your request involve AI technologies?',
     usesAiTechHelpText:
       'Select "Yes" if you are considering using AI for this request, even if you are not yest sure. This could be for new development or enhancement to an existing solution. For general AI related questions, please contact the AI team at <aiEmail>AI@cms.hhs.gov</aiEmail>. For more targeted and specific AI inquiries, please reach out to the <trbEmail>Technical Review Board (TRB)</trbEmail> for assistance.',
@@ -419,6 +500,7 @@ const intake = {
         'Do you plan to use any software products to fulfill your business needs?',
       usingSoftwareHelp:
         'This could include COTS products, infrastructure products, or other engineering and development tools. <dvsmEmail>Email the Division of Vendor and Software Management (DVSM)</dvsmEmail> to learn more about options at CMS related to software and Enterprise License Agreements (ELAs). If you mark "I\'m not sure", someone from DVSM may reach out to speak with you about available software and enterprise licenses.',
+      notSure: "I'm not sure",
       selectedLabel: 'Selected software',
       whichSoftwareLabel: 'Which software?',
       whichSoftwareHelp:
@@ -431,7 +513,7 @@ const intake = {
     },
     needsEaSupport: 'Does your request need Enterprise Architecture support?',
     needsEaSupportHelpText:
-      'If you are unsure, mark "Yes" and someone from the EA team will assess your needs.',
+      'If you are unsure, mark "Yes" and someone from the EA team will assess your needs. You may also reach out to EA directly at <email>EnterpriseArchitecture@cms.hhs.gov</email>.',
     eaTeamHelp: {
       label: 'How can the Enterprise Architecture team help me?',
       description:
@@ -444,54 +526,94 @@ const intake = {
       model: 'Model your business processes and document workflows'
     },
     hasUiChanges:
-      'Does your project involve any user interface component, or changes to an interface component?'
+      'Will your project have a user interface, be public facing, or involve outside customers?'
   },
   contractDetails: {
     heading: 'Contract details',
+    description:
+      'Document details about your funding, budget, and contract. These details will help assess the spending scope of your project and request.',
+    fundingAndBudget: 'Funding and budget',
+    fundingSources: {
+      label: 'Which existing funding sources will fund this project?',
+      helpText:
+        'If you are unsure, please get in touch with your Front Office. If this will not use an existing funding source, skip this question.',
+      addFundingSource: 'Add a funding source',
+      addAnotherFundingSource: 'Add another funding source',
+      fundingNumber: 'Funding number',
+      fundingNumberHelpText: 'Must be 6 digits long',
+      fundingNumberLink:
+        'You can find your funding number in the CMS Operating Plan page',
+      fundingSource: 'Funding source',
+      fundingSources: 'Funding sources',
+      fundingNumberLabel: 'Funding number: {{fundingNumber}}',
+      fundingSourcesLabel: 'Funding sources: {{sources}}',
+      formLegend: '{{action}} funding source',
+      errors: {
+        fundingNumberMinDigits: 'Funding number must be exactly 6 digits',
+        fundingNumberDigits: 'Funding number can only contain digits',
+        fundingNumberUnique: 'Funding number must be unique',
+        fundingSource: 'Select a funding source'
+      }
+    },
     currentAnnualSpending: 'What is the current annual spending?',
+    currentAnnualSpendingHelpText:
+      'Input the dollar amount of the current annual spending.',
     currentAnnualSpendingITPortion:
-      'What portion (% or amount) of the current annual spending is IT?',
+      'What percentage of the current annual spending is IT?',
     plannedYearOneSpending:
-      'What is the planned annual spending of the first year of the new contract?',
+      'What is the planned annual spending for the first year of the new contract?',
+    plannedYearOneSpendingHelpText:
+      'Input the dollar amount of the planned annual spending.',
     plannedYearOneSpendingITPortion:
-      'What portion (% or amount) of the planned annual spending of the first year of the new contract is IT?',
+      'What percentage of the planned annual spending for the first year of the new contract is IT?',
+    contractHeading: 'Contract',
     hasContract:
       'Do you already have a contract in place to support this effort?',
-    hasContractHelpText:
-      'This information helps the Office of Acquisition and Grants Management (OAGM) track work',
     contractors: 'Contractor(s)',
-    periodOfPerformance:
-      'Period of Performance dates (include all option years)',
+
+    performanceStartDate: 'Performance start date',
+    performanceEndDate: 'Performance end date',
     newPeriodOfPerformance:
       'New Period of Performance dates (include all option years)',
-    periodOfPerformanceHelpText: 'For example: 4/10/2020 - 4/9/2025',
+    periodOfPerformanceHasContract:
+      'Period of performance dates for planned project',
+    periodOfPerformanceHasContractHelpText:
+      'Specify the dates for the development work or contract adjustment that this Life Cycle ID (LCID) should cover. Include all option years. For example: 4/10/2020 – 4/9/2025',
+    periodOfPerformanceInProgress:
+      'Period of performance dates for planned contract or development work',
+    periodOfPerformanceInProgressHelpText:
+      'Specify the dates for the development work or contract that this Life Cycle ID (LCID) should cover. Include all option years. For example: 4/10/2020 – 4/9/2025',
+
     hasContractRadioHint:
       'Choosing this option will remove previously-entered contract number(s).',
     ...hasContractLabels
   },
   review: {
     heading: 'Check your answers before sending',
+    edit: 'Edit this section',
     notSubmitted: 'Not yet submitted',
     systemRequest: 'System Request',
     submissionDate: 'Submission date',
+    requestType: 'Request type',
     contactDetails: 'Contact details',
     requesterComponent: 'Requester component',
-    cmsBusinessOwnerName: "CMS Business Owner's name",
+    cmsBusinessOwnerName: 'CMS Business Owner',
     cmsBusinessOwnerComponent: 'CMS Business Owner component',
     cmsProjectManagerName: 'CMS Project/Product Manager or Lead',
     cmsProjectManagerComponent: 'CMS Project/Product Manager or Lead component',
-    collaborating: 'I have started collaborating with',
+    collaborating: 'I have started collaborating with:',
     requestDetails: 'Request details',
-    projectName: 'Project name',
-    businessNeed: 'What is your business need?',
+    projectName: 'Contract/request title',
+    businessNeed:
+      'What is your business need that this contract/request will meet?',
     solving: 'How are you thinking of solving it?',
-    process: 'Where are you in the process?',
-    eaSupport: 'Do you need Enterprise Architecture (EA) support?',
-    usesAiTech: 'Does your request involve AI technologies?',
+    process: 'What is your project status?',
+    eaSupport: 'Does your request need Enterprise Architecture support?',
+    usesAiTech: 'Does this project plan to use AI technologies?',
     hasUiChanges:
-      'Does your project involve any user interface component, or changes to an interface component?',
+      'Does your project involve any user interface component or changes to an interface component?',
     usingSoftware:
-      'Do you plan to use any software products to fulfill your business needs?',
+      'Do you plan to use software products to fulfill your business needs?',
     softwareAcquisitionMethods: 'How will the software be acquired?',
     contractDetails: 'Contract details',
     costs:
@@ -499,28 +621,32 @@ const intake = {
     increase: 'Approximately how much do you expect the cost to increase?',
     currentAnnualSpending: 'What is the current annual spending?',
     currentAnnualSpendingITPortion:
-      'What portion (% or amount) of the current annual spending is IT?',
+      'What percentage of the current annual spending is IT?',
     plannedYearOneSpending:
-      'What is the planned annual spending of the first year of the new contract?',
+      'What is the planned annual spending for the first year of the new contract?',
     plannedYearOneSpendingITPortion:
-      'What portion (% or amount) of the planned annual spending of the first year of the new contract is IT?',
+      'What percentage of the planned annual spending for the first year of the new contract is IT?',
     contract: 'Do you already have a contract in place to support this effort?',
-    contractors: 'Contractors',
+    contractors: 'Contractor(s)',
     contractVehicle: 'Contract vehicle',
-    contractNumber: 'Contract number',
+    contractNumber: 'Contract number(s)',
     noContractNumber: 'No contract number specified',
-    performance: 'Period of performance',
+    performance: 'Period of performance dates for planned project',
     notEntered: 'Not Entered',
     documents: 'Documents',
     nextSteps: {
       heading: 'What happens next?',
       description:
-        'The Governance Review Admin Team will review and get back to you with <strong>one of these</strong> outcomes:',
-      direct: 'direct you to go through the Governance Review process',
-      decide: 'or decide there is no further governance needed',
-      timeline: 'They will get back to you in two business days.'
+        'The Governance Admin Team will review your request and get back to you within two business days. If your project is determined to contain reportable IT, your project may require a full Governance Review. The full IT Governance Review process can take up to 3 weeks assuming no issues are raised.'
     },
-    sendIntakeRequest: 'Send my Intake Request'
+    submitIntakeRequest: 'Submit my Intake Request',
+    saveWithoutSubmitting: 'Save and exit without submitting'
+  },
+  viewIntakeRequest: {
+    heading: 'View submitted Intake Request',
+    downloadPDF: 'Download Intake Request as PDF',
+    docsNotIncluded:
+      'Documents will not be downloaded as a part of this PDF download.'
   }
 };
 

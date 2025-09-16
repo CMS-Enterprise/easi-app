@@ -343,7 +343,11 @@ export const emptySystemIntake: SystemIntakeFragmentFragment = {
     numberOfObjection: 0,
     votingStatus: GRBVotingInformationStatus.NOT_STARTED
   },
-  systemIntakeSystems: []
+  systemIntakeSystems: [],
+  itGovTaskStatuses: {
+    __typename: 'ITGovTaskStatuses',
+    intakeFormStatus: ITGovIntakeFormStatus.READY
+  }
 };
 
 export const systemIntake: SystemIntakeFragmentFragment = {
@@ -512,7 +516,11 @@ export const systemIntake: SystemIntakeFragmentFragment = {
   grbReviewAsyncEndDate: null,
   grbReviewStartedAt: null,
   systemIntakeSystems: [],
-  doesNotSupportSystems: null
+  doesNotSupportSystems: null,
+  itGovTaskStatuses: {
+    __typename: 'ITGovTaskStatuses',
+    intakeFormStatus: ITGovIntakeFormStatus.READY
+  }
 };
 
 export const systemIntakeForTable: GetSystemIntakesTableQuery['systemIntakes'][number] =

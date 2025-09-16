@@ -14,6 +14,7 @@ import { useEasiFormContext } from 'components/EasiForm';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import HelpText from 'components/HelpText';
 import Label from 'components/Label';
+import RequiredAsterisk from 'components/RequiredAsterisk';
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
 import { GovernanceTeamsForm } from 'types/systemIntake';
 
@@ -51,7 +52,7 @@ const GovernanceTeams = () => {
           className="text-bold margin-bottom-1"
           aria-describedby="govTeamHelpText"
         >
-          {t('contactDetails.collaboration.label')}
+          {t('contactDetails.collaboration.label')} <RequiredAsterisk />
         </legend>
 
         <HelpText id="govTeamHelpText">
@@ -109,7 +110,10 @@ const GovernanceTeams = () => {
                     error={!!errors?.teams?.[key]?.collaborator}
                     className="margin-top-1 margin-bottom-2 margin-left-4"
                   >
-                    <Label htmlFor={`governanceTeam-${key}-collaborator`}>
+                    <Label
+                      htmlFor={`governanceTeam-${key}-collaborator`}
+                      required
+                    >
                       {t(`${acronym} collaborator name`)}
                     </Label>
 

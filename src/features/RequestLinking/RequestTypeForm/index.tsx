@@ -6,27 +6,27 @@ import {
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink,
-  Button
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardGroup,
+  CardHeader,
+  Icon
 } from '@trussworks/react-uswds';
-import { Field, Form, Formik, FormikProps } from 'formik';
 import {
   SystemIntakeRequestType,
   useCreateSystemIntakeMutation,
-  useGetSystemIntakeQuery,
   useUpdateSystemIntakeRequestTypeMutation
 } from 'gql/generated/graphql';
 
 import CollapsableLink from 'components/CollapsableLink';
-import { ErrorAlert, ErrorAlertMessage } from 'components/ErrorAlert';
-import FieldGroup from 'components/FieldGroup';
+import IconButton from 'components/IconButton';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
-import { RadioField } from 'components/RadioField';
-import flattenErrors from 'utils/flattenErrors';
 import linkCedarSystemIdQueryString, {
   useLinkCedarSystemIdQueryParam
 } from 'utils/linkCedarSystemIdQueryString';
-import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
 const RequestTypeForm = () => {
   const { systemId } = useParams<{
@@ -36,7 +36,10 @@ const RequestTypeForm = () => {
   // Set isNew from checking loc state false explicitly
   // This is done in such a way as a stop gap to fix the problem where
   // changing Intake Request Types, from the overview page, will create new Intake Requests
-  const { state } = useLocation<{ isNew?: boolean }>();
+  const { state } = useLocation<{
+    isNew?: boolean;
+    isFromTaskList?: boolean;
+  }>();
   const isNew = state?.isNew !== false;
 
   const { t } = useTranslation('intake');
@@ -47,28 +50,10 @@ const RequestTypeForm = () => {
   const [edit] = useUpdateSystemIntakeRequestTypeMutation();
 
   const linkCedarSystemId = useLinkCedarSystemIdQueryParam();
+  const taskListUrl = `/governance-task-list/${systemId}`;
 
-  // Check for an existing intake to prefill the request type option
-  const intakeQuery = useGetSystemIntakeQuery({
-    variables: {
-      id: systemId || ''
-    },
-    skip: !systemId
-  });
-  const lastRequestType = intakeQuery.data?.systemIntake?.requestType;
-
-  const majorChangesExamples: string[] = t(
-    'requestTypeForm.helpAndGuidance.majorChanges.list',
-    {
-      returnObjects: true
-    }
-  );
-
-  const handleCreateIntake = (formikValues: {
-    requestType: SystemIntakeRequestType;
-  }) => {
+  const handleCreateIntake = (requestType: SystemIntakeRequestType) => {
     oktaAuth.getUser().then((user: any) => {
-      const { requestType } = formikValues;
       const input = {
         requestType,
         requester: {
@@ -120,9 +105,15 @@ const RequestTypeForm = () => {
     });
   };
 
+  const requestTypes = [
+    SystemIntakeRequestType.NEW,
+    SystemIntakeRequestType.RECOMPETE,
+    SystemIntakeRequestType.MAJOR_CHANGES
+  ];
+
   return (
     <MainContent
-      className="grid-container margin-bottom-5"
+      className="grid-container margin-bottom-15"
       data-testid="request-type-form"
     >
       <BreadcrumbBar variant="wrap">
@@ -133,115 +124,95 @@ const RequestTypeForm = () => {
         </Breadcrumb>
         <Breadcrumb current>{t('navigation.startRequest')}</Breadcrumb>
       </BreadcrumbBar>
-      <PageHeading>{t('requestTypeForm.heading')}</PageHeading>
-      <Formik
-        initialValues={{
-          requestType: lastRequestType || ('' as SystemIntakeRequestType)
+
+      <PageHeading className="margin-top-4 margin-bottom-2">
+        {isNew
+          ? t('requestTypeForm.heading')
+          : t('navigation.changeRequestType')}
+      </PageHeading>
+      <p className="margin-top-0 margin-bottom-3 font-body-lg text-light">
+        {t('requestTypeForm.subheading')}
+      </p>
+      <IconButton
+        icon={<Icon.ArrowBack className="margin-right-05" />}
+        type="button"
+        unstyled
+        onClick={() => {
+          history.goBack();
         }}
-        enableReinitialize
-        onSubmit={handleCreateIntake}
-        validationSchema={SystemIntakeValidationSchema.requestType}
-        validateOnBlur={false}
-        validateOnChange={false}
-        validateOnMount={false}
       >
-        {(
-          formikProps: FormikProps<{ requestType: SystemIntakeRequestType }>
-        ) => {
-          const { values, errors, setErrors, handleSubmit } = formikProps;
-          const flatErrors = flattenErrors(errors);
+        {isNew
+          ? t('technicalAssistance:requestType.goBack')
+          : t('technicalAssistance:requestType.goBackWithoutChange')}
+      </IconButton>
+
+      <CardGroup className="margin-top-4 margin-bottom-8">
+        {requestTypes.map(type => {
+          const card = t(`requestTypeForm.cards.${type}`, {
+            returnObjects: true
+          }) as {
+            heading: string;
+            description: string;
+            collapseLink: string;
+            collapseLinkList: string[];
+          };
+
           return (
-            <>
-              {Object.keys(errors).length > 0 && (
-                <ErrorAlert
-                  testId="formik-validation-errors"
-                  classNames="margin-top-3"
-                  heading="Please check and fix the following"
-                >
-                  {Object.keys(flatErrors).map(key => {
-                    return (
-                      <ErrorAlertMessage
-                        key={`Error.${key}`}
-                        errorKey={key}
-                        message={flatErrors[key]}
-                      />
-                    );
-                  })}
-                </ErrorAlert>
-              )}
-              <Form
-                onSubmit={e => {
-                  handleSubmit(e);
-                  window.scrollTo(0, 0);
-                }}
-              >
-                <FieldGroup
-                  error={!!flatErrors.requestType}
-                  scrollElement="requestType"
-                >
-                  <fieldset
-                    className="usa-fieldset"
-                    aria-describedby="RequestType-HelpText"
-                  >
-                    <legend className="font-heading-xl margin-bottom-4">
-                      {t('requestTypeForm.subheading')}
-                    </legend>
-                    <Field
-                      as={RadioField}
-                      id="RequestType-NewSystem"
-                      className="margin-bottom-4"
-                      label={t('requestTypeForm.fields.addNewSystem')}
-                      name="requestType"
-                      value="NEW"
-                      checked={values.requestType === 'NEW'}
-                    />
-                    <Field
-                      as={RadioField}
-                      id="RequestType-MajorChangesSystem"
-                      className="margin-bottom-4"
-                      label={t('requestTypeForm.fields.majorChanges')}
-                      name="requestType"
-                      value="MAJOR_CHANGES"
-                      checked={values.requestType === 'MAJOR_CHANGES'}
-                    />
-                    <Field
-                      as={RadioField}
-                      id="RequestType-RecompeteSystem"
-                      className="margin-bottom-4"
-                      label={t('requestTypeForm.fields.recompete')}
-                      name="requestType"
-                      value="RECOMPETE"
-                      checked={values.requestType === 'RECOMPETE'}
-                    />
-                  </fieldset>
-                </FieldGroup>
+            <Card
+              key={type}
+              containerProps={{
+                className: 'radius-0 border-gray-10 shadow-3'
+              }}
+              gridLayout={{
+                tablet: {
+                  col: 6
+                }
+              }}
+            >
+              <CardHeader>
+                <h3>{card.heading}</h3>
+              </CardHeader>
+              <CardBody>
+                <p>{card.description}</p>
                 <CollapsableLink
-                  id="MajorChangesAccordion"
-                  label={t(
-                    'requestTypeForm.helpAndGuidance.majorChanges.label'
-                  )}
+                  id={`when-should-i-choose-this-option-${type.toLowerCase()}`}
+                  label={card.collapseLink}
                 >
-                  <p>
-                    {t('requestTypeForm.helpAndGuidance.majorChanges.para')}
-                  </p>
-                  <ul className="line-height-body-6">
-                    {majorChangesExamples.map(item => (
+                  <ul
+                    className="margin-bottom-0 margin-top-1 padding-left-205 line-height-body-5"
+                    style={{ listStyleType: 'disc' }}
+                  >
+                    {card.collapseLinkList.map(item => (
                       <li key={item}>{item}</li>
                     ))}
                   </ul>
                 </CollapsableLink>
-                <Button
-                  className="margin-top-5 display-block"
-                  type="submit"
-                  onClick={() => setErrors({})}
-                >
-                  Continue
-                </Button>
-              </Form>
-            </>
+              </CardBody>
+              <CardFooter>
+                {isNew ? (
+                  <Button
+                    type="button"
+                    className="margin-top-2 margin-right-1"
+                    data-testid={`start-button--${type.toLowerCase()}`}
+                    onClick={() => handleCreateIntake(type)}
+                  >
+                    {t('requestTypeForm.start')}
+                  </Button>
+                ) : (
+                  <Button
+                    type="button"
+                    className="margin-top-2 margin-right-1"
+                    data-testid={`continue-button--${type.toLowerCase()}`}
+                    onClick={() => history.push(taskListUrl)}
+                  >
+                    {t('requestTypeForm.continue')}
+                  </Button>
+                )}
+              </CardFooter>
+            </Card>
           );
-        }}
-      </Formik>
+        })}
+      </CardGroup>
     </MainContent>
   );
 };

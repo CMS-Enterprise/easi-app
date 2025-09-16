@@ -19,9 +19,9 @@ import Alert from 'components/Alert';
 import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
 import { ErrorAlert, ErrorAlertMessage } from 'components/ErrorAlert';
 import FeedbackBanner from 'components/FeedbackBanner';
-import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
+import RequiredFieldsText from 'components/RequiredFieldsText';
 import SystemIntakeContactsTable from 'components/SystemIntakeContactsTable';
 import { GovernanceTeamsForm } from 'types/systemIntake';
 import flattenFormErrors from 'utils/flattenFormErrors';
@@ -167,15 +167,15 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
       <ErrorMessage errors={errors} name="root" as={<Alert type="error" />} />
 
-      <p className="line-height-body-5">
+      <PageHeading className="margin-top-4 margin-bottom-1">
+        {t('contactDetails.heading')}
+      </PageHeading>
+
+      <p className="font-body-lg line-height-body-5 margin-top-0 margin-bottom-2 text-light">
         {t('contactDetails.intakeProcessDescription')}
       </p>
 
-      <MandatoryFieldsAlert className="tablet:grid-col-6" />
-
-      <PageHeading className="margin-bottom-3">
-        {t('contactDetails.heading')}
-      </PageHeading>
+      <RequiredFieldsText className="margin-top-0 margin-bottom-5" />
 
       {systemIntake.requestFormState ===
         SystemIntakeFormState.EDITS_REQUESTED && (
@@ -202,6 +202,13 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           showActionsColumn
         />
 
+        {/* Governance Teams */}
+        <div className="margin-top-3 border-top border-base-light padding-top-1">
+          <p className="margin-top-0 margin-bottom-1 text-bold">
+            {t('requestDetails.subsectionHeadings.collaboration')}
+          </p>
+        </div>
+
         <EasiFormProvider<GovernanceTeamsForm> {...form}>
           <GovernanceTeams />
         </EasiFormProvider>
@@ -210,16 +217,16 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           next={{
             type: 'submit'
           }}
-          border={false}
+          border
           taskListUrl={saveExitLink}
           submit={() => submit(() => history.push(saveExitLink))}
-          className="margin-top-4"
+          className="margin-top-5"
         />
       </Form>
 
       {/* <AutoSave values={watch()} onSave={submit} debounceDelay={3000} /> */}
 
-      <PageNumber currentPage={1} totalPages={5} />
+      <PageNumber currentPage={1} totalPages={5} className="margin-bottom-15" />
     </>
   );
 };

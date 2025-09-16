@@ -28,7 +28,8 @@ const general = {
   },
   actions: 'Actions',
   name: 'Name',
-  noneSpecified: 'None specified'
+  noneSpecified: 'None specified',
+  on: 'on '
 };
 
 export default general;

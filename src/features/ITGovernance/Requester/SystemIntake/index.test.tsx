@@ -201,7 +201,7 @@ describe('The System Intake page', () => {
 
     expect(
       screen.getByRole('heading', {
-        name: /your Intake Request has been submitted/i,
+        name: /Success!/i,
         level: 1
       })
     ).toBeInTheDocument();
@@ -225,7 +225,7 @@ describe('The System Intake page', () => {
 
     expect(
       screen.getByRole('heading', {
-        name: /review your Intake Request/i,
+        name: /View submitted Intake Request/i,
         level: 1
       })
     ).toBeInTheDocument();

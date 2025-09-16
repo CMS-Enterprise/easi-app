@@ -1,5 +1,6 @@
 import {
   FundingSourceFragmentFragment,
+  ITGovIntakeFormStatus,
   SystemIntakeCollaboratorInput,
   SystemIntakeContactComponent,
   SystemIntakeContactFragment,
@@ -66,6 +67,9 @@ export type SystemIntakeForm = {
   grbDate: string | null;
   adminLead: string;
   requesterNameAndComponent: string;
+  itGovTaskStatuses: {
+    intakeFormStatus: ITGovIntakeFormStatus;
+  };
 } & ContractDetailsForm;
 
 /** Funding source formatted for API */
@@ -90,16 +94,8 @@ export type ContractDetailsForm = {
   contract: {
     hasContract: SystemIntakeContractStatus | null;
     contractor: string;
-    startDate: {
-      month: string;
-      day: string;
-      year: string;
-    };
-    endDate: {
-      month: string;
-      day: string;
-      year: string;
-    };
+    startDate: string | null;
+    endDate: string | null;
     numbers: string;
   };
 };
