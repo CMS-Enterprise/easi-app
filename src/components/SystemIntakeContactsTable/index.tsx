@@ -18,11 +18,13 @@ import './index.scss';
 type SystemIntakeContactsTableProps = {
   systemIntakeId: string;
   showActionsColumn?: boolean;
+  className?: string;
 };
 
 const SystemIntakeContactsTable = ({
   systemIntakeId,
-  showActionsColumn = false
+  showActionsColumn = false,
+  className
 }: SystemIntakeContactsTableProps) => {
   const { t } = useTranslation('intake');
 
@@ -181,7 +183,12 @@ const SystemIntakeContactsTable = ({
     table;
 
   return (
-    <div className="system-intake-contacts-table usa-table-container--scrollable">
+    <div
+      className={classNames(
+        'system-intake-contacts-table usa-table-container--scrollable',
+        className
+      )}
+    >
       <Table bordered={false} fullWidth {...getTableProps()}>
         <thead>
           {headerGroups.map(headerGroup => {

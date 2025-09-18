@@ -407,9 +407,12 @@ const intake = {
     },
     systemIntakeContactRoles,
     systemIntakeContactComponents,
+    teamMembersPointsOfContact: 'Team members and project points of contact',
     addTeamMembers:
       'Use the button and table below to add and edit any team members or key collaborators for this project.',
     addAnotherContact: 'Add another contact',
+    contactsTableWarning:
+      'You must add at least at least the project’s Business Owner and Project/Product Manager or Lead (available roles to fulfill this requirement are Product Owner, Product Manager, or Project Manager). If there is one individual that fills multiple roles, you may assign all roles that apply.',
     loadingContacts: 'Loading contacts',
     noContacts: 'No contacts have been added to this request.',
     additionalContacts: {

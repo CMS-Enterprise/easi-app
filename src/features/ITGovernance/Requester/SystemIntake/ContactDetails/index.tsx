@@ -27,6 +27,8 @@ import { GovernanceTeamsForm } from 'types/systemIntake';
 import flattenFormErrors from 'utils/flattenFormErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
+import Section from '../_components/Section';
+
 import GovernanceTeams from './GovernanceTeams';
 import { formatGovernanceTeamsInput } from './utils';
 
@@ -188,30 +190,37 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         )}
         className="maxw-none tablet:grid-col-9 margin-bottom-7"
       >
-        <p>{t('contactDetails.addTeamMembers')}</p>
-        <Button
-          type="button"
-          onClick={() => null}
-          outline
-          className="margin-top-0"
-        >
-          {t('contactDetails.addAnotherContact')}
-        </Button>
-        <SystemIntakeContactsTable
-          systemIntakeId={systemIntake.id}
-          showActionsColumn
-        />
+        <Section heading={t('contactDetails.teamMembersPointsOfContact')}>
+          <p className="margin-bottom-1">
+            {t('contactDetails.addTeamMembers')}
+          </p>
+
+          <Button
+            type="button"
+            onClick={() => null}
+            outline
+            className="margin-top-0"
+          >
+            {t('contactDetails.addAnotherContact')}
+          </Button>
+
+          <Alert type="warning" className="margin-top-3" slim>
+            {t('contactDetails.contactsTableWarning')}
+          </Alert>
+
+          <SystemIntakeContactsTable
+            systemIntakeId={systemIntake.id}
+            className="margin-top-3 padding-top-05 margin-bottom-6"
+            showActionsColumn
+          />
+        </Section>
 
         {/* Governance Teams */}
-        <div className="margin-top-3 border-top border-base-light padding-top-1">
-          <p className="margin-top-0 margin-bottom-1 text-bold">
-            {t('requestDetails.subsectionHeadings.collaboration')}
-          </p>
-        </div>
-
-        <EasiFormProvider<GovernanceTeamsForm> {...form}>
-          <GovernanceTeams />
-        </EasiFormProvider>
+        <Section heading={t('requestDetails.subsectionHeadings.collaboration')}>
+          <EasiFormProvider<GovernanceTeamsForm> {...form}>
+            <GovernanceTeams />
+          </EasiFormProvider>
+        </Section>
 
         <Pager
           next={{
