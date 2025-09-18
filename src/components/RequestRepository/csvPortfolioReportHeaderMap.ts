@@ -1,18 +1,20 @@
-const csvHeaderMap = (t: any) => [
+import { TFunction } from 'i18next';
+
+const csvHeaderMap = (t: TFunction) => [
   {
     key: 'requestName',
     label: t('intake:csvHeadings.projectName')
   },
   {
-    key: 'requesterName',
+    key: 'requester.userAccount.commonName',
     label: t('intake:csvHeadings.requesterName')
   },
   {
-    key: 'euaUserId',
+    key: 'requester.userAccount.username',
     label: t('intake:csvHeadings.euaId')
   },
   {
-    key: 'requesterComponent',
+    key: 'requester.component',
     label: t('intake:csvHeadings.requesterComponent')
   },
   {

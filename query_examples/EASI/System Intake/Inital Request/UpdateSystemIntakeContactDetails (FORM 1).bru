@@ -1,7 +1,7 @@
 meta {
   name: UpdateSystemIntakeContactDetails (FORM 1)
   type: graphql
-  seq: 4
+  seq: 2
 }
 
 post {
@@ -40,11 +40,19 @@ body:graphql {
           name
           __typename
         }
-        requester {
-          component
-          name
-          __typename
+      requester {
+        id
+        roles
+        component
+        isRequester
+        userID
+        userAccount {
+          id
+          commonName
+          username
+          email
         }
+      }
         __typename
       }
       __typename

@@ -7,6 +7,7 @@ import (
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 func (s *ResolverSuite) TestSystemIntakesQuery() {
@@ -16,7 +17,7 @@ func (s *ResolverSuite) TestSystemIntakesQuery() {
 	submittedAt := time.Now()
 
 	// Create an open intake
-	openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
+	openIntake, err := storage.CreateSystemIntake(ctx, store, &models.SystemIntake{
 		State:       models.SystemIntakeStateOpen,
 		RequestType: models.SystemIntakeRequestTypeNEW,
 		SubmittedAt: &submittedAt,
@@ -30,7 +31,7 @@ func (s *ResolverSuite) TestSystemIntakesQuery() {
 	s.NotNil(openIntake)
 
 	// Create a closed intake
-	closedIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
+	closedIntake, err := storage.CreateSystemIntake(ctx, store, &models.SystemIntake{
 		State:       models.SystemIntakeStateClosed,
 		RequestType: models.SystemIntakeRequestTypeNEW,
 		SubmittedAt: &submittedAt,
@@ -61,7 +62,7 @@ func (s *ResolverSuite) TestSystemIntakesQueryUnsubmitted() {
 	store := s.testConfigs.Store
 
 	// Create an open intake
-	openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
+	openIntake, err := storage.CreateSystemIntake(ctx, store, &models.SystemIntake{
 		State:       models.SystemIntakeStateOpen,
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
@@ -69,7 +70,7 @@ func (s *ResolverSuite) TestSystemIntakesQueryUnsubmitted() {
 	s.NotNil(openIntake)
 
 	// Create a closed intake
-	closedIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
+	closedIntake, err := storage.CreateSystemIntake(ctx, store, &models.SystemIntake{
 		State:       models.SystemIntakeStateClosed,
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
@@ -94,7 +95,7 @@ func (s *ResolverSuite) TestSystemIntakesQueryArchived() {
 	archivedAt := time.Now()
 
 	// Create an open intake with an `archived_at`
-	openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
+	openIntake, err := storage.CreateSystemIntake(ctx, store, &models.SystemIntake{
 		State:       models.SystemIntakeStateOpen,
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
@@ -107,7 +108,7 @@ func (s *ResolverSuite) TestSystemIntakesQueryArchived() {
 	s.NotNil(openIntake)
 
 	// Create a closed intake with an `archived_at`
-	closedIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
+	closedIntake, err := storage.CreateSystemIntake(ctx, store, &models.SystemIntake{
 		State:       models.SystemIntakeStateClosed,
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
@@ -203,7 +204,7 @@ func (s *ResolverSuite) TestUpdateSystemIntakeRequestType() {
 	submittedAt := time.Now()
 
 	// Create a "new request" type system intake
-	openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
+	openIntake, err := storage.CreateSystemIntake(ctx, store, &models.SystemIntake{
 		State:       models.SystemIntakeStateOpen,
 		RequestType: models.SystemIntakeRequestTypeNEW,
 		SubmittedAt: &submittedAt,

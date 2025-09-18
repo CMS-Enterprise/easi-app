@@ -108,92 +108,285 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
             Contact details
           </h2>
           <dl
+            class="margin-top-1"
             title="Contact details"
           >
             <div
               class="easi-review-row"
             >
               <div
-                data-testid="contact-requester-A11Y"
+                class="system-intake-contacts-table usa-table-container--scrollable"
               >
-                <dt
-                  class="text-bold margin-bottom-05"
+                <table
+                  class="usa-table usa-table--borderless width-full"
+                  data-testid="table"
                 >
-                  Requester name
-                </dt>
-                <dd
-                  class="description-definition margin-0"
-                >
-                  Ally Anderson
-                </dd>
-              </div>
-              <div>
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  Requester component
-                </dt>
-                <dd
-                  class="description-definition margin-0"
-                >
-                  CMS Wide
-                </dd>
-              </div>
-            </div>
-            <div
-              class="easi-review-row"
-            >
-              <div>
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  CMS Business Owner
-                </dt>
-                <dd
-                  class="description-definition margin-0"
-                >
-                  Adeline Aarons
-                </dd>
-              </div>
-              <div>
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  CMS Business Owner component
-                </dt>
-                <dd
-                  class="description-definition margin-0"
-                >
-                  Center for Medicare
-                </dd>
-              </div>
-            </div>
-            <div
-              class="easi-review-row"
-            >
-              <div>
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  CMS Project/Product Manager or Lead
-                </dt>
-                <dd
-                  class="description-definition margin-0"
-                >
-                  Audrey Abrams
-                </dd>
-              </div>
-              <div>
-                <dt
-                  class="text-bold margin-bottom-05"
-                >
-                  CMS Project/Product Manager or Lead component
-                </dt>
-                <dd
-                  class="description-definition margin-0"
-                >
-                  Office of Legislation
-                </dd>
+                  <thead>
+                    <tr
+                      role="row"
+                    >
+                      <th
+                        aria-sort="none"
+                        class="border-bottom-2px"
+                        colspan="1"
+                        role="columnheader"
+                        scope="col"
+                        style="width: auto;"
+                      >
+                        <button
+                          class="usa-button usa-button--unstyled width-full flex-justify margin-y-0"
+                          data-testid="button"
+                          style="cursor: pointer;"
+                          title="Toggle SortBy"
+                          type="button"
+                        >
+                          <span
+                            class="display-block margin-left-4 padding-left-05"
+                          >
+                            Name
+                          </span>
+                          <svg
+                            aria-hidden="true"
+                            class="usa-icon margin-left-05"
+                            data-testid="caret--sort"
+                            focusable="false"
+                            height="1em"
+                            role="img"
+                            viewBox="0 0 24 24"
+                            width="1em"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                            />
+                          </svg>
+                        </button>
+                      </th>
+                      <th
+                        aria-sort="none"
+                        class="border-bottom-2px"
+                        colspan="1"
+                        role="columnheader"
+                        scope="col"
+                        style="width: 200px;"
+                      >
+                        <button
+                          class="usa-button usa-button--unstyled width-full flex-justify margin-y-0"
+                          data-testid="button"
+                          style="cursor: pointer;"
+                          title="Toggle SortBy"
+                          type="button"
+                        >
+                          Component
+                          <svg
+                            aria-hidden="true"
+                            class="usa-icon margin-left-05"
+                            data-testid="caret--sort"
+                            focusable="false"
+                            height="1em"
+                            role="img"
+                            viewBox="0 0 24 24"
+                            width="1em"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                            />
+                          </svg>
+                        </button>
+                      </th>
+                      <th
+                        aria-sort="none"
+                        class="border-bottom-2px"
+                        colspan="1"
+                        role="columnheader"
+                        scope="col"
+                        style="width: auto;"
+                      >
+                        <button
+                          class="usa-button usa-button--unstyled width-full flex-justify margin-y-0"
+                          data-testid="button"
+                          style="cursor: pointer;"
+                          title="Toggle SortBy"
+                          type="button"
+                        >
+                          Role(s)
+                          <svg
+                            aria-hidden="true"
+                            class="usa-icon margin-left-05"
+                            data-testid="caret--sort"
+                            focusable="false"
+                            height="1em"
+                            role="img"
+                            viewBox="0 0 24 24"
+                            width="1em"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"
+                            />
+                          </svg>
+                        </button>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody
+                    role="rowgroup"
+                  >
+                    <tr
+                      aria-label="contact-systemIntakeContact-A11Y"
+                      data-testid="contact-row"
+                      role="row"
+                    >
+                      <td
+                        role="cell"
+                      >
+                        <div
+                          class="display-flex flex-align-center"
+                        >
+                          <span
+                            class="usa-tooltip"
+                            data-testid="tooltipWrapper"
+                          >
+                            <button
+                              aria-describedby="tooltip-550000"
+                              class="usa-button usa-tooltip__trigger padding-0 margin-0 margin-top-1 bg-transparent outline-0"
+                              data-testid="triggerElement"
+                              tabindex="0"
+                              title=""
+                              type="button"
+                            >
+                              <svg
+                                aria-label="Primary requester"
+                                class="usa-icon usa-icon--size-3 text-primary"
+                                focusable="false"
+                                height="1em"
+                                role="img"
+                                viewBox="0 0 24 24"
+                                width="1em"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-2 8c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm4 8H8v-.57c0-.81.48-1.53 1.22-1.85a6.95 6.95 0 0 1 5.56 0A2.01 2.01 0 0 1 16 17.43V18z"
+                                />
+                              </svg>
+                            </button>
+                            <span
+                              aria-hidden="true"
+                              class="usa-tooltip__body"
+                              data-testid="tooltipBody"
+                              id="tooltip-550000"
+                              role="tooltip"
+                              title="This individual is the primary requester. Primary requesters are able to edit IT governance requests in EASi."
+                            >
+                              This individual is the primary requester. Primary requesters are able to edit IT governance requests in EASi.
+                            </span>
+                          </span>
+                          <div
+                            class="margin-left-105"
+                          >
+                            <p
+                              data-testid="commonName"
+                            >
+                              Ally Anderson
+                            </p>
+                            <p
+                              data-testid="email"
+                            >
+                              ally.anderson@local.fake
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                      <td
+                        role="cell"
+                      >
+                        CMS
+                      </td>
+                      <td
+                        role="cell"
+                      >
+                        Other
+                      </td>
+                    </tr>
+                    <tr
+                      aria-label="contact-systemIntakeContact-ABCD"
+                      data-testid="contact-row"
+                      role="row"
+                    >
+                      <td
+                        role="cell"
+                      >
+                        <div
+                          class="display-flex flex-align-center"
+                        >
+                          <div
+                            class="margin-left-4 padding-left-05"
+                          >
+                            <p
+                              data-testid="commonName"
+                            >
+                              Adeline Aarons
+                            </p>
+                            <p
+                              data-testid="email"
+                            >
+                              adeline.aarons@local.fake
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                      <td
+                        role="cell"
+                      >
+                        CM
+                      </td>
+                      <td
+                        role="cell"
+                      >
+                        Business Owner
+                      </td>
+                    </tr>
+                    <tr
+                      aria-label="contact-systemIntakeContact-ADMI"
+                      data-testid="contact-row"
+                      role="row"
+                    >
+                      <td
+                        role="cell"
+                      >
+                        <div
+                          class="display-flex flex-align-center"
+                        >
+                          <div
+                            class="margin-left-4 padding-left-05"
+                          >
+                            <p
+                              data-testid="commonName"
+                            >
+                              Audrey Abrams
+                            </p>
+                            <p
+                              data-testid="email"
+                            >
+                              audrey.abrams@local.fake
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                      <td
+                        role="cell"
+                      >
+                        OL
+                      </td>
+                      <td
+                        role="cell"
+                      >
+                        Product Manager
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
             <div

@@ -14,10 +14,15 @@ export default gql(/* GraphQL */ `
       statusAdmin
       state
 
-      # Uses requesterName and requesterComponent instead of full requester object
-      # to prevent multiple calls to Okta
-      requesterName
-      requesterComponent
+      requester {
+        id
+        component
+        userAccount {
+          id
+          username
+          commonName
+        }
+      }
 
       businessOwner {
         name

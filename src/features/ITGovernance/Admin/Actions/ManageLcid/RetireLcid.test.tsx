@@ -22,7 +22,7 @@ const renderComponent = (lcidRetiresAt?: string) =>
     <MemoryRouter>
       <MockedProvider
         mocks={[
-          getSystemIntakeContactsQuery,
+          getSystemIntakeContactsQuery(),
           getSystemIntakeQuery(),
           getSystemIntakeQuery()
         ]}

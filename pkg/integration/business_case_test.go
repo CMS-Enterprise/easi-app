@@ -13,6 +13,7 @@ import (
 	"github.com/guregu/null"
 
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 )
 
@@ -28,7 +29,7 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 	intake.RequestFormState = models.SIRFSSubmitted
 	intake.EUAUserID = null.StringFrom(s.user.euaID)
 
-	createdIntake, err := s.store.CreateSystemIntake(context.Background(), &intake)
+	createdIntake, err := storage.CreateSystemIntake(context.Background(), s.store, &intake)
 	s.NoError(err)
 	intakeID := createdIntake.ID
 

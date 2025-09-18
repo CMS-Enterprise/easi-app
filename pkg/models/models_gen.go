@@ -186,10 +186,11 @@ type CreateGRBReviewerInput struct {
 
 // The data needed to associate a contact with a system intake
 type CreateSystemIntakeContactInput struct {
-	EuaUserID      string    `json:"euaUserId"`
-	SystemIntakeID uuid.UUID `json:"systemIntakeId"`
-	Component      string    `json:"component"`
-	Role           string    `json:"role"`
+	EuaUserID      string                       `json:"euaUserId"`
+	SystemIntakeID uuid.UUID                    `json:"systemIntakeId"`
+	Component      SystemIntakeContactComponent `json:"component"`
+	Roles          []SystemIntakeContactRole    `json:"roles"`
+	IsRequester    bool                         `json:"isRequester"`
 }
 
 // The payload when creating a system intake contact
@@ -609,12 +610,6 @@ type SystemIntakeConfirmLCIDInput struct {
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
 }
 
-// The payload when retrieving system intake contacts
-type SystemIntakeContactsPayload struct {
-	SystemIntakeContacts []*AugmentedSystemIntakeContact `json:"systemIntakeContacts"`
-	InvalidEUAIDs        []string                        `json:"invalidEUAIDs"`
-}
-
 // Represents a contract for work on a system
 type SystemIntakeContract struct {
 	Contractor  *string       `json:"contractor,omitempty"`
@@ -800,13 +795,6 @@ type SystemIntakeRequestEditsInput struct {
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
 }
 
-// The contact who made an IT governance request for a system
-type SystemIntakeRequester struct {
-	Component *string `json:"component,omitempty"`
-	Email     *string `json:"email,omitempty"`
-	Name      string  `json:"name"`
-}
-
 // The input data used to set the requester of a system request
 type SystemIntakeRequesterInput struct {
 	Name string `json:"name"`
@@ -928,11 +916,10 @@ type UpdateSystemIntakeContactDetailsInput struct {
 
 // The data needed to update a contact associated with a system intake
 type UpdateSystemIntakeContactInput struct {
-	ID             uuid.UUID `json:"id"`
-	EuaUserID      string    `json:"euaUserId"`
-	SystemIntakeID uuid.UUID `json:"systemIntakeId"`
-	Component      string    `json:"component"`
-	Role           string    `json:"role"`
+	ID          uuid.UUID                    `json:"id"`
+	Component   SystemIntakeContactComponent `json:"component"`
+	Roles       []SystemIntakeContactRole    `json:"roles"`
+	IsRequester bool                         `json:"isRequester"`
 }
 
 // Input data for updating contract details related to a system request

@@ -1,12 +1,15 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import { render, screen } from '@testing-library/react';
+import {
+  render,
+  screen,
+  waitForElementToBeRemoved
+} from '@testing-library/react';
 import { SystemIntakeFragmentFragment } from 'gql/generated/graphql';
 import {
   getSystemIntakeContactsQuery,
   getSystemIntakeQuery,
-  requester,
   systemIntake
 } from 'tests/mock/systemIntake';
 
@@ -17,20 +20,24 @@ import IntakeReview from './index';
 
 describe('The GRT intake review view', () => {
   let dateSpy: any;
+  let mathRandomSpy: any;
   beforeAll(() => {
     // September 30, 2020
     dateSpy = vi.spyOn(Date, 'now').mockImplementation(() => 1601449200000);
+    // Mock Math.random to return consistent values for tooltip IDs
+    mathRandomSpy = vi.spyOn(Math, 'random').mockImplementation(() => 0.5);
   });
 
   afterAll(() => {
     dateSpy.mockRestore();
+    mathRandomSpy.mockRestore();
   });
 
   it('renders without crashing', () => {
     render(
       <MemoryRouter>
         <MockedProvider
-          mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery]}
+          mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery()]}
         >
           <MessageProvider>
             <IntakeReview systemIntake={systemIntake} />
@@ -47,7 +54,7 @@ describe('The GRT intake review view', () => {
         initialEntries={[`/it-governance/${systemIntake.id}/intake-request`]}
       >
         <MockedProvider
-          mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery]}
+          mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery()]}
         >
           <Route path={['/it-governance/:systemId/intake-request']}>
             <MessageProvider>
@@ -58,9 +65,7 @@ describe('The GRT intake review view', () => {
       </MemoryRouter>
     );
 
-    expect(
-      await screen.findByTestId(`contact-requester-${requester.euaUserId}`)
-    ).toBeInTheDocument();
+    await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
 
     expect(asFragment()).toMatchSnapshot();
   });
@@ -77,7 +82,7 @@ describe('The GRT intake review view', () => {
         <VerboseMockedProvider
           mocks={[
             getSystemIntakeQuery({ costs }),
-            getSystemIntakeContactsQuery
+            getSystemIntakeContactsQuery()
           ]}
         >
           <MessageProvider>
@@ -109,7 +114,7 @@ describe('The GRT intake review view', () => {
         <MockedProvider
           mocks={[
             getSystemIntakeQuery({ annualSpending }),
-            getSystemIntakeContactsQuery
+            getSystemIntakeContactsQuery()
           ]}
         >
           <MessageProvider>

@@ -36,10 +36,10 @@ import './index.scss';
 
 export type RequestSummaryProps = {
   id: string;
-  requester: SystemIntakeFragmentFragment['requester'];
   requestName: string;
   requestType: RequestType;
   statusAdmin: SystemIntakeStatusAdmin;
+  requester?: SystemIntakeFragmentFragment['requester'];
   adminLead?: string | null;
   submittedAt?: string | null;
   lcid?: string | null;
@@ -170,7 +170,7 @@ const RequestSummary = ({
             contractName={contractName}
             systems={systems}
             requester={getPersonNameAndComponentAcronym(
-              requester?.name || '',
+              requester?.userAccount?.commonName || '',
               requester?.component
             )}
             contractNumbers={contractNumbers}

@@ -130,7 +130,7 @@ describe('IT Gov Actions', () => {
         initialEntry: `/it-governance/${systemIntake.id}/actions/request-edits`,
         mocks: [
           getSystemIntakeQuery(),
-          getSystemIntakeContactsQuery,
+          getSystemIntakeContactsQuery(),
           getGovernanceTaskListQuery({
             step: SystemIntakeStep.DRAFT_BUSINESS_CASE
           })
@@ -151,7 +151,7 @@ describe('IT Gov Actions', () => {
         initialEntry: `/it-governance/${systemIntake.id}/actions/request-edits`,
         mocks: [
           getSystemIntakeQuery(),
-          getSystemIntakeContactsQuery,
+          getSystemIntakeContactsQuery(),
           getGovernanceTaskListQuery({
             step: SystemIntakeStep.GRT_MEETING
           })
@@ -175,11 +175,11 @@ describe('IT Gov Actions', () => {
         mocks: [
           // initial data
           getSystemIntakeQuery(),
-          getSystemIntakeContactsQuery,
+          getSystemIntakeContactsQuery(),
           getGovernanceTaskListQuery(),
           // post-mutation refetches (MockLink will satisfy these)
           getSystemIntakeQuery(),
-          getSystemIntakeContactsQuery,
+          getSystemIntakeContactsQuery(),
           getGovernanceTaskListQuery()
         ]
       });
@@ -221,7 +221,7 @@ describe('IT Gov Actions', () => {
         initialEntry: `/it-governance/${systemIntake.id}/actions/new-step`,
         mocks: [
           getSystemIntakeQuery(),
-          getSystemIntakeContactsQuery,
+          getSystemIntakeContactsQuery(),
           getGovernanceTaskListQuery()
         ]
       });
@@ -248,7 +248,7 @@ describe('IT Gov Actions', () => {
         initialEntry: `/it-governance/${systemIntake.id}/actions/new-step`,
         mocks: [
           getSystemIntakeQuery(),
-          getSystemIntakeContactsQuery,
+          getSystemIntakeContactsQuery(),
           getGovernanceTaskListQuery({ step: SystemIntakeStep.GRB_MEETING })
         ]
       });

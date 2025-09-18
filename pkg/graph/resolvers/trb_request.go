@@ -101,7 +101,7 @@ func UpdateTRBRequest(ctx context.Context, id uuid.UUID, changes map[string]inte
 	princ := appcontext.Principal(ctx)
 
 	//apply changes here
-	err = ApplyChangesAndMetaData(changes, existing, princ)
+	err = BaseStructPreUpdate(changes, existing, princ, true)
 	if err != nil {
 		return nil, err
 	}
@@ -166,7 +166,7 @@ func UpdateTRBRequestConsultMeetingTime(
 	changes := map[string]interface{}{
 		"consultMeetingTime": &meetingTime,
 	}
-	err = ApplyChangesAndMetaData(changes, trb, appcontext.Principal(ctx))
+	err = BaseStructPreUpdate(changes, trb, appcontext.Principal(ctx), true)
 	if err != nil {
 		return nil, err
 	}
@@ -225,7 +225,7 @@ func UpdateTRBRequestTRBLead(
 		"trbLead": &trbLead,
 	}
 
-	if err := ApplyChangesAndMetaData(changes, trb, appcontext.Principal(ctx)); err != nil {
+	if err := BaseStructPreUpdate(changes, trb, appcontext.Principal(ctx), true); err != nil {
 		return nil, err
 	}
 
@@ -295,7 +295,7 @@ func CloseTRBRequest(
 		"state": models.TRBRequestStateClosed,
 	}
 
-	err = ApplyChangesAndMetaData(trbChanges, trb, appcontext.Principal(ctx))
+	err = BaseStructPreUpdate(trbChanges, trb, appcontext.Principal(ctx), true)
 	if err != nil {
 		return nil, err
 	}
@@ -368,7 +368,7 @@ func ReopenTRBRequest(
 		"state": models.TRBRequestStateOpen,
 	}
 
-	err = ApplyChangesAndMetaData(trbChanges, trb, appcontext.Principal(ctx))
+	err = BaseStructPreUpdate(trbChanges, trb, appcontext.Principal(ctx), true)
 	if err != nil {
 		return nil, err
 	}
