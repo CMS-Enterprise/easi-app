@@ -8,6 +8,7 @@ import {
 } from 'components/DescriptionGroup';
 import ReviewRow from 'components/ReviewRow';
 import { yesNoMap } from 'data/common';
+import formatDollars from 'utils/formatDollars';
 import { showSystemVal } from 'utils/showVal';
 
 type SystemIntakeAnnualSpendingProps = {
@@ -33,12 +34,15 @@ const SystemIntakeAnnualSpending = ({
     plannedYearOneSpendingITPortion
   } = annualSpending || {};
 
-  const formatDollars = (value: string | null | undefined) =>
+  const formatDollarsString = (value: string | null | undefined) =>
     showSystemVal(value, {
-      format: val => (Number.isNaN(Number(val)) ? val : `$${val}`)
+      format: val => {
+        const num = Number(val);
+        return Number.isNaN(num) ? val : formatDollars(num);
+      }
     });
 
-  const formatPercentage = (value: string | null | undefined) =>
+  const formatPercentageString = (value: string | null | undefined) =>
     showSystemVal(value, {
       format: val => (Number.isNaN(Number(val)) ? val : `${val}%`)
     });
@@ -50,7 +54,7 @@ const SystemIntakeAnnualSpending = ({
           <div>
             <DescriptionTerm term={t('review.currentAnnualSpending')} />
             <DescriptionDefinition
-              definition={formatDollars(currentAnnualSpending)}
+              definition={formatDollarsString(currentAnnualSpending)}
             />
           </div>
           <div>
@@ -58,7 +62,9 @@ const SystemIntakeAnnualSpending = ({
               term={t('review.currentAnnualSpendingITPortion')}
             />
             <DescriptionDefinition
-              definition={formatPercentage(currentAnnualSpendingITPortion)}
+              definition={formatPercentageString(
+                currentAnnualSpendingITPortion
+              )}
             />
           </div>
         </ReviewRow>
@@ -66,7 +72,7 @@ const SystemIntakeAnnualSpending = ({
           <div>
             <DescriptionTerm term={t('review.plannedYearOneSpending')} />
             <DescriptionDefinition
-              definition={formatDollars(plannedYearOneSpending)}
+              definition={formatDollarsString(plannedYearOneSpending)}
             />
           </div>
           <div>
@@ -74,7 +80,9 @@ const SystemIntakeAnnualSpending = ({
               term={t('review.plannedYearOneSpendingITPortion')}
             />
             <DescriptionDefinition
-              definition={formatPercentage(plannedYearOneSpendingITPortion)}
+              definition={formatPercentageString(
+                plannedYearOneSpendingITPortion
+              )}
             />
           </div>
         </ReviewRow>
@@ -90,13 +98,13 @@ const SystemIntakeAnnualSpending = ({
           <div>
             <DescriptionTerm term={t('review.currentAnnualSpending')} />
             <DescriptionDefinition
-              definition={formatDollars(currentAnnualSpending)}
+              definition={formatDollarsString(currentAnnualSpending)}
             />
           </div>
           <div>
             <DescriptionTerm term={t('review.plannedYearOneSpending')} />
             <DescriptionDefinition
-              definition={formatDollars(plannedYearOneSpending)}
+              definition={formatDollarsString(plannedYearOneSpending)}
             />
           </div>
         </ReviewRow>
@@ -121,7 +129,7 @@ const SystemIntakeAnnualSpending = ({
           <div>
             <DescriptionTerm term={t('review.increase')} />
             <DescriptionDefinition
-              definition={formatDollars(costs.expectedIncreaseAmount)}
+              definition={formatDollarsString(costs.expectedIncreaseAmount)}
             />
           </div>
         )}
