@@ -9365,6 +9365,7 @@ enum SystemIntakeRequestType {
   NEW
   RECOMPETE
   SHUTDOWN
+  OTHER
 }
 
 """
