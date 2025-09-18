@@ -71,6 +71,7 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
     [linkedSystemIntakes, linkedTrbRequests]
   );
 
+  // TODO: Replace `any` column type with SystemLinkedRequest
   const columns: Column<any>[] = useMemo(() => {
     return [
       {
@@ -162,7 +163,7 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
           if (lr.__typename === 'TRBRequest') {
             return <>{lr.requesterInfo.commonName}</>;
           }
-          return <>{lr.requesterName}</>;
+          return <>{lr.requester.userAccount.commonName}</>;
         }
       }
     ];
@@ -261,41 +262,50 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
 
       <Table bordered={false} fullWidth scrollable {...getTableProps()}>
         <thead>
-          {headerGroups.map(headerGroup => (
-            <tr
-              {...headerGroup.getHeaderGroupProps()}
-              key={{ ...headerGroup.getHeaderGroupProps() }.key}
-            >
-              {headerGroup.headers.map((column, index) => (
-                <th
-                  {...column.getHeaderProps(column.getSortByToggleProps())}
-                  aria-sort={getColumnSortStatus(column)}
-                  scope="col"
-                  className="border-bottom-2px"
-                >
-                  <Button
-                    type="button"
-                    unstyled
-                    {...column.getSortByToggleProps()}
-                  >
-                    {column.render('Header')}
-                    {getHeaderSortIcon(column)}
-                  </Button>
-                </th>
-              ))}
-            </tr>
-          ))}
+          {headerGroups.map(headerGroup => {
+            const { key, ...headerGroupProps } =
+              headerGroup.getHeaderGroupProps();
+
+            return (
+              <tr {...headerGroupProps} key={key}>
+                {headerGroup.headers.map((column, index) => {
+                  const { key: headerKey, ...headerProps } =
+                    column.getHeaderProps(column.getSortByToggleProps());
+
+                  return (
+                    <th
+                      {...headerProps}
+                      key={headerKey}
+                      aria-sort={getColumnSortStatus(column)}
+                      scope="col"
+                      className="border-bottom-2px"
+                    >
+                      <Button
+                        type="button"
+                        unstyled
+                        {...column.getSortByToggleProps()}
+                      >
+                        {column.render('Header')}
+                        {getHeaderSortIcon(column)}
+                      </Button>
+                    </th>
+                  );
+                })}
+              </tr>
+            );
+          })}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {page.map((row, rowIdx) => {
+          {page.map(row => {
+            const { key: rowKey, ...rowProps } = row.getRowProps();
+
             return (
-              <tr {...row.getRowProps()} key={{ ...row.getRowProps() }.key}>
+              <tr {...rowProps} key={rowKey}>
                 {row.cells.map(cell => {
+                  const { key: cellKey, ...cellProps } = cell.getCellProps();
+
                   return (
-                    <td
-                      {...cell.getCellProps()}
-                      key={{ ...cell.getCellProps() }.key}
-                    >
+                    <td {...cellProps} key={cellKey}>
                       {cell.render('Cell')}
                     </td>
                   );

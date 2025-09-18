@@ -1,5 +1,6 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
+import { FetchResult } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -23,7 +24,7 @@ describe('System Workspace Requests Table', () => {
   it('renders open and closed requests', async () => {
     const cedarSystemId = '{11AB1A00-1234-5678-ABC1-1A001B00CC1B}';
 
-    const result = {
+    const result: FetchResult<GetLinkedRequestsQuery> = {
       data: {
         __typename: 'Query',
         cedarSystemDetails: {
@@ -36,7 +37,7 @@ describe('System Workspace Requests Table', () => {
           }
         }
       }
-    } as const;
+    };
 
     const getLinkedRequestsMockedQuery: MockedQuery<
       GetLinkedRequestsQuery,

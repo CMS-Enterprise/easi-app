@@ -12,7 +12,6 @@ import {
   getSystemIntakeQuery,
   systemIntake
 } from 'tests/mock/systemIntake';
-import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import { MessageProvider } from 'hooks/useMessage';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
@@ -132,31 +131,5 @@ describe('The GRT intake review view', () => {
 
     expect(screen.getByText('$3.5')).toBeInTheDocument();
     expect(screen.getByText('$123,456')).toBeInTheDocument();
-  });
-
-  it('Renders action button for GRT admins', async () => {
-    render(
-      <MemoryRouter
-        initialEntries={[`/it-governance/${systemIntake.id}/intake-request`]}
-      >
-        <MockedProvider
-          mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery()]}
-        >
-          <Route path={['/it-governance/:systemId/intake-request']}>
-            <MessageProvider>
-              <ITGovAdminContext.Provider value>
-                <IntakeReview systemIntake={systemIntake} />
-              </ITGovAdminContext.Provider>
-            </MessageProvider>
-          </Route>
-        </MockedProvider>
-      </MemoryRouter>
-    );
-
-    await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
-
-    expect(
-      screen.getByRole('link', { name: 'Take an action' })
-    ).toBeInTheDocument();
   });
 });

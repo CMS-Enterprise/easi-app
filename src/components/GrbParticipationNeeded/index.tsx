@@ -81,11 +81,11 @@ const GrbParticipationNeeded = () => {
       },
       {
         Header: t<string>('intake:fields.requester'),
-        accessor: ({ requesterName, requesterComponent }) =>
-          requesterName
+        accessor: ({ requester }) =>
+          requester
             ? getPersonNameAndComponentAcronym(
-                requesterName,
-                requesterComponent
+                requester.userAccount.commonName,
+                requester.component
               )
             : ''
       },

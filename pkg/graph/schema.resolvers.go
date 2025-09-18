@@ -12,6 +12,10 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/google/uuid"
+	"github.com/guregu/null"
+	"golang.org/x/sync/errgroup"
+
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
@@ -25,9 +29,6 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/services"
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
-	"github.com/google/uuid"
-	"github.com/guregu/null"
-	"golang.org/x/sync/errgroup"
 )
 
 // AlternativeASolution is the resolver for the alternativeASolution field.
@@ -1946,7 +1947,6 @@ func (r *systemIntakeResolver) RequestName(ctx context.Context, obj *models.Syst
 // Requester is the resolver for the requester field.
 func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeContact, error) {
 	return resolvers.SystemIntakeContactGetRequester(ctx, obj.ID)
-
 }
 
 // Documents is the resolver for the documents field.

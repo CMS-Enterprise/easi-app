@@ -485,7 +485,7 @@ exports[`Additional contacts component > renders without crashing 1`] = `
     <h4
       class="margin-top-0"
     >
-      Additional team members and project points of contact
+      Additional contacts
     </h4>
     <div
       class="system-intake-contacts__contacts-list"
