@@ -130,13 +130,6 @@ func SystemIntakeUpdateContactDetails(ctx context.Context, store *storage.Store,
 	}
 	intake.RequestFormState = formstate.GetNewStateForUpdatedForm(intake.RequestFormState)
 
-	intake.Requester = input.Requester.Name
-	intake.Component = null.StringFrom(input.Requester.Component)
-	intake.BusinessOwner = null.StringFrom(input.BusinessOwner.Name)
-	intake.BusinessOwnerComponent = null.StringFrom(input.BusinessOwner.Component)
-	intake.ProductManager = null.StringFrom(input.ProductManager.Name)
-	intake.ProductManagerComponent = null.StringFrom(input.ProductManager.Component)
-
 	if input.GovernanceTeams.IsPresent != nil {
 		trbCollaboratorName := null.StringFromPtr(nil)
 		for _, team := range input.GovernanceTeams.Teams {

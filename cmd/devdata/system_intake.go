@@ -444,18 +444,6 @@ func updateSystemIntakeContactDetails(
 
 	input := models.UpdateSystemIntakeContactDetailsInput{
 		ID: intake.ID,
-		Requester: &models.SystemIntakeRequesterWithComponentInput{
-			Name:      requesterName,
-			Component: requesterComponent,
-		},
-		BusinessOwner: &models.SystemIntakeBusinessOwnerInput{
-			Name:      businessOwnerName,
-			Component: businessOwnerComponent,
-		},
-		ProductManager: &models.SystemIntakeProductManagerInput{
-			Name:      productManagerName,
-			Component: productManagerComponent,
-		},
 		GovernanceTeams: &models.SystemIntakeGovernanceTeamInput{
 			IsPresent: &govTeamsPresent,
 			Teams: []*models.SystemIntakeCollaboratorInput{

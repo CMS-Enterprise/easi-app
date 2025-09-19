@@ -2257,12 +2257,6 @@ export type SystemIntakeBusinessOwner = {
   name?: Maybe<Scalars['String']['output']>;
 };
 
-/** The input data used to set the CMS Business Owner of a system */
-export type SystemIntakeBusinessOwnerInput = {
-  component: Scalars['String']['input'];
-  name: Scalars['String']['input'];
-};
-
 /** Input for changing an intake's LCID retirement date in IT Gov v2 */
 export type SystemIntakeChangeLCIDRetirementDateInput = {
   additionalInfo?: InputMaybe<Scalars['HTML']['input']>;
@@ -2757,12 +2751,6 @@ export type SystemIntakeProductManager = {
   name?: Maybe<Scalars['String']['output']>;
 };
 
-/** The input data used to set the CMS product manager/lead of a system */
-export type SystemIntakeProductManagerInput = {
-  component: Scalars['String']['input'];
-  name: Scalars['String']['input'];
-};
-
 /** Input for submitting a Progress to New Step action in IT Gov v2 */
 export type SystemIntakeProgressToNewStepsInput = {
   additionalInfo?: InputMaybe<Scalars['HTML']['input']>;
@@ -2816,15 +2804,6 @@ export enum SystemIntakeRequestType {
 
 /** The input data used to set the requester of a system request */
 export type SystemIntakeRequesterInput = {
-  name: Scalars['String']['input'];
-};
-
-/**
- * The input data used to set the requester for a system request along with the
- * requester's business component
- */
-export type SystemIntakeRequesterWithComponentInput = {
-  component: Scalars['String']['input'];
   name: Scalars['String']['input'];
 };
 
@@ -3426,11 +3405,8 @@ export type UpdateSystemIntakeAdminLeadInput = {
  * a system request
  */
 export type UpdateSystemIntakeContactDetailsInput = {
-  businessOwner: SystemIntakeBusinessOwnerInput;
   governanceTeams: SystemIntakeGovernanceTeamInput;
   id: Scalars['UUID']['input'];
-  productManager: SystemIntakeProductManagerInput;
-  requester: SystemIntakeRequesterWithComponentInput;
 };
 
 /** The data needed to update a contact associated with a system intake */

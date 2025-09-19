@@ -1017,30 +1017,6 @@ input CreateSystemIntakeInput {
   requester: SystemIntakeRequesterInput!
 }
 
-"""
-The input data used to set the requester for a system request along with the
-requester's business component
-"""
-input SystemIntakeRequesterWithComponentInput {
-  name: String!
-  component: String!
-}
-
-"""
-The input data used to set the CMS Business Owner of a system
-"""
-input SystemIntakeBusinessOwnerInput {
-  name: String!
-  component: String!
-}
-
-"""
-The input data used to set the CMS product manager/lead of a system
-"""
-input SystemIntakeProductManagerInput {
-  name: String!
-  component: String!
-}
 
 """
 The input data used to add an OIT collaborator for a system request
@@ -1065,9 +1041,6 @@ a system request
 """
 input UpdateSystemIntakeContactDetailsInput {
   id: UUID!
-  requester: SystemIntakeRequesterWithComponentInput!
-  businessOwner: SystemIntakeBusinessOwnerInput!
-  productManager: SystemIntakeProductManagerInput!
   governanceTeams: SystemIntakeGovernanceTeamInput!
 }
 

@@ -15,11 +15,6 @@ body:graphql {
     updateSystemIntakeContactDetails(input: $input) {
       systemIntake {
         id
-        businessOwner {
-          component
-          name
-          __typename
-        }
         governanceTeams {
           isPresent
           teams {
@@ -35,24 +30,6 @@ body:graphql {
         collaborator508
         eaCollaboratorName
    
-        productManager {
-          component
-          name
-          __typename
-        }
-      requester {
-        id
-        roles
-        component
-        isRequester
-        userID
-        userAccount {
-          id
-          commonName
-          username
-          email
-        }
-      }
         __typename
       }
       __typename
@@ -64,18 +41,6 @@ body:graphql:vars {
   {
     "input": {
       "id": "{{systemIntakeID}}",
-      "requester": {
-        "name": "User ABCD",
-        "component": "Center for Clinical Standards and Quality"
-      },
-      "businessOwner": {
-        "name": "Caden Schmeler",
-        "component": "Center for Program Integrity"
-      },
-      "productManager": {
-        "name": "Zechariah Wyman",
-        "component": "Center for Consumer Information and Insurance Oversight"
-      },
       "governanceTeams": {
         "isPresent": true,
         "teams": [

@@ -8637,7 +8637,6 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputStartGRBReviewInput,
 		ec.unmarshalInputSubmitIntakeInput,
 		ec.unmarshalInputSystemIntakeAnnualSpendingInput,
-		ec.unmarshalInputSystemIntakeBusinessOwnerInput,
 		ec.unmarshalInputSystemIntakeChangeLCIDRetirementDateInput,
 		ec.unmarshalInputSystemIntakeCloseRequestInput,
 		ec.unmarshalInputSystemIntakeCollaboratorInput,
@@ -8651,13 +8650,11 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputSystemIntakeGovernanceTeamInput,
 		ec.unmarshalInputSystemIntakeIssueLCIDInput,
 		ec.unmarshalInputSystemIntakeNotITGovReqInput,
-		ec.unmarshalInputSystemIntakeProductManagerInput,
 		ec.unmarshalInputSystemIntakeProgressToNewStepsInput,
 		ec.unmarshalInputSystemIntakeRejectIntakeInput,
 		ec.unmarshalInputSystemIntakeReopenRequestInput,
 		ec.unmarshalInputSystemIntakeRequestEditsInput,
 		ec.unmarshalInputSystemIntakeRequesterInput,
-		ec.unmarshalInputSystemIntakeRequesterWithComponentInput,
 		ec.unmarshalInputSystemIntakeRetireLCIDInput,
 		ec.unmarshalInputSystemIntakeUnretireLCIDInput,
 		ec.unmarshalInputSystemIntakeUpdateLCIDInput,
@@ -9804,30 +9801,6 @@ input CreateSystemIntakeInput {
   requester: SystemIntakeRequesterInput!
 }
 
-"""
-The input data used to set the requester for a system request along with the
-requester's business component
-"""
-input SystemIntakeRequesterWithComponentInput {
-  name: String!
-  component: String!
-}
-
-"""
-The input data used to set the CMS Business Owner of a system
-"""
-input SystemIntakeBusinessOwnerInput {
-  name: String!
-  component: String!
-}
-
-"""
-The input data used to set the CMS product manager/lead of a system
-"""
-input SystemIntakeProductManagerInput {
-  name: String!
-  component: String!
-}
 
 """
 The input data used to add an OIT collaborator for a system request
@@ -9852,9 +9825,6 @@ a system request
 """
 input UpdateSystemIntakeContactDetailsInput {
   id: UUID!
-  requester: SystemIntakeRequesterWithComponentInput!
-  businessOwner: SystemIntakeBusinessOwnerInput!
-  productManager: SystemIntakeProductManagerInput!
   governanceTeams: SystemIntakeGovernanceTeamInput!
 }
 
@@ -66132,40 +66102,6 @@ func (ec *executionContext) unmarshalInputSystemIntakeAnnualSpendingInput(ctx co
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputSystemIntakeBusinessOwnerInput(ctx context.Context, obj any) (models.SystemIntakeBusinessOwnerInput, error) {
-	var it models.SystemIntakeBusinessOwnerInput
-	asMap := map[string]any{}
-	for k, v := range obj.(map[string]any) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"name", "component"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "name":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Name = data
-		case "component":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("component"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Component = data
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputSystemIntakeChangeLCIDRetirementDateInput(ctx context.Context, obj any) (models.SystemIntakeChangeLCIDRetirementDateInput, error) {
 	var it models.SystemIntakeChangeLCIDRetirementDateInput
 	asMap := map[string]any{}
@@ -66860,40 +66796,6 @@ func (ec *executionContext) unmarshalInputSystemIntakeNotITGovReqInput(ctx conte
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputSystemIntakeProductManagerInput(ctx context.Context, obj any) (models.SystemIntakeProductManagerInput, error) {
-	var it models.SystemIntakeProductManagerInput
-	asMap := map[string]any{}
-	for k, v := range obj.(map[string]any) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"name", "component"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "name":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Name = data
-		case "component":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("component"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Component = data
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputSystemIntakeProgressToNewStepsInput(ctx context.Context, obj any) (models.SystemIntakeProgressToNewStepsInput, error) {
 	var it models.SystemIntakeProgressToNewStepsInput
 	asMap := map[string]any{}
@@ -67184,40 +67086,6 @@ func (ec *executionContext) unmarshalInputSystemIntakeRequesterInput(ctx context
 				return it, err
 			}
 			it.Name = data
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputSystemIntakeRequesterWithComponentInput(ctx context.Context, obj any) (models.SystemIntakeRequesterWithComponentInput, error) {
-	var it models.SystemIntakeRequesterWithComponentInput
-	asMap := map[string]any{}
-	for k, v := range obj.(map[string]any) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"name", "component"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "name":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Name = data
-		case "component":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("component"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Component = data
 		}
 	}
 
@@ -67540,7 +67408,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeContactDetailsInput(
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "requester", "businessOwner", "productManager", "governanceTeams"}
+	fieldsInOrder := [...]string{"id", "governanceTeams"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -67554,27 +67422,6 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeContactDetailsInput(
 				return it, err
 			}
 			it.ID = data
-		case "requester":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("requester"))
-			data, err := ec.unmarshalNSystemIntakeRequesterWithComponentInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeRequesterWithComponentInput(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Requester = data
-		case "businessOwner":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("businessOwner"))
-			data, err := ec.unmarshalNSystemIntakeBusinessOwnerInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeBusinessOwnerInput(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.BusinessOwner = data
-		case "productManager":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("productManager"))
-			data, err := ec.unmarshalNSystemIntakeProductManagerInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeProductManagerInput(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ProductManager = data
 		case "governanceTeams":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("governanceTeams"))
 			data, err := ec.unmarshalNSystemIntakeGovernanceTeamInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGovernanceTeamInput(ctx, v)
@@ -81827,11 +81674,6 @@ func (ec *executionContext) marshalNSystemIntakeBusinessOwner2ᚖgithubᚗcomᚋ
 	return ec._SystemIntakeBusinessOwner(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNSystemIntakeBusinessOwnerInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeBusinessOwnerInput(ctx context.Context, v any) (*models.SystemIntakeBusinessOwnerInput, error) {
-	res, err := ec.unmarshalInputSystemIntakeBusinessOwnerInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) unmarshalNSystemIntakeChangeLCIDRetirementDateInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeChangeLCIDRetirementDateInput(ctx context.Context, v any) (models.SystemIntakeChangeLCIDRetirementDateInput, error) {
 	res, err := ec.unmarshalInputSystemIntakeChangeLCIDRetirementDateInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -82678,11 +82520,6 @@ func (ec *executionContext) marshalNSystemIntakeProductManager2ᚖgithubᚗcom�
 	return ec._SystemIntakeProductManager(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNSystemIntakeProductManagerInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeProductManagerInput(ctx context.Context, v any) (*models.SystemIntakeProductManagerInput, error) {
-	res, err := ec.unmarshalInputSystemIntakeProductManagerInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) unmarshalNSystemIntakeProgressToNewStepsInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeProgressToNewStepsInput(ctx context.Context, v any) (models.SystemIntakeProgressToNewStepsInput, error) {
 	res, err := ec.unmarshalInputSystemIntakeProgressToNewStepsInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -82722,11 +82559,6 @@ func (ec *executionContext) marshalNSystemIntakeRequestType2githubᚗcomᚋcms�
 
 func (ec *executionContext) unmarshalNSystemIntakeRequesterInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeRequesterInput(ctx context.Context, v any) (*models.SystemIntakeRequesterInput, error) {
 	res, err := ec.unmarshalInputSystemIntakeRequesterInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNSystemIntakeRequesterWithComponentInput2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeRequesterWithComponentInput(ctx context.Context, v any) (*models.SystemIntakeRequesterWithComponentInput, error) {
-	res, err := ec.unmarshalInputSystemIntakeRequesterWithComponentInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
