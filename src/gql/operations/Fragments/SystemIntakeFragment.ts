@@ -81,6 +81,7 @@ export default gql(/* GraphQL */ `
       name
     }
     requestName
+    projectAcronym
     requestType
     statusAdmin
     statusRequester

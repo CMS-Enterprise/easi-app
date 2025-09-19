@@ -128,6 +128,7 @@ func SystemIntakeUpdate(ctx context.Context, store *storage.Store, fetchCedarSys
 
 	intake.ProcessStatus = null.StringFromPtr(input.CurrentStage)
 	intake.ProjectName = null.StringFromPtr(input.RequestName)
+	intake.ProjectAcronym = null.StringFromPtr(input.ProjectAcronym)
 	intake.BusinessNeed = null.StringFromPtr(input.BusinessNeed)
 	intake.Solution = null.StringFromPtr(input.BusinessSolution)
 	intake.EASupportRequest = null.BoolFromPtr(input.NeedsEaSupport)

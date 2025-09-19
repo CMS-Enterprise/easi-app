@@ -16,6 +16,7 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   id: '',
   euaUserId: '',
   requestName: '',
+  projectAcronym: '',
   statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_IN_PROGRESS,
   requestType: 'NEW',
   requester: {
