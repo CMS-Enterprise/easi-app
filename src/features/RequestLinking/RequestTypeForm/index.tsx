@@ -22,6 +22,7 @@ import {
 
 import CollapsableLink from 'components/CollapsableLink';
 import IconButton from 'components/IconButton';
+import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import linkCedarSystemIdQueryString, {
@@ -66,13 +67,16 @@ const RequestTypeForm = () => {
         const navigationLink = `/linked-systems/${id}?${linkqs || ''}`;
 
         switch (requestType) {
-          case 'NEW':
+          case SystemIntakeRequestType.NEW:
             history.push(`/governance-overview/${id}?${linkqs}`, { isNew });
             break;
-          case 'MAJOR_CHANGES':
+          case SystemIntakeRequestType.MAJOR_CHANGES:
             history.push(navigationLink, { isNew });
             break;
-          case 'RECOMPETE':
+          case SystemIntakeRequestType.RECOMPETE:
+            history.push(navigationLink, { isNew });
+            break;
+          case SystemIntakeRequestType.OTHER:
             history.push(navigationLink, { isNew });
             break;
           default:
@@ -213,6 +217,20 @@ const RequestTypeForm = () => {
           );
         })}
       </CardGroup>
+      <h3>{t('requestTypeForm.other.header')}</h3>
+      <UswdsReactLink
+        to=""
+        onClick={e => {
+          e.preventDefault();
+          if (isNew) {
+            handleCreateIntake(SystemIntakeRequestType.OTHER);
+          } else {
+            history.push(taskListUrl);
+          }
+        }}
+      >
+        {t('requestTypeForm.other.link')}
+      </UswdsReactLink>
     </MainContent>
   );
 };
