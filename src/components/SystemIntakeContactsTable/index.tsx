@@ -17,13 +17,14 @@ import './index.scss';
 
 type SystemIntakeContactsTableProps = {
   systemIntakeId: string;
-  showActionsColumn?: boolean;
+  /** Sets contact to edit with form modal. If undefined, actions column will not render. */
+  handleEditContact?: (contact: SystemIntakeContactFragment) => void;
   className?: string;
 };
 
 const SystemIntakeContactsTable = ({
   systemIntakeId,
-  showActionsColumn = false,
+  handleEditContact,
   className
 }: SystemIntakeContactsTableProps) => {
   const { t } = useTranslation('intake');
@@ -46,7 +47,7 @@ const SystemIntakeContactsTable = ({
             <Button
               type="button"
               className="margin-top-0 margin-right-2"
-              onClick={() => null}
+              onClick={() => handleEditContact?.(row)}
               data-testid={`editContact-${index}`}
               unstyled
             >
@@ -81,7 +82,7 @@ const SystemIntakeContactsTable = ({
         accessor: (row: SystemIntakeContactFragment) =>
           row.userAccount.commonName,
         id: 'commonName',
-        width: showActionsColumn ? 320 : 'auto',
+        width: handleEditContact ? 320 : 'auto',
         Cell: ({ row }: { row: { original: SystemIntakeContactFragment } }) => (
           <div className="display-flex flex-align-center">
             {row.original.isRequester && (
@@ -118,7 +119,7 @@ const SystemIntakeContactsTable = ({
         Header: t('fields.component'),
         accessor: 'component',
         id: 'component',
-        width: showActionsColumn ? 150 : 200,
+        width: handleEditContact ? 150 : 200,
         Cell: ({
           value
         }: {
@@ -165,9 +166,9 @@ const SystemIntakeContactsTable = ({
           );
         }
       },
-      ...(showActionsColumn ? [actionsColumn] : [])
+      ...(handleEditContact ? [actionsColumn] : [])
     ];
-  }, [t, showActionsColumn]);
+  }, [t, handleEditContact]);
 
   const table = useTable(
     {

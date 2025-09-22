@@ -1,4 +1,6 @@
 import {
+  SystemIntakeContactComponent,
+  SystemIntakeContactRole,
   SystemIntakeDocumentCommonType,
   SystemIntakeDocumentVersion
 } from 'gql/generated/graphql';
@@ -45,6 +47,29 @@ const governanceTeams = Yup.object().shape({
           : true;
       }
     )
+});
+
+export const SystemIntakeContactSchema = Yup.object().shape({
+  userInfo: Yup.object()
+    .shape({
+      euaUserId: Yup.string(),
+      commonName: Yup.string(),
+      email: Yup.string()
+    })
+    .test('isRequired', 'Select a contact', values => {
+      return !!(values.euaUserId && values.commonName && values.email);
+    }),
+  component: Yup.mixed<SystemIntakeContactComponent>()
+    .oneOf(Object.values(SystemIntakeContactComponent))
+    .required('Select a component'),
+  roles: Yup.array()
+    .of(Yup.string())
+    .of(
+      Yup.mixed<SystemIntakeContactRole>().oneOf(
+        Object.values(SystemIntakeContactRole)
+      )
+    )
+    .min(1, 'Select at least one role')
 });
 
 const SystemIntakeValidationSchema = {

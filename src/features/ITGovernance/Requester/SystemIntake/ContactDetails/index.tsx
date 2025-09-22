@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FieldPath } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -8,6 +8,7 @@ import { Button, Form } from '@trussworks/react-uswds';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
 import {
   GetSystemIntakeDocument,
+  SystemIntakeContactFragment,
   SystemIntakeFormState,
   SystemIntakeFragmentFragment,
   SystemIntakeRequestType,
@@ -29,6 +30,7 @@ import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
 import Section from '../_components/Section';
 
+import ContactFormModal from './_components/ContactFormModal';
 import GovernanceTeams from './GovernanceTeams';
 import { formatGovernanceTeamsInput } from './utils';
 
@@ -46,6 +48,11 @@ type ContactDetailsProps = {
 const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const { t } = useTranslation('intake');
   const history = useHistory();
+
+  const [contactToEdit, setContactToEdit] =
+    useState<SystemIntakeContactFragment | null>(null);
+
+  const [isContactsModalOpen, setIsContactsModalOpen] = useState(false);
 
   const [updateGovernanceTeams] = useUpdateSystemIntakeContactDetailsMutation({
     refetchQueries: [
@@ -138,8 +145,42 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   /** Flattened field errors, excluding any root errors */
   const fieldErrors = flattenFormErrors<GovernanceTeamsForm>(errors);
 
+  /** Close contacts modal and reset contact to edit */
+  const handleCloseContactsModal = () => {
+    if (contactToEdit) {
+      setContactToEdit(null);
+    }
+    setIsContactsModalOpen(false);
+  };
+
+  useEffect(() => {
+    setIsContactsModalOpen(!!contactToEdit);
+  }, [contactToEdit]);
+
   return (
     <>
+      <ContactFormModal
+        type="contact"
+        systemIntakeId={systemIntake.id}
+        isOpen={isContactsModalOpen}
+        closeModal={handleCloseContactsModal}
+        initialValues={
+          contactToEdit
+            ? {
+                id: contactToEdit.id,
+                userInfo: {
+                  euaUserId: contactToEdit.userAccount.username,
+                  commonName: contactToEdit.userAccount.commonName,
+                  email: contactToEdit.userAccount.email
+                },
+                component: contactToEdit.component,
+                roles: contactToEdit.roles,
+                isRequester: contactToEdit.isRequester
+              }
+            : undefined
+        }
+      />
+
       {Object.keys(errors).length > 0 && (
         <ErrorAlert
           testId="contact-details-errors"
@@ -197,7 +238,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
           <Button
             type="button"
-            onClick={() => null}
+            onClick={() => setIsContactsModalOpen(true)}
             outline
             className="margin-top-0"
           >
@@ -211,7 +252,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           <SystemIntakeContactsTable
             systemIntakeId={systemIntake.id}
             className="margin-top-3 padding-top-05 margin-bottom-6"
-            showActionsColumn
+            handleEditContact={setContactToEdit}
           />
         </Section>
 

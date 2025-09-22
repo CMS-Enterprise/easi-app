@@ -221,7 +221,7 @@ describe('SystemIntakeContactsTable', () => {
       <MockedProvider mocks={[getSystemIntakeContactsQuery()]}>
         <SystemIntakeContactsTable
           systemIntakeId={systemIntake.id}
-          showActionsColumn
+          handleEditContact={() => vi.fn()}
         />
       </MockedProvider>
     );
@@ -262,7 +262,7 @@ describe('SystemIntakeContactsTable', () => {
       <MockedProvider mocks={[getSystemIntakeContactsQuery()]}>
         <SystemIntakeContactsTable
           systemIntakeId={systemIntake.id}
-          showActionsColumn
+          handleEditContact={() => vi.fn()}
         />
       </MockedProvider>
     );

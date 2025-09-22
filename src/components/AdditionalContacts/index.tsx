@@ -9,6 +9,7 @@ import {
   SystemIntakeContactRole
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
+import { capitalize } from 'lodash';
 
 import Alert from 'components/Alert';
 import CedarContactSelect from 'components/CedarContactSelect';
@@ -149,6 +150,8 @@ const ContactForm = ({
     role: ''
   });
 
+  const action = activeContact?.id ? 'edit' : 'add';
+
   const contactRoles: Record<PersonRole, string> = i18next.t(
     'technicalAssistance:attendees.contactRoles',
     {
@@ -209,7 +212,10 @@ const ContactForm = ({
       {/* Contact Name */}
       <FieldGroup className="margin-top-2" error={!!errors.commonName}>
         <Label className="text-normal" htmlFor="systemIntakeContact.commonName">
-          {t('contactDetails.additionalContacts.name', { type })}
+          {t('contactDetails.additionalContacts.name', {
+            type: action === 'edit' ? capitalize(type) : type,
+            context: action
+          })}
         </Label>
         <HelpText className="margin-top-1">
           {t('technicalAssistance:emailRecipientFields.newRecipientHelpText')}
@@ -249,7 +255,10 @@ const ContactForm = ({
       {/* Contact Component */}
       <FieldGroup className="margin-top-2" error={!!errors.component}>
         <Label className="text-normal" htmlFor="systemIntakeContact.component">
-          {t('contactDetails.additionalContacts.component', { type })}
+          {t('contactDetails.additionalContacts.component', {
+            type: action === 'edit' ? capitalize(type) : type,
+            context: action
+          })}
         </Label>
         <FieldErrorMsg>{errors.component}</FieldErrorMsg>
         <Select
@@ -276,7 +285,10 @@ const ContactForm = ({
       {/* Contact Role */}
       <FieldGroup className="margin-top-2" error={!!errors.role}>
         <Label className="text-normal" htmlFor="systemIntakeContact.role">
-          {t('contactDetails.additionalContacts.role', { type })}
+          {t('contactDetails.additionalContacts.role', {
+            type: action === 'edit' ? capitalize(type) : type,
+            context: action
+          })}
         </Label>
         <FieldErrorMsg>{errors.role}</FieldErrorMsg>
         <Select
@@ -319,12 +331,10 @@ const ContactForm = ({
           type="button"
           onClick={() => handleSubmit()}
         >
-          {t(
-            activeContact?.id
-              ? 'contactDetails.additionalContacts.save'
-              : 'contactDetails.additionalContacts.addContact',
-            { type }
-          )}
+          {t('contactDetails.additionalContacts.submit', {
+            type,
+            context: activeContact?.id ? 'edit' : 'add'
+          })}
         </Button>
       </div>
     </div>
