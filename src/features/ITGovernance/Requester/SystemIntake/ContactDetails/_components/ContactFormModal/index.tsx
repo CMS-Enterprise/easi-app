@@ -30,7 +30,7 @@ import Modal from 'components/Modal';
 import MultiSelect from 'components/MultiSelect';
 import RequiredFieldsText from 'components/RequiredFieldsText';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
-import { SystemIntakeContactSchema } from 'validations/systemIntakeSchema';
+import { ContactFormSchema } from 'validations/systemIntakeSchema';
 
 type ContactFormModalProps = {
   systemIntakeId: string;
@@ -43,20 +43,20 @@ type ContactFormModalProps = {
 
 type ContactFormFields = {
   id: string;
-  userInfo: {
-    euaUserId: string;
+  userAccount: {
+    username: string;
     commonName: string;
     email: string;
   };
-  component: SystemIntakeContactFragment['component'] | null;
+  component?: SystemIntakeContactFragment['component'] | null;
   roles: SystemIntakeContactFragment['roles'];
   isRequester: boolean;
 };
 
 const emptyContactFields: ContactFormFields = {
   id: '',
-  userInfo: {
-    euaUserId: '',
+  userAccount: {
+    username: '',
     commonName: '',
     email: ''
   },
@@ -93,7 +93,7 @@ const ContactFormModal = ({
     setError,
     formState: { errors, isValid, defaultValues, isSubmitSuccessful }
   } = useEasiForm<ContactFormFields>({
-    resolver: yupResolver(SystemIntakeContactSchema)
+    resolver: yupResolver(ContactFormSchema)
   });
 
   /** Set form action to edit if default values has an id */
@@ -107,7 +107,7 @@ const ContactFormModal = ({
       variables: {
         input: {
           systemIntakeId,
-          euaUserId: values.userInfo.euaUserId,
+          euaUserId: values.userAccount.username,
           component: values.component!,
           roles: values.roles,
           isRequester: values.isRequester
@@ -168,34 +168,49 @@ const ContactFormModal = ({
 
         <ErrorMessage errors={errors} name="root" as={<Alert type="error" />} />
 
-        <FieldGroup className="margin-top-2" error={!!errors.userInfo}>
-          <Label className="text-normal" htmlFor="userInfo">
+        <FieldGroup className="margin-top-2" error={!!errors.userAccount}>
+          <Label className="text-normal" htmlFor="userAccount">
             {t('contactDetails.additionalContacts.name', {
               type: action === 'edit' ? capitalize(type) : type,
               context: action
             })}
           </Label>
-          <HelpText className="margin-top-05" id="userInfoHelpText">
+          <HelpText className="margin-top-05" id="userAccountHelpText">
             {t('contactDetails.additionalContacts.nameHelpText')}
           </HelpText>
 
           <ErrorMessage
             errors={errors}
-            name="userInfo"
+            name="userAccount"
             as={<FieldErrorMsg />}
           />
 
           <Controller
             control={control}
-            name="userInfo"
-            render={({ field: { ref, ...field } }) => (
-              <CedarContactSelect
-                {...field}
-                id="userInfo"
-                name="userInfo"
-                ariaDescribedBy="userInfoHelpText"
-              />
-            )}
+            name="userAccount"
+            render={({ field: { ref, ...field } }) => {
+              return (
+                <CedarContactSelect
+                  {...field}
+                  disabled={action === 'edit'}
+                  id="userAccount"
+                  name="userAccount"
+                  ariaDescribedBy="userAccountHelpText"
+                  value={{
+                    euaUserId: field.value.username,
+                    commonName: field.value.commonName,
+                    email: field.value.email
+                  }}
+                  onChange={contact => {
+                    field.onChange({
+                      username: contact?.euaUserId || '',
+                      commonName: contact?.commonName || '',
+                      email: contact?.email || ''
+                    });
+                  }}
+                />
+              );
+            }}
           />
         </FieldGroup>
 
@@ -254,7 +269,7 @@ const ContactFormModal = ({
           />
         </FieldGroup>
 
-        <ExternalRecipientAlert email={watch('userInfo.email')} />
+        <ExternalRecipientAlert email={watch('userAccount.email')} />
 
         <ButtonGroup className="margin-top-205">
           <Button

@@ -49,16 +49,18 @@ const governanceTeams = Yup.object().shape({
     )
 });
 
-export const SystemIntakeContactSchema = Yup.object().shape({
-  userInfo: Yup.object()
-    .shape({
-      euaUserId: Yup.string(),
-      commonName: Yup.string(),
-      email: Yup.string()
-    })
-    .test('isRequired', 'Select a contact', values => {
-      return !!(values.euaUserId && values.commonName && values.email);
-    }),
+const UserAccountSchema = Yup.object()
+  .shape({
+    username: Yup.string(),
+    commonName: Yup.string(),
+    email: Yup.string()
+  })
+  .test('required', 'Select a contact', values => {
+    return !!(values.username && values.commonName && values.email);
+  });
+
+export const ContactFormSchema = Yup.object().shape({
+  userAccount: UserAccountSchema,
   component: Yup.mixed<SystemIntakeContactComponent>()
     .oneOf(Object.values(SystemIntakeContactComponent))
     .required('Select a component'),

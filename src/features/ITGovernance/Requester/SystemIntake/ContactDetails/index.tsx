@@ -164,21 +164,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         systemIntakeId={systemIntake.id}
         isOpen={isContactsModalOpen}
         closeModal={handleCloseContactsModal}
-        initialValues={
-          contactToEdit
-            ? {
-                id: contactToEdit.id,
-                userInfo: {
-                  euaUserId: contactToEdit.userAccount.username,
-                  commonName: contactToEdit.userAccount.commonName,
-                  email: contactToEdit.userAccount.email
-                },
-                component: contactToEdit.component,
-                roles: contactToEdit.roles,
-                isRequester: contactToEdit.isRequester
-              }
-            : undefined
-        }
+        initialValues={contactToEdit}
       />
 
       {Object.keys(errors).length > 0 && (
