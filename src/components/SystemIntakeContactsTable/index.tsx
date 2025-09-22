@@ -4,9 +4,9 @@ import { Column, useSortBy, useTable } from 'react-table';
 import { Button, Icon, Table, Tooltip } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
+  GetSystemIntakeContactsQuery,
   SystemIntakeContactFragment,
-  SystemIntakeContactRole,
-  useGetSystemIntakeContactsQuery
+  SystemIntakeContactRole
 } from 'gql/generated/graphql';
 
 import Spinner from 'components/Spinner';
@@ -16,26 +16,20 @@ import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 import './index.scss';
 
 type SystemIntakeContactsTableProps = {
-  systemIntakeId: string;
+  systemIntakeContacts: GetSystemIntakeContactsQuery['systemIntakeContacts'];
+  loading: boolean;
   /** Sets contact to edit with form modal. If undefined, actions column will not render. */
   handleEditContact?: (contact: SystemIntakeContactFragment) => void;
   className?: string;
 };
 
 const SystemIntakeContactsTable = ({
-  systemIntakeId,
+  systemIntakeContacts,
+  loading,
   handleEditContact,
   className
 }: SystemIntakeContactsTableProps) => {
   const { t } = useTranslation('intake');
-
-  const { data, loading } = useGetSystemIntakeContactsQuery({
-    variables: {
-      id: systemIntakeId
-    }
-  });
-
-  const { allContacts = [] } = data?.systemIntakeContacts || {};
 
   const columns = useMemo<Column<SystemIntakeContactFragment>[]>(() => {
     const actionsColumn: Column<SystemIntakeContactFragment> = {
@@ -173,7 +167,7 @@ const SystemIntakeContactsTable = ({
   const table = useTable(
     {
       columns,
-      data: allContacts,
+      data: systemIntakeContacts?.allContacts || [],
       autoResetSortBy: false,
       autoResetPage: true
     },

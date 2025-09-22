@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FieldPath } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -13,6 +13,7 @@ import {
   SystemIntakeFragmentFragment,
   SystemIntakeRequestType,
   UpdateSystemIntakeContactDetailsInput,
+  useGetSystemIntakeContactsQuery,
   useUpdateSystemIntakeContactDetailsMutation
 } from 'gql/generated/graphql';
 
@@ -26,7 +27,9 @@ import RequiredFieldsText from 'components/RequiredFieldsText';
 import SystemIntakeContactsTable from 'components/SystemIntakeContactsTable';
 import { GovernanceTeamsForm } from 'types/systemIntake';
 import flattenFormErrors from 'utils/flattenFormErrors';
-import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
+import SystemIntakeValidationSchema, {
+  SystemIntakeContactsSchema
+} from 'validations/systemIntakeSchema';
 
 import Section from '../_components/Section';
 
@@ -48,6 +51,12 @@ type ContactDetailsProps = {
 const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const { t } = useTranslation('intake');
   const history = useHistory();
+
+  const { data, loading } = useGetSystemIntakeContactsQuery({
+    variables: {
+      id: systemIntake.id
+    }
+  });
 
   const [contactToEdit, setContactToEdit] =
     useState<SystemIntakeContactFragment | null>(null);
@@ -96,7 +105,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     setFocus,
     watch,
     setError,
-    formState: { isDirty, errors }
+    formState: { isDirty, errors, isValid }
   } = form;
 
   const governanceTeams = watch('teams');
@@ -144,6 +153,27 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
   /** Flattened field errors, excluding any root errors */
   const fieldErrors = flattenFormErrors<GovernanceTeamsForm>(errors);
+
+  /**
+   * Returns true if `data.systemIntakeContacts` meets basic requirements:
+   * - requester must have both component and role specified
+   * - must have at least one business owner and product manager
+   */
+  // TODO: better error states - right now we're just showing a generic warning if false
+  const contactsTableIsValid = useMemo(() => {
+    if (loading) return true;
+
+    if (!data?.systemIntakeContacts) {
+      return false;
+    }
+
+    try {
+      SystemIntakeContactsSchema.validateSync(data.systemIntakeContacts);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }, [loading, data?.systemIntakeContacts]);
 
   /** Close contacts modal and reset contact to edit */
   const handleCloseContactsModal = () => {
@@ -231,12 +261,15 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
             {t('contactDetails.addAnotherContact')}
           </Button>
 
-          <Alert type="warning" className="margin-top-3" slim>
-            {t('contactDetails.contactsTableWarning')}
-          </Alert>
+          {!contactsTableIsValid && (
+            <Alert type="warning" className="margin-top-3" slim>
+              {t('contactDetails.contactsTableWarning')}
+            </Alert>
+          )}
 
           <SystemIntakeContactsTable
-            systemIntakeId={systemIntake.id}
+            systemIntakeContacts={data?.systemIntakeContacts}
+            loading={loading}
             className="margin-top-3 padding-top-05 margin-bottom-6"
             handleEditContact={setContactToEdit}
           />
@@ -251,7 +284,8 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
         <Pager
           next={{
-            type: 'submit'
+            type: 'submit',
+            disabled: !isValid || !contactsTableIsValid || loading
           }}
           border
           taskListUrl={saveExitLink}

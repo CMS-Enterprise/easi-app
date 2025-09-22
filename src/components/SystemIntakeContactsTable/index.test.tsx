@@ -1,12 +1,7 @@
 import React from 'react';
-import { MockedProvider } from '@apollo/client/testing';
+import { render, screen, within } from '@testing-library/react';
 import {
-  render,
-  screen,
-  waitForElementToBeRemoved,
-  within
-} from '@testing-library/react';
-import {
+  GetSystemIntakeContactsQuery,
   SystemIntakeContactComponent,
   SystemIntakeContactFragment,
   SystemIntakeContactRole
@@ -14,7 +9,6 @@ import {
 import i18next from 'i18next';
 import {
   businessOwner,
-  getSystemIntakeContactsQuery,
   productManager,
   requester,
   systemIntake
@@ -40,42 +34,44 @@ const additionalContact: SystemIntakeContactFragment = {
   isRequester: false
 };
 
+const systemIntakeContacts: GetSystemIntakeContactsQuery['systemIntakeContacts'] =
+  {
+    __typename: 'SystemIntakeContacts',
+    requester,
+    businessOwners: [businessOwner],
+    productManagers: [productManager],
+    additionalContacts: [],
+    allContacts: [requester, businessOwner, productManager]
+  };
+
 describe('SystemIntakeContactsTable', () => {
-  it('renders the contacts', async () => {
+  it('renders the contacts', () => {
     render(
-      <MockedProvider mocks={[getSystemIntakeContactsQuery()]}>
-        <SystemIntakeContactsTable systemIntakeId={systemIntake.id} />
-      </MockedProvider>
+      <SystemIntakeContactsTable
+        systemIntakeContacts={systemIntakeContacts}
+        loading={false}
+      />
     );
 
-    await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
-
-    const allContacts: SystemIntakeContactFragment[] = [
-      requester,
-      businessOwner,
-      productManager
-    ];
-
     expect(screen.getAllByTestId('contact-row')).toHaveLength(
-      allContacts.length
+      systemIntakeContacts.allContacts.length
     );
 
     // Check that each contact renders in the table
-    allContacts.forEach(contact => {
+    systemIntakeContacts.allContacts.forEach(contact => {
       expect(
         screen.getByRole('row', { name: `contact-${contact.id}` })
       ).toBeInTheDocument();
     });
   });
 
-  it('displays requester icon for requester contact', async () => {
+  it('displays requester icon for requester contact', () => {
     render(
-      <MockedProvider mocks={[getSystemIntakeContactsQuery()]}>
-        <SystemIntakeContactsTable systemIntakeId={systemIntake.id} />
-      </MockedProvider>
+      <SystemIntakeContactsTable
+        systemIntakeContacts={systemIntakeContacts}
+        loading={false}
+      />
     );
-
-    await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
 
     const requesterRow = screen.getByRole('row', {
       name: `contact-${requester.id}`
@@ -90,14 +86,13 @@ describe('SystemIntakeContactsTable', () => {
     expect(icon).toBeInTheDocument();
   });
 
-  it('does not display requester icon for non-requester contacts', async () => {
+  it('does not display requester icon for non-requester contacts', () => {
     render(
-      <MockedProvider mocks={[getSystemIntakeContactsQuery()]}>
-        <SystemIntakeContactsTable systemIntakeId={systemIntake.id} />
-      </MockedProvider>
+      <SystemIntakeContactsTable
+        systemIntakeContacts={systemIntakeContacts}
+        loading={false}
+      />
     );
-
-    await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
 
     const nonRequesterRow = screen.getByRole('row', {
       name: `contact-${businessOwner.id}`
@@ -110,14 +105,13 @@ describe('SystemIntakeContactsTable', () => {
     expect(icon).not.toBeInTheDocument();
   });
 
-  it('displays contact names and emails', async () => {
+  it('displays contact names and emails', () => {
     render(
-      <MockedProvider mocks={[getSystemIntakeContactsQuery()]}>
-        <SystemIntakeContactsTable systemIntakeId={systemIntake.id} />
-      </MockedProvider>
+      <SystemIntakeContactsTable
+        systemIntakeContacts={systemIntakeContacts}
+        loading={false}
+      />
     );
-
-    await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
 
     const requesterRow = screen.getByRole('row', {
       name: `contact-${requester.id}`
@@ -131,14 +125,13 @@ describe('SystemIntakeContactsTable', () => {
     ).toBeInTheDocument();
   });
 
-  it('displays component acronym', async () => {
+  it('displays component acronym', () => {
     render(
-      <MockedProvider mocks={[getSystemIntakeContactsQuery()]}>
-        <SystemIntakeContactsTable systemIntakeId={systemIntake.id} />
-      </MockedProvider>
+      <SystemIntakeContactsTable
+        systemIntakeContacts={systemIntakeContacts}
+        loading={false}
+      />
     );
-
-    await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
 
     const requesterRow = screen.getByRole('row', {
       name: `contact-${requester.id}`
@@ -151,35 +144,36 @@ describe('SystemIntakeContactsTable', () => {
     ).toBeInTheDocument();
   });
 
-  it('displays "None specified" for empty component', async () => {
-    render(
-      <MockedProvider
-        mocks={[
-          getSystemIntakeContactsQuery([
-            {
-              ...additionalContact,
-              component: null
-            }
-          ])
-        ]}
-      >
-        <SystemIntakeContactsTable systemIntakeId={systemIntake.id} />
-      </MockedProvider>
-    );
+  it('displays "None specified" for empty component', () => {
+    const contactWithoutComponent: SystemIntakeContactFragment = {
+      ...additionalContact,
+      component: null
+    };
 
-    await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
+    render(
+      <SystemIntakeContactsTable
+        systemIntakeContacts={{
+          ...systemIntakeContacts,
+          additionalContacts: [contactWithoutComponent],
+          allContacts: [
+            ...systemIntakeContacts.allContacts,
+            contactWithoutComponent
+          ]
+        }}
+        loading={false}
+      />
+    );
 
     expect(screen.getByText('None specified')).toBeInTheDocument();
   });
 
-  it('displays translated role names', async () => {
+  it('displays translated role names', () => {
     render(
-      <MockedProvider mocks={[getSystemIntakeContactsQuery()]}>
-        <SystemIntakeContactsTable systemIntakeId={systemIntake.id} />
-      </MockedProvider>
+      <SystemIntakeContactsTable
+        systemIntakeContacts={systemIntakeContacts}
+        loading={false}
+      />
     );
-
-    await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
 
     const requesterRow = screen.getByRole('row', {
       name: `contact-${businessOwner.id}`
@@ -195,38 +189,37 @@ describe('SystemIntakeContactsTable', () => {
     ).toBeInTheDocument();
   });
 
-  it('displays "None specified" for empty roles', async () => {
-    render(
-      <MockedProvider
-        mocks={[
-          getSystemIntakeContactsQuery([
-            {
-              ...additionalContact,
-              roles: []
-            }
-          ])
-        ]}
-      >
-        <SystemIntakeContactsTable systemIntakeId={systemIntake.id} />
-      </MockedProvider>
-    );
+  it('displays "None specified" for empty roles', () => {
+    const contactWithoutRoles: SystemIntakeContactFragment = {
+      ...additionalContact,
+      roles: []
+    };
 
-    await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
+    render(
+      <SystemIntakeContactsTable
+        systemIntakeContacts={{
+          ...systemIntakeContacts,
+          additionalContacts: [contactWithoutRoles],
+          allContacts: [
+            ...systemIntakeContacts.allContacts,
+            contactWithoutRoles
+          ]
+        }}
+        loading={false}
+      />
+    );
 
     expect(screen.getByText('None specified')).toBeInTheDocument();
   });
 
-  it('renders action buttons for all contacts', async () => {
+  it('renders action buttons for all contacts', () => {
     render(
-      <MockedProvider mocks={[getSystemIntakeContactsQuery()]}>
-        <SystemIntakeContactsTable
-          systemIntakeId={systemIntake.id}
-          handleEditContact={() => vi.fn()}
-        />
-      </MockedProvider>
+      <SystemIntakeContactsTable
+        systemIntakeContacts={systemIntakeContacts}
+        loading={false}
+        handleEditContact={() => vi.fn()}
+      />
     );
-
-    await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
 
     const businessOwnerRow = screen.getByRole('row', {
       name: `contact-${businessOwner.id}`
@@ -240,14 +233,13 @@ describe('SystemIntakeContactsTable', () => {
     ).toBeInTheDocument();
   });
 
-  it('hides action buttons if showActionsColumn is false', async () => {
+  it('hides action buttons if handleEditContact is not provided', () => {
     render(
-      <MockedProvider mocks={[getSystemIntakeContactsQuery()]}>
-        <SystemIntakeContactsTable systemIntakeId={systemIntake.id} />
-      </MockedProvider>
+      <SystemIntakeContactsTable
+        systemIntakeContacts={systemIntakeContacts}
+        loading={false}
+      />
     );
-
-    await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
 
     expect(
       screen.queryByRole('button', { name: 'Edit' })
@@ -259,15 +251,12 @@ describe('SystemIntakeContactsTable', () => {
 
   it('disables remove button for requester contact', async () => {
     render(
-      <MockedProvider mocks={[getSystemIntakeContactsQuery()]}>
-        <SystemIntakeContactsTable
-          systemIntakeId={systemIntake.id}
-          handleEditContact={() => vi.fn()}
-        />
-      </MockedProvider>
+      <SystemIntakeContactsTable
+        systemIntakeContacts={systemIntakeContacts}
+        loading={false}
+        handleEditContact={() => vi.fn()}
+      />
     );
-
-    await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
 
     const requesterRow = screen.getByRole('row', {
       name: `contact-${requester.id}`

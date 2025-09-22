@@ -65,13 +65,21 @@ export const ContactFormSchema = Yup.object().shape({
     .oneOf(Object.values(SystemIntakeContactComponent))
     .required('Select a component'),
   roles: Yup.array()
-    .of(Yup.string())
     .of(
       Yup.mixed<SystemIntakeContactRole>().oneOf(
         Object.values(SystemIntakeContactRole)
       )
     )
     .min(1, 'Select at least one role')
+});
+
+export const SystemIntakeContactsSchema = Yup.object({
+  requester: ContactFormSchema.test(
+    'requester-is-valid',
+    requester => !!requester.component && (requester?.roles || []).length > 0
+  ),
+  businessOwners: Yup.array(ContactFormSchema).min(1),
+  productManagers: Yup.array(ContactFormSchema).min(1)
 });
 
 const SystemIntakeValidationSchema = {
