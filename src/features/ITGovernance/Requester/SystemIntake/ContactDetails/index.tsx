@@ -123,14 +123,13 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   ) => {
     if (!isDirty) return callback();
 
-    // TODO: EASI-4938 - remove type assertion when mutation input is updated to remove contacts
     const input: UpdateSystemIntakeContactDetailsInput = {
       id: systemIntake.id,
       governanceTeams: {
         isPresent,
         teams: formatGovernanceTeamsInput(governanceTeams)
       }
-    } as UpdateSystemIntakeContactDetailsInput;
+    };
 
     const result = await updateGovernanceTeams({
       variables: {
