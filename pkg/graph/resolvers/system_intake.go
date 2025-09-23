@@ -174,6 +174,8 @@ func SystemIntakeUpdateContactDetails(ctx context.Context, store *storage.Store,
 	// TODO: set new intake property based on isPresent on input
 
 	if input.GovernanceTeams.IsPresent != nil {
+		intake.GovernanceTeamsIsPresent = null.BoolFromPtr(input.GovernanceTeams.IsPresent)
+
 		trbCollaboratorName := null.StringFromPtr(nil)
 		for _, team := range input.GovernanceTeams.Teams {
 			if team.Key == "technicalReviewBoard" {
@@ -201,6 +203,7 @@ func SystemIntakeUpdateContactDetails(ctx context.Context, store *storage.Store,
 		intake.TRBCollaboratorName = null.StringFromPtr(nil)
 		intake.OITSecurityCollaboratorName = null.StringFromPtr(nil)
 		intake.CollaboratorName508 = null.StringFromPtr(nil)
+		intake.GovernanceTeamsIsPresent = null.BoolFromPtr(nil)
 	}
 
 	// TODO: make sure updateSystemIntake updates new govenerananceteam ispresent boolean in database

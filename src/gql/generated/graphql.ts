@@ -3381,7 +3381,6 @@ export type UpdateSystemIntakeContactDetailsInput = {
   businessOwner: SystemIntakeBusinessOwnerInput;
   governanceTeams: SystemIntakeGovernanceTeamInput;
   id: Scalars['UUID']['input'];
-  isPresent: Scalars['Boolean']['input'];
   productManager: SystemIntakeProductManagerInput;
   requester: SystemIntakeRequesterWithComponentInput;
 };

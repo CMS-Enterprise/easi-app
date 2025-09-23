@@ -1079,7 +1079,6 @@ input UpdateSystemIntakeContactDetailsInput {
   businessOwner: SystemIntakeBusinessOwnerInput!
   productManager: SystemIntakeProductManagerInput!
   governanceTeams: SystemIntakeGovernanceTeamInput!
-  isPresent: Boolean!
 }
 
 """

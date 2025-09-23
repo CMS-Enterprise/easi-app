@@ -295,7 +295,8 @@ func (s *Store) UpdateSystemIntakeNP(ctx context.Context, np sqlutils.NamedPrepa
 			grb_review_async_end_date = :grb_review_async_end_date,
 			grb_presentation_deck_requester_reminder_email_sent_time = :grb_presentation_deck_requester_reminder_email_sent_time,
 			grb_review_async_manual_end_date = :grb_review_async_manual_end_date,
-			does_not_support_systems = :does_not_support_systems
+			does_not_support_systems = :does_not_support_systems,
+			governance_teams_is_present = :governance_teams_is_present
 		WHERE system_intakes.id = :id
 	`
 	updateStmt, err := np.PrepareNamed(updateSystemIntakeSQL)

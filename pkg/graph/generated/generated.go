@@ -9868,7 +9868,6 @@ input UpdateSystemIntakeContactDetailsInput {
   businessOwner: SystemIntakeBusinessOwnerInput!
   productManager: SystemIntakeProductManagerInput!
   governanceTeams: SystemIntakeGovernanceTeamInput!
-  isPresent: Boolean!
 }
 
 """
@@ -67251,7 +67250,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeContactDetailsInput(
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "requester", "businessOwner", "productManager", "governanceTeams", "isPresent"}
+	fieldsInOrder := [...]string{"id", "requester", "businessOwner", "productManager", "governanceTeams"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -67293,13 +67292,6 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeContactDetailsInput(
 				return it, err
 			}
 			it.GovernanceTeams = data
-		case "isPresent":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isPresent"))
-			data, err := ec.unmarshalNBoolean2bool(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.IsPresent = data
 		}
 	}
 

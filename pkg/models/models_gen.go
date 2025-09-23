@@ -924,7 +924,6 @@ type UpdateSystemIntakeContactDetailsInput struct {
 	BusinessOwner   *SystemIntakeBusinessOwnerInput          `json:"businessOwner"`
 	ProductManager  *SystemIntakeProductManagerInput         `json:"productManager"`
 	GovernanceTeams *SystemIntakeGovernanceTeamInput         `json:"governanceTeams"`
-	IsPresent       bool                                     `json:"isPresent"`
 }
 
 // The data needed to update a contact associated with a system intake
