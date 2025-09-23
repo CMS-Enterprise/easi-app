@@ -22,7 +22,6 @@ import {
 
 import CollapsableLink from 'components/CollapsableLink';
 import IconButton from 'components/IconButton';
-import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import linkCedarSystemIdQueryString, {
@@ -218,8 +217,9 @@ const RequestTypeForm = () => {
         })}
       </CardGroup>
       <h3>{t('requestTypeForm.other.header')}</h3>
-      <UswdsReactLink
-        to=""
+      <Button
+        type="button"
+        unstyled
         onClick={e => {
           e.preventDefault();
           if (isNew) {
@@ -230,7 +230,8 @@ const RequestTypeForm = () => {
         }}
       >
         {t('requestTypeForm.other.link')}
-      </UswdsReactLink>
+        <Icon.ArrowForward aria-hidden />
+      </Button>
     </MainContent>
   );
 };
