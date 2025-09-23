@@ -186,7 +186,8 @@ const intake = {
     new: 'Add a new system or service',
     recompete: 'Re-compete',
     majorChanges: 'Major change or upgrade',
-    shutdown: 'Decommission a system'
+    shutdown: 'Decommission a system',
+    other: 'Other'
   },
 
   csvHeadings: {

@@ -23,6 +23,8 @@ const (
 	SystemIntakeRequestTypeRECOMPETE SystemIntakeRequestType = "RECOMPETE"
 	// SystemIntakeRequestTypeSHUTDOWN captures enum value of "SHUTDOWN"
 	SystemIntakeRequestTypeSHUTDOWN SystemIntakeRequestType = "SHUTDOWN"
+	// SystemIntakeRequestTypeSHUTDOWN captures enum value of "OTHER"
+	SystemIntakeRequestTypeOTHER SystemIntakeRequestType = "OTHER"
 )
 
 // SystemIntakeState represents whether the intake is open or closed
