@@ -301,7 +301,7 @@ const intake = {
       }
     },
     other: {
-      header: 'Additional IT Governance Services',
+      header: 'Additional IT Governance services',
       link: `Other (I don't see what I'm looking for)`
     }
   },
