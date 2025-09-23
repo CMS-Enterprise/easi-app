@@ -68,6 +68,11 @@ const SystemIntakeContactsTable = ({
 
     return [
       {
+        // createdAt column is hidden and only used for sorting purposes
+        accessor: 'createdAt',
+        id: 'createdAt'
+      },
+      {
         Header: () => (
           <span className="display-block margin-left-4 padding-left-05">
             {t('general:name')}
@@ -164,18 +169,26 @@ const SystemIntakeContactsTable = ({
     ];
   }, [t, handleEditContact]);
 
+  const contacts = systemIntakeContacts?.allContacts || [];
+
   const table = useTable(
     {
       columns,
-      data: systemIntakeContacts?.allContacts || [],
+      data: contacts,
       autoResetSortBy: false,
-      autoResetPage: true
+      autoResetPage: true,
+      initialState: {
+        hiddenColumns: useMemo(() => ['createdAt'], []),
+        sortBy: useMemo(() => [{ id: 'createdAt', desc: false }], [])
+      }
     },
     useSortBy
   );
 
   const { getTableBodyProps, getTableProps, headerGroups, prepareRow, rows } =
     table;
+
+  rows.map(row => prepareRow(row));
 
   return (
     <div
@@ -241,7 +254,6 @@ const SystemIntakeContactsTable = ({
         <tbody {...getTableBodyProps()}>
           {rows.length > 0 ? (
             rows.map(row => {
-              prepareRow(row);
               const { key: rowKey, ...rowProps } = row.getRowProps();
 
               const { id } = row.original;

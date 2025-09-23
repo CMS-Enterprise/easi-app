@@ -31,7 +31,8 @@ const additionalContact: SystemIntakeContactFragment = {
   },
   component: SystemIntakeContactComponent.OFFICE_OF_LEGISLATION,
   roles: [SystemIntakeContactRole.OTHER],
-  isRequester: false
+  isRequester: false,
+  createdAt: '2025-09-23T15:58:46.72809Z'
 };
 
 const systemIntakeContacts: GetSystemIntakeContactsQuery['systemIntakeContacts'] =

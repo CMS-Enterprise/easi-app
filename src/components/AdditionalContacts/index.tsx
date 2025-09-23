@@ -36,7 +36,8 @@ export const initialContactDetails: SystemIntakeContactFragment = {
   },
   component: undefined,
   roles: [],
-  isRequester: false
+  isRequester: false,
+  createdAt: ''
 };
 
 type ContactProps = {
