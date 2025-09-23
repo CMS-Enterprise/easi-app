@@ -754,6 +754,10 @@ type SystemIntake {
   eaCollaboratorName: String
   collaborator508: String
   collaboratorName508: String
+  trbCollaborator: String
+  trbCollaboratorName: String
+  oitSecurityCollaborator: String
+  oitSecurityCollaboratorName: String
   euaUserId: String
   existingFunding: Boolean
   fundingSources: [SystemIntakeFundingSource!]!
@@ -783,8 +787,6 @@ type SystemIntake {
   usingSoftware: String
   acquisitionMethods: [SystemIntakeSoftwareAcquisitionMethods!]!
   notes: [SystemIntakeNote!]!
-  oitSecurityCollaborator: String
-  oitSecurityCollaboratorName: String
   productManager: SystemIntakeProductManager!
   projectAcronym: String
   rejectionReason: HTML
@@ -799,8 +801,6 @@ type SystemIntake {
   state: SystemIntakeState!
   step: SystemIntakeStep!
   submittedAt: Time
-  trbCollaborator: String
-  trbCollaboratorName: String
   updatedAt: Time
   grtReviewEmailBody: String
   decidedAt: Time
