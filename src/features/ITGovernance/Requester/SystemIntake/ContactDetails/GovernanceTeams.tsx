@@ -160,6 +160,11 @@ const GovernanceTeams = () => {
             />
           )}
         />
+        <ErrorMessage
+          errors={errors}
+          name="governanceTeams.isPresent"
+          as={FieldErrorMsg}
+        />
       </Fieldset>
     </>
   );
