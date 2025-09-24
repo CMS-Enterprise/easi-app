@@ -102,7 +102,7 @@ const GovernanceTeams = () => {
                         label={label}
                         disabled={!isPresent}
                         value="true"
-                        checked={field.value === true}
+                        checked={field.value === true} // this explicit check isn't needed, but it matches the explicit false check we run below. leaving for consistency
                         onChange={() => field.onChange(!field.value)}
                       />
                     );
@@ -155,7 +155,7 @@ const GovernanceTeams = () => {
               id="governanceTeamsIsPresentFalse"
               label={t('contactDetails.collaboration.none')}
               value="false"
-              checked={field.value === false}
+              checked={field.value === false} // explicitly false check this as `null` is a possible and valid value (i.e., `!field.value` is not sufficient)
               onChange={() => field.onChange(false)}
             />
           )}
