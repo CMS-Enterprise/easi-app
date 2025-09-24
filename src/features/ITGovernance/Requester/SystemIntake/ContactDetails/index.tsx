@@ -18,6 +18,7 @@ import {
 } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
+import AutoSave from 'components/AutoSave';
 import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
 import { ErrorAlert, ErrorAlertMessage } from 'components/ErrorAlert';
 import FeedbackBanner from 'components/FeedbackBanner';
@@ -293,7 +294,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         />
       </Form>
 
-      {/* <AutoSave values={watch()} onSave={submit} debounceDelay={3000} /> */}
+      <AutoSave values={watch()} onSave={submit} debounceDelay={3000} />
 
       <PageNumber currentPage={1} totalPages={5} className="margin-bottom-15" />
     </>
