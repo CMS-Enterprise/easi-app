@@ -68,6 +68,7 @@ const intake = {
   viewFeedback: 'View feedback',
   fields: {
     projectName: 'Project name',
+    projectAcronym: 'Project acronym',
     requester: 'Requester name',
     submissionDate: 'Submission date',
     requestFor: 'Request for',
@@ -204,6 +205,7 @@ const intake = {
     collaborator508: '508 Clearance Officer',
     eaCollaborator: 'EA collaborator name',
     projectName: 'Project name',
+    projectAcronym: 'Project acronym',
     existingFunding: 'Existing Funding',
     fundingSource: 'Funding Number and Source',
     businessNeed: 'Business Need',
