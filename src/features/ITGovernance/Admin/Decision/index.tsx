@@ -1,12 +1,15 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
+import { Button } from '@trussworks/react-uswds';
 import { SystemIntakeDecisionState } from 'gql/generated/graphql';
 
+import Alert from 'components/Alert';
 import {
   DescriptionDefinition,
   DescriptionList,
   DescriptionTerm
 } from 'components/DescriptionGroup';
+import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import { RichTextViewer } from 'components/RichTextEditor';
 
@@ -58,17 +61,26 @@ const Decision = ({
 
   return (
     <>
-      <PageHeading data-testid="grt-decision-view" className="margin-top-0">
-        {t('decision.title', { context: decisionState })}
-      </PageHeading>
+      <PageHeading className="margin-y-0">{t('decision.heading')}</PageHeading>
+      <p className="font-body-md line-height-body-4 text-light margin-top-05">
+        {t('decision.subheading')}
+      </p>
 
-      {decisionState === SystemIntakeDecisionState.NOT_APPROVED ? (
-        <Rejected
-          rejectionReason={rejectionReason}
-          decisionNextSteps={decisionNextSteps}
-        />
-      ) : (
-        <p>{t('decision.description', { context: decisionState })}</p>
+      {decisionState === SystemIntakeDecisionState.NO_DECISION && (
+        <>
+          <Button type="button" className="margin-bottom-5">
+            Issue decision
+          </Button>
+
+          <Alert type="info" slim>
+            <Trans
+              i18nKey="governanceReviewTeam:decision.noDecisionAlert"
+              components={{
+                link1: <UswdsReactLink to="actions"> </UswdsReactLink>
+              }}
+            />
+          </Alert>
+        </>
       )}
     </>
   );
