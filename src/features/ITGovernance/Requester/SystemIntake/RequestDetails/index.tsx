@@ -281,7 +281,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           <Grid tablet={{ col: 4 }}>
             <FieldGroup
               scrollElement="projectAcronym"
-              className="margin-left-1"
+              className="tablet:margin-left-1"
               error={!!errors.projectAcronym}
             >
               <Label htmlFor="projectAcronym">
