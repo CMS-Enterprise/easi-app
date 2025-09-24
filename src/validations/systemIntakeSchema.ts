@@ -79,7 +79,23 @@ export const SystemIntakeContactsSchema = Yup.object({
     requester => !!requester.component && (requester?.roles || []).length > 0
   ),
   businessOwners: Yup.array(ContactFormSchema).min(1),
-  productManagers: Yup.array(ContactFormSchema).min(1)
+  // Check that contact exists with product manager, product owner, or project manager role
+  allContacts: Yup.array(ContactFormSchema).test(
+    'has-required-roles',
+    contacts => {
+      if (!contacts || contacts.length === 0) return false;
+
+      const requiredRoles = [
+        SystemIntakeContactRole.PROJECT_MANAGER,
+        SystemIntakeContactRole.PRODUCT_OWNER,
+        SystemIntakeContactRole.PRODUCT_MANAGER
+      ];
+
+      return contacts.some(contact =>
+        contact?.roles?.some(role => role && requiredRoles.includes(role))
+      );
+    }
+  )
 });
 
 const SystemIntakeValidationSchema = {

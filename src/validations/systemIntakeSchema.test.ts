@@ -126,7 +126,7 @@ describe('System intake contacts schema', () => {
     await expect(
       SystemIntakeContactsSchema.validate({
         ...validContacts,
-        productManagers: []
+        allContacts: [requester, businessOwner]
       })
     ).rejects.toThrow();
   });
