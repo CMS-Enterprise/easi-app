@@ -1,4 +1,4 @@
-FROM nginx:1.27.1 as builder
+FROM nginx:1.28.0 as builder
 
 ARG ENABLED_MODULES=cachepurge
 
@@ -13,9 +13,9 @@ COPY ./modules/ /modules/
 
 RUN apt-get update \
     && apt-get install -y --no-install-suggests --no-install-recommends \
-                patch make wget mercurial devscripts debhelper dpkg-dev \
+                patch make wget git devscripts debhelper dpkg-dev \
                 quilt lsb-release build-essential \
-    && hg clone -r ${NGINX_VERSION}-${PKG_RELEASE%%~*} https://hg.nginx.org/pkg-oss/ \
+    && git clone --branch ${NGINX_VERSION}-${PKG_RELEASE%%~*} --depth 1 https://github.com/nginx/pkg-oss/ \
     && cd pkg-oss \
     && mkdir /tmp/packages \
     && for module in $ENABLED_MODULES; do \
@@ -58,7 +58,7 @@ RUN apt-get update \
     && echo "BUILT_MODULES=\"$BUILT_MODULES\"" > /tmp/packages/modules.env \
     && rm -rf /var/lib/apt/lists/*
 
-FROM nginx:1.27.1
+FROM nginx:1.28.0
 ENV NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx
 COPY ./nginx.conf /etc/nginx/templates/nginx.conf.template
 RUN --mount=type=bind,target=/tmp/packages/,source=/tmp/packages/,from=builder \
