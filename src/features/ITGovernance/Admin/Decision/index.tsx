@@ -149,6 +149,7 @@ const Decision = ({
           </Alert>
         </>
       ) : (
+        // decisionState === all else
         <LcidInfoContainer decisionState={decisionState} />
       )}
     </>
