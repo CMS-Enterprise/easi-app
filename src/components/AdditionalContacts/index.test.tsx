@@ -143,7 +143,7 @@ describe('Additional contacts component', () => {
     // Check for add another contact button
     expect(
       getByRole('button', {
-        name: 'Add another contact'
+        name: 'Add an additional contact'
       })
     ).toBeInTheDocument();
   });
