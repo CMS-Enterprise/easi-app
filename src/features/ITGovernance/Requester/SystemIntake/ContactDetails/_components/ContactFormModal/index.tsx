@@ -13,7 +13,6 @@ import {
 } from '@trussworks/react-uswds';
 import { ExternalRecipientAlert } from 'features/TechnicalAssistance/Admin/_components/ActionFormWrapper/Recipients';
 import {
-  SystemIntakeContactFragment,
   SystemIntakeContactRole,
   useCreateSystemIntakeContactMutation,
   useUpdateSystemIntakeContactMutation
@@ -30,6 +29,7 @@ import Modal from 'components/Modal';
 import MultiSelect from 'components/MultiSelect';
 import RequiredFieldsText from 'components/RequiredFieldsText';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
+import { ContactFormFields } from 'types/systemIntake';
 import { ContactFormSchema } from 'validations/systemIntakeSchema';
 
 type ContactFormModalProps = {
@@ -39,18 +39,6 @@ type ContactFormModalProps = {
   closeModal: () => void;
   isOpen: boolean;
   initialValues?: ContactFormFields | null;
-};
-
-type ContactFormFields = {
-  id: string;
-  userAccount: {
-    username: string;
-    commonName: string;
-    email: string;
-  };
-  component?: SystemIntakeContactFragment['component'] | null;
-  roles: SystemIntakeContactFragment['roles'];
-  isRequester: boolean;
 };
 
 const emptyContactFields: ContactFormFields = {
@@ -169,7 +157,10 @@ const ContactFormModal = ({
         <ErrorMessage errors={errors} name="root" as={<Alert type="error" />} />
 
         <FieldGroup className="margin-top-2" error={!!errors.userAccount}>
-          <Label className="text-normal" htmlFor="userAccount">
+          <Label
+            className="text-normal"
+            htmlFor="react-select-userAccount-input"
+          >
             {t('contactDetails.additionalContacts.name', {
               type: action === 'edit' ? capitalize(type) : type,
               context: action
@@ -243,7 +234,7 @@ const ContactFormModal = ({
         </FieldGroup>
 
         <FieldGroup className="margin-top-2" error={!!errors.roles}>
-          <Label className="text-normal" htmlFor="roles">
+          <Label className="text-normal" htmlFor="roles-combobox">
             {t('contactDetails.additionalContacts.roles', {
               type: action === 'edit' ? capitalize(type) : type,
               context: action
@@ -259,6 +250,7 @@ const ContactFormModal = ({
               <MultiSelect
                 {...field}
                 id="roles"
+                inputId="roles-combobox"
                 initialValues={field.value}
                 options={Object.keys(SystemIntakeContactRole).map(role => ({
                   value: role,
