@@ -53,10 +53,27 @@ const LcidInfoContainer = ({
 }) => {
   const { t } = useTranslation('governanceReviewTeam');
 
+  const IconComponent =
+    decisionState === SystemIntakeDecisionState.LCID_ISSUED
+      ? Icon.CheckCircle
+      : Icon.Cancel;
+
+  const decisionStateBackgroundColorMap: Record<
+    SystemIntakeDecisionState,
+    string
+  > = {
+    [SystemIntakeDecisionState.LCID_ISSUED]: 'bg-success-dark',
+    [SystemIntakeDecisionState.NOT_APPROVED]: 'bg-error-dark',
+    [SystemIntakeDecisionState.NOT_GOVERNANCE]: 'bg-base-dark',
+    [SystemIntakeDecisionState.NO_DECISION]: ''
+  };
+
   return (
     <>
-      <div className="padding-2 bg-success-dark display-flex flex-align-center">
-        <Icon.CheckCircle
+      <div
+        className={`margin-top-5 padding-2 display-flex flex-align-center ${decisionStateBackgroundColorMap[decisionState]}`}
+      >
+        <IconComponent
           className="text-white margin-right-2"
           aria-hidden
           size={3}
@@ -95,7 +112,7 @@ const LcidInfoContainer = ({
 type DecisionProps = {
   rejectionReason?: string | null;
   decisionNextSteps?: string | null;
-  decisionState?: SystemIntakeDecisionState;
+  decisionState: SystemIntakeDecisionState;
 };
 
 const Decision = ({
@@ -111,9 +128,8 @@ const Decision = ({
       <p className="font-body-md line-height-body-4 text-light margin-top-05">
         {t('decision.subheading')}
       </p>
-      <LcidInfoContainer decisionState={decisionState} />
 
-      {decisionState === SystemIntakeDecisionState.NO_DECISION && (
+      {decisionState === SystemIntakeDecisionState.NO_DECISION ? (
         <>
           <UswdsReactLink
             to="resolutions"
@@ -132,9 +148,7 @@ const Decision = ({
             />
           </Alert>
         </>
-      )}
-
-      {decisionState === SystemIntakeDecisionState.NOT_GOVERNANCE && (
+      ) : (
         <LcidInfoContainer decisionState={decisionState} />
       )}
     </>
