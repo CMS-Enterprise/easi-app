@@ -1,6 +1,5 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Button } from '@trussworks/react-uswds';
 import { SystemIntakeDecisionState } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
@@ -46,6 +45,36 @@ const Rejected = ({ rejectionReason, decisionNextSteps }: RejectedProps) => {
   );
 };
 
+const LcidInfoContainer = () => {
+  const { t } = useTranslation('governanceReviewTeam');
+
+  return (
+    <div className="bg-base-lightest padding-3">
+      <dl className="easi-dl">
+        <DescriptionTerm
+          term={t('decision.decisionDate')}
+          className="margin-bottom-0"
+        />
+        <DescriptionDefinition
+          className="text-pre-wrap margin-bottom-2"
+          // TODO: date format here
+          definition="a date will go here"
+        />
+
+        <DescriptionTerm
+          term={t('decision.reason')}
+          className="margin-bottom-0"
+        />
+        <DescriptionDefinition
+          className="text-pre-wrap margin-bottom-2"
+          // TODO: date format here
+          definition="reason baby"
+        />
+      </dl>
+    </div>
+  );
+};
+
 type DecisionProps = {
   rejectionReason?: string | null;
   decisionNextSteps?: string | null;
@@ -65,6 +94,7 @@ const Decision = ({
       <p className="font-body-md line-height-body-4 text-light margin-top-05">
         {t('decision.subheading')}
       </p>
+      <LcidInfoContainer />
 
       {decisionState === SystemIntakeDecisionState.NO_DECISION && (
         <>
@@ -85,6 +115,10 @@ const Decision = ({
             />
           </Alert>
         </>
+      )}
+
+      {decisionState === SystemIntakeDecisionState.NOT_GOVERNANCE && (
+        <LcidInfoContainer />
       )}
     </>
   );

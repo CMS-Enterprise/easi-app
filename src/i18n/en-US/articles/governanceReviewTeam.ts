@@ -292,7 +292,9 @@ const governanceReviewTeam = {
     nextSteps: 'Next Steps',
     rejectionReason: 'Rejection Reason',
     noRejectionReasons: 'No reasons specified',
-    decisionSectionTitle: 'Decision Details'
+    decisionSectionTitle: 'Decision Details',
+    decisionDate: 'Decision date',
+    reason: 'Reason'
   },
   systemInformation: {
     title: 'System information'
