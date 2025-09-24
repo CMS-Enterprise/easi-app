@@ -206,7 +206,6 @@ func SystemIntakeUpdateContactDetails(ctx context.Context, store *storage.Store,
 		intake.GovernanceTeamsIsPresent = null.BoolFromPtr(nil)
 	}
 
-	// TODO: make sure updateSystemIntake updates new govenerananceteam ispresent boolean in database
 	savedIntake, err := store.UpdateSystemIntake(ctx, intake)
 	return &models.UpdateSystemIntakePayload{
 		SystemIntake: savedIntake,
