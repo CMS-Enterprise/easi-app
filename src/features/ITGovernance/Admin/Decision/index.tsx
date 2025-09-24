@@ -1,5 +1,6 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { Icon } from '@trussworks/react-uswds';
 import { SystemIntakeDecisionState } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
@@ -45,33 +46,49 @@ const Rejected = ({ rejectionReason, decisionNextSteps }: RejectedProps) => {
   );
 };
 
-const LcidInfoContainer = () => {
+const LcidInfoContainer = ({
+  decisionState
+}: {
+  decisionState: SystemIntakeDecisionState;
+}) => {
   const { t } = useTranslation('governanceReviewTeam');
 
   return (
-    <div className="bg-base-lightest padding-3">
-      <dl className="easi-dl">
-        <DescriptionTerm
-          term={t('decision.decisionDate')}
-          className="margin-bottom-0"
+    <>
+      <div className="padding-2 bg-success-dark display-flex flex-align-center">
+        <Icon.CheckCircle
+          className="text-white margin-right-2"
+          aria-hidden
+          size={3}
         />
-        <DescriptionDefinition
-          className="text-pre-wrap margin-bottom-2"
-          // TODO: date format here
-          definition="a date will go here"
-        />
+        <span className="easi-body-large text-white">
+          {t('decision.decisionState', { context: decisionState })}
+        </span>
+      </div>
+      <div className="bg-base-lightest padding-3">
+        <dl className="easi-dl">
+          <DescriptionTerm
+            term={t('decision.decisionDate')}
+            className="margin-bottom-0"
+          />
+          <DescriptionDefinition
+            className="text-pre-wrap margin-bottom-2"
+            // TODO: date format here
+            definition="a date will go here"
+          />
 
-        <DescriptionTerm
-          term={t('decision.reason')}
-          className="margin-bottom-0"
-        />
-        <DescriptionDefinition
-          className="text-pre-wrap margin-bottom-2"
-          // TODO: date format here
-          definition="reason baby"
-        />
-      </dl>
-    </div>
+          <DescriptionTerm
+            term={t('decision.reason')}
+            className="margin-bottom-0"
+          />
+          <DescriptionDefinition
+            className="text-pre-wrap margin-bottom-2"
+            // TODO: date format here
+            definition="reason baby"
+          />
+        </dl>
+      </div>
+    </>
   );
 };
 
@@ -94,7 +111,7 @@ const Decision = ({
       <p className="font-body-md line-height-body-4 text-light margin-top-05">
         {t('decision.subheading')}
       </p>
-      <LcidInfoContainer />
+      <LcidInfoContainer decisionState={decisionState} />
 
       {decisionState === SystemIntakeDecisionState.NO_DECISION && (
         <>
@@ -118,7 +135,7 @@ const Decision = ({
       )}
 
       {decisionState === SystemIntakeDecisionState.NOT_GOVERNANCE && (
-        <LcidInfoContainer />
+        <LcidInfoContainer decisionState={decisionState} />
       )}
     </>
   );

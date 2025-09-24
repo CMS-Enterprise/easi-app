@@ -281,6 +281,13 @@ const governanceReviewTeam = {
     issueDecisionButton: 'Issue decision',
     noDecisionAlert:
       'A decision has not yet been issued for this request. If you would like to take an action to issue a decision, use the button above or <link1>visit the Actions page</link1> of this request.',
+    decisionDate: 'Decision date',
+    reason: 'Reason',
+    decisionState_LCID_ISSUED:
+      'This request has been approved and a Life Cycle ID (LCID) has been issued.',
+    decisionState_NOT_APPROVED: 'This request was not approved.',
+    decisionState_NOT_GOVERNANCE:
+      'This request is not an IT Governance request.',
     title: 'Decision',
     title_LCID_ISSUED: 'Decision - Approved',
     title_NOT_APPROVED: 'Decision - Rejected',
@@ -292,9 +299,7 @@ const governanceReviewTeam = {
     nextSteps: 'Next Steps',
     rejectionReason: 'Rejection Reason',
     noRejectionReasons: 'No reasons specified',
-    decisionSectionTitle: 'Decision Details',
-    decisionDate: 'Decision date',
-    reason: 'Reason'
+    decisionSectionTitle: 'Decision Details'
   },
   systemInformation: {
     title: 'System information'
