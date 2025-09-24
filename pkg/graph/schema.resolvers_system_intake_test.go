@@ -546,20 +546,7 @@ func (s *GraphQLTestSuite) TestUpdateContactDetails() {
 	var resp struct {
 		UpdateSystemIntakeContactDetails struct {
 			SystemIntake struct {
-				ID            string
-				BusinessOwner struct {
-					Name      string
-					Component string
-				}
-				ProductManager struct {
-					Name      string
-					Component string
-				}
-				Requester struct {
-					Name      string
-					Component string
-					Email     string
-				}
+				ID              string
 				GovernanceTeams struct {
 					IsPresent bool
 					Teams     null.String
@@ -574,18 +561,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetails() {
 		`mutation {
 			updateSystemIntakeContactDetails(input: {
 				id: "%s",
-				businessOwner: {
-					name: "Iama Businessowner",
-					component: "CMS Office 1"
-				},
-				productManager: {
-					name: "Iama Productmanager",
-					component: "CMS Office 2"
-				},
-				requester: {
-					name: "Iama Requester",
-					component: "CMS Office 3"
-				},
 				governanceTeams: {
 					isPresent: false
 					teams: []
@@ -593,19 +568,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetails() {
 			}) {
 				systemIntake {
 					id,
-					businessOwner {
-						name
-						component
-					}
-					productManager {
-						name
-						component
-					}
-					requester {
-						name
-						component
-						email
-					}
 					governanceTeams {
 						teams {
 							name
@@ -619,15 +581,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetails() {
 	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContactDetails.SystemIntake.ID)
 
 	respIntake := resp.UpdateSystemIntakeContactDetails.SystemIntake
-	s.Equal(respIntake.BusinessOwner.Name, "Iama Businessowner")
-	s.Equal(respIntake.BusinessOwner.Component, "CMS Office 1")
-
-	s.Equal(respIntake.ProductManager.Name, "Iama Productmanager")
-	s.Equal(respIntake.ProductManager.Component, "CMS Office 2")
-
-	s.Equal(respIntake.Requester.Name, "Iama Requester")
-	s.Equal(respIntake.Requester.Component, "CMS Office 3")
-	s.Equal(respIntake.Requester.Email, "terry.thompson@local.fake")
 
 	s.Nil(respIntake.GovernanceTeams.Teams.Ptr())
 	s.False(respIntake.GovernanceTeams.IsPresent)
@@ -673,18 +626,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsEmptyEUA() {
 		`mutation {
 			updateSystemIntakeContactDetails(input: {
 				id: "%s",
-				businessOwner: {
-					name: "Iama Businessowner",
-					component: "CMS Office 1"
-				},
-				productManager: {
-					name: "Iama Productmanager",
-					component: "CMS Office 2"
-				},
-				requester: {
-					name: "Iama Requester",
-					component: "CMS Office 3"
-				},
 				governanceTeams: {
 					isPresent: false
 					teams: []
@@ -692,19 +633,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsEmptyEUA() {
 			}) {
 				systemIntake {
 					id,
-					businessOwner {
-						name
-						component
-					}
-					productManager {
-						name
-						component
-					}
-					requester {
-						name
-						component
-						email
-					}
 					governanceTeams {
 						teams {
 							name
@@ -718,15 +646,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsEmptyEUA() {
 	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContactDetails.SystemIntake.ID)
 
 	respIntake := resp.UpdateSystemIntakeContactDetails.SystemIntake
-	s.Equal(respIntake.BusinessOwner.Name, "Iama Businessowner")
-	s.Equal(respIntake.BusinessOwner.Component, "CMS Office 1")
-
-	s.Equal(respIntake.ProductManager.Name, "Iama Productmanager")
-	s.Equal(respIntake.ProductManager.Component, "CMS Office 2")
-
-	s.Equal(respIntake.Requester.Name, "Iama Requester")
-	s.Equal(respIntake.Requester.Component, "CMS Office 3")
-	s.Equal(respIntake.Requester.Email, "")
 
 	s.Nil(respIntake.GovernanceTeams.Teams.Ptr())
 	s.False(respIntake.GovernanceTeams.IsPresent)
@@ -744,19 +663,7 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWithTeams() {
 	var resp struct {
 		UpdateSystemIntakeContactDetails struct {
 			SystemIntake struct {
-				ID            string
-				BusinessOwner struct {
-					Name      string
-					Component string
-				}
-				ProductManager struct {
-					Name      string
-					Component string
-				}
-				Requester struct {
-					Name      string
-					Component string
-				}
+				ID              string
 				GovernanceTeams struct {
 					IsPresent bool
 					Teams     []struct {
@@ -775,18 +682,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWithTeams() {
 		`mutation {
 			updateSystemIntakeContactDetails(input: {
 				id: "%s",
-				businessOwner: {
-					name: "Iama Businessowner",
-					component: "CMS Office 1"
-				},
-				productManager: {
-					name: "Iama Productmanager",
-					component: "CMS Office 2"
-				},
-				requester: {
-					name: "Iama Requester",
-					component: "CMS Office 3"
-				},
 				governanceTeams: {
 					isPresent: true,
 					teams: [
@@ -798,18 +693,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWithTeams() {
 			}) {
 				systemIntake {
 					id,
-					businessOwner {
-						name
-						component
-					}
-					productManager {
-						name
-						component
-					}
-					requester {
-						name
-						component
-					}
 					governanceTeams {
 						teams {
 							collaborator
@@ -855,19 +738,7 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearTeams() {
 	var resp struct {
 		UpdateSystemIntakeContactDetails struct {
 			SystemIntake struct {
-				ID            string
-				BusinessOwner struct {
-					Name      string
-					Component string
-				}
-				ProductManager struct {
-					Name      string
-					Component string
-				}
-				Requester struct {
-					Name      string
-					Component string
-				}
+				ID              string
 				GovernanceTeams struct {
 					IsPresent bool
 					Teams     null.String
@@ -882,18 +753,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearTeams() {
 		`mutation {
 			updateSystemIntakeContactDetails(input: {
 				id: "%s",
-				businessOwner: {
-					name: "Iama Businessowner",
-					component: "CMS Office 1"
-				},
-				productManager: {
-					name: "Iama Productmanager",
-					component: "CMS Office 2"
-				},
-				requester: {
-					name: "Iama Requester",
-					component: "CMS Office 3"
-				},
 				governanceTeams: {
 					isPresent: false,
 					teams: null
@@ -901,18 +760,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearTeams() {
 			}) {
 				systemIntake {
 					id,
-					businessOwner {
-						name
-						component
-					}
-					productManager {
-						name
-						component
-					}
-					requester {
-						name
-						component
-					}
 					governanceTeams {
 						teams {
 							collaborator
@@ -950,19 +797,7 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearOneTeam() {
 	var resp struct {
 		UpdateSystemIntakeContactDetails struct {
 			SystemIntake struct {
-				ID            string
-				BusinessOwner struct {
-					Name      string
-					Component string
-				}
-				ProductManager struct {
-					Name      string
-					Component string
-				}
-				Requester struct {
-					Name      string
-					Component string
-				}
+				ID              string
 				GovernanceTeams struct {
 					IsPresent bool
 					Teams     []struct {
@@ -981,18 +816,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearOneTeam() {
 		`mutation {
 			updateSystemIntakeContactDetails(input: {
 				id: "%s",
-				businessOwner: {
-					name: "Iama Businessowner",
-					component: "CMS Office 1"
-				},
-				productManager: {
-					name: "Iama Productmanager",
-					component: "CMS Office 2"
-				},
-				requester: {
-					name: "Iama Requester",
-					component: "CMS Office 3"
-				},
 				governanceTeams: {
 					isPresent: true,
 					teams: [
@@ -1004,18 +827,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearOneTeam() {
 			}) {
 				systemIntake {
 					id,
-					businessOwner {
-						name
-						component
-					}
-					productManager {
-						name
-						component
-					}
-					requester {
-						name
-						component
-					}
 					governanceTeams {
 						teams {
 							collaborator
