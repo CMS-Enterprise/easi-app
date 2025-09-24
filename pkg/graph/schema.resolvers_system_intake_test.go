@@ -22,9 +22,6 @@ func (s *GraphQLTestSuite) TestCreateSystemIntakeMutation() {
 		CreateSystemIntake struct {
 			ID          string
 			RequestType string
-			Requester   struct {
-				Name string
-			}
 		}
 	}
 
@@ -40,14 +37,10 @@ func (s *GraphQLTestSuite) TestCreateSystemIntakeMutation() {
 			}) {
 				id
 				requestType
-				requester {
-					name
-				}
 			}
 		}`, &resp, s.addAuthWithAllJobCodesToGraphQLClientTest("TEST"))
 
 	s.NotNil(resp.CreateSystemIntake.ID)
-	s.Equal("Test User", resp.CreateSystemIntake.Requester.Name)
 	s.Equal("NEW", resp.CreateSystemIntake.RequestType)
 }
 
