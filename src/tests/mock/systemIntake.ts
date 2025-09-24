@@ -67,24 +67,28 @@ const contacts: SystemIntakeContactFragment[] = users
     },
     component: SystemIntakeContactComponent.CMS_WIDE,
     roles: [SystemIntakeContactRole.OTHER],
-    isRequester: false
+    isRequester: false,
+    createdAt: '2025-09-23T15:58:46.72809Z'
   }));
 
 export const requester: SystemIntakeContactFragment = {
   ...contacts[0],
-  isRequester: true
+  isRequester: true,
+  createdAt: '2025-09-20T15:58:46.72809Z'
 };
 
 export const businessOwner: SystemIntakeContactFragment = {
   ...contacts[1],
   roles: [SystemIntakeContactRole.BUSINESS_OWNER],
-  component: SystemIntakeContactComponent.CENTER_FOR_MEDICARE_CM
+  component: SystemIntakeContactComponent.CENTER_FOR_MEDICARE_CM,
+  createdAt: '2025-09-21T15:58:46.72809Z'
 };
 
 export const productManager: SystemIntakeContactFragment = {
   ...contacts[2],
   roles: [SystemIntakeContactRole.PRODUCT_MANAGER],
-  component: SystemIntakeContactComponent.OFFICE_OF_LEGISLATION
+  component: SystemIntakeContactComponent.OFFICE_OF_LEGISLATION,
+  createdAt: '2025-09-22T15:58:46.72809Z'
 };
 
 export const documents: SystemIntakeDocumentFragmentFragment[] = [

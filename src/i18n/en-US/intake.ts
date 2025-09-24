@@ -391,7 +391,6 @@ const intake = {
       helpText:
         'This person owns a line of business related to this request and will champion the request moving forward.',
       nameField: 'CMS Business Owner name',
-      searchesEUADatabase: 'This field searches CMS’ EUA database.',
       component: 'CMS Business Owner component',
       email: 'CMS Business Owner email'
     },
@@ -407,9 +406,12 @@ const intake = {
     },
     systemIntakeContactRoles,
     systemIntakeContactComponents,
+    teamMembersPointsOfContact: 'Team members and project points of contact',
     addTeamMembers:
       'Use the button and table below to add and edit any team members or key collaborators for this project.',
     addAnotherContact: 'Add another contact',
+    contactsTableWarning:
+      'You must add at least at least the project’s Business Owner and Project/Product Manager or Lead (available roles to fulfill this requirement are Product Owner, Product Manager, or Project Manager). If there is one individual that fills multiple roles, you may assign all roles that apply.',
     loadingContacts: 'Loading contacts',
     noContacts: 'No contacts have been added to this request.',
     additionalContacts: {
@@ -422,18 +424,25 @@ const intake = {
       showMore: 'Show {{count}} more recipients',
       showFewer: 'Show {{count}} fewer recipients',
       delete: 'Delete {{type}}',
-      add: 'Add another {{type}}',
-      edit: 'Edit {{type}}',
-      name: 'New {{type}} name',
-      component: 'New {{type}} component',
+      add: 'Add an additional {{type}}',
+      edit: 'Edit a {{type}}',
+      name_add: 'New {{type}} name',
+      name: '{{type}} name',
+      nameHelpText: 'This field searches CMS’ EUA database.',
+      component_add: 'New {{type}} component',
+      component: '{{type}} component',
       select: 'Select an option',
-      role: 'New {{type}} role',
-      save: 'Save',
-      addContact: 'Add {{type}}',
+      role_add: 'New {{type}} role',
+      role: '{{type}} role',
+      roles_add: 'New {{type}} role(s)',
+      roles: '{{type}} role(s)',
+      submit_edit: 'Save changes',
+      submit_add: 'Add {{type}}',
       errors: {
         commonName: "Enter the {{type}}'s name",
         component: "Select the {{type}}'s component",
-        role: "Select the {{type}}'s role"
+        role: "Select the {{type}}'s role",
+        root: 'There was an error {{action}}ing your {{type}}. Please try again. If the error persists, try again later.'
       }
     },
     governanceTeam: {

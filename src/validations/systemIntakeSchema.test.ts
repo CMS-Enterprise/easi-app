@@ -1,6 +1,14 @@
+import { GetSystemIntakeContactsQuery } from 'gql/generated/graphql';
 import { DateTime } from 'luxon';
+import {
+  businessOwner,
+  productManager,
+  requester
+} from 'tests/mock/systemIntake';
 
-import SystemIntakeValidationSchema from './systemIntakeSchema';
+import SystemIntakeValidationSchema, {
+  SystemIntakeContactsSchema
+} from './systemIntakeSchema';
 
 // Helper: build ISO string in UTC with trailing 'Z'
 const toIsoUtc = (d: { month: string; day: string; year: string }) =>
@@ -77,5 +85,58 @@ describe('System intake contract dates', () => {
         ).rejects.toThrow();
       })
     );
+  });
+});
+
+describe('System intake contacts schema', () => {
+  const validContacts: GetSystemIntakeContactsQuery['systemIntakeContacts'] = {
+    __typename: 'SystemIntakeContacts',
+    requester,
+    businessOwners: [businessOwner],
+    productManagers: [productManager],
+    additionalContacts: [],
+    allContacts: [requester, businessOwner, productManager]
+  };
+
+  it('accepts valid contacts', async () => {
+    await expect(
+      SystemIntakeContactsSchema.validate(validContacts)
+    ).resolves.toBeDefined();
+  });
+
+  it('throws an error if requester is missing component', async () => {
+    await expect(
+      SystemIntakeContactsSchema.validate({
+        ...validContacts,
+        requester: { ...requester, component: null }
+      })
+    ).rejects.toThrow();
+  });
+
+  it('throws an error if requester is missing roles', async () => {
+    await expect(
+      SystemIntakeContactsSchema.validate({
+        ...validContacts,
+        requester: { ...requester, roles: [] }
+      })
+    ).rejects.toThrow();
+  });
+
+  it('throws error if no product manager is set', async () => {
+    await expect(
+      SystemIntakeContactsSchema.validate({
+        ...validContacts,
+        productManagers: []
+      })
+    ).rejects.toThrow();
+  });
+
+  it('throws error if no business owner is set', async () => {
+    await expect(
+      SystemIntakeContactsSchema.validate({
+        ...validContacts,
+        businessOwners: []
+      })
+    ).rejects.toThrow();
   });
 });
