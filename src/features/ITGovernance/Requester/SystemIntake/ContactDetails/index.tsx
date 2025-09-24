@@ -7,12 +7,14 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Form } from '@trussworks/react-uswds';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
 import {
+  GetSystemIntakeContactsDocument,
   GetSystemIntakeDocument,
   SystemIntakeContactFragment,
   SystemIntakeFormState,
   SystemIntakeFragmentFragment,
   SystemIntakeRequestType,
   UpdateSystemIntakeContactDetailsInput,
+  useDeleteSystemIntakeContactMutation,
   useGetSystemIntakeContactsQuery,
   useUpdateSystemIntakeContactDetailsMutation
 } from 'gql/generated/graphql';
@@ -63,6 +65,15 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     useState<SystemIntakeContactFragment | null>(null);
 
   const [isContactsModalOpen, setIsContactsModalOpen] = useState(false);
+
+  const [removeContact] = useDeleteSystemIntakeContactMutation({
+    refetchQueries: [
+      {
+        query: GetSystemIntakeContactsDocument,
+        variables: { id: systemIntake.id }
+      }
+    ]
+  });
 
   const [updateGovernanceTeams] = useUpdateSystemIntakeContactDetailsMutation({
     refetchQueries: [
@@ -268,6 +279,9 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           )}
 
           <SystemIntakeContactsTable
+            removeContact={id =>
+              removeContact({ variables: { input: { id } } })
+            }
             systemIntakeContacts={data?.systemIntakeContacts}
             loading={loading}
             className="margin-top-3 padding-top-05 margin-bottom-6"

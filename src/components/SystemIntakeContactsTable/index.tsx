@@ -1,7 +1,15 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Column, useSortBy, useTable } from 'react-table';
-import { Button, Icon, Table, Tooltip } from '@trussworks/react-uswds';
+import {
+  Button,
+  ButtonGroup,
+  Icon,
+  ModalFooter,
+  ModalHeading,
+  Table,
+  Tooltip
+} from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
   GetSystemIntakeContactsQuery,
@@ -9,6 +17,7 @@ import {
   SystemIntakeContactRole
 } from 'gql/generated/graphql';
 
+import Modal from 'components/Modal';
 import Spinner from 'components/Spinner';
 import cmsComponents from 'constants/cmsComponents';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
@@ -20,6 +29,7 @@ type SystemIntakeContactsTableProps = {
   loading: boolean;
   /** Sets contact to edit with form modal. If undefined, actions column will not render. */
   handleEditContact?: (contact: SystemIntakeContactFragment) => void;
+  removeContact?: (id: string) => void;
   className?: string;
 };
 
@@ -27,9 +37,14 @@ const SystemIntakeContactsTable = ({
   systemIntakeContacts,
   loading,
   handleEditContact,
+  removeContact,
   className
 }: SystemIntakeContactsTableProps) => {
   const { t } = useTranslation('intake');
+
+  const [contactIdToRemove, setContactIdToRemove] = useState<string | null>(
+    null
+  );
 
   const columns = useMemo<Column<SystemIntakeContactFragment>[]>(() => {
     const actionsColumn: Column<SystemIntakeContactFragment> = {
@@ -54,7 +69,7 @@ const SystemIntakeContactsTable = ({
                 row.isRequester ? 'text-disabled' : 'text-error'
               )}
               unstyled
-              onClick={() => null}
+              onClick={() => setContactIdToRemove(row.id)}
               data-testid={`removeContact-${index}`}
               disabled={row.isRequester}
             >
@@ -191,111 +206,156 @@ const SystemIntakeContactsTable = ({
   rows.map(row => prepareRow(row));
 
   return (
-    <div
-      className={classNames(
-        'system-intake-contacts-table usa-table-container--scrollable',
-        className
-      )}
-    >
-      <Table bordered={false} fullWidth {...getTableProps()}>
-        <thead>
-          {headerGroups.map(headerGroup => {
-            const { key, ...headerGroupProps } =
-              headerGroup.getHeaderGroupProps();
+    <>
+      <div
+        className={classNames(
+          'system-intake-contacts-table usa-table-container--scrollable',
+          className
+        )}
+      >
+        <Table bordered={false} fullWidth {...getTableProps()}>
+          <thead>
+            {headerGroups.map(headerGroup => {
+              const { key, ...headerGroupProps } =
+                headerGroup.getHeaderGroupProps();
 
-            return (
-              <tr {...headerGroupProps} key={key}>
-                {headerGroup.headers.map(column => {
-                  const { key: headerKey, ...headerProps } =
-                    column.getHeaderProps();
+              return (
+                <tr {...headerGroupProps} key={key}>
+                  {headerGroup.headers.map(column => {
+                    const { key: headerKey, ...headerProps } =
+                      column.getHeaderProps();
 
-                  if (column.id === 'actions') {
+                    if (column.id === 'actions') {
+                      return (
+                        <th
+                          {...headerProps}
+                          key={headerKey}
+                          className="border-bottom-2px"
+                          style={{
+                            width: column.width
+                          }}
+                        >
+                          {column.render('Header')}
+                        </th>
+                      );
+                    }
+
                     return (
                       <th
                         {...headerProps}
                         key={headerKey}
+                        aria-sort={getColumnSortStatus(column)}
+                        scope="col"
                         className="border-bottom-2px"
                         style={{
                           width: column.width
                         }}
                       >
-                        {column.render('Header')}
+                        <Button
+                          type="button"
+                          className="width-full flex-justify margin-y-0"
+                          unstyled
+                          {...column.getSortByToggleProps()}
+                        >
+                          {column.render('Header')}
+                          {getHeaderSortIcon(column)}
+                        </Button>
                       </th>
-                    );
-                  }
-
-                  return (
-                    <th
-                      {...headerProps}
-                      key={headerKey}
-                      aria-sort={getColumnSortStatus(column)}
-                      scope="col"
-                      className="border-bottom-2px"
-                      style={{
-                        width: column.width
-                      }}
-                    >
-                      <Button
-                        type="button"
-                        className="width-full flex-justify margin-y-0"
-                        unstyled
-                        {...column.getSortByToggleProps()}
-                      >
-                        {column.render('Header')}
-                        {getHeaderSortIcon(column)}
-                      </Button>
-                    </th>
-                  );
-                })}
-              </tr>
-            );
-          })}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.length > 0 ? (
-            rows.map(row => {
-              const { key: rowKey, ...rowProps } = row.getRowProps();
-
-              const { id } = row.original;
-
-              return (
-                <tr
-                  {...rowProps}
-                  key={rowKey}
-                  data-testid="contact-row"
-                  aria-label={`contact-${id}`}
-                >
-                  {row.cells.map(cell => {
-                    const { key: cellKey, ...cellProps } = cell.getCellProps();
-
-                    return (
-                      <td {...cellProps} key={cellKey}>
-                        {cell.render('Cell')}
-                      </td>
                     );
                   })}
                 </tr>
               );
-            })
-          ) : (
-            <tr>
-              <td colSpan={columns.length} className="padding-left-4">
-                <span className="margin-left-05 display-flex flex-align-center text-italic">
-                  {loading ? (
-                    <>
-                      <Spinner size="small" className="margin-right-1" />
-                      {t('contactDetails.loadingContacts')}
-                    </>
-                  ) : (
-                    t('contactDetails.noContacts')
-                  )}
-                </span>
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </Table>
-    </div>
+            })}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.length > 0 ? (
+              rows.map(row => {
+                const { key: rowKey, ...rowProps } = row.getRowProps();
+
+                const { id } = row.original;
+
+                return (
+                  <tr
+                    {...rowProps}
+                    key={rowKey}
+                    data-testid="contact-row"
+                    aria-label={`contact-${id}`}
+                  >
+                    {row.cells.map(cell => {
+                      const { key: cellKey, ...cellProps } =
+                        cell.getCellProps();
+
+                      return (
+                        <td {...cellProps} key={cellKey}>
+                          {cell.render('Cell')}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })
+            ) : (
+              <tr>
+                <td colSpan={columns.length} className="padding-left-4">
+                  <span className="margin-left-05 display-flex flex-align-center text-italic">
+                    {loading ? (
+                      <>
+                        <Spinner size="small" className="margin-right-1" />
+                        {t('contactDetails.loadingContacts')}
+                      </>
+                    ) : (
+                      t('contactDetails.noContacts')
+                    )}
+                  </span>
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </Table>
+      </div>
+
+      {/* Remove contact modal */}
+      {removeContact && (
+        <Modal
+          isOpen={!!contactIdToRemove}
+          closeModal={() => setContactIdToRemove(null)}
+          className="font-body-md"
+        >
+          <ModalHeading>
+            {t('contactDetails.additionalContacts.removeModal.heading')}
+          </ModalHeading>
+          <p>
+            {t('contactDetails.additionalContacts.removeModal.description')}
+          </p>
+
+          <ModalFooter>
+            <ButtonGroup>
+              <Button
+                type="button"
+                className="margin-right-2 bg-error"
+                onClick={() => {
+                  if (contactIdToRemove) {
+                    removeContact(contactIdToRemove);
+                  }
+
+                  setContactIdToRemove(null);
+                }}
+              >
+                {t('contactDetails.additionalContacts.removeModal.submit')}
+              </Button>
+
+              <Button
+                type="button"
+                onClick={() => setContactIdToRemove(null)}
+                unstyled
+              >
+                {t('general:cancel')}
+              </Button>
+            </ButtonGroup>
+          </ModalFooter>
+        </Modal>
+      )}
+    </>
   );
 };
 
