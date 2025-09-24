@@ -68,9 +68,13 @@ const Decision = ({
 
       {decisionState === SystemIntakeDecisionState.NO_DECISION && (
         <>
-          <Button type="button" className="margin-bottom-5">
-            Issue decision
-          </Button>
+          <UswdsReactLink
+            to="resolutions"
+            className="usa-button margin-bottom-5"
+            variant="unstyled"
+          >
+            {t('decision.issueDecisionButton')}
+          </UswdsReactLink>
 
           <Alert type="info" slim>
             <Trans

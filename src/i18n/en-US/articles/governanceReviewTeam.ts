@@ -278,6 +278,7 @@ const governanceReviewTeam = {
   decision: {
     heading: 'Decision',
     subheading: 'A summary of the decision issued for this request.',
+    issueDecisionButton: 'Issue decision',
     noDecisionAlert:
       'A decision has not yet been issued for this request. If you would like to take an action to issue a decision, use the button above or <link1>visit the Actions page</link1> of this request.',
     title: 'Decision',
