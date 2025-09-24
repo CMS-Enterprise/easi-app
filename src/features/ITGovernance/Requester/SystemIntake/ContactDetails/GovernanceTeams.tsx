@@ -102,7 +102,7 @@ const GovernanceTeams = () => {
                         label={label}
                         disabled={!isPresent}
                         value="true"
-                        checked={field.value}
+                        checked={field.value === true}
                         onChange={() => field.onChange(!field.value)}
                       />
                     );
@@ -155,7 +155,7 @@ const GovernanceTeams = () => {
               id="governanceTeamsIsPresentFalse"
               label={t('contactDetails.collaboration.none')}
               value="false"
-              checked={!field.value}
+              checked={field.value === false}
               onChange={() => field.onChange(false)}
             />
           )}
