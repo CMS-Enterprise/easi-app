@@ -126,7 +126,6 @@ func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wir
 		if reqAccount != nil {
 			si.Requester = reqAccount.Username
 		}
-		// TODO: verify component is what CEDAR expects here, and that it is meant to come from the requester
 		si.Component = null.StringFrom(string(requester.Component))
 	}
 	businessOwners, _ := contacts.BusinessOwners()
