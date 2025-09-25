@@ -302,7 +302,7 @@ const action = {
   lcidStatusTag: {
     ISSUED: 'Active',
     EXPIRED: 'Expired',
-    EXPIRING_SOON: 'Expiring soon',
+    EXPIRING_SOON: 'Due soon',
     RETIRED: 'Retired',
     RETIRING_SOON: 'Retiring soon'
   },

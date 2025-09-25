@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Icon } from '@trussworks/react-uswds';
 import { SystemIntakeLCIDStatus } from 'gql/generated/graphql';
 import { DateTime } from 'luxon';
 
@@ -9,10 +10,18 @@ type LcidTagStatus = SystemIntakeLCIDStatus | 'EXPIRING_SOON' | 'RETIRING_SOON';
 
 export const lcidStatusClassName: Record<LcidTagStatus, string> = {
   ISSUED: 'bg-success-dark text-white',
-  RETIRED: 'bg-base-lighter',
+  RETIRED: 'border-2px border-base text-base',
   RETIRING_SOON: 'bg-warning',
   EXPIRED: 'bg-secondary-dark text-white',
   EXPIRING_SOON: 'bg-warning'
+};
+
+const lcidStatusIcons: Record<LcidTagStatus, React.ElementType> = {
+  ISSUED: Icon.Check,
+  RETIRED: Icon.History,
+  RETIRING_SOON: Icon.Check,
+  EXPIRED: Icon.Error,
+  EXPIRING_SOON: Icon.Warning
 };
 
 type LcidStatusTagProps = {
@@ -63,11 +72,14 @@ const LcidStatusTag = ({
     return lcidStatus;
   }, [lcidStatus, lcidExpiresAt, lcidRetiresAt]);
 
+  const IconComponent = lcidStatusIcons[status];
+
   return (
     <Tag
-      className={`margin-right-0 ${lcidStatusClassName[status]}`}
+      className={`margin-right-0 ${lcidStatusClassName[status]} display-flex`}
       data-testid="lcid-status-tag"
     >
+      <IconComponent className="margin-right-1" aria-hidden />
       {t(`lcidStatusTag.${status}`)}
     </Tag>
   );

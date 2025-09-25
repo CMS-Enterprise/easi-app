@@ -64,6 +64,7 @@ const RequestOverview = () => {
   });
 
   const systemIntake = data?.systemIntake;
+  console.log(systemIntake);
 
   const lcidRetiringSoon =
     systemIntake?.statusAdmin === SystemIntakeStatusAdmin.LCID_RETIRING_SOON &&
