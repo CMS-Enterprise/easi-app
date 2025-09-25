@@ -45,36 +45,20 @@ const DefinitionCombo = ({
   );
 };
 
-const LcidInfoContainer = ({
-  decisionState,
-  rejectionReason,
-  lcid,
-  lcidIssuedAt,
-  lcidExpiresAt,
-  lcidScope,
-  lcidCostBaseline
-}: DecisionProps) => {
+const LcidInfoContainer = () => {
   const { t } = useTranslation('governanceReviewTeam');
+  const {
+    decisionState,
+    rejectionReason,
+    lcid,
+    lcidIssuedAt,
+    lcidExpiresAt,
+    lcidScope,
+    lcidCostBaseline
+  } = useDecision();
 
-  // const IconComponent =
-  //   decisionState === SystemIntakeDecisionState.LCID_ISSUED
-  //     ? Icon.CheckCircle
-  //     : Icon.Cancel;
-
-  // const decisionStateBackgroundColorMap: Record<
-  //   SystemIntakeDecisionState,
-  //   string
-  // > = {
-  //   [SystemIntakeDecisionState.LCID_ISSUED]: 'bg-success-dark',
-  //   [SystemIntakeDecisionState.NOT_APPROVED]: 'bg-error-dark',
-  //   [SystemIntakeDecisionState.NOT_GOVERNANCE]: 'bg-base-dark',
-  //   [SystemIntakeDecisionState.NO_DECISION]: ''
-  // };
-
-  const decisionView: Record<
-    Exclude<SystemIntakeDecisionState, SystemIntakeDecisionState.NO_DECISION>,
-    { icon: React.ElementType; bg: string }
-  > = {
+  // one place for icon + background
+  const decisionView = {
     [SystemIntakeDecisionState.LCID_ISSUED]: {
       icon: Icon.CheckCircle,
       bg: 'bg-success-dark'
@@ -86,8 +70,12 @@ const LcidInfoContainer = ({
     [SystemIntakeDecisionState.NOT_GOVERNANCE]: {
       icon: Icon.Cancel,
       bg: 'bg-base-dark'
+    },
+    [SystemIntakeDecisionState.NO_DECISION]: {
+      icon: Icon.Info,
+      bg: ''
     }
-  };
+  } as const;
 
   const { icon: IconComponent, bg } = decisionView[decisionState];
 
@@ -105,6 +93,7 @@ const LcidInfoContainer = ({
           {t('decision.decisionState', { context: decisionState })}
         </span>
       </div>
+
       <div className="bg-base-lightest padding-3">
         <dl className="easi-dl">
           {decisionState === SystemIntakeDecisionState.LCID_ISSUED ? (
@@ -113,10 +102,12 @@ const LcidInfoContainer = ({
                 <h3 className="margin-y-0">{t('decision.lcidInfoHeader')}</h3>
                 <Tag className="bg-success-dark text-white">TODO Gary</Tag>
               </div>
+
               <DefinitionCombo
                 term={t('decision.terms.lcidNumber')}
                 definition={lcid!}
               />
+
               <div className="grid-row">
                 <Grid tablet={{ col: 6 }}>
                   <DefinitionCombo
@@ -131,6 +122,7 @@ const LcidInfoContainer = ({
                   />
                 </Grid>
               </div>
+
               <DefinitionCombo
                 term={t('decision.terms.scope')}
                 definition={lcidScope ?? t('notes.extendLcid.noScope')}
@@ -174,17 +166,14 @@ type DecisionProps = {
   trbFollowUpRecommendation?: SystemIntakeTRBFollowUp | null;
 };
 
+// const Decision = (props: DecisionProps) => {
 const Decision = ({
-  rejectionReason,
   decisionNextSteps,
   decisionState,
-  lcid,
-  lcidIssuedAt,
-  lcidExpiresAt,
-  lcidScope,
-  lcidCostBaseline,
-  trbFollowUpRecommendation
+  trbFollowUpRecommendation,
+  ...rest
 }: DecisionProps) => {
+  // const { decisionNextSteps, decisionState, trbFollowUpRecommendation } = props;
   const { t } = useTranslation('governanceReviewTeam');
 
   return (
@@ -203,7 +192,6 @@ const Decision = ({
           >
             {t('decision.issueDecisionButton')}
           </UswdsReactLink>
-
           <Alert type="info" slim>
             <Trans
               i18nKey="governanceReviewTeam:decision.noDecisionAlert"
@@ -214,36 +202,39 @@ const Decision = ({
           </Alert>
         </>
       ) : (
-        // decisionState === all else
-        <LcidInfoContainer
-          decisionState={decisionState}
-          rejectionReason={rejectionReason}
-          lcid={lcid}
-          lcidIssuedAt={lcidIssuedAt}
-          lcidExpiresAt={lcidExpiresAt}
-          lcidScope={lcidScope}
-          lcidCostBaseline={lcidCostBaseline}
-        />
+        <DecisionContext.Provider
+          value={{
+            decisionNextSteps,
+            decisionState,
+            trbFollowUpRecommendation,
+            ...rest
+          }}
+        >
+          <LcidInfoContainer />
+          {decisionState !== SystemIntakeDecisionState.NOT_GOVERNANCE && (
+            <dl className="padding-x-2">
+              <DefinitionCombo
+                isLast
+                term={t('decision.terms.nextSteps')}
+                definition={
+                  <RichTextViewer
+                    value={
+                      decisionNextSteps || t('notes.extendLcid.noNextSteps')
+                    }
+                  />
+                }
+              />
+              <DefinitionCombo
+                term={t('decision.terms.consultTRB')}
+                definition={
+                  trbFollowUpRecommendation &&
+                  t(`action:issueLCID.trbFollowup.${trbFollowUpRecommendation}`)
+                }
+              />
+            </dl>
+          )}
+        </DecisionContext.Provider>
       )}
-
-      <dl className="padding-x-2">
-        <DefinitionCombo
-          isLast
-          term={t('decision.terms.nextSteps')}
-          definition={
-            <RichTextViewer
-              value={decisionNextSteps || t('notes.extendLcid.noNextSteps')}
-            />
-          }
-        />
-        <DefinitionCombo
-          term={t('decision.terms.consultTRB')}
-          definition={
-            trbFollowUpRecommendation &&
-            t(`action:issueLCID.trbFollowup.${trbFollowUpRecommendation}`)
-          }
-        />
-      </dl>
     </>
   );
 };
