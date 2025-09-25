@@ -59,6 +59,12 @@ const GovernanceTeams = () => {
           {t('contactDetails.collaboration.helpText')}
         </HelpText>
 
+        <ErrorMessage
+          errors={errors}
+          name="governanceTeams.isPresent"
+          as={FieldErrorMsg}
+        />
+
         <Controller
           control={control}
           name="governanceTeams.isPresent"
@@ -69,7 +75,7 @@ const GovernanceTeams = () => {
               id="governanceTeamsIsPresentTrue"
               label={t('contactDetails.collaboration.oneOrMore')}
               value="true"
-              checked={!!field.value}
+              checked={field.value === true} // this explicit check isn't needed, but it matches the explicit false check we run below. leaving for consistency
               onChange={() => field.onChange(true)}
             />
           )}
@@ -102,7 +108,7 @@ const GovernanceTeams = () => {
                         label={label}
                         disabled={!isPresent}
                         value="true"
-                        checked={field.value === true} // this explicit check isn't needed, but it matches the explicit false check we run below. leaving for consistency
+                        checked={field.value}
                         onChange={() => field.onChange(!field.value)}
                       />
                     );
@@ -159,11 +165,6 @@ const GovernanceTeams = () => {
               onChange={() => field.onChange(false)}
             />
           )}
-        />
-        <ErrorMessage
-          errors={errors}
-          name="governanceTeams.isPresent"
-          as={FieldErrorMsg}
         />
       </Fieldset>
     </>
