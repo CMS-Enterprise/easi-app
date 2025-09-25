@@ -3066,7 +3066,7 @@ type Query {
   cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!
   cedarBudget(cedarSystemID: String!): [CedarBudget!]
   cedarBudgetSystemCost(cedarSystemID: String!): CedarBudgetSystemCost
-  cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
+  searchOktaUsers(searchTerm: String!): [UserInfo!]!
   cedarSoftwareProducts(cedarSystemId: String!): CedarSoftwareProducts
   cedarSystem(cedarSystemId: String!): CedarSystem
   cedarSystems: [CedarSystem!]!

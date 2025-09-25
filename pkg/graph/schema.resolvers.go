@@ -1383,9 +1383,9 @@ func (r *queryResolver) CedarBudgetSystemCost(ctx context.Context, cedarSystemID
 	return cedarBudgetSystemCost, nil
 }
 
-// CedarPersonsByCommonName is the resolver for the cedarPersonsByCommonName field.
-func (r *queryResolver) CedarPersonsByCommonName(ctx context.Context, commonName string) ([]*models.UserInfo, error) {
-	response, err := r.service.SearchCommonNameContains(ctx, commonName)
+// SearchOktaUsers is the resolver for the searchOktaUsers field.
+func (r *queryResolver) SearchOktaUsers(ctx context.Context, searchTerm string) ([]*models.UserInfo, error) {
+	response, err := r.service.SearchCommonNameContains(ctx, searchTerm)
 	if err != nil {
 		return nil, err
 	}
