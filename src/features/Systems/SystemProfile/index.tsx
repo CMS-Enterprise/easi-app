@@ -63,7 +63,6 @@ import { showSystemVal } from 'utils/showVal';
 
 import BookmarkButton from '../../../components/BookmarkButton';
 
-import EditPageCallout from './components/EditPageCallout';
 // components/index contains all the sideNavItems components, routes, labels and translations
 // The sideNavItems object keys are mapped to the url param - 'subinfo'
 import sideNavItems from './components/index';
@@ -641,14 +640,6 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                   {/* Side navigation for single system */}
                   <SideNav items={subNavigationLinks} />
 
-                  {subinfo === 'team' && (
-                    <EditPageCallout
-                      className="margin-top-3"
-                      // TODO: Get system modifiedAt value and add to props
-                      // modifiedAt={}
-                    />
-                  )}
-
                   {/* Setting a ref here to reference the grid width for the fixed side nav */}
                   {modal && (
                     <>
@@ -697,13 +688,6 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                                 systemId={systemId}
                               />
                             </div>
-                            {subinfo === 'team' && isMobile && (
-                              <EditPageCallout
-                                className="margin-top-4"
-                                // TODO: Get system modifiedAt value and add to props
-                                // modifiedAt={}
-                              />
-                            )}
                           </Grid>
                         )}
                       </Grid>
