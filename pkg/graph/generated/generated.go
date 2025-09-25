@@ -9875,6 +9875,7 @@ Input to update some fields on a system request
 input UpdateSystemIntakeRequestDetailsInput {
   id: UUID!
   requestName: String
+  projectAcronym: String
   businessNeed: String
   businessSolution: String
   currentStage: String
@@ -67530,7 +67531,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeRequestDetailsInput(
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "requestName", "businessNeed", "businessSolution", "currentStage", "needsEaSupport", "hasUiChanges", "usesAiTech", "usingSoftware", "acquisitionMethods", "cedarSystemId"}
+	fieldsInOrder := [...]string{"id", "requestName", "projectAcronym", "businessNeed", "businessSolution", "currentStage", "needsEaSupport", "hasUiChanges", "usesAiTech", "usingSoftware", "acquisitionMethods", "cedarSystemId"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -67551,6 +67552,13 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeRequestDetailsInput(
 				return it, err
 			}
 			it.RequestName = data
+		case "projectAcronym":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("projectAcronym"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ProjectAcronym = data
 		case "businessNeed":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("businessNeed"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)

@@ -11,6 +11,7 @@ export default gql(/* GraphQL */ `
       id
       euaUserId
       requestName
+      projectAcronym
       statusAdmin
       state
 
