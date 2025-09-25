@@ -10,7 +10,7 @@ import {
 import i18next from 'i18next';
 
 import Alert from 'components/Alert';
-import CedarContactSelect from 'components/CedarContactSelect';
+import OktaUserSelect from 'components/CedarContactSelect';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
 import HelpText from 'components/HelpText';
@@ -179,7 +179,7 @@ const ContactForm = ({
           {t('technicalAssistance:emailRecipientFields.newRecipientHelpText')}
         </HelpText>
         <FieldErrorMsg>{errors.commonName}</FieldErrorMsg>
-        <CedarContactSelect
+        <OktaUserSelect
           id="IntakeForm-ContactCommonName"
           name="systemIntakeContact.commonName"
           ariaDescribedBy="IntakeForm-BusinessOwnerHelp"

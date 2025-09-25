@@ -23,7 +23,7 @@ import {
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import * as yup from 'yup';
 
-import CedarContactSelect from 'components/CedarContactSelect';
+import OktaUserSelect from 'components/CedarContactSelect';
 import CollapsableLink from 'components/CollapsableLink';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import HelpText from 'components/HelpText';
@@ -238,7 +238,7 @@ const TeamMemberForm = ({
                     {t('singleSystem.editTeam.form.nameError')}
                   </FieldErrorMsg>
                 )}
-                <CedarContactSelect
+                <OktaUserSelect
                   {...{ ...field, ref: null }}
                   id={field.name}
                   // Edit mode will display the user in a disabled dropdown

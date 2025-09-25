@@ -1,5 +1,5 @@
 meta {
-  name: CedarPersons
+  name: OktaUsers
   type: graphql
   seq: 2
 }
@@ -12,7 +12,7 @@ post {
 
 body:graphql {
   query {
-    cedarPersonsByCommonName(commonName: "Aaron") {
+    searchOktaUsers(searchTerm: "Aaron") {
      commonName
      email
      euaUserId

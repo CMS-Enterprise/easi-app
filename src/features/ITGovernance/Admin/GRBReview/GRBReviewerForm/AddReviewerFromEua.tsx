@@ -21,7 +21,7 @@ import {
 } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
-import CedarContactSelect from 'components/CedarContactSelect';
+import OktaUserSelect from 'components/CedarContactSelect';
 import CollapsableLink from 'components/CollapsableLink';
 import { useEasiForm } from 'components/EasiForm';
 import FieldErrorMsg from 'components/FieldErrorMsg';
@@ -217,7 +217,7 @@ const AddReviewerFromEua = ({
               isSubmitted && <FieldErrorMsg>{message}</FieldErrorMsg>
             }
           />
-          <CedarContactSelect
+          <OktaUserSelect
             {...{ ...register('userAccount'), ref: null }}
             onChange={contact =>
               setValue(

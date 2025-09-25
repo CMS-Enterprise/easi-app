@@ -21,42 +21,42 @@ import { Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import Spinner from 'components/Spinner';
-import useCedarContactLookup from 'hooks/useCedarContactLookup';
-import { CedarContactProps } from 'types/systemIntake';
+import useOktaUserLookup from 'hooks/useOktaUserLookup';
+import { OktaUserProps } from 'types/systemIntake';
 import color from 'utils/uswdsColor';
 
 import './index.scss';
 
-type CedarContactSelectProps = {
+type OktaUserSelectProps = {
   className?: string;
   id: string;
   name: string;
   ariaDescribedBy?: string;
-  value?: CedarContactProps | null;
-  onChange: (contact: CedarContactProps | null) => void;
+  value?: OktaUserProps | null;
+  onChange: (contact: OktaUserProps | null) => void;
   disabled?: boolean;
   autoSearch?: boolean;
   inputRef?: RefCallBack;
 };
 
-type CedarContactSelectOption = {
-  value: CedarContactProps;
+type OktaUserSelectOption = {
+  value: OktaUserProps;
   label: string;
 };
 
 // Override React Select input to fix hidden input on select bug
-const Input = (props: InputProps<CedarContactSelectOption, false>) => {
+const Input = (props: InputProps<OktaUserSelectOption, false>) => {
   return (
     <components.Input
       {...props}
       isHidden={false}
-      data-testid="cedar-contact-select"
+      data-testid="okta-user-select"
     />
   );
 };
 
 // Custom option component
-const Option = (props: OptionProps<CedarContactSelectOption, false>) => {
+const Option = (props: OptionProps<OktaUserSelectOption, false>) => {
   const { isFocused } = props;
   return (
     <components.Option
@@ -68,7 +68,7 @@ const Option = (props: OptionProps<CedarContactSelectOption, false>) => {
   );
 };
 
-const Menu = (props: MenuProps<CedarContactSelectOption, false>) => {
+const Menu = (props: MenuProps<OktaUserSelectOption, false>) => {
   const {
     selectProps: { inputValue }
   } = props;
@@ -77,7 +77,7 @@ const Menu = (props: MenuProps<CedarContactSelectOption, false>) => {
 };
 
 const ClearIndicator = (
-  props: ClearIndicatorProps<CedarContactSelectOption, false>
+  props: ClearIndicatorProps<OktaUserSelectOption, false>
 ) => {
   const {
     selectProps: { inputValue }
@@ -88,7 +88,7 @@ const ClearIndicator = (
 };
 
 const IndicatorsContainer = (
-  props: IndicatorsContainerProps<CedarContactSelectOption, false>
+  props: IndicatorsContainerProps<OktaUserSelectOption, false>
 ) => {
   const {
     children,
@@ -97,12 +97,10 @@ const IndicatorsContainer = (
   } = props;
 
   // Whether to show spinner based on className
-  const loading = className!
-    .split(' ')
-    .includes('cedar-contact-select__loading');
+  const loading = className!.split(' ').includes('okta-user-select__loading');
   // Whether to show warning icon based in className
   const resultsWarning =
-    hasValue && className!.split(' ').includes('cedar-contact-select__warning');
+    hasValue && className!.split(' ').includes('okta-user-select__warning');
 
   // Hide indicators if field is disabled
   if (isDisabled) return null;
@@ -119,7 +117,7 @@ const IndicatorsContainer = (
 };
 
 /** Format contact label to include name, EUA, and email */
-const formatContactLabel = (contact: CedarContactProps) => {
+const formatContactLabel = (contact: OktaUserProps) => {
   const { commonName, euaUserId, email } = contact;
   return `${commonName}${euaUserId && `, ${euaUserId}`}${
     email ? ` (${email})` : ''
@@ -127,9 +125,9 @@ const formatContactLabel = (contact: CedarContactProps) => {
 };
 
 /**
- * Combobox to look up contact by name from CEDAR
+ * Combobox to look up contact by name from OKTA
  */
-export default function CedarContactSelect({
+export default function OktaUserSelect({
   className,
   id,
   name,
@@ -139,7 +137,7 @@ export default function CedarContactSelect({
   disabled,
   autoSearch,
   inputRef
-}: CedarContactSelectProps) {
+}: OktaUserSelectProps) {
   const { t } = useTranslation();
 
   // If autoSearch, set name as initial search term
@@ -148,8 +146,7 @@ export default function CedarContactSelect({
   );
 
   // If autoSearch, run initial query from name
-  const { contacts, queryCedarContacts, loading } =
-    useCedarContactLookup(searchTerm);
+  const { contacts, queryOktaUsers, loading } = useOktaUserLookup(searchTerm);
 
   // Selected contact
   const selectedContact = useRef(value?.euaUserId);
@@ -164,20 +161,20 @@ export default function CedarContactSelect({
   const showWarning =
     shouldAutoSearch && !value?.euaUserId && contacts.length !== 1;
 
-  /** Query CEDAR by common name and update contacts */
+  /** Query OKTA by common name and update contacts */
   const queryContacts = useCallback(
     (query: string) => {
       setSearchTerm(query);
       if (query.length > 1) {
-        queryCedarContacts(query.split(',')[0]);
+        queryOktaUsers(query.split(',')[0]);
       }
     },
-    [queryCedarContacts]
+    [queryOktaUsers]
   );
 
   /** Update contact and reset search term */
   const updateContact = useCallback(
-    (contact?: CedarContactProps | null) => {
+    (contact?: OktaUserProps | null) => {
       onChange(contact || null);
       selectedContact.current = contact?.euaUserId;
       queryContacts(contact ? formatContactLabel(contact) : '');
@@ -284,11 +281,11 @@ export default function CedarContactSelect({
       name={name}
       className={classNames(
         'margin-top-1',
-        'cedar-contact-select',
+        'okta-user-select',
         'usa-combo-box',
         'maxw-none',
-        { 'cedar-contact-select__warning': showWarning },
-        { 'cedar-contact-select__loading': loading },
+        { 'okta-user-select__warning': showWarning },
+        { 'okta-user-select__loading': loading },
         { 'opacity-70': disabled },
         className
       )}
@@ -317,7 +314,7 @@ export default function CedarContactSelect({
             }
           : undefined
       }
-      onChange={(newValue: SingleValue<CedarContactSelectOption>) =>
+      onChange={(newValue: SingleValue<OktaUserSelectOption>) =>
         updateContact(newValue?.value || null)
       }
       onBlur={() => {
@@ -334,7 +331,7 @@ export default function CedarContactSelect({
       defaultInputValue={searchTerm}
       inputValue={searchTerm}
       noOptionsMessage={() => t('No results')}
-      classNamePrefix="cedar-contact-select"
+      classNamePrefix="okta-user-select"
       instanceId={id}
       placeholder={false}
       backspaceRemovesValue={false}

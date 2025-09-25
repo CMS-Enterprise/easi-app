@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export default gql(/* GraphQL */ `
-  query GetCedarContacts($commonName: String!) {
-    cedarPersonsByCommonName(commonName: $commonName) {
+  query GetOktaUsers($searchTerm: String!) {
+    searchOktaUsers(searchTerm: $searchTerm) {
       commonName
       email
       euaUserId

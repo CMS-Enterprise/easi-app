@@ -36,7 +36,7 @@ const cedarContactsMock = (
   result: {
     data: {
       __typename: 'Query',
-      cedarPersonsByCommonName: [newAttendee.userInfo]
+      searchOktaUsers: [newAttendee.userInfo]
     }
   }
 });
