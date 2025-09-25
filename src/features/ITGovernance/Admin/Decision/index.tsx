@@ -3,6 +3,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Grid, Icon } from '@trussworks/react-uswds';
 import {
   SystemIntakeDecisionState,
+  SystemIntakeLCIDStatus,
   SystemIntakeTRBFollowUp
 } from 'gql/generated/graphql';
 
@@ -11,6 +12,7 @@ import {
   DescriptionDefinition,
   DescriptionTerm
 } from 'components/DescriptionGroup';
+import LcidStatusTag from 'components/LcidStatusTag';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import { RichTextViewer } from 'components/RichTextEditor';
@@ -52,7 +54,9 @@ const LcidInfoContainer = () => {
     lcidIssuedAt,
     lcidExpiresAt,
     lcidScope,
-    lcidCostBaseline
+    lcidCostBaseline,
+    lcidStatus,
+    lcidRetiresAt
   } = useDecision();
 
   // one place for icon + background
@@ -98,7 +102,13 @@ const LcidInfoContainer = () => {
             <>
               <div className="display-flex margin-bottom-2 flex-justify">
                 <h3 className="margin-y-0">{t('decision.lcidInfoHeader')}</h3>
-                <Tag className="bg-success-dark text-white">TODO Gary</Tag>
+                {lcidStatus && (
+                  <LcidStatusTag
+                    lcidStatus={lcidStatus}
+                    lcidExpiresAt={lcidExpiresAt}
+                    lcidRetiresAt={lcidRetiresAt}
+                  />
+                )}
               </div>
 
               <DefinitionCombo
@@ -166,6 +176,8 @@ type DecisionProps = {
   lcidScope?: string | null;
   lcidCostBaseline?: string | null;
   trbFollowUpRecommendation?: SystemIntakeTRBFollowUp | null;
+  lcidStatus?: SystemIntakeLCIDStatus | null;
+  lcidRetiresAt?: string | null;
 };
 
 const Decision = ({
