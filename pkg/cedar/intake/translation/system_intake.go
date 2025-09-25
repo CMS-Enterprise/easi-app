@@ -62,16 +62,10 @@ func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wir
 	}
 
 	obj := &intakemodels.EASIIntake{
-		IntakeID:    si.ID.String(),
-		UserEUA:     si.EUAUserID.ValueOrZero(),
-		Status:      string(clientStatus),
-		RequestType: string(si.RequestType),
-		// Requester:                       si.Requester,
-		// Component:                       si.Component.ValueOrZero(), // IS THIS the Requester Component?
-		// BusinessOwner:                   si.BusinessOwner.ValueOrZero(),
-		// BusinessOwnerComponent:          si.BusinessOwnerComponent.ValueOrZero(),
-		// ProductManager:                  si.ProductManager.ValueOrZero(),
-		// ProductManagerComponent:         si.ProductManagerComponent.ValueOrZero(),
+		IntakeID:                        si.ID.String(),
+		UserEUA:                         si.EUAUserID.ValueOrZero(),
+		Status:                          string(clientStatus),
+		RequestType:                     string(si.RequestType),
 		IssoName:                        si.ISSOName.Ptr(),
 		TrbCollaboratorName:             si.TRBCollaboratorName.Ptr(),
 		OitSecurityCollaboratorName:     si.OITSecurityCollaboratorName.Ptr(),
