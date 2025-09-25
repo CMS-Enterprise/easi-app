@@ -97,6 +97,6 @@ func SystemIntakeContactGetByID(ctx context.Context, id uuid.UUID) (*models.Syst
 }
 
 // SystemIntakeContactGetRequester fetches the requester contact for a system intake
-func SystemIntakeContactGetRequester(ctx context.Context, system_intake_id uuid.UUID) (*models.SystemIntakeContact, error) {
-	return dataloaders.SystemIntakeContactGetRequester(ctx, system_intake_id)
+func SystemIntakeContactGetRequester(ctx context.Context, systemIntakeID uuid.UUID) (*models.SystemIntakeContact, error) {
+	return dataloaders.SystemIntakeContactGetRequester(ctx, systemIntakeID)
 }
