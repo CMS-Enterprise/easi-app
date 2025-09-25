@@ -120,14 +120,31 @@ func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wir
 	}
 
 	// Populate contacts. For now, don't stop submission if there is an error fetching these
-	req, _ := contacts.Requester()
-	if req != nil {
-		reqAccount, _ := req.UserAccount(ctx)
+	requester, _ := contacts.Requester()
+	if requester != nil {
+		reqAccount, _ := requester.UserAccount(ctx)
 		if reqAccount != nil {
 			si.Requester = reqAccount.Username
 		}
 		// TODO: verify component is what CEDAR expects here, and that it is meant to come from the requester
-		si.Component = null.StringFrom(string(req.Component))
+		si.Component = null.StringFrom(string(requester.Component))
+	}
+	businessOwners, _ := contacts.BusinessOwners()
+	if len(businessOwners) > 0 {
+		boAccount, _ := businessOwners[0].UserAccount(ctx)
+		if boAccount != nil {
+			si.BusinessOwner = null.StringFrom(boAccount.Username)
+		}
+		si.BusinessOwnerComponent = null.StringFrom(string(businessOwners[0].Component))
+	}
+
+	productManagers, _ := contacts.ProductManagers()
+	if len(productManagers) > 0 {
+		pmAccount, _ := productManagers[0].UserAccount(ctx)
+		if pmAccount != nil {
+			si.ProductManager = null.StringFrom(pmAccount.Username)
+		}
+		si.ProductManagerComponent = null.StringFrom(string(productManagers[0].Component))
 	}
 
 	blob, err := json.Marshal(&obj)
