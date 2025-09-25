@@ -66,13 +66,16 @@ const RequestTypeForm = () => {
         const navigationLink = `/linked-systems/${id}?${linkqs || ''}`;
 
         switch (requestType) {
-          case 'NEW':
+          case SystemIntakeRequestType.NEW:
             history.push(`/governance-overview/${id}?${linkqs}`, { isNew });
             break;
-          case 'MAJOR_CHANGES':
+          case SystemIntakeRequestType.MAJOR_CHANGES:
             history.push(navigationLink, { isNew });
             break;
-          case 'RECOMPETE':
+          case SystemIntakeRequestType.RECOMPETE:
+            history.push(navigationLink, { isNew });
+            break;
+          case SystemIntakeRequestType.OTHER:
             history.push(navigationLink, { isNew });
             break;
           default:
@@ -213,6 +216,22 @@ const RequestTypeForm = () => {
           );
         })}
       </CardGroup>
+      <h3>{t('requestTypeForm.other.header')}</h3>
+      <Button
+        type="button"
+        unstyled
+        onClick={e => {
+          e.preventDefault();
+          if (isNew) {
+            handleCreateIntake(SystemIntakeRequestType.OTHER);
+          } else {
+            history.push(taskListUrl);
+          }
+        }}
+      >
+        {t('requestTypeForm.other.link')}
+        <Icon.ArrowForward aria-hidden />
+      </Button>
     </MainContent>
   );
 };
