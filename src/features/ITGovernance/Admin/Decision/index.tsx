@@ -91,7 +91,12 @@ const LcidInfoContainer = ({
           <DescriptionDefinition
             className="text-pre-wrap margin-bottom-2"
             // TODO: date format here
-            definition="a date will go here"
+            definition={
+              <RichTextViewer
+                // value={rejectionReason || t('decision.noRejectionReasons')}
+                value="TODO Date Format"
+              />
+            }
           />
 
           <DescriptionTerm
@@ -101,7 +106,7 @@ const LcidInfoContainer = ({
           <DescriptionDefinition
             className="text-pre-wrap margin-bottom-2"
             // TODO: date format here
-            definition="reason baby"
+            definition={<RichTextViewer value="TODO later" />}
           />
         </dl>
       </div>
@@ -133,7 +138,7 @@ const Decision = ({
         <>
           <UswdsReactLink
             to="resolutions"
-            className="usa-button margin-bottom-5"
+            className="usa-button margin-bottom-3"
             variant="unstyled"
           >
             {t('decision.issueDecisionButton')}
@@ -150,7 +155,10 @@ const Decision = ({
         </>
       ) : (
         // decisionState === all else
-        <LcidInfoContainer decisionState={decisionState} />
+        <LcidInfoContainer
+          decisionState={decisionState}
+          rejectionReason={rejectionReason}
+        />
       )}
     </>
   );
