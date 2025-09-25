@@ -85,7 +85,7 @@ export type ContactDetailsForm = {
   businessOwner: ContactFields & { sameAsRequester: boolean };
   productManager: ContactFields & { sameAsRequester: boolean };
   governanceTeams: {
-    isPresent: boolean;
+    isPresent: boolean | null | undefined;
     teams: CollaboratorFields;
   };
 };
