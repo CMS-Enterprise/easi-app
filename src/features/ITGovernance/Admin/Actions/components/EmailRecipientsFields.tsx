@@ -13,7 +13,7 @@ import {
 
 import AdditionalContacts from 'components/AdditionalContacts';
 import Alert from 'components/Alert';
-import CedarContactSelect from 'components/CedarContactSelect';
+import OktaUserSelect from 'components/CedarContactSelect';
 import CheckboxField from 'components/CheckboxField';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
@@ -119,7 +119,7 @@ const Recipient = ({
           <HelpText className="margin-bottom-1 margin-top-05">
             {t('technicalAssistance:emailRecipientFields.newRecipientHelpText')}
           </HelpText>
-          <CedarContactSelect
+          <OktaUserSelect
             id="IntakeForm-ContactCommonName"
             name="systemIntakeContact.commonName"
             value={activeContact}

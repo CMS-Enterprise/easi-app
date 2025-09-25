@@ -26,7 +26,7 @@ import AdditionalContacts from 'components/AdditionalContacts';
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
 import Alert from 'components/Alert';
 import AutoSave from 'components/AutoSave';
-import CedarContactSelect from 'components/CedarContactSelect';
+import OktaUserSelect from 'components/CedarContactSelect';
 import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
 import { ErrorAlert, ErrorAlertMessage } from 'components/ErrorAlert';
 import FeedbackBanner from 'components/FeedbackBanner';
@@ -434,7 +434,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               name="businessOwner.commonName"
               render={({ field: { ref, ...field } }) => {
                 return (
-                  <CedarContactSelect
+                  <OktaUserSelect
                     {...field}
                     inputRef={ref}
                     id="businessOwnerCommonName"
@@ -532,7 +532,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               name="productManager.commonName"
               render={({ field: { ref, ...field } }) => {
                 return (
-                  <CedarContactSelect
+                  <OktaUserSelect
                     {...field}
                     inputRef={ref}
                     id="productManagerCommonName"

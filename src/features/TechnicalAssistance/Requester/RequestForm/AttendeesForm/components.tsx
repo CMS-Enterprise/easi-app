@@ -29,7 +29,7 @@ import {
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
 import Alert from 'components/Alert';
 import { AvatarCircle } from 'components/Avatar/Avatar';
-import CedarContactSelect from 'components/CedarContactSelect';
+import OktaUserSelect from 'components/CedarContactSelect';
 import { ErrorAlertMessage } from 'components/ErrorAlert';
 import HelpText from 'components/HelpText';
 import UswdsReactLink from 'components/LinkWrapper';
@@ -164,7 +164,7 @@ const AttendeeFields = ({
                       </Trans>
                     </HelpText>
                   )}
-                  <CedarContactSelect
+                  <OktaUserSelect
                     id="euaUserId"
                     name="euaUserId"
                     value={activeAttendee.userInfo}

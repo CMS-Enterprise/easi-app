@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { GetCedarContactsDocument } from 'gql/generated/graphql';
 
-import CedarContactSelect from './index';
+import OktaUserSelect from './index';
 
 const contact = {
   commonName: 'Adeline Aarons',
@@ -25,7 +25,7 @@ describe('CedarContactSelect', () => {
     },
     result: {
       data: {
-        cedarPersonsByCommonName: [contact]
+        searchOktaUsers: [contact]
       }
     }
   };
@@ -35,7 +35,7 @@ describe('CedarContactSelect', () => {
 
     const { asFragment, getByTestId, findByText } = render(
       <MockedProvider mocks={[cedarContactsQuery]} addTypename={false}>
-        <CedarContactSelect
+        <OktaUserSelect
           id="cedarContactSelect"
           name="cedarContactSelect"
           onChange={() => null}

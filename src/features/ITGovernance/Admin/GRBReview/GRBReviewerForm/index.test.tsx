@@ -79,7 +79,7 @@ const cedarContactsQuery = (
   result: {
     data: {
       __typename: 'Query',
-      cedarPersonsByCommonName: [contact]
+      searchOktaUsers: [contact]
     }
   }
 });

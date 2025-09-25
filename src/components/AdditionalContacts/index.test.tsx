@@ -86,7 +86,7 @@ const cedarContactsQuery: MockedQuery<
   result: {
     data: {
       __typename: 'Query',
-      cedarPersonsByCommonName: [
+      searchOktaUsers: [
         {
           __typename: 'UserInfo',
           commonName: additionalContacts[0].commonName,

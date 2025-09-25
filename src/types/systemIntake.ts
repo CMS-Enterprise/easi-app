@@ -158,7 +158,7 @@ export type SubmitDatesForm = {
 };
 
 /** Cedar contact properties */
-export type CedarContactProps = {
+export type OktaUserProps = {
   euaUserId: string | null;
   commonName: string;
   email?: string;

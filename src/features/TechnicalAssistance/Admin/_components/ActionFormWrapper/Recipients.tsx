@@ -13,7 +13,7 @@ import { PersonRole } from 'gql/generated/graphql';
 
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
 import Alert from 'components/Alert';
-import CedarContactSelect from 'components/CedarContactSelect';
+import OktaUserSelect from 'components/CedarContactSelect';
 import CheckboxField from 'components/CheckboxField';
 import FieldGroup from 'components/FieldGroup';
 import HelpText from 'components/HelpText';
@@ -424,7 +424,7 @@ const RecipientsForm = ({
                                   {error && (
                                     <ErrorMessage>{error.message}</ErrorMessage>
                                   )}
-                                  <CedarContactSelect
+                                  <OktaUserSelect
                                     id={field.name}
                                     {...{ ...field, ref: null }}
                                     className="maxw-none"

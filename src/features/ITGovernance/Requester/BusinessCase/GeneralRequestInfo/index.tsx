@@ -6,7 +6,7 @@ import { Field, Form, Formik, FormikProps } from 'formik';
 
 import Alert from 'components/Alert';
 import AutoSave from 'components/AutoSave';
-import CedarContactSelect from 'components/CedarContactSelect';
+import OktaUserSelect from 'components/CedarContactSelect';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
 import HelpText from 'components/HelpText';
@@ -170,7 +170,7 @@ const GeneralRequestInfo = ({
                   {flatErrors['businessOwner.name']}
                 </FieldErrorMsg>
                 <Field
-                  as={CedarContactSelect}
+                  as={OktaUserSelect}
                   name="businessOwner.name"
                   error={!!flatErrors['businessOwner.name']}
                   id="BusinessCase-BusinessOwnerName"

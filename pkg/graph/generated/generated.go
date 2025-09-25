@@ -681,7 +681,6 @@ type ComplexityRoot struct {
 		CedarBudget                      func(childComplexity int, cedarSystemID string) int
 		CedarBudgetSystemCost            func(childComplexity int, cedarSystemID string) int
 		CedarContractsBySystem           func(childComplexity int, cedarSystemID string) int
-		CedarPersonsByCommonName         func(childComplexity int, commonName string) int
 		CedarSoftwareProducts            func(childComplexity int, cedarSystemID string) int
 		CedarSubSystems                  func(childComplexity int, cedarSystemID string) int
 		CedarSystem                      func(childComplexity int, cedarSystemID string) int
@@ -699,6 +698,7 @@ type ComplexityRoot struct {
 		RequesterUpdateEmailData         func(childComplexity int) int
 		RoleTypes                        func(childComplexity int) int
 		Roles                            func(childComplexity int, cedarSystemID string, roleTypeID *string) int
+		SearchOktaUsers                  func(childComplexity int, searchTerm string) int
 		SystemIntake                     func(childComplexity int, id uuid.UUID) int
 		SystemIntakeContacts             func(childComplexity int, id uuid.UUID) int
 		SystemIntakeSystem               func(childComplexity int, systemIntakeSystemID uuid.UUID) int
@@ -1415,7 +1415,7 @@ type QueryResolver interface {
 	CedarAuthorityToOperate(ctx context.Context, cedarSystemID string) ([]*models.CedarAuthorityToOperate, error)
 	CedarBudget(ctx context.Context, cedarSystemID string) ([]*models.CedarBudget, error)
 	CedarBudgetSystemCost(ctx context.Context, cedarSystemID string) (*models.CedarBudgetSystemCost, error)
-	CedarPersonsByCommonName(ctx context.Context, commonName string) ([]*models.UserInfo, error)
+	SearchOktaUsers(ctx context.Context, searchTerm string) ([]*models.UserInfo, error)
 	CedarSoftwareProducts(ctx context.Context, cedarSystemID string) (*models.CedarSoftwareProducts, error)
 	CedarSystem(ctx context.Context, cedarSystemID string) (*models.CedarSystem, error)
 	CedarSystems(ctx context.Context) ([]*models.CedarSystem, error)
@@ -5432,18 +5432,6 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Query.CedarContractsBySystem(childComplexity, args["cedarSystemId"].(string)), true
 
-	case "Query.cedarPersonsByCommonName":
-		if e.complexity.Query.CedarPersonsByCommonName == nil {
-			break
-		}
-
-		args, err := ec.field_Query_cedarPersonsByCommonName_args(ctx, rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.CedarPersonsByCommonName(childComplexity, args["commonName"].(string)), true
-
 	case "Query.cedarSoftwareProducts":
 		if e.complexity.Query.CedarSoftwareProducts == nil {
 			break
@@ -5612,6 +5600,18 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Query.Roles(childComplexity, args["cedarSystemId"].(string), args["roleTypeID"].(*string)), true
+
+	case "Query.searchOktaUsers":
+		if e.complexity.Query.SearchOktaUsers == nil {
+			break
+		}
+
+		args, err := ec.field_Query_searchOktaUsers_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.SearchOktaUsers(childComplexity, args["searchTerm"].(string)), true
 
 	case "Query.systemIntake":
 		if e.complexity.Query.SystemIntake == nil {
@@ -11854,7 +11854,7 @@ type Query {
   cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!
   cedarBudget(cedarSystemID: String!): [CedarBudget!]
   cedarBudgetSystemCost(cedarSystemID: String!): CedarBudgetSystemCost
-  cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
+  searchOktaUsers(searchTerm: String!): [UserInfo!]!
   cedarSoftwareProducts(cedarSystemId: String!): CedarSoftwareProducts
   cedarSystem(cedarSystemId: String!): CedarSystem
   cedarSystems: [CedarSystem!]!
@@ -13486,17 +13486,6 @@ func (ec *executionContext) field_Query_cedarContractsBySystem_args(ctx context.
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_cedarPersonsByCommonName_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
-	var err error
-	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "commonName", ec.unmarshalNString2string)
-	if err != nil {
-		return nil, err
-	}
-	args["commonName"] = arg0
-	return args, nil
-}
-
 func (ec *executionContext) field_Query_cedarSoftwareProducts_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -13624,6 +13613,17 @@ func (ec *executionContext) field_Query_roles_args(ctx context.Context, rawArgs 
 		return nil, err
 	}
 	args["roleTypeID"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_searchOktaUsers_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "searchTerm", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["searchTerm"] = arg0
 	return args, nil
 }
 
@@ -40621,8 +40621,8 @@ func (ec *executionContext) fieldContext_Query_cedarBudgetSystemCost(ctx context
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_cedarPersonsByCommonName(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_cedarPersonsByCommonName(ctx, field)
+func (ec *executionContext) _Query_searchOktaUsers(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_searchOktaUsers(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -40635,7 +40635,7 @@ func (ec *executionContext) _Query_cedarPersonsByCommonName(ctx context.Context,
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().CedarPersonsByCommonName(rctx, fc.Args["commonName"].(string))
+		return ec.resolvers.Query().SearchOktaUsers(rctx, fc.Args["searchTerm"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -40652,7 +40652,7 @@ func (ec *executionContext) _Query_cedarPersonsByCommonName(ctx context.Context,
 	return ec.marshalNUserInfo2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUserInfoᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_cedarPersonsByCommonName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_searchOktaUsers(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -40681,7 +40681,7 @@ func (ec *executionContext) fieldContext_Query_cedarPersonsByCommonName(ctx cont
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_cedarPersonsByCommonName_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_searchOktaUsers_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -72486,7 +72486,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
-		case "cedarPersonsByCommonName":
+		case "searchOktaUsers":
 			field := field
 
 			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
@@ -72495,7 +72495,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_cedarPersonsByCommonName(ctx, field)
+				res = ec._Query_searchOktaUsers(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
