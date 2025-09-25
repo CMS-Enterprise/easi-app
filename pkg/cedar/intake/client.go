@@ -60,6 +60,7 @@ type Client struct {
 	auth             runtime.ClientAuthInfoWriter
 	sdk              *apiclient.CEDARIntake
 	hc               *http.Client
+	buildDataloaders dataloaders.BuildDataloaders
 }
 
 // CheckConnection hits the CEDAR Intake API `/healthcheck` endpoint to verify
@@ -133,6 +134,8 @@ func (c *Client) publishIntakeObject(ctx context.Context, model translation.Inta
 		return nil
 	}
 
+	// TODO verify we need to rebuild this, but seems a good idea
+	ctx = dataloaders.CTXWithLoaders(ctx, c.buildDataloaders)
 	input, err := model.CreateIntakeModel(ctx) //note this requires a data loader on the context
 
 	if err != nil {

@@ -3,8 +3,11 @@ package translation
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"strings"
 	"time"
+
+	"github.com/guregu/null"
 
 	wire "github.com/cms-enterprise/easi-app/pkg/cedar/intake/gen/models"
 	intakemodels "github.com/cms-enterprise/easi-app/pkg/cedar/intake/models"
@@ -37,6 +40,12 @@ func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wir
 		})
 	}
 
+	// TODO, should we rebuild the dataloaders here?
+	contacts, err := resolvers.SystemIntakeContactsGetBySystemIntakeID(ctx, si.ID)
+	if err != nil {
+		return nil, fmt.Errorf("error fetching contacts for system intake %s: %w", si.ID.String(), err)
+	}
+
 	clientStatus, err := resolvers.CalculateSystemIntakeAdminStatus(ctx, helpers.PointerTo(models.SystemIntake(*si)))
 	if err != nil {
 		return nil, err
@@ -53,16 +62,16 @@ func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wir
 	}
 
 	obj := &intakemodels.EASIIntake{
-		IntakeID:                        si.ID.String(),
-		UserEUA:                         si.EUAUserID.ValueOrZero(),
-		Status:                          string(clientStatus),
-		RequestType:                     string(si.RequestType),
-		Requester:                       si.Requester,
-		Component:                       si.Component.ValueOrZero(),
-		BusinessOwner:                   si.BusinessOwner.ValueOrZero(),
-		BusinessOwnerComponent:          si.BusinessOwnerComponent.ValueOrZero(),
-		ProductManager:                  si.ProductManager.ValueOrZero(),
-		ProductManagerComponent:         si.ProductManagerComponent.ValueOrZero(),
+		IntakeID:    si.ID.String(),
+		UserEUA:     si.EUAUserID.ValueOrZero(),
+		Status:      string(clientStatus),
+		RequestType: string(si.RequestType),
+		// Requester:                       si.Requester,
+		// Component:                       si.Component.ValueOrZero(), // IS THIS the Requester Component?
+		// BusinessOwner:                   si.BusinessOwner.ValueOrZero(),
+		// BusinessOwnerComponent:          si.BusinessOwnerComponent.ValueOrZero(),
+		// ProductManager:                  si.ProductManager.ValueOrZero(),
+		// ProductManagerComponent:         si.ProductManagerComponent.ValueOrZero(),
 		IssoName:                        si.ISSOName.Ptr(),
 		TrbCollaboratorName:             si.TRBCollaboratorName.Ptr(),
 		OitSecurityCollaboratorName:     si.OITSecurityCollaboratorName.Ptr(),
@@ -108,6 +117,17 @@ func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wir
 		LifecycleExpiresAt:              pStr(strDate(si.LifecycleExpiresAt)),
 		LifecycleCostBaseline:           si.LifecycleCostBaseline.Ptr(),
 		// ScheduledProductionDate:         pStr(""), // TODO: fill this out after field is added to intake
+	}
+
+	// Populate contacts. For now, don't stop submission if there is an error fetching these
+	req, _ := contacts.Requester()
+	if req != nil {
+		reqAccount, _ := req.UserAccount(ctx)
+		if reqAccount != nil {
+			si.Requester = reqAccount.Username
+		}
+		// TODO: verify component is what CEDAR expects here, and that it is meant to come from the requester
+		si.Component = null.StringFrom(string(req.Component))
 	}
 
 	blob, err := json.Marshal(&obj)
