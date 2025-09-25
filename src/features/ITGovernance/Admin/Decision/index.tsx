@@ -16,7 +16,6 @@ import LcidStatusTag from 'components/LcidStatusTag';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import { RichTextViewer } from 'components/RichTextEditor';
-import Tag from 'components/Tag';
 import { formatDateLocal } from 'utils/date';
 
 // minimal context to avoid drilling
@@ -127,13 +126,24 @@ const LcidInfoContainer = () => {
                   />
                 </Grid>
                 <Grid tablet={{ col: 6 }}>
-                  <DefinitionCombo
-                    term={t('decision.terms.expirationDate')}
-                    definition={
-                      formatDateLocal(lcidExpiresAt, 'MM/dd/yyyy') ??
-                      t('decision.noDateSet')
-                    }
-                  />
+                  {lcidStatus !== SystemIntakeLCIDStatus.RETIRED && (
+                    <DefinitionCombo
+                      term={t('decision.terms.expirationDate')}
+                      definition={
+                        formatDateLocal(lcidExpiresAt, 'MM/dd/yyyy') ??
+                        t('decision.noDateSet')
+                      }
+                    />
+                  )}
+                  {lcidStatus === SystemIntakeLCIDStatus.RETIRED && (
+                    <DefinitionCombo
+                      term={t('decision.terms.retirementDate')}
+                      definition={
+                        formatDateLocal(lcidRetiresAt, 'MM/dd/yyyy') ??
+                        t('decision.noDateSet')
+                      }
+                    />
+                  )}
                 </Grid>
               </div>
 

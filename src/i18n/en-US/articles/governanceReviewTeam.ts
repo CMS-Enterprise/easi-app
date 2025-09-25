@@ -286,6 +286,8 @@ const governanceReviewTeam = {
       lcidNumber: 'LCID number',
       issueDate: 'Issue date',
       expirationDate: 'Expiration date',
+      retirementDate: 'Retirement date',
+      plannedRetirementDate: 'Planned retirement date',
       mostRecentUpdate: 'Most recent update',
       scope: 'Scope',
       projectCostBaseline: 'Project cost baseline',
