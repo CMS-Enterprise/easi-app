@@ -27,19 +27,17 @@ const useDecision = () => {
 
 const DefinitionCombo = ({
   term,
-  definition,
-  isLast
+  definition
 }: {
   term: React.ReactNode;
-  definition: React.ReactNode;
-  isLast?: boolean;
+  definition: string | undefined;
 }) => {
   return (
     <>
       <DescriptionTerm term={term} className="margin-bottom-0" />
       <DescriptionDefinition
-        className={`text-pre-wrap ${isLast ? 'margin-bottom-0' : 'margin-bottom-2'}`}
-        definition={definition}
+        className="text-pre-wrap margin-bottom-0"
+        definition={<RichTextViewer value={definition} />}
       />
     </>
   );
@@ -105,20 +103,26 @@ const LcidInfoContainer = () => {
 
               <DefinitionCombo
                 term={t('decision.terms.lcidNumber')}
-                definition={lcid!}
+                definition={lcid ?? t('lifecycleID.noLCID')}
               />
 
               <div className="grid-row">
                 <Grid tablet={{ col: 6 }}>
                   <DefinitionCombo
                     term={t('decision.terms.issueDate')}
-                    definition={formatDateLocal(lcidIssuedAt!, 'MM/dd/yyyy')}
+                    definition={
+                      formatDateLocal(lcidIssuedAt, 'MM/dd/yyyy') ??
+                      t('decision.noDateSet')
+                    }
                   />
                 </Grid>
                 <Grid tablet={{ col: 6 }}>
                   <DefinitionCombo
                     term={t('decision.terms.expirationDate')}
-                    definition={formatDateLocal(lcidExpiresAt!, 'MM/dd/yyyy')}
+                    definition={
+                      formatDateLocal(lcidExpiresAt, 'MM/dd/yyyy') ??
+                      t('decision.noDateSet')
+                    }
                   />
                 </Grid>
               </div>
@@ -128,7 +132,6 @@ const LcidInfoContainer = () => {
                 definition={lcidScope ?? t('notes.extendLcid.noScope')}
               />
               <DefinitionCombo
-                isLast
                 term={t('decision.terms.projectCostBaseline')}
                 definition={
                   lcidCostBaseline ?? t('notes.extendLcid.noCostBaseline')
@@ -142,7 +145,6 @@ const LcidInfoContainer = () => {
                 definition="TODO Date Format"
               />
               <DefinitionCombo
-                isLast
                 term={t('decision.reason')}
                 definition={rejectionReason || t('decision.noRejectionReasons')}
               />
@@ -166,14 +168,12 @@ type DecisionProps = {
   trbFollowUpRecommendation?: SystemIntakeTRBFollowUp | null;
 };
 
-// const Decision = (props: DecisionProps) => {
 const Decision = ({
   decisionNextSteps,
   decisionState,
   trbFollowUpRecommendation,
   ...rest
 }: DecisionProps) => {
-  // const { decisionNextSteps, decisionState, trbFollowUpRecommendation } = props;
   const { t } = useTranslation('governanceReviewTeam');
 
   return (
@@ -204,9 +204,7 @@ const Decision = ({
       ) : (
         <DecisionContext.Provider
           value={{
-            decisionNextSteps,
             decisionState,
-            trbFollowUpRecommendation,
             ...rest
           }}
         >
@@ -214,23 +212,19 @@ const Decision = ({
           {decisionState !== SystemIntakeDecisionState.NOT_GOVERNANCE && (
             <dl className="padding-x-2">
               <DefinitionCombo
-                isLast
                 term={t('decision.terms.nextSteps')}
                 definition={
-                  <RichTextViewer
-                    value={
-                      decisionNextSteps || t('notes.extendLcid.noNextSteps')
-                    }
-                  />
+                  decisionNextSteps || t('notes.extendLcid.noNextSteps')
                 }
               />
-              <DefinitionCombo
-                term={t('decision.terms.consultTRB')}
-                definition={
-                  trbFollowUpRecommendation &&
-                  t(`action:issueLCID.trbFollowup.${trbFollowUpRecommendation}`)
-                }
-              />
+              {trbFollowUpRecommendation && (
+                <DefinitionCombo
+                  term={t('decision.terms.consultTRB')}
+                  definition={t(
+                    `action:issueLCID.trbFollowup.${trbFollowUpRecommendation}`
+                  )}
+                />
+              )}
             </dl>
           )}
         </DecisionContext.Provider>
