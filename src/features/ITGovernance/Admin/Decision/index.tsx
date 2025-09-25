@@ -3,7 +3,8 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Grid, Icon } from '@trussworks/react-uswds';
 import {
   // GetSystemIntakeQuery,
-  SystemIntakeDecisionState
+  SystemIntakeDecisionState,
+  SystemIntakeTRBFollowUp
 } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
@@ -13,7 +14,7 @@ import {
 } from 'components/DescriptionGroup';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
-// import { RichTextViewer } from 'components/RichTextEditor';
+import { RichTextViewer } from 'components/RichTextEditor';
 import Tag from 'components/Tag';
 import { formatDateLocal } from 'utils/date';
 
@@ -55,8 +56,8 @@ const DefinitionCombo = ({
   definition,
   isLast
 }: {
-  term: string;
-  definition: string;
+  term: React.ReactNode;
+  definition: React.ReactNode;
   isLast?: boolean;
 }) => {
   return (
@@ -78,14 +79,6 @@ const LcidInfoContainer = ({
   lcidExpiresAt,
   lcidScope,
   lcidCostBaseline
-  // }: {
-  //   decisionState: SystemIntakeDecisionState;
-  //   rejectionReason?: string | null;
-  //   lcid?: string | null;
-  //   lcidIssuedAt?: string | null;
-  //   lcidExpiresAt?: string | null;
-  //   lcidScope?: string | null;
-  //   lcidCostBaseline?: string | null;
 }: DecisionProps) => {
   const { t } = useTranslation('governanceReviewTeam');
 
@@ -105,7 +98,7 @@ const LcidInfoContainer = ({
   };
 
   return (
-    <>
+    <div className="margin-bottom-3">
       <div
         className={`margin-top-5 padding-2 display-flex flex-align-center ${decisionStateBackgroundColorMap[decisionState]}`}
       >
@@ -171,7 +164,7 @@ const LcidInfoContainer = ({
           )}
         </dl>
       </div>
-    </>
+    </div>
   );
 };
 
@@ -184,6 +177,7 @@ type DecisionProps = {
   lcidExpiresAt?: string | null;
   lcidScope?: string | null;
   lcidCostBaseline?: string | null;
+  trbFollowUpRecommendation?: SystemIntakeTRBFollowUp | null;
 };
 
 const Decision = ({
@@ -194,7 +188,8 @@ const Decision = ({
   lcidIssuedAt,
   lcidExpiresAt,
   lcidScope,
-  lcidCostBaseline
+  lcidCostBaseline,
+  trbFollowUpRecommendation
 }: DecisionProps) => {
   const { t } = useTranslation('governanceReviewTeam');
 
@@ -236,6 +231,25 @@ const Decision = ({
           lcidCostBaseline={lcidCostBaseline}
         />
       )}
+
+      <dl className="padding-x-2">
+        <DefinitionCombo
+          isLast
+          term={t('decision.terms.nextSteps')}
+          definition={
+            <RichTextViewer
+              value={decisionNextSteps || t('notes.extendLcid.noNextSteps')}
+            />
+          }
+        />
+        <DefinitionCombo
+          term={t('decision.terms.consultTRB')}
+          definition={
+            trbFollowUpRecommendation &&
+            t(`action:issueLCID.trbFollowup.${trbFollowUpRecommendation}`)
+          }
+        />
+      </dl>
     </>
   );
 };
