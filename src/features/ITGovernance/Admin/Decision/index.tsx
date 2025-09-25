@@ -1,64 +1,80 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Icon } from '@trussworks/react-uswds';
-import { SystemIntakeDecisionState } from 'gql/generated/graphql';
+import { Grid, Icon } from '@trussworks/react-uswds';
+import {
+  // GetSystemIntakeQuery,
+  SystemIntakeDecisionState
+} from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import {
   DescriptionDefinition,
-  DescriptionList,
   DescriptionTerm
 } from 'components/DescriptionGroup';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
-import { RichTextViewer } from 'components/RichTextEditor';
+// import { RichTextViewer } from 'components/RichTextEditor';
 import Tag from 'components/Tag';
 
-type RejectedProps = {
-  rejectionReason?: string | null;
-  decisionNextSteps?: string | null;
-};
+// type RejectedProps = {
+//   rejectionReason?: string | null;
+//   decisionNextSteps?: string | null;
+// };
 
-type DecisionProps = {
-  rejectionReason?: string | null;
-  decisionNextSteps?: string | null;
-  decisionState: SystemIntakeDecisionState;
-};
+// const Rejected = ({ rejectionReason, decisionNextSteps }: RejectedProps) => {
+//   const { t } = useTranslation('governanceReviewTeam');
 
-const Rejected = ({ rejectionReason, decisionNextSteps }: RejectedProps) => {
-  const { t } = useTranslation('governanceReviewTeam');
+//   return (
+//     <DescriptionList title={t('decision.decisionSectionTitle')}>
+//       <DescriptionTerm term={t('decision.rejectionReason')} />
+//       <DescriptionDefinition
+//         className="text-pre-wrap"
+//         definition={
+//           <RichTextViewer
+//             value={rejectionReason || t('decision.noRejectionReasons')}
+//           />
+//         }
+//       />
 
+//       <DescriptionTerm term={t('decision.nextSteps')} />
+//       <DescriptionDefinition
+//         className="text-pre-wrap"
+//         definition={
+//           <RichTextViewer
+//             value={decisionNextSteps || t('notes.extendLcid.noNextSteps')}
+//           />
+//         }
+//       />
+//     </DescriptionList>
+//   );
+// };
+
+const DefinitionCombo = ({
+  term,
+  definition
+}: {
+  term: string;
+  definition: string;
+}) => {
   return (
-    <DescriptionList title={t('decision.decisionSectionTitle')}>
-      <DescriptionTerm term={t('decision.rejectionReason')} />
+    <>
+      <DescriptionTerm term={term} className="margin-bottom-0" />
       <DescriptionDefinition
-        className="text-pre-wrap"
-        definition={
-          <RichTextViewer
-            value={rejectionReason || t('decision.noRejectionReasons')}
-          />
-        }
+        className="text-pre-wrap margin-bottom-2"
+        definition={definition}
       />
-
-      <DescriptionTerm term={t('decision.nextSteps')} />
-      <DescriptionDefinition
-        className="text-pre-wrap"
-        definition={
-          <RichTextViewer
-            value={decisionNextSteps || t('notes.extendLcid.noNextSteps')}
-          />
-        }
-      />
-    </DescriptionList>
+    </>
   );
 };
 
 const LcidInfoContainer = ({
   decisionState,
-  rejectionReason
+  rejectionReason,
+  lcid
 }: {
   decisionState: SystemIntakeDecisionState;
   rejectionReason?: string | null;
+  lcid?: string | null;
 }) => {
   const { t } = useTranslation('governanceReviewTeam');
 
@@ -93,49 +109,69 @@ const LcidInfoContainer = ({
       </div>
       <div className="bg-base-lightest padding-3">
         <dl className="easi-dl">
-          <div className="display-flex margin-bottom-2 flex-justify">
-            <h3 className="margin-y-0">{t('decision.lcidInfoHeader')}</h3>
-            <Tag className="bg-success-dark text-white">TODO Gary</Tag>
-          </div>
-
-          <DescriptionTerm
-            term={t('decision.decisionDate')}
-            className="margin-bottom-0"
-          />
-          <DescriptionDefinition
-            className="text-pre-wrap margin-bottom-2"
-            // TODO: date format here
-            definition={
-              <RichTextViewer
-                // value={rejectionReason || t('decision.noRejectionReasons')}
-                value="TODO Date Format"
+          {decisionState === SystemIntakeDecisionState.LCID_ISSUED ? (
+            <>
+              <div className="display-flex margin-bottom-2 flex-justify">
+                <h3 className="margin-y-0">{t('decision.lcidInfoHeader')}</h3>
+                <Tag className="bg-success-dark text-white">TODO Gary</Tag>
+              </div>
+              <DefinitionCombo
+                term={t('decision.terms.lcidNumber')}
+                definition={lcid!}
               />
-            }
-          />
-
-          <DescriptionTerm
-            term={t('decision.reason')}
-            className="margin-bottom-0"
-          />
-          <DescriptionDefinition
-            className="text-pre-wrap margin-bottom-2"
-            // TODO: date format here
-            definition={
-              <RichTextViewer
-                value={rejectionReason || t('decision.noRejectionReasons')}
+              <div className="grid-row">
+                <Grid tablet={{ col: 6 }}>
+                  <DefinitionCombo
+                    term={t('decision.terms.issueDate')}
+                    definition={lcid!}
+                  />
+                </Grid>
+                <Grid tablet={{ col: 6 }}>
+                  <DefinitionCombo
+                    term={t('decision.terms.expirationDate')}
+                    definition={lcid!}
+                  />
+                </Grid>
+              </div>
+              <DefinitionCombo
+                term={t('decision.terms.scope')}
+                definition={lcid!}
               />
-            }
-          />
+              <DefinitionCombo
+                term={t('decision.terms.projectCostBaseline')}
+                definition={lcid!}
+              />
+            </>
+          ) : (
+            <>
+              <DefinitionCombo
+                term={t('decision.decisionDate')}
+                definition="TODO Date Format"
+              />
+              <DefinitionCombo
+                term={t('decision.reason')}
+                definition={rejectionReason || t('decision.noRejectionReasons')}
+              />
+            </>
+          )}
         </dl>
       </div>
     </>
   );
 };
 
+type DecisionProps = {
+  rejectionReason?: string | null;
+  decisionNextSteps?: string | null;
+  decisionState: SystemIntakeDecisionState;
+  lcid?: string | null;
+};
+
 const Decision = ({
   rejectionReason,
   decisionNextSteps,
-  decisionState
+  decisionState,
+  lcid
 }: DecisionProps) => {
   const { t } = useTranslation('governanceReviewTeam');
 
@@ -170,6 +206,7 @@ const Decision = ({
         <LcidInfoContainer
           decisionState={decisionState}
           rejectionReason={rejectionReason}
+          lcid={lcid}
         />
       )}
     </>
