@@ -281,6 +281,18 @@ const governanceReviewTeam = {
     issueDecisionButton: 'Issue decision',
     noDecisionAlert:
       'A decision has not yet been issued for this request. If you would like to take an action to issue a decision, use the button above or <link1>visit the Actions page</link1> of this request.',
+    lcidInfoHeader: 'LCID information',
+    terms: {
+      lcidNumber: 'LCID number',
+      issueDate: 'Issue date',
+      expirationDate: 'Expiration date',
+      mostRecentUpdate: 'Most recent update',
+      scope: 'Scope',
+      projectCostBaseline: 'Project cost baseline',
+      nextSteps: 'Next steps',
+      consultTRB:
+        'Should this team consult with the Technical Review Board (TRB) as a part of their next steps?'
+    },
     decisionDate: 'Decision date',
     reason: 'Reason',
     decisionState_LCID_ISSUED:
