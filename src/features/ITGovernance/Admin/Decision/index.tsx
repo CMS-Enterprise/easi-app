@@ -15,6 +15,7 @@ import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 // import { RichTextViewer } from 'components/RichTextEditor';
 import Tag from 'components/Tag';
+import { formatDateLocal } from 'utils/date';
 
 // type RejectedProps = {
 //   rejectionReason?: string | null;
@@ -51,16 +52,18 @@ import Tag from 'components/Tag';
 
 const DefinitionCombo = ({
   term,
-  definition
+  definition,
+  isLast
 }: {
   term: string;
   definition: string;
+  isLast?: boolean;
 }) => {
   return (
     <>
       <DescriptionTerm term={term} className="margin-bottom-0" />
       <DescriptionDefinition
-        className="text-pre-wrap margin-bottom-2"
+        className={`text-pre-wrap ${isLast ? 'margin-bottom-0' : 'margin-bottom-2'}`}
         definition={definition}
       />
     </>
@@ -70,12 +73,20 @@ const DefinitionCombo = ({
 const LcidInfoContainer = ({
   decisionState,
   rejectionReason,
-  lcid
-}: {
-  decisionState: SystemIntakeDecisionState;
-  rejectionReason?: string | null;
-  lcid?: string | null;
-}) => {
+  lcid,
+  lcidIssuedAt,
+  lcidExpiresAt,
+  lcidScope,
+  lcidCostBaseline
+  // }: {
+  //   decisionState: SystemIntakeDecisionState;
+  //   rejectionReason?: string | null;
+  //   lcid?: string | null;
+  //   lcidIssuedAt?: string | null;
+  //   lcidExpiresAt?: string | null;
+  //   lcidScope?: string | null;
+  //   lcidCostBaseline?: string | null;
+}: DecisionProps) => {
   const { t } = useTranslation('governanceReviewTeam');
 
   const IconComponent =
@@ -123,23 +134,26 @@ const LcidInfoContainer = ({
                 <Grid tablet={{ col: 6 }}>
                   <DefinitionCombo
                     term={t('decision.terms.issueDate')}
-                    definition={lcid!}
+                    definition={formatDateLocal(lcidIssuedAt!, 'MM/dd/yyyy')}
                   />
                 </Grid>
                 <Grid tablet={{ col: 6 }}>
                   <DefinitionCombo
                     term={t('decision.terms.expirationDate')}
-                    definition={lcid!}
+                    definition={formatDateLocal(lcidExpiresAt!, 'MM/dd/yyyy')}
                   />
                 </Grid>
               </div>
               <DefinitionCombo
                 term={t('decision.terms.scope')}
-                definition={lcid!}
+                definition={lcidScope ?? t('notes.extendLcid.noScope')}
               />
               <DefinitionCombo
+                isLast
                 term={t('decision.terms.projectCostBaseline')}
-                definition={lcid!}
+                definition={
+                  lcidCostBaseline ?? t('notes.extendLcid.noCostBaseline')
+                }
               />
             </>
           ) : (
@@ -149,6 +163,7 @@ const LcidInfoContainer = ({
                 definition="TODO Date Format"
               />
               <DefinitionCombo
+                isLast
                 term={t('decision.reason')}
                 definition={rejectionReason || t('decision.noRejectionReasons')}
               />
@@ -165,13 +180,21 @@ type DecisionProps = {
   decisionNextSteps?: string | null;
   decisionState: SystemIntakeDecisionState;
   lcid?: string | null;
+  lcidIssuedAt?: string | null;
+  lcidExpiresAt?: string | null;
+  lcidScope?: string | null;
+  lcidCostBaseline?: string | null;
 };
 
 const Decision = ({
   rejectionReason,
   decisionNextSteps,
   decisionState,
-  lcid
+  lcid,
+  lcidIssuedAt,
+  lcidExpiresAt,
+  lcidScope,
+  lcidCostBaseline
 }: DecisionProps) => {
   const { t } = useTranslation('governanceReviewTeam');
 
@@ -207,6 +230,10 @@ const Decision = ({
           decisionState={decisionState}
           rejectionReason={rejectionReason}
           lcid={lcid}
+          lcidIssuedAt={lcidIssuedAt}
+          lcidExpiresAt={lcidExpiresAt}
+          lcidScope={lcidScope}
+          lcidCostBaseline={lcidCostBaseline}
         />
       )}
     </>
