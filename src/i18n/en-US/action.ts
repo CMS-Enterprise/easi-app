@@ -304,8 +304,9 @@ const action = {
     EXPIRED: 'Expired',
     EXPIRING_SOON: 'Due soon',
     RETIRED: 'Retired',
-    RETIRING_SOON: 'Retiring soon'
+    RETIRING_SOON: 'Active'
   },
+  retiringSoonDate: 'Retiring soon ({{date}})',
   pastDateAlert:
     "You've entered a date that is in the past. Please double-check to make sure this date is accurate.",
   retireLcid: {

@@ -4,6 +4,8 @@ import { Icon } from '@trussworks/react-uswds';
 import { SystemIntakeLCIDStatus } from 'gql/generated/graphql';
 import { DateTime } from 'luxon';
 
+import { formatDateLocal } from 'utils/date';
+
 import Tag from '../Tag';
 
 type LcidTagStatus = SystemIntakeLCIDStatus | 'EXPIRING_SOON' | 'RETIRING_SOON';
@@ -11,7 +13,7 @@ type LcidTagStatus = SystemIntakeLCIDStatus | 'EXPIRING_SOON' | 'RETIRING_SOON';
 export const lcidStatusClassName: Record<LcidTagStatus, string> = {
   ISSUED: 'bg-success-dark text-white',
   RETIRED: 'border-2px border-base text-base',
-  RETIRING_SOON: 'bg-warning',
+  RETIRING_SOON: 'bg-success-dark text-white',
   EXPIRED: 'bg-secondary-dark text-white',
   EXPIRING_SOON: 'bg-warning'
 };
@@ -57,9 +59,7 @@ const LcidStatusTag = ({
     if (expiresAtDate < cutoffDate) {
       // If retire date is sooner than expire date, return 'RETIRING_SOON'
       if (retiresAtDate < expiresAtDate) {
-        // Latest design has "Active" text and retiring soon date on the side
-        // https://www.figma.com/design/ChzAP34A2DVvQUNQwD7lCt/IT-Governance-Next?node-id=6150-91712&t=ycbO53uXuBnlaQbc-0
-        return 'ISSUED';
+        return 'RETIRING_SOON';
       }
 
       return 'EXPIRING_SOON';
@@ -77,13 +77,22 @@ const LcidStatusTag = ({
   const IconComponent = lcidStatusIcons[status];
 
   return (
-    <Tag
-      className={`margin-right-0 ${lcidStatusClassName[status]} display-flex`}
-      data-testid="lcid-status-tag"
-    >
-      <IconComponent className="margin-right-1" aria-hidden />
-      {t(`lcidStatusTag.${status}`)}
-    </Tag>
+    <div className="display-flex flex-align-center">
+      {status === 'RETIRING_SOON' && (
+        <span className="text-italic text-base-dark margin-right-2">
+          {t('retiringSoonDate', {
+            date: formatDateLocal(lcidRetiresAt, 'MM/dd/yyyy')
+          })}
+        </span>
+      )}
+      <Tag
+        className={`margin-right-0 ${lcidStatusClassName[status]} display-flex`}
+        data-testid="lcid-status-tag"
+      >
+        <IconComponent className="margin-right-1" aria-hidden />
+        {t(`lcidStatusTag.${status}`)}
+      </Tag>
+    </div>
   );
 };
 
