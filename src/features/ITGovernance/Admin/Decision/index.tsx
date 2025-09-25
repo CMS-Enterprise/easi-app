@@ -2,7 +2,6 @@ import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Grid, Icon } from '@trussworks/react-uswds';
 import {
-  // GetSystemIntakeQuery,
   SystemIntakeDecisionState,
   SystemIntakeTRBFollowUp
 } from 'gql/generated/graphql';
@@ -18,38 +17,13 @@ import { RichTextViewer } from 'components/RichTextEditor';
 import Tag from 'components/Tag';
 import { formatDateLocal } from 'utils/date';
 
-// type RejectedProps = {
-//   rejectionReason?: string | null;
-//   decisionNextSteps?: string | null;
-// };
-
-// const Rejected = ({ rejectionReason, decisionNextSteps }: RejectedProps) => {
-//   const { t } = useTranslation('governanceReviewTeam');
-
-//   return (
-//     <DescriptionList title={t('decision.decisionSectionTitle')}>
-//       <DescriptionTerm term={t('decision.rejectionReason')} />
-//       <DescriptionDefinition
-//         className="text-pre-wrap"
-//         definition={
-//           <RichTextViewer
-//             value={rejectionReason || t('decision.noRejectionReasons')}
-//           />
-//         }
-//       />
-
-//       <DescriptionTerm term={t('decision.nextSteps')} />
-//       <DescriptionDefinition
-//         className="text-pre-wrap"
-//         definition={
-//           <RichTextViewer
-//             value={decisionNextSteps || t('notes.extendLcid.noNextSteps')}
-//           />
-//         }
-//       />
-//     </DescriptionList>
-//   );
-// };
+// minimal context to avoid drilling
+const DecisionContext = React.createContext<DecisionProps | null>(null);
+const useDecision = () => {
+  const ctx = React.useContext(DecisionContext);
+  if (!ctx) throw new Error('useDecision must be used within DecisionContext');
+  return ctx;
+};
 
 const DefinitionCombo = ({
   term,
@@ -82,25 +56,45 @@ const LcidInfoContainer = ({
 }: DecisionProps) => {
   const { t } = useTranslation('governanceReviewTeam');
 
-  const IconComponent =
-    decisionState === SystemIntakeDecisionState.LCID_ISSUED
-      ? Icon.CheckCircle
-      : Icon.Cancel;
+  // const IconComponent =
+  //   decisionState === SystemIntakeDecisionState.LCID_ISSUED
+  //     ? Icon.CheckCircle
+  //     : Icon.Cancel;
 
-  const decisionStateBackgroundColorMap: Record<
-    SystemIntakeDecisionState,
-    string
+  // const decisionStateBackgroundColorMap: Record<
+  //   SystemIntakeDecisionState,
+  //   string
+  // > = {
+  //   [SystemIntakeDecisionState.LCID_ISSUED]: 'bg-success-dark',
+  //   [SystemIntakeDecisionState.NOT_APPROVED]: 'bg-error-dark',
+  //   [SystemIntakeDecisionState.NOT_GOVERNANCE]: 'bg-base-dark',
+  //   [SystemIntakeDecisionState.NO_DECISION]: ''
+  // };
+
+  const decisionView: Record<
+    Exclude<SystemIntakeDecisionState, SystemIntakeDecisionState.NO_DECISION>,
+    { icon: React.ElementType; bg: string }
   > = {
-    [SystemIntakeDecisionState.LCID_ISSUED]: 'bg-success-dark',
-    [SystemIntakeDecisionState.NOT_APPROVED]: 'bg-error-dark',
-    [SystemIntakeDecisionState.NOT_GOVERNANCE]: 'bg-base-dark',
-    [SystemIntakeDecisionState.NO_DECISION]: ''
+    [SystemIntakeDecisionState.LCID_ISSUED]: {
+      icon: Icon.CheckCircle,
+      bg: 'bg-success-dark'
+    },
+    [SystemIntakeDecisionState.NOT_APPROVED]: {
+      icon: Icon.Cancel,
+      bg: 'bg-error-dark'
+    },
+    [SystemIntakeDecisionState.NOT_GOVERNANCE]: {
+      icon: Icon.Cancel,
+      bg: 'bg-base-dark'
+    }
   };
+
+  const { icon: IconComponent, bg } = decisionView[decisionState];
 
   return (
     <div className="margin-bottom-3">
       <div
-        className={`margin-top-5 padding-2 display-flex flex-align-center ${decisionStateBackgroundColorMap[decisionState]}`}
+        className={`margin-top-5 padding-2 display-flex flex-align-center ${bg}`}
       >
         <IconComponent
           className="text-white margin-right-2"
