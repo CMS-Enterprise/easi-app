@@ -38,7 +38,7 @@ const LcidStatusTag = ({
   const { t } = useTranslation('action');
 
   /** Calculate status for tag */
-  const status: LcidTagStatus | null = useMemo(() => {
+  const status: LcidTagStatus = useMemo(() => {
     // If expired or retired, return status
     if (
       lcidStatus === SystemIntakeLCIDStatus.EXPIRED ||
@@ -57,7 +57,9 @@ const LcidStatusTag = ({
     if (expiresAtDate < cutoffDate) {
       // If retire date is sooner than expire date, return 'RETIRING_SOON'
       if (retiresAtDate < expiresAtDate) {
-        return 'RETIRING_SOON';
+        // Latest design has "Active" text and retiring soon date on the side
+        // https://www.figma.com/design/ChzAP34A2DVvQUNQwD7lCt/IT-Governance-Next?node-id=6150-91712&t=ycbO53uXuBnlaQbc-0
+        return 'ISSUED';
       }
 
       return 'EXPIRING_SOON';
