@@ -294,6 +294,7 @@ const governanceReviewTeam = {
         'Should this team consult with the Technical Review Board (TRB) as a part of their next steps?'
     },
     decisionDate: 'Decision date',
+    noDateSet: 'No date set',
     reason: 'Reason',
     decisionState_LCID_ISSUED:
       'This request has been approved and a Life Cycle ID (LCID) has been issued.',
