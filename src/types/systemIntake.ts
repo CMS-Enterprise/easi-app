@@ -164,6 +164,18 @@ export type GovernanceTeamsForm = {
   teams: CollaboratorFields;
 };
 
+export type ContactFormFields = {
+  id: string;
+  userAccount: {
+    username: string;
+    commonName: string;
+    email: string;
+  };
+  component?: SystemIntakeContactFragment['component'] | null;
+  roles: SystemIntakeContactFragment['roles'];
+  isRequester: boolean;
+};
+
 // TODO EASI-4937 - these types will be removed with useSystemIntakeContacts hook
 // in favor of using the actual queries and mutations
 

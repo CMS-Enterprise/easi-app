@@ -4,9 +4,9 @@ import { Column, useSortBy, useTable } from 'react-table';
 import { Button, Icon, Table, Tooltip } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
+  GetSystemIntakeContactsQuery,
   SystemIntakeContactFragment,
-  SystemIntakeContactRole,
-  useGetSystemIntakeContactsQuery
+  SystemIntakeContactRole
 } from 'gql/generated/graphql';
 
 import Spinner from 'components/Spinner';
@@ -16,23 +16,20 @@ import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 import './index.scss';
 
 type SystemIntakeContactsTableProps = {
-  systemIntakeId: string;
-  showActionsColumn?: boolean;
+  systemIntakeContacts: GetSystemIntakeContactsQuery['systemIntakeContacts'];
+  loading: boolean;
+  /** Sets contact to edit with form modal. If undefined, actions column will not render. */
+  handleEditContact?: (contact: SystemIntakeContactFragment) => void;
+  className?: string;
 };
 
 const SystemIntakeContactsTable = ({
-  systemIntakeId,
-  showActionsColumn = false
+  systemIntakeContacts,
+  loading,
+  handleEditContact,
+  className
 }: SystemIntakeContactsTableProps) => {
   const { t } = useTranslation('intake');
-
-  const { data, loading } = useGetSystemIntakeContactsQuery({
-    variables: {
-      id: systemIntakeId
-    }
-  });
-
-  const { allContacts = [] } = data?.systemIntakeContacts || {};
 
   const columns = useMemo<Column<SystemIntakeContactFragment>[]>(() => {
     const actionsColumn: Column<SystemIntakeContactFragment> = {
@@ -44,7 +41,7 @@ const SystemIntakeContactsTable = ({
             <Button
               type="button"
               className="margin-top-0 margin-right-2"
-              onClick={() => null}
+              onClick={() => handleEditContact?.(row)}
               data-testid={`editContact-${index}`}
               unstyled
             >
@@ -71,6 +68,11 @@ const SystemIntakeContactsTable = ({
 
     return [
       {
+        // createdAt column is hidden and only used for sorting purposes
+        accessor: 'createdAt',
+        id: 'createdAt'
+      },
+      {
         Header: () => (
           <span className="display-block margin-left-4 padding-left-05">
             {t('general:name')}
@@ -79,7 +81,7 @@ const SystemIntakeContactsTable = ({
         accessor: (row: SystemIntakeContactFragment) =>
           row.userAccount.commonName,
         id: 'commonName',
-        width: showActionsColumn ? 320 : 'auto',
+        width: handleEditContact ? 320 : 'auto',
         Cell: ({ row }: { row: { original: SystemIntakeContactFragment } }) => (
           <div className="display-flex flex-align-center">
             {row.original.isRequester && (
@@ -116,7 +118,7 @@ const SystemIntakeContactsTable = ({
         Header: t('fields.component'),
         accessor: 'component',
         id: 'component',
-        width: showActionsColumn ? 150 : 200,
+        width: handleEditContact ? 150 : 200,
         Cell: ({
           value
         }: {
@@ -163,16 +165,22 @@ const SystemIntakeContactsTable = ({
           );
         }
       },
-      ...(showActionsColumn ? [actionsColumn] : [])
+      ...(handleEditContact ? [actionsColumn] : [])
     ];
-  }, [t, showActionsColumn]);
+  }, [t, handleEditContact]);
+
+  const contacts = systemIntakeContacts?.allContacts || [];
 
   const table = useTable(
     {
       columns,
-      data: allContacts,
+      data: contacts,
       autoResetSortBy: false,
-      autoResetPage: true
+      autoResetPage: true,
+      initialState: {
+        hiddenColumns: useMemo(() => ['createdAt'], []),
+        sortBy: useMemo(() => [{ id: 'createdAt', desc: false }], [])
+      }
     },
     useSortBy
   );
@@ -180,8 +188,15 @@ const SystemIntakeContactsTable = ({
   const { getTableBodyProps, getTableProps, headerGroups, prepareRow, rows } =
     table;
 
+  rows.map(row => prepareRow(row));
+
   return (
-    <div className="system-intake-contacts-table usa-table-container--scrollable">
+    <div
+      className={classNames(
+        'system-intake-contacts-table usa-table-container--scrollable',
+        className
+      )}
+    >
       <Table bordered={false} fullWidth {...getTableProps()}>
         <thead>
           {headerGroups.map(headerGroup => {
@@ -239,7 +254,6 @@ const SystemIntakeContactsTable = ({
         <tbody {...getTableBodyProps()}>
           {rows.length > 0 ? (
             rows.map(row => {
-              prepareRow(row);
               const { key: rowKey, ...rowProps } = row.getRowProps();
 
               const { id } = row.original;

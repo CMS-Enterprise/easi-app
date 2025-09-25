@@ -565,7 +565,7 @@ exports[`Additional contacts component > renders without crashing 1`] = `
       data-testid="button"
       type="button"
     >
-      Add another contact
+      Add an additional contact
     </button>
   </div>
 </DocumentFragment>

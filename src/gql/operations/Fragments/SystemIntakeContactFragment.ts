@@ -10,5 +10,6 @@ export default gql(/* GraphQL */ `
     component
     roles
     isRequester
+    createdAt
   }
 `);

@@ -53,7 +53,8 @@ const additionalContacts: SystemIntakeContactFragment[] = [
       commonName: 'Jerry Seinfeld',
       email: 'jerry.seinfeld@local.fake'
     },
-    isRequester: true
+    isRequester: true,
+    createdAt: '2025-09-23T15:58:46.72809Z'
   },
   {
     __typename: 'SystemIntakeContact',
@@ -68,7 +69,8 @@ const additionalContacts: SystemIntakeContactFragment[] = [
     },
     component: SystemIntakeContactComponent.OTHER,
     roles: [SystemIntakeContactRole.SYSTEM_MAINTAINER],
-    isRequester: false
+    isRequester: false,
+    createdAt: '2025-09-23T15:58:46.72809Z'
   }
 ];
 
@@ -141,7 +143,7 @@ describe('Additional contacts component', () => {
     // Check for add another contact button
     expect(
       getByRole('button', {
-        name: 'Add another contact'
+        name: 'Add an additional contact'
       })
     ).toBeInTheDocument();
   });

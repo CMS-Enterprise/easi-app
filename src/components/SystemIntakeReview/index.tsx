@@ -2,7 +2,10 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import DocumentsTable from 'features/ITGovernance/_components/DocumentsTable';
-import { SystemIntakeFragmentFragment } from 'gql/generated/graphql';
+import {
+  SystemIntakeFragmentFragment,
+  useGetSystemIntakeContactsQuery
+} from 'gql/generated/graphql';
 import i18next from 'i18next';
 
 import {
@@ -40,6 +43,12 @@ export const SystemIntakeReview = ({
     systemIntake;
 
   const { t } = useTranslation('intake');
+
+  const { data, loading: contactsLoading } = useGetSystemIntakeContactsQuery({
+    variables: {
+      id: systemIntake.id
+    }
+  });
 
   const getSubmissionDate = () => {
     if (submittedAt) {
@@ -233,7 +242,10 @@ export const SystemIntakeReview = ({
         className="margin-top-1"
       >
         <ReviewRow>
-          <SystemIntakeContactsTable systemIntakeId={systemIntake.id} />
+          <SystemIntakeContactsTable
+            systemIntakeContacts={data?.systemIntakeContacts}
+            loading={contactsLoading}
+          />
         </ReviewRow>
         <ReviewRow>
           <div>
