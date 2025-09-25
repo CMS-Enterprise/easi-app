@@ -12,10 +12,17 @@ import {
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import { RichTextViewer } from 'components/RichTextEditor';
+import Tag from 'components/Tag';
 
 type RejectedProps = {
   rejectionReason?: string | null;
   decisionNextSteps?: string | null;
+};
+
+type DecisionProps = {
+  rejectionReason?: string | null;
+  decisionNextSteps?: string | null;
+  decisionState: SystemIntakeDecisionState;
 };
 
 const Rejected = ({ rejectionReason, decisionNextSteps }: RejectedProps) => {
@@ -47,9 +54,11 @@ const Rejected = ({ rejectionReason, decisionNextSteps }: RejectedProps) => {
 };
 
 const LcidInfoContainer = ({
-  decisionState
+  decisionState,
+  rejectionReason
 }: {
   decisionState: SystemIntakeDecisionState;
+  rejectionReason?: string | null;
 }) => {
   const { t } = useTranslation('governanceReviewTeam');
 
@@ -84,6 +93,11 @@ const LcidInfoContainer = ({
       </div>
       <div className="bg-base-lightest padding-3">
         <dl className="easi-dl">
+          <div className="display-flex margin-bottom-2 flex-justify">
+            <h3 className="margin-y-0">{t('decision.lcidInfoHeader')}</h3>
+            <Tag className="bg-success-dark text-white">TODO Gary</Tag>
+          </div>
+
           <DescriptionTerm
             term={t('decision.decisionDate')}
             className="margin-bottom-0"
@@ -106,18 +120,16 @@ const LcidInfoContainer = ({
           <DescriptionDefinition
             className="text-pre-wrap margin-bottom-2"
             // TODO: date format here
-            definition={<RichTextViewer value="TODO later" />}
+            definition={
+              <RichTextViewer
+                value={rejectionReason || t('decision.noRejectionReasons')}
+              />
+            }
           />
         </dl>
       </div>
     </>
   );
-};
-
-type DecisionProps = {
-  rejectionReason?: string | null;
-  decisionNextSteps?: string | null;
-  decisionState: SystemIntakeDecisionState;
 };
 
 const Decision = ({
