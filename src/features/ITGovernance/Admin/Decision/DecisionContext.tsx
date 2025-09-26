@@ -1,4 +1,3 @@
-// DecisionContext.tsx
 import React from 'react';
 import {
   SystemIntakeDecisionState,
@@ -76,7 +75,6 @@ export function DecisionProvider({ children, ...props }: ProviderProps) {
     [props, lcidTagStatus]
   );
 
-  // IMPORTANT: This must be the same DecisionContext as used in useDecision
   return (
     <DecisionContext.Provider value={value}>
       {children}
