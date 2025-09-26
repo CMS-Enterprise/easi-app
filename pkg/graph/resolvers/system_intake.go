@@ -171,7 +171,6 @@ func SystemIntakeUpdateContactDetails(ctx context.Context, store *storage.Store,
 	intake.BusinessOwnerComponent = null.StringFrom(input.BusinessOwner.Component)
 	intake.ProductManager = null.StringFrom(input.ProductManager.Name)
 	intake.ProductManagerComponent = null.StringFrom(input.ProductManager.Component)
-	// TODO: set new intake property based on isPresent on input
 
 	if input.GovernanceTeams.IsPresent != nil {
 		intake.GovernanceTeamsIsPresent = null.BoolFromPtr(input.GovernanceTeams.IsPresent)
@@ -206,7 +205,6 @@ func SystemIntakeUpdateContactDetails(ctx context.Context, store *storage.Store,
 		intake.GovernanceTeamsIsPresent = null.BoolFromPtr(nil)
 	}
 
-	// TODO: make sure updateSystemIntake updates new govenerananceteam ispresent boolean in database
 	savedIntake, err := store.UpdateSystemIntake(ctx, intake)
 	return &models.UpdateSystemIntakePayload{
 		SystemIntake: savedIntake,
