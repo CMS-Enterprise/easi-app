@@ -3,8 +3,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Grid, Icon } from '@trussworks/react-uswds';
 import {
   SystemIntakeDecisionState,
-  SystemIntakeLCIDStatus,
-  SystemIntakeTRBFollowUp
+  SystemIntakeLCIDStatus
 } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
@@ -18,13 +17,12 @@ import PageHeading from 'components/PageHeading';
 import { RichTextViewer } from 'components/RichTextEditor';
 import { formatDateLocal } from 'utils/date';
 
-// minimal context to avoid drilling
-const DecisionContext = React.createContext<DecisionProps | null>(null);
-const useDecision = () => {
-  const ctx = React.useContext(DecisionContext);
-  if (!ctx) throw new Error('useDecision must be used within DecisionContext');
-  return ctx;
-};
+// new imports
+import {
+  DecisionProps,
+  DecisionProvider,
+  useDecision
+} from './DecisionContext';
 
 const DefinitionCombo = ({
   term,
@@ -55,11 +53,15 @@ const LcidInfoContainer = () => {
     lcidScope,
     lcidCostBaseline,
     lcidStatus,
-    lcidRetiresAt
+    lcidRetiresAt,
+    lcidTagStatus
   } = useDecision();
 
-  // one place for icon + background
-  const decisionView = {
+  // only used when decisionState !== NO_DECISION
+  const decisionView: Record<
+    Exclude<SystemIntakeDecisionState, SystemIntakeDecisionState.NO_DECISION>,
+    { icon: typeof Icon.CheckCircle; bg: string }
+  > = {
     [SystemIntakeDecisionState.LCID_ISSUED]: {
       icon: Icon.CheckCircle,
       bg: 'bg-success-dark'
@@ -71,14 +73,16 @@ const LcidInfoContainer = () => {
     [SystemIntakeDecisionState.NOT_GOVERNANCE]: {
       icon: Icon.Cancel,
       bg: 'bg-base-dark'
-    },
-    [SystemIntakeDecisionState.NO_DECISION]: {
-      icon: Icon.Info,
-      bg: ''
     }
-  } as const;
+  };
 
-  const { icon: IconComponent, bg } = decisionView[decisionState];
+  const { icon: IconComponent, bg } =
+    decisionView[
+      decisionState as Exclude<
+        SystemIntakeDecisionState,
+        SystemIntakeDecisionState.NO_DECISION
+      >
+    ];
 
   return (
     <div className="margin-bottom-3">
@@ -103,7 +107,8 @@ const LcidInfoContainer = () => {
                 <h3 className="margin-y-0">{t('decision.lcidInfoHeader')}</h3>
                 {lcidStatus && (
                   <LcidStatusTag
-                    lcidStatus={lcidStatus}
+                    // use computed status from context
+                    lcidStatus={lcidTagStatus as SystemIntakeLCIDStatus}
                     lcidExpiresAt={lcidExpiresAt}
                     lcidRetiresAt={lcidRetiresAt}
                   />
@@ -176,20 +181,6 @@ const LcidInfoContainer = () => {
   );
 };
 
-type DecisionProps = {
-  rejectionReason?: string | null;
-  decisionNextSteps?: string | null;
-  decisionState: SystemIntakeDecisionState;
-  lcid?: string | null;
-  lcidIssuedAt?: string | null;
-  lcidExpiresAt?: string | null;
-  lcidScope?: string | null;
-  lcidCostBaseline?: string | null;
-  trbFollowUpRecommendation?: SystemIntakeTRBFollowUp | null;
-  lcidStatus?: SystemIntakeLCIDStatus | null;
-  lcidRetiresAt?: string | null;
-};
-
 const Decision = ({
   decisionNextSteps,
   decisionState,
@@ -224,12 +215,7 @@ const Decision = ({
           </Alert>
         </>
       ) : (
-        <DecisionContext.Provider
-          value={{
-            decisionState,
-            ...rest
-          }}
-        >
+        <DecisionProvider decisionState={decisionState} {...rest}>
           <LcidInfoContainer />
           {decisionState !== SystemIntakeDecisionState.NOT_GOVERNANCE && (
             <dl className="padding-x-2">
@@ -249,7 +235,7 @@ const Decision = ({
               )}
             </dl>
           )}
-        </DecisionContext.Provider>
+        </DecisionProvider>
       )}
     </>
   );

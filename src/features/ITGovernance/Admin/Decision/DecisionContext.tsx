@@ -1,28 +1,27 @@
+// DecisionContext.tsx
 import React from 'react';
-import { SystemIntakeLCIDStatus } from 'gql/generated/graphql';
+import {
+  SystemIntakeDecisionState,
+  SystemIntakeLCIDStatus,
+  SystemIntakeTRBFollowUp
+} from 'gql/generated/graphql';
 import { DateTime } from 'luxon';
-
-export type LcidTagStatus =
-  | SystemIntakeLCIDStatus // e.g., ACTIVE | EXPIRED | RETIRED
-  | 'EXPIRING_SOON'
-  | 'RETIRING_SOON';
 
 export type DecisionProps = {
   rejectionReason?: string | null;
   decisionNextSteps?: string | null;
-  // decisionState is declared in the component file that imports this context
-  // to avoid a circular import; the provider caller passes it through
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  decisionState: any;
+  decisionState: SystemIntakeDecisionState;
   lcid?: string | null;
   lcidIssuedAt?: string | null;
   lcidExpiresAt?: string | null;
   lcidScope?: string | null;
   lcidCostBaseline?: string | null;
-  trbFollowUpRecommendation?: any | null; // same note as above
+  trbFollowUpRecommendation?: SystemIntakeTRBFollowUp | null;
   lcidStatus?: SystemIntakeLCIDStatus | null;
   lcidRetiresAt?: string | null;
 };
+
+type LcidTagStatus = SystemIntakeLCIDStatus | 'EXPIRING_SOON' | 'RETIRING_SOON';
 
 type DecisionContextValue = DecisionProps & {
   lcidTagStatus: LcidTagStatus;
@@ -36,49 +35,32 @@ export const useDecision = () => {
   return ctx;
 };
 
-// Pure helper for easy testing
-export function computeLcidTagStatus(
+function computeLcidTagStatus(
   lcidStatus?: SystemIntakeLCIDStatus | null,
   lcidExpiresAt?: string | null,
   lcidRetiresAt?: string | null
 ): LcidTagStatus {
   if (!lcidStatus) return SystemIntakeLCIDStatus.ISSUED;
-
   if (
     lcidStatus === SystemIntakeLCIDStatus.EXPIRED ||
     lcidStatus === SystemIntakeLCIDStatus.RETIRED
-  ) {
+  )
     return lcidStatus;
-  }
 
   const cutoff = DateTime.now().plus({ days: 60 }).toMillis();
+  const exp = DateTime.fromISO(lcidExpiresAt ?? '');
+  const ret = DateTime.fromISO(lcidRetiresAt ?? '');
+  const expMs = exp.isValid ? exp.toMillis() : Number.POSITIVE_INFINITY;
+  const retMs = ret.isValid ? ret.toMillis() : Number.POSITIVE_INFINITY;
 
-  const retiresAtDT = DateTime.fromISO(lcidRetiresAt ?? '');
-  const expiresAtDT = DateTime.fromISO(lcidExpiresAt ?? '');
-
-  const retiresAt = retiresAtDT.isValid
-    ? retiresAtDT.toMillis()
-    : Number.POSITIVE_INFINITY;
-  const expiresAt = expiresAtDT.isValid
-    ? expiresAtDT.toMillis()
-    : Number.POSITIVE_INFINITY;
-
-  if (expiresAt < cutoff) {
-    if (retiresAt < expiresAt) return 'RETIRING_SOON';
-    return 'EXPIRING_SOON';
-  }
-
-  if (retiresAt < cutoff) return 'RETIRING_SOON';
-
+  if (expMs < cutoff) return retMs < expMs ? 'RETIRING_SOON' : 'EXPIRING_SOON';
+  if (retMs < cutoff) return 'RETIRING_SOON';
   return lcidStatus;
 }
 
-type DecisionProviderProps = React.PropsWithChildren<DecisionProps>;
+type ProviderProps = React.PropsWithChildren<DecisionProps>;
 
-export const DecisionProvider = ({
-  children,
-  ...props
-}: DecisionProviderProps) => {
+export function DecisionProvider({ children, ...props }: ProviderProps) {
   const lcidTagStatus = React.useMemo(
     () =>
       computeLcidTagStatus(
@@ -94,9 +76,10 @@ export const DecisionProvider = ({
     [props, lcidTagStatus]
   );
 
+  // IMPORTANT: This must be the same DecisionContext as used in useDecision
   return (
     <DecisionContext.Provider value={value}>
       {children}
     </DecisionContext.Provider>
   );
-};
+}
