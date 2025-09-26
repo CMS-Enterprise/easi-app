@@ -1,7 +1,10 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Icon } from '@trussworks/react-uswds';
 import { SystemIntakeLCIDStatus } from 'gql/generated/graphql';
 import { DateTime } from 'luxon';
+
+import { formatDateLocal } from 'utils/date';
 
 import Tag from '../Tag';
 
@@ -9,10 +12,18 @@ type LcidTagStatus = SystemIntakeLCIDStatus | 'EXPIRING_SOON' | 'RETIRING_SOON';
 
 export const lcidStatusClassName: Record<LcidTagStatus, string> = {
   ISSUED: 'bg-success-dark text-white',
-  RETIRED: 'bg-base-lighter',
-  RETIRING_SOON: 'bg-warning',
+  RETIRED: 'border-2px border-base text-base',
+  RETIRING_SOON: 'bg-success-dark text-white',
   EXPIRED: 'bg-secondary-dark text-white',
   EXPIRING_SOON: 'bg-warning'
+};
+
+const lcidStatusIcons: Record<LcidTagStatus, React.ElementType> = {
+  ISSUED: Icon.Check,
+  RETIRED: Icon.History,
+  RETIRING_SOON: Icon.Check,
+  EXPIRED: Icon.Error,
+  EXPIRING_SOON: Icon.Warning
 };
 
 type LcidStatusTagProps = {
@@ -29,7 +40,7 @@ const LcidStatusTag = ({
   const { t } = useTranslation('action');
 
   /** Calculate status for tag */
-  const status: LcidTagStatus | null = useMemo(() => {
+  const status: LcidTagStatus = useMemo(() => {
     // If expired or retired, return status
     if (
       lcidStatus === SystemIntakeLCIDStatus.EXPIRED ||
@@ -63,13 +74,25 @@ const LcidStatusTag = ({
     return lcidStatus;
   }, [lcidStatus, lcidExpiresAt, lcidRetiresAt]);
 
+  const IconComponent = lcidStatusIcons[status];
+
   return (
-    <Tag
-      className={`margin-right-0 ${lcidStatusClassName[status]}`}
-      data-testid="lcid-status-tag"
-    >
-      {t(`lcidStatusTag.${status}`)}
-    </Tag>
+    <div className="display-flex flex-align-center">
+      {status === 'RETIRING_SOON' && (
+        <span className="text-italic text-base-dark margin-right-2">
+          {t('retiringSoonDate', {
+            date: formatDateLocal(lcidRetiresAt, 'MM/dd/yyyy')
+          })}
+        </span>
+      )}
+      <Tag
+        className={`margin-right-0 ${lcidStatusClassName[status]} display-flex`}
+        data-testid="lcid-status-tag"
+      >
+        <IconComponent className="margin-right-1" aria-hidden />
+        {t(`lcidStatusTag.${status}`)}
+      </Tag>
+    </div>
   );
 };
 

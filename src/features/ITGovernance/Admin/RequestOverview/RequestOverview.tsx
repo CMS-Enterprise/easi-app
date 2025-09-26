@@ -33,7 +33,6 @@ import Feedback from '../Feedback';
 import GRBReview from '../GRBReview';
 import { ModalProvider } from '../GRBReview/RestartReviewModal/RestartReviewModalContext';
 import IntakeReview from '../IntakeReview';
-import LifecycleID from '../LifecycleID';
 import Notes from '../Notes';
 import subNavItems from '../subNavItems';
 import Summary from '../Summary';
@@ -198,11 +197,6 @@ const RequestOverview = () => {
                   exact
                   path="/it-governance/:systemId/system-information"
                   render={() => <SystemInformation request={systemIntake} />}
-                />
-
-                <Route
-                  path="/it-governance/:systemId/lcid"
-                  render={() => <LifecycleID systemIntake={systemIntake} />}
                 />
 
                 {flags?.grbReviewTab && (
