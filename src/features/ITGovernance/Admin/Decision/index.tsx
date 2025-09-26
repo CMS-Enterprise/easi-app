@@ -131,18 +131,28 @@ const LcidInfoContainer = () => {
                   />
                 </Grid>
                 <Grid tablet={{ col: 6 }}>
-                  {lcidStatus !== SystemIntakeLCIDStatus.RETIRED && (
+                  {lcidTagStatus !== SystemIntakeLCIDStatus.RETIRED &&
+                    lcidTagStatus !== 'RETIRING_SOON' && (
+                      <DefinitionCombo
+                        term={t('decision.terms.expirationDate')}
+                        definition={
+                          formatDateLocal(lcidExpiresAt, 'MM/dd/yyyy') ??
+                          t('decision.noDateSet')
+                        }
+                      />
+                    )}
+                  {lcidTagStatus === SystemIntakeLCIDStatus.RETIRED && (
                     <DefinitionCombo
-                      term={t('decision.terms.expirationDate')}
+                      term={t('decision.terms.retirementDate')}
                       definition={
-                        formatDateLocal(lcidExpiresAt, 'MM/dd/yyyy') ??
+                        formatDateLocal(lcidRetiresAt, 'MM/dd/yyyy') ??
                         t('decision.noDateSet')
                       }
                     />
                   )}
-                  {lcidStatus === SystemIntakeLCIDStatus.RETIRED && (
+                  {lcidTagStatus === 'RETIRING_SOON' && (
                     <DefinitionCombo
-                      term={t('decision.terms.retirementDate')}
+                      term={t('decision.terms.plannedRetirementDate')}
                       definition={
                         formatDateLocal(lcidRetiresAt, 'MM/dd/yyyy') ??
                         t('decision.noDateSet')
