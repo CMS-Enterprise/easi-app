@@ -99,7 +99,7 @@ const LcidInfoContainer = () => {
         </span>
       </div>
 
-      <div className="bg-base-lightest padding-3">
+      <div className="bg-base-lightest padding-3 padding-bottom-0">
         <dl className="easi-dl">
           {decisionState === SystemIntakeDecisionState.LCID_ISSUED ? (
             <>

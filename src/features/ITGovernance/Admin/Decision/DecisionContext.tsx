@@ -34,28 +34,55 @@ export const useDecision = () => {
   return ctx;
 };
 
-function computeLcidTagStatus(
+// Compute the "tag status" for an LCID based on its current status and dates
+const computeLcidTagStatus = (
   lcidStatus?: SystemIntakeLCIDStatus | null,
   lcidExpiresAt?: string | null,
   lcidRetiresAt?: string | null
-): LcidTagStatus {
+): LcidTagStatus => {
   if (!lcidStatus) return SystemIntakeLCIDStatus.ISSUED;
+
   if (
     lcidStatus === SystemIntakeLCIDStatus.EXPIRED ||
     lcidStatus === SystemIntakeLCIDStatus.RETIRED
-  )
+  ) {
     return lcidStatus;
+  }
 
+  // Define a cutoff timestamp 60 days from now.
+  // Anything expiring/retiring before this cutoff counts as "soon".
   const cutoff = DateTime.now().plus({ days: 60 }).toMillis();
+
+  // Parse expiration date from ISO string into a Luxon DateTime.
+  // If it's missing/null, we pass an empty string (invalid DateTime).
   const exp = DateTime.fromISO(lcidExpiresAt ?? '');
+
+  // Parse retirement date from ISO string into a Luxon DateTime.
   const ret = DateTime.fromISO(lcidRetiresAt ?? '');
+
+  // Convert expiration date to milliseconds (epoch time).
+  // If invalid/missing, treat it as "infinity" so it won't affect comparisons.
   const expMs = exp.isValid ? exp.toMillis() : Number.POSITIVE_INFINITY;
+
+  // Convert retirement date to milliseconds (epoch time).
+  // Same "infinity" fallback if invalid.
   const retMs = ret.isValid ? ret.toMillis() : Number.POSITIVE_INFINITY;
 
-  if (expMs < cutoff) return retMs < expMs ? 'RETIRING_SOON' : 'EXPIRING_SOON';
-  if (retMs < cutoff) return 'RETIRING_SOON';
+  // If expiration date is within 60 days:
+  //   - If retirement date is even sooner than expiration, mark as RETIRING_SOON
+  //   - Otherwise, mark as EXPIRING_SOON
+  if (expMs < cutoff) {
+    return retMs < expMs ? 'RETIRING_SOON' : 'EXPIRING_SOON';
+  }
+
+  // If retirement date (but not expiration) is within 60 days, mark as RETIRING_SOON
+  if (retMs < cutoff) {
+    return 'RETIRING_SOON';
+  }
+
+  // Otherwise, keep the current LCID status (likely ISSUED).
   return lcidStatus;
-}
+};
 
 type ProviderProps = React.PropsWithChildren<DecisionProps>;
 
