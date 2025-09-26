@@ -204,9 +204,9 @@ describe('Governance Review Team', () => {
 
     // Check correct values are displayed on Life Cycle ID page
 
-    cy.get('li.usa-sidenav__item a[href*="lcid"]').click();
+    cy.get('li.usa-sidenav__item a[href*="decision"]').click();
 
-    cy.get('dd').contains(expirationDate.toFormat('MMMM d, yyyy'));
+    cy.get('dd').contains(expirationDate.toFormat('MM/dd/yyyy'));
     cy.get('dd').contains(scope);
     cy.get('dd').contains(nextSteps);
     cy.get('dd').contains('Yes, strongly recommend');
@@ -261,10 +261,10 @@ describe('Governance Review Team', () => {
 
     // Check correct values are displayed on Life Cycle ID page
 
-    cy.get('li.usa-sidenav__item a[href*="lcid"]').click();
+    cy.get('li.usa-sidenav__item a[href*="decision"]').click();
 
     cy.get('dd').contains(lcid);
-    cy.get('dd').contains(expirationDate.toFormat('MMMM d, yyyy'));
+    cy.get('dd').contains(expirationDate.toFormat('MM/dd/ yyyy'));
     cy.get('dd').contains(scope);
     cy.get('dd').contains(nextSteps);
     cy.get('dd').contains('Yes, strongly recommend');
@@ -306,14 +306,14 @@ describe('Governance Review Team', () => {
 
     // Check updated values are displayed on Life Cycle ID page
 
-    cy.get('li.usa-sidenav__item a[href*="lcid"]').click();
+    cy.get('li.usa-sidenav__item a[href*="decision"]').click();
 
     // Wait for task list query to complete
     cy.wait('@getGovernanceTaskList')
       .its('response.statusCode')
       .should('eq', 200);
 
-    cy.get('dd').contains(expirationDate.toFormat('MMMM d, yyyy'));
+    cy.get('dd').contains(expirationDate.toFormat('MM/dd/yyyy'));
     cy.get('dd').contains(scope);
     cy.get('dd').contains(nextSteps);
     cy.get('dd').contains(costBaseline);
