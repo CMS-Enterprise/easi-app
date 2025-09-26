@@ -201,7 +201,9 @@ const Decision = ({
 
   return (
     <>
-      <PageHeading className="margin-y-0">{t('decision.heading')}</PageHeading>
+      <PageHeading data-testid="grt-decision-view" className="margin-y-0">
+        {t('decision.heading')}
+      </PageHeading>
       <p className="font-body-md line-height-body-4 text-light margin-top-05">
         {t('decision.subheading')}
       </p>
