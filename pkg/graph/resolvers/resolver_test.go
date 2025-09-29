@@ -256,6 +256,10 @@ func (s *ResolverSuite) createNewIntakeWithResolver(callbacks ...func(*models.Sy
 	intake, err := CreateSystemIntake(s.ctxWithNewDataloaders(), s.testConfigs.Store, CreateSystemIntakeInput, userhelpers.GetUserInfoAccountInfoWrapperFunc(s.testConfigs.UserSearchClient.FetchUserInfo))
 	s.NoError(err)
 	s.NotNil(intake)
+	requester, err := SystemIntakeContactGetRequester(s.ctxWithNewDataloaders(), intake.ID)
+	s.NoError(err)
+	s.NotNil(requester)
+	s.EqualValues(s.testConfigs.Principal.UserAccount.ID, requester.UserID)
 
 	for _, hook := range callbacks {
 		hook(intake)
