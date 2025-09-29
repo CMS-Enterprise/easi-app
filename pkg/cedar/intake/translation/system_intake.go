@@ -7,8 +7,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/guregu/null"
-
 	wire "github.com/cms-enterprise/easi-app/pkg/cedar/intake/gen/models"
 	intakemodels "github.com/cms-enterprise/easi-app/pkg/cedar/intake/models"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers"
@@ -38,12 +36,6 @@ func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wir
 			Source:          fundingSource.Investment.Ptr(),
 			FundingNumber:   fundingSource.ProjectNumber.Ptr(),
 		})
-	}
-
-	// TODO, should we rebuild the dataloaders here?
-	contacts, err := resolvers.SystemIntakeContactsGetBySystemIntakeID(ctx, si.ID)
-	if err != nil {
-		return nil, fmt.Errorf("error fetching contacts for system intake %s: %w", si.ID.String(), err)
 	}
 
 	clientStatus, err := resolvers.CalculateSystemIntakeAdminStatus(ctx, helpers.PointerTo(models.SystemIntake(*si)))
@@ -113,32 +105,16 @@ func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wir
 		// ScheduledProductionDate:         pStr(""), // TODO: fill this out after field is added to intake
 	}
 
-	// Populate contacts. For now, don't stop submission if there is an error fetching these
-	requester, _ := contacts.Requester()
-	if requester != nil {
-		reqAccount, _ := requester.UserAccount(ctx)
-		if reqAccount != nil {
-			si.Requester = reqAccount.Username
-		}
-		si.Component = null.StringFrom(string(requester.Component))
+	coreContacts, err := GetCoreTranslatableContactInfo(ctx, si.ID)
+	if err != nil {
+		return nil, fmt.Errorf("error getting core contact information for system intake %s: %w", si.ID.String(), err)
 	}
-	businessOwners, _ := contacts.BusinessOwners()
-	if len(businessOwners) > 0 {
-		boAccount, _ := businessOwners[0].UserAccount(ctx)
-		if boAccount != nil {
-			si.BusinessOwner = null.StringFrom(boAccount.Username)
-		}
-		si.BusinessOwnerComponent = null.StringFrom(string(businessOwners[0].Component))
-	}
-
-	productManagers, _ := contacts.ProductManagers()
-	if len(productManagers) > 0 {
-		pmAccount, _ := productManagers[0].UserAccount(ctx)
-		if pmAccount != nil {
-			si.ProductManager = null.StringFrom(pmAccount.Username)
-		}
-		si.ProductManagerComponent = null.StringFrom(string(productManagers[0].Component))
-	}
+	si.Requester = coreContacts.Requester
+	si.Component = coreContacts.Component
+	si.BusinessOwner = coreContacts.BusinessOwner
+	si.BusinessOwnerComponent = coreContacts.BusinessOwnerComponent
+	si.ProductManager = coreContacts.ProductManager
+	si.ProductManagerComponent = coreContacts.ProductManagerComponent
 
 	blob, err := json.Marshal(&obj)
 	if err != nil {
