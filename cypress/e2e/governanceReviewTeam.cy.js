@@ -264,7 +264,7 @@ describe('Governance Review Team', () => {
     cy.get('li.usa-sidenav__item a[href*="decision"]').click();
 
     cy.get('dd').contains(lcid);
-    cy.get('dd').contains(expirationDate.toFormat('MM/dd/ yyyy'));
+    cy.get('dd').contains(expirationDate.toFormat('MM/dd/yyyy'));
     cy.get('dd').contains(scope);
     cy.get('dd').contains(nextSteps);
     cy.get('dd').contains('Yes, strongly recommend');
