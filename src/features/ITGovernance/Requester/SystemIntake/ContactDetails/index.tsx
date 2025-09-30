@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FieldPath } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -8,14 +8,17 @@ import { Button, Form } from '@trussworks/react-uswds';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
 import {
   GetSystemIntakeDocument,
+  SystemIntakeContactFragment,
   SystemIntakeFormState,
   SystemIntakeFragmentFragment,
   SystemIntakeRequestType,
   UpdateSystemIntakeContactDetailsInput,
+  useGetSystemIntakeContactsQuery,
   useUpdateSystemIntakeContactDetailsMutation
 } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
+import AutoSave from 'components/AutoSave';
 import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
 import { ErrorAlert, ErrorAlertMessage } from 'components/ErrorAlert';
 import FeedbackBanner from 'components/FeedbackBanner';
@@ -25,8 +28,13 @@ import RequiredFieldsText from 'components/RequiredFieldsText';
 import SystemIntakeContactsTable from 'components/SystemIntakeContactsTable';
 import { GovernanceTeamsForm } from 'types/systemIntake';
 import flattenFormErrors from 'utils/flattenFormErrors';
-import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
+import SystemIntakeValidationSchema, {
+  SystemIntakeContactsSchema
+} from 'validations/systemIntakeSchema';
 
+import Section from '../_components/Section';
+
+import ContactFormModal from './_components/ContactFormModal';
 import GovernanceTeams from './GovernanceTeams';
 import { formatGovernanceTeamsInput } from './utils';
 
@@ -44,6 +52,17 @@ type ContactDetailsProps = {
 const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const { t } = useTranslation('intake');
   const history = useHistory();
+
+  const { data, loading } = useGetSystemIntakeContactsQuery({
+    variables: {
+      id: systemIntake.id
+    }
+  });
+
+  const [contactToEdit, setContactToEdit] =
+    useState<SystemIntakeContactFragment | null>(null);
+
+  const [isContactsModalOpen, setIsContactsModalOpen] = useState(false);
 
   const [updateGovernanceTeams] = useUpdateSystemIntakeContactDetailsMutation({
     refetchQueries: [
@@ -87,7 +106,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     setFocus,
     watch,
     setError,
-    formState: { isDirty, errors }
+    formState: { isDirty, errors, isValid }
   } = form;
 
   const governanceTeams = watch('teams');
@@ -105,14 +124,13 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   ) => {
     if (!isDirty) return callback();
 
-    // TODO: EASI-4938 - remove type assertion when mutation input is updated to remove contacts
     const input: UpdateSystemIntakeContactDetailsInput = {
       id: systemIntake.id,
       governanceTeams: {
         isPresent,
         teams: formatGovernanceTeamsInput(governanceTeams)
       }
-    } as UpdateSystemIntakeContactDetailsInput;
+    };
 
     const result = await updateGovernanceTeams({
       variables: {
@@ -136,8 +154,49 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   /** Flattened field errors, excluding any root errors */
   const fieldErrors = flattenFormErrors<GovernanceTeamsForm>(errors);
 
+  /**
+   * Returns true if `data.systemIntakeContacts` meets basic requirements:
+   * - requester must have both component and role specified
+   * - must have at least one business owner and product manager
+   */
+  // TODO: better error states - right now we're just showing a generic warning if false
+  const contactsTableIsValid = useMemo(() => {
+    if (loading) return true;
+
+    if (!data?.systemIntakeContacts) {
+      return false;
+    }
+
+    try {
+      SystemIntakeContactsSchema.validateSync(data.systemIntakeContacts);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }, [loading, data?.systemIntakeContacts]);
+
+  /** Close contacts modal and reset contact to edit */
+  const handleCloseContactsModal = () => {
+    if (contactToEdit) {
+      setContactToEdit(null);
+    }
+    setIsContactsModalOpen(false);
+  };
+
+  useEffect(() => {
+    setIsContactsModalOpen(!!contactToEdit);
+  }, [contactToEdit]);
+
   return (
     <>
+      <ContactFormModal
+        type="contact"
+        systemIntakeId={systemIntake.id}
+        isOpen={isContactsModalOpen}
+        closeModal={handleCloseContactsModal}
+        initialValues={contactToEdit}
+      />
+
       {Object.keys(errors).length > 0 && (
         <ErrorAlert
           testId="contact-details-errors"
@@ -188,34 +247,45 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         )}
         className="maxw-none tablet:grid-col-9 margin-bottom-7"
       >
-        <p>{t('contactDetails.addTeamMembers')}</p>
-        <Button
-          type="button"
-          onClick={() => null}
-          outline
-          className="margin-top-0"
-        >
-          {t('contactDetails.addAnotherContact')}
-        </Button>
-        <SystemIntakeContactsTable
-          systemIntakeId={systemIntake.id}
-          showActionsColumn
-        />
+        <Section heading={t('contactDetails.teamMembersPointsOfContact')}>
+          <p className="margin-bottom-1">
+            {t('contactDetails.addTeamMembers')}
+          </p>
+
+          <Button
+            type="button"
+            onClick={() => setIsContactsModalOpen(true)}
+            outline
+            className="margin-top-0"
+          >
+            {t('contactDetails.addAnotherContact')}
+          </Button>
+
+          {!contactsTableIsValid && (
+            <Alert type="warning" className="margin-top-3" slim>
+              {t('contactDetails.contactsTableWarning')}
+            </Alert>
+          )}
+
+          <SystemIntakeContactsTable
+            systemIntakeContacts={data?.systemIntakeContacts}
+            loading={loading}
+            className="margin-top-3 padding-top-05 margin-bottom-6"
+            handleEditContact={setContactToEdit}
+          />
+        </Section>
 
         {/* Governance Teams */}
-        <div className="margin-top-3 border-top border-base-light padding-top-1">
-          <p className="margin-top-0 margin-bottom-1 text-bold">
-            {t('requestDetails.subsectionHeadings.collaboration')}
-          </p>
-        </div>
-
-        <EasiFormProvider<GovernanceTeamsForm> {...form}>
-          <GovernanceTeams />
-        </EasiFormProvider>
+        <Section heading={t('requestDetails.subsectionHeadings.collaboration')}>
+          <EasiFormProvider<GovernanceTeamsForm> {...form}>
+            <GovernanceTeams />
+          </EasiFormProvider>
+        </Section>
 
         <Pager
           next={{
-            type: 'submit'
+            type: 'submit',
+            disabled: !isValid || !contactsTableIsValid || loading
           }}
           border
           taskListUrl={saveExitLink}
@@ -224,7 +294,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         />
       </Form>
 
-      {/* <AutoSave values={watch()} onSave={submit} debounceDelay={3000} /> */}
+      <AutoSave values={watch()} onSave={submit} debounceDelay={3000} />
 
       <PageNumber currentPage={1} totalPages={5} className="margin-bottom-15" />
     </>

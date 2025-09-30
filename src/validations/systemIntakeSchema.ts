@@ -1,4 +1,6 @@
 import {
+  SystemIntakeContactComponent,
+  SystemIntakeContactRole,
   SystemIntakeDocumentCommonType,
   SystemIntakeDocumentVersion
 } from 'gql/generated/graphql';
@@ -45,6 +47,55 @@ const governanceTeams = Yup.object().shape({
           : true;
       }
     )
+});
+
+const UserAccountSchema = Yup.object()
+  .shape({
+    username: Yup.string(),
+    commonName: Yup.string(),
+    email: Yup.string()
+  })
+  .test('required', 'Select a contact', values => {
+    return !!(values.username && values.commonName && values.email);
+  });
+
+export const ContactFormSchema = Yup.object().shape({
+  userAccount: UserAccountSchema,
+  component: Yup.mixed<SystemIntakeContactComponent>()
+    .oneOf(Object.values(SystemIntakeContactComponent))
+    .required('Select a component'),
+  roles: Yup.array()
+    .of(
+      Yup.mixed<SystemIntakeContactRole>().oneOf(
+        Object.values(SystemIntakeContactRole)
+      )
+    )
+    .min(1, 'Select at least one role')
+});
+
+export const SystemIntakeContactsSchema = Yup.object({
+  requester: ContactFormSchema.test(
+    'requester-is-valid',
+    requester => !!requester.component && (requester?.roles || []).length > 0
+  ),
+  businessOwners: Yup.array(ContactFormSchema).min(1),
+  // Check that contact exists with product manager, product owner, or project manager role
+  allContacts: Yup.array(ContactFormSchema).test(
+    'has-required-roles',
+    contacts => {
+      if (!contacts || contacts.length === 0) return false;
+
+      const requiredRoles = [
+        SystemIntakeContactRole.PROJECT_MANAGER,
+        SystemIntakeContactRole.PRODUCT_OWNER,
+        SystemIntakeContactRole.PRODUCT_MANAGER
+      ];
+
+      return contacts.some(contact =>
+        contact?.roles?.some(role => role && requiredRoles.includes(role))
+      );
+    }
+  )
 });
 
 const SystemIntakeValidationSchema = {
