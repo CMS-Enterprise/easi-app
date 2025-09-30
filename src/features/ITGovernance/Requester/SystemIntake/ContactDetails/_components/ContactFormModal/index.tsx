@@ -34,7 +34,6 @@ import { ContactFormSchema } from 'validations/systemIntakeSchema';
 
 type ContactFormModalProps = {
   systemIntakeId: string;
-  // Leaving this prop in case this component is used for email recipients in the future
   type: 'contact' | 'recipient';
   closeModal: () => void;
   isOpen: boolean;

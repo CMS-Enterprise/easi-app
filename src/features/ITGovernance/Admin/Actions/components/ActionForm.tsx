@@ -16,7 +16,6 @@ import classNames from 'classnames';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
 import {
   EmailNotificationRecipients,
-  SystemIntakeContactFragment,
   useGetSystemIntakeContactsQuery
 } from 'gql/generated/graphql';
 
@@ -118,13 +117,8 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
 
   const [isLoading, setIsLoading] = useState(true);
 
-  // Active contact for adding/verifying recipients
-  const [activeContact, setActiveContact] =
-    useState<SystemIntakeContactFragment | null>(null);
-
   const {
     control,
-    setValue,
     watch,
     reset,
     handleSubmit,
@@ -219,7 +213,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
     }
   }, [errors, hasErrors]);
 
-  if (isLoading || !systemIntakeContacts) return <PageLoading />;
+  if (isLoading) return <PageLoading />;
 
   const recipients = watch('notificationRecipients');
   const recipientsSelected: boolean =
@@ -352,16 +346,13 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
           />
 
           {/* Notification recipients */}
-          <EmailRecipientsFields
-            className="margin-top-6"
-            systemIntakeId={systemIntakeId}
-            activeContact={activeContact}
-            setActiveContact={setActiveContact}
-            contacts={systemIntakeContacts}
-            recipients={recipients}
-            setRecipients={values => setValue('notificationRecipients', values)}
-            error={errors.notificationRecipients?.message || ''}
-          />
+          {systemIntakeContacts && (
+            <EmailRecipientsFields
+              className="margin-top-6"
+              systemIntakeId={systemIntakeId}
+              contacts={systemIntakeContacts}
+            />
+          )}
 
           {/* Admin note */}
           <Controller

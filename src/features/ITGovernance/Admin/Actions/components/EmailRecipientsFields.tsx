@@ -1,14 +1,15 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useState } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { ErrorMessage } from '@hookform/error-message';
+import { Button } from '@trussworks/react-uswds';
 import classnames from 'classnames';
-import { RecipientLabel } from 'features/TechnicalAssistance/Admin/_components/ActionFormWrapper/Recipients';
+import ContactFormModal from 'features/ITGovernance/Requester/SystemIntake/ContactDetails/_components/ContactFormModal';
 import {
-  EmailNotificationRecipients,
   GetSystemIntakeContactsQuery,
   SystemIntakeContactFragment
 } from 'gql/generated/graphql';
 
-import AdditionalContacts from 'components/AdditionalContacts';
 import Alert from 'components/Alert';
 import CheckboxField from 'components/CheckboxField';
 import FieldErrorMsg from 'components/FieldErrorMsg';
@@ -18,279 +19,232 @@ import cmsComponents from 'constants/cmsComponents';
 import { IT_GOV_EMAIL, IT_INVESTMENT_EMAIL } from 'constants/externalUrls';
 import isExternalEmail from 'utils/externalEmail';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
+import toggleArrayValue from 'utils/toggleArrayValue';
 
-type EmailRecipientsFieldsProps = {
-  optional?: boolean;
-  className?: string;
-  alertClassName?: string;
-  systemIntakeId: string;
-  activeContact: SystemIntakeContactFragment | null;
-  setActiveContact: (contact: SystemIntakeContactFragment | null) => void;
-  contacts: NonNullable<GetSystemIntakeContactsQuery['systemIntakeContacts']>;
-  recipients: EmailNotificationRecipients;
-  setRecipients: (recipients: EmailNotificationRecipients) => void;
-  error: string;
+import { SystemIntakeActionFields } from './ActionForm';
+
+type RecipientLabelProps = {
+  name: string;
+  email: string;
+  component?: SystemIntakeContactFragment['component'];
+  roles?: SystemIntakeContactFragment['roles'];
+  isRequester?: boolean;
 };
 
-/**
- * Email recipient fields with functionality to verify and add recipients
- */
+/** Formats recipient for checkbox label */
+const RecipientLabel = ({
+  name,
+  email,
+  component,
+  roles,
+  /** If true, adds "Requester" to beginning of roles list */
+  isRequester
+}: RecipientLabelProps) => {
+  const { t } = useTranslation('intake');
+
+  const componentString = component && cmsComponents[component].name;
+
+  let rolesArray = (roles || []).map(role =>
+    t(`contactDetails.systemIntakeContactRoles.${role}`)
+  );
+
+  if (isRequester) {
+    rolesArray = [t('Requester'), ...rolesArray];
+  }
+
+  const commaSeparatedRoles = rolesArray.join(', ');
+
+  return (
+    <>
+      <span>
+        {getPersonNameAndComponentAcronym(name, componentString)}
+        {commaSeparatedRoles && ` (${commaSeparatedRoles})`}
+      </span>
+      {email && <span className="display-block text-base-dark">{email}</span>}
+    </>
+  );
+};
+
+const RecipientCheckboxField = ({
+  userAccount: { commonName, email },
+  component,
+  roles,
+  isRequester
+}: SystemIntakeContactFragment) => {
+  return (
+    <Controller
+      name="notificationRecipients.regularRecipientEmails"
+      render={({ field: { ref, ...field } }) => {
+        return (
+          <CheckboxField
+            {...field}
+            id={`recipient_${email}`}
+            value={email}
+            checked={field.value.includes(email)}
+            onChange={e =>
+              field.onChange(toggleArrayValue(field.value, e.target.value))
+            }
+            label={
+              <RecipientLabel
+                name={commonName}
+                email={email}
+                component={component}
+                roles={roles}
+                isRequester={isRequester}
+              />
+            }
+          />
+        );
+      }}
+    />
+  );
+};
+
+type EmailRecipientsFieldsProps = {
+  systemIntakeId: string;
+  contacts: NonNullable<GetSystemIntakeContactsQuery['systemIntakeContacts']>;
+  className?: string;
+};
+
+/** Email recipient fields for IT Governance admin actions */
 const EmailRecipientsFields = ({
-  optional = true,
-  className,
-  alertClassName,
   systemIntakeId,
-  activeContact,
-  setActiveContact,
-  contacts,
-  recipients,
-  setRecipients,
-  error
+  contacts: { requester, allContacts },
+  className
 }: EmailRecipientsFieldsProps) => {
   const { t } = useTranslation('action');
 
-  const { requester, allContacts } = contacts;
+  const [isContactsFormModalOpen, setIsContactsFormModalOpen] = useState(false);
+
+  const {
+    watch,
+    formState: { defaultValues, errors }
+  } = useFormContext<SystemIntakeActionFields>();
+
+  const recipients = watch('notificationRecipients');
+
+  const regularRecipientEmails = watch(
+    'notificationRecipients.regularRecipientEmails'
+  );
+
+  const selectedRecipientsCount = Object.values(recipients)
+    .flat()
+    .filter(value => value).length;
 
   const contactsArrayWithoutRequester = useMemo(
     () => allContacts.filter(contact => contact.id !== requester?.id),
     [allContacts, requester]
   );
 
-  const { regularRecipientEmails } = recipients;
-
-  /** Initial default recipients */
-  const defaultRecipients: EmailNotificationRecipients =
-    useRef(recipients).current;
-
-  /** Number of selected recipients */
-  const selectedCount = Object.values(recipients)
-    .flat()
-    .filter(value => value).length;
-
   /** Returns true if a recipient with an external email has been selected */
-  const externalRecipients: boolean = useMemo(
+  const hasExternalRecipients: boolean = useMemo(
     () => !!regularRecipientEmails.find(email => isExternalEmail(email)),
     [regularRecipientEmails]
   );
 
-  /**
-   * Updates email recipients in system intake
-   */
-  const updateRecipients = (value: string) => {
-    let updatedRecipients = [];
-
-    // Update recipients
-    if (regularRecipientEmails.includes(value)) {
-      // If recipient already exists, remove email from array
-      updatedRecipients = regularRecipientEmails.filter(
-        email => email !== value
-      );
-    } else {
-      // Add email to recipients array
-      updatedRecipients = [...regularRecipientEmails, value];
-    }
-
-    // Update recipients
-    setRecipients({
-      ...recipients,
-      regularRecipientEmails: updatedRecipients
-    });
-  };
-
-  /**
-   * Number of contacts to hide behind view more button
-   */
-  const hiddenContactsCount =
-    Number(!defaultRecipients.shouldNotifyITInvestment) +
-    contactsArrayWithoutRequester.length;
-
-  const requesterRolesList = [
-    t('Requester'),
-    ...(requester?.roles || []).map(role =>
-      t(`intake:contactDetails.systemIntakeContactRoles.${role}`)
-    )
-  ].join(', ');
+  const defaultRecipients = defaultValues?.notificationRecipients;
 
   return (
-    <div className={classnames(className)} id="grtActionEmailRecipientFields">
-      {/* Email required alert */}
-      {!optional && (
-        <Alert type="info" slim className={classnames(alertClassName)}>
-          {t('emailRecipients.emailRequired')}
-        </Alert>
-      )}
+    <>
+      <ContactFormModal
+        type="recipient"
+        systemIntakeId={systemIntakeId}
+        isOpen={isContactsFormModalOpen}
+        closeModal={() => setIsContactsFormModalOpen(false)}
+      />
 
-      {/* Recipients list */}
-      <FieldGroup error={!!error}>
-        <h4 className="margin-bottom-0 margin-top-2">
-          {t('emailRecipients.chooseRecipients')}
-        </h4>
-        <p className="margin-top-05">
-          <strong>{selectedCount}</strong>
-          {t(
-            selectedCount > 1 ? ' recipients selected' : ' recipient selected'
-          )}
-        </p>
-        <FieldErrorMsg>{error}</FieldErrorMsg>
-
-        {/* Requester */}
-        {requester && (
-          <CheckboxField
-            id={`recipient_${requester.userAccount.email}`}
-            name="email-recipient"
-            label={
-              <RecipientLabel
-                name={`${getPersonNameAndComponentAcronym(
-                  requester.userAccount.commonName,
-                  requester.component && cmsComponents[requester.component].name
-                )} (${requesterRolesList})`}
-                email={requester.userAccount.email}
-              />
-            }
-            value={requester.userAccount.email}
-            onChange={e => updateRecipients(e.target.value)}
-            onBlur={() => null}
-            checked={recipients.regularRecipientEmails.includes(
-              requester.userAccount.email
+      <div className={classnames(className)} id="grtActionEmailRecipientFields">
+        <FieldGroup error={!!errors.notificationRecipients?.message}>
+          <h4 className="margin-bottom-0 margin-top-2">
+            {t('emailRecipients.chooseRecipients')}
+          </h4>
+          <p className="margin-top-05">
+            <strong>{selectedRecipientsCount}</strong>
+            {t(
+              selectedRecipientsCount > 1
+                ? ' recipients selected'
+                : ' recipient selected'
             )}
-          />
-        )}
+          </p>
 
-        {/* IT Governance */}
-        <CheckboxField
-          label={
-            <RecipientLabel name={t('itGovernance')} email={IT_GOV_EMAIL} />
-          }
-          checked={recipients.shouldNotifyITGovernance}
-          name="shouldNotifyITGovernance"
-          id="shouldNotifyITGovernance"
-          value="shouldNotifyITGovernance"
-          onChange={e =>
-            setRecipients({
-              ...recipients,
-              shouldNotifyITGovernance: e.target.checked
-            })
-          }
-          onBlur={() => null}
-        />
+          <ErrorMessage name="notificationRecipients" as={<FieldErrorMsg />} />
 
-        {/* IT Investment - if default */}
-        {defaultRecipients.shouldNotifyITInvestment && (
-          <CheckboxField
-            label={
-              <RecipientLabel
-                name={t('itInvestment')}
-                email={IT_INVESTMENT_EMAIL}
-              />
-            }
-            checked={recipients.shouldNotifyITInvestment}
-            name="shouldNotifyITInvestment"
-            id="shouldNotifyITInvestment"
-            value="shouldNotifyITInvestment"
-            onChange={e =>
-              setRecipients({
-                ...recipients,
-                shouldNotifyITInvestment: e.target.checked
-              })
-            }
-            onBlur={() => null}
-          />
-        )}
+          {requester && <RecipientCheckboxField {...requester} />}
 
-        <div id="EmailRecipients-ContactsList" className="margin-bottom-4">
-          <TruncatedContent
-            initialCount={0}
-            labelMore={t(
-              `Show ${
-                hiddenContactsCount > 0 ? `${hiddenContactsCount} ` : ''
-              }more recipients`
-            )}
-            labelLess={t(
-              `Show ${
-                hiddenContactsCount > 0 ? `${hiddenContactsCount} ` : ''
-              }fewer recipients`
-            )}
-            buttonClassName="margin-top-105"
-          >
-            {/* IT Investment - if not default */}
-            {!defaultRecipients.shouldNotifyITInvestment && (
+          <Controller
+            name="notificationRecipients.shouldNotifyITGovernance"
+            render={({ field: { ref, ...field } }) => (
               <CheckboxField
+                {...field}
+                id="shouldNotifyITGovernance"
+                checked={field.value}
                 label={
                   <RecipientLabel
-                    name={t('itInvestment')}
-                    email={IT_INVESTMENT_EMAIL}
+                    name={t('itGovernance')}
+                    email={IT_GOV_EMAIL}
                   />
                 }
-                checked={recipients.shouldNotifyITInvestment}
-                name="shouldNotifyITInvestment"
-                id="shouldNotifyITInvestment"
-                value="shouldNotifyITInvestment"
-                onChange={e =>
-                  setRecipients({
-                    ...recipients,
-                    shouldNotifyITInvestment: e.target.checked
-                  })
-                }
-                onBlur={() => null}
               />
             )}
+          />
 
-            {contactsArrayWithoutRequester.map(contact => {
-              const rolesList = contact.roles
-                .map(role =>
-                  t(`intake:contactDetails.systemIntakeContactRoles.${role}`)
-                )
-                .join(', ');
-
-              const componentString =
-                contact.component && cmsComponents[contact.component].name;
-
-              return (
-                <CheckboxField
-                  key={contact.id}
-                  id={`recipient_${contact.userAccount.email}`}
-                  name="email-recipient"
-                  label={
-                    <RecipientLabel
-                      name={`${getPersonNameAndComponentAcronym(
-                        contact.userAccount.commonName,
-                        componentString
-                      )} (${rolesList})`}
-                      email={contact.userAccount.email}
+          <div id="EmailRecipients-ContactsList" className="margin-bottom-4">
+            <TruncatedContent
+              // Show IT investment mailbox above show more button if default
+              initialCount={Number(defaultRecipients?.shouldNotifyITInvestment)}
+              labelMore={itemCount =>
+                t('showMoreRecipients', { count: itemCount - 2 })
+              }
+              labelLess={itemCount =>
+                t('showFewerRecipients', { count: itemCount - 2 })
+              }
+              buttonClassName="margin-top-105"
+            >
+              {/* IT Investment - if not default */}
+              {!defaultRecipients?.shouldNotifyITInvestment && (
+                <Controller
+                  name="notificationRecipients.shouldNotifyITInvestment"
+                  render={({ field: { ref, ...field } }) => (
+                    <CheckboxField
+                      {...field}
+                      id="shouldNotifyITInvestment"
+                      checked={field.value}
+                      label={
+                        <RecipientLabel
+                          name={t('itInvestment')}
+                          email={IT_INVESTMENT_EMAIL}
+                        />
+                      }
                     />
-                  }
-                  value={contact.userAccount.email}
-                  onChange={e => updateRecipients(e.target.value)}
-                  onBlur={() => null}
-                  checked={recipients.regularRecipientEmails.includes(
-                    contact.userAccount.email
                   )}
                 />
-              );
-            })}
-            {/* Additional Contacts button/form */}
-            <AdditionalContacts
-              systemIntakeId={systemIntakeId}
-              activeContact={activeContact}
-              setActiveContact={setActiveContact}
-              showExternalUsersWarning={externalRecipients}
-              // Add new contact to recipients array
-              createContactCallback={contact =>
-                setRecipients({
-                  ...recipients,
-                  regularRecipientEmails: [
-                    ...recipients.regularRecipientEmails,
-                    contact.userAccount.email
-                  ]
-                })
-              }
-              type="recipient"
-              className="margin-top-3"
-            />
-          </TruncatedContent>
-        </div>
-      </FieldGroup>
-    </div>
+              )}
+
+              {contactsArrayWithoutRequester.map(contact => (
+                <RecipientCheckboxField key={contact.id} {...contact} />
+              ))}
+
+              {hasExternalRecipients && (
+                <Alert type="warning" className="margin-bottom-3" slim>
+                  {t('action:selectExternalRecipientWarning')}
+                </Alert>
+              )}
+
+              <Button
+                type="button"
+                onClick={() => setIsContactsFormModalOpen(true)}
+                outline
+                className="margin-top-0"
+              >
+                {t('intake:contactDetails.additionalContacts.add', {
+                  type: 'recipient'
+                })}
+              </Button>
+            </TruncatedContent>
+          </div>
+        </FieldGroup>
+      </div>
+    </>
   );
 };
 
