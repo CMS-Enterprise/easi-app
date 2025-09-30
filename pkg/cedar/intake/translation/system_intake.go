@@ -3,8 +3,11 @@ package translation
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"strings"
 	"time"
+
+	"github.com/guregu/null"
 
 	wire "github.com/cms-enterprise/easi-app/pkg/cedar/intake/gen/models"
 	intakemodels "github.com/cms-enterprise/easi-app/pkg/cedar/intake/models"
@@ -37,6 +40,12 @@ func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wir
 		})
 	}
 
+	// TODO, should we rebuild the dataloaders here?
+	contacts, err := resolvers.SystemIntakeContactsGetBySystemIntakeID(ctx, si.ID)
+	if err != nil {
+		return nil, fmt.Errorf("error fetching contacts for system intake %s: %w", si.ID.String(), err)
+	}
+
 	clientStatus, err := resolvers.CalculateSystemIntakeAdminStatus(ctx, helpers.PointerTo(models.SystemIntake(*si)))
 	if err != nil {
 		return nil, err
@@ -57,12 +66,6 @@ func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wir
 		UserEUA:                         si.EUAUserID.ValueOrZero(),
 		Status:                          string(clientStatus),
 		RequestType:                     string(si.RequestType),
-		Requester:                       si.Requester,
-		Component:                       si.Component.ValueOrZero(),
-		BusinessOwner:                   si.BusinessOwner.ValueOrZero(),
-		BusinessOwnerComponent:          si.BusinessOwnerComponent.ValueOrZero(),
-		ProductManager:                  si.ProductManager.ValueOrZero(),
-		ProductManagerComponent:         si.ProductManagerComponent.ValueOrZero(),
 		IssoName:                        si.ISSOName.Ptr(),
 		TrbCollaboratorName:             si.TRBCollaboratorName.Ptr(),
 		OitSecurityCollaboratorName:     si.OITSecurityCollaboratorName.Ptr(),
@@ -108,6 +111,33 @@ func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wir
 		LifecycleExpiresAt:              pStr(strDate(si.LifecycleExpiresAt)),
 		LifecycleCostBaseline:           si.LifecycleCostBaseline.Ptr(),
 		// ScheduledProductionDate:         pStr(""), // TODO: fill this out after field is added to intake
+	}
+
+	// Populate contacts. For now, don't stop submission if there is an error fetching these
+	requester, _ := contacts.Requester()
+	if requester != nil {
+		reqAccount, _ := requester.UserAccount(ctx)
+		if reqAccount != nil {
+			si.Requester = reqAccount.Username
+		}
+		si.Component = null.StringFrom(string(requester.Component))
+	}
+	businessOwners, _ := contacts.BusinessOwners()
+	if len(businessOwners) > 0 {
+		boAccount, _ := businessOwners[0].UserAccount(ctx)
+		if boAccount != nil {
+			si.BusinessOwner = null.StringFrom(boAccount.Username)
+		}
+		si.BusinessOwnerComponent = null.StringFrom(string(businessOwners[0].Component))
+	}
+
+	productManagers, _ := contacts.ProductManagers()
+	if len(productManagers) > 0 {
+		pmAccount, _ := productManagers[0].UserAccount(ctx)
+		if pmAccount != nil {
+			si.ProductManager = null.StringFrom(pmAccount.Username)
+		}
+		si.ProductManagerComponent = null.StringFrom(string(productManagers[0].Component))
 	}
 
 	blob, err := json.Marshal(&obj)
