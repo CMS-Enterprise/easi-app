@@ -14,6 +14,7 @@ import CheckboxField from 'components/CheckboxField';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
 import TruncatedContent from 'components/TruncatedContent';
+import cmsComponents from 'constants/cmsComponents';
 import { IT_GOV_EMAIL, IT_INVESTMENT_EMAIL } from 'constants/externalUrls';
 import isExternalEmail from 'utils/externalEmail';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
@@ -97,35 +98,18 @@ const EmailRecipientsFields = ({
   };
 
   /**
-   * Callback after a new additional contact is created
-   *
-   * Adds contact as recipient and to verifiedContacts array
-   */
-  const createContactCallback = (contact: SystemIntakeContactFragment) => {
-    // New contacts should automatically be selected as recipients
-    if (
-      // Check if response from CEDAR includes email
-      contact.userAccount.email &&
-      // Check if contact is already selected as recipient
-      !recipients.regularRecipientEmails.includes(contact.userAccount.email)
-    ) {
-      // Add contact email to recipients array
-      setRecipients({
-        ...recipients,
-        regularRecipientEmails: [
-          ...recipients.regularRecipientEmails,
-          contact.userAccount.email
-        ]
-      });
-    }
-  };
-
-  /**
    * Number of contacts to hide behind view more button
    */
   const hiddenContactsCount =
     Number(!defaultRecipients.shouldNotifyITInvestment) +
     contactsArrayWithoutRequester.length;
+
+  const requesterRolesList = [
+    t('Requester'),
+    ...(requester?.roles || []).map(role =>
+      t(`intake:contactDetails.systemIntakeContactRoles.${role}`)
+    )
+  ].join(', ');
 
   return (
     <div className={classnames(className)} id="grtActionEmailRecipientFields">
@@ -152,26 +136,23 @@ const EmailRecipientsFields = ({
         {/* Requester */}
         {requester && (
           <CheckboxField
-            id={`${requester?.userAccount.username}-requester`}
-            name={`${requester?.userAccount.username}-requester`}
+            id={`recipient_${requester.userAccount.email}`}
+            name="email-recipient"
             label={
               <RecipientLabel
                 name={`${getPersonNameAndComponentAcronym(
                   requester.userAccount.commonName,
-                  requester.component
-                )} (Requester)`}
+                  requester.component && cmsComponents[requester.component].name
+                )} (${requesterRolesList})`}
                 email={requester.userAccount.email}
               />
             }
-            value={requester?.userAccount.email || ''}
+            value={requester.userAccount.email}
             onChange={e => updateRecipients(e.target.value)}
             onBlur={() => null}
-            checked={
-              !!requester?.userAccount.email &&
-              recipients.regularRecipientEmails.includes(
-                requester.userAccount.email
-              )
-            }
+            checked={recipients.regularRecipientEmails.includes(
+              requester.userAccount.email
+            )}
           />
         )}
 
@@ -181,8 +162,8 @@ const EmailRecipientsFields = ({
             <RecipientLabel name={t('itGovernance')} email={IT_GOV_EMAIL} />
           }
           checked={recipients.shouldNotifyITGovernance}
-          name="contact-itGovernanceMailbox"
-          id="contact-itGovernanceMailbox"
+          name="shouldNotifyITGovernance"
+          id="shouldNotifyITGovernance"
           value="shouldNotifyITGovernance"
           onChange={e =>
             setRecipients({
@@ -203,8 +184,8 @@ const EmailRecipientsFields = ({
               />
             }
             checked={recipients.shouldNotifyITInvestment}
-            name="contact-itInvestmentMailbox"
-            id="contact-itInvestmentMailbox"
+            name="shouldNotifyITInvestment"
+            id="shouldNotifyITInvestment"
             value="shouldNotifyITInvestment"
             onChange={e =>
               setRecipients({
@@ -241,8 +222,8 @@ const EmailRecipientsFields = ({
                   />
                 }
                 checked={recipients.shouldNotifyITInvestment}
-                name="contact-itInvestmentMailbox"
-                id="contact-itInvestmentMailbox"
+                name="shouldNotifyITInvestment"
+                id="shouldNotifyITInvestment"
                 value="shouldNotifyITInvestment"
                 onChange={e =>
                   setRecipients({
@@ -253,18 +234,28 @@ const EmailRecipientsFields = ({
                 onBlur={() => null}
               />
             )}
+
             {contactsArrayWithoutRequester.map(contact => {
+              const rolesList = contact.roles
+                .map(role =>
+                  t(`intake:contactDetails.systemIntakeContactRoles.${role}`)
+                )
+                .join(', ');
+
+              const componentString =
+                contact.component && cmsComponents[contact.component].name;
+
               return (
                 <CheckboxField
                   key={contact.id}
-                  id={contact.id}
-                  name={`${contact.userAccount.username}-${contact.roles[0]}`}
+                  id={`recipient_${contact.userAccount.email}`}
+                  name="email-recipient"
                   label={
                     <RecipientLabel
                       name={`${getPersonNameAndComponentAcronym(
                         contact.userAccount.commonName,
-                        contact.component
-                      )} (${contact.roles[0]})`}
+                        componentString
+                      )} (${rolesList})`}
                       email={contact.userAccount.email}
                     />
                   }
@@ -283,7 +274,16 @@ const EmailRecipientsFields = ({
               activeContact={activeContact}
               setActiveContact={setActiveContact}
               showExternalUsersWarning={externalRecipients}
-              createContactCallback={createContactCallback}
+              // Add new contact to recipients array
+              createContactCallback={contact =>
+                setRecipients({
+                  ...recipients,
+                  regularRecipientEmails: [
+                    ...recipients.regularRecipientEmails,
+                    contact.userAccount.email
+                  ]
+                })
+              }
               type="recipient"
               className="margin-top-3"
             />
