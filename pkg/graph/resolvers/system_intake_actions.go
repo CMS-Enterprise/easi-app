@@ -311,6 +311,7 @@ func RejectIntakeAsNotApproved(
 
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
+	intake.DecidedAt = &updatedTime
 
 	// save intake, action, admin note
 	// See Note [Database calls from resolvers aren't atomic]
@@ -446,6 +447,7 @@ func IssueLCID(
 
 	// update other fields
 	intake.UpdatedAt = &currTime
+	intake.DecidedAt = &currTime
 
 	// save intake, action, admin note
 	// see Note [Database calls from resolvers aren't atomic]
@@ -713,6 +715,7 @@ func CreateSystemIntakeActionNotITGovRequest(
 
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
+	intake.DecidedAt = &updatedTime
 
 	// save intake, action, admin note
 	// see Note [Database calls from resolvers aren't atomic]
