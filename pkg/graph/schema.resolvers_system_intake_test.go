@@ -397,6 +397,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithCollaboratorsQuery() {
 		OITSecurityCollaboratorName: null.StringFrom(oitName),
 		TRBCollaboratorName:         null.StringFrom(trbName),
 		CollaboratorName508:         null.StringFrom(name508),
+		GovernanceTeamsIsPresent:    null.BoolFrom(true),
 	})
 	s.NoError(intakeErr)
 

@@ -23,6 +23,8 @@ const (
 	SystemIntakeRequestTypeRECOMPETE SystemIntakeRequestType = "RECOMPETE"
 	// SystemIntakeRequestTypeSHUTDOWN captures enum value of "SHUTDOWN"
 	SystemIntakeRequestTypeSHUTDOWN SystemIntakeRequestType = "SHUTDOWN"
+	// SystemIntakeRequestTypeSHUTDOWN captures enum value of "OTHER"
+	SystemIntakeRequestTypeOTHER SystemIntakeRequestType = "OTHER"
 )
 
 // SystemIntakeState represents whether the intake is open or closed
@@ -105,6 +107,7 @@ type SystemIntake struct {
 	EACollaboratorName                                null.String                  `json:"eaCollaboratorName" db:"ea_collaborator_name"` // EACollaboratorName is stored for legacy/display purposes but no longer collected
 	Collaborator508                                   null.String                  `json:"collaborator508" db:"collaborator_508"`
 	CollaboratorName508                               null.String                  `json:"collaboratorName508" db:"collaborator_name_508"`
+	GovernanceTeamsIsPresent                          null.Bool                    `json:"governanceTeamsIsPresent" db:"governance_teams_is_present"`
 	ProjectName                                       null.String                  `json:"projectName" db:"project_name"`
 	ProjectAcronym                                    null.String                  `json:"projectAcronym" db:"project_acronym"`
 	BusinessNeed                                      null.String                  `json:"businessNeed" db:"business_need"`

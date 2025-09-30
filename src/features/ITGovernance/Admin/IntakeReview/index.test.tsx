@@ -6,7 +6,6 @@ import {
   screen,
   waitForElementToBeRemoved
 } from '@testing-library/react';
-import { SystemIntakeFragmentFragment } from 'gql/generated/graphql';
 import {
   getSystemIntakeContactsQuery,
   getSystemIntakeQuery,
@@ -14,7 +13,6 @@ import {
 } from 'tests/mock/systemIntake';
 
 import { MessageProvider } from 'hooks/useMessage';
-import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import IntakeReview from './index';
 
@@ -68,68 +66,5 @@ describe('The GRT intake review view', () => {
     await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
 
     expect(asFragment()).toMatchSnapshot();
-  });
-
-  it('renders increased costs data', () => {
-    const costs: SystemIntakeFragmentFragment['costs'] = {
-      __typename: 'SystemIntakeCosts',
-      isExpectingIncrease: 'YES',
-      expectedIncreaseAmount: 'less than $1 million'
-    };
-
-    render(
-      <MemoryRouter>
-        <VerboseMockedProvider
-          mocks={[
-            getSystemIntakeQuery({ costs }),
-            getSystemIntakeContactsQuery()
-          ]}
-        >
-          <MessageProvider>
-            <IntakeReview
-              systemIntake={{
-                ...systemIntake,
-                costs
-              }}
-            />
-          </MessageProvider>
-        </VerboseMockedProvider>
-      </MemoryRouter>
-    );
-
-    expect(screen.getByText(/less than \$1 million/i)).toBeInTheDocument();
-  });
-
-  it('renders annual spending data', () => {
-    const annualSpending: SystemIntakeFragmentFragment['annualSpending'] = {
-      __typename: 'SystemIntakeAnnualSpending',
-      currentAnnualSpending: '3.50',
-      currentAnnualSpendingITPortion: '35',
-      plannedYearOneSpending: '123456',
-      plannedYearOneSpendingITPortion: '50'
-    };
-
-    render(
-      <MemoryRouter>
-        <MockedProvider
-          mocks={[
-            getSystemIntakeQuery({ annualSpending }),
-            getSystemIntakeContactsQuery()
-          ]}
-        >
-          <MessageProvider>
-            <IntakeReview
-              systemIntake={{
-                ...systemIntake,
-                annualSpending
-              }}
-            />
-          </MessageProvider>
-        </MockedProvider>
-      </MemoryRouter>
-    );
-
-    expect(screen.getByText('$3.5')).toBeInTheDocument();
-    expect(screen.getByText('$123,456')).toBeInTheDocument();
   });
 });

@@ -1872,9 +1872,8 @@ func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.
 		})
 	}
 
-	isPresent := len(teams) > 0
 	return &models.SystemIntakeGovernanceTeam{
-		IsPresent: &isPresent,
+		IsPresent: obj.GovernanceTeamsIsPresent.Ptr(),
 		Teams:     teams,
 	}, nil
 }
