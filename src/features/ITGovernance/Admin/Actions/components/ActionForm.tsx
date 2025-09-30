@@ -177,11 +177,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
 
   // Set default form values
   useEffect(() => {
-    if (
-      // Check that formatted contacts have been loaded before updating default values
-      !!requester?.systemIntakeId &&
-      isLoading
-    ) {
+    if (requester && isLoading) {
       reset(
         {
           adminNote: '',
@@ -191,9 +187,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
             shouldNotifyITGovernance: true,
             shouldNotifyITInvestment: false,
             ...defaultValues?.notificationRecipients,
-            regularRecipientEmails: requester.userAccount.email
-              ? [requester.userAccount.email]
-              : []
+            regularRecipientEmails: [requester.userAccount.email]
           }
         },
         { keepDefaultValues: false }

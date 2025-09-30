@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { ErrorMessage } from '@hookform/error-message';
 import { Button } from '@trussworks/react-uswds';
 import classnames from 'classnames';
@@ -118,6 +118,7 @@ const EmailRecipientsFields = ({
 
   const {
     watch,
+    setValue,
     formState: { defaultValues, errors }
   } = useFormContext<SystemIntakeActionFields>();
 
@@ -151,6 +152,12 @@ const EmailRecipientsFields = ({
         systemIntakeId={systemIntakeId}
         isOpen={isContactsFormModalOpen}
         closeModal={() => setIsContactsFormModalOpen(false)}
+        createContactCallback={contact => {
+          setValue('notificationRecipients.regularRecipientEmails', [
+            ...regularRecipientEmails,
+            contact.userAccount.email
+          ]);
+        }}
       />
 
       <div className={classnames(className)} id="grtActionEmailRecipientFields">
@@ -159,12 +166,10 @@ const EmailRecipientsFields = ({
             {t('emailRecipients.chooseRecipients')}
           </h4>
           <p className="margin-top-05">
-            <strong>{selectedRecipientsCount}</strong>
-            {t(
-              selectedRecipientsCount > 1
-                ? ' recipients selected'
-                : ' recipient selected'
-            )}
+            <Trans
+              i18nKey="action:recipientsSelected"
+              count={selectedRecipientsCount}
+            />
           </p>
 
           <ErrorMessage name="notificationRecipients" as={<FieldErrorMsg />} />

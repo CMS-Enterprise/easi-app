@@ -38,6 +38,7 @@ type ContactFormModalProps = {
   closeModal: () => void;
   isOpen: boolean;
   initialValues?: ContactFormFields | null;
+  createContactCallback?: (contact: ContactFormFields) => void;
 };
 
 const emptyContactFields: ContactFormFields = {
@@ -57,7 +58,8 @@ const ContactFormModal = ({
   type,
   closeModal,
   isOpen,
-  initialValues
+  initialValues,
+  createContactCallback
 }: ContactFormModalProps) => {
   const { t } = useTranslation('intake');
 
@@ -119,7 +121,13 @@ const ContactFormModal = ({
       action === 'edit' ? handleUpdateContact : handleCreateContact;
 
     return mutate(values)
-      .then(() => closeModal())
+      .then(() => {
+        if (action === 'add') {
+          createContactCallback?.(values);
+        }
+
+        closeModal();
+      })
       .catch(() =>
         setError('root', {
           message: t('contactDetails.additionalContacts.errors.root', {
