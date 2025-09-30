@@ -1,14 +1,22 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Column, useSortBy, useTable } from 'react-table';
-import { Button, Icon, Table, Tooltip } from '@trussworks/react-uswds';
+import {
+  Button,
+  ButtonGroup,
+  Icon,
+  ModalFooter,
+  ModalHeading,
+  Table,
+  Tooltip
+} from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
-  GetSystemIntakeContactsQuery,
   SystemIntakeContactFragment,
   SystemIntakeContactRole
 } from 'gql/generated/graphql';
 
+import Modal from 'components/Modal';
 import Spinner from 'components/Spinner';
 import cmsComponents from 'constants/cmsComponents';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
@@ -16,56 +24,39 @@ import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 import './index.scss';
 
 type SystemIntakeContactsTableProps = {
-  systemIntakeContacts: GetSystemIntakeContactsQuery['systemIntakeContacts'];
-  loading: boolean;
-  /** Sets contact to edit with form modal. If undefined, actions column will not render. */
+  contacts: SystemIntakeContactFragment[] | undefined;
   handleEditContact?: (contact: SystemIntakeContactFragment) => void;
+  removeContact?: (id: string) => void;
+  /** If true, a loading spinner and text will render in place of results */
+  loading?: boolean;
   className?: string;
 };
 
+/**
+ * Table component to display system intake contacts
+ *
+ * Renders actions column and button(s) if handleEditContact and/or removeContact is provided
+ */
 const SystemIntakeContactsTable = ({
-  systemIntakeContacts,
-  loading,
+  contacts,
   handleEditContact,
+  removeContact,
+  loading,
   className
 }: SystemIntakeContactsTableProps) => {
   const { t } = useTranslation('intake');
 
-  const columns = useMemo<Column<SystemIntakeContactFragment>[]>(() => {
-    const actionsColumn: Column<SystemIntakeContactFragment> = {
-      Header: t('general:actions'),
-      id: 'actions',
-      accessor: (row: SystemIntakeContactFragment, index) => {
-        return (
-          <div className="display-flex">
-            <Button
-              type="button"
-              className="margin-top-0 margin-right-2"
-              onClick={() => handleEditContact?.(row)}
-              data-testid={`editContact-${index}`}
-              unstyled
-            >
-              {t('general:edit')}
-            </Button>
-            <Button
-              type="button"
-              className={classNames(
-                'margin-top-0',
-                row.isRequester ? 'text-disabled' : 'text-error'
-              )}
-              unstyled
-              onClick={() => null}
-              data-testid={`removeContact-${index}`}
-              disabled={row.isRequester}
-            >
-              {t('general:remove')}
-            </Button>
-          </div>
-        );
-      },
-      width: 140
-    };
+  const [contactIdToRemove, setContactIdToRemove] = useState<string | null>(
+    null
+  );
 
+  /** Returns true if either `handleEditContact` or `removeContact` is provided */
+  const hasActionsColumn = useMemo(
+    () => !!handleEditContact || !!removeContact,
+    [handleEditContact, removeContact]
+  );
+
+  const columns = useMemo<Column<SystemIntakeContactFragment>[]>(() => {
     return [
       {
         // createdAt column is hidden and only used for sorting purposes
@@ -165,20 +156,61 @@ const SystemIntakeContactsTable = ({
           );
         }
       },
-      ...(handleEditContact ? [actionsColumn] : [])
+      {
+        Header: t('general:actions'),
+        id: 'actions',
+        accessor: (row: SystemIntakeContactFragment, index) => {
+          return (
+            <div className="display-flex">
+              {handleEditContact && (
+                <Button
+                  type="button"
+                  className="margin-top-0 margin-right-2"
+                  onClick={() => handleEditContact(row)}
+                  data-testid={`editContact-${index}`}
+                  unstyled
+                >
+                  {t('general:edit')}
+                </Button>
+              )}
+              {removeContact && (
+                <Button
+                  type="button"
+                  className={classNames(
+                    'margin-top-0',
+                    row.isRequester ? 'text-disabled' : 'text-error'
+                  )}
+                  unstyled
+                  onClick={() => setContactIdToRemove(row.id)}
+                  data-testid={`removeContact-${index}`}
+                  disabled={row.isRequester}
+                >
+                  {t('general:remove')}
+                </Button>
+              )}
+            </div>
+          );
+        },
+        width: 140
+      }
     ];
-  }, [t, handleEditContact]);
-
-  const contacts = systemIntakeContacts?.allContacts || [];
+  }, [t, handleEditContact, removeContact]);
 
   const table = useTable(
     {
       columns,
-      data: contacts,
+      data: contacts || [],
       autoResetSortBy: false,
       autoResetPage: true,
       initialState: {
-        hiddenColumns: useMemo(() => ['createdAt'], []),
+        hiddenColumns: useMemo(
+          () => [
+            'createdAt',
+            // Hide actions column if `hasActionsColumn` is false
+            ...(hasActionsColumn ? [] : ['actions'])
+          ],
+          [hasActionsColumn]
+        ),
         sortBy: useMemo(() => [{ id: 'createdAt', desc: false }], [])
       }
     },
@@ -191,111 +223,156 @@ const SystemIntakeContactsTable = ({
   rows.map(row => prepareRow(row));
 
   return (
-    <div
-      className={classNames(
-        'system-intake-contacts-table usa-table-container--scrollable',
-        className
-      )}
-    >
-      <Table bordered={false} fullWidth {...getTableProps()}>
-        <thead>
-          {headerGroups.map(headerGroup => {
-            const { key, ...headerGroupProps } =
-              headerGroup.getHeaderGroupProps();
+    <>
+      <div
+        className={classNames(
+          'system-intake-contacts-table usa-table-container--scrollable',
+          className
+        )}
+      >
+        <Table bordered={false} fullWidth {...getTableProps()}>
+          <thead>
+            {headerGroups.map(headerGroup => {
+              const { key, ...headerGroupProps } =
+                headerGroup.getHeaderGroupProps();
 
-            return (
-              <tr {...headerGroupProps} key={key}>
-                {headerGroup.headers.map(column => {
-                  const { key: headerKey, ...headerProps } =
-                    column.getHeaderProps();
+              return (
+                <tr {...headerGroupProps} key={key}>
+                  {headerGroup.headers.map(column => {
+                    const { key: headerKey, ...headerProps } =
+                      column.getHeaderProps();
 
-                  if (column.id === 'actions') {
+                    if (column.id === 'actions') {
+                      return (
+                        <th
+                          {...headerProps}
+                          key={headerKey}
+                          className="border-bottom-2px"
+                          style={{
+                            width: column.width
+                          }}
+                        >
+                          {column.render('Header')}
+                        </th>
+                      );
+                    }
+
                     return (
                       <th
                         {...headerProps}
                         key={headerKey}
+                        aria-sort={getColumnSortStatus(column)}
+                        scope="col"
                         className="border-bottom-2px"
                         style={{
                           width: column.width
                         }}
                       >
-                        {column.render('Header')}
+                        <Button
+                          type="button"
+                          className="width-full flex-justify margin-y-0"
+                          unstyled
+                          {...column.getSortByToggleProps()}
+                        >
+                          {column.render('Header')}
+                          {getHeaderSortIcon(column)}
+                        </Button>
                       </th>
-                    );
-                  }
-
-                  return (
-                    <th
-                      {...headerProps}
-                      key={headerKey}
-                      aria-sort={getColumnSortStatus(column)}
-                      scope="col"
-                      className="border-bottom-2px"
-                      style={{
-                        width: column.width
-                      }}
-                    >
-                      <Button
-                        type="button"
-                        className="width-full flex-justify margin-y-0"
-                        unstyled
-                        {...column.getSortByToggleProps()}
-                      >
-                        {column.render('Header')}
-                        {getHeaderSortIcon(column)}
-                      </Button>
-                    </th>
-                  );
-                })}
-              </tr>
-            );
-          })}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.length > 0 ? (
-            rows.map(row => {
-              const { key: rowKey, ...rowProps } = row.getRowProps();
-
-              const { id } = row.original;
-
-              return (
-                <tr
-                  {...rowProps}
-                  key={rowKey}
-                  data-testid="contact-row"
-                  aria-label={`contact-${id}`}
-                >
-                  {row.cells.map(cell => {
-                    const { key: cellKey, ...cellProps } = cell.getCellProps();
-
-                    return (
-                      <td {...cellProps} key={cellKey}>
-                        {cell.render('Cell')}
-                      </td>
                     );
                   })}
                 </tr>
               );
-            })
-          ) : (
-            <tr>
-              <td colSpan={columns.length} className="padding-left-4">
-                <span className="margin-left-05 display-flex flex-align-center text-italic">
-                  {loading ? (
-                    <>
-                      <Spinner size="small" className="margin-right-1" />
-                      {t('contactDetails.loadingContacts')}
-                    </>
-                  ) : (
-                    t('contactDetails.noContacts')
-                  )}
-                </span>
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </Table>
-    </div>
+            })}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.length > 0 ? (
+              rows.map(row => {
+                const { key: rowKey, ...rowProps } = row.getRowProps();
+
+                const { id } = row.original;
+
+                return (
+                  <tr
+                    {...rowProps}
+                    key={rowKey}
+                    data-testid="contact-row"
+                    aria-label={`contact-${id}`}
+                  >
+                    {row.cells.map(cell => {
+                      const { key: cellKey, ...cellProps } =
+                        cell.getCellProps();
+
+                      return (
+                        <td {...cellProps} key={cellKey}>
+                          {cell.render('Cell')}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })
+            ) : (
+              <tr>
+                <td colSpan={columns.length} className="padding-left-4">
+                  <span className="margin-left-05 display-flex flex-align-center text-italic">
+                    {loading ? (
+                      <>
+                        <Spinner size="small" className="margin-right-1" />
+                        {t('contactDetails.loadingContacts')}
+                      </>
+                    ) : (
+                      t('contactDetails.noContacts')
+                    )}
+                  </span>
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </Table>
+      </div>
+
+      {/* Remove contact modal */}
+      {removeContact && (
+        <Modal
+          isOpen={!!contactIdToRemove}
+          closeModal={() => setContactIdToRemove(null)}
+          className="font-body-md"
+        >
+          <ModalHeading>
+            {t('contactDetails.additionalContacts.removeModal.heading')}
+          </ModalHeading>
+          <p>
+            {t('contactDetails.additionalContacts.removeModal.description')}
+          </p>
+
+          <ModalFooter>
+            <ButtonGroup>
+              <Button
+                type="button"
+                className="margin-right-2 bg-error"
+                onClick={() => {
+                  if (contactIdToRemove) {
+                    removeContact(contactIdToRemove);
+                  }
+
+                  setContactIdToRemove(null);
+                }}
+              >
+                {t('contactDetails.additionalContacts.removeModal.submit')}
+              </Button>
+
+              <Button
+                type="button"
+                onClick={() => setContactIdToRemove(null)}
+                unstyled
+              >
+                {t('general:cancel')}
+              </Button>
+            </ButtonGroup>
+          </ModalFooter>
+        </Modal>
+      )}
+    </>
   );
 };
 
