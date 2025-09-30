@@ -443,6 +443,13 @@ const intake = {
         component: "Select the {{type}}'s component",
         role: "Select the {{type}}'s role",
         root: 'There was an error {{action}}ing your {{type}}. Please try again. If the error persists, try again later.'
+      },
+      removeModal: {
+        heading:
+          'Are you sure you want to remove this team member or point of contact?',
+        description:
+          'This action cannot be undone, though you may add this individual again if needed.',
+        submit: 'Remove contact'
       }
     },
     governanceTeam: {

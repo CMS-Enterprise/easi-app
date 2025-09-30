@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {
-  GetSystemIntakeContactsQuery,
   SystemIntakeContactComponent,
   SystemIntakeContactFragment,
   SystemIntakeContactRole
@@ -35,31 +35,22 @@ const additionalContact: SystemIntakeContactFragment = {
   createdAt: '2025-09-23T15:58:46.72809Z'
 };
 
-const systemIntakeContacts: GetSystemIntakeContactsQuery['systemIntakeContacts'] =
-  {
-    __typename: 'SystemIntakeContacts',
-    requester,
-    businessOwners: [businessOwner],
-    productManagers: [productManager],
-    additionalContacts: [],
-    allContacts: [requester, businessOwner, productManager]
-  };
+const systemIntakeContacts: SystemIntakeContactFragment[] = [
+  requester,
+  businessOwner,
+  productManager
+];
 
 describe('SystemIntakeContactsTable', () => {
   it('renders the contacts', () => {
-    render(
-      <SystemIntakeContactsTable
-        systemIntakeContacts={systemIntakeContacts}
-        loading={false}
-      />
-    );
+    render(<SystemIntakeContactsTable contacts={systemIntakeContacts} />);
 
     expect(screen.getAllByTestId('contact-row')).toHaveLength(
-      systemIntakeContacts.allContacts.length
+      systemIntakeContacts.length
     );
 
     // Check that each contact renders in the table
-    systemIntakeContacts.allContacts.forEach(contact => {
+    systemIntakeContacts.forEach(contact => {
       expect(
         screen.getByRole('row', { name: `contact-${contact.id}` })
       ).toBeInTheDocument();
@@ -67,12 +58,7 @@ describe('SystemIntakeContactsTable', () => {
   });
 
   it('displays requester icon for requester contact', () => {
-    render(
-      <SystemIntakeContactsTable
-        systemIntakeContacts={systemIntakeContacts}
-        loading={false}
-      />
-    );
+    render(<SystemIntakeContactsTable contacts={systemIntakeContacts} />);
 
     const requesterRow = screen.getByRole('row', {
       name: `contact-${requester.id}`
@@ -88,12 +74,7 @@ describe('SystemIntakeContactsTable', () => {
   });
 
   it('does not display requester icon for non-requester contacts', () => {
-    render(
-      <SystemIntakeContactsTable
-        systemIntakeContacts={systemIntakeContacts}
-        loading={false}
-      />
-    );
+    render(<SystemIntakeContactsTable contacts={systemIntakeContacts} />);
 
     const nonRequesterRow = screen.getByRole('row', {
       name: `contact-${businessOwner.id}`
@@ -107,12 +88,7 @@ describe('SystemIntakeContactsTable', () => {
   });
 
   it('displays contact names and emails', () => {
-    render(
-      <SystemIntakeContactsTable
-        systemIntakeContacts={systemIntakeContacts}
-        loading={false}
-      />
-    );
+    render(<SystemIntakeContactsTable contacts={systemIntakeContacts} />);
 
     const requesterRow = screen.getByRole('row', {
       name: `contact-${requester.id}`
@@ -127,12 +103,7 @@ describe('SystemIntakeContactsTable', () => {
   });
 
   it('displays component acronym', () => {
-    render(
-      <SystemIntakeContactsTable
-        systemIntakeContacts={systemIntakeContacts}
-        loading={false}
-      />
-    );
+    render(<SystemIntakeContactsTable contacts={systemIntakeContacts} />);
 
     const requesterRow = screen.getByRole('row', {
       name: `contact-${requester.id}`
@@ -153,15 +124,7 @@ describe('SystemIntakeContactsTable', () => {
 
     render(
       <SystemIntakeContactsTable
-        systemIntakeContacts={{
-          ...systemIntakeContacts,
-          additionalContacts: [contactWithoutComponent],
-          allContacts: [
-            ...systemIntakeContacts.allContacts,
-            contactWithoutComponent
-          ]
-        }}
-        loading={false}
+        contacts={[...systemIntakeContacts, contactWithoutComponent]}
       />
     );
 
@@ -169,12 +132,7 @@ describe('SystemIntakeContactsTable', () => {
   });
 
   it('displays translated role names', () => {
-    render(
-      <SystemIntakeContactsTable
-        systemIntakeContacts={systemIntakeContacts}
-        loading={false}
-      />
-    );
+    render(<SystemIntakeContactsTable contacts={systemIntakeContacts} />);
 
     const requesterRow = screen.getByRole('row', {
       name: `contact-${businessOwner.id}`
@@ -198,15 +156,7 @@ describe('SystemIntakeContactsTable', () => {
 
     render(
       <SystemIntakeContactsTable
-        systemIntakeContacts={{
-          ...systemIntakeContacts,
-          additionalContacts: [contactWithoutRoles],
-          allContacts: [
-            ...systemIntakeContacts.allContacts,
-            contactWithoutRoles
-          ]
-        }}
-        loading={false}
+        contacts={[...systemIntakeContacts, contactWithoutRoles]}
       />
     );
 
@@ -216,9 +166,9 @@ describe('SystemIntakeContactsTable', () => {
   it('renders action buttons for all contacts', () => {
     render(
       <SystemIntakeContactsTable
-        systemIntakeContacts={systemIntakeContacts}
-        loading={false}
+        contacts={systemIntakeContacts}
         handleEditContact={() => vi.fn()}
+        removeContact={() => vi.fn()}
       />
     );
 
@@ -234,17 +184,13 @@ describe('SystemIntakeContactsTable', () => {
     ).toBeInTheDocument();
   });
 
-  it('hides action buttons if handleEditContact is not provided', () => {
-    render(
-      <SystemIntakeContactsTable
-        systemIntakeContacts={systemIntakeContacts}
-        loading={false}
-      />
-    );
+  it('hides action buttons if `handleEditContact` and `removeContact` are not provided', () => {
+    render(<SystemIntakeContactsTable contacts={systemIntakeContacts} />);
 
     expect(
       screen.queryByRole('button', { name: 'Edit' })
     ).not.toBeInTheDocument();
+
     expect(
       screen.queryByRole('button', { name: 'Remove' })
     ).not.toBeInTheDocument();
@@ -253,9 +199,9 @@ describe('SystemIntakeContactsTable', () => {
   it('disables remove button for requester contact', async () => {
     render(
       <SystemIntakeContactsTable
-        systemIntakeContacts={systemIntakeContacts}
-        loading={false}
+        contacts={systemIntakeContacts}
         handleEditContact={() => vi.fn()}
+        removeContact={() => vi.fn()}
       />
     );
 
@@ -268,5 +214,36 @@ describe('SystemIntakeContactsTable', () => {
     });
 
     expect(requesterRemoveButton).toBeDisabled();
+  });
+
+  it('renders remove modal when button is clicked', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <SystemIntakeContactsTable
+        contacts={systemIntakeContacts}
+        handleEditContact={() => vi.fn()}
+        removeContact={() => vi.fn()}
+      />
+    );
+
+    const businessOwnerRow = screen.getByRole('row', {
+      name: `contact-${businessOwner.id}`
+    });
+
+    const businessOwnerRemoveButton = within(businessOwnerRow).getByRole(
+      'button',
+      {
+        name: 'Remove'
+      }
+    );
+
+    await user.click(businessOwnerRemoveButton);
+
+    expect(
+      await screen.findByRole('heading', {
+        name: 'Are you sure you want to remove this team member or point of contact?'
+      })
+    ).toBeInTheDocument();
   });
 });
