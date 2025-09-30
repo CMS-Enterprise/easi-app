@@ -16,7 +16,8 @@ import classNames from 'classnames';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
 import {
   EmailNotificationRecipients,
-  SystemIntakeContactFragment
+  SystemIntakeContactFragment,
+  useGetSystemIntakeContactsQuery
 } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
@@ -30,7 +31,6 @@ import PageLoading from 'components/PageLoading';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import RichTextEditor from 'components/RichTextEditor';
 import useMessage from 'hooks/useMessage';
-import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 
 import ActionsSummary, { ActionsSummaryProps } from './ActionsSummary';
 import EmailRecipientsFields from './EmailRecipientsFields';
@@ -109,10 +109,12 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  const {
-    contacts: { data: contacts }
-  } = useSystemIntakeContacts(systemIntakeId);
-  const { requester } = contacts || {};
+  const { data: { systemIntakeContacts } = {} } =
+    useGetSystemIntakeContactsQuery({
+      variables: { id: systemIntakeId }
+    });
+
+  const { requester } = systemIntakeContacts || {};
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -217,7 +219,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
     }
   }, [errors, hasErrors]);
 
-  if (isLoading || !contacts) return <PageLoading />;
+  if (isLoading || !systemIntakeContacts) return <PageLoading />;
 
   const recipients = watch('notificationRecipients');
   const recipientsSelected: boolean =
@@ -355,7 +357,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
             systemIntakeId={systemIntakeId}
             activeContact={activeContact}
             setActiveContact={setActiveContact}
-            contacts={contacts}
+            contacts={systemIntakeContacts}
             recipients={recipients}
             setRecipients={values => setValue('notificationRecipients', values)}
             error={errors.notificationRecipients?.message || ''}
