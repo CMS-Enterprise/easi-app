@@ -2798,6 +2798,7 @@ export type SystemIntakeRequestEditsInput = {
 export enum SystemIntakeRequestType {
   MAJOR_CHANGES = 'MAJOR_CHANGES',
   NEW = 'NEW',
+  OTHER = 'OTHER',
   RECOMPETE = 'RECOMPETE',
   SHUTDOWN = 'SHUTDOWN'
 }

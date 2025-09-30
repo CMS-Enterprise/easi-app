@@ -13,7 +13,12 @@ import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
 import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
 import SystemIntakeSoftwareAcquisitionMethods from 'constants/enums/SystemIntakeSoftwareAcquisitionMethods';
 
-export type RequestType = 'NEW' | 'MAJOR_CHANGES' | 'RECOMPETE' | 'SHUTDOWN';
+export type RequestType =
+  | 'NEW'
+  | 'MAJOR_CHANGES'
+  | 'RECOMPETE'
+  | 'SHUTDOWN'
+  | 'OTHER';
 
 /**
  * Type for SystemIntakeForm

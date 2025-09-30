@@ -145,7 +145,7 @@ const SystemIntakeValidationSchema = {
           'Please enter a valid number for the current annual spending'
         )
         .required('Tell us what the current annual spending for the contract')
-        .positive('Annual spending must be a positive number'),
+        .min(0, 'Annual spending cannot be a negative number'),
       currentAnnualSpendingITPortion: Yup.number()
         .typeError('Please enter a valid number')
         .required(
@@ -158,7 +158,7 @@ const SystemIntakeValidationSchema = {
         .required(
           'Tell us the planned annual spending of the first year of the new contract?'
         )
-        .positive('Annual spending must be a positive number'),
+        .min(0, 'Annual spending cannot be a negative number'),
       plannedYearOneSpendingITPortion: Yup.number()
         .typeError('Please enter a valid number')
         .required('Please enter a valid number for the planned annual spending')

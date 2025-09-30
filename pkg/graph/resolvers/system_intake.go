@@ -131,6 +131,8 @@ func SystemIntakeUpdateContactDetails(ctx context.Context, store *storage.Store,
 	intake.RequestFormState = formstate.GetNewStateForUpdatedForm(intake.RequestFormState)
 
 	if input.GovernanceTeams.IsPresent != nil {
+		intake.GovernanceTeamsIsPresent = null.BoolFromPtr(input.GovernanceTeams.IsPresent)
+
 		trbCollaboratorName := null.StringFromPtr(nil)
 		for _, team := range input.GovernanceTeams.Teams {
 			if team.Key == "technicalReviewBoard" {
@@ -158,6 +160,7 @@ func SystemIntakeUpdateContactDetails(ctx context.Context, store *storage.Store,
 		intake.TRBCollaboratorName = null.StringFromPtr(nil)
 		intake.OITSecurityCollaboratorName = null.StringFromPtr(nil)
 		intake.CollaboratorName508 = null.StringFromPtr(nil)
+		intake.GovernanceTeamsIsPresent = null.BoolFromPtr(nil)
 	}
 
 	savedIntake, err := store.UpdateSystemIntake(ctx, intake)
