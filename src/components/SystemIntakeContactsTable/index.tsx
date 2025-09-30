@@ -12,7 +12,6 @@ import {
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import {
-  GetSystemIntakeContactsQuery,
   SystemIntakeContactFragment,
   SystemIntakeContactRole
 } from 'gql/generated/graphql';
@@ -25,19 +24,24 @@ import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 import './index.scss';
 
 type SystemIntakeContactsTableProps = {
-  systemIntakeContacts: GetSystemIntakeContactsQuery['systemIntakeContacts'];
-  loading: boolean;
-  /** Sets contact to edit with form modal. If undefined, actions column will not render. */
+  contacts: SystemIntakeContactFragment[] | undefined;
   handleEditContact?: (contact: SystemIntakeContactFragment) => void;
   removeContact?: (id: string) => void;
+  /** If true, a loading spinner and text will render in place of results */
+  loading?: boolean;
   className?: string;
 };
 
+/**
+ * Table component to display system intake contacts
+ *
+ * Renders actions column and button(s) if handleEditContact and/or removeContact is provided
+ */
 const SystemIntakeContactsTable = ({
-  systemIntakeContacts,
-  loading,
+  contacts,
   handleEditContact,
   removeContact,
+  loading,
   className
 }: SystemIntakeContactsTableProps) => {
   const { t } = useTranslation('intake');
@@ -46,41 +50,13 @@ const SystemIntakeContactsTable = ({
     null
   );
 
-  const columns = useMemo<Column<SystemIntakeContactFragment>[]>(() => {
-    const actionsColumn: Column<SystemIntakeContactFragment> = {
-      Header: t('general:actions'),
-      id: 'actions',
-      accessor: (row: SystemIntakeContactFragment, index) => {
-        return (
-          <div className="display-flex">
-            <Button
-              type="button"
-              className="margin-top-0 margin-right-2"
-              onClick={() => handleEditContact?.(row)}
-              data-testid={`editContact-${index}`}
-              unstyled
-            >
-              {t('general:edit')}
-            </Button>
-            <Button
-              type="button"
-              className={classNames(
-                'margin-top-0',
-                row.isRequester ? 'text-disabled' : 'text-error'
-              )}
-              unstyled
-              onClick={() => setContactIdToRemove(row.id)}
-              data-testid={`removeContact-${index}`}
-              disabled={row.isRequester}
-            >
-              {t('general:remove')}
-            </Button>
-          </div>
-        );
-      },
-      width: 140
-    };
+  /** Returns true if either `handleEditContact` or `removeContact` is provided */
+  const hasActionsColumn = useMemo(
+    () => !!handleEditContact || !!removeContact,
+    [handleEditContact, removeContact]
+  );
 
+  const columns = useMemo<Column<SystemIntakeContactFragment>[]>(() => {
     return [
       {
         // createdAt column is hidden and only used for sorting purposes
@@ -180,20 +156,61 @@ const SystemIntakeContactsTable = ({
           );
         }
       },
-      ...(handleEditContact ? [actionsColumn] : [])
+      {
+        Header: t('general:actions'),
+        id: 'actions',
+        accessor: (row: SystemIntakeContactFragment, index) => {
+          return (
+            <div className="display-flex">
+              {handleEditContact && (
+                <Button
+                  type="button"
+                  className="margin-top-0 margin-right-2"
+                  onClick={() => handleEditContact(row)}
+                  data-testid={`editContact-${index}`}
+                  unstyled
+                >
+                  {t('general:edit')}
+                </Button>
+              )}
+              {removeContact && (
+                <Button
+                  type="button"
+                  className={classNames(
+                    'margin-top-0',
+                    row.isRequester ? 'text-disabled' : 'text-error'
+                  )}
+                  unstyled
+                  onClick={() => setContactIdToRemove(row.id)}
+                  data-testid={`removeContact-${index}`}
+                  disabled={row.isRequester}
+                >
+                  {t('general:remove')}
+                </Button>
+              )}
+            </div>
+          );
+        },
+        width: 140
+      }
     ];
-  }, [t, handleEditContact]);
-
-  const contacts = systemIntakeContacts?.allContacts || [];
+  }, [t, handleEditContact, removeContact]);
 
   const table = useTable(
     {
       columns,
-      data: contacts,
+      data: contacts || [],
       autoResetSortBy: false,
       autoResetPage: true,
       initialState: {
-        hiddenColumns: useMemo(() => ['createdAt'], []),
+        hiddenColumns: useMemo(
+          () => [
+            'createdAt',
+            // Hide actions column if `hasActionsColumn` is false
+            ...(hasActionsColumn ? [] : ['actions'])
+          ],
+          [hasActionsColumn]
+        ),
         sortBy: useMemo(() => [{ id: 'createdAt', desc: false }], [])
       }
     },

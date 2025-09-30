@@ -243,7 +243,7 @@ export const SystemIntakeReview = ({
       >
         <ReviewRow>
           <SystemIntakeContactsTable
-            systemIntakeContacts={data?.systemIntakeContacts}
+            contacts={data?.systemIntakeContacts?.allContacts}
             loading={contactsLoading}
           />
         </ReviewRow>

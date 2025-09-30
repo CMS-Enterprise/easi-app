@@ -279,13 +279,13 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           )}
 
           <SystemIntakeContactsTable
-            removeContact={id =>
-              removeContact({ variables: { input: { id } } })
-            }
-            systemIntakeContacts={data?.systemIntakeContacts}
+            contacts={data?.systemIntakeContacts?.allContacts}
             loading={loading}
             className="margin-top-3 padding-top-05 margin-bottom-6"
             handleEditContact={setContactToEdit}
+            removeContact={id =>
+              removeContact({ variables: { input: { id } } })
+            }
           />
         </Section>
 
