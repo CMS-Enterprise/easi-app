@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { ErrorMessage } from '@hookform/error-message';
 import { Button } from '@trussworks/react-uswds';
@@ -12,6 +12,7 @@ import {
 
 import Alert from 'components/Alert';
 import CheckboxField from 'components/CheckboxField';
+import { useEasiFormContext } from 'components/EasiForm';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
 import TruncatedContent from 'components/TruncatedContent';
@@ -120,7 +121,7 @@ const EmailRecipientsFields = ({
     watch,
     setValue,
     formState: { defaultValues, errors }
-  } = useFormContext<SystemIntakeActionFields>();
+  } = useEasiFormContext<SystemIntakeActionFields>();
 
   const recipients = watch('notificationRecipients');
 
@@ -172,7 +173,11 @@ const EmailRecipientsFields = ({
             />
           </p>
 
-          <ErrorMessage name="notificationRecipients" as={<FieldErrorMsg />} />
+          <ErrorMessage
+            errors={errors}
+            name="notificationRecipients"
+            as={<FieldErrorMsg />}
+          />
 
           {requester && <RecipientCheckboxField {...requester} />}
 

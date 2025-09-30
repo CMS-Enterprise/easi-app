@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { ApolloError, FetchResult } from '@apollo/client';
@@ -21,6 +21,7 @@ import {
 
 import Alert from 'components/Alert';
 import Breadcrumbs from 'components/Breadcrumbs';
+import { useEasiFormContext } from 'components/EasiForm';
 import { ErrorAlertMessage } from 'components/ErrorAlert';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import Label from 'components/Label';
@@ -124,7 +125,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
     handleSubmit,
     setError,
     formState: { isSubmitting, defaultValues, errors }
-  } = useFormContext<SystemIntakeActionFields>();
+  } = useEasiFormContext<SystemIntakeActionFields>();
 
   /** Execute `onSubmit` prop with success and error handling */
   const completeAction = (formData: TFieldValues) => {
