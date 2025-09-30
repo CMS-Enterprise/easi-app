@@ -336,7 +336,6 @@ const governanceReviewTeam = {
       'Leah Nguyen',
       'Leilani Fields',
       'Nicholas Downey',
-      'Savannah Huttenberger',
       'Tara Ross',
       'Valerie Hartz'
     ]
