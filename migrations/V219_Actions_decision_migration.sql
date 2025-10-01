@@ -6,4 +6,4 @@ FROM (SELECT DISTINCT ON (intake_id)
 FROM actions
 WHERE action_type IN ('NOT_GOVERNANCE', 'ISSUE_LCID', 'REJECT', 'CLOSE_REQUEST')
 ORDER BY intake_id, created_at DESC) x
-WHERE si.id = x.intake_id
+WHERE si.id = x.intake_id;
