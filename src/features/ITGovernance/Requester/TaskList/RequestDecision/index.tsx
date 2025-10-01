@@ -29,8 +29,6 @@ import { RichTextViewer } from 'components/RichTextEditor';
 import { ENTERPRISE_ARCH_EMAIL, IT_GOV_EMAIL } from 'constants/externalUrls';
 import { formatDateLocal } from 'utils/date';
 
-import './index.scss';
-
 const RequestDecision = () => {
   const { systemId } = useParams<{ systemId: string }>();
   const { t } = useTranslation('taskList');
