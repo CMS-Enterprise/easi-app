@@ -37,7 +37,9 @@ const taskList = {
     decision: 'Decision:',
     alert:
       'A decision has been made for this request, you can view the decision at the bottom of this page. Please check the email sent to you for further information.',
-    needHelp: 'Need help? Contact the Governance team'
+    needHelp: 'Need help? Contact the Governance team',
+    haveQuestions: 'Have questions about this decision?',
+    contact: 'Contact the Governance Team at <emailLink>{{email}}</emailLink>.'
   },
   navigation: {
     home: 'IT Governance',
