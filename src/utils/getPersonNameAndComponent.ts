@@ -1,4 +1,5 @@
 import { SystemIntakeContactComponent } from 'gql/generated/graphql';
+import i18next from 'i18next';
 
 import cmsComponentsMap from 'constants/cmsComponentsMap';
 
@@ -31,14 +32,14 @@ export const getPersonNameAndComponentAcronym = (
   let acronym: string | undefined;
   let componentString: string = component;
 
-  // Get acronym and component name (if prop is an enum) from cmsComponentsMap
+  // Get acronym and component label key (if prop is an enum) from cmsComponentsMap
   if (isComponentEnum(component)) {
     const componentObject = cmsComponentsMap[component];
     acronym = componentObject.acronym;
-    componentString = componentObject.name;
+    componentString = i18next.t(componentObject.labelKey);
   } else {
     acronym = Object.values(cmsComponentsMap).find(
-      val => val.name === component
+      val => i18next.t(val.labelKey) === component
     )?.acronym;
   }
 

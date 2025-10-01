@@ -232,9 +232,9 @@ const ContactFormModal = ({
             </option>
             {Object.entries(cmsComponentsMap)
               .filter(([enumValue, val]) => !val.legacy)
-              .map(([enumValue, { acronym, name }]) => (
+              .map(([enumValue, { acronym, labelKey }]) => (
                 <option key={enumValue} value={enumValue}>
-                  {acronym ? `${name} (${acronym})` : name}
+                  {acronym ? `${t(labelKey)} (${acronym})` : t(labelKey)}
                 </option>
               ))}
           </Select>

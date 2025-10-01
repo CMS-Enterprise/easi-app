@@ -126,8 +126,8 @@ const SystemIntakeContactsTable = ({
           // Get component data using enum value
           const component = cmsComponentsMap[value];
 
-          // Display acronym if available, otherwise display component name
-          return <>{component.acronym || t(component.name)}</>;
+          // Display acronym if available, otherwise display component label
+          return <>{component.acronym || t(component.labelKey)}</>;
         }
       },
       {

@@ -199,7 +199,7 @@ export const Table = ({
         Cell: ({ row }: { row: Row<CedarSystem> }) => (
           <p>
             {Object.values(cmsComponentsMap).find(
-              item => item.name === row.original.businessOwnerOrg
+              item => t(item.labelKey) === row.original.businessOwnerOrg
             )?.acronym || row.original.businessOwnerOrg}
           </p>
         )
