@@ -51,6 +51,13 @@ const taskList = {
         'The Technical Review Board (TRB) can offer a variety of advice and guidance about your system and proposed technical solutions. As a part of your next steps, the Governance Team recommends a trb consult session.',
       content_STRONGLY_RECOMMENDED:
         'The Technical Review Board (TRB) can offer a variety of advice and guidance about your system and proposed technical solutions. As a part of your next steps, the Governance Team strongly recommends a TRB consult session.'
+    },
+    updateSystemProfile: {
+      heading: 'Update your System Profile',
+      copy: 'Keeping your System Profile up-to-date allows CMS to maintain current and accurate information about its systems, as required by legislation and department policy. You can view your current System Profile in EASi using the links below and may keep your System Profile updated by:',
+      list1: 'completing the yearly CMS System Census',
+      list2:
+        'emailing Enterprise Architecture at <emailLink>{{email}}</emailLink> if you notice any incorrect information'
     }
   },
   navigation: {
