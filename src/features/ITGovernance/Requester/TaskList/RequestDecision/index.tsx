@@ -1,57 +1,41 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
+import React, { useRef } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { Link, useHistory, useParams } from 'react-router-dom';
+import { useReactToPrint } from 'react-to-print';
 import {
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink,
-  Link as UswdsLink
+  Icon,
+  Link as UswdsLink,
+  SummaryBox,
+  SummaryBoxContent,
+  SummaryBoxHeading
 } from '@trussworks/react-uswds';
+import Decision, {
+  LcidInfoContainer
+} from 'features/ITGovernance/Admin/Decision';
+import { DecisionProvider } from 'features/ITGovernance/Admin/Decision/DecisionContext';
 import {
   SystemIntakeDecisionState,
   SystemIntakeFragmentFragment,
   useGetSystemIntakeQuery
 } from 'gql/generated/graphql';
 
+import IconButton from 'components/IconButton';
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
+import PDFExport, { PDFExportButton } from 'components/PDFExport';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
 
-import Approved from './Approved';
-import NotGovernance from './NotGovernance';
-import Rejected from './Rejected';
-
 import './index.scss';
-
-type DecisionComponentProps = {
-  systemIntake: SystemIntakeFragmentFragment;
-};
-
-/** Renders decision content based on `decisionState` field */
-const DecisionComponent = ({ systemIntake }: DecisionComponentProps) => {
-  const { decisionState } = systemIntake;
-  const { t } = useTranslation('governanceReviewTeam');
-
-  switch (decisionState) {
-    case SystemIntakeDecisionState.LCID_ISSUED:
-      return <Approved intake={systemIntake} />;
-
-    case SystemIntakeDecisionState.NOT_APPROVED:
-      return <Rejected intake={systemIntake} />;
-
-    case SystemIntakeDecisionState.NOT_GOVERNANCE:
-      return <NotGovernance intake={systemIntake} />;
-
-    default:
-      return <p>{t('decision.noDecision')}</p>;
-  }
-};
 
 const RequestDecision = () => {
   const { systemId } = useParams<{ systemId: string }>();
   const { t } = useTranslation('taskList');
+  const history = useHistory();
 
   const { loading, data } = useGetSystemIntakeQuery({
     variables: {
@@ -60,6 +44,17 @@ const RequestDecision = () => {
   });
 
   const systemIntake = data?.systemIntake;
+
+  const printRef = useRef<HTMLDivElement>(null);
+  const handlePrint = useReactToPrint({
+    documentTitle: `${t('navigation.nextSteps')}.pdf`,
+    content: () => printRef.current,
+    pageStyle: `
+      @page {
+        margin: auto;
+      }
+    `
+  });
 
   return (
     <MainContent className="grid-container margin-bottom-7">
@@ -85,25 +80,79 @@ const RequestDecision = () => {
       {loading && <PageLoading />}
 
       {systemIntake && (
-        <div className="grid-row grid-gap-6 margin-top-2">
-          <div className="desktop:grid-col-9 margin-bottom-2">
-            <PageHeading className="margin-top-2">
-              {t('navigation.nextSteps')}
-            </PageHeading>
+        <>
+          <PageHeading className="margin-top-2 margin-bottom-1">
+            {t('navigation.nextSteps')}
+          </PageHeading>
 
-            <DecisionComponent systemIntake={systemIntake} />
+          <div className="display-flex">
+            <IconButton
+              type="button"
+              icon={<Icon.ArrowBack aria-hidden />}
+              className="margin-y-0"
+              onClick={() => {
+                history.goBack();
+              }}
+              unstyled
+            >
+              {t('taskList:navigation.returnToGovernanceTaskList')}
+            </IconButton>
+            <span className="margin-x-2 text-base-light">|</span>
+            <PDFExportButton handlePrint={handlePrint}>
+              {t('decisionNextSteps.downloadPDF')}
+            </PDFExportButton>
+          </div>
 
-            <UswdsReactLink
+          <div ref={printRef}>
+            <DecisionProvider {...systemIntake}>
+              <LcidInfoContainer />
+            </DecisionProvider>
+          </div>
+
+          <SummaryBox className="grid-col-6 margin-top-0 margin-bottom-5">
+            <SummaryBoxHeading headingLevel="h3" className="margin-bottom-2">
+              {t('decision.haveQuestions')}
+            </SummaryBoxHeading>
+            <SummaryBoxContent>
+              <Trans
+                i18nKey="taskList:decision.contact"
+                values={{ email: IT_GOV_EMAIL }}
+                components={{
+                  emailLink: (
+                    <UswdsLink href={`mailto:${IT_GOV_EMAIL}`}> </UswdsLink>
+                  )
+                }}
+              />
+            </SummaryBoxContent>
+          </SummaryBox>
+
+          <div className="display-flex">
+            <IconButton
+              type="button"
+              icon={<Icon.ArrowBack aria-hidden />}
+              className="margin-y-0"
+              onClick={() => {
+                history.goBack();
+              }}
+              unstyled
+            >
+              {t('taskList:navigation.returnToGovernanceTaskList')}
+            </IconButton>
+            <span className="margin-x-2 text-base-light">|</span>
+            <PDFExportButton handlePrint={handlePrint}>
+              {t('decisionNextSteps.downloadPDF')}
+            </PDFExportButton>
+          </div>
+
+          {/* <UswdsReactLink
               className="usa-button margin-top-4"
               variant="unstyled"
               to={`/governance-task-list/${systemId}`}
             >
               {t('navigation.returnToTaskList')}
-            </UswdsReactLink>
-          </div>
-
+            </UswdsReactLink> */}
           {/* Sidebar */}
-          <div className="desktop:grid-col-3">
+          {/* <div className="desktop:grid-col-3">
             <div className="sidebar margin-top-4">
               <h3 className="font-sans-sm">{t('decision.needHelp')}</h3>
               <p>
@@ -112,8 +161,8 @@ const RequestDecision = () => {
                 </UswdsLink>
               </p>
             </div>
-          </div>
-        </div>
+          </div> */}
+        </>
       )}
     </MainContent>
   );
