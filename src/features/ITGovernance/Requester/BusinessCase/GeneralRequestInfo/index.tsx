@@ -96,10 +96,7 @@ const GeneralRequestInfo = ({
                       {t('requestName')}
                       <RequiredAsterisk />
                     </Label>
-                    <HelpText
-                      id="BusinessCase-RequestNameHelp"
-                      className="tablet:width-mobile-lg"
-                    >
+                    <HelpText id="BusinessCase-RequestNameHelp">
                       {t('requestNameHelpText')}
                     </HelpText>
                     <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
@@ -117,7 +114,7 @@ const GeneralRequestInfo = ({
                 <Grid tablet={{ col: 5 }}>
                   <FieldGroup
                     scrollElement="projectAcronym"
-                    className="margin-left-1"
+                    className="tablet:margin-left-1"
                     error={!!flatErrors.projectAcronym}
                   >
                     <Label htmlFor="BusinessCase-ProjectAcronym">

@@ -63,6 +63,7 @@ export const UpdateSystemIntakeRequestDetails = gql(/* GraphQL */ `
       systemIntake {
         id
         requestName
+        projectAcronym
         businessNeed
         businessSolution
         needsEaSupport
