@@ -34,10 +34,7 @@ const IconButton = ({
   ...defaultProps
 }: IconButtonProps) => {
   const linkIcon = React.cloneElement(icon, {
-    className: classNames(
-      icon.props.className,
-      `margin-${iconPosition === 'before' ? 'right' : 'left'}-1`
-    ),
+    className: classNames(icon.props.className),
     'aria-hidden': true
   });
 
