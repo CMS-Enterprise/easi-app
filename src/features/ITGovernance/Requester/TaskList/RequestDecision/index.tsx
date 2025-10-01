@@ -14,7 +14,10 @@ import {
 } from '@trussworks/react-uswds';
 import { LcidInfoContainer } from 'features/ITGovernance/Admin/Decision';
 import { DecisionProvider } from 'features/ITGovernance/Admin/Decision/DecisionContext';
-import { useGetSystemIntakeQuery } from 'gql/generated/graphql';
+import {
+  SystemIntakeDecisionState,
+  useGetSystemIntakeQuery
+} from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import IconButton from 'components/IconButton';
@@ -103,67 +106,75 @@ const RequestDecision = () => {
               <LcidInfoContainer />
             </DecisionProvider>
 
-            <h2 className="margin-top-4 margin-bottom-2">
-              {t('decision.nextSteps')}
-            </h2>
-            <Alert slim type="info">
-              {t('decision.nextStepsAlert')}
-            </Alert>
-            <p>{systemIntake.decisionNextSteps}</p>
-            {systemIntake.decidedAt && (
-              <p className="text-base">
-                {t('decision.nextStepRecommendedOn', {
-                  date: formatDateLocal(systemIntake.decidedAt, 'MM/dd/yyyy')
-                })}
-              </p>
-            )}
+            {systemIntake.decisionState !==
+              SystemIntakeDecisionState.NOT_GOVERNANCE && (
+              <>
+                <h2 className="margin-top-4 margin-bottom-2">
+                  {t('decision.nextSteps')}
+                </h2>
+                <Alert slim type="info">
+                  {t('decision.nextStepsAlert')}
+                </Alert>
+                <p>{systemIntake.decisionNextSteps}</p>
+                {systemIntake.decidedAt && (
+                  <p className="text-base">
+                    {t('decision.nextStepRecommendedOn', {
+                      date: formatDateLocal(
+                        systemIntake.decidedAt,
+                        'MM/dd/yyyy'
+                      )
+                    })}
+                  </p>
+                )}
 
-            <h3 className="margin-top-4 margin-bottom-2">
-              {t('decision.consultWithTheTRB.heading')}
-            </h3>
-            <p className="easi-body-normal">
-              {t('decision.consultWithTheTRB.content', {
-                context: systemIntake.trbFollowUpRecommendation
-              })}
-            </p>
+                <h3 className="margin-top-4 margin-bottom-2">
+                  {t('decision.consultWithTheTRB.heading')}
+                </h3>
+                <p className="easi-body-normal">
+                  {t('decision.consultWithTheTRB.content', {
+                    context: systemIntake.trbFollowUpRecommendation
+                  })}
+                </p>
 
-            <IconButton
-              type="button"
-              icon={<Icon.ArrowForward aria-hidden />}
-              iconPosition="after"
-              className="margin-y-0"
-              onClick={() => {
-                history.push('/trb/start');
-              }}
-              unstyled
-            >
-              {t('technicalAssistance:breadcrumbs.startTrbRequest')}
-            </IconButton>
-
-            <h3 className="margin-top-4 margin-bottom-2">
-              {t('decision.updateSystemProfile.heading')}
-            </h3>
-            <p className="easi-body-normal margin-bottom-0">
-              {t('decision.updateSystemProfile.copy')}
-            </p>
-            <ul className="margin-top-0">
-              <li className="easi-body-normal">
-                {t('decision.updateSystemProfile.list1')}
-              </li>
-              <li className="easi-body-normal">
-                <Trans
-                  i18nKey="taskList:decision.updateSystemProfile.list2"
-                  values={{ email: ENTERPRISE_ARCH_EMAIL }}
-                  components={{
-                    emailLink: (
-                      <UswdsLink href={`mailto:${ENTERPRISE_ARCH_EMAIL}`}>
-                        {' '}
-                      </UswdsLink>
-                    )
+                <IconButton
+                  type="button"
+                  icon={<Icon.ArrowForward aria-hidden />}
+                  iconPosition="after"
+                  className="margin-y-0"
+                  onClick={() => {
+                    history.push('/trb/start');
                   }}
-                />
-              </li>
-            </ul>
+                  unstyled
+                >
+                  {t('technicalAssistance:breadcrumbs.startTrbRequest')}
+                </IconButton>
+
+                <h3 className="margin-top-4 margin-bottom-2">
+                  {t('decision.updateSystemProfile.heading')}
+                </h3>
+                <p className="easi-body-normal margin-bottom-0">
+                  {t('decision.updateSystemProfile.copy')}
+                </p>
+                <ul className="margin-top-0">
+                  <li className="easi-body-normal">
+                    {t('decision.updateSystemProfile.list1')}
+                  </li>
+                  <li className="easi-body-normal">
+                    <Trans
+                      i18nKey="taskList:decision.updateSystemProfile.list2"
+                      values={{ email: ENTERPRISE_ARCH_EMAIL }}
+                      components={{
+                        emailLink: (
+                          <UswdsLink href={`mailto:${ENTERPRISE_ARCH_EMAIL}`}>
+                            {' '}
+                          </UswdsLink>
+                        )
+                      }}
+                    />
+                  </li>
+                </ul>
+              </>
+            )}
           </div>
 
           <SummaryBox className="grid-col-6 margin-top-10 margin-bottom-4">
