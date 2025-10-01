@@ -15,7 +15,6 @@ import { getSystemIntakeQuery, systemIntake } from 'tests/mock/systemIntake';
 
 import { MessageProvider } from 'hooks/useMessage';
 import easiMockStore from 'utils/testing/easiMockStore';
-import { getByRoleWithNameTextKey } from 'utils/testing/helpers';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import RequestDecision from './index';
