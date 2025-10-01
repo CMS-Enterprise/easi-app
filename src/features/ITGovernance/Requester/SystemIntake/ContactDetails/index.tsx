@@ -289,7 +289,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
             data.productManager.component === data.requester.component
         },
         governanceTeams: {
-          isPresent: !!systemIntake.governanceTeams.isPresent,
+          isPresent: systemIntake.governanceTeams.isPresent,
           teams: formatGovTeamsField(systemIntake.governanceTeams.teams)
         }
       });

@@ -59,6 +59,12 @@ const GovernanceTeams = () => {
           {t('contactDetails.collaboration.helpText')}
         </HelpText>
 
+        <ErrorMessage
+          errors={errors}
+          name="governanceTeams.isPresent"
+          as={FieldErrorMsg}
+        />
+
         <Controller
           control={control}
           name="governanceTeams.isPresent"
@@ -69,7 +75,7 @@ const GovernanceTeams = () => {
               id="governanceTeamsIsPresentTrue"
               label={t('contactDetails.collaboration.oneOrMore')}
               value="true"
-              checked={!!field.value}
+              checked={field.value === true} // this explicit check isn't needed, but it matches the explicit false check we run below. leaving for consistency
               onChange={() => field.onChange(true)}
             />
           )}
@@ -155,7 +161,7 @@ const GovernanceTeams = () => {
               id="governanceTeamsIsPresentFalse"
               label={t('contactDetails.collaboration.none')}
               value="false"
-              checked={!field.value}
+              checked={field.value === false} // explicitly false check this as `null` is a possible and valid value (i.e., `!field.value` is not sufficient)
               onChange={() => field.onChange(false)}
             />
           )}
