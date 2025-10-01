@@ -129,6 +129,19 @@ const RequestDecision = () => {
                 context: systemIntake.trbFollowUpRecommendation
               })}
             </p>
+
+            <IconButton
+              type="button"
+              icon={<Icon.ArrowForward aria-hidden />}
+              iconPosition="after"
+              className="margin-y-0"
+              onClick={() => {
+                history.push('/trb/start');
+              }}
+              unstyled
+            >
+              {t('technicalAssistance:breadcrumbs.startTrbRequest')}
+            </IconButton>
           </div>
 
           <SummaryBox className="grid-col-6 margin-top-0 margin-bottom-5">
