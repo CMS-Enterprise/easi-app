@@ -103,7 +103,7 @@ const RequestDecision = () => {
 
           <div ref={printRef}>
             <DecisionProvider {...systemIntake}>
-              <LcidInfoContainer />
+              <LcidInfoContainer isRequester />
             </DecisionProvider>
 
             {systemIntake.decisionState !==

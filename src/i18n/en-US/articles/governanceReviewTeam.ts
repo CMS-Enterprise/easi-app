@@ -303,6 +303,11 @@ const governanceReviewTeam = {
     decisionState_NOT_APPROVED: 'This request was not approved.',
     decisionState_NOT_GOVERNANCE:
       'This request is not an IT Governance request.',
+    requesterDecisionState_LCID_ISSUED:
+      'Your request has been approved and a Life Cycle ID (LCID) has been issued.',
+    requesterDecisionState_NOT_APPROVED: 'Your request was not approved.',
+    requesterDecisionState_NOT_GOVERNANCE:
+      'The Governance Team decided that your request is not an IT Governance request.',
     title: 'Decision',
     title_LCID_ISSUED: 'Decision - Approved',
     title_NOT_APPROVED: 'Decision - Rejected',

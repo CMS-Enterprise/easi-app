@@ -42,7 +42,11 @@ const DefinitionCombo = ({
   );
 };
 
-export const LcidInfoContainer = () => {
+export const LcidInfoContainer = ({
+  isRequester
+}: {
+  isRequester?: boolean;
+}) => {
   const { t } = useTranslation('governanceReviewTeam');
   const {
     decisionState,
@@ -95,7 +99,9 @@ export const LcidInfoContainer = () => {
           size={3}
         />
         <span className="easi-body-large text-white">
-          {t('decision.decisionState', { context: decisionState })}
+          {isRequester
+            ? t('decision.requesterDecisionState', { context: decisionState })
+            : t('decision.decisionState', { context: decisionState })}
         </span>
       </div>
 
