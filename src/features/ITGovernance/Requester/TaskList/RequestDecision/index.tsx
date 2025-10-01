@@ -46,7 +46,7 @@ const RequestDecision = () => {
     content: () => printRef.current,
     pageStyle: `
       @page {
-        margin: auto;
+        margin: 1in;
       }
     `
   });
