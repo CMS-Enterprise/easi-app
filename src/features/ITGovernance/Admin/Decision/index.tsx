@@ -42,7 +42,7 @@ const DefinitionCombo = ({
   );
 };
 
-const LcidInfoContainer = () => {
+export const LcidInfoContainer = () => {
   const { t } = useTranslation('governanceReviewTeam');
   const {
     decisionState,
