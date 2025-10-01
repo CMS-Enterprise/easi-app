@@ -563,6 +563,7 @@ func CreateSystemIntakeActionReopenRequest(
 
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
+	intake.DecidedAt = nil
 
 	// save intake, action, admin note
 	// see Note [Database calls from resolvers aren't atomic]
@@ -640,6 +641,7 @@ func CreateSystemIntakeActionCloseRequest(
 
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
+	intake.DecidedAt = &updatedTime
 
 	// save intake, action, admin note
 	// see Note [Database calls from resolvers aren't atomic]
