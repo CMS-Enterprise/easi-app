@@ -973,6 +973,7 @@ type UpdateSystemIntakePayload struct {
 type UpdateSystemIntakeRequestDetailsInput struct {
 	ID                 uuid.UUID                                `json:"id"`
 	RequestName        *string                                  `json:"requestName,omitempty"`
+	ProjectAcronym     *string                                  `json:"projectAcronym,omitempty"`
 	BusinessNeed       *string                                  `json:"businessNeed,omitempty"`
 	BusinessSolution   *string                                  `json:"businessSolution,omitempty"`
 	CurrentStage       *string                                  `json:"currentStage,omitempty"`
