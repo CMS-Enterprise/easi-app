@@ -6,6 +6,31 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
     class="margin-top-neg-1"
   >
     <div
+      class="easi-pdf-export__controls"
+    >
+      <button
+        class="usa-button usa-button--unstyled display-flex flex-align-center easi-no-print"
+        data-testid="button"
+        type="button"
+      >
+        <svg
+          aria-hidden="true"
+          class="usa-icon"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"
+          />
+        </svg>
+        Download Business Case as PDF
+      </button>
+    </div>
+    <div
       class="easi-pdf-export"
     >
       <h1
@@ -1385,7 +1410,7 @@ exports[`The Business Case Review Component > matches the snapshot 1`] = `
       >
         <svg
           aria-hidden="true"
-          class="usa-icon margin-right-1"
+          class="usa-icon"
           focusable="false"
           height="1em"
           role="img"

@@ -62,7 +62,7 @@ exports[`Trb Public Guidance Letter > renders from email link 1`] = `
     >
       <svg
         aria-hidden="true"
-        class="usa-icon margin-right-1"
+        class="usa-icon"
         focusable="false"
         height="1em"
         role="img"
@@ -671,7 +671,7 @@ exports[`Trb Public Guidance Letter > renders from task list link 1`] = `
     >
       <svg
         aria-hidden="true"
-        class="usa-icon margin-right-1"
+        class="usa-icon"
         focusable="false"
         height="1em"
         role="img"

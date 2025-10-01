@@ -95,7 +95,7 @@ exports[`GRB review form step wrapper > matches the snapshot 1`] = `
                 >
                   <svg
                     aria-hidden="true"
-                    class="usa-icon margin-right-1"
+                    class="usa-icon"
                     focusable="false"
                     height="1em"
                     role="img"
