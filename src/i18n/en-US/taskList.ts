@@ -122,7 +122,8 @@ const taskList = {
   decisionNextSteps: {
     heading: 'Decision and next steps',
     description:
-      'If your Business Case is approved you will receive a unique Life Cycle ID. If it is not approved, you would need to address the concerns to proceed.'
+      'If your Business Case is approved you will receive a unique Life Cycle ID. If it is not approved, you would need to address the concerns to proceed.',
+    downloadPDF: 'Download decision and next steps as PDF'
   },
   cta: {
     viewSubmittedRequest: 'View submitted request form',
