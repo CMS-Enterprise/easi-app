@@ -1087,6 +1087,7 @@ Input to update some fields on a system request
 input UpdateSystemIntakeRequestDetailsInput {
   id: UUID!
   requestName: String
+  projectAcronym: String
   businessNeed: String
   businessSolution: String
   currentStage: String

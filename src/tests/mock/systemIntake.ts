@@ -229,6 +229,7 @@ export const governanceRequestFeedbacks: SystemIntakeFragmentFragment['governanc
 export const emptySystemIntake: SystemIntakeFragmentFragment = {
   __typename: 'SystemIntake',
   requestName: null,
+  projectAcronym: null,
   id: systemIntakeId,
   euaUserId: requester.euaUserId,
   adminLead: '',
@@ -369,6 +370,7 @@ export const emptySystemIntake: SystemIntakeFragmentFragment = {
 export const systemIntake: SystemIntakeFragmentFragment = {
   __typename: 'SystemIntake',
   requestName: 'Mock System Intake Request',
+  projectAcronym: 'MSIR',
   id: systemIntakeId,
   euaUserId: requester.euaUserId,
   adminLead: '',
