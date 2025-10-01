@@ -14,7 +14,7 @@ import {
   systemIntake
 } from 'tests/mock/systemIntake';
 
-import cmsComponents from 'constants/cmsComponents';
+import cmsComponentsMap from 'constants/cmsComponentsMap';
 
 import SystemIntakeContactsTable from './index';
 
@@ -112,7 +112,7 @@ describe('SystemIntakeContactsTable', () => {
     const component = requester.component!;
 
     expect(
-      within(requesterRow).getByText(cmsComponents[component].acronym!)
+      within(requesterRow).getByText(cmsComponentsMap[component].acronym!)
     ).toBeInTheDocument();
   });
 

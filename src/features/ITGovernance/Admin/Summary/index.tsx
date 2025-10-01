@@ -28,7 +28,7 @@ import { RadioField, RadioGroup } from 'components/RadioField';
 import StateTag from 'components/StateTag';
 import { RequestType } from 'types/systemIntake';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
-import { translateRequestType } from 'utils/systemIntake';
+import translateRequestType from 'utils/systemIntake';
 
 import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 

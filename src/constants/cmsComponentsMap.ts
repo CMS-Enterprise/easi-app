@@ -1,0 +1,224 @@
+import { SystemIntakeContactComponent } from 'gql/generated/graphql';
+import i18next from 'i18next';
+
+/** Map of CMS components to their name and acronym */
+const cmsComponentsMap: Record<
+  SystemIntakeContactComponent,
+  {
+    /** If true, component is only found in legacy data and cannot be selected in the UI */
+    readonly legacy: boolean;
+    readonly name: string;
+    readonly acronym?: string;
+  }
+> = {
+  CENTER_FOR_CLINICAL_STANDARDS_AND_QUALITY_CCSQ: {
+    acronym: 'CCSQ',
+    name: i18next.t(
+      'intake:systemIntakeContactComponents.CENTER_FOR_CLINICAL_STANDARDS_AND_QUALITY_CCSQ'
+    ),
+    legacy: false
+  },
+  CENTER_FOR_CONSUMER_INFORMATION_AND_INSURANCE_OVERSIGHT_CCIIO: {
+    acronym: 'CCIIO',
+    name: i18next.t(
+      'intake:systemIntakeContactComponents.CENTER_FOR_CONSUMER_INFORMATION_AND_INSURANCE_OVERSIGHT_CCIIO'
+    ),
+    legacy: false
+  },
+  CENTER_FOR_MEDICARE_CM: {
+    acronym: 'CM',
+    name: i18next.t(
+      'intake:systemIntakeContactComponents.CENTER_FOR_MEDICARE_CM'
+    ),
+    legacy: false
+  },
+  CENTER_FOR_MEDICAID_AND_CHIP_SERVICES_CMCS: {
+    acronym: 'CMCS',
+    name: i18next.t(
+      'intake:systemIntakeContactComponents.CENTER_FOR_MEDICAID_AND_CHIP_SERVICES_CMCS'
+    ),
+    legacy: false
+  },
+  CENTER_FOR_MEDICARE_AND_MEDICAID_INNOVATION_CMMI: {
+    acronym: 'CMMI',
+    name: i18next.t(
+      'intake:systemIntakeContactComponents.CENTER_FOR_MEDICARE_AND_MEDICAID_INNOVATION_CMMI'
+    ),
+    legacy: false
+  },
+  CENTER_FOR_PROGRAM_INTEGRITY_CPI: {
+    acronym: 'CPI',
+    name: i18next.t(
+      'intake:systemIntakeContactComponents.CENTER_FOR_PROGRAM_INTEGRITY_CPI'
+    ),
+    legacy: false
+  },
+  CMS_WIDE: {
+    acronym: 'CMS',
+    name: i18next.t('intake:systemIntakeContactComponents.CMS_WIDE'),
+    legacy: false
+  },
+  EMERGENCY_PREPAREDNESS_AND_RESPONSE_OPERATIONS_EPRO: {
+    acronym: 'EPRO',
+    name: i18next.t(
+      'intake:systemIntakeContactComponents.EMERGENCY_PREPAREDNESS_AND_RESPONSE_OPERATIONS_EPRO'
+    ),
+    legacy: false
+  },
+  FEDERAL_COORDINATED_HEALTH_CARE_OFFICE: {
+    acronym: 'FCHCO',
+    name: i18next.t(
+      'intake:systemIntakeContactComponents.FEDERAL_COORDINATED_HEALTH_CARE_OFFICE'
+    ),
+    legacy: false
+  },
+  OFFICE_OF_ACQUISITION_AND_GRANTS_MANAGEMENT_OAGM: {
+    acronym: 'OAGM',
+    name: i18next.t(
+      'intake:systemIntakeContactComponents.OFFICE_OF_ACQUISITION_AND_GRANTS_MANAGEMENT_OAGM'
+    ),
+    legacy: false
+  },
+  OFFICE_OF_HEALTHCARE_EXPERIENCE_AND_INTEROPERABILITY: {
+    acronym: 'OHEI',
+    name: i18next.t(
+      'intake:systemIntakeContactComponents.OFFICE_OF_HEALTHCARE_EXPERIENCE_AND_INTEROPERABILITY'
+    ),
+    legacy: false
+  },
+  OFFICE_OF_COMMUNICATIONS_OC: {
+    acronym: 'OC',
+    name: i18next.t(
+      'intake:systemIntakeContactComponents.OFFICE_OF_COMMUNICATIONS_OC'
+    ),
+    legacy: false
+  },
+  OFFICE_OF_ENTERPRISE_DATA_AND_ANALYTICS_OEDA: {
+    acronym: 'OEDA',
+    name: i18next.t(
+      'intake:systemIntakeContactComponents.OFFICE_OF_ENTERPRISE_DATA_AND_ANALYTICS_OEDA'
+    ),
+    legacy: false
+  },
+  OFFICE_OF_EQUAL_OPPORTUNITY_AND_CIVIL_RIGHTS: {
+    acronym: 'OEOCR',
+    name: i18next.t(
+      'intake:systemIntakeContactComponents.OFFICE_OF_EQUAL_OPPORTUNITY_AND_CIVIL_RIGHTS'
+    ),
+    legacy: false
+  },
+  OFFICE_OF_FINANCIAL_MANAGEMENT_OFM: {
+    acronym: 'OFM',
+    name: i18next.t(
+      'intake:systemIntakeContactComponents.OFFICE_OF_FINANCIAL_MANAGEMENT_OFM'
+    ),
+    legacy: false
+  },
+  OFFICE_OF_HUMAN_CAPITAL: {
+    acronym: 'OHC',
+    name: i18next.t(
+      'intake:systemIntakeContactComponents.OFFICE_OF_HUMAN_CAPITAL'
+    ),
+    legacy: false
+  },
+  OFFICE_OF_INFORMATION_TECHNOLOGY_OIT: {
+    acronym: 'OIT',
+    name: i18next.t(
+      'intake:systemIntakeContactComponents.OFFICE_OF_INFORMATION_TECHNOLOGY_OIT'
+    ),
+    legacy: false
+  },
+  OFFICE_OF_LEGISLATION: {
+    acronym: 'OL',
+    name: i18next.t(
+      'intake:systemIntakeContactComponents.OFFICE_OF_LEGISLATION'
+    ),
+    legacy: false
+  },
+  OFFICE_OF_MINORITY_HEALTH_OMH: {
+    acronym: 'OMH',
+    name: i18next.t(
+      'intake:systemIntakeContactComponents.OFFICE_OF_MINORITY_HEALTH_OMH'
+    ),
+    legacy: false
+  },
+  OFFICE_OF_PROGRAM_OPERATIONS_AND_LOCAL_ENGAGEMENT_OPOLE: {
+    acronym: 'OPOLE',
+    name: i18next.t(
+      'intake:systemIntakeContactComponents.OFFICE_OF_PROGRAM_OPERATIONS_AND_LOCAL_ENGAGEMENT_OPOLE'
+    ),
+    legacy: false
+  },
+  OFFICE_OF_SECURITY_FACILITIES_AND_LOGISTICS_OPERATIONS_OSFLO: {
+    acronym: 'OSFLO',
+    name: i18next.t(
+      'intake:systemIntakeContactComponents.OFFICE_OF_SECURITY_FACILITIES_AND_LOGISTICS_OPERATIONS_OSFLO'
+    ),
+    legacy: false
+  },
+  OFFICE_OF_STRATEGIC_OPERATIONS_AND_REGULATORY_AFFAIRS_OSORA: {
+    acronym: 'OSORA',
+    name: i18next.t(
+      'intake:systemIntakeContactComponents.OFFICE_OF_STRATEGIC_OPERATIONS_AND_REGULATORY_AFFAIRS_OSORA'
+    ),
+    legacy: false
+  },
+  OFFICE_OF_STRATEGY_PERFORMANCE_AND_RESULTS_OSPR: {
+    acronym: 'OSPR',
+    name: i18next.t(
+      'intake:systemIntakeContactComponents.OFFICE_OF_STRATEGY_PERFORMANCE_AND_RESULTS_OSPR'
+    ),
+    legacy: false
+  },
+  OFFICE_OF_THE_ACTUARY_OACT: {
+    acronym: 'OACT',
+    name: i18next.t(
+      'intake:systemIntakeContactComponents.OFFICE_OF_THE_ACTUARY_OACT'
+    ),
+    legacy: false
+  },
+  OFFICES_OF_HEARINGS_AND_INQUIRIES: {
+    acronym: 'OHI',
+    name: i18next.t(
+      'intake:systemIntakeContactComponents.OFFICES_OF_HEARINGS_AND_INQUIRIES'
+    ),
+    legacy: false
+  },
+  OFFICE_OF_THE_ADMINISTRATOR: {
+    acronym: 'OA',
+    name: i18next.t(
+      'intake:systemIntakeContactComponents.OFFICE_OF_THE_ADMINISTRATOR'
+    ),
+    legacy: false
+  },
+  CONSORTIUM_FOR_MEDICAID_AND_CHILDRENS_HEALTH: {
+    name: i18next.t(
+      'intake:systemIntakeContactComponents.CONSORTIUM_FOR_MEDICAID_AND_CHILDRENS_HEALTH'
+    ),
+    legacy: true
+  },
+  CONSORTIUM_FOR_MEDICARE_HEALTH_PLANS_OPERATIONS: {
+    name: i18next.t(
+      'intake:systemIntakeContactComponents.CONSORTIUM_FOR_MEDICARE_HEALTH_PLANS_OPERATIONS'
+    ),
+    legacy: true
+  },
+  OFFICE_OF_BURDEN_REDUCTION_AND_HEALTH_INFORMATICS: {
+    name: i18next.t(
+      'intake:systemIntakeContactComponents.OFFICE_OF_BURDEN_REDUCTION_AND_HEALTH_INFORMATICS'
+    ),
+    legacy: true
+  },
+  OFFICE_OF_SUPPORT_SERVICES_AND_OPERATIONS: {
+    name: i18next.t(
+      'intake:systemIntakeContactComponents.OFFICE_OF_SUPPORT_SERVICES_AND_OPERATIONS'
+    ),
+    legacy: true
+  },
+  OTHER: {
+    name: i18next.t('intake:systemIntakeContactComponents.OTHER'),
+    legacy: false
+  }
+};
+
+export default cmsComponentsMap;

@@ -1,10 +1,10 @@
 import React from 'react';
 
-import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
+import cmsComponentsMap from 'constants/cmsComponentsMap';
 
 const ComponentSelectOptions = () => (
   <>
-    {cmsDivisionsAndOffices
+    {Object.values(cmsComponentsMap)
       .filter(val => !val.legacy)
       .map(({ acronym, name }) => (
         <option key={name} value={name}>

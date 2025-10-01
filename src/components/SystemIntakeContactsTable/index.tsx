@@ -18,7 +18,7 @@ import {
 
 import Modal from 'components/Modal';
 import Spinner from 'components/Spinner';
-import cmsComponents from 'constants/cmsComponents';
+import cmsComponentsMap from 'constants/cmsComponentsMap';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 
 import './index.scss';
@@ -124,7 +124,7 @@ const SystemIntakeContactsTable = ({
           }
 
           // Get component data using enum value
-          const component = cmsComponents[value];
+          const component = cmsComponentsMap[value];
 
           // Display acronym if available, otherwise display component name
           return <>{component.acronym || t(component.name)}</>;
