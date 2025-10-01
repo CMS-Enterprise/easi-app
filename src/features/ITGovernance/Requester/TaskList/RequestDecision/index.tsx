@@ -12,24 +12,17 @@ import {
   SummaryBoxContent,
   SummaryBoxHeading
 } from '@trussworks/react-uswds';
-import Decision, {
-  LcidInfoContainer
-} from 'features/ITGovernance/Admin/Decision';
+import { LcidInfoContainer } from 'features/ITGovernance/Admin/Decision';
 import { DecisionProvider } from 'features/ITGovernance/Admin/Decision/DecisionContext';
-import {
-  SystemIntakeDecisionState,
-  SystemIntakeFragmentFragment,
-  useGetSystemIntakeQuery
-} from 'gql/generated/graphql';
+import { useGetSystemIntakeQuery } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import IconButton from 'components/IconButton';
-import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
-import PDFExport, { PDFExportButton } from 'components/PDFExport';
-import { IT_GOV_EMAIL } from 'constants/externalUrls';
+import { PDFExportButton } from 'components/PDFExport';
+import { ENTERPRISE_ARCH_EMAIL, IT_GOV_EMAIL } from 'constants/externalUrls';
 import { formatDateLocal } from 'utils/date';
 
 import './index.scss';
@@ -110,7 +103,9 @@ const RequestDecision = () => {
               <LcidInfoContainer />
             </DecisionProvider>
 
-            <h2>{t('decision.nextSteps')}</h2>
+            <h2 className="margin-top-4 margin-bottom-2">
+              {t('decision.nextSteps')}
+            </h2>
             <Alert slim type="info">
               {t('decision.nextStepsAlert')}
             </Alert>
@@ -123,8 +118,10 @@ const RequestDecision = () => {
               </p>
             )}
 
-            <h3>{t('decision.consultWithTheTRB.heading')}</h3>
-            <p>
+            <h3 className="margin-top-4 margin-bottom-2">
+              {t('decision.consultWithTheTRB.heading')}
+            </h3>
+            <p className="easi-body-normal">
               {t('decision.consultWithTheTRB.content', {
                 context: systemIntake.trbFollowUpRecommendation
               })}
@@ -142,9 +139,34 @@ const RequestDecision = () => {
             >
               {t('technicalAssistance:breadcrumbs.startTrbRequest')}
             </IconButton>
+
+            <h3 className="margin-top-4 margin-bottom-2">
+              {t('decision.updateSystemProfile.heading')}
+            </h3>
+            <p className="easi-body-normal margin-bottom-0">
+              {t('decision.updateSystemProfile.copy')}
+            </p>
+            <ul className="margin-top-0">
+              <li className="easi-body-normal">
+                {t('decision.updateSystemProfile.list1')}
+              </li>
+              <li className="easi-body-normal">
+                <Trans
+                  i18nKey="taskList:decision.updateSystemProfile.list2"
+                  values={{ email: ENTERPRISE_ARCH_EMAIL }}
+                  components={{
+                    emailLink: (
+                      <UswdsLink href={`mailto:${ENTERPRISE_ARCH_EMAIL}`}>
+                        {' '}
+                      </UswdsLink>
+                    )
+                  }}
+                />
+              </li>
+            </ul>
           </div>
 
-          <SummaryBox className="grid-col-6 margin-top-0 margin-bottom-5">
+          <SummaryBox className="grid-col-6 margin-top-10 margin-bottom-4">
             <SummaryBoxHeading headingLevel="h3" className="margin-bottom-2">
               {t('decision.haveQuestions')}
             </SummaryBoxHeading>
