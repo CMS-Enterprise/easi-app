@@ -38,7 +38,7 @@ import Section from '../_components/Section';
 
 import ContactFormModal from './_components/ContactFormModal';
 import GovernanceTeams from './GovernanceTeams';
-import { formatGovernanceTeamsInput } from './utils';
+import formatGovernanceTeamsInput from './utils';
 
 import './index.scss';
 

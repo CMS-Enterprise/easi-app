@@ -34,11 +34,11 @@ import { ContactFormSchema } from 'validations/systemIntakeSchema';
 
 type ContactFormModalProps = {
   systemIntakeId: string;
-  // Leaving this prop in case this component is used for email recipients in the future
   type: 'contact' | 'recipient';
   closeModal: () => void;
   isOpen: boolean;
   initialValues?: ContactFormFields | null;
+  createContactCallback?: (contact: ContactFormFields) => void;
 };
 
 const emptyContactFields: ContactFormFields = {
@@ -58,7 +58,8 @@ const ContactFormModal = ({
   type,
   closeModal,
   isOpen,
-  initialValues
+  initialValues,
+  createContactCallback
 }: ContactFormModalProps) => {
   const { t } = useTranslation('intake');
 
@@ -120,7 +121,13 @@ const ContactFormModal = ({
       action === 'edit' ? handleUpdateContact : handleCreateContact;
 
     return mutate(values)
-      .then(() => closeModal())
+      .then(() => {
+        if (action === 'add') {
+          createContactCallback?.(values);
+        }
+
+        closeModal();
+      })
       .catch(() =>
         setError('root', {
           message: t('contactDetails.additionalContacts.errors.root', {

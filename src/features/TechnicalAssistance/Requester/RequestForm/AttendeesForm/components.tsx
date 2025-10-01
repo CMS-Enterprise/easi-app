@@ -21,12 +21,12 @@ import {
   Select,
   Table
 } from '@trussworks/react-uswds';
+import ComponentSelectOptions from 'features/TechnicalAssistance/Admin/_components/ComponentSelectOptions.tsx';
 import {
   DeleteTRBRequestAttendeeMutation,
   PersonRole
 } from 'gql/generated/graphql';
 
-import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
 import Alert from 'components/Alert';
 import { AvatarCircle } from 'components/Avatar/Avatar';
 import CedarContactSelect from 'components/CedarContactSelect';
@@ -203,7 +203,7 @@ const AttendeeFields = ({
                       label={`- ${t('basic.options.select')} -`}
                       disabled
                     />
-                    {cmsDivisionsAndOfficesOptions('component')}
+                    <ComponentSelectOptions />
                   </Select>
                 </FormGroup>
               );

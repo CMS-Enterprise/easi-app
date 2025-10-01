@@ -409,7 +409,7 @@ exports[`Trb Admin: Action: Request Edits > submits a feedback message 1`] = `
                 d="m7 10 5 5 5-5z"
               />
             </svg>
-             Show 3 more recipients
+            Show 3 more recipients
           </button>
         </ul>
       </div>

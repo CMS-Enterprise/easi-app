@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { ApolloError, FetchResult } from '@apollo/client';
@@ -16,11 +16,12 @@ import classNames from 'classnames';
 import Pager from 'features/TechnicalAssistance/Requester/RequestForm/Pager';
 import {
   EmailNotificationRecipients,
-  SystemIntakeContactFragment
+  useGetSystemIntakeContactsQuery
 } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import Breadcrumbs from 'components/Breadcrumbs';
+import { useEasiFormContext } from 'components/EasiForm';
 import { ErrorAlertMessage } from 'components/ErrorAlert';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import Label from 'components/Label';
@@ -30,7 +31,6 @@ import PageLoading from 'components/PageLoading';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import RichTextEditor from 'components/RichTextEditor';
 import useMessage from 'hooks/useMessage';
-import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 
 import ActionsSummary, { ActionsSummaryProps } from './ActionsSummary';
 import EmailRecipientsFields from './EmailRecipientsFields';
@@ -109,26 +109,23 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  const {
-    contacts: { data: contacts }
-  } = useSystemIntakeContacts(systemIntakeId);
-  const { requester } = contacts || {};
+  const { data: { systemIntakeContacts } = {} } =
+    useGetSystemIntakeContactsQuery({
+      variables: { id: systemIntakeId }
+    });
+
+  const { requester } = systemIntakeContacts || {};
 
   const [isLoading, setIsLoading] = useState(true);
 
-  // Active contact for adding/verifying recipients
-  const [activeContact, setActiveContact] =
-    useState<SystemIntakeContactFragment | null>(null);
-
   const {
     control,
-    setValue,
     watch,
     reset,
     handleSubmit,
     setError,
     formState: { isSubmitting, defaultValues, errors }
-  } = useFormContext<SystemIntakeActionFields>();
+  } = useEasiFormContext<SystemIntakeActionFields>();
 
   /** Execute `onSubmit` prop with success and error handling */
   const completeAction = (formData: TFieldValues) => {
@@ -181,11 +178,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
 
   // Set default form values
   useEffect(() => {
-    if (
-      // Check that formatted contacts have been loaded before updating default values
-      !!requester?.systemIntakeId &&
-      isLoading
-    ) {
+    if (requester && isLoading) {
       reset(
         {
           adminNote: '',
@@ -195,9 +188,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
             shouldNotifyITGovernance: true,
             shouldNotifyITInvestment: false,
             ...defaultValues?.notificationRecipients,
-            regularRecipientEmails: requester.userAccount.email
-              ? [requester.userAccount.email]
-              : []
+            regularRecipientEmails: [requester.userAccount.email]
           }
         },
         { keepDefaultValues: false }
@@ -217,7 +208,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
     }
   }, [errors, hasErrors]);
 
-  if (isLoading || !contacts) return <PageLoading />;
+  if (isLoading) return <PageLoading />;
 
   const recipients = watch('notificationRecipients');
   const recipientsSelected: boolean =
@@ -350,16 +341,13 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
           />
 
           {/* Notification recipients */}
-          <EmailRecipientsFields
-            className="margin-top-6"
-            systemIntakeId={systemIntakeId}
-            activeContact={activeContact}
-            setActiveContact={setActiveContact}
-            contacts={contacts}
-            recipients={recipients}
-            setRecipients={values => setValue('notificationRecipients', values)}
-            error={errors.notificationRecipients?.message || ''}
-          />
+          {systemIntakeContacts && (
+            <EmailRecipientsFields
+              className="margin-top-6"
+              systemIntakeId={systemIntakeId}
+              contacts={systemIntakeContacts}
+            />
+          )}
 
           {/* Admin note */}
           <Controller

@@ -1,27 +1,10 @@
-import {
-  SystemIntakeCollaboratorInput,
-  SystemIntakeContactFragment,
-  SystemIntakeFragmentFragment
-} from 'gql/generated/graphql';
+import { SystemIntakeCollaboratorInput } from 'gql/generated/graphql';
 
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
-import { CollaboratorFields, ContactFields } from 'types/systemIntake';
-
-/** Removes `roles` and `systemIntakeId` fields from `SystemIntakeContactFragment` type */
-export const formatContactFields = ({
-  userAccount,
-  ...contact
-}: SystemIntakeContactFragment): ContactFields => ({
-  ...contact,
-  username: userAccount.username,
-  commonName: userAccount.commonName,
-  email: userAccount.email,
-  // TODO: fix this
-  component: contact.component!
-});
+import { CollaboratorFields } from 'types/systemIntake';
 
 /** Format system intake governance team field values for gql mutation */
-export const formatGovernanceTeamsInput = (
+const formatGovernanceTeamsInput = (
   teams: CollaboratorFields
 ): SystemIntakeCollaboratorInput[] => {
   return Object.entries(teams)
@@ -39,24 +22,4 @@ export const formatGovernanceTeamsInput = (
     });
 };
 
-/** Format system intake governance team data for Contact details fields */
-export const formatGovTeamsField = (
-  /** System intake `governanceTeams.teams` value */
-  teams:
-    | SystemIntakeFragmentFragment['governanceTeams']['teams']
-    | null
-    | undefined
-): CollaboratorFields => {
-  return cmsGovernanceTeams.reduce((acc, { key }) => {
-    /** Value from system intake */
-    const teamValue = (teams || []).find(value => value.key === key);
-
-    return {
-      ...acc,
-      [key]: {
-        isPresent: !!teamValue,
-        collaborator: teamValue?.collaborator || ''
-      }
-    };
-  }, {} as CollaboratorFields);
-};
+export default formatGovernanceTeamsInput;
