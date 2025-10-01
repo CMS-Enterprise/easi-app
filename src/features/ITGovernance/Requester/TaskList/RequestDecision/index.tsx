@@ -25,6 +25,7 @@ import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import { PDFExportButton } from 'components/PDFExport';
+import { RichTextViewer } from 'components/RichTextEditor';
 import { ENTERPRISE_ARCH_EMAIL, IT_GOV_EMAIL } from 'constants/externalUrls';
 import { formatDateLocal } from 'utils/date';
 
@@ -115,7 +116,14 @@ const RequestDecision = () => {
                 <Alert slim type="info">
                   {t('decision.nextStepsAlert')}
                 </Alert>
-                <p>{systemIntake.decisionNextSteps}</p>
+                <p className="easi-body-normal">
+                  <RichTextViewer
+                    value={
+                      systemIntake.decisionNextSteps ||
+                      t('notes.extendLcid.noNextSteps')
+                    }
+                  />
+                </p>
                 {systemIntake.decidedAt && (
                   <p className="text-base">
                     {t('decision.nextStepRecommendedOn', {
@@ -149,30 +157,37 @@ const RequestDecision = () => {
                   {t('technicalAssistance:breadcrumbs.startTrbRequest')}
                 </IconButton>
 
-                <h3 className="margin-top-4 margin-bottom-2">
-                  {t('decision.updateSystemProfile.heading')}
-                </h3>
-                <p className="easi-body-normal margin-bottom-0">
-                  {t('decision.updateSystemProfile.copy')}
-                </p>
-                <ul className="margin-top-0">
-                  <li className="easi-body-normal">
-                    {t('decision.updateSystemProfile.list1')}
-                  </li>
-                  <li className="easi-body-normal">
-                    <Trans
-                      i18nKey="taskList:decision.updateSystemProfile.list2"
-                      values={{ email: ENTERPRISE_ARCH_EMAIL }}
-                      components={{
-                        emailLink: (
-                          <UswdsLink href={`mailto:${ENTERPRISE_ARCH_EMAIL}`}>
-                            {' '}
-                          </UswdsLink>
-                        )
-                      }}
-                    />
-                  </li>
-                </ul>
+                {systemIntake.decisionState ===
+                  SystemIntakeDecisionState.LCID_ISSUED && (
+                  <>
+                    <h3 className="margin-top-4 margin-bottom-2">
+                      {t('decision.updateSystemProfile.heading')}
+                    </h3>
+                    <p className="easi-body-normal margin-bottom-0">
+                      {t('decision.updateSystemProfile.copy')}
+                    </p>
+                    <ul className="margin-top-0">
+                      <li className="easi-body-normal">
+                        {t('decision.updateSystemProfile.list1')}
+                      </li>
+                      <li className="easi-body-normal">
+                        <Trans
+                          i18nKey="taskList:decision.updateSystemProfile.list2"
+                          values={{ email: ENTERPRISE_ARCH_EMAIL }}
+                          components={{
+                            emailLink: (
+                              <UswdsLink
+                                href={`mailto:${ENTERPRISE_ARCH_EMAIL}`}
+                              >
+                                {' '}
+                              </UswdsLink>
+                            )
+                          }}
+                        />
+                      </li>
+                    </ul>
+                  </>
+                )}
               </>
             )}
           </div>
