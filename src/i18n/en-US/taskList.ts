@@ -32,6 +32,9 @@ const taskList = {
     costBaseline: 'Project Cost Baseline',
     reasons: 'Reasons',
     nextSteps: 'Next steps',
+    nextStepsAlert:
+      'The Governance Review Board (GRB) and Governance Review Team (GRT) recommend that you complete the following next steps as a part of the Governance Review process and your ongoing project.',
+    nextStepRecommendedOn: 'Next steps recommended on {{date}}',
     completeNextSteps:
       'Finish these next steps to complete the governance review process.',
     decision: 'Decision:',
@@ -39,7 +42,16 @@ const taskList = {
       'A decision has been made for this request, you can view the decision at the bottom of this page. Please check the email sent to you for further information.',
     needHelp: 'Need help? Contact the Governance team',
     haveQuestions: 'Have questions about this decision?',
-    contact: 'Contact the Governance Team at <emailLink>{{email}}</emailLink>.'
+    contact: 'Contact the Governance Team at <emailLink>{{email}}</emailLink>.',
+    consultWithTheTRB: {
+      heading: 'Consult with the TRB',
+      content_NOT_RECOMMENDED:
+        'The Technical Review Board (TRB) can offer a variety of advice and guidance about your system and proposed technical solutions. As a part of your next steps, the Governance Team does not think a TRB consult is necessary.',
+      content_RECOMMENDED_BUT_NOT_CRITICAL:
+        'The Technical Review Board (TRB) can offer a variety of advice and guidance about your system and proposed technical solutions. As a part of your next steps, the Governance Team recommends a trb consult session.',
+      content_STRONGLY_RECOMMENDED:
+        'The Technical Review Board (TRB) can offer a variety of advice and guidance about your system and proposed technical solutions. As a part of your next steps, the Governance Team strongly recommends a TRB consult session.'
+    }
   },
   navigation: {
     home: 'IT Governance',

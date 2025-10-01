@@ -22,6 +22,7 @@ import {
   useGetSystemIntakeQuery
 } from 'gql/generated/graphql';
 
+import Alert from 'components/Alert';
 import IconButton from 'components/IconButton';
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
@@ -29,6 +30,7 @@ import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import PDFExport, { PDFExportButton } from 'components/PDFExport';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
+import { formatDateLocal } from 'utils/date';
 
 import './index.scss';
 
@@ -107,6 +109,26 @@ const RequestDecision = () => {
             <DecisionProvider {...systemIntake}>
               <LcidInfoContainer />
             </DecisionProvider>
+
+            <h2>{t('decision.nextSteps')}</h2>
+            <Alert slim type="info">
+              {t('decision.nextStepsAlert')}
+            </Alert>
+            <p>{systemIntake.decisionNextSteps}</p>
+            {systemIntake.decidedAt && (
+              <p className="text-base">
+                {t('decision.nextStepRecommendedOn', {
+                  date: formatDateLocal(systemIntake.decidedAt, 'MM/dd/yyyy')
+                })}
+              </p>
+            )}
+
+            <h3>{t('decision.consultWithTheTRB.heading')}</h3>
+            <p>
+              {t('decision.consultWithTheTRB.content', {
+                context: systemIntake.trbFollowUpRecommendation
+              })}
+            </p>
           </div>
 
           <SummaryBox className="grid-col-6 margin-top-0 margin-bottom-5">
@@ -143,25 +165,6 @@ const RequestDecision = () => {
               {t('decisionNextSteps.downloadPDF')}
             </PDFExportButton>
           </div>
-
-          {/* <UswdsReactLink
-              className="usa-button margin-top-4"
-              variant="unstyled"
-              to={`/governance-task-list/${systemId}`}
-            >
-              {t('navigation.returnToTaskList')}
-            </UswdsReactLink> */}
-          {/* Sidebar */}
-          {/* <div className="desktop:grid-col-3">
-            <div className="sidebar margin-top-4">
-              <h3 className="font-sans-sm">{t('decision.needHelp')}</h3>
-              <p>
-                <UswdsLink href={`mailto:${IT_GOV_EMAIL}`}>
-                  {IT_GOV_EMAIL}
-                </UswdsLink>
-              </p>
-            </div>
-          </div> */}
         </>
       )}
     </MainContent>
