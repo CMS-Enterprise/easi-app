@@ -1,17 +1,25 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
-import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
+import { getNonLegacyComponents } from 'constants/cmsComponentsMap';
 
-const ComponentSelectOptions = () => (
-  <>
-    {cmsDivisionsAndOffices
-      .filter(val => !val.legacy)
-      .map(({ acronym, name }) => (
-        <option key={name} value={name}>
-          {acronym ? `${name} (${acronym})` : name}
-        </option>
-      ))}
-  </>
-);
+const ComponentSelectOptions = () => {
+  const { t } = useTranslation('intake');
+
+  return (
+    <>
+      {getNonLegacyComponents().map(
+        ({ labelKey, acronym, enum: enumValue }) => {
+          const label = t(labelKey);
+          return (
+            <option key={enumValue} value={label}>
+              {acronym ? `${label} (${acronym})` : label}
+            </option>
+          );
+        }
+      )}
+    </>
+  );
+};
 
 export default ComponentSelectOptions;

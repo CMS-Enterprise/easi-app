@@ -22,7 +22,7 @@ import { yesNoMap } from 'data/common';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 import { formatContractDate, formatDateLocal } from 'utils/date';
 import formatContractNumbers from 'utils/formatContractNumbers';
-import { translateRequestType } from 'utils/systemIntake';
+import translateRequestType from 'utils/systemIntake';
 
 import SystemIntakeAnnualSpending from './SystemIntakeAnnualCosts';
 

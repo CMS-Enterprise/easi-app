@@ -37,13 +37,13 @@ import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import TablePagination from 'components/TablePagination';
-import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import contactRoles from 'constants/enums/contactRoles';
 import {
   AttendeeFieldLabels,
   TRBAttendee,
   TRBAttendeeFields
 } from 'types/technicalAssistance';
+import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 
 import { initialAttendee } from '../Attendees';
 import { TrbFormAlert } from '..';
@@ -271,11 +271,6 @@ const Attendee = ({
   // Gets label from enum value in attendee object
   const role = attendee.role ? contactRoles[attendee.role] : '';
 
-  /** Attendee component acronym */
-  const component = cmsDivisionsAndOffices.find(
-    ({ name }) => name === attendee.component
-  )?.acronym;
-
   // If attendee is not found in CEDAR, return null
   if (!attendee.userInfo) return null;
 
@@ -292,8 +287,10 @@ const Attendee = ({
       {/* Attendee details */}
       <div>
         <p className="margin-y-05 text-bold">
-          {commonName}
-          {component && ','} {component}
+          {getPersonNameAndComponentAcronym(
+            commonName || '',
+            attendee.component
+          )}
         </p>
         <p className="margin-y-05">{email}</p>
         <p className="margin-top-05 margin-bottom-0">{role}</p>
