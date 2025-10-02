@@ -41,7 +41,7 @@ import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
-import cmsComponentsMap from 'constants/cmsComponentsMap';
+import { getComponentByName } from 'constants/cmsComponentsMap';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   getColumnSortStatus,
@@ -196,13 +196,12 @@ export const Table = ({
         Header: t<string>('systemTable.header.systemOwner'),
         accessor: 'businessOwnerOrg',
         id: 'systemOwner',
-        Cell: ({ row }: { row: Row<CedarSystem> }) => (
-          <p>
-            {Object.values(cmsComponentsMap).find(
-              item => t(item.labelKey) === row.original.businessOwnerOrg
-            )?.acronym || row.original.businessOwnerOrg}
-          </p>
-        )
+        Cell: ({ row }: { row: Row<CedarSystem> }) => {
+          const component = getComponentByName(
+            row.original.businessOwnerOrg || ''
+          );
+          return <p>{component?.acronym || row.original.businessOwnerOrg}</p>;
+        }
       });
     }
 

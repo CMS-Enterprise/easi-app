@@ -14,7 +14,7 @@ import {
   systemIntake
 } from 'tests/mock/systemIntake';
 
-import cmsComponentsMap from 'constants/cmsComponentsMap';
+import { getComponentByEnum } from 'constants/cmsComponentsMap';
 
 import SystemIntakeContactsTable from './index';
 
@@ -109,11 +109,9 @@ describe('SystemIntakeContactsTable', () => {
       name: `contact-${requester.id}`
     });
 
-    const component = requester.component!;
+    const { acronym } = getComponentByEnum(requester.component!);
 
-    expect(
-      within(requesterRow).getByText(cmsComponentsMap[component].acronym!)
-    ).toBeInTheDocument();
+    expect(within(requesterRow).getByText(acronym!)).toBeInTheDocument();
   });
 
   it('displays "None specified" for empty component', () => {

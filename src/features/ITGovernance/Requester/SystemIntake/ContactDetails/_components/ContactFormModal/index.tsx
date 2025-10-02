@@ -28,7 +28,7 @@ import HelpText from 'components/HelpText';
 import Modal from 'components/Modal';
 import MultiSelect from 'components/MultiSelect';
 import RequiredFieldsText from 'components/RequiredFieldsText';
-import cmsComponentsMap from 'constants/cmsComponentsMap';
+import { getNonLegacyComponents } from 'constants/cmsComponentsMap';
 import { ContactFormFields } from 'types/systemIntake';
 import { ContactFormSchema } from 'validations/systemIntakeSchema';
 
@@ -230,13 +230,16 @@ const ContactFormModal = ({
             <option value="" disabled>
               {t('contactDetails.additionalContacts.select')}
             </option>
-            {Object.entries(cmsComponentsMap)
-              .filter(([enumValue, val]) => !val.legacy)
-              .map(([enumValue, { acronym, labelKey }]) => (
-                <option key={enumValue} value={enumValue}>
-                  {acronym ? `${t(labelKey)} (${acronym})` : t(labelKey)}
-                </option>
-              ))}
+            {getNonLegacyComponents().map(
+              ({ labelKey, acronym, enum: enumValue }) => {
+                const label = t(labelKey);
+                return (
+                  <option key={enumValue} value={enumValue}>
+                    {acronym ? `${label} (${acronym})` : label}
+                  </option>
+                );
+              }
+            )}
           </Select>
         </FieldGroup>
 
