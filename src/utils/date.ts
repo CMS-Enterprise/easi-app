@@ -1,3 +1,4 @@
+import { ContractDate } from 'gql/generated/graphql';
 import { DateTime, Interval } from 'luxon';
 
 // Used to parse out mintute, day, ,month, and years from ISOString
@@ -110,22 +111,20 @@ export const formatEndOfDayDeadline = (date: DateTime | string): string => {
   return formattedDateTime.toISO({ suppressMilliseconds: true });
 };
 
-type ContractDate = {
-  day?: string | null | undefined;
-  month?: string | null | undefined;
-  year?: string | null | undefined;
-};
+/** Formats contract date object into MM/dd/yyyy format */
+export function formatContractDate({
+  month,
+  day,
+  year
+}: Omit<ContractDate, '__typename'>) {
+  if (!month || !day || !year) return '';
 
-export const formatContractDate = (date?: ContractDate): string => {
-  if (!date) return '';
+  // Pad month and day with leading zeros if needed
+  const formattedMonth = month.padStart(2, '0');
+  const formattedDay = day.padStart(2, '0');
 
-  const { month, day, year } = date;
-
-  const parts = [month, day, year];
-  return parts
-    .filter((value: string | null | undefined) => value && value.length > 0)
-    .join('/');
-};
+  return `${formattedMonth}/${formattedDay}/${year}`;
+}
 
 /**
  * Returns the input parameter's fiscal year
