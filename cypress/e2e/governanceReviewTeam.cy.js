@@ -590,21 +590,19 @@ describe('Governance Review Team', () => {
 
     cy.contains('button', 'more recipients').click();
 
-    cy.contains('button', 'Add another recipient').click();
+    cy.contains('button', 'Add an additional recipient').click();
 
-    cy.get('#react-select-IntakeForm-ContactCommonName-input')
-      .type('Aaron A')
-      .wait(2000) // See Note [Specific Cypress wait duration on Okta search]
-      .type('{downArrow}{enter}')
-      .should('have.value', 'Aaron Adams, ADMN (aaron.adams@local.fake)');
+    cy.selectContact({
+      commonName: 'Aaron Adams',
+      euaUserId: 'ADMN',
+      email: 'aaron.adams@local.fake'
+    });
 
-    cy.get('#IntakeForm-ContactComponent')
-      .select('Center for Medicare')
-      .should('have.value', 'Center for Medicare');
+    cy.getByTestId('component-select').select('Office of Legislation (OL)');
 
-    cy.get('#IntakeForm-ContactRole')
-      .select('Product Owner')
-      .should('have.value', 'Product Owner');
+    cy.get('#roles').click();
+    cy.contains('label', 'Privacy Advisor').click();
+    cy.get('#roles').click();
 
     cy.contains('button', 'Add recipient').click();
 
