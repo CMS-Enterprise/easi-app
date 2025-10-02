@@ -7,17 +7,18 @@ import {
 import { DateTime } from 'luxon';
 
 export type DecisionProps = {
-  rejectionReason?: string | null;
   decisionNextSteps?: string | null;
   decisionState: SystemIntakeDecisionState;
   lcid?: string | null;
-  lcidIssuedAt?: string | null;
-  lcidExpiresAt?: string | null;
-  lcidScope?: string | null;
   lcidCostBaseline?: string | null;
-  trbFollowUpRecommendation?: SystemIntakeTRBFollowUp | null;
-  lcidStatus?: SystemIntakeLCIDStatus | null;
+  lcidExpiresAt?: string | null;
+  lcidIssuedAt?: string | null;
   lcidRetiresAt?: string | null;
+  lcidScope?: string | null;
+  lcidStatus?: SystemIntakeLCIDStatus | null;
+  rejectionReason?: string | null;
+  trbFollowUpRecommendation?: SystemIntakeTRBFollowUp | null;
+  decidedAt?: string | null;
 };
 
 type LcidTagStatus = SystemIntakeLCIDStatus | 'EXPIRING_SOON' | 'RETIRING_SOON';

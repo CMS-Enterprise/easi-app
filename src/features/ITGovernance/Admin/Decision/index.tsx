@@ -45,16 +45,17 @@ const DefinitionCombo = ({
 const LcidInfoContainer = () => {
   const { t } = useTranslation('governanceReviewTeam');
   const {
+    decidedAt,
     decisionState,
-    rejectionReason,
     lcid,
-    lcidIssuedAt,
-    lcidExpiresAt,
-    lcidScope,
     lcidCostBaseline,
-    lcidStatus,
+    lcidExpiresAt,
+    lcidIssuedAt,
     lcidRetiresAt,
-    lcidTagStatus
+    lcidScope,
+    lcidStatus,
+    lcidTagStatus,
+    rejectionReason
   } = useDecision();
 
   // only used when decisionState !== NO_DECISION
@@ -177,7 +178,7 @@ const LcidInfoContainer = () => {
             <>
               <DefinitionCombo
                 term={t('decision.decisionDate')}
-                definition="TODO Date Format"
+                definition={decidedAt}
               />
               <DefinitionCombo
                 term={t('decision.reason')}
