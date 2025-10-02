@@ -6,8 +6,8 @@ import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
-import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import useTRBAttendees from 'hooks/useTRBAttendees';
+import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 
 import Breadcrumbs from '../../../../../components/Breadcrumbs';
 
@@ -90,11 +90,12 @@ const Done = () => {
           </Grid>
           <Grid col={6}>
             <dt>Requester</dt>
-            <dd>{`${requester.userInfo?.commonName}, ${
-              cmsDivisionsAndOffices.find(
-                component => component.name === requester.component
-              )?.acronym
-            }`}</dd>
+            <dd>
+              {getPersonNameAndComponentAcronym(
+                requester.userInfo?.commonName || '',
+                requester.component
+              )}
+            </dd>
           </Grid>
         </dl>
       </GridContainer>

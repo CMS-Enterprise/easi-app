@@ -16,7 +16,6 @@ import { useEasiFormContext } from 'components/EasiForm';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
 import TruncatedContent from 'components/TruncatedContent';
-import cmsComponents from 'constants/cmsComponents';
 import { IT_GOV_EMAIL, IT_INVESTMENT_EMAIL } from 'constants/externalUrls';
 import isExternalEmail from 'utils/externalEmail';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
@@ -43,8 +42,6 @@ const RecipientLabel = ({
 }: RecipientLabelProps) => {
   const { t } = useTranslation('intake');
 
-  const componentString = component && cmsComponents[component].name;
-
   let rolesArray = (roles || []).map(role =>
     t(`contactDetails.systemIntakeContactRoles.${role}`)
   );
@@ -58,7 +55,7 @@ const RecipientLabel = ({
   return (
     <>
       <span>
-        {getPersonNameAndComponentAcronym(name, componentString)}
+        {getPersonNameAndComponentAcronym(name, component)}
         {commaSeparatedRoles && ` (${commaSeparatedRoles})`}
       </span>
       {email && <span className="display-block text-base-dark">{email}</span>}

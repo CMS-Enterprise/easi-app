@@ -80,55 +80,53 @@ const systemIntakeContactRoles: Translation<SystemIntakeContactRole> = {
 const systemIntakeContactComponents: Translation<SystemIntakeContactComponent> =
   {
     CENTER_FOR_CLINICAL_STANDARDS_AND_QUALITY_CCSQ:
-      'Center for Clinical Standards and Quality (CCSQ)',
+      'Center for Clinical Standards and Quality',
     CENTER_FOR_CONSUMER_INFORMATION_AND_INSURANCE_OVERSIGHT_CCIIO:
-      'Center for Consumer Information and Insurance Oversight (CCIIO)',
-    CENTER_FOR_MEDICARE_CM: 'Center for Medicare (CM)',
+      'Center for Consumer Information and Insurance Oversight',
+    CENTER_FOR_MEDICARE_CM: 'Center for Medicare',
     CENTER_FOR_MEDICAID_AND_CHIP_SERVICES_CMCS:
-      'Center for Medicaid and Chip Services (CMCS)',
+      'Center for Medicaid and CHIP Services',
     CENTER_FOR_MEDICARE_AND_MEDICAID_INNOVATION_CMMI:
-      'Center for Medicare and Medicaid Innovation (CMMI)',
-    CENTER_FOR_PROGRAM_INTEGRITY_CPI: 'Center for Program Integrity (CPI)',
+      'Center for Medicare and Medicaid Innovation',
+    CENTER_FOR_PROGRAM_INTEGRITY_CPI: 'Center for Program Integrity',
     CMS_WIDE: 'CMS Wide',
     EMERGENCY_PREPAREDNESS_AND_RESPONSE_OPERATIONS_EPRO:
-      'Emergency Preparedness and Response Operations (EPRO)',
+      'Emergency Preparedness and Response Operations',
     FEDERAL_COORDINATED_HEALTH_CARE_OFFICE:
-      'Federal Coordinated Health Care Office (FCHCO)',
+      'Federal Coordinated Health Care Office',
     OFFICE_OF_ACQUISITION_AND_GRANTS_MANAGEMENT_OAGM:
-      'Office of Acquisition and Grants Management (OAGM)',
+      'Office of Acquisition and Grants Management',
     OFFICE_OF_HEALTHCARE_EXPERIENCE_AND_INTEROPERABILITY:
-      'Office of Healthcare Experience and Interoperability (OHX)',
-    OFFICE_OF_COMMUNICATIONS_OC: 'Office of Communications (OC)',
+      'Office of Healthcare Experience and Interoperability',
+    OFFICE_OF_COMMUNICATIONS_OC: 'Office of Communications',
     OFFICE_OF_ENTERPRISE_DATA_AND_ANALYTICS_OEDA:
-      'Office of Enterprise Data and Analytics (OEDA)',
+      'Office of Enterprise Data and Analytics',
     OFFICE_OF_EQUAL_OPPORTUNITY_AND_CIVIL_RIGHTS:
-      'Office of Equal Opportunity and Civil Rights (EOCR)',
-    OFFICE_OF_FINANCIAL_MANAGEMENT_OFM: 'Office of Financial Management (OFM)',
-    OFFICE_OF_HUMAN_CAPITAL: 'Office of Human Capital (OHC)',
-    OFFICE_OF_INFORMATION_TECHNOLOGY_OIT:
-      'Office of Information Technology (OIT)',
-    OFFICE_OF_LEGISLATION: 'Office of Legislation (OL)',
-    OFFICE_OF_MINORITY_HEALTH_OMH: 'Office of Minority Health (OMH)',
+      'Office of Equal Opportunity and Civil Rights',
+    OFFICE_OF_FINANCIAL_MANAGEMENT_OFM: 'Office of Financial Management',
+    OFFICE_OF_HUMAN_CAPITAL: 'Office of Human Capital',
+    OFFICE_OF_INFORMATION_TECHNOLOGY_OIT: 'Office of Information Technology',
+    OFFICE_OF_LEGISLATION: 'Office of Legislation',
+    OFFICE_OF_MINORITY_HEALTH_OMH: 'Office of Minority Health',
     OFFICE_OF_PROGRAM_OPERATIONS_AND_LOCAL_ENGAGEMENT_OPOLE:
-      'Office of Program Operations and Local Engagement (OPOLE)',
+      'Office of Program Operations and Local Engagement',
     OFFICE_OF_SECURITY_FACILITIES_AND_LOGISTICS_OPERATIONS_OSFLO:
-      'Office of Security Facilities and Logistics Operations (OSFLO)',
+      'Office of Security, Facilities, and Logistics Operations',
     OFFICE_OF_STRATEGIC_OPERATIONS_AND_REGULATORY_AFFAIRS_OSORA:
-      'Office of Strategic Operations and Regulatory Affairs (OSORA)',
+      'Office of Strategic Operations and Regulatory Affairs',
     OFFICE_OF_STRATEGY_PERFORMANCE_AND_RESULTS_OSPR:
-      'Office of Strategy Performance and Results (OSPR)',
-    OFFICE_OF_THE_ACTUARY_OACT: 'Office of the Actuary (OACT)',
-    OFFICE_OF_THE_ADMINISTRATOR: 'Office of the Administrator (OA)',
-    OFFICES_OF_HEARINGS_AND_INQUIRIES:
-      'Offices of Hearings and Inquiries (OHI)',
+      'Office of Strategy, Performance, and Results',
+    OFFICE_OF_THE_ACTUARY_OACT: 'Office of the Actuary',
+    OFFICE_OF_THE_ADMINISTRATOR: 'Office of the Administrator',
+    OFFICES_OF_HEARINGS_AND_INQUIRIES: 'Offices of Hearings and Inquiries',
     CONSORTIUM_FOR_MEDICAID_AND_CHILDRENS_HEALTH:
-      "Consortium for Medicaid and Children's Health (CMCH)",
+      "Consortium for Medicaid and Children's Health",
     CONSORTIUM_FOR_MEDICARE_HEALTH_PLANS_OPERATIONS:
-      'Consortium for Medicare Health Plans Operations (CMHPO)',
+      'Consortium for Medicare Health Plans Operations',
     OFFICE_OF_BURDEN_REDUCTION_AND_HEALTH_INFORMATICS:
-      'Office of Burden Reduction and Health Informatics (OBRI)',
+      'Office of Burden Reduction and Health Informatics',
     OFFICE_OF_SUPPORT_SERVICES_AND_OPERATIONS:
-      'Office of Support Services and Operations (OSSO)',
+      'Office of Support Services and Operations',
     OTHER: 'Other'
   };
 
