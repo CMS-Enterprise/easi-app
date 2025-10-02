@@ -17,7 +17,6 @@ import PageHeading from 'components/PageHeading';
 import { RichTextViewer } from 'components/RichTextEditor';
 import { formatDateLocal } from 'utils/date';
 
-// new imports
 import {
   DecisionProps,
   DecisionProvider,
@@ -49,16 +48,17 @@ export const LcidInfoContainer = ({
 }) => {
   const { t } = useTranslation('governanceReviewTeam');
   const {
+    decidedAt,
     decisionState,
-    rejectionReason,
     lcid,
-    lcidIssuedAt,
-    lcidExpiresAt,
-    lcidScope,
     lcidCostBaseline,
-    lcidStatus,
+    lcidExpiresAt,
+    lcidIssuedAt,
     lcidRetiresAt,
-    lcidTagStatus
+    lcidScope,
+    lcidStatus,
+    lcidTagStatus,
+    rejectionReason
   } = useDecision();
 
   // only used when decisionState !== NO_DECISION
@@ -183,7 +183,10 @@ export const LcidInfoContainer = ({
             <>
               <DefinitionCombo
                 term={t('decision.decisionDate')}
-                definition="TODO Date Format"
+                definition={
+                  formatDateLocal(decidedAt, 'MM/dd/yyyy') ??
+                  t('decision.noDateSet')
+                }
               />
               <DefinitionCombo
                 term={t('decision.reason')}
