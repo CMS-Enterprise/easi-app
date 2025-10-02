@@ -30,7 +30,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v5
       - name: Set up go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: 'go.mod'
       - name: Login to Docker Hub
@@ -39,7 +39,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4.2.1
+        uses: aws-actions/configure-aws-credentials@v5.0.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -118,7 +118,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4.2.1
+        uses: aws-actions/configure-aws-credentials@v5.0.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -191,14 +191,14 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v5
       - name: Set up node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: ${{ env.EASI_APP_NODE_VERSION }}
           cache: 'yarn'
       - name: Install yarn dependencies
         run: yarn install --frozen-lockfile
       - name: Set up go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: 'go.mod'
       # go-swagger is used for pre-commit hooks
@@ -208,7 +208,7 @@ jobs:
           cd /usr/local/bin
           wget -O swagger https://github.com/go-swagger/go-swagger/releases/download/v0.30.5/swagger_linux_amd64
           chmod +x swagger
-      - uses: actions/setup-python@v5 # Python is required for pre-commit/action
+      - uses: actions/setup-python@v6 # Python is required for pre-commit/action
         with:
           python-version: '3.9'
       - name: Pre-commit checks
@@ -230,7 +230,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v5
       - name: Set up node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: ${{ env.EASI_APP_NODE_VERSION }}
           cache: 'yarn'
@@ -249,7 +249,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v5
       - name: Set up node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: ${{ env.EASI_APP_NODE_VERSION }}
           cache: 'yarn'
