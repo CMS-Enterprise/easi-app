@@ -142,6 +142,7 @@ const intake = {
   viewFeedback: 'View feedback',
   fields: {
     projectName: 'Project name',
+    projectAcronym: 'Project acronym',
     requester: 'Requester name',
     submissionDate: 'Submission date',
     requestFor: 'Request for',
@@ -279,6 +280,7 @@ const intake = {
     collaborator508: '508 Clearance Officer',
     eaCollaborator: 'EA collaborator name',
     projectName: 'Project name',
+    projectAcronym: 'Project acronym',
     existingFunding: 'Existing Funding',
     fundingSource: 'Funding Number and Source',
     businessNeed: 'Business Need',
@@ -484,6 +486,9 @@ const intake = {
     contractTitle: 'Contract/Request Title',
     contractTitleHelpText:
       'Your request title should match the title of your Acquisition Plan or Interagency Agreement.',
+    projectAcronym: 'Contract/request acronym',
+    projectAcronymHelpText:
+      'Include any acronym or short name related to this request.',
     businessNeed:
       'What is your business need that this contract/request will meet?',
     businessNeedHelpText:
@@ -623,6 +628,7 @@ const intake = {
     collaborating: 'I have started collaborating with:',
     requestDetails: 'Request details',
     projectName: 'Contract/request title',
+    projectAcronym: 'Contract/request acronym',
     businessNeed:
       'What is your business need that this contract/request will meet?',
     solving: 'How are you thinking of solving it?',
