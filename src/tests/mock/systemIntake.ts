@@ -420,13 +420,13 @@ export const systemIntake: SystemIntakeFragmentFragment = {
     startDate: {
       __typename: 'ContractDate',
       month: '1',
-      day: '',
+      day: '10',
       year: '2020'
     },
     endDate: {
       __typename: 'ContractDate',
       month: '12',
-      day: '',
+      day: '10',
       year: '2020'
     }
   },
