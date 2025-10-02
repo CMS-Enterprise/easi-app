@@ -1,8 +1,3 @@
-// Note [Specific Cypress wait duration on Okta search]
-// 2000ms seems to work well for this. Sadly, 1000ms sometimes isn't enough for the dropdown to appear,
-// and 3000 causes issue with autosave. This is definitely a bit hacky...
-// TODO: fix this in the future if it causes more headache
-
 const testSystemIntakeName = 'Test Request Name';
 cy.systemIntake = {
   contactDetails: {
