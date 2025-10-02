@@ -2480,10 +2480,10 @@
     "@babel/runtime" "^7.27.0"
     compare-versions "^4.1.2"
 
-"@okta/okta-signin-widget@^7.35.1":
-  version "7.35.1"
-  resolved "https://registry.yarnpkg.com/@okta/okta-signin-widget/-/okta-signin-widget-7.35.1.tgz#091c98c07496110b8962d4a64c816771f3702ba6"
-  integrity sha512-9FPKI42wNZ36+KH3gBpsNhc5DYE/7OBBZWcYlk70Ec2fMKrwwwKckAWPTIYmoeclQpuHJBcmmymiDKswnOswNw==
+"@okta/okta-signin-widget@^7.35.2":
+  version "7.35.2"
+  resolved "https://registry.yarnpkg.com/@okta/okta-signin-widget/-/okta-signin-widget-7.35.2.tgz#ecc66a445510e58d6e4891368aa8afd58b1e1aa5"
+  integrity sha512-IKjF3PWEn0njv8eiN8PfR81g7mHK44cWS58+voAl5XjQEQr/j/dgXieNokwLgWUJ1MCkOg2sQlL7jcPOh4+ygw==
   dependencies:
     "@okta/okta-auth-js" "7.14.0"
     "@sindresorhus/to-milliseconds" "^1.0.0"
@@ -11365,10 +11365,10 @@ sass-resources-loader@^2.2.5:
     glob "^7.1.6"
     loader-utils "^2.0.0"
 
-sass@^1.93.0:
-  version "1.93.0"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.93.0.tgz#8252f61405be295f4755d1ed5df48bf118587aa5"
-  integrity sha512-CQi5/AzCwiubU3dSqRDJ93RfOfg/hhpW1l6wCIvolmehfwgCI35R/0QDs1+R+Ygrl8jFawwwIojE2w47/mf94A==
+sass@^1.93.2:
+  version "1.93.2"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.93.2.tgz#e97d225d60f59a3b3dbb6d2ae3c1b955fd1f2cd1"
+  integrity sha512-t+YPtOQHpGW1QWsh1CHQ5cPIr9lbbGZLZnbihP/D/qZj/yuV68m8qarcV17nvkOX81BCrvzAlq2klCQFZghyTg==
   dependencies:
     chokidar "^4.0.0"
     immutable "^5.0.2"
