@@ -574,8 +574,7 @@ describe('Governance Review Team', () => {
     cy.get('#system-intakes-table__open').contains('a', 'Closed Request');
   });
 
-  // TODO EASI-4938 - fix e2e test
-  it.skip('can add additional contact as email recipient', () => {
+  it('can add additional contact as email recipient', () => {
     cy.contains('a', 'initial form filled and submitted')
       .should('be.visible')
       .click();
