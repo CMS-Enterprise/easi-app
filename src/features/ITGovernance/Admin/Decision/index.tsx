@@ -178,7 +178,10 @@ const LcidInfoContainer = () => {
             <>
               <DefinitionCombo
                 term={t('decision.decisionDate')}
-                definition={decidedAt}
+                definition={
+                  formatDateLocal(decidedAt, 'MM/dd/yyyy') ??
+                  t('decision.noDateSet')
+                }
               />
               <DefinitionCombo
                 term={t('decision.reason')}
