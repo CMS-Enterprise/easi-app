@@ -52,7 +52,9 @@ describe('SystemIntakeContactsTable', () => {
     // Check that each contact renders in the table
     systemIntakeContacts.forEach(contact => {
       expect(
-        screen.getByRole('row', { name: `contact-${contact.id}` })
+        screen.getByRole('row', {
+          name: `contact-${contact.userAccount.username}`
+        })
       ).toBeInTheDocument();
     });
   });
@@ -226,7 +228,7 @@ describe('SystemIntakeContactsTable', () => {
     );
 
     const businessOwnerRow = screen.getByRole('row', {
-      name: `contact-${businessOwner.id}`
+      name: `contact-${businessOwner.userAccount.username}`
     });
 
     const businessOwnerRemoveButton = within(businessOwnerRow).getByRole(
