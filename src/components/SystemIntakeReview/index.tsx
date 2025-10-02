@@ -182,6 +182,16 @@ export const SystemIntakeReview = ({
             <DescriptionTerm term={t('review.projectName')} />
             <DescriptionDefinition definition={systemIntake.requestName} />
           </div>
+          <div>
+            <DescriptionTerm term={t('review.projectAcronym')} />
+            <DescriptionDefinition
+              definition={
+                systemIntake.projectAcronym
+                  ? systemIntake.projectAcronym
+                  : 'N/A'
+              }
+            />
+          </div>
         </ReviewRow>
         <div className="margin-bottom-205 line-height-body-3">
           <div>

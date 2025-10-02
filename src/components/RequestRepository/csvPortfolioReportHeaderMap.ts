@@ -6,6 +6,10 @@ const csvHeaderMap = (t: TFunction) => [
     label: t('intake:csvHeadings.projectName')
   },
   {
+    key: 'projectAcronym',
+    label: t('intake:csvHeadings.projectAcronym')
+  },
+  {
     key: 'requester.userAccount.commonName',
     label: t('intake:csvHeadings.requesterName')
   },
