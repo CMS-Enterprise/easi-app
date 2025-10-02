@@ -128,6 +128,14 @@ describe('The System Intake Form', () => {
     cy.contains('button', 'Add contact').click();
 
     cy.getByTestId('contact-row-ADMI').contains('Audrey Abrams');
+    cy.getByTestId('contact-row-ADMI').contains('OC');
+    cy.getByTestId('contact-row-ADMI').contains('Other');
+
+    cy.getByTestId('contact-row-ADMI').contains('button', 'Remove').click();
+
+    cy.contains('button', 'Remove contact').click();
+
+    cy.getByTestId('contact-row-ADMI').should('not.exist');
 
     // Governance teams
     cy.get('#governanceTeamsIsPresentTrue')
