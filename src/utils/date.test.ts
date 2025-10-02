@@ -61,17 +61,17 @@ describe('formatDateLocal/UTC', () => {
         year: '2022'
       };
 
-      expect(formatContractDate(input)).toEqual('2/1/2022');
+      expect(formatContractDate(input)).toEqual('02/01/2022');
     });
 
-    it('formats a date without a day', () => {
+    it('returns an empty string when the date is incomplete', () => {
       const input = {
         day: '',
         month: '2',
         year: '2022'
       };
 
-      expect(formatContractDate(input)).toEqual('2/2022');
+      expect(formatContractDate(input)).toEqual('');
     });
   });
 });
