@@ -4,33 +4,66 @@
 // TODO: fix this in the future if it causes more headache
 
 const testSystemIntakeName = 'Test Request Name';
-
 cy.systemIntake = {
   contactDetails: {
     fillNonBranchingFields: () => {
-      cy.get('#requesterComponent')
-        .select('Center for Medicare')
-        .should('have.value', 'Center for Medicare');
+      cy.getByTestId('contact-row-E2E1').contains('button', 'Edit').click();
 
-      cy.get('#react-select-businessOwnerCommonName-input')
-        .type('Audrey')
-        .wait(2000) // See Note [Specific Cypress wait duration on Okta search]
-        .type('{downarrow}{enter}')
-        .should('have.value', 'Audrey Abrams, ADMI (audrey.abrams@local.fake)');
+      cy.getByTestId('component-select').select('Center for Medicare (CM)');
 
-      cy.get('#businessOwnerComponent')
-        .select('CMS Wide')
-        .should('have.value', 'CMS Wide');
+      cy.get('#roles').click();
+      cy.contains('label', 'Cloud Navigator').click();
+      cy.get('#roles').click();
 
-      cy.get('#react-select-productManagerCommonName-input')
-        .type('Delphia')
-        .wait(2000) // See Note [Specific Cypress wait duration on Okta search]
-        .type('{downArrow}{enter}')
-        .should('have.value', 'Delphia Green, GBRG (delphia.green@local.fake)');
+      cy.contains('button', 'Save changes').click();
 
-      cy.get('#productManagerComponent')
-        .select('Office of Legislation')
-        .should('have.value', 'Office of Legislation');
+      cy.getByTestId('contact-row-E2E1').contains('Cloud Navigator');
+      cy.getByTestId('contact-row-E2E1').contains('CM');
+
+      cy.contains('button', 'Add another contact').click();
+
+      cy.selectContact({
+        commonName: 'Aaron Adams',
+        euaUserId: 'ADMN',
+        email: 'aaron.adams@local.fake'
+      });
+
+      cy.getByTestId('component-select').select(
+        'Center for Program Integrity (CPI)'
+      );
+
+      cy.get('#roles').click();
+      cy.contains('label', 'Business Owner').click();
+      cy.get('#roles').click();
+
+      cy.contains('button', 'Add contact').click();
+
+      cy.getByTestId('contact-row-ADMN').contains('Aaron Adams');
+      cy.getByTestId('contact-row-ADMN').contains('CPI');
+      cy.getByTestId('contact-row-ADMN').contains('Business Owner');
+
+      cy.contains('button', 'Add another contact').click();
+
+      cy.selectContact({
+        commonName: 'Annetta Lockman',
+        euaUserId: 'LW40',
+        email: 'annetta.lockman@local.fake'
+      });
+
+      cy.getByTestId('component-select').select('Office of Legislation (OL)');
+
+      cy.get('#roles').click();
+      cy.contains('label', 'Product Manager').click();
+      cy.contains('label', 'Privacy Advisor').click();
+      cy.get('#roles').click();
+
+      cy.contains('button', 'Add contact').click();
+
+      cy.getByTestId('contact-row-LW40').contains('Annetta Lockman');
+      cy.getByTestId('contact-row-LW40').contains('OL');
+      cy.getByTestId('contact-row-LW40').contains(
+        'Product Manager, Privacy Advisor'
+      );
     }
   },
   requestDetails: {

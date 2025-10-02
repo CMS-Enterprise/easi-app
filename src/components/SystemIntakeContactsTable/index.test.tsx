@@ -45,7 +45,7 @@ describe('SystemIntakeContactsTable', () => {
   it('renders the contacts', () => {
     render(<SystemIntakeContactsTable contacts={systemIntakeContacts} />);
 
-    expect(screen.getAllByTestId('contact-row')).toHaveLength(
+    expect(screen.getAllByRole('row', { name: /contact-/ })).toHaveLength(
       systemIntakeContacts.length
     );
 
@@ -61,7 +61,7 @@ describe('SystemIntakeContactsTable', () => {
     render(<SystemIntakeContactsTable contacts={systemIntakeContacts} />);
 
     const requesterRow = screen.getByRole('row', {
-      name: `contact-${requester.id}`
+      name: `contact-${requester.userAccount.username}`
     });
 
     expect(requesterRow).toBeInTheDocument();
@@ -77,7 +77,7 @@ describe('SystemIntakeContactsTable', () => {
     render(<SystemIntakeContactsTable contacts={systemIntakeContacts} />);
 
     const nonRequesterRow = screen.getByRole('row', {
-      name: `contact-${businessOwner.id}`
+      name: `contact-${businessOwner.userAccount.username}`
     });
 
     const icon = within(nonRequesterRow).queryByRole('img', {
@@ -91,7 +91,7 @@ describe('SystemIntakeContactsTable', () => {
     render(<SystemIntakeContactsTable contacts={systemIntakeContacts} />);
 
     const requesterRow = screen.getByRole('row', {
-      name: `contact-${requester.id}`
+      name: `contact-${requester.userAccount.username}`
     });
 
     expect(
@@ -106,7 +106,7 @@ describe('SystemIntakeContactsTable', () => {
     render(<SystemIntakeContactsTable contacts={systemIntakeContacts} />);
 
     const requesterRow = screen.getByRole('row', {
-      name: `contact-${requester.id}`
+      name: `contact-${requester.userAccount.username}`
     });
 
     const { acronym } = getComponentByEnum(requester.component!);
@@ -133,7 +133,7 @@ describe('SystemIntakeContactsTable', () => {
     render(<SystemIntakeContactsTable contacts={systemIntakeContacts} />);
 
     const requesterRow = screen.getByRole('row', {
-      name: `contact-${businessOwner.id}`
+      name: `contact-${businessOwner.userAccount.username}`
     });
 
     // Check that role is displayed (translated)
@@ -171,7 +171,7 @@ describe('SystemIntakeContactsTable', () => {
     );
 
     const businessOwnerRow = screen.getByRole('row', {
-      name: `contact-${businessOwner.id}`
+      name: `contact-${businessOwner.userAccount.username}`
     });
 
     expect(
@@ -204,7 +204,7 @@ describe('SystemIntakeContactsTable', () => {
     );
 
     const requesterRow = screen.getByRole('row', {
-      name: `contact-${requester.id}`
+      name: `contact-${requester.userAccount.username}`
     });
 
     const requesterRemoveButton = within(requesterRow).getByRole('button', {
