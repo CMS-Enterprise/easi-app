@@ -234,8 +234,8 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
                     role="rowgroup"
                   >
                     <tr
-                      aria-label="contact-systemIntakeContact-A11Y"
-                      data-testid="contact-row"
+                      aria-label="contact-A11Y"
+                      data-testid="contact-row-A11Y"
                       role="row"
                     >
                       <td
@@ -310,8 +310,8 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
                       </td>
                     </tr>
                     <tr
-                      aria-label="contact-systemIntakeContact-ABCD"
-                      data-testid="contact-row"
+                      aria-label="contact-ABCD"
+                      data-testid="contact-row-ABCD"
                       role="row"
                     >
                       <td
@@ -348,8 +348,8 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
                       </td>
                     </tr>
                     <tr
-                      aria-label="contact-systemIntakeContact-ADMI"
-                      data-testid="contact-row"
+                      aria-label="contact-ADMI"
+                      data-testid="contact-row-ADMI"
                       role="row"
                     >
                       <td

@@ -181,7 +181,7 @@ exports[`ContactFormModal > matches the snapshot 1`] = `
               </label>
               <select
                 class="usa-select"
-                data-testid="Select"
+                data-testid="component-select"
                 id="component"
                 name="component"
               >

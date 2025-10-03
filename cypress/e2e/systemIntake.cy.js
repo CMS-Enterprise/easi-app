@@ -3,8 +3,7 @@ import SystemIntakeSoftwareAcquisitionMethods from '../../src/constants/enums/Sy
 import { BASIC_USER_PROD } from '../../src/constants/jobCodes';
 import testSystemIntakeName from '../support/systemIntake';
 
-// TODO EASI-4938 - fix e2e test
-describe.skip('The System Intake Form', () => {
+describe('The System Intake Form', () => {
   beforeEach(() => {
     cy.localLogin({ name: 'E2E1', role: BASIC_USER_PROD });
 
@@ -19,10 +18,6 @@ describe.skip('The System Intake Form', () => {
 
       if (req.body.operationName === 'CreateSystemIntakeContact') {
         req.alias = 'createContact';
-      }
-
-      if (req.body.operationName === 'UpdateSystemIntakeContactDetails') {
-        req.alias = 'updateContactDetails';
       }
 
       if (req.body.operationName === 'UpdateSystemIntakeContractDetails') {
@@ -61,33 +56,11 @@ describe.skip('The System Intake Form', () => {
     // Contact details
     cy.systemIntake.contactDetails.fillNonBranchingFields();
 
-    // Test "Business Owner same as requester" checkbox
-    cy.get('#businessOwnerSameAsRequester')
-      .check({ force: true })
-      .should('be.checked');
-
-    // Business Owner name should be disabled when checkbox is checked
-    cy.get('#react-select-businessOwnerCommonName-input').should('be.disabled');
-
-    // Check that Business Owner fields updated to display requester values
-    cy.get('#react-select-businessOwnerCommonName-input').should(
-      'have.value',
-      // Requester name shows as User E2E1 instead of "EndToEnd One" (their actual name) during testing
-      'User E2E1, E2E1 (endtoend.one@local.fake)'
-    );
-
-    cy.get('#businessOwnerComponent').should(
-      'have.value',
-      'Center for Medicare'
-    );
-
     cy.get('#governanceTeamsIsPresentFalse')
       .check({ force: true })
       .should('be.checked');
 
     cy.contains('button', 'Next').click();
-
-    cy.wait('@updateContactDetails');
 
     // Request details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
@@ -137,31 +110,32 @@ describe.skip('The System Intake Form', () => {
     // Contact details
     cy.systemIntake.contactDetails.fillNonBranchingFields();
 
-    // Test "same as requester" checkbox
-
     // Add additional contact
     cy.contains('button', 'Add another contact').click();
 
-    cy.get('#react-select-IntakeForm-ContactCommonName-input')
-      .type('Annetta Lockman')
-      .wait(2000)
-      .type('{downArrow}{enter}')
-      .should(
-        'have.value',
-        'Annetta Lockman, LW40 (annetta.lockman@local.fake)'
-      );
+    cy.selectContact({
+      commonName: 'Audrey Abrams',
+      euaUserId: 'ADMI',
+      email: 'audrey.abrams@local.fake'
+    });
 
-    cy.get('#IntakeForm-ContactComponent')
-      .select('Other')
-      .should('have.value', 'Other');
+    cy.getByTestId('component-select').select('Office of Communications (OC)');
 
-    cy.get('#IntakeForm-ContactRole')
-      .select('Product Owner')
-      .should('have.value', 'Product Owner');
+    cy.get('#roles').type('Other');
+    cy.contains('label', 'Other').click();
+    cy.get('#roles').click();
 
-    cy.contains('button', 'Add contact').click(1000);
+    cy.contains('button', 'Add contact').click();
 
-    cy.contains('p', 'Annetta Lockman, Other');
+    cy.getByTestId('contact-row-ADMI').contains('Audrey Abrams');
+    cy.getByTestId('contact-row-ADMI').contains('OC');
+    cy.getByTestId('contact-row-ADMI').contains('Other');
+
+    cy.getByTestId('contact-row-ADMI').contains('button', 'Remove').click();
+
+    cy.contains('button', 'Remove contact').click();
+
+    cy.getByTestId('contact-row-ADMI').should('not.exist');
 
     // Governance teams
     cy.get('#governanceTeamsIsPresentTrue')
@@ -179,8 +153,6 @@ describe.skip('The System Intake Form', () => {
     });
 
     cy.contains('button', 'Next').click();
-
-    cy.wait('@updateContactDetails');
 
     // Request details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
@@ -309,33 +281,6 @@ describe.skip('The System Intake Form', () => {
     // Review
     cy.contains('h1', 'Check your answers before sending');
 
-    cy.contains('.easi-review-row dt', /^Requester name$/)
-      .siblings('dd')
-      .contains('EndToEnd One');
-
-    cy.contains('.easi-review-row dt', 'Requester component')
-      .siblings('dd')
-      .contains('Center for Medicare');
-
-    cy.contains('.easi-review-row dt', 'CMS Business Owner')
-      .siblings('dd')
-      .contains('Audrey Abrams');
-
-    cy.contains('.easi-review-row dt', 'CMS Business Owner component')
-      .siblings('dd')
-      .contains('CMS Wide');
-
-    cy.contains('.easi-review-row dt', 'CMS Project/Product Manager or Lead')
-      .siblings('dd')
-      .contains('Delphia Green');
-
-    cy.contains(
-      '.easi-review-row dt',
-      'CMS Project/Product Manager or Lead component'
-    )
-      .siblings('dd')
-      .contains('Office of Legislation');
-
     cy.contains('.easi-review-row dt', 'I have started collaborating with')
       .siblings('dd')
       .eq(0)
@@ -439,7 +384,6 @@ describe.skip('The System Intake Form', () => {
       .should('be.checked');
 
     cy.contains('button', 'Next').click();
-    cy.wait('@updateContactDetails');
 
     cy.contains('h1', 'Request details');
 

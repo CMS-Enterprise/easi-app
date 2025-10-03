@@ -161,7 +161,7 @@ const SystemIntakeContactsTable = ({
       {
         Header: t('general:actions'),
         id: 'actions',
-        accessor: (row: SystemIntakeContactFragment, index) => {
+        accessor: (row: SystemIntakeContactFragment) => {
           return (
             <div className="display-flex">
               {handleEditContact && (
@@ -169,7 +169,7 @@ const SystemIntakeContactsTable = ({
                   type="button"
                   className="margin-top-0 margin-right-2"
                   onClick={() => handleEditContact(row)}
-                  data-testid={`editContact-${index}`}
+                  data-testid={`editContact-${row.userAccount.username}`}
                   unstyled
                 >
                   {t('general:edit')}
@@ -184,7 +184,7 @@ const SystemIntakeContactsTable = ({
                   )}
                   unstyled
                   onClick={() => setContactIdToRemove(row.id)}
-                  data-testid={`removeContact-${index}`}
+                  data-testid={`removeContact-${row.userAccount.username}`}
                   disabled={row.isRequester}
                 >
                   {t('general:remove')}
@@ -291,14 +291,14 @@ const SystemIntakeContactsTable = ({
               rows.map(row => {
                 const { key: rowKey, ...rowProps } = row.getRowProps();
 
-                const { id } = row.original;
+                const { username } = row.original.userAccount;
 
                 return (
                   <tr
                     {...rowProps}
                     key={rowKey}
-                    data-testid="contact-row"
-                    aria-label={`contact-${id}`}
+                    data-testid={`contact-row-${username}`}
+                    aria-label={`contact-${username}`}
                   >
                     {row.cells.map(cell => {
                       const { key: cellKey, ...cellProps } =

@@ -88,11 +88,11 @@ describe('GRB review', () => {
     cy.url().should('include', '/add?from-grb-setup');
     cy.contains('h1', 'Add a GRB reviewer');
 
-    cy.get('#react-select-userAccount-input')
-      .type('Aaron A')
-      .wait(2000) // See Note [Specific Cypress wait duration on Okta search]
-      .type('{downArrow}{enter}')
-      .should('have.value', 'Aaron Adams, ADMN (aaron.adams@local.fake)');
+    cy.selectContact({
+      commonName: 'Aaron Adams',
+      euaUserId: 'ADMN',
+      email: 'aaron.adams@local.fake'
+    });
 
     cy.get('#votingRole').select('Voting').should('have.value', 'VOTING');
     cy.get('#grbRole')
