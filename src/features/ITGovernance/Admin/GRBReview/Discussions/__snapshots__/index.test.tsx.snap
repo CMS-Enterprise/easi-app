@@ -112,7 +112,7 @@ exports[`Discussions > matches the snapshot 1`] = `
           View
           <svg
             aria-hidden="true"
-            class="usa-icon margin-left-1"
+            class="usa-icon"
             focusable="false"
             height="1em"
             role="img"
@@ -197,7 +197,7 @@ exports[`Discussions > matches the snapshot 1`] = `
             >
               <svg
                 aria-hidden="true"
-                class="usa-icon text-primary margin-right-1"
+                class="usa-icon text-primary"
                 focusable="false"
                 height="1em"
                 role="img"
@@ -288,7 +288,7 @@ exports[`Discussions > matches the snapshot 1`] = `
           View
           <svg
             aria-hidden="true"
-            class="usa-icon margin-left-1"
+            class="usa-icon"
             focusable="false"
             height="1em"
             role="img"
@@ -373,7 +373,7 @@ exports[`Discussions > matches the snapshot 1`] = `
             >
               <svg
                 aria-hidden="true"
-                class="usa-icon text-primary margin-right-1"
+                class="usa-icon text-primary"
                 focusable="false"
                 height="1em"
                 role="img"

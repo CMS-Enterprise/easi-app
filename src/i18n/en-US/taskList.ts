@@ -32,12 +32,33 @@ const taskList = {
     costBaseline: 'Project Cost Baseline',
     reasons: 'Reasons',
     nextSteps: 'Next steps',
+    nextStepsAlert:
+      'The Governance Review Board (GRB) and Governance Review Team (GRT) recommend that you complete the following next steps as a part of the Governance Review process and your ongoing project.',
+    nextStepRecommendedOn: 'Next steps recommended on {{date}}',
     completeNextSteps:
       'Finish these next steps to complete the governance review process.',
     decision: 'Decision:',
     alert:
       'A decision has been made for this request, you can view the decision at the bottom of this page. Please check the email sent to you for further information.',
-    needHelp: 'Need help? Contact the Governance team'
+    needHelp: 'Need help? Contact the Governance team',
+    haveQuestions: 'Have questions about this decision?',
+    contact: 'Contact the Governance Team at <emailLink>{{email}}</emailLink>.',
+    consultWithTheTRB: {
+      heading: 'Consult with the TRB',
+      content_NOT_RECOMMENDED:
+        'The Technical Review Board (TRB) can offer a variety of advice and guidance about your system and proposed technical solutions. As a part of your next steps, the Governance Team does not think a TRB consult is necessary.',
+      content_RECOMMENDED_BUT_NOT_CRITICAL:
+        'The Technical Review Board (TRB) can offer a variety of advice and guidance about your system and proposed technical solutions. As a part of your next steps, the Governance Team recommends a trb consult session.',
+      content_STRONGLY_RECOMMENDED:
+        'The Technical Review Board (TRB) can offer a variety of advice and guidance about your system and proposed technical solutions. As a part of your next steps, the Governance Team strongly recommends a TRB consult session.'
+    },
+    updateSystemProfile: {
+      heading: 'Update your System Profile',
+      copy: 'Keeping your System Profile up-to-date allows CMS to maintain current and accurate information about its systems, as required by legislation and department policy. You can view your current System Profile in EASi using the links below and may keep your System Profile updated by:',
+      list1: 'completing the yearly CMS System Census',
+      list2:
+        'emailing Enterprise Architecture at <emailLink>{{email}}</emailLink> if you notice any incorrect information'
+    }
   },
   navigation: {
     home: 'IT Governance',
@@ -122,7 +143,8 @@ const taskList = {
   decisionNextSteps: {
     heading: 'Decision and next steps',
     description:
-      'If your Business Case is approved you will receive a unique Life Cycle ID. If it is not approved, you would need to address the concerns to proceed.'
+      'If your Business Case is approved you will receive a unique Life Cycle ID. If it is not approved, you would need to address the concerns to proceed.',
+    downloadPDF: 'Download decision and next steps as PDF'
   },
   cta: {
     viewSubmittedRequest: 'View submitted request form',

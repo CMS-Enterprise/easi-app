@@ -39,7 +39,7 @@ type PDFExportProps = {
   children: React.ReactNode;
   label?: string;
   helpText?: string;
-  linkPosition?: 'top' | 'bottom' | 'both';
+  linkPosition?: 'top' | 'bottom' | 'both' | 'none';
   disabled?: boolean;
 };
 
@@ -71,8 +71,14 @@ const PDFExport = ({
     </div>
   );
 
-  const showTop = linkPosition === 'top' || linkPosition === 'both';
-  const showBottom = linkPosition === 'bottom' || linkPosition === 'both';
+  const showTop =
+    linkPosition === 'top' ||
+    linkPosition === 'both' ||
+    linkPosition !== 'none';
+  const showBottom =
+    linkPosition === 'bottom' ||
+    linkPosition === 'both' ||
+    linkPosition !== 'none';
 
   return (
     <>

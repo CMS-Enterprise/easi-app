@@ -57,11 +57,7 @@ const subNavItems = (
     },
     {
       route: `/it-governance/${systemId}/decision`,
-      text: 'governanceReviewTeam:decision.title'
-    },
-    {
-      route: `/it-governance/${systemId}/lcid`,
-      text: 'governanceReviewTeam:lifecycleID.title',
+      text: 'governanceReviewTeam:decision.title',
       groupEnd: true
     },
     {
