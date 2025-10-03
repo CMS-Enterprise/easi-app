@@ -204,7 +204,7 @@ exports[`Email recipient fields component > renders recipients 1`] = `
                 d="m7 14 5-5 5 5z"
               />
             </svg>
-             Show 3 fewer recipients
+            Show 3 fewer recipients
           </button>
           <div
             class="easi-checkbox usa-checkbox"

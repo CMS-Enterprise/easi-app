@@ -11,7 +11,6 @@ import {
 } from '@trussworks/react-uswds';
 import { PersonRole } from 'gql/generated/graphql';
 
-import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
 import Alert from 'components/Alert';
 import CedarContactSelect from 'components/CedarContactSelect';
 import CheckboxField from 'components/CheckboxField';
@@ -25,6 +24,8 @@ import { TRBAttendee } from 'types/technicalAssistance';
 import isExternalEmail from 'utils/externalEmail';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 import toggleArrayValue from 'utils/toggleArrayValue';
+
+import ComponentSelectOptions from '../ComponentSelectOptions.tsx';
 
 type RecipientsProps = {
   setRecipientFormOpen?: (value: boolean) => void;
@@ -458,7 +459,7 @@ const RecipientsForm = ({
                                       label={`- ${t('basic.options.select')} -`}
                                       disabled
                                     />
-                                    {cmsDivisionsAndOfficesOptions('component')}
+                                    <ComponentSelectOptions />
                                   </Select>
                                 </FormGroup>
                               );

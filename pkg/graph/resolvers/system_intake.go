@@ -25,6 +25,7 @@ func CreateSystemIntake(
 	ctx context.Context,
 	store *storage.Store,
 	input models.CreateSystemIntakeInput,
+	getAccountInformation userhelpers.GetAccountInfoFunc,
 ) (*models.SystemIntake, error) {
 	systemIntake := models.SystemIntake{
 		EUAUserID:   null.StringFrom(appcontext.Principal(ctx).ID()),
@@ -33,68 +34,32 @@ func CreateSystemIntake(
 		State:       models.SystemIntakeStateOpen,
 		Step:        models.SystemIntakeStepINITIALFORM,
 	}
-	createdIntake, err := store.CreateSystemIntake(ctx, &systemIntake)
-	return createdIntake, err
-}
 
-// CreateSystemIntakeContact creates a system intake's contact info.
-func CreateSystemIntakeContact(
-	ctx context.Context,
-	store *storage.Store,
-	input models.CreateSystemIntakeContactInput,
-	getAccountInformation userhelpers.GetAccountInfoFunc,
-) (*models.CreateSystemIntakeContactPayload, error) {
-	contact := &models.SystemIntakeContact{
-		SystemIntakeID: input.SystemIntakeID,
-		EUAUserID:      input.EuaUserID,
-		Component:      input.Component,
-		Role:           input.Role,
-	}
-	contactUserAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, input.EuaUserID, false, getAccountInformation)
-	if err != nil {
-		return nil, err
-	}
+	intakeRetFromTransaction, err := sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
+		createdIntake, err := storage.CreateSystemIntake(ctx, tx, &systemIntake)
+		if err != nil {
+			return nil, err
+		}
+		logger := appcontext.ZLogger(ctx)
+		principal := appcontext.Principal(ctx)
+		_, err2 := CreateSystemIntakeContact(ctx, logger, principal, tx, models.CreateSystemIntakeContactInput{
+			EuaUserID:      principal.ID(),
+			SystemIntakeID: createdIntake.ID,
+			Roles: []models.SystemIntakeContactRole{
+				models.SystemIntakeContactRolePLACEHOLDER,
+			},
+			Component:   models.SystemIntakeContactComponentPLACEHOLDER,
+			IsRequester: true,
+		},
+			getAccountInformation,
+		)
+		if err2 != nil {
+			return nil, err2
+		}
 
-	contact.UserID = contactUserAccount.ID
-
-	createdContact, err := store.CreateSystemIntakeContact(ctx, contact)
-	if err != nil {
-		return nil, err
-	}
-	return &models.CreateSystemIntakeContactPayload{
-		SystemIntakeContact: createdContact,
-	}, nil
-}
-
-// UpdateSystemIntakeContact updates a system intake's contact info.
-func UpdateSystemIntakeContact(
-	ctx context.Context,
-	store *storage.Store,
-	input models.UpdateSystemIntakeContactInput,
-	getAccountInformation userhelpers.GetAccountInfoFunc,
-) (*models.CreateSystemIntakeContactPayload, error) {
-	contact := &models.SystemIntakeContact{
-		ID:             input.ID,
-		SystemIntakeID: input.SystemIntakeID,
-		EUAUserID:      input.EuaUserID,
-		Component:      input.Component,
-		Role:           input.Role,
-	}
-
-	contactUserAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, input.EuaUserID, false, getAccountInformation)
-	if err != nil {
-		return nil, err
-	} // We comment this out for now, we will use this eventually to link the contact to the user account
-
-	contact.UserID = contactUserAccount.ID
-
-	updatedContact, err := store.UpdateSystemIntakeContact(ctx, contact)
-	if err != nil {
-		return nil, err
-	}
-	return &models.CreateSystemIntakeContactPayload{
-		SystemIntakeContact: updatedContact,
-	}, nil
+		return createdIntake, nil
+	})
+	return intakeRetFromTransaction, err
 }
 
 // UpdateSystemIntakeRequestType updates a system intake's request type and returns the updated intake.
@@ -166,13 +131,6 @@ func SystemIntakeUpdateContactDetails(ctx context.Context, store *storage.Store,
 	}
 	intake.RequestFormState = formstate.GetNewStateForUpdatedForm(intake.RequestFormState)
 
-	intake.Requester = input.Requester.Name
-	intake.Component = null.StringFrom(input.Requester.Component)
-	intake.BusinessOwner = null.StringFrom(input.BusinessOwner.Name)
-	intake.BusinessOwnerComponent = null.StringFrom(input.BusinessOwner.Component)
-	intake.ProductManager = null.StringFrom(input.ProductManager.Name)
-	intake.ProductManagerComponent = null.StringFrom(input.ProductManager.Component)
-
 	if input.GovernanceTeams.IsPresent != nil {
 		intake.GovernanceTeamsIsPresent = null.BoolFromPtr(input.GovernanceTeams.IsPresent)
 
@@ -217,7 +175,7 @@ func SystemIntakeUpdateContactDetails(ctx context.Context, store *storage.Store,
 func SystemIntakeUpdateContractDetails(ctx context.Context, store *storage.Store, input models.UpdateSystemIntakeContractDetailsInput) (*models.UpdateSystemIntakePayload, error) {
 	return sqlutils.WithTransactionRet[*models.UpdateSystemIntakePayload](ctx, store, func(tx *sqlx.Tx) (*models.UpdateSystemIntakePayload, error) {
 
-		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, input.ID)
+		intake, err := storage.FetchSystemIntakeByIDNP(ctx, tx, input.ID)
 		if err != nil {
 			return nil, err
 		}

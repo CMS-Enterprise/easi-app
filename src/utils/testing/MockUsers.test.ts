@@ -1,8 +1,6 @@
 import { PersonRole } from 'gql/generated/graphql';
 import users, { MockUserInfo } from 'tests/mock/users';
 
-import { CMSOffice } from 'constants/enums/cmsDivisionsAndOffices';
-
 import MockTrbAttendees, {
   defaultMockAttendeeProps,
   MockTrbAttendee
@@ -83,7 +81,7 @@ describe('Mock user data', () => {
     expect(attendees.next()).toEqual({ ...attendeeOne, trbRequestId });
 
     // Mock attendee with props
-    const component: CMSOffice = 'Center for Program Integrity';
+    const component = 'Center for Program Integrity';
     const role = PersonRole.SYSTEM_OWNER;
     const attendeeWithProps = attendees.findByEuaUserId(userOne.euaUserId, {
       component,

@@ -10,10 +10,10 @@ import { AppState } from 'stores/reducers/rootReducer';
 
 import AccordionNavigation from 'components/AccordionNavigation';
 import PageLoading from 'components/PageLoading';
-import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import useMessage from 'hooks/useMessage';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import { TrbAdminPage, TrbRequestIdRef } from 'types/technicalAssistance';
+import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 import user from 'utils/user';
 
 import AdditionalInformation from './_components/AdditionalInformation';
@@ -142,24 +142,16 @@ export default function AdminHome() {
     data: { requester, loading: requesterLoading }
   } = useTRBAttendees(id);
 
-  /**
-   * Requester name and cms office acronym
-   */
+  /** Requester name and cms office acronym */
   const requesterString = useMemo(() => {
-    // If loading, return null
     if (requesterLoading) return null;
 
-    // If requester component is not set, return name or EUA
-    if (!requester.component)
-      return requester?.userInfo?.commonName || requester?.userInfo?.euaUserId;
+    const { commonName, euaUserId } = requester?.userInfo || {};
 
-    /** Requester component */
-    const requesterComponent = cmsDivisionsAndOffices.find(
-      object => object.name === requester.component
+    return getPersonNameAndComponentAcronym(
+      commonName || euaUserId || '',
+      requester.component
     );
-
-    // Return requester name and component acronym
-    return `${requester?.userInfo?.commonName}, ${requesterComponent?.acronym}`;
   }, [requester, requesterLoading]);
 
   // Note count for NoteBox modal rendered on each page

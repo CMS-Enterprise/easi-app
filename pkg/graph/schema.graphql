@@ -676,15 +676,6 @@ type SystemIntakeProductManager {
 }
 
 """
-The contact who made an IT governance request for a system
-"""
-type SystemIntakeRequester {
-  component: String
-  email: String
-  name: String!
-}
-
-"""
 Represents a single row of presentation link and document data for a system intake's Async GRB review
 All data values are optional but there is a constraint to require one data value on insertion
 """
@@ -792,12 +783,10 @@ type SystemIntake {
   rejectionReason: HTML
   requestName: String
   requestType: SystemIntakeRequestType!
-  requester: SystemIntakeRequester!
-  # Both of these fields only really exist because the `requester` type (above) always calls Okta to get the `email` field, and the
-  # 2 below (requesterName & requesterComponent) are just fields right from the system intakes table
-  # TODO Remove them when email is not always fetched on the `requester` type
-  requesterName: String
-  requesterComponent: String
+  """
+  The contact who made the IT governance request. Note that this shouldn't be null, but for some legacy contacts a requester is not set.
+  """
+  requester: SystemIntakeContact
   state: SystemIntakeState!
   step: SystemIntakeStep!
   submittedAt: Time
@@ -880,6 +869,8 @@ type SystemIntake {
   grbReviewAsyncManualEndDate: Time
   grbReviewReminderLastSent: Time
   systemIntakeSystems: [SystemIntakeSystem!]!
+  
+  contacts: SystemIntakeContacts!
 }
 
 """
@@ -1027,30 +1018,6 @@ input CreateSystemIntakeInput {
   requester: SystemIntakeRequesterInput!
 }
 
-"""
-The input data used to set the requester for a system request along with the
-requester's business component
-"""
-input SystemIntakeRequesterWithComponentInput {
-  name: String!
-  component: String!
-}
-
-"""
-The input data used to set the CMS Business Owner of a system
-"""
-input SystemIntakeBusinessOwnerInput {
-  name: String!
-  component: String!
-}
-
-"""
-The input data used to set the CMS product manager/lead of a system
-"""
-input SystemIntakeProductManagerInput {
-  name: String!
-  component: String!
-}
 
 """
 The input data used to add an OIT collaborator for a system request
@@ -1075,9 +1042,6 @@ a system request
 """
 input UpdateSystemIntakeContactDetailsInput {
   id: UUID!
-  requester: SystemIntakeRequesterWithComponentInput!
-  businessOwner: SystemIntakeBusinessOwnerInput!
-  productManager: SystemIntakeProductManagerInput!
   governanceTeams: SystemIntakeGovernanceTeamInput!
 }
 
@@ -1816,27 +1780,105 @@ type CurrentUser {
 }
 
 """
+SystemIntakeContactRole is the various roles that a user can have as a contact on a system intake
+"""
+enum SystemIntakeContactRole  {
+  BUSINESS_OWNER
+  CLOUD_NAVIGATOR
+  CONTRACTING_OFFICERS_REPRESENTATIVE
+  CYBER_RISK_ADVISOR
+  INFORMATION_SYSTEM_SECURITY_ADVISOR
+  OTHER
+  PRIVACY_ADVISOR
+  PRODUCT_OWNER
+  PRODUCT_MANAGER
+  PROJECT_MANAGER
+  SUBJECT_MATTER_EXPERT
+  SYSTEM_MAINTAINER
+  SYSTEM_OWNER
+}
+
+enum SystemIntakeContactComponent {
+  CENTER_FOR_CLINICAL_STANDARDS_AND_QUALITY_CCSQ
+  CENTER_FOR_CONSUMER_INFORMATION_AND_INSURANCE_OVERSIGHT_CCIIO
+  CENTER_FOR_MEDICARE_CM
+  CENTER_FOR_MEDICAID_AND_CHIP_SERVICES_CMCS
+  CENTER_FOR_MEDICARE_AND_MEDICAID_INNOVATION_CMMI
+  CENTER_FOR_PROGRAM_INTEGRITY_CPI
+  CMS_WIDE
+  EMERGENCY_PREPAREDNESS_AND_RESPONSE_OPERATIONS_EPRO
+  FEDERAL_COORDINATED_HEALTH_CARE_OFFICE
+  OFFICE_OF_ACQUISITION_AND_GRANTS_MANAGEMENT_OAGM
+  OFFICE_OF_HEALTHCARE_EXPERIENCE_AND_INTEROPERABILITY
+  OFFICE_OF_COMMUNICATIONS_OC
+  OFFICE_OF_ENTERPRISE_DATA_AND_ANALYTICS_OEDA
+  OFFICE_OF_EQUAL_OPPORTUNITY_AND_CIVIL_RIGHTS
+  OFFICE_OF_FINANCIAL_MANAGEMENT_OFM
+  OFFICE_OF_HUMAN_CAPITAL
+  OFFICE_OF_INFORMATION_TECHNOLOGY_OIT
+  OFFICE_OF_LEGISLATION
+  OFFICE_OF_MINORITY_HEALTH_OMH
+  OFFICE_OF_PROGRAM_OPERATIONS_AND_LOCAL_ENGAGEMENT_OPOLE
+  OFFICE_OF_SECURITY_FACILITIES_AND_LOGISTICS_OPERATIONS_OSFLO
+  OFFICE_OF_STRATEGIC_OPERATIONS_AND_REGULATORY_AFFAIRS_OSORA
+  OFFICE_OF_STRATEGY_PERFORMANCE_AND_RESULTS_OSPR
+  OFFICE_OF_THE_ACTUARY_OACT
+  OFFICE_OF_THE_ADMINISTRATOR
+  OFFICES_OF_HEARINGS_AND_INQUIRIES
+  OTHER
+  # Legacy Options, not for adding or updating
+  CONSORTIUM_FOR_MEDICAID_AND_CHILDRENS_HEALTH
+  CONSORTIUM_FOR_MEDICARE_HEALTH_PLANS_OPERATIONS
+  OFFICE_OF_BURDEN_REDUCTION_AND_HEALTH_INFORMATICS
+  OFFICE_OF_SUPPORT_SERVICES_AND_OPERATIONS
+}
+
+"""
+This is a convenience struct which surfaces information about the contacts associated with a system intake
+"""
+type SystemIntakeContacts {
+  """
+  Returns the requester from the List of Contacts. In practice it should only ever be one requester, and should not be empty. However, some legacy data might be missing a requester or have multiple requesters.
+  """
+  requester: SystemIntakeContact
+  """
+  Returns the business owner from the List of Contacts
+  """
+  businessOwners: [SystemIntakeContact!]!
+  """
+  Returns the product managers from the List of Contacts
+  """
+  productManagers: [SystemIntakeContact!]!
+  """
+  Returns the additional contacts from the List of Contacts. These are all the contacts except for requester, businessOwners, productManagers
+  """
+  additionalContacts: [SystemIntakeContact!]!
+
+  """
+  Returns all the raw contacts from the List of Contacts
+  """
+  allContacts: [SystemIntakeContact!]!
+}
+
+"""
 Represents a contact associated with a system intake
 """
 type SystemIntakeContact {
   id: UUID!
-  euaUserId: String!
+  userID: UUID!
+  userAccount: UserAccount!
   systemIntakeId: UUID!
-  component: String!
-  role: String!
-}
+  component: SystemIntakeContactComponent @goField(forceResolver: true)
+  roles: [SystemIntakeContactRole!]! @goField(forceResolver: true)
+  isRequester: Boolean!
 
-"""
-Represents a contact associated with a system intake, including additional fields from CEDAR
-"""
-type AugmentedSystemIntakeContact {
-  id: UUID!
-  euaUserId: String!
-  systemIntakeId: UUID!
-  component: String!
-  role: String!
-  commonName: String
-  email: EmailAddress
+  # Meta Data
+  createdBy: UUID!
+  createdByUserAccount: UserAccount!
+  createdAt: Time!
+  modifiedBy: UUID
+  modifiedByUserAccount: UserAccount
+  modifiedAt: Time
 }
 
 """
@@ -1845,8 +1887,9 @@ The data needed to associate a contact with a system intake
 input CreateSystemIntakeContactInput {
   euaUserId: String!
   systemIntakeId: UUID!
-  component: String!
-  role: String!
+  component: SystemIntakeContactComponent!
+  roles: [SystemIntakeContactRole!]!
+  isRequester: Boolean!
 }
 
 """
@@ -1854,10 +1897,9 @@ The data needed to update a contact associated with a system intake
 """
 input UpdateSystemIntakeContactInput {
   id: UUID!
-  euaUserId: String!
-  systemIntakeId: UUID!
-  component: String!
-  role: String!
+  component: SystemIntakeContactComponent!
+  roles: [SystemIntakeContactRole!]!
+  isRequester: Boolean!
 }
 
 """
@@ -1885,14 +1927,6 @@ input EmailNotificationRecipients {
   regularRecipientEmails: [EmailAddress!]!
   shouldNotifyITGovernance: Boolean!
   shouldNotifyITInvestment: Boolean!
-}
-
-"""
-The payload when retrieving system intake contacts
-"""
-type SystemIntakeContactsPayload {
-  systemIntakeContacts: [AugmentedSystemIntakeContact!]!
-  invalidEUAIDs: [String!]!
 }
 
 """
@@ -3087,7 +3121,10 @@ type Query {
   exchanges(cedarSystemId: String!): [CedarExchange!]!
   urls(cedarSystemId: String!): [CedarURL!]!
   cedarSystemDetails(cedarSystemId: String!): CedarSystemDetails
-  systemIntakeContacts(id: UUID!): SystemIntakeContactsPayload!
+  """
+  This returns a SystemIntakeContacts object. It holds the information about the contacts associated with a specific System Intake.
+  """
+  systemIntakeContacts(id: UUID!): SystemIntakeContacts
   trbRequest(id: UUID!): TRBRequest!
   trbRequests(archived: Boolean! = false): [TRBRequest!]!
     @hasRole(role: EASI_TRB_ADMIN)
@@ -3168,6 +3205,7 @@ directive @goModel(
 
 # https://gqlgen.com/config/#inline-config-with-directives
 directive @goField(
+  forceResolver: Boolean
   omittable: Boolean
 ) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
 

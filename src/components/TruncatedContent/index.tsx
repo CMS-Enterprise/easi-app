@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Button, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 type TruncatedContentProps = {
-  children: React.ReactNodeArray;
+  children: React.ReactNode[];
   initialCount: number;
-  labelMore?: string;
-  labelLess?: string;
+  labelMore?: string | ((itemCount: number) => string);
+  labelLess?: string | ((itemCount: number) => string);
   buttonClassName?: string;
   expanded?: boolean;
   hideToggle?: boolean;
 };
 
 export default function TruncatedContent({
-  children,
+  children = [],
   initialCount,
   labelMore = 'Show more',
   labelLess = 'Show less',
@@ -22,15 +22,42 @@ export default function TruncatedContent({
   hideToggle
 }: TruncatedContentProps) {
   const [isExpanded, setExpanded] = useState(expanded);
-  const defaultContent = children
-    .filter(child => child) // Filter out conditional children
-    .flat()
-    .slice(0, initialCount);
-  const expandedContent = children
-    .filter(child => child) // Filter out conditional children
-    .flat()
-    .slice(initialCount);
+
+  /** Normalizes children to flat array of visible elements */
+  const visibleChildren = useMemo(
+    () => children.filter(child => Boolean(child)).flat(),
+    [children]
+  );
+
+  const defaultContent = useMemo(
+    () => visibleChildren.slice(0, initialCount),
+    [visibleChildren, initialCount]
+  );
+
+  const expandedContent = useMemo(
+    () => visibleChildren.slice(initialCount),
+    [visibleChildren, initialCount]
+  );
+
+  const expandedCount = expandedContent.length;
+
+  /**
+   * Get toggle label based on expanded state
+   *
+   * Passes the count of expanded content to the label if prop is a function
+   */
+  const toggleLabel = useMemo(() => {
+    const labelProp = isExpanded ? labelLess : labelMore;
+
+    if (typeof labelProp === 'function') {
+      return labelProp(expandedCount);
+    }
+
+    return labelProp;
+  }, [isExpanded, labelLess, labelMore, expandedCount]);
+
   const ArrowIcon = isExpanded ? Icon.ArrowDropUp : Icon.ArrowDropDown;
+
   return (
     <>
       {defaultContent}
@@ -47,8 +74,8 @@ export default function TruncatedContent({
             buttonClassName
           )}
         >
-          <ArrowIcon className="margin-x-05" aria-hidden />{' '}
-          {isExpanded ? labelLess : labelMore}
+          <ArrowIcon className="margin-x-05" aria-hidden />
+          {toggleLabel}
         </Button>
       )}
       {isExpanded && expandedContent}

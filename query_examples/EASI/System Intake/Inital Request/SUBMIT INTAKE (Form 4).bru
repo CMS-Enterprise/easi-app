@@ -1,7 +1,7 @@
 meta {
   name: SUBMIT INTAKE (Form 4)
   type: graphql
-  seq: 7
+  seq: 5
 }
 
 post {
@@ -55,7 +55,19 @@ body:graphql {
         rejectionReason
         requestName
         requestType
-        #   requester
+        requester {
+          id
+          roles
+          component
+          isRequester
+          userID
+          userAccount {
+            id
+            commonName
+            username
+            email
+          }
+        }
         state
         submittedAt
         trbCollaborator

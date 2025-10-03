@@ -4,8 +4,14 @@ export const SystemIntakeWithReviewRequested = gql(/* GraphQL */ `
   fragment SystemIntakeWithReviewRequested on SystemIntake {
     id
     requestName
-    requesterName
-    requesterComponent
+    requester {
+      id
+      component
+      userAccount {
+        id
+        commonName
+      }
+    }
     grbDate
   }
 `);

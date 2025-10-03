@@ -200,7 +200,12 @@ exports[`Trb Request form: Basic > submits the form successfully after a failed 
             <option
               value="Office of the Actuary"
             >
-              Office of the Actuary (OA)
+              Office of the Actuary (OACT)
+            </option>
+            <option
+              value="Office of the Administrator"
+            >
+              Office of the Administrator (OA)
             </option>
             <option
               value="Offices of Hearings and Inquiries"

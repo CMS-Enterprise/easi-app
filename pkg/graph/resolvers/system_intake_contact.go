@@ -1,0 +1,102 @@
+package resolvers
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/google/uuid"
+	"go.uber.org/zap"
+
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
+)
+
+// CreateSystemIntakeContact creates a system intake's contact info.
+func CreateSystemIntakeContact(
+	ctx context.Context,
+	logger *zap.Logger,
+	principal authentication.Principal,
+	np sqlutils.NamedPreparer,
+	input models.CreateSystemIntakeContactInput,
+	getAccountInformation userhelpers.GetAccountInfoFunc,
+) (*models.CreateSystemIntakeContactPayload, error) {
+	principalAccount := principal.Account()
+	if principalAccount == nil {
+		return nil, fmt.Errorf("principal doesn't have an account, username %s", principal.String())
+	}
+	contactUserAccount, err := userhelpers.GetOrCreateUserAccount(ctx, np, input.EuaUserID, false, getAccountInformation)
+	if err != nil {
+		return nil, err
+	}
+
+	contact := models.NewSystemIntakeContact(contactUserAccount.ID, principalAccount.ID)
+	contact.SystemIntakeID = input.SystemIntakeID
+	contact.Component = input.Component
+	contact.IsRequester = input.IsRequester
+
+	contact.Roles = input.Roles
+
+	createdContact, err := storage.CreateSystemIntakeContact(ctx, np, contact)
+	if err != nil {
+		return nil, err
+	}
+	return &models.CreateSystemIntakeContactPayload{
+		SystemIntakeContact: createdContact,
+	}, nil
+}
+
+// SystemIntakeContactDelete will, delete a System Intake contact
+func SystemIntakeContactDelete(ctx context.Context, np sqlutils.NamedPreparer, id uuid.UUID) (*models.SystemIntakeContact, error) {
+	return storage.DeleteSystemIntakeContact(ctx, np, id)
+}
+
+// UpdateSystemIntakeContact updates a system intake's contact info.
+func UpdateSystemIntakeContact(
+	ctx context.Context,
+	logger *zap.Logger,
+	principal authentication.Principal,
+	np sqlutils.NamedPreparer,
+	input models.UpdateSystemIntakeContactInput,
+	getAccountInformation userhelpers.GetAccountInfoFunc,
+) (*models.CreateSystemIntakeContactPayload, error) {
+	contact, err := dataloaders.SystemIntakeContactGetByID(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	contact.Component = input.Component
+	contact.Roles = input.Roles
+	contact.IsRequester = input.IsRequester
+	err = BaseStructPreUpdate(map[string]any{}, contact, principal, false)
+	if err != nil {
+		return nil, err
+	}
+
+	updatedContact, err := storage.UpdateSystemIntakeContact(ctx, np, contact)
+	if err != nil {
+		return nil, err
+	}
+	return &models.CreateSystemIntakeContactPayload{
+		SystemIntakeContact: updatedContact,
+	}, nil
+}
+
+// SystemIntakeContactsGetBySystemIntakeID fetches contacts for a system intake
+func SystemIntakeContactsGetBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) (*models.SystemIntakeContacts, error) {
+	return dataloaders.SystemIntakeContactsGetBySystemIntakeID(ctx, systemIntakeID)
+
+}
+
+// SystemIntakeContactGetByID fetches contacts for a system intake
+func SystemIntakeContactGetByID(ctx context.Context, id uuid.UUID) (*models.SystemIntakeContact, error) {
+	return dataloaders.SystemIntakeContactGetByID(ctx, id)
+}
+
+// SystemIntakeContactGetRequester fetches the requester contact for a system intake
+func SystemIntakeContactGetRequester(ctx context.Context, systemIntakeID uuid.UUID) (*models.SystemIntakeContact, error) {
+	return dataloaders.SystemIntakeContactGetRequester(ctx, systemIntakeID)
+}

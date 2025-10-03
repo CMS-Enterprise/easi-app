@@ -41,7 +41,7 @@ import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
-import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices'; // May be temporary if we want to hard code all the CMS acronyms.  For now it creates an acronym for all capitalized words
+import { getComponentByName } from 'constants/cmsComponentsMap';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   getColumnSortStatus,
@@ -196,13 +196,12 @@ export const Table = ({
         Header: t<string>('systemTable.header.systemOwner'),
         accessor: 'businessOwnerOrg',
         id: 'systemOwner',
-        Cell: ({ row }: { row: Row<CedarSystem> }) => (
-          <p>
-            {cmsDivisionsAndOffices.find(
-              item => item.name === row.original.businessOwnerOrg
-            )?.acronym || row.original.businessOwnerOrg}
-          </p>
-        )
+        Cell: ({ row }: { row: Row<CedarSystem> }) => {
+          const component = getComponentByName(
+            row.original.businessOwnerOrg || ''
+          );
+          return <p>{component?.acronym || row.original.businessOwnerOrg}</p>;
+        }
       });
     }
 

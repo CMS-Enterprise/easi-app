@@ -1,14 +1,12 @@
 import { PersonRole } from 'gql/generated/graphql';
 
-import { CMSOffice } from 'constants/enums/cmsDivisionsAndOffices';
-
 import MockUsers, { MockUser, MockUserOptions } from './MockUsers';
 
 export interface MockTrbAttendee extends MockUser {
   __typename: 'TRBRequestAttendee';
   trbRequestId: string;
   id: string;
-  component: CMSOffice;
+  component: string;
   role: PersonRole;
   createdAt: string;
 }

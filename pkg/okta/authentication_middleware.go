@@ -85,7 +85,6 @@ func (f oktaMiddlewareFactory) newPrincipal(ctx context.Context) (*authenticatio
 	userAccount, err := userhelpers.GetOrCreateUserAccount(
 		ctx,
 		f.Store,
-		f.Store,
 		euaID,
 		true,
 		userhelpers.GetOktaAccountInfoWrapperFunction(userhelpers.GetOktaAccountInfo),

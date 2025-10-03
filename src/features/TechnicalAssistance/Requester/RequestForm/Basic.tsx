@@ -16,6 +16,7 @@ import {
   Select,
   TextInput
 } from '@trussworks/react-uswds';
+import ComponentSelectOptions from 'features/TechnicalAssistance/Admin/_components/ComponentSelectOptions.tsx';
 import FundingSources from 'features/TechnicalAssistance/Requester/RequestForm/FundingSources/FundingSources';
 import {
   GetTRBRequestQuery,
@@ -28,7 +29,6 @@ import {
 } from 'gql/generated/graphql';
 import { camelCase, lowerFirst, pick, upperFirst } from 'lodash';
 
-import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
 import Alert from 'components/Alert';
 import DatePickerFormatted from 'components/DatePickerFormatted';
 import Divider from 'components/Divider';
@@ -401,7 +401,7 @@ function Basic({
                   ref={null}
                 >
                   <option>- {t('basic.options.select')} -</option>
-                  {cmsDivisionsAndOfficesOptions('component')}
+                  <ComponentSelectOptions />
                 </Select>
               </FormGroup>
             )}

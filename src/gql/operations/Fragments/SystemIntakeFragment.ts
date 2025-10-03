@@ -76,9 +76,11 @@ export default gql(/* GraphQL */ `
     }
     rejectionReason
     requester {
+      id
       component
-      email
-      name
+      userAccount {
+        ...UserAccount
+      }
     }
     requestName
     projectAcronym

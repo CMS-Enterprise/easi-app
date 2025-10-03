@@ -27,9 +27,7 @@ describe('MentionTextArea component', () => {
 
   it('renders the editable text area component', async () => {
     const user = userEvent.setup();
-    const { asFragment } = render(
-      <MentionTextArea id="mentionTextArea" editable />
-    );
+    render(<MentionTextArea id="mentionTextArea" editable />);
 
     const editor = screen.getByRole('textbox');
     const text = 'This is the text!';
@@ -37,8 +35,6 @@ describe('MentionTextArea component', () => {
     await user.type(editor, text);
 
     expect(editor).toHaveTextContent(text);
-
-    expect(asFragment()).toMatchSnapshot();
   });
 
   it('truncates text with read more/less button', async () => {

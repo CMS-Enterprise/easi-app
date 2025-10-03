@@ -8,6 +8,7 @@ import (
 	_ "github.com/lib/pq" // required for postgres driver in sql
 
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 )
 
@@ -21,9 +22,6 @@ func (s *GraphQLTestSuite) TestCreateSystemIntakeMutation() {
 		CreateSystemIntake struct {
 			ID          string
 			RequestType string
-			Requester   struct {
-				Name string
-			}
 		}
 	}
 
@@ -39,14 +37,10 @@ func (s *GraphQLTestSuite) TestCreateSystemIntakeMutation() {
 			}) {
 				id
 				requestType
-				requester {
-					name
-				}
 			}
-		}`, &resp, addAuthWithAllJobCodesToGraphQLClientTest("TEST"))
+		}`, &resp, s.addAuthWithAllJobCodesToGraphQLClientTest("TEST"))
 
 	s.NotNil(resp.CreateSystemIntake.ID)
-	s.Equal("Test User", resp.CreateSystemIntake.Requester.Name)
 	s.Equal("NEW", resp.CreateSystemIntake.RequestType)
 }
 
@@ -56,7 +50,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeQuery() {
 	businessOwner := "Firstname Lastname"
 	businessOwnerComponent := "OIT"
 
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+	intake, intakeErr := storage.CreateSystemIntake(ctx, s.store, &models.SystemIntake{
 		EUAUserID:              null.StringFrom("TEST"),
 		ProjectName:            null.StringFrom(projectName),
 		RequestType:            models.SystemIntakeRequestTypeNEW,
@@ -94,7 +88,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeQuery() {
 				}
 				businessNeed
 			}
-		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		}`, intake.ID), &resp, s.addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 	s.Equal(projectName, resp.SystemIntake.RequestName)
@@ -111,7 +105,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithNotesQuery() {
 	businessOwner := "Firstname Lastname"
 	businessOwnerComponent := "OIT"
 
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+	intake, intakeErr := storage.CreateSystemIntake(ctx, s.store, &models.SystemIntake{
 		EUAUserID:              null.StringFrom("TEST"),
 		ProjectName:            null.StringFrom(projectName),
 		RequestType:            models.SystemIntakeRequestTypeNEW,
@@ -169,7 +163,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithNotesQuery() {
 					}
 				}
 			}
-		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest("WWWW"))
+		}`, intake.ID), &resp, s.addAuthWithAllJobCodesToGraphQLClientTest("WWWW"))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 
@@ -199,7 +193,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithContractMonthAndYearQuery() 
 	contractEndYear := "2020"
 	projectName := "My cool project"
 
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+	intake, intakeErr := storage.CreateSystemIntake(ctx, s.store, &models.SystemIntake{
 		EUAUserID:          null.StringFrom("TEST"),
 		ProjectName:        null.StringFrom(projectName),
 		RequestType:        models.SystemIntakeRequestTypeNEW,
@@ -249,7 +243,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithContractMonthAndYearQuery() 
 			}
 		}`, intake.ID),
 		&resp,
-		addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()),
+		s.addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()),
 	)
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
@@ -272,7 +266,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithContractDatesQuery() {
 	contractStartDate, _ := time.Parse("2006-1-2", "2002-8-24")
 	contractEndDate, _ := time.Parse("2006-1-2", "2020-10-31")
 
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+	intake, intakeErr := storage.CreateSystemIntake(ctx, s.store, &models.SystemIntake{
 		EUAUserID:         null.StringFrom("TEST"),
 		ProjectName:       null.StringFrom(projectName),
 		RequestType:       models.SystemIntakeRequestTypeNEW,
@@ -320,7 +314,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithContractDatesQuery() {
 			}
 		}`, intake.ID),
 		&resp,
-		addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		s.addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 
@@ -339,7 +333,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithNoCollaboratorsQuery() {
 	ctx := s.context
 	projectName := "My cool project"
 
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+	intake, intakeErr := storage.CreateSystemIntake(ctx, s.store, &models.SystemIntake{
 		EUAUserID:                   null.StringFrom("TEST"),
 		ProjectName:                 null.StringFrom(projectName),
 		RequestType:                 models.SystemIntakeRequestTypeNEW,
@@ -382,7 +376,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithNoCollaboratorsQuery() {
 					}
 				}
 			}
-		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		}`, intake.ID), &resp, s.addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 	s.False(resp.SystemIntake.GovernanceTeams.IsPresent)
@@ -396,7 +390,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithCollaboratorsQuery() {
 	oitName := "My OIT Rep"
 	trbName := "My TRB Rep"
 
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+	intake, intakeErr := storage.CreateSystemIntake(ctx, s.store, &models.SystemIntake{
 		EUAUserID:                   null.StringFrom("TEST"),
 		ProjectName:                 null.StringFrom(projectName),
 		RequestType:                 models.SystemIntakeRequestTypeNEW,
@@ -440,7 +434,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithCollaboratorsQuery() {
 					}
 				}
 			}
-		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		}`, intake.ID), &resp, s.addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 	s.True(resp.SystemIntake.GovernanceTeams.IsPresent)
@@ -452,7 +446,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithCollaboratorsQuery() {
 func (s *GraphQLTestSuite) TestFetchSystemIntakeWithActionsQuery() {
 	ctx := s.context
 
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+	intake, intakeErr := storage.CreateSystemIntake(ctx, s.store, &models.SystemIntake{
 		EUAUserID:   null.StringFrom("TEST"),
 		ProjectName: null.StringFrom("Test Project"),
 		RequestType: models.SystemIntakeRequestTypeNEW,
@@ -513,7 +507,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithActionsQuery() {
 					createdAt
 				}
 			}
-		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		}`, intake.ID), &resp, s.addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(2, len(resp.SystemIntake.Actions))
 
@@ -537,7 +531,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithActionsQuery() {
 func (s *GraphQLTestSuite) TestUpdateContactDetails() {
 	ctx := s.context
 
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+	intake, intakeErr := storage.CreateSystemIntake(ctx, s.store, &models.SystemIntake{
 		EUAUserID:   null.StringFrom("TEST"),
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
@@ -546,20 +540,7 @@ func (s *GraphQLTestSuite) TestUpdateContactDetails() {
 	var resp struct {
 		UpdateSystemIntakeContactDetails struct {
 			SystemIntake struct {
-				ID            string
-				BusinessOwner struct {
-					Name      string
-					Component string
-				}
-				ProductManager struct {
-					Name      string
-					Component string
-				}
-				Requester struct {
-					Name      string
-					Component string
-					Email     string
-				}
+				ID              string
 				GovernanceTeams struct {
 					IsPresent bool
 					Teams     null.String
@@ -574,18 +555,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetails() {
 		`mutation {
 			updateSystemIntakeContactDetails(input: {
 				id: "%s",
-				businessOwner: {
-					name: "Iama Businessowner",
-					component: "CMS Office 1"
-				},
-				productManager: {
-					name: "Iama Productmanager",
-					component: "CMS Office 2"
-				},
-				requester: {
-					name: "Iama Requester",
-					component: "CMS Office 3"
-				},
 				governanceTeams: {
 					isPresent: false
 					teams: []
@@ -593,19 +562,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetails() {
 			}) {
 				systemIntake {
 					id,
-					businessOwner {
-						name
-						component
-					}
-					productManager {
-						name
-						component
-					}
-					requester {
-						name
-						component
-						email
-					}
 					governanceTeams {
 						teams {
 							name
@@ -619,15 +575,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetails() {
 	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContactDetails.SystemIntake.ID)
 
 	respIntake := resp.UpdateSystemIntakeContactDetails.SystemIntake
-	s.Equal(respIntake.BusinessOwner.Name, "Iama Businessowner")
-	s.Equal(respIntake.BusinessOwner.Component, "CMS Office 1")
-
-	s.Equal(respIntake.ProductManager.Name, "Iama Productmanager")
-	s.Equal(respIntake.ProductManager.Component, "CMS Office 2")
-
-	s.Equal(respIntake.Requester.Name, "Iama Requester")
-	s.Equal(respIntake.Requester.Component, "CMS Office 3")
-	s.Equal(respIntake.Requester.Email, "terry.thompson@local.fake")
 
 	s.Nil(respIntake.GovernanceTeams.Teams.Ptr())
 	s.False(respIntake.GovernanceTeams.IsPresent)
@@ -636,7 +583,7 @@ func (s *GraphQLTestSuite) TestUpdateContactDetails() {
 func (s *GraphQLTestSuite) TestUpdateContactDetailsEmptyEUA() {
 	ctx := s.context
 
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+	intake, intakeErr := storage.CreateSystemIntake(ctx, s.store, &models.SystemIntake{
 		// EUAUserID:   null.StringFrom("TEST"),
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
@@ -673,18 +620,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsEmptyEUA() {
 		`mutation {
 			updateSystemIntakeContactDetails(input: {
 				id: "%s",
-				businessOwner: {
-					name: "Iama Businessowner",
-					component: "CMS Office 1"
-				},
-				productManager: {
-					name: "Iama Productmanager",
-					component: "CMS Office 2"
-				},
-				requester: {
-					name: "Iama Requester",
-					component: "CMS Office 3"
-				},
 				governanceTeams: {
 					isPresent: false
 					teams: []
@@ -692,19 +627,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsEmptyEUA() {
 			}) {
 				systemIntake {
 					id,
-					businessOwner {
-						name
-						component
-					}
-					productManager {
-						name
-						component
-					}
-					requester {
-						name
-						component
-						email
-					}
 					governanceTeams {
 						teams {
 							name
@@ -718,15 +640,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsEmptyEUA() {
 	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContactDetails.SystemIntake.ID)
 
 	respIntake := resp.UpdateSystemIntakeContactDetails.SystemIntake
-	s.Equal(respIntake.BusinessOwner.Name, "Iama Businessowner")
-	s.Equal(respIntake.BusinessOwner.Component, "CMS Office 1")
-
-	s.Equal(respIntake.ProductManager.Name, "Iama Productmanager")
-	s.Equal(respIntake.ProductManager.Component, "CMS Office 2")
-
-	s.Equal(respIntake.Requester.Name, "Iama Requester")
-	s.Equal(respIntake.Requester.Component, "CMS Office 3")
-	s.Equal(respIntake.Requester.Email, "")
 
 	s.Nil(respIntake.GovernanceTeams.Teams.Ptr())
 	s.False(respIntake.GovernanceTeams.IsPresent)
@@ -735,7 +648,7 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsEmptyEUA() {
 func (s *GraphQLTestSuite) TestUpdateContactDetailsWithTeams() {
 	ctx := s.context
 
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+	intake, intakeErr := storage.CreateSystemIntake(ctx, s.store, &models.SystemIntake{
 		EUAUserID:   null.StringFrom("TEST"),
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
@@ -744,19 +657,7 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWithTeams() {
 	var resp struct {
 		UpdateSystemIntakeContactDetails struct {
 			SystemIntake struct {
-				ID            string
-				BusinessOwner struct {
-					Name      string
-					Component string
-				}
-				ProductManager struct {
-					Name      string
-					Component string
-				}
-				Requester struct {
-					Name      string
-					Component string
-				}
+				ID              string
 				GovernanceTeams struct {
 					IsPresent bool
 					Teams     []struct {
@@ -775,18 +676,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWithTeams() {
 		`mutation {
 			updateSystemIntakeContactDetails(input: {
 				id: "%s",
-				businessOwner: {
-					name: "Iama Businessowner",
-					component: "CMS Office 1"
-				},
-				productManager: {
-					name: "Iama Productmanager",
-					component: "CMS Office 2"
-				},
-				requester: {
-					name: "Iama Requester",
-					component: "CMS Office 3"
-				},
 				governanceTeams: {
 					isPresent: true,
 					teams: [
@@ -798,18 +687,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWithTeams() {
 			}) {
 				systemIntake {
 					id,
-					businessOwner {
-						name
-						component
-					}
-					productManager {
-						name
-						component
-					}
-					requester {
-						name
-						component
-					}
 					governanceTeams {
 						teams {
 							collaborator
@@ -840,7 +717,7 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWithTeams() {
 func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearTeams() {
 	ctx := s.context
 
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+	intake, intakeErr := storage.CreateSystemIntake(ctx, s.store, &models.SystemIntake{
 		EUAUserID:   null.StringFrom("TEST"),
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
@@ -855,19 +732,7 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearTeams() {
 	var resp struct {
 		UpdateSystemIntakeContactDetails struct {
 			SystemIntake struct {
-				ID            string
-				BusinessOwner struct {
-					Name      string
-					Component string
-				}
-				ProductManager struct {
-					Name      string
-					Component string
-				}
-				Requester struct {
-					Name      string
-					Component string
-				}
+				ID              string
 				GovernanceTeams struct {
 					IsPresent bool
 					Teams     null.String
@@ -882,18 +747,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearTeams() {
 		`mutation {
 			updateSystemIntakeContactDetails(input: {
 				id: "%s",
-				businessOwner: {
-					name: "Iama Businessowner",
-					component: "CMS Office 1"
-				},
-				productManager: {
-					name: "Iama Productmanager",
-					component: "CMS Office 2"
-				},
-				requester: {
-					name: "Iama Requester",
-					component: "CMS Office 3"
-				},
 				governanceTeams: {
 					isPresent: false,
 					teams: null
@@ -901,18 +754,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearTeams() {
 			}) {
 				systemIntake {
 					id,
-					businessOwner {
-						name
-						component
-					}
-					productManager {
-						name
-						component
-					}
-					requester {
-						name
-						component
-					}
 					governanceTeams {
 						teams {
 							collaborator
@@ -935,7 +776,7 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearTeams() {
 func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearOneTeam() {
 	ctx := s.context
 
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+	intake, intakeErr := storage.CreateSystemIntake(ctx, s.store, &models.SystemIntake{
 		EUAUserID:   null.StringFrom("TEST"),
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
@@ -950,19 +791,7 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearOneTeam() {
 	var resp struct {
 		UpdateSystemIntakeContactDetails struct {
 			SystemIntake struct {
-				ID            string
-				BusinessOwner struct {
-					Name      string
-					Component string
-				}
-				ProductManager struct {
-					Name      string
-					Component string
-				}
-				Requester struct {
-					Name      string
-					Component string
-				}
+				ID              string
 				GovernanceTeams struct {
 					IsPresent bool
 					Teams     []struct {
@@ -981,18 +810,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearOneTeam() {
 		`mutation {
 			updateSystemIntakeContactDetails(input: {
 				id: "%s",
-				businessOwner: {
-					name: "Iama Businessowner",
-					component: "CMS Office 1"
-				},
-				productManager: {
-					name: "Iama Productmanager",
-					component: "CMS Office 2"
-				},
-				requester: {
-					name: "Iama Requester",
-					component: "CMS Office 3"
-				},
 				governanceTeams: {
 					isPresent: true,
 					teams: [
@@ -1004,18 +821,6 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearOneTeam() {
 			}) {
 				systemIntake {
 					id,
-					businessOwner {
-						name
-						component
-					}
-					productManager {
-						name
-						component
-					}
-					requester {
-						name
-						component
-					}
 					governanceTeams {
 						teams {
 							collaborator
@@ -1046,7 +851,7 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearOneTeam() {
 func (s *GraphQLTestSuite) TestUpdateRequestDetails() {
 	ctx := s.context
 
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+	intake, intakeErr := storage.CreateSystemIntake(ctx, s.store, &models.SystemIntake{
 		EUAUserID:   null.StringFrom("TEST"),
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
@@ -1117,7 +922,7 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetails() {
 func (s *GraphQLTestSuite) TestUpdateRequestDetailsNullFields() {
 	ctx := s.context
 
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+	intake, intakeErr := storage.CreateSystemIntake(ctx, s.store, &models.SystemIntake{
 		EUAUserID:   null.StringFrom("TEST"),
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
@@ -1166,7 +971,7 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetailsNullFields() {
 func (s *GraphQLTestSuite) TestUpdateRequestDetailsHasUiChangesTrue() {
 	ctx := s.context
 
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+	intake, intakeErr := storage.CreateSystemIntake(ctx, s.store, &models.SystemIntake{
 		EUAUserID:   null.StringFrom("TEST"),
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
@@ -1212,7 +1017,7 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetailsHasUiChangesTrue() {
 func (s *GraphQLTestSuite) TestUpdateContractDetailsImmediatelyAfterIntakeCreation() {
 	ctx := s.context
 
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+	intake, intakeErr := storage.CreateSystemIntake(ctx, s.store, &models.SystemIntake{
 		EUAUserID:   null.StringFrom("TEST"),
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
@@ -1358,7 +1163,7 @@ func (s *GraphQLTestSuite) TestContractQueryReturnsVehicleForLegacyIntakes() {
 
 	contractVehicle := "Ford"
 
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+	intake, intakeErr := storage.CreateSystemIntake(ctx, s.store, &models.SystemIntake{
 		EUAUserID:       null.StringFrom("TEST"),
 		RequestType:     models.SystemIntakeRequestTypeNEW,
 		ContractVehicle: null.StringFrom(contractVehicle),
@@ -1392,7 +1197,7 @@ func (s *GraphQLTestSuite) TestContractQueryReturnsVehicleForLegacyIntakes() {
 					contractNumber
 				}
 			}
-		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		}`, intake.ID), &resp, s.addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(contractVehicle, *resp.SystemIntake.Contract.Vehicle)
 	s.Empty(resp.SystemIntake.ContractNumbers)
@@ -1402,7 +1207,7 @@ func (s *GraphQLTestSuite) TestContractQueryReturnsVehicleForLegacyIntakes() {
 func (s *GraphQLTestSuite) TestUpdateContractDetailsReplacesContractVehicleWithContractNumber() {
 	ctx := s.context
 
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+	intake, intakeErr := storage.CreateSystemIntake(ctx, s.store, &models.SystemIntake{
 		EUAUserID:       null.StringFrom("TEST"),
 		RequestType:     models.SystemIntakeRequestTypeNEW,
 		ContractVehicle: null.StringFrom("Toyota"),
@@ -1463,7 +1268,7 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveFundingSource() {
 
 	ctx := s.context
 
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+	intake, intakeErr := storage.CreateSystemIntake(ctx, s.store, &models.SystemIntake{
 		EUAUserID:       null.StringFrom("TEST"),
 		RequestType:     models.SystemIntakeRequestTypeNEW,
 		ExistingFunding: null.BoolFrom(true),
@@ -1523,7 +1328,7 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveFundingSource() {
 func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveCosts() {
 	ctx := s.context
 
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+	intake, intakeErr := storage.CreateSystemIntake(ctx, s.store, &models.SystemIntake{
 		EUAUserID:          null.StringFrom("TEST"),
 		RequestType:        models.SystemIntakeRequestTypeNEW,
 		CostIncreaseAmount: null.StringFrom("Just a little"),
@@ -1576,7 +1381,7 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
 	contractStartDate, _ := time.Parse("2006-1-2", "2002-8-24")
 	contractEndDate, _ := time.Parse("2006-1-2", "2020-10-31")
 
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+	intake, intakeErr := storage.CreateSystemIntake(ctx, s.store, &models.SystemIntake{
 		EUAUserID:         null.StringFrom("TEST"),
 		RequestType:       models.SystemIntakeRequestTypeNEW,
 		ExistingContract:  null.StringFrom("HAVE_CONTRACT"),
@@ -1677,7 +1482,7 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
 func (s *GraphQLTestSuite) TestSubmitIntake() {
 	ctx := s.context
 
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+	intake, intakeErr := storage.CreateSystemIntake(ctx, s.store, &models.SystemIntake{
 		EUAUserID:   null.StringFrom("TEST"),
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
@@ -1700,7 +1505,7 @@ func (s *GraphQLTestSuite) TestSubmitIntake() {
 					id
 				}
 			}
-		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest("TEST"))
+		}`, intake.ID), &resp, s.addAuthWithAllJobCodesToGraphQLClientTest("TEST"))
 
 	respIntake := resp.SubmitIntake.SystemIntake
 	s.Equal(intake.ID.String(), respIntake.ID)

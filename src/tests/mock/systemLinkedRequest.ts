@@ -21,7 +21,15 @@ const linkedSystemIntakes: LinkedSystemIntake[] = [
     submittedAt: '2024-07-24T23:41:58.42997Z',
     status: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_NEW,
     lcid: null,
-    requesterName: 'User One',
+    requester: {
+      __typename: 'SystemIntakeContact',
+      id: 'userOne',
+      userAccount: {
+        __typename: 'UserAccount',
+        id: 'userOne',
+        commonName: 'User One'
+      }
+    },
     lastMeetingDate: timeInThePast,
     nextMeetingDate: aLongTimeFromNow,
     __typename: 'SystemIntake'
@@ -32,7 +40,15 @@ const linkedSystemIntakes: LinkedSystemIntake[] = [
     submittedAt: '2024-07-25T23:41:58.500526Z',
     status: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_NEW,
     lcid: null,
-    requesterName: 'User One',
+    requester: {
+      __typename: 'SystemIntakeContact',
+      id: 'userOne',
+      userAccount: {
+        __typename: 'UserAccount',
+        id: 'userOne',
+        commonName: 'User One'
+      }
+    },
     lastMeetingDate: null,
     nextMeetingDate: null,
     __typename: 'SystemIntake'
@@ -43,7 +59,15 @@ const linkedSystemIntakes: LinkedSystemIntake[] = [
     submittedAt: '2024-07-01T23:41:58.500526Z',
     status: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_NEW,
     lcid: null,
-    requesterName: 'User USR1',
+    requester: {
+      __typename: 'SystemIntakeContact',
+      id: 'userUSR1',
+      userAccount: {
+        __typename: 'UserAccount',
+        id: 'userUSR1',
+        commonName: 'User USR1'
+      }
+    },
     lastMeetingDate: timeInThePast,
     nextMeetingDate: aLongTimeFromNow,
     __typename: 'SystemIntake'

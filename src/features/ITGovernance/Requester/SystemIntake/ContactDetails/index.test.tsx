@@ -5,20 +5,27 @@ import {
   waitForElementToBeRemoved,
   within
 } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import {
   GetSystemIntakeContactsDocument,
-  GetSystemIntakeContactsQuery
+  GetSystemIntakeContactsQuery,
+  SystemIntakeContactFragment
 } from 'gql/generated/graphql';
 import {
   emptySystemIntake,
-  getSystemIntakeQuery
+  getSystemIntakeQuery,
+  requester
 } from 'tests/mock/systemIntake';
 
 import { MockedQuery } from 'types/util';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import ContactDetails from '.';
+
+const emptyRequester: SystemIntakeContactFragment = {
+  ...requester,
+  component: null,
+  roles: []
+};
 
 const getSystemIntakeContactsQuery: MockedQuery<GetSystemIntakeContactsQuery> =
   {
@@ -32,8 +39,12 @@ const getSystemIntakeContactsQuery: MockedQuery<GetSystemIntakeContactsQuery> =
       data: {
         __typename: 'Query',
         systemIntakeContacts: {
-          __typename: 'SystemIntakeContactsPayload',
-          systemIntakeContacts: []
+          __typename: 'SystemIntakeContacts',
+          requester: emptyRequester,
+          businessOwners: [],
+          productManagers: [],
+          additionalContacts: [],
+          allContacts: [emptyRequester]
         }
       }
     }
@@ -59,63 +70,16 @@ describe('System intake form - Contact details', () => {
       screen.getByRole('heading', { name: 'Contact details' })
     ).toBeInTheDocument();
 
-    // Requester name is filled in
-    expect(
-      screen.getByRole('textbox', { name: 'Requester name *' })
-    ).toHaveValue(emptySystemIntake.requester.name);
-  });
-
-  it('renders error messages', async () => {
-    const user = userEvent.setup();
-    render(
-      <VerboseMockedProvider
-        addTypename
-        mocks={[
-          getSystemIntakeQuery(emptySystemIntake),
-          getSystemIntakeContactsQuery
-        ]}
-      >
-        <ContactDetails systemIntake={emptySystemIntake} />
-      </VerboseMockedProvider>
-    );
-
-    await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
-
-    // Submit empty form
-    await user.click(screen.getByRole('button', { name: 'Next' }));
+    const requesterRow = screen.getByRole('row', {
+      name: `contact-${emptyRequester?.userAccount.username}`
+    });
 
     expect(
-      await screen.findByRole('heading', {
-        name: 'Please check and fix the following'
-      })
+      within(requesterRow).getByText(emptyRequester?.userAccount.commonName!)
     ).toBeInTheDocument();
 
-    const errorSummary = screen.getByTestId('contact-details-errors');
+    expect(within(requesterRow).getAllByText('None specified')).toHaveLength(2);
 
-    expect(
-      within(errorSummary).getByText("Select the Requester's component")
-    ).toBeInTheDocument();
-
-    expect(
-      within(errorSummary).getByText(
-        "Enter the Business or Product Owner's name"
-      )
-    ).toBeInTheDocument();
-
-    expect(
-      within(errorSummary).getByText('Select a Business Owner Component')
-    ).toBeInTheDocument();
-
-    expect(
-      within(errorSummary).getByText(
-        'Enter the CMS Project/Product Manager or Lead name'
-      )
-    ).toBeInTheDocument();
-
-    expect(
-      within(errorSummary).getByText(
-        'Select a Project/Product Manager or Lead Component'
-      )
-    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Next' })).toBeDisabled();
   });
 });

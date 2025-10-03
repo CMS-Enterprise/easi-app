@@ -3,6 +3,7 @@ package translation
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -31,9 +32,7 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wir
 		BusinessCaseID:         bc.ID.String(),
 		IntakeID:               pStr(bc.SystemIntakeID.String()),
 		ProjectName:            bc.ProjectName.ValueOrZero(), // will always have a value by the time a draft Business Case is submitted
-		Requester:              bc.Requester.ValueOrZero(),   // will always have a value by the time a draft Business Case is submitted
 		RequesterPhoneNumber:   bc.RequesterPhoneNumber.Ptr(),
-		BusinessOwner:          bc.BusinessOwner.ValueOrZero(), // will always have a value by the time a draft Business Case is submitted
 		BusinessNeed:           bc.BusinessNeed.Ptr(),
 		CurrentSolutionSummary: bc.CurrentSolutionSummary.Ptr(),
 		CmsBenefit:             bc.CMSBenefit.Ptr(),
@@ -48,6 +47,12 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wir
 
 		BusinessSolutions: []*intakemodels.EASIBusinessSolution{},
 	}
+	coreContacts, err := GetCoreTranslatableContactInfo(ctx, bc.SystemIntakeID)
+	if err != nil {
+		return nil, fmt.Errorf("error getting core contact information for system intake %s: %w", bc.SystemIntakeID.String(), err)
+	}
+	obj.Requester = coreContacts.Requester
+	obj.BusinessOwner = coreContacts.BusinessOwner.String
 
 	// Build the collection of embedded objects
 
