@@ -89,7 +89,7 @@ exports[`Feedback page > Renders the feedback page - Governance task list 1`] = 
       >
         <svg
           aria-hidden="true"
-          class="usa-icon margin-right-1"
+          class="usa-icon"
           focusable="false"
           height="1em"
           role="img"
@@ -366,7 +366,7 @@ exports[`Feedback page > Renders the feedback page - Governance task list 1`] = 
       >
         <svg
           aria-hidden="true"
-          class="usa-icon margin-right-1"
+          class="usa-icon"
           focusable="false"
           height="1em"
           role="img"
