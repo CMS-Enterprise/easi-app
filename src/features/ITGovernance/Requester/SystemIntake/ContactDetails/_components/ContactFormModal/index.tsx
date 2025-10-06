@@ -226,7 +226,12 @@ const ContactFormModal = ({
             as={<FieldErrorMsg />}
           />
 
-          <Select {...register('component')} ref={null} id="component">
+          <Select
+            {...register('component')}
+            ref={null}
+            id="component"
+            data-testid="component-select"
+          >
             <option value="" disabled>
               {t('contactDetails.additionalContacts.select')}
             </option>

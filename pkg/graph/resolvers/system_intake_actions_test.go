@@ -316,6 +316,8 @@ func (s *ResolverSuite) TestRejectIntakeAsNotApproved() {
 	s.EqualValues(input.NextSteps, *updatedIntake.DecisionNextSteps)
 	s.EqualValues(input.TrbFollowUp, *updatedIntake.TRBFollowUpRecommendation)
 
+	s.NotNil(updatedIntake.DecidedAt)
+
 	// should create action
 	allActionsForIntake, err := s.testConfigs.Store.GetActionsBySystemIntakeID(s.testConfigs.Context, updatedIntake.ID)
 	s.NoError(err)
@@ -439,6 +441,8 @@ func (s *ResolverSuite) TestIssueLCID() {
 		s.EqualValues(input.TrbFollowUp, *updatedIntake.TRBFollowUpRecommendation)
 		s.EqualValues(*input.CostBaseline, updatedIntake.LifecycleCostBaseline.ValueOrZero())
 
+		s.NotNil(updatedIntake.DecidedAt)
+
 		// expiration date and issued date require some special test code;
 		// - EqualValues() doesn't necessarily work, because the timezones might be different
 		// - using the .Equal() method from time.Time doesn't work, because input.ExpiresAt has more precision than updatedIntake.LifecycleExpiresAt
@@ -530,6 +534,8 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 			// Step and Decision State should be unaffected
 			s.Equal(intake.Step, actionedIntake.Step)
 			s.Equal(intake.DecisionState, actionedIntake.DecisionState)
+
+			s.NotNil(actionedIntake.DecidedAt)
 		})
 	}
 	for _, formStep := range formSteps {
@@ -919,6 +925,8 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 				s.Equal(models.SIDSNotGovernance, actionedIntake.DecisionState)
 				// Rejection Reason should be stored
 				s.Equal(reason, actionedIntake.RejectionReason)
+
+				s.NotNil(actionedIntake.DecidedAt)
 			})
 		}
 	}
