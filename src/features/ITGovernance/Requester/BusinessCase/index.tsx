@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -18,7 +18,8 @@ import { NotFoundPartial } from 'features/Miscellaneous/NotFound';
 import { FormikProps } from 'formik';
 import {
   SystemIntakeStep,
-  useGetGovernanceTaskListQuery
+  useGetGovernanceTaskListQuery,
+  useGetSystemIntakeContactsQuery
 } from 'gql/generated/graphql';
 import { AppState } from 'stores/reducers/rootReducer';
 
@@ -58,8 +59,29 @@ export const BusinessCase = () => {
   const location = useLocation<any>();
   const { t } = useTranslation('taskList');
 
-  const businessCase = useSelector(
+  const initialBusinessCase = useSelector(
     (state: AppState) => state.businessCase.form
+  );
+
+  const { data: contactsData, loading: contactsLoading } =
+    useGetSystemIntakeContactsQuery({
+      variables: {
+        id: initialBusinessCase.systemIntakeId
+      }
+    });
+
+  /** Business case with business owner name updated from contacts table */
+  const businessCase: BusinessCaseModel = useMemo(
+    () => ({
+      ...initialBusinessCase,
+      // Get business owner name from contacts table because we no longer update this through the business case form
+      businessOwner: {
+        name:
+          contactsData?.systemIntakeContacts?.businessOwners[0]?.userAccount
+            .commonName || ''
+      }
+    }),
+    [initialBusinessCase, contactsData]
   );
 
   const isSubmitting = useSelector((state: AppState) => state.action.isPosting);
@@ -78,7 +100,7 @@ export const BusinessCase = () => {
     current.resetForm({ values: current.values, errors: current.errors });
   };
 
-  const { data, loading } = useGetGovernanceTaskListQuery({
+  const { data, loading: taskListLoading } = useGetGovernanceTaskListQuery({
     variables: {
       id: businessCase.systemIntakeId
     },
@@ -87,6 +109,8 @@ export const BusinessCase = () => {
 
   const isFinal: boolean =
     data?.systemIntake?.step === SystemIntakeStep.FINAL_BUSINESS_CASE;
+
+  const loading = contactsLoading || taskListLoading;
 
   // Start new Business Case or resume existing Business Case
   useEffect(() => {
