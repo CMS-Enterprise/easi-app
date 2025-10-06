@@ -29,7 +29,7 @@ describe('The Business Case Form', () => {
 
     cy.get('#BusinessCase-BusinessOwnerName').should(
       'have.value',
-      'John BusinessOwner'
+      'Ally Anderson'
     );
 
     cy.get('#BusinessCase-RequesterPhoneNumber')
