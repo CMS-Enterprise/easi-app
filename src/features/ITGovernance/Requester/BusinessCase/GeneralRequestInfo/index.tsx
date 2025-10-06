@@ -98,10 +98,11 @@ const GeneralRequestInfo = ({
                     <HelpText id="BusinessCase-RequestNameHelp">
                       {t('requestNameHelpText')}
                     </HelpText>
-                    <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
+                    {!!flatErrors.requestName && (
+                      <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
+                    )}
                     <Field
                       as={TextInput}
-                      error={!!flatErrors.requestName}
                       id="BusinessCase-RequestName"
                       maxLength={50}
                       aria-describedby="BusinessCase-RequestNameHelp"
@@ -122,10 +123,11 @@ const GeneralRequestInfo = ({
                     <HelpText id="BusinessCase-ProjectAcronymHelp">
                       {t('projectAcronymHelpText')}
                     </HelpText>
-                    <FieldErrorMsg>{flatErrors.projectAcronym}</FieldErrorMsg>
+                    {!!flatErrors.projectAcronym && (
+                      <FieldErrorMsg>{flatErrors.projectAcronym}</FieldErrorMsg>
+                    )}
                     <Field
                       as={TextInput}
-                      error={!!flatErrors.projectAcronym}
                       id="BusinessCase-ProjectAcronym"
                       maxLength={10}
                       aria-describedby="BusinessCase-ProjectAcronymHelp"
@@ -143,10 +145,11 @@ const GeneralRequestInfo = ({
                   {t('requester')}
                   <RequiredAsterisk />
                 </Label>
-                <FieldErrorMsg>{flatErrors['requester.name']}</FieldErrorMsg>
+                {!!flatErrors['requester.name'] && (
+                  <FieldErrorMsg>{flatErrors['requester.name']}</FieldErrorMsg>
+                )}
                 <Field
                   as={TextInput}
-                  error={!!flatErrors['requester.name']}
                   id="BusinessCase-RequesterName"
                   maxLength={50}
                   name="requester.name"
@@ -162,13 +165,14 @@ const GeneralRequestInfo = ({
                   {t('businessOwner')}
                   <RequiredAsterisk />
                 </Label>
-                <FieldErrorMsg>
-                  {flatErrors['businessOwner.name']}
-                </FieldErrorMsg>
+                {!!flatErrors['businessOwner.name'] && (
+                  <FieldErrorMsg>
+                    {flatErrors['businessOwner.name']}
+                  </FieldErrorMsg>
+                )}
                 <Field
                   as={TextInput}
                   name="businessOwner.name"
-                  error={!!flatErrors['businessOwner.name']}
                   id="BusinessCase-BusinessOwnerName"
                   maxLength={50}
                   className="maxw-none"
@@ -187,12 +191,13 @@ const GeneralRequestInfo = ({
                 <HelpText id="BusinessCase-PhoneNumber">
                   {t('requesterPhoneNumberHelpText')}
                 </HelpText>
-                <FieldErrorMsg>
-                  {flatErrors['requester.phoneNumber']}
-                </FieldErrorMsg>
+                {!!flatErrors['requester.phoneNumber'] && (
+                  <FieldErrorMsg>
+                    {flatErrors['requester.phoneNumber']}
+                  </FieldErrorMsg>
+                )}
                 <Field
                   as={TextInput}
-                  error={!!flatErrors['requester.phoneNumber']}
                   id="BusinessCase-RequesterPhoneNumber"
                   maxLength={20}
                   name="requester.phoneNumber"
