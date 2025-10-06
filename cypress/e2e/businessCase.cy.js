@@ -27,7 +27,7 @@ describe('The Business Case Form', () => {
 
     cy.get('#BusinessCase-RequesterName').should('have.value', 'EndToEnd One');
 
-    cy.get('#react-select-BusinessCase-BusinessOwnerName-input').should(
+    cy.get('#BusinessCase-BusinessOwnerName').should(
       'have.value',
       'John BusinessOwner'
     );
