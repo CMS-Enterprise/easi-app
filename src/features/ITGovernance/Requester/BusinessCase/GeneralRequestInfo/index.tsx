@@ -6,7 +6,6 @@ import { Field, Form, Formik, FormikProps } from 'formik';
 
 import Alert from 'components/Alert';
 import AutoSave from 'components/AutoSave';
-import CedarContactSelect from 'components/CedarContactSelect';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
 import HelpText from 'components/HelpText';
@@ -35,14 +34,14 @@ const GeneralRequestInfo = ({
   const { t } = useTranslation('businessCase');
   const history = useHistory();
 
+  const allowedPhoneNumberCharacters = /[\d- ]+/g;
+
   const initialValues: GeneralRequestInfoForm = {
     requestName: businessCase.requestName,
     projectAcronym: businessCase.projectAcronym,
     requester: businessCase.requester,
     businessOwner: businessCase.businessOwner
   };
-
-  const allowedPhoneNumberCharacters = /[\d- ]+/g;
 
   return (
     <Formik
@@ -55,7 +54,7 @@ const GeneralRequestInfo = ({
       innerRef={formikRef}
     >
       {(formikProps: FormikProps<GeneralRequestInfoForm>) => {
-        const { errors, values, setFieldValue, validateForm } = formikProps;
+        const { errors, values, validateForm } = formikProps;
         const flatErrors = flattenErrors(errors);
 
         return (
@@ -167,21 +166,14 @@ const GeneralRequestInfo = ({
                   {flatErrors['businessOwner.name']}
                 </FieldErrorMsg>
                 <Field
-                  as={CedarContactSelect}
+                  as={TextInput}
                   name="businessOwner.name"
                   error={!!flatErrors['businessOwner.name']}
                   id="BusinessCase-BusinessOwnerName"
-                  value={{
-                    commonName: values.businessOwner.name,
-                    euaUserId: '',
-                    email: ''
-                  }}
-                  onChange={(contact: any) => {
-                    setFieldValue(
-                      'businessOwner.name',
-                      contact?.commonName || ''
-                    );
-                  }}
+                  maxLength={50}
+                  className="maxw-none"
+                  // Disable business owner field - business owner can only be updated in the intake form
+                  disabled
                 />
               </FieldGroup>
               <FieldGroup
