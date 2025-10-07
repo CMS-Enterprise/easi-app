@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Column, useSortBy, useTable } from 'react-table';
+import { Column, usePagination, useSortBy, useTable } from 'react-table';
 import {
   Button,
   ButtonGroup,
@@ -18,8 +18,13 @@ import {
 
 import Modal from 'components/Modal';
 import Spinner from 'components/Spinner';
+import TablePagination from 'components/TablePagination';
 import { getComponentByEnum } from 'constants/cmsComponentsMap';
-import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
+import {
+  currentTableSortDescription,
+  getColumnSortStatus,
+  getHeaderSortIcon
+} from 'utils/tableSort';
 
 import './index.scss';
 
@@ -201,7 +206,7 @@ const SystemIntakeContactsTable = ({
   const table = useTable(
     {
       columns,
-      data: contacts || [],
+      data: useMemo(() => contacts || [], [contacts]),
       autoResetSortBy: false,
       autoResetPage: true,
       initialState: {
@@ -213,10 +218,13 @@ const SystemIntakeContactsTable = ({
           ],
           [hasActionsColumn]
         ),
-        sortBy: useMemo(() => [{ id: 'createdAt', desc: false }], [])
+        sortBy: useMemo(() => [{ id: 'createdAt', desc: false }], []),
+        pageIndex: 0,
+        pageSize: 10
       }
     },
-    useSortBy
+    useSortBy,
+    usePagination
   );
 
   const { getTableBodyProps, getTableProps, headerGroups, prepareRow, rows } =
@@ -331,6 +339,25 @@ const SystemIntakeContactsTable = ({
             )}
           </tbody>
         </Table>
+
+        {rows.length > 10 && (
+          <>
+            <TablePagination
+              {...table}
+              pageIndex={table.state.pageIndex}
+              pageSize={table.state.pageSize}
+              page={[]}
+              className="desktop:grid-col-fill desktop:padding-bottom-0"
+            />
+
+            <div
+              className="usa-sr-only usa-table__announcement-region"
+              aria-live="polite"
+            >
+              {currentTableSortDescription(headerGroups[0])}
+            </div>
+          </>
+        )}
       </div>
 
       {/* Remove contact modal */}

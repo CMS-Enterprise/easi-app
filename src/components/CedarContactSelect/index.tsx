@@ -254,7 +254,8 @@ export default function CedarContactSelect({
     }),
     input: provided => ({
       ...provided,
-      visibility: 'visible'
+      visibility: 'visible',
+      overflow: 'hidden'
     }),
     option: provided => ({
       ...provided,

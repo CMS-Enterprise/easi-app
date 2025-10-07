@@ -114,7 +114,7 @@ exports[`ContactFormModal > matches the snapshot 1`] = `
                       id="react-select-userAccount-placeholder"
                     />
                     <div
-                      class="cedar-contact-select__input-container css-19bb58m"
+                      class="cedar-contact-select__input-container css-11fdr2o"
                       data-value=""
                     >
                       <input
