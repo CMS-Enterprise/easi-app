@@ -1,4 +1,4 @@
-import React, { ReactNode, ReactNodeArray } from 'react';
+import React, { ReactNode } from 'react';
 import classnames from 'classnames';
 
 import './index.scss';
@@ -6,7 +6,7 @@ import './index.scss';
 type DescriptionListProps = {
   className?: string;
   title?: string;
-  children: ReactNode | ReactNodeArray;
+  children: ReactNode;
 };
 export const DescriptionList = ({
   title,

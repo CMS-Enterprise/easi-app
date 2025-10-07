@@ -276,6 +276,38 @@ const governanceReviewTeam = {
     costBaseline: 'Project Cost Baseline'
   },
   decision: {
+    heading: 'Decision',
+    subheading: 'A summary of the decision issued for this request.',
+    issueDecisionButton: 'Issue decision',
+    noDecisionAlert:
+      'A decision has not yet been issued for this request. If you would like to take an action to issue a decision, use the button above or <link1>visit the Actions page</link1> of this request.',
+    lcidInfoHeader: 'LCID information',
+    terms: {
+      lcidNumber: 'LCID number',
+      issueDate: 'Issue date',
+      expirationDate: 'Expiration date',
+      retirementDate: 'Retirement date',
+      plannedRetirementDate: 'Planned retirement date',
+      mostRecentUpdate: 'Most recent update',
+      scope: 'Scope',
+      projectCostBaseline: 'Project cost baseline',
+      nextSteps: 'Next steps',
+      consultTRB:
+        'Should this team consult with the Technical Review Board (TRB) as a part of their next steps?'
+    },
+    decisionDate: 'Decision date',
+    noDateSet: 'No date set',
+    reason: 'Reason',
+    decisionState_LCID_ISSUED:
+      'This request has been approved and a Life Cycle ID (LCID) has been issued.',
+    decisionState_NOT_APPROVED: 'This request was not approved.',
+    decisionState_NOT_GOVERNANCE:
+      'This request is not an IT Governance request.',
+    requesterDecisionState_LCID_ISSUED:
+      'Your request has been approved and a Life Cycle ID (LCID) has been issued.',
+    requesterDecisionState_NOT_APPROVED: 'Your request was not approved.',
+    requesterDecisionState_NOT_GOVERNANCE:
+      'The Governance Team decided that your request is not an IT Governance request.',
     title: 'Decision',
     title_LCID_ISSUED: 'Decision - Approved',
     title_NOT_APPROVED: 'Decision - Rejected',

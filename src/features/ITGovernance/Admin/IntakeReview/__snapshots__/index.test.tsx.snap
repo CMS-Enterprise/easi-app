@@ -38,7 +38,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
       >
         <svg
           aria-hidden="true"
-          class="usa-icon margin-right-1"
+          class="usa-icon"
           focusable="false"
           height="1em"
           role="img"
@@ -840,7 +840,7 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
       >
         <svg
           aria-hidden="true"
-          class="usa-icon margin-right-1"
+          class="usa-icon"
           focusable="false"
           height="1em"
           role="img"
