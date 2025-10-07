@@ -129,7 +129,7 @@ describe('The Business Case Form', () => {
           phoneNumber: '1234567890'
         },
         businessOwner: {
-          name: 'John BusinessOwner'
+          name: 'Ally Anderson'
         },
         businessNeed:
           'Business Need: The quick brown fox jumps over the lazy dog.',
