@@ -41,7 +41,7 @@ exports[`CedarContactSelect > selects contact from dropdown 1`] = `
         class="cedar-contact-select__value-container css-hlgwow"
       >
         <div
-          class="cedar-contact-select__input-container css-1cfo1cf"
+          class="cedar-contact-select__input-container css-1dw4q2m"
           data-value="Adeline Aarons"
         >
           <input

@@ -37,7 +37,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 				Requester:   fmt.Sprintf("link to systems %d", i),
 			}
 
-			created, err := s.store.CreateSystemIntake(ctx, &intake)
+			created, err := CreateSystemIntake(ctx, s.store, &intake)
 			s.NoError(err)
 			createdIDs = append(createdIDs, created.ID)
 			createdIntakes = append(createdIntakes, created)
@@ -165,7 +165,7 @@ func (s *StoreTestSuite) TestDeleteSystemIntakeSystemByID() {
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "delete system test",
 		}
-		createdIntake, err := s.store.CreateSystemIntake(ctx, &intake)
+		createdIntake, err := CreateSystemIntake(ctx, s.store, &intake)
 		s.NoError(err)
 
 		// Step 2: Link multiple systems
@@ -233,7 +233,7 @@ func (s *StoreTestSuite) TestUpdateSystemIntakeSystemByID() {
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "update system test",
 		}
-		createdIntake, err := s.store.CreateSystemIntake(ctx, &intake)
+		createdIntake, err := CreateSystemIntake(ctx, s.store, &intake)
 		s.NoError(err)
 
 		// Step 2: Link a system
@@ -312,7 +312,7 @@ func (s *StoreTestSuite) TestGetLinkedSystemByID() {
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "get system test",
 		}
-		createdIntake, err := s.store.CreateSystemIntake(ctx, &intake)
+		createdIntake, err := CreateSystemIntake(ctx, s.store, &intake)
 		s.NoError(err)
 
 		// Step 2: Link a system
@@ -371,7 +371,7 @@ func (s *StoreTestSuite) TestAddSystemIntakeSystem() {
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "test add system link",
 		}
-		createdIntake, err := s.store.CreateSystemIntake(ctx, &intake)
+		createdIntake, err := CreateSystemIntake(ctx, s.store, &intake)
 		initialDescription := "initial description"
 		s.NoError(err)
 

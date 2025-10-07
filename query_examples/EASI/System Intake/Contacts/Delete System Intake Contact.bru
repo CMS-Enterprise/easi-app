@@ -1,0 +1,57 @@
+meta {
+  name: Delete System Intake Contact
+  type: graphql
+  seq: 4
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation DeleteSystemIntakeContact($input: DeleteSystemIntakeContactInput!) {
+    deleteSystemIntakeContact(input: $input) {
+      systemIntakeContact {
+        id
+        userAccount {
+          username
+          commonName
+        }
+        systemIntakeId
+        component
+        roles
+        isRequester
+  
+        #
+        createdBy
+        createdByUserAccount {
+          username
+          commonName
+        }
+        createdAt
+        modifiedBy
+        modifiedByUserAccount{
+          username
+          commonName
+        }
+        modifiedAt
+      }
+      __typename
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "id": "{{systemIntakeContactID}}"
+    }
+  }
+}
+
+settings {
+  encodeUrl: true
+}

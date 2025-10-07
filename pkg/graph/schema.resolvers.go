@@ -498,7 +498,7 @@ func (r *mutationResolver) UpdateSystemIntakeNote(ctx context.Context, input mod
 
 // CreateSystemIntake is the resolver for the createSystemIntake field.
 func (r *mutationResolver) CreateSystemIntake(ctx context.Context, input models.CreateSystemIntakeInput) (*models.SystemIntake, error) {
-	return resolvers.CreateSystemIntake(ctx, r.store, input)
+	return resolvers.CreateSystemIntake(ctx, r.store, input, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo))
 }
 
 // UpdateSystemIntakeRequestType is the resolver for the updateSystemIntakeRequestType field.
@@ -672,20 +672,22 @@ func (r *mutationResolver) UpdateSystemLink(ctx context.Context, input models.Up
 
 // CreateSystemIntakeContact is the resolver for the createSystemIntakeContact field.
 func (r *mutationResolver) CreateSystemIntakeContact(ctx context.Context, input models.CreateSystemIntakeContactInput) (*models.CreateSystemIntakeContactPayload, error) {
-	return resolvers.CreateSystemIntakeContact(ctx, r.store, input, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo))
+	principal := appcontext.Principal(ctx)
+	logger := appcontext.ZLogger(ctx)
+
+	return resolvers.CreateSystemIntakeContact(ctx, logger, principal, r.store, input, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo))
 }
 
 // UpdateSystemIntakeContact is the resolver for the updateSystemIntakeContact field.
 func (r *mutationResolver) UpdateSystemIntakeContact(ctx context.Context, input models.UpdateSystemIntakeContactInput) (*models.CreateSystemIntakeContactPayload, error) {
-	return resolvers.UpdateSystemIntakeContact(ctx, r.store, input, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo))
+	principal := appcontext.Principal(ctx)
+	logger := appcontext.ZLogger(ctx)
+	return resolvers.UpdateSystemIntakeContact(ctx, logger, principal, r.store, input, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo))
 }
 
 // DeleteSystemIntakeContact is the resolver for the deleteSystemIntakeContact field.
 func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input models.DeleteSystemIntakeContactInput) (*models.DeleteSystemIntakeContactPayload, error) {
-	contact := &models.SystemIntakeContact{
-		ID: input.ID,
-	}
-	_, err := r.store.DeleteSystemIntakeContact(ctx, contact)
+	contact, err := resolvers.SystemIntakeContactDelete(ctx, r.store, input.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -1610,51 +1612,8 @@ func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID st
 }
 
 // SystemIntakeContacts is the resolver for the systemIntakeContacts field.
-func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) (*models.SystemIntakeContactsPayload, error) {
-	contacts, err := r.store.FetchSystemIntakeContactsBySystemIntakeID(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-
-	if len(contacts) == 0 {
-		return &models.SystemIntakeContactsPayload{}, nil
-	}
-
-	euaIDs := make([]string, len(contacts))
-	for i, contact := range contacts {
-		euaIDs[i] = contact.EUAUserID
-	}
-
-	userInfos, err := r.service.FetchUserInfos(ctx, euaIDs)
-	if err != nil {
-		return nil, err
-	}
-
-	userInfoMap := make(map[string]*models.UserInfo)
-	for _, userInfo := range userInfos {
-		if userInfo != nil {
-			userInfoMap[userInfo.Username] = userInfo
-		}
-	}
-
-	augmentedContacts := make([]*models.AugmentedSystemIntakeContact, 0, len(contacts))
-	invalidEUAIDs := make([]string, 0, len(contacts))
-	for _, contact := range contacts {
-		if userInfo, found := userInfoMap[contact.EUAUserID]; found {
-			augmentedContacts = append(augmentedContacts, &models.AugmentedSystemIntakeContact{
-				SystemIntakeContact: *contact,
-				CommonName:          userInfo.DisplayName,
-				Email:               userInfo.Email,
-			})
-		} else {
-			invalidEUAIDs = append(invalidEUAIDs, contact.EUAUserID)
-		}
-	}
-
-	return &models.SystemIntakeContactsPayload{
-		SystemIntakeContacts: augmentedContacts,
-		InvalidEUAIDs:        invalidEUAIDs,
-	}, nil
+func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) (*models.SystemIntakeContacts, error) {
+	return resolvers.SystemIntakeContactsGetBySystemIntakeID(ctx, id)
 }
 
 // TrbRequest is the resolver for the trbRequest field.
@@ -1985,50 +1944,8 @@ func (r *systemIntakeResolver) RequestName(ctx context.Context, obj *models.Syst
 }
 
 // Requester is the resolver for the requester field.
-func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeRequester, error) {
-	requesterWithoutEmail := &models.SystemIntakeRequester{
-		Component: obj.Component.Ptr(),
-		Email:     nil,
-		Name:      obj.Requester,
-	}
-
-	// if the EUA doesn't exist (Sharepoint imports), don't bother calling Okta
-	if !obj.EUAUserID.Valid {
-		return requesterWithoutEmail, nil
-	}
-
-	user, err := dataloaders.FetchUserInfoByEUAUserID(ctx, obj.EUAUserID.ValueOrZero())
-	if err != nil {
-		// check if the EUA ID is just invalid in Okta (i.e. the requester no longer has an active EUA account)
-		if _, ok := err.(*apperrors.InvalidEUAIDError); ok {
-			return requesterWithoutEmail, nil
-		}
-
-		// error we can't handle, like being unable to communicate with Okta
-		return nil, err
-	}
-
-	// if we can't find the user and there was no error (shouldn't happen normally), omit the email
-	// user is a pointer, so we want to avoid a dereference below with this check
-	if user == nil {
-		return requesterWithoutEmail, nil
-	}
-
-	return &models.SystemIntakeRequester{
-		Component: obj.Component.Ptr(),
-		Email:     helpers.PointerTo(user.Email.String()),
-		Name:      obj.Requester,
-	}, nil
-}
-
-// RequesterName is the resolver for the requesterName field.
-func (r *systemIntakeResolver) RequesterName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return &obj.Requester, nil
-}
-
-// RequesterComponent is the resolver for the requesterComponent field.
-func (r *systemIntakeResolver) RequesterComponent(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.Component.Ptr(), nil
+func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeContact, error) {
+	return resolvers.SystemIntakeContactGetRequester(ctx, obj.ID)
 }
 
 // Documents is the resolver for the documents field.
@@ -2111,6 +2028,27 @@ func (r *systemIntakeResolver) GrbReviewAsyncStatus(ctx context.Context, obj *mo
 // SystemIntakeSystems is the resolver for the systemIntakeSystems field.
 func (r *systemIntakeResolver) SystemIntakeSystems(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeSystem, error) {
 	return resolvers.SystemIntakeSystemsByIntakeID(ctx, obj.ID)
+}
+
+// Contacts is the resolver for the contacts field.
+func (r *systemIntakeResolver) Contacts(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeContacts, error) {
+	return resolvers.SystemIntakeContactsGetBySystemIntakeID(ctx, obj.ID)
+}
+
+// Component is the resolver for the component field.
+func (r *systemIntakeContactResolver) Component(ctx context.Context, obj *models.SystemIntakeContact) (*models.SystemIntakeContactComponent, error) {
+	if obj == nil {
+		return nil, nil
+	}
+	return obj.FilteredComponent(), nil
+}
+
+// Roles is the resolver for the roles field.
+func (r *systemIntakeContactResolver) Roles(ctx context.Context, obj *models.SystemIntakeContact) ([]models.SystemIntakeContactRole, error) {
+	if obj == nil {
+		return nil, nil
+	}
+	return obj.FilteredRoles(), nil
 }
 
 // DocumentType is the resolver for the documentType field.
@@ -2465,6 +2403,11 @@ func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 // SystemIntake returns generated.SystemIntakeResolver implementation.
 func (r *Resolver) SystemIntake() generated.SystemIntakeResolver { return &systemIntakeResolver{r} }
 
+// SystemIntakeContact returns generated.SystemIntakeContactResolver implementation.
+func (r *Resolver) SystemIntakeContact() generated.SystemIntakeContactResolver {
+	return &systemIntakeContactResolver{r}
+}
+
 // SystemIntakeDocument returns generated.SystemIntakeDocumentResolver implementation.
 func (r *Resolver) SystemIntakeDocument() generated.SystemIntakeDocumentResolver {
 	return &systemIntakeDocumentResolver{r}
@@ -2539,6 +2482,7 @@ type iTGovTaskStatusesResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
+type systemIntakeContactResolver struct{ *Resolver }
 type systemIntakeDocumentResolver struct{ *Resolver }
 type systemIntakeGRBPresentationLinksResolver struct{ *Resolver }
 type systemIntakeGRBReviewerResolver struct{ *Resolver }

@@ -71,7 +71,7 @@ describe('Issue LCID form', async () => {
     render(
       <VerboseMockedProvider
         mocks={[
-          getSystemIntakeContactsQuery,
+          getSystemIntakeContactsQuery(),
           getSystemIntakeQuery(),
           getSystemIntakesWithLcidsQuery
         ]}
@@ -106,7 +106,7 @@ describe('Issue LCID form', async () => {
     render(
       <VerboseMockedProvider
         mocks={[
-          getSystemIntakeContactsQuery,
+          getSystemIntakeContactsQuery(),
           getSystemIntakeQuery(),
           getSystemIntakesWithLcidsQuery
         ]}
@@ -170,7 +170,7 @@ describe('Issue LCID form', async () => {
     render(
       <VerboseMockedProvider
         mocks={[
-          getSystemIntakeContactsQuery,
+          getSystemIntakeContactsQuery(),
           getSystemIntakeQuery(),
           getSystemIntakesWithLcidsQuery
         ]}

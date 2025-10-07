@@ -20,7 +20,9 @@ func (s *ResolverSuite) TestSetSystemIntakeGRBPresentationLinks() {
 		Requester: &models.SystemIntakeRequesterInput{
 			Name: "Requester Name",
 		},
-	})
+	},
+		userhelpers.GetUserInfoAccountInfoWrapperFunc(s.fetchUserInfoStub),
+	)
 	s.NoError(err)
 	s.NotNil(systemIntake)
 
@@ -51,7 +53,9 @@ func (s *ResolverSuite) TestUploadSystemIntakeGRBPresentationDeckOnCompletedGRBR
 		Requester: &models.SystemIntakeRequesterInput{
 			Name: "Requester Name",
 		},
-	})
+	},
+		userhelpers.GetUserInfoAccountInfoWrapperFunc(s.fetchUserInfoStub),
+	)
 	s.NoError(err)
 	s.NotNil(intake)
 
@@ -160,7 +164,9 @@ func (s *ResolverSuite) createUploadSystemIntakeGRBPresentationDeckInput(fileDat
 		Requester: &models.SystemIntakeRequesterInput{
 			Name: "Requester Name",
 		},
-	})
+	},
+		userhelpers.GetUserInfoAccountInfoWrapperFunc(s.fetchUserInfoStub),
+	)
 	s.NoError(err)
 	s.NotNil(systemIntake)
 

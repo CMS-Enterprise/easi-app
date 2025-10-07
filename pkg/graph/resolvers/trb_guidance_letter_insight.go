@@ -59,7 +59,7 @@ func UpdateTRBGuidanceLetterInsight(ctx context.Context, store *storage.Store, c
 		return nil, err
 	}
 
-	err = ApplyChangesAndMetaData(changes, insight, appcontext.Principal(ctx))
+	err = BaseStructPreUpdate(changes, insight, appcontext.Principal(ctx), true)
 	if err != nil {
 		return nil, err
 	}

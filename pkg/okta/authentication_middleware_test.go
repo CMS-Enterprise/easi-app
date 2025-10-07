@@ -87,7 +87,7 @@ func (s *AuthenticationMiddlewareTestSuite) buildMiddleware(verify func(jwt stri
 
 func (s *AuthenticationMiddlewareTestSuite) TestAuthorizeMiddleware() {
 
-	_, err := userhelpers.GetOrCreateUserAccount(context.Background(), s.store, s.store, "EASI", true, userhelpers.GetUserInfoAccountInfoWrapperFunc(s.userSearchClient.FetchUserInfo))
+	_, err := userhelpers.GetOrCreateUserAccount(context.Background(), s.store, "EASI", true, userhelpers.GetUserInfoAccountInfoWrapperFunc(s.userSearchClient.FetchUserInfo))
 	s.NoError(err)
 
 	s.Run("a valid token sets the principal", func() {

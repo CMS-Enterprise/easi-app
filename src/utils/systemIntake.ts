@@ -1,6 +1,5 @@
 import i18next from 'i18next';
 
-import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import { RequestType } from 'types/systemIntake';
 
 // NOTE: these utility functions take strings rather than more restricted types so they can operate on values coming from GraphQL queries,
@@ -9,7 +8,7 @@ import { RequestType } from 'types/systemIntake';
 /**
  * Translate the API enum to a human readable string
  */
-export const translateRequestType = (requestType: RequestType) => {
+const translateRequestType = (requestType: RequestType) => {
   switch (requestType) {
     case 'NEW':
       return i18next.t('intake:requestType.new');
@@ -24,15 +23,4 @@ export const translateRequestType = (requestType: RequestType) => {
   }
 };
 
-/**
- * Get the acronym representation of the component name
- * @param componentToTranslate - component name string that needs to be converted to an acronym
- */
-export const getAcronymForComponent = (componentToTranslate: string) => {
-  const component = cmsDivisionsAndOffices.find(
-    c => c.name === componentToTranslate
-  );
-
-  // TODO: what do we return if not found? (should be impossible)
-  return component ? component.acronym : 'Other';
-};
+export default translateRequestType;

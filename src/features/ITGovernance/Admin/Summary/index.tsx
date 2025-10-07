@@ -28,7 +28,7 @@ import { RadioField, RadioGroup } from 'components/RadioField';
 import StateTag from 'components/StateTag';
 import { RequestType } from 'types/systemIntake';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
-import { translateRequestType } from 'utils/systemIntake';
+import translateRequestType from 'utils/systemIntake';
 
 import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
@@ -36,10 +36,10 @@ import './index.scss';
 
 export type RequestSummaryProps = {
   id: string;
-  requester: SystemIntakeFragmentFragment['requester'];
   requestName: string;
   requestType: RequestType;
   statusAdmin: SystemIntakeStatusAdmin;
+  requester?: SystemIntakeFragmentFragment['requester'];
   adminLead?: string | null;
   submittedAt?: string | null;
   lcid?: string | null;
@@ -170,7 +170,7 @@ const RequestSummary = ({
             contractName={contractName}
             systems={systems}
             requester={getPersonNameAndComponentAcronym(
-              requester?.name || '',
+              requester?.userAccount?.commonName || '',
               requester?.component
             )}
             contractNumbers={contractNumbers}

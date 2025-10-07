@@ -177,6 +177,12 @@ const action = {
   },
   itGovernance: 'IT Governance Mailbox',
   itInvestment: 'IT Investment Mailbox',
+  showMoreRecipients: 'Show {{count}} more recipient',
+  showMoreRecipients_plural: 'Show {{count}} more recipients',
+  showFewerRecipients: 'Show {{count}} fewer recipient',
+  showFewerRecipients_plural: 'Show {{count}} fewer recipients',
+  recipientsSelected: '<strong>{{count}}</strong> recipient selected',
+  recipientsSelected_plural: '<strong>{{count}}</strong> recipients selected',
   addExternalRecipientWarning:
     'The selected individual is external to the CMS organization. Please be sure they should see the information in this notification email before proceeding.',
   selectExternalRecipientWarning:

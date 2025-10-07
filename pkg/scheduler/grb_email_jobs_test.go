@@ -7,6 +7,7 @@ import (
 
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 func (suite *SchedulerTestSuite) TestSendAsyncVotingHalfwayThroughEmailJobFunction() {
@@ -25,7 +26,7 @@ func (suite *SchedulerTestSuite) TestSendAsyncVotingHalfwayThroughEmailJobFuncti
 		RequestType:           models.SystemIntakeRequestTypeNEW,
 		GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
 	}
-	createdIntake, err := suite.testConfigs.Store.CreateSystemIntake(suite.testConfigs.Context, testIntake)
+	createdIntake, err := storage.CreateSystemIntake(suite.testConfigs.Context, suite.testConfigs.Store, testIntake)
 	suite.NoError(err)
 	suite.NotNil(createdIntake)
 
@@ -49,7 +50,7 @@ func (suite *SchedulerTestSuite) TestSendAsyncPastDueNoQuorumEmailJobFunction() 
 		GrbReviewType:         models.SystemIntakeGRBReviewTypeAsync,
 	}
 
-	createdIntake, err := suite.testConfigs.Store.CreateSystemIntake(suite.testConfigs.Context, testIntake)
+	createdIntake, err := storage.CreateSystemIntake(suite.testConfigs.Context, suite.testConfigs.Store, testIntake)
 	suite.NoError(err)
 	suite.NotNil(createdIntake)
 
@@ -74,7 +75,7 @@ func (suite *SchedulerTestSuite) TestSendGRBReviewEndedEmailJobFunction() {
 		Step:                  models.SystemIntakeStepINITIALFORM,
 		RequestType:           models.SystemIntakeRequestTypeNEW,
 	}
-	createdIntake, err := suite.testConfigs.Store.CreateSystemIntake(suite.testConfigs.Context, testIntake)
+	createdIntake, err := storage.CreateSystemIntake(suite.testConfigs.Context, suite.testConfigs.Store, testIntake)
 	suite.NoError(err)
 	suite.NotNil(createdIntake)
 

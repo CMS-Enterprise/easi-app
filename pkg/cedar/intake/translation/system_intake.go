@@ -3,6 +3,7 @@ package translation
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"strings"
 	"time"
 
@@ -57,12 +58,6 @@ func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wir
 		UserEUA:                         si.EUAUserID.ValueOrZero(),
 		Status:                          string(clientStatus),
 		RequestType:                     string(si.RequestType),
-		Requester:                       si.Requester,
-		Component:                       si.Component.ValueOrZero(),
-		BusinessOwner:                   si.BusinessOwner.ValueOrZero(),
-		BusinessOwnerComponent:          si.BusinessOwnerComponent.ValueOrZero(),
-		ProductManager:                  si.ProductManager.ValueOrZero(),
-		ProductManagerComponent:         si.ProductManagerComponent.ValueOrZero(),
 		IssoName:                        si.ISSOName.Ptr(),
 		TrbCollaboratorName:             si.TRBCollaboratorName.Ptr(),
 		OitSecurityCollaboratorName:     si.OITSecurityCollaboratorName.Ptr(),
@@ -109,6 +104,17 @@ func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wir
 		LifecycleCostBaseline:           si.LifecycleCostBaseline.Ptr(),
 		// ScheduledProductionDate:         pStr(""), // TODO: fill this out after field is added to intake
 	}
+
+	coreContacts, err := GetCoreTranslatableContactInfo(ctx, si.ID)
+	if err != nil {
+		return nil, fmt.Errorf("error getting core contact information for system intake %s: %w", si.ID.String(), err)
+	}
+	si.Requester = coreContacts.Requester
+	si.Component = coreContacts.Component
+	si.BusinessOwner = coreContacts.BusinessOwner
+	si.BusinessOwnerComponent = coreContacts.BusinessOwnerComponent
+	si.ProductManager = coreContacts.ProductManager
+	si.ProductManagerComponent = coreContacts.ProductManagerComponent
 
 	blob, err := json.Marshal(&obj)
 	if err != nil {
