@@ -708,7 +708,9 @@ export const taskListSystemIntake: NonNullable<
   grbReviewStartedAt: null,
   grbReviewAsyncEndDate: null,
   grbReviewAsyncRecordingTime: null,
-  grbPresentationLinks: null
+  grbPresentationLinks: null,
+  grbReviewAsyncManualEndDate: null,
+  doesNotSupportSystems: null
 };
 
 export const getGovernanceTaskListQuery = (
