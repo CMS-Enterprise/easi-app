@@ -537,7 +537,8 @@ export const systemIntake: SystemIntakeFragmentFragment = {
   itGovTaskStatuses: {
     __typename: 'ITGovTaskStatuses',
     intakeFormStatus: ITGovIntakeFormStatus.READY
-  }
+  },
+  doesNotSupportSystems: true
 };
 
 export const systemIntakeForTable: GetSystemIntakesTableQuery['systemIntakes'][number] =
@@ -710,8 +711,10 @@ export const taskListSystemIntake: NonNullable<
   grbReviewType: SystemIntakeGRBReviewType.STANDARD,
   grbReviewStartedAt: null,
   grbReviewAsyncEndDate: null,
+  grbReviewAsyncManualEndDate: null,
   grbReviewAsyncRecordingTime: null,
-  grbPresentationLinks: null
+  grbPresentationLinks: null,
+  doesNotSupportSystems: true
 };
 
 export const getGovernanceTaskListQuery = (
