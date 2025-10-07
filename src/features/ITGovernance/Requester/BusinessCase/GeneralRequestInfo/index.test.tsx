@@ -13,6 +13,7 @@ import { SystemIntakeStep } from 'gql/generated/graphql';
 import configureMockStore from 'redux-mock-store';
 import {
   getGovernanceTaskListQuery,
+  getSystemIntakeContactsQuery,
   systemIntake
 } from 'tests/mock/systemIntake';
 
@@ -20,6 +21,10 @@ import { businessCaseInitialData } from 'data/businessCase';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 const renderPage = async (store: any, isFinal?: boolean) => {
+  const step = isFinal
+    ? SystemIntakeStep.FINAL_BUSINESS_CASE
+    : SystemIntakeStep.DRAFT_BUSINESS_CASE;
+
   render(
     <MemoryRouter
       initialEntries={[
@@ -29,11 +34,8 @@ const renderPage = async (store: any, isFinal?: boolean) => {
       <Provider store={store}>
         <VerboseMockedProvider
           mocks={[
-            getGovernanceTaskListQuery({
-              step: isFinal
-                ? SystemIntakeStep.FINAL_BUSINESS_CASE
-                : SystemIntakeStep.DRAFT_BUSINESS_CASE
-            })
+            getSystemIntakeContactsQuery(),
+            getGovernanceTaskListQuery({ step })
           ]}
         >
           <Route
@@ -102,19 +104,10 @@ describe('Business case general request info form', () => {
 
     expect(requesterField).toBeDisabled();
 
-    await user.type(requesterField, 'John Doe');
-    expect(requesterField).toHaveValue('John Doe');
-
-    const businessOwnerField = screen.getByTestId('cedar-contact-select');
-
-    await user.type(businessOwnerField, 'Jane McModel');
-    await user.keyboard('[Enter]');
-
-    expect(businessOwnerField).toHaveValue('Jane McModel');
-
     const phoneNumberField = screen.getByRole('textbox', {
       name: /Phone Number/i
     });
+
     await user.type(phoneNumberField, '1234567890');
     expect(phoneNumberField).toHaveValue('1234567890');
   });

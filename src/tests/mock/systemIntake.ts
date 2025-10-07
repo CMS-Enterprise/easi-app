@@ -526,8 +526,7 @@ export const systemIntake: SystemIntakeFragmentFragment = {
   itGovTaskStatuses: {
     __typename: 'ITGovTaskStatuses',
     intakeFormStatus: ITGovIntakeFormStatus.READY
-  },
-  doesNotSupportSystems: true
+  }
 };
 
 export const systemIntakeForTable: GetSystemIntakesTableQuery['systemIntakes'][number] =
