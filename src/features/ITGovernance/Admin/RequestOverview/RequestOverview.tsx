@@ -25,6 +25,7 @@ import { formatDateUtc } from 'utils/date';
 import AccordionNavigation from '../../../../components/AccordionNavigation';
 import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 import Actions from '../Actions';
+import RequestHome from '../Actions/RequestHome';
 import BusinessCaseReview from '../BusinessCaseReview';
 import Dates from '../Dates';
 import Decision from '../Decision';
@@ -151,6 +152,11 @@ const RequestOverview = () => {
               className={classnames({ 'desktop:grid-col-9': !fullPageLayout })}
             >
               <Switch>
+                <Route
+                  path="/it-governance/:systemId/request-home"
+                  render={() => <RequestHome systemIntake={systemIntake} />}
+                />
+
                 <Route
                   path="/it-governance/:systemId/intake-request"
                   render={() => <IntakeReview systemIntake={systemIntake} />}
