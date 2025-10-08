@@ -40,7 +40,7 @@ const RequestHome = ({
         <h2 className="margin-bottom-4">
           {t('requestHome.sections.requestSummary.heading')}
         </h2>
-        <Grid row>
+        <Grid row className="margin-bottom-4">
           <div className="tablet:grid-col-6">
             <p className="text-bold margin-top-0 margin-bottom-1">
               {t('requestHome.sections.requestSummary.intakeRequestForm.title')}
@@ -76,6 +76,16 @@ const RequestHome = ({
             </Link>
           </div>
         </Grid>
+
+        {/* Intake request form overview */}
+        <div className="bg-primary-lighter padding-3">
+          <h3 className="margin-y-0">
+            {t('requestHome.sections.requestSummary.overview.heading')}
+          </h3>
+          <p className="easi-body-medium margin-y-0">
+            {t('requestHome.sections.requestSummary.overview.description')}
+          </p>
+        </div>
       </div>
     </div>
   );

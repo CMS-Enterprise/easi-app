@@ -407,7 +407,9 @@ const governanceReviewTeam = {
         overview: {
           heading: 'Intake Request form overview',
           description:
-            'In addition to the basic details in the header above, below are some of the key details about this project included in the submitted Intake Request form.'
+            'In addition to the basic details in the header above, below are some of the key details about this project included in the submitted Intake Request form.',
+          showMore: 'Show more',
+          showLess: 'Show less'
         }
       }
     }
