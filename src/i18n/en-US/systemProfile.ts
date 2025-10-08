@@ -504,7 +504,14 @@ const systemProfile = {
   gql: {
     fail: 'Failed to retrieve systems data'
   },
-  returnToSystemProfile: 'Return to system profile'
+  returnToSystemProfile: 'Return to system profile',
+  editSystemProfile: {
+    heading: 'Edit system profile',
+    subheading: 'for {{systemName}}',
+    description:
+      'Use this page to compile information about your system and it’s status in the CMS Target Life Cycle (TLC). Compiling more system information in EASi will allow OIT and CMS to stay updated about your system and proactively prompt you if there are any governance activities or TLC related tasks to complete.',
+    returnToSystemWorkspace: 'Return to system workspace'
+  }
 };
 
 export default systemProfile;

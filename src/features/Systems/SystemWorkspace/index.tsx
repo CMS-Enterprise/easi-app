@@ -1,8 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Redirect, useParams } from 'react-router-dom';
+import { Redirect, useHistory, useParams } from 'react-router-dom';
 import {
   Button,
+  ButtonGroup,
   CardGroup,
   Grid,
   GridContainer
@@ -31,7 +32,7 @@ import TeamCard from './components/TeamCard';
 export const SystemWorkspace = () => {
   const flags = useFlags();
   const { t } = useTranslation('systemWorkspace');
-
+  const history = useHistory();
   const [isSystemProfileOpen, toggleSystemProfile] = useState<boolean>(false);
 
   const { systemId } = useParams<{
@@ -130,13 +131,21 @@ export const SystemWorkspace = () => {
               header={t('spaces.systemProfile.header')}
               description={t('spaces.systemProfile.description')}
               footer={
-                <Button
-                  type="button"
-                  outline
-                  onClick={() => toggleSystemProfile(true)}
-                >
-                  {t('spaces.systemProfile.linktext')}
-                </Button>
+                <ButtonGroup>
+                  <Button
+                    type="button"
+                    onClick={() => history.push(`/systems/${systemId}/edit`)}
+                  >
+                    {t('systemProfile:editSystemProfile.heading')}
+                  </Button>
+                  <Button
+                    type="button"
+                    outline
+                    onClick={() => toggleSystemProfile(true)}
+                  >
+                    {t('spaces.systemProfile.linktext')}
+                  </Button>
+                </ButtonGroup>
               }
             />
 
