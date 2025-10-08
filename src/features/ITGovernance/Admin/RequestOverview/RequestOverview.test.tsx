@@ -149,7 +149,7 @@ describe('Governance Review Team', () => {
         initialEntries={[`/it-governance/${systemIntake.id}/intake-request`]}
       >
         <MockedProvider
-          mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery]}
+          mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery()]}
           addTypename={false}
         >
           <Provider store={defaultStore}>
@@ -284,7 +284,7 @@ describe('Governance Review Team', () => {
               statusAdmin: SystemIntakeStatusAdmin.LCID_RETIRING_SOON,
               lcidRetiresAt: '2020-10-08T03:11:24.478056Z'
             }),
-            getSystemIntakeContactsQuery
+            getSystemIntakeContactsQuery()
           ]}
           addTypename={false}
         >
@@ -312,7 +312,7 @@ describe('Governance Review Board', () => {
         initialEntries={[`/it-governance/${systemIntake.id}/intake-request`]}
       >
         <MockedProvider
-          mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery]}
+          mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery()]}
           addTypename={false}
         >
           <Provider store={defaultStore}>

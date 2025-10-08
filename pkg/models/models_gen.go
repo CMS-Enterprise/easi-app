@@ -186,10 +186,11 @@ type CreateGRBReviewerInput struct {
 
 // The data needed to associate a contact with a system intake
 type CreateSystemIntakeContactInput struct {
-	EuaUserID      string    `json:"euaUserId"`
-	SystemIntakeID uuid.UUID `json:"systemIntakeId"`
-	Component      string    `json:"component"`
-	Role           string    `json:"role"`
+	EuaUserID      string                       `json:"euaUserId"`
+	SystemIntakeID uuid.UUID                    `json:"systemIntakeId"`
+	Component      SystemIntakeContactComponent `json:"component"`
+	Roles          []SystemIntakeContactRole    `json:"roles"`
+	IsRequester    bool                         `json:"isRequester"`
 }
 
 // The payload when creating a system intake contact
@@ -555,12 +556,6 @@ type SystemIntakeBusinessOwner struct {
 	Name      *string `json:"name,omitempty"`
 }
 
-// The input data used to set the CMS Business Owner of a system
-type SystemIntakeBusinessOwnerInput struct {
-	Name      string `json:"name"`
-	Component string `json:"component"`
-}
-
 // Input for changing an intake's LCID retirement date in IT Gov v2
 type SystemIntakeChangeLCIDRetirementDateInput struct {
 	SystemIntakeID         uuid.UUID                    `json:"systemIntakeID"`
@@ -607,12 +602,6 @@ type SystemIntakeConfirmLCIDInput struct {
 	AdditionalInfo         *HTML                        `json:"additionalInfo,omitempty"`
 	NotificationRecipients *EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
-}
-
-// The payload when retrieving system intake contacts
-type SystemIntakeContactsPayload struct {
-	SystemIntakeContacts []*AugmentedSystemIntakeContact `json:"systemIntakeContacts"`
-	InvalidEUAIDs        []string                        `json:"invalidEUAIDs"`
 }
 
 // Represents a contract for work on a system
@@ -751,12 +740,6 @@ type SystemIntakeProductManager struct {
 	Name      *string `json:"name,omitempty"`
 }
 
-// The input data used to set the CMS product manager/lead of a system
-type SystemIntakeProductManagerInput struct {
-	Name      string `json:"name"`
-	Component string `json:"component"`
-}
-
 // Input for submitting a Progress to New Step action in IT Gov v2
 type SystemIntakeProgressToNewStepsInput struct {
 	SystemIntakeID         uuid.UUID                    `json:"systemIntakeID"`
@@ -800,23 +783,9 @@ type SystemIntakeRequestEditsInput struct {
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
 }
 
-// The contact who made an IT governance request for a system
-type SystemIntakeRequester struct {
-	Component *string `json:"component,omitempty"`
-	Email     *string `json:"email,omitempty"`
-	Name      string  `json:"name"`
-}
-
 // The input data used to set the requester of a system request
 type SystemIntakeRequesterInput struct {
 	Name string `json:"name"`
-}
-
-// The input data used to set the requester for a system request along with the
-// requester's business component
-type SystemIntakeRequesterWithComponentInput struct {
-	Name      string `json:"name"`
-	Component string `json:"component"`
 }
 
 // Input for retiring an intake's LCID in IT Gov v2
@@ -919,20 +888,16 @@ type UpdateSystemIntakeAdminLeadInput struct {
 // The input data used to update the contact details of the people associated with
 // a system request
 type UpdateSystemIntakeContactDetailsInput struct {
-	ID              uuid.UUID                                `json:"id"`
-	Requester       *SystemIntakeRequesterWithComponentInput `json:"requester"`
-	BusinessOwner   *SystemIntakeBusinessOwnerInput          `json:"businessOwner"`
-	ProductManager  *SystemIntakeProductManagerInput         `json:"productManager"`
-	GovernanceTeams *SystemIntakeGovernanceTeamInput         `json:"governanceTeams"`
+	ID              uuid.UUID                        `json:"id"`
+	GovernanceTeams *SystemIntakeGovernanceTeamInput `json:"governanceTeams"`
 }
 
 // The data needed to update a contact associated with a system intake
 type UpdateSystemIntakeContactInput struct {
-	ID             uuid.UUID `json:"id"`
-	EuaUserID      string    `json:"euaUserId"`
-	SystemIntakeID uuid.UUID `json:"systemIntakeId"`
-	Component      string    `json:"component"`
-	Role           string    `json:"role"`
+	ID          uuid.UUID                    `json:"id"`
+	Component   SystemIntakeContactComponent `json:"component"`
+	Roles       []SystemIntakeContactRole    `json:"roles"`
+	IsRequester bool                         `json:"isRequester"`
 }
 
 // Input data for updating contract details related to a system request

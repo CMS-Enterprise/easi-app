@@ -8,6 +8,7 @@ import (
 
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 )
 
@@ -31,7 +32,7 @@ func (s *ResolverSuite) TestSystemIntakeContractNumbers() {
 				Requester:   fmt.Sprintf("system intake contract number data loader %d", i),
 			}
 
-			created, err := s.testConfigs.Store.CreateSystemIntake(ctx, &intake)
+			created, err := storage.CreateSystemIntake(ctx, s.testConfigs.Store, &intake)
 			s.NoError(err)
 			createdIDs = append(createdIDs, created.ID)
 		}

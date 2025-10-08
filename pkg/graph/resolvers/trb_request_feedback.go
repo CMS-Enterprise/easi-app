@@ -76,7 +76,7 @@ func CreateTRBRequestFeedback(
 			"status": models.TRBFormStatusInProgress,
 		}
 
-		err = ApplyChangesAndMetaData(formChanges, form, appcontext.Principal(ctx))
+		err = BaseStructPreUpdate(formChanges, form, appcontext.Principal(ctx), true)
 		if err != nil {
 			return nil, err
 		}

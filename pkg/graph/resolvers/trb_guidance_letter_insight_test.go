@@ -52,7 +52,7 @@ func (s *ResolverSuite) TestTRBGuidanceLetterRecommendationCRUD() {
 			"insight":      "I recommend you restart your PC",
 			"links":        linksChanges,
 		}
-		err = ApplyChangesAndMetaData(changes, created, appcontext.Principal(ctx))
+		err = BaseStructPreUpdate(changes, created, appcontext.Principal(ctx), true)
 		s.NoError(err)
 
 		// Test updating a recommendation

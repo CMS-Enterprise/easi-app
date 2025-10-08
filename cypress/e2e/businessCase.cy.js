@@ -27,9 +27,9 @@ describe('The Business Case Form', () => {
 
     cy.get('#BusinessCase-RequesterName').should('have.value', 'EndToEnd One');
 
-    cy.get('#react-select-BusinessCase-BusinessOwnerName-input').should(
+    cy.get('#BusinessCase-BusinessOwnerName').should(
       'have.value',
-      'John BusinessOwner'
+      'Ally Anderson'
     );
 
     cy.get('#BusinessCase-RequesterPhoneNumber')
@@ -129,7 +129,7 @@ describe('The Business Case Form', () => {
           phoneNumber: '1234567890'
         },
         businessOwner: {
-          name: 'John BusinessOwner'
+          name: 'Ally Anderson'
         },
         businessNeed:
           'Business Need: The quick brown fox jumps over the lazy dog.',

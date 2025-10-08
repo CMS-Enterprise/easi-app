@@ -1,10 +1,13 @@
 import {
+  SystemIntakeContactComponent,
+  SystemIntakeContactRole,
   SystemIntakeDocumentCommonType,
   SystemIntakeDocumentVersion
 } from 'gql/generated/graphql';
 
 import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
 import SystemIntakeSoftwareAcquisitionMethods from 'constants/enums/SystemIntakeSoftwareAcquisitionMethods';
+import { Translation } from 'types/util';
 
 const hasContractLabels: Record<
   `hasContract_${SystemIntakeContractStatus}`,
@@ -56,6 +59,77 @@ export const acquistionStrategyLabels: Record<
   NOT_YET_DETERMINED: 'Not yet determined'
 };
 
+const systemIntakeContactRoles: Translation<SystemIntakeContactRole> = {
+  BUSINESS_OWNER: 'Business Owner',
+  CLOUD_NAVIGATOR: 'Cloud Navigator',
+  CONTRACTING_OFFICERS_REPRESENTATIVE:
+    "Contracting Officer's Representative (COR)",
+  CYBER_RISK_ADVISOR: 'Cyber Risk Advisor (CRA)',
+  INFORMATION_SYSTEM_SECURITY_ADVISOR:
+    'Information System Security Advisor (ISSO)',
+  PRIVACY_ADVISOR: 'Privacy Advisor',
+  PRODUCT_MANAGER: 'Product Manager',
+  PRODUCT_OWNER: 'Product Owner',
+  PROJECT_MANAGER: 'Project Manager',
+  SUBJECT_MATTER_EXPERT: 'Subject Matter Expert (SME)',
+  SYSTEM_MAINTAINER: 'System Maintainer',
+  SYSTEM_OWNER: 'System Owner',
+  OTHER: 'Other'
+};
+
+const systemIntakeContactComponents: Translation<SystemIntakeContactComponent> =
+  {
+    CENTER_FOR_CLINICAL_STANDARDS_AND_QUALITY_CCSQ:
+      'Center for Clinical Standards and Quality',
+    CENTER_FOR_CONSUMER_INFORMATION_AND_INSURANCE_OVERSIGHT_CCIIO:
+      'Center for Consumer Information and Insurance Oversight',
+    CENTER_FOR_MEDICARE_CM: 'Center for Medicare',
+    CENTER_FOR_MEDICAID_AND_CHIP_SERVICES_CMCS:
+      'Center for Medicaid and CHIP Services',
+    CENTER_FOR_MEDICARE_AND_MEDICAID_INNOVATION_CMMI:
+      'Center for Medicare and Medicaid Innovation',
+    CENTER_FOR_PROGRAM_INTEGRITY_CPI: 'Center for Program Integrity',
+    CMS_WIDE: 'CMS Wide',
+    EMERGENCY_PREPAREDNESS_AND_RESPONSE_OPERATIONS_EPRO:
+      'Emergency Preparedness and Response Operations',
+    FEDERAL_COORDINATED_HEALTH_CARE_OFFICE:
+      'Federal Coordinated Health Care Office',
+    OFFICE_OF_ACQUISITION_AND_GRANTS_MANAGEMENT_OAGM:
+      'Office of Acquisition and Grants Management',
+    OFFICE_OF_HEALTHCARE_EXPERIENCE_AND_INTEROPERABILITY:
+      'Office of Healthcare Experience and Interoperability',
+    OFFICE_OF_COMMUNICATIONS_OC: 'Office of Communications',
+    OFFICE_OF_ENTERPRISE_DATA_AND_ANALYTICS_OEDA:
+      'Office of Enterprise Data and Analytics',
+    OFFICE_OF_EQUAL_OPPORTUNITY_AND_CIVIL_RIGHTS:
+      'Office of Equal Opportunity and Civil Rights',
+    OFFICE_OF_FINANCIAL_MANAGEMENT_OFM: 'Office of Financial Management',
+    OFFICE_OF_HUMAN_CAPITAL: 'Office of Human Capital',
+    OFFICE_OF_INFORMATION_TECHNOLOGY_OIT: 'Office of Information Technology',
+    OFFICE_OF_LEGISLATION: 'Office of Legislation',
+    OFFICE_OF_MINORITY_HEALTH_OMH: 'Office of Minority Health',
+    OFFICE_OF_PROGRAM_OPERATIONS_AND_LOCAL_ENGAGEMENT_OPOLE:
+      'Office of Program Operations and Local Engagement',
+    OFFICE_OF_SECURITY_FACILITIES_AND_LOGISTICS_OPERATIONS_OSFLO:
+      'Office of Security, Facilities, and Logistics Operations',
+    OFFICE_OF_STRATEGIC_OPERATIONS_AND_REGULATORY_AFFAIRS_OSORA:
+      'Office of Strategic Operations and Regulatory Affairs',
+    OFFICE_OF_STRATEGY_PERFORMANCE_AND_RESULTS_OSPR:
+      'Office of Strategy, Performance, and Results',
+    OFFICE_OF_THE_ACTUARY_OACT: 'Office of the Actuary',
+    OFFICE_OF_THE_ADMINISTRATOR: 'Office of the Administrator',
+    OFFICES_OF_HEARINGS_AND_INQUIRIES: 'Offices of Hearings and Inquiries',
+    CONSORTIUM_FOR_MEDICAID_AND_CHILDRENS_HEALTH:
+      "Consortium for Medicaid and Children's Health",
+    CONSORTIUM_FOR_MEDICARE_HEALTH_PLANS_OPERATIONS:
+      'Consortium for Medicare Health Plans Operations',
+    OFFICE_OF_BURDEN_REDUCTION_AND_HEALTH_INFORMATICS:
+      'Office of Burden Reduction and Health Informatics',
+    OFFICE_OF_SUPPORT_SERVICES_AND_OPERATIONS:
+      'Office of Support Services and Operations',
+    OTHER: 'Other'
+  };
+
 const intake = {
   navigation: {
     itGovernance: 'IT Governance',
@@ -73,6 +147,7 @@ const intake = {
     submissionDate: 'Submission date',
     requestFor: 'Request for',
     component: 'Component',
+    roles: 'Role(s)',
     grtDate: 'GRT Date',
     grbDate: 'GRB Date',
     adminLead: 'Admin Lead',
@@ -321,7 +396,6 @@ const intake = {
       helpText:
         'This person owns a line of business related to this request and will champion the request moving forward.',
       nameField: 'CMS Business Owner name',
-      searchesEUADatabase: 'This field searches CMS’ EUA database.',
       component: 'CMS Business Owner component',
       email: 'CMS Business Owner email'
     },
@@ -335,25 +409,52 @@ const intake = {
       component: 'CMS Project/Product Manager or Lead component',
       email: 'CMS Project/Product Manager or Lead email'
     },
+    systemIntakeContactRoles,
+    systemIntakeContactComponents,
+    teamMembersPointsOfContact: 'Team members and project points of contact',
+    addTeamMembers:
+      'Use the button and table below to add and edit any team members or key collaborators for this project.',
+    addAnotherContact: 'Add another contact',
+    contactsTableWarning:
+      'You must add at least at least the project’s Business Owner and Project/Product Manager or Lead (available roles to fulfill this requirement are Product Owner, Product Manager, or Project Manager). If there is one individual that fills multiple roles, you may assign all roles that apply.',
+    loadingContacts: 'Loading contacts',
+    noContacts: 'No contacts have been added to this request.',
     additionalContacts: {
-      titleContacts: 'Additional team members and project points of contact',
+      requesterTooltip:
+        'This individual is the primary requester. Primary requesters are able to edit IT governance requests in EASi.',
+      primaryRequester: 'Primary requester',
+      titleContacts: 'Additional contacts',
       titleRecipients: 'Choose recipients',
       recipientsSelected: '{{count}} recipients selected',
       showMore: 'Show {{count}} more recipients',
       showFewer: 'Show {{count}} fewer recipients',
       delete: 'Delete {{type}}',
-      add: 'Add another {{type}}',
-      edit: 'Edit {{type}}',
-      name: 'New {{type}} name',
-      component: 'New {{type}} component',
+      add: 'Add an additional {{type}}',
+      edit: 'Edit a {{type}}',
+      name_add: 'New {{type}} name',
+      name: '{{type}} name',
+      nameHelpText: 'This field searches CMS’ EUA database.',
+      component_add: 'New {{type}} component',
+      component: '{{type}} component',
       select: 'Select an option',
-      role: 'New {{type}} role',
-      save: 'Save',
-      addContact: 'Add {{type}}',
+      role_add: 'New {{type}} role',
+      role: '{{type}} role',
+      roles_add: 'New {{type}} role(s)',
+      roles: '{{type}} role(s)',
+      submit_edit: 'Save changes',
+      submit_add: 'Add {{type}}',
       errors: {
         commonName: "Enter the {{type}}'s name",
         component: "Select the {{type}}'s component",
-        role: "Select the {{type}}'s role"
+        role: "Select the {{type}}'s role",
+        root: 'There was an error {{action}}ing your {{type}}. Please try again. If the error persists, try again later.'
+      },
+      removeModal: {
+        heading:
+          'Are you sure you want to remove this team member or point of contact?',
+        description:
+          'This action cannot be undone, though you may add this individual again if needed.',
+        submit: 'Remove contact'
       }
     },
     governanceTeam: {

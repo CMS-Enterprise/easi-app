@@ -92,7 +92,7 @@ func (s *ResolverSuite) TestCreateTRBRequestFeedback() {
 		formChanges := map[string]interface{}{
 			"status": models.TRBFormStatusCompleted,
 		}
-		err = ApplyChangesAndMetaData(formChanges, form, appcontext.Principal(ctx))
+		err = BaseStructPreUpdate(formChanges, form, appcontext.Principal(ctx), true)
 		s.NoError(err)
 		form, err = store.UpdateTRBRequestForm(ctx, form)
 		s.NoError(err)
@@ -139,7 +139,7 @@ func (s *ResolverSuite) TestCreateTRBRequestFeedback() {
 		formChanges = map[string]interface{}{
 			"status": models.TRBFormStatusCompleted,
 		}
-		err = ApplyChangesAndMetaData(formChanges, form, appcontext.Principal(ctx))
+		err = BaseStructPreUpdate(formChanges, form, appcontext.Principal(ctx), true)
 		s.NoError(err)
 		_, err = store.UpdateTRBRequestForm(ctx, form)
 		s.NoError(err)

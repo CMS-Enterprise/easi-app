@@ -2,7 +2,10 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import DocumentsTable from 'features/ITGovernance/_components/DocumentsTable';
-import { SystemIntakeFragmentFragment } from 'gql/generated/graphql';
+import {
+  SystemIntakeFragmentFragment,
+  useGetSystemIntakeContactsQuery
+} from 'gql/generated/graphql';
 import i18next from 'i18next';
 
 import {
@@ -14,12 +17,12 @@ import FundingSourcesTable from 'components/FundingSources/FundingSourcesTable';
 import { formatFundingSourcesForApp } from 'components/FundingSources/utils';
 import UswdsReactLink from 'components/LinkWrapper';
 import ReviewRow from 'components/ReviewRow';
+import SystemIntakeContactsTable from 'components/SystemIntakeContactsTable';
 import { yesNoMap } from 'data/common';
-import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 import { formatContractDate, formatDateLocal } from 'utils/date';
 import formatContractNumbers from 'utils/formatContractNumbers';
-import { translateRequestType } from 'utils/systemIntake';
+import translateRequestType from 'utils/systemIntake';
 
 import SystemIntakeAnnualSpending from './SystemIntakeAnnualCosts';
 
@@ -38,13 +41,14 @@ export const SystemIntakeReview = ({
 }: SystemIntakeReviewProps) => {
   const { annualSpending, costs, contract, submittedAt, contractNumbers } =
     systemIntake;
-  const {
-    contacts: {
-      data: { requester, businessOwner, productManager }
-    }
-  } = useSystemIntakeContacts(systemIntake.id);
 
   const { t } = useTranslation('intake');
+
+  const { data, loading: contactsLoading } = useGetSystemIntakeContactsQuery({
+    variables: {
+      id: systemIntake.id
+    }
+  });
 
   const getSubmissionDate = () => {
     if (submittedAt) {
@@ -132,38 +136,15 @@ export const SystemIntakeReview = ({
         </UswdsReactLink>
       )}
 
-      <DescriptionList title={t('review.contactDetails')}>
+      <DescriptionList
+        title={t('review.contactDetails')}
+        className="margin-top-1"
+      >
         <ReviewRow>
-          <div
-            data-testid={`contact-requester-${requester.id || requester.euaUserId}`}
-          >
-            <DescriptionTerm term={t('fields.requester')} />
-            <DescriptionDefinition definition={requester.commonName} />
-          </div>
-          <div>
-            <DescriptionTerm term={t('review.requesterComponent')} />
-            <DescriptionDefinition definition={requester.component} />
-          </div>
-        </ReviewRow>
-        <ReviewRow>
-          <div>
-            <DescriptionTerm term={t('review.cmsBusinessOwnerName')} />
-            <DescriptionDefinition definition={businessOwner.commonName} />
-          </div>
-          <div>
-            <DescriptionTerm term={t('review.cmsBusinessOwnerComponent')} />
-            <DescriptionDefinition definition={businessOwner.component} />
-          </div>
-        </ReviewRow>
-        <ReviewRow>
-          <div>
-            <DescriptionTerm term={t('review.cmsProjectManagerName')} />
-            <DescriptionDefinition definition={productManager.commonName} />
-          </div>
-          <div>
-            <DescriptionTerm term={t('review.cmsProjectManagerComponent')} />
-            <DescriptionDefinition definition={productManager.component} />
-          </div>
+          <SystemIntakeContactsTable
+            contacts={data?.systemIntakeContacts?.allContacts}
+            loading={contactsLoading}
+          />
         </ReviewRow>
         <ReviewRow>
           <div>

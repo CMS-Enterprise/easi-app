@@ -47,7 +47,7 @@ func UpdateTRBGuidanceLetter(ctx context.Context, store *storage.Store, input ma
 		return nil, err
 	}
 
-	err = ApplyChangesAndMetaData(input, letter, appcontext.Principal(ctx))
+	err = BaseStructPreUpdate(input, letter, appcontext.Principal(ctx), true)
 	if err != nil {
 		return nil, err
 	}

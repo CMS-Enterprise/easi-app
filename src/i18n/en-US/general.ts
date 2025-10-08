@@ -27,6 +27,8 @@ const general = {
     warning: 'Date is in the past'
   },
   actions: 'Actions',
+  name: 'Name',
+  noneSpecified: 'None specified',
   on: 'on '
 };
 
