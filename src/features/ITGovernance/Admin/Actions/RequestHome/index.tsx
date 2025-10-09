@@ -84,7 +84,7 @@ const RequestHome = ({
               {t('requestHome.sections.requestSummary.intakeRequestForm.title')}
             </p>
             {/* Insert status here */}
-            <Link to="/">
+            <Link to={`/it-governance/${systemIntake.id}/intake-request`}>
               <IconButton
                 icon={<Icon.ArrowForward aria-hidden />}
                 type="button"
@@ -102,7 +102,7 @@ const RequestHome = ({
               {t('requestHome.sections.requestSummary.businessCase.title')}
             </p>
             {/* Insert status here */}
-            <Link to="/">
+            <Link to={`/it-governance/${systemIntake.id}/business-case`}>
               <IconButton
                 icon={<Icon.ArrowForward aria-hidden />}
                 type="button"
