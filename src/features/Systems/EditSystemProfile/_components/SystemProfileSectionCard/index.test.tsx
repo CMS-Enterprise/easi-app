@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { SystemProfileLockableSection } from 'gql/generated/graphql';
 
 import SystemProfileSectionCard from '.';
 
@@ -9,7 +10,7 @@ describe('SystemProfileSectionCard', () => {
       <SystemProfileSectionCard
         title="Section Title"
         description="This is the section card description."
-        route="section-route"
+        section={SystemProfileLockableSection.DATA}
       />
     );
 
@@ -21,7 +22,7 @@ describe('SystemProfileSectionCard', () => {
       <SystemProfileSectionCard
         title="Section Title"
         description="This is the section card description."
-        route="section-route"
+        section={SystemProfileLockableSection.DATA}
         isManagedExternally
       />
     );
@@ -40,7 +41,7 @@ describe('SystemProfileSectionCard', () => {
       <SystemProfileSectionCard
         title="Section Title"
         description="This is the section card description."
-        route="section-route"
+        section={SystemProfileLockableSection.DATA}
         isManagedExternally
         readOnly
       />
@@ -58,7 +59,7 @@ describe('SystemProfileSectionCard', () => {
       <SystemProfileSectionCard
         title="Section Title"
         description="This is the section card description."
-        route="section-route"
+        section={SystemProfileLockableSection.DATA}
         hasPendingChanges
       />
     );

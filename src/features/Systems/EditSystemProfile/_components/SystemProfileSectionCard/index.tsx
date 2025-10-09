@@ -10,13 +10,22 @@ import {
   Icon
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import {
+  SystemProfileLockableSection,
+  SystemProfileSectionLockStatus
+} from 'gql/generated/graphql';
 
 import PercentCompleteTag from 'components/PercentCompleteTag';
+import SectionLock from 'components/SectionLock';
+import {
+  systemProfileLockableSectionMap,
+  SystemProfileSection
+} from 'constants/systemProfile';
 
 type SystemProfileSectionCardProps = {
   title: string;
   description: string;
-  route: string;
+  section: SystemProfileSection;
   percentComplete?: number;
   hasPendingChanges?: boolean;
   isManagedExternally?: boolean;
@@ -29,7 +38,7 @@ type SystemProfileSectionCardProps = {
 const SystemProfileSectionCard = ({
   title,
   description,
-  route,
+  section,
   percentComplete,
   hasPendingChanges,
   isManagedExternally,
@@ -38,6 +47,25 @@ const SystemProfileSectionCard = ({
   const { t } = useTranslation('systemProfile');
 
   const history = useHistory();
+
+  // TODO: Update to use actual section lock context
+  const lockableSectionLocks = [
+    {
+      section: SystemProfileLockableSection.DATA,
+      lockedByUserAccount: {
+        username: 'USR2',
+        commonName: 'User Two',
+        email: 'user.two@local.fake'
+      }
+    }
+  ] as SystemProfileSectionLockStatus[];
+
+  /** Returns lock status if section is locked */
+  const sectionLock: SystemProfileSectionLockStatus | undefined =
+    lockableSectionLocks?.find(lock => lock.section === section);
+
+  // TODO: Update to actual route (ex: systems/id/edit/key)
+  const sectionRoute = systemProfileLockableSectionMap[section];
 
   return (
     <Card
@@ -79,17 +107,22 @@ const SystemProfileSectionCard = ({
             {t('editSystemProfile.sectionHasPendingChanges')}
           </p>
         )}
-        <Button
-          type="button"
-          onClick={() => history.push(route)}
-          className={
-            hasPendingChanges ? 'usa-button--unstyled' : 'usa-button--outline'
-          }
-        >
-          {hasPendingChanges || readOnly
-            ? t('editSystemProfile.viewSection')
-            : t('editSystemProfile.editSection')}
-        </Button>
+
+        {sectionLock ? (
+          <SectionLock sectionLock={sectionLock} />
+        ) : (
+          <Button
+            type="button"
+            onClick={() => history.push(sectionRoute)}
+            className={
+              hasPendingChanges ? 'usa-button--unstyled' : 'usa-button--outline'
+            }
+          >
+            {hasPendingChanges || readOnly
+              ? t('editSystemProfile.viewSection')
+              : t('editSystemProfile.editSection')}
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );

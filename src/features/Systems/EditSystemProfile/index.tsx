@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { CardGroup, GridContainer, Icon } from '@trussworks/react-uswds';
+import { SystemProfileLockableSection } from 'gql/generated/graphql';
 
 import Breadcrumbs from 'components/Breadcrumbs';
 import IconLink from 'components/IconLink';
@@ -59,7 +60,7 @@ const EditSystemProfile = () => {
           <SystemProfileSectionCard
             title={t('businessInformation.title')}
             description={t('businessInformation.description')}
-            route="business-information"
+            section={SystemProfileLockableSection.BUSINESS_INFORMATION}
             percentComplete={18}
             isManagedExternally
           />
@@ -67,42 +68,42 @@ const EditSystemProfile = () => {
           <SystemProfileSectionCard
             title={t('implementationDetails.title')}
             description={t('implementationDetails.description')}
-            route="business-information"
+            section={SystemProfileLockableSection.IMPLEMENTATION_DETAILS}
             percentComplete={98}
           />
 
           <SystemProfileSectionCard
             title={t('data.title')}
             description={t('data.description')}
-            route="business-information"
+            section={SystemProfileLockableSection.DATA}
             percentComplete={70}
           />
 
           <SystemProfileSectionCard
             title={t('toolsAndSoftware.title')}
             description={t('toolsAndSoftware.description')}
-            route="business-information"
+            section={SystemProfileLockableSection.TOOLS_AND_SOFTWARE}
             percentComplete={70}
           />
 
           <SystemProfileSectionCard
             title={t('subSystems.title')}
             description={t('subSystems.description')}
-            route="business-information"
+            section={SystemProfileLockableSection.SUB_SYSTEMS}
             percentComplete={70}
           />
 
           <SystemProfileSectionCard
             title={t('team.title')}
             description={t('team.description')}
-            route="business-information"
+            section={SystemProfileLockableSection.TEAM}
             percentComplete={70}
           />
 
           <SystemProfileSectionCard
             title={t('contracts.title')}
             description={t('contracts.description')}
-            route="business-information"
+            section="CONTRACTS"
             isManagedExternally
             readOnly
           />
@@ -110,7 +111,7 @@ const EditSystemProfile = () => {
           <SystemProfileSectionCard
             title={t('fundingAndBudget.title')}
             description={t('fundingAndBudget.description')}
-            route="business-information"
+            section="FUNDING_AND_BUDGET"
             isManagedExternally
             readOnly
           />
@@ -118,7 +119,7 @@ const EditSystemProfile = () => {
           <SystemProfileSectionCard
             title={t('atoAndSecurity.title')}
             description={t('atoAndSecurity.description')}
-            route="business-information"
+            section="ATO_AND_SECURITY"
             isManagedExternally
             readOnly
           />
