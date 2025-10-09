@@ -23,7 +23,7 @@ import {
   useDecision
 } from './DecisionContext';
 
-const DefinitionCombo = ({
+export const DefinitionCombo = ({
   term,
   definition
 }: {
