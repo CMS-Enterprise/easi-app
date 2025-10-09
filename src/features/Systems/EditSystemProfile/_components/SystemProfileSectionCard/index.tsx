@@ -36,7 +36,10 @@ const SystemProfileSectionCard = ({
   const history = useHistory();
 
   return (
-    <Card className="grid-col-4">
+    <Card
+      className="grid-col-4"
+      containerProps={{ className: 'shadow-2 border-width-1px' }}
+    >
       {isManagedExternally && (
         <h5 className="text-base-dark bg-base-lightest padding-x-3 margin-0 font-body-xs text-light display-flex flex-align-center">
           <Icon.InfoOutline className="margin-right-05" aria-hidden />

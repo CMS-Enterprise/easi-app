@@ -55,12 +55,66 @@ const EditSystemProfile = () => {
           {t('systemProfile:editSystemProfile.returnToSystemWorkspace')}
         </IconLink>
 
-        <CardGroup>
+        <CardGroup className="margin-bottom-10">
           <SystemProfileSectionCard
             title={t('businessInformation.title')}
             description={t('businessInformation.description')}
             route="business-information"
             isManagedExternally
+          />
+
+          <SystemProfileSectionCard
+            title={t('implementationDetails.title')}
+            description={t('implementationDetails.description')}
+            route="business-information"
+          />
+
+          <SystemProfileSectionCard
+            title={t('data.title')}
+            description={t('data.description')}
+            route="business-information"
+          />
+
+          <SystemProfileSectionCard
+            title={t('toolsAndSoftware.title')}
+            description={t('toolsAndSoftware.description')}
+            route="business-information"
+          />
+
+          <SystemProfileSectionCard
+            title={t('subSystems.title')}
+            description={t('subSystems.description')}
+            route="business-information"
+          />
+
+          <SystemProfileSectionCard
+            title={t('team.title')}
+            description={t('team.description')}
+            route="business-information"
+          />
+
+          <SystemProfileSectionCard
+            title={t('contracts.title')}
+            description={t('contracts.description')}
+            route="business-information"
+            isManagedExternally
+            readOnly
+          />
+
+          <SystemProfileSectionCard
+            title={t('fundingAndBudget.title')}
+            description={t('fundingAndBudget.description')}
+            route="business-information"
+            isManagedExternally
+            readOnly
+          />
+
+          <SystemProfileSectionCard
+            title={t('atoAndSecurity.title')}
+            description={t('atoAndSecurity.description')}
+            route="business-information"
+            isManagedExternally
+            readOnly
           />
         </CardGroup>
       </GridContainer>

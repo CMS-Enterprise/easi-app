@@ -521,6 +521,46 @@ const systemProfile = {
     title: 'Business information',
     description:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.'
+  },
+  implementationDetails: {
+    title: 'Implementation details',
+    description:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.'
+  },
+  data: {
+    title: 'Data',
+    description:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.'
+  },
+  toolsAndSoftware: {
+    title: 'Tools and software',
+    description:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.'
+  },
+  subSystems: {
+    title: 'Sub-systems',
+    description:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.'
+  },
+  team: {
+    title: 'Team',
+    description:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.'
+  },
+  contracts: {
+    title: 'Contracts',
+    description:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.'
+  },
+  fundingAndBudget: {
+    title: 'Funding and budget',
+    description:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.'
+  },
+  atoAndSecurity: {
+    title: 'ATO and security',
+    description:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.'
   }
 };
 
