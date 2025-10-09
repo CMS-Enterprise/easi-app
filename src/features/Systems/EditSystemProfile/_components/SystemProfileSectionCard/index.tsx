@@ -15,8 +15,8 @@ type SystemProfileSectionCardProps = {
   title: string;
   description: string;
   route: string;
-  hasPendingChanges: boolean;
-  isManagedExternally: boolean;
+  hasPendingChanges?: boolean;
+  isManagedExternally?: boolean;
   readOnly?: boolean;
 };
 
@@ -39,7 +39,7 @@ const SystemProfileSectionCard = ({
     <Card className="grid-col-4">
       {isManagedExternally && (
         <h5 className="text-base-dark bg-base-lightest padding-x-3 margin-0 font-body-xs text-light display-flex flex-align-center">
-          <Icon.InfoOutline className="margin-right-05" />
+          <Icon.InfoOutline className="margin-right-05" aria-hidden />
           {t(
             readOnly
               ? 'editSystemProfile.dataManagedExternally'
@@ -64,7 +64,7 @@ const SystemProfileSectionCard = ({
       <CardFooter>
         {hasPendingChanges && (
           <p className="text-base-dark margin-top-1 margin-bottom-0 display-flex flex-align-center">
-            <Icon.Schedule className="margin-right-05" />
+            <Icon.Schedule className="margin-right-05" aria-hidden />
             {t('editSystemProfile.sectionHasPendingChanges')}
           </p>
         )}

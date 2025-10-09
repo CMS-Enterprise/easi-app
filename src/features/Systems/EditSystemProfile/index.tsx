@@ -60,7 +60,6 @@ const EditSystemProfile = () => {
             title={t('businessInformation.title')}
             description={t('businessInformation.description')}
             route="business-information"
-            hasPendingChanges={false}
             isManagedExternally
           />
         </CardGroup>
