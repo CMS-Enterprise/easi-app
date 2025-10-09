@@ -510,7 +510,17 @@ const systemProfile = {
     subheading: 'for {{systemName}}',
     description:
       'Use this page to compile information about your system and it’s status in the CMS Target Life Cycle (TLC). Compiling more system information in EASi will allow OIT and CMS to stay updated about your system and proactively prompt you if there are any governance activities or TLC related tasks to complete.',
-    returnToSystemWorkspace: 'Return to system workspace'
+    returnToSystemWorkspace: 'Return to system workspace',
+    sectionHasPendingChanges: 'This section has pending changes',
+    editSection: 'Edit section',
+    viewSection: 'View section',
+    dataPartiallyManagedExternally: 'Data partially managed externally',
+    dataManagedExternally: 'Data managed externally'
+  },
+  businessInformation: {
+    title: 'Business information',
+    description:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.'
   }
 };
 

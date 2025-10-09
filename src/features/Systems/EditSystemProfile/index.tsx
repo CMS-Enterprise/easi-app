@@ -1,12 +1,14 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import { GridContainer, Icon } from '@trussworks/react-uswds';
+import { CardGroup, GridContainer, Icon } from '@trussworks/react-uswds';
 
 import Breadcrumbs from 'components/Breadcrumbs';
 import IconLink from 'components/IconLink';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
+
+import SystemProfileSectionCard from './_components/SystemProfileSectionCard';
 
 const EditSystemProfile = () => {
   const { t } = useTranslation('systemProfile');
@@ -52,6 +54,16 @@ const EditSystemProfile = () => {
         >
           {t('systemProfile:editSystemProfile.returnToSystemWorkspace')}
         </IconLink>
+
+        <CardGroup>
+          <SystemProfileSectionCard
+            title={t('businessInformation.title')}
+            description={t('businessInformation.description')}
+            route="business-information"
+            hasPendingChanges={false}
+            isManagedExternally
+          />
+        </CardGroup>
       </GridContainer>
     </MainContent>
   );
