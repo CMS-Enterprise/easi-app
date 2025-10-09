@@ -44,6 +44,7 @@ const BusinessCaseReview = ({
 
           <h2>{t('generalRequest')}</h2>
           <GeneralRequestInfoReview
+            systemIntakeId={values.systemIntakeId}
             values={{
               requestName: values.requestName,
               projectAcronym: values.projectAcronym,
