@@ -11,10 +11,13 @@ import {
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
+import PercentCompleteTag from 'components/PercentCompleteTag';
+
 type SystemProfileSectionCardProps = {
   title: string;
   description: string;
   route: string;
+  percentComplete?: number;
   hasPendingChanges?: boolean;
   isManagedExternally?: boolean;
   readOnly?: boolean;
@@ -27,6 +30,7 @@ const SystemProfileSectionCard = ({
   title,
   description,
   route,
+  percentComplete,
   hasPendingChanges,
   isManagedExternally,
   readOnly
@@ -60,8 +64,12 @@ const SystemProfileSectionCard = ({
         <h3>{title}</h3>
       </CardHeader>
 
-      <CardBody className="padding-top-05">
+      <CardBody className="padding-top-05 padding-bottom-2">
         <p>{description}</p>
+
+        {percentComplete && (
+          <PercentCompleteTag percentComplete={percentComplete} />
+        )}
       </CardBody>
 
       <CardFooter>

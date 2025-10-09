@@ -60,6 +60,7 @@ const EditSystemProfile = () => {
             title={t('businessInformation.title')}
             description={t('businessInformation.description')}
             route="business-information"
+            percentComplete={18}
             isManagedExternally
           />
 
@@ -67,30 +68,35 @@ const EditSystemProfile = () => {
             title={t('implementationDetails.title')}
             description={t('implementationDetails.description')}
             route="business-information"
+            percentComplete={98}
           />
 
           <SystemProfileSectionCard
             title={t('data.title')}
             description={t('data.description')}
             route="business-information"
+            percentComplete={70}
           />
 
           <SystemProfileSectionCard
             title={t('toolsAndSoftware.title')}
             description={t('toolsAndSoftware.description')}
             route="business-information"
+            percentComplete={70}
           />
 
           <SystemProfileSectionCard
             title={t('subSystems.title')}
             description={t('subSystems.description')}
             route="business-information"
+            percentComplete={70}
           />
 
           <SystemProfileSectionCard
             title={t('team.title')}
             description={t('team.description')}
             route="business-information"
+            percentComplete={70}
           />
 
           <SystemProfileSectionCard
