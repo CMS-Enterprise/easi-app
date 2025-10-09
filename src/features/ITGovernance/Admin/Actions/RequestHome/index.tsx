@@ -11,7 +11,10 @@ import {
 
 import IconButton from 'components/IconButton';
 import PageHeading from 'components/PageHeading';
+import ReviewRow from 'components/ReviewRow';
 import SystemIntakeContactsTable from 'components/SystemIntakeContactsTable';
+
+import { DefinitionCombo } from '../../Decision';
 
 const RequestHome = ({
   systemIntake
@@ -111,13 +114,78 @@ const RequestHome = ({
         </Grid>
 
         {/* Intake request form overview */}
-        <div className="bg-primary-lighter padding-3">
+        <div className="bg-primary-lighter padding-3 padding-bottom-0">
           <h3 className="margin-y-0">
             {t('requestHome.sections.requestSummary.overview.heading')}
           </h3>
-          <p className="easi-body-medium margin-y-0">
+          <p className="easi-body-normal margin-y-0">
             {t('requestHome.sections.requestSummary.overview.description')}
           </p>
+          <div className="padding-top-3">
+            <DefinitionCombo
+              term={t('intake:review.businessNeed')}
+              definition={
+                systemIntake.businessNeed ??
+                t('grbReview.businessCaseOverview.noSolution')
+              }
+            />
+            <DefinitionCombo
+              term={t('intake:review.solving')}
+              definition={
+                systemIntake.businessSolution ??
+                t('grbReview.businessCaseOverview.noSolution')
+              }
+            />
+            <DefinitionCombo
+              term={t('intake:review.process')}
+              definition={
+                systemIntake.currentStage ??
+                t('grbReview.businessCaseOverview.noSolution')
+              }
+            />
+            <ReviewRow>
+              <div>
+                <DefinitionCombo
+                  term={t('intake:review.currentAnnualSpending')}
+                  definition={
+                    systemIntake.annualSpending?.currentAnnualSpending ??
+                    t('grbReview.businessCaseOverview.noSolution')
+                  }
+                />
+              </div>
+              <div>
+                <DefinitionCombo
+                  term={t('intake:review.currentAnnualSpendingITPortion')}
+                  definition={
+                    systemIntake.annualSpending
+                      ?.currentAnnualSpendingITPortion ??
+                    t('grbReview.businessCaseOverview.noSolution')
+                  }
+                />
+              </div>
+            </ReviewRow>
+            <ReviewRow>
+              <div>
+                <DefinitionCombo
+                  term={t('intake:review.plannedYearOneSpending')}
+                  definition={
+                    systemIntake.annualSpending?.plannedYearOneSpending ??
+                    t('grbReview.businessCaseOverview.noSolution')
+                  }
+                />
+              </div>
+              <div>
+                <DefinitionCombo
+                  term={t('intake:review.plannedYearOneSpendingITPortion')}
+                  definition={
+                    systemIntake.annualSpending
+                      ?.plannedYearOneSpendingITPortion ??
+                    t('grbReview.businessCaseOverview.noSolution')
+                  }
+                />
+              </div>
+            </ReviewRow>
+          </div>
         </div>
       </div>
     </div>
