@@ -13,6 +13,7 @@ import IconButton from 'components/IconButton';
 import PageHeading from 'components/PageHeading';
 import ReviewRow from 'components/ReviewRow';
 import SystemIntakeContactsTable from 'components/SystemIntakeContactsTable';
+import TaskStatusTag from 'components/TaskStatusTag';
 
 import { DefinitionCombo } from '../../Decision';
 
@@ -83,7 +84,11 @@ const RequestHome = ({
             <p className="text-bold margin-top-0 margin-bottom-1">
               {t('requestHome.sections.requestSummary.intakeRequestForm.title')}
             </p>
-            {/* Insert status here */}
+            <div className="margin-y-1">
+              <TaskStatusTag
+                status={systemIntake.itGovTaskStatuses.intakeFormStatus}
+              />
+            </div>
             <Link to={`/it-governance/${systemIntake.id}/intake-request`}>
               <IconButton
                 icon={<Icon.ArrowForward aria-hidden />}
@@ -101,7 +106,11 @@ const RequestHome = ({
             <p className="text-bold margin-top-0 margin-bottom-1">
               {t('requestHome.sections.requestSummary.businessCase.title')}
             </p>
-            {/* Insert status here */}
+            <div className="margin-y-1">
+              <TaskStatusTag
+                status={systemIntake.itGovTaskStatuses.bizCaseDraftStatus}
+              />
+            </div>
             <Link to={`/it-governance/${systemIntake.id}/business-case`}>
               <IconButton
                 icon={<Icon.ArrowForward aria-hidden />}
