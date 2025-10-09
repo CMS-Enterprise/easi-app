@@ -1,4 +1,5 @@
 import React from 'react';
+import { useGetSystemIntakeContactsQuery } from 'gql/generated/graphql';
 
 import {
   DescriptionDefinition,
@@ -9,12 +10,23 @@ import ReviewRow from 'components/ReviewRow';
 import { GeneralRequestInfoForm } from 'types/businessCase';
 
 type GeneralRequestInfoReviewProps = {
+  systemIntakeId: string;
   values: GeneralRequestInfoForm;
 };
 
 const GeneralRequestInfoReview = ({
+  systemIntakeId,
   values
 }: GeneralRequestInfoReviewProps) => {
+  const { data } = useGetSystemIntakeContactsQuery({
+    variables: {
+      id: systemIntakeId
+    }
+  });
+
+  // Get business owner from contacts table because we no longer update this through the business case form
+  const businessOwner = data?.systemIntakeContacts?.businessOwners[0];
+
   return (
     <DescriptionList title="General request information">
       <ReviewRow>
@@ -32,7 +44,9 @@ const GeneralRequestInfoReview = ({
       <ReviewRow>
         <div>
           <DescriptionTerm term="CMS Business Owner" />
-          <DescriptionDefinition definition={values.businessOwner.name} />
+          <DescriptionDefinition
+            definition={businessOwner?.userAccount.commonName}
+          />
         </div>
       </ReviewRow>
       <ReviewRow>
