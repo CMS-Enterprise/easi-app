@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Grid, Icon } from '@trussworks/react-uswds';
@@ -22,6 +22,8 @@ const RequestHome = ({
   systemIntake: SystemIntakeFragmentFragment;
 }) => {
   const { t } = useTranslation('governanceReviewTeam');
+
+  const [expandedOverview, setExpandedOverview] = useState(false);
 
   const { data, loading } = useGetSystemIntakeContactsQuery({
     variables: {
@@ -114,78 +116,100 @@ const RequestHome = ({
         </Grid>
 
         {/* Intake request form overview */}
-        <div className="bg-primary-lighter padding-3 padding-bottom-0">
+        <div
+          // Conditional rendering padding class to adjust padding becuase RichTextViewer adds a padding at the bottom
+          className={`bg-primary-lighter padding-3 ${expandedOverview ? 'padding-bottom-0' : ''}`}
+        >
           <h3 className="margin-y-0">
             {t('requestHome.sections.requestSummary.overview.heading')}
           </h3>
           <p className="easi-body-normal margin-y-0">
             {t('requestHome.sections.requestSummary.overview.description')}
           </p>
-          <div className="padding-top-3">
-            <DefinitionCombo
-              term={t('intake:review.businessNeed')}
-              definition={
-                systemIntake.businessNeed ??
-                t('grbReview.businessCaseOverview.noSolution')
-              }
-            />
-            <DefinitionCombo
-              term={t('intake:review.solving')}
-              definition={
-                systemIntake.businessSolution ??
-                t('grbReview.businessCaseOverview.noSolution')
-              }
-            />
-            <DefinitionCombo
-              term={t('intake:review.process')}
-              definition={
-                systemIntake.currentStage ??
-                t('grbReview.businessCaseOverview.noSolution')
-              }
-            />
-            <ReviewRow>
-              <div>
-                <DefinitionCombo
-                  term={t('intake:review.currentAnnualSpending')}
-                  definition={
-                    systemIntake.annualSpending?.currentAnnualSpending ??
-                    t('grbReview.businessCaseOverview.noSolution')
-                  }
-                />
-              </div>
-              <div>
-                <DefinitionCombo
-                  term={t('intake:review.currentAnnualSpendingITPortion')}
-                  definition={
-                    systemIntake.annualSpending
-                      ?.currentAnnualSpendingITPortion ??
-                    t('grbReview.businessCaseOverview.noSolution')
-                  }
-                />
-              </div>
-            </ReviewRow>
-            <ReviewRow>
-              <div>
-                <DefinitionCombo
-                  term={t('intake:review.plannedYearOneSpending')}
-                  definition={
-                    systemIntake.annualSpending?.plannedYearOneSpending ??
-                    t('grbReview.businessCaseOverview.noSolution')
-                  }
-                />
-              </div>
-              <div>
-                <DefinitionCombo
-                  term={t('intake:review.plannedYearOneSpendingITPortion')}
-                  definition={
-                    systemIntake.annualSpending
-                      ?.plannedYearOneSpendingITPortion ??
-                    t('grbReview.businessCaseOverview.noSolution')
-                  }
-                />
-              </div>
-            </ReviewRow>
-          </div>
+          <IconButton
+            type="button"
+            unstyled
+            className="margin-top-1"
+            onClick={() => setExpandedOverview(!expandedOverview)}
+            icon={
+              expandedOverview ? (
+                <Icon.ExpandLess aria-hidden />
+              ) : (
+                <Icon.ExpandMore aria-hidden />
+              )
+            }
+          >
+            {expandedOverview
+              ? t('requestHome.sections.requestSummary.overview.showLess')
+              : t('requestHome.sections.requestSummary.overview.showMore')}
+          </IconButton>
+          {expandedOverview && (
+            <div className="padding-top-3">
+              <DefinitionCombo
+                term={t('intake:review.businessNeed')}
+                definition={
+                  systemIntake.businessNeed ??
+                  t('grbReview.businessCaseOverview.noSolution')
+                }
+              />
+              <DefinitionCombo
+                term={t('intake:review.solving')}
+                definition={
+                  systemIntake.businessSolution ??
+                  t('grbReview.businessCaseOverview.noSolution')
+                }
+              />
+              <DefinitionCombo
+                term={t('intake:review.process')}
+                definition={
+                  systemIntake.currentStage ??
+                  t('grbReview.businessCaseOverview.noSolution')
+                }
+              />
+              <ReviewRow>
+                <div>
+                  <DefinitionCombo
+                    term={t('intake:review.currentAnnualSpending')}
+                    definition={
+                      systemIntake.annualSpending?.currentAnnualSpending ??
+                      t('grbReview.businessCaseOverview.noSolution')
+                    }
+                  />
+                </div>
+                <div>
+                  <DefinitionCombo
+                    term={t('intake:review.currentAnnualSpendingITPortion')}
+                    definition={
+                      systemIntake.annualSpending
+                        ?.currentAnnualSpendingITPortion ??
+                      t('grbReview.businessCaseOverview.noSolution')
+                    }
+                  />
+                </div>
+              </ReviewRow>
+              <ReviewRow>
+                <div>
+                  <DefinitionCombo
+                    term={t('intake:review.plannedYearOneSpending')}
+                    definition={
+                      systemIntake.annualSpending?.plannedYearOneSpending ??
+                      t('grbReview.businessCaseOverview.noSolution')
+                    }
+                  />
+                </div>
+                <div>
+                  <DefinitionCombo
+                    term={t('intake:review.plannedYearOneSpendingITPortion')}
+                    definition={
+                      systemIntake.annualSpending
+                        ?.plannedYearOneSpendingITPortion ??
+                      t('grbReview.businessCaseOverview.noSolution')
+                    }
+                  />
+                </div>
+              </ReviewRow>
+            </div>
+          )}
         </div>
       </div>
     </div>
