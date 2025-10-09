@@ -52,6 +52,7 @@ const BusinessCaseReview = ({
         </PageHeading>
         <h2 className="font-heading-xl">General request information</h2>
         <GeneralRequestInfoReview
+          systemIntakeId={businessCase.systemIntakeId}
           values={{
             requestName: businessCase.requestName,
             projectAcronym: businessCase.projectAcronym,

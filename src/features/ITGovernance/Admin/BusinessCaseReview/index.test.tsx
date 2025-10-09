@@ -1,9 +1,15 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
+import {
+  businessOwner,
+  getSystemIntakeContactsQuery,
+  systemIntake
+} from 'tests/mock/systemIntake';
 
 import { businessCaseInitialData } from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
+import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 
@@ -18,14 +24,14 @@ describe('The GRT Business Case review', () => {
   const mockBusinessCase: BusinessCaseModel = {
     ...businessCaseInitialData,
     id: '54e829a9-6ce3-4b4b-81b0-7781b1e22821',
-    systemIntakeId: 'c9dcaca2-c500-45ae-96ce-a4ae527b4c8a',
+    systemIntakeId: systemIntake.id,
     requestName: 'Easy Access to System Information',
     requester: {
       name: 'Jane Doe',
       phoneNumber: '1234567890'
     },
     businessOwner: {
-      name: 'Jane Doe'
+      name: businessOwner.userAccount.commonName
     },
     businessNeed: 'Mock business need',
     cmsBenefit: 'Mock CMS benefit',
@@ -155,24 +161,36 @@ describe('The GRT Business Case review', () => {
     }
   };
 
-  it('matches the snapshot', () => {
+  it('matches the snapshot', async () => {
     const { asFragment } = render(
       <MemoryRouter>
-        <BusinessCaseReview businessCase={mockBusinessCase} />
+        <VerboseMockedProvider mocks={[getSystemIntakeContactsQuery()]}>
+          <BusinessCaseReview businessCase={mockBusinessCase} />
+        </VerboseMockedProvider>
       </MemoryRouter>
     );
+
+    expect(
+      await screen.findByText(businessOwner.userAccount.commonName)
+    ).toBeInTheDocument();
 
     expect(asFragment()).toMatchSnapshot();
   });
 
-  it('Renders action button for GRT admins', () => {
+  it('Renders action button for GRT admins', async () => {
     render(
       <MemoryRouter>
-        <ITGovAdminContext.Provider value>
-          <BusinessCaseReview businessCase={mockBusinessCase} />
-        </ITGovAdminContext.Provider>
+        <VerboseMockedProvider mocks={[getSystemIntakeContactsQuery()]}>
+          <ITGovAdminContext.Provider value>
+            <BusinessCaseReview businessCase={mockBusinessCase} />
+          </ITGovAdminContext.Provider>
+        </VerboseMockedProvider>
       </MemoryRouter>
     );
+
+    expect(
+      await screen.findByText(businessOwner.userAccount.commonName)
+    ).toBeInTheDocument();
 
     expect(
       screen.getByRole('link', { name: 'Take an action' })

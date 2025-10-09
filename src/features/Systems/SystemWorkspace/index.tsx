@@ -1,6 +1,6 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Redirect, useParams } from 'react-router-dom';
+import { Redirect, useHistory, useParams } from 'react-router-dom';
 import {
   Button,
   CardGroup,
@@ -17,7 +17,6 @@ import Breadcrumbs from 'components/Breadcrumbs';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
-import SystemProfileModal from 'components/SystemProfileModal';
 import TLCTag from 'components/TLCTag';
 import { RoleTypeName } from 'types/systemProfile';
 import linkCedarSystemIdQueryString from 'utils/linkCedarSystemIdQueryString';
@@ -31,8 +30,7 @@ import TeamCard from './components/TeamCard';
 export const SystemWorkspace = () => {
   const flags = useFlags();
   const { t } = useTranslation('systemWorkspace');
-
-  const [isSystemProfileOpen, toggleSystemProfile] = useState<boolean>(false);
+  const history = useHistory();
 
   const { systemId } = useParams<{
     systemId: string;
@@ -89,11 +87,6 @@ export const SystemWorkspace = () => {
             { text: t('header') }
           ]}
         />
-        <SystemProfileModal
-          id={systemId}
-          isOpen={isSystemProfileOpen}
-          closeModal={() => toggleSystemProfile(false)}
-        />
         <div className="display-flex flex-align-start flex-justify margin-top-5">
           <div>
             <PageHeading className="margin-bottom-1 margin-top-0">
@@ -133,7 +126,7 @@ export const SystemWorkspace = () => {
                 <Button
                   type="button"
                   outline
-                  onClick={() => toggleSystemProfile(true)}
+                  onClick={() => history.push(`/systems/${systemId}/home`)}
                 >
                   {t('spaces.systemProfile.linktext')}
                 </Button>
