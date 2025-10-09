@@ -2,10 +2,16 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Grid, Icon } from '@trussworks/react-uswds';
-import { SystemIntakeFragmentFragment } from 'gql/generated/graphql';
+import {
+  GetSystemIntakeContactsDocument,
+  SystemIntakeFragmentFragment,
+  useDeleteSystemIntakeContactMutation,
+  useGetSystemIntakeContactsQuery
+} from 'gql/generated/graphql';
 
 import IconButton from 'components/IconButton';
 import PageHeading from 'components/PageHeading';
+import SystemIntakeContactsTable from 'components/SystemIntakeContactsTable';
 
 const RequestHome = ({
   systemIntake
@@ -13,6 +19,21 @@ const RequestHome = ({
   systemIntake: SystemIntakeFragmentFragment;
 }) => {
   const { t } = useTranslation('governanceReviewTeam');
+
+  const { data, loading } = useGetSystemIntakeContactsQuery({
+    variables: {
+      id: systemIntake.id
+    }
+  });
+
+  const [removeContact] = useDeleteSystemIntakeContactMutation({
+    refetchQueries: [
+      {
+        query: GetSystemIntakeContactsDocument,
+        variables: { id: systemIntake.id }
+      }
+    ]
+  });
 
   return (
     <div data-testid="request-home">
@@ -30,9 +51,21 @@ const RequestHome = ({
         <h2 className="margin-bottom-0">
           {t('requestHome.sections.teamInfo.heading')}
         </h2>
-        <p className="easi-body-medium margin-y-0">
+        <p className="easi-body-medium margin-top-0 margin-bottom-2">
           {t('requestHome.sections.teamInfo.description')}
         </p>
+        <Link to="/">
+          <IconButton icon={<Icon.Add aria-hidden />} type="button" unstyled>
+            {t('requestHome.sections.teamInfo.addAnother')}
+          </IconButton>
+        </Link>
+        <SystemIntakeContactsTable
+          contacts={data?.systemIntakeContacts?.allContacts}
+          loading={loading}
+          // className="margin-top-3 padding-top-05 margin-bottom-6"
+          // handleEditContact={setContactToEdit}
+          removeContact={id => removeContact({ variables: { input: { id } } })}
+        />
       </div>
 
       {/* Request summary section */}
