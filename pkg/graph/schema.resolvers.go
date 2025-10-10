@@ -1282,6 +1282,18 @@ func (r *mutationResolver) SendGRBReviewPresentationDeckReminderEmail(ctx contex
 	return resolvers.SendGRBReviewPresentationDeckReminderEmail(ctx, systemIntakeID, r.emailClient, r.store, r.service.FetchUserInfo)
 }
 
+// LockSystemProfileSection is the resolver for the lockSystemProfileSection field.
+func (r *mutationResolver) LockSystemProfileSection(ctx context.Context, cedarSystemID string, section models.SystemProfileLockableSection) (bool, error) {
+	// TODO: Implement lock section resolver
+	return true, nil
+}
+
+// UnlockSystemProfileSection is the resolver for the unlockSystemProfileSection field.
+func (r *mutationResolver) UnlockSystemProfileSection(ctx context.Context, cedarSystemID string, section models.SystemProfileLockableSection) (bool, error) {
+	// TODO: Implement unlock section resolver
+	return true, nil
+}
+
 // SystemIntake is the resolver for the systemIntake field.
 func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 	intake, err := r.store.FetchSystemIntakeByID(ctx, id)
@@ -1659,6 +1671,17 @@ func (r *queryResolver) SystemIntakeSystem(ctx context.Context, systemIntakeSyst
 // SystemIntakeSystems is the resolver for the systemIntakeSystems field.
 func (r *queryResolver) SystemIntakeSystems(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeSystem, error) {
 	return resolvers.SystemIntakeSystemsByIntakeID(ctx, systemIntakeID)
+}
+
+// SystemProfileLockedSections is the resolver for the systemProfileLockedSections field.
+func (r *queryResolver) SystemProfileLockedSections(ctx context.Context, cedarSystemID string) ([]*models.SystemProfileSectionLockStatus, error) {
+	// TODO: Implement locked section resolver - currently returns empty array
+	return []*models.SystemProfileSectionLockStatus{}, nil
+}
+
+// OnSystemProfileLockableSectionLocksChanged is the resolver for the onSystemProfileLockableSectionLocksChanged field.
+func (r *subscriptionResolver) OnSystemProfileLockableSectionLocksChanged(ctx context.Context, cedarSystemID string, typeArg models.SystemProfileLockableSection) (<-chan *models.SystemProfileSectionLockStatusChanged, error) {
+	return resolvers.OnSystemProfileLockableSectionLocksChanged(ctx, cedarSystemID, typeArg)
 }
 
 // Actions is the resolver for the actions field.
@@ -2400,6 +2423,9 @@ func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResol
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
+// Subscription returns generated.SubscriptionResolver implementation.
+func (r *Resolver) Subscription() generated.SubscriptionResolver { return &subscriptionResolver{r} }
+
 // SystemIntake returns generated.SystemIntakeResolver implementation.
 func (r *Resolver) SystemIntake() generated.SystemIntakeResolver { return &systemIntakeResolver{r} }
 
@@ -2481,6 +2507,7 @@ type governanceRequestFeedbackResolver struct{ *Resolver }
 type iTGovTaskStatusesResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+type subscriptionResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
 type systemIntakeContactResolver struct{ *Resolver }
 type systemIntakeDocumentResolver struct{ *Resolver }
