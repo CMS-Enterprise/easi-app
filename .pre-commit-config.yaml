@@ -93,13 +93,14 @@ repos:
         name: Lint GraphQL schema
         entry: scripts/pre-commit-graphql-schema-lint
         language: script
-        files: pkg/graph/schema.graphql
+        files: "pkg/graph/schema/.*\\.graphql"
+        pass_filenames: false
 
   - repo: local
     hooks:
       - id: check-code-generation
         name: Run GraphQL code generation
-        entry: "scripts/dev gql"
+        entry: "scripts/pre-commit-check-code-generation"
         language: script
         files: "pkg/graph/schema\\.graphql|pkg/graph/schema\\.resolvers\\.go|src/gql/operations/.*\\.ts"
         pass_filenames: false
