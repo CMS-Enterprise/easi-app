@@ -1,4 +1,4 @@
-package graph
+package resolvers
 
 // This file will be automatically regenerated based on the schema, any resolver implementations
 // will be copied through when generating and any unknown code will be moved to the end.
@@ -8,10 +8,9 @@ import (
 	"context"
 
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
-	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers"
 )
 
 // UserAccount is the resolver for the userAccount field.
 func (r *queryResolver) UserAccount(ctx context.Context, username string) (*authentication.UserAccount, error) {
-	return resolvers.UserAccountGetByUsername(ctx, r.store, r.store, username)
+	return UserAccountGetByUsername(ctx, r.store, r.store, username)
 }
