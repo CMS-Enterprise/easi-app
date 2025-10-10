@@ -514,6 +514,11 @@ type SubmitIntakeInput struct {
 	ID uuid.UUID `json:"id"`
 }
 
+// Subscriptions are a way to get real-time updates from the server.
+// They are effectively websockets that send data from the server to the client when a particular event happens.
+type Subscription struct {
+}
+
 // An action taken on a system intake, often resulting in a change in status.
 type SystemIntakeAction struct {
 	ID                     uuid.UUID                         `json:"id"`
@@ -826,6 +831,12 @@ type SystemProfileSectionLockStatus struct {
 	LockedByUserAccount *authentication.UserAccount  `json:"lockedByUserAccount"`
 }
 
+type SystemProfileSectionLockStatusChanged struct {
+	ChangeType LockChangeType                  `json:"changeType"`
+	LockStatus *SystemProfileSectionLockStatus `json:"lockStatus"`
+	ActionType LockActionType                  `json:"actionType"`
+}
+
 // Input data for creating a system intake's relationship to a CEDAR system
 type SystemRelationshipInput struct {
 	CedarSystemID                      *string                  `json:"cedarSystemId,omitempty"`
@@ -1064,6 +1075,120 @@ type UpdateSystemIntakeGRBReviewFormInputTimeframeAsync struct {
 type UpdateSystemIntakeGRBReviewTypeInput struct {
 	SystemIntakeID uuid.UUID                 `json:"systemIntakeID"`
 	GrbReviewType  SystemIntakeGRBReviewType `json:"grbReviewType"`
+}
+
+type LockActionType string
+
+const (
+	// A normal flow action
+	LockActionTypeNormal LockActionType = "NORMAL"
+	// An administrative action
+	LockActionTypeAdmin LockActionType = "ADMIN"
+)
+
+var AllLockActionType = []LockActionType{
+	LockActionTypeNormal,
+	LockActionTypeAdmin,
+}
+
+func (e LockActionType) IsValid() bool {
+	switch e {
+	case LockActionTypeNormal, LockActionTypeAdmin:
+		return true
+	}
+	return false
+}
+
+func (e LockActionType) String() string {
+	return string(e)
+}
+
+func (e *LockActionType) UnmarshalGQL(v any) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = LockActionType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid LockActionType", str)
+	}
+	return nil
+}
+
+func (e LockActionType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+func (e *LockActionType) UnmarshalJSON(b []byte) error {
+	s, err := strconv.Unquote(string(b))
+	if err != nil {
+		return err
+	}
+	return e.UnmarshalGQL(s)
+}
+
+func (e LockActionType) MarshalJSON() ([]byte, error) {
+	var buf bytes.Buffer
+	e.MarshalGQL(&buf)
+	return buf.Bytes(), nil
+}
+
+type LockChangeType string
+
+const (
+	LockChangeTypeAdded   LockChangeType = "ADDED"
+	LockChangeTypeUpdated LockChangeType = "UPDATED"
+	LockChangeTypeRemoved LockChangeType = "REMOVED"
+)
+
+var AllLockChangeType = []LockChangeType{
+	LockChangeTypeAdded,
+	LockChangeTypeUpdated,
+	LockChangeTypeRemoved,
+}
+
+func (e LockChangeType) IsValid() bool {
+	switch e {
+	case LockChangeTypeAdded, LockChangeTypeUpdated, LockChangeTypeRemoved:
+		return true
+	}
+	return false
+}
+
+func (e LockChangeType) String() string {
+	return string(e)
+}
+
+func (e *LockChangeType) UnmarshalGQL(v any) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = LockChangeType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid LockChangeType", str)
+	}
+	return nil
+}
+
+func (e LockChangeType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+func (e *LockChangeType) UnmarshalJSON(b []byte) error {
+	s, err := strconv.Unquote(string(b))
+	if err != nil {
+		return err
+	}
+	return e.UnmarshalGQL(s)
+}
+
+func (e LockChangeType) MarshalJSON() ([]byte, error) {
+	var buf bytes.Buffer
+	e.MarshalGQL(&buf)
+	return buf.Bytes(), nil
 }
 
 // A user role associated with a job code
@@ -1770,70 +1895,6 @@ func (e *SystemIntakeStepToProgressTo) UnmarshalJSON(b []byte) error {
 }
 
 func (e SystemIntakeStepToProgressTo) MarshalJSON() ([]byte, error) {
-	var buf bytes.Buffer
-	e.MarshalGQL(&buf)
-	return buf.Bytes(), nil
-}
-
-// Sections of the system profile form that can be locked for editing
-type SystemProfileLockableSection string
-
-const (
-	SystemProfileLockableSectionBusinessInformation   SystemProfileLockableSection = "BUSINESS_INFORMATION"
-	SystemProfileLockableSectionImplementationDetails SystemProfileLockableSection = "IMPLEMENTATION_DETAILS"
-	SystemProfileLockableSectionData                  SystemProfileLockableSection = "DATA"
-	SystemProfileLockableSectionToolsAndSoftware      SystemProfileLockableSection = "TOOLS_AND_SOFTWARE"
-	SystemProfileLockableSectionSubSystems            SystemProfileLockableSection = "SUB_SYSTEMS"
-	SystemProfileLockableSectionTeam                  SystemProfileLockableSection = "TEAM"
-)
-
-var AllSystemProfileLockableSection = []SystemProfileLockableSection{
-	SystemProfileLockableSectionBusinessInformation,
-	SystemProfileLockableSectionImplementationDetails,
-	SystemProfileLockableSectionData,
-	SystemProfileLockableSectionToolsAndSoftware,
-	SystemProfileLockableSectionSubSystems,
-	SystemProfileLockableSectionTeam,
-}
-
-func (e SystemProfileLockableSection) IsValid() bool {
-	switch e {
-	case SystemProfileLockableSectionBusinessInformation, SystemProfileLockableSectionImplementationDetails, SystemProfileLockableSectionData, SystemProfileLockableSectionToolsAndSoftware, SystemProfileLockableSectionSubSystems, SystemProfileLockableSectionTeam:
-		return true
-	}
-	return false
-}
-
-func (e SystemProfileLockableSection) String() string {
-	return string(e)
-}
-
-func (e *SystemProfileLockableSection) UnmarshalGQL(v any) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = SystemProfileLockableSection(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid SystemProfileLockableSection", str)
-	}
-	return nil
-}
-
-func (e SystemProfileLockableSection) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
-func (e *SystemProfileLockableSection) UnmarshalJSON(b []byte) error {
-	s, err := strconv.Unquote(string(b))
-	if err != nil {
-		return err
-	}
-	return e.UnmarshalGQL(s)
-}
-
-func (e SystemProfileLockableSection) MarshalJSON() ([]byte, error) {
 	var buf bytes.Buffer
 	e.MarshalGQL(&buf)
 	return buf.Bytes(), nil

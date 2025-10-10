@@ -1018,6 +1018,19 @@ export enum LifecycleCostYear {
   LIFECYCLE_COST_YEAR_5 = 'LIFECYCLE_COST_YEAR_5'
 }
 
+export enum LockActionType {
+  /** An administrative action */
+  ADMIN = 'ADMIN',
+  /** A normal flow action */
+  NORMAL = 'NORMAL'
+}
+
+export enum LockChangeType {
+  ADDED = 'ADDED',
+  REMOVED = 'REMOVED',
+  UPDATED = 'UPDATED'
+}
+
 /** Defines the mutations for the schema */
 export type Mutation = {
   __typename: 'Mutation';
@@ -2079,6 +2092,25 @@ export type SubmitIntakeInput = {
   id: Scalars['UUID']['input'];
 };
 
+/**
+ * Subscriptions are a way to get real-time updates from the server.
+ * They are effectively websockets that send data from the server to the client when a particular event happens.
+ */
+export type Subscription = {
+  __typename: 'Subscription';
+  onSystemProfileLockableSectionLocksChanged: SystemProfileSectionLockStatusChanged;
+};
+
+
+/**
+ * Subscriptions are a way to get real-time updates from the server.
+ * They are effectively websockets that send data from the server to the client when a particular event happens.
+ */
+export type SubscriptionOnSystemProfileLockableSectionLocksChangedArgs = {
+  cedarSystemId: Scalars['String']['input'];
+  type: SystemProfileLockableSection;
+};
+
 /** Represents an IT governance request for a system */
 export type SystemIntake = {
   __typename: 'SystemIntake';
@@ -2977,6 +3009,13 @@ export type SystemProfileSectionLockStatus = {
   cedarSystemId: Scalars['String']['output'];
   lockedByUserAccount: UserAccount;
   section: SystemProfileLockableSection;
+};
+
+export type SystemProfileSectionLockStatusChanged = {
+  __typename: 'SystemProfileSectionLockStatusChanged';
+  actionType: LockActionType;
+  changeType: LockChangeType;
+  lockStatus: SystemProfileSectionLockStatus;
 };
 
 /** Input data for creating a system intake's relationship to a CEDAR system */

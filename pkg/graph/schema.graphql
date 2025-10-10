@@ -23,26 +23,6 @@ enum PersonRole {
   OTHER
 }
 
-"""
-Sections of the system profile form that can be locked for editing
-"""
-enum SystemProfileLockableSection {
-  BUSINESS_INFORMATION
-  IMPLEMENTATION_DETAILS
-  DATA
-  TOOLS_AND_SOFTWARE
-  SUB_SYSTEMS
-  TEAM
-}
-
-"""
-Status of a locked section of the system profile form
-"""
-type SystemProfileSectionLockStatus {
-  cedarSystemId: String!
-  section: SystemProfileLockableSection!
-  lockedByUserAccount: UserAccount!
-}
 
 """
 CedarAuthorityToOperate represents the response from the /authorityToOperate endpoint from the CEDAR Core API.
@@ -3581,4 +3561,61 @@ type UserAccount {
   Represents if a user has logged in. If the user was added as a result of another action, this will show FALSE. When the user logs in, their account will be updated
   """
   hasLoggedIn: Boolean
+}
+"""
+Subscriptions are a way to get real-time updates from the server.
+They are effectively websockets that send data from the server to the client when a particular event happens.
+"""
+type Subscription {
+    onSystemProfileLockableSectionLocksChanged(
+    cedarSystemId: String!
+    type: SystemProfileLockableSection!
+  ): SystemProfileSectionLockStatusChanged!
+}
+
+
+"""
+Sections of the system profile form that can be locked for editing
+"""
+enum SystemProfileLockableSection {
+  BUSINESS_INFORMATION
+  IMPLEMENTATION_DETAILS
+  DATA
+  TOOLS_AND_SOFTWARE
+  SUB_SYSTEMS
+  TEAM
+}
+
+"""
+Status of a locked section of the system profile form
+"""
+type SystemProfileSectionLockStatus {
+  cedarSystemId: String!
+  section: SystemProfileLockableSection!
+  lockedByUserAccount: UserAccount!
+}
+
+type SystemProfileSectionLockStatusChanged {
+  changeType: LockChangeType!
+  lockStatus: SystemProfileSectionLockStatus!
+  actionType: LockActionType!
+}
+
+
+enum LockChangeType {
+  ADDED
+  UPDATED
+  REMOVED
+}
+
+enum LockActionType {
+  """
+  A normal flow action
+  """
+  NORMAL
+
+  """
+  An administrative action
+  """
+  ADMIN
 }

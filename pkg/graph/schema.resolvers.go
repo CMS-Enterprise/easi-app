@@ -1679,6 +1679,11 @@ func (r *queryResolver) SystemProfileLockedSections(ctx context.Context, cedarSy
 	return []*models.SystemProfileSectionLockStatus{}, nil
 }
 
+// OnSystemProfileLockableSectionLocksChanged is the resolver for the onSystemProfileLockableSectionLocksChanged field.
+func (r *subscriptionResolver) OnSystemProfileLockableSectionLocksChanged(ctx context.Context, cedarSystemID string, typeArg models.SystemProfileLockableSection) (<-chan *models.SystemProfileSectionLockStatusChanged, error) {
+	return resolvers.OnSystemProfileLockableSectionLocksChanged(ctx, cedarSystemID, typeArg)
+}
+
 // Actions is the resolver for the actions field.
 func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeAction, error) {
 	actions, actionsErr := dataloaders.GetSystemIntakeActionsBySystemIntakeID(ctx, obj.ID)
@@ -2418,6 +2423,9 @@ func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResol
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
+// Subscription returns generated.SubscriptionResolver implementation.
+func (r *Resolver) Subscription() generated.SubscriptionResolver { return &subscriptionResolver{r} }
+
 // SystemIntake returns generated.SystemIntakeResolver implementation.
 func (r *Resolver) SystemIntake() generated.SystemIntakeResolver { return &systemIntakeResolver{r} }
 
@@ -2499,6 +2507,7 @@ type governanceRequestFeedbackResolver struct{ *Resolver }
 type iTGovTaskStatusesResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+type subscriptionResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
 type systemIntakeContactResolver struct{ *Resolver }
 type systemIntakeDocumentResolver struct{ *Resolver }

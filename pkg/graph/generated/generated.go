@@ -7,6 +7,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"strconv"
 	"sync"
 	"sync/atomic"
@@ -52,6 +53,7 @@ type ResolverRoot interface {
 	ITGovTaskStatuses() ITGovTaskStatusesResolver
 	Mutation() MutationResolver
 	Query() QueryResolver
+	Subscription() SubscriptionResolver
 	SystemIntake() SystemIntakeResolver
 	SystemIntakeContact() SystemIntakeContactResolver
 	SystemIntakeDocument() SystemIntakeDocumentResolver
@@ -722,6 +724,10 @@ type ComplexityRoot struct {
 		TimeSent func(childComplexity int) int
 	}
 
+	Subscription struct {
+		OnSystemProfileLockableSectionLocksChanged func(childComplexity int, cedarSystemID string, typeArg models.SystemProfileLockableSection) int
+	}
+
 	SystemIntake struct {
 		AcquisitionMethods                                func(childComplexity int) int
 		Actions                                           func(childComplexity int) int
@@ -1025,6 +1031,12 @@ type ComplexityRoot struct {
 		CedarSystemID       func(childComplexity int) int
 		LockedByUserAccount func(childComplexity int) int
 		Section             func(childComplexity int) int
+	}
+
+	SystemProfileSectionLockStatusChanged struct {
+		ActionType func(childComplexity int) int
+		ChangeType func(childComplexity int) int
+		LockStatus func(childComplexity int) int
 	}
 
 	TRBAdminNote struct {
@@ -1447,6 +1459,9 @@ type QueryResolver interface {
 	SystemIntakeSystem(ctx context.Context, systemIntakeSystemID uuid.UUID) (*models.SystemIntakeSystem, error)
 	SystemIntakeSystems(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeSystem, error)
 	SystemProfileLockedSections(ctx context.Context, cedarSystemID string) ([]*models.SystemProfileSectionLockStatus, error)
+}
+type SubscriptionResolver interface {
+	OnSystemProfileLockableSectionLocksChanged(ctx context.Context, cedarSystemID string, typeArg models.SystemProfileLockableSection) (<-chan *models.SystemProfileSectionLockStatusChanged, error)
 }
 type SystemIntakeResolver interface {
 	Actions(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeAction, error)
@@ -5807,6 +5822,18 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.SendSystemIntakeGRBReviewReminderPayload.TimeSent(childComplexity), true
 
+	case "Subscription.onSystemProfileLockableSectionLocksChanged":
+		if e.complexity.Subscription.OnSystemProfileLockableSectionLocksChanged == nil {
+			break
+		}
+
+		args, err := ec.field_Subscription_onSystemProfileLockableSectionLocksChanged_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Subscription.OnSystemProfileLockableSectionLocksChanged(childComplexity, args["cedarSystemId"].(string), args["type"].(models.SystemProfileLockableSection)), true
+
 	case "SystemIntake.acquisitionMethods":
 		if e.complexity.SystemIntake.AcquisitionMethods == nil {
 			break
@@ -7417,6 +7444,27 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.SystemProfileSectionLockStatus.Section(childComplexity), true
 
+	case "SystemProfileSectionLockStatusChanged.actionType":
+		if e.complexity.SystemProfileSectionLockStatusChanged.ActionType == nil {
+			break
+		}
+
+		return e.complexity.SystemProfileSectionLockStatusChanged.ActionType(childComplexity), true
+
+	case "SystemProfileSectionLockStatusChanged.changeType":
+		if e.complexity.SystemProfileSectionLockStatusChanged.ChangeType == nil {
+			break
+		}
+
+		return e.complexity.SystemProfileSectionLockStatusChanged.ChangeType(childComplexity), true
+
+	case "SystemProfileSectionLockStatusChanged.lockStatus":
+		if e.complexity.SystemProfileSectionLockStatusChanged.LockStatus == nil {
+			break
+		}
+
+		return e.complexity.SystemProfileSectionLockStatusChanged.LockStatus(childComplexity), true
+
 	case "TRBAdminNote.author":
 		if e.complexity.TRBAdminNote.Author == nil {
 			break
@@ -8802,6 +8850,23 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 				Data: buf.Bytes(),
 			}
 		}
+	case ast.Subscription:
+		next := ec._Subscription(ctx, opCtx.Operation.SelectionSet)
+
+		var buf bytes.Buffer
+		return func(ctx context.Context) *graphql.Response {
+			buf.Reset()
+			data := next(ctx)
+
+			if data == nil {
+				return nil
+			}
+			data.MarshalGQL(&buf)
+
+			return &graphql.Response{
+				Data: buf.Bytes(),
+			}
+		}
 
 	default:
 		return graphql.OneShot(graphql.ErrorResponse(ctx, "unsupported GraphQL operation"))
@@ -8875,26 +8940,6 @@ enum PersonRole {
   OTHER
 }
 
-"""
-Sections of the system profile form that can be locked for editing
-"""
-enum SystemProfileLockableSection {
-  BUSINESS_INFORMATION
-  IMPLEMENTATION_DETAILS
-  DATA
-  TOOLS_AND_SOFTWARE
-  SUB_SYSTEMS
-  TEAM
-}
-
-"""
-Status of a locked section of the system profile form
-"""
-type SystemProfileSectionLockStatus {
-  cedarSystemId: String!
-  section: SystemProfileLockableSection!
-  lockedByUserAccount: UserAccount!
-}
 
 """
 CedarAuthorityToOperate represents the response from the /authorityToOperate endpoint from the CEDAR Core API.
@@ -12434,6 +12479,63 @@ type UserAccount {
   """
   hasLoggedIn: Boolean
 }
+"""
+Subscriptions are a way to get real-time updates from the server.
+They are effectively websockets that send data from the server to the client when a particular event happens.
+"""
+type Subscription {
+    onSystemProfileLockableSectionLocksChanged(
+    cedarSystemId: String!
+    type: SystemProfileLockableSection!
+  ): SystemProfileSectionLockStatusChanged!
+}
+
+
+"""
+Sections of the system profile form that can be locked for editing
+"""
+enum SystemProfileLockableSection {
+  BUSINESS_INFORMATION
+  IMPLEMENTATION_DETAILS
+  DATA
+  TOOLS_AND_SOFTWARE
+  SUB_SYSTEMS
+  TEAM
+}
+
+"""
+Status of a locked section of the system profile form
+"""
+type SystemProfileSectionLockStatus {
+  cedarSystemId: String!
+  section: SystemProfileLockableSection!
+  lockedByUserAccount: UserAccount!
+}
+
+type SystemProfileSectionLockStatusChanged {
+  changeType: LockChangeType!
+  lockStatus: SystemProfileSectionLockStatus!
+  actionType: LockActionType!
+}
+
+
+enum LockChangeType {
+  ADDED
+  UPDATED
+  REMOVED
+}
+
+enum LockActionType {
+  """
+  A normal flow action
+  """
+  NORMAL
+
+  """
+  An administrative action
+  """
+  ADMIN
+}
 `, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
@@ -13908,6 +14010,22 @@ func (ec *executionContext) field_Query_userAccount_args(ctx context.Context, ra
 		return nil, err
 	}
 	args["username"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Subscription_onSystemProfileLockableSectionLocksChanged_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNString2string)
+	if err != nil {
+		return nil, err
+	}
+	args["cedarSystemId"] = arg0
+	arg1, err := graphql.ProcessArgField(ctx, rawArgs, "type", ec.unmarshalNSystemProfileLockableSection2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemProfileLockableSection)
+	if err != nil {
+		return nil, err
+	}
+	args["type"] = arg1
 	return args, nil
 }
 
@@ -43182,6 +43300,83 @@ func (ec *executionContext) fieldContext_SendSystemIntakeGRBReviewReminderPayloa
 	return fc, nil
 }
 
+func (ec *executionContext) _Subscription_onSystemProfileLockableSectionLocksChanged(ctx context.Context, field graphql.CollectedField) (ret func(ctx context.Context) graphql.Marshaler) {
+	fc, err := ec.fieldContext_Subscription_onSystemProfileLockableSectionLocksChanged(ctx, field)
+	if err != nil {
+		return nil
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = nil
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Subscription().OnSystemProfileLockableSectionLocksChanged(rctx, fc.Args["cedarSystemId"].(string), fc.Args["type"].(models.SystemProfileLockableSection))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return nil
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return nil
+	}
+	return func(ctx context.Context) graphql.Marshaler {
+		select {
+		case res, ok := <-resTmp.(<-chan *models.SystemProfileSectionLockStatusChanged):
+			if !ok {
+				return nil
+			}
+			return graphql.WriterFunc(func(w io.Writer) {
+				w.Write([]byte{'{'})
+				graphql.MarshalString(field.Alias).MarshalGQL(w)
+				w.Write([]byte{':'})
+				ec.marshalNSystemProfileSectionLockStatusChanged2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemProfileSectionLockStatusChanged(ctx, field.Selections, res).MarshalGQL(w)
+				w.Write([]byte{'}'})
+			})
+		case <-ctx.Done():
+			return nil
+		}
+	}
+}
+
+func (ec *executionContext) fieldContext_Subscription_onSystemProfileLockableSectionLocksChanged(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Subscription",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "changeType":
+				return ec.fieldContext_SystemProfileSectionLockStatusChanged_changeType(ctx, field)
+			case "lockStatus":
+				return ec.fieldContext_SystemProfileSectionLockStatusChanged_lockStatus(ctx, field)
+			case "actionType":
+				return ec.fieldContext_SystemProfileSectionLockStatusChanged_actionType(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemProfileSectionLockStatusChanged", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Subscription_onSystemProfileLockableSectionLocksChanged_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntake_actions(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntake_actions(ctx, field)
 	if err != nil {
@@ -54197,6 +54392,146 @@ func (ec *executionContext) fieldContext_SystemProfileSectionLockStatus_lockedBy
 				return ec.fieldContext_UserAccount_hasLoggedIn(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type UserAccount", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemProfileSectionLockStatusChanged_changeType(ctx context.Context, field graphql.CollectedField, obj *models.SystemProfileSectionLockStatusChanged) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemProfileSectionLockStatusChanged_changeType(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ChangeType, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(models.LockChangeType)
+	fc.Result = res
+	return ec.marshalNLockChangeType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐLockChangeType(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemProfileSectionLockStatusChanged_changeType(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemProfileSectionLockStatusChanged",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type LockChangeType does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemProfileSectionLockStatusChanged_lockStatus(ctx context.Context, field graphql.CollectedField, obj *models.SystemProfileSectionLockStatusChanged) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemProfileSectionLockStatusChanged_lockStatus(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.LockStatus, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.SystemProfileSectionLockStatus)
+	fc.Result = res
+	return ec.marshalNSystemProfileSectionLockStatus2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemProfileSectionLockStatus(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemProfileSectionLockStatusChanged_lockStatus(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemProfileSectionLockStatusChanged",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "cedarSystemId":
+				return ec.fieldContext_SystemProfileSectionLockStatus_cedarSystemId(ctx, field)
+			case "section":
+				return ec.fieldContext_SystemProfileSectionLockStatus_section(ctx, field)
+			case "lockedByUserAccount":
+				return ec.fieldContext_SystemProfileSectionLockStatus_lockedByUserAccount(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemProfileSectionLockStatus", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemProfileSectionLockStatusChanged_actionType(ctx context.Context, field graphql.CollectedField, obj *models.SystemProfileSectionLockStatusChanged) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemProfileSectionLockStatusChanged_actionType(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ActionType, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(models.LockActionType)
+	fc.Result = res
+	return ec.marshalNLockActionType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐLockActionType(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemProfileSectionLockStatusChanged_actionType(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemProfileSectionLockStatusChanged",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type LockActionType does not have child fields")
 		},
 	}
 	return fc, nil
@@ -73722,6 +74057,26 @@ func (ec *executionContext) _SendSystemIntakeGRBReviewReminderPayload(ctx contex
 	return out
 }
 
+var subscriptionImplementors = []string{"Subscription"}
+
+func (ec *executionContext) _Subscription(ctx context.Context, sel ast.SelectionSet) func(ctx context.Context) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, subscriptionImplementors)
+	ctx = graphql.WithFieldContext(ctx, &graphql.FieldContext{
+		Object: "Subscription",
+	})
+	if len(fields) != 1 {
+		ec.Errorf(ctx, "must subscribe to exactly one stream")
+		return nil
+	}
+
+	switch fields[0].Name {
+	case "onSystemProfileLockableSectionLocksChanged":
+		return ec._Subscription_onSystemProfileLockableSectionLocksChanged(ctx, fields[0])
+	default:
+		panic("unknown field " + strconv.Quote(fields[0].Name))
+	}
+}
+
 var systemIntakeImplementors = []string{"SystemIntake"}
 
 func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.SelectionSet, obj *models.SystemIntake) graphql.Marshaler {
@@ -77351,6 +77706,55 @@ func (ec *executionContext) _SystemProfileSectionLockStatus(ctx context.Context,
 			}
 		case "lockedByUserAccount":
 			out.Values[i] = ec._SystemProfileSectionLockStatus_lockedByUserAccount(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var systemProfileSectionLockStatusChangedImplementors = []string{"SystemProfileSectionLockStatusChanged"}
+
+func (ec *executionContext) _SystemProfileSectionLockStatusChanged(ctx context.Context, sel ast.SelectionSet, obj *models.SystemProfileSectionLockStatusChanged) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, systemProfileSectionLockStatusChangedImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SystemProfileSectionLockStatusChanged")
+		case "changeType":
+			out.Values[i] = ec._SystemProfileSectionLockStatusChanged_changeType(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "lockStatus":
+			out.Values[i] = ec._SystemProfileSectionLockStatusChanged_lockStatus(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "actionType":
+			out.Values[i] = ec._SystemProfileSectionLockStatusChanged_actionType(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -81783,6 +82187,26 @@ func (ec *executionContext) marshalNLaunchDarklySettings2ᚖgithubᚗcomᚋcms�
 	return ec._LaunchDarklySettings(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNLockActionType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐLockActionType(ctx context.Context, v any) (models.LockActionType, error) {
+	var res models.LockActionType
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNLockActionType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐLockActionType(ctx context.Context, sel ast.SelectionSet, v models.LockActionType) graphql.Marshaler {
+	return v
+}
+
+func (ec *executionContext) unmarshalNLockChangeType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐLockChangeType(ctx context.Context, v any) (models.LockChangeType, error) {
+	var res models.LockChangeType
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNLockChangeType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐLockChangeType(ctx context.Context, sel ast.SelectionSet, v models.LockChangeType) graphql.Marshaler {
+	return v
+}
+
 func (ec *executionContext) unmarshalNPersonRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐPersonRole(ctx context.Context, v any) (models.PersonRole, error) {
 	tmp, err := graphql.UnmarshalString(v)
 	res := models.PersonRole(tmp)
@@ -83354,13 +83778,20 @@ func (ec *executionContext) unmarshalNSystemIntakeUpdateLCIDInput2githubᚗcom�
 }
 
 func (ec *executionContext) unmarshalNSystemProfileLockableSection2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemProfileLockableSection(ctx context.Context, v any) (models.SystemProfileLockableSection, error) {
-	var res models.SystemProfileLockableSection
-	err := res.UnmarshalGQL(v)
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.SystemProfileLockableSection(tmp)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNSystemProfileLockableSection2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemProfileLockableSection(ctx context.Context, sel ast.SelectionSet, v models.SystemProfileLockableSection) graphql.Marshaler {
-	return v
+	_ = sel
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) marshalNSystemProfileSectionLockStatus2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemProfileSectionLockStatusᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.SystemProfileSectionLockStatus) graphql.Marshaler {
@@ -83415,6 +83846,20 @@ func (ec *executionContext) marshalNSystemProfileSectionLockStatus2ᚖgithubᚗc
 		return graphql.Null
 	}
 	return ec._SystemProfileSectionLockStatus(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNSystemProfileSectionLockStatusChanged2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemProfileSectionLockStatusChanged(ctx context.Context, sel ast.SelectionSet, v models.SystemProfileSectionLockStatusChanged) graphql.Marshaler {
+	return ec._SystemProfileSectionLockStatusChanged(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNSystemProfileSectionLockStatusChanged2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemProfileSectionLockStatusChanged(ctx context.Context, sel ast.SelectionSet, v *models.SystemProfileSectionLockStatusChanged) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._SystemProfileSectionLockStatusChanged(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNSystemRelationshipInput2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemRelationshipInputᚄ(ctx context.Context, v any) ([]*models.SystemRelationshipInput, error) {
