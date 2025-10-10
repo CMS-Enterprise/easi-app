@@ -1,0 +1,42 @@
+"""
+The representation of a User account in the EASI application
+"""
+type UserAccount {
+  id: UUID!
+  """
+  The unique username of this user account
+  """
+  username: String!
+  """
+  The Common Name of a user. Typically this is a combination of Given and Family name
+  """
+  commonName: String!
+  """
+  The language localization of a user.
+  """
+  locale: String!
+  """
+  The email address associated to this user account
+  """
+  email: String!
+  """
+  A users given name
+  """
+  givenName: String!
+  """
+  A users family name
+  """
+  familyName: String!
+  """
+  The zone information connected with a user account
+  """
+  zoneInfo: String!
+  """
+  Represents if a user has logged in. If the user was added as a result of another action, this will show FALSE. When the user logs in, their account will be updated
+  """
+  hasLoggedIn: Boolean
+}
+
+extend type Query {
+    userAccount(username: String!): UserAccount
+}

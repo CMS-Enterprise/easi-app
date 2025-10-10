@@ -18,7 +18,6 @@ import (
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
-	"github.com/cms-enterprise/easi-app/pkg/authentication"
 	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
@@ -1644,11 +1643,6 @@ func (r *queryResolver) TrbAdminNote(ctx context.Context, id uuid.UUID) (*models
 // RequesterUpdateEmailData is the resolver for the requesterUpdateEmailData field.
 func (r *queryResolver) RequesterUpdateEmailData(ctx context.Context) ([]*models.RequesterUpdateEmailData, error) {
 	return resolvers.GetRequesterUpdateEmailData(ctx, r.store, r.service.FetchUserInfos)
-}
-
-// UserAccount is the resolver for the userAccount field.
-func (r *queryResolver) UserAccount(ctx context.Context, username string) (*authentication.UserAccount, error) {
-	return resolvers.UserAccountGetByUsername(ctx, r.store, r.store, username)
 }
 
 // SystemIntakeSystem is the resolver for the systemIntakeSystem field.

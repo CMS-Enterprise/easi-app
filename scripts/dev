@@ -421,7 +421,7 @@ namespace :gql do
 
          `go install golang.org/x/tools/cmd/goimports@latest` if !$?.success?
 
-         sh "goimports -w -local github.com/cms-enterprise/easi-app pkg/graph/resolvers" if $?.success?
+         sh "goimports -w -local github.com/cms-enterprise/easi-app pkg/graph" if $?.success?
 
         end
       end
