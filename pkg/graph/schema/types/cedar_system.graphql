@@ -1,0 +1,52 @@
+"""
+CedarSystem represents the response from the /system/detail endpoint from the CEDAR Core API.
+Right now, this does not tie in with any other types defined here, and is a root node until that changes.
+"""
+type CedarSystem {
+  id: String!
+  name: String!
+  description: String
+  acronym: String
+  atoEffectiveDate: Time
+  atoExpirationDate: Time
+  oaStatus: String
+  status: String
+  businessOwnerOrg: String
+  businessOwnerOrgComp: String
+  businessOwnerRoles: [CedarRole!]!
+  systemMaintainerOrg: String
+  systemMaintainerOrgComp: String
+  versionId: String
+  isBookmarked: Boolean!
+  linkedTrbRequests(state: TRBRequestState! = OPEN): [TRBRequest!]!
+  linkedSystemIntakes(state: SystemIntakeState! = OPEN): [SystemIntake!]!
+  uuid: String
+}
+
+"""
+This is the Representation of Cedar system with additional related information
+"""
+type CedarSystemDetails {
+  cedarSystem: CedarSystem!
+  systemMaintainerInformation: CedarSystemMaintainerInformation!
+  businessOwnerInformation: CedarBusinessOwnerInformation!
+  roles: [CedarRole!]!
+  deployments: [CedarDeployment!]!
+  threats: [CedarThreat!]!
+  urls: [CedarURL!]!
+  isMySystem: Boolean
+  atoEffectiveDate: Time
+  atoExpirationDate: Time
+}
+
+extend type Query {
+  cedarSystem(cedarSystemId: String!): CedarSystem
+  cedarSystems: [CedarSystem!]!
+  myCedarSystems: [CedarSystem!]!
+
+  """
+  Cedar System Details is a convenient method to return a Cedar System along with other convenience information.
+  TODO, this can be refactored using helper methods in GQL to return the fields, instead of relying on the resolver to return all fields at the same time.
+  """
+  cedarSystemDetails(cedarSystemId: String!): CedarSystemDetails
+}

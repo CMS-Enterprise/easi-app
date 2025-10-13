@@ -3,6 +3,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button, Grid, Icon, Label, TextInput } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
+import { useGetSystemIntakeContactsQuery } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import AutoSave from 'components/AutoSave';
@@ -10,6 +11,7 @@ import FieldErrorMsg from 'components/FieldErrorMsg';
 import FieldGroup from 'components/FieldGroup';
 import HelpText from 'components/HelpText';
 import IconButton from 'components/IconButton';
+import PageLoading from 'components/PageLoading';
 import PageNumber from 'components/PageNumber';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import { BusinessCaseModel, GeneralRequestInfoForm } from 'types/businessCase';
@@ -34,13 +36,26 @@ const GeneralRequestInfo = ({
   const { t } = useTranslation('businessCase');
   const history = useHistory();
 
+  const { data, loading } = useGetSystemIntakeContactsQuery({
+    variables: {
+      id: businessCase.systemIntakeId
+    }
+  });
+
+  if (loading) {
+    return <PageLoading />;
+  }
+
+  // Get business owner from contacts table because we no longer update this through the business case form
+  const businessOwner = data?.systemIntakeContacts?.businessOwners[0];
+
   const allowedPhoneNumberCharacters = /[\d- ]+/g;
 
   const initialValues: GeneralRequestInfoForm = {
     requestName: businessCase.requestName,
     projectAcronym: businessCase.projectAcronym,
     requester: businessCase.requester,
-    businessOwner: businessCase.businessOwner
+    businessOwner: { name: businessOwner?.userAccount.commonName || '' }
   };
 
   return (

@@ -1,7 +1,13 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import {
+  businessOwner,
+  getSystemIntakeContactsQuery,
+  systemIntake
+} from 'tests/mock/systemIntake';
 
 import { BusinessCaseModel } from 'types/businessCase';
+import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import BusinessCaseReview from './index';
 
@@ -15,7 +21,7 @@ describe('The Business Case Review Component', () => {
     status: 'OPEN',
     createdAt: '2021-06-10T19:22:40Z',
     updatedAt: '2021-06-11T19:22:40Z',
-    systemIntakeId: '048c26ea-07be-4f40-b29e-761fc17bf414',
+    systemIntakeId: systemIntake.id,
     requestName: 'EASi Test',
     projectAcronym: 'EASi',
     requester: {
@@ -23,7 +29,7 @@ describe('The Business Case Review Component', () => {
       phoneNumber: '1234567890'
     },
     businessOwner: {
-      name: 'Jane Smith'
+      name: businessOwner.userAccount.commonName
     },
     businessNeed: 'Test business need',
     collaborationNeeded: 'Test collaboration needed',
@@ -397,8 +403,16 @@ describe('The Business Case Review Component', () => {
     }
   };
 
-  it('matches the snapshot', () => {
-    const { asFragment } = render(<BusinessCaseReview values={businessCase} />);
+  it('matches the snapshot', async () => {
+    const { asFragment } = render(
+      <VerboseMockedProvider mocks={[getSystemIntakeContactsQuery()]}>
+        <BusinessCaseReview values={businessCase} />
+      </VerboseMockedProvider>
+    );
+
+    expect(
+      await screen.findByText(businessOwner.userAccount.commonName)
+    ).toBeInTheDocument();
 
     expect(asFragment()).toMatchSnapshot();
   });

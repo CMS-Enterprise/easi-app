@@ -1753,6 +1753,10 @@ export type Query = {
   cedarSubSystems: Array<CedarSubSystem>;
   cedarSystem?: Maybe<CedarSystem>;
   cedarSystemBookmarks: Array<CedarSystemBookmark>;
+  /**
+   * Cedar System Details is a convenient method to return a Cedar System along with other convenience information.
+   * TODO, this can be refactored using helper methods in GQL to return the fields, instead of relying on the resolver to return all fields at the same time.
+   */
   cedarSystemDetails?: Maybe<CedarSystemDetails>;
   cedarSystems: Array<CedarSystem>;
   cedarThreat: Array<CedarThreat>;
