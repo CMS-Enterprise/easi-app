@@ -11,6 +11,9 @@ import PageHeading from 'components/PageHeading';
 
 import SystemProfileSectionCard from './_components/SystemProfileSectionCard';
 
+/**
+ * Displays section cards and links for editing system profile.
+ */
 const EditSystemProfile = () => {
   const { t } = useTranslation('systemProfile');
 
@@ -38,7 +41,7 @@ const EditSystemProfile = () => {
 
         <p className="text-body-lg text-light margin-top-1">
           {t('systemProfile:editSystemProfile.subheading', {
-            // TODO: use system name from query
+            // TODO EASI-4984: use system name from query
             systemName: 'Easy Access to System Information'
           })}
         </p>
@@ -58,51 +61,37 @@ const EditSystemProfile = () => {
 
         <CardGroup className="margin-bottom-10">
           <SystemProfileSectionCard
-            title={t('businessInformation.title')}
-            description={t('businessInformation.description')}
             section={SystemProfileLockableSection.BUSINESS_INFORMATION}
             percentComplete={18}
             isManagedExternally
           />
 
           <SystemProfileSectionCard
-            title={t('implementationDetails.title')}
-            description={t('implementationDetails.description')}
             section={SystemProfileLockableSection.IMPLEMENTATION_DETAILS}
             percentComplete={98}
           />
 
           <SystemProfileSectionCard
-            title={t('data.title')}
-            description={t('data.description')}
             section={SystemProfileLockableSection.DATA}
             percentComplete={70}
           />
 
           <SystemProfileSectionCard
-            title={t('toolsAndSoftware.title')}
-            description={t('toolsAndSoftware.description')}
             section={SystemProfileLockableSection.TOOLS_AND_SOFTWARE}
             percentComplete={70}
           />
 
           <SystemProfileSectionCard
-            title={t('subSystems.title')}
-            description={t('subSystems.description')}
             section={SystemProfileLockableSection.SUB_SYSTEMS}
             percentComplete={70}
           />
 
           <SystemProfileSectionCard
-            title={t('team.title')}
-            description={t('team.description')}
             section={SystemProfileLockableSection.TEAM}
             percentComplete={70}
           />
 
           <SystemProfileSectionCard
-            title={t('contracts.title')}
-            description={t('contracts.description')}
             section="CONTRACTS"
             isManagedExternally
             externalDataExists
@@ -110,8 +99,6 @@ const EditSystemProfile = () => {
           />
 
           <SystemProfileSectionCard
-            title={t('fundingAndBudget.title')}
-            description={t('fundingAndBudget.description')}
             section="FUNDING_AND_BUDGET"
             isManagedExternally
             externalDataExists
@@ -119,8 +106,6 @@ const EditSystemProfile = () => {
           />
 
           <SystemProfileSectionCard
-            title={t('atoAndSecurity.title')}
-            description={t('atoAndSecurity.description')}
             section="ATO_AND_SECURITY"
             isManagedExternally
             externalDataExists

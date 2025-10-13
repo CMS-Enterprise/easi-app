@@ -10,7 +10,11 @@ type SectionLockProps = {
   sectionLock?: SystemProfileSectionLockStatus | null;
 };
 
-// Component to display the lock state of a section
+/**
+ * Component that displays the lock state of a section of system profile.
+ *
+ * Does not render if `sectionLock` prop is not provided.
+ */
 const SectionLock = ({ sectionLock }: SectionLockProps) => {
   const { t } = useTranslation('systemProfile');
 

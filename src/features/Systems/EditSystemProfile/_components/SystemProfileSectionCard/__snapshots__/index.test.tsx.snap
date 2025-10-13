@@ -14,7 +14,7 @@ exports[`SystemProfileSectionCard > matches the snapshot 1`] = `
         data-testid="CardHeader"
       >
         <h3>
-          Section Title
+          Business information
         </h3>
       </div>
       <div
@@ -22,7 +22,7 @@ exports[`SystemProfileSectionCard > matches the snapshot 1`] = `
         data-testid="CardBody"
       >
         <p>
-          This is the section card description.
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.
         </p>
       </div>
       <div

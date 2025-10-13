@@ -7,7 +7,7 @@ import easiMockStore from 'utils/testing/easiMockStore';
 
 import SectionLock from './index';
 
-// TODO: Remove temp type assertion and use data type from lock context after completed
+// TODO EASI-4984: Remove temp type assertion and use data type from lock context after completed
 const sectionLock = {
   lockedByUserAccount: {
     username: 'USR2',

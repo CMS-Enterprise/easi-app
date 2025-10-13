@@ -23,8 +23,6 @@ import {
 } from 'constants/systemProfile';
 
 type SystemProfileSectionCardProps = {
-  title: string;
-  description: string;
   section: SystemProfileSection;
   percentComplete?: number;
   hasPendingChanges?: boolean;
@@ -37,8 +35,6 @@ type SystemProfileSectionCardProps = {
  * Displays information about a system profile section with view/edit button
  */
 const SystemProfileSectionCard = ({
-  title,
-  description,
   section,
   percentComplete,
   hasPendingChanges,
@@ -50,7 +46,7 @@ const SystemProfileSectionCard = ({
 
   const history = useHistory();
 
-  // TODO: Update to use actual section lock context
+  // TODO EASI-4984: Update to use actual section lock context
   const lockableSectionLocks = [
     {
       section: SystemProfileLockableSection.DATA,
@@ -66,7 +62,7 @@ const SystemProfileSectionCard = ({
   const sectionLock: SystemProfileSectionLockStatus | undefined =
     lockableSectionLocks?.find(lock => lock.section === section);
 
-  // TODO: Update to actual route (ex: systems/id/edit/key)
+  // TODO EASI-4984: Update to actual route (ex: systems/id/edit/key)
   const sectionRoute = systemProfileLockableSectionMap[section];
 
   return (
@@ -91,11 +87,11 @@ const SystemProfileSectionCard = ({
           isManagedExternally && 'padding-top-105'
         )}
       >
-        <h3>{title}</h3>
+        <h3>{t(`sectionCards.${section}.title`)}</h3>
       </CardHeader>
 
       <CardBody className="padding-top-05 padding-bottom-2">
-        <p>{description}</p>
+        <p>{t(`sectionCards.${section}.description`)}</p>
 
         {percentComplete && (
           <PercentCompleteTag percentComplete={percentComplete} />

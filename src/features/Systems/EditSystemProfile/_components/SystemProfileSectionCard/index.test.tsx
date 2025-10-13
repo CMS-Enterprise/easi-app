@@ -2,6 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { render, screen } from '@testing-library/react';
 import { SystemProfileLockableSection } from 'gql/generated/graphql';
+import i18next from 'i18next';
 
 import easiMockStore from 'utils/testing/easiMockStore';
 
@@ -14,8 +15,6 @@ describe('SystemProfileSectionCard', () => {
     const { asFragment } = render(
       <Provider store={store}>
         <SystemProfileSectionCard
-          title="Section Title"
-          description="This is the section card description."
           section={SystemProfileLockableSection.BUSINESS_INFORMATION}
         />
       </Provider>
@@ -24,12 +23,36 @@ describe('SystemProfileSectionCard', () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
+  it('renders section title and description', () => {
+    render(
+      <Provider store={store}>
+        <SystemProfileSectionCard
+          section={SystemProfileLockableSection.BUSINESS_INFORMATION}
+        />
+      </Provider>
+    );
+
+    expect(
+      screen.getByText(
+        i18next.t<string>(
+          'systemProfile.sectionCards.BUSINESS_INFORMATION.title'
+        )
+      )
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(
+        i18next.t<string>(
+          'systemProfile.sectionCards.BUSINESS_INFORMATION.description'
+        )
+      )
+    ).toBeInTheDocument();
+  });
+
   it('renders partially managed externally', () => {
     render(
       <Provider store={store}>
         <SystemProfileSectionCard
-          title="Section Title"
-          description="This is the section card description."
           section={SystemProfileLockableSection.BUSINESS_INFORMATION}
           isManagedExternally
         />
@@ -49,8 +72,6 @@ describe('SystemProfileSectionCard', () => {
     render(
       <Provider store={store}>
         <SystemProfileSectionCard
-          title="Section Title"
-          description="This is the section card description."
           section={SystemProfileLockableSection.BUSINESS_INFORMATION}
           isManagedExternally
           readOnly
@@ -69,8 +90,6 @@ describe('SystemProfileSectionCard', () => {
     render(
       <Provider store={store}>
         <SystemProfileSectionCard
-          title="Section Title"
-          description="This is the section card description."
           section={SystemProfileLockableSection.BUSINESS_INFORMATION}
           externalDataExists
         />
@@ -84,8 +103,6 @@ describe('SystemProfileSectionCard', () => {
     render(
       <Provider store={store}>
         <SystemProfileSectionCard
-          title="Section Title"
-          description="This is the section card description."
           section={SystemProfileLockableSection.BUSINESS_INFORMATION}
           hasPendingChanges
         />
@@ -101,5 +118,5 @@ describe('SystemProfileSectionCard', () => {
     );
   });
 
-  // TODO: test section locks once context is implemented
+  // TODO EASI-4984: test section locks once context is implemented
 });
