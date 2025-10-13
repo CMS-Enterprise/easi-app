@@ -100,4 +100,6 @@ describe('SystemProfileSectionCard', () => {
       'usa-button--unstyled'
     );
   });
+
+  // TODO: test section locks once context is implemented
 });

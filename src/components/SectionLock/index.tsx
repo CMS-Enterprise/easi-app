@@ -7,7 +7,7 @@ import { AppState } from 'stores/reducers/rootReducer';
 import { AvatarCircle } from 'components/Avatar/Avatar';
 
 type SectionLockProps = {
-  sectionLock: SystemProfileSectionLockStatus;
+  sectionLock?: SystemProfileSectionLockStatus | null;
 };
 
 // Component to display the lock state of a section
