@@ -516,8 +516,9 @@ const systemProfile = {
     viewSection: 'View section',
     dataPartiallyManagedExternally: 'Data partially managed externally',
     dataManagedExternally: 'Data managed externally',
+    externalDataExists: 'External data exists',
     selfLocked: 'You are editing this section.',
-    locked: '{{teamMember}} is currently editing. Come back later.'
+    locked: 'is currently editing. Come back later.'
   },
   businessInformation: {
     title: 'Business information',

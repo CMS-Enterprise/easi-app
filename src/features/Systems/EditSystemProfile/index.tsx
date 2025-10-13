@@ -105,6 +105,7 @@ const EditSystemProfile = () => {
             description={t('contracts.description')}
             section="CONTRACTS"
             isManagedExternally
+            externalDataExists
             readOnly
           />
 
@@ -113,6 +114,7 @@ const EditSystemProfile = () => {
             description={t('fundingAndBudget.description')}
             section="FUNDING_AND_BUDGET"
             isManagedExternally
+            externalDataExists
             readOnly
           />
 
@@ -121,6 +123,7 @@ const EditSystemProfile = () => {
             description={t('atoAndSecurity.description')}
             section="ATO_AND_SECURITY"
             isManagedExternally
+            externalDataExists
             readOnly
           />
         </CardGroup>

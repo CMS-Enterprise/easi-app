@@ -29,6 +29,7 @@ type SystemProfileSectionCardProps = {
   percentComplete?: number;
   hasPendingChanges?: boolean;
   isManagedExternally?: boolean;
+  externalDataExists?: boolean;
   readOnly?: boolean;
 };
 
@@ -42,6 +43,7 @@ const SystemProfileSectionCard = ({
   percentComplete,
   hasPendingChanges,
   isManagedExternally,
+  externalDataExists,
   readOnly
 }: SystemProfileSectionCardProps) => {
   const { t } = useTranslation('systemProfile');
@@ -97,6 +99,13 @@ const SystemProfileSectionCard = ({
 
         {percentComplete && (
           <PercentCompleteTag percentComplete={percentComplete} />
+        )}
+
+        {externalDataExists && (
+          <span className="display-inline-flex flex-align-center line-height-body-3 padding-y-05 padding-left-1 padding-right-105 bg-base-lighter text-base-darker text-bold">
+            <Icon.CheckCircle className="margin-right-1" aria-hidden />
+            {t('editSystemProfile.externalDataExists')}
+          </span>
         )}
       </CardBody>
 
