@@ -158,6 +158,11 @@ const RequestOverview = () => {
                 />
 
                 <Route
+                  path="/it-governance/:systemId/request-home"
+                  render={() => <RequestHome systemIntake={systemIntake} />}
+                />
+
+                <Route
                   path="/it-governance/:systemId/intake-request"
                   render={() => <IntakeReview systemIntake={systemIntake} />}
                 />
