@@ -514,8 +514,6 @@ type SubmitIntakeInput struct {
 	ID uuid.UUID `json:"id"`
 }
 
-// Subscriptions are a way to get real-time updates from the server.
-// They are effectively websockets that send data from the server to the client when a particular event happens.
 type Subscription struct {
 }
 

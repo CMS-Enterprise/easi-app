@@ -36,8 +36,8 @@ import (
 	cedarintake "github.com/cms-enterprise/easi-app/pkg/cedar/intake"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/flags"
-	"github.com/cms-enterprise/easi-app/pkg/graph"
 	"github.com/cms-enterprise/easi-app/pkg/graph/generated"
+	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers"
 	"github.com/cms-enterprise/easi-app/pkg/handlers"
 	"github.com/cms-enterprise/easi-app/pkg/local"
 	"github.com/cms-enterprise/easi-app/pkg/models"
@@ -181,9 +181,9 @@ func (s *Server) routes() {
 		userSearchClient.FetchUserInfo,
 	)
 
-	resolver := graph.NewResolver(
+	resolver := resolvers.NewResolver(
 		store,
-		graph.ResolverService{
+		resolvers.ResolverService{
 			SubmitIntake: services.NewSubmitSystemIntake(
 				serviceConfig,
 				services.AuthorizeUserIsIntakeRequester,

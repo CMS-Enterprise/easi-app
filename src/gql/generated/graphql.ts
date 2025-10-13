@@ -1766,6 +1766,10 @@ export type Query = {
   cedarSubSystems: Array<CedarSubSystem>;
   cedarSystem?: Maybe<CedarSystem>;
   cedarSystemBookmarks: Array<CedarSystemBookmark>;
+  /**
+   * Cedar System Details is a convenient method to return a Cedar System along with other convenience information.
+   * TODO, this can be refactored using helper methods in GQL to return the fields, instead of relying on the resolver to return all fields at the same time.
+   */
   cedarSystemDetails?: Maybe<CedarSystemDetails>;
   cedarSystems: Array<CedarSystem>;
   cedarThreat: Array<CedarThreat>;
@@ -2092,23 +2096,14 @@ export type SubmitIntakeInput = {
   id: Scalars['UUID']['input'];
 };
 
-/**
- * Subscriptions are a way to get real-time updates from the server.
- * They are effectively websockets that send data from the server to the client when a particular event happens.
- */
 export type Subscription = {
   __typename: 'Subscription';
-  onSystemProfileLockableSectionLocksChanged: SystemProfileSectionLockStatusChanged;
+  onSystemProfileSectionLockStatusChanged: SystemProfileSectionLockStatusChanged;
 };
 
 
-/**
- * Subscriptions are a way to get real-time updates from the server.
- * They are effectively websockets that send data from the server to the client when a particular event happens.
- */
-export type SubscriptionOnSystemProfileLockableSectionLocksChangedArgs = {
-  cedarSystemId: Scalars['String']['input'];
-  type: SystemProfileLockableSection;
+export type SubscriptionOnSystemProfileSectionLockStatusChangedArgs = {
+  cedarSystemID: Scalars['String']['input'];
 };
 
 /** Represents an IT governance request for a system */
