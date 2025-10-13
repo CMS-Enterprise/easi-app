@@ -147,7 +147,7 @@ func (r *queryResolver) MyCedarSystems(ctx context.Context) ([]*models.CedarSyst
 
 // CedarSystemDetails is the resolver for the cedarSystemDetails field.
 func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID string) (*models.CedarSystemDetails, error) {
-	// TODO: consider refactoring this to work with the main CEDAR sytem implementation instead of using go funcs
+	// TODO: consider refactoring this to work with the main CEDAR system implementation instead of using go funcs
 	g := new(errgroup.Group)
 
 	var sysDetail *models.CedarSystemDetails
