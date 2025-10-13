@@ -134,30 +134,6 @@ type CedarSoftwareProducts {
   usesAiTech: String
 }
 
-"""
-CedarSystem represents the response from the /system/detail endpoint from the CEDAR Core API.
-Right now, this does not tie in with any other types defined here, and is a root node until that changes.
-"""
-type CedarSystem {
-  id: String!
-  name: String!
-  description: String
-  acronym: String
-  atoEffectiveDate: Time
-  atoExpirationDate: Time
-  oaStatus: String
-  status: String
-  businessOwnerOrg: String
-  businessOwnerOrgComp: String
-  businessOwnerRoles: [CedarRole!]!
-  systemMaintainerOrg: String
-  systemMaintainerOrgComp: String
-  versionId: String
-  isBookmarked: Boolean!
-  linkedTrbRequests(state: TRBRequestState! = OPEN): [TRBRequest!]!
-  linkedSystemIntakes(state: SystemIntakeState! = OPEN): [SystemIntake!]!
-  uuid: String
-}
 
 """
 CedarSubSystem represents the response from the /system/detail
@@ -248,22 +224,6 @@ type CedarSystemMaintainerInformation {
   testReportsOnDemand: Boolean
   testScriptsOnDemand: Boolean
   yearToRetireReplace: String
-}
-
-"""
-This is the Representation of Cedar system with additional related information
-"""
-type CedarSystemDetails {
-  cedarSystem: CedarSystem!
-  systemMaintainerInformation: CedarSystemMaintainerInformation!
-  businessOwnerInformation: CedarBusinessOwnerInformation!
-  roles: [CedarRole!]!
-  deployments: [CedarDeployment!]!
-  threats: [CedarThreat!]!
-  urls: [CedarURL!]!
-  isMySystem: Boolean
-  atoEffectiveDate: Time
-  atoExpirationDate: Time
 }
 
 """
@@ -3103,11 +3063,8 @@ type Query {
   cedarBudgetSystemCost(cedarSystemID: String!): CedarBudgetSystemCost
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
   cedarSoftwareProducts(cedarSystemId: String!): CedarSoftwareProducts
-  cedarSystem(cedarSystemId: String!): CedarSystem
-  cedarSystems: [CedarSystem!]!
   cedarSubSystems(cedarSystemId: String!): [CedarSubSystem!]!
   cedarContractsBySystem(cedarSystemId: String!): [CedarContract!]!
-  myCedarSystems: [CedarSystem!]!
   cedarSystemBookmarks: [CedarSystemBookmark!]!
   cedarThreat(cedarSystemId: String!): [CedarThreat!]!
   deployments(
@@ -3120,7 +3077,6 @@ type Query {
   roles(cedarSystemId: String!, roleTypeID: String): [CedarRole!]!
   exchanges(cedarSystemId: String!): [CedarExchange!]!
   urls(cedarSystemId: String!): [CedarURL!]!
-  cedarSystemDetails(cedarSystemId: String!): CedarSystemDetails
   """
   This returns a SystemIntakeContacts object. It holds the information about the contacts associated with a specific System Intake.
   """

@@ -7,14 +7,12 @@ package resolvers
 import (
 	"context"
 	"errors"
-	"fmt"
 	"slices"
 	"strconv"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
-	"golang.org/x/sync/errgroup"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
@@ -159,98 +157,6 @@ func (r *cedarSoftwareProductsResolver) SoftwareProducts(ctx context.Context, ob
 	}
 
 	return softwareProductItems, nil
-}
-
-// BusinessOwnerRoles is the resolver for the businessOwnerRoles field.
-func (r *cedarSystemResolver) BusinessOwnerRoles(ctx context.Context, obj *models.CedarSystem) ([]*models.CedarRole, error) {
-	cedarRoles, err := r.cedarCoreClient.GetBusinessOwnerRolesBySystem(ctx, obj.ID.String)
-	if err != nil {
-		return nil, err
-	}
-	return cedarRoles, nil
-}
-
-// IsBookmarked is the resolver for the isBookmarked field.
-func (r *cedarSystemResolver) IsBookmarked(ctx context.Context, obj *models.CedarSystem) (bool, error) {
-	return GetCedarSystemIsBookmarked(ctx, obj.ID.String)
-}
-
-// LinkedTrbRequests is the resolver for the linkedTrbRequests field.
-func (r *cedarSystemResolver) LinkedTrbRequests(ctx context.Context, obj *models.CedarSystem, state models.TRBRequestState) ([]*models.TRBRequest, error) {
-	return CedarSystemLinkedTRBRequests(ctx, obj.ID.String, state)
-}
-
-// LinkedSystemIntakes is the resolver for the linkedSystemIntakes field.
-func (r *cedarSystemResolver) LinkedSystemIntakes(ctx context.Context, obj *models.CedarSystem, state models.SystemIntakeState) ([]*models.SystemIntake, error) {
-	return CedarSystemLinkedSystemIntakes(ctx, obj.ID.String, state)
-}
-
-// SystemMaintainerInformation is the resolver for the systemMaintainerInformation field.
-func (r *cedarSystemDetailsResolver) SystemMaintainerInformation(ctx context.Context, obj *models.CedarSystemDetails) (*models.CedarSystemMaintainerInformation, error) {
-	return &models.CedarSystemMaintainerInformation{
-		AdHocAgileDeploymentFrequency:         obj.SystemMaintainerInformation.AdHocAgileDeploymentFrequency.Ptr(),
-		AgileUsed:                             &obj.SystemMaintainerInformation.AgileUsed,
-		AuthoritativeDatasource:               obj.SystemMaintainerInformation.AuthoritativeDatasource.Ptr(),
-		BusinessArtifactsOnDemand:             &obj.SystemMaintainerInformation.BusinessArtifactsOnDemand,
-		DataAtRestEncryptionKeyManagement:     obj.SystemMaintainerInformation.DataAtRestEncryptionKeyManagement.Ptr(),
-		DeploymentFrequency:                   obj.SystemMaintainerInformation.DeploymentFrequency.Ptr(),
-		DevCompletionPercent:                  obj.SystemMaintainerInformation.DevCompletionPercent.Ptr(),
-		DevWorkDescription:                    obj.SystemMaintainerInformation.DevWorkDescription.Ptr(),
-		EcapParticipation:                     &obj.SystemMaintainerInformation.EcapParticipation,
-		FrontendAccessType:                    obj.SystemMaintainerInformation.FrontendAccessType.Ptr(),
-		HardCodedIPAddress:                    &obj.SystemMaintainerInformation.HardCodedIPAddress,
-		IP6EnabledAssetPercent:                obj.SystemMaintainerInformation.IP6EnabledAssetPercent.Ptr(),
-		IP6TransitionPlan:                     obj.SystemMaintainerInformation.IP6TransitionPlan.Ptr(),
-		IPEnabledAssetCount:                   &obj.SystemMaintainerInformation.IPEnabledAssetCount,
-		LegalHoldCaseName:                     obj.SystemMaintainerInformation.LegalHoldCaseName.Ptr(),
-		LocallyStoredUserInformation:          &obj.SystemMaintainerInformation.LocallyStoredUserInformation,
-		MajorRefreshDate:                      obj.SystemMaintainerInformation.MajorRefreshDate.Ptr(),
-		MultifactorAuthenticationMethod:       models.StringsFromZeroStrs(obj.SystemMaintainerInformation.MultifactorAuthenticationMethod),
-		MultifactorAuthenticationMethodOther:  obj.SystemMaintainerInformation.MultifactorAuthenticationMethodOther.Ptr(),
-		NetAccessibility:                      obj.SystemMaintainerInformation.NetAccessibility.Ptr(),
-		NetworkTrafficEncryptionKeyManagement: obj.SystemMaintainerInformation.NetworkTrafficEncryptionKeyManagement.Ptr(),
-		NoMajorRefresh:                        &obj.SystemMaintainerInformation.NoMajorRefresh,
-		NoPersistentRecordsFlag:               &obj.SystemMaintainerInformation.NoPersistentRecordsFlag,
-		NoPlannedMajorRefresh:                 &obj.SystemMaintainerInformation.NoPlannedMajorRefresh,
-		OmDocumentationOnDemand:               &obj.SystemMaintainerInformation.OmDocumentationOnDemand,
-		PlansToRetireReplace:                  obj.SystemMaintainerInformation.PlansToRetireReplace.Ptr(),
-		QuarterToRetireReplace:                obj.SystemMaintainerInformation.QuarterToRetireReplace.Ptr(),
-		RecordsManagementBucket:               models.StringsFromZeroStrs(obj.SystemMaintainerInformation.RecordsManagementBucket),
-		RecordsManagementDisposalLocation:     obj.SystemMaintainerInformation.RecordsManagementDisposalLocation.Ptr(),
-		RecordsManagementDisposalPlan:         obj.SystemMaintainerInformation.RecordsManagementDisposalPlan.Ptr(),
-		RecordsUnderLegalHold:                 &obj.SystemMaintainerInformation.RecordsUnderLegalHold,
-		SourceCodeOnDemand:                    &obj.SystemMaintainerInformation.SourceCodeOnDemand,
-		SystemCustomization:                   obj.SystemMaintainerInformation.SystemCustomization.Ptr(),
-		SystemDataLocation:                    models.StringsFromZeroStrs(obj.SystemMaintainerInformation.SystemDataLocation),
-		SystemDataLocationNotes:               obj.SystemMaintainerInformation.SystemDataLocationNotes.Ptr(),
-		SystemDesignOnDemand:                  &obj.SystemMaintainerInformation.SystemDesignOnDemand,
-		SystemProductionDate:                  obj.SystemMaintainerInformation.SystemProductionDate.Ptr(),
-		SystemRequirementsOnDemand:            &obj.SystemMaintainerInformation.SystemRequirementsOnDemand,
-		TestPlanOnDemand:                      &obj.SystemMaintainerInformation.TestPlanOnDemand,
-		TestReportsOnDemand:                   &obj.SystemMaintainerInformation.TestReportsOnDemand,
-		TestScriptsOnDemand:                   &obj.SystemMaintainerInformation.TestScriptsOnDemand,
-		YearToRetireReplace:                   obj.SystemMaintainerInformation.YearToRetireReplace.Ptr(),
-	}, nil
-}
-
-// BusinessOwnerInformation is the resolver for the businessOwnerInformation field.
-func (r *cedarSystemDetailsResolver) BusinessOwnerInformation(ctx context.Context, obj *models.CedarSystemDetails) (*models.CedarBusinessOwnerInformation, error) {
-	return &models.CedarBusinessOwnerInformation{
-		BeneficiaryAddressPurpose:      models.StringsFromZeroStrs(obj.BusinessOwnerInformation.BeneficiaryAddressPurpose),
-		BeneficiaryAddressPurposeOther: obj.BusinessOwnerInformation.BeneficiaryAddressPurposeOther.Ptr(),
-		BeneficiaryAddressSource:       models.StringsFromZeroStrs(obj.BusinessOwnerInformation.BeneficiaryAddressSource),
-		BeneficiaryAddressSourceOther:  obj.BusinessOwnerInformation.BeneficiaryAddressSourceOther.Ptr(),
-		BeneficiaryInformation:         models.StringsFromZeroStrs(obj.BusinessOwnerInformation.BeneficiaryInformation),
-		CostPerYear:                    obj.BusinessOwnerInformation.CostPerYear.Ptr(),
-		EditBeneficiaryInformation:     &obj.BusinessOwnerInformation.EditBeneficiaryInformation,
-		IsCmsOwned:                     &obj.BusinessOwnerInformation.IsCmsOwned,
-		Nr508UserInterface:             obj.BusinessOwnerInformation.Nr508UserInterface.Ptr(),
-		NumberOfContractorFte:          obj.BusinessOwnerInformation.NumberOfContractorFte.Ptr(),
-		NumberOfFederalFte:             obj.BusinessOwnerInformation.NumberOfFederalFte.Ptr(),
-		NumberOfSupportedUsersPerMonth: obj.BusinessOwnerInformation.NumberOfSupportedUsersPerMonth.Ptr(),
-		StoresBankingData:              &obj.BusinessOwnerInformation.StoresBankingData,
-		StoresBeneficiaryAddress:       &obj.BusinessOwnerInformation.StoresBeneficiaryAddress,
-	}, nil
 }
 
 // Author is the resolver for the author field.
@@ -1402,31 +1308,6 @@ func (r *queryResolver) CedarSoftwareProducts(ctx context.Context, cedarSystemID
 	return cedarSoftwareProducts, nil
 }
 
-// CedarSystem is the resolver for the cedarSystem field.
-func (r *queryResolver) CedarSystem(ctx context.Context, cedarSystemID string) (*models.CedarSystem, error) {
-	cedarSystem, err := r.cedarCoreClient.GetSystem(ctx, cedarSystemID)
-	if err != nil {
-		return nil, err
-	}
-	withOA := AttachOAStatus(ctx, r.cedarCoreClient, []*models.CedarSystem{cedarSystem})
-
-	if len(withOA) < 1 {
-		return nil, fmt.Errorf("expected 1 system back when attaching OA status, got %[1]d for system %[2]s", len(withOA), cedarSystemID)
-	}
-
-	return withOA[0], nil
-}
-
-// CedarSystems is the resolver for the cedarSystems field.
-func (r *queryResolver) CedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
-	systems, err := r.cedarCoreClient.GetSystemSummary(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	return AttachOAStatus(ctx, r.cedarCoreClient, systems), nil
-}
-
 // CedarSubSystems is the resolver for the cedarSubSystems field.
 func (r *queryResolver) CedarSubSystems(ctx context.Context, cedarSystemID string) ([]*models.CedarSubSystem, error) {
 	systems, err := r.cedarCoreClient.GetSystemSummary(ctx, cedarcore.SystemSummaryOpts.WithSubSystems(cedarSystemID))
@@ -1450,17 +1331,6 @@ func (r *queryResolver) CedarSubSystems(ctx context.Context, cedarSystemID strin
 // CedarContractsBySystem is the resolver for the cedarContractsBySystem field.
 func (r *queryResolver) CedarContractsBySystem(ctx context.Context, cedarSystemID string) ([]*models.CedarContract, error) {
 	return r.cedarCoreClient.GetContractBySystem(ctx, cedarSystemID)
-}
-
-// MyCedarSystems is the resolver for the myCedarSystems field.
-func (r *queryResolver) MyCedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
-	requesterEUAID := appcontext.Principal(ctx).ID()
-	systems, err := r.cedarCoreClient.GetSystemSummary(ctx, cedarcore.SystemSummaryOpts.WithEuaIDFilter(requesterEUAID))
-	if err != nil {
-		return nil, err
-	}
-
-	return AttachOAStatus(ctx, r.cedarCoreClient, systems), nil
 }
 
 // CedarSystemBookmarks is the resolver for the cedarSystemBookmarks field.
@@ -1545,68 +1415,6 @@ func (r *queryResolver) Urls(ctx context.Context, cedarSystemID string) ([]*mode
 		return nil, err
 	}
 	return cedarURLs, nil
-}
-
-// CedarSystemDetails is the resolver for the cedarSystemDetails field.
-func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID string) (*models.CedarSystemDetails, error) {
-	g := new(errgroup.Group)
-
-	var sysDetail *models.CedarSystemDetails
-	var errS error
-	g.Go(func() error {
-		sysDetail, errS = r.cedarCoreClient.GetSystemDetail(ctx, cedarSystemID)
-		return errS
-	})
-
-	var cedarRoles []*models.CedarRole
-	var errR error
-	g.Go(func() error {
-		cedarRoles, errR = r.cedarCoreClient.GetRolesBySystem(ctx, cedarSystemID, nil)
-		return errR
-	})
-
-	var cedarDeployments []*models.CedarDeployment
-	var errD error
-	g.Go(func() error {
-		cedarDeployments, errD = r.cedarCoreClient.GetDeployments(ctx, cedarSystemID, nil)
-		return errD
-	})
-
-	var cedarThreats []*models.CedarThreat
-	var errT error
-	g.Go(func() error {
-		cedarThreats, errT = r.cedarCoreClient.GetThreat(ctx, cedarSystemID)
-		return errT
-	})
-
-	var cedarURLs []*models.CedarURL
-	var errU error
-	g.Go(func() error {
-		cedarURLs, errU = r.cedarCoreClient.GetURLsForSystem(ctx, cedarSystemID)
-		return errU
-	})
-
-	if err := g.Wait(); err != nil {
-		return nil, err
-	}
-
-	userEua := appcontext.Principal(ctx).ID()
-	isMySystem := slices.ContainsFunc(cedarRoles, func(role *models.CedarRole) bool {
-		return role.AssigneeUsername.String == userEua
-	})
-
-	dCedarSys := models.CedarSystemDetails{
-		CedarSystem:                 sysDetail.CedarSystem,
-		BusinessOwnerInformation:    sysDetail.BusinessOwnerInformation,
-		SystemMaintainerInformation: sysDetail.SystemMaintainerInformation,
-		Roles:                       cedarRoles,
-		Deployments:                 cedarDeployments,
-		Threats:                     cedarThreats,
-		URLs:                        cedarURLs,
-		IsMySystem:                  isMySystem,
-	}
-
-	return &dCedarSys, nil
 }
 
 // SystemIntakeContacts is the resolver for the systemIntakeContacts field.
@@ -2369,14 +2177,6 @@ func (r *Resolver) CedarSoftwareProducts() generated.CedarSoftwareProductsResolv
 	return &cedarSoftwareProductsResolver{r}
 }
 
-// CedarSystem returns generated.CedarSystemResolver implementation.
-func (r *Resolver) CedarSystem() generated.CedarSystemResolver { return &cedarSystemResolver{r} }
-
-// CedarSystemDetails returns generated.CedarSystemDetailsResolver implementation.
-func (r *Resolver) CedarSystemDetails() generated.CedarSystemDetailsResolver {
-	return &cedarSystemDetailsResolver{r}
-}
-
 // GovernanceRequestFeedback returns generated.GovernanceRequestFeedbackResolver implementation.
 func (r *Resolver) GovernanceRequestFeedback() generated.GovernanceRequestFeedbackResolver {
 	return &governanceRequestFeedbackResolver{r}
@@ -2468,8 +2268,6 @@ func (r *Resolver) UserInfo() generated.UserInfoResolver { return &userInfoResol
 type businessCaseResolver struct{ *Resolver }
 type cedarBudgetSystemCostResolver struct{ *Resolver }
 type cedarSoftwareProductsResolver struct{ *Resolver }
-type cedarSystemResolver struct{ *Resolver }
-type cedarSystemDetailsResolver struct{ *Resolver }
 type governanceRequestFeedbackResolver struct{ *Resolver }
 type iTGovTaskStatusesResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
