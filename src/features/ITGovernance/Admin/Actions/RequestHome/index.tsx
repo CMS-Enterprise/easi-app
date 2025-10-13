@@ -41,6 +41,12 @@ const RequestHome = ({
     ]
   });
 
+  const bizCaseStatusToRender = ['DONE', 'NOT_NEEDED', 'SUBMITTED'].includes(
+    systemIntake.itGovTaskStatuses.bizCaseDraftStatus
+  )
+    ? systemIntake.itGovTaskStatuses.bizCaseFinalStatus
+    : systemIntake.itGovTaskStatuses.bizCaseDraftStatus;
+
   return (
     <div data-testid="request-home">
       <div className="margin-bottom-6">
@@ -107,9 +113,7 @@ const RequestHome = ({
               {t('requestHome.sections.requestSummary.businessCase.title')}
             </p>
             <div className="margin-y-1">
-              <TaskStatusTag
-                status={systemIntake.itGovTaskStatuses.bizCaseDraftStatus}
-              />
+              <TaskStatusTag status={bizCaseStatusToRender} />
             </div>
             <Link to={`/it-governance/${systemIntake.id}/business-case`}>
               <IconButton
