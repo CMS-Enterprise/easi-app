@@ -22,7 +22,7 @@ const RequestHome = ({
 }: {
   systemIntake: SystemIntakeFragmentFragment;
 }) => {
-  const { t } = useTranslation('governanceReviewTeam');
+  const { t } = useTranslation('requestHome');
 
   const [expandedOverview, setExpandedOverview] = useState(false);
 
