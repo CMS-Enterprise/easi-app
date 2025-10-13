@@ -1732,12 +1732,6 @@ type LaunchDarklySettings {
   signedHash: String!
 }
 
-"""
-The current user of the application
-"""
-type CurrentUser {
-  launchDarkly: LaunchDarklySettings!
-}
 
 """
 SystemIntakeContactRole is the various roles that a user can have as a contact on a system intake
@@ -3057,7 +3051,6 @@ type Query {
   systemIntakesWithReviewRequested: [SystemIntake!]!
   systemIntakesWithLcids: [SystemIntake!]!
   compareGRBReviewersByIntakeID(id: UUID!): [GRBReviewerComparisonIntake!]!
-  currentUser: CurrentUser
   cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!
   cedarBudget(cedarSystemID: String!): [CedarBudget!]
   cedarBudgetSystemCost(cedarSystemID: String!): CedarBudgetSystemCost

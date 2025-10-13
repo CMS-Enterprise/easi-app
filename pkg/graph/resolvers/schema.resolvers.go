@@ -19,7 +19,6 @@ import (
 	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
-	"github.com/cms-enterprise/easi-app/pkg/flags"
 	"github.com/cms-enterprise/easi-app/pkg/graph/generated"
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
@@ -1242,21 +1241,6 @@ func (r *queryResolver) SystemIntakesWithLcids(ctx context.Context) ([]*models.S
 // CompareGRBReviewersByIntakeID is the resolver for the compareGRBReviewersByIntakeID field.
 func (r *queryResolver) CompareGRBReviewersByIntakeID(ctx context.Context, id uuid.UUID) ([]*models.GRBReviewerComparisonIntake, error) {
 	return SystemIntakeCompareGRBReviewers(ctx, r.store, id)
-}
-
-// CurrentUser is the resolver for the currentUser field.
-func (r *queryResolver) CurrentUser(ctx context.Context) (*models.CurrentUser, error) {
-	ldUser := flags.Principal(ctx)
-	userKey := ldUser.GetKey()
-	signedHash := r.ldClient.SecureModeHash(ldUser)
-
-	currentUser := models.CurrentUser{
-		LaunchDarkly: &models.LaunchDarklySettings{
-			UserKey:    userKey,
-			SignedHash: signedHash,
-		},
-	}
-	return &currentUser, nil
 }
 
 // CedarAuthorityToOperate is the resolver for the cedarAuthorityToOperate field.
