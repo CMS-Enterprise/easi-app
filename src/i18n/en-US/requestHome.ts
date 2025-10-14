@@ -51,7 +51,9 @@ const requestHome = {
     isRequesterHint:
       'Checking this box will replace the current primary requester and remove their edit access in EASi.',
     addButton: 'Add point of contact',
-    dontAddAndReturn: 'Don’t add and return to request details'
+    dontAddAndReturn: 'Don’t add and return to request details',
+    successAlert:
+      'You have added <bold>{{name}}</bold> as a project point of contact.'
   }
 };
 
