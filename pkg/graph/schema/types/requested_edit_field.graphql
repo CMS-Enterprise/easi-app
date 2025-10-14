@@ -37,3 +37,14 @@ enum RequestedEditFieldOutcome {
   APPROVED
   REJECTED
 }
+
+extend type Mutation {
+"""
+Let's an admin either approve or deny a change to a requested edit at the field level.
+TODO: determine the role that is needed to do this change
+"""
+  reviewRequestedEditField(
+    requestedEditFieldID: UUID!
+    outcome: RequestedEditFieldOutcome!
+  ): RequestedEditField! @hasRole(role: EASI_GOVTEAM)
+}

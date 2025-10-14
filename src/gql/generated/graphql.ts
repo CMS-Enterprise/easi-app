@@ -1079,6 +1079,11 @@ export type Mutation = {
   reopenTrbRequest: TRBRequest;
   requestReviewForTRBGuidanceLetter: TRBGuidanceLetter;
   restartGRBReviewAsync?: Maybe<UpdateSystemIntakePayload>;
+  /**
+   * Let's an admin either approve or deny a change to a requested edit at the field level.
+   * TODO: determine the role that is needed to do this change
+   */
+  reviewRequestedEditField: RequestedEditField;
   sendCantFindSomethingEmail?: Maybe<Scalars['String']['output']>;
   sendFeedbackEmail?: Maybe<Scalars['String']['output']>;
   sendGRBReviewPresentationDeckReminderEmail: Scalars['Boolean']['output'];
@@ -1446,6 +1451,13 @@ export type MutationRequestReviewForTRBGuidanceLetterArgs = {
 /** Defines the mutations for the schema */
 export type MutationRestartGRBReviewAsyncArgs = {
   input: RestartGRBReviewInput;
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationReviewRequestedEditFieldArgs = {
+  outcome: RequestedEditFieldOutcome;
+  requestedEditFieldID: Scalars['UUID']['input'];
 };
 
 

@@ -621,6 +621,7 @@ type ComplexityRoot struct {
 		ReopenTrbRequest                                    func(childComplexity int, input models.ReopenTRBRequestInput) int
 		RequestReviewForTRBGuidanceLetter                   func(childComplexity int, id uuid.UUID) int
 		RestartGRBReviewAsync                               func(childComplexity int, input models.RestartGRBReviewInput) int
+		ReviewRequestedEditField                            func(childComplexity int, requestedEditFieldID uuid.UUID, outcome models.RequestedEditFieldOutcome) int
 		SendCantFindSomethingEmail                          func(childComplexity int, input models.SendCantFindSomethingEmailInput) int
 		SendFeedbackEmail                                   func(childComplexity int, input models.SendFeedbackEmailInput) int
 		SendGRBReviewPresentationDeckReminderEmail          func(childComplexity int, systemIntakeID uuid.UUID) int
@@ -1433,6 +1434,7 @@ type MutationResolver interface {
 	CreateTrbLeadOption(ctx context.Context, eua string) (*models.UserInfo, error)
 	DeleteTrbLeadOption(ctx context.Context, eua string) (bool, error)
 	SendGRBReviewPresentationDeckReminderEmail(ctx context.Context, systemIntakeID uuid.UUID) (bool, error)
+	ReviewRequestedEditField(ctx context.Context, requestedEditFieldID uuid.UUID, outcome models.RequestedEditFieldOutcome) (*models.RequestedEditField, error)
 }
 type QueryResolver interface {
 	SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error)
@@ -4840,6 +4842,18 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Mutation.RestartGRBReviewAsync(childComplexity, args["input"].(models.RestartGRBReviewInput)), true
+
+	case "Mutation.reviewRequestedEditField":
+		if e.complexity.Mutation.ReviewRequestedEditField == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_reviewRequestedEditField_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.ReviewRequestedEditField(childComplexity, args["requestedEditFieldID"].(uuid.UUID), args["outcome"].(models.RequestedEditFieldOutcome)), true
 
 	case "Mutation.sendCantFindSomethingEmail":
 		if e.complexity.Mutation.SendCantFindSomethingEmail == nil {
@@ -12599,6 +12613,17 @@ enum RequestedEditFieldOutcome {
   APPROVED
   REJECTED
 }
+
+extend type Mutation {
+"""
+Let's an admin either approve or deny a change to a requested edit at the field level.
+TODO: determine the role that is needed to do this change
+"""
+  reviewRequestedEditField(
+    requestedEditFieldID: UUID!
+    outcome: RequestedEditFieldOutcome!
+  ): RequestedEditField! @hasRole(role: EASI_GOVTEAM)
+}
 `, BuiltIn: false},
 	{Name: "../schema/types/scalars.graphql", Input: `"""
 UUIDs are represented using 36 ASCII characters, for example B0511859-ADE6-4A67-8969-16EC280C0E1A
@@ -13300,6 +13325,22 @@ func (ec *executionContext) field_Mutation_restartGRBReviewAsync_args(ctx contex
 		return nil, err
 	}
 	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_reviewRequestedEditField_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "requestedEditFieldID", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
+	if err != nil {
+		return nil, err
+	}
+	args["requestedEditFieldID"] = arg0
+	arg1, err := graphql.ProcessArgField(ctx, rawArgs, "outcome", ec.unmarshalNRequestedEditFieldOutcome2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRequestedEditFieldOutcome)
+	if err != nil {
+		return nil, err
+	}
+	args["outcome"] = arg1
 	return args, nil
 }
 
@@ -39179,6 +39220,124 @@ func (ec *executionContext) fieldContext_Mutation_sendGRBReviewPresentationDeckR
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_sendGRBReviewPresentationDeckReminderEmail_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_reviewRequestedEditField(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_reviewRequestedEditField(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().ReviewRequestedEditField(rctx, fc.Args["requestedEditFieldID"].(uuid.UUID), fc.Args["outcome"].(models.RequestedEditFieldOutcome))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				var zeroVal *models.RequestedEditField
+				return zeroVal, err
+			}
+			if ec.directives.HasRole == nil {
+				var zeroVal *models.RequestedEditField
+				return zeroVal, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*models.RequestedEditField); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cms-enterprise/easi-app/pkg/models.RequestedEditField`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.RequestedEditField)
+	fc.Result = res
+	return ec.marshalNRequestedEditField2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRequestedEditField(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_reviewRequestedEditField(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_RequestedEditField_id(ctx, field)
+			case "requestedEditID":
+				return ec.fieldContext_RequestedEditField_requestedEditID(ctx, field)
+			case "fieldName":
+				return ec.fieldContext_RequestedEditField_fieldName(ctx, field)
+			case "fieldNameTranslated":
+				return ec.fieldContext_RequestedEditField_fieldNameTranslated(ctx, field)
+			case "fieldOrder":
+				return ec.fieldContext_RequestedEditField_fieldOrder(ctx, field)
+			case "outcome":
+				return ec.fieldContext_RequestedEditField_outcome(ctx, field)
+			case "outcomeBy":
+				return ec.fieldContext_RequestedEditField_outcomeBy(ctx, field)
+			case "outcomeByUserAccount":
+				return ec.fieldContext_RequestedEditField_outcomeByUserAccount(ctx, field)
+			case "outcomeDts":
+				return ec.fieldContext_RequestedEditField_outcomeDts(ctx, field)
+			case "old":
+				return ec.fieldContext_RequestedEditField_old(ctx, field)
+			case "new":
+				return ec.fieldContext_RequestedEditField_new(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_RequestedEditField_createdBy(ctx, field)
+			case "createdByUserAccount":
+				return ec.fieldContext_RequestedEditField_createdByUserAccount(ctx, field)
+			case "createdDts":
+				return ec.fieldContext_RequestedEditField_createdDts(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_RequestedEditField_modifiedBy(ctx, field)
+			case "modifiedByUserAccount":
+				return ec.fieldContext_RequestedEditField_modifiedByUserAccount(ctx, field)
+			case "modifiedDts":
+				return ec.fieldContext_RequestedEditField_modifiedDts(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type RequestedEditField", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_reviewRequestedEditField_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -74057,6 +74216,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "reviewRequestedEditField":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_reviewRequestedEditField(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -83265,6 +83431,10 @@ func (ec *executionContext) marshalNRequestedEdit2ᚖgithubᚗcomᚋcmsᚑenterp
 		return graphql.Null
 	}
 	return ec._RequestedEdit(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNRequestedEditField2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRequestedEditField(ctx context.Context, sel ast.SelectionSet, v models.RequestedEditField) graphql.Marshaler {
+	return ec._RequestedEditField(ctx, sel, &v)
 }
 
 func (ec *executionContext) marshalNRequestedEditField2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRequestedEditFieldᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.RequestedEditField) graphql.Marshaler {
