@@ -8917,7 +8917,6 @@ type CedarSoftwareProducts {
   usesAiTech: String
 }
 
-
 """
 CedarSubSystem represents the response from the /system/detail
 """
@@ -9505,7 +9504,8 @@ type SystemIntake {
   """
   All users are are involved in a GRB review. This will be deprecated in favor of grbVotingInformation
   """
-  grbReviewers: [SystemIntakeGRBReviewer!]! @deprecated(reason: "Use grbVotingInformation.grbReviewers instead")
+  grbReviewers: [SystemIntakeGRBReviewer!]!
+    @deprecated(reason: "Use grbVotingInformation.grbReviewers instead")
   """
   All information about voting activity in a GRB review
   """
@@ -9612,7 +9612,7 @@ type SystemIntake {
   grbReviewAsyncManualEndDate: Time
   grbReviewReminderLastSent: Time
   systemIntakeSystems: [SystemIntakeSystem!]!
-  
+
   contacts: SystemIntakeContacts!
 }
 
@@ -9760,7 +9760,6 @@ input CreateSystemIntakeInput {
   requestType: SystemIntakeRequestType!
   requester: SystemIntakeRequesterInput!
 }
-
 
 """
 The input data used to add an OIT collaborator for a system request
@@ -10515,11 +10514,10 @@ type LaunchDarklySettings {
   signedHash: String!
 }
 
-
 """
 SystemIntakeContactRole is the various roles that a user can have as a contact on a system intake
 """
-enum SystemIntakeContactRole  {
+enum SystemIntakeContactRole {
   BUSINESS_OWNER
   CLOUD_NAVIGATOR
   CONTRACTING_OFFICERS_REPRESENTATIVE
@@ -11686,39 +11684,66 @@ type Mutation {
 
   startGRBReview(input: StartGRBReviewInput!): String
 
-  createSystemIntakeGRBReviewers(input: CreateSystemIntakeGRBReviewersInput!): CreateSystemIntakeGRBReviewersPayload
-  updateSystemIntakeGRBReviewer(input: UpdateSystemIntakeGRBReviewerInput!): SystemIntakeGRBReviewer!
-  deleteSystemIntakeGRBReviewer(input: DeleteSystemIntakeGRBReviewerInput!): UUID!
+  createSystemIntakeGRBReviewers(
+    input: CreateSystemIntakeGRBReviewersInput!
+  ): CreateSystemIntakeGRBReviewersPayload
+  updateSystemIntakeGRBReviewer(
+    input: UpdateSystemIntakeGRBReviewerInput!
+  ): SystemIntakeGRBReviewer!
+  deleteSystemIntakeGRBReviewer(
+    input: DeleteSystemIntakeGRBReviewerInput!
+  ): UUID!
 
-  castSystemIntakeGRBReviewerVote(input: CastSystemIntakeGRBReviewerVoteInput!): SystemIntakeGRBReviewer!
+  castSystemIntakeGRBReviewerVote(
+    input: CastSystemIntakeGRBReviewerVoteInput!
+  ): SystemIntakeGRBReviewer!
 
-  sendSystemIntakeGRBReviewerReminder(systemIntakeID: UUID!): SendSystemIntakeGRBReviewReminderPayload!
+  sendSystemIntakeGRBReviewerReminder(
+    systemIntakeID: UUID!
+  ): SendSystemIntakeGRBReviewReminderPayload!
 
-  createSystemIntakeGRBDiscussionPost(input: createSystemIntakeGRBDiscussionPostInput!): SystemIntakeGRBReviewDiscussionPost
-  createSystemIntakeGRBDiscussionReply(input: createSystemIntakeGRBDiscussionReplyInput!): SystemIntakeGRBReviewDiscussionPost
+  createSystemIntakeGRBDiscussionPost(
+    input: createSystemIntakeGRBDiscussionPostInput!
+  ): SystemIntakeGRBReviewDiscussionPost
+  createSystemIntakeGRBDiscussionReply(
+    input: createSystemIntakeGRBDiscussionReplyInput!
+  ): SystemIntakeGRBReviewDiscussionPost
 
-  updateSystemIntakeGRBReviewType(input: updateSystemIntakeGRBReviewTypeInput!): UpdateSystemIntakePayload
-  @hasRole(role: EASI_GOVTEAM)
-  updateSystemIntakeGRBReviewFormPresentationStandard(input: updateSystemIntakeGRBReviewFormInputPresentationStandard!): UpdateSystemIntakePayload
-  @hasRole(role: EASI_GOVTEAM)
-  updateSystemIntakeGRBReviewFormPresentationAsync(input: updateSystemIntakeGRBReviewFormInputPresentationAsync!): UpdateSystemIntakePayload
-  @hasRole(role: EASI_GOVTEAM)
-  updateSystemIntakeGRBReviewFormTimeframeAsync(input: updateSystemIntakeGRBReviewFormInputTimeframeAsync!): UpdateSystemIntakePayload
-  @hasRole(role: EASI_GOVTEAM)
-  extendGRBReviewDeadlineAsync(input: ExtendGRBReviewDeadlineInput!): UpdateSystemIntakePayload
-  @hasRole(role: EASI_GOVTEAM)
-  restartGRBReviewAsync(input: RestartGRBReviewInput!): UpdateSystemIntakePayload
-  @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeGRBReviewType(
+    input: updateSystemIntakeGRBReviewTypeInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeGRBReviewFormPresentationStandard(
+    input: updateSystemIntakeGRBReviewFormInputPresentationStandard!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeGRBReviewFormPresentationAsync(
+    input: updateSystemIntakeGRBReviewFormInputPresentationAsync!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeGRBReviewFormTimeframeAsync(
+    input: updateSystemIntakeGRBReviewFormInputTimeframeAsync!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  extendGRBReviewDeadlineAsync(
+    input: ExtendGRBReviewDeadlineInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  restartGRBReviewAsync(
+    input: RestartGRBReviewInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
 
   updateSystemIntakeLinkedCedarSystem(
     input: UpdateSystemIntakeLinkedCedarSystemInput!
   ): UpdateSystemIntakePayload
 
-  setSystemIntakeGRBPresentationLinks(input: SystemIntakeGRBPresentationLinksInput!): SystemIntakeGRBPresentationLinks
-  uploadSystemIntakeGRBPresentationDeck(input: UploadSystemIntakeGRBPresentationDeckInput!): SystemIntakeGRBPresentationLinks
-  deleteSystemIntakeGRBPresentationLinks(input: DeleteSystemIntakeGRBPresentationLinksInput!): UUID!
-  manuallyEndSystemIntakeGRBReviewAsyncVoting(systemIntakeID: UUID!): UpdateSystemIntakePayload
-  @hasRole(role: EASI_GOVTEAM)
+  setSystemIntakeGRBPresentationLinks(
+    input: SystemIntakeGRBPresentationLinksInput!
+  ): SystemIntakeGRBPresentationLinks
+  uploadSystemIntakeGRBPresentationDeck(
+    input: UploadSystemIntakeGRBPresentationDeckInput!
+  ): SystemIntakeGRBPresentationLinks
+  deleteSystemIntakeGRBPresentationLinks(
+    input: DeleteSystemIntakeGRBPresentationLinksInput!
+  ): UUID!
+  manuallyEndSystemIntakeGRBReviewAsyncVoting(
+    systemIntakeID: UUID!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
 
   archiveSystemIntake(id: UUID!): SystemIntake!
 
@@ -11812,10 +11837,8 @@ type Mutation {
     @hasRole(role: EASI_TRB_ADMIN)
   reopenTrbRequest(input: ReopenTRBRequestInput!): TRBRequest!
     @hasRole(role: EASI_TRB_ADMIN)
-  createTrbLeadOption(eua: String!): UserInfo!
-  @hasRole(role: EASI_TRB_ADMIN)
-  deleteTrbLeadOption(eua: String!): Boolean!
-  @hasRole(role: EASI_TRB_ADMIN)
+  createTrbLeadOption(eua: String!): UserInfo! @hasRole(role: EASI_TRB_ADMIN)
+  deleteTrbLeadOption(eua: String!): Boolean! @hasRole(role: EASI_TRB_ADMIN)
   sendGRBReviewPresentationDeckReminderEmail(systemIntakeID: UUID!): Boolean!
     @hasRole(role: EASI_GOVTEAM)
 }
@@ -12144,11 +12167,11 @@ enum ITGovGRBStatus {
   """
   The GRB meeting is waiting for review
   """
-  AWAITING_GRB_REVIEW,
+  AWAITING_GRB_REVIEW
   """
   The GRB review is currently in progress
   """
-  REVIEW_IN_PROGRESS,
+  REVIEW_IN_PROGRESS
   """
   The GRT meeting has already happened, and an outcome hasn't been noted yet
   """
