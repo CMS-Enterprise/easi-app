@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
@@ -27,6 +28,7 @@ import FieldGroup from 'components/FieldGroup';
 import HelpText from 'components/HelpText';
 import MultiSelect from 'components/MultiSelect';
 import { getNonLegacyComponents } from 'constants/cmsComponentsMap';
+import useMessage from 'hooks/useMessage';
 import { ContactFormFields } from 'types/systemIntake';
 import { ContactFormSchema } from 'validations/systemIntakeSchema';
 
@@ -60,6 +62,8 @@ const ContactForm = ({
 }: ContactFormProps) => {
   const { t } = useTranslation('intake');
 
+  const history = useHistory();
+  const { showMessageOnNextPage } = useMessage();
   const [create] = useCreateSystemIntakeContactMutation({
     refetchQueries: ['GetSystemIntakeContacts'],
     awaitRefetchQueries: true
@@ -125,6 +129,10 @@ const ContactForm = ({
         }
 
         // closeModal();
+        showMessageOnNextPage(t('requestHome:addPOC.successAlert'), {
+          type: 'success'
+        });
+        history.push('request-home');
       })
       .catch(() =>
         setError('root', {
