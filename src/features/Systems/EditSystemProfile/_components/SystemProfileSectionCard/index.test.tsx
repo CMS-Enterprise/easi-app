@@ -35,7 +35,7 @@ describe('SystemProfileSectionCard', () => {
     expect(
       screen.getByText(
         i18next.t<string>(
-          'systemProfile.sectionCards.BUSINESS_INFORMATION.title'
+          'systemProfile:sectionCards.BUSINESS_INFORMATION.title'
         )
       )
     ).toBeInTheDocument();
@@ -43,7 +43,7 @@ describe('SystemProfileSectionCard', () => {
     expect(
       screen.getByText(
         i18next.t<string>(
-          'systemProfile.sectionCards.BUSINESS_INFORMATION.description'
+          'systemProfile:sectionCards.BUSINESS_INFORMATION.description'
         )
       )
     ).toBeInTheDocument();
