@@ -14,7 +14,6 @@ import PageHeading from 'components/PageHeading';
 import ReviewRow from 'components/ReviewRow';
 import SystemIntakeContactsTable from 'components/SystemIntakeContactsTable';
 import TaskStatusTag from 'components/TaskStatusTag';
-import useMessage from 'hooks/useMessage';
 
 import { DefinitionCombo } from '../../Decision';
 
@@ -25,7 +24,6 @@ const RequestHome = ({
 }) => {
   const { t } = useTranslation('requestHome');
 
-  const { Message } = useMessage();
   const [expandedOverview, setExpandedOverview] = useState(false);
 
   const { data, loading } = useGetSystemIntakeContactsQuery({
@@ -51,7 +49,6 @@ const RequestHome = ({
 
   return (
     <div data-testid="request-home">
-      <Message />
       <div className="margin-bottom-6">
         <PageHeading className="margin-y-0">
           {t('requestHome.title')}
