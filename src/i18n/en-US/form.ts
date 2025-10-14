@@ -19,7 +19,10 @@ const form = {
   fileType: 'Uploaded file',
   fileType_pdf: 'Uploaded PDF file',
   fileType_word: 'Uploaded word document',
-  fileType_excel: 'Uploaded spreadsheet'
+  fileType_excel: 'Uploaded spreadsheet',
+  saveAndExit: 'Save and exit',
+  exitForm: 'Exit form',
+  exitFormWithoutSaving: 'Exit form without saving'
 };
 
 export default form;

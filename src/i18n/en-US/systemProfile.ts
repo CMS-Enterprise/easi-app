@@ -571,7 +571,21 @@ const systemProfile = {
     dataManagedExternally: 'Data managed externally',
     externalDataExists: 'External data exists',
     selfLocked: 'You are editing this section.',
-    locked: 'is currently editing. Come back later.'
+    locked: 'is currently editing. Come back later.',
+    form: {
+      subheading:
+        'Use this form to compile information about your system and it’s status in the CMS Target Life Cycle (TLC). This information will populate your TLC System Profile in EASi.',
+      description:
+        'Compiling more system information in EASi will allow OIT and CMS to stay updated about your system and proactively prompt you if there are any governance activities or TLC related tasks to complete.',
+      breadcrumb: 'Update system information',
+      systemDetails: 'System details',
+      sectionCompleteness: 'Section completeness',
+      pendingChangesAlert:
+        'When you save your changes to this page, the changes will be pending until they are confirmed by the Enterprise Architecture (EA) team, so you will not see them right away.',
+      saveAndContinue: 'Save and continue to next section',
+      continueToNextSection: 'Continue to next section',
+      nextSection: 'Next section: {{sectionName}}'
+    }
   },
   sectionCards
 };

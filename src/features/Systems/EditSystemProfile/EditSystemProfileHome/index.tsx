@@ -50,7 +50,7 @@ const EditSystemProfileHome = ({
           })}
         </p>
 
-        <p className="font-body-md text-light line-height-body-5 margin-top-105">
+        <p className="font-body-md text-light line-height-body-4 margin-top-105">
           {t('systemProfile:editSystemProfile.description')}
         </p>
 
