@@ -188,7 +188,6 @@ const AppRoutes = () => {
       <SecureRoute path="/systems/:systemId" exact component={SystemProfile} />
       <SecureRoute
         path="/systems/:systemId/edit"
-        exact
         component={EditSystemProfile}
       />
       <SecureRoute
