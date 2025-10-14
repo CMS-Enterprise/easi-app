@@ -1,5 +1,7 @@
 // Loosely grouped by System Subpages
 
+import { SystemProfileLockableSection } from 'gql/generated/graphql';
+
 // Team
 
 export const teamSectionKeys = [
@@ -26,3 +28,26 @@ export const threatLevelGrades = [
 ] as const;
 
 export const securityFindingKeys = ['total', ...threatLevelGrades] as const;
+
+/** Expands SystemProfileLockableSection enum to include read-only sections */
+export type SystemProfileSection =
+  | SystemProfileLockableSection
+  | 'CONTRACTS'
+  | 'FUNDING_AND_BUDGET'
+  | 'ATO_AND_SECURITY';
+
+/** Maps section enum to corresponding route */
+export const systemProfileLockableSectionMap: Record<
+  SystemProfileSection,
+  string
+> = {
+  BUSINESS_INFORMATION: 'business-information',
+  IMPLEMENTATION_DETAILS: 'implementation-details',
+  DATA: 'data',
+  TOOLS_AND_SOFTWARE: 'tools-and-software',
+  SUB_SYSTEMS: 'sub-systems',
+  TEAM: 'team',
+  CONTRACTS: 'contracts',
+  FUNDING_AND_BUDGET: 'funding-and-budget',
+  ATO_AND_SECURITY: 'ato-and-security'
+};
