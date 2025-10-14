@@ -3,7 +3,7 @@
 exports[`SystemProfileSectionCard > matches the snapshot 1`] = `
 <DocumentFragment>
   <li
-    class="usa-card grid-col-4"
+    class="usa-card tablet:grid-col-6 desktop:grid-col-4"
     data-testid="Card"
   >
     <div

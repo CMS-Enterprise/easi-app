@@ -67,7 +67,7 @@ const SystemProfileSectionCard = ({
 
   return (
     <Card
-      className="grid-col-4"
+      className="tablet:grid-col-6 desktop:grid-col-4"
       containerProps={{ className: 'shadow-2 border-width-1px' }}
     >
       {isManagedExternally && (
