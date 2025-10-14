@@ -76,11 +76,11 @@ const EditSystemProfile = () => {
         </IconLink>
 
         <CardGroup className="margin-bottom-10">
-          <SystemProfileSectionCard
+          {/* <SystemProfileSectionCard
             section={SystemProfileLockableSection.BUSINESS_INFORMATION}
             isManagedExternally
             readOnly
-          />
+          /> */}
 
           <SystemProfileSectionCard
             section={SystemProfileLockableSection.IMPLEMENTATION_DETAILS}
