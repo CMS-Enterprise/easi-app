@@ -12374,7 +12374,7 @@ type UserAccount {
 }
 
 extend type Query {
-    userAccount(username: String!): UserAccount
+  userAccount(username: String!): UserAccount
 }
 `, BuiltIn: false},
 }
