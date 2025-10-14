@@ -1,4 +1,4 @@
-CREATE TYPE REQUESTED_EDITS_SECTION AS ENUM (
+CREATE TYPE REQUESTED_EDIT_SECTION AS ENUM (
     'BUSINESS_INFORMATION',
     'IMPLEMENTATION_DETAILS',
     'DATA',
@@ -6,13 +6,13 @@ CREATE TYPE REQUESTED_EDITS_SECTION AS ENUM (
     'SUB_SYSTEMS',
     'TEAM'
 );
-COMMENT ON TYPE REQUESTED_EDITS_SECTION IS 'Enum representing sections of an entity that can be edited. Currently, it only refers to CEDAR entities. If it changes in the future, we will need to expand the type';
+COMMENT ON TYPE REQUESTED_EDIT_SECTION IS 'Enum representing sections of an entity that can be edited. Currently, it only refers to CEDAR entities. If it changes in the future, we will need to expand the type';
 
 CREATE TABLE requested_edit (
     id UUID PRIMARY KEY,
     primary_key UUID NOT NULL,
     actor_id UUID NOT NULL REFERENCES user_account(id), --foreign key to user table
-    section REQUESTED_EDITS_SECTION NOT NULL,
+    section REQUESTED_EDIT_SECTION NOT NULL,
 
     /*
     The outcome of the edit being requested? Should this live on the field level instead?
