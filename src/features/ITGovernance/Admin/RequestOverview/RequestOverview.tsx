@@ -76,7 +76,9 @@ const RequestOverview = () => {
 
   /** Full page layout hides summary and side navigation */
   const fullPageLayout: boolean =
-    ['resolutions', 'manage-lcid'].includes(activePage) || !!subPage;
+    ['resolutions', 'manage-lcid', 'add-point-of-contact'].includes(
+      activePage
+    ) || !!subPage;
 
   const navItems = subNavItems(systemId, isITGovAdmin, flags);
 
@@ -160,10 +162,10 @@ const RequestOverview = () => {
 
                 <Route
                   path="/it-governance/:systemId/add-point-of-contact"
-                  render={() => (
-                    <AddPointOfContact systemIntake={systemIntake} />
-                  )}
-                />
+                  exact
+                >
+                  <AddPointOfContact systemIntake={systemIntake} />
+                </Route>
 
                 {/* <Route
                   path="/it-governance/:systemId/edit-point-of-contact"
