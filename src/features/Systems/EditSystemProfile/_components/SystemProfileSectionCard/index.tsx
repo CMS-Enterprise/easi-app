@@ -90,7 +90,12 @@ const SystemProfileSectionCard = ({
         <h3>{t(`sectionCards.${section}.title`)}</h3>
       </CardHeader>
 
-      <CardBody className="padding-top-05 padding-bottom-2">
+      <CardBody
+        className={classNames(
+          'padding-top-05',
+          !hasPendingChanges && 'padding-bottom-2'
+        )}
+      >
         <p>{t(`sectionCards.${section}.description`)}</p>
 
         {percentComplete && (

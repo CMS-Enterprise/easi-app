@@ -80,6 +80,7 @@ const EditSystemProfile = () => {
             section={SystemProfileLockableSection.BUSINESS_INFORMATION}
             percentComplete={18}
             isManagedExternally
+            hasPendingChanges
           />
 
           <SystemProfileSectionCard
