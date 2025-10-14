@@ -6,6 +6,7 @@ type CheckboxFieldProps = {
   disabled?: boolean;
   id: string;
   label: React.ReactNode;
+  labelDescription?: React.ReactNode;
   name: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur: () => void;
@@ -19,6 +20,7 @@ const CheckboxField = ({
   disabled,
   id,
   label,
+  labelDescription,
   name,
   onChange,
   onBlur,
@@ -47,6 +49,7 @@ const CheckboxField = ({
       <label className="usa-checkbox__label" htmlFor={id}>
         {label}
       </label>
+      {labelDescription}
     </div>
   );
 };
