@@ -14,7 +14,7 @@ exports[`SystemProfileSectionCard > matches the snapshot 1`] = `
         data-testid="CardHeader"
       >
         <h3>
-          Business information
+          Implementation details
         </h3>
       </div>
       <div
