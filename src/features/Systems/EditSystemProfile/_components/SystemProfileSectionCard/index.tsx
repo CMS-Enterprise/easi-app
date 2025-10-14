@@ -10,10 +10,7 @@ import {
   Icon
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import {
-  SystemProfileLockableSection,
-  SystemProfileSectionLockStatus
-} from 'gql/generated/graphql';
+import { SystemProfileSectionLockStatus } from 'gql/generated/graphql';
 
 import PercentCompleteTag from 'components/PercentCompleteTag';
 import SectionLock from 'components/SectionLock';
@@ -47,16 +44,7 @@ const SystemProfileSectionCard = ({
   const history = useHistory();
 
   // TODO EASI-4984: Update to use actual section lock context
-  const lockableSectionLocks = [
-    {
-      section: SystemProfileLockableSection.DATA,
-      lockedByUserAccount: {
-        username: 'USR2',
-        commonName: 'User Two',
-        email: 'user.two@local.fake'
-      }
-    }
-  ] as SystemProfileSectionLockStatus[];
+  const lockableSectionLocks = [] as SystemProfileSectionLockStatus[];
 
   /** Returns lock status if section is locked */
   const sectionLock: SystemProfileSectionLockStatus | undefined =
