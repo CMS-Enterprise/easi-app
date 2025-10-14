@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { Controller } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -124,14 +124,24 @@ const ContactForm = ({
     return mutate(values)
       .then(() => {
         if (action === 'add') {
-          console.log(values);
-          // createContactCallback?.(values);
+          createContactCallback?.(values);
         }
 
-        // closeModal();
-        showMessageOnNextPage(t('requestHome:addPOC.successAlert'), {
-          type: 'success'
-        });
+        showMessageOnNextPage(
+          <Trans
+            t={t}
+            i18nKey="requestHome:addPOC.successAlert"
+            values={{
+              name: values.userAccount.commonName
+            }}
+            components={{
+              bold: <strong />
+            }}
+          />,
+          {
+            type: 'success'
+          }
+        );
         history.push('request-home');
       })
       .catch(() =>
