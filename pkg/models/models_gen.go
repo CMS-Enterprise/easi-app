@@ -409,6 +409,43 @@ type ReopenTRBRequestInput struct {
 	NotifyEuaIds   []string  `json:"notifyEuaIds"`
 }
 
+type RequestedEdit struct {
+	ID uuid.UUID `json:"id"`
+	// The identifier of the system that an edit is being requested for.
+	PrimaryKey uuid.UUID            `json:"primaryKey"`
+	ActorID    uuid.UUID            `json:"actorID"`
+	Section    RequestedEditSection `json:"section"`
+	// The specific fields that were requested to be edited.
+	Fields                []*RequestedEditField       `json:"fields"`
+	CreatedBy             uuid.UUID                   `json:"createdBy"`
+	CreatedByUserAccount  *authentication.UserAccount `json:"createdByUserAccount"`
+	CreatedDts            time.Time                   `json:"createdDts"`
+	ModifiedBy            *uuid.UUID                  `json:"modifiedBy,omitempty"`
+	ModifiedByUserAccount *authentication.UserAccount `json:"modifiedByUserAccount,omitempty"`
+	ModifiedDts           *time.Time                  `json:"modifiedDts,omitempty"`
+}
+
+type RequestedEditField struct {
+	ID                  uuid.UUID `json:"id"`
+	RequestedEditID     uuid.UUID `json:"requestedEditID"`
+	FieldName           string    `json:"fieldName"`
+	FieldNameTranslated string    `json:"fieldNameTranslated"`
+	// Designates the order of the question in the form.  Uses integer as page and question order uses hundreths place.  Ex: 1.01, 1.02, 2.01, 2.02
+	FieldOrder            float64                     `json:"fieldOrder"`
+	Outcome               RequestedEditFieldOutcome   `json:"outcome"`
+	OutcomeBy             *uuid.UUID                  `json:"outcomeBy,omitempty"`
+	OutcomeByUserAccount  *authentication.UserAccount `json:"outcomeByUserAccount,omitempty"`
+	OutcomeDts            *time.Time                  `json:"outcomeDts,omitempty"`
+	Old                   any                         `json:"old,omitempty"`
+	New                   any                         `json:"new,omitempty"`
+	CreatedBy             uuid.UUID                   `json:"createdBy"`
+	CreatedByUserAccount  *authentication.UserAccount `json:"createdByUserAccount"`
+	CreatedDts            time.Time                   `json:"createdDts"`
+	ModifiedBy            *uuid.UUID                  `json:"modifiedBy,omitempty"`
+	ModifiedByUserAccount *authentication.UserAccount `json:"modifiedByUserAccount,omitempty"`
+	ModifiedDts           *time.Time                  `json:"modifiedDts,omitempty"`
+}
+
 type RequesterUpdateEmailData struct {
 	EuaUserID      string                  `json:"euaUserId"`
 	ProjectName    string                  `json:"projectName"`
@@ -1057,6 +1094,130 @@ type UpdateSystemIntakeGRBReviewFormInputTimeframeAsync struct {
 type UpdateSystemIntakeGRBReviewTypeInput struct {
 	SystemIntakeID uuid.UUID                 `json:"systemIntakeID"`
 	GrbReviewType  SystemIntakeGRBReviewType `json:"grbReviewType"`
+}
+
+// This is an enum representing the outcome of a requested edit.
+type RequestedEditFieldOutcome string
+
+const (
+	RequestedEditFieldOutcomePending  RequestedEditFieldOutcome = "PENDING"
+	RequestedEditFieldOutcomeApproved RequestedEditFieldOutcome = "APPROVED"
+	RequestedEditFieldOutcomeRejected RequestedEditFieldOutcome = "REJECTED"
+)
+
+var AllRequestedEditFieldOutcome = []RequestedEditFieldOutcome{
+	RequestedEditFieldOutcomePending,
+	RequestedEditFieldOutcomeApproved,
+	RequestedEditFieldOutcomeRejected,
+}
+
+func (e RequestedEditFieldOutcome) IsValid() bool {
+	switch e {
+	case RequestedEditFieldOutcomePending, RequestedEditFieldOutcomeApproved, RequestedEditFieldOutcomeRejected:
+		return true
+	}
+	return false
+}
+
+func (e RequestedEditFieldOutcome) String() string {
+	return string(e)
+}
+
+func (e *RequestedEditFieldOutcome) UnmarshalGQL(v any) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = RequestedEditFieldOutcome(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid RequestedEditFieldOutcome", str)
+	}
+	return nil
+}
+
+func (e RequestedEditFieldOutcome) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+func (e *RequestedEditFieldOutcome) UnmarshalJSON(b []byte) error {
+	s, err := strconv.Unquote(string(b))
+	if err != nil {
+		return err
+	}
+	return e.UnmarshalGQL(s)
+}
+
+func (e RequestedEditFieldOutcome) MarshalJSON() ([]byte, error) {
+	var buf bytes.Buffer
+	e.MarshalGQL(&buf)
+	return buf.Bytes(), nil
+}
+
+// This is an enum representing the sections of a Cedar System that can be edited.
+type RequestedEditSection string
+
+const (
+	RequestedEditSectionBusinessOwner    RequestedEditSection = "BUSINESS_OWNER"
+	RequestedEditSectionSystemMaintainer RequestedEditSection = "SYSTEM_MAINTAINER"
+	RequestedEditSectionRoles            RequestedEditSection = "ROLES"
+	RequestedEditSectionDeployments      RequestedEditSection = "DEPLOYMENTS"
+	RequestedEditSectionThreats          RequestedEditSection = "THREATS"
+	RequestedEditSectionURLS             RequestedEditSection = "URLS"
+	RequestedEditSectionAtoDates         RequestedEditSection = "ATO_DATES"
+)
+
+var AllRequestedEditSection = []RequestedEditSection{
+	RequestedEditSectionBusinessOwner,
+	RequestedEditSectionSystemMaintainer,
+	RequestedEditSectionRoles,
+	RequestedEditSectionDeployments,
+	RequestedEditSectionThreats,
+	RequestedEditSectionURLS,
+	RequestedEditSectionAtoDates,
+}
+
+func (e RequestedEditSection) IsValid() bool {
+	switch e {
+	case RequestedEditSectionBusinessOwner, RequestedEditSectionSystemMaintainer, RequestedEditSectionRoles, RequestedEditSectionDeployments, RequestedEditSectionThreats, RequestedEditSectionURLS, RequestedEditSectionAtoDates:
+		return true
+	}
+	return false
+}
+
+func (e RequestedEditSection) String() string {
+	return string(e)
+}
+
+func (e *RequestedEditSection) UnmarshalGQL(v any) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = RequestedEditSection(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid RequestedEditSection", str)
+	}
+	return nil
+}
+
+func (e RequestedEditSection) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+func (e *RequestedEditSection) UnmarshalJSON(b []byte) error {
+	s, err := strconv.Unquote(string(b))
+	if err != nil {
+		return err
+	}
+	return e.UnmarshalGQL(s)
+}
+
+func (e RequestedEditSection) MarshalJSON() ([]byte, error) {
+	var buf bytes.Buffer
+	e.MarshalGQL(&buf)
+	return buf.Bytes(), nil
 }
 
 // A user role associated with a job code

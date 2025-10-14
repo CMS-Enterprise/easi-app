@@ -16,6 +16,11 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  /**
+   * https://gqlgen.com/reference/scalars/#any
+   * Maps an arbitrary GraphQL value to a interface{} Go type.
+   */
+  Any: { input: any; output: any; }
   /** Email addresses are represented as strings */
   EmailAddress: { input: EmailAddress; output: EmailAddress; }
   /** HTML are represented using as strings,  <p><strong>Notification email</strong></p> */
@@ -1751,6 +1756,7 @@ export type Query = {
   myCedarSystems: Array<CedarSystem>;
   mySystemIntakes: Array<SystemIntake>;
   myTrbRequests: Array<TRBRequest>;
+  requestedEdits: Array<RequestedEdit>;
   requesterUpdateEmailData: Array<RequesterUpdateEmailData>;
   roleTypes: Array<CedarRoleType>;
   roles: Array<CedarRole>;
@@ -1940,6 +1946,63 @@ export enum RequestRelationType {
   EXISTING_SERVICE = 'EXISTING_SERVICE',
   EXISTING_SYSTEM = 'EXISTING_SYSTEM',
   NEW_SYSTEM = 'NEW_SYSTEM'
+}
+
+export type RequestedEdit = {
+  __typename: 'RequestedEdit';
+  actorID: Scalars['UUID']['output'];
+  createdBy: Scalars['UUID']['output'];
+  createdByUserAccount: UserAccount;
+  createdDts: Scalars['Time']['output'];
+  /** The specific fields that were requested to be edited. */
+  fields: Array<RequestedEditField>;
+  id: Scalars['UUID']['output'];
+  modifiedBy?: Maybe<Scalars['UUID']['output']>;
+  modifiedByUserAccount?: Maybe<UserAccount>;
+  modifiedDts?: Maybe<Scalars['Time']['output']>;
+  /** The identifier of the system that an edit is being requested for. */
+  primaryKey: Scalars['UUID']['output'];
+  section: RequestedEditSection;
+};
+
+export type RequestedEditField = {
+  __typename: 'RequestedEditField';
+  createdBy: Scalars['UUID']['output'];
+  createdByUserAccount: UserAccount;
+  createdDts: Scalars['Time']['output'];
+  fieldName: Scalars['String']['output'];
+  fieldNameTranslated: Scalars['String']['output'];
+  /** Designates the order of the question in the form.  Uses integer as page and question order uses hundreths place.  Ex: 1.01, 1.02, 2.01, 2.02 */
+  fieldOrder: Scalars['Float']['output'];
+  id: Scalars['UUID']['output'];
+  modifiedBy?: Maybe<Scalars['UUID']['output']>;
+  modifiedByUserAccount?: Maybe<UserAccount>;
+  modifiedDts?: Maybe<Scalars['Time']['output']>;
+  new?: Maybe<Scalars['Any']['output']>;
+  old?: Maybe<Scalars['Any']['output']>;
+  outcome: RequestedEditFieldOutcome;
+  outcomeBy?: Maybe<Scalars['UUID']['output']>;
+  outcomeByUserAccount?: Maybe<UserAccount>;
+  outcomeDts?: Maybe<Scalars['Time']['output']>;
+  requestedEditID: Scalars['UUID']['output'];
+};
+
+/** This is an enum representing the outcome of a requested edit. */
+export enum RequestedEditFieldOutcome {
+  APPROVED = 'APPROVED',
+  PENDING = 'PENDING',
+  REJECTED = 'REJECTED'
+}
+
+/** This is an enum representing the sections of a Cedar System that can be edited. */
+export enum RequestedEditSection {
+  ATO_DATES = 'ATO_DATES',
+  BUSINESS_OWNER = 'BUSINESS_OWNER',
+  DEPLOYMENTS = 'DEPLOYMENTS',
+  ROLES = 'ROLES',
+  SYSTEM_MAINTAINER = 'SYSTEM_MAINTAINER',
+  THREATS = 'THREATS',
+  URLS = 'URLS'
 }
 
 export type RequesterUpdateEmailData = {

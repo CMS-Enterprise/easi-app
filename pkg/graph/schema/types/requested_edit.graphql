@@ -1,0 +1,39 @@
+type RequestedEdit {
+  id: UUID!
+  """
+  The identifier of the system that an edit is being requested for.
+  """
+  primaryKey: UUID!
+  actorID: UUID!
+  section: RequestedEditSection!
+
+  """
+  The specific fields that were requested to be edited.
+  """
+  fields: [RequestedEditField!]!
+
+  # Metadata columns
+  createdBy: UUID!
+  createdByUserAccount: UserAccount!
+  createdDts: Time!
+  modifiedBy: UUID
+  modifiedByUserAccount: UserAccount
+  modifiedDts: Time
+}
+
+"""
+This is an enum representing the sections of a Cedar System that can be edited.
+"""
+enum RequestedEditSection {
+  BUSINESS_OWNER
+  SYSTEM_MAINTAINER
+  ROLES
+  DEPLOYMENTS
+  THREATS
+  URLS
+  ATO_DATES
+}
+
+extend type Query {
+  requestedEdits: [RequestedEdit!]!
+}

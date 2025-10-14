@@ -1,0 +1,39 @@
+type RequestedEditField {
+  id: UUID!
+  requestedEditID: UUID!
+
+  fieldName: String!
+  fieldNameTranslated: String!
+  """
+  Designates the order of the question in the form.  Uses integer as page and question order uses hundreths place.  Ex: 1.01, 1.02, 2.01, 2.02
+  """
+  fieldOrder: Float!
+
+  # The outcome of the edit being requested? Should this live on the field level instead?
+
+  outcome: RequestedEditFieldOutcome!
+  outcomeBy: UUID
+  outcomeByUserAccount: UserAccount
+  outcomeDts: Time
+
+  old: Any
+  new: Any
+
+  # Metadata columns
+
+  createdBy: UUID!
+  createdByUserAccount: UserAccount!
+  createdDts: Time!
+  modifiedBy: UUID
+  modifiedByUserAccount: UserAccount
+  modifiedDts: Time
+}
+
+"""
+This is an enum representing the outcome of a requested edit.
+"""
+enum RequestedEditFieldOutcome {
+  PENDING
+  APPROVED
+  REJECTED
+}

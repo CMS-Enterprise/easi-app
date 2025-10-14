@@ -1,0 +1,36 @@
+"""
+UUIDs are represented using 36 ASCII characters, for example B0511859-ADE6-4A67-8969-16EC280C0E1A
+"""
+scalar UUID
+
+"""
+HTML are represented using as strings,  <p><strong>Notification email</strong></p>
+"""
+scalar HTML
+
+"""
+TaggedHTML is represented using strings but can contain Tags (ex: @User) and possibly other richer elements than HTML
+"""
+scalar TaggedHTML
+
+"""
+Time values are represented as strings using RFC3339 format, for example 2019-10-12T07:20:50.52Z
+"""
+scalar Time
+
+"""
+Email addresses are represented as strings
+"""
+scalar EmailAddress
+
+"""
+https://gqlgen.com/reference/file-upload/
+Represents a multipart file upload
+"""
+scalar Upload
+
+"""
+https://gqlgen.com/reference/scalars/#any
+Maps an arbitrary GraphQL value to a interface{} Go type.
+"""
+scalar Any
