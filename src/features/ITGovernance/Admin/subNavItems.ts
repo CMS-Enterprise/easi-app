@@ -15,7 +15,7 @@ const subNavItems = (
   const links: Array<NavLinkProps & { hidden?: boolean }> = [
     {
       route: `/it-governance/${systemId}/request-home`,
-      text: 'governanceReviewTeam:requestHome.title',
+      text: 'requestHome:requestHome.title',
       groupEnd: true
     },
     {

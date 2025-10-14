@@ -40,6 +40,15 @@ const requestHome = {
         }
       }
     }
+  },
+  addPOC: {
+    title: 'Add a project point of contact',
+    description:
+      'Add another project team member to this IT Governance request. You may also designate them as the primary requester for this project, giving them full edit access to the request in EASi.',
+    addAlert:
+      'Adding a project contact will send them an informational notification email with a brief summary of the request. If you have designated them as the primary requester, they will also receive a link to EASi and will be able to access all content about this IT Governance request, though they will not be able to take any actions on the request or see Admin-specific details such as Admin notes. Please make sure this individual should be able to access this information before you proceed.',
+    addButton: 'Add point of contact',
+    dontAddAndReturn: 'Don’t add and return to request details'
   }
 };
 

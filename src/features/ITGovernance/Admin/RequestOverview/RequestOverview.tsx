@@ -35,6 +35,7 @@ import GRBReview from '../GRBReview';
 import { ModalProvider } from '../GRBReview/RestartReviewModal/RestartReviewModalContext';
 import IntakeReview from '../IntakeReview';
 import Notes from '../Notes';
+import AddPointOfContact from '../PointOfContact/Add';
 import subNavItems from '../subNavItems';
 import Summary from '../Summary';
 import SystemInformation from '../SystemInformation';
@@ -158,9 +159,18 @@ const RequestOverview = () => {
                 />
 
                 <Route
-                  path="/it-governance/:systemId/request-home"
-                  render={() => <RequestHome systemIntake={systemIntake} />}
+                  path="/it-governance/:systemId/add-point-of-contact"
+                  render={() => (
+                    <AddPointOfContact systemIntake={systemIntake} />
+                  )}
                 />
+
+                {/* <Route
+                  path="/it-governance/:systemId/edit-point-of-contact"
+                  render={() => (
+                    <EditPointOfContact systemIntake={systemIntake} />
+                  )}
+                /> */}
 
                 <Route
                   path="/it-governance/:systemId/intake-request"
