@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import {
   Button,
   Card,
@@ -41,6 +41,10 @@ const SystemProfileSectionCard = ({
 }: SystemProfileSectionCardProps) => {
   const { t } = useTranslation('systemProfile');
 
+  const { systemId } = useParams<{
+    systemId: string;
+  }>();
+
   const history = useHistory();
 
   // TODO EASI-4984: Update to use actual section lock context
@@ -50,8 +54,7 @@ const SystemProfileSectionCard = ({
   const sectionLock: SystemProfileSectionLockStatus | undefined =
     lockableSectionLocks?.find(lock => lock.section === section);
 
-  // TODO EASI-4984: Update to actual route (ex: systems/id/edit/key)
-  const sectionRoute = systemProfileLockableSectionMap[section];
+  const sectionKey = systemProfileLockableSectionMap[section];
 
   return (
     <Card
@@ -111,7 +114,8 @@ const SystemProfileSectionCard = ({
         ) : (
           <Button
             type="button"
-            onClick={() => history.push(sectionRoute)}
+            // TODO EASI-4984: Update to actual route. Currently using existing system profile routes.
+            onClick={() => history.push(`/systems/${systemId}/${sectionKey}`)}
             className={
               hasPendingChanges ? 'usa-button--unstyled' : 'usa-button--outline'
             }
