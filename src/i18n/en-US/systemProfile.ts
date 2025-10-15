@@ -1,3 +1,57 @@
+import { SystemProfileSection } from 'constants/systemProfile';
+
+// TODO EASI-4984: Update system profile section card descriptions after content is added to Figma
+const sectionCards: Record<
+  SystemProfileSection,
+  { title: string; description: string }
+> = {
+  BUSINESS_INFORMATION: {
+    title: 'Business information',
+    description:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.'
+  },
+  IMPLEMENTATION_DETAILS: {
+    title: 'Implementation details',
+    description:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.'
+  },
+  DATA: {
+    title: 'Data',
+    description:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.'
+  },
+  TOOLS_AND_SOFTWARE: {
+    title: 'Tools and software',
+    description:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.'
+  },
+  SUB_SYSTEMS: {
+    title: 'Sub-systems',
+    description:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.'
+  },
+  TEAM: {
+    title: 'Team',
+    description:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.'
+  },
+  CONTRACTS: {
+    title: 'Contracts',
+    description:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.'
+  },
+  FUNDING_AND_BUDGET: {
+    title: 'Funding and budget',
+    description:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.'
+  },
+  ATO_AND_SECURITY: {
+    title: 'ATO and security',
+    description:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.'
+  }
+};
+
 const systemProfile = {
   header: 'CMS systems and applications',
   subHeader: 'Find information about existing CMS systems and applications.',
@@ -504,7 +558,23 @@ const systemProfile = {
   gql: {
     fail: 'Failed to retrieve systems data'
   },
-  returnToSystemProfile: 'Return to system profile'
+  returnToSystemProfile: 'Return to system profile',
+  editSystemProfile: {
+    heading: 'Edit system profile',
+    subheading: 'for {{systemName}}',
+    description:
+      'Use this page to compile information about your system and it’s status in the CMS Target Life Cycle (TLC). Compiling more system information in EASi will allow OIT and CMS to stay updated about your system and proactively prompt you if there are any governance activities or TLC related tasks to complete.',
+    returnToSystemWorkspace: 'Return to system workspace',
+    sectionHasPendingChanges: 'This section has pending changes',
+    editSection: 'Edit section',
+    viewSection: 'View section',
+    dataPartiallyManagedExternally: 'Data partially managed externally',
+    dataManagedExternally: 'Data managed externally',
+    externalDataExists: 'External data exists',
+    selfLocked: 'You are editing this section.',
+    locked: 'is currently editing. Come back later.'
+  },
+  sectionCards
 };
 
 export default systemProfile;

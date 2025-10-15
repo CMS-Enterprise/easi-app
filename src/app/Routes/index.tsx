@@ -36,6 +36,7 @@ import TermsAndConditions from 'features/Miscellaneous/TermsAndConditions';
 import UserInfo from 'features/Miscellaneous/User';
 import RequestLinkForm from 'features/RequestLinking/RequestLinkForm';
 import RequestTypeForm from 'features/RequestLinking/RequestTypeForm';
+import EditSystemProfile from 'features/Systems/EditSystemProfile';
 import SystemList from 'features/Systems/Home';
 import SystemProfile from 'features/Systems/SystemProfile';
 import SystemWorkspace from 'features/Systems/SystemWorkspace';
@@ -185,6 +186,11 @@ const AppRoutes = () => {
         />
       )}
       <SecureRoute path="/systems/:systemId" exact component={SystemProfile} />
+      <SecureRoute
+        path="/systems/:systemId/edit"
+        exact
+        component={EditSystemProfile}
+      />
       <SecureRoute
         path="/systems/:systemId/:subinfo/:edit(edit)?/:action(team-member)?/:top(top)?"
         exact
