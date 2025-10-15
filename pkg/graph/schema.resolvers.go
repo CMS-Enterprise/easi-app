@@ -12,10 +12,6 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/google/uuid"
-	"github.com/guregu/null"
-	"golang.org/x/sync/errgroup"
-
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
@@ -29,6 +25,9 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/services"
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
+	"github.com/google/uuid"
+	"github.com/guregu/null"
+	"golang.org/x/sync/errgroup"
 )
 
 // AlternativeASolution is the resolver for the alternativeASolution field.
