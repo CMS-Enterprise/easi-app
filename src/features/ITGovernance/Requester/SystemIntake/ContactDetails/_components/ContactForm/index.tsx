@@ -63,7 +63,7 @@ const ContactForm = ({
   const { t } = useTranslation('intake');
 
   const history = useHistory();
-  const { showMessageOnNextPage } = useMessage();
+  const { showMessage, showMessageOnNextPage } = useMessage();
   const [create] = useCreateSystemIntakeContactMutation({
     refetchQueries: ['GetSystemIntakeContacts'],
     awaitRefetchQueries: true
@@ -80,7 +80,6 @@ const ContactForm = ({
     register,
     watch,
     reset,
-    setError,
     formState: { errors, isValid, defaultValues, isSubmitSuccessful }
   } = useEasiForm<ContactFormFields>({
     resolver: yupResolver(ContactFormSchema)
@@ -145,12 +144,19 @@ const ContactForm = ({
         history.push('request-home');
       })
       .catch(() =>
-        setError('root', {
-          message: t('contactDetails.additionalContacts.errors.root', {
-            action,
-            type
-          })
-        })
+        showMessage(
+          <Trans
+            t={t}
+            i18nKey="contactDetails.additionalContacts.errors.root"
+            values={{
+              action,
+              type: 'project point of contact'
+            }}
+          />,
+          {
+            type: 'error'
+          }
+        )
       );
   });
 
