@@ -20,7 +20,8 @@ const Option = ({
   const { t } = useTranslation('systemProfile');
   return (
     <option value={value}>
-      {t('tableAndPagination:pageSize:show', { value })} {suffix}
+      {t('tableAndPagination:pageSize:show', { value })}
+      {suffix && ` ${{ suffix }}`}
     </option>
   );
 };
