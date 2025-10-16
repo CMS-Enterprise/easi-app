@@ -18,6 +18,7 @@ import {
 
 import Modal from 'components/Modal';
 import Spinner from 'components/Spinner';
+import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import { getComponentByEnum } from 'constants/cmsComponentsMap';
 import {
@@ -35,6 +36,7 @@ type SystemIntakeContactsTableProps = {
   /** If true, a loading spinner and text will render in place of results */
   loading?: boolean;
   className?: string;
+  pageSize?: number;
 };
 
 /**
@@ -47,7 +49,8 @@ const SystemIntakeContactsTable = ({
   handleEditContact,
   removeContact,
   loading,
-  className
+  className,
+  pageSize = 10
 }: SystemIntakeContactsTableProps) => {
   const { t } = useTranslation('intake');
 
@@ -220,15 +223,21 @@ const SystemIntakeContactsTable = ({
         ),
         sortBy: useMemo(() => [{ id: 'createdAt', desc: false }], []),
         pageIndex: 0,
-        pageSize: 10
+        pageSize
       }
     },
     useSortBy,
     usePagination
   );
 
-  const { getTableBodyProps, getTableProps, headerGroups, prepareRow, rows } =
-    table;
+  const {
+    getTableBodyProps,
+    getTableProps,
+    headerGroups,
+    prepareRow,
+    rows,
+    setPageSize
+  } = table;
 
   rows.map(row => prepareRow(row));
 
@@ -340,14 +349,20 @@ const SystemIntakeContactsTable = ({
           </tbody>
         </Table>
 
-        {rows.length > 10 && (
-          <>
+        {rows.length > pageSize && (
+          <div className="display-flex flex-row flex-justify-between">
             <TablePagination
               {...table}
               pageIndex={table.state.pageIndex}
               pageSize={table.state.pageSize}
               page={[]}
               className="desktop:grid-col-fill desktop:padding-bottom-0"
+            />
+            <TablePageSize
+              className="desktop:grid-col-auto"
+              pageSize={table.state.pageSize}
+              setPageSize={setPageSize}
+              suffix="rows"
             />
 
             <div
@@ -356,7 +371,7 @@ const SystemIntakeContactsTable = ({
             >
               {currentTableSortDescription(headerGroups[0])}
             </div>
-          </>
+          </div>
         )}
       </div>
 
