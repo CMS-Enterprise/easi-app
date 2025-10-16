@@ -334,7 +334,7 @@ const ContactForm = ({
         </FieldGroup>
 
         {requestHomeVariant && (
-          <FieldGroup className="margin-top-2">
+          <FieldGroup className="margin-top-2 margin-bottom-8">
             <Controller
               control={control}
               name="isRequester"
@@ -372,7 +372,7 @@ const ContactForm = ({
         )}
 
         {requestHomeVariant && action === 'add' && (
-          <Alert type="info" className="margin-top-8 margin-bottom-4">
+          <Alert type="info" className="margin-top-0 margin-bottom-4">
             {t('requestHome:addPOC.addAlert')}
           </Alert>
         )}
