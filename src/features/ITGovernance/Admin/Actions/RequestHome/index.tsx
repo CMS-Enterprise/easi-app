@@ -4,7 +4,6 @@ import { Link, useHistory } from 'react-router-dom';
 import { Grid, Icon } from '@trussworks/react-uswds';
 import {
   GetSystemIntakeContactsDocument,
-  SystemIntakeContactFragment,
   SystemIntakeFragmentFragment,
   useDeleteSystemIntakeContactMutation,
   useGetSystemIntakeContactsQuery
@@ -15,6 +14,7 @@ import PageHeading from 'components/PageHeading';
 import ReviewRow from 'components/ReviewRow';
 import SystemIntakeContactsTable from 'components/SystemIntakeContactsTable';
 import TaskStatusTag from 'components/TaskStatusTag';
+import useMessage from 'hooks/useMessage';
 
 import { DefinitionCombo } from '../../Decision';
 
@@ -24,12 +24,9 @@ const RequestHome = ({
   systemIntake: SystemIntakeFragmentFragment;
 }) => {
   const { t } = useTranslation('requestHome');
+  const { showMessage, showErrorMessageInModal } = useMessage();
 
   const [expandedOverview, setExpandedOverview] = useState(false);
-  const [contactToEdit, setContactToEdit] =
-    useState<SystemIntakeContactFragment | null>(null);
-
-  console.log(contactToEdit);
 
   const { data, loading } = useGetSystemIntakeContactsQuery({
     variables: {
@@ -45,6 +42,17 @@ const RequestHome = ({
       }
     ]
   });
+
+  const handleRemoveContact = (id: string) =>
+    removeContact({ variables: { input: { id } } })
+      .then(() => {
+        showMessage(t('requestHome:pocRemoval.success'), {
+          type: 'success'
+        });
+      })
+      .catch(() => {
+        showErrorMessageInModal(t('requestHome:pocRemoval.error'));
+      });
 
   const history = useHistory();
 
@@ -81,19 +89,13 @@ const RequestHome = ({
         <SystemIntakeContactsTable
           contacts={data?.systemIntakeContacts?.allContacts}
           loading={loading}
-          // className="margin-top-3 padding-top-05 margin-bottom-6"
-          // handleEditContact={() => {
-          //   setContactToEdit();
-          //   history.push()
-          // } }
           handleEditContact={contact => {
-            setContactToEdit(contact);
             history.push({
               pathname: 'edit-point-of-contact',
               state: { contact }
             });
           }}
-          removeContact={id => removeContact({ variables: { input: { id } } })}
+          removeContact={handleRemoveContact}
         />
       </div>
 

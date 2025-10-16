@@ -55,6 +55,11 @@ const requestHome = {
     successAlert:
       'You have added <bold>{{name}}</bold> as a project point of contact.'
   },
+  pocRemoval: {
+    success: 'You successfully removed a project point of contact.',
+    error:
+      'There was an issue removing this project point of contact. Please try again. If the error persists, try again later.'
+  },
   editPOC: {
     title: 'Edit a project point of contact',
     description:
