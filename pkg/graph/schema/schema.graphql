@@ -135,31 +135,6 @@ type CedarSoftwareProducts {
 }
 
 """
-CedarSystem represents the response from the /system/detail endpoint from the CEDAR Core API.
-Right now, this does not tie in with any other types defined here, and is a root node until that changes.
-"""
-type CedarSystem {
-  id: String!
-  name: String!
-  description: String
-  acronym: String
-  atoEffectiveDate: Time
-  atoExpirationDate: Time
-  oaStatus: String
-  status: String
-  businessOwnerOrg: String
-  businessOwnerOrgComp: String
-  businessOwnerRoles: [CedarRole!]!
-  systemMaintainerOrg: String
-  systemMaintainerOrgComp: String
-  versionId: String
-  isBookmarked: Boolean!
-  linkedTrbRequests(state: TRBRequestState! = OPEN): [TRBRequest!]!
-  linkedSystemIntakes(state: SystemIntakeState! = OPEN): [SystemIntake!]!
-  uuid: String
-}
-
-"""
 CedarSubSystem represents the response from the /system/detail
 """
 type CedarSubSystem {
@@ -248,22 +223,6 @@ type CedarSystemMaintainerInformation {
   testReportsOnDemand: Boolean
   testScriptsOnDemand: Boolean
   yearToRetireReplace: String
-}
-
-"""
-This is the Representation of Cedar system with additional related information
-"""
-type CedarSystemDetails {
-  cedarSystem: CedarSystem!
-  systemMaintainerInformation: CedarSystemMaintainerInformation!
-  businessOwnerInformation: CedarBusinessOwnerInformation!
-  roles: [CedarRole!]!
-  deployments: [CedarDeployment!]!
-  threats: [CedarThreat!]!
-  urls: [CedarURL!]!
-  isMySystem: Boolean
-  atoEffectiveDate: Time
-  atoExpirationDate: Time
 }
 
 """
@@ -762,7 +721,8 @@ type SystemIntake {
   """
   All users are are involved in a GRB review. This will be deprecated in favor of grbVotingInformation
   """
-  grbReviewers: [SystemIntakeGRBReviewer!]! @deprecated(reason: "Use grbVotingInformation.grbReviewers instead")
+  grbReviewers: [SystemIntakeGRBReviewer!]!
+    @deprecated(reason: "Use grbVotingInformation.grbReviewers instead")
   """
   All information about voting activity in a GRB review
   """
@@ -869,7 +829,7 @@ type SystemIntake {
   grbReviewAsyncManualEndDate: Time
   grbReviewReminderLastSent: Time
   systemIntakeSystems: [SystemIntakeSystem!]!
-  
+
   contacts: SystemIntakeContacts!
 }
 
@@ -1017,7 +977,6 @@ input CreateSystemIntakeInput {
   requestType: SystemIntakeRequestType!
   requester: SystemIntakeRequesterInput!
 }
-
 
 """
 The input data used to add an OIT collaborator for a system request
@@ -1773,16 +1732,9 @@ type LaunchDarklySettings {
 }
 
 """
-The current user of the application
-"""
-type CurrentUser {
-  launchDarkly: LaunchDarklySettings!
-}
-
-"""
 SystemIntakeContactRole is the various roles that a user can have as a contact on a system intake
 """
-enum SystemIntakeContactRole  {
+enum SystemIntakeContactRole {
   BUSINESS_OWNER
   CLOUD_NAVIGATOR
   CONTRACTING_OFFICERS_REPRESENTATIVE
@@ -2949,39 +2901,66 @@ type Mutation {
 
   startGRBReview(input: StartGRBReviewInput!): String
 
-  createSystemIntakeGRBReviewers(input: CreateSystemIntakeGRBReviewersInput!): CreateSystemIntakeGRBReviewersPayload
-  updateSystemIntakeGRBReviewer(input: UpdateSystemIntakeGRBReviewerInput!): SystemIntakeGRBReviewer!
-  deleteSystemIntakeGRBReviewer(input: DeleteSystemIntakeGRBReviewerInput!): UUID!
+  createSystemIntakeGRBReviewers(
+    input: CreateSystemIntakeGRBReviewersInput!
+  ): CreateSystemIntakeGRBReviewersPayload
+  updateSystemIntakeGRBReviewer(
+    input: UpdateSystemIntakeGRBReviewerInput!
+  ): SystemIntakeGRBReviewer!
+  deleteSystemIntakeGRBReviewer(
+    input: DeleteSystemIntakeGRBReviewerInput!
+  ): UUID!
 
-  castSystemIntakeGRBReviewerVote(input: CastSystemIntakeGRBReviewerVoteInput!): SystemIntakeGRBReviewer!
+  castSystemIntakeGRBReviewerVote(
+    input: CastSystemIntakeGRBReviewerVoteInput!
+  ): SystemIntakeGRBReviewer!
 
-  sendSystemIntakeGRBReviewerReminder(systemIntakeID: UUID!): SendSystemIntakeGRBReviewReminderPayload!
+  sendSystemIntakeGRBReviewerReminder(
+    systemIntakeID: UUID!
+  ): SendSystemIntakeGRBReviewReminderPayload!
 
-  createSystemIntakeGRBDiscussionPost(input: createSystemIntakeGRBDiscussionPostInput!): SystemIntakeGRBReviewDiscussionPost
-  createSystemIntakeGRBDiscussionReply(input: createSystemIntakeGRBDiscussionReplyInput!): SystemIntakeGRBReviewDiscussionPost
+  createSystemIntakeGRBDiscussionPost(
+    input: createSystemIntakeGRBDiscussionPostInput!
+  ): SystemIntakeGRBReviewDiscussionPost
+  createSystemIntakeGRBDiscussionReply(
+    input: createSystemIntakeGRBDiscussionReplyInput!
+  ): SystemIntakeGRBReviewDiscussionPost
 
-  updateSystemIntakeGRBReviewType(input: updateSystemIntakeGRBReviewTypeInput!): UpdateSystemIntakePayload
-  @hasRole(role: EASI_GOVTEAM)
-  updateSystemIntakeGRBReviewFormPresentationStandard(input: updateSystemIntakeGRBReviewFormInputPresentationStandard!): UpdateSystemIntakePayload
-  @hasRole(role: EASI_GOVTEAM)
-  updateSystemIntakeGRBReviewFormPresentationAsync(input: updateSystemIntakeGRBReviewFormInputPresentationAsync!): UpdateSystemIntakePayload
-  @hasRole(role: EASI_GOVTEAM)
-  updateSystemIntakeGRBReviewFormTimeframeAsync(input: updateSystemIntakeGRBReviewFormInputTimeframeAsync!): UpdateSystemIntakePayload
-  @hasRole(role: EASI_GOVTEAM)
-  extendGRBReviewDeadlineAsync(input: ExtendGRBReviewDeadlineInput!): UpdateSystemIntakePayload
-  @hasRole(role: EASI_GOVTEAM)
-  restartGRBReviewAsync(input: RestartGRBReviewInput!): UpdateSystemIntakePayload
-  @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeGRBReviewType(
+    input: updateSystemIntakeGRBReviewTypeInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeGRBReviewFormPresentationStandard(
+    input: updateSystemIntakeGRBReviewFormInputPresentationStandard!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeGRBReviewFormPresentationAsync(
+    input: updateSystemIntakeGRBReviewFormInputPresentationAsync!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeGRBReviewFormTimeframeAsync(
+    input: updateSystemIntakeGRBReviewFormInputTimeframeAsync!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  extendGRBReviewDeadlineAsync(
+    input: ExtendGRBReviewDeadlineInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  restartGRBReviewAsync(
+    input: RestartGRBReviewInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
 
   updateSystemIntakeLinkedCedarSystem(
     input: UpdateSystemIntakeLinkedCedarSystemInput!
   ): UpdateSystemIntakePayload
 
-  setSystemIntakeGRBPresentationLinks(input: SystemIntakeGRBPresentationLinksInput!): SystemIntakeGRBPresentationLinks
-  uploadSystemIntakeGRBPresentationDeck(input: UploadSystemIntakeGRBPresentationDeckInput!): SystemIntakeGRBPresentationLinks
-  deleteSystemIntakeGRBPresentationLinks(input: DeleteSystemIntakeGRBPresentationLinksInput!): UUID!
-  manuallyEndSystemIntakeGRBReviewAsyncVoting(systemIntakeID: UUID!): UpdateSystemIntakePayload
-  @hasRole(role: EASI_GOVTEAM)
+  setSystemIntakeGRBPresentationLinks(
+    input: SystemIntakeGRBPresentationLinksInput!
+  ): SystemIntakeGRBPresentationLinks
+  uploadSystemIntakeGRBPresentationDeck(
+    input: UploadSystemIntakeGRBPresentationDeckInput!
+  ): SystemIntakeGRBPresentationLinks
+  deleteSystemIntakeGRBPresentationLinks(
+    input: DeleteSystemIntakeGRBPresentationLinksInput!
+  ): UUID!
+  manuallyEndSystemIntakeGRBReviewAsyncVoting(
+    systemIntakeID: UUID!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
 
   archiveSystemIntake(id: UUID!): SystemIntake!
 
@@ -3075,10 +3054,8 @@ type Mutation {
     @hasRole(role: EASI_TRB_ADMIN)
   reopenTrbRequest(input: ReopenTRBRequestInput!): TRBRequest!
     @hasRole(role: EASI_TRB_ADMIN)
-  createTrbLeadOption(eua: String!): UserInfo!
-  @hasRole(role: EASI_TRB_ADMIN)
-  deleteTrbLeadOption(eua: String!): Boolean!
-  @hasRole(role: EASI_TRB_ADMIN)
+  createTrbLeadOption(eua: String!): UserInfo! @hasRole(role: EASI_TRB_ADMIN)
+  deleteTrbLeadOption(eua: String!): Boolean! @hasRole(role: EASI_TRB_ADMIN)
   sendGRBReviewPresentationDeckReminderEmail(systemIntakeID: UUID!): Boolean!
     @hasRole(role: EASI_GOVTEAM)
 }
@@ -3097,17 +3074,13 @@ type Query {
   systemIntakesWithReviewRequested: [SystemIntake!]!
   systemIntakesWithLcids: [SystemIntake!]!
   compareGRBReviewersByIntakeID(id: UUID!): [GRBReviewerComparisonIntake!]!
-  currentUser: CurrentUser
   cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!
   cedarBudget(cedarSystemID: String!): [CedarBudget!]
   cedarBudgetSystemCost(cedarSystemID: String!): CedarBudgetSystemCost
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
   cedarSoftwareProducts(cedarSystemId: String!): CedarSoftwareProducts
-  cedarSystem(cedarSystemId: String!): CedarSystem
-  cedarSystems: [CedarSystem!]!
   cedarSubSystems(cedarSystemId: String!): [CedarSubSystem!]!
   cedarContractsBySystem(cedarSystemId: String!): [CedarContract!]!
-  myCedarSystems: [CedarSystem!]!
   cedarSystemBookmarks: [CedarSystemBookmark!]!
   cedarThreat(cedarSystemId: String!): [CedarThreat!]!
   deployments(
@@ -3120,7 +3093,6 @@ type Query {
   roles(cedarSystemId: String!, roleTypeID: String): [CedarRole!]!
   exchanges(cedarSystemId: String!): [CedarExchange!]!
   urls(cedarSystemId: String!): [CedarURL!]!
-  cedarSystemDetails(cedarSystemId: String!): CedarSystemDetails
   """
   This returns a SystemIntakeContacts object. It holds the information about the contacts associated with a specific System Intake.
   """
@@ -3132,7 +3104,6 @@ type Query {
   trbLeadOptions: [UserInfo!]!
   trbAdminNote(id: UUID!): TRBAdminNote! @hasRole(role: EASI_TRB_ADMIN)
   requesterUpdateEmailData: [RequesterUpdateEmailData!]!
-  userAccount(username: String!): UserAccount
   systemIntakeSystem(systemIntakeSystemID: UUID!): SystemIntakeSystem
   systemIntakeSystems(systemIntakeId: UUID!): [SystemIntakeSystem!]!
 }
@@ -3413,11 +3384,11 @@ enum ITGovGRBStatus {
   """
   The GRB meeting is waiting for review
   """
-  AWAITING_GRB_REVIEW,
+  AWAITING_GRB_REVIEW
   """
   The GRB review is currently in progress
   """
-  REVIEW_IN_PROGRESS,
+  REVIEW_IN_PROGRESS
   """
   The GRT meeting has already happened, and an outcome hasn't been noted yet
   """
@@ -3514,43 +3485,4 @@ enum SystemIntakeLCIDStatus {
   ISSUED
   EXPIRED
   RETIRED
-}
-
-"""
-The representation of a User account in the EASI application
-"""
-type UserAccount {
-  id: UUID!
-  """
-  The unique username of this user account
-  """
-  username: String!
-  """
-  The Common Name of a user. Typically this is a combination of Given and Family name
-  """
-  commonName: String!
-  """
-  The language localization of a user.
-  """
-  locale: String!
-  """
-  The email address associated to this user account
-  """
-  email: String!
-  """
-  A users given name
-  """
-  givenName: String!
-  """
-  A users family name
-  """
-  familyName: String!
-  """
-  The zone information connected with a user account
-  """
-  zoneInfo: String!
-  """
-  Represents if a user has logged in. If the user was added as a result of another action, this will show FALSE. When the user logs in, their account will be updated
-  """
-  hasLoggedIn: Boolean
 }

@@ -50,6 +50,17 @@ repos:
     hooks:
       - id: golangci-lint-full
         name: Lint go files
+        
+  - repo: local
+    hooks:
+      - id: format-graphql
+        name: Format staged GraphQL files
+        entry: scripts/format-graphql.sh
+        language: script
+        types: [graphql]
+        pass_filenames: true
+        description: >
+          Formats .graphql files using Prettier. If files are changed, please re-stage and commit again.        
 
   - repo: local
     hooks:
@@ -93,15 +104,16 @@ repos:
         name: Lint GraphQL schema
         entry: scripts/pre-commit-graphql-schema-lint
         language: script
-        files: pkg/graph/schema.graphql
+        files: "pkg/graph/schema/.*\\.graphql"
+        pass_filenames: false
 
   - repo: local
     hooks:
       - id: check-code-generation
         name: Run GraphQL code generation
-        entry: "scripts/dev gql"
+        entry: "scripts/pre-commit-check-code-generation"
         language: script
-        files: "pkg/graph/schema\\.graphql|pkg/graph/schema\\.resolvers\\.go|src/gql/operations/.*\\.ts"
+        files: "pkg/graph/.*\\.go|pkg/graph/.*\\.graphql|src/gql/operations.*\\.ts"
         pass_filenames: false
 
   # for some reason, trying to call "go run cmd/intake_schema_gen/main.go" directly from this config doesn't work;

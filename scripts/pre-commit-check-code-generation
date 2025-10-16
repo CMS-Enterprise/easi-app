@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# Run GraphQL generation for Go files
+go generate ./... || exit
+
+if ! command -v goimports &> /dev/null; then
+  go install golang.org/x/tools/cmd/goimports@latest || exit
+fi
+
+# Run goimports on generated files
+find pkg/graph/resolvers -name \*.resolvers.go -exec goimports -w -local github.com/cms-enterprise/easi-app {} \; || exit
+
+# Run GraphQL generation for Typescript files
+yarn generate
