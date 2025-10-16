@@ -11,12 +11,14 @@ import {
   Label,
   Select
 } from '@trussworks/react-uswds';
+import { ExternalRecipientAlert } from 'features/TechnicalAssistance/Admin/_components/ActionFormWrapper/Recipients';
 import {
   GetSystemIntakeContactsDocument,
   SystemIntakeContactRole,
   useCreateSystemIntakeContactMutation,
   useUpdateSystemIntakeContactMutation
 } from 'gql/generated/graphql';
+import { capitalize } from 'lodash';
 
 import Alert from 'components/Alert';
 import CedarContactSelect from 'components/CedarContactSelect';
@@ -34,10 +36,14 @@ import { ContactFormSchema } from 'validations/systemIntakeSchema';
 type ContactFormProps = {
   systemIntakeId: string;
   type: 'contact' | 'recipient';
-  // Update to remove closeModal
-  // closeModal: () => void;
   initialValues?: ContactFormFields | null;
   createContactCallback?: (contact: ContactFormFields) => void;
+  // Controls copy and UI differences when used in a modal vs page
+  copyVariant?: 'requestHome' | 'additionalContacts';
+  showExternalRecipientAlert?: boolean;
+  onCancel?: () => void;
+  onSuccess?: (values: ContactFormFields) => void;
+  onError?: (message: React.ReactNode) => void;
 };
 
 const emptyContactFields: ContactFormFields = {
@@ -55,9 +61,13 @@ const emptyContactFields: ContactFormFields = {
 const ContactForm = ({
   systemIntakeId,
   type,
-  // closeModal,
   initialValues,
-  createContactCallback
+  createContactCallback,
+  copyVariant = 'requestHome',
+  showExternalRecipientAlert = false,
+  onCancel,
+  onSuccess,
+  onError
 }: ContactFormProps) => {
   const { t } = useTranslation('intake');
 
@@ -87,6 +97,7 @@ const ContactForm = ({
     control,
     handleSubmit,
     register,
+    watch,
     reset,
     formState: { errors, isValid, defaultValues, isSubmitSuccessful }
   } = useEasiForm<ContactFormFields>({
@@ -134,7 +145,11 @@ const ContactForm = ({
         if (action === 'add') {
           createContactCallback?.(values);
         }
-
+        if (onSuccess) {
+          onSuccess(values);
+          return;
+        }
+        // Default page behavior
         showMessageOnNextPage(
           <Trans
             t={t}
@@ -153,20 +168,26 @@ const ContactForm = ({
         history.push('request-home');
       })
       .catch(() => {
-        window.scrollTo(0, 0);
-        showMessage(
+        const errorNode = (
           <Trans
             t={t}
             i18nKey="contactDetails.additionalContacts.errors.root"
             values={{
               action,
-              type: 'project point of contact'
+              type
             }}
-          />,
-          {
-            type: 'error'
-          }
+          />
         );
+
+        if (onError) {
+          onError(errorNode);
+          return;
+        }
+
+        window.scrollTo(0, 0);
+        showMessage(errorNode, {
+          type: 'error'
+        });
       });
   });
 
@@ -183,13 +204,18 @@ const ContactForm = ({
 
         <FieldGroup className="margin-top-2" error={!!errors.userAccount}>
           <Label
-            className="text-bold"
+            className={
+              copyVariant === 'requestHome' ? 'text-bold' : 'text-normal'
+            }
             htmlFor="react-select-userAccount-input"
             requiredMarker
           >
-            {t('requestHome:sharedPOC.name', {
-              context: action
-            })}
+            {copyVariant === 'requestHome'
+              ? t('requestHome:sharedPOC.name', { context: action })
+              : t('contactDetails.additionalContacts.name', {
+                  type: action === 'edit' ? capitalize(type) : type,
+                  context: action
+                })}
           </Label>
           <HelpText className="margin-top-05" id="userAccountHelpText">
             {t('contactDetails.additionalContacts.nameHelpText')}
@@ -231,10 +257,19 @@ const ContactForm = ({
         </FieldGroup>
 
         <FieldGroup className="margin-top-2" error={!!errors.component}>
-          <Label className="text-bold" htmlFor="component" requiredMarker>
-            {t('requestHome:sharedPOC.component', {
-              context: action
-            })}
+          <Label
+            className={
+              copyVariant === 'requestHome' ? 'text-bold' : 'text-normal'
+            }
+            htmlFor="component"
+            requiredMarker
+          >
+            {copyVariant === 'requestHome'
+              ? t('requestHome:sharedPOC.component', { context: action })
+              : t('contactDetails.additionalContacts.component', {
+                  type: action === 'edit' ? capitalize(type) : type,
+                  context: action
+                })}
           </Label>
 
           <ErrorMessage
@@ -267,8 +302,19 @@ const ContactForm = ({
         </FieldGroup>
 
         <FieldGroup className="margin-top-2" error={!!errors.roles}>
-          <Label className="text-bold" htmlFor="roles-combobox" requiredMarker>
-            {t('requestHome:sharedPOC.roles')}
+          <Label
+            className={
+              copyVariant === 'requestHome' ? 'text-bold' : 'text-normal'
+            }
+            htmlFor="roles-combobox"
+            requiredMarker
+          >
+            {copyVariant === 'requestHome'
+              ? t('requestHome:sharedPOC.roles')
+              : t('contactDetails.additionalContacts.roles', {
+                  type: action === 'edit' ? capitalize(type) : type,
+                  context: action
+                })}
           </Label>
 
           <ErrorMessage errors={errors} name="roles" as={<FieldErrorMsg />} />
@@ -323,7 +369,11 @@ const ContactForm = ({
           />
         </FieldGroup>
 
-        {action === 'add' && (
+        {showExternalRecipientAlert && (
+          <ExternalRecipientAlert email={watch('userAccount.email')} />
+        )}
+
+        {copyVariant === 'requestHome' && action === 'add' && (
           <Alert type="info" className="margin-top-8 margin-bottom-4">
             {t('requestHome:addPOC.addAlert')}
           </Alert>
@@ -338,17 +388,19 @@ const ContactForm = ({
           >
             {t('contactDetails.additionalContacts.submit', {
               context: action,
-              type: 'point of contact'
+              type: copyVariant === 'requestHome' ? 'point of contact' : type
             })}
           </Button>
-          {/* <Button
-            className="text-error"
-            type="button"
-            onClick={() => closeModal()}
-            unstyled
-          >
-            {t('Cancel')}
-          </Button> */}
+          {onCancel && (
+            <Button
+              className="text-error"
+              type="button"
+              onClick={() => onCancel()}
+              unstyled
+            >
+              {t('Cancel')}
+            </Button>
+          )}
         </ButtonGroup>
       </Fieldset>
     </>
