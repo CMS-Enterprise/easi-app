@@ -67,11 +67,6 @@ const SystemIntakeContactsTable = ({
   const columns = useMemo<Column<SystemIntakeContactFragment>[]>(() => {
     return [
       {
-        // createdAt column is hidden and only used for sorting purposes
-        accessor: 'createdAt',
-        id: 'createdAt'
-      },
-      {
         Header: () => (
           <span className="display-block margin-left-4 padding-left-05">
             {t('general:name')}
@@ -206,22 +201,35 @@ const SystemIntakeContactsTable = ({
     ];
   }, [t, handleEditContact, removeContact]);
 
+  // Pre-sort the data to ensure isRequester contacts appear first
+  const sortedContacts = useMemo(() => {
+    if (!contacts) return [];
+
+    return [...contacts].sort((a, b) => {
+      // First sort by isRequester (true values first)
+      if (a.isRequester && !b.isRequester) return -1;
+      if (!a.isRequester && b.isRequester) return 1;
+
+      // Then sort by createdAt (oldest first)
+      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+    });
+  }, [contacts]);
+
   const table = useTable(
     {
       columns,
-      data: useMemo(() => contacts || [], [contacts]),
+      data: sortedContacts,
       autoResetSortBy: false,
       autoResetPage: true,
       initialState: {
         hiddenColumns: useMemo(
           () => [
-            'createdAt',
             // Hide actions column if `hasActionsColumn` is false
             ...(hasActionsColumn ? [] : ['actions'])
           ],
           [hasActionsColumn]
         ),
-        sortBy: useMemo(() => [{ id: 'createdAt', desc: false }], []),
+        sortBy: useMemo(() => [], []),
         pageIndex: 0,
         pageSize
       }
