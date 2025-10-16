@@ -5,16 +5,18 @@ import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
 
 import SystemProfileFormWrapper from '../_components/SystemProfileFormWrapper';
 
-const Team = () => {
+const BusinessInformation = () => {
   const form = useEasiForm();
 
   return (
     <EasiFormProvider {...form}>
-      <SystemProfileFormWrapper section={SystemProfileLockableSection.TEAM}>
+      <SystemProfileFormWrapper
+        section={SystemProfileLockableSection.BUSINESS_INFORMATION}
+      >
         section content
       </SystemProfileFormWrapper>
     </EasiFormProvider>
   );
 };
 
-export default Team;
+export default BusinessInformation;

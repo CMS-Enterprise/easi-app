@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { FetchResult } from '@apollo/client';
 import { Button, GridContainer, Icon } from '@trussworks/react-uswds';
-import { SystemProfileLockableSection } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import Breadcrumbs from 'components/Breadcrumbs';
@@ -13,16 +12,18 @@ import IconButton from 'components/IconButton';
 import IconLink from 'components/IconLink';
 import PageHeading from 'components/PageHeading';
 import PercentCompleteTag from 'components/PercentCompleteTag';
-import { systemProfileLockableSections } from 'constants/systemProfile';
+import { systemProfileSections } from 'constants/systemProfile';
 import useMessage from 'hooks/useMessage';
 
 import './index.scss';
+
+type SystemProfileSectionKey = (typeof systemProfileSections)[number]['key'];
 
 type SystemProfileFormWrapperProps<
   TFieldValues extends FieldValues = FieldValues
 > = {
   children: React.ReactNode;
-  section: SystemProfileLockableSection;
+  section: SystemProfileSectionKey;
   /** Optional onSubmit function if section is editable form */
   onSubmit?: (values: TFieldValues) => Promise<FetchResult>;
   readOnly?: boolean;
@@ -62,14 +63,14 @@ function SystemProfileFormWrapper<
 
   /** Returns next section enum/key and route if it exists */
   const nextSection = useMemo(() => {
-    const sectionIndex = systemProfileLockableSections.findIndex(
+    const sectionIndex = systemProfileSections.findIndex(
       s => s.key === section
     );
 
-    const sectionCount = systemProfileLockableSections.length;
+    const sectionCount = systemProfileSections.length;
 
     return sectionIndex < sectionCount - 1
-      ? systemProfileLockableSections[sectionIndex + 1]
+      ? systemProfileSections[sectionIndex + 1]
       : undefined;
   }, [section]);
 

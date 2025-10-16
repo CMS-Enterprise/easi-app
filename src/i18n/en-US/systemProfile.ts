@@ -32,7 +32,7 @@ const sectionCards: Record<
   TEAM: {
     title: 'Team',
     description:
-      'A count of all full-time employees (FTE) from CMS and contractor teams. This section also lists the name, contact information, and roles for individuals working on this system. '
+      'A count of all full-time employees (FTE) from CMS and contractor teams. This section also lists the name, contact information, and roles for individuals working on this system.'
   },
   CONTRACTS: {
     title: 'Contracts',

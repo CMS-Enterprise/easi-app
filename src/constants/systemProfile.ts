@@ -54,7 +54,7 @@ export const systemProfileLockableSectionMap: Record<
 };
 
 /** Array of edit system profile sections for form wrapper navigation */
-export const systemProfileLockableSections = [
+export const systemProfileSections = [
   {
     key: SystemProfileLockableSection.BUSINESS_INFORMATION,
     route: 'business-information'

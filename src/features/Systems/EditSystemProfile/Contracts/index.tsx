@@ -1,20 +1,19 @@
 import React from 'react';
-import { SystemProfileLockableSection } from 'gql/generated/graphql';
 
 import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
 
 import SystemProfileFormWrapper from '../_components/SystemProfileFormWrapper';
 
-const Team = () => {
+const Contracts = () => {
   const form = useEasiForm();
 
   return (
     <EasiFormProvider {...form}>
-      <SystemProfileFormWrapper section={SystemProfileLockableSection.TEAM}>
+      <SystemProfileFormWrapper section="CONTRACTS" readOnly>
         section content
       </SystemProfileFormWrapper>
     </EasiFormProvider>
   );
 };
 
-export default Team;
+export default Contracts;
