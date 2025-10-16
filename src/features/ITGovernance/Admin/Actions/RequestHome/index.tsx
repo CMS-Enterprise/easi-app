@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { Grid, Icon } from '@trussworks/react-uswds';
 import {
   GetSystemIntakeContactsDocument,
+  SystemIntakeContactFragment,
   SystemIntakeFragmentFragment,
   useDeleteSystemIntakeContactMutation,
   useGetSystemIntakeContactsQuery
@@ -25,6 +26,10 @@ const RequestHome = ({
   const { t } = useTranslation('requestHome');
 
   const [expandedOverview, setExpandedOverview] = useState(false);
+  const [contactToEdit, setContactToEdit] =
+    useState<SystemIntakeContactFragment | null>(null);
+
+  console.log(contactToEdit);
 
   const { data, loading } = useGetSystemIntakeContactsQuery({
     variables: {
@@ -40,6 +45,8 @@ const RequestHome = ({
       }
     ]
   });
+
+  const history = useHistory();
 
   const bizCaseStatusToRender = ['DONE', 'NOT_NEEDED', 'SUBMITTED'].includes(
     systemIntake.itGovTaskStatuses.bizCaseDraftStatus
@@ -75,7 +82,17 @@ const RequestHome = ({
           contacts={data?.systemIntakeContacts?.allContacts}
           loading={loading}
           // className="margin-top-3 padding-top-05 margin-bottom-6"
-          // handleEditContact={setContactToEdit}
+          // handleEditContact={() => {
+          //   setContactToEdit();
+          //   history.push()
+          // } }
+          handleEditContact={contact => {
+            setContactToEdit(contact);
+            history.push({
+              pathname: 'edit-point-of-contact',
+              state: { contact }
+            });
+          }}
           removeContact={id => removeContact({ variables: { input: { id } } })}
         />
       </div>
