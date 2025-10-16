@@ -1,42 +1,64 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
+import { FieldValues } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
+import { FetchResult } from '@apollo/client';
 import { Button, GridContainer, Icon } from '@trussworks/react-uswds';
 import { SystemProfileLockableSection } from 'gql/generated/graphql';
 
 import Alert from 'components/Alert';
 import Breadcrumbs from 'components/Breadcrumbs';
+import { useEasiFormContext } from 'components/EasiForm';
+import IconButton from 'components/IconButton';
 import IconLink from 'components/IconLink';
 import PageHeading from 'components/PageHeading';
 import PercentCompleteTag from 'components/PercentCompleteTag';
 import { systemProfileLockableSections } from 'constants/systemProfile';
+import useMessage from 'hooks/useMessage';
 
 import './index.scss';
 
-type SystemProfileFormWrapperProps = {
+type SystemProfileFormWrapperProps<
+  TFieldValues extends FieldValues = FieldValues
+> = {
   children: React.ReactNode;
   section: SystemProfileLockableSection;
+  /** Optional onSubmit function if section is editable form */
+  onSubmit?: (values: TFieldValues) => Promise<FetchResult>;
   readOnly?: boolean;
   showPendingChangesAlert?: boolean;
 };
 
 /**
  * Wrapper for the edit system profile form.
+ * Includes header, section title/description, and form footer with submit/navigation buttons.
  *
- * Includes header, section title/description, and form navigation footer.
+ * Must be wrapped in form provider component.
  */
-const SystemProfileFormWrapper = ({
+function SystemProfileFormWrapper<
+  TFieldValues extends FieldValues = FieldValues
+>({
   children,
   section,
+  onSubmit,
   readOnly,
   showPendingChangesAlert
-}: SystemProfileFormWrapperProps) => {
+}: SystemProfileFormWrapperProps<TFieldValues>) {
   const { t } = useTranslation('systemProfile');
   const history = useHistory();
+
+  const { Message, showMessage } = useMessage();
 
   const { systemId } = useParams<{
     systemId: string;
   }>();
+
+  const {
+    handleSubmit,
+    formState: { isDirty, isSubmitting }
+  } = useEasiFormContext<TFieldValues>();
+
+  const editSystemProfilePath = `/systems/${systemId}/edit`;
 
   /** Returns next section enum/key and route if it exists */
   const nextSection = useMemo(() => {
@@ -51,6 +73,22 @@ const SystemProfileFormWrapper = ({
       : undefined;
   }, [section]);
 
+  /** Submits form if dirty and onSubmit is provided, otherwise redirects to redirectPath */
+  const submit = useCallback(
+    async (redirectPath: string) => {
+      if (!isDirty || !onSubmit) {
+        return history.push(redirectPath);
+      }
+
+      return handleSubmit(async values =>
+        onSubmit(values)
+          .then(() => history.push(redirectPath))
+          .catch(() => showMessage(t('form:saveError'), { type: 'error' }))
+      )();
+    },
+    [isDirty, onSubmit, showMessage, t, history, handleSubmit]
+  );
+
   return (
     <div className="system-profile-form-wrapper">
       <div className="bg-base-lightest padding-bottom-6">
@@ -60,7 +98,7 @@ const SystemProfileFormWrapper = ({
               { text: t('header:home'), url: '/' },
               {
                 text: t('editSystemProfile.form.systemDetails'),
-                url: `/systems/${systemId}/edit`
+                url: editSystemProfilePath
               },
               { text: t('editSystemProfile.form.breadcrumb') }
             ]}
@@ -83,17 +121,25 @@ const SystemProfileFormWrapper = ({
             {t('editSystemProfile.form.description')}
           </p>
 
-          <IconLink
-            to={`/systems/${systemId}/edit`}
+          <IconButton
+            type="button"
             icon={<Icon.ArrowBack aria-hidden />}
             iconPosition="before"
+            onClick={() =>
+              readOnly
+                ? history.push(editSystemProfilePath)
+                : submit(editSystemProfilePath)
+            }
+            unstyled
           >
-            {t('form:saveAndExit')}
-          </IconLink>
+            {readOnly ? t('form:exitForm') : t('form:saveAndExit')}
+          </IconButton>
         </GridContainer>
       </div>
 
       <GridContainer className="padding-top-3 padding-bottom-7">
+        <Message />
+
         <h2 className="margin-bottom-1">
           {t(`sectionCards.${section}.title`)}
         </h2>
@@ -123,9 +169,10 @@ const SystemProfileFormWrapper = ({
         <div className="form-button-group margin-top-2 display-flex tablet:flex-align-center flex-gap-105">
           {!readOnly && (
             <Button
-              type="submit"
+              type="button"
               outline
-              onClick={() => history.push(`/systems/${systemId}/edit`)}
+              disabled={isSubmitting}
+              onClick={() => submit(editSystemProfilePath)}
             >
               {t('form:saveAndExit')}
             </Button>
@@ -133,9 +180,10 @@ const SystemProfileFormWrapper = ({
 
           {nextSection && (
             <Button
-              type={readOnly ? 'button' : 'submit'}
+              type="button"
+              disabled={isSubmitting}
               onClick={() =>
-                history.push(`/systems/${systemId}/${nextSection.route}`)
+                submit(`${editSystemProfilePath}/${nextSection.route}`)
               }
             >
               {t(
@@ -161,7 +209,7 @@ const SystemProfileFormWrapper = ({
         </div>
 
         <IconLink
-          to={`/systems/${systemId}/edit`}
+          to={editSystemProfilePath}
           icon={<Icon.ArrowBack aria-hidden />}
           iconPosition="before"
           className="margin-top-105"
@@ -171,6 +219,6 @@ const SystemProfileFormWrapper = ({
       </GridContainer>
     </div>
   );
-};
+}
 
 export default SystemProfileFormWrapper;
