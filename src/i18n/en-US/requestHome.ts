@@ -54,6 +54,20 @@ const requestHome = {
     dontAddAndReturn: 'Don’t add and return to request details',
     successAlert:
       'You have added <bold>{{name}}</bold> as a project point of contact.'
+  },
+  editPOC: {
+    title: 'Edit a project point of contact',
+    description:
+      'Edit the details for this team member. You may also designate them as the primary requester for this project, giving them full edit access to the request in EASi. If they are already the primary requester and you wish to remove them, you must first designate a new primary requester.',
+    notRemovePrimary:
+      'You may not remove this primary requester until you designate a new one. Please add a new contact or edit an existing contact to do so.'
+  },
+  sharedPOC: {
+    name_add: 'New contact name',
+    name_edit: 'Project contact name',
+    component_add: 'New contact component',
+    component_edit: 'Project contact component',
+    roles: 'New contact role'
   }
 };
 
