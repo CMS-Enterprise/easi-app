@@ -65,7 +65,9 @@ const requestHome = {
     description:
       'Edit the details for this team member. You may also designate them as the primary requester for this project, giving them full edit access to the request in EASi. If they are already the primary requester and you wish to remove them, you must first designate a new primary requester.',
     notRemovePrimary:
-      'You may not remove this primary requester until you designate a new one. Please add a new contact or edit an existing contact to do so.'
+      'You may not remove this primary requester until you designate a new one. Please add a new contact or edit an existing contact to do so.',
+    changePrimary:
+      'Checking this box will replace the current primary requester and remove their edit access in EASi.'
   },
   sharedPOC: {
     name_add: 'New contact name',

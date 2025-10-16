@@ -12,6 +12,7 @@ import {
   Select
 } from '@trussworks/react-uswds';
 import {
+  GetSystemIntakeContactsDocument,
   SystemIntakeContactRole,
   useCreateSystemIntakeContactMutation,
   useUpdateSystemIntakeContactMutation
@@ -63,12 +64,22 @@ const ContactForm = ({
   const history = useHistory();
   const { showMessage, showMessageOnNextPage } = useMessage();
   const [create] = useCreateSystemIntakeContactMutation({
-    refetchQueries: ['GetSystemIntakeContacts'],
+    refetchQueries: [
+      {
+        query: GetSystemIntakeContactsDocument,
+        variables: { id: systemIntakeId }
+      }
+    ],
     awaitRefetchQueries: true
   });
 
   const [update] = useUpdateSystemIntakeContactMutation({
-    refetchQueries: ['GetSystemIntakeContacts'],
+    refetchQueries: [
+      {
+        query: GetSystemIntakeContactsDocument,
+        variables: { id: systemIntakeId }
+      }
+    ],
     awaitRefetchQueries: true
   });
 
@@ -298,12 +309,12 @@ const ContactForm = ({
                     <p
                       className={`margin-y-0 padding-left-4 font-sans-xs ${defaultValues?.isRequester ? 'text-gray-50' : ''}`}
                     >
-                      {/* TODO: different words for non-priarmy
-                        need to do a check to see if it is isPrimary
-                       */}
-                      {action === 'add'
-                        ? t('requestHome:addPOC.isRequesterHint')
-                        : t('requestHome:editPOC.notRemovePrimary')}
+                      {action === 'add' &&
+                        t('requestHome:addPOC.isRequesterHint')}
+                      {action === 'edit' &&
+                        (defaultValues?.isRequester
+                          ? t('requestHome:editPOC.notRemovePrimary')
+                          : t('requestHome:editPOC.changePrimary'))}
                     </p>
                   }
                 />

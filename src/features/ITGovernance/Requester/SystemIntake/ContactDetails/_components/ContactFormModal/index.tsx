@@ -13,6 +13,7 @@ import {
 } from '@trussworks/react-uswds';
 import { ExternalRecipientAlert } from 'features/TechnicalAssistance/Admin/_components/ActionFormWrapper/Recipients';
 import {
+  GetSystemIntakeContactsDocument,
   SystemIntakeContactRole,
   useCreateSystemIntakeContactMutation,
   useUpdateSystemIntakeContactMutation
@@ -64,12 +65,22 @@ const ContactFormModal = ({
   const { t } = useTranslation('intake');
 
   const [create] = useCreateSystemIntakeContactMutation({
-    refetchQueries: ['GetSystemIntakeContacts'],
+    refetchQueries: [
+      {
+        query: GetSystemIntakeContactsDocument,
+        variables: { id: systemIntakeId }
+      }
+    ],
     awaitRefetchQueries: true
   });
 
   const [update] = useUpdateSystemIntakeContactMutation({
-    refetchQueries: ['GetSystemIntakeContacts'],
+    refetchQueries: [
+      {
+        query: GetSystemIntakeContactsDocument,
+        variables: { id: systemIntakeId }
+      }
+    ],
     awaitRefetchQueries: true
   });
 
