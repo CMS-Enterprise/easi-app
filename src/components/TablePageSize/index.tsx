@@ -7,13 +7,20 @@ type TablePageSizeProps = {
   className?: string;
   pageSize: number;
   setPageSize: (pageSize: number) => void;
+  suffix?: string;
 };
 
-const Option = ({ value }: { value: number }) => {
+const Option = ({
+  value,
+  suffix
+}: {
+  value: number | 'all';
+  suffix?: string; // Add word to end of page - ex: Show 10 milestones
+}) => {
   const { t } = useTranslation('systemProfile');
   return (
     <option value={value}>
-      {t('tableAndPagination:pageSize:show', { value })}
+      {t('tableAndPagination:pageSize:show', { value })} {suffix}
     </option>
   );
 };
@@ -21,7 +28,8 @@ const Option = ({ value }: { value: number }) => {
 const TablePageSize = ({
   className,
   pageSize,
-  setPageSize
+  setPageSize,
+  suffix
 }: TablePageSizeProps) => {
   const classNames = classnames('desktop:margin-top-2', className);
   return (
@@ -34,11 +42,11 @@ const TablePageSize = ({
         onChange={(e: any) => setPageSize(Number(e.target.value))}
         value={pageSize}
       >
-        <Option value={5} />
-        <Option value={10} />
-        <Option value={25} />
-        <Option value={50} />
-        <Option value={100} />
+        <Option value={5} suffix={suffix} />
+        <Option value={10} suffix={suffix} />
+        <Option value={25} suffix={suffix} />
+        <Option value={50} suffix={suffix} />
+        <Option value={100} suffix={suffix} />
       </Select>
     </div>
   );

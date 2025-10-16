@@ -96,6 +96,7 @@ const RequestHome = ({
             });
           }}
           removeContact={handleRemoveContact}
+          pageSize={5}
         />
       </div>
 
