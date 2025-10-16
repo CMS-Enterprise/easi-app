@@ -76,56 +76,55 @@ const EditSystemProfile = () => {
         </IconLink>
 
         <CardGroup className="margin-bottom-10">
-          <SystemProfileSectionCard
+          {/* <SystemProfileSectionCard
             section={SystemProfileLockableSection.BUSINESS_INFORMATION}
-            percentComplete={18}
             isManagedExternally
-            hasPendingChanges
-          />
+            readOnly
+          /> */}
 
           <SystemProfileSectionCard
             section={SystemProfileLockableSection.IMPLEMENTATION_DETAILS}
-            percentComplete={98}
+            isManagedExternally
+            readOnly
           />
 
           <SystemProfileSectionCard
             section={SystemProfileLockableSection.DATA}
-            percentComplete={70}
+            isManagedExternally
+            readOnly
           />
 
           <SystemProfileSectionCard
             section={SystemProfileLockableSection.TOOLS_AND_SOFTWARE}
-            percentComplete={70}
+            isManagedExternally
+            readOnly
           />
 
           <SystemProfileSectionCard
             section={SystemProfileLockableSection.SUB_SYSTEMS}
-            percentComplete={70}
+            isManagedExternally
+            readOnly
           />
 
           <SystemProfileSectionCard
             section={SystemProfileLockableSection.TEAM}
-            percentComplete={70}
           />
 
           <SystemProfileSectionCard
             section="CONTRACTS"
             isManagedExternally
-            externalDataExists
             readOnly
           />
 
           <SystemProfileSectionCard
             section="FUNDING_AND_BUDGET"
             isManagedExternally
-            externalDataExists
             readOnly
           />
 
           <SystemProfileSectionCard
             section="ATO_AND_SECURITY"
             isManagedExternally
-            externalDataExists
             readOnly
           />
         </CardGroup>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
+import { MemoryRouter, Route } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 import { SystemProfileLockableSection } from 'gql/generated/graphql';
 import i18next from 'i18next';
@@ -14,9 +15,13 @@ describe('SystemProfileSectionCard', () => {
   it('matches the snapshot', () => {
     const { asFragment } = render(
       <Provider store={store}>
-        <SystemProfileSectionCard
-          section={SystemProfileLockableSection.BUSINESS_INFORMATION}
-        />
+        <MemoryRouter initialEntries={['/systems/000-100-0/edit']}>
+          <Route path="/systems/:systemId/edit">
+            <SystemProfileSectionCard
+              section={SystemProfileLockableSection.IMPLEMENTATION_DETAILS}
+            />
+          </Route>
+        </MemoryRouter>
       </Provider>
     );
 
@@ -26,16 +31,20 @@ describe('SystemProfileSectionCard', () => {
   it('renders section title and description', () => {
     render(
       <Provider store={store}>
-        <SystemProfileSectionCard
-          section={SystemProfileLockableSection.BUSINESS_INFORMATION}
-        />
+        <MemoryRouter initialEntries={['/systems/000-100-0/edit']}>
+          <Route path="/systems/:systemId/edit">
+            <SystemProfileSectionCard
+              section={SystemProfileLockableSection.IMPLEMENTATION_DETAILS}
+            />
+          </Route>
+        </MemoryRouter>
       </Provider>
     );
 
     expect(
       screen.getByText(
         i18next.t<string>(
-          'systemProfile:sectionCards.BUSINESS_INFORMATION.title'
+          'systemProfile:sectionCards.IMPLEMENTATION_DETAILS.title'
         )
       )
     ).toBeInTheDocument();
@@ -43,7 +52,7 @@ describe('SystemProfileSectionCard', () => {
     expect(
       screen.getByText(
         i18next.t<string>(
-          'systemProfile:sectionCards.BUSINESS_INFORMATION.description'
+          'systemProfile:sectionCards.IMPLEMENTATION_DETAILS.description'
         )
       )
     ).toBeInTheDocument();
@@ -52,10 +61,14 @@ describe('SystemProfileSectionCard', () => {
   it('renders partially managed externally', () => {
     render(
       <Provider store={store}>
-        <SystemProfileSectionCard
-          section={SystemProfileLockableSection.BUSINESS_INFORMATION}
-          isManagedExternally
-        />
+        <MemoryRouter initialEntries={['/systems/000-100-0/edit']}>
+          <Route path="/systems/:systemId/edit">
+            <SystemProfileSectionCard
+              section={SystemProfileLockableSection.IMPLEMENTATION_DETAILS}
+              isManagedExternally
+            />
+          </Route>
+        </MemoryRouter>
       </Provider>
     );
 
@@ -71,11 +84,15 @@ describe('SystemProfileSectionCard', () => {
   it('renders managed externally - read only view', () => {
     render(
       <Provider store={store}>
-        <SystemProfileSectionCard
-          section={SystemProfileLockableSection.BUSINESS_INFORMATION}
-          isManagedExternally
-          readOnly
-        />
+        <MemoryRouter initialEntries={['/systems/000-100-0/edit']}>
+          <Route path="/systems/:systemId/edit">
+            <SystemProfileSectionCard
+              section={SystemProfileLockableSection.IMPLEMENTATION_DETAILS}
+              isManagedExternally
+              readOnly
+            />
+          </Route>
+        </MemoryRouter>
       </Provider>
     );
 
@@ -89,10 +106,14 @@ describe('SystemProfileSectionCard', () => {
   it('renders section with external data', () => {
     render(
       <Provider store={store}>
-        <SystemProfileSectionCard
-          section={SystemProfileLockableSection.BUSINESS_INFORMATION}
-          externalDataExists
-        />
+        <MemoryRouter initialEntries={['/systems/000-100-0/edit']}>
+          <Route path="/systems/:systemId/edit">
+            <SystemProfileSectionCard
+              section={SystemProfileLockableSection.IMPLEMENTATION_DETAILS}
+              externalDataExists
+            />
+          </Route>
+        </MemoryRouter>
       </Provider>
     );
 
@@ -102,10 +123,14 @@ describe('SystemProfileSectionCard', () => {
   it('renders section with pending changes ', () => {
     render(
       <Provider store={store}>
-        <SystemProfileSectionCard
-          section={SystemProfileLockableSection.BUSINESS_INFORMATION}
-          hasPendingChanges
-        />
+        <MemoryRouter initialEntries={['/systems/000-100-0/edit']}>
+          <Route path="/systems/:systemId/edit">
+            <SystemProfileSectionCard
+              section={SystemProfileLockableSection.IMPLEMENTATION_DETAILS}
+              hasPendingChanges
+            />
+          </Route>
+        </MemoryRouter>
       </Provider>
     );
 

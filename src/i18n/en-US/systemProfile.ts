@@ -1,6 +1,5 @@
 import { SystemProfileSection } from 'constants/systemProfile';
 
-// TODO EASI-4984: Update system profile section card descriptions after content is added to Figma
 const sectionCards: Record<
   SystemProfileSection,
   { title: string; description: string }
@@ -8,47 +7,47 @@ const sectionCards: Record<
   BUSINESS_INFORMATION: {
     title: 'Business information',
     description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.'
+      'Basic non-technical information about this system, including high-level details such as the system name, acronym, and description.'
   },
   IMPLEMENTATION_DETAILS: {
     title: 'Implementation details',
     description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.'
+      'More in-depth information about this system and its operations, including details such as users per month, development progress, environment URLs, and more.'
   },
   DATA: {
     title: 'Data',
     description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.'
+      'Information about the data this system stores, exchanges, and uses. This section also includes information about APIs for this system.'
   },
   TOOLS_AND_SOFTWARE: {
     title: 'Tools and software',
     description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.'
+      'A list of the tools or software licenses used by this system to accomplish a variety of tasks from project management to development and security. These tools and software could be used directly in the implementation of the system or in day-to-day operations.'
   },
   SUB_SYSTEMS: {
     title: 'Sub-systems',
     description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.'
+      'Basic information about any sub-systems under the umbrella of this system. Includes details such as a name, description, and retirement date.'
   },
   TEAM: {
     title: 'Team',
     description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.'
+      'A count of all full-time employees (FTE) from CMS and contractor teams. This section also lists the name, contact information, and roles for individuals working on this system. '
   },
   CONTRACTS: {
     title: 'Contracts',
     description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.'
+      'All contracts fully or partially supporting this system. This information is pulled from other CMS systems, including CAMS and CALM, and includes details such as contract title, contract number, and period of performance.'
   },
   FUNDING_AND_BUDGET: {
     title: 'Funding and budget',
     description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.'
+      'Information about the system costs and funding sources of this system. This information is pulled from other CMS systems, including CAMS and CALM, and includes details such as budgeted and actual costs by system year, as well as the percentage of each budget project specifically allocated to this system.'
   },
   ATO_AND_SECURITY: {
     title: 'ATO and security',
     description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.'
+      'Security and authorization details for this system. This information comes from CFACTS and includes details such as ATO status, ATO expiration date, and total number of POA&Ms and security findings.'
   }
 };
 
