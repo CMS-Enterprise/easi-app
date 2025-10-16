@@ -37,16 +37,17 @@ export type SystemProfileSection =
   | 'ATO_AND_SECURITY';
 
 /** Maps section enum to corresponding route */
+// TODO EASI-4984 - Update to use new routes. These point to existing system profile pages (or empty string if not yet implemented).
 export const systemProfileLockableSectionMap: Record<
   SystemProfileSection,
   string
 > = {
-  BUSINESS_INFORMATION: 'business-information',
-  IMPLEMENTATION_DETAILS: 'implementation-details',
-  DATA: 'data',
+  BUSINESS_INFORMATION: '',
+  IMPLEMENTATION_DETAILS: 'details',
+  DATA: 'system-data',
   TOOLS_AND_SOFTWARE: 'tools-and-software',
   SUB_SYSTEMS: 'sub-systems',
-  TEAM: 'team',
+  TEAM: 'team/edit?workspace',
   CONTRACTS: 'contracts',
   FUNDING_AND_BUDGET: 'funding-and-budget',
   ATO_AND_SECURITY: 'ato-and-security'
