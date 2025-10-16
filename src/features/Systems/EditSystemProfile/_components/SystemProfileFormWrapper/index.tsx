@@ -89,7 +89,10 @@ function SystemProfileFormWrapper<
 
   return (
     <div className="system-profile-form-wrapper">
-      <div className="bg-base-lightest padding-bottom-6">
+      <div
+        className="bg-base-lightest padding-bottom-6"
+        data-testid="form-wrapper-header"
+      >
         <GridContainer>
           <Breadcrumbs
             items={[
@@ -135,7 +138,10 @@ function SystemProfileFormWrapper<
         </GridContainer>
       </div>
 
-      <GridContainer className="padding-top-3 padding-bottom-7">
+      <GridContainer
+        className="padding-top-3 padding-bottom-7"
+        data-testid="system-profile-form-wrapper-content"
+      >
         <Message />
 
         <h2 className="margin-bottom-1">
@@ -148,7 +154,10 @@ function SystemProfileFormWrapper<
         {children}
       </GridContainer>
 
-      <GridContainer className="padding-bottom-10 margin-bottom-3">
+      <GridContainer
+        className="padding-bottom-10 margin-bottom-3"
+        data-testid="form-wrapper-footer"
+      >
         <div className="border-top-1px border-base-light padding-top-2 padding-bottom-1 margin-y-05 display-flex flex-align-center">
           <h4 className="margin-y-0 margin-right-1">
             {t('editSystemProfile.form.sectionCompleteness')}
@@ -158,53 +167,57 @@ function SystemProfileFormWrapper<
           <PercentCompleteTag percentComplete={0} />
         </div>
 
-        <div className="form-button-group margin-top-2 display-flex tablet:flex-align-center flex-gap-105">
-          {!readOnly && (
-            <Button
-              type="button"
-              outline
-              disabled={isSubmitting}
-              onClick={() => submit(editSystemProfilePath)}
+        {
+          // Hide navigation buttons and next section text if there is no next section
+          nextSection && (
+            <div
+              className="form-button-group margin-top-2 display-flex tablet:flex-align-center flex-gap-105"
+              data-testid="form-wrapper-button-group"
             >
-              {t('form:saveAndExit')}
-            </Button>
-          )}
-
-          {nextSection && (
-            <Button
-              type="button"
-              disabled={isSubmitting}
-              onClick={() =>
-                submit(`${editSystemProfilePath}/${nextSection.route}`)
-              }
-            >
-              {t(
-                readOnly
-                  ? 'editSystemProfile.form.continueToNextSection'
-                  : 'editSystemProfile.form.saveAndContinue'
+              {!readOnly && (
+                <Button
+                  type="button"
+                  outline
+                  disabled={isSubmitting}
+                  onClick={() => submit(editSystemProfilePath)}
+                >
+                  {t('form:saveAndExit')}
+                </Button>
               )}
-            </Button>
-          )}
 
-          {nextSection && (
-            <p
-              className="margin-y-0 text-base-dark"
-              data-testid="next-section-text"
-            >
-              {t('editSystemProfile.form.nextSection', {
-                sectionName: t(
-                  `systemProfile:sectionCards.${nextSection.key}.title`
-                )
-              })}
-            </p>
-          )}
-        </div>
+              <Button
+                type="button"
+                disabled={isSubmitting}
+                onClick={() =>
+                  submit(`${editSystemProfilePath}/${nextSection.route}`)
+                }
+              >
+                {t(
+                  readOnly
+                    ? 'editSystemProfile.form.continueToNextSection'
+                    : 'editSystemProfile.form.saveAndContinue'
+                )}
+              </Button>
+
+              <p
+                className="margin-y-0 text-base-dark"
+                data-testid="next-section-text"
+              >
+                {t('editSystemProfile.form.nextSection', {
+                  sectionName: t(
+                    `systemProfile:sectionCards.${nextSection.key}.title`
+                  )
+                })}
+              </p>
+            </div>
+          )
+        }
 
         <IconLink
           to={editSystemProfilePath}
           icon={<Icon.ArrowBack aria-hidden />}
           iconPosition="before"
-          className="margin-top-105"
+          className="margin-top-2"
         >
           {readOnly ? t('form:exitForm') : t('form:exitFormWithoutSaving')}
         </IconLink>

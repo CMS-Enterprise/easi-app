@@ -41,6 +41,7 @@ const PercentCompleteTag = ({
 
   return (
     <Tag
+      data-testid="percent-complete-tag"
       className={classNames(
         'line-height-body-3 padding-y-05 padding-x-105 display-inline-block text-no-uppercase font-body-sm text-bold easi-percent-complete-tag',
         tagColorClassName,
