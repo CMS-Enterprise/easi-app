@@ -29,6 +29,7 @@ describe('SystemProfileFormWrapper', () => {
             <SystemProfileFormWrapper
               section={SystemProfileLockableSection.BUSINESS_INFORMATION}
               onSubmit={onSubmit}
+              percentComplete={20}
             >
               {content}
             </SystemProfileFormWrapper>
@@ -84,6 +85,7 @@ describe('SystemProfileFormWrapper', () => {
             <SystemProfileFormWrapper
               section={SystemProfileLockableSection.BUSINESS_INFORMATION}
               readOnly
+              hasExternalData={false}
             >
               section content
             </SystemProfileFormWrapper>
@@ -99,6 +101,10 @@ describe('SystemProfileFormWrapper', () => {
     ).toBeInTheDocument();
 
     const footer = screen.getByTestId('form-wrapper-footer');
+
+    expect(within(footer).getByTestId('external-data-tag')).toHaveTextContent(
+      /No external data/
+    );
 
     const buttonGroup = within(footer).getByTestId('form-wrapper-button-group');
 

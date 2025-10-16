@@ -9,7 +9,11 @@ const AtoAndSecurity = () => {
 
   return (
     <EasiFormProvider {...form}>
-      <SystemProfileFormWrapper section="ATO_AND_SECURITY" readOnly>
+      <SystemProfileFormWrapper
+        section="ATO_AND_SECURITY"
+        readOnly
+        hasExternalData={false}
+      >
         section content
       </SystemProfileFormWrapper>
     </EasiFormProvider>

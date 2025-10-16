@@ -9,7 +9,11 @@ const FundingAndBudget = () => {
 
   return (
     <EasiFormProvider {...form}>
-      <SystemProfileFormWrapper section="FUNDING_AND_BUDGET" readOnly>
+      <SystemProfileFormWrapper
+        section="FUNDING_AND_BUDGET"
+        readOnly
+        hasExternalData={false}
+      >
         section content
       </SystemProfileFormWrapper>
     </EasiFormProvider>

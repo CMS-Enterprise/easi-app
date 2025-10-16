@@ -14,6 +14,8 @@ import PercentCompleteTag from 'components/PercentCompleteTag';
 import { systemProfileSections } from 'constants/systemProfile';
 import useMessage from 'hooks/useMessage';
 
+import ExternalDataTag from '../ExternalDataTag';
+
 import './index.scss';
 
 type SystemProfileSectionKey = (typeof systemProfileSections)[number]['key'];
@@ -26,6 +28,8 @@ type SystemProfileFormWrapperProps<
   /** Optional onSubmit function if section is editable form */
   onSubmit?: (values: TFieldValues) => Promise<FetchResult>;
   readOnly?: boolean;
+  percentComplete?: number;
+  hasExternalData?: boolean;
 };
 
 /**
@@ -40,7 +44,9 @@ function SystemProfileFormWrapper<
   children,
   section,
   onSubmit,
-  readOnly
+  readOnly,
+  percentComplete,
+  hasExternalData
 }: SystemProfileFormWrapperProps<TFieldValues>) {
   const { t } = useTranslation('systemProfile');
   const history = useHistory();
@@ -109,6 +115,7 @@ function SystemProfileFormWrapper<
             {t('editSystemProfile.heading')}
           </PageHeading>
 
+          {/* TODO EASI-4984: implement overall percentage complete functionality */}
           <PercentCompleteTag
             percentComplete={70}
             translationKey="general:percentCompleteOverall"
@@ -163,8 +170,13 @@ function SystemProfileFormWrapper<
             {t('editSystemProfile.form.sectionCompleteness')}
           </h4>
 
-          {/* TODO EASI-4984: should show external data tag instead of percentage if applicable */}
-          <PercentCompleteTag percentComplete={0} />
+          {percentComplete !== undefined && (
+            <PercentCompleteTag percentComplete={percentComplete} />
+          )}
+
+          {hasExternalData !== undefined && (
+            <ExternalDataTag hasExternalData={hasExternalData} />
+          )}
         </div>
 
         {

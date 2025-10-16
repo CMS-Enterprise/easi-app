@@ -570,6 +570,7 @@ const systemProfile = {
     dataPartiallyManagedExternally: 'Data partially managed externally',
     dataManagedExternally: 'Data managed externally',
     externalDataExists: 'External data exists',
+    noExternalData: 'No external data',
     selfLocked: 'You are editing this section.',
     locked: 'is currently editing. Come back later.',
     form: {

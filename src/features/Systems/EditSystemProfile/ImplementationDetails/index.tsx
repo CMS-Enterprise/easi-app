@@ -12,6 +12,7 @@ const ImplementationDetails = () => {
     <EasiFormProvider {...form}>
       <SystemProfileFormWrapper
         section={SystemProfileLockableSection.IMPLEMENTATION_DETAILS}
+        percentComplete={0}
       >
         section content
       </SystemProfileFormWrapper>

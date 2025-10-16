@@ -12,6 +12,7 @@ const ToolsAndSoftware = () => {
     <EasiFormProvider {...form}>
       <SystemProfileFormWrapper
         section={SystemProfileLockableSection.TOOLS_AND_SOFTWARE}
+        percentComplete={0}
       >
         section content
       </SystemProfileFormWrapper>

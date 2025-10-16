@@ -12,6 +12,7 @@ const SubSystems = () => {
     <EasiFormProvider {...form}>
       <SystemProfileFormWrapper
         section={SystemProfileLockableSection.SUB_SYSTEMS}
+        percentComplete={0}
       >
         section content
       </SystemProfileFormWrapper>

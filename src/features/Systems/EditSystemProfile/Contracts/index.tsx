@@ -9,7 +9,11 @@ const Contracts = () => {
 
   return (
     <EasiFormProvider {...form}>
-      <SystemProfileFormWrapper section="CONTRACTS" readOnly>
+      <SystemProfileFormWrapper
+        section="CONTRACTS"
+        readOnly
+        hasExternalData={false}
+      >
         section content
       </SystemProfileFormWrapper>
     </EasiFormProvider>

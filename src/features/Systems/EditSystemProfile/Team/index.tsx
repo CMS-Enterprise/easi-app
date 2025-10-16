@@ -10,7 +10,10 @@ const Team = () => {
 
   return (
     <EasiFormProvider {...form}>
-      <SystemProfileFormWrapper section={SystemProfileLockableSection.TEAM}>
+      <SystemProfileFormWrapper
+        section={SystemProfileLockableSection.TEAM}
+        percentComplete={0}
+      >
         section content
       </SystemProfileFormWrapper>
     </EasiFormProvider>

@@ -10,7 +10,10 @@ const Data = () => {
 
   return (
     <EasiFormProvider {...form}>
-      <SystemProfileFormWrapper section={SystemProfileLockableSection.DATA}>
+      <SystemProfileFormWrapper
+        section={SystemProfileLockableSection.DATA}
+        percentComplete={0}
+      >
         section content
       </SystemProfileFormWrapper>
     </EasiFormProvider>

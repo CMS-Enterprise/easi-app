@@ -12,6 +12,7 @@ const BusinessInformation = () => {
     <EasiFormProvider {...form}>
       <SystemProfileFormWrapper
         section={SystemProfileLockableSection.BUSINESS_INFORMATION}
+        percentComplete={0}
       >
         section content
       </SystemProfileFormWrapper>
