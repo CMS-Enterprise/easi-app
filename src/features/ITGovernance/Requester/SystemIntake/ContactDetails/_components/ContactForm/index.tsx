@@ -105,6 +105,8 @@ const ContactForm = ({
     defaultValues: initialValues || emptyContactFields
   });
 
+  const requestHomeVariant = copyVariant === 'requestHome';
+
   /** Set form action to edit if default values has an id */
   const action: 'add' | 'edit' = useMemo(
     () => (defaultValues?.id ? 'edit' : 'add'),
@@ -204,13 +206,11 @@ const ContactForm = ({
 
         <FieldGroup className="margin-top-2" error={!!errors.userAccount}>
           <Label
-            className={
-              copyVariant === 'requestHome' ? 'text-bold' : 'text-normal'
-            }
+            className={requestHomeVariant ? 'text-bold' : 'text-normal'}
             htmlFor="react-select-userAccount-input"
             requiredMarker
           >
-            {copyVariant === 'requestHome'
+            {requestHomeVariant
               ? t('requestHome:sharedPOC.name', { context: action })
               : t('contactDetails.additionalContacts.name', {
                   type: action === 'edit' ? capitalize(type) : type,
@@ -258,13 +258,11 @@ const ContactForm = ({
 
         <FieldGroup className="margin-top-2" error={!!errors.component}>
           <Label
-            className={
-              copyVariant === 'requestHome' ? 'text-bold' : 'text-normal'
-            }
+            className={requestHomeVariant ? 'text-bold' : 'text-normal'}
             htmlFor="component"
             requiredMarker
           >
-            {copyVariant === 'requestHome'
+            {requestHomeVariant
               ? t('requestHome:sharedPOC.component', { context: action })
               : t('contactDetails.additionalContacts.component', {
                   type: action === 'edit' ? capitalize(type) : type,
@@ -303,13 +301,11 @@ const ContactForm = ({
 
         <FieldGroup className="margin-top-2" error={!!errors.roles}>
           <Label
-            className={
-              copyVariant === 'requestHome' ? 'text-bold' : 'text-normal'
-            }
+            className={requestHomeVariant ? 'text-bold' : 'text-normal'}
             htmlFor="roles-combobox"
             requiredMarker
           >
-            {copyVariant === 'requestHome'
+            {requestHomeVariant
               ? t('requestHome:sharedPOC.roles')
               : t('contactDetails.additionalContacts.roles', {
                   type: action === 'edit' ? capitalize(type) : type,
@@ -337,43 +333,45 @@ const ContactForm = ({
           />
         </FieldGroup>
 
-        <FieldGroup className="margin-top-2">
-          <Controller
-            control={control}
-            name="isRequester"
-            render={({ field: { ref, onChange, ...field } }) => {
-              return (
-                <CheckboxField
-                  {...field}
-                  id={field.name}
-                  value="true"
-                  checked={field.value ?? false}
-                  disabled={!!defaultValues?.isRequester}
-                  onChange={e => onChange(e.target.checked)}
-                  label={t('requestHome:addPOC.isRequester')}
-                  labelDescription={
-                    <p
-                      className={`margin-y-0 padding-left-4 font-sans-xs ${defaultValues?.isRequester ? 'text-gray-50' : ''}`}
-                    >
-                      {action === 'add' &&
-                        t('requestHome:addPOC.isRequesterHint')}
-                      {action === 'edit' &&
-                        (defaultValues?.isRequester
-                          ? t('requestHome:editPOC.notRemovePrimary')
-                          : t('requestHome:editPOC.changePrimary'))}
-                    </p>
-                  }
-                />
-              );
-            }}
-          />
-        </FieldGroup>
+        {requestHomeVariant && (
+          <FieldGroup className="margin-top-2">
+            <Controller
+              control={control}
+              name="isRequester"
+              render={({ field: { ref, onChange, ...field } }) => {
+                return (
+                  <CheckboxField
+                    {...field}
+                    id={field.name}
+                    value="true"
+                    checked={field.value ?? false}
+                    disabled={!!defaultValues?.isRequester}
+                    onChange={e => onChange(e.target.checked)}
+                    label={t('requestHome:addPOC.isRequester')}
+                    labelDescription={
+                      <p
+                        className={`margin-y-0 padding-left-4 font-sans-xs ${defaultValues?.isRequester ? 'text-gray-50' : ''}`}
+                      >
+                        {action === 'add' &&
+                          t('requestHome:addPOC.isRequesterHint')}
+                        {action === 'edit' &&
+                          (defaultValues?.isRequester
+                            ? t('requestHome:editPOC.notRemovePrimary')
+                            : t('requestHome:editPOC.changePrimary'))}
+                      </p>
+                    }
+                  />
+                );
+              }}
+            />
+          </FieldGroup>
+        )}
 
         {showExternalRecipientAlert && (
           <ExternalRecipientAlert email={watch('userAccount.email')} />
         )}
 
-        {copyVariant === 'requestHome' && action === 'add' && (
+        {requestHomeVariant && action === 'add' && (
           <Alert type="info" className="margin-top-8 margin-bottom-4">
             {t('requestHome:addPOC.addAlert')}
           </Alert>
@@ -388,7 +386,7 @@ const ContactForm = ({
           >
             {t('contactDetails.additionalContacts.submit', {
               context: action,
-              type: copyVariant === 'requestHome' ? 'point of contact' : type
+              type: requestHomeVariant ? 'point of contact' : type
             })}
           </Button>
           {onCancel && (
