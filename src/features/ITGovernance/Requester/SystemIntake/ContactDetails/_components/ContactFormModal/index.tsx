@@ -26,6 +26,8 @@ const ContactFormModal = ({
 }: ContactFormModalProps) => {
   const { t } = useTranslation('intake');
 
+  const action: 'add' | 'edit' = initialValues?.id ? 'edit' : 'add';
+
   return (
     <Modal
       isOpen={isOpen}
@@ -35,8 +37,7 @@ const ContactFormModal = ({
       <Fieldset>
         <legend>
           <ModalHeading className="margin-bottom-0">
-            {/* THIS HAD A EDIT VERSION  */}
-            {t(`contactDetails.additionalContacts.add`, { type })}
+            {t(`contactDetails.additionalContacts.${action}`, { type })}
           </ModalHeading>
         </legend>
         <ContactForm
