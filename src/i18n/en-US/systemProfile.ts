@@ -1,6 +1,5 @@
 import { SystemProfileSection } from 'constants/systemProfile';
 
-// TODO EASI-4984: Update system profile section card descriptions after content is added to Figma
 const sectionCards: Record<
   SystemProfileSection,
   { title: string; description: string }
