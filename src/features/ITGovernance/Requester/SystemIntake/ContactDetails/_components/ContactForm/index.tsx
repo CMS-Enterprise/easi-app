@@ -11,7 +11,6 @@ import {
   Label,
   Select
 } from '@trussworks/react-uswds';
-import { ExternalRecipientAlert } from 'features/TechnicalAssistance/Admin/_components/ActionFormWrapper/Recipients';
 import {
   SystemIntakeContactRole,
   useCreateSystemIntakeContactMutation,
@@ -78,11 +77,11 @@ const ContactForm = ({
     control,
     handleSubmit,
     register,
-    watch,
     reset,
     formState: { errors, isValid, defaultValues, isSubmitSuccessful }
   } = useEasiForm<ContactFormFields>({
-    resolver: yupResolver(ContactFormSchema)
+    resolver: yupResolver(ContactFormSchema),
+    defaultValues: initialValues || emptyContactFields
   });
 
   /** Set form action to edit if default values has an id */
@@ -143,7 +142,8 @@ const ContactForm = ({
         );
         history.push('request-home');
       })
-      .catch(() =>
+      .catch(() => {
+        window.scrollTo(0, 0);
         showMessage(
           <Trans
             t={t}
@@ -156,8 +156,8 @@ const ContactForm = ({
           {
             type: 'error'
           }
-        )
-      );
+        );
+      });
   });
 
   // Reset default values
@@ -177,8 +177,7 @@ const ContactForm = ({
             htmlFor="react-select-userAccount-input"
             requiredMarker
           >
-            {t('contactDetails.additionalContacts.name', {
-              type: action === 'edit' ? capitalize(type) : type,
+            {t('requestHome:sharedPOC.name', {
               context: action
             })}
           </Label>
@@ -204,9 +203,9 @@ const ContactForm = ({
                   name="userAccount"
                   ariaDescribedBy="userAccountHelpText"
                   value={{
-                    euaUserId: field.value?.username ?? '',
-                    commonName: field.value?.commonName ?? '',
-                    email: field.value?.email ?? ''
+                    euaUserId: field.value.username,
+                    commonName: field.value.commonName,
+                    email: field.value.email
                   }}
                   onChange={contact => {
                     field.onChange({
@@ -223,8 +222,7 @@ const ContactForm = ({
 
         <FieldGroup className="margin-top-2" error={!!errors.component}>
           <Label className="text-bold" htmlFor="component" requiredMarker>
-            {t('contactDetails.additionalContacts.component', {
-              type: action === 'edit' ? capitalize(type) : type,
+            {t('requestHome:sharedPOC.component', {
               context: action
             })}
           </Label>
@@ -260,10 +258,7 @@ const ContactForm = ({
 
         <FieldGroup className="margin-top-2" error={!!errors.roles}>
           <Label className="text-bold" htmlFor="roles-combobox" requiredMarker>
-            {t('contactDetails.additionalContacts.roles', {
-              type: action === 'edit' ? capitalize(type) : type,
-              context: action
-            })}
+            {t('requestHome:sharedPOC.roles')}
           </Label>
 
           <ErrorMessage errors={errors} name="roles" as={<FieldErrorMsg />} />
@@ -297,11 +292,19 @@ const ContactForm = ({
                   id={field.name}
                   value="true"
                   checked={field.value ?? false}
+                  disabled={!!defaultValues?.isRequester}
                   onChange={e => onChange(e.target.checked)}
                   label={t('requestHome:addPOC.isRequester')}
                   labelDescription={
-                    <p className="margin-y-0 padding-left-4 font-sans-xs">
-                      {t('requestHome:addPOC.isRequesterHint')}
+                    <p
+                      className={`margin-y-0 padding-left-4 font-sans-xs ${defaultValues?.isRequester ? 'text-gray-50' : ''}`}
+                    >
+                      {/* TODO: different words for non-priarmy
+                        need to do a check to see if it is isPrimary
+                       */}
+                      {action === 'add'
+                        ? t('requestHome:addPOC.isRequesterHint')
+                        : t('requestHome:editPOC.notRemovePrimary')}
                     </p>
                   }
                 />
@@ -310,10 +313,11 @@ const ContactForm = ({
           />
         </FieldGroup>
 
-        <ExternalRecipientAlert email={watch('userAccount.email')} />
-        <Alert type="info" className="margin-top-8 margin-bottom-4">
-          {t('requestHome:addPOC.addAlert')}
-        </Alert>
+        {action === 'add' && (
+          <Alert type="info" className="margin-top-8 margin-bottom-4">
+            {t('requestHome:addPOC.addAlert')}
+          </Alert>
+        )}
 
         <ButtonGroup className="margin-top-205">
           <Button
