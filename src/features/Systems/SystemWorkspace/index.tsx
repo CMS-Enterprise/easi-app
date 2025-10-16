@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Redirect, useHistory, useParams } from 'react-router-dom';
 import {
   Button,
+  ButtonGroup,
   CardGroup,
   Grid,
   GridContainer
@@ -123,13 +124,21 @@ export const SystemWorkspace = () => {
               header={t('spaces.systemProfile.header')}
               description={t('spaces.systemProfile.description')}
               footer={
-                <Button
-                  type="button"
-                  outline
-                  onClick={() => history.push(`/systems/${systemId}/home`)}
-                >
-                  {t('spaces.systemProfile.linktext')}
-                </Button>
+                <ButtonGroup>
+                  <Button
+                    type="button"
+                    onClick={() => history.push(`/systems/${systemId}/edit`)}
+                  >
+                    {t('systemProfile:editSystemProfile.heading')}
+                  </Button>
+                  <Button
+                    type="button"
+                    outline
+                    onClick={() => history.push(`/systems/${systemId}/home`)}
+                  >
+                    {t('spaces.systemProfile.linktext')}
+                  </Button>
+                </ButtonGroup>
               }
             />
 
