@@ -5,7 +5,6 @@ import { useHistory, useParams } from 'react-router-dom';
 import { FetchResult } from '@apollo/client';
 import { Button, GridContainer, Icon } from '@trussworks/react-uswds';
 
-import Alert from 'components/Alert';
 import Breadcrumbs from 'components/Breadcrumbs';
 import { useEasiFormContext } from 'components/EasiForm';
 import IconButton from 'components/IconButton';
@@ -27,7 +26,6 @@ type SystemProfileFormWrapperProps<
   /** Optional onSubmit function if section is editable form */
   onSubmit?: (values: TFieldValues) => Promise<FetchResult>;
   readOnly?: boolean;
-  showPendingChangesAlert?: boolean;
 };
 
 /**
@@ -42,8 +40,7 @@ function SystemProfileFormWrapper<
   children,
   section,
   onSubmit,
-  readOnly,
-  showPendingChangesAlert
+  readOnly
 }: SystemProfileFormWrapperProps<TFieldValues>) {
   const { t } = useTranslation('systemProfile');
   const history = useHistory();
@@ -160,12 +157,6 @@ function SystemProfileFormWrapper<
           {/* TODO EASI-4984: should show external data tag instead of percentage if applicable */}
           <PercentCompleteTag percentComplete={0} />
         </div>
-
-        {showPendingChangesAlert && (
-          <Alert type="warning" slim className="margin-bottom-3">
-            {t('editSystemProfile.form.pendingChangesAlert')}
-          </Alert>
-        )}
 
         <div className="form-button-group margin-top-2 display-flex tablet:flex-align-center flex-gap-105">
           {!readOnly && (

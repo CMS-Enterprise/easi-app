@@ -580,8 +580,6 @@ const systemProfile = {
       breadcrumb: 'Update system information',
       systemDetails: 'System details',
       sectionCompleteness: 'Section completeness',
-      pendingChangesAlert:
-        'When you save your changes to this page, the changes will be pending until they are confirmed by the Enterprise Architecture (EA) team, so you will not see them right away.',
       saveAndContinue: 'Save and continue to next section',
       continueToNextSection: 'Continue to next section',
       nextSection: 'Next section: {{sectionName}}'
