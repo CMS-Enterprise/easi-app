@@ -22,7 +22,6 @@ const AddOrEditPointOfContact = ({
 }) => {
   const { t } = useTranslation('requestHome');
   const location = useLocation<{ contact?: SystemIntakeContactFragment }>();
-  // Extract the contact from navigation state
   const contactToEdit = location.state?.contact;
 
   // Transform SystemIntakeContactFragment to ContactFormFields format
@@ -64,8 +63,6 @@ const AddOrEditPointOfContact = ({
         <ContactForm
           type="contact"
           systemIntakeId={systemIntake.id}
-          // isOpen={isContactsModalOpen}
-          // closeModal={() => console.log('gary it is working')}
           initialValues={isAddingPOC ? null : transformedContactToEdit}
         />
         <IconLink
