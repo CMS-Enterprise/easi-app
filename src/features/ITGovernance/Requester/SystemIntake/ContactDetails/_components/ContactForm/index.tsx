@@ -16,7 +16,6 @@ import {
   useCreateSystemIntakeContactMutation,
   useUpdateSystemIntakeContactMutation
 } from 'gql/generated/graphql';
-import { capitalize } from 'lodash';
 
 import Alert from 'components/Alert';
 import CedarContactSelect from 'components/CedarContactSelect';
