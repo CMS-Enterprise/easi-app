@@ -19,6 +19,8 @@ import {
   SystemProfileSection
 } from 'constants/systemProfile';
 
+import './index.scss';
+
 type SystemProfileSectionCardProps = {
   section: SystemProfileSection;
   percentComplete?: number;
@@ -87,7 +89,9 @@ const SystemProfileSectionCard = ({
           !hasPendingChanges && 'padding-bottom-2'
         )}
       >
-        <p>{t(`sectionCards.${section}.description`)}</p>
+        <p className="system-profile-section-card__description">
+          {t(`sectionCards.${section}.description`)}
+        </p>
 
         {percentComplete && (
           <PercentCompleteTag percentComplete={percentComplete} />

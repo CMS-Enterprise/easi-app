@@ -21,8 +21,10 @@ exports[`SystemProfileSectionCard > matches the snapshot 1`] = `
         class="usa-card__body padding-top-05 padding-bottom-2"
         data-testid="CardBody"
       >
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis earum tenetur quo cupiditate, eaque qui officia recusandae. Lorem ipsum dolor sit amet consectetur adi.
+        <p
+          class="system-profile-section-card__description"
+        >
+          More in-depth information about this system and its operations, including details such as users per month, development progress, environment URLs, and more.
         </p>
       </div>
       <div
