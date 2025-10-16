@@ -1,3 +1,56 @@
+import { SystemProfileSection } from 'constants/systemProfile';
+
+const sectionCards: Record<
+  SystemProfileSection,
+  { title: string; description: string }
+> = {
+  BUSINESS_INFORMATION: {
+    title: 'Business information',
+    description:
+      'Basic non-technical information about this system, including high-level details such as the system name, acronym, and description.'
+  },
+  IMPLEMENTATION_DETAILS: {
+    title: 'Implementation details',
+    description:
+      'More in-depth information about this system and its operations, including details such as users per month, development progress, environment URLs, and more.'
+  },
+  DATA: {
+    title: 'Data',
+    description:
+      'Information about the data this system stores, exchanges, and uses. This section also includes information about APIs for this system.'
+  },
+  TOOLS_AND_SOFTWARE: {
+    title: 'Tools and software',
+    description:
+      'A list of the tools or software licenses used by this system to accomplish a variety of tasks from project management to development and security. These tools and software could be used directly in the implementation of the system or in day-to-day operations.'
+  },
+  SUB_SYSTEMS: {
+    title: 'Sub-systems',
+    description:
+      'Basic information about any sub-systems under the umbrella of this system. Includes details such as a name, description, and retirement date.'
+  },
+  TEAM: {
+    title: 'Team',
+    description:
+      'A count of all full-time employees (FTE) from CMS and contractor teams. This section also lists the name, contact information, and roles for individuals working on this system. '
+  },
+  CONTRACTS: {
+    title: 'Contracts',
+    description:
+      'All contracts fully or partially supporting this system. This information is pulled from other CMS systems, including CAMS and CALM, and includes details such as contract title, contract number, and period of performance.'
+  },
+  FUNDING_AND_BUDGET: {
+    title: 'Funding and budget',
+    description:
+      'Information about the system costs and funding sources of this system. This information is pulled from other CMS systems, including CAMS and CALM, and includes details such as budgeted and actual costs by system year, as well as the percentage of each budget project specifically allocated to this system.'
+  },
+  ATO_AND_SECURITY: {
+    title: 'ATO and security',
+    description:
+      'Security and authorization details for this system. This information comes from CFACTS and includes details such as ATO status, ATO expiration date, and total number of POA&Ms and security findings.'
+  }
+};
+
 const systemProfile = {
   header: 'CMS systems and applications',
   subHeader: 'Find information about existing CMS systems and applications.',
@@ -504,7 +557,23 @@ const systemProfile = {
   gql: {
     fail: 'Failed to retrieve systems data'
   },
-  returnToSystemProfile: 'Return to system profile'
+  returnToSystemProfile: 'Return to system profile',
+  editSystemProfile: {
+    heading: 'Edit system profile',
+    subheading: 'for {{systemName}}',
+    description:
+      'Use this page to compile information about your system and it’s status in the CMS Target Life Cycle (TLC). Compiling more system information in EASi will allow OIT and CMS to stay updated about your system and proactively prompt you if there are any governance activities or TLC related tasks to complete.',
+    returnToSystemWorkspace: 'Return to system workspace',
+    sectionHasPendingChanges: 'This section has pending changes',
+    editSection: 'Edit section',
+    viewSection: 'View section',
+    dataPartiallyManagedExternally: 'Data partially managed externally',
+    dataManagedExternally: 'Data managed externally',
+    externalDataExists: 'External data exists',
+    selfLocked: 'You are editing this section.',
+    locked: 'is currently editing. Come back later.'
+  },
+  sectionCards
 };
 
 export default systemProfile;
