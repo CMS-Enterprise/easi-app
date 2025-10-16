@@ -110,7 +110,7 @@ describe('SystemProfileSectionCard', () => {
           <Route path="/systems/:systemId/edit">
             <SystemProfileSectionCard
               section={SystemProfileLockableSection.IMPLEMENTATION_DETAILS}
-              externalDataExists
+              hasExternalData
             />
           </Route>
         </MemoryRouter>

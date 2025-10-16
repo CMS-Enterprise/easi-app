@@ -52,3 +52,31 @@ export const systemProfileLockableSectionMap: Record<
   FUNDING_AND_BUDGET: 'funding-and-budget',
   ATO_AND_SECURITY: 'ato-and-security'
 };
+
+/** Array of edit system profile sections for form wrapper navigation */
+export const systemProfileSections = [
+  {
+    key: SystemProfileLockableSection.BUSINESS_INFORMATION,
+    route: 'business-information'
+  },
+  {
+    key: SystemProfileLockableSection.IMPLEMENTATION_DETAILS,
+    route: 'implementation-details'
+  },
+  { key: SystemProfileLockableSection.DATA, route: 'data' },
+  {
+    key: SystemProfileLockableSection.TOOLS_AND_SOFTWARE,
+    route: 'tools-and-software'
+  },
+  { key: SystemProfileLockableSection.SUB_SYSTEMS, route: 'sub-systems' },
+  { key: SystemProfileLockableSection.TEAM, route: 'team' },
+  { key: 'CONTRACTS', route: 'contracts' },
+  {
+    key: 'FUNDING_AND_BUDGET',
+    route: 'funding-and-budget'
+  },
+  {
+    key: 'ATO_AND_SECURITY',
+    route: 'ato-and-security'
+  }
+] as const;

@@ -1,27 +1,25 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
-import { CardGroup, GridContainer, Icon } from '@trussworks/react-uswds';
+import { Route, Switch, useParams } from 'react-router-dom';
 import NotFound from 'features/Miscellaneous/NotFound';
-import {
-  SystemProfileLockableSection,
-  useGetCedarSystemQuery
-} from 'gql/generated/graphql';
+import { useGetCedarSystemQuery } from 'gql/generated/graphql';
 
-import Breadcrumbs from 'components/Breadcrumbs';
-import IconLink from 'components/IconLink';
-import MainContent from 'components/MainContent';
-import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 
-import SystemProfileSectionCard from './_components/SystemProfileSectionCard';
+import AtoAndSecurity from './AtoAndSecurity';
+import BusinessInformation from './BusinessInformation';
+import Contracts from './Contracts';
+import Data from './Data';
+import EditSystemProfileHome from './EditSystemProfileHome';
+import FundingAndBudget from './FundingAndBudget';
+import ImplementationDetails from './ImplementationDetails';
+import SubSystems from './SubSystems';
+import Team from './Team';
+import ToolsAndSoftware from './ToolsAndSoftware';
 
 /**
- * Displays section cards and links for editing system profile.
+ * Index file with routes for editable system profile.
  */
 const EditSystemProfile = () => {
-  const { t } = useTranslation('systemProfile');
-
   const { systemId } = useParams<{
     systemId: string;
   }>();
@@ -36,100 +34,52 @@ const EditSystemProfile = () => {
 
   if (loading) return <PageLoading />;
 
-  const { name: systemName } = data.cedarSystem || {};
+  const { name: systemName = '' } = data.cedarSystem || {};
 
   return (
-    <MainContent>
-      <GridContainer>
-        <Breadcrumbs
-          items={[
-            { text: t('header:home'), url: '/' },
-            {
-              text: t('systemWorkspace:header'),
-              url: `/systems/${systemId}/workspace`
-            },
-            { text: t('systemProfile:editSystemProfile.heading') }
-          ]}
-        />
+    <Switch>
+      <Route exact path="/systems/:systemId/edit">
+        <EditSystemProfileHome systemId={systemId} systemName={systemName} />
+      </Route>
 
-        <PageHeading className="margin-bottom-0">
-          {t('systemProfile:editSystemProfile.heading')}
-        </PageHeading>
+      <Route path="/systems/:systemId/edit/business-information">
+        <BusinessInformation />
+      </Route>
 
-        <p className="text-body-lg text-light margin-top-1">
-          {t('systemProfile:editSystemProfile.subheading', {
-            systemName
-          })}
-        </p>
+      <Route path="/systems/:systemId/edit/implementation-details">
+        <ImplementationDetails />
+      </Route>
 
-        <p className="font-body-md text-light line-height-body-5 margin-top-105">
-          {t('systemProfile:editSystemProfile.description')}
-        </p>
+      <Route path="/systems/:systemId/edit/data">
+        <Data />
+      </Route>
 
-        <IconLink
-          to={`/systems/${systemId}/workspace`}
-          icon={<Icon.ArrowBack aria-hidden />}
-          iconPosition="before"
-          className="margin-bottom-6"
-        >
-          {t('systemProfile:editSystemProfile.returnToSystemWorkspace')}
-        </IconLink>
+      <Route path="/systems/:systemId/edit/tools-and-software">
+        <ToolsAndSoftware />
+      </Route>
 
-        <CardGroup className="margin-bottom-10">
-          {/* <SystemProfileSectionCard
-            section={SystemProfileLockableSection.BUSINESS_INFORMATION}
-            isManagedExternally
-            readOnly
-          /> */}
+      <Route path="/systems/:systemId/edit/sub-systems">
+        <SubSystems />
+      </Route>
 
-          <SystemProfileSectionCard
-            section={SystemProfileLockableSection.IMPLEMENTATION_DETAILS}
-            isManagedExternally
-            readOnly
-          />
+      <Route path="/systems/:systemId/edit/team">
+        <Team />
+      </Route>
 
-          <SystemProfileSectionCard
-            section={SystemProfileLockableSection.DATA}
-            isManagedExternally
-            readOnly
-          />
+      <Route path="/systems/:systemId/edit/contracts">
+        <Contracts />
+      </Route>
 
-          <SystemProfileSectionCard
-            section={SystemProfileLockableSection.TOOLS_AND_SOFTWARE}
-            isManagedExternally
-            readOnly
-          />
+      <Route path="/systems/:systemId/edit/funding-and-budget">
+        <FundingAndBudget />
+      </Route>
 
-          <SystemProfileSectionCard
-            section={SystemProfileLockableSection.SUB_SYSTEMS}
-            isManagedExternally
-            readOnly
-          />
+      <Route path="/systems/:systemId/edit/ato-and-security">
+        <AtoAndSecurity />
+      </Route>
 
-          <SystemProfileSectionCard
-            section={SystemProfileLockableSection.TEAM}
-          />
-
-          <SystemProfileSectionCard
-            section="CONTRACTS"
-            isManagedExternally
-            readOnly
-          />
-
-          <SystemProfileSectionCard
-            section="FUNDING_AND_BUDGET"
-            isManagedExternally
-            readOnly
-          />
-
-          <SystemProfileSectionCard
-            section="ATO_AND_SECURITY"
-            isManagedExternally
-            readOnly
-          />
-        </CardGroup>
-      </GridContainer>
-    </MainContent>
+      <Route path="*" component={NotFound} />
+    </Switch>
   );
 };
 
