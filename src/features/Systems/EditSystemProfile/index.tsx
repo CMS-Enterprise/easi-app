@@ -1,6 +1,5 @@
 import React from 'react';
-import { Switch, useParams } from 'react-router-dom';
-import { SecureRoute } from '@okta/okta-react';
+import { Route, Switch, useParams } from 'react-router-dom';
 import NotFound from 'features/Miscellaneous/NotFound';
 import { useGetCedarSystemQuery } from 'gql/generated/graphql';
 
@@ -39,47 +38,47 @@ const EditSystemProfile = () => {
 
   return (
     <Switch>
-      <SecureRoute exact path="/systems/:systemId/edit">
+      <Route exact path="/systems/:systemId/edit">
         <EditSystemProfileHome systemId={systemId} systemName={systemName} />
-      </SecureRoute>
+      </Route>
 
-      <SecureRoute path="/systems/:systemId/edit/business-information">
+      <Route path="/systems/:systemId/edit/business-information">
         <BusinessInformation />
-      </SecureRoute>
+      </Route>
 
-      <SecureRoute path="/systems/:systemId/edit/implementation-details">
+      <Route path="/systems/:systemId/edit/implementation-details">
         <ImplementationDetails />
-      </SecureRoute>
+      </Route>
 
-      <SecureRoute path="/systems/:systemId/edit/data">
+      <Route path="/systems/:systemId/edit/data">
         <Data />
-      </SecureRoute>
+      </Route>
 
-      <SecureRoute path="/systems/:systemId/edit/tools-and-software">
+      <Route path="/systems/:systemId/edit/tools-and-software">
         <ToolsAndSoftware />
-      </SecureRoute>
+      </Route>
 
-      <SecureRoute path="/systems/:systemId/edit/sub-systems">
+      <Route path="/systems/:systemId/edit/sub-systems">
         <SubSystems />
-      </SecureRoute>
+      </Route>
 
-      <SecureRoute path="/systems/:systemId/edit/team">
+      <Route path="/systems/:systemId/edit/team">
         <Team />
-      </SecureRoute>
+      </Route>
 
-      <SecureRoute path="/systems/:systemId/edit/contracts">
+      <Route path="/systems/:systemId/edit/contracts">
         <Contracts />
-      </SecureRoute>
+      </Route>
 
-      <SecureRoute path="/systems/:systemId/edit/funding-and-budget">
+      <Route path="/systems/:systemId/edit/funding-and-budget">
         <FundingAndBudget />
-      </SecureRoute>
+      </Route>
 
-      <SecureRoute path="/systems/:systemId/edit/ato-and-security">
+      <Route path="/systems/:systemId/edit/ato-and-security">
         <AtoAndSecurity />
-      </SecureRoute>
+      </Route>
 
-      <SecureRoute path="*" component={NotFound} />
+      <Route path="*" component={NotFound} />
     </Switch>
   );
 };
