@@ -1,0 +1,60 @@
+
+
+"""
+Sections of the system profile form that can be locked for editing
+"""
+enum SystemProfileLockableSection {
+  BUSINESS_INFORMATION
+  IMPLEMENTATION_DETAILS
+  DATA
+  TOOLS_AND_SOFTWARE
+  SUB_SYSTEMS
+  TEAM
+}
+
+"""
+Status of a locked section of the system profile form
+"""
+type SystemProfileSectionLockStatus {
+  cedarSystemId: String!
+  section: SystemProfileLockableSection!
+  lockedByUserAccount: UserAccount!
+}
+
+type SystemProfileSectionLockStatusChanged {
+  changeType: LockChangeType!
+  lockStatus: SystemProfileSectionLockStatus!
+  actionType: LockActionType!
+}
+
+
+enum LockChangeType {
+  ADDED
+  UPDATED
+  REMOVED
+}
+
+enum LockActionType {
+  """
+  A normal flow action
+  """
+  NORMAL
+
+  """
+  An administrative action
+  """
+  ADMIN
+}
+
+extend type Query {
+  """
+  Returns an array containing the status of locked sections for a given cedar system profile form
+  """
+  systemProfileLockedSections(cedarSystemId: String!): [SystemProfileSectionLockStatus!]!
+}
+
+type Subscription {
+    onSystemProfileSectionLockStatusChanged(
+    cedarSystemID: String!
+  ): SystemProfileSectionLockStatusChanged!
+}
