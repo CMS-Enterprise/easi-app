@@ -81,7 +81,7 @@ const RequestHome = ({
         <p className="easi-body-medium margin-top-0 margin-bottom-2">
           {t('requestHome.sections.teamInfo.description')}
         </p>
-        <Link to="add-point-of-contact">
+        <Link to={`/it-governance/${systemIntake.id}/add-point-of-contact`}>
           <IconButton icon={<Icon.Add aria-hidden />} type="button" unstyled>
             {t('requestHome.sections.teamInfo.addAnother')}
           </IconButton>
