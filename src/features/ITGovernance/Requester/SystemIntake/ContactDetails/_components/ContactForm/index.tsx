@@ -167,7 +167,7 @@ const ContactForm = ({
             type: 'success'
           }
         );
-        history.push('request-home');
+        history.push(`/it-governance/${systemIntakeId}/request-home`);
       })
       .catch(() => {
         const errorNode = (
