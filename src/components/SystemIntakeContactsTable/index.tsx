@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Column, useSortBy, useTable } from 'react-table';
+import { Column, usePagination, useSortBy, useTable } from 'react-table';
 import {
   Button,
   ButtonGroup,
@@ -234,7 +234,8 @@ const SystemIntakeContactsTable = ({
         pageSize
       }
     },
-    useSortBy
+    useSortBy,
+    usePagination
   );
 
   const {
