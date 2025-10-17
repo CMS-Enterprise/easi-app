@@ -182,21 +182,21 @@ const RequestHome = ({
                 term={t('intake:review.businessNeed')}
                 definition={
                   systemIntake.businessNeed ??
-                  t('grbReview.businessCaseOverview.noSolution')
+                  t('grbReview:businessCaseOverview.noSolution')
                 }
               />
               <DefinitionCombo
                 term={t('intake:review.solving')}
                 definition={
                   systemIntake.businessSolution ??
-                  t('grbReview.businessCaseOverview.noSolution')
+                  t('grbReview:businessCaseOverview.noSolution')
                 }
               />
               <DefinitionCombo
                 term={t('intake:review.process')}
                 definition={
                   systemIntake.currentStage ??
-                  t('grbReview.businessCaseOverview.noSolution')
+                  t('grbReview:businessCaseOverview.noSolution')
                 }
               />
               <ReviewRow>
@@ -205,7 +205,7 @@ const RequestHome = ({
                     term={t('intake:review.currentAnnualSpending')}
                     definition={
                       systemIntake.annualSpending?.currentAnnualSpending ??
-                      t('grbReview.businessCaseOverview.noSolution')
+                      t('grbReview:businessCaseOverview.noSolution')
                     }
                   />
                 </div>
@@ -215,7 +215,7 @@ const RequestHome = ({
                     definition={
                       systemIntake.annualSpending
                         ?.currentAnnualSpendingITPortion ??
-                      t('grbReview.businessCaseOverview.noSolution')
+                      t('grbReview:businessCaseOverview.noSolution')
                     }
                   />
                 </div>
@@ -226,7 +226,7 @@ const RequestHome = ({
                     term={t('intake:review.plannedYearOneSpending')}
                     definition={
                       systemIntake.annualSpending?.plannedYearOneSpending ??
-                      t('grbReview.businessCaseOverview.noSolution')
+                      t('grbReview:businessCaseOverview.noSolution')
                     }
                   />
                 </div>
@@ -236,7 +236,7 @@ const RequestHome = ({
                     definition={
                       systemIntake.annualSpending
                         ?.plannedYearOneSpendingITPortion ??
-                      t('grbReview.businessCaseOverview.noSolution')
+                      t('grbReview:businessCaseOverview.noSolution')
                     }
                   />
                 </div>

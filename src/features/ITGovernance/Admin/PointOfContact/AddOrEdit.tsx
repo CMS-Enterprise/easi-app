@@ -52,7 +52,7 @@ const AddOrEditPointOfContact = ({
         </p>
         <RequiredFieldsText />
         <IconLink
-          to="request-home"
+          to={`/it-governance/${systemIntake.id}/request-home`}
           icon={<Icon.ArrowBack aria-hidden />}
           className="margin-bottom-5"
         >
@@ -66,7 +66,7 @@ const AddOrEditPointOfContact = ({
           initialValues={isAddingPOC ? null : transformedContactToEdit}
         />
         <IconLink
-          to="request-home"
+          to={`/it-governance/${systemIntake.id}/request-home`}
           icon={<Icon.ArrowBack aria-hidden />}
           className="margin-top-2 margin-bottom-5"
         >
