@@ -179,6 +179,8 @@ export default gql(/* GraphQL */ `
     }
     itGovTaskStatuses {
       intakeFormStatus
+      bizCaseDraftStatus
+      bizCaseFinalStatus
     }
   }
 `);

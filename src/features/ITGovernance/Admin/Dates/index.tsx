@@ -118,7 +118,7 @@ const Dates = ({
         }
       });
 
-      history.push(`/it-governance/${systemId}/intake-request`);
+      history.push(`/it-governance/${systemId}/request-home`);
     } catch (error) {
       showMessage(t('error.message'), { type: 'error' });
     }

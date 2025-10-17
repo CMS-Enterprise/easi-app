@@ -5,15 +5,25 @@ import classnames from 'classnames';
 
 type TablePageSizeProps = {
   className?: string;
-  pageSize: number;
+  pageSize: number | 'all';
   setPageSize: (pageSize: number) => void;
+  setInitPageSize?: (pageSize: number) => void; // Used to set a default page size to reset to when exporting table document to PDF
+  valueArray?: (number | 'all')[];
+  suffix?: string;
+  onChange?: () => void; // Optional callback for when the page size changes
 };
 
-const Option = ({ value }: { value: number }) => {
+const Option = ({
+  value,
+  suffix
+}: {
+  value: number | 'all';
+  suffix?: string; // Add word to end of page - ex: Show 10 milestones
+}) => {
   const { t } = useTranslation('systemProfile');
   return (
-    <option value={value}>
-      {t('tableAndPagination:pageSize:show', { value })}
+    <option value={value === 'all' ? 100000 : value}>
+      {t('tableAndPagination:pageSize:show', { value })} {suffix}
     </option>
   );
 };
@@ -21,9 +31,14 @@ const Option = ({ value }: { value: number }) => {
 const TablePageSize = ({
   className,
   pageSize,
-  setPageSize
+  setPageSize,
+  setInitPageSize,
+  valueArray = [5, 10, 25, 50, 100],
+  suffix,
+  onChange
 }: TablePageSizeProps) => {
   const classNames = classnames('desktop:margin-top-2', className);
+
   return (
     <div className={classNames}>
       <Select
@@ -31,14 +46,24 @@ const TablePageSize = ({
         id="table-page-size"
         data-testid="table-page-size"
         name="tablePageSize"
-        onChange={(e: any) => setPageSize(Number(e.target.value))}
+        onChange={(e: any) => {
+          setPageSize(Number(e.target.value));
+          if (setInitPageSize) {
+            setInitPageSize(Number(e.target.value));
+          }
+          if (onChange) {
+            onChange();
+          }
+        }}
         value={pageSize}
       >
-        <Option value={5} />
-        <Option value={10} />
-        <Option value={25} />
-        <Option value={50} />
-        <Option value={100} />
+        {valueArray.map(value => (
+          <Option
+            key={`table-page-size--${value}`}
+            value={value}
+            suffix={suffix}
+          />
+        ))}
       </Select>
     </div>
   );

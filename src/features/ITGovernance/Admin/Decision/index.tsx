@@ -23,7 +23,7 @@ import {
   useDecision
 } from './DecisionContext';
 
-const DefinitionCombo = ({
+export const DefinitionCombo = ({
   term,
   definition
 }: {
@@ -32,9 +32,12 @@ const DefinitionCombo = ({
 }) => {
   return (
     <>
-      <DescriptionTerm term={term} className="margin-bottom-0" />
+      <DescriptionTerm
+        term={term}
+        className="margin-bottom-0 easi-text-normal"
+      />
       <DescriptionDefinition
-        className="text-pre-wrap margin-bottom-0"
+        className="text-pre-wrap margin-bottom-0 easi-body-medium"
         definition={<RichTextViewer value={definition} />}
       />
     </>
