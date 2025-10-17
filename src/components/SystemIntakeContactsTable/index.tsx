@@ -244,6 +244,7 @@ const SystemIntakeContactsTable = ({
     headerGroups,
     prepareRow,
     rows,
+    page,
     setPageSize
   } = table;
 
@@ -313,7 +314,7 @@ const SystemIntakeContactsTable = ({
           </thead>
           <tbody {...getTableBodyProps()}>
             {rows.length > 0 ? (
-              rows.map(row => {
+              page.map(row => {
                 const { key: rowKey, ...rowProps } = row.getRowProps();
 
                 const { username } = row.original.userAccount;
