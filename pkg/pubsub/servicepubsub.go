@@ -14,8 +14,9 @@ type ServicePubSub struct {
 
 // NewServicePubSub is a constructor to create a new instance of a PubSub service
 func NewServicePubSub() *ServicePubSub {
-	psi := ServicePubSub{sessions: SessionMap{}}
-	return &psi
+	return &ServicePubSub{
+		sessions: make(SessionMap),
+	}
 }
 
 // Subscribe will register the subscriber for notifications of a given eventType within a session
@@ -46,8 +47,8 @@ func (ps *ServicePubSub) Unsubscribe(sessionID uuid.UUID, eventType EventType, s
 		return
 	}
 
-	subscriber, wasSubscriberMapFound := subscriberMap[subscriberID]
-	if !wasSubscriberMapFound {
+	subscriber, wasSubscriberFound := subscriberMap[subscriberID]
+	if !wasSubscriberFound {
 		return
 	}
 
