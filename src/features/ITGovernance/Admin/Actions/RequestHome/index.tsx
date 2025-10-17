@@ -91,7 +91,7 @@ const RequestHome = ({
           loading={loading}
           handleEditContact={contact => {
             history.push({
-              pathname: 'edit-point-of-contact',
+              pathname: `/it-governance/${systemIntake.id}/edit-point-of-contact`,
               state: { contact }
             });
           }}
