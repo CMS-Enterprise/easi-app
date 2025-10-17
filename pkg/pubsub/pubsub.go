@@ -1,3 +1,5 @@
+// Package pubsub provides a lightweight, thread-safe publish-subscribe service
+// for managing event notifications within sessions.
 package pubsub
 
 import (

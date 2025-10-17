@@ -6,20 +6,20 @@ import (
 	"github.com/google/uuid"
 )
 
-// ServicePubSub is a PubSub service implementation boxing communication by Session
+// ServicePubSub is a thread-safe PubSub service implementation that organizes subscriptions by session
 type ServicePubSub struct {
 	sessions SessionMap
 	lock     sync.Mutex
 }
 
-// NewServicePubSub is a constructor to create a new instance of a PubSub service
+// NewServicePubSub creates a new instance of a PubSub service
 func NewServicePubSub() *ServicePubSub {
 	return &ServicePubSub{
 		sessions: make(SessionMap),
 	}
 }
 
-// Subscribe will register the subscriber for notifications of a given eventType within a session
+// Subscribe registers the subscriber for notifications of a given eventType within a session
 func (ps *ServicePubSub) Subscribe(sessionID uuid.UUID, eventType EventType, subscriber Subscriber, onDisconnect <-chan struct{}) {
 	ps.lock.Lock()
 

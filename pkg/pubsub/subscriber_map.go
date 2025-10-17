@@ -1,4 +1,4 @@
 package pubsub
 
-// SubscriberMap defines a collection of subscribers by identifying tokens
+// SubscriberMap is a collection of subscribers indexed by subscriber ID
 type SubscriberMap map[string]Subscriber
