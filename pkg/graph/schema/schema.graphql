@@ -23,7 +23,6 @@ enum PersonRole {
   OTHER
 }
 
-
 """
 CedarAuthorityToOperate represents the response from the /authorityToOperate endpoint from the CEDAR Core API.
 """
@@ -3059,9 +3058,6 @@ type Mutation {
   deleteTrbLeadOption(eua: String!): Boolean! @hasRole(role: EASI_TRB_ADMIN)
   sendGRBReviewPresentationDeckReminderEmail(systemIntakeID: UUID!): Boolean!
     @hasRole(role: EASI_GOVTEAM)
-  
-  lockSystemProfileSection(cedarSystemId: String!, section: SystemProfileLockableSection!): Boolean!
-  unlockSystemProfileSection(cedarSystemId: String!, section: SystemProfileLockableSection!): Boolean!
 }
 
 """
@@ -3110,7 +3106,6 @@ type Query {
   requesterUpdateEmailData: [RequesterUpdateEmailData!]!
   systemIntakeSystem(systemIntakeSystemID: UUID!): SystemIntakeSystem
   systemIntakeSystems(systemIntakeId: UUID!): [SystemIntakeSystem!]!
-
 }
 
 enum TRBRequestType {

@@ -827,8 +827,10 @@ type SystemProfileSectionLockStatus struct {
 	CedarSystemID       string                       `json:"cedarSystemId"`
 	Section             SystemProfileLockableSection `json:"section"`
 	LockedByUserAccount *authentication.UserAccount  `json:"lockedByUserAccount"`
+	IsAdmin             bool                         `json:"isAdmin"`
 }
 
+// Details about a change to the lock status of a system profile section
 type SystemProfileSectionLockStatusChanged struct {
 	ChangeType LockChangeType                  `json:"changeType"`
 	LockStatus *SystemProfileSectionLockStatus `json:"lockStatus"`

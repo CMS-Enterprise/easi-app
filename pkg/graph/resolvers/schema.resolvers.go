@@ -1185,18 +1185,6 @@ func (r *mutationResolver) SendGRBReviewPresentationDeckReminderEmail(ctx contex
 	return SendGRBReviewPresentationDeckReminderEmail(ctx, systemIntakeID, r.emailClient, r.store, r.service.FetchUserInfo)
 }
 
-// LockSystemProfileSection is the resolver for the lockSystemProfileSection field.
-func (r *mutationResolver) LockSystemProfileSection(ctx context.Context, cedarSystemID string, section models.SystemProfileLockableSection) (bool, error) {
-	// TODO: Implement lock section resolver
-	return true, nil
-}
-
-// UnlockSystemProfileSection is the resolver for the unlockSystemProfileSection field.
-func (r *mutationResolver) UnlockSystemProfileSection(ctx context.Context, cedarSystemID string, section models.SystemProfileLockableSection) (bool, error) {
-	// TODO: Implement unlock section resolver
-	return true, nil
-}
-
 // SystemIntake is the resolver for the systemIntake field.
 func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 	intake, err := r.store.FetchSystemIntakeByID(ctx, id)

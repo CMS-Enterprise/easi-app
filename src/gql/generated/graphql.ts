@@ -1112,6 +1112,7 @@ export type Mutation = {
   startGRBReview?: Maybe<Scalars['String']['output']>;
   submitIntake?: Maybe<UpdateSystemIntakePayload>;
   unlinkTRBRequestRelation?: Maybe<TRBRequest>;
+  unlockAllSystemProfileSections: Array<SystemProfileSectionLockStatus>;
   unlockSystemProfileSection: Scalars['Boolean']['output'];
   updateSystemIntakeAdminLead?: Maybe<UpdateSystemIntakePayload>;
   updateSystemIntakeContact?: Maybe<CreateSystemIntakeContactPayload>;
@@ -1579,6 +1580,12 @@ export type MutationSubmitIntakeArgs = {
 /** Defines the mutations for the schema */
 export type MutationUnlinkTRBRequestRelationArgs = {
   trbRequestID: Scalars['UUID']['input'];
+};
+
+
+/** Defines the mutations for the schema */
+export type MutationUnlockAllSystemProfileSectionsArgs = {
+  cedarSystemId: Scalars['String']['input'];
 };
 
 
@@ -2098,12 +2105,18 @@ export type SubmitIntakeInput = {
 
 export type Subscription = {
   __typename: 'Subscription';
+  onLockSystemProfileSectionContext: SystemProfileSectionLockStatusChanged;
   onSystemProfileSectionLockStatusChanged: SystemProfileSectionLockStatusChanged;
 };
 
 
+export type SubscriptionOnLockSystemProfileSectionContextArgs = {
+  cedarSystemId: Scalars['String']['input'];
+};
+
+
 export type SubscriptionOnSystemProfileSectionLockStatusChangedArgs = {
-  cedarSystemID: Scalars['String']['input'];
+  cedarSystemId: Scalars['String']['input'];
 };
 
 /** Represents an IT governance request for a system */
@@ -3002,10 +3015,12 @@ export enum SystemProfileLockableSection {
 export type SystemProfileSectionLockStatus = {
   __typename: 'SystemProfileSectionLockStatus';
   cedarSystemId: Scalars['String']['output'];
+  isAdmin: Scalars['Boolean']['output'];
   lockedByUserAccount: UserAccount;
   section: SystemProfileLockableSection;
 };
 
+/** Details about a change to the lock status of a system profile section */
 export type SystemProfileSectionLockStatusChanged = {
   __typename: 'SystemProfileSectionLockStatusChanged';
   actionType: LockActionType;
