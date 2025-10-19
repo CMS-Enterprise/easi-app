@@ -6,45 +6,50 @@ package resolvers
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/google/uuid"
 
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/graph/generated"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // LockSystemProfileSection is the resolver for the lockSystemProfileSection field.
 func (r *mutationResolver) LockSystemProfileSection(ctx context.Context, cedarSystemID uuid.UUID, section models.SystemProfileLockableSection) (bool, error) {
-	// TODO: Implement lock section resolver
-	return true, nil
+	principal := appcontext.Principal(ctx)
+
+	return LockSystemProfileSection(r.pubsub, cedarSystemID, section, principal)
 }
 
 // UnlockSystemProfileSection is the resolver for the unlockSystemProfileSection field.
 func (r *mutationResolver) UnlockSystemProfileSection(ctx context.Context, cedarSystemID uuid.UUID, section models.SystemProfileLockableSection) (bool, error) {
-	// TODO: Implement unlock section resolver
-	return true, nil
+	userID := appcontext.Principal(ctx).Account().ID
+
+	return UnlockSystemProfileSection(r.pubsub, cedarSystemID, section, userID, models.LockActionTypeNormal)
 }
 
 // UnlockAllSystemProfileSections is the resolver for the unlockAllSystemProfileSections field.
 func (r *mutationResolver) UnlockAllSystemProfileSections(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.SystemProfileSectionLockStatus, error) {
-	panic(fmt.Errorf("not implemented: UnlockAllSystemProfileSections - unlockAllSystemProfileSections"))
+	return UnlockAllSystemProfileSections(r.pubsub, cedarSystemID)
 }
 
 // SystemProfileLockedSections is the resolver for the systemProfileLockedSections field.
 func (r *queryResolver) SystemProfileLockedSections(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.SystemProfileSectionLockStatus, error) {
-	// TODO: Implement locked section resolver - currently returns empty array
-	return []*models.SystemProfileSectionLockStatus{}, nil
+	return GetSystemProfileSectionLocks(cedarSystemID)
 }
 
 // OnSystemProfileSectionLockStatusChanged is the resolver for the onSystemProfileSectionLockStatusChanged field.
 func (r *subscriptionResolver) OnSystemProfileSectionLockStatusChanged(ctx context.Context, cedarSystemID uuid.UUID) (<-chan *models.SystemProfileSectionLockStatusChanged, error) {
-	panic(fmt.Errorf("not implemented: OnSystemProfileSectionLockStatusChanged - onSystemProfileSectionLockStatusChanged"))
+	principal := appcontext.Principal(ctx)
+
+	return SubscribeSystemProfileSectionLockChangesWithCallback(r.pubsub, cedarSystemID, principal, ctx.Done())
 }
 
 // OnLockSystemProfileSectionContext is the resolver for the onLockSystemProfileSectionContext field.
 func (r *subscriptionResolver) OnLockSystemProfileSectionContext(ctx context.Context, cedarSystemID uuid.UUID) (<-chan *models.SystemProfileSectionLockStatusChanged, error) {
-	panic(fmt.Errorf("not implemented: OnLockSystemProfileSectionContext - onLockSystemProfileSectionContext"))
+	principal := appcontext.Principal(ctx)
+
+	return OnLockSystemProfileSectionContext(r.pubsub, cedarSystemID, principal, ctx.Done())
 }
 
 // Subscription returns generated.SubscriptionResolver implementation.
