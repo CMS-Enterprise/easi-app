@@ -28,6 +28,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/authorization"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/oktaapi"
+	"github.com/cms-enterprise/easi-app/pkg/pubsub"
 	"github.com/cms-enterprise/easi-app/pkg/scheduler"
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 	"github.com/cms-enterprise/easi-app/pkg/usersearch"
@@ -171,6 +172,9 @@ func (s *Server) routes() {
 
 	serviceConfig := services.NewConfig(s.logger, ldClient)
 
+	// set up PubSub service for real-time subscriptions
+	pubsubService := pubsub.NewServicePubSub()
+
 	// set up GraphQL routes
 	gql := s.router.PathPrefix("/api/graph").Subrouter()
 
@@ -206,6 +210,7 @@ func (s *Server) routes() {
 		&emailClient,
 		ldClient,
 		coreClient,
+		pubsubService,
 	)
 	gqlDirectives := generated.DirectiveRoot{HasRole: func(ctx context.Context, obj interface{}, next graphql.Resolver, role models.Role) (res interface{}, err error) {
 		if !services.HasRole(ctx, role) {
