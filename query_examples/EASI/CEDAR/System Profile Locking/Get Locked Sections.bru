@@ -1,0 +1,32 @@
+meta {
+  name: Get System Profile Locked Sections
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query systemProfileLockedSections {
+    systemProfileLockedSections(cedarSystemId: "{{cedarSystemId}}") {
+      cedarSystemId
+      section
+      isAdmin
+      lockedByUserAccount {
+        id
+        username
+        commonName
+        email
+      }
+    }
+  }
+}
+
+settings {
+  encodeUrl: true
+}
+

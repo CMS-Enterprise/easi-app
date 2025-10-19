@@ -1,0 +1,36 @@
+meta {
+  name: Subscribe to Lock Status Changes
+  type: graphql
+  seq: 5
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  subscription onLockChanges {
+    onSystemProfileSectionLockStatusChanged(cedarSystemId: "{{cedarSystemId}}") {
+      changeType
+      actionType
+      lockStatus {
+        cedarSystemId
+        section
+        isAdmin
+        lockedByUserAccount {
+          id
+          username
+          commonName
+          email
+        }
+      }
+    }
+  }
+}
+
+settings {
+  encodeUrl: true
+}
+
