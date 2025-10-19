@@ -5,7 +5,7 @@
   "dependencies": {
     "@apollo/client": "^3.13.9",
     "@babel/plugin-syntax-class-properties": "^7.12.13",
-    "@cypress/code-coverage": "^3.14.6",
+    "@cypress/code-coverage": "^3.14.7",
     "@graphql-codegen/typescript-react-apollo": "^4.3.3",
     "@hookform/error-message": "^2.0.1",
     "@hookform/resolvers": "^2.9.8",
@@ -71,7 +71,7 @@
     "react-datepicker": "^8.7.0",
     "react-dom": "18.3.1",
     "react-ga4": "^2.1.0",
-    "react-hook-form": "^7.64.0",
+    "react-hook-form": "^7.65.0",
     "react-i18next": "^11.5.0",
     "react-idle-timer": "^5.7.2",
     "react-media": "^1.10.0",
@@ -181,7 +181,7 @@
     "vite-plugin-svgr": "^4.5.0",
     "vite-tsconfig-paths": "^4.2.0",
     "vitest": "^3.2.4",
-    "webpack": "^5.102.0"
+    "webpack": "^5.102.1"
   },
   "resolutions": {
     "@types/react": "18.3.1",
