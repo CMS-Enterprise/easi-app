@@ -32,7 +32,7 @@ enum SystemProfileLockableSection {
 Status of a locked section of the system profile form
 """
 type SystemProfileSectionLockStatus {
-  cedarSystemId: String!
+  cedarSystemId: UUID!
   section: SystemProfileLockableSection!
   lockedByUserAccount: UserAccount!
   isAdmin: Boolean!
@@ -52,32 +52,32 @@ extend type Query {
   Returns an array containing the status of locked sections for a given cedar system profile form
   """
   systemProfileLockedSections(
-    cedarSystemId: String!
+    cedarSystemId: UUID!
   ): [SystemProfileSectionLockStatus!]!
 }
 
 extend type Mutation {
   lockSystemProfileSection(
-    cedarSystemId: String!
+    cedarSystemId: UUID!
     section: SystemProfileLockableSection!
   ): Boolean!
 
   unlockSystemProfileSection(
-    cedarSystemId: String!
+    cedarSystemId: UUID!
     section: SystemProfileLockableSection!
   ): Boolean!
 
   unlockAllSystemProfileSections(
-    cedarSystemId: String!
+    cedarSystemId: UUID!
   ): [SystemProfileSectionLockStatus!]!
 }
 
 type Subscription {
   onSystemProfileSectionLockStatusChanged(
-    cedarSystemId: String!
+    cedarSystemId: UUID!
   ): SystemProfileSectionLockStatusChanged!
 
   onLockSystemProfileSectionContext(
-    cedarSystemId: String!
+    cedarSystemId: UUID!
   ): SystemProfileSectionLockStatusChanged!
 }

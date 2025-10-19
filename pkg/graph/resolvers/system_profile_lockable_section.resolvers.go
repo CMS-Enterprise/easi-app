@@ -8,40 +8,42 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/google/uuid"
+
 	"github.com/cms-enterprise/easi-app/pkg/graph/generated"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // LockSystemProfileSection is the resolver for the lockSystemProfileSection field.
-func (r *mutationResolver) LockSystemProfileSection(ctx context.Context, cedarSystemID string, section models.SystemProfileLockableSection) (bool, error) {
+func (r *mutationResolver) LockSystemProfileSection(ctx context.Context, cedarSystemID uuid.UUID, section models.SystemProfileLockableSection) (bool, error) {
 	// TODO: Implement lock section resolver
 	return true, nil
 }
 
 // UnlockSystemProfileSection is the resolver for the unlockSystemProfileSection field.
-func (r *mutationResolver) UnlockSystemProfileSection(ctx context.Context, cedarSystemID string, section models.SystemProfileLockableSection) (bool, error) {
+func (r *mutationResolver) UnlockSystemProfileSection(ctx context.Context, cedarSystemID uuid.UUID, section models.SystemProfileLockableSection) (bool, error) {
 	// TODO: Implement unlock section resolver
 	return true, nil
 }
 
 // UnlockAllSystemProfileSections is the resolver for the unlockAllSystemProfileSections field.
-func (r *mutationResolver) UnlockAllSystemProfileSections(ctx context.Context, cedarSystemID string) ([]*models.SystemProfileSectionLockStatus, error) {
+func (r *mutationResolver) UnlockAllSystemProfileSections(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.SystemProfileSectionLockStatus, error) {
 	panic(fmt.Errorf("not implemented: UnlockAllSystemProfileSections - unlockAllSystemProfileSections"))
 }
 
 // SystemProfileLockedSections is the resolver for the systemProfileLockedSections field.
-func (r *queryResolver) SystemProfileLockedSections(ctx context.Context, cedarSystemID string) ([]*models.SystemProfileSectionLockStatus, error) {
+func (r *queryResolver) SystemProfileLockedSections(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.SystemProfileSectionLockStatus, error) {
 	// TODO: Implement locked section resolver - currently returns empty array
 	return []*models.SystemProfileSectionLockStatus{}, nil
 }
 
 // OnSystemProfileSectionLockStatusChanged is the resolver for the onSystemProfileSectionLockStatusChanged field.
-func (r *subscriptionResolver) OnSystemProfileSectionLockStatusChanged(ctx context.Context, cedarSystemID string) (<-chan *models.SystemProfileSectionLockStatusChanged, error) {
+func (r *subscriptionResolver) OnSystemProfileSectionLockStatusChanged(ctx context.Context, cedarSystemID uuid.UUID) (<-chan *models.SystemProfileSectionLockStatusChanged, error) {
 	panic(fmt.Errorf("not implemented: OnSystemProfileSectionLockStatusChanged - onSystemProfileSectionLockStatusChanged"))
 }
 
 // OnLockSystemProfileSectionContext is the resolver for the onLockSystemProfileSectionContext field.
-func (r *subscriptionResolver) OnLockSystemProfileSectionContext(ctx context.Context, cedarSystemID string) (<-chan *models.SystemProfileSectionLockStatusChanged, error) {
+func (r *subscriptionResolver) OnLockSystemProfileSectionContext(ctx context.Context, cedarSystemID uuid.UUID) (<-chan *models.SystemProfileSectionLockStatusChanged, error) {
 	panic(fmt.Errorf("not implemented: OnLockSystemProfileSectionContext - onLockSystemProfileSectionContext"))
 }
 
