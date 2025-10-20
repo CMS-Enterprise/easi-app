@@ -7,46 +7,44 @@ package resolvers
 import (
 	"context"
 
-	"github.com/google/uuid"
-
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/graph/generated"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // LockSystemProfileSection is the resolver for the lockSystemProfileSection field.
-func (r *mutationResolver) LockSystemProfileSection(ctx context.Context, cedarSystemID uuid.UUID, section models.SystemProfileLockableSection) (bool, error) {
+func (r *mutationResolver) LockSystemProfileSection(ctx context.Context, cedarSystemID string, section models.SystemProfileLockableSection) (bool, error) {
 	principal := appcontext.Principal(ctx)
 
 	return LockSystemProfileSection(r.pubsub, cedarSystemID, section, principal)
 }
 
 // UnlockSystemProfileSection is the resolver for the unlockSystemProfileSection field.
-func (r *mutationResolver) UnlockSystemProfileSection(ctx context.Context, cedarSystemID uuid.UUID, section models.SystemProfileLockableSection) (bool, error) {
+func (r *mutationResolver) UnlockSystemProfileSection(ctx context.Context, cedarSystemID string, section models.SystemProfileLockableSection) (bool, error) {
 	userID := appcontext.Principal(ctx).Account().ID
 
 	return UnlockSystemProfileSection(r.pubsub, cedarSystemID, section, userID, models.LockActionTypeNormal)
 }
 
 // UnlockAllSystemProfileSections is the resolver for the unlockAllSystemProfileSections field.
-func (r *mutationResolver) UnlockAllSystemProfileSections(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.SystemProfileSectionLockStatus, error) {
+func (r *mutationResolver) UnlockAllSystemProfileSections(ctx context.Context, cedarSystemID string) ([]*models.SystemProfileSectionLockStatus, error) {
 	return UnlockAllSystemProfileSections(r.pubsub, cedarSystemID)
 }
 
 // SystemProfileLockedSections is the resolver for the systemProfileLockedSections field.
-func (r *queryResolver) SystemProfileLockedSections(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.SystemProfileSectionLockStatus, error) {
+func (r *queryResolver) SystemProfileLockedSections(ctx context.Context, cedarSystemID string) ([]*models.SystemProfileSectionLockStatus, error) {
 	return GetSystemProfileSectionLocks(cedarSystemID)
 }
 
 // OnSystemProfileSectionLockStatusChanged is the resolver for the onSystemProfileSectionLockStatusChanged field.
-func (r *subscriptionResolver) OnSystemProfileSectionLockStatusChanged(ctx context.Context, cedarSystemID uuid.UUID) (<-chan *models.SystemProfileSectionLockStatusChanged, error) {
+func (r *subscriptionResolver) OnSystemProfileSectionLockStatusChanged(ctx context.Context, cedarSystemID string) (<-chan *models.SystemProfileSectionLockStatusChanged, error) {
 	principal := appcontext.Principal(ctx)
 
 	return SubscribeSystemProfileSectionLockChangesWithCallback(r.pubsub, cedarSystemID, principal, ctx.Done())
 }
 
 // OnLockSystemProfileSectionContext is the resolver for the onLockSystemProfileSectionContext field.
-func (r *subscriptionResolver) OnLockSystemProfileSectionContext(ctx context.Context, cedarSystemID uuid.UUID) (<-chan *models.SystemProfileSectionLockStatusChanged, error) {
+func (r *subscriptionResolver) OnLockSystemProfileSectionContext(ctx context.Context, cedarSystemID string) (<-chan *models.SystemProfileSectionLockStatusChanged, error) {
 	principal := appcontext.Principal(ctx)
 
 	return OnLockSystemProfileSectionContext(r.pubsub, cedarSystemID, principal, ctx.Done())

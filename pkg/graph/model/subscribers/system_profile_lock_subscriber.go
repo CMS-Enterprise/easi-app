@@ -9,7 +9,7 @@ import (
 )
 
 // OnSystemProfileLockChangedUnsubscribedCallback is a callback that will be called when a SystemProfileLockChangedSubscriber is unsubscribed
-type OnSystemProfileLockChangedUnsubscribedCallback func(ps pubsub.PubSub, subscriber pubsub.Subscriber, cedarSystemID uuid.UUID)
+type OnSystemProfileLockChangedUnsubscribedCallback func(ps pubsub.PubSub, subscriber pubsub.Subscriber, cedarSystemID string)
 
 // SystemProfileLockChangedSubscriber is a Subscriber definition to receive SystemProfileSectionLockStatusChanged payloads
 type SystemProfileLockChangedSubscriber struct {
@@ -50,7 +50,7 @@ func (s *SystemProfileLockChangedSubscriber) Notify(payload interface{}) {
 // NotifyUnsubscribed will be called by the PubSub service when this Subscriber is unsubscribed
 func (s *SystemProfileLockChangedSubscriber) NotifyUnsubscribed(ps *pubsub.ServicePubSub, sessionID uuid.UUID) {
 	if s.onUnsubscribed != nil {
-		s.onUnsubscribed(ps, s, sessionID)
+		s.onUnsubscribed(ps, s, sessionID.String())
 	}
 }
 

@@ -824,7 +824,7 @@ type SystemIntakeUpdateLCIDInput struct {
 
 // Status of a locked section of the system profile form
 type SystemProfileSectionLockStatus struct {
-	CedarSystemID       uuid.UUID                    `json:"cedarSystemId"`
+	CedarSystemID       string                       `json:"cedarSystemId"`
 	Section             SystemProfileLockableSection `json:"section"`
 	LockedByUserAccount *authentication.UserAccount  `json:"lockedByUserAccount"`
 	IsAdmin             bool                         `json:"isAdmin"`

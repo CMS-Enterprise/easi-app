@@ -1438,7 +1438,7 @@ export type MutationExtendGRBReviewDeadlineAsyncArgs = {
 
 /** Defines the mutations for the schema */
 export type MutationLockSystemProfileSectionArgs = {
-  cedarSystemId: Scalars['UUID']['input'];
+  cedarSystemId: Scalars['String']['input'];
   section: SystemProfileLockableSection;
 };
 
@@ -1585,13 +1585,13 @@ export type MutationUnlinkTRBRequestRelationArgs = {
 
 /** Defines the mutations for the schema */
 export type MutationUnlockAllSystemProfileSectionsArgs = {
-  cedarSystemId: Scalars['UUID']['input'];
+  cedarSystemId: Scalars['String']['input'];
 };
 
 
 /** Defines the mutations for the schema */
 export type MutationUnlockSystemProfileSectionArgs = {
-  cedarSystemId: Scalars['UUID']['input'];
+  cedarSystemId: Scalars['String']['input'];
   section: SystemProfileLockableSection;
 };
 
@@ -1939,7 +1939,7 @@ export type QuerySystemIntakesArgs = {
 
 /** Query definition for the schema */
 export type QuerySystemProfileLockedSectionsArgs = {
-  cedarSystemId: Scalars['UUID']['input'];
+  cedarSystemId: Scalars['String']['input'];
 };
 
 
@@ -2111,12 +2111,12 @@ export type Subscription = {
 
 
 export type SubscriptionOnLockSystemProfileSectionContextArgs = {
-  cedarSystemId: Scalars['UUID']['input'];
+  cedarSystemId: Scalars['String']['input'];
 };
 
 
 export type SubscriptionOnSystemProfileSectionLockStatusChangedArgs = {
-  cedarSystemId: Scalars['UUID']['input'];
+  cedarSystemId: Scalars['String']['input'];
 };
 
 /** Represents an IT governance request for a system */
@@ -3014,7 +3014,7 @@ export enum SystemProfileLockableSection {
 /** Status of a locked section of the system profile form */
 export type SystemProfileSectionLockStatus = {
   __typename: 'SystemProfileSectionLockStatus';
-  cedarSystemId: Scalars['UUID']['output'];
+  cedarSystemId: Scalars['String']['output'];
   isAdmin: Scalars['Boolean']['output'];
   lockedByUserAccount: UserAccount;
   section: SystemProfileLockableSection;
