@@ -231,14 +231,8 @@ const SystemIntakeContactsTable = ({
     useSortBy
   );
 
-  const {
-    getTableBodyProps,
-    getTableProps,
-    headerGroups,
-    prepareRow,
-    rows,
-    page
-  } = table;
+  const { getTableBodyProps, getTableProps, headerGroups, prepareRow, rows } =
+    table;
 
   rows.map(row => prepareRow(row));
 
@@ -306,7 +300,7 @@ const SystemIntakeContactsTable = ({
           </thead>
           <tbody {...getTableBodyProps()}>
             {rows.length > 0 ? (
-              page.map(row => {
+              rows.map(row => {
                 const { key: rowKey, ...rowProps } = row.getRowProps();
 
                 const { username } = row.original.userAccount;
