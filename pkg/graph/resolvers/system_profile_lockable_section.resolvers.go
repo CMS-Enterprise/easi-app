@@ -6,6 +6,7 @@ package resolvers
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/graph/generated"
@@ -14,6 +15,10 @@ import (
 
 // LockSystemProfileSection is the resolver for the lockSystemProfileSection field.
 func (r *mutationResolver) LockSystemProfileSection(ctx context.Context, cedarSystemID string, section models.SystemProfileLockableSection) (bool, error) {
+	if cedarSystemID == "" {
+		return false, fmt.Errorf("cedarSystemID cannot be empty")
+	}
+
 	principal := appcontext.Principal(ctx)
 
 	return LockSystemProfileSection(r.pubsub, cedarSystemID, section, principal)
@@ -21,6 +26,10 @@ func (r *mutationResolver) LockSystemProfileSection(ctx context.Context, cedarSy
 
 // UnlockSystemProfileSection is the resolver for the unlockSystemProfileSection field.
 func (r *mutationResolver) UnlockSystemProfileSection(ctx context.Context, cedarSystemID string, section models.SystemProfileLockableSection) (bool, error) {
+	if cedarSystemID == "" {
+		return false, fmt.Errorf("cedarSystemID cannot be empty")
+	}
+
 	userID := appcontext.Principal(ctx).Account().ID
 
 	return UnlockSystemProfileSection(r.pubsub, cedarSystemID, section, userID, models.LockActionTypeNormal)
@@ -28,16 +37,28 @@ func (r *mutationResolver) UnlockSystemProfileSection(ctx context.Context, cedar
 
 // UnlockAllSystemProfileSections is the resolver for the unlockAllSystemProfileSections field.
 func (r *mutationResolver) UnlockAllSystemProfileSections(ctx context.Context, cedarSystemID string) ([]*models.SystemProfileSectionLockStatus, error) {
+	if cedarSystemID == "" {
+		return nil, fmt.Errorf("cedarSystemID cannot be empty")
+	}
+
 	return UnlockAllSystemProfileSections(r.pubsub, cedarSystemID)
 }
 
 // SystemProfileLockedSections is the resolver for the systemProfileLockedSections field.
 func (r *queryResolver) SystemProfileLockedSections(ctx context.Context, cedarSystemID string) ([]*models.SystemProfileSectionLockStatus, error) {
+	if cedarSystemID == "" {
+		return nil, fmt.Errorf("cedarSystemID cannot be empty")
+	}
+
 	return GetSystemProfileSectionLocks(cedarSystemID)
 }
 
 // OnSystemProfileSectionLockStatusChanged is the resolver for the onSystemProfileSectionLockStatusChanged field.
 func (r *subscriptionResolver) OnSystemProfileSectionLockStatusChanged(ctx context.Context, cedarSystemID string) (<-chan *models.SystemProfileSectionLockStatusChanged, error) {
+	if cedarSystemID == "" {
+		return nil, fmt.Errorf("cedarSystemID cannot be empty")
+	}
+
 	principal := appcontext.Principal(ctx)
 
 	return SubscribeSystemProfileSectionLockChangesWithCallback(r.pubsub, cedarSystemID, principal, ctx.Done())
@@ -45,6 +66,10 @@ func (r *subscriptionResolver) OnSystemProfileSectionLockStatusChanged(ctx conte
 
 // OnLockSystemProfileSectionContext is the resolver for the onLockSystemProfileSectionContext field.
 func (r *subscriptionResolver) OnLockSystemProfileSectionContext(ctx context.Context, cedarSystemID string) (<-chan *models.SystemProfileSectionLockStatusChanged, error) {
+	if cedarSystemID == "" {
+		return nil, fmt.Errorf("cedarSystemID cannot be empty")
+	}
+
 	principal := appcontext.Principal(ctx)
 
 	return OnLockSystemProfileSectionContext(r.pubsub, cedarSystemID, principal, ctx.Done())
