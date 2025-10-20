@@ -12545,23 +12545,23 @@ extend type Query {
   """
   systemProfileSectionLocks(
     cedarSystemId: String!
-  ): [SystemProfileSectionLockStatus!]!
+  ): [SystemProfileSectionLockStatus!]! @hasRole(role: EASI_USER)
 }
 
 extend type Mutation {
   lockSystemProfileSection(
     cedarSystemId: String!
     section: SystemProfileLockableSection!
-  ): Boolean!
+  ): Boolean! @hasRole(role: EASI_USER)
 
   unlockSystemProfileSection(
     cedarSystemId: String!
     section: SystemProfileLockableSection!
-  ): Boolean!
+  ): Boolean! @hasRole(role: EASI_USER)
 
   unlockAllSystemProfileSections(
     cedarSystemId: String!
-  ): [SystemProfileSectionLockStatus!]!
+  ): [SystemProfileSectionLockStatus!]! @hasRole(role: EASI_USER)
 }
 
 type Subscription {
@@ -12571,7 +12571,7 @@ type Subscription {
   """
   onSystemProfileSectionLockStatusChanged(
     cedarSystemId: String!
-  ): SystemProfileSectionLockStatusChanged!
+  ): SystemProfileSectionLockStatusChanged! @hasRole(role: EASI_USER)
 }
 `, BuiltIn: false},
 	{Name: "../schema/types/user_account.graphql", Input: `"""
@@ -39200,8 +39200,35 @@ func (ec *executionContext) _Mutation_lockSystemProfileSection(ctx context.Conte
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().LockSystemProfileSection(rctx, fc.Args["cedarSystemId"].(string), fc.Args["section"].(models.SystemProfileLockableSection))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().LockSystemProfileSection(rctx, fc.Args["cedarSystemId"].(string), fc.Args["section"].(models.SystemProfileLockableSection))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_USER")
+			if err != nil {
+				var zeroVal bool
+				return zeroVal, err
+			}
+			if ec.directives.HasRole == nil {
+				var zeroVal bool
+				return zeroVal, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(bool); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be bool`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -39255,8 +39282,35 @@ func (ec *executionContext) _Mutation_unlockSystemProfileSection(ctx context.Con
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UnlockSystemProfileSection(rctx, fc.Args["cedarSystemId"].(string), fc.Args["section"].(models.SystemProfileLockableSection))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UnlockSystemProfileSection(rctx, fc.Args["cedarSystemId"].(string), fc.Args["section"].(models.SystemProfileLockableSection))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_USER")
+			if err != nil {
+				var zeroVal bool
+				return zeroVal, err
+			}
+			if ec.directives.HasRole == nil {
+				var zeroVal bool
+				return zeroVal, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(bool); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be bool`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -39310,8 +39364,35 @@ func (ec *executionContext) _Mutation_unlockAllSystemProfileSections(ctx context
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UnlockAllSystemProfileSections(rctx, fc.Args["cedarSystemId"].(string))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UnlockAllSystemProfileSections(rctx, fc.Args["cedarSystemId"].(string))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_USER")
+			if err != nil {
+				var zeroVal []*models.SystemProfileSectionLockStatus
+				return zeroVal, err
+			}
+			if ec.directives.HasRole == nil {
+				var zeroVal []*models.SystemProfileSectionLockStatus
+				return zeroVal, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.([]*models.SystemProfileSectionLockStatus); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be []*github.com/cms-enterprise/easi-app/pkg/models.SystemProfileSectionLockStatus`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -42858,8 +42939,35 @@ func (ec *executionContext) _Query_systemProfileSectionLocks(ctx context.Context
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().SystemProfileSectionLocks(rctx, fc.Args["cedarSystemId"].(string))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Query().SystemProfileSectionLocks(rctx, fc.Args["cedarSystemId"].(string))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_USER")
+			if err != nil {
+				var zeroVal []*models.SystemProfileSectionLockStatus
+				return zeroVal, err
+			}
+			if ec.directives.HasRole == nil {
+				var zeroVal []*models.SystemProfileSectionLockStatus
+				return zeroVal, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.([]*models.SystemProfileSectionLockStatus); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be []*github.com/cms-enterprise/easi-app/pkg/models.SystemProfileSectionLockStatus`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -43466,8 +43574,35 @@ func (ec *executionContext) _Subscription_onSystemProfileSectionLockStatusChange
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Subscription().OnSystemProfileSectionLockStatusChanged(rctx, fc.Args["cedarSystemId"].(string))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Subscription().OnSystemProfileSectionLockStatusChanged(rctx, fc.Args["cedarSystemId"].(string))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_USER")
+			if err != nil {
+				var zeroVal *models.SystemProfileSectionLockStatusChanged
+				return zeroVal, err
+			}
+			if ec.directives.HasRole == nil {
+				var zeroVal *models.SystemProfileSectionLockStatusChanged
+				return zeroVal, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(<-chan *models.SystemProfileSectionLockStatusChanged); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be <-chan *github.com/cms-enterprise/easi-app/pkg/models.SystemProfileSectionLockStatusChanged`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)

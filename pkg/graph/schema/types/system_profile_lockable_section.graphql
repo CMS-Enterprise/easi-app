@@ -53,23 +53,23 @@ extend type Query {
   """
   systemProfileSectionLocks(
     cedarSystemId: String!
-  ): [SystemProfileSectionLockStatus!]!
+  ): [SystemProfileSectionLockStatus!]! @hasRole(role: EASI_USER)
 }
 
 extend type Mutation {
   lockSystemProfileSection(
     cedarSystemId: String!
     section: SystemProfileLockableSection!
-  ): Boolean!
+  ): Boolean! @hasRole(role: EASI_USER)
 
   unlockSystemProfileSection(
     cedarSystemId: String!
     section: SystemProfileLockableSection!
-  ): Boolean!
+  ): Boolean! @hasRole(role: EASI_USER)
 
   unlockAllSystemProfileSections(
     cedarSystemId: String!
-  ): [SystemProfileSectionLockStatus!]!
+  ): [SystemProfileSectionLockStatus!]! @hasRole(role: EASI_USER)
 }
 
 type Subscription {
@@ -79,5 +79,5 @@ type Subscription {
   """
   onSystemProfileSectionLockStatusChanged(
     cedarSystemId: String!
-  ): SystemProfileSectionLockStatusChanged!
+  ): SystemProfileSectionLockStatusChanged! @hasRole(role: EASI_USER)
 }
