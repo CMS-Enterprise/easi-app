@@ -361,13 +361,17 @@ const governanceReviewTeam = {
     members: [
       'Alex Smith',
       'Ashley Marks',
+      'Cora Tracy',
       'Dominese Withers',
       'Emily Hill',
+      'George Hoffman',
       'Jaime Cadwell',
+      'Katie Elloff',
       'Kayla Jones',
       'Leah Nguyen',
       'Leilani Fields',
       'Nicholas Downey',
+      'Scott Shippy',
       'Tara Ross',
       'Valerie Hartz'
     ]

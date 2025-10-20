@@ -5,10 +5,10 @@ go 1.24.4
 require (
 	github.com/99designs/gqlgen v0.17.78
 	github.com/alecthomas/jsonschema v0.0.0-20211228220459-151e3c21f49d
-	github.com/aws/aws-sdk-go-v2 v1.39.0
+	github.com/aws/aws-sdk-go-v2 v1.39.2
 	github.com/aws/aws-sdk-go-v2/config v1.31.7
 	github.com/aws/aws-sdk-go-v2/credentials v1.18.11
-	github.com/aws/aws-sdk-go-v2/feature/rds/auth v1.6.7
+	github.com/aws/aws-sdk-go-v2/feature/rds/auth v1.6.9
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.88.0
 	github.com/aws/aws-sdk-go-v2/service/ses v1.34.2
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a
