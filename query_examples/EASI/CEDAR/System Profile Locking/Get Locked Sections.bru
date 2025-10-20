@@ -1,5 +1,5 @@
 meta {
-  name: Get System Profile Locked Sections
+  name: Get System Profile Section Locks
   type: graphql
   seq: 1
 }
@@ -11,8 +11,8 @@ post {
 }
 
 body:graphql {
-  query systemProfileLockedSections {
-    systemProfileLockedSections(cedarSystemId: "{{cedarSystemId}}") {
+  query systemProfileSectionLocks {
+    systemProfileSectionLocks(cedarSystemId: "{{cedarSystemId}}") {
       cedarSystemId
       section
       isAdmin

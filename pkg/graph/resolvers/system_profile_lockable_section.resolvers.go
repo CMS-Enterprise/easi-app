@@ -44,13 +44,9 @@ func (r *mutationResolver) UnlockAllSystemProfileSections(ctx context.Context, c
 	return UnlockAllSystemProfileSections(r.pubsub, cedarSystemID)
 }
 
-// SystemProfileLockedSections is the resolver for the systemProfileLockedSections field.
-func (r *queryResolver) SystemProfileLockedSections(ctx context.Context, cedarSystemID string) ([]*models.SystemProfileSectionLockStatus, error) {
-	if cedarSystemID == "" {
-		return nil, fmt.Errorf("cedarSystemID cannot be empty")
-	}
-
-	return GetSystemProfileSectionLocks(cedarSystemID)
+// SystemProfileSectionLocks is the resolver for the systemProfileSectionLocks field.
+func (r *queryResolver) SystemProfileSectionLocks(ctx context.Context, cedarSystemID string) ([]*models.SystemProfileSectionLockStatus, error) {
+	panic(fmt.Errorf("not implemented: SystemProfileSectionLocks - systemProfileSectionLocks"))
 }
 
 // OnSystemProfileSectionLockStatusChanged is the resolver for the onSystemProfileSectionLockStatusChanged field.

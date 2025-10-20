@@ -702,7 +702,7 @@ type ComplexityRoot struct {
 		SystemIntakes                    func(childComplexity int, openRequests bool) int
 		SystemIntakesWithLcids           func(childComplexity int) int
 		SystemIntakesWithReviewRequested func(childComplexity int) int
-		SystemProfileLockedSections      func(childComplexity int, cedarSystemID string) int
+		SystemProfileSectionLocks        func(childComplexity int, cedarSystemID string) int
 		TrbAdminNote                     func(childComplexity int, id uuid.UUID) int
 		TrbLeadOptions                   func(childComplexity int) int
 		TrbRequest                       func(childComplexity int, id uuid.UUID) int
@@ -1460,7 +1460,7 @@ type QueryResolver interface {
 	MyCedarSystems(ctx context.Context) ([]*models.CedarSystem, error)
 	CedarSystemDetails(ctx context.Context, cedarSystemID string) (*models.CedarSystemDetails, error)
 	CurrentUser(ctx context.Context) (*models.CurrentUser, error)
-	SystemProfileLockedSections(ctx context.Context, cedarSystemID string) ([]*models.SystemProfileSectionLockStatus, error)
+	SystemProfileSectionLocks(ctx context.Context, cedarSystemID string) ([]*models.SystemProfileSectionLockStatus, error)
 	UserAccount(ctx context.Context, username string) (*authentication.UserAccount, error)
 }
 type SubscriptionResolver interface {
@@ -5702,17 +5702,17 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Query.SystemIntakesWithReviewRequested(childComplexity), true
 
-	case "Query.systemProfileLockedSections":
-		if e.complexity.Query.SystemProfileLockedSections == nil {
+	case "Query.systemProfileSectionLocks":
+		if e.complexity.Query.SystemProfileSectionLocks == nil {
 			break
 		}
 
-		args, err := ec.field_Query_systemProfileLockedSections_args(ctx, rawArgs)
+		args, err := ec.field_Query_systemProfileSectionLocks_args(ctx, rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Query.SystemProfileLockedSections(childComplexity, args["cedarSystemId"].(string)), true
+		return e.complexity.Query.SystemProfileSectionLocks(childComplexity, args["cedarSystemId"].(string)), true
 
 	case "Query.trbAdminNote":
 		if e.complexity.Query.TrbAdminNote == nil {
@@ -12543,7 +12543,7 @@ extend type Query {
   """
   Returns an array containing the status of locked sections for a given cedar system profile form
   """
-  systemProfileLockedSections(
+  systemProfileSectionLocks(
     cedarSystemId: String!
   ): [SystemProfileSectionLockStatus!]!
 }
@@ -14038,7 +14038,7 @@ func (ec *executionContext) field_Query_systemIntakes_args(ctx context.Context, 
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_systemProfileLockedSections_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+func (ec *executionContext) field_Query_systemProfileSectionLocks_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
 	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNString2string)
@@ -42845,8 +42845,8 @@ func (ec *executionContext) fieldContext_Query_currentUser(_ context.Context, fi
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_systemProfileLockedSections(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_systemProfileLockedSections(ctx, field)
+func (ec *executionContext) _Query_systemProfileSectionLocks(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_systemProfileSectionLocks(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -42859,7 +42859,7 @@ func (ec *executionContext) _Query_systemProfileLockedSections(ctx context.Conte
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().SystemProfileLockedSections(rctx, fc.Args["cedarSystemId"].(string))
+		return ec.resolvers.Query().SystemProfileSectionLocks(rctx, fc.Args["cedarSystemId"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -42876,7 +42876,7 @@ func (ec *executionContext) _Query_systemProfileLockedSections(ctx context.Conte
 	return ec.marshalNSystemProfileSectionLockStatus2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐSystemProfileSectionLockStatusᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_systemProfileLockedSections(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_systemProfileSectionLocks(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -42903,7 +42903,7 @@ func (ec *executionContext) fieldContext_Query_systemProfileLockedSections(ctx c
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_systemProfileLockedSections_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_systemProfileSectionLocks_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -74095,7 +74095,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
-		case "systemProfileLockedSections":
+		case "systemProfileSectionLocks":
 			field := field
 
 			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
@@ -74104,7 +74104,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_systemProfileLockedSections(ctx, field)
+				res = ec._Query_systemProfileSectionLocks(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}

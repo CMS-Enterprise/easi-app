@@ -51,7 +51,7 @@ extend type Query {
   """
   Returns an array containing the status of locked sections for a given cedar system profile form
   """
-  systemProfileLockedSections(
+  systemProfileSectionLocks(
     cedarSystemId: String!
   ): [SystemProfileSectionLockStatus!]!
 }

@@ -1803,7 +1803,7 @@ export type Query = {
   systemIntakesWithLcids: Array<SystemIntake>;
   systemIntakesWithReviewRequested: Array<SystemIntake>;
   /** Returns an array containing the status of locked sections for a given cedar system profile form */
-  systemProfileLockedSections: Array<SystemProfileSectionLockStatus>;
+  systemProfileSectionLocks: Array<SystemProfileSectionLockStatus>;
   trbAdminNote: TRBAdminNote;
   trbLeadOptions: Array<UserInfo>;
   trbRequest: TRBRequest;
@@ -1938,7 +1938,7 @@ export type QuerySystemIntakesArgs = {
 
 
 /** Query definition for the schema */
-export type QuerySystemProfileLockedSectionsArgs = {
+export type QuerySystemProfileSectionLocksArgs = {
   cedarSystemId: Scalars['String']['input'];
 };
 
