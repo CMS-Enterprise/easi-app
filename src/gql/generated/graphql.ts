@@ -2105,13 +2105,11 @@ export type SubmitIntakeInput = {
 
 export type Subscription = {
   __typename: 'Subscription';
-  onLockSystemProfileSectionContext: SystemProfileSectionLockStatusChanged;
+  /**
+   * Subscribes to lock/unlock events for a system profile.
+   * Automatically unlocks all sections owned by the user when websocket disconnects.
+   */
   onSystemProfileSectionLockStatusChanged: SystemProfileSectionLockStatusChanged;
-};
-
-
-export type SubscriptionOnLockSystemProfileSectionContextArgs = {
-  cedarSystemId: Scalars['String']['input'];
 };
 
 

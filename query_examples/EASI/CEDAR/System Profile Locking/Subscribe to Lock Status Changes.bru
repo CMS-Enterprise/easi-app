@@ -11,7 +11,7 @@ post {
 }
 
 body:graphql {
-  subscription onLockChanges {
+  subscription onLockStatusChanged {
     onSystemProfileSectionLockStatusChanged(cedarSystemId: "{{cedarSystemId}}") {
       changeType
       actionType

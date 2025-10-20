@@ -73,11 +73,11 @@ extend type Mutation {
 }
 
 type Subscription {
+  """
+  Subscribes to lock/unlock events for a system profile.
+  Automatically unlocks all sections owned by the user when websocket disconnects.
+  """
   onSystemProfileSectionLockStatusChanged(
-    cedarSystemId: String!
-  ): SystemProfileSectionLockStatusChanged!
-
-  onLockSystemProfileSectionContext(
     cedarSystemId: String!
   ): SystemProfileSectionLockStatusChanged!
 }

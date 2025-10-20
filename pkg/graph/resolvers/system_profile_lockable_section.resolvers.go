@@ -61,18 +61,7 @@ func (r *subscriptionResolver) OnSystemProfileSectionLockStatusChanged(ctx conte
 
 	principal := appcontext.Principal(ctx)
 
-	return SubscribeSystemProfileSectionLockChangesWithCallback(r.pubsub, cedarSystemID, principal, ctx.Done())
-}
-
-// OnLockSystemProfileSectionContext is the resolver for the onLockSystemProfileSectionContext field.
-func (r *subscriptionResolver) OnLockSystemProfileSectionContext(ctx context.Context, cedarSystemID string) (<-chan *models.SystemProfileSectionLockStatusChanged, error) {
-	if cedarSystemID == "" {
-		return nil, fmt.Errorf("cedarSystemID cannot be empty")
-	}
-
-	principal := appcontext.Principal(ctx)
-
-	return OnLockSystemProfileSectionContext(r.pubsub, cedarSystemID, principal, ctx.Done())
+	return OnSystemProfileSectionLockStatusChanged(r.pubsub, cedarSystemID, principal, ctx.Done())
 }
 
 // Subscription returns generated.SubscriptionResolver implementation.

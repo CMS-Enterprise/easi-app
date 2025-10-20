@@ -136,6 +136,12 @@ func UnlockSystemProfileSection(ps pubsub.PubSub, cedarSystemID string, section 
 	}
 
 	delete(systemProfileSessionLocks.systemSections[cedarSystemID], section)
+
+	// Clean up empty system map
+	if len(systemProfileSessionLocks.systemSections[cedarSystemID]) == 0 {
+		delete(systemProfileSessionLocks.systemSections, cedarSystemID)
+	}
+
 	systemProfileSessionLocks.Unlock()
 
 	// Publish outside the lock to avoid blocking other operations
@@ -149,11 +155,15 @@ func UnlockSystemProfileSection(ps pubsub.PubSub, cedarSystemID string, section 
 	return true, nil
 }
 
+// isUserAuthorizedToEditLock checks if a user is authorized to unlock a section.
+// Users can only unlock sections they personally locked.
 func isUserAuthorizedToEditLock(status models.SystemProfileSectionLockStatus, userID uuid.UUID) bool {
 	return userID == status.LockedByUserAccount.ID
 }
 
-// UnlockAllSystemProfileSections will unlock all system profile sections on the provided system
+// UnlockAllSystemProfileSections is an admin function that unlocks all sections for a system.
+// Bypasses ownership checks - can unlock sections owned by any user.
+// Publishes REMOVED events with ADMIN action type for each unlocked section.
 func UnlockAllSystemProfileSections(ps pubsub.PubSub, cedarSystemID string) ([]*models.SystemProfileSectionLockStatus, error) {
 	systemProfileSessionLocks.Lock()
 
@@ -195,28 +205,6 @@ func UnlockAllSystemProfileSections(ps pubsub.PubSub, cedarSystemID string) ([]*
 	return deletedSections, nil
 }
 
-// internalSubscribeToSystemProfileSectionLockChanges creates a new
-// subscriber and subscribes it to the pubsubevents.SystemProfileSectionLocksChanged
-// event. It returns the subscriber's channel and any error that occurred.
-func internalSubscribeToSystemProfileSectionLockChanges(
-	ps pubsub.PubSub,
-	cedarSystemID string,
-	principal authentication.Principal,
-	onDisconnect <-chan struct{},
-	onUnsubscribedCallback subscribers.OnSystemProfileLockChangedUnsubscribedCallback,
-) (<-chan *models.SystemProfileSectionLockStatusChanged, error) {
-	subscriber := subscribers.NewSystemProfileLockChangedSubscriber(principal, cedarSystemID)
-
-	subscriber.SetOnUnsubscribedCallback(onUnsubscribedCallback)
-
-	return SubscribeSystemProfileSectionLockChanges(
-		ps,
-		cedarSystemID,
-		subscriber,
-		onDisconnect,
-	)
-}
-
 // getOwnedSections returns a list of system profile sections owned by a specific principal
 func getOwnedSections(systemSectionLocks sectionMap, subscriber pubsub.Subscriber) []models.SystemProfileLockableSection {
 	var ownedSections []models.SystemProfileLockableSection
@@ -230,40 +218,28 @@ func getOwnedSections(systemSectionLocks sectionMap, subscriber pubsub.Subscribe
 	return ownedSections
 }
 
-// SubscribeSystemProfileSectionLockChangesWithCallback is a convenience relay method to subscribe to lock changes
-func SubscribeSystemProfileSectionLockChangesWithCallback(
+// OnSystemProfileSectionLockStatusChanged subscribes to lock status change events for a system profile.
+// Automatically unlocks all sections owned by the user when the websocket connection closes.
+func OnSystemProfileSectionLockStatusChanged(
 	ps pubsub.PubSub,
 	cedarSystemID string,
 	principal authentication.Principal,
 	onDisconnect <-chan struct{},
 ) (<-chan *models.SystemProfileSectionLockStatusChanged, error) {
-	return internalSubscribeToSystemProfileSectionLockChanges(
+	subscriber := subscribers.NewSystemProfileLockChangedSubscriber(principal, cedarSystemID)
+	subscriber.SetOnUnsubscribedCallback(onLockSystemProfileSectionUnsubscribeComplete)
+
+	return SubscribeSystemProfileSectionLockChanges(
 		ps,
 		cedarSystemID,
-		principal,
+		subscriber,
 		onDisconnect,
-		nil,
 	)
 }
 
-// OnLockSystemProfileSectionContext maintains a webhook monitoring changes to system
-// profile sections. Once that webhook dies it will auto-unlock any section locked
-// by that user.
-func OnLockSystemProfileSectionContext(
-	ps pubsub.PubSub,
-	cedarSystemID string,
-	principal authentication.Principal,
-	onDisconnect <-chan struct{},
-) (<-chan *models.SystemProfileSectionLockStatusChanged, error) {
-	return internalSubscribeToSystemProfileSectionLockChanges(
-		ps,
-		cedarSystemID,
-		principal,
-		onDisconnect,
-		onLockSystemProfileSectionUnsubscribeComplete,
-	)
-}
-
+// onLockSystemProfileSectionUnsubscribeComplete is a callback invoked when the lock status subscription
+// disconnects. It automatically unlocks all sections owned by the disconnected user to prevent
+// abandoned locks.
 func onLockSystemProfileSectionUnsubscribeComplete(
 	ps pubsub.PubSub,
 	subscriber pubsub.Subscriber,
