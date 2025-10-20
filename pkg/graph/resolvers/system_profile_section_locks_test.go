@@ -1,104 +1,122 @@
 package resolvers
 
 import (
+	"testing"
+
+	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/pubsub"
 )
 
-// cleanupSystemProfileLocks clears the global in-memory lock state to prevent test interference
-func cleanupSystemProfileLocks(ps pubsub.PubSub, cedarSystemID string) {
-	_, _ = UnlockAllSystemProfileSections(ps, cedarSystemID)
+// Helper to create a test principal
+func createTestPrincipal(euaID string, allowGRT bool) authentication.Principal {
+	return &authentication.EUAPrincipal{
+		EUAID:      euaID,
+		JobCodeGRT: allowGRT,
+		UserAccount: &authentication.UserAccount{
+			ID:         uuid.New(),
+			Username:   euaID,
+			CommonName: euaID + " Test",
+			Email:      euaID + "@test.local",
+		},
+	}
 }
 
-func (s *ResolverSuite) TestSystemProfileSectionLock() {
+func TestSystemProfileSectionLock(t *testing.T) {
+	// Reset global state before test
+	systemProfileSessionLocks = sessionLockController{systemLockStatuses: make(systemLockStatusMap)}
+
 	cedarSystemID := "61469178-a474-445d-a6ef-db84fe425e02"
 	section := models.SystemProfileLockableSectionBusinessInformation
 	ps := pubsub.NewServicePubSub()
-	principal := s.getTestPrincipal(s.testConfigs.Context, s.testConfigs.Store, "ABCD", false)
-	defer cleanupSystemProfileLocks(ps, cedarSystemID)
+	principal := createTestPrincipal("ABCD", false)
 
-	s.Run("should lock a section", func() {
-		// Initial state - no locks
-		locks, err := GetSystemProfileSectionLocks(cedarSystemID)
-		s.NoError(err)
-		s.Empty(locks)
+	// Initial state - no locks
+	locks, err := GetSystemProfileSectionLocks(cedarSystemID)
+	require.NoError(t, err)
+	assert.Empty(t, locks)
 
-		// Lock a section
-		locked, err := LockSystemProfileSection(ps, cedarSystemID, section, principal)
-		s.NoError(err)
-		s.True(locked)
+	// Lock a section
+	locked, err := LockSystemProfileSection(ps, cedarSystemID, section, principal)
+	require.NoError(t, err)
+	assert.True(t, locked)
 
-		// Verify section is locked
-		locks, err = GetSystemProfileSectionLocks(cedarSystemID)
-		s.NoError(err)
-		s.Len(locks, 1)
-		s.Equal(cedarSystemID, locks[0].CedarSystemID)
-		s.Equal(section, locks[0].Section)
-		s.Equal(principal.Account().ID, locks[0].LockedByUserAccount.ID)
-	})
+	// Verify section is locked
+	locks, err = GetSystemProfileSectionLocks(cedarSystemID)
+	require.NoError(t, err)
+	require.Len(t, locks, 1)
+	assert.Equal(t, cedarSystemID, locks[0].CedarSystemID)
+	assert.Equal(t, section, locks[0].Section)
+	assert.Equal(t, principal.Account().ID, locks[0].LockedByUserAccount.ID)
 
-	s.Run("should unlock a section", func() {
-		// Unlock the section
-		userID := principal.Account().ID
-		unlocked, err := UnlockSystemProfileSection(ps, cedarSystemID, section, userID, models.LockActionTypeNormal)
-		s.NoError(err)
-		s.True(unlocked)
+	// Unlock the section
+	userID := principal.Account().ID
+	unlocked, err := UnlockSystemProfileSection(ps, cedarSystemID, section, userID, models.LockActionTypeNormal)
+	require.NoError(t, err)
+	assert.True(t, unlocked)
 
-		// Verify section is unlocked
-		locks, err := GetSystemProfileSectionLocks(cedarSystemID)
-		s.NoError(err)
-		s.Empty(locks)
-	})
+	// Verify section is unlocked
+	locks, err = GetSystemProfileSectionLocks(cedarSystemID)
+	require.NoError(t, err)
+	assert.Empty(t, locks)
 }
 
-func (s *ResolverSuite) TestSystemProfileSectionLockConflict() {
+func TestSystemProfileSectionLockConflict(t *testing.T) {
+	// Reset global state before test
+	systemProfileSessionLocks = sessionLockController{systemLockStatuses: make(systemLockStatusMap)}
+
 	cedarSystemID := "e321c11a-a720-490a-a51d-70a00256efcf"
 	section := models.SystemProfileLockableSectionData
 	ps := pubsub.NewServicePubSub()
-	defer cleanupSystemProfileLocks(ps, cedarSystemID)
 
-	userA := s.getTestPrincipal(s.testConfigs.Context, s.testConfigs.Store, "ABCD", false)
-	userB := s.getTestPrincipal(s.testConfigs.Context, s.testConfigs.Store, "USR1", false)
+	userA := createTestPrincipal("ABCD", false)
+	userB := createTestPrincipal("USR1", false)
 
 	// User A locks the section
 	locked, err := LockSystemProfileSection(ps, cedarSystemID, section, userA)
-	s.NoError(err)
-	s.True(locked)
+	require.NoError(t, err)
+	assert.True(t, locked)
 
 	// User B tries to lock the same section - should fail
 	locked, err = LockSystemProfileSection(ps, cedarSystemID, section, userB)
-	s.Error(err)
-	s.False(locked)
-	s.Contains(err.Error(), "already locked by")
+	require.Error(t, err)
+	assert.False(t, locked)
+	assert.Contains(t, err.Error(), "already locked by")
 
 	// Verify only User A's lock exists
 	locks, err := GetSystemProfileSectionLocks(cedarSystemID)
-	s.NoError(err)
-	s.Len(locks, 1)
-	s.Equal(userA.Account().ID, locks[0].LockedByUserAccount.ID)
+	require.NoError(t, err)
+	require.Len(t, locks, 1)
+	assert.Equal(t, userA.Account().ID, locks[0].LockedByUserAccount.ID)
 
 	// User A unlocks
 	unlocked, err := UnlockSystemProfileSection(ps, cedarSystemID, section, userA.Account().ID, models.LockActionTypeNormal)
-	s.NoError(err)
-	s.True(unlocked)
+	require.NoError(t, err)
+	assert.True(t, unlocked)
 
 	// Now User B can lock the section
 	locked, err = LockSystemProfileSection(ps, cedarSystemID, section, userB)
-	s.NoError(err)
-	s.True(locked)
+	require.NoError(t, err)
+	assert.True(t, locked)
 
 	// Verify User B's lock exists
 	locks, err = GetSystemProfileSectionLocks(cedarSystemID)
-	s.NoError(err)
-	s.Len(locks, 1)
-	s.Equal(userB.Account().ID, locks[0].LockedByUserAccount.ID)
+	require.NoError(t, err)
+	require.Len(t, locks, 1)
+	assert.Equal(t, userB.Account().ID, locks[0].LockedByUserAccount.ID)
 }
 
-func (s *ResolverSuite) TestUnlockAllSystemProfileSections() {
+func TestUnlockAllSystemProfileSections(t *testing.T) {
+	// Reset global state before test
+	systemProfileSessionLocks = sessionLockController{systemLockStatuses: make(systemLockStatusMap)}
+
 	cedarSystemID := "b105ddf3-c758-4f13-a520-976ffb1be680"
 	ps := pubsub.NewServicePubSub()
-	principal := s.getTestPrincipal(s.testConfigs.Context, s.testConfigs.Store, "ABCD", false)
-	defer cleanupSystemProfileLocks(ps, cedarSystemID)
+	principal := createTestPrincipal("ABCD", false)
 
 	// Lock multiple sections
 	section1 := models.SystemProfileLockableSectionBusinessInformation
@@ -106,73 +124,72 @@ func (s *ResolverSuite) TestUnlockAllSystemProfileSections() {
 	section3 := models.SystemProfileLockableSectionTeam
 
 	locked1, err := LockSystemProfileSection(ps, cedarSystemID, section1, principal)
-	s.NoError(err)
-	s.True(locked1)
+	require.NoError(t, err)
+	assert.True(t, locked1)
 
 	locked2, err := LockSystemProfileSection(ps, cedarSystemID, section2, principal)
-	s.NoError(err)
-	s.True(locked2)
+	require.NoError(t, err)
+	assert.True(t, locked2)
 
 	locked3, err := LockSystemProfileSection(ps, cedarSystemID, section3, principal)
-	s.NoError(err)
-	s.True(locked3)
+	require.NoError(t, err)
+	assert.True(t, locked3)
 
 	// Verify all sections are locked
 	locks, err := GetSystemProfileSectionLocks(cedarSystemID)
-	s.NoError(err)
-	s.Len(locks, 3)
+	require.NoError(t, err)
+	assert.Len(t, locks, 3)
 
 	// Unlock all sections
 	deletedSections, err := UnlockAllSystemProfileSections(ps, cedarSystemID)
-	s.NoError(err)
-	s.Len(deletedSections, 3)
+	require.NoError(t, err)
+	assert.Len(t, deletedSections, 3)
 
 	// Verify all sections match what was deleted
 	deletedSectionTypes := make(map[models.SystemProfileLockableSection]bool)
 	for _, deleted := range deletedSections {
 		deletedSectionTypes[deleted.Section] = true
 	}
-	s.True(deletedSectionTypes[section1])
-	s.True(deletedSectionTypes[section2])
-	s.True(deletedSectionTypes[section3])
+	assert.True(t, deletedSectionTypes[section1])
+	assert.True(t, deletedSectionTypes[section2])
+	assert.True(t, deletedSectionTypes[section3])
 
 	// Verify no locks remain
 	locks, err = GetSystemProfileSectionLocks(cedarSystemID)
-	s.NoError(err)
-	s.Empty(locks)
+	require.NoError(t, err)
+	assert.Empty(t, locks)
 }
 
-func (s *ResolverSuite) TestLockSystemProfileSectionAsAdmin() {
+func TestLockSystemProfileSectionAsAdmin(t *testing.T) {
+	// Reset global state before test
+	systemProfileSessionLocks = sessionLockController{systemLockStatuses: make(systemLockStatusMap)}
+
 	cedarSystemID := "97862207-b502-440a-9392-318b2b261434"
 	section := models.SystemProfileLockableSectionData
 	ps := pubsub.NewServicePubSub()
-	defer cleanupSystemProfileLocks(ps, cedarSystemID)
 
-	s.Run("regular user lock should not have admin flag", func() {
-		regularUser := s.getTestPrincipal(s.testConfigs.Context, s.testConfigs.Store, "ABCD", false)
-		locked, err := LockSystemProfileSection(ps, cedarSystemID, section, regularUser)
-		s.NoError(err)
-		s.True(locked)
+	// Lock as regular user
+	regularUser := createTestPrincipal("ABCD", false)
+	locked, err := LockSystemProfileSection(ps, cedarSystemID, section, regularUser)
+	require.NoError(t, err)
+	assert.True(t, locked)
 
-		locks, err := GetSystemProfileSectionLocks(cedarSystemID)
-		s.NoError(err)
-		s.Len(locks, 1)
-		s.False(locks[0].IsAdmin, "Regular user should not have isAdmin flag")
+	locks, err := GetSystemProfileSectionLocks(cedarSystemID)
+	require.NoError(t, err)
+	require.Len(t, locks, 1)
+	assert.False(t, locks[0].IsAdmin, "Regular user should not have isAdmin flag")
 
-		// Unlock before next test section
-		_, err = UnlockSystemProfileSection(ps, cedarSystemID, section, regularUser.Account().ID, models.LockActionTypeNormal)
-		s.NoError(err)
-	})
+	// Cleanup
+	_, _ = UnlockSystemProfileSection(ps, cedarSystemID, section, regularUser.Account().ID, models.LockActionTypeNormal)
 
-	s.Run("admin user lock should have admin flag", func() {
-		adminUser := s.getTestPrincipal(s.testConfigs.Context, s.testConfigs.Store, "USR1", true)
-		locked, err := LockSystemProfileSection(ps, cedarSystemID, section, adminUser)
-		s.NoError(err)
-		s.True(locked)
+	// Lock as admin user
+	adminUser := createTestPrincipal("USR1", true)
+	locked, err = LockSystemProfileSection(ps, cedarSystemID, section, adminUser)
+	require.NoError(t, err)
+	assert.True(t, locked)
 
-		locks, err := GetSystemProfileSectionLocks(cedarSystemID)
-		s.NoError(err)
-		s.Len(locks, 1)
-		s.True(locks[0].IsAdmin, "GRT admin user should have isAdmin flag")
-	})
+	locks, err = GetSystemProfileSectionLocks(cedarSystemID)
+	require.NoError(t, err)
+	require.Len(t, locks, 1)
+	assert.True(t, locks[0].IsAdmin, "GRT admin user should have isAdmin flag")
 }
