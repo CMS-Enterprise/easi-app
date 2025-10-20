@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Column, usePagination, useSortBy, useTable } from 'react-table';
+import { Column, useSortBy, useTable } from 'react-table';
 import {
   Button,
   ButtonGroup,
@@ -18,14 +18,8 @@ import {
 
 import Modal from 'components/Modal';
 import Spinner from 'components/Spinner';
-import TablePageSize from 'components/TablePageSize';
-import TablePagination from 'components/TablePagination';
 import { getComponentByEnum } from 'constants/cmsComponentsMap';
-import {
-  currentTableSortDescription,
-  getColumnSortStatus,
-  getHeaderSortIcon
-} from 'utils/tableSort';
+import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
 
 import './index.scss';
 
@@ -234,8 +228,7 @@ const SystemIntakeContactsTable = ({
         pageSize
       }
     },
-    useSortBy,
-    usePagination
+    useSortBy
   );
 
   const {
@@ -244,8 +237,7 @@ const SystemIntakeContactsTable = ({
     headerGroups,
     prepareRow,
     rows,
-    page,
-    setPageSize
+    page
   } = table;
 
   rows.map(row => prepareRow(row));
@@ -358,73 +350,48 @@ const SystemIntakeContactsTable = ({
           </tbody>
         </Table>
 
-        {rows.length > pageSize && (
-          <div className="display-flex flex-row flex-justify-between">
-            <TablePagination
-              {...table}
-              pageIndex={table.state.pageIndex}
-              pageSize={table.state.pageSize}
-              page={[]}
-              className="desktop:grid-col-fill desktop:padding-bottom-0"
-            />
-            <TablePageSize
-              className="desktop:grid-col-auto"
-              pageSize={table.state.pageSize}
-              setPageSize={setPageSize}
-              suffix="rows"
-            />
+        {/* Remove contact modal */}
+        {removeContact && (
+          <Modal
+            isOpen={!!contactIdToRemove}
+            closeModal={() => setContactIdToRemove(null)}
+            className="font-body-md"
+          >
+            <ModalHeading>
+              {t('contactDetails.additionalContacts.removeModal.heading')}
+            </ModalHeading>
+            <p>
+              {t('contactDetails.additionalContacts.removeModal.description')}
+            </p>
 
-            <div
-              className="usa-sr-only usa-table__announcement-region"
-              aria-live="polite"
-            >
-              {currentTableSortDescription(headerGroups[0])}
-            </div>
-          </div>
+            <ModalFooter>
+              <ButtonGroup>
+                <Button
+                  type="button"
+                  className="margin-right-2 bg-error"
+                  onClick={() => {
+                    if (contactIdToRemove) {
+                      removeContact(contactIdToRemove);
+                    }
+
+                    setContactIdToRemove(null);
+                  }}
+                >
+                  {t('contactDetails.additionalContacts.removeModal.submit')}
+                </Button>
+
+                <Button
+                  type="button"
+                  onClick={() => setContactIdToRemove(null)}
+                  unstyled
+                >
+                  {t('general:cancel')}
+                </Button>
+              </ButtonGroup>
+            </ModalFooter>
+          </Modal>
         )}
       </div>
-
-      {/* Remove contact modal */}
-      {removeContact && (
-        <Modal
-          isOpen={!!contactIdToRemove}
-          closeModal={() => setContactIdToRemove(null)}
-          className="font-body-md"
-        >
-          <ModalHeading>
-            {t('contactDetails.additionalContacts.removeModal.heading')}
-          </ModalHeading>
-          <p>
-            {t('contactDetails.additionalContacts.removeModal.description')}
-          </p>
-
-          <ModalFooter>
-            <ButtonGroup>
-              <Button
-                type="button"
-                className="margin-right-2 bg-error"
-                onClick={() => {
-                  if (contactIdToRemove) {
-                    removeContact(contactIdToRemove);
-                  }
-
-                  setContactIdToRemove(null);
-                }}
-              >
-                {t('contactDetails.additionalContacts.removeModal.submit')}
-              </Button>
-
-              <Button
-                type="button"
-                onClick={() => setContactIdToRemove(null)}
-                unstyled
-              >
-                {t('general:cancel')}
-              </Button>
-            </ButtonGroup>
-          </ModalFooter>
-        </Modal>
-      )}
     </>
   );
 };
