@@ -205,7 +205,7 @@ func internalSubscribeToSystemProfileSectionLockChanges(
 	onDisconnect <-chan struct{},
 	onUnsubscribedCallback subscribers.OnSystemProfileLockChangedUnsubscribedCallback,
 ) (<-chan *models.SystemProfileSectionLockStatusChanged, error) {
-	subscriber := subscribers.NewSystemProfileLockChangedSubscriber(principal)
+	subscriber := subscribers.NewSystemProfileLockChangedSubscriber(principal, cedarSystemID)
 
 	subscriber.SetOnUnsubscribedCallback(onUnsubscribedCallback)
 

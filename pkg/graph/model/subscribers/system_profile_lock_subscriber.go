@@ -15,18 +15,20 @@ type OnSystemProfileLockChangedUnsubscribedCallback func(ps pubsub.PubSub, subsc
 type SystemProfileLockChangedSubscriber struct {
 	ID             uuid.UUID
 	Principal      authentication.Principal
+	CedarSystemID  string // Original system ID for callback use
 	Channel        chan *models.SystemProfileSectionLockStatusChanged
 	onUnsubscribed OnSystemProfileLockChangedUnsubscribedCallback
 }
 
 // NewSystemProfileLockChangedSubscriber is a constructor to create a new SystemProfileLockChangedSubscriber
-func NewSystemProfileLockChangedSubscriber(principal authentication.Principal) *SystemProfileLockChangedSubscriber {
+func NewSystemProfileLockChangedSubscriber(principal authentication.Principal, cedarSystemID string) *SystemProfileLockChangedSubscriber {
 	id := uuid.New()
 
 	subscriber := &SystemProfileLockChangedSubscriber{
-		ID:        id,
-		Principal: principal,
-		Channel:   make(chan *models.SystemProfileSectionLockStatusChanged)}
+		ID:            id,
+		Principal:     principal,
+		CedarSystemID: cedarSystemID,
+		Channel:       make(chan *models.SystemProfileSectionLockStatusChanged)}
 
 	return subscriber
 }
@@ -50,7 +52,7 @@ func (s *SystemProfileLockChangedSubscriber) Notify(payload interface{}) {
 // NotifyUnsubscribed will be called by the PubSub service when this Subscriber is unsubscribed
 func (s *SystemProfileLockChangedSubscriber) NotifyUnsubscribed(ps *pubsub.ServicePubSub, sessionID uuid.UUID) {
 	if s.onUnsubscribed != nil {
-		s.onUnsubscribed(ps, s, sessionID.String())
+		s.onUnsubscribed(ps, s, s.CedarSystemID)
 	}
 }
 
