@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import {
@@ -11,15 +11,12 @@ import {
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import { SystemProfileSectionLockStatus } from 'gql/generated/graphql';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import PercentCompleteTag from 'components/PercentCompleteTag';
 import SectionLock from 'components/SectionLock';
-import {
-  getSystemProfileSections,
-  SystemProfileSection
-} from 'constants/systemProfile';
+import { SystemProfileSection } from 'types/systemProfile';
 
+import useSystemProfileSections from '../../_utils/useSystemProfileSections';
 import ExternalDataTag from '../ExternalDataTag';
 
 import './index.scss';
@@ -45,13 +42,15 @@ const SystemProfileSectionCard = ({
   readOnly
 }: SystemProfileSectionCardProps) => {
   const { t } = useTranslation('systemProfile');
-  const flags = useFlags();
+  const history = useHistory();
 
   const { systemId } = useParams<{
     systemId: string;
   }>();
 
-  const history = useHistory();
+  const { currentSection } = useSystemProfileSections({
+    sectionKey: section
+  });
 
   // TODO EASI-4984: Update to use actual section lock context
   const lockableSectionLocks = [] as SystemProfileSectionLockStatus[];
@@ -60,27 +59,7 @@ const SystemProfileSectionCard = ({
   const sectionLock: SystemProfileSectionLockStatus | undefined =
     lockableSectionLocks?.find(lock => lock.section === section);
 
-  const systemProfileSections = getSystemProfileSections(
-    flags.editableSystemProfile
-  );
-
-  /** Returns the correct URL path for the section based on feature flag state and section enabled status */
-  // TODO EASI-4984: Remove feature flag and get constant section route once editable system profile is complete.
-  const sectionUrlPath = useMemo(() => {
-    const currentSection = systemProfileSections.find(s => s.key === section);
-
-    if (!currentSection) {
-      return '';
-    }
-
-    const { route, enabled } = currentSection;
-
-    const shouldUseFormRoute = enabled || flags.editableSystemProfile;
-
-    return shouldUseFormRoute
-      ? `/systems/${systemId}/edit/${route}`
-      : `/systems/${systemId}/${route}`;
-  }, [section, systemProfileSections, flags.editableSystemProfile, systemId]);
+  if (!currentSection) return null;
 
   return (
     <Card
@@ -139,8 +118,9 @@ const SystemProfileSectionCard = ({
         ) : (
           <Button
             type="button"
-            // TODO EASI-4984: Update to actual route. Currently using existing system profile routes.
-            onClick={() => history.push(sectionUrlPath)}
+            onClick={() =>
+              history.push(`/systems/${systemId}/${currentSection.route}`)
+            }
             className={
               hasPendingChanges ? 'usa-button--unstyled' : 'usa-button--outline'
             }

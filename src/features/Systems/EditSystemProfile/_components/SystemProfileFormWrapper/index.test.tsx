@@ -4,7 +4,6 @@ import { render, screen, within } from '@testing-library/react';
 import { SystemProfileLockableSection } from 'gql/generated/graphql';
 
 import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
-import { getSystemProfileSections } from 'constants/systemProfile';
 import { MessageProvider } from 'hooks/useMessage';
 
 import SystemProfileFormWrapper from './index';
@@ -122,14 +121,11 @@ describe('SystemProfileFormWrapper', () => {
   });
 
   it('hides continue button and next section text if there is no next section', () => {
-    const systemProfileSections = getSystemProfileSections(true);
-    const lastSection = systemProfileSections[systemProfileSections.length - 1];
-
     render(
       <MemoryRouter initialEntries={[`/systems/${systemId}/edit`]}>
         <MessageProvider>
           <MockFormProvider>
-            <SystemProfileFormWrapper section={lastSection.key}>
+            <SystemProfileFormWrapper section="ATO_AND_SECURITY">
               section content
             </SystemProfileFormWrapper>
           </MockFormProvider>

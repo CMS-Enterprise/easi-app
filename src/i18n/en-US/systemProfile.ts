@@ -1,4 +1,4 @@
-import { SystemProfileSection } from 'constants/systemProfile';
+import { SystemProfileSection } from 'types/systemProfile';
 
 const sectionCards: Record<
   SystemProfileSection,

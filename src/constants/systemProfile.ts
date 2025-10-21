@@ -29,77 +29,69 @@ export const threatLevelGrades = [
 
 export const securityFindingKeys = ['total', ...threatLevelGrades] as const;
 
-/** Expands SystemProfileLockableSection enum to include read-only sections */
-export type SystemProfileSection =
-  | SystemProfileLockableSection
-  | 'CONTRACTS'
-  | 'FUNDING_AND_BUDGET'
-  | 'ATO_AND_SECURITY';
-
 /**
- * Returns an array of system profile sections with key/enum and corresponding route.
+ * Array of system profile sections with routes and enabled status.
  *
- * Each section contains an `enabled` flag that determines if development on the section is completed
- * and we should display the new section regardless of the enableEditableSystemProfile feature flag.
+ * `legacyRoute` is the route for the legacy system profile page to be used if the section is
+ * disabled and the feature flag is off.
  *
- * @param enableEditableSystemProfile - If true, returns editable form section routes instead of read-only routes.
+ * If `enabled` is true, the corresponding edit system profile form section will be enabled and
+ * section card will show editable data. This overrides the feature flag.
  */
-// TODO EASI-4984 - This can be updated to a plain array of sections once editable system profile is complete.
-// This format is a workaround for iteratively releasing new sections.
-export const getSystemProfileSections = (
-  enableEditableSystemProfile: boolean
-): Array<{
-  key: SystemProfileSection;
-  /** Returns correct route based on feature flag state */
-  route: string;
-  /** If true, this section should be enabled in the edit system profile form regardless of the feature flag. */
-  enabled: boolean;
-}> => {
-  return [
-    {
-      key: SystemProfileLockableSection.BUSINESS_INFORMATION,
-      route: 'business-information',
-      enabled: false
-    },
-    {
-      key: SystemProfileLockableSection.IMPLEMENTATION_DETAILS,
-      route: enableEditableSystemProfile ? 'implementation-details' : 'details',
-      enabled: false
-    },
-    {
-      key: SystemProfileLockableSection.DATA,
-      route: enableEditableSystemProfile ? 'data' : 'system-data',
-      enabled: false
-    },
-    {
-      key: SystemProfileLockableSection.TOOLS_AND_SOFTWARE,
-      route: 'tools-and-software',
-      enabled: false
-    },
-    {
-      key: SystemProfileLockableSection.SUB_SYSTEMS,
-      route: 'sub-systems',
-      enabled: false
-    },
-    {
-      key: SystemProfileLockableSection.TEAM,
-      route: enableEditableSystemProfile ? 'team' : 'team/edit?workspace',
-      enabled: false
-    },
-    {
-      key: 'CONTRACTS',
-      route: 'contracts',
-      enabled: false
-    },
-    {
-      key: 'FUNDING_AND_BUDGET',
-      route: 'funding-and-budget',
-      enabled: false
-    },
-    {
-      key: 'ATO_AND_SECURITY',
-      route: 'ato-and-security',
-      enabled: false
-    }
-  ];
-};
+// TODO EASI-4984 - when the feature flag is removed, remove `legacyRoute` and enabled properties.
+export const systemProfileSections = [
+  {
+    key: SystemProfileLockableSection.BUSINESS_INFORMATION,
+    route: 'business-information',
+    legacyRoute: '',
+    enabled: false
+  },
+  {
+    key: SystemProfileLockableSection.IMPLEMENTATION_DETAILS,
+    route: 'implementation-details',
+    legacyRoute: 'details',
+    enabled: false
+  },
+  {
+    key: SystemProfileLockableSection.DATA,
+    route: 'data',
+    legacyRoute: 'system-data',
+    enabled: false
+  },
+  {
+    key: SystemProfileLockableSection.TOOLS_AND_SOFTWARE,
+    route: 'tools-and-software',
+    legacyRoute: 'tools-and-software',
+    enabled: false
+  },
+  {
+    key: SystemProfileLockableSection.SUB_SYSTEMS,
+    route: 'sub-systems',
+    legacyRoute: 'sub-systems',
+    enabled: false
+  },
+  {
+    key: SystemProfileLockableSection.TEAM,
+    route: 'team',
+    legacyRoute: 'team/edit?workspace',
+    enabled: false
+  },
+  {
+    key: 'CONTRACTS',
+    route: 'contracts',
+    legacyRoute: 'contracts',
+    enabled: false
+  },
+  {
+    key: 'FUNDING_AND_BUDGET',
+    route: 'funding-and-budget',
+    legacyRoute: 'funding-and-budget',
+    enabled: false
+  },
+  {
+    key: 'ATO_AND_SECURITY',
+    route: 'ato-and-security',
+    legacyRoute: 'ato-and-security',
+    enabled: false
+  }
+] as const;

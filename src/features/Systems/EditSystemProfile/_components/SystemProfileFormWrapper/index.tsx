@@ -1,11 +1,10 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { FieldValues } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { FetchResult } from '@apollo/client';
 import { Button, GridContainer, Icon } from '@trussworks/react-uswds';
 import NotFound from 'features/Miscellaneous/NotFound';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Breadcrumbs from 'components/Breadcrumbs';
 import { useEasiFormContext } from 'components/EasiForm';
@@ -13,12 +12,10 @@ import IconButton from 'components/IconButton';
 import IconLink from 'components/IconLink';
 import PageHeading from 'components/PageHeading';
 import PercentCompleteTag from 'components/PercentCompleteTag';
-import {
-  getSystemProfileSections,
-  SystemProfileSection
-} from 'constants/systemProfile';
 import useMessage from 'hooks/useMessage';
+import { SystemProfileSection } from 'types/systemProfile';
 
+import useSystemProfileSections from '../../_utils/useSystemProfileSections';
 import ExternalDataTag from '../ExternalDataTag';
 
 import './index.scss';
@@ -53,9 +50,13 @@ function SystemProfileFormWrapper<
 }: SystemProfileFormWrapperProps<TFieldValues>) {
   const { t } = useTranslation('systemProfile');
   const history = useHistory();
-  const flags = useFlags();
 
   const { Message, showMessage } = useMessage();
+
+  const { currentSection, nextSection } = useSystemProfileSections({
+    sectionKey: section,
+    includeDisabledSections: false
+  });
 
   const { systemId } = useParams<{
     systemId: string;
@@ -67,27 +68,6 @@ function SystemProfileFormWrapper<
   } = useEasiFormContext<TFieldValues>();
 
   const editSystemProfilePath = `/systems/${systemId}/edit`;
-
-  const systemProfileSections = getSystemProfileSections(
-    flags.editableSystemProfile
-  );
-
-  const currentSectionIndex = useMemo(
-    () => systemProfileSections.findIndex(s => s.key === section),
-    [section, systemProfileSections]
-  );
-
-  const currentSection = systemProfileSections[currentSectionIndex];
-
-  /** Returns next section data object if it exists */
-  const nextSection = useMemo(() => {
-    const sectionCount = systemProfileSections.length;
-
-    // If there is no next section, return undefined
-    return currentSectionIndex < sectionCount - 1
-      ? systemProfileSections[currentSectionIndex + 1]
-      : undefined;
-  }, [currentSectionIndex, systemProfileSections]);
 
   /** Submits form if dirty and onSubmit is provided, otherwise redirects to redirectPath */
   const submit = useCallback(
@@ -105,8 +85,7 @@ function SystemProfileFormWrapper<
     [isDirty, onSubmit, showMessage, t, history, handleSubmit]
   );
 
-  // Show page not found if section is disabled and feature flag is off
-  if (!currentSection.enabled && !flags.editableSystemProfile) {
+  if (!currentSection) {
     return <NotFound />;
   }
 
@@ -218,7 +197,7 @@ function SystemProfileFormWrapper<
                 type="button"
                 disabled={isSubmitting}
                 onClick={() =>
-                  submit(`${editSystemProfilePath}/${nextSection.route}`)
+                  submit(`/systems/${systemId}/${nextSection.route}`)
                 }
               >
                 {t(
