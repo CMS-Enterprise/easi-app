@@ -28,7 +28,7 @@ func NewSystemProfileLockChangedSubscriber(principal authentication.Principal, c
 		ID:            id,
 		Principal:     principal,
 		CedarSystemID: cedarSystemID,
-		Channel:       make(chan *models.SystemProfileSectionLockStatusChanged)}
+		Channel:       make(chan *models.SystemProfileSectionLockStatusChanged, 10)} // Buffered to prevent blocking publishers
 
 	return subscriber
 }
