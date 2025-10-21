@@ -9,4 +9,5 @@ export type Flags = {
   grbReviewTab: boolean;
   showAtoColumn: boolean;
   serviceAlertEnabled: boolean;
+  editableSystemProfile: boolean;
 };

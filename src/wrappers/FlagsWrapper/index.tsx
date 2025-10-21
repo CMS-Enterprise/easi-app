@@ -38,7 +38,8 @@ const UserTargetingWrapper = ({ children }: WrapperProps) => {
             systemWorkspaceTeam: false,
             grbReviewTab: false,
             showAtoColumn: false,
-            serviceAlertEnabled: false
+            serviceAlertEnabled: false,
+            editableSystemProfile: false
           }
         });
 
