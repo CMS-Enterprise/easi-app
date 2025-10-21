@@ -29,7 +29,9 @@ const general = {
   actions: 'Actions',
   name: 'Name',
   noneSpecified: 'None specified',
-  on: 'on '
+  on: 'on ',
+  percentComplete: '{{percent}}% complete',
+  percentCompleteOverall: '{{percent}}% complete overall'
 };
 
 export default general;

@@ -819,6 +819,13 @@ type SystemIntakeUpdateLCIDInput struct {
 	AdminNote              *HTML                        `json:"adminNote,omitempty"`
 }
 
+// Status of a locked section of the system profile form
+type SystemProfileSectionLockStatus struct {
+	CedarSystemID       string                       `json:"cedarSystemId"`
+	Section             SystemProfileLockableSection `json:"section"`
+	LockedByUserAccount *authentication.UserAccount  `json:"lockedByUserAccount"`
+}
+
 // Input data for creating a system intake's relationship to a CEDAR system
 type SystemRelationshipInput struct {
 	CedarSystemID                      *string                  `json:"cedarSystemId,omitempty"`
@@ -1763,6 +1770,70 @@ func (e *SystemIntakeStepToProgressTo) UnmarshalJSON(b []byte) error {
 }
 
 func (e SystemIntakeStepToProgressTo) MarshalJSON() ([]byte, error) {
+	var buf bytes.Buffer
+	e.MarshalGQL(&buf)
+	return buf.Bytes(), nil
+}
+
+// Sections of the system profile form that can be locked for editing
+type SystemProfileLockableSection string
+
+const (
+	SystemProfileLockableSectionBusinessInformation   SystemProfileLockableSection = "BUSINESS_INFORMATION"
+	SystemProfileLockableSectionImplementationDetails SystemProfileLockableSection = "IMPLEMENTATION_DETAILS"
+	SystemProfileLockableSectionData                  SystemProfileLockableSection = "DATA"
+	SystemProfileLockableSectionToolsAndSoftware      SystemProfileLockableSection = "TOOLS_AND_SOFTWARE"
+	SystemProfileLockableSectionSubSystems            SystemProfileLockableSection = "SUB_SYSTEMS"
+	SystemProfileLockableSectionTeam                  SystemProfileLockableSection = "TEAM"
+)
+
+var AllSystemProfileLockableSection = []SystemProfileLockableSection{
+	SystemProfileLockableSectionBusinessInformation,
+	SystemProfileLockableSectionImplementationDetails,
+	SystemProfileLockableSectionData,
+	SystemProfileLockableSectionToolsAndSoftware,
+	SystemProfileLockableSectionSubSystems,
+	SystemProfileLockableSectionTeam,
+}
+
+func (e SystemProfileLockableSection) IsValid() bool {
+	switch e {
+	case SystemProfileLockableSectionBusinessInformation, SystemProfileLockableSectionImplementationDetails, SystemProfileLockableSectionData, SystemProfileLockableSectionToolsAndSoftware, SystemProfileLockableSectionSubSystems, SystemProfileLockableSectionTeam:
+		return true
+	}
+	return false
+}
+
+func (e SystemProfileLockableSection) String() string {
+	return string(e)
+}
+
+func (e *SystemProfileLockableSection) UnmarshalGQL(v any) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemProfileLockableSection(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemProfileLockableSection", str)
+	}
+	return nil
+}
+
+func (e SystemProfileLockableSection) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+func (e *SystemProfileLockableSection) UnmarshalJSON(b []byte) error {
+	s, err := strconv.Unquote(string(b))
+	if err != nil {
+		return err
+	}
+	return e.UnmarshalGQL(s)
+}
+
+func (e SystemProfileLockableSection) MarshalJSON() ([]byte, error) {
 	var buf bytes.Buffer
 	e.MarshalGQL(&buf)
 	return buf.Bytes(), nil
