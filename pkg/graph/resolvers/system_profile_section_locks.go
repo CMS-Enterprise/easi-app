@@ -244,9 +244,9 @@ func OnSystemProfileSectionLockStatusChanged(
 // abandoned locks.
 func onLockSystemProfileSectionUnsubscribeComplete(
 	ps pubsub.PubSub,
-	subscriber pubsub.Subscriber,
-	cedarSystemID string,
+	subscriber *subscribers.SystemProfileLockChangedSubscriber,
 ) {
+	cedarSystemID := subscriber.CedarSystemID
 	systemProfileSessionLocks.Lock()
 	sectionLocks, found := systemProfileSessionLocks.systemLockStatuses[cedarSystemID]
 	if !found {

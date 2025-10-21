@@ -8,8 +8,8 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/pubsub"
 )
 
-// OnSystemProfileLockChangedUnsubscribedCallback is a callback that will be called when a SystemProfileLockChangedSubscriber is unsubscribed
-type OnSystemProfileLockChangedUnsubscribedCallback func(ps pubsub.PubSub, subscriber pubsub.Subscriber, cedarSystemID string)
+// OnUnsubscribeCallback is a callback that will be called when a SystemProfileLockChangedSubscriber is unsubscribed
+type OnUnsubscribeCallback func(ps pubsub.PubSub, subscriber *SystemProfileLockChangedSubscriber)
 
 // SystemProfileLockChangedSubscriber is a Subscriber definition to receive SystemProfileSectionLockStatusChanged payloads
 type SystemProfileLockChangedSubscriber struct {
@@ -17,7 +17,7 @@ type SystemProfileLockChangedSubscriber struct {
 	Principal      authentication.Principal
 	CedarSystemID  string // Original system ID for callback use
 	Channel        chan *models.SystemProfileSectionLockStatusChanged
-	onUnsubscribed OnSystemProfileLockChangedUnsubscribedCallback
+	onUnsubscribed OnUnsubscribeCallback
 }
 
 // NewSystemProfileLockChangedSubscriber is a constructor to create a new SystemProfileLockChangedSubscriber
@@ -52,7 +52,7 @@ func (s *SystemProfileLockChangedSubscriber) Notify(payload interface{}) {
 // NotifyUnsubscribed will be called by the PubSub service when this Subscriber is unsubscribed
 func (s *SystemProfileLockChangedSubscriber) NotifyUnsubscribed(ps *pubsub.ServicePubSub, sessionID uuid.UUID) {
 	if s.onUnsubscribed != nil {
-		s.onUnsubscribed(ps, s, s.CedarSystemID)
+		s.onUnsubscribed(ps, s)
 	}
 }
 
@@ -62,6 +62,6 @@ func (s *SystemProfileLockChangedSubscriber) GetChannel() <-chan *models.SystemP
 }
 
 // SetOnUnsubscribedCallback is an optional callback that will be called when this Subscriber is unsubscribed
-func (s *SystemProfileLockChangedSubscriber) SetOnUnsubscribedCallback(onUnsubscribed OnSystemProfileLockChangedUnsubscribedCallback) {
+func (s *SystemProfileLockChangedSubscriber) SetOnUnsubscribedCallback(onUnsubscribed OnUnsubscribeCallback) {
 	s.onUnsubscribed = onUnsubscribed
 }
