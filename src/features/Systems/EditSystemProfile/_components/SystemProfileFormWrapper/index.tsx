@@ -229,7 +229,7 @@ function SystemProfileFormWrapper<
           to={editSystemProfilePath}
           icon={<Icon.ArrowBack aria-hidden />}
           iconPosition="before"
-          className="margin-top-2"
+          className="display-inline-flex margin-top-2"
         >
           {readOnly ? t('form:exitForm') : t('form:exitFormWithoutSaving')}
         </IconLink>
