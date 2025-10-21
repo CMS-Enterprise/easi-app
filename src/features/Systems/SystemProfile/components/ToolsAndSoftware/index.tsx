@@ -9,7 +9,6 @@ import {
   Grid,
   Icon
 } from '@trussworks/react-uswds';
-import { NotFoundPartial } from 'features/Miscellaneous/NotFound';
 
 import {
   DescriptionDefinition,
