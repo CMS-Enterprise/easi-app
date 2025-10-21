@@ -13,6 +13,7 @@ import {
   Icon,
   Link
 } from '@trussworks/react-uswds';
+import { NotFoundPartial } from 'features/Miscellaneous/NotFound';
 import { mockVendors } from 'features/Systems/SystemProfile/data/mockSystemData';
 import { getPersonFullName } from 'features/Systems/SystemProfile/util';
 import { useFlags } from 'launchdarkly-react-client-sdk';
@@ -241,7 +242,15 @@ export const TeamSection = ({
 const Team = ({ system }: SystemProfileSubviewProps) => {
   const { t } = useTranslation('systemProfile');
   const flags = useFlags();
-  const team = useMemo(() => getTeam(system.usernamesWithRoles), [system]);
+
+  const team = useMemo(
+    () => getTeam(system?.usernamesWithRoles || []),
+    [system]
+  );
+
+  if (!system?.usernamesWithRoles) {
+    return <NotFoundPartial />;
+  }
 
   return (
     <>
