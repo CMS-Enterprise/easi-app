@@ -95,7 +95,9 @@ function getDevelopmentTags(
 function getLocations(
   // eslint-disable-next-line camelcase
   cedarSystemDetails: GetSystemProfileQuery['cedarSystemDetails']
-): UrlLocation[] {
+): UrlLocation[] | undefined {
+  if (!cedarSystemDetails?.urls) return undefined;
+
   return (cedarSystemDetails?.urls ?? []).map(url => {
     // Find a deployment from matching its type with the url host env
     const { urlHostingEnv } = url;
@@ -177,11 +179,11 @@ export function getSystemProfileData(
 
   const locations = getLocations(cedarSystemDetails);
 
-  const productionLocation = locations.find(
+  const productionLocation = locations?.find(
     location => location.urlHostingEnv === 'Production'
   );
 
-  const cedarAuthorityToOperate = data?.cedarAuthorityToOperate[0];
+  const cedarAuthorityToOperate = data?.cedarAuthorityToOperate?.[0];
 
   const numberOfContractorFte = parseFloat(
     cedarSystemDetails?.businessOwnerInformation?.numberOfContractorFte || '0'
