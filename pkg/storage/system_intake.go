@@ -615,7 +615,7 @@ func (s *Store) GetMySystemIntakes(ctx context.Context) ([]*models.SystemIntake,
 	var intakes []*models.SystemIntake
 
 	err := namedSelect(ctx, s.db, &intakes, sqlqueries.SystemIntake.GetByUser, args{
-		"eua_user_id": appcontext.Principal(ctx).Account().Username,
+		"user_id":  appcontext.Principal(ctx).Account().ID,
 	})
 
 	return intakes, err

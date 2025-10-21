@@ -1,6 +1,7 @@
-SELECT *
-FROM system_intakes
-WHERE
-    eua_user_id = :eua_user_id
-    AND archived_at IS NULL
-ORDER BY created_at DESC;
+SELECT DISTINCT si.*
+FROM system_intakes si
+JOIN system_intake_contacts sic
+  ON sic.system_intake_id = si.id
+WHERE sic.user_id = :user_id
+  AND sic.is_requester = TRUE
+ORDER BY si.created_at DESC;
