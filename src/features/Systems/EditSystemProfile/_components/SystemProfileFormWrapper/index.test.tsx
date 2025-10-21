@@ -8,6 +8,12 @@ import { MessageProvider } from 'hooks/useMessage';
 
 import SystemProfileFormWrapper from './index';
 
+vi.mock('launchdarkly-react-client-sdk', () => ({
+  useFlags: () => ({
+    editableSystemProfile: true
+  })
+}));
+
 const systemId = '123';
 
 describe('SystemProfileFormWrapper', () => {
@@ -120,12 +126,12 @@ describe('SystemProfileFormWrapper', () => {
     expect(within(footer).getByText(/Next section:/)).toBeInTheDocument();
   });
 
-  it('hides continue button and next section text if there is no next section', () => {
+  it('hides continue button and next section text for last section if read-only', () => {
     render(
       <MemoryRouter initialEntries={[`/systems/${systemId}/edit`]}>
         <MessageProvider>
           <MockFormProvider>
-            <SystemProfileFormWrapper section="ATO_AND_SECURITY">
+            <SystemProfileFormWrapper section="ATO_AND_SECURITY" readOnly>
               section content
             </SystemProfileFormWrapper>
           </MockFormProvider>

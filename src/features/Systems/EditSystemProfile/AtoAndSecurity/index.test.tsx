@@ -7,6 +7,12 @@ import { MessageProvider } from 'hooks/useMessage';
 
 import AtoAndSecurity from '.';
 
+vi.mock('launchdarkly-react-client-sdk', () => ({
+  useFlags: () => ({
+    editableSystemProfile: true
+  })
+}));
+
 describe('AtoAndSecurity', () => {
   it('renders section name and description', () => {
     render(

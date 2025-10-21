@@ -14,6 +14,12 @@ import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import EditSystemProfile from '.';
 
+vi.mock('launchdarkly-react-client-sdk', () => ({
+  useFlags: () => ({
+    editableSystemProfile: true
+  })
+}));
+
 const cedarSystem: GetCedarSystemQuery['cedarSystem'] = {
   __typename: 'CedarSystem',
   id: '{11AB1A00-1234-5678-ABC1-1A001B00CC1B}',

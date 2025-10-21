@@ -9,6 +9,12 @@ import easiMockStore from 'utils/testing/easiMockStore';
 
 import SystemProfileSectionCard from '.';
 
+vi.mock('launchdarkly-react-client-sdk', () => ({
+  useFlags: () => ({
+    editableSystemProfile: true
+  })
+}));
+
 describe('SystemProfileSectionCard', () => {
   const store = easiMockStore();
 
