@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { FetchResult } from '@apollo/client';
 import { Button, GridContainer, Icon } from '@trussworks/react-uswds';
+import NotFound from 'features/Miscellaneous/NotFound';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Breadcrumbs from 'components/Breadcrumbs';
@@ -71,18 +72,22 @@ function SystemProfileFormWrapper<
     flags.editableSystemProfile
   );
 
-  /** Returns next section enum/key and route if it exists */
-  const nextSection = useMemo(() => {
-    const sectionIndex = systemProfileSections.findIndex(
-      s => s.key === section
-    );
+  const currentSectionIndex = useMemo(
+    () => systemProfileSections.findIndex(s => s.key === section),
+    [section, systemProfileSections]
+  );
 
+  const currentSection = systemProfileSections[currentSectionIndex];
+
+  /** Returns next section data object if it exists */
+  const nextSection = useMemo(() => {
     const sectionCount = systemProfileSections.length;
 
-    return sectionIndex < sectionCount - 1
-      ? systemProfileSections[sectionIndex + 1]
+    // If there is no next section, return undefined
+    return currentSectionIndex < sectionCount - 1
+      ? systemProfileSections[currentSectionIndex + 1]
       : undefined;
-  }, [section]);
+  }, [currentSectionIndex, systemProfileSections]);
 
   /** Submits form if dirty and onSubmit is provided, otherwise redirects to redirectPath */
   const submit = useCallback(
@@ -99,6 +104,11 @@ function SystemProfileFormWrapper<
     },
     [isDirty, onSubmit, showMessage, t, history, handleSubmit]
   );
+
+  // Show page not found if section is disabled and feature flag is off
+  if (!currentSection.enabled && !flags.editableSystemProfile) {
+    return <NotFound />;
+  }
 
   return (
     <div className="system-profile-form-wrapper">

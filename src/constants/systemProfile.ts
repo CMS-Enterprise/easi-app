@@ -52,7 +52,7 @@ export const getSystemProfileSections = (
   key: SystemProfileSection;
   /** Returns correct route based on feature flag state */
   route: string;
-  /** If true, this section is enabled in the edit system profile form regardless of the feature flag. */
+  /** If true, this section should be enabled in the edit system profile form regardless of the feature flag. */
   enabled: boolean;
 }> => {
   return [
