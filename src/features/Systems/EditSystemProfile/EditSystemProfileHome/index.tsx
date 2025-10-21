@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { CardGroup, GridContainer, Icon } from '@trussworks/react-uswds';
 import { SystemProfileLockableSection } from 'gql/generated/graphql';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Breadcrumbs from 'components/Breadcrumbs';
 import IconLink from 'components/IconLink';
@@ -25,6 +26,8 @@ const EditSystemProfileHome = ({
   systemName
 }: EditSystemProfileHomeProps) => {
   const { t } = useTranslation('systemProfile');
+
+  const flags = useFlags();
 
   return (
     <MainContent>
@@ -64,34 +67,35 @@ const EditSystemProfileHome = ({
         </IconLink>
 
         <CardGroup className="margin-bottom-10">
-          {/* <SystemProfileSectionCard
-            section={SystemProfileLockableSection.BUSINESS_INFORMATION}
-            isManagedExternally
-            readOnly
-          /> */}
+          {flags.editableSystemProfile && (
+            <SystemProfileSectionCard
+              section={SystemProfileLockableSection.BUSINESS_INFORMATION}
+              isManagedExternally
+            />
+          )}
 
           <SystemProfileSectionCard
             section={SystemProfileLockableSection.IMPLEMENTATION_DETAILS}
-            isManagedExternally
-            readOnly
+            isManagedExternally={!flags.editableSystemProfile}
+            readOnly={!flags.editableSystemProfile}
           />
 
           <SystemProfileSectionCard
             section={SystemProfileLockableSection.DATA}
-            isManagedExternally
-            readOnly
+            isManagedExternally={!flags.editableSystemProfile}
+            readOnly={!flags.editableSystemProfile}
           />
 
           <SystemProfileSectionCard
             section={SystemProfileLockableSection.TOOLS_AND_SOFTWARE}
-            isManagedExternally
-            readOnly
+            isManagedExternally={!flags.editableSystemProfile}
+            readOnly={!flags.editableSystemProfile}
           />
 
           <SystemProfileSectionCard
             section={SystemProfileLockableSection.SUB_SYSTEMS}
-            isManagedExternally
-            readOnly
+            isManagedExternally={!flags.editableSystemProfile}
+            readOnly={!flags.editableSystemProfile}
           />
 
           <SystemProfileSectionCard
