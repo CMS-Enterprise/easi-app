@@ -1018,6 +1018,19 @@ export enum LifecycleCostYear {
   LIFECYCLE_COST_YEAR_5 = 'LIFECYCLE_COST_YEAR_5'
 }
 
+export enum LockActionType {
+  /** An administrative action */
+  ADMIN = 'ADMIN',
+  /** A normal flow action */
+  NORMAL = 'NORMAL'
+}
+
+export enum LockChangeType {
+  ADDED = 'ADDED',
+  REMOVED = 'REMOVED',
+  UPDATED = 'UPDATED'
+}
+
 /** Defines the mutations for the schema */
 export type Mutation = {
   __typename: 'Mutation';
@@ -1099,6 +1112,7 @@ export type Mutation = {
   startGRBReview?: Maybe<Scalars['String']['output']>;
   submitIntake?: Maybe<UpdateSystemIntakePayload>;
   unlinkTRBRequestRelation?: Maybe<TRBRequest>;
+  unlockAllSystemProfileSections: Array<SystemProfileSectionLockStatus>;
   unlockSystemProfileSection: Scalars['Boolean']['output'];
   updateSystemIntakeAdminLead?: Maybe<UpdateSystemIntakePayload>;
   updateSystemIntakeContact?: Maybe<CreateSystemIntakeContactPayload>;
@@ -1570,6 +1584,12 @@ export type MutationUnlinkTRBRequestRelationArgs = {
 
 
 /** Defines the mutations for the schema */
+export type MutationUnlockAllSystemProfileSectionsArgs = {
+  cedarSystemId: Scalars['String']['input'];
+};
+
+
+/** Defines the mutations for the schema */
 export type MutationUnlockSystemProfileSectionArgs = {
   cedarSystemId: Scalars['String']['input'];
   section: SystemProfileLockableSection;
@@ -1783,7 +1803,7 @@ export type Query = {
   systemIntakesWithLcids: Array<SystemIntake>;
   systemIntakesWithReviewRequested: Array<SystemIntake>;
   /** Returns an array containing the status of locked sections for a given cedar system profile form */
-  systemProfileLockedSections: Array<SystemProfileSectionLockStatus>;
+  systemProfileSectionLocks: Array<SystemProfileSectionLockStatus>;
   trbAdminNote: TRBAdminNote;
   trbLeadOptions: Array<UserInfo>;
   trbRequest: TRBRequest;
@@ -1918,7 +1938,7 @@ export type QuerySystemIntakesArgs = {
 
 
 /** Query definition for the schema */
-export type QuerySystemProfileLockedSectionsArgs = {
+export type QuerySystemProfileSectionLocksArgs = {
   cedarSystemId: Scalars['String']['input'];
 };
 
@@ -2081,6 +2101,20 @@ export type StartGRBReviewInput = {
 /** Input to submit an intake for review */
 export type SubmitIntakeInput = {
   id: Scalars['UUID']['input'];
+};
+
+export type Subscription = {
+  __typename: 'Subscription';
+  /**
+   * Subscribes to lock/unlock events for a system profile.
+   * Automatically unlocks all sections owned by the user when websocket disconnects.
+   */
+  onSystemProfileSectionLockStatusChanged: SystemProfileSectionLockStatusChanged;
+};
+
+
+export type SubscriptionOnSystemProfileSectionLockStatusChangedArgs = {
+  cedarSystemId: Scalars['String']['input'];
 };
 
 /** Represents an IT governance request for a system */
@@ -2979,8 +3013,17 @@ export enum SystemProfileLockableSection {
 export type SystemProfileSectionLockStatus = {
   __typename: 'SystemProfileSectionLockStatus';
   cedarSystemId: Scalars['String']['output'];
+  isAdmin: Scalars['Boolean']['output'];
   lockedByUserAccount: UserAccount;
   section: SystemProfileLockableSection;
+};
+
+/** Details about a change to the lock status of a system profile section */
+export type SystemProfileSectionLockStatusChanged = {
+  __typename: 'SystemProfileSectionLockStatusChanged';
+  actionType: LockActionType;
+  changeType: LockChangeType;
+  lockStatus: SystemProfileSectionLockStatus;
 };
 
 /** Input data for creating a system intake's relationship to a CEDAR system */

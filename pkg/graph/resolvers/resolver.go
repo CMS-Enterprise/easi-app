@@ -8,6 +8,7 @@ import (
 	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/pubsub"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 	"github.com/cms-enterprise/easi-app/pkg/upload"
 )
@@ -26,6 +27,7 @@ type Resolver struct {
 	emailClient     *email.Client
 	ldClient        *ldclient.LDClient
 	cedarCoreClient *cedarcore.Client
+	pubsub          pubsub.PubSub
 }
 
 // ResolverService holds service methods for use in resolvers
@@ -44,6 +46,15 @@ func NewResolver(
 	emailClient *email.Client,
 	ldClient *ldclient.LDClient,
 	cedarCoreClient *cedarcore.Client,
+	ps pubsub.PubSub,
 ) *Resolver {
-	return &Resolver{store: store, service: service, s3Client: s3Client, emailClient: emailClient, ldClient: ldClient, cedarCoreClient: cedarCoreClient}
+	return &Resolver{
+		store:           store,
+		service:         service,
+		s3Client:        s3Client,
+		emailClient:     emailClient,
+		ldClient:        ldClient,
+		cedarCoreClient: cedarCoreClient,
+		pubsub:          ps,
+	}
 }
