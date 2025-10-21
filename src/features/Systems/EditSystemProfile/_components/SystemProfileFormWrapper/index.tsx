@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { FetchResult } from '@apollo/client';
 import { Button, GridContainer, Icon } from '@trussworks/react-uswds';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Breadcrumbs from 'components/Breadcrumbs';
 import { useEasiFormContext } from 'components/EasiForm';
@@ -11,20 +12,21 @@ import IconButton from 'components/IconButton';
 import IconLink from 'components/IconLink';
 import PageHeading from 'components/PageHeading';
 import PercentCompleteTag from 'components/PercentCompleteTag';
-import { systemProfileSections } from 'constants/systemProfile';
+import {
+  getSystemProfileSections,
+  SystemProfileSection
+} from 'constants/systemProfile';
 import useMessage from 'hooks/useMessage';
 
 import ExternalDataTag from '../ExternalDataTag';
 
 import './index.scss';
 
-type SystemProfileSectionKey = (typeof systemProfileSections)[number]['key'];
-
 type SystemProfileFormWrapperProps<
   TFieldValues extends FieldValues = FieldValues
 > = {
   children: React.ReactNode;
-  section: SystemProfileSectionKey;
+  section: SystemProfileSection;
   /** Optional onSubmit function if section is editable form */
   onSubmit?: (values: TFieldValues) => Promise<FetchResult>;
   readOnly?: boolean;
@@ -50,6 +52,7 @@ function SystemProfileFormWrapper<
 }: SystemProfileFormWrapperProps<TFieldValues>) {
   const { t } = useTranslation('systemProfile');
   const history = useHistory();
+  const flags = useFlags();
 
   const { Message, showMessage } = useMessage();
 
@@ -63,6 +66,10 @@ function SystemProfileFormWrapper<
   } = useEasiFormContext<TFieldValues>();
 
   const editSystemProfilePath = `/systems/${systemId}/edit`;
+
+  const systemProfileSections = getSystemProfileSections(
+    flags.editableSystemProfile
+  );
 
   /** Returns next section enum/key and route if it exists */
   const nextSection = useMemo(() => {

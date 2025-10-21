@@ -36,47 +36,70 @@ export type SystemProfileSection =
   | 'FUNDING_AND_BUDGET'
   | 'ATO_AND_SECURITY';
 
-/** Maps section enum to corresponding route */
-// TODO EASI-4984 - Update to use new routes. These point to existing system profile pages (or empty string if not yet implemented).
-export const systemProfileLockableSectionMap: Record<
-  SystemProfileSection,
-  string
-> = {
-  BUSINESS_INFORMATION: '',
-  IMPLEMENTATION_DETAILS: 'details',
-  DATA: 'system-data',
-  TOOLS_AND_SOFTWARE: 'tools-and-software',
-  SUB_SYSTEMS: 'sub-systems',
-  TEAM: 'team/edit?workspace',
-  CONTRACTS: 'contracts',
-  FUNDING_AND_BUDGET: 'funding-and-budget',
-  ATO_AND_SECURITY: 'ato-and-security'
+/**
+ * Returns an array of system profile sections with key/enum and corresponding route.
+ *
+ * Each section contains an `enabled` flag that determines if development on the section is completed
+ * and we should display the new section regardless of the enableEditableSystemProfile feature flag.
+ *
+ * @param enableEditableSystemProfile - If true, returns editable form section routes instead of read-only routes.
+ */
+// TODO EASI-4984 - This can be updated to a plain array of sections once editable system profile is complete.
+// This format is a workaround for iteratively releasing new sections.
+export const getSystemProfileSections = (
+  enableEditableSystemProfile: boolean
+): Array<{
+  key: SystemProfileSection;
+  /** Returns correct route based on feature flag state */
+  route: string;
+  /** If true, this section is enabled in the edit system profile form regardless of the feature flag. */
+  enabled: boolean;
+}> => {
+  return [
+    {
+      key: SystemProfileLockableSection.BUSINESS_INFORMATION,
+      route: 'business-information',
+      enabled: false
+    },
+    {
+      key: SystemProfileLockableSection.IMPLEMENTATION_DETAILS,
+      route: enableEditableSystemProfile ? 'implementation-details' : 'details',
+      enabled: false
+    },
+    {
+      key: SystemProfileLockableSection.DATA,
+      route: enableEditableSystemProfile ? 'data' : 'system-data',
+      enabled: false
+    },
+    {
+      key: SystemProfileLockableSection.TOOLS_AND_SOFTWARE,
+      route: 'tools-and-software',
+      enabled: false
+    },
+    {
+      key: SystemProfileLockableSection.SUB_SYSTEMS,
+      route: 'sub-systems',
+      enabled: false
+    },
+    {
+      key: SystemProfileLockableSection.TEAM,
+      route: enableEditableSystemProfile ? 'team' : 'team/edit?workspace',
+      enabled: false
+    },
+    {
+      key: 'CONTRACTS',
+      route: 'contracts',
+      enabled: false
+    },
+    {
+      key: 'FUNDING_AND_BUDGET',
+      route: 'funding-and-budget',
+      enabled: false
+    },
+    {
+      key: 'ATO_AND_SECURITY',
+      route: 'ato-and-security',
+      enabled: false
+    }
+  ];
 };
-
-/** Array of edit system profile sections for form wrapper navigation */
-export const systemProfileSections = [
-  {
-    key: SystemProfileLockableSection.BUSINESS_INFORMATION,
-    route: 'business-information'
-  },
-  {
-    key: SystemProfileLockableSection.IMPLEMENTATION_DETAILS,
-    route: 'implementation-details'
-  },
-  { key: SystemProfileLockableSection.DATA, route: 'data' },
-  {
-    key: SystemProfileLockableSection.TOOLS_AND_SOFTWARE,
-    route: 'tools-and-software'
-  },
-  { key: SystemProfileLockableSection.SUB_SYSTEMS, route: 'sub-systems' },
-  { key: SystemProfileLockableSection.TEAM, route: 'team' },
-  { key: 'CONTRACTS', route: 'contracts' },
-  {
-    key: 'FUNDING_AND_BUDGET',
-    route: 'funding-and-budget'
-  },
-  {
-    key: 'ATO_AND_SECURITY',
-    route: 'ato-and-security'
-  }
-] as const;
