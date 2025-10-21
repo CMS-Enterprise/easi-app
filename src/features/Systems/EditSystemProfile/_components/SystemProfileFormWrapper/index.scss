@@ -1,0 +1,11 @@
+@use 'viewports' as *;
+
+.system-profile-form-wrapper {
+  .form-button-group {
+    flex-direction: column;
+    
+    @media screen and (min-width: $tablet) {
+      flex-direction: row;
+    }
+  }
+}
