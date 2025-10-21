@@ -176,8 +176,8 @@ function SystemProfileFormWrapper<
         </div>
 
         {
-          // Hide navigation buttons and next section text if there is no next section
-          nextSection && (
+          // Hide navigation buttons for last section if read-only
+          (nextSection || !readOnly) && (
             <div
               className="form-button-group margin-top-2 display-flex tablet:flex-align-center flex-gap-105"
               data-testid="form-wrapper-button-group"
@@ -192,31 +192,33 @@ function SystemProfileFormWrapper<
                   {t('form:saveAndExit')}
                 </Button>
               )}
-
-              <Button
-                type="button"
-                disabled={isSubmitting}
-                onClick={() =>
-                  submit(`/systems/${systemId}/${nextSection.route}`)
-                }
-              >
-                {t(
-                  readOnly
-                    ? 'editSystemProfile.form.continueToNextSection'
-                    : 'editSystemProfile.form.saveAndContinue'
-                )}
-              </Button>
-
-              <p
-                className="margin-y-0 text-base-dark"
-                data-testid="next-section-text"
-              >
-                {t('editSystemProfile.form.nextSection', {
-                  sectionName: t(
-                    `systemProfile:sectionCards.${nextSection.key}.title`
-                  )
-                })}
-              </p>
+              {nextSection && (
+                <>
+                  <Button
+                    type="button"
+                    disabled={isSubmitting}
+                    onClick={() =>
+                      submit(`/systems/${systemId}/${nextSection.route}`)
+                    }
+                  >
+                    {t(
+                      readOnly
+                        ? 'editSystemProfile.form.continueToNextSection'
+                        : 'editSystemProfile.form.saveAndContinue'
+                    )}
+                  </Button>
+                  <p
+                    className="margin-y-0 text-base-dark"
+                    data-testid="next-section-text"
+                  >
+                    {t('editSystemProfile.form.nextSection', {
+                      sectionName: t(
+                        `systemProfile:sectionCards.${nextSection.key}.title`
+                      )
+                    })}
+                  </p>
+                </>
+              )}
             </div>
           )
         }
