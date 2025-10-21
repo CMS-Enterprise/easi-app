@@ -9,6 +9,7 @@ import {
   Grid,
   Icon
 } from '@trussworks/react-uswds';
+import { NotFoundPartial } from 'features/Miscellaneous/NotFound';
 
 import {
   DescriptionDefinition,
@@ -32,6 +33,10 @@ const SystemToolsAndSoftware = ({ system }: SystemProfileSubviewProps) => {
     productsLeft =
       system.toolsAndSoftware?.softwareProducts.length -
       TOOLS_AND_SOFTWARE_PRODUCT_COUNT_CAP;
+  }
+
+  if (!system.toolsAndSoftware) {
+    return <NotFoundPartial />;
   }
 
   return (
