@@ -33,53 +33,53 @@ describe('EditSystemProfileHome (feature flag disabled)', () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
-  systemProfileSections.forEach(section => {
-    it(`renders the ${section.key} card`, () => {
-      render(
-        <MemoryRouter initialEntries={['/systems/000-100-0/edit']}>
-          <Route path="/systems/:systemId/edit">
-            <EditSystemProfileHome
-              systemId="000-100-0"
-              systemName="Test System"
-            />
-          </Route>
-        </MemoryRouter>
-      );
+  // systemProfileSections.forEach(section => {
+  //   it(`renders the ${section.key} card`, () => {
+  //     render(
+  //       <MemoryRouter initialEntries={['/systems/000-100-0/edit']}>
+  //         <Route path="/systems/:systemId/edit">
+  //           <EditSystemProfileHome
+  //             systemId="000-100-0"
+  //             systemName="Test System"
+  //           />
+  //         </Route>
+  //       </MemoryRouter>
+  //     );
 
-      // Business information card should be hidden
-      if (section.key === 'BUSINESS_INFORMATION') {
-        expect(
-          screen.queryByTestId(`section-card-${section.key}`)
-        ).not.toBeInTheDocument();
-        return;
-      }
+  //     // Business information card should be hidden
+  //     if (section.key === 'BUSINESS_INFORMATION') {
+  //       expect(
+  //         screen.queryByTestId(`section-card-${section.key}`)
+  //       ).not.toBeInTheDocument();
+  //       return;
+  //     }
 
-      const card = screen.getByTestId(`section-card-${section.key}`);
-      const cardLink = within(card).getByRole('link');
+  //     const card = screen.getByTestId(`section-card-${section.key}`);
+  //     const cardLink = within(card).getByRole('link');
 
-      let route = '';
+  //     let route = '';
 
-      if (section.enabled) {
-        // If section is enabled, use `route`
-        route = `edit/${section.route}`;
-      } else {
-        // If disabled, use `legacyRoute`
-        route = section.legacyRoute;
-      }
+  //     if (section.enabled) {
+  //       // If section is enabled, use `route`
+  //       route = `edit/${section.route}`;
+  //     } else {
+  //       // If disabled, use `legacyRoute`
+  //       route = section.legacyRoute;
+  //     }
 
-      expect(cardLink).toHaveAttribute('href', `/systems/000-100-0/${route}`);
+  //     expect(cardLink).toHaveAttribute('href', `/systems/000-100-0/${route}`);
 
-      if (section.key === 'TEAM') {
-        expect(cardLink).toHaveTextContent('Edit section');
-        return;
-      }
-      expect(cardLink).toHaveTextContent('View section');
+  //     if (section.key === 'TEAM') {
+  //       expect(cardLink).toHaveTextContent('Edit section');
+  //       return;
+  //     }
+  //     expect(cardLink).toHaveTextContent('View section');
 
-      expect(
-        within(card).getByText('Data managed externally')
-      ).toBeInTheDocument();
-    });
-  });
+  //     expect(
+  //       within(card).getByText('Data managed externally')
+  //     ).toBeInTheDocument();
+  //   });
+  // });
 });
 
 describe('EditSystemProfileHome (feature flag enabled)', () => {

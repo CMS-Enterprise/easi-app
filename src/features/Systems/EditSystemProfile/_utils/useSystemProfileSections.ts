@@ -13,7 +13,7 @@ export type SystemProfileSectionData = {
   key: SystemProfileSection;
   /** Returns correct route based on feature flag state */
   route: string;
-  /** Computed value: true if section is enabled OR feature flag is on */
+  /** Returns true if section OR global `editableSystemProfile` feature flag is enabled */
   isEnabled: boolean;
 };
 
@@ -24,10 +24,10 @@ type UseSystemProfileSectionsReturn = {
 
 /**
  * Resolves system profile section data routes and navigation order based on
- * the section's enabled state and the editableSystemProfile feature flag.
+ * the section feature flag.
  *
  * @param sectionKey - The current section key or enum value.
- * @param includeDisabledSections - If false, only includes enabled sections.
+ * @param includeDisabledSections - If false, only includes sections with enabled feature flags.
  *
  * @returns Current section data and next section for sequential navigation
  */
@@ -39,14 +39,13 @@ function useSystemProfileSections({
 }: UseSystemProfileSectionsProps): UseSystemProfileSectionsReturn {
   const flags = useFlags();
 
-  /**
-   * Section data with routes resolved based on section enabled state and feature flags.
-   *
-   * If `includeDisabledSections` is false, filters to only enabled sections.
-   */
+  /** Section data with routes resolved based on feature flags and `includeDisabledSections` parameter */
   const resolvedSections: SystemProfileSectionData[] = useMemo(() => {
     let sections = systemProfileSections.map(section => {
-      const isEnabled = section.enabled || flags.editableSystemProfile;
+      // `editableSystemProfile` feature flag overrides section feature flags
+      const isEnabled =
+        flags[section.featureFlag] || flags.editableSystemProfile;
+
       const route = isEnabled ? `edit/${section.route}` : section.legacyRoute;
 
       return {
@@ -61,7 +60,7 @@ function useSystemProfileSections({
     }
 
     return sections;
-  }, [flags.editableSystemProfile, includeDisabledSections]);
+  }, [flags, includeDisabledSections]);
 
   const currentSectionIndex = useMemo(
     () => resolvedSections.findIndex(section => section.key === sectionKey),

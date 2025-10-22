@@ -10,4 +10,13 @@ export type Flags = {
   showAtoColumn: boolean;
   serviceAlertEnabled: boolean;
   editableSystemProfile: boolean;
+  systemProfileBusinessInformation: boolean;
+  systemProfileImplementationDetails: boolean;
+  systemProfileData: boolean;
+  systemProfileToolsAndSoftware: boolean;
+  systemProfileSubSystems: boolean;
+  systemProfileTeam: boolean;
+  systemProfileContracts: boolean;
+  systemProfileFundingAndBudget: boolean;
+  systemProfileAtoAndSecurity: boolean;
 };

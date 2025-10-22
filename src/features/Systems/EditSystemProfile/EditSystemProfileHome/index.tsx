@@ -29,6 +29,9 @@ const EditSystemProfileHome = ({
 
   const flags = useFlags();
 
+  /** Global `editableSystemProfile` feature flag overrides section feature flags */
+  const enableAllSections = flags.editableSystemProfile;
+
   return (
     <MainContent>
       <GridContainer>
@@ -67,7 +70,7 @@ const EditSystemProfileHome = ({
         </IconLink>
 
         <CardGroup className="margin-bottom-10">
-          {flags.editableSystemProfile && (
+          {(enableAllSections || flags.systemProfileBusinessInformation) && (
             <SystemProfileSectionCard
               section={SystemProfileLockableSection.BUSINESS_INFORMATION}
               isManagedExternally
@@ -76,26 +79,36 @@ const EditSystemProfileHome = ({
 
           <SystemProfileSectionCard
             section={SystemProfileLockableSection.IMPLEMENTATION_DETAILS}
-            isManagedExternally={!flags.editableSystemProfile}
-            readOnly={!flags.editableSystemProfile}
+            isManagedExternally={
+              !enableAllSections && !flags.systemProfileImplementationDetails
+            }
+            readOnly={
+              !enableAllSections && !flags.systemProfileImplementationDetails
+            }
           />
 
           <SystemProfileSectionCard
             section={SystemProfileLockableSection.DATA}
-            isManagedExternally={!flags.editableSystemProfile}
-            readOnly={!flags.editableSystemProfile}
+            isManagedExternally={!enableAllSections && !flags.systemProfileData}
+            readOnly={!enableAllSections && !flags.systemProfileData}
           />
 
           <SystemProfileSectionCard
             section={SystemProfileLockableSection.TOOLS_AND_SOFTWARE}
-            isManagedExternally={!flags.editableSystemProfile}
-            readOnly={!flags.editableSystemProfile}
+            isManagedExternally={
+              !enableAllSections && !flags.systemProfileToolsAndSoftware
+            }
+            readOnly={
+              !enableAllSections && !flags.systemProfileToolsAndSoftware
+            }
           />
 
           <SystemProfileSectionCard
             section={SystemProfileLockableSection.SUB_SYSTEMS}
-            isManagedExternally={!flags.editableSystemProfile}
-            readOnly={!flags.editableSystemProfile}
+            isManagedExternally={
+              !enableAllSections && !flags.systemProfileSubSystems
+            }
+            readOnly={!enableAllSections && !flags.systemProfileSubSystems}
           />
 
           <SystemProfileSectionCard

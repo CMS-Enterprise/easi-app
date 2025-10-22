@@ -85,6 +85,7 @@ function SystemProfileFormWrapper<
     [isDirty, onSubmit, showMessage, t, history, handleSubmit]
   );
 
+  // Return page not found if section feature flag is disabled
   if (!currentSection) {
     return <NotFound />;
   }
