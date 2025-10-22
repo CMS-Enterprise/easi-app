@@ -38,7 +38,7 @@ export const securityFindingKeys = ['total', ...threatLevelGrades] as const;
  * If `enabled` is true, the corresponding edit system profile form section will be enabled and
  * section card will show editable data. This overrides the feature flag.
  */
-// TODO EASI-4984 - when the feature flag is removed, remove `legacyRoute` and enabled properties.
+// TODO EASI-4984 - remove `legacyRoute` once editable system profile feature is fully enabled
 export const systemProfileSections = [
   {
     key: SystemProfileLockableSection.BUSINESS_INFORMATION,

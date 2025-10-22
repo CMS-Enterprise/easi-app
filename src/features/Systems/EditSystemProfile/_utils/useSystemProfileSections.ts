@@ -32,7 +32,7 @@ type UseSystemProfileSectionsReturn = {
  * @returns Current section data and next section for sequential navigation
  */
 // TODO EASI-4984 - this should be removed and replaced with a plain array of sections
-// once editable system profile work is complete and feature flag is removed.
+// once editable system profile is fully enabled and we no longer need feature flag logic
 function useSystemProfileSections({
   sectionKey,
   includeDisabledSections = true

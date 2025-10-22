@@ -63,6 +63,7 @@ const SystemProfileSectionCard = ({
     <Card
       className="tablet:grid-col-6 desktop:grid-col-4"
       containerProps={{ className: 'shadow-2 border-width-1px' }}
+      data-testid={`section-card-${section}`}
     >
       {isManagedExternally && (
         <h5 className="text-base-dark bg-base-lightest padding-x-3 margin-0 font-body-xs text-light display-flex flex-align-center">
