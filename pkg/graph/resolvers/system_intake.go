@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	"errors"
 	"slices"
 	"time"
 
@@ -12,6 +13,7 @@ import (
 	"github.com/samber/lo"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers/systemintake/formstate"
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
@@ -340,7 +342,14 @@ func SystemIntakesWithReviewRequested(ctx context.Context, store *storage.Store)
 }
 
 func GetMySystemIntakes(ctx context.Context, store *storage.Store) ([]*models.SystemIntake, error) {
-	return store.GetMySystemIntakes(ctx)
+    p := appcontext.Principal(ctx)
+    if p == nil || p.Account() == nil || p.Account().ID == uuid.Nil {
+        return nil, &apperrors.UnauthorizedError{
+            Err: errors.New("unauthorized to fetch system intake"),
+        }
+    }
+
+    return store.GetMySystemIntakes(ctx, p.Account().ID)
 }
 
 const maxEUAsPerRequest = 200
