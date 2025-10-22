@@ -31,13 +31,12 @@ exports[`SystemProfileSectionCard > matches the snapshot 1`] = `
         class="usa-card__footer"
         data-testid="CardFooter"
       >
-        <button
+        <a
           class="usa-button usa-button--outline"
-          data-testid="button"
-          type="button"
+          href="/systems/000-100-0/edit/implementation-details"
         >
           Edit section
-        </button>
+        </a>
       </div>
     </div>
   </li>

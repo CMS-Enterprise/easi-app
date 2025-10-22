@@ -82,7 +82,7 @@ describe('SystemProfileSectionCard', () => {
       screen.getByText('Data partially managed externally')
     ).toBeInTheDocument();
 
-    expect(screen.getByRole('button', { name: 'Edit section' })).toHaveClass(
+    expect(screen.getByRole('link', { name: 'Edit section' })).toHaveClass(
       'usa-button--outline'
     );
   });
@@ -104,7 +104,7 @@ describe('SystemProfileSectionCard', () => {
 
     expect(screen.getByText('Data managed externally')).toBeInTheDocument();
 
-    expect(screen.getByRole('button', { name: 'View section' })).toHaveClass(
+    expect(screen.getByRole('link', { name: 'View section' })).toHaveClass(
       'usa-button--outline'
     );
   });
@@ -144,7 +144,7 @@ describe('SystemProfileSectionCard', () => {
       screen.getByText('This section has pending changes')
     ).toBeInTheDocument();
 
-    expect(screen.getByRole('button', { name: 'View section' })).toHaveClass(
+    expect(screen.getByRole('link', { name: 'View section' })).toHaveClass(
       'usa-button--unstyled'
     );
   });

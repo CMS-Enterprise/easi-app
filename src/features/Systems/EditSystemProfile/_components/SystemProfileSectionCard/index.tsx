@@ -1,8 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import {
-  Button,
   Card,
   CardBody,
   CardFooter,
@@ -42,7 +41,6 @@ const SystemProfileSectionCard = ({
   readOnly
 }: SystemProfileSectionCardProps) => {
   const { t } = useTranslation('systemProfile');
-  const history = useHistory();
 
   const { systemId } = useParams<{
     systemId: string;
@@ -116,19 +114,16 @@ const SystemProfileSectionCard = ({
         {sectionLock ? (
           <SectionLock sectionLock={sectionLock} />
         ) : (
-          <Button
-            type="button"
-            onClick={() =>
-              history.push(`/systems/${systemId}/${currentSection.route}`)
-            }
-            className={
+          <Link
+            to={`/systems/${systemId}/${currentSection.route}`}
+            className={`usa-button ${
               hasPendingChanges ? 'usa-button--unstyled' : 'usa-button--outline'
-            }
+            }`}
           >
             {hasPendingChanges || readOnly
               ? t('editSystemProfile.viewSection')
               : t('editSystemProfile.editSection')}
-          </Button>
+          </Link>
         )}
       </CardFooter>
     </Card>
