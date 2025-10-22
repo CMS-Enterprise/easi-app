@@ -1,5 +1,6 @@
 import {
   SystemIntakeContactComponent,
+  SystemIntakeContactFragment,
   SystemIntakeContactRole,
   SystemIntakeDocumentCommonType,
   SystemIntakeDocumentVersion
@@ -60,7 +61,33 @@ const UserAccountSchema = Yup.object()
   });
 
 export const ContactFormSchema = Yup.object().shape({
-  userAccount: UserAccountSchema,
+  userAccount: UserAccountSchema.test(
+    'duplicate',
+    'This contact has already been added to the request.',
+    function isDuplicate(value) {
+      const existingContacts: SystemIntakeContactFragment[] =
+        this.options.context?.existingContacts || [];
+
+      // Skip if editing an existing contact
+      // or no existing contacts have been added yet
+      if (this.parent?.id || existingContacts.length === 0) {
+        return true;
+      }
+
+      const isDuplicateContact = existingContacts.some(
+        contact => contact.userAccount.username === value.username
+      );
+
+      if (isDuplicateContact) {
+        return this.createError({
+          path: 'userAccount',
+          message: 'This contact has already been added to the request.'
+        });
+      }
+
+      return true;
+    }
+  ),
   component: Yup.mixed<SystemIntakeContactComponent>()
     .oneOf(Object.values(SystemIntakeContactComponent))
     .required('Select a component'),

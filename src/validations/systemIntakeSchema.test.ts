@@ -1,4 +1,7 @@
-import { GetSystemIntakeContactsQuery } from 'gql/generated/graphql';
+import {
+  GetSystemIntakeContactsQuery,
+  SystemIntakeContactFragment
+} from 'gql/generated/graphql';
 import { DateTime } from 'luxon';
 import {
   businessOwner,
@@ -7,6 +10,7 @@ import {
 } from 'tests/mock/systemIntake';
 
 import SystemIntakeValidationSchema, {
+  ContactFormSchema,
   SystemIntakeContactsSchema
 } from './systemIntakeSchema';
 
@@ -138,5 +142,63 @@ describe('System intake contacts schema', () => {
         businessOwners: []
       })
     ).rejects.toThrow();
+  });
+});
+
+describe('Contact form schema', () => {
+  it('accepts valid contacts', async () => {
+    await expect(ContactFormSchema.validate(requester)).resolves.toBeDefined();
+  });
+
+  it('throws error if no contact is selected (missing username)', async () => {
+    await expect(
+      ContactFormSchema.validate({
+        ...requester,
+        userAccount: {
+          ...requester.userAccount,
+          username: ''
+        }
+      })
+    ).rejects.toThrow();
+  });
+
+  it('throws error if no component is selected', async () => {
+    await expect(
+      ContactFormSchema.validate({
+        ...requester,
+        component: null
+      })
+    ).rejects.toThrow();
+  });
+
+  it('throws error if no roles are selected', async () => {
+    await expect(
+      ContactFormSchema.validate({
+        ...requester,
+        roles: []
+      })
+    ).rejects.toThrow();
+  });
+
+  it('throws error if user account is a duplicate', async () => {
+    // Duplicate requester contact without id
+    const newContact: SystemIntakeContactFragment = {
+      ...requester,
+      id: ''
+    };
+
+    await expect(
+      ContactFormSchema.validate(newContact, {
+        context: { existingContacts: [requester] }
+      })
+    ).rejects.toThrow();
+  });
+
+  it('accepts duplicate contact if it is being edited', async () => {
+    await expect(
+      ContactFormSchema.validate(requester, {
+        context: { existingContacts: [requester] }
+      })
+    ).resolves.toBeDefined();
   });
 });

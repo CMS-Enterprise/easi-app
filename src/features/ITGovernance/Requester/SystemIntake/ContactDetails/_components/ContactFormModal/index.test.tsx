@@ -1,6 +1,10 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { businessOwner, getCedarContactsQuery } from 'tests/mock/systemIntake';
+import {
+  businessOwner,
+  getCedarContactsQuery,
+  getSystemIntakeContactsQuery
+} from 'tests/mock/systemIntake';
 
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
@@ -9,9 +13,9 @@ import ContactFormModal from '.';
 describe('ContactFormModal', () => {
   it('matches the snapshot', async () => {
     const { baseElement } = render(
-      <VerboseMockedProvider>
+      <VerboseMockedProvider mocks={[getSystemIntakeContactsQuery()]}>
         <ContactFormModal
-          systemIntakeId="123"
+          systemIntakeId={businessOwner.systemIntakeId}
           type="contact"
           closeModal={() => {}}
           isOpen
@@ -27,9 +31,9 @@ describe('ContactFormModal', () => {
 
   it('disables submit button if fields are empty', async () => {
     render(
-      <VerboseMockedProvider>
+      <VerboseMockedProvider mocks={[getSystemIntakeContactsQuery()]}>
         <ContactFormModal
-          systemIntakeId="123"
+          systemIntakeId={businessOwner.systemIntakeId}
           type="contact"
           closeModal={() => {}}
           isOpen
@@ -47,6 +51,7 @@ describe('ContactFormModal', () => {
     render(
       <VerboseMockedProvider
         mocks={[
+          getSystemIntakeContactsQuery(),
           getCedarContactsQuery(contactLabel, {
             __typename: 'UserInfo',
             commonName: userAccount.commonName,
@@ -56,7 +61,7 @@ describe('ContactFormModal', () => {
         ]}
       >
         <ContactFormModal
-          systemIntakeId="123"
+          systemIntakeId={businessOwner.systemIntakeId}
           type="contact"
           closeModal={() => {}}
           isOpen
