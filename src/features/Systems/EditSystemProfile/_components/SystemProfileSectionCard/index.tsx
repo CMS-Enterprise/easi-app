@@ -10,12 +10,13 @@ import {
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import { SystemProfileSectionLockStatus } from 'gql/generated/graphql';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import PercentCompleteTag from 'components/PercentCompleteTag';
 import SectionLock from 'components/SectionLock';
 import { SystemProfileSection } from 'types/systemProfile';
 
-import useSystemProfileSections from '../../_utils/useSystemProfileSections';
+import { getSystemProfileSectionMap } from '../../util';
 import ExternalDataTag from '../ExternalDataTag';
 
 import './index.scss';
@@ -46,9 +47,9 @@ const SystemProfileSectionCard = ({
     systemId: string;
   }>();
 
-  const { currentSection } = useSystemProfileSections({
-    sectionKey: section
-  });
+  const flags = useFlags();
+  const sectionMap = getSystemProfileSectionMap(flags);
+  const { route } = sectionMap[section];
 
   // TODO EASI-4984: Update to use actual section lock context
   const lockableSectionLocks = [] as SystemProfileSectionLockStatus[];
@@ -56,8 +57,6 @@ const SystemProfileSectionCard = ({
   /** Returns lock status if section is locked */
   const sectionLock: SystemProfileSectionLockStatus | undefined =
     lockableSectionLocks?.find(lock => lock.section === section);
-
-  if (!currentSection) return null;
 
   return (
     <Card
@@ -116,7 +115,7 @@ const SystemProfileSectionCard = ({
           <SectionLock sectionLock={sectionLock} />
         ) : (
           <Link
-            to={`/systems/${systemId}/${currentSection.route}`}
+            to={`/systems/${systemId}/${route}`}
             className={`usa-button ${
               hasPendingChanges ? 'usa-button--unstyled' : 'usa-button--outline'
             }`}

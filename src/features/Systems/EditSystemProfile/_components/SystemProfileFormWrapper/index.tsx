@@ -5,6 +5,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { FetchResult } from '@apollo/client';
 import { Button, GridContainer, Icon } from '@trussworks/react-uswds';
 import NotFound from 'features/Miscellaneous/NotFound';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Breadcrumbs from 'components/Breadcrumbs';
 import { useEasiFormContext } from 'components/EasiForm';
@@ -15,7 +16,7 @@ import PercentCompleteTag from 'components/PercentCompleteTag';
 import useMessage from 'hooks/useMessage';
 import { SystemProfileSection } from 'types/systemProfile';
 
-import useSystemProfileSections from '../../_utils/useSystemProfileSections';
+import { getEnabledSections } from '../../util';
 import ExternalDataTag from '../ExternalDataTag';
 
 import './index.scss';
@@ -53,10 +54,20 @@ function SystemProfileFormWrapper<
 
   const { Message, showMessage } = useMessage();
 
-  const { currentSection, nextSection } = useSystemProfileSections({
-    sectionKey: section,
-    includeDisabledSections: false
-  });
+  const flags = useFlags();
+  const enabledSections = getEnabledSections(flags);
+
+  const currentSectionIndex = enabledSections.findIndex(
+    ({ key }) => key === section
+  );
+
+  const currentSection =
+    currentSectionIndex > -1 ? enabledSections[currentSectionIndex] : undefined;
+
+  const nextSection =
+    currentSection && currentSectionIndex < enabledSections.length - 1
+      ? enabledSections[currentSectionIndex + 1]
+      : undefined;
 
   const { systemId } = useParams<{
     systemId: string;
