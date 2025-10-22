@@ -94,7 +94,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const form = useEasiForm<GovernanceTeamsForm>({
     resolver: yupResolver(SystemIntakeValidationSchema.governanceTeams),
     defaultValues: {
-      isPresent: false,
+      isPresent: systemIntake.governanceTeams.isPresent,
       teams: {
         securityPrivacy: {
           isPresent: false,
