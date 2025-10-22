@@ -9,7 +9,7 @@ type UseSystemProfileSectionsProps = {
   includeDisabledSections?: boolean;
 };
 
-export type SystemProfileSectionData = {
+type SystemProfileSectionData = {
   key: SystemProfileSection;
   /** Returns correct route based on feature flag state */
   route: string;

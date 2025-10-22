@@ -7,8 +7,7 @@ import { systemProfileSections } from 'constants/systemProfile';
 
 import EditSystemProfileHome from './index';
 
-// TODO EASI-4984 - remove feature flag conditional tests once
-// editable system profile feature is fully enabled
+// TODO EASI-4984 - remove feature flag tests once editable system profile feature is fully enabled
 
 const mockUseFlags = vi.fn();
 
@@ -16,7 +15,7 @@ vi.mock('launchdarkly-react-client-sdk', () => ({
   useFlags: () => mockUseFlags()
 }));
 
-describe('EditSystemProfileHome (feature flag disabled)', () => {
+describe('EditSystemProfileHome (editableSystemProfile flag disabled)', () => {
   beforeEach(() => {
     mockUseFlags.mockReturnValue({
       editableSystemProfile: false
@@ -33,74 +32,52 @@ describe('EditSystemProfileHome (feature flag disabled)', () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
-  // systemProfileSections.forEach(section => {
-  //   it(`renders the ${section.key} card`, () => {
-  //     render(
-  //       <MemoryRouter initialEntries={['/systems/000-100-0/edit']}>
-  //         <Route path="/systems/:systemId/edit">
-  //           <EditSystemProfileHome
-  //             systemId="000-100-0"
-  //             systemName="Test System"
-  //           />
-  //         </Route>
-  //       </MemoryRouter>
-  //     );
-
-  //     // Business information card should be hidden
-  //     if (section.key === 'BUSINESS_INFORMATION') {
-  //       expect(
-  //         screen.queryByTestId(`section-card-${section.key}`)
-  //       ).not.toBeInTheDocument();
-  //       return;
-  //     }
-
-  //     const card = screen.getByTestId(`section-card-${section.key}`);
-  //     const cardLink = within(card).getByRole('link');
-
-  //     let route = '';
-
-  //     if (section.enabled) {
-  //       // If section is enabled, use `route`
-  //       route = `edit/${section.route}`;
-  //     } else {
-  //       // If disabled, use `legacyRoute`
-  //       route = section.legacyRoute;
-  //     }
-
-  //     expect(cardLink).toHaveAttribute('href', `/systems/000-100-0/${route}`);
-
-  //     if (section.key === 'TEAM') {
-  //       expect(cardLink).toHaveTextContent('Edit section');
-  //       return;
-  //     }
-  //     expect(cardLink).toHaveTextContent('View section');
-
-  //     expect(
-  //       within(card).getByText('Data managed externally')
-  //     ).toBeInTheDocument();
-  //   });
-  // });
-});
-
-describe('EditSystemProfileHome (feature flag enabled)', () => {
-  beforeEach(() => {
-    mockUseFlags.mockReturnValue({
-      editableSystemProfile: true
-    });
-  });
-
-  it('matches the snapshot', () => {
-    const { asFragment } = render(
-      <MemoryRouter initialEntries={['/systems/000-100-0/edit']}>
-        <EditSystemProfileHome systemId="000-100-0" systemName="Test System" />
-      </MemoryRouter>
-    );
-
-    expect(asFragment()).toMatchSnapshot();
-  });
-
   systemProfileSections.forEach(section => {
-    it(`renders the ${section.key} card`, () => {
+    it(`renders the ${section.key} card (section flag disabled)`, () => {
+      render(
+        <MemoryRouter initialEntries={['/systems/000-100-0/edit']}>
+          <Route path="/systems/:systemId/edit">
+            <EditSystemProfileHome
+              systemId="000-100-0"
+              systemName="Test System"
+            />
+          </Route>
+        </MemoryRouter>
+      );
+
+      // Business information card should be hidden
+      if (section.key === 'BUSINESS_INFORMATION') {
+        expect(
+          screen.queryByTestId(`section-card-${section.key}`)
+        ).not.toBeInTheDocument();
+        return;
+      }
+
+      const card = screen.getByTestId(`section-card-${section.key}`);
+      const cardLink = within(card).getByRole('link');
+
+      expect(cardLink).toHaveAttribute(
+        'href',
+        `/systems/000-100-0/${section.legacyRoute}`
+      );
+
+      if (section.key === 'TEAM') {
+        expect(cardLink).toHaveTextContent('Edit section');
+        return;
+      }
+
+      expect(cardLink).toHaveTextContent('View section');
+
+      expect(
+        within(card).getByText('Data managed externally')
+      ).toBeInTheDocument();
+    });
+
+    it(`renders the ${section.key} card (section flag enabled)`, () => {
+      mockUseFlags.mockReturnValue({
+        [section.featureFlag]: true
+      });
+
       render(
         <MemoryRouter initialEntries={['/systems/000-100-0/edit']}>
           <Route path="/systems/:systemId/edit">
@@ -139,5 +116,24 @@ describe('EditSystemProfileHome (feature flag enabled)', () => {
         ).toBeInTheDocument();
       }
     });
+  });
+});
+
+// Snapshot for global feature flag override
+describe('EditSystemProfileHome (editableSystemProfile flag enabled)', () => {
+  beforeEach(() => {
+    mockUseFlags.mockReturnValue({
+      editableSystemProfile: true
+    });
+  });
+
+  it('matches the snapshot', () => {
+    const { asFragment } = render(
+      <MemoryRouter initialEntries={['/systems/000-100-0/edit']}>
+        <EditSystemProfileHome systemId="000-100-0" systemName="Test System" />
+      </MemoryRouter>
+    );
+
+    expect(asFragment()).toMatchSnapshot();
   });
 });

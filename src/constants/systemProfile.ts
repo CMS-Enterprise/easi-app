@@ -2,6 +2,9 @@
 
 import { SystemProfileLockableSection } from 'gql/generated/graphql';
 
+import { Flags } from 'types/flags';
+import { SystemProfileSection } from 'types/systemProfile';
+
 // Team
 
 export const teamSectionKeys = [
@@ -29,13 +32,20 @@ export const threatLevelGrades = [
 
 export const securityFindingKeys = ['total', ...threatLevelGrades] as const;
 
+type SectionData = {
+  key: SystemProfileSection;
+  route: string;
+  legacyRoute: string;
+  featureFlag: keyof Flags;
+};
+
 /**
  * Array of system profile sections with routes and enabled status.
  *
  * `legacyRoute` is the route for the legacy system profile page to be used if feature flags are off.
  */
 // TODO EASI-4984 - remove `legacyRoute` once editable system profile feature is fully enabled
-export const systemProfileSections = [
+export const systemProfileSections: Array<SectionData> = [
   {
     key: SystemProfileLockableSection.BUSINESS_INFORMATION,
     route: 'business-information',
@@ -90,4 +100,4 @@ export const systemProfileSections = [
     legacyRoute: 'ato-and-security',
     featureFlag: 'systemProfileAtoAndSecurity'
   }
-] as const;
+];

@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`EditSystemProfileHome (feature flag disabled) > matches the snapshot 1`] = `
+exports[`EditSystemProfileHome (editableSystemProfile flag disabled) > matches the snapshot 1`] = `
 <DocumentFragment>
   <main
     class="easi-main-content"
@@ -566,7 +566,7 @@ exports[`EditSystemProfileHome (feature flag disabled) > matches the snapshot 1`
 </DocumentFragment>
 `;
 
-exports[`EditSystemProfileHome (feature flag enabled) > matches the snapshot 1`] = `
+exports[`EditSystemProfileHome (editableSystemProfile flag enabled) > matches the snapshot 1`] = `
 <DocumentFragment>
   <main
     class="easi-main-content"
