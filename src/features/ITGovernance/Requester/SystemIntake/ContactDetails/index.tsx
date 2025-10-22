@@ -121,7 +121,6 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   } = form;
 
   const governanceTeams = watch('teams');
-  const isPresent = watch('isPresent');
 
   /**
    * Update governance teams and execute callback if provided
@@ -134,11 +133,12 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     shouldValidate: boolean = false
   ) => {
     if (!isDirty) return callback();
+    const values = watch();
 
     const input: UpdateSystemIntakeContactDetailsInput = {
       id: systemIntake.id,
       governanceTeams: {
-        isPresent: systemIntake.governanceTeams.isPresent,
+        isPresent: values.isPresent,
         teams: formatGovernanceTeamsInput(governanceTeams)
       }
     };
