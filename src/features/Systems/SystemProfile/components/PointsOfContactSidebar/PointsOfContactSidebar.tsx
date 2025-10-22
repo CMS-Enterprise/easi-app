@@ -60,9 +60,9 @@ const PointsOfContactSidebar = ({
       <p className="font-body-xs margin-top-1 margin-bottom-3">
         {t('singleSystem.pointsOfContact', { count: contactsWithRoles.length })}
       </p>
-      {system.usernamesWithRoles && <DataNotFound />}
+      {!system.usernamesWithRoles && <DataNotFound />}
 
-      {!system.usernamesWithRoles && (
+      {!!system.usernamesWithRoles && (
         <>
           {contactsWithRoles.length ? (
             contactsWithRoles.map(contact => {
