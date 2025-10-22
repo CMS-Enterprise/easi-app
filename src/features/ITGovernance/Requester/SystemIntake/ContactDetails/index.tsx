@@ -138,7 +138,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     const input: UpdateSystemIntakeContactDetailsInput = {
       id: systemIntake.id,
       governanceTeams: {
-        isPresent,
+        isPresent: systemIntake.governanceTeams.isPresent,
         teams: formatGovernanceTeamsInput(governanceTeams)
       }
     };
