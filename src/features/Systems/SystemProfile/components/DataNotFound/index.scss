@@ -1,0 +1,10 @@
+@use 'uswds-core' as *;
+@use 'colors' as *;
+
+.data-not-found {
+  background-color: color('warning-lighter');
+  border: 1px solid color('warning-light');
+  border-radius: 0.25rem;
+  border-radius: radius('md');
+  word-break: break-word;
+}

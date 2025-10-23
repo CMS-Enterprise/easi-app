@@ -136,7 +136,7 @@ describe('System Profile Points of Contact by subpage', () => {
     Object.keys(pointsOfContactIds).map(subpage => subpage as SubpageKey)
   )('poc set is of the first matching role type for %s', subpage => {
     const allowedSubpagePocIds = pointsOfContactIds[subpage];
-    const contacts = getPointsOfContact(subpage, data.usernamesWithRoles);
+    const contacts = getPointsOfContact(subpage, data.usernamesWithRoles || []);
 
     // Collect all contacts matching all poc ids for the subpage
     const received = allowedSubpagePocIds.filter(pocid => {

@@ -16,6 +16,7 @@ import {
   GetSystemIntakeContactsDocument,
   SystemIntakeContactRole,
   useCreateSystemIntakeContactMutation,
+  useGetSystemIntakeContactsQuery,
   useUpdateSystemIntakeContactMutation
 } from 'gql/generated/graphql';
 import { capitalize } from 'lodash';
@@ -93,6 +94,16 @@ const ContactForm = ({
     awaitRefetchQueries: true
   });
 
+  // Read existing contacts from cache to prevent duplicates
+  const { data: contactsData } = useGetSystemIntakeContactsQuery({
+    variables: {
+      id: systemIntakeId
+    }
+  });
+
+  const existingContacts =
+    contactsData?.systemIntakeContacts?.allContacts || [];
+
   const {
     control,
     handleSubmit,
@@ -102,7 +113,8 @@ const ContactForm = ({
     formState: { errors, isValid, defaultValues, isSubmitSuccessful }
   } = useEasiForm<ContactFormFields>({
     resolver: yupResolver(ContactFormSchema),
-    defaultValues: initialValues || emptyContactFields
+    defaultValues: initialValues || emptyContactFields,
+    context: { existingContacts }
   });
 
   const requestHomeVariant = copyVariant === 'requestHome';

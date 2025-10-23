@@ -8,6 +8,7 @@ import {
   Select
 } from '@trussworks/react-uswds';
 import {
+  GetGovernanceTaskListDocument,
   SystemIntakeFormStep,
   SystemIntakeStep,
   useCreateSystemIntakeActionRequestEditsMutation
@@ -33,7 +34,14 @@ const RequestEdits = ({
   const { t } = useTranslation(['action', 'form']);
 
   const [mutate] = useCreateSystemIntakeActionRequestEditsMutation({
-    refetchQueries: ['GetGovernanceTaskListQuery']
+    refetchQueries: [
+      {
+        query: GetGovernanceTaskListDocument,
+        variables: {
+          id: systemIntakeId
+        }
+      }
+    ]
   });
 
   /** Default `intakeFormStep` value
