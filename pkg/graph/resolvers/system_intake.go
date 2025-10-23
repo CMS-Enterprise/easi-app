@@ -342,7 +342,11 @@ func SystemIntakesWithReviewRequested(ctx context.Context, store *storage.Store)
 }
 
 func GetMySystemIntakes(ctx context.Context, store *storage.Store) ([]*models.SystemIntake, error) {
-    p := appcontext.Principal(ctx)
+p := appcontext.Principal(ctx)
+userAccount := p.Account()
+if userAccount == nil {
+    return nil, fmt.ErrorOf(" there is no user account present")
+}
     if p == nil || p.Account() == nil || p.Account().ID == uuid.Nil {
         return nil, &apperrors.UnauthorizedError{
             Err: errors.New("unauthorized to fetch system intake"),
