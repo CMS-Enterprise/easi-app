@@ -1,7 +1,11 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
-import { businessOwner, getCedarContactsQuery } from 'tests/mock/systemIntake';
+import {
+  businessOwner,
+  getCedarContactsQuery,
+  getSystemIntakeContactsQuery
+} from 'tests/mock/systemIntake';
 
 import { MessageProvider } from 'hooks/useMessage';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
@@ -12,10 +16,11 @@ describe('ContactFormModal', () => {
   it('matches the snapshot', async () => {
     const { baseElement } = render(
       <MemoryRouter>
-        <VerboseMockedProvider>
+        <VerboseMockedProvider mocks={[getSystemIntakeContactsQuery()]}>
           <MessageProvider>
+            {' '}
             <ContactFormModal
-              systemIntakeId="123"
+              systemIntakeId={businessOwner.systemIntakeId}
               type="contact"
               closeModal={() => {}}
               isOpen
@@ -34,10 +39,10 @@ describe('ContactFormModal', () => {
   it('disables submit button if fields are empty', async () => {
     render(
       <MemoryRouter>
-        <VerboseMockedProvider>
+        <VerboseMockedProvider mocks={[getSystemIntakeContactsQuery()]}>
           <MessageProvider>
             <ContactFormModal
-              systemIntakeId="123"
+              systemIntakeId={businessOwner.systemIntakeId}
               type="contact"
               closeModal={() => {}}
               isOpen
@@ -62,6 +67,7 @@ describe('ContactFormModal', () => {
       <MemoryRouter>
         <VerboseMockedProvider
           mocks={[
+            getSystemIntakeContactsQuery(),
             getCedarContactsQuery(contactLabel, {
               __typename: 'UserInfo',
               commonName: userAccount.commonName,
@@ -72,7 +78,7 @@ describe('ContactFormModal', () => {
         >
           <MessageProvider>
             <ContactFormModal
-              systemIntakeId="123"
+              systemIntakeId={businessOwner.systemIntakeId}
               type="contact"
               closeModal={() => {}}
               isOpen
