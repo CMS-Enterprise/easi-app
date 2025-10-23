@@ -614,7 +614,7 @@ func (s *Store) GetSystemIntakesWithLCIDs(ctx context.Context) ([]*models.System
 func (s *Store) GetMySystemIntakes(ctx context.Context, userID uuid.UUID) ([]*models.SystemIntake, error) {
 	var intakes []*models.SystemIntake
 	err := namedSelect(ctx, s.db, &intakes, sqlqueries.SystemIntake.GetByUser, args{
-		"user_id": userID.String(),
+		"user_id": userID,
 	})
 	return intakes, err
 }
