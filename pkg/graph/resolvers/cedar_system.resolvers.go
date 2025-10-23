@@ -9,12 +9,11 @@ import (
 	"fmt"
 	"slices"
 
-	"golang.org/x/sync/errgroup"
-
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
 	"github.com/cms-enterprise/easi-app/pkg/graph/generated"
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"golang.org/x/sync/errgroup"
 )
 
 // BusinessOwnerRoles is the resolver for the businessOwnerRoles field.
