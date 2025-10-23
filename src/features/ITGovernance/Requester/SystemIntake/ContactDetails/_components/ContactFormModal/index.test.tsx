@@ -18,7 +18,6 @@ describe('ContactFormModal', () => {
       <MemoryRouter>
         <VerboseMockedProvider mocks={[getSystemIntakeContactsQuery()]}>
           <MessageProvider>
-            
             <ContactFormModal
               systemIntakeId={businessOwner.systemIntakeId}
               type="contact"
