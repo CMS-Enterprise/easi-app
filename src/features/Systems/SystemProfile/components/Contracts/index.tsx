@@ -22,6 +22,8 @@ import {
 import { formatDateUtc } from 'utils/date';
 import showVal from 'utils/showVal';
 
+import DataNotFound from '../DataNotFound';
+
 const ContractCard = ({
   contract
 }: {
@@ -156,7 +158,10 @@ const Contracts = ({ system }: SystemProfileSubviewProps) => {
         {t('singleSystem.contracts.contractInfo')}
       </h2>
 
-      {system.cedarContractsBySystem.length > 0 ? (
+      {!system.cedarContractsBySystem && <DataNotFound />}
+
+      {!!system.cedarContractsBySystem &&
+      system.cedarContractsBySystem.length > 0 ? (
         <CardGroup className="margin-0">
           {system.cedarContractsBySystem?.map(
             (contract): React.ReactNode => (
