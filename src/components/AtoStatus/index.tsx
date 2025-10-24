@@ -101,6 +101,7 @@ export function AtoStatusIconText({
       <StatusIcon
         size={3}
         className={`margin-right-1 ${atoStatusIconClassNames[status]}`}
+        aria-hidden
       />
       {oaStatus === 'OA Member' && (
         <span>{t('singleSystem.ato.atoOngoing')}</span>

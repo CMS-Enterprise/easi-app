@@ -40,11 +40,15 @@ const IntakeReview = ({ systemIntake }: IntakeReviewProps) => {
     <div data-testid="intake-review">
       <div className="margin-bottom-4">
         <PageHeading className="margin-y-0">{t('general:intake')}</PageHeading>
-        {!!intakeStatus && <TaskStatusTag status={intakeStatus} />}
-        <span className="text-base">
-          {t('general:on')}
-          {formatDateLocal(dateInfo, 'MM/dd/yyyy')}
-        </span>
+        {!!intakeStatus && (
+          <>
+            <TaskStatusTag status={intakeStatus} />
+            <span className="text-base">
+              {t('general:on')}
+              {formatDateLocal(dateInfo, 'MM/dd/yyyy')}
+            </span>
+          </>
+        )}
       </div>
       <PDFExport
         title="System Intake"
