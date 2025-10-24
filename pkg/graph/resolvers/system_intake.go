@@ -347,7 +347,7 @@ func GetMySystemIntakes(ctx context.Context, store *storage.Store) ([]*models.Sy
 		return nil, fmt.Errorf("there is no user account present")
 	}
 
-	return store.GetMySystemIntakes(ctx, p.Account().ID)
+	return store.GetMySystemIntakes(ctx, userAccount.ID)
 }
 
 const maxEUAsPerRequest = 200
