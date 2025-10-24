@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { CardGroup, GridContainer, Icon } from '@trussworks/react-uswds';
 import { SystemProfileLockableSection } from 'gql/generated/graphql';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Breadcrumbs from 'components/Breadcrumbs';
 import IconLink from 'components/IconLink';
@@ -9,6 +10,7 @@ import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 
 import SystemProfileSectionCard from '../_components/SystemProfileSectionCard';
+import { getSystemProfileSectionMap } from '../util';
 
 type EditSystemProfileHomeProps = {
   systemId: string;
@@ -25,6 +27,9 @@ const EditSystemProfileHome = ({
   systemName
 }: EditSystemProfileHomeProps) => {
   const { t } = useTranslation('systemProfile');
+
+  const flags = useFlags();
+  const sectionMap = getSystemProfileSectionMap(flags);
 
   return (
     <MainContent>
@@ -64,34 +69,35 @@ const EditSystemProfileHome = ({
         </IconLink>
 
         <CardGroup className="margin-bottom-10">
-          {/* <SystemProfileSectionCard
-            section={SystemProfileLockableSection.BUSINESS_INFORMATION}
-            isManagedExternally
-            readOnly
-          /> */}
+          {sectionMap.BUSINESS_INFORMATION.isEnabled && (
+            <SystemProfileSectionCard
+              section={SystemProfileLockableSection.BUSINESS_INFORMATION}
+              isManagedExternally
+            />
+          )}
 
           <SystemProfileSectionCard
             section={SystemProfileLockableSection.IMPLEMENTATION_DETAILS}
-            isManagedExternally
-            readOnly
+            isManagedExternally={!sectionMap.IMPLEMENTATION_DETAILS.isEnabled}
+            readOnly={!sectionMap.IMPLEMENTATION_DETAILS.isEnabled}
           />
 
           <SystemProfileSectionCard
             section={SystemProfileLockableSection.DATA}
-            isManagedExternally
-            readOnly
+            isManagedExternally={!sectionMap.DATA.isEnabled}
+            readOnly={!sectionMap.DATA.isEnabled}
           />
 
           <SystemProfileSectionCard
             section={SystemProfileLockableSection.TOOLS_AND_SOFTWARE}
-            isManagedExternally
-            readOnly
+            isManagedExternally={!sectionMap.TOOLS_AND_SOFTWARE.isEnabled}
+            readOnly={!sectionMap.TOOLS_AND_SOFTWARE.isEnabled}
           />
 
           <SystemProfileSectionCard
             section={SystemProfileLockableSection.SUB_SYSTEMS}
-            isManagedExternally
-            readOnly
+            isManagedExternally={!sectionMap.SUB_SYSTEMS.isEnabled}
+            readOnly={!sectionMap.SUB_SYSTEMS.isEnabled}
           />
 
           <SystemProfileSectionCard

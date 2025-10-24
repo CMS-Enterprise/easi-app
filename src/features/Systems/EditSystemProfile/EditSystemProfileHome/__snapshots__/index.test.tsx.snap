@@ -1,0 +1,1102 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`EditSystemProfileHome (editableSystemProfile flag disabled) > matches the snapshot 1`] = `
+<DocumentFragment>
+  <main
+    class="easi-main-content"
+    id="main-content"
+    role="main"
+    tabindex="-1"
+  >
+    <div
+      class="grid-container"
+      data-testid="gridContainer"
+    >
+      <nav
+        aria-label="Breadcrumbs"
+        class="usa-breadcrumb usa-breadcrumb--wrap padding-bottom-0"
+        style="background-color: transparent;"
+      >
+        <ol
+          class="usa-breadcrumb__list"
+        >
+          <li
+            class="usa-breadcrumb__list-item"
+          >
+            <a
+              class="text-primary usa-breadcrumb__link"
+              href="/"
+            >
+              <span>
+                Home
+              </span>
+            </a>
+          </li>
+          <li
+            class="usa-breadcrumb__list-item"
+          >
+            <a
+              class="text-primary usa-breadcrumb__link"
+              href="/systems/000-100-0/workspace"
+            >
+              <span>
+                System workspace
+              </span>
+            </a>
+          </li>
+          <li
+            aria-current="page"
+            class="usa-breadcrumb__list-item usa-current"
+          >
+            <span>
+              Edit system profile
+            </span>
+          </li>
+        </ol>
+      </nav>
+      <h1
+        aria-live="polite"
+        class="easi-h1 margin-bottom-0"
+        tabindex="-1"
+      >
+        Edit system profile
+      </h1>
+      <p
+        class="text-body-lg text-light margin-top-1"
+      >
+        for Test System
+      </p>
+      <p
+        class="font-body-md text-light line-height-body-4 margin-top-105"
+      >
+        Use this page to compile information about your system and it’s status in the CMS Target Life Cycle (TLC). Compiling more system information in EASi will allow OIT and CMS to stay updated about your system and proactively prompt you if there are any governance activities or TLC related tasks to complete.
+      </p>
+      <a
+        class="usa-link display-flex flex-align-center margin-bottom-6"
+        href="/systems/000-100-0/workspace"
+      >
+        <svg
+          aria-hidden="true"
+          class="usa-icon margin-right-1"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+          />
+        </svg>
+        Return to system workspace
+      </a>
+      <ul
+        class="usa-card-group margin-bottom-10"
+        data-testid="CardGroup"
+      >
+        <li
+          class="usa-card tablet:grid-col-6 desktop:grid-col-4"
+          data-testid="section-card-IMPLEMENTATION_DETAILS"
+        >
+          <div
+            class="usa-card__container shadow-2 border-width-1px"
+          >
+            <h5
+              class="text-base-dark bg-base-lightest padding-x-3 margin-0 font-body-xs text-light display-flex flex-align-center"
+            >
+              <svg
+                aria-hidden="true"
+                class="usa-icon margin-right-05"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0V0z"
+                  fill="none"
+                />
+                <path
+                  d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                />
+              </svg>
+              Data managed externally
+            </h5>
+            <div
+              class="usa-card__header padding-bottom-0 padding-top-105"
+              data-testid="CardHeader"
+            >
+              <h3>
+                Implementation details
+              </h3>
+            </div>
+            <div
+              class="usa-card__body padding-top-05 padding-bottom-2"
+              data-testid="CardBody"
+            >
+              <p
+                class="system-profile-section-card__description"
+              >
+                More in-depth information about this system and its operations, including details such as users per month, development progress, environment URLs, and more.
+              </p>
+            </div>
+            <div
+              class="usa-card__footer"
+              data-testid="CardFooter"
+            >
+              <a
+                class="usa-button usa-button--outline"
+                href="/systems/undefined/details"
+              >
+                View section
+              </a>
+            </div>
+          </div>
+        </li>
+        <li
+          class="usa-card tablet:grid-col-6 desktop:grid-col-4"
+          data-testid="section-card-DATA"
+        >
+          <div
+            class="usa-card__container shadow-2 border-width-1px"
+          >
+            <h5
+              class="text-base-dark bg-base-lightest padding-x-3 margin-0 font-body-xs text-light display-flex flex-align-center"
+            >
+              <svg
+                aria-hidden="true"
+                class="usa-icon margin-right-05"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0V0z"
+                  fill="none"
+                />
+                <path
+                  d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                />
+              </svg>
+              Data managed externally
+            </h5>
+            <div
+              class="usa-card__header padding-bottom-0 padding-top-105"
+              data-testid="CardHeader"
+            >
+              <h3>
+                Data
+              </h3>
+            </div>
+            <div
+              class="usa-card__body padding-top-05 padding-bottom-2"
+              data-testid="CardBody"
+            >
+              <p
+                class="system-profile-section-card__description"
+              >
+                Information about the data this system stores, exchanges, and uses. This section also includes information about APIs for this system.
+              </p>
+            </div>
+            <div
+              class="usa-card__footer"
+              data-testid="CardFooter"
+            >
+              <a
+                class="usa-button usa-button--outline"
+                href="/systems/undefined/system-data"
+              >
+                View section
+              </a>
+            </div>
+          </div>
+        </li>
+        <li
+          class="usa-card tablet:grid-col-6 desktop:grid-col-4"
+          data-testid="section-card-TOOLS_AND_SOFTWARE"
+        >
+          <div
+            class="usa-card__container shadow-2 border-width-1px"
+          >
+            <h5
+              class="text-base-dark bg-base-lightest padding-x-3 margin-0 font-body-xs text-light display-flex flex-align-center"
+            >
+              <svg
+                aria-hidden="true"
+                class="usa-icon margin-right-05"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0V0z"
+                  fill="none"
+                />
+                <path
+                  d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                />
+              </svg>
+              Data managed externally
+            </h5>
+            <div
+              class="usa-card__header padding-bottom-0 padding-top-105"
+              data-testid="CardHeader"
+            >
+              <h3>
+                Tools and software
+              </h3>
+            </div>
+            <div
+              class="usa-card__body padding-top-05 padding-bottom-2"
+              data-testid="CardBody"
+            >
+              <p
+                class="system-profile-section-card__description"
+              >
+                A list of the tools or software licenses used by this system to accomplish a variety of tasks from project management to development and security. These tools and software could be used directly in the implementation of the system or in day-to-day operations.
+              </p>
+            </div>
+            <div
+              class="usa-card__footer"
+              data-testid="CardFooter"
+            >
+              <a
+                class="usa-button usa-button--outline"
+                href="/systems/undefined/tools-and-software"
+              >
+                View section
+              </a>
+            </div>
+          </div>
+        </li>
+        <li
+          class="usa-card tablet:grid-col-6 desktop:grid-col-4"
+          data-testid="section-card-SUB_SYSTEMS"
+        >
+          <div
+            class="usa-card__container shadow-2 border-width-1px"
+          >
+            <h5
+              class="text-base-dark bg-base-lightest padding-x-3 margin-0 font-body-xs text-light display-flex flex-align-center"
+            >
+              <svg
+                aria-hidden="true"
+                class="usa-icon margin-right-05"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0V0z"
+                  fill="none"
+                />
+                <path
+                  d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                />
+              </svg>
+              Data managed externally
+            </h5>
+            <div
+              class="usa-card__header padding-bottom-0 padding-top-105"
+              data-testid="CardHeader"
+            >
+              <h3>
+                Sub-systems
+              </h3>
+            </div>
+            <div
+              class="usa-card__body padding-top-05 padding-bottom-2"
+              data-testid="CardBody"
+            >
+              <p
+                class="system-profile-section-card__description"
+              >
+                Basic information about any sub-systems under the umbrella of this system. Includes details such as a name, description, and retirement date.
+              </p>
+            </div>
+            <div
+              class="usa-card__footer"
+              data-testid="CardFooter"
+            >
+              <a
+                class="usa-button usa-button--outline"
+                href="/systems/undefined/sub-systems"
+              >
+                View section
+              </a>
+            </div>
+          </div>
+        </li>
+        <li
+          class="usa-card tablet:grid-col-6 desktop:grid-col-4"
+          data-testid="section-card-TEAM"
+        >
+          <div
+            class="usa-card__container shadow-2 border-width-1px"
+          >
+            <div
+              class="usa-card__header padding-bottom-0"
+              data-testid="CardHeader"
+            >
+              <h3>
+                Team
+              </h3>
+            </div>
+            <div
+              class="usa-card__body padding-top-05 padding-bottom-2"
+              data-testid="CardBody"
+            >
+              <p
+                class="system-profile-section-card__description"
+              >
+                A count of all full-time employees (FTE) from CMS and contractor teams. This section also lists the name, contact information, and roles for individuals working on this system.
+              </p>
+            </div>
+            <div
+              class="usa-card__footer"
+              data-testid="CardFooter"
+            >
+              <a
+                class="usa-button usa-button--outline"
+                href="/systems/undefined/team/edit?workspace"
+              >
+                Edit section
+              </a>
+            </div>
+          </div>
+        </li>
+        <li
+          class="usa-card tablet:grid-col-6 desktop:grid-col-4"
+          data-testid="section-card-CONTRACTS"
+        >
+          <div
+            class="usa-card__container shadow-2 border-width-1px"
+          >
+            <h5
+              class="text-base-dark bg-base-lightest padding-x-3 margin-0 font-body-xs text-light display-flex flex-align-center"
+            >
+              <svg
+                aria-hidden="true"
+                class="usa-icon margin-right-05"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0V0z"
+                  fill="none"
+                />
+                <path
+                  d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                />
+              </svg>
+              Data managed externally
+            </h5>
+            <div
+              class="usa-card__header padding-bottom-0 padding-top-105"
+              data-testid="CardHeader"
+            >
+              <h3>
+                Contracts
+              </h3>
+            </div>
+            <div
+              class="usa-card__body padding-top-05 padding-bottom-2"
+              data-testid="CardBody"
+            >
+              <p
+                class="system-profile-section-card__description"
+              >
+                All contracts fully or partially supporting this system. This information is pulled from other CMS systems, including CAMS and CALM, and includes details such as contract title, contract number, and period of performance.
+              </p>
+            </div>
+            <div
+              class="usa-card__footer"
+              data-testid="CardFooter"
+            >
+              <a
+                class="usa-button usa-button--outline"
+                href="/systems/undefined/contracts"
+              >
+                View section
+              </a>
+            </div>
+          </div>
+        </li>
+        <li
+          class="usa-card tablet:grid-col-6 desktop:grid-col-4"
+          data-testid="section-card-FUNDING_AND_BUDGET"
+        >
+          <div
+            class="usa-card__container shadow-2 border-width-1px"
+          >
+            <h5
+              class="text-base-dark bg-base-lightest padding-x-3 margin-0 font-body-xs text-light display-flex flex-align-center"
+            >
+              <svg
+                aria-hidden="true"
+                class="usa-icon margin-right-05"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0V0z"
+                  fill="none"
+                />
+                <path
+                  d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                />
+              </svg>
+              Data managed externally
+            </h5>
+            <div
+              class="usa-card__header padding-bottom-0 padding-top-105"
+              data-testid="CardHeader"
+            >
+              <h3>
+                Funding and budget
+              </h3>
+            </div>
+            <div
+              class="usa-card__body padding-top-05 padding-bottom-2"
+              data-testid="CardBody"
+            >
+              <p
+                class="system-profile-section-card__description"
+              >
+                Information about the system costs and funding sources of this system. This information is pulled from other CMS systems, including CAMS and CALM, and includes details such as budgeted and actual costs by system year, as well as the percentage of each budget project specifically allocated to this system.
+              </p>
+            </div>
+            <div
+              class="usa-card__footer"
+              data-testid="CardFooter"
+            >
+              <a
+                class="usa-button usa-button--outline"
+                href="/systems/undefined/funding-and-budget"
+              >
+                View section
+              </a>
+            </div>
+          </div>
+        </li>
+        <li
+          class="usa-card tablet:grid-col-6 desktop:grid-col-4"
+          data-testid="section-card-ATO_AND_SECURITY"
+        >
+          <div
+            class="usa-card__container shadow-2 border-width-1px"
+          >
+            <h5
+              class="text-base-dark bg-base-lightest padding-x-3 margin-0 font-body-xs text-light display-flex flex-align-center"
+            >
+              <svg
+                aria-hidden="true"
+                class="usa-icon margin-right-05"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0V0z"
+                  fill="none"
+                />
+                <path
+                  d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                />
+              </svg>
+              Data managed externally
+            </h5>
+            <div
+              class="usa-card__header padding-bottom-0 padding-top-105"
+              data-testid="CardHeader"
+            >
+              <h3>
+                ATO and security
+              </h3>
+            </div>
+            <div
+              class="usa-card__body padding-top-05 padding-bottom-2"
+              data-testid="CardBody"
+            >
+              <p
+                class="system-profile-section-card__description"
+              >
+                Security and authorization details for this system. This information comes from CFACTS and includes details such as ATO status, ATO expiration date, and total number of POA&Ms and security findings.
+              </p>
+            </div>
+            <div
+              class="usa-card__footer"
+              data-testid="CardFooter"
+            >
+              <a
+                class="usa-button usa-button--outline"
+                href="/systems/undefined/ato-and-security"
+              >
+                View section
+              </a>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </main>
+</DocumentFragment>
+`;
+
+exports[`EditSystemProfileHome (editableSystemProfile flag enabled) > matches the snapshot 1`] = `
+<DocumentFragment>
+  <main
+    class="easi-main-content"
+    id="main-content"
+    role="main"
+    tabindex="-1"
+  >
+    <div
+      class="grid-container"
+      data-testid="gridContainer"
+    >
+      <nav
+        aria-label="Breadcrumbs"
+        class="usa-breadcrumb usa-breadcrumb--wrap padding-bottom-0"
+        style="background-color: transparent;"
+      >
+        <ol
+          class="usa-breadcrumb__list"
+        >
+          <li
+            class="usa-breadcrumb__list-item"
+          >
+            <a
+              class="text-primary usa-breadcrumb__link"
+              href="/"
+            >
+              <span>
+                Home
+              </span>
+            </a>
+          </li>
+          <li
+            class="usa-breadcrumb__list-item"
+          >
+            <a
+              class="text-primary usa-breadcrumb__link"
+              href="/systems/000-100-0/workspace"
+            >
+              <span>
+                System workspace
+              </span>
+            </a>
+          </li>
+          <li
+            aria-current="page"
+            class="usa-breadcrumb__list-item usa-current"
+          >
+            <span>
+              Edit system profile
+            </span>
+          </li>
+        </ol>
+      </nav>
+      <h1
+        aria-live="polite"
+        class="easi-h1 margin-bottom-0"
+        tabindex="-1"
+      >
+        Edit system profile
+      </h1>
+      <p
+        class="text-body-lg text-light margin-top-1"
+      >
+        for Test System
+      </p>
+      <p
+        class="font-body-md text-light line-height-body-4 margin-top-105"
+      >
+        Use this page to compile information about your system and it’s status in the CMS Target Life Cycle (TLC). Compiling more system information in EASi will allow OIT and CMS to stay updated about your system and proactively prompt you if there are any governance activities or TLC related tasks to complete.
+      </p>
+      <a
+        class="usa-link display-flex flex-align-center margin-bottom-6"
+        href="/systems/000-100-0/workspace"
+      >
+        <svg
+          aria-hidden="true"
+          class="usa-icon margin-right-1"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+          />
+        </svg>
+        Return to system workspace
+      </a>
+      <ul
+        class="usa-card-group margin-bottom-10"
+        data-testid="CardGroup"
+      >
+        <li
+          class="usa-card tablet:grid-col-6 desktop:grid-col-4"
+          data-testid="section-card-BUSINESS_INFORMATION"
+        >
+          <div
+            class="usa-card__container shadow-2 border-width-1px"
+          >
+            <h5
+              class="text-base-dark bg-base-lightest padding-x-3 margin-0 font-body-xs text-light display-flex flex-align-center"
+            >
+              <svg
+                aria-hidden="true"
+                class="usa-icon margin-right-05"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0V0z"
+                  fill="none"
+                />
+                <path
+                  d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                />
+              </svg>
+              Data partially managed externally
+            </h5>
+            <div
+              class="usa-card__header padding-bottom-0 padding-top-105"
+              data-testid="CardHeader"
+            >
+              <h3>
+                Business information
+              </h3>
+            </div>
+            <div
+              class="usa-card__body padding-top-05 padding-bottom-2"
+              data-testid="CardBody"
+            >
+              <p
+                class="system-profile-section-card__description"
+              >
+                Basic non-technical information about this system, including high-level details such as the system name, acronym, and description.
+              </p>
+            </div>
+            <div
+              class="usa-card__footer"
+              data-testid="CardFooter"
+            >
+              <a
+                class="usa-button usa-button--outline"
+                href="/systems/undefined/edit/business-information"
+              >
+                Edit section
+              </a>
+            </div>
+          </div>
+        </li>
+        <li
+          class="usa-card tablet:grid-col-6 desktop:grid-col-4"
+          data-testid="section-card-IMPLEMENTATION_DETAILS"
+        >
+          <div
+            class="usa-card__container shadow-2 border-width-1px"
+          >
+            <div
+              class="usa-card__header padding-bottom-0"
+              data-testid="CardHeader"
+            >
+              <h3>
+                Implementation details
+              </h3>
+            </div>
+            <div
+              class="usa-card__body padding-top-05 padding-bottom-2"
+              data-testid="CardBody"
+            >
+              <p
+                class="system-profile-section-card__description"
+              >
+                More in-depth information about this system and its operations, including details such as users per month, development progress, environment URLs, and more.
+              </p>
+            </div>
+            <div
+              class="usa-card__footer"
+              data-testid="CardFooter"
+            >
+              <a
+                class="usa-button usa-button--outline"
+                href="/systems/undefined/edit/implementation-details"
+              >
+                Edit section
+              </a>
+            </div>
+          </div>
+        </li>
+        <li
+          class="usa-card tablet:grid-col-6 desktop:grid-col-4"
+          data-testid="section-card-DATA"
+        >
+          <div
+            class="usa-card__container shadow-2 border-width-1px"
+          >
+            <div
+              class="usa-card__header padding-bottom-0"
+              data-testid="CardHeader"
+            >
+              <h3>
+                Data
+              </h3>
+            </div>
+            <div
+              class="usa-card__body padding-top-05 padding-bottom-2"
+              data-testid="CardBody"
+            >
+              <p
+                class="system-profile-section-card__description"
+              >
+                Information about the data this system stores, exchanges, and uses. This section also includes information about APIs for this system.
+              </p>
+            </div>
+            <div
+              class="usa-card__footer"
+              data-testid="CardFooter"
+            >
+              <a
+                class="usa-button usa-button--outline"
+                href="/systems/undefined/edit/data"
+              >
+                Edit section
+              </a>
+            </div>
+          </div>
+        </li>
+        <li
+          class="usa-card tablet:grid-col-6 desktop:grid-col-4"
+          data-testid="section-card-TOOLS_AND_SOFTWARE"
+        >
+          <div
+            class="usa-card__container shadow-2 border-width-1px"
+          >
+            <div
+              class="usa-card__header padding-bottom-0"
+              data-testid="CardHeader"
+            >
+              <h3>
+                Tools and software
+              </h3>
+            </div>
+            <div
+              class="usa-card__body padding-top-05 padding-bottom-2"
+              data-testid="CardBody"
+            >
+              <p
+                class="system-profile-section-card__description"
+              >
+                A list of the tools or software licenses used by this system to accomplish a variety of tasks from project management to development and security. These tools and software could be used directly in the implementation of the system or in day-to-day operations.
+              </p>
+            </div>
+            <div
+              class="usa-card__footer"
+              data-testid="CardFooter"
+            >
+              <a
+                class="usa-button usa-button--outline"
+                href="/systems/undefined/edit/tools-and-software"
+              >
+                Edit section
+              </a>
+            </div>
+          </div>
+        </li>
+        <li
+          class="usa-card tablet:grid-col-6 desktop:grid-col-4"
+          data-testid="section-card-SUB_SYSTEMS"
+        >
+          <div
+            class="usa-card__container shadow-2 border-width-1px"
+          >
+            <div
+              class="usa-card__header padding-bottom-0"
+              data-testid="CardHeader"
+            >
+              <h3>
+                Sub-systems
+              </h3>
+            </div>
+            <div
+              class="usa-card__body padding-top-05 padding-bottom-2"
+              data-testid="CardBody"
+            >
+              <p
+                class="system-profile-section-card__description"
+              >
+                Basic information about any sub-systems under the umbrella of this system. Includes details such as a name, description, and retirement date.
+              </p>
+            </div>
+            <div
+              class="usa-card__footer"
+              data-testid="CardFooter"
+            >
+              <a
+                class="usa-button usa-button--outline"
+                href="/systems/undefined/edit/sub-systems"
+              >
+                Edit section
+              </a>
+            </div>
+          </div>
+        </li>
+        <li
+          class="usa-card tablet:grid-col-6 desktop:grid-col-4"
+          data-testid="section-card-TEAM"
+        >
+          <div
+            class="usa-card__container shadow-2 border-width-1px"
+          >
+            <div
+              class="usa-card__header padding-bottom-0"
+              data-testid="CardHeader"
+            >
+              <h3>
+                Team
+              </h3>
+            </div>
+            <div
+              class="usa-card__body padding-top-05 padding-bottom-2"
+              data-testid="CardBody"
+            >
+              <p
+                class="system-profile-section-card__description"
+              >
+                A count of all full-time employees (FTE) from CMS and contractor teams. This section also lists the name, contact information, and roles for individuals working on this system.
+              </p>
+            </div>
+            <div
+              class="usa-card__footer"
+              data-testid="CardFooter"
+            >
+              <a
+                class="usa-button usa-button--outline"
+                href="/systems/undefined/edit/team"
+              >
+                Edit section
+              </a>
+            </div>
+          </div>
+        </li>
+        <li
+          class="usa-card tablet:grid-col-6 desktop:grid-col-4"
+          data-testid="section-card-CONTRACTS"
+        >
+          <div
+            class="usa-card__container shadow-2 border-width-1px"
+          >
+            <h5
+              class="text-base-dark bg-base-lightest padding-x-3 margin-0 font-body-xs text-light display-flex flex-align-center"
+            >
+              <svg
+                aria-hidden="true"
+                class="usa-icon margin-right-05"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0V0z"
+                  fill="none"
+                />
+                <path
+                  d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                />
+              </svg>
+              Data managed externally
+            </h5>
+            <div
+              class="usa-card__header padding-bottom-0 padding-top-105"
+              data-testid="CardHeader"
+            >
+              <h3>
+                Contracts
+              </h3>
+            </div>
+            <div
+              class="usa-card__body padding-top-05 padding-bottom-2"
+              data-testid="CardBody"
+            >
+              <p
+                class="system-profile-section-card__description"
+              >
+                All contracts fully or partially supporting this system. This information is pulled from other CMS systems, including CAMS and CALM, and includes details such as contract title, contract number, and period of performance.
+              </p>
+            </div>
+            <div
+              class="usa-card__footer"
+              data-testid="CardFooter"
+            >
+              <a
+                class="usa-button usa-button--outline"
+                href="/systems/undefined/edit/contracts"
+              >
+                View section
+              </a>
+            </div>
+          </div>
+        </li>
+        <li
+          class="usa-card tablet:grid-col-6 desktop:grid-col-4"
+          data-testid="section-card-FUNDING_AND_BUDGET"
+        >
+          <div
+            class="usa-card__container shadow-2 border-width-1px"
+          >
+            <h5
+              class="text-base-dark bg-base-lightest padding-x-3 margin-0 font-body-xs text-light display-flex flex-align-center"
+            >
+              <svg
+                aria-hidden="true"
+                class="usa-icon margin-right-05"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0V0z"
+                  fill="none"
+                />
+                <path
+                  d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                />
+              </svg>
+              Data managed externally
+            </h5>
+            <div
+              class="usa-card__header padding-bottom-0 padding-top-105"
+              data-testid="CardHeader"
+            >
+              <h3>
+                Funding and budget
+              </h3>
+            </div>
+            <div
+              class="usa-card__body padding-top-05 padding-bottom-2"
+              data-testid="CardBody"
+            >
+              <p
+                class="system-profile-section-card__description"
+              >
+                Information about the system costs and funding sources of this system. This information is pulled from other CMS systems, including CAMS and CALM, and includes details such as budgeted and actual costs by system year, as well as the percentage of each budget project specifically allocated to this system.
+              </p>
+            </div>
+            <div
+              class="usa-card__footer"
+              data-testid="CardFooter"
+            >
+              <a
+                class="usa-button usa-button--outline"
+                href="/systems/undefined/edit/funding-and-budget"
+              >
+                View section
+              </a>
+            </div>
+          </div>
+        </li>
+        <li
+          class="usa-card tablet:grid-col-6 desktop:grid-col-4"
+          data-testid="section-card-ATO_AND_SECURITY"
+        >
+          <div
+            class="usa-card__container shadow-2 border-width-1px"
+          >
+            <h5
+              class="text-base-dark bg-base-lightest padding-x-3 margin-0 font-body-xs text-light display-flex flex-align-center"
+            >
+              <svg
+                aria-hidden="true"
+                class="usa-icon margin-right-05"
+                focusable="false"
+                height="1em"
+                role="img"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0V0z"
+                  fill="none"
+                />
+                <path
+                  d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                />
+              </svg>
+              Data managed externally
+            </h5>
+            <div
+              class="usa-card__header padding-bottom-0 padding-top-105"
+              data-testid="CardHeader"
+            >
+              <h3>
+                ATO and security
+              </h3>
+            </div>
+            <div
+              class="usa-card__body padding-top-05 padding-bottom-2"
+              data-testid="CardBody"
+            >
+              <p
+                class="system-profile-section-card__description"
+              >
+                Security and authorization details for this system. This information comes from CFACTS and includes details such as ATO status, ATO expiration date, and total number of POA&Ms and security findings.
+              </p>
+            </div>
+            <div
+              class="usa-card__footer"
+              data-testid="CardFooter"
+            >
+              <a
+                class="usa-button usa-button--outline"
+                href="/systems/undefined/edit/ato-and-security"
+              >
+                View section
+              </a>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </main>
+</DocumentFragment>
+`;

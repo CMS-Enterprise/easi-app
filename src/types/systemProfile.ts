@@ -6,7 +6,8 @@ import {
 import {
   CedarAssigneeType,
   CedarRole,
-  GetSystemProfileQuery
+  GetSystemProfileQuery,
+  SystemProfileLockableSection
 } from 'gql/generated/graphql';
 
 import {
@@ -206,3 +207,10 @@ export interface SystemProfileData extends GetSystemProfileQuery {
 export interface SystemProfileSubviewProps {
   system: SystemProfileData;
 }
+
+/** Expands SystemProfileLockableSection enum to include read-only sections */
+export type SystemProfileSection =
+  | SystemProfileLockableSection
+  | 'CONTRACTS'
+  | 'FUNDING_AND_BUDGET'
+  | 'ATO_AND_SECURITY';

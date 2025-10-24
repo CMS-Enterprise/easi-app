@@ -7,6 +7,12 @@ import { MessageProvider } from 'hooks/useMessage';
 
 import BusinessInformation from '.';
 
+vi.mock('launchdarkly-react-client-sdk', () => ({
+  useFlags: () => ({
+    editableSystemProfile: true
+  })
+}));
+
 describe('BusinessInformation', () => {
   it('renders section name, description, and next section text', () => {
     render(
