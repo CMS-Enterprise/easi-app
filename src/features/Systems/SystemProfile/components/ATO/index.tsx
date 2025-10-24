@@ -44,6 +44,8 @@ import {
 import { formatDateUtc } from 'utils/date';
 import showVal from 'utils/showVal';
 
+import DataNotFound from '../DataNotFound';
+
 import './index.scss';
 
 /**
@@ -105,7 +107,9 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
           {t('singleSystem.ato.header')}
         </h2>
 
-        {ato ? (
+        {!ato && <DataNotFound />}
+
+        {ato && (
           <CardGroup className="margin-0">
             <Card
               className={classnames('grid-col-12', {
@@ -199,12 +203,6 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
               </Alert>
             )}
           </CardGroup>
-        ) : (
-          <Grid row gap className="margin-top-0 margin-bottom-4">
-            <Grid tablet={{ col: 12 }}>
-              <Alert type="info">{t('singleSystem.ato.noEmailContact')}</Alert>
-            </Grid>
-          </Grid>
         )}
 
         {/* Hide ATO Process List behind feature flag */}
@@ -305,79 +303,91 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
           {t('singleSystem.ato.POAMandSecurityFindings')}
         </h2>
 
-        {atoStatus === 'No ATO' && (
-          <Grid row gap className="margin-top-2 margin-bottom-2">
-            <Grid tablet={{ col: 12 }}>
-              <Alert type="info">{t('singleSystem.ato.noEmailContact')}</Alert>
-            </Grid>
-          </Grid>
-        )}
-
-        {/* TODO: can we combine/simplify all these No ATO checks */}
-        {atoStatus !== 'No ATO' && (
-          <div>
-            <Grid row gap className="margin-top-2">
-              <Grid tablet={{ col: 6 }} className="padding-right-2">
-                <DescriptionTerm term={t('singleSystem.ato.totalPOAM')} />
-                <DescriptionDefinition
-                  className="line-height-body-3 margin-bottom-4"
-                  definition={showVal(ato?.countOfOpenPoams)}
-                />
+        {!atoStatus && <DataNotFound />}
+        {!!atoStatus && (
+          <>
+            {atoStatus === 'No ATO' && (
+              <Grid row gap className="margin-top-2 margin-bottom-2">
+                <Grid tablet={{ col: 12 }}>
+                  <Alert type="info">
+                    {t('singleSystem.ato.noEmailContact')}
+                  </Alert>
+                </Grid>
               </Grid>
-              <Grid tablet={{ col: 6 }} className="padding-right-2">
-                <DescriptionTerm term={t('singleSystem.ato.longestOpenPOAM')} />
-                <DescriptionDefinition
-                  className="line-height-body-3 margin-bottom-4"
-                  definition={showVal(longestOpenFinding)}
-                />
-              </Grid>
-            </Grid>
-          </div>
-        )}
+            )}
 
-        {atoStatus !== 'No ATO' && (
-          <Grid row gap>
-            {securityFindingKeys
-              .filter(
-                k =>
-                  k === 'total' || // always show total
-                  securityFindings[k] !== 0 // otherwise hide 0 count
-              )
-              .map(k => {
-                const camelKey = camelCase(k);
-                return (
-                  <Grid key={camelKey} className="padding-right-2 grid-col-6">
+            {/* TODO: can we combine/simplify all these No ATO checks */}
+            {atoStatus !== 'No ATO' && (
+              <div>
+                <Grid row gap className="margin-top-2">
+                  <Grid tablet={{ col: 6 }} className="padding-right-2">
+                    <DescriptionTerm term={t('singleSystem.ato.totalPOAM')} />
+                    <DescriptionDefinition
+                      className="line-height-body-3 margin-bottom-4"
+                      definition={showVal(ato?.countOfOpenPoams)}
+                    />
+                  </Grid>
+                  <Grid tablet={{ col: 6 }} className="padding-right-2">
                     <DescriptionTerm
-                      term={t(`singleSystem.ato.${camelKey}Findings`)}
+                      term={t('singleSystem.ato.longestOpenPOAM')}
                     />
                     <DescriptionDefinition
                       className="line-height-body-3 margin-bottom-4"
-                      definition={securityFindings[k]}
+                      definition={showVal(longestOpenFinding)}
                     />
                   </Grid>
-                );
-              })}
-          </Grid>
-        )}
-        <Grid row gap className="margin-top-2 margin-bottom-2">
-          <Grid tablet={{ col: 12 }}>
-            <Alert type="info">
-              {t('singleSystem.ato.cfactsAccessInfo')}
-              <div className="margin-top-1">
-                <Link
-                  aria-label="Open 'CFACTS' in a new tab"
-                  className="line-height-body-5"
-                  href="https://cfacts.cms.gov"
-                  variant="external"
-                  target="_blank"
-                >
-                  {t('singleSystem.ato.goToCfacts')}
-                  <span aria-hidden>&nbsp;</span>
-                </Link>
+                </Grid>
               </div>
-            </Alert>
-          </Grid>
-        </Grid>
+            )}
+
+            {atoStatus !== 'No ATO' && (
+              <Grid row gap>
+                {securityFindingKeys
+                  .filter(
+                    k =>
+                      k === 'total' || // always show total
+                      securityFindings[k] !== 0 // otherwise hide 0 count
+                  )
+                  .map(k => {
+                    const camelKey = camelCase(k);
+                    return (
+                      <Grid
+                        key={camelKey}
+                        className="padding-right-2 grid-col-6"
+                      >
+                        <DescriptionTerm
+                          term={t(`singleSystem.ato.${camelKey}Findings`)}
+                        />
+                        <DescriptionDefinition
+                          className="line-height-body-3 margin-bottom-4"
+                          definition={securityFindings[k]}
+                        />
+                      </Grid>
+                    );
+                  })}
+              </Grid>
+            )}
+            <Grid row gap className="margin-top-2 margin-bottom-2">
+              <Grid tablet={{ col: 12 }}>
+                <Alert type="info">
+                  {t('singleSystem.ato.cfactsAccessInfo')}
+                  <div className="margin-top-1">
+                    <Link
+                      aria-label="Open 'CFACTS' in a new tab"
+                      className="line-height-body-5"
+                      href="https://cfacts.cms.gov"
+                      variant="external"
+                      target="_blank"
+                    >
+                      {t('singleSystem.ato.goToCfacts')}
+                      <span aria-hidden>&nbsp;</span>
+                    </Link>
+                  </div>
+                </Alert>
+              </Grid>
+            </Grid>
+          </>
+        )}
       </SectionWrapper>
 
       {/* Dates, Forms, and Testing */}
@@ -386,152 +396,169 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
           {t('singleSystem.ato.datesFormsAndTesting')}
         </h2>
 
-        {atoStatus === 'No ATO' && (
-          <Grid row gap className="margin-top-2 margin-bottom-2">
-            <Grid tablet={{ col: 12 }}>
-              <Alert type="info">{t('singleSystem.ato.noATODates')}</Alert>
-            </Grid>
-          </Grid>
-        )}
-        {atoStatus !== 'No ATO' && (
-          <div>
-            <>
-              <Grid row gap>
-                <Grid tablet={{ col: 6 }}>
-                  <DescriptionTerm
-                    term={t('singleSystem.ato.lastCsrapScaDate')}
-                  />
-                  {/* NOTE: lastCsrapScaDate label matches to lastActScaDate date field
+        {!atoStatus && <DataNotFound />}
+
+        {!!atoStatus && (
+          <>
+            {atoStatus === 'No ATO' && (
+              <Grid row gap className="margin-top-2 margin-bottom-2">
+                <Grid tablet={{ col: 12 }}>
+                  <Alert type="info">{t('singleSystem.ato.noATODates')}</Alert>
+                </Grid>
+              </Grid>
+            )}
+            {atoStatus !== 'No ATO' && (
+              <div>
+                <>
+                  <Grid row gap>
+                    <Grid tablet={{ col: 6 }}>
+                      <DescriptionTerm
+                        term={t('singleSystem.ato.lastCsrapScaDate')}
+                      />
+                      {/* NOTE: lastCsrapScaDate label matches to lastActScaDate date field
                             ACT was replaced with CSRAP in the FE but not in the CEDAR API which explains the discrepancy */}
-                  <DescriptionDefinition
-                    className="line-height-body-3 margin-bottom-4"
-                    definition={showVal(
-                      ato?.lastActScaDate &&
-                        formatDateUtc(ato.lastActScaDate, 'MMMM d, yyyy')
-                    )}
-                  />
-                </Grid>
-                <Grid tablet={{ col: 6 }}>
-                  <DescriptionTerm term={t('singleSystem.ato.lastPenTest')} />
-                  <DescriptionDefinition
-                    className="line-height-body-3 margin-bottom-4"
-                    definition={showVal(
-                      ato?.lastPenTestDate &&
-                        formatDateUtc(ato.lastPenTestDate, 'MMMM d, yyyy')
-                    )}
-                  />
-                </Grid>
-              </Grid>
-              <Grid row gap>
-                <Grid tablet={{ col: 6 }}>
-                  <DescriptionTerm term={t('singleSystem.ato.lastPIA')} />
-                  <DescriptionDefinition
-                    className="line-height-body-3 margin-bottom-4"
-                    definition={showVal(
-                      ato?.piaCompletionDate &&
-                        formatDateUtc(ato.piaCompletionDate, 'MMMM d, yyyy')
-                    )}
-                  />
-                </Grid>
-                <Grid tablet={{ col: 6 }}>
-                  <DescriptionTerm
-                    term={t('singleSystem.ato.lastATOAssessment')}
-                  />
-                  <DescriptionDefinition
-                    className="line-height-body-3 margin-bottom-4"
-                    definition={showVal(
-                      ato?.lastAssessmentDate &&
-                        formatDateUtc(ato.lastAssessmentDate, 'MMMM d, yyyy')
-                    )}
-                  />
-                </Grid>
-              </Grid>
-              <Grid row gap>
-                <Grid tablet={{ col: 6 }}>
-                  <DescriptionTerm term={t('singleSystem.ato.lastSIA')} />
-                  {/* TODO: remove this? SIA not listed in EA Data Dictionary */}
-                  <DescriptionDefinition
-                    className="line-height-body-3 margin-bottom-4"
-                    definition={t('singleSystem.noDataAvailable')}
-                  />
-                </Grid>
-                <Grid tablet={{ col: 6 }}>
-                  <DescriptionTerm
-                    term={t('singleSystem.ato.lastDisasterRecoveryExercise')}
-                  />
-                  {/* TODO: display disaster recovery plan date once DR Exercise Date field is exposed through API */}
-                  <DescriptionDefinition
-                    className="line-height-body-3 margin-bottom-4"
-                    definition={t('singleSystem.noDataAvailable')}
-                  />
-                </Grid>
-              </Grid>
-              <Grid row gap>
-                <Grid tablet={{ col: 6 }}>
-                  <DescriptionTerm
-                    term={t('singleSystem.ato.lastContingencyCompletion')}
-                  />
-                  <DescriptionDefinition
-                    className="line-height-body-3 margin-bottom-4"
-                    definition={showVal(
-                      ato?.lastContingencyPlanCompletionDate &&
-                        formatDateUtc(
-                          ato.lastContingencyPlanCompletionDate,
-                          'MMMM d, yyyy'
-                        )
-                    )}
-                  />
-                </Grid>
-                <Grid tablet={{ col: 6 }}>
-                  <DescriptionTerm
-                    term={t('singleSystem.ato.lastDisasterRecoveryPlanUpdate')}
-                  />
-                  {/* TODO: display last disaster recovery plan update once Last DR Plan Update field is exposed through API */}
-                  <DescriptionDefinition
-                    className="line-height-body-3 margin-bottom-4"
-                    definition={t('singleSystem.noDataAvailable')}
-                  />
-                </Grid>
-              </Grid>
-            </>
-          </div>
+                      <DescriptionDefinition
+                        className="line-height-body-3 margin-bottom-4"
+                        definition={showVal(
+                          ato?.lastActScaDate &&
+                            formatDateUtc(ato.lastActScaDate, 'MMMM d, yyyy')
+                        )}
+                      />
+                    </Grid>
+                    <Grid tablet={{ col: 6 }}>
+                      <DescriptionTerm
+                        term={t('singleSystem.ato.lastPenTest')}
+                      />
+                      <DescriptionDefinition
+                        className="line-height-body-3 margin-bottom-4"
+                        definition={showVal(
+                          ato?.lastPenTestDate &&
+                            formatDateUtc(ato.lastPenTestDate, 'MMMM d, yyyy')
+                        )}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid row gap>
+                    <Grid tablet={{ col: 6 }}>
+                      <DescriptionTerm term={t('singleSystem.ato.lastPIA')} />
+                      <DescriptionDefinition
+                        className="line-height-body-3 margin-bottom-4"
+                        definition={showVal(
+                          ato?.piaCompletionDate &&
+                            formatDateUtc(ato.piaCompletionDate, 'MMMM d, yyyy')
+                        )}
+                      />
+                    </Grid>
+                    <Grid tablet={{ col: 6 }}>
+                      <DescriptionTerm
+                        term={t('singleSystem.ato.lastATOAssessment')}
+                      />
+                      <DescriptionDefinition
+                        className="line-height-body-3 margin-bottom-4"
+                        definition={showVal(
+                          ato?.lastAssessmentDate &&
+                            formatDateUtc(
+                              ato.lastAssessmentDate,
+                              'MMMM d, yyyy'
+                            )
+                        )}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid row gap>
+                    <Grid tablet={{ col: 6 }}>
+                      <DescriptionTerm term={t('singleSystem.ato.lastSIA')} />
+                      {/* TODO: remove this? SIA not listed in EA Data Dictionary */}
+                      <DescriptionDefinition
+                        className="line-height-body-3 margin-bottom-4"
+                        definition={t('singleSystem.noDataAvailable')}
+                      />
+                    </Grid>
+                    <Grid tablet={{ col: 6 }}>
+                      <DescriptionTerm
+                        term={t(
+                          'singleSystem.ato.lastDisasterRecoveryExercise'
+                        )}
+                      />
+                      {/* TODO: display disaster recovery plan date once DR Exercise Date field is exposed through API */}
+                      <DescriptionDefinition
+                        className="line-height-body-3 margin-bottom-4"
+                        definition={t('singleSystem.noDataAvailable')}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid row gap>
+                    <Grid tablet={{ col: 6 }}>
+                      <DescriptionTerm
+                        term={t('singleSystem.ato.lastContingencyCompletion')}
+                      />
+                      <DescriptionDefinition
+                        className="line-height-body-3 margin-bottom-4"
+                        definition={showVal(
+                          ato?.lastContingencyPlanCompletionDate &&
+                            formatDateUtc(
+                              ato.lastContingencyPlanCompletionDate,
+                              'MMMM d, yyyy'
+                            )
+                        )}
+                      />
+                    </Grid>
+                    <Grid tablet={{ col: 6 }}>
+                      <DescriptionTerm
+                        term={t(
+                          'singleSystem.ato.lastDisasterRecoveryPlanUpdate'
+                        )}
+                      />
+                      {/* TODO: display last disaster recovery plan update once Last DR Plan Update field is exposed through API */}
+                      <DescriptionDefinition
+                        className="line-height-body-3 margin-bottom-4"
+                        definition={t('singleSystem.noDataAvailable')}
+                      />
+                    </Grid>
+                  </Grid>
+                </>
+              </div>
+            )}
+          </>
         )}
       </SectionWrapper>
 
       {/* Documents Table */}
-      <SectionWrapper>
-        <Table bordered={false} fullWidth scrollable>
-          <thead>
-            <tr>
-              <th scope="col" className="border-bottom-2px">
-                {t('singleSystem.ato.documentType')}
-              </th>
-              <th scope="col" className="border-bottom-2px">
-                {t('singleSystem.ato.doesSystemHaveDoc')}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>{t('singleSystem.ato.disasterRecoveryPlanDoc')}</td>
-              {/* TODO: display yes/no for disaster recovery plan once DR Plan field is exposed through API */}
-              <td>{t('singleSystem.noDataAvailable')}</td>
-            </tr>
-            <tr>
-              <td>{t('singleSystem.ato.sornDoc')}</td>
-              {ato?.systemOfRecordsNotice ? <td>Yes</td> : <td>No</td>}
-            </tr>
-            <tr>
-              <td>{t('singleSystem.ato.contingencyPlanDoc')}</td>
-              {ato?.lastContingencyPlanCompletionDate ? (
-                <td>Yes</td>
-              ) : (
-                <td>No</td>
-              )}
-            </tr>
-          </tbody>
-        </Table>
-      </SectionWrapper>
+      {ato && (
+        <SectionWrapper>
+          <Table bordered={false} fullWidth scrollable>
+            <thead>
+              <tr>
+                <th scope="col" className="border-bottom-2px">
+                  {t('singleSystem.ato.documentType')}
+                </th>
+                <th scope="col" className="border-bottom-2px">
+                  {t('singleSystem.ato.doesSystemHaveDoc')}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{t('singleSystem.ato.disasterRecoveryPlanDoc')}</td>
+                {/* TODO: display yes/no for disaster recovery plan once DR Plan field is exposed through API */}
+                <td>{t('singleSystem.noDataAvailable')}</td>
+              </tr>
+              <tr>
+                <td>{t('singleSystem.ato.sornDoc')}</td>
+                {ato?.systemOfRecordsNotice ? <td>Yes</td> : <td>No</td>}
+              </tr>
+              <tr>
+                <td>{t('singleSystem.ato.contingencyPlanDoc')}</td>
+                {ato?.lastContingencyPlanCompletionDate ? (
+                  <td>Yes</td>
+                ) : (
+                  <td>No</td>
+                )}
+              </tr>
+            </tbody>
+          </Table>
+        </SectionWrapper>
+      )}
 
       {/* Acronym Definitions and Information */}
       <SectionWrapper className="margin-bottom-4 margin-top-4">

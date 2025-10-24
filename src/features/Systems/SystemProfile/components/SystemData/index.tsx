@@ -28,6 +28,8 @@ import {
 } from 'types/systemProfile';
 import { showSystemVal } from 'utils/showVal';
 
+import DataNotFound from '../DataNotFound';
+
 // The majority of values rendered the components here are one-offs
 // sometimes due to changing source data
 
@@ -199,6 +201,8 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
         <h2 id="system" className="margin-top-0">
           {t('singleSystem.systemData.header')}
         </h2>
+
+        {!system.cedarSystemDetails && <DataNotFound />}
         {/*
         Enterprise status n/a
         <DescriptionTerm term={t('singleSystem.systemData.enterpriseStatus')} />
@@ -217,68 +221,70 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
           definition="Yes, this system has glossary information or metadata descriptions"
         />
         */}
-        <Table bordered={false} fullWidth scrollable>
-          <thead>
-            <tr>
-              <th
-                scope="col"
-                className="border-bottom-2px"
-                style={{ width: '50%' }}
-              >
-                {t('singleSystem.systemData.dataCategory')}
-              </th>
-              <th
-                scope="col"
-                className="border-bottom-2px"
-                style={{ width: '50%' }}
-              >
-                {t('singleSystem.systemData.collectedUsedStored')}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style={{ verticalAlign: 'top' }}>
-              <td>{t('singleSystem.systemData.beneficiaryInfo')}</td>
-              <td>
-                {showSystemVal(
-                  system.cedarSystemDetails?.businessOwnerInformation
-                    .storesBeneficiaryAddress
-                    ? 'Yes'
-                    : 'No'
-                )}
-              </td>
-            </tr>
-            <tr style={{ verticalAlign: 'top' }}>
-              <td>{t('singleSystem.systemData.pII')}</td>
-              <td>{showSystemVal(null)}</td>
-            </tr>
-            <tr style={{ verticalAlign: 'top' }}>
-              <td>{t('singleSystem.systemData.pHI')}</td>
-              <td>{showSystemVal(null)}</td>
-            </tr>
-            <tr style={{ verticalAlign: 'top' }}>
-              <td>{t('singleSystem.systemData.sensitiveInformation')}</td>
-              <td>{showSystemVal(null)}</td>
-            </tr>
-            <tr style={{ verticalAlign: 'top' }}>
-              <td>{t('singleSystem.systemData.collectedUsedStored')}</td>
-              <td>{showSystemVal(null)}</td>
-            </tr>
-            <tr style={{ verticalAlign: 'top' }}>
-              <td className="border-bottom-0">
-                {t('singleSystem.systemData.bankingData')}
-              </td>
-              <td className="border-bottom-0">
-                {showSystemVal(
-                  system.cedarSystemDetails?.businessOwnerInformation
-                    .storesBankingData
-                    ? 'Yes'
-                    : 'No'
-                )}
-              </td>
-            </tr>
-          </tbody>
-        </Table>
+        {!!system.cedarSystemDetails && (
+          <Table bordered={false} fullWidth scrollable>
+            <thead>
+              <tr>
+                <th
+                  scope="col"
+                  className="border-bottom-2px"
+                  style={{ width: '50%' }}
+                >
+                  {t('singleSystem.systemData.dataCategory')}
+                </th>
+                <th
+                  scope="col"
+                  className="border-bottom-2px"
+                  style={{ width: '50%' }}
+                >
+                  {t('singleSystem.systemData.collectedUsedStored')}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style={{ verticalAlign: 'top' }}>
+                <td>{t('singleSystem.systemData.beneficiaryInfo')}</td>
+                <td>
+                  {showSystemVal(
+                    system.cedarSystemDetails?.businessOwnerInformation
+                      .storesBeneficiaryAddress
+                      ? 'Yes'
+                      : 'No'
+                  )}
+                </td>
+              </tr>
+              <tr style={{ verticalAlign: 'top' }}>
+                <td>{t('singleSystem.systemData.pII')}</td>
+                <td>{showSystemVal(null)}</td>
+              </tr>
+              <tr style={{ verticalAlign: 'top' }}>
+                <td>{t('singleSystem.systemData.pHI')}</td>
+                <td>{showSystemVal(null)}</td>
+              </tr>
+              <tr style={{ verticalAlign: 'top' }}>
+                <td>{t('singleSystem.systemData.sensitiveInformation')}</td>
+                <td>{showSystemVal(null)}</td>
+              </tr>
+              <tr style={{ verticalAlign: 'top' }}>
+                <td>{t('singleSystem.systemData.collectedUsedStored')}</td>
+                <td>{showSystemVal(null)}</td>
+              </tr>
+              <tr style={{ verticalAlign: 'top' }}>
+                <td className="border-bottom-0">
+                  {t('singleSystem.systemData.bankingData')}
+                </td>
+                <td className="border-bottom-0">
+                  {showSystemVal(
+                    system.cedarSystemDetails?.businessOwnerInformation
+                      .storesBankingData
+                      ? 'Yes'
+                      : 'No'
+                  )}
+                </td>
+              </tr>
+            </tbody>
+          </Table>
+        )}
       </SectionWrapper>
 
       <SectionWrapper borderBottom className="margin-bottom-4 padding-bottom-5">
@@ -286,102 +292,108 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
           {t('singleSystem.systemData.apiInfo')}
         </h2>
 
-        <Grid row className="margin-top-3">
-          <Grid tablet={{ col: 6 }} className="margin-bottom-5">
-            <DescriptionTerm
-              className="display-inline-flex margin-right-1"
-              term={t('singleSystem.systemData.apiStatus')}
-            />
-            <DescriptionDefinition
-              className="font-body-md line-height-body-3"
-              definition={showSystemVal(null)}
-            />
-          </Grid>
-          <Grid tablet={{ col: 6 }} className="margin-bottom-5">
-            <DescriptionTerm
-              className="display-inline-flex margin-right-1"
-              term={t('singleSystem.systemData.fHIRUsage')}
-            />
-            <DescriptionDefinition
-              className="line-height-body-3 font-body-md"
-              definition={showSystemVal(
-                system.cedarSoftwareProducts?.apiFHIRUse
-              )}
-            />
-          </Grid>
-          <Grid tablet={{ col: 6 }} className="margin-bottom-5">
-            <DescriptionTerm
-              className="display-inline-flex margin-right-1"
-              term={t('singleSystem.systemData.apiDescriptionLocation')}
-            />
-            <DescriptionDefinition
-              className="line-height-body-3 margin-bottom-5 margin-right-1"
-              definition={showSystemVal(
-                system.cedarSoftwareProducts?.apiDescPublished
-              )}
-            />
+        {!system.cedarSoftwareProducts && <DataNotFound />}
 
-            <DescriptionTerm
-              className="display-inline-flex margin-right-1"
-              term={t('singleSystem.systemData.apiGateway')}
-            />
-            <DescriptionDefinition
-              className="line-height-body-3 margin-bottom-2"
-              definition={showSystemVal(
-                system.cedarSoftwareProducts?.systemHasAPIGateway,
-                {
-                  format: v => (v ? 'Yes' : 'No')
-                }
-              )}
-            />
-            <UswdsReactLink to="tools-and-software">
-              {t('singleSystem.systemData.viewGateway')}
-            </UswdsReactLink>
-          </Grid>
-          <Grid tablet={{ col: 6 }} className="margin-bottom-5">
-            <DescriptionTerm
-              className="display-inline-flex margin-right-1"
-              term={t('singleSystem.systemData.access')}
-            />
-            <DescriptionDefinition
-              className="line-height-body-3 margin-bottom-5"
-              definition={showSystemVal(
-                system.cedarSoftwareProducts?.apisAccessibility
-              )}
-            />
-            <DescriptionTerm
-              className="display-inline-flex margin-right-1"
-              term={t('singleSystem.systemData.apiPortal')}
-            />
-            <DescriptionDefinition
-              className="line-height-body-3"
-              definition={showSystemVal(
-                system.cedarSoftwareProducts?.apiHasPortal,
-                {
-                  format: v =>
-                    v ? 'This system has an API portal' : 'No API portal'
-                }
-              )}
-            />
-          </Grid>
-        </Grid>
+        {!!system.cedarSoftwareProducts && (
+          <>
+            <Grid row className="margin-top-3">
+              <Grid tablet={{ col: 6 }} className="margin-bottom-5">
+                <DescriptionTerm
+                  className="display-inline-flex margin-right-1"
+                  term={t('singleSystem.systemData.apiStatus')}
+                />
+                <DescriptionDefinition
+                  className="font-body-md line-height-body-3"
+                  definition={showSystemVal(null)}
+                />
+              </Grid>
+              <Grid tablet={{ col: 6 }} className="margin-bottom-5">
+                <DescriptionTerm
+                  className="display-inline-flex margin-right-1"
+                  term={t('singleSystem.systemData.fHIRUsage')}
+                />
+                <DescriptionDefinition
+                  className="line-height-body-3 font-body-md"
+                  definition={showSystemVal(
+                    system.cedarSoftwareProducts?.apiFHIRUse
+                  )}
+                />
+              </Grid>
+              <Grid tablet={{ col: 6 }} className="margin-bottom-5">
+                <DescriptionTerm
+                  className="display-inline-flex margin-right-1"
+                  term={t('singleSystem.systemData.apiDescriptionLocation')}
+                />
+                <DescriptionDefinition
+                  className="line-height-body-3 margin-bottom-5 margin-right-1"
+                  definition={showSystemVal(
+                    system.cedarSoftwareProducts?.apiDescPublished
+                  )}
+                />
 
-        <h3
-          className="margin-top-0 margin-bottom-1 scroll-margin-top-6"
-          id="data-categories"
-        >
-          {t('singleSystem.systemData.dataCategories')}
-        </h3>
-        {system.cedarSoftwareProducts?.apiDataArea
-          ? system.cedarSoftwareProducts?.apiDataArea.map(tag => (
-              <Tag
-                key={tag}
-                className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
-              >
-                {tag}
-              </Tag>
-            ))
-          : showSystemVal(null)}
+                <DescriptionTerm
+                  className="display-inline-flex margin-right-1"
+                  term={t('singleSystem.systemData.apiGateway')}
+                />
+                <DescriptionDefinition
+                  className="line-height-body-3 margin-bottom-2"
+                  definition={showSystemVal(
+                    system.cedarSoftwareProducts?.systemHasAPIGateway,
+                    {
+                      format: v => (v ? 'Yes' : 'No')
+                    }
+                  )}
+                />
+                <UswdsReactLink to="tools-and-software">
+                  {t('singleSystem.systemData.viewGateway')}
+                </UswdsReactLink>
+              </Grid>
+              <Grid tablet={{ col: 6 }} className="margin-bottom-5">
+                <DescriptionTerm
+                  className="display-inline-flex margin-right-1"
+                  term={t('singleSystem.systemData.access')}
+                />
+                <DescriptionDefinition
+                  className="line-height-body-3 margin-bottom-5"
+                  definition={showSystemVal(
+                    system.cedarSoftwareProducts?.apisAccessibility
+                  )}
+                />
+                <DescriptionTerm
+                  className="display-inline-flex margin-right-1"
+                  term={t('singleSystem.systemData.apiPortal')}
+                />
+                <DescriptionDefinition
+                  className="line-height-body-3"
+                  definition={showSystemVal(
+                    system.cedarSoftwareProducts?.apiHasPortal,
+                    {
+                      format: v =>
+                        v ? 'This system has an API portal' : 'No API portal'
+                    }
+                  )}
+                />
+              </Grid>
+            </Grid>
+
+            <h3
+              className="margin-top-0 margin-bottom-1 scroll-margin-top-6"
+              id="data-categories"
+            >
+              {t('singleSystem.systemData.dataCategories')}
+            </h3>
+            {system.cedarSoftwareProducts?.apiDataArea
+              ? system.cedarSoftwareProducts?.apiDataArea.map(tag => (
+                  <Tag
+                    key={tag}
+                    className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
+                  >
+                    {tag}
+                  </Tag>
+                ))
+              : showSystemVal(null)}
+          </>
+        )}
       </SectionWrapper>
 
       <SectionWrapper className="padding-bottom-4 margin-bottom-4">
@@ -389,46 +401,55 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
           {t('singleSystem.systemData.dataExchanges')}
         </h2>
 
-        {exchanges.length ? (
+        {!exchanges && <DataNotFound />}
+
+        {!!exchanges && (
           <>
-            <CardGroup className="margin-0">
-              {exchanges
-                .slice(0, isExchangesExpanded ? undefined : exchangesCountCap)
-                .map(data => (
-                  <ExchangeCard
-                    key={`${data.exchangeId} ${data.exchangeName}`}
-                    data={data}
-                  />
-                ))}
-            </CardGroup>
-            {showMoreExchangesToggle && (
-              <Button
-                unstyled
-                type="button"
-                className="line-height-body-5"
-                onClick={() => {
-                  setExchangesExpanded(!isExchangesExpanded);
-                }}
-              >
-                {t(
-                  `singleSystem.systemData.showExchanges.${
-                    isExchangesExpanded ? 'less' : 'more'
-                  }`
+            {exchanges.length ? (
+              <>
+                <CardGroup className="margin-0">
+                  {exchanges
+                    .slice(
+                      0,
+                      isExchangesExpanded ? undefined : exchangesCountCap
+                    )
+                    .map(data => (
+                      <ExchangeCard
+                        key={`${data.exchangeId} ${data.exchangeName}`}
+                        data={data}
+                      />
+                    ))}
+                </CardGroup>
+                {showMoreExchangesToggle && (
+                  <Button
+                    unstyled
+                    type="button"
+                    className="line-height-body-5"
+                    onClick={() => {
+                      setExchangesExpanded(!isExchangesExpanded);
+                    }}
+                  >
+                    {t(
+                      `singleSystem.systemData.showExchanges.${
+                        isExchangesExpanded ? 'less' : 'more'
+                      }`
+                    )}
+                    <Icon.ExpandMore
+                      aria-hidden
+                      className="margin-left-05 margin-bottom-2px text-tbottom"
+                      style={{
+                        transform: isExchangesExpanded ? 'rotate(180deg)' : ''
+                      }}
+                    />
+                  </Button>
                 )}
-                <Icon.ExpandMore
-                  aria-hidden
-                  className="margin-left-05 margin-bottom-2px text-tbottom"
-                  style={{
-                    transform: isExchangesExpanded ? 'rotate(180deg)' : ''
-                  }}
-                />
-              </Button>
+              </>
+            ) : (
+              <Alert type="info" headingLevel="h4">
+                {t('singleSystem.systemData.noExchangesAlert')}
+              </Alert>
             )}
           </>
-        ) : (
-          <Alert type="info" headingLevel="h4">
-            {t('singleSystem.systemData.noExchangesAlert')}
-          </Alert>
         )}
       </SectionWrapper>
 

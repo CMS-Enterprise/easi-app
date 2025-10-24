@@ -99,7 +99,7 @@ function renderWithProvider({
 describe('IT Gov Actions', () => {
   it('Renders options and selects action', async () => {
     renderWithProvider({
-      mocks: [getGovernanceTaskListQuery()],
+      mocks: [getSystemIntakeContactsQuery(), getGovernanceTaskListQuery()],
       initialEntry: `/it-governance/${systemIntake.id}/actions`
     });
 
@@ -131,6 +131,7 @@ describe('IT Gov Actions', () => {
         mocks: [
           getSystemIntakeQuery(),
           getSystemIntakeContactsQuery(),
+          getSystemIntakeContactsQuery(),
           getGovernanceTaskListQuery({
             step: SystemIntakeStep.DRAFT_BUSINESS_CASE
           })
@@ -151,6 +152,7 @@ describe('IT Gov Actions', () => {
         initialEntry: `/it-governance/${systemIntake.id}/actions/request-edits`,
         mocks: [
           getSystemIntakeQuery(),
+          getSystemIntakeContactsQuery(),
           getSystemIntakeContactsQuery(),
           getGovernanceTaskListQuery({
             step: SystemIntakeStep.GRT_MEETING
@@ -222,6 +224,7 @@ describe('IT Gov Actions', () => {
         mocks: [
           getSystemIntakeQuery(),
           getSystemIntakeContactsQuery(),
+          getSystemIntakeContactsQuery(),
           getGovernanceTaskListQuery()
         ]
       });
@@ -248,6 +251,7 @@ describe('IT Gov Actions', () => {
         initialEntry: `/it-governance/${systemIntake.id}/actions/new-step`,
         mocks: [
           getSystemIntakeQuery(),
+          getSystemIntakeContactsQuery(),
           getSystemIntakeContactsQuery(),
           getGovernanceTaskListQuery({ step: SystemIntakeStep.GRB_MEETING })
         ]

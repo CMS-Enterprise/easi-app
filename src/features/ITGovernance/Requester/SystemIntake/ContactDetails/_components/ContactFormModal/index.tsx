@@ -15,6 +15,7 @@ import { ExternalRecipientAlert } from 'features/TechnicalAssistance/Admin/_comp
 import {
   SystemIntakeContactRole,
   useCreateSystemIntakeContactMutation,
+  useGetSystemIntakeContactsQuery,
   useUpdateSystemIntakeContactMutation
 } from 'gql/generated/graphql';
 import { capitalize } from 'lodash';
@@ -73,6 +74,16 @@ const ContactFormModal = ({
     awaitRefetchQueries: true
   });
 
+  // Read existing contacts from cache to prevent duplicates
+  const { data: contactsData } = useGetSystemIntakeContactsQuery({
+    variables: {
+      id: systemIntakeId
+    }
+  });
+
+  const existingContacts =
+    contactsData?.systemIntakeContacts?.allContacts || [];
+
   const {
     control,
     handleSubmit,
@@ -80,10 +91,17 @@ const ContactFormModal = ({
     watch,
     reset,
     setError,
-    formState: { errors, isValid, defaultValues, isSubmitSuccessful }
+    formState: { errors, defaultValues, isSubmitSuccessful, isSubmitting }
   } = useEasiForm<ContactFormFields>({
-    resolver: yupResolver(ContactFormSchema)
+    resolver: yupResolver(ContactFormSchema),
+    context: { existingContacts }
   });
+
+  const username = watch('userAccount.username');
+  const component = watch('component');
+  const roles = watch('roles');
+
+  const hasEmptyRequiredFields = !username || !component || roles?.length === 0;
 
   /** Set form action to edit if default values has an id */
   const action: 'add' | 'edit' = useMemo(
@@ -283,7 +301,7 @@ const ContactFormModal = ({
             className="margin-right-2"
             type="button"
             onClick={submit}
-            disabled={!isValid}
+            disabled={hasEmptyRequiredFields || isSubmitting}
           >
             {t('contactDetails.additionalContacts.submit', {
               context: action,

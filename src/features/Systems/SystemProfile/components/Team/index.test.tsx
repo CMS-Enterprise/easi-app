@@ -83,7 +83,7 @@ describe('System Profile Team subpage', () => {
       ]
     };
 
-    const team = getTeam(systemProfileDataWithTeam.usernamesWithRoles);
+    const team = getTeam(systemProfileDataWithTeam.usernamesWithRoles || []);
     expect(team).toEqual(expected);
   });
 
@@ -138,7 +138,7 @@ describe(`System Profile Team section collapse/expand toggle at ${TEAM_SECTION_M
     const data = getMockSystemProfileData(res);
     const { getByRole, getAllByTestId } = render(
       <TeamSection
-        usernamesWithRoles={data.usernamesWithRoles}
+        usernamesWithRoles={data.usernamesWithRoles || []}
         section="additional"
       />
     );

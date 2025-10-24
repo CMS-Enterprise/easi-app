@@ -8,12 +8,12 @@ import {
  * Assignees appear to be listed in order. The returned list keeps that order.
  */
 export default function getUsernamesWithRoles(
-  personRoles: CedarRoleAssigneePerson[]
+  personRoles: CedarRoleAssigneePerson[] | undefined
 ): UsernameWithRoles[] {
   const people: UsernameWithRoles[] = [];
 
   // eslint-disable-next-line no-restricted-syntax
-  for (const role of personRoles) {
+  for (const role of personRoles || []) {
     const { assigneeUsername } = role;
     if (assigneeUsername) {
       let person = people.find(
