@@ -48,6 +48,7 @@ const toastSuccess = (
     <Alert
       type="success"
       isClosable={false}
+      slim={false}
       data-testid={defaultOptions.id}
       heading={options?.heading}
     >

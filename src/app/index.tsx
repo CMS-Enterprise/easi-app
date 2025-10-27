@@ -160,6 +160,7 @@ const errorLink = onError(({ graphQLErrors, operation }) => {
             ) : (
               <Alert
                 type="error"
+                slim={false}
                 heading={i18next.t<string>('error:global.generalError')}
                 isClosable={false}
               >

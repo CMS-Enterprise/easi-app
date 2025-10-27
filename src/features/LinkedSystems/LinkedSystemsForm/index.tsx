@@ -28,6 +28,7 @@ import {
   useUnlinkSystemIntakeRelationMutation,
   useUpdateSystemLinkMutation
 } from 'gql/generated/graphql';
+import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import Alert from 'components/Alert';
 import CheckboxField from 'components/CheckboxField';
@@ -39,6 +40,7 @@ import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import RequiredFieldsText from 'components/RequiredFieldsText';
+import toastSuccess from 'components/ToastSuccess';
 import useMessage from 'hooks/useMessage';
 import flattenFormErrors from 'utils/flattenFormErrors';
 import { linkedSystemsSchema } from 'validations/systemIntakeSchema';
@@ -252,6 +254,8 @@ const LinkedSystemsForm = () => {
 
   const fieldErrors = flattenFormErrors<LinkedSystemsFormFields>(errors);
 
+  const { setErrorMeta } = useErrorMessage();
+
   const submit = handleSubmit((payload: LinkedSystemsFormFields) => {
     if (!isDirty) return;
 
@@ -270,51 +274,46 @@ const LinkedSystemsForm = () => {
           doesNotSupportSystems
         );
 
-    mutation
-      .then(() => {
-        showMessageOnNextPage(
-          <Trans
-            i18nKey={
-              linkedSystemID
-                ? 'linkedSystems:savedChangesToALink'
-                : 'linkedSystems:successfullyLinked'
-            }
-            values={{ updatedSystem: systemName }}
-            components={{
-              span: <span className="text-bold" />
-            }}
-          />,
-          {
-            type: 'success'
+    setErrorMeta({
+      overrideMessage: t('linkedSystems:errorLinking')
+    });
+
+    mutation.then(() => {
+      toastSuccess(
+        <Trans
+          i18nKey={
+            linkedSystemID
+              ? 'linkedSystems:savedChangesToALink'
+              : 'linkedSystems:successfullyLinked'
           }
-        );
-        const nextState: {
-          from?: string;
-          successfullyAdded?: boolean;
-          successfullyUpdated?: boolean;
-          systemUpdated?: string;
-        } = {};
+          values={{ updatedSystem: systemName }}
+          components={{
+            span: <span className="text-bold" />
+          }}
+        />
+      );
 
-        if (isFromTaskList) nextState.from = 'task-list';
-        if (isFromAdmin) nextState.from = 'admin';
+      const nextState: {
+        from?: string;
+        successfullyAdded?: boolean;
+        successfullyUpdated?: boolean;
+        systemUpdated?: string;
+      } = {};
 
-        // If we were editing an existing link, mark "updated"; otherwise "added"
-        if (linkedSystemID) {
-          nextState.successfullyUpdated = true;
-        } else {
-          nextState.successfullyAdded = true;
-        }
+      if (isFromTaskList) nextState.from = 'task-list';
+      if (isFromAdmin) nextState.from = 'admin';
 
-        if (systemName) nextState.systemUpdated = systemName;
+      // If we were editing an existing link, mark "updated"; otherwise "added"
+      if (linkedSystemID) {
+        nextState.successfullyUpdated = true;
+      } else {
+        nextState.successfullyAdded = true;
+      }
 
-        history.push(`/linked-systems/${systemIntakeID}`, nextState);
-      })
-      .catch(() => {
-        showMessage(t('linkedSystems:errorLinking'), {
-          type: 'error',
-          className: 'margin-top-2'
-        });
-      });
+      if (systemName) nextState.systemUpdated = systemName;
+
+      history.push(`/linked-systems/${systemIntakeID}`, nextState);
+    });
   });
 
   const systemOptions = linkedSystemID
