@@ -142,9 +142,7 @@ const RequestHome = ({
         </Grid>
 
         {/* Intake request form overview */}
-        <div
-          className="bg-primary-lighter padding-3"
-        >
+        <div className="bg-primary-lighter padding-3">
           <h3 className="margin-y-0">
             {t('requestHome.sections.requestSummary.overview.heading')}
           </h3>
