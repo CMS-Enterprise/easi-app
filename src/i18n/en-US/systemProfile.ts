@@ -586,7 +586,14 @@ const systemProfile = {
       nextSection: 'Next section: {{sectionName}}'
     }
   },
-  sectionCards
+  sectionCards,
+  dataNotFound: {
+    heading: 'Data not currently available',
+    description:
+      'EASi is currently having difficulty accessing some or all data for this section, so it cannot be displayed. Please check back later.',
+    contact:
+      'If you have any questions, please contact Enterprise Architecture at <emailLink>EnterpriseArchitecture@cms.hhs.gov</emailLink>.'
+  }
 };
 
 export default systemProfile;

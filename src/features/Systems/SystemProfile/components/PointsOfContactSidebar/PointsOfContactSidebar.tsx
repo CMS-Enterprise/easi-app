@@ -12,6 +12,7 @@ import {
 
 import pointsOfContactIds from '../../data/pointsOfContactIds';
 import { getPersonFullName } from '../../util';
+import DataNotFound from '../DataNotFound';
 
 /**
  * Get a list of subpage contacts defined by `pointsOfContactIds`.
@@ -52,56 +53,63 @@ const PointsOfContactSidebar = ({
 
   const contactsWithRoles = getPointsOfContact(
     subpageKey,
-    system.usernamesWithRoles
+    system.usernamesWithRoles || []
   );
   return (
     <>
       <p className="font-body-xs margin-top-1 margin-bottom-3">
         {t('singleSystem.pointsOfContact', { count: contactsWithRoles.length })}
       </p>
-      {contactsWithRoles.length ? (
-        contactsWithRoles.map(contact => {
-          const role = contact.roles[0];
-          return (
-            <React.Fragment key={role.roleID}>
-              <h3 className="system-profile__subheader margin-bottom-1">
-                {getPersonFullName(role)}
-              </h3>
-              <div>
-                {contact.roles.map(r => (
-                  <h5
-                    key={r.roleID}
-                    className="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
-                  >
-                    {r.roleTypeName}
-                  </h5>
-                ))}
-              </div>
-              {role.assigneeEmail && (
-                <p>
-                  <Link
-                    aria-label={t('singleSystem.sendEmail')}
-                    className="line-height-body-5"
-                    href={`mailto:${role.assigneeEmail}`}
-                    target="_blank"
-                  >
-                    {t('singleSystem.sendEmail')}
-                    <Icon.MailOutline
-                      className="margin-left-05 margin-bottom-2px text-tbottom"
-                      aria-hidden
-                    />
-                  </Link>
-                </p>
-              )}
-            </React.Fragment>
-          );
-        })
-      ) : (
-        // No contacts
-        <Alert type="info" slim className="margin-bottom-6">
-          {t(`singleSystem.noPointsOfContact`)}
-        </Alert>
+      {!system.usernamesWithRoles && <DataNotFound />}
+
+      {!!system.usernamesWithRoles && (
+        <>
+          {contactsWithRoles.length ? (
+            contactsWithRoles.map(contact => {
+              const role = contact.roles[0];
+              return (
+                <React.Fragment key={role.roleID}>
+                  <h3 className="system-profile__subheader margin-bottom-1">
+                    {getPersonFullName(role)}
+                  </h3>
+                  <div>
+                    {contact.roles.map(r => (
+                      <h5
+                        key={r.roleID}
+                        className="margin-top-0 margin-bottom-05 font-sans-2xs text-normal"
+                      >
+                        {r.roleTypeName}
+                      </h5>
+                    ))}
+                  </div>
+                  {role.assigneeEmail && (
+                    <p>
+                      <Link
+                        aria-label={t('singleSystem.sendEmail')}
+                        className="line-height-body-5"
+                        href={`mailto:${role.assigneeEmail}`}
+                        target="_blank"
+                      >
+                        {t('singleSystem.sendEmail')}
+                        <Icon.MailOutline
+                          className="margin-left-05 margin-bottom-2px text-tbottom"
+                          aria-hidden
+                        />
+                      </Link>
+                    </p>
+                  )}
+                </React.Fragment>
+              );
+            })
+          ) : (
+            // No contacts
+            <Alert type="info" slim className="margin-bottom-6">
+              {t(`singleSystem.noPointsOfContact`)}
+            </Alert>
+          )}
+        </>
       )}
+
       {subpageKey !== 'team' && (
         <p>
           <UswdsReactLink

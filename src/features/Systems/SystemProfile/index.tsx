@@ -81,7 +81,7 @@ function getDevelopmentTags(
   cedarSystemDetails: GetSystemProfileQuery['cedarSystemDetails']
 ): DevelopmentTag[] {
   const tags: DevelopmentTag[] = [];
-  if (cedarSystemDetails?.systemMaintainerInformation.agileUsed === true) {
+  if (cedarSystemDetails?.systemMaintainerInformation?.agileUsed === true) {
     tags.push('Agile Methodology');
   }
   return tags;
@@ -95,7 +95,9 @@ function getDevelopmentTags(
 function getLocations(
   // eslint-disable-next-line camelcase
   cedarSystemDetails: GetSystemProfileQuery['cedarSystemDetails']
-): UrlLocation[] {
+): UrlLocation[] | undefined {
+  if (!cedarSystemDetails?.urls) return undefined;
+
   return (cedarSystemDetails?.urls ?? []).map(url => {
     // Find a deployment from matching its type with the url host env
     const { urlHostingEnv } = url;
@@ -153,51 +155,42 @@ function getPlannedRetirement(
 export function getSystemProfileData(
   data?: GetSystemProfileQuery
 ): SystemProfileData | undefined {
-  // System profile data is generally unavailable if `data.cedarSystemDetails` is empty
-  if (!data) return undefined;
-
   const {
     cedarSystemDetails,
     cedarSoftwareProducts,
     cedarBudget,
     cedarBudgetSystemCost
-  } = data;
+  } = data || ({} as GetSystemProfileQuery);
+
   const cedarSystem = cedarSystemDetails?.cedarSystem;
 
-  if (
-    !cedarSystemDetails ||
-    !cedarSystem ||
-    !cedarSoftwareProducts ||
-    !cedarBudget ||
-    !cedarBudgetSystemCost
-  )
-    return undefined;
-
   // Save CedarAssigneeType.PERSON roles for convenience
-  const personRoles = cedarSystemDetails.roles.filter(
+  const personRoles = cedarSystemDetails?.roles.filter(
     role => role.assigneeType === CedarAssigneeType.PERSON
-  ) as CedarRoleAssigneePerson[];
+  );
 
-  const businessOwners = personRoles.filter(
+  const businessOwners = personRoles?.filter(
     role => role.roleTypeName === RoleTypeName.BUSINESS_OWNER
   );
 
-  const usernamesWithRoles = getUsernamesWithRoles(personRoles);
+  const usernamesWithRoles = getUsernamesWithRoles(
+    personRoles as CedarRoleAssigneePerson[]
+  );
 
   const locations = getLocations(cedarSystemDetails);
 
-  const productionLocation = locations.find(
+  const productionLocation = locations?.find(
     location => location.urlHostingEnv === 'Production'
   );
 
-  const cedarAuthorityToOperate = data.cedarAuthorityToOperate[0];
+  const cedarAuthorityToOperate = data?.cedarAuthorityToOperate?.[0];
 
   const numberOfContractorFte = parseFloat(
-    cedarSystemDetails.businessOwnerInformation?.numberOfContractorFte || '0'
+    cedarSystemDetails?.businessOwnerInformation?.numberOfContractorFte || '0'
   );
 
   const numberOfFederalFte = parseFloat(
-    cedarSystemDetails.businessOwnerInformation?.numberOfFederalFte || '0'
+    cedarSystemDetails?.businessOwnerInformation?.numberOfFederalFte || '0'
   );
 
   const numberOfFte = Number(
@@ -205,26 +198,28 @@ export function getSystemProfileData(
   );
 
   return {
-    ...data,
-    id: cedarSystem.id,
+    ...(data || ({} as GetSystemProfileQuery)),
+    id: cedarSystem?.id || '',
     ato: cedarAuthorityToOperate,
     atoStatus: getAtoStatus(
       cedarAuthorityToOperate?.dateAuthorizationMemoExpires,
       cedarAuthorityToOperate?.oaStatus
     ),
-    budgetSystemCosts: cedarBudgetSystemCost,
-    budgets: cedarBudget,
-    businessOwners,
-    developmentTags: getDevelopmentTags(cedarSystemDetails),
+    budgetSystemCosts: cedarBudgetSystemCost || undefined,
+    budgets: cedarBudget || [],
+    businessOwners: businessOwners || [],
+    developmentTags: getDevelopmentTags(
+      cedarSystemDetails || ({} as GetSystemProfileQuery['cedarSystemDetails'])
+    ),
     locations,
     numberOfContractorFte,
     numberOfFederalFte,
     numberOfFte,
     oaStatus: cedarAuthorityToOperate?.oaStatus,
-    personRoles,
+    personRoles: personRoles as CedarRoleAssigneePerson[] | undefined,
     plannedRetirement: getPlannedRetirement(cedarSystemDetails),
     productionLocation,
-    status: cedarSystem.status!,
+    status: cedarSystem?.status!,
     toolsAndSoftware: cedarSoftwareProducts || undefined,
     usernamesWithRoles,
 
@@ -272,7 +267,7 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
     }
   }, [top, hash]);
 
-  const { loading, error, data } = useGetSystemProfileQuery({
+  const { loading, data } = useGetSystemProfileQuery({
     variables: {
       cedarSystemId: systemId
     }
@@ -317,7 +312,7 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
     return <PageLoading />;
   }
 
-  if (error || !systemProfileData || !cedarSystem) {
+  if (!systemProfileData || !cedarSystem) {
     return <NotFound />;
   }
 
@@ -386,7 +381,7 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
     return (
       <EditTeam
         name={cedarSystem.name}
-        team={systemProfileData.usernamesWithRoles}
+        team={systemProfileData.usernamesWithRoles || []}
         numberOfFederalFte={systemProfileData.numberOfFederalFte}
         numberOfContractorFte={systemProfileData.numberOfContractorFte}
       />
@@ -548,15 +543,15 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                         <DescriptionDefinition
                           className="font-body-xs line-height-body-2"
                           definition={t('singleSystem.summary.subheader2', {
-                            count: businessOwners.length
+                            count: businessOwners?.length || 0
                           })}
                         />
                         <DescriptionTerm
                           className="font-heading-lg line-height-heading-2"
                           term={
-                            businessOwners.length
+                            businessOwners?.length
                               ? businessOwners
-                                  .map(bo => getPersonFullName(bo))
+                                  ?.map(bo => getPersonFullName(bo))
                                   .join(', ')
                               : showSystemVal(null, {
                                   defaultClassName:

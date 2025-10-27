@@ -183,18 +183,18 @@ export interface SystemProfileData extends GetSystemProfileQuery {
   atoStatus?: AtoStatus;
   budgets?: GetSystemProfileBudget[];
   budgetSystemCosts?: GetSystemProfileSystemCost;
-  businessOwners: GetSystemProfileRoles[];
+  businessOwners?: GetSystemProfileRoles[];
   developmentTags?: DevelopmentTag[];
   locations?: UrlLocation[];
   numberOfContractorFte?: number;
   numberOfFederalFte?: number;
   numberOfFte?: number;
   oaStatus?: string | null;
-  personRoles: CedarRoleAssigneePerson[];
-  plannedRetirement: string | null;
+  personRoles?: CedarRoleAssigneePerson[];
+  plannedRetirement?: string | null;
   productionLocation?: UrlLocation;
   status: GetSystemProfileStatus;
-  usernamesWithRoles: UsernameWithRoles[];
+  usernamesWithRoles?: UsernameWithRoles[];
 
   // Remaining mock data stubs
   activities?: tempATOProp[];
