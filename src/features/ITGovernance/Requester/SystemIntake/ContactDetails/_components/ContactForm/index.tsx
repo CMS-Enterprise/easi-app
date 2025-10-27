@@ -167,7 +167,7 @@ const ContactForm = ({
         showMessageOnNextPage(
           <Trans
             t={t}
-            i18nKey="requestHome:addPOC.successAlert"
+            i18nKey={`requestHome:${action}POC.successAlert`}
             values={{
               name: values.userAccount.commonName
             }}
@@ -362,7 +362,7 @@ const ContactForm = ({
                     label={t('requestHome:addPOC.isRequester')}
                     labelDescription={
                       <p
-                        className={`margin-y-0 padding-left-4 font-sans-xs ${defaultValues?.isRequester ? 'text-gray-50' : ''}`}
+                        className={`margin-y-0 padding-left-4 font-sans-2xs ${defaultValues?.isRequester ? 'text-gray-50' : ''}`}
                       >
                         {action === 'add' &&
                           t('requestHome:addPOC.isRequesterHint')}

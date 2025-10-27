@@ -67,7 +67,8 @@ const requestHome = {
     notRemovePrimary:
       'You may not remove this primary requester until you designate a new one. Please add a new contact or edit an existing contact to do so.',
     changePrimary:
-      'Checking this box will replace the current primary requester and remove their edit access in EASi.'
+      'Checking this box will replace the current primary requester and remove their edit access in EASi.',
+    successAlert: 'You have edited a project point of contact.'
   },
   sharedPOC: {
     name_add: 'New contact name',
