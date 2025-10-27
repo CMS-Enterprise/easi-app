@@ -1,7 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
-import { MockLink } from '@apollo/client/testing';
+import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
@@ -16,29 +15,16 @@ import MockMessage from 'utils/testing/MockMessage';
 
 import RequestHome from './index';
 
-function makeClient(mocks: MockedQuery[]) {
-  return new ApolloClient({
-    link: new MockLink(mocks, true),
-    cache: new InMemoryCache(),
-    defaultOptions: {
-      watchQuery: { fetchPolicy: 'no-cache', errorPolicy: 'all' },
-      query: { fetchPolicy: 'no-cache', errorPolicy: 'all' },
-      mutate: { errorPolicy: 'all' }
-    }
-  });
-}
-
 function renderWithProvider(mocks: MockedQuery[]) {
-  const client = makeClient(mocks);
   return render(
-    <ApolloProvider client={client}>
+    <MockedProvider mocks={mocks}>
       <MemoryRouter>
         <MessageProvider>
           <MockMessage />
           <RequestHome systemIntake={systemIntake} />
         </MessageProvider>
       </MemoryRouter>
-    </ApolloProvider>
+    </MockedProvider>
   );
 }
 
