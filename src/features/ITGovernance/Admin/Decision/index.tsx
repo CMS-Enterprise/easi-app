@@ -24,23 +24,25 @@ import {
 } from './DecisionContext';
 
 export const DefinitionCombo = ({
+  className,
   term,
   definition
 }: {
+  className?: string;
   term: React.ReactNode;
-  definition: string | undefined;
+  definition: React.ReactNode;
 }) => {
   return (
-    <>
+    <div className={`margin-bottom-3 ${className ?? ''}`}>
       <DescriptionTerm
         term={term}
         className="margin-bottom-0 easi-text-normal"
       />
       <DescriptionDefinition
         className="text-pre-wrap margin-bottom-0 easi-body-medium"
-        definition={<RichTextViewer value={definition} />}
+        definition={definition}
       />
-    </>
+    </div>
   );
 };
 
@@ -108,7 +110,7 @@ export const LcidInfoContainer = ({
         </span>
       </div>
 
-      <div className="bg-base-lightest padding-3 padding-bottom-0">
+      <div className="bg-base-lightest padding-3">
         <dl className="easi-dl">
           {decisionState === SystemIntakeDecisionState.LCID_ISSUED ? (
             <>
@@ -116,8 +118,7 @@ export const LcidInfoContainer = ({
                 <h3 className="margin-y-0">{t('decision.lcidInfoHeader')}</h3>
                 {lcidStatus && (
                   <LcidStatusTag
-                    // use computed status from context
-                    lcidStatus={lcidTagStatus as SystemIntakeLCIDStatus}
+                    lcidStatus={lcidStatus}
                     lcidExpiresAt={lcidExpiresAt}
                     lcidRetiresAt={lcidRetiresAt}
                   />
@@ -173,7 +174,12 @@ export const LcidInfoContainer = ({
 
               <DefinitionCombo
                 term={t('decision.terms.scope')}
-                definition={lcidScope ?? t('notes.extendLcid.noScope')}
+                className="margin-bottom-0"
+                definition={
+                  <RichTextViewer
+                    value={lcidScope ?? t('notes.extendLcid.noScope')}
+                  />
+                }
               />
               <DefinitionCombo
                 term={t('decision.terms.projectCostBaseline')}
@@ -245,8 +251,13 @@ const Decision = ({
             <dl className="padding-x-2">
               <DefinitionCombo
                 term={t('decision.terms.nextSteps')}
+                className="margin-bottom-0"
                 definition={
-                  decisionNextSteps || t('notes.extendLcid.noNextSteps')
+                  <RichTextViewer
+                    value={
+                      decisionNextSteps ?? t('notes.extendLcid.noNextSteps')
+                    }
+                  />
                 }
               />
               {trbFollowUpRecommendation && (

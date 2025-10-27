@@ -27,8 +27,6 @@ const RequestHome = ({
   const { t } = useTranslation('requestHome');
   const { showMessage, showErrorMessageInModal } = useMessage();
 
-  const [expandedOverview, setExpandedOverview] = useState(false);
-
   const { data, loading } = useGetSystemIntakeContactsQuery({
     variables: {
       id: systemIntake.id
@@ -145,8 +143,7 @@ const RequestHome = ({
 
         {/* Intake request form overview */}
         <div
-          // Conditional rendering padding class to adjust padding becuase RichTextViewer adds a padding at the bottom
-          className={`bg-primary-lighter padding-3 ${expandedOverview ? 'padding-bottom-0' : ''}`}
+          className="bg-primary-lighter padding-3"
         >
           <h3 className="margin-y-0">
             {t('requestHome.sections.requestSummary.overview.heading')}
@@ -155,7 +152,7 @@ const RequestHome = ({
             {t('requestHome.sections.requestSummary.overview.description')}
           </p>
           <CollapsableLink
-            className="padding-bottom-0"
+            className="margin-top-1 padding-bottom-0"
             id="request-home-summary"
             label={t('requestHome.sections.requestSummary.overview.showMore')}
             closeLabel={t(
@@ -186,7 +183,7 @@ const RequestHome = ({
                   t('grbReview:businessCaseOverview.noSolution')
                 }
               />
-              <ReviewRow>
+              <ReviewRow className="margin-bottom-0">
                 <div>
                   <DefinitionCombo
                     term={t('intake:review.currentAnnualSpending')}
@@ -207,10 +204,11 @@ const RequestHome = ({
                   />
                 </div>
               </ReviewRow>
-              <ReviewRow>
+              <ReviewRow className="margin-bottom-0">
                 <div>
                   <DefinitionCombo
                     term={t('intake:review.plannedYearOneSpending')}
+                    className="margin-bottom-0"
                     definition={
                       systemIntake.annualSpending?.plannedYearOneSpending ??
                       t('grbReview:businessCaseOverview.noSolution')
@@ -220,6 +218,7 @@ const RequestHome = ({
                 <div>
                   <DefinitionCombo
                     term={t('intake:review.plannedYearOneSpendingITPortion')}
+                    className="margin-bottom-0"
                     definition={
                       systemIntake.annualSpending
                         ?.plannedYearOneSpendingITPortion ??
