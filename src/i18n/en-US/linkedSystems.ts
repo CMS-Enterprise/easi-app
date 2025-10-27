@@ -63,6 +63,8 @@ export default {
   errorLinking:
     'There was an issue saving your changes. Please try again, and if the problem persists, try again later.',
   successfullyDeleted: 'You have removed a linked system from this request.',
+  successfullyRemovedAllLinkedSystems:
+    'You have removed all linked systems from this request.',
   removeLinkedSystemModal: {
     heading: 'Remove linked system?',
     message:

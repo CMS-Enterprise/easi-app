@@ -130,13 +130,10 @@ const findKnownError = (errorMessage: string): string | undefined => {
  * It also allows for overriding the error message for a specific component.
  */
 const errorLink = onError(({ graphQLErrors, operation }) => {
-  console.log('graphQLErrors', graphQLErrors);
   if (graphQLErrors) {
     const { overrideMessage, skipError } = getCurrentErrorMeta();
     const isReactNode = React.isValidElement(overrideMessage);
     const operationType = getOperationType(operation);
-
-    console.log('operationType', operationType);
 
     graphQLErrors.forEach(err => {
       let knownErrorMessage = '';
@@ -156,7 +153,6 @@ const errorLink = onError(({ graphQLErrors, operation }) => {
       }
 
       if (operationType === 'mutation' && !skipError) {
-        console.log('hit');
         toast.error(
           <div>
             {isReactNode ? (
