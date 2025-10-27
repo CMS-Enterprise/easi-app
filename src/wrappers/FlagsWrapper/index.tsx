@@ -38,7 +38,17 @@ const UserTargetingWrapper = ({ children }: WrapperProps) => {
             systemWorkspaceTeam: false,
             grbReviewTab: false,
             showAtoColumn: false,
-            serviceAlertEnabled: false
+            serviceAlertEnabled: false,
+            editableSystemProfile: false,
+            systemProfileBusinessInformation: false,
+            systemProfileImplementationDetails: false,
+            systemProfileData: false,
+            systemProfileToolsAndSoftware: false,
+            systemProfileSubSystems: false,
+            systemProfileTeam: false,
+            systemProfileContracts: false,
+            systemProfileFundingAndBudget: false,
+            systemProfileAtoAndSecurity: false
           }
         });
 

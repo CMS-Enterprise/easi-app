@@ -1,8 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import {
-  Button,
   Card,
   CardBody,
   CardFooter,
@@ -11,14 +10,13 @@ import {
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import { SystemProfileSectionLockStatus } from 'gql/generated/graphql';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import PercentCompleteTag from 'components/PercentCompleteTag';
 import SectionLock from 'components/SectionLock';
-import {
-  systemProfileLockableSectionMap,
-  SystemProfileSection
-} from 'constants/systemProfile';
+import { SystemProfileSection } from 'types/systemProfile';
 
+import { getSystemProfileSectionMap } from '../../util';
 import ExternalDataTag from '../ExternalDataTag';
 
 import './index.scss';
@@ -49,7 +47,9 @@ const SystemProfileSectionCard = ({
     systemId: string;
   }>();
 
-  const history = useHistory();
+  const flags = useFlags();
+  const sectionMap = getSystemProfileSectionMap(flags);
+  const { route } = sectionMap[section];
 
   // TODO EASI-4984: Update to use actual section lock context
   const lockableSectionLocks = [] as SystemProfileSectionLockStatus[];
@@ -58,12 +58,11 @@ const SystemProfileSectionCard = ({
   const sectionLock: SystemProfileSectionLockStatus | undefined =
     lockableSectionLocks?.find(lock => lock.section === section);
 
-  const sectionKey = systemProfileLockableSectionMap[section];
-
   return (
     <Card
       className="tablet:grid-col-6 desktop:grid-col-4"
       containerProps={{ className: 'shadow-2 border-width-1px' }}
+      data-testid={`section-card-${section}`}
     >
       {isManagedExternally && (
         <h5 className="text-base-dark bg-base-lightest padding-x-3 margin-0 font-body-xs text-light display-flex flex-align-center">
@@ -115,18 +114,16 @@ const SystemProfileSectionCard = ({
         {sectionLock ? (
           <SectionLock sectionLock={sectionLock} />
         ) : (
-          <Button
-            type="button"
-            // TODO EASI-4984: Update to actual route. Currently using existing system profile routes.
-            onClick={() => history.push(`/systems/${systemId}/${sectionKey}`)}
-            className={
+          <Link
+            to={`/systems/${systemId}/${route}`}
+            className={`usa-button ${
               hasPendingChanges ? 'usa-button--unstyled' : 'usa-button--outline'
-            }
+            }`}
           >
             {hasPendingChanges || readOnly
               ? t('editSystemProfile.viewSection')
               : t('editSystemProfile.editSection')}
-          </Button>
+          </Link>
         )}
       </CardFooter>
     </Card>

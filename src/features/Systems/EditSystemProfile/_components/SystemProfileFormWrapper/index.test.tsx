@@ -4,10 +4,15 @@ import { render, screen, within } from '@testing-library/react';
 import { SystemProfileLockableSection } from 'gql/generated/graphql';
 
 import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
-import { systemProfileSections } from 'constants/systemProfile';
 import { MessageProvider } from 'hooks/useMessage';
 
 import SystemProfileFormWrapper from './index';
+
+vi.mock('launchdarkly-react-client-sdk', () => ({
+  useFlags: () => ({
+    editableSystemProfile: true
+  })
+}));
 
 const systemId = '123';
 
@@ -121,14 +126,12 @@ describe('SystemProfileFormWrapper', () => {
     expect(within(footer).getByText(/Next section:/)).toBeInTheDocument();
   });
 
-  it('hides continue button and next section text if there is no next section', () => {
-    const lastSection = systemProfileSections[systemProfileSections.length - 1];
-
+  it('hides continue button and next section text for last section if read-only', () => {
     render(
       <MemoryRouter initialEntries={[`/systems/${systemId}/edit`]}>
         <MessageProvider>
           <MockFormProvider>
-            <SystemProfileFormWrapper section={lastSection.key}>
+            <SystemProfileFormWrapper section="ATO_AND_SECURITY" readOnly>
               section content
             </SystemProfileFormWrapper>
           </MockFormProvider>

@@ -1,9 +1,11 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { FieldValues } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { FetchResult } from '@apollo/client';
 import { Button, GridContainer, Icon } from '@trussworks/react-uswds';
+import NotFound from 'features/Miscellaneous/NotFound';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Breadcrumbs from 'components/Breadcrumbs';
 import { useEasiFormContext } from 'components/EasiForm';
@@ -11,20 +13,19 @@ import IconButton from 'components/IconButton';
 import IconLink from 'components/IconLink';
 import PageHeading from 'components/PageHeading';
 import PercentCompleteTag from 'components/PercentCompleteTag';
-import { systemProfileSections } from 'constants/systemProfile';
 import useMessage from 'hooks/useMessage';
+import { SystemProfileSection } from 'types/systemProfile';
 
+import { getEnabledSections } from '../../util';
 import ExternalDataTag from '../ExternalDataTag';
 
 import './index.scss';
-
-type SystemProfileSectionKey = (typeof systemProfileSections)[number]['key'];
 
 type SystemProfileFormWrapperProps<
   TFieldValues extends FieldValues = FieldValues
 > = {
   children: React.ReactNode;
-  section: SystemProfileSectionKey;
+  section: SystemProfileSection;
   /** Optional onSubmit function if section is editable form */
   onSubmit?: (values: TFieldValues) => Promise<FetchResult>;
   readOnly?: boolean;
@@ -53,6 +54,21 @@ function SystemProfileFormWrapper<
 
   const { Message, showMessage } = useMessage();
 
+  const flags = useFlags();
+  const enabledSections = getEnabledSections(flags);
+
+  const currentSectionIndex = enabledSections.findIndex(
+    ({ key }) => key === section
+  );
+
+  const currentSection =
+    currentSectionIndex > -1 ? enabledSections[currentSectionIndex] : undefined;
+
+  const nextSection =
+    currentSection && currentSectionIndex < enabledSections.length - 1
+      ? enabledSections[currentSectionIndex + 1]
+      : undefined;
+
   const { systemId } = useParams<{
     systemId: string;
   }>();
@@ -63,19 +79,6 @@ function SystemProfileFormWrapper<
   } = useEasiFormContext<TFieldValues>();
 
   const editSystemProfilePath = `/systems/${systemId}/edit`;
-
-  /** Returns next section enum/key and route if it exists */
-  const nextSection = useMemo(() => {
-    const sectionIndex = systemProfileSections.findIndex(
-      s => s.key === section
-    );
-
-    const sectionCount = systemProfileSections.length;
-
-    return sectionIndex < sectionCount - 1
-      ? systemProfileSections[sectionIndex + 1]
-      : undefined;
-  }, [section]);
 
   /** Submits form if dirty and onSubmit is provided, otherwise redirects to redirectPath */
   const submit = useCallback(
@@ -92,6 +95,11 @@ function SystemProfileFormWrapper<
     },
     [isDirty, onSubmit, showMessage, t, history, handleSubmit]
   );
+
+  // Return page not found if section feature flag is disabled
+  if (!currentSection) {
+    return <NotFound />;
+  }
 
   return (
     <div className="system-profile-form-wrapper">
@@ -180,8 +188,8 @@ function SystemProfileFormWrapper<
         </div>
 
         {
-          // Hide navigation buttons and next section text if there is no next section
-          nextSection && (
+          // Hide navigation buttons for last section if read-only
+          (nextSection || !readOnly) && (
             <div
               className="form-button-group margin-top-2 display-flex tablet:flex-align-center flex-gap-105"
               data-testid="form-wrapper-button-group"
@@ -196,31 +204,33 @@ function SystemProfileFormWrapper<
                   {t('form:saveAndExit')}
                 </Button>
               )}
-
-              <Button
-                type="button"
-                disabled={isSubmitting}
-                onClick={() =>
-                  submit(`${editSystemProfilePath}/${nextSection.route}`)
-                }
-              >
-                {t(
-                  readOnly
-                    ? 'editSystemProfile.form.continueToNextSection'
-                    : 'editSystemProfile.form.saveAndContinue'
-                )}
-              </Button>
-
-              <p
-                className="margin-y-0 text-base-dark"
-                data-testid="next-section-text"
-              >
-                {t('editSystemProfile.form.nextSection', {
-                  sectionName: t(
-                    `systemProfile:sectionCards.${nextSection.key}.title`
-                  )
-                })}
-              </p>
+              {nextSection && (
+                <>
+                  <Button
+                    type="button"
+                    disabled={isSubmitting}
+                    onClick={() =>
+                      submit(`/systems/${systemId}/${nextSection.route}`)
+                    }
+                  >
+                    {t(
+                      readOnly
+                        ? 'editSystemProfile.form.continueToNextSection'
+                        : 'editSystemProfile.form.saveAndContinue'
+                    )}
+                  </Button>
+                  <p
+                    className="margin-y-0 text-base-dark"
+                    data-testid="next-section-text"
+                  >
+                    {t('editSystemProfile.form.nextSection', {
+                      sectionName: t(
+                        `systemProfile:sectionCards.${nextSection.key}.title`
+                      )
+                    })}
+                  </p>
+                </>
+              )}
             </div>
           )
         }
