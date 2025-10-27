@@ -2,14 +2,30 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import ReactGA from 'react-ga4';
 import { Provider } from 'react-redux';
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import { toast } from 'react-toastify';
+import {
+  ApolloClient,
+  ApolloProvider,
+  InMemoryCache,
+  Operation,
+  split
+} from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+import { onError } from '@apollo/client/link/error';
+import { getMainDefinition } from '@apollo/client/utilities';
 import { createUploadLink } from 'apollo-upload-client';
 import axios from 'axios';
 import { detect } from 'detect-browser';
+import i18next from 'i18next';
 import { TextEncoder } from 'text-encoding';
+import {
+  getCurrentErrorMeta,
+  setCurrentErrorMeta
+} from 'wrappers/ErrorContext/errorMetaStore';
 
+import Alert from 'components/Alert';
 import { localAuthStorageKey } from 'constants/localAuth';
+import { knownErrors } from 'i18n/en-US/error';
 
 import '../config/i18n';
 
@@ -86,10 +102,93 @@ const authLink = setContext((request, { headers }) => {
   };
 });
 
+/**
+ * Helper function to determine operation type
+ */
+function getOperationType(
+  operation: Operation
+): 'query' | 'mutation' | 'subscription' | 'unknown' {
+  try {
+    const definition = operation.query.definitions[0];
+    if (definition?.kind === 'OperationDefinition') {
+      return definition.operation || 'unknown';
+    }
+    return 'unknown';
+  } catch {
+    return 'unknown';
+  }
+}
+
+const findKnownError = (errorMessage: string): string | undefined => {
+  return Object.keys(knownErrors).find(key => errorMessage.includes(key));
+};
+
+/**
+ * Error Link
+ *
+ * A link that intercepts GraphQL errors and displays them in a toast notification.
+ * It also allows for overriding the error message for a specific component.
+ */
+const errorLink = onError(({ graphQLErrors, operation }) => {
+  console.log('graphQLErrors', graphQLErrors);
+  if (graphQLErrors) {
+    const { overrideMessage, skipError } = getCurrentErrorMeta();
+    const isReactNode = React.isValidElement(overrideMessage);
+    const operationType = getOperationType(operation);
+
+    console.log('operationType', operationType);
+
+    graphQLErrors.forEach(err => {
+      let knownErrorMessage = '';
+
+      let knownError: string | undefined;
+
+      // Handle different operation types if needed
+      switch (operationType) {
+        case 'mutation':
+          knownError = findKnownError(err.message);
+          knownErrorMessage = knownError
+            ? knownErrors[knownError]
+            : knownErrorMessage;
+          break;
+        default:
+          knownErrorMessage = '';
+      }
+
+      if (operationType === 'mutation' && !skipError) {
+        console.log('hit');
+        toast.error(
+          <div>
+            {isReactNode ? (
+              overrideMessage
+            ) : (
+              <Alert
+                type="error"
+                heading={i18next.t<string>('error:global.generalError')}
+                isClosable={false}
+              >
+                <p className="margin-0">
+                  {knownErrorMessage || overrideMessage}
+                </p>
+                <p className="margin-0">
+                  {i18next.t<string>('error:global.generalBody')}
+                </p>
+              </Alert>
+            )}
+          </div>
+        );
+
+        // Clear the override message after displaying the error
+        setCurrentErrorMeta({});
+      }
+    });
+  }
+});
+
 const client = new ApolloClient({
   // TODO: Update package - apollo-upload-client (requires nodejs upgrade - https://jiraent.cms.gov/browse/EASI-3505)
   // @ts-ignore
-  link: authLink.concat(uploadLink),
+  link: errorLink.concat(authLink).concat(uploadLink),
   cache: new InMemoryCache({
     typePolicies: {
       cedarSystemDetails: {

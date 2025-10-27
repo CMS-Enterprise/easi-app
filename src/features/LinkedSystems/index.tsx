@@ -133,7 +133,7 @@ const LinkedSystems = () => {
 
     try {
       const response = await deleteSystemLink({
-        variables: { systemIntakeSystemID: systemToBeRemoved }
+        // variables: { systemIntakeSystemID: systemToBeRemoved }
       });
 
       if (response?.data) {
