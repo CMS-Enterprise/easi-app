@@ -223,7 +223,6 @@ const SystemIntakeContactsTable = ({
           ],
           [hasActionsColumn]
         ),
-        sortBy: useMemo(() => [], []),
         pageIndex: 0,
         pageSize
       }
