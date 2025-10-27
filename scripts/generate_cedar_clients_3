@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+
+set -o errexit
+
+# -----------------------
+# Prerequisites
+# -----------------------
+if ! command -v jq &> /dev/null
+then
+    echo "jq could not be found."
+    echo "Install jq from https://stedolan.github.io/jq/download/"
+    exit 1
+fi
+
+if ! command -v ogen &> /dev/null
+then
+    echo "ogen could not be found."
+    echo "Install ogen with: go install github.com/ogen-go/ogen/cmd/ogen@latest"
+    exit 2
+fi
+
+# -----------------------
+# Paths
+# -----------------------
+repoRootPath=$(git rev-parse --show-toplevel)
+
+# Intake API
+#intakeSwaggerFile="cedar_intake.json"
+#intakeFolderPath="${repoRootPath}/pkg/cedar/intake"
+#intakeTempFile=$(mktemp /tmp/intake.XXXXXX)
+
+# Core API
+coreSwaggerFile="cedar_core_3.json"
+coreFolderPath="${repoRootPath}/pkg/cedar/core"
+coreTempFile=$(mktemp /tmp/core.XXXXXX)
+
+# Local schema vendor file
+oasSchemaFile="${repoRootPath}/oas_schema_2024-10-18.json"
+
+# Download schema if it doesn't exist
+if [ ! -f "$oasSchemaFile" ]; then
+    echo "Downloading OpenAPI meta-schema..."
+    curl -sSL -o "$oasSchemaFile" https://spec.openapis.org/oas/3.0/schema/2024-10-18
+fi
+
+# -----------------------
+# Intake API: tweaks + generate
+# -----------------------
+#cd "$intakeFolderPath"
+#
+## Make clientLastUpdatedDate nullable
+#jq '.components.schemas.IntakeInput.properties.clientLastUpdatedDate |= . + {"nullable": true}' "$intakeSwaggerFile" > "$intakeTempFile"
+#mv "$intakeTempFile" "$intakeSwaggerFile"
+#
+## Generate Go code
+#ogen --target ./gen --clean "$intakeSwaggerFile"
+
+# -----------------------
+# Core API: tweaks + vendor schema + generate
+# -----------------------
+cd "$coreFolderPath"
+
+# Force HTTPS in servers
+jq '.servers = [{"url": "https://"}]' "$coreSwaggerFile" > "$coreTempFile"
+mv "$coreTempFile" "$coreSwaggerFile"
+
+jq --arg schema "$oasSchemaFile" '
+  (.. | objects | select(.["$ref"] == "https://spec.openapis.org/oas/3.0/schema/2024-10-18") | .["$ref"]) = $schema
+' "$coreSwaggerFile" > "$coreTempFile"
+
+# Generate Go code
+ogen --target ./gen --clean cedar_core_3.json
