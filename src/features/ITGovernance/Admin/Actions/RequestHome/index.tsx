@@ -9,7 +9,8 @@ import {
   useGetSystemIntakeContactsQuery
 } from 'gql/generated/graphql';
 
-import IconButton from 'components/IconButton';
+import CollapsableLink from 'components/CollapsableLink';
+import IconLink from 'components/IconLink';
 import PageHeading from 'components/PageHeading';
 import ReviewRow from 'components/ReviewRow';
 import SystemIntakeContactsTable from 'components/SystemIntakeContactsTable';
@@ -81,11 +82,12 @@ const RequestHome = ({
         <p className="easi-body-medium margin-top-0 margin-bottom-2">
           {t('requestHome.sections.teamInfo.description')}
         </p>
-        <Link to={`/it-governance/${systemIntake.id}/add-point-of-contact`}>
-          <IconButton icon={<Icon.Add aria-hidden />} type="button" unstyled>
-            {t('requestHome.sections.teamInfo.addAnother')}
-          </IconButton>
-        </Link>
+        <IconLink
+          to={`/it-governance/${systemIntake.id}/add-point-of-contact`}
+          icon={<Icon.Add aria-hidden />}
+        >
+          {t('requestHome.sections.teamInfo.addAnother')}
+        </IconLink>
         <SystemIntakeContactsTable
           contacts={data?.systemIntakeContacts?.allContacts}
           loading={loading}
@@ -106,45 +108,38 @@ const RequestHome = ({
           {t('requestHome.sections.requestSummary.heading')}
         </h2>
         <Grid row className="margin-bottom-4">
-          <div className="tablet:grid-col-6">
+          <div className="tablet:grid-col-6 margin-bottom-2 tablet:margin-bottom-0">
             <p className="text-bold margin-top-0 margin-bottom-1">
               {t('requestHome.sections.requestSummary.intakeRequestForm.title')}
             </p>
-            <div className="margin-y-1">
+            <div className="margin-top-1 margin-bottom-2">
               <TaskStatusTag
                 status={systemIntake.itGovTaskStatuses.intakeFormStatus}
               />
             </div>
-            <Link to={`/it-governance/${systemIntake.id}/intake-request`}>
-              <IconButton
-                icon={<Icon.ArrowForward aria-hidden />}
-                type="button"
-                unstyled
-                iconPosition="after"
-              >
-                {t(
-                  'requestHome.sections.requestSummary.intakeRequestForm.view'
-                )}
-              </IconButton>
-            </Link>
+
+            <IconLink
+              to={`/it-governance/${systemIntake.id}/intake-request`}
+              icon={<Icon.ArrowForward aria-hidden />}
+              iconPosition="after"
+            >
+              {t('requestHome.sections.requestSummary.intakeRequestForm.view')}
+            </IconLink>
           </div>
           <div className="tablet:grid-col-6">
             <p className="text-bold margin-top-0 margin-bottom-1">
               {t('requestHome.sections.requestSummary.businessCase.title')}
             </p>
-            <div className="margin-y-1">
+            <div className="margin-top-1 margin-bottom-2">
               <TaskStatusTag status={bizCaseStatusToRender} />
             </div>
-            <Link to={`/it-governance/${systemIntake.id}/business-case`}>
-              <IconButton
-                icon={<Icon.ArrowForward aria-hidden />}
-                type="button"
-                unstyled
-                iconPosition="after"
-              >
-                {t('requestHome.sections.requestSummary.businessCase.view')}
-              </IconButton>
-            </Link>
+            <IconLink
+              to={`/it-governance/${systemIntake.id}/business-case`}
+              icon={<Icon.ArrowForward aria-hidden />}
+              iconPosition="after"
+            >
+              {t('requestHome.sections.requestSummary.intakeRequestForm.view')}
+            </IconLink>
           </div>
         </Grid>
 
@@ -159,24 +154,16 @@ const RequestHome = ({
           <p className="easi-body-normal margin-y-0">
             {t('requestHome.sections.requestSummary.overview.description')}
           </p>
-          <IconButton
-            type="button"
-            unstyled
-            className="margin-top-1"
-            onClick={() => setExpandedOverview(!expandedOverview)}
-            icon={
-              expandedOverview ? (
-                <Icon.ExpandLess aria-hidden />
-              ) : (
-                <Icon.ExpandMore aria-hidden />
-              )
-            }
+          <CollapsableLink
+            className="padding-bottom-0"
+            id="request-home-summary"
+            label={t('requestHome.sections.requestSummary.overview.showMore')}
+            closeLabel={t(
+              'requestHome.sections.requestSummary.overview.showLess'
+            )}
+            styleLeftBar={false}
+            bold={false}
           >
-            {expandedOverview
-              ? t('requestHome.sections.requestSummary.overview.showLess')
-              : t('requestHome.sections.requestSummary.overview.showMore')}
-          </IconButton>
-          {expandedOverview && (
             <div className="padding-top-3">
               <DefinitionCombo
                 term={t('intake:review.businessNeed')}
@@ -242,7 +229,7 @@ const RequestHome = ({
                 </div>
               </ReviewRow>
             </div>
-          )}
+          </CollapsableLink>
         </div>
       </div>
     </div>
