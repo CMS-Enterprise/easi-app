@@ -9,7 +9,6 @@ import {
 } from 'gql/generated/graphql';
 
 import IconLink from 'components/IconLink';
-import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import RequiredFieldsText from 'components/RequiredFieldsText';
 
@@ -42,7 +41,7 @@ const AddOrEditPointOfContact = ({
   const isAddingPOC = type === 'add';
 
   return (
-    <MainContent data-testid="add-poc" className="margin-top-6">
+    <div data-testid="add-poc" className="margin-top-6 margin-bottom-15">
       <div className="grid-col-8">
         <PageHeading className="margin-top-0 margin-bottom-1">
           {isAddingPOC ? t('addPOC.title') : t('editPOC.title')}
@@ -73,7 +72,7 @@ const AddOrEditPointOfContact = ({
           {t('addPOC.dontAddAndReturn')}
         </IconLink>
       </div>
-    </MainContent>
+    </div>
   );
 };
 
