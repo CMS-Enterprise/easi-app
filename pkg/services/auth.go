@@ -54,6 +54,9 @@ func AuthorizeUserIsIntakeRequester(ctx context.Context, intake *models.SystemIn
 	if err != nil {
 		return false
 	}
+	if requester == nil {
+		return false
+	}
 	account := principal.Account()
 	if account == nil {
 		return false
@@ -79,6 +82,9 @@ func AuthorizeUserIsBusinessCaseRequester(ctx context.Context, bizCase *models.B
 
 	requester, err := dataloaders.SystemIntakeContactGetRequester(ctx, bizCase.SystemIntakeID)
 	if err != nil {
+		return false
+	}
+	if requester == nil {
 		return false
 	}
 	account := principal.Account()
