@@ -9,7 +9,6 @@ import {
   useSetSystemIntakeGRBPresentationLinksMutation,
   useUploadSystemIntakeGRBPresentationDeckMutation
 } from 'gql/generated/graphql';
-import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import { Alert } from 'components/Alert';
 import { useEasiForm } from 'components/EasiForm';
@@ -70,18 +69,12 @@ const PresentationDeckUpload = ({ type = 'requester' }: UploadFormProps) => {
       ? `/governance-task-list/${systemId}`
       : `/it-governance/${systemId}/grb-review`;
 
-  const { setErrorMeta } = useErrorMessage();
-
   const submit = handleSubmit(async values => {
     const presentationDeckFileData = values.presentationDeckFileData?.size
       ? await fileToBase64File(values.presentationDeckFileData)
       : undefined;
 
     if (type === 'requester') {
-      setErrorMeta({
-        overrideMessage: t('presentationLinks.presentationUpload.error')
-      });
-
       upload({
         variables: {
           input: {

@@ -19,7 +19,6 @@ import {
   useDeleteSystemIntakeGRBReviewerMutation,
   useUpdateSystemIntakeGRBReviewerMutation
 } from 'gql/generated/graphql';
-import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import Alert from 'components/Alert';
 import CedarContactSelect from 'components/CedarContactSelect';
@@ -97,14 +96,8 @@ const AddReviewerFromEua = ({
 
   const action: GRBReviewFormAction = activeReviewer ? 'edit' : 'add';
 
-  const { setErrorMeta } = useErrorMessage();
-
   /** Update roles for existing reviewer */
   const updateRoles = ({ userAccount, ...reviewer }: GRBReviewerFields) => {
-    setErrorMeta({
-      overrideMessage: t('grbReview:messages.error.edit')
-    });
-
     updateGRBReviewer({
       variables: {
         input: {
@@ -130,10 +123,6 @@ const AddReviewerFromEua = ({
 
   const removeGRBReviewer = useCallback(
     (reviewer: SystemIntakeGRBReviewerFragment) => {
-      setErrorMeta({
-        overrideMessage: t('grbReview:messages.error.remove')
-      });
-
       mutate({ variables: { input: { reviewerID: reviewer.id } } }).then(() =>
         toastSuccess(
           <Trans
@@ -153,7 +142,7 @@ const AddReviewerFromEua = ({
         history.push(`/it-governance/${systemId}/grb-review`);
       }
     },
-    [history, systemId, mutate, t, isFromGRBSetup, setErrorMeta]
+    [history, systemId, mutate, isFromGRBSetup]
   );
 
   return (

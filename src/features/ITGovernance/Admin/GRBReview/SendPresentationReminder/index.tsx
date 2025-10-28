@@ -10,7 +10,6 @@ import {
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import { useSendPresentationDeckReminderMutation } from 'gql/generated/graphql';
-import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import Alert from 'components/Alert';
 import { downloadFileFromURL } from 'utils/downloadFile';
@@ -48,13 +47,7 @@ function SendPresentationReminder({
     }
   });
 
-  const { setErrorMeta } = useErrorMessage();
-
   const sendReminderClick = () => {
-    setErrorMeta({
-      overrideMessage: t('presentationLinks.sendReminderCard.reminderError')
-    });
-
     sendReminder().then(() => {
       // Set state to show reminder has been sent and disable Send Reminder button
       setReminderSend(true);

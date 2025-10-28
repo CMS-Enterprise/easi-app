@@ -14,7 +14,6 @@ import {
   GetSystemIntakeGRBReviewDocument,
   useRestartGRBReviewAsyncMutation
 } from 'gql/generated/graphql';
-import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import Alert from 'components/Alert';
 import HelpText from 'components/HelpText';
@@ -40,14 +39,8 @@ const RestartReviewModal = ({ systemIntakeId }: { systemIntakeId: string }) => {
     closeModal();
   };
 
-  const { setErrorMeta } = useErrorMessage();
-
   const handleSubmit: ReactEventHandler = event => {
     event.preventDefault();
-
-    setErrorMeta({
-      overrideMessage: t('adminTask.restartReview.error')
-    });
 
     restartReview({
       variables: {

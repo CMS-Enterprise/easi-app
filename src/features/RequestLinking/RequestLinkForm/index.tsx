@@ -31,7 +31,6 @@ import {
   useUnlinkSystemIntakeRelationMutation,
   useUnlinkTrbRequestRelationMutation
 } from 'gql/generated/graphql';
-import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import Alert from 'components/Alert';
 import IconButton from 'components/IconButton';
@@ -217,13 +216,7 @@ const RequestLinkForm = ({
     return false;
   })();
 
-  const { setErrorMeta } = useErrorMessage();
-
   const submit = handleSubmit(formData => {
-    setErrorMeta({
-      overrideMessage: t('error:encounteredIssueTryAgain')
-    });
-
     // Do some field parsing and correlate relation type to mutation
 
     // Parse contract numbers from csv text input to string[]

@@ -16,7 +16,6 @@ import {
   useCreateSystemIntakeGRBDiscussionPostMutation,
   useCreateSystemIntakeGRBDiscussionReplyMutation
 } from 'gql/generated/graphql';
-import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import { useEasiForm } from 'components/EasiForm';
 import FieldErrorMsg from 'components/FieldErrorMsg';
@@ -89,13 +88,7 @@ const DiscussionForm = ({
 
   const { pushDiscussionQuery } = useDiscussionParams();
 
-  const { setErrorMeta } = useErrorMessage();
-
   const createDiscussion = handleSubmit(({ content }) => {
-    setErrorMeta({
-      overrideMessage: t('general.alerts.startDiscussionError')
-    });
-
     if ('systemIntakeID' in mutationProps) {
       mutateDiscussion({
         variables: {
@@ -116,10 +109,6 @@ const DiscussionForm = ({
   });
 
   const createReply = handleSubmit(({ content }) => {
-    setErrorMeta({
-      overrideMessage: t('general.alerts.replyError')
-    });
-
     if ('initialPostID' in mutationProps) {
       mutateReply({
         variables: {
@@ -132,7 +121,6 @@ const DiscussionForm = ({
       }).then(() => {
         // Reset field values
         reset();
-
         toastSuccess(t('general.alerts.replySuccess'));
       });
 

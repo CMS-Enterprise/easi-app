@@ -22,7 +22,6 @@ import {
 } from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { AppState } from 'stores/reducers/rootReducer';
-import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import { Alert } from 'components/Alert';
 import { useEasiForm } from 'components/EasiForm';
@@ -107,14 +106,8 @@ const DocumentUploadForm = ({
     return `/it-governance/${systemId}/grb-review`;
   }, [state.uploadSource, type, systemId]);
 
-  const { setErrorMeta } = useErrorMessage();
-
   const submit = handleSubmit(async ({ otherTypeDescription, ...formData }) => {
     const newFile = await fileToBase64File(formData.fileData);
-
-    setErrorMeta({
-      overrideMessage: t('technicalAssistance:documents.upload.error')
-    });
 
     createDocument({
       variables: {

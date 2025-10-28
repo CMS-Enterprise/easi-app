@@ -11,7 +11,6 @@ import {
   SystemIntakeGRBReviewerFragment,
   useCastGRBReviewerVoteMutation
 } from 'gql/generated/graphql';
-import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import { useEasiForm } from 'components/EasiForm';
 import FieldErrorMsg from 'components/FieldErrorMsg';
@@ -79,13 +78,7 @@ const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
 
   const [mutation] = useCastGRBReviewerVoteMutation();
 
-  const { setErrorMeta } = useErrorMessage();
-
   const castVote = handleSubmit(async input => {
-    setErrorMeta({
-      overrideMessage: t('technicalAssistance:documents.upload.error')
-    });
-
     mutation({
       variables: {
         input: {

@@ -14,7 +14,6 @@ import {
   SystemIntakeGRBReviewerFragment,
   useDeleteSystemIntakeGRBReviewerMutation
 } from 'gql/generated/graphql';
-import { useErrorMessage } from 'wrappers/ErrorContext';
 import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import Modal from 'components/Modal';
@@ -145,13 +144,7 @@ const ParticipantsTable = ({
   const { getTableBodyProps, getTableProps, headerGroups, prepareRow, rows } =
     table;
 
-  const { setErrorMeta } = useErrorMessage();
-
   const removeGRBReviewer = (reviewer: SystemIntakeGRBReviewerFragment) => {
-    setErrorMeta({
-      overrideMessage: t('messages.error.remove')
-    });
-
     deleteReviewer({ variables: { input: { reviewerID: reviewer.id } } }).then(
       () =>
         toastSuccess(

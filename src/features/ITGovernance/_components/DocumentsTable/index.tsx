@@ -15,7 +15,6 @@ import {
   SystemIntakeDocumentStatus,
   useDeleteSystemIntakeDocumentMutation
 } from 'gql/generated/graphql';
-import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import Modal from 'components/Modal';
 import TablePageSize from 'components/TablePageSize';
@@ -195,13 +194,8 @@ const DocumentsTable = ({
     setPageSize
   } = table;
 
-  const { setErrorMeta } = useErrorMessage();
-
   const ConfirmDeleteModal = () => {
     if (!fileToDelete) return null;
-    setErrorMeta({
-      overrideMessage: t('intake:documents.table.removeModal.error')
-    });
     return (
       <Modal isOpen={!!fileToDelete} closeModal={() => setFileToDelete(null)}>
         <h3 className="margin-top-0 margin-bottom-0">

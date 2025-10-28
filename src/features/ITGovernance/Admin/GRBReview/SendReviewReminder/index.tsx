@@ -6,7 +6,6 @@ import {
   SystemIntakeGRBReviewFragment,
   useSendSystemIntakeGRBReviewerReminderMutation
 } from 'gql/generated/graphql';
-import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import Modal from 'components/Modal';
 import toastSuccess from 'components/ToastSuccess';
@@ -45,14 +44,8 @@ const SendReviewReminder = ({
     setIsModalOpen(false);
   };
 
-  const { setErrorMeta } = useErrorMessage();
-
   const handleSendReminder = () => {
     if (!systemIntakeId) return;
-
-    setErrorMeta({
-      overrideMessage: t('adminTask.sendReviewReminder.modal.error')
-    });
 
     sendReminder().then(response => {
       setIsModalOpen(false);

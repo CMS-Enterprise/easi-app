@@ -18,7 +18,6 @@ import {
   useGetSystemIntakeSystemsQuery,
   useUnlinkSystemIntakeRelationMutation
 } from 'gql/generated/graphql';
-import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import Breadcrumbs from 'components/Breadcrumbs';
 import CheckboxField from 'components/CheckboxField';
@@ -97,8 +96,6 @@ const LinkedSystems = () => {
   const [deleteSystemLink] = useDeleteSystemLinkMutation();
   const [unlinkAllSystems] = useUnlinkSystemIntakeRelationMutation();
 
-  const { setErrorMeta } = useErrorMessage();
-
   const handleRemoveModal = (systemLinkedSystemId: string) => {
     setSystemToBeRemoved(systemLinkedSystemId);
     setRemoveLinkedSystemModalOpen(true);
@@ -114,12 +111,6 @@ const LinkedSystems = () => {
       return;
     }
 
-    setErrorMeta({
-      overrideMessage: (
-        <Trans i18nKey="linkedSystems:unableToRemoveAllLinkedSystems" />
-      )
-    });
-
     // Otherwise directly flip the flag
     await unlinkAllSystems({
       variables: { intakeID: id, doesNotSupportSystems: !noSystemsUsed }
@@ -129,12 +120,6 @@ const LinkedSystems = () => {
 
   const handleRemoveLink = async () => {
     if (!systemToBeRemoved) return;
-
-    setErrorMeta({
-      overrideMessage: (
-        <Trans i18nKey="linkedSystems:unableToRemoveLinkedSystem" />
-      )
-    });
 
     const response = await deleteSystemLink({
       variables: { systemIntakeSystemID: systemToBeRemoved }
@@ -157,12 +142,6 @@ const LinkedSystems = () => {
 
   // Confirm remove-all: unlink all and set flag true in one mutation
   const handleRemoveAllSystemLinks = async () => {
-    setErrorMeta({
-      overrideMessage: (
-        <Trans i18nKey="linkedSystems:unableToRemoveAllLinkedSystems" />
-      )
-    });
-
     await unlinkAllSystems({
       variables: { intakeID: id, doesNotSupportSystems: true }
     });

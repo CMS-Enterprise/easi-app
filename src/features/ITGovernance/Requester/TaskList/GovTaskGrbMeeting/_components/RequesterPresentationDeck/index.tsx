@@ -8,7 +8,6 @@ import {
   SystemIntakeGRBReviewType,
   useDeleteSystemIntakeGRBPresentationLinksMutation
 } from 'gql/generated/graphql';
-import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
@@ -53,14 +52,8 @@ const RequesterPresentationDeck = ({
       ]
     });
 
-  const { setErrorMeta } = useErrorMessage();
-
   /** Remove presentation links and handle error/success messages */
   const removePresentationLinks = () => {
-    setErrorMeta({
-      overrideMessage: t('grbReview:asyncPresentation.modalRemoveLinks.error')
-    });
-
     deleteSystemIntakeGRBPresentationLinks().then(() => {
       toastSuccess(t('grbReview:asyncPresentation.modalRemoveLinks.success'));
       setRemovalModalOpen(false);

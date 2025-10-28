@@ -19,7 +19,6 @@ import {
   SystemIntakeGRBReviewType,
   useDeleteSystemIntakeGRBPresentationLinksMutation
 } from 'gql/generated/graphql';
-import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import Alert from 'components/Alert';
 import ExternalLinkAndModal from 'components/ExternalLinkAndModal';
@@ -192,13 +191,7 @@ function PresentationLinksCard({
     setRemovePresentationLinksModalOpen
   ] = useState<boolean>(false);
 
-  const { setErrorMeta } = useErrorMessage();
-
   const removePresentationLinks = () => {
-    setErrorMeta({
-      overrideMessage: t('asyncPresentation.modalRemoveLinks.error')
-    });
-
     deleteSystemIntakeGRBPresentationLinks()
       .then(() => {
         toastSuccess(t('asyncPresentation.modalRemoveLinks.success'));

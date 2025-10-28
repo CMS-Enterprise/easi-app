@@ -18,7 +18,6 @@ import {
   useSetRolesForUserOnSystemMutation
 } from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
-import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import Breadcrumbs from 'components/Breadcrumbs';
 import IconLink from 'components/IconLink';
@@ -135,16 +134,10 @@ const EditTeam = ({
     refetchQueries: ['GetSystemProfile']
   });
 
-  const { setErrorMeta } = useErrorMessage();
-
   /**
    * Remove team member and close modal
    */
   const removeUser = (user: { euaUserId: string; commonName: string }) => {
-    setErrorMeta({
-      overrideMessage: t('singleSystem.editTeam.form.errorRemoveContact')
-    });
-
     // Set roles to empty string to remove user
     updateRoles({
       variables: {

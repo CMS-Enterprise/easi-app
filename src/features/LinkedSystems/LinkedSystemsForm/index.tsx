@@ -28,7 +28,6 @@ import {
   useUnlinkSystemIntakeRelationMutation,
   useUpdateSystemLinkMutation
 } from 'gql/generated/graphql';
-import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import Alert from 'components/Alert';
 import CheckboxField from 'components/CheckboxField';
@@ -254,8 +253,6 @@ const LinkedSystemsForm = () => {
 
   const fieldErrors = flattenFormErrors<LinkedSystemsFormFields>(errors);
 
-  const { setErrorMeta } = useErrorMessage();
-
   const submit = handleSubmit((payload: LinkedSystemsFormFields) => {
     if (!isDirty) return;
 
@@ -273,10 +270,6 @@ const LinkedSystemsForm = () => {
           setSystemSupport,
           doesNotSupportSystems
         );
-
-    setErrorMeta({
-      overrideMessage: t('linkedSystems:errorLinking')
-    });
 
     mutation.then(() => {
       toastSuccess(

@@ -10,7 +10,6 @@ import {
   TRBFormStatus,
   useCreateTRBRequestFeedbackMutation
 } from 'gql/generated/graphql';
-import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import HelpText from 'components/HelpText';
 import Label from 'components/Label';
@@ -78,15 +77,9 @@ function RequestEdits() {
 
   const [sendFeedback, feedbackResult] = useCreateTRBRequestFeedbackMutation();
 
-  const { setErrorMeta } = useErrorMessage();
-
   const submitForm = (formData: RequestEditsFields) => {
     // Filter out fields that don't belong in the TRB feedback input
     const { copyITGovMailbox, ...trbFeedbackData } = formData;
-
-    setErrorMeta({
-      overrideMessage: t(`${actionText}.error`)
-    });
 
     sendFeedback({
       variables: {

@@ -18,7 +18,6 @@ import {
   SystemIntakeGRBReviewType,
   useUpdateSystemIntakeGRBReviewAsyncPresentationMutation
 } from 'gql/generated/graphql';
-import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import Alert from 'components/Alert';
 import DatePickerFormatted from 'components/DatePickerFormatted';
@@ -108,15 +107,9 @@ const PresentationLinksForm = ({
     (!!errors?.presentationDeckFileData ||
       !defaultValues?.presentationDeckFileData?.name);
 
-  const { setErrorMeta } = useErrorMessage();
-
   /** Submit form to set GRB review presentation links */
   const submit = handleSubmit(
     async ({ grbReviewAsyncRecordingTime: recordingTime, ...links }) => {
-      setErrorMeta({
-        overrideMessage: t('presentationLinks.error')
-      });
-
       // Only include newly updated file data, not default values
       // File data from default values does not have `size` field
       const transcriptFileData = links.transcriptFileData?.size

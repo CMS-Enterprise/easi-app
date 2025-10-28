@@ -16,7 +16,6 @@ import {
   GetSystemIntakeGRBReviewDocument,
   useExtendGRBReviewDeadlineAsyncMutation
 } from 'gql/generated/graphql';
-import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import Alert from 'components/Alert';
 import { useEasiForm } from 'components/EasiForm';
@@ -63,13 +62,7 @@ const ExtendGRBAsyncReview = () => {
     setIsOpen(false);
   };
 
-  const { setErrorMeta } = useErrorMessage();
-
   const addTimeOrEndEarly = handleSubmit(async input => {
-    setErrorMeta({
-      overrideMessage: t('statusCard.addTimeModal.error')
-    });
-
     mutation({
       variables: {
         input: {
