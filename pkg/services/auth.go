@@ -59,7 +59,7 @@ func AuthorizeUserIsIntakeRequester(ctx context.Context, intake *models.SystemIn
 		return false
 	}
 	// User is the requester
-	if account.ID == requester.ID {
+	if account.ID == requester.UserID {
 		return true
 	}
 	// Default to failure to authorize and create a quick audit log
@@ -86,7 +86,7 @@ func AuthorizeUserIsBusinessCaseRequester(ctx context.Context, bizCase *models.B
 		return false
 	}
 	// User is the requester
-	if account.ID == requester.ID {
+	if account.ID == requester.UserID {
 		return true
 	}
 	// Default to failure to authorize and create a quick audit log
