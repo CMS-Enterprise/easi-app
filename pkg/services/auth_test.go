@@ -20,9 +20,9 @@ type fakePrincipal struct {
 	account     *fakeAccount
 }
 
-func (p *fakePrincipal) String() string { return "fakePrincipal" }
-func (p *fakePrincipal) ID() string { return p.account.ID.String() }
-func (p *fakePrincipal) AllowEASi() bool     { return p.easiAllowed }
+func (p *fakePrincipal) String() string  { return "fakePrincipal" }
+func (p *fakePrincipal) ID() string      { return p.account.ID.String() }
+func (p *fakePrincipal) AllowEASi() bool { return p.easiAllowed }
 func (p *fakePrincipal) Account() *authentication.UserAccount {
 	return &authentication.UserAccount{ID: p.account.ID}
 }
@@ -30,7 +30,6 @@ func (p *fakePrincipal) Account() *authentication.UserAccount {
 // satisfy unused calls in this file so compiler's happy if interface grows
 func (p *fakePrincipal) AllowGRT() bool      { return false }
 func (p *fakePrincipal) AllowTRBAdmin() bool { return false }
-
 
 func (s *ServicesTestSuite) TestAuthorizeUserIsIntakeRequester() {
 	authorizeSaveSystemIntake := AuthorizeUserIsIntakeRequester
