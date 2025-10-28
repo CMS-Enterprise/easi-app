@@ -10,12 +10,13 @@ import {
   TRBFormStatus,
   useCreateTRBRequestFeedbackMutation
 } from 'gql/generated/graphql';
+import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import HelpText from 'components/HelpText';
 import Label from 'components/Label';
 import PageLoading from 'components/PageLoading';
 import RichTextEditor from 'components/RichTextEditor';
-import useMessage from 'hooks/useMessage';
+import toastSuccess from 'components/ToastSuccess';
 import { TrbRecipientFields } from 'types/technicalAssistance';
 import { trbActionSchema } from 'validations/trbRequestSchema';
 
@@ -35,8 +36,6 @@ function RequestEdits() {
     action: 'request-edits' | 'ready-for-consult';
   }>();
   const history = useHistory();
-
-  const { showMessage, showMessageOnNextPage } = useMessage();
 
   const requestUrl = `/trb/${id}/${activePage}`;
 
@@ -79,28 +78,24 @@ function RequestEdits() {
 
   const [sendFeedback, feedbackResult] = useCreateTRBRequestFeedbackMutation();
 
+  const { setErrorMeta } = useErrorMessage();
+
   const submitForm = (formData: RequestEditsFields) => {
     // Filter out fields that don't belong in the TRB feedback input
     const { copyITGovMailbox, ...trbFeedbackData } = formData;
+
+    setErrorMeta({
+      overrideMessage: t(`${actionText}.error`)
+    });
 
     sendFeedback({
       variables: {
         input: { ...trbFeedbackData, trbRequestId: id, action: feedbackAction }
       }
-    })
-      .then(result => {
-        showMessageOnNextPage(t(`${actionText}.success`), {
-          type: 'success',
-          className: 'margin-top-3'
-        });
-        history.push(requestUrl);
-      })
-      .catch(err => {
-        showMessage(t(`${actionText}.error`), {
-          type: 'error',
-          className: 'margin-top-3'
-        });
-      });
+    }).then(result => {
+      toastSuccess(t(`${actionText}.success`));
+      history.push(requestUrl);
+    });
   };
 
   const disableFormText = useMemo(() => {

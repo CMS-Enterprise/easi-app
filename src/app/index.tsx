@@ -123,7 +123,49 @@ const findKnownError = (errorMessage: string): string | undefined => {
 
 const operationErrorMap: Record<string, string> = {
   CreateSystemIntakeGRBReviewers:
-    'There was an issue adding GRB reviewers. Please try again, and if the error persists, try again at a later date.'
+    'There was an issue adding GRB reviewers. Please try again, and if the error persists, try again at a later date.',
+  UpdateTRBGuidanceLetterInsightOrder:
+    'There was an issue saving your guidance. Please try again, and if the problem persists, try again later.',
+  UpdateTRBRequestLead:
+    'There was an issue assigning a TRB lead for this request. Please try again, and if the problem persists, try again later.',
+  CreateTRBAdminNoteGeneralRequest:
+    'There was a problem saving your note. Please try again. If the error persists, please try again at a later date.',
+  CreateTRBAdminNoteInitialRequestForm:
+    'There was a problem saving your note. Please try again. If the error persists, please try again at a later date.',
+  CreateTRBAdminNoteSupportingDocuments:
+    'There was a problem saving your note. Please try again. If the error persists, please try again at a later date.',
+  CreateTRBAdminNoteConsultSession:
+    'There was a problem saving your note. Please try again. If the error persists, please try again at a later date.',
+  CreateTRBAdminNoteGuidanceLetter:
+    'There was a problem saving your note. Please try again. If the error persists, please try again at a later date.',
+  CloseTRBRequest:
+    'There was an issue closing this request. Please try again, and if the problem persists, try again later.',
+  ReopenTRBRequest:
+    'There was an issue re-opening this request. Please try again, and if the problem persists, try again later.',
+  UpdateTRBRequestConsultMeeting:
+    'There was an issue scheduling the consult session. Please try again, and if the problem persists, try again later.',
+  DeleteTRBGuidanceLetterInsight:
+    'There was an issue removing this guidance. Please try again, and if the problem persists, try again later.',
+  RequestReviewForTRBGuidanceLetter:
+    'There was an issue submitting your guidance letter for internal review. Please try again, and if the problem persists, try again later.',
+  CreateTRBRequestFeedback:
+    'There was an issue submitting your feedback. Please try again, and if the problem persists, try again later.',
+  UpdateTRBRequestAndForm:
+    'There was an issue updating this request. Please try again, and if the problem persists, try again later.',
+  UpdateTRBRequestFundingSources:
+    'Your basic request details were not saved. Please try again. If the error persists, please try again at a later date.',
+  DeleteTRBRequestFundingSource:
+    'Your basic request details were not saved. Please try again. If the error persists, please try again at a later date.',
+  DeleteTRBRequestDocument:
+    'There was an issue removing your document. Please try again, and if the problem persists, try again later.',
+  CreateTRBRequestDocument:
+    'There was an issue uploading your document. Please try again, and if the problem persists, try again later.',
+  CreateTRBRequestAttendee:
+    'There was an issue adding an attendee. Please try again, and if the problem persists, try again later.',
+  UpdateTRBRequestAttendee:
+    'There was an issue updating an attendee. Please try again, and if the problem persists, try again later.',
+  DeleteTRBRequestAttendee:
+    'There was an issue removing an attendee. Please try again, and if the problem persists, try again later.'
 };
 
 /**
@@ -173,7 +215,7 @@ const errorLink = onError(({ graphQLErrors, operation, networkError }) => {
                 isClosable={false}
               >
                 <p className="margin-0">
-                  {knownErrorMessage || overrideMessage}
+                  {overrideMessage || knownErrorMessage}
                 </p>
                 <p className="margin-0">
                   {i18next.t<string>('error:global.generalBody')}

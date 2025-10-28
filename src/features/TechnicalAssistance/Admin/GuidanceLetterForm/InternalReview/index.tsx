@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { ApolloError } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import {
   GetTRBGuidanceLetterDocument,
@@ -9,6 +8,7 @@ import {
   useDeleteTRBGuidanceLetterInsightMutation,
   useRequestReviewForTRBGuidanceLetterMutation
 } from 'gql/generated/graphql';
+import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import Alert from 'components/Alert';
 import Divider from 'components/Divider';
@@ -47,6 +47,15 @@ const InternalReview = ({
     ]
   });
 
+  const { setErrorMeta } = useErrorMessage();
+
+  setErrorMeta({
+    overrideMessage: t('guidanceLetterForm.error', {
+      action: 'removing',
+      type: 'insight'
+    })
+  });
+
   useEffect(() => {
     setIsStepSubmitting(isSubmitting);
   }, [setIsStepSubmitting, isSubmitting]);
@@ -59,8 +68,6 @@ const InternalReview = ({
         guidanceLetter={guidanceLetter}
         className="margin-top-5 margin-bottom-4"
         insightActions={{
-          setReorderError: error =>
-            setFormAlert(error ? { type: 'error', message: error } : null),
           edit: insight =>
             history.push(`/trb/${trbRequestId}/guidance/insights/form`, {
               insight: {
@@ -68,16 +75,7 @@ const InternalReview = ({
                 links: insight.links.map(link => ({ link }))
               }
             }),
-          remove: insight =>
-            remove({ variables: { id: insight.id } }).catch(() =>
-              setFormAlert({
-                type: 'error',
-                message: t('guidanceLetterForm.error', {
-                  action: 'removing',
-                  type: 'insight'
-                })
-              })
-            )
+          remove: insight => remove({ variables: { id: insight.id } })
         }}
         showSectionEditLinks
       />
@@ -110,19 +108,9 @@ const InternalReview = ({
           ),
           disabled: isSubmitting,
           onClick: () => {
-            requestReview()
-              .then(() => history.push(`/trb/${trbRequestId}/guidance`))
-              .catch(error => {
-                if (error instanceof ApolloError) {
-                  setFormAlert({
-                    type: 'error',
-                    message: t('guidanceLetterForm.error', {
-                      action: 'submitting',
-                      type: 'guidance letter for internal review'
-                    })
-                  });
-                }
-              });
+            requestReview().then(() =>
+              history.push(`/trb/${trbRequestId}/guidance`)
+            );
           }
         }}
         buttons={[
