@@ -7,7 +7,6 @@ import {
   SystemIntakeGRBReviewerFragment,
   useCreateSystemIntakeGRBReviewersMutation
 } from 'gql/generated/graphql';
-import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import IconLink from 'components/IconLink';
 import RequiredAsterisk from 'components/RequiredAsterisk';
@@ -52,13 +51,7 @@ const GRBReviewerForm = ({
     ? `/it-governance/${systemId}/grb-review/participants`
     : `/it-governance/${systemId}/grb-review`;
 
-  const { setErrorMeta } = useErrorMessage();
-
   const createGRBReviewers = (reviewers: GRBReviewerFields[]) => {
-    setErrorMeta({
-      overrideMessage: t('grbReview:messages.error.add')
-    });
-
     mutate({
       variables: {
         input: {

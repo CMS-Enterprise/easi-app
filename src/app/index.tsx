@@ -121,6 +121,11 @@ const findKnownError = (errorMessage: string): string | undefined => {
   return Object.keys(knownErrors).find(key => errorMessage.includes(key));
 };
 
+const operationErrorMap: Record<string, string> = {
+  CreateSystemIntakeGRBReviewers:
+    'There was an issue adding GRB reviewers. Please try again, and if the error persists, try again at a later date.'
+};
+
 /**
  * Error Link
  *
@@ -142,10 +147,14 @@ const errorLink = onError(({ graphQLErrors, operation, networkError }) => {
       // Handle different operation types if needed
       switch (operationType) {
         case 'mutation':
-          knownError = findKnownError(err.message);
-          knownErrorMessage = knownError
-            ? knownErrors[knownError]
-            : knownErrorMessage;
+          if (operationErrorMap[operation.operationName]) {
+            knownErrorMessage = operationErrorMap[operation.operationName];
+          } else {
+            knownError = findKnownError(err.message);
+            knownErrorMessage = knownError
+              ? knownErrors[knownError]
+              : knownErrorMessage;
+          }
           break;
         default:
           knownErrorMessage = '';
