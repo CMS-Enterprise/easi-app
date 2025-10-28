@@ -1,3 +1,5 @@
+//go:build debug
+
 package loaders
 
 import (
@@ -49,4 +51,14 @@ func errorPerEachKey[K comparable, V any](keys []K, err error) []*dataloader.Res
 		output[index] = &dataloader.Result[V]{Data: empty, Error: err}
 	}
 	return output
+}
+
+// DoNotUsePlaceholder is a placeholder function to avoid "imported and not used" errors in debug builds. It does not do anything meaningful.
+func DoNotUsePlaceholder() {
+
+	oneToManyDataLoader([]int{}, []string{}, func(s string) int { return 0 })
+	oneToOneDataLoader([]int{}, []string{}, func(s string) int { return 0 })
+	oneToOneWithCustomKeyDataLoaderAllowNil([]int{}, []string{}, func(s string) int { return 0 }, func(i int, m map[int]string) (string, bool) { return "", false })
+	oneToManyWithCustomKeyDataLoader([]int{}, []string{}, func(s string) int { return 0 }, func(i int, m map[int][]string) ([]string, bool) { return nil, false })
+	errorPerEachKey[int, string]([]int{}, fmt.Errorf("This is just a placeholder"))
 }
