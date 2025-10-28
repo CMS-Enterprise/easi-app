@@ -18,12 +18,14 @@ import {
   useSetRolesForUserOnSystemMutation
 } from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
+import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import Breadcrumbs from 'components/Breadcrumbs';
 import IconLink from 'components/IconLink';
 import MainContent from 'components/MainContent';
 import Modal from 'components/Modal';
 import Spinner from 'components/Spinner';
+import toastSuccess from 'components/ToastSuccess';
 import useIsWorkspaceParam from 'hooks/useIsWorkspaceParam';
 import useMessage from 'hooks/useMessage';
 import { TeamMemberRoleTypeName, UsernameWithRoles } from 'types/systemProfile';
@@ -73,13 +75,7 @@ const EditTeam = ({
 }: EditTeamProps) => {
   const { t } = useTranslation(['systemProfile', 'systemWorkspace']);
   const history = useHistory();
-  const {
-    Message,
-    showMessage,
-    errorMessageInModal,
-    showErrorMessageInModal,
-    clearMessage
-  } = useMessage();
+  const { Message } = useMessage();
 
   const flags = useFlags();
   const isWorkspace = useIsWorkspaceParam();
@@ -139,10 +135,16 @@ const EditTeam = ({
     refetchQueries: ['GetSystemProfile']
   });
 
+  const { setErrorMeta } = useErrorMessage();
+
   /**
    * Remove team member and close modal
    */
   const removeUser = (user: { euaUserId: string; commonName: string }) => {
+    setErrorMeta({
+      overrideMessage: t('singleSystem.editTeam.form.errorRemoveContact')
+    });
+
     // Set roles to empty string to remove user
     updateRoles({
       variables: {
@@ -152,23 +154,14 @@ const EditTeam = ({
           desiredRoleTypeIDs: []
         }
       }
-    })
-      .then(() => {
-        setMemberToDelete(null);
-        showMessage(
-          t('singleSystem.editTeam.form.successRemoveContact', {
-            commonName: user.commonName
-          }),
-          {
-            type: 'success'
-          }
-        );
-      })
-      .catch(() =>
-        showErrorMessageInModal(
-          t('singleSystem.editTeam.form.errorRemoveContact')
-        )
+    }).then(() => {
+      setMemberToDelete(null);
+      toastSuccess(
+        t('singleSystem.editTeam.form.successRemoveContact', {
+          commonName: user.commonName
+        })
       );
+    });
   };
 
   /**
@@ -450,18 +443,13 @@ const EditTeam = ({
           <Modal
             isOpen={!!memberToDelete}
             closeModal={() => {
-              clearMessage();
               setMemberToDelete(null);
             }}
           >
             <h3 className="margin-y-0 line-height-heading-2">
               {t('singleSystem.editTeam.removeModalTitle')}
             </h3>
-            {errorMessageInModal && (
-              <Alert type="error" className="margin-top-2" headingLevel="h4">
-                {errorMessageInModal}
-              </Alert>
-            )}
+
             <p>
               {!isWorkspace
                 ? t('singleSystem.editTeam.removeModalDescription', {
@@ -506,7 +494,6 @@ const EditTeam = ({
               <Button
                 type="button"
                 onClick={() => {
-                  clearMessage();
                   setMemberToDelete(null);
                 }}
                 className="margin-left-1"

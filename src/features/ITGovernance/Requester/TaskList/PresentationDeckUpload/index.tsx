@@ -9,12 +9,13 @@ import {
   useSetSystemIntakeGRBPresentationLinksMutation,
   useUploadSystemIntakeGRBPresentationDeckMutation
 } from 'gql/generated/graphql';
+import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import { Alert } from 'components/Alert';
 import { useEasiForm } from 'components/EasiForm';
 import IconLink from 'components/IconLink';
 import Label from 'components/Label';
-import useMessage from 'hooks/useMessage';
+import toastSuccess from 'components/ToastSuccess';
 import { ITGovernanceViewType } from 'types/itGov';
 import { fileToBase64File } from 'utils/downloadFile';
 
@@ -43,8 +44,6 @@ const PresentationDeckUpload = ({ type = 'requester' }: UploadFormProps) => {
     systemId: string;
   }>();
 
-  const { showMessageOnNextPage, showMessage } = useMessage();
-
   // Form would need to toggle between two mutations based on user type
   const [setPresentationLinks] = useSetSystemIntakeGRBPresentationLinksMutation(
     { refetchQueries: ['GetSystemIntake'] }
@@ -71,12 +70,18 @@ const PresentationDeckUpload = ({ type = 'requester' }: UploadFormProps) => {
       ? `/governance-task-list/${systemId}`
       : `/it-governance/${systemId}/grb-review`;
 
+  const { setErrorMeta } = useErrorMessage();
+
   const submit = handleSubmit(async values => {
     const presentationDeckFileData = values.presentationDeckFileData?.size
       ? await fileToBase64File(values.presentationDeckFileData)
       : undefined;
 
     if (type === 'requester') {
+      setErrorMeta({
+        overrideMessage: t('presentationLinks.presentationUpload.error')
+      });
+
       upload({
         variables: {
           input: {
@@ -84,22 +89,10 @@ const PresentationDeckUpload = ({ type = 'requester' }: UploadFormProps) => {
             presentationDeckFileData
           }
         }
-      })
-        .then(() => {
-          showMessageOnNextPage(
-            t('presentationLinks.presentationUpload.success'),
-            {
-              type: 'success'
-            }
-          );
-          history.push(requestDetailsLink);
-        })
-        .catch(() => {
-          showMessage(t('presentationLinks.presentationUpload.error'), {
-            type: 'error',
-            className: 'margin-top-4'
-          });
-        });
+      }).then(() => {
+        toastSuccess(t('presentationLinks.presentationUpload.success'));
+        history.push(requestDetailsLink);
+      });
     } else {
       setPresentationLinks({
         variables: {
@@ -108,22 +101,10 @@ const PresentationDeckUpload = ({ type = 'requester' }: UploadFormProps) => {
             presentationDeckFileData
           }
         }
-      })
-        .then(() => {
-          showMessageOnNextPage(
-            t('presentationLinks.presentationUpload.success'),
-            {
-              type: 'success'
-            }
-          );
-          history.push(requestDetailsLink);
-        })
-        .catch(() => {
-          showMessage(t('presentationLinks.presentationUpload.error'), {
-            type: 'error',
-            className: 'margin-top-4'
-          });
-        });
+      }).then(() => {
+        toastSuccess(t('presentationLinks.presentationUpload.success'));
+        history.push(requestDetailsLink);
+      });
     }
   });
 

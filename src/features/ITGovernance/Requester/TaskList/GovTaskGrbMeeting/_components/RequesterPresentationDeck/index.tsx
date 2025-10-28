@@ -8,11 +8,11 @@ import {
   SystemIntakeGRBReviewType,
   useDeleteSystemIntakeGRBPresentationLinksMutation
 } from 'gql/generated/graphql';
+import { useErrorMessage } from 'wrappers/ErrorContext';
 
-import Alert from 'components/Alert';
 import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
-import useMessage from 'hooks/useMessage';
+import toastSuccess from 'components/ToastSuccess';
 
 interface RequesterPresentationDeckProps {
   systemIntakeID: string;
@@ -38,13 +38,6 @@ const RequesterPresentationDeck = ({
   const { t } = useTranslation('itGov');
   const [removalModalOpen, setRemovalModalOpen] = useState(false);
 
-  const {
-    showMessage,
-    showErrorMessageInModal,
-    errorMessageInModal,
-    clearMessage
-  } = useMessage();
-
   const [deleteSystemIntakeGRBPresentationLinks] =
     useDeleteSystemIntakeGRBPresentationLinksMutation({
       variables: {
@@ -60,20 +53,18 @@ const RequesterPresentationDeck = ({
       ]
     });
 
+  const { setErrorMeta } = useErrorMessage();
+
   /** Remove presentation links and handle error/success messages */
   const removePresentationLinks = () => {
-    deleteSystemIntakeGRBPresentationLinks()
-      .then(() => {
-        showMessage(t('grbReview:asyncPresentation.modalRemoveLinks.success'), {
-          type: 'success'
-        });
-        setRemovalModalOpen(false);
-      })
-      .catch(() => {
-        showErrorMessageInModal(
-          t('grbReview:asyncPresentation.modalRemoveLinks.error')
-        );
-      });
+    setErrorMeta({
+      overrideMessage: t('grbReview:asyncPresentation.modalRemoveLinks.error')
+    });
+
+    deleteSystemIntakeGRBPresentationLinks().then(() => {
+      toastSuccess(t('grbReview:asyncPresentation.modalRemoveLinks.success'));
+      setRemovalModalOpen(false);
+    });
   };
 
   const {
@@ -92,7 +83,6 @@ const RequesterPresentationDeck = ({
         isOpen={removalModalOpen}
         closeModal={() => {
           setRemovalModalOpen(false);
-          clearMessage();
         }}
         shouldCloseOnOverlayClick
         className="maxw-mobile-lg height-auto"
@@ -104,11 +94,6 @@ const RequesterPresentationDeck = ({
         <h3 className="margin-top-0" id="removePresentationModalTitle">
           {t('taskList.step.grbMeeting.removeModal.title')}
         </h3>
-        {errorMessageInModal && (
-          <Alert type="error" className="margin-bottom-2">
-            {errorMessageInModal}
-          </Alert>
-        )}
         <p className="font-body-md line-height-sans-4 margin-top-105">
           {t('taskList.step.grbMeeting.removeModal.text')}
         </p>

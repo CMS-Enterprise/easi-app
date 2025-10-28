@@ -10,9 +10,9 @@ import {
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import { useSendPresentationDeckReminderMutation } from 'gql/generated/graphql';
+import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import Alert from 'components/Alert';
-import useMessage from 'hooks/useMessage';
 import { downloadFileFromURL } from 'utils/downloadFile';
 
 function SendPresentationReminder({
@@ -42,28 +42,23 @@ function SendPresentationReminder({
   // State to track if reminder has been sent
   const [reminderSend, setReminderSend] = useState(false);
 
-  const { showMessage } = useMessage();
-
   const [sendReminder, { loading }] = useSendPresentationDeckReminderMutation({
     variables: {
       systemIntakeID
     }
   });
 
+  const { setErrorMeta } = useErrorMessage();
+
   const sendReminderClick = () => {
-    sendReminder()
-      .then(() => {
-        // Set state to show reminder has been sent and disable Send Reminder button
-        setReminderSend(true);
-      })
-      // Set error message if reminder fails to send
-      .catch(() => {
-        showMessage(t('presentationLinks.sendReminderCard.reminderError'), {
-          type: 'error',
-          className: 'margin-top-4'
-        });
-        document.querySelector('.usa-alert--error')?.scrollIntoView();
-      });
+    setErrorMeta({
+      overrideMessage: t('presentationLinks.sendReminderCard.reminderError')
+    });
+
+    sendReminder().then(() => {
+      // Set state to show reminder has been sent and disable Send Reminder button
+      setReminderSend(true);
+    });
   };
 
   const fileInputRef = useRef<HTMLInputElement>(null);

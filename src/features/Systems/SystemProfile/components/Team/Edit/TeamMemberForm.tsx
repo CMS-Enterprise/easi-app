@@ -21,6 +21,7 @@ import {
   useGetCedarRoleTypesQuery
 } from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
+import { useErrorMessage } from 'wrappers/ErrorContext';
 import * as yup from 'yup';
 
 import CedarContactSelect from 'components/CedarContactSelect';
@@ -32,9 +33,9 @@ import MultiSelect from 'components/MultiSelect';
 import PageLoading from 'components/PageLoading';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import Spinner from 'components/Spinner';
+import toastSuccess from 'components/ToastSuccess';
 import teamRolesIndex from 'constants/teamRolesIndex';
 import useIsWorkspaceParam from 'hooks/useIsWorkspaceParam';
-import useMessage from 'hooks/useMessage';
 import { TeamMemberRoleTypeName, UsernameWithRoles } from 'types/systemProfile';
 
 import { TeamContactCard } from '..';
@@ -77,7 +78,6 @@ const TeamMemberForm = ({
   const flags = useFlags();
   const isWorkspace = useIsWorkspaceParam();
 
-  const { showMessageOnNextPage, showMessage } = useMessage();
   const history = useHistory();
   const { state } = useLocation<{ user?: UsernameWithRoles }>();
   const user = state?.user;
@@ -131,8 +131,18 @@ const TeamMemberForm = ({
     }
   });
 
+  const { setErrorMeta } = useErrorMessage();
+
   const submitForm = handleSubmit(({ euaUserId, desiredRoleTypeIDs }) => {
     if (isDirty) {
+      setErrorMeta({
+        overrideMessage: t(
+          `singleSystem.editTeam.form.${
+            isEdit ? 'errorUpdateRoles' : 'errorAddContact'
+          }`
+        )
+      });
+
       updateRoles({
         variables: {
           input: {
@@ -141,38 +151,22 @@ const TeamMemberForm = ({
             desiredRoleTypeIDs
           }
         }
-      })
-        .then(() => {
-          showMessageOnNextPage(
-            t(
-              `singleSystem.editTeam.form.${
-                isEdit ? 'successUpdateRoles' : 'successAddContact'
-              }`,
-              {
-                commonName
-              }
-            ),
+      }).then(() => {
+        toastSuccess(
+          t(
+            `singleSystem.editTeam.form.${
+              isEdit ? 'successUpdateRoles' : 'successAddContact'
+            }`,
             {
-              type: 'success'
+              commonName
             }
-          );
-          history.push({
-            pathname: `/systems/${cedarSystemId}/team/edit`,
-            search: isWorkspace ? 'workspace' : undefined
-          });
-        })
-        .catch(() => {
-          showMessage(
-            t(
-              `singleSystem.editTeam.form.${
-                isEdit ? 'errorUpdateRoles' : 'errorAddContact'
-              }`
-            ),
-            {
-              type: 'error'
-            }
-          );
+          )
+        );
+        history.push({
+          pathname: `/systems/${cedarSystemId}/team/edit`,
+          search: isWorkspace ? 'workspace' : undefined
         });
+      });
     }
   });
 

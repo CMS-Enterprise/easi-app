@@ -19,6 +19,7 @@ import {
   useUpdateSystemIntakeContactMutation
 } from 'gql/generated/graphql';
 import { capitalize } from 'lodash';
+import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import Alert from 'components/Alert';
 import CedarContactSelect from 'components/CedarContactSelect';
@@ -90,7 +91,6 @@ const ContactFormModal = ({
     register,
     watch,
     reset,
-    setError,
     formState: { errors, defaultValues, isSubmitSuccessful, isSubmitting }
   } = useEasiForm<ContactFormFields>({
     resolver: yupResolver(ContactFormSchema),
@@ -134,26 +134,26 @@ const ContactFormModal = ({
       }
     });
 
+  const { setErrorMeta } = useErrorMessage();
+
   const submit = handleSubmit(async values => {
     const mutate =
       action === 'edit' ? handleUpdateContact : handleCreateContact;
 
-    return mutate(values)
-      .then(() => {
-        if (action === 'add') {
-          createContactCallback?.(values);
-        }
-
-        closeModal();
+    setErrorMeta({
+      overrideMessage: t('contactDetails.additionalContacts.errors.root', {
+        action,
+        type
       })
-      .catch(() =>
-        setError('root', {
-          message: t('contactDetails.additionalContacts.errors.root', {
-            action,
-            type
-          })
-        })
-      );
+    });
+
+    return mutate(values).then(() => {
+      if (action === 'add') {
+        createContactCallback?.(values);
+      }
+
+      closeModal();
+    });
   });
 
   // Reset default values
