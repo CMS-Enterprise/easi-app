@@ -21,7 +21,6 @@ const InternalReview = ({
   trbRequestId,
   guidanceLetter,
   guidanceLetterStatus,
-  setFormAlert,
   setIsStepSubmitting,
   stepsCompleted,
   setStepsCompleted
