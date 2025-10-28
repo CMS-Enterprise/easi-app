@@ -71,6 +71,12 @@ func SubscribeSystemProfileSectionLockChanges(ps pubsub.PubSub, cedarSystemID st
 func LockSystemProfileSection(ps pubsub.PubSub, cedarSystemID string, section models.SystemProfileLockableSection, principal authentication.Principal) (bool, error) {
 	systemProfileSessionLocks.Lock()
 
+	account := principal.Account()
+	if account == nil {
+		systemProfileSessionLocks.Unlock()
+		return false, fmt.Errorf("failed to lock section [%v], unable to retrieve user account", section)
+	}
+
 	sectionLocks, found := systemProfileSessionLocks.systemLockStatuses[cedarSystemID]
 	if !found {
 		systemProfileSessionLocks.systemLockStatuses[cedarSystemID] = make(sectionLockStatusMap)
@@ -78,15 +84,9 @@ func LockSystemProfileSection(ps pubsub.PubSub, cedarSystemID string, section mo
 	}
 
 	lockStatus, sectionWasLocked := sectionLocks[section]
-	if sectionWasLocked && lockStatus.LockedByUserAccount.ID != principal.Account().ID {
+	if sectionWasLocked && lockStatus.LockedByUserAccount.ID != account.ID {
 		systemProfileSessionLocks.Unlock()
 		return false, fmt.Errorf("failed to lock section [%v], already locked by [%v]", section, lockStatus.LockedByUserAccount.ID)
-	}
-
-	account := principal.Account()
-	if account == nil {
-		systemProfileSessionLocks.Unlock()
-		return false, fmt.Errorf("failed to lock section [%v], unable to retrieve user account", section)
 	}
 
 	// Determine if this is an admin action - user has GRT or TRB admin privileges
@@ -211,8 +211,13 @@ func UnlockAllSystemProfileSections(ps pubsub.PubSub, cedarSystemID string) ([]*
 func getOwnedSections(sectionLocks sectionLockStatusMap, subscriber pubsub.Subscriber) []models.SystemProfileLockableSection {
 	var ownedSections []models.SystemProfileLockableSection
 
+	account := subscriber.GetPrincipal().Account()
+	if account == nil {
+		return ownedSections
+	}
+
 	for section, lockStatus := range sectionLocks {
-		if lockStatus.LockedByUserAccount.ID == subscriber.GetPrincipal().Account().ID {
+		if lockStatus.LockedByUserAccount.ID == account.ID {
 			ownedSections = append(ownedSections, section)
 		}
 	}
