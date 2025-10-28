@@ -9,6 +9,7 @@ import {
   SystemIntakeGRBReviewFragment,
   SystemIntakeStatusAdmin
 } from 'gql/generated/graphql';
+import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import AutoSave from 'components/AutoSave';
 import Breadcrumbs from 'components/Breadcrumbs';
@@ -54,7 +55,7 @@ function GRBReviewFormStepWrapper<
 }: GRBReviewFormStepWrapperProps<TFieldValues>) {
   const { t } = useTranslation('grbReview');
   const history = useHistory();
-  const { Message, showMessage } = useMessage();
+  const { Message } = useMessage();
 
   /** Formatted steps for stepped form header */
   const [steps, setSteps] = useState<StepHeaderStepProps[]>(
@@ -92,6 +93,8 @@ function GRBReviewFormStepWrapper<
     !grbReview.grbReviewStartedAt &&
     grbReview.statusAdmin !== SystemIntakeStatusAdmin.GRB_MEETING_READY;
 
+  const { setErrorMeta } = useErrorMessage();
+
   const submitStep = useCallback(
     async ({
       shouldValidate = true,
@@ -108,11 +111,13 @@ function GRBReviewFormStepWrapper<
             return history.push(`${grbReviewPath}/${path}`);
           }
 
-          return onSubmit(formData)
-            .then(() => history.push(`${grbReviewPath}/${path}`))
-            .catch(() => {
-              showMessage(t('setUpGrbReviewForm.error'), { type: 'error' });
-            });
+          setErrorMeta({
+            overrideMessage: t('setUpGrbReviewForm.error')
+          });
+
+          return onSubmit(formData).then(() =>
+            history.push(`${grbReviewPath}/${path}`)
+          );
         },
         async () => {
           if (shouldValidate) return null;
@@ -131,8 +136,8 @@ function GRBReviewFormStepWrapper<
       isDirty,
       onSubmit,
       partialSubmit,
-      showMessage,
-      t
+      t,
+      setErrorMeta
     ]
   );
 

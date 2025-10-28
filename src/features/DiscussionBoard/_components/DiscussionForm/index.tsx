@@ -16,6 +16,7 @@ import {
   useCreateSystemIntakeGRBDiscussionPostMutation,
   useCreateSystemIntakeGRBDiscussionReplyMutation
 } from 'gql/generated/graphql';
+import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import { useEasiForm } from 'components/EasiForm';
 import FieldErrorMsg from 'components/FieldErrorMsg';
@@ -24,6 +25,7 @@ import Label from 'components/Label';
 import MentionTextArea from 'components/MentionTextArea';
 import Modal from 'components/Modal';
 import RequiredAsterisk from 'components/RequiredAsterisk';
+import toastSuccess from 'components/ToastSuccess';
 import useDiscussionParams from 'hooks/useDiscussionParams';
 import { DiscussionAlert, MentionSuggestion } from 'types/discussions';
 import discussionSchema from 'validations/discussionSchema';
@@ -87,7 +89,13 @@ const DiscussionForm = ({
 
   const { pushDiscussionQuery } = useDiscussionParams();
 
+  const { setErrorMeta } = useErrorMessage();
+
   const createDiscussion = handleSubmit(({ content }) => {
+    setErrorMeta({
+      overrideMessage: t('general.alerts.startDiscussionError')
+    });
+
     if ('systemIntakeID' in mutationProps) {
       mutateDiscussion({
         variables: {
@@ -99,16 +107,7 @@ const DiscussionForm = ({
         }
       })
         .then(() => {
-          setDiscussionAlert({
-            message: t('general.alerts.startDiscussionSuccess'),
-            type: 'success'
-          });
-        })
-        .catch(e => {
-          setDiscussionAlert({
-            message: t('general.alerts.startDiscussionError'),
-            type: 'error'
-          });
+          toastSuccess(t('general.alerts.startDiscussionSuccess'));
         })
         .finally(() => {
           pushDiscussionQuery({ discussionBoardType, discussionMode: 'view' });
@@ -117,6 +116,10 @@ const DiscussionForm = ({
   });
 
   const createReply = handleSubmit(({ content }) => {
+    setErrorMeta({
+      overrideMessage: t('general.alerts.replyError')
+    });
+
     if ('initialPostID' in mutationProps) {
       mutateReply({
         variables: {
@@ -126,22 +129,12 @@ const DiscussionForm = ({
             content
           }
         }
-      })
-        .then(() => {
-          // Reset field values
-          reset();
+      }).then(() => {
+        // Reset field values
+        reset();
 
-          setDiscussionAlert({
-            message: t('general.alerts.replySuccess'),
-            type: 'success'
-          });
-        })
-        .catch(e => {
-          setDiscussionAlert({
-            message: t('general.alerts.replyError'),
-            type: 'error'
-          });
-        });
+        toastSuccess(t('general.alerts.replySuccess'));
+      });
 
       setModalIsOpen(false);
     }

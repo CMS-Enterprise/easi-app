@@ -16,13 +16,14 @@ import {
   GetSystemIntakeGRBReviewDocument,
   useExtendGRBReviewDeadlineAsyncMutation
 } from 'gql/generated/graphql';
+import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import Alert from 'components/Alert';
 import { useEasiForm } from 'components/EasiForm';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import Modal from 'components/Modal';
 import RequiredFieldsText from 'components/RequiredFieldsText';
-import useMessage from 'hooks/useMessage';
+import toastSuccess from 'components/ToastSuccess';
 import { formatDateUtc, formatEndOfDayDeadline } from 'utils/date';
 
 /**
@@ -34,10 +35,6 @@ const ExtendGRBAsyncReview = () => {
   const { systemId } = useParams<{
     systemId: string;
   }>();
-
-  const { showMessage } = useMessage();
-
-  const [err, setError] = useState<boolean>(false);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -62,12 +59,17 @@ const ExtendGRBAsyncReview = () => {
   } = form;
 
   const resetModal = () => {
-    setError(false);
     reset();
     setIsOpen(false);
   };
 
+  const { setErrorMeta } = useErrorMessage();
+
   const addTimeOrEndEarly = handleSubmit(async input => {
+    setErrorMeta({
+      overrideMessage: t('statusCard.addTimeModal.error')
+    });
+
     mutation({
       variables: {
         input: {
@@ -75,22 +77,15 @@ const ExtendGRBAsyncReview = () => {
           grbReviewAsyncEndDate: input.grbReviewAsyncEndDate
         }
       }
-    })
-      .then(() => {
-        showMessage(
-          t('statusCard.addTimeModal.success', {
-            date: formatDateUtc(input.grbReviewAsyncEndDate, 'MM/dd/yyyy')
-          }),
-          {
-            type: 'success'
-          }
-        );
+    }).then(() => {
+      toastSuccess(
+        t('statusCard.addTimeModal.success', {
+          date: formatDateUtc(input.grbReviewAsyncEndDate, 'MM/dd/yyyy')
+        })
+      );
 
-        resetModal();
-      })
-      .catch(() => {
-        setError(true);
-      });
+      resetModal();
+    });
   });
 
   return (
@@ -104,12 +99,6 @@ const ExtendGRBAsyncReview = () => {
         <h3 className="margin-top-0 margin-bottom-0">
           {t('statusCard.addTimeModal.heading')}
         </h3>
-
-        {err && (
-          <Alert type="error" slim>
-            {t('statusCard.addTimeModal.error')}
-          </Alert>
-        )}
 
         <p>{t('statusCard.addTimeModal.description')}</p>
 

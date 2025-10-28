@@ -36,7 +36,11 @@ const error = {
     generalError: 'Something went wrong with your request.',
     generalBody:
       'Please try again. If the problem persists, please contact support.',
-    knownErrors
+    knownErrors,
+    networkError: {
+      heading: 'Unable to connect to the server.',
+      body: 'Please check your connection and try again. If the problem persists, please contact support.'
+    }
   }
 };
 

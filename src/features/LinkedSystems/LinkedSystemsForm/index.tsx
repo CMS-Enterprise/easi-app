@@ -150,7 +150,7 @@ const LinkedSystemsForm = () => {
   const isFromTaskList = location.state?.from === 'task-list';
   const isFromAdmin = location.state?.from === 'admin';
 
-  const { showMessageOnNextPage, showMessage, Message } = useMessage();
+  const { Message } = useMessage();
 
   const form = useEasiForm<LinkedSystemsFormFields>({
     resolver: yupResolver(linkedSystemsSchema),

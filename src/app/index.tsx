@@ -129,7 +129,8 @@ const findKnownError = (errorMessage: string): string | undefined => {
  * A link that intercepts GraphQL errors and displays them in a toast notification.
  * It also allows for overriding the error message for a specific component.
  */
-const errorLink = onError(({ graphQLErrors, operation }) => {
+const errorLink = onError(({ graphQLErrors, operation, networkError }) => {
+  /** Handle GraphQL errors */
   if (graphQLErrors) {
     const { overrideMessage, skipError } = getCurrentErrorMeta();
     const isReactNode = React.isValidElement(overrideMessage);
@@ -179,6 +180,27 @@ const errorLink = onError(({ graphQLErrors, operation }) => {
         setCurrentErrorMeta({});
       }
     });
+  }
+
+  // Handle network errors (SERVER DOWN, etc.)
+  if (networkError && !graphQLErrors) {
+    const operationType = getOperationType(operation);
+
+    // Only show toast for mutations
+    if (operationType === 'mutation') {
+      toast.error(
+        <Alert
+          type="error"
+          slim={false}
+          heading={i18next.t<string>('error:global.networkError.heading')}
+          isClosable={false}
+        >
+          <p className="margin-0">
+            {i18next.t<string>('error:global.networkError.body')}
+          </p>
+        </Alert>
+      );
+    }
   }
 });
 

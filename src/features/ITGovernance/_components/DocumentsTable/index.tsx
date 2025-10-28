@@ -15,11 +15,12 @@ import {
   SystemIntakeDocumentStatus,
   useDeleteSystemIntakeDocumentMutation
 } from 'gql/generated/graphql';
+import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import Modal from 'components/Modal';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
-import useMessage from 'hooks/useMessage';
+import toastSuccess from 'components/ToastSuccess';
 import { formatDateLocal } from 'utils/date';
 import { downloadFileFromURL } from 'utils/downloadFile';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
@@ -41,8 +42,6 @@ const DocumentsTable = ({
   hideRemoveButton
 }: DocumentsTableProps) => {
   const { t } = useTranslation();
-
-  const { showMessage } = useMessage();
 
   const [fileToDelete, setFileToDelete] =
     useState<SystemIntakeDocumentFragmentFragment | null>(null);
@@ -196,8 +195,13 @@ const DocumentsTable = ({
     setPageSize
   } = table;
 
+  const { setErrorMeta } = useErrorMessage();
+
   const ConfirmDeleteModal = () => {
     if (!fileToDelete) return null;
+    setErrorMeta({
+      overrideMessage: t('intake:documents.table.removeModal.error')
+    });
     return (
       <Modal isOpen={!!fileToDelete} closeModal={() => setFileToDelete(null)}>
         <h3 className="margin-top-0 margin-bottom-0">
@@ -212,22 +216,13 @@ const DocumentsTable = ({
           type="button"
           secondary
           onClick={() => {
-            deleteDocument({ variables: { id: fileToDelete.id } })
-              .then(() => {
-                showMessage(
-                  t('intake:documents.table.removeModal.success', {
-                    documentName: fileToDelete.fileName
-                  }),
-                  {
-                    type: 'success'
-                  }
-                );
-              })
-              .catch(() => {
-                showMessage(t('intake:documents.table.removeModal.error'), {
-                  type: 'error'
-                });
-              });
+            deleteDocument({ variables: { id: fileToDelete.id } }).then(() => {
+              toastSuccess(
+                t('intake:documents.table.removeModal.success', {
+                  documentName: fileToDelete.fileName
+                })
+              );
+            });
 
             setFileToDelete(null);
           }}
