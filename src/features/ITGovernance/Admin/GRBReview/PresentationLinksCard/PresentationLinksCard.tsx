@@ -19,13 +19,14 @@ import {
   SystemIntakeGRBReviewType,
   useDeleteSystemIntakeGRBPresentationLinksMutation
 } from 'gql/generated/graphql';
+import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import Alert from 'components/Alert';
 import ExternalLinkAndModal from 'components/ExternalLinkAndModal';
 import IconLink from 'components/IconLink';
 import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
-import useMessage from 'hooks/useMessage';
+import toastSuccess from 'components/ToastSuccess';
 import { formatDateLocal } from 'utils/date';
 import { downloadFileFromURL } from 'utils/downloadFile';
 
@@ -154,8 +155,6 @@ function PresentationLinksCard({
 
   const isITGovAdmin = useContext(ITGovAdminContext);
 
-  const { showMessage } = useMessage();
-
   const {
     recordingLink,
     recordingPasscode,
@@ -193,17 +192,16 @@ function PresentationLinksCard({
     setRemovePresentationLinksModalOpen
   ] = useState<boolean>(false);
 
+  const { setErrorMeta } = useErrorMessage();
+
   const removePresentationLinks = () => {
+    setErrorMeta({
+      overrideMessage: t('asyncPresentation.modalRemoveLinks.error')
+    });
+
     deleteSystemIntakeGRBPresentationLinks()
       .then(() => {
-        showMessage(t('asyncPresentation.modalRemoveLinks.success'), {
-          type: 'success'
-        });
-      })
-      .catch(() => {
-        showMessage(t('asyncPresentation.modalRemoveLinks.error'), {
-          type: 'error'
-        });
+        toastSuccess(t('asyncPresentation.modalRemoveLinks.success'));
       })
       .finally(() => {
         setRemovePresentationLinksModalOpen(false);

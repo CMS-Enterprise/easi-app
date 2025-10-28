@@ -18,6 +18,7 @@ import {
   SystemIntakeGRBReviewType,
   useUpdateSystemIntakeGRBReviewAsyncPresentationMutation
 } from 'gql/generated/graphql';
+import { useErrorMessage } from 'wrappers/ErrorContext';
 
 import Alert from 'components/Alert';
 import DatePickerFormatted from 'components/DatePickerFormatted';
@@ -28,6 +29,7 @@ import IconLink from 'components/IconLink';
 import Label from 'components/Label';
 import MainContent from 'components/MainContent';
 import { TabPanel, Tabs } from 'components/Tabs';
+import toastSuccess from 'components/ToastSuccess';
 import useMessage from 'hooks/useMessage';
 import { fileToBase64File } from 'utils/downloadFile';
 import { SetGRBPresentationLinksSchema } from 'validations/grbReviewSchema';
@@ -60,7 +62,7 @@ const PresentationLinksForm = ({
   grbReviewAsyncRecordingTime
 }: PresentationLinksFormProps) => {
   const { t } = useTranslation('grbReview');
-  const { showMessage, showMessageOnNextPage, Message } = useMessage();
+  const { Message } = useMessage();
   const history = useHistory();
 
   const [setPresentationLinks] =
@@ -106,9 +108,15 @@ const PresentationLinksForm = ({
     (!!errors?.presentationDeckFileData ||
       !defaultValues?.presentationDeckFileData?.name);
 
+  const { setErrorMeta } = useErrorMessage();
+
   /** Submit form to set GRB review presentation links */
   const submit = handleSubmit(
     async ({ grbReviewAsyncRecordingTime: recordingTime, ...links }) => {
+      setErrorMeta({
+        overrideMessage: t('presentationLinks.error')
+      });
+
       // Only include newly updated file data, not default values
       // File data from default values does not have `size` field
       const transcriptFileData = links.transcriptFileData?.size
@@ -136,21 +144,11 @@ const PresentationLinksForm = ({
                 : presentationDeckFileData
           }
         }
-      })
-        .then(() => {
-          showMessageOnNextPage(t(`presentationLinks.success`), {
-            type: 'success'
-          });
+      }).then(() => {
+        toastSuccess(t(`presentationLinks.success`));
 
-          history.push(grbReviewPath);
-        })
-        .catch(() => {
-          showMessage(t(`presentationLinks.error`), { type: 'error' });
-
-          // Scroll to error
-          const err = document.querySelector('.usa-alert');
-          err?.scrollIntoView();
-        });
+        history.push(grbReviewPath);
+      });
     }
   );
 
