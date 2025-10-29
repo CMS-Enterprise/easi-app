@@ -121,6 +121,7 @@ const findKnownError = (errorMessage: string): string | undefined => {
   return Object.keys(knownErrors).find(key => errorMessage.includes(key));
 };
 
+// TODO: Move this to a translation file
 const operationErrorMap: Record<string, string> = {
   CreateSystemIntakeGRBReviewers:
     'There was an issue adding GRB reviewers. Please try again, and if the error persists, try again at a later date.',
