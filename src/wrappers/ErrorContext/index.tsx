@@ -43,13 +43,16 @@ export const useErrorMessage = (
  */
 export const statusAlert = ({
   message,
-  timeout = 5000,
+  timeout,
   type = 'success'
 }: {
   message?: string | React.ReactNode;
   timeout?: number;
   type?: 'success' | 'error' | 'warning';
 }) => {
+  // Use shorter timeout in Cypress tests to prevent toasts from covering elements
+  const defaultTimeout = (window as any).Cypress ? 500 : 5000;
+
   const generalMessage =
     type === 'error'
       ? 'Something went wrong with your request. Please try again.'
@@ -60,7 +63,7 @@ export const statusAlert = ({
       {message || generalMessage}
     </Alert>,
     {
-      autoClose: timeout || 5000,
+      autoClose: timeout ?? defaultTimeout,
       hideProgressBar: true
     }
   );

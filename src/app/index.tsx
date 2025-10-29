@@ -225,6 +225,9 @@ const operationErrorMap: Record<string, string> = {
  * It also allows for overriding the error message for a specific component.
  */
 const errorLink = onError(({ graphQLErrors, operation, networkError }) => {
+  // Use shorter timeout in Cypress tests to prevent toasts from covering elements
+  const toastTimeout = (window as any).Cypress ? 100 : 5000;
+
   /** Handle GraphQL errors */
   if (graphQLErrors) {
     const { overrideMessage, skipError } = getCurrentErrorMeta();
@@ -272,7 +275,8 @@ const errorLink = onError(({ graphQLErrors, operation, networkError }) => {
                 </p>
               </Alert>
             )}
-          </div>
+          </div>,
+          { autoClose: toastTimeout }
         );
 
         // Clear the override message after displaying the error
@@ -297,7 +301,8 @@ const errorLink = onError(({ graphQLErrors, operation, networkError }) => {
           <p className="margin-0">
             {i18next.t<string>('error:global.networkError.body')}
           </p>
-        </Alert>
+        </Alert>,
+        { autoClose: toastTimeout }
       );
     }
   }

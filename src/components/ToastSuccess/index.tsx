@@ -29,8 +29,11 @@ const toastSuccess = (
     heading?: string;
   }
 ) => {
+  // Use shorter timeout in Cypress tests to prevent toasts from covering elements
+  const autoCloseTime = (window as any).Cypress ? 100 : 3000;
+
   const defaultOptions = {
-    autoClose: 3000,
+    autoClose: autoCloseTime,
     position: 'top-center' as const,
     hideProgressBar: false,
     closeOnClick: true,
