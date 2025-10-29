@@ -4,6 +4,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import {
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -140,8 +141,14 @@ describe('Trb Admin: Action: Request Edits', () => {
     await user.click(submitButton);
 
     // Success toasts don't render in test DOM
-    // Verify submission succeeded by checking button is disabled during submission
-    expect(submitButton).toBeDisabled();
+    // Verify submission succeeded by checking we navigated away from the form
+    await waitFor(() => {
+      expect(
+        screen.queryByText(
+          i18next.t<string>('technicalAssistance:actionRequestEdits.heading')
+        )
+      ).not.toBeInTheDocument();
+    });
   });
 
   it('shows error notice when submission fails', async () => {

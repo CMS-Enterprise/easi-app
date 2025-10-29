@@ -190,17 +190,17 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
     );
 
     // Click through the modal
-    await user.click(
-      await findByRole('button', {
-        name: i18next.t<string>(
-          'technicalAssistance:actionCloseRequest.confirmModal.close'
-        )
-      })
-    );
+    const confirmButton = await findByRole('button', {
+      name: i18next.t<string>(
+        'technicalAssistance:actionCloseRequest.confirmModal.close'
+      )
+    });
 
-    await findByText(
-      i18next.t<string>('technicalAssistance:actionCloseRequest.success')
-    );
+    await user.click(confirmButton);
+
+    // Success toasts don't render in test DOM
+    // Verify successful submission by checking we navigated to AdminHome
+    await findByText(i18next.t<string>('technicalAssistance:adminHome.notes'));
   });
 
   it('shows an error notice when close submission fails', async () => {
@@ -380,17 +380,15 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
       text
     );
 
-    await user.click(
-      getByRole('button', {
-        name: i18next.t<string>(
-          'technicalAssistance:actionReopenRequest.submit'
-        )
-      })
-    );
+    const submitButton = getByRole('button', {
+      name: i18next.t<string>('technicalAssistance:actionReopenRequest.submit')
+    });
 
-    await findByText(
-      i18next.t<string>('technicalAssistance:actionReopenRequest.success')
-    );
+    await user.click(submitButton);
+
+    // Success toasts don't render in test DOM
+    // Verify successful submission by checking we navigated to AdminHome
+    await findByText(i18next.t<string>('technicalAssistance:adminHome.notes'));
   });
 
   it('shows an error notice when re-open submission fails', async () => {

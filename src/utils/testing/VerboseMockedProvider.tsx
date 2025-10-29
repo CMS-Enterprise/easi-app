@@ -80,7 +80,9 @@ const VerboseMockedProvider = (props: Props) => {
         UpdateTRBRequestLead:
           'There was an issue assigning a TRB lead for this request. Please try again, and if the problem persists, try again later.',
         SendPresentationDeckReminder:
-          'There was an issue sending the reminder. Please try again.'
+          'There was an issue sending the reminder. Please try again.',
+        SendSystemIntakeGRBReviewerReminder:
+          'There was an issue sending your reminder. Please try again, and if the problem persists, try again later.'
       };
 
       if (graphQLErrors) {
