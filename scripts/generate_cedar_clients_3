@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 
-set -o errexit
-
-# -----------------------
-# Prerequisites
-# -----------------------
+# --- 1. Tool Checks ---
 if ! command -v jq &> /dev/null
 then
     echo "jq could not be found."
@@ -12,61 +8,42 @@ then
     exit 1
 fi
 
-if ! command -v ogen &> /dev/null
+if ! command -v oapi-codegen &> /dev/null
 then
-    echo "ogen could not be found."
-    echo "Install ogen with: go install github.com/ogen-go/ogen/cmd/ogen@latest"
+    echo "oapi-codegen could not be found."
+    echo "Install oapi-codegen: go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest"
     exit 2
 fi
 
-# -----------------------
-# Paths
-# -----------------------
+# Exit on first error
+set -o errexit
+
+# set up common paths
 repoRootPath=$(git rev-parse --show-toplevel)
 
-# Intake API
-#intakeSwaggerFile="cedar_intake.json"
-#intakeFolderPath="${repoRootPath}/pkg/cedar/intake"
-#intakeTempFile=$(mktemp /tmp/intake.XXXXXX)
+# --- 2. Paths and Variables ---
 
 # Core API
 coreSwaggerFile="cedar_core_3.json"
 coreFolderPath="${repoRootPath}/pkg/cedar/core"
-coreTempFile=$(mktemp /tmp/core.XXXXXX)
+coreOutputFile="./gen/openapi_client.gen.go"
 
-# Local schema vendor file
-oasSchemaFile="${repoRootPath}/oas_schema_2024-10-18.json"
-
-# Download schema if it doesn't exist
-if [ ! -f "$oasSchemaFile" ]; then
-    echo "Downloading OpenAPI meta-schema..."
-    curl -sSL -o "$oasSchemaFile" https://spec.openapis.org/oas/3.0/schema/2024-10-18
-fi
-
-# -----------------------
-# Intake API: tweaks + generate
-# -----------------------
-#cd "$intakeFolderPath"
-#
-## Make clientLastUpdatedDate nullable
-#jq '.components.schemas.IntakeInput.properties.clientLastUpdatedDate |= . + {"nullable": true}' "$intakeSwaggerFile" > "$intakeTempFile"
-#mv "$intakeTempFile" "$intakeSwaggerFile"
-#
-## Generate Go code
-#ogen --target ./gen --clean "$intakeSwaggerFile"
-
-# -----------------------
-# Core API: tweaks + vendor schema + generate
-# -----------------------
+# --- 3. Core API Generation ---
+echo "--- Processing Core API ---"
 cd "$coreFolderPath"
 
-# Force HTTPS in servers
-jq '.servers = [{"url": "https://"}]' "$coreSwaggerFile" > "$coreTempFile"
-mv "$coreTempFile" "$coreSwaggerFile"
+# A. Create a temporary file for safe JSON transformation
+coreTempFile=$(mktemp /tmp/core_oas3.XXXXXX.json)
+cp "$coreSwaggerFile" "$coreTempFile"
 
-jq --arg schema "$oasSchemaFile" '
-  (.. | objects | select(.["$ref"] == "https://spec.openapis.org/oas/3.0/schema/2024-10-18") | .["$ref"]) = $schema
-' "$coreSwaggerFile" > "$coreTempFile"
+# B. Update 'schemes' (old 2.0 structure) to 'servers' (OAS 3.0 structure) for https using jq
+jq -c '.servers = [{"url": "https://{host}"}] | .servers[0].variables = {"host": {"default": "api.cedar.example.com"}}' "$coreTempFile" > "$coreSwaggerFile"
+rm "$coreTempFile"
 
-# Generate Go code
-ogen --target ./gen --clean cedar_core_3.json
+# C. Run oapi-codegen using only the core 'types' and 'client' flags.
+oapi-codegen \
+    -package gen \
+    -generate "types,client" \
+    "$coreSwaggerFile" > "$coreOutputFile"
+
+echo "✅ Core API client generated successfully (Basic Mode)."

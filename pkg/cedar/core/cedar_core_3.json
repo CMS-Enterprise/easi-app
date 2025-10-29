@@ -7,7 +7,12 @@
   },
   "servers": [
     {
-      "url": "https://"
+      "url": "https://{host}",
+      "variables": {
+        "host": {
+          "default": "api.cedar.example.com"
+        }
+      }
     }
   ],
   "paths": {
