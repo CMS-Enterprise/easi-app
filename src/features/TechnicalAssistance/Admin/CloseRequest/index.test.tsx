@@ -1,7 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
@@ -15,6 +14,7 @@ import i18next from 'i18next';
 
 import { MessageProvider } from 'hooks/useMessage';
 import easiMockStore from 'utils/testing/easiMockStore';
+import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import TRBRequestInfoWrapper from '../_components/RequestContext';
 import AdminHome from '..';
@@ -74,7 +74,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
   it('closes a request with a reason', async () => {
     const { getByLabelText, findByText, findByRole } = render(
       <Provider store={store}>
-        <MockedProvider
+        <VerboseMockedProvider
           defaultOptions={{
             watchQuery: { fetchPolicy: 'no-cache' },
             query: { fetchPolicy: 'no-cache' }
@@ -167,7 +167,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
               </TRBRequestInfoWrapper>
             </MessageProvider>
           </MemoryRouter>
-        </MockedProvider>
+        </VerboseMockedProvider>
       </Provider>
     );
 
@@ -205,7 +205,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
 
   it('shows an error notice when close submission fails', async () => {
     const { getByLabelText, findByText, findByRole } = render(
-      <MockedProvider
+      <VerboseMockedProvider
         mocks={[
           getAttendeesQuery,
           {
@@ -220,7 +220,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
                 }
               }
             },
-            error: new Error()
+            error: new Error('Failed to close request')
           }
         ]}
       >
@@ -233,7 +233,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
             </Route>
           </MessageProvider>
         </MemoryRouter>
-      </MockedProvider>
+      </VerboseMockedProvider>
     );
 
     await findByText(
@@ -265,7 +265,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
   it('re-opens a request with a reason', async () => {
     const { getByLabelText, getByRole, findByText, findByRole } = render(
       <Provider store={store}>
-        <MockedProvider
+        <VerboseMockedProvider
           defaultOptions={{
             watchQuery: { fetchPolicy: 'no-cache' },
             query: { fetchPolicy: 'no-cache' }
@@ -358,7 +358,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
               </TRBRequestInfoWrapper>
             </MessageProvider>
           </MemoryRouter>
-        </MockedProvider>
+        </VerboseMockedProvider>
       </Provider>
     );
 
@@ -395,7 +395,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
 
   it('shows an error notice when re-open submission fails', async () => {
     const { getByLabelText, getByRole, findByText } = render(
-      <MockedProvider
+      <VerboseMockedProvider
         mocks={[
           getAttendeesQuery,
           {
@@ -410,7 +410,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
                 }
               }
             },
-            error: new Error()
+            error: new Error('Failed to reopen request')
           }
         ]}
       >
@@ -425,7 +425,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
             </TRBRequestInfoWrapper>
           </MessageProvider>
         </MemoryRouter>
-      </MockedProvider>
+      </VerboseMockedProvider>
     );
 
     await findByText(

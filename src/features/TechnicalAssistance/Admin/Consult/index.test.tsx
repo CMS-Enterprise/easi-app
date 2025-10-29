@@ -254,7 +254,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
           summaryQuery,
           {
             ...updateTrbRequestConsultMeetingQuery,
-            error: new Error()
+            error: new Error('Failed to schedule')
           },
           emptyConsultMeetingTime
         ]}

@@ -411,23 +411,19 @@ describe('Trb Request form: Supporting documents', () => {
       >
         <Route exact path="/trb/requests/:id/:step?/:view?">
           <MockedProvider
-            mocks={[
-              mockGetTrbRequestDocumentsQueryNoDocuments,
-              // Upload document file with forced network error
-              {
-                request: {
-                  query: CreateTRBRequestDocumentDocument,
-                  variables: {
-                    input: {
-                      requestID: 'f3b4cff8-321d-4d2a-a9a2-4b05810756d7',
-                      documentType: 'ARCHITECTURE_DIAGRAM',
-                      fileData: testFile
-                    }
-                  }
-                },
-                error: new Error()
-              }
-            ]}
+            link={
+              new WildcardMockLink([
+                mockGetTrbRequestDocumentsQueryNoDocuments,
+                // Upload document file with forced network error
+                {
+                  request: {
+                    query: CreateTRBRequestDocumentDocument,
+                    variables: MATCH_ANY_PARAMETERS // File operations don't match traditional `mocks`, so use this to always match
+                  },
+                  error: new Error('Upload failed')
+                }
+              ])
+            }
           >
             <MessageProvider>{documents}</MessageProvider>
           </MockedProvider>

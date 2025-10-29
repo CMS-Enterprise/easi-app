@@ -1,7 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ModalRef } from '@trussworks/react-uswds';
@@ -19,6 +18,7 @@ import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
 import MockMessage from 'utils/testing/MockMessage';
 import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';
+import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import TrbAssignLeadModal, { TrbAssignLeadModalOpener } from '.';
 
@@ -64,7 +64,7 @@ describe('TrbAssignLeadModal', () => {
     const { findByText } = render(
       <>
         <Provider store={store}>
-          <MockedProvider mocks={[getTrbLeadOptionsQuery]}>
+          <VerboseMockedProvider mocks={[getTrbLeadOptionsQuery]}>
             <MemoryRouter>
               <MessageProvider>
                 <TrbAssignLeadModalOpener
@@ -83,7 +83,7 @@ describe('TrbAssignLeadModal', () => {
                 />
               </MessageProvider>
             </MemoryRouter>
-          </MockedProvider>
+          </VerboseMockedProvider>
         </Provider>
       </>
     );
@@ -100,7 +100,7 @@ describe('TrbAssignLeadModal', () => {
 
     const { findByText, getByRole, getByTestId } = render(
       <Provider store={store}>
-        <MockedProvider
+        <VerboseMockedProvider
           mocks={[getTrbLeadOptionsQuery, updateTrbRequestLeadMutation]}
         >
           <MemoryRouter>
@@ -120,7 +120,7 @@ describe('TrbAssignLeadModal', () => {
               />
             </MessageProvider>
           </MemoryRouter>
-        </MockedProvider>
+        </VerboseMockedProvider>
       </Provider>
     );
 
@@ -149,12 +149,12 @@ describe('TrbAssignLeadModal', () => {
 
     const { findByText, getByRole, findByTestId } = render(
       <Provider store={store}>
-        <MockedProvider
+        <VerboseMockedProvider
           mocks={[
             getTrbLeadOptionsQuery,
             {
               request: updateTrbRequestLeadMutation.request,
-              error: new Error()
+              error: new Error('Failed to assign lead')
             }
           ]}
         >
@@ -175,7 +175,7 @@ describe('TrbAssignLeadModal', () => {
               />
             </MessageProvider>
           </MemoryRouter>
-        </MockedProvider>
+        </VerboseMockedProvider>
       </Provider>
     );
 
