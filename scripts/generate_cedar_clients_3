@@ -1,0 +1,120 @@
+#!/usr/bin/env bash
+
+# --- 0. Initial Setup and Safe Cleanup Function ---
+
+# Exit immediately if a command exits with a non-zero status.
+set -o errexit
+
+# 1. Define cleanup function (Must be defined first)
+cleanup() {
+    echo "--- Performing Cleanup ---" >&2
+    # This function uses checks to safely remove files referenced by global variables.
+    if [ -n "$JQ_FILTER_FILE" ] && [ -f "$JQ_FILTER_FILE" ]; then
+        rm -f "$JQ_FILTER_FILE"
+        echo "Removed temporary filter file." >&2
+    fi
+    if [ -n "$finalPatchedSpecFile" ] && [ -f "$finalPatchedSpecFile" ]; then
+        rm -f "$finalPatchedSpecFile"
+        echo "Removed temporary spec file." >&2
+    fi
+}
+
+# 2. Force pre-cleanup of any prior session's files before assignment.
+#    We will use a safe, explicit find/delete process rather than simple globs.
+echo "--- Performing Pre-Cleanup of Stale Files ---" >&2
+find /tmp/ -maxdepth 1 -name "core_patch_filter.*.jq" -delete 2>/dev/null
+find /tmp/ -maxdepth 1 -name "core_patched_spec.*.json" -delete 2>/dev/null
+
+# 3. Initialize temporary file variables to empty strings globally.
+JQ_FILTER_FILE=""
+finalPatchedSpecFile=""
+
+# 4. Set the BASH DEFER: Execute the cleanup function upon exit.
+trap cleanup EXIT
+
+
+# --- 1. Tool Checks (Omitted for brevity) ---
+if ! command -v jq &> /dev/null; then
+    echo "jq could not be found. Install it to perform JSON transformations."
+    exit 1
+fi
+if ! command -v ogen &> /dev/null; then
+    echo "ogen could not be found."
+    echo "Installing ogen now..."
+    go install github.com/ogen-go/ogen/cmd/ogen@latest
+    if ! command -v ogen &> /dev/null; then
+        echo "ogen installation failed or is not in your PATH. Please check your Go environment."
+        exit 2
+    fi
+fi
+
+# --- 2. Paths and Variables (Create files after safe cleanup) ---
+coreSwaggerFile="cedar_core_3.json"
+repoRootPath=$(git rev-parse --show-toplevel)
+coreFolderPath="${repoRootPath}/pkg/cedar/core"
+coreOutputDirectory="${coreFolderPath}/gen/ogen_client"
+
+# Create and assign the file paths after the safe pre-cleanup step.
+# These operations should now be guaranteed to succeed.
+JQ_FILTER_FILE=$(mktemp /tmp/core_patch_filter.XXXXXX.jq)
+finalPatchedSpecFile=$(mktemp /tmp/core_patched_spec.XXXXXX.json)
+
+
+# --- 3. Create the JQ Filter File (Content remains the same) ---
+cat > "$JQ_FILTER_FILE" << 'EOF_JQ'
+# JQ Filter to perform all OAS 3.0 patches in a single chain
+
+# CRITICAL PATCH 1: Remove the invalid duplicate path entry at the end of the file.
+del(.paths."/authorityToOperate")
+
+# PATCH 2: Fix API Hosts (2.0 schemes -> 3.0 servers)
+| .servers = [{"url": "https://{host}"}] | .servers[0].variables = {"host": {"default": "api.cedar.example.com"}}
+
+# PATCH 3: Fix Invalid Parameter (systemId missing schema)
+| .paths."/gateway/CEDAR%20Core%20API/2.0.0/authorityToOperate".get.parameters |= (
+    if . != null then
+      map(
+        if .name == "systemId" and .in == "query" then
+          . + {"schema": {"type": "string"}}
+        else
+          .
+        end
+      )
+    else
+      .
+    end
+  )
+EOF_JQ
+
+
+# --- 4. Core API Specification Patching and Generation ---
+echo "--- Preparing Core API Specification ---"
+cd "$coreFolderPath"
+
+# A. Execute all patches using the filter file.
+echo "Applying all patches (Cleanup, Host/Server, and systemId Schema) using filter file..."
+if ! jq -c -f "$JQ_FILTER_FILE" "$coreSwaggerFile" > "$finalPatchedSpecFile"; then
+    echo "ERROR: JQ Patch failed. Aborting without modifying the source file." >&2
+    exit 4
+fi
+
+# B. FINAL COMMIT: Overwrite the source file ONLY if all patches succeeded.
+echo "Committing final patched specification to $coreSwaggerFile"
+cp "$finalPatchedSpecFile" "$coreSwaggerFile"
+
+
+# --- 5. Ogen Code Generation ---
+echo "--- Generating Client with ogen ---"
+
+mkdir -p "$coreOutputDirectory"
+
+# Run the ogen generator
+ogen \
+    --package cedarcoreclient \
+    --target "$coreOutputDirectory" \
+    --clean \
+    "$coreSwaggerFile"
+
+echo "✅ Core API client generated successfully into: ${coreOutputDirectory}"
+
+# Script exits, triggering the trap and the safe cleanup function.

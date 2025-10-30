@@ -52,6 +52,7 @@ issues:
   exclude-files:
     - "pkg/graph/generated/generated.go" # Since we don't ignore _all_ generated files, we have to ignore this one specifically
     - "pkg/models/models_gen.go" # Since we don't ignore _all_ generated files, we have to ignore this one specifically
+    - "pkg/cedar/core/gen/ogen_client"
   exclude-rules:
     - text: 'shadow: declaration of "err" shadows declaration at'
       linters: [ govet ]
