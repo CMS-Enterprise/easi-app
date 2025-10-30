@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen"
 	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 
@@ -84,4 +86,63 @@ func (c *Client) GetAuthorityToOperate(ctx context.Context, cedarSystemID string
 	}
 
 	return retVal, nil
+}
+
+func GetAuthorityToOperate3(ctx context.Context, cedarSystemID string) ([]*models.CedarAuthorityToOperate, error) {
+	cedarClient := NewCedarClient3()
+	if cedarClient.MockEnabled {
+		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
+		if cedarcoremock.IsMockSystem(cedarSystemID) {
+			return cedarcoremock.GetATOs(), nil
+		}
+		return nil, cedarcoremock.NoSystemFoundError()
+	}
+
+	// parse UUID
+	parsedUUID, err := uuid.Parse(cedarSystemID)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := cedarClient.Client.GetGatewayCEDAR20Core20API200AuthorityToOperateWithResponse(ctx, &gen.GetGatewayCEDAR20Core20API200AuthorityToOperateParams{SystemId: &parsedUUID})
+	if err != nil {
+		return nil, err
+	}
+
+	var results []*models.CedarAuthorityToOperate
+
+	for _, ato := range resp.JSON200.AuthorityToOperateList {
+		retVal = append(retVal, &models.CedarAuthorityToOperate{
+			UUID:    zero.StringFromPtr(ato.UUID),    // required
+			CedarID: zero.StringFromPtr(ato.CedarID), // required
+
+			ActualDispositionDate:                     zero.TimeFrom(time.Time(ato.ActualDispositionDate)),
+			ContainsPersonallyIdentifiableInformation: ato.ContainsPersonallyIdentifiableInformation,
+			CountOfTotalNonPrivilegedUserPopulation:   int(ato.CountOfTotalNonPrivilegedUserPopulation),
+			CountOfOpenPoams:                          int(ato.CountOfOpenPoams),
+			CountOfTotalPrivilegedUserPopulation:      int(ato.CountOfTotalPrivilegedUserPopulation),
+			DateAuthorizationMemoExpires:              zero.TimeFrom(time.Time(ato.DateAuthorizationMemoExpires)),
+			DateAuthorizationMemoSigned:               zero.TimeFrom(time.Time(ato.DateAuthorizationMemoSigned)),
+			EAuthenticationLevel:                      zero.StringFrom(ato.EAuthenticationLevel),
+			Fips199OverallImpactRating:                int(ato.Fips199OverallImpactRating),
+			FismaSystemAcronym:                        zero.StringFrom(ato.FismaSystemAcronym),
+			FismaSystemName:                           zero.StringFrom(ato.FismaSystemName),
+			IsAccessedByNonOrganizationalUsers:        ato.IsAccessedByNonOrganizationalUsers,
+			IsPiiLimitedToUserNameAndPass:             ato.IsPiiLimitedToUserNameAndPass,
+			IsProtectedHealthInformation:              ato.IsProtectedHealthInformation,
+			LastActScaDate:                            zero.TimeFrom(time.Time(ato.LastActScaDate)),
+			LastAssessmentDate:                        zero.TimeFrom(time.Time(ato.LastAssessmentDate)),
+			LastContingencyPlanCompletionDate:         zero.TimeFrom(time.Time(ato.LastContingencyPlanCompletionDate)),
+			LastPenTestDate:                           zero.TimeFrom(time.Time(ato.LastPenTestDate)),
+			OaStatus:                                  zero.StringFrom(ato.OaStatus),
+			PiaCompletionDate:                         zero.TimeFrom(time.Time(ato.PiaCompletionDate)),
+			PrimaryCyberRiskAdvisor:                   zero.StringFrom(ato.PrimaryCyberRiskAdvisor),
+			PrivacySubjectMatterExpert:                zero.StringFrom(ato.PrivacySubjectMatterExpert),
+			RecoveryPointObjective:                    float64(ato.RecoveryPointObjective),
+			RecoveryTimeObjective:                     float64(ato.RecoveryTimeObjective),
+			SystemOfRecordsNotice:                     models.ZeroStringsFrom(ato.SystemOfRecordsNotice),
+			TLCPhase:                                  zero.StringFrom(ato.TlcPhase),
+			XLCPhase:                                  zero.StringFrom(ato.XlcPhase),
+		})
+	}
 }

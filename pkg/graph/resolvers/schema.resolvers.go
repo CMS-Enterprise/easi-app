@@ -17,6 +17,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/graph/generated"
@@ -1250,6 +1251,12 @@ func (r *queryResolver) CedarAuthorityToOperate(ctx context.Context, cedarSystem
 		return nil, err
 	}
 
+	// parse UUID
+	parsedUUID, err := uuid.Parse(cedarSystemID)
+	if err != nil {
+		return nil, err
+	}
+	cedarcore.NewCedarClient3().Client.GetGatewayCEDAR20Core20API200AuthorityToOperate(ctx, &gen.GetGatewayCEDAR20Core20API200AuthorityToOperateParams{SystemId: &parsedUUID})
 	return cedarATO, nil
 }
 
