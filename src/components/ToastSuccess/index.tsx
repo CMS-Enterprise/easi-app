@@ -52,7 +52,7 @@ const toastSuccess = (
       type="success"
       isClosable={false}
       slim={false}
-      data-testid={defaultOptions.id}
+      data-testid="alert"
       heading={options?.heading}
     >
       {message}
