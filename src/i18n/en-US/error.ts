@@ -1,19 +1,101 @@
-// TODO: remove mint specific and add easi known errors
-export const knownErrors: Record<string, string> = {
-  uniq_contractor_name_per_solution_key:
-    'This contractor is already added to this solution and cannot be added again. Please edit the existing entry.',
-  uniq_user_id_per_solution_key:
-    'This user is already added to this solution and cannot be added again. Please edit the existing entry.',
-  uniq_mailbox_address_per_solution_key:
-    'This mailbox address is already added to this solution and cannot be added again. Please edit the existing entry.',
-  uniq_system_owner_key_type_component:
-    'This owner is already added to this solution and cannot be added again. Please edit the existing entry.',
-  unique_collaborator_per_plan:
-    'This person is already a member of your model team. Please select a different person to add to your team.',
-  unique_name_per_model_plan_when_mto_common_milestone_is_null:
-    'There is already a model milestone in your MTO with this name. Please choose a different name for this milestone.',
-  unique_name_per_model_plan_when_mto_common_solution_is_null:
-    'There is already a model solution in your MTO with this name. Please choose a different name for this solution.'
+// TODO: add known errors, develop BE method for implementing known errors
+export const knownErrors: Record<string, string> = {};
+
+export const operationErrors: Record<string, string> = {
+  CreateSystemIntakeGRBReviewers:
+    'There was an issue adding GRB reviewers. Please try again, and if the error persists, try again at a later date.',
+  UpdateTRBGuidanceLetterInsightOrder:
+    'There was an issue saving your guidance. Please try again, and if the problem persists, try again later.',
+  UpdateTRBRequestLead:
+    'There was an issue assigning a TRB lead for this request. Please try again, and if the problem persists, try again later.',
+  CreateTRBAdminNoteGeneralRequest:
+    'There was a problem saving your note. Please try again. If the error persists, please try again at a later date.',
+  CreateTRBAdminNoteInitialRequestForm:
+    'There was a problem saving your note. Please try again. If the error persists, please try again at a later date.',
+  CreateTRBAdminNoteSupportingDocuments:
+    'There was a problem saving your note. Please try again. If the error persists, please try again at a later date.',
+  CreateTRBAdminNoteConsultSession:
+    'There was a problem saving your note. Please try again. If the error persists, please try again at a later date.',
+  CreateTRBAdminNoteGuidanceLetter:
+    'There was a problem saving your note. Please try again. If the error persists, please try again at a later date.',
+  CloseTRBRequest:
+    'There was an issue closing this request. Please try again, and if the problem persists, try again later.',
+  ReopenTRBRequest:
+    'There was an issue re-opening this request. Please try again, and if the problem persists, try again later.',
+  UpdateTRBRequestConsultMeeting:
+    'There was an issue scheduling the consult session. Please try again, and if the problem persists, try again later.',
+  DeleteTRBGuidanceLetterInsight:
+    'There was an issue removing this guidance. Please try again, and if the problem persists, try again later.',
+  RequestReviewForTRBGuidanceLetter:
+    'There was an issue submitting your guidance letter for internal review. Please try again, and if the problem persists, try again later.',
+  CreateTRBRequestFeedback:
+    'There was an issue submitting your feedback. Please try again, and if the problem persists, try again later.',
+  UpdateTRBRequestAndForm:
+    'There was an issue updating this request. Please try again, and if the problem persists, try again later.',
+  UpdateTRBRequestFundingSources:
+    'Your basic request details were not saved. Please try again. If the error persists, please try again at a later date.',
+  DeleteTRBRequestFundingSource:
+    'Your basic request details were not saved. Please try again. If the error persists, please try again at a later date.',
+  DeleteTRBRequestDocument:
+    'There was an issue removing your document. Please try again, and if the problem persists, try again later.',
+  CreateTRBRequestDocument:
+    'There was an issue uploading your document. Please try again, and if the problem persists, try again later.',
+  CreateTRBRequestAttendee:
+    'There was an issue adding an attendee. Please try again, and if the problem persists, try again later.',
+  UpdateTRBRequestAttendee:
+    'There was an issue updating an attendee. Please try again, and if the problem persists, try again later.',
+  DeleteTRBRequestAttendee:
+    'There was an issue removing an attendee. Please try again, and if the problem persists, try again later.',
+  CreateSystemIntakeGRBDiscussionPost:
+    'There was an issue with adding to the discussion board, please try again.',
+  CreateSystemIntakeGRBDiscussionReply:
+    'There was an issue with adding your reply, please try again.',
+  DeleteSystemIntakeDocument:
+    'There was an issue removing your document. Please try again, and if the problem persists, try again later.',
+  CreateSystemIntakeDocument:
+    'There was an issue uploading your document. Please try again, and if the problem persists, try again later.',
+  UpdateSystemIntakeGRBReviewer:
+    'There was an issue updating this GRB reviewer. Please try again, and if the error persists, try again at a later date.',
+  DeleteSystemIntakeGRBReviewer:
+    'There was an issue removing this GRB reviewer. Please try again, and if the error persists, try again at a later date.',
+  ExtendGRBReviewDeadlineAsync:
+    'There was an issue adding time to this review. Please try again, and if the problem persists, try again later.',
+  CastGRBReviewerVote:
+    'There was an issue submitting your vote. Please try again, and if the problem persists, try again later.',
+  DeleteSystemIntakeGRBPresentationLinks:
+    'There was an issue deleting the presentation details. Please try again, and if the problem persists, try again later.',
+  UpdateSystemIntakeGRBReviewAsyncPresentation:
+    'There was an issue uploading your presentation. Please try again, and if the issue persists please try again later.',
+  RestartGRBReviewAsync:
+    'There was an issue restarting this review. Please try again, and if the problem persists, try again later.',
+  SendPresentationDeckReminder:
+    'There was an issue sending the reminder. Please try again.',
+  SendSystemIntakeGRBReviewerReminder:
+    'There was an issue sending your reminder. Please try again, and if the problem persists, try again later.',
+  UploadSystemIntakeGRBPresentationDeck:
+    'There was an issue uploading your presentation. Please try again, and if the issue persists please try again later.',
+  UnlinkSystemIntakeRelation:
+    'There was an issue removing the link between this request and all of the selected systems. Please try again, and if the problem persists, try again later.',
+  DeleteSystemLink:
+    'There was an issue removing the link between this request and the selected system. Please try again, and if the problem persists, try again later.',
+  AddSystemLink:
+    'There was an issue saving your changes. Please try again, and if the problem persists, try again later.',
+  SetTrbRequestRelationNewSystem:
+    'EASi encountered an issue. Please try again, and if the problem persists, try again later.',
+  SetSystemIntakeRelationNewSystem:
+    'EASi encountered an issue. Please try again, and if the problem persists, try again later.',
+  SetTrbRequestRelationExistingSystem:
+    'EASi encountered an issue. Please try again, and if the problem persists, try again later.',
+  SetSystemIntakeRelationExistingSystem:
+    'EASi encountered an issue. Please try again, and if the problem persists, try again later.',
+  SetTrbRequestRelationExistingService:
+    'EASi encountered an issue. Please try again, and if the problem persists, try again later.',
+  SetSystemIntakeRelationExistingService:
+    'EASi encountered an issue. Please try again, and if the problem persists, try again later.',
+  UnlinkTrbRequestRelation:
+    'EASi encountered an issue. Please try again, and if the problem persists, try again later.',
+  SetRolesForUserOnSystem:
+    'There was a problem removing a team member. Please try again. If the error persists, please try again at a later date.'
 };
 
 const error = {
@@ -32,6 +114,7 @@ const error = {
   encounteredIssueTryAgain:
     'EASi encountered an issue. Please try again, and if the problem persists, try again later.',
   knownErrors,
+  operationErrors,
   global: {
     generalError: 'Something went wrong with your request.',
     generalBody:
