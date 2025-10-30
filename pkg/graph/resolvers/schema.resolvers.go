@@ -11,6 +11,9 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/google/uuid"
+	"github.com/guregu/null"
+
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
@@ -21,8 +24,6 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/services"
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
-	"github.com/google/uuid"
-	"github.com/guregu/null"
 )
 
 // AlternativeASolution is the resolver for the alternativeASolution field.
