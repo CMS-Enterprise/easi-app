@@ -2,6 +2,7 @@ package subscribers
 
 import (
 	"github.com/google/uuid"
+	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
 	"github.com/cms-enterprise/easi-app/pkg/models"
@@ -17,18 +18,26 @@ type SystemProfileLockChangedSubscriber struct {
 	Principal      authentication.Principal
 	CedarSystemID  string // Original system ID for callback use
 	Channel        chan *models.SystemProfileSectionLockStatusChanged
+	Logger         *zap.Logger
 	onUnsubscribed OnUnsubscribeCallback
 }
 
 // NewSystemProfileLockChangedSubscriber is a constructor to create a new SystemProfileLockChangedSubscriber
-func NewSystemProfileLockChangedSubscriber(principal authentication.Principal, cedarSystemID string) *SystemProfileLockChangedSubscriber {
+func NewSystemProfileLockChangedSubscriber(principal authentication.Principal, cedarSystemID string, logger *zap.Logger) *SystemProfileLockChangedSubscriber {
 	id := uuid.New()
+
+	// Guard against nil logger
+	if logger == nil {
+		logger = zap.NewNop()
+	}
 
 	subscriber := &SystemProfileLockChangedSubscriber{
 		ID:            id,
 		Principal:     principal,
 		CedarSystemID: cedarSystemID,
-		Channel:       make(chan *models.SystemProfileSectionLockStatusChanged, 10)} // Buffered to prevent blocking publishers
+		Channel:       make(chan *models.SystemProfileSectionLockStatusChanged, 10), // Buffered to prevent blocking publishers
+		Logger:        logger,
+	}
 
 	return subscriber
 }

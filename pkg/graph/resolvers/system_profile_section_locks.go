@@ -1,13 +1,17 @@
 package resolvers
 
 import (
+	"context"
 	"fmt"
 	"sync"
 
 	"github.com/google/uuid"
+	"go.uber.org/zap"
 
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
 	"github.com/cms-enterprise/easi-app/pkg/graph/model/subscribers"
+	"github.com/cms-enterprise/easi-app/pkg/logfields"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/models/pubsubevents"
 	"github.com/cms-enterprise/easi-app/pkg/pubsub"
@@ -228,12 +232,23 @@ func getOwnedSections(sectionLocks sectionLockStatusMap, subscriber pubsub.Subsc
 // OnSystemProfileSectionLockStatusChanged subscribes to lock status change events for a system profile.
 // Automatically unlocks all sections owned by the user when the websocket connection closes.
 func OnSystemProfileSectionLockStatusChanged(
+	ctx context.Context,
 	ps pubsub.PubSub,
 	cedarSystemID string,
 	principal authentication.Principal,
 	onDisconnect <-chan struct{},
 ) (<-chan *models.SystemProfileSectionLockStatusChanged, error) {
-	subscriber := subscribers.NewSystemProfileLockChangedSubscriber(principal, cedarSystemID)
+	logger := appcontext.ZLogger(ctx)
+
+	// Add trace ID to logger
+	if traceID, ok := appcontext.Trace(ctx); ok {
+		logger = logger.With(zap.String("trace_id", traceID.String()))
+	}
+
+	// Add app section to identify system profile locking operations
+	logger = logger.With(logfields.SystemProfileLockingAppSection)
+
+	subscriber := subscribers.NewSystemProfileLockChangedSubscriber(principal, cedarSystemID, logger)
 	subscriber.SetOnUnsubscribedCallback(onLockSystemProfileSectionUnsubscribeComplete)
 
 	return SubscribeSystemProfileSectionLockChanges(
@@ -262,11 +277,24 @@ func onLockSystemProfileSectionUnsubscribeComplete(
 	ownedSections := getOwnedSections(sectionLocks, subscriber)
 	systemProfileSessionLocks.Unlock()
 
+	account := subscriber.GetPrincipal().Account()
+	if account == nil {
+		subscriber.Logger.Error("Failed to get account from principal during auto-unlock on disconnect",
+			zap.String("cedar_system_id", cedarSystemID),
+		)
+		return
+	}
+
 	for _, section := range ownedSections {
-		_, err := UnlockSystemProfileSection(ps, cedarSystemID, section, subscriber.GetPrincipal().Account().ID, models.LockActionTypeNormal)
+		_, err := UnlockSystemProfileSection(ps, cedarSystemID, section, account.ID, models.LockActionTypeNormal)
 
 		if err != nil {
-			fmt.Printf("Uncapturable error on websocket disconnect: %v\n", err.Error()) //TODO: can we pass a reference to the logger to the pubsub?
+			subscriber.Logger.Error("Failed to auto-unlock section on websocket disconnect",
+				zap.Error(err),
+				zap.String("cedar_system_id", cedarSystemID),
+				zap.String("section", string(section)),
+				zap.String("user_id", account.ID.String()),
+			)
 		}
 	}
 }

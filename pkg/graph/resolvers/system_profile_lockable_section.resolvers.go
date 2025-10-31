@@ -61,7 +61,7 @@ func (r *subscriptionResolver) OnSystemProfileSectionLockStatusChanged(ctx conte
 
 	principal := appcontext.Principal(ctx)
 
-	return OnSystemProfileSectionLockStatusChanged(r.pubsub, cedarSystemID, principal, ctx.Done())
+	return OnSystemProfileSectionLockStatusChanged(ctx, r.pubsub, cedarSystemID, principal, ctx.Done())
 }
 
 // Subscription returns generated.SubscriptionResolver implementation.
