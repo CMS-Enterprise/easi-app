@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/99designs/gqlgen/graphql/handler/transport"
 	jwtverifier "github.com/okta/okta-jwt-verifier-golang"
 	"go.uber.org/zap"
 
@@ -25,7 +26,7 @@ const (
 	testTRBAdminJobCode = "EASI_TRB_ADMIN_D"
 )
 
-func (f oktaMiddlewareFactory) jwt(_ *zap.Logger, authHeader string) (*authentication.EnhancedJwt, error) {
+func (f OktaMiddlewareFactory) jwt(_ *zap.Logger, authHeader string) (*authentication.EnhancedJwt, error) {
 	tokenParts := strings.Split(authHeader, "Bearer ")
 	if len(tokenParts) < 2 {
 		return nil, errors.New("invalid Bearer in auth header")
@@ -65,10 +66,10 @@ func jwtGroupsContainsJobCode(jwt *jwtverifier.Jwt, jobCode string) bool {
 	return false
 }
 
-func (f oktaMiddlewareFactory) newPrincipal(ctx context.Context) (*authentication.EUAPrincipal, error) {
+func (f OktaMiddlewareFactory) newPrincipal(ctx context.Context) (*authentication.EUAPrincipal, error) {
 	enhanced := appcontext.EnhancedJWT(ctx)
-	euaID := enhanced.JWT.Claims["sub"].(string)
-	if euaID == "" {
+	euaID, ok := enhanced.JWT.Claims["sub"].(string)
+	if !ok || euaID == "" {
 		return nil, errors.New("unable to retrieve EUA ID from JWT")
 	}
 	jwt := enhanced.JWT
@@ -103,7 +104,8 @@ func (f oktaMiddlewareFactory) newPrincipal(ctx context.Context) (*authenticatio
 		nil
 }
 
-func (f oktaMiddlewareFactory) newAuthenticationMiddleware(next http.Handler) http.Handler {
+// NewAuthenticationMiddleware returns an HTTP handler that authenticates requests using Okta JWT tokens
+func (f OktaMiddlewareFactory) NewAuthenticationMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		logger := appcontext.ZLogger(r.Context())
 		authHeader := r.Header.Get("Authorization")
@@ -141,6 +143,43 @@ func (f oktaMiddlewareFactory) newAuthenticationMiddleware(next http.Handler) ht
 	})
 }
 
+// NewOktaWebSocketAuthenticationMiddleware returns a transport.WebsocketInitFunc that uses the `authToken` in
+// the websocket connection payload to authenticate an Okta user.
+func (f OktaMiddlewareFactory) NewOktaWebSocketAuthenticationMiddleware() transport.WebsocketInitFunc {
+	return func(ctx context.Context, initPayload transport.InitPayload) (context.Context, *transport.InitPayload, error) {
+		logger := appcontext.ZLogger(ctx)
+
+		token, ok := initPayload["authToken"].(string)
+		if !ok || token == "" {
+			return nil, &initPayload, errors.New("authToken not found in transport payload")
+		}
+
+		jwt, err := f.jwt(logger, token)
+		if err != nil {
+			logger.Info("could not parse jwt from token", zap.Error(err))
+			return nil, &initPayload, err
+		}
+		ctx = appcontext.WithEnhancedJWT(ctx, *jwt)
+
+		principal, err := f.newPrincipal(ctx)
+		if err != nil {
+			logger.Error("could not set context for okta auth", zap.Error(err))
+			return nil, &initPayload, err
+		}
+
+		if principal == nil {
+			logger.Error("principal is nil after authentication")
+			return nil, &initPayload, errors.New("authentication succeeded but principal is nil")
+		}
+
+		logger = logger.With(zap.String("user", principal.ID()))
+		ctx = appcontext.WithPrincipal(ctx, principal)
+		ctx = appcontext.WithLogger(ctx, logger)
+
+		return ctx, &initPayload, nil
+	}
+}
+
 // NewJwtVerifier returns a new JWT verifier with some minimal config
 func NewJwtVerifier(clientID string, issuer string) *jwtverifier.JwtVerifier {
 	toValidate := map[string]string{}
@@ -160,7 +199,8 @@ type JwtVerifier interface {
 	VerifyAccessToken(jwt string) (*jwtverifier.Jwt, error)
 }
 
-type oktaMiddlewareFactory struct {
+// OktaMiddlewareFactory holds dependencies for Okta authentication middleware
+type OktaMiddlewareFactory struct {
 	handlers.HandlerBase
 	Store        *storage.Store
 	verifier     JwtVerifier
@@ -168,8 +208,8 @@ type oktaMiddlewareFactory struct {
 	codeTRBAdmin string
 }
 
-// NewOktaAuthenticationMiddleware returns a wrapper for HandlerFunc to authorize with Okta
-func NewOktaAuthenticationMiddleware(base handlers.HandlerBase, jwtVerifier JwtVerifier, store *storage.Store, useTestJobCodes bool) func(http.Handler) http.Handler {
+// NewOktaMiddlewareFactory creates and returns an OktaMiddlewareFactory
+func NewOktaMiddlewareFactory(base handlers.HandlerBase, jwtVerifier JwtVerifier, store *storage.Store, useTestJobCodes bool) *OktaMiddlewareFactory {
 	// by default we want to use the PROD job codes, and only in
 	// pre-PROD environments do we want to empower the
 	// alternate job codes.
@@ -180,12 +220,17 @@ func NewOktaAuthenticationMiddleware(base handlers.HandlerBase, jwtVerifier JwtV
 		jobCodeTRBAdmin = testTRBAdminJobCode
 	}
 
-	middlewareFactory := oktaMiddlewareFactory{
+	return &OktaMiddlewareFactory{
 		HandlerBase:  base,
 		Store:        store,
 		verifier:     jwtVerifier,
 		codeGRT:      jobCodeGRT,
 		codeTRBAdmin: jobCodeTRBAdmin,
 	}
-	return middlewareFactory.newAuthenticationMiddleware
+}
+
+// NewOktaAuthenticationMiddleware returns a wrapper for HandlerFunc to authorize with Okta
+func NewOktaAuthenticationMiddleware(base handlers.HandlerBase, jwtVerifier JwtVerifier, store *storage.Store, useTestJobCodes bool) func(http.Handler) http.Handler {
+	middlewareFactory := NewOktaMiddlewareFactory(base, jwtVerifier, store, useTestJobCodes)
+	return middlewareFactory.NewAuthenticationMiddleware
 }

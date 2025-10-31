@@ -7,7 +7,9 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/go-openapi/swag"
+	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
@@ -86,6 +88,36 @@ func devUserContext(ctx context.Context, authHeader string, store *storage.Store
 	}
 	princ.UserAccount = userAccount
 	return appcontext.WithPrincipal(ctx, princ), nil
+}
+
+// NewLocalWebSocketAuthenticationMiddleware returns a transport.WebsocketInitFunc that uses the `authToken` in
+// the websocket connection payload to authenticate a local user.
+func NewLocalWebSocketAuthenticationMiddleware(store *storage.Store) transport.WebsocketInitFunc {
+	return func(ctx context.Context, initPayload transport.InitPayload) (context.Context, *transport.InitPayload, error) {
+		logger := appcontext.ZLogger(ctx)
+
+		token, ok := initPayload["authToken"].(string)
+		if !ok || token == "" {
+			return nil, &initPayload, errors.New("authToken not found in transport payload")
+		}
+
+		devCtx, err := devUserContext(ctx, token, store)
+		if err != nil {
+			logger.Error("could not set context for local dev auth", zap.Error(err))
+			return nil, &initPayload, err
+		}
+
+		principal := appcontext.Principal(devCtx)
+		if principal == nil {
+			logger.Error("principal is nil after authentication")
+			return nil, &initPayload, errors.New("authentication succeeded but principal is nil")
+		}
+
+		logger = logger.With(zap.String("user", principal.ID()))
+		devCtx = appcontext.WithLogger(devCtx, logger)
+
+		return devCtx, &initPayload, nil
+	}
 }
 
 // NewLocalAuthenticationMiddleware stubs out context info for local (non-Okta) authentication

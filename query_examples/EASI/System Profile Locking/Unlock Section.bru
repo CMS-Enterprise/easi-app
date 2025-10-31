@@ -1,0 +1,25 @@
+meta {
+  name: Unlock Section
+  type: graphql
+  seq: 3
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation unlockSection {
+    unlockSystemProfileSection(
+      cedarSystemId: "{{cedarSystemId}}"
+      section: BUSINESS_INFORMATION
+    )
+  }
+}
+
+settings {
+  encodeUrl: true
+}
+

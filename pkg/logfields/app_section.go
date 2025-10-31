@@ -6,8 +6,9 @@ import "go.uber.org/zap"
 const (
 	AppSectionKey string = "app_section"
 
-	CedarPublisherSectionKey string = "cedar_publisher"
-	SchedularSectionKey      string = "scheduler"
+	CedarPublisherSectionKey       string = "cedar_publisher"
+	SchedularSectionKey            string = "scheduler"
+	SystemProfileLockingSectionKey string = "system_profile_locking"
 )
 
 // CedarPublisherAppSection provides the zap field for specifying the part of the application is the CEDAR publisher
@@ -15,3 +16,6 @@ var CedarPublisherAppSection = zap.String(AppSectionKey, CedarPublisherSectionKe
 
 // SchedulerAppSection provides the zap field for specifying the part of the application is the scheduler
 var SchedulerAppSection = zap.String(AppSectionKey, SchedularSectionKey)
+
+// SystemProfileLockingAppSection provides the zap field for specifying the part of the application is the system profile locking service
+var SystemProfileLockingAppSection = zap.String(AppSectionKey, SystemProfileLockingSectionKey)

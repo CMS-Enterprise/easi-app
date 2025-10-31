@@ -1,0 +1,31 @@
+meta {
+  name: Unlock All Sections
+  type: graphql
+  seq: 4
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation unlockAllSections {
+    unlockAllSystemProfileSections(cedarSystemId: "{{cedarSystemId}}") {
+      cedarSystemId
+      section
+      lockedByUserAccount {
+        id
+        username
+        commonName
+        email
+      }
+    }
+  }
+}
+
+settings {
+  encodeUrl: true
+}
+
