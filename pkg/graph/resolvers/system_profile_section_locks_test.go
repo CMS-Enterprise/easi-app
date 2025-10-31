@@ -55,7 +55,7 @@ func TestSystemProfileSectionLock(t *testing.T) {
 
 	// Unlock the section
 	userID := principal.Account().ID
-	unlocked, err := UnlockSystemProfileSection(ps, cedarSystemID, section, userID, models.LockActionTypeNormal)
+	unlocked, err := UnlockSystemProfileSection(ps, cedarSystemID, section, userID)
 	require.NoError(t, err)
 	assert.True(t, unlocked)
 
@@ -94,7 +94,7 @@ func TestSystemProfileSectionLockConflict(t *testing.T) {
 	assert.Equal(t, userA.Account().ID, locks[0].LockedByUserAccount.ID)
 
 	// User A unlocks
-	unlocked, err := UnlockSystemProfileSection(ps, cedarSystemID, section, userA.Account().ID, models.LockActionTypeNormal)
+	unlocked, err := UnlockSystemProfileSection(ps, cedarSystemID, section, userA.Account().ID)
 	require.NoError(t, err)
 	assert.True(t, unlocked)
 
@@ -158,38 +158,4 @@ func TestUnlockAllSystemProfileSections(t *testing.T) {
 	locks, err = GetSystemProfileSectionLocks(cedarSystemID)
 	require.NoError(t, err)
 	assert.Empty(t, locks)
-}
-
-func TestLockSystemProfileSectionAsAdmin(t *testing.T) {
-	// Reset global state before test
-	systemProfileSessionLocks = sessionLockController{systemLockStatuses: make(systemLockStatusMap)}
-
-	cedarSystemID := "97862207-b502-440a-9392-318b2b261434"
-	section := models.SystemProfileLockableSectionData
-	ps := pubsub.NewServicePubSub()
-
-	// Lock as regular user
-	regularUser := createTestPrincipal("ABCD", false)
-	locked, err := LockSystemProfileSection(ps, cedarSystemID, section, regularUser)
-	require.NoError(t, err)
-	assert.True(t, locked)
-
-	locks, err := GetSystemProfileSectionLocks(cedarSystemID)
-	require.NoError(t, err)
-	require.Len(t, locks, 1)
-	assert.False(t, locks[0].IsAdmin, "Regular user should not have isAdmin flag")
-
-	// Cleanup
-	_, _ = UnlockSystemProfileSection(ps, cedarSystemID, section, regularUser.Account().ID, models.LockActionTypeNormal)
-
-	// Lock as admin user
-	adminUser := createTestPrincipal("USR1", true)
-	locked, err = LockSystemProfileSection(ps, cedarSystemID, section, adminUser)
-	require.NoError(t, err)
-	assert.True(t, locked)
-
-	locks, err = GetSystemProfileSectionLocks(cedarSystemID)
-	require.NoError(t, err)
-	require.Len(t, locks, 1)
-	assert.True(t, locks[0].IsAdmin, "GRT admin user should have isAdmin flag")
 }

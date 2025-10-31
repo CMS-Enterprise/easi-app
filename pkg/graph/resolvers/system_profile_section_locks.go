@@ -100,14 +100,10 @@ func LockSystemProfileSection(ps pubsub.PubSub, cedarSystemID string, section mo
 		return false, fmt.Errorf("failed to lock section [%v], already locked by [%v]", section, lockStatus.LockedByUserAccount.ID)
 	}
 
-	// Determine if this is an admin action - user has GRT or TRB admin privileges
-	isAdmin := principal.AllowGRT() || principal.AllowTRBAdmin()
-
 	newLockStatus := models.SystemProfileSectionLockStatus{
 		CedarSystemID:       cedarSystemID,
 		Section:             section,
 		LockedByUserAccount: account,
-		IsAdmin:             isAdmin,
 	}
 
 	systemProfileSessionLocks.systemLockStatuses[cedarSystemID][section] = newLockStatus
@@ -118,7 +114,6 @@ func LockSystemProfileSection(ps pubsub.PubSub, cedarSystemID string, section mo
 		ps.Publish(sessionID, pubsubevents.SystemProfileSectionLocksChanged, models.SystemProfileSectionLockStatusChanged{
 			ChangeType: models.LockChangeTypeAdded,
 			LockStatus: &newLockStatus,
-			ActionType: models.LockActionTypeNormal,
 		})
 	}
 
@@ -128,7 +123,7 @@ func LockSystemProfileSection(ps pubsub.PubSub, cedarSystemID string, section mo
 // UnlockSystemProfileSection will unlock the provided system profile section on the provided system
 //
 // This method will fail if the provided principal is not the person who locked the system profile section or if the section is not locked.
-func UnlockSystemProfileSection(ps pubsub.PubSub, cedarSystemID string, section models.SystemProfileLockableSection, userID uuid.UUID, actionType models.LockActionType) (bool, error) {
+func UnlockSystemProfileSection(ps pubsub.PubSub, cedarSystemID string, section models.SystemProfileLockableSection, userID uuid.UUID) (bool, error) {
 	systemProfileSessionLocks.Lock()
 
 	sectionLocks, found := systemProfileSessionLocks.systemLockStatuses[cedarSystemID]
@@ -162,7 +157,6 @@ func UnlockSystemProfileSection(ps pubsub.PubSub, cedarSystemID string, section 
 	ps.Publish(sessionID, pubsubevents.SystemProfileSectionLocksChanged, models.SystemProfileSectionLockStatusChanged{
 		ChangeType: models.LockChangeTypeRemoved,
 		LockStatus: &lockStatus,
-		ActionType: actionType,
 	})
 
 	return true, nil
@@ -174,9 +168,9 @@ func isUserAuthorizedToEditLock(lockStatus models.SystemProfileSectionLockStatus
 	return userID == lockStatus.LockedByUserAccount.ID
 }
 
-// UnlockAllSystemProfileSections is an admin function that unlocks all sections for a system.
+// UnlockAllSystemProfileSections unlocks all sections for a system.
 // Bypasses ownership checks - can unlock sections owned by any user.
-// Publishes REMOVED events with ADMIN action type for each unlocked section.
+// Publishes REMOVED events for each unlocked section.
 func UnlockAllSystemProfileSections(ps pubsub.PubSub, cedarSystemID string) ([]*models.SystemProfileSectionLockStatus, error) {
 	systemProfileSessionLocks.Lock()
 
@@ -208,7 +202,6 @@ func UnlockAllSystemProfileSections(ps pubsub.PubSub, cedarSystemID string) ([]*
 		ps.Publish(sessionID, pubsubevents.SystemProfileSectionLocksChanged, models.SystemProfileSectionLockStatusChanged{
 			ChangeType: models.LockChangeTypeRemoved,
 			LockStatus: &item.lockStatus,
-			ActionType: models.LockActionTypeAdmin,
 		})
 	}
 
@@ -290,7 +283,7 @@ func onLockSystemProfileSectionUnsubscribeComplete(
 	}
 
 	for _, section := range ownedSections {
-		_, err := UnlockSystemProfileSection(ps, cedarSystemID, section, account.ID, models.LockActionTypeNormal)
+		_, err := UnlockSystemProfileSection(ps, cedarSystemID, section, account.ID)
 
 		if err != nil {
 			subscriber.Logger.Error("Failed to auto-unlock section on websocket disconnect",

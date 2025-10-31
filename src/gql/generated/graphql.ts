@@ -1018,13 +1018,6 @@ export enum LifecycleCostYear {
   LIFECYCLE_COST_YEAR_5 = 'LIFECYCLE_COST_YEAR_5'
 }
 
-export enum LockActionType {
-  /** An administrative action */
-  ADMIN = 'ADMIN',
-  /** A normal flow action */
-  NORMAL = 'NORMAL'
-}
-
 export enum LockChangeType {
   ADDED = 'ADDED',
   REMOVED = 'REMOVED',
@@ -3013,7 +3006,6 @@ export enum SystemProfileLockableSection {
 export type SystemProfileSectionLockStatus = {
   __typename: 'SystemProfileSectionLockStatus';
   cedarSystemId: Scalars['String']['output'];
-  isAdmin: Scalars['Boolean']['output'];
   lockedByUserAccount: UserAccount;
   section: SystemProfileLockableSection;
 };
@@ -3021,7 +3013,6 @@ export type SystemProfileSectionLockStatus = {
 /** Details about a change to the lock status of a system profile section */
 export type SystemProfileSectionLockStatusChanged = {
   __typename: 'SystemProfileSectionLockStatusChanged';
-  actionType: LockActionType;
   changeType: LockChangeType;
   lockStatus: SystemProfileSectionLockStatus;
 };

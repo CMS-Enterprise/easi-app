@@ -4,18 +4,6 @@ enum LockChangeType {
   REMOVED
 }
 
-enum LockActionType {
-  """
-  A normal flow action
-  """
-  NORMAL
-
-  """
-  An administrative action
-  """
-  ADMIN
-}
-
 """
 Sections of the system profile form that can be locked for editing
 """
@@ -35,7 +23,6 @@ type SystemProfileSectionLockStatus {
   cedarSystemId: String!
   section: SystemProfileLockableSection!
   lockedByUserAccount: UserAccount!
-  isAdmin: Boolean!
 }
 
 """
@@ -44,7 +31,6 @@ Details about a change to the lock status of a system profile section
 type SystemProfileSectionLockStatusChanged {
   changeType: LockChangeType!
   lockStatus: SystemProfileSectionLockStatus!
-  actionType: LockActionType!
 }
 
 extend type Query {

@@ -827,14 +827,12 @@ type SystemProfileSectionLockStatus struct {
 	CedarSystemID       string                       `json:"cedarSystemId"`
 	Section             SystemProfileLockableSection `json:"section"`
 	LockedByUserAccount *authentication.UserAccount  `json:"lockedByUserAccount"`
-	IsAdmin             bool                         `json:"isAdmin"`
 }
 
 // Details about a change to the lock status of a system profile section
 type SystemProfileSectionLockStatusChanged struct {
 	ChangeType LockChangeType                  `json:"changeType"`
 	LockStatus *SystemProfileSectionLockStatus `json:"lockStatus"`
-	ActionType LockActionType                  `json:"actionType"`
 }
 
 // Input data for creating a system intake's relationship to a CEDAR system
@@ -1075,63 +1073,6 @@ type UpdateSystemIntakeGRBReviewFormInputTimeframeAsync struct {
 type UpdateSystemIntakeGRBReviewTypeInput struct {
 	SystemIntakeID uuid.UUID                 `json:"systemIntakeID"`
 	GrbReviewType  SystemIntakeGRBReviewType `json:"grbReviewType"`
-}
-
-type LockActionType string
-
-const (
-	// A normal flow action
-	LockActionTypeNormal LockActionType = "NORMAL"
-	// An administrative action
-	LockActionTypeAdmin LockActionType = "ADMIN"
-)
-
-var AllLockActionType = []LockActionType{
-	LockActionTypeNormal,
-	LockActionTypeAdmin,
-}
-
-func (e LockActionType) IsValid() bool {
-	switch e {
-	case LockActionTypeNormal, LockActionTypeAdmin:
-		return true
-	}
-	return false
-}
-
-func (e LockActionType) String() string {
-	return string(e)
-}
-
-func (e *LockActionType) UnmarshalGQL(v any) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = LockActionType(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid LockActionType", str)
-	}
-	return nil
-}
-
-func (e LockActionType) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
-func (e *LockActionType) UnmarshalJSON(b []byte) error {
-	s, err := strconv.Unquote(string(b))
-	if err != nil {
-		return err
-	}
-	return e.UnmarshalGQL(s)
-}
-
-func (e LockActionType) MarshalJSON() ([]byte, error) {
-	var buf bytes.Buffer
-	e.MarshalGQL(&buf)
-	return buf.Bytes(), nil
 }
 
 type LockChangeType string

@@ -1030,13 +1030,11 @@ type ComplexityRoot struct {
 
 	SystemProfileSectionLockStatus struct {
 		CedarSystemID       func(childComplexity int) int
-		IsAdmin             func(childComplexity int) int
 		LockedByUserAccount func(childComplexity int) int
 		Section             func(childComplexity int) int
 	}
 
 	SystemProfileSectionLockStatusChanged struct {
-		ActionType func(childComplexity int) int
 		ChangeType func(childComplexity int) int
 		LockStatus func(childComplexity int) int
 	}
@@ -7445,13 +7443,6 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.SystemProfileSectionLockStatus.CedarSystemID(childComplexity), true
 
-	case "SystemProfileSectionLockStatus.isAdmin":
-		if e.complexity.SystemProfileSectionLockStatus.IsAdmin == nil {
-			break
-		}
-
-		return e.complexity.SystemProfileSectionLockStatus.IsAdmin(childComplexity), true
-
 	case "SystemProfileSectionLockStatus.lockedByUserAccount":
 		if e.complexity.SystemProfileSectionLockStatus.LockedByUserAccount == nil {
 			break
@@ -7465,13 +7456,6 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.SystemProfileSectionLockStatus.Section(childComplexity), true
-
-	case "SystemProfileSectionLockStatusChanged.actionType":
-		if e.complexity.SystemProfileSectionLockStatusChanged.ActionType == nil {
-			break
-		}
-
-		return e.complexity.SystemProfileSectionLockStatusChanged.ActionType(childComplexity), true
 
 	case "SystemProfileSectionLockStatusChanged.changeType":
 		if e.complexity.SystemProfileSectionLockStatusChanged.ChangeType == nil {
@@ -12496,18 +12480,6 @@ extend type Query {
   REMOVED
 }
 
-enum LockActionType {
-  """
-  A normal flow action
-  """
-  NORMAL
-
-  """
-  An administrative action
-  """
-  ADMIN
-}
-
 """
 Sections of the system profile form that can be locked for editing
 """
@@ -12527,7 +12499,6 @@ type SystemProfileSectionLockStatus {
   cedarSystemId: String!
   section: SystemProfileLockableSection!
   lockedByUserAccount: UserAccount!
-  isAdmin: Boolean!
 }
 
 """
@@ -12536,7 +12507,6 @@ Details about a change to the lock status of a system profile section
 type SystemProfileSectionLockStatusChanged {
   changeType: LockChangeType!
   lockStatus: SystemProfileSectionLockStatus!
-  actionType: LockActionType!
 }
 
 extend type Query {
@@ -39423,8 +39393,6 @@ func (ec *executionContext) fieldContext_Mutation_unlockAllSystemProfileSections
 				return ec.fieldContext_SystemProfileSectionLockStatus_section(ctx, field)
 			case "lockedByUserAccount":
 				return ec.fieldContext_SystemProfileSectionLockStatus_lockedByUserAccount(ctx, field)
-			case "isAdmin":
-				return ec.fieldContext_SystemProfileSectionLockStatus_isAdmin(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemProfileSectionLockStatus", field.Name)
 		},
@@ -42998,8 +42966,6 @@ func (ec *executionContext) fieldContext_Query_systemProfileSectionLocks(ctx con
 				return ec.fieldContext_SystemProfileSectionLockStatus_section(ctx, field)
 			case "lockedByUserAccount":
 				return ec.fieldContext_SystemProfileSectionLockStatus_lockedByUserAccount(ctx, field)
-			case "isAdmin":
-				return ec.fieldContext_SystemProfileSectionLockStatus_isAdmin(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemProfileSectionLockStatus", field.Name)
 		},
@@ -43645,8 +43611,6 @@ func (ec *executionContext) fieldContext_Subscription_onSystemProfileSectionLock
 				return ec.fieldContext_SystemProfileSectionLockStatusChanged_changeType(ctx, field)
 			case "lockStatus":
 				return ec.fieldContext_SystemProfileSectionLockStatusChanged_lockStatus(ctx, field)
-			case "actionType":
-				return ec.fieldContext_SystemProfileSectionLockStatusChanged_actionType(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemProfileSectionLockStatusChanged", field.Name)
 		},
@@ -54685,50 +54649,6 @@ func (ec *executionContext) fieldContext_SystemProfileSectionLockStatus_lockedBy
 	return fc, nil
 }
 
-func (ec *executionContext) _SystemProfileSectionLockStatus_isAdmin(ctx context.Context, field graphql.CollectedField, obj *models.SystemProfileSectionLockStatus) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemProfileSectionLockStatus_isAdmin(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.IsAdmin, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(bool)
-	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_SystemProfileSectionLockStatus_isAdmin(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "SystemProfileSectionLockStatus",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Boolean does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _SystemProfileSectionLockStatusChanged_changeType(ctx context.Context, field graphql.CollectedField, obj *models.SystemProfileSectionLockStatusChanged) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemProfileSectionLockStatusChanged_changeType(ctx, field)
 	if err != nil {
@@ -54818,54 +54738,8 @@ func (ec *executionContext) fieldContext_SystemProfileSectionLockStatusChanged_l
 				return ec.fieldContext_SystemProfileSectionLockStatus_section(ctx, field)
 			case "lockedByUserAccount":
 				return ec.fieldContext_SystemProfileSectionLockStatus_lockedByUserAccount(ctx, field)
-			case "isAdmin":
-				return ec.fieldContext_SystemProfileSectionLockStatus_isAdmin(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemProfileSectionLockStatus", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _SystemProfileSectionLockStatusChanged_actionType(ctx context.Context, field graphql.CollectedField, obj *models.SystemProfileSectionLockStatusChanged) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemProfileSectionLockStatusChanged_actionType(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ActionType, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(models.LockActionType)
-	fc.Result = res
-	return ec.marshalNLockActionType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐLockActionType(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_SystemProfileSectionLockStatusChanged_actionType(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "SystemProfileSectionLockStatusChanged",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type LockActionType does not have child fields")
 		},
 	}
 	return fc, nil
@@ -78050,11 +77924,6 @@ func (ec *executionContext) _SystemProfileSectionLockStatus(ctx context.Context,
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "isAdmin":
-			out.Values[i] = ec._SystemProfileSectionLockStatus_isAdmin(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -78096,11 +77965,6 @@ func (ec *executionContext) _SystemProfileSectionLockStatusChanged(ctx context.C
 			}
 		case "lockStatus":
 			out.Values[i] = ec._SystemProfileSectionLockStatusChanged_lockStatus(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "actionType":
-			out.Values[i] = ec._SystemProfileSectionLockStatusChanged_actionType(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -82531,16 +82395,6 @@ func (ec *executionContext) marshalNLaunchDarklySettings2ᚖgithubᚗcomᚋcms�
 		return graphql.Null
 	}
 	return ec._LaunchDarklySettings(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalNLockActionType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐLockActionType(ctx context.Context, v any) (models.LockActionType, error) {
-	var res models.LockActionType
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNLockActionType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐLockActionType(ctx context.Context, sel ast.SelectionSet, v models.LockActionType) graphql.Marshaler {
-	return v
 }
 
 func (ec *executionContext) unmarshalNLockChangeType2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐLockChangeType(ctx context.Context, v any) (models.LockChangeType, error) {

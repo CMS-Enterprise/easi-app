@@ -36,7 +36,7 @@ func (r *mutationResolver) UnlockSystemProfileSection(ctx context.Context, cedar
 		return false, fmt.Errorf("failed to unlock section [%v], unable to retrieve user account", section)
 	}
 
-	return UnlockSystemProfileSection(r.pubsub, cedarSystemID, section, account.ID, models.LockActionTypeNormal)
+	return UnlockSystemProfileSection(r.pubsub, cedarSystemID, section, account.ID)
 }
 
 // UnlockAllSystemProfileSections is the resolver for the unlockAllSystemProfileSections field.

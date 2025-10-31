@@ -14,11 +14,9 @@ body:graphql {
   subscription onLockStatusChanged {
     onSystemProfileSectionLockStatusChanged(cedarSystemId: "{{cedarSystemId}}") {
       changeType
-      actionType
       lockStatus {
         cedarSystemId
         section
-        isAdmin
         lockedByUserAccount {
           id
           username
