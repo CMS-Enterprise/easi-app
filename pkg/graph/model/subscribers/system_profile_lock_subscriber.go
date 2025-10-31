@@ -1,6 +1,8 @@
 package subscribers
 
 import (
+	"fmt"
+
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
@@ -54,7 +56,18 @@ func (s *SystemProfileLockChangedSubscriber) GetPrincipal() authentication.Princ
 
 // Notify will be called by the PubSub service when an event this Subscriber is registered for is dispatched
 func (s *SystemProfileLockChangedSubscriber) Notify(payload interface{}) {
-	typedPayload := payload.(models.SystemProfileSectionLockStatusChanged)
+	typedPayload, ok := payload.(models.SystemProfileSectionLockStatusChanged)
+
+	// Log error if invalid payload type
+	if !ok {
+		s.Logger.Error("Invalid payload type in Notify",
+			zap.String("expected", "SystemProfileSectionLockStatusChanged"),
+			zap.String("got", fmt.Sprintf("%T", payload)),
+		)
+		return
+	}
+
+	// Send the validated payload to the channel
 	s.Channel <- &typedPayload
 }
 
