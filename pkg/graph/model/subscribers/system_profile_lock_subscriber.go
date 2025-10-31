@@ -9,8 +9,8 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/pubsub"
 )
 
-// OnUnsubscribeCallback is a callback that will be called when a SystemProfileLockChangedSubscriber is unsubscribed
-type OnUnsubscribeCallback func(ps pubsub.PubSub, subscriber *SystemProfileLockChangedSubscriber)
+// SystemProfileLockOnUnsubscribeCallback is a callback that will be called when a SystemProfileLockChangedSubscriber is unsubscribed
+type SystemProfileLockOnUnsubscribeCallback func(ps pubsub.PubSub, subscriber *SystemProfileLockChangedSubscriber)
 
 // SystemProfileLockChangedSubscriber is a Subscriber definition to receive SystemProfileSectionLockStatusChanged payloads
 type SystemProfileLockChangedSubscriber struct {
@@ -19,7 +19,7 @@ type SystemProfileLockChangedSubscriber struct {
 	CedarSystemID  string // Original system ID for callback use
 	Channel        chan *models.SystemProfileSectionLockStatusChanged
 	Logger         *zap.Logger
-	onUnsubscribed OnUnsubscribeCallback
+	onUnsubscribed SystemProfileLockOnUnsubscribeCallback
 }
 
 // NewSystemProfileLockChangedSubscriber is a constructor to create a new SystemProfileLockChangedSubscriber
@@ -71,6 +71,6 @@ func (s *SystemProfileLockChangedSubscriber) GetChannel() <-chan *models.SystemP
 }
 
 // SetOnUnsubscribedCallback is an optional callback that will be called when this Subscriber is unsubscribed
-func (s *SystemProfileLockChangedSubscriber) SetOnUnsubscribedCallback(onUnsubscribed OnUnsubscribeCallback) {
+func (s *SystemProfileLockChangedSubscriber) SetOnUnsubscribedCallback(onUnsubscribed SystemProfileLockOnUnsubscribeCallback) {
 	s.onUnsubscribed = onUnsubscribed
 }

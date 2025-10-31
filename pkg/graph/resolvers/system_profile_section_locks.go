@@ -27,6 +27,13 @@ type (
 		systemLockStatuses systemLockStatusMap
 		sync.Mutex
 	}
+
+	// sectionLockEntry holds a lockable section and its corresponding lock status
+	// extracted from the section lock status map
+	sectionLockEntry struct {
+		section    models.SystemProfileLockableSection
+		lockStatus models.SystemProfileSectionLockStatus
+	}
 )
 
 var (
@@ -180,16 +187,13 @@ func UnlockAllSystemProfileSections(ps pubsub.PubSub, cedarSystemID string) ([]*
 	}
 
 	// Copy sections to unlock while holding the lock
-	var sectionsToUnlock []struct {
-		section    models.SystemProfileLockableSection
-		lockStatus models.SystemProfileSectionLockStatus
-	}
+	var sectionsToUnlock []sectionLockEntry
 
 	for section, lockStatus := range sectionLocks {
-		sectionsToUnlock = append(sectionsToUnlock, struct {
-			section    models.SystemProfileLockableSection
-			lockStatus models.SystemProfileSectionLockStatus
-		}{section: section, lockStatus: lockStatus})
+		sectionsToUnlock = append(sectionsToUnlock, sectionLockEntry{
+			section:    section,
+			lockStatus: lockStatus,
+		})
 	}
 
 	// Delete from map while holding lock
