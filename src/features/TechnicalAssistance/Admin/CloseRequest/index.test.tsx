@@ -258,7 +258,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
     );
 
     await findByText(
-      i18next.t<string>('technicalAssistance:actionCloseRequest.error')
+      i18next.t<string>('error:operationErrors.CloseTRBRequest')
     );
   });
 
@@ -448,7 +448,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
     );
 
     await findByText(
-      i18next.t<string>('technicalAssistance:actionReopenRequest.error')
+      i18next.t<string>('error:operationErrors.ReopenTRBRequest')
     );
   });
 });

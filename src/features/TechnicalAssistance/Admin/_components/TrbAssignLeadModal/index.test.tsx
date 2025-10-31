@@ -186,7 +186,7 @@ describe('TrbAssignLeadModal', () => {
     );
 
     await findByText(
-      i18next.t<string>('technicalAssistance:assignTrbLeadModal.error')
+      i18next.t<string>('error:operationErrors.UpdateTRBRequestLead')
     );
   });
 });

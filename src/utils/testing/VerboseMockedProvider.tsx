@@ -14,6 +14,7 @@ import {
   MockedResponse,
   MockLink
 } from '@apollo/client/testing';
+import i18next from 'i18next';
 
 import Alert from 'components/Alert';
 
@@ -56,34 +57,15 @@ const VerboseMockedProvider = (props: Props) => {
 
   const mockLink = new MockLink(mocks, true); // addTypename = true for second param
 
+  const errorMessages = i18next.t<Record<string, string>>(
+    'error:operationErrors',
+    { returnObjects: true }
+  );
+
   const errorLoggingLink = onError(
     ({ graphQLErrors, networkError, operation }) => {
       const operationType = getOperationType(operation);
       const { operationName } = operation;
-
-      // Error messages map (matches production error handler)
-      const errorMessages: Record<string, string> = {
-        CreateTRBAdminNoteGeneralRequest:
-          'There was a problem saving your note. Please try again. If the error persists, please try again at a later date.',
-        CreateTRBAdminNoteSupportingDocuments:
-          'There was a problem saving your note. Please try again. If the error persists, please try again at a later date.',
-        UpdateTRBRequestConsultMeeting:
-          'There was an issue scheduling the consult session. Please try again, and if the problem persists, try again later.',
-        CreateTRBRequestDocument:
-          'There was an issue uploading your document. Please try again, and if the problem persists, try again later.',
-        CreateTRBRequestFeedback:
-          'There was an issue completing the request edits action. Please try again, and if the problem persists, try again later.',
-        CloseTRBRequest:
-          'There was an issue closing this request. Please try again, and if the problem persists, try again later.',
-        ReopenTRBRequest:
-          'There was an issue re-opening this request. Please try again, and if the problem persists, try again later.',
-        UpdateTRBRequestLead:
-          'There was an issue assigning a TRB lead for this request. Please try again, and if the problem persists, try again later.',
-        SendPresentationDeckReminder:
-          'There was an issue sending the reminder. Please try again.',
-        SendSystemIntakeGRBReviewerReminder:
-          'There was an issue sending your reminder. Please try again, and if the problem persists, try again later.'
-      };
 
       if (graphQLErrors) {
         graphQLErrors.forEach(({ message, locations, path }) =>

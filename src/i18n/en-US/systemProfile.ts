@@ -286,8 +286,6 @@ const systemProfile = {
           'There was a problem adding a team member. Please try again. If the error persists, please try again at a later date.',
         successRemoveContact:
           '{{commonName}} has been removed as a team member.',
-        errorRemoveContact:
-          'There was a problem removing a team member. Please try again. If the error persists, please try again at a later date.',
         availableRoles: {
           link: 'What roles are available?',
           descriptionNull: 'Error fetching role description',

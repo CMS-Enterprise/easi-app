@@ -306,7 +306,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
     );
 
     await findByText(
-      i18next.t<string>('technicalAssistance:actionScheduleConsult.error')
+      i18next.t<string>('error:operationErrors.UpdateTRBRequestConsultMeeting')
     );
   });
 });

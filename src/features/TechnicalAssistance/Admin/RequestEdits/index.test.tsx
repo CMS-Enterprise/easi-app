@@ -193,7 +193,7 @@ describe('Trb Admin: Action: Request Edits', () => {
     );
 
     await screen.findByText(
-      i18next.t<string>('technicalAssistance:actionRequestEdits.error')
+      i18next.t<string>('error:operationErrors.CreateTRBRequestFeedback')
     );
   });
 });

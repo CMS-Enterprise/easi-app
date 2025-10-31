@@ -61,13 +61,9 @@ const discussions = {
       noDiscussions: 'There are not yet any discussions.',
       noDiscussionsStartButton:
         'There are not yet any discussions. <button>Start a discussion</button>.',
-      replyError:
-        'There was an issue with adding your reply, please try again.',
       replySuccess: 'Success! Your reply has been added.',
       saveDiscussion:
         'When you save your discussion, the selected team(s) and individual(s) will be notified via email.',
-      startDiscussionError:
-        'There was an issue with adding to the discussion board, please try again.',
       startDiscussionSuccess:
         'You have successfully added to the discussion board.'
     },
