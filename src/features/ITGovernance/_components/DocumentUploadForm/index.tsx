@@ -30,6 +30,7 @@ import HelpText from 'components/HelpText';
 import IconLink from 'components/IconLink';
 import Label from 'components/Label';
 import RequiredAsterisk from 'components/RequiredAsterisk';
+import toastSuccess from 'components/ToastSuccess';
 import useMessage from 'hooks/useMessage';
 import { ITGovernanceViewType } from 'types/itGov';
 import { fileToBase64File } from 'utils/downloadFile';
@@ -63,7 +64,7 @@ const DocumentUploadForm = ({
     systemId: string;
   }>();
 
-  const { Message, showMessageOnNextPage, showMessage } = useMessage();
+  const { Message } = useMessage();
 
   const [createDocument] = useCreateSystemIntakeDocumentMutation({
     refetchQueries: [
@@ -107,6 +108,7 @@ const DocumentUploadForm = ({
 
   const submit = handleSubmit(async ({ otherTypeDescription, ...formData }) => {
     const newFile = await fileToBase64File(formData.fileData);
+
     createDocument({
       variables: {
         input: {
@@ -121,22 +123,10 @@ const DocumentUploadForm = ({
           sendNotification: formData.sendNotification
         }
       }
-    })
-      .then(() => {
-        showMessageOnNextPage(
-          t('technicalAssistance:documents.upload.success'),
-          {
-            type: 'success'
-          }
-        );
-        history.push(returnLink);
-      })
-      .catch(() => {
-        showMessage(t('technicalAssistance:documents.upload.error'), {
-          type: 'error',
-          className: 'margin-top-4'
-        });
-      });
+    }).then(() => {
+      toastSuccess(t('technicalAssistance:documents.upload.success'));
+      history.push(returnLink);
+    });
   });
 
   return (

@@ -21,7 +21,7 @@ import {
 
 import Spinner from 'components/Spinner';
 import TextAreaField from 'components/TextAreaField';
-import useMessage from 'hooks/useMessage';
+import toastSuccess from 'components/ToastSuccess';
 import { TrbRecipientFields } from 'types/technicalAssistance';
 import { trbActionSchema } from 'validations/trbRequestSchema';
 
@@ -43,8 +43,6 @@ function CloseRequest() {
     action: 'close-request' | 'reopen-request';
   }>();
   const history = useHistory();
-
-  const { showMessage, showMessageOnNextPage } = useMessage();
 
   const requestUrl = `/trb/${id}/${activePage}`;
 
@@ -92,20 +90,10 @@ function CloseRequest() {
             copyTrbMailbox
           }
         }
-      })
-        .then(result => {
-          showMessageOnNextPage(t(`${actionText}.success`), {
-            type: 'success',
-            className: 'margin-top-3'
-          });
-          history.push(`/trb/${id}/request`);
-        })
-        .catch(err => {
-          showMessage(t(`${actionText}.error`), {
-            type: 'error',
-            className: 'margin-top-3'
-          });
-        });
+      }).then(() => {
+        toastSuccess(t(`${actionText}.success`));
+        history.push(`/trb/${id}/request`);
+      });
     }
   );
 
@@ -120,20 +108,10 @@ function CloseRequest() {
             copyTrbMailbox
           }
         }
-      })
-        .then(result => {
-          showMessageOnNextPage(t(`${actionText}.success`), {
-            type: 'success',
-            className: 'margin-top-3'
-          });
-          history.push(`/trb/${id}/request`);
-        })
-        .catch(err => {
-          showMessage(t(`${actionText}.error`), {
-            type: 'error',
-            className: 'margin-top-3'
-          });
-        });
+      }).then(() => {
+        toastSuccess(t(`${actionText}.success`));
+        history.push(`/trb/${id}/request`);
+      });
     }
   );
 

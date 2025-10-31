@@ -25,7 +25,7 @@ import ExternalLinkAndModal from 'components/ExternalLinkAndModal';
 import IconLink from 'components/IconLink';
 import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
-import useMessage from 'hooks/useMessage';
+import toastSuccess from 'components/ToastSuccess';
 import { formatDateLocal } from 'utils/date';
 import { downloadFileFromURL } from 'utils/downloadFile';
 
@@ -154,8 +154,6 @@ function PresentationLinksCard({
 
   const isITGovAdmin = useContext(ITGovAdminContext);
 
-  const { showMessage } = useMessage();
-
   const {
     recordingLink,
     recordingPasscode,
@@ -196,14 +194,7 @@ function PresentationLinksCard({
   const removePresentationLinks = () => {
     deleteSystemIntakeGRBPresentationLinks()
       .then(() => {
-        showMessage(t('asyncPresentation.modalRemoveLinks.success'), {
-          type: 'success'
-        });
-      })
-      .catch(() => {
-        showMessage(t('asyncPresentation.modalRemoveLinks.error'), {
-          type: 'error'
-        });
+        toastSuccess(t('asyncPresentation.modalRemoveLinks.success'));
       })
       .finally(() => {
         setRemovePresentationLinksModalOpen(false);

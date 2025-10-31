@@ -22,7 +22,7 @@ import {
 } from 'gql/generated/graphql';
 import { AppState } from 'stores/reducers/rootReducer';
 
-import useMessage from 'hooks/useMessage';
+import toastSuccess from 'components/ToastSuccess';
 import { TrbRequestIdRef } from 'types/technicalAssistance';
 
 type TrbAssignLeadModalOpenerProps = {
@@ -95,8 +95,6 @@ function TrbAssignLeadModal({
     }
   });
 
-  const { showMessage } = useMessage();
-
   const { data } = useGetTRBLeadOptionsQuery();
 
   const [mutate] = useUpdateTRBRequestLeadMutation();
@@ -111,26 +109,15 @@ function TrbAssignLeadModal({
           trbLead: formData.trbLead
         }
       }
-    })
-      .then(result => {
-        showMessage(
-          t(`assignTrbLeadModal.success`, {
-            name: data?.trbLeadOptions.find(
-              e => e.euaUserId === formData.trbLead
-            )!.commonName
-          }),
-          {
-            type: 'success',
-            className: 'margin-top-3'
-          }
-        );
-      })
-      .catch(err => {
-        showMessage(t(`assignTrbLeadModal.error`), {
-          type: 'error',
-          className: 'margin-top-3'
-        });
-      });
+    }).then(() => {
+      toastSuccess(
+        t(`assignTrbLeadModal.success`, {
+          name: data?.trbLeadOptions.find(
+            e => e.euaUserId === formData.trbLead
+          )!.commonName
+        })
+      );
+    });
 
     reset();
   });

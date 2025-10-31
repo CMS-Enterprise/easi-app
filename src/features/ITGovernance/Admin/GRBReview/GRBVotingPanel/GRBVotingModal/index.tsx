@@ -12,7 +12,6 @@ import {
   useCastGRBReviewerVoteMutation
 } from 'gql/generated/graphql';
 
-import Alert from 'components/Alert';
 import { useEasiForm } from 'components/EasiForm';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import Modal from 'components/Modal';
@@ -32,8 +31,6 @@ const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
   const { systemId } = useParams<{
     systemId: string;
   }>();
-
-  const [err, setError] = useState<boolean>(false);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -91,17 +88,12 @@ const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
         }
       },
       refetchQueries: ['GetSystemIntake']
-    })
-      .then(() => {
-        setIsOpen(false);
-      })
-      .catch(() => {
-        setError(true);
-      });
+    }).then(() => {
+      setIsOpen(false);
+    });
   });
 
   const resetModal = () => {
-    setError(false);
     reset();
     setIsOpen(false);
   };
@@ -130,12 +122,6 @@ const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
           dateVoted={grbReviewer.dateVoted}
           className="margin-bottom-0 margin-top-1"
         />
-
-        {err && (
-          <Alert type="error" slim>
-            {t('technicalAssistance:documents.upload.error')}
-          </Alert>
-        )}
 
         <p>
           {hasVoted

@@ -32,6 +32,7 @@ import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
 import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';
 import typeRichText from 'utils/testing/typeRichText';
+import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import TRBRequestInfoWrapper from '../_components/RequestContext';
 import AdminHome from '..';
@@ -282,12 +283,20 @@ describe('Trb Admin Notes: Add Note', () => {
   });
 
   it('shows an error notice when submission fails', async () => {
-    const { getByLabelText, getByRole, findByText } = render(
-      <MockedProvider
+    const { getByLabelText, getByRole } = render(
+      <VerboseMockedProvider
+        defaultOptions={{
+          watchQuery: { fetchPolicy: 'no-cache' },
+          query: { fetchPolicy: 'no-cache' }
+        }}
         mocks={[
+          getTrbRequestSummaryQuery,
+          getTRBRequestAttendeesQuery,
+          getTrbRequestDocumentsQuery,
+          getTrbInsightsQuery,
           {
             ...createTrbAdminNoteQuery,
-            error: new Error()
+            error: new Error('Failed to save note')
           }
         ]}
       >
@@ -302,7 +311,7 @@ describe('Trb Admin Notes: Add Note', () => {
             </MessageProvider>
           </TRBRequestInfoWrapper>
         </MemoryRouter>
-      </MockedProvider>
+      </VerboseMockedProvider>
     );
 
     // Select note category
@@ -310,20 +319,23 @@ describe('Trb Admin Notes: Add Note', () => {
       getByLabelText(
         RegExp(i18next.t<string>('technicalAssistance:notes.labels.category'))
       ),
-      ['Supporting documents']
+      ['General note about this request']
     );
 
     // Enter note text
     await typeRichText(await screen.findByTestId('noteText'), 'My cute note');
 
-    await user.click(
-      getByRole('button', {
-        name: i18next.t<string>('technicalAssistance:notes.saveNote')
-      })
-    );
+    const submitButton = getByRole('button', {
+      name: i18next.t<string>('technicalAssistance:notes.saveNote')
+    });
 
-    await findByText(
-      i18next.t<string>('technicalAssistance:notes.status.error')
+    await user.click(submitButton);
+
+    // Error is displayed by VerboseMockedProvider's error handler
+    const errorAlert = await screen.findByTestId('test-error-message');
+    expect(errorAlert).toBeInTheDocument();
+    expect(errorAlert).toHaveTextContent(
+      /There was a problem saving your note/
     );
   });
 });

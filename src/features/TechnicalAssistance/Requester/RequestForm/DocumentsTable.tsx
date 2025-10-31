@@ -14,6 +14,7 @@ import {
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import Spinner from 'components/Spinner';
+import toastSuccess from 'components/ToastSuccess';
 import useMessage from 'hooks/useMessage';
 import { formatDateLocal } from 'utils/date';
 import { downloadFileFromURL } from 'utils/downloadFile';
@@ -83,49 +84,22 @@ function DocumentsTable({
   // Documents can be deleted from the table
   const [deleteDocument] = useDeleteTRBRequestDocumentMutation();
 
-  const setRemoveError = useMemo(() => {
-    return () => {
-      if (setDocumentMessage && setDocumentStatus) {
-        setDocumentMessage(t('documents.supportingDocuments.removeFail'));
-        setDocumentStatus('error');
-      }
-    };
-  }, [t, setDocumentMessage, setDocumentStatus]);
-
   const handleDelete = useMemo(() => {
     return (file: TrbRequestDocuments) => {
       deleteDocument({
         variables: {
           id: file.id
         }
-      })
-        .then(response => {
-          if (!response.errors) {
-            if (setDocumentMessage && setDocumentStatus) {
-              setDocumentMessage(
-                t('documents.supportingDocuments.removeSuccess', {
-                  documentName: file.fileName
-                })
-              );
-              setDocumentStatus('success');
-            }
-            refetch();
-          } else {
-            setRemoveError();
-          }
-        })
-        .catch(() => {
-          setRemoveError();
-        });
+      }).then(() => {
+        toastSuccess(
+          t('documents.supportingDocuments.removeSuccess', {
+            documentName: file.fileName
+          })
+        );
+        refetch();
+      });
     };
-  }, [
-    deleteDocument,
-    refetch,
-    t,
-    setDocumentMessage,
-    setDocumentStatus,
-    setRemoveError
-  ]);
+  }, [deleteDocument, refetch, t]);
 
   const columns = useMemo<Column<TrbRequestDocuments>[]>(() => {
     const getUrlForDocument = (documentId: string, documentName: string) => {

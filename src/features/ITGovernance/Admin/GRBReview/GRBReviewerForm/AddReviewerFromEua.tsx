@@ -28,15 +28,15 @@ import FieldErrorMsg from 'components/FieldErrorMsg';
 import HelpText from 'components/HelpText';
 import Label from 'components/Label';
 import Modal from 'components/Modal';
+import toastSuccess from 'components/ToastSuccess';
 import { grbReviewerRoles, grbReviewerVotingRoles } from 'constants/grbRoles';
-import useMessage from 'hooks/useMessage';
 import { GRBReviewerFields, GRBReviewFormAction } from 'types/grbReview';
 import { GRBReviewerSchema } from 'validations/grbReviewSchema';
 
 type AddReviewerFromEuaProps = {
   systemId: string;
   initialGRBReviewers: SystemIntakeGRBReviewerFragment[];
-  createGRBReviewers: (reviewers: GRBReviewerFields[]) => Promise<void>;
+  createGRBReviewers: (reviewers: GRBReviewerFields[]) => void;
   grbReviewStartedAt?: string | null;
   grbReviewPath: string;
   isFromGRBSetup?: boolean;
@@ -54,8 +54,6 @@ const AddReviewerFromEua = ({
   const { t } = useTranslation('grbReview');
 
   const history = useHistory();
-
-  const { showMessage, showMessageOnNextPage } = useMessage();
 
   const [reviewerToRemove, setReviewerToRemove] =
     useState<SystemIntakeGRBReviewerFragment | null>(null);
@@ -99,7 +97,7 @@ const AddReviewerFromEua = ({
   const action: GRBReviewFormAction = activeReviewer ? 'edit' : 'add';
 
   /** Update roles for existing reviewer */
-  const updateRoles = ({ userAccount, ...reviewer }: GRBReviewerFields) =>
+  const updateRoles = ({ userAccount, ...reviewer }: GRBReviewerFields) => {
     updateGRBReviewer({
       variables: {
         input: {
@@ -107,25 +105,17 @@ const AddReviewerFromEua = ({
           reviewerID: activeReviewer?.id || ''
         }
       }
-    })
-      .then(() => {
-        showMessageOnNextPage(
-          <Trans
-            i18nKey="grbReview:messages.success.edit"
-            values={{ commonName: userAccount.commonName }}
-          />,
-          { type: 'success' }
-        );
+    }).then(() => {
+      toastSuccess(
+        <Trans
+          i18nKey="grbReview:messages.success.edit"
+          values={{ commonName: userAccount.commonName }}
+        />
+      );
 
-        history.push(grbReviewPath);
-      })
-      .catch(() => {
-        showMessage(t(`messages.error.edit`), { type: 'error' });
-
-        // Scroll to error
-        const err = document.querySelector('.usa-alert');
-        err?.scrollIntoView();
-      });
+      history.push(grbReviewPath);
+    });
+  };
 
   const [mutate] = useDeleteSystemIntakeGRBReviewerMutation({
     refetchQueries: [GetSystemIntakeGRBReviewDocument]
@@ -133,19 +123,14 @@ const AddReviewerFromEua = ({
 
   const removeGRBReviewer = useCallback(
     (reviewer: SystemIntakeGRBReviewerFragment) => {
-      mutate({ variables: { input: { reviewerID: reviewer.id } } })
-        .then(() =>
-          showMessage(
-            <Trans
-              i18nKey="grbReview:messages.success.remove"
-              values={{ commonName: reviewer.userAccount.commonName }}
-            />,
-            { type: 'success' }
-          )
+      mutate({ variables: { input: { reviewerID: reviewer.id } } }).then(() =>
+        toastSuccess(
+          <Trans
+            i18nKey="grbReview:messages.success.remove"
+            values={{ commonName: reviewer.userAccount.commonName }}
+          />
         )
-        .catch(() =>
-          showMessage(t('messages.error.remove'), { type: 'error' })
-        );
+      );
 
       // // Reset `reviewerToRemove` to close modal
       setReviewerToRemove(null);
@@ -157,7 +142,7 @@ const AddReviewerFromEua = ({
         history.push(`/it-governance/${systemId}/grb-review`);
       }
     },
-    [history, systemId, mutate, showMessage, t, isFromGRBSetup]
+    [history, systemId, mutate, isFromGRBSetup]
   );
 
   return (
