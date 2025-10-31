@@ -6,7 +6,8 @@ import {
 import {
   CedarAssigneeType,
   CedarRole,
-  GetSystemProfileQuery
+  GetSystemProfileQuery,
+  SystemProfileLockableSection
 } from 'gql/generated/graphql';
 
 import {
@@ -182,18 +183,18 @@ export interface SystemProfileData extends GetSystemProfileQuery {
   atoStatus?: AtoStatus;
   budgets?: GetSystemProfileBudget[];
   budgetSystemCosts?: GetSystemProfileSystemCost;
-  businessOwners: GetSystemProfileRoles[];
+  businessOwners?: GetSystemProfileRoles[];
   developmentTags?: DevelopmentTag[];
   locations?: UrlLocation[];
   numberOfContractorFte?: number;
   numberOfFederalFte?: number;
   numberOfFte?: number;
   oaStatus?: string | null;
-  personRoles: CedarRoleAssigneePerson[];
-  plannedRetirement: string | null;
+  personRoles?: CedarRoleAssigneePerson[];
+  plannedRetirement?: string | null;
   productionLocation?: UrlLocation;
   status: GetSystemProfileStatus;
-  usernamesWithRoles: UsernameWithRoles[];
+  usernamesWithRoles?: UsernameWithRoles[];
 
   // Remaining mock data stubs
   activities?: tempATOProp[];
@@ -206,3 +207,10 @@ export interface SystemProfileData extends GetSystemProfileQuery {
 export interface SystemProfileSubviewProps {
   system: SystemProfileData;
 }
+
+/** Expands SystemProfileLockableSection enum to include read-only sections */
+export type SystemProfileSection =
+  | SystemProfileLockableSection
+  | 'CONTRACTS'
+  | 'FUNDING_AND_BUDGET'
+  | 'ATO_AND_SECURITY';

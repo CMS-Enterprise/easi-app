@@ -2,6 +2,9 @@
 
 import { SystemProfileLockableSection } from 'gql/generated/graphql';
 
+import { Flags } from 'types/flags';
+import { SystemProfileSection } from 'types/systemProfile';
+
 // Team
 
 export const teamSectionKeys = [
@@ -29,26 +32,72 @@ export const threatLevelGrades = [
 
 export const securityFindingKeys = ['total', ...threatLevelGrades] as const;
 
-/** Expands SystemProfileLockableSection enum to include read-only sections */
-export type SystemProfileSection =
-  | SystemProfileLockableSection
-  | 'CONTRACTS'
-  | 'FUNDING_AND_BUDGET'
-  | 'ATO_AND_SECURITY';
-
-/** Maps section enum to corresponding route */
-// TODO EASI-4984 - Update to use new routes. These point to existing system profile pages (or empty string if not yet implemented).
-export const systemProfileLockableSectionMap: Record<
-  SystemProfileSection,
-  string
-> = {
-  BUSINESS_INFORMATION: '',
-  IMPLEMENTATION_DETAILS: 'details',
-  DATA: 'system-data',
-  TOOLS_AND_SOFTWARE: 'tools-and-software',
-  SUB_SYSTEMS: 'sub-systems',
-  TEAM: 'team/edit?workspace',
-  CONTRACTS: 'contracts',
-  FUNDING_AND_BUDGET: 'funding-and-budget',
-  ATO_AND_SECURITY: 'ato-and-security'
+type SectionData = {
+  key: SystemProfileSection;
+  route: string;
+  legacyRoute: string;
+  featureFlag: keyof Flags;
 };
+
+/**
+ * Array of system profile sections with routes and enabled status.
+ *
+ * `legacyRoute` is the route for the legacy system profile page to be used if feature flags are off.
+ */
+// TODO EASI-4984 - remove `legacyRoute` once editable system profile feature is fully enabled
+export const systemProfileSections: Array<SectionData> = [
+  {
+    key: SystemProfileLockableSection.BUSINESS_INFORMATION,
+    route: 'business-information',
+    legacyRoute: '',
+    featureFlag: 'systemProfileBusinessInformation'
+  },
+  {
+    key: SystemProfileLockableSection.IMPLEMENTATION_DETAILS,
+    route: 'implementation-details',
+    legacyRoute: 'details',
+    featureFlag: 'systemProfileImplementationDetails'
+  },
+  {
+    key: SystemProfileLockableSection.DATA,
+    route: 'data',
+    legacyRoute: 'system-data',
+    featureFlag: 'systemProfileData'
+  },
+  {
+    key: SystemProfileLockableSection.TOOLS_AND_SOFTWARE,
+    route: 'tools-and-software',
+    legacyRoute: 'tools-and-software',
+    featureFlag: 'systemProfileToolsAndSoftware'
+  },
+  {
+    key: SystemProfileLockableSection.SUB_SYSTEMS,
+    route: 'sub-systems',
+    legacyRoute: 'sub-systems',
+    featureFlag: 'systemProfileSubSystems'
+  },
+  {
+    key: SystemProfileLockableSection.TEAM,
+    route: 'team',
+    legacyRoute: 'team/edit?workspace',
+    featureFlag: 'systemProfileTeam'
+  },
+  {
+    key: 'CONTRACTS',
+    route: 'contracts',
+    legacyRoute: 'contracts',
+    featureFlag: 'systemProfileContracts'
+  },
+  {
+    key: 'FUNDING_AND_BUDGET',
+    route: 'funding-and-budget',
+    legacyRoute: 'funding-and-budget',
+    featureFlag: 'systemProfileFundingAndBudget'
+  },
+  {
+    key: 'ATO_AND_SECURITY',
+    route: 'ato-and-security',
+    legacyRoute: 'ato-and-security',
+    featureFlag: 'systemProfileAtoAndSecurity'
+  }
+];

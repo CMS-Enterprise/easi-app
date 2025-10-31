@@ -1,0 +1,44 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`DataNotFound component > matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="data-not-found padding-3 easi-body-medium"
+  >
+    <div
+      class="display-flex flex-justify"
+    >
+      <h3
+        class="margin-top-1 margin-bottom-0"
+      >
+        Data not currently available
+      </h3>
+      <svg
+        aria-hidden="true"
+        class="usa-icon usa-icon--size-3 margin-left-1 text-warning top-1"
+        focusable="false"
+        height="1em"
+        role="img"
+        viewBox="0 0 24 24"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
+        />
+      </svg>
+    </div>
+    <p>
+      EASi is currently having difficulty accessing some or all data for this section, so it cannot be displayed. Please check back later.
+    </p>
+    If you have any questions, please contact Enterprise Architecture at 
+    <a
+      class="usa-link"
+      href="mailto:EnterpriseArchitecture@cms.hhs.gov"
+    >
+      EnterpriseArchitecture@cms.hhs.gov
+    </a>
+    .
+  </div>
+</DocumentFragment>
+`;

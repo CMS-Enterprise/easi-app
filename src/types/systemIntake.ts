@@ -164,7 +164,7 @@ export type CollaboratorFields = Record<
 >;
 
 export type GovernanceTeamsForm = {
-  isPresent: boolean;
+  isPresent: boolean | null | undefined;
   teams: CollaboratorFields;
 };
 

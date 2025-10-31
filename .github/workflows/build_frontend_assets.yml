@@ -27,7 +27,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v5
       - name: Set up node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ env.EASI_APP_NODE_VERSION }}
           cache: 'yarn'
@@ -39,7 +39,7 @@ jobs:
         run: |
           ./scripts/build_static.sh
       - name: Upload Frontend assets
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ${{ inputs.env }}-frontend-assets
           path: build/
