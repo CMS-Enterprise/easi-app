@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"os"
 	"strconv"
 	"strings"
@@ -15,6 +16,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/gorilla/mux"
+	"github.com/gorilla/websocket"
 	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
 	"github.com/vektah/gqlparser/v2/ast"
 	"go.uber.org/zap"
@@ -28,6 +30,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/authorization"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/oktaapi"
+	"github.com/cms-enterprise/easi-app/pkg/pubsub"
 	"github.com/cms-enterprise/easi-app/pkg/scheduler"
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 	"github.com/cms-enterprise/easi-app/pkg/usersearch"
@@ -68,18 +71,18 @@ func (s *Server) routes() {
 		s.logger.Fatal("Failed to create store", zap.Error(storeErr))
 	}
 
-	oktaAuthenticationMiddleware := okta.NewOktaAuthenticationMiddleware(
+	// Create Okta middleware factory for both HTTP and WebSocket authentication
+	oktaMiddlewareFactory := okta.NewOktaMiddlewareFactory(
 		handlers.NewHandlerBase(),
 		jwtVerifier,
 		store,
 		oktaConfig.AltJobCodes,
 	)
 
-	s.router.Use(oktaAuthenticationMiddleware)
+	s.router.Use(oktaMiddlewareFactory.NewAuthenticationMiddleware)
 
 	if s.NewLocalAuthIsEnabled() {
-		localAuthenticationMiddleware := local.NewLocalAuthenticationMiddleware(store)
-		s.router.Use(localAuthenticationMiddleware)
+		s.router.Use(local.NewLocalAuthenticationMiddleware(store))
 	}
 
 	userAccountServiceMiddleware := userhelpers.NewUserAccountServiceMiddleware(dataloaders.GetUserAccountByID)
@@ -171,6 +174,9 @@ func (s *Server) routes() {
 
 	serviceConfig := services.NewConfig(s.logger, ldClient)
 
+	// set up PubSub service for real-time subscriptions
+	pubsubService := pubsub.NewServicePubSub()
+
 	// set up GraphQL routes
 	gql := s.router.PathPrefix("/api/graph").Subrouter()
 
@@ -206,6 +212,7 @@ func (s *Server) routes() {
 		&emailClient,
 		ldClient,
 		coreClient,
+		pubsubService,
 	)
 	gqlDirectives := generated.DirectiveRoot{HasRole: func(ctx context.Context, obj interface{}, next graphql.Resolver, role models.Role) (res interface{}, err error) {
 		if !services.HasRole(ctx, role) {
@@ -217,7 +224,8 @@ func (s *Server) routes() {
 		return next(ctx)
 	}}
 	gqlConfig := generated.Config{Resolvers: resolver, Directives: gqlDirectives}
-	graphqlServer := newGQLServer(generated.NewExecutableSchema(gqlConfig))
+	clientAddress := s.Config.GetString(appconfig.ClientAddressKey)
+	graphqlServer := newGQLServer(generated.NewExecutableSchema(gqlConfig), oktaMiddlewareFactory, store, clientAddress)
 	graphqlServer.Use(extension.FixedComplexityLimit(1000))
 	graphqlServer.AroundResponses(NewGQLResponseMiddleware())
 
@@ -376,11 +384,19 @@ func (s *Server) routes() {
 
 }
 
-func newGQLServer(es graphql.ExecutableSchema) *handler.Server {
+func newGQLServer(es graphql.ExecutableSchema, oktaMiddlewareFactory *okta.OktaMiddlewareFactory, store *storage.Store, clientAddress string) *handler.Server {
 	srv := handler.New(es)
 
 	srv.AddTransport(transport.Websocket{
 		KeepAlivePingInterval: 10 * time.Second,
+		Upgrader: websocket.Upgrader{
+			CheckOrigin: func(r *http.Request) bool {
+				origin := r.Header.Get("Origin")
+				return origin == clientAddress
+			},
+			Subprotocols: []string{"graphql-transport-ws"},
+		},
+		InitFunc: HandleLocalOrOktaWebSocketAuth(oktaMiddlewareFactory, store),
 	})
 	srv.AddTransport(transport.Options{})
 	srv.AddTransport(transport.GET{})
