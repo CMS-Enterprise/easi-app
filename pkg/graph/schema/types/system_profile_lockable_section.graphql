@@ -1,0 +1,69 @@
+enum LockChangeType {
+  ADDED
+  UPDATED
+  REMOVED
+}
+
+"""
+Sections of the system profile form that can be locked for editing
+"""
+enum SystemProfileLockableSection {
+  BUSINESS_INFORMATION
+  IMPLEMENTATION_DETAILS
+  DATA
+  TOOLS_AND_SOFTWARE
+  SUB_SYSTEMS
+  TEAM
+}
+
+"""
+Status of a locked section of the system profile form
+"""
+type SystemProfileSectionLockStatus {
+  cedarSystemId: String!
+  section: SystemProfileLockableSection!
+  lockedByUserAccount: UserAccount!
+}
+
+"""
+Details about a change to the lock status of a system profile section
+"""
+type SystemProfileSectionLockStatusChanged {
+  changeType: LockChangeType!
+  lockStatus: SystemProfileSectionLockStatus!
+}
+
+extend type Query {
+  """
+  Returns an array containing the status of locked sections for a given cedar system profile form
+  """
+  systemProfileSectionLocks(
+    cedarSystemId: String!
+  ): [SystemProfileSectionLockStatus!]! @hasRole(role: EASI_USER)
+}
+
+extend type Mutation {
+  lockSystemProfileSection(
+    cedarSystemId: String!
+    section: SystemProfileLockableSection!
+  ): Boolean! @hasRole(role: EASI_USER)
+
+  unlockSystemProfileSection(
+    cedarSystemId: String!
+    section: SystemProfileLockableSection!
+  ): Boolean! @hasRole(role: EASI_USER)
+
+  unlockAllSystemProfileSections(
+    cedarSystemId: String!
+  ): [SystemProfileSectionLockStatus!]! @hasRole(role: EASI_USER)
+}
+
+type Subscription {
+  """
+  Subscribes to lock/unlock events for a system profile.
+  Automatically unlocks all sections owned by the user when websocket disconnects.
+  """
+  onSystemProfileSectionLockStatusChanged(
+    cedarSystemId: String!
+  ): SystemProfileSectionLockStatusChanged! @hasRole(role: EASI_USER)
+}

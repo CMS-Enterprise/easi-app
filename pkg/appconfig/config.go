@@ -146,6 +146,9 @@ const ClientHostKey = "CLIENT_HOSTNAME"
 // ClientProtocolKey is the key for getting the client's protocol
 const ClientProtocolKey = "CLIENT_PROTOCOL"
 
+// ClientAddressKey is the key for getting the client's address
+const ClientAddressKey = "CLIENT_ADDRESS"
+
 // EmailTemplateDirectoryKey is the key for getting the email template directory
 const EmailTemplateDirectoryKey = "EMAIL_TEMPLATE_DIR"
 
