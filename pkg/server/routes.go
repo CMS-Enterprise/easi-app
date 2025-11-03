@@ -390,6 +390,8 @@ func newGQLServer(es graphql.ExecutableSchema, oktaMiddlewareFactory *okta.OktaM
 	srv.AddTransport(transport.Websocket{
 		KeepAlivePingInterval: 10 * time.Second,
 		Upgrader: websocket.Upgrader{
+			// Strict origin validation
+			// Note: Bruno subscription queries will not work (use GraphQL Playground or update to allow empty origin)
 			CheckOrigin: func(r *http.Request) bool {
 				origin := r.Header.Get("Origin")
 				return origin == clientAddress
