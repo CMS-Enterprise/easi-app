@@ -1,0 +1,25 @@
+meta {
+  name: Lock Section
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{url}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation lockSection {
+    lockSystemProfileSection(
+      cedarSystemId: "{{cedarSystemId}}"
+      section: BUSINESS_INFORMATION
+    )
+  }
+}
+
+settings {
+  encodeUrl: true
+}
+

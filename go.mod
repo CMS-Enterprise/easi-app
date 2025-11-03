@@ -109,7 +109,7 @@ require (
 	github.com/agnivade/levenshtein v1.2.1 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/boombuler/barcode v1.0.1-0.20190219062509-6c824513bacc // indirect
-	github.com/charmbracelet/bubbletea v1.3.8
+	github.com/charmbracelet/bubbletea v1.3.10
 	github.com/cpuguy83/go-md2man/v2 v2.0.7 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.2.0 // indirect
@@ -122,7 +122,7 @@ require (
 	github.com/go-openapi/loads v0.23.1 // indirect
 	github.com/go-openapi/spec v0.22.0 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
-	github.com/gorilla/websocket v1.5.0 // indirect
+	github.com/gorilla/websocket v1.5.0
 	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79 // indirect
 	github.com/iancoleman/orderedmap v0.0.0-20190318233801-ac98e3ecb4b0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
