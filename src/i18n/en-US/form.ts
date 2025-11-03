@@ -13,13 +13,17 @@ const form = {
     makeSelection: 'Please make a selection',
     selectFile: 'Please select a file'
   },
-  // File upload
   selectedFile: 'Selected file',
   clearFile: 'Clear file',
   fileType: 'Uploaded file',
   fileType_pdf: 'Uploaded PDF file',
   fileType_word: 'Uploaded word document',
-  fileType_excel: 'Uploaded spreadsheet'
+  fileType_excel: 'Uploaded spreadsheet',
+  saveAndExit: 'Save and exit',
+  exitForm: 'Exit form',
+  exitFormWithoutSaving: 'Exit form without saving',
+  saveError:
+    'There was an issue saving your changes. Please try again, and if the problem persists, try again later.'
 };
 
 export default form;
