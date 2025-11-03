@@ -17,7 +17,7 @@ import SystemIntakeContactsTable from 'components/SystemIntakeContactsTable';
 import TaskStatusTag from 'components/TaskStatusTag';
 import useMessage from 'hooks/useMessage';
 
-import { DefinitionCombo } from '../../Decision';
+import { DefinitionCombo } from '../Decision';
 
 const RequestHome = ({
   systemIntake

@@ -25,7 +25,6 @@ import { formatDateUtc } from 'utils/date';
 import AccordionNavigation from '../../../../components/AccordionNavigation';
 import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
 import Actions from '../Actions';
-import RequestHome from '../Actions/RequestHome';
 import BusinessCaseReview from '../BusinessCaseReview';
 import Dates from '../Dates';
 import Decision from '../Decision';
@@ -36,6 +35,7 @@ import { ModalProvider } from '../GRBReview/RestartReviewModal/RestartReviewModa
 import IntakeReview from '../IntakeReview';
 import Notes from '../Notes';
 import AddOrEditPointOfContact from '../PointOfContact/AddOrEdit';
+import RequestHome from '../RequestHome';
 import subNavItems from '../subNavItems';
 import Summary from '../Summary';
 import SystemInformation from '../SystemInformation';
