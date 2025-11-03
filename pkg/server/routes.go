@@ -392,7 +392,7 @@ func newGQLServer(es graphql.ExecutableSchema, oktaMiddlewareFactory *okta.OktaM
 		Upgrader: websocket.Upgrader{
 			CheckOrigin: func(r *http.Request) bool {
 				origin := r.Header.Get("Origin")
-				return origin == "" || origin == clientAddress
+				return origin == clientAddress
 			},
 			Subprotocols: []string{"graphql-transport-ws"},
 		},
