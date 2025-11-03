@@ -224,7 +224,7 @@ func (s *Server) routes() {
 		return next(ctx)
 	}}
 	gqlConfig := generated.Config{Resolvers: resolver, Directives: gqlDirectives}
-	clientAddress := s.Config.GetString("CLIENT_ADDRESS")
+	clientAddress := s.Config.GetString(appconfig.ClientAddressKey)
 	graphqlServer := newGQLServer(generated.NewExecutableSchema(gqlConfig), oktaMiddlewareFactory, store, clientAddress)
 	graphqlServer.Use(extension.FixedComplexityLimit(1000))
 	graphqlServer.AroundResponses(NewGQLResponseMiddleware())
