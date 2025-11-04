@@ -19,7 +19,7 @@ import {
   useUpdateSystemIntakeContactMutation
 } from 'gql/generated/graphql';
 import { capitalize } from 'lodash';
-import { useErrorMessage } from 'wrappers/ErrorContext';
+import { setCurrentErrorMeta } from 'wrappers/ErrorContext/errorMetaStore';
 
 import Alert from 'components/Alert';
 import CedarContactSelect from 'components/CedarContactSelect';
@@ -134,13 +134,11 @@ const ContactFormModal = ({
       }
     });
 
-  const { setErrorMeta } = useErrorMessage();
-
   const submit = handleSubmit(async values => {
     const mutate =
       action === 'edit' ? handleUpdateContact : handleCreateContact;
 
-    setErrorMeta({
+    setCurrentErrorMeta({
       overrideMessage: t('contactDetails.additionalContacts.errors.root', {
         action,
         type

@@ -754,7 +754,6 @@ const technicalAssistance = {
         "To keep CMS safe, documents are scanned for viruses after uploading. If something goes wrong, we'll let you know.",
       uploadDocument: 'Upload document',
       dontUploadAndReturn: 'Don’t upload and return to previous page',
-      success: 'Your document has been uploaded and is being scanned.',
       sendNotificationToGRBReviewers: {
         header: 'Would you like to send a notification email to GRB reviewers?',
         info: 'If you choose “Yes”, EASi will automatically send a notification email to all GRB reviewers added to this request. Sending a notification while a GRB review is still in progress will help GRB reviewers stay up to date with all relevant project materials.'

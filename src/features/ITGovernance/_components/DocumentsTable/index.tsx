@@ -15,11 +15,11 @@ import {
   SystemIntakeDocumentStatus,
   useDeleteSystemIntakeDocumentMutation
 } from 'gql/generated/graphql';
+import { setCurrentSuccessMeta } from 'wrappers/ErrorContext/successMetaStore';
 
 import Modal from 'components/Modal';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
-import toastSuccess from 'components/ToastSuccess';
 import { formatDateLocal } from 'utils/date';
 import { downloadFileFromURL } from 'utils/downloadFile';
 import { getColumnSortStatus, getHeaderSortIcon } from 'utils/tableSort';
@@ -210,13 +210,17 @@ const DocumentsTable = ({
           type="button"
           secondary
           onClick={() => {
-            deleteDocument({ variables: { id: fileToDelete.id } }).then(() => {
-              toastSuccess(
-                t('intake:documents.table.removeModal.success', {
+            setCurrentSuccessMeta({
+              overrideMessage: t(
+                'success:operationSuccesses.DeleteSystemIntakeDocument',
+                {
                   documentName: fileToDelete.fileName
-                })
-              );
+                }
+              )
             });
+            deleteDocument({ variables: { id: fileToDelete.id } }).then(
+              () => {}
+            );
 
             setFileToDelete(null);
           }}

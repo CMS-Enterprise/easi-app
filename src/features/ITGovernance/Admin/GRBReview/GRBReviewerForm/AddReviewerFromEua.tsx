@@ -19,6 +19,7 @@ import {
   useDeleteSystemIntakeGRBReviewerMutation,
   useUpdateSystemIntakeGRBReviewerMutation
 } from 'gql/generated/graphql';
+import { setCurrentSuccessMeta } from 'wrappers/ErrorContext/successMetaStore';
 
 import Alert from 'components/Alert';
 import CedarContactSelect from 'components/CedarContactSelect';
@@ -28,7 +29,6 @@ import FieldErrorMsg from 'components/FieldErrorMsg';
 import HelpText from 'components/HelpText';
 import Label from 'components/Label';
 import Modal from 'components/Modal';
-import toastSuccess from 'components/ToastSuccess';
 import { grbReviewerRoles, grbReviewerVotingRoles } from 'constants/grbRoles';
 import { GRBReviewerFields, GRBReviewFormAction } from 'types/grbReview';
 import { GRBReviewerSchema } from 'validations/grbReviewSchema';
@@ -98,6 +98,15 @@ const AddReviewerFromEua = ({
 
   /** Update roles for existing reviewer */
   const updateRoles = ({ userAccount, ...reviewer }: GRBReviewerFields) => {
+    setCurrentSuccessMeta({
+      overrideMessage: t(
+        'success:operationSuccesses.UpdateSystemIntakeGRBReviewer',
+        {
+          commonName: userAccount.commonName
+        }
+      )
+    });
+
     updateGRBReviewer({
       variables: {
         input: {
@@ -106,13 +115,6 @@ const AddReviewerFromEua = ({
         }
       }
     }).then(() => {
-      toastSuccess(
-        <Trans
-          i18nKey="grbReview:messages.success.edit"
-          values={{ commonName: userAccount.commonName }}
-        />
-      );
-
       history.push(grbReviewPath);
     });
   };
@@ -123,14 +125,16 @@ const AddReviewerFromEua = ({
 
   const removeGRBReviewer = useCallback(
     (reviewer: SystemIntakeGRBReviewerFragment) => {
-      mutate({ variables: { input: { reviewerID: reviewer.id } } }).then(() =>
-        toastSuccess(
-          <Trans
-            i18nKey="grbReview:messages.success.remove"
-            values={{ commonName: reviewer.userAccount.commonName }}
-          />
+      setCurrentSuccessMeta({
+        overrideMessage: t(
+          'success:operationSuccesses.DeleteSystemIntakeGRBReviewer',
+          {
+            commonName: reviewer.userAccount.commonName
+          }
         )
-      );
+      });
+
+      mutate({ variables: { input: { reviewerID: reviewer.id } } });
 
       // // Reset `reviewerToRemove` to close modal
       setReviewerToRemove(null);
@@ -142,7 +146,7 @@ const AddReviewerFromEua = ({
         history.push(`/it-governance/${systemId}/grb-review`);
       }
     },
-    [history, systemId, mutate, isFromGRBSetup]
+    [history, systemId, mutate, isFromGRBSetup, t]
   );
 
   return (

@@ -30,7 +30,6 @@ import HelpText from 'components/HelpText';
 import IconLink from 'components/IconLink';
 import Label from 'components/Label';
 import RequiredAsterisk from 'components/RequiredAsterisk';
-import toastSuccess from 'components/ToastSuccess';
 import useMessage from 'hooks/useMessage';
 import { ITGovernanceViewType } from 'types/itGov';
 import { fileToBase64File } from 'utils/downloadFile';
@@ -124,7 +123,6 @@ const DocumentUploadForm = ({
         }
       }
     }).then(() => {
-      toastSuccess(t('technicalAssistance:documents.upload.success'));
       history.push(returnLink);
     });
   });

@@ -63,9 +63,7 @@ const discussions = {
         'There are not yet any discussions. <button>Start a discussion</button>.',
       replySuccess: 'Success! Your reply has been added.',
       saveDiscussion:
-        'When you save your discussion, the selected team(s) and individual(s) will be notified via email.',
-      startDiscussionSuccess:
-        'You have successfully added to the discussion board.'
+        'When you save your discussion, the selected team(s) and individual(s) will be notified via email.'
     },
 
     startDiscussion: {

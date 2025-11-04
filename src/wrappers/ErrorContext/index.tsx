@@ -1,31 +1,41 @@
-// ErrorMessageContext.tsx
+// MessageContext.tsx
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import Alert from 'components/Alert';
 
 import { setCurrentErrorMeta } from './errorMetaStore';
+import { setCurrentSuccessMeta } from './successMetaStore';
 
 type ErrorMeta = {
   overrideMessage?: string | React.ReactNode;
   skipError?: boolean;
 };
 
-// ErrorMessageContext is used to provide the error message to the component
-const ErrorMessageContext = createContext<{
+type SuccessMeta = {
+  overrideMessage?: string | React.ReactNode;
+  skipSuccess?: boolean;
+};
+
+// Combined MessageContext for both error and success messages
+const MessageContext = createContext<{
   errorMeta: ErrorMeta;
   setErrorMeta: (meta: ErrorMeta) => void;
+  successMeta: SuccessMeta;
+  setSuccessMeta: (meta: SuccessMeta) => void;
 }>({
   errorMeta: {},
-  setErrorMeta: () => {}
+  setErrorMeta: () => {},
+  successMeta: {},
+  setSuccessMeta: () => {}
 });
 
-// Hook that accepts a message directly
+// Hook for setting error messages
 export const useErrorMessage = (
   message?: string | React.ReactNode,
   skipError?: boolean
 ) => {
-  const { setErrorMeta } = useContext(ErrorMessageContext);
+  const { setErrorMeta } = useContext(MessageContext);
 
   useEffect(() => {
     if (message) {
@@ -33,7 +43,23 @@ export const useErrorMessage = (
     }
   }, [message, setErrorMeta, skipError]);
 
-  return useContext(ErrorMessageContext);
+  return useContext(MessageContext);
+};
+
+// Hook for setting success messages
+export const useSuccessMessage = (
+  message?: string | React.ReactNode,
+  skipSuccess?: boolean
+) => {
+  const { setSuccessMeta } = useContext(MessageContext);
+
+  useEffect(() => {
+    if (message) {
+      setSuccessMeta({ overrideMessage: message, skipSuccess });
+    }
+  }, [message, setSuccessMeta, skipSuccess]);
+
+  return useContext(MessageContext);
 };
 
 /**
@@ -70,30 +96,38 @@ export const statusAlert = ({
 };
 
 /**
- * ErrorMessageProvider
+ * MessageProvider
  *
- * A provider that allows components to set and retrieve error message overrides
- * without needing to pass props through multiple component layers. The provider
- * maintains a state of the current error metadata and provides a setter function
+ * A combined provider that allows components to set and retrieve both error and success
+ * message overrides without needing to pass props through multiple component layers.
+ * The provider maintains state for both error and success metadata and provides setter functions.
  */
-
-// ErrorMessageProvider is used to provide the error message to the component
-export const ErrorMessageProvider = ({
+export const MessageMetaProvider = ({
   children
 }: {
   children: React.ReactNode;
 }) => {
   const [errorMeta, setErrorMeta] = useState<ErrorMeta>({});
+  const [successMeta, setSuccessMeta] = useState<SuccessMeta>({});
 
   useEffect(() => {
     setCurrentErrorMeta(errorMeta);
   }, [errorMeta]);
 
+  useEffect(() => {
+    setCurrentSuccessMeta(successMeta);
+  }, [successMeta]);
+
   return (
-    <ErrorMessageContext.Provider value={{ errorMeta, setErrorMeta }}>
+    <MessageContext.Provider
+      value={{ errorMeta, setErrorMeta, successMeta, setSuccessMeta }}
+    >
       {children}
-    </ErrorMessageContext.Provider>
+    </MessageContext.Provider>
   );
 };
 
-export default ErrorMessageProvider;
+// Backward compatibility - export as ErrorMessageProvider
+export const ErrorMessageProvider = MessageMetaProvider;
+
+export default MessageMetaProvider;

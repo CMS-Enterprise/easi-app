@@ -29,6 +29,7 @@ import itGov from './itGov';
 import linkedSystems from './linkedSystems';
 import makingARequest from './makingARequest';
 import privacyPolicy from './privacyPolicy';
+import success from './success';
 import systemProfile from './systemProfile';
 import systemWorkspace from './systemWorkspace';
 import tableAndPagination from './tableAndPagination';
@@ -70,7 +71,8 @@ const enUS = {
   taskList,
   technicalAssistance,
   termsAndConditions,
-  fundingSources
+  fundingSources,
+  success
 };
 
 export default enUS;

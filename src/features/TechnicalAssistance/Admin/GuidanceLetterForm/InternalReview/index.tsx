@@ -8,7 +8,7 @@ import {
   useDeleteTRBGuidanceLetterInsightMutation,
   useRequestReviewForTRBGuidanceLetterMutation
 } from 'gql/generated/graphql';
-import { useErrorMessage } from 'wrappers/ErrorContext';
+import { setCurrentErrorMeta } from 'wrappers/ErrorContext/errorMetaStore';
 
 import Alert from 'components/Alert';
 import Divider from 'components/Divider';
@@ -46,9 +46,7 @@ const InternalReview = ({
     ]
   });
 
-  const { setErrorMeta } = useErrorMessage();
-
-  setErrorMeta({
+  setCurrentErrorMeta({
     overrideMessage: t('guidanceLetterForm.error', {
       action: 'removing',
       type: 'insight'

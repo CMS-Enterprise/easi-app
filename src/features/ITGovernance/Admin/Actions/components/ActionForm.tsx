@@ -18,7 +18,7 @@ import {
   EmailNotificationRecipients,
   useGetSystemIntakeContactsQuery
 } from 'gql/generated/graphql';
-import { useErrorMessage } from 'wrappers/ErrorContext';
+import { setCurrentErrorMeta } from 'wrappers/ErrorContext/errorMetaStore';
 
 import Alert from 'components/Alert';
 import Breadcrumbs from 'components/Breadcrumbs';
@@ -126,15 +126,13 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
     formState: { isSubmitting, defaultValues, errors }
   } = useEasiFormContext<SystemIntakeActionFields>();
 
-  const { setErrorMeta } = useErrorMessage();
-
   /** Execute `onSubmit` prop with success and error handling */
   const completeAction = (formData: TFieldValues) => {
     // Ensure blank admin notes are null instead of '' so that it doesn't get displayed in the notes list
     // eslint-disable-next-line no-param-reassign
     if (formData.adminNote === '') formData.adminNote = null;
 
-    setErrorMeta({
+    setCurrentErrorMeta({
       overrideMessage: t('error')
     });
 

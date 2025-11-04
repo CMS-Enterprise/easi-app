@@ -24,7 +24,6 @@ import Label from 'components/Label';
 import MentionTextArea from 'components/MentionTextArea';
 import Modal from 'components/Modal';
 import RequiredAsterisk from 'components/RequiredAsterisk';
-import toastSuccess from 'components/ToastSuccess';
 import useDiscussionParams from 'hooks/useDiscussionParams';
 import { DiscussionAlert, MentionSuggestion } from 'types/discussions';
 import discussionSchema from 'validations/discussionSchema';
@@ -98,13 +97,9 @@ const DiscussionForm = ({
             content
           }
         }
-      })
-        .then(() => {
-          toastSuccess(t('general.alerts.startDiscussionSuccess'));
-        })
-        .finally(() => {
-          pushDiscussionQuery({ discussionBoardType, discussionMode: 'view' });
-        });
+      }).finally(() => {
+        pushDiscussionQuery({ discussionBoardType, discussionMode: 'view' });
+      });
     }
   });
 
@@ -121,7 +116,6 @@ const DiscussionForm = ({
       }).then(() => {
         // Reset field values
         reset();
-        toastSuccess(t('general.alerts.replySuccess'));
       });
 
       setModalIsOpen(false);

@@ -14,6 +14,7 @@ import {
   SystemIntakeGRBReviewerFragment,
   useDeleteSystemIntakeGRBReviewerMutation
 } from 'gql/generated/graphql';
+import { setCurrentSuccessMeta } from 'wrappers/ErrorContext/successMetaStore';
 import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import Modal from 'components/Modal';
@@ -145,16 +146,16 @@ const ParticipantsTable = ({
     table;
 
   const removeGRBReviewer = (reviewer: SystemIntakeGRBReviewerFragment) => {
-    deleteReviewer({ variables: { input: { reviewerID: reviewer.id } } }).then(
-      () =>
-        toastSuccess(
-          <Trans
-            i18nKey="grbReview:messages.success.remove"
-            values={{ commonName: reviewer.userAccount.commonName }}
-          />
-        )
-    );
+    setCurrentSuccessMeta({
+      overrideMessage: t(
+        'success:operationSuccesses.DeleteSystemIntakeGRBReviewer',
+        {
+          commonName: reviewer.userAccount.commonName
+        }
+      )
+    });
 
+    deleteReviewer({ variables: { input: { reviewerID: reviewer.id } } });
     // Reset `reviewerToRemove` to close modal
     setReviewerToRemove(null);
   };

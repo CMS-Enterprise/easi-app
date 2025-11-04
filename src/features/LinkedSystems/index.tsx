@@ -127,7 +127,6 @@ const LinkedSystems = () => {
 
     if (response?.data) {
       await refetchSystemIntakes();
-      toastSuccess(t('linkedSystems:successfullyDeleted'));
       setRemoveLinkedSystemModalOpen(false);
     }
   };
@@ -147,7 +146,6 @@ const LinkedSystems = () => {
     });
 
     await Promise.all([refetchSystemIntakes(), refetchIntake()]);
-    toastSuccess(t('linkedSystems:successfullyRemovedAllLinkedSystems'));
     setRemoveAllLinkedSystemsModalOpen(false);
   };
 

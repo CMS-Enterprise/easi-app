@@ -16,13 +16,13 @@ import {
   GetSystemIntakeGRBReviewDocument,
   useExtendGRBReviewDeadlineAsyncMutation
 } from 'gql/generated/graphql';
+import { setCurrentSuccessMeta } from 'wrappers/ErrorContext/successMetaStore';
 
 import Alert from 'components/Alert';
 import { useEasiForm } from 'components/EasiForm';
 import FieldErrorMsg from 'components/FieldErrorMsg';
 import Modal from 'components/Modal';
 import RequiredFieldsText from 'components/RequiredFieldsText';
-import toastSuccess from 'components/ToastSuccess';
 import { formatDateUtc, formatEndOfDayDeadline } from 'utils/date';
 
 /**
@@ -63,6 +63,15 @@ const ExtendGRBAsyncReview = () => {
   };
 
   const addTimeOrEndEarly = handleSubmit(async input => {
+    setCurrentSuccessMeta({
+      overrideMessage: t(
+        'success:operationSuccesses.ExtendGRBReviewDeadlineAsync',
+        {
+          date: formatDateUtc(input.grbReviewAsyncEndDate, 'MM/dd/yyyy')
+        }
+      )
+    });
+
     mutation({
       variables: {
         input: {
@@ -71,12 +80,6 @@ const ExtendGRBAsyncReview = () => {
         }
       }
     }).then(() => {
-      toastSuccess(
-        t('statusCard.addTimeModal.success', {
-          date: formatDateUtc(input.grbReviewAsyncEndDate, 'MM/dd/yyyy')
-        })
-      );
-
       resetModal();
     });
   });

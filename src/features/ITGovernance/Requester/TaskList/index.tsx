@@ -20,7 +20,7 @@ import {
   SystemIntakeState,
   SystemIntakeStatusAdmin
 } from 'gql/generated/graphql';
-import { useErrorMessage } from 'wrappers/ErrorContext';
+import { setCurrentErrorMeta } from 'wrappers/ErrorContext/errorMetaStore';
 
 import Alert from 'components/Alert';
 import Breadcrumbs from 'components/Breadcrumbs';
@@ -85,10 +85,8 @@ function GovernanceTaskList() {
   const linkCedarSystemId = useLinkCedarSystemIdQueryParam();
   const linkCedarSystemIdQs = linkCedarSystemIdQueryString(linkCedarSystemId);
 
-  const { setErrorMeta } = useErrorMessage();
-
   const archiveIntake = async () => {
-    setErrorMeta({
+    setCurrentErrorMeta({
       overrideMessage: t<string>('taskList:withdraw_modal.error', {
         context: requestName ? 'name' : 'noName',
         requestName

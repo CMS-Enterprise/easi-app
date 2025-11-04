@@ -197,8 +197,7 @@ const intake = {
         explanation:
           'You will not be able to access this document after it is removed, and GRB reviewers will not be able to view it.',
         confirm: 'Remove document',
-        cancel: 'Cancel',
-        success: 'You have successfully removed {{documentName}}.'
+        cancel: 'Cancel'
       }
     }
   },

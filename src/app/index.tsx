@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import { toast } from 'react-toastify';
 import {
   ApolloClient,
+  ApolloLink,
   ApolloProvider,
   InMemoryCache,
   Operation
@@ -20,6 +21,10 @@ import {
   getCurrentErrorMeta,
   setCurrentErrorMeta
 } from 'wrappers/ErrorContext/errorMetaStore';
+import {
+  getCurrentSuccessMeta,
+  setCurrentSuccessMeta
+} from 'wrappers/ErrorContext/successMetaStore';
 
 import Alert from 'components/Alert';
 import { localAuthStorageKey } from 'constants/localAuth';
@@ -222,10 +227,74 @@ const errorLink = onError(({ graphQLErrors, operation, networkError }) => {
   }
 });
 
+/**
+ * Success Link
+ *
+ * A link that intercepts successful mutation responses and displays success toasts.
+ * It also allows for overriding the success message for a specific component.
+ */
+const successLink = new ApolloLink((operation, forward) => {
+  return forward(operation).map(response => {
+    const { overrideMessage, skipSuccess } = getCurrentSuccessMeta();
+    const operationType = getOperationType(operation);
+
+    const operationSuccessesMap = i18next.t<Record<string, string>>(
+      'success:operationSuccesses',
+      { returnObjects: true }
+    );
+
+    // Only show success toasts for mutations
+    if (operationType === 'mutation' && !skipSuccess && response.data) {
+      // Use shorter timeout in Cypress tests to prevent toasts from covering elements
+      const toastTimeout = (window as any).Cypress ? 100 : 3000;
+
+      let knownSuccessMessage = '';
+
+      // Handle different operation types if needed
+      switch (operationType) {
+        case 'mutation':
+          if (operationSuccessesMap[operation.operationName]) {
+            knownSuccessMessage =
+              operationSuccessesMap[operation.operationName];
+          }
+          break;
+        default:
+          knownSuccessMessage = '';
+      }
+
+      toast.success(
+        <Alert
+          type="success"
+          isClosable={false}
+          slim={false}
+          data-testid="alert"
+        >
+          {overrideMessage ||
+            knownSuccessMessage ||
+            i18next.t<string>('success:global.success')}
+        </Alert>,
+        {
+          autoClose: toastTimeout,
+          position: 'top-center' as const,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true
+        }
+      );
+
+      // Clear the override message after displaying the success
+      setCurrentSuccessMeta({});
+    }
+
+    return response;
+  });
+});
+
 const client = new ApolloClient({
   // TODO: Update package - apollo-upload-client (requires nodejs upgrade - https://jiraent.cms.gov/browse/EASI-3505)
   // @ts-ignore
-  link: errorLink.concat(authLink).concat(uploadLink),
+  link: errorLink.concat(successLink).concat(authLink).concat(uploadLink),
   cache: new InMemoryCache({
     typePolicies: {
       cedarSystemDetails: {

@@ -7,11 +7,11 @@ import {
   SystemIntakeGRBReviewerFragment,
   useCreateSystemIntakeGRBReviewersMutation
 } from 'gql/generated/graphql';
+import { setCurrentSuccessMeta } from 'wrappers/ErrorContext/successMetaStore';
 
 import IconLink from 'components/IconLink';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import { TabPanel, Tabs } from 'components/Tabs';
-import toastSuccess from 'components/ToastSuccess';
 import useMessage from 'hooks/useMessage';
 import { GRBReviewerFields, GRBReviewFormAction } from 'types/grbReview';
 
@@ -52,6 +52,15 @@ const GRBReviewerForm = ({
     : `/it-governance/${systemId}/grb-review`;
 
   const createGRBReviewers = (reviewers: GRBReviewerFields[]) => {
+    setCurrentSuccessMeta({
+      overrideMessage: t(
+        'success:operationSuccesses.CreateSystemIntakeGRBReviewers',
+        {
+          count: reviewers.length
+        }
+      )
+    });
+
     mutate({
       variables: {
         input: {
@@ -63,13 +72,6 @@ const GRBReviewerForm = ({
         }
       }
     }).then(() => {
-      toastSuccess(
-        <Trans
-          i18nKey="grbReview:messages.success.add"
-          count={reviewers.length}
-        />
-      );
-
       history.push(grbReviewPath);
     });
   };

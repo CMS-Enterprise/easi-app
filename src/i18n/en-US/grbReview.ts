@@ -32,25 +32,6 @@ export const grbReviewerRolesTranslation: Translation<SystemIntakeGRBReviewerRol
     OTHER: 'Other'
   };
 
-const messages: {
-  error: Translation<GRBReviewFormAction>;
-  success: Translation<GRBReviewFormAction>;
-} = {
-  error: {
-    add: 'There was an issue adding GRB reviewers. Please try again, and if the error persists, try again at a later date.',
-    edit: 'There was an issue updating roles for this GRB reviewer. Please try again, and if the error persists, try again at a later date.',
-    remove:
-      'There was an issue removing this GRB reviewer. Please try again, and if the error persists, try again at a later date.'
-  },
-  success: {
-    add: 'You added <strong>1 reviewer</strong> to this GRB review.',
-    add_plural:
-      'You added <strong>{{count}} reviewers</strong> to this GRB review.',
-    edit: 'You updated roles for {{commonName}} for this GRB review.',
-    remove: 'You removed <strong>{{commonName}}</strong> as a GRB reviewer.'
-  }
-};
-
 export const grbReviewFormSteps = [
   {
     label: 'Review type',
@@ -235,7 +216,6 @@ export default {
     cantStartAlert_STANDARD:
       'You will not be able to complete this form until the request is in the “Ready for GRB review” status. Please take the admin action to progress this request to the GRB step. <link1>Go to admin actions</link1>'
   },
-  messages,
   votingRoles: grbReviewerVotingRolesTranslation,
 
   reviewerRoles: grbReviewerRolesTranslation,
@@ -514,9 +494,7 @@ export default {
 Format: mm/dd/yyyy`,
       newEnd: 'This review will now end on {{date}}.',
       addTime: 'Add time',
-      goBack: 'Go back and don’t add time',
-      success:
-        'You added time to this GRB review. The new end date is {{date}} at 5:00pm EST.'
+      goBack: 'Go back and don’t add time'
     },
     endVotingModal: {
       heading: 'End voting early?',

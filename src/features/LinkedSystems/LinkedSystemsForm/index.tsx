@@ -28,6 +28,7 @@ import {
   useUnlinkSystemIntakeRelationMutation,
   useUpdateSystemLinkMutation
 } from 'gql/generated/graphql';
+import { setCurrentSuccessMeta } from 'wrappers/ErrorContext/successMetaStore';
 
 import Alert from 'components/Alert';
 import CheckboxField from 'components/CheckboxField';
@@ -39,7 +40,6 @@ import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import RequiredFieldsText from 'components/RequiredFieldsText';
-import toastSuccess from 'components/ToastSuccess';
 import useMessage from 'hooks/useMessage';
 import flattenFormErrors from 'utils/flattenFormErrors';
 import { linkedSystemsSchema } from 'validations/systemIntakeSchema';
@@ -261,6 +261,21 @@ const LinkedSystemsForm = () => {
       option => option.value === payload.cedarSystemID
     )?.label;
 
+    // Set success message directly in store before mutation executes
+    setCurrentSuccessMeta({
+      overrideMessage: (
+        <Trans
+          i18nKey={
+            linkedSystemID
+              ? 'success:operationSuccesses.UpdateSystemLink'
+              : 'success:operationSuccesses.AddSystemLink'
+          }
+          values={{ updatedSystem: systemName }}
+          components={{ span: <span className="text-bold" /> }}
+        />
+      )
+    });
+
     const mutation = linkedSystemID
       ? updateLink(payload, linkedSystemID, systemIntakeID, updateSystemLink)
       : addLink(
@@ -272,20 +287,6 @@ const LinkedSystemsForm = () => {
         );
 
     mutation.then(() => {
-      toastSuccess(
-        <Trans
-          i18nKey={
-            linkedSystemID
-              ? 'linkedSystems:savedChangesToALink'
-              : 'linkedSystems:successfullyLinked'
-          }
-          values={{ updatedSystem: systemName }}
-          components={{
-            span: <span className="text-bold" />
-          }}
-        />
-      );
-
       const nextState: {
         from?: string;
         successfullyAdded?: boolean;
