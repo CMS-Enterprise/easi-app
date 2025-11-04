@@ -24,27 +24,6 @@ enum PersonRole {
 }
 
 """
-Sections of the system profile form that can be locked for editing
-"""
-enum SystemProfileLockableSection {
-  BUSINESS_INFORMATION
-  IMPLEMENTATION_DETAILS
-  DATA
-  TOOLS_AND_SOFTWARE
-  SUB_SYSTEMS
-  TEAM
-}
-
-"""
-Status of a locked section of the system profile form
-"""
-type SystemProfileSectionLockStatus {
-  cedarSystemId: String!
-  section: SystemProfileLockableSection!
-  lockedByUserAccount: UserAccount!
-}
-
-"""
 CedarAuthorityToOperate represents the response from the /authorityToOperate endpoint from the CEDAR Core API.
 """
 type CedarAuthorityToOperate {
@@ -3079,9 +3058,6 @@ type Mutation {
   deleteTrbLeadOption(eua: String!): Boolean! @hasRole(role: EASI_TRB_ADMIN)
   sendGRBReviewPresentationDeckReminderEmail(systemIntakeID: UUID!): Boolean!
     @hasRole(role: EASI_GOVTEAM)
-  
-  lockSystemProfileSection(cedarSystemId: String!, section: SystemProfileLockableSection!): Boolean!
-  unlockSystemProfileSection(cedarSystemId: String!, section: SystemProfileLockableSection!): Boolean!
 }
 
 """
@@ -3130,10 +3106,6 @@ type Query {
   requesterUpdateEmailData: [RequesterUpdateEmailData!]!
   systemIntakeSystem(systemIntakeSystemID: UUID!): SystemIntakeSystem
   systemIntakeSystems(systemIntakeId: UUID!): [SystemIntakeSystem!]!
-  """
-  Returns an array containing the status of locked sections for a given cedar system profile form
-  """
-  systemProfileLockedSections(cedarSystemId: String!): [SystemProfileSectionLockStatus!]!
 }
 
 enum TRBRequestType {
