@@ -11,8 +11,8 @@ import {
 import { deleteSystemIntakeGRBReviewerMutation } from 'tests/mock/grbReview';
 import { systemIntake } from 'tests/mock/systemIntake';
 import users from 'tests/mock/users';
-import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
+import ITGovAdminContext from 'contexts/ITGovAdminContext/ITGovAdminContext';
 import { MessageProvider } from 'hooks/useMessage';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 

@@ -14,9 +14,9 @@ import {
   SystemIntakeGRBReviewerFragment,
   useDeleteSystemIntakeGRBReviewerMutation
 } from 'gql/generated/graphql';
-import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import Modal from 'components/Modal';
+import ITGovAdminContext from 'contexts/ITGovAdminContext/ITGovAdminContext';
 import useMessage from 'hooks/useMessage';
 import {
   currentTableSortDescription,

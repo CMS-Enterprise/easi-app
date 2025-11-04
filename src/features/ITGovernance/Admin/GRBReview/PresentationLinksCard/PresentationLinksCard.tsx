@@ -29,7 +29,7 @@ import useMessage from 'hooks/useMessage';
 import { formatDateLocal } from 'utils/date';
 import { downloadFileFromURL } from 'utils/downloadFile';
 
-import ITGovAdminContext from '../../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
+import ITGovAdminContext from '../../../../../contexts/ITGovAdminContext/ITGovAdminContext';
 import { useRestartReviewModal } from '../RestartReviewModal/RestartReviewModalContext';
 
 export type PresentationCardActionsProps = {
