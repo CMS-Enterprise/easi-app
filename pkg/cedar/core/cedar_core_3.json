@@ -116,7 +116,7 @@
         "security": []
       }
     },
-    "/gateway/CEDAR%20Core%20API/2.0.0/authorityToOperate": {
+    "/gateway/CEDAR Core API/2.0.0/authorityToOperate": {
       "get": {
         "description": "Retrieve Authority to Operate (ATO) information. Can filter by system ID or search using various criteria including UUID, FISMA system acronym, TLC phase, PII/PHI flags, and disposition dates.",
         "parameters": [
@@ -445,7 +445,7 @@
         }
       }
     },
-    "/gateway/CEDAR%20Core%20API/2.0.0/budget": {
+    "/gateway/CEDAR Core API/2.0.0/budget": {
       "post": {
         "description": "Add new budget(s) to the Alfabet system. This interface takes an array of one or more budgets.",
         "requestBody": {
@@ -908,7 +908,7 @@
         }
       }
     },
-    "/gateway/CEDAR%20Core%20API/2.0.0/budget/list": {
+    "/gateway/CEDAR Core API/2.0.0/budget/list": {
       "delete": {
         "description": "Delete a list of budget items based on their ID(s).",
         "parameters": [
@@ -988,7 +988,7 @@
         }
       }
     },
-    "/gateway/CEDAR%20Core%20API/2.0.0/budgetSystemCostFind": {
+    "/gateway/CEDAR Core API/2.0.0/budgetSystemCostFind": {
       "get": {
         "description": "Retrieve budget system cost information by systemId. Returns actual system costs by fiscal year.",
         "parameters": [
@@ -1085,7 +1085,7 @@
         }
       }
     },
-    "/gateway/CEDAR%20Core%20API/2.0.0/component": {
+    "/gateway/CEDAR Core API/2.0.0/component": {
       "post": {
         "description": "Adds a new software component and related vendor information to Alfabet.",
         "requestBody": {
@@ -1267,7 +1267,7 @@
         }
       }
     },
-    "/gateway/CEDAR%20Core%20API/2.0.0/contract": {
+    "/gateway/CEDAR Core API/2.0.0/contract": {
       "post": {
         "description": "Add new contract deliverables to the system.",
         "requestBody": {
@@ -1636,7 +1636,7 @@
         }
       }
     },
-    "/gateway/CEDAR%20Core%20API/2.0.0/contract/list": {
+    "/gateway/CEDAR Core API/2.0.0/contract/list": {
       "delete": {
         "description": "Delete a list of contracts based on their ID(s).",
         "parameters": [
@@ -1915,7 +1915,7 @@
         }
       }
     },
-    "/gateway/CEDAR%20Core%20API/2.0.0/costType/list": {
+    "/gateway/CEDAR Core API/2.0.0/costType/list": {
       "get": {
         "description": "Retrieve a list of cost types. Returns the \"Internal Labor\" cost type as highlighted fields (id, name) and all other cost types in the CostTypes array. Both application and name parameters are required but not used in filtering.",
         "parameters": [
@@ -2024,7 +2024,7 @@
         }
       }
     },
-    "/gateway/CEDAR%20Core%20API/2.0.0/deployment": {
+    "/gateway/CEDAR Core API/2.0.0/deployment": {
       "post": {
         "description": "Add one or more deployment records to the system.",
         "requestBody": {
@@ -3072,7 +3072,7 @@
         }
       }
     },
-    "/gateway/CEDAR%20Core%20API/2.0.0/domainModel/list": {
+    "/gateway/CEDAR Core API/2.0.0/domainModel/list": {
       "get": {
         "description": "Retrieve a list of domain model entries. The model parameter is required but not used in filtering.",
         "parameters": [
@@ -3180,7 +3180,7 @@
         }
       }
     },
-    "/gateway/CEDAR%20Core%20API/2.0.0/domainModelLevel": {
+    "/gateway/CEDAR Core API/2.0.0/domainModelLevel": {
       "get": {
         "description": "Retrieve the hierarchy levels associated with a specific domain reference model.",
         "parameters": [
@@ -3265,7 +3265,7 @@
         }
       }
     },
-    "/gateway/CEDAR%20Core%20API/2.0.0/domainModelName": {
+    "/gateway/CEDAR Core API/2.0.0/domainModelName": {
       "get": {
         "description": "Retrieves a list of available domain reference models from a global configuration.",
         "parameters": [],
@@ -3340,7 +3340,7 @@
         }
       }
     },
-    "/gateway/CEDAR%20Core%20API/2.0.0/enumeration": {
+    "/gateway/CEDAR Core API/2.0.0/enumeration": {
       "get": {
         "description": "Retrieve a list of enumerations based on their names.",
         "parameters": [
@@ -3483,7 +3483,7 @@
         }
       }
     },
-    "/gateway/CEDAR%20Core%20API/exchange": {
+    "/gateway/CEDAR Core API/exchange": {
       "post": {
         "description": "Add a list of data exchange records to the system.",
         "requestBody": {
@@ -3826,7 +3826,7 @@
         }
       }
     },
-    "/gateway/CEDAR%20Core%20API/2.0.0/exchange/{id}": {
+    "/gateway/CEDAR Core API/2.0.0/exchange/{id}": {
       "get": {
         "description": "Exchange by id",
         "parameters": [
@@ -4022,7 +4022,7 @@
         }
       }
     },
-    "/gateway/CEDAR%20Core%20API/2.0.0/exchange": {
+    "/gateway/CEDAR Core API/2.0.0/exchange": {
       "get": {
         "description": "Exchange Find List",
         "parameters": [
@@ -4690,7 +4690,7 @@
         }
       }
     },
-    "/gateway/CEDAR%20Core%20API/2.0.0/organization": {
+    "/gateway/CEDAR Core API/2.0.0/organization": {
       "get": {
         "description": "Retrieve a list of organizations based on various criteria. If no criteria are provided, an empty list will be returned.",
         "parameters": [
@@ -4789,7 +4789,7 @@
         }
       }
     },
-    "/gateway/CEDAR%20Core%20API/2.0.0/role": {
+    "/gateway/CEDAR Core API/2.0.0/role": {
       "post": {
         "summary": "Add role assignments to a CEDAR application. This interface takes in objectId, roleTypeId AND either assigneeId, assigneeUserName or assigneeOrgId are required.",
         "description": "Add role assignments to a CEDAR application. This interface takes in objectId, roleTypeId AND either assigneeId, assigneeUserName or assigneeOrgId are required.",
@@ -5014,7 +5014,7 @@
         }
       }
     },
-    "/gateway/CEDAR%20Core%20API/2.0.0/role/list": {
+    "/gateway/CEDAR Core API/2.0.0/role/list": {
       "delete": {
         "description": "Deletes a list of role assignments by ID from SparxEA and the local database. Takes an application name and an array of role IDs.",
         "parameters": [
@@ -5108,7 +5108,7 @@
         }
       }
     },
-    "/gateway/CEDAR%20Core%20API/2.0.0/role/type/{application}": {
+    "/gateway/CEDAR Core API/2.0.0/role/type/{application}": {
       "get": {
         "summary": "Finds a list of role types available within an application. This interface takes in application.",
         "description": "Finds a list of role types available within an application. This interface takes in application. The list of current roles are: AI Contact API Contact Budget Analyst Business Owner Business Question Contact Contracting Officer's Representative (COR) DA Reviewer Data Center Contact ISSO Government Task Lead (GTL) Project Lead QA Reviewer System Maintainer Subject Matter Expert (SME) Support Staff Survey Point of Contact Technical System Issues Contact",
@@ -5193,7 +5193,7 @@
         }
       }
     },
-    "/gateway/CEDAR%20Core%20API/2.0.0/softwareProducts": {
+    "/gateway/CEDAR Core API/2.0.0/softwareProducts": {
       "post": {
         "description": "Add, update, or delete software product and API/AI-related details for a system.",
         "requestBody": {
@@ -5680,7 +5680,7 @@
         }
       }
     },
-    "/gateway/CEDAR%20Core%20API/2.0.0/stakeholder": {
+    "/gateway/CEDAR Core API/2.0.0/stakeholder": {
       "get": {
         "description": "Retrieve a list of stakeholders based on various optional criteria.",
         "parameters": [
@@ -5839,7 +5839,7 @@
         }
       }
     },
-    "/gateway/CEDAR%20Core%20API/2.0.0/supportContact": {
+    "/gateway/CEDAR Core API/2.0.0/supportContact": {
       "post": {
         "description": "Add or update a list of support contacts in Alfabet and the underlying database.",
         "requestBody": {
@@ -6182,7 +6182,7 @@
         }
       }
     },
-    "/gateway/CEDAR%20Core%20API/2.0.0/system/detail/{id}": {
+    "/gateway/CEDAR Core API/2.0.0/system/detail/{id}": {
       "get": {
         "description": "System Detail by id",
         "parameters": [
@@ -6854,7 +6854,7 @@
         }
       }
     },
-    "/gateway/CEDAR%20Core%20API/2.0.0/system/summary/{id}": {
+    "/gateway/CEDAR Core API/2.0.0/system/summary/{id}": {
       "get": {
         "description": "System Summary by id",
         "parameters": [
@@ -6960,7 +6960,7 @@
         }
       }
     },
-    "/gateway/CEDAR%20Core%20API/2.0.0/system/summary": {
+    "/gateway/CEDAR Core API/2.0.0/system/summary": {
       "get": {
         "description": "System Summary list",
         "parameters": [
@@ -7161,7 +7161,7 @@
         }
       }
     },
-    "/gateway/CEDAR%20Core%20API/2.0.0/threat": {
+    "/gateway/CEDAR Core API/2.0.0/threat": {
       "get": {
         "description": "Threat List",
         "parameters": [
@@ -7281,7 +7281,7 @@
         }
       }
     },
-    "/gateway/CEDAR%20Core%20API/2.0.0/url/{id}": {
+    "/gateway/CEDAR Core API/2.0.0/url/{id}": {
       "get": {
         "description": "URL List",
         "parameters": [
@@ -7396,7 +7396,7 @@
         }
       }
     },
-    "/gateway/CEDAR%20Core%20API/2.0.0/user": {
+    "/gateway/CEDAR Core API/2.0.0/user": {
       "post": {
         "description": "Add a list of users to a CEDAR application, optionally creating Sparx Person records if they do not exist.",
         "requestBody": {
@@ -8635,7 +8635,7 @@
         }
       }
     },
-    "/gateway/System%20Census%20Core%20API/2.0.0/adminReviewer": {
+    "/gateway/System Census Core API/2.0.0/adminReviewer": {
       "post": {
         "description": "Add one or more System Census Reviewers.",
         "requestBody": {
@@ -8905,7 +8905,7 @@
         }
       }
     },
-    "/gateway/System%20Census%20Core%20API/2.0.0/admin/reviewer": {
+    "/gateway/System Census Core API/2.0.0/admin/reviewer": {
       "get": {
         "description": "Reviewers are CMS employees responsible for verifying the accuracy and completeness of the System Census Survey data each year. There are two types of reviewers, QA and DA. The list of potential reviewers is returned by this endpoint and can be filtered by 'type'",
         "parameters": [
@@ -9008,7 +9008,7 @@
         }
       }
     },
-    "/gateway/System%20Census%20Core%20API/2.0.0/budgetAndContracts": {
+    "/gateway/System Census Core API/2.0.0/budgetAndContracts": {
       "post": {
         "description": "Add or update budget and contract information for a system.",
         "requestBody": {
@@ -9322,7 +9322,7 @@
         }
       }
     },
-    "/gateway/System%20Census%20Core%20API/2.0.0/businessOwner": {
+    "/gateway/System Census Core API/2.0.0/businessOwner": {
       "post": {
         "description": "Add or update business owner basic information data for a system. If an update, ID is required.",
         "requestBody": {
@@ -9521,7 +9521,7 @@
         }
       }
     },
-    "/gateway/System%20Census%20Core%20API/2.0.0/page/businessOwner": {
+    "/gateway/System Census Core API/2.0.0/page/businessOwner": {
       "get": {
         "description": "Get business owner basic information for a system by system ID.",
         "parameters": [
@@ -9643,7 +9643,7 @@
         }
       }
     },
-    "/gateway/System%20Census%20Core%20API/2.0.0/page/dataCenters": {
+    "/gateway/System Census Core API/2.0.0/page/dataCenters": {
       "post": {
         "description": "Add, update, or delete system data center/deployment information. Supports full CRUD operations for deployment relationships and system-level cloud migration settings.",
         "requestBody": {
@@ -10316,7 +10316,7 @@
         }
       }
     },
-    "/gateway/System%20Census%20Core%20API/2.0.0/dataExchangeNotes": {
+    "/gateway/System Census Core API/2.0.0/dataExchangeNotes": {
       "post": {
         "description": "Add a list of notes for a data exchange.",
         "requestBody": {
@@ -10553,7 +10553,7 @@
         }
       }
     },
-    "/gateway/System%20Census%20Core%20API/2.0.0/dataExchange/notes": {
+    "/gateway/System Census Core API/2.0.0/dataExchange/notes": {
       "delete": {
         "description": "Deletes notes associated with specific data exchange IDs. This endpoint removes notes from the SYSTEM_SURVEY_EXCHANGE_NOTES table based on the provided exchange IDs. This implementation matches the webmethods flow pageDataExchangeNotesDelete.",
         "parameters": [
@@ -10633,7 +10633,7 @@
         }
       }
     },
-    "/gateway/System%20Census%20Core%20API/2.0.0/dataExchange/status": {
+    "/gateway/System Census Core API/2.0.0/dataExchange/status": {
       "delete": {
         "description": "Delete data exchange status records based on their exchange IDs.",
         "requestBody": {
@@ -10872,7 +10872,7 @@
         }
       }
     },
-    "/gateway/System%20Census%20Core%20API/2.0.0/page/dataExchange": {
+    "/gateway/System Census Core API/2.0.0/page/dataExchange": {
       "post": {
         "description": "Add or update data exchange information for a system. A data exchange can be between two CMS IT systems or between a CMS system and a non-CMS stakeholder.",
         "requestBody": {
@@ -11785,7 +11785,7 @@
         }
       }
     },
-    "/gateway/System%20Census%20Core%20API/2.0.0/drm": {
+    "/gateway/System Census Core API/2.0.0/drm": {
       "get": {
         "description": "Retrieves all Data Reference Model (DRM) flat hierarchy data for reference purposes.",
         "tags": [
@@ -11844,7 +11844,7 @@
         }
       }
     },
-    "/gateway/System%20Census%20Core%20API/2.0.0/note": {
+    "/gateway/System Census Core API/2.0.0/note": {
       "post": {
         "summary": "Add Notes to System Census",
         "description": "Add one or more notes to a system in the census database. Notes are associated with specific pages within a system and can include optional email notifications to reviewers and respondents. Each note is automatically timestamped upon creation.",
@@ -12154,7 +12154,7 @@
         }
       }
     },
-    "/gateway/System%20Census%20Core%20API/2.0.0/note/list": {
+    "/gateway/System Census Core API/2.0.0/note/list": {
       "delete": {
         "description": "Delete a list of notes based on their ID(s).",
         "parameters": [
@@ -12355,7 +12355,7 @@
         }
       }
     },
-    "/gateway/System%20Census%20Core%20API/2.0.0/person": {
+    "/gateway/System Census Core API/2.0.0/person": {
       "get": {
         "description": "Retrieve a list of persons from LDAP based on query criteria. At least one parameter must be provided for the search.",
         "parameters": [
@@ -12540,7 +12540,7 @@
         }
       }
     },
-    "/gateway/System%20Census%20Core%20API/2.0.0/softwareProducts": {
+    "/gateway/System Census Core API/2.0.0/softwareProducts": {
       "post": {
         "description": "Add or update software product details and system-level API/AI information.",
         "requestBody": {
@@ -12900,7 +12900,7 @@
         }
       }
     },
-    "/gateway/System%20Census%20Core%20API/2.0.0/page/softwareProducts": {
+    "/gateway/System Census Core API/2.0.0/page/softwareProducts": {
       "get": {
         "description": "Get software products list for a system by system ID.",
         "parameters": [
@@ -13022,7 +13022,7 @@
         }
       }
     },
-    "/gateway/System%20Census%20Core%20API/2.0.0/status": {
+    "/gateway/System Census Core API/2.0.0/status": {
       "post": {
         "description": "Adds or updates a list of system status records.",
         "requestBody": {
@@ -13545,7 +13545,7 @@
         }
       }
     },
-    "/gateway/System%20Census%20Core%20API/2.0.0/system/ai-use": {
+    "/gateway/System Census Core API/2.0.0/system/ai-use": {
       "get": {
         "description": "Retrieves AI Use census data for a specific system by its GUID.",
         "parameters": [
@@ -13961,7 +13961,7 @@
         }
       }
     },
-    "/gateway/System%20Census%20Core%20API/2.0.0/systemComponents": {
+    "/gateway/System Census Core API/2.0.0/systemComponents": {
       "post": {
         "description": "Add, update or delete system components for a given system.",
         "requestBody": {
@@ -14253,7 +14253,7 @@
         }
       }
     },
-    "/gateway/System%20Census%20Core%20API/2.0.0/page/systemData": {
+    "/gateway/System Census Core API/2.0.0/page/systemData": {
       "post": {
         "description": "Adds or updates system data page census information for a given system.",
         "requestBody": {
@@ -14656,7 +14656,7 @@
         }
       }
     },
-    "/gateway/System%20Census%20Core%20API/2.0.0/systemMaintainer": {
+    "/gateway/System Census Core API/2.0.0/systemMaintainer": {
       "post": {
         "description": "Adds or updates system maintainer details for a given system.",
         "requestBody": {
@@ -15077,7 +15077,7 @@
         }
       }
     },
-    "/gateway/System%20Census%20Core%20API/2.0.0/page/systemMaintainer": {
+    "/gateway/System Census Core API/2.0.0/page/systemMaintainer": {
       "get": {
         "description": "Retrieve system maintainer information for a given system ID.",
         "parameters": [
@@ -15549,7 +15549,7 @@
         }
       }
     },
-    "/gateway/System%20Census%20Core%20API/2.0.0/systemProperty": {
+    "/gateway/System Census Core API/2.0.0/systemProperty": {
       "post": {
         "description": "Add or update a system property value for a given system ID and property name.",
         "requestBody": {
@@ -15720,7 +15720,7 @@
         }
       }
     },
-    "/gateway/System%20Census%20Core%20API/2.0.0/page/systemsList": {
+    "/gateway/System Census Core API/2.0.0/page/systemsList": {
       "get": {
         "description": "Retrieve a list of all systems in the System Census.",
         "tags": [
@@ -15936,7 +15936,7 @@
         }
       }
     },
-    "/gateway/System%20Census%20Core%20API/2.0.0/page/Urls": {
+    "/gateway/System Census Core API/2.0.0/page/Urls": {
       "post": {
         "description": "Creates, updates, or deletes URL records associated with a system.",
         "requestBody": {

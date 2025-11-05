@@ -7,6 +7,7 @@ package resolvers
 import (
 	"context"
 	"errors"
+	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -17,7 +18,6 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
-	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/graph/generated"
@@ -1247,16 +1247,15 @@ func (r *queryResolver) CompareGRBReviewersByIntakeID(ctx context.Context, id uu
 // CedarAuthorityToOperate is the resolver for the cedarAuthorityToOperate field.
 func (r *queryResolver) CedarAuthorityToOperate(ctx context.Context, cedarSystemID string) ([]*models.CedarAuthorityToOperate, error) {
 	cedarATO, err := r.cedarCoreClient.GetAuthorityToOperate(ctx, cedarSystemID)
+	//cedarATO, err := cedarcore.GetAuthorityToOperate3(ctx, cedarSystemID)
 	if err != nil {
 		return nil, err
 	}
 
-	// parse UUID
-	parsedUUID, err := uuid.Parse(cedarSystemID)
-	if err != nil {
-		return nil, err
-	}
-	cedarcore.NewCedarClient3().Client.GetGatewayCEDAR20Core20API200AuthorityToOperate(ctx, &gen.GetGatewayCEDAR20Core20API200AuthorityToOperateParams{SystemId: &parsedUUID})
+	fmt.Println("==== cedarATO ====")
+	fmt.Println(cedarATO)
+	fmt.Println("==== cedarATO ====")
+
 	return cedarATO, nil
 }
 

@@ -2,6 +2,7 @@ package cedarcore
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -104,45 +105,82 @@ func GetAuthorityToOperate3(ctx context.Context, cedarSystemID string) ([]*model
 		return nil, err
 	}
 
-	resp, err := cedarClient.Client.GetGatewayCEDAR20Core20API200AuthorityToOperateWithResponse(ctx, &gen.GetGatewayCEDAR20Core20API200AuthorityToOperateParams{SystemId: &parsedUUID})
+	resp, err := cedarClient.Client.GetGatewayCEDARCoreAPI200AuthorityToOperateWithResponse(ctx, &gen.GetGatewayCEDARCoreAPI200AuthorityToOperateParams{SystemId: &parsedUUID})
 	if err != nil {
 		return nil, err
 	}
 
-	var results []*models.CedarAuthorityToOperate
+	fmt.Println("==== resp.Body ====")
+	fmt.Println(string(resp.Body))
+	fmt.Println("==== resp.Body ====")
 
-	for _, ato := range resp.JSON200.AuthorityToOperateList {
+	if resp.JSON400 != nil {
+		return nil, fmt.Errorf("client error when getting authority to operate: %s", resp.JSON400.Message)
+	}
+
+	if resp.JSON401 != nil {
+		return nil, fmt.Errorf("unauthorized when getting authority to operate: %s", resp.JSON401.Error)
+	}
+
+	if resp.JSON500 != nil {
+		return nil, fmt.Errorf("cedar server-side error when getting authority to operate: %[1]s, %[2]s", resp.JSON500.Error, resp.JSON500.Message)
+	}
+
+	if resp.JSON200 == nil {
+		return nil, errors.New("unexpected nil response when getting authority to operate")
+	}
+
+	retVal := []*models.CedarAuthorityToOperate{}
+
+	if resp.JSON200.AuthorityToOperateList == nil {
+		return retVal, nil
+	}
+
+	for _, ato := range *resp.JSON200.AuthorityToOperateList {
+		var curr models.CedarAuthorityToOperate
+		curr.UUID = zero.StringFromPtr(ato.Uuid)       // required
+		curr.CedarID = zero.StringFromPtr(ato.CedarId) // required
+
+		if ato.ActualDispositionDate != nil {
+			// TODO: parse time
+			// curr.ActualDispositionDate =  zero.TimeFrom(time.Time(ato.ActualDispositionDate))
+
+			_ = 1
+		}
+
+		// TODO: do we want to do an `if x != nil` block for each field? or do we wait to see if Cedar changes things going forwards?
+
 		retVal = append(retVal, &models.CedarAuthorityToOperate{
-			UUID:    zero.StringFromPtr(ato.UUID),    // required
-			CedarID: zero.StringFromPtr(ato.CedarID), // required
 
-			ActualDispositionDate:                     zero.TimeFrom(time.Time(ato.ActualDispositionDate)),
-			ContainsPersonallyIdentifiableInformation: ato.ContainsPersonallyIdentifiableInformation,
-			CountOfTotalNonPrivilegedUserPopulation:   int(ato.CountOfTotalNonPrivilegedUserPopulation),
-			CountOfOpenPoams:                          int(ato.CountOfOpenPoams),
-			CountOfTotalPrivilegedUserPopulation:      int(ato.CountOfTotalPrivilegedUserPopulation),
-			DateAuthorizationMemoExpires:              zero.TimeFrom(time.Time(ato.DateAuthorizationMemoExpires)),
-			DateAuthorizationMemoSigned:               zero.TimeFrom(time.Time(ato.DateAuthorizationMemoSigned)),
-			EAuthenticationLevel:                      zero.StringFrom(ato.EAuthenticationLevel),
-			Fips199OverallImpactRating:                int(ato.Fips199OverallImpactRating),
-			FismaSystemAcronym:                        zero.StringFrom(ato.FismaSystemAcronym),
-			FismaSystemName:                           zero.StringFrom(ato.FismaSystemName),
-			IsAccessedByNonOrganizationalUsers:        ato.IsAccessedByNonOrganizationalUsers,
-			IsPiiLimitedToUserNameAndPass:             ato.IsPiiLimitedToUserNameAndPass,
-			IsProtectedHealthInformation:              ato.IsProtectedHealthInformation,
-			LastActScaDate:                            zero.TimeFrom(time.Time(ato.LastActScaDate)),
-			LastAssessmentDate:                        zero.TimeFrom(time.Time(ato.LastAssessmentDate)),
-			LastContingencyPlanCompletionDate:         zero.TimeFrom(time.Time(ato.LastContingencyPlanCompletionDate)),
-			LastPenTestDate:                           zero.TimeFrom(time.Time(ato.LastPenTestDate)),
-			OaStatus:                                  zero.StringFrom(ato.OaStatus),
-			PiaCompletionDate:                         zero.TimeFrom(time.Time(ato.PiaCompletionDate)),
-			PrimaryCyberRiskAdvisor:                   zero.StringFrom(ato.PrimaryCyberRiskAdvisor),
-			PrivacySubjectMatterExpert:                zero.StringFrom(ato.PrivacySubjectMatterExpert),
-			RecoveryPointObjective:                    float64(ato.RecoveryPointObjective),
-			RecoveryTimeObjective:                     float64(ato.RecoveryTimeObjective),
-			SystemOfRecordsNotice:                     models.ZeroStringsFrom(ato.SystemOfRecordsNotice),
-			TLCPhase:                                  zero.StringFrom(ato.TlcPhase),
-			XLCPhase:                                  zero.StringFrom(ato.XlcPhase),
+			ContainsPersonallyIdentifiableInformation: zero.BoolFromPtr(ato.ContainsPersonallyIdentifiableInformation).Bool,
+			CountOfTotalNonPrivilegedUserPopulation:   *ato.CountOfTotalNonPrivilegedUserPopulation,
+			CountOfOpenPoams:                          *ato.CountOfOpenPoams,
+			CountOfTotalPrivilegedUserPopulation:      *ato.CountOfTotalPrivilegedUserPopulation,
+			//DateAuthorizationMemoExpires:              zero.TimeFrom(time.Time(ato.DateAuthorizationMemoExpires)),
+			//DateAuthorizationMemoSigned:               zero.TimeFrom(time.Time(ato.DateAuthorizationMemoSigned)),
+			EAuthenticationLevel: zero.StringFromPtr(ato.EAuthenticationLevel),
+			//Fips199OverallImpactRating:                int(ato.Fips199OverallImpactRating),
+			FismaSystemAcronym:                 zero.StringFromPtr(ato.FismaSystemAcronym),
+			FismaSystemName:                    zero.StringFromPtr(ato.FismaSystemName),
+			IsAccessedByNonOrganizationalUsers: zero.BoolFromPtr(ato.IsAccessedByNonOrganizationalUsers).Bool,
+			IsPiiLimitedToUserNameAndPass:      zero.BoolFromPtr(ato.IsPiiLimitedToUserNameAndPass).Bool,
+			IsProtectedHealthInformation:       zero.BoolFromPtr(ato.IsProtectedHealthInformation).Bool,
+			//LastActScaDate:                            zero.TimeFrom(time.Time(ato.LastActScaDate)),
+			//LastAssessmentDate:                        zero.TimeFrom(time.Time(ato.LastAssessmentDate)),
+			//LastContingencyPlanCompletionDate:         zero.TimeFrom(time.Time(ato.LastContingencyPlanCompletionDate)),
+			//LastPenTestDate:                           zero.TimeFrom(time.Time(ato.LastPenTestDate)),
+			OaStatus: zero.StringFromPtr(ato.OaStatus),
+			//PiaCompletionDate:                         zero.TimeFrom(time.Time(ato.PiaCompletionDate)),
+			PrimaryCyberRiskAdvisor:    zero.StringFromPtr(ato.PrimaryCyberRiskAdvisor),
+			PrivacySubjectMatterExpert: zero.StringFromPtr(ato.PrivacySubjectMatterExpert),
+			//RecoveryPointObjective:                    float64(ato.RecoveryPointObjective),
+			//RecoveryTimeObjective: float64(ato.RecoveryTimeObjective),
+			//SystemOfRecordsNotice: models.ZeroStringsFrom(*ato.SystemOfRecordsNotice),
+			SystemOfRecordsNotice: models.ZeroStringsFrom(nil),
+			TLCPhase:              zero.StringFromPtr(ato.TlcPhase),
+			XLCPhase:              zero.StringFromPtr(ato.XlcPhase),
 		})
 	}
+
+	return retVal, nil
 }
