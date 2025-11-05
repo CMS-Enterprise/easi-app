@@ -1192,8 +1192,10 @@ func main() {
 	createSystemIntakeNote(ctx, store, intake, "This is my note")
 
 	intakeID = uuid.MustParse("cd79738d-d453-4e26-a27d-9d2a303e0262")
+	// Create context with E2E1 as principal so the system_intake_contact is created with E2E1's user account ID
+	e2e1Ctx := userCtxNonAdmin(mock.EndToEndUserOne)
 	intake = makeSystemIntakeAndProgressToStep(
-		ctx,
+		e2e1Ctx,
 		"For Business Case Cypress test",
 		&intakeID,
 		mock.EndToEndUserOne,

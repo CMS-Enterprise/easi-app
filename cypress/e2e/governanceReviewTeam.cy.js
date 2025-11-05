@@ -63,7 +63,7 @@ describe('Governance Review Team', () => {
 
     cy.location().should(loc => {
       expect(loc.pathname).to.eq(
-        '/it-governance/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/intake-request'
+        '/it-governance/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/request-home'
       );
     });
 
