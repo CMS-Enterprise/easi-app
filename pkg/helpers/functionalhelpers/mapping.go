@@ -68,7 +68,7 @@ func OneToOneWithCustomKey[K comparable, V any, mapType any, mapKey comparable, 
 // OneToManyWithCustomKey takes a list of keys and a list of values which map one-to-many (key-to-value)
 // ex: vals could be a list of collaborators where more than one collaborator exists for the same model plan id
 // getKey: this function takes a value, and gets mapKey key for the intermediate map of data. This is needed for cases where you can't directly infer a key from a value
-// getRes: this function takes an original key, and the intermediate response and returns a value and bool if hte value exists
+// getRes: this function takes an original key, and the intermediate response and returns a value and bool if the value exists
 // transform output lets you cast a data result to final expected data type returned
 /* EXAMPLE
 type SolutionAndPossibleKey struct {
