@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	"fmt"
 	"slices"
 	"time"
 
@@ -340,7 +341,13 @@ func SystemIntakesWithReviewRequested(ctx context.Context, store *storage.Store)
 }
 
 func GetMySystemIntakes(ctx context.Context, store *storage.Store) ([]*models.SystemIntake, error) {
-	return store.GetMySystemIntakes(ctx)
+	p := appcontext.Principal(ctx)
+	userAccount := p.Account()
+	if userAccount == nil {
+		return nil, fmt.Errorf("there is no user account present")
+	}
+
+	return store.GetMySystemIntakes(ctx, userAccount.ID)
 }
 
 const maxEUAsPerRequest = 200
