@@ -11,7 +11,6 @@ import {
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
-import toastSuccess from 'components/ToastSuccess';
 
 interface RequesterPresentationDeckProps {
   systemIntakeID: string;
@@ -55,7 +54,6 @@ const RequesterPresentationDeck = ({
   /** Remove presentation links and handle error/success messages */
   const removePresentationLinks = () => {
     deleteSystemIntakeGRBPresentationLinks().then(() => {
-      toastSuccess(t('grbReview:asyncPresentation.modalRemoveLinks.success'));
       setRemovalModalOpen(false);
     });
   };

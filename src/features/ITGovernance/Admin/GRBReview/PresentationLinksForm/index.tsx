@@ -28,7 +28,6 @@ import IconLink from 'components/IconLink';
 import Label from 'components/Label';
 import MainContent from 'components/MainContent';
 import { TabPanel, Tabs } from 'components/Tabs';
-import toastSuccess from 'components/ToastSuccess';
 import useMessage from 'hooks/useMessage';
 import { fileToBase64File } from 'utils/downloadFile';
 import { SetGRBPresentationLinksSchema } from 'validations/grbReviewSchema';
@@ -138,8 +137,6 @@ const PresentationLinksForm = ({
           }
         }
       }).then(() => {
-        toastSuccess(t(`presentationLinks.success`));
-
         history.push(grbReviewPath);
       });
     }

@@ -14,12 +14,12 @@ import {
   GetSystemIntakeGRBReviewDocument,
   useRestartGRBReviewAsyncMutation
 } from 'gql/generated/graphql';
+import { setCurrentSuccessMeta } from 'wrappers/ErrorContext/successMetaStore';
 
 import Alert from 'components/Alert';
 import HelpText from 'components/HelpText';
 import Modal from 'components/Modal';
 import RequiredFieldsText from 'components/RequiredFieldsText';
-import toastSuccess from 'components/ToastSuccess';
 import { formatDateLocal, formatEndOfDayDeadline } from 'utils/date';
 
 import { useRestartReviewModal } from './RestartReviewModalContext';
@@ -42,6 +42,16 @@ const RestartReviewModal = ({ systemIntakeId }: { systemIntakeId: string }) => {
   const handleSubmit: ReactEventHandler = event => {
     event.preventDefault();
 
+    setCurrentSuccessMeta({
+      overrideMessage: (
+        <Trans
+          i18nKey="success:RestartGRBReviewAsync"
+          components={{ bold: <strong /> }}
+          values={{ date: formatDateLocal(selectedDate, 'MM/dd/yyyy') }}
+        />
+      )
+    });
+
     restartReview({
       variables: {
         input: {
@@ -50,14 +60,6 @@ const RestartReviewModal = ({ systemIntakeId }: { systemIntakeId: string }) => {
         }
       }
     }).then(() => {
-      toastSuccess(
-        <Trans
-          i18nKey="grbReview:adminTask.restartReview.success"
-          components={{ bold: <strong /> }}
-          values={{ date: formatDateLocal(selectedDate, 'MM/dd/yyyy') }}
-        />
-      );
-
       // Close modal on success
       handleCloseModal();
     });

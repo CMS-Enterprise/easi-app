@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { Column, useSortBy, useTable } from 'react-table';
 import {
@@ -18,7 +18,6 @@ import { setCurrentSuccessMeta } from 'wrappers/ErrorContext/successMetaStore';
 import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import Modal from 'components/Modal';
-import toastSuccess from 'components/ToastSuccess';
 import {
   currentTableSortDescription,
   getColumnSortStatus,

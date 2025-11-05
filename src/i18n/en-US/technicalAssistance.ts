@@ -252,7 +252,6 @@ const technicalAssistance = {
     followupYes: 'Yes, a follow-up is recommended',
     notNecessary: 'Not necessary',
     followupHelpText: 'Examples: in 6 months, when development is complete',
-    removeSuccess: 'Your guidance was removed from this letter.',
     guidanceSuccess: 'Your guidance was added to this letter.',
     guidanceSuccess_edit: 'Your guidance was edited',
     modal: {
@@ -666,9 +665,6 @@ const technicalAssistance = {
     attendeeNameHelpText:
       'This field searches the EUA system. If you wish to invite a team member without an EUA ID, please contact the TRB at <1>cms-trb@cms.hhs.gov</1>.',
     alerts: {
-      success: 'Your attendee has been added.',
-      successEdit: 'Your attendee has been edited.',
-      successRemove: 'Your attendee has been removed.',
       invalidForm: 'Invalid attendees form.'
     },
     modal: {
@@ -770,8 +766,7 @@ const technicalAssistance = {
       removeInfo:
         'You will not be able to access this document after it is removed, and the TRB team will not be able to view it.',
       removeDocument: 'Remove document',
-      cancel: 'Cancel',
-      removeSuccess: 'You have successfully removed {{-documentName}}.'
+      cancel: 'Cancel'
     },
     viewFail:
       'There was an issue viewing {{-documentName}}. Please try again, and if the problem persists, try again later.'
@@ -1021,8 +1016,6 @@ const technicalAssistance = {
       meetingDate: 'mm/dd/yyyy',
       meetingTime: 'hh:mm pm'
     },
-    success:
-      'The date for this request’s TRB consult session is set for {{date}} at {{time}}.',
     alert:
       'If you have not already done so, you must also send a calendar invite with meeting details and a video conferencing link. EASi does not currently integrate with calendar tools and will not send a calendar invite for you.',
     breadcrumb: 'Schedule a consult'
@@ -1044,9 +1037,6 @@ const technicalAssistance = {
     save: 'Save',
     saveNote: 'Save note',
     cancel: 'Cancel',
-    status: {
-      success: 'Your note has been added.'
-    },
     labels: {
       category: 'What is this note about?',
       categoryHelpText:
@@ -1085,7 +1075,6 @@ const technicalAssistance = {
     label: 'Why are you closing this request?',
     hint: 'Give a brief explanation, especially if you are closing this request without sending an guidance letter.',
     submit: 'Complete action and close request',
-    success: 'Action complete. This request is now closed.',
     confirmModal: {
       heading: 'Are you sure you want to close this request?',
       text: [
@@ -1105,15 +1094,13 @@ const technicalAssistance = {
       'Reopen this request if additional work needs to be completed or if it was closed in error.',
     label: 'Why are you re-opening this request?',
     hint: 'Give a brief explanation.',
-    submit: 'Complete action and re-open request',
-    success: 'Action complete. This request is now open.'
+    submit: 'Complete action and re-open request'
   },
   assignTrbLeadModal: {
     heading: 'Assign an Admin lead for this request',
     label: 'Select a Lead from the TRB Team:',
     assignMyself: 'Assign myself',
-    submit: 'Assign',
-    success: '{{name}} is assigned as the TRB lead for this request.'
+    submit: 'Assign'
   },
   closeTab: 'Close tab',
   // technicalAssistance.link here provides overrides to itGov.link

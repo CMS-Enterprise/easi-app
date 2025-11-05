@@ -10,11 +10,11 @@ import {
   useGetTRBRequestDocumentsQuery,
   useGetTRBRequestDocumentUrlsLazyQuery
 } from 'gql/generated/graphql';
+import { setCurrentSuccessMeta } from 'wrappers/ErrorContext/successMetaStore';
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import Spinner from 'components/Spinner';
-import toastSuccess from 'components/ToastSuccess';
 import useMessage from 'hooks/useMessage';
 import { formatDateLocal } from 'utils/date';
 import { downloadFileFromURL } from 'utils/downloadFile';
@@ -86,16 +86,19 @@ function DocumentsTable({
 
   const handleDelete = useMemo(() => {
     return (file: TrbRequestDocuments) => {
+      setCurrentSuccessMeta({
+        overrideMessage: t(
+          'success:operationSuccesses.DeleteTRBRequestDocument',
+          {
+            documentName: file.fileName
+          }
+        )
+      });
       deleteDocument({
         variables: {
           id: file.id
         }
       }).then(() => {
-        toastSuccess(
-          t('documents.supportingDocuments.removeSuccess', {
-            documentName: file.fileName
-          })
-        );
         refetch();
       });
     };

@@ -31,6 +31,7 @@ import {
   useUnlinkSystemIntakeRelationMutation,
   useUnlinkTrbRequestRelationMutation
 } from 'gql/generated/graphql';
+import { setCurrentSuccessMeta } from 'wrappers/ErrorContext/successMetaStore';
 
 import Alert from 'components/Alert';
 import IconButton from 'components/IconButton';
@@ -218,6 +219,10 @@ const RequestLinkForm = ({
 
   const submit = handleSubmit(formData => {
     // Do some field parsing and correlate relation type to mutation
+
+    setCurrentSuccessMeta({
+      skipSuccess: true
+    });
 
     // Parse contract numbers from csv text input to string[]
     // Make sure an empty string input is sent as an empty list

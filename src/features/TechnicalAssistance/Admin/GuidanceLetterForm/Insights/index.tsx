@@ -13,7 +13,6 @@ import {
 import { Alert } from 'components/Alert';
 import Divider from 'components/Divider';
 import { useEasiForm } from 'components/EasiForm';
-import toastSuccess from 'components/ToastSuccess';
 import {
   GuidanceLetterInsightFields,
   StepComponentProps
@@ -127,11 +126,7 @@ const Insights = ({
 
                   history.push(`/trb/${trbRequestId}/guidance/insights/form`);
                 }}
-                remove={insight =>
-                  remove({ variables: { id: insight.id } }).then(() =>
-                    toastSuccess(t('guidanceLetterForm.removeSuccess'))
-                  )
-                }
+                remove={insight => remove({ variables: { id: insight.id } })}
               />
             )
           }

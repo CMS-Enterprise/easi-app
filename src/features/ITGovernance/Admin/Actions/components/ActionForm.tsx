@@ -19,6 +19,7 @@ import {
   useGetSystemIntakeContactsQuery
 } from 'gql/generated/graphql';
 import { setCurrentErrorMeta } from 'wrappers/ErrorContext/errorMetaStore';
+import { setCurrentSuccessMeta } from 'wrappers/ErrorContext/successMetaStore';
 
 import Alert from 'components/Alert';
 import Breadcrumbs from 'components/Breadcrumbs';
@@ -31,7 +32,6 @@ import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import RichTextEditor from 'components/RichTextEditor';
-import toastSuccess from 'components/ToastSuccess';
 
 import ActionsSummary, { ActionsSummaryProps } from './ActionsSummary';
 import EmailRecipientsFields from './EmailRecipientsFields';
@@ -136,13 +136,13 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
       overrideMessage: t('error')
     });
 
+    setCurrentSuccessMeta({
+      overrideMessage: successMessage ? t(successMessage) : undefined,
+      skipSuccess: !successMessage
+    });
+
     onSubmit(formData)
       .then(() => {
-        // Display success message
-        if (successMessage) {
-          toastSuccess(t(successMessage));
-        }
-
         history.push(`/it-governance/${systemIntakeId}/actions`);
       })
       .catch(e => {

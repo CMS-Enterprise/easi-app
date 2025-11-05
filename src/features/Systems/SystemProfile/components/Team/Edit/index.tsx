@@ -18,13 +18,13 @@ import {
   useSetRolesForUserOnSystemMutation
 } from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
+import { setCurrentSuccessMeta } from 'wrappers/ErrorContext/successMetaStore';
 
 import Breadcrumbs from 'components/Breadcrumbs';
 import IconLink from 'components/IconLink';
 import MainContent from 'components/MainContent';
 import Modal from 'components/Modal';
 import Spinner from 'components/Spinner';
-import toastSuccess from 'components/ToastSuccess';
 import useIsWorkspaceParam from 'hooks/useIsWorkspaceParam';
 import useMessage from 'hooks/useMessage';
 import { TeamMemberRoleTypeName, UsernameWithRoles } from 'types/systemProfile';
@@ -138,6 +138,12 @@ const EditTeam = ({
    * Remove team member and close modal
    */
   const removeUser = (user: { euaUserId: string; commonName: string }) => {
+    setCurrentSuccessMeta({
+      overrideMessage: t('success:SetRolesForUserOnSystem', {
+        commonName: user.commonName
+      })
+    });
+
     // Set roles to empty string to remove user
     updateRoles({
       variables: {
@@ -149,11 +155,6 @@ const EditTeam = ({
       }
     }).then(() => {
       setMemberToDelete(null);
-      toastSuccess(
-        t('singleSystem.editTeam.form.successRemoveContact', {
-          commonName: user.commonName
-        })
-      );
     });
   };
 

@@ -10,12 +10,13 @@ import {
   TRBFormStatus,
   useCreateTRBRequestFeedbackMutation
 } from 'gql/generated/graphql';
+import { setCurrentErrorMeta } from 'wrappers/ErrorContext/errorMetaStore';
+import { setCurrentSuccessMeta } from 'wrappers/ErrorContext/successMetaStore';
 
 import HelpText from 'components/HelpText';
 import Label from 'components/Label';
 import PageLoading from 'components/PageLoading';
 import RichTextEditor from 'components/RichTextEditor';
-import toastSuccess from 'components/ToastSuccess';
 import { TrbRecipientFields } from 'types/technicalAssistance';
 import { trbActionSchema } from 'validations/trbRequestSchema';
 
@@ -81,12 +82,19 @@ function RequestEdits() {
     // Filter out fields that don't belong in the TRB feedback input
     const { copyITGovMailbox, ...trbFeedbackData } = formData;
 
+    setCurrentErrorMeta({
+      overrideMessage: t(`${actionText}.error`)
+    });
+
+    setCurrentSuccessMeta({
+      overrideMessage: t(`${actionText}.success`)
+    });
+
     sendFeedback({
       variables: {
         input: { ...trbFeedbackData, trbRequestId: id, action: feedbackAction }
       }
     }).then(result => {
-      toastSuccess(t(`${actionText}.success`));
       history.push(requestUrl);
     });
   };

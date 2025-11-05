@@ -22,6 +22,7 @@ import {
 } from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { setCurrentErrorMeta } from 'wrappers/ErrorContext/errorMetaStore';
+import { setCurrentSuccessMeta } from 'wrappers/ErrorContext/successMetaStore';
 import * as yup from 'yup';
 
 import CedarContactSelect from 'components/CedarContactSelect';
@@ -33,7 +34,6 @@ import MultiSelect from 'components/MultiSelect';
 import PageLoading from 'components/PageLoading';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import Spinner from 'components/Spinner';
-import toastSuccess from 'components/ToastSuccess';
 import teamRolesIndex from 'constants/teamRolesIndex';
 import useIsWorkspaceParam from 'hooks/useIsWorkspaceParam';
 import { TeamMemberRoleTypeName, UsernameWithRoles } from 'types/systemProfile';
@@ -141,6 +141,17 @@ const TeamMemberForm = ({
         )
       });
 
+      setCurrentSuccessMeta({
+        overrideMessage: t(
+          `singleSystem.editTeam.form.${
+            isEdit ? 'successUpdateRoles' : 'successAddContact'
+          }`,
+          {
+            commonName
+          }
+        )
+      });
+
       updateRoles({
         variables: {
           input: {
@@ -150,16 +161,6 @@ const TeamMemberForm = ({
           }
         }
       }).then(() => {
-        toastSuccess(
-          t(
-            `singleSystem.editTeam.form.${
-              isEdit ? 'successUpdateRoles' : 'successAddContact'
-            }`,
-            {
-              commonName
-            }
-          )
-        );
         history.push({
           pathname: `/systems/${cedarSystemId}/team/edit`,
           search: isWorkspace ? 'workspace' : undefined

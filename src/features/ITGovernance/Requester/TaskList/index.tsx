@@ -21,6 +21,7 @@ import {
   SystemIntakeStatusAdmin
 } from 'gql/generated/graphql';
 import { setCurrentErrorMeta } from 'wrappers/ErrorContext/errorMetaStore';
+import { setCurrentSuccessMeta } from 'wrappers/ErrorContext/successMetaStore';
 
 import Alert from 'components/Alert';
 import Breadcrumbs from 'components/Breadcrumbs';
@@ -30,7 +31,6 @@ import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import { TaskListContainer } from 'components/TaskList';
-import toastSuccess from 'components/ToastSuccess';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import useMessage from 'hooks/useMessage';
 import { formatDateUtc } from 'utils/date';
@@ -93,14 +93,15 @@ function GovernanceTaskList() {
       })
     });
 
+    setCurrentSuccessMeta({
+      overrideMessage: t<string>('taskList:withdraw_modal.confirmationText', {
+        context: requestName ? 'name' : 'noName',
+        requestName
+      })
+    });
+
     archive()
       .then(() => {
-        const message = t<string>('taskList:withdraw_modal.confirmationText', {
-          context: requestName ? 'name' : 'noName',
-          requestName
-        });
-
-        toastSuccess(message);
         history.push('/');
       })
       .catch(() => {

@@ -21,7 +21,6 @@ import {
 
 import Spinner from 'components/Spinner';
 import TextAreaField from 'components/TextAreaField';
-import toastSuccess from 'components/ToastSuccess';
 import { TrbRecipientFields } from 'types/technicalAssistance';
 import { trbActionSchema } from 'validations/trbRequestSchema';
 
@@ -91,7 +90,6 @@ function CloseRequest() {
           }
         }
       }).then(() => {
-        toastSuccess(t(`${actionText}.success`));
         history.push(`/trb/${id}/request`);
       });
     }
@@ -109,7 +107,6 @@ function CloseRequest() {
           }
         }
       }).then(() => {
-        toastSuccess(t(`${actionText}.success`));
         history.push(`/trb/${id}/request`);
       });
     }

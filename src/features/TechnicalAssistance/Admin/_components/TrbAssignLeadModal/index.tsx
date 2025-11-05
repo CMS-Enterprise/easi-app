@@ -21,8 +21,8 @@ import {
   useUpdateTRBRequestLeadMutation
 } from 'gql/generated/graphql';
 import { AppState } from 'stores/reducers/rootReducer';
+import { setCurrentSuccessMeta } from 'wrappers/ErrorContext/successMetaStore';
 
-import toastSuccess from 'components/ToastSuccess';
 import { TrbRequestIdRef } from 'types/technicalAssistance';
 
 type TrbAssignLeadModalOpenerProps = {
@@ -102,6 +102,13 @@ function TrbAssignLeadModal({
   const submit = handleSubmit(formData => {
     if (!trbRequestIdRef.current) return;
 
+    setCurrentSuccessMeta({
+      overrideMessage: t(`success:UpdateTRBRequestLead`, {
+        name: data?.trbLeadOptions.find(e => e.euaUserId === formData.trbLead)!
+          .commonName
+      })
+    });
+
     mutate({
       variables: {
         input: {
@@ -109,16 +116,7 @@ function TrbAssignLeadModal({
           trbLead: formData.trbLead
         }
       }
-    }).then(() => {
-      toastSuccess(
-        t(`assignTrbLeadModal.success`, {
-          name: data?.trbLeadOptions.find(
-            e => e.euaUserId === formData.trbLead
-          )!.commonName
-        })
-      );
     });
-
     reset();
   });
 

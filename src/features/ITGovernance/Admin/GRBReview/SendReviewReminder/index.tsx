@@ -8,7 +8,6 @@ import {
 } from 'gql/generated/graphql';
 
 import Modal from 'components/Modal';
-import toastSuccess from 'components/ToastSuccess';
 
 const SendReviewReminder = ({
   isOpen,
@@ -49,7 +48,6 @@ const SendReviewReminder = ({
 
     sendReminder().then(response => {
       setIsModalOpen(false);
-      toastSuccess(t('adminTask.sendReviewReminder.modal.success'));
     });
   };
 

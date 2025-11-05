@@ -14,7 +14,6 @@ import { Alert } from 'components/Alert';
 import { useEasiForm } from 'components/EasiForm';
 import IconLink from 'components/IconLink';
 import Label from 'components/Label';
-import toastSuccess from 'components/ToastSuccess';
 import { ITGovernanceViewType } from 'types/itGov';
 import { fileToBase64File } from 'utils/downloadFile';
 
@@ -83,7 +82,6 @@ const PresentationDeckUpload = ({ type = 'requester' }: UploadFormProps) => {
           }
         }
       }).then(() => {
-        toastSuccess(t('presentationLinks.presentationUpload.success'));
         history.push(requestDetailsLink);
       });
     } else {
@@ -95,7 +93,6 @@ const PresentationDeckUpload = ({ type = 'requester' }: UploadFormProps) => {
           }
         }
       }).then(() => {
-        toastSuccess(t('presentationLinks.presentationUpload.success'));
         history.push(requestDetailsLink);
       });
     }

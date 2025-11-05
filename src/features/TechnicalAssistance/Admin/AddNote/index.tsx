@@ -30,7 +30,6 @@ import PageHeading from 'components/PageHeading';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import RichTextEditor from 'components/RichTextEditor';
 import Spinner from 'components/Spinner';
-import toastSuccess from 'components/ToastSuccess';
 import useMessage from 'hooks/useMessage';
 
 import { ModalViewType } from '../_components/NoteModal';
@@ -107,7 +106,6 @@ const AddNote = ({
 
   const submit = handleSubmit(formData =>
     createNote(formData).then(result => {
-      toastSuccess(t('notes.status.success'));
       if (!setModalView) {
         history.push(requestUrl);
       } else {

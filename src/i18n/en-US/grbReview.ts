@@ -6,7 +6,7 @@ import {
   SystemIntakeGRBReviewStandardStatusType
 } from 'gql/generated/graphql';
 
-import { GRBReviewFormAction, GRBReviewStatus } from 'types/grbReview';
+import { GRBReviewStatus } from 'types/grbReview';
 import { Translation } from 'types/util';
 
 export const grbReviewerVotingRolesTranslation: Translation<SystemIntakeGRBReviewerVotingRole> =
@@ -140,8 +140,7 @@ export default {
       title: 'Remove presentation links?',
       text: 'This action will remove any links and files previously added about this asynchronous presesntation and cannot be undone. Are you sure you want to continue?',
       confirm: 'Remove presentation links',
-      cancel: "Don't remove",
-      success: 'Presentation links have been removed.'
+      cancel: "Don't remove"
     }
   },
   businessCaseOverview: {
@@ -334,9 +333,7 @@ export default {
         description:
           'Sending this reminder will send a notification email to the {{count}} out of {{total}} Governance Review Board (GRB) voting members who have not yet added a vote for this request.',
         sendReminder: 'Send reminder',
-        cancel: 'Go back without sending',
-        success:
-          'You sent a voting reminder for this GRB review. GRB members added to this review will receive a voting reminder email.'
+        cancel: 'Go back without sending'
       }
     },
     takeADifferentAction: 'or, take a different action',
@@ -348,11 +345,7 @@ export default {
       setNewEndDateHelpText:
         'Select the new date when the GRB review should end. The review will close at 5pm EST on that day. Format: mm/dd/yyyy',
       restart: 'Restart',
-      cancel: "Go back and don't restart",
-      success:
-        'You restarted this GRB review. The new end date is <bold>{{date}}</bold> at 5:00pm EST.',
-      error:
-        'There was an issue restarting this review. Please try again, and if the problem persists, try again later.'
+      cancel: "Go back and don't restart"
     }
   },
   reviewTask: {
@@ -452,8 +445,7 @@ export default {
         'Don’t upload and return to the governance task list',
       selectFile: 'Select your file',
       recommendedFileTypes: 'Select a PDF, PPT, PPTX, DOC, DOCX, XLS, or XLSX',
-      upload: 'Upload presentation',
-      success: 'You have successfully uploaded your GRB presentation.'
+      upload: 'Upload presentation'
     },
     sendReminderCard: {
       header: 'Presentation deck',

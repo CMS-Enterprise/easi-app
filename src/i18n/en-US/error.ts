@@ -28,8 +28,6 @@ export const operationErrors: Record<string, string> = {
     'There was an issue removing this guidance. Please try again, and if the problem persists, try again later.',
   RequestReviewForTRBGuidanceLetter:
     'There was an issue submitting your guidance letter for internal review. Please try again, and if the problem persists, try again later.',
-  CreateTRBRequestFeedback:
-    'There was an issue submitting your feedback. Please try again, and if the problem persists, try again later.',
   UpdateTRBRequestAndForm:
     'There was an issue updating this request. Please try again, and if the problem persists, try again later.',
   UpdateTRBRequestFundingSources:
@@ -66,6 +64,14 @@ export const operationErrors: Record<string, string> = {
     'There was an issue deleting the presentation details. Please try again, and if the problem persists, try again later.',
   UpdateSystemIntakeGRBReviewAsyncPresentation:
     'There was an issue uploading your presentation. Please try again, and if the issue persists please try again later.',
+  StartGRBReview:
+    'There was a problem saving your GRB review form. Please try again. If the error persists, please try again at a later date.',
+  UpdateSystemIntakeGRBReviewFormInputTimeframeAsync:
+    'There was a problem saving your GRB review form. Please try again. If the error persists, please try again at a later date.',
+  UpdateSystemIntakeGRBReviewStandardPresentation:
+    'There was a problem saving your GRB review form. Please try again. If the error persists, please try again at a later date.',
+  UpdateSystemIntakeGRBReviewType:
+    'There was a problem saving your GRB review form. Please try again. If the error persists, please try again at a later date.',
   RestartGRBReviewAsync:
     'There was an issue restarting this review. Please try again, and if the problem persists, try again later.',
   SendPresentationDeckReminder:
@@ -73,6 +79,8 @@ export const operationErrors: Record<string, string> = {
   SendSystemIntakeGRBReviewerReminder:
     'There was an issue sending your reminder. Please try again, and if the problem persists, try again later.',
   UploadSystemIntakeGRBPresentationDeck:
+    'There was an issue uploading your presentation. Please try again, and if the issue persists please try again later.',
+  SetSystemIntakeGRBPresentationLinks:
     'There was an issue uploading your presentation. Please try again, and if the issue persists please try again later.',
   UnlinkSystemIntakeRelation:
     'There was an issue removing the link between this request and all of the selected systems. Please try again, and if the problem persists, try again later.',
@@ -95,7 +103,9 @@ export const operationErrors: Record<string, string> = {
   UnlinkTrbRequestRelation:
     'EASi encountered an issue. Please try again, and if the problem persists, try again later.',
   SetRolesForUserOnSystem:
-    'There was a problem removing a team member. Please try again. If the error persists, please try again at a later date.'
+    'There was a problem removing a team member. Please try again. If the error persists, please try again at a later date.',
+  ArchiveSystemIntake:
+    'There was an issue archiving this request. Please try again, and if the problem persists, try again later.'
 };
 
 const error = {

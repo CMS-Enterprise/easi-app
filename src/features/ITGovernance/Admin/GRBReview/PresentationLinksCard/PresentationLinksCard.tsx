@@ -25,7 +25,6 @@ import ExternalLinkAndModal from 'components/ExternalLinkAndModal';
 import IconLink from 'components/IconLink';
 import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
-import toastSuccess from 'components/ToastSuccess';
 import { formatDateLocal } from 'utils/date';
 import { downloadFileFromURL } from 'utils/downloadFile';
 
@@ -192,13 +191,9 @@ function PresentationLinksCard({
   ] = useState<boolean>(false);
 
   const removePresentationLinks = () => {
-    deleteSystemIntakeGRBPresentationLinks()
-      .then(() => {
-        toastSuccess(t('asyncPresentation.modalRemoveLinks.success'));
-      })
-      .finally(() => {
-        setRemovePresentationLinksModalOpen(false);
-      });
+    deleteSystemIntakeGRBPresentationLinks().finally(() => {
+      setRemovePresentationLinksModalOpen(false);
+    });
   };
 
   return (

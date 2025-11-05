@@ -7,7 +7,7 @@ import {
   useParams,
   useRouteMatch
 } from 'react-router-dom';
-import { ApolloError, ApolloQueryResult } from '@apollo/client';
+import { ApolloQueryResult } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Form, Icon } from '@trussworks/react-uswds';
 import classNames from 'classnames';
@@ -16,6 +16,7 @@ import {
   GetTRBRequestQueryVariables,
   PersonRole
 } from 'gql/generated/graphql';
+import { setCurrentSuccessMeta } from 'wrappers/ErrorContext/successMetaStore';
 
 import Alert from 'components/Alert';
 import Divider from 'components/Divider';
@@ -165,16 +166,14 @@ function Attendees({
             }
             callback?.();
           } catch (e) {
-            if (e instanceof ApolloError) {
-              setFormAlert({
-                type: 'error',
-                message: t<string>('attendees.alerts.error')
-              });
-            }
+            // Do nothing, caught in global error handler
           }
         },
         async () => {
           if (!shouldValidate) {
+            setCurrentSuccessMeta({
+              skipSuccess: true
+            });
             await partialSubmit({
               update: formData =>
                 updateAttendee({
@@ -193,9 +192,7 @@ function Attendees({
       refetchRequest,
       requester,
       updateAttendee,
-      setFormAlert,
-      partialSubmit,
-      t
+      partialSubmit
     ]
   );
 

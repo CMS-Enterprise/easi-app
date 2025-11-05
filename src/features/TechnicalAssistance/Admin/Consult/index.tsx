@@ -17,10 +17,10 @@ import {
   useUpdateTRBRequestConsultMeetingMutation
 } from 'gql/generated/graphql';
 import { DateTime } from 'luxon';
+import { setCurrentSuccessMeta } from 'wrappers/ErrorContext/successMetaStore';
 
 import PageLoading from 'components/PageLoading';
 import TextAreaField from 'components/TextAreaField';
-import toastSuccess from 'components/ToastSuccess';
 import { TrbRecipientFields } from 'types/technicalAssistance';
 import { consultSchema } from 'validations/trbRequestSchema';
 
@@ -99,6 +99,18 @@ function Consult() {
         .toUTC()
         .toISO() || '';
 
+    setCurrentSuccessMeta({
+      overrideMessage: t(
+        'success:operationSuccesses.UpdateTRBRequestConsultMeeting',
+        {
+          date: formData.meetingDate,
+          time: DateTime.fromFormat(formData.meetingTime, 'HH:mm')
+            .toFormat('t')
+            .toLowerCase()
+        }
+      )
+    });
+
     mutate({
       variables: {
         input: {
@@ -110,17 +122,6 @@ function Consult() {
         }
       }
     }).then(() => {
-      toastSuccess(
-        t('actionScheduleConsult.success', {
-          date: formData.meetingDate,
-          time: DateTime.fromFormat(formData.meetingTime, 'HH:mm')
-            .toFormat('t')
-            .toLowerCase(),
-          interpolation: {
-            escapeValue: false
-          }
-        })
-      );
       history.push(requestUrl);
     });
   };
