@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { Controller } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
@@ -20,6 +20,7 @@ import {
 } from 'gql/generated/graphql';
 import { capitalize } from 'lodash';
 import { setCurrentErrorMeta } from 'wrappers/ErrorContext/errorMetaStore';
+import { setCurrentSuccessMeta } from 'wrappers/ErrorContext/successMetaStore';
 
 import Alert from 'components/Alert';
 import CedarContactSelect from 'components/CedarContactSelect';
@@ -139,10 +140,28 @@ const ContactFormModal = ({
       action === 'edit' ? handleUpdateContact : handleCreateContact;
 
     setCurrentErrorMeta({
-      overrideMessage: t('contactDetails.additionalContacts.errors.root', {
-        action,
-        type
-      })
+      overrideMessage: t(
+        `error:operationErrors.${action.toUpperCase()}SystemIntakeContact`,
+        {
+          action,
+          type
+        }
+      )
+    });
+
+    setCurrentSuccessMeta({
+      overrideMessage: (
+        <Trans
+          t={t}
+          i18nKey={`success:operationSuccesses.${action.toUpperCase()}SystemIntakeContact`}
+          values={{
+            name: values.userAccount.commonName
+          }}
+          components={{
+            bold: <strong />
+          }}
+        />
+      )
     });
 
     return mutate(values).then(() => {

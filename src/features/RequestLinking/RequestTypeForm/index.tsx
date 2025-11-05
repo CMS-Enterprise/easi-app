@@ -19,6 +19,7 @@ import {
   useCreateSystemIntakeMutation,
   useUpdateSystemIntakeRequestTypeMutation
 } from 'gql/generated/graphql';
+import { setCurrentSuccessMeta } from 'wrappers/ErrorContext/successMetaStore';
 
 import CollapsableLink from 'components/CollapsableLink';
 import IconButton from 'components/IconButton';
@@ -83,6 +84,10 @@ const RequestTypeForm = () => {
             break;
         }
       };
+
+      setCurrentSuccessMeta({
+        skipSuccess: true
+      });
 
       if (!systemId) {
         create({ variables: { input } }).then(response => {

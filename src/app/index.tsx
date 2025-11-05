@@ -197,10 +197,9 @@ const errorLink = onError(({ graphQLErrors, operation, networkError }) => {
           </div>,
           { autoClose: toastTimeout }
         );
-
-        // Clear the override message after displaying the error
-        setCurrentErrorMeta({});
       }
+      // Clear the override message after displaying the error
+      setCurrentErrorMeta({});
     });
   }
 
@@ -227,6 +226,14 @@ const errorLink = onError(({ graphQLErrors, operation, networkError }) => {
   }
 });
 
+const bypassedOperations: string[] = [
+  'UnlinkSystemIntakeRelation',
+  'UpdateSystemIntakeContactDetails',
+  'UpdateSystemIntakeRequestDetails',
+  'UpdateSystemIntakeContractDetails',
+  'SubmitIntake'
+];
+
 /**
  * Success Link
  *
@@ -243,8 +250,17 @@ const successLink = new ApolloLink((operation, forward) => {
       { returnObjects: true }
     );
 
+    if (bypassedOperations.includes(operation.operationName)) {
+      return response;
+    }
+
     // Only show success toasts for mutations
-    if (operationType === 'mutation' && !skipSuccess && response.data) {
+    if (
+      operationType === 'mutation' &&
+      !skipSuccess &&
+      // skipSuccess !== operation.operationName &&
+      response.data
+    ) {
       // Use shorter timeout in Cypress tests to prevent toasts from covering elements
       const toastTimeout = (window as any).Cypress ? 100 : 3000;
 
@@ -282,10 +298,9 @@ const successLink = new ApolloLink((operation, forward) => {
           draggable: true
         }
       );
-
-      // Clear the override message after displaying the success
-      setCurrentSuccessMeta({});
     }
+    // Clear the override message after displaying the success
+    setCurrentSuccessMeta({});
 
     return response;
   });

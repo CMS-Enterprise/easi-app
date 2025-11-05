@@ -61,13 +61,18 @@ export const operationSuccesses: Record<string, string> = {
     'You have successfully uploaded your GRB presentation.',
   UnlinkSystemIntakeRelation:
     'You have removed all linked systems from this request.',
-  DeleteSystemLink: 'You have removed a linked system from this request.',
-  AddSystemLink:
-    'You linked <span>{{updatedSystem}}</span> to this IT Governance request.',
-  UpdateSystemLink:
-    'You saved changes to the system link for <span>{{updatedSystem}}</span>.',
+  deleteSystemLink: 'You have removed a linked system from this request.',
+  addSystemLink:
+    'You linked <span>{{system}}</span> to this IT Governance request.',
+  updateSystemLink:
+    'You saved changes to the system link for <span>{{system}}</span>.',
   SetRolesForUserOnSystem: '{{commonName}} has been removed as a team member.',
-  ArchiveSystemIntake: 'You archived this request.'
+  ArchiveSystemIntake: 'You archived this request.',
+  CreateSystemIntakeContact:
+    'You have added <bold>{{name}}</bold> as a project point of contact.',
+  EditSystemIntakeContact: 'You have edited a project point of contact.',
+  DeleteSystemIntakeContact:
+    'You successfully removed a project point of contact.'
 };
 
 export default {

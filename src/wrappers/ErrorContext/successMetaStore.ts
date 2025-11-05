@@ -11,7 +11,7 @@ import React from 'react';
 
 let currentMeta: {
   overrideMessage?: string | React.ReactNode;
-  skipSuccess?: boolean;
+  skipSuccess?: boolean; // Whether to skip success for this operation
 } = {};
 
 export const setCurrentSuccessMeta = (meta: typeof currentMeta) => {

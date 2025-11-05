@@ -84,10 +84,12 @@ export const operationErrors: Record<string, string> = {
     'There was an issue uploading your presentation. Please try again, and if the issue persists please try again later.',
   UnlinkSystemIntakeRelation:
     'There was an issue removing the link between this request and all of the selected systems. Please try again, and if the problem persists, try again later.',
-  DeleteSystemLink:
+  deleteSystemLink:
     'There was an issue removing the link between this request and the selected system. Please try again, and if the problem persists, try again later.',
-  AddSystemLink:
+  addSystemLink:
     'There was an issue saving your changes. Please try again, and if the problem persists, try again later.',
+  updateSystemLink:
+    'There was an issue updating your changes. Please try again, and if the problem persists, try again later.',
   SetTrbRequestRelationNewSystem:
     'EASi encountered an issue. Please try again, and if the problem persists, try again later.',
   SetSystemIntakeRelationNewSystem:
@@ -105,7 +107,13 @@ export const operationErrors: Record<string, string> = {
   SetRolesForUserOnSystem:
     'There was a problem removing a team member. Please try again. If the error persists, please try again at a later date.',
   ArchiveSystemIntake:
-    'There was an issue archiving this request. Please try again, and if the problem persists, try again later.'
+    'There was an issue archiving this request. Please try again, and if the problem persists, try again later.',
+  CreateSystemIntakeContact:
+    'There was an error {{action}}ing your {{type}}. Please try again. If the error persists, try again later.',
+  EditSystemIntakeContact:
+    'There was an error editing your contact. Please try again. If the error persists, try again later.',
+  DeleteSystemIntakeContact:
+    'There was an issue removing this project point of contact. Please try again. If the error persists, try again later.'
 };
 
 const error = {

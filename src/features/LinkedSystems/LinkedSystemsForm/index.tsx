@@ -261,16 +261,15 @@ const LinkedSystemsForm = () => {
       option => option.value === payload.cedarSystemID
     )?.label;
 
-    // Set success message directly in store before mutation executes
     setCurrentSuccessMeta({
       overrideMessage: (
         <Trans
           i18nKey={
             linkedSystemID
-              ? 'success:operationSuccesses.UpdateSystemLink'
-              : 'success:operationSuccesses.AddSystemLink'
+              ? 'success:operationSuccesses.updateSystemLink'
+              : 'success:operationSuccesses.addSystemLink'
           }
-          values={{ updatedSystem: systemName }}
+          values={{ system: systemName }}
           components={{ span: <span className="text-bold" /> }}
         />
       )
