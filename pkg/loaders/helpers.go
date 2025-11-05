@@ -1,5 +1,3 @@
-//go:build debug
-
 package loaders
 
 import (
@@ -7,7 +5,7 @@ import (
 
 	"github.com/graph-gophers/dataloader/v7"
 
-	fHelpers "github.com/cms-enterprise/easi-app/pkg/helpers/functionalhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/helpers/functionalhelpers"
 )
 
 func transformToDataLoaderResult[V any](val V, valueFound bool) *dataloader.Result[V] {
@@ -25,7 +23,7 @@ func transformToDataLoaderResultAllowNils[V any](val V, valueFound bool) *datalo
 
 func oneToOneDataLoader[K comparable, V any](keys []K, values []V, getKey func(V) K) []*dataloader.Result[V] {
 
-	return fHelpers.OneToOne(keys, values, getKey, transformToDataLoaderResult)
+	return functionalhelpers.OneToOne(keys, values, getKey, transformToDataLoaderResult)
 }
 
 // // oneToOneDataLoaderAllowNil is a version of oneToOneDataLoader that allows nil values to be returned without erroring.
@@ -35,13 +33,13 @@ func oneToOneDataLoader[K comparable, V any](keys []K, values []V, getKey func(V
 
 // oneToOneWithCustomKeyDataLoaderAllowNil is a version of oneToOneDataLoader that allows nil values to be returned without erroring.
 func oneToOneWithCustomKeyDataLoaderAllowNil[K comparable, V any, mapKey comparable, mapType any](keys []K, values []mapType, getKey func(mapType) mapKey, getRes func(K, map[mapKey]mapType) (V, bool)) []*dataloader.Result[V] {
-	return fHelpers.OneToOneWithCustomKey(keys, values, getKey, getRes, transformToDataLoaderResultAllowNils)
+	return functionalhelpers.OneToOneWithCustomKey(keys, values, getKey, getRes, transformToDataLoaderResultAllowNils)
 }
 func oneToManyWithCustomKeyDataLoader[K comparable, V any, mapKey comparable, mapType any](keys []K, values []mapType, getKey func(mapType) mapKey, getRes func(K, map[mapKey][]mapType) ([]V, bool)) []*dataloader.Result[[]V] {
-	return fHelpers.OneToManyWithCustomKey(keys, values, getKey, getRes, transformToDataLoaderResultAllowNils)
+	return functionalhelpers.OneToManyWithCustomKey(keys, values, getKey, getRes, transformToDataLoaderResultAllowNils)
 }
 func oneToManyDataLoader[K comparable, V any](keys []K, values []V, getKey func(V) K) []*dataloader.Result[[]V] {
-	return fHelpers.OneToMany[K, V, V](keys, values, getKey, transformToDataLoaderResultAllowNils)
+	return functionalhelpers.OneToMany[K, V, V](keys, values, getKey, transformToDataLoaderResultAllowNils)
 }
 
 func errorPerEachKey[K comparable, V any](keys []K, err error) []*dataloader.Result[V] {
@@ -60,5 +58,5 @@ func DoNotUsePlaceholder() {
 	oneToOneDataLoader([]int{}, []string{}, func(s string) int { return 0 })
 	oneToOneWithCustomKeyDataLoaderAllowNil([]int{}, []string{}, func(s string) int { return 0 }, func(i int, m map[int]string) (string, bool) { return "", false })
 	oneToManyWithCustomKeyDataLoader([]int{}, []string{}, func(s string) int { return 0 }, func(i int, m map[int][]string) ([]string, bool) { return nil, false })
-	errorPerEachKey[int, string]([]int{}, fmt.Errorf("This is just a placeholder"))
+	errorPerEachKey[int, string]([]int{}, fmt.Errorf("this is just a placeholder"))
 }

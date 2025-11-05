@@ -1,4 +1,4 @@
-package helpers
+package functionalhelpers
 
 func getResultSimplifiedOneToOne[K comparable, V any](key K, resultMap map[K]V) (V, bool) {
 	res, ok := resultMap[key]
