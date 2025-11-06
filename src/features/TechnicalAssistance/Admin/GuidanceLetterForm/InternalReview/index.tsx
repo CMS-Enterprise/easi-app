@@ -8,7 +8,6 @@ import {
   useDeleteTRBGuidanceLetterInsightMutation,
   useRequestReviewForTRBGuidanceLetterMutation
 } from 'gql/generated/graphql';
-import { setCurrentErrorMeta } from 'wrappers/ErrorContext/errorMetaStore';
 
 import Alert from 'components/Alert';
 import Divider from 'components/Divider';
@@ -46,13 +45,6 @@ const InternalReview = ({
     ]
   });
 
-  setCurrentErrorMeta({
-    overrideMessage: t('guidanceLetterForm.error', {
-      action: 'removing',
-      type: 'insight'
-    })
-  });
-
   useEffect(() => {
     setIsStepSubmitting(isSubmitting);
   }, [setIsStepSubmitting, isSubmitting]);
@@ -72,7 +64,9 @@ const InternalReview = ({
                 links: insight.links.map(link => ({ link }))
               }
             }),
-          remove: insight => remove({ variables: { id: insight.id } })
+          remove: insight => {
+            remove({ variables: { id: insight.id } });
+          }
         }}
         showSectionEditLinks
       />

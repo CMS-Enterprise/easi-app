@@ -271,8 +271,6 @@ const technicalAssistance = {
     notesCount:
       '<bold>{{count}}</bold> note{{plural}} about this guidance letter',
     done: {
-      success:
-        'Your guidance letter has been sent. Selected email notification recipients will receive a confirmation email with a link to the guidance letter. Additionally, the original requester can view this letter from their request task list.',
       error:
         'Your guidance letter was not sent. Please either return to the previous page and try again, or try again at a later date. The requester will not be able to view the guidance letter until it is successfully sent.',
       returnToRequestHome: 'Return to request home',

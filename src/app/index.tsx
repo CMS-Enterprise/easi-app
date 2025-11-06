@@ -230,7 +230,9 @@ const bypassedOperations: string[] = [
   'UpdateSystemIntakeContactDetails',
   'UpdateSystemIntakeRequestDetails',
   'UpdateSystemIntakeContractDetails',
-  'SubmitIntake'
+  'SubmitIntake',
+  'RequestReviewForTRBGuidanceLetter',
+  'DeleteTRBGuidanceLetterInsight'
 ];
 
 /**

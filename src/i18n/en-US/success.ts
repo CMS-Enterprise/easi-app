@@ -17,8 +17,7 @@ export const operationSuccesses: Record<string, string> = {
   UpdateTRBRequestConsultMeeting:
     'The date for this request’s TRB consult session is set for {{date}} at {{time}}.',
   DeleteTRBGuidanceLetterInsight: 'Your guidance was removed from this letter.',
-  RequestReviewForTRBGuidanceLetter:
-    'There was an issue submitting your guidance letter for internal review. Please try again, and if the problem persists, try again later.',
+  RequestReviewForTRBGuidanceLetter: 'Your guidance was added to this letter.',
   UpdateTRBRequestAndForm:
     'There was an issue updating this request. Please try again, and if the problem persists, try again later.',
   UpdateTRBRequestFundingSources:
