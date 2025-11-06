@@ -78,11 +78,15 @@ const LinkedSystems = () => {
   });
 
   const { data: systemData, refetch: refetchIntake } = useGetSystemIntakeQuery({
-    variables: { id }
+    variables: { id },
+    fetchPolicy: 'network-only'
   });
 
   // Derived source of truth
   const noSystemsUsed = !!systemData?.systemIntake?.doesNotSupportSystems;
+
+  // Need to use a local state to avoid recalling the mutation when the checkbox is toggled
+  const [useNoSystemsUsed, setUseNoSystemsUsed] = useState(noSystemsUsed);
 
   // Local UI state
   const [systemToBeRemoved, setSystemToBeRemoved] = useState<string>();
@@ -104,15 +108,19 @@ const LinkedSystems = () => {
   const handleNoSystemsUsedCheckbox = async () => {
     const hasSystems = (data?.systemIntakeSystems?.length ?? 0) > 0;
 
+    if (!hasSystems) {
+      return;
+    }
+
     // Turning on while systems exist -> prompt first
-    if (!noSystemsUsed && hasSystems) {
+    if (!useNoSystemsUsed && hasSystems) {
       setRemoveAllLinkedSystemsModalOpen(true);
       return;
     }
 
     // Otherwise directly flip the flag
     await unlinkAllSystems({
-      variables: { intakeID: id, doesNotSupportSystems: !noSystemsUsed }
+      variables: { intakeID: id, doesNotSupportSystems: !useNoSystemsUsed }
     });
     await Promise.all([refetchIntake(), refetchSystemIntakes()]);
   };
@@ -135,6 +143,7 @@ const LinkedSystems = () => {
   };
 
   const handleCloseRemoveAllLinkedSystemModal = () => {
+    setUseNoSystemsUsed(false);
     setRemoveAllLinkedSystemsModalOpen(false);
   };
 
@@ -253,7 +262,7 @@ const LinkedSystems = () => {
 
                 history.push(addASystemUrl, navigationData);
               }}
-              disabled={noSystemsUsed}
+              disabled={useNoSystemsUsed}
             >
               {t('itGov:link.form.addASystem')}
             </Button>
@@ -263,8 +272,13 @@ const LinkedSystems = () => {
               id="systemsUsed"
               name="datavalue"
               value="systemsUsed"
-              checked={noSystemsUsed}
-              onChange={handleNoSystemsUsedCheckbox}
+              checked={useNoSystemsUsed}
+              onChange={() => {
+                if (!useNoSystemsUsed) {
+                  handleNoSystemsUsedCheckbox();
+                }
+                setUseNoSystemsUsed(!useNoSystemsUsed);
+              }}
               onBlur={() => null}
             />
 
@@ -277,7 +291,7 @@ const LinkedSystems = () => {
               systemIntakeId={id}
               onRemoveLink={handleRemoveModal}
               isFromTaskList={isFromTaskList}
-              noSystemsUsed={noSystemsUsed}
+              noSystemsUsed={useNoSystemsUsed}
               isFromAdmin={isFromAdmin}
             />
           </Grid>
@@ -289,7 +303,7 @@ const LinkedSystems = () => {
               type="submit"
               disabled={
                 (data?.systemIntakeSystems?.length === 0) !==
-                Boolean(noSystemsUsed)
+                Boolean(useNoSystemsUsed)
               }
               onClick={() => {
                 if (isFromAdmin) {
@@ -318,7 +332,7 @@ const LinkedSystems = () => {
                 type="submit"
                 disabled={
                   (data?.systemIntakeSystems?.length === 0) !==
-                  Boolean(noSystemsUsed)
+                  Boolean(useNoSystemsUsed)
                 }
                 onClick={() => {
                   if (isFromAdmin) {

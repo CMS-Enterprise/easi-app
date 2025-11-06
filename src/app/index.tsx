@@ -136,7 +136,7 @@ const findKnownError = (
  */
 const errorLink = onError(({ graphQLErrors, operation, networkError }) => {
   // Use shorter timeout in Cypress tests to prevent toasts from covering elements
-  const toastTimeout = (window as any).Cypress ? 100 : 5000;
+  const toastTimeout = (window as any).Cypress ? 100 : false;
 
   const operationErrorMap = i18next.t<Record<string, string>>(
     'error:operationErrors',
@@ -227,7 +227,6 @@ const errorLink = onError(({ graphQLErrors, operation, networkError }) => {
 });
 
 const bypassedOperations: string[] = [
-  'UnlinkSystemIntakeRelation',
   'UpdateSystemIntakeContactDetails',
   'UpdateSystemIntakeRequestDetails',
   'UpdateSystemIntakeContractDetails',
@@ -250,7 +249,10 @@ const successLink = new ApolloLink((operation, forward) => {
       { returnObjects: true }
     );
 
-    if (bypassedOperations.includes(operation.operationName)) {
+    if (
+      bypassedOperations.includes(operation.operationName) ||
+      (response?.errors?.length ?? 0) > 0
+    ) {
       return response;
     }
 

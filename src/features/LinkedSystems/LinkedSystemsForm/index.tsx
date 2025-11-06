@@ -118,22 +118,47 @@ const addLink = async (
   systemIntakeID: string,
   addSystemLink: ReturnType<typeof useAddSystemLinkMutation>[0],
   setSystemSupport: ReturnType<typeof useUnlinkSystemIntakeRelationMutation>[0],
-  doesNotSupportSystems: boolean | null | undefined
+  doesNotSupportSystems: boolean | null | undefined,
+  systemName: string | undefined
 ) => {
-  // Only update if doesNotSupportSystems is null
-  if (doesNotSupportSystems === null || doesNotSupportSystems === undefined) {
-    await setSystemSupport({
-      variables: {
-        intakeID: systemIntakeID,
-        doesNotSupportSystems: false
-      }
-    });
-  }
-
   // Then add the new link
   const addInput = {
     input: buildInputPayload(payload, systemIntakeID)
   };
+
+  const successMessage = (
+    <Trans
+      i18nKey={
+        systemIntakeID
+          ? 'success:operationSuccesses.updateSystemLink'
+          : 'success:operationSuccesses.addSystemLink'
+      }
+      values={{ system: systemName || '' }}
+      components={{ span: <span className="text-bold" /> }}
+    />
+  );
+
+  // Only update if doesNotSupportSystems is null
+  if (doesNotSupportSystems === null || doesNotSupportSystems === undefined) {
+    setCurrentSuccessMeta({
+      skipSuccess: true
+    });
+    return setSystemSupport({
+      variables: {
+        intakeID: systemIntakeID,
+        doesNotSupportSystems: false
+      }
+    }).then(() => {
+      setCurrentSuccessMeta({
+        overrideMessage: successMessage
+      });
+      return addSystemLink({ variables: addInput });
+    });
+  }
+
+  setCurrentSuccessMeta({
+    overrideMessage: successMessage
+  });
 
   return addSystemLink({ variables: addInput });
 };
@@ -261,20 +286,6 @@ const LinkedSystemsForm = () => {
       option => option.value === payload.cedarSystemID
     )?.label;
 
-    setCurrentSuccessMeta({
-      overrideMessage: (
-        <Trans
-          i18nKey={
-            linkedSystemID
-              ? 'success:operationSuccesses.updateSystemLink'
-              : 'success:operationSuccesses.addSystemLink'
-          }
-          values={{ system: systemName }}
-          components={{ span: <span className="text-bold" /> }}
-        />
-      )
-    });
-
     const mutation = linkedSystemID
       ? updateLink(payload, linkedSystemID, systemIntakeID, updateSystemLink)
       : addLink(
@@ -282,7 +293,8 @@ const LinkedSystemsForm = () => {
           systemIntakeID,
           addSystemLink,
           setSystemSupport,
-          doesNotSupportSystems
+          doesNotSupportSystems,
+          systemName
         );
 
     mutation.then(() => {
