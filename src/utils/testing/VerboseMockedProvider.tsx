@@ -15,6 +15,7 @@ import {
   MockLink
 } from '@apollo/client/testing';
 import i18next from 'i18next';
+import { getCurrentErrorMeta } from 'wrappers/ErrorContext/errorMetaStore';
 
 import Alert from 'components/Alert';
 
@@ -79,12 +80,22 @@ const VerboseMockedProvider = (props: Props) => {
         );
 
         // Only display errors for mutations (not queries) to match production behavior
-        if (
-          operationType === 'mutation' &&
-          errorMessages[operationName] &&
-          testErrorSetter
-        ) {
-          testErrorSetter(errorMessages[operationName]);
+        if (operationType === 'mutation' && testErrorSetter) {
+          const { overrideMessage } = getCurrentErrorMeta();
+
+          // Priority: overrideMessage > i18n message > GraphQL error message
+          const displayMessage =
+            overrideMessage ||
+            errorMessages[operationName] ||
+            graphQLErrors[0]?.message;
+
+          if (displayMessage) {
+            testErrorSetter(
+              typeof displayMessage === 'string'
+                ? displayMessage
+                : 'An error occurred' // Fallback for ReactNode overrideMessages
+            );
+          }
         }
       }
 
@@ -93,10 +104,19 @@ const VerboseMockedProvider = (props: Props) => {
 
         // Only display errors for mutations (not queries) to match production behavior
         if (operationType === 'mutation' && testErrorSetter) {
-          const newErrorMessage =
+          const { overrideMessage } = getCurrentErrorMeta();
+
+          // Priority: overrideMessage > i18n message > fallback message
+          const displayMessage =
+            overrideMessage ||
             errorMessages[operationName] ||
             'A network error occurred. Please try again.';
-          testErrorSetter(newErrorMessage);
+
+          testErrorSetter(
+            typeof displayMessage === 'string'
+              ? displayMessage
+              : 'A network error occurred. Please try again.' // Fallback for ReactNode overrideMessages
+          );
         }
       }
     }

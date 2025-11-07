@@ -160,7 +160,14 @@ describe('Trb Admin: Action: Request Edits', () => {
           getTRBRequestAttendeesQuery,
           {
             ...createTrbRequestFeedbackQuery,
-            error: new Error('Failed to submit feedback')
+            result: {
+              errors: [
+                {
+                  message: 'Failed to submit feedback',
+                  path: ['createTRBRequestFeedback']
+                }
+              ]
+            }
           }
         ]}
       >
@@ -192,8 +199,9 @@ describe('Trb Admin: Action: Request Edits', () => {
       })
     );
 
+    // VerboseMockedProvider shows i18n error message (takes priority over GraphQL error)
     await screen.findByText(
-      i18next.t<string>('error:operationErrors.CreateTRBRequestFeedback')
+      i18next.t<string>('technicalAssistance:actionRequestEdits.error')
     );
   });
 });
