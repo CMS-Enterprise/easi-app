@@ -6,6 +6,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -49,9 +50,19 @@ func AuthorizeUserIsIntakeRequester(ctx context.Context, intake *models.SystemIn
 		logger.Info("does not have EASi job code")
 		return false
 	}
-
-	// If intake is owned by user, authorize
-	if principal.ID() == intake.EUAUserID.ValueOrZero() {
+	requester, err := dataloaders.SystemIntakeContactGetRequester(ctx, intake.ID)
+	if err != nil {
+		return false
+	}
+	if requester == nil {
+		return false
+	}
+	account := principal.Account()
+	if account == nil {
+		return false
+	}
+	// User is the requester
+	if account.ID == requester.UserID {
 		return true
 	}
 	// Default to failure to authorize and create a quick audit log
@@ -69,8 +80,19 @@ func AuthorizeUserIsBusinessCaseRequester(ctx context.Context, bizCase *models.B
 		return false
 	}
 
-	// If Business Case is owned by user, authorize
-	if principal.ID() == bizCase.EUAUserID {
+	requester, err := dataloaders.SystemIntakeContactGetRequester(ctx, bizCase.SystemIntakeID)
+	if err != nil {
+		return false
+	}
+	if requester == nil {
+		return false
+	}
+	account := principal.Account()
+	if account == nil {
+		return false
+	}
+	// User is the requester
+	if account.ID == requester.UserID {
 		return true
 	}
 	// Default to failure to authorize and create a quick audit log

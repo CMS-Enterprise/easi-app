@@ -28,6 +28,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/graph/generated"
 	"github.com/cms-enterprise/easi-app/pkg/local"
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/pubsub"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 	"github.com/cms-enterprise/easi-app/pkg/testconfig/useraccountstoretestconfigs"
 	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
@@ -127,7 +128,9 @@ func TestGraphQLTestSuite(t *testing.T) {
 	resolverService.FetchUserInfo = oktaAPIClient.FetchUserInfo
 	resolverService.SearchCommonNameContains = oktaAPIClient.SearchCommonNameContains
 
-	resolver := NewResolver(store, resolverService, &s3Client, &emailClient, ldClient, cedarCoreClient)
+	pubsubService := pubsub.NewServicePubSub()
+
+	resolver := NewResolver(store, resolverService, &s3Client, &emailClient, ldClient, cedarCoreClient, pubsubService)
 	schema := generated.NewExecutableSchema(generated.Config{Resolvers: resolver, Directives: directives})
 
 	buildDataloaders := func() *dataloaders.Dataloaders {

@@ -351,7 +351,9 @@ export const emptySystemIntake: SystemIntakeFragmentFragment = {
   systemIntakeSystems: [],
   itGovTaskStatuses: {
     __typename: 'ITGovTaskStatuses',
-    intakeFormStatus: ITGovIntakeFormStatus.READY
+    intakeFormStatus: ITGovIntakeFormStatus.READY,
+    bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.READY,
+    bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.READY
   }
 };
 
@@ -525,7 +527,9 @@ export const systemIntake: SystemIntakeFragmentFragment = {
   doesNotSupportSystems: null,
   itGovTaskStatuses: {
     __typename: 'ITGovTaskStatuses',
-    intakeFormStatus: ITGovIntakeFormStatus.READY
+    intakeFormStatus: ITGovIntakeFormStatus.READY,
+    bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.READY,
+    bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.READY
   }
 };
 

@@ -29,6 +29,7 @@ import itGov from './itGov';
 import linkedSystems from './linkedSystems';
 import makingARequest from './makingARequest';
 import privacyPolicy from './privacyPolicy';
+import requestHome from './requestHome';
 import success from './success';
 import systemProfile from './systemProfile';
 import systemWorkspace from './systemWorkspace';
@@ -64,6 +65,7 @@ const enUS = {
   newSystem,
   prepareTrbConsultMeeting,
   privacyPolicy,
+  requestHome,
   stepsInTRBProcess,
   systemProfile,
   systemWorkspace,
