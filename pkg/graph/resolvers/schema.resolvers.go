@@ -1193,13 +1193,13 @@ func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models
 		return nil, err
 	}
 
-	// if this user created the intake
-	if ok := services.AuthorizeUserIsIntakeRequester(ctx, intake); ok {
+	// if this user is an admin
+	if ok := services.AuthorizeRequireGRTJobCode(ctx); ok {
 		return intake, nil
 	}
 
-	// if this user is an admin
-	if ok := services.AuthorizeRequireGRTJobCode(ctx); ok {
+	// if this user created the intake
+	if ok := services.AuthorizeUserIsIntakeRequester(ctx, intake); ok {
 		return intake, nil
 	}
 

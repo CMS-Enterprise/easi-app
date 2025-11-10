@@ -12,6 +12,13 @@ import { getByRoleWithNameTextKey } from 'utils/testing/helpers';
 
 import Decision from './index';
 
+// Mock RichTextViewer to render plain text for testing
+vi.mock('components/RichTextEditor', () => ({
+  RichTextViewer: ({ value }: { value: string }) => (
+    <div data-testid="rich-text-viewer">{value}</div>
+  )
+}));
+
 // Deterministic dates in assertions
 vi.mock('utils/date', () => ({
   formatDateLocal: () => '09/29/2025'
@@ -142,7 +149,7 @@ describe('Decision component', () => {
         lcidScope={null}
         lcidCostBaseline={null}
         lcidStatus={null}
-        decisionNextSteps=""
+        decisionNextSteps={null}
         trbFollowUpRecommendation={null}
       />
     );
@@ -168,6 +175,8 @@ describe('Decision component', () => {
     screen.getByText(
       i18next.t<string>('governanceReviewTeam:decision.terms.nextSteps')
     );
+
+    // Check for the fallback text in the mocked RichTextViewer
     screen.getByText(
       i18next.t<string>('governanceReviewTeam:notes.extendLcid.noNextSteps')
     );

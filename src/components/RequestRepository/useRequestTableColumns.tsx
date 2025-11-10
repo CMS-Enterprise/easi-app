@@ -54,7 +54,7 @@ const useRequestTableColumns = (
       return (
         <Link
           className="usa-link"
-          to={`/it-governance/${row.original.id}/intake-request`}
+          to={`/it-governance/${row.original.id}/request-home`}
         >
           {value}
         </Link>

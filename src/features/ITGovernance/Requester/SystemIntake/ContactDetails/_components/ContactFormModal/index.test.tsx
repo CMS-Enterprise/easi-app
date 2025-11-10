@@ -1,4 +1,5 @@
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 import {
   businessOwner,
@@ -6,6 +7,7 @@ import {
   getSystemIntakeContactsQuery
 } from 'tests/mock/systemIntake';
 
+import { MessageProvider } from 'hooks/useMessage';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import ContactFormModal from '.';
@@ -13,14 +15,18 @@ import ContactFormModal from '.';
 describe('ContactFormModal', () => {
   it('matches the snapshot', async () => {
     const { baseElement } = render(
-      <VerboseMockedProvider mocks={[getSystemIntakeContactsQuery()]}>
-        <ContactFormModal
-          systemIntakeId={businessOwner.systemIntakeId}
-          type="contact"
-          closeModal={() => {}}
-          isOpen
-        />
-      </VerboseMockedProvider>,
+      <MemoryRouter>
+        <VerboseMockedProvider mocks={[getSystemIntakeContactsQuery()]}>
+          <MessageProvider>
+            <ContactFormModal
+              systemIntakeId={businessOwner.systemIntakeId}
+              type="contact"
+              closeModal={() => {}}
+              isOpen
+            />
+          </MessageProvider>
+        </VerboseMockedProvider>
+      </MemoryRouter>,
       { baseElement: document.body }
     );
 
@@ -31,17 +37,25 @@ describe('ContactFormModal', () => {
 
   it('disables submit button if fields are empty', async () => {
     render(
-      <VerboseMockedProvider mocks={[getSystemIntakeContactsQuery()]}>
-        <ContactFormModal
-          systemIntakeId={businessOwner.systemIntakeId}
-          type="contact"
-          closeModal={() => {}}
-          isOpen
-        />
-      </VerboseMockedProvider>
+      <MemoryRouter>
+        <VerboseMockedProvider mocks={[getSystemIntakeContactsQuery()]}>
+          <MessageProvider>
+            <ContactFormModal
+              systemIntakeId={businessOwner.systemIntakeId}
+              type="contact"
+              closeModal={() => {}}
+              isOpen
+            />
+          </MessageProvider>
+        </VerboseMockedProvider>
+      </MemoryRouter>
     );
 
-    expect(screen.getByRole('button', { name: 'Add contact' })).toBeDisabled();
+    expect(
+      screen.getByRole('button', {
+        name: 'Add contact'
+      })
+    ).toBeDisabled();
   });
 
   it('renders default values if initialValues are provided', async () => {
@@ -49,38 +63,48 @@ describe('ContactFormModal', () => {
     const contactLabel = `${userAccount.commonName}, ${userAccount.username} (${userAccount.email})`;
 
     render(
-      <VerboseMockedProvider
-        mocks={[
-          getSystemIntakeContactsQuery(),
-          getCedarContactsQuery(contactLabel, {
-            __typename: 'UserInfo',
-            commonName: userAccount.commonName,
-            email: userAccount.email,
-            euaUserId: userAccount.username
-          })
-        ]}
-      >
-        <ContactFormModal
-          systemIntakeId={businessOwner.systemIntakeId}
-          type="contact"
-          closeModal={() => {}}
-          isOpen
-          initialValues={businessOwner}
-        />
-      </VerboseMockedProvider>
+      <MemoryRouter>
+        <VerboseMockedProvider
+          mocks={[
+            getSystemIntakeContactsQuery(),
+            getCedarContactsQuery(contactLabel, {
+              __typename: 'UserInfo',
+              commonName: userAccount.commonName,
+              email: userAccount.email,
+              euaUserId: userAccount.username
+            })
+          ]}
+        >
+          <MessageProvider>
+            <ContactFormModal
+              systemIntakeId={businessOwner.systemIntakeId}
+              type="contact"
+              closeModal={() => {}}
+              isOpen
+              initialValues={businessOwner}
+            />
+          </MessageProvider>
+        </VerboseMockedProvider>
+      </MemoryRouter>
     );
 
     // Name field should be disabled
     expect(
-      screen.getByRole('combobox', { name: 'Contact name' })
+      screen.getByRole('combobox', {
+        name: 'Contact name *'
+      })
     ).toBeDisabled();
 
-    expect(screen.getByRole('combobox', { name: 'Contact name' })).toHaveValue(
-      contactLabel
-    );
+    expect(
+      screen.getByRole('combobox', {
+        name: 'Contact name *'
+      })
+    ).toHaveValue(contactLabel);
 
     expect(
-      screen.getByRole('combobox', { name: 'Contact component' })
+      screen.getByRole('combobox', {
+        name: 'Contact component *'
+      })
     ).toHaveValue(businessOwner.component);
 
     expect(
