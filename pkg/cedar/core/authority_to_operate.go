@@ -37,6 +37,10 @@ func (c *Client) GetAuthorityToOperate(ctx context.Context, cedarSystemID string
 	params.SetSystemID(&cedarSystemID)
 	params.HTTPClient = c.hc
 
+	fmt.Println("==== *params ====")
+	fmt.Printf("%+v\n", *params.HTTPClient)
+	fmt.Println("==== *params ====")
+
 	// Make the API call
 	resp, err := c.sdk.AuthorityToOperate.AuthorityToOperateFindList(params, c.auth)
 	if err != nil {
