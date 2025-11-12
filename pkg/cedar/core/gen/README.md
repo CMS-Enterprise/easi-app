@@ -30,3 +30,5 @@ client. This example can be found in `pkg/cedar/core/client3.go` (still WIP, but
 
 Adjusting for the new return fields (`JSON400`, etc) will lead to some new code layout, and we are still determining the
 best course of action to handle this.
+
+Link to current initial build out: https://github.com/CMS-Enterprise/easi-app/tree/NOREF/testing_swagger_3
