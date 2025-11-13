@@ -21,7 +21,7 @@ import {
   useGetCedarRoleTypesQuery
 } from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
-import { useErrorMessage } from 'wrappers/ErrorContext';
+import { setCurrentErrorMeta } from 'wrappers/ErrorContext/errorMetaStore';
 import * as yup from 'yup';
 
 import CedarContactSelect from 'components/CedarContactSelect';
@@ -131,11 +131,9 @@ const TeamMemberForm = ({
     }
   });
 
-  const { setErrorMeta } = useErrorMessage();
-
   const submitForm = handleSubmit(({ euaUserId, desiredRoleTypeIDs }) => {
     if (isDirty) {
-      setErrorMeta({
+      setCurrentErrorMeta({
         overrideMessage: t(
           `singleSystem.editTeam.form.${
             isEdit ? 'errorUpdateRoles' : 'errorAddContact'

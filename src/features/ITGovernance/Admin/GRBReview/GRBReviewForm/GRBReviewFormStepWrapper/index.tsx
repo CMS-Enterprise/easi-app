@@ -9,7 +9,7 @@ import {
   SystemIntakeGRBReviewFragment,
   SystemIntakeStatusAdmin
 } from 'gql/generated/graphql';
-import { useErrorMessage } from 'wrappers/ErrorContext';
+import { setCurrentErrorMeta } from 'wrappers/ErrorContext/errorMetaStore';
 
 import AutoSave from 'components/AutoSave';
 import Breadcrumbs from 'components/Breadcrumbs';
@@ -93,8 +93,6 @@ function GRBReviewFormStepWrapper<
     !grbReview.grbReviewStartedAt &&
     grbReview.statusAdmin !== SystemIntakeStatusAdmin.GRB_MEETING_READY;
 
-  const { setErrorMeta } = useErrorMessage();
-
   const submitStep = useCallback(
     async ({
       shouldValidate = true,
@@ -111,7 +109,7 @@ function GRBReviewFormStepWrapper<
             return history.push(`${grbReviewPath}/${path}`);
           }
 
-          setErrorMeta({
+          setCurrentErrorMeta({
             overrideMessage: t('setUpGrbReviewForm.error')
           });
 
@@ -129,16 +127,7 @@ function GRBReviewFormStepWrapper<
           });
         }
       )(),
-    [
-      grbReviewPath,
-      handleSubmit,
-      history,
-      isDirty,
-      onSubmit,
-      partialSubmit,
-      t,
-      setErrorMeta
-    ]
+    [grbReviewPath, handleSubmit, history, isDirty, onSubmit, partialSubmit, t]
   );
 
   /**
