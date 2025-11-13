@@ -77,6 +77,9 @@ const Table = ({
     [flags, groups]
   );
 
+  const environmentName = 'icpg-dev.crm9';
+  const appID = 'bc878d88-0468-f011-bec2-001dd8062d4a';
+
   const isTRBAdmin: boolean = useMemo(
     () => user.isTrbAdmin(groups, flags),
     [flags, groups]
@@ -117,12 +120,27 @@ const Table = ({
         }) => {
           let link: string;
 
+          if (row.original.process === 'IT Governance') {
+            return (
+              <a
+                className="usa-button usa-button--unstyled"
+                href={`https://${environmentName}.dynamics.com/main.aspx?appid=${appID}&pagetype=entityrecord&etn=new_systemintake&id=${row.original.id}`}
+              >
+                <em>
+                  <em
+                    className="usa-logo__text easi-nav__label"
+                    aria-label={t(`header`)}
+                  >
+                    {value}
+                  </em>
+                </em>
+              </a>
+            );
+          }
+
           switch (row.original.process) {
             case 'TRB':
               link = `/trb/task-list/${row.original.id}`;
-              break;
-            case 'IT Governance':
-              link = `/governance-task-list/${row.original.id}`;
               break;
             default:
               link = '/';

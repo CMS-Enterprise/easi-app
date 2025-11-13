@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import {
+  Button,
   Link as UswdsLink,
   SummaryBox,
   SummaryBoxContent
@@ -14,6 +15,8 @@ import PageHeading from 'components/PageHeading';
 const MakingARequest = () => {
   const { t } = useTranslation('makingARequest');
   const reasons = t('reasonList.options', { returnObjects: true }) as string[];
+  const environmentName = 'icpg-dev.crm9';
+  const appID = 'bc878d88-0468-f011-bec2-001dd8062d4a';
 
   return (
     <MainContent
@@ -24,7 +27,6 @@ const MakingARequest = () => {
         {t('heading')}
       </PageHeading>
       <p className="margin-top-0 font-body-lg">{t('subheading')}</p>
-
       <SummaryBox className="easi-request__container margin-bottom-3 padding-x-2 padding-y-1">
         <SummaryBoxContent>
           <p>{t('reasonList.intro')}</p>
@@ -35,7 +37,6 @@ const MakingARequest = () => {
           </ul>
         </SummaryBoxContent>
       </SummaryBox>
-
       <p>
         {t('forEnterpriseArchitectureHelp.message')}&nbsp;
         <UswdsLink href={`mailto:${t('forEnterpriseArchitectureHelp.email')}`}>
@@ -50,9 +51,22 @@ const MakingARequest = () => {
         </UswdsLink>
         .
       </p>
-      <Link to="/system/request-type" className="usa-button">
+      <Button
+        type="button"
+        className="usa-button"
+        onClick={() => {
+          window.open(
+            `https://${environmentName}.dynamics.com/main.aspx?appid=${appID}&pagetype=entityrecord&etn=new_systemintake`,
+            '_blank'
+          );
+        }}
+        data-testid="collapsable-link"
+      >
         {t('nextStep')}
-      </Link>
+      </Button>
+      {/* <Link to="http://google.com" className="usa-button">
+        {t('nextStep')}
+      </Link> */}
       <h2 className="padding-top-2 margin-top-5 easi-section__border-top">
         {t('myRequests')}
       </h2>

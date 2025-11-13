@@ -66,6 +66,11 @@ export const navLinks = (
   }
 ];
 
+// const environmentName = import.meta.env.VITE_POWER_APPS_ENVIRONMENT as string;
+// const appID = import.meta.env.VITE_POWER_APPS_APPID as string;
+const environmentName = 'icpg-dev.crm9';
+const appID = 'bc878d88-0468-f011-bec2-001dd8062d4a';
+
 const systemLinks = (
   flags: Flags,
   userGroups: string[],
@@ -87,9 +92,10 @@ const systemLinks = (
     isEnabled: true
   },
   {
-    link: '/system/request-type',
+    link: `https://${environmentName}.crm9.dynamics.com/main.aspx?appid=${appID}&pagetype=entityrecord&etn=new_systemintake`,
     label: 'addNewSystem',
-    isEnabled: true
+    isEnabled: true,
+    external: true
   }
 ];
 
@@ -135,26 +141,39 @@ const NavigationBar = ({ signout, userName }: NavigationProps) => {
   // Detects clicks outside systems dropdown nav
   useOutsideClick(systemNavRef, onSystemOutsideClick);
 
-  const systemNavLinks = systemLinks(flags, groups, isUserSet).map(route => (
-    <div className="easi-nav" key={route.label}>
-      <NavHashLink
-        to={route.link}
-        className="usa-nav__link easi-nav__sublink"
-        onClick={() => {
-          setIsOpen([false]);
-          setExpanded(false);
-        }}
-        exact={route.link === '/'}
-      >
-        <em
-          className="usa-logo__text easi-nav__label"
-          aria-label={t(`header:${route.label}`)}
-        >
-          {t(`header:${route.label}`)}
+  const systemNavLinks = systemLinks(flags, groups, isUserSet).map(route =>
+    route.external ? (
+      <a href={route.link} className="usa-nav__link easi-nav__sublink">
+        <em>
+          <em
+            className="usa-logo__text easi-nav__label"
+            aria-label={t(`header:${route.label}`)}
+          >
+            {t(`header:${route.label}`)}
+          </em>
         </em>
-      </NavHashLink>
-    </div>
-  ));
+      </a>
+    ) : (
+      <div className="easi-nav" key={route.label}>
+        <NavHashLink
+          to={route.link}
+          className="usa-nav__link easi-nav__sublink"
+          onClick={() => {
+            setIsOpen([false]);
+            setExpanded(false);
+          }}
+          exact={route.link === '/'}
+        >
+          <em
+            className="usa-logo__text easi-nav__label"
+            aria-label={t(`header:${route.label}`)}
+          >
+            {t(`header:${route.label}`)}
+          </em>
+        </NavHashLink>
+      </div>
+    )
+  );
 
   const primaryLinks = navLinks(flags, groups, isUserSet)
     .map(route => {
