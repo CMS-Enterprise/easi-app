@@ -64,7 +64,8 @@ const getTrbTasklistQuery: MockedQuery<GetTRBTasklistQuery> = {
         contractNumbers: [],
         systems: [],
         requesterInfo: {
-          euaUserId: 'TEST'
+          euaUserId: 'TEST',
+          __typename: 'UserInfo'
         },
         __typename: 'TRBRequest'
       }
