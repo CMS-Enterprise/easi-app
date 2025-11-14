@@ -136,7 +136,7 @@ const RequestHome = ({
               icon={<Icon.ArrowForward aria-hidden />}
               iconPosition="after"
             >
-              {t('requestHome.sections.requestSummary.intakeRequestForm.view')}
+              {t('requestHome.sections.requestSummary.businessCase.view')}
             </IconLink>
           </div>
         </Grid>
