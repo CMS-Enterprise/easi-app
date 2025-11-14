@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import {
   Link as ReactRouterLink,
   useHistory,
@@ -42,6 +43,7 @@ import {
   useArchiveSystemIntakeMutation,
   useGetGovernanceTaskListQuery
 } from '../../../../gql/generated/graphql';
+import { AppState } from '../../../../stores/reducers/rootReducer';
 
 import AdditionalRequestInfo from './AdditionalRequestInfo';
 import GovTaskBizCaseDraft from './GovTaskBizCaseDraft';
@@ -60,6 +62,9 @@ function GovernanceTaskList() {
   const history = useHistory();
   const { state } = useLocation<{ isNew?: boolean }>();
   const isNew = !!state?.isNew;
+  const { euaId, isUserSet } = useSelector(
+    (appState: AppState) => appState.auth
+  );
 
   const { showMessageOnNextPage, showMessage, Message } = useMessage();
 
@@ -117,7 +122,11 @@ function GovernanceTaskList() {
       systemIntake?.step === SystemIntakeStep.DECISION_AND_NEXT_STEPS) &&
     systemIntake?.statusAdmin !== SystemIntakeStatusAdmin.LCID_RETIRING_SOON;
 
-  if (error) {
+  // isRequester checks to see if the acting user is the requester (admins are not permitted to see this view, unless that admin is the requester)
+  const isRequester =
+    isUserSet && euaId === systemIntake?.requester?.userAccount.username;
+
+  if (error || !isRequester) {
     return <NotFound />;
   }
 
