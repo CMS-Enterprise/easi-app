@@ -55,6 +55,12 @@ const RequestHome = ({
 
   const history = useHistory();
 
+  const bizCaseTitleToRender = ['DONE', 'NOT_NEEDED', 'SUBMITTED'].includes(
+    systemIntake.itGovTaskStatuses.bizCaseDraftStatus
+  )
+    ? t('requestHome.sections.requestSummary.businessCase.title_final')
+    : t('requestHome.sections.requestSummary.businessCase.title_draft');
+
   const bizCaseStatusToRender = ['DONE', 'NOT_NEEDED', 'SUBMITTED'].includes(
     systemIntake.itGovTaskStatuses.bizCaseDraftStatus
   )
@@ -126,7 +132,7 @@ const RequestHome = ({
           </div>
           <div className="tablet:grid-col-6">
             <p className="text-bold margin-top-0 margin-bottom-1">
-              {t('requestHome.sections.requestSummary.businessCase.title')}
+              {bizCaseTitleToRender}
             </p>
             <div className="margin-top-1 margin-bottom-2">
               <TaskStatusTag status={bizCaseStatusToRender} />
