@@ -1,4 +1,5 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import {
   render,
@@ -20,6 +21,7 @@ import {
   UpdateTRBRequestArchivedMutationVariables
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
+import configureMockStore from 'redux-mock-store';
 
 import { MessageProvider } from 'hooks/useMessage';
 import { MockedQuery } from 'types/util';
@@ -97,17 +99,29 @@ const updateTrbRequestArchived: MockedQuery<
 };
 
 describe('Trb Task List', () => {
+  const mockStore = configureMockStore();
+  const store = mockStore({
+    auth: {
+      euaId: 'TEST',
+      name: 'Jerry Seinfeld',
+      isUserSet: true,
+      groups: []
+    }
+  });
+
   it('renders', async () => {
     render(
-      <MemoryRouter initialEntries={[`/trb/task-list/${trbRequestId}`]}>
-        <VerboseMockedProvider mocks={[getTrbTasklistQuery]}>
-          <MessageProvider>
-            <Route path="/trb/task-list/:id">
-              <TaskList />
-            </Route>
-          </MessageProvider>
-        </VerboseMockedProvider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`/trb/task-list/${trbRequestId}`]}>
+          <VerboseMockedProvider mocks={[getTrbTasklistQuery]}>
+            <MessageProvider>
+              <Route path="/trb/task-list/:id">
+                <TaskList />
+              </Route>
+            </MessageProvider>
+          </VerboseMockedProvider>
+        </MemoryRouter>
+      </Provider>
     );
 
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
@@ -137,20 +151,22 @@ describe('Trb Task List', () => {
 
   it('removes the request', async () => {
     render(
-      <MemoryRouter initialEntries={[`/trb/task-list/${trbRequestId}`]}>
-        <VerboseMockedProvider
-          mocks={[getTrbTasklistQuery, updateTrbRequestArchived]}
-        >
-          <MessageProvider>
-            <Route path="/trb/task-list/:id">
-              <TaskList />
-            </Route>
-            <Route path="/">
-              <MockMessage />
-            </Route>
-          </MessageProvider>
-        </VerboseMockedProvider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`/trb/task-list/${trbRequestId}`]}>
+          <VerboseMockedProvider
+            mocks={[getTrbTasklistQuery, updateTrbRequestArchived]}
+          >
+            <MessageProvider>
+              <Route path="/trb/task-list/:id">
+                <TaskList />
+              </Route>
+              <Route path="/">
+                <MockMessage />
+              </Route>
+            </MessageProvider>
+          </VerboseMockedProvider>
+        </MemoryRouter>
+      </Provider>
     );
     const user = userEvent.setup();
 
