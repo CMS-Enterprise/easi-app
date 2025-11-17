@@ -734,7 +734,15 @@ export const getGovernanceTaskListQuery = (
       __typename: 'Query',
       systemIntake: {
         ...taskListSystemIntake,
-        ...taskListData
+        ...taskListData,
+        __typename: 'SystemIntake',
+        requester: {
+          userAccount: {
+            __typename: 'UserAccount',
+            username: 'ABCD'
+          },
+          __typename: 'SystemIntakeContact'
+        }
       }
     }
   }
