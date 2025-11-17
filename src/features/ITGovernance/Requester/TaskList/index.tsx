@@ -126,7 +126,7 @@ function GovernanceTaskList() {
   const isRequester =
     isUserSet && euaId === systemIntake?.requester?.userAccount.username;
 
-  if (error || !isRequester) {
+  if (error || (systemIntake && !isRequester)) {
     return <NotFound />;
   }
 

@@ -86,7 +86,7 @@ function TaskList() {
   const isRequester =
     isUserSet && euaId === data?.trbRequest.requesterInfo.euaUserId;
 
-  if (error || !isRequester) {
+  if (error || (data && !isRequester)) {
     return (
       <GridContainer className="width-full">
         <NotFoundPartial />
