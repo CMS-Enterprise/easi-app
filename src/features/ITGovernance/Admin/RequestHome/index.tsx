@@ -55,15 +55,16 @@ const RequestHome = ({
 
   const history = useHistory();
 
-  const bizCaseTitleToRender = ['DONE', 'NOT_NEEDED', 'SUBMITTED'].includes(
-    systemIntake.itGovTaskStatuses.bizCaseDraftStatus
-  )
+  const shouldShowFinalStatus =
+    ['DONE', 'NOT_NEEDED', 'SUBMITTED'].includes(
+      systemIntake.itGovTaskStatuses.bizCaseDraftStatus
+    ) && systemIntake.itGovTaskStatuses.bizCaseFinalStatus !== 'CANT_START';
+
+  const bizCaseTitleToRender = shouldShowFinalStatus
     ? t('requestHome.sections.requestSummary.businessCase.title_final')
     : t('requestHome.sections.requestSummary.businessCase.title_draft');
 
-  const bizCaseStatusToRender = ['DONE', 'NOT_NEEDED', 'SUBMITTED'].includes(
-    systemIntake.itGovTaskStatuses.bizCaseDraftStatus
-  )
+  const bizCaseStatusToRender = shouldShowFinalStatus
     ? systemIntake.itGovTaskStatuses.bizCaseFinalStatus
     : systemIntake.itGovTaskStatuses.bizCaseDraftStatus;
 
