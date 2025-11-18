@@ -24,6 +24,7 @@ import Label from 'components/Label';
 import MentionTextArea from 'components/MentionTextArea';
 import Modal from 'components/Modal';
 import RequiredAsterisk from 'components/RequiredAsterisk';
+import toastSuccess from 'components/ToastSuccess';
 import useDiscussionParams from 'hooks/useDiscussionParams';
 import { DiscussionAlert, MentionSuggestion } from 'types/discussions';
 import discussionSchema from 'validations/discussionSchema';
@@ -99,16 +100,7 @@ const DiscussionForm = ({
         }
       })
         .then(() => {
-          setDiscussionAlert({
-            message: t('general.alerts.startDiscussionSuccess'),
-            type: 'success'
-          });
-        })
-        .catch(e => {
-          setDiscussionAlert({
-            message: t('general.alerts.startDiscussionError'),
-            type: 'error'
-          });
+          toastSuccess(t('general.alerts.startDiscussionSuccess'));
         })
         .finally(() => {
           pushDiscussionQuery({ discussionBoardType, discussionMode: 'view' });
@@ -126,22 +118,11 @@ const DiscussionForm = ({
             content
           }
         }
-      })
-        .then(() => {
-          // Reset field values
-          reset();
-
-          setDiscussionAlert({
-            message: t('general.alerts.replySuccess'),
-            type: 'success'
-          });
-        })
-        .catch(e => {
-          setDiscussionAlert({
-            message: t('general.alerts.replyError'),
-            type: 'error'
-          });
-        });
+      }).then(() => {
+        // Reset field values
+        reset();
+        toastSuccess(t('general.alerts.replySuccess'));
+      });
 
       setModalIsOpen(false);
     }

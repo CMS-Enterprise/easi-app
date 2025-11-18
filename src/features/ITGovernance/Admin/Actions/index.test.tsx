@@ -8,7 +8,7 @@ import {
   Observable
 } from '@apollo/client';
 import { MockLink } from '@apollo/client/testing';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { SystemIntakeFormStep, SystemIntakeStep } from 'gql/generated/graphql';
 import i18next from 'i18next';
@@ -205,14 +205,21 @@ describe('IT Gov Actions', () => {
         )
       ).toBeInTheDocument();
 
-      await user.click(
-        screen.getAllByRole('button', { name: 'Complete action' })[1]
-      );
+      const confirmButton = screen.getAllByRole('button', {
+        name: 'Complete action'
+      })[1];
 
-      // With the forced-success mutation, the success alert should appear
-      await screen.findByText(
-        'You have requested edits to the Intake Request form.'
-      );
+      await user.click(confirmButton);
+
+      // Success toasts don't render in test DOM
+      // Verify successful submission by checking modal is closed
+      await waitFor(() => {
+        expect(
+          screen.queryByText(
+            'Are you sure you want to complete this action to request edits?'
+          )
+        ).not.toBeInTheDocument();
+      });
     });
   });
 

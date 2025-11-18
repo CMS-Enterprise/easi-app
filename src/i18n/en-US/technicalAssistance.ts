@@ -226,8 +226,6 @@ const technicalAssistance = {
       'If you have two or more items per category, you can use arrows on the left side of each to reorder them within the category. Edit the guidance to change the category.',
     increaseOrderAriaLabel: 'Increase guidance sort order',
     decreaseOrderAriaLabel: 'Decrease guidance sort order',
-    reorderError:
-      'There was an issue saving your guidance. Please try again, and if the problem persists, try again later.',
     continueWithoutAdding: 'Continue without adding guidance',
     priorityCategory: 'Priority category',
     uncategorized: 'Uncategorized',
@@ -255,8 +253,6 @@ const technicalAssistance = {
     notNecessary: 'Not necessary',
     followupHelpText: 'Examples: in 6 months, when development is complete',
     removeSuccess: 'Your guidance was removed from this letter.',
-    error:
-      'There was an issue {{action}} your {{type}}. Please try again, and if the problem persists, try again later.',
     guidanceSuccess: 'Your guidance was added to this letter.',
     guidanceSuccess_edit: 'Your guidance was edited',
     modal: {
@@ -593,10 +589,6 @@ const technicalAssistance = {
         other: 'Other'
       }
     },
-    errors: {
-      submit:
-        'Your basic request details were not saved. Please try again. If the error persists, please try again at a later date.'
-    },
     allFieldsMandatory: 'All fields are mandatory',
     noAnswer: 'No answer selected',
     fundingSources: {
@@ -677,8 +669,6 @@ const technicalAssistance = {
       success: 'Your attendee has been added.',
       successEdit: 'Your attendee has been edited.',
       successRemove: 'Your attendee has been removed.',
-      error:
-        'There was an issue adding your attendee. Please try again, and if the problem persists, try again later.',
       invalidForm: 'Invalid attendees form.'
     },
     modal: {
@@ -764,8 +754,6 @@ const technicalAssistance = {
         "To keep CMS safe, documents are scanned for viruses after uploading. If something goes wrong, we'll let you know.",
       uploadDocument: 'Upload document',
       dontUploadAndReturn: 'Don’t upload and return to previous page',
-      error:
-        'There was an issue uploading your document. Please try again, and if the problem persists, try again later.',
       success: 'Your document has been uploaded and is being scanned.',
       sendNotificationToGRBReviewers: {
         header: 'Would you like to send a notification email to GRB reviewers?',
@@ -784,8 +772,6 @@ const technicalAssistance = {
         'You will not be able to access this document after it is removed, and the TRB team will not be able to view it.',
       removeDocument: 'Remove document',
       cancel: 'Cancel',
-      removeFail:
-        'There was an issue removing your document. Please try again, and if the problem persists, try again later.',
       removeSuccess: 'You have successfully removed {{-documentName}}.'
     },
     viewFail:
@@ -1036,8 +1022,6 @@ const technicalAssistance = {
       meetingDate: 'mm/dd/yyyy',
       meetingTime: 'hh:mm pm'
     },
-    error:
-      'There was an issue scheduling the consult session. Please try again, and if the problem persists, try again later.',
     success:
       'The date for this request’s TRB consult session is set for {{date}} at {{time}}.',
     alert:
@@ -1062,9 +1046,7 @@ const technicalAssistance = {
     saveNote: 'Save note',
     cancel: 'Cancel',
     status: {
-      success: 'Your note has been added.',
-      error:
-        'There was a problem saving your note. Please try again. If the error persists, please try again at a later date.'
+      success: 'Your note has been added.'
     },
     labels: {
       category: 'What is this note about?',
@@ -1105,8 +1087,6 @@ const technicalAssistance = {
     hint: 'Give a brief explanation, especially if you are closing this request without sending an guidance letter.',
     submit: 'Complete action and close request',
     success: 'Action complete. This request is now closed.',
-    error:
-      'There was an issue closing this request. Please try again, and if the problem persists, try again later.',
     confirmModal: {
       heading: 'Are you sure you want to close this request?',
       text: [
@@ -1127,18 +1107,14 @@ const technicalAssistance = {
     label: 'Why are you re-opening this request?',
     hint: 'Give a brief explanation.',
     submit: 'Complete action and re-open request',
-    success: 'Action complete. This request is now open.',
-    error:
-      'There was an issue re-opening this request. Please try again, and if the problem persists, try again later.'
+    success: 'Action complete. This request is now open.'
   },
   assignTrbLeadModal: {
     heading: 'Assign an Admin lead for this request',
     label: 'Select a Lead from the TRB Team:',
     assignMyself: 'Assign myself',
     submit: 'Assign',
-    success: '{{name}} is assigned as the TRB lead for this request.',
-    error:
-      'There was an issue assigning a TRB lead for this request. Please try again, and if the problem persists, try again later.'
+    success: '{{name}} is assigned as the TRB lead for this request.'
   },
   closeTab: 'Close tab',
   // technicalAssistance.link here provides overrides to itGov.link

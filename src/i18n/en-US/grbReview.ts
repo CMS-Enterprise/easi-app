@@ -160,9 +160,7 @@ export default {
       text: 'This action will remove any links and files previously added about this asynchronous presesntation and cannot be undone. Are you sure you want to continue?',
       confirm: 'Remove presentation links',
       cancel: "Don't remove",
-      success: 'Presentation links have been removed.',
-      error:
-        'There was an issue deleting the presentation details. Please try again, and if the problem persists, try again later.'
+      success: 'Presentation links have been removed.'
     }
   },
   businessCaseOverview: {
@@ -358,9 +356,7 @@ export default {
         sendReminder: 'Send reminder',
         cancel: 'Go back without sending',
         success:
-          'You sent a voting reminder for this GRB review. GRB members added to this review will receive a voting reminder email.',
-        error:
-          'There was an issue sending your reminder. Please try again, and if the problem persists, try again later.'
+          'You sent a voting reminder for this GRB review. GRB members added to this review will receive a voting reminder email.'
       }
     },
     takeADifferentAction: 'or, take a different action',
@@ -432,8 +428,6 @@ export default {
         confirmChangeVoteNoObjection: 'Change to an “no objection” vote',
         cancel: 'Cancel and go back',
         keepExistingVote: 'Keep existing vote',
-        error:
-          'There was an issue submitting your vote. Please try again, and if the problem persists, try again later.',
         validation: 'Vote comment is required',
         validationMustChange: 'Vote comment must be updated'
       }
@@ -479,9 +473,7 @@ export default {
       selectFile: 'Select your file',
       recommendedFileTypes: 'Select a PDF, PPT, PPTX, DOC, DOCX, XLS, or XLSX',
       upload: 'Upload presentation',
-      success: 'You have successfully uploaded your GRB presentation.',
-      error:
-        'There was an issue uploading your presentation. Please try again, and if the issue persists please try again later.'
+      success: 'You have successfully uploaded your GRB presentation.'
     },
     sendReminderCard: {
       header: 'Presentation deck',
@@ -492,8 +484,6 @@ export default {
         'The requester has not yet uploaded their GRB presentation deck. Use the buttons below to send a reminder or upload the deck yourself.',
       sendReminder: 'Send reminder',
       reminderSent: 'Reminder sent',
-      reminderError:
-        'There was an issue sending the reminder. Please try again.',
       uploadDeck: 'or, upload a deck for the project team',
       clearFile: 'Clear file',
       replacementDeck: 'or, upload a replacement presentation deck',
@@ -526,9 +516,7 @@ Format: mm/dd/yyyy`,
       addTime: 'Add time',
       goBack: 'Go back and don’t add time',
       success:
-        'You added time to this GRB review. The new end date is {{date}} at 5:00pm EST.',
-      error:
-        'There was an issue adding time to this review. Please try again, and if the problem persists, try again later.'
+        'You added time to this GRB review. The new end date is {{date}} at 5:00pm EST.'
     },
     endVotingModal: {
       heading: 'End voting early?',

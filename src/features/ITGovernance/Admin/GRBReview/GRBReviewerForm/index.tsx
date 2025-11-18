@@ -11,6 +11,7 @@ import {
 import IconLink from 'components/IconLink';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import { TabPanel, Tabs } from 'components/Tabs';
+import toastSuccess from 'components/ToastSuccess';
 import useMessage from 'hooks/useMessage';
 import { GRBReviewerFields, GRBReviewFormAction } from 'types/grbReview';
 
@@ -33,7 +34,7 @@ const GRBReviewerForm = ({
 }: GRBReviewerFormProps) => {
   const { t } = useTranslation('grbReview');
 
-  const { Message, showMessage, showMessageOnNextPage } = useMessage();
+  const { Message } = useMessage();
 
   const history = useHistory();
 
@@ -50,7 +51,7 @@ const GRBReviewerForm = ({
     ? `/it-governance/${systemId}/grb-review/participants`
     : `/it-governance/${systemId}/grb-review`;
 
-  const createGRBReviewers = (reviewers: GRBReviewerFields[]) =>
+  const createGRBReviewers = (reviewers: GRBReviewerFields[]) => {
     mutate({
       variables: {
         input: {
@@ -61,27 +62,17 @@ const GRBReviewerForm = ({
           }))
         }
       }
-    })
-      .then(() => {
-        showMessageOnNextPage(
-          <Trans
-            i18nKey="grbReview:messages.success.add"
-            count={reviewers.length}
-          />,
-          { type: 'success' }
-        );
+    }).then(() => {
+      toastSuccess(
+        <Trans
+          i18nKey="grbReview:messages.success.add"
+          count={reviewers.length}
+        />
+      );
 
-        history.push(grbReviewPath);
-      })
-      .catch(() => {
-        showMessage(t(`messages.error.add`), { type: 'error' });
-
-        // Scroll to error
-        setTimeout(() => {
-          const err = document.querySelector('.usa-alert');
-          err?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 100);
-      });
+      history.push(grbReviewPath);
+    });
+  };
 
   return (
     <GridContainer>

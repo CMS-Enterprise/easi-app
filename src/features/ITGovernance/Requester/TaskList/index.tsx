@@ -20,6 +20,7 @@ import {
   SystemIntakeState,
   SystemIntakeStatusAdmin
 } from 'gql/generated/graphql';
+import { setCurrentErrorMeta } from 'wrappers/ErrorContext/errorMetaStore';
 
 import Alert from 'components/Alert';
 import Breadcrumbs from 'components/Breadcrumbs';
@@ -29,6 +30,7 @@ import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import { TaskListContainer } from 'components/TaskList';
+import toastSuccess from 'components/ToastSuccess';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import useMessage from 'hooks/useMessage';
 import { formatDateUtc } from 'utils/date';
@@ -61,7 +63,7 @@ function GovernanceTaskList() {
   const { state } = useLocation<{ isNew?: boolean }>();
   const isNew = !!state?.isNew;
 
-  const { showMessageOnNextPage, showMessage, Message } = useMessage();
+  const { Message } = useMessage();
 
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -84,6 +86,13 @@ function GovernanceTaskList() {
   const linkCedarSystemIdQs = linkCedarSystemIdQueryString(linkCedarSystemId);
 
   const archiveIntake = async () => {
+    setCurrentErrorMeta({
+      overrideMessage: t<string>('taskList:withdraw_modal.error', {
+        context: requestName ? 'name' : 'noName',
+        requestName
+      })
+    });
+
     archive()
       .then(() => {
         const message = t<string>('taskList:withdraw_modal.confirmationText', {
@@ -91,16 +100,10 @@ function GovernanceTaskList() {
           requestName
         });
 
-        showMessageOnNextPage(message, { type: 'success' });
+        toastSuccess(message);
         history.push('/');
       })
       .catch(() => {
-        const message = t<string>('taskList:withdraw_modal.error', {
-          context: requestName ? 'name' : 'noName',
-          requestName
-        });
-
-        showMessage(message, { type: 'error' });
         setModalOpen(false);
       });
   };

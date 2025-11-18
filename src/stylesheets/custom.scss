@@ -452,3 +452,35 @@ abbr[title] {
     flex-direction: row;
   }
 }
+
+
+// Custom toast styling
+.Toastify__toast {
+  padding: 0 !important;
+  width: 100% !important;
+  max-width: 71rem !important;
+  display: block !important;
+  min-height: 0 !important;
+  border: 0 !important;
+}
+
+.Toastify__toast .usa-alert {
+  border-radius: .5rem !important;
+}
+
+.Toastify__toast .usa-alert .usa-alert__body {
+  border-radius: .5rem !important;
+}
+
+// Custom error toast styling
+.Toastify__toast--error {
+  border-left: none !important;
+  background-color: transparent !important;
+}
+
+// Custom progress bar styling for success toasts
+.Toastify__toast--success {
+  .Toastify__progress-bar {
+    background-color: #00a91c !important;
+  }
+}

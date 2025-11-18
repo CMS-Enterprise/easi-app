@@ -13,6 +13,7 @@ import {
 import { Alert } from 'components/Alert';
 import Divider from 'components/Divider';
 import { useEasiForm } from 'components/EasiForm';
+import toastSuccess from 'components/ToastSuccess';
 import {
   GuidanceLetterInsightFields,
   StepComponentProps
@@ -110,9 +111,6 @@ const Insights = ({
               <InsightsList
                 className="margin-bottom-7"
                 trbRequestId={trbRequestId}
-                setReorderError={error =>
-                  error ? setFormAlert({ type: 'error', message: error }) : null
-                }
                 edit={insight => {
                   // Set form field values for editing
                   reset(
@@ -130,22 +128,9 @@ const Insights = ({
                   history.push(`/trb/${trbRequestId}/guidance/insights/form`);
                 }}
                 remove={insight =>
-                  remove({ variables: { id: insight.id } })
-                    .then(() => {
-                      setFormAlert({
-                        type: 'success',
-                        message: t('guidanceLetterForm.removeSuccess')
-                      });
-                    })
-                    .catch(() =>
-                      setFormAlert({
-                        type: 'error',
-                        message: t('guidanceLetterForm.error', {
-                          action: 'removing',
-                          type: 'guidance'
-                        })
-                      })
-                    )
+                  remove({ variables: { id: insight.id } }).then(() =>
+                    toastSuccess(t('guidanceLetterForm.removeSuccess'))
+                  )
                 }
               />
             )

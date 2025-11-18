@@ -28,6 +28,7 @@ import IconLink from 'components/IconLink';
 import Label from 'components/Label';
 import MainContent from 'components/MainContent';
 import { TabPanel, Tabs } from 'components/Tabs';
+import toastSuccess from 'components/ToastSuccess';
 import useMessage from 'hooks/useMessage';
 import { fileToBase64File } from 'utils/downloadFile';
 import { SetGRBPresentationLinksSchema } from 'validations/grbReviewSchema';
@@ -60,7 +61,7 @@ const PresentationLinksForm = ({
   grbReviewAsyncRecordingTime
 }: PresentationLinksFormProps) => {
   const { t } = useTranslation('grbReview');
-  const { showMessage, showMessageOnNextPage, Message } = useMessage();
+  const { Message } = useMessage();
   const history = useHistory();
 
   const [setPresentationLinks] =
@@ -136,21 +137,11 @@ const PresentationLinksForm = ({
                 : presentationDeckFileData
           }
         }
-      })
-        .then(() => {
-          showMessageOnNextPage(t(`presentationLinks.success`), {
-            type: 'success'
-          });
+      }).then(() => {
+        toastSuccess(t(`presentationLinks.success`));
 
-          history.push(grbReviewPath);
-        })
-        .catch(() => {
-          showMessage(t(`presentationLinks.error`), { type: 'error' });
-
-          // Scroll to error
-          const err = document.querySelector('.usa-alert');
-          err?.scrollIntoView();
-        });
+        history.push(grbReviewPath);
+      });
     }
   );
 

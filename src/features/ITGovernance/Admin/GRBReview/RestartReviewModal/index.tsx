@@ -19,7 +19,7 @@ import Alert from 'components/Alert';
 import HelpText from 'components/HelpText';
 import Modal from 'components/Modal';
 import RequiredFieldsText from 'components/RequiredFieldsText';
-import { useMessage } from 'hooks/useMessage';
+import toastSuccess from 'components/ToastSuccess';
 import { formatDateLocal, formatEndOfDayDeadline } from 'utils/date';
 
 import { useRestartReviewModal } from './RestartReviewModalContext';
@@ -29,8 +29,6 @@ import './index.scss';
 const RestartReviewModal = ({ systemIntakeId }: { systemIntakeId: string }) => {
   const { t } = useTranslation('grbReview');
   const { isOpen, closeModal } = useRestartReviewModal();
-  const { errorMessageInModal, showErrorMessageInModal, showMessage } =
-    useMessage();
   const [selectedDate, setSelectedDate] = useState<string>('');
 
   const [restartReview] = useRestartGRBReviewAsyncMutation({
@@ -39,7 +37,6 @@ const RestartReviewModal = ({ systemIntakeId }: { systemIntakeId: string }) => {
 
   const handleCloseModal = () => {
     closeModal();
-    showErrorMessageInModal('');
   };
 
   const handleSubmit: ReactEventHandler = event => {
@@ -52,25 +49,18 @@ const RestartReviewModal = ({ systemIntakeId }: { systemIntakeId: string }) => {
           newGRBEndDate: selectedDate
         }
       }
-    })
-      .then(() => {
-        showMessage(
-          <Trans
-            i18nKey="grbReview:adminTask.restartReview.success"
-            components={{ bold: <strong /> }}
-            values={{ date: formatDateLocal(selectedDate, 'MM/dd/yyyy') }}
-          />,
-          {
-            type: 'success'
-          }
-        );
+    }).then(() => {
+      toastSuccess(
+        <Trans
+          i18nKey="grbReview:adminTask.restartReview.success"
+          components={{ bold: <strong /> }}
+          values={{ date: formatDateLocal(selectedDate, 'MM/dd/yyyy') }}
+        />
+      );
 
-        // Close modal on success
-        handleCloseModal();
-      })
-      .catch(() => {
-        showErrorMessageInModal(t('adminTask.restartReview.error'));
-      });
+      // Close modal on success
+      handleCloseModal();
+    });
   };
 
   return (
@@ -82,11 +72,7 @@ const RestartReviewModal = ({ systemIntakeId }: { systemIntakeId: string }) => {
     >
       <div data-testid="restart-review-modal">
         <ModalHeading>{t('adminTask.restartReview.title')}</ModalHeading>
-        {errorMessageInModal && (
-          <Alert type="error" className="margin-top-2">
-            {errorMessageInModal}
-          </Alert>
-        )}
+
         <p className="margin-y-0">{t('adminTask.restartReview.description')}</p>
         <form onSubmit={handleSubmit}>
           <FormGroup className="margin-y-0">

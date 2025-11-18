@@ -32,7 +32,7 @@ import { CreateGRBReviewersSchema } from 'validations/grbReviewSchema';
 
 type AddReviewersFromRequestProps = {
   systemId: string;
-  createGRBReviewers: (reviewers: GRBReviewerFields[]) => Promise<void>;
+  createGRBReviewers: (reviewers: GRBReviewerFields[]) => void;
   grbReviewStartedAt?: string | null;
   grbReviewPath: string;
 };
