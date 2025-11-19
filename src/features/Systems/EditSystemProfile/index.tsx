@@ -6,6 +6,8 @@ import { useGetCedarSystemQuery } from 'gql/generated/graphql';
 import PageLoading from 'components/PageLoading';
 import SystemSectionLockContextProvider from 'contexts/SystemSectionLockContext';
 
+import LockedSystemProfileSection from './_components/LockedSystemProfileSection';
+import SystemProfileLockWrapper from './_components/SystemProfileLockWrapper';
 import AtoAndSecurity from './AtoAndSecurity';
 import BusinessInformation from './BusinessInformation';
 import Contracts from './Contracts';
@@ -45,27 +47,39 @@ const EditSystemProfile = () => {
         </Route>
 
         <Route path="/systems/:systemId/edit/business-information">
-          <BusinessInformation />
+          <SystemProfileLockWrapper>
+            <BusinessInformation />
+          </SystemProfileLockWrapper>
         </Route>
 
         <Route path="/systems/:systemId/edit/implementation-details">
-          <ImplementationDetails />
+          <SystemProfileLockWrapper>
+            <ImplementationDetails />
+          </SystemProfileLockWrapper>
         </Route>
 
         <Route path="/systems/:systemId/edit/data">
-          <Data />
+          <SystemProfileLockWrapper>
+            <Data />
+          </SystemProfileLockWrapper>
         </Route>
 
         <Route path="/systems/:systemId/edit/tools-and-software">
-          <ToolsAndSoftware />
+          <SystemProfileLockWrapper>
+            <ToolsAndSoftware />
+          </SystemProfileLockWrapper>
         </Route>
 
         <Route path="/systems/:systemId/edit/sub-systems">
-          <SubSystems />
+          <SystemProfileLockWrapper>
+            <SubSystems />
+          </SystemProfileLockWrapper>
         </Route>
 
         <Route path="/systems/:systemId/edit/team">
-          <Team />
+          <SystemProfileLockWrapper>
+            <Team />
+          </SystemProfileLockWrapper>
         </Route>
 
         <Route path="/systems/:systemId/edit/contracts">
@@ -78,6 +92,10 @@ const EditSystemProfile = () => {
 
         <Route path="/systems/:systemId/edit/ato-and-security">
           <AtoAndSecurity />
+        </Route>
+
+        <Route path="/systems/:systemId/edit/locked">
+          <LockedSystemProfileSection />
         </Route>
 
         <Route path="*" component={NotFound} />

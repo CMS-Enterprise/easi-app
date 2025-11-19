@@ -1,3 +1,5 @@
+import { SystemProfileLockableSection } from 'gql/generated/graphql';
+
 import { systemProfileSections } from 'constants/systemProfile';
 import { Flags } from 'types/flags';
 import { SystemProfileSection } from 'types/systemProfile';
@@ -56,4 +58,21 @@ export const getSystemProfileSectionMap = (
   });
 
   return map;
+};
+
+/**
+ * Maps a route segment to its corresponding SystemProfileLockableSection enum value.
+ *
+ * Only returns lockable sections (excludes CONTRACTS, FUNDING_AND_BUDGET, ATO_AND_SECURITY).
+ */
+export const getLockableSectionFromRoute = (
+  route: string
+): SystemProfileLockableSection | null => {
+  const section = systemProfileSections.find(s => s.route === route);
+
+  if (section && section.key in SystemProfileLockableSection) {
+    return section.key as SystemProfileLockableSection;
+  }
+
+  return null;
 };

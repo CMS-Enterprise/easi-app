@@ -13,15 +13,13 @@ import React, {
 } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import {
-  GetSystemProfileSectionLocksQuery,
   LockChangeType,
   OnSystemProfileLockStatusChangedDocument,
   OnSystemProfileLockStatusChangedSubscription,
   useGetSystemProfileSectionLocksLazyQuery
 } from 'gql/generated/graphql';
 
-export type LockSectionType =
-  GetSystemProfileSectionLocksQuery['systemProfileSectionLocks'][0];
+import { LockSectionType } from 'types/systemProfile';
 
 type SystemSectionLockContextType = {
   systemProfileSectionLocks: LockSectionType[];
@@ -94,9 +92,8 @@ export const SystemSectionLockContext =
 /**
  * Hook to access the system section lock context
  */
-export const useSystemSectionLockContext = (): SystemSectionLockContextType => {
-  return useContext(SystemSectionLockContext);
-};
+export const useSystemSectionLockContext = (): SystemSectionLockContextType =>
+  useContext(SystemSectionLockContext);
 
 /**
  * Provider for the system section lock context
