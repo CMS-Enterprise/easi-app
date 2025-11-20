@@ -2,11 +2,19 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import ReactGA from 'react-ga4';
 import { Provider } from 'react-redux';
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import {
+  ApolloClient,
+  ApolloProvider,
+  InMemoryCache,
+  split
+} from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
+import { getMainDefinition } from '@apollo/client/utilities';
 import { createUploadLink } from 'apollo-upload-client';
 import axios from 'axios';
 import { detect } from 'detect-browser';
+import { createClient } from 'graphql-ws';
 import { TextEncoder } from 'text-encoding';
 
 import { localAuthStorageKey } from 'constants/localAuth';
@@ -86,10 +94,39 @@ const authLink = setContext((request, { headers }) => {
   };
 });
 
+// Set up WebSocket link for subscriptions
+// Extract protocol and address from graphqlAddress
+const [protocol, gqlAddressWithoutProtocol] = graphqlAddress.split('://');
+const wsProtocol = protocol === 'https' ? 'wss' : 'ws'; // Use WSS when connecting over HTTPS
+
+const wsLink = new GraphQLWsLink(
+  createClient({
+    url: `${wsProtocol}://${gqlAddressWithoutProtocol}`,
+    connectionParams: () => {
+      const authToken = getAuthHeader(graphqlAddress);
+      // Return authToken if available, empty object otherwise
+      // The backend's InitFunc will handle authentication and reject if token is missing
+      return authToken ? { authToken } : {};
+    },
+    shouldRetry: () => true
+  })
+);
+
+// The split function routes subscriptions to WebSocket and other operations to HTTP
+const splitLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    );
+  },
+  wsLink,
+  authLink.concat(uploadLink)
+);
+
 const client = new ApolloClient({
-  // TODO: Update package - apollo-upload-client (requires nodejs upgrade - https://jiraent.cms.gov/browse/EASI-3505)
-  // @ts-ignore
-  link: authLink.concat(uploadLink),
+  link: splitLink,
   cache: new InMemoryCache({
     typePolicies: {
       cedarSystemDetails: {
