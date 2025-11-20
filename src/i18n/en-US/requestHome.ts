@@ -28,7 +28,8 @@ const requestHome = {
           view: 'View Intake Request form'
         },
         businessCase: {
-          title: 'Business Case',
+          title_draft: 'Draft Business Case',
+          title_final: 'Final Business Case',
           view: 'View Business Case'
         },
         overview: {
