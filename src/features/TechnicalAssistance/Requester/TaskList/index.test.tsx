@@ -99,7 +99,7 @@ const updateTrbRequestArchived: MockedQuery<
 };
 
 describe('Trb Task List', () => {
-  const store = easiMockStore({ euaUserId: 'TEST' });
+  let store = easiMockStore({ euaUserId: 'TEST' });
 
   it('renders', async () => {
     render(
@@ -187,5 +187,34 @@ describe('Trb Task List', () => {
             .trbRequest.name ?? ''
       })
     );
+  });
+
+  it('prevents non-requester from viewing the page', async () => {
+    // set user to admin but with non-requester eua
+    store = easiMockStore({
+      euaUserId: 'ABCD',
+      groups: ['EASI_TRB_ADMIN_D', 'EASI_TRB_ADMIN_P']
+    });
+
+    render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`/trb/task-list/${trbRequestId}`]}>
+          <VerboseMockedProvider mocks={[getTrbTasklistQuery]}>
+            <MessageProvider>
+              <Route path="/trb/task-list/:id">
+                <TaskList />
+              </Route>
+            </MessageProvider>
+          </VerboseMockedProvider>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+
+    screen.getByRole('heading', {
+      level: 1,
+      name: i18next.t<string>('error:notFound.heading')
+    });
   });
 });
