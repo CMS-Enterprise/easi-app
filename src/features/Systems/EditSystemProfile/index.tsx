@@ -41,65 +41,58 @@ const EditSystemProfile = () => {
 
   return (
     <SystemSectionLockContextProvider>
-      <Switch>
-        <Route exact path="/systems/:systemId/edit">
-          <EditSystemProfileHome systemId={systemId} systemName={systemName} />
-        </Route>
+      <SystemProfileLockWrapper>
+        <Switch>
+          <Route exact path="/systems/:systemId/edit">
+            <EditSystemProfileHome
+              systemId={systemId}
+              systemName={systemName}
+            />
+          </Route>
 
-        <Route path="/systems/:systemId/edit/business-information">
-          <SystemProfileLockWrapper>
+          <Route path="/systems/:systemId/edit/business-information">
             <BusinessInformation />
-          </SystemProfileLockWrapper>
-        </Route>
+          </Route>
 
-        <Route path="/systems/:systemId/edit/implementation-details">
-          <SystemProfileLockWrapper>
+          <Route path="/systems/:systemId/edit/implementation-details">
             <ImplementationDetails />
-          </SystemProfileLockWrapper>
-        </Route>
+          </Route>
 
-        <Route path="/systems/:systemId/edit/data">
-          <SystemProfileLockWrapper>
+          <Route path="/systems/:systemId/edit/data">
             <Data />
-          </SystemProfileLockWrapper>
-        </Route>
+          </Route>
 
-        <Route path="/systems/:systemId/edit/tools-and-software">
-          <SystemProfileLockWrapper>
+          <Route path="/systems/:systemId/edit/tools-and-software">
             <ToolsAndSoftware />
-          </SystemProfileLockWrapper>
-        </Route>
+          </Route>
 
-        <Route path="/systems/:systemId/edit/sub-systems">
-          <SystemProfileLockWrapper>
+          <Route path="/systems/:systemId/edit/sub-systems">
             <SubSystems />
-          </SystemProfileLockWrapper>
-        </Route>
+          </Route>
 
-        <Route path="/systems/:systemId/edit/team">
-          <SystemProfileLockWrapper>
+          <Route path="/systems/:systemId/edit/team">
             <Team />
-          </SystemProfileLockWrapper>
-        </Route>
+          </Route>
 
-        <Route path="/systems/:systemId/edit/contracts">
-          <Contracts />
-        </Route>
+          <Route path="/systems/:systemId/edit/contracts">
+            <Contracts />
+          </Route>
 
-        <Route path="/systems/:systemId/edit/funding-and-budget">
-          <FundingAndBudget />
-        </Route>
+          <Route path="/systems/:systemId/edit/funding-and-budget">
+            <FundingAndBudget />
+          </Route>
 
-        <Route path="/systems/:systemId/edit/ato-and-security">
-          <AtoAndSecurity />
-        </Route>
+          <Route path="/systems/:systemId/edit/ato-and-security">
+            <AtoAndSecurity />
+          </Route>
 
-        <Route path="/systems/:systemId/edit/locked">
-          <LockedSystemProfileSection />
-        </Route>
+          <Route path="/systems/:systemId/edit/locked">
+            <LockedSystemProfileSection />
+          </Route>
 
-        <Route path="*" component={NotFound} />
-      </Switch>
+          <Route path="*" component={NotFound} />
+        </Switch>
+      </SystemProfileLockWrapper>
     </SystemSectionLockContextProvider>
   );
 };
