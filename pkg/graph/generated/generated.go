@@ -361,6 +361,7 @@ type ComplexityRoot struct {
 		BusinessOwnerRoles      func(childComplexity int) int
 		Description             func(childComplexity int) int
 		ID                      func(childComplexity int) int
+		IDAsUUID                func(childComplexity int) int
 		IsBookmarked            func(childComplexity int) int
 		LinkedSystemIntakes     func(childComplexity int, state models.SystemIntakeState) int
 		LinkedTrbRequests       func(childComplexity int, state models.TRBRequestState) int
@@ -3043,6 +3044,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.CedarSystem.ID(childComplexity), true
+	case "CedarSystem.idAsUUID":
+		if e.complexity.CedarSystem.IDAsUUID == nil {
+			break
+		}
+
+		return e.complexity.CedarSystem.IDAsUUID(childComplexity), true
 	case "CedarSystem.isBookmarked":
 		if e.complexity.CedarSystem.IsBookmarked == nil {
 			break
@@ -11594,6 +11601,7 @@ Right now, this does not tie in with any other types defined here, and is a root
 """
 type CedarSystem {
   id: String!
+  idAsUUID: UUID!
   name: String!
   description: String
   acronym: String
@@ -20162,6 +20170,35 @@ func (ec *executionContext) fieldContext_CedarSystem_id(_ context.Context, field
 	return fc, nil
 }
 
+func (ec *executionContext) _CedarSystem_idAsUUID(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystem) (ret graphql.Marshaler) {
+	return graphql.ResolveField(
+		ctx,
+		ec.OperationContext,
+		field,
+		ec.fieldContext_CedarSystem_idAsUUID,
+		func(ctx context.Context) (any, error) {
+			return obj.IDAsUUID, nil
+		},
+		nil,
+		ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID,
+		true,
+		true,
+	)
+}
+
+func (ec *executionContext) fieldContext_CedarSystem_idAsUUID(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSystem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _CedarSystem_name(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystem) (ret graphql.Marshaler) {
 	return graphql.ResolveField(
 		ctx,
@@ -21047,6 +21084,8 @@ func (ec *executionContext) fieldContext_CedarSystemDetails_cedarSystem(_ contex
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_CedarSystem_id(ctx, field)
+			case "idAsUUID":
+				return ec.fieldContext_CedarSystem_idAsUUID(ctx, field)
 			case "name":
 				return ec.fieldContext_CedarSystem_name(ctx, field)
 			case "description":
@@ -34998,6 +35037,8 @@ func (ec *executionContext) fieldContext_Query_cedarSystem(ctx context.Context, 
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_CedarSystem_id(ctx, field)
+			case "idAsUUID":
+				return ec.fieldContext_CedarSystem_idAsUUID(ctx, field)
 			case "name":
 				return ec.fieldContext_CedarSystem_name(ctx, field)
 			case "description":
@@ -35076,6 +35117,8 @@ func (ec *executionContext) fieldContext_Query_cedarSystems(_ context.Context, f
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_CedarSystem_id(ctx, field)
+			case "idAsUUID":
+				return ec.fieldContext_CedarSystem_idAsUUID(ctx, field)
 			case "name":
 				return ec.fieldContext_CedarSystem_name(ctx, field)
 			case "description":
@@ -35143,6 +35186,8 @@ func (ec *executionContext) fieldContext_Query_myCedarSystems(_ context.Context,
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_CedarSystem_id(ctx, field)
+			case "idAsUUID":
+				return ec.fieldContext_CedarSystem_idAsUUID(ctx, field)
 			case "name":
 				return ec.fieldContext_CedarSystem_name(ctx, field)
 			case "description":
@@ -38282,6 +38327,8 @@ func (ec *executionContext) fieldContext_SystemIntake_systems(_ context.Context,
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_CedarSystem_id(ctx, field)
+			case "idAsUUID":
+				return ec.fieldContext_CedarSystem_idAsUUID(ctx, field)
 			case "name":
 				return ec.fieldContext_CedarSystem_name(ctx, field)
 			case "description":
@@ -43537,6 +43584,8 @@ func (ec *executionContext) fieldContext_SystemIntakeSystem_cedarSystem(_ contex
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_CedarSystem_id(ctx, field)
+			case "idAsUUID":
+				return ec.fieldContext_CedarSystem_idAsUUID(ctx, field)
 			case "name":
 				return ec.fieldContext_CedarSystem_name(ctx, field)
 			case "description":
@@ -46536,6 +46585,8 @@ func (ec *executionContext) fieldContext_TRBRequest_systems(_ context.Context, f
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_CedarSystem_id(ctx, field)
+			case "idAsUUID":
+				return ec.fieldContext_CedarSystem_idAsUUID(ctx, field)
 			case "name":
 				return ec.fieldContext_CedarSystem_name(ctx, field)
 			case "description":
@@ -57174,6 +57225,11 @@ func (ec *executionContext) _CedarSystem(ctx context.Context, sel ast.SelectionS
 			out.Values[i] = graphql.MarshalString("CedarSystem")
 		case "id":
 			out.Values[i] = ec._CedarSystem_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
+		case "idAsUUID":
+			out.Values[i] = ec._CedarSystem_idAsUUID(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}

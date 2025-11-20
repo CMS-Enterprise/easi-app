@@ -1,12 +1,14 @@
 package models
 
 import (
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 )
 
 // CedarSystem is the model for a single system that comes back from the CEDAR Core API
 type CedarSystem struct {
 	ID                      zero.String `json:"id"`
+	IDAsUUID                uuid.UUID   `json:"idAsUUID"`
 	Name                    zero.String `json:"name"`
 	Description             zero.String `json:"description"`
 	Acronym                 zero.String `json:"acronym"`

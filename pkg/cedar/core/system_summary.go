@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
+	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
@@ -18,6 +20,7 @@ import (
 // GetSystemSummary makes a GET call to the /system/summary endpoint
 // If `tryCache` is true and `euaUserID` is nil, we will try to hit the cache. Otherwise, we will make an API call as we cannot filter on EUA on our end
 func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryParamFilterOpt) ([]*models.CedarSystem, error) {
+	logger := appcontext.ZLogger(ctx)
 	// Construct the parameters
 	params := apisystems.NewSystemSummaryFindListParams()
 
@@ -72,6 +75,13 @@ func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryPara
 	// Populate the SystemSummary field by converting each item in resp.Payload.SystemSummary
 	for _, sys := range resp.Payload.SystemSummary {
 		if sys.IctObjectID != nil {
+
+			// parse UUID
+			parsed, err := uuid.Parse(sys.UUID)
+			if err != nil {
+				logger.Error("unable to parse uuid", zap.Error(err))
+				continue
+			}
 			cedarSys := &models.CedarSystem{
 				VersionID:               zero.StringFromPtr(sys.ID),
 				Name:                    zero.StringFromPtr(sys.Name),
@@ -87,6 +97,9 @@ func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryPara
 				SystemMaintainerOrgComp: zero.StringFrom(sys.SystemMaintainerOrgComp),
 				ID:                      zero.StringFromPtr(sys.IctObjectID),
 				UUID:                    zero.StringFrom(sys.UUID),
+
+				// for testing
+				IDAsUUID: parsed,
 			}
 			retVal = append(retVal, cedarSys)
 		}
