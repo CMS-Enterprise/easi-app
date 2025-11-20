@@ -216,5 +216,8 @@ describe('Trb Task List', () => {
       level: 1,
       name: i18next.t<string>('error:notFound.heading')
     });
+
+    // reset store for future tests
+    store = easiMockStore({ euaUserId: 'TEST' });
   });
 });
