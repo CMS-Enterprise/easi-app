@@ -66,8 +66,10 @@ export const getSystemProfileSectionMap = (
  * Only returns lockable sections (excludes CONTRACTS, FUNDING_AND_BUDGET, ATO_AND_SECURITY).
  */
 export const getLockableSectionFromRoute = (
-  route: string
+  route: string | null | undefined
 ): SystemProfileLockableSection | null => {
+  if (!route) return null;
+
   const section = systemProfileSections.find(s => s.route === route);
 
   if (section && section.key in SystemProfileLockableSection) {

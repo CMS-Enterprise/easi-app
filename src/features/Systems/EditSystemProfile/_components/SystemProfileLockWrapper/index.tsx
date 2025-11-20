@@ -71,7 +71,10 @@ const extractRouteSegment = (pathname: string): string | null => {
 const SystemProfileLockWrapper = ({
   children
 }: SystemProfileLockWrapperProps) => {
-  const { systemId } = useParams<{ systemId: string }>();
+  const { systemId, section } = useParams<{
+    systemId: string;
+    section?: string;
+  }>();
   const { pathname } = useLocation();
   const history = useHistory();
 
@@ -82,17 +85,14 @@ const SystemProfileLockWrapper = ({
 
   const [lockSection, { loading: lockLoading }] =
     useLockSystemProfileSectionMutation();
+
   const [unlockSection, { loading: unlockLoading }] =
     useUnlockSystemProfileSectionMutation();
 
   // Track previous pathname to detect navigation changes
   const prevPathnameRef = useRef<string>(pathname);
 
-  const routeSegment = extractRouteSegment(pathname);
-
-  const currentSection = routeSegment
-    ? getLockableSectionFromRoute(routeSegment)
-    : null;
+  const currentSection = getLockableSectionFromRoute(section);
 
   // Determine lock status
   let lockState: LockStatus = LockStatus.CANT_LOCK;
@@ -116,9 +116,7 @@ const SystemProfileLockWrapper = ({
   useEffect(() => {
     const prevPathname = prevPathnameRef.current;
     const prevRouteSegment = extractRouteSegment(prevPathname);
-    const prevSection = prevRouteSegment
-      ? getLockableSectionFromRoute(prevRouteSegment)
-      : null;
+    const prevSection = getLockableSectionFromRoute(prevRouteSegment);
 
     // Only process if pathname actually changed
     if (prevPathname === pathname) {
@@ -164,15 +162,15 @@ const SystemProfileLockWrapper = ({
         }
       }).catch(() => {
         history.replace(`/systems/${systemId}/edit/locked`, {
-          section: routeSegment,
+          section,
           error: true
         });
       });
     }
   }, [
     pathname,
+    section,
     currentSection,
-    routeSegment,
     systemProfileSectionLocks,
     euaId,
     systemId,
@@ -191,7 +189,7 @@ const SystemProfileLockWrapper = ({
       <Redirect
         to={{
           pathname: `/systems/${systemId}/edit/locked`,
-          state: { section: routeSegment, error: false }
+          state: { section: currentSection, error: false }
         }}
       />
     );

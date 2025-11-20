@@ -6,11 +6,10 @@ import { AvatarCircle } from 'components/Avatar/Avatar';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import { useSystemSectionLockContext } from 'contexts/SystemSectionLockContext';
-
-import { getLockableSectionFromRoute } from '../../util';
+import { SystemProfileSection } from 'types/systemProfile';
 
 type LockedSectionLocationState = {
-  section?: string;
+  section?: SystemProfileSection;
   error?: boolean;
 };
 
@@ -20,25 +19,20 @@ type LockedSectionLocationState = {
 const LockedSystemProfileSection = () => {
   const { t } = useTranslation('systemProfile');
   const { systemId } = useParams<{ systemId: string }>();
-  const location = useLocation<LockedSectionLocationState>();
+  const {
+    state: { section, error }
+  } = useLocation<LockedSectionLocationState>();
+
   const { systemProfileSectionLocks } = useSystemSectionLockContext();
 
-  const routeSegment = location.state?.section;
-  const section = routeSegment
-    ? getLockableSectionFromRoute(routeSegment)
-    : null;
-
-  // Find the lock for this section
-  const sectionLock = section
-    ? systemProfileSectionLocks.find(lock => lock.section === section)
-    : null;
-
-  const hasError = location.state?.error;
+  const sectionLock = systemProfileSectionLocks.find(
+    lock => lock.section === section
+  );
 
   return (
     <MainContent className="grid-container">
       <div className="margin-y-7">
-        {hasError ? (
+        {error ? (
           <>
             <PageHeading className="margin-bottom-2" data-testid="page-error">
               {t('editSystemProfile.lockErrorHeading')}
