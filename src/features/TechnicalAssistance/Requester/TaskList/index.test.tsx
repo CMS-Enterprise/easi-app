@@ -21,10 +21,10 @@ import {
   UpdateTRBRequestArchivedMutationVariables
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
-import configureMockStore from 'redux-mock-store';
 
 import { MessageProvider } from 'hooks/useMessage';
 import { MockedQuery } from 'types/util';
+import easiMockStore from 'utils/testing/easiMockStore';
 import { getByRoleWithNameTextKey } from 'utils/testing/helpers';
 import MockMessage from 'utils/testing/MockMessage';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
@@ -99,15 +99,7 @@ const updateTrbRequestArchived: MockedQuery<
 };
 
 describe('Trb Task List', () => {
-  const mockStore = configureMockStore();
-  const store = mockStore({
-    auth: {
-      euaId: 'TEST',
-      name: 'Jerry Seinfeld',
-      isUserSet: true,
-      groups: []
-    }
-  });
+  const store = easiMockStore({ euaUserId: 'TEST' });
 
   it('renders', async () => {
     render(
