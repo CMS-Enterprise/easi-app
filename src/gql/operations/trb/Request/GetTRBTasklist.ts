@@ -30,6 +30,9 @@ export default gql(/* GraphQL */ `
         name
         acronym
       }
+      requesterInfo {
+        euaUserId
+      }
     }
   }
 `);

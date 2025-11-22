@@ -1,4 +1,5 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import {
   render,
@@ -23,6 +24,7 @@ import i18next from 'i18next';
 
 import { MessageProvider } from 'hooks/useMessage';
 import { MockedQuery } from 'types/util';
+import easiMockStore from 'utils/testing/easiMockStore';
 import { getByRoleWithNameTextKey } from 'utils/testing/helpers';
 import MockMessage from 'utils/testing/MockMessage';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
@@ -63,6 +65,10 @@ const getTrbTasklistQuery: MockedQuery<GetTRBTasklistQuery> = {
         contractName: null,
         contractNumbers: [],
         systems: [],
+        requesterInfo: {
+          euaUserId: 'TEST',
+          __typename: 'UserInfo'
+        },
         __typename: 'TRBRequest'
       }
     }
@@ -93,17 +99,21 @@ const updateTrbRequestArchived: MockedQuery<
 };
 
 describe('Trb Task List', () => {
+  let store = easiMockStore({ euaUserId: 'TEST' });
+
   it('renders', async () => {
     render(
-      <MemoryRouter initialEntries={[`/trb/task-list/${trbRequestId}`]}>
-        <VerboseMockedProvider mocks={[getTrbTasklistQuery]}>
-          <MessageProvider>
-            <Route path="/trb/task-list/:id">
-              <TaskList />
-            </Route>
-          </MessageProvider>
-        </VerboseMockedProvider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`/trb/task-list/${trbRequestId}`]}>
+          <VerboseMockedProvider mocks={[getTrbTasklistQuery]}>
+            <MessageProvider>
+              <Route path="/trb/task-list/:id">
+                <TaskList />
+              </Route>
+            </MessageProvider>
+          </VerboseMockedProvider>
+        </MemoryRouter>
+      </Provider>
     );
 
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
@@ -133,20 +143,22 @@ describe('Trb Task List', () => {
 
   it('removes the request', async () => {
     render(
-      <MemoryRouter initialEntries={[`/trb/task-list/${trbRequestId}`]}>
-        <VerboseMockedProvider
-          mocks={[getTrbTasklistQuery, updateTrbRequestArchived]}
-        >
-          <MessageProvider>
-            <Route path="/trb/task-list/:id">
-              <TaskList />
-            </Route>
-            <Route path="/">
-              <MockMessage />
-            </Route>
-          </MessageProvider>
-        </VerboseMockedProvider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`/trb/task-list/${trbRequestId}`]}>
+          <VerboseMockedProvider
+            mocks={[getTrbTasklistQuery, updateTrbRequestArchived]}
+          >
+            <MessageProvider>
+              <Route path="/trb/task-list/:id">
+                <TaskList />
+              </Route>
+              <Route path="/">
+                <MockMessage />
+              </Route>
+            </MessageProvider>
+          </VerboseMockedProvider>
+        </MemoryRouter>
+      </Provider>
     );
     const user = userEvent.setup();
 
@@ -175,5 +187,37 @@ describe('Trb Task List', () => {
             .trbRequest.name ?? ''
       })
     );
+  });
+
+  it('prevents non-requester from viewing the page', async () => {
+    // set user to admin but with non-requester eua
+    store = easiMockStore({
+      euaUserId: 'ABCD',
+      groups: ['EASI_TRB_ADMIN_D', 'EASI_TRB_ADMIN_P']
+    });
+
+    render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`/trb/task-list/${trbRequestId}`]}>
+          <VerboseMockedProvider mocks={[getTrbTasklistQuery]}>
+            <MessageProvider>
+              <Route path="/trb/task-list/:id">
+                <TaskList />
+              </Route>
+            </MessageProvider>
+          </VerboseMockedProvider>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+
+    screen.getByRole('heading', {
+      level: 1,
+      name: i18next.t<string>('error:notFound.heading')
+    });
+
+    // reset store for future tests
+    store = easiMockStore({ euaUserId: 'TEST' });
   });
 });

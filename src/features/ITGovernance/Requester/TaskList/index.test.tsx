@@ -29,7 +29,7 @@ import GovernanceTaskList from '.';
 describe('Governance Task List', () => {
   const { id } = systemIntake;
 
-  const store = easiMockStore();
+  let store = easiMockStore();
 
   describe('Open and closed states', () => {
     it('open request - new intake form', async () => {
@@ -76,6 +76,49 @@ describe('Governance Task List', () => {
         level: 3,
         name: i18next.t<string>('itGov:taskList.step.intakeForm.title')
       });
+    });
+
+    it('prevents a non-requester from viewing the task-list view', async () => {
+      store = easiMockStore({
+        euaUserId: 'TEST',
+        groups: [
+          'EASI_P_GOVTEAM',
+          'EASI_D_GOVTEAM',
+          'EASI_P_USER',
+          'EASI_TRB_ADMIN_D',
+          'EASI_TRB_ADMIN_P'
+        ]
+      });
+
+      render(
+        <MemoryRouter initialEntries={[`/governance-task-list/${id}`]}>
+          <VerboseMockedProvider
+            mocks={[
+              getGovernanceTaskListQuery({
+                ...taskListState.intakeFormNotStarted.systemIntake
+              })
+            ]}
+          >
+            <Provider store={store}>
+              <MessageProvider>
+                <Route path="/governance-task-list/:systemId">
+                  <GovernanceTaskList />
+                </Route>
+              </MessageProvider>
+            </Provider>
+          </VerboseMockedProvider>
+        </MemoryRouter>
+      );
+
+      await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+
+      screen.getByRole('heading', {
+        level: 1,
+        name: i18next.t<string>('error:notFound.heading')
+      });
+
+      // reset store for future tests
+      store = easiMockStore();
     });
 
     it('closed request - no decision', async () => {
