@@ -17,7 +17,7 @@ import {
 import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import Modal from 'components/Modal';
-import useMessage from 'hooks/useMessage';
+import toastSuccess from 'components/ToastSuccess';
 import {
   currentTableSortDescription,
   getColumnSortStatus,
@@ -42,8 +42,6 @@ const ParticipantsTable = ({
   const history = useHistory();
 
   const { pathname } = useLocation();
-
-  const { showMessage } = useMessage();
 
   const [reviewerToRemove, setReviewerToRemove] =
     useState<SystemIntakeGRBReviewerFragment | null>(null);
@@ -147,17 +145,15 @@ const ParticipantsTable = ({
     table;
 
   const removeGRBReviewer = (reviewer: SystemIntakeGRBReviewerFragment) => {
-    deleteReviewer({ variables: { input: { reviewerID: reviewer.id } } })
-      .then(() =>
-        showMessage(
+    deleteReviewer({ variables: { input: { reviewerID: reviewer.id } } }).then(
+      () =>
+        toastSuccess(
           <Trans
             i18nKey="grbReview:messages.success.remove"
             values={{ commonName: reviewer.userAccount.commonName }}
-          />,
-          { type: 'success' }
+          />
         )
-      )
-      .catch(() => showMessage(t('messages.error.remove'), { type: 'error' }));
+    );
 
     // Reset `reviewerToRemove` to close modal
     setReviewerToRemove(null);

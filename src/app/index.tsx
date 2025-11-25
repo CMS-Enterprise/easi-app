@@ -3,13 +3,9 @@ import { createRoot } from 'react-dom/client';
 import ReactGA from 'react-ga4';
 import { Provider } from 'react-redux';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
-import { createUploadLink } from 'apollo-upload-client';
 import axios from 'axios';
 import { detect } from 'detect-browser';
 import { TextEncoder } from 'text-encoding';
-
-import { localAuthStorageKey } from 'constants/localAuth';
 
 import '../config/i18n';
 
@@ -17,13 +13,12 @@ import * as serviceWorker from '../config/serviceWorker';
 import store from '../config/store';
 import UnsupportedBrowser from '../features/Miscellaneous/UnsupportedBrowser';
 
+import authLink, { getAuthHeader } from './Links/authLink';
+import errorLink from './Links/errorLink';
+import uploadLink from './Links/uploadLink';
 import AppComponent from './Routes';
 
 import './index.scss';
-
-const apiHost = new URL(
-  import.meta.env.VITE_API_ADDRESS || window.location.origin
-).host;
 
 // Initialize tracker for Google Analytics
 ReactGA.initialize([
@@ -35,61 +30,12 @@ ReactGA.initialize([
 ]);
 
 /**
- * Extract auth token from local storage and return a header
- */
-function getAuthHeader(targetUrl: string) {
-  const targetHost = new URL(targetUrl).host;
-  if (targetHost !== apiHost) {
-    return null;
-  }
-
-  // prefer dev auth if it exists
-  if (
-    window.localStorage[localAuthStorageKey] &&
-    JSON.parse(window.localStorage[localAuthStorageKey]).favorLocalAuth
-  ) {
-    return `Local ${window.localStorage[localAuthStorageKey]}`;
-  }
-
-  if (window.localStorage['okta-token-storage']) {
-    const json = JSON.parse(window.localStorage['okta-token-storage']);
-    if (json.accessToken) {
-      return `Bearer ${json.accessToken.accessToken}`;
-    }
-  }
-
-  return null;
-}
-
-/**
  * Setup client for GraphQL
  */
-
-// Pull the graphql address from the vite environment variables
-// However, if we don't have a VITE_GRAPHQL_ADDRESS, we should simply assume that the API is hosted on the same domain & port as the frontend
-// We also assume a path of /api/graph/query should be tacked onto that
-const graphqlAddress =
-  import.meta.env.VITE_GRAPHQL_ADDRESS ||
-  `${window.location.origin}/api/graph/query`;
-
-const uploadLink = createUploadLink({
-  uri: graphqlAddress
-});
-
-const authLink = setContext((request, { headers }) => {
-  const header = getAuthHeader(graphqlAddress);
-  return {
-    headers: {
-      ...headers,
-      authorization: header
-    }
-  };
-});
-
 const client = new ApolloClient({
   // TODO: Update package - apollo-upload-client (requires nodejs upgrade - https://jiraent.cms.gov/browse/EASI-3505)
   // @ts-ignore
-  link: authLink.concat(uploadLink),
+  link: errorLink.concat(authLink).concat(uploadLink),
   cache: new InMemoryCache({
     typePolicies: {
       cedarSystemDetails: {

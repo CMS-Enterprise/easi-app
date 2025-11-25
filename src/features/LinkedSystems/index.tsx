@@ -19,7 +19,6 @@ import {
   useUnlinkSystemIntakeRelationMutation
 } from 'gql/generated/graphql';
 
-import Alert from 'components/Alert';
 import Breadcrumbs from 'components/Breadcrumbs';
 import CheckboxField from 'components/CheckboxField';
 import IconButton from 'components/IconButton';
@@ -28,6 +27,7 @@ import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import RequiredAsterisk from 'components/RequiredAsterisk';
+import toastSuccess from 'components/ToastSuccess';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import useMessage from 'hooks/useMessage';
 
@@ -87,12 +87,6 @@ const LinkedSystems = () => {
 
   // Local UI state
   const [systemToBeRemoved, setSystemToBeRemoved] = useState<string>();
-  const [showSuccessfullyDeleted, setShowSuccessfullyDeleted] =
-    useState<boolean>(false);
-  const [showRemoveLinkedSystemError, setShowRemoveLinkedSystemError] =
-    useState<boolean>(false);
-  const [showRemoveAllLinkedSystemError, setShowRemoveAllLinkedSystemError] =
-    useState<boolean>(false);
   const [removeLinkedSystemModalOpen, setRemoveLinkedSystemModalOpen] =
     useState(false);
   const [removeAllLinkedSystemsModalOpen, setRemoveAllLinkedSystemsModalOpen] =
@@ -118,55 +112,43 @@ const LinkedSystems = () => {
     }
 
     // Otherwise directly flip the flag
-    try {
-      await unlinkAllSystems({
-        variables: { intakeID: id, doesNotSupportSystems: !noSystemsUsed }
-      });
-      await Promise.all([refetchIntake(), refetchSystemIntakes()]);
-    } catch {
-      setShowRemoveAllLinkedSystemError(true);
-    }
+    await unlinkAllSystems({
+      variables: { intakeID: id, doesNotSupportSystems: !noSystemsUsed }
+    });
+    await Promise.all([refetchIntake(), refetchSystemIntakes()]);
   };
 
   const handleRemoveLink = async () => {
     if (!systemToBeRemoved) return;
 
-    try {
-      const response = await deleteSystemLink({
-        variables: { systemIntakeSystemID: systemToBeRemoved }
-      });
+    const response = await deleteSystemLink({
+      variables: { systemIntakeSystemID: systemToBeRemoved }
+    });
 
-      if (response?.data) {
-        await refetchSystemIntakes();
-        setShowSuccessfullyDeleted(true);
-        setRemoveLinkedSystemModalOpen(false);
-      }
-    } catch {
-      setShowRemoveLinkedSystemError(true);
+    if (response?.data) {
+      await refetchSystemIntakes();
+      toastSuccess(t('linkedSystems:successfullyDeleted'));
+      setRemoveLinkedSystemModalOpen(false);
     }
   };
 
   const handleCloseRemoveLinkedSystemModal = () => {
-    setShowRemoveLinkedSystemError(false);
     setRemoveLinkedSystemModalOpen(false);
   };
 
   const handleCloseRemoveAllLinkedSystemModal = () => {
-    setShowRemoveAllLinkedSystemError(false);
     setRemoveAllLinkedSystemsModalOpen(false);
   };
 
   // Confirm remove-all: unlink all and set flag true in one mutation
   const handleRemoveAllSystemLinks = async () => {
-    try {
-      await unlinkAllSystems({
-        variables: { intakeID: id, doesNotSupportSystems: true }
-      });
-      await Promise.all([refetchSystemIntakes(), refetchIntake()]);
-      setRemoveAllLinkedSystemsModalOpen(false);
-    } catch {
-      setShowRemoveAllLinkedSystemError(true);
-    }
+    await unlinkAllSystems({
+      variables: { intakeID: id, doesNotSupportSystems: true }
+    });
+
+    await Promise.all([refetchSystemIntakes(), refetchIntake()]);
+    toastSuccess(t('linkedSystems:successfullyRemovedAllLinkedSystems'));
+    setRemoveAllLinkedSystemsModalOpen(false);
   };
 
   if (relationLoading) {
@@ -207,17 +189,6 @@ const LinkedSystems = () => {
       <Breadcrumbs items={breadcrumbs} />
 
       <Message />
-
-      {showSuccessfullyDeleted && (
-        <Alert
-          id="link-form-error"
-          type="success"
-          slim
-          className="margin-top-2"
-        >
-          <Trans i18nKey="linkedSystems:successfullyDeleted" />
-        </Alert>
-      )}
 
       <PageHeading className="margin-top-4 margin-bottom-0">
         {isFromTaskList || isFromAdmin
@@ -396,16 +367,6 @@ const LinkedSystems = () => {
         <ModalHeading className="margin-top-0 margin-bottom-105">
           {t('removeLinkedSystemModal.heading')}
         </ModalHeading>
-        {showRemoveLinkedSystemError && (
-          <Alert
-            id="link-form-error"
-            type="error"
-            slim
-            className="margin-top-2"
-          >
-            <Trans i18nKey="linkedSystems:unableToRemoveLinkedSystem" />
-          </Alert>
-        )}
         <p className="margin-top-0 text-light font-body-md">
           {t('removeLinkedSystemModal.message')}
         </p>
@@ -438,16 +399,6 @@ const LinkedSystems = () => {
         <ModalHeading className="margin-top-0 margin-bottom-105">
           {t('removeAllLinkedSystemsModal.heading')}
         </ModalHeading>
-        {showRemoveAllLinkedSystemError && (
-          <Alert
-            id="link-form-error"
-            type="error"
-            slim
-            className="margin-top-2"
-          >
-            <Trans i18nKey="linkedSystems:unableToRemoveAllLinkedSystem" />
-          </Alert>
-        )}
         <p className="margin-top-0 text-light font-body-md">
           {t('removeAllLinkedSystemsModal.message')}
         </p>

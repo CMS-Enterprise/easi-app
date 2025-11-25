@@ -183,11 +183,6 @@ function AttendeesForm({
             if (err instanceof ApolloError) {
               setMutationLoading(false);
 
-              // Set form error
-              setFormAlert({
-                type: 'error',
-                message: t<string>('attendees.alerts.error')
-              });
               // Return to attendees form
               history.push(backToFormUrl);
             }

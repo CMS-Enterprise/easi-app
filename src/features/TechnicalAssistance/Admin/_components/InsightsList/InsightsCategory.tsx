@@ -23,8 +23,6 @@ type InsightsCategoryProps = {
   setInsightToRemove?: (
     insight: TRBGuidanceLetterInsightFragment | null
   ) => void;
-  /** Optional function to set error message if order mutation fails */
-  setReorderError?: (error: string | null) => void;
 };
 
 /**
@@ -36,8 +34,7 @@ const InsightsCategory = ({
   insights,
   editable,
   edit,
-  setInsightToRemove,
-  setReorderError
+  setInsightToRemove
 }: InsightsCategoryProps) => {
   const { t } = useTranslation('technicalAssistance');
 
@@ -70,7 +67,7 @@ const InsightsCategory = ({
           newOrder
         }
       }
-    }).catch(() => setReorderError?.(t('guidanceLetterForm.reorderError')));
+    });
   };
 
   return (

@@ -113,8 +113,6 @@ const Review = ({
         guidanceLetter={guidanceLetter}
         className="margin-top-5 margin-bottom-4"
         insightActions={{
-          setReorderError: error =>
-            setFormAlert(error ? { type: 'error', message: error } : null),
           edit: insight =>
             history.push(`/trb/${trbRequestId}/guidance/insights/form`, {
               insight: {
@@ -122,16 +120,7 @@ const Review = ({
                 links: insight.links.map(link => ({ link }))
               }
             }),
-          remove: insight =>
-            remove({ variables: { id: insight.id } }).catch(() =>
-              setFormAlert({
-                type: 'error',
-                message: t('guidanceLetterForm.error', {
-                  action: 'removing',
-                  type: 'guidance'
-                })
-              })
-            )
+          remove: insight => remove({ variables: { id: insight.id } })
         }}
         showSectionEditLinks
       />

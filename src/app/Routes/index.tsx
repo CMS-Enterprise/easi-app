@@ -7,6 +7,7 @@ import {
   Switch,
   useLocation
 } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 import { LoginCallback, SecureRoute } from '@okta/okta-react';
 import { GovBanner, GridContainer } from '@trussworks/react-uswds';
 import Help from 'features/Help';
@@ -44,6 +45,7 @@ import SystemWorkspaceRequests from 'features/Systems/SystemWorkspace/SystemWork
 import TechnicalAssistance from 'features/TechnicalAssistance/Routes';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import AuthenticationWrapper from 'wrappers/AuthenticationWrapper';
+import ErrorMessageProvider from 'wrappers/ErrorContext';
 import FlagsWrapper from 'wrappers/FlagsWrapper';
 import TableStateWrapper from 'wrappers/TableStateWrapper';
 import TimeOutWrapper from 'wrappers/TimeOutWrapper';
@@ -57,6 +59,8 @@ import PageWrapper from 'components/PageWrapper';
 import { MessageProvider } from 'hooks/useMessage';
 
 import shouldScroll from '../../utils/scrollConfig';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -242,27 +246,41 @@ const App = () => {
       </button>
       <BrowserRouter>
         <AuthenticationWrapper>
-          <MessageProvider>
-            <FlagsWrapper>
-              <UserInfoWrapper>
-                <TimeOutWrapper>
-                  <TableStateWrapper>
-                    <PageWrapper>
-                      <GovBanner />
-                      <Header />
-                      <Navigation>
-                        <CedarAlertBanner />
-                        <AppRoutes />
-                      </Navigation>
-                      <Footer />
-                    </PageWrapper>
-                  </TableStateWrapper>
-                </TimeOutWrapper>
-              </UserInfoWrapper>
-            </FlagsWrapper>
-          </MessageProvider>
+          <ErrorMessageProvider>
+            <MessageProvider>
+              <FlagsWrapper>
+                <UserInfoWrapper>
+                  <TimeOutWrapper>
+                    <TableStateWrapper>
+                      <PageWrapper>
+                        <GovBanner />
+                        <Header />
+                        <Navigation>
+                          <CedarAlertBanner />
+                          <AppRoutes />
+                        </Navigation>
+                        <Footer />
+                      </PageWrapper>
+                    </TableStateWrapper>
+                  </TimeOutWrapper>
+                </UserInfoWrapper>
+              </FlagsWrapper>
+            </MessageProvider>
+          </ErrorMessageProvider>
         </AuthenticationWrapper>
       </BrowserRouter>
+      <ToastContainer
+        position="top-center"
+        className="width-full"
+        autoClose={false}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        icon={false}
+      />
     </>
   );
 };

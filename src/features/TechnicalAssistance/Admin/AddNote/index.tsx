@@ -30,6 +30,7 @@ import PageHeading from 'components/PageHeading';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import RichTextEditor from 'components/RichTextEditor';
 import Spinner from 'components/Spinner';
+import toastSuccess from 'components/ToastSuccess';
 import useMessage from 'hooks/useMessage';
 
 import { ModalViewType } from '../_components/NoteModal';
@@ -80,7 +81,7 @@ const AddNote = ({
   // TRB request information to render name in breadcrumbs
   const { data } = useContext(TRBRequestContext);
 
-  const { Message, showMessage, showMessageOnNextPage } = useMessage();
+  const { Message } = useMessage();
 
   const requestUrl: string = `/trb/${id}/notes`;
 
@@ -105,25 +106,14 @@ const AddNote = ({
   const createNote = useAddNote(trbRequestId || id);
 
   const submit = handleSubmit(formData =>
-    createNote(formData)
-      .then(result => {
-        if (!setModalView) {
-          showMessageOnNextPage(t('notes.status.success'), {
-            type: 'success',
-            className: 'margin-top-3'
-          });
-          history.push(requestUrl);
-        } else if (setModalView && setModalMessage) {
-          setModalView('viewNotes');
-          setModalMessage(t('notes.status.success'));
-        }
-      })
-      .catch(err => {
-        showMessage(t('notes.status.error'), {
-          type: 'error',
-          className: 'margin-top-3'
-        });
-      })
+    createNote(formData).then(result => {
+      toastSuccess(t('notes.status.success'));
+      if (!setModalView) {
+        history.push(requestUrl);
+      } else {
+        setModalView('viewNotes');
+      }
+    })
   );
 
   const category = watch('category');
