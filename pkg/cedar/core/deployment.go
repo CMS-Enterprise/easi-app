@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 	"go.uber.org/zap"
 
@@ -22,7 +23,7 @@ type GetDeploymentsOptionalParams struct {
 }
 
 // GetDeployments makes a GET call to the /deployment endpoint
-func (c *Client) GetDeployments(ctx context.Context, cedarSystemID string, optionalParams *GetDeploymentsOptionalParams) ([]*models.CedarDeployment, error) {
+func (c *Client) GetDeployments(ctx context.Context, cedarSystemID uuid.UUID, optionalParams *GetDeploymentsOptionalParams) ([]*models.CedarDeployment, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		if cedarcoremock.IsMockSystem(cedarSystemID) {
@@ -72,24 +73,29 @@ func (c *Client) GetDeployments(ctx context.Context, cedarSystemID string, optio
 	// generated swagger client turns JSON nulls into Go zero values, so use null/zero package to convert them back to nullable values
 	for _, deployment := range resp.Payload.Deployments {
 		if deployment.ID == nil {
-			appcontext.ZLogger(ctx).Error("Error decoding deployment; deployment ID was null", zap.String("systemID", cedarSystemID))
+			appcontext.ZLogger(ctx).Error("Error decoding deployment; deployment ID was null", zap.String("systemID", cedarSystemID.String()))
 			continue
 		}
 
 		if deployment.Name == nil {
-			appcontext.ZLogger(ctx).Error("Error decoding deployment; deployment name was null", zap.String("systemID", cedarSystemID))
+			appcontext.ZLogger(ctx).Error("Error decoding deployment; deployment name was null", zap.String("systemID", cedarSystemID.String()))
 			continue
 		}
 
 		if deployment.SystemID == nil {
-			appcontext.ZLogger(ctx).Error("Error decoding deployment; deployment system ID was null", zap.String("systemID", cedarSystemID))
+			appcontext.ZLogger(ctx).Error("Error decoding deployment; deployment system ID was null", zap.String("systemID", cedarSystemID.String()))
 			continue
+		}
+
+		parsedUUID, err := uuid.Parse(*deployment.SystemID)
+		if err != nil {
+			appcontext.ZLogger(ctx).Error("problem parsing deployment system id", zap.Error(err), zap.String("systemID", cedarSystemID.String()))
 		}
 
 		retDeployment := &models.CedarDeployment{
 			ID:                zero.StringFromPtr(deployment.ID),
 			Name:              zero.StringFromPtr(deployment.Name),
-			SystemID:          zero.StringFromPtr(deployment.SystemID),
+			SystemID:          &parsedUUID,
 			StartDate:         zero.TimeFrom(time.Time(deployment.StartDate)),
 			EndDate:           zero.TimeFrom(time.Time(deployment.EndDate)),
 			IsHotSite:         zero.StringFrom(deployment.IsHotSite),

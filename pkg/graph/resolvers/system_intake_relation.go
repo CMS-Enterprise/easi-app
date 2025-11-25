@@ -88,7 +88,7 @@ func SetSystemIntakeRelationNewSystem(
 func SetSystemIntakeRelationExistingSystem(
 	ctx context.Context,
 	store *storage.Store,
-	getCedarSystem func(ctx context.Context, systemID string) (*models.CedarSystem, error),
+	getCedarSystem func(ctx context.Context, systemID uuid.UUID) (*models.CedarSystem, error),
 	input *models.SetSystemIntakeRelationExistingSystemInput,
 ) (*models.SystemIntake, error) {
 	return sqlutils.WithTransactionRet[*models.SystemIntake](ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {

@@ -8,6 +8,8 @@ import (
 	"path"
 	"strings"
 
+	"github.com/google/uuid"
+
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -20,7 +22,7 @@ type cedarYouHaveBeenAddedEmailParameters struct {
 	FeedbackSlackLink   string
 }
 
-func (c Client) cedarYouHaveBeenAddedEmailBody(systemName string, systemID string, roles []string) (string, error) {
+func (c Client) cedarYouHaveBeenAddedEmailBody(systemName string, systemID uuid.UUID, roles []string) (string, error) {
 	if c.templates.cedarYouHaveBeenAdded == nil {
 		return "", errors.New("CEDAR You Have Been Added template is nil")
 	}
@@ -28,8 +30,8 @@ func (c Client) cedarYouHaveBeenAddedEmailBody(systemName string, systemID strin
 	data := cedarYouHaveBeenAddedEmailParameters{
 		SystemName:          systemName,
 		Roles:               buildRoleString(roles),
-		SystemWorkspaceLink: c.urlFromPath(path.Join("systems", systemID, "workspace")),
-		TeamLink:            c.urlFromPath(path.Join("systems", systemID, "team", "edit")) + "?workspace",
+		SystemWorkspaceLink: c.urlFromPath(path.Join("systems", systemID.String(), "workspace")),
+		TeamLink:            c.urlFromPath(path.Join("systems", systemID.String(), "team", "edit")) + "?workspace",
 		FeedbackFormLink:    c.urlFromPath(path.Join("help", "send-feedback")),
 		FeedbackSlackLink:   c.config.OITFeedbackChannelSlackLink,
 	}
@@ -45,7 +47,7 @@ func (c Client) cedarYouHaveBeenAddedEmailBody(systemName string, systemID strin
 func (c Client) SendCedarYouHaveBeenAddedEmail(
 	ctx context.Context,
 	systemName string,
-	systemID string,
+	systemID uuid.UUID,
 	roles []string,
 	teamMemberEmail models.EmailAddress,
 ) error {

@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export default gql(/* GraphQL */ `
-  query GetSystemWorkspace($cedarSystemId: String!) {
+  query GetSystemWorkspace($cedarSystemId: UUID!) {
     cedarAuthorityToOperate(cedarSystemID: $cedarSystemId) {
       uuid
       tlcPhase

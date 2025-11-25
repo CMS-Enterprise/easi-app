@@ -41,7 +41,7 @@ type CedarSystemDetails {
 }
 
 extend type Query {
-  cedarSystem(cedarSystemId: String!): CedarSystem
+  cedarSystem(cedarSystemId: UUID!): CedarSystem
   cedarSystems: [CedarSystem!]!
   myCedarSystems: [CedarSystem!]!
 
@@ -49,5 +49,5 @@ extend type Query {
   Cedar System Details is a convenient method to return a Cedar System along with other convenience information.
   TODO, this can be refactored using helper methods in GQL to return the fields, instead of relying on the resolver to return all fields at the same time.
   """
-  cedarSystemDetails(cedarSystemId: String!): CedarSystemDetails
+  cedarSystemDetails(cedarSystemId: UUID!): CedarSystemDetails
 }

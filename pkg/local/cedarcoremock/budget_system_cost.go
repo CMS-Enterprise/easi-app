@@ -1,8 +1,10 @@
 package cedarcoremock
 
 import (
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -13,52 +15,52 @@ func GetBudgetSystemCost() *models.CedarBudgetSystemCost {
 			{
 				ActualSystemCost: zero.StringFrom("3.50"),
 				FiscalYear:       zero.StringFrom("2024"),
-				SystemID:         zero.StringFrom("1234"),
+				SystemID:         helpers.PointerTo(uuid.New()),
 			},
 			{
 				ActualSystemCost: zero.StringFrom("7"),
 				FiscalYear:       zero.StringFrom("2023"),
-				SystemID:         zero.StringFrom("1235"),
+				SystemID:         helpers.PointerTo(uuid.New()),
 			},
 			{
 				ActualSystemCost: zero.StringFrom("10.50"),
 				FiscalYear:       zero.StringFrom("2022"),
-				SystemID:         zero.StringFrom("1236"),
+				SystemID:         helpers.PointerTo(uuid.New()),
 			},
 			{
 				ActualSystemCost: zero.StringFrom("14"),
 				FiscalYear:       zero.StringFrom("2021"),
-				SystemID:         zero.StringFrom("1237"),
+				SystemID:         helpers.PointerTo(uuid.New()),
 			},
 			{
 				ActualSystemCost: zero.StringFrom("3.50"),
 				FiscalYear:       zero.StringFrom("2020"),
-				SystemID:         zero.StringFrom("1234"),
+				SystemID:         helpers.PointerTo(uuid.New()),
 			},
 			{
 				ActualSystemCost: zero.StringFrom("7"),
 				FiscalYear:       zero.StringFrom("2019"),
-				SystemID:         zero.StringFrom("1235"),
+				SystemID:         helpers.PointerTo(uuid.New()),
 			},
 			{
 				ActualSystemCost: zero.StringFrom("10.50"),
 				FiscalYear:       zero.StringFrom("2018"),
-				SystemID:         zero.StringFrom("1236"),
+				SystemID:         helpers.PointerTo(uuid.New()),
 			},
 			{
 				ActualSystemCost: zero.StringFrom("14"),
 				FiscalYear:       zero.StringFrom("2017"),
-				SystemID:         zero.StringFrom("1237"),
+				SystemID:         helpers.PointerTo(uuid.New()),
 			},
 			{
 				ActualSystemCost: zero.StringFrom(""),
 				FiscalYear:       zero.StringFrom("2016"),
-				SystemID:         zero.StringFrom(""),
+				SystemID:         helpers.PointerTo(uuid.New()),
 			},
 			{
 				ActualSystemCost: zero.StringFrom("1000"),
 				FiscalYear:       zero.StringFrom(""),
-				SystemID:         zero.StringFrom(""),
+				SystemID:         helpers.PointerTo(uuid.New()),
 			},
 		},
 	}

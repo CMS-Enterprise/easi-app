@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 )
 
@@ -15,5 +16,5 @@ type CedarContract struct {
 	OrderNumber     zero.String `json:"orderNumber,omitempty"`
 	ServiceProvided zero.String `json:"serviceProvided,omitempty"`
 	IsDeliveryOrg   bool        `json:"isDeliveryOrg"`
-	SystemID        zero.String `json:"systemId,omitempty"`
+	SystemID        uuid.UUID   `json:"systemId,omitempty"`
 }

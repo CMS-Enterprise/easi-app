@@ -117,7 +117,7 @@ func (c *Client) PurgeSystemCacheByEUA(ctx context.Context, euaID string) error 
 }
 
 // GetSystem retrieves a CEDAR system by ID (IctObjectID)
-func (c *Client) GetSystem(ctx context.Context, systemID string) (*models.CedarSystem, error) {
+func (c *Client) GetSystem(ctx context.Context, systemID uuid.UUID) (*models.CedarSystem, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return cedarcoremock.GetSystem(systemID), nil
@@ -128,10 +128,10 @@ func (c *Client) GetSystem(ctx context.Context, systemID string) (*models.CedarS
 		return nil, err
 	}
 
-	systemSummaryMap := make(map[string]*models.CedarSystem)
+	systemSummaryMap := make(map[uuid.UUID]*models.CedarSystem)
 	for _, sys := range systemSummary {
 		if sys != nil {
-			systemSummaryMap[sys.ID.String] = sys
+			systemSummaryMap[sys.IDAsUUID] = sys
 		}
 	}
 	if sys, found := systemSummaryMap[systemID]; found && sys != nil {
@@ -164,9 +164,9 @@ func (systemSummaryOpts) WithEuaIDFilter(euaUserID string) systemSummaryParamFil
 }
 
 // WithSubSystems sets given cedar system ID as the parent system for which we are looking for sub-systems
-func (systemSummaryOpts) WithSubSystems(cedarSystemID string) systemSummaryParamFilterOpt {
+func (systemSummaryOpts) WithSubSystems(cedarSystemID uuid.UUID) systemSummaryParamFilterOpt {
 	return func(params *apisystems.SystemSummaryFindListParams) {
-		params.SetBelongsTo(&cedarSystemID)
+		params.SetBelongsTo(helpers.PointerTo(cedarSystemID.String()))
 
 		// we want all sub systems, not just ones included in the survey
 		// TODO: some systems come back only when `nil` is set and do not come back when `true` or `false` is set - why?

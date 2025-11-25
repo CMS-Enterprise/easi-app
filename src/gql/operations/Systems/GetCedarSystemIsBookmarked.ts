@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export default gql(/* GraphQL */ `
-  query GetCedarSystemIsBookmarked($id: String!) {
+  query GetCedarSystemIsBookmarked($id: UUID!) {
     cedarSystem(cedarSystemId: $id) {
       id
       isBookmarked

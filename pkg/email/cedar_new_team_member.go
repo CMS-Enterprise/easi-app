@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"path"
 
+	"github.com/google/uuid"
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
@@ -23,7 +24,7 @@ type cedarNewTeamMemberEmailParameters struct {
 	FeedbackSlackLink   string
 }
 
-func (c Client) cedarNewTeamMemberEmailBody(memberName string, systemName string, systemID string, roles []string) (string, error) {
+func (c Client) cedarNewTeamMemberEmailBody(memberName string, systemName string, systemID uuid.UUID, roles []string) (string, error) {
 	if c.templates.cedarNewTeamMember == nil {
 		return "", errors.New("CEDAR New Team Member template is nil")
 	}
@@ -32,8 +33,8 @@ func (c Client) cedarNewTeamMemberEmailBody(memberName string, systemName string
 		MemberName:          memberName,
 		SystemName:          systemName,
 		Roles:               buildRoleString(roles),
-		SystemWorkspaceLink: c.urlFromPath(path.Join("systems", systemID, "workspace")),
-		TeamLink:            c.urlFromPath(path.Join("systems", systemID, "team", "edit")) + "?workspace",
+		SystemWorkspaceLink: c.urlFromPath(path.Join("systems", systemID.String(), "workspace")),
+		TeamLink:            c.urlFromPath(path.Join("systems", systemID.String(), "team", "edit")) + "?workspace",
 		FeedbackFormLink:    c.urlFromPath(path.Join("help", "send-feedback")),
 		FeedbackSlackLink:   c.config.OITFeedbackChannelSlackLink,
 	}
@@ -51,7 +52,7 @@ func (c Client) SendCedarNewTeamMemberEmail(
 	newTeamMemberName string,
 	newTeamMemberEmail string,
 	systemName string,
-	systemID string,
+	systemID uuid.UUID,
 	roles []string,
 	existingTeamMembers []*models.CedarRole,
 ) error {

@@ -1,6 +1,7 @@
 package resolvers
 
 import (
+	"github.com/google/uuid"
 	"github.com/samber/lo"
 
 	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
@@ -16,7 +17,7 @@ func (s *ResolverSuite) TestCedarSetRolesForUser() {
 
 	currentUserEUA := "ABCD"
 	notCurrentUserEUA := "USR1"
-	cedarSystemID := "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"
+	cedarSystemID := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")
 	currentUserCurrentRoleID := "{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID02}"
 	otherRoleID1 := "{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID03}"
 	otherRoleID2 := "{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID04}"

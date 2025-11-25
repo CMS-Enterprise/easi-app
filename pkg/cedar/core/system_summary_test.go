@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
 
@@ -53,7 +54,7 @@ func (s *SystemSummaryTestSuite) TestGetSystemSummary() {
 
 	s.Run("Retrieves filtered list when Sub-System filter is present", func() {
 		c := NewClient(ctx, "fake", "fake", "1.0.0", false, true)
-		resp, err := c.GetSystemSummary(ctx, SystemSummaryOpts.WithSubSystems("1"))
+		resp, err := c.GetSystemSummary(ctx, SystemSummaryOpts.WithSubSystems(uuid.New()))
 		s.NoError(err)
 
 		// ensure filtered mock data is returned
@@ -69,12 +70,12 @@ func (s *SystemSummaryTestSuite) TestGetSystem() {
 
 	s.Run("LD defaults protects invocation of GetSystem", func() {
 		c := NewClient(ctx, "fake", "fake", "1.0.0", false, true)
-		_, err := c.GetSystem(ctx, "fake")
+		_, err := c.GetSystem(ctx, uuid.New())
 		s.NoError(err)
 
 		// should return mocked system when given corresponding mockKey, including inactive/deactivated systems
 		for _, v := range cedarcoremock.GetAllSystems() {
-			resp, err := c.GetSystem(ctx, v.ID.String)
+			resp, err := c.GetSystem(ctx, v.IDAsUUID)
 			s.NoError(err)
 			s.Equal(v, resp)
 		}

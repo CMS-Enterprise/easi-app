@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 	"github.com/samber/lo"
 	"go.uber.org/zap"
@@ -74,7 +75,7 @@ func decodeAssigneeType(rawAssigneeType string) (models.CedarAssigneeType, bool)
 }
 
 // GetBusinessOwnerRolesBySystem makes a GET call to the /role endpoint using a system ID and a Business Owner role type ID
-func (c *Client) GetBusinessOwnerRolesBySystem(ctx context.Context, cedarSystemID string) ([]*models.CedarRole, error) {
+func (c *Client) GetBusinessOwnerRolesBySystem(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarRole, error) {
 	businessOwnerRoleID, err := getCedarBusinessOwnerRoleTypeID(ctx, c)
 	if err != nil {
 		return nil, err
@@ -84,7 +85,7 @@ func (c *Client) GetBusinessOwnerRolesBySystem(ctx context.Context, cedarSystemI
 
 // GetRolesBySystem makes a GET call to the /role endpoint using a system ID and an optional role type ID
 // we don't currently have a use case for querying /role by role ID, so that's not implemented
-func (c *Client) GetRolesBySystem(ctx context.Context, cedarSystemID string, roleTypeID *string) ([]*models.CedarRole, error) {
+func (c *Client) GetRolesBySystem(ctx context.Context, cedarSystemID uuid.UUID, roleTypeID *string) ([]*models.CedarRole, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		if cedarcoremock.IsMockSystem(cedarSystemID) {
@@ -123,23 +124,23 @@ func (c *Client) GetRolesBySystem(ctx context.Context, cedarSystemID string, rol
 
 	for _, role := range resp.Payload.Roles {
 		if role.Application == nil {
-			appcontext.ZLogger(ctx).Error("Error decoding role; role Application was null", zap.String("systemID", cedarSystemID))
+			appcontext.ZLogger(ctx).Error("Error decoding role; role Application was null", zap.String("systemID", cedarSystemID.String()))
 			continue
 		}
 
 		if role.ObjectID == nil {
-			appcontext.ZLogger(ctx).Error("Error decoding role; role ObjectID was null", zap.String("systemID", cedarSystemID))
+			appcontext.ZLogger(ctx).Error("Error decoding role; role ObjectID was null", zap.String("systemID", cedarSystemID.String()))
 			continue
 		}
 
 		if role.RoleTypeID == nil {
-			appcontext.ZLogger(ctx).Error("Error decoding role; role type ID was null", zap.String("systemID", cedarSystemID))
+			appcontext.ZLogger(ctx).Error("Error decoding role; role type ID was null", zap.String("systemID", cedarSystemID.String()))
 			continue
 		}
 
 		assigneeType, validAssigneeType := decodeAssigneeType(role.AssigneeType)
 		if !validAssigneeType {
-			appcontext.ZLogger(ctx).Error("Error decoding role; role assignee type didn't match possible values from Swagger", zap.String("systemID", cedarSystemID))
+			appcontext.ZLogger(ctx).Error("Error decoding role; role assignee type didn't match possible values from Swagger", zap.String("systemID", cedarSystemID.String()))
 			continue
 		}
 
@@ -174,8 +175,13 @@ func (c *Client) GetRolesBySystem(ctx context.Context, cedarSystemID string, rol
 	return retVal, nil
 }
 
-func (c *Client) PurgeRoleCache(ctx context.Context, cedarSystemID string) error {
-	return c.PurgeCacheByPath(ctx, "/role?application="+cedarRoleApplication+"&objectId="+url.QueryEscape(cedarSystemID))
+func (c *Client) PurgeRoleCache(ctx context.Context, cedarSystemID uuid.UUID) error {
+	if err := c.PurgeCacheByPath(ctx, "/role?application="+cedarRoleApplication+"&objectId="+url.QueryEscape(cedarSystemID.String())); err == nil {
+		return nil
+	}
+
+	// try original method with uuid surrounded by `{}` - the cache will retain old data for a while, and eventually this can be removed
+	return c.PurgeCacheByPath(ctx, "/role?application="+cedarRoleApplication+"&objectId="+url.QueryEscape(fmt.Sprintf("{%s}", cedarSystemID.String())))
 }
 
 // GetRoleTypes queries CEDAR for the list of supported role types
@@ -249,7 +255,7 @@ type SetRoleResponseMetadata struct {
 }
 
 // SetRolesForUser sets the desired roles for a user on a given system to *exactly* the requested role types, adding and deleting role assignments in CEDAR as necessary
-func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaUserID string, desiredRoleTypeIDs []string) (*SetRoleResponseMetadata, error) {
+func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID uuid.UUID, euaUserID string, desiredRoleTypeIDs []string) (*SetRoleResponseMetadata, error) {
 	if c.mockEnabled {
 		// all the client methods this method depends on will return mocked data and not call out to CEDAR if mocking enabled
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
@@ -385,7 +391,7 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 }
 
 // private utility method for creating roles for a given system in CEDAR
-func (c *Client) addRoles(ctx context.Context, cedarSystemID string, newRoles []newRole) error {
+func (c *Client) addRoles(ctx context.Context, cedarSystemID uuid.UUID, newRoles []newRole) error {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return nil

@@ -70,7 +70,7 @@ type Dataloaders struct {
 	CedarSystemLinkedTRBRequests         *dataloadgen.Loader[models.TRBRequestsByCedarSystemIDsRequest, []*models.TRBRequest]
 	FetchUserInfo                        *dataloadgen.Loader[string, *models.UserInfo]
 	GetUserAccount                       *dataloadgen.Loader[uuid.UUID, *authentication.UserAccount]
-	GetCedarSystem                       *dataloadgen.Loader[string, *models.CedarSystem]
+	GetCedarSystem                       *dataloadgen.Loader[uuid.UUID, *models.CedarSystem]
 	SystemIntakeActions                  *dataloadgen.Loader[uuid.UUID, []*models.Action]
 	SystemIntakeBusinessCase             *dataloadgen.Loader[uuid.UUID, *models.BusinessCase]
 	SystemIntakeContactsByID             *dataloadgen.Loader[uuid.UUID, *models.SystemIntakeContact]

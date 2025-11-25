@@ -2,7 +2,9 @@ package cedarcore
 
 import (
 	"context"
+	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
@@ -12,7 +14,7 @@ import (
 )
 
 // GetBudgetBySystem queries CEDAR for budget information associated with a particular system, taking the version-independent ID of a system
-func (c *Client) GetBudgetBySystem(ctx context.Context, cedarSystemID string) ([]*models.CedarBudget, error) {
+func (c *Client) GetBudgetBySystem(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarBudget, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		if cedarcoremock.IsMockSystem(cedarSystemID) {
@@ -41,6 +43,10 @@ func (c *Client) GetBudgetBySystem(ctx context.Context, cedarSystemID string) ([
 	retVal := make([]*models.CedarBudget, 0, len(resp.Payload.Budgets))
 
 	for _, budget := range resp.Payload.Budgets {
+		parsedUUID, err := uuid.Parse(budget.SystemID)
+		if err != nil {
+			return nil, fmt.Errorf("problem parsing system id: %w", err)
+		}
 
 		retVal = append(retVal, &models.CedarBudget{
 			FiscalYear:    zero.StringFrom(budget.FiscalYear),
@@ -51,7 +57,7 @@ func (c *Client) GetBudgetBySystem(ctx context.Context, cedarSystemID string) ([
 			Name:          zero.StringFrom(budget.Name),
 			ProjectID:     zero.StringFromPtr(budget.ProjectID),
 			ProjectTitle:  zero.StringFrom(budget.ProjectTitle),
-			SystemID:      zero.StringFrom(budget.SystemID),
+			SystemID:      &parsedUUID,
 		})
 	}
 	return retVal, nil

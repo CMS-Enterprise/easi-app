@@ -7,7 +7,7 @@ import "github.com/google/uuid"
 type TRBRequestSystem struct {
 	BaseStructUser
 	TRBRequestID uuid.UUID `db:"trb_request_id"`
-	SystemID     string    `db:"system_id"`
+	SystemID     uuid.UUID `db:"system_id"`
 }
 
 // NewTRBRequestSystem creates a TRBRequestSystemLink

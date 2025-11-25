@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export default gql(/* GraphQL */ `
-  query GetCedarSubSystems($cedarSystemId: String!) {
+  query GetCedarSubSystems($cedarSystemId: UUID!) {
     cedarSubSystems(cedarSystemId: $cedarSystemId) {
       id
       name

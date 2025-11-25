@@ -539,7 +539,7 @@ func (s *StoreTestSuite) TestUpdateSystemIntakeLinkedCedarSystem() {
 		_, err := s.db.NamedExec(insertBasicIntakeSQL, &intake)
 		s.NoError(err)
 
-		cedarSystemID := null.StringFrom("555-55-5")
+		cedarSystemID := uuid.New()
 		updatedIntake, err := s.store.UpdateSystemIntakeLinkedCedarSystem(ctx, intake.ID, cedarSystemID)
 
 		s.NoError(err)
@@ -552,10 +552,10 @@ func (s *StoreTestSuite) TestUpdateSystemIntakeLinkedCedarSystem() {
 		_, err := s.db.NamedExec(insertBasicIntakeSQL, &intake)
 		s.NoError(err)
 
-		var cedarSystemID *string
-		updatedIntake, err := s.store.UpdateSystemIntakeLinkedCedarSystem(ctx, intake.ID, null.StringFromPtr(cedarSystemID))
+		var cedarSystemID uuid.UUID
+		updatedIntake, err := s.store.UpdateSystemIntakeLinkedCedarSystem(ctx, intake.ID, cedarSystemID)
 
 		s.NoError(err)
-		s.False(updatedIntake.CedarSystemID.Valid)
+		s.Nil(updatedIntake.CedarSystemID)
 	})
 }

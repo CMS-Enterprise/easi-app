@@ -29,7 +29,7 @@ func SetTRBRequestRelationNewSystem(
 		}
 
 		// Delete CEDAR relationships
-		if err := store.SetTRBRequestSystems(ctx, tx, input.TrbRequestID, []string{}); err != nil {
+		if err := store.SetTRBRequestSystems(ctx, tx, input.TrbRequestID, []uuid.UUID{}); err != nil {
 			return nil, err
 		}
 
@@ -51,7 +51,7 @@ func SetTRBRequestRelationNewSystem(
 func SetTRBRequestRelationExistingSystem(
 	ctx context.Context,
 	store *storage.Store,
-	getCedarSystem func(ctx context.Context, systemID string) (*models.CedarSystem, error),
+	getCedarSystem func(ctx context.Context, systemID uuid.UUID) (*models.CedarSystem, error),
 	input models.SetTRBRequestRelationExistingSystemInput,
 ) (*models.TRBRequest, error) {
 	return sqlutils.WithTransactionRet[*models.TRBRequest](ctx, store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
@@ -100,7 +100,7 @@ func SetTRBRequestRelationExistingService(
 		}
 
 		// Delete CEDAR relationships
-		if err := store.SetTRBRequestSystems(ctx, tx, input.TrbRequestID, []string{}); err != nil {
+		if err := store.SetTRBRequestSystems(ctx, tx, input.TrbRequestID, []uuid.UUID{}); err != nil {
 			return nil, err
 		}
 
@@ -131,7 +131,7 @@ func UnlinkTRBRequestRelation(
 		}
 
 		// Delete CEDAR relationships
-		if err := store.SetTRBRequestSystems(ctx, tx, trbRequestID, []string{}); err != nil {
+		if err := store.SetTRBRequestSystems(ctx, tx, trbRequestID, []uuid.UUID{}); err != nil {
 			return nil, err
 		}
 

@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 )
 
@@ -15,5 +16,5 @@ type CedarBudget struct {
 	Name          zero.String `json:"name,omitempty"`
 	ProjectID     zero.String `json:"projectId"`
 	ProjectTitle  zero.String `json:"projectTitle,omitempty"`
-	SystemID      zero.String `json:"systemId,omitempty"`
+	SystemID      *uuid.UUID  `json:"systemId,omitempty"`
 }

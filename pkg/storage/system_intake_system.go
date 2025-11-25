@@ -74,7 +74,7 @@ func (s *Store) SystemIntakesByCedarSystemIDs(ctx context.Context, requests []mo
 	)
 
 	for i, req := range requests {
-		cedarSystemIDs[i] = req.CedarSystemID
+		cedarSystemIDs[i] = req.CedarSystemID.String()
 		states[i] = req.State
 	}
 

@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null"
 	"github.com/guregu/null/zero"
 	"github.com/jmoiron/sqlx"
@@ -29,9 +30,9 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 
 	submittedAt := time.Now()
 
-	idOne := "{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"
+	idOne := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}")
 	descriptionOne := "other description"
-	idTwo := "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
+	idTwo := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")
 
 	var cases = map[string]systemIntakeRelationTestCase{
 		"adds contract numbers when no initial contract numbers exist": {
@@ -164,12 +165,12 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 
 	submittedAt := time.Now()
 
-	idOne := "{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"
+	idOne := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}")
 	descriptionOne := "other description"
-	idTwo := "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
-	idThree := "{11AB1A00-1234-5678-ABC1-1A001B00CC3D}"
-	idFour := "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"
-	idFive := "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"
+	idTwo := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")
+	idThree := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC3D}")
+	idFour := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC4E}")
+	idFive := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")
 
 	var cases = map[string]systemIntakeRelationTestCase{
 		"adds contract numbers and system IDs when no initial ones exist": {
@@ -336,7 +337,7 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			updatedIntake, err := SetSystemIntakeRelationExistingSystem(
 				ctx,
 				store,
-				func(ctx context.Context, systemID string) (*models.CedarSystem, error) {
+				func(ctx context.Context, systemID uuid.UUID) (*models.CedarSystem, error) {
 					return &models.CedarSystem{}, nil
 				},
 				input,
@@ -382,9 +383,9 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 
 	submittedAt := time.Now()
 
-	idOne := "{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"
+	idOne := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}")
 	descriptionOne := "other description"
-	idTwo := "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
+	idTwo := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")
 
 	var cases = map[string]systemIntakeRelationTestCase{
 		"adds contract numbers when no initial ones exist": {
@@ -537,7 +538,7 @@ func (s *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		_, err = SetSystemIntakeRelationNewSystem(ctx, store, input)
 		s.NoError(err) // we don't need to test the SetSystemIntakeRelationNewSystem function here
 		_, err = AddSystemLink(ctx, store, models.AddSystemLinkInput{
-			SystemID:                           "{11AB1A00-1234-5678-ABC1-1A001B0TDCTG}",
+			SystemID:                           uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B0TDCTG}"),
 			SystemIntakeID:                     openIntake.ID,
 			SystemRelationshipType:             []models.SystemRelationshipType{models.SystemRelationshipTypePrimarySupport, models.SystemRelationshipTypeOther},
 			OtherSystemRelationshipDescription: helpers.PointerTo("Test description"),
@@ -594,7 +595,7 @@ func (s *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		_, err = SetSystemIntakeRelationExistingSystem(
 			ctx,
 			store,
-			func(ctx context.Context, systemID string) (*models.CedarSystem, error) {
+			func(ctx context.Context, systemID uuid.UUID) (*models.CedarSystem, error) {
 				return &models.CedarSystem{}, nil
 			},
 			input,

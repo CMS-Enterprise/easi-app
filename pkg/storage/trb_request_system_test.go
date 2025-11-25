@@ -17,11 +17,11 @@ import (
 func (s *StoreTestSuite) TestLinkTRBRequestSystems() {
 	ctx := context.Background()
 
-	const (
-		system1 = "1"
-		system2 = "2"
-		system3 = "3"
-		system4 = "4"
+	var (
+		system1 = uuid.New()
+		system2 = uuid.New()
+		system3 = uuid.New()
+		system4 = uuid.New()
 	)
 
 	var createdIDs []uuid.UUID
@@ -42,7 +42,7 @@ func (s *StoreTestSuite) TestLinkTRBRequestSystems() {
 		s.NoError(err)
 
 		// insert systems for this created trb request
-		systemNumbers := []string{
+		systemNumbers := []uuid.UUID{
 			system1,
 			system2,
 			system3,

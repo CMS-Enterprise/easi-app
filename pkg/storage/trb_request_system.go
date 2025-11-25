@@ -16,13 +16,18 @@ import (
 
 // SetTRBRequestSystems links given System IDs to given TRB Request ID
 // This function opts to take a *sqlx.Tx instead of a NamedPreparer because the SQL calls inside this function are heavily intertwined, and we never want to call them outside the scope of a transaction
-func (s *Store) SetTRBRequestSystems(ctx context.Context, tx *sqlx.Tx, trbRequestID uuid.UUID, systemIDs []string) error {
+func (s *Store) SetTRBRequestSystems(ctx context.Context, tx *sqlx.Tx, trbRequestID uuid.UUID, systemIDs []uuid.UUID) error {
 	if trbRequestID == uuid.Nil {
 		return errors.New("unexpected nil trb request ID when linking trb request to system id")
 	}
 
+	var strArr []string
+	for _, sysID := range systemIDs {
+		strArr = append(strArr, sysID.String())
+	}
+
 	if _, err := tx.NamedExec(sqlqueries.TRBRequestSystemForm.Delete, map[string]interface{}{
-		"system_ids":     pq.StringArray(systemIDs),
+		"system_ids":     pq.StringArray(strArr),
 		"trb_request_id": trbRequestID,
 	}); err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to delete system ids linked to trb request", zap.Error(err))
@@ -71,7 +76,7 @@ func (s *Store) TRBRequestsByCedarSystemIDs(ctx context.Context, requests []mode
 	)
 
 	for i, req := range requests {
-		cedarSystemIDs[i] = req.CedarSystemID
+		cedarSystemIDs[i] = req.CedarSystemID.String()
 		states[i] = req.State
 	}
 

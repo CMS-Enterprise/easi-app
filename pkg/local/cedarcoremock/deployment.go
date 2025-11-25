@@ -3,8 +3,10 @@ package cedarcoremock
 import (
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -12,7 +14,7 @@ var mockDeployments = []*models.CedarDeployment{
 	{
 		ID:                       zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"),
 		Name:                     zero.StringFrom("Accountable Care Organization-Operational System (Development)"),
-		SystemID:                 zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"),
+		SystemID:                 helpers.PointerTo(uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")),
 		StartDate:                zero.TimeFrom(time.Time{}),
 		EndDate:                  zero.TimeFrom(time.Time{}),
 		IsHotSite:                zero.StringFrom("No"),
@@ -46,7 +48,7 @@ var mockDeployments = []*models.CedarDeployment{
 	{
 		ID:                       zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"),
 		Name:                     zero.StringFrom("Accountable Care Organization-Operational System (Implementation)"),
-		SystemID:                 zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"),
+		SystemID:                 helpers.PointerTo(uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")),
 		StartDate:                zero.TimeFrom(time.Time{}),
 		EndDate:                  zero.TimeFrom(time.Time{}),
 		IsHotSite:                zero.StringFrom("Yes"),
@@ -80,7 +82,7 @@ var mockDeployments = []*models.CedarDeployment{
 	{
 		ID:                       zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"),
 		Name:                     zero.StringFrom("Accountable Care Organization-Operational System (Production)"),
-		SystemID:                 zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"),
+		SystemID:                 helpers.PointerTo(uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}")),
 		StartDate:                zero.TimeFrom(time.Time{}),
 		EndDate:                  zero.TimeFrom(time.Time{}),
 		IsHotSite:                zero.StringFrom("No"),
@@ -114,7 +116,7 @@ var mockDeployments = []*models.CedarDeployment{
 	{
 		ID:                       zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC3D}"),
 		Name:                     zero.StringFrom("Accountable Care Organization-Operational System (Testing)"),
-		SystemID:                 zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC3D}"),
+		SystemID:                 helpers.PointerTo(uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC3D}")),
 		StartDate:                zero.TimeFrom(time.Time{}),
 		EndDate:                  zero.TimeFrom(time.Time{}),
 		IsHotSite:                zero.StringFrom("Yes"),
@@ -148,7 +150,7 @@ var mockDeployments = []*models.CedarDeployment{
 	{
 		ID:                       zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"),
 		Name:                     zero.StringFrom("Accountable Care Organization-Operational System (COOP DR)"),
-		SystemID:                 zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"),
+		SystemID:                 helpers.PointerTo(uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC4E}")),
 		StartDate:                zero.TimeFrom(time.Time{}),
 		EndDate:                  zero.TimeFrom(time.Time{}),
 		IsHotSite:                zero.StringFrom("No"),

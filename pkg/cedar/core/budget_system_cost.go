@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"sort"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
@@ -19,7 +20,7 @@ taking the version-independent ID of a system.
 
 NOTE: This function sorts the data returned by CEDAR to ensure ordering by descending FiscalYear
 */
-func (c *Client) GetBudgetSystemCostBySystem(ctx context.Context, cedarSystemID string) (*models.CedarBudgetSystemCost, error) {
+func (c *Client) GetBudgetSystemCostBySystem(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarBudgetSystemCost, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		if cedarcoremock.IsMockSystem(cedarSystemID) {
@@ -56,11 +57,15 @@ func (c *Client) GetBudgetSystemCostBySystem(ctx context.Context, cedarSystemID 
 	budgetActualCosts := make([]*models.BudgetActualCost, 0, len(resp.Payload.BudgetActualCost))
 
 	for _, budget := range resp.Payload.BudgetActualCost {
+		parsedUUID, err := uuid.Parse(budget.SystemID)
+		if err != nil {
+			return nil, fmt.Errorf("unable to parse system id: %w", err)
+		}
 
 		budgetActualCosts = append(budgetActualCosts, &models.BudgetActualCost{
 			ActualSystemCost: zero.StringFrom(budget.ActualSystemCost),
 			FiscalYear:       zero.StringFrom(budget.FiscalYear),
-			SystemID:         zero.StringFrom(budget.SystemID),
+			SystemID:         &parsedUUID,
 		})
 	}
 

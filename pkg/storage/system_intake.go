@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/guregu/null"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
@@ -567,11 +566,11 @@ func (s *Store) UpdateReviewDates(ctx context.Context, id uuid.UUID, grbDate *ti
 }
 
 // UpdateSystemIntakeLinkedCedarSystem updates the CEDAR system ID that is linked to a system intake
-func (s *Store) UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, id uuid.UUID, cedarSystemID null.String) (*models.SystemIntake, error) {
+func (s *Store) UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, id uuid.UUID, cedarSystemID uuid.UUID) (*models.SystemIntake, error) {
 	intake := struct {
 		ID            uuid.UUID
-		CedarSystemID null.String `db:"cedar_system_id"`
-		UpdatedAt     time.Time   `db:"updated_at"`
+		CedarSystemID uuid.UUID `db:"cedar_system_id"`
+		UpdatedAt     time.Time `db:"updated_at"`
 	}{
 		ID:            id,
 		CedarSystemID: cedarSystemID,
