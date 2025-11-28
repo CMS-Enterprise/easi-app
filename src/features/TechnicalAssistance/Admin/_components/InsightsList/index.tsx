@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   TRBGuidanceLetterInsightCategory,
@@ -15,8 +15,6 @@ import InsightsCategory from './InsightsCategory';
 
 type InsightsListProps = {
   trbRequestId: string;
-  /** Optional function to set error message if order mutation fails */
-  setReorderError?: (error: string | null) => void;
   /** If false, hides edit/remove buttons and reorder controls */
   editable?: boolean;
   edit?: (insight: TRBGuidanceLetterInsightFragment) => void;
@@ -30,7 +28,6 @@ type InsightsListProps = {
  */
 export default function InsightsList({
   trbRequestId,
-  setReorderError,
   editable = true,
   edit,
   remove,
@@ -48,12 +45,6 @@ export default function InsightsList({
   });
 
   const insights = data?.trbRequest?.guidanceLetter?.insights;
-
-  // Clear error on initial render
-  useEffect(() => {
-    setReorderError?.(null);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   if ((loading && !insights) || !insights) {
     return <PageLoading />;
@@ -109,7 +100,6 @@ export default function InsightsList({
         editable={editable}
         edit={edit}
         setInsightToRemove={remove && setInsightToRemove}
-        setReorderError={setReorderError}
       />
 
       <InsightsCategory
@@ -119,7 +109,6 @@ export default function InsightsList({
         editable={editable}
         edit={edit}
         setInsightToRemove={remove && setInsightToRemove}
-        setReorderError={setReorderError}
       />
 
       <InsightsCategory
@@ -129,7 +118,6 @@ export default function InsightsList({
         editable={editable}
         edit={edit}
         setInsightToRemove={remove && setInsightToRemove}
-        setReorderError={setReorderError}
       />
 
       {uncategorized.length > 0 && (
@@ -140,7 +128,6 @@ export default function InsightsList({
           editable={editable}
           edit={edit}
           setInsightToRemove={remove && setInsightToRemove}
-          setReorderError={setReorderError}
         />
       )}
     </div>

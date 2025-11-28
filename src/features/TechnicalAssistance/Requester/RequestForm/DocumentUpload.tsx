@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
@@ -58,8 +58,6 @@ const DocumentUpload = ({
   // Route param for navigation back to either inital request or task list
   const prevRoute = isInitialRequest ? 'requests' : 'task-list';
 
-  const [isUploadError, setIsUploadError] = useState(false);
-
   const { showMessageOnNextPage } = useMessage();
 
   // Documents can be created from the upload form
@@ -99,37 +97,30 @@ const DocumentUpload = ({
           fileData: newFile
         }
       }
-    })
-      .then(response => {
-        if (!response.errors) {
-          if (isInitialRequest && setFormAlert) {
-            if (refetchDocuments) refetchDocuments(); // Reload documents
-            setFormAlert({
-              type: 'success',
-              slim: true,
-              message: t('documents.upload.success')
-            });
-          } else {
-            showMessageOnNextPage(t('documents.upload.success'), {
-              className: 'margin-y-4',
-              type: 'success'
-            });
-          }
-          // Go back to the prev page
-          history.push(`/trb/${prevRoute}/${requestID}/documents`);
+    }).then(response => {
+      if (!response.errors) {
+        if (isInitialRequest && setFormAlert) {
+          if (refetchDocuments) refetchDocuments(); // Reload documents
+          setFormAlert({
+            type: 'success',
+            slim: true,
+            message: t('documents.upload.success')
+          });
         } else {
-          setIsUploadError(true);
+          showMessageOnNextPage(t('documents.upload.success'), {
+            className: 'margin-y-4',
+            type: 'success'
+          });
         }
-      })
-      .catch(err => {
-        setIsUploadError(true);
-      });
+        // Go back to the prev page
+        history.push(`/trb/${prevRoute}/${requestID}/documents`);
+      }
+    });
   });
 
   useEffect(() => {
     if (isInitialRequest) {
       if (view === 'upload') if (setFormAlert) setFormAlert(false);
-      if (!view) setIsUploadError(false);
       if (!view && isDirty) reset();
     }
   }, [view, setFormAlert, isDirty, reset, isInitialRequest]);
@@ -142,14 +133,6 @@ const DocumentUpload = ({
       err?.scrollIntoView();
     }
   }, [errors]);
-
-  // Scroll to the upload error if there's a problem
-  useEffect(() => {
-    if (isUploadError) {
-      const err = document.querySelector('.document-upload-error');
-      err?.scrollIntoView();
-    }
-  }, [isUploadError]);
 
   return (
     <div className={classNames({ 'grid-container': !isInitialRequest })}>
@@ -169,11 +152,7 @@ const DocumentUpload = ({
           { text: t('documents.upload.title') }
         ]}
       />
-      {isUploadError && (
-        <Alert type="error" className="document-upload-error">
-          {t('documents.upload.error')}
-        </Alert>
-      )}
+
       <Form className="maxw-full" onSubmit={submit}>
         <PageHeading className="margin-bottom-1">
           {t('documents.upload.title')}

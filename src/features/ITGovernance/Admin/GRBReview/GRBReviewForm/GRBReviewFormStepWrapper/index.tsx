@@ -9,6 +9,7 @@ import {
   SystemIntakeGRBReviewFragment,
   SystemIntakeStatusAdmin
 } from 'gql/generated/graphql';
+import { setCurrentErrorMeta } from 'wrappers/ErrorContext/errorMetaStore';
 
 import AutoSave from 'components/AutoSave';
 import Breadcrumbs from 'components/Breadcrumbs';
@@ -54,7 +55,7 @@ function GRBReviewFormStepWrapper<
 }: GRBReviewFormStepWrapperProps<TFieldValues>) {
   const { t } = useTranslation('grbReview');
   const history = useHistory();
-  const { Message, showMessage } = useMessage();
+  const { Message } = useMessage();
 
   /** Formatted steps for stepped form header */
   const [steps, setSteps] = useState<StepHeaderStepProps[]>(
@@ -108,11 +109,13 @@ function GRBReviewFormStepWrapper<
             return history.push(`${grbReviewPath}/${path}`);
           }
 
-          return onSubmit(formData)
-            .then(() => history.push(`${grbReviewPath}/${path}`))
-            .catch(() => {
-              showMessage(t('setUpGrbReviewForm.error'), { type: 'error' });
-            });
+          setCurrentErrorMeta({
+            overrideMessage: t('setUpGrbReviewForm.error')
+          });
+
+          return onSubmit(formData).then(() =>
+            history.push(`${grbReviewPath}/${path}`)
+          );
         },
         async () => {
           if (shouldValidate) return null;
@@ -124,16 +127,7 @@ function GRBReviewFormStepWrapper<
           });
         }
       )(),
-    [
-      grbReviewPath,
-      handleSubmit,
-      history,
-      isDirty,
-      onSubmit,
-      partialSubmit,
-      showMessage,
-      t
-    ]
+    [grbReviewPath, handleSubmit, history, isDirty, onSubmit, partialSubmit, t]
   );
 
   /**

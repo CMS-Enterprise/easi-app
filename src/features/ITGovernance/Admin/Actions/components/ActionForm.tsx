@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { ApolloError, FetchResult } from '@apollo/client';
+import { FetchResult } from '@apollo/client';
 import {
   Button,
   ButtonGroup,
@@ -18,6 +18,7 @@ import {
   EmailNotificationRecipients,
   useGetSystemIntakeContactsQuery
 } from 'gql/generated/graphql';
+import { setCurrentErrorMeta } from 'wrappers/ErrorContext/errorMetaStore';
 
 import Alert from 'components/Alert';
 import Breadcrumbs from 'components/Breadcrumbs';
@@ -30,7 +31,7 @@ import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import RequiredAsterisk from 'components/RequiredAsterisk';
 import RichTextEditor from 'components/RichTextEditor';
-import useMessage from 'hooks/useMessage';
+import toastSuccess from 'components/ToastSuccess';
 
 import ActionsSummary, { ActionsSummaryProps } from './ActionsSummary';
 import EmailRecipientsFields from './EmailRecipientsFields';
@@ -103,7 +104,6 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
 }: ActionFormProps<TFieldValues>) => {
   const { t } = useTranslation('action');
   const history = useHistory();
-  const { showMessageOnNextPage } = useMessage();
 
   const [sendEmail, setSendEmail] = useState(true);
 
@@ -123,7 +123,6 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
     watch,
     reset,
     handleSubmit,
-    setError,
     formState: { isSubmitting, defaultValues, errors }
   } = useEasiFormContext<SystemIntakeActionFields>();
 
@@ -133,25 +132,21 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
     // eslint-disable-next-line no-param-reassign
     if (formData.adminNote === '') formData.adminNote = null;
 
+    setCurrentErrorMeta({
+      overrideMessage: t('error')
+    });
+
     onSubmit(formData)
       .then(() => {
         // Display success message
         if (successMessage) {
-          showMessageOnNextPage(t(successMessage), { type: 'success' });
+          toastSuccess(t(successMessage));
         }
 
         history.push(`/it-governance/${systemIntakeId}/actions`);
       })
       .catch(e => {
         setModalIsOpen(false);
-
-        // If mutation fails, set root server error
-        if (e instanceof ApolloError) {
-          setError('root.server', { message: t('error') });
-        } else {
-          // If error is not ApolloError, set as general form error
-          setError('root.form', { message: e.message });
-        }
       });
   };
 
@@ -230,15 +225,6 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
           ]}
         />
       )}
-
-      {
-        // Error message for server error
-        errors?.root?.server?.message && (
-          <Alert type="error" className="action-error margin-top-2">
-            {errors.root.server.message}
-          </Alert>
-        )
-      }
 
       {typeof title === 'string' ? (
         <PageHeading className="margin-bottom-0">{title}</PageHeading>

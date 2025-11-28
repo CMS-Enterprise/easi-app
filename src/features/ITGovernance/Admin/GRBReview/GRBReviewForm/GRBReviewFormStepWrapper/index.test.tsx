@@ -28,6 +28,15 @@ describe('GRB review form step wrapper', () => {
       step?: GrbReviewFormStepKey;
     }
   ) => {
+    // Create fresh copy of grbReview to prevent test pollution
+    const defaultGrbReview = {
+      ...grbReview,
+      grbReviewType: SystemIntakeGRBReviewType.STANDARD,
+      grbReviewStartedAt: null,
+      grbDate: null,
+      grbPresentationLinks: null
+    };
+
     return render(
       <MemoryRouter
         initialEntries={[
@@ -39,7 +48,7 @@ describe('GRB review form step wrapper', () => {
             <Wrapper>
               <GRBReviewFormStepWrapper
                 onSubmit={props?.onSubmit || vi.fn()}
-                grbReview={props?.grbReview || grbReview}
+                grbReview={props?.grbReview || defaultGrbReview}
                 {...props}
               >
                 <h1>Test</h1>

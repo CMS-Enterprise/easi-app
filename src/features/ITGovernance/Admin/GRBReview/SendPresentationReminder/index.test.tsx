@@ -62,7 +62,7 @@ describe('SendPresentationReminder', () => {
         <MockedProvider mocks={[sendReminderEmail]}>
           <MessageProvider>
             <SendPresentationReminder
-              systemIntakeID="test-id"
+              systemIntakeID="123"
               presentationDeckFileURL={null}
               presentationDeckFileName={null}
               id="file-input"

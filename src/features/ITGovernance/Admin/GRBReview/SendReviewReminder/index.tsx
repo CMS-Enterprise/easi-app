@@ -1,11 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Alert,
-  Button,
-  ModalFooter,
-  ModalHeading
-} from '@trussworks/react-uswds';
+import { Button, ModalFooter, ModalHeading } from '@trussworks/react-uswds';
 import {
   SystemIntakeGRBReviewerVotingRole,
   SystemIntakeGRBReviewFragment,
@@ -13,7 +8,7 @@ import {
 } from 'gql/generated/graphql';
 
 import Modal from 'components/Modal';
-import useMessage from 'hooks/useMessage';
+import toastSuccess from 'components/ToastSuccess';
 
 const SendReviewReminder = ({
   isOpen,
@@ -27,8 +22,6 @@ const SendReviewReminder = ({
   grbReviewers: SystemIntakeGRBReviewFragment['grbVotingInformation']['grbReviewers'];
 }) => {
   const { t } = useTranslation('grbReview');
-  const { showMessage, errorMessageInModal, showErrorMessageInModal } =
-    useMessage();
 
   const grbReviewersWhoHaventVoted = grbReviewers.filter(
     reviewer =>
@@ -49,22 +42,15 @@ const SendReviewReminder = ({
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    showErrorMessageInModal('');
   };
 
   const handleSendReminder = () => {
     if (!systemIntakeId) return;
 
-    sendReminder()
-      .then(response => {
-        setIsModalOpen(false);
-        showMessage(t('adminTask.sendReviewReminder.modal.success'), {
-          type: 'success'
-        });
-      })
-      .catch(() => {
-        showErrorMessageInModal(t('adminTask.sendReviewReminder.modal.error'));
-      });
+    sendReminder().then(response => {
+      setIsModalOpen(false);
+      toastSuccess(t('adminTask.sendReviewReminder.modal.success'));
+    });
   };
 
   return (
@@ -78,11 +64,7 @@ const SendReviewReminder = ({
         <ModalHeading>
           {t('adminTask.sendReviewReminder.modal.title')}
         </ModalHeading>
-        {errorMessageInModal && (
-          <Alert type="error" className="margin-top-2" headingLevel="h4">
-            {errorMessageInModal}
-          </Alert>
-        )}
+
         <p className="margin-top-1">
           {t('adminTask.sendReviewReminder.modal.description', {
             count: grbReviewersWhoHaventVoted,

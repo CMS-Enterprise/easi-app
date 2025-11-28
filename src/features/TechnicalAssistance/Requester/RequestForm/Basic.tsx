@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { ApolloError } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Checkbox,
@@ -144,19 +143,6 @@ function Basic({
     }
   }, [errors, hasErrors]);
 
-  const handleApolloError = useCallback(
-    (err: any) => {
-      if (err instanceof ApolloError) {
-        setFormAlert({
-          type: 'error',
-          heading: t('errors.somethingWrong'),
-          message: t('basic.errors.submit')
-        });
-      }
-    },
-    [setFormAlert, t]
-  );
-
   const updateFields = useCallback(
     async (formData: Partial<FormFieldProps<TrbRequestFormBasic>>) => {
       const { id } = request;
@@ -232,8 +218,8 @@ function Basic({
             }
 
             callback?.();
-          } catch (e) {
-            handleApolloError(e);
+          } catch {
+            // Ignore errors, caught globally
           }
         },
         async () => {
@@ -245,7 +231,7 @@ function Basic({
           }
         }
       )(),
-    [handleSubmit, isDirty, handleApolloError, updateFields, partialSubmit]
+    [handleSubmit, isDirty, updateFields, partialSubmit]
   );
 
   // Handling the funding sources update/delete sumbission outside the scope of RHF handler
@@ -265,11 +251,9 @@ function Basic({
           sources
         }
       }
-    })
-      .then(() => {
-        refetchRequest();
-      })
-      .catch(handleApolloError);
+    }).then(() => {
+      refetchRequest();
+    });
   };
 
   const deleteFundingSource = (fundingNumber: string) => {
@@ -280,11 +264,9 @@ function Basic({
           fundingNumber
         }
       }
-    })
-      .then(() => {
-        refetchRequest();
-      })
-      .catch(handleApolloError);
+    }).then(() => {
+      refetchRequest();
+    });
   };
 
   useEffect(() => {

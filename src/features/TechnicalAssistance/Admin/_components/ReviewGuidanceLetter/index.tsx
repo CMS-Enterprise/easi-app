@@ -25,7 +25,6 @@ type ReviewGuidanceLetterProps = {
   insightActions?: {
     edit?: (insight: TRBGuidanceLetterInsightFragment) => void;
     remove?: (insight: TRBGuidanceLetterInsightFragment) => void;
-    setReorderError?: (error: string | null) => void;
   };
   showDateSent?: boolean;
   showSectionBorders?: boolean;
