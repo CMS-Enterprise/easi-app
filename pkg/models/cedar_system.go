@@ -7,8 +7,7 @@ import (
 
 // CedarSystem is the model for a single system that comes back from the CEDAR Core API
 type CedarSystem struct {
-	ID                      zero.String `json:"id"`
-	IDAsUUID                uuid.UUID   `json:"idAsUUID"`
+	ID                      uuid.UUID   `json:"id"`
 	Name                    zero.String `json:"name"`
 	Description             zero.String `json:"description"`
 	Acronym                 zero.String `json:"acronym"`
@@ -28,7 +27,7 @@ type CedarSystem struct {
 }
 
 type CedarSubSystem struct {
-	ID          zero.String `json:"id"`
+	ID          uuid.UUID   `json:"id"`
 	Name        zero.String `json:"name"`
 	Description zero.String `json:"description"`
 	Acronym     zero.String `json:"acronym"`

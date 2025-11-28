@@ -74,12 +74,16 @@ func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryPara
 	retVal := []*models.CedarSystem{}
 	// Populate the SystemSummary field by converting each item in resp.Payload.SystemSummary
 	for _, sys := range resp.Payload.SystemSummary {
-		if sys.IctObjectID != nil {
 
-			// parse UUID
-			parsed, err := uuid.Parse(sys.UUID)
+		if sys.IctObjectID != nil {
+			if sys.ID == nil {
+				logger.Warn("unexpected nil system ID when getting system summary")
+				continue
+			}
+
+			parsed, err := uuid.Parse(*sys.ID)
 			if err != nil {
-				logger.Error("unable to parse uuid", zap.Error(err))
+				logger.Error("unable to parse uuid when getting system summary", zap.Error(err))
 				continue
 			}
 			cedarSys := &models.CedarSystem{
@@ -95,11 +99,8 @@ func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryPara
 				BusinessOwnerOrgComp:    zero.StringFrom(sys.BusinessOwnerOrgComp),
 				SystemMaintainerOrg:     zero.StringFrom(sys.SystemMaintainerOrg),
 				SystemMaintainerOrgComp: zero.StringFrom(sys.SystemMaintainerOrgComp),
-				ID:                      zero.StringFromPtr(sys.IctObjectID),
+				ID:                      parsed,
 				UUID:                    zero.StringFrom(sys.UUID),
-
-				// for testing
-				IDAsUUID: parsed,
 			}
 			retVal = append(retVal, cedarSys)
 		}
@@ -131,7 +132,7 @@ func (c *Client) GetSystem(ctx context.Context, systemID uuid.UUID) (*models.Ced
 	systemSummaryMap := make(map[uuid.UUID]*models.CedarSystem)
 	for _, sys := range systemSummary {
 		if sys != nil {
-			systemSummaryMap[sys.IDAsUUID] = sys
+			systemSummaryMap[sys.ID] = sys
 		}
 	}
 	if sys, found := systemSummaryMap[systemID]; found && sys != nil {

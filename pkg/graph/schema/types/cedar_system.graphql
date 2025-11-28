@@ -3,8 +3,7 @@ CedarSystem represents the response from the /system/detail endpoint from the CE
 Right now, this does not tie in with any other types defined here, and is a root node until that changes.
 """
 type CedarSystem {
-  id: String!
-  idAsUUID: UUID!
+  id: UUID!
   name: String!
   description: String
   acronym: String

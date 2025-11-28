@@ -7,6 +7,7 @@ package resolvers
 import (
 	"context"
 	"errors"
+	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -156,6 +157,11 @@ func (r *cedarSoftwareProductsResolver) SoftwareProducts(ctx context.Context, ob
 	}
 
 	return softwareProductItems, nil
+}
+
+// ID is the resolver for the id field.
+func (r *cedarSubSystemResolver) ID(ctx context.Context, obj *models.CedarSubSystem) (string, error) {
+	panic(fmt.Errorf("not implemented: ID - id"))
 }
 
 // Author is the resolver for the author field.
@@ -2161,6 +2167,11 @@ func (r *Resolver) CedarSoftwareProducts() generated.CedarSoftwareProductsResolv
 	return &cedarSoftwareProductsResolver{r}
 }
 
+// CedarSubSystem returns generated.CedarSubSystemResolver implementation.
+func (r *Resolver) CedarSubSystem() generated.CedarSubSystemResolver {
+	return &cedarSubSystemResolver{r}
+}
+
 // GovernanceRequestFeedback returns generated.GovernanceRequestFeedbackResolver implementation.
 func (r *Resolver) GovernanceRequestFeedback() generated.GovernanceRequestFeedbackResolver {
 	return &governanceRequestFeedbackResolver{r}
@@ -2252,6 +2263,7 @@ func (r *Resolver) UserInfo() generated.UserInfoResolver { return &userInfoResol
 type businessCaseResolver struct{ *Resolver }
 type cedarBudgetSystemCostResolver struct{ *Resolver }
 type cedarSoftwareProductsResolver struct{ *Resolver }
+type cedarSubSystemResolver struct{ *Resolver }
 type governanceRequestFeedbackResolver struct{ *Resolver }
 type iTGovTaskStatusesResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }

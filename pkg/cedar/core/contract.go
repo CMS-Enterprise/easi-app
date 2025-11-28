@@ -11,6 +11,7 @@ import (
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/contract"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
@@ -24,15 +25,11 @@ func (c *Client) GetContractBySystem(ctx context.Context, cedarSystemID uuid.UUI
 		}
 		return nil, cedarcoremock.NoSystemFoundError()
 	}
-	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
-	if err != nil {
-		return nil, err
-	}
 
 	params := contract.NewContractFindParams()
 
 	// Construct the parameters
-	params.SetSystemID(cedarSystem.VersionID.Ptr())
+	params.SetSystemID(helpers.PointerTo(formatIDForCEDAR(cedarSystemID)))
 	params.HTTPClient = c.hc
 
 	// Make the API call
@@ -47,7 +44,7 @@ func (c *Client) GetContractBySystem(ctx context.Context, cedarSystemID uuid.UUI
 	for _, contractData := range resp.Payload.Contracts {
 		parsedUUID, err := uuid.Parse(contractData.SystemID)
 		if err != nil {
-			return nil, fmt.Errorf("unable to parse UUID: %w", err)
+			return nil, fmt.Errorf("unable to parse UUID when getting contract: %w", err)
 		}
 
 		var isDeliveryOrg bool

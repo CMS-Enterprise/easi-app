@@ -33,7 +33,7 @@ func (c *Client) GetAuthorityToOperate(ctx context.Context, cedarSystemID uuid.U
 
 	// Construct the parameters
 	params := apiauthority.NewAuthorityToOperateFindListParams()
-	params.SetSystemID(helpers.PointerTo(cedarSystemID.String()))
+	params.SetSystemID(helpers.PointerTo(formatIDForCEDAR(cedarSystemID)))
 	params.HTTPClient = c.hc
 
 	// Make the API call

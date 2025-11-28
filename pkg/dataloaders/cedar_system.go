@@ -19,7 +19,7 @@ func (d *dataReader) getCedarSystemsByIDs(ctx context.Context, cedarSystemIDs []
 
 	for _, sys := range data {
 		if sys != nil {
-			store[sys.IDAsUUID] = sys
+			store[sys.ID] = sys
 		}
 	}
 

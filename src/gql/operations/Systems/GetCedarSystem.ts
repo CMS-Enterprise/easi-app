@@ -4,7 +4,6 @@ export default gql(/* GraphQL */ `
   query GetCedarSystem($id: UUID!) {
     cedarSystem(cedarSystemId: $id) {
       id
-      idAsUUID
       name
       description
       acronym

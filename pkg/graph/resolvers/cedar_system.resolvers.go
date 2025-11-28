@@ -20,7 +20,7 @@ import (
 
 // BusinessOwnerRoles is the resolver for the businessOwnerRoles field.
 func (r *cedarSystemResolver) BusinessOwnerRoles(ctx context.Context, obj *models.CedarSystem) ([]*models.CedarRole, error) {
-	cedarRoles, err := r.cedarCoreClient.GetBusinessOwnerRolesBySystem(ctx, obj.IDAsUUID)
+	cedarRoles, err := r.cedarCoreClient.GetBusinessOwnerRolesBySystem(ctx, obj.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -29,17 +29,17 @@ func (r *cedarSystemResolver) BusinessOwnerRoles(ctx context.Context, obj *model
 
 // IsBookmarked is the resolver for the isBookmarked field.
 func (r *cedarSystemResolver) IsBookmarked(ctx context.Context, obj *models.CedarSystem) (bool, error) {
-	return GetCedarSystemIsBookmarked(ctx, obj.IDAsUUID)
+	return GetCedarSystemIsBookmarked(ctx, obj.ID)
 }
 
 // LinkedTrbRequests is the resolver for the linkedTrbRequests field.
 func (r *cedarSystemResolver) LinkedTrbRequests(ctx context.Context, obj *models.CedarSystem, state models.TRBRequestState) ([]*models.TRBRequest, error) {
-	return CedarSystemLinkedTRBRequests(ctx, obj.IDAsUUID, state)
+	return CedarSystemLinkedTRBRequests(ctx, obj.ID, state)
 }
 
 // LinkedSystemIntakes is the resolver for the linkedSystemIntakes field.
 func (r *cedarSystemResolver) LinkedSystemIntakes(ctx context.Context, obj *models.CedarSystem, state models.SystemIntakeState) ([]*models.SystemIntake, error) {
-	return CedarSystemLinkedSystemIntakes(ctx, obj.IDAsUUID, state)
+	return CedarSystemLinkedSystemIntakes(ctx, obj.ID, state)
 }
 
 // SystemMaintainerInformation is the resolver for the systemMaintainerInformation field.

@@ -32,14 +32,9 @@ func (c *Client) GetDeployments(ctx context.Context, cedarSystemID uuid.UUID, op
 		return nil, cedarcoremock.NoSystemFoundError()
 	}
 
-	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
-	if err != nil {
-		return nil, err
-	}
-
 	// Construct the parameters
 	params := apideployments.NewDeploymentFindListParams()
-	params.SetSystemID(cedarSystem.VersionID.String)
+	params.SetSystemID(formatIDForCEDAR(cedarSystemID))
 	params.HTTPClient = c.hc
 
 	if optionalParams != nil {

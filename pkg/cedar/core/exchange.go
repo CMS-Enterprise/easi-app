@@ -23,14 +23,9 @@ func (c *Client) GetExchangesBySystem(ctx context.Context, cedarSystemID uuid.UU
 		return nil, cedarcoremock.NoSystemFoundError()
 	}
 
-	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
-	if err != nil {
-		return nil, err
-	}
-
 	// Construct the parameters
 	params := exchange.NewExchangeFindListParams()
-	params.SetSystemID(cedarSystem.VersionID.String)
+	params.SetSystemID(formatIDForCEDAR(cedarSystemID))
 	params.SetDirection("both")
 	params.HTTPClient = c.hc
 
@@ -53,10 +48,10 @@ func (c *Client) GetExchangesBySystem(ctx context.Context, cedarSystemID uuid.UU
 		}
 
 		var direction models.ExchangeDirection
-		if exch.FromOwnerID == cedarSystem.VersionID.String {
-			direction = models.ExchangeDirection(models.ExchangeDirectionSender)
-		} else if exch.ToOwnerID == cedarSystem.VersionID.String {
-			direction = models.ExchangeDirection(models.ExchangeDirectionReceiver)
+		if exch.FromOwnerID == formatIDForCEDAR(cedarSystemID) {
+			direction = models.ExchangeDirectionSender
+		} else if exch.ToOwnerID == formatIDForCEDAR(cedarSystemID) {
+			direction = models.ExchangeDirectionReceiver
 		}
 
 		connectionFrequency := []zero.String{}

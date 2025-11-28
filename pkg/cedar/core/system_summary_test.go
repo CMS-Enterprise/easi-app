@@ -75,7 +75,7 @@ func (s *SystemSummaryTestSuite) TestGetSystem() {
 
 		// should return mocked system when given corresponding mockKey, including inactive/deactivated systems
 		for _, v := range cedarcoremock.GetAllSystems() {
-			resp, err := c.GetSystem(ctx, v.IDAsUUID)
+			resp, err := c.GetSystem(ctx, v.ID)
 			s.NoError(err)
 			s.Equal(v, resp)
 		}

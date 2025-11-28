@@ -32,10 +32,7 @@ const cedarSystem: GetCedarSystemQuery['cedarSystem'] = {
   businessOwnerOrgComp: 'IST',
   systemMaintainerOrg: 'Division of Quality Assurance',
   systemMaintainerOrgComp: 'DQA',
-  isBookmarked: false,
-
-  // testing
-  idAsUUID: '11AB1A00-1234-5678-ABC1-1A001B00CC1B'
+  isBookmarked: false
 };
 
 const getCedarSystemQuery: MockedQuery<
