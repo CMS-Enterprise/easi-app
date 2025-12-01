@@ -4,13 +4,7 @@
  * SubscriptionContext can be accessed from anywhere in the edit system profile form.
  */
 
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState
-} from 'react';
+import React, { createContext, useContext, useEffect, useMemo } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import {
   LockChangeType,
@@ -104,13 +98,11 @@ const SystemSectionLockContextProvider = ({
   const { systemId } = useParams<{ systemId: string }>();
   const { pathname } = useLocation();
 
-  const [lockStatuses, setLockStatuses] = useState<LockSectionType[]>([]);
-
-  const [loading, setLoading] = useState<boolean>(true);
-
   // useLazyQuery hook to initialize query and create subscription
-  const [getSystemProfileLocks, { data: queryData, subscribeToMore }] =
-    useGetSystemProfileSectionLocksLazyQuery();
+  const [
+    getSystemProfileLocks,
+    { data: queryData, loading: queryLoading, subscribeToMore }
+  ] = useGetSystemProfileSectionLocksLazyQuery();
 
   /**
    * Holds reference to subscribeToMore for closing websocket connection
@@ -128,77 +120,68 @@ const SystemSectionLockContextProvider = ({
     [systemId, pathname]
   );
 
-  // Update lock statuses when query data is available
-  useEffect(() => {
-    if (queryData?.systemProfileSectionLocks) {
-      setLockStatuses(queryData.systemProfileSectionLocks);
-      setLoading(false);
+  // Derive context value from query data
+  // When not on edit routes, return empty array and loading true
+  const contextValue = useMemo<SystemSectionLockContextType>(() => {
+    if (!shouldFetchLocks) {
+      return {
+        systemProfileSectionLocks: [],
+        loading: true
+      };
     }
-  }, [queryData]);
+    return {
+      systemProfileSectionLocks: queryData?.systemProfileSectionLocks ?? [],
+      loading: queryLoading ?? true
+    };
+  }, [shouldFetchLocks, queryData?.systemProfileSectionLocks, queryLoading]);
 
   useEffect(() => {
-    if (shouldFetchLocks) {
-      // Fetch existing lock statuses on mount or when systemId changes
-      getSystemProfileLocks({ variables: { cedarSystemId: systemId } });
-
-      // Set up subscription if not already subscribed
-      if (!subscribedRef.current) {
-        subscribedRef.current = subscribeToMore({
-          document: OnSystemProfileLockStatusChangedDocument,
-          variables: {
-            cedarSystemId: systemId
-          },
-          updateQuery: (
-            prev,
-            {
-              subscriptionData: { data }
-            }: {
-              subscriptionData: {
-                data: OnSystemProfileLockStatusChangedSubscription;
-              };
-            }
-          ) => {
-            if (!data) return prev;
-
-            const lockChange = data.onSystemProfileSectionLockStatusChanged;
-
-            // Update lock statuses based on change type
-            const updatedLocks =
-              lockChange.changeType === LockChangeType.REMOVED
-                ? // If section lock is to be freed, remove the lock from the context
-                  removeLockedSection(
-                    prev.systemProfileSectionLocks,
-                    lockChange.lockStatus
-                  )
-                : // If section lock is to be added/updated, add/update the lock in the context
-                  addLockedSection(
-                    prev.systemProfileSectionLocks,
-                    lockChange.lockStatus
-                  );
-
-            // Update state to trigger re-renders in consumers
-            setLockStatuses(updatedLocks);
-            setLoading(false);
-
-            // Return the formatted locks to be used as the next 'prev' parameter of updateQuery
-            return {
-              ...prev,
-              systemProfileSectionLocks: updatedLocks,
-              loading: false
-            };
-          }
-        });
-      }
-    } else {
-      // Unsubscribe from GraphQL Subscription when navigating away
-      // Invoking the reference to subscribeToMore will close the websocket connection
+    // Unsubscribe from GraphQL Subscription when navigating away
+    // Invoking the reference to subscribeToMore will close the websocket connection
+    if (!shouldFetchLocks) {
       if (subscribedRef.current) {
         subscribedRef.current();
         subscribedRef.current = null;
       }
-      // Reset state when not on edit system profile routes
-      setLockStatuses([]);
-      setLoading(true);
+      return;
+    }
+
+    // Fetch existing lock statuses on mount or when systemId changes
+    getSystemProfileLocks({ variables: { cedarSystemId: systemId } });
+
+    // Set up subscription if not already subscribed
+    if (!subscribedRef.current) {
+      subscribedRef.current = subscribeToMore({
+        document: OnSystemProfileLockStatusChangedDocument,
+        variables: {
+          cedarSystemId: systemId
+        },
+        updateQuery: (
+          prev,
+          {
+            subscriptionData: { data }
+          }: {
+            subscriptionData: {
+              data: OnSystemProfileLockStatusChangedSubscription;
+            };
+          }
+        ) => {
+          if (!data) return prev;
+
+          const { changeType, lockStatus } =
+            data.onSystemProfileSectionLockStatusChanged;
+
+          // Update lock statuses based on change type
+          const updatedLocks =
+            changeType === LockChangeType.REMOVED
+              ? removeLockedSection(prev.systemProfileSectionLocks, lockStatus)
+              : addLockedSection(prev.systemProfileSectionLocks, lockStatus);
+          return {
+            ...prev,
+            systemProfileSectionLocks: updatedLocks
+          };
+        }
+      });
     }
   }, [systemId, shouldFetchLocks, getSystemProfileLocks, subscribeToMore]);
 
@@ -213,12 +196,7 @@ const SystemSectionLockContextProvider = ({
   }, []);
 
   return (
-    <SystemSectionLockContext.Provider
-      value={{
-        systemProfileSectionLocks: lockStatuses,
-        loading
-      }}
-    >
+    <SystemSectionLockContext.Provider value={contextValue}>
       {children}
     </SystemSectionLockContext.Provider>
   );
