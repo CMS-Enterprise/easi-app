@@ -5,7 +5,7 @@
  */
 
 import React, { createContext, useContext, useEffect, useMemo } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import {
   LockChangeType,
   OnSystemProfileLockStatusChangedDocument,
@@ -96,13 +96,10 @@ const SystemSectionLockContextProvider = ({
   children
 }: SystemSectionLockContextProviderProps) => {
   const { systemId } = useParams<{ systemId: string }>();
-  const { pathname } = useLocation();
 
   // useLazyQuery hook to initialize query and create subscription
-  const [
-    getSystemProfileLocks,
-    { data: queryData, loading: queryLoading, subscribeToMore }
-  ] = useGetSystemProfileSectionLocksLazyQuery();
+  const [getSystemProfileLocks, { data, loading, subscribeToMore }] =
+    useGetSystemProfileSectionLocksLazyQuery();
 
   /**
    * Holds reference to subscribeToMore for closing websocket connection
@@ -113,77 +110,63 @@ const SystemSectionLockContextProvider = ({
     null
   );
 
-  /** Only subscribe when on edit system profile routes */
-  const shouldFetchLocks: boolean = useMemo(
-    () =>
-      systemId !== undefined && pathname.includes(`/systems/${systemId}/edit`),
-    [systemId, pathname]
-  );
-
   // Derive context value from query data
-  // When not on edit routes, return empty array and loading true
   const contextValue = useMemo<SystemSectionLockContextType>(() => {
-    if (!shouldFetchLocks) {
-      return {
-        systemProfileSectionLocks: [],
-        loading: true
-      };
-    }
     return {
-      systemProfileSectionLocks: queryData?.systemProfileSectionLocks ?? [],
-      loading: queryLoading ?? true
+      systemProfileSectionLocks: data?.systemProfileSectionLocks ?? [],
+      loading: loading ?? true
     };
-  }, [shouldFetchLocks, queryData?.systemProfileSectionLocks, queryLoading]);
+  }, [data?.systemProfileSectionLocks, loading]);
 
   useEffect(() => {
-    // Unsubscribe from GraphQL Subscription when navigating away
-    // Invoking the reference to subscribeToMore will close the websocket connection
-    if (!shouldFetchLocks) {
-      if (subscribedRef.current) {
-        subscribedRef.current();
-        subscribedRef.current = null;
-      }
+    // Only fetch and subscribe if systemId is available
+    if (!systemId) {
       return;
+    }
+
+    // Unsubscribe from previous subscription if systemId changed
+    if (subscribedRef.current) {
+      subscribedRef.current();
+      subscribedRef.current = null;
     }
 
     // Fetch existing lock statuses on mount or when systemId changes
     getSystemProfileLocks({ variables: { cedarSystemId: systemId } });
 
-    // Set up subscription if not already subscribed
-    if (!subscribedRef.current) {
-      subscribedRef.current = subscribeToMore({
-        document: OnSystemProfileLockStatusChangedDocument,
-        variables: {
-          cedarSystemId: systemId
-        },
-        updateQuery: (
-          prev,
-          {
-            subscriptionData: { data }
-          }: {
-            subscriptionData: {
-              data: OnSystemProfileLockStatusChangedSubscription;
-            };
-          }
-        ) => {
-          if (!data) return prev;
-
-          const { changeType, lockStatus } =
-            data.onSystemProfileSectionLockStatusChanged;
-
-          // Update lock statuses based on change type
-          const updatedLocks =
-            changeType === LockChangeType.REMOVED
-              ? removeLockedSection(prev.systemProfileSectionLocks, lockStatus)
-              : addLockedSection(prev.systemProfileSectionLocks, lockStatus);
-          return {
-            ...prev,
-            systemProfileSectionLocks: updatedLocks
+    // Set up subscription for the current systemId
+    subscribedRef.current = subscribeToMore({
+      document: OnSystemProfileLockStatusChangedDocument,
+      variables: {
+        cedarSystemId: systemId
+      },
+      updateQuery: (
+        prev,
+        {
+          subscriptionData: { data: subscriptionData }
+        }: {
+          subscriptionData: {
+            data: OnSystemProfileLockStatusChangedSubscription;
           };
         }
-      });
-    }
-  }, [systemId, shouldFetchLocks, getSystemProfileLocks, subscribeToMore]);
+      ) => {
+        if (!subscriptionData) return prev;
+
+        const { changeType, lockStatus } =
+          subscriptionData.onSystemProfileSectionLockStatusChanged;
+
+        // Update lock statuses based on change type
+        const updatedLocks =
+          changeType === LockChangeType.REMOVED
+            ? removeLockedSection(prev.systemProfileSectionLocks, lockStatus)
+            : addLockedSection(prev.systemProfileSectionLocks, lockStatus);
+
+        return {
+          ...prev,
+          systemProfileSectionLocks: updatedLocks
+        };
+      }
+    });
+  }, [systemId, getSystemProfileLocks, subscribeToMore]);
 
   // Cleanup subscription on unmount
   useEffect(() => {
