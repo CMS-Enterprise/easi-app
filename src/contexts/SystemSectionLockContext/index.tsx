@@ -83,7 +83,7 @@ const SystemSectionLockContextProvider = ({
   const { systemId } = useParams<{ systemId: string }>();
 
   // useLazyQuery hook to initialize query and create subscription
-  const [getSystemProfileLocks, { data, loading, subscribeToMore }] =
+  const [getSystemProfileLocks, { data, loading, subscribeToMore, called }] =
     useGetSystemProfileSectionLocksLazyQuery();
 
   /**
@@ -96,12 +96,14 @@ const SystemSectionLockContextProvider = ({
   );
 
   // Derive context value from query data
+
   const contextValue = useMemo<SystemSectionLockContextType>(() => {
     return {
       systemProfileSectionLocks: data?.systemProfileSectionLocks ?? [],
-      loading
+      // Show loading: true until the query has been executed
+      loading: loading || !called
     };
-  }, [data, loading]);
+  }, [data, loading, called]);
 
   useEffect(() => {
     // Only fetch and subscribe if systemId is available
