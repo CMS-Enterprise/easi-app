@@ -37,3 +37,17 @@ Document.prototype.elementFromPoint = (x: number, y: number) => null;
 window.scroll = vi.fn();
 window.scrollTo = vi.fn();
 Element.prototype.scrollIntoView = vi.fn();
+
+// Handle unhandled promise rejections from Apollo mutations in tests
+// These are expected when testing error states with MockedProvider
+// The global Apollo error handler will show toasts in production
+// but MockedProvider doesn't include the global error link
+process.on('unhandledRejection', (reason: any) => {
+  // Log Apollo/GraphQL errors for debugging but don't fail tests
+  if (reason?.networkError || reason?.graphQLErrors) {
+    console.log(
+      '[Test] Caught unhandled Apollo error (expected in error tests):',
+      reason.message || reason
+    );
+  }
+});

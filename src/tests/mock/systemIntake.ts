@@ -351,7 +351,9 @@ export const emptySystemIntake: SystemIntakeFragmentFragment = {
   systemIntakeSystems: [],
   itGovTaskStatuses: {
     __typename: 'ITGovTaskStatuses',
-    intakeFormStatus: ITGovIntakeFormStatus.READY
+    intakeFormStatus: ITGovIntakeFormStatus.READY,
+    bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.READY,
+    bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.READY
   }
 };
 
@@ -525,7 +527,9 @@ export const systemIntake: SystemIntakeFragmentFragment = {
   doesNotSupportSystems: null,
   itGovTaskStatuses: {
     __typename: 'ITGovTaskStatuses',
-    intakeFormStatus: ITGovIntakeFormStatus.READY
+    intakeFormStatus: ITGovIntakeFormStatus.READY,
+    bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.READY,
+    bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.READY
   }
 };
 
@@ -730,7 +734,15 @@ export const getGovernanceTaskListQuery = (
       __typename: 'Query',
       systemIntake: {
         ...taskListSystemIntake,
-        ...taskListData
+        ...taskListData,
+        __typename: 'SystemIntake',
+        requester: {
+          userAccount: {
+            __typename: 'UserAccount',
+            username: 'ABCD'
+          },
+          __typename: 'SystemIntakeContact'
+        }
       }
     }
   }

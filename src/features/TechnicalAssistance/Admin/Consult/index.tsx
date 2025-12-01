@@ -20,7 +20,7 @@ import { DateTime } from 'luxon';
 
 import PageLoading from 'components/PageLoading';
 import TextAreaField from 'components/TextAreaField';
-import useMessage from 'hooks/useMessage';
+import toastSuccess from 'components/ToastSuccess';
 import { TrbRecipientFields } from 'types/technicalAssistance';
 import { consultSchema } from 'validations/trbRequestSchema';
 
@@ -41,8 +41,6 @@ function Consult() {
     action: 'schedule-consult';
   }>();
   const history = useHistory();
-
-  const { showMessage, showMessageOnNextPage } = useMessage();
 
   const requestUrl = `/trb/${id}/request`;
 
@@ -111,31 +109,20 @@ function Consult() {
           notifyEuaIds: formData.notifyEuaIds
         }
       }
-    })
-      .then(result => {
-        showMessageOnNextPage(
-          t('actionScheduleConsult.success', {
-            date: formData.meetingDate,
-            time: DateTime.fromFormat(formData.meetingTime, 'HH:mm')
-              .toFormat('t')
-              .toLowerCase(),
-            interpolation: {
-              escapeValue: false
-            }
-          }),
-          {
-            type: 'success',
-            className: 'margin-top-3'
+    }).then(() => {
+      toastSuccess(
+        t('actionScheduleConsult.success', {
+          date: formData.meetingDate,
+          time: DateTime.fromFormat(formData.meetingTime, 'HH:mm')
+            .toFormat('t')
+            .toLowerCase(),
+          interpolation: {
+            escapeValue: false
           }
-        );
-        history.push(requestUrl);
-      })
-      .catch(err => {
-        showMessage(t('actionScheduleConsult.error'), {
-          type: 'error',
-          className: 'margin-top-3'
-        });
-      });
+        })
+      );
+      history.push(requestUrl);
+    });
   };
 
   if (loading || contextLoading) {

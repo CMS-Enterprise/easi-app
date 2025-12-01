@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import {
   Button,
@@ -36,6 +37,7 @@ import useMessage from 'hooks/useMessage';
 import { formatDateLocal } from 'utils/date';
 
 import Breadcrumbs from '../../../../components/Breadcrumbs';
+import { AppState } from '../../../../stores/reducers/rootReducer';
 
 function TaskList() {
   const { t } = useTranslation('technicalAssistance');
@@ -50,6 +52,10 @@ function TaskList() {
   const { id } = useParams<{
     id: string;
   }>();
+
+  const { euaId, isUserSet } = useSelector(
+    (appState: AppState) => appState.auth
+  );
 
   const { showMessageOnNextPage } = useMessage();
 
@@ -77,7 +83,10 @@ function TaskList() {
     });
   };
 
-  if (error) {
+  const isRequester =
+    isUserSet && euaId === data?.trbRequest.requesterInfo.euaUserId;
+
+  if (error || (data && !isRequester)) {
     return (
       <GridContainer className="width-full">
         <NotFoundPartial />

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
@@ -109,8 +109,6 @@ const RequestLinkForm = ({
     return t('additionalRequestInfo.taskListBreadCrumb');
   })();
 
-  const [hasUserError, setUserError] = useState<boolean>(false);
-
   const [isSkipModalOpen, setSkipModalOpen] = useState<boolean>(false);
   const [isUnlinkModalOpen, setUnlinkModalOpen] = useState<boolean>(false);
 
@@ -137,29 +135,25 @@ const RequestLinkForm = ({
         }));
   }, [data?.cedarSystems]);
 
-  const [setNewTRBSystem, { error: newTRBSystemError }] =
-    useSetTrbRequestRelationNewSystemMutation();
+  const [setNewTRBSystem] = useSetTrbRequestRelationNewSystemMutation();
 
-  const [setNewIntakeSystem, { error: newIntakeSystemError }] =
-    useSetSystemIntakeRelationNewSystemMutation();
+  const [setNewIntakeSystem] = useSetSystemIntakeRelationNewSystemMutation();
 
-  const [setExistingTRBSystem, { error: existingTRBSystemError }] =
+  const [setExistingTRBSystem] =
     useSetTrbRequestRelationExistingSystemMutation();
 
-  const [setExistingIntakeSystem, { error: existingIntakeSystemError }] =
+  const [setExistingIntakeSystem] =
     useSetSystemIntakeRelationExistingSystemMutation();
 
-  const [setExistingTRBService, { error: existingTRBServiceError }] =
+  const [setExistingTRBService] =
     useSetTrbRequestRelationExistingServiceMutation();
 
-  const [setExistingIntakeService, { error: existingIntakeServiceError }] =
+  const [setExistingIntakeService] =
     useSetSystemIntakeRelationExistingServiceMutation();
 
-  const [unlinkTRBRelation, { error: unlinkTRBRelationError }] =
-    useUnlinkTrbRequestRelationMutation();
+  const [unlinkTRBRelation] = useUnlinkTrbRequestRelationMutation();
 
-  const [unlinkIntakeRelation, { error: unlinkIntakeRelationError }] =
-    useUnlinkSystemIntakeRelationMutation();
+  const [unlinkIntakeRelation] = useUnlinkSystemIntakeRelationMutation();
 
   const { control, watch, setValue, handleSubmit } =
     useForm<RequestLinkFormFields>({
@@ -303,63 +297,33 @@ const RequestLinkForm = ({
           if (res?.data) history.push(redirectUrl);
         },
         () => {}
-      ).catch(() => {
-        setUserError(true);
-      });
+      );
     }
   });
 
   const unlink = () => {
     if (requestType === 'trb') {
-      unlinkTRBRelation({ variables: { trbRequestID: id } })
-        .then(
-          res => {
-            if (res?.data) history.push(redirectUrl);
-          },
-          () => {}
-        )
-        .catch(() => {
-          setUserError(true);
-        });
+      unlinkTRBRelation({ variables: { trbRequestID: id } }).then(
+        res => {
+          if (res?.data) history.push(redirectUrl);
+        },
+        () => {}
+      );
     } else {
       unlinkIntakeRelation({
         variables: { intakeID: id, doesNotSupportSystems: false }
-      })
-        .then(
-          res => {
-            if (res?.data) history.push(redirectUrl);
-          },
-          () => {}
-        )
-        .catch(() => {
-          setUserError(true);
-        });
+      }).then(
+        res => {
+          if (res?.data) history.push(redirectUrl);
+        },
+        () => {}
+      );
     }
   };
 
-  // Error feedback
-  const hasErrors =
-    relationError ||
-    newIntakeSystemError ||
-    newTRBSystemError ||
-    existingTRBServiceError ||
-    existingIntakeServiceError ||
-    unlinkTRBRelationError ||
-    unlinkIntakeRelationError ||
-    existingTRBSystemError ||
-    existingIntakeSystemError ||
-    hasUserError;
-
-  useEffect(() => {
-    if (hasErrors) {
-      const err = document.getElementById('link-form-error');
-      err?.scrollIntoView();
-    }
-  }, [hasErrors]);
-
   return (
     <MainContent className="grid-container margin-bottom-15">
-      {hasErrors && (
+      {relationError && (
         <Alert id="link-form-error" type="error" slim className="margin-top-2">
           {t('error:encounteredIssueTryAgain')}
         </Alert>

@@ -81,6 +81,12 @@ export default gql(/* GraphQL */ `
         presentationDeckFileStatus
         presentationDeckFileURL
       }
+
+      requester {
+        userAccount {
+          username
+        }
+      }
     }
   }
 `);

@@ -8,16 +8,12 @@ import {
   InMemoryCache,
   split
 } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { getMainDefinition } from '@apollo/client/utilities';
-import { createUploadLink } from 'apollo-upload-client';
 import axios from 'axios';
 import { detect } from 'detect-browser';
 import { createClient } from 'graphql-ws';
 import { TextEncoder } from 'text-encoding';
-
-import { localAuthStorageKey } from 'constants/localAuth';
 
 import '../config/i18n';
 
@@ -25,13 +21,12 @@ import * as serviceWorker from '../config/serviceWorker';
 import store from '../config/store';
 import UnsupportedBrowser from '../features/Miscellaneous/UnsupportedBrowser';
 
+import authLink, { getAuthHeader } from './Links/authLink';
+import errorLink from './Links/errorLink';
+import uploadLink from './Links/uploadLink';
 import AppComponent from './Routes';
 
 import './index.scss';
-
-const apiHost = new URL(
-  import.meta.env.VITE_API_ADDRESS || window.location.origin
-).host;
 
 // Initialize tracker for Google Analytics
 ReactGA.initialize([
@@ -43,33 +38,6 @@ ReactGA.initialize([
 ]);
 
 /**
- * Extract auth token from local storage and return a header
- */
-function getAuthHeader(targetUrl: string) {
-  const targetHost = new URL(targetUrl).host;
-  if (targetHost !== apiHost) {
-    return null;
-  }
-
-  // prefer dev auth if it exists
-  if (
-    window.localStorage[localAuthStorageKey] &&
-    JSON.parse(window.localStorage[localAuthStorageKey]).favorLocalAuth
-  ) {
-    return `Local ${window.localStorage[localAuthStorageKey]}`;
-  }
-
-  if (window.localStorage['okta-token-storage']) {
-    const json = JSON.parse(window.localStorage['okta-token-storage']);
-    if (json.accessToken) {
-      return `Bearer ${json.accessToken.accessToken}`;
-    }
-  }
-
-  return null;
-}
-
-/**
  * Setup client for GraphQL
  */
 
@@ -79,20 +47,6 @@ function getAuthHeader(targetUrl: string) {
 const graphqlAddress =
   import.meta.env.VITE_GRAPHQL_ADDRESS ||
   `${window.location.origin}/api/graph/query`;
-
-const uploadLink = createUploadLink({
-  uri: graphqlAddress
-});
-
-const authLink = setContext((request, { headers }) => {
-  const header = getAuthHeader(graphqlAddress);
-  return {
-    headers: {
-      ...headers,
-      authorization: header
-    }
-  };
-});
 
 // Set up WebSocket link for subscriptions
 // Extract protocol and address from graphqlAddress
@@ -112,6 +66,11 @@ const wsLink = new GraphQLWsLink(
   })
 );
 
+// HTTP link with error handling and auth/upload middleware
+// TODO: Update package - apollo-upload-client (requires nodejs upgrade - https://jiraent.cms.gov/browse/EASI-3505)
+// @ts-ignore
+const httpLink = errorLink.concat(authLink).concat(uploadLink);
+
 // The split function routes subscriptions to WebSocket and other operations to HTTP
 const splitLink = split(
   ({ query }) => {
@@ -122,7 +81,7 @@ const splitLink = split(
     );
   },
   wsLink,
-  authLink.concat(uploadLink)
+  httpLink
 );
 
 const client = new ApolloClient({

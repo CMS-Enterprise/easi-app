@@ -34,6 +34,8 @@ import GRBReview from '../GRBReview';
 import { ModalProvider } from '../GRBReview/RestartReviewModal/RestartReviewModalContext';
 import IntakeReview from '../IntakeReview';
 import Notes from '../Notes';
+import AddOrEditPointOfContact from '../PointOfContact/AddOrEdit';
+import RequestHome from '../RequestHome';
 import subNavItems from '../subNavItems';
 import Summary from '../Summary';
 import SystemInformation from '../SystemInformation';
@@ -74,7 +76,12 @@ const RequestOverview = () => {
 
   /** Full page layout hides summary and side navigation */
   const fullPageLayout: boolean =
-    ['resolutions', 'manage-lcid'].includes(activePage) || !!subPage;
+    [
+      'resolutions',
+      'manage-lcid',
+      'add-point-of-contact',
+      'edit-point-of-contact'
+    ].includes(activePage) || !!subPage;
 
   const navItems = subNavItems(systemId, isITGovAdmin, flags);
 
@@ -151,6 +158,31 @@ const RequestOverview = () => {
               className={classnames({ 'desktop:grid-col-9': !fullPageLayout })}
             >
               <Switch>
+                <Route
+                  path="/it-governance/:systemId/request-home"
+                  render={() => <RequestHome systemIntake={systemIntake} />}
+                />
+
+                <Route
+                  path="/it-governance/:systemId/add-point-of-contact"
+                  exact
+                >
+                  <AddOrEditPointOfContact
+                    systemIntake={systemIntake}
+                    type="add"
+                  />
+                </Route>
+
+                <Route
+                  path="/it-governance/:systemId/edit-point-of-contact"
+                  exact
+                >
+                  <AddOrEditPointOfContact
+                    systemIntake={systemIntake}
+                    type="edit"
+                  />
+                </Route>
+
                 <Route
                   path="/it-governance/:systemId/intake-request"
                   render={() => <IntakeReview systemIntake={systemIntake} />}

@@ -30,6 +30,7 @@ type SystemIntakeContactsTableProps = {
   /** If true, a loading spinner and text will render in place of results */
   loading?: boolean;
   className?: string;
+  pageSize?: number;
 };
 
 /**
@@ -42,7 +43,8 @@ const SystemIntakeContactsTable = ({
   handleEditContact,
   removeContact,
   loading,
-  className
+  className,
+  pageSize = 10
 }: SystemIntakeContactsTableProps) => {
   const { t } = useTranslation('intake');
 
@@ -58,11 +60,6 @@ const SystemIntakeContactsTable = ({
 
   const columns = useMemo<Column<SystemIntakeContactFragment>[]>(() => {
     return [
-      {
-        // createdAt column is hidden and only used for sorting purposes
-        accessor: 'createdAt',
-        id: 'createdAt'
-      },
       {
         Header: () => (
           <span className="display-block margin-left-4 padding-left-05">
@@ -198,22 +195,36 @@ const SystemIntakeContactsTable = ({
     ];
   }, [t, handleEditContact, removeContact]);
 
+  // Pre-sort the data to ensure isRequester contacts appear first
+  const sortedContacts = useMemo(() => {
+    if (!contacts) return [];
+
+    return [...contacts].sort((a, b) => {
+      // First sort by isRequester (true values first)
+      if (a.isRequester && !b.isRequester) return -1;
+      if (!a.isRequester && b.isRequester) return 1;
+
+      // Then sort by createdAt (oldest first)
+      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+    });
+  }, [contacts]);
+
   const table = useTable(
     {
       columns,
-      data: useMemo(() => contacts || [], [contacts]),
+      data: sortedContacts,
       autoResetSortBy: false,
       autoResetPage: true,
       initialState: {
         hiddenColumns: useMemo(
           () => [
-            'createdAt',
             // Hide actions column if `hasActionsColumn` is false
             ...(hasActionsColumn ? [] : ['actions'])
           ],
           [hasActionsColumn]
         ),
-        sortBy: useMemo(() => [{ id: 'createdAt', desc: false }], [])
+        pageIndex: 0,
+        pageSize
       }
     },
     useSortBy
@@ -331,49 +342,49 @@ const SystemIntakeContactsTable = ({
             )}
           </tbody>
         </Table>
+
+        {/* Remove contact modal */}
+        {removeContact && (
+          <Modal
+            isOpen={!!contactIdToRemove}
+            closeModal={() => setContactIdToRemove(null)}
+            className="font-body-md"
+          >
+            <ModalHeading>
+              {t('contactDetails.additionalContacts.removeModal.heading')}
+            </ModalHeading>
+            <p>
+              {t('contactDetails.additionalContacts.removeModal.description')}
+            </p>
+
+            <ModalFooter>
+              <ButtonGroup>
+                <Button
+                  type="button"
+                  className="margin-right-2 bg-error"
+                  onClick={() => {
+                    if (contactIdToRemove) {
+                      removeContact(contactIdToRemove);
+                    }
+
+                    setContactIdToRemove(null);
+                  }}
+                >
+                  {t('contactDetails.additionalContacts.removeModal.submit')}
+                </Button>
+
+                <Button
+                  type="button"
+                  onClick={() => setContactIdToRemove(null)}
+                  unstyled
+                >
+                  {t('general:cancel')}
+                </Button>
+              </ButtonGroup>
+            </ModalFooter>
+          </Modal>
+        )}
       </div>
-
-      {/* Remove contact modal */}
-      {removeContact && (
-        <Modal
-          isOpen={!!contactIdToRemove}
-          closeModal={() => setContactIdToRemove(null)}
-          className="font-body-md"
-        >
-          <ModalHeading>
-            {t('contactDetails.additionalContacts.removeModal.heading')}
-          </ModalHeading>
-          <p>
-            {t('contactDetails.additionalContacts.removeModal.description')}
-          </p>
-
-          <ModalFooter>
-            <ButtonGroup>
-              <Button
-                type="button"
-                className="margin-right-2 bg-error"
-                onClick={() => {
-                  if (contactIdToRemove) {
-                    removeContact(contactIdToRemove);
-                  }
-
-                  setContactIdToRemove(null);
-                }}
-              >
-                {t('contactDetails.additionalContacts.removeModal.submit')}
-              </Button>
-
-              <Button
-                type="button"
-                onClick={() => setContactIdToRemove(null)}
-                unstyled
-              >
-                {t('general:cancel')}
-              </Button>
-            </ButtonGroup>
-          </ModalFooter>
-        </Modal>
-      )}
     </>
   );
 };
