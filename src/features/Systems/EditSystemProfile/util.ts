@@ -60,21 +60,8 @@ export const getSystemProfileSectionMap = (
   return map;
 };
 
-/**
- * Maps a route segment to its corresponding SystemProfileLockableSection enum value.
- *
- * Only returns lockable sections (excludes CONTRACTS, FUNDING_AND_BUDGET, ATO_AND_SECURITY).
- */
-export const getLockableSectionFromRoute = (
-  route: string | null | undefined
-): SystemProfileLockableSection | null => {
-  if (!route) return null;
-
-  const section = systemProfileSections.find(s => s.route === route);
-
-  if (section && section.key in SystemProfileLockableSection) {
-    return section.key as SystemProfileLockableSection;
-  }
-
-  return null;
+export const systemProfileSectionIsLockable = (
+  section: SystemProfileSection | undefined
+): section is SystemProfileLockableSection => {
+  return !!section && section in SystemProfileLockableSection;
 };

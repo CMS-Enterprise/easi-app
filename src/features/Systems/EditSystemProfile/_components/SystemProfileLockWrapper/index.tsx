@@ -1,66 +1,19 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { Redirect, useHistory, useLocation, useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import {
-  SystemProfileLockableSection,
   useLockSystemProfileSectionMutation,
   useUnlockSystemProfileSectionMutation
 } from 'gql/generated/graphql';
 import { AppState } from 'stores/reducers/rootReducer';
 
 import { useSystemSectionLockContext } from 'contexts/SystemSectionLockContext';
-import { LockSectionType } from 'types/systemProfile';
+import { SystemProfileSection } from 'types/systemProfile';
 
-import { getLockableSectionFromRoute } from '../../util';
+import { systemProfileSectionIsLockable } from '../../util';
 
 type SystemProfileLockWrapperProps = {
   children: React.ReactNode;
-};
-
-export enum LockStatus {
-  LOCKED = 'LOCKED',
-  UNLOCKED = 'UNLOCKED',
-  OCCUPYING = 'OCCUPYING',
-  CANT_LOCK = 'CANT_LOCK'
-}
-
-/**
- * Determines the lock status of a section for the current user
- */
-const findLockStatus = (
-  locks: LockSectionType[],
-  section: SystemProfileLockableSection,
-  euaId?: string
-): LockStatus => {
-  const foundLock = locks.find(lock => lock.section === section);
-
-  // If no lock found, section is unlocked
-  if (!foundLock) {
-    return LockStatus.UNLOCKED;
-  }
-
-  // If locked by another user, section is locked
-  if (foundLock.lockedByUserAccount.username !== euaId) {
-    return LockStatus.LOCKED;
-  }
-
-  // User currently has the lock
-  return LockStatus.OCCUPYING;
-};
-
-/**
- * Extracts the route segment from the full pathname
- */
-const extractRouteSegment = (pathname: string): string | null => {
-  const parts = pathname.split('/');
-  const editIndex = parts.indexOf('edit');
-
-  // Should be: /systems/:systemId/edit/:section
-  if (editIndex !== -1 && parts[editIndex + 1]) {
-    return parts[editIndex + 1];
-  }
-
-  return null;
 };
 
 /**
@@ -73,7 +26,7 @@ const SystemProfileLockWrapper = ({
 }: SystemProfileLockWrapperProps) => {
   const { systemId, section } = useParams<{
     systemId: string;
-    section?: string;
+    section?: SystemProfileSection;
   }>();
   const { pathname } = useLocation();
   const history = useHistory();
@@ -89,45 +42,53 @@ const SystemProfileLockWrapper = ({
   const [unlockSection, { loading: unlockLoading }] =
     useUnlockSystemProfileSectionMutation();
 
+  const loading = useMemo(() => {
+    return lockLoading || unlockLoading || locksLoading;
+  }, [lockLoading, unlockLoading, locksLoading]);
+
   // Track previous pathname to detect navigation changes
-  const prevPathnameRef = useRef<string>(pathname);
+  const prevSectionRef = useRef<SystemProfileSection | undefined>(section);
 
-  const currentSection = getLockableSectionFromRoute(section);
+  const currentSectionIsLockable = systemProfileSectionIsLockable(section);
 
-  // Determine lock status
-  let lockState: LockStatus = LockStatus.CANT_LOCK;
+  const lockedRedirectPath = systemId
+    ? `/systems/${systemId}/edit/locked`
+    : undefined;
 
-  if (
-    currentSection &&
-    systemProfileSectionLocks &&
-    euaId &&
-    !lockLoading &&
-    !unlockLoading &&
-    !locksLoading
-  ) {
-    lockState = findLockStatus(
-      systemProfileSectionLocks,
-      currentSection,
-      euaId
+  /** Returns true if the current section is locked by another user */
+  const isLockedByAnotherUser = useMemo(() => {
+    if (!currentSectionIsLockable || loading) {
+      return false;
+    }
+
+    const sectionLock = systemProfileSectionLocks.find(
+      lock => lock.section === section
     );
-  }
+
+    return sectionLock?.lockedByUserAccount.username !== euaId;
+  }, [
+    section,
+    currentSectionIsLockable,
+    systemProfileSectionLocks,
+    euaId,
+    loading
+  ]);
 
   // Handle automatic locking/unlocking on navigation
   useEffect(() => {
-    const prevPathname = prevPathnameRef.current;
-    const prevRouteSegment = extractRouteSegment(prevPathname);
-    const prevSection = getLockableSectionFromRoute(prevRouteSegment);
+    const prevSection = prevSectionRef.current;
+    const prevSectionIsLockable = systemProfileSectionIsLockable(prevSection);
 
     // Only process if pathname actually changed
-    if (prevPathname === pathname) {
+    if (loading || prevSection === section) {
       return;
     }
 
     // Update previous pathname ref
-    prevPathnameRef.current = pathname;
+    prevSectionRef.current = section;
 
     // Unlock previous section if navigating away from a lockable section
-    if (prevSection) {
+    if (prevSectionIsLockable) {
       const prevLock = systemProfileSectionLocks.find(
         lock =>
           lock.section === prevSection &&
@@ -140,60 +101,62 @@ const SystemProfileLockWrapper = ({
             cedarSystemId: systemId,
             section: prevSection
           }
-        }).catch(() => {
-          // Error handling: navigation will be handled by error state if needed
+        }).catch(error => {
+          // Non-blocking: log and move on
+          // eslint-disable-next-line no-console
+          console.error('Error: Failed to unlock system profile section', {
+            error,
+            section: prevSection
+          });
         });
       }
     }
 
     // Lock current section if navigating to a lockable section
     if (
-      currentSection &&
-      lockState === LockStatus.UNLOCKED &&
-      systemId &&
-      !lockLoading &&
-      !unlockLoading &&
-      !locksLoading
+      currentSectionIsLockable &&
+      !isLockedByAnotherUser &&
+      lockedRedirectPath
     ) {
       lockSection({
         variables: {
-          cedarSystemId: systemId,
-          section: currentSection
+          cedarSystemId: systemId!,
+          section
         }
       }).catch(() => {
-        history.replace(`/systems/${systemId}/edit/locked`, {
+        history.replace(lockedRedirectPath, {
           section,
           error: true
         });
       });
     }
   }, [
-    pathname,
     section,
-    currentSection,
+    currentSectionIsLockable,
     systemProfileSectionLocks,
     euaId,
     systemId,
-    lockState,
+    isLockedByAnotherUser,
     lockSection,
     unlockSection,
-    lockLoading,
-    unlockLoading,
-    locksLoading,
-    history
+    history,
+    loading,
+    lockedRedirectPath
   ]);
 
   // Redirect if section is locked by another user
-  if (lockState === LockStatus.LOCKED && currentSection && systemId) {
-    return (
-      <Redirect
-        to={{
-          pathname: `/systems/${systemId}/edit/locked`,
-          state: { section: currentSection, error: false }
-        }}
-      />
-    );
-  }
+  useEffect(() => {
+    if (
+      isLockedByAnotherUser &&
+      lockedRedirectPath &&
+      pathname !== lockedRedirectPath
+    ) {
+      history.replace(lockedRedirectPath, {
+        section,
+        error: false
+      });
+    }
+  }, [isLockedByAnotherUser, section, lockedRedirectPath, pathname, history]);
 
   return <>{children}</>;
 };
