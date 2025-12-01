@@ -29,26 +29,23 @@ type SystemSectionLockContextProviderProps = {
  * @param locksToUpdate The current locks in the context
  * @param lockSection The lock to add
  */
-export const addLockedSection = (
+const addLockedSection = (
   locksToUpdate: LockSectionType[] = [],
   lockSection: LockSectionType
 ): LockSectionType[] => {
-  const updatedLocks: LockSectionType[] = [...locksToUpdate];
-
-  // Finds the lock index from the context array
-  const foundSectionIndex: number = locksToUpdate.findIndex(
-    (section: LockSectionType) => section.section === lockSection.section
+  const existingIndex = locksToUpdate.findIndex(
+    ({ section }) => section === lockSection.section
   );
 
-  // If the lock exists, replace the lock object
-  if (foundSectionIndex !== -1) {
-    updatedLocks[foundSectionIndex] = lockSection;
-    // Otherwise add the lock object to the context array
-  } else {
-    updatedLocks.push(lockSection);
+  if (existingIndex !== -1) {
+    // Replace existing lock
+    return locksToUpdate.map((section, index) =>
+      index === existingIndex ? lockSection : section
+    );
   }
 
-  return updatedLocks;
+  // Add new lock
+  return [...locksToUpdate, lockSection];
 };
 
 /**
@@ -56,23 +53,11 @@ export const addLockedSection = (
  * @param locksToUpdate The current locks in the context
  * @param lockSection The lock to remove
  */
-export const removeLockedSection = (
+const removeLockedSection = (
   locksToUpdate: LockSectionType[] = [],
   lockSection: LockSectionType
-): LockSectionType[] => {
-  const updatedLocks: LockSectionType[] = [...locksToUpdate];
-
-  // Finds and removes the locked object from the context array
-  const foundIndex = updatedLocks.findIndex(
-    (section: LockSectionType) => section.section === lockSection.section
-  );
-
-  if (foundIndex !== -1) {
-    updatedLocks.splice(foundIndex, 1);
-  }
-
-  return updatedLocks;
-};
+): LockSectionType[] =>
+  locksToUpdate.filter(({ section }) => section !== lockSection.section);
 
 /**
  * Create the subscription context - can be used anywhere in edit system profile
@@ -114,9 +99,9 @@ const SystemSectionLockContextProvider = ({
   const contextValue = useMemo<SystemSectionLockContextType>(() => {
     return {
       systemProfileSectionLocks: data?.systemProfileSectionLocks ?? [],
-      loading: loading ?? true
+      loading
     };
-  }, [data?.systemProfileSectionLocks, loading]);
+  }, [data, loading]);
 
   useEffect(() => {
     // Only fetch and subscribe if systemId is available
