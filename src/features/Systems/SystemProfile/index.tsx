@@ -273,8 +273,6 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
     }
   });
 
-  console.info(data);
-
   // Header description expand toggle
   const descriptionRef = React.createRef<HTMLElement>();
   const [isDescriptionExpandable, setIsDescriptionExpandable] =
