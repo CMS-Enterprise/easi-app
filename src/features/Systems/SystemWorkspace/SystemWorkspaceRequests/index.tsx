@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { Redirect, useParams } from 'react-router-dom';
 import {
   CellProps,
   Column,
@@ -29,6 +29,7 @@ import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import { SystemLinkedRequest } from 'types/systemLinkedRequest';
+import { convertToNewFormat, isOldFormat } from 'utils/cedarSystems';
 import { formatDateLocal, formatDateUtc } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import linkCedarSystemIdQueryString from 'utils/linkCedarSystemIdQueryString';
@@ -356,6 +357,20 @@ function LinkedRequestsTable({ systemId }: { systemId: string }) {
       )}
     </div>
   );
+}
+
+export function SystemWorkspaceRequestsWrapper() {
+  const { systemId } = useParams<{ systemId: string }>();
+
+  if (isOldFormat(systemId)) {
+    return (
+      <Redirect
+        to={`/systems/${convertToNewFormat(systemId)}/workspace/requests`}
+      />
+    );
+  }
+
+  return <SystemWorkspaceRequests />;
 }
 
 function SystemWorkspaceRequests() {

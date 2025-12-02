@@ -1,9 +1,10 @@
 import React from 'react';
-import { Route, Switch, useParams } from 'react-router-dom';
+import { Redirect, Route, Switch, useParams } from 'react-router-dom';
 import NotFound from 'features/Miscellaneous/NotFound';
 import { useGetCedarSystemQuery } from 'gql/generated/graphql';
 
 import PageLoading from 'components/PageLoading';
+import { convertToNewFormat, isOldFormat } from 'utils/cedarSystems';
 
 import AtoAndSecurity from './AtoAndSecurity';
 import BusinessInformation from './BusinessInformation';
@@ -15,6 +16,16 @@ import ImplementationDetails from './ImplementationDetails';
 import SubSystems from './SubSystems';
 import Team from './Team';
 import ToolsAndSoftware from './ToolsAndSoftware';
+
+export const EditSystemProfileWrapper = () => {
+  const { systemId } = useParams<{ systemId: string }>();
+
+  if (isOldFormat(systemId)) {
+    return <Redirect to={`/systems/${convertToNewFormat(systemId)}/edit`} />;
+  }
+
+  return <EditSystemProfile />;
+};
 
 /**
  * Index file with routes for editable system profile.

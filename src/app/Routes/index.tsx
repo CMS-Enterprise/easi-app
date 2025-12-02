@@ -37,11 +37,11 @@ import TermsAndConditions from 'features/Miscellaneous/TermsAndConditions';
 import UserInfo from 'features/Miscellaneous/User';
 import RequestLinkForm from 'features/RequestLinking/RequestLinkForm';
 import RequestTypeForm from 'features/RequestLinking/RequestTypeForm';
-import EditSystemProfile from 'features/Systems/EditSystemProfile';
+import { EditSystemProfileWrapper } from 'features/Systems/EditSystemProfile';
 import SystemList from 'features/Systems/Home';
-import SystemProfile from 'features/Systems/SystemProfile';
-import SystemWorkspace from 'features/Systems/SystemWorkspace';
-import SystemWorkspaceRequests from 'features/Systems/SystemWorkspace/SystemWorkspaceRequests';
+import { SystemProfileWrapper } from 'features/Systems/SystemProfile';
+import { SystemWorkspaceWrapper } from 'features/Systems/SystemWorkspace';
+import { SystemWorkspaceRequestsWrapper } from 'features/Systems/SystemWorkspace/SystemWorkspaceRequests';
 import TechnicalAssistance from 'features/TechnicalAssistance/Routes';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import AuthenticationWrapper from 'wrappers/AuthenticationWrapper';
@@ -173,13 +173,13 @@ const AppRoutes = () => {
             key="workspace"
             exact
             path="/systems/:systemId/workspace"
-            component={SystemWorkspace}
+            component={SystemWorkspaceWrapper}
           />,
           <SecureRoute
             key="workspace-requests"
             exact
             path="/systems/:systemId/workspace/requests"
-            component={SystemWorkspaceRequests}
+            component={SystemWorkspaceRequestsWrapper}
           />
         ]
       ) : (
@@ -189,15 +189,19 @@ const AppRoutes = () => {
           to="/systems/:systemId"
         />
       )}
-      <SecureRoute path="/systems/:systemId" exact component={SystemProfile} />
+      <SecureRoute
+        path="/systems/:systemId"
+        exact
+        component={SystemProfileWrapper}
+      />
       <SecureRoute
         path="/systems/:systemId/edit"
-        component={EditSystemProfile}
+        component={EditSystemProfileWrapper}
       />
       <SecureRoute
         path="/systems/:systemId/:subinfo/:edit(edit)?/:action(team-member)?/:top(top)?"
         exact
-        component={SystemProfile}
+        component={SystemProfileWrapper}
       />
       <Redirect
         exact
