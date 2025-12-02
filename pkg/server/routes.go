@@ -180,9 +180,6 @@ func (s *Server) routes() {
 	// set up GraphQL routes
 	gql := s.router.PathPrefix("/api/graph").Subrouter()
 
-	// Temp disabling requirePrincipalMiddleware to allow WebSocket connections to authenticate via InitFunc
-	// gql.Use(requirePrincipalMiddleware)
-
 	saveAction := services.NewSaveAction(
 		store.CreateAction,
 		userSearchClient.FetchUserInfo,
