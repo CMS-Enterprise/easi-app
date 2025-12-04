@@ -226,7 +226,7 @@ func (s *ResolverSuite) TestSetTRBRequestRelationExistingSystem() {
 			// Ensure the system IDs were modified properly
 			s.Equal(len(caseValues.NewSystemIDs), len(updatedTRBRequestSystemIDs))
 			for _, v := range updatedTRBRequestSystemIDs {
-				s.Contains(caseValues.NewSystemIDs, v.ID.String)
+				s.Contains(caseValues.NewSystemIDs, v.ID)
 			}
 
 			// Ensure the contract numbers were modified properly

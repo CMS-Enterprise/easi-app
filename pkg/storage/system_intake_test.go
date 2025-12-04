@@ -543,7 +543,8 @@ func (s *StoreTestSuite) TestUpdateSystemIntakeLinkedCedarSystem() {
 		updatedIntake, err := s.store.UpdateSystemIntakeLinkedCedarSystem(ctx, intake.ID, cedarSystemID)
 
 		s.NoError(err)
-		s.Equal(updatedIntake.CedarSystemID, cedarSystemID)
+		s.NotNil(updatedIntake.CedarSystemID)
+		s.Equal(*updatedIntake.CedarSystemID, cedarSystemID)
 	})
 
 	s.Run("update linked CEDAR system ID to null", func() {
