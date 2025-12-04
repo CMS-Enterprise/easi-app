@@ -45,7 +45,6 @@ import SystemWorkspaceRequests from 'features/Systems/SystemWorkspace/SystemWork
 import TechnicalAssistance from 'features/TechnicalAssistance/Routes';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import AuthenticationWrapper from 'wrappers/AuthenticationWrapper';
-import ErrorMessageProvider from 'wrappers/ErrorContext';
 import FlagsWrapper from 'wrappers/FlagsWrapper';
 import TableStateWrapper from 'wrappers/TableStateWrapper';
 import TimeOutWrapper from 'wrappers/TimeOutWrapper';
@@ -246,27 +245,25 @@ const App = () => {
       </button>
       <BrowserRouter>
         <AuthenticationWrapper>
-          <ErrorMessageProvider>
-            <MessageProvider>
-              <FlagsWrapper>
-                <UserInfoWrapper>
-                  <TimeOutWrapper>
-                    <TableStateWrapper>
-                      <PageWrapper>
-                        <GovBanner />
-                        <Header />
-                        <Navigation>
-                          <CedarAlertBanner />
-                          <AppRoutes />
-                        </Navigation>
-                        <Footer />
-                      </PageWrapper>
-                    </TableStateWrapper>
-                  </TimeOutWrapper>
-                </UserInfoWrapper>
-              </FlagsWrapper>
-            </MessageProvider>
-          </ErrorMessageProvider>
+          <MessageProvider>
+            <FlagsWrapper>
+              <UserInfoWrapper>
+                <TimeOutWrapper>
+                  <TableStateWrapper>
+                    <PageWrapper>
+                      <GovBanner />
+                      <Header />
+                      <Navigation>
+                        <CedarAlertBanner />
+                        <AppRoutes />
+                      </Navigation>
+                      <Footer />
+                    </PageWrapper>
+                  </TableStateWrapper>
+                </TimeOutWrapper>
+              </UserInfoWrapper>
+            </FlagsWrapper>
+          </MessageProvider>
         </AuthenticationWrapper>
       </BrowserRouter>
       <ToastContainer
