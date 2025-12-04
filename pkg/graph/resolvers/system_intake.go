@@ -115,16 +115,6 @@ func SystemIntakeUpdate(ctx context.Context, store *storage.Store, fetchCedarSys
 
 		intake.CedarSystemID = input.CedarSystemID
 	}
-	//
-	//cedarSystemID := null.StringFromPtr(input.CedarSystemID)
-	//cedarSystemIDStr := cedarSystemID.ValueOrZero()
-	//if input.CedarSystemID != nil && len(*input.CedarSystemID) > 0 {
-	//	_, err = fetchCedarSystem(ctx, cedarSystemIDStr)
-	//	if err != nil {
-	//		return nil, err
-	//	}
-	//	intake.CedarSystemID = null.StringFromPtr(input.CedarSystemID)
-	//}
 
 	savedIntake, err := store.UpdateSystemIntake(ctx, intake)
 	return &models.UpdateSystemIntakePayload{
