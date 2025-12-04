@@ -20,14 +20,14 @@ body:graphql {
       otherSystemRelationshipDescription
     }
   }
-  
+
 }
 
 body:graphql:vars {
   {
       "input":
       {
-          "systemID": "{11AB1A00-1234-5678-ABC1-1A001B0TDCTG}",
+          "systemID": "{7ab1e041-adde-433b-80e1-88183fd4a355}",
           "systemIntakeID": "{{systemIntakeID}}",
           "systemRelationshipType": ["OTHER"],
           "otherSystemRelationshipDescription": "important info"
@@ -37,12 +37,12 @@ body:graphql:vars {
 
 script:post-response {
   let responseData = res.getBody().data.addSystemLink
-  
+
   systemIntakeSystemId = responseData.id
-  
-  
+
+
   bru.setVar("systemIntakeSystemId", systemIntakeSystemId);
-  
+
 }
 
 settings {

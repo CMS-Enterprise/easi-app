@@ -686,7 +686,7 @@ func (r *mutationResolver) UpdateSystemIntakeLinkedCedarSystem(ctx context.Conte
 		}
 	}
 
-	intake, err := r.store.UpdateSystemIntakeLinkedCedarSystem(ctx, input.ID, *input.CedarSystemID)
+	intake, err := r.store.UpdateSystemIntakeLinkedCedarSystem(ctx, input.ID, input.CedarSystemID)
 
 	if err != nil {
 		return nil, err

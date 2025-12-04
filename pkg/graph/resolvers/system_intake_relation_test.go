@@ -538,7 +538,7 @@ func (s *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		_, err = SetSystemIntakeRelationNewSystem(ctx, store, input)
 		s.NoError(err) // we don't need to test the SetSystemIntakeRelationNewSystem function here
 		_, err = AddSystemLink(ctx, store, models.AddSystemLinkInput{
-			SystemID:                           uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B0TDCTG}"),
+			SystemID:                           uuid.MustParse("{7ab1e041-adde-433b-80e1-88183fd4a355}"),
 			SystemIntakeID:                     openIntake.ID,
 			SystemRelationshipType:             []models.SystemRelationshipType{models.SystemRelationshipTypePrimarySupport, models.SystemRelationshipTypeOther},
 			OtherSystemRelationshipDescription: helpers.PointerTo("Test description"),

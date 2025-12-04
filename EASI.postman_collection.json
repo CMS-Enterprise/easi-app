@@ -1574,7 +1574,7 @@
 									"mode": "graphql",
 									"graphql": {
 										"query": "mutation AddSystemLink($input: AddSystemLinkInput!) {\n  addSystemLink(input: $input) {\n    id\n    systemIntakeID\n    systemID\n    systemRelationshipType\n    otherSystemRelationshipDescription\n  }\n}\n",
-										"variables": "{\n    \"input\":\n    {\n        \"systemID\": \"{11AB1A00-1234-5678-ABC1-1A001B0TDCTG}\",\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\n        \"systemRelationshipType\": [\"OTHER\"],\n        \"otherSystemRelationshipDescription\": \"important info\"\n    }\n}"
+										"variables": "{\n    \"input\":\n    {\n        \"systemID\": \"{7ab1e041-adde-433b-80e1-88183fd4a355}\",\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\n        \"systemRelationshipType\": [\"OTHER\"],\n        \"otherSystemRelationshipDescription\": \"important info\"\n    }\n}"
 									}
 								},
 								"url": {

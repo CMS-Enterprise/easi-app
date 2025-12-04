@@ -19,9 +19,9 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 	ctx := context.Background()
 
 	var (
-		system1 = uuid.New()
-		system2 = uuid.New()
-		system3 = uuid.New()
+		system1 = uuid.MustParse("10000000-0000-4000-a000-000000000000")
+		system2 = uuid.MustParse("20000000-0000-4000-a000-000000000000")
+		system3 = uuid.MustParse("30000000-0000-4000-a000-000000000000")
 	)
 
 	var createdIDs []uuid.UUID
@@ -43,9 +43,9 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 		}
 
 		// insert systems for this created system intake
-		idOne := uuid.New()
-		idTwo := uuid.New()
-		idThree := uuid.New()
+		idOne := uuid.MustParse("10000000-0000-4000-a000-000000000000")
+		idTwo := uuid.MustParse("20000000-0000-4000-a000-000000000000")
+		idThree := uuid.MustParse("30000000-0000-4000-a000-000000000000")
 		idFour := uuid.New()
 		descriptionOne := "other text description"
 		linkedSystems := []*models.SystemRelationshipInput{
