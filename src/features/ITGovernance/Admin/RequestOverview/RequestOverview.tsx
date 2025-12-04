@@ -23,7 +23,7 @@ import { clearBusinessCase, fetchBusinessCase } from 'types/routines';
 import { formatDateUtc } from 'utils/date';
 
 import AccordionNavigation from '../../../../components/AccordionNavigation';
-import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
+import ITGovAdminContext from '../../../../contexts/ITGovAdminContext/ITGovAdminContext';
 import Actions from '../Actions';
 import BusinessCaseReview from '../BusinessCaseReview';
 import Dates from '../Dates';

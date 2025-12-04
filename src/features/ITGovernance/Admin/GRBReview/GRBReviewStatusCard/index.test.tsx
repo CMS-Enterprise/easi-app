@@ -12,8 +12,8 @@ import {
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
 import { systemIntake } from 'tests/mock/systemIntake';
-import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
+import ITGovAdminContext from 'contexts/ITGovAdminContext/ITGovAdminContext';
 import { MessageProvider } from 'hooks/useMessage';
 
 import { ModalProvider } from '../RestartReviewModal/RestartReviewModalContext';

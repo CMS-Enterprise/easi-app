@@ -8,7 +8,8 @@ import {
   SystemIntakeGRBReviewerVotingRole
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
-import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
+
+import ITGovAdminContext from 'contexts/ITGovAdminContext/ITGovAdminContext';
 
 import DecisionRecordCard from './index';
 

@@ -6,9 +6,9 @@ import RequestLinkForm from 'features/RequestLinking/RequestLinkForm';
 import { useGetSystemIntakeGRBReviewQuery } from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { AppState } from 'stores/reducers/rootReducer';
-import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import PageLoading from 'components/PageLoading';
+import ITGovAdminContext from 'contexts/ITGovAdminContext/ITGovAdminContext';
 import user from 'utils/user';
 
 import DecisionRecord from './GRBReview/DecisionRecord';

@@ -180,8 +180,6 @@ func (s *Server) routes() {
 	// set up GraphQL routes
 	gql := s.router.PathPrefix("/api/graph").Subrouter()
 
-	gql.Use(requirePrincipalMiddleware)
-
 	saveAction := services.NewSaveAction(
 		store.CreateAction,
 		userSearchClient.FetchUserInfo,

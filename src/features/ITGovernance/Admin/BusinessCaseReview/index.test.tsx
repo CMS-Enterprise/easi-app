@@ -11,7 +11,7 @@ import { businessCaseInitialData } from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
-import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
+import ITGovAdminContext from '../../../../contexts/ITGovAdminContext/ITGovAdminContext';
 
 import BusinessCaseReview from './index';
 

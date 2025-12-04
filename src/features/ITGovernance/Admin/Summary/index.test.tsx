@@ -13,7 +13,7 @@ import {
 import { DateTime } from 'luxon';
 import users from 'tests/mock/users';
 
-import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
+import ITGovAdminContext from '../../../../contexts/ITGovAdminContext/ITGovAdminContext';
 
 import Summary, { RequestSummaryProps } from '.';
 

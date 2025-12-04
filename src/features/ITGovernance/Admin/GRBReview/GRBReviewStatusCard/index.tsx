@@ -6,11 +6,11 @@ import {
   SystemIntakeGRBReviewFragment,
   SystemIntakeGRBReviewType
 } from 'gql/generated/graphql';
-import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import IconLink from 'components/IconLink';
 import UswdsReactLink from 'components/LinkWrapper';
 import Tag from 'components/Tag';
+import ITGovAdminContext from 'contexts/ITGovAdminContext/ITGovAdminContext';
 import { GRBReviewStatus } from 'types/grbReview';
 import { formatDateUtc, formatDaysHoursMinutes } from 'utils/date';
 

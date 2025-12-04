@@ -7,6 +7,7 @@ import {
   CedarAssigneeType,
   CedarRole,
   GetSystemProfileQuery,
+  GetSystemProfileSectionLocksQuery,
   SystemProfileLockableSection
 } from 'gql/generated/graphql';
 
@@ -214,3 +215,6 @@ export type SystemProfileSection =
   | 'CONTRACTS'
   | 'FUNDING_AND_BUDGET'
   | 'ATO_AND_SECURITY';
+
+export type LockSectionType =
+  GetSystemProfileSectionLocksQuery['systemProfileSectionLocks'][0];

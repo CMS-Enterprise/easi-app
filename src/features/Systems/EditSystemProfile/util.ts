@@ -1,3 +1,5 @@
+import { SystemProfileLockableSection } from 'gql/generated/graphql';
+
 import { systemProfileSections } from 'constants/systemProfile';
 import { Flags } from 'types/flags';
 import { SystemProfileSection } from 'types/systemProfile';
@@ -56,4 +58,10 @@ export const getSystemProfileSectionMap = (
   });
 
   return map;
+};
+
+export const systemProfileSectionIsLockable = (
+  section: SystemProfileSection | undefined
+): section is SystemProfileLockableSection => {
+  return !!section && section in SystemProfileLockableSection;
 };

@@ -21,8 +21,8 @@ import {
 import i18next from 'i18next';
 import { getSystemIntakeGRBReviewQuery, grbReview } from 'tests/mock/grbReview';
 import { getCedarContactsQuery, systemIntake } from 'tests/mock/systemIntake';
-import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
+import ITGovAdminContext from 'contexts/ITGovAdminContext/ITGovAdminContext';
 import { MessageProvider } from 'hooks/useMessage';
 import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';

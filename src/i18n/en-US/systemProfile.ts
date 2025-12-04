@@ -571,6 +571,13 @@ const systemProfile = {
     noExternalData: 'No external data',
     selfLocked: 'You are editing this section.',
     locked: 'is currently editing. Come back later.',
+    lockedHeading:
+      "Someone is currently editing the section you're trying to access.",
+    lockedSubheading: 'Please try again later.',
+    lockedBy: '{{name}} is currently editing this section.',
+    lockErrorHeading: 'Sorry, an error has occurred.',
+    lockErrorInfo: 'Please return to the system profile and try again.',
+    returnToSystemProfile: 'Return to system profile',
     form: {
       subheading:
         'Use this form to compile information about your system and it’s status in the CMS Target Life Cycle (TLC). This information will populate your TLC System Profile in EASi.',

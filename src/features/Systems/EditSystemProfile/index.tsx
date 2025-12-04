@@ -4,7 +4,10 @@ import NotFound from 'features/Miscellaneous/NotFound';
 import { useGetCedarSystemQuery } from 'gql/generated/graphql';
 
 import PageLoading from 'components/PageLoading';
+import SystemSectionLockContextProvider from 'contexts/SystemSectionLockContext';
 
+import LockedSystemProfileSection from './_components/LockedSystemProfileSection';
+import SystemProfileLockWrapper from './_components/SystemProfileLockWrapper';
 import AtoAndSecurity from './AtoAndSecurity';
 import BusinessInformation from './BusinessInformation';
 import Contracts from './Contracts';
@@ -37,49 +40,60 @@ const EditSystemProfile = () => {
   const { name: systemName = '' } = data.cedarSystem || {};
 
   return (
-    <Switch>
-      <Route exact path="/systems/:systemId/edit">
-        <EditSystemProfileHome systemId={systemId} systemName={systemName} />
-      </Route>
+    <SystemSectionLockContextProvider>
+      <SystemProfileLockWrapper>
+        <Switch>
+          <Route exact path="/systems/:systemId/edit">
+            <EditSystemProfileHome
+              systemId={systemId}
+              systemName={systemName}
+            />
+          </Route>
 
-      <Route path="/systems/:systemId/edit/business-information">
-        <BusinessInformation />
-      </Route>
+          <Route path="/systems/:systemId/edit/business-information">
+            <BusinessInformation />
+          </Route>
 
-      <Route path="/systems/:systemId/edit/implementation-details">
-        <ImplementationDetails />
-      </Route>
+          <Route path="/systems/:systemId/edit/implementation-details">
+            <ImplementationDetails />
+          </Route>
 
-      <Route path="/systems/:systemId/edit/data">
-        <Data />
-      </Route>
+          <Route path="/systems/:systemId/edit/data">
+            <Data />
+          </Route>
 
-      <Route path="/systems/:systemId/edit/tools-and-software">
-        <ToolsAndSoftware />
-      </Route>
+          <Route path="/systems/:systemId/edit/tools-and-software">
+            <ToolsAndSoftware />
+          </Route>
 
-      <Route path="/systems/:systemId/edit/sub-systems">
-        <SubSystems />
-      </Route>
+          <Route path="/systems/:systemId/edit/sub-systems">
+            <SubSystems />
+          </Route>
 
-      <Route path="/systems/:systemId/edit/team">
-        <Team />
-      </Route>
+          <Route path="/systems/:systemId/edit/team">
+            <Team />
+          </Route>
 
-      <Route path="/systems/:systemId/edit/contracts">
-        <Contracts />
-      </Route>
+          <Route path="/systems/:systemId/edit/contracts">
+            <Contracts />
+          </Route>
 
-      <Route path="/systems/:systemId/edit/funding-and-budget">
-        <FundingAndBudget />
-      </Route>
+          <Route path="/systems/:systemId/edit/funding-and-budget">
+            <FundingAndBudget />
+          </Route>
 
-      <Route path="/systems/:systemId/edit/ato-and-security">
-        <AtoAndSecurity />
-      </Route>
+          <Route path="/systems/:systemId/edit/ato-and-security">
+            <AtoAndSecurity />
+          </Route>
 
-      <Route path="*" component={NotFound} />
-    </Switch>
+          <Route path="/systems/:systemId/edit/locked">
+            <LockedSystemProfileSection />
+          </Route>
+
+          <Route path="*" component={NotFound} />
+        </Switch>
+      </SystemProfileLockWrapper>
+    </SystemSectionLockContextProvider>
   );
 };
 
