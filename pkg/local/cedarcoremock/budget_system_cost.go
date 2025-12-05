@@ -55,12 +55,12 @@ func GetBudgetSystemCost() *models.CedarBudgetSystemCost {
 			{
 				ActualSystemCost: zero.StringFrom(""),
 				FiscalYear:       zero.StringFrom("2016"),
-				SystemID:         helpers.PointerTo(uuid.New()),
+				SystemID:         nil,
 			},
 			{
 				ActualSystemCost: zero.StringFrom("1000"),
 				FiscalYear:       zero.StringFrom(""),
-				SystemID:         helpers.PointerTo(uuid.New()),
+				SystemID:         nil,
 			},
 		},
 	}

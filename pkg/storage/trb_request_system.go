@@ -71,12 +71,12 @@ func (s *Store) TRBRequestSystemsByTRBRequestIDs(ctx context.Context, trbRequest
 func (s *Store) TRBRequestsByCedarSystemIDs(ctx context.Context, requests []models.TRBRequestsByCedarSystemIDsRequest) ([]*models.TRBRequestsByCedarSystemIDsResponse, error) {
 	// build lists for multiple `where` clauses
 	var (
-		cedarSystemIDs = make([]string, len(requests))
+		cedarSystemIDs = make([]uuid.UUID, len(requests))
 		states         = make([]models.TRBRequestState, len(requests))
 	)
 
 	for i, req := range requests {
-		cedarSystemIDs[i] = req.CedarSystemID.String()
+		cedarSystemIDs[i] = req.CedarSystemID
 		states[i] = req.State
 	}
 
