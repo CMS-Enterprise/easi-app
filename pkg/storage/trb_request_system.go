@@ -21,13 +21,8 @@ func (s *Store) SetTRBRequestSystems(ctx context.Context, tx *sqlx.Tx, trbReques
 		return errors.New("unexpected nil trb request ID when linking trb request to system id")
 	}
 
-	var strArr []string
-	for _, sysID := range systemIDs {
-		strArr = append(strArr, sysID.String())
-	}
-
 	if _, err := tx.NamedExec(sqlqueries.TRBRequestSystemForm.Delete, map[string]interface{}{
-		"system_ids":     pq.StringArray(strArr),
+		"system_ids":     pq.Array(systemIDs),
 		"trb_request_id": trbRequestID,
 	}); err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to delete system ids linked to trb request", zap.Error(err))
