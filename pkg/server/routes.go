@@ -225,6 +225,7 @@ func (s *Server) routes() {
 	clientAddress := s.Config.GetString(appconfig.ClientAddressKey)
 	graphqlServer := newGQLServer(generated.NewExecutableSchema(gqlConfig), oktaMiddlewareFactory, store, clientAddress)
 	graphqlServer.Use(extension.FixedComplexityLimit(1000))
+	graphqlServer.AroundOperations(authorization.NewRequirePrincipalOperationMiddleware())
 	graphqlServer.AroundResponses(NewGQLResponseMiddleware())
 
 	getCedarSystems := func(ctx context.Context) ([]*models.CedarSystem, error) {
