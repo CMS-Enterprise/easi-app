@@ -7,10 +7,10 @@ import {
 } from 'gql/generated/graphql';
 import { AppState } from 'stores/reducers/rootReducer';
 
+import { SystemProfileSectionRoute } from 'constants/systemProfile';
 import { useSystemSectionLockContext } from 'contexts/SystemSectionLockContext';
-import { SystemProfileSection } from 'types/systemProfile';
 
-import { systemProfileSectionIsLockable } from '../../util';
+import { getLockableSectionFromRoute } from '../../util';
 
 type SystemProfileLockWrapperProps = {
   children: React.ReactNode;
@@ -26,8 +26,9 @@ const SystemProfileLockWrapper = ({
 }: SystemProfileLockWrapperProps) => {
   const { systemId, section } = useParams<{
     systemId: string;
-    section?: SystemProfileSection;
+    section?: SystemProfileSectionRoute;
   }>();
+
   const { pathname } = useLocation();
   const history = useHistory();
 
@@ -46,10 +47,10 @@ const SystemProfileLockWrapper = ({
     return lockLoading || unlockLoading || locksLoading;
   }, [lockLoading, unlockLoading, locksLoading]);
 
-  // Track previous pathname to detect navigation changes
-  const prevSectionRef = useRef<SystemProfileSection | undefined>(section);
+  const currentLockableSection = getLockableSectionFromRoute(section);
 
-  const currentSectionIsLockable = systemProfileSectionIsLockable(section);
+  /** Track previous pathname to detect navigation changes */
+  const prevSectionRef = useRef<SystemProfileSectionRoute | undefined>(section);
 
   const lockedRedirectPath = systemId
     ? `/systems/${systemId}/edit/locked`
@@ -57,41 +58,36 @@ const SystemProfileLockWrapper = ({
 
   /** Returns true if the current section is locked by another user */
   const isLockedByAnotherUser = useMemo(() => {
-    if (!currentSectionIsLockable || loading) {
+    if (!currentLockableSection || loading) {
       return false;
     }
 
     const sectionLock = systemProfileSectionLocks.find(
-      lock => lock.section === section
+      lock => lock.section === currentLockableSection
     );
 
-    return sectionLock?.lockedByUserAccount.username !== euaId;
-  }, [
-    section,
-    currentSectionIsLockable,
-    systemProfileSectionLocks,
-    euaId,
-    loading
-  ]);
+    return sectionLock && sectionLock.lockedByUserAccount.username !== euaId;
+  }, [currentLockableSection, systemProfileSectionLocks, euaId, loading]);
 
   // Handle automatic locking/unlocking on navigation
   useEffect(() => {
     const prevSection = prevSectionRef.current;
-    const prevSectionIsLockable = systemProfileSectionIsLockable(prevSection);
 
     // Only process if pathname actually changed
     if (loading || prevSection === section) {
       return;
     }
 
+    const prevLockableSection = getLockableSectionFromRoute(prevSection);
+
     // Update previous pathname ref
     prevSectionRef.current = section;
 
     // Unlock previous section if navigating away from a lockable section
-    if (prevSectionIsLockable) {
+    if (prevLockableSection) {
       const prevLock = systemProfileSectionLocks.find(
         lock =>
-          lock.section === prevSection &&
+          lock.section === prevLockableSection &&
           lock.lockedByUserAccount.username === euaId
       );
 
@@ -99,14 +95,14 @@ const SystemProfileLockWrapper = ({
         unlockSection({
           variables: {
             cedarSystemId: systemId,
-            section: prevSection
+            section: prevLockableSection
           }
         }).catch(error => {
           // Non-blocking: log and move on
           // eslint-disable-next-line no-console
           console.error('Error: Failed to unlock system profile section', {
             error,
-            section: prevSection
+            section: prevLockableSection
           });
         });
       }
@@ -114,25 +110,25 @@ const SystemProfileLockWrapper = ({
 
     // Lock current section if navigating to a lockable section
     if (
-      currentSectionIsLockable &&
+      currentLockableSection &&
       !isLockedByAnotherUser &&
       lockedRedirectPath
     ) {
       lockSection({
         variables: {
           cedarSystemId: systemId!,
-          section
+          section: currentLockableSection
         }
       }).catch(() => {
         history.replace(lockedRedirectPath, {
-          section,
+          section: currentLockableSection,
           error: true
         });
       });
     }
   }, [
     section,
-    currentSectionIsLockable,
+    currentLockableSection,
     systemProfileSectionLocks,
     euaId,
     systemId,
@@ -148,15 +144,22 @@ const SystemProfileLockWrapper = ({
   useEffect(() => {
     if (
       isLockedByAnotherUser &&
+      currentLockableSection &&
       lockedRedirectPath &&
       pathname !== lockedRedirectPath
     ) {
       history.replace(lockedRedirectPath, {
-        section,
+        section: currentLockableSection,
         error: false
       });
     }
-  }, [isLockedByAnotherUser, section, lockedRedirectPath, pathname, history]);
+  }, [
+    isLockedByAnotherUser,
+    currentLockableSection,
+    lockedRedirectPath,
+    pathname,
+    history
+  ]);
 
   return <>{children}</>;
 };

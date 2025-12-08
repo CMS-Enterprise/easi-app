@@ -1,6 +1,9 @@
 import { SystemProfileLockableSection } from 'gql/generated/graphql';
 
-import { systemProfileSections } from 'constants/systemProfile';
+import {
+  SystemProfileSectionRoute,
+  systemProfileSections
+} from 'constants/systemProfile';
 import { Flags } from 'types/flags';
 import { SystemProfileSection } from 'types/systemProfile';
 
@@ -60,8 +63,28 @@ export const getSystemProfileSectionMap = (
   return map;
 };
 
-export const systemProfileSectionIsLockable = (
-  section: SystemProfileSection | undefined
-): section is SystemProfileLockableSection => {
-  return !!section && section in SystemProfileLockableSection;
+/** Lookup map from route strings to SystemProfileLockableSection enum values. */
+const routeToEnumMap = new Map<
+  SystemProfileSectionRoute,
+  SystemProfileLockableSection
+>(
+  systemProfileSections
+    .filter(section => section.key in SystemProfileLockableSection)
+    .map(section => [
+      section.route,
+      section.key as SystemProfileLockableSection
+    ])
+);
+
+/**
+ * Returns the SystemProfileLockableSection enum value from a route string.
+ *
+ * If the route is not a valid lockable section route, returns null.
+ */
+export const getLockableSectionFromRoute = (
+  route: SystemProfileSectionRoute | undefined
+): SystemProfileLockableSection | null => {
+  if (!route) return null;
+
+  return routeToEnumMap.get(route) ?? null;
 };
