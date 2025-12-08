@@ -267,20 +267,20 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
               </p>
               <p className="margin-y-0 text-base">
                 {t('singleSystem.fundingAndBudget.fiscalYear')}:{' '}
-                {system.budgetSystemCosts?.budgetActualCost[0].fiscalYear}
+                {system.budgetSystemCosts?.budgetActualCost?.[0]?.fiscalYear}
               </p>
             </CardHeader>
             <CardBody className="padding-2 padding-top-0">
               <Grid row>
                 <Grid desktop={{ col: 12 }} className="padding-0">
                   <h3 className="link-header margin-top-0 margin-bottom-2">
-                    {system.budgetSystemCosts?.budgetActualCost[0]
-                      .actualSystemCost
+                    {system.budgetSystemCosts?.budgetActualCost?.[0]
+                      ?.actualSystemCost
                       ? formatDollars(
                           Math.trunc(
                             Number(
-                              system.budgetSystemCosts?.budgetActualCost[0]
-                                .actualSystemCost
+                              system.budgetSystemCosts?.budgetActualCost?.[0]
+                                ?.actualSystemCost
                             )
                           )
                         )
