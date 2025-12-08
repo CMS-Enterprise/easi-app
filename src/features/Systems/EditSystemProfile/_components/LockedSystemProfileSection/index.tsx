@@ -19,9 +19,8 @@ type LockedSectionLocationState = {
 const LockedSystemProfileSection = () => {
   const { t } = useTranslation('systemProfile');
   const { systemId } = useParams<{ systemId: string }>();
-  const {
-    state: { section, error }
-  } = useLocation<LockedSectionLocationState>();
+  const { state = {} } = useLocation<LockedSectionLocationState>();
+  const { section, error } = state;
 
   const { systemProfileSectionLocks } = useSystemSectionLockContext();
 
