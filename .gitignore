@@ -51,3 +51,4 @@ devlocal-https.*
 
 # local data outputs
 cmd/populate_user_table/output
+cmd/pull_all_intakes/output
