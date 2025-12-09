@@ -4,6 +4,9 @@ services:
     command: ['postgres', '-c', 'log_statement=all', '-c', 'max_connections=25']
     environment:
       - POSTGRES_PASSWORD=mysecretpassword
+    labels:
+      - "dev.dozzle.name=EASI DB"
+      - "dev.dozzle.group=EASI"
   db_migrate:
     image: easi-db-migrate:latest
     environment:
@@ -13,6 +16,9 @@ services:
       - FLYWAY_PLACEHOLDERS_APP_USER_PASSWORD=supersecretapp # Keep this around for legacy migration V88__Add_app_user.sql
     depends_on:
       - db
+    labels:
+      - "dev.dozzle.name=Flyway"
+      - "dev.dozzle.group=EASI"
   easi:
     environment:
       - CEDAR_CORE_MOCK
@@ -76,6 +82,9 @@ services:
     depends_on:
       db_migrate:
         condition: service_completed_successfully # Only start if migrations completed successfully
+    labels:
+      - "dev.dozzle.name=Backend"
+      - "dev.dozzle.group=EASI"
   cedarproxy:
     image: cedarproxy:latest
     environment:
@@ -84,14 +93,23 @@ services:
     build:
       dockerfile: Dockerfile.cedarproxy
       context: ./cedarproxy/
+    labels:
+      - "dev.dozzle.name=CEDAR Proxy"
+      - "dev.dozzle.group=EASI"
   easi_client:
     image: easi_client:latest
+    labels:
+      - "dev.dozzle.name=Frontend"
+      - "dev.dozzle.group=EASI"
   minio:
     restart: always
     image: minio/minio:latest
     entrypoint: minio server --address :9004 /data
     ports:
     - '9004:9004'
+    labels:
+      - "dev.dozzle.name=MinIO"
+      - "dev.dozzle.group=EASI"
   minio_mc:
     image: minio/mc:latest
     depends_on:
@@ -104,5 +122,29 @@ services:
       /usr/bin/mc mb --quiet local/easi-app-file-uploads/;
       /usr/bin/mc policy set public local/easi-app-file-uploads;
       "
+    labels:
+      - "dev.dozzle.name=MinIO Client Setup"
+      - "dev.dozzle.group=EASI"
   email:
     image: dockage/mailcatcher:0.8.2
+    labels:
+      - "dev.dozzle.name=MailCatcher"
+      - "dev.dozzle.group=EASI"
+
+      # Dozzle - Live log viewer with grouped containers
+  dozzle:
+    image: amir20/dozzle:latest
+    restart: unless-stopped
+    ports:
+      - "8895:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      DOZZLE_LEVEL: info
+      DOZZLE_NO_ANALYTICS: TRUE #Don't send analytics
+      # Remove the filter to show all containers initially - you can filter in the UI
+      DOZZLE_FILTER: "label=dev.dozzle.name"
+      DOZZLE_ENABLE_ACTIONS: true
+    labels:
+      - "dev.dozzle.name=Dozzle"
+      - "dev.dozzle.group=EASI"
