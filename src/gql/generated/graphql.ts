@@ -824,13 +824,13 @@ export type GRBVotingInformation = {
 
 /** All possible permutations of the status of a GRB ASYNC voting session */
 export enum GRBVotingInformationStatus {
-  /** End date has passed, quorum of votes has been met (5 votes), vote count for approval met (0 votes with objections). */
+  /** End date has passed, quorum of votes has been met (1 vote), vote count for approval met (0 votes with objections). */
   APPROVED = 'APPROVED',
-  /** End date has passed, quorum of votes has been met (5 votes), vote count is mostly no objections but has one objection vote OR voting has been ended early and a quorum has not been met. */
+  /** End date has passed, quorum of votes has been met (1 vote), vote count is mostly no objections but has one objection vote OR voting has been ended early and a quorum has not been met. */
   INCONCLUSIVE = 'INCONCLUSIVE',
   /** Setup button has been pressed. This shows for the In progress and Past due statuses */
   IN_PROGRESS = 'IN_PROGRESS',
-  /** End date has passed, quorum of votes has been met (5 votes), vote count has two or more objections. */
+  /** End date has passed, quorum of votes has been met (1 vote), vote count has two or more objections. */
   NOT_APPROVED = 'NOT_APPROVED',
   /** This status is not rendered to the front end, but it is to show a state where the GRB async voting button has not yet been pressed */
   NOT_STARTED = 'NOT_STARTED'
