@@ -239,6 +239,8 @@ type SystemProfileProps = {
 
 export const SystemProfileWrapper = ({ id, modal }: SystemProfileProps) => {
   const params = useParams<{ systemId: string }>();
+  const location = useLocation();
+  console.info(location);
 
   const systemId = id || params.systemId;
 
