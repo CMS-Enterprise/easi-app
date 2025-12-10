@@ -167,10 +167,11 @@ const AppRoutes = () => {
         component={SystemIntake}
       />
       <SecureRoute exact path="/systems" component={SystemList} />
-      <Route
-        path="/systems/:legacyId((.*?\{.*?\}.*))/*"
-        component={SystemIDWrapper}
-      />
+
+      {/* keep these routes at the top of the `/systems/*` routes for redirect purposes */}
+      <Route path="/systems/:legacyId" component={SystemIDWrapper} />
+      <Route path="/systems/:legacyId/*" component={SystemIDWrapper} />
+
       {flags.systemWorkspace ? (
         [
           <SecureRoute

@@ -5,6 +5,16 @@ export default function SystemIDWrapper() {
   const { pathname, search, hash } = useLocation();
   const { legacyId } = useParams<{ legacyId: string }>();
 
+  const isLegacyId =
+    legacyId.includes('{') ||
+    legacyId.includes('}') ||
+    legacyId.includes('%7B') ||
+    legacyId.includes('%7D');
+
+  if (!isLegacyId) {
+    return <Redirect to={`${pathname}${search}${hash}`} />;
+  }
+
   const decoded = decodeURIComponent(legacyId);
 
   const newFormatId = decoded.replace(/[{}]/g, '');
