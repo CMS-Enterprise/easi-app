@@ -32,7 +32,7 @@ export const threatLevelGrades = [
 
 export const securityFindingKeys = ['total', ...threatLevelGrades] as const;
 
-type SectionData = {
+type SystemProfileSectionData = {
   key: SystemProfileSection;
   route: string;
   legacyRoute: string;
@@ -45,7 +45,7 @@ type SectionData = {
  * `legacyRoute` is the route for the legacy system profile page to be used if feature flags are off.
  */
 // TODO EASI-4984 - remove `legacyRoute` once editable system profile feature is fully enabled
-export const systemProfileSections: Array<SectionData> = [
+export const systemProfileSections = [
   {
     key: SystemProfileLockableSection.BUSINESS_INFORMATION,
     route: 'business-information',
@@ -100,4 +100,7 @@ export const systemProfileSections: Array<SectionData> = [
     legacyRoute: 'ato-and-security',
     featureFlag: 'systemProfileAtoAndSecurity'
   }
-];
+] as const satisfies readonly SystemProfileSectionData[];
+
+export type SystemProfileSectionRoute =
+  (typeof systemProfileSections)[number]['route'];

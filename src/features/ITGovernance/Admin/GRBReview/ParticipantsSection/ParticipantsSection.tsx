@@ -11,7 +11,7 @@ import {
 
 import UswdsReactLink from 'components/LinkWrapper';
 
-import ITGovAdminContext from '../../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
+import ITGovAdminContext from '../../../../../contexts/ITGovAdminContext/ITGovAdminContext';
 import { useRestartReviewModal } from '../RestartReviewModal/RestartReviewModalContext';
 
 import ParticipantsTable from './_components/ParticipantsTable';

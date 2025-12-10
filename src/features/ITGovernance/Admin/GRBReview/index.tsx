@@ -23,7 +23,7 @@ import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import { BusinessCaseModel } from 'types/businessCase';
 
-import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
+import ITGovAdminContext from '../../../../contexts/ITGovAdminContext/ITGovAdminContext';
 
 import GRBFeedbackCard from './GRBFeedbackCard/GRBFeedbackCard';
 import ParticipantsSection from './ParticipantsSection/ParticipantsSection';
