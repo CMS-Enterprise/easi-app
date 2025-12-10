@@ -20,7 +20,6 @@ import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import TLCTag from 'components/TLCTag';
 import { RoleTypeName } from 'types/systemProfile';
-import { convertToNewFormat, isOldFormat } from 'utils/cedarSystems';
 import linkCedarSystemIdQueryString from 'utils/linkCedarSystemIdQueryString';
 
 import AtoCard from './components/AtoCard';
@@ -28,18 +27,6 @@ import HelpLinks from './components/HelpLinks';
 import RequestsCard from './components/RequestsCard';
 import SpacesCard from './components/SpacesCard';
 import TeamCard from './components/TeamCard';
-
-export const SystemWorkspaceWrapper = () => {
-  const { systemId } = useParams<{ systemId: string }>();
-
-  if (isOldFormat(systemId)) {
-    return (
-      <Redirect to={`/systems/${convertToNewFormat(systemId)}/workspace`} />
-    );
-  }
-
-  return <SystemWorkspace />;
-};
 
 export const SystemWorkspace = () => {
   const flags = useFlags();

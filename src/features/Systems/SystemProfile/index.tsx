@@ -3,7 +3,6 @@ import { Trans, useTranslation } from 'react-i18next';
 import {
   Link as RouterLink,
   NavLink,
-  Redirect,
   useLocation,
   useParams
 } from 'react-router-dom';
@@ -58,7 +57,6 @@ import {
   UrlLocation,
   UrlLocationTag
 } from 'types/systemProfile';
-import { convertToNewFormat, isOldFormat } from 'utils/cedarSystems';
 import { formatHttpsUrl } from 'utils/formatUrl';
 import getUsernamesWithRoles from 'utils/getUsernamesWithRoles';
 import { showSystemVal } from 'utils/showVal';
@@ -235,20 +233,6 @@ export function getSystemProfileData(
 type SystemProfileProps = {
   id?: string;
   modal?: boolean;
-};
-
-export const SystemProfileWrapper = ({ id, modal }: SystemProfileProps) => {
-  const params = useParams<{ systemId: string }>();
-  const location = useLocation();
-  console.info(location);
-
-  const systemId = id || params.systemId;
-
-  if (isOldFormat(systemId)) {
-    return <Redirect to={`/systems/${convertToNewFormat(systemId)}`} />;
-  }
-
-  return <SystemProfile id={id} modal={modal} />;
 };
 
 const SystemProfile = ({ id, modal }: SystemProfileProps) => {
