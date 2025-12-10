@@ -8,9 +8,9 @@ import {
   SystemIntakeGRBReviewFragment
 } from 'gql/generated/graphql';
 import i18next from 'i18next';
-import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import UswdsReactLink from 'components/LinkWrapper';
+import ITGovAdminContext from 'contexts/ITGovAdminContext/ITGovAdminContext';
 
 import './index.scss';
 

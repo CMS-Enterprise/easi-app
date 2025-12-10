@@ -31,7 +31,7 @@ import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
-import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
+import ITGovAdminContext from '../../../../contexts/ITGovAdminContext/ITGovAdminContext';
 
 import { ModalProvider } from './RestartReviewModal/RestartReviewModalContext';
 import GRBReview from '.';

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 import {
@@ -9,11 +9,11 @@ import {
   Icon
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import { SystemProfileSectionLockStatus } from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import PercentCompleteTag from 'components/PercentCompleteTag';
 import SectionLock from 'components/SectionLock';
+import { useSystemSectionLockContext } from 'contexts/SystemSectionLockContext';
 import { SystemProfileSection } from 'types/systemProfile';
 
 import { getSystemProfileSectionMap } from '../../util';
@@ -51,12 +51,12 @@ const SystemProfileSectionCard = ({
   const sectionMap = getSystemProfileSectionMap(flags);
   const { route } = sectionMap[section];
 
-  // TODO EASI-4984: Update to use actual section lock context
-  const lockableSectionLocks = [] as SystemProfileSectionLockStatus[];
+  const { systemProfileSectionLocks } = useSystemSectionLockContext();
 
-  /** Returns lock status if section is locked */
-  const sectionLock: SystemProfileSectionLockStatus | undefined =
-    lockableSectionLocks?.find(lock => lock.section === section);
+  const sectionLock = useMemo(
+    () => systemProfileSectionLocks.find(lock => lock.section === section),
+    [systemProfileSectionLocks, section]
+  );
 
   return (
     <Card
