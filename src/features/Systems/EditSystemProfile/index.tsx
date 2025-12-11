@@ -6,6 +6,8 @@ import { useGetCedarSystemQuery } from 'gql/generated/graphql';
 import PageLoading from 'components/PageLoading';
 import SystemSectionLockContextProvider from 'contexts/SystemSectionLockContext';
 
+import SystemIDWrapper from '../Wrapper/SystemIDWrapper';
+
 import LockedSystemProfileSection from './_components/LockedSystemProfileSection';
 import SystemProfileLockWrapper from './_components/SystemProfileLockWrapper';
 import AtoAndSecurity from './AtoAndSecurity';
@@ -43,6 +45,10 @@ const EditSystemProfile = () => {
     <SystemSectionLockContextProvider>
       <SystemProfileLockWrapper>
         <Switch>
+          {/* keep these routes at the top of the `/systems/*` routes for redirect purposes */}
+          <Route path="/systems/:legacyId" component={SystemIDWrapper} />
+          <Route path="/systems/:legacyId/*" component={SystemIDWrapper} />
+
           <Route exact path="/systems/:systemId/edit">
             <EditSystemProfileHome
               systemId={systemId}
