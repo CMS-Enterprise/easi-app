@@ -11,7 +11,7 @@ post {
 }
 
 body:graphql {
-  query GetExchanges($cedarSystemId: String!) {
+  query GetExchanges($cedarSystemId: UUID!) {
       exchanges(cedarSystemId: $cedarSystemId) {
       connectionFrequency
       containsBankingData

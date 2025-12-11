@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export default gql(/* GraphQL */ `
-  subscription OnSystemProfileLockStatusChanged($cedarSystemId: String!) {
+  subscription OnSystemProfileLockStatusChanged($cedarSystemId: UUID!) {
     onSystemProfileSectionLockStatusChanged(cedarSystemId: $cedarSystemId) {
       changeType
       lockStatus {

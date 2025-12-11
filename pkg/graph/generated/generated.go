@@ -619,7 +619,7 @@ type ComplexityRoot struct {
 		DeleteTRBRequestFundingSources                      func(childComplexity int, input models.DeleteTRBRequestFundingSourcesInput) int
 		DeleteTrbLeadOption                                 func(childComplexity int, eua string) int
 		ExtendGRBReviewDeadlineAsync                        func(childComplexity int, input models.ExtendGRBReviewDeadlineInput) int
-		LockSystemProfileSection                            func(childComplexity int, cedarSystemID string, section models.SystemProfileLockableSection) int
+		LockSystemProfileSection                            func(childComplexity int, cedarSystemID uuid.UUID, section models.SystemProfileLockableSection) int
 		ManuallyEndSystemIntakeGRBReviewAsyncVoting         func(childComplexity int, systemIntakeID uuid.UUID) int
 		ReopenTrbRequest                                    func(childComplexity int, input models.ReopenTRBRequestInput) int
 		RequestReviewForTRBGuidanceLetter                   func(childComplexity int, id uuid.UUID) int
@@ -643,8 +643,8 @@ type ComplexityRoot struct {
 		StartGRBReview                                      func(childComplexity int, input models.StartGRBReviewInput) int
 		SubmitIntake                                        func(childComplexity int, input models.SubmitIntakeInput) int
 		UnlinkTRBRequestRelation                            func(childComplexity int, trbRequestID uuid.UUID) int
-		UnlockAllSystemProfileSections                      func(childComplexity int, cedarSystemID string) int
-		UnlockSystemProfileSection                          func(childComplexity int, cedarSystemID string, section models.SystemProfileLockableSection) int
+		UnlockAllSystemProfileSections                      func(childComplexity int, cedarSystemID uuid.UUID) int
+		UnlockSystemProfileSection                          func(childComplexity int, cedarSystemID uuid.UUID, section models.SystemProfileLockableSection) int
 		UpdateSystemIntakeAdminLead                         func(childComplexity int, input models.UpdateSystemIntakeAdminLeadInput) int
 		UpdateSystemIntakeContact                           func(childComplexity int, input models.UpdateSystemIntakeContactInput) int
 		UpdateSystemIntakeContactDetails                    func(childComplexity int, input models.UpdateSystemIntakeContactDetailsInput) int
@@ -702,7 +702,7 @@ type ComplexityRoot struct {
 		SystemIntakes                    func(childComplexity int, openRequests bool) int
 		SystemIntakesWithLcids           func(childComplexity int) int
 		SystemIntakesWithReviewRequested func(childComplexity int) int
-		SystemProfileSectionLocks        func(childComplexity int, cedarSystemID string) int
+		SystemProfileSectionLocks        func(childComplexity int, cedarSystemID uuid.UUID) int
 		TrbAdminNote                     func(childComplexity int, id uuid.UUID) int
 		TrbLeadOptions                   func(childComplexity int) int
 		TrbRequest                       func(childComplexity int, id uuid.UUID) int
@@ -726,7 +726,7 @@ type ComplexityRoot struct {
 	}
 
 	Subscription struct {
-		OnSystemProfileSectionLockStatusChanged func(childComplexity int, cedarSystemID string) int
+		OnSystemProfileSectionLockStatusChanged func(childComplexity int, cedarSystemID uuid.UUID) int
 	}
 
 	SystemIntake struct {
@@ -1422,9 +1422,9 @@ type MutationResolver interface {
 	CreateTrbLeadOption(ctx context.Context, eua string) (*models.UserInfo, error)
 	DeleteTrbLeadOption(ctx context.Context, eua string) (bool, error)
 	SendGRBReviewPresentationDeckReminderEmail(ctx context.Context, systemIntakeID uuid.UUID) (bool, error)
-	LockSystemProfileSection(ctx context.Context, cedarSystemID string, section models.SystemProfileLockableSection) (bool, error)
-	UnlockSystemProfileSection(ctx context.Context, cedarSystemID string, section models.SystemProfileLockableSection) (bool, error)
-	UnlockAllSystemProfileSections(ctx context.Context, cedarSystemID string) ([]*models.SystemProfileSectionLockStatus, error)
+	LockSystemProfileSection(ctx context.Context, cedarSystemID uuid.UUID, section models.SystemProfileLockableSection) (bool, error)
+	UnlockSystemProfileSection(ctx context.Context, cedarSystemID uuid.UUID, section models.SystemProfileLockableSection) (bool, error)
+	UnlockAllSystemProfileSections(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.SystemProfileSectionLockStatus, error)
 }
 type QueryResolver interface {
 	SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error)
@@ -1461,11 +1461,11 @@ type QueryResolver interface {
 	MyCedarSystems(ctx context.Context) ([]*models.CedarSystem, error)
 	CedarSystemDetails(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarSystemDetails, error)
 	CurrentUser(ctx context.Context) (*models.CurrentUser, error)
-	SystemProfileSectionLocks(ctx context.Context, cedarSystemID string) ([]*models.SystemProfileSectionLockStatus, error)
+	SystemProfileSectionLocks(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.SystemProfileSectionLockStatus, error)
 	UserAccount(ctx context.Context, username string) (*authentication.UserAccount, error)
 }
 type SubscriptionResolver interface {
-	OnSystemProfileSectionLockStatusChanged(ctx context.Context, cedarSystemID string) (<-chan *models.SystemProfileSectionLockStatusChanged, error)
+	OnSystemProfileSectionLockStatusChanged(ctx context.Context, cedarSystemID uuid.UUID) (<-chan *models.SystemProfileSectionLockStatusChanged, error)
 }
 type SystemIntakeResolver interface {
 	Actions(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeAction, error)
@@ -4429,7 +4429,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Mutation.LockSystemProfileSection(childComplexity, args["cedarSystemId"].(string), args["section"].(models.SystemProfileLockableSection)), true
+		return e.complexity.Mutation.LockSystemProfileSection(childComplexity, args["cedarSystemId"].(uuid.UUID), args["section"].(models.SystemProfileLockableSection)), true
 	case "Mutation.manuallyEndSystemIntakeGRBReviewAsyncVoting":
 		if e.complexity.Mutation.ManuallyEndSystemIntakeGRBReviewAsyncVoting == nil {
 			break
@@ -4693,7 +4693,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UnlockAllSystemProfileSections(childComplexity, args["cedarSystemId"].(string)), true
+		return e.complexity.Mutation.UnlockAllSystemProfileSections(childComplexity, args["cedarSystemId"].(uuid.UUID)), true
 	case "Mutation.unlockSystemProfileSection":
 		if e.complexity.Mutation.UnlockSystemProfileSection == nil {
 			break
@@ -4704,7 +4704,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UnlockSystemProfileSection(childComplexity, args["cedarSystemId"].(string), args["section"].(models.SystemProfileLockableSection)), true
+		return e.complexity.Mutation.UnlockSystemProfileSection(childComplexity, args["cedarSystemId"].(uuid.UUID), args["section"].(models.SystemProfileLockableSection)), true
 	case "Mutation.updateSystemIntakeAdminLead":
 		if e.complexity.Mutation.UpdateSystemIntakeAdminLead == nil {
 			break
@@ -5265,7 +5265,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Query.SystemProfileSectionLocks(childComplexity, args["cedarSystemId"].(string)), true
+		return e.complexity.Query.SystemProfileSectionLocks(childComplexity, args["cedarSystemId"].(uuid.UUID)), true
 	case "Query.trbAdminNote":
 		if e.complexity.Query.TrbAdminNote == nil {
 			break
@@ -5388,7 +5388,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Subscription.OnSystemProfileSectionLockStatusChanged(childComplexity, args["cedarSystemId"].(string)), true
+		return e.complexity.Subscription.OnSystemProfileSectionLockStatusChanged(childComplexity, args["cedarSystemId"].(uuid.UUID)), true
 
 	case "SystemIntake.acquisitionMethods":
 		if e.complexity.SystemIntake.AcquisitionMethods == nil {
@@ -11678,7 +11678,7 @@ enum SystemProfileLockableSection {
 Status of a locked section of the system profile form
 """
 type SystemProfileSectionLockStatus {
-  cedarSystemId: String!
+  cedarSystemId: UUID!
   section: SystemProfileLockableSection!
   lockedByUserAccount: UserAccount!
 }
@@ -11696,23 +11696,23 @@ extend type Query {
   Returns an array containing the status of locked sections for a given cedar system profile form
   """
   systemProfileSectionLocks(
-    cedarSystemId: String!
+    cedarSystemId: UUID!
   ): [SystemProfileSectionLockStatus!]! @hasRole(role: EASI_USER)
 }
 
 extend type Mutation {
   lockSystemProfileSection(
-    cedarSystemId: String!
+    cedarSystemId: UUID!
     section: SystemProfileLockableSection!
   ): Boolean! @hasRole(role: EASI_USER)
 
   unlockSystemProfileSection(
-    cedarSystemId: String!
+    cedarSystemId: UUID!
     section: SystemProfileLockableSection!
   ): Boolean! @hasRole(role: EASI_USER)
 
   unlockAllSystemProfileSections(
-    cedarSystemId: String!
+    cedarSystemId: UUID!
   ): [SystemProfileSectionLockStatus!]! @hasRole(role: EASI_USER)
 }
 
@@ -11722,7 +11722,7 @@ type Subscription {
   Automatically unlocks all sections owned by the user when websocket disconnects.
   """
   onSystemProfileSectionLockStatusChanged(
-    cedarSystemId: String!
+    cedarSystemId: UUID!
   ): SystemProfileSectionLockStatusChanged! @hasRole(role: EASI_USER)
 }
 `, BuiltIn: false},
@@ -12351,7 +12351,7 @@ func (ec *executionContext) field_Mutation_extendGRBReviewDeadlineAsync_args(ctx
 func (ec *executionContext) field_Mutation_lockSystemProfileSection_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNString2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
 	if err != nil {
 		return nil, err
 	}
@@ -12630,7 +12630,7 @@ func (ec *executionContext) field_Mutation_unlinkTRBRequestRelation_args(ctx con
 func (ec *executionContext) field_Mutation_unlockAllSystemProfileSections_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNString2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
 	if err != nil {
 		return nil, err
 	}
@@ -12641,7 +12641,7 @@ func (ec *executionContext) field_Mutation_unlockAllSystemProfileSections_args(c
 func (ec *executionContext) field_Mutation_unlockSystemProfileSection_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNString2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
 	if err != nil {
 		return nil, err
 	}
@@ -13193,7 +13193,7 @@ func (ec *executionContext) field_Query_systemIntakes_args(ctx context.Context, 
 func (ec *executionContext) field_Query_systemProfileSectionLocks_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNString2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
 	if err != nil {
 		return nil, err
 	}
@@ -13259,7 +13259,7 @@ func (ec *executionContext) field_Query_userAccount_args(ctx context.Context, ra
 func (ec *executionContext) field_Subscription_onSystemProfileSectionLockStatusChanged_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNString2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
 	if err != nil {
 		return nil, err
 	}
@@ -32101,7 +32101,7 @@ func (ec *executionContext) _Mutation_lockSystemProfileSection(ctx context.Conte
 		ec.fieldContext_Mutation_lockSystemProfileSection,
 		func(ctx context.Context) (any, error) {
 			fc := graphql.GetFieldContext(ctx)
-			return ec.resolvers.Mutation().LockSystemProfileSection(ctx, fc.Args["cedarSystemId"].(string), fc.Args["section"].(models.SystemProfileLockableSection))
+			return ec.resolvers.Mutation().LockSystemProfileSection(ctx, fc.Args["cedarSystemId"].(uuid.UUID), fc.Args["section"].(models.SystemProfileLockableSection))
 		},
 		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
 			directive0 := next
@@ -32160,7 +32160,7 @@ func (ec *executionContext) _Mutation_unlockSystemProfileSection(ctx context.Con
 		ec.fieldContext_Mutation_unlockSystemProfileSection,
 		func(ctx context.Context) (any, error) {
 			fc := graphql.GetFieldContext(ctx)
-			return ec.resolvers.Mutation().UnlockSystemProfileSection(ctx, fc.Args["cedarSystemId"].(string), fc.Args["section"].(models.SystemProfileLockableSection))
+			return ec.resolvers.Mutation().UnlockSystemProfileSection(ctx, fc.Args["cedarSystemId"].(uuid.UUID), fc.Args["section"].(models.SystemProfileLockableSection))
 		},
 		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
 			directive0 := next
@@ -32219,7 +32219,7 @@ func (ec *executionContext) _Mutation_unlockAllSystemProfileSections(ctx context
 		ec.fieldContext_Mutation_unlockAllSystemProfileSections,
 		func(ctx context.Context) (any, error) {
 			fc := graphql.GetFieldContext(ctx)
-			return ec.resolvers.Mutation().UnlockAllSystemProfileSections(ctx, fc.Args["cedarSystemId"].(string))
+			return ec.resolvers.Mutation().UnlockAllSystemProfileSections(ctx, fc.Args["cedarSystemId"].(uuid.UUID))
 		},
 		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
 			directive0 := next
@@ -35292,7 +35292,7 @@ func (ec *executionContext) _Query_systemProfileSectionLocks(ctx context.Context
 		ec.fieldContext_Query_systemProfileSectionLocks,
 		func(ctx context.Context) (any, error) {
 			fc := graphql.GetFieldContext(ctx)
-			return ec.resolvers.Query().SystemProfileSectionLocks(ctx, fc.Args["cedarSystemId"].(string))
+			return ec.resolvers.Query().SystemProfileSectionLocks(ctx, fc.Args["cedarSystemId"].(uuid.UUID))
 		},
 		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
 			directive0 := next
@@ -35760,7 +35760,7 @@ func (ec *executionContext) _Subscription_onSystemProfileSectionLockStatusChange
 		ec.fieldContext_Subscription_onSystemProfileSectionLockStatusChanged,
 		func(ctx context.Context) (any, error) {
 			fc := graphql.GetFieldContext(ctx)
-			return ec.resolvers.Subscription().OnSystemProfileSectionLockStatusChanged(ctx, fc.Args["cedarSystemId"].(string))
+			return ec.resolvers.Subscription().OnSystemProfileSectionLockStatusChanged(ctx, fc.Args["cedarSystemId"].(uuid.UUID))
 		},
 		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
 			directive0 := next
@@ -43650,7 +43650,7 @@ func (ec *executionContext) _SystemProfileSectionLockStatus_cedarSystemId(ctx co
 			return obj.CedarSystemID, nil
 		},
 		nil,
-		ec.marshalNString2string,
+		ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID,
 		true,
 		true,
 	)
@@ -43663,7 +43663,7 @@ func (ec *executionContext) fieldContext_SystemProfileSectionLockStatus_cedarSys
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type UUID does not have child fields")
 		},
 	}
 	return fc, nil

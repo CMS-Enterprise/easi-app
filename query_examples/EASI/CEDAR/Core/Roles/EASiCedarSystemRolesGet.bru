@@ -11,7 +11,7 @@ post {
 }
 
 body:graphql {
-  query($cedarSystemId: String!) {
+  query($cedarSystemId: UUID!) {
     cedarSystemDetails(cedarSystemId: $cedarSystemId) {
       cedarSystem {
         name

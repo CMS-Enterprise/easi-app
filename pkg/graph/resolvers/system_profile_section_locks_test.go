@@ -30,7 +30,7 @@ func TestSystemProfileSectionLock(t *testing.T) {
 	// Reset global state before test
 	systemProfileSessionLocks = sessionLockController{systemLockStatuses: make(systemLockStatusMap)}
 
-	cedarSystemID := "61469178-a474-445d-a6ef-db84fe425e02"
+	cedarSystemID := uuid.MustParse("61469178-a474-445d-a6ef-db84fe425e02")
 	section := models.SystemProfileLockableSectionBusinessInformation
 	ps := pubsub.NewServicePubSub()
 	principal := createTestPrincipal("ABCD", false)
@@ -69,7 +69,7 @@ func TestSystemProfileSectionLockConflict(t *testing.T) {
 	// Reset global state before test
 	systemProfileSessionLocks = sessionLockController{systemLockStatuses: make(systemLockStatusMap)}
 
-	cedarSystemID := "e321c11a-a720-490a-a51d-70a00256efcf"
+	cedarSystemID := uuid.MustParse("e321c11a-a720-490a-a51d-70a00256efcf")
 	section := models.SystemProfileLockableSectionData
 	ps := pubsub.NewServicePubSub()
 
@@ -114,7 +114,7 @@ func TestUnlockAllSystemProfileSections(t *testing.T) {
 	// Reset global state before test
 	systemProfileSessionLocks = sessionLockController{systemLockStatuses: make(systemLockStatusMap)}
 
-	cedarSystemID := "b105ddf3-c758-4f13-a520-976ffb1be680"
+	cedarSystemID := uuid.MustParse("b105ddf3-c758-4f13-a520-976ffb1be680")
 	ps := pubsub.NewServicePubSub()
 	principal := createTestPrincipal("ABCD", false)
 
