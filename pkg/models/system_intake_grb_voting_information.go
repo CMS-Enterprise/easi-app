@@ -18,7 +18,7 @@ const (
 )
 
 // numberOfVotesForQuorum is the number of votes needed to reach quorum. If less than this amount of votes are cast, the GRB is considered inconclusive
-const numberOfVotesForQuorum = 5
+const numberOfVotesForQuorum = 1
 
 // GRBVotingInformation is a struct that holds information about the GRB voting process
 // It is a convenience struct that holds a SystemIntake and its GRB reviewers
