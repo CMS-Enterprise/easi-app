@@ -1,27 +1,28 @@
 import React from 'react';
 import { Redirect, useLocation, useParams } from 'react-router-dom';
 
-export default function SystemIDWrapper() {
+export default function SystemIDWrapper({ children }: React.PropsWithChildren) {
   const { pathname, search, hash } = useLocation();
-  const { legacyId } = useParams<{ legacyId: string }>();
-
-  const isLegacyId =
-    legacyId.includes('{') ||
-    legacyId.includes('}') ||
-    legacyId.includes('%7B') ||
-    legacyId.includes('%7D');
-
-  if (!isLegacyId) {
-    return <Redirect to={`${pathname}${search}${hash}`} />;
+  const { systemId } = useParams<{ systemId?: string }>();
+  if (!systemId) {
+    return <>{children}</>;
   }
 
-  const decoded = decodeURIComponent(legacyId);
+  const isLegacyId =
+    systemId.includes('{') ||
+    systemId.includes('}') ||
+    systemId.includes('%7B') ||
+    systemId.includes('%7D');
 
-  const newFormatId = decoded.replace(/[{}]/g, '');
+  if (isLegacyId) {
+    const decoded = decodeURIComponent(systemId);
+    const newFormatId = decoded.replace(/[{}]/g, '');
+    const encodedNew = encodeURIComponent(newFormatId);
+    const newPathname = pathname.replace(systemId, encodedNew);
+    const redirectTo = `${newPathname}${search}${hash}`;
 
-  const newPathname = pathname.replace(legacyId, newFormatId);
+    return <Redirect to={redirectTo} push={false} />;
+  }
 
-  const redirectTo = `${newPathname}${search}${hash}`;
-
-  return <Redirect to={redirectTo} />;
+  return <>{children}</>;
 }

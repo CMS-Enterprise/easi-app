@@ -168,41 +168,50 @@ const AppRoutes = () => {
       />
       <SecureRoute exact path="/systems" component={SystemList} />
 
-      {/* keep these routes at the top of the `/systems/*` routes for redirect purposes */}
-      <Route path="/systems/:legacyId" component={SystemIDWrapper} />
-      <Route path="/systems/:legacyId/*" component={SystemIDWrapper} />
-
-      {flags.systemWorkspace ? (
-        [
-          <SecureRoute
-            key="workspace"
-            exact
-            path="/systems/:systemId/workspace"
-            component={SystemWorkspace}
-          />,
-          <SecureRoute
-            key="workspace-requests"
-            exact
-            path="/systems/:systemId/workspace/requests"
-            component={SystemWorkspaceRequests}
-          />
-        ]
-      ) : (
-        <Redirect
-          exact
-          from="/systems/:systemId/workspace"
-          to="/systems/:systemId"
-        />
-      )}
-      <SecureRoute path="/systems/:systemId" exact component={SystemProfile} />
-      <SecureRoute
-        path="/systems/:systemId/edit/:section?"
-        component={EditSystemProfile}
-      />
-      <SecureRoute
-        path="/systems/:systemId/:subinfo/:edit(edit)?/:action(team-member)?/:top(top)?"
-        exact
-        component={SystemProfile}
+      <Route
+        path="/systems/:systemId"
+        render={() => (
+          <SystemIDWrapper>
+            <Switch>
+              {flags.systemWorkspace ? (
+                [
+                  <SecureRoute
+                    key="workspace"
+                    exact
+                    path="/systems/:systemId/workspace"
+                    component={SystemWorkspace}
+                  />,
+                  <SecureRoute
+                    key="workspace-requests"
+                    exact
+                    path="/systems/:systemId/workspace/requests"
+                    component={SystemWorkspaceRequests}
+                  />
+                ]
+              ) : (
+                <Redirect
+                  exact
+                  from="/systems/:systemId/workspace"
+                  to="/systems/:systemId"
+                />
+              )}
+              <Route
+                exact
+                path="/systems/:systemId"
+                component={SystemProfile}
+              />
+              <SecureRoute
+                path="/systems/:systemId/edit/:section?"
+                component={EditSystemProfile}
+              />
+              <SecureRoute
+                path="/systems/:systemId/:subinfo/:edit(edit)?/:action(team-member)?/:top(top)?"
+                exact
+                component={SystemProfile}
+              />
+            </Switch>
+          </SystemIDWrapper>
+        )}
       />
       <Redirect
         exact
