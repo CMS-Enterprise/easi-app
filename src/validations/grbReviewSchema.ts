@@ -72,10 +72,10 @@ export const SetGRBParticipantsAsyncSchema = Yup.object({
       })
     )
     .test(
-      'at-least-five-voting',
-      i18next.t('grbReview:setUpGrbReviewForm.minFive'),
+      'at-least-one-voting',
+      i18next.t('grbReview:setUpGrbReviewForm.minOne'),
       (reviewers = []) =>
-        reviewers.filter(r => r.votingRole === 'VOTING').length >= 5
+        reviewers.filter(r => r.votingRole === 'VOTING').length >= 1
     ),
   grbReviewAsyncEndDate: Yup.date().required(
     i18next.t('grbReview:setUpGrbReviewForm.invalidDate')

@@ -279,7 +279,7 @@ exports[`GRB review form - participants and timeframe > renders the step 1`] = `
               <p
                 class="margin-y-0 text-base-dark line-height-sans-4"
               >
-                Add the GRB members who should review this IT Governance request and indicate their voting role. For asynchronous reviews, you must add at least 5 voting members.
+                Add the GRB members who should review this IT Governance request and indicate their voting role. For asynchronous reviews, you must add at least 1 voting member.
               </p>
               <button
                 class="usa-button"
