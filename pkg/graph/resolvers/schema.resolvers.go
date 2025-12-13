@@ -159,11 +159,6 @@ func (r *cedarSoftwareProductsResolver) SoftwareProducts(ctx context.Context, ob
 	return softwareProductItems, nil
 }
 
-// ID is the resolver for the id field.
-func (r *cedarSubSystemResolver) ID(ctx context.Context, obj *models.CedarSubSystem) (string, error) {
-	panic(fmt.Errorf("not implemented: ID - id"))
-}
-
 // Author is the resolver for the author field.
 func (r *governanceRequestFeedbackResolver) Author(ctx context.Context, obj *models.GovernanceRequestFeedback) (*models.UserInfo, error) {
 	return GetGovernanceRequestFeedbackAuthor(ctx, obj.CreatedBy)
@@ -1302,6 +1297,10 @@ func (r *queryResolver) CedarSoftwareProducts(ctx context.Context, cedarSystemID
 func (r *queryResolver) CedarSubSystems(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarSubSystem, error) {
 	systems, err := r.cedarCoreClient.GetSystemSummary(ctx, cedarcore.SystemSummaryOpts.WithSubSystems(cedarSystemID))
 	if err != nil {
+		fmt.Println("==== er ====")
+		fmt.Println(err)
+		fmt.Println("==== er ====")
+
 		return nil, err
 	}
 
@@ -2167,11 +2166,6 @@ func (r *Resolver) CedarSoftwareProducts() generated.CedarSoftwareProductsResolv
 	return &cedarSoftwareProductsResolver{r}
 }
 
-// CedarSubSystem returns generated.CedarSubSystemResolver implementation.
-func (r *Resolver) CedarSubSystem() generated.CedarSubSystemResolver {
-	return &cedarSubSystemResolver{r}
-}
-
 // GovernanceRequestFeedback returns generated.GovernanceRequestFeedbackResolver implementation.
 func (r *Resolver) GovernanceRequestFeedback() generated.GovernanceRequestFeedbackResolver {
 	return &governanceRequestFeedbackResolver{r}
@@ -2263,7 +2257,6 @@ func (r *Resolver) UserInfo() generated.UserInfoResolver { return &userInfoResol
 type businessCaseResolver struct{ *Resolver }
 type cedarBudgetSystemCostResolver struct{ *Resolver }
 type cedarSoftwareProductsResolver struct{ *Resolver }
-type cedarSubSystemResolver struct{ *Resolver }
 type governanceRequestFeedbackResolver struct{ *Resolver }
 type iTGovTaskStatusesResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }

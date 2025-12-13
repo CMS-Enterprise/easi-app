@@ -138,7 +138,7 @@ type CedarSoftwareProducts {
 CedarSubSystem represents the response from the /system/detail
 """
 type CedarSubSystem {
-  id: String!
+  id: UUID!
   name: String!
   acronym: String
   description: String
