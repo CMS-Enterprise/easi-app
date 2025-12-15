@@ -92,7 +92,7 @@ const systemLinks = (
     isEnabled: true
   },
   {
-    link: `https://${environmentName}.crm9.dynamics.com/main.aspx?appid=${appID}&pagetype=entityrecord&etn=new_systemintake`,
+    link: `https://${environmentName}.dynamics.com/main.aspx?appid=${appID}&pagetype=entityrecord&etn=new_systemintake`,
     label: 'addNewSystem',
     isEnabled: true,
     external: true
