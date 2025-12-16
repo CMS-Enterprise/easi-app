@@ -1,13 +1,13 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { SystemProfileSectionLockStatus } from 'gql/generated/graphql';
 import { AppState } from 'stores/reducers/rootReducer';
 
 import { AvatarCircle } from 'components/Avatar/Avatar';
+import { LockSectionType } from 'types/systemProfile';
 
 type SectionLockProps = {
-  sectionLock?: SystemProfileSectionLockStatus | null;
+  sectionLock?: LockSectionType | null;
 };
 
 /**

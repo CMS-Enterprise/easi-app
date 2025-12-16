@@ -13,7 +13,7 @@ import PDFExport from 'components/PDFExport';
 import { BusinessCaseModel } from 'types/businessCase';
 import { getFiscalYear } from 'utils/date';
 
-import ITGovAdminContext from '../../../../wrappers/ITGovAdminContext/ITGovAdminContext';
+import ITGovAdminContext from '../../../../contexts/ITGovAdminContext/ITGovAdminContext';
 
 type BusinessCaseReviewProps = {
   businessCase: BusinessCaseModel;

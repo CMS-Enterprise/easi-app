@@ -262,7 +262,7 @@ export default {
     steps: grbReviewFormSteps,
     error:
       'There was a problem saving your GRB review form. Please try again. If the error persists, please try again at a later date.',
-    minFive: 'Please select at least five voting GRB reviewers',
+    minOne: 'Please select at least one voting GRB reviewer',
     invalidDate: 'Please enter a valid date',
     reviewType: {
       label: 'Choose review type',
@@ -297,7 +297,7 @@ export default {
       grbReviewers: {
         heading: 'GRB reviewers',
         description:
-          'Add the GRB members who should review this IT Governance request and indicate their voting role. For asynchronous reviews, you must add at least 5 voting members.'
+          'Add the GRB members who should review this IT Governance request and indicate their voting role. For asynchronous reviews, you must add at least 1 voting member.'
       },
       timeframe: {
         heading: 'Timeframe',

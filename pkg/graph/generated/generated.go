@@ -8972,15 +8972,15 @@ enum GRBVotingInformationStatus {
   """
   IN_PROGRESS
   """
-  End date has passed, quorum of votes has been met (5 votes), vote count for approval met (0 votes with objections).
+  End date has passed, quorum of votes has been met (1 vote), vote count for approval met (0 votes with objections).
   """
   APPROVED
   """
-  End date has passed, quorum of votes has been met (5 votes), vote count has two or more objections.
+  End date has passed, quorum of votes has been met (1 vote), vote count has two or more objections.
   """
   NOT_APPROVED
   """
-  End date has passed, quorum of votes has been met (5 votes), vote count is mostly no objections but has one objection vote OR voting has been ended early and a quorum has not been met.
+  End date has passed, quorum of votes has been met (1 vote), vote count is mostly no objections but has one objection vote OR voting has been ended early and a quorum has not been met.
   """
   INCONCLUSIVE
 }

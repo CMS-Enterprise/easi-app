@@ -14,10 +14,10 @@ import {
   SystemIntakeGRBReviewerFragment,
   useDeleteSystemIntakeGRBReviewerMutation
 } from 'gql/generated/graphql';
-import ITGovAdminContext from 'wrappers/ITGovAdminContext/ITGovAdminContext';
 
 import Modal from 'components/Modal';
 import toastSuccess from 'components/ToastSuccess';
+import ITGovAdminContext from 'contexts/ITGovAdminContext/ITGovAdminContext';
 import {
   currentTableSortDescription,
   getColumnSortStatus,
