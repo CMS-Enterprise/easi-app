@@ -120,7 +120,7 @@ require (
 	github.com/go-openapi/loads v0.23.1 // indirect
 	github.com/go-openapi/spec v0.22.0 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
-	github.com/gorilla/websocket v1.5.0
+	github.com/gorilla/websocket v1.5.3
 	github.com/graph-gophers/dataloader/v7 v7.1.2
 	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79 // indirect
 	github.com/iancoleman/orderedmap v0.0.0-20190318233801-ac98e3ecb4b0 // indirect
