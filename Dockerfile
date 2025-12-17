@@ -10,8 +10,11 @@ RUN go mod download
 
 FROM base AS dev
 
-RUN go install github.com/go-delve/delve/cmd/dlv@latest && \
-    go install golang.org/x/tools/gopls@latest && \
+# NOTE: Update delve and gopls versions when bumping the GO base image version
+# These versions are pinned for Go 1.24.4 compatibility
+# TODO: (MINT-3592, EASI-5031) See ticket to update to latest go version
+RUN go install github.com/go-delve/delve/cmd/dlv@v1.25.2 && \
+	go install golang.org/x/tools/gopls@v0.20.0 && \
     go install github.com/cosmtrek/air@4612c12f1ed7c899314b8430bc1d841ca2cb061a
 
 FROM base AS build
