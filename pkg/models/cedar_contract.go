@@ -16,5 +16,5 @@ type CedarContract struct {
 	OrderNumber     zero.String `json:"orderNumber,omitempty"`
 	ServiceProvided zero.String `json:"serviceProvided,omitempty"`
 	IsDeliveryOrg   bool        `json:"isDeliveryOrg"`
-	SystemID        uuid.UUID   `json:"systemId,omitempty"`
+	SystemID        *uuid.UUID  `json:"systemId,omitempty"`
 }

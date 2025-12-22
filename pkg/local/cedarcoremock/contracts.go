@@ -61,7 +61,7 @@ func GetContractsBySystem(cedarSystemID uuid.UUID) []*models.CedarContract {
 	contracts := []*models.CedarContract{}
 	for i := range mockContracts {
 		contract := *mockContracts[i]
-		contract.SystemID = cedarSystemID
+		contract.SystemID = &cedarSystemID
 		contracts = append(contracts, &contract)
 	}
 	return contracts

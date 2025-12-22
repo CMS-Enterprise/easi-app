@@ -70,7 +70,7 @@ func (c *Client) GetContractBySystem(ctx context.Context, cedarSystemID uuid.UUI
 			OrderNumber:     zero.StringFrom(contractData.OrderNumber),
 			ServiceProvided: zero.StringFrom(contractData.ServiceProvided),
 			IsDeliveryOrg:   isDeliveryOrg,
-			SystemID:        parsedUUID,
+			SystemID:        &parsedUUID,
 		})
 	}
 	return retVal, nil

@@ -16773,7 +16773,7 @@ func (ec *executionContext) _CedarContract_systemID(ctx context.Context, field g
 			return obj.SystemID, nil
 		},
 		nil,
-		ec.marshalOUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID,
+		ec.marshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID,
 		true,
 		false,
 	)
@@ -72944,18 +72944,6 @@ func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel
 	_ = sel
 	_ = ctx
 	res := graphql.MarshalTime(*v)
-	return res
-}
-
-func (ec *executionContext) unmarshalOUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx context.Context, v any) (uuid.UUID, error) {
-	res, err := models.UnmarshalUUID(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx context.Context, sel ast.SelectionSet, v uuid.UUID) graphql.Marshaler {
-	_ = sel
-	_ = ctx
-	res := models.MarshalUUID(v)
 	return res
 }
 
