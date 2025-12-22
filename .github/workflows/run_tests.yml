@@ -96,7 +96,7 @@ jobs:
           ./scripts/testsuite
           docker compose --project-name easi-server-test -f docker-compose.ci_server_test.yml down
       - name: Upload backend test artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: backend-tests
           path: results
@@ -129,7 +129,7 @@ jobs:
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Download Frontend assets
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: test-frontend-assets
           path: build/
@@ -166,14 +166,14 @@ jobs:
           ./scripts/run-cypress-test-docker
       - name: Upload cypress videos
         if: ${{ always() }}
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: cypress-videos
           path: cypress/videos
           retention-days: 14
       - name: Upload cypress screenshots
         if: ${{ always() }}
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: cypress-screenshots
           path: cypress/screenshots
