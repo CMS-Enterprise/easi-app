@@ -85,6 +85,7 @@ func (c *Client) GetDeployments(ctx context.Context, cedarSystemID uuid.UUID, op
 		parsedUUID, err := uuid.Parse(*deployment.SystemID)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error("problem parsing deployment system id", zap.Error(err), zap.String("systemID", cedarSystemID.String()))
+			continue
 		}
 
 		retDeployment := &models.CedarDeployment{
@@ -96,7 +97,7 @@ func (c *Client) GetDeployments(ctx context.Context, cedarSystemID uuid.UUID, op
 			IsHotSite:         zero.StringFrom(deployment.IsHotSite),
 			Description:       zero.StringFrom(deployment.Description),
 			ContractorName:    zero.StringFrom(deployment.ContractorName),
-			SystemVersion:     zero.StringFrom(deployment.ContractorName),
+			SystemVersion:     zero.StringFrom(deployment.SystemVersion),
 			HasProductionData: zero.StringFrom(deployment.HasProductionData),
 
 			// TODO - assumes no nulls in array returned from query

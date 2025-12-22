@@ -7,7 +7,6 @@ package resolvers
 import (
 	"context"
 	"errors"
-	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -1297,10 +1296,6 @@ func (r *queryResolver) CedarSoftwareProducts(ctx context.Context, cedarSystemID
 func (r *queryResolver) CedarSubSystems(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarSubSystem, error) {
 	systems, err := r.cedarCoreClient.GetSystemSummary(ctx, cedarcore.SystemSummaryOpts.WithSubSystems(cedarSystemID))
 	if err != nil {
-		fmt.Println("==== er ====")
-		fmt.Println(err)
-		fmt.Println("==== er ====")
-
 		return nil, err
 	}
 
