@@ -6,6 +6,7 @@ import { Redirect, useLocation, useParams } from 'react-router-dom';
 export default function SystemIDWrapper({ children }: React.PropsWithChildren) {
   const { pathname, search, hash } = useLocation();
   const { systemId } = useParams<{ systemId?: string }>();
+
   if (!systemId) {
     return <>{children}</>;
   }
