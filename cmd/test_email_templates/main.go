@@ -55,7 +55,7 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 	requestName := "Example Request"
 	requesterName := "Requesting User"
 	requesterEmail := models.NewEmailAddress("TEST@local.fake")
-	cedarSystemID := "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"
+	cedarSystemID := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC4E}")
 	component := "Test Component"
 	adminEmail := models.NewEmailAddress("admin@local.fake")
 	emailRecipients := []models.EmailAddress{requesterEmail, adminEmail}

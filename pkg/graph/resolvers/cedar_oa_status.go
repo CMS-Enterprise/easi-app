@@ -29,9 +29,9 @@ func AttachOAStatus(ctx context.Context, client *cedarcore.Client, systems []*mo
 			sem <- struct{}{}
 			defer func() { <-sem }()
 
-			ato, err := client.GetAuthorityToOperate(ctx, systems[idx].ID.String)
+			ato, err := client.GetAuthorityToOperate(ctx, systems[idx].ID)
 			if err != nil {
-				logger.Error("problem getting ato for system id", zap.Error(err), zap.String("system.id", systems[idx].ID.String))
+				logger.Error("problem getting ato for system id", zap.Error(err), zap.String("system.id", systems[idx].ID.String()))
 				return
 			}
 

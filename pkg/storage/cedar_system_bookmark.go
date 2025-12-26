@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 
+	"github.com/google/uuid"
 	"github.com/lib/pq"
 	"go.uber.org/zap"
 
@@ -88,7 +89,7 @@ func (s *Store) FetchCedarSystemIsBookmarkedByCedarSystemIDs(ctx context.Context
 	// build lists for multiple `where` clauses
 	var (
 		euaUserIDs = make([]string, len(bookmarkRequests))
-		systemIDs  = make([]string, len(bookmarkRequests))
+		systemIDs  = make([]uuid.UUID, len(bookmarkRequests))
 	)
 
 	for i, req := range bookmarkRequests {

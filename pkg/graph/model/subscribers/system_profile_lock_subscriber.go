@@ -18,14 +18,14 @@ type SystemProfileLockOnUnsubscribeCallback func(ps pubsub.PubSub, subscriber *S
 type SystemProfileLockChangedSubscriber struct {
 	ID             uuid.UUID
 	Principal      authentication.Principal
-	CedarSystemID  string // Original system ID for callback use
+	CedarSystemID  uuid.UUID // Original system ID for callback use
 	Channel        chan *models.SystemProfileSectionLockStatusChanged
 	Logger         *zap.Logger
 	onUnsubscribed SystemProfileLockOnUnsubscribeCallback
 }
 
 // NewSystemProfileLockChangedSubscriber is a constructor to create a new SystemProfileLockChangedSubscriber
-func NewSystemProfileLockChangedSubscriber(principal authentication.Principal, cedarSystemID string, logger *zap.Logger) *SystemProfileLockChangedSubscriber {
+func NewSystemProfileLockChangedSubscriber(principal authentication.Principal, cedarSystemID uuid.UUID, logger *zap.Logger) *SystemProfileLockChangedSubscriber {
 	id := uuid.New()
 
 	// Guard against nil logger

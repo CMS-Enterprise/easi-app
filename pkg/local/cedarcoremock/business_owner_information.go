@@ -1,13 +1,14 @@
 package cedarcoremock
 
 import (
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-var mockBusinessOwnerInformation = map[string]*models.BusinessOwnerInformation{
-	"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}": {
+var mockBusinessOwnerInformation = map[uuid.UUID]*models.BusinessOwnerInformation{
+	uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"): {
 		BeneficiaryAddressPurpose:      []zero.String{zero.StringFrom("Purpose 1"), zero.StringFrom("Purpose 2")},
 		BeneficiaryAddressPurposeOther: zero.StringFrom("Customer Service"),
 		BeneficiaryAddressSource:       []zero.String{zero.StringFrom("Source 1"), zero.StringFrom("Source 2")},
@@ -23,7 +24,7 @@ var mockBusinessOwnerInformation = map[string]*models.BusinessOwnerInformation{
 		StoresBankingData:              true,
 		StoresBeneficiaryAddress:       true,
 	},
-	"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}": {
+	uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"): {
 		BeneficiaryAddressPurpose:      []zero.String{zero.StringFrom("Beneficiary 1"), zero.StringFrom("Beneficiary 2")},
 		BeneficiaryAddressPurposeOther: zero.StringFrom("Development"),
 		BeneficiaryAddressSource:       []zero.String{zero.StringFrom("Bene Source 1"), zero.StringFrom("Bene Source 2")},
@@ -39,7 +40,7 @@ var mockBusinessOwnerInformation = map[string]*models.BusinessOwnerInformation{
 		StoresBankingData:              false,
 		StoresBeneficiaryAddress:       false,
 	},
-	"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}": {
+	uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"): {
 		BeneficiaryAddressPurpose:      []zero.String{zero.StringFrom("Address 1"), zero.StringFrom("Address 2")},
 		BeneficiaryAddressPurposeOther: zero.StringFrom("QA and Testing"),
 		BeneficiaryAddressSource:       []zero.String{zero.StringFrom("Address Source 1"), zero.StringFrom("Address Source 2")},
@@ -55,7 +56,7 @@ var mockBusinessOwnerInformation = map[string]*models.BusinessOwnerInformation{
 		StoresBankingData:              true,
 		StoresBeneficiaryAddress:       false,
 	},
-	"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}": {
+	uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC3D}"): {
 		BeneficiaryAddressPurpose:      []zero.String{zero.StringFrom("Bene Address Purpose 1"), zero.StringFrom("Bene Address Purpose 2")},
 		BeneficiaryAddressPurposeOther: zero.StringFrom("Operations and Management"),
 		BeneficiaryAddressSource:       []zero.String{zero.StringFrom("Source 1"), zero.StringFrom("Source 2"), zero.StringFrom("Source 3")},
@@ -71,7 +72,7 @@ var mockBusinessOwnerInformation = map[string]*models.BusinessOwnerInformation{
 		StoresBankingData:              false,
 		StoresBeneficiaryAddress:       false,
 	},
-	"{11AB1A00-1234-5678-ABC1-1A001B00CC4E}": {
+	uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"): {
 		BeneficiaryAddressPurpose:      []zero.String{zero.StringFrom("Purpose 1"), zero.StringFrom("Purpose 2"), zero.StringFrom("Purpose 3")},
 		BeneficiaryAddressPurposeOther: zero.StringFrom("Customer Service"),
 		BeneficiaryAddressSource:       []zero.String{zero.StringFrom("Bene Source 1"), zero.StringFrom("Bene Source 2"), zero.StringFrom("Bene Source 3")},
@@ -90,7 +91,7 @@ var mockBusinessOwnerInformation = map[string]*models.BusinessOwnerInformation{
 }
 
 // GetBusinessOwnerInformation returns a mocked BusinessOwnerInformation struct
-func GetBusinessOwnerInformation(cedarSystemID string) *models.BusinessOwnerInformation {
+func GetBusinessOwnerInformation(cedarSystemID uuid.UUID) *models.BusinessOwnerInformation {
 	if val, ok := mockBusinessOwnerInformation[cedarSystemID]; ok {
 		return val
 	}

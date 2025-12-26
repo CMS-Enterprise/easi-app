@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
@@ -13,7 +14,7 @@ import (
 )
 
 // GetExchangesBySystem fetches a list of CEDAR exchange records for a given system
-func (c *Client) GetExchangesBySystem(ctx context.Context, cedarSystemID string) ([]*models.CedarExchange, error) {
+func (c *Client) GetExchangesBySystem(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarExchange, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		if cedarcoremock.IsMockSystem(cedarSystemID) {
@@ -22,14 +23,9 @@ func (c *Client) GetExchangesBySystem(ctx context.Context, cedarSystemID string)
 		return nil, cedarcoremock.NoSystemFoundError()
 	}
 
-	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
-	if err != nil {
-		return nil, err
-	}
-
 	// Construct the parameters
 	params := exchange.NewExchangeFindListParams()
-	params.SetSystemID(cedarSystem.VersionID.String)
+	params.SetSystemID(formatIDForCEDAR(cedarSystemID))
 	params.SetDirection("both")
 	params.HTTPClient = c.hc
 
@@ -52,10 +48,10 @@ func (c *Client) GetExchangesBySystem(ctx context.Context, cedarSystemID string)
 		}
 
 		var direction models.ExchangeDirection
-		if exch.FromOwnerID == cedarSystem.VersionID.String {
-			direction = models.ExchangeDirection(models.ExchangeDirectionSender)
-		} else if exch.ToOwnerID == cedarSystem.VersionID.String {
-			direction = models.ExchangeDirection(models.ExchangeDirectionReceiver)
+		if exch.FromOwnerID == formatIDForCEDAR(cedarSystemID) {
+			direction = models.ExchangeDirectionSender
+		} else if exch.ToOwnerID == formatIDForCEDAR(cedarSystemID) {
+			direction = models.ExchangeDirectionReceiver
 		}
 
 		connectionFrequency := []zero.String{}

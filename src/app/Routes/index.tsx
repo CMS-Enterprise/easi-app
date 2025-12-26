@@ -40,7 +40,7 @@ import RequestTypeForm from 'features/RequestLinking/RequestTypeForm';
 import EditSystemProfile from 'features/Systems/EditSystemProfile';
 import SystemList from 'features/Systems/Home';
 import SystemProfile from 'features/Systems/SystemProfile';
-import SystemWorkspace from 'features/Systems/SystemWorkspace';
+import { SystemWorkspace } from 'features/Systems/SystemWorkspace';
 import SystemWorkspaceRequests from 'features/Systems/SystemWorkspace/SystemWorkspaceRequests';
 import TechnicalAssistance from 'features/TechnicalAssistance/Routes';
 import { useFlags } from 'launchdarkly-react-client-sdk';
@@ -57,6 +57,7 @@ import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import { MessageProvider } from 'hooks/useMessage';
 
+import SystemIDWrapper from '../../features/Systems/Wrapper/SystemIDWrapper';
 import shouldScroll from '../../utils/scrollConfig';
 
 import 'react-toastify/dist/ReactToastify.css';
@@ -166,37 +167,51 @@ const AppRoutes = () => {
         component={SystemIntake}
       />
       <SecureRoute exact path="/systems" component={SystemList} />
-      {flags.systemWorkspace ? (
-        [
-          <SecureRoute
-            key="workspace"
-            exact
-            path="/systems/:systemId/workspace"
-            component={SystemWorkspace}
-          />,
-          <SecureRoute
-            key="workspace-requests"
-            exact
-            path="/systems/:systemId/workspace/requests"
-            component={SystemWorkspaceRequests}
-          />
-        ]
-      ) : (
-        <Redirect
-          exact
-          from="/systems/:systemId/workspace"
-          to="/systems/:systemId"
-        />
-      )}
-      <SecureRoute path="/systems/:systemId" exact component={SystemProfile} />
-      <SecureRoute
-        path="/systems/:systemId/edit/:section?"
-        component={EditSystemProfile}
-      />
-      <SecureRoute
-        path="/systems/:systemId/:subinfo/:edit(edit)?/:action(team-member)?/:top(top)?"
-        exact
-        component={SystemProfile}
+
+      <Route
+        path="/systems/:systemId"
+        render={() => (
+          <SystemIDWrapper>
+            <Switch>
+              {flags.systemWorkspace ? (
+                [
+                  <SecureRoute
+                    key="workspace"
+                    exact
+                    path="/systems/:systemId/workspace"
+                    component={SystemWorkspace}
+                  />,
+                  <SecureRoute
+                    key="workspace-requests"
+                    exact
+                    path="/systems/:systemId/workspace/requests"
+                    component={SystemWorkspaceRequests}
+                  />
+                ]
+              ) : (
+                <Redirect
+                  exact
+                  from="/systems/:systemId/workspace"
+                  to="/systems/:systemId"
+                />
+              )}
+              <Route
+                exact
+                path="/systems/:systemId"
+                component={SystemProfile}
+              />
+              <SecureRoute
+                path="/systems/:systemId/edit/:section?"
+                component={EditSystemProfile}
+              />
+              <SecureRoute
+                path="/systems/:systemId/:subinfo/:edit(edit)?/:action(team-member)?/:top(top)?"
+                exact
+                component={SystemProfile}
+              />
+            </Switch>
+          </SystemIDWrapper>
+        )}
       />
       <Redirect
         exact

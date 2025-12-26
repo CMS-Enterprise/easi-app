@@ -18,11 +18,10 @@ import (
 func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 	ctx := context.Background()
 
-	const (
-		system1 = "1"
-		system2 = "2"
-		system3 = "3"
-		system4 = "4"
+	var (
+		system1 = uuid.MustParse("10000000-0000-4000-a000-000000000000")
+		system2 = uuid.MustParse("20000000-0000-4000-a000-000000000000")
+		system3 = uuid.MustParse("30000000-0000-4000-a000-000000000000")
 	)
 
 	var createdIDs []uuid.UUID
@@ -44,10 +43,10 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 		}
 
 		// insert systems for this created system intake
-		idOne := "1"
-		idTwo := "2"
-		idThree := "3"
-		idFour := "4"
+		idOne := uuid.MustParse("10000000-0000-4000-a000-000000000000")
+		idTwo := uuid.MustParse("20000000-0000-4000-a000-000000000000")
+		idThree := uuid.MustParse("30000000-0000-4000-a000-000000000000")
+		idFour := uuid.New()
 		descriptionOne := "other text description"
 		linkedSystems := []*models.SystemRelationshipInput{
 			{
@@ -169,8 +168,8 @@ func (s *StoreTestSuite) TestDeleteSystemIntakeSystemByID() {
 		s.NoError(err)
 
 		// Step 2: Link multiple systems
-		idOne := "system-1"
-		idTwo := "system-2"
+		idOne := uuid.New()
+		idTwo := uuid.New()
 		linkedSystems := []*models.SystemRelationshipInput{
 			{
 				CedarSystemID:          &idOne,
@@ -237,7 +236,7 @@ func (s *StoreTestSuite) TestUpdateSystemIntakeSystemByID() {
 		s.NoError(err)
 
 		// Step 2: Link a system
-		systemID := "system-to-update"
+		systemID := uuid.New()
 		initialDescription := "initial description"
 		initialRelationship := []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"}
 
@@ -316,7 +315,7 @@ func (s *StoreTestSuite) TestGetLinkedSystemByID() {
 		s.NoError(err)
 
 		// Step 2: Link a system
-		systemID := "system-to-get"
+		systemID := uuid.New()
 		relationshipTypes := []models.SystemRelationshipType{"USES_OR_IMPACTED_BY_SELECTED_SYSTEM"}
 
 		linkedSystems := []*models.SystemRelationshipInput{
@@ -379,7 +378,7 @@ func (s *StoreTestSuite) TestAddSystemIntakeSystem() {
 		systemLink := models.SystemIntakeSystem{
 			BaseStructUser:                     models.NewBaseStructUser(uuid.New()),
 			SystemIntakeID:                     createdIntake.ID,
-			SystemID:                           "system-test-id",
+			SystemID:                           uuid.New(),
 			SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
 			OtherSystemRelationshipDescription: &initialDescription,
 		}

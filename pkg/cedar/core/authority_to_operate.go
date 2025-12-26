@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 
@@ -20,7 +22,7 @@ import (
 //   the other optional parameters. For this reason we are not going to include the optional parameters in the client methods for EASi.
 
 // GetAuthorityToOperate makes a GET call to the /authority_to_operate endpoint
-func (c *Client) GetAuthorityToOperate(ctx context.Context, cedarSystemID string) ([]*models.CedarAuthorityToOperate, error) {
+func (c *Client) GetAuthorityToOperate(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarAuthorityToOperate, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		if cedarcoremock.IsMockSystem(cedarSystemID) {
@@ -31,7 +33,7 @@ func (c *Client) GetAuthorityToOperate(ctx context.Context, cedarSystemID string
 
 	// Construct the parameters
 	params := apiauthority.NewAuthorityToOperateFindListParams()
-	params.SetSystemID(&cedarSystemID)
+	params.SetSystemID(helpers.PointerTo(formatIDForCEDAR(cedarSystemID)))
 	params.HTTPClient = c.hc
 
 	// Make the API call

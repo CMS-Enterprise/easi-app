@@ -3,13 +3,14 @@ package cedarcoremock
 import (
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-var mockSystemMaintainerInformation = map[string]*models.SystemMaintainerInformation{
-	"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}": {
+var mockSystemMaintainerInformation = map[uuid.UUID]*models.SystemMaintainerInformation{
+	uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"): {
 		AdHocAgileDeploymentFrequency:         zero.StringFrom("Every three weeks"),
 		AgileUsed:                             true,
 		AuthoritativeDatasource:               zero.StringFrom("Source control"),
@@ -53,7 +54,7 @@ var mockSystemMaintainerInformation = map[string]*models.SystemMaintainerInforma
 		TestScriptsOnDemand:                   true,
 		YearToRetireReplace:                   zero.StringFrom("2027"),
 	},
-	"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}": {
+	uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"): {
 		AdHocAgileDeploymentFrequency:         zero.StringFrom("Daily"),
 		AgileUsed:                             false,
 		AuthoritativeDatasource:               zero.StringFrom("Wikipedia"),
@@ -97,7 +98,7 @@ var mockSystemMaintainerInformation = map[string]*models.SystemMaintainerInforma
 		TestScriptsOnDemand:                   false,
 		YearToRetireReplace:                   zero.StringFrom("2025"),
 	},
-	"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}": {
+	uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"): {
 		AdHocAgileDeploymentFrequency:         zero.StringFrom("Monthly"),
 		AgileUsed:                             true,
 		AuthoritativeDatasource:               zero.StringFrom("PostgreSQL"),
@@ -141,7 +142,7 @@ var mockSystemMaintainerInformation = map[string]*models.SystemMaintainerInforma
 		TestScriptsOnDemand:                   true,
 		YearToRetireReplace:                   zero.StringFrom("2077"),
 	},
-	"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}": {
+	uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC3D}"): {
 		AdHocAgileDeploymentFrequency:         zero.StringFrom("Hourly"),
 		AgileUsed:                             false,
 		AuthoritativeDatasource:               zero.StringFrom("MongoDB"),
@@ -185,7 +186,7 @@ var mockSystemMaintainerInformation = map[string]*models.SystemMaintainerInforma
 		TestScriptsOnDemand:                   false,
 		YearToRetireReplace:                   zero.StringFrom("2034"),
 	},
-	"{11AB1A00-1234-5678-ABC1-1A001B00CC4E}": {
+	uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"): {
 		AdHocAgileDeploymentFrequency:         zero.StringFrom("Annually"),
 		AgileUsed:                             true,
 		AuthoritativeDatasource:               zero.StringFrom("Google docs"),
@@ -232,7 +233,7 @@ var mockSystemMaintainerInformation = map[string]*models.SystemMaintainerInforma
 }
 
 // GetSystemMaintainerInformation returns mocked system maintainer information for a single CEDAR system
-func GetSystemMaintainerInformation(cedarSystemID string) *models.SystemMaintainerInformation {
+func GetSystemMaintainerInformation(cedarSystemID uuid.UUID) *models.SystemMaintainerInformation {
 	if val, ok := mockSystemMaintainerInformation[cedarSystemID]; ok {
 		return val
 	}

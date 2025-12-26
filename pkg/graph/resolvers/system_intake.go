@@ -85,7 +85,7 @@ func UpdateSystemIntakeRequestType(ctx context.Context, store *storage.Store, sy
 
 // SystemIntakeUpdate takes a UpdateSystemIntakeRequestDetailsInput struct and updates the database with the provided information.
 // It also updates the request form state to show in progress, unless the state was EDITS_REQUESTED
-func SystemIntakeUpdate(ctx context.Context, store *storage.Store, fetchCedarSystem func(context.Context, string) (*models.CedarSystem, error), input models.UpdateSystemIntakeRequestDetailsInput) (*models.UpdateSystemIntakePayload, error) {
+func SystemIntakeUpdate(ctx context.Context, store *storage.Store, fetchCedarSystem func(context.Context, uuid.UUID) (*models.CedarSystem, error), input models.UpdateSystemIntakeRequestDetailsInput) (*models.UpdateSystemIntakePayload, error) {
 	intake, err := store.FetchSystemIntakeByID(ctx, input.ID)
 	if err != nil {
 		return nil, err
@@ -107,14 +107,13 @@ func SystemIntakeUpdate(ctx context.Context, store *storage.Store, fetchCedarSys
 		return acqMethod.String()
 	})
 
-	cedarSystemID := null.StringFromPtr(input.CedarSystemID)
-	cedarSystemIDStr := cedarSystemID.ValueOrZero()
-	if input.CedarSystemID != nil && len(*input.CedarSystemID) > 0 {
-		_, err = fetchCedarSystem(ctx, cedarSystemIDStr)
+	if input.CedarSystemID != nil && *input.CedarSystemID != uuid.Nil {
+		_, err = fetchCedarSystem(ctx, *input.CedarSystemID)
 		if err != nil {
 			return nil, err
 		}
-		intake.CedarSystemID = null.StringFromPtr(input.CedarSystemID)
+
+		intake.CedarSystemID = input.CedarSystemID
 	}
 
 	savedIntake, err := store.UpdateSystemIntake(ctx, intake)

@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 )
 
@@ -9,7 +10,7 @@ import (
 type BudgetActualCost struct {
 	ActualSystemCost zero.String `json:"actualSystemCost,omitempty"`
 	FiscalYear       zero.String `json:"fiscalYear,omitempty"`
-	SystemID         zero.String `json:"systemId,omitempty"`
+	SystemID         *uuid.UUID  `json:"systemId,omitempty"`
 }
 
 type CedarBudgetSystemCost struct {

@@ -151,7 +151,7 @@ type SystemIntake struct {
 	DecisionNextSteps                                 *HTML                        `json:"decisionNextSteps" db:"decision_next_steps"`
 	RejectionReason                                   *HTML                        `json:"rejectionReason" db:"rejection_reason"`
 	AdminLead                                         null.String                  `json:"adminLead" db:"admin_lead"`
-	CedarSystemID                                     null.String                  `json:"cedarSystemId" db:"cedar_system_id"`
+	CedarSystemID                                     *uuid.UUID                   `json:"cedarSystemId" db:"cedar_system_id"`
 	ExistingFunding                                   null.Bool                    `json:"existingFunding" db:"existing_funding"`
 	FundingSource                                     null.String                  `json:"fundingSource" db:"funding_source"`
 	FundingNumber                                     null.String                  `json:"fundingNumber" db:"funding_number"`
@@ -274,16 +274,16 @@ func (s RelatedSystemIntake) GetMappingVal() *SystemIntake {
 }
 
 type SystemIntakesByCedarSystemIDsRequest struct {
-	CedarSystemID string
+	CedarSystemID uuid.UUID
 	State         SystemIntakeState
 }
 
 type SystemIntakesByCedarSystemIDsResponse struct {
-	CedarSystemID string `db:"system_id"`
+	CedarSystemID uuid.UUID `db:"system_id"`
 	SystemIntake
 }
 
-func (s SystemIntakesByCedarSystemIDsResponse) GetMappingKey() string {
+func (s SystemIntakesByCedarSystemIDsResponse) GetMappingKey() uuid.UUID {
 	return s.CedarSystemID
 }
 

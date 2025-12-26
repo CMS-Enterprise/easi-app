@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null"
 	"github.com/guregu/null/zero"
 	"github.com/jmoiron/sqlx"
@@ -17,8 +18,8 @@ import (
 type systemIntakeRelationTestCase struct {
 	InitialContractNumbers []string
 	NewContractNumbers     []string
-	InitialSystemIDs       []string
-	NewSystemIDs           []string
+	InitialSystemIDs       []uuid.UUID
+	NewSystemIDs           []uuid.UUID
 	InitialLinkedSystems   []*models.SystemRelationshipInput
 	NewLinkedSystems       []*models.SystemRelationshipInput
 }
@@ -29,9 +30,9 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 
 	submittedAt := time.Now()
 
-	idOne := "{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"
+	idOne := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}")
 	descriptionOne := "other description"
-	idTwo := "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
+	idTwo := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")
 
 	var cases = map[string]systemIntakeRelationTestCase{
 		"adds contract numbers when no initial contract numbers exist": {
@@ -57,8 +58,8 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 		"should remove existing system IDs": {
 			InitialContractNumbers: []string{"1", "2"},
 			NewContractNumbers:     []string{"1"},
-			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
-			NewSystemIDs:           []string{},
+			InitialSystemIDs:       []uuid.UUID{uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"), uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")},
+			NewSystemIDs:           []uuid.UUID{},
 			InitialLinkedSystems: []*models.SystemRelationshipInput{
 				{
 					CedarSystemID:                      &idOne,
@@ -75,8 +76,8 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 		"should not add system IDs": {
 			InitialContractNumbers: []string{"1", "2"},
 			NewContractNumbers:     []string{"1"},
-			InitialSystemIDs:       []string{},
-			NewSystemIDs:           []string{},
+			InitialSystemIDs:       []uuid.UUID{},
+			NewSystemIDs:           []uuid.UUID{},
 			InitialLinkedSystems:   []*models.SystemRelationshipInput{},
 			NewLinkedSystems:       []*models.SystemRelationshipInput{},
 		},
@@ -164,19 +165,19 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 
 	submittedAt := time.Now()
 
-	idOne := "{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"
+	idOne := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}")
 	descriptionOne := "other description"
-	idTwo := "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
-	idThree := "{11AB1A00-1234-5678-ABC1-1A001B00CC3D}"
-	idFour := "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"
-	idFive := "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"
+	idTwo := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")
+	idThree := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC3D}")
+	idFour := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC4E}")
+	idFive := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")
 
 	var cases = map[string]systemIntakeRelationTestCase{
 		"adds contract numbers and system IDs when no initial ones exist": {
 			InitialContractNumbers: []string{},
 			NewContractNumbers:     []string{"1", "2"},
-			InitialSystemIDs:       []string{},
-			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
+			InitialSystemIDs:       []uuid.UUID{},
+			NewSystemIDs:           []uuid.UUID{uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"), uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")},
 			InitialLinkedSystems:   []*models.SystemRelationshipInput{},
 			NewLinkedSystems: []*models.SystemRelationshipInput{
 				{
@@ -193,8 +194,8 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 		"removes existing contract numbers and system IDs when none are given": {
 			InitialContractNumbers: []string{"1", "2"},
 			NewContractNumbers:     []string{},
-			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
-			NewSystemIDs:           []string{},
+			InitialSystemIDs:       []uuid.UUID{uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"), uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")},
+			NewSystemIDs:           []uuid.UUID{},
 
 			InitialLinkedSystems: []*models.SystemRelationshipInput{
 				{
@@ -212,8 +213,8 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 		"changes existing contract numbers and system IDs to different ones": {
 			InitialContractNumbers: []string{"1", "2"},
 			NewContractNumbers:     []string{"3", "4"},
-			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
-			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}", "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"},
+			InitialSystemIDs:       []uuid.UUID{uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"), uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")},
+			NewSystemIDs:           []uuid.UUID{uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC3D}"), uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC4E}")},
 			InitialLinkedSystems: []*models.SystemRelationshipInput{
 				{
 					CedarSystemID:                      &idOne,
@@ -240,8 +241,8 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 		"changes existing contract numbers and system IDs to add new ones": {
 			InitialContractNumbers: []string{"1", "2"},
 			NewContractNumbers:     []string{"1", "2", "3"},
-			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
-			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}", "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}", "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"},
+			InitialSystemIDs:       []uuid.UUID{uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"), uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")},
+			NewSystemIDs:           []uuid.UUID{uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC3D}"), uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"), uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")},
 			InitialLinkedSystems: []*models.SystemRelationshipInput{
 				{
 					CedarSystemID:                      &idOne,
@@ -272,8 +273,8 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 		"changes existing contract numbers and system IDs to remove old ones": {
 			InitialContractNumbers: []string{"1", "2"},
 			NewContractNumbers:     []string{"1"},
-			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
-			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"},
+			InitialSystemIDs:       []uuid.UUID{uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"), uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")},
+			NewSystemIDs:           []uuid.UUID{uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}")},
 			InitialLinkedSystems: []*models.SystemRelationshipInput{
 				{
 					CedarSystemID:                      &idOne,
@@ -336,7 +337,7 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			updatedIntake, err := SetSystemIntakeRelationExistingSystem(
 				ctx,
 				store,
-				func(ctx context.Context, systemID string) (*models.CedarSystem, error) {
+				func(ctx context.Context, systemID uuid.UUID) (*models.CedarSystem, error) {
 					return &models.CedarSystem{}, nil
 				},
 				input,
@@ -357,7 +358,7 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			// Ensure the system IDs were modified properly
 			s.Equal(len(caseValues.NewSystemIDs), len(updatedIntakeSystemIDs))
 			for _, v := range updatedIntakeSystemIDs {
-				s.Contains(caseValues.NewSystemIDs, v.ID.String)
+				s.Contains(caseValues.NewSystemIDs, v.ID)
 			}
 
 			// Ensure the contract numbers were modified properly
@@ -382,9 +383,9 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 
 	submittedAt := time.Now()
 
-	idOne := "{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"
+	idOne := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}")
 	descriptionOne := "other description"
-	idTwo := "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
+	idTwo := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")
 
 	var cases = map[string]systemIntakeRelationTestCase{
 		"adds contract numbers when no initial ones exist": {
@@ -410,8 +411,8 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 		"should remove existing system IDs": {
 			InitialContractNumbers: []string{"1", "2"},
 			NewContractNumbers:     []string{"1"},
-			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
-			NewSystemIDs:           []string{},
+			InitialSystemIDs:       []uuid.UUID{uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"), uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")},
+			NewSystemIDs:           []uuid.UUID{},
 			InitialLinkedSystems: []*models.SystemRelationshipInput{
 				{
 					CedarSystemID:                      &idOne,
@@ -428,8 +429,8 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 		"should not add system IDs": {
 			InitialContractNumbers: []string{"1", "2"},
 			NewContractNumbers:     []string{"1"},
-			InitialSystemIDs:       []string{},
-			NewSystemIDs:           []string{},
+			InitialSystemIDs:       []uuid.UUID{},
+			NewSystemIDs:           []uuid.UUID{},
 			InitialLinkedSystems:   []*models.SystemRelationshipInput{},
 			NewLinkedSystems:       []*models.SystemRelationshipInput{},
 		},
@@ -537,7 +538,7 @@ func (s *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		_, err = SetSystemIntakeRelationNewSystem(ctx, store, input)
 		s.NoError(err) // we don't need to test the SetSystemIntakeRelationNewSystem function here
 		_, err = AddSystemLink(ctx, store, models.AddSystemLinkInput{
-			SystemID:                           "{11AB1A00-1234-5678-ABC1-1A001B0TDCTG}",
+			SystemID:                           uuid.MustParse("{7ab1e041-adde-433b-80e1-88183fd4a355}"),
 			SystemIntakeID:                     openIntake.ID,
 			SystemRelationshipType:             []models.SystemRelationshipType{models.SystemRelationshipTypePrimarySupport, models.SystemRelationshipTypeOther},
 			OtherSystemRelationshipDescription: helpers.PointerTo("Test description"),
@@ -594,7 +595,7 @@ func (s *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		_, err = SetSystemIntakeRelationExistingSystem(
 			ctx,
 			store,
-			func(ctx context.Context, systemID string) (*models.CedarSystem, error) {
+			func(ctx context.Context, systemID uuid.UUID) (*models.CedarSystem, error) {
 				return &models.CedarSystem{}, nil
 			},
 			input,

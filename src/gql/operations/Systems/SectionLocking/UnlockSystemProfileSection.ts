@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 
 export default gql(/* GraphQL */ `
   mutation UnlockSystemProfileSection(
-    $cedarSystemId: String!
+    $cedarSystemId: UUID!
     $section: SystemProfileLockableSection!
   ) {
     unlockSystemProfileSection(cedarSystemId: $cedarSystemId, section: $section)

@@ -75,7 +75,7 @@ func (s *EmailTestSuite) TestSendCedarNewTeamMemberEmail() {
 			memberName,
 			"test@fake.com",
 			systemName,
-			systemID.String(),
+			systemID,
 			rolesList,
 			existingTeamMembers,
 		)

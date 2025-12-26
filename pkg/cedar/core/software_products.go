@@ -4,16 +4,17 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
-	software_products "github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/software_products"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/software_products"
 	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // GetSoftwareProductsBySystem queries CEDAR for software product/tooling information associated with a particular system, taking the version-independent ID of a system
-func (c *Client) GetSoftwareProductsBySystem(ctx context.Context, cedarSystemID string) (*models.CedarSoftwareProducts, error) {
+func (c *Client) GetSoftwareProductsBySystem(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarSoftwareProducts, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		if cedarcoremock.IsMockSystem(cedarSystemID) {

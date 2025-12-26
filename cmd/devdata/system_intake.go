@@ -86,7 +86,7 @@ func fillOutInitialIntake(
 		true,
 		true,
 		"Some CEDAR System ID",
-		"the current stage",
+		uuid.New(),
 		true,
 		"YES",
 		acqMethods,
@@ -249,7 +249,7 @@ func updateSystemIntakeRequestDetails(
 	needsEaSupport bool,
 	usesAiTech bool,
 	currentStage string,
-	cedarSystemID string,
+	cedarSystemID uuid.UUID,
 	hasUIChanges bool,
 	usingSoftware string,
 	acquisitionMethods []models.SystemIntakeSoftwareAcquisitionMethods,
@@ -267,7 +267,7 @@ func updateSystemIntakeRequestDetails(
 		UsingSoftware:      &usingSoftware,
 		AcquisitionMethods: acquisitionMethods,
 	}
-	fetchCedarSystemMock := func(context.Context, string) (*models.CedarSystem, error) {
+	fetchCedarSystemMock := func(context.Context, uuid.UUID) (*models.CedarSystem, error) {
 		return &models.CedarSystem{}, nil
 	}
 	payload, err := resolvers.SystemIntakeUpdate(ctx, store, fetchCedarSystemMock, input)
@@ -378,7 +378,7 @@ func setSystemIntakeRelationExistingSystem(
 	_, err := resolvers.SetSystemIntakeRelationExistingSystem(
 		ctx,
 		store,
-		func(ctx context.Context, systemID string) (*models.CedarSystem, error) {
+		func(ctx context.Context, systemID uuid.UUID) (*models.CedarSystem, error) {
 			return cedarcoremock.GetSystem(systemID), nil
 		},
 		input,

@@ -3,6 +3,7 @@ package cedarcoremock
 import (
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 
 	"github.com/cms-enterprise/easi-app/pkg/models"
@@ -56,11 +57,11 @@ var mockContracts = []*models.CedarContract{
 	},
 }
 
-func GetContractsBySystem(cedarSystemID string) []*models.CedarContract {
+func GetContractsBySystem(cedarSystemID uuid.UUID) []*models.CedarContract {
 	contracts := []*models.CedarContract{}
 	for i := range mockContracts {
 		contract := *mockContracts[i]
-		contract.SystemID = zero.StringFrom(cedarSystemID)
+		contract.SystemID = &cedarSystemID
 		contracts = append(contracts, &contract)
 	}
 	return contracts

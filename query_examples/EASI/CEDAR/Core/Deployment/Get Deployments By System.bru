@@ -11,7 +11,7 @@ post {
 }
 
 body:graphql {
-  query GetDeploymentsBySystem($cedarSystemId: String!, $deploymentType: String, $state: String, $status: String){
+  query GetDeploymentsBySystem($cedarSystemId: UUID!, $deploymentType: String, $state: String, $status: String){
       deployments(cedarSystemId: $cedarSystemId, deploymentType: $deploymentType, state: $state, status: $status) {
           id
           name

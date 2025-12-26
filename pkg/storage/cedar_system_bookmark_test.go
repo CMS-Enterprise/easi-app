@@ -17,7 +17,7 @@ func (s *StoreTestSuite) TestCreateCedarSystemBookmark() {
 	ctx := context.Background()
 
 	s.Run("create a new cedar system bookmark", func() {
-		cedarSystemID := "326-1556-0"
+		cedarSystemID := uuid.New()
 		bookmark := models.CedarSystemBookmark{
 			EUAUserID:     "ANON",
 			CedarSystemID: cedarSystemID,
@@ -41,7 +41,7 @@ func (s *StoreTestSuite) TestDuplicateCedarSystemBookmark() {
 	s.store.clock = &settableClock
 
 	s.Run("create a duplicate cedar system bookmark and verify created_at updates", func() {
-		cedarSystemID := "326-1556-2"
+		cedarSystemID := uuid.New()
 		bookmark := models.CedarSystemBookmark{
 			EUAUserID:     "ANON",
 			CedarSystemID: cedarSystemID,
@@ -61,8 +61,8 @@ func (s *StoreTestSuite) TestDuplicateCedarSystemBookmark() {
 func (s *StoreTestSuite) TestFetchCedarSystemIsBookmarkedByCedarSystemIDs() {
 	ctx := context.Background()
 
-	cedarSystemID := uuid.New().String()
-	s.NotEmpty(cedarSystemID)
+	cedarSystemID := uuid.New()
+	s.NotNil(cedarSystemID)
 
 	otherID := uuid.New().String()
 	s.NotEmpty(otherID)

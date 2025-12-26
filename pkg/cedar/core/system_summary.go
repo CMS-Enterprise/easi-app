@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
+	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
@@ -18,6 +20,7 @@ import (
 // GetSystemSummary makes a GET call to the /system/summary endpoint
 // If `tryCache` is true and `euaUserID` is nil, we will try to hit the cache. Otherwise, we will make an API call as we cannot filter on EUA on our end
 func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryParamFilterOpt) ([]*models.CedarSystem, error) {
+	logger := appcontext.ZLogger(ctx)
 	// Construct the parameters
 	params := apisystems.NewSystemSummaryFindListParams()
 
@@ -71,7 +74,18 @@ func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryPara
 	retVal := []*models.CedarSystem{}
 	// Populate the SystemSummary field by converting each item in resp.Payload.SystemSummary
 	for _, sys := range resp.Payload.SystemSummary {
+
 		if sys.IctObjectID != nil {
+			if sys.ID == nil {
+				logger.Warn("unexpected nil system ID when getting system summary")
+				continue
+			}
+
+			parsed, err := uuid.Parse(*sys.ID)
+			if err != nil {
+				logger.Error("unable to parse uuid when getting system summary", zap.Error(err))
+				continue
+			}
 			cedarSys := &models.CedarSystem{
 				VersionID:               zero.StringFromPtr(sys.ID),
 				Name:                    zero.StringFromPtr(sys.Name),
@@ -85,7 +99,7 @@ func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryPara
 				BusinessOwnerOrgComp:    zero.StringFrom(sys.BusinessOwnerOrgComp),
 				SystemMaintainerOrg:     zero.StringFrom(sys.SystemMaintainerOrg),
 				SystemMaintainerOrgComp: zero.StringFrom(sys.SystemMaintainerOrgComp),
-				ID:                      zero.StringFromPtr(sys.IctObjectID),
+				ID:                      parsed,
 				UUID:                    zero.StringFrom(sys.UUID),
 			}
 			retVal = append(retVal, cedarSys)
@@ -104,7 +118,7 @@ func (c *Client) PurgeSystemCacheByEUA(ctx context.Context, euaID string) error 
 }
 
 // GetSystem retrieves a CEDAR system by ID (IctObjectID)
-func (c *Client) GetSystem(ctx context.Context, systemID string) (*models.CedarSystem, error) {
+func (c *Client) GetSystem(ctx context.Context, systemID uuid.UUID) (*models.CedarSystem, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return cedarcoremock.GetSystem(systemID), nil
@@ -115,10 +129,10 @@ func (c *Client) GetSystem(ctx context.Context, systemID string) (*models.CedarS
 		return nil, err
 	}
 
-	systemSummaryMap := make(map[string]*models.CedarSystem)
+	systemSummaryMap := make(map[uuid.UUID]*models.CedarSystem)
 	for _, sys := range systemSummary {
 		if sys != nil {
-			systemSummaryMap[sys.ID.String] = sys
+			systemSummaryMap[sys.ID] = sys
 		}
 	}
 	if sys, found := systemSummaryMap[systemID]; found && sys != nil {
@@ -151,9 +165,9 @@ func (systemSummaryOpts) WithEuaIDFilter(euaUserID string) systemSummaryParamFil
 }
 
 // WithSubSystems sets given cedar system ID as the parent system for which we are looking for sub-systems
-func (systemSummaryOpts) WithSubSystems(cedarSystemID string) systemSummaryParamFilterOpt {
+func (systemSummaryOpts) WithSubSystems(cedarSystemID uuid.UUID) systemSummaryParamFilterOpt {
 	return func(params *apisystems.SystemSummaryFindListParams) {
-		params.SetBelongsTo(&cedarSystemID)
+		params.SetBelongsTo(helpers.PointerTo(cedarSystemID.String()))
 
 		// we want all sub systems, not just ones included in the survey
 		// TODO: some systems come back only when `nil` is set and do not come back when `true` or `false` is set - why?

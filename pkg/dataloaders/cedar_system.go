@@ -4,20 +4,22 @@ import (
 	"context"
 	"errors"
 
+	"github.com/google/uuid"
+
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-func (d *dataReader) getCedarSystemsByIDs(ctx context.Context, cedarSystemIDs []string) ([]*models.CedarSystem, []error) {
+func (d *dataReader) getCedarSystemsByIDs(ctx context.Context, cedarSystemIDs []uuid.UUID) ([]*models.CedarSystem, []error) {
 	data, err := d.getCedarSystems(ctx)
 	if err != nil {
 		return nil, []error{err}
 	}
 
-	store := map[string]*models.CedarSystem{}
+	store := map[uuid.UUID]*models.CedarSystem{}
 
 	for _, sys := range data {
 		if sys != nil {
-			store[sys.ID.String] = sys
+			store[sys.ID] = sys
 		}
 	}
 
@@ -31,7 +33,7 @@ func (d *dataReader) getCedarSystemsByIDs(ctx context.Context, cedarSystemIDs []
 	return out, nil
 }
 
-func GetCedarSystemByID(ctx context.Context, cedarSystemID string) (*models.CedarSystem, error) {
+func GetCedarSystemByID(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarSystem, error) {
 	loaders, ok := loadersFromCTX(ctx)
 	if !ok {
 		return nil, errors.New("unexpected nil dataloaders in GetCedarSystemByID")

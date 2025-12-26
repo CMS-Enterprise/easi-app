@@ -21,7 +21,7 @@ type TRBAdminNoteCategorySpecificData interface {
 // The input type for adding a new System Link
 type AddSystemLinkInput struct {
 	SystemIntakeID                     uuid.UUID                `json:"systemIntakeID"`
-	SystemID                           string                   `json:"systemID"`
+	SystemID                           uuid.UUID                `json:"systemID"`
 	SystemRelationshipType             []SystemRelationshipType `json:"systemRelationshipType"`
 	OtherSystemRelationshipDescription *string                  `json:"otherSystemRelationshipDescription,omitempty"`
 }
@@ -30,7 +30,7 @@ type AddSystemLinkInput struct {
 type AddSystemLinkPayload struct {
 	ID                                 uuid.UUID                `json:"id"`
 	SystemIntakeID                     uuid.UUID                `json:"systemIntakeID"`
-	SystemID                           string                   `json:"systemID"`
+	SystemID                           uuid.UUID                `json:"systemID"`
 	SystemRelationshipType             []SystemRelationshipType `json:"systemRelationshipType"`
 	OtherSystemRelationshipDescription *string                  `json:"otherSystemRelationshipDescription,omitempty"`
 }
@@ -65,9 +65,9 @@ type CastSystemIntakeGRBReviewerVoteInput struct {
 // CedarBudgetActualCost represents an individual budget actual cost item; this information is returned from the CEDAR Core API
 // as a part of the CedarBudgetSystemCost object
 type CedarBudgetActualCost struct {
-	ActualSystemCost *string `json:"actualSystemCost,omitempty"`
-	FiscalYear       *string `json:"fiscalYear,omitempty"`
-	SystemID         *string `json:"systemId,omitempty"`
+	ActualSystemCost *string    `json:"actualSystemCost,omitempty"`
+	FiscalYear       *string    `json:"fiscalYear,omitempty"`
+	SystemID         *uuid.UUID `json:"systemId,omitempty"`
 }
 
 // BusinessOwnerInformation contains information about the Business Owner for a CEDAR system
@@ -170,7 +170,7 @@ type ContractDate struct {
 
 // The data needed to bookmark a cedar system
 type CreateCedarSystemBookmarkInput struct {
-	CedarSystemID string `json:"cedarSystemId"`
+	CedarSystemID uuid.UUID `json:"cedarSystemId"`
 }
 
 // The payload when bookmarking a cedar system
@@ -318,7 +318,7 @@ type CurrentUser struct {
 
 // The payload when deleting a bookmark for a cedar system
 type DeleteCedarSystemBookmarkPayload struct {
-	CedarSystemID string `json:"cedarSystemId"`
+	CedarSystemID uuid.UUID `json:"cedarSystemId"`
 }
 
 // The data needed to delete a system intake contact
@@ -465,9 +465,9 @@ type SendTRBGuidanceLetterInput struct {
 }
 
 type SetRolesForUserOnSystemInput struct {
-	CedarSystemID      string   `json:"cedarSystemID"`
-	EuaUserID          string   `json:"euaUserId"`
-	DesiredRoleTypeIDs []string `json:"desiredRoleTypeIDs"`
+	CedarSystemID      uuid.UUID `json:"cedarSystemID"`
+	EuaUserID          string    `json:"euaUserId"`
+	DesiredRoleTypeIDs []string  `json:"desiredRoleTypeIDs"`
 }
 
 type SetSystemIntakeRelationExistingServiceInput struct {
@@ -494,9 +494,9 @@ type SetTRBRequestRelationExistingServiceInput struct {
 }
 
 type SetTRBRequestRelationExistingSystemInput struct {
-	TrbRequestID    uuid.UUID `json:"trbRequestID"`
-	CedarSystemIDs  []string  `json:"cedarSystemIDs"`
-	ContractNumbers []string  `json:"contractNumbers"`
+	TrbRequestID    uuid.UUID   `json:"trbRequestID"`
+	CedarSystemIDs  []uuid.UUID `json:"cedarSystemIDs"`
+	ContractNumbers []string    `json:"contractNumbers"`
 }
 
 type SetTRBRequestRelationNewSystemInput struct {
@@ -824,7 +824,7 @@ type SystemIntakeUpdateLCIDInput struct {
 
 // Status of a locked section of the system profile form
 type SystemProfileSectionLockStatus struct {
-	CedarSystemID       string                       `json:"cedarSystemId"`
+	CedarSystemID       uuid.UUID                    `json:"cedarSystemId"`
 	Section             SystemProfileLockableSection `json:"section"`
 	LockedByUserAccount *authentication.UserAccount  `json:"lockedByUserAccount"`
 }
@@ -837,7 +837,7 @@ type SystemProfileSectionLockStatusChanged struct {
 
 // Input data for creating a system intake's relationship to a CEDAR system
 type SystemRelationshipInput struct {
-	CedarSystemID                      *string                  `json:"cedarSystemId,omitempty"`
+	CedarSystemID                      *uuid.UUID               `json:"cedarSystemId,omitempty"`
 	SystemRelationshipType             []SystemRelationshipType `json:"systemRelationshipType"`
 	OtherSystemRelationshipDescription *string                  `json:"otherSystemRelationshipDescription,omitempty"`
 }
@@ -933,8 +933,8 @@ type UpdateSystemIntakeGRBReviewerInput struct {
 
 // Input data for updating a system intake's relationship to a CEDAR system
 type UpdateSystemIntakeLinkedCedarSystemInput struct {
-	ID            uuid.UUID `json:"id"`
-	CedarSystemID *string   `json:"cedarSystemId,omitempty"`
+	ID            uuid.UUID  `json:"id"`
+	CedarSystemID *uuid.UUID `json:"cedarSystemId,omitempty"`
 }
 
 // Input data for updating an IT governance admin note
@@ -963,7 +963,7 @@ type UpdateSystemIntakeRequestDetailsInput struct {
 	UsesAiTech         *bool                                    `json:"usesAiTech,omitempty"`
 	UsingSoftware      *string                                  `json:"usingSoftware,omitempty"`
 	AcquisitionMethods []SystemIntakeSoftwareAcquisitionMethods `json:"acquisitionMethods"`
-	CedarSystemID      *string                                  `json:"cedarSystemId,omitempty"`
+	CedarSystemID      *uuid.UUID                               `json:"cedarSystemId,omitempty"`
 }
 
 // Input data used to update GRT and GRB dates for a system request
@@ -977,7 +977,7 @@ type UpdateSystemIntakeReviewDatesInput struct {
 type UpdateSystemLinkInput struct {
 	ID                                 uuid.UUID                `json:"id"`
 	SystemIntakeID                     uuid.UUID                `json:"systemIntakeID"`
-	SystemID                           string                   `json:"systemID"`
+	SystemID                           uuid.UUID                `json:"systemID"`
 	SystemRelationshipType             []SystemRelationshipType `json:"systemRelationshipType"`
 	OtherSystemRelationshipDescription *string                  `json:"otherSystemRelationshipDescription,omitempty"`
 }

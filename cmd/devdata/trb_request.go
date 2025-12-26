@@ -471,9 +471,9 @@ func (s *seederConfig) seedTRBCase14(ctx context.Context) error {
 		ctx,
 		trbRequest.ID,
 		[]string{"00001", "00002"}, // contract numbers
-		[]string{ // cedar system IDs, these mock IDs are from the client helper
-			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
-			"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
+		[]uuid.UUID{ // cedar system IDs, these mock IDs are from the client helper
+			uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"),
+			uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"),
 		},
 	)
 	if err != nil {
@@ -503,9 +503,9 @@ func (s *seederConfig) seedTRBCase16(ctx context.Context) error {
 		ctx,
 		trbRequest.ID,
 		[]string{"ABC", "DEF"}, // contract numbers
-		[]string{ // cedar system IDs, these mock IDs are from the client helper
-			"{11AB1A00-1234-5678-ABC1-1A001B00CC6G}",
-			"{11AB1A00-1234-5678-ABC1-1A001B00CC5F}",
+		[]uuid.UUID{ // cedar system IDs, these mock IDs are from the client helper
+			uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC6F}"),
+			uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC5F}"),
 		},
 	)
 	if err != nil {
@@ -523,9 +523,9 @@ func (s *seederConfig) seedTRBCase17(ctx context.Context) error {
 		ctx,
 		trbRequest.ID,
 		[]string{"00002", "00003"}, // contract numbers
-		[]string{ // cedar system IDs, these mock IDs are from the client helper
-			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
-			"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}",
+		[]uuid.UUID{ // cedar system IDs, these mock IDs are from the client helper
+			uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"),
+			uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC3D}"),
 		},
 	)
 	if err != nil {
@@ -543,9 +543,9 @@ func (s *seederConfig) seedTRBCase18(ctx context.Context) error {
 		ctx,
 		trbRequest.ID,
 		[]string{"00004", "00005"}, // contract numbers
-		[]string{ // cedar system IDs, these mock IDs are from the client helper
-			"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
-			"{11AB1A00-1234-5678-ABC1-1A001B00CC4E}",
+		[]uuid.UUID{ // cedar system IDs, these mock IDs are from the client helper
+			uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"),
+			uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"),
 		},
 	)
 	if err != nil {
@@ -666,8 +666,8 @@ func (s *seederConfig) seedTRBCase21(ctx context.Context) error {
 				ctx,
 				trbRequest.ID,
 				[]string{"11111", "11112"}, // contract numbers
-				[]string{ // cedar system IDs, these mock IDs are from the client helper
-					"{11AB1A00-1234-5678-ABC1-1A001B00CC5F}",
+				[]uuid.UUID{ // cedar system IDs, these mock IDs are from the client helper
+					uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC5F}"),
 				},
 			)
 			if err != nil {
@@ -1247,12 +1247,12 @@ func (s *seederConfig) addTRBExistingSystemRelation(
 	ctx context.Context,
 	trbRequestID uuid.UUID,
 	contractNumbers []string,
-	cedarSystemIDs []string,
+	cedarSystemIDs []uuid.UUID,
 ) (*models.TRBRequest, error) {
 	return resolvers.SetTRBRequestRelationExistingSystem(
 		ctx,
 		s.store,
-		func(ctx context.Context, systemID string) (*models.CedarSystem, error) {
+		func(ctx context.Context, systemID uuid.UUID) (*models.CedarSystem, error) {
 			return cedarcoremock.GetSystem(systemID), nil
 		},
 		models.SetTRBRequestRelationExistingSystemInput{

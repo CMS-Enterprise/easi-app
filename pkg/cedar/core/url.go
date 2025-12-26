@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
@@ -17,7 +18,7 @@ import (
 // Note: CEDAR's /url/{id} endpoint theoretically supports querying for URLs associated with any sort of CEDAR object;
 // however, this method assumes that the parameter is a version-independent system ID.
 // If we need to look up URLs based on something other than systems, we will need to create another method.
-func (c *Client) GetURLsForSystem(ctx context.Context, cedarSystemID string) ([]*models.CedarURL, error) {
+func (c *Client) GetURLsForSystem(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarURL, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		if cedarcoremock.IsMockSystem(cedarSystemID) {

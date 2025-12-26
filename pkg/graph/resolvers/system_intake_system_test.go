@@ -15,9 +15,9 @@ import (
 func (s *ResolverSuite) TestIntakeRelatedSystems() {
 	ctx := s.testConfigs.Context
 
-	systemID1 := "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"
-	systemID2 := "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
-	systemID3 := "{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"
+	systemID1 := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")
+	systemID2 := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")
+	systemID3 := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}")
 
 	description := "other description"
 
@@ -72,15 +72,15 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 		)
 
 		for _, result := range data {
-			if result.ID.String == systemID1 {
+			if result.ID == systemID1 {
 				found1 = true
 			}
 
-			if result.ID.String == systemID2 {
+			if result.ID == systemID2 {
 				found2 = true
 			}
 
-			if result.ID.String == systemID3 {
+			if result.ID == systemID3 {
 				found3 = true
 			}
 		}
@@ -105,9 +105,9 @@ func (s *ResolverSuite) TestSystemIntakesByCedarSystemID() {
 		closed uuid.UUID
 	)
 
-	systemID1 := "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"
-	systemID2 := "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
-	systemID3 := "{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"
+	systemID1 := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")
+	systemID2 := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")
+	systemID3 := uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}")
 
 	description := "other description"
 

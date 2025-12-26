@@ -4,7 +4,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 
-	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 )
@@ -14,11 +13,14 @@ func (s *ResolverSuite) TestRelatedRequests() {
 
 	description := "other description"
 
+	var (
+		systemID1         = uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")
+		systemID2         = uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")
+		systemID3         = uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}")
+		unrelatedSystemID = uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC3D}")
+	)
+
 	const (
-		systemID1               = "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"
-		systemID2               = "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
-		systemID3               = "{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"
-		unrelatedSystemID       = "{11AB1A00-1234-5678-ABC1-1A001B00CC3D}"
 		contractNumber1         = "00001"
 		contractNumber2         = "00002"
 		contractNumber3         = "00003"
@@ -26,30 +28,30 @@ func (s *ResolverSuite) TestRelatedRequests() {
 	)
 
 	system1 := models.SystemRelationshipInput{
-		CedarSystemID:                      helpers.PointerTo(string(systemID1)),
+		CedarSystemID:                      &systemID1,
 		SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
 		OtherSystemRelationshipDescription: &description,
 	}
 
 	system2 := models.SystemRelationshipInput{
-		CedarSystemID:                      helpers.PointerTo(string(systemID2)),
+		CedarSystemID:                      &systemID2,
 		SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
 		OtherSystemRelationshipDescription: &description,
 	}
 
 	system3 := models.SystemRelationshipInput{
-		CedarSystemID:                      helpers.PointerTo(string(systemID3)),
+		CedarSystemID:                      &systemID3,
 		SystemRelationshipType:             []models.SystemRelationshipType{"PRIMARY_SUPPORT", "OTHER"},
 		OtherSystemRelationshipDescription: &description,
 	}
 
 	unrelatedSystem := models.SystemRelationshipInput{
-		CedarSystemID:          helpers.PointerTo(string(unrelatedSystemID)),
+		CedarSystemID:          &unrelatedSystemID,
 		SystemRelationshipType: []models.SystemRelationshipType{"PRIMARY_SUPPORT"},
 	}
 
 	var relations = map[string]struct {
-		TrbSystems                  []string
+		TrbSystems                  []uuid.UUID
 		CedarSystems                []*models.SystemRelationshipInput
 		ContractNumbers             []string
 		ExpectedRelatedTrbRequests  int
@@ -58,40 +60,40 @@ func (s *ResolverSuite) TestRelatedRequests() {
 		SystemIntakeID              uuid.UUID
 	}{
 		"no relation should have no relations": {
-			[]string{}, []*models.SystemRelationshipInput{}, []string{}, 0, 0, uuid.Nil, uuid.Nil,
+			[]uuid.UUID{}, []*models.SystemRelationshipInput{}, []string{}, 0, 0, uuid.Nil, uuid.Nil,
 		},
 		"req with sys1 should relate to req with sys1 and sys2": {
-			[]string{systemID1}, []*models.SystemRelationshipInput{&system1}, []string{}, 1, 1, uuid.Nil, uuid.Nil,
+			[]uuid.UUID{systemID1}, []*models.SystemRelationshipInput{&system1}, []string{}, 1, 1, uuid.Nil, uuid.Nil,
 		},
 		"req with sys2 should relate to req with sys1 and sys2": {
-			[]string{systemID2}, []*models.SystemRelationshipInput{&system2}, []string{}, 1, 1, uuid.Nil, uuid.Nil,
+			[]uuid.UUID{systemID2}, []*models.SystemRelationshipInput{&system2}, []string{}, 1, 1, uuid.Nil, uuid.Nil,
 		},
 		"req with sys1 and sys2 should relate to req with sys1 and req with sys2": {
-			[]string{systemID1, systemID2}, []*models.SystemRelationshipInput{&system1, &system2}, []string{}, 2, 2, uuid.Nil, uuid.Nil,
+			[]uuid.UUID{systemID1, systemID2}, []*models.SystemRelationshipInput{&system1, &system2}, []string{}, 2, 2, uuid.Nil, uuid.Nil,
 		},
 		"unrelated system ID should relate to no requests": {
-			[]string{unrelatedSystemID}, []*models.SystemRelationshipInput{&unrelatedSystem}, []string{}, 0, 0, uuid.Nil, uuid.Nil,
+			[]uuid.UUID{unrelatedSystemID}, []*models.SystemRelationshipInput{&unrelatedSystem}, []string{}, 0, 0, uuid.Nil, uuid.Nil,
 		},
 		"req with cn1 should relate to req with cn1 and cn2": {
-			[]string{}, []*models.SystemRelationshipInput{}, []string{contractNumber1}, 1, 1, uuid.Nil, uuid.Nil,
+			[]uuid.UUID{}, []*models.SystemRelationshipInput{}, []string{contractNumber1}, 1, 1, uuid.Nil, uuid.Nil,
 		},
 		"req with cn2 should relate to req with cn1 and cn2": {
-			[]string{}, []*models.SystemRelationshipInput{}, []string{contractNumber2}, 1, 1, uuid.Nil, uuid.Nil,
+			[]uuid.UUID{}, []*models.SystemRelationshipInput{}, []string{contractNumber2}, 1, 1, uuid.Nil, uuid.Nil,
 		},
 		"req with cn1 and cn2 should relate to req with cn1 and req with cn2": {
-			[]string{}, []*models.SystemRelationshipInput{}, []string{contractNumber1, contractNumber2}, 2, 2, uuid.Nil, uuid.Nil,
+			[]uuid.UUID{}, []*models.SystemRelationshipInput{}, []string{contractNumber1, contractNumber2}, 2, 2, uuid.Nil, uuid.Nil,
 		},
 		"unrelated contract number should relate to no requests": {
-			[]string{}, []*models.SystemRelationshipInput{}, []string{unrelatedContractNumber}, 0, 0, uuid.Nil, uuid.Nil,
+			[]uuid.UUID{}, []*models.SystemRelationshipInput{}, []string{unrelatedContractNumber}, 0, 0, uuid.Nil, uuid.Nil,
 		},
 		"req with sys3 and cn3 should relate to req with sys3 and req with cn3": {
-			[]string{systemID3}, []*models.SystemRelationshipInput{&system3}, []string{contractNumber3}, 2, 2, uuid.Nil, uuid.Nil,
+			[]uuid.UUID{systemID3}, []*models.SystemRelationshipInput{&system3}, []string{contractNumber3}, 2, 2, uuid.Nil, uuid.Nil,
 		},
 		"req with cn3 should relate to req with sys3 and cn3": {
-			[]string{}, []*models.SystemRelationshipInput{&system3}, []string{contractNumber3}, 2, 2, uuid.Nil, uuid.Nil,
+			[]uuid.UUID{}, []*models.SystemRelationshipInput{&system3}, []string{contractNumber3}, 2, 2, uuid.Nil, uuid.Nil,
 		},
 		"req with sys3 should relate to req with sys3 and cn3": {
-			[]string{systemID3}, []*models.SystemRelationshipInput{&system3}, []string{contractNumber3}, 2, 2, uuid.Nil, uuid.Nil,
+			[]uuid.UUID{systemID3}, []*models.SystemRelationshipInput{&system3}, []string{contractNumber3}, 2, 2, uuid.Nil, uuid.Nil,
 		},
 	}
 	// create system intakes and trb requests for testing

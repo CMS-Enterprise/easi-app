@@ -118,7 +118,7 @@ func (r *cedarBudgetSystemCostResolver) BudgetActualCost(ctx context.Context, ob
 		fyCost := &models.CedarBudgetActualCost{
 			ActualSystemCost: cost.ActualSystemCost.Ptr(),
 			FiscalYear:       cost.FiscalYear.Ptr(),
-			SystemID:         cost.SystemID.Ptr(),
+			SystemID:         cost.SystemID,
 		}
 		actualCosts = append(actualCosts, fyCost)
 	}
@@ -672,7 +672,7 @@ func (r *mutationResolver) RestartGRBReviewAsync(ctx context.Context, input mode
 // UpdateSystemIntakeLinkedCedarSystem is the resolver for the updateSystemIntakeLinkedCedarSystem field.
 func (r *mutationResolver) UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, input models.UpdateSystemIntakeLinkedCedarSystemInput) (*models.UpdateSystemIntakePayload, error) {
 	// If the linked system is not nil, make sure it's a valid CEDAR system, otherwise return an error
-	if input.CedarSystemID != nil && len(*input.CedarSystemID) > 0 {
+	if input.CedarSystemID != nil && *input.CedarSystemID != uuid.Nil {
 		_, err := r.cedarCoreClient.GetSystem(ctx, *input.CedarSystemID)
 
 		if err != nil {
@@ -680,7 +680,7 @@ func (r *mutationResolver) UpdateSystemIntakeLinkedCedarSystem(ctx context.Conte
 		}
 	}
 
-	intake, err := r.store.UpdateSystemIntakeLinkedCedarSystem(ctx, input.ID, null.StringFromPtr(input.CedarSystemID))
+	intake, err := r.store.UpdateSystemIntakeLinkedCedarSystem(ctx, input.ID, input.CedarSystemID)
 
 	if err != nil {
 		return nil, err
@@ -1244,7 +1244,7 @@ func (r *queryResolver) CompareGRBReviewersByIntakeID(ctx context.Context, id uu
 }
 
 // CedarAuthorityToOperate is the resolver for the cedarAuthorityToOperate field.
-func (r *queryResolver) CedarAuthorityToOperate(ctx context.Context, cedarSystemID string) ([]*models.CedarAuthorityToOperate, error) {
+func (r *queryResolver) CedarAuthorityToOperate(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarAuthorityToOperate, error) {
 	cedarATO, err := r.cedarCoreClient.GetAuthorityToOperate(ctx, cedarSystemID)
 	if err != nil {
 		return nil, err
@@ -1254,7 +1254,7 @@ func (r *queryResolver) CedarAuthorityToOperate(ctx context.Context, cedarSystem
 }
 
 // CedarBudget is the resolver for the cedarBudget field.
-func (r *queryResolver) CedarBudget(ctx context.Context, cedarSystemID string) ([]*models.CedarBudget, error) {
+func (r *queryResolver) CedarBudget(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarBudget, error) {
 	cedarBudget, err := r.cedarCoreClient.GetBudgetBySystem(ctx, cedarSystemID)
 	if err != nil {
 		return nil, err
@@ -1264,7 +1264,7 @@ func (r *queryResolver) CedarBudget(ctx context.Context, cedarSystemID string) (
 }
 
 // CedarBudgetSystemCost is the resolver for the cedarBudgetSystemCost field.
-func (r *queryResolver) CedarBudgetSystemCost(ctx context.Context, cedarSystemID string) (*models.CedarBudgetSystemCost, error) {
+func (r *queryResolver) CedarBudgetSystemCost(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarBudgetSystemCost, error) {
 	cedarBudgetSystemCost, err := r.cedarCoreClient.GetBudgetSystemCostBySystem(ctx, cedarSystemID)
 	if err != nil {
 		return nil, err
@@ -1284,7 +1284,7 @@ func (r *queryResolver) CedarPersonsByCommonName(ctx context.Context, commonName
 }
 
 // CedarSoftwareProducts is the resolver for the cedarSoftwareProducts field.
-func (r *queryResolver) CedarSoftwareProducts(ctx context.Context, cedarSystemID string) (*models.CedarSoftwareProducts, error) {
+func (r *queryResolver) CedarSoftwareProducts(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarSoftwareProducts, error) {
 	cedarSoftwareProducts, err := r.cedarCoreClient.GetSoftwareProductsBySystem(ctx, cedarSystemID)
 	if err != nil {
 		return nil, err
@@ -1293,7 +1293,7 @@ func (r *queryResolver) CedarSoftwareProducts(ctx context.Context, cedarSystemID
 }
 
 // CedarSubSystems is the resolver for the cedarSubSystems field.
-func (r *queryResolver) CedarSubSystems(ctx context.Context, cedarSystemID string) ([]*models.CedarSubSystem, error) {
+func (r *queryResolver) CedarSubSystems(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarSubSystem, error) {
 	systems, err := r.cedarCoreClient.GetSystemSummary(ctx, cedarcore.SystemSummaryOpts.WithSubSystems(cedarSystemID))
 	if err != nil {
 		return nil, err
@@ -1313,7 +1313,7 @@ func (r *queryResolver) CedarSubSystems(ctx context.Context, cedarSystemID strin
 }
 
 // CedarContractsBySystem is the resolver for the cedarContractsBySystem field.
-func (r *queryResolver) CedarContractsBySystem(ctx context.Context, cedarSystemID string) ([]*models.CedarContract, error) {
+func (r *queryResolver) CedarContractsBySystem(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarContract, error) {
 	return r.cedarCoreClient.GetContractBySystem(ctx, cedarSystemID)
 }
 
@@ -1327,7 +1327,7 @@ func (r *queryResolver) CedarSystemBookmarks(ctx context.Context) ([]*models.Ced
 }
 
 // CedarThreat is the resolver for the cedarThreat field.
-func (r *queryResolver) CedarThreat(ctx context.Context, cedarSystemID string) ([]*models.CedarThreat, error) {
+func (r *queryResolver) CedarThreat(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarThreat, error) {
 	cedarThreat, err := r.cedarCoreClient.GetThreat(ctx, cedarSystemID)
 	if err != nil {
 		return nil, err
@@ -1336,7 +1336,7 @@ func (r *queryResolver) CedarThreat(ctx context.Context, cedarSystemID string) (
 }
 
 // Deployments is the resolver for the deployments field.
-func (r *queryResolver) Deployments(ctx context.Context, cedarSystemID string, deploymentType *string, state *string, status *string) ([]*models.CedarDeployment, error) {
+func (r *queryResolver) Deployments(ctx context.Context, cedarSystemID uuid.UUID, deploymentType *string, state *string, status *string) ([]*models.CedarDeployment, error) {
 	var optionalParams *cedarcore.GetDeploymentsOptionalParams
 	if deploymentType != nil || state != nil || status != nil {
 		optionalParams = &cedarcore.GetDeploymentsOptionalParams{}
@@ -1373,7 +1373,7 @@ func (r *queryResolver) RoleTypes(ctx context.Context) ([]*models.CedarRoleType,
 }
 
 // Roles is the resolver for the roles field.
-func (r *queryResolver) Roles(ctx context.Context, cedarSystemID string, roleTypeID *string) ([]*models.CedarRole, error) {
+func (r *queryResolver) Roles(ctx context.Context, cedarSystemID uuid.UUID, roleTypeID *string) ([]*models.CedarRole, error) {
 	cedarRoles, err := r.cedarCoreClient.GetRolesBySystem(ctx, cedarSystemID, roleTypeID)
 	if err != nil {
 		return nil, err
@@ -1383,7 +1383,7 @@ func (r *queryResolver) Roles(ctx context.Context, cedarSystemID string, roleTyp
 }
 
 // Exchanges is the resolver for the exchanges field.
-func (r *queryResolver) Exchanges(ctx context.Context, cedarSystemID string) ([]*models.CedarExchange, error) {
+func (r *queryResolver) Exchanges(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarExchange, error) {
 	exchanges, err := r.cedarCoreClient.GetExchangesBySystem(ctx, cedarSystemID)
 	if err != nil {
 		return nil, err
@@ -1393,7 +1393,7 @@ func (r *queryResolver) Exchanges(ctx context.Context, cedarSystemID string) ([]
 }
 
 // Urls is the resolver for the urls field.
-func (r *queryResolver) Urls(ctx context.Context, cedarSystemID string) ([]*models.CedarURL, error) {
+func (r *queryResolver) Urls(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarURL, error) {
 	cedarURLs, err := r.cedarCoreClient.GetURLsForSystem(ctx, cedarSystemID)
 	if err != nil {
 		return nil, err

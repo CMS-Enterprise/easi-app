@@ -71,7 +71,7 @@ type CedarBudget {
   name: String
   projectId: String!
   projectTitle: String
-  systemId: String
+  systemId: UUID
 }
 
 """
@@ -81,7 +81,7 @@ as a part of the CedarBudgetSystemCost object
 type CedarBudgetActualCost {
   actualSystemCost: String
   fiscalYear: String
-  systemId: String
+  systemId: UUID
 }
 
 """
@@ -138,7 +138,7 @@ type CedarSoftwareProducts {
 CedarSubSystem represents the response from the /system/detail
 """
 type CedarSubSystem {
-  id: String!
+  id: UUID!
   name: String!
   acronym: String
   description: String
@@ -230,7 +230,7 @@ Represents a user's bookmark of a cedar system
 """
 type CedarSystemBookmark {
   euaUserId: String!
-  cedarSystemId: String!
+  cedarSystemId: UUID!
 }
 
 type CedarContract {
@@ -242,7 +242,7 @@ type CedarContract {
   orderNumber: String
   serviceProvided: String
   isDeliveryOrg: Boolean
-  systemID: String
+  systemID: UUID
 }
 
 """
@@ -260,7 +260,7 @@ type UserInfo {
 The data needed to bookmark a cedar system
 """
 input CreateCedarSystemBookmarkInput {
-  cedarSystemId: String!
+  cedarSystemId: UUID!
 }
 
 """
@@ -274,7 +274,7 @@ type CreateCedarSystemBookmarkPayload {
 The payload when deleting a bookmark for a cedar system
 """
 type DeleteCedarSystemBookmarkPayload {
-  cedarSystemId: String!
+  cedarSystemId: UUID!
 }
 
 """
@@ -283,7 +283,7 @@ CedarDeployment represents a deployment of a system; this information is returne
 type CedarDeployment {
   id: String!
   name: String!
-  systemID: String!
+  systemID: UUID!
   startDate: Time
   endDate: Time
   isHotSite: String
@@ -361,7 +361,7 @@ type CedarRole {
 }
 
 input SetRolesForUserOnSystemInput {
-  cedarSystemID: String!
+  cedarSystemID: UUID!
   euaUserId: String!
   desiredRoleTypeIDs: [String!]!
 }
@@ -754,7 +754,7 @@ type SystemIntake {
   grtReviewEmailBody: String
   decidedAt: Time
   businessCaseId: UUID
-  cedarSystemId: String
+  cedarSystemId: UUID
   documents: [SystemIntakeDocument!]!
   hasUiChanges: Boolean
   usesAiTech: Boolean
@@ -1019,7 +1019,7 @@ input UpdateSystemIntakeRequestDetailsInput {
   usesAiTech: Boolean
   usingSoftware: String
   acquisitionMethods: [SystemIntakeSoftwareAcquisitionMethods!]!
-  cedarSystemId: String
+  cedarSystemId: UUID
 }
 
 """
@@ -1103,7 +1103,7 @@ enum SystemRelationshipType {
 Input data for creating a system intake's relationship to a CEDAR system
 """
 input SystemRelationshipInput {
-  cedarSystemId: String
+  cedarSystemId: UUID
   systemRelationshipType: [SystemRelationshipType!]!
   otherSystemRelationshipDescription: String
 }
@@ -1111,7 +1111,7 @@ input SystemRelationshipInput {
 type SystemIntakeSystem {
   id: UUID!
   systemIntakeID: UUID!
-  systemID: String!
+  systemID: UUID!
   """
   Note: This should be a system but is nullable in case of error
   """
@@ -1124,7 +1124,7 @@ Input data for updating a system intake's relationship to a CEDAR system
 """
 input UpdateSystemIntakeLinkedCedarSystemInput {
   id: UUID!
-  cedarSystemId: String
+  cedarSystemId: UUID
 }
 
 # RequestRelationType.NEW_SYSTEM
@@ -1473,7 +1473,7 @@ The input type for adding a new System Link
 """
 input AddSystemLinkInput {
   systemIntakeID: UUID!
-  systemID: String!
+  systemID: UUID!
   systemRelationshipType: [SystemRelationshipType!]!
   otherSystemRelationshipDescription: String
 }
@@ -1484,7 +1484,7 @@ The payload for adding a new System Link
 type AddSystemLinkPayload {
   id: UUID!
   systemIntakeID: UUID!
-  systemID: String!
+  systemID: UUID!
   systemRelationshipType: [SystemRelationshipType!]!
   otherSystemRelationshipDescription: String
 }
@@ -1510,7 +1510,7 @@ The input type for updating a system intake's linked system by id
 input UpdateSystemLinkInput {
   id: UUID!
   systemIntakeID: UUID!
-  systemID: String!
+  systemID: UUID!
   systemRelationshipType: [SystemRelationshipType!]!
   otherSystemRelationshipDescription: String
 }
@@ -2508,7 +2508,7 @@ input SetTRBRequestRelationNewSystemInput {
 # RequestRelationType.EXISTING_SYSTEM
 input SetTRBRequestRelationExistingSystemInput {
   trbRequestID: UUID!
-  cedarSystemIDs: [String!]!
+  cedarSystemIDs: [UUID!]!
   contractNumbers: [String!]!
 }
 
@@ -3074,25 +3074,25 @@ type Query {
   systemIntakesWithReviewRequested: [SystemIntake!]!
   systemIntakesWithLcids: [SystemIntake!]!
   compareGRBReviewersByIntakeID(id: UUID!): [GRBReviewerComparisonIntake!]!
-  cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!
-  cedarBudget(cedarSystemID: String!): [CedarBudget!]
-  cedarBudgetSystemCost(cedarSystemID: String!): CedarBudgetSystemCost
+  cedarAuthorityToOperate(cedarSystemID: UUID!): [CedarAuthorityToOperate!]!
+  cedarBudget(cedarSystemID: UUID!): [CedarBudget!]
+  cedarBudgetSystemCost(cedarSystemID: UUID!): CedarBudgetSystemCost
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
-  cedarSoftwareProducts(cedarSystemId: String!): CedarSoftwareProducts
-  cedarSubSystems(cedarSystemId: String!): [CedarSubSystem!]!
-  cedarContractsBySystem(cedarSystemId: String!): [CedarContract!]!
+  cedarSoftwareProducts(cedarSystemId: UUID!): CedarSoftwareProducts
+  cedarSubSystems(cedarSystemId: UUID!): [CedarSubSystem!]!
+  cedarContractsBySystem(cedarSystemId: UUID!): [CedarContract!]!
   cedarSystemBookmarks: [CedarSystemBookmark!]!
-  cedarThreat(cedarSystemId: String!): [CedarThreat!]!
+  cedarThreat(cedarSystemId: UUID!): [CedarThreat!]!
   deployments(
-    cedarSystemId: String!
+    cedarSystemId: UUID!
     deploymentType: String
     state: String
     status: String
   ): [CedarDeployment!]!
   roleTypes: [CedarRoleType!]!
-  roles(cedarSystemId: String!, roleTypeID: String): [CedarRole!]!
-  exchanges(cedarSystemId: String!): [CedarExchange!]!
-  urls(cedarSystemId: String!): [CedarURL!]!
+  roles(cedarSystemId: UUID!, roleTypeID: String): [CedarRole!]!
+  exchanges(cedarSystemId: UUID!): [CedarExchange!]!
+  urls(cedarSystemId: UUID!): [CedarURL!]!
   """
   This returns a SystemIntakeContacts object. It holds the information about the contacts associated with a specific System Intake.
   """

@@ -20,7 +20,7 @@ enum SystemProfileLockableSection {
 Status of a locked section of the system profile form
 """
 type SystemProfileSectionLockStatus {
-  cedarSystemId: String!
+  cedarSystemId: UUID!
   section: SystemProfileLockableSection!
   lockedByUserAccount: UserAccount!
 }
@@ -38,23 +38,23 @@ extend type Query {
   Returns an array containing the status of locked sections for a given cedar system profile form
   """
   systemProfileSectionLocks(
-    cedarSystemId: String!
+    cedarSystemId: UUID!
   ): [SystemProfileSectionLockStatus!]! @hasRole(role: EASI_USER)
 }
 
 extend type Mutation {
   lockSystemProfileSection(
-    cedarSystemId: String!
+    cedarSystemId: UUID!
     section: SystemProfileLockableSection!
   ): Boolean! @hasRole(role: EASI_USER)
 
   unlockSystemProfileSection(
-    cedarSystemId: String!
+    cedarSystemId: UUID!
     section: SystemProfileLockableSection!
   ): Boolean! @hasRole(role: EASI_USER)
 
   unlockAllSystemProfileSections(
-    cedarSystemId: String!
+    cedarSystemId: UUID!
   ): [SystemProfileSectionLockStatus!]! @hasRole(role: EASI_USER)
 }
 
@@ -64,6 +64,6 @@ type Subscription {
   Automatically unlocks all sections owned by the user when websocket disconnects.
   """
   onSystemProfileSectionLockStatusChanged(
-    cedarSystemId: String!
+    cedarSystemId: UUID!
   ): SystemProfileSectionLockStatusChanged! @hasRole(role: EASI_USER)
 }

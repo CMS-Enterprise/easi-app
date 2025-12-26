@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
@@ -13,7 +14,7 @@ import (
 )
 
 // GetThreat makes a GET call to the /threat endpoint
-func (c *Client) GetThreat(ctx context.Context, cedarSystemID string) ([]*models.CedarThreat, error) {
+func (c *Client) GetThreat(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarThreat, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		if cedarcoremock.IsMockSystem(cedarSystemID) {

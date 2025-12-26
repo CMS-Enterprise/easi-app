@@ -618,7 +618,7 @@ type ComplexityRoot struct {
 		DeleteTRBRequestFundingSources                      func(childComplexity int, input models.DeleteTRBRequestFundingSourcesInput) int
 		DeleteTrbLeadOption                                 func(childComplexity int, eua string) int
 		ExtendGRBReviewDeadlineAsync                        func(childComplexity int, input models.ExtendGRBReviewDeadlineInput) int
-		LockSystemProfileSection                            func(childComplexity int, cedarSystemID string, section models.SystemProfileLockableSection) int
+		LockSystemProfileSection                            func(childComplexity int, cedarSystemID uuid.UUID, section models.SystemProfileLockableSection) int
 		ManuallyEndSystemIntakeGRBReviewAsyncVoting         func(childComplexity int, systemIntakeID uuid.UUID) int
 		ReopenTrbRequest                                    func(childComplexity int, input models.ReopenTRBRequestInput) int
 		RequestReviewForTRBGuidanceLetter                   func(childComplexity int, id uuid.UUID) int
@@ -642,8 +642,8 @@ type ComplexityRoot struct {
 		StartGRBReview                                      func(childComplexity int, input models.StartGRBReviewInput) int
 		SubmitIntake                                        func(childComplexity int, input models.SubmitIntakeInput) int
 		UnlinkTRBRequestRelation                            func(childComplexity int, trbRequestID uuid.UUID) int
-		UnlockAllSystemProfileSections                      func(childComplexity int, cedarSystemID string) int
-		UnlockSystemProfileSection                          func(childComplexity int, cedarSystemID string, section models.SystemProfileLockableSection) int
+		UnlockAllSystemProfileSections                      func(childComplexity int, cedarSystemID uuid.UUID) int
+		UnlockSystemProfileSection                          func(childComplexity int, cedarSystemID uuid.UUID, section models.SystemProfileLockableSection) int
 		UpdateSystemIntakeAdminLead                         func(childComplexity int, input models.UpdateSystemIntakeAdminLeadInput) int
 		UpdateSystemIntakeContact                           func(childComplexity int, input models.UpdateSystemIntakeContactInput) int
 		UpdateSystemIntakeContactDetails                    func(childComplexity int, input models.UpdateSystemIntakeContactDetailsInput) int
@@ -672,28 +672,28 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		CedarAuthorityToOperate          func(childComplexity int, cedarSystemID string) int
-		CedarBudget                      func(childComplexity int, cedarSystemID string) int
-		CedarBudgetSystemCost            func(childComplexity int, cedarSystemID string) int
-		CedarContractsBySystem           func(childComplexity int, cedarSystemID string) int
+		CedarAuthorityToOperate          func(childComplexity int, cedarSystemID uuid.UUID) int
+		CedarBudget                      func(childComplexity int, cedarSystemID uuid.UUID) int
+		CedarBudgetSystemCost            func(childComplexity int, cedarSystemID uuid.UUID) int
+		CedarContractsBySystem           func(childComplexity int, cedarSystemID uuid.UUID) int
 		CedarPersonsByCommonName         func(childComplexity int, commonName string) int
-		CedarSoftwareProducts            func(childComplexity int, cedarSystemID string) int
-		CedarSubSystems                  func(childComplexity int, cedarSystemID string) int
-		CedarSystem                      func(childComplexity int, cedarSystemID string) int
+		CedarSoftwareProducts            func(childComplexity int, cedarSystemID uuid.UUID) int
+		CedarSubSystems                  func(childComplexity int, cedarSystemID uuid.UUID) int
+		CedarSystem                      func(childComplexity int, cedarSystemID uuid.UUID) int
 		CedarSystemBookmarks             func(childComplexity int) int
-		CedarSystemDetails               func(childComplexity int, cedarSystemID string) int
+		CedarSystemDetails               func(childComplexity int, cedarSystemID uuid.UUID) int
 		CedarSystems                     func(childComplexity int) int
-		CedarThreat                      func(childComplexity int, cedarSystemID string) int
+		CedarThreat                      func(childComplexity int, cedarSystemID uuid.UUID) int
 		CompareGRBReviewersByIntakeID    func(childComplexity int, id uuid.UUID) int
 		CurrentUser                      func(childComplexity int) int
-		Deployments                      func(childComplexity int, cedarSystemID string, deploymentType *string, state *string, status *string) int
-		Exchanges                        func(childComplexity int, cedarSystemID string) int
+		Deployments                      func(childComplexity int, cedarSystemID uuid.UUID, deploymentType *string, state *string, status *string) int
+		Exchanges                        func(childComplexity int, cedarSystemID uuid.UUID) int
 		MyCedarSystems                   func(childComplexity int) int
 		MySystemIntakes                  func(childComplexity int) int
 		MyTrbRequests                    func(childComplexity int, archived bool) int
 		RequesterUpdateEmailData         func(childComplexity int) int
 		RoleTypes                        func(childComplexity int) int
-		Roles                            func(childComplexity int, cedarSystemID string, roleTypeID *string) int
+		Roles                            func(childComplexity int, cedarSystemID uuid.UUID, roleTypeID *string) int
 		SystemIntake                     func(childComplexity int, id uuid.UUID) int
 		SystemIntakeContacts             func(childComplexity int, id uuid.UUID) int
 		SystemIntakeSystem               func(childComplexity int, systemIntakeSystemID uuid.UUID) int
@@ -701,12 +701,12 @@ type ComplexityRoot struct {
 		SystemIntakes                    func(childComplexity int, openRequests bool) int
 		SystemIntakesWithLcids           func(childComplexity int) int
 		SystemIntakesWithReviewRequested func(childComplexity int) int
-		SystemProfileSectionLocks        func(childComplexity int, cedarSystemID string) int
+		SystemProfileSectionLocks        func(childComplexity int, cedarSystemID uuid.UUID) int
 		TrbAdminNote                     func(childComplexity int, id uuid.UUID) int
 		TrbLeadOptions                   func(childComplexity int) int
 		TrbRequest                       func(childComplexity int, id uuid.UUID) int
 		TrbRequests                      func(childComplexity int, archived bool) int
-		Urls                             func(childComplexity int, cedarSystemID string) int
+		Urls                             func(childComplexity int, cedarSystemID uuid.UUID) int
 		UserAccount                      func(childComplexity int, username string) int
 	}
 
@@ -725,7 +725,7 @@ type ComplexityRoot struct {
 	}
 
 	Subscription struct {
-		OnSystemProfileSectionLockStatusChanged func(childComplexity int, cedarSystemID string) int
+		OnSystemProfileSectionLockStatusChanged func(childComplexity int, cedarSystemID uuid.UUID) int
 	}
 
 	SystemIntake struct {
@@ -1418,9 +1418,9 @@ type MutationResolver interface {
 	CreateTrbLeadOption(ctx context.Context, eua string) (*models.UserInfo, error)
 	DeleteTrbLeadOption(ctx context.Context, eua string) (bool, error)
 	SendGRBReviewPresentationDeckReminderEmail(ctx context.Context, systemIntakeID uuid.UUID) (bool, error)
-	LockSystemProfileSection(ctx context.Context, cedarSystemID string, section models.SystemProfileLockableSection) (bool, error)
-	UnlockSystemProfileSection(ctx context.Context, cedarSystemID string, section models.SystemProfileLockableSection) (bool, error)
-	UnlockAllSystemProfileSections(ctx context.Context, cedarSystemID string) ([]*models.SystemProfileSectionLockStatus, error)
+	LockSystemProfileSection(ctx context.Context, cedarSystemID uuid.UUID, section models.SystemProfileLockableSection) (bool, error)
+	UnlockSystemProfileSection(ctx context.Context, cedarSystemID uuid.UUID, section models.SystemProfileLockableSection) (bool, error)
+	UnlockAllSystemProfileSections(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.SystemProfileSectionLockStatus, error)
 }
 type QueryResolver interface {
 	SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error)
@@ -1429,20 +1429,20 @@ type QueryResolver interface {
 	SystemIntakesWithReviewRequested(ctx context.Context) ([]*models.SystemIntake, error)
 	SystemIntakesWithLcids(ctx context.Context) ([]*models.SystemIntake, error)
 	CompareGRBReviewersByIntakeID(ctx context.Context, id uuid.UUID) ([]*models.GRBReviewerComparisonIntake, error)
-	CedarAuthorityToOperate(ctx context.Context, cedarSystemID string) ([]*models.CedarAuthorityToOperate, error)
-	CedarBudget(ctx context.Context, cedarSystemID string) ([]*models.CedarBudget, error)
-	CedarBudgetSystemCost(ctx context.Context, cedarSystemID string) (*models.CedarBudgetSystemCost, error)
+	CedarAuthorityToOperate(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarAuthorityToOperate, error)
+	CedarBudget(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarBudget, error)
+	CedarBudgetSystemCost(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarBudgetSystemCost, error)
 	CedarPersonsByCommonName(ctx context.Context, commonName string) ([]*models.UserInfo, error)
-	CedarSoftwareProducts(ctx context.Context, cedarSystemID string) (*models.CedarSoftwareProducts, error)
-	CedarSubSystems(ctx context.Context, cedarSystemID string) ([]*models.CedarSubSystem, error)
-	CedarContractsBySystem(ctx context.Context, cedarSystemID string) ([]*models.CedarContract, error)
+	CedarSoftwareProducts(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarSoftwareProducts, error)
+	CedarSubSystems(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarSubSystem, error)
+	CedarContractsBySystem(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarContract, error)
 	CedarSystemBookmarks(ctx context.Context) ([]*models.CedarSystemBookmark, error)
-	CedarThreat(ctx context.Context, cedarSystemID string) ([]*models.CedarThreat, error)
-	Deployments(ctx context.Context, cedarSystemID string, deploymentType *string, state *string, status *string) ([]*models.CedarDeployment, error)
+	CedarThreat(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarThreat, error)
+	Deployments(ctx context.Context, cedarSystemID uuid.UUID, deploymentType *string, state *string, status *string) ([]*models.CedarDeployment, error)
 	RoleTypes(ctx context.Context) ([]*models.CedarRoleType, error)
-	Roles(ctx context.Context, cedarSystemID string, roleTypeID *string) ([]*models.CedarRole, error)
-	Exchanges(ctx context.Context, cedarSystemID string) ([]*models.CedarExchange, error)
-	Urls(ctx context.Context, cedarSystemID string) ([]*models.CedarURL, error)
+	Roles(ctx context.Context, cedarSystemID uuid.UUID, roleTypeID *string) ([]*models.CedarRole, error)
+	Exchanges(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarExchange, error)
+	Urls(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.CedarURL, error)
 	SystemIntakeContacts(ctx context.Context, id uuid.UUID) (*models.SystemIntakeContacts, error)
 	TrbRequest(ctx context.Context, id uuid.UUID) (*models.TRBRequest, error)
 	TrbRequests(ctx context.Context, archived bool) ([]*models.TRBRequest, error)
@@ -1452,16 +1452,16 @@ type QueryResolver interface {
 	RequesterUpdateEmailData(ctx context.Context) ([]*models.RequesterUpdateEmailData, error)
 	SystemIntakeSystem(ctx context.Context, systemIntakeSystemID uuid.UUID) (*models.SystemIntakeSystem, error)
 	SystemIntakeSystems(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeSystem, error)
-	CedarSystem(ctx context.Context, cedarSystemID string) (*models.CedarSystem, error)
+	CedarSystem(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarSystem, error)
 	CedarSystems(ctx context.Context) ([]*models.CedarSystem, error)
 	MyCedarSystems(ctx context.Context) ([]*models.CedarSystem, error)
-	CedarSystemDetails(ctx context.Context, cedarSystemID string) (*models.CedarSystemDetails, error)
+	CedarSystemDetails(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarSystemDetails, error)
 	CurrentUser(ctx context.Context) (*models.CurrentUser, error)
-	SystemProfileSectionLocks(ctx context.Context, cedarSystemID string) ([]*models.SystemProfileSectionLockStatus, error)
+	SystemProfileSectionLocks(ctx context.Context, cedarSystemID uuid.UUID) ([]*models.SystemProfileSectionLockStatus, error)
 	UserAccount(ctx context.Context, username string) (*authentication.UserAccount, error)
 }
 type SubscriptionResolver interface {
-	OnSystemProfileSectionLockStatusChanged(ctx context.Context, cedarSystemID string) (<-chan *models.SystemProfileSectionLockStatusChanged, error)
+	OnSystemProfileSectionLockStatusChanged(ctx context.Context, cedarSystemID uuid.UUID) (<-chan *models.SystemProfileSectionLockStatusChanged, error)
 }
 type SystemIntakeResolver interface {
 	Actions(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeAction, error)
@@ -4425,7 +4425,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Mutation.LockSystemProfileSection(childComplexity, args["cedarSystemId"].(string), args["section"].(models.SystemProfileLockableSection)), true
+		return e.complexity.Mutation.LockSystemProfileSection(childComplexity, args["cedarSystemId"].(uuid.UUID), args["section"].(models.SystemProfileLockableSection)), true
 	case "Mutation.manuallyEndSystemIntakeGRBReviewAsyncVoting":
 		if e.complexity.Mutation.ManuallyEndSystemIntakeGRBReviewAsyncVoting == nil {
 			break
@@ -4689,7 +4689,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UnlockAllSystemProfileSections(childComplexity, args["cedarSystemId"].(string)), true
+		return e.complexity.Mutation.UnlockAllSystemProfileSections(childComplexity, args["cedarSystemId"].(uuid.UUID)), true
 	case "Mutation.unlockSystemProfileSection":
 		if e.complexity.Mutation.UnlockSystemProfileSection == nil {
 			break
@@ -4700,7 +4700,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UnlockSystemProfileSection(childComplexity, args["cedarSystemId"].(string), args["section"].(models.SystemProfileLockableSection)), true
+		return e.complexity.Mutation.UnlockSystemProfileSection(childComplexity, args["cedarSystemId"].(uuid.UUID), args["section"].(models.SystemProfileLockableSection)), true
 	case "Mutation.updateSystemIntakeAdminLead":
 		if e.complexity.Mutation.UpdateSystemIntakeAdminLead == nil {
 			break
@@ -4987,7 +4987,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Query.CedarAuthorityToOperate(childComplexity, args["cedarSystemID"].(string)), true
+		return e.complexity.Query.CedarAuthorityToOperate(childComplexity, args["cedarSystemID"].(uuid.UUID)), true
 	case "Query.cedarBudget":
 		if e.complexity.Query.CedarBudget == nil {
 			break
@@ -4998,7 +4998,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Query.CedarBudget(childComplexity, args["cedarSystemID"].(string)), true
+		return e.complexity.Query.CedarBudget(childComplexity, args["cedarSystemID"].(uuid.UUID)), true
 	case "Query.cedarBudgetSystemCost":
 		if e.complexity.Query.CedarBudgetSystemCost == nil {
 			break
@@ -5009,7 +5009,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Query.CedarBudgetSystemCost(childComplexity, args["cedarSystemID"].(string)), true
+		return e.complexity.Query.CedarBudgetSystemCost(childComplexity, args["cedarSystemID"].(uuid.UUID)), true
 	case "Query.cedarContractsBySystem":
 		if e.complexity.Query.CedarContractsBySystem == nil {
 			break
@@ -5020,7 +5020,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Query.CedarContractsBySystem(childComplexity, args["cedarSystemId"].(string)), true
+		return e.complexity.Query.CedarContractsBySystem(childComplexity, args["cedarSystemId"].(uuid.UUID)), true
 	case "Query.cedarPersonsByCommonName":
 		if e.complexity.Query.CedarPersonsByCommonName == nil {
 			break
@@ -5042,7 +5042,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Query.CedarSoftwareProducts(childComplexity, args["cedarSystemId"].(string)), true
+		return e.complexity.Query.CedarSoftwareProducts(childComplexity, args["cedarSystemId"].(uuid.UUID)), true
 	case "Query.cedarSubSystems":
 		if e.complexity.Query.CedarSubSystems == nil {
 			break
@@ -5053,7 +5053,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Query.CedarSubSystems(childComplexity, args["cedarSystemId"].(string)), true
+		return e.complexity.Query.CedarSubSystems(childComplexity, args["cedarSystemId"].(uuid.UUID)), true
 	case "Query.cedarSystem":
 		if e.complexity.Query.CedarSystem == nil {
 			break
@@ -5064,7 +5064,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Query.CedarSystem(childComplexity, args["cedarSystemId"].(string)), true
+		return e.complexity.Query.CedarSystem(childComplexity, args["cedarSystemId"].(uuid.UUID)), true
 	case "Query.cedarSystemBookmarks":
 		if e.complexity.Query.CedarSystemBookmarks == nil {
 			break
@@ -5081,7 +5081,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Query.CedarSystemDetails(childComplexity, args["cedarSystemId"].(string)), true
+		return e.complexity.Query.CedarSystemDetails(childComplexity, args["cedarSystemId"].(uuid.UUID)), true
 	case "Query.cedarSystems":
 		if e.complexity.Query.CedarSystems == nil {
 			break
@@ -5098,7 +5098,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Query.CedarThreat(childComplexity, args["cedarSystemId"].(string)), true
+		return e.complexity.Query.CedarThreat(childComplexity, args["cedarSystemId"].(uuid.UUID)), true
 	case "Query.compareGRBReviewersByIntakeID":
 		if e.complexity.Query.CompareGRBReviewersByIntakeID == nil {
 			break
@@ -5126,7 +5126,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Query.Deployments(childComplexity, args["cedarSystemId"].(string), args["deploymentType"].(*string), args["state"].(*string), args["status"].(*string)), true
+		return e.complexity.Query.Deployments(childComplexity, args["cedarSystemId"].(uuid.UUID), args["deploymentType"].(*string), args["state"].(*string), args["status"].(*string)), true
 	case "Query.exchanges":
 		if e.complexity.Query.Exchanges == nil {
 			break
@@ -5137,7 +5137,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Query.Exchanges(childComplexity, args["cedarSystemId"].(string)), true
+		return e.complexity.Query.Exchanges(childComplexity, args["cedarSystemId"].(uuid.UUID)), true
 	case "Query.myCedarSystems":
 		if e.complexity.Query.MyCedarSystems == nil {
 			break
@@ -5183,7 +5183,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Query.Roles(childComplexity, args["cedarSystemId"].(string), args["roleTypeID"].(*string)), true
+		return e.complexity.Query.Roles(childComplexity, args["cedarSystemId"].(uuid.UUID), args["roleTypeID"].(*string)), true
 	case "Query.systemIntake":
 		if e.complexity.Query.SystemIntake == nil {
 			break
@@ -5261,7 +5261,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Query.SystemProfileSectionLocks(childComplexity, args["cedarSystemId"].(string)), true
+		return e.complexity.Query.SystemProfileSectionLocks(childComplexity, args["cedarSystemId"].(uuid.UUID)), true
 	case "Query.trbAdminNote":
 		if e.complexity.Query.TrbAdminNote == nil {
 			break
@@ -5311,7 +5311,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Query.Urls(childComplexity, args["cedarSystemId"].(string)), true
+		return e.complexity.Query.Urls(childComplexity, args["cedarSystemId"].(uuid.UUID)), true
 	case "Query.userAccount":
 		if e.complexity.Query.UserAccount == nil {
 			break
@@ -5384,7 +5384,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Subscription.OnSystemProfileSectionLockStatusChanged(childComplexity, args["cedarSystemId"].(string)), true
+		return e.complexity.Subscription.OnSystemProfileSectionLockStatusChanged(childComplexity, args["cedarSystemId"].(uuid.UUID)), true
 
 	case "SystemIntake.acquisitionMethods":
 		if e.complexity.SystemIntake.AcquisitionMethods == nil {
@@ -8172,7 +8172,7 @@ type CedarBudget {
   name: String
   projectId: String!
   projectTitle: String
-  systemId: String
+  systemId: UUID
 }
 
 """
@@ -8182,7 +8182,7 @@ as a part of the CedarBudgetSystemCost object
 type CedarBudgetActualCost {
   actualSystemCost: String
   fiscalYear: String
-  systemId: String
+  systemId: UUID
 }
 
 """
@@ -8239,7 +8239,7 @@ type CedarSoftwareProducts {
 CedarSubSystem represents the response from the /system/detail
 """
 type CedarSubSystem {
-  id: String!
+  id: UUID!
   name: String!
   acronym: String
   description: String
@@ -8331,7 +8331,7 @@ Represents a user's bookmark of a cedar system
 """
 type CedarSystemBookmark {
   euaUserId: String!
-  cedarSystemId: String!
+  cedarSystemId: UUID!
 }
 
 type CedarContract {
@@ -8343,7 +8343,7 @@ type CedarContract {
   orderNumber: String
   serviceProvided: String
   isDeliveryOrg: Boolean
-  systemID: String
+  systemID: UUID
 }
 
 """
@@ -8361,7 +8361,7 @@ type UserInfo {
 The data needed to bookmark a cedar system
 """
 input CreateCedarSystemBookmarkInput {
-  cedarSystemId: String!
+  cedarSystemId: UUID!
 }
 
 """
@@ -8375,7 +8375,7 @@ type CreateCedarSystemBookmarkPayload {
 The payload when deleting a bookmark for a cedar system
 """
 type DeleteCedarSystemBookmarkPayload {
-  cedarSystemId: String!
+  cedarSystemId: UUID!
 }
 
 """
@@ -8384,7 +8384,7 @@ CedarDeployment represents a deployment of a system; this information is returne
 type CedarDeployment {
   id: String!
   name: String!
-  systemID: String!
+  systemID: UUID!
   startDate: Time
   endDate: Time
   isHotSite: String
@@ -8462,7 +8462,7 @@ type CedarRole {
 }
 
 input SetRolesForUserOnSystemInput {
-  cedarSystemID: String!
+  cedarSystemID: UUID!
   euaUserId: String!
   desiredRoleTypeIDs: [String!]!
 }
@@ -8855,7 +8855,7 @@ type SystemIntake {
   grtReviewEmailBody: String
   decidedAt: Time
   businessCaseId: UUID
-  cedarSystemId: String
+  cedarSystemId: UUID
   documents: [SystemIntakeDocument!]!
   hasUiChanges: Boolean
   usesAiTech: Boolean
@@ -9120,7 +9120,7 @@ input UpdateSystemIntakeRequestDetailsInput {
   usesAiTech: Boolean
   usingSoftware: String
   acquisitionMethods: [SystemIntakeSoftwareAcquisitionMethods!]!
-  cedarSystemId: String
+  cedarSystemId: UUID
 }
 
 """
@@ -9204,7 +9204,7 @@ enum SystemRelationshipType {
 Input data for creating a system intake's relationship to a CEDAR system
 """
 input SystemRelationshipInput {
-  cedarSystemId: String
+  cedarSystemId: UUID
   systemRelationshipType: [SystemRelationshipType!]!
   otherSystemRelationshipDescription: String
 }
@@ -9212,7 +9212,7 @@ input SystemRelationshipInput {
 type SystemIntakeSystem {
   id: UUID!
   systemIntakeID: UUID!
-  systemID: String!
+  systemID: UUID!
   """
   Note: This should be a system but is nullable in case of error
   """
@@ -9225,7 +9225,7 @@ Input data for updating a system intake's relationship to a CEDAR system
 """
 input UpdateSystemIntakeLinkedCedarSystemInput {
   id: UUID!
-  cedarSystemId: String
+  cedarSystemId: UUID
 }
 
 # RequestRelationType.NEW_SYSTEM
@@ -9574,7 +9574,7 @@ The input type for adding a new System Link
 """
 input AddSystemLinkInput {
   systemIntakeID: UUID!
-  systemID: String!
+  systemID: UUID!
   systemRelationshipType: [SystemRelationshipType!]!
   otherSystemRelationshipDescription: String
 }
@@ -9585,7 +9585,7 @@ The payload for adding a new System Link
 type AddSystemLinkPayload {
   id: UUID!
   systemIntakeID: UUID!
-  systemID: String!
+  systemID: UUID!
   systemRelationshipType: [SystemRelationshipType!]!
   otherSystemRelationshipDescription: String
 }
@@ -9611,7 +9611,7 @@ The input type for updating a system intake's linked system by id
 input UpdateSystemLinkInput {
   id: UUID!
   systemIntakeID: UUID!
-  systemID: String!
+  systemID: UUID!
   systemRelationshipType: [SystemRelationshipType!]!
   otherSystemRelationshipDescription: String
 }
@@ -10609,7 +10609,7 @@ input SetTRBRequestRelationNewSystemInput {
 # RequestRelationType.EXISTING_SYSTEM
 input SetTRBRequestRelationExistingSystemInput {
   trbRequestID: UUID!
-  cedarSystemIDs: [String!]!
+  cedarSystemIDs: [UUID!]!
   contractNumbers: [String!]!
 }
 
@@ -11175,25 +11175,25 @@ type Query {
   systemIntakesWithReviewRequested: [SystemIntake!]!
   systemIntakesWithLcids: [SystemIntake!]!
   compareGRBReviewersByIntakeID(id: UUID!): [GRBReviewerComparisonIntake!]!
-  cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!
-  cedarBudget(cedarSystemID: String!): [CedarBudget!]
-  cedarBudgetSystemCost(cedarSystemID: String!): CedarBudgetSystemCost
+  cedarAuthorityToOperate(cedarSystemID: UUID!): [CedarAuthorityToOperate!]!
+  cedarBudget(cedarSystemID: UUID!): [CedarBudget!]
+  cedarBudgetSystemCost(cedarSystemID: UUID!): CedarBudgetSystemCost
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
-  cedarSoftwareProducts(cedarSystemId: String!): CedarSoftwareProducts
-  cedarSubSystems(cedarSystemId: String!): [CedarSubSystem!]!
-  cedarContractsBySystem(cedarSystemId: String!): [CedarContract!]!
+  cedarSoftwareProducts(cedarSystemId: UUID!): CedarSoftwareProducts
+  cedarSubSystems(cedarSystemId: UUID!): [CedarSubSystem!]!
+  cedarContractsBySystem(cedarSystemId: UUID!): [CedarContract!]!
   cedarSystemBookmarks: [CedarSystemBookmark!]!
-  cedarThreat(cedarSystemId: String!): [CedarThreat!]!
+  cedarThreat(cedarSystemId: UUID!): [CedarThreat!]!
   deployments(
-    cedarSystemId: String!
+    cedarSystemId: UUID!
     deploymentType: String
     state: String
     status: String
   ): [CedarDeployment!]!
   roleTypes: [CedarRoleType!]!
-  roles(cedarSystemId: String!, roleTypeID: String): [CedarRole!]!
-  exchanges(cedarSystemId: String!): [CedarExchange!]!
-  urls(cedarSystemId: String!): [CedarURL!]!
+  roles(cedarSystemId: UUID!, roleTypeID: String): [CedarRole!]!
+  exchanges(cedarSystemId: UUID!): [CedarExchange!]!
+  urls(cedarSystemId: UUID!): [CedarURL!]!
   """
   This returns a SystemIntakeContacts object. It holds the information about the contacts associated with a specific System Intake.
   """
@@ -11593,7 +11593,7 @@ CedarSystem represents the response from the /system/detail endpoint from the CE
 Right now, this does not tie in with any other types defined here, and is a root node until that changes.
 """
 type CedarSystem {
-  id: String!
+  id: UUID!
   name: String!
   description: String
   acronym: String
@@ -11630,7 +11630,7 @@ type CedarSystemDetails {
 }
 
 extend type Query {
-  cedarSystem(cedarSystemId: String!): CedarSystem
+  cedarSystem(cedarSystemId: UUID!): CedarSystem
   cedarSystems: [CedarSystem!]!
   myCedarSystems: [CedarSystem!]!
 
@@ -11638,7 +11638,7 @@ extend type Query {
   Cedar System Details is a convenient method to return a Cedar System along with other convenience information.
   TODO, this can be refactored using helper methods in GQL to return the fields, instead of relying on the resolver to return all fields at the same time.
   """
-  cedarSystemDetails(cedarSystemId: String!): CedarSystemDetails
+  cedarSystemDetails(cedarSystemId: UUID!): CedarSystemDetails
 }
 `, BuiltIn: false},
 	{Name: "../schema/types/current_user.graphql", Input: `"""
@@ -11674,7 +11674,7 @@ enum SystemProfileLockableSection {
 Status of a locked section of the system profile form
 """
 type SystemProfileSectionLockStatus {
-  cedarSystemId: String!
+  cedarSystemId: UUID!
   section: SystemProfileLockableSection!
   lockedByUserAccount: UserAccount!
 }
@@ -11692,23 +11692,23 @@ extend type Query {
   Returns an array containing the status of locked sections for a given cedar system profile form
   """
   systemProfileSectionLocks(
-    cedarSystemId: String!
+    cedarSystemId: UUID!
   ): [SystemProfileSectionLockStatus!]! @hasRole(role: EASI_USER)
 }
 
 extend type Mutation {
   lockSystemProfileSection(
-    cedarSystemId: String!
+    cedarSystemId: UUID!
     section: SystemProfileLockableSection!
   ): Boolean! @hasRole(role: EASI_USER)
 
   unlockSystemProfileSection(
-    cedarSystemId: String!
+    cedarSystemId: UUID!
     section: SystemProfileLockableSection!
   ): Boolean! @hasRole(role: EASI_USER)
 
   unlockAllSystemProfileSections(
-    cedarSystemId: String!
+    cedarSystemId: UUID!
   ): [SystemProfileSectionLockStatus!]! @hasRole(role: EASI_USER)
 }
 
@@ -11718,7 +11718,7 @@ type Subscription {
   Automatically unlocks all sections owned by the user when websocket disconnects.
   """
   onSystemProfileSectionLockStatusChanged(
-    cedarSystemId: String!
+    cedarSystemId: UUID!
   ): SystemProfileSectionLockStatusChanged! @hasRole(role: EASI_USER)
 }
 `, BuiltIn: false},
@@ -12347,7 +12347,7 @@ func (ec *executionContext) field_Mutation_extendGRBReviewDeadlineAsync_args(ctx
 func (ec *executionContext) field_Mutation_lockSystemProfileSection_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNString2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
 	if err != nil {
 		return nil, err
 	}
@@ -12626,7 +12626,7 @@ func (ec *executionContext) field_Mutation_unlinkTRBRequestRelation_args(ctx con
 func (ec *executionContext) field_Mutation_unlockAllSystemProfileSections_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNString2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
 	if err != nil {
 		return nil, err
 	}
@@ -12637,7 +12637,7 @@ func (ec *executionContext) field_Mutation_unlockAllSystemProfileSections_args(c
 func (ec *executionContext) field_Mutation_unlockSystemProfileSection_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNString2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
 	if err != nil {
 		return nil, err
 	}
@@ -12949,7 +12949,7 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 func (ec *executionContext) field_Query_cedarAuthorityToOperate_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemID", ec.unmarshalNString2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemID", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
 	if err != nil {
 		return nil, err
 	}
@@ -12960,7 +12960,7 @@ func (ec *executionContext) field_Query_cedarAuthorityToOperate_args(ctx context
 func (ec *executionContext) field_Query_cedarBudgetSystemCost_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemID", ec.unmarshalNString2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemID", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
 	if err != nil {
 		return nil, err
 	}
@@ -12971,7 +12971,7 @@ func (ec *executionContext) field_Query_cedarBudgetSystemCost_args(ctx context.C
 func (ec *executionContext) field_Query_cedarBudget_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemID", ec.unmarshalNString2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemID", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
 	if err != nil {
 		return nil, err
 	}
@@ -12982,7 +12982,7 @@ func (ec *executionContext) field_Query_cedarBudget_args(ctx context.Context, ra
 func (ec *executionContext) field_Query_cedarContractsBySystem_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNString2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
 	if err != nil {
 		return nil, err
 	}
@@ -13004,7 +13004,7 @@ func (ec *executionContext) field_Query_cedarPersonsByCommonName_args(ctx contex
 func (ec *executionContext) field_Query_cedarSoftwareProducts_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNString2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
 	if err != nil {
 		return nil, err
 	}
@@ -13015,7 +13015,7 @@ func (ec *executionContext) field_Query_cedarSoftwareProducts_args(ctx context.C
 func (ec *executionContext) field_Query_cedarSubSystems_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNString2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
 	if err != nil {
 		return nil, err
 	}
@@ -13026,7 +13026,7 @@ func (ec *executionContext) field_Query_cedarSubSystems_args(ctx context.Context
 func (ec *executionContext) field_Query_cedarSystemDetails_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNString2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
 	if err != nil {
 		return nil, err
 	}
@@ -13037,7 +13037,7 @@ func (ec *executionContext) field_Query_cedarSystemDetails_args(ctx context.Cont
 func (ec *executionContext) field_Query_cedarSystem_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNString2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
 	if err != nil {
 		return nil, err
 	}
@@ -13048,7 +13048,7 @@ func (ec *executionContext) field_Query_cedarSystem_args(ctx context.Context, ra
 func (ec *executionContext) field_Query_cedarThreat_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNString2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
 	if err != nil {
 		return nil, err
 	}
@@ -13070,7 +13070,7 @@ func (ec *executionContext) field_Query_compareGRBReviewersByIntakeID_args(ctx c
 func (ec *executionContext) field_Query_deployments_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNString2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
 	if err != nil {
 		return nil, err
 	}
@@ -13096,7 +13096,7 @@ func (ec *executionContext) field_Query_deployments_args(ctx context.Context, ra
 func (ec *executionContext) field_Query_exchanges_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNString2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
 	if err != nil {
 		return nil, err
 	}
@@ -13118,7 +13118,7 @@ func (ec *executionContext) field_Query_myTrbRequests_args(ctx context.Context, 
 func (ec *executionContext) field_Query_roles_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNString2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
 	if err != nil {
 		return nil, err
 	}
@@ -13189,7 +13189,7 @@ func (ec *executionContext) field_Query_systemIntakes_args(ctx context.Context, 
 func (ec *executionContext) field_Query_systemProfileSectionLocks_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNString2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
 	if err != nil {
 		return nil, err
 	}
@@ -13233,7 +13233,7 @@ func (ec *executionContext) field_Query_trbRequests_args(ctx context.Context, ra
 func (ec *executionContext) field_Query_urls_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNString2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
 	if err != nil {
 		return nil, err
 	}
@@ -13255,7 +13255,7 @@ func (ec *executionContext) field_Query_userAccount_args(ctx context.Context, ra
 func (ec *executionContext) field_Subscription_onSystemProfileSectionLockStatusChanged_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNString2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "cedarSystemId", ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID)
 	if err != nil {
 		return nil, err
 	}
@@ -13383,7 +13383,7 @@ func (ec *executionContext) _AddSystemLinkPayload_systemID(ctx context.Context, 
 			return obj.SystemID, nil
 		},
 		nil,
-		ec.marshalNString2string,
+		ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID,
 		true,
 		true,
 	)
@@ -13396,7 +13396,7 @@ func (ec *executionContext) fieldContext_AddSystemLinkPayload_systemID(_ context
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type UUID does not have child fields")
 		},
 	}
 	return fc, nil
@@ -15982,7 +15982,7 @@ func (ec *executionContext) _CedarBudget_systemId(ctx context.Context, field gra
 			return obj.SystemID, nil
 		},
 		nil,
-		ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString,
+		ec.marshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID,
 		true,
 		false,
 	)
@@ -15995,7 +15995,7 @@ func (ec *executionContext) fieldContext_CedarBudget_systemId(_ context.Context,
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type UUID does not have child fields")
 		},
 	}
 	return fc, nil
@@ -16069,7 +16069,7 @@ func (ec *executionContext) _CedarBudgetActualCost_systemId(ctx context.Context,
 			return obj.SystemID, nil
 		},
 		nil,
-		ec.marshalOString2ᚖstring,
+		ec.marshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID,
 		true,
 		false,
 	)
@@ -16082,7 +16082,7 @@ func (ec *executionContext) fieldContext_CedarBudgetActualCost_systemId(_ contex
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type UUID does not have child fields")
 		},
 	}
 	return fc, nil
@@ -16773,7 +16773,7 @@ func (ec *executionContext) _CedarContract_systemID(ctx context.Context, field g
 			return obj.SystemID, nil
 		},
 		nil,
-		ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString,
+		ec.marshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID,
 		true,
 		false,
 	)
@@ -16786,7 +16786,7 @@ func (ec *executionContext) fieldContext_CedarContract_systemID(_ context.Contex
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type UUID does not have child fields")
 		},
 	}
 	return fc, nil
@@ -17237,7 +17237,7 @@ func (ec *executionContext) _CedarDeployment_systemID(ctx context.Context, field
 			return obj.SystemID, nil
 		},
 		nil,
-		ec.marshalNString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString,
+		ec.marshalNUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID,
 		true,
 		true,
 	)
@@ -17250,7 +17250,7 @@ func (ec *executionContext) fieldContext_CedarDeployment_systemID(_ context.Cont
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type UUID does not have child fields")
 		},
 	}
 	return fc, nil
@@ -20027,7 +20027,7 @@ func (ec *executionContext) _CedarSubSystem_id(ctx context.Context, field graphq
 			return obj.ID, nil
 		},
 		nil,
-		ec.marshalNString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString,
+		ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID,
 		true,
 		true,
 	)
@@ -20040,7 +20040,7 @@ func (ec *executionContext) fieldContext_CedarSubSystem_id(_ context.Context, fi
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type UUID does not have child fields")
 		},
 	}
 	return fc, nil
@@ -20143,7 +20143,7 @@ func (ec *executionContext) _CedarSystem_id(ctx context.Context, field graphql.C
 			return obj.ID, nil
 		},
 		nil,
-		ec.marshalNString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString,
+		ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID,
 		true,
 		true,
 	)
@@ -20156,7 +20156,7 @@ func (ec *executionContext) fieldContext_CedarSystem_id(_ context.Context, field
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type UUID does not have child fields")
 		},
 	}
 	return fc, nil
@@ -21002,7 +21002,7 @@ func (ec *executionContext) _CedarSystemBookmark_cedarSystemId(ctx context.Conte
 			return obj.CedarSystemID, nil
 		},
 		nil,
-		ec.marshalNString2string,
+		ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID,
 		true,
 		true,
 	)
@@ -21015,7 +21015,7 @@ func (ec *executionContext) fieldContext_CedarSystemBookmark_cedarSystemId(_ con
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type UUID does not have child fields")
 		},
 	}
 	return fc, nil
@@ -23537,7 +23537,7 @@ func (ec *executionContext) _DeleteCedarSystemBookmarkPayload_cedarSystemId(ctx 
 			return obj.CedarSystemID, nil
 		},
 		nil,
-		ec.marshalNString2string,
+		ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID,
 		true,
 		true,
 	)
@@ -23550,7 +23550,7 @@ func (ec *executionContext) fieldContext_DeleteCedarSystemBookmarkPayload_cedarS
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type UUID does not have child fields")
 		},
 	}
 	return fc, nil
@@ -32097,7 +32097,7 @@ func (ec *executionContext) _Mutation_lockSystemProfileSection(ctx context.Conte
 		ec.fieldContext_Mutation_lockSystemProfileSection,
 		func(ctx context.Context) (any, error) {
 			fc := graphql.GetFieldContext(ctx)
-			return ec.resolvers.Mutation().LockSystemProfileSection(ctx, fc.Args["cedarSystemId"].(string), fc.Args["section"].(models.SystemProfileLockableSection))
+			return ec.resolvers.Mutation().LockSystemProfileSection(ctx, fc.Args["cedarSystemId"].(uuid.UUID), fc.Args["section"].(models.SystemProfileLockableSection))
 		},
 		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
 			directive0 := next
@@ -32156,7 +32156,7 @@ func (ec *executionContext) _Mutation_unlockSystemProfileSection(ctx context.Con
 		ec.fieldContext_Mutation_unlockSystemProfileSection,
 		func(ctx context.Context) (any, error) {
 			fc := graphql.GetFieldContext(ctx)
-			return ec.resolvers.Mutation().UnlockSystemProfileSection(ctx, fc.Args["cedarSystemId"].(string), fc.Args["section"].(models.SystemProfileLockableSection))
+			return ec.resolvers.Mutation().UnlockSystemProfileSection(ctx, fc.Args["cedarSystemId"].(uuid.UUID), fc.Args["section"].(models.SystemProfileLockableSection))
 		},
 		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
 			directive0 := next
@@ -32215,7 +32215,7 @@ func (ec *executionContext) _Mutation_unlockAllSystemProfileSections(ctx context
 		ec.fieldContext_Mutation_unlockAllSystemProfileSections,
 		func(ctx context.Context) (any, error) {
 			fc := graphql.GetFieldContext(ctx)
-			return ec.resolvers.Mutation().UnlockAllSystemProfileSections(ctx, fc.Args["cedarSystemId"].(string))
+			return ec.resolvers.Mutation().UnlockAllSystemProfileSections(ctx, fc.Args["cedarSystemId"].(uuid.UUID))
 		},
 		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
 			directive0 := next
@@ -33432,7 +33432,7 @@ func (ec *executionContext) _Query_cedarAuthorityToOperate(ctx context.Context, 
 		ec.fieldContext_Query_cedarAuthorityToOperate,
 		func(ctx context.Context) (any, error) {
 			fc := graphql.GetFieldContext(ctx)
-			return ec.resolvers.Query().CedarAuthorityToOperate(ctx, fc.Args["cedarSystemID"].(string))
+			return ec.resolvers.Query().CedarAuthorityToOperate(ctx, fc.Args["cedarSystemID"].(uuid.UUID))
 		},
 		nil,
 		ec.marshalNCedarAuthorityToOperate2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarAuthorityToOperateᚄ,
@@ -33533,7 +33533,7 @@ func (ec *executionContext) _Query_cedarBudget(ctx context.Context, field graphq
 		ec.fieldContext_Query_cedarBudget,
 		func(ctx context.Context) (any, error) {
 			fc := graphql.GetFieldContext(ctx)
-			return ec.resolvers.Query().CedarBudget(ctx, fc.Args["cedarSystemID"].(string))
+			return ec.resolvers.Query().CedarBudget(ctx, fc.Args["cedarSystemID"].(uuid.UUID))
 		},
 		nil,
 		ec.marshalOCedarBudget2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarBudgetᚄ,
@@ -33594,7 +33594,7 @@ func (ec *executionContext) _Query_cedarBudgetSystemCost(ctx context.Context, fi
 		ec.fieldContext_Query_cedarBudgetSystemCost,
 		func(ctx context.Context) (any, error) {
 			fc := graphql.GetFieldContext(ctx)
-			return ec.resolvers.Query().CedarBudgetSystemCost(ctx, fc.Args["cedarSystemID"].(string))
+			return ec.resolvers.Query().CedarBudgetSystemCost(ctx, fc.Args["cedarSystemID"].(uuid.UUID))
 		},
 		nil,
 		ec.marshalOCedarBudgetSystemCost2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarBudgetSystemCost,
@@ -33692,7 +33692,7 @@ func (ec *executionContext) _Query_cedarSoftwareProducts(ctx context.Context, fi
 		ec.fieldContext_Query_cedarSoftwareProducts,
 		func(ctx context.Context) (any, error) {
 			fc := graphql.GetFieldContext(ctx)
-			return ec.resolvers.Query().CedarSoftwareProducts(ctx, fc.Args["cedarSystemId"].(string))
+			return ec.resolvers.Query().CedarSoftwareProducts(ctx, fc.Args["cedarSystemId"].(uuid.UUID))
 		},
 		nil,
 		ec.marshalOCedarSoftwareProducts2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSoftwareProducts,
@@ -33763,7 +33763,7 @@ func (ec *executionContext) _Query_cedarSubSystems(ctx context.Context, field gr
 		ec.fieldContext_Query_cedarSubSystems,
 		func(ctx context.Context) (any, error) {
 			fc := graphql.GetFieldContext(ctx)
-			return ec.resolvers.Query().CedarSubSystems(ctx, fc.Args["cedarSystemId"].(string))
+			return ec.resolvers.Query().CedarSubSystems(ctx, fc.Args["cedarSystemId"].(uuid.UUID))
 		},
 		nil,
 		ec.marshalNCedarSubSystem2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSubSystemᚄ,
@@ -33814,7 +33814,7 @@ func (ec *executionContext) _Query_cedarContractsBySystem(ctx context.Context, f
 		ec.fieldContext_Query_cedarContractsBySystem,
 		func(ctx context.Context) (any, error) {
 			fc := graphql.GetFieldContext(ctx)
-			return ec.resolvers.Query().CedarContractsBySystem(ctx, fc.Args["cedarSystemId"].(string))
+			return ec.resolvers.Query().CedarContractsBySystem(ctx, fc.Args["cedarSystemId"].(uuid.UUID))
 		},
 		nil,
 		ec.marshalNCedarContract2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarContractᚄ,
@@ -33910,7 +33910,7 @@ func (ec *executionContext) _Query_cedarThreat(ctx context.Context, field graphq
 		ec.fieldContext_Query_cedarThreat,
 		func(ctx context.Context) (any, error) {
 			fc := graphql.GetFieldContext(ctx)
-			return ec.resolvers.Query().CedarThreat(ctx, fc.Args["cedarSystemId"].(string))
+			return ec.resolvers.Query().CedarThreat(ctx, fc.Args["cedarSystemId"].(uuid.UUID))
 		},
 		nil,
 		ec.marshalNCedarThreat2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarThreatᚄ,
@@ -33967,7 +33967,7 @@ func (ec *executionContext) _Query_deployments(ctx context.Context, field graphq
 		ec.fieldContext_Query_deployments,
 		func(ctx context.Context) (any, error) {
 			fc := graphql.GetFieldContext(ctx)
-			return ec.resolvers.Query().Deployments(ctx, fc.Args["cedarSystemId"].(string), fc.Args["deploymentType"].(*string), fc.Args["state"].(*string), fc.Args["status"].(*string))
+			return ec.resolvers.Query().Deployments(ctx, fc.Args["cedarSystemId"].(uuid.UUID), fc.Args["deploymentType"].(*string), fc.Args["state"].(*string), fc.Args["status"].(*string))
 		},
 		nil,
 		ec.marshalNCedarDeployment2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarDeploymentᚄ,
@@ -34085,7 +34085,7 @@ func (ec *executionContext) _Query_roles(ctx context.Context, field graphql.Coll
 		ec.fieldContext_Query_roles,
 		func(ctx context.Context) (any, error) {
 			fc := graphql.GetFieldContext(ctx)
-			return ec.resolvers.Query().Roles(ctx, fc.Args["cedarSystemId"].(string), fc.Args["roleTypeID"].(*string))
+			return ec.resolvers.Query().Roles(ctx, fc.Args["cedarSystemId"].(uuid.UUID), fc.Args["roleTypeID"].(*string))
 		},
 		nil,
 		ec.marshalNCedarRole2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarRoleᚄ,
@@ -34160,7 +34160,7 @@ func (ec *executionContext) _Query_exchanges(ctx context.Context, field graphql.
 		ec.fieldContext_Query_exchanges,
 		func(ctx context.Context) (any, error) {
 			fc := graphql.GetFieldContext(ctx)
-			return ec.resolvers.Query().Exchanges(ctx, fc.Args["cedarSystemId"].(string))
+			return ec.resolvers.Query().Exchanges(ctx, fc.Args["cedarSystemId"].(uuid.UUID))
 		},
 		nil,
 		ec.marshalNCedarExchange2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarExchangeᚄ,
@@ -34259,7 +34259,7 @@ func (ec *executionContext) _Query_urls(ctx context.Context, field graphql.Colle
 		ec.fieldContext_Query_urls,
 		func(ctx context.Context) (any, error) {
 			fc := graphql.GetFieldContext(ctx)
-			return ec.resolvers.Query().Urls(ctx, fc.Args["cedarSystemId"].(string))
+			return ec.resolvers.Query().Urls(ctx, fc.Args["cedarSystemId"].(uuid.UUID))
 		},
 		nil,
 		ec.marshalNCedarURL2ᚕᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarURLᚄ,
@@ -34979,7 +34979,7 @@ func (ec *executionContext) _Query_cedarSystem(ctx context.Context, field graphq
 		ec.fieldContext_Query_cedarSystem,
 		func(ctx context.Context) (any, error) {
 			fc := graphql.GetFieldContext(ctx)
-			return ec.resolvers.Query().CedarSystem(ctx, fc.Args["cedarSystemId"].(string))
+			return ec.resolvers.Query().CedarSystem(ctx, fc.Args["cedarSystemId"].(uuid.UUID))
 		},
 		nil,
 		ec.marshalOCedarSystem2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystem,
@@ -35192,7 +35192,7 @@ func (ec *executionContext) _Query_cedarSystemDetails(ctx context.Context, field
 		ec.fieldContext_Query_cedarSystemDetails,
 		func(ctx context.Context) (any, error) {
 			fc := graphql.GetFieldContext(ctx)
-			return ec.resolvers.Query().CedarSystemDetails(ctx, fc.Args["cedarSystemId"].(string))
+			return ec.resolvers.Query().CedarSystemDetails(ctx, fc.Args["cedarSystemId"].(uuid.UUID))
 		},
 		nil,
 		ec.marshalOCedarSystemDetails2ᚖgithubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemDetails,
@@ -35288,7 +35288,7 @@ func (ec *executionContext) _Query_systemProfileSectionLocks(ctx context.Context
 		ec.fieldContext_Query_systemProfileSectionLocks,
 		func(ctx context.Context) (any, error) {
 			fc := graphql.GetFieldContext(ctx)
-			return ec.resolvers.Query().SystemProfileSectionLocks(ctx, fc.Args["cedarSystemId"].(string))
+			return ec.resolvers.Query().SystemProfileSectionLocks(ctx, fc.Args["cedarSystemId"].(uuid.UUID))
 		},
 		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
 			directive0 := next
@@ -35756,7 +35756,7 @@ func (ec *executionContext) _Subscription_onSystemProfileSectionLockStatusChange
 		ec.fieldContext_Subscription_onSystemProfileSectionLockStatusChanged,
 		func(ctx context.Context) (any, error) {
 			fc := graphql.GetFieldContext(ctx)
-			return ec.resolvers.Subscription().OnSystemProfileSectionLockStatusChanged(ctx, fc.Args["cedarSystemId"].(string))
+			return ec.resolvers.Subscription().OnSystemProfileSectionLockStatusChanged(ctx, fc.Args["cedarSystemId"].(uuid.UUID))
 		},
 		func(ctx context.Context, next graphql.Resolver) graphql.Resolver {
 			directive0 := next
@@ -37706,7 +37706,7 @@ func (ec *executionContext) _SystemIntake_cedarSystemId(ctx context.Context, fie
 			return obj.CedarSystemID, nil
 		},
 		nil,
-		ec.marshalOString2githubᚗcomᚋgureguᚋnullᚐString,
+		ec.marshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID,
 		true,
 		false,
 	)
@@ -37719,7 +37719,7 @@ func (ec *executionContext) fieldContext_SystemIntake_cedarSystemId(_ context.Co
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type UUID does not have child fields")
 		},
 	}
 	return fc, nil
@@ -43492,7 +43492,7 @@ func (ec *executionContext) _SystemIntakeSystem_systemID(ctx context.Context, fi
 			return obj.SystemID, nil
 		},
 		nil,
-		ec.marshalNString2string,
+		ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID,
 		true,
 		true,
 	)
@@ -43505,7 +43505,7 @@ func (ec *executionContext) fieldContext_SystemIntakeSystem_systemID(_ context.C
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type UUID does not have child fields")
 		},
 	}
 	return fc, nil
@@ -43646,7 +43646,7 @@ func (ec *executionContext) _SystemProfileSectionLockStatus_cedarSystemId(ctx co
 			return obj.CedarSystemID, nil
 		},
 		nil,
-		ec.marshalNString2string,
+		ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID,
 		true,
 		true,
 	)
@@ -43659,7 +43659,7 @@ func (ec *executionContext) fieldContext_SystemProfileSectionLockStatus_cedarSys
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type UUID does not have child fields")
 		},
 	}
 	return fc, nil
@@ -51497,7 +51497,7 @@ func (ec *executionContext) unmarshalInputAddSystemLinkInput(ctx context.Context
 			it.SystemIntakeID = data
 		case "systemID":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemID"))
-			data, err := ec.unmarshalNString2string(ctx, v)
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -51627,7 +51627,7 @@ func (ec *executionContext) unmarshalInputCreateCedarSystemBookmarkInput(ctx con
 		switch k {
 		case "cedarSystemId":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemId"))
-			data, err := ec.unmarshalNString2string(ctx, v)
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -52845,7 +52845,7 @@ func (ec *executionContext) unmarshalInputSetRolesForUserOnSystemInput(ctx conte
 		switch k {
 		case "cedarSystemID":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemID"))
-			data, err := ec.unmarshalNString2string(ctx, v)
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -53050,7 +53050,7 @@ func (ec *executionContext) unmarshalInputSetTRBRequestRelationExistingSystemInp
 			it.TrbRequestID = data
 		case "cedarSystemIDs":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemIDs"))
-			data, err := ec.unmarshalNString2ᚕstringᚄ(ctx, v)
+			data, err := ec.unmarshalNUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -54403,7 +54403,7 @@ func (ec *executionContext) unmarshalInputSystemRelationshipInput(ctx context.Co
 		switch k {
 		case "cedarSystemId":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemId"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -54704,7 +54704,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeLinkedCedarSystemInp
 			it.ID = data
 		case "cedarSystemId":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemId"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -54849,7 +54849,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeRequestDetailsInput(
 			it.AcquisitionMethods = data
 		case "cedarSystemId":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemId"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -54931,7 +54931,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemLinkInput(ctx context.Cont
 			it.SystemIntakeID = data
 		case "systemID":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemID"))
-			data, err := ec.unmarshalNString2string(ctx, v)
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -71192,6 +71192,28 @@ func (ec *executionContext) marshalNUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUID�
 	}
 
 	return ret
+}
+
+func (ec *executionContext) unmarshalNUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx context.Context, v any) (*uuid.UUID, error) {
+	res, err := models.UnmarshalUUID(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx context.Context, sel ast.SelectionSet, v *uuid.UUID) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	_ = sel
+	res := models.MarshalUUID(*v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) unmarshalNUpdateSystemIntakeAdminLeadInput2githubᚗcomᚋcmsᚑenterpriseᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemIntakeAdminLeadInput(ctx context.Context, v any) (models.UpdateSystemIntakeAdminLeadInput, error) {

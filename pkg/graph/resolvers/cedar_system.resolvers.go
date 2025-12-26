@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"slices"
 
+	"github.com/google/uuid"
 	"golang.org/x/sync/errgroup"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
@@ -19,7 +20,7 @@ import (
 
 // BusinessOwnerRoles is the resolver for the businessOwnerRoles field.
 func (r *cedarSystemResolver) BusinessOwnerRoles(ctx context.Context, obj *models.CedarSystem) ([]*models.CedarRole, error) {
-	cedarRoles, err := r.cedarCoreClient.GetBusinessOwnerRolesBySystem(ctx, obj.ID.String)
+	cedarRoles, err := r.cedarCoreClient.GetBusinessOwnerRolesBySystem(ctx, obj.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -28,17 +29,17 @@ func (r *cedarSystemResolver) BusinessOwnerRoles(ctx context.Context, obj *model
 
 // IsBookmarked is the resolver for the isBookmarked field.
 func (r *cedarSystemResolver) IsBookmarked(ctx context.Context, obj *models.CedarSystem) (bool, error) {
-	return GetCedarSystemIsBookmarked(ctx, obj.ID.String)
+	return GetCedarSystemIsBookmarked(ctx, obj.ID)
 }
 
 // LinkedTrbRequests is the resolver for the linkedTrbRequests field.
 func (r *cedarSystemResolver) LinkedTrbRequests(ctx context.Context, obj *models.CedarSystem, state models.TRBRequestState) ([]*models.TRBRequest, error) {
-	return CedarSystemLinkedTRBRequests(ctx, obj.ID.String, state)
+	return CedarSystemLinkedTRBRequests(ctx, obj.ID, state)
 }
 
 // LinkedSystemIntakes is the resolver for the linkedSystemIntakes field.
 func (r *cedarSystemResolver) LinkedSystemIntakes(ctx context.Context, obj *models.CedarSystem, state models.SystemIntakeState) ([]*models.SystemIntake, error) {
-	return CedarSystemLinkedSystemIntakes(ctx, obj.ID.String, state)
+	return CedarSystemLinkedSystemIntakes(ctx, obj.ID, state)
 }
 
 // SystemMaintainerInformation is the resolver for the systemMaintainerInformation field.
@@ -110,7 +111,7 @@ func (r *cedarSystemDetailsResolver) BusinessOwnerInformation(ctx context.Contex
 }
 
 // CedarSystem is the resolver for the cedarSystem field.
-func (r *queryResolver) CedarSystem(ctx context.Context, cedarSystemID string) (*models.CedarSystem, error) {
+func (r *queryResolver) CedarSystem(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarSystem, error) {
 	cedarSystem, err := r.cedarCoreClient.GetSystem(ctx, cedarSystemID)
 	if err != nil {
 		return nil, err
@@ -146,7 +147,7 @@ func (r *queryResolver) MyCedarSystems(ctx context.Context) ([]*models.CedarSyst
 }
 
 // CedarSystemDetails is the resolver for the cedarSystemDetails field.
-func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID string) (*models.CedarSystemDetails, error) {
+func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarSystemDetails, error) {
 	// TODO: consider refactoring this to work with the main CEDAR system implementation instead of using go funcs
 	g := new(errgroup.Group)
 

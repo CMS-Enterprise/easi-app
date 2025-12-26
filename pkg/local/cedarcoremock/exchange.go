@@ -3,13 +3,14 @@ package cedarcoremock
 import (
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
-var mockExchanges = map[string][]*models.CedarExchange{
-	"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}": {
+var mockExchanges = map[uuid.UUID][]*models.CedarExchange{
+	uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"): {
 		{
 			ConnectionFrequency:         []zero.String{zero.StringFrom("Ad Hoc"), zero.StringFrom("As Needed")},
 			ContainsBankingData:         true,
@@ -77,7 +78,7 @@ var mockExchanges = map[string][]*models.CedarExchange{
 			}},
 		},
 	},
-	"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}": {
+	uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"): {
 		{
 			ConnectionFrequency:         []zero.String{zero.StringFrom("Ad Hoc"), zero.StringFrom("As Needed")},
 			ContainsBankingData:         true,
@@ -145,7 +146,7 @@ var mockExchanges = map[string][]*models.CedarExchange{
 			}},
 		},
 	},
-	"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}": {
+	uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"): {
 		{
 			ConnectionFrequency:         []zero.String{zero.StringFrom("Ad Hoc"), zero.StringFrom("As Needed")},
 			ContainsBankingData:         true,
@@ -213,7 +214,7 @@ var mockExchanges = map[string][]*models.CedarExchange{
 			}},
 		},
 	},
-	"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}": {
+	uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC3D}"): {
 		{
 			ConnectionFrequency:         []zero.String{zero.StringFrom("Ad Hoc"), zero.StringFrom("As Needed")},
 			ContainsBankingData:         true,
@@ -281,7 +282,7 @@ var mockExchanges = map[string][]*models.CedarExchange{
 			}},
 		},
 	},
-	"{11AB1A00-1234-5678-ABC1-1A001B00CC4E}": {
+	uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"): {
 		{
 			ConnectionFrequency:         []zero.String{zero.StringFrom("Ad Hoc"), zero.StringFrom("As Needed")},
 			ContainsBankingData:         true,
@@ -352,7 +353,7 @@ var mockExchanges = map[string][]*models.CedarExchange{
 }
 
 // GetExchange returns a mock slice of CedarExchange structs
-func GetExchange(cedarSystemID string) []*models.CedarExchange {
+func GetExchange(cedarSystemID uuid.UUID) []*models.CedarExchange {
 	if val, ok := mockExchanges[cedarSystemID]; ok {
 		return val
 	}

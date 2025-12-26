@@ -7,6 +7,7 @@ import (
 	"unicode"
 	"unicode/utf8"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
@@ -16,7 +17,7 @@ import (
 )
 
 // GetSystemDetail makes a GET call to the /system/detail/{id} endpoint
-func (c *Client) GetSystemDetail(ctx context.Context, cedarSystemID string) (*models.CedarSystemDetails, error) {
+func (c *Client) GetSystemDetail(ctx context.Context, cedarSystemID uuid.UUID) (*models.CedarSystemDetails, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		mocksys := cedarcoremock.GetSystem(cedarSystemID)

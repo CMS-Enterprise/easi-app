@@ -19,7 +19,7 @@ const (
 type SystemIntakeSystem struct {
 	BaseStructUser
 	SystemIntakeID                     uuid.UUID                         `json:"systemIntakeId" db:"system_intake_id"`
-	SystemID                           string                            `json:"systemId" db:"system_id"`
+	SystemID                           uuid.UUID                         `json:"systemId" db:"system_id"`
 	SystemRelationshipType             EnumArray[SystemRelationshipType] `json:"relationshipType" db:"relationship_type"`
 	OtherSystemRelationshipDescription *string                           `json:"otherSystemRelationshipDescription" db:"other_system_relationship_description"`
 }

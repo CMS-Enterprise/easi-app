@@ -14,8 +14,8 @@ import (
 type trbRequestRelationTestCase struct {
 	InitialContractNumbers []string
 	NewContractNumbers     []string
-	InitialSystemIDs       []string
-	NewSystemIDs           []string
+	InitialSystemIDs       []uuid.UUID
+	NewSystemIDs           []uuid.UUID
 }
 
 func (s *ResolverSuite) TestSetTRBRequestRelationNewSystem() {
@@ -46,14 +46,14 @@ func (s *ResolverSuite) TestSetTRBRequestRelationNewSystem() {
 		"should remove existing system IDs": {
 			InitialContractNumbers: []string{"1", "2"},
 			NewContractNumbers:     []string{"1"},
-			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
-			NewSystemIDs:           []string{},
+			InitialSystemIDs:       []uuid.UUID{uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"), uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")},
+			NewSystemIDs:           []uuid.UUID{},
 		},
 		"should not add system IDs": {
 			InitialContractNumbers: []string{"1", "2"},
 			NewContractNumbers:     []string{"1"},
-			InitialSystemIDs:       []string{},
-			NewSystemIDs:           []string{},
+			InitialSystemIDs:       []uuid.UUID{},
+			NewSystemIDs:           []uuid.UUID{},
 		},
 	}
 
@@ -135,33 +135,33 @@ func (s *ResolverSuite) TestSetTRBRequestRelationExistingSystem() {
 	var cases = map[string]trbRequestRelationTestCase{
 		"adds contract numbers and system IDs when no initial ones exist": {
 			InitialContractNumbers: []string{},
-			InitialSystemIDs:       []string{},
+			InitialSystemIDs:       []uuid.UUID{},
 			NewContractNumbers:     []string{"1", "2"},
-			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
+			NewSystemIDs:           []uuid.UUID{uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"), uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")},
 		},
 		"removes existing contract numbers and system IDs when none are given": {
 			InitialContractNumbers: []string{"1", "2"},
-			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
+			InitialSystemIDs:       []uuid.UUID{uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"), uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")},
 			NewContractNumbers:     []string{},
-			NewSystemIDs:           []string{},
+			NewSystemIDs:           []uuid.UUID{},
 		},
 		"changes existing contract numbers and system IDs to different ones": {
 			InitialContractNumbers: []string{"1", "2"},
-			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
+			InitialSystemIDs:       []uuid.UUID{uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"), uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")},
 			NewContractNumbers:     []string{"3", "4"},
-			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}", "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"},
+			NewSystemIDs:           []uuid.UUID{uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC3D}"), uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC4E}")},
 		},
 		"changes existing contract numbers and system IDs to add new ones": {
 			InitialContractNumbers: []string{"1", "2"},
-			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
+			InitialSystemIDs:       []uuid.UUID{uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"), uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")},
 			NewContractNumbers:     []string{"1", "2", "3"},
-			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}", "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}", "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"},
+			NewSystemIDs:           []uuid.UUID{uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC3D}"), uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"), uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")},
 		},
 		"changes existing contract numbers and system IDs to remove old ones": {
 			InitialContractNumbers: []string{"1", "2"},
-			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
+			InitialSystemIDs:       []uuid.UUID{uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"), uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")},
 			NewContractNumbers:     []string{"1"},
-			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"},
+			NewSystemIDs:           []uuid.UUID{uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}")},
 		},
 	}
 
@@ -205,7 +205,7 @@ func (s *ResolverSuite) TestSetTRBRequestRelationExistingSystem() {
 			updatedTRBRequest, err := SetTRBRequestRelationExistingSystem(
 				ctx,
 				store,
-				func(ctx context.Context, systemID string) (*models.CedarSystem, error) {
+				func(ctx context.Context, systemID uuid.UUID) (*models.CedarSystem, error) {
 					return &models.CedarSystem{}, nil
 				},
 				input,
@@ -226,7 +226,7 @@ func (s *ResolverSuite) TestSetTRBRequestRelationExistingSystem() {
 			// Ensure the system IDs were modified properly
 			s.Equal(len(caseValues.NewSystemIDs), len(updatedTRBRequestSystemIDs))
 			for _, v := range updatedTRBRequestSystemIDs {
-				s.Contains(caseValues.NewSystemIDs, v.ID.String)
+				s.Contains(caseValues.NewSystemIDs, v.ID)
 			}
 
 			// Ensure the contract numbers were modified properly
@@ -270,14 +270,14 @@ func (s *ResolverSuite) TestSetTRBRequestRelationExistingService() {
 		"should remove existing system IDs": {
 			InitialContractNumbers: []string{"1", "2"},
 			NewContractNumbers:     []string{"1"},
-			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
-			NewSystemIDs:           []string{},
+			InitialSystemIDs:       []uuid.UUID{uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"), uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")},
+			NewSystemIDs:           []uuid.UUID{},
 		},
 		"should not add system IDs": {
 			InitialContractNumbers: []string{"1", "2"},
 			NewContractNumbers:     []string{"1"},
-			InitialSystemIDs:       []string{},
-			NewSystemIDs:           []string{},
+			InitialSystemIDs:       []uuid.UUID{},
+			NewSystemIDs:           []uuid.UUID{},
 		},
 	}
 
@@ -396,13 +396,13 @@ func (s *ResolverSuite) TestUnlinkTRBRequestRelation() {
 		// Set the existing system relationship
 		input := models.SetTRBRequestRelationExistingSystemInput{
 			TrbRequestID:    trbRequest.ID,
-			CedarSystemIDs:  []string{"abcde", "fghijk"},
+			CedarSystemIDs:  []uuid.UUID{uuid.New(), uuid.New()},
 			ContractNumbers: []string{"12345", "67890"},
 		}
 		_, err = SetTRBRequestRelationExistingSystem(
 			ctx,
 			store,
-			func(ctx context.Context, systemID string) (*models.CedarSystem, error) {
+			func(ctx context.Context, systemID uuid.UUID) (*models.CedarSystem, error) {
 				return &models.CedarSystem{}, nil
 			},
 			input,

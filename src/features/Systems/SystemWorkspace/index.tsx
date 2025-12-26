@@ -64,6 +64,12 @@ export const SystemWorkspace = () => {
   /** The `linkSearchQuery` is used on starting new request links throughout workspace */
   const linkSearchQuery = linkCedarSystemIdQueryString(systemId);
 
+  if (systemId.startsWith('{') && systemId.endsWith('}')) {
+    return (
+      <Redirect to={`/systems/${systemId.slice(1, systemId.length - 1)}`} />
+    );
+  }
+
   if (loading) {
     return <PageLoading />;
   }

@@ -1,8 +1,10 @@
 package cedarcoremock
 
 import (
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -16,7 +18,7 @@ var mockBudgets = []*models.CedarBudget{
 		Name:          zero.StringFrom("Budget Project 1"),
 		ProjectID:     zero.StringFrom("12345"),
 		ProjectTitle:  zero.StringFrom("Budget X"),
-		SystemID:      zero.StringFrom("12345"),
+		SystemID:      helpers.PointerTo(uuid.New()),
 	},
 	{
 		FiscalYear:    zero.StringFrom("2023"),
@@ -27,7 +29,7 @@ var mockBudgets = []*models.CedarBudget{
 		Name:          zero.StringFrom("Budget Project 1"),
 		ProjectID:     zero.StringFrom("12345"),
 		ProjectTitle:  zero.StringFrom("Budget X"),
-		SystemID:      zero.StringFrom("12345"),
+		SystemID:      helpers.PointerTo(uuid.New()),
 	},
 	{
 		FiscalYear:    zero.StringFrom(""),
@@ -38,7 +40,7 @@ var mockBudgets = []*models.CedarBudget{
 		Name:          zero.StringFrom(""),
 		ProjectID:     zero.StringFrom("12345"),
 		ProjectTitle:  zero.StringFrom(""),
-		SystemID:      zero.StringFrom(""),
+		SystemID:      helpers.PointerTo(uuid.New()),
 	},
 }
 

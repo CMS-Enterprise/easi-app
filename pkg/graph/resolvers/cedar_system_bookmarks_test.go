@@ -11,10 +11,10 @@ func (s *ResolverSuite) TestCedarSystemBookmarks() {
 	mockSystems := cedarcoremock.GetActiveSystems()
 	s.Len(mockSystems, 5)
 
-	cedarSystemID := mockSystems[0].ID.String
+	cedarSystemID := mockSystems[0].ID
 	s.NotEmpty(cedarSystemID)
 
-	otherID := mockSystems[1].ID.String
+	otherID := mockSystems[1].ID
 	s.NotEmpty(otherID)
 
 	s.Run("saves and retrieves a bookmark", func() {

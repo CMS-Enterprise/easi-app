@@ -58,7 +58,7 @@ func (s *EmailTestSuite) TestSendCedarYouHaveBeenAddedEmail() {
 		client, err := NewClient(s.config, &ms)
 		s.NoError(err)
 
-		err = client.SendCedarYouHaveBeenAddedEmail(ctx, systemName, systemID.String(), rolesList, "test@fake.com")
+		err = client.SendCedarYouHaveBeenAddedEmail(ctx, systemName, systemID, rolesList, "test@fake.com")
 		s.NoError(err)
 
 		expectedSubject := fmt.Sprintf("You have been added as a team member for %s", systemName)

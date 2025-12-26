@@ -12,10 +12,10 @@ import (
 func (s *ResolverSuite) TestTRBRequestRelatedSystems() {
 	ctx := s.testConfigs.Context
 
-	const (
-		systemID1 = "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"
-		systemID2 = "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
-		systemID3 = "{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"
+	var (
+		systemID1 = uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}")
+		systemID2 = uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}")
+		systemID3 = uuid.MustParse("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}")
 	)
 
 	var createdIDs []uuid.UUID
@@ -30,7 +30,7 @@ func (s *ResolverSuite) TestTRBRequestRelatedSystems() {
 
 		// set contract for the created trb request
 		// insert systems for this created trb request
-		systemIDs := []string{
+		systemIDs := []uuid.UUID{
 			systemID1,
 			systemID2,
 			systemID3,
@@ -52,15 +52,15 @@ func (s *ResolverSuite) TestTRBRequestRelatedSystems() {
 		)
 
 		for _, result := range data {
-			if result.ID.String == systemID1 {
+			if result.ID == systemID1 {
 				found1 = true
 			}
 
-			if result.ID.String == systemID2 {
+			if result.ID == systemID2 {
 				found2 = true
 			}
 
-			if result.ID.String == systemID3 {
+			if result.ID == systemID3 {
 				found3 = true
 			}
 		}
@@ -86,11 +86,11 @@ func (s *ResolverSuite) TestTRBRequestsByCedarSystemID() {
 		closed uuid.UUID
 	)
 
-	const (
-		system1 = "1"
-		system2 = "2"
-		system3 = "3"
-		system4 = "4"
+	var (
+		system1 = uuid.New()
+		system2 = uuid.New()
+		system3 = uuid.New()
+		system4 = uuid.New()
 	)
 
 	s.Run("test getting TRB requests by cedar system id", func() {
@@ -134,7 +134,7 @@ func (s *ResolverSuite) TestTRBRequestsByCedarSystemID() {
 		closed = create3.ID
 
 		// link all systems to all TRBs
-		systemNumbers := []string{
+		systemNumbers := []uuid.UUID{
 			system1,
 			system2,
 			system3,

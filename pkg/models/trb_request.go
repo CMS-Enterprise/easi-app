@@ -132,17 +132,17 @@ func (t RelatedTRBRequest) GetMappingVal() *TRBRequest {
 
 // TRBRequestsByCedarSystemIDsRequest is used as an input for dataloaders that can only receive a single argument
 type TRBRequestsByCedarSystemIDsRequest struct {
-	CedarSystemID string
+	CedarSystemID uuid.UUID
 	State         TRBRequestState
 }
 
 // TRBRequestsByCedarSystemIDsResponse with the added related request ID allows for using the mapping helpers in the dataloader package.
 type TRBRequestsByCedarSystemIDsResponse struct {
-	CedarSystemID string `db:"system_id"`
+	CedarSystemID uuid.UUID `db:"system_id"`
 	TRBRequest
 }
 
-func (t TRBRequestsByCedarSystemIDsResponse) GetMappingKey() string {
+func (t TRBRequestsByCedarSystemIDsResponse) GetMappingKey() uuid.UUID {
 	return t.CedarSystemID
 }
 

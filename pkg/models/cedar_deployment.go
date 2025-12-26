@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 )
 
@@ -28,7 +29,7 @@ type CedarDeployment struct {
 	// always-present fields
 	ID       zero.String
 	Name     zero.String
-	SystemID zero.String
+	SystemID *uuid.UUID
 
 	// possibly-null fields
 	StartDate                zero.Time

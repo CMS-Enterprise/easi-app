@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 
 export default gql(/* GraphQL */ `
   query GetLinkedRequests(
-    $cedarSystemId: String!
+    $cedarSystemId: UUID!
     $systemIntakeState: SystemIntakeState!
     $trbRequestState: TRBRequestState!
   ) {

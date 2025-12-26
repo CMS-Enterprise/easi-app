@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
@@ -120,7 +121,7 @@ func GetRoleTypeByRoleTypeID(roleTypeID string) *models.CedarRoleType {
 }
 
 // GetSystemRoles returns mocked roles for a single CEDAR system, filtered by role type ID
-func GetSystemRoles(cedarSystemID string, roleTypeID *string) []*models.CedarRole {
+func GetSystemRoles(cedarSystemID uuid.UUID, roleTypeID *string) []*models.CedarRole {
 	var roleTypeIDStr string
 	if roleTypeID != nil {
 		roleTypeIDStr = *roleTypeID
@@ -140,7 +141,7 @@ func GetSystemRoles(cedarSystemID string, roleTypeID *string) []*models.CedarRol
 	) *models.CedarRole {
 		return &models.CedarRole{
 			Application:       zero.StringFrom("alfabet"), // should always be "alfabet"
-			ObjectID:          zero.StringFrom(cedarSystemID),
+			ObjectID:          zero.StringFrom(cedarSystemID.String()),
 			AssigneeType:      helpers.PointerTo(models.PersonAssignee),
 			AssigneeUsername:  zero.StringFrom(user.Username),
 			AssigneeEmail:     zero.StringFrom(string(user.Email)),
