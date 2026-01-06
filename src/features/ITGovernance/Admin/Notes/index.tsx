@@ -41,7 +41,7 @@ type NoteForm = {
 };
 
 const Notes = () => {
-  const { systemId } = useParams<{ systemId: string }>();
+  const { systemIntakeID } = useParams<{ systemIntakeID: string }>();
   const authState = useSelector((state: AppState) => state.auth);
   const [createNoteMutation, createMutationResult] =
     useCreateSystemIntakeNoteMutation({
@@ -49,7 +49,7 @@ const Notes = () => {
         {
           query: GetAdminNotesAndActionsDocument,
           variables: {
-            id: systemId
+            id: systemIntakeID
           }
         }
       ]
@@ -61,7 +61,7 @@ const Notes = () => {
     refetch: refetchAdminNotesAndActions
   } = useGetAdminNotesAndActionsQuery({
     variables: {
-      id: systemId
+      id: systemIntakeID
     }
   });
 
@@ -124,7 +124,7 @@ const Notes = () => {
     { resetForm }: FormikHelpers<NoteForm>
   ) => {
     const input = {
-      intakeId: systemId,
+      intakeId: systemIntakeID,
       authorName: authState.name,
       content: values.note
     };

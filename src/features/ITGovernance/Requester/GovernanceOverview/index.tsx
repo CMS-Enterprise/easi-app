@@ -19,8 +19,8 @@ import './index.scss';
 
 const GovernanceOverview = () => {
   const { t } = useTranslation('governanceOverview');
-  const { systemId } = useParams<{
-    systemId: string;
+  const { systemIntakeID } = useParams<{
+    systemIntakeID: string;
   }>();
 
   const { state } = useLocation<{ isNew?: boolean }>();
@@ -49,7 +49,7 @@ const GovernanceOverview = () => {
       </span>
       <Link
         to={{
-          pathname: `/system/request-type/${systemId || ''}`,
+          pathname: `/system/request-type/${systemIntakeID || ''}`,
           search: linkCedarSystemIdQs,
           state: { isNew }
         }}
@@ -64,14 +64,14 @@ const GovernanceOverview = () => {
 
       <GovernanceOverviewContent />
 
-      {systemId && (
+      {systemIntakeID && (
         <div className="margin-top-4">
           <UswdsReactLink
             className="usa-button
             usa-button--outline"
             variant="unstyled"
             to={{
-              pathname: `/system/request-type/${systemId}`,
+              pathname: `/system/request-type/${systemIntakeID}`,
               search: linkCedarSystemIdQs,
               state: { isNew }
             }}
@@ -82,7 +82,7 @@ const GovernanceOverview = () => {
             className="usa-button"
             variant="unstyled"
             to={{
-              pathname: `/linked-systems/${systemId}`,
+              pathname: `/linked-systems/${systemIntakeID}`,
               search: linkCedarSystemIdQs,
               state: { isNew }
             }}

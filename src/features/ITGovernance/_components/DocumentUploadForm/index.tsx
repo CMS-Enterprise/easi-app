@@ -60,8 +60,8 @@ const DocumentUploadForm = ({
     uploadSource: 'request' | 'grbReviewForm';
   }>();
 
-  const { systemId } = useParams<{
-    systemId: string;
+  const { systemIntakeID } = useParams<{
+    systemIntakeID: string;
   }>();
 
   const { Message } = useMessage();
@@ -71,7 +71,7 @@ const DocumentUploadForm = ({
       {
         query: GetSystemIntakeDocument,
         variables: {
-          id: systemId
+          id: systemIntakeID
         }
       }
     ]
@@ -96,15 +96,15 @@ const DocumentUploadForm = ({
 
   const returnLink = useMemo(() => {
     if (state.uploadSource === 'grbReviewForm') {
-      return `/it-governance/${systemId}/grb-review/documents`;
+      return `/it-governance/${systemIntakeID}/grb-review/documents`;
     }
 
     if (type === 'requester') {
-      return `/system/${systemId}/documents`;
+      return `/system/${systemIntakeID}/documents`;
     }
 
-    return `/it-governance/${systemId}/grb-review`;
-  }, [state.uploadSource, type, systemId]);
+    return `/it-governance/${systemIntakeID}/grb-review`;
+  }, [state.uploadSource, type, systemIntakeID]);
 
   const submit = handleSubmit(async ({ otherTypeDescription, ...formData }) => {
     const newFile = await fileToBase64File(formData.fileData);
@@ -119,7 +119,7 @@ const DocumentUploadForm = ({
           ...(formData.documentType === 'OTHER'
             ? { otherTypeDescription }
             : {}),
-          requestID: systemId,
+          requestID: systemIntakeID,
           sendNotification: formData.sendNotification
         }
       }

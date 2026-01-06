@@ -30,13 +30,13 @@ import { ENTERPRISE_ARCH_EMAIL, IT_GOV_EMAIL } from 'constants/externalUrls';
 import { formatDateLocal } from 'utils/date';
 
 const RequestDecision = () => {
-  const { systemId } = useParams<{ systemId: string }>();
+  const { systemIntakeID } = useParams<{ systemIntakeID: string }>();
   const { t } = useTranslation('taskList');
   const history = useHistory();
 
   const { loading, data } = useGetSystemIntakeQuery({
     variables: {
-      id: systemId
+      id: systemIntakeID
     }
   });
 
@@ -65,7 +65,7 @@ const RequestDecision = () => {
           <Breadcrumb>
             <BreadcrumbLink
               asCustom={Link}
-              to={`/governance-task-list/${systemId}`}
+              to={`/governance-task-list/${systemIntakeID}`}
             >
               <span>{t('navigation.governanceTaskList')}</span>
             </BreadcrumbLink>

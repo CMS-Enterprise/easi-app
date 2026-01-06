@@ -19,8 +19,8 @@ export type GRBVotingPanelProps = {
 const GRBVotingPanel = ({ grbReviewer, className }: GRBVotingPanelProps) => {
   const { t } = useTranslation('grbReview');
 
-  const { systemId } = useParams<{
-    systemId: string;
+  const { systemIntakeID } = useParams<{
+    systemIntakeID: string;
   }>();
 
   return (
@@ -65,7 +65,7 @@ const GRBVotingPanel = ({ grbReviewer, className }: GRBVotingPanelProps) => {
                   components={{
                     presentationLink: (
                       <NavHashLink
-                        to={`/it-governance/${systemId}/grb-review#documents`}
+                        to={`/it-governance/${systemIntakeID}/grb-review#documents`}
                       >
                         {' '}
                       </NavHashLink>
@@ -75,7 +75,7 @@ const GRBVotingPanel = ({ grbReviewer, className }: GRBVotingPanelProps) => {
                     ),
                     grtLink: (
                       <NavHashLink
-                        to={`/it-governance/${systemId}/grb-review#details`}
+                        to={`/it-governance/${systemIntakeID}/grb-review#details`}
                       >
                         {' '}
                       </NavHashLink>
@@ -118,7 +118,7 @@ const GRBVotingPanel = ({ grbReviewer, className }: GRBVotingPanelProps) => {
                   components={{
                     discussionLink: (
                       <NavHashLink
-                        to={`/it-governance/${systemId}/grb-review#discussions`}
+                        to={`/it-governance/${systemIntakeID}/grb-review#discussions`}
                         className="display-block"
                         style={{ paddingLeft: '20px' }}
                       >

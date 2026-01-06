@@ -11,7 +11,7 @@ import MainContent from 'components/MainContent';
 import PrepareForGRTBase from 'components/PrepareForGRT';
 
 const PrepareForGRT = () => {
-  const { systemId } = useParams<{ systemId: string }>();
+  const { systemIntakeID } = useParams<{ systemIntakeID: string }>();
   const { t } = useTranslation('governanceReviewTeam');
   return (
     <MainContent className="easi-prepare-for-grt margin-bottom-5">
@@ -25,7 +25,7 @@ const PrepareForGRT = () => {
           <Breadcrumb>
             <BreadcrumbLink
               asCustom={Link}
-              to={`/governance-task-list/${systemId}`}
+              to={`/governance-task-list/${systemIntakeID}`}
             >
               <span>{t('taskList:navigation.governanceTaskList')}</span>
             </BreadcrumbLink>
@@ -34,7 +34,10 @@ const PrepareForGRT = () => {
         </BreadcrumbBar>
         <PrepareForGRTBase />
         <div className="margin-top-4">
-          <Link to={`/governance-task-list/${systemId}`} className="text-ink">
+          <Link
+            to={`/governance-task-list/${systemIntakeID}`}
+            className="text-ink"
+          >
             Back
           </Link>
         </div>

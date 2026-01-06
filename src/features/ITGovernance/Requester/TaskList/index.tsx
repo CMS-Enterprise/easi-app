@@ -59,7 +59,7 @@ import GovTaskIntakeForm from './GovTaskIntakeForm';
 import './index.scss';
 
 function GovernanceTaskList() {
-  const { systemId } = useParams<{ systemId: string }>();
+  const { systemIntakeID } = useParams<{ systemIntakeID: string }>();
   const { t } = useTranslation(['itGov', 'intake']);
   const history = useHistory();
   const { state } = useLocation<{ isNew?: boolean }>();
@@ -74,13 +74,13 @@ function GovernanceTaskList() {
 
   const { data, loading, error } = useGetGovernanceTaskListQuery({
     variables: {
-      id: systemId
+      id: systemIntakeID
     }
   });
 
   const [archive] = useArchiveSystemIntakeMutation({
     variables: {
-      id: systemId
+      id: systemIntakeID
     }
   });
 
@@ -170,7 +170,7 @@ function GovernanceTaskList() {
 
                 <ReactRouterLink
                   to={{
-                    pathname: `/system/request-type/${systemId || ''}`,
+                    pathname: `/system/request-type/${systemIntakeID || ''}`,
                     search: linkCedarSystemIdQs,
                     state: { isNew, isFromTaskList: true }
                   }}

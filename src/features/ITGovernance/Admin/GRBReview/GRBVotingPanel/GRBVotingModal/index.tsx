@@ -28,8 +28,8 @@ type GRBVotingModalProps = {
 const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
   const { t } = useTranslation('grbReview');
 
-  const { systemId } = useParams<{
-    systemId: string;
+  const { systemIntakeID } = useParams<{
+    systemIntakeID: string;
   }>();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -51,14 +51,14 @@ const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
     formState: { errors }
   } = useEasiForm<CastGRBReviewerVoteMutationVariables['input']>({
     defaultValues: {
-      systemIntakeID: systemId,
+      systemIntakeID,
       vote: grbReviewer.vote
         ? defaultVote
         : SystemIntakeAsyncGRBVotingOption.NO_OBJECTION,
       voteComment: grbReviewer.voteComment || ''
     },
     values: {
-      systemIntakeID: systemId,
+      systemIntakeID,
       vote: grbReviewer.vote
         ? defaultVote
         : SystemIntakeAsyncGRBVotingOption.NO_OBJECTION,
@@ -82,7 +82,7 @@ const GRBVotingModal = ({ grbReviewer }: GRBVotingModalProps) => {
     mutation({
       variables: {
         input: {
-          systemIntakeID: systemId,
+          systemIntakeID,
           vote: input.vote,
           voteComment: input.voteComment ? input.voteComment : undefined
         }

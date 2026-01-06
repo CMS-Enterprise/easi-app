@@ -94,7 +94,7 @@ const DecisionRecordCard = ({
 }: DecisionRecordCardProps) => {
   const { t } = useTranslation('grbReview');
 
-  const { systemId } = useParams<{ systemId: string }>();
+  const { systemIntakeID } = useParams<{ systemIntakeID: string }>();
 
   const voteCommentCount: number =
     grbVotingInformation?.grbReviewers?.filter(
@@ -112,7 +112,7 @@ const DecisionRecordCard = ({
 
   const decisionConfig = configureDecisionRender(
     grbVotingInformation.votingStatus,
-    systemId
+    systemIntakeID
   );
 
   return (
@@ -135,7 +135,7 @@ const DecisionRecordCard = ({
         </p>
 
         <UswdsReactLink
-          to={`/it-governance/${systemId}/grb-review/decision-record`}
+          to={`/it-governance/${systemIntakeID}/grb-review/decision-record`}
           className="text-white flex-align-self-center"
         >
           {t('decisionCard.viewVotes')}

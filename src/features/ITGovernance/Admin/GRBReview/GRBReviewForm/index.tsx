@@ -20,19 +20,19 @@ const GRBReviewForm = ({
 
   return (
     <Switch>
-      <Route path="/it-governance/:systemId/grb-review/:step(review-type)">
+      <Route path="/it-governance/:systemIntakeID/grb-review/:step(review-type)">
         <ReviewType grbReview={grbReview} />
       </Route>
 
-      <Route path="/it-governance/:systemId/grb-review/:step(presentation)">
+      <Route path="/it-governance/:systemIntakeID/grb-review/:step(presentation)">
         <Presentation grbReview={grbReview} />
       </Route>
 
-      <Route path="/it-governance/:systemId/grb-review/:step(documents)">
+      <Route path="/it-governance/:systemIntakeID/grb-review/:step(documents)">
         <AdditionalDocumentation grbReview={grbReview} />
       </Route>
 
-      <Route path="/it-governance/:systemId/grb-review/:step(participants)">
+      <Route path="/it-governance/:systemIntakeID/grb-review/:step(participants)">
         <Participants grbReview={grbReview} />
       </Route>
 

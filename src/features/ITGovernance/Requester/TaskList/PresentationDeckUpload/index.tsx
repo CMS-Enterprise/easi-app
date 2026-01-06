@@ -39,8 +39,8 @@ const PresentationDeckUpload = ({ type = 'requester' }: UploadFormProps) => {
 
   const history = useHistory();
 
-  const { systemId } = useParams<{
-    systemId: string;
+  const { systemIntakeID } = useParams<{
+    systemIntakeID: string;
   }>();
 
   // Form would need to toggle between two mutations based on user type
@@ -66,8 +66,8 @@ const PresentationDeckUpload = ({ type = 'requester' }: UploadFormProps) => {
 
   const requestDetailsLink =
     type === 'requester'
-      ? `/governance-task-list/${systemId}`
-      : `/it-governance/${systemId}/grb-review`;
+      ? `/governance-task-list/${systemIntakeID}`
+      : `/it-governance/${systemIntakeID}/grb-review`;
 
   const submit = handleSubmit(async values => {
     const presentationDeckFileData = values.presentationDeckFileData?.size
@@ -78,7 +78,7 @@ const PresentationDeckUpload = ({ type = 'requester' }: UploadFormProps) => {
       upload({
         variables: {
           input: {
-            systemIntakeID: systemId,
+            systemIntakeID,
             presentationDeckFileData
           }
         }
@@ -90,7 +90,7 @@ const PresentationDeckUpload = ({ type = 'requester' }: UploadFormProps) => {
       setPresentationLinks({
         variables: {
           input: {
-            systemIntakeID: systemId,
+            systemIntakeID,
             presentationDeckFileData
           }
         }

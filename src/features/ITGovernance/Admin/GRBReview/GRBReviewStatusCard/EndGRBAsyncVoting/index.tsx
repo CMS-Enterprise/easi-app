@@ -28,8 +28,8 @@ const EndGRBAsyncVoting = ({
 }: EndGRBAsyncVotingProps) => {
   const { t } = useTranslation('grbReview');
 
-  const { systemId } = useParams<{
-    systemId: string;
+  const { systemIntakeID } = useParams<{
+    systemIntakeID: string;
   }>();
 
   const { showMessage } = useMessage();
@@ -40,7 +40,7 @@ const EndGRBAsyncVoting = ({
   const [endVoting] = useEndGRBReviewAsyncVotingMutation({
     refetchQueries: [GetSystemIntakeGRBReviewDocument, GetSystemIntakeDocument],
     variables: {
-      systemIntakeID: systemId
+      systemIntakeID
     },
     onCompleted: () =>
       showMessage(t('statusCard.endVotingModal.success'), {

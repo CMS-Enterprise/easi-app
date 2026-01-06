@@ -20,7 +20,7 @@ const Confirmation = ({
 }: {
   submissionSuccess: boolean;
 }) => {
-  const { systemId } = useParams<{ systemId: string }>();
+  const { systemIntakeID } = useParams<{ systemIntakeID: string }>();
   const { t } = useTranslation('intake');
 
   return (
@@ -41,7 +41,7 @@ const Confirmation = ({
             <Breadcrumb>
               <BreadcrumbLink
                 asCustom={ReactRouterLink}
-                to={`/governance-task-list/${systemId}`}
+                to={`/governance-task-list/${systemIntakeID}`}
               >
                 <span>{t('taskList:navigation.governanceTaskList')}</span>
               </BreadcrumbLink>
@@ -64,14 +64,14 @@ const Confirmation = ({
           <ButtonGroup>
             {!submissionSuccess && (
               <ReactRouterLink
-                to={`/system/${systemId}/contact-details`}
+                to={`/system/${systemIntakeID}/contact-details`}
                 className="usa-button"
               >
                 {t('submission.error.backToIntakeRequest')}
               </ReactRouterLink>
             )}
             <ReactRouterLink
-              to={`/governance-task-list/${systemId}`}
+              to={`/governance-task-list/${systemIntakeID}`}
               className={`usa-button ${!submissionSuccess ? 'usa-button--outline' : ''}`}
             >
               {t('taskList:navigation.returnToTaskList')}

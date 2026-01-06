@@ -38,8 +38,8 @@ const GRBReviewerForm = ({
 
   const history = useHistory();
 
-  const { systemId, action } = useParams<{
-    systemId: string;
+  const { systemIntakeID, action } = useParams<{
+    systemIntakeID: string;
     action: GRBReviewFormAction;
   }>();
 
@@ -48,14 +48,14 @@ const GRBReviewerForm = ({
   });
 
   const grbReviewPath = isFromGRBSetup
-    ? `/it-governance/${systemId}/grb-review/participants`
-    : `/it-governance/${systemId}/grb-review`;
+    ? `/it-governance/${systemIntakeID}/grb-review/participants`
+    : `/it-governance/${systemIntakeID}/grb-review`;
 
   const createGRBReviewers = (reviewers: GRBReviewerFields[]) => {
     mutate({
       variables: {
         input: {
-          systemIntakeID: systemId,
+          systemIntakeID,
           reviewers: reviewers.map(({ userAccount, ...reviewer }) => ({
             ...reviewer,
             euaUserId: userAccount.username
@@ -114,7 +114,7 @@ const GRBReviewerForm = ({
               >
                 <AddReviewerFromEua
                   grbReviewPath={grbReviewPath}
-                  systemId={systemId}
+                  systemId={systemIntakeID}
                   initialGRBReviewers={initialGRBReviewers}
                   createGRBReviewers={createGRBReviewers}
                   grbReviewStartedAt={grbReviewStartedAt}
@@ -128,7 +128,7 @@ const GRBReviewerForm = ({
               >
                 <AddReviewersFromRequest
                   grbReviewPath={grbReviewPath}
-                  systemId={systemId}
+                  systemId={systemIntakeID}
                   createGRBReviewers={createGRBReviewers}
                 />
               </TabPanel>
@@ -136,7 +136,7 @@ const GRBReviewerForm = ({
           ) : (
             <AddReviewerFromEua
               grbReviewPath={grbReviewPath}
-              systemId={systemId}
+              systemId={systemIntakeID}
               initialGRBReviewers={initialGRBReviewers}
               createGRBReviewers={createGRBReviewers}
               grbReviewStartedAt={grbReviewStartedAt}

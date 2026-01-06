@@ -19,12 +19,12 @@ import { formatDateUtc } from 'utils/date';
 import './index.scss';
 
 const LcidInfo = () => {
-  const { systemId } = useParams<{ systemId: string }>();
+  const { systemIntakeID } = useParams<{ systemIntakeID: string }>();
   const { t } = useTranslation('taskList');
 
   const { loading, data } = useGetSystemIntakeQuery({
     variables: {
-      id: systemId
+      id: systemIntakeID
     }
   });
 
@@ -42,7 +42,7 @@ const LcidInfo = () => {
           <Breadcrumb>
             <BreadcrumbLink
               asCustom={Link}
-              to={`/governance-task-list/${systemId}`}
+              to={`/governance-task-list/${systemIntakeID}`}
             >
               <span>{t('navigation.governanceTaskList')}</span>
             </BreadcrumbLink>

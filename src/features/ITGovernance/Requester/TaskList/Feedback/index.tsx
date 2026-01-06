@@ -16,7 +16,7 @@ import FeedbackList from './FeedbackList';
  * IT Governance feedback page
  */
 const GovernanceFeedback = () => {
-  const { systemId } = useParams<{ systemId: string }>();
+  const { systemIntakeID } = useParams<{ systemIntakeID: string }>();
   const { t } = useTranslation('taskList');
 
   const { state } = useLocation<{
@@ -42,7 +42,7 @@ const GovernanceFeedback = () => {
         <Breadcrumb>
           <BreadcrumbLink
             asCustom={Link}
-            to={`/governance-task-list/${systemId}`}
+            to={`/governance-task-list/${systemIntakeID}`}
           >
             <span>{t('navigation.governanceTaskList')}</span>
           </BreadcrumbLink>
@@ -70,9 +70,10 @@ const GovernanceFeedback = () => {
       </PageHeading>
 
       <FeedbackList
-        systemIntakeId={systemId}
+        systemIntakeId={systemIntakeID}
         returnLink={{
-          path: formState?.pathname || `/governance-task-list/${systemId}`,
+          path:
+            formState?.pathname || `/governance-task-list/${systemIntakeID}`,
           text: formState
             ? t('navigation.returnToForm', { type: formState.type })
             : t('navigation.returnToGovernanceTaskList')

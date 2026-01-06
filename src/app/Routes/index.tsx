@@ -90,7 +90,10 @@ const AppRoutes = () => {
       <SecureRoute path="/my-requests" component={MyRequests} />
       {/* GRT/GRB Routes */}
       <Redirect from="/governance-review-team/*" to="/it-governance/*" />
-      <SecureRoute path="/it-governance/:id" component={GovernanceReviewTeam} />
+      <SecureRoute
+        path="/it-governance/:systemIntakeID"
+        component={GovernanceReviewTeam}
+      />
       {/* Requester / Business Owner Routes */}
       <SecureRoute path="/system/making-a-request" component={MakingARequest} />
       <SecureRoute
@@ -112,42 +115,42 @@ const AppRoutes = () => {
       </SecureRoute>
 
       <SecureRoute
-        path="/governance-overview/:systemId?"
+        path="/governance-overview/:systemIntakeID?"
         component={GovernanceOverview}
       />
       <SecureRoute
-        path="/governance-task-list/:systemId"
+        path="/governance-task-list/:systemIntakeID"
         exact
         component={GovernanceTaskList}
       />
       <SecureRoute
-        path="/governance-task-list/:systemId/feedback"
+        path="/governance-task-list/:systemIntakeID/feedback"
         exact
         component={GovernanceFeedback}
       />
       <SecureRoute
         exact
-        path="/governance-task-list/:systemId/prepare-for-grt"
+        path="/governance-task-list/:systemIntakeID/prepare-for-grt"
         component={PrepareForGRT}
       />
       <SecureRoute
         exact
-        path="/governance-task-list/:systemId/prepare-for-grb"
+        path="/governance-task-list/:systemIntakeID/prepare-for-grb"
         component={PrepareForGRB}
       />
       <SecureRoute
         exact
-        path="/governance-task-list/:systemId/request-decision"
+        path="/governance-task-list/:systemIntakeID/request-decision"
         component={RequestDecision}
       />
       <SecureRoute
         exact
-        path="/governance-task-list/:systemId/lcid-info"
+        path="/governance-task-list/:systemIntakeID/lcid-info"
         component={LcidInfo}
       />
       <SecureRoute
         exact
-        path="/governance-task-list/:systemId/presentation-deck-upload"
+        path="/governance-task-list/:systemIntakeID/presentation-deck-upload"
         render={() => (
           <MainContent>
             <GridContainer>
@@ -159,11 +162,11 @@ const AppRoutes = () => {
 
       <Redirect
         exact
-        from="/system/:systemId"
-        to="/system/:systemId/contact-details"
+        from="/system/:systemIntakeID"
+        to="/system/:systemIntakeID/contact-details"
       />
       <SecureRoute
-        path="/system/:systemId/:formPage/:subPage?"
+        path="/system/:systemIntakeID/:formPage/:subPage?"
         component={SystemIntake}
       />
       <SecureRoute exact path="/systems" component={SystemList} />

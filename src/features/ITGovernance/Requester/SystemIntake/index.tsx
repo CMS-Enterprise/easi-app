@@ -25,8 +25,8 @@ import './index.scss';
 
 export const SystemIntake = () => {
   const { t } = useTranslation();
-  const { systemId, subPage, formPage } = useParams<{
-    systemId: string;
+  const { systemIntakeID, subPage, formPage } = useParams<{
+    systemIntakeID: string;
     formPage: string;
     subPage: string;
   }>();
@@ -34,7 +34,7 @@ export const SystemIntake = () => {
   const { loading, data } = useGetSystemIntakeQuery({
     nextFetchPolicy: 'cache-first',
     variables: {
-      id: systemId
+      id: systemIntakeID
     }
   });
 
@@ -62,7 +62,7 @@ export const SystemIntake = () => {
           <Breadcrumb>
             <BreadcrumbLink
               asCustom={Link}
-              to={`/governance-task-list/${systemId}`}
+              to={`/governance-task-list/${systemIntakeID}`}
             >
               <span>{t('taskList:navigation.governanceTaskList')}</span>
             </BreadcrumbLink>
@@ -76,39 +76,39 @@ export const SystemIntake = () => {
       {!loading && !!systemIntake && (
         <Switch>
           <Route
-            path="/system/:systemId/contact-details"
+            path="/system/:systemIntakeID/contact-details"
             render={() => <ContactDetails systemIntake={systemIntake} />}
           />
           <Route
-            path="/system/:systemId/request-details"
+            path="/system/:systemIntakeID/request-details"
             render={() => <RequestDetails systemIntake={systemIntake} />}
           />
           <Route
-            path="/system/:systemId/contract-details"
+            path="/system/:systemIntakeID/contract-details"
             render={() => <ContractDetails systemIntake={systemIntake} />}
           />
           <Route
-            path="/system/:systemId/documents/upload"
+            path="/system/:systemIntakeID/documents/upload"
             render={() => <DocumentUploadForm type="requester" />}
           />
           <Route
-            path="/system/:systemId/documents"
+            path="/system/:systemIntakeID/documents"
             render={() => <Documents systemIntake={systemIntake} />}
           />
           <Route
-            path="/system/:systemId/review"
+            path="/system/:systemIntakeID/review"
             render={() => <Review systemIntake={systemIntake} />}
           />
           <Route
-            path="/system/:systemId/confirmation"
+            path="/system/:systemIntakeID/confirmation"
             render={() => <Confirmation submissionSuccess />}
           />
           <Route
-            path="/system/:systemId/confirmation-error"
+            path="/system/:systemIntakeID/confirmation-error"
             render={() => <Confirmation submissionSuccess={false} />}
           />
           <Route
-            path="/system/:systemId/view"
+            path="/system/:systemIntakeID/view"
             render={() => <SystemIntakeView systemIntake={systemIntake} />}
           />
           <Route path="*" render={() => <NotFoundPartial />} />

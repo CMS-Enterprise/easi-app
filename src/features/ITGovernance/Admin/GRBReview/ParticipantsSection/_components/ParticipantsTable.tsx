@@ -37,7 +37,7 @@ const ParticipantsTable = ({
 }: ParticipantsTableProps) => {
   const { t } = useTranslation('grbReview');
 
-  const { systemId } = useParams<{ systemId: string }>();
+  const { systemIntakeID } = useParams<{ systemIntakeID: string }>();
 
   const history = useHistory();
 
@@ -68,7 +68,7 @@ const ParticipantsTable = ({
               onClick={() => {
                 if (fromGRBSetup) {
                   history.push(
-                    `/it-governance/${systemId}/grb-review/edit?from-grb-setup`,
+                    `/it-governance/${systemIntakeID}/grb-review/edit?from-grb-setup`,
                     reviewer
                   );
                 } else {
@@ -124,7 +124,7 @@ const ParticipantsTable = ({
     pathname,
     setReviewerToRemove,
     showParticipantEditButton,
-    systemId,
+    systemIntakeID,
     t
   ]);
 

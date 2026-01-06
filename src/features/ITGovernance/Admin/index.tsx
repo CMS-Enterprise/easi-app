@@ -26,13 +26,13 @@ const GovernanceReviewTeam = () => {
 
   const flags = useFlags();
 
-  const { id } = useParams<{
-    id: string;
+  const { systemIntakeID } = useParams<{
+    systemIntakeID: string;
   }>();
 
   const { data, loading } = useGetSystemIntakeGRBReviewQuery({
     variables: {
-      id
+      id: systemIntakeID
     }
   });
 
@@ -74,7 +74,7 @@ const GovernanceReviewTeam = () => {
 
             {flags?.grbReviewTab && (
               <Route
-                path="/it-governance/:systemId/grb-review/:step(review-type|presentation|documents|participants)"
+                path="/it-governance/:systemIntakeID/grb-review/:step(review-type|presentation|documents|participants)"
                 exact
               >
                 <GRBReviewForm grbReview={grbReview} loading={loading} />
@@ -83,7 +83,7 @@ const GovernanceReviewTeam = () => {
 
             {flags?.grbReviewTab && (
               <Route
-                path="/it-governance/:systemId/grb-review/decision-record"
+                path="/it-governance/:systemIntakeID/grb-review/decision-record"
                 exact
               >
                 <DecisionRecord
@@ -95,10 +95,10 @@ const GovernanceReviewTeam = () => {
 
             {flags?.grbReviewTab && (
               <Route
-                path="/it-governance/:systemId/grb-review/presentation-links"
+                path="/it-governance/:systemIntakeID/grb-review/presentation-links"
                 render={() => (
                   <PresentationLinksForm
-                    id={id}
+                    id={systemIntakeID}
                     grbReviewType={grbReview.grbReviewType}
                     grbPresentationLinks={grbReview.grbPresentationLinks}
                     grbReviewAsyncRecordingTime={
@@ -110,7 +110,7 @@ const GovernanceReviewTeam = () => {
             )}
 
             <Route
-              path="/it-governance/:systemId/grb-review/:action(add|edit)"
+              path="/it-governance/:systemIntakeID/grb-review/:action(add|edit)"
               exact
             >
               <GRBReviewerForm
@@ -122,7 +122,10 @@ const GovernanceReviewTeam = () => {
               />
             </Route>
 
-            <Route path="/it-governance/:systemId/:activePage/:subPage?" exact>
+            <Route
+              path="/it-governance/:systemIntakeID/:activePage/:subPage?"
+              exact
+            >
               <RequestOverview />
             </Route>
 

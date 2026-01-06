@@ -43,7 +43,7 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
 
   const history = useHistory();
   const { pathname } = useLocation();
-  const { systemId } = useParams<{ systemId: string }>();
+  const { systemIntakeID } = useParams<{ systemIntakeID: string }>();
 
   const {
     grbReviewType,
@@ -265,7 +265,9 @@ const Participants = ({ grbReview }: GRBReviewFormStepProps) => {
               tOptions={{ context: grbReviewType }}
               components={{
                 link1: (
-                  <UswdsReactLink to={`/it-governance/${systemId}/actions`}>
+                  <UswdsReactLink
+                    to={`/it-governance/${systemIntakeID}/actions`}
+                  >
                     actions link
                   </UswdsReactLink>
                 )

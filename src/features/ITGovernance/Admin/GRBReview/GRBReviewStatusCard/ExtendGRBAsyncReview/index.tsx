@@ -31,8 +31,8 @@ import { formatDateUtc, formatEndOfDayDeadline } from 'utils/date';
 const ExtendGRBAsyncReview = () => {
   const { t } = useTranslation('grbReview');
 
-  const { systemId } = useParams<{
-    systemId: string;
+  const { systemIntakeID } = useParams<{
+    systemIntakeID: string;
   }>();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -66,7 +66,7 @@ const ExtendGRBAsyncReview = () => {
     mutation({
       variables: {
         input: {
-          systemIntakeID: systemId,
+          systemIntakeID,
           grbReviewAsyncEndDate: input.grbReviewAsyncEndDate
         }
       }

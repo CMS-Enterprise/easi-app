@@ -31,7 +31,7 @@ const Dates = ({
   const { t } = useTranslation();
   const { showMessage } = useMessage();
   const history = useHistory();
-  const { systemId } = useParams<{ systemId: string }>();
+  const { systemIntakeID } = useParams<{ systemIntakeID: string }>();
 
   const [updateReviewDates] = useUpdateSystemIntakeReviewDatesMutation({
     errorPolicy: 'all'
@@ -81,7 +81,7 @@ const Dates = ({
       await updateReviewType({
         variables: {
           input: {
-            systemIntakeID: systemId,
+            systemIntakeID,
             grbReviewType
           }
         }
@@ -111,14 +111,14 @@ const Dates = ({
       await updateReviewDates({
         variables: {
           input: {
-            id: systemId,
+            id: systemIntakeID,
             grtDate: newGrtDate,
             ...(newGrbDate ? { grbDate: newGrbDate } : {})
           }
         }
       });
 
-      history.push(`/it-governance/${systemId}/request-home`);
+      history.push(`/it-governance/${systemIntakeID}/request-home`);
     } catch (error) {
       showMessage(t('error.message'), { type: 'error' });
     }

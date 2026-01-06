@@ -52,15 +52,15 @@ const RequestOverview = () => {
 
   const isITGovAdmin = useContext(ITGovAdminContext);
 
-  const { systemId, activePage, subPage } = useParams<{
-    systemId: string;
+  const { systemIntakeID, activePage, subPage } = useParams<{
+    systemIntakeID: string;
     activePage: string;
     subPage?: string;
   }>();
 
   const { loading, data } = useGetSystemIntakeQuery({
     variables: {
-      id: systemId
+      id: systemIntakeID
     }
   });
 
@@ -83,7 +83,7 @@ const RequestOverview = () => {
       'edit-point-of-contact'
     ].includes(activePage) || !!subPage;
 
-  const navItems = subNavItems(systemId, isITGovAdmin, flags);
+  const navItems = subNavItems(systemIntakeID, isITGovAdmin, flags);
 
   useEffect(() => {
     if (systemIntake?.businessCaseId) {
@@ -201,7 +201,7 @@ const RequestOverview = () => {
                 />
 
                 <Route
-                  path="/it-governance/:systemId/business-case"
+                  path="/it-governance/:systemIntakeID/business-case"
                   render={() => (
                     <BusinessCaseReview
                       businessCase={businessCase}
@@ -211,13 +211,13 @@ const RequestOverview = () => {
                 />
 
                 <Route
-                  path="/it-governance/:systemId/notes"
+                  path="/it-governance/:systemIntakeID/notes"
                   render={() => <Notes />}
                 />
 
                 <Route
-                  path="/it-governance/:systemId/feedback"
-                  render={() => <Feedback systemIntakeId={systemId} />}
+                  path="/it-governance/:systemIntakeID/feedback"
+                  render={() => <Feedback systemIntakeId={systemIntakeID} />}
                 />
 
                 <Route
@@ -233,7 +233,7 @@ const RequestOverview = () => {
 
                 {flags?.grbReviewTab && (
                   <Route
-                    path="/it-governance/:systemId/grb-review/:action(add|edit)?"
+                    path="/it-governance/:systemIntakeID/grb-review/:action(add|edit)?"
                     exact
                     render={() => (
                       <ModalProvider>
@@ -248,7 +248,7 @@ const RequestOverview = () => {
 
                 {flags?.grbReviewTab && (
                   <Route
-                    path="/it-governance/:systemId/grb-review/presentation-deck-upload"
+                    path="/it-governance/:systemIntakeID/grb-review/presentation-deck-upload"
                     render={() => <PresentationDeckUpload type="admin" />}
                   />
                 )}
@@ -256,12 +256,12 @@ const RequestOverview = () => {
                 {/* GRT only routes */}
 
                 <Route
-                  path="/it-governance/:systemId/dates"
+                  path="/it-governance/:systemIntakeID/dates"
                   render={() => <Dates systemIntake={systemIntake} />}
                 />
 
                 <Route
-                  path="/it-governance/:systemId/(actions|resolutions|manage-lcid)/:subPage?"
+                  path="/it-governance/:systemIntakeID/(actions|resolutions|manage-lcid)/:subPage?"
                   render={() => <Actions systemIntake={systemIntake} />}
                 />
 

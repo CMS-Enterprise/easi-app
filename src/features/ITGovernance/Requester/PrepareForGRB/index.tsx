@@ -14,7 +14,7 @@ import PrepareForGRBBase from 'components/PrepareForGRB';
 import './index.scss';
 
 const PrepareForGRB = () => {
-  const { systemId } = useParams<{ systemId: string }>();
+  const { systemIntakeID } = useParams<{ systemIntakeID: string }>();
   const { t } = useTranslation('governanceReviewBoard');
   return (
     <MainContent className="easi-prepare-for-grb margin-bottom-5">
@@ -28,7 +28,7 @@ const PrepareForGRB = () => {
           <Breadcrumb>
             <BreadcrumbLink
               asCustom={Link}
-              to={`/governance-task-list/${systemId}`}
+              to={`/governance-task-list/${systemIntakeID}`}
             >
               <span>{t('taskList:navigation.governanceTaskList')}</span>
             </BreadcrumbLink>
@@ -38,7 +38,7 @@ const PrepareForGRB = () => {
         <PrepareForGRBBase />
         <div className="margin-top-4">
           <UswdsReactLink
-            to={`/governance-task-list/${systemId}`}
+            to={`/governance-task-list/${systemIntakeID}`}
             className="text-ink"
           >
             Back
