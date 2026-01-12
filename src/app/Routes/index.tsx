@@ -57,6 +57,7 @@ import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import { MessageProvider } from 'hooks/useMessage';
 
+import PowerPlatformFlagWrapper from '../../features/ITGovernance/Wrapper/PowerPlatformFlagWrapper';
 import SystemIDWrapper from '../../features/Systems/Wrapper/SystemIDWrapper';
 import shouldScroll from '../../utils/scrollConfig';
 
@@ -111,61 +112,74 @@ const AppRoutes = () => {
         <LinkedSystemsForm />
       </SecureRoute>
 
-      <SecureRoute
-        path="/governance-overview/:systemId?"
-        component={GovernanceOverview}
-      />
-      <SecureRoute
-        path="/governance-task-list/:systemId"
-        exact
-        component={GovernanceTaskList}
-      />
-      <SecureRoute
-        path="/governance-task-list/:systemId/feedback"
-        exact
-        component={GovernanceFeedback}
-      />
-      <SecureRoute
-        exact
-        path="/governance-task-list/:systemId/prepare-for-grt"
-        component={PrepareForGRT}
-      />
-      <SecureRoute
-        exact
-        path="/governance-task-list/:systemId/prepare-for-grb"
-        component={PrepareForGRB}
-      />
-      <SecureRoute
-        exact
-        path="/governance-task-list/:systemId/request-decision"
-        component={RequestDecision}
-      />
-      <SecureRoute
-        exact
-        path="/governance-task-list/:systemId/lcid-info"
-        component={LcidInfo}
-      />
-      <SecureRoute
-        exact
-        path="/governance-task-list/:systemId/presentation-deck-upload"
+      <Route
+        path={[
+          '/governance-overview/:id',
+          '/governance-task-list/:id',
+          '/system/:id'
+        ]}
         render={() => (
-          <MainContent>
-            <GridContainer>
-              <PresentationDeckUpload type="requester" />
-            </GridContainer>
-          </MainContent>
+          <PowerPlatformFlagWrapper>
+            <Switch>
+              <SecureRoute
+                path="/governance-overview/:systemId?"
+                component={GovernanceOverview}
+              />
+              <SecureRoute
+                path="/governance-task-list/:systemId"
+                exact
+                component={GovernanceTaskList}
+              />
+              <SecureRoute
+                path="/governance-task-list/:systemId/feedback"
+                exact
+                component={GovernanceFeedback}
+              />
+              <SecureRoute
+                exact
+                path="/governance-task-list/:systemId/prepare-for-grt"
+                component={PrepareForGRT}
+              />
+              <SecureRoute
+                exact
+                path="/governance-task-list/:systemId/prepare-for-grb"
+                component={PrepareForGRB}
+              />
+              <SecureRoute
+                exact
+                path="/governance-task-list/:systemId/request-decision"
+                component={RequestDecision}
+              />
+              <SecureRoute
+                exact
+                path="/governance-task-list/:systemId/lcid-info"
+                component={LcidInfo}
+              />
+              <SecureRoute
+                exact
+                path="/governance-task-list/:systemId/presentation-deck-upload"
+                render={() => (
+                  <MainContent>
+                    <GridContainer>
+                      <PresentationDeckUpload type="requester" />
+                    </GridContainer>
+                  </MainContent>
+                )}
+              />
+              <Redirect
+                exact
+                from="/system/:systemId"
+                to="/system/:systemId/contact-details"
+              />
+              <SecureRoute
+                path="/system/:systemId/:formPage/:subPage?"
+                component={SystemIntake}
+              />
+            </Switch>
+          </PowerPlatformFlagWrapper>
         )}
       />
 
-      <Redirect
-        exact
-        from="/system/:systemId"
-        to="/system/:systemId/contact-details"
-      />
-      <SecureRoute
-        path="/system/:systemId/:formPage/:subPage?"
-        component={SystemIntake}
-      />
       <SecureRoute exact path="/systems" component={SystemList} />
 
       <Route
