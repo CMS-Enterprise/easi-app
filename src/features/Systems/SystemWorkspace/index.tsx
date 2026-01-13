@@ -44,7 +44,7 @@ export const SystemWorkspace = () => {
   });
 
   const cedarSystem = data?.cedarSystemDetails?.cedarSystem;
-  const ato = data?.cedarAuthorityToOperate[0];
+  const ato = data?.cedarAuthorityToOperate?.[0];
   const atoStatus = getAtoStatus(
     ato?.dateAuthorizationMemoExpires,
     ato?.oaStatus

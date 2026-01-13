@@ -434,7 +434,7 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                     {t('singleSystem.summary.tlcPhase')}
                   </p>
                   <TLCTag
-                    tlcPhase={data?.cedarAuthorityToOperate[0]?.tlcPhase}
+                    tlcPhase={data?.cedarAuthorityToOperate?.[0]?.tlcPhase}
                   />
                 </div>
 

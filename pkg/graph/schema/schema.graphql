@@ -3074,15 +3074,15 @@ type Query {
   systemIntakesWithReviewRequested: [SystemIntake!]!
   systemIntakesWithLcids: [SystemIntake!]!
   compareGRBReviewersByIntakeID(id: UUID!): [GRBReviewerComparisonIntake!]!
-  cedarAuthorityToOperate(cedarSystemID: UUID!): [CedarAuthorityToOperate!]!
+  cedarAuthorityToOperate(cedarSystemID: UUID!): [CedarAuthorityToOperate!]
   cedarBudget(cedarSystemID: UUID!): [CedarBudget!]
   cedarBudgetSystemCost(cedarSystemID: UUID!): CedarBudgetSystemCost
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
   cedarSoftwareProducts(cedarSystemId: UUID!): CedarSoftwareProducts
-  cedarSubSystems(cedarSystemId: UUID!): [CedarSubSystem!]!
-  cedarContractsBySystem(cedarSystemId: UUID!): [CedarContract!]!
+  cedarSubSystems(cedarSystemId: UUID!): [CedarSubSystem!]
+  cedarContractsBySystem(cedarSystemId: UUID!): [CedarContract!]
   cedarSystemBookmarks: [CedarSystemBookmark!]!
-  cedarThreat(cedarSystemId: UUID!): [CedarThreat!]!
+  cedarThreat(cedarSystemId: UUID!): [CedarThreat!]
   deployments(
     cedarSystemId: UUID!
     deploymentType: String
@@ -3091,7 +3091,7 @@ type Query {
   ): [CedarDeployment!]!
   roleTypes: [CedarRoleType!]!
   roles(cedarSystemId: UUID!, roleTypeID: String): [CedarRole!]!
-  exchanges(cedarSystemId: UUID!): [CedarExchange!]!
+  exchanges(cedarSystemId: UUID!): [CedarExchange!]
   urls(cedarSystemId: UUID!): [CedarURL!]!
   """
   This returns a SystemIntakeContacts object. It holds the information about the contacts associated with a specific System Intake.

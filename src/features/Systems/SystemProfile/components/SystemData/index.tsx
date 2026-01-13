@@ -193,7 +193,8 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
 
   const exchangesCountCap = 5;
   const [isExchangesExpanded, setExchangesExpanded] = useState<boolean>(false);
-  const showMoreExchangesToggle = exchanges.length - exchangesCountCap > 0;
+  const showMoreExchangesToggle =
+    exchanges && exchanges.length - exchangesCountCap > 0;
 
   return (
     <>
