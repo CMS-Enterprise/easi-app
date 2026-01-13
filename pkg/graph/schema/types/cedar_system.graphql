@@ -27,13 +27,13 @@ type CedarSystem {
 This is the Representation of Cedar system with additional related information
 """
 type CedarSystemDetails {
-  cedarSystem: CedarSystem!
-  systemMaintainerInformation: CedarSystemMaintainerInformation!
-  businessOwnerInformation: CedarBusinessOwnerInformation!
-  roles: [CedarRole!]!
-  deployments: [CedarDeployment!]!
-  threats: [CedarThreat!]!
-  urls: [CedarURL!]!
+  cedarSystem: CedarSystem
+  systemMaintainerInformation: CedarSystemMaintainerInformation
+  businessOwnerInformation: CedarBusinessOwnerInformation
+  roles: [CedarRole!]
+  deployments: [CedarDeployment!]
+  threats: [CedarThreat!]
+  urls: [CedarURL!]
   isMySystem: Boolean
   atoEffectiveDate: Time
   atoExpirationDate: Time

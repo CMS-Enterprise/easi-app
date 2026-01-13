@@ -248,7 +248,7 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
                 <td>
                   {showSystemVal(
                     system.cedarSystemDetails?.businessOwnerInformation
-                      .storesBeneficiaryAddress
+                      ?.storesBeneficiaryAddress
                       ? 'Yes'
                       : 'No'
                   )}
@@ -277,7 +277,7 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
                 <td className="border-bottom-0">
                   {showSystemVal(
                     system.cedarSystemDetails?.businessOwnerInformation
-                      .storesBankingData
+                      ?.storesBankingData
                       ? 'Yes'
                       : 'No'
                   )}
