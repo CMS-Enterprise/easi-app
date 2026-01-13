@@ -13,7 +13,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/ses v1.34.2
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a
 	github.com/go-co-op/gocron/v2 v2.16.6
-	github.com/go-openapi/errors v0.22.3
+	github.com/go-openapi/errors v0.22.6
 	github.com/go-openapi/runtime v0.29.0
 	github.com/go-openapi/strfmt v0.24.0
 	github.com/go-openapi/swag v0.23.1
