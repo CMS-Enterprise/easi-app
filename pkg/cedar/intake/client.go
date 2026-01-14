@@ -219,11 +219,13 @@ func (c *Client) publishIntakeAndBusinessCase(ctx context.Context, logger *zap.L
 			continue
 		}
 		businessCase, err := store.FetchBusinessCaseByID(ctx, *intake.BusinessCaseID) // NOTE this needs a dataloader on the context
-		logger.Warn(
-			"failed to fetch Business Case for intake when publishing to CEDAR",
-			zap.String("id", intake.ID.String()),
-			zap.Error(err),
-		)
+		if err != nil {
+			logger.Warn(
+				"failed to fetch Business Case for intake when publishing to CEDAR",
+				zap.String("id", intake.ID.String()),
+				zap.Error(err),
+			)
+		}
 		if businessCase == nil {
 			continue
 		}
