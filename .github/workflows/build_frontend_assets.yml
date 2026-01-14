@@ -39,7 +39,7 @@ jobs:
         run: |
           ./scripts/build_static.sh
       - name: Upload Frontend assets
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ inputs.env }}-frontend-assets
           path: build/
