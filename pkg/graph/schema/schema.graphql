@@ -3088,11 +3088,11 @@ type Query {
     deploymentType: String
     state: String
     status: String
-  ): [CedarDeployment!]!
+  ): [CedarDeployment!]
   roleTypes: [CedarRoleType!]!
-  roles(cedarSystemId: UUID!, roleTypeID: String): [CedarRole!]!
+  roles(cedarSystemId: UUID!, roleTypeID: String): [CedarRole!]
   exchanges(cedarSystemId: UUID!): [CedarExchange!]
-  urls(cedarSystemId: UUID!): [CedarURL!]!
+  urls(cedarSystemId: UUID!): [CedarURL!]
   """
   This returns a SystemIntakeContacts object. It holds the information about the contacts associated with a specific System Intake.
   """

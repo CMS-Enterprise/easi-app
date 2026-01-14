@@ -13,7 +13,7 @@ type CedarSystem {
   status: String
   businessOwnerOrg: String
   businessOwnerOrgComp: String
-  businessOwnerRoles: [CedarRole!]!
+  businessOwnerRoles: [CedarRole!]
   systemMaintainerOrg: String
   systemMaintainerOrgComp: String
   versionId: String
@@ -41,8 +41,8 @@ type CedarSystemDetails {
 
 extend type Query {
   cedarSystem(cedarSystemId: UUID!): CedarSystem
-  cedarSystems: [CedarSystem!]!
-  myCedarSystems: [CedarSystem!]!
+  cedarSystems: [CedarSystem!]
+  myCedarSystems: [CedarSystem!]
 
   """
   Cedar System Details is a convenient method to return a Cedar System along with other convenience information.
