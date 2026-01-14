@@ -151,13 +151,15 @@ export type GetSystemProfileSystemCost = NonNullable<
 >;
 
 export type GetSystemProfileRoles = NonNullable<
-  NonNullable<GetSystemProfileQuery['cedarSystemDetails']>['roles'][number]
+  NonNullable<
+    NonNullable<GetSystemProfileQuery['cedarSystemDetails']>['roles']
+  >[number]
 >;
 
 export type GetSystemProfileStatus = NonNullable<
   NonNullable<
-    GetSystemProfileQuery['cedarSystemDetails']
-  >['cedarSystem']['status']
+    NonNullable<GetSystemProfileQuery['cedarSystemDetails']>['cedarSystem']
+  >['status']
 >;
 
 export type GetSystemProfileSoftwareProducts = NonNullable<

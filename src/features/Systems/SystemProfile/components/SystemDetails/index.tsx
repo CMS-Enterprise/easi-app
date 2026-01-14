@@ -60,7 +60,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
               <DescriptionDefinition
                 className="font-body-md line-height-body-3"
                 definition={showSystemVal(
-                  cedarSystemDetails?.businessOwnerInformation.isCmsOwned,
+                  cedarSystemDetails?.businessOwnerInformation?.isCmsOwned,
                   {
                     format: v =>
                       t(
@@ -80,7 +80,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                 className="line-height-body-3 font-body-md"
                 definition={showSystemVal(
                   cedarSystemDetails?.businessOwnerInformation
-                    .numberOfSupportedUsersPerMonth,
+                    ?.numberOfSupportedUsersPerMonth,
                   { format: formatNumber }
                 )}
               />
@@ -91,7 +91,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                 className="line-height-body-3"
                 definition={showSystemVal(
                   cedarSystemDetails?.systemMaintainerInformation
-                    .netAccessibility
+                    ?.netAccessibility
                 )}
               />
             </Grid>
@@ -325,7 +325,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                   className="line-height-body-3 margin-bottom-4"
                   definition={showSystemVal(
                     cedarSystemDetails?.systemMaintainerInformation
-                      .systemCustomization
+                      ?.systemCustomization
                   )}
                 />
                 <DescriptionTerm
@@ -335,7 +335,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                   className="line-height-body-3 margin-bottom-4"
                   definition={showSystemVal(
                     cedarSystemDetails?.systemMaintainerInformation
-                      .deploymentFrequency
+                      ?.deploymentFrequency
                   )}
                 />
               </Grid>
@@ -347,7 +347,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                   className="line-height-body-3 margin-bottom-4"
                   definition={showSystemVal(
                     cedarSystemDetails?.systemMaintainerInformation
-                      .devCompletionPercent
+                      ?.devCompletionPercent
                   )}
                 />
                 <DescriptionTerm
@@ -366,7 +366,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                   className="line-height-body-3 margin-bottom-4"
                   definition={showVal(
                     cedarSystemDetails?.systemMaintainerInformation
-                      .devWorkDescription
+                      ?.devWorkDescription
                   )}
                 />
               </Grid>

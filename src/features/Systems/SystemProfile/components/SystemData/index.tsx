@@ -193,7 +193,8 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
 
   const exchangesCountCap = 5;
   const [isExchangesExpanded, setExchangesExpanded] = useState<boolean>(false);
-  const showMoreExchangesToggle = exchanges.length - exchangesCountCap > 0;
+  const showMoreExchangesToggle =
+    exchanges && exchanges.length - exchangesCountCap > 0;
 
   return (
     <>
@@ -247,7 +248,7 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
                 <td>
                   {showSystemVal(
                     system.cedarSystemDetails?.businessOwnerInformation
-                      .storesBeneficiaryAddress
+                      ?.storesBeneficiaryAddress
                       ? 'Yes'
                       : 'No'
                   )}
@@ -276,7 +277,7 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
                 <td className="border-bottom-0">
                   {showSystemVal(
                     system.cedarSystemDetails?.businessOwnerInformation
-                      .storesBankingData
+                      ?.storesBankingData
                       ? 'Yes'
                       : 'No'
                   )}

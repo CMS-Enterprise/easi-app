@@ -93,8 +93,8 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
 
   const fields = useMemo(() => {
     return {
-      securityFindings: cedarThreat && getSecurityFindings(cedarThreat),
-      longestOpenFinding: getLongestOpenFinding(cedarThreat)
+      securityFindings: getSecurityFindings(cedarThreat || []),
+      longestOpenFinding: cedarThreat ? getLongestOpenFinding(cedarThreat) : 0
     };
   }, [cedarThreat]);
 

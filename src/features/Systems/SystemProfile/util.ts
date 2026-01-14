@@ -16,7 +16,11 @@ import showVal from 'utils/showVal';
 export function getPersonFullName(
   role:
     | GetSystemProfileRoles
-    | SystemIntakeFragmentFragment['systems'][number]['businessOwnerRoles'][number]
+    | NonNullable<
+        NonNullable<
+          SystemIntakeFragmentFragment['systems'][number]
+        >['businessOwnerRoles']
+      >[number]
 ): string {
   const fullname = `${role.assigneeFirstName} ${role.assigneeLastName}`;
   return fullname === fullname.toUpperCase()
