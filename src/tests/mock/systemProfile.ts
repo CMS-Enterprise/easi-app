@@ -261,33 +261,18 @@ export const result: { data: GetSystemProfileQuery } = {
     __typename: 'Query',
     cedarAuthorityToOperate: [
       {
-        uuid: '00000000-0000-0000-0000-000000000000',
-        actualDispositionDate: null,
-        containsPersonallyIdentifiableInformation: true,
-        countOfTotalNonPrivilegedUserPopulation: 15,
+        uuid: '00000000-0000-0000-0000-000000000001',
         countOfOpenPoams: 7,
-        countOfTotalPrivilegedUserPopulation: 42,
         dateAuthorizationMemoExpires: '2022-07-30T00:00:00Z',
         dateAuthorizationMemoSigned: '2022-02-26T00:00:00Z',
-        eAuthenticationLevel: 'Moderate',
-        fips199OverallImpactRating: 1,
-        fismaSystemAcronym: 'MUS',
-        fismaSystemName: 'Made Up System',
-        isAccessedByNonOrganizationalUsers: true,
-        isPiiLimitedToUserNameAndPass: true,
-        isProtectedHealthInformation: false,
         lastActScaDate: '2022-01-23T00:00:00Z',
         lastAssessmentDate: '2021-11-15T00:00:00Z',
         lastContingencyPlanCompletionDate: '2022-06-11T00:00:00Z',
         lastPenTestDate: '2022-05-31T00:00:00Z',
+        oaStatus: 'Active',
         piaCompletionDate: '2022-12-28T00:00:00Z',
-        primaryCyberRiskAdvisor: 'CRA',
-        privacySubjectMatterExpert: 'SME',
-        recoveryPointObjective: 42,
-        recoveryTimeObjective: 10,
         systemOfRecordsNotice: ['SORN 1', 'SORN 2'],
         tlcPhase: 'Operate',
-
         __typename: 'CedarAuthorityToOperate'
       }
     ],
@@ -296,10 +281,8 @@ export const result: { data: GetSystemProfileQuery } = {
         fiscalYear: '2023',
         funding:
           'Most of this funding is directly and only for this system (over 80%)',
-        fundingId: 'b9b5568a-6ef5-4a7f-94e2-5bfc76ffd4a3',
         fundingSource: 'Prog Ops',
         id: '485f8040-b008-4ad2-9b49-bd5fdf79a45c',
-        name: 'Budget Project 1',
         projectId: '12345',
         projectTitle: 'Budget X',
         systemId: '12345',
@@ -309,10 +292,8 @@ export const result: { data: GetSystemProfileQuery } = {
         fiscalYear: '2023',
         funding:
           'Only part of this funding is directly for this system (less than 40%)',
-        fundingId: 'a21f368e-98c1-4b9f-8efd-38361bc34934',
         fundingSource: 'Fed Admin',
         id: '4f9cc4cb-8a06-4375-99bd-2cabd64d8f0c',
-        name: 'Budget Project 1',
         projectId: '12345',
         projectTitle: 'Budget X',
         systemId: '12345',
@@ -681,7 +662,6 @@ export const result: { data: GetSystemProfileQuery } = {
       }
     ],
     cedarSoftwareProducts: {
-      aiSolnCatg: ['AI Solution Categories'],
       apiDataArea: [
         'Beneficiary and Consumer',
         'Healthcare Payment',
@@ -690,69 +670,42 @@ export const result: { data: GetSystemProfileQuery } = {
       ],
       softwareProducts: [
         {
+          systemSoftwareConnectionGuid: 'System Software Connection GUID 1',
           apiGatewayUse: false,
           elaPurchase: 'ELA Purchase',
-          elaVendorId: 'ELA Vendor ID 1',
           providesAiCapability: false,
-          refstr: 'Ref String',
-          softwareCatagoryConnectionGuid: 'Software Catagory Connection GUID 1',
-          softwareVendorConnectionGuid: 'Software Vendor Connection GUID 1',
-          softwareCost: 'about $3.50',
-          softwareElaOrganization: 'ELA Organization',
           softwareName: 'SQL Server',
-          systemSoftwareConnectionGuid: 'System Software Connection GUID 1',
           technopediaCategory: 'Tecnhopedia Category 1',
-          technopediaID: 'Technopedia ID 1',
           vendorName: 'Microsoft',
           __typename: 'CedarSoftwareProductItem'
         },
         {
+          systemSoftwareConnectionGuid: 'System Software Connection GUID 2',
           apiGatewayUse: true,
           elaPurchase: 'ELA Purchase',
-          elaVendorId: 'ELA Vendor ID 2',
           providesAiCapability: false,
-          refstr: 'Ref String',
-          softwareCatagoryConnectionGuid: 'Software Catagory Connection GUID 2',
-          softwareVendorConnectionGuid: 'Software Vendor Connection GUID 2',
-          softwareCost: 'about $3.50',
-          softwareElaOrganization: 'ELA Organization',
           softwareName: 'Splunk',
-          systemSoftwareConnectionGuid: 'System Software Connection GUID 2',
           technopediaCategory: 'Tecnhopedia Category 2',
-          technopediaID: 'Technopedia ID 2',
           vendorName: 'Splunk',
           __typename: 'CedarSoftwareProductItem'
         },
         {
+          systemSoftwareConnectionGuid: 'System Software Connection GUID 3',
           apiGatewayUse: true,
           elaPurchase: 'ELA Purchase',
-          elaVendorId: 'ELA Vendor ID 3',
           providesAiCapability: true,
-          refstr: 'Ref String',
-          softwareCatagoryConnectionGuid: 'Software Catagory Connection GUID 3',
-          softwareVendorConnectionGuid: 'Software Vendor Connection GUID 3',
-          softwareCost: 'about $3.50',
-          softwareElaOrganization: 'ELA Organization',
           softwareName: 'Terraform',
-          systemSoftwareConnectionGuid: 'System Software Connection GUID 3',
           technopediaCategory: 'Tecnhopedia Category 3',
-          technopediaID: 'Technopedia ID 3',
           vendorName: 'hashiCorp',
           __typename: 'CedarSoftwareProductItem'
         }
       ],
-      aiSolnCatgOther: null,
-      apiDescPubLocation: 'API Publishing Location',
       apiDescPublished: 'No, published elsewhere',
       apiFHIRUse: 'Hl7',
-      apiFHIRUseOther: null,
       apiHasPortal: true,
       apisAccessibility: 'Internal Access',
       apisDeveloped: 'API in development but not yet launched',
-      developmentStage: 'O&M',
       systemHasAPIGateway: true,
-      usesAiTech:
-        'Plans (No - But there currently are plans to use AI capabilities in the next two years)',
       __typename: 'CedarSoftwareProducts'
     },
     cedarSystemDetails: {
@@ -882,7 +835,6 @@ export const result: { data: GetSystemProfileQuery } = {
           'Centers for Medicare and Medicaid Services Analysis, Reporting and Tracking System (CMS ARTS)',
         description: null,
         orderNumber: '75FCMC21F0028',
-        serviceProvided: null,
         isDeliveryOrg: true,
         __typename: 'CedarContract'
       }
@@ -891,8 +843,6 @@ export const result: { data: GetSystemProfileQuery } = {
       {
         __typename: 'CedarExchange',
         exchangeId: '{1}',
-        containsPhi: true,
-        containsHealthDisparityData: true,
         exchangeName: 'CMS Exchange',
         exchangeDescription:
           'CMS Exchange description. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
@@ -905,8 +855,6 @@ export const result: { data: GetSystemProfileQuery } = {
       {
         __typename: 'CedarExchange',
         exchangeId: '{2}',
-        containsPhi: false,
-        containsHealthDisparityData: false,
         exchangeName: 'EASI Exchange',
         exchangeDescription:
           'EASI Exchange description. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',

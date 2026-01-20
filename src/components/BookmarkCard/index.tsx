@@ -29,7 +29,8 @@ const BookmarkCard = ({
   status,
   statusIcon,
   businessOwnerOrg
-}: BookmarkCardProps & GetCedarSystemsQuery['cedarSystems'][number]) => {
+}: BookmarkCardProps &
+  NonNullable<NonNullable<GetCedarSystemsQuery['cedarSystems']>[number]>) => {
   const { t } = useTranslation();
 
   const [deleteMutate] = useDeleteCedarSystemBookmarkMutation();

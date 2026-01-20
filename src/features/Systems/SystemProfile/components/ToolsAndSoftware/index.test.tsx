@@ -86,19 +86,12 @@ describe(`System Profile Tools and Software section collapse/expand toggle at ${
       .fill(0)
       .map((_, index) => {
         return {
+          systemSoftwareConnectionGuid: `softwareProduct-${index}`,
           apiGatewayUse: false,
           elaPurchase: '',
-          elaVendorId: '',
           providesAiCapability: false,
-          refstr: 'Ref String',
-          softwareCatagoryConnectionGuid: `Software Catagory Connection GUID ${index}`,
-          softwareVendorConnectionGuid: `Software Vendor Connection GUID ${index}`,
-          softwareCost: 'about $3.50',
-          softwareElaOrganization: 'ELA Organization',
           softwareName: `Software Product ${index}`,
-          systemSoftwareConnectionGuid: `System Software Connection GUID ${index}`,
           technopediaCategory: '',
-          technopediaID: `Technopedia ID ${index}`,
           vendorName: '',
           __typename: 'CedarSoftwareProductItem'
         };

@@ -101,7 +101,7 @@ function getLocations(
   return (cedarSystemDetails?.urls ?? []).map(url => {
     // Find a deployment from matching its type with the url host env
     const { urlHostingEnv } = url;
-    const deployment = cedarSystemDetails?.deployments.find(
+    const deployment = cedarSystemDetails?.deployments?.find(
       dpl => urlHostingEnv && dpl.deploymentType === urlHostingEnv
     );
 
@@ -165,7 +165,7 @@ export function getSystemProfileData(
   const cedarSystem = cedarSystemDetails?.cedarSystem;
 
   // Save CedarAssigneeType.PERSON roles for convenience
-  const personRoles = cedarSystemDetails?.roles.filter(
+  const personRoles = cedarSystemDetails?.roles?.filter(
     role => role.assigneeType === CedarAssigneeType.PERSON
   );
 
@@ -302,7 +302,7 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
 
     return {
       cedarSystem: cedarSystemDetails.cedarSystem,
-      cmsComponent: cedarSystemDetails.cedarSystem.businessOwnerOrg
+      cmsComponent: cedarSystemDetails.cedarSystem?.businessOwnerOrg
     };
   }, [data]);
 
@@ -434,7 +434,7 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                     {t('singleSystem.summary.tlcPhase')}
                   </p>
                   <TLCTag
-                    tlcPhase={data?.cedarAuthorityToOperate[0]?.tlcPhase}
+                    tlcPhase={data?.cedarAuthorityToOperate?.[0]?.tlcPhase}
                   />
                 </div>
 
