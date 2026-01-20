@@ -32,6 +32,7 @@ const UserTargetingWrapper = ({ children }: WrapperProps) => {
             atoProcessList: false,
             downgradeGovTeam: false,
             downgradeTrbAdmin: false,
+            powerPlatformEnabled: false,
             systemProfileHiddenFields: false,
             systemWorkspace: false,
             systemWorkspaceRequestsCard: false,

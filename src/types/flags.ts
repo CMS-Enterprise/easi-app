@@ -7,6 +7,7 @@ export type Flags = {
   systemWorkspaceRequestsCard: boolean;
   systemWorkspaceTeam: boolean;
   grbReviewTab: boolean;
+  powerPlatformEnabled: boolean;
   showAtoColumn: boolean;
   serviceAlertEnabled: boolean;
   editableSystemProfile: boolean;
