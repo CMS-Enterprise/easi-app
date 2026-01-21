@@ -26,6 +26,7 @@ import {
   GetSystemProfileExchanges,
   SystemProfileSubviewProps
 } from 'types/systemProfile';
+import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 import { showSystemVal } from 'utils/showVal';
 
 import DataNotFound from '../DataNotFound';
@@ -196,6 +197,9 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
   const showMoreExchangesToggle =
     exchanges && exchanges.length - exchangesCountCap > 0;
 
+  const businessOwnerInformation =
+    system.cedarSystemDetails?.businessOwnerInformation;
+
   return (
     <>
       <SectionWrapper borderBottom className="margin-bottom-4 padding-bottom-4">
@@ -203,7 +207,10 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
           {t('singleSystem.systemData.header')}
         </h2>
 
-        {!system.cedarSystemDetails && <DataNotFound />}
+        {(!system.cedarSystemDetails || !businessOwnerInformation) && (
+          <DataNotFound />
+        )}
+
         {/*
         Enterprise status n/a
         <DescriptionTerm term={t('singleSystem.systemData.enterpriseStatus')} />
@@ -247,10 +254,9 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
                 <td>{t('singleSystem.systemData.beneficiaryInfo')}</td>
                 <td>
                   {showSystemVal(
-                    system.cedarSystemDetails?.businessOwnerInformation
-                      ?.storesBeneficiaryAddress
-                      ? 'Yes'
-                      : 'No'
+                    convertBoolToYesNo(
+                      businessOwnerInformation?.storesBeneficiaryAddress
+                    )
                   )}
                 </td>
               </tr>
@@ -276,10 +282,9 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
                 </td>
                 <td className="border-bottom-0">
                   {showSystemVal(
-                    system.cedarSystemDetails?.businessOwnerInformation
-                      ?.storesBankingData
-                      ? 'Yes'
-                      : 'No'
+                    convertBoolToYesNo(
+                      businessOwnerInformation?.storesBankingData
+                    )
                   )}
                 </td>
               </tr>
@@ -341,7 +346,7 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
                   definition={showSystemVal(
                     system.cedarSoftwareProducts?.systemHasAPIGateway,
                     {
-                      format: v => (v ? 'Yes' : 'No')
+                      format: convertBoolToYesNo
                     }
                   )}
                 />
