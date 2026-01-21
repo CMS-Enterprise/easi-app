@@ -94,7 +94,8 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
   const { loading, data } = useGetSystemProfileQuery({
     variables: {
       cedarSystemId: systemId
-    }
+    },
+    errorPolicy: 'all'
   });
 
   // Header description expand toggle
