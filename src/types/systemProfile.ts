@@ -190,7 +190,7 @@ export interface SystemProfileData extends GetSystemProfileQuery {
   personRoles?: CedarRoleAssigneePerson[];
   plannedRetirement?: string | null;
   productionLocation?: UrlLocation;
-  status: GetSystemProfileStatus;
+  status?: GetSystemProfileStatus;
   usernamesWithRoles?: UsernameWithRoles[];
   toolsAndSoftware?: GetSystemProfileSoftwareProducts;
 }

@@ -114,8 +114,8 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
   }, [descriptionRef]);
 
   const systemProfileData: SystemProfileData | undefined = useMemo(
-    () => getSystemProfileData(data),
-    [data]
+    () => getSystemProfileData(data, systemId),
+    [data, systemId]
   );
 
   const { cedarSystem } = data?.cedarSystemDetails || {};

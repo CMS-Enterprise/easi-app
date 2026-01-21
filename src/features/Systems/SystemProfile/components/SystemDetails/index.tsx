@@ -378,7 +378,10 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                     />
                     <DescriptionDefinition
                       className="line-height-body-3 margin-bottom-4"
-                      definition={system.status}
+                      definition={showSystemVal(system.status, {
+                        defaultClassName:
+                          'text-normal text-italic text-base-dark'
+                      })}
                     />
                   </Grid>
                   <Grid desktop={{ col: 12 }}>

@@ -92,7 +92,8 @@ function getDevelopmentTags(
  * It is passed to all SystemProfile subpage components.
  */
 const getSystemProfileData = (
-  data?: GetSystemProfileQuery
+  data?: GetSystemProfileQuery,
+  systemId?: string
 ): SystemProfileData | undefined => {
   const {
     cedarSystemDetails,
@@ -138,7 +139,7 @@ const getSystemProfileData = (
 
   return {
     ...(data || ({} as GetSystemProfileQuery)),
-    id: cedarSystem?.id || '',
+    id: systemId || cedarSystem?.id || '',
     ato: cedarAuthorityToOperate,
     atoStatus: getAtoStatus(
       cedarAuthorityToOperate?.dateAuthorizationMemoExpires,
@@ -158,7 +159,7 @@ const getSystemProfileData = (
     personRoles: personRoles as CedarRoleAssigneePerson[] | undefined,
     plannedRetirement: getPlannedRetirement(cedarSystemDetails),
     productionLocation,
-    status: cedarSystem?.status!,
+    status: cedarSystem?.status ?? undefined,
     toolsAndSoftware: cedarSoftwareProducts || undefined,
     usernamesWithRoles
   };
