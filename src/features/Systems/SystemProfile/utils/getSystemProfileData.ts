@@ -1,9 +1,4 @@
 import {
-  activities as mockActivies,
-  subSystems as mockSubSystems,
-  systemData as mockSystemData
-} from 'features/Systems/SystemProfile/data/mockSystemData';
-import {
   CedarAssigneeType,
   GetSystemProfileQuery
 } from 'gql/generated/graphql';
@@ -165,12 +160,7 @@ const getSystemProfileData = (
     productionLocation,
     status: cedarSystem?.status!,
     toolsAndSoftware: cedarSoftwareProducts || undefined,
-    usernamesWithRoles,
-
-    // Remaining mock data stubs
-    activities: mockActivies,
-    subSystems: mockSubSystems,
-    systemData: mockSystemData
+    usernamesWithRoles
   };
 };
 
