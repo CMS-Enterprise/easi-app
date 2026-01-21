@@ -11,7 +11,7 @@ import {
 } from 'types/systemProfile';
 
 import pointsOfContactIds from '../../data/pointsOfContactIds';
-import { getPersonFullName } from '../../util';
+import { getPersonFullName } from '../../utils/util';
 import DataNotFound from '../DataNotFound';
 
 /**

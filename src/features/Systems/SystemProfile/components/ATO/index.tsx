@@ -20,7 +20,7 @@ import classnames from 'classnames';
 import {
   showAtoEffectiveDate,
   showAtoExpirationDate
-} from 'features/Systems/SystemProfile/util';
+} from 'features/Systems/SystemProfile/utils/util';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { camelCase } from 'lodash';
 

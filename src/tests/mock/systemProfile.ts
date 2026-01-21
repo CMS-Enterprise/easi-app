@@ -1,4 +1,4 @@
-import { getSystemProfileData } from 'features/Systems/SystemProfile';
+import getSystemProfileData from 'features/Systems/SystemProfile/utils/getSystemProfileData';
 import {
   CedarAssigneeType,
   CedarRole,

@@ -22,20 +22,10 @@ import {
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import NotFound, { NotFoundPartial } from 'features/Miscellaneous/NotFound';
-import {
-  activities as mockActivies,
-  subSystems as mockSubSystems,
-  systemData as mockSystemData
-} from 'features/Systems/SystemProfile/data/mockSystemData';
-import {
-  CedarAssigneeType,
-  GetSystemProfileQuery,
-  useGetSystemProfileQuery
-} from 'gql/generated/graphql';
+import { useGetSystemProfileQuery } from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Alert from 'components/Alert';
-import { getAtoStatus } from 'components/AtoStatus';
 import CollapsableLink from 'components/CollapsableLink';
 import {
   DescriptionDefinition,
@@ -48,17 +38,7 @@ import PageLoading from 'components/PageLoading';
 import SectionWrapper from 'components/SectionWrapper';
 import TLCTag from 'components/TLCTag';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
-import {
-  CedarRoleAssigneePerson,
-  DevelopmentTag,
-  RoleTypeName,
-  SubpageKey,
-  SystemProfileData,
-  UrlLocation,
-  UrlLocationTag
-} from 'types/systemProfile';
-import { formatHttpsUrl } from 'utils/formatUrl';
-import getUsernamesWithRoles from 'utils/getUsernamesWithRoles';
+import { SubpageKey, SystemProfileData } from 'types/systemProfile';
 import { showSystemVal } from 'utils/showVal';
 
 import BookmarkButton from '../../../components/BookmarkButton';
@@ -69,166 +49,10 @@ import sideNavItems from './components/index';
 import PointsOfContactSidebar from './components/PointsOfContactSidebar/PointsOfContactSidebar';
 import SystemSubNav from './components/SystemSubNav/index';
 import EditTeam from './components/Team/Edit';
-import { getPersonFullName } from './util';
+import getSystemProfileData from './utils/getSystemProfileData';
+import { getPersonFullName } from './utils/util';
 
 import './index.scss';
-
-/**
- * Get Development Tags which are derived from various other properties.
- */
-function getDevelopmentTags(
-  // eslint-disable-next-line camelcase
-  cedarSystemDetails: GetSystemProfileQuery['cedarSystemDetails']
-): DevelopmentTag[] {
-  const tags: DevelopmentTag[] = [];
-  if (cedarSystemDetails?.systemMaintainerInformation?.agileUsed === true) {
-    tags.push('Agile Methodology');
-  }
-  return tags;
-}
-
-/**
- * Get a list of UrlLocations found from Cedar system Urls and Deployments.
- * A `UrlLocation` is extended from a Cedar Url with some additional parsing
- * and Deployment assignments.
- */
-function getLocations(
-  // eslint-disable-next-line camelcase
-  cedarSystemDetails: GetSystemProfileQuery['cedarSystemDetails']
-): UrlLocation[] | undefined {
-  if (!cedarSystemDetails?.urls) return undefined;
-
-  return (cedarSystemDetails?.urls ?? []).map(url => {
-    // Find a deployment from matching its type with the url host env
-    const { urlHostingEnv } = url;
-    const deployment = cedarSystemDetails?.deployments?.find(
-      dpl => urlHostingEnv && dpl.deploymentType === urlHostingEnv
-    );
-
-    // Location tags derived from certain properties
-    const tags: UrlLocationTag[] = [];
-    if (url.isAPIEndpoint) tags.push('API endpoint');
-    if (url.isVersionCodeRepository) tags.push('Versioned code respository');
-
-    // Fix address urls without a protocol
-    // and reassign it to the original address property
-    const address = url.address && formatHttpsUrl(url.address);
-
-    return {
-      ...url,
-      address,
-      deploymentDataCenterName: deployment?.dataCenter?.name,
-      tags
-    };
-  });
-}
-
-function getPlannedRetirement(
-  // eslint-disable-next-line camelcase
-  cedarSystemDetails: GetSystemProfileQuery['cedarSystemDetails']
-): string | null {
-  const { plansToRetireReplace, quarterToRetireReplace, yearToRetireReplace } =
-    cedarSystemDetails?.systemMaintainerInformation || {};
-
-  // Return null if none of the original properties are truthy
-  if (
-    !(plansToRetireReplace || quarterToRetireReplace || yearToRetireReplace)
-  ) {
-    return null;
-  }
-
-  // Return a string where all falsy values are empty
-  return `${plansToRetireReplace || ''} ${
-    quarterToRetireReplace || yearToRetireReplace
-      ? `(${`Q${quarterToRetireReplace || ''} ${
-          yearToRetireReplace || ''
-        }`.trim()})`
-      : ''
-  }`;
-}
-
-/**
- * `SystemProfileData` is a merge of request data and parsed data
- * required by SystemHome and at least one other subpage.
- * It is passed to all SystemProfile subpage components.
- */
-export function getSystemProfileData(
-  data?: GetSystemProfileQuery
-): SystemProfileData | undefined {
-  const {
-    cedarSystemDetails,
-    cedarSoftwareProducts,
-    cedarBudget,
-    cedarBudgetSystemCost
-  } = data || ({} as GetSystemProfileQuery);
-
-  const cedarSystem = cedarSystemDetails?.cedarSystem;
-
-  // Save CedarAssigneeType.PERSON roles for convenience
-  const personRoles = cedarSystemDetails?.roles?.filter(
-    role => role.assigneeType === CedarAssigneeType.PERSON
-  );
-
-  const businessOwners = personRoles?.filter(
-    role => role.roleTypeName === RoleTypeName.BUSINESS_OWNER
-  );
-
-  const usernamesWithRoles = getUsernamesWithRoles(
-    personRoles as CedarRoleAssigneePerson[]
-  );
-
-  const locations = getLocations(cedarSystemDetails);
-
-  const productionLocation = locations?.find(
-    location => location.urlHostingEnv === 'Production'
-  );
-
-  const cedarAuthorityToOperate = data?.cedarAuthorityToOperate?.[0];
-
-  const numberOfContractorFte = parseFloat(
-    cedarSystemDetails?.businessOwnerInformation?.numberOfContractorFte || '0'
-  );
-
-  const numberOfFederalFte = parseFloat(
-    cedarSystemDetails?.businessOwnerInformation?.numberOfFederalFte || '0'
-  );
-
-  const numberOfFte = Number(
-    (numberOfContractorFte + numberOfFederalFte).toFixed(2)
-  );
-
-  return {
-    ...(data || ({} as GetSystemProfileQuery)),
-    id: cedarSystem?.id || '',
-    ato: cedarAuthorityToOperate,
-    atoStatus: getAtoStatus(
-      cedarAuthorityToOperate?.dateAuthorizationMemoExpires,
-      cedarAuthorityToOperate?.oaStatus
-    ),
-    budgetSystemCosts: cedarBudgetSystemCost || undefined,
-    budgets: cedarBudget || [],
-    businessOwners: businessOwners || [],
-    developmentTags: getDevelopmentTags(
-      cedarSystemDetails || ({} as GetSystemProfileQuery['cedarSystemDetails'])
-    ),
-    locations,
-    numberOfContractorFte,
-    numberOfFederalFte,
-    numberOfFte,
-    oaStatus: cedarAuthorityToOperate?.oaStatus,
-    personRoles: personRoles as CedarRoleAssigneePerson[] | undefined,
-    plannedRetirement: getPlannedRetirement(cedarSystemDetails),
-    productionLocation,
-    status: cedarSystem?.status!,
-    toolsAndSoftware: cedarSoftwareProducts || undefined,
-    usernamesWithRoles,
-
-    // Remaining mock data stubs
-    activities: mockActivies,
-    subSystems: mockSubSystems,
-    systemData: mockSystemData
-  };
-}
 
 type SystemProfileProps = {
   id?: string;
@@ -294,19 +118,7 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
     [data]
   );
 
-  const fields = useMemo(() => {
-    if (!data) return {};
-
-    const { cedarSystemDetails } = data!;
-    if (!cedarSystemDetails) return {};
-
-    return {
-      cedarSystem: cedarSystemDetails.cedarSystem,
-      cmsComponent: cedarSystemDetails.cedarSystem?.businessOwnerOrg
-    };
-  }, [data]);
-
-  const { cedarSystem, cmsComponent } = fields;
+  const { cedarSystem } = data?.cedarSystemDetails || {};
 
   if (loading) {
     return <PageLoading />;
@@ -532,7 +344,7 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                         />
                         <DescriptionTerm
                           className="font-heading-lg line-height-heading-2"
-                          term={showSystemVal(cmsComponent, {
+                          term={showSystemVal(cedarSystem?.businessOwnerOrg, {
                             defaultClassName:
                               'text-normal text-italic text-base-dark'
                           })}
