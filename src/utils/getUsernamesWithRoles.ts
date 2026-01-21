@@ -12,21 +12,18 @@ export default function getUsernamesWithRoles(
 ): UsernameWithRoles[] {
   const people: UsernameWithRoles[] = [];
 
-  // eslint-disable-next-line no-restricted-syntax
-  for (const role of personRoles || []) {
+  (personRoles || []).forEach(role => {
     const { assigneeUsername } = role;
-    if (assigneeUsername) {
-      let person = people.find(
-        p => p.assigneeUsername === role.assigneeUsername
-      );
-      if (!person) {
-        person = { assigneeUsername, roles: [] };
-        people.push(person);
-      }
+    if (!assigneeUsername) return;
 
-      person.roles.push(role);
+    let person = people.find(p => p.assigneeUsername === assigneeUsername);
+    if (!person) {
+      person = { assigneeUsername, roles: [] };
+      people.push(person);
     }
-  }
+
+    person.roles.push(role);
+  });
 
   return people;
 }
