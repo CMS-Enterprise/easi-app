@@ -114,9 +114,10 @@ const AppRoutes = () => {
 
       <Route
         path={[
-          '/governance-overview/:id',
-          '/governance-task-list/:id',
-          '/system/:id'
+          '/governance-overview/:id/*',
+          '/governance-task-list/:id/*',
+          '/it-governance/:id/*',
+          '/system/:id/*'
         ]}
         render={() => (
           <PowerPlatformFlagWrapper>
