@@ -12,7 +12,7 @@ import NotFound from 'features/Miscellaneous/NotFound';
 import { useGetSystemWorkspaceQuery } from 'gql/generated/graphql';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
-import { getAtoStatus } from 'components/AtoStatus';
+import getAtoStatus from 'components/AtoStatus/getAtoStatus';
 import BookmarkButton from 'components/BookmarkButton';
 import Breadcrumbs from 'components/Breadcrumbs';
 import MainContent from 'components/MainContent';
