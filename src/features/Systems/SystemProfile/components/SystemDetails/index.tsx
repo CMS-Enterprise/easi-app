@@ -36,6 +36,9 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
   const flags = useFlags();
   const { locations, developmentTags, cedarSystemDetails } = system;
 
+  const { businessOwnerInformation, systemMaintainerInformation } =
+    cedarSystemDetails || {};
+
   const locationsCountCap = 5;
   const [isLocationsExpanded, setLocationsExpanded] = useState<boolean>(false);
   const showMoreLocationsToggle = locations
@@ -49,7 +52,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
           {t('singleSystem.systemDetails.header')}
         </h2>
 
-        {!system.cedarSystemDetails && <DataNotFound />}
+        {(!cedarSystemDetails || !businessOwnerInformation) && <DataNotFound />}
 
         {!!cedarSystemDetails && (
           <Grid row className="margin-top-3">
@@ -60,7 +63,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
               <DescriptionDefinition
                 className="font-body-md line-height-body-3"
                 definition={showSystemVal(
-                  cedarSystemDetails?.businessOwnerInformation?.isCmsOwned,
+                  businessOwnerInformation?.isCmsOwned,
                   {
                     format: v =>
                       t(
@@ -79,8 +82,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
               <DescriptionDefinition
                 className="line-height-body-3 font-body-md"
                 definition={showSystemVal(
-                  cedarSystemDetails?.businessOwnerInformation
-                    ?.numberOfSupportedUsersPerMonth,
+                  businessOwnerInformation?.numberOfSupportedUsersPerMonth,
                   { format: formatNumber }
                 )}
               />
@@ -90,8 +92,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
               <DescriptionDefinition
                 className="line-height-body-3"
                 definition={showSystemVal(
-                  cedarSystemDetails?.systemMaintainerInformation
-                    ?.netAccessibility
+                  systemMaintainerInformation?.netAccessibility
                 )}
               />
             </Grid>
@@ -324,8 +325,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                 <DescriptionDefinition
                   className="line-height-body-3 margin-bottom-4"
                   definition={showSystemVal(
-                    cedarSystemDetails?.systemMaintainerInformation
-                      ?.systemCustomization
+                    systemMaintainerInformation?.systemCustomization
                   )}
                 />
                 <DescriptionTerm
@@ -334,8 +334,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                 <DescriptionDefinition
                   className="line-height-body-3 margin-bottom-4"
                   definition={showSystemVal(
-                    cedarSystemDetails?.systemMaintainerInformation
-                      ?.deploymentFrequency
+                    systemMaintainerInformation?.deploymentFrequency
                   )}
                 />
               </Grid>
@@ -346,8 +345,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                 <DescriptionDefinition
                   className="line-height-body-3 margin-bottom-4"
                   definition={showSystemVal(
-                    cedarSystemDetails?.systemMaintainerInformation
-                      ?.devCompletionPercent
+                    systemMaintainerInformation?.devCompletionPercent
                   )}
                 />
                 <DescriptionTerm
@@ -365,8 +363,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                 <DescriptionDefinition
                   className="line-height-body-3 margin-bottom-4"
                   definition={showVal(
-                    cedarSystemDetails?.systemMaintainerInformation
-                      ?.devWorkDescription
+                    systemMaintainerInformation?.devWorkDescription
                   )}
                 />
               </Grid>
@@ -378,7 +375,10 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                     />
                     <DescriptionDefinition
                       className="line-height-body-3 margin-bottom-4"
-                      definition={system.status}
+                      definition={showSystemVal(system.status, {
+                        defaultClassName:
+                          'text-normal text-italic text-base-dark'
+                      })}
                     />
                   </Grid>
                   <Grid desktop={{ col: 12 }}>
@@ -405,12 +405,11 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
           {t('singleSystem.systemDetails.ipInfo')}
         </h2>
 
-        {!cedarSystemDetails?.systemMaintainerInformation && <DataNotFound />}
+        {!systemMaintainerInformation && <DataNotFound />}
 
-        {!!cedarSystemDetails?.systemMaintainerInformation && (
+        {!!systemMaintainerInformation && (
           <>
-            {cedarSystemDetails?.systemMaintainerInformation
-              .ecapParticipation && (
+            {systemMaintainerInformation.ecapParticipation && (
               <Tag className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter">
                 <Icon.CheckCircle
                   className="system-profile__icon text-primary-dark margin-right-1"
@@ -428,8 +427,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                 <DescriptionDefinition
                   className="line-height-body-3 margin-bottom-4"
                   definition={showSystemVal(
-                    cedarSystemDetails?.systemMaintainerInformation
-                      .frontendAccessType
+                    systemMaintainerInformation?.frontendAccessType
                   )}
                 />
                 <DescriptionTerm
@@ -438,8 +436,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                 <DescriptionDefinition
                   className="line-height-body-3 margin-bottom-4"
                   definition={showSystemVal(
-                    cedarSystemDetails?.systemMaintainerInformation
-                      .ip6TransitionPlan
+                    systemMaintainerInformation?.ip6TransitionPlan
                   )}
                 />
               </Grid>
@@ -450,8 +447,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                 <DescriptionDefinition
                   className="line-height-body-3 margin-bottom-4"
                   definition={showSystemVal(
-                    cedarSystemDetails?.systemMaintainerInformation
-                      .ipEnabledAssetCount
+                    systemMaintainerInformation?.ipEnabledAssetCount
                   )}
                 />
                 <DescriptionTerm
@@ -460,8 +456,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                 <DescriptionDefinition
                   className="line-height-body-3 margin-bottom-4"
                   definition={showSystemVal(
-                    cedarSystemDetails?.systemMaintainerInformation
-                      .ip6EnabledAssetPercent
+                    systemMaintainerInformation?.ip6EnabledAssetPercent
                   )}
                 />
               </Grid>
@@ -472,8 +467,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                 <DescriptionDefinition
                   className="line-height-body-3 margin-bottom-4"
                   definition={showSystemVal(
-                    cedarSystemDetails?.systemMaintainerInformation
-                      .hardCodedIPAddress,
+                    systemMaintainerInformation?.hardCodedIPAddress,
                     {
                       format: v =>
                         v ? 'This system has hard-coded IP addresses' : 'None'

@@ -8,9 +8,6 @@ import {
   Grid,
   Icon,
   Link,
-  ProcessList,
-  ProcessListHeading,
-  ProcessListItem,
   SummaryBox,
   SummaryBoxContent,
   SummaryBoxHeading,
@@ -20,7 +17,7 @@ import classnames from 'classnames';
 import {
   showAtoEffectiveDate,
   showAtoExpirationDate
-} from 'features/Systems/SystemProfile/util';
+} from 'features/Systems/SystemProfile/utils/util';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { camelCase } from 'lodash';
 
@@ -32,7 +29,6 @@ import {
 import Divider from 'components/Divider';
 import HelpText from 'components/HelpText';
 import SectionWrapper from 'components/SectionWrapper';
-import Tag from 'components/Tag';
 import { securityFindingKeys } from 'constants/systemProfile';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import {
@@ -45,6 +41,8 @@ import { formatDateUtc } from 'utils/date';
 import showVal from 'utils/showVal';
 
 import DataNotFound from '../DataNotFound';
+
+import ATOProcessList from './ATOProcessList';
 
 import './index.scss';
 
@@ -206,43 +204,9 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
         )}
 
         {/* Hide ATO Process List behind feature flag */}
-        {flags.atoProcessList && system.activities !== undefined && (
-          <ProcessList>
-            {system.activities.map(act => (
-              <ProcessListItem key={act.id}>
-                <ProcessListHeading
-                  type="h4"
-                  className="easi-header__basic flex-align-start"
-                >
-                  <div className="margin-0 font-body-lg">Start a process</div>
-                  <div className="text-right margin-bottom-0">
-                    <Tag
-                      className={classnames('font-body-md', 'margin-bottom-1', {
-                        'bg-success-dark text-white':
-                          act.status === 'Completed',
-                        'bg-warning': act.status === 'In progress',
-                        'bg-white text-base border-base border-2px':
-                          act.status === 'Not started'
-                      })}
-                    >
-                      {act.status}
-                    </Tag>
-                    <h5 className="text-normal margin-y-0 text-base-dark">
-                      {act.status === 'Completed'
-                        ? t('singleSystem.ato.completed')
-                        : t('singleSystem.ato.due')}
-                      {act.dueDate}
-                    </h5>
-                  </div>
-                </ProcessListHeading>
-                <DescriptionTerm term={t('singleSystem.ato.activityOwner')} />
-                <DescriptionDefinition
-                  className="line-height-body-3 font-body-md margin-bottom-0"
-                  definition={act.activityOwner}
-                />
-              </ProcessListItem>
-            ))}
-          </ProcessList>
+        {flags.atoProcessList && (
+          /* TODO: Pass actual activities field once implemented in schema */
+          <ATOProcessList activities={[]} />
         )}
 
         <SectionWrapper className="margin-bottom-4 margin-top-4">

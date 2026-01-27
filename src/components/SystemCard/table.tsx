@@ -7,7 +7,7 @@ import {
   useTable
 } from 'react-table';
 import { Table as UswdsTable } from '@trussworks/react-uswds';
-import { getPersonFullName } from 'features/Systems/SystemProfile/util';
+import { getPersonFullName } from 'features/Systems/SystemProfile/utils/util';
 import {
   GetTRBRequestSummaryQuery,
   SystemIntakeFragmentFragment

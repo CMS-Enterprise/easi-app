@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon, Link } from '@trussworks/react-uswds';
 import classnames from 'classnames';
-import { getPersonFullName } from 'features/Systems/SystemProfile/util';
+import { getPersonFullName } from 'features/Systems/SystemProfile/utils/util';
 import { CedarRole } from 'gql/generated/graphql';
 
 import { AtoStatusTag } from 'components/AtoStatus';
