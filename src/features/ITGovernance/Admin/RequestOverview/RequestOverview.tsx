@@ -24,6 +24,7 @@ import { formatDateUtc } from 'utils/date';
 
 import AccordionNavigation from '../../../../components/AccordionNavigation';
 import ITGovAdminContext from '../../../../contexts/ITGovAdminContext/ITGovAdminContext';
+import PowerPlatformFlagWrapper from '../../Wrapper/PowerPlatformFlagWrapper';
 import Actions from '../Actions';
 import BusinessCaseReview from '../BusinessCaseReview';
 import Dates from '../Dates';
@@ -157,116 +158,136 @@ const RequestOverview = () => {
             <section
               className={classnames({ 'desktop:grid-col-9': !fullPageLayout })}
             >
-              <Switch>
-                <Route
-                  path="/it-governance/:systemId/request-home"
-                  render={() => <RequestHome systemIntake={systemIntake} />}
-                />
+              <Route
+                path={[
+                  '/governance-overview/:id/*',
+                  '/governance-task-list/:id/*',
+                  '/it-governance/:id/*',
+                  '/system/:id/*'
+                ]}
+                render={() => (
+                  <PowerPlatformFlagWrapper>
+                    <Switch>
+                      <Route
+                        path="/it-governance/:systemId/request-home"
+                        render={() => (
+                          <RequestHome systemIntake={systemIntake} />
+                        )}
+                      />
 
-                <Route
-                  path="/it-governance/:systemId/add-point-of-contact"
-                  exact
-                >
-                  <AddOrEditPointOfContact
-                    systemIntake={systemIntake}
-                    type="add"
-                  />
-                </Route>
-
-                <Route
-                  path="/it-governance/:systemId/edit-point-of-contact"
-                  exact
-                >
-                  <AddOrEditPointOfContact
-                    systemIntake={systemIntake}
-                    type="edit"
-                  />
-                </Route>
-
-                <Route
-                  path="/it-governance/:systemId/intake-request"
-                  render={() => <IntakeReview systemIntake={systemIntake} />}
-                />
-
-                {flags?.grbReviewTab && (
-                  <Route
-                    path="/it-governance/:systemId/documents/upload"
-                    render={() => <DocumentUploadForm type="admin" />}
-                  />
-                )}
-
-                <Route
-                  path="/it-governance/:systemId/documents"
-                  render={() => <Documents systemIntake={systemIntake} />}
-                />
-
-                <Route
-                  path="/it-governance/:systemId/business-case"
-                  render={() => (
-                    <BusinessCaseReview
-                      businessCase={businessCase}
-                      grtFeedbacks={systemIntake.governanceRequestFeedbacks}
-                    />
-                  )}
-                />
-
-                <Route
-                  path="/it-governance/:systemId/notes"
-                  render={() => <Notes />}
-                />
-
-                <Route
-                  path="/it-governance/:systemId/feedback"
-                  render={() => <Feedback systemIntakeId={systemId} />}
-                />
-
-                <Route
-                  path="/it-governance/:systemId/decision"
-                  render={() => <Decision {...systemIntake} />}
-                />
-
-                <Route
-                  exact
-                  path="/it-governance/:systemId/system-information"
-                  render={() => <SystemInformation request={systemIntake} />}
-                />
-
-                {flags?.grbReviewTab && (
-                  <Route
-                    path="/it-governance/:systemId/grb-review/:action(add|edit)?"
-                    exact
-                    render={() => (
-                      <ModalProvider>
-                        <GRBReview
+                      <Route
+                        path="/it-governance/:systemId/add-point-of-contact"
+                        exact
+                      >
+                        <AddOrEditPointOfContact
                           systemIntake={systemIntake}
-                          businessCase={businessCase}
+                          type="add"
                         />
-                      </ModalProvider>
-                    )}
-                  />
+                      </Route>
+
+                      <Route
+                        path="/it-governance/:systemId/edit-point-of-contact"
+                        exact
+                      >
+                        <AddOrEditPointOfContact
+                          systemIntake={systemIntake}
+                          type="edit"
+                        />
+                      </Route>
+
+                      <Route
+                        path="/it-governance/:systemId/intake-request"
+                        render={() => (
+                          <IntakeReview systemIntake={systemIntake} />
+                        )}
+                      />
+
+                      {flags?.grbReviewTab && (
+                        <Route
+                          path="/it-governance/:systemId/documents/upload"
+                          render={() => <DocumentUploadForm type="admin" />}
+                        />
+                      )}
+
+                      <Route
+                        path="/it-governance/:systemId/documents"
+                        render={() => <Documents systemIntake={systemIntake} />}
+                      />
+
+                      <Route
+                        path="/it-governance/:systemId/business-case"
+                        render={() => (
+                          <BusinessCaseReview
+                            businessCase={businessCase}
+                            grtFeedbacks={
+                              systemIntake.governanceRequestFeedbacks
+                            }
+                          />
+                        )}
+                      />
+
+                      <Route
+                        path="/it-governance/:systemId/notes"
+                        render={() => <Notes />}
+                      />
+
+                      <Route
+                        path="/it-governance/:systemId/feedback"
+                        render={() => <Feedback systemIntakeId={systemId} />}
+                      />
+
+                      <Route
+                        path="/it-governance/:systemId/decision"
+                        render={() => <Decision {...systemIntake} />}
+                      />
+
+                      <Route
+                        exact
+                        path="/it-governance/:systemId/system-information"
+                        render={() => (
+                          <SystemInformation request={systemIntake} />
+                        )}
+                      />
+
+                      {flags?.grbReviewTab && (
+                        <Route
+                          path="/it-governance/:systemId/grb-review/:action(add|edit)?"
+                          exact
+                          render={() => (
+                            <ModalProvider>
+                              <GRBReview
+                                systemIntake={systemIntake}
+                                businessCase={businessCase}
+                              />
+                            </ModalProvider>
+                          )}
+                        />
+                      )}
+
+                      {flags?.grbReviewTab && (
+                        <Route
+                          path="/it-governance/:systemId/grb-review/presentation-deck-upload"
+                          render={() => <PresentationDeckUpload type="admin" />}
+                        />
+                      )}
+
+                      {/* GRT only routes */}
+
+                      <Route
+                        path="/it-governance/:systemId/dates"
+                        render={() => <Dates systemIntake={systemIntake} />}
+                      />
+
+                      <Route
+                        path="/it-governance/:systemId/(actions|resolutions|manage-lcid)/:subPage?"
+                        render={() => <Actions systemIntake={systemIntake} />}
+                      />
+
+                      <Route path="*" component={NotFound} />
+                    </Switch>
+                  </PowerPlatformFlagWrapper>
                 )}
-
-                {flags?.grbReviewTab && (
-                  <Route
-                    path="/it-governance/:systemId/grb-review/presentation-deck-upload"
-                    render={() => <PresentationDeckUpload type="admin" />}
-                  />
-                )}
-
-                {/* GRT only routes */}
-
-                <Route
-                  path="/it-governance/:systemId/dates"
-                  render={() => <Dates systemIntake={systemIntake} />}
-                />
-
-                <Route
-                  path="/it-governance/:systemId/(actions|resolutions|manage-lcid)/:subPage?"
-                  render={() => <Actions systemIntake={systemIntake} />}
-                />
-
-                <Route path="*" component={NotFound} />
-              </Switch>
+              />
             </section>
           )}
         </div>
