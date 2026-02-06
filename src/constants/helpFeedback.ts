@@ -147,8 +147,7 @@ export const reportOptionFieldsForTextInput: Record<
 } as const;
 
 /** Report A Problem ui form */
-export interface SendReportAProblemEmailForm
-  extends SendReportAProblemEmailInput {
+export interface SendReportAProblemEmailForm extends SendReportAProblemEmailInput {
   easiServiceAdditionalText: string;
   howSevereWasTheProblemAdditionalText: string;
 }

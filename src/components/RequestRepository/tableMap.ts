@@ -16,8 +16,10 @@ export type TableSystemIntakeNotes = TableSystemIntake['notes'][number];
 // Here is where the data can be modified and used appropriately for sorting.
 // Modifed data can then be configured with JSX components in column cell configuration
 
-export interface SystemIntakeForTable
-  extends Omit<TableSystemIntake, 'status' | 'contract' | 'fundingSources'> {
+export interface SystemIntakeForTable extends Omit<
+  TableSystemIntake,
+  'status' | 'contract' | 'fundingSources'
+> {
   /** String with requester name and component acronym */
   requesterNameAndComponent: string;
   /** Translated status string */
