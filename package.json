@@ -7,10 +7,13 @@
     "@babel/plugin-syntax-class-properties": "^7.12.13",
     "@cypress/code-coverage": "^3.14.7",
     "@graphql-codegen/typescript-react-apollo": "^4.4.0",
+    "@graphql-codegen/typescript-react-apollo": "^4.4.0",
     "@hookform/error-message": "^2.0.1",
     "@hookform/resolvers": "^2.9.8",
     "@okta/okta-auth-js": "^7.14.1",
+    "@okta/okta-auth-js": "^7.14.1",
     "@okta/okta-react": "^6.10.0",
+    "@okta/okta-signin-widget": "^7.40.3",
     "@okta/okta-signin-widget": "^7.40.3",
     "@tiptap/core": "^2.12.0",
     "@tiptap/extension-document": "^2.12.0",
@@ -57,7 +60,7 @@
     "focus-trap-react": "^11.0.4",
     "font-awesome": "^4.7.0",
     "formik": "^2.4.9",
-    "glob": "^11.1.0",
+    "glob": "^12.0.0",
     "graphql-ws": "^6.0.7",
     "i18next": "^19.8.5",
     "i18next-browser-languagedetector": "^5.0.0",
@@ -184,7 +187,7 @@
     "vite-plugin-svgr": "^4.5.0",
     "vite-tsconfig-paths": "^4.2.0",
     "vitest": "^3.2.4",
-    "webpack": "^5.104.1"
+    "webpack": "^5.105.0"
   },
   "resolutions": {
     "@types/react": "18.3.1",
