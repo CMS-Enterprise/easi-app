@@ -22,8 +22,10 @@ interface MockedRequest<
 }
 
 /** Extends `MockedResponse` to optionally enforce stricter typing on `request` and `result` properties */
-export interface MockedQuery<TData = any, TVariables = OperationVariables>
-  extends MockedResponse<TData, TVariables> {
+export interface MockedQuery<
+  TData = any,
+  TVariables = OperationVariables
+> extends MockedResponse<TData, TVariables> {
   request: MockedRequest<
     TVariables extends Record<string, any> ? TVariables : never
   >;
