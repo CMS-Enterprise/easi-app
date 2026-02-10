@@ -184,7 +184,7 @@
     "vite-plugin-svgr": "^4.5.0",
     "vite-tsconfig-paths": "^4.2.0",
     "vitest": "^3.2.4",
-    "webpack": "^5.102.1"
+    "webpack": "^5.104.1"
   },
   "resolutions": {
     "@types/react": "18.3.1",
