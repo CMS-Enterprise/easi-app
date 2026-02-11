@@ -11,7 +11,7 @@ export const IT_INVESTMENT_EMAIL = 'IT_Investment@cms.hhs.gov';
 export const ENTERPRISE_ARCH_EMAIL = 'EnterpriseArchitecture@cms.hhs.gov';
 
 export const TRB_DECK_TEMPLATES =
-  'https://share.cms.gov/cms-wide/Systems/TRB/Templates/Forms/AllItems.aspx';
+  'https://cmsgovonline.sharepoint.com/sites/CMS-SharePoint-Systems-Classic/TRB/Templates/Forms/AllItems.aspx?InitialTabId=Ribbon%2ERead&VisibilityContext=WSSTabPersistence';
 
 export const CFACTS = 'https://cfacts.cms.gov';
 
