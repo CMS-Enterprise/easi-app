@@ -24,6 +24,7 @@ services:
       - ./pkg/:/easi/pkg/
       - ./cmd/:/easi/cmd/ # Go build uses ./cmd as well
       - ./.air.conf:/easi/.air.conf
+      - ./.air.toml:/easi/.air.toml
       - ./.airDebug.conf:/easi/.airDebug.conf
       - ./.airDebugWait.conf:/easi/.airDebugWait.conf
       - /easi/tmp/air/ # This should match .air.conf's tmp_dir. Note that this isn't a volume mount to a local file/folder, but just an empty volume for Air to use.
