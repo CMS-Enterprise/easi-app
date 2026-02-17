@@ -1,6 +1,6 @@
 module github.com/cms-enterprise/easi-app
 
-go 1.26.0
+go 1.25.7
 
 require (
 	github.com/99designs/gqlgen v0.17.81
