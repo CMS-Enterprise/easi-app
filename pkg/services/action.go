@@ -107,10 +107,7 @@ func NewSubmitSystemIntake(
 			return &apperrors.UnauthorizedError{Err: errors.New("user is unauthorized to submit system intake")}
 		}
 
-		isResubmitted := false
-		if intake.RequestFormState == models.SIRFSEditsRequested {
-			isResubmitted = true
-		}
+		isResubmitted := intake.RequestFormState == models.SIRFSEditsRequested
 
 		updatedTime := config.clock.Now()
 		intake.UpdatedAt = &updatedTime
@@ -257,20 +254,16 @@ func NewSubmitBusinessCase(
 			}
 		}
 
-		isResubmitted := false
-		if (intake.Step == models.SystemIntakeStepDRAFTBIZCASE && intake.DraftBusinessCaseState == models.SIRFSEditsRequested) ||
-			(intake.Step == models.SystemIntakeStepFINALBIZCASE && intake.FinalBusinessCaseState == models.SIRFSEditsRequested) {
-			isResubmitted = true
-		}
-		isDraft := false
-		if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
-			isDraft = true
-		}
+		isResubmitted := (intake.Step == models.SystemIntakeStepDRAFTBIZCASE && intake.DraftBusinessCaseState == models.SIRFSEditsRequested) ||
+			(intake.Step == models.SystemIntakeStepFINALBIZCASE && intake.FinalBusinessCaseState == models.SIRFSEditsRequested)
+
+		isDraft := intake.Step == models.SystemIntakeStepDRAFTBIZCASE
 
 		// Set intake state based on v2 logic
-		if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
+		switch intake.Step {
+		case models.SystemIntakeStepDRAFTBIZCASE:
 			intake.DraftBusinessCaseState = models.SIRFSSubmitted
-		} else if intake.Step == models.SystemIntakeStepFINALBIZCASE {
+		case models.SystemIntakeStepFINALBIZCASE:
 			intake.FinalBusinessCaseState = models.SIRFSSubmitted
 		}
 

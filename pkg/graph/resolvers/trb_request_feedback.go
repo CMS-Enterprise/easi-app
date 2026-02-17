@@ -95,7 +95,8 @@ func CreateTRBRequestFeedback(
 	}
 
 	if emailClient != nil {
-		if feedback.Action == models.TRBFeedbackActionRequestEdits {
+		switch feedback.Action {
+		case models.TRBFeedbackActionRequestEdits:
 			err = emailClient.SendTRBEditsNeededOnFormNotification(
 				ctx,
 				recipientEmails,
@@ -108,7 +109,7 @@ func CreateTRBRequestFeedback(
 			if err != nil {
 				return nil, err
 			}
-		} else if feedback.Action == models.TRBFeedbackActionReadyForConsult {
+		case models.TRBFeedbackActionReadyForConsult:
 			err = emailClient.SendTRBReadyForConsultNotification(
 				ctx,
 				recipientEmails,

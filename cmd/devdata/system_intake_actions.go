@@ -85,7 +85,7 @@ func makeSystemIntakeAndProgressToStep(
 		}
 	}
 	if options.submitForm {
-		if !(options.fillForm || options.completeOtherSteps) {
+		if !options.fillForm && !options.completeOtherSteps {
 			panic("must fill form or complete prior steps to submit")
 		}
 		switch newStep {
