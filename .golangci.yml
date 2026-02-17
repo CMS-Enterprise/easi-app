@@ -48,6 +48,7 @@ linters:
       - comments
     rules:
       - text: "ST1000" # Exclude package comments from `stylecheck`
+        linters: [staticcheck]
       - text: 'shadow: declaration of "err" shadows declaration at'
         linters: [govet]
     paths:
