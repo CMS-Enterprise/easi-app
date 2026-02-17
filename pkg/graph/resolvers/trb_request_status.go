@@ -170,6 +170,8 @@ func GetTRBTaskStatuses(ctx context.Context, trbRequest models.TRBRequest) (*mod
 		guidanceLetterStatusTaskList = models.TRBGuidanceLetterStatusTaskListCannotStartYet
 	case models.TRBGuidanceLetterStatusCompleted:
 		guidanceLetterStatusTaskList = models.TRBGuidanceLetterStatusTaskListCompleted
+	default:
+		// other statuses use the initialized InReview value
 	}
 
 	statuses := models.TRBTaskStatuses{

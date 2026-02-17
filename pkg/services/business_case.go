@@ -175,6 +175,8 @@ func NewUpdateBusinessCase(
 			intake.DraftBusinessCaseState = formstate.GetNewStateForUpdatedForm(intake.DraftBusinessCaseState)
 		case models.SystemIntakeStepFINALBIZCASE:
 			intake.FinalBusinessCaseState = formstate.GetNewStateForUpdatedForm(intake.FinalBusinessCaseState)
+		default:
+			// no state change needed for other steps
 		}
 		_, err = updateIntake(ctx, intake)
 		if err != nil {

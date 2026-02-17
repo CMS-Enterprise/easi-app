@@ -265,6 +265,8 @@ func NewSubmitBusinessCase(
 			intake.DraftBusinessCaseState = models.SIRFSSubmitted
 		case models.SystemIntakeStepFINALBIZCASE:
 			intake.FinalBusinessCaseState = models.SIRFSSubmitted
+		default:
+			// no state change needed for other steps
 		}
 
 		intake.UpdatedAt = &updatedAt
