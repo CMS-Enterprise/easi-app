@@ -170,10 +170,13 @@ func NewUpdateBusinessCase(
 		}
 
 		// Since the db doesn't differentiate between draft or final, we need to rely on the step the intake is in. If the intake isn't in that state, the Business Case state won't update.
-		if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
+		switch intake.Step {
+		case models.SystemIntakeStepDRAFTBIZCASE:
 			intake.DraftBusinessCaseState = formstate.GetNewStateForUpdatedForm(intake.DraftBusinessCaseState)
-		} else if intake.Step == models.SystemIntakeStepFINALBIZCASE {
+		case models.SystemIntakeStepFINALBIZCASE:
 			intake.FinalBusinessCaseState = formstate.GetNewStateForUpdatedForm(intake.FinalBusinessCaseState)
+		default:
+			// no state change needed for other steps
 		}
 		_, err = updateIntake(ctx, intake)
 		if err != nil {

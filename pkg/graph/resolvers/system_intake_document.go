@@ -48,11 +48,12 @@ func GetStatusForSystemIntakeDocument(ctx context.Context, s3Client *upload.S3Cl
 	}
 
 	// possible tag values come from virus scanning lambda
-	if avStatus == "CLEAN" {
+	switch avStatus {
+	case "CLEAN":
 		return models.SystemIntakeDocumentStatusAvailable, nil
-	} else if avStatus == "INFECTED" {
+	case "INFECTED":
 		return models.SystemIntakeDocumentStatusUnavailable, nil
-	} else {
+	default:
 		return models.SystemIntakeDocumentStatusPending, nil
 	}
 }
