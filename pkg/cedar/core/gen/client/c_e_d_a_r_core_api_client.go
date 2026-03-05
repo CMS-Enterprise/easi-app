@@ -39,10 +39,10 @@ var Default = NewHTTPClient(nil)
 const (
 	// DefaultHost is the default Host
 	// found in Meta (info) section of spec file
-	DefaultHost string = "webmethods-apigw.cedar.cms.gov"
+	DefaultHost string = "webmethods-integration.app-alb.cedar-dev.eadg.cmscloud.local"
 	// DefaultBasePath is the default BasePath
 	// found in Meta (info) section of spec file
-	DefaultBasePath string = "/gateway/CEDAR Core API/2.0.0"
+	DefaultBasePath string = "/api/cedar/core/v02"
 )
 
 // DefaultSchemes are the default schemes found in Meta (info) section of spec file

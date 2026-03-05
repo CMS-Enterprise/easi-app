@@ -63,11 +63,11 @@ ExchangeUpdateParams contains all the parameters to send to the API endpoint
 */
 type ExchangeUpdateParams struct {
 
-	/* Body.
+	/* ExchangeUpdateRequest.
 
 	   Data exchange array to be updated in Alfabet.
 	*/
-	Body *models.ExchangeUpdateRequest
+	ExchangeUpdateRequest *models.ExchangeUpdateRequest
 
 	timeout    time.Duration
 	Context    context.Context
@@ -122,15 +122,15 @@ func (o *ExchangeUpdateParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithBody adds the body to the exchange update params
-func (o *ExchangeUpdateParams) WithBody(body *models.ExchangeUpdateRequest) *ExchangeUpdateParams {
-	o.SetBody(body)
+// WithExchangeUpdateRequest adds the exchangeUpdateRequest to the exchange update params
+func (o *ExchangeUpdateParams) WithExchangeUpdateRequest(exchangeUpdateRequest *models.ExchangeUpdateRequest) *ExchangeUpdateParams {
+	o.SetExchangeUpdateRequest(exchangeUpdateRequest)
 	return o
 }
 
-// SetBody adds the body to the exchange update params
-func (o *ExchangeUpdateParams) SetBody(body *models.ExchangeUpdateRequest) {
-	o.Body = body
+// SetExchangeUpdateRequest adds the exchangeUpdateRequest to the exchange update params
+func (o *ExchangeUpdateParams) SetExchangeUpdateRequest(exchangeUpdateRequest *models.ExchangeUpdateRequest) {
+	o.ExchangeUpdateRequest = exchangeUpdateRequest
 }
 
 // WriteToRequest writes these params to a swagger request
@@ -140,8 +140,8 @@ func (o *ExchangeUpdateParams) WriteToRequest(r runtime.ClientRequest, reg strfm
 		return err
 	}
 	var res []error
-	if o.Body != nil {
-		if err := r.SetBodyParam(o.Body); err != nil {
+	if o.ExchangeUpdateRequest != nil {
+		if err := r.SetBodyParam(o.ExchangeUpdateRequest); err != nil {
 			return err
 		}
 	}

@@ -21,7 +21,8 @@ import (
 // swagger:model Exchange
 type Exchange struct {
 
-	// api ownership
+	// Indicates which system owns the API endpoint.
+	// Example: The API endpoint belongs to the sending system
 	APIOwnership string `json:"apiOwnership,omitempty"`
 
 	// business purpose of address
@@ -46,9 +47,11 @@ type Exchange struct {
 	ContainsPii bool `json:"containsPii,omitempty"`
 
 	// data exchange agreement
+	// Example: CMS Contract and Service Agreement
 	DataExchangeAgreement string `json:"dataExchangeAgreement,omitempty"`
 
 	// data format
+	// Example: XML
 	DataFormat string `json:"dataFormat,omitempty"`
 
 	// data format other
@@ -87,6 +90,9 @@ type Exchange struct {
 
 	// exchange network protocol other
 	ExchangeNetworkProtocolOther string `json:"exchangeNetworkProtocolOther,omitempty"`
+
+	// exchange primary data area
+	ExchangePrimaryDataArea []string `json:"exchangePrimaryDataArea"`
 
 	// exchange retired date
 	// Format: date
@@ -388,9 +394,11 @@ func (m *Exchange) UnmarshalBinary(b []byte) error {
 type ExchangeTypeOfDataItems0 struct {
 
 	// id
+	// Example: 114-14-0
 	ID string `json:"id,omitempty"`
 
 	// name
+	// Example: Beneficiary and Consumer
 	Name string `json:"name,omitempty"`
 }
 

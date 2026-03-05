@@ -63,11 +63,11 @@ SupportContactAddParams contains all the parameters to send to the API endpoint
 */
 type SupportContactAddParams struct {
 
-	/* Body.
+	/* SupportContact.
 
 	   supportContact information to be added to Alfabet.
 	*/
-	Body *models.SupportContactAddRequest
+	SupportContact *models.SupportContactAddRequest
 
 	timeout    time.Duration
 	Context    context.Context
@@ -122,15 +122,15 @@ func (o *SupportContactAddParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithBody adds the body to the support contact add params
-func (o *SupportContactAddParams) WithBody(body *models.SupportContactAddRequest) *SupportContactAddParams {
-	o.SetBody(body)
+// WithSupportContact adds the supportContact to the support contact add params
+func (o *SupportContactAddParams) WithSupportContact(supportContact *models.SupportContactAddRequest) *SupportContactAddParams {
+	o.SetSupportContact(supportContact)
 	return o
 }
 
-// SetBody adds the body to the support contact add params
-func (o *SupportContactAddParams) SetBody(body *models.SupportContactAddRequest) {
-	o.Body = body
+// SetSupportContact adds the supportContact to the support contact add params
+func (o *SupportContactAddParams) SetSupportContact(supportContact *models.SupportContactAddRequest) {
+	o.SupportContact = supportContact
 }
 
 // WriteToRequest writes these params to a swagger request
@@ -140,8 +140,8 @@ func (o *SupportContactAddParams) WriteToRequest(r runtime.ClientRequest, reg st
 		return err
 	}
 	var res []error
-	if o.Body != nil {
-		if err := r.SetBodyParam(o.Body); err != nil {
+	if o.SupportContact != nil {
+		if err := r.SetBodyParam(o.SupportContact); err != nil {
 			return err
 		}
 	}

@@ -36,7 +36,9 @@ type ClientService interface {
 }
 
 /*
-BudgetSystemCostFind budget system cost find API
+BudgetSystemCostFind retrieves actual system cost data by fiscal year
+
+Retrieve actual system cost data aggregated by fiscal year for a given system.
 */
 func (a *Client) BudgetSystemCostFind(params *BudgetSystemCostFindParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*BudgetSystemCostFindOK, error) {
 	// TODO: Validate the params before sending

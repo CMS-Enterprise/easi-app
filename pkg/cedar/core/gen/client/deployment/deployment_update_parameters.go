@@ -63,11 +63,11 @@ DeploymentUpdateParams contains all the parameters to send to the API endpoint
 */
 type DeploymentUpdateParams struct {
 
-	/* Body.
+	/* DeploymentUpdateRequest.
 
 	   Deployment list to be updated in Alfabet.
 	*/
-	Body *models.DeploymentUpdateRequest
+	DeploymentUpdateRequest *models.DeploymentUpdateRequest
 
 	timeout    time.Duration
 	Context    context.Context
@@ -122,15 +122,15 @@ func (o *DeploymentUpdateParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithBody adds the body to the deployment update params
-func (o *DeploymentUpdateParams) WithBody(body *models.DeploymentUpdateRequest) *DeploymentUpdateParams {
-	o.SetBody(body)
+// WithDeploymentUpdateRequest adds the deploymentUpdateRequest to the deployment update params
+func (o *DeploymentUpdateParams) WithDeploymentUpdateRequest(deploymentUpdateRequest *models.DeploymentUpdateRequest) *DeploymentUpdateParams {
+	o.SetDeploymentUpdateRequest(deploymentUpdateRequest)
 	return o
 }
 
-// SetBody adds the body to the deployment update params
-func (o *DeploymentUpdateParams) SetBody(body *models.DeploymentUpdateRequest) {
-	o.Body = body
+// SetDeploymentUpdateRequest adds the deploymentUpdateRequest to the deployment update params
+func (o *DeploymentUpdateParams) SetDeploymentUpdateRequest(deploymentUpdateRequest *models.DeploymentUpdateRequest) {
+	o.DeploymentUpdateRequest = deploymentUpdateRequest
 }
 
 // WriteToRequest writes these params to a swagger request
@@ -140,8 +140,8 @@ func (o *DeploymentUpdateParams) WriteToRequest(r runtime.ClientRequest, reg str
 		return err
 	}
 	var res []error
-	if o.Body != nil {
-		if err := r.SetBodyParam(o.Body); err != nil {
+	if o.DeploymentUpdateRequest != nil {
+		if err := r.SetBodyParam(o.DeploymentUpdateRequest); err != nil {
 			return err
 		}
 	}
