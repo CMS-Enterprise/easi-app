@@ -14,6 +14,7 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
 )
 
 // NewOrganizationFindListParams creates a new OrganizationFindListParams object,
@@ -67,6 +68,12 @@ type OrganizationFindListParams struct {
 	*/
 	Acronym *string
 
+	/* Flat.
+
+	   If true, returns a flat sorted list of organizations instead of the hierarchical tree structure.
+	*/
+	Flat *bool
+
 	/* ID.
 
 	   ID of a specific organization. Will return the organization specified and all children of the organization.
@@ -78,6 +85,12 @@ type OrganizationFindListParams struct {
 	   Exact name of a specific organization. Will return the organization specified and all children of the organization.
 	*/
 	Name *string
+
+	/* Search.
+
+	   Wildcard search on organization name or acronym (case-insensitive, partial match). Returns all matching subtrees.
+	*/
+	Search *string
 
 	timeout    time.Duration
 	Context    context.Context
@@ -143,6 +156,17 @@ func (o *OrganizationFindListParams) SetAcronym(acronym *string) {
 	o.Acronym = acronym
 }
 
+// WithFlat adds the flat to the organization find list params
+func (o *OrganizationFindListParams) WithFlat(flat *bool) *OrganizationFindListParams {
+	o.SetFlat(flat)
+	return o
+}
+
+// SetFlat adds the flat to the organization find list params
+func (o *OrganizationFindListParams) SetFlat(flat *bool) {
+	o.Flat = flat
+}
+
 // WithID adds the id to the organization find list params
 func (o *OrganizationFindListParams) WithID(id *string) *OrganizationFindListParams {
 	o.SetID(id)
@@ -165,6 +189,17 @@ func (o *OrganizationFindListParams) SetName(name *string) {
 	o.Name = name
 }
 
+// WithSearch adds the search to the organization find list params
+func (o *OrganizationFindListParams) WithSearch(search *string) *OrganizationFindListParams {
+	o.SetSearch(search)
+	return o
+}
+
+// SetSearch adds the search to the organization find list params
+func (o *OrganizationFindListParams) SetSearch(search *string) {
+	o.Search = search
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *OrganizationFindListParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -185,6 +220,23 @@ func (o *OrganizationFindListParams) WriteToRequest(r runtime.ClientRequest, reg
 		if qAcronym != "" {
 
 			if err := r.SetQueryParam("acronym", qAcronym); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.Flat != nil {
+
+		// query param flat
+		var qrFlat bool
+
+		if o.Flat != nil {
+			qrFlat = *o.Flat
+		}
+		qFlat := swag.FormatBool(qrFlat)
+		if qFlat != "" {
+
+			if err := r.SetQueryParam("flat", qFlat); err != nil {
 				return err
 			}
 		}
@@ -219,6 +271,23 @@ func (o *OrganizationFindListParams) WriteToRequest(r runtime.ClientRequest, reg
 		if qName != "" {
 
 			if err := r.SetQueryParam("name", qName); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.Search != nil {
+
+		// query param search
+		var qrSearch string
+
+		if o.Search != nil {
+			qrSearch = *o.Search
+		}
+		qSearch := qrSearch
+		if qSearch != "" {
+
+			if err := r.SetQueryParam("search", qSearch); err != nil {
 				return err
 			}
 		}

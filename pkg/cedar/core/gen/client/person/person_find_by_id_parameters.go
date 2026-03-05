@@ -63,7 +63,7 @@ type PersonFindByIDParams struct {
 
 	/* ID.
 
-	   ID of person to retrieve.
+	   EUA ID of person to retrieve.
 	*/
 	ID string
 

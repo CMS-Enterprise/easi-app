@@ -101,6 +101,7 @@ func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryPara
 				SystemMaintainerOrgComp: zero.StringFrom(sys.SystemMaintainerOrgComp),
 				ID:                      parsed,
 				UUID:                    zero.StringFrom(sys.UUID),
+				OaStatus:                zero.StringFrom(sys.OaStatus),
 			}
 			retVal = append(retVal, cedarSys)
 		}

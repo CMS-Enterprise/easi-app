@@ -63,11 +63,11 @@ SoftwareProductsAddParams contains all the parameters to send to the API endpoin
 */
 type SoftwareProductsAddParams struct {
 
-	/* Body.
+	/* SoftwareProducts.
 
 	   Page detail information to be added to CEDAR
 	*/
-	Body *models.PageSoftwareProductsRequest
+	SoftwareProducts *models.PageSoftwareProductsRequest
 
 	timeout    time.Duration
 	Context    context.Context
@@ -122,15 +122,15 @@ func (o *SoftwareProductsAddParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithBody adds the body to the software products add params
-func (o *SoftwareProductsAddParams) WithBody(body *models.PageSoftwareProductsRequest) *SoftwareProductsAddParams {
-	o.SetBody(body)
+// WithSoftwareProducts adds the softwareProducts to the software products add params
+func (o *SoftwareProductsAddParams) WithSoftwareProducts(softwareProducts *models.PageSoftwareProductsRequest) *SoftwareProductsAddParams {
+	o.SetSoftwareProducts(softwareProducts)
 	return o
 }
 
-// SetBody adds the body to the software products add params
-func (o *SoftwareProductsAddParams) SetBody(body *models.PageSoftwareProductsRequest) {
-	o.Body = body
+// SetSoftwareProducts adds the softwareProducts to the software products add params
+func (o *SoftwareProductsAddParams) SetSoftwareProducts(softwareProducts *models.PageSoftwareProductsRequest) {
+	o.SoftwareProducts = softwareProducts
 }
 
 // WriteToRequest writes these params to a swagger request
@@ -140,8 +140,8 @@ func (o *SoftwareProductsAddParams) WriteToRequest(r runtime.ClientRequest, reg 
 		return err
 	}
 	var res []error
-	if o.Body != nil {
-		if err := r.SetBodyParam(o.Body); err != nil {
+	if o.SoftwareProducts != nil {
+		if err := r.SetBodyParam(o.SoftwareProducts); err != nil {
 			return err
 		}
 	}
