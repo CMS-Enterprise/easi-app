@@ -1,4 +1,4 @@
-FROM golang:1.24.4 AS base
+FROM golang:1.25.7 AS base
 
 WORKDIR /easi/
 
@@ -11,11 +11,9 @@ RUN go mod download
 FROM base AS dev
 
 # NOTE: Update delve and gopls versions when bumping the GO base image version
-# These versions are pinned for Go 1.24.4 compatibility
-# TODO: (MINT-3592, EASI-5031) See ticket to update to latest go version
-RUN go install github.com/go-delve/delve/cmd/dlv@v1.25.2 && \
-	go install golang.org/x/tools/gopls@v0.20.0 && \
-    go install github.com/cosmtrek/air@4612c12f1ed7c899314b8430bc1d841ca2cb061a
+RUN go install github.com/go-delve/delve/cmd/dlv@latest && \
+	go install golang.org/x/tools/gopls@latest && \
+    go install github.com/air-verse/air@latest
 
 FROM base AS build
 

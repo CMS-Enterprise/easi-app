@@ -63,13 +63,14 @@ func cedarRoleApplicationPtr() *string {
 func decodeAssigneeType(rawAssigneeType string) (models.CedarAssigneeType, bool) {
 	lowered := strings.ToLower(rawAssigneeType)
 
-	if lowered == cedarPersonAssignee {
+	switch lowered {
+	case cedarPersonAssignee:
 		return models.PersonAssignee, true
-	} else if lowered == cedarOrganizationAssignee {
+	case cedarOrganizationAssignee:
 		return models.OrganizationAssignee, true
-	} else if lowered == "" {
+	case "":
 		return "", true
-	} else {
+	default:
 		return "", false
 	}
 }

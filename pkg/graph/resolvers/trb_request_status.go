@@ -34,7 +34,8 @@ func getTRBFeedbackStatus(ctx context.Context, trbRequestID uuid.UUID) (*models.
 
 	if feedback != nil {
 		// If the latest feedback exists, calculate the status based on the action
-		if feedback.Action == models.TRBFeedbackActionRequestEdits {
+		switch feedback.Action {
+		case models.TRBFeedbackActionRequestEdits:
 			if form.Status == models.TRBFormStatusCompleted {
 				// If the form is completed, that means the edits were made
 				status = models.TRBFeedbackStatus(models.TRBFeedbackStatusInReview)
@@ -42,7 +43,7 @@ func getTRBFeedbackStatus(ctx context.Context, trbRequestID uuid.UUID) (*models.
 				// If the form isn't complete, then "edits requested" still applies
 				status = models.TRBFeedbackStatus(models.TRBFeedbackStatusEditsRequested)
 			}
-		} else if feedback.Action == models.TRBFeedbackActionReadyForConsult {
+		case models.TRBFeedbackActionReadyForConsult:
 			// If latest feedback action is "ready for consult", return "completed" status
 			status = models.TRBFeedbackStatusCompleted
 		}
@@ -164,10 +165,13 @@ func GetTRBTaskStatuses(ctx context.Context, trbRequest models.TRBRequest) (*mod
 	}
 
 	guidanceLetterStatusTaskList := models.TRBGuidanceLetterStatusTaskListInReview
-	if *guidanceLetterStatus == models.TRBGuidanceLetterStatusCannotStartYet {
+	switch *guidanceLetterStatus {
+	case models.TRBGuidanceLetterStatusCannotStartYet:
 		guidanceLetterStatusTaskList = models.TRBGuidanceLetterStatusTaskListCannotStartYet
-	} else if *guidanceLetterStatus == models.TRBGuidanceLetterStatusCompleted {
+	case models.TRBGuidanceLetterStatusCompleted:
 		guidanceLetterStatusTaskList = models.TRBGuidanceLetterStatusTaskListCompleted
+	default:
+		// other statuses use the initialized InReview value
 	}
 
 	statuses := models.TRBTaskStatuses{
