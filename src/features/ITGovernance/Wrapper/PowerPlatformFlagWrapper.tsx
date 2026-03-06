@@ -7,11 +7,11 @@ import PageLoading from 'components/PageLoading';
 export default function PowerPlatformFlagWrapper({
   children
 }: React.PropsWithChildren) {
-  const { systemIntakeID } = useParams<{ systemIntakeID?: string }>();
+  const { id } = useParams<{ id?: string }>();
   const flags = useFlags();
 
   if (flags.enablePowerPlatform) {
-    window.location.href = `https://icpg-dev.crm9.dynamics.com/main.aspx?appid=bc878d88-0468-f011-bec2-001dd8062d4a&pagetype=entityrecord&etn=new_systemintake&id=${systemIntakeID}`;
+    window.location.href = `https://icpg-dev.crm9.dynamics.com/main.aspx?appid=bc878d88-0468-f011-bec2-001dd8062d4a&pagetype=entityrecord&etn=new_systemintake&id=${id}`;
     return <PageLoading />;
   }
 
