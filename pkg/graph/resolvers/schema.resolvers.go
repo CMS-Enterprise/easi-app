@@ -19,6 +19,7 @@ import (
 	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
 	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
+	"github.com/cms-enterprise/easi-app/pkg/flags"
 	"github.com/cms-enterprise/easi-app/pkg/graph/generated"
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
@@ -200,6 +201,15 @@ func (r *iTGovTaskStatusesResolver) DecisionAndNextStepsStatus(ctx context.Conte
 
 // CreateSystemIntakeActionProgressToNewStep is the resolver for the createSystemIntakeActionProgressToNewStep field.
 func (r *mutationResolver) CreateSystemIntakeActionProgressToNewStep(ctx context.Context, input models.SystemIntakeProgressToNewStepsInput) (*models.UpdateSystemIntakePayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	updatedIntake, err := ProgressIntake(
 		ctx,
 		r.store,
@@ -215,6 +225,15 @@ func (r *mutationResolver) CreateSystemIntakeActionProgressToNewStep(ctx context
 
 // CreateSystemIntakeActionRequestEdits is the resolver for the createSystemIntakeActionRequestEdits field.
 func (r *mutationResolver) CreateSystemIntakeActionRequestEdits(ctx context.Context, input models.SystemIntakeRequestEditsInput) (*models.UpdateSystemIntakePayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	intake, err := CreateSystemIntakeActionRequestEdits(
 		ctx,
 		r.store,
@@ -229,6 +248,15 @@ func (r *mutationResolver) CreateSystemIntakeActionRequestEdits(ctx context.Cont
 
 // CreateSystemIntakeActionExpireLcid is the resolver for the createSystemIntakeActionExpireLCID field.
 func (r *mutationResolver) CreateSystemIntakeActionExpireLcid(ctx context.Context, input models.SystemIntakeExpireLCIDInput) (*models.UpdateSystemIntakePayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	intake, err := ExpireLCID(
 		ctx,
 		r.store,
@@ -244,6 +272,15 @@ func (r *mutationResolver) CreateSystemIntakeActionExpireLcid(ctx context.Contex
 
 // CreateSystemIntakeActionUpdateLcid is the resolver for the createSystemIntakeActionUpdateLCID field.
 func (r *mutationResolver) CreateSystemIntakeActionUpdateLcid(ctx context.Context, input models.SystemIntakeUpdateLCIDInput) (*models.UpdateSystemIntakePayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	intake, err := UpdateLCID(
 		ctx,
 		r.store,
@@ -259,6 +296,15 @@ func (r *mutationResolver) CreateSystemIntakeActionUpdateLcid(ctx context.Contex
 
 // CreateSystemIntakeActionRetireLcid is the resolver for the createSystemIntakeActionRetireLCID field.
 func (r *mutationResolver) CreateSystemIntakeActionRetireLcid(ctx context.Context, input models.SystemIntakeRetireLCIDInput) (*models.UpdateSystemIntakePayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	intake, err := RetireLCID(
 		ctx,
 		r.store,
@@ -274,6 +320,15 @@ func (r *mutationResolver) CreateSystemIntakeActionRetireLcid(ctx context.Contex
 
 // CreateSystemIntakeActionUnretireLcid is the resolver for the createSystemIntakeActionUnretireLCID field.
 func (r *mutationResolver) CreateSystemIntakeActionUnretireLcid(ctx context.Context, input models.SystemIntakeUnretireLCIDInput) (*models.UpdateSystemIntakePayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	intake, err := UnretireLCID(
 		ctx,
 		r.store,
@@ -289,6 +344,15 @@ func (r *mutationResolver) CreateSystemIntakeActionUnretireLcid(ctx context.Cont
 
 // CreateSystemIntakeActionChangeLCIDRetirementDate is the resolver for the createSystemIntakeActionChangeLCIDRetirementDate field.
 func (r *mutationResolver) CreateSystemIntakeActionChangeLCIDRetirementDate(ctx context.Context, input models.SystemIntakeChangeLCIDRetirementDateInput) (*models.UpdateSystemIntakePayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	intake, err := ChangeLCIDRetirementDate(
 		ctx,
 		r.store,
@@ -304,6 +368,15 @@ func (r *mutationResolver) CreateSystemIntakeActionChangeLCIDRetirementDate(ctx 
 
 // CreateSystemIntakeActionConfirmLcid is the resolver for the createSystemIntakeActionConfirmLCID field.
 func (r *mutationResolver) CreateSystemIntakeActionConfirmLcid(ctx context.Context, input models.SystemIntakeConfirmLCIDInput) (*models.UpdateSystemIntakePayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	intake, err := ConfirmLCID(
 		ctx,
 		r.store,
@@ -319,6 +392,15 @@ func (r *mutationResolver) CreateSystemIntakeActionConfirmLcid(ctx context.Conte
 
 // CreateSystemIntakeActionIssueLcid is the resolver for the createSystemIntakeActionIssueLCID field.
 func (r *mutationResolver) CreateSystemIntakeActionIssueLcid(ctx context.Context, input models.SystemIntakeIssueLCIDInput) (*models.UpdateSystemIntakePayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	updatedIntake, err := IssueLCID(
 		ctx,
 		r.store,
@@ -334,6 +416,15 @@ func (r *mutationResolver) CreateSystemIntakeActionIssueLcid(ctx context.Context
 
 // CreateSystemIntakeActionRejectIntake is the resolver for the createSystemIntakeActionRejectIntake field.
 func (r *mutationResolver) CreateSystemIntakeActionRejectIntake(ctx context.Context, input models.SystemIntakeRejectIntakeInput) (*models.UpdateSystemIntakePayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	updatedIntake, err := RejectIntakeAsNotApproved(
 		ctx,
 		r.store,
@@ -349,6 +440,15 @@ func (r *mutationResolver) CreateSystemIntakeActionRejectIntake(ctx context.Cont
 
 // CreateSystemIntakeActionReopenRequest is the resolver for the createSystemIntakeActionReopenRequest field.
 func (r *mutationResolver) CreateSystemIntakeActionReopenRequest(ctx context.Context, input models.SystemIntakeReopenRequestInput) (*models.UpdateSystemIntakePayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	intake, err := CreateSystemIntakeActionReopenRequest(
 		ctx,
 		r.store,
@@ -363,6 +463,15 @@ func (r *mutationResolver) CreateSystemIntakeActionReopenRequest(ctx context.Con
 
 // CreateSystemIntakeActionCloseRequest is the resolver for the createSystemIntakeActionCloseRequest field.
 func (r *mutationResolver) CreateSystemIntakeActionCloseRequest(ctx context.Context, input models.SystemIntakeCloseRequestInput) (*models.UpdateSystemIntakePayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	intake, err := CreateSystemIntakeActionCloseRequest(
 		ctx,
 		r.store,
@@ -377,6 +486,15 @@ func (r *mutationResolver) CreateSystemIntakeActionCloseRequest(ctx context.Cont
 
 // CreateSystemIntakeActionNotITGovRequest is the resolver for the createSystemIntakeActionNotITGovRequest field.
 func (r *mutationResolver) CreateSystemIntakeActionNotITGovRequest(ctx context.Context, input models.SystemIntakeNotITGovReqInput) (*models.UpdateSystemIntakePayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	intake, err := CreateSystemIntakeActionNotITGovRequest(
 		ctx,
 		r.store,
@@ -391,31 +509,85 @@ func (r *mutationResolver) CreateSystemIntakeActionNotITGovRequest(ctx context.C
 
 // CreateSystemIntakeNote is the resolver for the createSystemIntakeNote field.
 func (r *mutationResolver) CreateSystemIntakeNote(ctx context.Context, input models.CreateSystemIntakeNoteInput) (*models.SystemIntakeNote, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	return CreateSystemIntakeNote(ctx, r.store, input)
 }
 
 // UpdateSystemIntakeNote is the resolver for the updateSystemIntakeNote field.
 func (r *mutationResolver) UpdateSystemIntakeNote(ctx context.Context, input models.UpdateSystemIntakeNoteInput) (*models.SystemIntakeNote, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	return UpdateSystemIntakeNote(ctx, r.store, r.service.FetchUserInfo, input)
 }
 
 // CreateSystemIntake is the resolver for the createSystemIntake field.
 func (r *mutationResolver) CreateSystemIntake(ctx context.Context, input models.CreateSystemIntakeInput) (*models.SystemIntake, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	return CreateSystemIntake(ctx, r.store, input, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo))
 }
 
 // UpdateSystemIntakeRequestType is the resolver for the updateSystemIntakeRequestType field.
 func (r *mutationResolver) UpdateSystemIntakeRequestType(ctx context.Context, id uuid.UUID, newType models.SystemIntakeRequestType) (*models.SystemIntake, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	return UpdateSystemIntakeRequestType(ctx, r.store, id, newType)
 }
 
 // SubmitIntake is the resolver for the submitIntake field.
 func (r *mutationResolver) SubmitIntake(ctx context.Context, input models.SubmitIntakeInput) (*models.UpdateSystemIntakePayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	return SubmitIntake(ctx, r.store, r.service.FetchUserInfo, r.service.SubmitIntake, input)
 }
 
 // UpdateSystemIntakeAdminLead is the resolver for the updateSystemIntakeAdminLead field.
 func (r *mutationResolver) UpdateSystemIntakeAdminLead(ctx context.Context, input models.UpdateSystemIntakeAdminLeadInput) (*models.UpdateSystemIntakePayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	savedAdminLead, err := r.store.UpdateAdminLead(ctx, input.ID, input.AdminLead)
 	systemIntake := models.SystemIntake{
 		AdminLead: null.StringFrom(savedAdminLead),
@@ -428,6 +600,15 @@ func (r *mutationResolver) UpdateSystemIntakeAdminLead(ctx context.Context, inpu
 
 // UpdateSystemIntakeReviewDates is the resolver for the updateSystemIntakeReviewDates field.
 func (r *mutationResolver) UpdateSystemIntakeReviewDates(ctx context.Context, input models.UpdateSystemIntakeReviewDatesInput) (*models.UpdateSystemIntakePayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	intake, err := r.store.UpdateReviewDates(ctx, input.ID, input.GrbDate, input.GrtDate)
 	return &models.UpdateSystemIntakePayload{
 		SystemIntake: intake,
@@ -436,16 +617,43 @@ func (r *mutationResolver) UpdateSystemIntakeReviewDates(ctx context.Context, in
 
 // UpdateSystemIntakeContactDetails is the resolver for the updateSystemIntakeContactDetails field.
 func (r *mutationResolver) UpdateSystemIntakeContactDetails(ctx context.Context, input models.UpdateSystemIntakeContactDetailsInput) (*models.UpdateSystemIntakePayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	return SystemIntakeUpdateContactDetails(ctx, r.store, input)
 }
 
 // UpdateSystemIntakeRequestDetails is the resolver for the updateSystemIntakeRequestDetails field.
 func (r *mutationResolver) UpdateSystemIntakeRequestDetails(ctx context.Context, input models.UpdateSystemIntakeRequestDetailsInput) (*models.UpdateSystemIntakePayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	return SystemIntakeUpdate(ctx, r.store, r.cedarCoreClient.GetSystem, input)
 }
 
 // UpdateSystemIntakeContractDetails is the resolver for the updateSystemIntakeContractDetails field.
 func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context, input models.UpdateSystemIntakeContractDetailsInput) (*models.UpdateSystemIntakePayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	return SystemIntakeUpdateContractDetails(ctx, r.store, input)
 }
 
@@ -485,6 +693,15 @@ func (r *mutationResolver) SetSystemIntakeRelationNewSystem(ctx context.Context,
 	// 1. Delete (if any) existing CEDAR System ID relations that were set by SetSystemIntakeRelationExistingSystem()
 	// 2. Delete (if any) existing free-text contract/service name that might have been set by SetSystemIntakeRelationExistingService()
 	// 3. Delete & Create Contract Number relations (Delete & Create because this mutation always receives the full state of the relations)
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	intake, err := SetSystemIntakeRelationNewSystem(ctx, r.store, input)
 	if err != nil {
 		return nil, err
@@ -500,6 +717,15 @@ func (r *mutationResolver) SetSystemIntakeRelationExistingSystem(ctx context.Con
 	// This resolver's purpose is to relate this System Intake to some number of CEDAR System IDs and Contract Numbers
 	// It is also responsible for clearing any previous relations that might have been set by SetSystemIntakeRelationExistingService(), which,
 	// in practice, should just be the `contractName` field.
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	intake, err := SetSystemIntakeRelationExistingSystem(ctx, r.store, r.cedarCoreClient.GetSystem, input)
 	if err != nil {
 		return nil, err
@@ -520,6 +746,15 @@ func (r *mutationResolver) SetSystemIntakeRelationExistingService(ctx context.Co
 	// 1. Delete (if any) existing CEDAR System ID relations that might have been set by SetSystemIntakeRelationExistingSystem()
 	// 2. Set the free-text contract/service name
 	// 3. Delete & Create Contract Number relations (Delete & Create because this mutation always receives the full state of the relations)
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	intake, err := SetSystemIntakeRelationExistingService(ctx, r.store, input)
 	if err != nil {
 		return nil, err
@@ -532,6 +767,15 @@ func (r *mutationResolver) SetSystemIntakeRelationExistingService(ctx context.Co
 
 // SetSystemSupportAndUnlinkSystemIntakeRelation is the resolver for the setSystemSupportAndUnlinkSystemIntakeRelation field.
 func (r *mutationResolver) SetSystemSupportAndUnlinkSystemIntakeRelation(ctx context.Context, intakeID uuid.UUID, doesNotSupportSystems bool) (*models.UpdateSystemIntakePayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	intake, err := SetSystemSupportAndUnlinkSystemIntakeRelation(ctx, r.store, intakeID, doesNotSupportSystems)
 
 	if err != nil {
@@ -545,6 +789,15 @@ func (r *mutationResolver) SetSystemSupportAndUnlinkSystemIntakeRelation(ctx con
 
 // AddSystemLink is the resolver for the addSystemLink field.
 func (r *mutationResolver) AddSystemLink(ctx context.Context, input models.AddSystemLinkInput) (*models.AddSystemLinkPayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	newSystemLink, err := AddSystemLink(ctx, r.store, input)
 
 	if err != nil {
@@ -555,6 +808,15 @@ func (r *mutationResolver) AddSystemLink(ctx context.Context, input models.AddSy
 
 // DeleteSystemLink is the resolver for the deleteSystemLink field.
 func (r *mutationResolver) DeleteSystemLink(ctx context.Context, systemIntakeSystemID uuid.UUID) (*models.DeleteSystemLinkPayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	deletedSystemIntake, err := DeleteSystemIntakeSystemByID(ctx, r.store, systemIntakeSystemID)
 
 	if err != nil {
@@ -565,6 +827,15 @@ func (r *mutationResolver) DeleteSystemLink(ctx context.Context, systemIntakeSys
 
 // UpdateSystemLink is the resolver for the updateSystemLink field.
 func (r *mutationResolver) UpdateSystemLink(ctx context.Context, input models.UpdateSystemLinkInput) (*models.UpdateSystemLinkPayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	systemIntakeSystem, err := UpdateSystemLinkByID(ctx, r.store, input)
 
 	if err != nil {
@@ -575,6 +846,15 @@ func (r *mutationResolver) UpdateSystemLink(ctx context.Context, input models.Up
 
 // CreateSystemIntakeContact is the resolver for the createSystemIntakeContact field.
 func (r *mutationResolver) CreateSystemIntakeContact(ctx context.Context, input models.CreateSystemIntakeContactInput) (*models.CreateSystemIntakeContactPayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	principal := appcontext.Principal(ctx)
 	logger := appcontext.ZLogger(ctx)
 
@@ -583,6 +863,15 @@ func (r *mutationResolver) CreateSystemIntakeContact(ctx context.Context, input 
 
 // UpdateSystemIntakeContact is the resolver for the updateSystemIntakeContact field.
 func (r *mutationResolver) UpdateSystemIntakeContact(ctx context.Context, input models.UpdateSystemIntakeContactInput) (*models.CreateSystemIntakeContactPayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	principal := appcontext.Principal(ctx)
 	logger := appcontext.ZLogger(ctx)
 	return UpdateSystemIntakeContact(ctx, logger, principal, r.store, input, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo))
@@ -590,6 +879,15 @@ func (r *mutationResolver) UpdateSystemIntakeContact(ctx context.Context, input 
 
 // DeleteSystemIntakeContact is the resolver for the deleteSystemIntakeContact field.
 func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input models.DeleteSystemIntakeContactInput) (*models.DeleteSystemIntakeContactPayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	contact, err := SystemIntakeContactDelete(ctx, r.store, input.ID)
 	if err != nil {
 		return nil, err
@@ -601,76 +899,211 @@ func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input 
 
 // StartGRBReview is the resolver for the startGRBReview field.
 func (r *mutationResolver) StartGRBReview(ctx context.Context, input models.StartGRBReviewInput) (*string, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	return StartGRBReview(ctx, r.store, r.emailClient, input.SystemIntakeID)
 }
 
 // CreateSystemIntakeGRBReviewers is the resolver for the createSystemIntakeGRBReviewers field.
 func (r *mutationResolver) CreateSystemIntakeGRBReviewers(ctx context.Context, input models.CreateSystemIntakeGRBReviewersInput) (*models.CreateSystemIntakeGRBReviewersPayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	return CreateSystemIntakeGRBReviewers(ctx, r.store, r.emailClient, userhelpers.GetUserInfoAccountInfosWrapperFunc(r.service.FetchUserInfos), &input)
 }
 
 // UpdateSystemIntakeGRBReviewer is the resolver for the updateSystemIntakeGRBReviewer field.
 func (r *mutationResolver) UpdateSystemIntakeGRBReviewer(ctx context.Context, input models.UpdateSystemIntakeGRBReviewerInput) (*models.SystemIntakeGRBReviewer, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	return UpdateSystemIntakeGRBReviewer(ctx, r.store, &input)
 }
 
 // DeleteSystemIntakeGRBReviewer is the resolver for the deleteSystemIntakeGRBReviewer field.
 func (r *mutationResolver) DeleteSystemIntakeGRBReviewer(ctx context.Context, input models.DeleteSystemIntakeGRBReviewerInput) (uuid.UUID, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return uuid.Nil, err
+	}
+
+	if powerPlatformEnabled {
+		return uuid.Nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	return input.ReviewerID, DeleteSystemIntakeGRBReviewer(ctx, r.store, input.ReviewerID)
 }
 
 // CastSystemIntakeGRBReviewerVote is the resolver for the castSystemIntakeGRBReviewerVote field.
 func (r *mutationResolver) CastSystemIntakeGRBReviewerVote(ctx context.Context, input models.CastSystemIntakeGRBReviewerVoteInput) (*models.SystemIntakeGRBReviewer, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	return CastSystemIntakeGRBReviewerVote(ctx, r.store, r.emailClient, input)
 }
 
 // SendSystemIntakeGRBReviewerReminder is the resolver for the sendSystemIntakeGRBReviewerReminder field.
 func (r *mutationResolver) SendSystemIntakeGRBReviewerReminder(ctx context.Context, systemIntakeID uuid.UUID) (*models.SendSystemIntakeGRBReviewReminderPayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	return SendSystemIntakeGRBReviewerReminder(ctx, r.store, r.emailClient, systemIntakeID)
 }
 
 // CreateSystemIntakeGRBDiscussionPost is the resolver for the createSystemIntakeGRBDiscussionPost field.
 func (r *mutationResolver) CreateSystemIntakeGRBDiscussionPost(ctx context.Context, input models.CreateSystemIntakeGRBDiscussionPostInput) (*models.SystemIntakeGRBReviewDiscussionPost, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	return CreateSystemIntakeGRBDiscussionPost(ctx, r.store, r.emailClient, input)
 }
 
 // CreateSystemIntakeGRBDiscussionReply is the resolver for the createSystemIntakeGRBDiscussionReply field.
 func (r *mutationResolver) CreateSystemIntakeGRBDiscussionReply(ctx context.Context, input models.CreateSystemIntakeGRBDiscussionReplyInput) (*models.SystemIntakeGRBReviewDiscussionPost, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	return CreateSystemIntakeGRBDiscussionReply(ctx, r.store, r.emailClient, input)
 }
 
 // UpdateSystemIntakeGRBReviewType is the resolver for the updateSystemIntakeGRBReviewType field.
 func (r *mutationResolver) UpdateSystemIntakeGRBReviewType(ctx context.Context, input models.UpdateSystemIntakeGRBReviewTypeInput) (*models.UpdateSystemIntakePayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	return UpdateSystemIntakeGRBReviewType(ctx, r.store, input)
 }
 
 // UpdateSystemIntakeGRBReviewFormPresentationStandard is the resolver for the updateSystemIntakeGRBReviewFormPresentationStandard field.
 func (r *mutationResolver) UpdateSystemIntakeGRBReviewFormPresentationStandard(ctx context.Context, input models.UpdateSystemIntakeGRBReviewFormInputPresentationStandard) (*models.UpdateSystemIntakePayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	return UpdateSystemIntakeGRBReviewFormInputPresentationStandard(ctx, r.store, input)
 }
 
 // UpdateSystemIntakeGRBReviewFormPresentationAsync is the resolver for the updateSystemIntakeGRBReviewFormPresentationAsync field.
 func (r *mutationResolver) UpdateSystemIntakeGRBReviewFormPresentationAsync(ctx context.Context, input models.UpdateSystemIntakeGRBReviewFormInputPresentationAsync) (*models.UpdateSystemIntakePayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	return UpdateSystemIntakeGRBReviewFormInputPresentationAsync(ctx, r.store, input)
 }
 
 // UpdateSystemIntakeGRBReviewFormTimeframeAsync is the resolver for the updateSystemIntakeGRBReviewFormTimeframeAsync field.
 func (r *mutationResolver) UpdateSystemIntakeGRBReviewFormTimeframeAsync(ctx context.Context, input models.UpdateSystemIntakeGRBReviewFormInputTimeframeAsync) (*models.UpdateSystemIntakePayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	return UpdateSystemIntakeGRBReviewFormInputTimeframeAsync(ctx, r.store, r.emailClient, input)
 }
 
 // ExtendGRBReviewDeadlineAsync is the resolver for the extendGRBReviewDeadlineAsync field.
 func (r *mutationResolver) ExtendGRBReviewDeadlineAsync(ctx context.Context, input models.ExtendGRBReviewDeadlineInput) (*models.UpdateSystemIntakePayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	return ExtendGRBReviewDeadlineAsync(ctx, r.store, r.emailClient, input)
 }
 
 // RestartGRBReviewAsync is the resolver for the restartGRBReviewAsync field.
 func (r *mutationResolver) RestartGRBReviewAsync(ctx context.Context, input models.RestartGRBReviewInput) (*models.UpdateSystemIntakePayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	return RestartGRBReviewAsync(ctx, r.store, r.emailClient, input)
 }
 
 // UpdateSystemIntakeLinkedCedarSystem is the resolver for the updateSystemIntakeLinkedCedarSystem field.
 func (r *mutationResolver) UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, input models.UpdateSystemIntakeLinkedCedarSystemInput) (*models.UpdateSystemIntakePayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	// If the linked system is not nil, make sure it's a valid CEDAR system, otherwise return an error
 	if input.CedarSystemID != nil && *input.CedarSystemID != uuid.Nil {
 		_, err := r.cedarCoreClient.GetSystem(ctx, *input.CedarSystemID)
@@ -693,26 +1126,71 @@ func (r *mutationResolver) UpdateSystemIntakeLinkedCedarSystem(ctx context.Conte
 
 // SetSystemIntakeGRBPresentationLinks is the resolver for the setSystemIntakeGRBPresentationLinks field.
 func (r *mutationResolver) SetSystemIntakeGRBPresentationLinks(ctx context.Context, input models.SystemIntakeGRBPresentationLinksInput) (*models.SystemIntakeGRBPresentationLinks, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	return SetSystemIntakeGRBPresentationLinks(ctx, r.store, r.s3Client, input)
 }
 
 // UploadSystemIntakeGRBPresentationDeck is the resolver for the uploadSystemIntakeGRBPresentationDeck field.
 func (r *mutationResolver) UploadSystemIntakeGRBPresentationDeck(ctx context.Context, input models.UploadSystemIntakeGRBPresentationDeckInput) (*models.SystemIntakeGRBPresentationLinks, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	return UploadSystemIntakeGRBPresentationDeck(ctx, r.store, r.s3Client, input)
 }
 
 // DeleteSystemIntakeGRBPresentationLinks is the resolver for the deleteSystemIntakeGRBPresentationLinks field.
 func (r *mutationResolver) DeleteSystemIntakeGRBPresentationLinks(ctx context.Context, input models.DeleteSystemIntakeGRBPresentationLinksInput) (uuid.UUID, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return uuid.Nil, err
+	}
+
+	if powerPlatformEnabled {
+		return uuid.Nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	return input.SystemIntakeID, r.store.DeleteSystemIntakeGRBPresentationLinks(ctx, input.SystemIntakeID)
 }
 
 // ManuallyEndSystemIntakeGRBReviewAsyncVoting is the resolver for the manuallyEndSystemIntakeGRBReviewAsyncVoting field.
 func (r *mutationResolver) ManuallyEndSystemIntakeGRBReviewAsyncVoting(ctx context.Context, systemIntakeID uuid.UUID) (*models.UpdateSystemIntakePayload, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	return ManuallyEndSystemIntakeGRBReviewAsyncVoting(ctx, r.store, r.emailClient, systemIntakeID)
 }
 
 // ArchiveSystemIntake is the resolver for the archiveSystemIntake field.
 func (r *mutationResolver) ArchiveSystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+	powerPlatformEnabled, err := flags.PowerPlatformEnabled(ctx, r.ldClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if powerPlatformEnabled {
+		return nil, errors.New("system intake editing from directly within EASi is not permitted to Power Platform enabled users")
+	}
+
 	intake, err := r.store.FetchSystemIntakeByID(ctx, id)
 	if err != nil {
 		return nil, err
